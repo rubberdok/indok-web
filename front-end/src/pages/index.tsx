@@ -1,8 +1,10 @@
 import { NextPage } from "next";
+import Link from "next/link";
 
 const IndexPage: NextPage = () => (
     <div>
-        <h1>Hello Next.js </h1>
+        <h1>Velkommen til Indøkntnu.no </h1>
+        <Link href="/testpage">test link</Link>
     </div>
 );
 
