@@ -1,0 +1,22 @@
+version: "3"
+
+services:
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+  backend:
+    restart: always
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    working_dir: /code/backend
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./backend:/code/backend
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
