@@ -13,6 +13,7 @@ services:
       - 5432
     volumes:
       - postgres_data:/var/lib/postgresql/data/:cached
+
   backend:
     restart: always
     build:
@@ -26,6 +27,21 @@ services:
       - "8000:8000"
     depends_on:
       - db
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    working_dir: /code/frontend
+    command: npm run dev
+    volumes:
+      - ./frontend/:/code/frontend
+      - /code/frontend/node_modules
+      - /code/frontend/.next
+    ports:
+      - 3000:3000
+    expose:
+      - 3000
 
 volumes:
   postgres_data:
