@@ -243,3 +243,6 @@ dist
 .vscode/launch.json
 web.code-workspace
 # End of https://www.toptal.com/developers/gitignore/api/node
+
+
+**/.DS_Store
