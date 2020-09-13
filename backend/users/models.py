@@ -1,6 +1,6 @@
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 # Create your models here.
-class User(models.Model):
-    username = models.CharField("Username", max_length=50)
-    year = models.IntegerField()
+class User(AbstractUser):
+    year = models.IntegerField(null=True, blank=True)
