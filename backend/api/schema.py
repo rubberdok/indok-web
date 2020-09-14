@@ -1,9 +1,5 @@
 import graphene
-from events.schema import EventQuery
+from events.schema import Mutations as EventMutations
+from events.schema import EventQuery as EventQueries
 
-
-class Query(EventQuery):
-    pass
-
-
-schema = graphene.Schema(query=Query)
+schema = graphene.Schema(query=EventQueries, mutation=EventMutations)
