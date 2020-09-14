@@ -3,6 +3,7 @@ import Link from "next/link";
 import ApolloClient from "apollo-boost";
 import { ApolloProvider } from "@apollo/react-hooks";
 import EventInfo from "./events";
+import Layout from "../components/Layout";
 
 const IndexPage: NextPage = () => {
     const client = new ApolloClient({
@@ -10,14 +11,16 @@ const IndexPage: NextPage = () => {
     });
 
     return (
-        <ApolloProvider client={client}>
-            <div>
-                <h1>Velkommen til Indøkntnu.no </h1>
-                <Link href="/testpage">test link</Link>
-            </div>
+        <Layout>
+            <ApolloProvider client={client}>
+                <div>
+                    <h1>Velkommen til Indøkntnu.no </h1>
+                    <Link href="/testpage">test link</Link>
+                </div>
 
-            <EventInfo />
-        </ApolloProvider>
+                <EventInfo />
+            </ApolloProvider>
+        </Layout>
     );
 };
 
