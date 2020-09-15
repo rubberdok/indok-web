@@ -1,7 +1,8 @@
-import React from "react";
-import { NextPage } from "next";
-import { useQuery } from "react-apollo";
 import { gql } from "apollo-boost";
+import { NextPage } from "next";
+import Link from "next/link";
+import React from "react";
+import { useQuery } from "react-apollo";
 
 const EventInfo: NextPage = () => {
     const QUERY_EVENT = gql`
@@ -38,13 +39,18 @@ const EventInfo: NextPage = () => {
             </div>
         );
 
-    return data.allEvents.map((event) => (
-        <div key={event.id}>
-            <p>
-                {event.id}: {event.title}
-            </p>
+    return (
+        <div>
+            <Link href="/"> Go Home </Link>
+            {data.allEvents.map((event) => (
+                <div key={event.id}>
+                    <p>
+                        {event.id}: {event.title}
+                    </p>
+                </div>
+            ))}
         </div>
-    ));
+    );
 };
 
 export default EventInfo;
