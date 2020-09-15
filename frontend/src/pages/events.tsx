@@ -23,7 +23,7 @@ const EventInfo: NextPage = () => {
     `;
 
     const { data, loading } = useQuery(QUERY_ALL_EVENTS, {
-        pollInterval: 50000, // refetch the result every 0.5 second
+        pollInterval: 30000, // refetch the result every 30 second
     });
 
     // should handle loading status
