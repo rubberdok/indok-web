@@ -66,6 +66,15 @@ class DeleteEvent(graphene.Mutation):
         ok = True
         return DeleteEvent(event=event, ok=ok)
 
+class Event(graphene.ObjectType):
+    title = graphene.String()
+    description = graphene.String()
+
+
+class Mutations(graphene.ObjectType):
+    create_event = CreateEvent.Field()
+    update_event = UpdateEvent.Field()
+    delete_event = DeleteEvent.Field()
 
 class EventQuery(graphene.ObjectType):
     all_events = graphene.List(EventType)
@@ -80,14 +89,3 @@ class EventQuery(graphene.ObjectType):
             return Event.objects.get(id=id)
         except Event.DoesNotExist:
             return None
-
-
-class Event(graphene.ObjectType):
-    title = graphene.String()
-    description = graphene.String()
-
-
-class Mutations(graphene.ObjectType):
-    create_event = CreateEvent.Field()
-    update_event = UpdateEvent.Field()
-    delete_event = DeleteEvent.Field()
