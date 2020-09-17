@@ -91,18 +91,3 @@ class Mutations(graphene.ObjectType):
     create_event = CreateEvent.Field()
     update_event = UpdateEvent.Field()
     delete_event = DeleteEvent.Field()
-
-
-class EventQuery(graphene.ObjectType):
-    all_events = graphene.List(EventType)
-    event = graphene.Field(EventType, id=graphene.ID(required=True))
-
-    def resolve_all_events(root, info):
-        # We can easily optimize query count in the resolve method
-        return EventModel.objects.all()
-
-    def resolve_event(root, info, id):
-        try:
-            return EventModel.objects.get(id=id)
-        except EventModel.DoesNotExist:
-            return None
