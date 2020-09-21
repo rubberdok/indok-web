@@ -66,6 +66,7 @@ class DeleteEvent(graphene.Mutation):
         ok = True
         return DeleteEvent(event=event, ok=ok)
 
+
 class Event(graphene.ObjectType):
     title = graphene.String()
     description = graphene.String()
@@ -76,16 +77,17 @@ class Mutations(graphene.ObjectType):
     update_event = UpdateEvent.Field()
     delete_event = DeleteEvent.Field()
 
+
 class EventQuery(graphene.ObjectType):
     all_events = graphene.List(EventType)
     event = graphene.Field(EventType, id=graphene.ID(required=True))
 
     def resolve_all_events(root, info):
         # We can easily optimize query count in the resolve method
-        return Event.objects.all()
+        return EventModel.objects.all()
 
     def resolve_event(root, info, id):
         try:
-            return Event.objects.get(id=id)
-        except Event.DoesNotExist:
+            return EventModel.objects.get(id=id)
+        except EventModel.DoesNotExist:
             return None
