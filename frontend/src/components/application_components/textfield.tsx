@@ -1,10 +1,7 @@
-const TextField = ({ title }:{ title: string }) => (
-    <>
-        <label>{title}</label>
-        <input type="text">
-
-        </input>
-    </>
+const TextField = ({ title, placeholder }:{ title: string, placeholder: string }) => (
+    <label>{title}
+        <input type="text" placeholder={placeholder}/>
+    </label>
 );
 
 export default TextField;

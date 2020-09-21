@@ -3,17 +3,17 @@ import Link from "next/link";
 import Layout from "../components/Layout";
 import Application from "../components/application"
 import TextField from "../components/application_components/textfield"
-import SingleChoice from "../components/application_components/singlechoice"
-import MultiChoice from "../components/application_components/multichoice"
+import Choice from "../components/application_components/choice"
 
 const ApplicationPage: NextPage = () => (
     <Layout>
+        <Link href="/"><a>Back to index</a></Link>
         <Application>
-            <TextField title="Test input"/>
+            <TextField title="Test input" placeholder="Type text here"/>
             <br/>
-            <SingleChoice title="Test radio buttons" options={["test1", "test2"]}/>
+            <Choice title="Test radio buttons" radio={true} options={["test1", "test2"]}/>
             <br/>
-            <MultiChoice title="Test checkbox" options={["test3", "test4"]}/>
+            <Choice title="Test checkbox" radio={false} options={["test3", "test4"]}/>
         </Application>
     </Layout>
 );
