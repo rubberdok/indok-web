@@ -1,5 +1,3 @@
-
-
 const TextField = ({ title }:{ title: string }) => (
     <>
         <label>{title}</label>
