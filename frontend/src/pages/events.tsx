@@ -1,18 +1,9 @@
 import { NextPage } from "next";
 import Link from "next/link";
 import React from "react";
-import { gql, useMutation, useQuery } from "@apollo/client";
+import { gql, useMutation, useQuery, DataProxy, FetchResult } from "@apollo/client";
 
 const EventInfo: NextPage = () => {
-    const QUERY_EVENT = gql`
-        query {
-            event(id: 1) {
-                id
-                title
-            }
-        }
-    `;
-
     const CREATE_EVENT = gql`
         mutation CreateEvent($title: String, $description: String, $starttime: DateTime) {
             createEvent(title: $title, description: $description, starttime: $starttime) {
@@ -37,7 +28,6 @@ const EventInfo: NextPage = () => {
             }
         }
     `;
-
     const AllEvents = () => {
         const { loading, error, data } = useQuery(QUERY_ALL_EVENTS, {
             pollInterval: 30000, // refetch the result every 30 second
@@ -56,6 +46,16 @@ const EventInfo: NextPage = () => {
         ));
     };
 
+    const alternativeUpdateCache = (cache: DataProxy, fetchResult: FetchResult) => {
+        const currentEvents = (cache.readQuery({ query: QUERY_ALL_EVENTS }) as any).allEvents;
+        console.log(currentEvents);
+        if (fetchResult.data) {
+            const newEvent = fetchResult.data.createEvent.event;
+            console.log(newEvent);
+            cache.writeQuery({ query: QUERY_ALL_EVENTS, data: { allEvents: [...currentEvents, newEvent] } });
+        }
+    };
+
     const CreateEvent = () => {
         let title: HTMLInputElement;
         let description: HTMLInputElement;
@@ -65,9 +65,9 @@ const EventInfo: NextPage = () => {
             update(cache, { data: { createEvent } }) {
                 cache.modify({
                     fields: {
-                        event(existingEvents = []) {
+                        allEvents(existingEvents = []) {
                             const newEventRef = cache.writeFragment({
-                                data: createEvent,
+                                data: createEvent.event,
                                 fragment: gql`
                                     fragment NewEvent on Event {
                                         id
