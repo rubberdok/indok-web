@@ -1,4 +1,4 @@
-const Choice = ({ title, radio, options }:{ title: string, radio: boolean, options:string[] }) => (
+const Choice = ({ title, radio, options }:{ title: string, radio?: boolean, options:string[] }) => (
     <label>
         {title}
         <form>
