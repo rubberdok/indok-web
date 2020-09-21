@@ -60,14 +60,42 @@ const EventInfo: NextPage = () => {
         let title: HTMLInputElement;
         let description: HTMLInputElement;
         let startTime: HTMLInputElement;
-        const [createEvent, { data }] = useMutation(CREATE_EVENT); //ideally we use this data to update the event list
+
+        const [createEvent] = useMutation(CREATE_EVENT, {
+            update(cache, { data: { createEvent } }) {
+                cache.modify({
+                    fields: {
+                        event(existingEvents = []) {
+                            const newEventRef = cache.writeFragment({
+                                data: createEvent,
+                                fragment: gql`
+                                    fragment NewEvent on Event {
+                                        id
+                                        title
+                                        description
+                                        starttime
+                                    }
+                                `,
+                            });
+                            return [...existingEvents, newEventRef];
+                        },
+                    },
+                });
+            },
+        });
 
         return (
             <div>
                 <form
                     onSubmit={(e) => {
                         e.preventDefault();
-                        createEvent({ variables: { title: title.value, description: description.value } });
+                        createEvent({
+                            variables: {
+                                title: title.value,
+                                description: description.value,
+                                starttime: startTime.value,
+                            },
+                        });
                         title.value = "";
                         description.value = "";
                     }}
