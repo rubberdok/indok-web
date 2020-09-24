@@ -1,33 +1,74 @@
 import { NextPage } from "next";
 import Link from "next/link";
-import Layout from "../../components/Layout";
-import { ALL_LISTINGS } from "../lib/allListings"
-import { useQuery } from '@apollo/react-hooks';
+import Layout from "../components/Layout";
+import { useQuery, useMutation } from "@apollo/client";
+import gql from "graphql-tag";
 
-const Listings:NextPage = () => {
-    const {
-        loading,
-        error,
-        data
-    } = useQuery(ALL_LISTINGS);
-    if(error){
-        return(
-            <h1>Error</h1>
-        );
+const ALL_LISTINGS = gql`
+    query allListings {
+        listings {
+            id
+            title
+            description
+            startDateTime
+            endDateTime
+            url
+        }
     }
-    if(loading){
-        return(
-            <h1>Loading...</h1>
-        );
+`;
+const ADD_LISTING = gql`
+    mutation exampleListing {
+        createListing(
+            title: "example"
+            description: "desc"
+            startDateTime: "2020-09-24T11:00:00+00:00"
+            endDateTime: "2020-09-24T11:00:00+00:00"
+            url: "www.google.com"
+        ) {
+            listing {
+                title
+                description
+                startDateTime
+                endDateTime
+                url
+            }
+            ok
+        }
     }
-    return(
+`;
+
+interface Listing {
+    title: string;
+    id: string;
+}
+
+const Listings: NextPage = () => {
+    const { loading, error, data } = useQuery(ALL_LISTINGS);
+    const [addListing] = useMutation(ADD_LISTING);
+    if (error) {
+        return <h1>Error</h1>;
+    }
+    if (loading) {
+        return <h1>Loading...</h1>;
+    }
+    return (
         <Layout>
+            <button
+                onClick={() => {
+                    addListing();
+                }}
+            >
+                Test
+            </button>
             <ul>
-                {data.listing.map(({ id, title }) => (
-                    <li>
-                        <Link href={`/listings/${id}`}><a>{title}</a></Link>
-                    </li>
-                ))}
+                {data.listings &&
+                    data.listings.map(({ id, title }: Listing) => (
+                        <li>
+                            <Link href={`/listings/${id}`}>
+                                <a>{title}</a>
+                            </Link>
+                        </li>
+                    ))}
             </ul>
         </Layout>
     );
