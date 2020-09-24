@@ -68,9 +68,3 @@ class UpdateListing(graphene.Mutation):
         listing.save()
         ok = True
         return cls(listing=listing, ok=ok)
-
-
-class ListingMutations(graphene.ObjectType):
-    create_listing = CreateListing.Field()
-    delete_listing = DeleteListing.Field()
-    update_listing = UpdateListing.Field()

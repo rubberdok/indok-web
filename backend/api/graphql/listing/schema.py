@@ -1,25 +1,20 @@
 import graphene
 
-from api.graphql.listing.types import ListingType
-from apps.listing.models import Listing as ListingModel
-
-from .mutation import ListingMutations
+from .types import ListingType
+from .resolvers import resolve_all_listings, resolve_listing_by_id
+from .mutations import CreateListing, DeleteListing, UpdateListing
 
 class ListingQueries(graphene.ObjectType):
     all_listings = graphene.List(ListingType)
     listing_by_id = graphene.Field(ListingType, id=graphene.String())
 
     def resolve_all_listings(root, info, **kwargs):
-        return ListingModel.objects.all()
+        return resolve_all_listings(root, info)
 
     def resolve_listing_by_id(root, info, id):
-        listing = ListingModel.objects.get(pk=id)
-        if listing is None:
-            return None
-        return listing
+        return resolve_listing_by_id(root, info, id)
 
-class Mutation(ListingMutations):
-    pass
-
-class Query(ListingQueries):
-    pass
+class ListingMutations(graphene.ObjectType):
+    create_listing = CreateListing.Field()
+    update_listing = UpdateListing.Field()
+    delete_listing = DeleteListing.Field()
