@@ -1,7 +1,7 @@
 from datetime import datetime
 
 import graphene
-from events.models import Event as EventModel
+from apps.events.models import Event as EventModel
 from django.shortcuts import get_object_or_404
 from graphene_django import DjangoObjectType
 

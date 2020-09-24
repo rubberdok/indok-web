@@ -1,5 +1,5 @@
 import graphene
-from events.models import Event
+from apps.events.models import Event
 from graphene_django import DjangoObjectType
 
 
