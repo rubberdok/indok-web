@@ -1,6 +1,7 @@
 import { NextPage } from "next";
 import Link from "next/link";
 import Layout from "../components/Layout";
+import styled from "styled-components";
 
 const IndexPage: NextPage = () => (
     <Layout>

@@ -1,7 +1,7 @@
 import graphene
 
-from graph.listing.types import ListingType
-from listing.models import Listing as Listing
+from api.graphql.listing.types import ListingType
+from apps.listing.models import Listing as Listing
 
 class CreateListing(graphene.Mutation):
     class Arguments:

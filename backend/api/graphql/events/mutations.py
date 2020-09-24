@@ -1,16 +1,11 @@
-import graphene
-
-from graphene import Argument
-from graphene_django import DjangoObjectType
 from datetime import datetime
+
+import graphene
+from apps.events.models import Event as EventModel
 from django.shortcuts import get_object_or_404
+from graphene_django import DjangoObjectType
 
-from .models import Event as EventModel
-
-
-class EventType(DjangoObjectType):
-    class Meta:
-        model = EventModel
+from .types import EventType
 
 
 class CreateEvent(graphene.Mutation):
@@ -65,29 +60,3 @@ class DeleteEvent(graphene.Mutation):
         event.delete()
         ok = True
         return DeleteEvent(event=event, ok=ok)
-
-
-class Event(graphene.ObjectType):
-    title = graphene.String()
-    description = graphene.String()
-
-
-class Mutations(graphene.ObjectType):
-    create_event = CreateEvent.Field()
-    update_event = UpdateEvent.Field()
-    delete_event = DeleteEvent.Field()
-
-
-class EventQuery(graphene.ObjectType):
-    all_events = graphene.List(EventType)
-    event = graphene.Field(EventType, id=graphene.ID(required=True))
-
-    def resolve_all_events(root, info):
-        # We can easily optimize query count in the resolve method
-        return EventModel.objects.all()
-
-    def resolve_event(root, info, id):
-        try:
-            return EventModel.objects.get(id=id)
-        except EventModel.DoesNotExist:
-            return None

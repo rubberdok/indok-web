@@ -1,11 +1,11 @@
 import graphene
 
-from graph.listing.types import ListingType
-from listing.models import Listing as ListingModel
+from api.graphql.listing.types import ListingType
+from apps.listing.models import Listing as ListingModel
 
 from .mutation import ListingMutations
 
-class ListingQuery(graphene.ObjectType):
+class ListingQueries(graphene.ObjectType):
     all_listings = graphene.List(ListingType)
     listing_by_id = graphene.Field(ListingType, id=graphene.String())
 

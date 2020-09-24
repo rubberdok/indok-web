@@ -1,6 +1,6 @@
 from graphene_django import DjangoObjectType
 
-from listing.models import Listing as ListingModel
+from apps.listing.models import Listing as ListingModel
 
 class ListingType(DjangoObjectType):
     class Meta:

@@ -40,15 +40,16 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "corsheaders",
-    "users",
-    "events",
+    "apps.users",
+    "apps.events",
+    "apps.listing",
     "graphene_django",
     "listing",
 ]
 
 AUTH_USER_MODEL = "users.User"
 
-GRAPHENE = {"SCHEMA": "graph.schema.schema"}
+GRAPHENE = {"SCHEMA": "api.graphql.schema.schema"}
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
