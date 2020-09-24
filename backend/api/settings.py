@@ -48,7 +48,7 @@ INSTALLED_APPS = [
 
 AUTH_USER_MODEL = "users.User"
 
-GRAPHENE = {"SCHEMA": "api.schema.schema"}
+GRAPHENE = {"SCHEMA": "graph.schema.schema"}
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
