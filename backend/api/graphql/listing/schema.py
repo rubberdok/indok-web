@@ -21,5 +21,5 @@ class ListingQueries(graphene.ObjectType):
 class Mutation(ListingMutations):
     pass
 
-class Query(ListingQuery):
+class Query(ListingQueries):
     pass

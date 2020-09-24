@@ -6,12 +6,14 @@ from .listing.schema import ListingMutations, ListingQueries
 
 class Query(
     EventQueries,
+    ListingQueries
 ):
     pass
 
 
 class Mutations(
     EventMutations,
+    ListingMutations
 ):
     pass
 
