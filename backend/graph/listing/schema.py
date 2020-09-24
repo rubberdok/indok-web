@@ -3,13 +3,13 @@ import graphene
 from graph.listing.types import ListingType
 from listing.models import Listing as ListingModel
 
-from .mutation import CreateListing
+from .mutation import ListingMutations
 
 class ListingQuery(graphene.ObjectType):
-    listings = graphene.List(ListingType)
+    all_listings = graphene.List(ListingType)
     listing_by_id = graphene.Field(ListingType, id=graphene.String())
 
-    def resolve_listings(root, info, **kwargs):
+    def resolve_all_listings(root, info, **kwargs):
         return ListingModel.objects.all()
 
     def resolve_listing_by_id(root, info, id):
@@ -18,5 +18,8 @@ class ListingQuery(graphene.ObjectType):
             return None
         return listing
 
-class Mutations(graphene.ObjectType):
-    create_listing = CreateListing.Field()
+class Mutation(ListingMutations):
+    pass
+
+class Query(ListingQuery):
+    pass
