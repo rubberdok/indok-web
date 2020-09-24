@@ -1,6 +1,6 @@
 import graphene
 
-from graphql.listing.types import ListingType
+from graph.listing.types import ListingType
 from listing.models import Listing as ListingModel
 
 from .mutation import CreateListing
