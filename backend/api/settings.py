@@ -33,16 +33,19 @@ CORS_ORIGIN_WHITELIST = ["http://localhost:3000", "http://127.0.0.1:3000"]
 # Application definition
 
 INSTALLED_APPS = [
+    # Django modules
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "corsheaders",
+    # Local apps
     "apps.users",
     "apps.events",
     "apps.listing",
+    # External apps
+    "corsheaders",
     "graphene_django",
 ]
 
