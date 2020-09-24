@@ -20,6 +20,3 @@ class ListingQuery(graphene.ObjectType):
 
 class Mutations(graphene.ObjectType):
     create_listing = CreateListing.Field()
-
-class Queries(graphene.ObjectType):
-    listings = ListingQuery
