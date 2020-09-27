@@ -7,7 +7,8 @@
       "description": "Søk dette vervet. Her er det bratt læringskurve, vi kaster deg på dypt vann, og mye sosialt.",
       "start_date_time": "2020-09-24T12:00:00+01:00",
       "end_date_time": "2020-09-25T23:59:59+01:00",
-      "url": "www.google.com"
+      "url": "www.google.com",
+      "slug": "superkult-verv-hos-gio"
     }
   },
   {
@@ -18,7 +19,8 @@
       "description": "Søk dette vervet. Her er det bratt læringskurve, vi kaster deg på dypt vann, og mye sosialt.",
       "start_date_time": "2020-10-24T12:00:00+01:00",
       "end_date_time": "2020-10-25T23:59:59+01:00",
-      "url": "www.vg.no"
+      "url": "www.vg.no",
+      "slug": "superkult-verv-hos-gio2"
     }
   }
 ]

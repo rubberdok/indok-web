@@ -4,7 +4,7 @@ from .events.schema import EventMutations, EventQueries
 from .listing.schema import ListingMutations, ListingQueries
 
 
-class Query(
+class Queries(
     EventQueries,
     ListingQueries
 ):
@@ -18,4 +18,4 @@ class Mutations(
     pass
 
 
-schema = graphene.Schema(query=Query, mutation=Mutations)
+schema = graphene.Schema(query=Queries, mutation=Mutations)

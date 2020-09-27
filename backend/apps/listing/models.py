@@ -5,7 +5,7 @@ import uuid
 class Listing(models.Model):
     description = models.CharField(max_length=2000)
     title = models.CharField(max_length=250)
-
+    slug = models.SlugField(max_length=255, allow_unicode=True, default="")
 
     start_date_time = models.DateTimeField()
     end_date_time = models.DateTimeField()

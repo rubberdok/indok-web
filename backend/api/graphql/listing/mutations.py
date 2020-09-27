@@ -1,6 +1,8 @@
 import graphene
 
-from api.graphql.listing.types import ListingType
+from django.utils.text import slugify
+
+from .types import ListingType
 from apps.listing.models import Listing as Listing
 
 class CreateListing(graphene.Mutation):
@@ -22,7 +24,8 @@ class CreateListing(graphene.Mutation):
             description=description,
             url=url,
             start_date_time=start_date_time,
-            end_date_time=end_date_time
+            end_date_time=end_date_time,
+            slug = slugify(title)
         )
         listing.save()
         ok = True
