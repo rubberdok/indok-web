@@ -8,6 +8,7 @@ class Listing(models.Model):
 
     start_date_time = models.DateTimeField()
     end_date_time = models.DateTimeField()
+    deadline = models.DateTimeField()
 
     url = models.URLField()
 
