@@ -15,7 +15,7 @@ class CreateListing(graphene.Mutation):
         end_date_time = graphene.DateTime()
 
     ok = graphene.Boolean()
-    listing = graphene.Field(lambda: ListingType)
+    listing = graphene.Field(ListingType)
 
     @classmethod
     def mutate(cls, root, info, title, description, url, start_date_time, end_date_time):
