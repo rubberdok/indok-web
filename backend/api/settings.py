@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     # External apps
     "corsheaders",
     "graphene_django",
+    "django-filter",
 ]
 
 AUTH_USER_MODEL = "users.User"
