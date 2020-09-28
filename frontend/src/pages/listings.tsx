@@ -1,8 +1,7 @@
 import { NextPage } from "next";
 import Link from "next/link";
 import Layout from "../components/Layout";
-import { useQuery, useMutation } from "@apollo/client";
-import gql from "graphql-tag";
+import { gql, useQuery, useMutation } from "@apollo/client";
 
 const ALL_LISTINGS = gql`
     query allListings {
