@@ -43,10 +43,10 @@ INSTALLED_APPS = [
     # Local apps
     "apps.users",
     "apps.events",
+    "apps.cabins",
     # External apps
     "corsheaders",
     "graphene_django",
-    "cabins",
 ]
 
 AUTH_USER_MODEL = "users.User"
