@@ -5,7 +5,7 @@ import { gql, useQuery, useMutation } from "@apollo/client";
 
 const ALL_LISTINGS = gql`
     query allListings {
-        listings {
+        allListings {
             id
             title
             description
@@ -37,19 +37,20 @@ const ADD_LISTING = gql`
 `;
 
 interface Listing {
-    title: string;
     id: string;
+    title: string;
+    description: string;
+    startDateTime: string;
+    endDateTime: string;
+    url: string;
 }
 
 const Listings: NextPage = () => {
     const { loading, error, data } = useQuery(ALL_LISTINGS);
     const [addListing] = useMutation(ADD_LISTING);
-    if (error) {
-        return <h1>Error</h1>;
-    }
-    if (loading) {
-        return <h1>Loading...</h1>;
-    }
+    console.log(data);
+    if (error) return <h1>Error</h1>;
+    if (loading) return <h1>Loading...</h1>;
     return (
         <Layout>
             <button
@@ -60,11 +61,11 @@ const Listings: NextPage = () => {
                 Test
             </button>
             <ul>
-                {data.listings &&
-                    data.listings.map(({ id, title }: Listing) => (
-                        <li>
-                            <Link href={`/listings/${id}`}>
-                                <a>{title}</a>
+                {data.allListings &&
+                    data.allListings.map((listing: Listing) => (
+                        <li key={listing.id}>
+                            <Link href={`/listings/${listing.id}`}>
+                                <a>{listing.title}</a>
                             </Link>
                         </li>
                     ))}
