@@ -2,6 +2,8 @@ import { AppProps } from "next/app";
 import "../styles/global.css";
 import "react-calendar/dist/Calendar.css";
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
+import { ThemeProvider } from "styled-components";
+import theme from "../styles/theme";
 
 const App = ({ Component, pageProps }: AppProps): JSX.Element => {
     const client = new ApolloClient({
@@ -10,7 +12,9 @@ const App = ({ Component, pageProps }: AppProps): JSX.Element => {
     });
     return (
         <ApolloProvider client={client}>
-            <Component {...pageProps} />
+            <ThemeProvider theme={theme}>
+                <Component {...pageProps} />
+            </ThemeProvider>
         </ApolloProvider>
     );
 };
