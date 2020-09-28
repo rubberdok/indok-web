@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "apps.users",
     "apps.events",
     "apps.listing",
+    "apps.listing_response",
     # External apps
     "corsheaders",
     "graphene_django",
