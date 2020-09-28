@@ -1,5 +1,5 @@
 from django.contrib import admin
-from cabins.models import Cabin, Booking
+from apps.cabins.models import Cabin, Booking
 
 # Register your models here.
 

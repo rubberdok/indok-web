@@ -6,6 +6,7 @@ from datetime import datetime
 from django.shortcuts import get_object_or_404
 
 from api.graphql.cabins.types import BookingType
+from apps.cabins.models import Booking as BookingModel
 
 
 class BookingQueries(graphene.ObjectType):

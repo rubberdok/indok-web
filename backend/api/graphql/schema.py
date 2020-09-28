@@ -1,11 +1,10 @@
 import graphene
 
-from .events.schema import EventMutations, EventQueries
+from api.graphql.events.schema import EventMutations, EventQueries
+from api.graphql.cabins.schema import BookingQueries
 
 
-class Query(
-    EventQueries,
-):
+class Query(EventQueries, BookingQueries):
     pass
 
 
