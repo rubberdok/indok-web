@@ -1,8 +1,6 @@
 import { NextPage } from "next";
-import Link from "next/link";
-import React from "react";
-import { gql, useMutation, useQuery, DataProxy, FetchResult } from "@apollo/client";
-
+import { gql, useQuery } from "@apollo/client";
+import Calendar from "react-calendar";
 interface BookingType {
     id: string;
     contactNum: number;
@@ -40,6 +38,9 @@ const CabinInfo: NextPage = () => {
                         {Booking.startDay} to {Booking.endDay} by {Booking.contactPerson}
                     </h4>
                     <p>Contact: {Booking.contactNum}</p>
+                    <div>
+                        <Calendar />
+                    </div>
                 </div>
             );
         });
@@ -48,7 +49,7 @@ const CabinInfo: NextPage = () => {
     return (
         <>
             <h1>Hyttebooking</h1>
-            <AllBookings></AllBookings>
+            <AllBookings />
         </>
     );
 };
