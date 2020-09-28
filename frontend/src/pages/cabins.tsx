@@ -1,7 +1,6 @@
 import { NextPage } from "next";
-import Link from "next/link";
 import React from "react";
-import { gql, useMutation, useQuery, DataProxy, FetchResult } from "@apollo/client";
+import { gql, useQuery } from "@apollo/client";
 
 interface BookingType {
     id: string;
