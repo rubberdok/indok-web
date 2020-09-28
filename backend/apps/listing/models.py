@@ -16,3 +16,4 @@ class Listing(models.Model):
 
     def __repl__(self):
         return self.__str__()
+
