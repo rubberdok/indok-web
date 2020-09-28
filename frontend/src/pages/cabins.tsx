@@ -1,6 +1,7 @@
 import { NextPage } from "next";
 import { gql, useQuery } from "@apollo/client";
 import Calendar from "react-calendar";
+
 interface BookingType {
     id: string;
     contactNum: number;

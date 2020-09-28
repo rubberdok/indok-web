@@ -22,5 +22,5 @@ class CabinType(DjangoObjectType):
 class BookingQueries(graphene.ObjectType):
     all_bookings = graphene.List(BookingType)
 
-    def resolve_all_bookings(root, info):
+    def resolve_all_bookings(self, root):
         return BookingModel.objects.all()

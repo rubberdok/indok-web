@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     "users",
     "events",
     "graphene_django",
-    "cabin",
+    "cabins",
 ]
 
 AUTH_USER_MODEL = "users.User"
