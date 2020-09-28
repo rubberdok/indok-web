@@ -6,7 +6,7 @@ from .mutations import CreateListing, DeleteListing, UpdateListing
 
 class ListingQueries(graphene.ObjectType):
     all_listings = graphene.List(ListingType)
-    listing_by_id = graphene.Field(ListingType, id=graphene.String())
+    listing_by_id = graphene.Field(ListingType, id=graphene.Int())
 
     def resolve_all_listings(root, info, **kwargs):
         return resolve_all_listings(root, info)
