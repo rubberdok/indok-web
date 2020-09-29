@@ -44,6 +44,7 @@ const LISTING_BY_ID = gql`
             title
             description
             startDateTime
+            deadline
             endDateTime
             url
         }
