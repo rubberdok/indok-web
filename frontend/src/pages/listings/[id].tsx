@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import Layout from "../../components/Layout";
 import { gql, useQuery, ApolloClient } from "@apollo/client";
+import TextField from "../../components/listing_response_components/textfield";
 
 interface Listing {
     id: string;
@@ -21,32 +22,23 @@ interface Listing {
 
 const Listing: NextPage /* <Props> */ = (/* { listingData }: { listingData: Listing } */) => {
     const router = useRouter();
-    console.log(router.query.id);
-    const { loading, error, data } = useQuery(LISTING_BY_ID, { variables: { ID: router.query.id as string } });
+    const { loading, error, data } = useQuery(LISTING_BY_ID, { variables: { ID: Number(router.query.id) } });
     if (error) return <h1>Error</h1>;
     if (loading) return <h1>Loading...</h1>;
     const listing = data.listingById;
-    console.log(listing);
     return (
         <Layout>
             <h3>{listing.title}</h3>
             <p>{listing.description}</p>
+            <TextField title="Apply:" placeholder="Your application" size="short" />
         </Layout>
     );
 };
 
 export default Listing;
 
-const ALL_LISTING_IDS = gql`
-    query allListingIDs {
-        allListings {
-            id
-        }
-    }
-`;
-
 const LISTING_BY_ID = gql`
-    query listingById($ID: String!) {
+    query listingById($ID: Int!) {
         listingById(id: $ID) {
             id
             title
@@ -58,7 +50,15 @@ const LISTING_BY_ID = gql`
     }
 `;
 
-/* export const getStaticPaths: GetStaticPaths = async () => {
+/* const ALL_LISTING_IDS = gql`
+    query allListingIDs {
+        allListings {
+            id
+        }
+    }
+`;
+
+export const getStaticPaths: GetStaticPaths = async () => {
     const { error, data } = useQuery(ALL_LISTING_IDS);
     if (error) {
         console.log("Error fetching listing IDs");
