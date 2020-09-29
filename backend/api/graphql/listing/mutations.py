@@ -13,18 +13,20 @@ class CreateListing(graphene.Mutation):
 
         start_date_time = graphene.DateTime()
         end_date_time = graphene.DateTime()
+        deadline = graphene.DateTime()
 
     ok = graphene.Boolean()
     listing = graphene.Field(ListingType)
 
     @classmethod
-    def mutate(cls, root, info, title, description, url, start_date_time, end_date_time):
+    def mutate(cls, root, info, title, description, url, start_date_time, end_date_time, deadline):
         listing = Listing(
             title=title,
             description=description,
             url=url,
             start_date_time=start_date_time,
             end_date_time=end_date_time,
+            deadline=deadline,
             slug = slugify(title)
         )
         listing.save()
