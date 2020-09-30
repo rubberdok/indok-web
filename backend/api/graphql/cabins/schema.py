@@ -1,16 +1,18 @@
 import graphene
-
-from graphene import Argument
 from graphene_django import DjangoObjectType
-from datetime import datetime
 from django.shortcuts import get_object_or_404
 
-from api.graphql.cabins.types import BookingType
-from apps.cabins.models import Booking as BookingModel
+from .types import BookingType
+from .mutations import CreateBooking, UpdateBooking, DeleteBooking
+from .resolvers import BookingResolvers
 
 
-class BookingQueries(graphene.ObjectType):
+class BookingMutations(graphene.ObjectType):
+    create_booking = CreateBooking.Field()
+    update_booking = UpdateBooking.Field()
+    delete_booking = DeleteBooking.Field()
+
+
+class BookingQueries(graphene.ObjectType, BookingResolvers):
     all_bookings = graphene.List(BookingType)
-
-    def resolve_all_bookings(self, root):
-        return BookingModel.objects.all()
+    booking = graphene.Field(BookingType, booking_id=graphene.ID(required=True))
