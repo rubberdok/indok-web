@@ -1,16 +1,14 @@
 import graphene
 
-from api.graphql.events.schema import EventMutations, EventQueries
-from api.graphql.cabins.schema import BookingQueries
+from .events.schema import EventMutations, EventQueries
+from .cabins.schema import BookingMutations, BookingQueries
 
 
 class Query(EventQueries, BookingQueries):
     pass
 
 
-class Mutations(
-    EventMutations,
-):
+class Mutations(EventMutations, BookingMutations):
     pass
 
 
