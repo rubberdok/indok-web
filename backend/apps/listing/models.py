@@ -1,4 +1,5 @@
 from django.db import models
+from apps.organizations.models import Organization
 # Create your models here.
 
 class Listing(models.Model):
@@ -9,6 +10,8 @@ class Listing(models.Model):
     start_date_time = models.DateTimeField()
     end_date_time = models.DateTimeField()
     deadline = models.DateTimeField()
+
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE, null=True)
 
     url = models.URLField()
 

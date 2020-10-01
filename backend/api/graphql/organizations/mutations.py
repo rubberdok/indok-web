@@ -1,6 +1,6 @@
 import graphene
 
-from django_util.text import slugify
+from django.utils.text import slugify
 
 from .types import OrganizationType
 from apps.organizations.models import Organization
