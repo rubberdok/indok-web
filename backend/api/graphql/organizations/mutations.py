@@ -8,7 +8,7 @@ from apps.organizations.models import Organization
 class OrganizationInput(graphene.InputObjectType):
     name = graphene.String(required=False)
     description = graphene.String(required=False)
-    parent = graphene.ID(required=False)
+    parent_id = graphene.ID(required=False)
 
 class CreateOrganization(graphene.Mutation):
     organization = graphene.Field(OrganizationType)
