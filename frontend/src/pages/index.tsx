@@ -2,9 +2,11 @@ import { NextPage } from "next";
 import Layout from "../components/Layout";
 import { Title, SubTitle, Heading, SubHeading, Paragraph } from "../components/ui/Typography";
 import Button from "../components/ui/Button";
+import Navbar from "../components/navbar/Navbar.tsx";
 
 const IndexPage: NextPage = () => (
     <Layout>
+        <Navbar />
         <div>
             <SubTitle>Foreningen for studentene ved</SubTitle>
             <Title>Industriell Økonomi og Teknologiledelse</Title>
