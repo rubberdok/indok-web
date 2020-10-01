@@ -10,6 +10,7 @@ const ALL_LISTINGS = gql`
             title
             description
             startDateTime
+            deadline
             endDateTime
             url
         }
@@ -21,6 +22,7 @@ const ADD_LISTING = gql`
             title: "example"
             description: "desc"
             startDateTime: "2020-09-24T11:00:00+00:00"
+            deadline: "2020-09-24T11:00:00+00:00"
             endDateTime: "2020-09-24T11:00:00+00:00"
             url: "www.google.com"
         ) {
@@ -28,6 +30,7 @@ const ADD_LISTING = gql`
                 title
                 description
                 startDateTime
+                deadline
                 endDateTime
                 url
             }
@@ -48,7 +51,6 @@ interface Listing {
 const Listings: NextPage = () => {
     const { loading, error, data } = useQuery(ALL_LISTINGS);
     const [addListing] = useMutation(ADD_LISTING);
-    console.log(data);
     if (error) return <h1>Error</h1>;
     if (loading) return <h1>Loading...</h1>;
     return (
