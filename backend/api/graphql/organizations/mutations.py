@@ -19,7 +19,12 @@ class CreateOrganization(graphene.Mutation):
 
     @classmethod
     def mutate(cls, root, info, organization_data):
-        organization = Organization(name=organization_data['name'], slug=slugify(organization_data['name']))
+        organization = Organization()
+
+        for k, v in organization_data.items():
+            setattr(organization, k, v)
+
+        setattr(organization, "slug", slugify(organization.name))
         organization.save()
 
         ok = True
