@@ -15,7 +15,7 @@ class CreateOrganization(graphene.Mutation):
     ok = graphene.Boolean()
 
     class Arguments:
-        organization_data = OrganizationType(required=True)
+        organization_data = OrganizationInput(required=True)
 
     @classmethod
     def mutate(cls, root, info, organization_data):
