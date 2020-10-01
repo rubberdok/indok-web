@@ -1,9 +1,9 @@
+import { useMutation, useQuery } from "@apollo/client";
 import { NextPage } from "next";
 import Link from "next/link";
-import React from "react";
-import { useMutation, useQuery } from "@apollo/client";
-import { GET_EVENTS } from "../graphql/events/queries";
+import React, { useState } from "react";
 import { CREATE_EVENT } from "../graphql/events/mutations";
+import { GET_EVENTS } from "../graphql/events/queries";
 
 interface Event {
     id: string;
@@ -11,7 +11,7 @@ interface Event {
     description: string;
     starttime: string;
 }
-const EventInfo: NextPage = () => {
+const EventPage: NextPage = () => {
     const AllEvents = () => {
         const { loading, error, data } = useQuery(GET_EVENTS, {
             pollInterval: 30000, // refetch the result every 30 second
@@ -31,9 +31,13 @@ const EventInfo: NextPage = () => {
     };
 
     const CreateEvent = () => {
-        let title: HTMLInputElement;
-        let description: HTMLInputElement;
-        let startTime: HTMLInputElement;
+        const deafultInput = {
+            title: "",
+            description: "",
+            starttime: "",
+        };
+
+        const [inputData, setInputData] = useState(deafultInput);
 
         const [createEvent] = useMutation(CREATE_EVENT, {
             update: (cache, { data: { createEvent } }) => {
@@ -47,46 +51,38 @@ const EventInfo: NextPage = () => {
             },
         });
 
+        const { title, description, starttime } = inputData;
         return (
             <div>
                 <form
                     onSubmit={(e) => {
                         e.preventDefault();
                         createEvent({
-                            variables: {
-                                title: title.value,
-                                description: description.value,
-                                starttime: startTime.value,
-                            },
+                            variables: inputData,
                         });
-                        title.value = "";
-                        description.value = "";
-                        startTime.value = "";
+                        setInputData(deafultInput);
                     }}
                 >
                     <div>
                         <input
                             placeholder="Title"
-                            ref={(node) => {
-                                title = node;
-                            }}
+                            value={title}
+                            onChange={(e) => setInputData({ ...inputData, title: e.currentTarget.value })}
                         />
                     </div>
                     <div>
                         <input
                             placeholder="Description"
-                            ref={(node) => {
-                                description = node;
-                            }}
+                            value={description}
+                            onChange={(e) => setInputData({ ...inputData, description: e.currentTarget.value })}
                         />
                     </div>
                     <div>
                         <input
                             type="datetime-local"
                             placeholder="Start time"
-                            ref={(node) => {
-                                startTime = node;
-                            }}
+                            value={starttime}
+                            onChange={(e) => setInputData({ ...inputData, starttime: e.currentTarget.value })}
                         />
                     </div>
                     <button type="submit">Create Event</button>
@@ -104,4 +100,4 @@ const EventInfo: NextPage = () => {
     );
 };
 
-export default EventInfo;
+export default EventPage;
