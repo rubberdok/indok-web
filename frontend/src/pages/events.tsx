@@ -1,7 +1,9 @@
 import { NextPage } from "next";
 import Link from "next/link";
 import React from "react";
-import { gql, useMutation, useQuery, DataProxy, FetchResult } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
+import { GET_EVENTS } from "../graphql/events/queries";
+import { CREATE_EVENT } from "../graphql/events/mutations";
 
 interface Event {
     id: string;
@@ -10,32 +12,8 @@ interface Event {
     starttime: string;
 }
 const EventInfo: NextPage = () => {
-    const CREATE_EVENT = gql`
-        mutation CreateEvent($title: String, $description: String, $starttime: DateTime) {
-            createEvent(title: $title, description: $description, starttime: $starttime) {
-                ok
-                event {
-                    id
-                    title
-                    description
-                    starttime
-                }
-            }
-        }
-    `;
-
-    const QUERY_ALL_EVENTS = gql`
-        query {
-            allEvents {
-                id
-                title
-                description
-                starttime
-            }
-        }
-    `;
     const AllEvents = () => {
-        const { loading, error, data } = useQuery(QUERY_ALL_EVENTS, {
+        const { loading, error, data } = useQuery(GET_EVENTS, {
             pollInterval: 30000, // refetch the result every 30 second
         });
         // should handle loading status
@@ -83,6 +61,7 @@ const EventInfo: NextPage = () => {
                         });
                         title.value = "";
                         description.value = "";
+                        startTime.value = "";
                     }}
                 >
                     <div>
