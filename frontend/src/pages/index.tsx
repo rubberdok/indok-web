@@ -13,6 +13,7 @@ const IndexPage: NextPage = () => (
             <StyledHeader>Velkommen til Indøkntnu.no </StyledHeader>
             <Link href="/testpage">test link</Link>
         </div>
+        <Link href="/events"> Go to Events</Link>
     </Layout>
 );
 
