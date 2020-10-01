@@ -60,7 +60,7 @@ class UpdateBooking(graphene.Mutation):
         )
         booking.start_day = start_day if start_day is not None else booking.start_day
         booking.end_day = end_day if end_day is not None else booking.end_day
-        
+
         ok = True
         return UpdateBooking(booking=booking, ok=ok)
 
