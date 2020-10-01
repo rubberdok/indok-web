@@ -15,4 +15,7 @@ class BookingMutations(graphene.ObjectType):
 
 class BookingQueries(graphene.ObjectType, BookingResolvers):
     all_bookings = graphene.List(BookingType)
+    bookings_by_month = graphene.List(
+        BookingType, year=graphene.String(), month=graphene.String()
+    )
     booking = graphene.Field(BookingType, booking_id=graphene.ID(required=True))
