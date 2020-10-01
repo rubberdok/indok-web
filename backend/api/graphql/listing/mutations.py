@@ -11,7 +11,7 @@ class ListingInput(graphene.InputObjectType):
     start_date_time = graphene.DateTime(required=False)
     end_date_time = graphene.DateTime(required=False)
     url = graphene.String(required=False)
-    organization = graphene.ID(required=False)
+    organization_id = graphene.ID(required=False)
 
 
 class CreateListing(graphene.Mutation):
