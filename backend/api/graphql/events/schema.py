@@ -1,7 +1,7 @@
 import graphene
+from apps.events.models import Event
 
 from .mutations import CreateEvent, DeleteEvent, UpdateEvent
-from .resolvers import resolve_all_events, resolve_event
 from .types import EventType
 
 
@@ -15,8 +15,11 @@ class EventQueries(graphene.ObjectType):
     all_events = graphene.List(EventType)
     event = graphene.Field(EventType, id=graphene.ID(required=True))
 
-    def resolve_all_events(self, info):
-        return resolve_all_events(info)
+    def resolve_all_events(root, info):
+        return Event.objects.all()
 
-    def resolve_event(self, info, id):
-        return resolve_event(info, id)
+    def resolve_event(info, id):
+        try:
+            return Event.objects.get(id=id)
+        except Event.DoesNotExist:
+            return None
