@@ -1,14 +1,6 @@
 import { NextPage } from "next";
 import { gql, useQuery } from "@apollo/client";
-import Calendar from "react-calendar";
-
-interface BookingType {
-    id: string;
-    contactNum: number;
-    contactPerson: string;
-    startDay: string;
-    endDay: string;
-}
+import { Booking } from "../../lib/types/Cabins";
 
 const CabinInfo: NextPage = () => {
     const QUERY_ALL_BOOKINGS = gql`
@@ -30,8 +22,7 @@ const CabinInfo: NextPage = () => {
 
         if (error) return <p>Error :(</p>;
 
-        return data.allBookings.map((Booking: BookingType) => {
-            //console.log(Booking.contactNum);
+        return data.allBookings.map((Booking: Booking) => {
             return (
                 <div key={Booking.id}>
                     <h3>Booking #{Booking.id}: </h3>
@@ -39,9 +30,6 @@ const CabinInfo: NextPage = () => {
                         {Booking.startDay} to {Booking.endDay} by {Booking.contactPerson}
                     </h4>
                     <p>Contact: {Booking.contactNum}</p>
-                    <div>
-                        <Calendar />
-                    </div>
                 </div>
             );
         });
