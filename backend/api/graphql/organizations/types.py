@@ -5,4 +5,4 @@ from apps.organizations.models import Organization
 class OrganizationType(DjangoObjectType):
     class meta:
         model = Organization
-        fields = ['id', 'name', 'slug']
+        fields = ['id', 'name', 'slug', 'description', 'parent']
