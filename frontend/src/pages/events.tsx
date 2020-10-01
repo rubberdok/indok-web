@@ -3,6 +3,12 @@ import Link from "next/link";
 import React from "react";
 import { gql, useMutation, useQuery, DataProxy, FetchResult } from "@apollo/client";
 
+interface Event {
+    id: string;
+    title: string;
+    description: string;
+    starttime: string;
+}
 const EventInfo: NextPage = () => {
     const CREATE_EVENT = gql`
         mutation CreateEvent($title: String, $description: String, $starttime: DateTime) {
@@ -37,7 +43,7 @@ const EventInfo: NextPage = () => {
 
         if (error) return <p>Error :(</p>;
 
-        return data.allEvents.map((event) => (
+        return data.allEvents.map((event: Event) => (
             <div key={event.id}>
                 <p>
                     {event.id}: {event.title} - {event.starttime.slice(0, 19).replace("T", " ")} - {event.description}
@@ -46,38 +52,17 @@ const EventInfo: NextPage = () => {
         ));
     };
 
-    const alternativeUpdateCache = (cache: DataProxy, fetchResult: FetchResult) => {
-        const currentEvents = (cache.readQuery({ query: QUERY_ALL_EVENTS }) as any).allEvents;
-        console.log(currentEvents);
-        if (fetchResult.data) {
-            const newEvent = fetchResult.data.createEvent.event;
-            console.log(newEvent);
-            cache.writeQuery({ query: QUERY_ALL_EVENTS, data: { allEvents: [...currentEvents, newEvent] } });
-        }
-    };
-
     const CreateEvent = () => {
         let title: HTMLInputElement;
         let description: HTMLInputElement;
         let startTime: HTMLInputElement;
 
         const [createEvent] = useMutation(CREATE_EVENT, {
-            update(cache, { data: { createEvent } }) {
+            update: (cache, { data: { createEvent } }) => {
                 cache.modify({
                     fields: {
-                        allEvents(existingEvents = []) {
-                            const newEventRef = cache.writeFragment({
-                                data: createEvent.event,
-                                fragment: gql`
-                                    fragment NewEvent on Event {
-                                        id
-                                        title
-                                        description
-                                        starttime
-                                    }
-                                `,
-                            });
-                            return [...existingEvents, newEventRef];
+                        allEvents: (existingEvents) => {
+                            return [...existingEvents, createEvent.event];
                         },
                     },
                 });
