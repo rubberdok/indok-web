@@ -10,6 +10,7 @@ class ListingInput(graphene.InputObjectType):
     description = graphene.String(required=False)
     start_date_time = graphene.DateTime(required=False)
     end_date_time = graphene.DateTime(required=False)
+    deadline = graphene.DateTime(required=False)
     url = graphene.String(required=False)
     organization_id = graphene.ID(required=False)
 
