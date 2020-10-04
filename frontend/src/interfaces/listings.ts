@@ -9,3 +9,10 @@ export interface ListingType {
     slug: string;
     organization: { id: string; name: string };
 }
+
+export interface ListingData {
+    allListings: ListingType[];
+    createListing: {
+        listing: ListingType;
+    };
+}
