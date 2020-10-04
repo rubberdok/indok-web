@@ -22,7 +22,7 @@ const Listings: NextPage = () => {
             const existingListings: any = cache.readQuery({
                 query: ALL_LISTINGS,
             });
-            const newListing = data.createListing.returning[0];
+            const newListing = data.createListing.listing;
             cache.writeQuery({
                 query: ALL_LISTINGS,
                 data: { allListings: [...existingListings.allListings, newListing] },
