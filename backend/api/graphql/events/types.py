@@ -1,8 +1,31 @@
 import graphene
-from apps.events.models import Event
+from apps.events.models import Category, Event
 from graphene_django import DjangoObjectType
 
 
 class EventType(DjangoObjectType):
     class Meta:
         model = Event
+        fields = [
+            "id",
+            "title",
+            "starttime",
+            "endtime",
+            "location",
+            "description",
+            "organization",
+            "categories",
+            "image",
+            "is_attendable",
+            "deadline",
+            "publisher",
+        ]
+
+
+class CategoryType(DjangoObjectType):
+    class Meta:
+        model = Category
+        fields = [
+            "id",
+            "name",
+        ]
