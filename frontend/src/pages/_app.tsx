@@ -1,5 +1,6 @@
 import { AppProps } from "next/app";
 import "../styles/global.css";
+import "../styles/fonts.css";
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 import { ThemeProvider } from "styled-components";
 import theme from "../styles/theme";
