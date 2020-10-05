@@ -1,11 +1,7 @@
 import { NextPage } from "next";
 import Link from "next/link";
 import Layout from "../components/Layout";
-import styled from "styled-components";
-
-const StyledHeader = styled.h1`
-    color: ${({ theme }) => theme.colors.primary};
-`;
+import { StyledHeader } from "../components/styled/Lib";
 
 const IndexPage: NextPage = () => (
     <Layout>
