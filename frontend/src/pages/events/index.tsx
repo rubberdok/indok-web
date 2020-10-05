@@ -1,3 +1,4 @@
+import Layout from "@components/Layout";
 import { NextPage } from "next";
 import Link from "next/link";
 import React from "react";
@@ -37,7 +38,7 @@ const Events: NextPage = () => {
     };
 
     return (
-        <div>
+        <Layout>
             <div>
                 <h1>Events</h1>
             </div>
@@ -51,7 +52,7 @@ const Events: NextPage = () => {
                 <AllEvents />
             </div>
             <Filter />
-        </div>
+        </Layout>
     );
 };
 
