@@ -3,7 +3,7 @@ import { GET_EVENTS } from "@graphql/events/queries";
 import Link from "next/link";
 import { Event } from "@interfaces/events";
 
-const AllEvents = () => {
+const AllEvents: React.FC = () => {
     const { loading, error, data } = useQuery(GET_EVENTS, {
         pollInterval: 30000, // refetch the result every 30 second
     });
