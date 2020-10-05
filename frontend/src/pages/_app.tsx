@@ -3,6 +3,7 @@ import "../styles/global.css";
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 import { ThemeProvider } from "styled-components";
 import theme from "../styles/theme";
+import { Provider } from "next-auth/client";
 
 const App = ({ Component, pageProps }: AppProps): JSX.Element => {
     const client = new ApolloClient({
@@ -10,11 +11,13 @@ const App = ({ Component, pageProps }: AppProps): JSX.Element => {
         cache: new InMemoryCache(),
     });
     return (
-        <ApolloProvider client={client}>
-            <ThemeProvider theme={theme}>
-                <Component {...pageProps} />
-            </ThemeProvider>
-        </ApolloProvider>
+        <Provider session={pageProps.session}>
+            <ApolloProvider client={client}>
+                <ThemeProvider theme={theme}>
+                    <Component {...pageProps} />
+                </ThemeProvider>
+            </ApolloProvider>
+        </Provider>
     );
 };
 
