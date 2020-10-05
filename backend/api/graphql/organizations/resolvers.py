@@ -1,7 +1,7 @@
 from apps.organizations.models import Organization
 
 class OrganizationResolvers:
-    def resolve_all_organizations(root, info):
+    def resolve_all_organizations(root, info, search=None):
         return Organization.objects.all()
 
     def resolve_organization(root, info, id):
