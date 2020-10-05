@@ -1,13 +1,14 @@
 import { NextPage } from "next";
 import Link from "next/link";
 import Layout from "../components/Layout";
-import { useQuery, useMutation } from "@apollo/client";
-import { ListingType, AllListingsData, CreateListingData } from "../interfaces/listings";
-import { ALL_LISTINGS, LISTING_FRAGMENT } from "../graphql/listings/queries";
-import { ADD_EXAMPLE_LISTING } from "../graphql/listings/mutations";
+import { useQuery } from "@apollo/client";
+import { ListingType, AllListingsData } from "../interfaces/listings";
+import { ALL_LISTINGS } from "../graphql/listings/queries";
+import CreateListing from "../components/pages/listings/createlisting";
 
 const Listings: NextPage = () => {
     const { loading, error, data } = useQuery<AllListingsData>(ALL_LISTINGS);
+    /* TODO: implement update in CreateListing
     const [addExampleListing] = useMutation<CreateListingData>(ADD_EXAMPLE_LISTING, {
         update: (cache, { data }) => {
             cache.modify({
@@ -22,18 +23,12 @@ const Listings: NextPage = () => {
                 },
             });
         },
-    });
+    }); */
     if (error) return <p>Error</p>;
     if (loading) return <p>Loading...</p>;
     return (
         <Layout>
-            <button
-                onClick={() => {
-                    addExampleListing();
-                }}
-            >
-                Test
-            </button>
+            <CreateListing />
             <ul>
                 {data!.allListings &&
                     data!.allListings.map((listing: ListingType) => (

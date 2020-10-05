@@ -1,26 +1,31 @@
+import { ChangeEvent } from "react";
+
 const TextField = ({
     title,
+    onChange,
     placeholder,
-    size = "oneline" || "short" || "long",
+    size,
 }: {
     title: string;
-    placeholder: string;
-    size: string;
+    onChange?: (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+    placeholder?: string;
+    size?: "short" | "long";
 }) => {
-    let text: string = "";
     return (
         <label>
             {title}
-            {size != "oneline" ? <br /> : null}
-            <input
-                type="text"
-                placeholder={placeholder}
-                style={{
-                    width: "300px",
-                    height: size == "short" ? "200px" : size == "long" ? "500px" : "",
-                }}
-                onChange={(e) => (text = e.target.value)}
-            />
+            <br />
+            {size ? (
+                <textarea
+                    placeholder={placeholder}
+                    rows={size === "short" ? 5 : 10}
+                    cols={40}
+                    onChange={onChange}
+                    style={{ resize: "none" }}
+                />
+            ) : (
+                <input type="text" placeholder={placeholder} onChange={onChange} />
+            )}
         </label>
     );
 };

@@ -1,15 +1,22 @@
 import { gql } from "@apollo/client";
 
-export const ADD_EXAMPLE_LISTING = gql`
-    mutation exampleListing {
+export const ADD_LISTING = gql`
+    mutation addListing(
+        $title: String!
+        $description: String!
+        $startDateTime: DateTime!
+        $deadline: DateTime!
+        $endDateTime: DateTime!
+        $url: String!
+    ) {
         createListing(
             listingData: {
-                title: "example"
-                description: "desc"
-                startDateTime: "2020-09-24T11:00:00+00:00"
-                deadline: "2020-09-24T11:00:00+00:00"
-                endDateTime: "2020-09-24T11:00:00+00:00"
-                url: "www.google.com"
+                title: $title
+                description: $description
+                startDateTime: $startDateTime
+                deadline: $deadline
+                endDateTime: $endDateTime
+                url: $url
             }
         ) {
             listing {
