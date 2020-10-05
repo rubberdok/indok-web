@@ -22,7 +22,7 @@
             "@components/*": ["src/components/*"],
             "@styles/*": ["src/styles/*"],
             "@public/*": ["public/*"],
-            "@interfaces/*": ["interfaces/*"],
+            "@interfaces/*": ["src/interfaces/*"],
             "@graphql/*": ["src/graphql/*"]
         }
     },
