@@ -1,4 +1,5 @@
 import graphene
+from django.db.models import Q
 
 from .mutations import CreateOrganization, UpdateOrganization, DeleteOrganization
 from .types import OrganizationType
@@ -11,10 +12,15 @@ class OrganizationMutations(graphene.ObjectType):
     delete_organization = DeleteOrganization.Field()
 
 class OrganizationQueries(graphene.ObjectType):
-    all_organizations = graphene.List(OrganizationType)
+    all_organizations = graphene.List(OrganizationType, search=graphene.String())
     organization = graphene.Field(OrganizationType, id=graphene.ID(required=True))
 
-    def resolve_all_organizations(root, info):
+    def resolve_all_organizations(root, info, search=None):
+        if search:
+            filter = (
+                Q(name__icontains=search)
+            )
+            return Organization.objects.filter(filter)
         return Organization.objects.all()
 
     def resolve_organization(root, info, id):

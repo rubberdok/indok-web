@@ -7,7 +7,7 @@ class Organization(models.Model):
     slug = models.SlugField(max_length=100)
     description = models.CharField(max_length=4000, blank=True)
 
-    parent = models.ForeignKey('Organization', on_delete=models.CASCADE, null=True)
+    parent = models.ForeignKey('Organization', on_delete=models.CASCADE, null=True, related_name="children")
 
     logo = models.ImageField(upload_to='organizations', null=True)
 
