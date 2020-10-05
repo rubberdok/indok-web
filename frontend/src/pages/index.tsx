@@ -1,17 +1,11 @@
-import { NextPage } from "next";
-import Layout from "@components/Layout";
-import { Heading, SubHeading, Paragraph } from "@components/ui/Typography";
-import Link from "next/link";
-import Button from "@components/ui/Button";
-import Navbar from "@components/navbar/Navbar";
 import Hero from "@components/Hero";
-import Fade from "react-reveal";
+import Layout from "@components/Layout";
+import Button from "@components/ui/Button";
+import { Heading, Paragraph, SubHeading } from "@components/ui/Typography";
+import { NextPage } from "next";
 
 const IndexPage: NextPage = () => (
     <Layout>
-        <Fade top>
-            <Navbar />
-        </Fade>
         <Hero />
         <div>
             <br />
@@ -28,7 +22,6 @@ const IndexPage: NextPage = () => (
             </Paragraph>
             <Button url="/testpage">Les mer om foreningen</Button>
         </div>
-        <Link href="/events"> Go to Events</Link>
     </Layout>
 );
 

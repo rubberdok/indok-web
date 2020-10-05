@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import NavbarLinks from "./NavbarLinks";
 import Brand from "./Brand";
+import NavbarLinks from "./NavbarLinks";
 
 interface NavBoxProps {
     open?: boolean;
@@ -65,20 +65,23 @@ const Toggle = styled.div`
 
 const Navbox = styled.div<NavBoxProps>`
     display: flex;
-    height: 100%;
+    height: 100px;
     justify-content: flex-end;
     align-items: center;
+    overflow: hidden;
 
     @media (max-width: 768px) {
         flex-direction: column;
         position: fixed;
         width: 100%;
+        height: 100vh;
         justify-content: flex-start;
         padding-top: 10vh;
         background-color: #fff;
         transition: all 0.3s ease;
         z-index: 7;
-        right: ${(props) => (props.open ? "-100%" : "0")};
+        right: 0;
+        width: ${(props) => (props.open ? "0" : "100%")};
     }
 `;
 

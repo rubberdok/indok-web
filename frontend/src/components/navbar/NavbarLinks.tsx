@@ -1,10 +1,34 @@
+import Link from "next/link";
+import { useRouter } from "next/router";
 import React from "react";
 import styled from "styled-components";
-import Link from "next/link";
 
 interface NavItemProps {
     primary?: boolean;
 }
+
+const NavbarLinks: React.FC = () => {
+    const router = useRouter();
+
+    return (
+        <>
+            <Link href="/">
+                <NavItem className={router.pathname == "/" ? "active" : ""}>Hjem</NavItem>
+            </Link>
+            <Link href="/about">
+                <NavItem className={router.pathname == "/about" ? "active" : ""}>Om foreningen</NavItem>
+            </Link>
+            <Link href="/events">
+                <NavItem className={router.pathname == "/events" ? "active" : ""}>Arrangementer</NavItem>
+            </Link>
+            <Link href="/cabins">
+                <NavItem className={router.pathname == "/cabins" ? "active" : ""}>Hyttebooking</NavItem>
+            </Link>
+            <Line />
+            <NavItem primary>Login</NavItem>
+        </>
+    );
+};
 
 const NavItem = styled.a<NavItemProps>`
     text-decoration: none;
@@ -17,7 +41,8 @@ const NavItem = styled.a<NavItemProps>`
     transition: all 200ms ease-in;
     position: relative;
 
-    :after {
+    :after,
+    &.active:after {
         @media (min-width: 768px) {
             position: absolute;
             bottom: -9px;
@@ -31,6 +56,10 @@ const NavItem = styled.a<NavItemProps>`
             height: 2px;
             transition: all 0.2s ease;
         }
+    }
+
+    &.active:after {
+        width: 100%;
     }
 
     :hover {
@@ -58,18 +87,5 @@ const Line = styled.div`
         display: none;
     }
 `;
-
-const NavbarLinks: React.FC = () => {
-    return (
-        <>
-            <NavItem>Hjem</NavItem>
-            <NavItem>Om foreningen</NavItem>
-            <NavItem>Arrangementer</NavItem>
-            <NavItem>Hyttebooking</NavItem>
-            <Line />
-            <NavItem primary>Login</NavItem>
-        </>
-    );
-};
 
 export default NavbarLinks;

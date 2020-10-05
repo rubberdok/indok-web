@@ -1,22 +1,21 @@
-import { Shadow } from "./ui/Card.tsx";
-import { Title, SubTitle, Heading, SubHeading, Paragraph } from "./ui/Typography";
-import Button, { StyledButton } from "./ui/Button.tsx";
+import { Fade, Slide } from "react-awesome-reveal";
 import styled from "styled-components";
-import Slide from "react-reveal/Slide";
-import Fade from "react-reveal/Fade";
+import Button, { StyledButton } from "./ui/Button";
+import { Shadow } from "./ui/Card";
+import { SubTitle, Title } from "./ui/Typography";
 
 const Hero: React.FC = () => {
     return (
         <Section>
-            <Fade>
+            <Fade triggerOnce>
                 <Image src="/img/hero.jpg" />
             </Fade>
-            <Slide left>
+            <Slide direction="left" triggerOnce>
                 <Overlay>
                     <TitleCard>
                         <SubTitle>Foreningen for studentene ved</SubTitle>
                         <Title>Industriell Økonomi og Teknologiledelse</Title>
-                        <Button url="#">Les mer om foreningen</Button>
+                        <Button url="/about">Les mer om foreningen</Button>
                     </TitleCard>
                 </Overlay>
             </Slide>
