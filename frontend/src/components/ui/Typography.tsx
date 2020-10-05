@@ -5,6 +5,9 @@ export const Title = styled.h1`
     font-family: "Playfair Display";
     font-weight: 900;
     font-size: 48px;
+    line-height: 1.4;
+    margin-bottom: 40px;
+    margin-top: 40px;
 `;
 
 export const SubTitle = styled.p`

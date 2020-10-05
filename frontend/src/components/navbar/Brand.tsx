@@ -4,6 +4,7 @@ import Link from "next/link";
 
 const LogoWrap = styled.div`
     margin: auto 0;
+    z-index: 10;
 `;
 const Logo = styled.img`
     width: 120px;

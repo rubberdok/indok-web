@@ -3,13 +3,16 @@ import Layout from "../components/Layout";
 import { Title, SubTitle, Heading, SubHeading, Paragraph } from "../components/ui/Typography";
 import Button from "../components/ui/Button";
 import Navbar from "../components/navbar/Navbar.tsx";
+import Hero from "../components/Hero.tsx";
+import Fade from "react-reveal/Fade";
 
 const IndexPage: NextPage = () => (
     <Layout>
-        <Navbar />
+        <Fade top>
+            <Navbar />
+        </Fade>
+        <Hero />
         <div>
-            <SubTitle>Foreningen for studentene ved</SubTitle>
-            <Title>Industriell Økonomi og Teknologiledelse</Title>
             <br />
             <SubHeading>Arrangementer</SubHeading>
             <Heading>Hva skjer nå?</Heading>

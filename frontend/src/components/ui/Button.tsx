@@ -28,7 +28,7 @@ const Icon = styled.div`
     }
 `;
 
-const StyledButton = styled.a`
+export const StyledButton = styled.a`
     background: ${({ theme }) => theme.colors.primary};
     color: #fff;
     font-family: "Montserrat";

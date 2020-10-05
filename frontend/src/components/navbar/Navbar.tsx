@@ -47,7 +47,7 @@ const Navbox = styled.div`
         padding-top: 10vh;
         background-color: #fff;
         transition: all 0.3s ease;
-        z-index: -1;
+        z-index: 7;
         right: ${(props) => (props.open ? "-100%" : "0")};
     }
 `;
@@ -60,6 +60,7 @@ const Hamburger = styled.div`
     align-self: center;
     position: relative;
     transform: ${(props) => (props.open ? "rotate(-225deg) scale(0.8)" : "inherit")};
+    z-index: 10;
 
     ::before,
     ::after {
@@ -81,7 +82,7 @@ const Hamburger = styled.div`
         top: 7px;
     }
 `;
-function Navbar(props: any) {
+function Navbar() {
     const [navbarOpen, setNavbarOpen] = useState(false);
 
     return (
