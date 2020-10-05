@@ -9,17 +9,24 @@ class Category(models.Model):
 
 
 class Event(models.Model):
+    # Mandatory fields
     title = models.CharField(max_length=128)
     starttime = models.DateTimeField()
-    endtime = models.DateTimeField(blank=True)
-    location = models.TextField()
     description = models.TextField()
-    organization = models.ForeignKey(Organization, on_delete=models.CASCADE, null=True)
-    category = models.ForeignKey(Category, on_delete=models.DO_NOTHING, null=True)
-    image = models.URLField(blank=True)
     is_attendable = models.BooleanField()
-    deadline = models.DateTimeField()
     publisher = models.TextField()
+
+    # Optional fields
+    endtime = models.DateTimeField(blank=True, null=True)
+    location = models.TextField(blank=True, default="")
+    organization = models.ForeignKey(
+        Organization, on_delete=models.CASCADE, blank=True, null=True
+    )
+    category = models.ForeignKey(
+        Category, on_delete=models.DO_NOTHING, blank=True, null=True
+    )
+    image = models.URLField(blank=True, default="")
+    deadline = models.DateTimeField(blank=True, null=True)
 
     # TODO: Integrate when models are finished
     # author = models.ForeignKey(get_user_model(), on_delete=models.DO_NOTHING)
