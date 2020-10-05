@@ -12,7 +12,7 @@ class Category(models.Model):
 
     class Meta:
         # Add verbose name
-        verbose_name = "Categories"
+        verbose_name_plural = "Categories"
 
 
 class Event(models.Model):
