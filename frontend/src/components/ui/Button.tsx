@@ -2,7 +2,12 @@ import styled from "styled-components";
 import Link from "next/link";
 import feather from "feather-icons";
 
-export default function Button(props: any) {
+interface ButtonProps {
+    url: string;
+    children: string | JSX.Element;
+}
+
+const Button: React.FC<ButtonProps> = (props) => {
     return (
         <Link href={props.url}>
             <StyledButton>
@@ -13,7 +18,7 @@ export default function Button(props: any) {
             </StyledButton>
         </Link>
     );
-}
+};
 
 const Icon = styled.div`
     background: ${({ theme }) => theme.colors.primaryDark};
@@ -52,3 +57,5 @@ export const StyledButton = styled.a`
 const Container = styled.div`
     padding: 20px 35px;
 `;
+
+export default Button;

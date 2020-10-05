@@ -5,7 +5,7 @@ import styled from "styled-components";
 import Slide from "react-reveal/Slide";
 import Fade from "react-reveal/Fade";
 
-export default function Hero() {
+const Hero: React.FC = () => {
     return (
         <Section>
             <Fade>
@@ -22,7 +22,7 @@ export default function Hero() {
             </Slide>
         </Section>
     );
-}
+};
 
 const Section = styled.div`
     height: calc(100vh - 100px);
@@ -58,3 +58,5 @@ const TitleCard = styled(Shadow)`
         margin-right: -80px;
     }
 `;
+
+export default Hero;

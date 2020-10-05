@@ -2,7 +2,11 @@ import React from "react";
 import styled from "styled-components";
 import Link from "next/link";
 
-const NavItem = styled.a`
+interface NavItemProps {
+    primary?: boolean;
+}
+
+const NavItem = styled.a<NavItemProps>`
     text-decoration: none;
     font-weight: 600;
     font-size: 16px;
@@ -55,7 +59,7 @@ const Line = styled.div`
     }
 `;
 
-function NavbarLinks() {
+const NavbarLinks: React.FC = () => {
     return (
         <>
             <NavItem>Hjem</NavItem>
@@ -66,6 +70,6 @@ function NavbarLinks() {
             <NavItem primary>Login</NavItem>
         </>
     );
-}
+};
 
 export default NavbarLinks;
