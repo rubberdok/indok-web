@@ -1,6 +1,7 @@
 import { NextPage } from "next";
 import Layout from "../components/Layout";
 import { Title, SubTitle, Heading, SubHeading, Paragraph } from "../components/ui/Typography";
+import Link from "next/link";
 import Button from "../components/ui/Button";
 import Navbar from "../components/navbar/Navbar.tsx";
 
@@ -24,6 +25,7 @@ const IndexPage: NextPage = () => (
             </Paragraph>
             <Button url="/testpage">Les mer om foreningen</Button>
         </div>
+        <Link href="/events"> Go to Events</Link>
     </Layout>
 );
 
