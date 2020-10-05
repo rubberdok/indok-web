@@ -1,5 +1,5 @@
 import { CREATE_EVENT } from "../../../graphql/events/mutations";
-import { useMutation } from "@apollo/client";
+import { gql, useMutation } from "@apollo/client";
 import { useState } from "react";
 
 const CreateEvent = () => {
@@ -16,7 +16,15 @@ const CreateEvent = () => {
             cache.modify({
                 fields: {
                     allEvents: (existingEvents) => {
-                        return [...existingEvents, createEvent.event];
+                        const newEventRef = cache.writeFragment({
+                            data: createEvent.event,
+                            fragment: gql`
+                                fragment NewEvent on Event {
+                                    id
+                                }
+                            `,
+                        });
+                        return [...existingEvents, newEventRef];
                     },
                 },
             });
