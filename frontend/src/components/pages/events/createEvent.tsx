@@ -1,4 +1,4 @@
-import { CREATE_EVENT } from "../../../graphql/events/mutations";
+import { CREATE_EVENT } from "@graphql/events/mutations";
 import { gql, useMutation } from "@apollo/client";
 import { useState } from "react";
 
