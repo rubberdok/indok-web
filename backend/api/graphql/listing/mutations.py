@@ -23,7 +23,7 @@ class CreateListing(graphene.Mutation):
         listing_data = ListingInput(required=True)
 
     @classmethod
-    def mutate(cls, root, info, listing_data):
+    def mutate(cls, self, info, listing_data):
         listing = Listing()
 
         for k, v in listing_data.items():
@@ -36,18 +36,19 @@ class CreateListing(graphene.Mutation):
         return cls(listing=listing, ok=ok)
 
 class DeleteListing(graphene.Mutation):
+    ok = graphene.Boolean()
+    listing_id = graphene.ID()
+
     class Arguments:
         id = graphene.ID()
 
-    ok = graphene.Boolean()
-    listing = graphene.Field(ListingType)
-
     @classmethod
-    def mutate(cls, root, info, **kwargs):
+    def mutate(cls, self, info, **kwargs):
         listing = Listing.objects.get(pk=kwargs["id"])
+        listing_id = listing.id
         listing.delete()
         ok = True
-        return cls(ok=ok)
+        return cls(ok=ok, listing_id=listing_id)
 
 class UpdateListing(graphene.Mutation):
     listing = graphene.Field(ListingType)
@@ -58,7 +59,7 @@ class UpdateListing(graphene.Mutation):
         listing_data = ListingInput(required=False)
 
     @classmethod
-    def mutate(cls, root, info, id, listing_data=None):
+    def mutate(cls, self, info, id, listing_data=None):
         listing = Listing.objects.get(pk=id)
 
         for k, v in listing_data.items():

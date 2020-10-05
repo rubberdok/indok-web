@@ -15,7 +15,7 @@ class CreateListingResponse(graphene.Mutation):
         listing_response_data = ListingResponseInput(required=True)
 
     @classmethod
-    def mutate(cls, root, info, listing_response_data):
+    def mutate(cls, self, info, listing_response_data):
         listing_response = ListingResponse()
         for k, v in listing_response_data.items():
             setattr(listing_response, k, v)
@@ -33,7 +33,7 @@ class UpdateListingResponse(graphene.Mutation):
         listing_response_data = ListingResponseInput(required=False)
 
     @classmethod
-    def mutate(cls, root, info, listing_response_id, listing_response_data=None):
+    def mutate(cls, self, info, listing_response_id, listing_response_data=None):
         listing_response = ListingResponse.objects.get(pk=listing_response_id)
 
         for k, v in listing_response_data.items():
@@ -51,7 +51,7 @@ class DeleteListingResponse(graphene.Mutation):
         listing_response_id = graphene.ID()
 
     @classmethod
-    def mutate(cls, root, info, listing_response_id):
+    def mutate(cls, self, info, listing_response_id):
         listing_response = ListingResponse.objects.get(pk=listing_response_id)
         listing_response.delete()
         ok = True
