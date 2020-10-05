@@ -9,6 +9,8 @@ from .resolvers import (
     resolve_event,
 )
 from .types import CategoryType, EventType
+from .resolvers import EventResolvers
+from .types import EventType
 
 
 class EventMutations(graphene.ObjectType):
@@ -17,7 +19,7 @@ class EventMutations(graphene.ObjectType):
     delete_event = DeleteEvent.Field()
 
 
-class EventQueries(graphene.ObjectType):
+class EventQueries(graphene.ObjectType, EventResolvers):
     all_events = graphene.List(EventType)
     event = graphene.Field(EventType, id=graphene.ID(required=True))
 
