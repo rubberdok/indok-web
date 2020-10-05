@@ -1,4 +1,5 @@
-from django.contrib.auth import get_user_model
+# from django.contrib.auth import get_user_model
+from apps.organizations.models import Organization
 from django.db import models
 
 
@@ -13,8 +14,8 @@ class Event(models.Model):
     endtime = models.DateTimeField(blank=True)
     location = models.TextField()
     description = models.TextField()
-    organization = models.ForeignKey("Organization", on_delete=models.CASCADE)
-    category = models.ForeignKey(Category, on_delete=models.DO_NOTHING)
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE, null=True)
+    category = models.ForeignKey(Category, on_delete=models.DO_NOTHING, null=True)
     image = models.URLField(blank=True)
     is_attendable = models.BooleanField()
     deadline = models.DateTimeField()
