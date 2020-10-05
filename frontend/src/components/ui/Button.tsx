@@ -4,7 +4,7 @@ import feather from "feather-icons";
 
 interface ButtonProps {
     url: string;
-    children: string;
+    children: string | JSX.Element;
 }
 
 const Button: React.FC<ButtonProps> = (props) => {
