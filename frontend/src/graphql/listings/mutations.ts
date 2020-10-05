@@ -13,6 +13,7 @@ export const ADD_EXAMPLE_LISTING = gql`
             }
         ) {
             listing {
+                id
                 title
                 description
                 startDateTime
