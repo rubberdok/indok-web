@@ -15,7 +15,7 @@ class EventInput(graphene.InputObjectType):
     endtime = graphene.DateTime(required=False)
     location = graphene.String(required=False)
     description = graphene.String(required=False)
-    organization = graphene.Field(required=False)
+    organization = graphene.ID(required=False)
     categories = graphene.ID(required=False)
     image = graphene.String(required=False)
     is_attendable = graphene.Boolean(required=False)
