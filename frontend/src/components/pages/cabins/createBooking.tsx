@@ -7,7 +7,7 @@ const CreateBooking = () => {
     let start_day: HTMLInputElement;
     let end_day: HTMLInputElement;
 
-    const [createBooking, { data }] = useMutation(CREATE_BOOKING);
+    const [createBooking] = useMutation(CREATE_BOOKING);
 
     return (
         <div>
