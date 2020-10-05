@@ -1,262 +1,31 @@
-import { NextPage } from "next";
-import { gql, useQuery, useMutation, DataProxy, FetchResult } from "@apollo/client";
-import Calendar, { MonthView } from "react-calendar";
-import { useState, FC } from "react";
-import BigCalendar from "react-big-calendar";
+import Link from "next/link";
+import Calendar from "react-calendar";
+import AllBookings from "../../components/pages/cabins/allBookings";
+import { useState } from "react";
+import CreateBooking from "../../components/pages/cabins/createBooking";
+import { RangeBooking } from "../../components/pages/cabins/rangeBooking";
+import { BookingsFor } from "../../components/pages/cabins/bookingsFor";
 
-interface BookingType {
-    id: string;
-    contactNum: number;
-    contactPerson: string;
-    startDay: string;
-    endDay: string;
-}
-
-interface QueryVariables {
-    query_variables: {
-        year: string;
-        month: string;
-    };
-}
-
-const CabinInfo: NextPage<QueryVariables, null> = () => {
-    const QUERY_ALL_BOOKINGS = gql`
-        query {
-            allBookings {
-                id
-                contactNum
-                contactPerson
-                startDay
-                endDay
-            }
-        }
-    `;
-
-    const QUERY_BOOKING_RANGE = gql`
-        query BookingRange($year: String, $month: String) {
-            bookingsByMonth(year: $year, month: $month) {
-                id
-                contactNum
-                contactPerson
-                startDay
-                endDay
-            }
-        }
-    `;
-
-    const CREATE_BOOKING = gql`
-        mutation CreateBooking($contactNum: Int, $contactPerson: String, $endDay: String, $startDay: String) {
-            createBooking(
-                contactNum: $contactNum
-                contactPerson: $contactPerson
-                endDay: $endDay
-                startDay: $startDay
-            ) {
-                ok
-                # booking {
-                #     id
-                #     contactNum
-                #     contactPerson
-                #     startDay
-                #     endDay
-                # }
-            }
-        }
-    `;
-
+const Bookings = () => {
     const [query, updateQuery] = useState({
         year: "2020",
         month: "11",
     });
 
-    const AllBookings: FC<QueryVariables> = (query_variables: QueryVariables) => {
-        const { loading, error, data } = useQuery(QUERY_BOOKING_RANGE, {
-            variables: query_variables.query_variables,
-        });
-
-        if (loading) return <p>Loading...</p>;
-
-        if (!query_variables.query_variables.month || !query_variables.query_variables.month)
-            return <p>Vennligst fyll inn begge feltene</p>;
-
-        if (error) return <p>Error :(</p>;
-
-        if (data.bookingsByMonth.length == 0) {
-            return (
-                <div>
-                    <p>Ingen ledige bookinger</p>
-                </div>
-            );
-        }
-
-        return data.bookingsByMonth.map((Booking: BookingType) => {
-            return (
-                <div key={Booking.id}>
-                    <h3>Booking #{Booking.id}: </h3>
-                    <h4>
-                        {Booking.startDay} to {Booking.endDay} by {Booking.contactPerson}
-                    </h4>
-                    <p>Contact: {Booking.contactNum}</p>
-                </div>
-            );
-        });
-    };
-
-    const CreateBooking = () => {
-        let contact_num: HTMLInputElement;
-        let contact_person: HTMLInputElement;
-        let start_day: HTMLInputElement;
-        let end_day: HTMLInputElement;
-
-        const [createBooking, { data }] = useMutation(CREATE_BOOKING);
-
-        return (
-            <div>
-                <form
-                    onSubmit={(e) => {
-                        e.preventDefault();
-                        console.log(typeof end_day.value, end_day.value);
-
-                        createBooking({
-                            variables: {
-                                contactNum: parseInt(contact_num.value),
-                                contactPerson: contact_person.value,
-                                startDay: start_day.value,
-                                endDay: end_day.value,
-                            },
-                        });
-
-                        contact_num.value = "";
-                        contact_person.value = "";
-                        start_day.value = "";
-                        end_day.value = "";
-
-                        console.log("Booking created");
-                    }}
-                >
-                    <div>
-                        <input
-                            type="number"
-                            placeholder="Contact Number"
-                            ref={(node) => {
-                                contact_num = node as HTMLInputElement; // avoid ts-error 2322
-                            }}
-                        />
-                    </div>
-                    <div>
-                        <input
-                            placeholder="Contact Person"
-                            ref={(node) => {
-                                contact_person = node as HTMLInputElement;
-                            }}
-                        />
-                    </div>
-                    <div>
-                        <input
-                            type="date"
-                            placeholder="Start day"
-                            ref={(node) => {
-                                start_day = node as HTMLInputElement;
-                            }}
-                        />
-                    </div>
-                    <div>
-                        <input
-                            type="date"
-                            placeholder="End day"
-                            ref={(node) => {
-                                end_day = node as HTMLInputElement;
-                            }}
-                        />
-                    </div>
-                    <button type="submit">Create Booking</button>
-                </form>
-            </div>
-        );
-    };
-
-    const RangeBooking = (range_update: any) => {
-        let year: HTMLInputElement;
-        let month: HTMLInputElement;
-
-        return (
-            <form
-                onSubmit={(e) => {
-                    updateQuery({
-                        year: year.value,
-                        month: month.value,
-                    });
-
-                    console.log(year.value, month.value);
-                    e.preventDefault();
-                }}
-            >
-                <input
-                    //type="date"
-                    placeholder="År"
-                    ref={(node) => {
-                        year = node as HTMLInputElement;
-                    }}
-                />
-
-                <input
-                    //type="date"
-                    placeholder="Måned"
-                    ref={(node) => {
-                        month = node as HTMLInputElement;
-                    }}
-                />
-
-                <button type="submit">Finn ledige hytter</button>
-            </form>
-        );
-    };
-
-    const BookingsFor = (query_variables: QueryVariables) => {
-        const month_index = parseInt(query_variables.query_variables.month) - 1;
-        const year = query_variables.query_variables.year;
-
-        const months = [
-            "Januar",
-            "Februar",
-            "Mars",
-            "April",
-            "Mai",
-            "Juni",
-            "Juli",
-            "August",
-            "September",
-            "Oktober",
-            "November",
-            "Desember",
-        ];
-        const month = months[month_index];
-        return (
-            <>
-                <h3>
-                    Booking for {month} {year}
-                </h3>
-            </>
-        );
-    };
+    // console.log(updateQuery)
+    // updateQuery({
+    //      year: "2001",
+    //      month: "01",
+    // })
 
     return (
-        <>
-            <h1>Hyttebooking</h1>
-            <CreateBooking />
-            <div>
-                <Calendar
-                    onChange={(e) => {
-                        console.log(e.toLocaleString());
-                    }}
-                />
-            </div>
-
+        <div>
             <RangeBooking range_update={updateQuery} />
-            <BookingsFor query_variables={query} />
-            <AllBookings query_variables={query} />
-        </>
+            <BookingsFor queryVariables={query} />
+            <AllBookings queryVariables={query} />
+            <Link href="/cabins/">Go home</Link>
+            <Calendar onChange={(date) => console.log(date)} />
+        </div>
     );
 };
-
-export default CabinInfo;
+export default Bookings;

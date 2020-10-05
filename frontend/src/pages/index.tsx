@@ -14,6 +14,7 @@ const IndexPage: NextPage = () => (
             <Link href="/testpage">test link</Link>
         </div>
         <Link href="/events"> Go to Events</Link>
+        <Link href="/cabins"> Go to Cabins</Link>
     </Layout>
 );
 
