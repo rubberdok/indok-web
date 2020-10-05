@@ -1,7 +1,37 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import NavbarLinks from "./NavbarLinks.tsx";
-import Brand from "./Brand.tsx";
+import NavbarLinks from "./NavbarLinks";
+import Brand from "./Brand";
+
+interface NavBoxProps {
+    open?: boolean;
+}
+
+interface HamburgerProps {
+    open?: boolean;
+}
+
+const Navbar: React.FC = () => {
+    const [navbarOpen, setNavbarOpen] = useState(false);
+
+    return (
+        <Nav>
+            <Brand />
+            <Toggle onClick={() => setNavbarOpen(!navbarOpen)}>
+                {navbarOpen ? <Hamburger open /> : <Hamburger />}
+            </Toggle>
+            {navbarOpen ? (
+                <Navbox>
+                    <NavbarLinks />
+                </Navbox>
+            ) : (
+                <Navbox open>
+                    <NavbarLinks />
+                </Navbox>
+            )}
+        </Nav>
+    );
+};
 
 const Nav = styled.nav`
     height: 100px;
@@ -33,7 +63,7 @@ const Toggle = styled.div`
     }
 `;
 
-const Navbox = styled.div`
+const Navbox = styled.div<NavBoxProps>`
     display: flex;
     height: 100%;
     justify-content: flex-end;
@@ -52,7 +82,7 @@ const Navbox = styled.div`
     }
 `;
 
-const Hamburger = styled.div`
+const Hamburger = styled.div<HamburgerProps>`
     background-color: #111;
     height: 3px;
     width: 30px;
@@ -81,26 +111,5 @@ const Hamburger = styled.div`
         top: 7px;
     }
 `;
-function Navbar(props: any) {
-    const [navbarOpen, setNavbarOpen] = useState(false);
-
-    return (
-        <Nav>
-            <Brand></Brand>
-            <Toggle navbarOpen={navbarOpen} onClick={() => setNavbarOpen(!navbarOpen)}>
-                {navbarOpen ? <Hamburger open /> : <Hamburger />}
-            </Toggle>
-            {navbarOpen ? (
-                <Navbox>
-                    <NavbarLinks />
-                </Navbox>
-            ) : (
-                <Navbox open>
-                    <NavbarLinks />
-                </Navbox>
-            )}
-        </Nav>
-    );
-}
 
 export default Navbar;
