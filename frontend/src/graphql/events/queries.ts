@@ -10,3 +10,14 @@ export const GET_EVENTS = gql`
         }
     }
 `;
+
+export const GET_EVENT = gql`
+    query Event($id: ID!) {
+        event(id: $id) {
+            id
+            title
+            description
+            starttime
+        }
+    }
+`;

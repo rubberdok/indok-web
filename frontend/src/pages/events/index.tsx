@@ -1,50 +1,9 @@
 import { NextPage } from "next";
 import Link from "next/link";
 import React from "react";
-import { gql, useQuery } from "@apollo/client";
+import AllEvents from "../../components/pages/events/allEvents";
 
 const Events: NextPage = () => {
-    const QUERY_ALL_EVENTS = gql`
-        query {
-            allEvents {
-                id
-                title
-                description
-                starttime
-            }
-        }
-    `;
-    const AllEvents = () => {
-        const { loading, error, data } = useQuery(QUERY_ALL_EVENTS, {
-            pollInterval: 30000, // refetch the result every 30 second
-        });
-        // should handle loading status
-        if (loading) return <p>Loading...</p>;
-
-        if (error) return <p>Error :(</p>;
-
-        return (
-            <div style={{ float: "right", width: "70%" }}>
-                {data.allEvents.map((event) => (
-                    <Link href={`/events/${event.id}`} key={event.id}>
-                        <div
-                            style={{
-                                border: "solid",
-                                borderWidth: "0.1em",
-                                padding: "0.5em",
-                                marginBottom: "0.5em",
-                            }}
-                        >
-                            <p>
-                                {event.title} - Time: {event.starttime.slice(0, 19).replace("T", " ")}
-                            </p>
-                        </div>
-                    </Link>
-                ))}
-            </div>
-        );
-    };
-
     const Filter = () => {
         /* const { loading, error, data } = useQuery(QUERY_ALL_EVENTS, {
             pollInterval: 30000, // refetch the result every 30 second
