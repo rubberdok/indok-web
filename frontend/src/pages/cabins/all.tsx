@@ -2,6 +2,7 @@ import { NextPage } from "next";
 import { gql, useQuery, useMutation, DataProxy, FetchResult } from "@apollo/client";
 import Calendar, { MonthView } from "react-calendar";
 import { useState, FC } from "react";
+import BigCalendar from "react-big-calendar";
 
 interface BookingType {
     id: string;
@@ -74,6 +75,9 @@ const CabinInfo: NextPage<QueryVariables, null> = () => {
         });
 
         if (loading) return <p>Loading...</p>;
+
+        if (!query_variables.query_variables.month || !query_variables.query_variables.month)
+            return <p>Vennligst fyll inn begge feltene</p>;
 
         if (error) return <p>Error :(</p>;
 
@@ -171,7 +175,7 @@ const CabinInfo: NextPage<QueryVariables, null> = () => {
         );
     };
 
-    const RangeBooking = () => {
+    const RangeBooking = (range_update: any) => {
         let year: HTMLInputElement;
         let month: HTMLInputElement;
 
@@ -208,15 +212,48 @@ const CabinInfo: NextPage<QueryVariables, null> = () => {
         );
     };
 
+    const BookingsFor = (query_variables: QueryVariables) => {
+        const month_index = parseInt(query_variables.query_variables.month) - 1;
+        const year = query_variables.query_variables.year;
+
+        const months = [
+            "Januar",
+            "Februar",
+            "Mars",
+            "April",
+            "Mai",
+            "Juni",
+            "Juli",
+            "August",
+            "September",
+            "Oktober",
+            "November",
+            "Desember",
+        ];
+        const month = months[month_index];
+        return (
+            <>
+                <h3>
+                    Booking for {month} {year}
+                </h3>
+            </>
+        );
+    };
+
     return (
         <>
             <h1>Hyttebooking</h1>
             <CreateBooking />
             <div>
-                <Calendar />
+                <Calendar
+                    onChange={(e) => {
+                        console.log(e.toLocaleString());
+                    }}
+                />
             </div>
 
-            <RangeBooking />
+            <RangeBooking range_update={updateQuery} />
+            <BookingsFor query_variables={query} />
             <AllBookings query_variables={query} />
         </>
     );
