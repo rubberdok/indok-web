@@ -14,7 +14,7 @@ class EventType(DjangoObjectType):
             "location",
             "description",
             "organization",
-            "categories",
+            "category",
             "image",
             "is_attendable",
             "deadline",

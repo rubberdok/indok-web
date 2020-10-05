@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     # Local apps
     "apps.users",
     "apps.events",
+    "apps.organizations",
     # External apps
     "corsheaders",
     "graphene_django",
