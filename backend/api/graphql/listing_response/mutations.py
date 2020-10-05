@@ -16,11 +16,9 @@ class CreateListingResponse(graphene.Mutation):
 
     @classmethod
     def mutate(cls, root, info, listing_response_data):
-        listing_response = ListingResponse(
-            response = listing_response_data['response'],
-            applicant_id = listing_response_data['applicant_id'],
-            listing_id = listing_response_data['listing_id']
-        )
+        listing_response = ListingResponse()
+        for k, v in listing_response_data.items():
+            setattr(listing_response, k, v)
 
         listing_response.save()
         ok = True
