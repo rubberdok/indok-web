@@ -3,20 +3,23 @@ import Link from "next/link";
 import Layout from "../components/Layout";
 import { useQuery, useMutation } from "@apollo/client";
 import { ListingType, AllListingsData, CreateListingData } from "../interfaces/listings";
-import { ALL_LISTINGS } from "../graphql/listings/queries";
+import { ALL_LISTINGS, LISTING_FRAGMENT } from "../graphql/listings/queries";
 import { ADD_EXAMPLE_LISTING } from "../graphql/listings/mutations";
 
 const Listings: NextPage = () => {
     const { loading, error, data } = useQuery<AllListingsData>(ALL_LISTINGS);
     const [addExampleListing] = useMutation<CreateListingData>(ADD_EXAMPLE_LISTING, {
         update: (cache, { data }) => {
-            const existingListings: AllListingsData | null = cache.readQuery({
-                query: ALL_LISTINGS,
-            });
-            const newListing = data && data.createListing.listing;
-            cache.writeQuery({
-                query: ALL_LISTINGS,
-                data: { allListings: [...existingListings!.allListings, newListing] },
+            cache.modify({
+                fields: {
+                    allListings: (existingListings) => {
+                        const newListing = cache.writeFragment<ListingType>({
+                            data: data!.createListing.listing,
+                            fragment: LISTING_FRAGMENT,
+                        });
+                        return [...existingListings, newListing];
+                    },
+                },
             });
         },
     });

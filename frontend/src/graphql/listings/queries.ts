@@ -31,3 +31,9 @@ export const LISTING_BY_ID = gql`
         }
     }
 `;
+
+export const LISTING_FRAGMENT = gql`
+    fragment NewListing on Listing {
+        id
+    }
+`;
