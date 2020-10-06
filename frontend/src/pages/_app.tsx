@@ -1,9 +1,10 @@
-import { AppProps } from "next/app";
-import "../styles/global.css";
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
-import { ThemeProvider } from "styled-components";
-import theme from "../styles/theme";
+import "@styles/fonts.css";
+import "@styles/global.css";
+import theme from "@styles/theme";
 import { Provider } from "next-auth/client";
+import { AppProps } from "next/app";
+import { ThemeProvider } from "styled-components";
 
 const App = ({ Component, pageProps }: AppProps): JSX.Element => {
     const client = new ApolloClient({
