@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { gql } from "@apollo/client";
 
 export const GET_ARCHIVEDDOCUMENTS = gql`
@@ -7,6 +8,14 @@ export const GET_ARCHIVEDDOCUMENTS = gql`
             title
             description
             date
+        }
+    }
+`;
+
+export const GET_DOCUMENTTYPE = gql`
+    query {
+        allArchivedDocs {
+            typeDoc
         }
     }
 `;
