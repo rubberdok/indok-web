@@ -5,10 +5,18 @@ import Layout from "@components/Layout";
 import { Title, SubTitle, Heading, SubHeading, Paragraph } from "@components/ui/Typography";
 import Button from "@components/ui/Button";
 import Navbar from "@components/navbar/Navbar";
+import { AUTHENTICATE } from "@graphql/auth/mutations";
+import { useMutation } from "@apollo/client";
 
 const IndexPage: NextPage = () => {
     const [session, loading] = useSession();
     if (loading) return <div>loading...</div>;
+
+    const [authenticate] = useMutation(AUTHENTICATE);
+    session &&
+        authenticate({
+            variables: { provider: "google-oauth2", accessToken: session.user.accessToken },
+        }).then((data) => console.log(data));
     return (
         <Layout>
             <Navbar />
@@ -30,7 +38,7 @@ const IndexPage: NextPage = () => {
                         </>
                         <style jsx>{`
                             .avatar {
-                                width: 220px;
+                                width: 120px;
                                 border-radius: 10px;
                             }
                         `}</style>
