@@ -1,4 +1,4 @@
-import ListingType from "./listingType";
+import { ListingType } from "@interfaces/listings";
 import Link from "next/link";
 
 const ListingItem = (listing: ListingType) => (

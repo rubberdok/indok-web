@@ -1,7 +1,7 @@
 import TextField from "./textfield";
 import { useState } from "react";
-import { ListingType } from "../../../interfaces/listings";
-import { ADD_LISTING } from "../../../graphql/listings/mutations";
+import { ListingType } from "@interfaces/listings";
+import { ADD_LISTING } from "@graphql/listings/mutations";
 import { useMutation } from "@apollo/client";
 
 const CreateListing = () => {

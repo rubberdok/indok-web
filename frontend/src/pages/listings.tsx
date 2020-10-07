@@ -1,10 +1,10 @@
 import { NextPage } from "next";
 import Link from "next/link";
-import Layout from "../components/Layout";
+import Layout from "@components/Layout";
 import { useQuery } from "@apollo/client";
-import { ListingType, AllListingsData } from "../interfaces/listings";
-import { ALL_LISTINGS } from "../graphql/listings/queries";
-import CreateListing from "../components/pages/listings/createlisting";
+import { ListingType, AllListingsData } from "@interfaces/listings";
+import { ALL_LISTINGS } from "@graphql/listings/queries";
+import CreateListing from "@components/pages/listings/createlisting";
 
 const Listings: NextPage = () => {
     const { loading, error, data } = useQuery<AllListingsData>(ALL_LISTINGS);

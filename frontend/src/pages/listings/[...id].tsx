@@ -1,8 +1,8 @@
 import { NextPage, GetServerSideProps, InferGetServerSidePropsType } from "next";
-import Layout from "../../components/Layout";
+import Layout from "@components/Layout";
 import { useQuery } from "@apollo/client";
-import TextField from "../../components/pages/listings/textfield";
-import { LISTING_BY_ID } from "../../graphql/listings/queries";
+import TextField from "@components/pages/listings/textfield";
+import { LISTING_BY_ID } from "@graphql/listings/queries";
 
 const Listing: NextPage = ({ id }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
     const { loading, error, data } = useQuery(LISTING_BY_ID, { variables: { ID: Number(id[0]) } });
