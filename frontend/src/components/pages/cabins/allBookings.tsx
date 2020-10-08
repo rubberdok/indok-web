@@ -21,7 +21,7 @@ const AllBookings: FC<Props> = ({ queryVariables }) => {
     if (data.bookingsByMonth.length == 0) {
         return (
             <div>
-                <p>Ingen ledige bookinger</p>
+                <p>Ingen bookinger gjort</p>
             </div>
         );
     }
