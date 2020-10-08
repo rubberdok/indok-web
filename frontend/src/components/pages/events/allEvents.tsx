@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
-import { GET_EVENTS } from "../../../graphql/events/queries";
-import { Event } from "../../../interfaces/events";
+import { GET_EVENTS } from "@graphql/events/queries";
+import { Event } from "@interfaces/events";
 
 const AllEvents = () => {
     const { loading, error, data } = useQuery(GET_EVENTS);
