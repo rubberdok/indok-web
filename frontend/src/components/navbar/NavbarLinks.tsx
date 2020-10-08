@@ -40,26 +40,29 @@ const NavItem = styled.a<NavItemProps>`
     margin: 0 25px;
     transition: all 200ms ease-in;
     position: relative;
+    padding: 10px 0;
 
     :after,
     &.active:after {
         @media (min-width: 768px) {
             position: absolute;
-            bottom: -9px;
             left: 0;
             right: 0;
-            width: 0%;
+            bottom: 1px;
+            width: 50%;
             margin: 0 auto;
             content: ".";
             color: transparent;
             background: ${(props) => (props.primary ? ({ theme }) => theme.colors.primary : "#111")};
             height: 2px;
             transition: all 0.2s ease;
+            opacity: 0;
         }
     }
 
     &.active:after {
         width: 100%;
+        opacity: 1;
     }
 
     :hover {
@@ -68,6 +71,7 @@ const NavItem = styled.a<NavItemProps>`
 
         ::after {
             width: 100%;
+            opacity: 1;
         }
     }
 
