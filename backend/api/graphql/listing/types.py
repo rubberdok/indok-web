@@ -1,7 +1,12 @@
 from graphene_django import DjangoObjectType
-from graphene import relay
 
-from apps.listing.models import Listing as Listing
+from apps.listing.models import Listing, Response
+
+
+class ResponseType(DjangoObjectType):
+    class Meta:
+        model = Response
+        fields = ['response', 'listing', 'applicant', 'id']
 
 class ListingType(DjangoObjectType):
     class Meta:

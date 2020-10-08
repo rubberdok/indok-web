@@ -2,8 +2,8 @@ import graphene
 
 from django.utils.text import slugify
 
-from .types import ListingType
-from apps.listing.models import Listing as Listing
+from .types import ListingType, ResponseType
+from apps.listing.models import Listing, Response
 
 class ListingInput(graphene.InputObjectType):
     title = graphene.String(required=False)
@@ -68,3 +68,61 @@ class UpdateListing(graphene.Mutation):
         listing.save()
         ok = True
         return cls(listing=listing, ok=ok)
+
+
+
+
+class ResponseInput(graphene.InputObjectType):
+    response = graphene.String(required=False)
+    applicant_id = graphene.ID(required=False)
+    listing_id = graphene.ID(required=False)
+
+class CreateResponse(graphene.Mutation):
+    listing_response = graphene.Field(ResponseType)
+    ok = graphene.Boolean()
+
+    class Arguments:
+        listing_response_data = ResponseInput(required=True)
+
+    @classmethod
+    def mutate(cls, self, info, listing_response_data):
+        listing_response = Response()
+        for k, v in listing_response_data.items():
+            setattr(listing_response, k, v)
+
+        listing_response.save()
+        ok = True
+        return cls(listing_response=listing_response, ok=ok)
+
+class UpdateResponse(graphene.Mutation):
+    listing_response = graphene.Field(ResponseType)
+    ok = graphene.Boolean()
+
+    class Arguments:
+        listing_response_id = graphene.ID()
+        listing_response_data = ResponseInput(required=False)
+
+    @classmethod
+    def mutate(cls, self, info, listing_response_id, listing_response_data=None):
+        listing_response = Response.objects.get(pk=listing_response_id)
+
+        for k, v in listing_response_data.items():
+            setattr(listing_response, k, v)
+
+        listing_response.save()
+        ok = True
+        return cls(listing_response=listing_response, ok=ok)
+
+class DeleteResponse(graphene.Mutation):
+    listing_response = graphene.Field(ResponseType)
+    ok = graphene.Boolean()
+
+    class Arguments:
+        listing_response_id = graphene.ID()
+
+    @classmethod
+    def mutate(cls, self, info, listing_response_id):
+        listing_response = Response.objects.get(pk=listing_response_id)
+        listing_response.delete()
+        ok = True
+        return cls(ok=ok)

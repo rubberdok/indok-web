@@ -1,4 +1,4 @@
-from apps.listing.models import Listing
+from apps.listing.models import Listing, Response
 from django.db.models import Q
 
 class ListingResolvers:
@@ -17,3 +17,14 @@ class ListingResolvers:
             return Listing.objects.get(pk=id)
         except Listing.DoesNotExist:
             return None
+
+
+class ResponseResolvers:
+    def resolve_responses_by_listing_id(root, info, id, search=None):
+        return Listing.objects.get(pk=id).response_set.all()
+
+    def resolve_reponse_by_id(root, info, id):
+        return Response.objects.get(pk=1)
+
+    def resolve_all_respones(root, info, id):
+        return Response.objects.all()
