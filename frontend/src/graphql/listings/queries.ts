@@ -37,3 +37,18 @@ export const LISTING_FRAGMENT = gql`
         id
     }
 `;
+
+/* export const ALL_ORGANIZATIONS = gql`
+    query allOrganization {
+        allOrganizations {
+            id
+            name
+        }
+    }
+`; */
+
+/* export const RESPONSE_BY_LISTING_ID = gql`
+    query () {
+
+    }
+`; */

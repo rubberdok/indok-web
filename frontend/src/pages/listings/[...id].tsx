@@ -5,6 +5,7 @@ import TextField from "@components/pages/listings/textfield";
 import { LISTING_BY_ID } from "@graphql/listings/queries";
 import { ListingByIdData } from "@interfaces/listings";
 import Link from "next/link";
+import ResponseForm from "@components/pages/listings/responseForm";
 
 const Listing: NextPage = ({ id }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
     const { loading, error, data } = useQuery<ListingByIdData>(LISTING_BY_ID, { variables: { ID: Number(id[0]) } });
@@ -17,11 +18,9 @@ const Listing: NextPage = ({ id }: InferGetServerSidePropsType<typeof getServerS
             <h3>{listing.title}</h3>
             <p>{listing.description}</p>
             <p>Frist: {listing.deadline.slice(0, 16).replace("T", " ")}</p>
-            <form>
+            <ResponseForm>
                 <TextField title="Søk:" placeholder="Din søknad..." size="long" />
-                <br />
-                <button type="submit">Søk!</button>
-            </form>
+            </ResponseForm>
         </Layout>
     );
 };
