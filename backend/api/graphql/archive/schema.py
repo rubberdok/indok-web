@@ -13,4 +13,4 @@ class ArchiveMutations(graphene.ObjectType):
 
 class ArchiveQueries(graphene.ObjectType, ArchiveDocumentResolvers):
     all_archives = graphene.List(ArchiveDocumentType)
-    archiveDocument = graphene.Field(ArchiveDocumentType, id=graphene.ID(required=True))
+    archive = graphene.Field(ArchiveDocumentType, id=graphene.ID(required=True))

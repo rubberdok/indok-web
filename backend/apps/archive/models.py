@@ -1,9 +1,9 @@
-from django.core.files.storage import FileSystemStorage
 from django.db import models
 from enum import Enum
 from datetime import datetime
+from quickstart import main as quickstart
+#from django.db.models.signals import pre_save
 
-fs = FileSystemStorage(location='/storage')
 
 # Create your models here.
 
@@ -23,10 +23,15 @@ class ArchiveDocument(models.Model):
     uploadedDate = datetime.now()
     typeDoc = models.CharField(max_length=12,choices=[(tag, tag.value) for tag in FileType])
     description = models.TextField(default=None, blank=True, null=True) 
-    fileLocation = models.FileField(storage = fs)
+    fileLocation = models.CharField(max_length=100,default=None, null=False)
+    #thumbnailLink = quickstart(fileLocation)
 
     def __str__(self):
         return self.title
+
+#def setThumbnailLink(sender, instance, *args, **kvargs):
+   # link = ArchiveDocument.ocke
+
 
 
 
