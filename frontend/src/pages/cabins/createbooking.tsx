@@ -2,7 +2,7 @@ import CreateBooking from "../../components/pages/cabins/createBooking";
 import { useState } from "react";
 import AllBookings from "../../components/pages/cabins/allBookings";
 
-const BookingSite = () => {
+const CreateBookingPage = () => {
     const [query, rangeUpdate] = useState({
         year: "2020",
         month: "10",
@@ -16,4 +16,4 @@ const BookingSite = () => {
     );
 };
 
-export default BookingSite;
+export default CreateBookingPage;

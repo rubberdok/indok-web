@@ -11,7 +11,7 @@ interface Props {
 }
 
 const BookingCalendar = ({ rangeUpdate, queryVariables }: Props) => {
-    const { loading, error, data } = useQuery(QUERY_BOOKING_RANGE, {
+    const { loading, data } = useQuery(QUERY_BOOKING_RANGE, {
         variables: queryVariables,
     });
 
@@ -50,8 +50,6 @@ const BookingCalendar = ({ rangeUpdate, queryVariables }: Props) => {
                     rangeUpdate({
                         year: startdate.getFullYear().toString(),
                         month: (startdate.getMonth() + 1).toString(),
-                        start: "",
-                        end: "",
                     });
                 }}
                 onChange={(e) => {
