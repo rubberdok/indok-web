@@ -78,51 +78,51 @@ class ResponseInput(graphene.InputObjectType):
     listing_id = graphene.ID(required=False)
 
 class CreateResponse(graphene.Mutation):
-    listing_response = graphene.Field(ResponseType)
+    response = graphene.Field(ResponseType)
     ok = graphene.Boolean()
 
     class Arguments:
-        listing_response_data = ResponseInput(required=True)
+        response_data = ResponseInput(required=True)
 
     @classmethod
-    def mutate(cls, self, info, listing_response_data):
-        listing_response = Response()
-        for k, v in listing_response_data.items():
-            setattr(listing_response, k, v)
+    def mutate(cls, self, info, response_data):
+        response = Response()
+        for k, v in response_data.items():
+            setattr(response, k, v)
 
-        listing_response.save()
+        response.save()
         ok = True
-        return cls(listing_response=listing_response, ok=ok)
+        return cls(response=response, ok=ok)
 
 class UpdateResponse(graphene.Mutation):
-    listing_response = graphene.Field(ResponseType)
+    response = graphene.Field(ResponseType)
     ok = graphene.Boolean()
 
     class Arguments:
-        listing_response_id = graphene.ID()
-        listing_response_data = ResponseInput(required=False)
+        response_id = graphene.ID()
+        response_data = ResponseInput(required=False)
 
     @classmethod
-    def mutate(cls, self, info, listing_response_id, listing_response_data=None):
-        listing_response = Response.objects.get(pk=listing_response_id)
+    def mutate(cls, self, info, response_id, response_data=None):
+        response = Response.objects.get(pk=response_id)
 
-        for k, v in listing_response_data.items():
-            setattr(listing_response, k, v)
-
-        listing_response.save()
+        for k, v in response_data.items():
+            setattr(response, k, v)
+            
+        response.save()
         ok = True
-        return cls(listing_response=listing_response, ok=ok)
+        return cls(response=response, ok=ok)
 
 class DeleteResponse(graphene.Mutation):
-    listing_response = graphene.Field(ResponseType)
+    response = graphene.Field(ResponseType)
     ok = graphene.Boolean()
 
     class Arguments:
-        listing_response_id = graphene.ID()
+        response_id = graphene.ID()
 
     @classmethod
-    def mutate(cls, self, info, listing_response_id):
-        listing_response = Response.objects.get(pk=listing_response_id)
-        listing_response.delete()
+    def mutate(cls, self, info, response_id):
+        response = Response.objects.get(pk=response_id)
+        response.delete()
         ok = True
         return cls(ok=ok)
