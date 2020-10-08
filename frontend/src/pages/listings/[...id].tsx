@@ -3,13 +3,14 @@ import Layout from "@components/Layout";
 import { useQuery } from "@apollo/client";
 import TextField from "@components/pages/listings/textfield";
 import { LISTING_BY_ID } from "@graphql/listings/queries";
+import { ListingByIdData } from "@interfaces/listings";
 import Link from "next/link";
 
 const Listing: NextPage = ({ id }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-    const { loading, error, data } = useQuery(LISTING_BY_ID, { variables: { ID: Number(id[0]) } });
+    const { loading, error, data } = useQuery<ListingByIdData>(LISTING_BY_ID, { variables: { ID: Number(id[0]) } });
     if (error) return <h1>Error</h1>;
     if (loading) return <h1>Loading...</h1>;
-    const listing = data.listingById;
+    const listing = data!.listingById;
     return (
         <Layout>
             <Link href="/listings">Tilbake</Link>

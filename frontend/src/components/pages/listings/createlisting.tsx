@@ -1,18 +1,18 @@
 import TextField from "./textfield";
 import { useState } from "react";
-import { ListingType } from "@interfaces/listings";
+import { Listing } from "@interfaces/listings";
 import { ADD_LISTING } from "@graphql/listings/mutations";
 import { LISTING_FRAGMENT } from "@graphql/listings/queries";
 import { useMutation } from "@apollo/client";
 
 const CreateListing = () => {
-    const [newListing, setNewListing] = useState<ListingType>({} as ListingType);
+    const [newListing, setNewListing] = useState<Listing>({} as Listing);
     const [addListing] = useMutation(ADD_LISTING, {
         update: (cache, { data }) => {
             cache.modify({
                 fields: {
                     allListings: (existingListings) => {
-                        const newListing = cache.writeFragment<ListingType>({
+                        const newListing = cache.writeFragment<Listing>({
                             data: data!.createListing.listing,
                             fragment: LISTING_FRAGMENT,
                         });

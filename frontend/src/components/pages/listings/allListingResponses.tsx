@@ -1,5 +1,5 @@
-import { ListingType } from "@interfaces/listings";
+import { Listing } from "@interfaces/listings";
 
-const AllListingResponses = (listing: ListingType) => {};
+const AllListingResponses = (listing: Listing) => {};
 
 export default AllListingResponses;
