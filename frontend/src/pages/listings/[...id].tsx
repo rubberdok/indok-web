@@ -3,6 +3,7 @@ import Layout from "@components/Layout";
 import { useQuery } from "@apollo/client";
 import TextField from "@components/pages/listings/textfield";
 import { LISTING_BY_ID } from "@graphql/listings/queries";
+import Link from "next/link";
 
 const Listing: NextPage = ({ id }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
     const { loading, error, data } = useQuery(LISTING_BY_ID, { variables: { ID: Number(id[0]) } });
@@ -11,9 +12,15 @@ const Listing: NextPage = ({ id }: InferGetServerSidePropsType<typeof getServerS
     const listing = data.listingById;
     return (
         <Layout>
+            <Link href="/listings">Tilbake</Link>
             <h3>{listing.title}</h3>
             <p>{listing.description}</p>
-            <TextField title="Apply:" placeholder="Your application" size="short" />
+            <p>Frist: {listing.deadline.slice(0, 16).replace("T", " ")}</p>
+            <form>
+                <TextField title="Søk:" placeholder="Din søknad..." size="long" />
+                <br />
+                <button type="submit">Søk!</button>
+            </form>
         </Layout>
     );
 };

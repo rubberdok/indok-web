@@ -5,11 +5,13 @@ const TextField = ({
     onChange,
     placeholder,
     size,
+    value,
 }: {
     title: string;
     onChange?: (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
     placeholder?: string;
     size?: "short" | "long";
+    value?: string;
 }) => {
     return (
         <label>
@@ -22,9 +24,10 @@ const TextField = ({
                     cols={40}
                     onChange={onChange}
                     style={{ resize: "none" }}
+                    value={value}
                 />
             ) : (
-                <input type="text" placeholder={placeholder} onChange={onChange} />
+                <input type="text" placeholder={placeholder} onChange={onChange} value={value} />
             )}
         </label>
     );
