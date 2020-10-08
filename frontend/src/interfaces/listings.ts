@@ -1,4 +1,4 @@
-export interface ListingType {
+export interface Listing {
     id: string;
     title: string;
     description: string;
@@ -11,11 +11,15 @@ export interface ListingType {
 }
 
 export interface AllListingsData {
-    allListings: ListingType[];
+    allListings: Listing[];
 }
 
 export interface CreateListingData {
     createListing: {
-        listing: ListingType;
+        listing: Listing;
     };
+}
+
+export interface ListingByIdData {
+    listingById: Listing;
 }
