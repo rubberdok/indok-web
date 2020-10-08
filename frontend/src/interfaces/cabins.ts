@@ -9,4 +9,6 @@ export interface BookingType {
 export interface QueryVariables {
     year: string;
     month: string;
+    start?: string;
+    end?: string;
 }

@@ -27,7 +27,7 @@ export const BookingsFor: FC<Props> = ({ queryVariables }) => {
     return (
         <>
             <h3>
-                Bookings for {month} {year}
+                Bookinger for {month} {year}
             </h3>
         </>
     );

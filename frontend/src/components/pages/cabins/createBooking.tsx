@@ -1,33 +1,43 @@
 import { useMutation } from "@apollo/client";
 import { CREATE_BOOKING } from "../../../graphql/cabins/mutations";
+import { QueryVariables } from "../../../interfaces/cabins";
+import BookingCalendar from "./bookingCalendar";
+import { BookingsFor } from "./bookingsFor";
 
-const CreateBooking = () => {
+interface Props {
+    queryVariables: QueryVariables;
+    rangeUpdate: (variables: QueryVariables) => void;
+}
+
+const CreateBooking = ({ rangeUpdate, queryVariables }: Props) => {
     let contact_num: HTMLInputElement;
     let contact_person: HTMLInputElement;
-    let start_day: HTMLInputElement;
-    let end_day: HTMLInputElement;
 
     const [createBooking] = useMutation(CREATE_BOOKING);
 
     return (
         <div>
+            <h1>Book hytte woho</h1>
+            <BookingCalendar queryVariables={queryVariables} rangeUpdate={rangeUpdate} />
+            <BookingsFor queryVariables={queryVariables} />
             <form
                 onSubmit={(e) => {
                     e.preventDefault();
+
+                    // Oppdater cache
+                    console.log("Making booking...");
 
                     createBooking({
                         variables: {
                             contactNum: parseInt(contact_num.value),
                             contactPerson: contact_person.value,
-                            startDay: start_day.value,
-                            endDay: end_day.value,
+                            startDay: queryVariables.start,
+                            endDay: queryVariables.end,
                         },
                     });
 
                     contact_num.value = "";
                     contact_person.value = "";
-                    start_day.value = "";
-                    end_day.value = "";
 
                     console.log("Booking created");
                 }}
@@ -35,7 +45,7 @@ const CreateBooking = () => {
                 <div>
                     <input
                         type="number"
-                        placeholder="Contact Number"
+                        placeholder="Mobilnummer"
                         ref={(node) => {
                             contact_num = node as HTMLInputElement; // avoid ts-error 2322
                         }}
@@ -43,31 +53,13 @@ const CreateBooking = () => {
                 </div>
                 <div>
                     <input
-                        placeholder="Contact Person"
+                        placeholder="Fullt navn"
                         ref={(node) => {
                             contact_person = node as HTMLInputElement;
                         }}
                     />
                 </div>
-                <div>
-                    <input
-                        type="date"
-                        placeholder="Start day"
-                        ref={(node) => {
-                            start_day = node as HTMLInputElement;
-                        }}
-                    />
-                </div>
-                <div>
-                    <input
-                        type="date"
-                        placeholder="End day"
-                        ref={(node) => {
-                            end_day = node as HTMLInputElement;
-                        }}
-                    />
-                </div>
-                <button type="submit">Create Booking</button>
+                <button type="submit">Book</button>
             </form>
         </div>
     );
