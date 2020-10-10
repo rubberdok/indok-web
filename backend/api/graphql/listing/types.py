@@ -20,5 +20,6 @@ class ListingType(DjangoObjectType):
             "url",
             "slug",
             "deadline",
-            "organization"
+            "organization",
+            "responses"
         ]

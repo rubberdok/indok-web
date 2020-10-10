@@ -26,7 +26,7 @@ class Listing(models.Model):
 
 class Response(models.Model):
     applicant = models.ForeignKey(User, blank=False, null=False, on_delete=models.CASCADE)
-    listing = models.ForeignKey(Listing, blank=False, null=False, on_delete=models.CASCADE)
+    listing = models.ForeignKey(Listing, blank=False, null=False, on_delete=models.CASCADE, related_name="responses")
     response = models.CharField(max_length=5000)
 
     class Meta:
