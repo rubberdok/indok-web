@@ -21,7 +21,4 @@ class ListingResolvers:
 
 class ResponseResolvers:
     def resolve_response(root, info, id):
-        return Response.objects.get(pk=1)
-
-    def resolve_responses(root, info, id):
-        return Response.objects.all()
+        return Response.objects.get(pk=id)
