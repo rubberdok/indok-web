@@ -10,8 +10,8 @@ export interface Listing {
     organization: { id: string; name: string };
 }
 
-export interface AllListingsData {
-    allListings: Listing[];
+export interface ListingsData {
+    listings: Listing[];
 }
 
 export interface CreateListingData {
@@ -20,6 +20,6 @@ export interface CreateListingData {
     };
 }
 
-export interface ListingByIdData {
-    listingById: Listing;
+export interface ListingData {
+    listing: Listing;
 }

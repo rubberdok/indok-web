@@ -1,17 +1,17 @@
 import TextField from "./textfield";
 import { useState } from "react";
 import { Listing } from "@interfaces/listings";
-import { ADD_LISTING } from "@graphql/listings/mutations";
+import { CREATE_LISTING } from "@graphql/listings/mutations";
 import { LISTING_FRAGMENT } from "@graphql/listings/queries";
 import { useMutation } from "@apollo/client";
 
 const CreateListing = () => {
     const [newListing, setNewListing] = useState<Listing>({} as Listing);
-    const [addListing] = useMutation(ADD_LISTING, {
+    const [createListing] = useMutation(CREATE_LISTING, {
         update: (cache, { data }) => {
             cache.modify({
                 fields: {
-                    allListings: (existingListings) => {
+                    listings: (existingListings) => {
                         const newListing = cache.writeFragment<Listing>({
                             data: data!.createListing.listing,
                             fragment: LISTING_FRAGMENT,
@@ -26,7 +26,7 @@ const CreateListing = () => {
         <form
             onSubmit={(e) => {
                 e.preventDefault();
-                addListing({
+                createListing({
                     variables: {
                         title: newListing.title,
                         description: newListing.description,
@@ -36,6 +36,7 @@ const CreateListing = () => {
                         url: "www.google.com",
                     },
                 });
+                //TODO: properly reset newListing state
                 setNewListing({ ...newListing, title: "", description: "" });
             }}
         >
