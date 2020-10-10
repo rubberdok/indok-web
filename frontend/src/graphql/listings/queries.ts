@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
-export const ALL_LISTINGS = gql`
-    query allListings {
-        allListings {
+export const LISTINGS = gql`
+    query {
+        listings {
             id
             title
             description
@@ -18,9 +18,9 @@ export const ALL_LISTINGS = gql`
     }
 `;
 
-export const LISTING_BY_ID = gql`
-    query listingById($ID: Int!) {
-        listingById(id: $ID) {
+export const LISTING = gql`
+    query listing($ID: ID!) {
+        listing(id: $ID) {
             id
             title
             description
@@ -38,17 +38,22 @@ export const LISTING_FRAGMENT = gql`
     }
 `;
 
+export const RESPONSES = gql`
+query listing($ID: ID!) {
+    listing(id: $ID) {
+        responses {
+            id
+            title
+        }
+    }
+}
+`;
+
 /* export const ALL_ORGANIZATIONS = gql`
     query allOrganization {
         allOrganizations {
             id
             name
         }
-    }
-`; */
-
-/* export const RESPONSE_BY_LISTING_ID = gql`
-    query () {
-
     }
 `; */

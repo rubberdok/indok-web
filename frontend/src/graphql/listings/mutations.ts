@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
-export const ADD_LISTING = gql`
-    mutation addListing(
+export const CREATE_LISTING = gql`
+    mutation createListing(
         $title: String!
         $description: String!
         $startDateTime: DateTime!

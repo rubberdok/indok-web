@@ -1,15 +1,15 @@
 import { useQuery } from "@apollo/client";
-import { AllListingsData } from "@interfaces/listings";
-import { ALL_LISTINGS } from "@graphql/listings/queries";
+import { ListingsData } from "@interfaces/listings";
+import { LISTINGS } from "@graphql/listings/queries";
 import Link from "next/link";
 
 const AllListings = () => {
-    const { loading, error, data } = useQuery<AllListingsData>(ALL_LISTINGS);
+    const { loading, error, data } = useQuery<ListingsData>(LISTINGS);
     if (error) return <p>Error</p>;
     if (loading) return <p>Loading...</p>;
     return (
         <ul>
-            {data!.allListings.map((listing) => (
+            {data!.listings.map((listing) => (
                 <li>
                     <Link href={`/listings/${listing.id}/${listing.slug}`}>
                         <a>{listing.title}</a>
