@@ -12,11 +12,10 @@ from .mutations import (
 from .resolvers import ListingResolvers, ResponseResolvers
 
 class ListingQueries(graphene.ObjectType, ListingResolvers, ResponseResolvers):
-    all_listings = graphene.List(ListingType, search=graphene.String(required=False))
-    listing_by_id = graphene.Field(ListingType, id=graphene.Int())
+    listings = graphene.List(ListingType, search=graphene.String(required=False))
+    listing = graphene.Field(ListingType, id=graphene.ID())
 
-    responses_by_listing_id = graphene.List(ResponseType, id=graphene.ID())
-
+    response = graphene.Field(ResponseType, id=graphene.ID())
 
 class ListingMutations(graphene.ObjectType):
     create_listing = CreateListing.Field()
