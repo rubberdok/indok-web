@@ -1,7 +1,13 @@
 from apps.organizations.models import Organization
+from django.db.models import Q
 
 class OrganizationResolvers:
     def resolve_all_organizations(root, info, search=None):
+        if search:
+            filter = (
+                Q(name__icontains=search)
+            )
+            return Organization.objects.filter(filter)
         return Organization.objects.all()
 
     def resolve_organization(root, info, id):
