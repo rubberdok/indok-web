@@ -50,7 +50,7 @@ const Calendar = ({ onDaySelected, eventDates, onMonthSelected }: CalendarProps)
     };
 
     const getRows = () => {
-        const slots: JSX.Element[] = [...previousMonthDays(), ...getDaysOfMonth()];
+        const slots: JSX.Element[] = [...previousMonthDays(), ...getDaysOfMonth(), ...nextMonthDays()];
         let cells: JSX.Element[];
         return slots.reduce(
             (prev: JSX.Element[][], curr, index) => {
@@ -75,12 +75,12 @@ const Calendar = ({ onDaySelected, eventDates, onMonthSelected }: CalendarProps)
     const previousMonthDays = () => {
         const previousDays: JSX.Element[] = [];
         const firstOfMonth = selectedMonth.startOf("month");
-        const mondayIndex = 1;
+        const mondayIndex = 0;
 
         // Check if Month starts with a Monday
-        if (firstOfMonth.day() !== mondayIndex) {
-            const previousMonday = selectedMonth.clone().subtract(1, "months").endOf("month").day(mondayIndex);
-            const dayDifference = firstOfMonth.diff(previousMonday, "day") + 1;
+        if (firstOfMonth.weekday() !== mondayIndex) {
+            const previousMonday = selectedMonth.clone().subtract(1, "months").endOf("month").weekday(mondayIndex);
+            const dayDifference = firstOfMonth.diff(previousMonday, "days") + 1;
 
             for (let i = 0; i < dayDifference; i++) {
                 const date = moment(firstOfMonth);
@@ -98,6 +98,34 @@ const Calendar = ({ onDaySelected, eventDates, onMonthSelected }: CalendarProps)
             }
         }
         return previousDays;
+    };
+
+    const nextMonthDays = () => {
+        const nextDays: JSX.Element[] = [];
+        const endOfMonth = selectedMonth.endOf("month");
+        const sundayIndex = 6;
+
+        // Check if Month ends with a sunday
+        if (endOfMonth.weekday() !== sundayIndex) {
+            const nextSunday = selectedMonth.clone().add(1, "months").startOf("month").weekday(sundayIndex);
+            const dayDifference = nextSunday.diff(endOfMonth, "days") + 1;
+
+            for (let i = 0; i < dayDifference; i++) {
+                const date = moment(endOfMonth);
+                date.add(i + 1, "day");
+                nextDays.push(
+                    <DayCell
+                        isSelected={date.isSame(selectedDay, "day")}
+                        onClick={() => setSelectedDay(date)}
+                        outOfRange={true}
+                        key={i + 31 * 2}
+                    >
+                        <Day>{date.format("D")}</Day>
+                    </DayCell>
+                );
+            }
+        }
+        return nextDays;
     };
 
     const onChangeMonth = (months: number) => {
