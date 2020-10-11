@@ -1,9 +1,9 @@
 import { useQuery } from "@apollo/client";
 import { GET_EVENTS } from "@graphql/events/queries";
-import { Event, GetEventsData } from "@interfaces/events";
+import { Event } from "@interfaces/events";
 
 const AllEvents = () => {
-    const { loading, error, data } = useQuery<GetEventsData>(GET_EVENTS);
+    const { loading, error, data } = useQuery<{ allEvents: Event[] }>(GET_EVENTS);
 
     if (loading) return <p>Loading...</p>;
 
@@ -11,7 +11,7 @@ const AllEvents = () => {
 
     return (
         <>
-            {data!.allEvents.map((event: Event) => (
+            {data!.allEvents.map((event) => (
                 <div key={event.id}>
                     <p>
                         {event.id}: {event.title} - {event.starttime.slice(0, 19).replace("T", " ")} -{" "}

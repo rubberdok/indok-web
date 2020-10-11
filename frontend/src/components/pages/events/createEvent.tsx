@@ -1,7 +1,7 @@
 import { CREATE_EVENT } from "@graphql/events/mutations";
 import { gql, useMutation } from "@apollo/client";
 import { useState } from "react";
-import { Event, CreateEventData } from "@interfaces/events";
+import { Event } from "@interfaces/events";
 
 const CreateEvent = () => {
     const defaultInput = {
@@ -12,7 +12,7 @@ const CreateEvent = () => {
 
     const [inputData, setInputData] = useState(defaultInput);
 
-    const [createEvent] = useMutation<CreateEventData>(CREATE_EVENT, {
+    const [createEvent] = useMutation<{ createEvent: { event: Event } }>(CREATE_EVENT, {
         update: (cache, { data }) => {
             cache.modify({
                 fields: {
