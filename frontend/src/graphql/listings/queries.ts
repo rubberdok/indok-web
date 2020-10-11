@@ -39,14 +39,14 @@ export const LISTING_FRAGMENT = gql`
 `;
 
 export const RESPONSES = gql`
-query listing($ID: ID!) {
-    listing(id: $ID) {
-        responses {
-            id
-            title
+    query listing($ID: ID!) {
+        listing(id: $ID) {
+            responses {
+                id
+                title
+            }
         }
     }
-}
 `;
 
 /* export const ALL_ORGANIZATIONS = gql`
