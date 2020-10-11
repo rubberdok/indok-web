@@ -28,6 +28,7 @@ const Calendar = ({ onDaySelected, eventDates, onMonthSelected }: CalendarProps)
     const [selectedMonth, setSelectedMonth] = useState(moment());
     const [selectedDay, setSelectedDay] = useState(moment());
     const [events, setEvents] = useState<number[]>([]);
+    const [hoveredDay, setHoveredDay] = useState(moment());
 
     const getDaysOfMonth = () => {
         const daysOfMonth: JSX.Element[] = [];

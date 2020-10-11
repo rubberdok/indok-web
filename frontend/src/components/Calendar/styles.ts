@@ -1,7 +1,7 @@
 import styled, { css } from "styled-components";
 
 export const WeekDay = styled.th`
-    color: #92929d;
+    color: #064b4b;
     text-transform: uppercase;
     font-size: 12px;
     width: 48px;
@@ -26,7 +26,7 @@ export const EventMarker = styled.div`
     width: 4px;
     margin: 0px 1px;
     border-radius: 50%;
-    background-color: rgb(246, 121, 35);
+    background-color: #6a9997;
 `;
 
 export const Day = styled.div`
@@ -74,7 +74,7 @@ export const MonthPickButton = styled.button`
 `;
 
 export const SelectedDayStyles = css`
-    background-color: rgb(246, 121, 35);
+    background-color: #f4b961;
     color: white;
     border-radius: 4px;
 `;
@@ -98,7 +98,7 @@ export const DayCell = styled.td<DayCellProps>`
 
         > ${Day} {
             ${SelectedDayStyles};
-            ${(props) => !props.isSelected && "background-color: rgba(246, 121, 35, 0.3)"};
+            ${(props) => !props.isSelected && "background-color: #F5F0EB"};
         }
     }
 `;
