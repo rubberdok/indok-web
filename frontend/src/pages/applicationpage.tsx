@@ -9,9 +9,7 @@ import Slider from "../components/pages/listings/slider";
 
 const ApplicationPage: NextPage = () => (
     <Layout>
-        <Link href="/">
-            <a>Back to index</a>
-        </Link>
+        <Link href="/">Back to index</Link>
         <ListingResponse>
             <TextField title="Test input" placeholder="Type text here" size="short" />
             <br />

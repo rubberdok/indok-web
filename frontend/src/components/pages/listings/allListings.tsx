@@ -13,7 +13,9 @@ const AllListings = () => {
                 fields: {
                     listings: (existingListings: { __ref: string }[]) => {
                         console.log(existingListings);
-                        return existingListings.filter(listing => listing.__ref.split(":")[1] !== data!.deleteListing.listingId);
+                        return existingListings.filter(
+                            (listing) => listing.__ref.split(":")[1] !== data!.deleteListing.listingId
+                        );
                     },
                 },
             });
@@ -24,10 +26,8 @@ const AllListings = () => {
     return (
         <ul>
             {data!.listings.map((listing) => (
-                <li>
-                    <Link href={`/listings/${listing.id}/${listing.slug}`}>
-                        <a>{listing.title}</a>
-                    </Link>
+                <li key={listing.id}>
+                    <Link href={`/listings/${listing.id}/${listing.slug}`}>{listing.title}</Link>
                     <p>
                         {listing.organization && listing.organization.name}
                         Frist: {listing.deadline.slice(0, 16).replace("T", " ")}
@@ -36,9 +36,9 @@ const AllListings = () => {
                                 e.preventDefault();
                                 deleteListing({
                                     variables: {
-                                        ID: listing.id
-                                    }
-                                })
+                                        ID: listing.id,
+                                    },
+                                });
                             }}
                         >
                             Slett

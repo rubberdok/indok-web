@@ -1,14 +1,14 @@
-const Choice = ({ title, radio, options }:{ title: string, radio?: boolean, options:string[] }) => (
+const Choice = ({ title, radio, options }: { title: string; radio?: boolean; options: string[] }) => (
     <label>
         {title}
         <form>
-            {options.map((option:string) => {
-                return(
-                    <label>
-                        <input type={radio ? "radio" : "checkbox"}/>
+            {options.map((option: string, index: number) => {
+                return (
+                    <label key={index}>
+                        <input type={radio ? "radio" : "checkbox"} />
                         {option}
                     </label>
-                )
+                );
             })}
         </form>
     </label>
