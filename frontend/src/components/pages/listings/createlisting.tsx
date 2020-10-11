@@ -7,7 +7,7 @@ import { useMutation } from "@apollo/client";
 
 const CreateListing = () => {
     const [newListing, setNewListing] = useState<Listing>({} as Listing);
-    const [createListing] = useMutation(CREATE_LISTING, {
+    const [createListing] = useMutation<{ createListing: { listing: Listing } }>(CREATE_LISTING, {
         update: (cache, { data }) => {
             cache.modify({
                 fields: {

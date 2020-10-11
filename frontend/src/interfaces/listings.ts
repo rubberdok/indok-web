@@ -9,17 +9,3 @@ export interface Listing {
     slug: string;
     organization: { id: string; name: string };
 }
-
-export interface ListingsData {
-    listings: Listing[];
-}
-
-export interface CreateListingData {
-    createListing: {
-        listing: Listing;
-    };
-}
-
-export interface ListingData {
-    listing: Listing;
-}
