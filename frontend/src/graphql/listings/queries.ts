@@ -43,7 +43,7 @@ export const RESPONSES = gql`
         listing(id: $ID) {
             responses {
                 id
-                title
+                response
             }
         }
     }

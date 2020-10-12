@@ -1,10 +1,23 @@
-import { Listing } from "@interfaces/listings";
+import { Listing, Response } from "@interfaces/listings";
 import { useQuery } from "@apollo/client";
+import { RESPONSES } from "@graphql/listings/queries";
 
 const AllResponses: React.FC<{ listing: Listing }> = ({ listing }) => {
+    const { loading, error, data } = useQuery<{
+        listing: { responses: Response[] };
+    }>(RESPONSES, { variables: { ID: Number(listing.id) } });
+    if (error) return <p>Error</p>;
+    if (loading) return <p>Loading...</p>;
+    console.log(data);
     return (
         <ul>
-            <li></li>
+            {data!.listing.responses.map((response) => (
+                <li key={response.id}>
+                    Response #{response.id}
+                    <br />
+                    {response.response}
+                </li>
+            ))}
         </ul>
     );
 };

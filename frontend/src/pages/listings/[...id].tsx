@@ -1,11 +1,12 @@
 import { NextPage, GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Layout from "@components/Layout";
 import { useQuery } from "@apollo/client";
-import TextField from "@components/pages/listings/textfield";
+import TextField from "@components/pages/listings/formComponents/textfield";
 import { LISTING } from "@graphql/listings/queries";
 import { Listing } from "@interfaces/listings";
 import Link from "next/link";
-import ResponseForm from "@components/pages/listings/responseForm";
+import CreateResponse from "@components/pages/listings/createResponse";
+import AllResponses from "@components/pages/listings/allResponses";
 
 const ListingPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ id }) => {
     const { loading, error, data } = useQuery<{ listing: Listing }>(LISTING, { variables: { ID: Number(id[0]) } });
@@ -18,9 +19,10 @@ const ListingPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProp
             <h3>{listing.title}</h3>
             <p>{listing.description}</p>
             <p>Frist: {listing.deadline.slice(0, 16).replace("T", " ")}</p>
-            <ResponseForm>
+            <CreateResponse listing={listing}>
                 <TextField title="Søk:" placeholder="Din søknad..." size="long" />
-            </ResponseForm>
+            </CreateResponse>
+            <AllResponses listing={listing} />
         </Layout>
     );
 };

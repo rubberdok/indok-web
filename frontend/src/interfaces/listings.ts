@@ -9,3 +9,8 @@ export interface Listing {
     slug: string;
     organization: { id: string; name: string };
 }
+
+export interface Response {
+    id: string;
+    response: string;
+}

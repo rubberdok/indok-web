@@ -41,3 +41,15 @@ export const DELETE_LISTING = gql`
         }
     }
 `;
+
+export const CREATE_RESPONSE = gql`
+    mutation createResponse($response: String!, $applicantId: ID!, $listingId: ID!) {
+        createResponse(responseData: { response: $response, applicantId: $applicantId, listingId: $listingId }) {
+            response {
+                id
+                response
+            }
+            ok
+        }
+    }
+`;
