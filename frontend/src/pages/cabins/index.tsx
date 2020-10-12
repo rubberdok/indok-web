@@ -22,12 +22,7 @@ const CabinHome = () => {
         <div>
             <h1>CabinHome </h1>
             <Link href="cabins/all">all bookings</Link>
-            <Calendar
-                onMonthSelected={setSelectedMonth}
-                onDaySelected={(selected) => {
-                    console.log("date", selected);
-                }}
-            />
+            <Calendar onMonthSelected={setSelectedMonth} rangeChanged={(range) => console.log(range)} />
         </div>
     );
 };

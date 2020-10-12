@@ -22,17 +22,17 @@ moment.updateLocale("nb", {
 });
 
 interface CalendarProps {
-    onDaySelected: (selectedDay: moment.Moment) => void;
     eventDates?: moment.Moment[];
     onMonthSelected: (selectedMonth: moment.Moment) => void;
-    rangeDates?: moment.Moment[];
+    rangeChanged: (range: string[]) => void;
 }
 
-const Calendar = ({ onDaySelected, eventDates, onMonthSelected }: CalendarProps) => {
+const Calendar = ({ eventDates, onMonthSelected, rangeChanged }: CalendarProps) => {
     const [selectedMonth, setSelectedMonth] = useState(moment());
     const [selectedDay, setSelectedDay] = useState(moment());
     const [events, setEvents] = useState<number[]>([]);
     const [range, setRange] = useState<string[]>([]);
+    const [isRangeFreezed, setIsRangeFreezed] = useState(false);
 
     const getDaysOfMonth = (isCurrentMonth = true) => {
         const daysOfMonth: JSX.Element[] = [];
@@ -42,12 +42,10 @@ const Calendar = ({ onDaySelected, eventDates, onMonthSelected }: CalendarProps)
             date.set("date", i);
             daysOfMonth.push(
                 <DayCell
-                    onMouseOver={() => {
-                        setRange(getDateRange(selectedDay, date));
-                    }}
+                    onMouseOver={() => (isRangeFreezed ? null : setRange(getDateRange(selectedDay, date)))}
                     isInRange={_.includes(range, date.format("YYYY-MM-DD"))}
                     isSelected={date.isSame(selectedDay, "day")}
-                    onClick={() => setSelectedDay(date)}
+                    onClick={() => handleDateClicked(date)}
                     key={date.format("YYYY-MM-DD")}
                 >
                     <Day>{i}</Day>
@@ -81,7 +79,7 @@ const Calendar = ({ onDaySelected, eventDates, onMonthSelected }: CalendarProps)
                 previousDays.push(
                     <DayCell
                         isSelected={date.isSame(selectedDay, "day")}
-                        onClick={() => setSelectedDay(date)}
+                        onClick={() => handleDateClicked(date)}
                         outOfRange={true}
                         key={isCurrentMonth ? date.format("YYYY-MM-DD") : `next-${date.format("YYYY-MM-DD")}`}
                     >
@@ -111,7 +109,7 @@ const Calendar = ({ onDaySelected, eventDates, onMonthSelected }: CalendarProps)
                 nextDays.push(
                     <DayCell
                         isSelected={date.isSame(selectedDay, "day")}
-                        onClick={() => setSelectedDay(date)}
+                        onClick={() => handleDateClicked(date)}
                         outOfRange={true}
                         key={`${date.format("YYYY-MM-DD")}`}
                     >
@@ -150,6 +148,17 @@ const Calendar = ({ onDaySelected, eventDates, onMonthSelected }: CalendarProps)
         );
     };
 
+    const handleDateClicked = (date: moment.Moment) => {
+        if (range.length > 0 && !isRangeFreezed) {
+            rangeChanged(range);
+            setIsRangeFreezed(true);
+        } else {
+            setSelectedDay(date);
+            setIsRangeFreezed(false);
+            setRange([]);
+        }
+    };
+
     const onChangeMonth = (months: number) => {
         const newSelectedMonth = moment(selectedMonth);
         newSelectedMonth.add(months, "months");
@@ -157,13 +166,11 @@ const Calendar = ({ onDaySelected, eventDates, onMonthSelected }: CalendarProps)
     };
 
     useEffect(() => {
-        console.log("selected day changed", selectedDay.format("YYYY-MM-DD"));
         if (!selectedDay.isSame(selectedMonth, "month")) {
             const newMonth = moment(selectedMonth);
             newMonth.set("month", selectedDay.get("month"));
             setSelectedMonth(newMonth);
         }
-        onDaySelected(selectedDay);
     }, [selectedDay]);
 
     useEffect(() => {
