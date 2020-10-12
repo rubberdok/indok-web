@@ -10,20 +10,35 @@ class Survey(models.Model):
     description = models.CharField(max_length=3000, blank=True, default="")
     question = models.ManyToManyField("Question", related_name="surveys")
 
+    def __str__(self):
+        return self.descriptive_name
+
 class Question(models.Model):
     question = models.CharField(max_length=300)
     description = models.CharField(max_length=1000, blank=True, default="")
     slug = models.CharField(max_length=300, blank=True, default="")
     offered_answer = models.ManyToManyField("OfferedAnswer", related_name="questions")
 
+    def __str__(self):
+        return f"Question: {self.question}"
+
 class OfferedAnswer(models.Model):
     answer = models.CharField(max_length=500)
 
+    def __str__(self):
+        return self.answer
+
 class Answer(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name="answers")
-    survey = models.ForeignKey(Question, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    survey = models.ForeignKey(Survey, on_delete=models.CASCADE)
     answer = models.CharField(max_length=10000)
+
+    def __str__(self):
+        return f"Survey: {self.survey}; User: {self.user}; Question: {self.question}; Answer: {self.answer}"
 
 class QuestionType(models.Model):
     descriptive_name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.descriptive_name
