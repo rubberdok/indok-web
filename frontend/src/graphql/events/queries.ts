@@ -5,8 +5,20 @@ export const GET_EVENTS = gql`
         allEvents {
             id
             title
-            description
             starttime
+            endtime
+            location
+            description
+            organization {
+                name
+            }
+            category {
+                name
+            }
+            image
+            isAttendable
+            deadline
+            publisher
         }
     }
 `;
@@ -16,8 +28,38 @@ export const GET_EVENT = gql`
         event(id: $id) {
             id
             title
-            description
             starttime
+            endtime
+            location
+            description
+            organization {
+                name
+            }
+            category {
+                name
+            }
+            image
+            isAttendable
+            deadline
+            publisher
+        }
+    }
+`;
+
+export const GET_CATEGORIES = gql`
+    query {
+        allCategories {
+            id
+            name
+        }
+    }
+`;
+
+export const GET_CATEGORY = gql`
+    query Category($id: ID!) {
+        category(id: $id) {
+            id
+            name
         }
     }
 `;

@@ -16,7 +16,7 @@ class EventInput(graphene.InputObjectType):
     location = graphene.String(required=False)
     description = graphene.String(required=False)
     organization = graphene.ID(required=False)
-    categories = graphene.ID(required=False)
+    category = graphene.ID(required=False)
     image = graphene.String(required=False)
     is_attendable = graphene.Boolean(required=False)
     deadline = graphene.DateTime(required=False)
@@ -72,7 +72,6 @@ class DeleteEvent(graphene.Mutation):
 
 class CategoryInput(graphene.InputObjectType):
     name = graphene.String(required=False)
-    publisher = graphene.String(required=False)
 
 
 class CreateCategory(graphene.Mutation):

@@ -21,11 +21,11 @@ class Event(models.Model):
     starttime = models.DateTimeField()
     description = models.TextField()
     is_attendable = models.BooleanField()
-    publisher = models.TextField()
+    publisher = models.CharField(max_length=128)
 
     # Optional fields
     endtime = models.DateTimeField(blank=True, null=True)
-    location = models.TextField(blank=True, default="")
+    location = models.CharField(max_length=128, blank=True, default="")
     organization = models.ForeignKey(
         Organization, on_delete=models.CASCADE, blank=True, null=True
     )
