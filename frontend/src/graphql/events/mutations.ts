@@ -7,8 +7,8 @@ export const CREATE_EVENT = gql`
         $endtime: DateTime
         $location: String
         $description: String
-        $organization: ID
-        $category: ID
+        $organizationId: ID
+        $categoryId: ID
         $image: String
         $isAttendable: Boolean
         $deadline: DateTime
@@ -21,8 +21,8 @@ export const CREATE_EVENT = gql`
                 endtime: $endtime
                 location: $location
                 description: $description
-                organization: $organization
-                category: $category
+                organizationId: $organizationId
+                categoryId: $categoryId
                 image: $image
                 isAttendable: $isAttendable
                 deadline: $deadline
