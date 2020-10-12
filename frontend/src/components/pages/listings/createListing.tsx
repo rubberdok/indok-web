@@ -2,8 +2,7 @@ import TextField from "./formComponents/textfield";
 import { useState } from "react";
 import { Listing } from "@interfaces/listings";
 import { CREATE_LISTING } from "@graphql/listings/mutations";
-import { LISTING_FRAGMENT } from "@graphql/listings/queries";
-import { useMutation } from "@apollo/client";
+import { useMutation, gql } from "@apollo/client";
 
 const CreateListing: React.FC = () => {
     const [newListing, setNewListing] = useState<Listing>({} as Listing);
@@ -14,7 +13,11 @@ const CreateListing: React.FC = () => {
                     listings: (existingListings) => {
                         const newListing = cache.writeFragment<Listing>({
                             data: data!.createListing.listing,
-                            fragment: LISTING_FRAGMENT,
+                            fragment: gql`
+                                fragment NewListing on Listing {
+                                    id
+                                }
+                            `,
                         });
                         return [...existingListings, newListing];
                     },

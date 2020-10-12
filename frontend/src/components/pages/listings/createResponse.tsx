@@ -1,5 +1,5 @@
 import { Listing, Response } from "@interfaces/listings";
-import { useMutation } from "@apollo/client";
+import { useMutation, gql } from "@apollo/client";
 import { CREATE_RESPONSE } from "@graphql/listings/mutations";
 import React, { useState, ChangeEvent } from "react";
 
@@ -8,7 +8,26 @@ const CreateResponse: React.FC<{
     children?: React.ReactNode;
 }> = ({ listing, children }) => {
     const [newResponse, setNewResponse] = useState<Response>({} as Response);
-    const [createResponse] = useMutation<{ createResponse: { response: Response } }>(CREATE_RESPONSE);
+    const [createResponse] = useMutation<{ createResponse: { response: Response } }>(CREATE_RESPONSE, {
+        update: (cache, { data }) => {
+            const listingField = `listing({"id":` + listing.id + `})`;
+            cache.modify({
+                fields: {
+                    responses: (existingResponses) => {
+                        const newResponse = cache.writeFragment<Response>({
+                            data: data!.createResponse.response,
+                            fragment: gql`
+                                fragment NewResponse on Response {
+                                    id
+                                }
+                            `,
+                        });
+                        return [...existingResponses, newResponse];
+                    },
+                },
+            });
+        },
+    });
     return (
         <form
             onSubmit={(e) => {

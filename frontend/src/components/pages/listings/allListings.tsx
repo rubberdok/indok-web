@@ -8,7 +8,6 @@ const AllListings: React.FC = () => {
     const { loading, error, data } = useQuery<{ listings: Listing[] }>(LISTINGS);
     const [deleteListing] = useMutation<{ deleteListing: { ok: boolean; listingId: string } }>(DELETE_LISTING, {
         update: (cache, { data }) => {
-            console.log(data!.deleteListing.listingId);
             cache.modify({
                 fields: {
                     listings: (existingListings: { __ref: string }[]) => {
