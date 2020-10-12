@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "apps.listing",
     "apps.listing_response",
     "apps.organizations",
+    "apps.surveys",
     # External apps
     "corsheaders",
     "graphene_django",

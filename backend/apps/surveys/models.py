@@ -21,7 +21,7 @@ class OfferedAnswer(models.Model):
 
 class Answer(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name="answers")
     survey = models.ForeignKey(Question, on_delete=models.CASCADE)
     answer = models.CharField(max_length=10000)
 
