@@ -1,4 +1,7 @@
-const Dropdown = ({ title, options }: { title: string; options: string[] }) => (
+const Dropdown: React.FC<{
+    title: string;
+    options: string[];
+}> = ({ title, options }) => (
     <label>
         {title}
         <select>

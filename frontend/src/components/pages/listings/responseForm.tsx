@@ -1,4 +1,6 @@
-const ResponseForm = ({ children }: { children: React.ReactNode }) => (
+const ResponseForm: React.FC<{
+    children?: React.ReactNode;
+}> = ({ children }) => (
     <form>
         {children}
         <br />

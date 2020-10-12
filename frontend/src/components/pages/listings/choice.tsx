@@ -1,4 +1,8 @@
-const Choice = ({ title, radio, options }: { title: string; radio?: boolean; options: string[] }) => (
+const Choice: React.FC<{
+    title: string;
+    radio?: boolean;
+    options: string[];
+}> = ({ title, radio, options }) => (
     <label>
         {title}
         <form>

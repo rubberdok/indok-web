@@ -1,18 +1,12 @@
 import { ChangeEvent } from "react";
 
-const TextField = ({
-    title,
-    onChange,
-    placeholder,
-    size,
-    value,
-}: {
+const TextField: React.FC<{
     title: string;
     onChange?: (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
     placeholder?: string;
     size?: "short" | "long";
     value?: string;
-}) => {
+}> = ({ title, onChange, placeholder, size, value }) => {
     return (
         <label>
             {title}

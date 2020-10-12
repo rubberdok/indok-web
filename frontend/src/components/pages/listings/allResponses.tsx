@@ -1,7 +1,7 @@
 import { Listing } from "@interfaces/listings";
 import { useQuery } from "@apollo/client";
 
-const AllResponses = (listing: Listing) => {
+const AllResponses: React.FC<{ listing: Listing }> = ({ listing }) => {
     return (
         <ul>
             <li></li>

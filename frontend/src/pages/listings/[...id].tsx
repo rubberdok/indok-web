@@ -7,7 +7,7 @@ import { Listing } from "@interfaces/listings";
 import Link from "next/link";
 import ResponseForm from "@components/pages/listings/responseForm";
 
-const Listing: NextPage = ({ id }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const ListingPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ id }) => {
     const { loading, error, data } = useQuery<{ listing: Listing }>(LISTING, { variables: { ID: Number(id[0]) } });
     if (error) return <h1>Error</h1>;
     if (loading) return <h1>Loading...</h1>;
@@ -25,9 +25,9 @@ const Listing: NextPage = ({ id }: InferGetServerSidePropsType<typeof getServerS
     );
 };
 
-export default Listing;
+export default ListingPage;
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getServerSideProps: GetServerSideProps<{ id: string[] }> = async (context) => {
     const id = context.query.id as string[];
     return {
         props: { id },

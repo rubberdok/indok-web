@@ -5,7 +5,7 @@ import { CREATE_LISTING } from "@graphql/listings/mutations";
 import { LISTING_FRAGMENT } from "@graphql/listings/queries";
 import { useMutation } from "@apollo/client";
 
-const CreateListing = () => {
+const CreateListing: React.FC = () => {
     const [newListing, setNewListing] = useState<Listing>({} as Listing);
     const [createListing] = useMutation<{ createListing: { listing: Listing } }>(CREATE_LISTING, {
         update: (cache, { data }) => {

@@ -4,7 +4,7 @@ import { LISTINGS } from "@graphql/listings/queries";
 import { DELETE_LISTING } from "@graphql/listings/mutations";
 import Link from "next/link";
 
-const AllListings = () => {
+const AllListings: React.FC = () => {
     const { loading, error, data } = useQuery<{ listings: Listing[] }>(LISTINGS);
     const [deleteListing] = useMutation<{ deleteListing: { ok: boolean; listingId: string } }>(DELETE_LISTING, {
         update: (cache, { data }) => {
