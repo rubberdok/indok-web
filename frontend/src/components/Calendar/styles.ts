@@ -1,5 +1,11 @@
 import styled, { css } from "styled-components";
 
+export const TwoCalendarsContainer = styled.div`
+    display: flex;
+    width: 100%;
+    justify-content: space-evenly;
+`;
+
 export const WeekDay = styled.th`
     color: #064b4b;
     text-transform: uppercase;
@@ -10,7 +16,7 @@ export const WeekDay = styled.th`
 `;
 
 export const BigTable = styled.table`
-    width: 1000px;
+    width: 500px;
 `;
 
 export const EventMarkerWrapper = styled.div`
@@ -35,10 +41,6 @@ export const Day = styled.div`
     align-items: center;
     height: 90%;
     margin: 15%;
-`;
-
-export const Wrapper = styled.div`
-    max-width: 350px;
 `;
 export const MonthSelector = styled.div`
     display: flex;

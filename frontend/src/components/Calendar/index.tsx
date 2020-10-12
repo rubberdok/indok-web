@@ -11,10 +11,11 @@ import {
     Year,
     EventMarker,
     EventMarkerWrapper,
-    Wrapper,
     BigTable,
+    TwoCalendarsContainer,
 } from "./styles";
 import _ from "lodash";
+import { getDateRange } from "./helpers";
 
 moment.updateLocale("nb", {
     weekdaysShort: ["søn", "man", "tir", "ons", "tor", "fre", "lør"],
@@ -27,30 +28,27 @@ interface CalendarProps {
     rangeDates?: moment.Moment[];
 }
 
-const SELECT_RANGE_FEATURE = true;
-
 const Calendar = ({ onDaySelected, eventDates, onMonthSelected }: CalendarProps) => {
     const [selectedMonth, setSelectedMonth] = useState(moment());
     const [selectedDay, setSelectedDay] = useState(moment());
     const [events, setEvents] = useState<number[]>([]);
-    const [range, setRange] = useState<number[]>([]);
+    const [range, setRange] = useState<string[]>([]);
 
-    const getDaysOfMonth = () => {
+    const getDaysOfMonth = (isCurrentMonth = true) => {
         const daysOfMonth: JSX.Element[] = [];
-        for (let i = 1; i <= selectedMonth.daysInMonth(); i++) {
-            const date = moment(selectedMonth);
+        const month = isCurrentMonth ? moment(selectedMonth) : moment(selectedMonth).clone().add(1, "month");
+        for (let i = 1; i <= month.daysInMonth(); i++) {
+            const date = isCurrentMonth ? moment(selectedMonth) : moment(selectedMonth).clone().add(1, "month");
             date.set("date", i);
             daysOfMonth.push(
                 <DayCell
                     onMouseOver={() => {
-                        if (SELECT_RANGE_FEATURE) {
-                            setRange(_.range(selectedDay.date(), i));
-                        }
+                        setRange(getDateRange(selectedDay, date));
                     }}
-                    isInRange={_.includes(range, i)}
+                    isInRange={_.includes(range, date.format("YYYY-MM-DD"))}
                     isSelected={date.isSame(selectedDay, "day")}
                     onClick={() => setSelectedDay(date)}
-                    key={i}
+                    key={date.format("YYYY-MM-DD")}
                 >
                     <Day>{i}</Day>
                     <EventMarkerWrapper>
@@ -65,8 +63,72 @@ const Calendar = ({ onDaySelected, eventDates, onMonthSelected }: CalendarProps)
         return daysOfMonth;
     };
 
-    const getRows = () => {
-        const slots: JSX.Element[] = [...previousMonthDays(), ...getDaysOfMonth(), ...nextMonthDays()];
+    const previousMonthDays = (isCurrentMonth = true) => {
+        const previousDays: JSX.Element[] = [];
+        const firstOfMonth = isCurrentMonth
+            ? selectedMonth.startOf("month")
+            : selectedMonth.clone().add(1, "month").startOf("month");
+        const mondayIndex = 0;
+
+        // Check if Month starts with a Monday
+        if (firstOfMonth.weekday() !== mondayIndex) {
+            const previousMonday = firstOfMonth.clone().subtract(1, "months").endOf("month").weekday(mondayIndex);
+            const dayDifference = firstOfMonth.diff(previousMonday, "days") + 1;
+
+            for (let i = 0; i < dayDifference; i++) {
+                const date = moment(firstOfMonth);
+                date.subtract(dayDifference - i, "day");
+                previousDays.push(
+                    <DayCell
+                        isSelected={date.isSame(selectedDay, "day")}
+                        onClick={() => setSelectedDay(date)}
+                        outOfRange={true}
+                        key={isCurrentMonth ? date.format("YYYY-MM-DD") : `next-${date.format("YYYY-MM-DD")}`}
+                    >
+                        <Day>{date.format("D")}</Day>
+                    </DayCell>
+                );
+            }
+        }
+        return previousDays;
+    };
+
+    const nextMonthDays = (isCurrentMonth = true) => {
+        const nextDays: JSX.Element[] = [];
+        const endOfMonth = isCurrentMonth
+            ? selectedMonth.endOf("month")
+            : selectedMonth.clone().add(1, "month").endOf("month");
+        const sundayIndex = 6;
+
+        // Check if Month ends with a sunday
+        if (endOfMonth.weekday() !== sundayIndex) {
+            const nextSunday = endOfMonth.clone().add(1, "months").startOf("month").weekday(sundayIndex);
+            const dayDifference = nextSunday.diff(endOfMonth, "days") + 1;
+
+            for (let i = 0; i < dayDifference; i++) {
+                const date = moment(endOfMonth);
+                date.add(i + 1, "day");
+                nextDays.push(
+                    <DayCell
+                        isSelected={date.isSame(selectedDay, "day")}
+                        onClick={() => setSelectedDay(date)}
+                        outOfRange={true}
+                        key={`${date.format("YYYY-MM-DD")}`}
+                    >
+                        <Day>{date.format("D")}</Day>
+                    </DayCell>
+                );
+            }
+        }
+        return nextDays;
+    };
+
+    const getRows = (isCurrentMonth = true) => {
+        const slots: JSX.Element[] = [
+            ...previousMonthDays(isCurrentMonth),
+            ...getDaysOfMonth(isCurrentMonth),
+            ...(isCurrentMonth ? [] : nextMonthDays(isCurrentMonth)),
+        ];
         let cells: JSX.Element[];
         return slots.reduce(
             (prev: JSX.Element[][], curr, index) => {
@@ -88,62 +150,6 @@ const Calendar = ({ onDaySelected, eventDates, onMonthSelected }: CalendarProps)
         );
     };
 
-    const previousMonthDays = () => {
-        const previousDays: JSX.Element[] = [];
-        const firstOfMonth = selectedMonth.startOf("month");
-        const mondayIndex = 0;
-
-        // Check if Month starts with a Monday
-        if (firstOfMonth.weekday() !== mondayIndex) {
-            const previousMonday = selectedMonth.clone().subtract(1, "months").endOf("month").weekday(mondayIndex);
-            const dayDifference = firstOfMonth.diff(previousMonday, "days") + 1;
-
-            for (let i = 0; i < dayDifference; i++) {
-                const date = moment(firstOfMonth);
-                date.subtract(dayDifference - i, "day");
-                previousDays.push(
-                    <DayCell
-                        isSelected={date.isSame(selectedDay, "day")}
-                        onClick={() => setSelectedDay(date)}
-                        outOfRange={true}
-                        key={i + 31}
-                    >
-                        <Day>{date.format("D")}</Day>
-                    </DayCell>
-                );
-            }
-        }
-        return previousDays;
-    };
-
-    const nextMonthDays = () => {
-        const nextDays: JSX.Element[] = [];
-        const endOfMonth = selectedMonth.endOf("month");
-        const sundayIndex = 6;
-
-        // Check if Month ends with a sunday
-        if (endOfMonth.weekday() !== sundayIndex) {
-            const nextSunday = selectedMonth.clone().add(1, "months").startOf("month").weekday(sundayIndex);
-            const dayDifference = nextSunday.diff(endOfMonth, "days") + 1;
-
-            for (let i = 0; i < dayDifference; i++) {
-                const date = moment(endOfMonth);
-                date.add(i + 1, "day");
-                nextDays.push(
-                    <DayCell
-                        isSelected={date.isSame(selectedDay, "day")}
-                        onClick={() => setSelectedDay(date)}
-                        outOfRange={true}
-                        key={i + 31 * 2}
-                    >
-                        <Day>{date.format("D")}</Day>
-                    </DayCell>
-                );
-            }
-        }
-        return nextDays;
-    };
-
     const onChangeMonth = (months: number) => {
         const newSelectedMonth = moment(selectedMonth);
         newSelectedMonth.add(months, "months");
@@ -151,6 +157,7 @@ const Calendar = ({ onDaySelected, eventDates, onMonthSelected }: CalendarProps)
     };
 
     useEffect(() => {
+        console.log("selected day changed", selectedDay.format("YYYY-MM-DD"));
         if (!selectedDay.isSame(selectedMonth, "month")) {
             const newMonth = moment(selectedMonth);
             newMonth.set("month", selectedDay.get("month"));
@@ -175,7 +182,7 @@ const Calendar = ({ onDaySelected, eventDates, onMonthSelected }: CalendarProps)
     }, [selectedMonth]);
 
     return (
-        <Wrapper>
+        <>
             <MonthSelector>
                 <Month>
                     {selectedMonth.format("MMMM")}
@@ -186,21 +193,41 @@ const Calendar = ({ onDaySelected, eventDates, onMonthSelected }: CalendarProps)
                     <MonthPickButton onClick={() => onChangeMonth(1)}>next month</MonthPickButton>
                 </MonthButtons>
             </MonthSelector>
-            <BigTable>
-                <thead>
-                    <tr>
-                        {moment.weekdaysShort(true).map((dow) => (
-                            <WeekDay key={dow}>{dow}</WeekDay>
-                        ))}
-                    </tr>
-                </thead>
-                <tbody>
-                    {getRows().map((row, index) => (
-                        <tr key={`row-${index}`}>{row}</tr>
-                    ))}
-                </tbody>
-            </BigTable>
-        </Wrapper>
+            <TwoCalendarsContainer>
+                <div>
+                    <BigTable>
+                        <thead>
+                            <tr>
+                                {moment.weekdaysShort(true).map((dow) => (
+                                    <WeekDay key={dow}>{dow}</WeekDay>
+                                ))}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {getRows().map((row, index) => (
+                                <tr key={`row-${index}`}>{row}</tr>
+                            ))}
+                        </tbody>
+                    </BigTable>
+                </div>
+                <div>
+                    <BigTable>
+                        <thead>
+                            <tr>
+                                {moment.weekdaysShort(true).map((dow) => (
+                                    <WeekDay key={dow}>{dow}</WeekDay>
+                                ))}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {getRows(false).map((row, index) => (
+                                <tr key={`next-row-${index}`}>{row}</tr>
+                            ))}
+                        </tbody>
+                    </BigTable>
+                </div>
+            </TwoCalendarsContainer>
+        </>
     );
 };
 
