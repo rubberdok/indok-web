@@ -1,15 +1,24 @@
+import { BookingsFor } from "../../components/pages/cabins/bookingsFor";
 import { useMutation } from "@apollo/client";
-import { CREATE_BOOKING } from "../../../graphql/cabins/mutations";
-import { QueryVariables } from "../../../interfaces/cabins";
-import BookingCalendar from "./bookingCalendar";
-import { BookingsFor } from "./bookingsFor";
+import { CREATE_BOOKING } from "../../graphql/cabins/mutations";
+import { useState } from "react";
+import { QueryVariables } from "../../interfaces/cabins";
 
 interface Props {
     queryVariables: QueryVariables;
     rangeUpdate: (variables: QueryVariables) => void;
 }
 
-const CreateBooking = ({ rangeUpdate, queryVariables }: Props) => {
+const BookPage = ({ queryVariables, rangeUpdate }: Props) => {
+    // const [query, rangeUpdate] = useState({
+    //     year: "2020",
+    //     month: "10",
+    //     start: "",
+    //     end: "",
+    // });
+
+    console.log(queryVariables);
+
     let contact_num: HTMLInputElement;
     let contact_person: HTMLInputElement;
 
@@ -17,8 +26,6 @@ const CreateBooking = ({ rangeUpdate, queryVariables }: Props) => {
 
     return (
         <div>
-            <h1>Book hytte woho</h1>
-            <BookingCalendar queryVariables={queryVariables} rangeUpdate={rangeUpdate} />
             <BookingsFor queryVariables={queryVariables} />
             <form
                 onSubmit={(e) => {
@@ -65,4 +72,4 @@ const CreateBooking = ({ rangeUpdate, queryVariables }: Props) => {
     );
 };
 
-export default CreateBooking;
+export default BookPage;

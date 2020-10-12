@@ -10,7 +10,7 @@ interface Props {
     rangeUpdate: (variables: QueryVariables) => void;
 }
 
-const BookingCalendar = ({ rangeUpdate, queryVariables }: Props) => {
+const BookingCalendar = ({ queryVariables, rangeUpdate }: Props) => {
     const { loading, data } = useQuery(QUERY_BOOKING_RANGE, {
         variables: queryVariables,
     });
