@@ -18,6 +18,7 @@ class Question(models.Model):
     description = models.CharField(max_length=1000, blank=True, default="")
     slug = models.CharField(max_length=300, blank=True, default="")
     offered_answer = models.ManyToManyField("OfferedAnswer", related_name="questions")
+    question_type = models.ForeignKey("QuestionType", on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         return f"Question: {self.question}"
