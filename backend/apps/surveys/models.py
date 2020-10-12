@@ -35,7 +35,7 @@ class OfferedAnswer(models.Model):
 
 class Answer(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    question = models.ForeignKey(SurveyQuestion, on_delete=models.CASCADE)
+    survey_question = models.ForeignKey(SurveyQuestion, on_delete=models.CASCADE)
     answer = models.CharField(max_length=10000)
 
     def __str__(self):
