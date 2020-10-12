@@ -19,6 +19,9 @@ class SurveyQuestion(models.Model):
     offered_answer = models.ManyToManyField("OfferedAnswer", related_name="surveyquestions")
     question_type = models.ForeignKey("QuestionType", on_delete=models.SET_NULL, null=True)
 
+    def __str__(self):
+        return f"{self.survey}: {self.question}"
+
 class Question(models.Model):
     question = models.CharField(max_length=300)
     description = models.CharField(max_length=1000, blank=True, default="")
@@ -39,7 +42,7 @@ class Answer(models.Model):
     answer = models.CharField(max_length=10000)
 
     def __str__(self):
-        return f"Survey: {self.survey}; User: {self.user}; Question: {self.question}; Answer: {self.answer}"
+        return f"User: {self.user}; Answer: {self.answer}"
 
 class QuestionType(models.Model):
     descriptive_name = models.CharField(max_length=100)
