@@ -11,14 +11,15 @@ const AllEvents = () => {
 
     return (
         <>
-            {data!.allEvents.map((event) => (
-                <div key={event.id}>
-                    <p>
-                        {event.id}: {event.title} - {event.starttime.slice(0, 19).replace("T", " ")} -{" "}
-                        {event.description}
-                    </p>
-                </div>
-            ))}
+            {data &&
+                data.allEvents.map((event) => (
+                    <div key={event.id}>
+                        <p>
+                            {event.id}: {event.title} - {event.starttime.slice(0, 19).replace("T", " ")} -{" "}
+                            {event.description}
+                        </p>
+                    </div>
+                ))}
         </>
     );
 };

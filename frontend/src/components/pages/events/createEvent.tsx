@@ -14,21 +14,22 @@ const CreateEvent = () => {
 
     const [createEvent] = useMutation<{ createEvent: { event: Event } }>(CREATE_EVENT, {
         update: (cache, { data }) => {
-            cache.modify({
-                fields: {
-                    allEvents: (existingEvents) => {
-                        const newEventRef = cache.writeFragment<Event>({
-                            data: data!.createEvent.event,
-                            fragment: gql`
-                                fragment NewEvent on Event {
-                                    id
-                                }
-                            `,
-                        });
-                        return [...existingEvents, newEventRef];
+            data &&
+                cache.modify({
+                    fields: {
+                        allEvents: (existingEvents) => {
+                            const newEventRef = cache.writeFragment<Event>({
+                                data: data.createEvent.event,
+                                fragment: gql`
+                                    fragment NewEvent on Event {
+                                        id
+                                    }
+                                `,
+                            });
+                            return [...existingEvents, newEventRef];
+                        },
                     },
-                },
-            });
+                });
         },
     });
 
