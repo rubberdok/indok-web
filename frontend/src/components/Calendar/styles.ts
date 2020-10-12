@@ -8,10 +8,10 @@ export const WeekDay = styled.th`
     margin: 0 5px;
     height: 39px;
 `;
-interface DayCellProps {
-    outOfRange?: boolean;
-    isSelected?: boolean;
-}
+
+export const BigTable = styled.table`
+    width: 1000px;
+`;
 
 export const EventMarkerWrapper = styled.div`
     width: 100%;
@@ -73,6 +73,12 @@ export const MonthPickButton = styled.button`
     }
 `;
 
+interface DayCellProps {
+    outOfRange?: boolean;
+    isSelected?: boolean;
+    isInRange?: boolean;
+}
+
 export const SelectedDayStyles = css`
     background-color: #f4b961;
     color: white;
@@ -81,12 +87,13 @@ export const SelectedDayStyles = css`
 
 export const DayCell = styled.td<DayCellProps>`
     position: relative;
-    height: 48px;
+    height: 60px;
     text-align: center;
     color: ${(props) => (props.outOfRange ? "#cecece" : "black")};
 
     > ${Day} {
         ${(props) => props.isSelected && SelectedDayStyles};
+        ${(props) => props.isInRange && !props.isSelected && "background-color: #F5F0EB"};
     }
 
     ${EventMarker} {
@@ -97,7 +104,6 @@ export const DayCell = styled.td<DayCellProps>`
         cursor: pointer;
 
         > ${Day} {
-            ${SelectedDayStyles};
             ${(props) => !props.isSelected && "background-color: #F5F0EB"};
         }
     }

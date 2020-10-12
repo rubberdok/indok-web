@@ -23,7 +23,6 @@ const CabinHome = () => {
             <h1>CabinHome </h1>
             <Link href="cabins/all">all bookings</Link>
             <Calendar
-                eventDates={generateRandomDays(selectedMonth)}
                 onMonthSelected={setSelectedMonth}
                 onDaySelected={(selected) => {
                     console.log("date", selected);

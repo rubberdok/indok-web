@@ -12,7 +12,9 @@ import {
     EventMarker,
     EventMarkerWrapper,
     Wrapper,
+    BigTable,
 } from "./styles";
+import _ from "lodash";
 
 moment.updateLocale("nb", {
     weekdaysShort: ["søn", "man", "tir", "ons", "tor", "fre", "lør"],
@@ -20,15 +22,18 @@ moment.updateLocale("nb", {
 
 interface CalendarProps {
     onDaySelected: (selectedDay: moment.Moment) => void;
-    eventDates: moment.Moment[];
+    eventDates?: moment.Moment[];
     onMonthSelected: (selectedMonth: moment.Moment) => void;
+    rangeDates?: moment.Moment[];
 }
+
+const SELECT_RANGE_FEATURE = true;
 
 const Calendar = ({ onDaySelected, eventDates, onMonthSelected }: CalendarProps) => {
     const [selectedMonth, setSelectedMonth] = useState(moment());
     const [selectedDay, setSelectedDay] = useState(moment());
     const [events, setEvents] = useState<number[]>([]);
-    const [hoveredDay, setHoveredDay] = useState(moment());
+    const [range, setRange] = useState<number[]>([]);
 
     const getDaysOfMonth = () => {
         const daysOfMonth: JSX.Element[] = [];
@@ -36,7 +41,17 @@ const Calendar = ({ onDaySelected, eventDates, onMonthSelected }: CalendarProps)
             const date = moment(selectedMonth);
             date.set("date", i);
             daysOfMonth.push(
-                <DayCell isSelected={date.isSame(selectedDay, "day")} onClick={() => setSelectedDay(date)} key={i}>
+                <DayCell
+                    onMouseOver={() => {
+                        if (SELECT_RANGE_FEATURE) {
+                            setRange(_.range(selectedDay.date(), i));
+                        }
+                    }}
+                    isInRange={_.includes(range, i)}
+                    isSelected={date.isSame(selectedDay, "day")}
+                    onClick={() => setSelectedDay(date)}
+                    key={i}
+                >
                     <Day>{i}</Day>
                     <EventMarkerWrapper>
                         {events.length > 0 &&
@@ -146,7 +161,7 @@ const Calendar = ({ onDaySelected, eventDates, onMonthSelected }: CalendarProps)
 
     useEffect(() => {
         const eventArray = [...Array(31)].map((x) => 0);
-        eventDates.forEach((x) => {
+        eventDates?.forEach((x) => {
             if (moment(x).isSame(selectedMonth, "month")) {
                 const index = +x.format("D") - 1;
                 eventArray[index] = eventArray[index] === 3 ? 3 : eventArray[index] + 1;
@@ -171,7 +186,7 @@ const Calendar = ({ onDaySelected, eventDates, onMonthSelected }: CalendarProps)
                     <MonthPickButton onClick={() => onChangeMonth(1)}>next month</MonthPickButton>
                 </MonthButtons>
             </MonthSelector>
-            <table>
+            <BigTable>
                 <thead>
                     <tr>
                         {moment.weekdaysShort(true).map((dow) => (
@@ -184,7 +199,7 @@ const Calendar = ({ onDaySelected, eventDates, onMonthSelected }: CalendarProps)
                         <tr key={`row-${index}`}>{row}</tr>
                     ))}
                 </tbody>
-            </table>
+            </BigTable>
         </Wrapper>
     );
 };
