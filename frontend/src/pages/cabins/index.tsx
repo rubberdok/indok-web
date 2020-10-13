@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 import { useRouter } from "next/router";
+import Calendar from "../../components/Calendar/index";
 
 const CreateBookingPage = () => {
     const [range, rangeChange] = useState({
@@ -59,12 +60,13 @@ const CreateBookingPage = () => {
                         outputEl.innerHTML = `Booking fra ${fromString} til ${toString} er allerede booket fra \n`;
                         outputEl.innerHTML += `${occupiedByString[0]} til ${occupiedByString[1]}`;
                     } else {
-                        // oppdaterer state og redirecter til ny side med start- og sluttdato
+                        // updates state and redirects to book page with query fromDate and toDate
                         outputEl.innerHTML = "";
                         rangeChange({
                             from: fromDate,
                             to: toDate,
                         });
+
                         router.push({
                             pathname: "cabins/bookNy",
                             query: { fromDate: fromDate.toLocaleDateString(), toDate: toDate.toLocaleDateString() },
