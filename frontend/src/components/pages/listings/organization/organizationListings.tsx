@@ -10,7 +10,18 @@ const OrganizationListings: React.FC<{ organization: Organization }> = ({ organi
     });
     if (error) return <p>Error</p>;
     if (loading) return <p>Loading...</p>;
-    return <ul>{data && data.organization.listings.map((listing) => <li key={listing.id}>{listing.title}</li>)}</ul>;
+    return (
+        <ul>
+            {data &&
+                data.organization.listings.map((listing) => (
+                    <li key={listing.id}>
+                        {listing.title}
+                        <br />
+                        <p>Søknader:{listing.responses ? listing.responses.length : 0}</p>
+                    </li>
+                ))}
+        </ul>
+    );
 };
 
 export default OrganizationListings;
