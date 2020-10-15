@@ -1,4 +1,6 @@
-const ResponsePage: React.FC = () => {
+import { NextPage } from "next";
+
+const ResponsePage: NextPage = () => {
     return <div></div>;
 };
 
