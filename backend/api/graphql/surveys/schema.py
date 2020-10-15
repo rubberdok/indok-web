@@ -15,11 +15,12 @@ from .resolvers import (
     AnswerResolvers,
 )
 
-from .mutations import (
+from .mutations.questions import (
     CreateQuestion,
     UpdateQuestion,
     DeleteQuestion,
 )
+
 import graphene
 
 

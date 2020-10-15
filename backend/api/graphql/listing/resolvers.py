@@ -2,7 +2,7 @@ from apps.listing.models import Listing, Response
 from django.db.models import Q
 
 class ListingResolvers:
-    def resolve_listings(parent, info, search=None, **kwargs):
+    def resolve_listings(parent, info, search=None):
         if search:
             filter = (
                 Q(title__icontains=search) |
