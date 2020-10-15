@@ -14,7 +14,7 @@ const CreateEvent = () => {
         organizationId: "",
         categoryId: "",
         image: "",
-        isAttendable: "",
+        isAttendable: false,
         deadline: "",
         publisher: "",
     };
@@ -45,6 +45,7 @@ const CreateEvent = () => {
     return (
         <div>
             <form
+                id="createform"
                 onSubmit={(e) => {
                     e.preventDefault();
                     const filtered = Object.entries(eventData).filter(([k, v]) => v !== "");
@@ -60,14 +61,6 @@ const CreateEvent = () => {
                         placeholder="Title"
                         value={eventData.title}
                         onChange={(e) => setEventData({ ...eventData, title: e.currentTarget.value })}
-                    />
-                </div>
-                <div>
-                    Description: &nbsp;
-                    <input
-                        placeholder="Description"
-                        value={eventData.description}
-                        onChange={(e) => setEventData({ ...eventData, description: e.currentTarget.value })}
                     />
                 </div>
                 <div>
@@ -92,9 +85,22 @@ const CreateEvent = () => {
                     <input
                         type="checkbox"
                         placeholder="Is attendable"
-                        value={eventData.isAttendable}
+                        checked={eventData.isAttendable}
                         onChange={(e) => setEventData({ ...eventData, isAttendable: e.currentTarget.checked })}
                     />
+                </div>
+                <div>
+                    Description: <br />
+                    <textarea
+                        style={{
+                            width: 300,
+                            height: 60,
+                        }}
+                        form="createform"
+                        placeholder="Description ..."
+                        value={eventData.description}
+                        onChange={(e) => setEventData({ ...eventData, description: e.currentTarget.value })}
+                    ></textarea>
                 </div>
 
                 <h4 style={{ marginBottom: 0 }}>Optional fields</h4>
