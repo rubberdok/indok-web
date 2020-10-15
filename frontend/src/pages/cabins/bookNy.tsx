@@ -1,6 +1,8 @@
 import { useRouter } from "next/router";
 import { useMutation } from "@apollo/client";
 import { CREATE_BOOKING } from "../../graphql/cabins/mutations";
+import Link from "next/link";
+import Navbar from "@components/navbar/Navbar";
 
 const BookPage = () => {
     let firstnameEl: HTMLInputElement;
@@ -20,10 +22,11 @@ const BookPage = () => {
         // todo: run checks to see if dates are occupied or not.
         e.preventDefault();
 
-        // must parse dates to be "YYYY-MM-DD"
-
-        fromDate = fromDate.split("/").reverse().join("-");
-        toDate = toDate.split("/").reverse().join("-");
+        // must parse dates to be "YYYY-MM-DD", not "DD/MM/YYYY"
+        if (fromDate && toDate) {
+            fromDate = fromDate.split("/").reverse().join("-");
+            toDate = toDate.split("/").reverse().join("-");
+        }
 
         const firstname = firstnameEl.value;
         const surname = surnameEl.value;
@@ -47,12 +50,15 @@ const BookPage = () => {
 
     return (
         <div>
+            <Navbar></Navbar>
             <h2>Booking</h2>
             <p>
                 Booking fra {data.fromDate} til {data.toDate}
             </p>
+            <Link href="/cabins">Tilbake</Link>
             <form action="submit" onSubmit={(e) => handleSubmit(e)}>
                 <input
+                    required
                     type="text"
                     placeholder="Fornavn"
                     ref={(node) => {
@@ -60,6 +66,7 @@ const BookPage = () => {
                     }}
                 />
                 <input
+                    required
                     type="text"
                     placeholder="Etternavn"
                     ref={(node) => {
@@ -67,6 +74,7 @@ const BookPage = () => {
                     }}
                 />
                 <input
+                    required
                     type="email"
                     placeholder="E-postadresse"
                     ref={(node) => {
@@ -74,6 +82,7 @@ const BookPage = () => {
                     }}
                 />
                 <input
+                    required
                     type="number"
                     placeholder="Mobilnummer"
                     ref={(node) => {
