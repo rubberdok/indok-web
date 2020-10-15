@@ -1,9 +1,11 @@
 import { AppProps } from "next/app";
 import "../styles/global.css";
 import "react-calendar/dist/Calendar.css";
+import "@styles/global.css";
+import "@styles/fonts.css";
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 import { ThemeProvider } from "styled-components";
-import theme from "../styles/theme";
+import theme from "@styles/theme";
 
 const App = ({ Component, pageProps }: AppProps): JSX.Element => {
     const client = new ApolloClient({
