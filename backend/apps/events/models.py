@@ -18,21 +18,21 @@ class Category(models.Model):
 class Event(models.Model):
     # Mandatory fields
     title = models.CharField(max_length=128)
-    starttime = models.DateTimeField()
     description = models.TextField()
+    starttime = models.DateTimeField()
     is_attendable = models.BooleanField()
     publisher = models.CharField(max_length=128)
 
     # Optional fields
     endtime = models.DateTimeField(blank=True, null=True)
-    location = models.CharField(max_length=128, blank=True, default="")
+    location = models.CharField(max_length=128, blank=True, null=True)
     organization = models.ForeignKey(
         Organization, on_delete=models.CASCADE, blank=True, null=True
     )
     category = models.ForeignKey(
         Category, on_delete=models.DO_NOTHING, blank=True, null=True
     )
-    image = models.URLField(blank=True, default="")
+    image = models.URLField(blank=True, null=True)
     deadline = models.DateTimeField(blank=True, null=True)
 
     # TODO: Integrate when models are finished

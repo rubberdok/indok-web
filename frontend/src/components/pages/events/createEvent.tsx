@@ -2,6 +2,7 @@ import { CREATE_EVENT } from "@graphql/events/mutations";
 import { gql, useMutation } from "@apollo/client";
 import { useState } from "react";
 import { Event } from "@interfaces/events";
+import { RSA_PSS_SALTLEN_AUTO } from "constants";
 
 const CreateEvent = () => {
     const defaultInput = {
@@ -46,26 +47,15 @@ const CreateEvent = () => {
             <form
                 onSubmit={(e) => {
                     e.preventDefault();
-                    console.log(eventData);
-                    createEvent({
-                        variables: {
-                            title: eventData.title,
-                            description: eventData.description,
-                            starttime: eventData.starttime,
-                            endtime: eventData.endtime,
-                            location: eventData.location,
-                            organizationId: parseInt(eventData.organizationId),
-                            categoryId: parseInt(eventData.categoryId),
-                            image: eventData.image,
-                            isAttendable: eventData.isAttendable,
-                            deadline: eventData.deadline,
-                            publisher: eventData.publisher,
-                        },
-                    });
-                    setEventData(defaultInput);
+                    const filtered = Object.entries(eventData).filter(([k, v]) => v !== "");
+                    const filteredObj = Object.fromEntries(filtered);
+                    createEvent({ variables: { ...filteredObj } }).then((res) => setEventData(defaultInput));
                 }}
             >
+                <h2 style={{ marginTop: -10, marginBottom: 10, textAlign: "center" }}>Create new event</h2>
+                <h4 style={{ margin: 0 }}>Mandatory fields</h4>
                 <div>
+                    Title: &nbsp;
                     <input
                         placeholder="Title"
                         value={eventData.title}
@@ -73,10 +63,19 @@ const CreateEvent = () => {
                     />
                 </div>
                 <div>
+                    Description: &nbsp;
                     <input
                         placeholder="Description"
                         value={eventData.description}
                         onChange={(e) => setEventData({ ...eventData, description: e.currentTarget.value })}
+                    />
+                </div>
+                <div>
+                    Publisher: &nbsp;
+                    <input
+                        placeholder="Publisher"
+                        value={eventData.publisher}
+                        onChange={(e) => setEventData({ ...eventData, publisher: e.currentTarget.value })}
                     />
                 </div>
                 <div>
@@ -89,6 +88,17 @@ const CreateEvent = () => {
                     />
                 </div>
                 <div>
+                    Is attendable: &nbsp;
+                    <input
+                        type="checkbox"
+                        placeholder="Is attendable"
+                        value={eventData.isAttendable}
+                        onChange={(e) => setEventData({ ...eventData, isAttendable: e.currentTarget.checked })}
+                    />
+                </div>
+
+                <h4 style={{ marginBottom: 0 }}>Optional fields</h4>
+                <div>
                     End time: &nbsp;
                     <input
                         type="datetime-local"
@@ -98,6 +108,7 @@ const CreateEvent = () => {
                     />
                 </div>
                 <div>
+                    Location: &nbsp;
                     <input
                         placeholder="Location"
                         value={eventData.location}
@@ -105,6 +116,7 @@ const CreateEvent = () => {
                     />
                 </div>
                 <div>
+                    Organization (ID): &nbsp;
                     <input
                         placeholder="Organization ID"
                         value={eventData.organizationId}
@@ -112,6 +124,7 @@ const CreateEvent = () => {
                     />
                 </div>
                 <div>
+                    Category (ID): &nbsp;
                     <input
                         placeholder="Category ID"
                         value={eventData.categoryId}
@@ -119,19 +132,11 @@ const CreateEvent = () => {
                     />
                 </div>
                 <div>
+                    Image (URL): &nbsp;
                     <input
-                        placeholder="Image"
+                        placeholder="Image URL"
                         value={eventData.image}
                         onChange={(e) => setEventData({ ...eventData, image: e.currentTarget.value })}
-                    />
-                </div>
-                <div>
-                    Is attendable: &nbsp;
-                    <input
-                        type="checkbox"
-                        placeholder="Is attendable"
-                        value={eventData.isAttendable}
-                        onChange={(e) => setEventData({ ...eventData, isAttendable: e.currentTarget.value })}
                     />
                 </div>
                 <div>
@@ -143,14 +148,24 @@ const CreateEvent = () => {
                         onChange={(e) => setEventData({ ...eventData, deadline: e.currentTarget.value })}
                     />
                 </div>
-                <div>
-                    <input
-                        placeholder="Publisher"
-                        value={eventData.publisher}
-                        onChange={(e) => setEventData({ ...eventData, publisher: e.currentTarget.value })}
-                    />
-                </div>
-                <button type="submit">Create Event</button>
+                <button
+                    style={{
+                        marginTop: 20,
+                        marginLeft: "auto",
+                        marginRight: "auto",
+                        marginBottom: -10,
+                        borderRadius: "0.5em",
+                        width: 150,
+                        height: 60,
+                        display: "block",
+                        borderColor: "#065A5A",
+                        backgroundColor: "#6A9997",
+                        color: "#fff",
+                    }}
+                    type="submit"
+                >
+                    Create Event
+                </button>
             </form>
         </div>
     );

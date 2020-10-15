@@ -1,3 +1,4 @@
+import Navbar from "@components/navbar/Navbar";
 import { NextPage } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -11,6 +12,7 @@ const EventInfo: NextPage = () => {
 
     return (
         <div>
+            <Navbar />
             {numberId && <EventDetailPage eventId={numberId} />}
             <Link href="/events"> Back to events </Link>
         </div>

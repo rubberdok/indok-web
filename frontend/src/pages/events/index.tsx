@@ -3,6 +3,7 @@ import { NextPage } from "next";
 import Link from "next/link";
 import React from "react";
 import AllEvents from "../../components/pages/events/allEvents";
+import Navbar from "@components/navbar/Navbar";
 
 const Events: NextPage = () => {
     const Filter = () => {
@@ -39,6 +40,7 @@ const Events: NextPage = () => {
 
     return (
         <Layout>
+            <Navbar />
             <div>
                 <h1>Events</h1>
             </div>
