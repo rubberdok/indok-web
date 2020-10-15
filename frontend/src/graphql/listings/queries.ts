@@ -43,6 +43,63 @@ export const RESPONSES = gql`
     }
 `;
 
+export const RESPONSE = gql`
+    query listing($listingID: ID!, $responseID: ID!) {
+        listing(id: $listingID) {
+            response(id: $responseID) {
+                id
+                response
+            }
+        }
+    }
+`;
+
+export const ORGANIZATIONS = gql`
+    query {
+        organizations {
+            id
+            name
+            slug
+            description
+            parent
+            children
+        }
+    }
+`;
+
+export const ORGANIZATION = gql`
+    query organization($ID: ID!) {
+        organization(id: $ID) {
+            id
+            name
+            slug
+            description
+            parent
+            children
+        }
+    }
+`;
+
+export const ORGANIZATION_LISTINGS = gql`
+    query organization($ID: ID!) {
+        organization(id: $ID) {
+            listings {
+                id
+                title
+                description
+                startDateTime
+                deadline
+                endDateTime
+                url
+                responses {
+                    id
+                    response
+                }
+            }
+        }
+    }
+`;
+
 /* export const ALL_ORGANIZATIONS = gql`
     query allOrganization {
         allOrganizations {

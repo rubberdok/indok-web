@@ -8,9 +8,19 @@ export interface Listing {
     url: string;
     slug: string;
     organization: { id: string; name: string };
+    responses?: Response[];
 }
 
 export interface Response {
     id: string;
     response: string;
+}
+
+export interface Organization {
+    id: string;
+    name: string;
+    slug: string;
+    description: string;
+    parent?: Organization;
+    children?: Organization[];
 }

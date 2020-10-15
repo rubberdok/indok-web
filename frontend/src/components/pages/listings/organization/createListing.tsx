@@ -1,4 +1,4 @@
-import TextField from "./formComponents/textfield";
+import TextField from "../formComponents/textfield";
 import { useState } from "react";
 import { Listing } from "@interfaces/listings";
 import { CREATE_LISTING } from "@graphql/listings/mutations";

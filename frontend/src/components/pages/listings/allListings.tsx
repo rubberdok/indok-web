@@ -1,5 +1,5 @@
 import { useQuery, useMutation } from "@apollo/client";
-import { Listing } from "@interfaces/listings";
+import { Listing, Organization } from "@interfaces/listings";
 import { LISTINGS } from "@graphql/listings/queries";
 import { DELETE_LISTING } from "@graphql/listings/mutations";
 import Link from "next/link";
