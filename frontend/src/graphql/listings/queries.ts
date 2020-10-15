@@ -32,12 +32,6 @@ export const LISTING = gql`
     }
 `;
 
-export const LISTING_FRAGMENT = gql`
-    fragment NewListing on Listing {
-        id
-    }
-`;
-
 export const RESPONSES = gql`
     query listing($ID: ID!) {
         listing(id: $ID) {

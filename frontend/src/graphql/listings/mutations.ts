@@ -53,3 +53,14 @@ export const CREATE_RESPONSE = gql`
         }
     }
 `;
+
+export const DELETE_RESPONSE = gql`
+    mutation deleteResponse($ID: ID!) {
+        deleteResponse(responseId: $ID) {
+            response {
+                id
+            }
+            ok
+        }
+    }
+`;
