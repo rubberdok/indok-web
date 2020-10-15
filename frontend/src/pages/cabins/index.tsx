@@ -34,20 +34,22 @@ const CreateBookingPage = () => {
         parsedBookings = data.allBookings.map((booking: any) => {
             const from: number[] = booking.startDay.split("-").map((date: string) => parseInt(date));
             const to: number[] = booking.endDay.split("-").map((date: string) => parseInt(date));
-            const fromDate = new Date(from[0], from[1] + 1, from[2]);
-            const toDate = new Date(to[0], to[1] + 1, to[2]);
+            const fromDate = new Date(from[0], from[1] - 1, from[2]);
+            const toDate = new Date(to[0], to[1] - 1, to[2]);
 
             return {
                 from: fromDate,
                 to: toDate,
             };
         });
+
+        console.log(parsedBookings);
     }
 
     return (
         <div>
             <Navbar></Navbar>
-            <h1>Book hytte test</h1>
+            <h1>Book hytte</h1>
             {/* <BookingCalendar queryVariables={query} rangeUpdate={rangeUpdate} /> */}
             {/* send videre med parametre onsubmit */}
             <form
