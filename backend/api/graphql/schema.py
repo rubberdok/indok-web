@@ -3,14 +3,13 @@ import graphene
 from .events.schema import EventMutations, EventQueries
 from .listing.schema import ListingMutations, ListingQueries
 from .organizations.schema import OrganizationMutations, OrganizationQueries
-from .surveys.schema import OfferedAnswerQueries, QuestionTypeQueries
+from .surveys.schema import SurveyQueries
 
 class Queries(
     EventQueries,
     ListingQueries,
     OrganizationQueries,
-    OfferedAnswerQueries,
-    QuestionTypeQueries,
+    SurveyQueries,
 ):
     pass
 
