@@ -16,7 +16,6 @@ const BookPage = () => {
     const data = router.query;
     let fromDate = data.fromDate;
     let toDate = data.toDate;
-    console.log(data);
 
     const handleSubmit = (e: any) => {
         // todo: run checks to see if dates are occupied or not.
@@ -32,9 +31,6 @@ const BookPage = () => {
         const surname = surnameEl.value;
         const email = emailEl.value;
         const phone = phoneEl.value;
-        console.log("dates");
-        console.log(fromDate);
-        console.log(toDate);
 
         createBooking({
             variables: {
@@ -44,8 +40,6 @@ const BookPage = () => {
                 endDay: toDate,
             },
         });
-
-        console.log("booking created");
     };
 
     return (
