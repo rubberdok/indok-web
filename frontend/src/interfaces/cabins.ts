@@ -6,6 +6,11 @@ export interface BookingType {
     endDay: string;
 }
 
+export interface BookingFromTo {
+    from: Date;
+    to: Date;
+}
+
 export interface QueryVariables {
     year: string;
     month: string;
