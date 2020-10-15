@@ -1,5 +1,6 @@
 import { useQuery } from "@apollo/client";
 import { GET_EVENT } from "../../../graphql/events/queries";
+import Link from "next/link";
 
 interface Props {
     eventId: number;
@@ -26,20 +27,39 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
     if (data.event)
         return (
             <div>
-                <h3>Event: {data.event.title}</h3>
+                <h2 style={{ marginTop: -10, marginBottom: 10, textAlign: "center" }}>Event details</h2>
+                <div style={{ marginBottom: 15 }}>
+                    <h4 style={{ margin: 0 }}>Mandatory fields</h4>
+                    Id: {data.event.id}
+                    <br />
+                    Title: {data.event.title}
+                    Starttime: {parseDate(data.event.starttime)}
+                    <br />
+                    Publisher: {data.event.publisher}
+                    <br />
+                    Is attendable: {data.event.isAttendable}
+                    <br />
+                    Description: {data.event.description}
+                    <br />
+                </div>
 
-                <p>Id: {data.event.id}</p>
-                <p>Title: {data.event.title}</p>
-                <p>Starttime: {parseDate(data.event.starttime)}</p>
-                <p>Endtime: {parseDate(data.event.endtime)}</p>
-                <p>Location: {data.event.location}</p>
-                <p>Description: {data.event.description}</p>
-                <p>Organization: {getName(data.event.organization)}</p>
-                <p>Category: {getName(data.event.category)}</p>
-                <p>Image URL: {data.event.image}</p>
-                <p>Is attendable: {data.event.isAttendable}</p>
-                <p>Deadline: {parseDate(data.event.deadline)}</p>
-                <p>Publisher: {data.event.publisher}</p>
+                <div>
+                    <h4 style={{ margin: 0 }}>Optional fields</h4>
+                    Endtime: {parseDate(data.event.endtime)}
+                    <br />
+                    Location: {data.event.location}
+                    <br />
+                    Organization: {getName(data.event.organization)}
+                    <br />
+                    Category: {getName(data.event.category)}
+                    <br />
+                    Image URL: {data.event.image}
+                    <br />
+                    Deadline: {parseDate(data.event.deadline)}
+                    <br />
+                </div>
+
+                <Link href="/events"> Back to Events</Link>
             </div>
         );
     else return null;

@@ -13,8 +13,28 @@ const EventInfo: NextPage = () => {
     return (
         <div>
             <Navbar />
-            {numberId && <EventDetailPage eventId={numberId} />}
+            <div
+                style={{
+                    border: "solid",
+                    borderRadius: "1em",
+                    padding: "2em",
+                    backgroundColor: "#fff",
+                    borderColor: "#6A9997",
+                    width: "450px",
+                    margin: "0 auto",
+                }}
+            >
+                {" "}
+                <div style={{ marginLeft: "auto", marginRight: "auto" }}>
+                    {numberId && <EventDetailPage eventId={numberId} />}
+                </div>
+            </div>
             <Link href="/events"> Back to events </Link>
+        </div>
+    );
+    return (
+        <div>
+            <Navbar />
         </div>
     );
 };
