@@ -62,25 +62,6 @@ const CreateBookingPage = () => {
     let toEl: HTMLInputElement;
     let outputEl: HTMLElement;
 
-    // const { loading, data } = useQuery(QUERY_ALL_BOOKINGS);
-
-    // // parse all bookings data
-
-    // let parsedBookings: BookingFromTo[];
-    // if (!loading) {
-    //     parsedBookings = data.allBookings.map((booking: any) => {
-    //         const from: number[] = booking.startDay.split("-").map((date: string) => parseInt(date));
-    //         const to: number[] = booking.endDay.split("-").map((date: string) => parseInt(date));
-    //         const fromDate = new Date(from[0], from[1] - 1, from[2]);
-    //         const toDate = new Date(to[0], to[1] - 1, to[2]);
-
-    //         return {
-    //             from: fromDate,
-    //             to: toDate,
-    //         };
-    //     });
-    // }
-
     const parsedBookings: BookingFromTo[] | undefined = getBookings();
 
     return (
@@ -96,20 +77,6 @@ const CreateBookingPage = () => {
                     const to = toEl.value.split("-").map((n) => parseInt(n));
                     const fromDate = new Date(from[0], from[1] - 1, from[2]);
                     const toDate = new Date(to[0], to[1] - 1, to[2]);
-
-                    // run check to see if booking is occupied
-                    // let occupied = false;
-                    // let occupiedByString: string[] = [];
-                    // parsedBookings.forEach((booking) => {
-                    //     if (
-                    //         (fromDate >= booking.from && fromDate <= booking.to) || // fromDate inside booking range
-                    //         (toDate >= booking.from && toDate <= booking.to) || // toDate inside booking range
-                    //         (fromDate <= booking.from && toDate >= booking.to) // both fromDate and toDate outside of booking range (booking range inside range(from, to))
-                    //     ) {
-                    //         occupied = true;
-                    //         occupiedByString = [booking.from.toLocaleDateString(), booking.to.toLocaleDateString()];
-                    //     }
-                    // });
 
                     if (parsedBookings) {
                         const [occupied, occupiedFrom, occupiedTo] = isOccupied(parsedBookings, fromDate, toDate);
