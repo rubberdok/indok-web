@@ -12,11 +12,25 @@ const OrganizationListingsPage: NextPage<InferGetServerSidePropsType<typeof getS
     });
     if (error) return <p>Error</p>;
     if (loading) return <p>Loading...</p>;
-    return <>{data && <OrganizationListings organization={data.organization} />}</>;
+    return (
+        <>
+            {data && (
+                <>
+                    <div>
+                        <h3>{data.organization.name}</h3>
+                    </div>
+                    <div>{data.organization.description}</div>
+                    <br />
+                    <div>Åpne verv:</div>
+                    <OrganizationListings organization={data.organization} />
+                </>
+            )}
+        </>
+    );
 };
 
 export const getServerSideProps: GetServerSideProps<{ orgID: string }> = async (context) => {
-    console.log(context);
+    console.log(context.query);
     const orgID = context.query.orgID as string;
     return {
         props: { orgID },

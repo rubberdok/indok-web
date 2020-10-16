@@ -72,8 +72,6 @@ export const ORGANIZATION = gql`
             name
             slug
             description
-            parent
-            children
         }
     }
 `;

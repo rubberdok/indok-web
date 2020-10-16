@@ -5,7 +5,7 @@ import { ORGANIZATIONS } from "@graphql/listings/queries";
 import { Organization } from "@interfaces/listings";
 import Link from "next/link";
 
-const OrgDemoPage: NextPage = () => {
+const Demo: NextPage = () => {
     //TODO: change allOrganizations to organizations
     const { loading, error, data } = useQuery<{ allOrganizations: Organization[] }>(ORGANIZATIONS);
     if (error) return <p>Error</p>;
@@ -24,4 +24,4 @@ const OrgDemoPage: NextPage = () => {
     );
 };
 
-export default OrgDemoPage;
+export default Demo;
