@@ -95,7 +95,7 @@ export const DayCell = styled.td<DayCellProps>`
 
     > ${Day} {
         ${(props) => props.isSelected && SelectedDayStyles};
-        ${(props) => props.isInRange && !props.isSelected && "background-color: #F5F0EB"};
+        ${(props) => props.isInRange && !props.isSelected && "background-color: #064B4B"};
     }
 
     ${EventMarker} {
@@ -106,7 +106,7 @@ export const DayCell = styled.td<DayCellProps>`
         cursor: pointer;
 
         > ${Day} {
-            ${(props) => !props.isSelected && "background-color: #F5F0EB"};
+            ${(props) => !props.isSelected && "background-color: #064B4B"};
         }
     }
 `;

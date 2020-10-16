@@ -9,7 +9,6 @@ import {
     MonthPickButton,
     MonthSelector,
     Year,
-    EventMarker,
     EventMarkerWrapper,
     BigTable,
     TwoCalendarsContainer,
@@ -21,16 +20,20 @@ moment.updateLocale("nb", {
     weekdaysShort: ["søn", "man", "tir", "ons", "tor", "fre", "lør"],
 });
 
+export interface Event {
+    date: string;
+    renderComponent: (key: string) => React.ReactNode;
+}
+
 interface CalendarProps {
-    eventDates?: moment.Moment[];
-    onMonthSelected: (selectedMonth: moment.Moment) => void;
+    events: Event[];
+    onMonthSelected?: (selectedMonth: moment.Moment) => void;
     rangeChanged: (range: string[]) => void;
 }
 
-const Calendar = ({ eventDates, onMonthSelected, rangeChanged }: CalendarProps) => {
+const Calendar = ({ events, rangeChanged }: CalendarProps) => {
     const [selectedMonth, setSelectedMonth] = useState(moment());
     const [selectedDay, setSelectedDay] = useState(moment());
-    const [events, setEvents] = useState<number[]>([]);
     const [range, setRange] = useState<string[]>([]);
     const [isRangeFreezed, setIsRangeFreezed] = useState(false);
 
@@ -40,6 +43,7 @@ const Calendar = ({ eventDates, onMonthSelected, rangeChanged }: CalendarProps) 
         for (let i = 1; i <= month.daysInMonth(); i++) {
             const date = isCurrentMonth ? moment(selectedMonth) : moment(selectedMonth).clone().add(1, "month");
             date.set("date", i);
+            const dateEvents = events.filter((event) => event.date === date.format("YYYY-MM-DD"));
             daysOfMonth.push(
                 <DayCell
                     onMouseOver={() => (isRangeFreezed ? null : setRange(getDateRange(selectedDay, date)))}
@@ -50,10 +54,7 @@ const Calendar = ({ eventDates, onMonthSelected, rangeChanged }: CalendarProps) 
                 >
                     <Day>{i}</Day>
                     <EventMarkerWrapper>
-                        {events.length > 0 &&
-                            [...new Array(events[i - 1])].map((x, index) => {
-                                return <EventMarker key={index} />;
-                            })}
+                        {dateEvents ? dateEvents.map((event, index) => event.renderComponent(`${index}`)) : null}
                     </EventMarkerWrapper>
                 </DayCell>
             );
@@ -172,21 +173,6 @@ const Calendar = ({ eventDates, onMonthSelected, rangeChanged }: CalendarProps) 
             setSelectedMonth(newMonth);
         }
     }, [selectedDay]);
-
-    useEffect(() => {
-        const eventArray = [...Array(31)].map((x) => 0);
-        eventDates?.forEach((x) => {
-            if (moment(x).isSame(selectedMonth, "month")) {
-                const index = +x.format("D") - 1;
-                eventArray[index] = eventArray[index] === 3 ? 3 : eventArray[index] + 1;
-            }
-        });
-        setEvents(eventArray);
-    }, [eventDates, selectedMonth]);
-
-    useEffect(() => {
-        onMonthSelected(selectedMonth);
-    }, [selectedMonth]);
 
     return (
         <>

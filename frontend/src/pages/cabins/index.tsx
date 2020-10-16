@@ -1,133 +1,83 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
 import { useRouter } from "next/router";
-import Calendar from "../../components/Calendar/index";
-import Button from "@components/ui/Button";
-import Navbar from "@components/navbar/Navbar";
+import Calendar, { Event } from "../../components/Calendar";
+import moment from "moment";
 import { useQuery } from "@apollo/client";
 import { QUERY_ALL_BOOKINGS } from "../../graphql/cabins/queries";
-import { BookingFromTo } from "@interfaces/cabins";
+import { Booking } from "../../lib/types/Cabins";
+import _ from "lodash";
+import { getDateRange } from "../../components/Calendar/helpers";
+import { EventMarker } from "../../components/Calendar/styles";
 
-// move these to external file?
-export function isOccupied(allBookings: BookingFromTo[], fromDate: Date, toDate: Date) {
-    // checks if the range from fromDate to toDate overlaps with ranges of any of the bookings in allBookings
-    let occupied = false;
-    let occupiedByString: string[] = [];
-    allBookings.forEach((booking) => {
-        if (
-            (fromDate >= booking.from && fromDate <= booking.to) || // fromDate inside booking range
-            (toDate >= booking.from && toDate <= booking.to) || // toDate inside booking range
-            (fromDate <= booking.from && toDate >= booking.to) // both fromDate and toDate outside of booking range (booking range inside range(from, to))
-        ) {
-            occupied = true;
-            occupiedByString = [booking.from.toLocaleDateString(), booking.to.toLocaleDateString()];
-        }
-    });
-
-    return [occupied, occupiedByString[0], occupiedByString[1]];
+interface AllBookingsQuery {
+    allBookings: Booking[];
 }
 
-export function getBookings(): BookingFromTo[] | undefined {
-    const { loading, data } = useQuery(QUERY_ALL_BOOKINGS);
-
-    // parse all bookings data
-
-    let parsedBookings: BookingFromTo[];
-
-    if (!loading) {
-        parsedBookings = data.allBookings.map((booking: any) => {
-            const from: number[] = booking.startDay.split("-").map((date: string) => parseInt(date));
-            const to: number[] = booking.endDay.split("-").map((date: string) => parseInt(date));
-            const fromDate = new Date(from[0], from[1] - 1, from[2]);
-            const toDate = new Date(to[0], to[1] - 1, to[2]);
-
-            return {
-                from: fromDate,
-                to: toDate,
-            };
-        });
-        return parsedBookings;
-    }
-    return undefined;
-}
+const DayEvent = (key: string) => <EventMarker key={key} />;
 
 const CreateBookingPage = () => {
-    const [range, rangeChange] = useState({
-        from: new Date(1, 1, 2020),
-        to: new Date(2, 1, 2020),
-    });
-
+    const { loading, error, data } = useQuery<AllBookingsQuery>(QUERY_ALL_BOOKINGS);
     const router = useRouter();
+    const [range, setRange] = useState<string[]>([]);
+    const [bookings, setBookings] = useState<Event[]>([]);
+    const [errorMessage, setErrorMessage] = useState("");
+    const [isBookButtonDisabled, setIsBookButtonDisabled] = useState(true);
 
-    let fromEl: HTMLInputElement;
-    let toEl: HTMLInputElement;
-    let outputEl: HTMLElement;
+    useEffect(() => {
+        if (data) {
+            const events = data.allBookings.reduce((bookingDays, booking) => {
+                const rangeOfBooking = getDateRange(moment(booking.startDay), moment(booking.endDay));
+                rangeOfBooking.forEach((dayDate: string) => {
+                    bookingDays.push({
+                        date: dayDate,
+                        renderComponent: DayEvent,
+                    });
+                });
+                return bookingDays;
+            }, [] as Event[]);
+            setBookings(events);
+        }
+    }, [data]);
 
-    const parsedBookings: BookingFromTo[] | undefined = getBookings();
+    useEffect(() => {
+        if (data) {
+            const isConflict =
+                data.allBookings.filter(
+                    (booking) =>
+                        _.includes(range, booking.startDay) ||
+                        _.includes(range, booking.endDay) ||
+                        (moment(booking.startDay).isBefore(moment(range[0])) &&
+                            moment(booking.endDay).isAfter(moment(range[1]))) ||
+                        (moment(booking.startDay).isAfter(moment(range[0])) &&
+                            moment(booking.endDay).isBefore(moment(range[1])))
+                ).length > 0;
+            if (isConflict) {
+                setErrorMessage("The selected calendar range is occupied by a booking");
+                setIsBookButtonDisabled(true);
+            } else {
+                setErrorMessage("");
+                setIsBookButtonDisabled(false);
+            }
+        }
+    }, [range]);
 
     return (
         <div>
-            <Navbar></Navbar>
             <h1>Book hytte</h1>
-            {/* <BookingCalendar queryVariables={query} rangeUpdate={rangeUpdate} /> */}
-            {/* send videre med parametre onsubmit */}
-            <form
-                onSubmit={(e) => {
-                    e.preventDefault();
-                    const from = fromEl.value.split("-").map((n) => parseInt(n));
-                    const to = toEl.value.split("-").map((n) => parseInt(n));
-                    const fromDate = new Date(from[0], from[1] - 1, from[2]);
-                    const toDate = new Date(to[0], to[1] - 1, to[2]);
-
-                    if (parsedBookings) {
-                        const [occupied, occupiedFrom, occupiedTo] = isOccupied(parsedBookings, fromDate, toDate);
-
-                        if (occupied) {
-                            const fromString = fromDate.toLocaleDateString();
-                            const toString = toDate.toLocaleDateString();
-                            outputEl.innerHTML = `Booking fra ${fromString} til ${toString} er allerede booket fra \n`;
-                            outputEl.innerHTML += `${occupiedFrom} til ${occupiedTo}`;
-                        } else {
-                            // updates state and redirects to book page with query fromDate and toDate
-                            outputEl.innerHTML = "";
-                            rangeChange({
-                                from: fromDate,
-                                to: toDate,
-                            });
-
-                            router.push({
-                                pathname: "cabins/bookNy",
-                                query: { fromDate: fromDate.toLocaleDateString(), toDate: toDate.toLocaleDateString() },
-                            });
-                        }
-                    }
+            <Calendar rangeChanged={(range) => setRange(range)} events={bookings} />
+            <button
+                onClick={() => {
+                    router.push({
+                        pathname: "cabins/bookNy",
+                        query: { fromDate: range[0], toDate: range[1] },
+                    });
                 }}
+                disabled={isBookButtonDisabled}
             >
-                <input
-                    required
-                    type="date"
-                    placeholder="Fra"
-                    ref={(node) => {
-                        fromEl = node as HTMLInputElement;
-                    }}
-                />
-
-                <input
-                    required
-                    type="date"
-                    placeholder="Til"
-                    ref={(node) => {
-                        toEl = node as HTMLInputElement;
-                    }}
-                />
-
-                <button type="submit">Book</button>
-                <p
-                    ref={(node) => {
-                        outputEl = node as HTMLElement;
-                    }}
-                ></p>
-                <Button url="#">Book</Button>
-            </form>
+                Book
+            </button>
+            <p>{errorMessage}</p>
         </div>
     );
 };
