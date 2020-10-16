@@ -12,11 +12,7 @@ const OrganizationListingsPage: NextPage<InferGetServerSidePropsType<typeof getS
     });
     if (error) return <p>Error</p>;
     if (loading) return <p>Loading...</p>;
-    return (
-        <div>
-            <OrganizationListings organization={data!.organization} />
-        </div>
-    );
+    return <>{data && <OrganizationListings organization={data.organization} />}</>;
 };
 
 export const getServerSideProps: GetServerSideProps<{ id: string }> = async (context) => {

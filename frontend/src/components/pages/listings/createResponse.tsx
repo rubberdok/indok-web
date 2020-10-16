@@ -12,11 +12,11 @@ const CreateResponse: React.FC<{
         CREATE_RESPONSE /* , {
         //TODO: implement update for createResponse
         update: (cache, { data }) => {
-            cache.modify({
+            data && cache.modify({
                 fields: {
                     listing: ({ existingResponses }: { existingResponses: Reference[] }) => {
                         const newResponse = cache.writeFragment<Response>({
-                            data: data!.createResponse.response,
+                            data: data.createResponse.response,
                             fragment: gql`
                                 fragment NewResponse on Response {
                                     id

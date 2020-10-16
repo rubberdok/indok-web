@@ -12,26 +12,27 @@ const AllResponses: React.FC<{ listing: Listing }> = ({ listing }) => {
     if (loading) return <p>Loading...</p>;
     return (
         <ul>
-            {data!.listing.responses.map((response) => (
-                <li key={response.id}>
-                    Response #{response.id}
-                    <br />
-                    {response.response}
-                    <br />
-                    <button
-                        onClick={(e) => {
-                            e.preventDefault();
-                            deleteResponse({
-                                variables: {
-                                    ID: response.id,
-                                },
-                            });
-                        }}
-                    >
-                        Slett
-                    </button>
-                </li>
-            ))}
+            {data &&
+                data.listing.responses.map((response) => (
+                    <li key={response.id}>
+                        Response #{response.id}
+                        <br />
+                        {response.response}
+                        <br />
+                        <button
+                            onClick={(e) => {
+                                e.preventDefault();
+                                deleteResponse({
+                                    variables: {
+                                        ID: response.id,
+                                    },
+                                });
+                            }}
+                        >
+                            Slett
+                        </button>
+                    </li>
+                ))}
         </ul>
     );
 };

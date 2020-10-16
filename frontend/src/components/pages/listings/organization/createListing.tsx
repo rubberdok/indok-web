@@ -8,21 +8,22 @@ const CreateListing: React.FC = () => {
     const [newListing, setNewListing] = useState<Listing>({} as Listing);
     const [createListing] = useMutation<{ createListing: { listing: Listing } }>(CREATE_LISTING, {
         update: (cache, { data }) => {
-            cache.modify({
-                fields: {
-                    listings: (existingListings) => {
-                        const newListing = cache.writeFragment<Listing>({
-                            data: data!.createListing.listing,
-                            fragment: gql`
-                                fragment NewListing on Listing {
-                                    id
-                                }
-                            `,
-                        });
-                        return [...existingListings, newListing];
+            data &&
+                cache.modify({
+                    fields: {
+                        listings: (existingListings) => {
+                            const newListing = cache.writeFragment<Listing>({
+                                data: data.createListing.listing,
+                                fragment: gql`
+                                    fragment NewListing on Listing {
+                                        id
+                                    }
+                                `,
+                            });
+                            return [...existingListings, newListing];
+                        },
                     },
-                },
-            });
+                });
         },
     });
     return (

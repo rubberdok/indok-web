@@ -12,18 +12,21 @@ const ListingPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProp
     const { loading, error, data } = useQuery<{ listing: Listing }>(LISTING, { variables: { ID: Number(id[0]) } });
     if (error) return <h1>Error</h1>;
     if (loading) return <h1>Loading...</h1>;
-    const listing = data!.listing;
     return (
-        <Layout>
-            <Link href="/listings">Tilbake</Link>
-            <h3>{listing.title}</h3>
-            <p>{listing.description}</p>
-            <p>Frist: {listing.deadline.slice(0, 16).replace("T", " ")}</p>
-            <CreateResponse listing={listing}>
-                <TextField title="Søk:" placeholder="Din søknad..." size="long" />
-            </CreateResponse>
-            <AllResponses listing={listing} />
-        </Layout>
+        <>
+            {data && (
+                <Layout>
+                    <Link href="/listings">Tilbake</Link>
+                    <h3>{data.listing.title}</h3>
+                    <p>{data.listing.description}</p>
+                    <p>Frist: {data.listing.deadline.slice(0, 16).replace("T", " ")}</p>
+                    <CreateResponse listing={data.listing}>
+                        <TextField title="Søk:" placeholder="Din søknad..." size="long" />
+                    </CreateResponse>
+                    <AllResponses listing={data.listing} />
+                </Layout>
+            )}
+        </>
     );
 };
 
