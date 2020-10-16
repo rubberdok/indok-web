@@ -1,3 +1,4 @@
+import Layout from "atomic-layout";
 import styled from "styled-components";
 
 export const Title = styled.h1`
@@ -8,6 +9,10 @@ export const Title = styled.h1`
     line-height: 1.4;
     margin-bottom: 40px;
     margin-top: 40px;
+
+    @media (max-width: ${Layout.breakpoints.md.maxWidth}) {
+        font-size: 30px;
+    }
 `;
 
 export const SubTitle = styled.p`
@@ -17,6 +22,10 @@ export const SubTitle = styled.p`
     font-size: 20px;
     text-transform: uppercase;
     margin-bottom: -40px;
+
+    @media (max-width: ${Layout.breakpoints.md.maxWidth}) {
+        font-size: 15px;
+    }
 `;
 
 export const Heading = styled.h2`
@@ -24,6 +33,10 @@ export const Heading = styled.h2`
     font-family: "Playfair Display";
     font-weight: 900;
     font-size: 36px;
+
+    @media (max-width: ${Layout.breakpoints.md.maxWidth}) {
+        font-size: 25px;
+    }
 `;
 
 export const SubHeading = styled.p`
@@ -33,6 +46,10 @@ export const SubHeading = styled.p`
     font-size: 16px;
     text-transform: uppercase;
     margin-bottom: -35px;
+
+    @media (max-width: ${Layout.breakpoints.md.maxWidth}) {
+        font-size: 10px;
+    }
 `;
 
 export const Paragraph = styled.p`

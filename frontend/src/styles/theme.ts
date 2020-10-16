@@ -6,4 +6,5 @@ export default {
         background: "#F5F0EB",
         secondary: "#F4B961",
     },
+    contentWidth: "1400px",
 };

@@ -1,8 +1,15 @@
+import Button from "@components/ui/Button";
+import Card from "@components/ui/Card";
+import Content from "@components/ui/Content";
+import { SubTitle, Title } from "@components/ui/Typography";
+import { Composition } from "atomic-layout";
 import { Fade, Slide } from "react-awesome-reveal";
 import styled from "styled-components";
-import Button, { StyledButton } from "./ui/Button";
-import { Shadow } from "./ui/Card";
-import { SubTitle, Title } from "./ui/Typography";
+
+const template = `
+  heading
+  actions
+`;
 
 const Hero: React.FC = () => {
     return (
@@ -12,11 +19,23 @@ const Hero: React.FC = () => {
             </Fade>
             <Slide direction="left" triggerOnce>
                 <Overlay>
-                    <TitleCard>
-                        <SubTitle>Foreningen for studentene ved</SubTitle>
-                        <Title>Industriell Økonomi og Teknologiledelse</Title>
-                        <Button url="/about">Les mer om foreningen</Button>
-                    </TitleCard>
+                    <Content>
+                        <Card>
+                            <Composition template={template} width={450} widthMd={550} widthLg={700}>
+                                {({ Heading, Actions }) => (
+                                    <>
+                                        <Heading paddingHorizontal={50} paddingTop={30}>
+                                            <SubTitle>Foreningen for studentene ved</SubTitle>
+                                            <Title>Industriell Økonomi og Teknologiledelse</Title>
+                                        </Heading>
+                                        <Actions flex align="flex-end" justify="end">
+                                            <Button url="/about">Les mer om foreningen</Button>
+                                        </Actions>
+                                    </>
+                                )}
+                            </Composition>
+                        </Card>
+                    </Content>
                 </Overlay>
             </Slide>
         </Section>
@@ -35,6 +54,7 @@ const Overlay = styled.div`
     height: calc(100vh - 100px);
     display: flex;
     align-items: center;
+    justify-content: center;
 `;
 
 const Image = styled.img`
@@ -43,19 +63,6 @@ const Image = styled.img`
     float: right;
     object-fit: cover;
     filter: drop-shadow(-10px 0px 100px rgba(0, 0, 0, 0.15));
-`;
-
-const TitleCard = styled(Shadow)`
-    background: #fff;
-    width: 710px;
-    padding: 50px 80px 0 90px;
-    margin-left: 8vw;
-    margin-top: -40px;
-
-    & ${StyledButton} {
-        float: right;
-        margin-right: -80px;
-    }
 `;
 
 export default Hero;

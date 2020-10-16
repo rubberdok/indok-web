@@ -1,13 +1,14 @@
 import Hero from "@components/Hero";
 import Layout from "@components/Layout";
 import Button from "@components/ui/Button";
+import Content from "@components/ui/Content";
 import { Heading, Paragraph, SubHeading } from "@components/ui/Typography";
 import { NextPage } from "next";
 
 const IndexPage: NextPage = () => (
     <Layout>
         <Hero />
-        <div>
+        <Content>
             <br />
             <SubHeading>Arrangementer</SubHeading>
             <Heading>Hva skjer nå?</Heading>
@@ -21,7 +22,8 @@ const IndexPage: NextPage = () => (
                 studentenes mulighet til å direkte påvirke budsjetter og avgjørelser som blir fattet på linjen.
             </Paragraph>
             <Button url="/testpage">Les mer om foreningen</Button>
-        </div>
+            <br />
+        </Content>
     </Layout>
 );
 

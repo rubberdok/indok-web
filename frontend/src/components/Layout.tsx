@@ -1,5 +1,5 @@
-import Head from "next/head";
 import Navbar from "@components/navbar/Navbar";
+import Head from "next/head";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
     return (
