@@ -1,72 +1,89 @@
-import { BookingsFor } from "../../components/pages/cabins/bookingsFor";
+import { useRouter } from "next/router";
 import { useMutation } from "@apollo/client";
 import { CREATE_BOOKING } from "../../graphql/cabins/mutations";
-import { useState } from "react";
-import { QueryVariables } from "../../interfaces/cabins";
+import Link from "next/link";
+import Navbar from "@components/navbar/Navbar";
 
-interface Props {
-    queryVariables: QueryVariables;
-    rangeUpdate: (variables: QueryVariables) => void;
-}
-
-const BookPage = ({ queryVariables, rangeUpdate }: Props) => {
-    // const [query, rangeUpdate] = useState({
-    //     year: "2020",
-    //     month: "10",
-    //     start: "",
-    //     end: "",
-    // });
-
-    console.log(queryVariables);
-
-    let contact_num: HTMLInputElement;
-    let contact_person: HTMLInputElement;
+const BookPage = () => {
+    let firstnameEl: HTMLInputElement;
+    let surnameEl: HTMLInputElement;
+    let emailEl: HTMLInputElement;
+    let phoneEl: HTMLInputElement;
 
     const [createBooking] = useMutation(CREATE_BOOKING);
 
+    const router = useRouter();
+    const data = router.query;
+    let fromDate = data.fromDate;
+    let toDate = data.toDate;
+
+    const handleSubmit = (e: any) => {
+        // todo: run checks to see if dates are occupied or not.
+        e.preventDefault();
+
+        // must parse dates to be "YYYY-MM-DD", not "DD/MM/YYYY"
+        if (fromDate && toDate) {
+            fromDate = fromDate.split("/").reverse().join("-");
+            toDate = toDate.split("/").reverse().join("-");
+        }
+
+        const firstname = firstnameEl.value;
+        const surname = surnameEl.value;
+        const email = emailEl.value;
+        const phone = phoneEl.value;
+
+        createBooking({
+            variables: {
+                contactNum: parseInt(phone),
+                contactPerson: firstname + " " + surname,
+                startDay: fromDate,
+                endDay: toDate,
+            },
+        });
+    };
+
     return (
         <div>
-            <BookingsFor queryVariables={queryVariables} />
-            <form
-                onSubmit={(e) => {
-                    e.preventDefault();
-
-                    // Oppdater cache
-                    console.log("Making booking...");
-
-                    createBooking({
-                        variables: {
-                            contactNum: parseInt(contact_num.value),
-                            contactPerson: contact_person.value,
-                            startDay: queryVariables.start,
-                            endDay: queryVariables.end,
-                        },
-                    });
-
-                    contact_num.value = "";
-                    contact_person.value = "";
-
-                    console.log("Booking created");
-                }}
-            >
-                <div>
-                    <input
-                        type="number"
-                        placeholder="Mobilnummer"
-                        ref={(node) => {
-                            contact_num = node as HTMLInputElement; // avoid ts-error 2322
-                        }}
-                    />
-                </div>
-                <div>
-                    <input
-                        placeholder="Fullt navn"
-                        ref={(node) => {
-                            contact_person = node as HTMLInputElement;
-                        }}
-                    />
-                </div>
-                <button type="submit">Book</button>
+            <Navbar></Navbar>
+            <h2>Booking</h2>
+            <p>
+                Booking fra {data.fromDate} til {data.toDate}
+            </p>
+            <Link href="/cabins">Tilbake</Link>
+            <form action="submit" onSubmit={(e) => handleSubmit(e)}>
+                <input
+                    required
+                    type="text"
+                    placeholder="Fornavn"
+                    ref={(node) => {
+                        firstnameEl = node as HTMLInputElement;
+                    }}
+                />
+                <input
+                    required
+                    type="text"
+                    placeholder="Etternavn"
+                    ref={(node) => {
+                        surnameEl = node as HTMLInputElement;
+                    }}
+                />
+                <input
+                    required
+                    type="email"
+                    placeholder="E-postadresse"
+                    ref={(node) => {
+                        emailEl = node as HTMLInputElement;
+                    }}
+                />
+                <input
+                    required
+                    type="number"
+                    placeholder="Mobilnummer"
+                    ref={(node) => {
+                        phoneEl = node as HTMLInputElement;
+                    }}
+                />
+                <button type="submit">Fullfør booking</button>
             </form>
         </div>
     );

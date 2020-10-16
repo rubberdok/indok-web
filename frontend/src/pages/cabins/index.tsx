@@ -69,7 +69,7 @@ const CreateBookingPage = () => {
             <button
                 onClick={() => {
                     router.push({
-                        pathname: "cabins/bookNy",
+                        pathname: "cabins/book",
                         query: { fromDate: range[0], toDate: range[1] },
                     });
                 }}
