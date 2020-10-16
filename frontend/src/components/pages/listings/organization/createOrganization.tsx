@@ -13,7 +13,8 @@ const CreateOrganization: React.FC = () => {
                 data &&
                     cache.modify({
                         fields: {
-                            organizations: (existingOrganizations) => {
+                            //TODO: change allOrganizations to organizations
+                            allOrganizations: (existingOrganizations) => {
                                 const newOrganization = cache.writeFragment<Organization>({
                                     data: data.createOrganization.organization,
                                     fragment: gql`
@@ -47,11 +48,14 @@ const CreateOrganization: React.FC = () => {
                 onChange={(e) => setNewOrganization({ ...newOrganization, name: e.target.value })}
                 value={newOrganization.name}
             />
+            <br />
             <TextField
                 title="Beskrivelse: "
+                size="short"
                 onChange={(e) => setNewOrganization({ ...newOrganization, description: e.target.value })}
                 value={newOrganization.description}
             />
+            <br />
             <button type="submit">Opprett organisasjon</button>
         </form>
     );

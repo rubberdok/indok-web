@@ -56,13 +56,11 @@ export const RESPONSE = gql`
 
 export const ORGANIZATIONS = gql`
     query {
-        organizations {
+        allOrganizations {
             id
             name
             slug
             description
-            parent
-            children
         }
     }
 `;
