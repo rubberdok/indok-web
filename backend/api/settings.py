@@ -133,14 +133,10 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 
-STATICFILES_DIRS = [
-    "backend/api/static/"
-]
 
-
-# wip email aut
-EMAIL_HOST_USER = "herman.holmoy12@gmail.com"
-EMAIL_HOST_PASSWORD = "raider321"
+#CONFIG
+EMAIL_HOST_USER = "" # e-post
+EMAIL_HOST_PASSWORD = "" # passord
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'

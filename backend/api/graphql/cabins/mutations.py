@@ -93,12 +93,11 @@ class SendEmail(graphene.Mutation):
 
     def mutate(self, info, firstname, surname, receiverEmail, bookFrom, bookTo):
         subject = "Bekreftelsesmail for booking av Indøkhytte"
-        senderEmail = "herman.holmoy12@gmail.com"
+        senderEmail = "herman.holmoy12@gmail.com" # modify
 
         startDate = datetime.strptime(bookFrom, "%Y-%m-%d").isoformat()
         endDate = datetime.strptime(bookTo, "%Y-%m-%d").isoformat()
         text = "Legg til i Google Calendar"
-        # create link to google cal
         link = f"https://calendar.google.com/calendar/r/eventedit?text={text}&dates={startDate}/{endDate}"
 
         print("dates", startDate, endDate)
