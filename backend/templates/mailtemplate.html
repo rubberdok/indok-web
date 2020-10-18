@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title></title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="" />
+
+    <style>
+      body {
+        font-family: "Montserrat";
+      }
+      .container {
+        border: 5px solid #065a5a;
+        text-align: center;
+        padding: 20px;
+        background-color: #f5f0eb;
+        width: 80%;
+        -webkit-box-shadow: 11px 17px 52px -12px rgba(0, 0, 0, 0.48);
+        -moz-box-shadow: 11px 17px 52px -12px rgba(0, 0, 0, 0.48);
+        box-shadow: 11px 17px 52px -12px rgba(0, 0, 0, 0.48);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Hei {{ firstname }}!</h2>
+      <p>
+        Dette er en bekreftelsesmail for din booking av en Indøkhytte fra
+        {{fromDate }} til {{ toDatse }}.
+      </p>
+      <p>Vennligst les nøye gjennom reglementet før dere kommer til hytta.</p>
+      <h2>God tur!</h2>
+
+      <a href="{{ link }}">Legg til i Google Calendar</a>
+    </div>
+  </body>
+</html>
