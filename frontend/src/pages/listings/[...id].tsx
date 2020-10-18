@@ -6,7 +6,6 @@ import { LISTING } from "@graphql/listings/queries";
 import { Listing } from "@interfaces/listings";
 import Link from "next/link";
 import CreateResponse from "@components/pages/listings/createResponse";
-import AllResponses from "@components/pages/listings/organization/allResponses";
 
 const ListingPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ id }) => {
     const { loading, error, data } = useQuery<{ listing: Listing }>(LISTING, { variables: { ID: Number(id[0]) } });
@@ -23,7 +22,6 @@ const ListingPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProp
                     <CreateResponse listing={data.listing}>
                         <TextField title="Søk:" placeholder="Din søknad..." size="long" />
                     </CreateResponse>
-                    <AllResponses listing={data.listing} />
                 </Layout>
             )}
         </>

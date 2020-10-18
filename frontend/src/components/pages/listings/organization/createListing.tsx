@@ -71,28 +71,28 @@ const CreateListing: React.FC<{ organization?: Organization }> = ({ organization
                 value={newListing.description}
             />
             <br />
-            Start time:
+            Starttid:{" "}
             <input
                 type="datetime-local"
                 onChange={(e) => setNewListing({ ...newListing, startDateTime: e.target.value })}
                 value={newListing.startDateTime}
             />
             <br />
-            Deadline:
+            Frist:{" "}
             <input
                 type="datetime-local"
                 onChange={(e) => setNewListing({ ...newListing, deadline: e.target.value })}
                 value={newListing.deadline}
             />
             <br />
-            End time:
+            Slutt:{" "}
             <input
                 type="datetime-local"
                 onChange={(e) => setNewListing({ ...newListing, endDateTime: e.target.value })}
                 value={newListing.endDateTime}
             />
             <br />
-            <button type="submit">Add listing</button>
+            <button type="submit">Legg til verv</button>
         </form>
     );
 };

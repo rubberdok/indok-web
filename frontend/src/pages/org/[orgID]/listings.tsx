@@ -4,6 +4,7 @@ import { useQuery } from "@apollo/client";
 import { ORGANIZATION } from "@graphql/listings/queries";
 import { Organization } from "@interfaces/listings";
 import CreateListing from "@components/pages/listings/organization/createListing";
+import Link from "next/link";
 
 const OrganizationListingsPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ orgID }) => {
     const { loading, error, data } = useQuery<{ organization: Organization }>(ORGANIZATION, {
@@ -15,20 +16,17 @@ const OrganizationListingsPage: NextPage<InferGetServerSidePropsType<typeof getS
     if (loading) return <p>Loading...</p>;
     return (
         <>
+            <Link href="/org">Tilbake</Link>
             {data && (
                 <>
                     <div>
                         <h3>{data.organization.name}</h3>
                     </div>
                     <div>{data.organization.description}</div>
-                    <div>
-                        <h4>Opprett verv:</h4>
-                    </div>
-                    <CreateListing organization={data.organization} />
-                    <div>
-                        <h4>Åpne verv:</h4>
-                    </div>
+                    <h4>Åpne verv:</h4>
                     <OrganizationListings organization={data.organization} />
+                    <h4>Opprett verv:</h4>
+                    <CreateListing organization={data.organization} />
                 </>
             )}
         </>

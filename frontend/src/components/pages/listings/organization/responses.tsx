@@ -3,7 +3,7 @@ import { useQuery, useMutation } from "@apollo/client";
 import { RESPONSES } from "@graphql/listings/queries";
 import { DELETE_RESPONSE } from "@graphql/listings/mutations";
 
-const AllResponses: React.FC<{ listing: Listing }> = ({ listing }) => {
+const Responses: React.FC<{ listing: Listing }> = ({ listing }) => {
     const { loading, error, data } = useQuery<{ listing: { responses: Response[] } }>(RESPONSES, {
         variables: { ID: Number(listing.id) },
     });
@@ -37,4 +37,4 @@ const AllResponses: React.FC<{ listing: Listing }> = ({ listing }) => {
     );
 };
 
-export default AllResponses;
+export default Responses;

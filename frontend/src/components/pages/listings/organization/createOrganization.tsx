@@ -44,7 +44,7 @@ const CreateOrganization: React.FC = () => {
             }}
         >
             <TextField
-                title="Navn på organisasjonen: "
+                title="Navn på foreningen: "
                 onChange={(e) => setNewOrganization({ ...newOrganization, name: e.target.value })}
                 value={newOrganization.name}
             />

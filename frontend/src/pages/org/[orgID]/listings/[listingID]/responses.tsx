@@ -1,10 +1,14 @@
 import { NextPage, GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { useQuery } from "@apollo/client";
-import { Listing, Response } from "@interfaces/listings";
+import { Listing } from "@interfaces/listings";
 import { LISTING } from "@graphql/listings/queries";
-import AllResponses from "@components/pages/listings/organization/allResponses";
+import Responses from "@components/pages/listings/organization/responses";
+import Link from "next/link";
 
-const ListingResponsesPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ listingID }) => {
+const ListingResponsesPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
+    listingID,
+    orgID,
+}) => {
     const { loading, error, data } = useQuery<{ listing: Listing }>(LISTING, {
         variables: {
             ID: listingID,
@@ -16,9 +20,10 @@ const ListingResponsesPage: NextPage<InferGetServerSidePropsType<typeof getServe
         <>
             {data && (
                 <>
+                    <Link href={`/org/${orgID}/listings`}>Tilbake</Link>
                     <h3>{data.listing.title}</h3>
                     <p>{data.listing.description}</p>
-                    <AllResponses listing={data.listing} />
+                    <Responses listing={data.listing} />
                 </>
             )}
         </>
@@ -27,10 +32,12 @@ const ListingResponsesPage: NextPage<InferGetServerSidePropsType<typeof getServe
 
 export const getServerSideProps: GetServerSideProps<{
     listingID: string;
+    orgID: string;
 }> = async (context) => {
     const listingID = context.query.listingID as string;
+    const orgID = context.query.orgID as string;
     return {
-        props: { listingID },
+        props: { listingID, orgID },
     };
 };
 

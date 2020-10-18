@@ -1,5 +1,5 @@
 import { Listing, Response } from "@interfaces/listings";
-import { useMutation, gql, Reference } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import { CREATE_RESPONSE } from "@graphql/listings/mutations";
 import React, { useState, ChangeEvent } from "react";
 
