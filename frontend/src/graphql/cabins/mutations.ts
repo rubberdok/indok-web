@@ -7,3 +7,23 @@ export const CREATE_BOOKING = gql`
         }
     }
 `;
+
+export const SEND_EMAIL = gql`
+    mutation SendEmail(
+        $firstname: String
+        $surname: String
+        $receiverEmail: String
+        $bookFrom: String
+        $bookTo: String
+    ) {
+        sendEmail(
+            firstname: $firstname
+            surname: $surname
+            receiverEmail: $receiverEmail
+            bookFrom: $bookFrom
+            bookTo: $bookTo
+        ) {
+            ok
+        }
+    }
+`;
