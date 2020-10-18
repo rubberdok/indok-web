@@ -3,6 +3,7 @@ import { NextPage, GetServerSideProps, InferGetServerSidePropsType } from "next"
 import { useQuery } from "@apollo/client";
 import { ORGANIZATION } from "@graphql/listings/queries";
 import { Organization } from "@interfaces/listings";
+import CreateListing from "@components/pages/listings/organization/createListing";
 
 const OrganizationListingsPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ orgID }) => {
     const { loading, error, data } = useQuery<{ organization: Organization }>(ORGANIZATION, {
@@ -20,8 +21,13 @@ const OrganizationListingsPage: NextPage<InferGetServerSidePropsType<typeof getS
                         <h3>{data.organization.name}</h3>
                     </div>
                     <div>{data.organization.description}</div>
-                    <br />
-                    <div>Åpne verv:</div>
+                    <div>
+                        <h4>Opprett verv:</h4>
+                    </div>
+                    <CreateListing />
+                    <div>
+                        <h4>Åpne verv:</h4>
+                    </div>
                     <OrganizationListings organization={data.organization} />
                 </>
             )}

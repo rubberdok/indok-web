@@ -89,7 +89,6 @@ export const ORGANIZATION_LISTINGS = gql`
                 url
                 responses {
                     id
-                    response
                 }
             }
         }
