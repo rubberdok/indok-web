@@ -56,7 +56,7 @@ const CreateOrganization: React.FC = () => {
                 value={newOrganization.description}
             />
             <br />
-            <button type="submit">Opprett organisasjon</button>
+            <button type="submit">Opprett forening</button>
         </form>
     );
 };

@@ -3,7 +3,7 @@ import { useQuery, useMutation } from "@apollo/client";
 import { RESPONSES } from "@graphql/listings/queries";
 import { DELETE_RESPONSE } from "@graphql/listings/mutations";
 
-const Responses: React.FC<{ listing: Listing }> = ({ listing }) => {
+const ListingResponses: React.FC<{ listing: Listing }> = ({ listing }) => {
     const { loading, error, data } = useQuery<{ listing: { responses: Response[] } }>(RESPONSES, {
         variables: { ID: Number(listing.id) },
     });
@@ -15,10 +15,7 @@ const Responses: React.FC<{ listing: Listing }> = ({ listing }) => {
             {data &&
                 data.listing.responses.map((response) => (
                     <li key={response.id}>
-                        Response #{response.id}
-                        <br />
-                        {response.response}
-                        <br />
+                        Response #{response.id}{" "}
                         <button
                             onClick={(e) => {
                                 e.preventDefault();
@@ -31,10 +28,12 @@ const Responses: React.FC<{ listing: Listing }> = ({ listing }) => {
                         >
                             Slett
                         </button>
+                        <br />
+                        {response.response}
                     </li>
                 ))}
         </ul>
     );
 };
 
-export default Responses;
+export default ListingResponses;

@@ -2,7 +2,7 @@ import { NextPage, GetServerSideProps, InferGetServerSidePropsType } from "next"
 import { useQuery } from "@apollo/client";
 import { Listing } from "@interfaces/listings";
 import { LISTING } from "@graphql/listings/queries";
-import Responses from "@components/pages/listings/organization/responses";
+import ListingResponses from "@components/pages/listings/organization/listingResponses";
 import Link from "next/link";
 
 const ListingResponsesPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
@@ -23,7 +23,7 @@ const ListingResponsesPage: NextPage<InferGetServerSidePropsType<typeof getServe
                     <Link href={`/org/${orgID}/listings`}>Tilbake</Link>
                     <h3>{data.listing.title}</h3>
                     <p>{data.listing.description}</p>
-                    <Responses listing={data.listing} />
+                    <ListingResponses listing={data.listing} />
                 </>
             )}
         </>

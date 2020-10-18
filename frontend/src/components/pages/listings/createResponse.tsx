@@ -7,7 +7,7 @@ const CreateResponse: React.FC<{
     listing: Listing;
     children?: React.ReactNode;
 }> = ({ listing, children }) => {
-    const [newResponse, setNewResponse] = useState<Response>({} as Response);
+    const [response, setResponse] = useState<Response>({} as Response);
     const [createResponse] = useMutation<{ createResponse: { response: Response } }>(
         CREATE_RESPONSE /* , {
         //TODO: implement update for createResponse
@@ -36,26 +36,26 @@ const CreateResponse: React.FC<{
                 e.preventDefault();
                 createResponse({
                     variables: {
-                        response: newResponse.response,
+                        response: response.response,
                         applicantId: 1,
                         listingId: listing.id,
                     },
                 });
-                setNewResponse({ ...newResponse, response: "" });
+                setResponse({ ...response, response: "" });
             }}
         >
             {React.Children.map(children, (child) => {
                 if (React.isValidElement(child)) {
                     return React.cloneElement(child, {
-                        value: newResponse.response,
+                        value: response.response,
                         onChange: (e: ChangeEvent<HTMLInputElement>) =>
-                            setNewResponse({ ...newResponse, response: e.target.value }),
+                            setResponse({ ...response, response: e.target.value }),
                     });
                 }
                 return child;
             })}
             <br />
-            <button type="submit">Søk!</button>
+            <button type="submit">Søk</button>
         </form>
     );
 };

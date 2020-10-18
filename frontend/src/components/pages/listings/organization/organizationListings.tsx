@@ -31,28 +31,39 @@ const OrganizationListings: React.FC<{ organization: Organization }> = ({ organi
     }
     if (loading) return <p>Loading...</p>;
     return (
-        <ul>
-            {data &&
-                data.organization.listings.map((listing) => (
-                    <li key={listing.id}>
-                        <Link href={`/org/${organization.id}/listings/${listing.id}/responses`}>{listing.title}</Link>{" "}
-                        <button
-                            onClick={(e) => {
-                                e.preventDefault();
-                                deleteListing({
-                                    variables: {
-                                        ID: listing.id,
-                                    },
-                                });
-                            }}
-                        >
-                            Slett
-                        </button>
-                        <br />
-                        <p>Søknader: {listing.responses ? listing.responses.length : 0}</p>
-                    </li>
-                ))}
-        </ul>
+        <>
+            {data && (
+                <>
+                    {data.organization.listings.length !== 0 ? (
+                        <ul>
+                            {data.organization.listings.map((listing) => (
+                                <li key={listing.id}>
+                                    <Link href={`/org/${organization.id}/listings/${listing.id}/responses`}>
+                                        {listing.title}
+                                    </Link>{" "}
+                                    <button
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            deleteListing({
+                                                variables: {
+                                                    ID: listing.id,
+                                                },
+                                            });
+                                        }}
+                                    >
+                                        Slett
+                                    </button>
+                                    <br />
+                                    <p>Søknader: {listing.responses ? listing.responses.length : 0}</p>
+                                </li>
+                            ))}
+                        </ul>
+                    ) : (
+                        <p>Ingen åpne verv</p>
+                    )}
+                </>
+            )}
+        </>
     );
 };
 
