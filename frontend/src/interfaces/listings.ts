@@ -7,7 +7,7 @@ export interface Listing {
     endDateTime: string;
     url: string;
     slug: string;
-    organization: { id: string; name: string };
+    organization?: Organization;
     responses?: Response[];
 }
 

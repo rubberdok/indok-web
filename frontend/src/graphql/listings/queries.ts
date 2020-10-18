@@ -94,12 +94,3 @@ export const ORGANIZATION_LISTINGS = gql`
         }
     }
 `;
-
-/* export const ALL_ORGANIZATIONS = gql`
-    query allOrganization {
-        allOrganizations {
-            id
-            name
-        }
-    }
-`; */

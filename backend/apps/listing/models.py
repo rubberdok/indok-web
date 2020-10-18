@@ -14,7 +14,7 @@ class Listing(models.Model):
     end_date_time = models.DateTimeField()
     deadline = models.DateTimeField()
 
-    organization = models.ForeignKey(Organization, on_delete=models.CASCADE, null=True)
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE, null=True, related_name="listings")
 
     url = models.URLField(null=True, blank=True)
 

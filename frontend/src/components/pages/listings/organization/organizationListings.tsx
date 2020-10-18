@@ -8,7 +8,10 @@ const OrganizationListings: React.FC<{ organization: Organization }> = ({ organi
             ID: organization.id,
         },
     });
-    if (error) return <p>Error</p>;
+    if (error) {
+        console.log(error);
+        return <p>Error</p>;
+    }
     if (loading) return <p>Loading...</p>;
     return (
         <ul>
