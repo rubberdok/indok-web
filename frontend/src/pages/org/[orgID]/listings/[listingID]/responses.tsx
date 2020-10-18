@@ -1,10 +1,11 @@
 import { NextPage, GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { useQuery } from "@apollo/client";
 import { Listing, Response } from "@interfaces/listings";
-import { RESPONSES } from "@graphql/listings/queries";
+import { LISTING } from "@graphql/listings/queries";
+import AllResponses from "@components/pages/listings/organization/allResponses";
 
 const ListingResponsesPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ listingID }) => {
-    const { loading, error, data } = useQuery<{ listing: Listing }>(RESPONSES, {
+    const { loading, error, data } = useQuery<{ listing: Listing }>(LISTING, {
         variables: {
             ID: listingID,
         },
@@ -17,15 +18,7 @@ const ListingResponsesPage: NextPage<InferGetServerSidePropsType<typeof getServe
                 <>
                     <h3>{data.listing.title}</h3>
                     <p>{data.listing.description}</p>
-                    <ul>
-                        {data.listing.responses &&
-                            data.listing.responses.map((response) => (
-                                <li key={response.id}>
-                                    <h4>Response #{response.id}</h4>
-                                    <p>{response.response}</p>
-                                </li>
-                            ))}
-                    </ul>
+                    <AllResponses listing={data.listing} />
                 </>
             )}
         </>

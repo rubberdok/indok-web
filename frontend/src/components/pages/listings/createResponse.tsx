@@ -41,6 +41,7 @@ const CreateResponse: React.FC<{
                         listingId: listing.id,
                     },
                 });
+                setNewResponse({ ...newResponse, response: "" });
             }}
         >
             {React.Children.map(children, (child) => {
