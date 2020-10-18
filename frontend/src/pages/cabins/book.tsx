@@ -3,14 +3,19 @@ import { useMutation } from "@apollo/client";
 import { CREATE_BOOKING } from "../../graphql/cabins/mutations";
 import Link from "next/link";
 import Navbar from "@components/navbar/Navbar";
+import Button from "@components/ui/Button";
+import React from "react";
+import Input from "@components/ui/Input";
+import { SEND_EMAIL } from "@graphql/cabins/mutations";
 
 const BookPage = () => {
-    let firstnameEl: HTMLInputElement;
-    let surnameEl: HTMLInputElement;
-    let emailEl: HTMLInputElement;
-    let phoneEl: HTMLInputElement;
+    const firstnameRef = React.createRef<HTMLInputElement>();
+    const surnameRef = React.createRef<HTMLInputElement>();
+    const emailRef = React.createRef<HTMLInputElement>();
+    const phoneRef = React.createRef<HTMLInputElement>();
 
     const [createBooking] = useMutation(CREATE_BOOKING);
+    const [sendEmail] = useMutation(SEND_EMAIL);
 
     const router = useRouter();
     const data = router.query;
@@ -27,19 +32,35 @@ const BookPage = () => {
             toDate = toDate.split("/").reverse().join("-");
         }
 
-        const firstname = firstnameEl.value;
-        const surname = surnameEl.value;
-        const email = emailEl.value;
-        const phone = phoneEl.value;
+        // avoid refs being null
+        if (firstnameRef.current && surnameRef.current && emailRef.current && phoneRef.current) {
+            const firstname = firstnameRef.current.value;
+            const surname = surnameRef.current.value;
+            const email = emailRef.current.value;
+            const phone = phoneRef.current.value;
 
-        createBooking({
-            variables: {
-                contactNum: parseInt(phone),
-                contactPerson: firstname + " " + surname,
-                startDay: fromDate,
-                endDay: toDate,
-            },
-        });
+            // create booking and send email
+            createBooking({
+                variables: {
+                    contactNum: parseInt(phone),
+                    contactPerson: firstname + " " + surname,
+                    startDay: fromDate,
+                    endDay: toDate,
+                },
+            });
+
+            sendEmail({
+                variables: {
+                    firstname: firstname,
+                    surname: surname,
+                    receiverEmail: email,
+                    bookFrom: fromDate,
+                    bookTo: toDate,
+                },
+            });
+
+            console.log("created booking and sent email");
+        }
     };
 
     return (
@@ -51,39 +72,12 @@ const BookPage = () => {
             </p>
             <Link href="/cabins">Tilbake</Link>
             <form action="submit" onSubmit={(e) => handleSubmit(e)}>
-                <input
-                    required
-                    type="text"
-                    placeholder="Fornavn"
-                    ref={(node) => {
-                        firstnameEl = node as HTMLInputElement;
-                    }}
-                />
-                <input
-                    required
-                    type="text"
-                    placeholder="Etternavn"
-                    ref={(node) => {
-                        surnameEl = node as HTMLInputElement;
-                    }}
-                />
-                <input
-                    required
-                    type="email"
-                    placeholder="E-postadresse"
-                    ref={(node) => {
-                        emailEl = node as HTMLInputElement;
-                    }}
-                />
-                <input
-                    required
-                    type="number"
-                    placeholder="Mobilnummer"
-                    ref={(node) => {
-                        phoneEl = node as HTMLInputElement;
-                    }}
-                />
+                <Input placeholder="Fornavn" required={true} type="text" ref={firstnameRef}></Input>
+                <Input placeholder="Etternavn" required={true} type="text" ref={surnameRef}></Input>
+                <Input placeholder="E-postadresse" required={true} type="email" ref={emailRef}></Input>
+                <Input placeholder="Mobilnummer" required={true} type="nummer" ref={phoneRef}></Input>
                 <button type="submit">Fullfør booking</button>
+                <Button url={router.asPath}>Fullfør booking</Button>
             </form>
         </div>
     );
