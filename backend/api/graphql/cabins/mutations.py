@@ -93,14 +93,15 @@ class SendEmail(graphene.Mutation):
 
     def mutate(self, info, firstname, surname, receiverEmail, bookFrom, bookTo):
         subject = "Bekreftelsesmail for booking av Indøkhytte"
-        senderEmail = "herman.holmoy12@gmail.com" # modify
+        sender_email = "herman.holmoy12@gmail.com" # modify
 
-        startDate = datetime.strptime(bookFrom, "%Y-%m-%d").isoformat()
-        endDate = datetime.strptime(bookTo, "%Y-%m-%d").isoformat()
-        text = "Legg til i Google Calendar"
-        link = f"https://calendar.google.com/calendar/r/eventedit?text={text}&dates={startDate}/{endDate}"
+        start_date = datetime.strptime(bookFrom, "%Y-%m-%d").isoformat().replace("-", "").replace(":", "") # Google Calendar wants YYYYMMDDThhmmss
+        end_date = datetime.strptime(bookTo, "%Y-%m-%d").isoformat().replace("-", "").replace(":", "")
+        text = "Hyttetur til Indøkhyttene"
+        location = "Oppdal+Skisenter+-+Stølen"
+        link = f"https://calendar.google.com/calendar/u/0/r/eventedit?text={text}&dates={start_date}/{end_date}&location={location}"
 
-        print("dates", startDate, endDate)
+        print("dates", start_date, end_date)
         print("link: ", link)
 
         ctx = {
@@ -112,9 +113,8 @@ class SendEmail(graphene.Mutation):
         }
 
         content = get_template("mailtemplate.html").render(ctx)
-        msg = EmailMessage(subject, content, senderEmail, [receiverEmail])
+        msg = EmailMessage(subject, content, sender_email, [receiverEmail])
         msg.content_subtype = "html"
-        #msg.attach_file("/reglement.txt")
         msg.send()
 
         ok = True
