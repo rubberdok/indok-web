@@ -13,11 +13,21 @@ const ListingResponsesPage: NextPage<InferGetServerSidePropsType<typeof getServe
     if (loading) return <p>Loading</p>;
     return (
         <>
-            <ul>
-                {data &&
-                    data.listing.responses &&
-                    data.listing.responses.map((response) => <li key={response.id}>Response #{response.id}</li>)}
-            </ul>
+            {data && (
+                <>
+                    <h3>{data.listing.title}</h3>
+                    <p>{data.listing.description}</p>
+                    <ul>
+                        {data.listing.responses &&
+                            data.listing.responses.map((response) => (
+                                <li key={response.id}>
+                                    <h4>Response #{response.id}</h4>
+                                    <p>{response.response}</p>
+                                </li>
+                            ))}
+                    </ul>
+                </>
+            )}
         </>
     );
 };

@@ -1,6 +1,7 @@
 import { Organization, Listing } from "@interfaces/listings";
 import { ORGANIZATION_LISTINGS } from "@graphql/listings/queries";
 import { useQuery } from "@apollo/client";
+import Link from "next/link";
 
 const OrganizationListings: React.FC<{ organization: Organization }> = ({ organization }) => {
     const { loading, error, data } = useQuery<{ organization: { listings: Listing[] } }>(ORGANIZATION_LISTINGS, {
@@ -18,7 +19,7 @@ const OrganizationListings: React.FC<{ organization: Organization }> = ({ organi
             {data &&
                 data.organization.listings.map((listing) => (
                     <li key={listing.id}>
-                        {listing.title}
+                        <Link href={`/org/${organization.id}/listings/${listing.id}/responses`}>{listing.title}</Link>
                         <br />
                         <p>Søknader:{listing.responses ? listing.responses.length : 0}</p>
                     </li>

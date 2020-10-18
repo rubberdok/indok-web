@@ -1,10 +1,10 @@
 import TextField from "../formComponents/textfield";
 import { useState } from "react";
-import { Listing } from "@interfaces/listings";
+import { Listing, Organization } from "@interfaces/listings";
 import { CREATE_LISTING } from "@graphql/listings/mutations";
 import { useMutation, gql } from "@apollo/client";
 
-const CreateListing: React.FC = () => {
+const CreateListing: React.FC<{ organization?: Organization }> = ({ organization }) => {
     const [newListing, setNewListing] = useState<Listing>({} as Listing);
     const [createListing] = useMutation<{ createListing: { listing: Listing } }>(CREATE_LISTING, {
         update: (cache, { data }) => {
@@ -30,16 +30,30 @@ const CreateListing: React.FC = () => {
         <form
             onSubmit={(e) => {
                 e.preventDefault();
-                createListing({
-                    variables: {
-                        title: newListing.title,
-                        description: newListing.description,
-                        startDateTime: newListing.startDateTime,
-                        deadline: newListing.deadline,
-                        endDateTime: newListing.endDateTime,
-                        url: "www.google.com",
-                    },
-                });
+                createListing(
+                    organization
+                        ? {
+                              variables: {
+                                  title: newListing.title,
+                                  description: newListing.description,
+                                  startDateTime: newListing.startDateTime,
+                                  deadline: newListing.deadline,
+                                  endDateTime: newListing.endDateTime,
+                                  url: "www.google.com",
+                                  organizationId: organization.id,
+                              },
+                          }
+                        : {
+                              variables: {
+                                  title: newListing.title,
+                                  description: newListing.description,
+                                  startDateTime: newListing.startDateTime,
+                                  deadline: newListing.deadline,
+                                  endDateTime: newListing.endDateTime,
+                                  url: "www.google.com",
+                              },
+                          }
+                );
                 //TODO: properly reset newListing state
                 setNewListing({ ...newListing, title: "", description: "" });
             }}

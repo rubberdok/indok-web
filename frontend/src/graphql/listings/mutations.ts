@@ -8,6 +8,7 @@ export const CREATE_LISTING = gql`
         $deadline: DateTime!
         $endDateTime: DateTime!
         $url: String!
+        $organizationId: ID
     ) {
         createListing(
             listingData: {
@@ -17,6 +18,7 @@ export const CREATE_LISTING = gql`
                 deadline: $deadline
                 endDateTime: $endDateTime
                 url: $url
+                organizationId: $organizationId
             }
         ) {
             listing {
@@ -27,6 +29,10 @@ export const CREATE_LISTING = gql`
                 deadline
                 endDateTime
                 url
+                organization {
+                    id
+                    name
+                }
             }
             ok
         }

@@ -24,7 +24,7 @@ const OrganizationListingsPage: NextPage<InferGetServerSidePropsType<typeof getS
                     <div>
                         <h4>Opprett verv:</h4>
                     </div>
-                    <CreateListing />
+                    <CreateListing organization={data.organization} />
                     <div>
                         <h4>Åpne verv:</h4>
                     </div>
