@@ -9,24 +9,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="" />
 
-    <style>
-      body {
-        font-family: "Montserrat";
-      }
-      .container {
+    <style></style>
+  </head>
+  <body style="font-family: Montserrat">
+    <div
+      style="
         border: 5px solid #065a5a;
         text-align: center;
-        padding: 20px;
+        padding: 50px;
         background-color: #f5f0eb;
         width: 80%;
-        -webkit-box-shadow: 11px 17px 52px -12px rgba(0, 0, 0, 0.48);
-        -moz-box-shadow: 11px 17px 52px -12px rgba(0, 0, 0, 0.48);
         box-shadow: 11px 17px 52px -12px rgba(0, 0, 0, 0.48);
-      }
-    </style>
-  </head>
-  <body>
-    <div class="container">
+      "
+    >
+      <div>Fet logo</div>
       <h2>Hei {{ firstname }}!</h2>
       <p>
         Dette er en bekreftelsesmail for din booking av en Indøkhytte fra
@@ -35,7 +31,18 @@
       <p>Vennligst les nøye gjennom reglementet før dere kommer til hytta.</p>
       <h2>God tur!</h2>
 
-      <a href="{{ link }}">Legg til i Google Calendar</a>
+      <a
+        style="
+          color: white;
+          background-color: #065a5a;
+          display: inline-block;
+          margin: 10px;
+          padding: 15px;
+          text-decoration: none;
+        "
+        href="{{ link }}"
+        >Legg til i Google Calendar</a
+      >
     </div>
   </body>
 </html>
