@@ -3,7 +3,7 @@ from graphene_django import DjangoObjectType
 from django.shortcuts import get_object_or_404
 
 from .types import BookingType
-from .mutations import CreateBooking, UpdateBooking, DeleteBooking
+from .mutations import CreateBooking, UpdateBooking, DeleteBooking, SendEmail
 from .resolvers import BookingResolvers
 
 
@@ -11,6 +11,7 @@ class BookingMutations(graphene.ObjectType):
     create_booking = CreateBooking.Field()
     update_booking = UpdateBooking.Field()
     delete_booking = DeleteBooking.Field()
+    send_email = SendEmail.Field()
 
 
 class BookingQueries(graphene.ObjectType, BookingResolvers):
