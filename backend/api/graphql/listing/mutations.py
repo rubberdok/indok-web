@@ -8,8 +8,8 @@ from apps.listing.models import Listing, Response
 class ListingInput(graphene.InputObjectType):
     title = graphene.String(required=False)
     description = graphene.String(required=False)
-    start_date_time = graphene.DateTime(required=False)
-    end_date_time = graphene.DateTime(required=False)
+    start_datetime = graphene.DateTime(required=False)
+    end_datetime = graphene.DateTime(required=False)
     deadline = graphene.DateTime(required=False)
     url = graphene.String(required=False)
     organization_id = graphene.ID(required=False)
