@@ -15,21 +15,31 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>((props, forwardedRe
 
 const StyledInput = styled.input`
     background: ${({ theme }) => theme.colors.primary};
+    border: 2px solid ${({ theme }) => theme.colors.primary};
+    display: grid;
     color: #fff;
     font-family: "Montserrat";
     font-size: 18px;
-    border: none;
-    display: grid;
     text-decoration: none !important;
     margin-bottom: 10px;
     padding: 10px;
+    background: linear-gradient(
+            to bottom,
+            ${({ theme }) => theme.colors.primary} 50%,
+            ${({ theme }) => theme.colors.background} 50%
+        )
+        top;
+    background-size: 100% 200%;
+    transition: all 0.2s ease-in-out;
 
     &:hover {
     }
 
     &:focus {
-    }
-
+        background-position: 0% 100%;
+        color: black;
+        outline: none;
+        background-color: #fff;
     }
 `;
 
