@@ -35,7 +35,7 @@ interface CalendarProps {
 const Calendar = ({ events, rangeChanged }: CalendarProps) => {
     const [selectedMonth, setSelectedMonth] = useState(moment());
     const [selectedDay, setSelectedDay] = useState(moment());
-    const [range, setRange] = useState<string[]>([]);
+    const [hoverRange, setHoverRange] = useState<string[]>([]);
     const [isRangeFreezed, setIsRangeFreezed] = useState(false);
 
     const getDaysOfMonth = (isCurrentMonth = true) => {
@@ -47,8 +47,8 @@ const Calendar = ({ events, rangeChanged }: CalendarProps) => {
             const dateEvents = events.filter((event) => event.date === date.format(DATE_FORMAT));
             daysOfMonth.push(
                 <DayCell
-                    onMouseOver={() => (isRangeFreezed ? null : setRange(getDateRange(selectedDay, date)))}
-                    isInRange={_.includes(range, date.format(DATE_FORMAT))}
+                    onMouseOver={() => (isRangeFreezed ? null : setHoverRange(getDateRange(selectedDay, date)))}
+                    isInRange={_.includes(hoverRange, date.format(DATE_FORMAT))}
                     isSelected={date.isSame(selectedDay, "day")}
                     onClick={() => handleDateClicked(date)}
                     key={date.format(DATE_FORMAT)}
@@ -151,13 +151,13 @@ const Calendar = ({ events, rangeChanged }: CalendarProps) => {
     };
 
     const handleDateClicked = (date: moment.Moment) => {
-        if (range.length > 0 && !isRangeFreezed) {
-            rangeChanged(range[1], range[range.length - 1]);
+        if (hoverRange.length > 0 && !isRangeFreezed) {
+            rangeChanged(hoverRange[1], hoverRange[hoverRange.length - 1]);
             setIsRangeFreezed(true);
         } else {
             setSelectedDay(date);
             setIsRangeFreezed(false);
-            setRange([]);
+            setHoverRange([]);
         }
     };
 
