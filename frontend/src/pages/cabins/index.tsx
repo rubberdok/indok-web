@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
 
 import { useRouter } from "next/router";
-import Calendar, { Event } from "../../components/Calendar";
+import Calendar, { CalendarEvent, createDateRange } from "../../components/Calendar";
 import moment from "moment";
 import { useQuery } from "@apollo/client";
 import { QUERY_ALL_BOOKINGS } from "../../graphql/cabins/queries";
 import { Booking } from "../../lib/types/Cabins";
 import _ from "lodash";
-import { getDateRange } from "../../components/Calendar/helpers";
 import { EventMarker } from "../../components/Calendar/styles";
 
 interface AllBookingsQuery {
@@ -19,15 +18,16 @@ const DayEvent = (key: string) => <EventMarker key={key} />;
 const CreateBookingPage = () => {
     const { loading, error, data } = useQuery<AllBookingsQuery>(QUERY_ALL_BOOKINGS);
     const router = useRouter();
-    const [range, setRange] = useState<string[]>([]);
-    const [bookings, setBookings] = useState<Event[]>([]);
+    const [fromDate, setFromDate] = useState("");
+    const [toDate, setToDate] = useState("");
+    const [bookings, setBookings] = useState<CalendarEvent[]>([]);
     const [errorMessage, setErrorMessage] = useState("");
     const [isBookButtonDisabled, setIsBookButtonDisabled] = useState(true);
 
     useEffect(() => {
         if (data) {
             const events = data.allBookings.reduce((bookingDays, booking) => {
-                const rangeOfBooking = getDateRange(moment(booking.startDay), moment(booking.endDay));
+                const rangeOfBooking = createDateRange(booking.startDay, booking.endDay);
                 rangeOfBooking.forEach((dayDate: string) => {
                     bookingDays.push({
                         date: dayDate,
@@ -35,22 +35,23 @@ const CreateBookingPage = () => {
                     });
                 });
                 return bookingDays;
-            }, [] as Event[]);
+            }, [] as CalendarEvent[]);
             setBookings(events);
         }
     }, [data]);
 
     useEffect(() => {
         if (data) {
+            const range = createDateRange(fromDate, toDate);
             const isConflict =
                 data.allBookings.filter(
                     (booking) =>
                         _.includes(range, booking.startDay) ||
                         _.includes(range, booking.endDay) ||
-                        (moment(booking.startDay).isBefore(moment(range[0])) &&
-                            moment(booking.endDay).isAfter(moment(range[1]))) ||
-                        (moment(booking.startDay).isAfter(moment(range[0])) &&
-                            moment(booking.endDay).isBefore(moment(range[1])))
+                        (moment(booking.startDay).isBefore(moment(fromDate)) &&
+                            moment(booking.endDay).isAfter(moment(toDate))) ||
+                        (moment(booking.startDay).isAfter(moment(fromDate)) &&
+                            moment(booking.endDay).isBefore(moment(toDate)))
                 ).length > 0;
             if (isConflict) {
                 setErrorMessage("The selected calendar range is occupied by a booking");
@@ -60,17 +61,23 @@ const CreateBookingPage = () => {
                 setIsBookButtonDisabled(false);
             }
         }
-    }, [range]);
+    }, [fromDate, toDate]);
 
     return (
         <div>
             <h1>Book hytte</h1>
-            <Calendar rangeChanged={(range) => setRange(range)} events={bookings} />
+            <Calendar
+                rangeChanged={(fromDate, toDate) => {
+                    setFromDate(fromDate);
+                    setToDate(toDate);
+                }}
+                events={bookings}
+            />
             <button
                 onClick={() => {
                     router.push({
                         pathname: "cabins/book",
-                        query: { fromDate: range[0], toDate: range[1] },
+                        query: { fromDate, toDate },
                     });
                 }}
                 disabled={isBookButtonDisabled}
