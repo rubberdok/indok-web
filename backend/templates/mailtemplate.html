@@ -9,11 +9,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="" />
 
-    <style></style>
+    <style>
+      span {
+        white-space: nowrap;
+      }
+    </style>
   </head>
-  <body style="font-family: Montserrat">
+  <body style="font-family: Times">
     <div
       style="
+        font-family: Montserrat;
         border: 5px solid #065a5a;
         text-align: center;
         padding: 50px;
@@ -22,13 +27,22 @@
         box-shadow: 11px 17px 52px -12px rgba(0, 0, 0, 0.48);
       "
     >
-      <div>Fet logo</div>
+      {% load static %}
+
+      <img
+        src="cid:hyttestyret_logo.png"
+        alt=""
+        style="width: 270px; margin: auto"
+      />
       <h2>Hei {{ firstname }}!</h2>
       <p>
         Dette er en bekreftelsesmail for din booking av en Indøkhytte fra
-        {{fromDate }} til {{ toDate }}.
+        <span><b>{{fromDate }}</b></span> til <span><b>{{ toDate }}</b>.</span>
       </p>
-      <p>Vennligst les nøye gjennom reglementet før dere kommer til hytta.</p>
+      <p>
+        Vennligst les nøye gjennom reglementet og sjekklisten før dere kommer
+        til hytta.
+      </p>
       <h2>God tur!</h2>
 
       <a
