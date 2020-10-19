@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { useRouter } from "next/router";
 import Calendar, { Event } from "../../components/Calendar";
@@ -9,6 +9,7 @@ import { Booking } from "../../lib/types/Cabins";
 import _ from "lodash";
 import { getDateRange } from "../../components/Calendar/helpers";
 import { EventMarker } from "../../components/Calendar/styles";
+import Navbar from "@components/navbar/Navbar";
 
 interface AllBookingsQuery {
     allBookings: Booking[];
@@ -64,6 +65,7 @@ const CreateBookingPage = () => {
 
     return (
         <div>
+            <Navbar />
             <h1>Book hytte</h1>
             <Calendar rangeChanged={(range) => setRange(range)} events={bookings} />
             <button
