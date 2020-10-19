@@ -1,4 +1,4 @@
-export interface BookingType {
+export interface Booking {
     id: string;
     contactNum: number;
     contactPerson: string;

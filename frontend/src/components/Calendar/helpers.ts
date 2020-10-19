@@ -10,3 +10,5 @@ export const getDateRange = (start: moment.Moment, end: moment.Moment, format = 
     }
     return output;
 };
+
+export const getCurrentDate = () => moment().format("YYYY-MM-DD");

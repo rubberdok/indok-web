@@ -36,6 +36,9 @@
             ],
             "@graphql/*": [
                 "src/graphql/*"
+            ],
+            "@hooks/*": [
+                "src/hooks/*"
             ]
         }
     },
