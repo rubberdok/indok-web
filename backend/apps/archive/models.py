@@ -1,12 +1,9 @@
 from django.db import models
 from enum import Enum
 from datetime import datetime
-<<<<<<< Updated upstream
-=======
 #from quickstart import main as quickstart
 #from django.db.models.signals import pre_save
 
->>>>>>> Stashed changes
 
 # Create your models here.
 
