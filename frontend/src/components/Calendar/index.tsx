@@ -20,15 +20,15 @@ moment.updateLocale("nb", {
     weekdaysShort: ["søn", "man", "tir", "ons", "tor", "fre", "lør"],
 });
 
-export interface Event {
+export interface CalendarEvent {
     date: string;
     renderComponent: (key: string) => React.ReactNode;
 }
 
 interface CalendarProps {
-    events: Event[];
+    events: CalendarEvent[];
     onMonthSelected?: (selectedMonth: moment.Moment) => void;
-    rangeChanged: (range: string[]) => void;
+    rangeChanged: (fromDate: string, toDate: string) => void;
 }
 
 const Calendar = ({ events, rangeChanged }: CalendarProps) => {
@@ -151,7 +151,7 @@ const Calendar = ({ events, rangeChanged }: CalendarProps) => {
 
     const handleDateClicked = (date: moment.Moment) => {
         if (range.length > 0 && !isRangeFreezed) {
-            rangeChanged(range);
+            rangeChanged(range[1], range[range.length - 1]);
             setIsRangeFreezed(true);
         } else {
             setSelectedDay(date);
@@ -223,5 +223,7 @@ const Calendar = ({ events, rangeChanged }: CalendarProps) => {
         </>
     );
 };
+
+export const createDateRange = (fromDate: string, toDate: string) => getDateRange(moment(fromDate), moment(toDate));
 
 export default Calendar;
