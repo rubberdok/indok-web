@@ -7,26 +7,25 @@ from graphene_django import DjangoObjectType
 
 from .types import ArchiveDocumentType
 
-
 class CreateArchiveDocument(graphene.Mutation):
     class Arguments:
         title = graphene.String()
         description = graphene.String()
         date = graphene.DateTime()
-        typeDoc = graphene.String()
-        fileLocation = graphene.String()
+        type_doc = graphene.String()
+        file_location = graphene.String()
 
     ok = graphene.Boolean()
     arhiveDocument = graphene.Field(ArchiveDocumentType)
 
-    def mutate(root, info, title, description, date, typeDoc, fileLocation):
+    def mutate(root, info, title, description, date, type_doc, file_location):
         archiveDocument = ArchiveDocumentModel.objects.create(
             title=title,
             description=description,
             date=date,
-            uploadedDate = datetime.now(),
-            typeDoc = typeDoc,
-            fileLocation=fileLocation
+            uploaded_date = datetime.now(),
+            type_doc = typeDoc,
+            file_location=fileLocation
         )
         ok = True
         return CreateEvent(archiveDocument=archiveDocument, ok=ok)
@@ -38,8 +37,8 @@ class UpdateArchiveDocument(graphene.Mutation):
         id = graphene.ID()
         description = graphene.String()
         date = graphene.DateTime()
-        typeDoc = graphene.String()
-        fileLocation = graphene.String()
+        type_doc = graphene.String()
+        file_location = graphene.String()
 
     ok = graphene.Boolean()
     event = graphene.Field(ArchiveDocumentType)
