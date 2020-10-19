@@ -59,13 +59,38 @@ const Line = styled.div`
     }
 `;
 
+interface Site {
+    href: string;
+    text: string;
+}
+
+const sites: Site[] = [
+    {
+        text: "Hjem",
+        href: "/",
+    },
+    {
+        text: "Om foreningen",
+        href: "/about",
+    },
+    {
+        text: "Arrangementer",
+        href: "/events",
+    },
+    {
+        text: "Hyttebooking",
+        href: "/cabins",
+    },
+];
+
 const NavbarLinks: React.FC = () => {
     return (
         <>
-            <NavItem>Hjem</NavItem>
-            <NavItem>Om foreningen</NavItem>
-            <NavItem>Arrangementer</NavItem>
-            <NavItem>Hyttebooking</NavItem>
+            {sites.map((site) => (
+                <Link href={site.href} key={site.href}>
+                    <NavItem>{site.text}</NavItem>
+                </Link>
+            ))}
             <Line />
             <NavItem primary>Login</NavItem>
         </>

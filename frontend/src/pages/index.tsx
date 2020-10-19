@@ -25,8 +25,6 @@ const IndexPage: NextPage = () => (
             </Paragraph>
             <Button url="/testpage">Les mer om foreningen</Button>
         </div>
-        <Link href="/events"> Go to Events</Link>
-        <Link href="/cabins"> Go to Cabins</Link>
     </Layout>
 );
 
