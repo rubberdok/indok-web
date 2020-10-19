@@ -1,4 +1,4 @@
-import Button from "@components/ui/Button";
+import Button, { Primary } from "@components/ui/Button";
 import Card from "@components/ui/Card";
 import Content from "@components/ui/Content";
 import { SubTitle, Title } from "@components/ui/Typography";
@@ -6,10 +6,10 @@ import { Composition } from "atomic-layout";
 import { Fade, Slide } from "react-awesome-reveal";
 import styled from "styled-components";
 
-const template = `
+const areasMobile = `
   heading
-  actions
-`;
+  action
+`
 
 const Hero: React.FC = () => {
     return (
@@ -21,16 +21,16 @@ const Hero: React.FC = () => {
                 <Overlay>
                     <Content>
                         <Card>
-                            <Composition template={template} width={450} widthMd={550} widthLg={700}>
-                                {({ Heading, Actions }) => (
+                            <Composition areas={areasMobile} maxWidth={450} maxWidthMd={550} maxWidthLg={700}>
+                                {( Areas ) => (
                                     <>
-                                        <Heading paddingHorizontal={50} paddingTop={30}>
+                                        <Areas.Heading paddingHorizontal={70} paddingTop={30}>
                                             <SubTitle>Foreningen for studentene ved</SubTitle>
                                             <Title>Industriell Økonomi og Teknologiledelse</Title>
-                                        </Heading>
-                                        <Actions flex align="flex-end" justify="end">
-                                            <Button url="/about">Les mer om foreningen</Button>
-                                        </Actions>
+                                        </Areas.Heading>
+                                        <Areas.Action flex align="flex-end" justify="end">
+                                            <Button style={Primary} url="/about">Les mer om foreningen</Button>
+                                        </Areas.Action>
                                     </>
                                 )}
                             </Composition>
@@ -59,7 +59,7 @@ const Overlay = styled.div`
 
 const Image = styled.img`
     height: calc(100vh - 100px);
-    width: 70vw;
+    width: calc(50vw + 300px);
     float: right;
     object-fit: cover;
     filter: drop-shadow(-10px 0px 100px rgba(0, 0, 0, 0.15));

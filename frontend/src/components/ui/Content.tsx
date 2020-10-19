@@ -9,7 +9,8 @@ const Content: React.FC<ContentProps> = (props) => {
 };
 
 const StyledContent = styled.div`
-    width: ${({ theme }) => theme.contentWidth};
+    max-width: ${({ theme }) => theme.contentWidth};
+    width: 100%;
     margin: 0 auto;
     padding: 0 40px;
 `;

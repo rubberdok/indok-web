@@ -48,7 +48,8 @@ export const SubHeading = styled.p`
     margin-bottom: -35px;
 
     @media (max-width: ${Layout.breakpoints.md.maxWidth}) {
-        font-size: 10px;
+        font-size: 13px;
+        margin-bottom: -20px;
     }
 `;
 

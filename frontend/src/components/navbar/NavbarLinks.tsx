@@ -1,3 +1,4 @@
+import Layout from "atomic-layout";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
@@ -44,7 +45,7 @@ const NavItem = styled.a<NavItemProps>`
 
     :after,
     &.active:after {
-        @media (min-width: 768px) {
+        @media (min-width: ${Layout.breakpoints.md.maxWidth}) {
             position: absolute;
             left: 0;
             right: 0;
@@ -75,7 +76,7 @@ const NavItem = styled.a<NavItemProps>`
         }
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: ${Layout.breakpoints.md.maxWidth}) {
         padding: 20px 0;
         font-size: 1.5rem;
         z-index: 99999;
@@ -87,7 +88,7 @@ const Line = styled.div`
     margin: 0 25px;
     width: 20px;
     height: 2px;
-    @media (max-width: 768px) {
+    @media (max-width: ${Layout.breakpoints.md.maxWidth}) {
         display: none;
     }
 `;

@@ -1,3 +1,4 @@
+import Layout from "atomic-layout";
 import React, { useState } from "react";
 import styled from "styled-components";
 import Brand from "./Brand";
@@ -43,7 +44,7 @@ const Nav = styled.nav`
     z-index: 2;
     align-self: center;
 
-    @media (max-width: 768px) {
+    @media (max-width: ${Layout.breakpoints.md.maxWidth}) {
         position: sticky;
         height: 8vh;
         top: 0;
@@ -58,7 +59,7 @@ const Toggle = styled.div`
     height: 100%;
     cursor: pointer;
 
-    @media (max-width: 768px) {
+    @media (max-width: ${Layout.breakpoints.md.maxWidth}) {
         display: flex;
     }
 `;
@@ -70,7 +71,7 @@ const Navbox = styled.div<NavBoxProps>`
     align-items: center;
     overflow: hidden;
 
-    @media (max-width: 768px) {
+    @media (max-width: ${Layout.breakpoints.md.maxWidth}) {
         flex-direction: column;
         position: fixed;
         width: 100%;
@@ -89,7 +90,7 @@ const Hamburger = styled.div<HamburgerProps>`
     background-color: #111;
     height: 3px;
     width: 30px;
-    transition: all 0.3s cubic-bezier(0.54, -0.1, 0.29, 1.24);
+    transition: all 0.3s ease;
     align-self: center;
     position: relative;
     transform: ${(props) => (props.open ? "rotate(-225deg) scale(0.8)" : "inherit")};
@@ -102,16 +103,16 @@ const Hamburger = styled.div<HamburgerProps>`
         background-color: #111;
         content: "";
         position: absolute;
-        transition: all 0.3s cubic-bezier(0.54, -0.1, 0.29, 1.24);
+        transition: all 0.3s ease;
     }
 
     ::before {
-        transform: ${(props) => (props.open ? "rotate(90deg) translate(7px,0)" : "inherit")};
+        transform: ${(props) => (props.open ? "rotate(90deg) translate(7px,0)" : "rotate(180deg)")};
         top: -7px;
     }
 
     ::after {
-        transform: ${(props) => (props.open ? "rotate(90deg) translate(-7px,0)" : "inherit")};
+        transform: ${(props) => (props.open ? "rotate(90deg) translate(-7px,0)" : "rotate(180deg)")};
         top: 7px;
     }
 `;
