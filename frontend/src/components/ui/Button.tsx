@@ -5,12 +5,15 @@ import feather from "feather-icons";
 interface ButtonProps {
     url: string;
     children: string | JSX.Element;
+    onClick?: (event: React.FormEvent<EventTarget>) => void;
 }
 
 const Button: React.FC<ButtonProps> = (props) => {
     return (
         <Link href={props.url}>
-            <StyledButton>
+            <StyledButton
+                onClick={(event: React.FormEvent<EventTarget>) => (props.onClick ? props.onClick(event) : null)}
+            >
                 <Container>{props.children}</Container>
                 <Icon>
                     <i dangerouslySetInnerHTML={{ __html: feather.icons["arrow-right"].toSvg() }} />
