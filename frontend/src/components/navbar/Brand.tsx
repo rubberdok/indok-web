@@ -16,7 +16,7 @@ const Logo = styled.img`
 const Brand = () => {
     return (
         <LogoWrap>
-            <Link href="#">
+            <Link href="/">
                 <Logo src={"/logo.svg"} alt="Company Logo" />
             </Link>
         </LogoWrap>
