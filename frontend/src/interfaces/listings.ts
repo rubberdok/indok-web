@@ -2,9 +2,9 @@ export interface Listing {
     id: string;
     title: string;
     description: string;
-    startDateTime: string;
+    startDatetime: string;
     deadline: string;
-    endDateTime: string;
+    endDatetime: string;
     url: string;
     slug: string;
     organization?: Organization;

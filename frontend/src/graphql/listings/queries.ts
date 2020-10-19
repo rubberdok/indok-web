@@ -6,9 +6,9 @@ export const LISTINGS = gql`
             id
             title
             description
-            startDateTime
+            startDatetime
             deadline
-            endDateTime
+            endDatetime
             url
             slug
             organization {
@@ -24,9 +24,9 @@ export const LISTING = gql`
             id
             title
             description
-            startDateTime
+            startDatetime
             deadline
-            endDateTime
+            endDatetime
             url
         }
     }
@@ -83,9 +83,9 @@ export const ORGANIZATION_LISTINGS = gql`
                 id
                 title
                 description
-                startDateTime
+                startDatetime
                 deadline
-                endDateTime
+                endDatetime
                 url
                 responses {
                     id

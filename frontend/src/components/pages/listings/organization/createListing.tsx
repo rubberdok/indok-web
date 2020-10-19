@@ -34,9 +34,9 @@ const CreateListing: React.FC<{ organization: Organization }> = ({ organization 
                     variables: {
                         title: newListing.title,
                         description: newListing.description,
-                        startDateTime: newListing.startDateTime,
+                        startDateTime: newListing.startDatetime,
                         deadline: newListing.deadline,
-                        endDateTime: newListing.endDateTime,
+                        endDateTime: newListing.endDatetime,
                         url: "www.google.com",
                         organizationId: organization.id,
                     },
@@ -61,8 +61,8 @@ const CreateListing: React.FC<{ organization: Organization }> = ({ organization 
             Starttid:{" "}
             <input
                 type="datetime-local"
-                onChange={(e) => setNewListing({ ...newListing, startDateTime: e.target.value })}
-                value={newListing.startDateTime}
+                onChange={(e) => setNewListing({ ...newListing, startDatetime: e.target.value })}
+                value={newListing.startDatetime}
             />
             <br />
             Frist:{" "}
@@ -75,8 +75,8 @@ const CreateListing: React.FC<{ organization: Organization }> = ({ organization 
             Slutt:{" "}
             <input
                 type="datetime-local"
-                onChange={(e) => setNewListing({ ...newListing, endDateTime: e.target.value })}
-                value={newListing.endDateTime}
+                onChange={(e) => setNewListing({ ...newListing, endDatetime: e.target.value })}
+                value={newListing.endDatetime}
             />
             <br />
             <button type="submit">Legg til verv</button>

@@ -4,9 +4,9 @@ export const CREATE_LISTING = gql`
     mutation createListing(
         $title: String!
         $description: String!
-        $startDateTime: DateTime!
+        $startDatetime: DateTime!
         $deadline: DateTime!
-        $endDateTime: DateTime!
+        $endDatetime: DateTime!
         $url: String!
         $organizationId: ID
     ) {
@@ -14,9 +14,9 @@ export const CREATE_LISTING = gql`
             listingData: {
                 title: $title
                 description: $description
-                startDateTime: $startDateTime
+                startDatetime: $startDatetime
                 deadline: $deadline
-                endDateTime: $endDateTime
+                endDatetime: $endDatetime
                 url: $url
                 organizationId: $organizationId
             }
@@ -25,9 +25,9 @@ export const CREATE_LISTING = gql`
                 id
                 title
                 description
-                startDateTime
+                startDatetime
                 deadline
-                endDateTime
+                endDatetime
                 url
                 organization {
                     id
