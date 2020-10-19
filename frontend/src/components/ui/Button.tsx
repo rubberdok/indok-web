@@ -5,12 +5,13 @@ import styled from "styled-components";
 interface ButtonProps {
     url: string;
     children: string | JSX.Element;
+    style?: any;
 }
 
 const Button: React.FC<ButtonProps> = (props) => {
     return (
         <Link href={props.url}>
-            <StyledButton>
+            <StyledButton as={props.style}>
                 <Container>{props.children}</Container>
                 <Icon>
                     <i dangerouslySetInnerHTML={{ __html: feather.icons["arrow-right"].toSvg() }} />
@@ -21,12 +22,13 @@ const Button: React.FC<ButtonProps> = (props) => {
 };
 
 const Icon = styled.div`
-    background: ${({ theme }) => theme.colors.primaryDark};
+    background: #111;
     width: 70px;
     display: table-cell;
     text-align: center;
     vertical-align: middle;
     transition: 0.3s all ease;
+    color: #fff;
 
     & svg {
         margin-top: 8px;
@@ -34,7 +36,7 @@ const Icon = styled.div`
 `;
 
 const StyledButton = styled.a`
-    background: ${({ theme }) => theme.colors.primary};
+    background: #282828;
     color: #fff;
     font-family: "Montserrat";
     font-size: 18px;
@@ -44,7 +46,7 @@ const StyledButton = styled.a`
     transition: 0.3s all ease;
 
     &:hover {
-        background: ${({ theme }) => theme.colors.primaryDark};
+        background: #111;
         cursor: pointer;
 
         & ${Icon} {
@@ -57,5 +59,18 @@ const StyledButton = styled.a`
 const Container = styled.div`
     padding: 20px 35px;
 `;
+
+export const Primary = styled(StyledButton)`
+    background: ${({ theme }) => theme.colors.primary};
+    color: #fff;
+
+    &:hover {
+        background: ${({ theme }) => theme.colors.primaryDark};
+    }
+
+    & ${Icon} {
+        background: ${({ theme }) => theme.colors.primaryDark};
+    }
+`
 
 export default Button;
