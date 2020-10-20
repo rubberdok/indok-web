@@ -15,9 +15,10 @@ import {
 } from "./styles";
 import _ from "lodash";
 import { getDateRange } from "./helpers";
+import { NORWEGIAN_SHORT_DAY_NAMES, DATE_FORMAT } from "./constants";
 
 moment.updateLocale("nb", {
-    weekdaysShort: ["søn", "man", "tir", "ons", "tor", "fre", "lør"],
+    weekdaysShort: NORWEGIAN_SHORT_DAY_NAMES,
 });
 
 export interface CalendarEvent {
@@ -34,7 +35,7 @@ interface CalendarProps {
 const Calendar = ({ events, rangeChanged }: CalendarProps) => {
     const [selectedMonth, setSelectedMonth] = useState(moment());
     const [selectedDay, setSelectedDay] = useState(moment());
-    const [range, setRange] = useState<string[]>([]);
+    const [hoverRange, setHoverRange] = useState<string[]>([]);
     const [isRangeFreezed, setIsRangeFreezed] = useState(false);
 
     const getDaysOfMonth = (isCurrentMonth = true) => {
@@ -43,14 +44,14 @@ const Calendar = ({ events, rangeChanged }: CalendarProps) => {
         for (let i = 1; i <= month.daysInMonth(); i++) {
             const date = isCurrentMonth ? moment(selectedMonth) : moment(selectedMonth).clone().add(1, "month");
             date.set("date", i);
-            const dateEvents = events.filter((event) => event.date === date.format("YYYY-MM-DD"));
+            const dateEvents = events.filter((event) => event.date === date.format(DATE_FORMAT));
             daysOfMonth.push(
                 <DayCell
-                    onMouseOver={() => (isRangeFreezed ? null : setRange(getDateRange(selectedDay, date)))}
-                    isInRange={_.includes(range, date.format("YYYY-MM-DD"))}
+                    onMouseOver={() => (isRangeFreezed ? null : setHoverRange(getDateRange(selectedDay, date)))}
+                    isInRange={_.includes(hoverRange, date.format(DATE_FORMAT))}
                     isSelected={date.isSame(selectedDay, "day")}
                     onClick={() => handleDateClicked(date)}
-                    key={date.format("YYYY-MM-DD")}
+                    key={date.format(DATE_FORMAT)}
                 >
                     <Day>{i}</Day>
                     <EventMarkerWrapper>
@@ -82,7 +83,7 @@ const Calendar = ({ events, rangeChanged }: CalendarProps) => {
                         isSelected={date.isSame(selectedDay, "day")}
                         onClick={() => handleDateClicked(date)}
                         outOfRange={true}
-                        key={isCurrentMonth ? date.format("YYYY-MM-DD") : `next-${date.format("YYYY-MM-DD")}`}
+                        key={isCurrentMonth ? date.format(DATE_FORMAT) : `next-${date.format(DATE_FORMAT)}`}
                     >
                         <Day>{date.format("D")}</Day>
                     </DayCell>
@@ -112,7 +113,7 @@ const Calendar = ({ events, rangeChanged }: CalendarProps) => {
                         isSelected={date.isSame(selectedDay, "day")}
                         onClick={() => handleDateClicked(date)}
                         outOfRange={true}
-                        key={`${date.format("YYYY-MM-DD")}`}
+                        key={`${date.format(DATE_FORMAT)}`}
                     >
                         <Day>{date.format("D")}</Day>
                     </DayCell>
@@ -150,13 +151,13 @@ const Calendar = ({ events, rangeChanged }: CalendarProps) => {
     };
 
     const handleDateClicked = (date: moment.Moment) => {
-        if (range.length > 0 && !isRangeFreezed) {
-            rangeChanged(range[1], range[range.length - 1]);
+        if (hoverRange.length > 0 && !isRangeFreezed) {
+            rangeChanged(hoverRange[1], hoverRange[hoverRange.length - 1]);
             setIsRangeFreezed(true);
         } else {
             setSelectedDay(date);
             setIsRangeFreezed(false);
-            setRange([]);
+            setHoverRange([]);
         }
     };
 
@@ -225,5 +226,5 @@ const Calendar = ({ events, rangeChanged }: CalendarProps) => {
 };
 
 export const createDateRange = (fromDate: string, toDate: string) => getDateRange(moment(fromDate), moment(toDate));
-
+export const CONSTANTS = { NORWEGIAN_SHORT_DAY_NAMES, DATE_FORMAT };
 export default Calendar;
