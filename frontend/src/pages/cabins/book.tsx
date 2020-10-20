@@ -7,6 +7,9 @@ import Button from "@components/ui/Button";
 import React from "react";
 import Input from "@components/ui/Input";
 import { SEND_EMAIL } from "@graphql/cabins/mutations";
+import { Heading } from "@components/ui/Typography";
+import Summary from "../../components/pages/cabins/Summary";
+import { Card } from "../../components/pages/cabins/Card";
 
 const BookPage = () => {
     const firstnameRef = React.createRef<HTMLInputElement>();
@@ -19,18 +22,16 @@ const BookPage = () => {
 
     const router = useRouter();
     const data = router.query;
-    let fromDate = data.fromDate;
-    let toDate = data.toDate;
+    let fromDate = data.fromDate as string;
+    let toDate = data.toDate as string;
 
-    const handleSubmit = (e: any) => {
+    const handleSubmit = (e: React.FormEvent<EventTarget>) => {
         // todo: run checks to see if dates are occupied or not.
         e.preventDefault();
 
         // must parse dates to be "YYYY-MM-DD", not "DD/MM/YYYY"
-        if (fromDate && toDate) {
-            fromDate = fromDate.split("/").reverse().join("-");
-            toDate = toDate.split("/").reverse().join("-");
-        }
+        fromDate = fromDate.split("/").reverse().join("-");
+        toDate = toDate.split("/").reverse().join("-");
 
         // avoid refs being null
         if (firstnameRef.current && surnameRef.current && emailRef.current && phoneRef.current) {
@@ -66,19 +67,18 @@ const BookPage = () => {
     return (
         <div>
             <Navbar></Navbar>
-            <h2>Booking</h2>
-            <p>
-                Booking fra {data.fromDate} til {data.toDate}
-            </p>
-            <Link href="/cabins">Tilbake</Link>
-            <form action="submit" onSubmit={(e) => handleSubmit(e)}>
+            <Heading>Fullføring av booking</Heading>
+            <Link href="/cabins">Tilbake</Link>{" "}
+            <Summary from={fromDate} to={toDate} cabin={"Bjørnen"} price={1299}></Summary>
+            <Card>
                 <Input placeholder="Fornavn" required={true} type="text" ref={firstnameRef}></Input>
                 <Input placeholder="Etternavn" required={true} type="text" ref={surnameRef}></Input>
                 <Input placeholder="E-postadresse" required={true} type="email" ref={emailRef}></Input>
                 <Input placeholder="Mobilnummer" required={true} type="nummer" ref={phoneRef}></Input>
-                <button type="submit">Fullfør booking</button>
-                <Button url={router.asPath}>Fullfør booking</Button>
-            </form>
+                <Button url="#" onClick={(e) => handleSubmit(e)}>
+                    Fullfør booking
+                </Button>
+            </Card>
         </div>
     );
 };
