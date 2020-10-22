@@ -13,7 +13,7 @@ const AllEvents: React.FC = () => {
     if (error) return <p>Error :(</p>;
 
     return (
-        <div style={{ float: "right", width: "70%" }}>
+        <div style={{ float: "right", width: "70%", paddingRight: "6em" }}>
             {data.allEvents.map((event: Event) => (
                 <Link href={`/events/${event.id}`} key={event.id}>
                     <div

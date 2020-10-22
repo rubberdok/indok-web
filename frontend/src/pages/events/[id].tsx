@@ -1,6 +1,8 @@
+import Layout from "@components/Layout";
 import Navbar from "@components/navbar/Navbar";
 import { NextPage } from "next";
 import Link from "next/link";
+import Button from "@components/ui/Button";
 import { useRouter } from "next/router";
 import React from "react";
 import EventDetailPage from "../../components/pages/events/eventDetailPage";
@@ -11,7 +13,7 @@ const EventInfo: NextPage = () => {
     const numberId = typeof id === "string" && parseInt(id);
 
     return (
-        <div>
+        <Layout>
             <Navbar />
             <div
                 style={{
@@ -20,22 +22,17 @@ const EventInfo: NextPage = () => {
                     padding: "2em",
                     backgroundColor: "#fff",
                     borderColor: "#6A9997",
-                    width: "450px",
+                    width: "70%",
                     margin: "0 auto",
                 }}
             >
                 {" "}
                 <div style={{ marginLeft: "auto", marginRight: "auto" }}>
                     {numberId && <EventDetailPage eventId={numberId} />}
+                    <Button url="/events"> Back to events </Button>
                 </div>
             </div>
-            <Link href="/events"> Back to events </Link>
-        </div>
-    );
-    return (
-        <div>
-            <Navbar />
-        </div>
+        </Layout>
     );
 };
 
