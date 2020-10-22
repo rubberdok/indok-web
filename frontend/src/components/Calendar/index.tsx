@@ -1,25 +1,10 @@
 import { useState, useEffect } from "react";
 import moment from "moment";
-import {
-    Day,
-    DayCell,
-    WeekDay,
-    Month,
-    MonthButtons,
-    MonthPickButton,
-    MonthSelector,
-    Year,
-    EventMarkerWrapper,
-    BigTable,
-    TwoCalendarsContainer,
-} from "./styles";
+import { Day, DayCell, MonthPickButton, MonthSelector, EventMarkerWrapper, TwoCalendarsContainer } from "./styles";
 import _ from "lodash";
 import { getDateRange, rangeLength } from "./helpers";
 import { NORWEGIAN_SHORT_DAY_NAMES, DATE_FORMAT } from "./constants";
-
-moment.updateLocale("nb", {
-    weekdaysShort: NORWEGIAN_SHORT_DAY_NAMES,
-});
+import CalendarTable from "./CalendarTable";
 
 export interface CalendarEvent {
     date: string;
@@ -123,7 +108,8 @@ const Calendar = ({ events, rangeChanged }: CalendarProps) => {
         return nextDays;
     };
 
-    const getRows = (isCurrentMonth = true) => {
+    const getRows = (month: moment.Moment) => {
+        const isCurrentMonth = month.isSame(selectedMonth, "month");
         const slots: JSX.Element[] = [
             ...previousMonthDays(isCurrentMonth),
             ...getDaysOfMonth(isCurrentMonth),
@@ -178,48 +164,12 @@ const Calendar = ({ events, rangeChanged }: CalendarProps) => {
     return (
         <>
             <MonthSelector>
-                <Month>
-                    {selectedMonth.format("MMMM")}
-                    <Year>{selectedMonth.format("YYYY")}</Year>
-                </Month>
-                <MonthButtons>
-                    <MonthPickButton onClick={() => onChangeMonth(-1)}>previus month</MonthPickButton>
-                    <MonthPickButton onClick={() => onChangeMonth(1)}>next month</MonthPickButton>
-                </MonthButtons>
+                <MonthPickButton onClick={() => onChangeMonth(-1)}>{"<"}</MonthPickButton>
+                <MonthPickButton onClick={() => onChangeMonth(1)}>{">"}</MonthPickButton>
             </MonthSelector>
             <TwoCalendarsContainer>
-                <div>
-                    <BigTable>
-                        <thead>
-                            <tr>
-                                {moment.weekdaysShort(true).map((dow) => (
-                                    <WeekDay key={dow}>{dow}</WeekDay>
-                                ))}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {getRows().map((row, index) => (
-                                <tr key={`row-${index}`}>{row}</tr>
-                            ))}
-                        </tbody>
-                    </BigTable>
-                </div>
-                <div>
-                    <BigTable>
-                        <thead>
-                            <tr>
-                                {moment.weekdaysShort(true).map((dow) => (
-                                    <WeekDay key={dow}>{dow}</WeekDay>
-                                ))}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {getRows(false).map((row, index) => (
-                                <tr key={`next-row-${index}`}>{row}</tr>
-                            ))}
-                        </tbody>
-                    </BigTable>
-                </div>
+                <CalendarTable getRows={getRows} month={selectedMonth} />
+                <CalendarTable getRows={getRows} month={selectedMonth.clone().add(1, "month")} />
             </TwoCalendarsContainer>
         </>
     );
