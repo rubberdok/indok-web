@@ -17,9 +17,9 @@
         "url": "github.com/hovedstyret/indok-web"
     },
     "dependencies": {
-        "feather-icons": "^4.28.0",
-        "@apollo/client": "^3.2.0",
+        "@apollo/client": "^3.2.5",
         "@types/styled-components": "^5.1.3",
+        "feather-icons": "^4.28.0",
         "graphql": "^15.3.0",
         "next": "^9.5.1",
         "react": "^16.13.1",

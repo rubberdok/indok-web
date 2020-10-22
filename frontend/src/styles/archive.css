@@ -1,0 +1,35 @@
+button {
+    background-color: transparent;
+    color: #065A5A;
+    padding: 40px;
+    font-size: 0.7em;
+    margin-top: 5em;
+    font-family: Arial;
+    text-align: center;
+    margin: 1em;
+    padding: 0.25em 1em;
+    border: 2px solid #065A5A;
+    border-radius: 3px;
+  }
+
+button-active {
+    background-color: #065A5A;
+    color: white;
+    padding: 40px;
+    font-size: 0.7em;
+    margin-top: 5em;
+    font-family: Arial;
+    text-align: center;
+    margin: 1em;
+    padding: 0.25em 1em;
+    border: 2px solid #065A5A;
+    border-radius: 3px;
+}
+
+button-title {
+    font-size: 1.5em;
+    text-align: center;
+    font-family: montserrat;
+    font-weight: normal;
+    color: white;
+}

@@ -1,35 +1,30 @@
 /* eslint-disable prettier/prettier */
 import { gql } from "@apollo/client";
 
-export const GET_ARCHIVEDDOCUMENTS = gql`
+export const DOCUMENT = gql`
     query {
         allArchives {
             id
             title
             description
             date
-        }
-    }
-`;
-
-export const GET_FILELOCATION = gql`
-    query {
-        allArchives {
-            id
-            fileLocation
-        }
-    }
-`;
-
-export const GET_DOCUMENTTYPE = gql`
-    query {
-        allArchives {
-            id
+            url
+            thumbnail
             typeDoc
         }
     }
 `;
 
-console.log(GET_ARCHIVEDDOCUMENTS);
-console.log(GET_FILELOCATION);
-console.log(GET_DOCUMENTTYPE);
+export const DOCUMENTS = gql`
+    query allArchives($ID: ID!) {
+        allArchives(id: $ID) {
+            id
+            title
+            description
+            date
+            url
+            thumbnail
+            typeDoc
+        }
+    }
+`;
