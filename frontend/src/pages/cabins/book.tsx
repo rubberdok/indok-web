@@ -4,29 +4,45 @@ import { CREATE_BOOKING } from "../../graphql/cabins/mutations";
 import Link from "next/link";
 import Navbar from "@components/navbar/Navbar";
 import Button from "@components/ui/Button";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Input from "@components/ui/Input";
 import { SEND_EMAIL } from "@graphql/cabins/mutations";
 import { Heading, Paragraph } from "@components/ui/Typography";
-import Summary from "../../components/pages/cabins/Summary";
 import { Card } from "../../components/pages/cabins/Card";
 import useBookingRange from "../../hooks/cabins/useBookingRange";
+import Content from "../../components/ui/Content";
+import { InputFields } from "@components/pages/cabins/InputFields";
+import { Composition } from "atomic-layout";
+import Summary from "@components/pages/cabins/Summary";
+import moment from "moment";
+import { getRangeLength } from "@components/Calendar";
 
-const BookPage = () => {
+const BookPage = (): JSX.Element => {
     const firstnameRef = React.createRef<HTMLInputElement>();
     const surnameRef = React.createRef<HTMLInputElement>();
     const emailRef = React.createRef<HTMLInputElement>();
     const phoneRef = React.createRef<HTMLInputElement>();
+    const inputRefs = [firstnameRef, surnameRef, emailRef, phoneRef];
 
     const router = useRouter();
     const data = router.query;
     let fromDate = data.fromDate as string;
     let toDate = data.toDate as string;
+    const pricePerNight = 1000;
+    const rangeLength = getRangeLength(fromDate, toDate);
 
     const [createBooking] = useMutation(CREATE_BOOKING);
     const [sendEmail] = useMutation(SEND_EMAIL);
     const [errorMessage, setErrorMessage] = useState("");
-    const { isAvailable } = useBookingRange(fromDate, toDate);
+
+    const templateMobile = `
+        inputfields summary
+    `;
+
+    const templateTablet = `
+        inputfields
+        summary
+    `;
 
     const handleSubmit = (e: React.FormEvent<EventTarget>) => {
         e.preventDefault();
@@ -34,9 +50,6 @@ const BookPage = () => {
         // must parse dates to be "YYYY-MM-DD", not "DD/MM/YYYY"
         fromDate = fromDate.split("/").reverse().join("-");
         toDate = toDate.split("/").reverse().join("-");
-
-        console.log("Klikk");
-        console.log(isAvailable);
 
         // avoid refs being null
         if (firstnameRef.current && surnameRef.current && emailRef.current && phoneRef.current) {
@@ -47,7 +60,7 @@ const BookPage = () => {
 
             // create booking and send email
 
-            if (isAvailable) {
+            if (firstname) {
                 createBooking({
                     variables: {
                         contactNum: parseInt(phone),
@@ -70,28 +83,35 @@ const BookPage = () => {
 
                 console.log("created booking and sent email");
             } else {
-                setErrorMessage("Den valgte tidsperioden er ikke tilgjengelig.");
+                console.log("Ikke tilgjengelig.");
             }
         }
     };
 
     return (
-        <div>
+        <Content>
             <Navbar></Navbar>
             <Heading>Fullføring av booking</Heading>
             <Link href="/cabins">Tilbake</Link>
-            <Summary from={fromDate} to={toDate} cabin={"Bjørnen"} price={1299}></Summary>
-            <Card>
-                <Input placeholder="Fornavn" required={true} type="text" ref={firstnameRef}></Input>
-                <Input placeholder="Etternavn" required={true} type="text" ref={surnameRef}></Input>
-                <Input placeholder="E-postadresse" required={true} type="email" ref={emailRef}></Input>
-                <Input placeholder="Mobilnummer" required={true} type="nummer" ref={phoneRef}></Input>
-                <Button url="#" onClick={(e) => handleSubmit(e)}>
-                    Fullfør booking
-                </Button>
-                <Paragraph>{errorMessage}</Paragraph>
-            </Card>
-        </div>
+            <Composition templateMd={templateTablet} templateLg={templateMobile} padding={15} gutter={15} gutterLg={40}>
+                {() => (
+                    <>
+                        <InputFields refs={inputRefs}>
+                            <Button url="#" onClick={(e) => handleSubmit(e)}>
+                                Gå til betaling
+                            </Button>
+                        </InputFields>
+                        <Summary
+                            from={fromDate}
+                            to={toDate}
+                            cabin={"Bjørnen"}
+                            price={pricePerNight}
+                            nights={rangeLength}
+                        ></Summary>
+                    </>
+                )}
+            </Composition>
+        </Content>
     );
 };
 
