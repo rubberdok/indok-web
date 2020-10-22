@@ -11,3 +11,10 @@ export const getDateRange = (start: moment.Moment, end: moment.Moment, format = 
     }
     return output;
 };
+
+export const rangeLength = (startDay: string, endDay: string): number => {
+    const start = moment([...startDay.split("-").map(Number)]);
+    const end = moment([...endDay.split("-").map(Number)]);
+    console.log(start, end);
+    return end.diff(start, "days") + 1;
+};
