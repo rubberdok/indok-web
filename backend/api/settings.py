@@ -132,16 +132,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = "/static/"
-STATICFILES_DIRS = [
-    "backend/static/cabins"
-]
+STATICFILES_DIRS = ["backend/static/cabins"]
 
 
-
-#CONFIG
-EMAIL_HOST_USER = "" # e-post
-EMAIL_HOST_PASSWORD = "" # passord
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# CONFIG
+EMAIL_HOST_USER = ""  # e-post
+EMAIL_HOST_PASSWORD = ""  # passord
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
