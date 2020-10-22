@@ -8,23 +8,26 @@ const AllListings: React.FC = () => {
     if (error) return <p>Error</p>;
     if (loading) return <p>Loading...</p>;
     return (
-        <ul>
+        <>
             {data &&
-                data.listings.map((listing) => (
-                    <li key={listing.id}>
-                        <Link href={`/listings/${listing.id}/${listing.slug}`}>{listing.title}</Link>
-                        <p>
-                            {listing.organization && (
-                                <>
-                                    {listing.organization.name}
-                                    <br />
-                                </>
-                            )}
-                            Frist: {listing.deadline.slice(0, 16).replace("T", " ")}
-                        </p>
-                    </li>
-                ))}
-        </ul>
+                <ul>
+                    {data.listings.map((listing) => (
+                        <li key={listing.id}>
+                            <Link href={`/listings/${listing.id}/${listing.slug}`}>{listing.title}</Link>
+                            <p>
+                                {listing.organization && (
+                                    <>
+                                        {listing.organization.name}
+                                        <br />
+                                    </>
+                                )}
+                                Frist: {listing.deadline.slice(0, 16).replace("T", " ")}
+                            </p>
+                        </li>
+                    ))}
+                </ul>
+            }
+        </>
     );
 };
 

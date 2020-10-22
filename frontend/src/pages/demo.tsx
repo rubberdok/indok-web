@@ -6,9 +6,9 @@ const Demo: NextPage = () => {
     return (
         <Layout>
             <h3>Demoside for vervsøknad</h3>
-            <Link href="/listings">Vervoversikten</Link>
+            <Link href="/users">Brukernes side</Link>
             <br />
-            <Link href="/org">Foreningenes side for behandling av søknader</Link>
+            <Link href="/org">Foreningenes side</Link>
         </Layout>
     );
 };

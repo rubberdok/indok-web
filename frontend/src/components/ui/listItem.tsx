@@ -4,11 +4,12 @@ const ListItem: React.FC<{
     mainText: string;
     subText: string;
     selected: boolean;
+    key?: string;
     imgSrc?: string;
     onClick?: () => void;
 }> = ({ mainText, subText, selected, imgSrc, onClick }) => (
     <Item selected={selected}>
-        <div role="button" onClick={(e) => {
+        <button onClick={(e) => {
             e.preventDefault();
             if(onClick){
                 onClick();
@@ -17,7 +18,7 @@ const ListItem: React.FC<{
             <div>{mainText}</div>
             <div>{subText}</div>
             <img src={imgSrc} alt=""/>
-        </div>
+        </button>
     </Item>
 );
 
