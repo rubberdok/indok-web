@@ -16,18 +16,20 @@ const AllEvents: React.FC = () => {
         <div style={{ float: "right", width: "70%" }}>
             {data.allEvents.map((event: Event) => (
                 <Link href={`/events/${event.id}`} key={event.id}>
-                    <div
-                        style={{
-                            border: "solid",
-                            borderWidth: "0.1em",
-                            padding: "0.5em",
-                            marginBottom: "0.5em",
-                        }}
-                    >
-                        <p>
-                            {event.title} - Time: {event.starttime.slice(0, 19).replace("T", " ")}
-                        </p>
-                    </div>
+                    <a href={`/events/${event.id}`} style={{ color: "#000" }}>
+                        <div
+                            style={{
+                                border: "solid",
+                                borderWidth: "0.1em",
+                                padding: "0.5em",
+                                marginBottom: "0.5em",
+                            }}
+                        >
+                            <p>
+                                {event.title} - Time: {event.starttime.slice(0, 19).replace("T", " ")}
+                            </p>
+                        </div>
+                    </a>
                 </Link>
             ))}
         </div>

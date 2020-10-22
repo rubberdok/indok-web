@@ -63,3 +63,14 @@ export const GET_CATEGORY = gql`
         }
     }
 `;
+
+export const QUERY_EVENT_FILTERED_ORGANIZATIONS = gql`
+    {
+        eventFilteredOrganizations {
+            name
+            children {
+                name
+            }
+        }
+    }
+`;
