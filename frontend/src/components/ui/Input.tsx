@@ -16,13 +16,10 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>((props, forwardedRe
 const StyledInput = styled.input`
     background: ${({ theme }) => theme.colors.primary};
     border: 2px solid ${({ theme }) => theme.colors.primary};
-    display: grid;
-    color: #fff;
     font-family: "Montserrat";
-    font-size: 18px;
-    text-decoration: none !important;
-    margin-bottom: 10px;
+    font-size: 17px;
     padding: 10px;
+    text-decoration: none !important;
     background: linear-gradient(
             to bottom,
             ${({ theme }) => theme.colors.primary} 50%,
@@ -31,18 +28,25 @@ const StyledInput = styled.input`
         top;
     background-size: 100% 200%;
     transition: all 0.2s ease-in-out;
+    color: white;
+
+    ::placeholder {
+        color: white;
+    }
 
     &:hover {
     }
 
     &:focus {
-        background-position: 0% 100%;
-        color: black;
+        background-position: 0% -100%;
         outline: none;
-        background-color: #fff;
+        color: ${({ theme }) => theme.colors.primary};
+        ::placeholder {
+            color: ${({ theme }) => theme.colors.primary};
+        }
     }
 `;
 
-Input.displayName = "Input"; // hvorfor?
+Input.displayName = "Input";
 
 export default Input;
