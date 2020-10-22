@@ -18,6 +18,10 @@ class EventResolvers:
                 kwargs["organization__name"] = organization
                 del kwargs["organization"]
 
+            if (organization := kwargs.get("category", None)) != None:
+                kwargs["category__name"] = organization
+                del kwargs["category"]
+
             new_kwargs = {f"{k}__icontains": v for k, v in kwargs.items()}
             queries = [Q(**{k: v}) for k, v in new_kwargs.items()]
 
