@@ -15,7 +15,11 @@ const flexChild = {
     marginLeft: '50px',
 }
 const responseView = {
-    backgroundColor: '#a0a0a0',
+    backgroundColor: '#F5F0EB',
+    borderRadius: '6px',
+    padding: 10,
+    border: '1px solid grey',
+    width: '50%',
 };
 
 const ListingResponses: React.FC<{ listing: Listing }> = ({ listing }) => {
