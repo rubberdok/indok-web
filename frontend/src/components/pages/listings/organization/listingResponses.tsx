@@ -37,8 +37,8 @@ const ListingResponses: React.FC<{ listing: Listing }> = ({ listing }) => {
                     <List>
                         {data.listing.responses.map((response) => (
                             <ListItem
-                                mainText={"Response #"+response.id}
-                                subText={"[klasse]"}
+                                mainText={"Søknad #"+response.id}
+                                subText={""}
                                 selected={response === selectedResponse}
                                 onClick={() => {
                                     if(response === selectedResponse){

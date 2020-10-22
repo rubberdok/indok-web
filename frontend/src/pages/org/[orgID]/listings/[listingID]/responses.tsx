@@ -21,8 +21,6 @@ const ListingResponsesPage: NextPage<InferGetServerSidePropsType<typeof getServe
             {data && (
                 <>
                     <Link href={`/org/${orgID}/listings`}>Tilbake</Link>
-                    <h3>{data.listing.title}</h3>
-                    <p>{data.listing.description}</p>
                     <ListingResponses listing={data.listing} />
                 </>
             )}
