@@ -7,8 +7,8 @@ import { Listing } from "@interfaces/listings";
 import Link from "next/link";
 import CreateResponse from "@components/pages/listings/createResponse";
 
-const ListingPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ id }) => {
-    const { loading, error, data } = useQuery<{ listing: Listing }>(LISTING, { variables: { ID: Number(id[0]) } });
+const ListingPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ userID, listingID }) => {
+    const { loading, error, data } = useQuery<{ listing: Listing }>(LISTING, { variables: { ID: Number(listingID[0]) } });
     if (error) return <h1>Error</h1>;
     if (loading) return <h1>Loading...</h1>;
     return (
@@ -30,10 +30,11 @@ const ListingPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProp
 
 export default ListingPage;
 
-export const getServerSideProps: GetServerSideProps<{ id: string[] }> = async (context) => {
-    const id = context.query.id as string[];
+export const getServerSideProps: GetServerSideProps<{ userID: string; listingID: string }> = async (context) => {
+    const listingID = context.query.listingID as string;
+    const userID = context.query.userID as string;
     return {
-        props: { id },
+        props: { userID, listingID },
     };
 };
 

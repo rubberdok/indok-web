@@ -24,3 +24,11 @@ export interface Organization {
     parent?: Organization;
     children?: Organization[];
 }
+
+export interface User {
+    id: string;
+    username: string;
+    firstName: string;
+    lastName: string;
+    year: string;
+}

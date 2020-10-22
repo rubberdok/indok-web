@@ -94,3 +94,15 @@ export const ORGANIZATION_LISTINGS = gql`
         }
     }
 `;
+
+export const USERS = gql`
+    query {
+        users {
+            id
+            username
+            firstName
+            lastName
+            year
+        }
+    }
+`;
