@@ -1,7 +1,7 @@
 import graphene
 from datetime import datetime
 from django.shortcuts import get_object_or_404
-from django.core.mail import send_mail
+from django.core.mail import send_mail, EmailMultiAlternatives
 
 from .types import BookingType
 from apps.cabins.models import Booking as BookingModel
@@ -9,6 +9,10 @@ from apps.cabins.models import Booking as BookingModel
 from django.template import Context
 from django.template.loader import render_to_string, get_template
 from django.core.mail import EmailMessage
+
+from ics import Calendar, Event
+from pathlib import Path
+from email.mime.image import MIMEImage
 
 
 class CreateBooking(graphene.Mutation):
@@ -93,16 +97,14 @@ class SendEmail(graphene.Mutation):
 
     def mutate(self, info, firstname, surname, receiverEmail, bookFrom, bookTo):
         subject = "Bekreftelsesmail for booking av Indøkhytte"
-        sender_email = "herman.holmoy12@gmail.com" # modify
+        sender_email = "herman.holmoy12@gmail.com" 
+        #sender_email = "booking@indokhyttene.no"
 
         start_date = datetime.strptime(bookFrom, "%Y-%m-%d").isoformat().replace("-", "").replace(":", "") # Google Calendar wants YYYYMMDDThhmmss
         end_date = datetime.strptime(bookTo, "%Y-%m-%d").isoformat().replace("-", "").replace(":", "")
         text = "Hyttetur til Indøkhyttene"
         location = "Oppdal+Skisenter+-+Stølen"
         link = f"https://calendar.google.com/calendar/u/0/r/eventedit?text={text}&dates={start_date}/{end_date}&location={location}"
-
-        print("dates", start_date, end_date)
-        print("link: ", link)
 
         ctx = {
             "firstname": firstname, 
@@ -113,9 +115,25 @@ class SendEmail(graphene.Mutation):
         }
 
         content = get_template("mailtemplate.html").render(ctx)
-        msg = EmailMessage(subject, content, sender_email, [receiverEmail])
-        msg.content_subtype = "html"
+        image_path = "static/cabins/hyttestyret_logo.png"
+        image_name = Path(image_path).name
+
+        msg = EmailMultiAlternatives(subject, "test content", sender_email, [receiverEmail])
+        msg.attach_alternative(content, "text/html")
+        msg.content_subtype = 'html'  
+        msg.mixed_subtype = 'related' 
+        
+        with open(image_path, mode='rb') as f:
+            image = MIMEImage(f.read())
+            image.add_header('Content-ID', f"<{image_name}>")
+            msg.attach(image)
+
+        msg.attach_file("static/cabins/Sjekkliste.docx")
+        msg.attach_file("static/cabins/Reglement.docx")
+
         msg.send()
+
+
 
         ok = True
         return SendEmail(ok=ok)
