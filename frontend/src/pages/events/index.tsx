@@ -4,40 +4,9 @@ import Link from "next/link";
 import React from "react";
 import AllEvents from "../../components/pages/events/allEvents";
 import Navbar from "@components/navbar/Navbar";
+import Filter from "@components/pages/events/filter";
 
 const Events: NextPage = () => {
-    const Filter = () => {
-        /* const { loading, error, data } = useQuery(QUERY_ALL_EVENTS, {
-            pollInterval: 30000, // refetch the result every 30 second
-        });
-        // should handle loading status
-        if (loading) return <p>Loading...</p>;
-
-        if (error) return <p>Error :(</p>;
-        */
-
-        const dummyOrganizations = [
-            { title: "Estiem" },
-            { title: "Hyttestyret" },
-            { title: "Janus IF", children: [{ title: "Janus HK" }, { title: "Janus FK" }, { title: "Janus FKFK" }] },
-        ];
-
-        return (
-            <div style={{ float: "left", width: "25%", border: "solid", borderWidth: "0.05em", paddingLeft: "1em" }}>
-                {dummyOrganizations.map((org) => (
-                    <div key={org.title} style={{}}>
-                        <p>{org.title}</p>
-                        {org.children?.map((subOrg) => (
-                            <div key={subOrg.title} style={{ marginLeft: "2em", fontSize: "15px" }}>
-                                <p>{subOrg.title}</p>
-                            </div>
-                        ))}
-                    </div>
-                ))}
-            </div>
-        );
-    };
-
     return (
         <Layout>
             <Navbar />

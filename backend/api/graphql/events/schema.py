@@ -13,7 +13,13 @@ class EventMutations(graphene.ObjectType):
 
 
 class EventQueries(graphene.ObjectType, EventResolvers):
-    all_events = graphene.List(EventType)
+    all_events = graphene.List(
+        EventType,
+        category=graphene.String(required=False),
+        organization=graphene.String(required=False),
+        start_time=graphene.DateTime(required=False),
+        end_time=graphene.DateTime(required=False),
+    )
     event = graphene.Field(EventType, id=graphene.ID(required=True))
 
 
