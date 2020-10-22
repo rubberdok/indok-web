@@ -24,11 +24,11 @@ class CreateArchiveDocument(graphene.Mutation):
             description=description,
             date=date,
             uploaded_date = datetime.now(),
-            type_doc = typeDoc,
-            file_location=fileLocation
+            type_doc = type_doc,
+            file_location=file_location
         )
         ok = True
-        return CreateEvent(archiveDocument=archiveDocument, ok=ok)
+        return CreateArchiveDocument(archiveDocument=archiveDocument, ok=ok)
 
 
 class UpdateArchiveDocument(graphene.Mutation):

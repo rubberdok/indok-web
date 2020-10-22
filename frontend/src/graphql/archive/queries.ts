@@ -2,7 +2,7 @@ import { gql } from "@apollo/client";
 
 export const GET_ARCHIVEDDOCUMENTS = gql`
     query {
-        allArchivedDocs {
+        allArchives {
             id
             title
             description
