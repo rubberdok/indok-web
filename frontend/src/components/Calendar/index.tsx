@@ -14,7 +14,7 @@ import {
     TwoCalendarsContainer,
 } from "./styles";
 import _ from "lodash";
-import { getDateRange } from "./helpers";
+import { getDateRange, rangeLength } from "./helpers";
 import { NORWEGIAN_SHORT_DAY_NAMES, DATE_FORMAT } from "./constants";
 
 moment.updateLocale("nb", {
@@ -226,5 +226,6 @@ const Calendar = ({ events, rangeChanged }: CalendarProps) => {
 };
 
 export const createDateRange = (fromDate: string, toDate: string) => getDateRange(moment(fromDate), moment(toDate));
+export const getRangeLength = (fromDate: string, toDate: string) => rangeLength(fromDate, toDate);
 export const CONSTANTS = { NORWEGIAN_SHORT_DAY_NAMES, DATE_FORMAT };
 export default Calendar;
