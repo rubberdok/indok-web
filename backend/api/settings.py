@@ -138,9 +138,25 @@ STATICFILES_DIRS = [
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #CONFIG
-EMAIL_HOST_USER = "" # e-post
-EMAIL_HOST_PASSWORD = "" # passord
+EMAIL_HOST_USER = "booking.indokhyttene@gmail.com"
+EMAIL_HOST_PASSWORD = "***REMOVED***"
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
