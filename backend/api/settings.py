@@ -135,8 +135,7 @@ STATIC_URL = "/static/"
 STATICFILES_DIRS = ["backend/static/cabins"]
 
 #CONFIG
-EMAIL_HOST_USER = "herman.holmoy12@gmail.com"
-EMAIL_HOST_PASSWORD = "raider321"
+
 #EMAIL_HOST_USER = "booking.indokhyttene@gmail.com"
 #EMAIL_HOST_PASSWORD = "***REMOVED***"
 #EMAIL_HOST_USER = "rubberdok1@gmail.com"
