@@ -5,16 +5,13 @@ import Link from "next/link";
 import Navbar from "@components/navbar/Navbar";
 import Button from "@components/ui/Button";
 import React, { useEffect, useState } from "react";
-import Input from "@components/ui/Input";
 import { SEND_EMAIL } from "@graphql/cabins/mutations";
-import { Heading, Paragraph } from "@components/ui/Typography";
-import { Card } from "../../components/pages/cabins/Card";
+import { Heading } from "@components/ui/Typography";
 import useBookingRange from "../../hooks/cabins/useBookingRange";
 import Content from "../../components/ui/Content";
 import { InputFields } from "@components/pages/cabins/InputFields";
 import { Composition } from "atomic-layout";
 import Summary from "@components/pages/cabins/Summary";
-import moment from "moment";
 import { getRangeLength } from "@components/Calendar";
 
 const BookPage = (): JSX.Element => {
@@ -26,30 +23,38 @@ const BookPage = (): JSX.Element => {
 
     const router = useRouter();
     const data = router.query;
-    let fromDate = data.fromDate as string;
-    let toDate = data.toDate as string;
+
+    const [dateRange, setDateRange] = useState(["", ""]);
+    const [rangeLength, setRangeLength] = useState(0);
+
+    useEffect(() => {
+        if (data.fromDate && data.toDate) {
+            const fromDate = data.fromDate as string;
+            const fromDateParsed = fromDate.split("/").reverse().join("-");
+            const toDate = data.toDate as string;
+            const toDateParsed = toDate.split("/").reverse().join("-");
+            setDateRange([fromDateParsed, toDateParsed]);
+            setRangeLength(getRangeLength(fromDate, toDate));
+        }
+    }, [data]);
+
     const pricePerNight = 1000;
-    const rangeLength = getRangeLength(fromDate, toDate);
 
     const [createBooking] = useMutation(CREATE_BOOKING);
     const [sendEmail] = useMutation(SEND_EMAIL);
     const [errorMessage, setErrorMessage] = useState("");
 
-    const templateMobile = `
-        inputfields summary
+    const templateDesktop = `
+        inputs sum
     `;
 
-    const templateTablet = `
-        inputfields
-        summary
+    const templatePhone = `
+        inputs
+        sum
     `;
 
     const handleSubmit = (e: React.FormEvent<EventTarget>) => {
         e.preventDefault();
-
-        // must parse dates to be "YYYY-MM-DD", not "DD/MM/YYYY"
-        fromDate = fromDate.split("/").reverse().join("-");
-        toDate = toDate.split("/").reverse().join("-");
 
         // avoid refs being null
         if (firstnameRef.current && surnameRef.current && emailRef.current && phoneRef.current) {
@@ -65,8 +70,8 @@ const BookPage = (): JSX.Element => {
                     variables: {
                         contactNum: parseInt(phone),
                         contactPerson: firstname + " " + surname,
-                        startDay: fromDate,
-                        endDay: toDate,
+                        startDay: dateRange[0],
+                        endDay: dateRange[1],
                     },
                 });
 
@@ -75,8 +80,8 @@ const BookPage = (): JSX.Element => {
                         firstname: firstname,
                         surname: surname,
                         receiverEmail: email,
-                        bookFrom: fromDate,
-                        bookTo: toDate,
+                        bookFrom: dateRange[0],
+                        bookTo: dateRange[1],
                     },
                 });
                 setErrorMessage("");
@@ -93,21 +98,25 @@ const BookPage = (): JSX.Element => {
             <Navbar></Navbar>
             <Heading>Fullføring av booking</Heading>
             <Link href="/cabins">Tilbake</Link>
-            <Composition templateMd={templateTablet} templateLg={templateMobile} padding={15} gutter={15} gutterLg={40}>
-                {() => (
+            <Composition templateXs={templatePhone} templateLg={templateDesktop} padding={15} gutter={15} gutterLg={40}>
+                {({ Inputs, Sum }) => (
                     <>
-                        <InputFields refs={inputRefs}>
-                            <Button url="#" onClick={(e) => handleSubmit(e)}>
-                                Gå til betaling
-                            </Button>
-                        </InputFields>
-                        <Summary
-                            from={fromDate}
-                            to={toDate}
-                            cabin={"Bjørnen"}
-                            price={pricePerNight}
-                            nights={rangeLength}
-                        ></Summary>
+                        <Inputs>
+                            <InputFields refs={inputRefs}>
+                                <Button url="#" onClick={(e) => handleSubmit(e)}>
+                                    Gå til betaling
+                                </Button>
+                            </InputFields>
+                        </Inputs>
+                        <Sum>
+                            <Summary
+                                from={dateRange[0]}
+                                to={dateRange[1]}
+                                cabin={"Bjørnen"}
+                                price={pricePerNight}
+                                nights={rangeLength}
+                            ></Summary>
+                        </Sum>
                     </>
                 )}
             </Composition>
