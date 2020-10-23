@@ -10,7 +10,6 @@ from django.template import Context
 from django.template.loader import render_to_string, get_template
 from django.core.mail import EmailMessage
 
-from ics import Calendar, Event
 from pathlib import Path
 from email.mime.image import MIMEImage
 
