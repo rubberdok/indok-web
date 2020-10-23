@@ -1,5 +1,11 @@
 import styled, { css } from "styled-components";
 
+export const CalendarTableContainer = styled.div`
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+`;
+
 export const TwoCalendarsContainer = styled.div`
     display: flex;
     width: 100%;
@@ -16,7 +22,7 @@ export const WeekDay = styled.th`
 `;
 
 export const BigTable = styled.table`
-    width: 500px;
+    width: 100%;
 `;
 
 export const EventMarkerWrapper = styled.div`
@@ -48,17 +54,16 @@ export const MonthSelector = styled.div`
     align-items: center;
     justify-content: space-between;
 `;
-export const Month = styled.p`
+export const Month = styled.div`
+    text-align: center;
     font-weight: 700;
     font-size: 14px;
-    margin: 0 0 0 8px;
 `;
 export const Year = styled.span`
     font-weight: 400;
     font-size: 14px;
     padding-left: 5px;
 `;
-export const MonthButtons = styled.div``;
 export const MonthPickButton = styled.button`
     margin: 0 5px;
     border-radius: 6px;
