@@ -12,6 +12,7 @@ from django.core.mail import EmailMessage
 
 from pathlib import Path
 from email.mime.image import MIMEImage
+from email.mime.text import MIMEText
 from static.cabins.mailcontent import get_no_html_mail
 
 
