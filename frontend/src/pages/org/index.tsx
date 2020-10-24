@@ -4,14 +4,16 @@ import { useQuery } from "@apollo/client";
 import { ORGANIZATIONS } from "@graphql/listings/queries";
 import { Organization } from "@interfaces/listings";
 import Link from "next/link";
+import NavBar from "@components/navbar/Navbar";
 
-const OrgDemo: NextPage = () => {
+const OrganizationsPage: NextPage = () => {
     //TODO: change allOrganizations to organizations
     const { loading, error, data } = useQuery<{ allOrganizations: Organization[] }>(ORGANIZATIONS);
     if (error) return <p>Error</p>;
     if (loading) return <p>Loading...</p>;
     return (
         <>
+            <NavBar />
             <Link href="/demo">Tilbake</Link>
             <h3>Demoside for å logge inn i forening</h3>
             {data &&
@@ -26,4 +28,4 @@ const OrgDemo: NextPage = () => {
     );
 };
 
-export default OrgDemo;
+export default OrganizationsPage;

@@ -9,17 +9,17 @@ import List from "@components/ui/list";
 //Temporary styling components for demo
 //TODO: implement proper styledcomponents
 const horizontal = {
-    display: 'flex',
+    display: "flex",
 };
 const flexChild = {
-    marginLeft: '50px',
-}
+    marginLeft: "50px",
+};
 const responseView = {
-    backgroundColor: '#F5F0EB',
-    borderRadius: '6px',
+    backgroundColor: "#F5F0EB",
+    borderRadius: "6px",
     padding: 10,
-    border: '1px solid grey',
-    width: '50%',
+    border: "1px solid grey",
+    width: "50%",
 };
 
 const ListingResponses: React.FC<{ listing: Listing }> = ({ listing }) => {
@@ -32,18 +32,19 @@ const ListingResponses: React.FC<{ listing: Listing }> = ({ listing }) => {
     if (loading) return <p>Loading...</p>;
     return (
         <>
-            {data &&
+            {data && (
                 <div style={horizontal}>
                     <List>
                         {data.listing.responses.map((response) => (
                             <ListItem
-                                mainText={"Søknad #"+response.id}
+                                mainText={"Søknad #" + response.id}
                                 subText={""}
+                                key={response.id}
                                 selected={response === selectedResponse}
                                 onClick={() => {
-                                    if(response === selectedResponse){
+                                    if (response === selectedResponse) {
                                         selectResponse(undefined);
-                                    }else{
+                                    } else {
                                         selectResponse(response);
                                     }
                                 }}
@@ -66,18 +67,16 @@ const ListingResponses: React.FC<{ listing: Listing }> = ({ listing }) => {
                             </li> */
                         ))}
                     </List>
-                    {selectedResponse ?
-                        <div style={{...responseView, ...flexChild}}>
-                            {selectedResponse.response}
-                        </div>
-                    :
+                    {selectedResponse ? (
+                        <div style={{ ...responseView, ...flexChild }}>{selectedResponse.response}</div>
+                    ) : (
                         <div style={flexChild}>
                             <h3>{listing.title}</h3>
                             <p>{listing.description}</p>
                         </div>
-                    }
+                    )}
                 </div>
-            }
+            )}
         </>
     );
 };

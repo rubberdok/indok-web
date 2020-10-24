@@ -4,6 +4,7 @@ import { Listing } from "@interfaces/listings";
 import { LISTING } from "@graphql/listings/queries";
 import ListingResponses from "@components/pages/listings/organization/listingResponses";
 import Link from "next/link";
+import NavBar from "@components/navbar/Navbar";
 
 const ListingResponsesPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
     listingID,
@@ -18,6 +19,7 @@ const ListingResponsesPage: NextPage<InferGetServerSidePropsType<typeof getServe
     if (loading) return <p>Loading</p>;
     return (
         <>
+            <NavBar />
             {data && (
                 <>
                     <Link href={`/org/${orgID}/listings`}>Tilbake</Link>

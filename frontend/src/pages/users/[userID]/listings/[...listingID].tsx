@@ -6,16 +6,20 @@ import { LISTING } from "@graphql/listings/queries";
 import { Listing } from "@interfaces/listings";
 import Link from "next/link";
 import CreateResponse from "@components/pages/listings/createResponse";
+import NavBar from "@components/navbar/Navbar";
 
 const ListingPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ userID, listingID }) => {
-    const { loading, error, data } = useQuery<{ listing: Listing }>(LISTING, { variables: { ID: Number(listingID[0]) } });
+    const { loading, error, data } = useQuery<{ listing: Listing }>(LISTING, {
+        variables: { ID: Number(listingID[0]) },
+    });
     if (error) return <h1>Error</h1>;
     if (loading) return <h1>Loading...</h1>;
     return (
         <>
+            <NavBar />
             {data && (
                 <Layout>
-                    <Link href="/listings">Tilbake</Link>
+                    <Link href={`/users/${userID}/listings`}>Tilbake</Link>
                     <h3>{data.listing.title}</h3>
                     <p>{data.listing.description}</p>
                     <p>Frist: {data.listing.deadline.slice(0, 16).replace("T", " ")}</p>
