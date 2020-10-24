@@ -16,4 +16,4 @@ six==1.15.0
 sqlparse==0.3.1
 Unidecode==1.1.1
 django-filter==2.4.0
-pillow==7.2.0
+pillow==8.0.0
