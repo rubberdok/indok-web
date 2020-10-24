@@ -5,8 +5,9 @@ import React, { useState, ChangeEvent } from "react";
 
 const CreateResponse: React.FC<{
     listing: Listing;
+    applicantID: string;
     children?: React.ReactNode;
-}> = ({ listing, children }) => {
+}> = ({ listing, applicantID, children }) => {
     const [response, setResponse] = useState<Response>({} as Response);
     const [createResponse] = useMutation<{ createResponse: { response: Response } }>(
         CREATE_RESPONSE /* , {
@@ -37,7 +38,7 @@ const CreateResponse: React.FC<{
                 createResponse({
                     variables: {
                         response: response.response,
-                        applicantId: 1,
+                        applicantId: applicantID,
                         listingId: listing.id,
                     },
                 });

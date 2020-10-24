@@ -14,6 +14,7 @@ export interface Listing {
 export interface Response {
     id: string;
     response: string;
+    applicant: User;
 }
 
 export interface Organization {
@@ -31,4 +32,5 @@ export interface User {
     firstName: string;
     lastName: string;
     year: string;
+    email: string;
 }

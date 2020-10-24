@@ -38,17 +38,31 @@ export const RESPONSES = gql`
             responses {
                 id
                 response
+                applicant {
+                    id
+                    username
+                    firstName
+                    lastName
+                    year
+                    email
+                }
             }
         }
     }
 `;
 
 export const RESPONSE = gql`
-    query listing($listingID: ID!, $responseID: ID!) {
-        listing(id: $listingID) {
-            response(id: $responseID) {
+    query response($responseID: ID!) {
+        response(id: $responseID) {
+            id
+            response
+            applicant {
                 id
-                response
+                username
+                firstName
+                lastName
+                year
+                email
             }
         }
     }
@@ -103,6 +117,20 @@ export const USERS = gql`
             firstName
             lastName
             year
+            email
+        }
+    }
+`;
+
+export const USER = gql`
+    query user($ID: ID!) {
+        user(id: $ID) {
+            id
+            username
+            firstName
+            lastName
+            year
+            email
         }
     }
 `;

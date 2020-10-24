@@ -9,7 +9,7 @@ const AllUsers: React.FC = () => {
     if (loading) return <p>Loading...</p>;
     return (
         <>
-            {data &&
+            {data && (
                 <ul>
                     {data.users.map((user) => (
                         <li key={user.id}>
@@ -17,9 +17,9 @@ const AllUsers: React.FC = () => {
                         </li>
                     ))}
                 </ul>
-            }
+            )}
         </>
     );
-}
+};
 
 export default AllUsers;
