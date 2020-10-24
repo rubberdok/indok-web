@@ -1,18 +1,17 @@
 import { useRouter } from "next/router";
 import { useMutation } from "@apollo/client";
 import { CREATE_BOOKING } from "../../graphql/cabins/mutations";
-import Link from "next/link";
 import Navbar from "@components/navbar/Navbar";
 import Button from "@components/ui/Button";
 import React, { useEffect, useState } from "react";
 import { SEND_EMAIL } from "@graphql/cabins/mutations";
-import { Heading } from "@components/ui/Typography";
 import useBookingRange from "../../hooks/cabins/useBookingRange";
 import Content from "../../components/ui/Content";
 import { InputFields } from "@components/pages/cabins/InputFields";
 import { Composition } from "atomic-layout";
 import Summary from "@components/pages/cabins/Summary";
 import { getRangeLength } from "@components/Calendar";
+import { HeaderComposition } from "@components/pages/cabins/HeaderCompositon";
 
 const BookPage = (): JSX.Element => {
     const firstnameRef = React.createRef<HTMLInputElement>();
@@ -26,6 +25,9 @@ const BookPage = (): JSX.Element => {
 
     const [dateRange, setDateRange] = useState(["", ""]);
     const [rangeLength, setRangeLength] = useState(0);
+    const [createBooking] = useMutation(CREATE_BOOKING);
+    const [sendEmail] = useMutation(SEND_EMAIL);
+    const [errorMessage, setErrorMessage] = useState("");
 
     useEffect(() => {
         if (data.fromDate && data.toDate) {
@@ -39,10 +41,6 @@ const BookPage = (): JSX.Element => {
     }, [data]);
 
     const pricePerNight = 1000;
-
-    const [createBooking] = useMutation(CREATE_BOOKING);
-    const [sendEmail] = useMutation(SEND_EMAIL);
-    const [errorMessage, setErrorMessage] = useState("");
 
     const templateDesktop = `
         inputs sum
@@ -64,7 +62,6 @@ const BookPage = (): JSX.Element => {
             const phone = phoneRef.current.value;
 
             // create booking and send email
-
             if (firstname) {
                 createBooking({
                     variables: {
@@ -96,8 +93,8 @@ const BookPage = (): JSX.Element => {
     return (
         <Content>
             <Navbar></Navbar>
-            <Heading>Fullføring av booking</Heading>
-            <Link href="/cabins">Tilbake</Link>
+            <HeaderComposition></HeaderComposition>
+            <p>{errorMessage}</p>
             <Composition templateXs={templatePhone} templateLg={templateDesktop} padding={15} gutter={15} gutterLg={40}>
                 {({ Inputs, Sum }) => (
                     <>
