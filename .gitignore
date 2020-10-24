@@ -249,3 +249,6 @@ web.code-workspace
 
 # Jetbrains
 .idea/
+
+
+mailconfig.py
