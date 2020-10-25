@@ -17,3 +17,4 @@ sqlparse==0.3.1
 Unidecode==1.1.1
 django-filter==2.4.0
 pillow==8.0.0
+pylint==2.6.0
