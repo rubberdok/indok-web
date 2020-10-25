@@ -244,6 +244,11 @@ dist
 web.code-workspace
 # End of https://www.toptal.com/developers/gitignore/api/node
 
+# devcontainer
+.devcontainer
+devcontainer.json
+.devcontainer.json
+
 
 **/.DS_Store
 
