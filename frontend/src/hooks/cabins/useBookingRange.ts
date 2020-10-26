@@ -16,7 +16,7 @@ interface Output {
         toDate: string | undefined;
         fromDate: string | undefined;
     };
-    setRange: (newFromDate: string, newToDate: string) => void;
+    setRange: (newFromDate: string | undefined, newToDate: string | undefined) => void;
     allBookingsQuery: QueryResult<AllBookingsQuery>;
 }
 
@@ -45,7 +45,7 @@ const useBookingRange = (initFromDate?: string, initToDate?: string): Output => 
         }
     }, [fromDate, toDate]);
 
-    const setRange = (newFromDate = fromDate, newToDate = toDate) => {
+    const setRange = (newFromDate: string | undefined, newToDate: string | undefined) => {
         setFromDate(newFromDate);
         setToDate(newToDate);
     };
