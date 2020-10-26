@@ -18,9 +18,13 @@ class SurveyQuestion(models.Model):
     question = models.ForeignKey("Question", on_delete=models.CASCADE)
     offered_answer = models.ManyToManyField("OfferedAnswer", related_name="surveyquestions")
     question_type = models.ForeignKey("QuestionType", on_delete=models.SET_NULL, null=True)
+    position = models.IntegerField(unique=True)
 
     def __str__(self) -> str:
         return f"{self.survey}: {self.question}"
+
+    class Meta:
+        ordering = ["position"]
 
 class Question(models.Model):
     question = models.CharField(max_length=300)
