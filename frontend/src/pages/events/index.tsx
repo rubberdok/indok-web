@@ -15,7 +15,7 @@ const Events: NextPage = () => {
 
             <Link href="/"> Go Home </Link>
 
-            <div style={{ float: "right" }}>
+            <div style={{ float: "right", paddingRight: "6em" }}>
                 <Link href="/events/create-event"> Add event </Link>
             </div>
             <div>

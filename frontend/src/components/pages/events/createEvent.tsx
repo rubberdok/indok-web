@@ -2,7 +2,7 @@ import { CREATE_EVENT } from "@graphql/events/mutations";
 import { gql, useMutation } from "@apollo/client";
 import { useState } from "react";
 import { Event } from "@interfaces/events";
-import { RSA_PSS_SALTLEN_AUTO } from "constants";
+import Button from "@components/ui/Button";
 
 const CreateEvent = () => {
     const defaultInput = {
@@ -159,7 +159,7 @@ const CreateEvent = () => {
                         marginTop: 20,
                         marginLeft: "auto",
                         marginRight: "auto",
-                        marginBottom: -10,
+                        marginBottom: 10,
                         borderRadius: "0.5em",
                         width: 150,
                         height: 60,
@@ -172,6 +172,10 @@ const CreateEvent = () => {
                 >
                     Create Event
                 </button>
+
+                <Button type="submit" url="/events">
+                    Create event
+                </Button>
             </form>
         </div>
     );
