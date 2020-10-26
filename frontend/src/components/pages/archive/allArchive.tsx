@@ -7,10 +7,9 @@ const AllArchive = () => {
     const { loading, error, data } = useQuery(DOCUMENTS);
 
     if (loading) return <p>Loading...</p>;
-
-    if (error) return <p>Error :(</p>;
     console.log(data);
     console.log("hei");
+    if (error) return <p>Error :(</p>;
     return data.allArchives.map((document: ArchivedDocument) => (
         <div key={document.id}>
             <img src={document.thumbnail} alt="" />
