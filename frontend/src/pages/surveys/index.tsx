@@ -1,5 +1,7 @@
 import { NextPage } from "next";
 
-const IndexPage: NextPage = () => {
-    
-}
+const SurveyPage: NextPage = () => {
+    return <></>;
+};
+
+export default SurveyPage;
