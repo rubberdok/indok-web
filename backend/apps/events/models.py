@@ -5,7 +5,7 @@ from django.db import models
 
 # Create your models here.
 class Category(models.Model):
-    name = models.CharField(max_length=64)
+    name = models.CharField(max_length=64, unique=True)
 
     def __str__(self):
         return self.name
@@ -30,7 +30,7 @@ class Event(models.Model):
         Organization, on_delete=models.CASCADE, blank=True, null=True
     )
     category = models.ForeignKey(
-        Category, on_delete=models.DO_NOTHING, blank=True, null=True
+        Category, on_delete=models.SET_NULL, blank=True, null=True
     )
     image = models.URLField(blank=True, null=True)
     deadline = models.DateTimeField(blank=True, null=True)
