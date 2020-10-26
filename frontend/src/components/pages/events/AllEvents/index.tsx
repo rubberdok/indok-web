@@ -54,7 +54,7 @@ const AllEvents: React.FC = () => {
                                             }}
                                         >
                                             <p>
-                                                {event.title} - Time: {event.starttime.slice(0, 19).replace("T", " ")}
+                                                {event.title} - Time: {event.startTime.slice(0, 19).replace("T", " ")}
                                             </p>
                                         </div>
                                     </a>

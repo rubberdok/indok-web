@@ -1,8 +1,8 @@
 export interface Event {
     id: string;
     title: string;
-    starttime: string;
-    endtime: string;
+    startTime: string;
+    endTime: string;
     location: string;
     description: string;
     organization: { id: string; name: string };

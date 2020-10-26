@@ -32,7 +32,7 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
                     Id: {data.event.id}
                     <br />
                     Title: {data.event.title}
-                    Starttime: {parseDate(data.event.starttime)}
+                    Starttime: {parseDate(data.event.startTime)}
                     <br />
                     Publisher: {data.event.publisher}
                     <br />
@@ -44,7 +44,7 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
 
                 <div>
                     <h4 style={{ margin: 0 }}>Optional fields</h4>
-                    Endtime: {parseDate(data.event.endtime)}
+                    Endtime: {parseDate(data.event.endTime)}
                     <br />
                     Location: {data.event.location}
                     <br />

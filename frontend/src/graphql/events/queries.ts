@@ -5,8 +5,8 @@ export const GET_EVENTS = gql`
         allEvents(organization: $organization, category: $category, startTime: $startTime, endTime: $endTime) {
             id
             title
-            starttime
-            endtime
+            startTime
+            endTime
             location
             description
             organization {
@@ -28,8 +28,8 @@ export const GET_EVENT = gql`
         event(id: $id) {
             id
             title
-            starttime
-            endtime
+            startTime
+            endTime
             location
             description
             organization {

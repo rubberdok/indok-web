@@ -8,8 +8,8 @@ const CreateEvent = () => {
     const defaultInput = {
         title: "",
         description: "",
-        starttime: "",
-        endtime: "",
+        startTime: "",
+        endTime: "",
         location: "",
         organizationId: "",
         categoryId: "",
@@ -76,8 +76,8 @@ const CreateEvent = () => {
                     <input
                         type="datetime-local"
                         placeholder="Start time"
-                        value={eventData.starttime}
-                        onChange={(e) => setEventData({ ...eventData, starttime: e.currentTarget.value })}
+                        value={eventData.startTime}
+                        onChange={(e) => setEventData({ ...eventData, startTime: e.currentTarget.value })}
                     />
                 </div>
                 <div>
@@ -109,8 +109,8 @@ const CreateEvent = () => {
                     <input
                         type="datetime-local"
                         placeholder="End time"
-                        value={eventData.endtime}
-                        onChange={(e) => setEventData({ ...eventData, endtime: e.currentTarget.value })}
+                        value={eventData.endTime}
+                        onChange={(e) => setEventData({ ...eventData, endTime: e.currentTarget.value })}
                     />
                 </div>
                 <div>

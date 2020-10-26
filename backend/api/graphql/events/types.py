@@ -9,8 +9,8 @@ class EventType(DjangoObjectType):
         fields = [
             "id",
             "title",
-            "starttime",
-            "endtime",
+            "start_time",
+            "end_time",
             "location",
             "description",
             "organization",
