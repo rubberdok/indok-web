@@ -13,15 +13,13 @@ const AllArchive = () => {
     console.log("hei");
     return data.allArchives.map((document: ArchivedDocument) => (
         <div key={document.id}>
-            <img src={document.urls.thumbnail} alt="" />
+            <img src={document.thumbnail} alt="" />
             <p>
-                {document.id}: {document.title} - {document.date}- {document.typeDoc}- {document.urls}-{" "}
+                {document.id}: {document.title} - {document.date}- {document.typeDoc}- {document.url}-{" "}
                 {console.log(document.urls)}
             </p>
         </div>
     ));
 };
-
-"https://drive.google.com/thumbnail?id=1ReOTT8xJVh5NTDdYI8ZF8NYHS9L1Er_uUXFZ7zicayI";
 
 export default AllArchive;

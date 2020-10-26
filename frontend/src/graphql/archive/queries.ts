@@ -9,6 +9,8 @@ export const GET_ARCHIVEDDOCUMENTS = gql`
             date
             typeDoc
             fileLocation
+            url
+            thumbnail
         }
     }
 `;
