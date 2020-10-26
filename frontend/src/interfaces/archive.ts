@@ -4,8 +4,6 @@ export interface ArchivedDocument {
     description: string;
     date: string;
     typeDoc: string;
-    urls: {
-        thumbnail: string;
-        url: string;
-    };
+    thumbnail: string;
+    url: string;
 }

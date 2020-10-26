@@ -16,7 +16,6 @@ const AllArchive = () => {
             <img src={document.thumbnail} alt="" />
             <p>
                 {document.id}: {document.title} - {document.date}- {document.typeDoc}- {document.url}-{" "}
-                {console.log(document.urls)}
             </p>
         </div>
     ));
