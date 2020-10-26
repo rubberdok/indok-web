@@ -22,6 +22,7 @@
         "feather-icons": "^4.28.0",
         "graphql": "^15.3.0",
         "next": "^9.5.1",
+        "onchange": "^7.1.0",
         "react": "^16.13.1",
         "react-dom": "^16.13.1",
         "styled-components": "^5.2.0",
