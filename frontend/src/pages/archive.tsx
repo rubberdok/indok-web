@@ -1,6 +1,3 @@
-/* eslint-disable react/jsx-no-undef */
-/* eslint-disable prettier/prettier */
-
 import { NextPage } from "next";
 import Link from "next/link";
 import styled from "styled-components";
