@@ -24,7 +24,7 @@ export interface SurveyQuestion {
 
 export interface QuestionType {
     id: string;
-    descriptiveName: string;
+    name: string;
 }
 
 export interface OfferedAnswer {
