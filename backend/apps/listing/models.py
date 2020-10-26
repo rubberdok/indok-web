@@ -3,6 +3,7 @@ from django.db.models import UniqueConstraint
 
 from apps.organizations.models import Organization
 from apps.users.models import User
+from apps.surveys.models import Survey
 # Create your models here.
 
 class Listing(models.Model):
@@ -17,6 +18,8 @@ class Listing(models.Model):
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE, null=True)
 
     url = models.URLField(null=True, blank=True)
+
+    survey = models.ForeignKey(Survey, null=True)
 
     def __str__(self):
         return f"{self.title} (Open: {self.start_date_time} - {self.end_date_time}: {self.description}"
