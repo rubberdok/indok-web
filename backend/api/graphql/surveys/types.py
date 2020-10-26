@@ -8,27 +8,63 @@ from apps.surveys.models import (
 )
 
 from graphene_django import DjangoObjectType
-
-class SurveyType(DjangoObjectType):
-    class Meta:
-        model = Survey
-
-class QuestionType(DjangoObjectType):
-    class Meta:
-        model = Question
-
-class QuestionTypeType(DjangoObjectType):
-    class Meta:
-        model = QuestionTypeModel
-
-class AnswerType(DjangoObjectType):
-    class Meta:
-        model = Answer
+import graphene
 
 class OfferedAnswerType(DjangoObjectType):
     class Meta:
         model = OfferedAnswer
 
+
+class AnswerType(DjangoObjectType):
+    class Meta:
+        model = Answer
+
+class QuestionTypeType(DjangoObjectType):
+    class Meta:
+        model = QuestionTypeModel
+
+
+
+class QuestionType(DjangoObjectType):
+    class Meta:
+        model = Question
+
 class SurveyQuestionType(DjangoObjectType):
+    offered_answers = graphene.List(OfferedAnswerType)
+
     class Meta:
         model = SurveyQuestion
+        fields = [
+            "question",
+            "id",
+            "question_type",
+            "position",
+        ]
+
+    @staticmethod
+    def resolve_offered_answers(root: SurveyQuestion, info):
+        return root.offered_answers.all()
+
+    @staticmethod
+    def resolve_answers(root: SurveyQuestion, info):
+        return root.answers.all()
+
+class SurveyType(DjangoObjectType):
+    survey_questions = graphene.List(SurveyQuestionType)
+
+    class Meta:
+        model = Survey
+        fields = [
+            "id",
+            "descriptive_name",
+            "description",
+        ]
+
+    @staticmethod
+    def resolve_survey_questions(root: Survey, info):
+        return root.surveyquestion_set.all()
+
+
+
+
+

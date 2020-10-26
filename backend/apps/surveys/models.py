@@ -16,7 +16,7 @@ class Survey(models.Model):
 class SurveyQuestion(models.Model):
     survey = models.ForeignKey(Survey, on_delete=models.CASCADE)
     question = models.ForeignKey("Question", on_delete=models.CASCADE)
-    offered_answer = models.ManyToManyField("OfferedAnswer", related_name="surveyquestions")
+    offered_answers = models.ManyToManyField("OfferedAnswer")
     question_type = models.ForeignKey("QuestionType", on_delete=models.SET_NULL, null=True)
     position = models.IntegerField(unique=True)
 
