@@ -2,9 +2,8 @@ import Layout from "@components/Layout";
 import { NextPage } from "next";
 import Link from "next/link";
 import React from "react";
-import AllEvents from "../../components/pages/events/allEvents";
 import Navbar from "@components/navbar/Navbar";
-import Filter from "@components/pages/events/filter";
+import AllEvents from "../../components/pages/events/AllEvents";
 
 const Events: NextPage = () => {
     return (
@@ -22,7 +21,6 @@ const Events: NextPage = () => {
             <div>
                 <AllEvents />
             </div>
-            <Filter />
         </Layout>
     );
 };

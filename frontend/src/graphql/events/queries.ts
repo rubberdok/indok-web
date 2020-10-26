@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
 export const GET_EVENTS = gql`
-    query {
-        allEvents {
+    query AllEvents($organization: String, $category: String, $startTime: DateTime, $endTime: DateTime) {
+        allEvents(organization: $organization, category: $category, startTime: $startTime, endTime: $endTime) {
             id
             title
             starttime

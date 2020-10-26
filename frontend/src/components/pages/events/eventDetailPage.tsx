@@ -16,7 +16,6 @@ function getName(obj: any) {
 
 const EventDetailPage: React.FC<Props> = ({ eventId }) => {
     const { loading, error, data } = useQuery(GET_EVENT, {
-        pollInterval: 30000, // refetch the result every 30 seconds
         variables: { id: eventId },
     });
 
