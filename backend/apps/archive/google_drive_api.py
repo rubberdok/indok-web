@@ -1,18 +1,18 @@
-""" from __future__ import print_function
+from __future__ import print_function
 import pickle
 import os.path
 import googleapiclient
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
-from google.auth.transport.requests import Request """
+from google.auth.transport.requests import Request 
 
-""" # If modifying these scopes, delete the file token.pickle.
+# If modifying these scopes, delete the file token.pickle.
 SCOPES = ['https://www.googleapis.com/auth/drive.metadata.readonly']
 
 def main():
     #fileID):
-    Shows basic usage of the Drive v3 API.
-    Prints the names and ids of the first 10 files the user has access to.
+    #Shows basic usage of the Drive v3 API.
+    #Prints the names and ids of the first 10 files the user has access to.
    
     creds = None
     # The file token.pickle stores the user's accesss and refresh tokens, and is
@@ -59,6 +59,6 @@ def get_thumbNail(file_id):
 
 if __name__ == '__main__':
     main()
- """
+
 
    

@@ -3,7 +3,7 @@ export interface ArchivedDocument {
     title: string;
     description: string;
     date: string;
-    typeDoc: string;
-    thumbnail: string;
     url: string;
+    thumbnail: string;
+    typeDoc: string;
 }

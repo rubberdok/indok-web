@@ -4,6 +4,6 @@ export interface Documents {
     description: string;
     date: string;
     url: string;
-    typeDoc: string;
     thumbnail: string;
+    typeDoc: string;
 }

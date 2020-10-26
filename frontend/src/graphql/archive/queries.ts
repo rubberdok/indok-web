@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { gql } from "@apollo/client";
 
-export const DOCUMENT = gql`
+export const DOCUMENTS = gql`
     query {
         allArchives {
             id
@@ -15,9 +15,9 @@ export const DOCUMENT = gql`
     }
 `;
 
-export const DOCUMENTS = gql`
-    query allArchives($ID: ID!) {
-        allArchives(id: $ID) {
+export const DOCUMENT = gql`
+    query archive($ID: ID!) {
+        archive(id: $ID) {
             id
             title
             description

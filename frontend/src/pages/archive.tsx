@@ -1,8 +1,8 @@
 import { NextPage } from "next";
 import Layout from "../components/Layout";
 import React from "react";
-import AllDocuments from "../components/pages/archive/allDocuments";
 import Button from "../components/pages/archive/FilterButtons";
+import AllArchive from "@components/pages/archive/allArchive";
 
 const Archive: NextPage = () => (
     <Layout>
@@ -11,7 +11,7 @@ const Archive: NextPage = () => (
             <div style={{ flex: "100%" }}>
                 <h1 style={{ alignSelf: "center" }}> Arkiv</h1>
             </div>
-            <AllDocuments />
+            <AllArchive />
         </div>
     </Layout>
 );

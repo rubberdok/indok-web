@@ -1,10 +1,10 @@
 /* eslint-disable prettier/prettier */
 import { useQuery } from "@apollo/client";
-import { GET_ARCHIVEDDOCUMENTS } from "@graphql/archive/queries";
+import { DOCUMENTS } from "@graphql/archive/queries";
 import { ArchivedDocument } from "@interfaces/archive";
 
 const AllArchive = () => {
-    const { loading, error, data } = useQuery(GET_ARCHIVEDDOCUMENTS);
+    const { loading, error, data } = useQuery(DOCUMENTS);
 
     if (loading) return <p>Loading...</p>;
 
