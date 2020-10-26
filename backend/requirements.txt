@@ -1,6 +1,6 @@
 aniso8601==7.0.0
 asgiref==3.2.10
-Django==3.1.1
+Django==3.1.2
 django-cors-headers==3.5.0
 djangorestframework==3.11.1
 graphene==2.1.8
@@ -15,3 +15,5 @@ singledispatch==3.4.0.3
 six==1.15.0
 sqlparse==0.3.1
 Unidecode==1.1.1
+google-api-python-client==1.12.5
+google_auth_oauthlib==0.4.1
