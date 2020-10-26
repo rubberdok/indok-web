@@ -37,10 +37,12 @@ const data = [
 const areasTablet = `
     content
     items
+    actions
 `;
 
 const areasLarge = `
     content items
+    actions items
 `;
 
 const IndexPage: NextPage = () => (
@@ -51,11 +53,18 @@ const IndexPage: NextPage = () => (
             <br />
             <br />
             <br />
-            <Composition alignItems="center" areas={areasTablet} areasLg={areasLarge} gap={60}>
+            <Composition alignItems="center" areas={areasTablet} areasLg={areasLarge} gap={60} gapRow={20}>
                 {(Areas) => (
                     <>
                         <Areas.Items>
-                            <Composition gap={10} gapLg={15}>
+                            <SubHeading>Kommende Arrangementer</SubHeading>
+                            <Composition
+                                templateCols="auto"
+                                templateColsMd="auto auto auto auto"
+                                templateColsLg="auto"
+                                gap={10}
+                                gapLg={15}
+                            >
                                 {data.map((item) => (
                                     <Item
                                         key={item.id}
@@ -80,8 +89,12 @@ const IndexPage: NextPage = () => (
                                 organ og er studentenes mulighet til å direkte påvirke budsjetter og avgjørelser som
                                 blir fattet på linjen.
                             </Paragraph>
-                            <Button url="/events">Se kalenderen</Button>
                         </Areas.Content>
+                        <Areas.Actions>
+                            <Button style="primary" link="/events">
+                                Se kalenderen
+                            </Button>
+                        </Areas.Actions>
                     </>
                 )}
             </Composition>

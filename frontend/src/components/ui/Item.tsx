@@ -13,17 +13,19 @@ const Item: React.FC<ItemProps> = (props) => {
         <Composition
             as={Container}
             areas={templateMobile}
-            templateMd={templateDesktop}
+            areasMd={templateTablet}
+            areasLg={templateDesktop}
+            templateColsMd="auto"
+            templateCols="120px 1fr auto"
             templateColsLg="120px 1fr auto"
             alignItems="center"
             gap={30}
             gapMd={20}
             gapLg={25}
-            maxWidthSmDown={200}
         >
             {(Areas) => (
                 <>
-                    <Areas.Image as={Image} src={props.imageUrl} alt="Painting of Vigorous Squares" />
+                    <Areas.Image as={Image} src={props.imageUrl} alt="Bilde" />
                     <Areas.Description padding="30px 30px 30px 15px">
                         <ItemTitle>{props.title}</ItemTitle>
                         <Box as={ItemSubtitle} margin="10px 0 0">
@@ -38,7 +40,6 @@ const Item: React.FC<ItemProps> = (props) => {
 };
 
 const Image = styled.img`
-    max-width: 100%;
     height: 100%;
     object-fit: cover;
 `;
@@ -61,13 +62,16 @@ const ItemSubtitle = styled.p`
 `;
 
 const templateMobile = `
-    image actions
-    description description
+    image description
+`;
+
+const templateTablet = `
+    image
+    description
 `;
 
 const templateDesktop = `
     image description actions
-    / 0 1fr auto
 `;
 
 export default Item;

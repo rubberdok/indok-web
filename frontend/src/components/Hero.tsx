@@ -30,7 +30,7 @@ const Hero: React.FC = () => {
                                             <Title>Industriell Økonomi og Teknologiledelse</Title>
                                         </Areas.Heading>
                                         <Areas.Action flex align="flex-end" justify="end">
-                                            <Button style="primary" url="/about">
+                                            <Button style="primary" link="/about">
                                                 Les mer om foreningen
                                             </Button>
                                         </Areas.Action>
@@ -62,7 +62,8 @@ const Overlay = styled.div`
 
 const Image = styled.img`
     height: calc(100vh - 100px);
-    width: calc(50vw + 300px);
+    width: calc(50% + 312px);
+    max-width: 100%;
     float: right;
     object-fit: cover;
     filter: drop-shadow(-10px 0px 100px rgba(0, 0, 0, 0.15));

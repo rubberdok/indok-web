@@ -33,9 +33,11 @@ export const Heading = styled.h2`
     font-family: "Playfair Display";
     font-weight: 900;
     font-size: 36px;
+    margin-top: -15px;
 
     @media (max-width: ${Layout.breakpoints.md.maxWidth}) {
         font-size: 25px;
+        margin-top: -10px;
     }
 `;
 
@@ -45,11 +47,9 @@ export const SubHeading = styled.p`
     font-weight: 300;
     font-size: 16px;
     text-transform: uppercase;
-    margin-bottom: -35px;
 
     @media (max-width: ${Layout.breakpoints.md.maxWidth}) {
         font-size: 13px;
-        margin-bottom: -20px;
     }
 `;
 
