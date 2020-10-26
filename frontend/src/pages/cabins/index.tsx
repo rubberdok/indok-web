@@ -20,8 +20,7 @@ const BookingContainer = styled.div`
     flex-direction: column;
 `;
 
-const Dropdown = styled.div<{ visable: boolean }>`
-    display: ${(props) => (props.visable ? "flex" : "none")};
+const Dropdown = styled.div`
     flex-direction: column;
     background-color: white;
     margin: 15px;
@@ -146,21 +145,28 @@ const CreateBookingPage = () => {
                             <BookButton>Book</BookButton>
                         </SelectContainer>
                     </FlowContainer>
-                    <Dropdown visable={showDropdown.cabin}>
-                        <span>
-                            Begge <input type="radio" />
-                        </span>
-                        <span>
-                            Bjørnen <input type="radio" />
-                        </span>
-                        <span>
-                            Oksen <input type="radio" />
-                        </span>
-                    </Dropdown>
-                    <Dropdown visable={showDropdown.calendar}>
-                        <p>{errorMessage}</p>
-                        <Calendar rangeChanged={(fromDate, toDate) => setRange(fromDate, toDate)} events={bookings} />
-                    </Dropdown>
+                    {showDropdown.cabin ? (
+                        <Dropdown>
+                            <span>
+                                Begge <input type="radio" />
+                            </span>
+                            <span>
+                                Bjørnen <input type="radio" />
+                            </span>
+                            <span>
+                                Oksen <input type="radio" />
+                            </span>
+                        </Dropdown>
+                    ) : null}
+                    {showDropdown.calendar ? (
+                        <Dropdown>
+                            <p>{errorMessage}</p>
+                            <Calendar
+                                rangeChanged={(fromDate, toDate) => setRange(fromDate, toDate)}
+                                events={bookings}
+                            />
+                        </Dropdown>
+                    ) : null}
                 </BookingContainer>
             </Container>
         </div>

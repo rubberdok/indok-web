@@ -33,7 +33,9 @@ const Calendar = ({ events, rangeChanged }: CalendarProps) => {
                 <DayCell
                     onMouseOver={() => (isRangeFreezed ? null : setHoverRange(getDateRange(selectedDay, date)))}
                     isInRange={_.includes(hoverRange, date.format(DATE_FORMAT))}
-                    isSelected={date.isSame(selectedDay, "day")}
+                    isSelected={
+                        date.isSame(selectedDay, "day") || date.isSame(hoverRange[hoverRange.length - 1], "day")
+                    }
                     onClick={() => handleDateClicked(date)}
                     key={date.format(DATE_FORMAT)}
                 >

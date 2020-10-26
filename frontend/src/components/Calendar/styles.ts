@@ -1,4 +1,5 @@
 import styled, { css } from "styled-components";
+import theme from "@styles/theme";
 
 export const CalendarTableContainer = styled.div`
     flex-grow: 1;
@@ -13,7 +14,7 @@ export const TwoCalendarsContainer = styled.div`
 `;
 
 export const WeekDay = styled.th`
-    color: #064b4b;
+    color: ${theme.colors.primaryDark};
     text-transform: uppercase;
     font-size: 12px;
     width: 48px;
@@ -38,7 +39,7 @@ export const EventMarker = styled.div`
     width: 4px;
     margin: 0px 1px;
     border-radius: 50%;
-    background-color: #6a9997;
+    background-color: ${theme.colors.primary};
 `;
 
 export const Day = styled.div`
@@ -67,9 +68,9 @@ export const Year = styled.span`
 export const MonthPickButton = styled.button`
     margin: 0 5px;
     border-radius: 6px;
-    border: 1px solid #e2e2ea;
+    border: 1px solid ${theme.colors.primaryDark};
     padding: 0;
-    color: #92929d;
+    color: ${theme.colors.primaryDark};
     background-color: white;
     padding: 6px;
     &:hover {
@@ -87,7 +88,7 @@ interface DayCellProps {
 }
 
 export const SelectedDayStyles = css`
-    background-color: #f4b961;
+    background-color: ${theme.colors.primary};
     color: white;
     border-radius: 4px;
 `;
@@ -100,7 +101,7 @@ export const DayCell = styled.td<DayCellProps>`
 
     > ${Day} {
         ${(props) => props.isSelected && SelectedDayStyles};
-        ${(props) => props.isInRange && !props.isSelected && "background-color: #064B4B"};
+        ${(props) => props.isInRange && !props.isSelected && `background-color: ${theme.colors.primaryLight}`};
     }
 
     ${EventMarker} {
@@ -111,7 +112,7 @@ export const DayCell = styled.td<DayCellProps>`
         cursor: pointer;
 
         > ${Day} {
-            ${(props) => !props.isSelected && "background-color: #064B4B"};
+            ${(props) => !props.isSelected && `background-color: ${theme.colors.primaryLight}`};
         }
     }
 `;
