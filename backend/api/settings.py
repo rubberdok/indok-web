@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 import os
+from api.mailconfig import USERNAME, PASSWORD
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -134,11 +135,10 @@ USE_TZ = True
 STATIC_URL = "/static/"
 STATICFILES_DIRS = ["backend/static/cabins"]
 
-
-# CONFIG
-EMAIL_HOST_USER = ""  # e-post
-EMAIL_HOST_PASSWORD = ""  # passord
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+#CONFIG
+EMAIL_HOST_USER = USERNAME
+EMAIL_HOST_PASSWORD = PASSWORD
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
