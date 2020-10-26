@@ -23,3 +23,14 @@ export const SURVEY = gql`
         }
     }
 `;
+
+export const LISTING_SURVEY = gql``;
+
+export const QUESTIONTYPES = gql`
+    query {
+        questionTypes {
+            id
+            name
+        }
+    }
+`;

@@ -49,7 +49,7 @@ class Answer(models.Model):
         return f"User: {self.user}; Answer: {self.answer}"
 
 class QuestionType(models.Model):
-    descriptive_name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100)
 
     def __str__(self) -> str:
-        return f"{self.descriptive_name}"
+        return f"{self.name}"
