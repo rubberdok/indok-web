@@ -12,6 +12,7 @@ import { Composition } from "atomic-layout";
 import Summary from "@components/pages/cabins/Summary";
 import { getRangeLength } from "@components/Calendar";
 import { HeaderComposition } from "@components/pages/cabins/HeaderCompositon";
+import CheckBox from "@components/pages/cabins/Checkbox";
 
 const BookPage = (): JSX.Element => {
     const firstnameRef = React.createRef<HTMLInputElement>();
@@ -28,6 +29,13 @@ const BookPage = (): JSX.Element => {
     const [createBooking] = useMutation(CREATE_BOOKING);
     const [sendEmail] = useMutation(SEND_EMAIL);
     const [errorMessage, setErrorMessage] = useState("");
+    const [checked, setChecked] = useState(false);
+    const [checkerror, setCheckError] = useState("");
+
+    const handleClick = () => {
+        setChecked(!checked);
+        setCheckError("");
+    };
 
     useEffect(() => {
         if (data.fromDate && data.toDate) {
@@ -62,7 +70,7 @@ const BookPage = (): JSX.Element => {
             const phone = phoneRef.current.value;
 
             // create booking and send email
-            if (firstname) {
+            if (checked) {
                 createBooking({
                     variables: {
                         contactNum: parseInt(phone),
@@ -84,9 +92,9 @@ const BookPage = (): JSX.Element => {
                     },
                 });
                 setErrorMessage("");
-
                 console.log("created booking and sent email");
             } else {
+                setCheckError("Du må samtykke med retningslinjene før du booker.");
                 console.log("Ikke tilgjengelig.");
             }
         }
@@ -102,6 +110,7 @@ const BookPage = (): JSX.Element => {
                     <>
                         <Inputs>
                             <InputFields refs={inputRefs}>
+                                <CheckBox checked={checked} onClick={handleClick} errorMsg={checkerror}></CheckBox>
                                 <Button url="#" onClick={(e) => handleSubmit(e)}>
                                     Gå til betaling
                                 </Button>
