@@ -5,7 +5,7 @@ import styled from "styled-components";
 
 const template = `
     arrow head
-    / 50px auto
+    / 65px auto
 `;
 
 export const HeaderComposition = (): JSX.Element => {
@@ -14,12 +14,12 @@ export const HeaderComposition = (): JSX.Element => {
             <Composition template={template}>
                 {({ Head, Arrow }) => (
                     <>
-                        <Head>
-                            <Header>Fullføring av booking</Header>
-                        </Head>
                         <Arrow>
                             <ArrowIconLink direction={"l"} size={35} href={"/cabins"}></ArrowIconLink>
                         </Arrow>
+                        <Head>
+                            <Header>Fullføring av booking</Header>
+                        </Head>
                     </>
                 )}
             </Composition>
