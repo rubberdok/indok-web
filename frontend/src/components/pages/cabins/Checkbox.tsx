@@ -7,7 +7,6 @@ interface CheckProps {
 }
 
 const CheckBox = ({ checked, onClick, errorMsg }: CheckProps): JSX.Element => {
-    console.log(errorMsg);
     return (
         <>
             <CheckboxWrapper status={errorMsg}>
