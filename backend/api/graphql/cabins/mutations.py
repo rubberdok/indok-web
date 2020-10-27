@@ -96,10 +96,11 @@ class SendEmail(graphene.Mutation):
         receiverEmail = graphene.String()
         bookFrom = graphene.String()
         bookTo = graphene.String()
+        price = graphene.Int()
 
     ok = graphene.Boolean()
 
-    def mutate(self, info, firstname, surname, receiverEmail, bookFrom, bookTo):
+    def mutate(self, info, firstname, surname, receiverEmail, bookFrom, bookTo, price):
         subject = "Bekreftelsesmail for booking av Indøkhytte"
 
         start_date = datetime.strptime(bookFrom, "%Y-%m-%d").isoformat().replace("-", "").replace(":", "") # Google Calendar wants YYYYMMDDThhmmss
@@ -114,7 +115,7 @@ class SendEmail(graphene.Mutation):
             "cabin": "Bjørnen",
             "fromDate": bookFrom,
             "toDate": bookTo,
-            "price": "1290",
+            "price": price,
             "link": link,
         }
 

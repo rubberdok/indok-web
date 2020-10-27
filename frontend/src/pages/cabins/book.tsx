@@ -80,6 +80,7 @@ const BookPage = (): JSX.Element => {
                         receiverEmail: email,
                         bookFrom: dateRange[0],
                         bookTo: dateRange[1],
+                        price: pricePerNight * rangeLength,
                     },
                 });
                 setErrorMessage("");

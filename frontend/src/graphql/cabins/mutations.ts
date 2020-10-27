@@ -21,6 +21,7 @@ export const SEND_EMAIL = gql`
         $receiverEmail: String
         $bookFrom: String
         $bookTo: String
+        $price: Int
     ) {
         sendEmail(
             firstname: $firstname
@@ -28,6 +29,7 @@ export const SEND_EMAIL = gql`
             receiverEmail: $receiverEmail
             bookFrom: $bookFrom
             bookTo: $bookTo
+            price: $price
         ) {
             ok
         }
