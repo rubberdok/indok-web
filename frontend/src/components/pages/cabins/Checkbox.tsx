@@ -1,3 +1,5 @@
+import Link from "next/link";
+import React from "react";
 import styled from "styled-components";
 
 interface CheckProps {
@@ -11,7 +13,9 @@ const CheckBox = ({ checked, onClick, errorMsg }: CheckProps): JSX.Element => {
         <>
             <CheckboxWrapper status={errorMsg}>
                 <input type="checkbox" onClick={onClick} onChange={onClick} checked={checked}></input>
-                <LabelText>Jeg samtykker til retningslinjene for booking av hytte</LabelText>
+                <LabelText>
+                    Jeg samtykker til <Link href="# ">retningslinjene</Link> for booking av hytte
+                </LabelText>
             </CheckboxWrapper>
         </>
     );
