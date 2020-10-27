@@ -69,6 +69,7 @@ const BookPage = (): JSX.Element => {
                         contactPerson: firstname + " " + surname,
                         startDay: dateRange[0],
                         endDay: dateRange[1],
+                        price: pricePerNight * rangeLength,
                     },
                 });
 

@@ -22,16 +22,18 @@ class CreateBooking(graphene.Mutation):
         contact_person = graphene.String()
         start_day = graphene.String()  # string "yyyy-mm-dd"
         end_day = graphene.String()
+        price = graphene.Int()
 
     ok = graphene.Boolean()
     booking = graphene.Field(BookingType)
 
-    def mutate(root, info, contact_num, contact_person, start_day, end_day):
+    def mutate(root, info, contact_num, contact_person, start_day, end_day, price):
         booking = BookingModel.objects.create(
             contact_num=contact_num,
             contact_person=contact_person,
             start_day=start_day,
             end_day=end_day,
+            price=price
         )
         ok = True
         return CreateBooking(booking=booking, ok=ok)
