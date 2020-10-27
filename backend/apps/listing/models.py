@@ -19,7 +19,7 @@ class Listing(models.Model):
 
     url = models.URLField(null=True, blank=True)
 
-    survey = models.ForeignKey(Survey, null=True)
+    survey = models.ForeignKey(Survey, null=True, on_delete=models.SET_NULL)
 
     def __str__(self):
         return f"{self.title} (Open: {self.start_date_time} - {self.end_date_time}: {self.description}"
