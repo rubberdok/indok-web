@@ -1,8 +1,9 @@
 
 
 
-def get_no_html_mail(ctx):
-    return f"""
+def get_no_html_mail(ctx, receiver):
+
+    user_content = f"""
         Hei {ctx["firstname"]}!
       
         Vi har nå reservert { ctx["cabin"] } fra { ctx["fromDate"] } til { ctx["toDate"] }.
@@ -29,3 +30,13 @@ def get_no_html_mail(ctx):
         https://www.januslinjeforening.no/indokhyttene/
     
     """
+
+    admin_content = ""
+
+    if receiver == "user": 
+        return user_content
+    elif receiver == "admin":
+        return admin_content
+    else:
+        print("receiver must be either admin or user")
+        return None
