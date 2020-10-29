@@ -85,6 +85,7 @@ interface DayCellProps {
     outOfRange?: boolean;
     isSelected?: boolean;
     isInRange?: boolean;
+    isHidden?: boolean;
 }
 
 export const SelectedDayStyles = css`
@@ -109,10 +110,9 @@ export const DayCell = styled.td<DayCellProps>`
     }
 
     &:hover {
-        cursor: pointer;
-
+        ${(props) => !props.isHidden && `cursor: pointer;`}
         > ${Day} {
-            ${(props) => !props.isSelected && `background-color: ${theme.colors.primaryLight}`};
+            ${(props) => !props.isSelected && !props.isHidden && `background-color: ${theme.colors.primaryLight}`};
         }
     }
 `;

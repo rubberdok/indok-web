@@ -22,6 +22,7 @@ export const previousMonthDays = (
     month: moment.Moment,
     selectedDay: moment.Moment,
     dateClicked: (date: moment.Moment) => void,
+    visable = true,
     key = ""
 ) => {
     const previousDays: JSX.Element[] = [];
@@ -37,14 +38,20 @@ export const previousMonthDays = (
             const date = moment(firstOfMonth);
             date.subtract(dayDifference - i, "day");
             previousDays.push(
-                <DayCell
-                    isSelected={date.isSame(selectedDay, "day")}
-                    onClick={() => dateClicked(date)}
-                    outOfRange={true}
-                    key={`${key}-${date.format(DATE_FORMAT)}`}
-                >
-                    <Day>{date.format("D")}</Day>
-                </DayCell>
+                visable ? (
+                    <DayCell
+                        isSelected={date.isSame(selectedDay, "day")}
+                        onClick={() => dateClicked(date)}
+                        outOfRange={true}
+                        key={`${key}-${date.format(DATE_FORMAT)}`}
+                    >
+                        <Day>{date.format("D")}</Day>
+                    </DayCell>
+                ) : (
+                    <DayCell isHidden key={`${key}-${date.format(DATE_FORMAT)}`}>
+                        <Day></Day>
+                    </DayCell>
+                )
             );
         }
     }

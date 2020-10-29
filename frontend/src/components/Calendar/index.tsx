@@ -51,7 +51,9 @@ const Calendar = ({ events, rangeChanged }: CalendarProps) => {
 
     const getRows = (month: moment.Moment) => {
         const slots: JSX.Element[] = [
-            ...previousMonthDays(month, selectedDay, handleDateClicked),
+            ...(month.isSame(selectedMonth, "month")
+                ? previousMonthDays(month, selectedDay, handleDateClicked)
+                : previousMonthDays(month, selectedDay, handleDateClicked, false, "next")),
             ...getDaysOfMonth(month),
             ...(month.isSame(selectedMonth, "month") ? [] : nextMonthDays(month, selectedDay, handleDateClicked)),
         ];
