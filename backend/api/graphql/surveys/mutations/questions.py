@@ -27,7 +27,7 @@ class CreateQuestion(graphene.Mutation):
         survey_question_data = SurveyQuestionInput(required=False)
 
     @classmethod
-    def mutate(cls, info, question_data, survey_question_data):
+    def mutate(cls, self, info, question_data, survey_question_data=None):
         question = Question()
         for k, v in question_data.items():
             setattr(question, k, v)
@@ -51,7 +51,7 @@ class UpdateQuestion(graphene.Mutation):
         question_data = QuestionInput(required=False)
 
     @classmethod
-    def mutate(cls, info, id, question_data):
+    def mutate(cls, self, info, id, question_data):
         question = Question.objects.get(pk=id)
         for k, v, in question_data.items():
             setattr(question, k, v)
@@ -67,7 +67,7 @@ class DeleteQuestion(graphene.Mutation):
         id = graphene.ID(required=True)
 
     @classmethod
-    def mutate(cls, info, id):
+    def mutate(cls, self, info, id):
         question = Question.objects.get(pk=id)
         deleted_id = question.id
         question.delete()
@@ -85,7 +85,7 @@ class CreateQuestionType(graphene.Mutation):
         question_type_data = QuestionTypeInput(required=True)
 
     @classmethod
-    def mutate(cls, info, question_type_data):
+    def mutate(cls, self, info, question_type_data):
         question_type = QuestionTypeModel()
         for key, value in question_type_data.items():
             setattr(question_type, key, value)
@@ -102,7 +102,7 @@ class UpdateQuestionType(graphene.Mutation):
         question_type_data = QuestionTypeInput(required=False)
 
     @classmethod
-    def mutate(cls, info, id, question_type_data):
+    def mutate(cls, self, info, id, question_type_data):
         question_type = QuestionType.objects.get(id=id)
         for key, value in question_type_data.items():
             setattr(question_type, key, value)
@@ -118,7 +118,7 @@ class DeleteQuestionType(graphene.Mutation):
         id = graphene.ID(required=True)
 
     @classmethod
-    def mutate(cls, info, id):
+    def mutate(cls, self, info, id):
         question_type = QuestionTypeModel.objects.get(pk=id)
         deleted_id = question_type.id
         question_type.delete()

@@ -17,7 +17,7 @@ class CreateSurvey(graphene.Mutation):
         survey_data = SurveyInput(required=False)
 
     @classmethod
-    def mutate(cls, info, survey_data):
+    def mutate(cls, self, info, survey_data):
         survey = Survey()
         for key, value in survey_data.items():
             setattr(survey, key, value)
@@ -35,7 +35,7 @@ class UpdateSurvey(graphene.Mutation):
         survey_data = SurveyInput(required=False)
 
     @classmethod
-    def mutate(cls, info, id, survey_data):
+    def mutate(cls, self, info, id, survey_data):
         survey = Survey.objects.get(pk=id)
         for key, value in survey_data.items():
             setattr(survey, key, value)
@@ -52,7 +52,7 @@ class DeleteSurvey(graphene.Mutation):
         id = graphene.ID(required=True)
 
     @classmethod
-    def mutate(cls, info, id):
+    def mutate(cls, self, info, id):
         survey = Survey.objects.get(pk=id)
         deleted_id = survey.id
         survey.delete()
