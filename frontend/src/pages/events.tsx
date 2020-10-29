@@ -1,16 +1,15 @@
-import { NextPage } from "next";
-import Link from "next/link";
-import React from "react";
+import Layout from "@components/Layout";
 import AllEvents from "@components/pages/events/allEvents";
 import CreateEvent from "@components/pages/events/createEvent";
+import { NextPage } from "next";
+import React from "react";
 
 const EventPage: NextPage = () => {
     return (
-        <div>
-            <Link href="/"> Go Home </Link>
+        <Layout>
             <CreateEvent />
             <AllEvents />
-        </div>
+        </Layout>
     );
 };
 
