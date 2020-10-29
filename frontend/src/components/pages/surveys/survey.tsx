@@ -3,6 +3,7 @@ import { SURVEY } from "@graphql/surveys/queries";
 import { Survey } from "@interfaces/surveys";
 import Choice from "./formComponents/choice";
 import TextField from "./formComponents/textfield";
+import Question from "@components/pages/surveys/question";
 
 const SurveyDetail: React.FC<{ id: string }> = ({ id }) => {
     const { error, loading, data } = useQuery<{ survey: Survey }>(SURVEY, { variables: { ID: Number(id) } });
@@ -15,22 +16,7 @@ const SurveyDetail: React.FC<{ id: string }> = ({ id }) => {
                 <>
                     <h1>{data.survey.descriptiveName}</h1>
                     {data.survey.surveyQuestions.map((surveyQuestion) => {
-                        switch (surveyQuestion.questionType.name) {
-                            case "Textfield":
-                                console.log("Tekstfelt!");
-                                return <TextField title={surveyQuestion.question.question} size="short" />;
-                            case "Choice":
-                                console.log("Valg!");
-                                return (
-                                    <Choice
-                                        title={surveyQuestion.question.question}
-                                        radio={true}
-                                        options={surveyQuestion.offeredAnswers.map(
-                                            (offeredAnswer) => offeredAnswer.answer
-                                        )}
-                                    />
-                                );
-                        }
+                        <Question question={surveyQuestion} />;
                     })}
                 </>
             )}
