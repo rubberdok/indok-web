@@ -1,7 +1,7 @@
 import { Listing } from "@interfaces/listings";
 import { useQuery, useMutation } from "@apollo/client";
 import { QUESTIONTYPES } from "@graphql/surveys/queries";
-import { CREATE_SURVEY } from "@graphql/surveys/mutations";
+import { CREATE_SURVEY, UPDATE_SURVEY } from "@graphql/surveys/mutations";
 import { useState } from "react";
 import TextField from "@components/pages/surveys/formComponents/textfield";
 import Dropdown from "@components/pages/surveys/formComponents/dropdown";
@@ -21,6 +21,8 @@ const CreateSurvey: React.FC<{ listing?: Listing }> = ({ listing }) => {
     const [survey, setSurvey] = useState<EditableSurvey>({} as EditableSurvey);
     if (listing) {
         setSurvey({ ...survey, descriptiveName: listing.title, listing: listing });
+    } else {
+        setSurvey({ ...survey, descriptiveName: "Ny søknad" });
     }
     const { loading, error, data } = useQuery<{ questionTypes: QuestionType[] }>(QUESTIONTYPES);
     const [createSurvey] = useMutation(CREATE_SURVEY);
@@ -30,7 +32,11 @@ const CreateSurvey: React.FC<{ listing?: Listing }> = ({ listing }) => {
     return (
         <>
             {data && (
-                <form>
+                <form
+                    onSubmit={(e) => {
+                        createSurvey();
+                    }}
+                >
                     <button
                         onClick={(e) => {
                             e.preventDefault();
