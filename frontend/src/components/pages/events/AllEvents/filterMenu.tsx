@@ -146,7 +146,7 @@ const FilterMenu: React.FC<Props> = ({ filters, onChange }) => {
                 paddingBottom: "1em",
             }}
         >
-            <h3 style={{ margin: "0px" }}>Filtrer</h3>
+            <h3 style={{ margin: "0px" }}>Filter</h3>
             <button onClick={() => onChange({})}>{"Nullstill filtre"}</button>
             <OrganizationFilter />
             <CategoryFilter />
