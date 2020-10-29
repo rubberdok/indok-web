@@ -1,10 +1,35 @@
+import Layout from "atomic-layout";
+import Link from "next/link";
+import { useRouter } from "next/router";
 import React from "react";
 import styled from "styled-components";
-import Link from "next/link";
 
 interface NavItemProps {
     primary?: boolean;
 }
+
+const NavbarLinks: React.FC = () => {
+    const router = useRouter();
+
+    return (
+        <>
+            <Link href="/">
+                <NavItem className={router.pathname == "/" ? "active" : ""}>Hjem</NavItem>
+            </Link>
+            <Link href="/about">
+                <NavItem className={router.pathname == "/about" ? "active" : ""}>Om foreningen</NavItem>
+            </Link>
+            <Link href="/events">
+                <NavItem className={router.pathname == "/events" ? "active" : ""}>Arrangementer</NavItem>
+            </Link>
+            <Link href="/cabins">
+                <NavItem className={router.pathname == "/cabins" ? "active" : ""}>Hyttebooking</NavItem>
+            </Link>
+            <Line />
+            <NavItem primary>Login</NavItem>
+        </>
+    );
+};
 
 const NavItem = styled.a<NavItemProps>`
     text-decoration: none;
@@ -16,21 +41,29 @@ const NavItem = styled.a<NavItemProps>`
     margin: 0 25px;
     transition: all 200ms ease-in;
     position: relative;
+    padding: 10px 0;
 
-    :after {
-        @media (min-width: 768px) {
+    :after,
+    &.active:after {
+        @media (min-width: ${Layout.breakpoints.md.maxWidth}) {
             position: absolute;
-            bottom: -9px;
             left: 0;
             right: 0;
-            width: 0%;
+            bottom: 1px;
+            width: 50%;
             margin: 0 auto;
             content: ".";
             color: transparent;
             background: ${(props) => (props.primary ? ({ theme }) => theme.colors.primary : "#111")};
             height: 2px;
             transition: all 0.2s ease;
+            opacity: 0;
         }
+    }
+
+    &.active:after {
+        width: 100%;
+        opacity: 1;
     }
 
     :hover {
@@ -39,13 +72,14 @@ const NavItem = styled.a<NavItemProps>`
 
         ::after {
             width: 100%;
+            opacity: 1;
         }
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: ${Layout.breakpoints.md.maxWidth}) {
         padding: 20px 0;
         font-size: 1.5rem;
-        z-index: 6;
+        z-index: 99999;
     }
 `;
 
@@ -54,22 +88,9 @@ const Line = styled.div`
     margin: 0 25px;
     width: 20px;
     height: 2px;
-    @media (max-width: 768px) {
+    @media (max-width: ${Layout.breakpoints.md.maxWidth}) {
         display: none;
     }
 `;
-
-const NavbarLinks: React.FC = () => {
-    return (
-        <>
-            <NavItem>Hjem</NavItem>
-            <NavItem>Om foreningen</NavItem>
-            <NavItem>Arrangementer</NavItem>
-            <NavItem>Hyttebooking</NavItem>
-            <Line />
-            <NavItem primary>Login</NavItem>
-        </>
-    );
-};
 
 export default NavbarLinks;
