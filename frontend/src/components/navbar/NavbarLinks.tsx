@@ -4,6 +4,29 @@ import { useRouter } from "next/router";
 import React from "react";
 import styled from "styled-components";
 
+const links = [
+    {
+        id: "1",
+        title: "Hjem",
+        href: "/",
+    },
+    {
+        id: "2",
+        title: "Om foreningen",
+        href: "/about",
+    },
+    {
+        id: "3",
+        title: "Arrangementer",
+        href: "/events",
+    },
+    {
+        id: "4",
+        title: "Hyttebooking",
+        href: "/cabins",
+    }
+]
+
 interface NavItemProps {
     primary?: boolean;
 }
@@ -13,18 +36,11 @@ const NavbarLinks: React.FC = () => {
 
     return (
         <>
-            <Link href="/">
-                <NavItem className={router.pathname == "/" ? "active" : ""}>Hjem</NavItem>
-            </Link>
-            <Link href="/about">
-                <NavItem className={router.pathname == "/about" ? "active" : ""}>Om foreningen</NavItem>
-            </Link>
-            <Link href="/events">
-                <NavItem className={router.pathname == "/events" ? "active" : ""}>Arrangementer</NavItem>
-            </Link>
-            <Link href="/cabins">
-                <NavItem className={router.pathname == "/cabins" ? "active" : ""}>Hyttebooking</NavItem>
-            </Link>
+            {links.map((item) => (
+                <Link key={item.id} href={item.href}>
+                    <NavItem className={router.pathname == item.href ? "active" : ""}>{item.title}</NavItem>
+                </Link>
+            ))}
             <Line />
             <NavItem primary>Login</NavItem>
         </>
