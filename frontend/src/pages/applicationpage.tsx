@@ -2,10 +2,10 @@ import { NextPage } from "next";
 import Link from "next/link";
 import Layout from "../components/Layout";
 import ResponseForm from "../components/pages/listings/responseForm";
-import TextField from "../components/pages/surveys/textfield";
-import Choice from "../components/pages/surveys/choice";
-import Dropdown from "../components/pages/surveys/dropdown";
-import Slider from "../components/pages/surveys/slider";
+import TextField from "../components/pages/surveys/formComponents/textfield";
+import Choice from "../components/pages/surveys/formComponents/choice";
+import Dropdown from "../components/pages/surveys/formComponents/dropdown";
+import Slider from "../components/pages/surveys/formComponents/slider";
 
 const ApplicationPage: NextPage = () => (
     <Layout>

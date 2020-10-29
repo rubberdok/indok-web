@@ -1,40 +1,41 @@
 import { useQuery } from "@apollo/client";
 import { SURVEY } from "@graphql/surveys/queries";
 import { Survey } from "@interfaces/surveys";
-import Choice from "./choice";
-import TextField from "./textfield";
+import Choice from "./formComponents/choice";
+import TextField from "./formComponents/textfield";
 
 const SurveyDetail: React.FC<{ id: string }> = ({ id }) => {
-    const { error, loading, data } = useQuery<{ survey: Survey }>(SURVEY, {variables: { ID: Number(id) }});
+    const { error, loading, data } = useQuery<{ survey: Survey }>(SURVEY, { variables: { ID: Number(id) } });
     if (loading) return <p>Loading...</p>;
-    if (error) return <p>Error 🙃</p>;
+    if (error) return <p>Error</p>;
 
     return (
         <>
-            {data &&
+            {data && (
                 <>
                     <h1>{data.survey.descriptiveName}</h1>
-                    {data.survey.surveyQuestions.map(surveyQuestion => {
+                    {data.survey.surveyQuestions.map((surveyQuestion) => {
                         switch (surveyQuestion.questionType.name) {
                             case "Textfield":
                                 console.log("Tekstfelt!");
-                                return <TextField title={surveyQuestion.question.question} size="short"/>;
+                                return <TextField title={surveyQuestion.question.question} size="short" />;
                             case "Choice":
                                 console.log("Valg!");
-                                return ( 
-                                    <Choice 
-                                        title={surveyQuestion.question.question} 
-                                        radio={true} 
-                                        options={surveyQuestion.offeredAnswers.map(offeredAnswer => offeredAnswer.answer)}
+                                return (
+                                    <Choice
+                                        title={surveyQuestion.question.question}
+                                        radio={true}
+                                        options={surveyQuestion.offeredAnswers.map(
+                                            (offeredAnswer) => offeredAnswer.answer
+                                        )}
                                     />
                                 );
                         }
                     })}
                 </>
-            }
+            )}
         </>
-
-    )
+    );
 };
 
 export default SurveyDetail;

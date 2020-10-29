@@ -1,7 +1,7 @@
 import { NextPage, GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Layout from "@components/Layout";
 import { useQuery } from "@apollo/client";
-import TextField from "@components/pages/surveys/textfield";
+import TextField from "@components/pages/surveys/formComponents/textfield";
 import { LISTING } from "@graphql/listings/queries";
 import { Listing } from "@interfaces/listings";
 import Link from "next/link";
