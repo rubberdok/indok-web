@@ -14,6 +14,7 @@ class QuestionInput(graphene.InputObjectType):
     question_type_id = graphene.ID()
     question = graphene.String(required=False)
     description = graphene.String(required=False)
+    position = graphene.Int()
 
 class CreateQuestion(graphene.Mutation):
     ok = graphene.Boolean()
