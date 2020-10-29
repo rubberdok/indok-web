@@ -1,15 +1,18 @@
+import { Listing } from "@interfaces/listings";
+
 export interface Survey {
     id: string;
     descriptiveName: string;
     description: string;
     questions: Question[];
+    listing: Listing;
 }
 
 export interface Question {
     id: string;
     survey: Survey;
-    question: String;
-    description: String;
+    question: string;
+    description: string;
     position: string;
     questionType: QuestionType;
     offeredAnswers: OfferedAnswer[];

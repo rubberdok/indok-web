@@ -3,7 +3,7 @@ import { SURVEY } from "@graphql/surveys/queries";
 import { Survey } from "@interfaces/surveys";
 import Choice from "./formComponents/choice";
 import TextField from "./formComponents/textfield";
-import Question from "@components/pages/surveys/question";
+import QuestionDetail from "@components/pages/surveys/questionDetail";
 
 const SurveyDetail: React.FC<{ id: string }> = ({ id }) => {
     const { error, loading, data } = useQuery<{ survey: Survey }>(SURVEY, { variables: { ID: Number(id) } });
@@ -15,8 +15,8 @@ const SurveyDetail: React.FC<{ id: string }> = ({ id }) => {
             {data && (
                 <>
                     <h1>{data.survey.descriptiveName}</h1>
-                    {data.survey.surveyQuestions.map((surveyQuestion) => {
-                        <Question question={surveyQuestion} />;
+                    {data.survey.questions.map((question) => {
+                        <QuestionDetail question={question} active={true} />;
                     })}
                 </>
             )}

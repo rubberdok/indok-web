@@ -5,20 +5,23 @@ import { CREATE_SURVEY } from "@graphql/surveys/mutations";
 import { useState } from "react";
 import TextField from "@components/pages/surveys/formComponents/textfield";
 import Dropdown from "@components/pages/surveys/formComponents/dropdown";
-import { Survey, QuestionType, SurveyQuestion } from "@interfaces/surveys";
-import Question from "@components/pages/surveys/question";
+import { Survey, QuestionType, Question } from "@interfaces/surveys";
+import QuestionDetail from "@components/pages/surveys/questionDetail";
 import CreateQuestion from "@components/pages/surveys/createQuestion";
 
-interface EditableSurveyQuestion extends SurveyQuestion {
+interface EditableQuestion extends Question {
     editing: boolean;
 }
 
 interface EditableSurvey extends Survey {
-    surveyQuestions: EditableSurveyQuestion[];
+    surveyQuestions: EditableQuestion[];
 }
 
-const CreateSurvey: React.FC<{ listing: Listing }> = ({ listing }) => {
+const CreateSurvey: React.FC<{ listing?: Listing }> = ({ listing }) => {
     const [survey, setSurvey] = useState<EditableSurvey>({} as EditableSurvey);
+    if (listing) {
+        setSurvey({ ...survey, descriptiveName: listing.title, listing: listing });
+    }
     const { loading, error, data } = useQuery<{ questionTypes: QuestionType[] }>(QUESTIONTYPES);
     const [createSurvey] = useMutation(CREATE_SURVEY);
     const [updateSurvey] = useMutation(UPDATE_SURVEY);
@@ -33,10 +36,7 @@ const CreateSurvey: React.FC<{ listing: Listing }> = ({ listing }) => {
                             e.preventDefault();
                             setSurvey({
                                 ...survey,
-                                surveyQuestions: [
-                                    ...survey.surveyQuestions,
-                                    { editing: true } as EditableSurveyQuestion,
-                                ],
+                                surveyQuestions: [...survey.surveyQuestions, { editing: true } as EditableQuestion],
                             });
                         }}
                     >
@@ -44,9 +44,9 @@ const CreateSurvey: React.FC<{ listing: Listing }> = ({ listing }) => {
                     </button>
                     {survey.surveyQuestions.map((question) => {
                         question.editing ? (
-                            <CreateQuestion question={question as SurveyQuestion} />
+                            <CreateQuestion question={question as Question} questionTypes={data.questionTypes} />
                         ) : (
-                            <Question question={question as SurveyQuestion} />
+                            <QuestionDetail question={question as Question} active={false} />
                         );
                     })}
                     <button type="submit">Lag søknad</button>
