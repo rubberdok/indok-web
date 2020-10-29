@@ -8,7 +8,8 @@ export interface Survey {
 export interface Question {
     id: string;
     question: string;
-    description: string;
+    description?: string;
+    //TODO: remove slug
     slug: string;
 }
 

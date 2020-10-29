@@ -1,7 +1,7 @@
 import { Listing } from "@interfaces/listings";
 import { useQuery, useMutation } from "@apollo/client";
 import { QUESTIONTYPES } from "@graphql/surveys/queries";
-import { CREATE_SURVEY, CREATE_QUESTION } from "@graphql/surveys/mutations";
+import { CREATE_SURVEY } from "@graphql/surveys/mutations";
 import { useState } from "react";
 import TextField from "@components/pages/surveys/formComponents/textfield";
 import Dropdown from "@components/pages/surveys/formComponents/dropdown";
@@ -21,8 +21,7 @@ const CreateSurvey: React.FC<{ listing: Listing }> = ({ listing }) => {
     const [survey, setSurvey] = useState<EditableSurvey>({} as EditableSurvey);
     const { loading, error, data } = useQuery<{ questionTypes: QuestionType[] }>(QUESTIONTYPES);
     const [createSurvey] = useMutation(CREATE_SURVEY);
-    //temporary implementation until bulk mutation for createSurvey is implemented
-    const [createQuestion] = useMutation(CREATE_QUESTION);
+    const [updateSurvey] = useMutation(UPDATE_SURVEY);
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error</p>;
     return (
