@@ -1,5 +1,5 @@
-import feather from "feather-icons";
 import Link from "next/link";
+import { ArrowLeft, ArrowRight } from 'react-feather';
 import styled from "styled-components";
 
 interface ButtonProps {
@@ -32,7 +32,7 @@ const Button: React.FC<ButtonProps> = (props) => {
                 {props.back ? (
                     <>
                         <Icon>
-                            <i dangerouslySetInnerHTML={{ __html: feather.icons["arrow-left"].toSvg() }} />
+                            <ArrowLeft />
                         </Icon>
                         <Container>{props.children}</Container>
                     </>
@@ -40,7 +40,7 @@ const Button: React.FC<ButtonProps> = (props) => {
                     <>
                         <Container>{props.children}</Container>
                         <Icon>
-                            <i dangerouslySetInnerHTML={{ __html: feather.icons["arrow-right"].toSvg() }} />
+                            <ArrowRight />
                         </Icon>
                     </>
                 )}
