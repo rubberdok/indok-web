@@ -2,10 +2,35 @@ export interface Listing {
     id: string;
     title: string;
     description: string;
-    startDateTime: string;
+    startDatetime: string;
     deadline: string;
-    endDateTime: string;
+    endDatetime: string;
     url: string;
     slug: string;
-    organization: { id: string; name: string };
+    organization?: Organization;
+    responses?: Response[];
+}
+
+export interface Response {
+    id: string;
+    response: string;
+    applicant: User;
+}
+
+export interface Organization {
+    id: string;
+    name: string;
+    slug: string;
+    description: string;
+    parent?: Organization;
+    children?: Organization[];
+}
+
+export interface User {
+    id: string;
+    username: string;
+    firstName: string;
+    lastName: string;
+    year: string;
+    email: string;
 }

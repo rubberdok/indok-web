@@ -2,7 +2,7 @@ import { SurveyQuestion } from "@interfaces/surveys";
 import TextField from "@components/pages/surveys/formComponents/textfield";
 import Choice from "@components/pages/surveys/formComponents/choice";
 
-const Question: React.FC<{ question: SurveyQuestion }> = ({ question }) => {
+const Question: React.FC<{ question: SurveyQuestion; active: boolean }> = ({ question, active }) => {
     switch (question.questionType.name) {
         case "Textfield":
             return <TextField title={question.question.question} size="short" />;

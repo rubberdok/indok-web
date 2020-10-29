@@ -1,25 +1,29 @@
-import TextField from "../surveys/formComponents/textfield";
+import TextField from "@components/pages/surveys/formComponents/textfield";
 import { useState } from "react";
-import { Listing } from "@interfaces/listings";
+import { Listing, Organization } from "@interfaces/listings";
 import { CREATE_LISTING } from "@graphql/listings/mutations";
-import { LISTING_FRAGMENT } from "@graphql/listings/queries";
-import { useMutation } from "@apollo/client";
+import { useMutation, gql } from "@apollo/client";
 
-const CreateListing: React.FC = () => {
+const CreateListing: React.FC<{ organization: Organization }> = ({ organization }) => {
     const [newListing, setNewListing] = useState<Listing>({} as Listing);
     const [createListing] = useMutation<{ createListing: { listing: Listing } }>(CREATE_LISTING, {
         update: (cache, { data }) => {
-            cache.modify({
-                fields: {
-                    listings: (existingListings) => {
-                        const newListing = cache.writeFragment<Listing>({
-                            data: data!.createListing.listing,
-                            fragment: LISTING_FRAGMENT,
-                        });
-                        return [...existingListings, newListing];
+            data &&
+                cache.modify({
+                    fields: {
+                        listings: (existingListings) => {
+                            const newListing = cache.writeFragment<Listing>({
+                                data: data.createListing.listing,
+                                fragment: gql`
+                                    fragment NewListing on Listing {
+                                        id
+                                    }
+                                `,
+                            });
+                            return [...existingListings, newListing];
+                        },
                     },
-                },
-            });
+                });
         },
     });
     return (
@@ -30,10 +34,11 @@ const CreateListing: React.FC = () => {
                     variables: {
                         title: newListing.title,
                         description: newListing.description,
-                        startDateTime: newListing.startDateTime,
+                        startDateTime: newListing.startDatetime,
                         deadline: newListing.deadline,
-                        endDateTime: newListing.endDateTime,
+                        endDateTime: newListing.endDatetime,
                         url: "www.google.com",
+                        organizationId: organization.id,
                     },
                 });
                 //TODO: properly reset newListing state
@@ -53,28 +58,28 @@ const CreateListing: React.FC = () => {
                 value={newListing.description}
             />
             <br />
-            Start time:
+            Starttid:{" "}
             <input
                 type="datetime-local"
-                onChange={(e) => setNewListing({ ...newListing, startDateTime: e.target.value })}
-                value={newListing.startDateTime}
+                onChange={(e) => setNewListing({ ...newListing, startDatetime: e.target.value })}
+                value={newListing.startDatetime}
             />
             <br />
-            Deadline:
+            Frist:{" "}
             <input
                 type="datetime-local"
                 onChange={(e) => setNewListing({ ...newListing, deadline: e.target.value })}
                 value={newListing.deadline}
             />
             <br />
-            End time:
+            Slutt:{" "}
             <input
                 type="datetime-local"
-                onChange={(e) => setNewListing({ ...newListing, endDateTime: e.target.value })}
-                value={newListing.endDateTime}
+                onChange={(e) => setNewListing({ ...newListing, endDatetime: e.target.value })}
+                value={newListing.endDatetime}
             />
             <br />
-            <button type="submit">Add listing</button>
+            <button type="submit">Legg til verv</button>
         </form>
     );
 };

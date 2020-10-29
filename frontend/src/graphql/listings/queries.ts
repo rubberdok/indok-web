@@ -6,9 +6,9 @@ export const LISTINGS = gql`
             id
             title
             description
-            startDateTime
+            startDatetime
             deadline
-            endDateTime
+            endDatetime
             url
             slug
             organization {
@@ -24,17 +24,11 @@ export const LISTING = gql`
             id
             title
             description
-            startDateTime
+            startDatetime
             deadline
-            endDateTime
+            endDatetime
             url
         }
-    }
-`;
-
-export const LISTING_FRAGMENT = gql`
-    fragment NewListing on Listing {
-        id
     }
 `;
 
@@ -43,17 +37,100 @@ export const RESPONSES = gql`
         listing(id: $ID) {
             responses {
                 id
-                title
+                response
+                applicant {
+                    id
+                    username
+                    firstName
+                    lastName
+                    year
+                    email
+                }
             }
         }
     }
 `;
 
-/* export const ALL_ORGANIZATIONS = gql`
-    query allOrganization {
+export const RESPONSE = gql`
+    query response($responseID: ID!) {
+        response(id: $responseID) {
+            id
+            response
+            applicant {
+                id
+                username
+                firstName
+                lastName
+                year
+                email
+            }
+        }
+    }
+`;
+
+export const ORGANIZATIONS = gql`
+    query {
         allOrganizations {
             id
             name
+            slug
+            description
         }
     }
-`; */
+`;
+
+export const ORGANIZATION = gql`
+    query organization($ID: ID!) {
+        organization(id: $ID) {
+            id
+            name
+            slug
+            description
+        }
+    }
+`;
+
+export const ORGANIZATION_LISTINGS = gql`
+    query organization($ID: ID!) {
+        organization(id: $ID) {
+            listings {
+                id
+                title
+                description
+                startDatetime
+                deadline
+                endDatetime
+                url
+                responses {
+                    id
+                }
+            }
+        }
+    }
+`;
+
+export const USERS = gql`
+    query {
+        users {
+            id
+            username
+            firstName
+            lastName
+            year
+            email
+        }
+    }
+`;
+
+export const USER = gql`
+    query user($ID: ID!) {
+        user(id: $ID) {
+            id
+            username
+            firstName
+            lastName
+            year
+            email
+        }
+    }
+`;
