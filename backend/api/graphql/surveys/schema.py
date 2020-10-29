@@ -21,6 +21,12 @@ from .mutations.questions import (
     DeleteQuestion,
 )
 
+from .mutations.surveys import (
+    CreateSurvey,
+    UpdateSurvey,
+    DeleteSurvey,
+)
+
 import graphene
 
 
@@ -55,3 +61,7 @@ class SurveyMutations(graphene.ObjectType):
     create_question = CreateQuestion.Field()
     update_question = UpdateQuestion.Field()
     delete_question = DeleteQuestion.Field()
+
+    create_survey = CreateSurvey.Field()
+    update_survey = UpdateSurvey.Field()
+    delete_survey = DeleteSurvey.Field()
