@@ -1,8 +1,8 @@
-import { gql } from "@apollo/client"
+import { gql } from "@apollo/client";
 
 export const SURVEY = gql`
-    query survey($ID: ID!){
-        survey(id: $ID){
+    query survey($ID: ID!) {
+        survey(id: $ID) {
             id
             descriptiveName
             surveyQuestions {
