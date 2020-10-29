@@ -32,6 +32,7 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
                     Id: {data.event.id}
                     <br />
                     Tittel: {data.event.title}
+                    <br />
                     Starttid: {parseDate(data.event.startTime)}
                     <br />
                     Publisert av: {data.event.publisher}
@@ -57,8 +58,6 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
                     Deadline for påmelding: {parseDate(data.event.deadline)}
                     <br />
                 </div>
-
-                <Link href="/events"> Tilbake til arrangementer</Link>
             </div>
         );
     else return null;

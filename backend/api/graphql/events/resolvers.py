@@ -23,6 +23,9 @@ class EventResolvers:
             elif start_time:
                 filteredEvents = filteredEvents.filter(start_time__gte=(start_time))
 
+            elif end_time:
+                filteredEvents = filteredEvents.filter(start_time__lte=(end_time))
+
             queries = []
             if category != None:
                 kwargs["category__name"] = category
