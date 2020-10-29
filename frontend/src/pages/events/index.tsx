@@ -3,20 +3,20 @@ import { NextPage } from "next";
 import Link from "next/link";
 import React from "react";
 import Navbar from "@components/navbar/Navbar";
-import AllEvents from "../../components/pages/events/AllEvents";
+import AllEvents from "../../components/pages/events/AllEvents/index";
 
 const Events: NextPage = () => {
     return (
         <Layout>
             <Navbar />
             <div>
-                <h1>Events</h1>
+                <h1>Arrangementer</h1>
             </div>
 
-            <Link href="/"> Go Home </Link>
+            <Link href="/"> Tilbake til forsiden </Link>
 
             <div style={{ float: "right", paddingRight: "6em" }}>
-                <Link href="/events/create-event"> Add event </Link>
+                <Link href="/events/create-event"> Opprett nytt arrangement </Link>
             </div>
             <div>
                 <AllEvents />

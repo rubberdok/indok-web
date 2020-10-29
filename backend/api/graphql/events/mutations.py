@@ -11,8 +11,8 @@ from .types import CategoryType, EventType
 
 class EventInput(graphene.InputObjectType):
     title = graphene.String(required=False)
-    starttime = graphene.DateTime(required=False)
-    endtime = graphene.DateTime(required=False)
+    start_time = graphene.DateTime(required=False)
+    end_time = graphene.DateTime(required=False)
     location = graphene.String(required=False)
     description = graphene.String(required=False)
     organization_id = graphene.ID(required=False)

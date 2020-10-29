@@ -111,7 +111,7 @@ const FilterMenu: React.FC<Props> = ({ filters, onChange }) => {
             <div>
                 <h5 style={{ margin: "0px" }}>{"Tidspunkt"}</h5>
                 <div>
-                    Starttid: &nbsp;
+                    <div>Fra:</div>
                     <input
                         type="datetime-local"
                         placeholder="Start time"
@@ -120,7 +120,7 @@ const FilterMenu: React.FC<Props> = ({ filters, onChange }) => {
                     />
                 </div>
                 <div>
-                    Sluttid: &nbsp;
+                    <div>Til:</div>
                     <input
                         type="datetime-local"
                         placeholder="Start time"
@@ -146,7 +146,7 @@ const FilterMenu: React.FC<Props> = ({ filters, onChange }) => {
                 paddingBottom: "1em",
             }}
         >
-            <h3 style={{ margin: "0px" }}>Filter</h3>
+            <h3 style={{ margin: "0px" }}>Filtrer</h3>
             <button onClick={() => onChange({})}>{"Nullstill filtre"}</button>
             <OrganizationFilter />
             <CategoryFilter />

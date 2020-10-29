@@ -28,37 +28,37 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
             <div>
                 <h2 style={{ marginTop: -10, marginBottom: 10, textAlign: "center" }}>Event details</h2>
                 <div style={{ marginBottom: 15 }}>
-                    <h4 style={{ margin: 0 }}>Mandatory fields</h4>
+                    <h4 style={{ margin: 0 }}>Påkrevde felt</h4>
                     Id: {data.event.id}
                     <br />
-                    Title: {data.event.title}
-                    Starttime: {parseDate(data.event.startTime)}
+                    Tittel: {data.event.title}
+                    Starttid: {parseDate(data.event.startTime)}
                     <br />
-                    Publisher: {data.event.publisher}
+                    Publisert av: {data.event.publisher}
                     <br />
-                    Is attendable: {data.event.isAttendable}
+                    Krever påmelding: {data.event.isAttendable ? "Ja" : "Nei"}
                     <br />
-                    Description: {data.event.description}
+                    Beskrvelse: {data.event.description}
                     <br />
                 </div>
 
                 <div>
-                    <h4 style={{ margin: 0 }}>Optional fields</h4>
-                    Endtime: {parseDate(data.event.endTime)}
+                    <h4 style={{ margin: 0 }}>Frivillige felt</h4>
+                    Sluttid: {parseDate(data.event.endTime)}
                     <br />
-                    Location: {data.event.location}
+                    Lokasjon: {data.event.location}
                     <br />
-                    Organization: {getName(data.event.organization)}
+                    Organisasjon: {getName(data.event.organization)}
                     <br />
-                    Category: {getName(data.event.category)}
+                    Kategori: {getName(data.event.category)}
                     <br />
-                    Image URL: {data.event.image}
+                    Bilde URL: {data.event.image}
                     <br />
-                    Deadline: {parseDate(data.event.deadline)}
+                    Deadline for påmelding: {parseDate(data.event.deadline)}
                     <br />
                 </div>
 
-                <Link href="/events"> Back to Events</Link>
+                <Link href="/events"> Tilbake til arrangementer</Link>
             </div>
         );
     else return null;

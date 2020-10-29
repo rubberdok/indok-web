@@ -29,7 +29,7 @@ const EventInfo: NextPage = () => {
                 {" "}
                 <div style={{ marginLeft: "auto", marginRight: "auto" }}>
                     {numberId && <EventDetailPage eventId={numberId} />}
-                    <Button url="/events"> Back to events </Button>
+                    <Button url="/events"> Tilbake til arrangementer </Button>
                 </div>
             </div>
         </Layout>

@@ -6,13 +6,23 @@ class EventResolvers:
     def resolve_all_events(
         parent, info, category=None, organization=None, start_time=None, end_time=None
     ):
-        string_names = ["category", "start_time", "end_time"]
+        string_names = ["category", "example_filter_1", "example_filter_2"]
         kwargs = {
             f"{string_names[i]}": element
-            for i, element in enumerate([category, start_time, end_time])
+            for i, element in enumerate([category])
             if element != None
         }
-        if kwargs or organization:
+        if kwargs or organization or start_time or end_time:
+            filteredEvents = Event.objects
+
+            if start_time and end_time:
+                filteredEvents = filteredEvents.filter(
+                    start_time__range=(start_time, end_time)
+                )
+
+            elif start_time:
+                filteredEvents = filteredEvents.filter(start_time__gte=(start_time))
+
             queries = []
             if category != None:
                 kwargs["category__name"] = category
@@ -27,7 +37,7 @@ class EventResolvers:
                     | Q(organization__parent__name__icontains=organization)
                 )
 
-            return Event.objects.filter(*queries)
+            return filteredEvents.filter(*queries)
         return Event.objects.all()
 
     def resolve_event(parent, info, id):

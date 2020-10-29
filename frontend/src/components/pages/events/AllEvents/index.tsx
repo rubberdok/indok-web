@@ -53,8 +53,9 @@ const AllEvents: React.FC = () => {
                                                 marginBottom: "0.5em",
                                             }}
                                         >
-                                            <p>
-                                                {event.title} - Time: {event.startTime.slice(0, 19).replace("T", " ")}
+                                            <p style={{ marginBottom: "0.2em" }}>{event.title}</p>
+                                            <p style={{ marginTop: 0 }}>
+                                                Starttid: {event.startTime.slice(0, 19).replace("T", " ")}
                                             </p>
                                         </div>
                                     </a>

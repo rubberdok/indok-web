@@ -1,7 +1,6 @@
 import { NextPage } from "next";
 import Link from "next/link";
 import React from "react";
-import Button from "@components/ui/Button";
 import Navbar from "@components/navbar/Navbar";
 
 import CreateEvent from "../../components/pages/events/createEvent";
@@ -27,7 +26,7 @@ const CreateEventsPage: NextPage = () => {
                 </div>
             </div>
 
-            <Link href="/events"> Back to events </Link>
+            <Link href="/events"> Tilbake til arrangementer </Link>
         </div>
     );
 };
