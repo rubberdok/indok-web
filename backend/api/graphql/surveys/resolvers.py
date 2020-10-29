@@ -53,16 +53,6 @@ class SurveyQuestionResolvers:
         """
         return SurveyQuestion.objects.all()
 
-class QuestionResolvers:
-    def resolve_question(self, info, id: int):
-        return Question.objects.get(pk=id)
-
-    def resolve_questions(self, info, search: Optional[str]=None):
-        """
-        TODO: Search implementation
-        """
-        return Question.objects.all()
-
 class AnswerResolvers:
     def resolve_answer(self, info, id: int):
         return Answer.objects.get(pk=id)

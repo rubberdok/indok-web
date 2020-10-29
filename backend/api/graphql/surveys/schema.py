@@ -1,7 +1,6 @@
 from .types import (
     OfferedAnswerType,
     AnswerType,
-    QuestionType,
     QuestionTypeType,
     SurveyType,
     SurveyQuestionType,
@@ -9,7 +8,6 @@ from .types import (
 from .resolvers import (
     OfferedAnswerResolvers,
     QuestionTypeResolvers,
-    QuestionResolvers,
     SurveyResolvers,
     SurveyQuestionResolvers,
     AnswerResolvers,
@@ -34,7 +32,6 @@ class SurveyQueries(
     graphene.ObjectType,
     OfferedAnswerResolvers,
     QuestionTypeResolvers,
-    QuestionResolvers,
     SurveyResolvers,
     SurveyQuestionResolvers,
     AnswerResolvers
@@ -44,9 +41,6 @@ class SurveyQueries(
 
     question_type = graphene.Field(QuestionTypeType, id=graphene.ID())
     question_types = graphene.List(QuestionTypeType, search=graphene.String())
-
-    question = graphene.Field(QuestionType, id=graphene.ID())
-    questions = graphene.List(QuestionType, search=graphene.String())
 
     survey = graphene.Field(SurveyType, id=graphene.ID())
     surveys = graphene.List(SurveyType, search=graphene.String())

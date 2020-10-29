@@ -1,7 +1,6 @@
 from apps.surveys.models import (
     Survey,
-    Question,
-    QuestionType as QuestionTypeModel,
+    QuestionType as QuestionType,
     Answer,
     OfferedAnswer,
     SurveyQuestion,
@@ -21,13 +20,7 @@ class AnswerType(DjangoObjectType):
 
 class QuestionTypeType(DjangoObjectType):
     class Meta:
-        model = QuestionTypeModel
-
-
-
-class QuestionType(DjangoObjectType):
-    class Meta:
-        model = Question
+        model = QuestionType
 
 class SurveyQuestionType(DjangoObjectType):
     offered_answers = graphene.List(OfferedAnswerType)
@@ -36,6 +29,7 @@ class SurveyQuestionType(DjangoObjectType):
         model = SurveyQuestion
         fields = [
             "question",
+            "description",
             "id",
             "question_type",
             "position",

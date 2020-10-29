@@ -1,58 +1,47 @@
 from apps.surveys.models import (
-    Question,
-    QuestionType as QuestionTypeModel,
+    QuestionType as QuestionType,
     SurveyQuestion,
 )
 
 from ..types import (
-    QuestionType,
-    QuestionTypeType
+    QuestionTypeType,
+    SurveyQuestionType,
 )
 import graphene
 
 class SurveyQuestionInput(graphene.InputObjectType):
     survey_id = graphene.ID()
     question_type_id = graphene.ID()
-
-class QuestionInput(graphene.InputObjectType):
     question = graphene.String(required=False)
     description = graphene.String(required=False)
 
 class CreateQuestion(graphene.Mutation):
     ok = graphene.Boolean()
-    question = graphene.Field(QuestionType)
+    question = graphene.Field(SurveyQuestionType)
 
     class Arguments:
-        question_data = QuestionInput(required=True)
-        survey_question_data = SurveyQuestionInput(required=False)
+        question_data = SurveyQuestionInput(required=True)
 
     @classmethod
-    def mutate(cls, self, info, question_data, survey_question_data=None):
+    def mutate(cls, self, info, question_data):
         question = Question()
         for k, v in question_data.items():
             setattr(question, k, v)
         question.save()
-
-        if survey_question_data:
-            survey_question = SurveyQuestion()
-            for key, value in survey_question_data.items():
-                setattr(survey_question, key, value)
-            setattr(survey_question, "question", question)
-            survey_question.save()
         ok = True
         return cls(question=question, ok=ok)
 
 class UpdateQuestion(graphene.Mutation):
     ok = graphene.Boolean()
-    question = graphene.Field(QuestionType)
+    question = graphene.Field(SurveyQuestionType)
 
     class Arguments:
         id = graphene.ID(required=True)
-        question_data = QuestionInput(required=False)
+        question_data = SurveyQuestionInput(required=False)
 
     @classmethod
     def mutate(cls, self, info, id, question_data):
-        question = Question.objects.get(pk=id)
+        question = SurveyQuestion.objects.get(pk=id)
         for k, v, in question_data.items():
             setattr(question, k, v)
         question.save()
@@ -68,7 +57,7 @@ class DeleteQuestion(graphene.Mutation):
 
     @classmethod
     def mutate(cls, self, info, id):
-        question = Question.objects.get(pk=id)
+        question = SurveyQuestion.objects.get(pk=id)
         deleted_id = question.id
         question.delete()
         ok = True
@@ -86,7 +75,7 @@ class CreateQuestionType(graphene.Mutation):
 
     @classmethod
     def mutate(cls, self, info, question_type_data):
-        question_type = QuestionTypeModel()
+        question_type = QuestionType()
         for key, value in question_type_data.items():
             setattr(question_type, key, value)
         question_type.save()
@@ -119,7 +108,7 @@ class DeleteQuestionType(graphene.Mutation):
 
     @classmethod
     def mutate(cls, self, info, id):
-        question_type = QuestionTypeModel.objects.get(pk=id)
+        question_type = QuestionType.objects.get(pk=id)
         deleted_id = question_type.id
         question_type.delete()
         ok = True
