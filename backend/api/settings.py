@@ -100,11 +100,12 @@ DATABASES = {
 }
 
 # Authentication
-SOCIAL_AUTH_POSTGRES_JSONFIELD = True
+# SOCIAL_AUTH_POSTGRES_JSONFIELD = True #Causes deprecation warning
+
+SOCIAL_AUTH_EXTRA_DATA = ["email", "picture", "name", "given_name", "family_name"]
 
 AUTHENTICATION_BACKENDS = (
     "social_core.backends.google.GoogleOAuth2",
-    # 'social_core.backends.google.GoogleOAuth',
     "django.contrib.auth.backends.ModelBackend",
 )
 
