@@ -2,21 +2,14 @@ export interface Survey {
     id: string;
     descriptiveName: string;
     description: string;
-    surveyQuestions: SurveyQuestion[];
+    questions: Question[];
 }
 
 export interface Question {
     id: string;
-    question: string;
-    description?: string;
-    //TODO: remove slug
-    slug: string;
-}
-
-export interface SurveyQuestion {
-    id: string;
     survey: Survey;
-    question: Question;
+    question: String;
+    description: String;
     position: string;
     questionType: QuestionType;
     offeredAnswers: OfferedAnswer[];
@@ -36,5 +29,5 @@ export interface OfferedAnswer {
 export interface Answer {
     id: string;
     answer: string;
-    surveyQuestion: SurveyQuestion;
+    question: Question;
 }

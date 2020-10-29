@@ -1,9 +1,9 @@
 from apps.surveys.models import (
     Survey,
-    QuestionType as QuestionType,
+    QuestionType as QuestionTypeModel,
     Answer,
     OfferedAnswer,
-    SurveyQuestion,
+    Question,
 )
 
 from graphene_django import DjangoObjectType
@@ -20,13 +20,13 @@ class AnswerType(DjangoObjectType):
 
 class QuestionTypeType(DjangoObjectType):
     class Meta:
-        model = QuestionType
+        model = QuestionTypeModel
 
-class SurveyQuestionType(DjangoObjectType):
+class QuestionType(DjangoObjectType):
     offered_answers = graphene.List(OfferedAnswerType)
 
     class Meta:
-        model = SurveyQuestion
+        model = Question
         fields = [
             "question",
             "description",
@@ -36,15 +36,15 @@ class SurveyQuestionType(DjangoObjectType):
         ]
 
     @staticmethod
-    def resolve_offered_answers(root: SurveyQuestion, info):
+    def resolve_offered_answers(root: Question, info):
         return root.offered_answers.all()
 
     @staticmethod
-    def resolve_answers(root: SurveyQuestion, info):
+    def resolve_answers(root: Question, info):
         return root.answers.all()
 
 class SurveyType(DjangoObjectType):
-    survey_questions = graphene.List(SurveyQuestionType)
+    questions = graphene.List(QuestionType)
 
     class Meta:
         model = Survey
@@ -55,8 +55,8 @@ class SurveyType(DjangoObjectType):
         ]
 
     @staticmethod
-    def resolve_survey_questions(root: Survey, info):
-        return root.surveyquestion_set.all()
+    def resolve_questions(root: Survey, info):
+        return root.question_set.all()
 
 
 

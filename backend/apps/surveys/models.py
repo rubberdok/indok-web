@@ -12,7 +12,7 @@ class Survey(models.Model):
     def __str__(self) -> str:
         return f"{self.descriptive_name}"
 
-class SurveyQuestion(models.Model):
+class Question(models.Model):
     survey = models.ForeignKey(Survey, on_delete=models.CASCADE)
     question = models.CharField(max_length=300)
     description = models.CharField(max_length=1000, blank=True, default="")
@@ -34,7 +34,7 @@ class OfferedAnswer(models.Model):
 
 class Answer(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    survey_question = models.ForeignKey(SurveyQuestion, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
     answer = models.CharField(max_length=10000)
 
     def __str__(self) -> str:

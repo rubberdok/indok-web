@@ -5,12 +5,10 @@ export const SURVEY = gql`
         survey(id: $ID) {
             id
             descriptiveName
-            surveyQuestions {
+            questions {
                 id
-                question {
-                    id
-                    question
-                }
+                question
+                description
                 questionType {
                     id
                     name

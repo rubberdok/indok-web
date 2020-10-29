@@ -1,15 +1,15 @@
 from apps.surveys.models import (
-    QuestionType as QuestionType,
-    SurveyQuestion,
+    QuestionType as QuestionTypeModel,
+    Question,
 )
 
 from ..types import (
     QuestionTypeType,
-    SurveyQuestionType,
+    QuestionType,
 )
 import graphene
 
-class SurveyQuestionInput(graphene.InputObjectType):
+class QuestionInput(graphene.InputObjectType):
     survey_id = graphene.ID()
     question_type_id = graphene.ID()
     question = graphene.String(required=False)
@@ -17,10 +17,10 @@ class SurveyQuestionInput(graphene.InputObjectType):
 
 class CreateQuestion(graphene.Mutation):
     ok = graphene.Boolean()
-    question = graphene.Field(SurveyQuestionType)
+    question = graphene.Field(QuestionType)
 
     class Arguments:
-        question_data = SurveyQuestionInput(required=True)
+        question_data = QuestionInput(required=True)
 
     @classmethod
     def mutate(cls, self, info, question_data):
@@ -33,15 +33,15 @@ class CreateQuestion(graphene.Mutation):
 
 class UpdateQuestion(graphene.Mutation):
     ok = graphene.Boolean()
-    question = graphene.Field(SurveyQuestionType)
+    question = graphene.Field(QuestionType)
 
     class Arguments:
         id = graphene.ID(required=True)
-        question_data = SurveyQuestionInput(required=False)
+        question_data = QuestionInput(required=False)
 
     @classmethod
     def mutate(cls, self, info, id, question_data):
-        question = SurveyQuestion.objects.get(pk=id)
+        question = Question.objects.get(pk=id)
         for k, v, in question_data.items():
             setattr(question, k, v)
         question.save()
@@ -57,7 +57,7 @@ class DeleteQuestion(graphene.Mutation):
 
     @classmethod
     def mutate(cls, self, info, id):
-        question = SurveyQuestion.objects.get(pk=id)
+        question = Question.objects.get(pk=id)
         deleted_id = question.id
         question.delete()
         ok = True
@@ -75,7 +75,7 @@ class CreateQuestionType(graphene.Mutation):
 
     @classmethod
     def mutate(cls, self, info, question_type_data):
-        question_type = QuestionType()
+        question_type = QuestionTypeModel()
         for key, value in question_type_data.items():
             setattr(question_type, key, value)
         question_type.save()
@@ -92,7 +92,7 @@ class UpdateQuestionType(graphene.Mutation):
 
     @classmethod
     def mutate(cls, self, info, id, question_type_data):
-        question_type = QuestionType.objects.get(id=id)
+        question_type = QuestionTypeModel.objects.get(id=id)
         for key, value in question_type_data.items():
             setattr(question_type, key, value)
         question_type.save()
@@ -108,7 +108,7 @@ class DeleteQuestionType(graphene.Mutation):
 
     @classmethod
     def mutate(cls, self, info, id):
-        question_type = QuestionType.objects.get(pk=id)
+        question_type = QuestionTypeModel.objects.get(pk=id)
         deleted_id = question_type.id
         question_type.delete()
         ok = True

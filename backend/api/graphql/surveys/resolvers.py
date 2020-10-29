@@ -2,7 +2,6 @@ from apps.surveys.models import (
     QuestionType,
     OfferedAnswer,
     Survey,
-    SurveyQuestion,
     Question,
     Answer,
 )
@@ -43,15 +42,15 @@ class SurveyResolvers:
         """
         return Survey.objects.all()
 
-class SurveyQuestionResolvers:
-    def resolve_survey_question(self, info, id: int):
-        return SurveyQuestion.objects.get(pk=id)
+class QuestionResolvers:
+    def resolve_question(self, info, id: int):
+        return Question.objects.get(pk=id)
 
-    def resolve_survey_questions(self, info, search: Optional[str]=None):
+    def resolve_questions(self, info, search: Optional[str]=None):
         """
         TODO: Search implementation
         """
-        return SurveyQuestion.objects.all()
+        return Question.objects.all()
 
 class AnswerResolvers:
     def resolve_answer(self, info, id: int):
