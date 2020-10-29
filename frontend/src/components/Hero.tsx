@@ -11,39 +11,37 @@ const areasMobile = `
     action
 `;
 
-const Hero: React.FC = () => {
-    return (
-        <Section>
-            <Fade triggerOnce>
-                <BackdropImage src="./nth.png" />
-                <Image src="/img/hero.jpg" />
-            </Fade>
-            <Slide direction="left" triggerOnce>
-                <Overlay>
-                    <Content>
-                        <Card>
-                            <Composition areas={areasMobile} maxWidth={450} maxWidthMd={550} maxWidthLg={700}>
-                                {(Areas) => (
-                                    <>
-                                        <Areas.Heading paddingHorizontal={70} paddingTop={30}>
-                                            <SubTitle>Foreningen for studentene ved</SubTitle>
-                                            <Title>Industriell Økonomi og Teknologiledelse</Title>
-                                        </Areas.Heading>
-                                        <Areas.Action flex align="flex-end" justify="end">
-                                            <Button style="primary" link="/about">
-                                                Les mer om foreningen
-                                            </Button>
-                                        </Areas.Action>
-                                    </>
-                                )}
-                            </Composition>
-                        </Card>
-                    </Content>
-                </Overlay>
-            </Slide>
-        </Section>
-    );
-};
+const Hero: React.FC = () => (
+    <Section>
+        <Fade triggerOnce>
+            <BackdropImage src="./nth.png" />
+            <Image src="/img/hero.jpg" />
+        </Fade>
+        <Slide direction="left" triggerOnce>
+            <Overlay>
+                <Content>
+                    <Card>
+                        <Composition areas={areasMobile} maxWidth={450} maxWidthMd={550} maxWidthLg={700}>
+                            {(Areas) => (
+                                <>
+                                    <Areas.Heading paddingHorizontal={70} paddingTop={30}>
+                                        <SubTitle>Foreningen for studentene ved</SubTitle>
+                                        <Title>Industriell Økonomi og Teknologiledelse</Title>
+                                    </Areas.Heading>
+                                    <Areas.Action flex align="flex-end" justify="end">
+                                        <Button style="primary" link="/about">
+                                            Les mer om foreningen
+                                        </Button>
+                                    </Areas.Action>
+                                </>
+                            )}
+                        </Composition>
+                    </Card>
+                </Content>
+            </Overlay>
+        </Slide>
+    </Section>
+);
 
 const Section = styled.div`
     height: calc(100vh - 100px);

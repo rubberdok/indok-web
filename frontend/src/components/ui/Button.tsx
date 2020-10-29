@@ -25,10 +25,10 @@ const Button: React.FC<ButtonProps> = (props) => {
 
     return (
         <WithLink
-            condition={props.link ? true : false}
+            condition={!!props.link}
             wrapper={(children: JSX.Element) => <Link href={props.link || "/"}>{children}</Link>}
         >
-            <StyledButton back={props.back ? true : false} as={props.style ? styles[props.style] : undefined}>
+            <StyledButton back={props.back} as={props.style ? styles[props.style] : undefined}>
                 {props.back ? (
                     <>
                         <Icon>
