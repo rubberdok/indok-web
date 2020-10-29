@@ -1,7 +1,8 @@
+import Layout from "atomic-layout";
 import React, { useState } from "react";
 import styled from "styled-components";
-import NavbarLinks from "./NavbarLinks";
 import Brand from "./Brand";
+import NavbarLinks from "./NavbarLinks";
 
 interface NavBoxProps {
     open?: boolean;
@@ -43,7 +44,7 @@ const Nav = styled.nav`
     z-index: 2;
     align-self: center;
 
-    @media (max-width: 768px) {
+    @media (max-width: ${Layout.breakpoints.md.maxWidth}) {
         position: sticky;
         height: 8vh;
         top: 0;
@@ -58,27 +59,30 @@ const Toggle = styled.div`
     height: 100%;
     cursor: pointer;
 
-    @media (max-width: 768px) {
+    @media (max-width: ${Layout.breakpoints.md.maxWidth}) {
         display: flex;
     }
 `;
 
 const Navbox = styled.div<NavBoxProps>`
     display: flex;
-    height: 100%;
+    height: 100px;
     justify-content: flex-end;
     align-items: center;
+    overflow: hidden;
 
-    @media (max-width: 768px) {
+    @media (max-width: ${Layout.breakpoints.md.maxWidth}) {
         flex-direction: column;
         position: fixed;
         width: 100%;
+        height: 100vh;
         justify-content: flex-start;
         padding-top: 10vh;
         background-color: #fff;
         transition: all 0.3s ease;
-        z-index: -1;
-        right: ${(props) => (props.open ? "-100%" : "0")};
+        z-index: 7;
+        right: 0;
+        width: ${(props) => (props.open ? "0" : "100%")};
     }
 `;
 
@@ -86,10 +90,11 @@ const Hamburger = styled.div<HamburgerProps>`
     background-color: #111;
     height: 3px;
     width: 30px;
-    transition: all 0.3s cubic-bezier(0.54, -0.1, 0.29, 1.24);
+    transition: all 0.3s ease;
     align-self: center;
     position: relative;
     transform: ${(props) => (props.open ? "rotate(-225deg) scale(0.8)" : "inherit")};
+    z-index: 10;
 
     ::before,
     ::after {
@@ -98,16 +103,16 @@ const Hamburger = styled.div<HamburgerProps>`
         background-color: #111;
         content: "";
         position: absolute;
-        transition: all 0.3s cubic-bezier(0.54, -0.1, 0.29, 1.24);
+        transition: all 0.3s ease;
     }
 
     ::before {
-        transform: ${(props) => (props.open ? "rotate(90deg) translate(7px,0)" : "inherit")};
+        transform: ${(props) => (props.open ? "rotate(90deg) translate(7px,0)" : "rotate(180deg)")};
         top: -7px;
     }
 
     ::after {
-        transform: ${(props) => (props.open ? "rotate(90deg) translate(-7px,0)" : "inherit")};
+        transform: ${(props) => (props.open ? "rotate(90deg) translate(-7px,0)" : "rotate(180deg)")};
         top: 7px;
     }
 `;
