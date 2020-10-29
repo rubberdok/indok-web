@@ -48,7 +48,6 @@ def get_no_html_mail(ctx, receiver):
     if receiver == "user": 
         return user_content
     elif receiver == "admin":
-        print("ADMIN MAIL")
         return admin_content
     else:
         print("receiver must be either admin or user")
