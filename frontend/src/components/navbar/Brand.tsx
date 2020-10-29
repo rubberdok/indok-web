@@ -1,9 +1,18 @@
+import Link from "next/link";
 import React from "react";
 import styled from "styled-components";
-import Link from "next/link";
+
+const Brand = () => (
+    <LogoWrap>
+        <Link href="/">
+            <Logo src={"/logo.svg"} alt="INDØK Hovedstyre" />
+        </Link>
+    </LogoWrap>
+);
 
 const LogoWrap = styled.div`
     margin: auto 0;
+    z-index: 10;
 `;
 const Logo = styled.img`
     width: 120px;
@@ -12,15 +21,5 @@ const Logo = styled.img`
         cursor: pointer;
     }
 `;
-
-const Brand = () => {
-    return (
-        <LogoWrap>
-            <Link href="#">
-                <Logo src={"/logo.svg"} alt="Company Logo" />
-            </Link>
-        </LogoWrap>
-    );
-};
 
 export default Brand;
