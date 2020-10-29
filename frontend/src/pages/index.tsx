@@ -1,50 +1,17 @@
-import { NextPage } from "next";
-import { signIn, signOut, useSession } from "next-auth/client";
-import Link from "next/link";
 import Layout from "@components/Layout";
-import { Title, SubTitle, Heading, SubHeading, Paragraph } from "@components/ui/Typography";
-import Button from "@components/ui/Button";
 import Navbar from "@components/navbar/Navbar";
-import { AUTHENTICATE } from "@graphql/auth/mutations";
-import { useMutation } from "@apollo/client";
+import Button from "@components/ui/Button";
+import { Heading, Paragraph, SubHeading, SubTitle, Title } from "@components/ui/Typography";
+import { NextPage } from "next";
+import Link from "next/link";
 
 const IndexPage: NextPage = () => {
-    const [session, loading] = useSession();
-    if (loading) return <div>loading...</div>;
-
-    const [authenticate] = useMutation(AUTHENTICATE);
-    session &&
-        authenticate({
-            variables: { provider: "google-oauth2", accessToken: session.user.accessToken },
-        }).then((data) => console.log(data));
     return (
         <Layout>
             <Navbar />
             <div>
                 <SubTitle>Foreningen for studentene ved</SubTitle>
                 <Title>Industriell Økonomi og Teknologiledelse</Title>
-                {!session && (
-                    <>
-                        Not signed in <br />
-                        <button onClick={signIn}>Sign in</button>
-                    </>
-                )}
-                {session && (
-                    <>
-                        Signed in as {session.user.email} <br />
-                        <>
-                            <img src={session.user.image} className="avatar" alt="user-avatar" />
-                            <h1>{session.user.name}</h1>
-                        </>
-                        <style jsx>{`
-                            .avatar {
-                                width: 120px;
-                                border-radius: 10px;
-                            }
-                        `}</style>
-                        <button onClick={signOut}>Sign out</button>
-                    </>
-                )}
                 <br />
                 <SubHeading>Arrangementer</SubHeading>
                 <Heading>Hva skjer nå?</Heading>
