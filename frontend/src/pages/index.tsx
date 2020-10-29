@@ -2,7 +2,7 @@ import Hero from "@components/Hero";
 import Layout from "@components/Layout";
 import Button from "@components/ui/Button";
 import Content from "@components/ui/Content";
-import Item from "@components/ui/Item";
+import ImageCard from "@components/ui/ImageCard";
 import { Heading, Paragraph, SubHeading } from "@components/ui/Typography";
 import { Composition } from "atomic-layout";
 import { NextPage } from "next";
@@ -22,13 +22,13 @@ const data = [
     },
     {
         id: "b802f384302cb24fbab0a44997e820bf2e8507bb",
-        imageUrl: "./img/Afterski.jpg",
+        imageUrl: "./img/afterski.jpg",
         title: "Afterski i Bymarka",
         subtitle: "25. November",
     },
     {
         id: "b802f384302cb24fbab0a44994e820bf2e8507bb",
-        imageUrl: "./img/Afterski.jpg",
+        imageUrl: "./img/afterski.jpg",
         title: "Afterski i Bymarka",
         subtitle: "25. November",
     },
@@ -66,7 +66,7 @@ const IndexPage: NextPage = () => (
                                 gapLg={15}
                             >
                                 {data.map((item) => (
-                                    <Item
+                                    <ImageCard
                                         key={item.id}
                                         title={item.title}
                                         subtitle={item.subtitle}
@@ -91,7 +91,7 @@ const IndexPage: NextPage = () => (
                             </Paragraph>
                         </Areas.Content>
                         <Areas.Actions>
-                            <Button style="primary" link="/events">
+                            <Button back style="primary" link="/events">
                                 Se kalenderen
                             </Button>
                         </Areas.Actions>
