@@ -13,8 +13,10 @@ const CheckBox = ({ checked, onClick, errorMsg }: CheckProps): JSX.Element => {
         <>
             <CheckboxWrapper status={errorMsg}>
                 <input type="checkbox" onClick={onClick} onChange={onClick} checked={checked}></input>
+
                 <LabelText>
-                    Jeg samtykker til <Link href="# ">retningslinjene</Link> for booking av hytte
+                    Jeg samtykker til <Link href="# ">retningslinjene</Link> for booking av hytte og godtar
+                    <Link href="#"> kontrakten</Link>.
                 </LabelText>
             </CheckboxWrapper>
         </>
@@ -28,6 +30,7 @@ const CheckboxWrapper = styled.label`
 
 const LabelText = styled.span`
     padding: 5px;
+    width: 50vh;
 `;
 
 export default CheckBox;
