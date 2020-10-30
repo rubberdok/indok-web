@@ -1,5 +1,6 @@
 import styled, { css } from "styled-components";
 import theme from "@styles/theme";
+import { isNull } from "lodash";
 
 export const CalendarTableContainer = styled.div`
     flex-grow: 1;
@@ -82,9 +83,9 @@ export const MonthPickButton = styled.button`
 `;
 
 interface DayCellProps {
-    outOfRange?: boolean;
+    isDisabled?: boolean;
     isSelected?: boolean;
-    isInRange?: boolean;
+    isInHoverRange?: boolean;
     isHidden?: boolean;
 }
 
@@ -98,11 +99,11 @@ export const DayCell = styled.td<DayCellProps>`
     position: relative;
     height: 60px;
     text-align: center;
-    color: ${(props) => (props.outOfRange ? "#cecece" : "black")};
+    color: ${(props) => (props.isDisabled ? "#cecece" : "black")};
 
     > ${Day} {
         ${(props) => props.isSelected && SelectedDayStyles};
-        ${(props) => props.isInRange && !props.isSelected && `background-color: ${theme.colors.primaryLight}`};
+        ${(props) => props.isInHoverRange && !props.isSelected && `background-color: ${theme.colors.primaryLight}`};
     }
 
     ${EventMarker} {
@@ -110,9 +111,13 @@ export const DayCell = styled.td<DayCellProps>`
     }
 
     &:hover {
-        ${(props) => !props.isHidden && `cursor: pointer;`}
+        ${(props) => (!props.isHidden && !props.isDisabled ? `cursor: pointer;` : `cursor: default;`)}
         > ${Day} {
-            ${(props) => !props.isSelected && !props.isHidden && `background-color: ${theme.colors.primaryLight}`};
+            ${(props) =>
+                !props.isSelected &&
+                !props.isHidden &&
+                !props.isDisabled &&
+                `background-color: ${theme.colors.primaryLight}`};
         }
     }
 `;
