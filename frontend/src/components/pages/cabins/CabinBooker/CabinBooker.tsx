@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import { EventMarker } from "@components/Calendar/styles";
 import { BookButton, BookingContainer, Dropdown, FlowContainer, SelectContainer } from "./styles";
 import Step from "./Step";
+import { from } from "@apollo/client";
 
 const DayEvent = (key: string) => <EventMarker key={key} />;
 
@@ -93,21 +94,25 @@ const CabinBooker = () => {
             ) : null}
             {activeStep == "Set from date" ? (
                 <Dropdown>
-                    <p>{errorMessage}</p>
                     <Calendar
                         rangeChanged={(fromDate, toDate) => {
-                            console.log(fromDate, toDate);
-                            setRange(fromDate, undefined);
+                            setRange(fromDate, toDate);
                             setActiveState("Set to date");
                         }}
                         events={bookings}
+                        disableRange
                     />
                 </Dropdown>
             ) : null}
             {activeStep == "Set to date" ? (
                 <Dropdown>
-                    <p>{errorMessage}</p>
-                    <Calendar rangeChanged={(fromDate, toDate) => setRange(fromDate, toDate)} events={bookings} />
+                    <Calendar
+                        initSelectedDay={range.fromDate}
+                        rangeChanged={(fromDate, toDate) => {
+                            setRange(fromDate, toDate);
+                        }}
+                        events={bookings}
+                    />
                 </Dropdown>
             ) : null}
         </BookingContainer>

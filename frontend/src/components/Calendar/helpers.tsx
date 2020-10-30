@@ -2,11 +2,12 @@ import moment from "moment";
 import { DATE_FORMAT } from "./constants";
 import { Day, DayCell } from "./styles";
 
-export const getDateRange = (start: moment.Moment, end: moment.Moment, format = DATE_FORMAT): string[] => {
-    const currentDate = start.clone();
+export const getDateRange = (start: string, end: string, format = DATE_FORMAT): string[] => {
+    const currentDate = moment(start);
+    const endDate = moment(end);
     const output = [];
-    end.add(1, "day");
-    while (currentDate.isBefore(end)) {
+    endDate.add(1, "day");
+    while (currentDate.isBefore(endDate)) {
         output.push(currentDate.format(format));
         currentDate.add(1, "day");
     }
@@ -22,6 +23,7 @@ export const previousMonthDays = (
     month: moment.Moment,
     selectedDay: moment.Moment,
     dateClicked: (date: moment.Moment) => void,
+    visable = true,
     key = ""
 ) => {
     const previousDays: JSX.Element[] = [];
@@ -37,14 +39,20 @@ export const previousMonthDays = (
             const date = moment(firstOfMonth);
             date.subtract(dayDifference - i, "day");
             previousDays.push(
-                <DayCell
-                    isSelected={date.isSame(selectedDay, "day")}
-                    onClick={() => dateClicked(date)}
-                    outOfRange={true}
-                    key={`${key}-${date.format(DATE_FORMAT)}`}
-                >
-                    <Day>{date.format("D")}</Day>
-                </DayCell>
+                visable ? (
+                    <DayCell
+                        isSelected={date.isSame(selectedDay, "day")}
+                        onClick={() => dateClicked(date)}
+                        isDisabled={true}
+                        key={`${key}-${date.format(DATE_FORMAT)}`}
+                    >
+                        <Day>{date.format("D")}</Day>
+                    </DayCell>
+                ) : (
+                    <DayCell isHidden key={`${key}-${date.format(DATE_FORMAT)}`}>
+                        <Day></Day>
+                    </DayCell>
+                )
             );
         }
     }
@@ -72,7 +80,7 @@ export const nextMonthDays = (
                 <DayCell
                     isSelected={date.isSame(selectedDay, "day")}
                     onClick={() => dateClicked(date)}
-                    outOfRange={true}
+                    isDisabled={true}
                     key={`${date.format(DATE_FORMAT)}`}
                 >
                     <Day>{date.format("D")}</Day>
