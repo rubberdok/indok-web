@@ -6,6 +6,10 @@ export interface Booking {
     endDay: string;
 }
 
+export interface Cabin {
+    name: string;
+}
+
 export interface BookingFromTo {
     from: Date;
     to: Date;

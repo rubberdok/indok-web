@@ -5,19 +5,25 @@ import React, { useEffect, useState } from "react";
 import { EventMarker } from "@components/Calendar/styles";
 import { BookButton, BookingContainer, Dropdown, FlowContainer, SelectContainer } from "./styles";
 import Step from "./Step";
-import { from } from "@apollo/client";
+import { useQuery } from "@apollo/client";
+import { Cabin } from "@interfaces/cabins";
+import { QUERY_CABINS } from "@graphql/cabins/queries";
 
 const DayEvent = (key: string) => <EventMarker key={key} />;
 
 type BookState = "Choose Cabin" | "Set from date" | "Set to date" | "Book" | undefined;
+
+interface BookingCabin extends Cabin {
+    checked: boolean;
+}
 
 const CabinBooker = () => {
     const router = useRouter();
     const [activeStep, setActiveState] = useState<BookState>();
     const { isAvailable, range, setRange, allBookingsQuery } = useBookingRange();
     const [bookings, setBookings] = useState<CalendarEvent[]>([]);
-    const [errorMessage, setErrorMessage] = useState("");
-    const [isBookButtonDisabled, setIsBookButtonDisabled] = useState(true);
+    const cabinQuery = useQuery<{ cabins: Cabin[] }>(QUERY_CABINS);
+    const [cabins, setCabins] = useState<BookingCabin[]>();
 
     useEffect(() => {
         if (allBookingsQuery.data) {
@@ -37,9 +43,12 @@ const CabinBooker = () => {
     }, [allBookingsQuery.data]);
 
     useEffect(() => {
-        setErrorMessage(isAvailable ? "" : "Det valgte intervallet er allerede booket");
-        setIsBookButtonDisabled(!isAvailable);
-    }, [isAvailable]);
+        setCabins(cabinQuery.data?.cabins.map((cabin) => ({ ...cabin, checked: true })));
+    }, [cabinQuery.data]);
+
+    const handleStepClick = (step: BookState) => {
+        activeStep === step ? setActiveState(undefined) : setActiveState(step);
+    };
 
     return (
         <BookingContainer>
@@ -48,27 +57,27 @@ const CabinBooker = () => {
                     header={"Velg Hytte"}
                     isSelected={activeStep === "Choose Cabin"}
                     subHeader={"Velg hvilken hytte du vil booke"}
-                    onClick={() => setActiveState("Choose Cabin")}
+                    onClick={() => handleStepClick("Choose Cabin")}
                 />
 
                 <Step
                     header={"Innsjekk"}
                     isSelected={activeStep === "Set from date"}
                     subHeader={range.fromDate ? range.fromDate : "Velg en dato"}
-                    onClick={() => setActiveState("Set from date")}
+                    onClick={() => handleStepClick("Set from date")}
                 />
 
                 <Step
                     header={"Utsjekk"}
                     isSelected={activeStep === "Set to date"}
                     subHeader={range.toDate ? range.toDate : "Velg en dato"}
-                    onClick={() => setActiveState("Set to date")}
+                    onClick={() => handleStepClick("Set to date")}
                 />
 
                 <SelectContainer
                     isSelected={activeStep === "Book"}
                     onClick={() => {
-                        !isBookButtonDisabled
+                        isAvailable
                             ? router.push({
                                   pathname: "cabins/book",
                                   query: range,
@@ -81,15 +90,20 @@ const CabinBooker = () => {
             </FlowContainer>
             {activeStep == "Choose Cabin" ? (
                 <Dropdown>
-                    <span>
-                        Begge <input type="radio" />
-                    </span>
-                    <span>
-                        Bjørnen <input type="radio" />
-                    </span>
-                    <span>
-                        Oksen <input type="radio" />
-                    </span>
+                    {cabins?.map((cabin) => (
+                        <p key={cabin.name}>
+                            <input
+                                type="checkbox"
+                                onClick={() => {
+                                    setCabins(
+                                        cabins.map((c) => (c.name === cabin.name ? { ...c, checked: !c.checked } : c))
+                                    );
+                                }}
+                                checked={cabin.checked}
+                            />
+                            {cabin.name}
+                        </p>
+                    ))}
                 </Dropdown>
             ) : null}
             {activeStep == "Set from date" ? (

@@ -52,11 +52,12 @@ const BookPage = (): JSX.Element => {
 
     const templateDesktop = `
         inputs sum
+        / 1fr 1fr
     `;
 
     const templatePhone = `
-        inputs
         sum
+        inputs
     `;
 
     const handleSubmit = (e: React.FormEvent<EventTarget>) => {

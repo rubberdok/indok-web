@@ -1,6 +1,5 @@
 import styled, { css } from "styled-components";
 import theme from "@styles/theme";
-import { isNull } from "lodash";
 
 export const CalendarTableContainer = styled.div`
     flex-grow: 1;
