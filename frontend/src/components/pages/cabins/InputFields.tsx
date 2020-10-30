@@ -5,9 +5,9 @@ import Input from "@components/ui/Input";
 import Button from "../../ui/Button";
 
 const templateMobile = `
-  input input
-  input input
-  button 
+    input input
+    input input
+    button 
 `;
 
 const templateTablet = `
