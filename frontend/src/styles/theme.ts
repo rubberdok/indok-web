@@ -5,5 +5,7 @@ export default {
         primaryLight: "#6A9997",
         background: "#F5F0EB",
         secondary: "#F4B961",
+        secondaryDark: "#EEB156",
     },
+    contentWidth: "1400px",
 };
