@@ -20,6 +20,14 @@ const CreateQuestion: React.FC<{
                     question.question = e.target.value;
                 }}
             />
+            <Dropdown 
+                title="Type" 
+                options={questionTypes.map(qt => qt.name)} 
+                onChange={(e) => {
+                    question.questionType = questionTypes.find(qt => qt.name === e.target.value) ?? questionTypes[0]
+                }}
+            /> 
+            // TODO: Implement the remaining question details.
         </>
     );
 };

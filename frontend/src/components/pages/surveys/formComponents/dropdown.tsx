@@ -1,10 +1,13 @@
+import { ChangeEvent } from "react";
+
 const Dropdown: React.FC<{
     title: string;
+    onChange?: (event: ChangeEvent<HTMLSelectElement>) => void;
     options: string[];
-}> = ({ title, options }) => (
+}> = ({ title, options, onChange }) => (
     <label>
         {title}
-        <select>
+        <select onChange={onChange} >
             {options.map((option: string, index: number) => {
                 return (
                     <option value={option} key={index}>
