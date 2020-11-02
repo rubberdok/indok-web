@@ -1,7 +1,7 @@
 import { Listing } from "@interfaces/listings";
 import { useQuery, useMutation } from "@apollo/client";
 import { QUESTIONTYPES } from "@graphql/surveys/queries";
-import { CREATE_SURVEY, UPDATE_SURVEY } from "@graphql/surveys/mutations";
+import { CREATE_SURVEY, UPDATE_SURVEY, CREATE_QUESTION } from "@graphql/surveys/mutations";
 import { useState } from "react";
 import TextField from "@components/pages/surveys/formComponents/textfield";
 import Dropdown from "@components/pages/surveys/formComponents/dropdown";
@@ -14,11 +14,19 @@ interface EditableQuestion extends Question {
 }
 
 interface EditableSurvey extends Survey {
-    surveyQuestions: EditableQuestion[];
+    questions: EditableQuestion[];
 }
 
 const CreateSurvey: React.FC<{ listing?: Listing }> = ({ listing }) => {
     const [survey, setSurvey] = useState<EditableSurvey>({} as EditableSurvey);
+    const setQuestion = (newQuestion: Question) => {
+        setSurvey({
+            ...survey,
+            questions: survey.questions.map(oldQuestion => (
+                oldQuestion.id === newQuestion.id ? { ...newQuestion, editing: true } : oldQuestion
+            ))
+        });
+    }
     if (listing) {
         setSurvey({ ...survey, descriptiveName: listing.title, listing: listing });
     } else {
@@ -27,6 +35,7 @@ const CreateSurvey: React.FC<{ listing?: Listing }> = ({ listing }) => {
     const { loading, error, data } = useQuery<{ questionTypes: QuestionType[] }>(QUESTIONTYPES);
     const [createSurvey] = useMutation(CREATE_SURVEY);
     const [updateSurvey] = useMutation(UPDATE_SURVEY);
+    const [createQuestion] = useMutation(CREATE_QUESTION);
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error</p>;
     createSurvey({ variables: {  }})
@@ -42,17 +51,25 @@ const CreateSurvey: React.FC<{ listing?: Listing }> = ({ listing }) => {
                     <button
                         onClick={(e) => {
                             e.preventDefault();
+                            createQuestion({variables: {
+                                question: "",
+                                description: "",
+                            }});
                             setSurvey({
                                 ...survey,
-                                surveyQuestions: [...survey.surveyQuestions, { editing: true } as EditableQuestion],
+                                questions: [...survey.questions, { editing: true } as EditableQuestion],
                             });
                         }}
                     >
                         Nytt spørsmål
                     </button>
-                    {survey.surveyQuestions.map((question) => {
+                    {survey.questions.map((question) => {
                         question.editing ? (
-                            <CreateQuestion question={question as Question} questionTypes={data.questionTypes} />
+                            <CreateQuestion
+                                question={question}
+                                setQuestion={setQuestion}
+                                questionTypes={data.questionTypes}
+                            />
                         ) : (
                             <QuestionDetail question={question as Question} active={false} />
                         );
@@ -63,3 +80,5 @@ const CreateSurvey: React.FC<{ listing?: Listing }> = ({ listing }) => {
         </>
     );
 };
+
+export default CreateSurvey;

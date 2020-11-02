@@ -6,9 +6,9 @@ import Dropdown from "@components/pages/surveys/formComponents/dropdown";
 
 const CreateQuestion: React.FC<{
     question: Question;
+    setQuestion: (question: Question) => void,
     questionTypes: QuestionType[];
-}> = ({ question, questionTypes }) => {
-    const [createQuestion] = useMutation(CREATE_QUESTION);
+}> = ({ question, setQuestion, questionTypes }) => {
     const [updateQuestion] = useMutation(UPDATE_QUESTION);
     return (
         <>
@@ -16,7 +16,11 @@ const CreateQuestion: React.FC<{
                 title="Spørsmål:"
                 value={question.question}
                 onChange={(e) => {
-                    question.question = e.target.value;
+                    e.preventDefault();
+                    setQuestion({
+                        ...question,
+                        question: e.target.value
+                    })
                 }}
             />
             <Dropdown 
