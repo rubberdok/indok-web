@@ -19,6 +19,7 @@ const Button = () => {
                         borderRadius: "60%",
                         padding: "12px",
                         marginLeft: "120px",
+                        outline: "none",
                     }}
                     onClick={() => setActive1(!active1)}
                 ></button>
@@ -32,6 +33,7 @@ const Button = () => {
                         background: active2 ? "#065A5A" : "transparent",
                         borderRadius: "60%",
                         padding: "12px",
+                        outline: "none",
                     }}
                     onClick={() => setActive2(!active2)}
                 ></button>
@@ -45,6 +47,7 @@ const Button = () => {
                         background: active3 ? "#065A5A" : "transparent",
                         borderRadius: "60%",
                         padding: "12px",
+                        outline: "none",
                     }}
                     onClick={() => setActive3(!active3)}
                 ></button>
@@ -56,6 +59,7 @@ const Button = () => {
                         background: active4 ? "#065A5A" : "transparent",
                         borderRadius: "60%",
                         padding: "12px",
+                        outline: "none",
                     }}
                     onClick={() => setActive4(!active4)}
                 ></button>
@@ -69,6 +73,7 @@ const Button = () => {
                         background: active5 ? "#065A5A" : "transparent",
                         borderRadius: "60%",
                         padding: "12px",
+                        outline: "none",
                     }}
                     onClick={() => setActive5(!active5)}
                 ></button>
@@ -80,6 +85,7 @@ const Button = () => {
                         background: active6 ? "#065A5A" : "transparent",
                         borderRadius: "60%",
                         padding: "12px",
+                        outline: "none",
                     }}
                     onClick={() => setActive6(!active6)}
                 ></button>
