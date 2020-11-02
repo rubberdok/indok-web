@@ -4,10 +4,13 @@ export const QUERY_ALL_BOOKINGS = gql`
     query {
         allBookings {
             id
-            contactNum
-            contactPerson
-            startDay
-            endDay
+            firstname
+            surname
+            phone
+            receiverEmail
+            bookFrom
+            bookTo
+            price
         }
     }
 `;

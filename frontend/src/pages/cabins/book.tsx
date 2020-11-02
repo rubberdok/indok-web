@@ -21,9 +21,20 @@ const BookPage = (): JSX.Element => {
     const phoneRef = React.createRef<HTMLInputElement>();
     const inputRefs = [firstnameRef, surnameRef, emailRef, phoneRef];
 
+    const pricePerNight = 1000;
+
+    const templateDesktop = `
+        inputs sum
+        / 1fr 1fr
+    `;
+
+    const templatePhone = `
+        sum
+        inputs
+    `;
+
     const router = useRouter();
     const data = router.query;
-    console.log(data);
 
     const [rangeLength, setRangeLength] = useState(0);
     const [createBooking] = useMutation(CREATE_BOOKING);
@@ -31,7 +42,7 @@ const BookPage = (): JSX.Element => {
     const [errorMessage, setErrorMessage] = useState("");
     const [checked, setChecked] = useState(false);
     const [checkerror, setCheckError] = useState("");
-    const { isAvailable, range, setRange } = useBookingRange();
+    const { isAvailable, range, setRange, allBookingsQuery } = useBookingRange();
 
     const handleClick = () => {
         setChecked(!checked);
@@ -49,49 +60,29 @@ const BookPage = (): JSX.Element => {
         }
     }, [data]);
 
-    const pricePerNight = 1000;
-
-    const templateDesktop = `
-        inputs sum
-        / 1fr 1fr
-    `;
-
-    const templatePhone = `
-        sum
-        inputs
-    `;
+    useEffect(() => {
+        setErrorMessage(isAvailable ? "" : "Den valgte perioden er ikke tilgjengelig.");
+    }, [isAvailable]);
 
     const handleSubmit = (e: React.FormEvent<EventTarget>) => {
         e.preventDefault();
 
         // avoid refs being null
         if (firstnameRef.current && surnameRef.current && emailRef.current && phoneRef.current) {
-            const firstname = firstnameRef.current.value;
-            const surname = surnameRef.current.value;
-            const email = emailRef.current.value;
-            const phone = phoneRef.current.value;
-
             const bookingData = {
-                firstname: firstname,
-                surname: surname,
-                receiverEmail: email,
+                firstname: firstnameRef.current.value,
+                surname: surnameRef.current.value,
+                phone: phoneRef.current.value,
+                receiverEmail: emailRef.current.value,
                 bookFrom: range.fromDate,
                 bookTo: range.toDate,
                 price: pricePerNight * rangeLength,
             };
 
-            console.log("isAvailable", isAvailable);
-
             // create booking and send email
             if (checked && isAvailable) {
                 createBooking({
-                    variables: {
-                        contactNum: parseInt(phone),
-                        contactPerson: firstname + " " + surname,
-                        startDay: range.fromDate,
-                        endDay: range.toDate,
-                        price: pricePerNight * rangeLength,
-                    },
+                    variables: bookingData,
                 });
 
                 sendEmail({
@@ -100,11 +91,9 @@ const BookPage = (): JSX.Element => {
 
                 setErrorMessage("");
                 setCheckError("");
-                console.log("created booking and sent email");
             } else {
                 setErrorMessage(isAvailable ? "" : "Den valgte perioden er ikke tilgjengelig.");
                 setCheckError(checked ? "" : "Du må samtykke med retningslinjene før du booker.");
-                console.log("Ikke tilgjengelig.");
             }
         }
     };
@@ -113,30 +102,39 @@ const BookPage = (): JSX.Element => {
         <Content>
             <Navbar></Navbar>
             <HeaderComposition></HeaderComposition>
-            <Composition templateXs={templatePhone} templateLg={templateDesktop} padding={15} gutter={15} gutterLg={40}>
-                {({ Inputs, Sum }) => (
-                    <>
-                        <Inputs>
-                            <InputFields refs={inputRefs}>
-                                <CheckBox checked={checked} onClick={handleClick} errorMsg={checkerror}></CheckBox>
-                                <Button url="#" onClick={(e) => handleSubmit(e)}>
-                                    Gå til betaling
-                                </Button>
-                                <p>{errorMessage}</p>
-                            </InputFields>
-                        </Inputs>
-                        <Sum>
-                            <Summary
-                                from={range.fromDate ? range.fromDate : ""}
-                                to={range.toDate ? range.toDate : ""}
-                                cabin={"Bjørnen"}
-                                price={pricePerNight}
-                                nights={rangeLength}
-                            ></Summary>
-                        </Sum>
-                    </>
-                )}
-            </Composition>
+            {isAvailable ? (
+                <Composition
+                    templateXs={templatePhone}
+                    templateLg={templateDesktop}
+                    padding={15}
+                    gutter={15}
+                    gutterLg={40}
+                >
+                    {({ Inputs, Sum }) => (
+                        <>
+                            <Inputs>
+                                <InputFields refs={inputRefs}>
+                                    <CheckBox checked={checked} onClick={handleClick} errorMsg={checkerror}></CheckBox>
+                                    <Button url="#" onClick={(e) => handleSubmit(e)}>
+                                        Gå til betaling
+                                    </Button>
+                                </InputFields>
+                            </Inputs>
+                            <Sum>
+                                <Summary
+                                    from={range.fromDate ? range.fromDate : ""}
+                                    to={range.toDate ? range.toDate : ""}
+                                    cabin={"Bjørnen"}
+                                    price={pricePerNight}
+                                    nights={rangeLength}
+                                ></Summary>
+                            </Sum>
+                        </>
+                    )}
+                </Composition>
+            ) : (
+                <>{allBookingsQuery.loading ? <p>Laster...</p> : <p>{errorMessage}</p>}</>
+            )}
         </Content>
     );
 };

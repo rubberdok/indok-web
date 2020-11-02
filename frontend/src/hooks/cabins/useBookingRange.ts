@@ -32,18 +32,18 @@ const useBookingRange = (initFromDate?: string, initToDate?: string): Output => 
             setIsAvailable(
                 allBookingsQuery.data.allBookings.filter(
                     (booking) =>
-                        _.includes(range, booking.startDay) ||
-                        _.includes(range, booking.endDay) ||
-                        (moment(booking.startDay).isBefore(moment(fromDate)) &&
-                            moment(booking.endDay).isAfter(moment(toDate))) ||
-                        (moment(booking.startDay).isAfter(moment(fromDate)) &&
-                            moment(booking.endDay).isBefore(moment(toDate)))
+                        _.includes(range, booking.bookFrom) ||
+                        _.includes(range, booking.bookTo) ||
+                        (moment(booking.bookFrom).isBefore(moment(fromDate)) &&
+                            moment(booking.bookTo).isAfter(moment(toDate))) ||
+                        (moment(booking.bookFrom).isAfter(moment(fromDate)) &&
+                            moment(booking.bookTo).isBefore(moment(toDate)))
                 ).length === 0
             );
         } else {
             setIsAvailable(false);
         }
-    }, [fromDate, toDate]);
+    }, [fromDate, toDate, allBookingsQuery.data]);
 
     const setRange = (newFromDate: string | undefined, newToDate: string | undefined) => {
         setFromDate(newFromDate);

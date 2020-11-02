@@ -23,7 +23,7 @@ const CabinBooker = () => {
         if (allBookingsQuery.data) {
             // Mark all occupied dates
             const events = allBookingsQuery.data.allBookings.reduce((bookingDays, booking) => {
-                const rangeOfBooking = createDateRange(booking.startDay, booking.endDay);
+                const rangeOfBooking = createDateRange(booking.bookFrom, booking.bookTo);
                 rangeOfBooking.forEach((dayDate: string) => {
                     bookingDays.push({
                         date: dayDate,
