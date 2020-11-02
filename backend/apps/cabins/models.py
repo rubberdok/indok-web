@@ -9,11 +9,14 @@ class Cabin(models.Model):
 
 
 class Booking(models.Model):
-    contact_num = models.IntegerField()
-    contact_person = models.CharField(max_length=100)
-    start_day = models.DateField()  # python datetime.date
-    end_day = models.DateField()
+
+    firstname = models.CharField(max_length=100)
+    surname = models.CharField(max_length=100)
+    phone = models.IntegerField()
+    receiverEmail = models.CharField(max_length=100)
+    bookFrom = models.DateField()
+    bookTo = models.DateField()
     price = models.IntegerField()
 
     def __str__(self):
-        return f"Booking {self.id}, {self.contact_person}"
+        return f"Booking {self.id}, {self.firstname} {self.surname}"
