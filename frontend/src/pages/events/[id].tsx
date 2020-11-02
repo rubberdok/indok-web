@@ -1,7 +1,5 @@
 import Layout from "@components/Layout";
-import Navbar from "@components/navbar/Navbar";
 import { NextPage } from "next";
-import Link from "next/link";
 import Button from "@components/ui/Button";
 import { useRouter } from "next/router";
 import React from "react";
@@ -25,11 +23,14 @@ const EventInfo: NextPage = () => {
                     margin: "0 auto",
                 }}
             >
-                {" "}
                 <div style={{ marginLeft: "auto", marginRight: "auto" }}>
                     {numberId && <EventDetailPage eventId={numberId} />}
-                    <Button url="/events"> Tilbake til arrangementer </Button>
                 </div>
+            </div>
+            <div style={{ marginTop: "2em" }}>
+                <Button style="primary" link="/events" back>
+                    Tilbake til arrangementer{" "}
+                </Button>{" "}
             </div>
         </Layout>
     );
