@@ -26,3 +26,11 @@ export const QUERY_BOOKING_RANGE = gql`
         }
     }
 `;
+
+export const QUERY_CABINS = gql`
+    query AllCabins {
+        cabins {
+            name
+        }
+    }
+`;

@@ -1,6 +1,3 @@
-
-
-
 def get_no_html_mail(ctx, receiver):
 
     user_content = f"""
@@ -45,7 +42,7 @@ def get_no_html_mail(ctx, receiver):
         indokntnu.no/
     """
 
-    if receiver == "user": 
+    if receiver == "user":
         return user_content
     elif receiver == "admin":
         return admin_content

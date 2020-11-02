@@ -9,6 +9,10 @@ export interface Booking {
     price: number;
 }
 
+export interface Cabin {
+    name: string;
+}
+
 export interface BookingFromTo {
     from: Date;
     to: Date;

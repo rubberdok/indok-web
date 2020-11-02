@@ -1,10 +1,13 @@
 import graphene
-from graphene_django import DjangoObjectType
-from django.shortcuts import get_object_or_404
 
-from .types import BookingType
-from .mutations import CreateBooking, UpdateBooking, DeleteBooking, SendEmail
-from .resolvers import BookingResolvers
+from api.graphql.cabins.types import BookingType, CabinType
+from api.graphql.cabins.mutations import (
+    CreateBooking,
+    UpdateBooking,
+    DeleteBooking,
+    SendEmail,
+)
+from api.graphql.cabins.resolvers import BookingResolvers
 
 
 class BookingMutations(graphene.ObjectType):
@@ -20,3 +23,4 @@ class BookingQueries(graphene.ObjectType, BookingResolvers):
         BookingType, year=graphene.String(), month=graphene.String()
     )
     booking = graphene.Field(BookingType, booking_id=graphene.ID(required=True))
+    cabins = graphene.List(CabinType)

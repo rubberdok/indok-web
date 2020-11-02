@@ -1,7 +1,4 @@
-import graphene
-
-from .types import BookingType
-from apps.cabins.models import Booking as BookingModel
+from apps.cabins.models import Booking as BookingModel, Cabin
 
 
 class BookingResolvers:
@@ -20,3 +17,6 @@ class BookingResolvers:
         )
 
         return in_range_bookings
+
+    def resolve_cabins(self, root):
+        return Cabin.objects.all()
