@@ -5,6 +5,7 @@ import { DELETE_RESPONSE } from "@graphql/listings/mutations";
 import { useState } from "react";
 import ListItem from "@components/ui/listItem";
 import List from "@components/ui/list";
+import OrganizationListing from "@components/pages/listings/organization/organizationListing";
 
 //Temporary styling components for demo
 //TODO: implement proper styledcomponents
@@ -71,8 +72,7 @@ const ListingResponses: React.FC<{ listing: Listing }> = ({ listing }) => {
                         <div style={{ ...responseView, ...flexChild }}>{selectedResponse.response}</div>
                     ) : (
                         <div style={flexChild}>
-                            <h3>{listing.title}</h3>
-                            <p>{listing.description}</p>
+                            <OrganizationListing listing={listing}/>
                         </div>
                     )}
                 </div>

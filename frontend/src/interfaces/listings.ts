@@ -1,3 +1,5 @@
+import { Survey } from "@interfaces/surveys";
+
 export interface Listing {
     id: string;
     title: string;
@@ -9,6 +11,7 @@ export interface Listing {
     slug: string;
     organization?: Organization;
     responses?: Response[];
+    survey?: Survey;
 }
 
 export interface Response {

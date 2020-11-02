@@ -17,8 +17,8 @@ interface EditableSurvey extends Survey {
     questions: EditableQuestion[];
 }
 
-const CreateSurvey: React.FC<{ listing?: Listing }> = ({ listing }) => {
-    const [survey, setSurvey] = useState<EditableSurvey>({} as EditableSurvey);
+const CreateSurvey: React.FC<{ oldSurvey: Survey }> = ({ oldSurvey }) => {
+    const [survey, setSurvey] = useState<EditableSurvey>(oldSurvey as EditableSurvey);
     const setQuestion = (newQuestion: Question) => {
         setSurvey({
             ...survey,
@@ -27,42 +27,40 @@ const CreateSurvey: React.FC<{ listing?: Listing }> = ({ listing }) => {
             ))
         });
     }
-    if (listing) {
-        setSurvey({ ...survey, descriptiveName: listing.title, listing: listing });
-    } else {
-        setSurvey({ ...survey, descriptiveName: "Ny søknad" });
-    }
     const { loading, error, data } = useQuery<{ questionTypes: QuestionType[] }>(QUESTIONTYPES);
     const [createSurvey] = useMutation(CREATE_SURVEY);
     const [updateSurvey] = useMutation(UPDATE_SURVEY);
-    const [createQuestion] = useMutation(CREATE_QUESTION);
+    const [createQuestion, { data: questionData }] = useMutation<{ createQuestion: { question: Question } }>(CREATE_QUESTION);
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error</p>;
-    createSurvey({ variables: {  }})
     return (
         <>
-            {data && (
-                <form
-                    onSubmit={(e) => {
+            <h4>{survey.descriptiveName}</h4>
+            <form
+                onSubmit={(e) => {
+                    e.preventDefault();
+                    createSurvey();
+                }}
+            >
+                <button
+                    onClick={(e) => {
                         e.preventDefault();
-                        createSurvey();
+                        createQuestion({variables: {
+                            question: "",
+                            description: "",
+                        }});
+                        setSurvey({
+                            ...survey,
+                            questions: [
+                                ...survey.questions,
+                                { ...questionData!.createQuestion.question, editing: true }
+                            ],
+                        });
                     }}
                 >
-                    <button
-                        onClick={(e) => {
-                            e.preventDefault();
-                            createQuestion({variables: {
-                                question: "",
-                                description: "",
-                            }});
-                            setSurvey({
-                                ...survey,
-                                questions: [...survey.questions, { editing: true } as EditableQuestion],
-                            });
-                        }}
-                    >
-                        Nytt spørsmål
-                    </button>
+                    Nytt spørsmål
+                </button>
+                {data && <>
                     {survey.questions.map((question) => {
                         question.editing ? (
                             <CreateQuestion
@@ -74,9 +72,9 @@ const CreateSurvey: React.FC<{ listing?: Listing }> = ({ listing }) => {
                             <QuestionDetail question={question as Question} active={false} />
                         );
                     })}
-                    <button type="submit">Lag søknad</button>
-                </form>
-            )}
+                </>}
+                <button type="submit">Lag søknad</button>
+            </form>
         </>
     );
 };

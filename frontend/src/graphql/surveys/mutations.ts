@@ -49,11 +49,13 @@ export const CREATE_QUESTION = gql`
     mutation CreateQuestion(
         $question: String!
         $description: String!
+        $surveyId: ID!
     ) {
         createQuestion(
             questionData: {
                 question: $question
                 description: $description
+                surveyId: $surveyId
             }
         ) {
             question {
