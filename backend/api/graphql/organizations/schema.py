@@ -1,10 +1,9 @@
 import graphene
-from django.db.models import Q
 
 from .mutations import CreateOrganization, UpdateOrganization, DeleteOrganization
 from .types import OrganizationType
+from .resolvers import OrganizationResolvers
 
-from apps.organizations.models import Organization
 
 
 class OrganizationMutations(graphene.ObjectType):
@@ -12,6 +11,7 @@ class OrganizationMutations(graphene.ObjectType):
     update_organization = UpdateOrganization.Field()
     delete_organization = DeleteOrganization.Field()
 
+<<<<<<< HEAD
 
 class OrganizationQueries(graphene.ObjectType):
     all_organizations = graphene.List(OrganizationType, search=graphene.String())
@@ -36,3 +36,8 @@ class OrganizationQueries(graphene.ObjectType):
 
         except Organization.DoesNotExist:
             return None
+=======
+class OrganizationQueries(graphene.ObjectType, OrganizationResolvers):
+    all_organizations = graphene.List(OrganizationType, search=graphene.String())
+    organization = graphene.Field(OrganizationType, id=graphene.ID(required=True))
+>>>>>>> b022cc55f830c6d4c6dcfb09d1783b9fd266b2e4
