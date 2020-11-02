@@ -2,13 +2,16 @@ import { NextPage } from "next";
 import Link from "next/link";
 import React from "react";
 import Navbar from "@components/navbar/Navbar";
-
 import CreateEvent from "../../components/pages/events/createEvent";
+import Button from "@components/ui/Button";
 
 const CreateEventsPage: NextPage = () => {
     return (
         <div>
             <Navbar />
+            <Button back style="primary" link="/events">
+                Tilbake til arrangementer
+            </Button>
             <div
                 style={{
                     border: "solid",
@@ -25,8 +28,6 @@ const CreateEventsPage: NextPage = () => {
                     <CreateEvent />
                 </div>
             </div>
-
-            <Link href="/events"> Tilbake til arrangementer </Link>
         </div>
     );
 };

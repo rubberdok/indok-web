@@ -175,7 +175,7 @@ const CreateEvent = () => {
                         onChange={(e) => setEventData({ ...eventData, image: e.currentTarget.value })}
                     />
                 </div>
-                <div>
+                <div style={{ marginBottom: "1em" }}>
                     Deadline for påmelding: &nbsp;
                     <input
                         type="datetime-local"
@@ -184,26 +184,8 @@ const CreateEvent = () => {
                         onChange={(e) => setEventData({ ...eventData, deadline: e.currentTarget.value })}
                     />
                 </div>
-                <button
-                    style={{
-                        marginTop: 20,
-                        marginLeft: "auto",
-                        marginRight: "auto",
-                        marginBottom: 10,
-                        borderRadius: "0.5em",
-                        width: 150,
-                        height: 60,
-                        display: "block",
-                        borderColor: "#065A5A",
-                        backgroundColor: "#6A9997",
-                        color: "#fff",
-                    }}
-                    type="submit"
-                >
-                    Opprett arrangement
-                </button>
 
-                <Button type="submit" url="/events">
+                <Button type="submit" url="/events" style="primary">
                     Opprett arrangement
                 </Button>
             </form>

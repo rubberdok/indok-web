@@ -48,9 +48,12 @@ const AllEvents: React.FC = () => {
                                         <div
                                             style={{
                                                 border: "solid",
-                                                borderWidth: "0.1em",
+                                                borderWidth: "0.05em",
+                                                borderColor: "#6A9997",
+                                                borderRadius: "0.2em",
                                                 padding: "0.5em",
                                                 marginBottom: "0.5em",
+                                                backgroundColor: "#FFF",
                                             }}
                                         >
                                             <p style={{ marginBottom: "0.2em" }}>{event.title}</p>

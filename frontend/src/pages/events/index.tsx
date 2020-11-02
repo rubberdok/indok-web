@@ -1,24 +1,28 @@
 import Layout from "@components/Layout";
 import { NextPage } from "next";
-import Link from "next/link";
 import React from "react";
-import Navbar from "@components/navbar/Navbar";
 import AllEvents from "../../components/pages/events/AllEvents/index";
+import Button from "@components/ui/Button";
 
 const Events: NextPage = () => {
     return (
         <Layout>
-            <Navbar />
             <div>
                 <h1>Arrangementer</h1>
             </div>
 
-            <Link href="/"> Tilbake til forsiden </Link>
-
-            <div style={{ float: "right", paddingRight: "6em" }}>
-                <Link href="/events/create-event"> Opprett nytt arrangement </Link>
+            <div style={{ float: "left", marginRight: "10px" }}>
+                <Button back style="primary" link="/">
+                    Tilbake til forsiden
+                </Button>
             </div>
-            <div>
+            <div style={{ float: "right", marginLeft: "10px" }}>
+                <Button style="primary" link="/events/create-event">
+                    Opprett nytt arrangement
+                </Button>
+            </div>
+
+            <div style={{ marginTop: "6em" }}>
                 <AllEvents />
             </div>
         </Layout>
