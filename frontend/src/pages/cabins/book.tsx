@@ -23,14 +23,15 @@ const BookPage = (): JSX.Element => {
 
     const router = useRouter();
     const data = router.query;
+    console.log(data);
 
-    const [dateRange, setDateRange] = useState(["", ""]);
     const [rangeLength, setRangeLength] = useState(0);
     const [createBooking] = useMutation(CREATE_BOOKING);
     const [sendEmail] = useMutation(SEND_EMAIL);
     const [errorMessage, setErrorMessage] = useState("");
     const [checked, setChecked] = useState(false);
     const [checkerror, setCheckError] = useState("");
+    const { isAvailable, range, setRange } = useBookingRange();
 
     const handleClick = () => {
         setChecked(!checked);
@@ -43,7 +44,7 @@ const BookPage = (): JSX.Element => {
             const fromDateParsed = fromDate.split("/").reverse().join("-");
             const toDate = data.toDate as string;
             const toDateParsed = toDate.split("/").reverse().join("-");
-            setDateRange([fromDateParsed, toDateParsed]);
+            setRange(fromDateParsed, toDateParsed);
             setRangeLength(getRangeLength(fromDate, toDate));
         }
     }, [data]);
@@ -70,32 +71,39 @@ const BookPage = (): JSX.Element => {
             const email = emailRef.current.value;
             const phone = phoneRef.current.value;
 
+            const bookingData = {
+                firstname: firstname,
+                surname: surname,
+                receiverEmail: email,
+                bookFrom: range.fromDate,
+                bookTo: range.toDate,
+                price: pricePerNight * rangeLength,
+            };
+
+            console.log("isAvailable", isAvailable);
+
             // create booking and send email
-            if (checked) {
+            if (checked && isAvailable) {
                 createBooking({
                     variables: {
                         contactNum: parseInt(phone),
                         contactPerson: firstname + " " + surname,
-                        startDay: dateRange[0],
-                        endDay: dateRange[1],
+                        startDay: range.fromDate,
+                        endDay: range.toDate,
                         price: pricePerNight * rangeLength,
                     },
                 });
 
                 sendEmail({
-                    variables: {
-                        firstname: firstname,
-                        surname: surname,
-                        receiverEmail: email,
-                        bookFrom: dateRange[0],
-                        bookTo: dateRange[1],
-                        price: pricePerNight * rangeLength,
-                    },
+                    variables: bookingData,
                 });
+
                 setErrorMessage("");
+                setCheckError("");
                 console.log("created booking and sent email");
             } else {
-                setCheckError("Du må samtykke med retningslinjene før du booker.");
+                setErrorMessage(isAvailable ? "" : "Den valgte perioden er ikke tilgjengelig.");
+                setCheckError(checked ? "" : "Du må samtykke med retningslinjene før du booker.");
                 console.log("Ikke tilgjengelig.");
             }
         }
@@ -105,7 +113,6 @@ const BookPage = (): JSX.Element => {
         <Content>
             <Navbar></Navbar>
             <HeaderComposition></HeaderComposition>
-            <p>{errorMessage}</p>
             <Composition templateXs={templatePhone} templateLg={templateDesktop} padding={15} gutter={15} gutterLg={40}>
                 {({ Inputs, Sum }) => (
                     <>
@@ -115,12 +122,13 @@ const BookPage = (): JSX.Element => {
                                 <Button url="#" onClick={(e) => handleSubmit(e)}>
                                     Gå til betaling
                                 </Button>
+                                <p>{errorMessage}</p>
                             </InputFields>
                         </Inputs>
                         <Sum>
                             <Summary
-                                from={dateRange[0]}
-                                to={dateRange[1]}
+                                from={range.fromDate ? range.fromDate : ""}
+                                to={range.toDate ? range.toDate : ""}
                                 cabin={"Bjørnen"}
                                 price={pricePerNight}
                                 nights={rangeLength}
