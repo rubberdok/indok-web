@@ -39,7 +39,7 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
                     <br />
                     Krever påmelding: {data.event.isAttendable ? "Ja" : "Nei"}
                     <br />
-                    Beskrvelse: {data.event.description}
+                    Beskrivelse: {data.event.description}
                     <br />
                 </div>
 
