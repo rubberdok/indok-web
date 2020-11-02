@@ -50,7 +50,14 @@ const AllArchive: React.FC = () => {
             <Grid item xs>
                 <Grid container className={classes.img} justify="center" spacing={2}>
                     {data.allArchives.map((doc: ArchivedDocument) => (
-                        <Item key={doc.id} title={doc.title} subtitle={doc.typeDoc} imageUrl={doc.thumbnail} />
+                        <Button
+                            key={doc.id}
+                            onClick={() => {
+                                window.open(doc.url, "_blank");
+                            }}
+                        >
+                            <Item key={doc.id} title={doc.title} subtitle={doc.typeDoc} imageUrl={doc.thumbnail} />
+                        </Button>
                     ))}
                 </Grid>
             </Grid>
@@ -61,8 +68,7 @@ const AllArchive: React.FC = () => {
 export default AllArchive;
 
 /*
-                            <Button onClick={() => { window.open(doc.url,  "_blank") }}>
-
+                            
      
        /* <Composition alignItems="center" areas={areasTablet} areasLg={areasLarge} gap={60} gapRow={20}>
                 {(Areas) => (
