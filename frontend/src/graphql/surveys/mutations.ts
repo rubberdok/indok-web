@@ -1,8 +1,16 @@
 import { gql } from "@apollo/client";
 
 export const CREATE_SURVEY = gql`
-    mutation CreateSurvey($input: SurveyInput!) {
-        createSurvey(surveyData: $input) {
+    mutation CreateSurvey(
+        $descriptiveName: String!
+        $description: String
+    ) {
+        createSurvey(
+            surveyData: {
+                descriptiveName: $descriptiveName
+                description: $description
+            }
+        ) {
             survey {
                 id
                 descriptiveName
@@ -14,8 +22,18 @@ export const CREATE_SURVEY = gql`
 `;
 
 export const UPDATE_SURVEY = gql`
-    mutation UpdateSurvey($id: ID!, $input: SurveyInput) {
-        createSurvey(id: $id, surveyData: $input) {
+    mutation UpdateSurvey(
+        $id: ID!
+        $descriptiveName: String!
+        $description: String
+    ) {
+        createSurvey(
+            id: $id
+            surveyData: {
+                descriptiveName: $descriptiveName
+                description: $description
+            }
+        ) {
             survey {
                 id
                 descriptiveName
@@ -28,8 +46,16 @@ export const UPDATE_SURVEY = gql`
 
 //temporary implementation until bulk mutation is implemented
 export const CREATE_QUESTION = gql`
-    mutation CreateQuestion($input: QuestionInput!) {
-        createQuestion(questionData: $input) {
+    mutation CreateQuestion(
+        $question: String!
+        $description: String!
+    ) {
+        createQuestion(
+            questionData: {
+                question: $question
+                description: $description
+            }
+        ) {
             question {
                 id
                 question
@@ -41,8 +67,18 @@ export const CREATE_QUESTION = gql`
 `;
 
 export const UPDATE_QUESTION = gql`
-    mutation CreateQuestion($id: ID!, $input: QuestionInput) {
-        createQuestion(id: $id, questionData: $input) {
+    mutation CreateQuestion(
+        $id: ID!
+        $question: String!
+        $description: String!
+    ) {
+        createQuestion(
+            id: $id
+            questionData: {
+                question: $question
+                description: $description
+            }
+        ) {
             question {
                 id
                 question

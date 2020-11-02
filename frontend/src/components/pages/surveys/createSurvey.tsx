@@ -29,11 +29,13 @@ const CreateSurvey: React.FC<{ listing?: Listing }> = ({ listing }) => {
     const [updateSurvey] = useMutation(UPDATE_SURVEY);
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error</p>;
+    createSurvey({ variables: {  }})
     return (
         <>
             {data && (
                 <form
                     onSubmit={(e) => {
+                        e.preventDefault();
                         createSurvey();
                     }}
                 >
