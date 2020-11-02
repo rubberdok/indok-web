@@ -10,18 +10,56 @@ const options = {
             clientSecret: process.env.GOOGLE_SECRET,
         }),
     ],
-
-    // A database is optional, but required to persist accounts in a database
-    // database: {
-    //     type: "postgres",
-    //     host: "db",
-    //     port: 5432,
-    //     username: "postgres",
-    //     password: "postgres",
-    //     database: "postgres",
-    //     synchronize: true,
-    // },
+    debug: true,
     callbacks: {
+        /**
+         * @param  {object} user     User object
+         * @param  {object} account  Provider account
+         * @param  {object} profile  Provider profile
+         * @return {boolean}         Return `true` (or a modified JWT) to allow sign in
+         *                           Return `false` to deny access
+         */
+        signIn: async (user, account, profile) => {
+            const isAllowedToSignIn = true;
+
+            // Authenticate with backend after frontend signin
+            await fetch("http://localhost:8000/", {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                method: "POST",
+                credentials: "same-origin",
+                body: JSON.stringify({
+                    query: `mutation{
+                        socialAuth(provider: ${"google-oauth2"}, accessToken: ${account.accessToken}") {
+                            social {
+                                uid
+                                extraData
+                            }
+                        }
+                    }`,
+                }),
+            })
+                .then((res) => {
+                    console.log("then");
+                    console.log(res);
+                })
+                .catch((error) => {
+                    console.log("catch");
+                    // isAllowedToSignIn = false;
+                    console.log(error);
+                });
+
+            if (isAllowedToSignIn) {
+                return Promise.resolve(true);
+            } else {
+                // Return false to display a default error message
+                return Promise.resolve(false);
+                // You can also Reject this callback with an Error or with a URL:
+                // return Promise.reject(new Error('error message')) // Redirect to error page
+                // return Promise.reject('/path/to/redirect')        // Redirect to a URL
+            }
+        },
         /**
          * @param  {object}  token     Decrypted JSON Web Token
          * @param  {object}  user      User object      (only available on sign in)
@@ -34,7 +72,7 @@ const options = {
             const isSignIn = user ? true : false;
             // Add data to token on sign-in
             if (isSignIn) {
-                token.auth_time = Math.floor(Date.now() / 1000);
+                token.authTime = Math.floor(Date.now() / 1000);
                 token.accessToken = account.accessToken;
                 token.userId = profile.id;
             }
@@ -47,10 +85,11 @@ const options = {
          *                               JSON Web Token (if not using database sessions)
          * @return {object}              Session that will be returned to the client
          */
-        session: async (session, user, sessionToken) => {
+        session: async (session, user) => {
             // Add extended user data from jwt callback to session object
-            const { auth_time, accessToken, userId } = user;
-            session.user = { ...session.user, auth_time, accessToken, userId };
+            const { authTime, accessToken, userId } = user;
+            session.user = { ...session.user, authTime, accessToken, userId };
+
             return Promise.resolve(session);
         },
     },

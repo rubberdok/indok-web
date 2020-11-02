@@ -1,4 +1,5 @@
 import Layout from "atomic-layout";
+import { signIn, signOut, useSession } from "next-auth/client";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
@@ -33,6 +34,7 @@ interface NavItemProps {
 
 const NavbarLinks: React.FC = () => {
     const router = useRouter();
+    const [session] = useSession();
 
     return (
         <>
@@ -42,7 +44,23 @@ const NavbarLinks: React.FC = () => {
                 </Link>
             ))}
             <Line />
-            <NavItem primary>Login</NavItem>
+            {!session && (
+                <NavItem primary onClick={() => signIn()}>
+                    Sign in
+                </NavItem>
+            )}
+            {session && (
+                <NavItem primary onClick={() => signOut()}>
+                    {session && <img src={session.user.image} alt="avatar" className="avatar" />}
+                    <style jsx>{`
+                        .avatar {
+                            width: 30px;
+                            border-radius: 10px;
+                        }
+                    `}</style>
+                    Sign out
+                </NavItem>
+            )}
         </>
     );
 };
