@@ -14,7 +14,6 @@ const EventInfo: NextPage = () => {
 
     return (
         <Layout>
-            <Navbar />
             <div
                 style={{
                     border: "solid",
