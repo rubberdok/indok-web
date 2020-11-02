@@ -5,11 +5,6 @@ interface CardProps {
     children: React.ReactNode;
 }
 
-interface CardElProps {
-    children: React.ReactNode;
-    inline?: boolean;
-}
-
 export const Card = ({ children }: CardProps): JSX.Element => {
     return (
         <>

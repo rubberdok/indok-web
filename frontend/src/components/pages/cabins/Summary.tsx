@@ -1,7 +1,7 @@
 import React from "react";
 import { Composition } from "atomic-layout";
 import { Paragraph } from "@components/ui/Typography";
-import { Card } from "./Card";
+import { Card } from "./CardC";
 import styled from "styled-components";
 
 const templateDesktop = `
