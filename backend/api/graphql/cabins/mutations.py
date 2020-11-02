@@ -19,22 +19,28 @@ from .mail import send_mails
 
 class CreateBooking(graphene.Mutation):
     class Arguments:
-        contact_num = graphene.Int()
-        contact_person = graphene.String()
-        start_day = graphene.String()  # string "yyyy-mm-dd"
-        end_day = graphene.String()
+        firstname = graphene.String()
+        surname = graphene.String()
+        phone = graphene.Int()
+        receiverEmail = graphene.String()
+        bookFrom = graphene.String()
+        bookTo = graphene.String()
         price = graphene.Int()
 
     ok = graphene.Boolean()
     booking = graphene.Field(BookingType)
 
-    def mutate(root, info, contact_num, contact_person, start_day, end_day, price):
+    def mutate(
+        self, info, firstname, surname, phone, receiverEmail, bookFrom, bookTo, price
+    ):
         booking = BookingModel.objects.create(
-            contact_num=contact_num,
-            contact_person=contact_person,
-            start_day=start_day,
-            end_day=end_day,
-            price=price
+            firstname=firstname,
+            surname=surname,
+            phone=phone,
+            receiverEmail=receiverEmail,
+            bookFrom=bookFrom,
+            bookTo=bookTo,
+            price=price,
         )
         ok = True
         return CreateBooking(booking=booking, ok=ok)
@@ -89,9 +95,8 @@ class DeleteBooking(graphene.Mutation):
         return DeleteBooking(ok=ok)
 
 
-
 class SendEmail(graphene.Mutation):
-    class Arguments: 
+    class Arguments:
         firstname = graphene.String()
         surname = graphene.String()
         receiverEmail = graphene.String()
@@ -102,7 +107,7 @@ class SendEmail(graphene.Mutation):
     ok = graphene.Boolean()
 
     def mutate(self, info, firstname, surname, receiverEmail, bookFrom, bookTo, price):
-        
+
         send_mails(info, firstname, surname, receiverEmail, bookFrom, bookTo, price)
 
         ok = True

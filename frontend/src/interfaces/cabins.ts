@@ -1,9 +1,12 @@
 export interface Booking {
     id: string;
-    contactNum: number;
-    contactPerson: string;
-    startDay: string;
-    endDay: string;
+    firstname: string;
+    surname: string;
+    phone: number;
+    receiverEmail: string;
+    bookFrom: string;
+    bookTo: string;
+    price: number;
 }
 
 export interface Cabin {
