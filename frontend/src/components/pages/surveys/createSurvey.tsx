@@ -1,10 +1,7 @@
-import { Listing } from "@interfaces/listings";
 import { useQuery, useMutation } from "@apollo/client";
 import { QUESTIONTYPES } from "@graphql/surveys/queries";
 import { CREATE_SURVEY, UPDATE_SURVEY, CREATE_QUESTION } from "@graphql/surveys/mutations";
 import { useState } from "react";
-import TextField from "@components/pages/surveys/formComponents/textfield";
-import Dropdown from "@components/pages/surveys/formComponents/dropdown";
 import { Survey, QuestionType, Question } from "@interfaces/surveys";
 import QuestionDetail from "@components/pages/surveys/questionDetail";
 import CreateQuestion from "@components/pages/surveys/createQuestion";

@@ -1,5 +1,5 @@
 import { Question, QuestionType } from "@interfaces/surveys";
-import { CREATE_QUESTION, UPDATE_QUESTION } from "@graphql/surveys/mutations";
+import { UPDATE_QUESTION } from "@graphql/surveys/mutations";
 import { useMutation } from "@apollo/client";
 import TextField from "@components/pages/surveys/formComponents/textfield";
 import Dropdown from "@components/pages/surveys/formComponents/dropdown";
