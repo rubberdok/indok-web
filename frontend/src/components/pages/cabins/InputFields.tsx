@@ -1,6 +1,6 @@
 import React from "react";
 import { Composition, Only } from "atomic-layout";
-import { Card } from "./Card";
+import { Card } from "./CardC";
 import Input from "@components/ui/Input";
 import Button from "../../ui/Button";
 
