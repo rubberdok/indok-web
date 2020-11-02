@@ -2,7 +2,6 @@ import { useRouter } from "next/router";
 import { useMutation } from "@apollo/client";
 import { CREATE_BOOKING } from "../../graphql/cabins/mutations";
 import Navbar from "@components/navbar/Navbar";
-import Button from "@components/ui/Button";
 import React, { useEffect, useState } from "react";
 import { SEND_EMAIL } from "@graphql/cabins/mutations";
 import useBookingRange from "../../hooks/cabins/useBookingRange";
@@ -13,6 +12,7 @@ import Summary from "@components/pages/cabins/Summary";
 import { getRangeLength } from "@components/Calendar";
 import { HeaderComposition } from "@components/pages/cabins/HeaderCompositon";
 import CheckBox from "@components/pages/cabins/Checkbox";
+import Button from "@components/pages/cabins/Button";
 
 const BookPage = (): JSX.Element => {
     const firstnameRef = React.createRef<HTMLInputElement>();
