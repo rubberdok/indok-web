@@ -68,7 +68,7 @@ The frontend runs on [localhost:3000](localhost:3000), and the backend on [local
   Logo created by Skraagen 🦆
 </p>
 
-[IndokNTNU.no](indokntnu.no) is powered by:
+[IndokNTNU.no](https://www.indokntnu.no) is powered by:
 
 <p float="left">
   <a href="https://graphql.org/">
