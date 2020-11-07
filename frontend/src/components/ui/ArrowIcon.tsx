@@ -6,10 +6,10 @@ import styled from "styled-components";
 interface ArrowProps {
     direction: string;
     size: number;
-    href: string;
+    href?: string;
 }
 
-export const ArrowIconLink = ({ direction, size, href }: ArrowProps): JSX.Element => {
+export const ArrowIcon = ({ direction, size, href }: ArrowProps): JSX.Element => {
     return (
         <IconWrapper>
             <Link href={href}>
