@@ -12,31 +12,10 @@ from static.cabins.mailcontent import get_no_html_mail
 from datetime import datetime
 
 
-def send_admin_mail(ctx, subject, receiver):
-    content = get_template("adminmailtemplate.html").render(ctx)
-    no_html_content = get_no_html_mail(ctx, "admin")
-    image_path = "static/cabins/hyttestyret_logo.png"
-    image_name = Path(image_path).name
 
-    msg = EmailMultiAlternatives(subject, no_html_content, "", [receiver])
-    msg.attach_alternative(content, "text/html")
-    msg.content_subtype = "html"
-    msg.mixed_subtype = "related"
-
-    with open(image_path, mode="rb") as f:
-        image = MIMEImage(f.read())
-        image.add_header("Content-ID", f"<{image_name}>")
-        msg.attach(image)
-
-    msg.attach_file("static/cabins/Sjekkliste.docx")
-    msg.attach_file("static/cabins/Reglement.docx")
-
-    msg.send()
-
-
-def send_user_mail(ctx, subject, receiver):
-    content = get_template("usermailtemplate.html").render(ctx)
-    no_html_content = get_no_html_mail(ctx, "user")
+def sendmail(ctx, subject, receiver, mailtype):
+    content = get_template("usermail.html").render(ctx) if mailtype == "user" else get_template("adminmail.html").render(ctx)
+    no_html_content = get_no_html_mail(ctx, "user") if mailtype == "user" else get_no_html_mail(ctx, "admin")
     image_path = "static/cabins/hyttestyret_logo.png"
     image_name = Path(image_path).name
 
@@ -57,7 +36,6 @@ def send_user_mail(ctx, subject, receiver):
 
 
 def send_mails(info, firstname, surname, receiverEmail, bookFrom, bookTo, price):
-    subject = "Bekreftelsesmail for booking av Indøkhytte"
 
     start_date = (
         datetime.strptime(bookFrom, "%Y-%m-%d")
@@ -86,7 +64,8 @@ def send_mails(info, firstname, surname, receiverEmail, bookFrom, bookTo, price)
         "link": link,
     }
 
-    send_user_mail(ctx, subject, receiverEmail)
-    send_admin_mail(
-        ctx, subject, "herman.holmoy12@gmail.com"
-    )  # swap with booking-mail later
+    user_subject = "Bekreftelsesmail for booking av Indøkhytte"
+    admin_subject = "Booking av Indøkhytte"
+
+    send_mail(user_subject, get_no_html_mail(ctx, "user"), "", [receiverEmail], html_message=render_to_string("usermail.html", ctx))
+    send_mail(admin_subject, get_no_html_mail(ctx, "admin"), "", ["herman.holmoy12@gmail.com"], html_message=render_to_string("adminmail.html", ctx))
