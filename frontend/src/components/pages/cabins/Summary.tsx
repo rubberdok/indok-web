@@ -42,7 +42,7 @@ const Summary = ({ from, to, cabin, price, nights }: SummaryProps): JSX.Element 
                 templateMd={templateDesktop}
                 templateColsMdOnly="minmax(100px, 1fr) 1fr"
                 padding={10}
-                gutter={15}
+                gutter={0}
                 gutterLg={25}
             >
                 {({ From, To, Cabin, Price, Total }) => (

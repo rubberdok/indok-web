@@ -15,7 +15,8 @@ const CheckBox = ({ checked, onClick, errorMsg }: CheckProps): JSX.Element => {
                 <input type="checkbox" onClick={onClick} onChange={onClick} checked={checked}></input>
 
                 <LabelText>
-                    Jeg samtykker til <Link href="# ">retningslinjene</Link> for booking av hytte og godtar
+                    Jeg har lest gjennom og samtykker til <Link href="# ">retningslinjene</Link> for booking av hytte og
+                    godtar
                     <Link href="#"> kontrakten</Link>.
                 </LabelText>
             </CheckboxWrapper>
