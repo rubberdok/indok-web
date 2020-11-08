@@ -18,16 +18,22 @@
     },
     "dependencies": {
         "@apollo/client": "^3.2.0",
+        "@types/react-slick": "^0.23.4",
         "atomic-layout": "^0.16.2",
+        "feather-icons": "^4.28.0",
         "graphql": "^15.3.0",
         "lodash": "^4.17.20",
         "moment": "^2.29.1",
         "next": "^9.5.1",
         "react": "^16.13.1",
+        "react-alice-carousel": "^2.0.2",
         "react-awesome-reveal": "^3.3.1",
         "react-dom": "^16.13.1",
         "react-feather": "^2.0.8",
         "react-feathers": "^0.7.0",
+        "react-multi-carousel": "^2.5.5",
+        "react-slick": "^0.27.13",
+        "slick-carousel": "^1.8.1",
         "styled-components": "^5.2.0"
     },
     "devDependencies": {

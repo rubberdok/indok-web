@@ -13,6 +13,7 @@ import { getRangeLength } from "@components/Calendar";
 import { HeaderComposition } from "@components/pages/cabins/HeaderCompositon";
 import CheckBox from "@components/pages/cabins/Checkbox";
 import Button from "@components/pages/cabins/Button";
+import ImageSlider from "@components/pages/cabins/ImageSlider";
 
 const BookPage = (): JSX.Element => {
     const firstnameRef = React.createRef<HTMLInputElement>();
@@ -24,11 +25,13 @@ const BookPage = (): JSX.Element => {
     const pricePerNight = 1000;
 
     const templateDesktop = `
-        inputs sum
+        sum slider
+        inputs slider
         / 1fr 1fr
     `;
 
     const templatePhone = `
+        slider
         sum
         inputs
     `;
@@ -110,7 +113,7 @@ const BookPage = (): JSX.Element => {
                     gutter={15}
                     gutterLg={40}
                 >
-                    {({ Inputs, Sum }) => (
+                    {({ Inputs, Sum, Slider }) => (
                         <>
                             <Inputs>
                                 <InputFields refs={inputRefs}>
@@ -129,6 +132,9 @@ const BookPage = (): JSX.Element => {
                                     nights={rangeLength}
                                 ></Summary>
                             </Sum>
+                            <Slider>
+                                <ImageSlider cabin="Bjørnen"></ImageSlider>
+                            </Slider>
                         </>
                     )}
                 </Composition>
