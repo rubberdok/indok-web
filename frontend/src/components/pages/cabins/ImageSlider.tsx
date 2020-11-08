@@ -10,12 +10,12 @@ interface ImageSliderProps {
 
 const images = {
     bjørnen: [
-        "/static/cabins/resized/bilde01.jpg",
-        "/static/cabins/resized/bilde02.jpg",
-        "/static/cabins/resized/bilde03.jpg",
-        "/static/cabins/resized/bilde04.jpg",
-        "/static/cabins/resized/bilde05.jpg",
-        "/static/cabins/resized/bilde06.jpg",
+        "/static/cabins/bilde01.jpg",
+        "/static/cabins/bilde02.jpg",
+        "/static/cabins/bilde03.jpg",
+        "/static/cabins/bilde04.jpg",
+        "/static/cabins/bilde05.jpg",
+        "/static/cabins/bilde06.jpg",
     ],
     oksen: [],
 };
