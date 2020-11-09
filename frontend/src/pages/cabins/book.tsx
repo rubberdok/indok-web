@@ -8,7 +8,7 @@ import useBookingRange from "../../hooks/cabins/useBookingRange";
 import Content from "../../components/ui/Content";
 import { InputFields } from "@components/pages/cabins/InputFields";
 import { Composition } from "atomic-layout";
-import Summary from "@components/pages/cabins/Summary";
+import Summary from "@components/pages/cabins/Summary/Summary";
 import { getRangeLength } from "@components/Calendar";
 import { HeaderComposition } from "@components/pages/cabins/HeaderCompositon";
 import CheckBox from "@components/pages/cabins/Checkbox";

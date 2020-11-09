@@ -1,8 +1,8 @@
 import React from "react";
 import { Composition } from "atomic-layout";
-import { Paragraph } from "@components/ui/Typography";
-import { Card } from "./CardC";
+import { Card } from "../CardC";
 import styled from "styled-components";
+import Facilities from "./Facilities";
 
 const templateDesktop = `
     from to
@@ -41,34 +41,37 @@ const Summary = ({ from, to, cabin, price, nights }: SummaryProps): JSX.Element 
                 templateXs={templateMobile}
                 templateMd={templateDesktop}
                 templateColsMdOnly="minmax(100px, 1fr) 1fr"
-                padding={10}
+                padding={0}
                 gutter={0}
-                gutterLg={25}
+                gutterLg={0}
             >
                 {({ From, To, Cabin, Price, Total }) => (
                     <>
                         <From>
-                            <Paragraph>Fra: {from}</Paragraph>
+                            <p>Fra: {from}</p>
                         </From>
                         <To>
-                            <Paragraph>Til: {to}</Paragraph>
+                            <p>Til: {to}</p>
                         </To>
                         <Cabin>
                             <VerticalSep height={2} />
-                            <Paragraph>Hytte: {cabin}</Paragraph>
+                            <p>
+                                Hytte: {cabin} <br />
+                            </p>
+                            <Facilities></Facilities>
                         </Cabin>
                         <Price>
                             <VerticalSep height={2} />
 
-                            <Paragraph>
+                            <p>
                                 {price} kr x {nights} dager
-                            </Paragraph>
+                            </p>
                         </Price>
                         <Total>
                             <VerticalSep height={4} />
-                            <Paragraph>
+                            <p>
                                 <b>Totalt: {price * nights}kr</b>
-                            </Paragraph>
+                            </p>
                         </Total>
                     </>
                 )}
