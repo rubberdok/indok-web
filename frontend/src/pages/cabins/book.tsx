@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import { useMutation } from "@apollo/client";
 import { CREATE_BOOKING } from "../../graphql/cabins/mutations";
 import Navbar from "@components/navbar/Navbar";
-import React, { useEffect, useState } from "react";
+import React, { SyntheticEvent, useEffect, useState } from "react";
 import { SEND_EMAIL } from "@graphql/cabins/mutations";
 import useBookingRange from "../../hooks/cabins/useBookingRange";
 import Content from "../../components/ui/Content";
@@ -21,6 +21,8 @@ const BookPage = (): JSX.Element => {
     const emailRef = React.createRef<HTMLInputElement>();
     const phoneRef = React.createRef<HTMLInputElement>();
     const inputRefs = [firstnameRef, surnameRef, emailRef, phoneRef];
+
+    const testInputRef = React.createRef<HTMLInputElement>();
 
     const pricePerNight = 1000;
 
@@ -45,7 +47,7 @@ const BookPage = (): JSX.Element => {
     const [errorMessage, setErrorMessage] = useState("");
     const [checked, setChecked] = useState(false);
     const [checkerror, setCheckError] = useState("");
-    const [checkable, setCheckabel] = useState(false);
+    const [checkable, setCheckable] = useState(false);
     const { isAvailable, range, setRange, allBookingsQuery } = useBookingRange();
 
     const handleClick = () => {
@@ -67,6 +69,24 @@ const BookPage = (): JSX.Element => {
     useEffect(() => {
         setErrorMessage(isAvailable ? "" : "Den valgte perioden er ikke tilgjengelig.");
     }, [isAvailable]);
+
+    const updateCheckable = (e: React.FormEvent<HTMLInputElement>) => {
+        const checklist = inputRefs.filter((ref) => {
+            if (ref.current?.value) {
+                if (ref.current?.value.length > 0) {
+                    return 1;
+                }
+            }
+        });
+
+        setCheckable(checklist.length == 4 ? true : false);
+
+        if (checklist.length == 4) {
+            setCheckable(true);
+        } else {
+            setCheckable(false);
+        }
+    };
 
     const handleSubmit = (e: React.FormEvent<EventTarget>) => {
         e.preventDefault();
@@ -117,8 +137,13 @@ const BookPage = (): JSX.Element => {
                     {({ Inputs, Sum, Slider }) => (
                         <>
                             <Inputs>
-                                <InputFields refs={inputRefs}>
-                                    <CheckBox checked={checked} onClick={handleClick} errorMsg={checkerror}></CheckBox>
+                                <InputFields refs={inputRefs} onChange={updateCheckable}>
+                                    <CheckBox
+                                        checked={checked}
+                                        onClick={handleClick}
+                                        errorMsg={checkerror}
+                                        checkable={checkable}
+                                    ></CheckBox>
                                     <Button url="#" onClick={(e) => handleSubmit(e)}>
                                         Gå til betaling
                                     </Button>

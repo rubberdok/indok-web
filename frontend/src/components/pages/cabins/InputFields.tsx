@@ -1,8 +1,8 @@
 import React from "react";
-import { Composition, Only } from "atomic-layout";
+import { Composition } from "atomic-layout";
 import Input from "@components/ui/Input";
-import Button from "../../ui/Button";
 import { Card } from "./CardC";
+import styled from "styled-components";
 
 const templateMobile = `
     input input
@@ -19,9 +19,10 @@ const templateTablet = `
 interface InputFieldsProps {
     refs: React.RefObject<HTMLInputElement>[];
     children: JSX.Element | JSX.Element[];
+    onChange: (e: React.FormEvent<HTMLInputElement>) => void;
 }
 
-export const InputFields = ({ refs, children }: InputFieldsProps): JSX.Element => {
+export const InputFields = ({ onChange, refs, children }: InputFieldsProps): JSX.Element => {
     return (
         <Card>
             <Composition
@@ -32,10 +33,23 @@ export const InputFields = ({ refs, children }: InputFieldsProps): JSX.Element =
                 gutter={15}
                 gutterLg={25}
             >
-                <Input type="text" required={true} placeholder="Fornavn" ref={refs[0]}></Input>
-                <Input type="text" required={true} placeholder="Etternavn" ref={refs[1]}></Input>
-                <Input type="email" required={true} placeholder="E-postadresse" ref={refs[2]}></Input>
-                <Input type="number" required={true} placeholder="Mobilnummer" ref={refs[3]}></Input>
+                <Input type="text" required={true} placeholder="Navn" ref={refs[0]} onChange={onChange}></Input>
+                <Input type="text" required={true} placeholder="Etternavn" ref={refs[1]} onChange={onChange}></Input>
+                <Input
+                    type="email"
+                    required={true}
+                    placeholder="E-postadresse"
+                    ref={refs[2]}
+                    onChange={onChange}
+                ></Input>
+                <Input
+                    type="number"
+                    required={true}
+                    placeholder="Mobilnummer"
+                    ref={refs[3]}
+                    onChange={onChange}
+                ></Input>
+
                 {children}
             </Composition>
         </Card>

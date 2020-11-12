@@ -1,19 +1,6 @@
-import { RefObject } from "react";
 import styled from "styled-components";
-import React from "react";
 
-interface InputProps {
-    required: boolean;
-    type: string;
-    placeholder: string;
-    ref: RefObject<HTMLInputElement>;
-}
-
-const Input = React.forwardRef<HTMLInputElement, InputProps>((props, forwardedRef) => (
-    <StyledInput ref={forwardedRef} placeholder={props.placeholder} type={props.type} required={props.required} />
-));
-
-const StyledInput = styled.input`
+const Input = styled.input`
     background: ${({ theme }) => theme.colors.primary};
     border: 2px solid ${({ theme }) => theme.colors.primary};
     font-family: "Montserrat";

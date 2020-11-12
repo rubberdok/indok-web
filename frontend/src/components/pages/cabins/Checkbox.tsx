@@ -6,13 +6,18 @@ interface CheckProps {
     checked: boolean;
     onClick: () => void;
     errorMsg: string;
+    checkable: boolean;
 }
 
-const CheckBox = ({ checked, onClick, errorMsg }: CheckProps): JSX.Element => {
+const CheckBox = ({ checked, onClick, errorMsg, checkable }: CheckProps): JSX.Element => {
     return (
         <>
             <CheckboxWrapper status={errorMsg}>
-                <input type="checkbox" onClick={onClick} onChange={onClick} checked={checked}></input>
+                {checkable ? (
+                    <input type="checkbox" onClick={onClick} onChange={onClick} checked={checked}></input>
+                ) : (
+                    <input type="checkbox" onClick={onClick} onChange={onClick} checked={checked} disabled></input>
+                )}
 
                 <LabelText>
                     Jeg har lest gjennom og samtykker til <Link href="# ">retningslinjene</Link> for booking av hytte og
