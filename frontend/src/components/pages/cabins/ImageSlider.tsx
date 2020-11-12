@@ -66,7 +66,7 @@ const Container = styled.div`
 `;
 
 const Img = styled.img`
-    width: 100%;
+    width: 90%;
     margin: auto;
     border-radius: 10px;
 `;

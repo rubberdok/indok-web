@@ -45,6 +45,7 @@ const BookPage = (): JSX.Element => {
     const [errorMessage, setErrorMessage] = useState("");
     const [checked, setChecked] = useState(false);
     const [checkerror, setCheckError] = useState("");
+    const [checkable, setCheckabel] = useState(false);
     const { isAvailable, range, setRange, allBookingsQuery } = useBookingRange();
 
     const handleClick = () => {

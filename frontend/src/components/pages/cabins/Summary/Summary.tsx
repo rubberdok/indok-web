@@ -3,18 +3,21 @@ import { Composition } from "atomic-layout";
 import { Card } from "../CardC";
 import styled from "styled-components";
 import Facilities from "./Facilities";
+import { SubHeading } from "@components/ui/Typography";
 
 const templateDesktop = `
-    from to
     cabin cabin
+    from to
+    facs facs
     price price
     total total
 `;
 
 const templateMobile = `
+    cabin
     from
     to
-    cabin
+    facs
     price
     total
 `;
@@ -45,21 +48,22 @@ const Summary = ({ from, to, cabin, price, nights }: SummaryProps): JSX.Element 
                 gutter={0}
                 gutterLg={0}
             >
-                {({ From, To, Cabin, Price, Total }) => (
+                {({ Cabin, From, To, Facs, Price, Total }) => (
                     <>
+                        <Cabin>
+                            <h3>Hytte: {cabin}</h3>
+                            <VerticalSep height={4} />
+                        </Cabin>
                         <From>
                             <p>Fra: {from}</p>
                         </From>
                         <To>
                             <p>Til: {to}</p>
                         </To>
-                        <Cabin>
+                        <Facs>
                             <VerticalSep height={2} />
-                            <p>
-                                Hytte: {cabin} <br />
-                            </p>
                             <Facilities></Facilities>
-                        </Cabin>
+                        </Facs>
                         <Price>
                             <VerticalSep height={2} />
 
