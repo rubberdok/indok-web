@@ -1,6 +1,6 @@
 import { AppProps } from "next/app";
 import "../styles/global.css";
-import "react-calendar/dist/Calendar.css";
+//import "react-calendar/dist/Calendar.css";
 import "@styles/global.css";
 import "@styles/fonts.css";
 import "slick-carousel/slick/slick.css";
