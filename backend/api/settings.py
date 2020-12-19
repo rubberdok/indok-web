@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "graphene_django",
     "social_django",
+    "rest_framework",
 ]
 
 AUTH_USER_MODEL = "users.User"

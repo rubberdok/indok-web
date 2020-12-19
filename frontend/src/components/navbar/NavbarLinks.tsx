@@ -1,130 +1,133 @@
 import Layout from "atomic-layout";
-import { signIn, signOut, useSession } from "next-auth/client";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 import styled from "styled-components";
+import { UserManager } from "oidc-client";
 
 const links = [
-    {
-        id: "1",
-        title: "Hjem",
-        href: "/",
-    },
-    {
-        id: "2",
-        title: "Om foreningen",
-        href: "/about",
-    },
-    {
-        id: "3",
-        title: "Arrangementer",
-        href: "/events",
-    },
-    {
-        id: "4",
-        title: "Hyttebooking",
-        href: "/cabins",
-    },
+  {
+    id: "1",
+    title: "Hjem",
+    href: "/",
+  },
+  {
+    id: "2",
+    title: "Om foreningen",
+    href: "/about",
+  },
+  {
+    id: "3",
+    title: "Arrangementer",
+    href: "/events",
+  },
+  {
+    id: "4",
+    title: "Hyttebooking",
+    href: "/cabins",
+  },
 ];
 
 interface NavItemProps {
-    primary?: boolean;
+  primary?: boolean;
 }
 
 const NavbarLinks: React.FC = () => {
-    const router = useRouter();
-    const [session] = useSession();
+  const router = useRouter();
+  const [session] = [false];
 
-    return (
-        <>
-            {links.map((item) => (
-                <Link key={item.id} href={item.href}>
-                    <NavItem className={router.pathname == item.href ? "active" : ""}>{item.title}</NavItem>
-                </Link>
-            ))}
-            <Line />
-            {!session && (
-                <NavItem primary onClick={() => signIn()}>
-                    Sign in
-                </NavItem>
-            )}
-            {session && (
-                <NavItem primary onClick={() => signOut()}>
-                    {session && <img src={session.user.image} alt="avatar" className="avatar" />}
-                    <style jsx>{`
-                        .avatar {
-                            width: 30px;
-                            border-radius: 10px;
-                        }
-                    `}</style>
-                    Sign out
-                </NavItem>
-            )}
-        </>
-    );
+  return (
+    <>
+      {links.map((item) => (
+        <Link key={item.id} href={item.href}>
+          <NavItem className={router.pathname == item.href ? "active" : ""}>{item.title}</NavItem>
+        </Link>
+      ))}
+      <Line />
+      {!session && (
+        <NavItem
+          primary
+          href="https://auth.dataporten.no/oauth/authorization?client_id=f17d2ea0-a7c9-4458-83bf-35cf5b555cae&state=kjbsgkjswgjlwkbjgs&redirect_uri=http://localhost:3000/cb&response_type=code&scope=openid%20userid%20profile%20userid-feide"
+        >
+          Sign in
+        </NavItem>
+      )}
+      {session && (
+        <NavItem primary onClick={() => null}>
+          {session && <img src={session.user.image} alt="avatar" className="avatar" />}
+          <style jsx>{`
+            .avatar {
+              width: 30px;
+              border-radius: 10px;
+            }
+          `}</style>
+          Sign out
+        </NavItem>
+      )}
+    </>
+  );
 };
 
 const NavItem = styled.a<NavItemProps>`
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 16px;
+  color: ${(props) => (props.primary ? ({ theme }) => theme.colors.primary : "#111")};
+  display: inline-block;
+  white-space: nowrap;
+  margin: 0 25px;
+  transition: all 200ms ease-in;
+  position: relative;
+  padding: 10px 0;
+
+  :after,
+  &.active:after {
+    @media (min-width: ${Layout.breakpoints.md.maxWidth}) {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 1px;
+      width: 50%;
+      margin: 0 auto;
+      content: ".";
+      color: transparent;
+      background: ${(props) => (props.primary ? ({ theme }) => theme.colors.primary : "#111")};
+      height: 2px;
+      transition: all 0.2s ease;
+      opacity: 0;
+    }
+  }
+
+  &.active:after {
+    width: 100%;
+    opacity: 1;
+  }
+
+  :hover {
     text-decoration: none;
-    font-weight: 600;
-    font-size: 16px;
-    color: ${(props) => (props.primary ? ({ theme }) => theme.colors.primary : "#111")};
-    display: inline-block;
-    white-space: nowrap;
-    margin: 0 25px;
-    transition: all 200ms ease-in;
-    position: relative;
-    padding: 10px 0;
+    cursor: pointer;
 
-    :after,
-    &.active:after {
-        @media (min-width: ${Layout.breakpoints.md.maxWidth}) {
-            position: absolute;
-            left: 0;
-            right: 0;
-            bottom: 1px;
-            width: 50%;
-            margin: 0 auto;
-            content: ".";
-            color: transparent;
-            background: ${(props) => (props.primary ? ({ theme }) => theme.colors.primary : "#111")};
-            height: 2px;
-            transition: all 0.2s ease;
-            opacity: 0;
-        }
+    ::after {
+      width: 100%;
+      opacity: 1;
     }
+  }
 
-    &.active:after {
-        width: 100%;
-        opacity: 1;
-    }
-
-    :hover {
-        text-decoration: none;
-        cursor: pointer;
-
-        ::after {
-            width: 100%;
-            opacity: 1;
-        }
-    }
-
-    @media (max-width: ${Layout.breakpoints.md.maxWidth}) {
-        padding: 20px 0;
-        font-size: 1.5rem;
-        z-index: 99999;
-    }
+  @media (max-width: ${Layout.breakpoints.md.maxWidth}) {
+    padding: 20px 0;
+    font-size: 1.5rem;
+    z-index: 99999;
+  }
 `;
 
 const Line = styled.div`
-    background: ${({ theme }) => theme.colors.primary};
-    margin: 0 25px;
-    width: 20px;
-    height: 2px;
-    @media (max-width: ${Layout.breakpoints.md.maxWidth}) {
-        display: none;
-    }
+  background: ${({ theme }) => theme.colors.primary};
+  margin: 0 25px;
+  width: 20px;
+  height: 2px;
+  @media (max-width: ${Layout.breakpoints.md.maxWidth}) {
+    display: none;
+  }
 `;
 
 export default NavbarLinks;
