@@ -5,12 +5,12 @@ import { NextPage } from "next";
 import React from "react";
 
 const EventPage: NextPage = () => {
-    return (
-        <Layout>
-            <CreateEvent />
-            <AllEvents />
-        </Layout>
-    );
+  return (
+    <Layout>
+      <CreateEvent />
+      <AllEvents />
+    </Layout>
+  );
 };
 
 export default EventPage;
