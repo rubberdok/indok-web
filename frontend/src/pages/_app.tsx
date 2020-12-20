@@ -6,17 +6,17 @@ import { ThemeProvider } from "styled-components";
 import theme from "@styles/theme";
 
 const App = ({ Component, pageProps }: AppProps): JSX.Element => {
-    const client = new ApolloClient({
-        uri: process.env.GRAPHQL_BACKEND_URI,
-        cache: new InMemoryCache(),
-    });
-    return (
-        <ApolloProvider client={client}>
-            <ThemeProvider theme={theme}>
-                <Component {...pageProps} />
-            </ThemeProvider>
-        </ApolloProvider>
-    );
+  const client = new ApolloClient({
+    uri: process.env.GRAPHQL_BACKEND_URI,
+    cache: new InMemoryCache(),
+  });
+  return (
+    <ApolloProvider client={client}>
+      <ThemeProvider theme={theme}>
+        <Component {...pageProps} />
+      </ThemeProvider>
+    </ApolloProvider>
+  );
 };
 
 export default App;
