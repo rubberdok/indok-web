@@ -3,7 +3,6 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 import styled from "styled-components";
-import { UserManager } from "oidc-client";
 
 const links = [
   {
@@ -34,7 +33,6 @@ interface NavItemProps {
 
 const NavbarLinks: React.FC = () => {
   const router = useRouter();
-  const [session] = [false];
 
   return (
     <>
@@ -44,15 +42,13 @@ const NavbarLinks: React.FC = () => {
         </Link>
       ))}
       <Line />
-      {!session && (
-        <NavItem
-          primary
-          href="https://auth.dataporten.no/oauth/authorization?client_id=f17d2ea0-a7c9-4458-83bf-35cf5b555cae&state=kjbsgkjswgjlwkbjgs&redirect_uri=http://localhost:3000/cb&response_type=code&scope=openid%20userid%20profile%20userid-feide"
-        >
-          Sign in
-        </NavItem>
-      )}
-      {session && (
+      <NavItem
+        primary
+        href="https://auth.dataporten.no/oauth/authorization?client_id=f17d2ea0-a7c9-4458-83bf-35cf5b555cae&state=kjbsgkjswgjlwkbjgs&redirect_uri=http://localhost:3000/cb&response_type=code&scope=openid%20userid%20profile%20userid-feide"
+      >
+        Sign in
+      </NavItem>
+      {/* {session && (
         <NavItem primary onClick={() => null}>
           {session && <img src={session.user.image} alt="avatar" className="avatar" />}
           <style jsx>{`
@@ -63,7 +59,7 @@ const NavbarLinks: React.FC = () => {
           `}</style>
           Sign out
         </NavItem>
-      )}
+      )} */}
     </>
   );
 };

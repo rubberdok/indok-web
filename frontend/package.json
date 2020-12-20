@@ -20,8 +20,7 @@
         "@apollo/client": "^3.2.0",
         "atomic-layout": "^0.16.2",
         "graphql": "^15.3.0",
-        "next": "^9.5.1",
-        "next-auth": "^3.1.0",
+        "next": "^10.0.3",
         "oidc-client": "^1.10.1",
         "pg": "^8.3.3",
         "react": "^16.13.1",
@@ -32,7 +31,6 @@
     },
     "devDependencies": {
         "@types/feather-icons": "^4.7.0",
-        "@types/next-auth": "^3.1.10",
         "@types/node": "^14.0.27",
         "@types/react": "^16.9.45",
         "@types/react-dom": "^16.9.8",
