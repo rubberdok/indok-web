@@ -44,7 +44,7 @@ const NavbarLinks: React.FC = () => {
       <Line />
       <NavItem
         primary
-        href="https://auth.dataporten.no/oauth/authorization?client_id=f17d2ea0-a7c9-4458-83bf-35cf5b555cae&state=kjbsgkjswgjlwkbjgs&redirect_uri=http://localhost:3000/cb&response_type=code&scope=openid%20userid%20profile%20userid-feide"
+        href="https://auth.dataporten.no/oauth/authorization?client_id=f17d2ea0-a7c9-4458-83bf-35cf5b555cae&state=kjbsgkjswgjlwkbjgs&redirect_uri=http://localhost:3000&response_type=code&scope=openid%20userid%20profile%20userid-feide"
       >
         Sign in
       </NavItem>

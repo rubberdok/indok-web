@@ -1,7 +1,21 @@
 import graphene
-from django.contrib.auth import get_user_model
+from django.contrib.auth import authenticate, get_user_model
 
 from .types import UserType
+
+
+class AuthUser(graphene.Mutation):
+    class Arguments:
+        code = graphene.String()
+        state = graphene.String()
+
+    token = graphene.String()
+    user = graphene.Field(UserType)
+
+    def mutate(root, info, code, state):
+        user = authenticate(None, code=code, state=state)
+        # TODO: Generate JWT and return it
+        return AuthUser(user=user)
 
 
 class UpdateUser(graphene.Mutation):

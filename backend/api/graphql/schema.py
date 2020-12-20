@@ -2,7 +2,6 @@ import graphene
 
 from .events.schema import EventMutations, EventQueries
 from .users.schema import UserMutations, UserQueries
-from .auth.schema import AuthMutations
 
 
 class Query(
@@ -15,7 +14,6 @@ class Query(
 class Mutations(
     EventMutations,
     UserMutations,
-    AuthMutations,
 ):
     pass
 

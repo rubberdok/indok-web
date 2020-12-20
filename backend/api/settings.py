@@ -101,7 +101,10 @@ DATABASES = {
 
 # Authentication
 
-AUTHENTICATION_BACKENDS = ("django.contrib.auth.backends.ModelBackend",)
+AUTHENTICATION_BACKENDS = [
+    "api.auth.backends.IndokWebBackend",
+    "django.contrib.auth.backends.ModelBackend",
+]
 
 
 # Password validation

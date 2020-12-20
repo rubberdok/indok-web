@@ -1,3 +1,6 @@
+import json
+
+import jwt
 import requests
 from requests.auth import HTTPBasicAuth
 from rest_framework.response import Response
@@ -8,9 +11,6 @@ from apps.users.models import User
 
 class GetTokenView(APIView):
     def post(self, request):
-        """
-        Return a list of all users.
-        """
         print("Get token view hit!")
         print(request.data)
         params = {
@@ -27,8 +27,30 @@ class GetTokenView(APIView):
                 "862ac077-2118-4c25-b047-1b99e90a0e9b",
             ),
         )
-        print(response)
+        print(response.json())
         resp = response.json()
+        id_token = resp["id_token"]
+
+        # Collect available public keys, mapping each key's ID to its parsed representation
+        jwks = requests.get("https://auth.dataporten.no/openid/jwks").json()
+        public_keys = {}
+        for jwk in jwks["keys"]:
+            kid = jwk["kid"]
+            public_keys[kid] = jwt.algorithms.RSAAlgorithm.from_jwk(json.dumps(jwk))
+
+        # look up the public key corresponding to the private key with which the token was signed
+        kid = jwt.get_unverified_header(id_token)["kid"]
+        key = public_keys[kid]
+
+        payload = jwt.decode(
+            id_token,
+            key=key,
+            algorithms=["RS256"],
+            issuer="https://auth.dataporten.no",
+            audience="f17d2ea0-a7c9-4458-83bf-35cf5b555cae",
+        )
+        print(payload)
+
         access_token = resp["access_token"]
 
         params = {

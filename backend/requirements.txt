@@ -1,7 +1,6 @@
 aniso8601==7.0.0
 asgiref==3.2.10
 certifi==2020.12.5
-chardet==3.0.4
 Django==3.1.2
 django-cors-headers==3.5.0
 djangorestframework==3.11.1
@@ -12,6 +11,7 @@ graphql-relay==2.0.1
 idna==2.10
 promise==2.3
 psycopg2-binary==2.8.5
+PyJWT[crypto]==1.7.1
 pytz==2020.1
 requests==2.24.0
 Rx==1.6.1
