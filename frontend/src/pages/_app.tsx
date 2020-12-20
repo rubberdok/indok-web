@@ -7,7 +7,7 @@ import theme from "@styles/theme";
 
 const App = ({ Component, pageProps }: AppProps): JSX.Element => {
   const client = new ApolloClient({
-    uri: "http://localhost:8000/graphql",
+    uri: process.env.GRAPHQL_BACKEND_URI,
     cache: new InMemoryCache(),
   });
   return (

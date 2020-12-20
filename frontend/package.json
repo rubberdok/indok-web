@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "next",
-    "build": "next build",
+    "build": "next build && next export",
     "start": "next start",
     "lint": "eslint src --ext .ts,.tsx",
     "lint:fix": "npm run lint -- --fix"
@@ -50,8 +50,8 @@
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
-    }
-  },
+      }
+    },
   "lint-staged": {
     "src/**/*.{ts,tsx}": [
       "npm run lint:fix",
