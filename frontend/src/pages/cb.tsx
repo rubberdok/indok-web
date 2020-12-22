@@ -1,35 +1,32 @@
+import { useMutation } from "@apollo/client";
 import Layout from "@components/Layout";
+import { AUTHENTICATE } from "@graphql/auth/mutations";
 import { NextPage } from "next";
-import { useEffect } from "react";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 
-const CallbackPage: NextPage = ({ query }) => {
-  const signIn = async () => {
-    const resp = await fetch("http://localhost:8000/get-token/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(query),
-    });
-    const data = await resp.json();
-    console.log("resp", data);
-  };
+const CallbackPage: NextPage = () => {
+  const router = useRouter();
+  const query = router.query;
+
+  const [authUser] = useMutation(AUTHENTICATE);
+  const [userInfo, setUserInfo] = useState({});
+
   useEffect(() => {
-    if (query) {
-      console.log(query);
+    if ("code" in query) {
       console.log("sending to backend");
-      signIn();
+      console.log(query);
+      authUser({ variables: query }).then((res) => {
+        console.log(res);
+        setUserInfo(res.data.authUser.user);
+      });
     }
   }, [query]);
   return (
     <Layout>
-      <div>Logging you in...!</div>
+      {userInfo.username ? <div>Logged in as {Object.values(userInfo).join("\n")}</div> : <div>Logging you in...!</div>}{" "}
     </Layout>
   );
-};
-
-CallbackPage.getInitialProps = ({ query }) => {
-  return { query };
 };
 
 export default CallbackPage;

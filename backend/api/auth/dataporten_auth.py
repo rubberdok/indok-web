@@ -28,7 +28,7 @@ class DataportenAuth:
             "state": state,
             "grant_type": "authorization_code",
             # "redirect_uri": os.environ.get("DATAPORTEN_REDIRECT_URI"),
-            "redirect_uri": "http://localhost:3000",  # TODO: change to /cb
+            "redirect_uri": "http://localhost:3000/cb",
         }
 
         response = requests.post(
@@ -46,6 +46,7 @@ class DataportenAuth:
             print(
                 f"ERROR: Got status code {response.status_code} when obtaining access token"
             )
+            print(response.json())
             return None
 
         return response.json()

@@ -13,15 +13,16 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from apps.users.views import GetTokenView, GetCSRFTokenView
 from django.contrib import admin
 from django.urls import path
-from graphene_django.views import GraphQLView
 from django.views.decorators.csrf import csrf_exempt
-from apps.users.views import GetTokenView
-
+from graphene_django.views import GraphQLView
+from graphql_jwt.decorators import jwt_cookie
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("graphql", GraphQLView.as_view(graphiql=True)),
+    # ok to csrf exempt the graphql endpoint: https://stackoverflow.com/questions/51764452/403-by-graphene-django-dont-use-csrf-exempt
+    path("graphql", csrf_exempt(jwt_cookie(GraphQLView.as_view(graphiql=True)))),
     path("get-token/", GetTokenView.as_view()),
 ]

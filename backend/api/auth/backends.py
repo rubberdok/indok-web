@@ -24,9 +24,11 @@ class IndokWebBackend(BaseBackend):
             return None
 
         # Fetch user info from Dataporten
-        username, feide_userid, email, name, year = dataporten.get_user_info(response)
-        if username is None:
+        user_info = dataporten.get_user_info(response)
+        if user_info is None:
             return None
+
+        username, feide_userid, email, name, year = user_info
 
         # TODO: check that user goes to indøk
         try:

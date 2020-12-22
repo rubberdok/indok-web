@@ -33,6 +33,12 @@ interface NavItemProps {
 
 const NavbarLinks: React.FC = () => {
   const router = useRouter();
+  let signInURL = "https://auth.dataporten.no/oauth/authorization";
+  signInURL += `?client_id=${process.env.DATAPORTEN_ID}`;
+  signInURL += `&state=kjbsgkjswgjlwkbjgs`;
+  signInURL += `&redirect_uri=${process.env.DATAPORTEN_REDIRECT_URI}`;
+  signInURL += `&response_type=code`;
+  signInURL += `&scope=openid%20userid%20userid-feide%20profile%20groups`;
 
   return (
     <>
@@ -42,11 +48,8 @@ const NavbarLinks: React.FC = () => {
         </Link>
       ))}
       <Line />
-      <NavItem
-        primary
-        href="https://auth.dataporten.no/oauth/authorization?client_id=f17d2ea0-a7c9-4458-83bf-35cf5b555cae&state=kjbsgkjswgjlwkbjgs&redirect_uri=http://localhost:3000&response_type=code&scope=openid%20userid%20profile%20userid-feide"
-      >
-        Sign in
+      <NavItem primary href={signInURL}>
+        Logg inn
       </NavItem>
       {/* {session && (
         <NavItem primary onClick={() => null}>
