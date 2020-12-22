@@ -3,7 +3,10 @@ import os
 
 import jwt
 import requests
+from django.contrib.auth import get_user_model
 from requests.auth import HTTPBasicAuth
+
+UserModel = get_user_model()
 
 # CLIENT_ID = os.environ.get("DATAPORTEN_ID")
 CLIENT_ID = "f17d2ea0-a7c9-4458-83bf-35cf5b555cae"
@@ -12,12 +15,13 @@ CLIENT_ID = "f17d2ea0-a7c9-4458-83bf-35cf5b555cae"
 class DataportenAuth:
     """
     Class implementing the backend part of authenticating a user with Dataporten.
-    Upon receiving an authorization code from frontend (and optionally a state string)
+    Upon receiving an authorization code from frontend
     this class completes the authentication by obtaining an access token from Dataporten,
     which can then be used to access user data at Dataporten.
     """
 
-    def complete_dataporten_auth(self, code, state):
+    @staticmethod
+    def complete_dataporten_auth(code):
         """
         https://docs.feide.no/service_providers/openid_connect/feide_obtaining_tokens.html
         """
@@ -25,7 +29,6 @@ class DataportenAuth:
         print(CLIENT_ID)
         params = {
             "code": code,
-            "state": state,
             "grant_type": "authorization_code",
             # "redirect_uri": os.environ.get("DATAPORTEN_REDIRECT_URI"),
             "redirect_uri": "http://localhost:3000/cb",
@@ -46,12 +49,12 @@ class DataportenAuth:
             print(
                 f"ERROR: Got status code {response.status_code} when obtaining access token"
             )
-            print(response.json())
             return None
-
+        
         return response.json()
 
-    def validate_response(self, resp):
+    @staticmethod
+    def validate_response(resp):
         """
         https://docs.feide.no/reference/oauth_oidc/openid_connect_details.html
         """
@@ -110,7 +113,8 @@ class DataportenAuth:
         print("The id_token was successfully validated")
         return True
 
-    def get_user_info(self, resp):
+    @staticmethod
+    def get_user_info(resp):
         """
         https://docs.feide.no/service_providers/openid_connect/oidc_authentication.html
         """
@@ -142,3 +146,46 @@ class DataportenAuth:
         name = user_info["name"]
         year = 4  # TODO: update when access to study year
         return (username, feide_userid, email, name, year)
+
+    @classmethod
+    def authenticate_and_get_user(cls, code=None):
+
+        if code is None:
+            return None
+
+        # Complete authentication of user
+        response = cls.complete_dataporten_auth(code)
+        if not cls.validate_response(response):
+            return None
+
+        # Fetch user info from Dataporten
+        user_info = cls.get_user_info(response)
+        if user_info is None:
+            return None
+
+        username, feide_userid, email, name, year = user_info
+
+        # TODO: check that user goes to indøk
+        try:
+            user = UserModel.objects.get(feide_userid=feide_userid)
+            # User exists, update user info
+            print(f"User {username} exists, updating in the database")
+            user.username = username
+            user.email = email
+            user.first_name = name
+            user.feide_userid = feide_userid
+            user.year = year
+            user.save()
+
+        except UserModel.DoesNotExist:
+            print("User does not exist, creating in the database")
+            # User does not exist, create a new user
+            user = UserModel(
+                username=username,
+                email=email,
+                first_name=name,
+                feide_userid=feide_userid,
+                year=year,
+            )
+            user.save()
+        return user

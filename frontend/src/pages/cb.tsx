@@ -7,21 +7,21 @@ import { useEffect, useState } from "react";
 
 const CallbackPage: NextPage = () => {
   const router = useRouter();
-  const query = router.query;
+  const { code } = router.query;
 
   const [authUser] = useMutation(AUTHENTICATE);
-  const [userInfo, setUserInfo] = useState({});
+  const [userInfo, setUserInfo] = useState<{ username?: string }>({});
 
   useEffect(() => {
-    if ("code" in query) {
+    if (code) {
       console.log("sending to backend");
-      console.log(query);
-      authUser({ variables: query }).then((res) => {
+      authUser({ variables: { code } }).then((res) => {
         console.log(res);
         setUserInfo(res.data.authUser.user);
       });
     }
-  }, [query]);
+  }, [code]);
+
   return (
     <Layout>
       {userInfo.username ? <div>Logged in as {Object.values(userInfo).join("\n")}</div> : <div>Logging you in...!</div>}{" "}

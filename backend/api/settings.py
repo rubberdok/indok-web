@@ -110,7 +110,7 @@ DATABASES = {
 # Authentication
 
 AUTHENTICATION_BACKENDS = [
-    "api.auth.backends.IndokWebBackend",
+    'graphql_jwt.backends.JSONWebTokenBackend',     
     "django.contrib.auth.backends.ModelBackend",
 ]
 
