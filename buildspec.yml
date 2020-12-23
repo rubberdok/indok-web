@@ -14,14 +14,14 @@ phases:
       - echo Build started on `date`
       - echo Building the Docker image...
       - docker build -t $REPOSITORY_URI:backend-latest ./backend
-      - docker tag $REPOSITORY_URI:backend-latest $REPOSITORY_URI:backend-$(IMAGE_TAG)
+      - docker tag $REPOSITORY_URI:backend-latest $REPOSITORY_URI:backend-$IMAGE_TAG
       - docker build -t $REPOSITORY_URI:frontend-latest ./frontend
-      - docker tag $REPOSITORY_URI:frontend-latest $REPOSITORY_URI:frontend-$(IMAGE_TAG)
+      - docker tag $REPOSITORY_URI:frontend-latest $REPOSITORY_URI:frontend-$IMAGE_TAG
   post_build:
     commands:
       - echo Build completed on `date`
       - echo Pushing the Docker images...
       - docker push $REPOSITORY_URI:backend-latest
-      - docker push $REPOSITORY_URI:backend-$(IMAGE_TAG)
+      - docker push $REPOSITORY_URI:backend-$IMAGE_TAG
       - docker push $REPOSITORY_URI:frontend-latest
-      - docker push $REPOSITORY_URI:frontend-$(IMAGE_TAG)
+      - docker push $REPOSITORY_URI:frontend-$IMAGE_TAG
