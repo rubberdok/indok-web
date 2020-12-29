@@ -1,4 +1,4 @@
-from apps.users.decorators import login_required
+from graphql_jwt.decorators import login_required
 from django.contrib.auth import get_user_model
 
 
