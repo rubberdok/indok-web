@@ -83,3 +83,25 @@ export const CREATE_ORGANIZATION = gql`
         }
     }
 `;
+
+export const CREATE_USER = gql`
+    mutation createUser($username: String!, $firstName: String!, $lastName: String!, $year: Int!, $password: String!) {
+        createUser(
+            userData: {
+                username: $username
+                firstName: $firstName
+                lastName: $lastName
+                year: $year
+                password: $password
+            }
+        ) {
+            user {
+                username
+                firstName
+                lastName
+                year
+                password
+            }
+        }
+    }
+`;
