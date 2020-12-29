@@ -1,6 +1,3 @@
-from graphql_jwt.middleware import JSONWebTokenMiddleware
-
-
 class IndokWebJWTMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
