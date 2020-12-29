@@ -17,7 +17,6 @@ const OrganizationListingsPage: NextPage<InferGetServerSidePropsType<typeof getS
     if (loading) return <p>Loading...</p>;
     return (
         <>
-            <NavBar />
             <Link href="/org">Tilbake</Link>
             {data && (
                 <>

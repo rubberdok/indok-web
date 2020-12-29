@@ -6,14 +6,11 @@ import Link from "next/link";
 import NavBar from "@components/navbar/Navbar";
 
 const UsersPage: NextPage = () => (
-    <>
-        <NavBar />
-        <Layout>
-            <Link href="/demo">Tilbake</Link>
-            <AllUsers />
-            <CreateUser />
-        </Layout>
-    </>
+    <Layout>
+        <Link href="/demo">Tilbake</Link>
+        <AllUsers />
+        <CreateUser />
+    </Layout>
 );
 
 export default UsersPage;

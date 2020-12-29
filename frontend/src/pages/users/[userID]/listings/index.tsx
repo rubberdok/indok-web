@@ -6,14 +6,11 @@ import NavBar from "@components/navbar/Navbar";
 
 const ListingsPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ userID }) => {
     return (
-        <>
-            <NavBar />
-            <Layout>
-                <Link href="/users">Tilbake</Link>
-                <h3>Åpne verv</h3>
-                <AllListings userID={userID} />
-            </Layout>
-        </>
+        <Layout>
+            <Link href="/users">Tilbake</Link>
+            <h3>Åpne verv</h3>
+            <AllListings userID={userID} />
+        </Layout>
     );
 };
 

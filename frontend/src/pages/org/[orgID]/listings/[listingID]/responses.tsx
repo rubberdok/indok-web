@@ -19,7 +19,6 @@ const ListingResponsesPage: NextPage<InferGetServerSidePropsType<typeof getServe
     if (loading) return <p>Loading</p>;
     return (
         <>
-            <NavBar />
             {data && (
                 <>
                     <Link href={`/org/${orgID}/listings`}>Tilbake</Link>

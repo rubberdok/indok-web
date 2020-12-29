@@ -16,7 +16,6 @@ const ListingPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProp
     if (loading) return <h1>Loading...</h1>;
     return (
         <>
-            <NavBar />
             {data && (
                 <Layout>
                     <Link href={`/users/${userID}/listings`}>Tilbake</Link>
