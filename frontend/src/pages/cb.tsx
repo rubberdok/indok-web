@@ -9,30 +9,28 @@ const CallbackPage: NextPage = () => {
   const router = useRouter();
   const { code } = router.query;
 
-  const [authUser] = useMutation(AUTHENTICATE);
-  const [userInfo, setUserInfo] = useState<{ username?: string }>({});
-  const [errors, setErrors] = useState<string>("");
+  const [authUser, { data, error }] = useMutation(AUTHENTICATE, { errorPolicy: "all" });
+  // const [userInfo, setUserInfo] = useState<{ username?: string }>({});
+  // const [errors, setErrors] = useState<string>("");
 
   useEffect(() => {
     if (code) {
       console.log("sending to backend");
-      authUser({ variables: { code } })
-        .then((res) => {
-          console.log(res);
-          setUserInfo(res.data.authUser.user);
-        })
-        .catch((err) => setErrors(err.message));
+      authUser({ variables: { code } });
     }
   }, [code]);
 
   return (
     <Layout>
-      {errors ? (
-        <div> ERROR: {errors}</div>
-      ) : userInfo.username ? (
-        <div>Logged in as {Object.values(userInfo).join("\n")}</div>
+      {error ? (
+        <div> ERROR: {error.message}</div>
+      ) : data ? (
+        <>
+          <div>Logged in as </div>
+          <pre>{JSON.stringify(data.authUser.user, null, 2)}</pre>
+        </>
       ) : (
-        <div>Logging you in...!</div>
+        <div>Logging you in...</div>
       )}{" "}
     </Layout>
   );
