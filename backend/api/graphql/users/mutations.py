@@ -3,6 +3,7 @@ from graphql_jwt.shortcuts import get_token
 from django.contrib.auth import get_user_model
 from api.auth.dataporten_auth import DataportenAuth
 
+
 from .types import UserType
 
 

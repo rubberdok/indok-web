@@ -11,20 +11,29 @@ const CallbackPage: NextPage = () => {
 
   const [authUser] = useMutation(AUTHENTICATE);
   const [userInfo, setUserInfo] = useState<{ username?: string }>({});
+  const [errors, setErrors] = useState<string>("");
 
   useEffect(() => {
     if (code) {
       console.log("sending to backend");
-      authUser({ variables: { code } }).then((res) => {
-        console.log(res);
-        setUserInfo(res.data.authUser.user);
-      });
+      authUser({ variables: { code } })
+        .then((res) => {
+          console.log(res);
+          setUserInfo(res.data.authUser.user);
+        })
+        .catch((err) => setErrors(err.message));
     }
   }, [code]);
 
   return (
     <Layout>
-      {userInfo.username ? <div>Logged in as {Object.values(userInfo).join("\n")}</div> : <div>Logging you in...!</div>}{" "}
+      {errors ? (
+        <div> ERROR: {errors}</div>
+      ) : userInfo.username ? (
+        <div>Logged in as {Object.values(userInfo).join("\n")}</div>
+      ) : (
+        <div>Logging you in...!</div>
+      )}{" "}
     </Layout>
   );
 };

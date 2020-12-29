@@ -1,5 +1,5 @@
 from apps.events.models import Event
-from apps.users.decorators import login_required
+from graphql_jwt.decorators import login_required
 
 
 class EventResolvers:

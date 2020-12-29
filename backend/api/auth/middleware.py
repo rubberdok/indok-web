@@ -8,11 +8,9 @@ class IndokWebJWTMiddleware:
     def __call__(self, request):
         response = self.get_response(request)
         jwt_token = getattr(request, "set_jwt_cookie", None)
-        print("test")
-        print(jwt_token)
-
+        print(f"\n[Middleware] JWT token for response: {jwt_token}")
         if jwt_token:
-            print(f"setting jwt cookie to {jwt_token}")
+            print(f"[Middleware] setting jwt cookie")
             response.set_cookie("JWT", jwt_token, max_age=24 * 60 * 60, httponly=True)
 
         return response

@@ -4,6 +4,7 @@ import os
 import jwt
 import requests
 from django.contrib.auth import get_user_model
+from django.core.exceptions import PermissionDenied, ValidationError
 from requests.auth import HTTPBasicAuth
 
 UserModel = get_user_model()
@@ -25,8 +26,8 @@ class DataportenAuth:
         """
         https://docs.feide.no/service_providers/openid_connect/feide_obtaining_tokens.html
         """
-        print("Completing dataporten authentication")
-        print(CLIENT_ID)
+        print("1. Completing dataporten authentication")
+        # print(CLIENT_ID)
         params = {
             "code": code,
             "grant_type": "authorization_code",
@@ -34,23 +35,24 @@ class DataportenAuth:
             "redirect_uri": "http://localhost:3000/cb",
         }
 
-        response = requests.post(
-            "https://auth.dataporten.no/oauth/token",
-            params,
-            auth=HTTPBasicAuth(
-                CLIENT_ID,
-                # os.environ.get("DATAPORTEN_SECRET"),
-                "862ac077-2118-4c25-b047-1b99e90a0e9b",
-            ),
-        )
-        if response.status_code == 200:
-            print("Successfully obtained access token")
-        else:
-            print(
-                f"ERROR: Got status code {response.status_code} when obtaining access token"
+        try:
+            response = requests.post(
+                "https://auth.dataporten.no/oauth/token",
+                params,
+                auth=HTTPBasicAuth(
+                    CLIENT_ID,
+                    # os.environ.get("DATAPORTEN_SECRET"),
+                    "862ac077-2118-4c25-b047-1b99e90a0e9b",
+                ),
             )
-            return None
-        
+            # Raises exceptions upon HTTP errors
+            response.raise_for_status()
+        except requests.exceptions.RequestException as err:
+            print(f"Error completing Dataporten authentication: {err}")
+            raise Exception("Error completing Dataporten authentication")
+
+        print(f"Successfully obtained access token: {response.json()['access_token']}")
+
         return response.json()
 
     @staticmethod
@@ -61,11 +63,18 @@ class DataportenAuth:
         if resp is None:
             return None
 
-        print("Validating id_token")
+        print("\n2. Validating id_token")
         id_token = resp["id_token"]
 
         # Collect available public keys, mapping each key's ID to its parsed representation
-        jwks = requests.get("https://auth.dataporten.no/openid/jwks").json()
+        try:
+            response = requests.get("https://auth.dataporten.no/openid/jwks")
+            response.raise_for_status()
+            jwks = response.json()
+        except requests.exceptions.RequestException as err:
+            print(f"Error fetching Dataporten public keys: {err}")
+            raise Exception("An error occured while validating id_token")
+
         public_keys = {}
         for jwk in jwks["keys"]:
             kid = jwk["kid"]
@@ -83,61 +92,68 @@ class DataportenAuth:
                 issuer="https://auth.dataporten.no",
                 audience=CLIENT_ID,
             )
-        # https://pyjwt.readthedocs.io/en/stable/api.html#exceptions
-        except jwt.ExpiredSignatureError:
-            print("Signature has expired")
-            return False
-        except jwt.InvalidAudienceError:
-            print(
-                "The token’s audience (aud) claim does not match one of the expected audience values"
-            )
-            return False
-        except jwt.InvalidIssuerError:
-            print("The token’s issuer (iss) claim does not match the expected issuer")
-            return False
-        except jwt.InvalidIssuedAtError:
-            print("The token’s issued at (iat) claim is in the future")
-            return False
-        except jwt.ImmatureSignatureError:
-            print("The token’s not-before (nbf) claim represents a time in the future")
-            return False
-        except jwt.InvalidSignatureError:
-            print(
-                "The token’s signature doesn’t match the one provided as part of the token"
-            )
-            return False
-        except:
-            print("ERROR: Unable to validate id_token")
-            return False
+        except jwt.PyJWTError as e:
+            print(f"Error validating id_token: {e}")
+            raise ValidationError("Unable to validate id_token")
 
         print("The id_token was successfully validated")
-        return True
 
     @staticmethod
-    def get_user_info(resp):
-        """
-        https://docs.feide.no/service_providers/openid_connect/oidc_authentication.html
-        """
-        if resp is None:
+    def confirm_indok_enrollment(access_token):
+        print("\n3. Confirming indøk enrollment")
+        if access_token is None:
             return None
-
-        print("Fetching user info from Dataporten")
-        access_token = resp["access_token"]
 
         params = {
             "Authorization": f"Bearer {access_token}",
         }
-        response = requests.get("https://auth.dataporten.no/userinfo", headers=params)
-        if response.status_code == 200:
-            print("Successfully fecthed user info")
-        else:
-            print(
-                f"ERROR: Got status code {response.status_code} when fetching user info"
+        try:
+            response = requests.get(
+                "https://groups-api.dataporten.no/groups/me/groups/fc:fs:fs:prg:ntnu.no:MTIØT",
+                headers=params,
             )
-            return None
+            response.raise_for_status()
+        except requests.exceptions.RequestException as err:
+            print(f"Error confirming indøk enrollment: {err}")
+            raise PermissionDenied("User is not enrolled at indøk")
 
         data = response.json()
+        print(f"Indøk enrollment info: {json.dumps(data)}")
 
+        enrolled = False
+        if "basic" in data and "active" in data:
+            enrolled = data["basic"] == "member" and data["active"] == True
+
+        if not enrolled:
+            raise PermissionDenied("User is not enrolled at indøk")
+
+        print("User is enrolled at indøk")
+
+    @staticmethod
+    def get_user_info(access_token):
+        """
+        https://docs.feide.no/service_providers/openid_connect/oidc_authentication.html
+        """
+        if access_token is None:
+            return None
+
+        print("\n4. Fetching user info from Dataporten")
+
+        params = {
+            "Authorization": f"Bearer {access_token}",
+        }
+        try:
+            response = requests.get(
+                "https://auth.dataporten.no/userinfo", headers=params
+            )
+            response.raise_for_status()
+        except requests.exceptions.RequestException as err:
+            print(f"Error fetching user info: {err}")
+            raise Exception("Unable to fetch user info from Dataporten")
+
+        print(f"Successfully fetched user info for {response.json()['user']['name']}")
+
+        data = response.json()
         user_info = data["user"]
 
         username = user_info["userid_sec"][0].split(":")[1].split("@")[0]
@@ -149,27 +165,31 @@ class DataportenAuth:
 
     @classmethod
     def authenticate_and_get_user(cls, code=None):
-
+        print(f"\n{'='*20}Authentication flow started{'='*20}")
         if code is None:
-            return None
+            raise ValidationError("Invalid authorization code from request")
 
         # Complete authentication of user
         response = cls.complete_dataporten_auth(code)
-        if not cls.validate_response(response):
-            return None
+        cls.validate_response(response)
+
+        access_token = response.get("access_token")
+
+        # Check if user is member of MTIØT group (studies indøk)
+        cls.confirm_indok_enrollment(access_token)
 
         # Fetch user info from Dataporten
-        user_info = cls.get_user_info(response)
+        user_info = cls.get_user_info(access_token)
         if user_info is None:
             return None
 
         username, feide_userid, email, name, year = user_info
 
-        # TODO: check that user goes to indøk
+        # Create or update user
         try:
             user = UserModel.objects.get(feide_userid=feide_userid)
             # User exists, update user info
-            print(f"User {username} exists, updating in the database")
+            print(f"\nUser {username} exists, updating in the database")
             user.username = username
             user.email = email
             user.first_name = name
@@ -178,7 +198,7 @@ class DataportenAuth:
             user.save()
 
         except UserModel.DoesNotExist:
-            print("User does not exist, creating in the database")
+            print(f"\nUser {username} does not exist, creating in the database")
             # User does not exist, create a new user
             user = UserModel(
                 username=username,
