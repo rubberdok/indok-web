@@ -5,7 +5,8 @@ RUN mkdir -p /code
 WORKDIR /code
 
 # Installing dependencies
-COPY package.json ./
+COPY package.json .
+COPY package-lock.json .
 RUN npm install
 
 # Copying source files

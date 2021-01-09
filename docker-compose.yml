@@ -17,9 +17,8 @@ services:
   backend:
     restart: always
     build:
-      context: .
-      dockerfile: backend/Dockerfile
-    working_dir: /code/backend
+      context: ./backend
+      dockerfile: Dockerfile
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - ./backend:/code/backend
@@ -30,9 +29,8 @@ services:
 
   frontend:
     build:
-      context: .
-      dockerfile: frontend/Dockerfile
-    working_dir: /code/frontend
+      context: ./frontend
+      dockerfile: Dockerfile
     command: npm run dev
     volumes:
       - ./frontend/:/code/frontend
