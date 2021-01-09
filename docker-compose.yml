@@ -21,7 +21,7 @@ services:
       dockerfile: Dockerfile
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
-      - ./backend:/code/backend
+      - ./backend:/code
     ports:
       - "8000:8000"
     depends_on:
@@ -33,9 +33,9 @@ services:
       dockerfile: Dockerfile
     command: npm run dev
     volumes:
-      - ./frontend/:/code/frontend
-      - /code/frontend/node_modules
-      - /code/frontend/.next
+      - ./frontend/:/code
+      - /code/node_modules
+      - /code/.next
     ports:
       - 3000:3000
     expose:
