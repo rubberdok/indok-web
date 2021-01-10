@@ -7,7 +7,14 @@ WORKDIR /code
 # Installing dependencies
 COPY package.json .
 COPY package-lock.json .
-RUN npm install
+RUN npm ci
+
+
+# set environment variables
+ARG GRAPHQL_BACKEND_URI
+ENV GRAPHQL_BACKEND_URI $GRAPHQL_BACKEND_URI
+ARG NODE_ENV
+ENV NODE_ENV $NODE_ENV
 
 # Copying source files
 COPY . .
