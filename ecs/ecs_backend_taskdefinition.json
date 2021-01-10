@@ -1,0 +1,43 @@
+{
+  "containerDefinitions": [
+    {
+      "name": "backend",
+      "image": "%s.dkr.ecr.eu-north-1.amazonaws.com/indokweb-backend:prod",
+      "essential": true,
+      "memoryReservation": 300,
+      "portMappings": [
+        {
+          "hostPort": 0,
+          "protocol": "tcp",
+          "containerPort": 8000
+        }
+      ],
+      "environment": [
+        {
+          "name": "APP_SETTINGS",
+          "value": "src.config.ProductionConfig"
+        },
+        {
+          "name": "DB_HOST",
+          "value": "%s"
+        },
+        {
+          "name": "DB_PASSWORD",
+          "value": "%s"
+        },
+        {
+          "name": "SECRET_KEY",
+          "value": "%s"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "indokweb-backend-log",
+          "awslogs-region": "eu-north-1"
+        }
+      }
+    }
+  ],
+  "family": "indokweb-backend-td"
+}

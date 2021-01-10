@@ -31,3 +31,5 @@ phases:
     commands:
       - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/indokweb-backend:prod
       - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/indokweb-frontend:prod
+      - chmod +x ./deploy.sh
+      - bash deploy.sh
