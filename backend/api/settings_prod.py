@@ -4,6 +4,8 @@ from api.settings import *
 
 DEBUG = True
 
+ALLOWED_HOSTS = ["indokweb-alb-765354250.eu-north-1.elb.amazonaws.com", ".indokweb-alb-765354250.eu-north-1.elb.amazonaws.com"]
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
@@ -16,3 +18,4 @@ DATABASES = {
 }
 
 SECRET_KEY = os.environ.get("SECRET_KEY")
+
