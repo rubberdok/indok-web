@@ -6,9 +6,6 @@ env:
     GRAPHQL_BACKEND_URI: "http://localhost:8000/graphql"
 
 phases:
-  install:
-    runtime-versions:
-      docker: 18
   pre_build:
     commands:
       - echo logging in to ecr...
