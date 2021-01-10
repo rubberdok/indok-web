@@ -3,7 +3,7 @@ version: 0.2
 env:
   variables:
     AWS_REGION: "eu-north-1"
-    GRAPHQL_BACKEND_URI: "http://localhost:8000/graphql"
+    GRAPHQL_BACKEND_URI: "indokweb-alb-765354250.eu-north-1.elb.amazonaws.com?api=true"
 
 phases:
   pre_build:

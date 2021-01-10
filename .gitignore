@@ -252,3 +252,6 @@ web.code-workspace
 
 # Jetbrains
 .idea/
+
+# Notes
+.notes.txt
