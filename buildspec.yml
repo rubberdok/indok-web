@@ -1,0 +1,29 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - aws --version
+      - $(aws ecr get-login --region $AWS_DEFAULT_REGION --no-include-email)
+      - REPOSITORY_URI=777854691961.dkr.ecr.eu-north-1.amazonaws.com/indokweb-images
+      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - IMAGE_TAG=${COMMIT_HASH:=latest}
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo Building the Docker image...
+      - docker build -t $REPOSITORY_URI:backend-latest ./backend
+      - docker tag $REPOSITORY_URI:backend-latest $REPOSITORY_URI:backend-$IMAGE_TAG
+      #- docker build -t $REPOSITORY_URI:frontend-latest ./frontend
+      #- docker tag $REPOSITORY_URI:frontend-latest $REPOSITORY_URI:frontend-$IMAGE_TAG
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Pushing the Docker images...
+      - docker push $REPOSITORY_URI:backend-latest
+      - docker push $REPOSITORY_URI:backend-$IMAGE_TAG
+      - echo Writing image definitions file...
+      - printf '[{"name":"indokweb-backend","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
+      #- docker push $REPOSITORY_URI:frontend-latest
+      #- docker push $REPOSITORY_URI:frontend-$IMAGE_TAG
