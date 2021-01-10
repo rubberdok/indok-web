@@ -2,7 +2,7 @@ import os
 
 from api.settings import *
 
-DEBUG = False
+DEBUG = True
 
 DATABASES = {
     "default": {
@@ -14,3 +14,5 @@ DATABASES = {
         "PORT": 5432,
     }
 }
+
+SECRET_KEY = os.environ.get("SECRET_KEY")
