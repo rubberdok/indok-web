@@ -1,16 +1,11 @@
-export interface ContractProps {
-    data: {
-        firstname: string;
-        surname: string;
-        cabin: string;
-        fromDate: string;
-        toDate: string;
-        price: number;
-    };
-}
+import { useRouter } from "next/router";
 
-const Contract = ({ data }: ContractProps) => {
+
+const Contract = () => {
     const currentTime = new Date().toLocaleString();
+
+    const router = useRouter();
+    const query = router.query;
 
     return (
         <>
@@ -21,17 +16,17 @@ const Contract = ({ data }: ContractProps) => {
                     På vegne av Foreningen for studenter ved Industriell økonomi og teknologiledelse er det i dag
                     inngått følgende leiekontrakt mellom Hyttestyret og{" "}
                     <b>
-                        {data.firstname} {data.surname}
+                        {query.firstname} {query.surname}
                     </b>
                     <br />
                 </p>
                 <p>
                     Gjeldende <br />
-                    Leieobjekt: <b>{data.cabin}</b>, Landsbygrenda, 7340 Oppdal
+                    Leieobjekt: <b>{query.cabin}</b>, Landsbygrenda, 7340 Oppdal
                     <br />
-                    Leieperiode: <b>{data.fromDate}</b> - <b>{data.toDate}</b> (yyyy-mm-dd)
+                    Leieperiode: <b>{query.fromDate}</b> - <b>{query.toDate}</b> (yyyy-mm-dd)
                     <br />
-                    Leiesum: <b>{data.price}</b> NOK innbetalt til konto 9235.28.31311 i forkant av leieperioden.
+                    Leiesum: <b>{query.price}</b> NOK innbetalt til konto 9235.28.31311 i forkant av leieperioden.
                 </p>
                 <p>
                     Leietager betaler ikke depositum i forkant av leieperioden, men eventuelle skader på hytte eller
