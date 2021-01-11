@@ -24,7 +24,6 @@ phases:
         docker build \
           -f frontend/Dockerfile.prod \
           -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/indokweb-frontend:prod \
-          --build-arg NODE_ENV=production \
           --build-arg NEXT_PUBLIC_GRAPHQL_BACKEND_URI=$NEXT_PUBLIC_GRAPHQL_BACKEND_URI \
           ./frontend
   post_build:
