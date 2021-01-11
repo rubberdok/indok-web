@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import { useMutation } from "@apollo/client";
 import { CREATE_BOOKING } from "../../graphql/cabins/mutations";
 import Navbar from "@components/navbar/Navbar";
-import React, { SyntheticEvent, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SEND_EMAIL } from "@graphql/cabins/mutations";
 import useBookingRange from "../../hooks/cabins/useBookingRange";
 import Content from "../../components/ui/Content";
@@ -85,7 +85,7 @@ const BookPage = (): JSX.Element => {
         setErrorMessage(isAvailable ? "" : "Den valgte perioden er ikke tilgjengelig.");
     }, [isAvailable]);
 
-    const handleInputChange = (e: React.FormEvent<HTMLInputElement>) => {
+    const handleInputChange = () => {
 
         // update checkbox
         const checklist = inputRefs.filter((ref) => {
