@@ -4,7 +4,7 @@ from api.settings import *
 
 DEBUG = False
 
-ALLOWED_HOSTS = ["indokweb-alb-765354250.eu-north-1.elb.amazonaws.com", ".indokweb-alb-765354250.eu-north-1.elb.amazonaws.com"]
+ALLOWED_HOSTS = ["api.gamma.indokntnu.no"]
 
 DATABASES = {
     "default": {
