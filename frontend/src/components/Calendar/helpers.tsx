@@ -49,10 +49,10 @@ export const previousMonthDays = (
                         <Day>{date.format("D")}</Day>
                     </DayCell>
                 ) : (
-                    <DayCell isHidden key={`${key}-${date.format(DATE_FORMAT)}`}>
-                        <Day></Day>
-                    </DayCell>
-                )
+                        <DayCell isHidden key={`${key}-${date.format(DATE_FORMAT)}`}>
+                            <Day></Day>
+                        </DayCell>
+                    )
             );
         }
     }
