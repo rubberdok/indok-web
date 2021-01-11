@@ -6,6 +6,8 @@ DEBUG = False
 
 ALLOWED_HOSTS = ["api.gamma.indokntnu.no"]
 
+CORS_ORIGIN_WHITELIST = ["https://gamma.indokntnu.no"]
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
@@ -18,4 +20,3 @@ DATABASES = {
 }
 
 SECRET_KEY = os.environ.get("SECRET_KEY")
-
