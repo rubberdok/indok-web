@@ -24,3 +24,14 @@ export interface QueryVariables {
     start?: string;
     end?: string;
 }
+
+export interface ContractProps {
+    contractData: {
+        firstname: string;
+        surname: string;
+        cabin: string;
+        fromDate: string;
+        toDate: string;
+        price: number;
+    }
+}
