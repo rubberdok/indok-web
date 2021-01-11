@@ -123,6 +123,8 @@ DATAPORTEN_ID = env("DATAPORTEN_ID")
 DATAPORTEN_SECRET = env("DATAPORTEN_SECRET")
 DATAPORTEN_REDIRECT_URI = env("DATAPORTEN_REDIRECT_URI")
 
+print("Dataporten vars:", DATAPORTEN_ID, DATAPORTEN_SECRET, DATAPORTEN_REDIRECT_URI)
+
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 

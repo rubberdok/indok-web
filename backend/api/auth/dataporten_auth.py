@@ -31,16 +31,17 @@ class DataportenAuth:
             "code": code,
             "grant_type": "authorization_code",
             "redirect_uri": settings.DATAPORTEN_REDIRECT_URI,
+            "client_id": CLIENT_ID,
         }
 
         try:
+            print(CLIENT_ID, settings.DATAPORTEN_SECRET)
             response = requests.post(
                 "https://auth.dataporten.no/oauth/token",
                 params,
                 auth=HTTPBasicAuth(
                     CLIENT_ID,
                     settings.DATAPORTEN_SECRET,
-                    # "862ac077-2118-4c25-b047-1b99e90a0e9b",
                 ),
             )
             # Raises exceptions upon HTTP errors
