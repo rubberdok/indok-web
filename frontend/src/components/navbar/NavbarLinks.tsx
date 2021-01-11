@@ -1,3 +1,6 @@
+import { useQuery } from "@apollo/client";
+import { GET_USER } from "@graphql/auth/queries";
+import { User } from "@interfaces/users";
 import Layout from "atomic-layout";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -40,6 +43,8 @@ const NavbarLinks: React.FC = () => {
   signInURL += `&response_type=code`;
   signInURL += `&scope=openid%20userid%20userid-feide%20profile%20groups`;
 
+  const { loading, error, data: userData } = useQuery<{ user: User }>(GET_USER);
+
   return (
     <>
       {links.map((item) => (
@@ -48,21 +53,21 @@ const NavbarLinks: React.FC = () => {
         </Link>
       ))}
       <Line />
-      <NavItem primary href={signInURL}>
-        Logg inn
-      </NavItem>
-      {/* {session && (
-        <NavItem primary onClick={() => null}>
-          {session && <img src={session.user.image} alt="avatar" className="avatar" />}
-          <style jsx>{`
-            .avatar {
-              width: 30px;
-              border-radius: 10px;
-            }
-          `}</style>
-          Sign out
+
+      {!userData || loading || !userData.user || error ? (
+        <NavItem primary href={signInURL}>
+          Logg inn med Feide
         </NavItem>
-      )} */}
+      ) : (
+        <>
+          <NavItem primary href={"/profile"}>
+            {userData.user.firstName}
+          </NavItem>
+          <NavItem primary href={"/logout"}>
+            Logg ut
+          </NavItem>
+        </>
+      )}
     </>
   );
 };

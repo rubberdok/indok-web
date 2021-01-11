@@ -15,10 +15,17 @@ export const AUTHENTICATE = gql`
         lastName
         feideUserid
         lastLogin
-        password
         dateJoined
         year
       }
+    }
+  }
+`;
+
+export const DELETE_TOKEN_COOKIE = gql`
+  mutation {
+    deleteTokenCookie {
+      deleted
     }
   }
 `;
