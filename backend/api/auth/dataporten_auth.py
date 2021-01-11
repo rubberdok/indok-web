@@ -6,11 +6,11 @@ import requests
 from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied, ValidationError
 from requests.auth import HTTPBasicAuth
+from django.conf import settings
 
 UserModel = get_user_model()
 
-# CLIENT_ID = os.environ.get("DATAPORTEN_ID")
-CLIENT_ID = "f17d2ea0-a7c9-4458-83bf-35cf5b555cae"
+CLIENT_ID = settings.DATAPORTEN_ID
 
 
 class DataportenAuth:
@@ -27,12 +27,10 @@ class DataportenAuth:
         https://docs.feide.no/service_providers/openid_connect/feide_obtaining_tokens.html
         """
         print("1. Completing dataporten authentication")
-        # print(CLIENT_ID)
         params = {
             "code": code,
             "grant_type": "authorization_code",
-            # "redirect_uri": os.environ.get("DATAPORTEN_REDIRECT_URI"),
-            "redirect_uri": "http://localhost:3000/authCallback",
+            "redirect_uri": settings.DATAPORTEN_REDIRECT_URI,
         }
 
         try:
@@ -41,8 +39,8 @@ class DataportenAuth:
                 params,
                 auth=HTTPBasicAuth(
                     CLIENT_ID,
-                    # os.environ.get("DATAPORTEN_SECRET"),
-                    "862ac077-2118-4c25-b047-1b99e90a0e9b",
+                    settings.DATAPORTEN_SECRET,
+                    # "862ac077-2118-4c25-b047-1b99e90a0e9b",
                 ),
             )
             # Raises exceptions upon HTTP errors
