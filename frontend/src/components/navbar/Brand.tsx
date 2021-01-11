@@ -5,7 +5,7 @@ import styled from "styled-components";
 const Brand = () => (
   <LogoWrap>
     <Link href="/">
-      <Logo src={"/logo.svg"} alt="Logo Hovedstyret Indøk" />
+      <Logo src={"/logo.svg"} alt="INDØK Hovedstyre" />
     </Link>
   </LogoWrap>
 );

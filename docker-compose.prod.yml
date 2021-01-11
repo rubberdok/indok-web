@@ -18,9 +18,7 @@ services:
     restart: always
     build:
       context: ./backend
-      dockerfile: Dockerfile
-    volumes:
-      - ./backend:/code
+      dockerfile: Dockerfile.prod
     ports:
       - "8000:8000"
     depends_on:
@@ -29,11 +27,7 @@ services:
   frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile
-    volumes:
-      - ./frontend/:/code
-      - /code/node_modules
-      - /code/.next
+      dockerfile: Dockerfile.prod
     ports:
       - 3000:3000
     expose:

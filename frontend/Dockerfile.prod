@@ -1,0 +1,22 @@
+FROM node:12
+
+# Create app directory
+RUN mkdir -p /code
+WORKDIR /code
+
+# Installing dependencies
+COPY package.json .
+COPY package-lock.json .
+RUN npm ci
+
+
+# set environment variables
+ARG NEXT_PUBLIC_GRAPHQL_BACKEND_URI
+ENV NEXT_PUBLIC_GRAPHQL_BACKEND_URI $NEXT_PUBLIC_GRAPHQL_BACKEND_URI
+
+# Copying source files
+COPY . .
+
+RUN ["npm", "run", "build"]
+
+CMD ["npm", "run", "start"]

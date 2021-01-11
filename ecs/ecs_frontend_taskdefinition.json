@@ -1,0 +1,25 @@
+{
+  "containerDefinitions": [
+    {
+      "name": "frontend",
+      "image": "%s.dkr.ecr.eu-north-1.amazonaws.com/indokweb-frontend:prod",
+      "essential": true,
+      "memoryReservation": 300,
+      "portMappings": [
+        {
+          "hostPort": 0,
+          "protocol": "tcp",
+          "containerPort": 3000
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "indokweb-frontend-log",
+          "awslogs-region": "eu-north-1"
+        }
+      }
+    }
+  ],
+  "family": "indokweb-frontend-td"
+}

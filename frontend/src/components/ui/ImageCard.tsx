@@ -60,16 +60,16 @@ const ItemSubtitle = styled.p`
 `;
 
 const templateMobile = `
-    image description
+  image description
 `;
 
 const templateTablet = `
-    image
-    description
+  image
+  description
 `;
 
 const templateDesktop = `
-    image description actions
+  image description actions
 `;
 
 export default ImageCard;

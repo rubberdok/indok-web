@@ -1,0 +1,34 @@
+version: 0.2
+
+env:
+  variables:
+    AWS_REGION: "eu-north-1"
+    NEXT_PUBLIC_GRAPHQL_BACKEND_URI: "https://api.gamma.indokntnu.no/graphql"
+
+phases:
+  pre_build:
+    commands:
+      - echo logging in to ecr...
+      - >
+        aws ecr get-login-password --region $AWS_REGION \
+          | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
+  build:
+    commands:
+      - echo building images...
+      - >
+        docker build \
+          -f backend/Dockerfile.prod \
+          -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/indokweb-backend:prod \
+          ./backend
+      - >
+        docker build \
+          -f frontend/Dockerfile.prod \
+          -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/indokweb-frontend:prod \
+          --build-arg NEXT_PUBLIC_GRAPHQL_BACKEND_URI=$NEXT_PUBLIC_GRAPHQL_BACKEND_URI \
+          ./frontend
+  post_build:
+    commands:
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/indokweb-backend:prod
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/indokweb-frontend:prod
+      - chmod +x ./deploy.sh
+      - bash deploy.sh

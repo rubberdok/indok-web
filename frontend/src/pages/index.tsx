@@ -57,7 +57,7 @@ const IndexPage: NextPage = () => (
         {(Areas) => (
           <>
             <Areas.Items>
-              <SubHeading>Kommende Arrangementer</SubHeading>
+              <SubHeading>Kommende Eventer</SubHeading>
               <Composition
                 templateCols="auto"
                 templateColsMd="auto auto auto auto"

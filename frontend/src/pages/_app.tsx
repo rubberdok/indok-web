@@ -7,7 +7,7 @@ import { ThemeProvider } from "styled-components";
 
 const App = ({ Component, pageProps }: AppProps): JSX.Element => {
   const link = createHttpLink({
-    uri: "http://localhost:8000/graphql",
+    uri: process.env.NEXT_PUBLIC_GRAPHQL_BACKEND_URI,
     credentials: "include",
   });
   const client = new ApolloClient({
