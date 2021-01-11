@@ -1,4 +1,5 @@
 import { useRouter } from "next/router";
+import styled from "styled-components";
 
 
 const Contract = () => {
@@ -10,6 +11,7 @@ const Contract = () => {
     return (
         <>
             <div>
+                <Logo src="/static/cabins/hyttestyret_logo.png"></Logo>
                 <h1>KONTRAKT</h1>
                 <h3>Utleieavtale</h3>
                 <p>
@@ -88,5 +90,12 @@ const Contract = () => {
         </>
     );
 };
+
+
+const Logo = styled.img`
+    margin: auto;
+    width: 30vh;
+`
+
 
 export default Contract;
