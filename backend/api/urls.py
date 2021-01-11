@@ -13,7 +13,6 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from apps.users.views import GetTokenView
 from django.contrib import admin
 from django.urls import path
 from django.views.decorators.csrf import csrf_exempt
@@ -24,5 +23,4 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     # ok to csrf exempt the graphql endpoint: https://stackoverflow.com/questions/51764452/403-by-graphene-django-dont-use-csrf-exempt
     path("graphql", csrf_exempt(jwt_cookie(GraphQLView.as_view(graphiql=True)))),
-    path("get-token/", GetTokenView.as_view()),
 ]
