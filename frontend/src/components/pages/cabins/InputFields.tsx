@@ -2,19 +2,18 @@ import React from "react";
 import { Composition } from "atomic-layout";
 import Input from "@components/ui/Input";
 import { Card } from "./CardC";
-import styled from "styled-components";
 
-const templateMobile = `
-    input input
-    input input
-    button 
-`;
+// const templateMobile = `
+//     input input
+//     input input
+//     button 
+// `;
 
-const templateTablet = `
-  input input
-  input input
-  button 
-`;
+// const templateTablet = `
+//   input input
+//   input input
+//   button 
+// `;
 
 interface InputFieldsProps {
     refs: React.RefObject<HTMLInputElement>[];
@@ -33,7 +32,7 @@ export const InputFields = ({ onChange, refs, children }: InputFieldsProps): JSX
                 gutter={15}
                 gutterLg={25}
             >
-                <Input type="text" required={true} placeholder="Navn" ref={refs[0]} onChange={onChange}></Input>
+                <Input type="text" required={true} placeholder="Fornavn" ref={refs[0]} onChange={onChange}></Input>
                 <Input type="text" required={true} placeholder="Etternavn" ref={refs[1]} onChange={onChange}></Input>
                 <Input
                     type="email"
