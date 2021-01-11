@@ -14,6 +14,21 @@ import { HeaderComposition } from "@components/pages/cabins/HeaderCompositon";
 import CheckBox from "@components/pages/cabins/Checkbox";
 import Button from "@components/pages/cabins/Button";
 import ImageSlider from "@components/pages/cabins/ImageSlider";
+import { ContractProps } from "@interfaces/cabins";
+
+
+interface BookingData {
+    firstname: string,
+    surname: string,
+    receiverEmail: string,
+    phone: number,
+    bookFrom: string,
+    bookTo: string,
+    cabin: string,
+    price: number
+}
+
+
 
 const BookPage = (): JSX.Element => {
     const firstnameRef = React.createRef<HTMLInputElement>();
@@ -21,8 +36,6 @@ const BookPage = (): JSX.Element => {
     const emailRef = React.createRef<HTMLInputElement>();
     const phoneRef = React.createRef<HTMLInputElement>();
     const inputRefs = [firstnameRef, surnameRef, emailRef, phoneRef];
-
-    const testInputRef = React.createRef<HTMLInputElement>();
 
     const pricePerNight = 1000;
 
@@ -41,6 +54,8 @@ const BookPage = (): JSX.Element => {
     const router = useRouter();
     const data = router.query;
 
+    const [contractData, setContractData] = useState({} as ContractProps)
+    const [bookingData, setBookingData] = useState({} as BookingData)
     const [rangeLength, setRangeLength] = useState(0);
     const [createBooking] = useMutation(CREATE_BOOKING);
     const [sendEmail] = useMutation(SEND_EMAIL);
@@ -70,7 +85,9 @@ const BookPage = (): JSX.Element => {
         setErrorMessage(isAvailable ? "" : "Den valgte perioden er ikke tilgjengelig.");
     }, [isAvailable]);
 
-    const updateCheckable = (e: React.FormEvent<HTMLInputElement>) => {
+    const handleInputChange = (e: React.FormEvent<HTMLInputElement>) => {
+
+        // update checkbox
         const checklist = inputRefs.filter((ref) => {
             if (ref.current?.value) {
                 if (ref.current?.value.length > 0) {
@@ -81,44 +98,51 @@ const BookPage = (): JSX.Element => {
 
         setCheckable(checklist.length == 4 ? true : false);
 
-        if (checklist.length == 4) {
-            setCheckable(true);
-        } else {
-            setCheckable(false);
+        // update input data
+        const updatedBookingData: BookingData = {
+            firstname: firstnameRef.current?.value as string,
+            surname: surnameRef.current?.value as string,
+            phone: parseInt(phoneRef.current?.value as string),
+            receiverEmail: emailRef.current?.value as string,
+            bookFrom: range.fromDate as string,
+            bookTo: range.toDate as string,
+            cabin: "Bjørnen",
+            price: rangeLength * pricePerNight,
         }
+
+        setBookingData(updatedBookingData)
+
+        // update contract data state
+        const updatedContractData = {
+            firstname: updatedBookingData.firstname,
+            surname: updatedBookingData.surname,
+            fromDate: updatedBookingData.bookFrom,
+            toDate: updatedBookingData.bookTo,
+            cabin: updatedBookingData.cabin,
+            price: updatedBookingData.price,
+        }
+
+        setContractData({ contractData: updatedContractData });
     };
 
     const handleSubmit = (e: React.FormEvent<EventTarget>) => {
         e.preventDefault();
 
-        // avoid refs being null
-        if (firstnameRef.current && surnameRef.current && emailRef.current && phoneRef.current) {
-            const bookingData = {
-                firstname: firstnameRef.current.value,
-                surname: surnameRef.current.value,
-                phone: phoneRef.current.value,
-                receiverEmail: emailRef.current.value,
-                bookFrom: range.fromDate,
-                bookTo: range.toDate,
-                price: pricePerNight * rangeLength,
-            };
+        // create booking and send email
+        if (checked && isAvailable) {
+            createBooking({
+                variables: bookingData,
+            });
 
-            // create booking and send email
-            if (checked && isAvailable) {
-                createBooking({
-                    variables: bookingData,
-                });
+            sendEmail({
+                variables: bookingData,
+            });
 
-                sendEmail({
-                    variables: bookingData,
-                });
-
-                setErrorMessage("");
-                setCheckError("");
-            } else {
-                setErrorMessage(isAvailable ? "" : "Den valgte perioden er ikke tilgjengelig.");
-                setCheckError(checked ? "" : "Du må samtykke med retningslinjene før du booker.");
-            }
+            setErrorMessage("");
+            setCheckError("");
+        } else {
+            setErrorMessage(isAvailable ? "" : "Den valgte perioden er ikke tilgjengelig.");
+            setCheckError(checked ? "" : "Du må samtykke med retningslinjene før du booker.");
         }
     };
 
@@ -137,12 +161,13 @@ const BookPage = (): JSX.Element => {
                     {({ Inputs, Sum, Slider }) => (
                         <>
                             <Inputs>
-                                <InputFields refs={inputRefs} onChange={updateCheckable}>
+                                <InputFields refs={inputRefs} onChange={handleInputChange}>
                                     <CheckBox
                                         checked={checked}
                                         onClick={handleClick}
                                         errorMsg={checkerror}
                                         checkable={checkable}
+                                        contractData={contractData}
                                     ></CheckBox>
                                     <Button url="#" onClick={(e) => handleSubmit(e)}>
                                         Gå til betaling
@@ -165,8 +190,8 @@ const BookPage = (): JSX.Element => {
                     )}
                 </Composition>
             ) : (
-                <>{allBookingsQuery.loading ? <p>Laster...</p> : <p>{errorMessage}</p>}</>
-            )}
+                    <>{allBookingsQuery.loading ? <p>Laster...</p> : <p>{errorMessage}</p>}</>
+                )}
         </Content>
     );
 };
