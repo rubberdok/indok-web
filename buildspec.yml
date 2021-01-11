@@ -3,7 +3,7 @@ version: 0.2
 env:
   variables:
     AWS_REGION: "eu-north-1"
-    NEXT_PUBLIC_GRAPHQL_BACKEND_URI: "http://indokweb-alb-765354250.eu-north-1.elb.amazonaws.com/graphql"
+    NEXT_PUBLIC_GRAPHQL_BACKEND_URI: "https://api.gamma.indokntnu.no/graphql"
 
 phases:
   pre_build:
