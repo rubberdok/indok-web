@@ -3,7 +3,7 @@ version: 0.2
 env:
   variables:
     AWS_REGION: "eu-north-1"
-    GRAPHQL_BACKEND_URI: "indokweb-alb-765354250.eu-north-1.elb.amazonaws.com?api=true"
+    NEXT_PUBLIC_GRAPHQL_BACKEND_URI: "indokweb-alb-765354250.eu-north-1.elb.amazonaws.com/graphql"
 
 phases:
   pre_build:
@@ -25,7 +25,7 @@ phases:
           -f frontend/Dockerfile.prod \
           -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/indokweb-frontend:prod \
           --build-arg NODE_ENV=production \
-          --build-arg GRAPHQL_BACKEND_URI=$GRAPHQL_BACKEND_URI \
+          --build-arg NEXT_PUBLIC_GRAPHQL_BACKEND_URI=$NEXT_PUBLIC_GRAPHQL_BACKEND_URI \
           ./frontend
   post_build:
     commands:
