@@ -1,5 +1,7 @@
+import { ContractProps } from "@interfaces/cabins";
 import Link from "next/link";
 import React from "react";
+import { useState } from "react";
 import styled from "styled-components";
 
 interface CheckProps {
@@ -7,22 +9,25 @@ interface CheckProps {
     onClick: () => void;
     errorMsg: string;
     checkable: boolean;
+    contractData: ContractProps;
 }
 
-const CheckBox = ({ checked, onClick, errorMsg, checkable }: CheckProps): JSX.Element => {
+const CheckBox = ({ checked, onClick, errorMsg, checkable, contractData }: CheckProps): JSX.Element => {
+
+    const [contractViewed, setContractViewed] = useState(false);
+
+    const contractOverlayClick = () => {
+        setContractViewed(true);
+    }
+
     return (
         <>
             <CheckboxWrapper status={errorMsg}>
-                {checkable ? (
-                    <input type="checkbox" onClick={onClick} onChange={onClick} checked={checked}></input>
-                ) : (
-                    <input type="checkbox" onClick={onClick} onChange={onClick} checked={checked} disabled></input>
-                )}
-
+                <input type="checkbox" onChange={onClick} checked={checked} disabled={!(checkable && contractViewed)}></input>
                 <LabelText>
                     Jeg har lest gjennom og samtykker til <Link href="# ">retningslinjene</Link> for booking av hytte og
                     godtar
-                    <Link href="#"> kontrakten</Link>.
+                    <span onClick={contractOverlayClick}><Link href={{ pathname: "./contract", query: contractData.contractData }}> kontrakten</Link>.</span>
                 </LabelText>
             </CheckboxWrapper>
         </>
