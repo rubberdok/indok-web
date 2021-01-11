@@ -14,10 +14,6 @@
       ],
       "environment": [
         {
-          "name": "APP_SETTINGS",
-          "value": "src.config.ProductionConfig"
-        },
-        {
           "name": "DB_HOST",
           "value": "%s"
         },
