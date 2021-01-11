@@ -1,16 +1,27 @@
 import graphene
+import graphql_jwt
 
 from .events.schema import EventMutations, EventQueries
+from .users.schema import UserMutations, UserQueries
+
+
+class JWTMutations(graphene.ObjectType):
+    verify_token = graphql_jwt.Verify.Field()
+    refresh_token = graphql_jwt.Refresh.Field()
+    delete_token_cookie = graphql_jwt.DeleteJSONWebTokenCookie.Field()
 
 
 class Query(
     EventQueries,
+    UserQueries,
 ):
     pass
 
 
 class Mutations(
     EventMutations,
+    UserMutations,
+    JWTMutations,
 ):
     pass
 

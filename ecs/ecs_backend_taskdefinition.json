@@ -24,6 +24,10 @@
         {
           "name": "SECRET_KEY",
           "value": "%s"
+        },
+        {
+          "name": "DATAPORTEN_SECRET",
+          "value": "%s"
         }
       ],
       "logConfiguration": {

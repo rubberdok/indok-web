@@ -1,3 +1,6 @@
+import { useQuery } from "@apollo/client";
+import { GET_USER } from "@graphql/auth/queries";
+import { User } from "@interfaces/users";
 import Layout from "atomic-layout";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -33,6 +36,14 @@ interface NavItemProps {
 
 const NavbarLinks: React.FC = () => {
   const router = useRouter();
+  let signInURL = "https://auth.dataporten.no/oauth/authorization";
+  signInURL += `?client_id=${process.env.NEXT_PUBLIC_DATAPORTEN_ID}`;
+  signInURL += `&state=kjbsgkjswgjlwkbjgs`;
+  signInURL += `&redirect_uri=${process.env.NEXT_PUBLIC_DATAPORTEN_REDIRECT_URI}`;
+  signInURL += `&response_type=code`;
+  signInURL += `&scope=openid%20userid%20userid-feide%20profile%20groups`;
+
+  const { loading, error, data: userData } = useQuery<{ user: User }>(GET_USER);
 
   return (
     <>
@@ -42,7 +53,21 @@ const NavbarLinks: React.FC = () => {
         </Link>
       ))}
       <Line />
-      <NavItem primary>Login</NavItem>
+
+      {!userData || loading || !userData.user || error ? (
+        <NavItem primary href={signInURL}>
+          Logg inn med Feide
+        </NavItem>
+      ) : (
+        <>
+          <NavItem primary href={"/profile"}>
+            {userData.user.firstName}
+          </NavItem>
+          <NavItem primary href={"/logout"}>
+            Logg ut
+          </NavItem>
+        </>
+      )}
     </>
   );
 };
