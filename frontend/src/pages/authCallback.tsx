@@ -7,11 +7,13 @@ import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
-const CallbackPage: NextPage = () => {
+const AuthCallbackPage: NextPage = () => {
   const router = useRouter();
   const { code } = router.query;
 
-  const [authUser, { data, error }] = useMutation<{ authUser: { user: User } }>(AUTHENTICATE, { errorPolicy: "all" });
+  const [authUser, { loading, data, error }] = useMutation<{ authUser: { user: User } }>(AUTHENTICATE, {
+    errorPolicy: "all",
+  });
 
   useEffect(() => {
     if (code) {
@@ -27,15 +29,16 @@ const CallbackPage: NextPage = () => {
     }
   }, [code]);
 
+  if (!loading && data) {
+    router.push("/profile");
+    return null;
+  }
   return (
     <Layout>
       {error ? (
         <div> ERROR: {error.message}</div>
       ) : data ? (
-        <pre>
-          <div>Logged in as </div>
-          {JSON.stringify(data.authUser.user, null, 4)}
-        </pre>
+        <div>Logged in as data.authUser.user.username </div>
       ) : (
         <div>Logging you in...</div>
       )}
@@ -43,4 +46,4 @@ const CallbackPage: NextPage = () => {
   );
 };
 
-export default CallbackPage;
+export default AuthCallbackPage;

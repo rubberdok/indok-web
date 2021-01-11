@@ -37,9 +37,9 @@ interface NavItemProps {
 const NavbarLinks: React.FC = () => {
   const router = useRouter();
   let signInURL = "https://auth.dataporten.no/oauth/authorization";
-  signInURL += `?client_id=${process.env.DATAPORTEN_ID}`;
+  signInURL += `?client_id=${process.env.NEXT_PUBLIC_DATAPORTEN_ID}`;
   signInURL += `&state=kjbsgkjswgjlwkbjgs`;
-  signInURL += `&redirect_uri=${process.env.DATAPORTEN_REDIRECT_URI}`;
+  signInURL += `&redirect_uri=${process.env.NEXT_PUBLIC_DATAPORTEN_REDIRECT_URI}`;
   signInURL += `&response_type=code`;
   signInURL += `&scope=openid%20userid%20userid-feide%20profile%20groups`;
 

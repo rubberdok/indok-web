@@ -32,7 +32,7 @@ class DataportenAuth:
             "code": code,
             "grant_type": "authorization_code",
             # "redirect_uri": os.environ.get("DATAPORTEN_REDIRECT_URI"),
-            "redirect_uri": "http://localhost:3000/cb",
+            "redirect_uri": "http://localhost:3000/authCallback",
         }
 
         try:
