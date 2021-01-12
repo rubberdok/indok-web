@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 import styled from "styled-components";
+import { DATAPORTEN_SCOPES, generateAuthURL } from "./utils";
 
 const links = [
   {
@@ -36,12 +37,12 @@ interface NavItemProps {
 
 const NavbarLinks: React.FC = () => {
   const router = useRouter();
-  let signInURL = "https://auth.dataporten.no/oauth/authorization";
-  signInURL += `?client_id=${process.env.NEXT_PUBLIC_DATAPORTEN_ID}`;
-  signInURL += `&state=kjbsgkjswgjlwkbjgs`;
-  signInURL += `&redirect_uri=${process.env.NEXT_PUBLIC_DATAPORTEN_REDIRECT_URI}`;
-  signInURL += `&response_type=code`;
-  signInURL += `&scope=openid%20userid%20userid-feide%20profile%20groups`;
+  const signInURL = generateAuthURL(
+    process.env.NEXT_PUBLIC_DATAPORTEN_ID,
+    process.env.NEXT_PUBLIC_DATAPORTEN_STATE,
+    process.env.NEXT_PUBLIC_DATAPORTEN_REDIRECT_URI,
+    DATAPORTEN_SCOPES
+  );
 
   const { loading, error, data: userData } = useQuery<{ user: User }>(GET_USER);
 
