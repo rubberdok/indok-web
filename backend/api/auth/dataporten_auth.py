@@ -1,5 +1,4 @@
 import json
-import os
 
 import jwt
 import requests
@@ -157,8 +156,9 @@ class DataportenAuth:
 
         username = user_info["userid_sec"][0].split(":")[1].split("@")[0]
         feide_userid = user_info["userid"]
-        email = f"{username}@stud.ntnu.no"
+        email = user_info["email"]
         name = user_info["name"]
+        # picture = "https://api.dataporten.no/userinfo/v1/user/media/" + user_info["profilephoto"] #TODO: add profile photo
         year = 4  # TODO: update when access to study year
         return (username, feide_userid, email, name, year)
 
