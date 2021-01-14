@@ -33,5 +33,5 @@ export interface ContractProps {
         fromDate: string;
         toDate: string;
         price: number;
-    }
+    };
 }

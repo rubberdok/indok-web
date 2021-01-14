@@ -16,19 +16,16 @@ import Button from "@components/pages/cabins/Button";
 import ImageSlider from "@components/pages/cabins/ImageSlider";
 import { ContractProps } from "@interfaces/cabins";
 
-
 interface BookingData {
-    firstname: string,
-    surname: string,
-    receiverEmail: string,
-    phone: number,
-    bookFrom: string,
-    bookTo: string,
-    cabin: string,
-    price: number
+    firstname: string;
+    surname: string;
+    receiverEmail: string;
+    phone: number;
+    bookFrom: string;
+    bookTo: string;
+    cabin: string;
+    price: number;
 }
-
-
 
 const BookPage = (): JSX.Element => {
     const firstnameRef = React.createRef<HTMLInputElement>();
@@ -54,8 +51,8 @@ const BookPage = (): JSX.Element => {
     const router = useRouter();
     const data = router.query;
 
-    const [contractData, setContractData] = useState({} as ContractProps)
-    const [bookingData, setBookingData] = useState({} as BookingData)
+    const [contractData, setContractData] = useState({} as ContractProps);
+    const [bookingData, setBookingData] = useState({} as BookingData);
     const [rangeLength, setRangeLength] = useState(0);
     const [createBooking] = useMutation(CREATE_BOOKING);
     const [sendEmail] = useMutation(SEND_EMAIL);
@@ -86,7 +83,6 @@ const BookPage = (): JSX.Element => {
     }, [isAvailable]);
 
     const handleInputChange = () => {
-
         // update checkbox
         const checklist = inputRefs.filter((ref) => {
             if (ref.current?.value) {
@@ -108,9 +104,9 @@ const BookPage = (): JSX.Element => {
             bookTo: range.toDate as string,
             cabin: "Bjørnen",
             price: rangeLength * pricePerNight,
-        }
+        };
 
-        setBookingData(updatedBookingData)
+        setBookingData(updatedBookingData);
 
         // update contract data state
         const updatedContractData = {
@@ -120,7 +116,7 @@ const BookPage = (): JSX.Element => {
             toDate: updatedBookingData.bookTo,
             cabin: updatedBookingData.cabin,
             price: updatedBookingData.price,
-        }
+        };
 
         setContractData({ contractData: updatedContractData });
     };
@@ -190,8 +186,8 @@ const BookPage = (): JSX.Element => {
                     )}
                 </Composition>
             ) : (
-                    <>{allBookingsQuery.loading ? <p>Laster...</p> : <p>{errorMessage}</p>}</>
-                )}
+                <>{allBookingsQuery.loading ? <p>Laster...</p> : <p>{errorMessage}</p>}</>
+            )}
         </Content>
     );
 };

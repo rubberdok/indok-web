@@ -48,7 +48,7 @@ export const ArrowIcon = ({ direction, size, href, onClick }: ArrowProps): JSX.E
 
 const Arrow = styled.div`
     transition: all 0.2s ease-in-out;
-    transform-origin: ${(props: ArrowProps) => (props.direction == "l" ? "60% 50%" : "40% 50%")};
+    transform-origin: ${(props: ArrowProps) => (props.direction == "l" ? "40% 50%" : "40% 50%")};
     &:hover {
         cursor: pointer;
         transform: scale(1.1);

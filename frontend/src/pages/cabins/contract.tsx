@@ -2,7 +2,6 @@ import Layout from "@components/Layout";
 import Contract from "@components/pages/cabins/Contract";
 import styled from "styled-components";
 
-
 const ContractPage = () => {
     return (
         <>

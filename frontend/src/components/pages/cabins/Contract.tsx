@@ -1,6 +1,8 @@
+import { ArrowIcon } from "@components/ui/ArrowIcon";
 import { useRouter } from "next/router";
+import Router from "next/router";
+import React from "react";
 import styled from "styled-components";
-
 
 const Contract = () => {
     const currentTime = new Date().toLocaleString();
@@ -8,10 +10,13 @@ const Contract = () => {
     const router = useRouter();
     const query = router.query;
 
+    const handleBackButtonClick = () => Router.back();
+
     return (
         <>
             <div>
                 <Logo src="/static/cabins/hyttestyret_logo.png"></Logo>
+                <ArrowIcon direction={"l"} size={35} onClick={handleBackButtonClick}></ArrowIcon>
                 <h1>KONTRAKT</h1>
                 <h3>Utleieavtale</h3>
                 <p>
@@ -91,11 +96,9 @@ const Contract = () => {
     );
 };
 
-
 const Logo = styled.img`
     margin: auto;
     width: 30vh;
-`
-
+`;
 
 export default Contract;

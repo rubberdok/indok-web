@@ -6,13 +6,13 @@ import { Card } from "./CardC";
 // const templateMobile = `
 //     input input
 //     input input
-//     button 
+//     button
 // `;
 
 // const templateTablet = `
 //   input input
 //   input input
-//   button 
+//   button
 // `;
 
 interface InputFieldsProps {
