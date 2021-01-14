@@ -79,9 +79,9 @@ const CabinBooker = () => {
                     onClick={() => {
                         isAvailable
                             ? router.push({
-                                pathname: "cabins/book",
-                                query: range,
-                            })
+                                  pathname: "cabins/book",
+                                  query: range,
+                              })
                             : null;
                     }}
                 >
