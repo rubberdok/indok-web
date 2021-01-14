@@ -47,7 +47,9 @@ class DataportenAuth:
             response.raise_for_status()
         except requests.exceptions.RequestException as err:
             print(f"Error completing Dataporten authentication: {err}")
-            raise Exception("Error completing Dataporten authentication")
+            raise Exception(
+                "En feil oppstud under fullføring av Dataporten-autentisering."
+            )
 
         print(f"Successfully obtained access token: {response.json()['access_token']}")
 
@@ -71,7 +73,7 @@ class DataportenAuth:
             jwks = response.json()
         except requests.exceptions.RequestException as err:
             print(f"Error fetching Dataporten public keys: {err}")
-            raise Exception("An error occured while validating id_token")
+            raise Exception("En systemfeil oppstod under validering av brukeren.")
 
         public_keys = {}
         for jwk in jwks["keys"]:
@@ -92,7 +94,7 @@ class DataportenAuth:
             )
         except jwt.PyJWTError as e:
             print(f"Error validating id_token: {e}")
-            raise ValidationError("Unable to validate id_token")
+            raise ValidationError("Kunne ikke validere brukeren.")
 
         print("The id_token was successfully validated")
 
@@ -113,7 +115,9 @@ class DataportenAuth:
             response.raise_for_status()
         except requests.exceptions.RequestException as err:
             print(f"Error confirming indøk enrollment: {err}")
-            raise PermissionDenied("User is not enrolled at indøk")
+            raise PermissionDenied(
+                "Beklager, kun studenter som studerer Industriell Økonomi og Teknologiledelse (MTIØT) kan logge inn."
+            )
 
         data = response.json()
         print(f"Indøk enrollment info: {json.dumps(data)}")
@@ -123,7 +127,9 @@ class DataportenAuth:
             enrolled = data["basic"] == "member" and data["active"] == True
 
         if not enrolled:
-            raise PermissionDenied("User is not enrolled at indøk")
+            raise PermissionDenied(
+                "Beklager, kun studenter som studerer Industriell Økonomi og Teknologiledelse (MTIØT) kan logge inn."
+            )
 
         print("User is enrolled at indøk")
 
@@ -147,7 +153,7 @@ class DataportenAuth:
             response.raise_for_status()
         except requests.exceptions.RequestException as err:
             print(f"Error fetching user info: {err}")
-            raise Exception("Unable to fetch user info from Dataporten")
+            raise Exception("Kunne ikke hente brukerinfo fra Dataporten.")
 
         print(f"Successfully fetched user info for {response.json()['user']['name']}")
 
@@ -166,7 +172,7 @@ class DataportenAuth:
     def authenticate_and_get_user(cls, code=None):
         print(f"\n{'='*20}Authentication flow started{'='*20}")
         if code is None:
-            raise ValidationError("Invalid authorization code from request")
+            raise ValidationError("Ugyldig autentiseringskode i forespørselen.")
 
         # Complete authentication of user
         response = cls.complete_dataporten_auth(code)

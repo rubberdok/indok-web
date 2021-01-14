@@ -28,7 +28,7 @@ const Button: React.FC<ButtonProps> = (props) => {
       condition={!!props.link}
       wrapper={(children: JSX.Element) => <Link href={props.link || "/"}>{children}</Link>}
     >
-      <StyledButton back={props.back} as={props.style ? styles[props.style] : undefined}>
+      <StyledButton back={props.back} as={props.style ? styles[props.style] : Primary}>
         {props.back ? (
           <>
             <Icon>
