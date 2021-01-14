@@ -1,5 +1,7 @@
 import { useQuery } from "@apollo/client";
 import Layout from "@components/Layout";
+import Content from "@components/ui/Content";
+import { Heading, Paragraph, Title } from "@components/ui/Typography";
 import { GET_USER } from "@graphql/auth/queries";
 import { User } from "@interfaces/users";
 import { NextPage } from "next";
@@ -24,22 +26,28 @@ const ProfilePage: NextPage = () => {
 
   return (
     <Layout>
-      <Col>
-        <h1>Brukerprofil</h1>
-        {user ? (
-          <div>
-            <h2>{user.firstName}</h2>
+      <Content>
+        <Col>
+          <Title>Brukerprofil</Title>
+          {user ? (
             <div>
-              <strong>Brukernavn:</strong> {user.username} <br />
-              <strong>E-post:</strong> {user.email} <br />
-              <strong>Klassetrinn:</strong> {user.year} <br />
-              Medlem siden {new Date(user.dateJoined).toLocaleString()} <br />
-            </div>{" "}
-          </div>
-        ) : (
-          <div> Du er ikke logget inn! Vennligst logg inn med Feide. </div>
-        )}
-      </Col>
+              <Heading>{user.firstName}</Heading>
+              <Content>
+                <Paragraph>
+                  <strong>Brukernavn:</strong> {user.username} <br />
+                  <strong>E-post:</strong> {user.email} <br />
+                  <strong>Klassetrinn:</strong> {user.year} <br />
+                </Paragraph>
+                <Paragraph>
+                  Medlem siden {new Date(user.dateJoined).toLocaleString()} <br />
+                </Paragraph>
+              </Content>
+            </div>
+          ) : (
+            <div> Du er ikke logget inn! Vennligst logg inn med Feide. </div>
+          )}
+        </Col>
+      </Content>
     </Layout>
   );
 };
