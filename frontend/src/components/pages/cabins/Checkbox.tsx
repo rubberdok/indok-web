@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import { ContractProps } from "@interfaces/cabins";
 import Link from "next/link";
 import React from "react";
@@ -13,21 +14,36 @@ interface CheckProps {
 }
 
 const CheckBox = ({ checked, onClick, errorMsg, checkable, contractData }: CheckProps): JSX.Element => {
-
     const [contractViewed, setContractViewed] = useState(false);
 
-    const contractOverlayClick = () => {
+    const contractLinkClick = () => {
         setContractViewed(true);
-    }
+    };
 
     return (
         <>
             <CheckboxWrapper status={errorMsg}>
-                <input type="checkbox" onChange={onClick} checked={checked} disabled={!(checkable && contractViewed)}></input>
+                <input
+                    type="checkbox"
+                    onChange={onClick}
+                    checked={checked}
+                    disabled={!(checkable && contractViewed)}
+                ></input>
                 <LabelText>
-                    Jeg har lest gjennom og samtykker til <Link href="# ">retningslinjene</Link> for booking av hytte og
-                    godtar
-                    <span onClick={contractOverlayClick}><Link href={{ pathname: "./contract", query: contractData.contractData }}> kontrakten</Link>.</span>
+                    Jeg har lest gjennom og samtykker til{" "}
+                    <Link href="./rules" passHref>
+                        <a aria-hidden="true" target="_blank" rel="noreferrer">
+                            retningslinjene
+                        </a>
+                    </Link>{" "}
+                    for booking av hytte og godtar
+                    <Link href={{ pathname: "./contract", query: contractData.contractData }} passHref>
+                        <a aria-hidden="true" onClick={contractLinkClick} target="_blank" rel="noreferrer">
+                            {" "}
+                            kontrakten
+                        </a>
+                    </Link>
+                    .
                 </LabelText>
             </CheckboxWrapper>
         </>
