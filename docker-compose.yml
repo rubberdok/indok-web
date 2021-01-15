@@ -17,12 +17,10 @@ services:
   backend:
     restart: always
     build:
-      context: .
-      dockerfile: backend/Dockerfile
-    working_dir: /code/backend
-    command: python manage.py runserver 0.0.0.0:8000
+      context: ./backend
+      dockerfile: Dockerfile
     volumes:
-      - ./backend:/code/backend
+      - ./backend:/code
     ports:
       - "8000:8000"
     depends_on:
@@ -30,14 +28,12 @@ services:
 
   frontend:
     build:
-      context: .
-      dockerfile: frontend/Dockerfile
-    working_dir: /code/frontend
-    command: npm run dev
+      context: ./frontend
+      dockerfile: Dockerfile
     volumes:
-      - ./frontend/:/code/frontend
-      - /code/frontend/node_modules
-      - /code/frontend/.next
+      - ./frontend/:/code
+      - /code/node_modules
+      - /code/.next
     ports:
       - 3000:3000
     expose:

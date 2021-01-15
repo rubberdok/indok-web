@@ -3,62 +3,62 @@ import Link from "next/link";
 import feather from "feather-icons";
 
 interface ButtonProps {
-    url: string;
-    children: string | JSX.Element;
-    onClick?: (event: React.FormEvent<EventTarget>) => void;
-    disabled?: boolean;
+  url: string;
+  children: string | JSX.Element;
+  onClick?: (event: React.FormEvent<EventTarget>) => void;
+  disabled?: boolean;
 }
 
 const Button: React.FC<ButtonProps> = (props) => {
-    console.log(props.disabled);
-    return (
-        <Link href={props.url}>
-            <StyledButton
-                onClick={(event: React.FormEvent<EventTarget>) => (props.onClick ? props.onClick(event) : null)}
-                disabled={props.disabled}
-            >
-                <Container>{props.children}</Container>
-                <Icon disabled={props.disabled}>
-                    <i dangerouslySetInnerHTML={{ __html: feather.icons["arrow-right"].toSvg() }} />
-                </Icon>
-            </StyledButton>
-        </Link>
-    );
+  console.log(props.disabled);
+  return (
+    <Link href={props.url}>
+      <StyledButton
+        onClick={(event: React.FormEvent<EventTarget>) => (props.onClick ? props.onClick(event) : null)}
+        disabled={props.disabled}
+      >
+        <Container>{props.children}</Container>
+        <Icon disabled={props.disabled}>
+          <i dangerouslySetInnerHTML={{ __html: feather.icons["arrow-right"].toSvg() }} />
+        </Icon>
+      </StyledButton>
+    </Link>
+  );
 };
 
 const Icon = styled.div`
-    background: ${({ theme, disabled }) => (disabled ? "#5f5e5e" : theme.colors.primaryDark)};
-    width: 70px;
-    display: table-cell;
-    text-align: center;
-    vertical-align: middle;
-    transition: 0.3s all ease;
-    & svg {
-        margin-top: 8px;
-    }
+  background: ${({ theme, disabled }) => (disabled ? "#5f5e5e" : theme.colors.primaryDark)};
+  width: 70px;
+  display: table-cell;
+  text-align: center;
+  vertical-align: middle;
+  transition: 0.3s all ease;
+  & svg {
+    margin-top: 8px;
+  }
 `;
 
 const StyledButton = styled.a`
-    background: ${({ theme, disabled }) => (disabled ? "#7a7979" : theme.colors.primary)};
-    color: #fff;
-    font-family: "Montserrat";
-    font-size: 18px;
-    border: none;
-    display: table;
-    text-decoration: none !important;
-    transition: 0.3s all ease;
-    &:hover {
-        background: ${({ theme, disabled }) => (disabled ? "#5f5e5e" : theme.colors.primaryDark)};
-        cursor: pointer;
-        & ${Icon} {
-            padding-left: 10px;
-            width: 70px;
-        }
+  background: ${({ theme, disabled }) => (disabled ? "#7a7979" : theme.colors.primary)};
+  color: #fff;
+  font-family: "Montserrat";
+  font-size: 18px;
+  border: none;
+  display: table;
+  text-decoration: none !important;
+  transition: 0.3s all ease;
+  &:hover {
+    background: ${({ theme, disabled }) => (disabled ? "#5f5e5e" : theme.colors.primaryDark)};
+    cursor: pointer;
+    & ${Icon} {
+      padding-left: 10px;
+      width: 70px;
     }
+  }
 `;
 
 const Container = styled.div`
-    padding: 20px 35px;
+  padding: 20px 35px;
 `;
 
 export default Button;

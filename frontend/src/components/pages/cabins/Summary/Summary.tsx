@@ -23,65 +23,65 @@ const templateMobile = `
 `;
 
 interface SummaryProps {
-    from: string;
-    to: string;
-    cabin: string;
-    price: number;
-    nights: number;
+  from: string;
+  to: string;
+  cabin: string;
+  price: number;
+  nights: number;
 }
 
 const VerticalSep = styled.hr`
-    background: ${({ theme }) => theme.colors.primary};
-    border: none;
-    width: 80%;
-    height: ${(p: { height: number }) => p.height}px;
+  background: ${({ theme }) => theme.colors.primary};
+  border: none;
+  width: 80%;
+  height: ${(p: { height: number }) => p.height}px;
 `;
 
 const Summary = ({ from, to, cabin, price, nights }: SummaryProps): JSX.Element => {
-    return (
-        <Card>
-            <Composition
-                templateXs={templateMobile}
-                templateMd={templateDesktop}
-                templateColsMdOnly="minmax(100px, 1fr) 1fr"
-                padding={0}
-                gutter={0}
-                gutterLg={0}
-            >
-                {({ Cabin, From, To, Facs, Price, Total }) => (
-                    <>
-                        <Cabin>
-                            <h3>Hytte: {cabin}</h3>
-                            <VerticalSep height={4} />
-                        </Cabin>
-                        <From>
-                            <p>Fra: {from}</p>
-                        </From>
-                        <To>
-                            <p>Til: {to}</p>
-                        </To>
-                        <Facs>
-                            <VerticalSep height={2} />
-                            <Facilities></Facilities>
-                        </Facs>
-                        <Price>
-                            <VerticalSep height={2} />
+  return (
+    <Card>
+      <Composition
+        templateXs={templateMobile}
+        templateMd={templateDesktop}
+        templateColsMdOnly="minmax(100px, 1fr) 1fr"
+        padding={0}
+        gutter={0}
+        gutterLg={0}
+      >
+        {({ Cabin, From, To, Facs, Price, Total }) => (
+          <>
+            <Cabin>
+              <h3>Hytte: {cabin}</h3>
+              <VerticalSep height={4} />
+            </Cabin>
+            <From>
+              <p>Fra: {from}</p>
+            </From>
+            <To>
+              <p>Til: {to}</p>
+            </To>
+            <Facs>
+              <VerticalSep height={2} />
+              <Facilities></Facilities>
+            </Facs>
+            <Price>
+              <VerticalSep height={2} />
 
-                            <p>
-                                {price} kr x {nights} dager
-                            </p>
-                        </Price>
-                        <Total>
-                            <VerticalSep height={4} />
-                            <p>
-                                <b>Totalt: {price * nights}kr</b>
-                            </p>
-                        </Total>
-                    </>
-                )}
-            </Composition>
-        </Card>
-    );
+              <p>
+                {price} kr x {nights} dager
+              </p>
+            </Price>
+            <Total>
+              <VerticalSep height={4} />
+              <p>
+                <b>Totalt: {price * nights}kr</b>
+              </p>
+            </Total>
+          </>
+        )}
+      </Composition>
+    </Card>
+  );
 };
 
 export default Summary;

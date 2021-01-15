@@ -1,14 +1,23 @@
 import graphene
 
-from .events.schema import EventMutations, EventQueries
 from .cabins.schema import BookingMutations, BookingQueries
+from .events.schema import EventMutations, EventQueries
+from .users.schema import UserMutations, UserQueries
 
 
-class Query(EventQueries, BookingQueries):
+class Query(
+    EventQueries,
+    UserQueries,
+    BookingQueries,
+):
     pass
 
 
-class Mutations(EventMutations, BookingMutations):
+class Mutations(
+    EventMutations,
+    UserMutations,
+    BookingMutations,
+):
     pass
 
 
