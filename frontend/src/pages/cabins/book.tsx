@@ -15,6 +15,7 @@ import CheckBox from "@components/pages/cabins/Checkbox";
 import Button from "@components/pages/cabins/Button";
 import ImageSlider from "@components/pages/cabins/ImageSlider";
 import { ContractProps } from "@interfaces/cabins";
+import styled from "styled-components";
 
 interface BookingData {
     firstname: string;
@@ -142,6 +143,10 @@ const BookPage = (): JSX.Element => {
         }
     };
 
+    const tempHandleSubmit = (e: React.FormEvent<EventTarget>) => {
+        e.preventDefault();
+    };
+
     return (
         <Content>
             <Navbar></Navbar>
@@ -165,7 +170,7 @@ const BookPage = (): JSX.Element => {
                                         checkable={checkable}
                                         contractData={contractData}
                                     ></CheckBox>
-                                    <Button url="#" onClick={(e) => handleSubmit(e)}>
+                                    <Button url="#" onClick={(e) => tempHandleSubmit(e)} disabled>
                                         Gå til betaling
                                     </Button>
                                 </InputFields>
