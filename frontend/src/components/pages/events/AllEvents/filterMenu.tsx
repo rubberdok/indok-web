@@ -2,6 +2,8 @@ import React from "react";
 import { useQuery } from "@apollo/client";
 import { GET_CATEGORIES, QUERY_EVENT_FILTERED_ORGANIZATIONS } from "@graphql/events/queries";
 import { FilterQuery } from ".";
+import { Organization } from "@interfaces/organizations";
+import { Category } from "@interfaces/events";
 
 interface Props {
   filters: FilterQuery;
@@ -23,7 +25,7 @@ const FilterMenu: React.FC<Props> = ({ filters, onChange }) => {
     return (
       <div>
         <h5 style={{ margin: "0px" }}>{"Organisasjoner"}</h5>
-        {data.eventFilteredOrganizations.map((org) => (
+        {data.eventFilteredOrganizations.map((org: Organization) => (
           <div key={org.name}>
             <div
               style={{
@@ -41,7 +43,7 @@ const FilterMenu: React.FC<Props> = ({ filters, onChange }) => {
               <p style={{ marginBottom: "0px", marginTop: "0.05em" }}>{org.name}</p>
             </div>
 
-            {org.children?.map((subOrg) => (
+            {org.children?.map((subOrg: Organization) => (
               <div
                 key={subOrg.name}
                 style={{
@@ -79,7 +81,7 @@ const FilterMenu: React.FC<Props> = ({ filters, onChange }) => {
     return (
       <div>
         <h5 style={{ marginBottom: "0px" }}>{"Kategorier"}</h5>
-        {data.allCategories.map((category) => (
+        {data.allCategories.map((category: Category) => (
           <div
             key={category.name}
             style={{
