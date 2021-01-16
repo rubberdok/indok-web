@@ -143,7 +143,7 @@ const Footer: React.FC = () => {
           </Row>
         </>
       )}
-      <div style={{ float: "left", clear: "both" }} ref={bottomRef}></div>
+      <div ref={bottomRef} />
     </Container>
   );
 };
