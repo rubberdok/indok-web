@@ -2,6 +2,7 @@ from apps.archive.models import ArchiveDocument
 from django.db.models import Q
 import graphene
 from django.db.models.sql import Query
+from operator import and_
 
 
 class ArchiveDocumentResolvers:
@@ -20,8 +21,16 @@ class ArchiveDocumentResolvers:
         except ArchiveDocument.DoesNotExist:
             return None
 
-    def resolve_archive_by_type(parent, info, type_doc):
-        try:
-            return ArchiveDocument.objects.filter(type_doc=type_doc)
-        except ArchiveDocument.DoesNotExist:
-            return None
+    def resolve_archive_by_type(parent, info, type_docs):
+        if type_docs:
+            try:
+                return ArchiveDocument.objects.filter(type_doc__in=type_docs)
+
+            except ArchiveDocument.DoesNotExist:
+                return None
+        else:
+            try:
+                return ArchiveDocument.objects.all()
+
+            except ArchiveDocument.DoesNotExist:
+                return None

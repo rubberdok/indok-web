@@ -28,3 +28,17 @@ export const DOCUMENT = gql`
         }
     }
 `;
+
+export const GET_DOCSBYTYPE = gql`
+    query archiveByType($document_types: [String]!) {
+        archiveByType(typeDocs: $document_types) {
+            id
+            title
+            description
+            date
+            url
+            thumbnail
+            typeDoc
+        }
+    }
+`;
