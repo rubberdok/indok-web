@@ -4,14 +4,11 @@ from apps.archive.models import ArchiveDocument
 from graphene_django import DjangoObjectType
 from apps.archive.google_drive_api import get_url, get_thumbNail
 
-#class URLType(graphene.ObjectType):
- #   url = graphene.String()
-  #  thumbnail = graphene.String()
 
 class ArchiveDocumentType(DjangoObjectType):
     url = graphene.String()
     thumbnail = graphene.String()
-    
+
     class Meta:
         model = ArchiveDocument
 
@@ -22,5 +19,3 @@ class ArchiveDocumentType(DjangoObjectType):
     @staticmethod
     def resolve_thumbnail(root: ArchiveDocument, info):
         return f"{get_thumbNail(root.file_location)}"
-
-   
