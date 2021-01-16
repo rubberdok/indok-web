@@ -1,5 +1,5 @@
-import styled from "styled-components";
 import theme from "@styles/theme";
+import styled from "styled-components";
 
 export const BookingContainer = styled.div`
   display: flex;

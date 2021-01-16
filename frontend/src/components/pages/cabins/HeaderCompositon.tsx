@@ -1,6 +1,6 @@
 import { ArrowIcon } from "@components/ui/ArrowIcon";
-import React from "react";
 import { Composition } from "atomic-layout";
+import React from "react";
 import styled from "styled-components";
 
 const template = `

@@ -1,7 +1,6 @@
+import { Speaker } from "react-feather";
+import { FaBed, FaLightbulb, FaThermometerFull, FaUtensils, FaWifi } from "react-icons/fa";
 import styled from "styled-components";
-import { Wifi, Thermometer, Zap, Speaker } from "react-feather";
-
-import { FaBed, FaWifi, FaThermometerFull, FaLightbulb, FaUtensils } from "react-icons/fa";
 
 const fontSize = 14;
 

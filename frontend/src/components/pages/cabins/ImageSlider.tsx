@@ -1,8 +1,8 @@
-import React from "react";
-import { Card } from "./CardC";
-import styled from "styled-components";
-import Slider from "react-slick";
 import { ArrowIcon } from "@components/ui/ArrowIcon";
+import React from "react";
+import Slider from "react-slick";
+import styled from "styled-components";
+import { Card } from "./CardC";
 
 interface ImageSliderProps {
   cabin: "Bjørnen" | "Oksen";

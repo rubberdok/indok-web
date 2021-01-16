@@ -1,8 +1,8 @@
-import React from "react";
-import styled from "styled-components";
 import Navbar from "@components/navbar/Navbar";
 import CabinBooker from "@components/pages/cabins/CabinBooker/CabinBooker";
 import { Paragraph } from "@components/ui/Typography";
+import React from "react";
+import styled from "styled-components";
 
 const Container = styled.div`
   display: flex;

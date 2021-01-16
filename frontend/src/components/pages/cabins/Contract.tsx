@@ -1,6 +1,5 @@
 import { ArrowIcon } from "@components/ui/ArrowIcon";
-import { useRouter } from "next/router";
-import Router from "next/router";
+import Router, { useRouter } from "next/router";
 import React from "react";
 import styled from "styled-components";
 
@@ -18,7 +17,7 @@ const Contract = () => {
         <Logo src="/static/cabins/hyttestyret_logo.png"></Logo>
         <ArrowIcon direction={"l"} size={35} onClick={handleBackButtonClick}></ArrowIcon>
         <h1>KONTRAKT</h1>
-        <h3>Utleieavtale</h3>
+        <h3>Utleieavtale</h3>ß
         <p>
           På vegne av Foreningen for studenter ved Industriell økonomi og teknologiledelse er det i dag inngått følgende
           leiekontrakt mellom Hyttestyret og{" "}

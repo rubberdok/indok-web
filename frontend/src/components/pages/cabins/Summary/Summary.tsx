@@ -1,9 +1,8 @@
-import React from "react";
 import { Composition } from "atomic-layout";
-import { Card } from "../CardC";
+import React from "react";
 import styled from "styled-components";
+import { Card } from "../CardC";
 import Facilities from "./Facilities";
-import { SubHeading } from "@components/ui/Typography";
 
 const templateDesktop = `
     cabin cabin

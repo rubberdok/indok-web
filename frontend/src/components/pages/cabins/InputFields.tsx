@@ -1,6 +1,6 @@
-import React from "react";
-import { Composition } from "atomic-layout";
 import Input from "@components/ui/Input";
+import { Composition } from "atomic-layout";
+import React from "react";
 import { Card } from "./CardC";
 
 // const templateMobile = `

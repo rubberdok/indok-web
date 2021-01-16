@@ -1,8 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import { ContractProps } from "@interfaces/cabins";
 import Link from "next/link";
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 
 interface CheckProps {

@@ -1,13 +1,13 @@
-import useBookingRange from "@hooks/cabins/useBookingRange";
-import { useRouter } from "next/router";
-import Calendar, { CalendarEvent, createDateRange } from "@components/Calendar";
-import React, { useEffect, useState } from "react";
-import { EventMarker } from "@components/Calendar/styles";
-import { BookButton, BookingContainer, Dropdown, FlowContainer, SelectContainer } from "./styles";
-import Step from "./Step";
 import { useQuery } from "@apollo/client";
-import { Cabin } from "@interfaces/cabins";
+import Calendar, { CalendarEvent, createDateRange } from "@components/Calendar";
+import { EventMarker } from "@components/Calendar/styles";
 import { QUERY_CABINS } from "@graphql/cabins/queries";
+import useBookingRange from "@hooks/cabins/useBookingRange";
+import { Cabin } from "@interfaces/cabins";
+import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
+import Step from "./Step";
+import { BookButton, BookingContainer, Dropdown, FlowContainer, SelectContainer } from "./styles";
 
 const DayEvent = (key: string) => <EventMarker key={key} />;
 

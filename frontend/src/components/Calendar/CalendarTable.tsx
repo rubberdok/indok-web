@@ -1,7 +1,7 @@
-import React from "react";
-import { WeekDay, BigTable, Month, Year, CalendarTableContainer } from "./styles";
-import { NORWEGIAN_SHORT_DAY_NAMES } from "./constants";
 import moment from "moment";
+import React from "react";
+import { NORWEGIAN_SHORT_DAY_NAMES } from "./constants";
+import { BigTable, CalendarTableContainer, Month, WeekDay, Year } from "./styles";
 
 moment.updateLocale("nb", {
   weekdaysShort: NORWEGIAN_SHORT_DAY_NAMES,

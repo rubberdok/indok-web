@@ -1,20 +1,20 @@
-import { useRouter } from "next/router";
 import { useMutation } from "@apollo/client";
-import { CREATE_BOOKING } from "../../graphql/cabins/mutations";
-import Navbar from "@components/navbar/Navbar";
-import React, { useEffect, useState } from "react";
-import { SEND_EMAIL } from "@graphql/cabins/mutations";
-import useBookingRange from "../../hooks/cabins/useBookingRange";
-import Content from "../../components/ui/Content";
-import { InputFields } from "@components/pages/cabins/InputFields";
-import { Composition } from "atomic-layout";
-import Summary from "@components/pages/cabins/Summary/Summary";
 import { getRangeLength } from "@components/Calendar";
-import { HeaderComposition } from "@components/pages/cabins/HeaderCompositon";
-import CheckBox from "@components/pages/cabins/Checkbox";
+import Navbar from "@components/navbar/Navbar";
 import Button from "@components/pages/cabins/Button";
+import CheckBox from "@components/pages/cabins/Checkbox";
+import { HeaderComposition } from "@components/pages/cabins/HeaderCompositon";
 import ImageSlider from "@components/pages/cabins/ImageSlider";
+import { InputFields } from "@components/pages/cabins/InputFields";
+import Summary from "@components/pages/cabins/Summary/Summary";
+import { SEND_EMAIL } from "@graphql/cabins/mutations";
 import { ContractProps } from "@interfaces/cabins";
+import { Composition } from "atomic-layout";
+import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
+import Content from "../../components/ui/Content";
+import { CREATE_BOOKING } from "../../graphql/cabins/mutations";
+import useBookingRange from "../../hooks/cabins/useBookingRange";
 
 interface BookingData {
   firstname: string;

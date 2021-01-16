@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react";
-import moment from "moment";
-import { Day, DayCell, MonthPickButton, MonthSelector, EventMarkerWrapper, TwoCalendarsContainer } from "./styles";
 import _ from "lodash";
-import { getDateRange, rangeLength, nextMonthDays, previousMonthDays } from "./helpers";
-import { NORWEGIAN_SHORT_DAY_NAMES, DATE_FORMAT } from "./constants";
+import moment from "moment";
+import { useEffect, useState } from "react";
 import CalendarTable from "./CalendarTable";
+import { DATE_FORMAT, NORWEGIAN_SHORT_DAY_NAMES } from "./constants";
+import { getDateRange, previousMonthDays, rangeLength } from "./helpers";
+import { Day, DayCell, EventMarkerWrapper, MonthPickButton, MonthSelector, TwoCalendarsContainer } from "./styles";
 
 export interface CalendarEvent {
   date: string;
