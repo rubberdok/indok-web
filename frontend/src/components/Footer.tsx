@@ -1,24 +1,49 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
+import Button from "./ui/Button";
 
 const Footer: React.FC = () => {
+  const [openHallOfFame, setOpenHallOfFame] = useState(false);
+
+  const bottomRef = useRef<HTMLDivElement>();
+
+  useEffect(() => {
+    if (bottomRef.current) {
+      bottomRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [openHallOfFame]);
+
   return (
     <Container>
       <Row>
         <Col>
           <h2>IndøkNTNU.no</h2>
-          <p> Hjemmesiden for studentfrivilligheten ved Industriell Økonomi og Teknologiledelse, NTNU</p>
-          <p>Laget av RubberDøk, Hovedstyret på Indøks webkomité</p>
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <p>
+            Hjemmesiden for studentfrivilligheten ved Industriell Økonomi og Teknologiledelse, NTNU
+            <br />
+            Laget av RubberDøk, Hovedstyret på Indøks webkomité
+          </p>
           <a href="https://github.com/hovedstyret">
             <img
               src="./img/rubberdøkdøk.png"
               alt="rubberdøk-logo"
-              style={{ height: "auto", width: "20%", display: "block", marginLeft: "auto", marginRight: "auto" }}
+              style={{
+                height: "auto",
+                width: "20%",
+                display: "block",
+                marginLeft: "auto",
+                marginRight: "auto",
+                marginBottom: "2%",
+              }}
             />
           </a>
         </Col>
         <Col>
-          <p>
+          <p style={{ marginTop: "-5%" }}>
             <a href="mailto:leder@indokhs.no">
               <img
                 src="./img/mail-icon.svg"
@@ -59,10 +84,66 @@ const Footer: React.FC = () => {
         </Col>
       </Row>
       <Row>
+        <Col>Kopirett © 2020 Foreningen for studentene ved Indøk. Alle rettigheter reservert.</Col>
+      </Row>
+      <Row>
         <Col>
-          <button>Hall of Fame</button>
+          <div style={{ display: "inline-block", marginBottom: "2%" }}>
+            <Button
+              style="secondary"
+              onClick={() => {
+                setOpenHallOfFame(!openHallOfFame);
+              }}
+              arrow={false}
+            >
+              Hall of Fame
+            </Button>
+          </div>
         </Col>
       </Row>
+      {openHallOfFame && (
+        <>
+          <Row>
+            <Col>
+              <strong>2020/2021</strong>
+            </Col>
+          </Row>
+          <Row>
+            <Col>Laget med blod, svette, tårer og kjærlighet av</Col>
+          </Row>
+          <Row>
+            <Col>
+              Morgan Heggland &apos;22
+              <br />
+              Ingrid Aaseng &apos;22
+              <br />
+              Fredrik Ahlborg &apos;22
+              <br />
+              Herman Holmøy &apos;25
+              <br />
+              Patrik Kjærran &apos;22
+              <br />
+              Anna Sofie Lunde &apos;22
+              <br />
+            </Col>
+            <Col>
+              Hermann Mørkrid &apos;23
+              <br />
+              Mathias Raa &apos;25
+              <br />
+              Mathilde Marie Solberg &apos;23 <br />
+              Sverre Spetalen &apos;21
+              <br />
+              Lars Waage &apos;23
+              <br />
+              Lars Lien Ankile &apos;22
+              <br />
+              Andreas Johannesen &apos;22
+            </Col>
+          </Row>
+        </>
+      )}
+      <div style={{ float: "left", clear: "both" }} ref={bottomRef}></div>
     </Container>
   );
 };
