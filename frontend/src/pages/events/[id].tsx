@@ -29,8 +29,8 @@ const EventInfo: NextPage = () => {
       </div>
       <div style={{ marginTop: "2em" }}>
         <Button styling="primary" link="/events" back>
-          Tilbake til arrangementer{" "}
-        </Button>{" "}
+          Tilbake til arrangementer
+        </Button>
       </div>
     </Layout>
   );
