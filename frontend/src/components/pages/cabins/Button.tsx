@@ -1,11 +1,19 @@
-import styled from "styled-components";
-import Link from "next/link";
 import feather from "feather-icons";
+import Link from "next/link";
+import styled from "styled-components";
 
 interface ButtonProps {
   url: string;
   children: string | JSX.Element;
   onClick?: (event: React.FormEvent<EventTarget>) => void;
+  disabled?: boolean;
+}
+
+interface IconProps {
+  disabled?: boolean;
+}
+
+interface StyledButtonProps {
   disabled?: boolean;
 }
 
@@ -26,7 +34,7 @@ const Button: React.FC<ButtonProps> = (props) => {
   );
 };
 
-const Icon = styled.div`
+const Icon = styled.div<IconProps & React.HTMLProps<HTMLDivElement>>`
   background: ${({ theme, disabled }) => (disabled ? "#5f5e5e" : theme.colors.primaryDark)};
   width: 70px;
   display: table-cell;
@@ -38,7 +46,7 @@ const Icon = styled.div`
   }
 `;
 
-const StyledButton = styled.a`
+const StyledButton = styled.a<StyledButtonProps & React.HTMLProps<HTMLAnchorElement>>`
   background: ${({ theme, disabled }) => (disabled ? "#7a7979" : theme.colors.primary)};
   color: #fff;
   font-family: "Montserrat";
