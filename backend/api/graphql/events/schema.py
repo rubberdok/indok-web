@@ -1,4 +1,5 @@
 import graphene
+from apps.events.models import Event
 
 from .mutations import CreateCategory, DeleteCategory, UpdateCategory
 from .mutations import CreateEvent, DeleteEvent, UpdateEvent

@@ -49,8 +49,6 @@ class EventResolvers:
         except Event.DoesNotExist:
             return None
 
-
-class CategoryResolvers:
     def resolve_all_categories(parent, info):
         return Category.objects.all()
 

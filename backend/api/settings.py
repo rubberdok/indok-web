@@ -12,9 +12,14 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 
+import environ
+
+env = environ.Env()
+environ.Env.read_env()
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
@@ -25,7 +30,9 @@ SECRET_KEY = "*snrr!^gn0zg)1*=&l4ecaghm-o+9-j)=ig-so$!@&f7*c+713"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["localhost"]
+
+CORS_ALLOW_CREDENTIALS = True
 
 CORS_ORIGIN_WHITELIST = ["http://localhost:3000", "http://127.0.0.1:3000"]
 
@@ -47,13 +54,20 @@ INSTALLED_APPS = [
     # External apps
     "corsheaders",
     "graphene_django",
+    "rest_framework",
 ]
 
 AUTH_USER_MODEL = "users.User"
 
-GRAPHENE = {"SCHEMA": "api.graphql.schema.schema"}
+GRAPHENE = {
+    "SCHEMA": "api.graphql.schema.schema",
+    "MIDDLEWARE": [
+        "graphql_jwt.middleware.JSONWebTokenMiddleware",
+    ],
+}
 
 MIDDLEWARE = [
+    "api.auth.middleware.IndokWebJWTMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -99,6 +113,16 @@ DATABASES = {
     }
 }
 
+# Authentication
+
+AUTHENTICATION_BACKENDS = [
+    "graphql_jwt.backends.JSONWebTokenBackend",
+    "django.contrib.auth.backends.ModelBackend",
+]
+
+DATAPORTEN_ID = env("DATAPORTEN_ID")
+DATAPORTEN_SECRET = env("DATAPORTEN_SECRET")
+DATAPORTEN_REDIRECT_URI = env("DATAPORTEN_REDIRECT_URI")
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators

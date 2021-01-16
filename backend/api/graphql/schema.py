@@ -1,15 +1,23 @@
 import graphene
 
 from .events.schema import EventMutations, EventQueries
-from .events.schema import CategoryMutations, CategoryQueries
 from .organizations.schema import OrganizationMutations, OrganizationQueries
+from .users.schema import UserMutations, UserQueries
 
 
-class Query(EventQueries, CategoryQueries, OrganizationQueries):
+class Query(
+    EventQueries,
+    UserQueries,
+    OrganizationQueries,
+):
     pass
 
 
-class Mutations(EventMutations, CategoryMutations, OrganizationMutations):
+class Mutations(
+    EventMutations,
+    UserMutations,
+    OrganizationMutations,
+):
     pass
 
 
