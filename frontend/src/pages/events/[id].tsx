@@ -1,6 +1,6 @@
 import Layout from "@components/Layout";
-import { NextPage } from "next";
 import Button from "@components/ui/Button";
+import { NextPage } from "next";
 import { useRouter } from "next/router";
 import React from "react";
 import EventDetailPage from "../../components/pages/events/eventDetailPage";

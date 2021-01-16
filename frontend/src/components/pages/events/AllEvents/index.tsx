@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/client";
 import { GET_EVENTS } from "@graphql/events/queries";
-import Link from "next/link";
 import { Event } from "@interfaces/events";
+import Link from "next/link";
 import React, { useState } from "react";
 import FilterMenu from "./filterMenu";
 

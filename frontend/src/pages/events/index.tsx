@@ -1,8 +1,8 @@
 import Layout from "@components/Layout";
+import Button from "@components/ui/Button";
 import { NextPage } from "next";
 import React from "react";
 import AllEvents from "../../components/pages/events/AllEvents/index";
-import Button from "@components/ui/Button";
 
 const Events: NextPage = () => {
   return (

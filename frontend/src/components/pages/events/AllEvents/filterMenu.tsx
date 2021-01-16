@@ -1,9 +1,9 @@
-import React from "react";
 import { useQuery } from "@apollo/client";
 import { GET_CATEGORIES, QUERY_EVENT_FILTERED_ORGANIZATIONS } from "@graphql/events/queries";
-import { FilterQuery } from ".";
-import { Organization } from "@interfaces/organizations";
 import { Category } from "@interfaces/events";
+import { Organization } from "@interfaces/organizations";
+import React from "react";
+import { FilterQuery } from ".";
 
 interface Props {
   filters: FilterQuery;

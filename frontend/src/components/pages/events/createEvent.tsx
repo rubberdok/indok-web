@@ -1,11 +1,11 @@
-import { CREATE_EVENT } from "@graphql/events/mutations";
 import { gql, useMutation, useQuery } from "@apollo/client";
-import { useState } from "react";
-import { Category, Event } from "@interfaces/events";
 import Button from "@components/ui/Button";
 import Select from "@components/ui/Select";
+import { CREATE_EVENT } from "@graphql/events/mutations";
 import { GET_CATEGORIES, QUERY_EVENT_FILTERED_ORGANIZATIONS } from "@graphql/events/queries";
+import { Category, Event } from "@interfaces/events";
 import { Organization } from "@interfaces/organizations";
+import { useState } from "react";
 
 const CreateEvent = () => {
   const defaultInput = {
