@@ -17,7 +17,7 @@ const Contract = () => {
         <Logo src="/static/cabins/hyttestyret_logo.png"></Logo>
         <ArrowIcon direction={"l"} size={35} onClick={handleBackButtonClick}></ArrowIcon>
         <h1>KONTRAKT</h1>
-        <h3>Utleieavtale</h3>ß
+        <h3>Utleieavtale</h3>
         <p>
           På vegne av Foreningen for studenter ved Industriell økonomi og teknologiledelse er det i dag inngått følgende
           leiekontrakt mellom Hyttestyret og{" "}

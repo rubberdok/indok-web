@@ -16,6 +16,6 @@ export const Card = ({ children }: CardProps): JSX.Element => {
 const StyledDiv = styled.div`
   padding: 20px;
   box-shadow: 0px 7px 17px -1px rgba(92, 92, 92, 0.62);
-  border-radius: 15px;ßß
+  border-radius: 15px;
   text-align: center;
 `;
