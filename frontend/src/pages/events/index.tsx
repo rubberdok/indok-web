@@ -5,28 +5,28 @@ import AllEvents from "../../components/pages/events/AllEvents/index";
 import Button from "@components/ui/Button";
 
 const Events: NextPage = () => {
-    return (
-        <Layout>
-            <div>
-                <h1>Arrangementer</h1>
-            </div>
+  return (
+    <Layout>
+      <div>
+        <h1>Arrangementer</h1>
+      </div>
 
-            <div style={{ float: "left", marginRight: "10px" }}>
-                <Button back style="primary" link="/">
-                    Tilbake til forsiden
-                </Button>
-            </div>
-            <div style={{ float: "right", marginLeft: "10px" }}>
-                <Button style="primary" link="/events/create-event">
-                    Opprett nytt arrangement
-                </Button>
-            </div>
+      <div style={{ float: "left", marginRight: "10px" }}>
+        <Button back styling="primary" link="/">
+          Tilbake til forsiden
+        </Button>
+      </div>
+      <div style={{ float: "right", marginLeft: "10px" }}>
+        <Button styling="primary" link="/events/create-event">
+          Opprett nytt arrangement
+        </Button>
+      </div>
 
-            <div style={{ marginTop: "6em" }}>
-                <AllEvents />
-            </div>
-        </Layout>
-    );
+      <div style={{ marginTop: "6em" }}>
+        <AllEvents />
+      </div>
+    </Layout>
+  );
 };
 
 export default Events;

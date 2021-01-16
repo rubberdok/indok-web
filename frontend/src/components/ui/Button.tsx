@@ -5,7 +5,7 @@ import styled from "styled-components";
 interface ButtonProps {
   link?: string;
   children: string | JSX.Element;
-  style?: "primary" | "secondary";
+  styling?: "primary" | "secondary";
   back?: boolean;
 }
 
@@ -17,7 +17,7 @@ interface LinkProps {
 
 const WithLink: React.FC<LinkProps> = ({ condition, wrapper, children }) => (condition ? wrapper(children) : children);
 
-const Button: React.FC<ButtonProps> = (props) => {
+const Button: React.FC<ButtonProps & React.HTMLProps<HTMLButtonElement>> = (props) => {
   const styles = {
     primary: Primary,
     secondary: Secondary,
@@ -28,7 +28,7 @@ const Button: React.FC<ButtonProps> = (props) => {
       condition={!!props.link}
       wrapper={(children: JSX.Element) => <Link href={props.link || "/"}>{children}</Link>}
     >
-      <StyledButton back={props.back} as={props.style ? styles[props.style] : Primary}>
+      <StyledButton back={props.back} as={props.styling ? styles[props.styling] : Primary}>
         {props.back ? (
           <>
             <Icon>
