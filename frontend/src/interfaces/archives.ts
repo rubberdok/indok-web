@@ -1,4 +1,4 @@
-export interface Documents {
+export interface Document {
     id: string;
     title: string;
     description: string;

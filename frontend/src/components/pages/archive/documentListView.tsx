@@ -2,7 +2,7 @@ import React from "react";
 import { useState } from "react";
 
 import ListDocuments from "./listDocuments";
-import FilterButton from "../archive/filterButtons";
+import FilterButton from "./filterButtons";
 import { Title } from "@components/ui/Typography";
 
 const ColoredLine = ({ color }: any) => (
