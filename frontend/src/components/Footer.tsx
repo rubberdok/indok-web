@@ -5,7 +5,7 @@ import Button from "./ui/Button";
 const Footer: React.FC = () => {
   const [openHallOfFame, setOpenHallOfFame] = useState(false);
 
-  const bottomRef = useRef<HTMLDivElement>();
+  const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (bottomRef.current) {
