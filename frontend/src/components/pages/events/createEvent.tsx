@@ -7,7 +7,7 @@ import { Category, Event } from "@interfaces/events";
 import { Organization } from "@interfaces/organizations";
 import { useState } from "react";
 
-const CreateEvent = () => {
+const CreateEvent: React.FC = () => {
   const defaultInput = {
     title: "",
     description: "",
@@ -81,9 +81,9 @@ const CreateEvent = () => {
         id="createform"
         onSubmit={(e) => {
           e.preventDefault();
-          const filtered = Object.entries(eventData).filter(([k, v]) => v !== "");
+          const filtered = Object.entries(eventData).filter((entry) => entry[1] !== "");
           const filteredObj = Object.fromEntries(filtered);
-          createEvent({ variables: { ...filteredObj } }).then((res) => setEventData(defaultInput));
+          createEvent({ variables: { ...filteredObj } }).then(() => setEventData(defaultInput));
         }}
       >
         <h2 style={{ marginTop: -10, marginBottom: 10, textAlign: "center" }}>Opprett nytt arrangement</h2>
