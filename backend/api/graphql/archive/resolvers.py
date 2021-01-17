@@ -1,26 +1,29 @@
 from apps.archive.models import ArchiveDocument
 from django.db.models import Q
-import graphene
 from django.db.models.sql import Query
-from operator import and_
+from graphql_jwt.decorators import login_required
 
 
 class ArchiveDocumentResolvers:
+    @login_required
     def resolve_all_archives(parent, info):
         return ArchiveDocument.objects.all()
 
+    @login_required
     def resolve_archive(parent, info, id):
         try:
             return ArchiveDocument.objects.get(id=id)
         except ArchiveDocument.DoesNotExist:
             return None
 
+    @login_required
     def resolve_archive_by_date(parent, info, date):
         try:
             return ArchiveDocument.objects.get(date=date)
         except ArchiveDocument.DoesNotExist:
             return None
 
+    @login_required
     def resolve_archive_by_type(parent, info, type_docs):
         if type_docs:
             try:

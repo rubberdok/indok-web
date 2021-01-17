@@ -1,8 +1,7 @@
 import graphene
-from graphene import ObjectType
+from apps.archive.google_drive_api import get_thumbnail, get_url
 from apps.archive.models import ArchiveDocument
 from graphene_django import DjangoObjectType
-from apps.archive.google_drive_api import get_url, get_thumbnail
 
 
 class ArchiveDocumentType(DjangoObjectType):
