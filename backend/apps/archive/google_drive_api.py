@@ -5,6 +5,8 @@ import googleapiclient
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
+from googleapiclient.errors import HttpError
+
 
 # If modifying these scopes, delete the file token.pickle.
 SCOPES = ["https://www.googleapis.com/auth/drive.metadata.readonly"]
@@ -42,16 +44,17 @@ def main():
 def get_url(file_id):
     service = main()
     # Call the Drive v3 API
-
     try:
         file = (
             service.files()
             .get(fileId=file_id, fields="id, name, webViewLink")
             .execute()
         )
-    except HTTPError as err:
+
+    except HttpError as err:
+        print(err)
         print("No files found.")
-        pass
+        return None
 
     return file["webViewLink"]
 
