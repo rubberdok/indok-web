@@ -5,7 +5,7 @@ import { CREATE_EVENT } from "@graphql/events/mutations";
 import { GET_CATEGORIES, QUERY_EVENT_FILTERED_ORGANIZATIONS } from "@graphql/events/queries";
 import { Category, Event } from "@interfaces/events";
 import { Organization } from "@interfaces/organizations";
-import { Router, useRouter } from "next/router";
+import { useRouter } from "next/router";
 import { useState } from "react";
 
 const CreateEvent: React.FC = () => {
