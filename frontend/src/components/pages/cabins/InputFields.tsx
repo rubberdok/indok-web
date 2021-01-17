@@ -21,7 +21,7 @@ interface InputFieldsProps {
   onChange: (e: React.FormEvent<HTMLInputElement>) => void;
 }
 
-export const InputFields = ({ onChange, refs, children }: InputFieldsProps): JSX.Element => {
+export const InputFields: React.FC<InputFieldsProps> = ({ onChange, refs, children }) => {
   return (
     <Card>
       <Composition

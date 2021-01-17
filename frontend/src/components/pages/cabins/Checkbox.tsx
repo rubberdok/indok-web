@@ -12,7 +12,7 @@ interface CheckProps {
   contractData: ContractProps;
 }
 
-const CheckBox = ({ checked, onClick, errorMsg, checkable, contractData }: CheckProps): JSX.Element => {
+const CheckBox: React.FC<CheckProps> = ({ checked, onClick, errorMsg, checkable, contractData }) => {
   const [contractViewed, setContractViewed] = useState(false);
 
   const contractLinkClick = () => {

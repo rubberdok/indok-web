@@ -1,3 +1,5 @@
+import { CompositionProps } from "@atomic-layout/core";
+import { ArrowIcon } from "@components/ui/ArrowIcon";
 import { Composition } from "atomic-layout";
 import React from "react";
 import styled from "styled-components";
@@ -11,11 +13,11 @@ interface HeaderCompositionProps {
   children: JSX.Element;
 }
 
-export const HeaderComposition = (props: HeaderCompositionProps): JSX.Element => {
+export const HeaderComposition: React.FC<HeaderCompositionProps> = (props) => {
   return (
     <Container>
       <Composition template={template}>
-        {({ Head, Arrow }) => (
+        {({ Head, Arrow }: CompositionProps) => (
           <>
             <Arrow>{props.children}</Arrow>
             <Head>

@@ -10,7 +10,7 @@ interface ArrowProps {
   onClick?: () => void;
 }
 
-export const ArrowIcon = ({ direction, size, href, onClick }: ArrowProps): JSX.Element => {
+export const ArrowIcon: React.FC<ArrowProps> = ({ direction, size, href, onClick }) => {
   return (
     <IconWrapper onClick={onClick}>
       {href ? (

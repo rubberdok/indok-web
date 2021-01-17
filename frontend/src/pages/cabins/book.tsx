@@ -1,4 +1,5 @@
 import { useMutation } from "@apollo/client";
+import { CompositionProps } from "@atomic-layout/core";
 import { getRangeLength } from "@components/Calendar";
 import Navbar from "@components/navbar/Navbar";
 import Button from "@components/pages/cabins/Button";
@@ -11,6 +12,7 @@ import { ArrowIcon } from "@components/ui/ArrowIcon";
 import { SEND_EMAIL } from "@graphql/cabins/mutations";
 import { ContractProps } from "@interfaces/cabins";
 import { Composition } from "atomic-layout";
+import { NextPage } from "next";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import Content from "../../components/ui/Content";
@@ -28,12 +30,14 @@ interface BookingData {
   price: number;
 }
 
-const BookPage = (): JSX.Element => {
+const BookPage: NextPage = () => {
   const firstnameRef = React.createRef<HTMLInputElement>();
   const surnameRef = React.createRef<HTMLInputElement>();
   const emailRef = React.createRef<HTMLInputElement>();
   const phoneRef = React.createRef<HTMLInputElement>();
   const inputRefs = [firstnameRef, surnameRef, emailRef, phoneRef];
+
+  const temporarilyDisableSubmitting = true;
 
   const pricePerNight = 1000;
 
@@ -124,7 +128,9 @@ const BookPage = (): JSX.Element => {
 
   const handleSubmit = (e: React.FormEvent<EventTarget>) => {
     e.preventDefault();
-
+    if (temporarilyDisableSubmitting) {
+      return;
+    }
     // create booking and send email
     if (checked && isAvailable) {
       createBooking({
@@ -143,10 +149,6 @@ const BookPage = (): JSX.Element => {
     }
   };
 
-  const tempHandleSubmit = (e: React.FormEvent<EventTarget>) => {
-    e.preventDefault();
-  };
-
   return (
     <Content>
       <Navbar></Navbar>
@@ -155,7 +157,7 @@ const BookPage = (): JSX.Element => {
       </HeaderComposition>
       {isAvailable ? (
         <Composition templateXs={templatePhone} templateLg={templateDesktop} padding={15} gutter={15} gutterLg={40}>
-          {({ Inputs, Sum, Slider }) => (
+          {({ Inputs, Sum, Slider }: CompositionProps) => (
             <>
               <Inputs>
                 <InputFields refs={inputRefs} onChange={handleInputChange}>
@@ -166,7 +168,7 @@ const BookPage = (): JSX.Element => {
                     checkable={checkable}
                     contractData={contractData}
                   ></CheckBox>
-                  <Button url="#" onClick={(e) => tempHandleSubmit(e)} disabled>
+                  <Button url="#" onClick={(e) => handleSubmit(e)} disabled={temporarilyDisableSubmitting}>
                     Gå til betaling
                   </Button>
                 </InputFields>

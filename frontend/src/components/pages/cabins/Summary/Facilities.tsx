@@ -31,7 +31,7 @@ const facilitiesData = [
   },
 ];
 
-const Facilities = (): JSX.Element => {
+const Facilities: React.FC = () => {
   return (
     <>
       <Container>

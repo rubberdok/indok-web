@@ -18,7 +18,7 @@ interface CalendarProps {
   disableRange?: boolean;
 }
 
-const Calendar = ({ events, rangeChanged, initSelectedDay, disableRange }: CalendarProps) => {
+const Calendar: React.FC<CalendarProps> = ({ events, rangeChanged, initSelectedDay, disableRange }) => {
   const [selectedMonth, setSelectedMonth] = useState(moment());
   const [selectedDay, setSelectedDay] = useState(moment(initSelectedDay));
   const [hoverRange, setHoverRange] = useState<string[]>([]);
@@ -124,6 +124,6 @@ const Calendar = ({ events, rangeChanged, initSelectedDay, disableRange }: Calen
 };
 
 export const createDateRange = getDateRange;
-export const getRangeLength = (fromDate: string, toDate: string) => rangeLength(fromDate, toDate);
+export const getRangeLength = (fromDate: string, toDate: string): number => rangeLength(fromDate, toDate);
 export const CONSTANTS = { NORWEGIAN_SHORT_DAY_NAMES, DATE_FORMAT };
 export default Calendar;

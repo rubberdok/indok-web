@@ -18,7 +18,6 @@ interface StyledButtonProps {
 }
 
 const Button: React.FC<ButtonProps> = (props) => {
-  console.log(props.disabled);
   return (
     <Link href={props.url}>
       <StyledButton

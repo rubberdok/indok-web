@@ -4,7 +4,7 @@ import React from "react";
 import styled from "styled-components";
 import { HeaderComposition } from "./HeaderCompositon";
 
-const Rules = () => {
+const Rules: React.FC = () => {
   const handleBackButtonClick = () => Router.back();
 
   return (

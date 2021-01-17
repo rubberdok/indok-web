@@ -1,3 +1,4 @@
+import { CompositionProps } from "@atomic-layout/core";
 import { Box, Composition } from "atomic-layout";
 import React from "react";
 import styled from "styled-components";
@@ -22,7 +23,7 @@ const ImageCard: React.FC<ImageCardProps> = (props) => (
     gapMd={20}
     gapLg={25}
   >
-    {(Areas) => (
+    {({ Areas }: CompositionProps) => (
       <>
         <Areas.Image as={Image} src={props.imageUrl} alt="Bilde" />
         <Areas.Description padding="30px 30px 30px 15px">

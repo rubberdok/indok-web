@@ -4,7 +4,7 @@ import React from "react";
 import styled from "styled-components";
 import { HeaderComposition } from "./HeaderCompositon";
 
-const Contract = () => {
+const Contract: React.FC = () => {
   const currentTime = new Date().toLocaleString();
 
   const router = useRouter();
