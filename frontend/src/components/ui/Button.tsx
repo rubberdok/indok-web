@@ -31,7 +31,7 @@ const Button: React.FC<ButtonProps> = (props) => {
       wrapper={(children: JSX.Element) => <Link href={props.link || "/"}>{children}</Link>}
     >
       <StyledButton back={props.back} as={props.style ? styles[props.style] : Primary} onClick={props.onClick}>
-        {props.arrow !== false ? (
+        {props.arrow ? (
           props.back ? (
             <>
               <Icon>

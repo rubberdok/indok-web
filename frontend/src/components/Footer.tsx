@@ -79,7 +79,7 @@ const Footer: React.FC = () => {
       </Row>
       <Row>
         <Col>
-          <div style={{ display: "inline-block", marginBottom: "2%" }}>
+          <div style={{ display: "inline-block", marginBottom: "2%", marginTop: "1em" }}>
             <Button
               style="secondary"
               onClick={() => {
