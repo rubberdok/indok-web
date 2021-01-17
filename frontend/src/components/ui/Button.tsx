@@ -72,7 +72,7 @@ const Icon = styled.div`
   }
 `;
 
-const StyledButton = styled.button<ButtonProps>`
+const StyledButton = styled.button<ButtonProps & React.HTMLProps<HTMLButtonElement>>`
   background: #282828;
   color: #fff;
   font-family: "Montserrat";

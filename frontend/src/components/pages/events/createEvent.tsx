@@ -5,6 +5,7 @@ import { CREATE_EVENT } from "@graphql/events/mutations";
 import { GET_CATEGORIES, QUERY_EVENT_FILTERED_ORGANIZATIONS } from "@graphql/events/queries";
 import { Category, Event } from "@interfaces/events";
 import { Organization } from "@interfaces/organizations";
+import { Router, useRouter } from "next/router";
 import { useState } from "react";
 
 const CreateEvent: React.FC = () => {
@@ -23,6 +24,8 @@ const CreateEvent: React.FC = () => {
   };
 
   const [eventData, setEventData] = useState(defaultInput);
+
+  const router = useRouter();
 
   const [createEvent] = useMutation<{ createEvent: { event: Event } }>(CREATE_EVENT, {
     update: (cache, { data }) => {
@@ -84,6 +87,7 @@ const CreateEvent: React.FC = () => {
           const filtered = Object.entries(eventData).filter((entry) => entry[1] !== "");
           const filteredObj = Object.fromEntries(filtered);
           createEvent({ variables: { ...filteredObj } }).then(() => setEventData(defaultInput));
+          router.push("/events");
         }}
       >
         <h2 style={{ marginTop: -10, marginBottom: 10, textAlign: "center" }}>Opprett nytt arrangement</h2>
@@ -186,7 +190,7 @@ const CreateEvent: React.FC = () => {
           />
         </div>
 
-        <Button type="submit" link="/events" styling="primary">
+        <Button type="submit" styling="primary">
           Opprett arrangement
         </Button>
       </form>
