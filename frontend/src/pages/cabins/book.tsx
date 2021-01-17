@@ -7,6 +7,7 @@ import { HeaderComposition } from "@components/pages/cabins/HeaderCompositon";
 import ImageSlider from "@components/pages/cabins/ImageSlider";
 import { InputFields } from "@components/pages/cabins/InputFields";
 import Summary from "@components/pages/cabins/Summary/Summary";
+import { ArrowIcon } from "@components/ui/ArrowIcon";
 import { SEND_EMAIL } from "@graphql/cabins/mutations";
 import { ContractProps } from "@interfaces/cabins";
 import { Composition } from "atomic-layout";
@@ -149,7 +150,9 @@ const BookPage = (): JSX.Element => {
   return (
     <Content>
       <Navbar></Navbar>
-      <HeaderComposition></HeaderComposition>
+      <HeaderComposition headerText="Fullføring av booking">
+        <ArrowIcon direction={"l"} size={35} href={"/cabins"}></ArrowIcon>
+      </HeaderComposition>
       {isAvailable ? (
         <Composition templateXs={templatePhone} templateLg={templateDesktop} padding={15} gutter={15} gutterLg={40}>
           {({ Inputs, Sum, Slider }) => (

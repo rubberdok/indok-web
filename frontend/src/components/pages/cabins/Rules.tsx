@@ -2,6 +2,7 @@ import { ArrowIcon } from "@components/ui/ArrowIcon";
 import Router from "next/router";
 import React from "react";
 import styled from "styled-components";
+import { HeaderComposition } from "./HeaderCompositon";
 
 const Rules = () => {
   const handleBackButtonClick = () => Router.back();
@@ -9,10 +10,9 @@ const Rules = () => {
   return (
     <>
       <Logo src="/static/cabins/hyttestyret_logo.png"></Logo>
-      <ArrowIcon direction={"l"} size={35} onClick={handleBackButtonClick}></ArrowIcon>
-
-      <h1>Retningslinjer for booking av hytte</h1>
-
+      <HeaderComposition headerText="RETNINGSLINJER FOR BOOKING AV HYTTE">
+        <ArrowIcon direction={"l"} size={35} onClick={handleBackButtonClick}></ArrowIcon>
+      </HeaderComposition>
       <RuleHeader>Nøkkelansvarlig</RuleHeader>
 
       <p>§1.1 Nøkkelansvarlig er den som henter og leverer tilbake nøklene fra bookingansvarlig.</p>

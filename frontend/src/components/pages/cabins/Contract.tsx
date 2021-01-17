@@ -2,6 +2,7 @@ import { ArrowIcon } from "@components/ui/ArrowIcon";
 import Router, { useRouter } from "next/router";
 import React from "react";
 import styled from "styled-components";
+import { HeaderComposition } from "./HeaderCompositon";
 
 const Contract = () => {
   const currentTime = new Date().toLocaleString();
@@ -13,10 +14,12 @@ const Contract = () => {
 
   return (
     <>
-      <div>
+      <Container>
         <Logo src="/static/cabins/hyttestyret_logo.png"></Logo>
-        <ArrowIcon direction={"l"} size={35} onClick={handleBackButtonClick}></ArrowIcon>
-        <h1>KONTRAKT</h1>
+        <HeaderComposition headerText="KONTRAKT">
+          <ArrowIcon direction={"l"} size={35} onClick={handleBackButtonClick}></ArrowIcon>
+        </HeaderComposition>
+        {/* <h1>KONTRAKT</h1> */}
         <h3>Utleieavtale</h3>
         <p>
           På vegne av Foreningen for studenter ved Industriell økonomi og teknologiledelse er det i dag inngått følgende
@@ -84,14 +87,17 @@ const Contract = () => {
         <p>
           Sted/dato: <b>{currentTime}</b>
         </p>
-      </div>
+      </Container>
     </>
   );
 };
 
 const Logo = styled.img`
   margin: auto;
+  margin-bottom: 50px;
   width: 30vh;
 `;
+
+const Container = styled.div``;
 
 export default Contract;
