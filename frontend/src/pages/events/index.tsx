@@ -32,7 +32,6 @@ const Events: NextPage = () => {
 export default Events;
 
 /*
-
 import { NextPage } from "next";
 import Link from "next/link";
 import React from "react";
