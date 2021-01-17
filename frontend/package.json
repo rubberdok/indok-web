@@ -22,14 +22,11 @@
     "atomic-layout": "^0.16.2",
     "graphql": "^15.3.0",
     "next": "^10.0.3",
-    "onchange": "^7.1.0",
     "react": "^16.13.1",
     "react-awesome-reveal": "^3.3.1",
     "react-dom": "^16.13.1",
     "react-feather": "^2.0.8",
-    "styled-components": "^5.2.0",
-    "feather-icons": "^4.28.0",
-    "xstate": "^4.13.0"
+    "styled-components": "^5.2.0"
   },
   "devDependencies": {
     "@types/feather-icons": "^4.7.0",
