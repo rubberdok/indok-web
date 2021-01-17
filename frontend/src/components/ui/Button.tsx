@@ -7,6 +7,8 @@ interface ButtonProps {
   children: string | JSX.Element;
   styling?: "primary" | "secondary";
   back?: boolean;
+  arrow?: boolean;
+  onClick?: ((event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void) | undefined;
 }
 
 interface LinkProps {
@@ -28,20 +30,26 @@ const Button: React.FC<ButtonProps & React.HTMLProps<HTMLButtonElement>> = (prop
       condition={!!props.link}
       wrapper={(children: JSX.Element) => <Link href={props.link || "/"}>{children}</Link>}
     >
-      <StyledButton back={props.back} as={props.styling ? styles[props.styling] : Primary}>
-        {props.back ? (
-          <>
-            <Icon>
-              <ArrowLeft />
-            </Icon>
-            <Container>{props.children}</Container>
-          </>
+      <StyledButton back={props.back} as={props.styling ? styles[props.styling] : Primary} onClick={props.onClick}>
+        {props.arrow ? (
+          props.back ? (
+            <>
+              <Icon>
+                <ArrowLeft />
+              </Icon>
+              <Container>{props.children}</Container>
+            </>
+          ) : (
+            <>
+              <Container>{props.children}</Container>
+              <Icon>
+                <ArrowRight />
+              </Icon>
+            </>
+          )
         ) : (
           <>
             <Container>{props.children}</Container>
-            <Icon>
-              <ArrowRight />
-            </Icon>
           </>
         )}
       </StyledButton>
