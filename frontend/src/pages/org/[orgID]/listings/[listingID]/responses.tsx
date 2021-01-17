@@ -7,37 +7,37 @@ import Link from "next/link";
 import NavBar from "@components/navbar/Navbar";
 
 const ListingResponsesPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
-    listingID,
-    orgID,
+  listingID,
+  orgID,
 }) => {
-    const { loading, error, data } = useQuery<{ listing: Listing }>(LISTING, {
-        variables: {
-            ID: listingID,
-        },
-    });
-    if (error) return <p>Error</p>;
-    if (loading) return <p>Loading</p>;
-    return (
+  const { loading, error, data } = useQuery<{ listing: Listing }>(LISTING, {
+    variables: {
+      ID: listingID,
+    },
+  });
+  if (error) return <p>Error</p>;
+  if (loading) return <p>Loading</p>;
+  return (
+    <>
+      {data && (
         <>
-            {data && (
-                <>
-                    <Link href={`/org/${orgID}/listings`}>Tilbake</Link>
-                    <ListingResponses listing={data.listing} />
-                </>
-            )}
+          <Link href={`/org/${orgID}/listings`}>Tilbake</Link>
+          <ListingResponses listing={data.listing} />
         </>
-    );
+      )}
+    </>
+  );
 };
 
 export const getServerSideProps: GetServerSideProps<{
-    listingID: string;
-    orgID: string;
+  listingID: string;
+  orgID: string;
 }> = async (context) => {
-    const listingID = context.query.listingID as string;
-    const orgID = context.query.orgID as string;
-    return {
-        props: { listingID, orgID },
-    };
+  const listingID = context.query.listingID as string;
+  const orgID = context.query.orgID as string;
+  return {
+    props: { listingID, orgID },
+  };
 };
 
 export default ListingResponsesPage;

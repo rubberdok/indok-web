@@ -17,4 +17,6 @@ class UserMutations(graphene.ObjectType):
 
 class UserQueries(graphene.ObjectType, UserResolvers):
     all_users = graphene.List(UserType)
-    user = graphene.Field(UserType, id=graphene.ID())  # ID is old, to be removed
+    users = graphene.List(UserType)  # Old
+    user = graphene.Field(UserType)
+    old_user = graphene.Field(UserType, id=graphene.ID())  # Old

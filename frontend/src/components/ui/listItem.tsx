@@ -1,27 +1,27 @@
 import styled from "styled-components";
 
 const ListItem: React.FC<{
-    mainText: string;
-    subText: string;
-    key: string;
-    selected: boolean;
-    imgSrc?: string;
-    onClick?: () => void;
+  mainText: string;
+  subText: string;
+  key: string;
+  selected: boolean;
+  imgSrc?: string;
+  onClick?: () => void;
 }> = ({ mainText, subText, key, selected, imgSrc, onClick }) => (
-    <Item selected={selected} key={key}>
-        <button
-            onClick={(e) => {
-                e.preventDefault();
-                if (onClick) {
-                    onClick();
-                }
-            }}
-        >
-            <div>{mainText}</div>
-            <div>{subText}</div>
-            <img src={imgSrc} alt="" />
-        </button>
-    </Item>
+  <Item selected={selected} key={key}>
+    <button
+      onClick={(e) => {
+        e.preventDefault();
+        if (onClick) {
+          onClick();
+        }
+      }}
+    >
+      <div>{mainText}</div>
+      <div>{subText}</div>
+      <img src={imgSrc} alt="" />
+    </button>
+  </Item>
 );
 
 const Item = styled.li<{ selected: boolean }>`

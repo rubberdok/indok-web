@@ -4,22 +4,22 @@ import { Survey } from "@interfaces/surveys";
 import QuestionDetail from "@components/pages/surveys/questionDetail";
 
 const SurveyDetail: React.FC<{ id: string }> = ({ id }) => {
-    const { error, loading, data } = useQuery<{ survey: Survey }>(SURVEY, { variables: { ID: Number(id) } });
-    if (loading) return <p>Loading...</p>;
-    if (error) return <p>Error</p>;
+  const { error, loading, data } = useQuery<{ survey: Survey }>(SURVEY, { variables: { ID: Number(id) } });
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error</p>;
 
-    return (
+  return (
+    <>
+      {data && (
         <>
-            {data && (
-                <>
-                    <h1>{data.survey.descriptiveName}</h1>
-                    {data.survey.questions.map((question) => {
-                        <QuestionDetail question={question} active={true} />;
-                    })}
-                </>
-            )}
+          <h1>{data.survey.descriptiveName}</h1>
+          {data.survey.questions.map((question) => {
+            <QuestionDetail question={question} active={true} />;
+          })}
         </>
-    );
+      )}
+    </>
+  );
 };
 
 export default SurveyDetail;
