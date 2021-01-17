@@ -81,7 +81,7 @@ const Footer: React.FC = () => {
         <Col>
           <div style={{ display: "inline-block", marginBottom: "2%", marginTop: "1em" }}>
             <Button
-              style="secondary"
+              styling="secondary"
               onClick={() => {
                 setOpenHallOfFame(!openHallOfFame);
               }}
