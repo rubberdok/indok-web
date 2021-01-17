@@ -1,6 +1,6 @@
 import { CompositionProps } from "@atomic-layout/core";
 import { Composition } from "atomic-layout";
-import React, { Fragment } from "react";
+import React from "react";
 import styled from "styled-components";
 import { Card } from "../CardC";
 import Facilities from "./Facilities";
@@ -49,7 +49,7 @@ const Summary = ({ from, to, cabin, price, nights }: SummaryProps): JSX.Element 
         gutterLg={0}
       >
         {({ Cabin, From, To, Facs, Price, Total }: CompositionProps) => (
-          <Fragment>
+          <>
             <Cabin>
               <h3>Hytte: {cabin}</h3>
               <VerticalSep height={4} />
@@ -77,7 +77,7 @@ const Summary = ({ from, to, cabin, price, nights }: SummaryProps): JSX.Element 
                 <b>Totalt: {price * nights}kr</b>
               </p>
             </Total>
-          </Fragment>
+          </>
         )}
       </Composition>
     </Card>

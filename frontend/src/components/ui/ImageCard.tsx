@@ -1,6 +1,6 @@
 import { CompositionProps } from "@atomic-layout/core";
 import { Box, Composition } from "atomic-layout";
-import React, { Fragment } from "react";
+import React from "react";
 import styled from "styled-components";
 
 interface ImageCardProps {
@@ -24,7 +24,7 @@ const ImageCard: React.FC<ImageCardProps> = (props) => (
     gapLg={25}
   >
     {({ Areas }: CompositionProps) => (
-      <Fragment>
+      <>
         <Areas.Image as={Image} src={props.imageUrl} alt="Bilde" />
         <Areas.Description padding="30px 30px 30px 15px">
           <ItemTitle>{props.title}</ItemTitle>
@@ -33,7 +33,7 @@ const ImageCard: React.FC<ImageCardProps> = (props) => (
           </Box>
         </Areas.Description>
         <Areas.Actions></Areas.Actions>
-      </Fragment>
+      </>
     )}
   </Composition>
 );

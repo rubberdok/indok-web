@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React from "react";
 import styled from "styled-components";
 
 interface CardProps {
@@ -7,9 +7,9 @@ interface CardProps {
 
 export const Card: React.FC<CardProps> = ({ children }) => {
   return (
-    <Fragment>
+    <>
       <StyledDiv>{children}</StyledDiv>
-    </Fragment>
+    </>
   );
 };
 

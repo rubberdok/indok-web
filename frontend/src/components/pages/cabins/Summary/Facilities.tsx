@@ -1,4 +1,3 @@
-import { Fragment } from "react";
 import { Speaker } from "react-feather";
 import { FaBed, FaLightbulb, FaThermometerFull, FaUtensils, FaWifi } from "react-icons/fa";
 import styled from "styled-components";
@@ -34,7 +33,7 @@ const facilitiesData = [
 
 const Facilities: React.FC = () => {
   return (
-    <Fragment>
+    <>
       <Container>
         {facilitiesData.map((item) => (
           <Item key={facilitiesData.indexOf(item)}>
@@ -42,7 +41,7 @@ const Facilities: React.FC = () => {
           </Item>
         ))}
       </Container>
-    </Fragment>
+    </>
   );
 };
 

@@ -35,6 +35,8 @@ const BookPage: NextPage = () => {
   const phoneRef = React.createRef<HTMLInputElement>();
   const inputRefs = [firstnameRef, surnameRef, emailRef, phoneRef];
 
+  const temporarilyDisableSubmitting = true;
+
   const pricePerNight = 1000;
 
   const templateDesktop = `
@@ -124,7 +126,9 @@ const BookPage: NextPage = () => {
 
   const handleSubmit = (e: React.FormEvent<EventTarget>) => {
     e.preventDefault();
-
+    if (temporarilyDisableSubmitting) {
+      return;
+    }
     // create booking and send email
     if (checked && isAvailable) {
       createBooking({
@@ -141,10 +145,6 @@ const BookPage: NextPage = () => {
       setErrorMessage(isAvailable ? "" : "Den valgte perioden er ikke tilgjengelig.");
       setCheckError(checked ? "" : "Du må samtykke med retningslinjene før du booker.");
     }
-  };
-
-  const tempHandleSubmit = (e: React.FormEvent<EventTarget>) => {
-    e.preventDefault();
   };
 
   return (
@@ -164,7 +164,7 @@ const BookPage: NextPage = () => {
                     checkable={checkable}
                     contractData={contractData}
                   ></CheckBox>
-                  <Button url="#" onClick={(e) => tempHandleSubmit(e)} disabled>
+                  <Button url="#" onClick={(e) => handleSubmit(e)} disabled={temporarilyDisableSubmitting}>
                     Gå til betaling
                   </Button>
                 </InputFields>

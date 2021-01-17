@@ -1,7 +1,7 @@
 import { CompositionProps } from "@atomic-layout/core";
 import { ArrowIcon } from "@components/ui/ArrowIcon";
 import { Composition } from "atomic-layout";
-import React, { Fragment } from "react";
+import React from "react";
 import styled from "styled-components";
 
 const template = `
@@ -11,7 +11,7 @@ const template = `
 
 export const HeaderComposition: React.FC = () => {
   return (
-    <Fragment>
+    <>
       <Composition template={template}>
         {({ Head, Arrow }: CompositionProps) => (
           <>
@@ -24,7 +24,7 @@ export const HeaderComposition: React.FC = () => {
           </>
         )}
       </Composition>
-    </Fragment>
+    </>
   );
 };
 
