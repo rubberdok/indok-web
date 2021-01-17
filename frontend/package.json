@@ -1,61 +1,61 @@
 {
-    "name": "frontend",
-    "version": "1.0.0",
-    "description": "",
-    "main": "index.js",
-    "author": "Hovedstyrets webkomitè",
-    "license": "MIT",
-    "scripts": {
-        "dev": "next",
-        "build": "next build",
-        "start": "next start",
-        "lint": "eslint src --ext .ts,.tsx",
-        "lint:fix": "npm run lint -- --fix"
-    },
-    "repository": {
-        "type": "git",
-        "url": "github.com/hovedstyret/indok-web"
-    },
-    "dependencies": {
-        "@apollo/client": "^3.2.0",
-        "atomic-layout": "^0.16.2",
-        "graphql": "^15.3.0",
-        "next": "^9.5.1",
-        "react": "^16.13.1",
-        "react-awesome-reveal": "^3.3.1",
-        "react-dom": "^16.13.1",
-        "react-feather": "^2.0.8",
-        "styled-components": "^5.2.0"
-    },
-    "devDependencies": {
-        "@types/feather-icons": "^4.7.0",
-        "@types/node": "^14.0.27",
-        "@types/react": "^16.9.45",
-        "@types/react-dom": "^16.9.8",
-        "@types/styled-components": "^5.1.3",
-        "@typescript-eslint/eslint-plugin": "^3.8.0",
-        "@typescript-eslint/parser": "^3.8.0",
-        "babel-plugin-styled-components": "^1.11.1",
-        "eslint": "^7.6.0",
-        "eslint-config-prettier": "^6.11.0",
-        "eslint-plugin-jsx-a11y": "^6.3.1",
-        "eslint-plugin-prettier": "^3.1.4",
-        "eslint-plugin-react": "^7.20.5",
-        "eslint-plugin-react-hooks": "^4.0.8",
-        "husky": "^4.2.5",
-        "lint-staged": "^10.2.11",
-        "prettier": "^2.0.5",
-        "typescript": "^3.9.7"
-    },
-    "husky": {
-        "hooks": {
-            "pre-commit": "lint-staged"
-        }
-    },
-    "lint-staged": {
-        "src/**/*.{ts,tsx}": [
-            "npm run lint:fix",
-            "prettier --write"
-        ]
+  "name": "frontend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "author": "Hovedstyrets webkomitè",
+  "license": "MIT",
+  "scripts": {
+    "dev": "next",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint src --ext .ts,.tsx",
+    "lint:fix": "npm run lint -- --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "github.com/hovedstyret/indok-web"
+  },
+  "dependencies": {
+    "@apollo/client": "^3.3.6",
+    "atomic-layout": "^0.16.2",
+    "graphql": "^15.3.0",
+    "next": "^10.0.3",
+    "react": "^16.13.1",
+    "react-awesome-reveal": "^3.3.1",
+    "react-dom": "^16.13.1",
+    "react-feather": "^2.0.8",
+    "styled-components": "^5.2.0"
+  },
+  "devDependencies": {
+    "@types/feather-icons": "^4.7.0",
+    "@types/node": "^14.0.27",
+    "@types/react": "^16.9.45",
+    "@types/react-dom": "^16.9.8",
+    "@types/styled-components": "^5.1.3",
+    "@typescript-eslint/eslint-plugin": "^3.8.0",
+    "@typescript-eslint/parser": "^3.8.0",
+    "babel-plugin-styled-components": "^1.11.1",
+    "eslint": "^7.6.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-jsx-a11y": "^6.3.1",
+    "eslint-plugin-prettier": "^3.1.4",
+    "eslint-plugin-react": "^7.20.5",
+    "eslint-plugin-react-hooks": "^4.0.8",
+    "husky": "^4.2.5",
+    "lint-staged": "^10.2.11",
+    "prettier": "^2.0.5",
+    "typescript": "^3.9.7"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
     }
+  },
+  "lint-staged": {
+    "src/**/*.{ts,tsx}": [
+      "npm run lint:fix",
+      "prettier --write"
+    ]
+  }
 }

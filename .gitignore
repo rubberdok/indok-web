@@ -199,15 +199,19 @@ typings/
 # Yarn Integrity file
 .yarn-integrity
 
-# dotenv environment variables file
+# environment variables files
 .env
 .env.test
+.env.local
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache
 
 # Next.js build output
 .next
+
+# Next.js export output
+out
 
 # Nuxt.js build / generate output
 .nuxt
@@ -256,3 +260,6 @@ devcontainer.json
 
 # Jetbrains
 .idea/
+
+# Notes
+.notes.txt

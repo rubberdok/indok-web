@@ -3,8 +3,9 @@ import graphene
 from .events.schema import EventMutations, EventQueries
 from .listing.schema import ListingMutations, ListingQueries
 from .organizations.schema import OrganizationMutations, OrganizationQueries
-from .surveys.schema import SurveyQueries, SurveyMutations
-from .users.schema import UserQueries, UserMutations
+from .surveys.schema import SurveyMutations, SurveyQueries
+from .users.schema import UserMutations, UserQueries
+
 
 class Queries(
     EventQueries,

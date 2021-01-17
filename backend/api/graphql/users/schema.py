@@ -1,14 +1,20 @@
 import graphene
+import graphql_jwt
 
-from .types import UserType
+from .mutations import AuthUser, CreateUser, UpdateUser
 from .resolvers import UserResolvers
-from .mutations import CreateUser
-
-
-class UserQueries(graphene.ObjectType, UserResolvers):
-    user = graphene.Field(UserType, id=graphene.ID())
-    users = graphene.List(UserType)
+from .types import UserType
 
 
 class UserMutations(graphene.ObjectType):
-    create_user = CreateUser.Field()
+    auth_user = AuthUser.Field()
+    update_user = UpdateUser.Field()
+    verify_token = graphql_jwt.Verify.Field()
+    refresh_token = graphql_jwt.Refresh.Field()
+    delete_token_cookie = graphql_jwt.DeleteJSONWebTokenCookie.Field()
+    create_user = CreateUser.Field()  # Old
+
+
+class UserQueries(graphene.ObjectType, UserResolvers):
+    all_users = graphene.List(UserType)
+    user = graphene.Field(UserType, id=graphene.ID())  # ID is old, to be removed
