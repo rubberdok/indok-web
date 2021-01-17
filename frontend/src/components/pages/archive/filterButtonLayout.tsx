@@ -1,5 +1,5 @@
-import React from "react";
 import { Paragraph } from "@components/ui/Typography";
+import React from "react";
 import { ContentWrapper } from "./wrapper";
 
 interface FilterButtonProps {
@@ -9,7 +9,7 @@ interface FilterButtonProps {
   onClick: () => void;
 }
 
-export const FilterButtonLayout = ({ active, title, onClick }: FilterButtonProps) => {
+export const FilterButtonLayout: React.FC<FilterButtonProps> = ({ active, title, onClick }) => {
   return (
     <ContentWrapper>
       <button

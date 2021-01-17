@@ -1,9 +1,7 @@
-import React from "react";
-import { useState } from "react";
-
-import ListDocuments from "./listDocuments";
-import FilterButton from "./FilterButtons";
 import { Title } from "@components/ui/Typography";
+import React, { useState } from "react";
+import FilterButton from "./FilterButtons";
+import ListDocuments from "./listDocuments";
 
 const ColoredLine = ({ color }: any) => (
   <hr
@@ -15,7 +13,7 @@ const ColoredLine = ({ color }: any) => (
   />
 );
 
-const DocumentListView = () => {
+const DocumentListView: React.FC = () => {
   const [typeFilters, setTypeFilters] = useState<{ [key: string]: { active: boolean; title: string } }>({
     Budget: { active: false, title: "Budsjetter" },
     Accounting: { active: false, title: "Regnskap" },

@@ -35,7 +35,7 @@ interface ListDocumentsProps {
   document_types: string[];
 }
 
-const ListDocuments = ({ document_types }: ListDocumentsProps) => {
+const ListDocuments: React.FC<ListDocumentsProps> = ({ document_types }) => {
   const { refetch, loading, data, error } = useQuery(GET_DOCSBYTYPE, { variables: { document_types } });
 
   useEffect(() => {

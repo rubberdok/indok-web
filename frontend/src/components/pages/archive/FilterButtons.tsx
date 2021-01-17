@@ -1,12 +1,12 @@
-import { Wrapper } from "./wrapper";
 import { FilterButtonLayout } from "./filterButtonLayout";
+import { Wrapper } from "./wrapper";
 
 interface FilterButtonProps {
   typeFilters: { [key: string]: { active: boolean; title: string } };
   updateTypeFilters: (key: string) => void;
 }
 
-const FilterButton = ({ typeFilters, updateTypeFilters }: FilterButtonProps) => {
+const FilterButton: React.FC<FilterButtonProps> = ({ typeFilters, updateTypeFilters }) => {
   return (
     <Wrapper>
       {Object.entries(typeFilters).map(([key, val]) => (
