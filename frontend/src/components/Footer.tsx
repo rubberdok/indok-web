@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import Button from "./ui/Button";
+import { Mail } from "react-feather";
 
 const Footer: React.FC = () => {
   const [openHallOfFame, setOpenHallOfFame] = useState(false);
@@ -8,7 +9,7 @@ const Footer: React.FC = () => {
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (bottomRef.current) {
+    if (bottomRef.current && openHallOfFame) {
       bottomRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [openHallOfFame]);
@@ -44,20 +45,10 @@ const Footer: React.FC = () => {
         </Col>
         <Col>
           <p style={{ marginTop: "-5%" }}>
-            <a href="mailto:leder@indokhs.no">
-              <img
-                src="./img/mail-icon.svg"
-                alt="mail-icon"
-                style={{
-                  height: "24px",
-                  width: "24px",
-                  display: "inline-block",
-                  marginRight: "2%",
-                  marginBottom: "-7px",
-                }}
-              />
-            </a>
-            leder@indokhs.no
+            <MailLink href="mailto:leder@indokhs.no">
+              <Mail style={{ marginTop: "2px", marginBottom: "-4px" }} />
+              <span style={{ marginLeft: "5px" }}>leder@indokhs.no</span>
+            </MailLink>
             <br />
             Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse <br />
             Kolbjørn Hejes vei 1E, NTNU Gløshaugen
@@ -171,4 +162,12 @@ const Col = styled.div`
   align-items: center;
   width: 100%;
 `;
+
+const MailLink = styled.a`
+  color: white;
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
 export default Footer;
