@@ -8,7 +8,7 @@ interface StepProps {
   isSelected: boolean;
 }
 
-const Step = ({ isSelected, header, subHeader, onClick }: StepProps) => (
+const Step: React.FC<StepProps> = ({ isSelected, header, subHeader, onClick }) => (
   <SelectContainer onClick={onClick} isSelected={isSelected}>
     <Header>{header}</Header>
     <SubHeader>{subHeader}</SubHeader>

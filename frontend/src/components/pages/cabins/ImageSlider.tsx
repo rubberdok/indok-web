@@ -20,7 +20,7 @@ const images = {
   oksen: [],
 };
 
-const ImageSlider = ({ cabin }: ImageSliderProps): JSX.Element => {
+const ImageSlider: React.FC<ImageSliderProps> = ({ cabin }) => {
   const settings = {
     dots: true,
     infinite: true,

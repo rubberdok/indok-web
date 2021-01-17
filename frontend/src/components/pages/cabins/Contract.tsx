@@ -1,9 +1,9 @@
 import { ArrowIcon } from "@components/ui/ArrowIcon";
 import Router, { useRouter } from "next/router";
-import React from "react";
+import React, { Fragment } from "react";
 import styled from "styled-components";
 
-const Contract = () => {
+const Contract: React.FC = () => {
   const currentTime = new Date().toLocaleString();
 
   const router = useRouter();
@@ -12,7 +12,7 @@ const Contract = () => {
   const handleBackButtonClick = () => Router.back();
 
   return (
-    <>
+    <Fragment>
       <div>
         <Logo src="/static/cabins/hyttestyret_logo.png"></Logo>
         <ArrowIcon direction={"l"} size={35} onClick={handleBackButtonClick}></ArrowIcon>
@@ -85,7 +85,7 @@ const Contract = () => {
           Sted/dato: <b>{currentTime}</b>
         </p>
       </div>
-    </>
+    </Fragment>
   );
 };
 

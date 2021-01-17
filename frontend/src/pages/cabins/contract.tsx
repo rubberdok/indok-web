@@ -1,8 +1,9 @@
 import Layout from "@components/Layout";
 import Contract from "@components/pages/cabins/Contract";
+import { NextPage } from "next";
 import styled from "styled-components";
 
-const ContractPage = () => {
+const ContractPage: NextPage = () => {
   return (
     <>
       <Layout>

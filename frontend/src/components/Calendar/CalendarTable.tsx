@@ -12,7 +12,7 @@ interface Props {
   month: moment.Moment;
 }
 
-const CalendarTable = ({ getRows, month }: Props) => (
+const CalendarTable: React.FC<Props> = ({ getRows, month }) => (
   <CalendarTableContainer>
     <Month>
       {month.format("MMMM")}

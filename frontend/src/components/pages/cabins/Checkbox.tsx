@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import { ContractProps } from "@interfaces/cabins";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { Fragment, useState } from "react";
 import styled from "styled-components";
 
 interface CheckProps {
@@ -12,7 +12,7 @@ interface CheckProps {
   contractData: ContractProps;
 }
 
-const CheckBox = ({ checked, onClick, errorMsg, checkable, contractData }: CheckProps): JSX.Element => {
+const CheckBox: React.FC<CheckProps> = ({ checked, onClick, errorMsg, checkable, contractData }) => {
   const [contractViewed, setContractViewed] = useState(false);
 
   const contractLinkClick = () => {
@@ -20,7 +20,7 @@ const CheckBox = ({ checked, onClick, errorMsg, checkable, contractData }: Check
   };
 
   return (
-    <>
+    <Fragment>
       <CheckboxWrapper status={errorMsg}>
         <input type="checkbox" onChange={onClick} checked={checked} disabled={!(checkable && contractViewed)}></input>
         <LabelText>
@@ -40,7 +40,7 @@ const CheckBox = ({ checked, onClick, errorMsg, checkable, contractData }: Check
           .
         </LabelText>
       </CheckboxWrapper>
-    </>
+    </Fragment>
   );
 };
 

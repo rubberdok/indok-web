@@ -45,7 +45,6 @@ const NavbarLinks: React.FC = () => {
   );
 
   const { loading, error, data: userData } = useQuery<{ user: User }>(GET_USER);
-  console.log(userData);
 
   return (
     <>

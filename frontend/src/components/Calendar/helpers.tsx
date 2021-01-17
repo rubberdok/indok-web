@@ -25,7 +25,7 @@ export const previousMonthDays = (
   dateClicked: (date: moment.Moment) => void,
   visable = true,
   key = ""
-) => {
+): JSX.Element[] => {
   const previousDays: JSX.Element[] = [];
   const firstOfMonth = month.clone().startOf("month");
   const mondayIndex = 0;
@@ -63,7 +63,7 @@ export const nextMonthDays = (
   month: moment.Moment,
   selectedDay: moment.Moment,
   dateClicked: (date: moment.Moment) => void
-) => {
+): JSX.Element[] => {
   const nextDays: JSX.Element[] = [];
   const endOfMonth = month.clone().endOf("month");
   const sundayIndex = 6;

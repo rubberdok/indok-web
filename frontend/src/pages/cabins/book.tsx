@@ -10,6 +10,7 @@ import Summary from "@components/pages/cabins/Summary/Summary";
 import { SEND_EMAIL } from "@graphql/cabins/mutations";
 import { ContractProps } from "@interfaces/cabins";
 import { Composition } from "atomic-layout";
+import { NextPage } from "next";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import Content from "../../components/ui/Content";
@@ -27,7 +28,7 @@ interface BookingData {
   price: number;
 }
 
-const BookPage = (): JSX.Element => {
+const BookPage: NextPage = () => {
   const firstnameRef = React.createRef<HTMLInputElement>();
   const surnameRef = React.createRef<HTMLInputElement>();
   const emailRef = React.createRef<HTMLInputElement>();

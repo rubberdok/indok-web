@@ -1,8 +1,9 @@
 import Layout from "@components/Layout";
 import Rules from "@components/pages/cabins/Rules";
+import { NextPage } from "next";
 import styled from "styled-components";
 
-const RulesPage = () => {
+const RulesPage: NextPage = () => {
   return (
     <>
       <Layout>

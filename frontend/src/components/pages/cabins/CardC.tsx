@@ -1,15 +1,15 @@
-import React from "react";
+import React, { Fragment } from "react";
 import styled from "styled-components";
 
 interface CardProps {
   children: React.ReactNode;
 }
 
-export const Card = ({ children }: CardProps): JSX.Element => {
+export const Card: React.FC<CardProps> = ({ children }) => {
   return (
-    <>
+    <Fragment>
       <StyledDiv>{children}</StyledDiv>
-    </>
+    </Fragment>
   );
 };
 

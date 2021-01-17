@@ -9,7 +9,6 @@ import { ThemeProvider } from "styled-components";
 import "../styles/global.css";
 
 const App = ({ Component, pageProps }: AppProps): JSX.Element => {
-  console.log(process.env.NEXT_PUBLIC_GRAPHQL_BACKEND_URI);
   const link = createHttpLink({
     uri: process.env.NEXT_PUBLIC_GRAPHQL_BACKEND_URI,
     credentials: "include",
