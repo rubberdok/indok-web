@@ -1,4 +1,3 @@
-import graphene
 from apps.events.models import Category, Event
 from graphene_django import DjangoObjectType
 

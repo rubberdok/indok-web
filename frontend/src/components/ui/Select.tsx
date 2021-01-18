@@ -1,34 +1,34 @@
 interface SelectProps {
-    name: string;
-    items: SelectItem[];
-    placeholder?: string;
-    onChange: (chosenItem: any) => void;
+  name: string;
+  items: SelectItem[];
+  placeholder?: string;
+  onChange: (chosenItem: any) => void;
 }
 
 interface SelectItem {
-    name: string;
-    value: any;
-    selected?: boolean;
+  name: string;
+  value: any;
+  selected?: boolean;
 }
 
 const Select: React.FC<SelectProps> = ({ name, items, placeholder, onChange }) => {
-    return (
-        <div>
-            <h6 style={{ marginBottom: 0, marginTop: 0 }}>{`${name}:`}</h6>
-            <select onBlur={(e) => onChange(e.currentTarget.value)} style={{ width: "100%" }}>
-                <option disabled selected>
-                    {placeholder ? placeholder : `Velg ${name.toLowerCase()}`}
-                </option>
-                {items.map((item) => {
-                    return (
-                        <option key={item.value} value={item.value} selected={item?.selected}>
-                            {item.name}
-                        </option>
-                    );
-                })}
-            </select>
-        </div>
-    );
+  return (
+    <div>
+      <h6 style={{ marginBottom: 0, marginTop: 0 }}>{`${name}:`}</h6>
+      <select onBlur={(e) => onChange(e.currentTarget.value)} style={{ width: "100%" }}>
+        <option disabled selected>
+          {placeholder ? placeholder : `Velg ${name.toLowerCase()}`}
+        </option>
+        {items.map((item) => {
+          return (
+            <option key={item.value} value={item.value} selected={item?.selected}>
+              {item.name}
+            </option>
+          );
+        })}
+      </select>
+    </div>
+  );
 };
 
 export default Select;

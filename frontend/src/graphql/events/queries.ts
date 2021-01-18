@@ -22,50 +22,52 @@ export const GET_EVENTS = gql`
             publisher
         }
     }
+  }
 `;
 
 export const GET_EVENT = gql`
-    query Event($id: ID!) {
-        event(id: $id) {
-            id
-            title
-            startTime
-            endTime
-            location
-            description
-            organization {
-                name
-            }
-            category {
-                name
-            }
-            image
-            isAttendable
-            deadline
-            publisher
-        }
+  query Event($id: ID!) {
+    event(id: $id) {
+      id
+      title
+      startTime
+      endTime
+      location
+      description
+      organization {
+        name
+      }
+      category {
+        name
+      }
+      image
+      isAttendable
+      deadline
+      publisher
     }
+  }
 `;
 
 export const GET_CATEGORIES = gql`
-    query {
-        allCategories {
-            id
-            name
-        }
+  query {
+    allCategories {
+      id
+      name
     }
+  }
 `;
 
 export const GET_CATEGORY = gql`
-    query Category($id: ID!) {
-        category(id: $id) {
-            id
-            name
-        }
+  query Category($id: ID!) {
+    category(id: $id) {
+      id
+      name
     }
+  }
 `;
 
 export const QUERY_EVENT_FILTERED_ORGANIZATIONS = gql`
+<<<<<<< HEAD
     {
         eventFilteredOrganizations {
             id
@@ -76,5 +78,16 @@ export const QUERY_EVENT_FILTERED_ORGANIZATIONS = gql`
                 name
             }
         }
+=======
+  {
+    eventFilteredOrganizations {
+      id
+      name
+      children {
+        id
+        name
+      }
+>>>>>>> ed4941e252ea2290abc600cd3d0c6a252a791b50
     }
+  }
 `;

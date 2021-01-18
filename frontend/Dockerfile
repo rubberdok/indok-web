@@ -1,13 +1,15 @@
 FROM node:12
 
 # Create app directory
-RUN mkdir -p /code/frontend/
-WORKDIR /code/frontend
+RUN mkdir -p /code
+WORKDIR /code
 
 # Installing dependencies
-COPY frontend/package.json ./
+COPY package.json .
+COPY package-lock.json .
 RUN npm install
 
 # Copying source files
-COPY frontend .
+COPY . .
 
+CMD ["npm", "run", "dev"]
