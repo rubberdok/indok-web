@@ -66,13 +66,15 @@ export const GET_CATEGORY = gql`
 `;
 
 export const QUERY_EVENT_FILTERED_ORGANIZATIONS = gql`
-  query eventFilteredOrganizations {
-    id
-    name
-    color
-    children {
+  query {
+    eventFilteredOrganizations {
       id
       name
+      color
+      children {
+        id
+        name
+      }
     }
   }
 `;
