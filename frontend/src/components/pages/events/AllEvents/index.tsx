@@ -48,8 +48,8 @@ const AllEvents: React.FC = () => {
                                         <div
                                             style={{
                                                 border: "solid",
-                                                borderWidth: "0.05em",
-                                                borderColor: "#6A9997",
+                                                borderWidth: "0.05em 0.05em 0.05em 1.2em",
+                                                borderColor: event.organization.color ?? "#6A9997",
                                                 borderRadius: "0.2em",
                                                 padding: "0.5em",
                                                 marginBottom: "0.5em",

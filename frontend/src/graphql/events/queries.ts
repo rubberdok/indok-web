@@ -11,6 +11,7 @@ export const GET_EVENTS = gql`
             description
             organization {
                 name
+                color
             }
             category {
                 name
@@ -69,6 +70,7 @@ export const QUERY_EVENT_FILTERED_ORGANIZATIONS = gql`
         eventFilteredOrganizations {
             id
             name
+            color
             children {
                 id
                 name

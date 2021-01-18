@@ -16,11 +16,8 @@ class Organization(models.Model):
     )
 
     logo = models.ImageField(upload_to="organizations", blank=True, null=True)
-<<<<<<< HEAD
-=======
 
     color = models.CharField(max_length=100, blank=True, null=True)
->>>>>>> b022cc55f830c6d4c6dcfb09d1783b9fd266b2e4
 
     class Meta:
         UniqueConstraint(

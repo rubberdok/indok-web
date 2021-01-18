@@ -5,7 +5,7 @@ export interface Event {
     endTime: string;
     location: string;
     description: string;
-    organization: { id: string; name: string };
+    organization: { id: string; name: string; color?: string };
     category: { id: string; name: string };
     image: string;
     isAttendable: string;
