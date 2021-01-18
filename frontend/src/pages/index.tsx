@@ -1,4 +1,3 @@
-import { CompositionProps } from "@atomic-layout/core";
 import Hero from "@components/Hero";
 import Layout from "@components/Layout";
 import Button from "@components/ui/Button";
@@ -55,7 +54,7 @@ const IndexPage: NextPage = () => (
       <br />
       <br />
       <Composition alignItems="center" areas={areasTablet} areasLg={areasLarge} gap={60} gapRow={20}>
-        {({ Areas }: CompositionProps) => (
+        {(Areas) => (
           <>
             <Areas.Items>
               <SubHeading>Kommende Eventer</SubHeading>

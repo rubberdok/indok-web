@@ -1,5 +1,4 @@
 import { useMutation } from "@apollo/client";
-import { CompositionProps } from "@atomic-layout/core";
 import { getRangeLength } from "@components/Calendar";
 import Navbar from "@components/navbar/Navbar";
 import Button from "@components/pages/cabins/Button";
@@ -157,7 +156,7 @@ const BookPage: NextPage = () => {
       </HeaderComposition>
       {isAvailable ? (
         <Composition templateXs={templatePhone} templateLg={templateDesktop} padding={15} gutter={15} gutterLg={40}>
-          {({ Inputs, Sum, Slider }: CompositionProps) => (
+          {({ Inputs, Sum, Slider }) => (
             <>
               <Inputs>
                 <InputFields refs={inputRefs} onChange={handleInputChange}>
