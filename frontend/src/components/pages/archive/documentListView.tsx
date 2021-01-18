@@ -9,19 +9,20 @@ const ColoredLine = ({ color }: any) => (
       color: color,
       backgroundColor: color,
       height: 5,
+      marginTop: 20,
     }}
   />
 );
 
 const DocumentListView: React.FC = () => {
   const [typeFilters, setTypeFilters] = useState<{ [key: string]: { active: boolean; title: string } }>({
-    Budget: { active: false, title: "Budsjetter" },
-    Accounting: { active: false, title: "Regnskap" },
+    Budget: { active: false, title: "Budsjetter og regnskap" },
+    // Accounting: { active: false, title: "Regnskap" },
     Summary: { active: false, title: "Referater" },
     Yearbook: { active: false, title: "Årbøker" },
     Guidelines: { active: false, title: "Retningslinjer" },
-    Regulation: { active: false, title: "Vedtekter" },
-    Statues: { active: false, title: "Statutter" },
+    Regulation: { active: false, title: "Vedtekter og statutter" },
+    // Statues: { active: false, title: "Statutter" },
     Others: { active: false, title: "Annet" },
   });
 
