@@ -17,10 +17,10 @@ const ListItem: React.FC<{
         }
       }}
     >
-      <div>{mainText}</div>
-      <div>{subText}</div>
-      <img src={imgSrc} alt="" />
     </button>
+    <div>{mainText}</div>
+    <div>{subText}</div>
+    <img src={imgSrc} alt="" />
   </Item>
 );
 

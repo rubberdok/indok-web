@@ -2,14 +2,19 @@ import { NextPage, GetServerSideProps, InferGetServerSidePropsType } from "next"
 import Link from "next/link";
 import Layout from "@components/Layout";
 import AllListings from "@components/pages/listings/allListings";
-import NavBar from "@components/navbar/Navbar";
+import { Title } from "@components/ui/Typography";
+import Content from "@components/ui/Content";
+
 
 const ListingsPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ userID }) => {
   return (
     <Layout>
+      <Content>
       <Link href="/users">Tilbake</Link>
-      <h3>Åpne verv</h3>
+      <Title>Åpne verv</Title>
       <AllListings userID={userID} />
+
+      </Content>
     </Layout>
   );
 };

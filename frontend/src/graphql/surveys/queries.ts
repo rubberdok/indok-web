@@ -30,3 +30,12 @@ export const QUESTIONTYPES = gql`
     }
   }
 `;
+
+export const SURVEYS = gql`
+  query {
+    surveys {
+      id
+      descriptiveName
+    }
+  }
+`;

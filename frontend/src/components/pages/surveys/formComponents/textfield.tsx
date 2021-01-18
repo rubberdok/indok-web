@@ -14,7 +14,7 @@ const TextField: React.FC<{
       {size ? (
         <textarea
           placeholder={placeholder}
-          rows={size === "short" ? 5 : 10}
+          rows={size === "short" ? 1 : 5}
           cols={40}
           onChange={onChange}
           style={{ resize: "none" }}

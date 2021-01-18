@@ -7,6 +7,9 @@ import { Listing } from "@interfaces/listings";
 import Link from "next/link";
 import CreateResponse from "@components/pages/listings/createResponse";
 import NavBar from "@components/navbar/Navbar";
+import Content from "@components/ui/Content";
+import { Title, SubTitle, SubHeading, Paragraph } from "@components/ui/Typography";
+import Button from "@components/ui/Button";
 
 const ListingPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ userID, listingID }) => {
   const { loading, error, data } = useQuery<{ listing: Listing }>(LISTING, {
@@ -18,13 +21,16 @@ const ListingPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProp
     <>
       {data && (
         <Layout>
+          <Content>
           <Link href={`/users/${userID}/listings`}>Tilbake</Link>
-          <h3>{data.listing.title}</h3>
-          <p>{data.listing.description}</p>
+          <Title>{data.listing.title}</Title>
+          <SubTitle>{data.listing.organization?.name}</SubTitle>
+          <Paragraph>{data.listing.description}</Paragraph>
           <p>Frist: {data.listing.deadline.slice(0, 16).replace("T", " ")}</p>
           <CreateResponse listing={data.listing} applicantID={userID}>
             <TextField title="Søk:" placeholder="Din søknad..." size="long" />
           </CreateResponse>
+          </Content>
         </Layout>
       )}
     </>

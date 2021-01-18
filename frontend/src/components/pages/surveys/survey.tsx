@@ -2,6 +2,7 @@ import { useQuery } from "@apollo/client";
 import { SURVEY } from "@graphql/surveys/queries";
 import { Survey } from "@interfaces/surveys";
 import QuestionDetail from "@components/pages/surveys/questionDetail";
+import { Title } from "@components/ui/Typography";
 
 const SurveyDetail: React.FC<{ id: string }> = ({ id }) => {
   const { error, loading, data } = useQuery<{ survey: Survey }>(SURVEY, { variables: { ID: Number(id) } });
@@ -12,10 +13,10 @@ const SurveyDetail: React.FC<{ id: string }> = ({ id }) => {
     <>
       {data && (
         <>
-          <h1>{data.survey.descriptiveName}</h1>
-          {data.survey.questions.map((question) => {
-            <QuestionDetail question={question} active={true} />;
-          })}
+          <Title>{data.survey.descriptiveName}</Title>
+          {data.survey.questions.map((question) => (
+            <QuestionDetail question={question} active={true} />
+          ))}
         </>
       )}
     </>
