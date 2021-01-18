@@ -1,9 +1,15 @@
 import Hero from "@components/Hero";
 import Layout from "@components/Layout";
-import Button from "@components/ui/Button";
 import Content from "@components/ui/Content";
 import ImageCard from "@components/ui/ImageCard";
 import { Heading, Paragraph, SubHeading } from "@components/ui/Typography";
+import { Typography } from "@material-ui/core";
+import AppBar from "@material-ui/core/AppBar";
+import Box from "@material-ui/core/Box";
+import Button from "@material-ui/core/Button";
+import Grid from "@material-ui/core/Grid";
+import Toolbar from "@material-ui/core/Toolbar";
+import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import { Composition } from "atomic-layout";
 import { NextPage } from "next";
 
@@ -45,14 +51,42 @@ const areasLarge = `
   actions items
 `;
 
+const hero = {
+  title: "Title of a longer featured blog post",
+  description:
+    "Multiple lines of text that form the lede, informing new readers quickly and efficiently about what's most interesting in this post's contents.",
+  image: "https://source.unsplash.com/random",
+  imgText: "main image description",
+  linkText: "Continue reading…",
+};
+
 const IndexPage: NextPage = () => (
   <Layout>
-    <Hero />
+    <AppBar position="static">
+      <Toolbar>
+        <Typography variant="h6">INDØK</Typography>
+      </Toolbar>
+    </AppBar>
+
+    <Hero post={hero} />
+
     <Content>
-      <br />
-      <br />
-      <br />
-      <br />
+      <Box my={20}>
+        <Grid container justify="center" alignItems="center" spacing={8}>
+          <Grid item xs={5}>
+            <Typography align="center" variant="h3">
+              Foreningen bak et av de beste sosiale miljøene på NTNU.
+            </Typography>
+          </Grid>
+          <Grid item xs={5}>
+            <Typography variant="subtitle1">
+              Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse, NTNU er formaliseringen av all
+              foreningsaktivitet på Indøk under ett og samme tak. På den måten kan vi si at Foreningen har eksistert så
+              lenge studentfrivilligheten på Indøk har det. Allerede på det første Indøk-kullet i 86´{" "}
+            </Typography>
+          </Grid>
+        </Grid>
+      </Box>
       <Composition alignItems="center" areas={areasTablet} areasLg={areasLarge} gap={60} gapRow={20}>
         {(Areas) => (
           <>
@@ -84,7 +118,7 @@ const IndexPage: NextPage = () => (
               </Paragraph>
             </Areas.Content>
             <Areas.Actions>
-              <Button back style="primary" link="/events">
+              <Button color="primary" variant="contained" endIcon={<NavigateNextIcon />}>
                 Se kalenderen
               </Button>
             </Areas.Actions>
