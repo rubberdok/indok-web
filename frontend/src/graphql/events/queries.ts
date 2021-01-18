@@ -67,7 +67,6 @@ export const GET_CATEGORY = gql`
 `;
 
 export const QUERY_EVENT_FILTERED_ORGANIZATIONS = gql`
-<<<<<<< HEAD
     {
         eventFilteredOrganizations {
             id
@@ -78,16 +77,6 @@ export const QUERY_EVENT_FILTERED_ORGANIZATIONS = gql`
                 name
             }
         }
-=======
-  {
-    eventFilteredOrganizations {
-      id
-      name
-      children {
-        id
-        name
-      }
->>>>>>> ed4941e252ea2290abc600cd3d0c6a252a791b50
     }
   }
 `;
