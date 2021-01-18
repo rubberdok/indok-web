@@ -2,7 +2,10 @@ import { useQuery } from "@apollo/client";
 import { GET_EVENTS } from "@graphql/events/queries";
 import { Event } from "@interfaces/events";
 import Link from "next/link";
+import { PlusSquare, Filter } from "react-feather";
+import styled from "styled-components";
 import React, { useState } from "react";
+import { NavItem } from "../../../navbar/NavbarLinks";
 import FilterMenu from "./filterMenu";
 
 export interface FilterQuery {
@@ -30,9 +33,40 @@ const AllEvents: React.FC = () => {
 
   return (
     <div>
-      <FilterMenu filters={filters} onChange={onChange} />
-      <div style={{ float: "right", width: "70%" }}>
-        <button onClick={() => setShowTableView(!showTableView)}>{showTableView ? "Vis liste" : "Vis kalender"}</button>
+      <NavItem
+        style={{ paddingBottom: "0px", paddingTop: "0px", margin: "0px", fontSize: "1.1em" }}
+        className={!showTableView ? "active" : ""}
+        primary
+        onClick={() => setShowTableView(!showTableView)}
+      >
+        Liste
+      </NavItem>
+      <NavItem
+        style={{ paddingBottom: "0px", paddingTop: "0px", fontSize: "1.1em" }}
+        className={showTableView ? "active" : ""}
+        primary
+        onClick={() => setShowTableView(!showTableView)}
+      >
+        Kalender
+      </NavItem>
+
+      <div style={{ float: "right" }}>
+        <Link href={`/events/create-event`}>
+          <StyledIconButton>
+            <PlusSquare />
+            <p style={{ margin: 0 }}>Opprett</p>
+          </StyledIconButton>
+        </Link>
+      </div>
+
+      <div style={{ float: "right", marginRight: "15px" }}>
+        <StyledIconButton>
+          <Filter />
+          <p style={{ margin: 0 }}>Filter</p>
+        </StyledIconButton>
+      </div>
+
+      <div style={{ width: "100%", paddingTop: "1em" }}>
         {showTableView ? (
           <p>{"Kommer snart! :)"}</p>
         ) : (
@@ -64,8 +98,31 @@ const AllEvents: React.FC = () => {
           </>
         )}
       </div>
+      <FilterMenu filters={filters} onChange={onChange} />
     </div>
   );
 };
 
 export default AllEvents;
+
+const StyledIconButton = styled.button`
+  background: transparent;
+  color: ${({ theme }) => theme.colors.primary};
+  font-family: "Montserrat";
+  font-size: 18px;
+  border: none;
+  display: flex;
+  align-items: stretch;
+  text-decoration: none !important;
+  transition: 0.3s all ease;
+  padding: 0;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  &:focus {
+    border: none;
+    outline: none;
+  }
+`;
