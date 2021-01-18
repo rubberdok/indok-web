@@ -28,6 +28,10 @@
         {
           "name": "DATAPORTEN_SECRET",
           "value": "%s"
+        },
+        {
+          "name": "GOOGLE_DRIVE_API_KEY",
+          "value": "%s"
         }
       ],
       "logConfiguration": {
