@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     # Local apps
     "apps.users",
     "apps.events",
+    "apps.organizations",
     # External apps
     "corsheaders",
     "graphene_django",
@@ -141,7 +142,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "Europe/Oslo"
 
 USE_I18N = True
 

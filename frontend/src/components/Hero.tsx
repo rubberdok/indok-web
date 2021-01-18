@@ -29,7 +29,7 @@ const Hero: React.FC = () => (
                     <Title>Industriell Økonomi og Teknologiledelse</Title>
                   </Areas.Heading>
                   <Areas.Action flex align="flex-end" justify="end">
-                    <Button style="primary" link="/about">
+                    <Button styling="primary" link="/about">
                       Les mer om foreningen
                     </Button>
                   </Areas.Action>
