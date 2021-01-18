@@ -1,27 +1,35 @@
+
+
+btn:focus {
+  outline: none;
+  box-shadow: none;
+  },
+
 .container {
-    display: flex;
-    justify-content: center;
-    align-items
-}
+  display: flex;
+  justify - content: center;
+  align - items
+},
 
 .button {
-    background-color: transparent;
-    color: #065A5A;
-    padding: 40px;
-    font-size: 0.7em;
-    margin-top: 5em;
-    font-family: Arial;
-    text-align: center;
-    margin: 1em;
-    padding: 0.25em 1em;
-    border: 2px solid #065A5A;
-    border-radius: 3px;
-}
+  background - color: transparent;
+  color: #065A5A;
+  padding: 40px;
+  font - size: 0.7em;
+  margin - top: 5em;
+  font - family: Arial;
+  text - align: center;
+  margin: 1em;
+  padding: 0.25em 1em;
+  border: 2px solid #065A5A;
+  border - radius: 3px;
+},
 
 .wrapper {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+  flex - wrap: wrap;
+  justify - content: space - between;
   padding: 20px;
-}
+},
+
 
