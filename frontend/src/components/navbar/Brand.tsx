@@ -2,7 +2,7 @@ import Link from "next/link";
 import React from "react";
 import styled from "styled-components";
 
-const Brand = () => (
+const Brand: React.FC = () => (
   <LogoWrap>
     <Link href="/">
       <Logo src={"/logo.svg"} alt="INDØK Hovedstyre" />

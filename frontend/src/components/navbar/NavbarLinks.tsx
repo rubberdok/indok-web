@@ -77,7 +77,7 @@ const NavItem = styled.a<NavItemProps>`
   text-decoration: none;
   font-weight: 600;
   font-size: 16px;
-  color: ${(props) => (props.primary ? ({ theme }) => theme.colors.primary : "#111")};
+  color: #111;
   display: inline-block;
   white-space: nowrap;
   margin: 0 25px;
@@ -96,7 +96,7 @@ const NavItem = styled.a<NavItemProps>`
       margin: 0 auto;
       content: ".";
       color: transparent;
-      background: ${(props) => (props.primary ? ({ theme }) => theme.colors.primary : "#111")};
+      background: "#111";
       height: 2px;
       transition: all 0.2s ease;
       opacity: 0;
@@ -126,7 +126,7 @@ const NavItem = styled.a<NavItemProps>`
 `;
 
 const Line = styled.div`
-  background: ${({ theme }) => theme.colors.primary};
+  background: #111;
   margin: 0 25px;
   width: 20px;
   height: 2px;
