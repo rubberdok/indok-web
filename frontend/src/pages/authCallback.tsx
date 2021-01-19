@@ -1,11 +1,14 @@
 import { useMutation } from "@apollo/client";
 import Layout from "@components/Layout";
+import Button from "@components/ui/Button";
+import Content from "@components/ui/Content";
+import { Paragraph, Title } from "@components/ui/Typography";
 import { AUTHENTICATE } from "@graphql/auth/mutations";
 import { GET_USER } from "@graphql/auth/queries";
 import { User } from "@interfaces/users";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 
 const AuthCallbackPage: NextPage = () => {
   const router = useRouter();
@@ -27,7 +30,7 @@ const AuthCallbackPage: NextPage = () => {
       authUser({
         variables: { code },
         update: (cache, { data }) => {
-          if (!data || !data.authUser.user) {
+          if (!data || !data.authUser || !data.authUser.user) {
             return;
           }
           cache.writeQuery<User>({ query: GET_USER, data: data.authUser.user });
@@ -36,19 +39,27 @@ const AuthCallbackPage: NextPage = () => {
     }
   }, [code]);
 
-  if (!loading && data) {
+  if (!loading && data?.authUser) {
     router.push("/profile");
     return null;
   }
   return (
     <Layout>
-      {error ? (
-        <div> ERROR: {error.message}</div>
-      ) : data ? (
-        <div>Logged in as data.authUser.user.username </div>
-      ) : (
-        <div>Logging you in...</div>
-      )}
+      <Content>
+        <Title>Feide-innlogging</Title>
+        {error ? (
+          <>
+            <Paragraph> FEIL: {error.message}</Paragraph>
+            <Button link="/" back>
+              Tilbake til hjemmesiden
+            </Button>
+          </>
+        ) : data ? (
+          <Paragraph>Logget inn som data.authUser.user.firstName </Paragraph>
+        ) : (
+          <Paragraph>Logger deg inn...</Paragraph>
+        )}
+      </Content>
     </Layout>
   );
 };

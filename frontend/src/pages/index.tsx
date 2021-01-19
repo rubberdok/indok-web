@@ -7,44 +7,6 @@ import Grid from "@material-ui/core/Grid";
 import { NextPage } from "next";
 import { Container } from "next/app";
 
-const data = [
-  {
-    id: "da39a3ee5e6b4b0d3255bfef95601890afd80709",
-    imageUrl: "./img/borsfest.jpg",
-    title: "Børsfest: Cash is king",
-    subtitle: "Om 6 dager",
-  },
-  {
-    id: "ad782ecdac770fc6eb9a62e44f90873fb97fb26b",
-    imageUrl: "./img/woodok.jpg",
-    title: "Woodøk i kjent stil",
-    subtitle: "20. November",
-  },
-  {
-    id: "b802f384302cb24fbab0a44997e820bf2e8507bb",
-    imageUrl: "./img/afterski.jpg",
-    title: "Afterski i Bymarka",
-    subtitle: "25. November",
-  },
-  {
-    id: "b802f384302cb24fbab0a44994e820bf2e8507bb",
-    imageUrl: "./img/afterski.jpg",
-    title: "Afterski i Bymarka",
-    subtitle: "25. November",
-  },
-];
-
-const areasTablet = `
-  content
-  items
-  actions
-`;
-
-const areasLarge = `
-  content items
-  actions items
-`;
-
 const IndexPage: NextPage = () => (
   <Layout>
     <Hero />
