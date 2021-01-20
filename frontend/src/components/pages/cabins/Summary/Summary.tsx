@@ -1,4 +1,3 @@
-import { CompositionProps } from "@atomic-layout/core";
 import { Composition } from "atomic-layout";
 import React from "react";
 import styled from "styled-components";
@@ -48,7 +47,7 @@ const Summary = ({ from, to, cabin, price, nights }: SummaryProps): JSX.Element 
         gutter={0}
         gutterLg={0}
       >
-        {({ Cabin, From, To, Facs, Price, Total }: CompositionProps) => (
+        {({ Cabin, From, To, Facs, Price, Total }) => (
           <>
             <Cabin>
               <h3>Hytte: {cabin}</h3>

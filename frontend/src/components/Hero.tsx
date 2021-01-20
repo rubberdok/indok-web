@@ -1,4 +1,3 @@
-import { CompositionProps } from "@atomic-layout/core";
 import Button from "@components/ui/Button";
 import Card from "@components/ui/Card";
 import Content from "@components/ui/Content";
@@ -23,7 +22,7 @@ const Hero: React.FC = () => (
         <Content>
           <Card>
             <Composition areas={areasMobile} maxWidth={450} maxWidthMd={550} maxWidthLg={700}>
-              {({ Areas }: CompositionProps) => (
+              {(Areas) => (
                 <>
                   <Areas.Heading paddingHorizontal={70} paddingTop={30}>
                     <SubTitle>Foreningen for studentene ved</SubTitle>
