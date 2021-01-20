@@ -1,7 +1,7 @@
 <h1 align="center">Indøk NTNU</h1><br>
 <p align="center">
   <a href="https://www.indokntnu.no/">
-    &nbsp;&nbsp;&nbsp;&nbsp;<img alt="Logo" title="Rubberdøk" src="../assets/logo_black.svg" width="300">
+    &nbsp;&nbsp;&nbsp;&nbsp;<img alt="Logo" title="Rubberdøk" src="https://github.com/hovedstyret/indok-web/blob/docs/assets/logo_black.svg" width="300">
   </a>
 </p>
 
@@ -26,7 +26,7 @@ Website for the students at Industrial Economics and Technology Management at NT
 
 <p align="center">
   <a href="https://www.indokntnu.no/">
-    <img alt="Landing Page" title="Indøk NTNU" src="../assets/Index.png" width="600">
+    <img alt="Landing Page" title="Indøk NTNU" src="https://github.com/hovedstyret/indok-web/blob/docs/assets/Index.png" width="600">
   </a>
 </p>
 
