@@ -8,7 +8,7 @@ const CreateResponse: React.FC<{
   listing: Listing;
   applicantID: string;
   children?: React.ReactNode;
-}> = ({ listing, applicantID, children }) => {
+}> = ({ listing, children, applicantID }) => {
   const [response, setResponse] = useState<Response>({} as Response);
   const [createResponse] = useMutation<{ createResponse: { response: Response } }>(
     CREATE_RESPONSE /* , {

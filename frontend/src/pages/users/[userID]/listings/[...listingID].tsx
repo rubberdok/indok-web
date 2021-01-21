@@ -22,14 +22,14 @@ const ListingPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProp
       {data && (
         <Layout>
           <Content>
-          <Link href={`/users/${userID}/listings`}>Tilbake</Link>
-          <Title>{data.listing.title}</Title>
-          <SubTitle>{data.listing.organization?.name}</SubTitle>
-          <Paragraph>{data.listing.description}</Paragraph>
-          <p>Frist: {data.listing.deadline.slice(0, 16).replace("T", " ")}</p>
-          <CreateResponse listing={data.listing} applicantID={userID}>
-            <TextField title="Søk:" placeholder="Din søknad..." size="long" />
-          </CreateResponse>
+            <Link href={`/users/${userID}/listings`}>Tilbake</Link>
+            <Title>{data.listing.title}</Title>
+            <SubTitle>{data.listing.organization?.name}</SubTitle>
+            <Paragraph>{data.listing.description}</Paragraph>
+            <p>Frist: {data.listing.deadline.slice(0, 16).replace("T", " ")}</p>
+            <CreateResponse listing={data.listing} applicantID={userID}>
+              <TextField title="Søk:" placeholder="Din søknad..." size="long" />
+            </CreateResponse>
           </Content>
         </Layout>
       )}

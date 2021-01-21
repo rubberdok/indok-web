@@ -5,15 +5,13 @@ import AllListings from "@components/pages/listings/allListings";
 import { Title } from "@components/ui/Typography";
 import Content from "@components/ui/Content";
 
-
 const ListingsPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ userID }) => {
   return (
     <Layout>
       <Content>
-      <Link href="/users">Tilbake</Link>
-      <Title>Åpne verv</Title>
-      <AllListings userID={userID} />
-
+        <Link href="/users">Tilbake</Link>
+        <Title>Åpne verv</Title>
+        <AllListings userID={userID} />
       </Content>
     </Layout>
   );
