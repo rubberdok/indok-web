@@ -15,8 +15,7 @@ class ListingQueries(graphene.ObjectType, ListingResolvers, ResponseResolvers):
     listings = graphene.List(ListingType, search=graphene.String(required=False))
     listing = graphene.Field(ListingType, id=graphene.ID())
 
-    response = graphene.Field(ResponseType, id=graphene.ID())
-    response_by_listing_id = graphene.Field(ResponseType, listing_id=graphene.ID())
+    response = graphene.Field(ResponseType, id=graphene.ID(required=False), listing_id=graphene.ID(required=False))
 
 class ListingMutations(graphene.ObjectType):
     create_listing = CreateListing.Field()
