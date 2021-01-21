@@ -5,7 +5,7 @@ import { ORGANIZATION } from "@graphql/listings/queries";
 import { Organization } from "@interfaces/listings";
 import CreateListing from "@components/pages/listings/organization/createListing";
 import Link from "next/link";
-import NavBar from "@components/navbar/Navbar";
+import Layout from "@components/Layout";
 
 const OrganizationListingsPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ orgID }) => {
   const { loading, error, data } = useQuery<{ organization: Organization }>(ORGANIZATION, {
@@ -16,7 +16,7 @@ const OrganizationListingsPage: NextPage<InferGetServerSidePropsType<typeof getS
   if (error) return <p>Error</p>;
   if (loading) return <p>Loading...</p>;
   return (
-    <>
+    <Layout>
       <Link href="/org">Tilbake</Link>
       {data && (
         <>
@@ -30,7 +30,7 @@ const OrganizationListingsPage: NextPage<InferGetServerSidePropsType<typeof getS
           <CreateListing organization={data.organization} />
         </>
       )}
-    </>
+    </Layout>
   );
 };
 

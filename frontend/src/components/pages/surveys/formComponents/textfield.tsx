@@ -6,9 +6,10 @@ const TextField: React.FC<{
   placeholder?: string;
   size?: "short" | "long";
   value?: string;
-}> = ({ title, onChange, placeholder, size, value }) => {
+  key?: string;
+}> = ({ title, onChange, placeholder, size, value, key }) => {
   return (
-    <label>
+    <label key={key}>
       {title}
       <br />
       {size ? (

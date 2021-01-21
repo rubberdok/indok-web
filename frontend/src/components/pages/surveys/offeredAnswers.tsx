@@ -1,8 +1,5 @@
-
-
-
 const OfferedAnswer: React.FC = () => {
+  return <></>;
+};
 
-}
-
-export default OfferedAnswer
+export default OfferedAnswer;
