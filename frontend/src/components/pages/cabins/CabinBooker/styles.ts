@@ -75,11 +75,9 @@ export const BookButton = styled.div`
 `;
 
 export const DropdownButton = styled.div<{ isSelected: boolean }>`
-  ${(props) => (props.isSelected ? `color: white;` : ``)};
-  ${(props) => (props.isSelected ? `background-color: ${theme.colors.primaryLight};` : ``)};
   border-radius: 5px;
   margin: 10px;
-  padding: 20px;
+  padding: 10px;
   &:hover {
     cursor: pointer;
     background-color: ${theme.colors.background};
@@ -90,7 +88,7 @@ export const DropdownButton = styled.div<{ isSelected: boolean }>`
   justify-content: center;
 `;
 
-export const TextContainer = styled.div<{ direction?: "right" | "left" | "center" }>`
+export const TextContainer = styled.div<{ direction?: "right" | "left" | "center"; small?: boolean }>`
   text-align: ${(props) => (props.direction ? props.direction : `left`)};
-  width: 50%;
+  width: ${(props) => (props.small ? `20%` : `80%`)};
 `;

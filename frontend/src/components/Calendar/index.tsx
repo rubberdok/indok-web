@@ -12,13 +12,14 @@ export interface CalendarEvent {
 }
 
 interface CalendarProps {
-  events: CalendarEvent[];
+  events?: CalendarEvent[];
+  disabledDates?: string[];
   rangeChanged: (fromDate: string, toDate: string | undefined) => void;
   initSelectedDay?: string;
   disableRange?: boolean;
 }
 
-const Calendar: React.FC<CalendarProps> = ({ events, rangeChanged, initSelectedDay, disableRange }) => {
+const Calendar: React.FC<CalendarProps> = ({ events, disabledDates, rangeChanged, initSelectedDay, disableRange }) => {
   const [selectedMonth, setSelectedMonth] = useState(moment());
   const [selectedDay, setSelectedDay] = useState(moment(initSelectedDay));
   const [hoverRange, setHoverRange] = useState<string[]>([]);
@@ -30,7 +31,7 @@ const Calendar: React.FC<CalendarProps> = ({ events, rangeChanged, initSelectedD
     for (let i = 1; i <= month.daysInMonth(); i++) {
       const date = moment(month);
       date.set("date", i);
-      const dateEvents = events.filter((event) => event.date === date.format(DATE_FORMAT));
+      const dateEvents = events?.filter((event) => event.date === date.format(DATE_FORMAT));
       daysOfMonth.push(
         <DayCell
           onMouseOver={() =>
@@ -45,7 +46,7 @@ const Calendar: React.FC<CalendarProps> = ({ events, rangeChanged, initSelectedD
           }
           onClick={() => handleDateClicked(date)}
           key={date.format(DATE_FORMAT)}
-          isDisabled={date.isBefore(today, "day")}
+          isDisabled={date.isBefore(today, "day") || _.includes(disabledDates, date.format(DATE_FORMAT))}
         >
           <Day>{i}</Day>
           <EventMarkerWrapper>

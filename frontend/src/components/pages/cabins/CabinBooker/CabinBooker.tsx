@@ -7,7 +7,16 @@ import { Cabin } from "@interfaces/cabins";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import Step from "./Step";
-import { BookButton, BookingContainer, Dropdown, FlowContainer, DropdownButton, TextContainer } from "./styles";
+import {
+  BookButton,
+  BookingContainer,
+  Dropdown,
+  FlowContainer,
+  DropdownButton,
+  TextContainer,
+  Header,
+  SubHeader,
+} from "./styles";
 import { FaArrowRight, FaCheck } from "react-icons/fa";
 
 const DayEvent = (key: string) => <EventMarker key={key} />;
@@ -22,7 +31,7 @@ const CabinBooker: React.FC = () => {
   const router = useRouter();
   const [activeStep, setActiveState] = useState<BookState>();
   const { isAvailable, range, setRange, allBookingsQuery } = useBookingRange();
-  const [bookings, setBookings] = useState<CalendarEvent[]>([]);
+  const [unavailableDates, setUnavailableDates] = useState<string[]>([]);
   const cabinQuery = useQuery<{ cabins: Cabin[] }>(QUERY_CABINS);
   const [cabins, setCabins] = useState<BookingCabin[]>();
 
@@ -32,14 +41,11 @@ const CabinBooker: React.FC = () => {
       const events = allBookingsQuery.data.allBookings.reduce((bookingDays, booking) => {
         const rangeOfBooking = createDateRange(booking.bookFrom, booking.bookTo);
         rangeOfBooking.forEach((dayDate: string) => {
-          bookingDays.push({
-            date: dayDate,
-            renderComponent: DayEvent,
-          });
+          bookingDays.push(dayDate);
         });
         return bookingDays;
-      }, [] as CalendarEvent[]);
-      setBookings(events);
+      }, [] as string[]);
+      setUnavailableDates(events);
     }
   }, [allBookingsQuery.data]);
 
@@ -51,13 +57,22 @@ const CabinBooker: React.FC = () => {
     activeStep === step ? setActiveState(undefined) : setActiveState(step);
   };
 
+  const getCabinSubHeader = () => {
+    if (!activeStep || activeStep == "Choose Cabin") {
+      return "Velg hvilken hytte du vil booke";
+    } else {
+      const bookedCabins = cabins ? cabins.filter((cabin) => cabin.checked) : [];
+      return "Booker ".concat(...bookedCabins.map((cabin, i) => (i > 0 ? ` og ${cabin.name}` : cabin.name)));
+    }
+  };
+
   return (
     <BookingContainer>
       <FlowContainer>
         <Step
           header={"Velg Hytte"}
           isSelected={activeStep === "Choose Cabin"}
-          subHeader={"Velg hvilken hytte du vil booke"}
+          subHeader={getCabinSubHeader()}
           onClick={() => handleStepClick("Choose Cabin")}
         />
 
@@ -97,8 +112,13 @@ const CabinBooker: React.FC = () => {
                 setCabins(cabins.map((c) => (c.name === cabin.name ? { ...c, checked: !c.checked } : c)));
               }}
             >
-              <TextContainer>{cabin.name}</TextContainer>
-              <TextContainer direction="right">{cabin.checked ? <FaCheck /> : null}</TextContainer>
+              <TextContainer direction="center">
+                <Header>{cabin.name}</Header>
+                <SubHeader>Flott hytte med peis og uteterrasse. </SubHeader>
+              </TextContainer>
+              <TextContainer direction="right" small>
+                {cabin.checked ? <FaCheck /> : null}
+              </TextContainer>
             </DropdownButton>
           ))}
         </Dropdown>
@@ -110,7 +130,7 @@ const CabinBooker: React.FC = () => {
               setRange(fromDate, toDate);
               setActiveState("Set to date");
             }}
-            events={bookings}
+            disabledDates={unavailableDates}
             disableRange
           />
         </Dropdown>
@@ -122,7 +142,7 @@ const CabinBooker: React.FC = () => {
             rangeChanged={(fromDate, toDate) => {
               setRange(fromDate, toDate);
             }}
-            events={bookings}
+            disabledDates={unavailableDates}
           />
         </Dropdown>
       ) : null}
