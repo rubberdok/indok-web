@@ -17,15 +17,14 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     paper: {
       padding: theme.spacing(2),
-      margin: "auto",
-      maxWidth: 500,
+      marginLeft: "70px",
     },
     image: {
       width: 128,
       height: 128,
     },
     img: {
-      margin: "auto",
+      marginLeft: "80px",
       display: "block",
       maxWidth: "100%",
       maxHeight: "100%",
@@ -50,9 +49,9 @@ const ListDocuments: React.FC<ListDocumentsProps> = ({ document_types }) => {
   if (error) return <p> Feil: {error.message} </p>;
 
   return (
-    <Grid container className={classes.root} justify="center" spacing={2}>
+    <Grid container className={classes.root} justifyContent="flex-start" spacing={2}>
       <Grid item xs>
-        <Grid container className={classes.img} justify="center" spacing={2}>
+        <Grid container className={classes.img} justifyContent="flex-start" spacing={2}>
           {data.archiveByType.length ? (
             data.archiveByType.map((doc: Document) => (
               <Button
@@ -66,7 +65,7 @@ const ListDocuments: React.FC<ListDocumentsProps> = ({ document_types }) => {
             ))
           ) : (
             <Content>
-              <Paragraph> Fant ingen dokumenter for de gitte filtrene</Paragraph>
+              <Paragraph> Fant ingen dokumenter som passer søket ditt </Paragraph>
             </Content>
           )}
         </Grid>

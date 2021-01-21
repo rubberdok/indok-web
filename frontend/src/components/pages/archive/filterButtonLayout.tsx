@@ -15,23 +15,35 @@ export const FilterButtonLayout: React.FC<FilterButtonProps> = ({ active, title,
       style={{
         flexDirection: "row",
         justifyContent: "space-evenly",
-        padding: "20px",
-        marginLeft: "30px",
-        marginRight: "30px",
       }}
     >
       <button
         style={{
-          background: active ? "#065A5A" : "transparent",
-          borderRadius: "60%",
-          padding: "8px",
+          background: active ? "#065A5A" : "rgb(6, 90, 90, 0.1)",
+          borderRadius: "20px",
+          margin: "6px",
           outline: "none",
+          cursor: "pointer",
+          display: "inline-block",
+          border: "none",
         }}
         onClick={() => onClick()}
-      ></button>
-      <Paragraph style={{ fontSize: "14px", padding: "8px", marginBottom: "12px", marginRight: "-16px" }}>
-        {title}
-      </Paragraph>
+      >
+        <Paragraph
+          style={{
+            fontSize: "14px",
+            fontWeight: "bolder",
+            marginBottom: "12px",
+            marginTop: "8px",
+            paddingLeft: "14px",
+            paddingRight: "14px",
+            justifyContent: "space-evenly",
+            color: active ? "#F5F0EB" : "black",
+          }}
+        >
+          {title}
+        </Paragraph>
+      </button>
     </ContentWrapper>
   );
 };

@@ -3,6 +3,7 @@ import React, { useState } from "react";
 
 import FilterButton from "./FilterButtons";
 import ListDocuments from "./listDocuments";
+import { ContentWrapper } from "./wrapper";
 
 const ColoredLine = ({ color }: any) => (
   <hr
@@ -28,19 +29,23 @@ const DocumentListView: React.FC = () => {
 
   return (
     <div>
-      <FilterButton
-        typeFilters={typeFilters}
-        updateTypeFilters={(key) =>
-          setTypeFilters({
-            ...typeFilters,
-            [key]: { active: !typeFilters[key].active, title: typeFilters[key].title },
-          })
-        }
-      />
-      <ColoredLine color={1} />
+      {/*   <ColoredLine color={1} /> */}
       <div style={{ flex: "100%" }}>
         <Title style={{ textAlign: "center" }}> Arkiv</Title>
       </div>
+      <ContentWrapper
+        style={{ marginLeft: "80px", marginRight: "80px", justifyContent: "space-evenly", paddingBottom: "50px" }}
+      >
+        <FilterButton
+          typeFilters={typeFilters}
+          updateTypeFilters={(key) =>
+            setTypeFilters({
+              ...typeFilters,
+              [key]: { active: !typeFilters[key].active, title: typeFilters[key].title },
+            })
+          }
+        />
+      </ContentWrapper>
       <ListDocuments
         document_types={Object.entries(typeFilters)
           .filter((key, _) => key[1].active)
