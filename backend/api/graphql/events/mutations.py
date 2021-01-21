@@ -37,7 +37,6 @@ class CreateEvent(graphene.Mutation):
         for k, v in event_data.items():
             setattr(event, k, v)
         event.publisher = info.context.user
-        print(info.context.user)
         event.save()
         ok = True
         return CreateEvent(event=event, ok=ok)
