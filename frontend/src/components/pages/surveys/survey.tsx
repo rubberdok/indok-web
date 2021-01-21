@@ -15,7 +15,7 @@ const SurveyDetail: React.FC<{ id: string }> = ({ id }) => {
         <>
           <Title>{data.survey.descriptiveName}</Title>
           {data.survey.questions.map((question) => (
-            <QuestionDetail question={question} active={true} />
+            <QuestionDetail question={question} active={true} key={question.id} />
           ))}
         </>
       )}
