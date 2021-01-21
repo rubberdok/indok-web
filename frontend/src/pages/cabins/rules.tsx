@@ -1,7 +1,8 @@
 import Layout from "@components/Layout";
+import Container from "@components/pages/cabins/Container";
 import Rules from "@components/pages/cabins/Rules";
 import { NextPage } from "next";
-import styled from "styled-components";
+import React from "react";
 
 const RulesPage: NextPage = () => {
   return (
@@ -14,11 +15,5 @@ const RulesPage: NextPage = () => {
     </>
   );
 };
-
-const Container = styled.div`
-  margin: auto;
-  width: 70%;
-  padding: 50px;
-`;
 
 export default RulesPage;
