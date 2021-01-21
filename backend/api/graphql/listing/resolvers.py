@@ -31,5 +31,4 @@ class ResponseResolvers:
     def resolve_response_by_listing_id(self, info, listing_id) -> Response:
         user: User = info.context.user
         response: Response = user.responses.filter(listing_id=listing_id).first()
-        print(response)
         return response
