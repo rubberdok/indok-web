@@ -68,6 +68,23 @@ export const RESPONSE = gql`
   }
 `;
 
+export const USER_RESPONSE = gql`
+  query userResponse($listingID: ID!) {
+    responseByListingId(listingId: $listingID) {
+      id
+      response
+      applicant {
+        id
+        username
+        firstName
+        lastName
+        year
+        email
+      }
+    }
+  }
+`;
+
 export const ORGANIZATIONS = gql`
   query {
     allOrganizations {
