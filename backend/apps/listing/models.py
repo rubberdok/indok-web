@@ -35,4 +35,5 @@ class Response(models.Model):
     response = models.CharField(max_length=5000)
 
     class Meta:
-        UniqueConstraint(fields=['applicant', 'listing'], name="unique_listing_response_for_listing")
+        constraints = [UniqueConstraint(fields=['applicant', 'listing'], name="unique_listing_response_for_listing")]
+        
