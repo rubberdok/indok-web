@@ -25,7 +25,4 @@ class ResponseResolvers:
     @login_required
     def resolve_response(root, info, id) -> Response:
         user: User = info.context.user
-        print(user.is_authenticated)
-        print(user.get_username)
-        print(user.responses)
         return user.responses.get(pk=id)
