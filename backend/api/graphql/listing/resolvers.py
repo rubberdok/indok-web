@@ -1,6 +1,7 @@
 from apps.listing.models import Listing, Response
 from django.db.models import Q
 from graphql_jwt.decorators import login_required
+from apps.users.models import User
 
 class ListingResolvers:
     def resolve_listings(parent, info, search=None):
@@ -22,6 +23,9 @@ class ListingResolvers:
 
 class ResponseResolvers:
     @login_required
-    def resolve_response(root, info, id):
-        user = info.context.User
+    def resolve_response(root, info, id) -> Response:
+        user: User = info.context.user
+        print(user.is_authenticated)
+        print(user.get_username)
+        print(user.responses)
         return user.responses.get(pk=id)
