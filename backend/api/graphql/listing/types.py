@@ -1,4 +1,5 @@
 from graphene_django import DjangoObjectType
+from graphql_jwt.decorators import user_passes_test
 from .dataloader import ResponsesByListingIdLoader
 import graphene
 
@@ -28,6 +29,7 @@ class ListingType(DjangoObjectType):
         ]
 
     @staticmethod
+    @user_passes_test(lambda user: user.is_staff)
     def resolve_responses(root: Listing, info):
         response_loader = ResponsesByListingIdLoader()
         return response_loader.load(root.id)

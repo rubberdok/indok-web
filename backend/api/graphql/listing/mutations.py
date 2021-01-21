@@ -5,7 +5,7 @@ from django.utils.text import slugify
 
 from .types import ListingType, ResponseType
 from apps.listing.models import Listing, Response
-from graphql_jwt.decorators import login_required
+from graphql_jwt.decorators import login_required, user_passes_test
 
 class ListingInput(graphene.InputObjectType):
     title = graphene.String(required=False)
@@ -25,6 +25,7 @@ class CreateListing(graphene.Mutation):
         listing_data = ListingInput(required=True)
 
     @classmethod
+    @user_passes_test(lambda user: user.is_staff)
     def mutate(cls, self, info, listing_data):
         listing = Listing()
 
@@ -45,6 +46,7 @@ class DeleteListing(graphene.Mutation):
         id = graphene.ID()
 
     @classmethod
+    @user_passes_test(lambda user: user.is_staff)
     def mutate(cls, self, info, **kwargs):
         listing = Listing.objects.get(pk=kwargs["id"])
         listing_id = listing.id
@@ -61,6 +63,7 @@ class UpdateListing(graphene.Mutation):
         listing_data = ListingInput(required=False)
 
     @classmethod
+    @user_passes_test(lambda user: user.is_staff)
     def mutate(cls, self, info, id, listing_data=None):
         listing = Listing.objects.get(pk=id)
 
