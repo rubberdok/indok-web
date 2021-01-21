@@ -31,5 +31,6 @@ class ListingType(DjangoObjectType):
     @staticmethod
     @user_passes_test(lambda user: user.is_staff)
     def resolve_responses(root: Listing, info):
+        user = info.context.user
         response_loader = ResponsesByListingIdLoader()
         return response_loader.load(root.id)
