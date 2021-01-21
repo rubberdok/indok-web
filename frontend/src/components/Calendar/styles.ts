@@ -95,28 +95,25 @@ export const SelectedDayStyles = css`
 `;
 
 export const DayCell = styled.td<DayCellProps>`
-    position: relative;
-    height: 60px;
-    text-align: center;
-    color: ${(props) => (props.isDisabled ? "#cecece" : "black")};
+  position: relative;
+  height: 60px;
+  text-align: center;
+  color: ${(props) => (props.isDisabled ? "#cecece" : "black")};
 
+  > ${Day} {
+    ${(props) => props.isSelected && SelectedDayStyles};
+    ${(props) => props.isInHoverRange && !props.isSelected && `background-color: ${theme.colors.primaryLight}`};
+  }
+
+  ${EventMarker} {
+    ${(props) => props.isSelected && "background-color: white"};
+  }
+
+  &:hover {
+    ${(props) => (!props.isHidden && !props.isDisabled ? `cursor: pointer;` : `cursor: default;`)}
     > ${Day} {
-        ${(props) => props.isSelected && SelectedDayStyles};
-        ${(props) => props.isInHoverRange && !props.isSelected && `background-color: ${theme.colors.primaryLight}`};
+      ${(props) =>
+        !props.isSelected && !props.isHidden && !props.isDisabled && `background-color: ${theme.colors.primaryLight}`};
     }
-
-    ${EventMarker} {
-        ${(props) => props.isSelected && "background-color: white"};
-    }
-
-    &:hover {
-        ${(props) => (!props.isHidden && !props.isDisabled ? `cursor: pointer;` : `cursor: default;`)}
-        > ${Day} {
-            ${(props) =>
-              !props.isSelected &&
-              !props.isHidden &&
-              !props.isDisabled &&
-              `background-color: ${theme.colors.primaryLight}`};
-        }
-    }
+  }
 `;

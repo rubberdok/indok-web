@@ -6,17 +6,20 @@ export const BookingContainer = styled.div`
   flex-direction: column;
 `;
 
-export const Dropdown = styled.div`
+export const Dropdown = styled.div<{ small?: boolean }>`
+  ${(props) => (props.small ? `width: 40%;` : ``)};
   flex-direction: column;
   background-color: white;
   margin: 15px;
   padding: 12px 16px;
   z-index: 1;
   border-radius: 30px;
+  display: flex;
 `;
 
 export const FlowContainer = styled.div`
   display: flex;
+  align-items: center;
   width: 800px;
   height: 60px;
   background-color: white;
@@ -29,6 +32,7 @@ export const SelectContainer = styled.div<{ isSelected: boolean }>`
   ${(props) => (props.isSelected ? `color: white;` : ``)};
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
   flex-grow: 1;
   height: 100%;
@@ -39,7 +43,6 @@ export const SelectContainer = styled.div<{ isSelected: boolean }>`
   }
   border-radius: 30px;
   text-align: center;
-  padding-top: 15px;
 `;
 
 export const Header = styled.div`
@@ -54,8 +57,40 @@ export const SubHeader = styled.div`
 `;
 
 export const BookButton = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background-color: ${theme.colors.primary};
   color: white;
   border-radius: 25px;
-  width: 70%;
+  width: 50px;
+  height: 50px;
+  margin-right: 5px;
+  margin-left: 5px;
+  &:hover {
+    cursor: pointer;
+    background-color: ${theme.colors.primaryLight};
+    color: white;
+  }
+`;
+
+export const DropdownButton = styled.div<{ isSelected: boolean }>`
+  ${(props) => (props.isSelected ? `color: white;` : ``)};
+  ${(props) => (props.isSelected ? `background-color: ${theme.colors.primaryLight};` : ``)};
+  border-radius: 5px;
+  margin: 10px;
+  padding: 20px;
+  &:hover {
+    cursor: pointer;
+    background-color: ${theme.colors.background};
+    color: black;
+  }
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const TextContainer = styled.div<{ direction?: "right" | "left" | "center" }>`
+  text-align: ${(props) => (props.direction ? props.direction : `left`)};
+  width: 50%;
 `;

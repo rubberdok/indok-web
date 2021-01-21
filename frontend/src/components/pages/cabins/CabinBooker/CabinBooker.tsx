@@ -7,7 +7,8 @@ import { Cabin } from "@interfaces/cabins";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import Step from "./Step";
-import { BookButton, BookingContainer, Dropdown, FlowContainer, SelectContainer } from "./styles";
+import { BookButton, BookingContainer, Dropdown, FlowContainer, DropdownButton, TextContainer } from "./styles";
+import { FaArrowRight, FaCheck } from "react-icons/fa";
 
 const DayEvent = (key: string) => <EventMarker key={key} />;
 
@@ -73,9 +74,7 @@ const CabinBooker: React.FC = () => {
           subHeader={range.toDate ? range.toDate : "Velg en dato"}
           onClick={() => handleStepClick("Set to date")}
         />
-
-        <SelectContainer
-          isSelected={activeStep === "Book"}
+        <BookButton
           onClick={() => {
             isAvailable
               ? router.push({
@@ -85,22 +84,22 @@ const CabinBooker: React.FC = () => {
               : null;
           }}
         >
-          <BookButton>Book</BookButton>
-        </SelectContainer>
+          <FaArrowRight />
+        </BookButton>
       </FlowContainer>
       {activeStep == "Choose Cabin" ? (
-        <Dropdown>
+        <Dropdown small>
           {cabins?.map((cabin) => (
-            <p key={cabin.name}>
-              <input
-                type="checkbox"
-                onClick={() => {
-                  setCabins(cabins.map((c) => (c.name === cabin.name ? { ...c, checked: !c.checked } : c)));
-                }}
-                checked={cabin.checked}
-              />
-              {cabin.name}
-            </p>
+            <DropdownButton
+              isSelected={cabin.checked}
+              key={cabin.name}
+              onClick={() => {
+                setCabins(cabins.map((c) => (c.name === cabin.name ? { ...c, checked: !c.checked } : c)));
+              }}
+            >
+              <TextContainer>{cabin.name}</TextContainer>
+              <TextContainer direction="right">{cabin.checked ? <FaCheck /> : null}</TextContainer>
+            </DropdownButton>
           ))}
         </Dropdown>
       ) : null}
