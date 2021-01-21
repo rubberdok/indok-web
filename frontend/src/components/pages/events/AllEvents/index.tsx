@@ -1,11 +1,14 @@
 import { useQuery } from "@apollo/client";
+import { GET_USER } from "@graphql/auth/queries";
 import { GET_EVENTS } from "@graphql/events/queries";
 import { Event } from "@interfaces/events";
+import { User } from "@interfaces/users";
 import Link from "next/link";
-import { PlusSquare, Filter } from "react-feather";
-import styled from "styled-components";
 import React, { useState } from "react";
+import { Filter, PlusSquare } from "react-feather";
+import styled from "styled-components";
 import { NavItem } from "../../../navbar/NavbarLinks";
+import { DATAPORTEN_SCOPES, generateAuthURL } from "../../../navbar/utils";
 import FilterMenu from "./filterMenu";
 
 export interface FilterQuery {
@@ -15,9 +18,17 @@ export interface FilterQuery {
   endTime?: string;
 }
 
+const signInURL = generateAuthURL(
+  process.env.NEXT_PUBLIC_DATAPORTEN_ID,
+  process.env.NEXT_PUBLIC_DATAPORTEN_STATE,
+  process.env.NEXT_PUBLIC_DATAPORTEN_REDIRECT_URI,
+  DATAPORTEN_SCOPES
+);
+
 const AllEvents: React.FC = () => {
   const [filters, setFilters] = useState({});
   const [showTableView, setShowTableView] = useState(false);
+  const { loading: userLoading, error: userError, data: userData } = useQuery<{ user: User }>(GET_USER);
   const { loading, error, data, refetch } = useQuery(GET_EVENTS, {
     variables: filters,
   });
@@ -51,12 +62,22 @@ const AllEvents: React.FC = () => {
       </NavItem>
 
       <div style={{ float: "right" }}>
-        <Link href={`/events/create-event`}>
-          <StyledIconButton>
-            <PlusSquare />
-            <p style={{ margin: 0 }}>Opprett</p>
-          </StyledIconButton>
-        </Link>
+        {!userData || userLoading || !userData.user || userError ? (
+          // TODO: Redirect til `/events/create-event` når vi har funksjonalitet for dette.
+          <Link href={signInURL}>
+            <StyledIconButton>
+              <PlusSquare />
+              <p style={{ margin: 0 }}>Opprett (Krever innlogging)</p>
+            </StyledIconButton>
+          </Link>
+        ) : (
+          <Link href={`/events/create-event`}>
+            <StyledIconButton>
+              <PlusSquare />
+              <p style={{ margin: 0 }}>Opprett</p>
+            </StyledIconButton>
+          </Link>
+        )}
       </div>
 
       <div style={{ float: "right", marginRight: "15px" }}>
@@ -81,7 +102,7 @@ const AllEvents: React.FC = () => {
                       style={{
                         border: "solid",
                         borderWidth: "0.05em 0.05em 0.05em 1.2em",
-                        borderColor: event.organization.color ?? "#6A9997",
+                        borderColor: (event.organization && event.organization.color) ?? "#6A9997",
                         borderRadius: "0.2em",
                         padding: "0.5em",
                         marginBottom: "0.5em",

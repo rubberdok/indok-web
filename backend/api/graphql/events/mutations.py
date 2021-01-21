@@ -2,9 +2,11 @@ from datetime import datetime
 
 import graphene
 from apps.events import models
+from django.contrib import auth
 from django.shortcuts import get_object_or_404
 from django.utils.text import slugify
 from graphene_django import DjangoObjectType
+from graphql_jwt.decorators import login_required
 
 from .types import CategoryType, EventType
 
@@ -20,7 +22,6 @@ class EventInput(graphene.InputObjectType):
     image = graphene.String(required=False)
     is_attendable = graphene.Boolean(required=False)
     deadline = graphene.DateTime(required=False)
-    publisher = graphene.String(required=False)
 
 
 class CreateEvent(graphene.Mutation):
@@ -30,10 +31,13 @@ class CreateEvent(graphene.Mutation):
     class Arguments:
         event_data = EventInput(required=True)
 
+    @login_required
     def mutate(root, info, event_data):
         event = models.Event()
         for k, v in event_data.items():
             setattr(event, k, v)
+        event.publisher = info.context.user
+        print(info.context.user)
         event.save()
         ok = True
         return CreateEvent(event=event, ok=ok)
