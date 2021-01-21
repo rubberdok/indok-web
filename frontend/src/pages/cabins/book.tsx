@@ -133,16 +133,16 @@ const BookPage: NextPage = () => {
     }
     // create booking and send email, redirect to confirmation page
     if (checked && isAvailable) {
-      // only create booking if allowed
+      // only create booking and send mail if allowed
       if (!temporarilyDisableBooking) {
         createBooking({
           variables: bookingData,
         });
-      }
 
-      sendEmail({
-        variables: bookingData,
-      });
+        sendEmail({
+          variables: bookingData,
+        });
+      }
 
       router.push({ pathname: "./confirmation" });
 
