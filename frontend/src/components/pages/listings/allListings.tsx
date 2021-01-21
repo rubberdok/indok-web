@@ -15,19 +15,9 @@ const AllListings: React.FC = () => {
       {data && (
         <List>
           {data.listings.map((listing) => (
-            <ListItem key={listing.id} mainText={listing.title} subText={listing.organization?.name || "na"} selected={false}/>
-/*
-            <Link href={`/users/${userID}/listings/${listing.id}/${listing.slug}`}>{listing.title}</Link>
-            <p>
-              {listing.organization && (
-                <>
-                  {listing.organization.name}
-                  <br />
-                </>
-              )}
-              Frist: {listing.deadline.slice(0, 16).replace("T", " ")}
-            </p>
-*/
+            <Link href={`/listings/${listing.id}/${listing.slug}`} passHref key={listing.id}>
+              <ListItem mainText={listing.title} subText={listing.organization?.name || "N/A"} selected={false} />
+            </Link>
           ))}
         </List>
       )}

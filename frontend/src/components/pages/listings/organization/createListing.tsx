@@ -4,7 +4,6 @@ import { Listing, Organization } from "@interfaces/listings";
 import { CREATE_LISTING } from "@graphql/listings/mutations";
 import { useMutation, gql } from "@apollo/client";
 
-
 const CreateListing: React.FC<{ organization: Organization }> = ({ organization }) => {
   const [newListing, setNewListing] = useState<Listing>({} as Listing);
   const [createListing] = useMutation<{ createListing: { listing: Listing } }>(CREATE_LISTING, {

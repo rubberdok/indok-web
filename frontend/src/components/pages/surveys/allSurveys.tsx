@@ -15,8 +15,8 @@ const AllSurveys: React.FC = () => {
       {data && (
         <List>
           {data.surveys.map((survey) => (
-            <ListItem key={survey.id} mainText={survey.descriptiveName} subText={"tomt"} selected={false}/>
-/*
+            <ListItem key={survey.id} mainText={survey.descriptiveName} subText={"tomt"} selected={false} />
+            /*
             <Link href={`/users/${userID}/listings/${listing.id}/${listing.slug}`}>{listing.title}</Link>
             <p>
               {listing.organization && (
