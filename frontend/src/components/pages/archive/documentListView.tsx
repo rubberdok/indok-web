@@ -1,5 +1,6 @@
 import { Title } from "@components/ui/Typography";
 import React, { useState } from "react";
+
 import FilterButton from "./FilterButtons";
 import ListDocuments from "./listDocuments";
 
@@ -16,14 +17,13 @@ const ColoredLine = ({ color }: any) => (
 
 const DocumentListView: React.FC = () => {
   const [typeFilters, setTypeFilters] = useState<{ [key: string]: { active: boolean; title: string } }>({
-    Budget: { active: false, title: "Budsjetter og regnskap" },
-    // Accounting: { active: false, title: "Regnskap" },
-    Summary: { active: false, title: "Referater" },
-    Yearbook: { active: false, title: "Årbøker" },
-    Guidelines: { active: false, title: "Retningslinjer" },
-    Regulation: { active: false, title: "Vedtekter og statutter" },
-    // Statues: { active: false, title: "Statutter" },
-    Others: { active: false, title: "Annet" },
+    BudReg: { active: false, title: "Budsjetter og regnskap" },
+    GenFors: { active: false, title: "Generalforsamling" },
+    Aarbok: { active: false, title: "Årbøker" },
+    HS: { active: false, title: "Støtte fra HS" },
+    Lover: { active: false, title: "Foreningens lover" },
+    Utveksling: { active: false, title: "Utveksling" },
+    Annet: { active: false, title: "Annet" },
   });
 
   return (
