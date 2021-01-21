@@ -10,7 +10,7 @@ const IndexPage: NextPage = () => <Layout>
   <Content>
     <Title>Stillingsutlysninger</Title>
     <AllSurveys/>
-    <Link href="404">
+    <Link href="surveys/new">
     <Button>Lag ny stillingsutlysning</Button>
     </Link>
   </Content>

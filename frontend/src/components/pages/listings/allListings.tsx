@@ -6,7 +6,7 @@ import List from "@components/ui/list";
 import ListItem from "@components/ui/listItem";
 
 //TODO: remove userID once user log-in is properly implemented
-const AllListings: React.FC<{ userID: string }> = ({ userID }) => {
+const AllListings: React.FC = () => {
   const { loading, error, data } = useQuery<{ listings: Listing[] }>(LISTINGS);
   if (error) return <p>Error</p>;
   if (loading) return <p>Loading...</p>;

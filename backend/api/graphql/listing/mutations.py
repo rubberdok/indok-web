@@ -69,9 +69,6 @@ class UpdateListing(graphene.Mutation):
         ok = True
         return cls(listing=listing, ok=ok)
 
-
-
-
 class ResponseInput(graphene.InputObjectType):
     response = graphene.String(required=False)
     applicant_id = graphene.ID(required=False)
