@@ -36,7 +36,8 @@ const BookPage: NextPage = () => {
   const phoneRef = React.createRef<HTMLInputElement>();
   const inputRefs = [firstnameRef, surnameRef, emailRef, phoneRef];
 
-  const temporarilyDisableSubmitting = true;
+  const temporarilyDisableSubmitting = false;
+  const temporarilyDisableBooking = true;
 
   const pricePerNight = 1000;
 
@@ -130,15 +131,20 @@ const BookPage: NextPage = () => {
     if (temporarilyDisableSubmitting) {
       return;
     }
-    // create booking and send email
+    // create booking and send email, redirect to confirmation page
     if (checked && isAvailable) {
-      createBooking({
-        variables: bookingData,
-      });
+      // only create booking and send mail if allowed
+      if (!temporarilyDisableBooking) {
+        createBooking({
+          variables: bookingData,
+        });
 
-      sendEmail({
-        variables: bookingData,
-      });
+        sendEmail({
+          variables: bookingData,
+        });
+      }
+
+      router.push({ pathname: "./confirmation" });
 
       setErrorMessage("");
       setCheckError("");

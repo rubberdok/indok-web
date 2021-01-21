@@ -254,8 +254,6 @@ web.code-workspace
 # Jetbrains
 .idea/
 
-# E-mail configuration
-mailconfig.py
 
 # Notes
 .notes.txt

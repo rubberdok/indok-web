@@ -28,6 +28,10 @@
         {
           "name": "DATAPORTEN_SECRET",
           "value": "%s"
+        },
+        {
+          "name": "BOOKING_EMAIL_PASSWORD",
+          "value": "%s"
         }
       ],
       "logConfiguration": {
