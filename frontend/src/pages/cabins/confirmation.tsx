@@ -1,5 +1,4 @@
 import Layout from "@components/Layout";
-import { Header } from "@components/pages/cabins/CabinBooker/styles";
 import { Heading, Paragraph } from "@components/ui/Typography";
 import Link from "next/link";
 import React from "react";
@@ -14,7 +13,7 @@ const Confirmation = () => {
           <Paragraph>
             Takk for din booking! Denne nettsiden er fortsatt under konstruksjon, så det blir ikke faktisk opprettet en
             booking. Det må du fortsatt gjøre gjennom{" "}
-            <Link href="mailto:booking@indokhyttene.no">booking@indokhyttene.no</Link>
+            <Link href="mailto:booking@indokhyttene.no">booking@indokhyttene.no</Link>.
           </Paragraph>
         </Container>
       </Layout>
