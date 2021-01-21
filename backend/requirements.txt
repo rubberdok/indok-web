@@ -18,6 +18,7 @@ promise==2.3
 psycopg2-binary==2.8.5
 pycparser==2.20
 PyJWT==1.7.1
+pytest-django==4.1.0
 pytz==2020.1
 requests==2.24.0
 Rx==1.6.1
