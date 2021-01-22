@@ -18,13 +18,13 @@ const ColoredLine = ({ color }: any) => (
 
 const DocumentListView: React.FC = () => {
   const [typeFilters, setTypeFilters] = useState<{ [key: string]: { active: boolean; title: string } }>({
-    BudReg: { active: false, title: "Budsjetter og regnskap" },
-    GenFors: { active: false, title: "Generalforsamling" },
-    Aarbok: { active: false, title: "Årbøker" },
-    HS: { active: false, title: "Støtte fra HS" },
-    Lover: { active: false, title: "Foreningens lover" },
-    Utveksling: { active: false, title: "Utveksling" },
-    Annet: { active: false, title: "Annet" },
+    Budget: { active: false, title: "Budsjetter og regnskap" },
+    Summary: { active: false, title: "Generalforsamling" },
+    Yearbook: { active: false, title: "Årbøker" },
+    Guidelines: { active: false, title: "Støtte fra HS" },
+    Regulation: { active: false, title: "Foreningens lover" },
+    Statues: { active: false, title: "Utveksling" },
+    Others: { active: false, title: "Annet" },
   });
 
   return (
