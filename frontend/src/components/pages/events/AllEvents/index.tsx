@@ -1,12 +1,15 @@
 import { useQuery } from "@apollo/client";
+import { GET_USER } from "@graphql/auth/queries";
 import { GET_EVENTS } from "@graphql/events/queries";
 import { Event } from "@interfaces/events";
+import { User } from "@interfaces/users";
 import Link from "next/link";
 import { PlusSquare } from "react-feather";
 import styled from "styled-components";
 import React, { useState } from "react";
 import { NavItem } from "../../../navbar/NavbarLinks";
 import color from "src/styles/theme";
+import { DATAPORTEN_SCOPES, generateAuthURL } from "../../../navbar/utils";
 import FilterMenu from "./filterMenu";
 
 export interface FilterQuery {
@@ -16,9 +19,17 @@ export interface FilterQuery {
   endTime?: string;
 }
 
+const signInURL = generateAuthURL(
+  process.env.NEXT_PUBLIC_DATAPORTEN_ID,
+  process.env.NEXT_PUBLIC_DATAPORTEN_STATE,
+  process.env.NEXT_PUBLIC_DATAPORTEN_REDIRECT_URI,
+  DATAPORTEN_SCOPES
+);
+
 const AllEvents: React.FC = () => {
   const [filters, setFilters] = useState({});
   const [showTableView, setShowTableView] = useState(false);
+  const { loading: userLoading, error: userError, data: userData } = useQuery<{ user: User }>(GET_USER);
   const { loading, error, data, refetch } = useQuery(GET_EVENTS, {
     variables: filters,
   });
@@ -53,6 +64,18 @@ const AllEvents: React.FC = () => {
         >
           Kalender
         </NavItem>
+
+        <div style={{ float: "right" }}>
+          {userData && !userLoading && userData.user && !userError && (
+            // TODO: Redirect til `/events/create-event` når vi har funksjonalitet for dette.
+            <Link href={`/events/create-event`}>
+              <StyledIconButton>
+                <PlusSquare />
+                <p style={{ margin: 0 }}>Opprett</p>
+              </StyledIconButton>
+            </Link>
+          )}
+        </div>
 
         <div style={{ float: "right" }}>
           <Link href={`/events/create-event`}>

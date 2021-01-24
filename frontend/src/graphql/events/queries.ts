@@ -19,7 +19,14 @@ export const GET_EVENTS = gql`
       image
       isAttendable
       deadline
-      publisher
+      publisher {
+        id
+        username
+        email
+        firstName
+        lastName
+        dateJoined
+      }
     }
   }
 `;
@@ -42,7 +49,14 @@ export const GET_EVENT = gql`
       image
       isAttendable
       deadline
-      publisher
+      publisher {
+        id
+        username
+        email
+        firstName
+        lastName
+        dateJoined
+      }
     }
   }
 `;
