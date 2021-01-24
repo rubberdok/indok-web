@@ -76,15 +76,6 @@ const AllEvents: React.FC = () => {
             </Link>
           )}
         </div>
-
-        <div style={{ float: "right" }}>
-          <Link href={`/events/create-event`}>
-            <StyledIconButton>
-              <PlusSquare />
-              <p style={{ margin: 0 }}>Opprett</p>
-            </StyledIconButton>
-          </Link>
-        </div>
       </div>
 
       <div style={{ width: "100%", paddingTop: "1em" }}>
@@ -105,7 +96,7 @@ const AllEvents: React.FC = () => {
                     <EventContainerLink href={`/events/${event.id}`} style={{ color: "#000" }}>
                       <EventContainer
                         style={{
-                          borderColor: event.organization.color ?? color.colors.primaryLight,
+                          borderColor: event.organization?.color ?? color.colors.primaryLight,
                         }}
                       >
                         <p style={{ marginBottom: "0.2em" }}>{event.title}</p>
