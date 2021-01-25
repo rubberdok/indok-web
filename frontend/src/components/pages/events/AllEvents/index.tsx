@@ -10,7 +10,6 @@ import React, { useState } from "react";
 import { Paragraph } from "@components/ui/Typography";
 import { NavItem } from "../../../navbar/NavbarLinks";
 import color from "src/styles/theme";
-import { DATAPORTEN_SCOPES, generateAuthURL } from "../../../navbar/utils";
 import FilterMenu from "./filterMenu";
 
 export interface FilterQuery {
@@ -20,13 +19,6 @@ export interface FilterQuery {
   endTime?: string;
 }
 
-const signInURL = generateAuthURL(
-  process.env.NEXT_PUBLIC_DATAPORTEN_ID,
-  process.env.NEXT_PUBLIC_DATAPORTEN_STATE,
-  process.env.NEXT_PUBLIC_DATAPORTEN_REDIRECT_URI,
-  DATAPORTEN_SCOPES
-);
-//
 const AllEvents: React.FC = () => {
   const [filters, setFilters] = useState({});
   const [showTableView, setShowTableView] = useState(false);
