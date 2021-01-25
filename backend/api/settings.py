@@ -30,7 +30,7 @@ SECRET_KEY = "*snrr!^gn0zg)1*=&l4ecaghm-o+9-j)=ig-so$!@&f7*c+713"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["localhost"]
+ALLOWED_HOSTS = ["localhost", "172.20.0.1"]
 
 CORS_ALLOW_CREDENTIALS = True
 

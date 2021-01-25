@@ -10,7 +10,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint src --ext .ts,.tsx",
-    "lint:fix": "npm run lint -- --fix"
+    "lint:fix": "npm run lint -- --fix",
+    "generate": "graphql-codegen --config codegen.yml"
   },
   "repository": {
     "type": "git",
@@ -28,6 +29,7 @@
     "styled-components": "^5.2.0"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "1.20.0",
     "@types/feather-icons": "^4.7.0",
     "@types/node": "^14.0.27",
     "@types/react": "^16.9.45",
@@ -45,7 +47,10 @@
     "husky": "^4.2.5",
     "lint-staged": "^10.2.11",
     "prettier": "^2.0.5",
-    "typescript": "^3.9.7"
+    "typescript": "^3.9.7",
+    "@graphql-codegen/typescript": "1.20.0",
+    "@graphql-codegen/typescript-operations": "1.17.13",
+    "@graphql-codegen/typescript-react-apollo": "2.2.1"
   },
   "husky": {
     "hooks": {
