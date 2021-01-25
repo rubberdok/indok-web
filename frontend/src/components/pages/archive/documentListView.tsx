@@ -29,7 +29,7 @@ const DocumentListView: React.FC = () => {
 
   return (
     <div>
-      {/*   <ColoredLine color={1} /> */}
+      <ColoredLine color={1} />
       <div style={{ flex: "100%" }}>
         <Title style={{ textAlign: "center" }}> Arkiv</Title>
       </div>
