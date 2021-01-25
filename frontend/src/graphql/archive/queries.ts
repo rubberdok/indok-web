@@ -5,8 +5,6 @@ export const DOCUMENTS = gql`
     allArchives {
       id
       title
-      description
-      date
       url
       thumbnail
       typeDoc
@@ -19,8 +17,6 @@ export const DOCUMENT = gql`
     archive(id: $ID) {
       id
       title
-      description
-      date
       url
       thumbnail
       typeDoc
@@ -33,8 +29,6 @@ export const GET_DOCSBYTYPE = gql`
     archiveByType(typeDocs: $document_types) {
       id
       title
-      description
-      date
       url
       thumbnail
       typeDoc
