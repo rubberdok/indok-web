@@ -1,19 +1,9 @@
 import graphene
-from datetime import datetime
 from django.shortcuts import get_object_or_404
-from django.core.mail import send_mail, EmailMultiAlternatives
 
 from .types import BookingType
 from apps.cabins.models import Booking as BookingModel
-
-from django.template import Context
-from django.template.loader import render_to_string, get_template
-from django.core.mail import EmailMessage
-
-from pathlib import Path
-from email.mime.image import MIMEImage
-from email.mime.text import MIMEText
-from static.cabins.mailcontent import get_no_html_mail
+from apps.cabins.models import Cabin as CabinModel
 from .mail import send_mails
 
 
@@ -26,12 +16,13 @@ class CreateBooking(graphene.Mutation):
         bookFrom = graphene.String()
         bookTo = graphene.String()
         price = graphene.Int()
+        cabins = graphene.List(graphene.Int)
 
     ok = graphene.Boolean()
     booking = graphene.Field(BookingType)
 
     def mutate(
-        self, info, firstname, surname, phone, receiverEmail, bookFrom, bookTo, price
+        self, info, firstname, surname, phone, receiverEmail, bookFrom, bookTo, price, cabins
     ):
         booking = BookingModel.objects.create(
             firstname=firstname,
@@ -40,8 +31,9 @@ class CreateBooking(graphene.Mutation):
             receiverEmail=receiverEmail,
             bookFrom=bookFrom,
             bookTo=bookTo,
-            price=price,
+            price=price
         )
+        booking.cabins.set(CabinModel.objects.filter(id__in=cabins))
         ok = True
         return CreateBooking(booking=booking, ok=ok)
 
