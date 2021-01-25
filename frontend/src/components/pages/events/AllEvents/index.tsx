@@ -7,6 +7,7 @@ import Link from "next/link";
 import { PlusSquare } from "react-feather";
 import styled from "styled-components";
 import React, { useState } from "react";
+import { Paragraph } from "@components/ui/Typography";
 import { NavItem } from "../../../navbar/NavbarLinks";
 import color from "src/styles/theme";
 import { DATAPORTEN_SCOPES, generateAuthURL } from "../../../navbar/utils";
@@ -25,7 +26,7 @@ const signInURL = generateAuthURL(
   process.env.NEXT_PUBLIC_DATAPORTEN_REDIRECT_URI,
   DATAPORTEN_SCOPES
 );
-
+//
 const AllEvents: React.FC = () => {
   const [filters, setFilters] = useState({});
   const [showTableView, setShowTableView] = useState(false);
@@ -34,15 +35,13 @@ const AllEvents: React.FC = () => {
     variables: filters,
   });
   // should handle loading status
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <Paragraph>Laster inn...</Paragraph>;
 
-  if (error) return <p>Error :(</p>;
+  if (error) return <Paragraph>Kunne ikke hente arrangementer.</Paragraph>;
 
   const onChange = (newFilters: FilterQuery) => {
     setFilters(newFilters);
-    if (newFilters !== undefined) {
-      refetch(newFilters);
-    }
+    refetch(newFilters);
   };
 
   return (
@@ -89,7 +88,7 @@ const AllEvents: React.FC = () => {
           ) : (
             <>
               {data.allEvents.length === 0 ? (
-                <h4>{"Ingen arrangementer passer til valgte filtere"}</h4>
+                <Paragraph>Ingen arrangementer passer til valgte filtre.</Paragraph>
               ) : (
                 data.allEvents.map((event: Event) => (
                   <Link href={`/events/${event.id}`} key={event.id}>

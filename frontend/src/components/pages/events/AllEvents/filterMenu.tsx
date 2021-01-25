@@ -35,7 +35,7 @@ const FilterMenu: React.FC<Props> = ({ filters, onChange }) => {
       <div style={{ paddingTop: "0.5em" }}>
         <InvisibleButton
           onClick={() => setOpenOrganizationDropDown(!openOrganizationDropDown)}
-          className={openOrganizationDropDown ? "active" : ""}
+          active={openOrganizationDropDown}
         >
           Organisasjoner
           {openOrganizationDropDown ? (
@@ -49,32 +49,21 @@ const FilterMenu: React.FC<Props> = ({ filters, onChange }) => {
           {data.eventFilteredOrganizations.map((org: Organization) => (
             <div key={org.name}>
               <InvisibleButton
-                style={{
-                  marginBottom: "0.4em",
-                  background: currentFilters?.organization === org.name ? "red" : "transparent",
-                }}
-                className={currentFilters?.organization === org.name ? "active" : ""}
+                style={{ marginBottom: "0.4em", fontSize: "16px" }}
                 onClick={() => setCurrentFilters({ ...currentFilters, organization: org.name })}
+                active={currentFilters?.organization === org.name}
               >
-                <Paragraph style={{ marginBottom: "0px", marginTop: "0.05em", fontSize: "16px" }}>{org.name}</Paragraph>
+                {org.name}
               </InvisibleButton>
 
               {org.children?.map((subOrg: Organization) => (
                 <InvisibleButton
                   key={subOrg.name}
-                  style={{ marginBottom: "0.3em", marginLeft: "1em" }}
-                  className={
-                    currentFilters?.organization === subOrg.name || currentFilters?.organization === org.name
-                      ? "active"
-                      : ""
-                  }
+                  style={{ marginBottom: "0.3em", marginLeft: "1em", fontSize: "14px" }}
+                  active={currentFilters?.organization === subOrg.name || currentFilters?.organization === org.name}
                   onClick={() => setCurrentFilters({ ...currentFilters, organization: subOrg.name })}
                 >
-                  <Paragraph
-                    style={{ marginBottom: "0px", marginTop: "0.05em", fontSize: "14px", width: "fit-content" }}
-                  >
-                    {subOrg.name}
-                  </Paragraph>
+                  {subOrg.name}
                 </InvisibleButton>
               ))}
             </div>
@@ -94,10 +83,7 @@ const FilterMenu: React.FC<Props> = ({ filters, onChange }) => {
 
     return (
       <div style={{ paddingTop: "0.5em" }}>
-        <InvisibleButton
-          onClick={() => setOpenCategoryDropDown(!openCategoryDropDown)}
-          className={openCategoryDropDown ? "active" : ""}
-        >
+        <InvisibleButton onClick={() => setOpenCategoryDropDown(!openCategoryDropDown)} active={openCategoryDropDown}>
           Kategorier
           {openCategoryDropDown ? (
             <ChevronDown style={{ float: "left", width: "18px", paddingBottom: "2%" }} />
@@ -110,13 +96,11 @@ const FilterMenu: React.FC<Props> = ({ filters, onChange }) => {
           {data.allCategories.map((category: Category) => (
             <InvisibleButton
               key={category.name}
-              style={{ marginBottom: "0.4em" }}
-              className={currentFilters?.category === category.name ? "active" : ""}
+              style={{ marginBottom: "0.4em", fontSize: "16px" }}
+              active={currentFilters?.category === category.name}
               onClick={() => setCurrentFilters({ ...currentFilters, category: category.name })}
             >
-              <Paragraph style={{ marginBottom: "0px", marginTop: "0.05em", fontSize: "16px" }}>
-                {category.name}
-              </Paragraph>
+              {category.name}
             </InvisibleButton>
           ))}
         </FadeInAndOutDiv>
@@ -226,7 +210,7 @@ const FadeInAndOutDiv = styled.div`
   }
 `;
 
-const InvisibleButton = styled.button`
+const InvisibleButton = styled.button<{ active?: boolean }>`
   background: transparent;
   color: #222;
   font-family: "Montserrat";
@@ -236,12 +220,8 @@ const InvisibleButton = styled.button`
   text-decoration: none !important;
   padding: 0;
   border-bottom: 1px solid transparent;
-  transition: border 500ms ease; 
-
-  &.active {
-    cursor: pointer;
-    font-weight: 600;
-  }
+  transition: border 500ms ease;
+  font-weight: ${(props) => (props.active ? "600" : "400")}; 
 
   &:hover {
     cursor: pointer;
