@@ -1,10 +1,11 @@
 import Layout from "@components/Layout";
+import Container from "@components/pages/cabins/Container";
 import { Heading, Paragraph } from "@components/ui/Typography";
+import { NextPage } from "next";
 import Link from "next/link";
 import React from "react";
-import styled from "styled-components";
 
-const Confirmation = () => {
+const Confirmation: NextPage = () => {
   return (
     <>
       <Layout>
@@ -20,11 +21,5 @@ const Confirmation = () => {
     </>
   );
 };
-
-const Container = styled.div`
-  margin: auto;
-  width: 70%;
-  padding: 50px;
-`;
 
 export default Confirmation;

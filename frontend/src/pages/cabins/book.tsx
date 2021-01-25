@@ -67,8 +67,8 @@ const BookPage: NextPage = () => {
   const [checkable, setCheckable] = useState(false);
   const { isAvailable, range, setRange, allBookingsQuery } = useBookingRange();
 
-  const handleClick = () => {
-    setChecked(!checked);
+  const handleClick = (isChecked: boolean) => {
+    setChecked(isChecked);
     setCheckError("");
   };
 
@@ -131,6 +131,7 @@ const BookPage: NextPage = () => {
     if (temporarilyDisableSubmitting) {
       return;
     }
+
     // create booking and send email, redirect to confirmation page
     if (checked && isAvailable) {
       // only create booking and send mail if allowed
