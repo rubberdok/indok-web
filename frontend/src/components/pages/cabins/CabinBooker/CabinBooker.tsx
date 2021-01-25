@@ -100,7 +100,7 @@ const CabinBooker: React.FC = () => {
                   pathname: "cabins/book",
                   query: {
                     ...range,
-                    cabins: "".concat(...getCheckedCabins().map((cabin, i) => (i > 0 ? `_${cabin.name}` : cabin.name))),
+                    cabins: "".concat(...getCheckedCabins().map((cabin, i) => (i > 0 ? `_${cabin.id}` : cabin.id))),
                   },
                 })
               : null;

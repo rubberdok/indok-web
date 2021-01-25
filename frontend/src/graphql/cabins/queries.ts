@@ -11,6 +11,10 @@ export const QUERY_ALL_BOOKINGS = gql`
       bookFrom
       bookTo
       price
+      cabins {
+        id
+        name
+      }
     }
   }
 `;
@@ -30,6 +34,7 @@ export const QUERY_BOOKING_RANGE = gql`
 export const QUERY_CABINS = gql`
   query AllCabins {
     cabins {
+      id
       name
     }
   }

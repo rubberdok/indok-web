@@ -10,6 +10,7 @@ export interface Booking {
 }
 
 export interface Cabin {
+  id: number;
   name: string;
 }
 
