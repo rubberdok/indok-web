@@ -5,8 +5,10 @@ import styled from "styled-components";
 interface ButtonProps {
   link?: string;
   children: string | JSX.Element;
-  style?: "primary" | "secondary";
+  styling?: "primary" | "secondary";
   back?: boolean;
+  arrow?: boolean;
+  onClick?: ((event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void) | undefined;
 }
 
 interface LinkProps {
@@ -17,7 +19,7 @@ interface LinkProps {
 
 const WithLink: React.FC<LinkProps> = ({ condition, wrapper, children }) => (condition ? wrapper(children) : children);
 
-const Button: React.FC<ButtonProps> = (props) => {
+const Button: React.FC<ButtonProps & React.HTMLProps<HTMLButtonElement>> = (props) => {
   const styles = {
     primary: Primary,
     secondary: Secondary,
@@ -28,20 +30,26 @@ const Button: React.FC<ButtonProps> = (props) => {
       condition={!!props.link}
       wrapper={(children: JSX.Element) => <Link href={props.link || "/"}>{children}</Link>}
     >
-      <StyledButton back={props.back} as={props.style ? styles[props.style] : Primary}>
-        {props.back ? (
-          <>
-            <Icon>
-              <ArrowLeft />
-            </Icon>
-            <Container>{props.children}</Container>
-          </>
+      <StyledButton back={props.back} as={props.styling ? styles[props.styling] : Primary} onClick={props.onClick}>
+        {props.arrow ? (
+          props.back ? (
+            <>
+              <Icon>
+                <ArrowLeft />
+              </Icon>
+              <Container>{props.children}</Container>
+            </>
+          ) : (
+            <>
+              <Container>{props.children}</Container>
+              <Icon>
+                <ArrowRight />
+              </Icon>
+            </>
+          )
         ) : (
           <>
             <Container>{props.children}</Container>
-            <Icon>
-              <ArrowRight />
-            </Icon>
           </>
         )}
       </StyledButton>
@@ -64,7 +72,7 @@ const Icon = styled.div`
   }
 `;
 
-const StyledButton = styled.button<ButtonProps>`
+const StyledButton = styled.button<ButtonProps & React.HTMLProps<HTMLButtonElement>>`
   background: #282828;
   color: #fff;
   font-family: "Montserrat";
