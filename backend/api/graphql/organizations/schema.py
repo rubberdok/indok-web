@@ -1,8 +1,9 @@
 import graphene
-
 from .mutations import CreateOrganization, UpdateOrganization, DeleteOrganization
 from .types import OrganizationType
 from .resolvers import OrganizationResolvers
+from django.db.models import Q
+from apps.organizations.models import Organization
 
 
 class OrganizationMutations(graphene.ObjectType):

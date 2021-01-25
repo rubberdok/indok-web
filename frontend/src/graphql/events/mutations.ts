@@ -25,6 +25,7 @@ export const CREATE_EVENT = gql`
         image: $image
         isAttendable: $isAttendable
         deadline: $deadline
+        publisher: $publisher
       }
     ) {
       event {
@@ -43,6 +44,7 @@ export const CREATE_EVENT = gql`
         image
         isAttendable
         deadline
+        publisher
       }
       ok
     }
