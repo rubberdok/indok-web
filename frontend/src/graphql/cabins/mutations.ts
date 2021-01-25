@@ -9,6 +9,7 @@ export const CREATE_BOOKING = gql`
     $bookFrom: String
     $bookTo: String
     $price: Int
+    $cabins: Int[]
   ) {
     createBooking(
       firstname: $firstname
@@ -18,6 +19,7 @@ export const CREATE_BOOKING = gql`
       bookFrom: $bookFrom
       bookTo: $bookTo
       price: $price
+      cabins: $cabins
     ) {
       ok
     }
