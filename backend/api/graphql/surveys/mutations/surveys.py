@@ -1,6 +1,7 @@
 import graphene
 
 from apps.surveys.models import Survey
+from apps.listing.models import Listing
 from ..types import SurveyType
 
 class SurveyInput(graphene.InputObjectType):
@@ -17,10 +18,14 @@ class CreateSurvey(graphene.Mutation):
         survey_data = SurveyInput(required=False)
 
     @classmethod
-    def mutate(cls, self, info, survey_data):
+    def mutate(cls, self, info, survey_data, listing_id=None):
         survey = Survey()
         for key, value in survey_data.items():
             setattr(survey, key, value)
+        if listing_id:
+            listing = Listing.objects.get(pk=listing_id)
+            listing.survey = survey
+            listing.save()
         survey.save()
         ok = True
         return cls(survey=survey, ok=ok)
