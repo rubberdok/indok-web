@@ -1,4 +1,4 @@
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { getRangeLength } from "@components/Calendar";
 import Navbar from "@components/navbar/Navbar";
 import Button from "@components/pages/cabins/Button";
@@ -9,7 +9,8 @@ import { InputFields } from "@components/pages/cabins/InputFields";
 import Summary from "@components/pages/cabins/Summary/Summary";
 import { ArrowIcon } from "@components/ui/ArrowIcon";
 import { SEND_EMAIL } from "@graphql/cabins/mutations";
-import { ContractProps } from "@interfaces/cabins";
+import { QUERY_CABINS } from "@graphql/cabins/queries";
+import { Cabin, ContractProps } from "@interfaces/cabins";
 import { Composition } from "atomic-layout";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
@@ -25,7 +26,7 @@ interface BookingData {
   phone: number;
   bookFrom: string;
   bookTo: string;
-  cabin: string;
+  cabins: string[];
   price: number;
 }
 
@@ -37,7 +38,7 @@ const BookPage: NextPage = () => {
   const inputRefs = [firstnameRef, surnameRef, emailRef, phoneRef];
 
   const temporarilyDisableSubmitting = false;
-  const temporarilyDisableBooking = true;
+  const temporarilyDisableBooking = false;
 
   const pricePerNight = 1000;
 
@@ -66,6 +67,8 @@ const BookPage: NextPage = () => {
   const [checkerror, setCheckError] = useState("");
   const [checkable, setCheckable] = useState(false);
   const { isAvailable, range, setRange, allBookingsQuery } = useBookingRange();
+  const cabinQuery = useQuery<{ cabins: Cabin[] }>(QUERY_CABINS);
+  const [cabinIds, setCabinIDs] = useState<number[]>();
 
   const handleClick = (isChecked: boolean) => {
     setChecked(isChecked);
@@ -73,13 +76,22 @@ const BookPage: NextPage = () => {
   };
 
   useEffect(() => {
-    if (data.fromDate && data.toDate) {
+    if (cabinIds) {
+      bookingData.cabins = cabinQuery.data?.cabins
+        .filter((cabin) => cabinIds.includes(parseInt(cabin.id)))
+        .map((cabin) => cabin.name) as string[];
+    }
+  }, [cabinQuery.data, cabinIds]);
+
+  useEffect(() => {
+    if (data.fromDate && data.toDate && data.cabins) {
       const fromDate = data.fromDate as string;
       const fromDateParsed = fromDate.split("/").reverse().join("-");
       const toDate = data.toDate as string;
       const toDateParsed = toDate.split("/").reverse().join("-");
       setRange(fromDateParsed, toDateParsed);
       setRangeLength(getRangeLength(fromDate, toDate));
+      setCabinIDs((data.cabins as string).split("_").map((id) => parseInt(id)));
     }
   }, [data]);
 
@@ -107,7 +119,7 @@ const BookPage: NextPage = () => {
       receiverEmail: emailRef.current?.value as string,
       bookFrom: range.fromDate as string,
       bookTo: range.toDate as string,
-      cabin: "Bjørnen",
+      cabins: bookingData.cabins,
       price: rangeLength * pricePerNight,
     };
 
@@ -119,7 +131,7 @@ const BookPage: NextPage = () => {
       surname: updatedBookingData.surname,
       fromDate: updatedBookingData.bookFrom,
       toDate: updatedBookingData.bookTo,
-      cabin: updatedBookingData.cabin,
+      cabins: updatedBookingData.cabins,
       price: updatedBookingData.price,
     };
 
@@ -137,7 +149,8 @@ const BookPage: NextPage = () => {
       // only create booking and send mail if allowed
       if (!temporarilyDisableBooking) {
         createBooking({
-          variables: bookingData,
+          // switch cabin names with cabin IDs
+          variables: { ...bookingData, cabins: cabinIds },
         });
 
         sendEmail({
@@ -183,7 +196,7 @@ const BookPage: NextPage = () => {
                 <Summary
                   from={range.fromDate ? range.fromDate : ""}
                   to={range.toDate ? range.toDate : ""}
-                  cabin={"Bjørnen"}
+                  cabins={bookingData.cabins ? bookingData.cabins : [""]}
                   price={pricePerNight}
                   nights={rangeLength}
                 ></Summary>

@@ -1,6 +1,7 @@
 import { ArrowIcon } from "@components/ui/ArrowIcon";
 import Router, { useRouter } from "next/router";
-import React from "react";
+import React, { useEffect } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 import { HeaderComposition } from "./HeaderCompositon";
 
@@ -10,7 +11,18 @@ const Contract: React.FC = () => {
   const router = useRouter();
   const query = router.query;
 
+  const [cabins, setCabins] = useState<string[]>([]);
+
   const handleBackButtonClick = () => Router.back();
+
+  useEffect(() => {
+    if (query.cabins) {
+      console.log(query);
+      const cabinList = typeof query.cabins === "string" ? [query.cabins] : query.cabins;
+      console.log(cabinList);
+      setCabins(cabinList);
+    }
+  }, [query]);
 
   return (
     <>
@@ -31,7 +43,8 @@ const Contract: React.FC = () => {
         </p>
         <p>
           Gjeldende <br />
-          Leieobjekt: <b>{query.cabin}</b>, Landsbygrenda, 7340 Oppdal
+          Leieobjekt(er): <b>{cabins.map((cabin, i) => (i > 0 ? " og " + cabin : cabin))}</b>, Landsbygrenda, 7340
+          Oppdal
           <br />
           Leieperiode: <b>{query.fromDate}</b> - <b>{query.toDate}</b> (yyyy-mm-dd)
           <br />

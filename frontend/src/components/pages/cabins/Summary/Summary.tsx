@@ -24,7 +24,7 @@ const templateMobile = `
 interface SummaryProps {
   from: string;
   to: string;
-  cabin: string;
+  cabins: string[];
   price: number;
   nights: number;
 }
@@ -36,7 +36,7 @@ const VerticalSep = styled.hr`
   height: ${(p: { height: number }) => p.height}px;
 `;
 
-const Summary = ({ from, to, cabin, price, nights }: SummaryProps): JSX.Element => {
+const Summary = ({ from, to, cabins, price, nights }: SummaryProps): JSX.Element => {
   return (
     <Card>
       <Composition
@@ -50,7 +50,9 @@ const Summary = ({ from, to, cabin, price, nights }: SummaryProps): JSX.Element 
         {({ Cabin, From, To, Facs, Price, Total }) => (
           <>
             <Cabin>
-              <h3>Hytte: {cabin}</h3>
+              <h3>
+                Hytte{cabins.length > 1 ? "r" : ""}: {cabins.map((cabin, i) => (i > 0 ? " og " + cabin : cabin))}
+              </h3>
               <VerticalSep height={4} />
             </Cabin>
             <From>

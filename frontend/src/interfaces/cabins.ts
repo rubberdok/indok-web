@@ -10,7 +10,7 @@ export interface Booking {
 }
 
 export interface Cabin {
-  id: number;
+  id: string;
   name: string;
 }
 
@@ -30,7 +30,7 @@ export interface ContractProps {
   contractData: {
     firstname: string;
     surname: string;
-    cabin: string;
+    cabins: string[];
     fromDate: string;
     toDate: string;
     price: number;
