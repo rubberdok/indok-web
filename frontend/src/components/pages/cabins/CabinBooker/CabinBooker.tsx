@@ -19,7 +19,7 @@ import {
 } from "./styles";
 import { FaArrowRight, FaCheck } from "react-icons/fa";
 
-const DayEvent = (key: string) => <EventMarker key={key} />;
+// const DayEvent = (key: string) => <EventMarker key={key} />;
 
 type BookState = "Choose Cabin" | "Set from date" | "Set to date" | "Book" | undefined;
 
