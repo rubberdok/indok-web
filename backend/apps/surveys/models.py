@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth import get_user_model
 from apps.organizations.models import Organization
 from apps.users.models import User
 
@@ -33,7 +34,7 @@ class OfferedAnswer(models.Model):
         return f"{self.answer}"
 
 class Answer(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     answer = models.CharField(max_length=10000)
 
