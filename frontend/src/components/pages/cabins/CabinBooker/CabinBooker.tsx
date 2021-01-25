@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import Calendar, { CalendarEvent, createDateRange } from "@components/Calendar";
+import Calendar, { createDateRange } from "@components/Calendar";
 import { EventMarker } from "@components/Calendar/styles";
 import { QUERY_CABINS } from "@graphql/cabins/queries";
 import useBookingRange from "@hooks/cabins/useBookingRange";
