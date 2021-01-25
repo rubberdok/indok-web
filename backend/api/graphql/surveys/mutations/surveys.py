@@ -23,11 +23,11 @@ class CreateSurvey(graphene.Mutation):
         survey = Survey()
         for key, value in survey_data.items():
             setattr(survey, key, value)
+        survey.save()
         if listing_id:
             listing = Listing.objects.get(pk=listing_id)
             listing.survey = survey
             listing.save()
-        survey.save()
         ok = True
         return cls(survey=survey, ok=ok)
 
