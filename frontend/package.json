@@ -22,7 +22,6 @@
     "atomic-layout": "^0.16.2",
     "feather-icons": "^4.28.0",
     "graphql": "^15.3.0",
-    "lodash": "^4.17.20",
     "moment": "^2.29.1",
     "next": "^10.0.3",
     "react": "^16.13.1",

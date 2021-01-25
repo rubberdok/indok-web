@@ -1,4 +1,3 @@
-import _ from "lodash";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import CalendarTable from "./CalendarTable";
@@ -39,14 +38,14 @@ const Calendar: React.FC<CalendarProps> = ({ events, disabledDates, rangeChanged
               ? null
               : setHoverRange(getDateRange(selectedDay.format(DATE_FORMAT), date.format(DATE_FORMAT)))
           }
-          isInHoverRange={_.includes(hoverRange, date.format(DATE_FORMAT))}
+          isInHoverRange={hoverRange.includes(date.format(DATE_FORMAT))}
           isSelected={
             date.isSame(selectedDay, "day") ||
             (hoverRange[hoverRange.length - 1] !== undefined && date.isSame(hoverRange[hoverRange.length - 1], "day"))
           }
           onClick={() => handleDateClicked(date)}
           key={date.format(DATE_FORMAT)}
-          isDisabled={date.isBefore(today, "day") || _.includes(disabledDates, date.format(DATE_FORMAT))}
+          isDisabled={date.isBefore(today, "day") || disabledDates?.includes(date.format(DATE_FORMAT))}
         >
           <Day>{i}</Day>
           <EventMarkerWrapper>
