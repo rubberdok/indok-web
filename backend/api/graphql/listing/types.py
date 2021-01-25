@@ -32,6 +32,9 @@ class ListingType(DjangoObjectType):
     @staticmethod
     @permission_required(["listing.view_responses"])
     def resolve_responses(root: Listing, info): 
+        """
+        TODO: ensure that the user belongs to the same organization as the origins of the listing.
+        """
         user = info.context.user
         response_loader = ResponsesByListingIdLoader()
         return response_loader.load(root.id)
