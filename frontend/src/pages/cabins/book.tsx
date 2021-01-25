@@ -38,7 +38,7 @@ const BookPage: NextPage = () => {
   const inputRefs = [firstnameRef, surnameRef, emailRef, phoneRef];
 
   const temporarilyDisableSubmitting = false;
-  const temporarilyDisableBooking = false;
+  const temporarilyDisableBooking = true;
 
   const pricePerNight = 1000;
 
