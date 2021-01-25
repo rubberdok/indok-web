@@ -16,6 +16,7 @@ class CreateSurvey(graphene.Mutation):
 
     class Arguments:
         survey_data = SurveyInput(required=False)
+        listing_id = graphene.ID(required=False)
 
     @classmethod
     def mutate(cls, self, info, survey_data, listing_id=None):
