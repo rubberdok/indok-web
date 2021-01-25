@@ -84,7 +84,7 @@ const IndexPage: NextPage = () => (
               </Paragraph>
             </Areas.Content>
             <Areas.Actions>
-              <Button back style="primary" link="/events">
+              <Button back styling="primary" link="/events">
                 Se kalenderen
               </Button>
             </Areas.Actions>
