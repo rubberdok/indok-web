@@ -57,11 +57,15 @@ const CabinBooker: React.FC = () => {
     activeStep === step ? setActiveState(undefined) : setActiveState(step);
   };
 
+  const getCheckedCabins = () => {
+    return cabins ? cabins.filter((cabin) => cabin.checked) : [];
+  };
+
   const getCabinSubHeader = () => {
     if (!activeStep || activeStep == "Choose Cabin") {
       return "Velg hvilken hytte du vil booke";
     } else {
-      const bookedCabins = cabins ? cabins.filter((cabin) => cabin.checked) : [];
+      const bookedCabins = getCheckedCabins();
       return "Booker ".concat(...bookedCabins.map((cabin, i) => (i > 0 ? ` og ${cabin.name}` : cabin.name)));
     }
   };
@@ -94,7 +98,10 @@ const CabinBooker: React.FC = () => {
             isAvailable
               ? router.push({
                   pathname: "cabins/book",
-                  query: range,
+                  query: {
+                    ...range,
+                    cabins: "".concat(...getCheckedCabins().map((cabin, i) => (i > 0 ? `_${cabin.name}` : cabin.name))),
+                  },
                 })
               : null;
           }}
