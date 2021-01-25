@@ -16,6 +16,7 @@ class ListingInput(graphene.InputObjectType):
     deadline = graphene.DateTime(required=False)
     url = graphene.String(required=False)
     organization_id = graphene.ID(required=False)
+    survey_id = graphene.ID(required=False)
 
 
 class CreateListing(graphene.Mutation):
