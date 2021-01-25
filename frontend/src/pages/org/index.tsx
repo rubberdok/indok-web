@@ -4,7 +4,7 @@ import { useQuery } from "@apollo/client";
 import { ORGANIZATIONS } from "@graphql/listings/queries";
 import { Organization } from "@interfaces/listings";
 import Link from "next/link";
-import NavBar from "@components/navbar/Navbar";
+import Layout from "@components/Layout";
 
 const OrganizationsPage: NextPage = () => {
   //TODO: change allOrganizations to organizations
@@ -12,9 +12,7 @@ const OrganizationsPage: NextPage = () => {
   if (error) return <p>Error</p>;
   if (loading) return <p>Loading...</p>;
   return (
-    <>
-      <NavBar />
-      <Link href="/demo">Tilbake</Link>
+    <Layout>
       <h3>Demoside for å logge inn i forening</h3>
       {data &&
         data.allOrganizations.map((org) => (
@@ -24,7 +22,7 @@ const OrganizationsPage: NextPage = () => {
         ))}
       <h4>Opprett ny forening</h4>
       <CreateOrganization />
-    </>
+    </Layout>
   );
 };
 

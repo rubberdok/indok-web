@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
 export const CREATE_SURVEY = gql`
-  mutation CreateSurvey($descriptiveName: String!, $description: String) {
-    createSurvey(surveyData: { descriptiveName: $descriptiveName, description: $description }) {
+  mutation CreateSurvey($descriptiveName: String!, $description: String, $listingId: ID) {
+    createSurvey(listingId: $listingId, surveyData: { descriptiveName: $descriptiveName, description: $description }) {
       survey {
         id
         descriptiveName

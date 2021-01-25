@@ -30,7 +30,6 @@ const CreateListing: React.FC<{ organization: Organization }> = ({ organization 
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        console.log(newListing);
         createListing({
           variables: {
             title: newListing.title,

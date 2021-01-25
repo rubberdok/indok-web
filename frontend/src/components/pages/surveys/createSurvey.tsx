@@ -25,7 +25,6 @@ const CreateSurvey: React.FC<{ oldSurvey: Survey }> = ({ oldSurvey }) => {
     });
   };
   const { loading, error, data } = useQuery<{ questionTypes: QuestionType[] }>(QUESTIONTYPES);
-  const [createSurvey] = useMutation(CREATE_SURVEY);
   const [updateSurvey] = useMutation(UPDATE_SURVEY);
   const [createQuestion, { data: questionData }] = useMutation<{ createQuestion: { question: Question } }>(
     CREATE_QUESTION
@@ -38,7 +37,7 @@ const CreateSurvey: React.FC<{ oldSurvey: Survey }> = ({ oldSurvey }) => {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          createSurvey();
+          updateSurvey();
         }}
       >
         <button

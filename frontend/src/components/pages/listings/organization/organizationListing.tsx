@@ -1,13 +1,16 @@
 import { Listing } from "@interfaces/listings";
+import { useState } from "react";
+import CreateSurvey from "@components/pages/surveys/createSurvey";
 import { Survey } from "@interfaces/surveys";
 import { CREATE_SURVEY } from "@graphql/surveys/mutations";
 import { useMutation } from "@apollo/client";
-import { useState } from "react";
-import CreateSurvey from "@components/pages/surveys/createSurvey";
+import { UPDATE_LISTING } from "@graphql/listings/mutations";
 
 const OrganizationListing: React.FC<{ listing: Listing }> = ({ listing }) => {
   const [surveyShown, showSurvey] = useState(false);
-  const [createSurvey, { data }] = useMutation<{ createSurvey: { survey: Survey } }>(CREATE_SURVEY);
+  const [createSurvey, { data: surveyData }] = useMutation<{ createSurvey: { survey: Survey } }>(CREATE_SURVEY);
+  if (!listing.survey) {
+  }
   return (
     <>
       <h3>{listing.title}</h3>
@@ -15,19 +18,24 @@ const OrganizationListing: React.FC<{ listing: Listing }> = ({ listing }) => {
       <button
         onClick={(e) => {
           e.preventDefault();
-          if (!listing.survey) {
-            createSurvey({
-              variables: {
-                descriptiveName: `Søknad: ${listing.title}`,
-                description: "",
-              },
-            });
-            listing.survey = data!.createSurvey.survey;
-          }
+          createSurvey({
+            variables: {
+              descriptiveName: `Søknad: ${listing.title}`,
+              description: "",
+              listingId: listing.id,
+            },
+          });
+        }}
+      >
+        Lag søknad
+      </button>
+      <button
+        onClick={(e) => {
+          e.preventDefault();
           showSurvey(!surveyShown);
         }}
       >
-        {surveyShown ? "Vis søknad" : "Gjem søknad"}
+        {surveyShown ? "Gjem søknad" : "Vis søknad"}
       </button>
       {surveyShown && listing.survey && <CreateSurvey oldSurvey={listing.survey} />}
     </>

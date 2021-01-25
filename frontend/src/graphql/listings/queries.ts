@@ -28,6 +28,23 @@ export const LISTING = gql`
       deadline
       endDatetime
       url
+      survey {
+        id
+        descriptiveName
+        questions {
+          id
+          question
+          description
+          questionType {
+            id
+            name
+          }
+          offeredAnswers {
+            id
+            answer
+          }
+        }
+      }
     }
   }
 `;
@@ -70,7 +87,7 @@ export const RESPONSE = gql`
 
 export const USER_RESPONSE = gql`
   query userResponse($listingID: ID!) {
-    responseByListingId(listingId: $listingID) {
+    response(listingId: $listingID) {
       id
       response
       applicant {
@@ -118,9 +135,6 @@ export const ORGANIZATION_LISTINGS = gql`
         deadline
         endDatetime
         url
-        responses {
-          id
-        }
       }
     }
   }

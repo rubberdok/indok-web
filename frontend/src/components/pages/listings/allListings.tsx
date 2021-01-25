@@ -16,7 +16,9 @@ const AllListings: React.FC = () => {
         <List>
           {data.listings.map((listing) => (
             <Link href={`/listings/${listing.id}/${listing.slug}`} passHref key={listing.id}>
-              <ListItem mainText={listing.title} subText={listing.organization?.name || "N/A"} selected={false} />
+              <a>
+                <ListItem mainText={listing.title} subText={listing.organization?.name || "N/A"} selected={false} />
+              </a>
             </Link>
           ))}
         </List>

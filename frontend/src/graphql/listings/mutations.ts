@@ -9,6 +9,7 @@ export const CREATE_LISTING = gql`
     $endDatetime: DateTime!
     $url: String!
     $organizationId: ID
+    $surveyId: ID
   ) {
     createListing(
       listingData: {
@@ -19,6 +20,7 @@ export const CREATE_LISTING = gql`
         endDatetime: $endDatetime
         url: $url
         organizationId: $organizationId
+        surveyId: $surveyId
       }
     ) {
       listing {
@@ -32,6 +34,55 @@ export const CREATE_LISTING = gql`
         organization {
           id
           name
+        }
+        survey {
+          id
+        }
+      }
+      ok
+    }
+  }
+`;
+
+export const UPDATE_LISTING = gql`
+  mutation updateListing(
+    $listingId: ID!
+    $title: String
+    $description: String
+    $startDatetime: Datetime
+    $endDatetime: Datetime
+    $deadline: Datetime
+    $url: String
+    $organizationId: ID
+    $surveyId: ID
+  ) {
+    updateListing(
+      id: $listingId
+      listingData: {
+        title: $title
+        description: $description
+        startDatetime: $startDatetime
+        deadline: $deadline
+        endDatetime: $endDatetime
+        url: $url
+        organizationId: $organizationId
+        surveyId: $surveyId
+      }
+    ) {
+      listing {
+        id
+        title
+        description
+        startDatetime
+        deadline
+        endDatetime
+        url
+        organization {
+          id
+          name
+        }
+        survey {
+          id
         }
       }
       ok
@@ -79,22 +130,6 @@ export const CREATE_ORGANIZATION = gql`
         name
         description
         slug
-      }
-    }
-  }
-`;
-
-export const CREATE_USER = gql`
-  mutation createUser($username: String!, $firstName: String!, $lastName: String!, $year: Int!, $password: String!) {
-    createUser(
-      userData: { username: $username, firstName: $firstName, lastName: $lastName, year: $year, password: $password }
-    ) {
-      user {
-        username
-        firstName
-        lastName
-        year
-        password
       }
     }
   }

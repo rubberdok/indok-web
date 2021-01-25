@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
 import { User } from "@interfaces/users";
-import { Listing } from "@interfaces/listings";
+import { Listing, Response } from "@interfaces/listings";
 import { GET_USER } from "@graphql/auth/queries";
 import { USER_RESPONSE } from "@graphql/listings/queries";
 import CreateResponse from "@components/pages/listings/createResponse";
@@ -20,8 +20,13 @@ const Apply: React.FC<{
     if (responseError) return <h1>Error</h1>;
     if (responseLoading) return <h1>Loading...</h1>;
     if (responseData) {
-      if (responseData.response === null) {
-        return <p>Du har søkt! Se søknad</p>;
+      if (responseData.response !== null) {
+        return (
+          <>
+            <p><b>Din søknad:</b></p>
+            <p>{responseData.response.response}</p>
+          </>
+        );
       } else {
         return (
           <CreateResponse listing={listing} applicantID={userData.user.id}>
