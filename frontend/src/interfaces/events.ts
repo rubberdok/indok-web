@@ -1,3 +1,5 @@
+import { User } from "./users";
+
 export interface Event {
   id: string;
   title: string;
@@ -5,12 +7,12 @@ export interface Event {
   endTime: string;
   location: string;
   description: string;
-  organization: { id: string; name: string };
+  organization: { id: string; name: string; color?: string };
   category: { id: string; name: string };
   image: string;
   isAttendable: string;
   deadline: string;
-  publisher: string;
+  publisher: User;
 }
 
 export interface Category {
