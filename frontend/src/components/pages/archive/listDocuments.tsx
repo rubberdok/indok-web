@@ -49,9 +49,9 @@ const ListDocuments: React.FC<ListDocumentsProps> = ({ document_types }) => {
   if (error) return <p> Feil: {error.message} </p>;
 
   return (
-    <Grid container className={classes.root} justifyContent="flex-start" spacing={2}>
+    <Grid container className={classes.root} justify="flex-start" spacing={2}>
       <Grid item xs>
-        <Grid container className={classes.img} justifyContent="flex-start" spacing={2}>
+        <Grid container className={classes.img} justify="flex-start" spacing={2}>
           {data.archiveByType.length ? (
             data.archiveByType.map((doc: Document) => (
               <Button
