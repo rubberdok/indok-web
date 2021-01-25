@@ -9,8 +9,6 @@ import { UPDATE_LISTING } from "@graphql/listings/mutations";
 const OrganizationListing: React.FC<{ listing: Listing }> = ({ listing }) => {
   const [surveyShown, showSurvey] = useState(false);
   const [createSurvey, { data: surveyData }] = useMutation<{ createSurvey: { survey: Survey } }>(CREATE_SURVEY);
-  if (!listing.survey) {
-  }
   return (
     <>
       <h3>{listing.title}</h3>
@@ -29,9 +27,13 @@ const OrganizationListing: React.FC<{ listing: Listing }> = ({ listing }) => {
       >
         Lag søknad
       </button>
+      <br />
       <button
         onClick={(e) => {
           e.preventDefault();
+          if (surveyData && !listing.survey) {
+            listing.survey = surveyData.createSurvey.survey;
+          }
           showSurvey(!surveyShown);
         }}
       >
