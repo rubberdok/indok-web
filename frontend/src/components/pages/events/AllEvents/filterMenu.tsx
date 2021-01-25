@@ -153,19 +153,7 @@ const FilterMenu: React.FC<Props> = ({ filters, onChange }) => {
   };
 
   return (
-    <div
-      style={{
-        float: "left",
-        width: "25%",
-        border: "solid",
-        borderWidth: "1px 2px 2px 1px",
-        borderColor: "#DCDCDC",
-        borderRadius: "0.2em",
-        backgroundColor: "#FFF",
-        paddingBottom: "1em",
-        minWidth: "235px",
-      }}
-    >
+    <FilterContainer>
       <div style={{ paddingLeft: "1em" }}>
         <div style={{ width: "100%" }}>
           <Filter style={{ marginTop: "0.1em", marginRight: "0.3em", float: "left", color: "#222" }} />
@@ -202,11 +190,23 @@ const FilterMenu: React.FC<Props> = ({ filters, onChange }) => {
           Filtrer
         </StyledFilterButton>
       </div>
-    </div>
+    </FilterContainer>
   );
 };
 
 export default FilterMenu;
+
+const FilterContainer = styled.div`
+  float: left;
+  width: 25%;
+  border: solid;
+  border-width: 1px 2px 2px 1px;
+  border-color: #dcdcdc;
+  border-radius: 0.2em;
+  background-color: #fff;
+  padding-bottom: 1em;
+  min-width: 235px;
+`;
 
 const FadeInAndOutDiv = styled.div`
   padding-left: 1em;
