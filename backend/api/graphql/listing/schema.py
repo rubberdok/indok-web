@@ -8,6 +8,7 @@ from .mutations import (
     CreateResponse,
     UpdateResponse,
     DeleteResponse,
+    AddPermission,
 )
 from .resolvers import ListingResolvers, ResponseResolvers
 
@@ -25,3 +26,5 @@ class ListingMutations(graphene.ObjectType):
     create_response = CreateResponse.Field()
     update_response = UpdateResponse.Field()
     delete_response = DeleteResponse.Field()
+
+    add_permission = AddPermission.Field()

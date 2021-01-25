@@ -4,7 +4,7 @@ from .dataloader import ResponsesByListingIdLoader
 import graphene
 
 from apps.listing.models import Listing, Response
-
+from graphql_jwt.decorators import permission_required
 
 class ResponseType(DjangoObjectType):
     class Meta:
@@ -29,8 +29,8 @@ class ListingType(DjangoObjectType):
         ]
 
     @staticmethod
-    @user_passes_test(lambda user: user.is_staff)
-    def resolve_responses(root: Listing, info):
+    @permission_required(["listing.view_responses"])
+    def resolve_responses(root: Listing, info): 
         user = info.context.user
         response_loader = ResponsesByListingIdLoader()
         return response_loader.load(root.id)

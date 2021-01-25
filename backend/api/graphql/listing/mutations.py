@@ -1,4 +1,5 @@
 from django.contrib.auth import login
+from django.contrib.auth.models import Permission
 import graphene
 
 from django.utils.text import slugify
@@ -131,5 +132,20 @@ class DeleteResponse(graphene.Mutation):
         user = info.context.user
         response = user.responses.get(pk=response_id)
         response.delete()
+        ok = True
+        return cls(ok=ok)
+
+
+class AddPermission(graphene.Mutation):
+    ok = graphene.Boolean()
+
+    class Arguments:
+        permission = graphene.String()
+    
+    @classmethod
+    def mutate(cls, self, info, permission):
+        user = info.context.user
+        user.user_permissions.add(Permission.objects.get(codename=permission))
+        user.save()
         ok = True
         return cls(ok=ok)
