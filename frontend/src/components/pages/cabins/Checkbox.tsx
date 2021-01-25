@@ -21,7 +21,7 @@ const CheckBox: React.FC<CheckProps> = ({ checked, onClick, errorMsg, checkable,
     setContractViewed(true);
   };
 
-  const realCheckboxOnclick = (e: React.FormEvent<EventTarget>) => {
+  const realCheckboxOnclick = () => {
     onClick(!checked);
     setCheckErrorMsg("");
   };

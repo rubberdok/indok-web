@@ -1,6 +1,5 @@
 import { useQuery } from "@apollo/client";
 import Calendar, { createDateRange } from "@components/Calendar";
-import { EventMarker } from "@components/Calendar/styles";
 import { QUERY_CABINS } from "@graphql/cabins/queries";
 import useBookingRange from "@hooks/cabins/useBookingRange";
 import { Cabin } from "@interfaces/cabins";
@@ -100,7 +99,9 @@ const CabinBooker: React.FC = () => {
                   pathname: "cabins/book",
                   query: {
                     ...range,
-                    cabins: "".concat(...getCheckedCabins().map((cabin, i) => (i > 0 ? `_${cabin.id}` : cabin.id))),
+                    cabins: "".concat(
+                      ...getCheckedCabins().map((cabin, i) => (i > 0 ? `_${cabin.id}` : String(cabin.id)))
+                    ),
                   },
                 })
               : null;
