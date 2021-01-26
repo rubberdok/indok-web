@@ -101,25 +101,31 @@ const Footer: React.FC = () => {
             <Table className={classes.table} aria-label="simple table">
               <TableBody>
                 <TableRow>
-                  <TableCell>Morgan Heggland &apos;22</TableCell>
+                  <TableCell>
+                    <p>Morgan Heggland &apos;22</p> <p>(prosjektleder)</p>
+                  </TableCell>
+                  <TableCell>
+                    <p>Lars Lien Ankile &apos;22</p> <p>(Lederpar Hovedstyret)</p>
+                  </TableCell>
+                  <TableCell>
+                    <p>Andreas Johannesen &apos;22</p> <p>(Lederpar Hovedstyret)</p>
+                  </TableCell>
                   <TableCell>Ingrid Aaseng &apos;22</TableCell>
+                </TableRow>
+                <TableRow>
                   <TableCell>Herman Holmøy &apos;25</TableCell>
                   <TableCell>Fredrik Ahlborg &apos;22</TableCell>
-                </TableRow>
-                <TableRow>
                   <TableCell>Patrik Kjærran &apos;22</TableCell>
                   <TableCell>Anna Sofie Lunde &apos;22</TableCell>
+                </TableRow>
+                <TableRow>
                   <TableCell>Hermann Mørkrid &apos;23</TableCell>
                   <TableCell>Mathias Raa &apos;25</TableCell>
-                </TableRow>
-                <TableRow>
                   <TableCell>Mathilde Marie Solberg &apos;23</TableCell>
                   <TableCell>Sverre Spetalen &apos;21</TableCell>
-                  <TableCell>Lars Waage &apos;23</TableCell>
-                  <TableCell>Lars Lien Ankile &apos;22</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell>Andreas Johannesen &apos;22</TableCell>
+                  <TableCell>Lars Waage &apos;23</TableCell>
                 </TableRow>
               </TableBody>
             </Table>
