@@ -16,4 +16,4 @@ COPY . .
 
 EXPOSE 8000
 
-ENTRYPOINT ["entrypoint_prod.sh"]
+ENTRYPOINT ["/code/entrypoint_prod.sh"]
