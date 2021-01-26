@@ -61,6 +61,7 @@ const NavbarLinks: React.FC = () => {
         </NavItem>
       ) : (
         <>
+          <NavItem href={"/archive"}>Arkiv</NavItem>
           <NavItem primary href={"/profile"}>
             {userData.user.firstName}
           </NavItem>
