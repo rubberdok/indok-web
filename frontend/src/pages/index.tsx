@@ -77,7 +77,7 @@ const IndexPage: NextPage = () => {
               </Box>
             </Grid>
             <Grid item xs={4}>
-              <Box mr={5} display="flex" top="0" alignItems="center" position="absolute" height="100%" zIndex="4">
+              {/* <Box mr={5} display="flex" top="0" alignItems="center" position="absolute" height="100%" zIndex="4">
                 <Paper>
                   <Box px={8} py={6}>
                     <Typography gutterBottom variant="body2">
@@ -92,7 +92,7 @@ const IndexPage: NextPage = () => {
                     </Link>
                   </Box>
                 </Paper>
-              </Box>
+              </Box> */}
             </Grid>
           </Grid>
         </Box>
