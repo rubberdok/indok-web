@@ -2,7 +2,7 @@ import Navbar from "@components/navbar/Navbar";
 import { Button } from "@material-ui/core";
 import { NextPage } from "next";
 import React from "react";
-import CreateEvent from "../../components/pages/events/createEvent";
+import CreateEvent from "@components/pages/events/createEvent";
 
 const CreateEventsPage: NextPage = () => {
   return (

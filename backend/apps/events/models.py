@@ -1,6 +1,7 @@
 # from django.contrib.auth import get_user_model
 from apps.organizations.models import Organization
 from django.db import models
+from django.contrib.auth import get_user_model
 
 
 # Create your models here.
@@ -21,7 +22,7 @@ class Event(models.Model):
     description = models.TextField()
     start_time = models.DateTimeField()
     is_attendable = models.BooleanField()
-    publisher = models.CharField(max_length=128)
+    publisher = models.ForeignKey(get_user_model(), on_delete=models.DO_NOTHING)
 
     # Optional fields
     end_time = models.DateTimeField(blank=True, null=True)
