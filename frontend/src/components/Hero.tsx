@@ -4,7 +4,7 @@ import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import Link from "next/link";
 import React from "react";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   hero: {
     color: "white",
   },
