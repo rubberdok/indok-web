@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title></title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="" />
+
+    <style>
+      span {
+        white-space: nowrap;
+      }
+
+      @media (min-width: 1000px) {
+        .contentDiv {
+          margin: 20px auto;
+          width: 80%;
+        }
+      }
+    </style>
+  </head>
+  <body style="font-family: Montserrat">
+    <div
+      style="
+        border: 5px solid #065a5a;
+        text-align: center;
+        padding: 50px;
+        background-color: #f5f0eb;
+        width: 80%;
+        box-shadow: 11px 17px 52px -12px rgba(0, 0, 0, 0.48);
+      "
+    >
+      {% load static %}
+
+      <img
+        src="cid:hyttestyret_logo.png"
+        alt=""
+        style="width: 270px; margin: auto"
+      />
+      <h2>Hei {{ firstname }}!</h2>
+      <p>
+        Vi har nå reservert {{ cabin }} fra
+        <span><b>{{fromDate }}</b></span> til
+        <span><b>{{ toDate }}</b>.</span>
+      </p>
+      Prisen kommer på <b>{{ price }} kr</b>. Betaling skjer via faktura, se
+      vedlegg.
+      <div class="contentDiv">
+        <p>
+          Hytten skal forlates i minst like god stand som den ble funnet, og
+          instrukser for utvask henger ved ytterdøren, samt som vedlegg i denne
+          mailen. Dere står selv ansvarlig for eventuelle skader som måtte
+          forekomme. Avbestilling uten gebyr må forekomme minst to uker før
+          avreise. Vennligst les nøye gjennom reglementet og sjekklisten før
+          dere kommer til hytta.
+        </p>
+      </div>
+      <p>Ikke nøl med å ta kontakt hvis dere skulle ha spørsmål.</p>
+      <h2>God tur!</h2>
+      <p>Med vennlig hilsen,</p>
+      <p>
+        Ellie Berglund <br />Bookingansvarlig Hyttestyret, <br />Indøkhyttene
+        NTNU <br />booking@indokhyttene.no / tlf. 94258380 <br /><a
+          href="https://www.januslinjeforening.no/indokhyttene/"
+          >januslinjeforening.no/indokhyttene/</a
+        >
+      </p>
+
+      <a
+        style="
+          color: white;
+          background-color: #065a5a;
+          display: inline-block;
+          margin: 10px;
+          padding: 15px;
+          text-decoration: none;
+        "
+        href="{{ link }}"
+        >Legg til i Google Calendar</a
+      >
+    </div>
+  </body>
+</html>
