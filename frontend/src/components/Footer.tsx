@@ -1,4 +1,4 @@
-import { Box, makeStyles, Typography } from "@material-ui/core";
+import { Box, Link, makeStyles, Typography } from "@material-ui/core";
 import Container from "@material-ui/core/Container";
 import React from "react";
 
@@ -86,7 +86,13 @@ const Footer: React.FC = () => {
       </Box>
       <Box className={classes.credits}>
         <Container>
-          <Typography variant="caption">Laget av RubberDøk, Hovedstyret på Indøks webkomité</Typography>
+          <Typography variant="caption">
+            Under konstruksjon av{" "}
+            <Link color="inherit" target="_blank" href="https://github.com/hovedstyret/indok-web">
+              RubberDøk
+            </Link>
+            , Hovedstyret på Indøk sin webkomité.
+          </Typography>
         </Container>
       </Box>
     </>
