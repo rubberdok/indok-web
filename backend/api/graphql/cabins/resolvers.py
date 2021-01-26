@@ -1,7 +1,7 @@
 from apps.cabins.models import Booking as BookingModel, Cabin
 
 
-class BookingResolvers:
+class CabinResolvers:
     def resolve_all_bookings(self, root):
         return BookingModel.objects.all()
 

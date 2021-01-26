@@ -8,6 +8,7 @@ import ImageSlider from "@components/pages/cabins/ImageSlider";
 import { InputFields } from "@components/pages/cabins/InputFields";
 import Summary from "@components/pages/cabins/Summary/Summary";
 import { ArrowIcon } from "@components/ui/ArrowIcon";
+import { Paragraph } from "@components/ui/Typography";
 import { SEND_EMAIL } from "@graphql/cabins/mutations";
 import { QUERY_CABINS } from "@graphql/cabins/queries";
 import { Cabin, ContractProps } from "@interfaces/cabins";
@@ -190,6 +191,7 @@ const BookPage: NextPage = () => {
                   <Button url="#" onClick={(e) => handleSubmit(e)} disabled={temporarilyDisableSubmitting}>
                     Gå til betaling
                   </Button>
+                  <Paragraph>OBS: Det er dessverre ikke mulig å booke via nettsiden ennå.</Paragraph>
                 </InputFields>
               </Inputs>
               <Sum>

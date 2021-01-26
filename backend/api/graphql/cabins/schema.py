@@ -7,17 +7,17 @@ from api.graphql.cabins.mutations import (
     DeleteBooking,
     SendEmail,
 )
-from api.graphql.cabins.resolvers import BookingResolvers
+from api.graphql.cabins.resolvers import CabinResolvers
 
 
-class BookingMutations(graphene.ObjectType):
-    create_booking = CreateBooking.Field()
+class CabinMutations(graphene.ObjectType):
+    create_Cabin = CreateBooking.Field()
     update_booking = UpdateBooking.Field()
     delete_booking = DeleteBooking.Field()
     send_email = SendEmail.Field()
 
 
-class BookingQueries(graphene.ObjectType, BookingResolvers):
+class CabinQueries(graphene.ObjectType, CabinResolvers):
     all_bookings = graphene.List(BookingType)
     bookings_by_month = graphene.List(
         BookingType, year=graphene.String(), month=graphene.String()
