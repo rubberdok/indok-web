@@ -1,14 +1,14 @@
 import Navbar from "@components/navbar/Navbar";
-import Button from "@components/ui/Button";
+import { Button } from "@material-ui/core";
 import { NextPage } from "next";
 import React from "react";
 import CreateEvent from "../../components/pages/events/createEvent";
 
 const CreateEventsPage: NextPage = () => {
   return (
-    <div>
+    <>
       <Navbar />
-      <Button back styling="primary" link="/events">
+      <Button color="primary" href="/events">
         Tilbake til arrangementer
       </Button>
       <div
@@ -27,7 +27,7 @@ const CreateEventsPage: NextPage = () => {
           <CreateEvent />
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

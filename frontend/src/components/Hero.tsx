@@ -1,51 +1,61 @@
-import { Box, Button, Card, Container, Grid, Typography } from "@material-ui/core";
+import { Box, Button, Container, Grid, Paper, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
+import Link from "next/link";
 import React from "react";
 
 const useStyles = makeStyles((theme) => ({
-  heroCard: {
-    width: theme.spacing(80),
-    marginTop: "80px",
+  hero: {
+    color: "white",
   },
   heroImage: {
     width: "100%",
-    height: "calc(100vh - 80px)",
+    height: "100%",
     backgroundSize: "cover",
     backgroundRepeat: "no-repeat",
     backgroundPosition: "center",
   },
+  heroCard: {
+    marginTop: -80,
+    padding: "32px 48px",
+  },
 }));
 
-interface HeroProps {
-  classes?: any;
-}
-
-const Hero: React.FC<HeroProps> = () => {
+const Hero: React.FC = () => {
   const classes = useStyles();
 
   return (
-    <Box height="calc(100vh - 80px)">
-      <Grid container justify="flex-end">
-        <Grid item xs={12} md={10}>
-          <Box className={classes.heroImage} style={{ backgroundImage: `url("/img/hero.jpg")` }}></Box>
-        </Grid>
-      </Grid>
+    <Box className={classes.hero} height="calc(100vh - 80px)">
+      <Box
+        className={classes.heroImage}
+        style={{
+          backgroundImage: `linear-gradient(to left, rgba(0, 0, 0, 0.0), rgba(0, 0, 0, 0.95)),
+        url('img/hero.jpg')`,
+        }}
+      ></Box>
       <Container>
-        <Box display="flex" top="0" alignItems="center" position="absolute" height="100%" zIndex="modal">
-          <Card className={classes.heroCard}>
-            <Box px={8} py={6}>
-              <Typography variant="overline">Foreningen for studentene ved</Typography>
-              <Typography variant="h1">Industriell Økonomi og Teknologiledelse</Typography>
-            </Box>
-
-            <Grid container justify="flex-end">
-              <Button color="primary" variant="contained" endIcon={<NavigateNextIcon />}>
-                Mer om foreningen
-              </Button>
-            </Grid>
-          </Card>
+        <Box display="flex" top="0" alignItems="center" position="absolute" height="90vh" zIndex="4">
+          <Box width={650}>
+            <Typography variant="overline">Foreningen for studentene ved</Typography>
+            <Typography variant="h1">Industriell Økonomi og Teknologiledelse</Typography>
+          </Box>
         </Box>
+        <Grid justify="center" container>
+          <Grid item xs={10}>
+            <Paper className={classes.heroCard}>
+              <Box display="flex" alignItems="center">
+                <Box flexGrow={1}>
+                  <Typography variant="h5">Les de siste nyhetene fra Hovedstyret</Typography>
+                </Box>
+                <Link href="/about">
+                  <Button variant="contained" endIcon={<NavigateNextIcon />}>
+                    Klikk her
+                  </Button>
+                </Link>
+              </Box>
+            </Paper>
+          </Grid>
+        </Grid>
       </Container>
     </Box>
   );

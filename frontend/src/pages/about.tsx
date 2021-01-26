@@ -1,16 +1,15 @@
 import Layout from "@components/Layout";
-import Content from "@components/ui/Content";
-import { Paragraph, Title } from "@components/ui/Typography";
+import { Container, Typography } from "@material-ui/core";
 import { NextPage } from "next";
 import React from "react";
 
 const AboutPage: NextPage = () => {
   return (
     <Layout>
-      <Content>
-        <Title>Om foreningen</Title>
-        <Paragraph>Dette er siden om foreningen! Den er for øyeblikket under utvikling!</Paragraph>
-      </Content>
+      <Container>
+        <Typography variant="h1">Om foreningen</Typography>
+        <Typography variant="body1">Dette er siden om foreningen! Den er for øyeblikket under utvikling!</Typography>
+      </Container>
     </Layout>
   );
 };

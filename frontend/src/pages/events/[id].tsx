@@ -1,5 +1,5 @@
 import Layout from "@components/Layout";
-import Button from "@components/ui/Button";
+import { Button } from "@material-ui/core";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import React from "react";
@@ -28,7 +28,7 @@ const EventInfo: NextPage = () => {
         </div>
       </div>
       <div style={{ marginTop: "2em" }}>
-        <Button styling="primary" link="/events" back>
+        <Button color="primary" href="/events">
           Tilbake til arrangementer
         </Button>
       </div>

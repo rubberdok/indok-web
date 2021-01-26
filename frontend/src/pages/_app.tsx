@@ -1,7 +1,6 @@
 import { ApolloClient, ApolloProvider, createHttpLink, InMemoryCache } from "@apollo/client";
 import { CssBaseline } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/styles";
-import "@styles/fonts.css";
 import "@styles/global.css";
 import theme from "@styles/theme";
 import { AppProps } from "next/app";
@@ -21,7 +20,7 @@ const App = ({ Component, pageProps }: AppProps): JSX.Element => {
   useEffect(() => {
     const jssStyles = document.querySelector("#jss-server-side");
     if (jssStyles) {
-      jssStyles.parentElement.removeChild(jssStyles);
+      jssStyles.parentElement?.removeChild(jssStyles);
     }
   }, []);
 
@@ -33,7 +32,6 @@ const App = ({ Component, pageProps }: AppProps): JSX.Element => {
           <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
         </Head>
         <ThemeProvider theme={theme}>
-          {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
           <CssBaseline />
           <Component {...pageProps} />
         </ThemeProvider>

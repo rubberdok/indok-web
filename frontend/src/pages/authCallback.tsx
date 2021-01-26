@@ -1,11 +1,9 @@
 import { useMutation } from "@apollo/client";
 import Layout from "@components/Layout";
-import Button from "@components/ui/Button";
-import Content from "@components/ui/Content";
-import { Paragraph, Title } from "@components/ui/Typography";
 import { AUTHENTICATE } from "@graphql/auth/mutations";
 import { GET_USER } from "@graphql/auth/queries";
 import { User } from "@interfaces/users";
+import { Button, Container, Typography } from "@material-ui/core";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
@@ -45,21 +43,26 @@ const AuthCallbackPage: NextPage = () => {
   }
   return (
     <Layout>
-      <Content>
-        <Title>Feide-innlogging</Title>
+      <Container>
+        <Typography variant="h2">Feide-innlogging</Typography>
         {error ? (
           <>
-            <Paragraph> FEIL: {error.message}</Paragraph>
-            <Button link="/" back>
+            <Typography variant="body1" color="error">
+              {" "}
+              FEIL: {error.message}
+            </Typography>
+            <Button variant="contained" href="/">
               Tilbake til hjemmesiden
             </Button>
           </>
         ) : data ? (
-          <Paragraph>Logget inn som data.authUser.user.firstName </Paragraph>
+          <Typography variant="body1" color="primary">
+            Logget inn som data.authUser.user.firstName{" "}
+          </Typography>
         ) : (
-          <Paragraph>Logger deg inn...</Paragraph>
+          <Typography variant="body1">Logger deg inn...</Typography>
         )}
-      </Content>
+      </Container>
     </Layout>
   );
 };

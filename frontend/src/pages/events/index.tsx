@@ -1,5 +1,5 @@
 import Layout from "@components/Layout";
-import Button from "@components/ui/Button";
+import { Button } from "@material-ui/core";
 import { NextPage } from "next";
 import React from "react";
 import AllEvents from "../../components/pages/events/AllEvents/index";
@@ -12,12 +12,12 @@ const Events: NextPage = () => {
       </div>
 
       <div style={{ float: "left", marginRight: "10px" }}>
-        <Button back styling="primary" link="/">
+        <Button color="primary" href="/">
           Tilbake til forsiden
         </Button>
       </div>
       <div style={{ float: "right", marginLeft: "10px" }}>
-        <Button styling="primary" link="/events/create-event">
+        <Button color="primary" href="/events/create-event">
           Opprett nytt arrangement
         </Button>
       </div>
