@@ -49,10 +49,11 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     # Local apps
-    "apps.users",
-    "apps.events",
+    "apps.archive",
     "apps.cabins",
+    "apps.events",
     "apps.organizations",
+    "apps.users",
     # External apps
     "corsheaders",
     "graphene_django",
@@ -166,3 +167,5 @@ EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_USE_TLS = True
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
+
+GOOGLE_DRIVE_API_KEY = env("GOOGLE_DRIVE_API_KEY")

@@ -32,6 +32,10 @@
         {
           "name": "BOOKING_EMAIL_PASSWORD",
           "value": "%s"
+        },
+        {
+          "name": "GOOGLE_DRIVE_API_KEY",
+          "value": "%s"
         }
       ],
       "logConfiguration": {

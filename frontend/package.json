@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.3.6",
-    "@types/lodash": "^4.14.167",
+    "@material-ui/core": "^4.11.3",
     "atomic-layout": "^0.16.2",
     "feather-icons": "^4.28.0",
     "graphql": "^15.3.0",
@@ -36,6 +36,7 @@
   },
   "devDependencies": {
     "@types/feather-icons": "^4.7.0",
+    "@types/lodash": "^4.14.168",
     "@types/node": "^14.0.27",
     "@types/react": "^16.9.45",
     "@types/react-calendar": "^3.1.1",
