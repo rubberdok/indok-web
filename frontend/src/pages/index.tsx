@@ -99,7 +99,7 @@ const IndexPage: NextPage = () => {
 
         <Box pt={5}>
           <Grid container spacing={5}>
-            <Grid item xs={3}>
+            <Grid item xs={12} md={3}>
               <Box height="100%" display="flex" alignItems="center">
                 <Typography variant="h3">
                   Kommende <br />
@@ -142,12 +142,12 @@ const IndexPage: NextPage = () => {
       </Container>
 
       <Box mt={12} position="relative">
-        <Container fixed>
+        <Container>
           <Box mb={5}>
             <Grid alignItems="stretch" container>
-              <Grid item xs={6}>
+              <Grid item xs={12} md={6}>
                 <Paper>
-                  <Box width={650} p={10}>
+                  <Box p={10}>
                     <Typography variant="overline">Hyttestyret</Typography>
                     <Typography gutterBottom variant="h3">
                       Book en av hyttene våre til rimlig pris
@@ -167,18 +167,18 @@ const IndexPage: NextPage = () => {
                   </Box>
                 </Paper>
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={12} md={6}>
                 <img className={classes.articleImg} alt="" src="/img/hytte.jpg" />
               </Grid>
             </Grid>
           </Box>
           <Grid alignItems="stretch" container>
-            <Grid item xs={6}>
+            <Grid item xs={12} md={6}>
               <img className={classes.articleImg} alt="" src="/img/gang.jpg" />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12} md={6}>
               <Paper>
-                <Box width={650} p={10}>
+                <Box p={10}>
                   <Typography variant="overline">Linjens historie</Typography>
                   <Typography gutterBottom variant="h3">
                     INDØK siden 1986

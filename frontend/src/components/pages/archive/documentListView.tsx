@@ -1,4 +1,4 @@
-import { Typography } from "@material-ui/core";
+import { Container, Typography } from "@material-ui/core";
 import React, { useState } from "react";
 import FilterButton from "./FilterButtons";
 import ListDocuments from "./listDocuments";
@@ -27,7 +27,7 @@ const DocumentListView: React.FC = () => {
   });
 
   return (
-    <div>
+    <Container>
       <ColoredLine color={1} />
       <div style={{ flex: "100%" }}>
         <Typography variant="h1" style={{ textAlign: "center" }}>
@@ -52,7 +52,7 @@ const DocumentListView: React.FC = () => {
           .filter((key, _) => key[1].active)
           .map(([_, val]) => val.title)}
       />
-    </div>
+    </Container>
   );
 };
 
