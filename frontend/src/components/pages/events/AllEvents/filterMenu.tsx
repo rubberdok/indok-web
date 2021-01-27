@@ -1,14 +1,12 @@
 import { useQuery } from "@apollo/client";
-import { Filter } from "react-feather";
 import { GET_CATEGORIES, QUERY_EVENT_FILTERED_ORGANIZATIONS } from "@graphql/events/queries";
 import { Category } from "@interfaces/events";
 import { Organization } from "@interfaces/organizations";
+import { Typography } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
-import { ChevronDown, ChevronRight } from "react-feather";
-import { FilterQuery } from ".";
-import { Paragraph } from "@components/ui/Typography";
+import { ChevronDown, ChevronRight, Filter } from "react-feather";
 import styled from "styled-components";
-import colors from "src/styles/theme";
+import { FilterQuery } from ".";
 
 interface Props {
   filters: FilterQuery;
@@ -111,10 +109,10 @@ const FilterMenu: React.FC<Props> = ({ filters, onChange }) => {
   const DateTimeFilter = () => {
     return (
       <div style={{ paddingTop: "0.5em" }}>
-        <Paragraph style={{ color: "#222", margin: 0, fontSize: "16px" }}>Tidspunkt</Paragraph>
+        <Typography style={{ color: "#222", margin: 0, fontSize: "16px" }}>Tidspunkt</Typography>
 
         <div>
-          <Paragraph style={{ marginBottom: "0px", marginTop: "0.05em", fontSize: "14px" }}>Fra:</Paragraph>
+          <Typography style={{ marginBottom: "0px", marginTop: "0.05em", fontSize: "14px" }}>Fra:</Typography>
           <input
             type="datetime-local"
             placeholder="Start time"
@@ -124,7 +122,7 @@ const FilterMenu: React.FC<Props> = ({ filters, onChange }) => {
         </div>
 
         <div>
-          <Paragraph style={{ marginBottom: "0px", marginTop: "0.05em", fontSize: "14px" }}>Til:</Paragraph>
+          <Typography style={{ marginBottom: "0px", marginTop: "0.05em", fontSize: "14px" }}>Til:</Typography>
           <input
             type="datetime-local"
             placeholder="Start time"
@@ -141,7 +139,7 @@ const FilterMenu: React.FC<Props> = ({ filters, onChange }) => {
       <div style={{ paddingLeft: "1em" }}>
         <div style={{ width: "100%" }}>
           <Filter style={{ marginTop: "0.1em", marginRight: "0.3em", float: "left", color: "#222" }} />
-          <Paragraph>Filtre</Paragraph>
+          <Typography>Filtre</Typography>
         </div>
         <div style={{ color: "#E3E3E3", backgroundColor: "#E3E3E3", marginRight: "10%", marginTop: "-7%" }}>
           <hr />
@@ -237,7 +235,7 @@ const InvisibleButton = styled.button<{ active?: boolean }>`
 `;
 
 const StyledFilterButton = styled.button`
-  background: ${colors.colors.primary};
+  background: #000;
   color: #fff;
   font-family: "Montserrat";
   font-size: 16px;
@@ -251,7 +249,7 @@ const StyledFilterButton = styled.button`
   padding-left: 9%;
 
   &:hover {
-    background: ${colors.colors.primaryDark};
+    background: #333;
     cursor: pointer;
   }
 
@@ -262,7 +260,7 @@ const StyledFilterButton = styled.button`
 `;
 
 const StyledCancelButton = styled.button`
-  background: ${colors.colors.secondary};
+  background: #000;
   color: #fff;
   font-family: "Montserrat";
   font-size: 16px;
@@ -276,7 +274,7 @@ const StyledCancelButton = styled.button`
   padding-left: 5%;
 
   &:hover {
-    background: ${colors.colors.secondaryDark};
+    background: #333;
     cursor: pointer;
   }
 

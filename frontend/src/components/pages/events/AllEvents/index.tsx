@@ -3,13 +3,11 @@ import { GET_USER } from "@graphql/auth/queries";
 import { GET_EVENTS } from "@graphql/events/queries";
 import { Event } from "@interfaces/events";
 import { User } from "@interfaces/users";
+import { Button, Typography } from "@material-ui/core";
 import Link from "next/link";
+import React, { useState } from "react";
 import { PlusSquare } from "react-feather";
 import styled from "styled-components";
-import React, { useState } from "react";
-import { Paragraph } from "@components/ui/Typography";
-import { NavItem } from "../../../navbar/NavbarLinks";
-import color from "src/styles/theme";
 import FilterMenu from "./filterMenu";
 
 export interface FilterQuery {
@@ -27,9 +25,9 @@ const AllEvents: React.FC = () => {
     variables: filters,
   });
   // should handle loading status
-  if (loading) return <Paragraph>Laster inn...</Paragraph>;
+  if (loading) return <Typography>Laster inn...</Typography>;
 
-  if (error) return <Paragraph>Kunne ikke hente arrangementer.</Paragraph>;
+  if (error) return <Typography>Kunne ikke hente arrangementer.</Typography>;
 
   const onChange = (newFilters: FilterQuery) => {
     setFilters(newFilters);
@@ -39,22 +37,20 @@ const AllEvents: React.FC = () => {
   return (
     <div>
       <div>
-        <NavItem
+        <Button
           style={{ paddingBottom: "0px", paddingTop: "0px", margin: "0px", fontSize: "1.1em" }}
           className={!showTableView ? "active" : ""}
-          primary
           onClick={() => setShowTableView(!showTableView)}
         >
           Liste
-        </NavItem>
-        <NavItem
+        </Button>
+        <Button
           style={{ paddingBottom: "0px", paddingTop: "0px", fontSize: "1.1em" }}
           className={showTableView ? "active" : ""}
-          primary
           onClick={() => setShowTableView(!showTableView)}
         >
           Kalender
-        </NavItem>
+        </Button>
 
         <div style={{ float: "right" }}>
           {userData && !userLoading && userData.user && !userError && (
@@ -80,14 +76,14 @@ const AllEvents: React.FC = () => {
           ) : (
             <>
               {data.allEvents.length === 0 ? (
-                <Paragraph>Ingen arrangementer passer til valgte filtre.</Paragraph>
+                <Typography variant="body1">Ingen arrangementer passer til valgte filtre.</Typography>
               ) : (
                 data.allEvents.map((event: Event) => (
                   <Link href={`/events/${event.id}`} key={event.id}>
                     <EventContainerLink href={`/events/${event.id}`} style={{ color: "#000" }}>
                       <EventContainer
                         style={{
-                          borderColor: event.organization?.color ?? color.colors.primaryLight,
+                          borderColor: event.organization?.color ?? "#fff",
                         }}
                       >
                         <p style={{ marginBottom: "0.2em" }}>{event.title}</p>
@@ -109,7 +105,7 @@ export default AllEvents;
 
 const StyledIconButton = styled.button`
   background: transparent;
-  color: ${({ theme }) => theme.colors.primary};
+  color: #000;
   font-family: "Montserrat";
   font-size: 18px;
   border: none;
@@ -132,7 +128,7 @@ const StyledIconButton = styled.button`
 const EventContainer = styled.div`
   border: solid;
   border-width: 0.05em 0.05em 0.05em 1.2em;
-  border-color: ${color.colors.primaryLight};
+  border-color: #fff;
   border-radius: 0.2em;
   padding: 0.5em;
   margin-bottom: 0.5em;

@@ -1,36 +1,33 @@
 /* eslint-disable prettier/prettier */
 import { useQuery } from "@apollo/client";
-import Content from "@components/ui/Content";
 import ImageCard from "@components/ui/ImageCard";
-import { Paragraph } from "@components/ui/Typography";
 import { GET_DOCSBYTYPE } from "@graphql/archive/queries";
 import { Document } from "@interfaces/archives";
+import { Container, Typography } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import React, { useEffect } from "react";
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      flexGrow: 1,
-    },
-    paper: {
-      padding: theme.spacing(2),
-      marginLeft: "70px",
-    },
-    image: {
-      width: 128,
-      height: 128,
-    },
-    img: {
-      marginLeft: "80px",
-      display: "block",
-      maxWidth: "100%",
-      maxHeight: "100%",
-    },
-  })
-);
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+  },
+  paper: {
+    padding: theme.spacing(2),
+    marginLeft: "70px",
+  },
+  image: {
+    width: 128,
+    height: 128,
+  },
+  img: {
+    marginLeft: "80px",
+    display: "block",
+    maxWidth: "100%",
+    maxHeight: "100%",
+  },
+}));
 
 interface ListDocumentsProps {
   document_types: string[];
@@ -64,9 +61,9 @@ const ListDocuments: React.FC<ListDocumentsProps> = ({ document_types }) => {
               </Button>
             ))
           ) : (
-            <Content>
-              <Paragraph> Fant ingen dokumenter som passer søket ditt </Paragraph>
-            </Content>
+            <Container>
+              <Typography> Fant ingen dokumenter som passer søket ditt </Typography>
+            </Container>
           )}
         </Grid>
       </Grid>
