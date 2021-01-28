@@ -16,7 +16,7 @@ const links = [
   },
   {
     id: "2",
-    title: "Om foreningen",
+    title: "Om Foreningen",
     href: "/about",
   },
   {
