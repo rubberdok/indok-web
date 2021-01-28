@@ -1,7 +1,14 @@
-import { AppBar, Container, IconButton, makeStyles, Toolbar, Typography } from "@material-ui/core";
-import Drawer from "@material-ui/core/Drawer";
-import Slide from "@material-ui/core/Slide";
-import useScrollTrigger from "@material-ui/core/useScrollTrigger";
+import {
+  AppBar,
+  Container,
+  Drawer,
+  IconButton,
+  makeStyles,
+  Slide,
+  Toolbar,
+  Typography,
+  useScrollTrigger,
+} from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 import Link from "next/link";
 import PropTypes from "prop-types";

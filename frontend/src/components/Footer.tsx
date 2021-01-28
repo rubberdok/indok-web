@@ -20,18 +20,6 @@ import CloseIcon from "@material-ui/icons/Close";
 import React from "react";
 
 const useStyles = makeStyles((theme) => ({
-  logo: {
-    width: theme.spacing(15),
-    marginBottom: theme.spacing(2),
-  },
-  nth: {
-    opacity: 0.035,
-    width: "500px",
-    right: "-120px",
-    bottom: "-120px",
-    position: "absolute",
-    zIndex: -100,
-  },
   credits: {
     padding: "30px 0",
     color: "#fff",

@@ -26,16 +26,14 @@ const App = ({ Component, pageProps }: AppProps): JSX.Element => {
 
   return (
     <ApolloProvider client={client}>
-      <React.Fragment>
-        <Head>
-          <title>INDØK</title>
-          <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
-        </Head>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <Component {...pageProps} />
-        </ThemeProvider>
-      </React.Fragment>
+      <Head>
+        <title>INDØK</title>
+        <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
+      </Head>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Component {...pageProps} />
+      </ThemeProvider>
     </ApolloProvider>
   );
 };

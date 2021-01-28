@@ -32,13 +32,10 @@ const links = [
 
 const useStyles = makeStyles(() => ({
   navItem: {
-    textDecoration: "none",
     fontWeight: 600,
     fontSize: 12,
-    display: "inline-block",
     textTransform: "uppercase",
     margin: "0 25px",
-    position: "relative",
     padding: "10px 0",
     "&:hover": {
       cursor: "pointer",
@@ -72,13 +69,13 @@ const NavbarLinks: React.FC = () => {
         </a>
       ) : (
         <>
-          <a className={classes.navItem} href={"/archive"}>
-            Arkiv
-          </a>
+          <Link href={"/archive"}>
+            <p className={classes.navItem}>Arkiv</p>
+          </Link>
           <a className={classes.navItem} href={"/profile"}>
             {userData.user.firstName}
           </a>
-          <a className={classes.navItem} href="/logout">
+          <a className={classes.navItem} href={"/logout"}>
             Logg ut
           </a>
         </>
