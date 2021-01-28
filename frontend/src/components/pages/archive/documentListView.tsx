@@ -18,7 +18,7 @@ const ColoredLine = ({ color }: any) => (
 
 const DocumentListView: React.FC = () => {
   const [typeFilters, setTypeFilters] = useState<{ [key: string]: { active: boolean; title: string } }>({
-    Budget: { active: false, title: "Budsjetter og regnskap" },
+    Budget: { active: false, title: "Budsjett og Regnskap" },
     Summary: { active: false, title: "Generalforsamling" },
     Yearbook: { active: false, title: "Årbøker" },
     Guidelines: { active: false, title: "Støtte fra HS" },
