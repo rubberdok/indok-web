@@ -37,7 +37,7 @@ const DocumentListView: React.FC = () => {
       <ListDocuments
         document_types={Object.entries(typeFilters)
           .filter((key, _) => key[1].active)
-          .map(([key, _]) => key)}
+          .map(([_, val]) => val.title)}
       />
     </div>
   );

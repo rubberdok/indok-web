@@ -14,7 +14,11 @@ def get_url(file_id):
     try:
         file = (
             service.files()
-            .get(fileId=file_id, fields="id, name, webViewLink")
+            .get(
+                fileId=file_id,
+                fields="id, name, webViewLink",
+                supportsTeamDrives=True,
+            )
             .execute()
         )
 

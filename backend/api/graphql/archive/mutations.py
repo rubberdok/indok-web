@@ -12,7 +12,6 @@ from .types import ArchiveDocumentType
 class CreateArchiveDocument(graphene.Mutation):
     class Arguments:
         title = graphene.String()
-        description = graphene.String()
         date = graphene.DateTime()
         type_doc = graphene.String()
         file_location = graphene.String()
@@ -21,10 +20,9 @@ class CreateArchiveDocument(graphene.Mutation):
     arhiveDocument = graphene.Field(ArchiveDocumentType)
 
     @login_required
-    def mutate(root, info, title, description, date, type_doc, file_location):
+    def mutate(root, info, title, date, type_doc, file_location):
         archiveDocument = ArchiveDocumentModel.objects.create(
             title=title,
-            description=description,
             date=date,
             uploaded_date=datetime.now(),
             type_doc=type_doc,
@@ -38,7 +36,6 @@ class UpdateArchiveDocument(graphene.Mutation):
     class Arguments:
         title = graphene.String()
         id = graphene.ID()
-        description = graphene.String()
         date = graphene.DateTime()
         type_doc = graphene.String()
         file_location = graphene.String()
@@ -47,12 +44,9 @@ class UpdateArchiveDocument(graphene.Mutation):
     event = graphene.Field(ArchiveDocumentType)
 
     @login_required
-    def mutate(root, info, id, title=None, description=None):
+    def mutate(root, info, id, title=None):
         archiveDocument = ArchiveDocumentModel.objects.get(pk=id)
         archiveDocument.title = title if title is not None else archiveDocument.title
-        archiveDocument.description = (
-            description if description is not None else event.description
-        )
 
         ok = True
         return UpdateArchiveDocument(archiveDocument=archiveDocument, ok=ok)
