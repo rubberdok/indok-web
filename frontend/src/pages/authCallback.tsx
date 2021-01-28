@@ -1,14 +1,11 @@
-import { useMutation } from "@apollo/client";
 import Layout from "@components/Layout";
 import Button from "@components/ui/Button";
 import Content from "@components/ui/Content";
 import { Paragraph, Title } from "@components/ui/Typography";
-import { AUTHENTICATE } from "@graphql/auth/mutations";
-import { GET_USER } from "@graphql/auth/queries";
-import { User } from "@interfaces/users";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
+import { GetUserDocument, useAuthUserMutation, UserFragment } from "src/generated/graphql";
 
 const AuthCallbackPage: NextPage = () => {
   const router = useRouter();
@@ -20,20 +17,19 @@ const AuthCallbackPage: NextPage = () => {
       return null;
     }
   }
-
-  const [authUser, { loading, data, error }] = useMutation<{ authUser: { user: User } }>(AUTHENTICATE, {
+  const [authUser, { loading, data, error }] = useAuthUserMutation({
     errorPolicy: "all",
   });
 
   useEffect(() => {
-    if (code) {
+    if (code && typeof code === "string") {
       authUser({
         variables: { code },
         update: (cache, { data }) => {
           if (!data || !data.authUser || !data.authUser.user) {
             return;
           }
-          cache.writeQuery<User>({ query: GET_USER, data: data.authUser.user });
+          cache.writeQuery<UserFragment>({ query: GetUserDocument, data: data.authUser.user });
         },
       });
     }

@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { GET_CATEGORIES, QUERY_EVENT_FILTERED_ORGANIZATIONS } from "@graphql/events/queries";
+import { GET_CATEGORIES, QUERY_EVENT_FILTERED_ORGANIZATIONS } from "src/graphql_old/events/queries";
 import { Category } from "@interfaces/events";
 import { Organization } from "@interfaces/organizations";
 import React from "react";

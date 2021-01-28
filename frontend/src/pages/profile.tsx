@@ -1,16 +1,14 @@
-import { useQuery } from "@apollo/client";
 import Layout from "@components/Layout";
 import Content from "@components/ui/Content";
 import { Heading, Paragraph, Title } from "@components/ui/Typography";
-import { GET_USER } from "@graphql/auth/queries";
-import { User } from "@interfaces/users";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import React from "react";
+import { useGetUserQuery } from "src/generated/graphql";
 import styled from "styled-components";
 
 const ProfilePage: NextPage = () => {
-  const { loading, error, data } = useQuery<{ user: User }>(GET_USER);
+  const { loading, error, data } = useGetUserQuery();
   const router = useRouter();
   if (loading) {
     return <h1>Loading ...</h1>;

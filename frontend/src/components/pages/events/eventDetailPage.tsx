@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { GET_EVENT } from "../../../graphql/events/queries";
+import { GET_EVENT } from "../../../graphql_old/events/queries";
 
 interface Props {
   eventId: number;

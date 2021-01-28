@@ -1,10 +1,8 @@
-import { useQuery } from "@apollo/client";
-import { GET_USER } from "@graphql/auth/queries";
-import { User } from "@interfaces/users";
 import Layout from "atomic-layout";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
+import { useGetUserQuery } from "src/generated/graphql";
 import styled from "styled-components";
 import { DATAPORTEN_SCOPES, generateAuthURL } from "./utils";
 
@@ -44,7 +42,7 @@ const NavbarLinks: React.FC = () => {
     DATAPORTEN_SCOPES
   );
 
-  const { loading, error, data: userData } = useQuery<{ user: User }>(GET_USER);
+  const { loading, error, data: userData } = useGetUserQuery();
 
   return (
     <>

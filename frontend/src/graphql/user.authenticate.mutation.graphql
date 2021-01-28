@@ -1,0 +1,8 @@
+mutation AuthUser($code: String!) {
+  authUser(code: $code) {
+    token
+    user {
+      ...user
+    }
+  }
+}

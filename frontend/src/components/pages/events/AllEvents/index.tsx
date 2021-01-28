@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { GET_EVENTS } from "@graphql/events/queries";
+import { GET_EVENTS } from "src/graphql_old/events/queries";
 import { Event } from "@interfaces/events";
 import Link from "next/link";
 import React, { useState } from "react";
