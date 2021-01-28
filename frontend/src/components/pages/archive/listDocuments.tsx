@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { useQuery } from "@apollo/client";
 import Content from "@components/ui/Content";
 import ImageCard from "@components/ui/ImageCard";
