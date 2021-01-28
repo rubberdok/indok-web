@@ -35,41 +35,36 @@ const AllEvents: React.FC = () => {
   };
 
   return (
-    <div>
-      <div>
-        <Button
-          style={{ paddingBottom: "0px", paddingTop: "0px", margin: "0px", fontSize: "1.1em" }}
-          className={!showTableView ? "active" : ""}
-          onClick={() => setShowTableView(!showTableView)}
-        >
-          Liste
-        </Button>
-        <Button
-          style={{ paddingBottom: "0px", paddingTop: "0px", fontSize: "1.1em" }}
-          className={showTableView ? "active" : ""}
-          onClick={() => setShowTableView(!showTableView)}
-        >
-          Kalender
-        </Button>
+    <>
+      <Button
+        style={{ paddingBottom: "0px", paddingTop: "0px", margin: "0px", fontSize: "1.1em" }}
+        className={!showTableView ? "active" : ""}
+        onClick={() => setShowTableView(!showTableView)}
+      >
+        Liste
+      </Button>
+      <Button
+        style={{ paddingBottom: "0px", paddingTop: "0px", fontSize: "1.1em" }}
+        className={showTableView ? "active" : ""}
+        onClick={() => setShowTableView(!showTableView)}
+      >
+        Kalender
+      </Button>
 
-        <div style={{ float: "right" }}>
-          {userData && !userLoading && userData.user && !userError && (
-            // TODO: Redirect til `/events/create-event` når vi har funksjonalitet for dette.
-            <Link href={`/events/create-event`}>
-              <StyledIconButton>
-                <PlusSquare />
-                <p style={{ margin: 0 }}>Opprett</p>
-              </StyledIconButton>
-            </Link>
-          )}
-        </div>
+      <div style={{ float: "right" }}>
+        {userData && !userLoading && userData.user && !userError && (
+          // TODO: Redirect til `/events/create-event` når vi har funksjonalitet for dette.
+          <Link href={`/events/create-event`}>
+            <StyledIconButton>
+              <PlusSquare />
+              <p style={{ margin: 0 }}>Opprett</p>
+            </StyledIconButton>
+          </Link>
+        )}
       </div>
 
       <div style={{ width: "100%", paddingTop: "1em" }}>
-        <div>
-          <FilterMenu filters={filters} onChange={onChange} />
-        </div>
-
+        <FilterMenu filters={filters} onChange={onChange} />
         <div style={{ width: "70%", float: "right" }}>
           {showTableView ? (
             <p>{"Kommer snart! :)"}</p>
@@ -97,7 +92,7 @@ const AllEvents: React.FC = () => {
           )}
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

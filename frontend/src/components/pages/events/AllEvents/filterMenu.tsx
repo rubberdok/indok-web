@@ -157,10 +157,11 @@ const FilterMenu: React.FC<Props> = ({ filters, onChange }) => {
           marginLeft: "auto",
           marginRight: "auto",
           width: "fit-content",
+          display: "flex",
         }}
       >
         <StyledCancelButton
-          style={{ float: "left", marginRight: "1em" }}
+          style={{ marginRight: "1em" }}
           onClick={() => {
             onChange({});
             setCurrentFilters({});
@@ -168,9 +169,7 @@ const FilterMenu: React.FC<Props> = ({ filters, onChange }) => {
         >
           Nullstill
         </StyledCancelButton>
-        <StyledFilterButton style={{ float: "left" }} onClick={() => onChange(currentFilters)}>
-          Filtrer
-        </StyledFilterButton>
+        <StyledFilterButton onClick={() => onChange(currentFilters)}>Filtrer</StyledFilterButton>
       </div>
     </FilterContainer>
   );
@@ -179,7 +178,6 @@ const FilterMenu: React.FC<Props> = ({ filters, onChange }) => {
 export default FilterMenu;
 
 const FilterContainer = styled.div`
-  float: left;
   width: 25%;
   border: solid;
   border-width: 1px 2px 2px 1px;

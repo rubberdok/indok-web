@@ -11,7 +11,7 @@ import { ArrowIcon } from "@components/ui/ArrowIcon";
 import { SEND_EMAIL } from "@graphql/cabins/mutations";
 import { QUERY_CABINS } from "@graphql/cabins/queries";
 import { Cabin, ContractProps } from "@interfaces/cabins";
-import { Container, Typography } from "@material-ui/core";
+import { Typography } from "@material-ui/core";
 import { Composition } from "atomic-layout";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
@@ -169,7 +169,7 @@ const BookPage: NextPage = () => {
   };
 
   return (
-    <Container>
+    <>
       <Navbar></Navbar>
       <HeaderComposition headerText="Fullføring av booking">
         <ArrowIcon direction={"l"} size={35} href={"/cabins"}></ArrowIcon>
@@ -211,7 +211,7 @@ const BookPage: NextPage = () => {
       ) : (
         <>{allBookingsQuery.loading ? <p>Laster...</p> : <p>{errorMessage}</p>}</>
       )}
-    </Container>
+    </>
   );
 };
 

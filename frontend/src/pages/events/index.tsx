@@ -8,13 +8,8 @@ const Events: NextPage = () => {
   return (
     <Layout>
       <Container>
-        <div>
-          <Typography variant="h1">Arrangementer</Typography>
-        </div>
-
-        <div>
-          <AllEvents />
-        </div>
+        <Typography variant="h1">Arrangementer</Typography>
+        <AllEvents />
       </Container>
     </Layout>
   );

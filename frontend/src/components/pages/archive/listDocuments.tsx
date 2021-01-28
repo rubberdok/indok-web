@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { useQuery } from "@apollo/client";
 import ImageCard from "@components/ui/ImageCard";
 import { GET_DOCSBYTYPE } from "@graphql/archive/queries";
