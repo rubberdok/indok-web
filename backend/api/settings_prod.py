@@ -2,7 +2,7 @@ import os
 
 from api.settings import *
 
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ["api.gamma.indokntnu.no"]
 
