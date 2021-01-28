@@ -14,7 +14,7 @@ interface EditableSurvey extends Survey {
   questions: EditableQuestion[];
 }
 
-const CreateSurvey: React.FC<{ oldSurvey: Survey }> = ({ oldSurvey }) => {
+const EditSurvey: React.FC<{ oldSurvey: Survey }> = ({ oldSurvey }) => {
   const [survey, setSurvey] = useState<EditableSurvey>(oldSurvey as EditableSurvey);
   const setQuestion = (newQuestion: Question) => {
     setSurvey({
@@ -27,7 +27,17 @@ const CreateSurvey: React.FC<{ oldSurvey: Survey }> = ({ oldSurvey }) => {
   const { loading, error, data } = useQuery<{ questionTypes: QuestionType[] }>(QUESTIONTYPES);
   const [updateSurvey] = useMutation(UPDATE_SURVEY);
   const [createQuestion, { data: questionData }] = useMutation<{ createQuestion: { question: Question } }>(
-    CREATE_QUESTION
+    CREATE_QUESTION,
+    {
+      onCompleted({ createQuestion: { question } }) {
+        if (question) {
+          setSurvey({
+            ...survey,
+            questions: [...survey.questions, { ...questionData!.createQuestion.question, editing: true }],
+          });
+        }
+      },
+    }
   );
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error</p>;
@@ -47,11 +57,13 @@ const CreateSurvey: React.FC<{ oldSurvey: Survey }> = ({ oldSurvey }) => {
               variables: {
                 question: "",
                 description: "",
+                position: (
+                  survey.questions
+                    .map((question) => parseInt(question.position))
+                    .reduce((prev, curr) => (prev > curr ? prev : curr), -1) + 1
+                ).toString(),
+                surveyId: `${survey.id}`,
               },
-            });
-            setSurvey({
-              ...survey,
-              questions: [...survey.questions, { ...questionData!.createQuestion.question, editing: true }],
             });
           }}
         >
@@ -68,10 +80,11 @@ const CreateSurvey: React.FC<{ oldSurvey: Survey }> = ({ oldSurvey }) => {
             })}
           </>
         )}
-        <button type="submit">Lag søknad</button>
+        <br />
+        <button type="submit">Lagre søknad</button>
       </form>
     </>
   );
 };
 
-export default CreateSurvey;
+export default EditSurvey;

@@ -50,22 +50,6 @@ const ListingResponses: React.FC<{ listing: Listing }> = ({ listing }) => {
                   }
                 }}
               />
-              /* <li key={response.id} style={response === selectedResponse ? selected : listItem}>
-                                <div
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        if(response === selectedResponse){
-                                            selectResponse(undefined);
-                                        }else{
-                                            selectResponse(response);
-                                        }
-                                    }}
-                                >
-                                    Response #{response.id}
-                                </div>
-                                {" "}
-                                
-                            </li> */
             ))}
           </List>
           {selectedResponse ? (
