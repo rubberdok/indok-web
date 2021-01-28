@@ -34,7 +34,7 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
           <br />
           Starttid: {parseDate(data.event.startTime)}
           <br />
-          Publisert av: {data.event.publisher}
+          Publisert av: {`${data.event.publisher.firstName} ${data.event.publisher.lastName}`}
           <br />
           Krever påmelding: {data.event.isAttendable ? "Ja" : "Nei"}
           <br />

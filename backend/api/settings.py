@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 import environ
 
@@ -48,12 +49,14 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     # Local apps
-    "apps.users",
+    "apps.archive",
+    "apps.cabins",
     "apps.events",
     "apps.listing",
     "apps.listing_response",
     "apps.organizations",
     "apps.surveys",
+    "apps.users",
     # External apps
     "corsheaders",
     "graphene_django",
@@ -87,7 +90,7 @@ ROOT_URLCONF = "api.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [os.path.join(BASE_DIR, "templates")],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -159,3 +162,14 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = "/static/"
+STATICFILES_DIRS = ["backend/static/cabins"]
+
+# CONFIG
+EMAIL_HOST_USER = env("BOOKING_EMAIL")
+EMAIL_HOST_PASSWORD = env("BOOKING_EMAIL_PASSWORD")
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_USE_TLS = True
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+
+GOOGLE_DRIVE_API_KEY = env("GOOGLE_DRIVE_API_KEY")

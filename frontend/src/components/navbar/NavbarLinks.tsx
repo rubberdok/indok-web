@@ -61,6 +61,7 @@ const NavbarLinks: React.FC = () => {
         </NavItem>
       ) : (
         <>
+          <NavItem href={"/archive"}>Arkiv</NavItem>
           <NavItem primary href={"/profile"}>
             {userData.user.firstName}
           </NavItem>
@@ -73,7 +74,7 @@ const NavbarLinks: React.FC = () => {
   );
 };
 
-const NavItem = styled.a<NavItemProps>`
+export const NavItem = styled.a<NavItemProps>`
   text-decoration: none;
   font-weight: 600;
   font-size: 16px;

@@ -11,7 +11,7 @@ class OrganizationType(DjangoObjectType):
 
     class Meta:
         model = Organization
-        fields = ["id", "name", "slug", "description", "parent", "children"]
+        fields = ["id", "name", "slug", "color", "description", "parent", "children"]
 
     @staticmethod
     def resolve_listings(root: Organization, info):

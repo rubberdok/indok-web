@@ -11,6 +11,7 @@ export const GET_EVENTS = gql`
       description
       organization {
         name
+        color
       }
       category {
         name
@@ -18,7 +19,14 @@ export const GET_EVENTS = gql`
       image
       isAttendable
       deadline
-      publisher
+      publisher {
+        id
+        username
+        email
+        firstName
+        lastName
+        dateJoined
+      }
     }
   }
 `;
@@ -41,7 +49,14 @@ export const GET_EVENT = gql`
       image
       isAttendable
       deadline
-      publisher
+      publisher {
+        id
+        username
+        email
+        firstName
+        lastName
+        dateJoined
+      }
     }
   }
 `;
@@ -65,10 +80,11 @@ export const GET_CATEGORY = gql`
 `;
 
 export const QUERY_EVENT_FILTERED_ORGANIZATIONS = gql`
-  {
+  query {
     eventFilteredOrganizations {
       id
       name
+      color
       children {
         id
         name

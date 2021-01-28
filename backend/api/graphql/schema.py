@@ -1,5 +1,7 @@
 import graphene
 
+from .cabins.schema import CabinMutations, CabinQueries
+from .archive.schema import ArchiveMutations, ArchiveQueries
 from .events.schema import EventMutations, EventQueries
 from .listing.schema import ListingMutations, ListingQueries
 from .organizations.schema import OrganizationMutations, OrganizationQueries
@@ -10,6 +12,9 @@ from .users.schema import UserMutations, UserQueries
 class Queries(
     EventQueries,
     ListingQueries,
+    ArchiveQueries,
+    UserQueries,
+    CabinQueries,
     OrganizationQueries,
     SurveyQueries,
     UserQueries,
@@ -20,6 +25,9 @@ class Queries(
 class Mutations(
     EventMutations,
     ListingMutations,
+    ArchiveMutations,
+    UserMutations,
+    CabinMutations,
     OrganizationMutations,
     SurveyMutations,
     UserMutations,
