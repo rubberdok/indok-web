@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "graphene_django",
     "rest_framework",
+    "rules"
 ]
 
 AUTH_USER_MODEL = "users.User"
@@ -120,6 +121,7 @@ DATABASES = {
 
 AUTHENTICATION_BACKENDS = [
     "graphql_jwt.backends.JSONWebTokenBackend",
+    "rules.permissions.ObjectPermissionBackend",
     "django.contrib.auth.backends.ModelBackend",
 ]
 
