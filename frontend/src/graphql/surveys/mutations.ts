@@ -28,12 +28,15 @@ export const UPDATE_SURVEY = gql`
 
 //temporary implementation until bulk mutation is implemented
 export const CREATE_QUESTION = gql`
-  mutation CreateQuestion($question: String!, $description: String!, $surveyId: ID!) {
-    createQuestion(questionData: { question: $question, description: $description, surveyId: $surveyId }) {
+  mutation CreateQuestion($question: String!, $description: String!, $position: Int!, $surveyId: ID!) {
+    createQuestion(
+      questionData: { question: $question, description: $description, position: $position, surveyId: $surveyId }
+    ) {
       question {
         id
         question
         description
+        position
       }
       ok
     }

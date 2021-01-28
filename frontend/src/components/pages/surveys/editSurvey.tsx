@@ -24,7 +24,7 @@ const EditSurvey: React.FC<{ oldSurvey: Survey }> = ({ oldSurvey }) => {
       ),
     });
   };
-  const { loading, error, data } = useQuery<{ questionTypes: QuestionType[] }>(QUESTIONTYPES);
+  const { loading, error, data: questionTypeData } = useQuery<{ questionTypes: QuestionType[] }>(QUESTIONTYPES);
   const [updateSurvey] = useMutation(UPDATE_SURVEY);
   const [createQuestion, { data: questionData }] = useMutation<{ createQuestion: { question: Question } }>(
     CREATE_QUESTION,
@@ -33,7 +33,7 @@ const EditSurvey: React.FC<{ oldSurvey: Survey }> = ({ oldSurvey }) => {
         if (question) {
           setSurvey({
             ...survey,
-            questions: [...survey.questions, { ...questionData!.createQuestion.question, editing: true }],
+            questions: [...survey.questions, { ...question, editing: true }],
           });
         }
       },
@@ -57,11 +57,10 @@ const EditSurvey: React.FC<{ oldSurvey: Survey }> = ({ oldSurvey }) => {
               variables: {
                 question: "",
                 description: "",
-                position: (
+                position:
                   survey.questions
                     .map((question) => parseInt(question.position))
-                    .reduce((prev, curr) => (prev > curr ? prev : curr), -1) + 1
-                ).toString(),
+                    .reduce((prev, curr) => (prev > curr ? prev : curr), -1) + 1,
                 surveyId: `${survey.id}`,
               },
             });
@@ -69,11 +68,15 @@ const EditSurvey: React.FC<{ oldSurvey: Survey }> = ({ oldSurvey }) => {
         >
           Nytt spørsmål
         </button>
-        {data && (
+        {questionTypeData && (
           <>
             {survey.questions.map((question) => {
               question.editing ? (
-                <CreateQuestion question={question} setQuestion={setQuestion} questionTypes={data.questionTypes} />
+                <CreateQuestion
+                  question={question}
+                  setQuestion={setQuestion}
+                  questionTypes={questionTypeData.questionTypes}
+                />
               ) : (
                 <QuestionDetail question={question as Question} active={false} />
               );

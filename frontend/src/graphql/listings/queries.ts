@@ -35,6 +35,7 @@ export const LISTING = gql`
           id
           question
           description
+          position
           questionType {
             id
             name
