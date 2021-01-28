@@ -16,7 +16,7 @@ const useStyles = makeStyles(() => ({
     backgroundPosition: "center",
   },
   heroCard: {
-    marginTop: -80,
+    marginTop: -70,
     padding: "32px 48px",
   },
 }));
@@ -25,7 +25,7 @@ const Hero: React.FC = () => {
   const classes = useStyles();
 
   return (
-    <Box className={classes.hero} height="calc(100vh - 80px)">
+    <Box className={classes.hero} height="calc(100vh - 130px)">
       <Box
         className={classes.heroImage}
         style={{

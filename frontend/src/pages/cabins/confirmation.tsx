@@ -1,6 +1,6 @@
 import Layout from "@components/Layout";
 import Container from "@components/pages/cabins/Container";
-import { Heading, Paragraph } from "@components/ui/Typography";
+import { Typography } from "@material-ui/core";
 import { NextPage } from "next";
 import Link from "next/link";
 import React from "react";
@@ -10,12 +10,12 @@ const Confirmation: NextPage = () => {
     <>
       <Layout>
         <Container>
-          <Heading>Bekreftelse for booking</Heading>
-          <Paragraph>
+          <Typography variant="h1">Bekreftelse for booking</Typography>
+          <Typography variant="body1">
             Takk for din booking! Denne nettsiden er fortsatt under konstruksjon, så det blir ikke faktisk opprettet en
             booking. Det må du fortsatt gjøre gjennom{" "}
             <Link href="mailto:booking@indokhyttene.no">booking@indokhyttene.no</Link>.
-          </Paragraph>
+          </Typography>
         </Container>
       </Layout>
     </>

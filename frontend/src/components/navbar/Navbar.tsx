@@ -84,6 +84,7 @@ const Navbar: React.FC = (props) => {
           </Container>
         </AppBar>
       </HideOnScroll>
+      <Toolbar />
       <Drawer anchor="right" open={state["right"]} onClose={toggleDrawer(false)}>
         <NavbarLinks></NavbarLinks>
       </Drawer>
