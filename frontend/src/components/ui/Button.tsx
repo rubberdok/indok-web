@@ -1,61 +1,133 @@
-import styled from "styled-components";
 import Link from "next/link";
-import feather from "feather-icons";
+import { ArrowLeft, ArrowRight } from "react-feather";
+import styled from "styled-components";
 
 interface ButtonProps {
-    url: string;
-    children: string | JSX.Element;
+  link?: string;
+  children: string | JSX.Element;
+  styling?: "primary" | "secondary";
+  back?: boolean;
+  arrow?: boolean;
+  onClick?: ((event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void) | undefined;
 }
 
-const Button: React.FC<ButtonProps> = (props) => {
-    return (
-        <Link href={props.url}>
-            <StyledButton>
-                <Container>{props.children}</Container>
-                <Icon>
-                    <i dangerouslySetInnerHTML={{ __html: feather.icons["arrow-right"].toSvg() }} />
-                </Icon>
-            </StyledButton>
-        </Link>
-    );
+interface LinkProps {
+  condition: boolean;
+  wrapper: { (children: JSX.Element): JSX.Element };
+  children: JSX.Element;
+}
+
+const WithLink: React.FC<LinkProps> = ({ condition, wrapper, children }) => (condition ? wrapper(children) : children);
+
+const Button: React.FC<ButtonProps & React.HTMLProps<HTMLButtonElement>> = (props) => {
+  const styles = {
+    primary: Primary,
+    secondary: Secondary,
+  };
+
+  return (
+    <WithLink
+      condition={!!props.link}
+      wrapper={(children: JSX.Element) => <Link href={props.link || "/"}>{children}</Link>}
+    >
+      <StyledButton back={props.back} as={props.styling ? styles[props.styling] : Primary} onClick={props.onClick}>
+        {props.arrow ? (
+          props.back ? (
+            <>
+              <Icon>
+                <ArrowLeft />
+              </Icon>
+              <Container>{props.children}</Container>
+            </>
+          ) : (
+            <>
+              <Container>{props.children}</Container>
+              <Icon>
+                <ArrowRight />
+              </Icon>
+            </>
+          )
+        ) : (
+          <>
+            <Container>{props.children}</Container>
+          </>
+        )}
+      </StyledButton>
+    </WithLink>
+  );
 };
 
 const Icon = styled.div`
-    background: ${({ theme }) => theme.colors.primaryDark};
-    width: 70px;
-    display: table-cell;
-    text-align: center;
-    vertical-align: middle;
-    transition: 0.3s all ease;
+  background: #111;
+  width: 70px;
+  display: flex;
+  text-align: center;
+  transition: 0.3s all ease;
+  color: #fff;
+  justify-content: center;
+  align-items: center;
 
-    & svg {
-        margin-top: 8px;
-    }
+  & svg {
+    margin-top: 4px;
+  }
 `;
 
-const StyledButton = styled.a`
-    background: ${({ theme }) => theme.colors.primary};
-    color: #fff;
-    font-family: "Montserrat";
-    font-size: 18px;
-    border: none;
-    display: table;
-    text-decoration: none !important;
-    transition: 0.3s all ease;
+const StyledButton = styled.button<ButtonProps & React.HTMLProps<HTMLButtonElement>>`
+  background: #282828;
+  color: #fff;
+  font-family: "Montserrat";
+  font-size: 18px;
+  border: none;
+  display: flex;
+  align-items: stretch;
+  text-decoration: none !important;
+  transition: 0.3s all ease;
+  padding: 0;
 
-    &:hover {
-        background: ${({ theme }) => theme.colors.primaryDark};
-        cursor: pointer;
+  &:hover {
+    background: #111;
+    cursor: pointer;
 
-        & ${Icon} {
-            padding-left: 10px;
-            width: 70px;
-        }
+    & ${Icon} {
+      padding: ${(props) => (props.back ? "0 10px 0 0" : "0 0 0 10px")};
+      width: 70px;
     }
+  }
+
+  &:focus {
+    border: none;
+    outline: none;
+  }
 `;
 
 const Container = styled.div`
-    padding: 20px 35px;
+  padding: 20px 35px;
+`;
+
+export const Primary = styled(StyledButton)`
+  background: ${({ theme }) => theme.colors.primary};
+  color: #fff;
+
+  &:hover {
+    background: ${({ theme }) => theme.colors.primaryDark};
+  }
+
+  & ${Icon} {
+    background: ${({ theme }) => theme.colors.primaryDark};
+  }
+`;
+
+export const Secondary = styled(StyledButton)`
+  background: ${({ theme }) => theme.colors.secondary};
+  color: #fff;
+
+  &:hover {
+    background: ${({ theme }) => theme.colors.secondaryDark};
+  }
+
+  & ${Icon} {
+    background: ${({ theme }) => theme.colors.secondaryDark};
+  }
 `;
 
 export default Button;

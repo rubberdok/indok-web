@@ -11,10 +11,16 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
+import os
+
+import environ
+
+env = environ.Env()
+environ.Env.read_env()
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
@@ -25,7 +31,9 @@ SECRET_KEY = "*snrr!^gn0zg)1*=&l4ecaghm-o+9-j)=ig-so$!@&f7*c+713"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["localhost"]
+
+CORS_ALLOW_CREDENTIALS = True
 
 CORS_ORIGIN_WHITELIST = ["http://localhost:3000", "http://127.0.0.1:3000"]
 
@@ -41,19 +49,28 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     # Local apps
-    "apps.users",
+    "apps.archive",
+    "apps.cabins",
     "apps.events",
     "apps.organizations",
+    "apps.users",
     # External apps
     "corsheaders",
     "graphene_django",
+    "rest_framework",
 ]
 
 AUTH_USER_MODEL = "users.User"
 
-GRAPHENE = {"SCHEMA": "api.graphql.schema.schema"}
+GRAPHENE = {
+    "SCHEMA": "api.graphql.schema.schema",
+    "MIDDLEWARE": [
+        "graphql_jwt.middleware.JSONWebTokenMiddleware",
+    ],
+}
 
 MIDDLEWARE = [
+    "api.auth.middleware.IndokWebJWTMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -69,7 +86,7 @@ ROOT_URLCONF = "api.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [os.path.join(BASE_DIR, "templates")],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -99,6 +116,16 @@ DATABASES = {
     }
 }
 
+# Authentication
+
+AUTHENTICATION_BACKENDS = [
+    "graphql_jwt.backends.JSONWebTokenBackend",
+    "django.contrib.auth.backends.ModelBackend",
+]
+
+DATAPORTEN_ID = env("DATAPORTEN_ID")
+DATAPORTEN_SECRET = env("DATAPORTEN_SECRET")
+DATAPORTEN_REDIRECT_URI = env("DATAPORTEN_REDIRECT_URI")
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -118,7 +145,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "Europe/Oslo"
 
 USE_I18N = True
 
@@ -131,3 +158,14 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = "/static/"
+STATICFILES_DIRS = ["backend/static/cabins"]
+
+# CONFIG
+EMAIL_HOST_USER = env("BOOKING_EMAIL")
+EMAIL_HOST_PASSWORD = env("BOOKING_EMAIL_PASSWORD")
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_USE_TLS = True
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+
+GOOGLE_DRIVE_API_KEY = env("GOOGLE_DRIVE_API_KEY")
