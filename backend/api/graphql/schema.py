@@ -17,7 +17,6 @@ class Queries(
     CabinQueries,
     OrganizationQueries,
     SurveyQueries,
-    UserQueries,
 ):
     pass
 
@@ -30,7 +29,6 @@ class Mutations(
     CabinMutations,
     OrganizationMutations,
     SurveyMutations,
-    UserMutations,
 ):
     pass
 
