@@ -4,20 +4,9 @@ import FilterButton from "./FilterButtons";
 import ListDocuments from "./listDocuments";
 import { ContentWrapper } from "./wrapper";
 
-const ColoredLine = ({ color }: any) => (
-  <hr
-    style={{
-      color: color,
-      backgroundColor: color,
-      height: 5,
-      marginTop: 20,
-    }}
-  />
-);
-
 const DocumentListView: React.FC = () => {
   const [typeFilters, setTypeFilters] = useState<{ [key: string]: { active: boolean; title: string } }>({
-    Budget: { active: false, title: "Budsjetter og regnskap" },
+    Budget: { active: false, title: "Budsjett og Regnskap" },
     Summary: { active: false, title: "Generalforsamling" },
     Yearbook: { active: false, title: "Årbøker" },
     Guidelines: { active: false, title: "Støtte fra HS" },
@@ -28,7 +17,6 @@ const DocumentListView: React.FC = () => {
 
   return (
     <Container>
-      <ColoredLine color={1} />
       <div style={{ flex: "100%" }}>
         <Typography variant="h1" style={{ textAlign: "center" }}>
           Arkiv
