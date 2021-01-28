@@ -17,7 +17,7 @@ import { NextPage } from "next";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import Content from "../../components/ui/Content";
-import { CREATE_BOOKING } from "../../graphql/cabins/mutations";
+import { CREATE_CABIN } from "../../graphql/cabins/mutations";
 import useBookingRange from "../../hooks/cabins/useBookingRange";
 
 interface BookingData {
@@ -39,7 +39,7 @@ const BookPage: NextPage = () => {
   const inputRefs = [firstnameRef, surnameRef, emailRef, phoneRef];
 
   const temporarilyDisableSubmitting = false;
-  const temporarilyDisableBooking = true;
+  const temporarilyDisableBooking = false;
 
   const pricePerNight = 1000;
 
@@ -61,7 +61,7 @@ const BookPage: NextPage = () => {
   const [contractData, setContractData] = useState({} as ContractProps);
   const [bookingData, setBookingData] = useState({} as BookingData);
   const [rangeLength, setRangeLength] = useState(0);
-  const [createBooking] = useMutation(CREATE_BOOKING);
+  const [createBooking] = useMutation(CREATE_CABIN);
   const [sendEmail] = useMutation(SEND_EMAIL);
   const [errorMessage, setErrorMessage] = useState("");
   const [checked, setChecked] = useState(false);
