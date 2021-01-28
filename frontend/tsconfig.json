@@ -23,7 +23,8 @@
             "@styles/*": ["src/styles/*"],
             "@public/*": ["public/*"],
             "@interfaces/*": ["src/interfaces/*"],
-            "@graphql/*": ["src/graphql/*"]
+            "@graphql/*": ["src/graphql/*"],
+            "@hooks/*": ["src/hooks/*"]
         }
     },
     "exclude": ["node_modules"],

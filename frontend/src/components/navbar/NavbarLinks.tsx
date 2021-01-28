@@ -74,7 +74,7 @@ const NavbarLinks: React.FC = () => {
   );
 };
 
-const NavItem = styled.a<NavItemProps>`
+export const NavItem = styled.a<NavItemProps>`
   text-decoration: none;
   font-weight: 600;
   font-size: 16px;

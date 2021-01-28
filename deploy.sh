@@ -33,7 +33,7 @@ deploy_cluster() {
   service="indokweb-backend-service"
   template="ecs_backend_taskdefinition.json"
   task_template=$(cat "ecs/$template")
-  task_def=$(printf "$task_template" $AWS_ACCOUNT_ID $AWS_RDS_HOST $AWS_RDS_PASSWORD $PRODUCTION_SECRET_KEY $DATAPORTEN_SECRET $GOOGLE_DRIVE_API_KEY)
+  task_def=$(printf "$task_template" $AWS_ACCOUNT_ID $AWS_RDS_HOST $AWS_RDS_PASSWORD $PRODUCTION_SECRET_KEY $DATAPORTEN_SECRET $BOOKING_EMAIL_PASSWORD $GOOGLE_DRIVE_API_KEY)
   echo "$task_def"
   register_definition
   update_service
@@ -55,7 +55,7 @@ echo $CODEBUILD_WEBHOOK_TRIGGER
 echo $CODEBUILD_WEBHOOK_EVENT
 
 if  [ "$CODEBUILD_WEBHOOK_TRIGGER" == "branch/master" ] && \
-    [ "$CODEBUILD_WEBHOOK_HEAD_REF" == "refs/heads/master" ]
+    ([ "$CODEBUILD_WEBHOOK_HEAD_REF" == "refs/heads/master" ] || ["$CODEBUILD_WEBHOOK_WEBHOOK_EVENT" == "PULL_REQUEST_MERGED"])
 then
   echo "Updating ECS."
   configure_aws_cli

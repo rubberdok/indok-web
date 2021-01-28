@@ -3,7 +3,10 @@ import "@styles/fonts.css";
 import "@styles/global.css";
 import theme from "@styles/theme";
 import { AppProps } from "next/app";
+import "slick-carousel/slick/slick-theme.css";
+import "slick-carousel/slick/slick.css";
 import { ThemeProvider } from "styled-components";
+import "../styles/global.css";
 
 const App = ({ Component, pageProps }: AppProps): JSX.Element => {
   const link = createHttpLink({

@@ -20,7 +20,6 @@ const CreateEvent: React.FC = () => {
     image: "",
     isAttendable: false,
     deadline: "",
-    publisher: "",
   };
 
   const [eventData, setEventData] = useState(defaultInput);
@@ -100,14 +99,14 @@ const CreateEvent: React.FC = () => {
             onChange={(e) => setEventData({ ...eventData, title: e.currentTarget.value })}
           />
         </div>
-        <div>
+        {/* <div>
           Publiserer: &nbsp;
           <input
             placeholder="Publiserer"
             value={eventData.publisher}
             onChange={(e) => setEventData({ ...eventData, publisher: e.currentTarget.value })}
           />
-        </div>
+        </div> */}
         <div>
           Starttid: &nbsp;
           <input

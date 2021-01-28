@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { useQuery } from "@apollo/client";
 import { DOCUMENTS } from "@graphql/archive/queries";
 import { ArchivedDocument } from "@interfaces/archive";
