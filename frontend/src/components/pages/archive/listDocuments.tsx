@@ -1,21 +1,17 @@
-/* eslint-disable prettier/prettier */
 import { useQuery } from "@apollo/client";
 import Content from "@components/ui/Content";
-import ImageCard from "@components/ui/ImageCard";
 import { GET_DOCSBYTYPE } from "@graphql/archive/queries";
 import { Document } from "@interfaces/archives";
 import Button from "@material-ui/core/Button";
-import GridList from "@material-ui/core/GridList";
-import Typography from "@material-ui/core/Typography";
-import GridListTile from "@material-ui/core/GridListTile";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import React, { useEffect } from "react";
 import Card from "@material-ui/core/Card";
-import CardActions from "@material-ui/core/CardActions";
-import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardMedia from "@material-ui/core/CardMedia";
 import CardActionArea from "@material-ui/core/CardActionArea";
+import GridList from "@material-ui/core/GridList";
+import GridListTile from "@material-ui/core/GridListTile";
+import Typography from "@material-ui/core/Typography";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -24,6 +20,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     paper: {
       padding: theme.spacing(2),
+      marginLeft: "70px",
     },
     image: {
       width: "128px",
@@ -31,6 +28,7 @@ const useStyles = makeStyles((theme: Theme) =>
       alignItems: "start",
     },
     img: {
+      marginLeft: "80px",
       maxWidth: "100%",
       maxHeight: "100%",
     },
