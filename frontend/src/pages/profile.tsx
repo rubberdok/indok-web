@@ -4,7 +4,7 @@ import { Heading, Paragraph, Title } from "@components/ui/Typography";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import React from "react";
-import { useGetUserQuery } from "src/generated/graphql";
+import { useGetUserQuery } from "src/api/generated/graphql";
 import styled from "styled-components";
 
 const ProfilePage: NextPage = () => {

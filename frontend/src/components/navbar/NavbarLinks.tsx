@@ -2,7 +2,7 @@ import Layout from "atomic-layout";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
-import { useGetUserQuery } from "src/generated/graphql";
+import { useGetUserQuery } from "src/api/generated/graphql";
 import styled from "styled-components";
 import { DATAPORTEN_SCOPES, generateAuthURL } from "./utils";
 

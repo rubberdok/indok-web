@@ -1,7 +1,7 @@
 import Layout from "@components/Layout";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
-import { useDeleteTokenCookieMutation } from "src/generated/graphql";
+import { useDeleteTokenCookieMutation } from "src/api/generated/graphql";
 
 const LogoutPage: NextPage = () => {
   const [deleteCookie, { data, loading, error, client }] = useDeleteTokenCookieMutation({

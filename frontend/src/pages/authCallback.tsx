@@ -5,7 +5,7 @@ import { Paragraph, Title } from "@components/ui/Typography";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
-import { GetUserDocument, useAuthUserMutation, UserFragment } from "src/generated/graphql";
+import { GetUserDocument, useAuthUserMutation, UserFragment } from "src/api/generated/graphql";
 
 const AuthCallbackPage: NextPage = () => {
   const router = useRouter();
