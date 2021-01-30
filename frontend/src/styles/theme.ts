@@ -1,4 +1,5 @@
 import { createMuiTheme } from "@material-ui/core/styles";
+import { Shadows } from "@material-ui/core/styles/shadows";
 
 const theme = createMuiTheme({
   typography: {
@@ -74,33 +75,7 @@ const theme = createMuiTheme({
       xl: 1920,
     },
   },
-  shadows: [
-    "none",
-    "none",
-    "none",
-    "none",
-    "none",
-    "none",
-    "none",
-    "none",
-    "none",
-    "none",
-    "none",
-    "none",
-    "none",
-    "none",
-    "none",
-    "none",
-    "none",
-    "none",
-    "none",
-    "none",
-    "none",
-    "none",
-    "none",
-    "none",
-    "none",
-  ],
+  shadows: Array(25).fill("none") as Shadows,
 });
 
 export default theme;
