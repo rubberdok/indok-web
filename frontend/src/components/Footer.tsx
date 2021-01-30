@@ -44,18 +44,11 @@ const Footer: React.FC = () => {
 
   const [open, setOpen] = React.useState(false);
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-  };
-
   return (
     <>
       <Box mt={10} className={classes.credits}>
         <Container>
-          <Button variant="contained" onClick={handleClickOpen}>
+          <Button variant="contained" onClick={() => setOpen(!open)}>
             Hall of Fame
           </Button>
           <Typography className={classes.text} variant="caption">
@@ -71,7 +64,7 @@ const Footer: React.FC = () => {
       <Dialog
         maxWidth="xl"
         fullWidth={false}
-        onClose={handleClose}
+        onClose={() => setOpen(!open)}
         aria-labelledby="customized-dialog-title"
         open={open}
       >
@@ -80,7 +73,7 @@ const Footer: React.FC = () => {
             Hall of Fame 2020/2021
           </Typography>
           <Typography variant="body1">Laget med blod, svette, tårer og kjærlighet av</Typography>
-          <IconButton className={classes.closeButton} aria-label="close" onClick={handleClose}>
+          <IconButton className={classes.closeButton} aria-label="close" onClick={() => setOpen(!open)}>
             <CloseIcon />
           </IconButton>
         </DialogTitle>
