@@ -172,7 +172,7 @@ const BookPage: NextPage = () => {
     <>
       <Navbar></Navbar>
       <HeaderComposition headerText="Fullføring av booking">
-        <ArrowIcon direction={"l"} size={35} href={"/cabins"}></ArrowIcon>
+        <ArrowIcon direction={"l"} size={35} href="/cabins"></ArrowIcon>
       </HeaderComposition>
       {isAvailable ? (
         <Composition templateXs={templatePhone} templateLg={templateDesktop} padding={15} gutter={15} gutterLg={40}>

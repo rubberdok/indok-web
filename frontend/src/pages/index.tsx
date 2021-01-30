@@ -76,24 +76,7 @@ const IndexPage: NextPage = () => {
                 </Box>
               </Box>
             </Grid>
-            <Grid item xs={4}>
-              {/* <Box mr={5} display="flex" top="0" alignItems="center" position="absolute" height="100%" zIndex="4">
-                <Paper>
-                  <Box px={8} py={6}>
-                    <Typography gutterBottom variant="body2">
-                      Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse, NTNU er formaliseringen av
-                      all foreningsaktivitet på Indøk under ett og samme tak.
-                    </Typography>
-                    <br />
-                    <Link href="/events">
-                      <Button variant="contained" endIcon={<NavigateNextIcon />}>
-                        Se kalenderen
-                      </Button>
-                    </Link>
-                  </Box>
-                </Paper>
-              </Box> */}
-            </Grid>
+            <Grid item xs={4}></Grid>
           </Grid>
         </Box>
 

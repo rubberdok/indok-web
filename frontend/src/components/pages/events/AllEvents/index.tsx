@@ -54,7 +54,7 @@ const AllEvents: React.FC = () => {
       <div style={{ float: "right" }}>
         {userData && !userLoading && userData.user && !userError && (
           // TODO: Redirect til `/events/create-event` når vi har funksjonalitet for dette.
-          <Link href={`/events/create-event`}>
+          <Link href="/events/create-event">
             <StyledIconButton>
               <PlusSquare />
               <p style={{ margin: 0 }}>Opprett</p>
@@ -77,7 +77,7 @@ const AllEvents: React.FC = () => {
               ) : (
                 data.allEvents.map((event: Event) => (
                   <Link href={`/events/${event.id}`} key={event.id}>
-                    <EventContainerLink href={`/events/${event.id}`} style={{ color: "#000" }}>
+                    <EventContainerLink style={{ color: "#000" }}>
                       <EventContainer
                         style={{
                           borderColor: event.organization?.color ?? "#fff",

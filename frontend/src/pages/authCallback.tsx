@@ -5,6 +5,7 @@ import { GET_USER } from "@graphql/auth/queries";
 import { User } from "@interfaces/users";
 import { Button, Container, Typography } from "@material-ui/core";
 import { NextPage } from "next";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 
@@ -51,9 +52,9 @@ const AuthCallbackPage: NextPage = () => {
               {" "}
               FEIL: {error.message}
             </Typography>
-            <Button variant="contained" href="/">
-              Tilbake til hjemmesiden
-            </Button>
+            <Link href="/">
+              <Button variant="contained">Tilbake til hjemmesiden</Button>
+            </Link>
           </>
         ) : data ? (
           <Typography variant="body1" color="primary">
