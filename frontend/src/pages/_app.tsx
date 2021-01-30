@@ -29,7 +29,7 @@ const App = ({ Component, pageProps }: AppProps): JSX.Element => {
   return (
     <ApolloProvider client={client}>
       <Head>
-        <title>INDØK</title>
+        <title>Indøk NTNU - Foreningen for Industriell Økonomi og teknologiledelse</title>
         <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
       </Head>
       <ThemeProvider theme={theme}>

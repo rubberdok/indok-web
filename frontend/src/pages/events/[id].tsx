@@ -12,6 +12,11 @@ const EventInfo: NextPage = () => {
 
   return (
     <Layout>
+      <div style={{ marginTop: "2em" }}>
+        <Button color="primary" href="/events">
+          Tilbake til arrangementer
+        </Button>
+      </div>
       <div
         style={{
           border: "solid",
@@ -26,11 +31,6 @@ const EventInfo: NextPage = () => {
         <div style={{ marginLeft: "auto", marginRight: "auto" }}>
           {numberId && <EventDetailPage eventId={numberId} />}
         </div>
-      </div>
-      <div style={{ marginTop: "2em" }}>
-        <Button color="primary" href="/events">
-          Tilbake til arrangementer
-        </Button>
       </div>
     </Layout>
   );

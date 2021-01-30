@@ -3,7 +3,7 @@ import { GET_USER } from "@graphql/auth/queries";
 import { GET_EVENTS } from "@graphql/events/queries";
 import { Event } from "@interfaces/events";
 import { User } from "@interfaces/users";
-import { Button, Typography } from "@material-ui/core";
+import { Button, Grid, Typography } from "@material-ui/core";
 import Link from "next/link";
 import React, { useState } from "react";
 import { PlusSquare } from "react-feather";
@@ -63,9 +63,11 @@ const AllEvents: React.FC = () => {
         )}
       </div>
 
-      <div style={{ width: "100%", paddingTop: "1em" }}>
-        <FilterMenu filters={filters} onChange={onChange} />
-        <div style={{ width: "70%", float: "right" }}>
+      <Grid container>
+        <Grid item xs={3}>
+          <FilterMenu filters={filters} onChange={onChange} />
+        </Grid>
+        <Grid item xs>
           {showTableView ? (
             <p>{"Kommer snart! :)"}</p>
           ) : (
@@ -90,8 +92,8 @@ const AllEvents: React.FC = () => {
               )}
             </>
           )}
-        </div>
-      </div>
+        </Grid>
+      </Grid>
     </>
   );
 };

@@ -69,15 +69,15 @@ const NavbarLinks: React.FC = () => {
         </a>
       ) : (
         <>
-          <Link href={"/archive"}>
+          <Link href="/archive">
             <p className={classes.navItem}>Arkiv</p>
           </Link>
-          <a className={classes.navItem} href={"/profile"}>
-            {userData.user.firstName}
-          </a>
-          <a className={classes.navItem} href={"/logout"}>
-            Logg ut
-          </a>
+          <Link href="/profile">
+            <p className={classes.navItem}>{userData.user.firstName}</p>
+          </Link>
+          <Link href="/logout">
+            <p className={classes.navItem}>Logg ut</p>
+          </Link>
         </>
       )}
     </>

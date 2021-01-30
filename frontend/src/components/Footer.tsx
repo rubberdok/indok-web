@@ -5,7 +5,6 @@ import {
   DialogContent,
   DialogTitle,
   IconButton,
-  Link,
   makeStyles,
   Paper,
   Table,
@@ -17,6 +16,7 @@ import {
 } from "@material-ui/core";
 import Container from "@material-ui/core/Container";
 import CloseIcon from "@material-ui/icons/Close";
+import Link from "next/link";
 import React from "react";
 
 const useStyles = makeStyles((theme) => ({
@@ -35,6 +35,7 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.grey[500],
   },
   text: {
+    position: "absolute",
     marginLeft: 40,
   },
 }));
@@ -53,10 +54,11 @@ const Footer: React.FC = () => {
           </Button>
           <Typography className={classes.text} variant="caption">
             Under konstruksjon av{" "}
-            <Link color="inherit" target="_blank" href="https://github.com/hovedstyret/indok-web">
+            <a href="https://github.com/hovedstyret/indok-web" rel="noreferrer" target="_blank">
               RubberDøk
-            </Link>
-            , Hovedstyret på Indøk sin webkomité. Kopirett © 2021 Foreningen for studentene ved Indøk. Alle rettigheter
+            </a>
+            , Hovedstyret på Indøk sin webkomité. <br />
+            Kopirett © 2021 Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse. Alle rettigheter
             reservert.
           </Typography>
         </Container>
