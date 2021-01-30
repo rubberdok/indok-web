@@ -11,8 +11,7 @@ import {
 } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 import Link from "next/link";
-import PropTypes from "prop-types";
-import React from "react";
+import React, { ReactElement } from "react";
 import NavbarLinks from "./NavbarLinks";
 
 const useStyles = makeStyles((theme) => ({
@@ -40,37 +39,24 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function HideOnScroll(props: any) {
-  const { children, window } = props;
-
-  const trigger = useScrollTrigger({ target: window ? window() : undefined });
+const HideOnScroll: React.FC = ({ children }) => {
+  const trigger = useScrollTrigger();
 
   return (
     <Slide appear={false} direction="down" in={!trigger}>
-      {children}
+      {children as ReactElement}
     </Slide>
   );
-}
-
-HideOnScroll.propTypes = {
-  children: PropTypes.element.isRequired,
-  window: PropTypes.func,
 };
 
-const Navbar: React.FC = (props) => {
+const Navbar: React.FC = () => {
   const classes = useStyles();
 
-  const [state, setState] = React.useState({
-    right: false,
-  });
-
-  const toggleDrawer = (open: boolean) => () => {
-    setState({ ...state, right: open });
-  };
+  const [openDrawer, setOpenDrawer] = React.useState(false);
 
   return (
     <div className={classes.root}>
-      <HideOnScroll {...props}>
+      <HideOnScroll>
         <AppBar color="default" className={classes.appBar}>
           <Container>
             <Toolbar className={classes.toolBar}>
@@ -83,7 +69,7 @@ const Navbar: React.FC = (props) => {
                 <NavbarLinks></NavbarLinks>
               </div>
               <div className={classes.sectionMobile}>
-                <IconButton onClick={toggleDrawer(true)} edge="start" color="inherit" aria-label="menu">
+                <IconButton onClick={() => setOpenDrawer(true)} edge="start" color="inherit" aria-label="menu">
                   <MenuIcon />
                 </IconButton>
               </div>
@@ -92,7 +78,7 @@ const Navbar: React.FC = (props) => {
         </AppBar>
       </HideOnScroll>
       <Toolbar />
-      <Drawer anchor="right" open={state["right"]} onClose={toggleDrawer(false)}>
+      <Drawer anchor="right" open={openDrawer} onClose={() => setOpenDrawer(false)}>
         <NavbarLinks></NavbarLinks>
       </Drawer>
     </div>
