@@ -1,0 +1,18 @@
+fragment event on EventType {
+  id
+  title
+  startTime
+  endTime
+  location
+  description
+  organization {
+    ...organization
+  }
+  category {
+    ...eventCategory
+  }
+  image
+  isAttendable
+  deadline
+  publisher
+}

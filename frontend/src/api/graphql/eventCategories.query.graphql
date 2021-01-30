@@ -1,0 +1,5 @@
+query allCategories {
+  allCategories {
+    ...category
+  }
+}

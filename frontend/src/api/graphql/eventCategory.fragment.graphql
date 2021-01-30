@@ -1,0 +1,4 @@
+fragment eventCategory on CategoryType {
+  id
+  name
+}

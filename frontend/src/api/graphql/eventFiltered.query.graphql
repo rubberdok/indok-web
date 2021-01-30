@@ -1,0 +1,10 @@
+query eventfiltered {
+  eventFilteredOrganizations {
+    id
+    name
+    children {
+      id
+      name
+    }
+  }
+}

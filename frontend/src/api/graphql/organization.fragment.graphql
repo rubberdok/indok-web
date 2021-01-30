@@ -1,0 +1,8 @@
+fragment organization on OrganizationType {
+  id
+  name
+  slug
+  description
+  parent
+  children
+}
