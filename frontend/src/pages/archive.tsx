@@ -1,7 +1,8 @@
-import { NextPage } from "next";
 import Layout from "@components/Layout";
-import React from "react";
 import DocumentListView from "@components/pages/archive/documentListView";
+import { Container } from "@material-ui/core";
+import { NextPage } from "next";
+import React from "react";
 import { redirectIfNotLoggedIn } from "src/utils/redirect";
 
 const Archive: NextPage = () => {
@@ -10,9 +11,9 @@ const Archive: NextPage = () => {
   }
   return (
     <Layout>
-      <div>
+      <Container>
         <DocumentListView />
-      </div>
+      </Container>
     </Layout>
   );
 };

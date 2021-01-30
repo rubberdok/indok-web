@@ -1,6 +1,6 @@
 import Navbar from "@components/navbar/Navbar";
 import CabinBooker from "@components/pages/cabins/CabinBooker/CabinBooker";
-import { Paragraph } from "@components/ui/Typography";
+import { Typography } from "@material-ui/core";
 import { NextPage } from "next";
 import React from "react";
 import styled from "styled-components";
@@ -16,9 +16,9 @@ const CreateBookingPage: NextPage = () => {
   return (
     <div>
       <Navbar />
-      <Paragraph>
+      <Typography>
         OBS: Hyttebooking via nettsiden er fortsatt under utvikling, og denne siden er kun til demonstrasjon.
-      </Paragraph>
+      </Typography>
       <Container>
         <CabinBooker />
       </Container>

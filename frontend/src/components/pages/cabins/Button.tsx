@@ -34,7 +34,7 @@ const Button: React.FC<ButtonProps> = (props) => {
 };
 
 const Icon = styled.div<IconProps & React.HTMLProps<HTMLDivElement>>`
-  background: ${({ theme, disabled }) => (disabled ? "#5f5e5e" : theme.colors.primaryDark)};
+  background: ${({ disabled }) => (disabled ? "#5f5e5e" : "#064B4B")};
   width: 70px;
   display: table-cell;
   text-align: center;
@@ -46,7 +46,7 @@ const Icon = styled.div<IconProps & React.HTMLProps<HTMLDivElement>>`
 `;
 
 const StyledButton = styled.a<StyledButtonProps & React.HTMLProps<HTMLAnchorElement>>`
-  background: ${({ theme, disabled }) => (disabled ? "#7a7979" : theme.colors.primary)};
+  background: ${({ disabled }) => (disabled ? "#7a7979" : "#065A5A")};
   color: #fff;
   font-family: "Montserrat";
   font-size: 18px;
@@ -55,7 +55,7 @@ const StyledButton = styled.a<StyledButtonProps & React.HTMLProps<HTMLAnchorElem
   text-decoration: none !important;
   transition: 0.3s all ease;
   &:hover {
-    background: ${({ theme, disabled }) => (disabled ? "#5f5e5e" : theme.colors.primaryDark)};
+    background: ${({ disabled }) => (disabled ? "#5f5e5e" : "#064B4B")};
     cursor: pointer;
     & ${Icon} {
       padding-left: 10px;

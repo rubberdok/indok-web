@@ -1,6 +1,5 @@
-import { Title } from "@components/ui/Typography";
+import { Typography } from "@material-ui/core";
 import React, { useState } from "react";
-
 import FilterButton from "./FilterButtons";
 import ListDocuments from "./listDocuments";
 import { ContentWrapper } from "./wrapper";
@@ -17,9 +16,11 @@ const DocumentListView: React.FC = () => {
   });
 
   return (
-    <div>
+    <>
       <div style={{ flex: "100%" }}>
-        <Title style={{ textAlign: "center" }}> Arkiv</Title>
+        <Typography variant="h1" style={{ textAlign: "center" }}>
+          Arkiv
+        </Typography>
       </div>
       <ContentWrapper
         style={{ marginLeft: "80px", marginRight: "80px", justifyContent: "space-evenly", paddingBottom: "50px" }}
@@ -39,7 +40,7 @@ const DocumentListView: React.FC = () => {
           .filter((key, _) => key[1].active)
           .map(([_, val]) => val.title)}
       />
-    </div>
+    </>
   );
 };
 
