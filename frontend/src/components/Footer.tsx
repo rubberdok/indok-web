@@ -16,7 +16,6 @@ import {
 } from "@material-ui/core";
 import Container from "@material-ui/core/Container";
 import CloseIcon from "@material-ui/icons/Close";
-import Link from "next/link";
 import React from "react";
 
 const useStyles = makeStyles((theme) => ({
