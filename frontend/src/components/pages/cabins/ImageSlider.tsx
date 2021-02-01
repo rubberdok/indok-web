@@ -1,12 +1,33 @@
-import { ArrowIcon } from "@components/ui/ArrowIcon";
+import { ImageSliderProps } from "@interfaces/cabins";
+import { Card, Container, createStyles, makeStyles, Theme } from "@material-ui/core";
 import React from "react";
-import Slider from "react-slick";
-import styled from "styled-components";
-import { Card } from "./CardC";
+import Carousel from "react-material-ui-carousel";
 
-interface ImageSliderProps {
-  cabin: "Bjørnen" | "Oksen";
-}
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      flexGrow: 1,
+    },
+    paper: {
+      padding: theme.spacing(2),
+      textAlign: "center",
+      color: theme.palette.text.primary,
+    },
+    card: {
+      padding: "20px",
+      boxShadow: "0px 7px 17px -1px rgba(92, 92, 92, 0.62)",
+      borderRadius: "15px",
+      textAlign: "center",
+    },
+    img: {
+      borderRadius: "10px",
+    },
+    carousel: {
+      width: "90%",
+      margin: "auto",
+    },
+  })
+);
 
 const images = {
   bjørnen: [
@@ -20,55 +41,28 @@ const images = {
   oksen: [],
 };
 
-const ImageSlider: React.FC<ImageSliderProps> = ({ cabin }) => {
-  const settings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    easing: "ease-in-out",
-    touchMove: true,
-    swipe: true,
-    prevArrow: <ArrowIcon direction="l" size={25} />,
-    nextArrow: <ArrowIcon direction="r" size={25} />,
-  };
+const ImageSlider = ({ cabin }: ImageSliderProps) => {
+  const classes = useStyles();
 
   return (
-    <>
-      <Card>
-        <Container>
-          <Slider {...settings}>
-            {cabin == "Bjørnen"
-              ? images.bjørnen.map((link) => (
-                  <ImageDiv key={link}>
-                    <Img src={link}></Img>
-                  </ImageDiv>
-                ))
-              : images.oksen.map((link) => (
-                  <ImageDiv key={link}>
-                    <Img src={link}></Img>
-                  </ImageDiv>
-                ))}
-          </Slider>
-        </Container>
+    <Container>
+      <Card className={classes.card}>
+        <Carousel timeout={500} navButtonsAlwaysVisible={true} autoPlay={false} className={classes.carousel}>
+          {cabin == "Bjørnen"
+            ? images.bjørnen.map((link) => (
+                <div key={link}>
+                  <img alt={cabin} src={link} className={classes.img}></img>
+                </div>
+              ))
+            : images.oksen.map((link) => (
+                <div key={link}>
+                  <img alt={cabin} src={link}></img>
+                </div>
+              ))}
+        </Carousel>
       </Card>
-    </>
+    </Container>
   );
 };
-
-const ImageDiv = styled.div``;
-
-const Container = styled.div`
-  max-width: 500px;
-  margin: auto;
-  padding-bottom: 20px;
-`;
-
-const Img = styled.img`
-  width: 90%;
-  margin: auto;
-  border-radius: 10px;
-`;
 
 export default ImageSlider;

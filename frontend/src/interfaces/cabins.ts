@@ -44,3 +44,7 @@ export interface SummaryProps {
   price: number;
   nights: number;
 }
+
+export interface ImageSliderProps {
+  cabin: "Bjørnen" | "Oksen";
+}

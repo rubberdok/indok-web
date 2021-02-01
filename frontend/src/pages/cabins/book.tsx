@@ -6,7 +6,7 @@ import CheckBox from "@components/pages/cabins/Checkbox";
 import { HeaderComposition } from "@components/pages/cabins/HeaderCompositon";
 import ImageSlider from "@components/pages/cabins/ImageSlider";
 import { InputFields } from "@components/pages/cabins/InputFields";
-import NewSummary from "@components/pages/cabins/Summary/Summary";
+import Summary from "@components/pages/cabins/Summary/Summary";
 import { ArrowIcon } from "@components/ui/ArrowIcon";
 import { SEND_EMAIL } from "@graphql/cabins/mutations";
 import { QUERY_CABINS } from "@graphql/cabins/queries";
@@ -195,16 +195,17 @@ const BookPage: NextPage = () => {
                   </InputFields>
                 </Inputs>
                 <Sum>
-                  <NewSummary
+                  <Summary
                     from={range.fromDate ? range.fromDate : ""}
                     to={range.toDate ? range.toDate : ""}
                     cabins={bookingData.cabins ? bookingData.cabins : [""]}
                     price={pricePerNight}
                     nights={rangeLength}
-                  ></NewSummary>
+                  ></Summary>
                 </Sum>
                 <Slider>
                   <ImageSlider cabin="Bjørnen"></ImageSlider>
+                  {/* <ImageSlider cabin={"Bjørnen"}></ImageSlider> */}
                 </Slider>
               </>
             )}
