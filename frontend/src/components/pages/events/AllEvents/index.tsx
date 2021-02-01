@@ -3,13 +3,11 @@ import { GET_USER } from "@graphql/auth/queries";
 import { GET_EVENTS } from "@graphql/events/queries";
 import { Event } from "@interfaces/events";
 import { User } from "@interfaces/users";
+import { Button, Grid, Typography, CircularProgress, Paper, Tabs, Tab, Paragraph } from "@material-ui/core";
 import Link from "next/link";
 import { PlusSquare } from "react-feather";
 import styled from "styled-components";
 import React, { useState } from "react";
-import { Paragraph } from "@components/ui/Typography";
-import { CircularProgress, Paper, Tabs, Tab } from "@material-ui/core";
-import { NavItem } from "../../../navbar/NavbarLinks";
 import color from "src/styles/theme";
 import { DATAPORTEN_SCOPES, generateAuthURL } from "../../../navbar/utils";
 import FilterMenu from "./FilterMenu";
@@ -114,6 +112,38 @@ const AllEvents: React.FC = () => {
           </div>
         )}
       </div>
+
+      <Grid container>
+        <Grid item xs={3}>
+          <FilterMenu filters={filters} onChange={onChange} />
+        </Grid>
+        <Grid item xs>
+          {showCalenderView ? (
+            <p>{"Kommer snart! :)"}</p>
+          ) : (
+            <>
+              {data.allEvents.length === 0 ? (
+                <Typography variant="body1">Ingen arrangementer passer til valgte filtre.</Typography>
+              ) : (
+                data.allEvents.map((event: Event) => (
+                  <Link href={`/events/${event.id}`} key={event.id}>
+                    <EventContainerLink style={{ color: "#000" }}>
+                      <EventContainer
+                        style={{
+                          borderColor: event.organization?.color ?? "#fff",
+                        }}
+                      >
+                        <p style={{ marginBottom: "0.2em" }}>{event.title}</p>
+                        <p style={{ marginTop: 0 }}>Starttid: {event.startTime.slice(0, 19).replace("T", " ")}</p>
+                      </EventContainer>
+                    </EventContainerLink>
+                  </Link>
+                ))
+              )}
+            </>
+          )}
+        </Grid>
+      </Grid>
     </div>
   );
 };
@@ -122,7 +152,7 @@ export default AllEvents;
 
 const StyledIconButton = styled.button`
   background: transparent;
-  color: ${({ theme }) => theme.colors.primary};
+  color: #fff;
   font-family: "Montserrat";
   font-size: 18px;
   border: none;
@@ -145,7 +175,7 @@ const StyledIconButton = styled.button`
 const EventContainer = styled.div`
   border: solid;
   border-width: 0.05em 0.05em 0.05em 1.2em;
-  border-color: ${color.colors.primaryLight};
+  border-color: #fff;
   border-radius: 0.2em;
   padding: 0.5em;
   margin-bottom: 0.5em;
