@@ -16,7 +16,7 @@ const ListItem: React.FC<{
       {imgSrc && <img src={imgSrc} alt="" />}
     </Item>
   );
-  return (onClick !== undefined) ? (
+  return onClick !== undefined ? (
     <button
       onClick={(e) => {
         e.preventDefault();

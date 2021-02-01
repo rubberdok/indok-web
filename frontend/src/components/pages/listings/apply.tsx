@@ -23,7 +23,9 @@ const Apply: React.FC<{
       if (responseData.response !== null) {
         return (
           <>
-            <p><b>Din søknad:</b></p>
+            <p>
+              <b>Din søknad:</b>
+            </p>
             <p>{responseData.response.response}</p>
           </>
         );
