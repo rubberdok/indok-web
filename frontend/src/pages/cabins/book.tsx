@@ -1,12 +1,12 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { getRangeLength } from "@components/Calendar";
-import Navbar from "@components/navbar/Navbar";
+import Layout from "@components/Layout";
 import Button from "@components/pages/cabins/Button";
 import CheckBox from "@components/pages/cabins/Checkbox";
 import { HeaderComposition } from "@components/pages/cabins/HeaderCompositon";
 import ImageSlider from "@components/pages/cabins/ImageSlider";
 import { InputFields } from "@components/pages/cabins/InputFields";
-import Summary from "@components/pages/cabins/Summary/Summary";
+import NewSummary from "@components/pages/cabins/Summary/Summary";
 import { ArrowIcon } from "@components/ui/ArrowIcon";
 import { SEND_EMAIL } from "@graphql/cabins/mutations";
 import { QUERY_CABINS } from "@graphql/cabins/queries";
@@ -171,47 +171,48 @@ const BookPage: NextPage = () => {
 
   return (
     <>
-      <Navbar></Navbar>
-      <HeaderComposition headerText="Fullføring av booking">
-        <ArrowIcon direction={"l"} size={35} href="/cabins"></ArrowIcon>
-      </HeaderComposition>
-      {isAvailable ? (
-        <Composition templateXs={templatePhone} templateLg={templateDesktop} padding={15} gutter={15} gutterLg={40}>
-          {({ Inputs, Sum, Slider }) => (
-            <>
-              <Inputs>
-                <InputFields refs={inputRefs} onChange={handleInputChange}>
-                  <CheckBox
-                    checked={checked}
-                    onClick={handleClick}
-                    errorMsg={checkerror}
-                    checkable={checkable}
-                    contractData={contractData}
-                  ></CheckBox>
-                  <Button url="#" onClick={(e) => handleSubmit(e)} disabled={temporarilyDisableSubmitting}>
-                    Gå til betaling
-                  </Button>
-                  <Typography>OBS: Det er dessverre ikke mulig å booke via nettsiden ennå.</Typography>
-                </InputFields>
-              </Inputs>
-              <Sum>
-                <Summary
-                  from={range.fromDate ? range.fromDate : ""}
-                  to={range.toDate ? range.toDate : ""}
-                  cabins={bookingData.cabins ? bookingData.cabins : [""]}
-                  price={pricePerNight}
-                  nights={rangeLength}
-                ></Summary>
-              </Sum>
-              <Slider>
-                <ImageSlider cabin="Bjørnen"></ImageSlider>
-              </Slider>
-            </>
-          )}
-        </Composition>
-      ) : (
-        <>{allBookingsQuery.loading ? <p>Laster...</p> : <p>{errorMessage}</p>}</>
-      )}
+      <Layout>
+        <HeaderComposition headerText="Fullføring av booking">
+          <ArrowIcon direction={"l"} size={35} href="/cabins"></ArrowIcon>
+        </HeaderComposition>
+        {isAvailable ? (
+          <Composition templateXs={templatePhone} templateLg={templateDesktop} padding={15} gutter={15} gutterLg={40}>
+            {({ Inputs, Sum, Slider }) => (
+              <>
+                <Inputs>
+                  <InputFields refs={inputRefs} onChange={handleInputChange}>
+                    <CheckBox
+                      checked={checked}
+                      onClick={handleClick}
+                      errorMsg={checkerror}
+                      checkable={checkable}
+                      contractData={contractData}
+                    ></CheckBox>
+                    <Button url="#" onClick={(e) => handleSubmit(e)} disabled={temporarilyDisableSubmitting}>
+                      Gå til betaling
+                    </Button>
+                    <Typography>OBS: Det er dessverre ikke mulig å booke via nettsiden ennå.</Typography>
+                  </InputFields>
+                </Inputs>
+                <Sum>
+                  <NewSummary
+                    from={range.fromDate ? range.fromDate : ""}
+                    to={range.toDate ? range.toDate : ""}
+                    cabins={bookingData.cabins ? bookingData.cabins : [""]}
+                    price={pricePerNight}
+                    nights={rangeLength}
+                  ></NewSummary>
+                </Sum>
+                <Slider>
+                  <ImageSlider cabin="Bjørnen"></ImageSlider>
+                </Slider>
+              </>
+            )}
+          </Composition>
+        ) : (
+          <>{allBookingsQuery.loading ? <p>Laster...</p> : <p>{errorMessage}</p>}</>
+        )}
+      </Layout>
     </>
   );
 };

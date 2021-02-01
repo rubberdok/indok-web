@@ -36,3 +36,11 @@ export interface ContractProps {
     price: number;
   };
 }
+
+export interface SummaryProps {
+  from: string;
+  to: string;
+  cabins: string[];
+  price: number;
+  nights: number;
+}

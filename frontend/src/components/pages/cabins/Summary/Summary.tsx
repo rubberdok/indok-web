@@ -1,87 +1,85 @@
-import { Composition } from "atomic-layout";
+import { SummaryProps } from "@interfaces/cabins";
 import React from "react";
-import styled from "styled-components";
-import { Card } from "../CardC";
+import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
+import Paper from "@material-ui/core/Paper";
+import Grid from "@material-ui/core/Grid";
 import Facilities from "./Facilities";
+import { Container, Divider } from "@material-ui/core";
+import { Card } from "@material-ui/core";
 
-const templateDesktop = `
-    cabin cabin
-    from to
-    facs facs
-    price price
-    total total
-`;
-
-const templateMobile = `
-    cabin
-    from
-    to
-    facs
-    price
-    total
-`;
-
-interface SummaryProps {
-  from: string;
-  to: string;
-  cabins: string[];
-  price: number;
-  nights: number;
-}
-
-const VerticalSep = styled.hr`
-  background: "#065A5A";
-  border: none;
-  width: 80%;
-  height: ${(p: { height: number }) => p.height}px;
-`;
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      flexGrow: 1,
+    },
+    paper: {
+      padding: theme.spacing(2),
+      textAlign: "center",
+      color: theme.palette.text.primary,
+    },
+    separator: {
+      backgroundColor: theme.palette.primary.main,
+      width: "80%",
+      height: 5,
+      margin: "auto",
+    },
+    lowSeparator: {
+      backgroundColor: theme.palette.primary.main,
+      width: "80%",
+      height: 3,
+      margin: "auto",
+    },
+    card: {
+      padding: "20px",
+      boxShadow: "0px 7px 17px -1px rgba(92, 92, 92, 0.62)",
+      borderRadius: "15px",
+      textAlign: "center",
+    },
+  })
+);
 
 const Summary = ({ from, to, cabins, price, nights }: SummaryProps): JSX.Element => {
-  return (
-    <Card>
-      <Composition
-        templateXs={templateMobile}
-        templateMd={templateDesktop}
-        templateColsMdOnly="minmax(100px, 1fr) 1fr"
-        padding={0}
-        gutter={0}
-        gutterLg={0}
-      >
-        {({ Cabin, From, To, Facs, Price, Total }) => (
-          <>
-            <Cabin>
-              <h3>
-                Hytte{cabins.length > 1 ? "r" : ""}: {cabins.map((cabin, i) => (i > 0 ? " og " + cabin : cabin))}
-              </h3>
-              <VerticalSep height={4} />
-            </Cabin>
-            <From>
-              <p>Fra: {from}</p>
-            </From>
-            <To>
-              <p>Til: {to}</p>
-            </To>
-            <Facs>
-              <VerticalSep height={2} />
-              <Facilities></Facilities>
-            </Facs>
-            <Price>
-              <VerticalSep height={2} />
+  const classes = useStyles();
 
-              <p>
+  return (
+    <Container>
+      <Card className={classes.card}>
+        <div className={classes.root}>
+          <Grid container spacing={1}>
+            <Grid item xs={12}>
+              <Paper className={classes.paper}>
+                <b>
+                  Hytte{cabins.length > 1 ? "r" : ""}: {cabins.map((cabin, i) => (i > 0 ? " og " + cabin : cabin))}
+                </b>
+              </Paper>
+            </Grid>
+            <Divider className={classes.separator} />
+            <Grid item xs={6}>
+              <Paper className={classes.paper}>Fra: {from}</Paper>
+            </Grid>
+            <Grid item xs={6}>
+              <Paper className={classes.paper}>Til: {to}</Paper>
+            </Grid>
+            <Divider className={classes.lowSeparator} />
+            <Grid item xs={12}>
+              <Paper className={classes.paper}>
+                <Facilities />
+              </Paper>
+            </Grid>
+            <Divider className={classes.lowSeparator} />
+            <Grid item xs={12}>
+              <Paper className={classes.paper}>
                 {price} kr x {nights} dager
-              </p>
-            </Price>
-            <Total>
-              <VerticalSep height={4} />
-              <p>
-                <b>Totalt: {price * nights}kr</b>
-              </p>
-            </Total>
-          </>
-        )}
-      </Composition>
-    </Card>
+              </Paper>
+            </Grid>
+            <Divider className={classes.separator} />
+            <Grid item xs={12}>
+              <Paper className={classes.paper}>Totalt: {price * nights}kr</Paper>
+            </Grid>
+          </Grid>
+        </div>
+      </Card>
+    </Container>
   );
 };
 
