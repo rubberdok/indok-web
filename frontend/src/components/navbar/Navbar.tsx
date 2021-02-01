@@ -77,7 +77,7 @@ const Navbar: React.FC = () => {
           </Container>
         </AppBar>
       </HideOnScroll>
-      <Toolbar />
+      <Toolbar id="back-to-top-anchor" />
       <Drawer anchor="right" open={openDrawer} onClose={() => setOpenDrawer(false)}>
         <NavbarLinks></NavbarLinks>
       </Drawer>
