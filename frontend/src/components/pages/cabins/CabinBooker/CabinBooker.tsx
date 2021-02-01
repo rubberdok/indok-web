@@ -3,6 +3,7 @@ import Calendar, { createDateRange } from "@components/Calendar";
 import { QUERY_CABINS } from "@graphql/cabins/queries";
 import useBookingRange from "@hooks/cabins/useBookingRange";
 import { Cabin } from "@interfaces/cabins";
+import CheckIcon from "@material-ui/icons/Check";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import Step from "./Step";
@@ -10,13 +11,12 @@ import {
   BookButton,
   BookingContainer,
   Dropdown,
-  FlowContainer,
   DropdownButton,
-  TextContainer,
+  FlowContainer,
   Header,
   SubHeader,
+  TextContainer,
 } from "./styles";
-import { FaArrowRight, FaCheck } from "react-icons/fa";
 
 // const DayEvent = (key: string) => <EventMarker key={key} />;
 
@@ -106,9 +106,7 @@ const CabinBooker: React.FC = () => {
                 })
               : null;
           }}
-        >
-          <FaArrowRight />
-        </BookButton>
+        ></BookButton>
       </FlowContainer>
       {activeStep == "Choose Cabin" ? (
         <Dropdown small>
@@ -125,7 +123,7 @@ const CabinBooker: React.FC = () => {
                 <SubHeader>Flott hytte med peis og uteterrasse. </SubHeader>
               </TextContainer>
               <TextContainer direction="right" small>
-                {cabin.checked ? <FaCheck /> : null}
+                {cabin.checked ? <CheckIcon /> : null}
               </TextContainer>
             </DropdownButton>
           ))}
