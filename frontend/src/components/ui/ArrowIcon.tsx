@@ -52,7 +52,7 @@ const Arrow = styled.div`
   &:hover {
     cursor: pointer;
     transform: scale(1.1);
-    color: ${({ theme }) => theme.colors.primary};
+    color: #065a5a;
   }
 `;
 

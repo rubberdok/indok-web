@@ -30,7 +30,7 @@ interface SummaryProps {
 }
 
 const VerticalSep = styled.hr`
-  background: ${({ theme }) => theme.colors.primary};
+  background: "#065A5A";
   border: none;
   width: 80%;
   height: ${(p: { height: number }) => p.height}px;

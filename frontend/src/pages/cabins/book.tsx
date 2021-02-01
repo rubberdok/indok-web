@@ -8,15 +8,15 @@ import ImageSlider from "@components/pages/cabins/ImageSlider";
 import { InputFields } from "@components/pages/cabins/InputFields";
 import Summary from "@components/pages/cabins/Summary/Summary";
 import { ArrowIcon } from "@components/ui/ArrowIcon";
-import { Paragraph } from "@components/ui/Typography";
 import { SEND_EMAIL } from "@graphql/cabins/mutations";
 import { QUERY_CABINS } from "@graphql/cabins/queries";
 import { Cabin, ContractProps } from "@interfaces/cabins";
+import { Typography } from "@material-ui/core";
 import { Composition } from "atomic-layout";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import Content from "../../components/ui/Content";
+//import Content from "../../components/ui/Content";
 import { CREATE_CABIN } from "../../graphql/cabins/mutations";
 import useBookingRange from "../../hooks/cabins/useBookingRange";
 
@@ -170,10 +170,10 @@ const BookPage: NextPage = () => {
   };
 
   return (
-    <Content>
+    <>
       <Navbar></Navbar>
       <HeaderComposition headerText="Fullføring av booking">
-        <ArrowIcon direction={"l"} size={35} href={"/cabins"}></ArrowIcon>
+        <ArrowIcon direction={"l"} size={35} href="/cabins"></ArrowIcon>
       </HeaderComposition>
       {isAvailable ? (
         <Composition templateXs={templatePhone} templateLg={templateDesktop} padding={15} gutter={15} gutterLg={40}>
@@ -191,7 +191,7 @@ const BookPage: NextPage = () => {
                   <Button url="#" onClick={(e) => handleSubmit(e)} disabled={temporarilyDisableSubmitting}>
                     Gå til betaling
                   </Button>
-                  <Paragraph>OBS: Det er dessverre ikke mulig å booke via nettsiden ennå.</Paragraph>
+                  <Typography>OBS: Det er dessverre ikke mulig å booke via nettsiden ennå.</Typography>
                 </InputFields>
               </Inputs>
               <Sum>
@@ -212,7 +212,7 @@ const BookPage: NextPage = () => {
       ) : (
         <>{allBookingsQuery.loading ? <p>Laster...</p> : <p>{errorMessage}</p>}</>
       )}
-    </Content>
+    </>
   );
 };
 
