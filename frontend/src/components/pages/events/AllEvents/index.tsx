@@ -8,9 +8,11 @@ import { PlusSquare } from "react-feather";
 import styled from "styled-components";
 import React, { useState } from "react";
 import { Paragraph } from "@components/ui/Typography";
+import { CircularProgress, Paper, Tabs, Tab } from "@material-ui/core";
 import { NavItem } from "../../../navbar/NavbarLinks";
 import color from "src/styles/theme";
-import FilterMenu from "./filterMenu";
+import { DATAPORTEN_SCOPES, generateAuthURL } from "../../../navbar/utils";
+import FilterMenu from "./FilterMenu";
 
 export interface FilterQuery {
   organization?: string;
@@ -19,15 +21,26 @@ export interface FilterQuery {
   endTime?: string;
 }
 
+const signInURL = generateAuthURL(
+  process.env.NEXT_PUBLIC_DATAPORTEN_ID,
+  process.env.NEXT_PUBLIC_DATAPORTEN_STATE,
+  process.env.NEXT_PUBLIC_DATAPORTEN_REDIRECT_URI,
+  DATAPORTEN_SCOPES
+);
+
+interface TabPanelProps {
+  children?: React.ReactNode;
+  index: any;
+  value: any;
+}
+
 const AllEvents: React.FC = () => {
   const [filters, setFilters] = useState({});
-  const [showTableView, setShowTableView] = useState(false);
+  const [showCalenderView, setShowCalenderView] = useState(false);
   const { loading: userLoading, error: userError, data: userData } = useQuery<{ user: User }>(GET_USER);
   const { loading, error, data, refetch } = useQuery(GET_EVENTS, {
     variables: filters,
   });
-  // should handle loading status
-  if (loading) return <Paragraph>Laster inn...</Paragraph>;
 
   if (error) return <Paragraph>Kunne ikke hente arrangementer.</Paragraph>;
 
@@ -35,26 +48,20 @@ const AllEvents: React.FC = () => {
     setFilters(newFilters);
     refetch(newFilters);
   };
-
   return (
     <div>
       <div>
-        <NavItem
-          style={{ paddingBottom: "0px", paddingTop: "0px", margin: "0px", fontSize: "1.1em" }}
-          className={!showTableView ? "active" : ""}
-          primary
-          onClick={() => setShowTableView(!showTableView)}
-        >
-          Liste
-        </NavItem>
-        <NavItem
-          style={{ paddingBottom: "0px", paddingTop: "0px", fontSize: "1.1em" }}
-          className={showTableView ? "active" : ""}
-          primary
-          onClick={() => setShowTableView(!showTableView)}
-        >
-          Kalender
-        </NavItem>
+        <Paper square>
+          <Tabs
+            value={showCalenderView ? 0 : 1}
+            onChange={() => setShowCalenderView(!showCalenderView)}
+            indicatorColor="primary"
+            textColor="primary"
+          >
+            <Tab label="Liste" />
+            <Tab label="Kalender" />
+          </Tabs>
+        </Paper>
 
         <div style={{ float: "right" }}>
           {userData && !userLoading && userData.user && !userError && (
@@ -74,32 +81,38 @@ const AllEvents: React.FC = () => {
           <FilterMenu filters={filters} onChange={onChange} />
         </div>
 
-        <div style={{ width: "70%", float: "right" }}>
-          {showTableView ? (
-            <p>{"Kommer snart! :)"}</p>
-          ) : (
-            <>
-              {data.allEvents.length === 0 ? (
-                <Paragraph>Ingen arrangementer passer til valgte filtre.</Paragraph>
-              ) : (
-                data.allEvents.map((event: Event) => (
-                  <Link href={`/events/${event.id}`} key={event.id}>
-                    <EventContainerLink href={`/events/${event.id}`} style={{ color: "#000" }}>
-                      <EventContainer
-                        style={{
-                          borderColor: event.organization?.color ?? color.colors.primaryLight,
-                        }}
-                      >
-                        <p style={{ marginBottom: "0.2em" }}>{event.title}</p>
-                        <p style={{ marginTop: 0 }}>Starttid: {event.startTime.slice(0, 19).replace("T", " ")}</p>
-                      </EventContainer>
-                    </EventContainerLink>
-                  </Link>
-                ))
-              )}
-            </>
-          )}
-        </div>
+        {loading ? (
+          <div style={{ width: "70%", paddingLeft: "60%", paddingTop: "3em" }}>
+            <CircularProgress color={color.colors.primary} />
+          </div>
+        ) : (
+          <div style={{ width: "70%", float: "right" }}>
+            {showCalenderView ? (
+              <p>{"Kommer snart! :)"}</p>
+            ) : (
+              <>
+                {data.allEvents.length === 0 ? (
+                  <Paragraph>Ingen arrangementer passer til valgte filtre.</Paragraph>
+                ) : (
+                  data.allEvents.map((event: Event) => (
+                    <Link href={`/events/${event.id}`} key={event.id}>
+                      <EventContainerLink href={`/events/${event.id}`} style={{ color: "#000" }}>
+                        <EventContainer
+                          style={{
+                            borderColor: event.organization?.color ?? color.colors.primaryLight,
+                          }}
+                        >
+                          <p style={{ marginBottom: "0.2em" }}>{event.title}</p>
+                          <p style={{ marginTop: 0 }}>Starttid: {event.startTime.slice(0, 19).replace("T", " ")}</p>
+                        </EventContainer>
+                      </EventContainerLink>
+                    </Link>
+                  ))
+                )}
+              </>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
