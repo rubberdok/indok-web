@@ -8,8 +8,6 @@ class Organization(models.Model):
     slug = models.SlugField(max_length=100, blank=True, default="")
     description = models.CharField(max_length=4000, blank=True)
 
-    members = models.ManyToManyField(get_user_model(), through="Members")
-
     parent = models.ForeignKey(
         "Organization",
         on_delete=models.CASCADE,
@@ -31,15 +29,15 @@ class Organization(models.Model):
         return f"{self.name}"
 
 
-class Members(models.Model):
-    member = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
-    organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
+class Member(models.Model):
+    member = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="memberships")
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name="members")
     role = models.ForeignKey("Role", on_delete=models.DO_NOTHING)
 
     class Meta:
-        constraints = UniqueConstraint(
+        constraints = [UniqueConstraint(
             fields=["member", "organization"], name="unique_member_in_organization"
-        )
+        )]
 
     def __str__(self) -> str:
         return f"{self.organization.name}:{self.member.username}" 
