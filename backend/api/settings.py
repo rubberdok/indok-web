@@ -69,6 +69,7 @@ GRAPHENE = {
 }
 
 MIDDLEWARE = [
+    "django_alive.middleware.healthcheck_bypass_host_check",
     "api.auth.middleware.IndokWebJWTMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",

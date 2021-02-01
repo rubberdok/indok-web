@@ -5,6 +5,7 @@ cffi==1.14.4
 chardet==3.0.4
 cryptography==3.3.1
 Django==3.1.2
+django-alive==1.1.0
 django-cors-headers==3.5.0
 django-environ==0.4.5
 django-graphql-jwt==0.3.1
