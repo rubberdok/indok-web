@@ -21,6 +21,7 @@ from graphql_jwt.decorators import jwt_cookie
 
 from apps.ping.views import Ping
 
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     # ok to csrf exempt the graphql endpoint: https://stackoverflow.com/questions/51764452/403-by-graphene-django-dont-use-csrf-exempt
