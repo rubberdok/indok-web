@@ -22,6 +22,7 @@ pytest-django==4.1.0
 pytz==2020.1
 requests==2.24.0
 Rx==1.6.1
+sentry-sdk==0.19.5
 singledispatch==3.4.0.3
 six==1.15.0
 sqlparse==0.3.1
