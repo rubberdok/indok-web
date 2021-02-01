@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ScrollTop() {
+const ScrollTop: React.FC = () => {
   const classes = useStyles();
   const trigger = useScrollTrigger({
     disableHysteresis: true,
@@ -37,4 +37,6 @@ export default function ScrollTop() {
       </div>
     </Zoom>
   );
-}
+};
+
+export default ScrollTop;
