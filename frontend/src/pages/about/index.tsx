@@ -1,12 +1,13 @@
 import Layout from "@components/Layout";
-import { Container, Typography } from "@material-ui/core";
+import Wrapper from "@components/pages/about/Wrapper";
+import { Typography } from "@material-ui/core";
 import { NextPage } from "next";
 import React from "react";
 
 const AboutPage: NextPage = () => {
   return (
     <Layout>
-      <Container>
+      <Wrapper>
         <Typography variant="h1">Om Foreningen</Typography>
         <br />
         <Typography variant="h3">Hvem er vi?</Typography>
@@ -52,7 +53,7 @@ const AboutPage: NextPage = () => {
         </Typography>
         <br />
         <Typography variant="h3">Hovedstyret blir født</Typography>
-      </Container>
+      </Wrapper>
     </Layout>
   );
 };
