@@ -61,7 +61,7 @@ const ListDocuments: React.FC<ListDocumentsProps> = ({ document_types }) => {
 
   return (
     <Content>
-      <GridList cellHeight={256} className={classes.img} cols={4}>
+      <GridList cellHeight={144} className={classes.img} cols={4} spacing={8}>
         {data.archiveByType.length ? (
           data.archiveByType.map((doc: Document) => (
             <GridListTile key={0}>
@@ -96,7 +96,6 @@ const ListDocuments: React.FC<ListDocumentsProps> = ({ document_types }) => {
                         align: "left",
                       }}
                     />
-                    {/* <ImageCard key={doc.id} title={doc.title} subtitle={doc.typeDoc} imageUrl={doc.thumbnail} /> */}
                   </Button>
                 </CardActionArea>
               </Card>

@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import FilterButton from "./FilterButtons";
 import ListDocuments from "./listDocuments";
 import { ContentWrapper } from "./wrapper";
+import YearSelector from "./yearSelector";
 
 const DocumentListView: React.FC = () => {
   const [typeFilters, setTypeFilters] = useState<{ [key: string]: { active: boolean; title: string } }>({
@@ -33,6 +34,9 @@ const DocumentListView: React.FC = () => {
             })
           }
         />
+      </ContentWrapper>
+      <ContentWrapper style={{ marginLeft: "240px", marginBottom: "28px", marginTop: "-28px" }}>
+        <YearSelector />
       </ContentWrapper>
       <ListDocuments
         document_types={Object.entries(typeFilters)
