@@ -15,8 +15,8 @@ const ListingPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProp
   const { loading, error, data } = useQuery<{ listing: Listing }>(LISTING, {
     variables: { ID: Number(listingID[0]) },
   });
-  if (error) return <h1>Error</h1>;
-  if (loading) return <h1>Loading...</h1>;
+  if (error) return <p>Error</p>;
+  if (loading) return <p>Loading...</p>;
   return (
     <>
       {data && (

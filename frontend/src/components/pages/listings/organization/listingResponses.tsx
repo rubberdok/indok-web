@@ -3,8 +3,6 @@ import { useQuery, useMutation } from "@apollo/client";
 import { RESPONSES } from "@graphql/listings/queries";
 import { DELETE_RESPONSE } from "@graphql/listings/mutations";
 import { useState } from "react";
-import ListItem from "@components/ui/listItem";
-import List from "@components/ui/list";
 import OrganizationListing from "@components/pages/listings/organization/organizationListing";
 
 //Temporary styling components for demo
@@ -35,23 +33,31 @@ const ListingResponses: React.FC<{ listing: Listing }> = ({ listing }) => {
     <>
       {data && (
         <div style={horizontal}>
-          <List>
+          <ul>
             {data.listing.responses.map((response) => (
-              <ListItem
-                mainText={response.applicant.firstName + " " + response.applicant.lastName}
-                subText={response.applicant.year + ". klasse"}
+              <button
                 key={response.id}
-                selected={response === selectedResponse}
-                onClick={() => {
+                onClick={(e) => {
+                  e.preventDefault();
                   if (response === selectedResponse) {
                     selectResponse(undefined);
                   } else {
                     selectResponse(response);
                   }
                 }}
-              />
+              >
+                <li>
+                  {response === selectedResponse ? (
+                    <b>{response.applicant.firstName + " " + response.applicant.lastName}</b>
+                  ) : (
+                    response.applicant.firstName + " " + response.applicant.lastName
+                  )}
+                  <br />
+                  {`${response.applicant.year}. klasse`}
+                </li>
+              </button>
             ))}
-          </List>
+          </ul>
           {selectedResponse ? (
             <div style={{ ...responseView, ...flexChild }}>{selectedResponse.response}</div>
           ) : (

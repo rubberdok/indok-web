@@ -1,6 +1,3 @@
-import List from "@components/ui/list";
-import ListItem from "@components/ui/listItem";
-
 const Choice: React.FC<{
   title: string;
   radio?: boolean;

@@ -17,8 +17,8 @@ const Apply: React.FC<{
   if (userLoading || userError || !userData || !userData.user) {
     return <p>Logg inn for å søke!</p>;
   } else {
-    if (responseError) return <h1>Error</h1>;
-    if (responseLoading) return <h1>Loading...</h1>;
+    if (responseError) return <p>Error</p>;
+    if (responseLoading) return <p>Loading...</p>;
     if (responseData) {
       if (responseData.response !== null) {
         return (

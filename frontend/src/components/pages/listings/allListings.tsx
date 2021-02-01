@@ -2,8 +2,6 @@ import { useQuery } from "@apollo/client";
 import { Listing } from "@interfaces/listings";
 import { LISTINGS } from "@graphql/listings/queries";
 import Link from "next/link";
-import List from "@components/ui/list";
-import ListItem from "@components/ui/listItem";
 
 //TODO: remove userID once user log-in is properly implemented
 const AllListings: React.FC = () => {
@@ -13,15 +11,19 @@ const AllListings: React.FC = () => {
   return (
     <>
       {data && (
-        <List>
+        <ul>
           {data.listings.map((listing) => (
             <Link href={`/listings/${listing.id}/${listing.slug}`} passHref key={listing.id}>
               <a>
-                <ListItem mainText={listing.title} subText={listing.organization?.name || "N/A"} selected={false} />
+                <li>
+                  <b>{listing.title}</b>
+                  <br />
+                  {listing.organization?.name}
+                </li>
               </a>
             </Link>
           ))}
-        </List>
+        </ul>
       )}
     </>
   );

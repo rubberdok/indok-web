@@ -2,7 +2,6 @@ import { Listing, Response } from "@interfaces/listings";
 import { useMutation } from "@apollo/client";
 import { CREATE_RESPONSE } from "@graphql/listings/mutations";
 import React, { useState, ChangeEvent } from "react";
-import Button from "@components/ui/Button";
 
 const CreateResponse: React.FC<{
   listing: Listing;
@@ -56,7 +55,7 @@ const CreateResponse: React.FC<{
         return child;
       })}
       <br />
-      <Button type="submit">Søk</Button>
+      <button type="submit">Søk</button>
     </form>
   );
 };
