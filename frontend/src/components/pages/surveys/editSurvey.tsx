@@ -1,49 +1,50 @@
 import { useQuery, useMutation } from "@apollo/client";
 import { QUESTIONTYPES } from "@graphql/surveys/queries";
-import { CREATE_SURVEY, UPDATE_SURVEY, CREATE_QUESTION } from "@graphql/surveys/mutations";
+import { UPDATE_SURVEY, CREATE_QUESTION } from "@graphql/surveys/mutations";
 import { useState } from "react";
 import { Survey, QuestionType, Question } from "@interfaces/surveys";
 import QuestionDetail from "@components/pages/surveys/questionDetail";
-import CreateQuestion from "@components/pages/surveys/createQuestion";
-
-interface EditableQuestion extends Question {
-  editing: boolean;
-}
-
-interface EditableSurvey extends Survey {
-  questions: EditableQuestion[];
-}
+import EditQuestion from "@components/pages/surveys/editQuestion";
 
 const EditSurvey: React.FC<{ oldSurvey: Survey }> = ({ oldSurvey }) => {
-  const [survey, setSurvey] = useState<EditableSurvey>(oldSurvey as EditableSurvey);
-  const setQuestion = (newQuestion: Question) => {
+  const [survey, setSurvey] = useState<Survey>(oldSurvey);
+  const [activeQuestion, setActiveQuestion] = useState<Question | undefined>();
+  const replaceOrAddQuestion = (questions: Question[], question: Question) => {
+    let added = false;
+    questions = questions.map((oldQuestion) => {
+      if (oldQuestion.id === question.id) {
+        added = true;
+        return question;
+      } else {
+        return oldQuestion;
+      }
+    });
+    if (!added) {
+      setActiveQuestion(question);
+      return [...questions, question];
+    }
+    return questions;
+  };
+  const setQuestion = (question: Question) => {
     setSurvey({
       ...survey,
-      questions: survey.questions.map((oldQuestion) =>
-        oldQuestion.id === newQuestion.id ? { ...newQuestion, editing: true } : oldQuestion
-      ),
+      questions: replaceOrAddQuestion(survey.questions, question),
     });
   };
-  const { loading, error, data: questionTypeData } = useQuery<{ questionTypes: QuestionType[] }>(QUESTIONTYPES);
+  const { loading: questionTypeLoading, error: questionTypeError, data: questionTypeData } = useQuery<{
+    questionTypes: QuestionType[];
+  }>(QUESTIONTYPES);
   const [updateSurvey] = useMutation(UPDATE_SURVEY);
-  const [createQuestion, { data: questionData }] = useMutation<{ createQuestion: { question: Question } }>(
-    CREATE_QUESTION,
-    {
-      onCompleted({ createQuestion: { question } }) {
-        if (question) {
-          setSurvey({
-            ...survey,
-            questions: [...survey.questions, { ...question, editing: true }],
-          });
-        }
-      },
-    }
-  );
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error</p>;
+  const [createQuestion] = useMutation<{ createQuestion: { question: Question } }>(CREATE_QUESTION, {
+    onCompleted({ createQuestion: { question } }) {
+      setQuestion(question);
+    },
+  });
+  if (questionTypeLoading) return <p>Loading...</p>;
+  if (questionTypeError) return <p>Error</p>;
   return (
     <>
-      <h4>{survey.descriptiveName}</h4>
+      <h3>{survey.descriptiveName}</h3>
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -69,19 +70,24 @@ const EditSurvey: React.FC<{ oldSurvey: Survey }> = ({ oldSurvey }) => {
           Nytt spørsmål
         </button>
         {questionTypeData && (
-          <>
-            {survey.questions.map((question) => {
-              question.editing ? (
-                <CreateQuestion
+          <ul>
+            {survey.questions.map((question) =>
+              question === activeQuestion ? (
+                <EditQuestion
                   question={question}
                   setQuestion={setQuestion}
+                  setActiveQuestion={setActiveQuestion}
                   questionTypes={questionTypeData.questionTypes}
                 />
               ) : (
-                <QuestionDetail question={question as Question} active={false} />
-              );
-            })}
-          </>
+                <QuestionDetail
+                  question={question as Question}
+                  setActiveQuestion={setActiveQuestion}
+                  key={question.id}
+                />
+              )
+            )}
+          </ul>
         )}
         <br />
         <button type="submit">Lagre søknad</button>
