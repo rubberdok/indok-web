@@ -1,8 +1,13 @@
 import { useQuery } from "@apollo/client";
+import { GET_USER } from "@graphql/auth/queries";
 import { GET_EVENTS } from "@graphql/events/queries";
 import { Event } from "@interfaces/events";
+import { User } from "@interfaces/users";
+import { Button, Grid, Typography } from "@material-ui/core";
 import Link from "next/link";
 import React, { useState } from "react";
+import { PlusSquare } from "react-feather";
+import styled from "styled-components";
 import FilterMenu from "./filterMenu";
 
 export interface FilterQuery {
@@ -15,13 +20,14 @@ export interface FilterQuery {
 const AllEvents: React.FC = () => {
   const [filters, setFilters] = useState({});
   const [showTableView, setShowTableView] = useState(false);
+  const { loading: userLoading, error: userError, data: userData } = useQuery<{ user: User }>(GET_USER);
   const { loading, error, data, refetch } = useQuery(GET_EVENTS, {
     variables: filters,
   });
   // should handle loading status
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <Typography>Laster inn...</Typography>;
 
-  if (error) return <p>Error :(</p>;
+  if (error) return <Typography>Kunne ikke hente arrangementer.</Typography>;
 
   const onChange = (newFilters: FilterQuery) => {
     setFilters(newFilters);
@@ -29,43 +35,112 @@ const AllEvents: React.FC = () => {
   };
 
   return (
-    <div>
-      <FilterMenu filters={filters} onChange={onChange} />
-      <div style={{ float: "right", width: "70%" }}>
-        <button onClick={() => setShowTableView(!showTableView)}>{showTableView ? "Vis liste" : "Vis kalender"}</button>
-        {showTableView ? (
-          <p>{"Kommer snart! :)"}</p>
-        ) : (
-          <>
-            {data.allEvents.length === 0 ? (
-              <h4>{"Ingen arrangementer passer til valgte filtere"}</h4>
-            ) : (
-              data.allEvents.map((event: Event) => (
-                <Link href={`/events/${event.id}`} key={event.id}>
-                  <a href={`/events/${event.id}`} style={{ color: "#000" }}>
-                    <div
-                      style={{
-                        border: "solid",
-                        borderWidth: "0.05em",
-                        borderColor: "#6A9997",
-                        borderRadius: "0.2em",
-                        padding: "0.5em",
-                        marginBottom: "0.5em",
-                        backgroundColor: "#FFF",
-                      }}
-                    >
-                      <p style={{ marginBottom: "0.2em" }}>{event.title}</p>
-                      <p style={{ marginTop: 0 }}>Starttid: {event.startTime.slice(0, 19).replace("T", " ")}</p>
-                    </div>
-                  </a>
-                </Link>
-              ))
-            )}
-          </>
+    <>
+      <Button
+        style={{ paddingBottom: "0px", paddingTop: "0px", margin: "0px", fontSize: "1.1em" }}
+        className={!showTableView ? "active" : ""}
+        onClick={() => setShowTableView(!showTableView)}
+      >
+        Liste
+      </Button>
+      <Button
+        style={{ paddingBottom: "0px", paddingTop: "0px", fontSize: "1.1em" }}
+        className={showTableView ? "active" : ""}
+        onClick={() => setShowTableView(!showTableView)}
+      >
+        Kalender
+      </Button>
+
+      <div style={{ float: "right" }}>
+        {userData && !userLoading && userData.user && !userError && (
+          // TODO: Redirect til `/events/create-event` når vi har funksjonalitet for dette.
+          <Link href="/events/create-event">
+            <StyledIconButton>
+              <PlusSquare />
+              <p style={{ margin: 0 }}>Opprett</p>
+            </StyledIconButton>
+          </Link>
         )}
       </div>
-    </div>
+
+      <Grid container>
+        <Grid item xs={3}>
+          <FilterMenu filters={filters} onChange={onChange} />
+        </Grid>
+        <Grid item xs>
+          {showTableView ? (
+            <p>{"Kommer snart! :)"}</p>
+          ) : (
+            <>
+              {data.allEvents.length === 0 ? (
+                <Typography variant="body1">Ingen arrangementer passer til valgte filtre.</Typography>
+              ) : (
+                data.allEvents.map((event: Event) => (
+                  <Link href={`/events/${event.id}`} key={event.id}>
+                    <EventContainerLink style={{ color: "#000" }}>
+                      <EventContainer
+                        style={{
+                          borderColor: event.organization?.color ?? "#fff",
+                        }}
+                      >
+                        <p style={{ marginBottom: "0.2em" }}>{event.title}</p>
+                        <p style={{ marginTop: 0 }}>Starttid: {event.startTime.slice(0, 19).replace("T", " ")}</p>
+                      </EventContainer>
+                    </EventContainerLink>
+                  </Link>
+                ))
+              )}
+            </>
+          )}
+        </Grid>
+      </Grid>
+    </>
   );
 };
 
 export default AllEvents;
+
+const StyledIconButton = styled.button`
+  background: transparent;
+  color: #000;
+  font-family: "Montserrat";
+  font-size: 18px;
+  border: none;
+  display: flex;
+  align-items: stretch;
+  text-decoration: none !important;
+  transition: 0.3s all ease;
+  padding: 0;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  &:focus {
+    border: none;
+    outline: none;
+  }
+`;
+
+const EventContainer = styled.div`
+  border: solid;
+  border-width: 0.05em 0.05em 0.05em 1.2em;
+  border-color: #fff;
+  border-radius: 0.2em;
+  padding: 0.5em;
+  margin-bottom: 0.5em;
+  background-color: #fff;
+
+  &:hover {
+    cursor: pointer;
+    background-color: #f4f4f4;
+  }
+`;
+
+const EventContainerLink = styled.a`
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: none;
+  }
+`;

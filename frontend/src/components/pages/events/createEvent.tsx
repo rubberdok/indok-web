@@ -1,10 +1,10 @@
 import { gql, useMutation, useQuery } from "@apollo/client";
-import Button from "@components/ui/Button";
 import Select from "@components/ui/Select";
 import { CREATE_EVENT } from "@graphql/events/mutations";
 import { GET_CATEGORIES, QUERY_EVENT_FILTERED_ORGANIZATIONS } from "@graphql/events/queries";
 import { Category, Event } from "@interfaces/events";
 import { Organization } from "@interfaces/organizations";
+import { Button } from "@material-ui/core";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
@@ -20,7 +20,6 @@ const CreateEvent: React.FC = () => {
     image: "",
     isAttendable: false,
     deadline: "",
-    publisher: "",
   };
 
   const [eventData, setEventData] = useState(defaultInput);
@@ -100,14 +99,14 @@ const CreateEvent: React.FC = () => {
             onChange={(e) => setEventData({ ...eventData, title: e.currentTarget.value })}
           />
         </div>
-        <div>
+        {/* <div>
           Publiserer: &nbsp;
           <input
             placeholder="Publiserer"
             value={eventData.publisher}
             onChange={(e) => setEventData({ ...eventData, publisher: e.currentTarget.value })}
           />
-        </div>
+        </div> */}
         <div>
           Starttid: &nbsp;
           <input
@@ -190,7 +189,7 @@ const CreateEvent: React.FC = () => {
           />
         </div>
 
-        <Button type="submit" styling="primary">
+        <Button type="submit" color="primary">
           Opprett arrangement
         </Button>
       </form>

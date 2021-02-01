@@ -48,7 +48,7 @@ class DataportenAuth:
         except requests.exceptions.RequestException as err:
             print(f"Error completing Dataporten authentication: {err}")
             raise Exception(
-                "En feil oppstud under fullføring av Dataporten-autentisering."
+                "En feil oppstod under fullføring av Dataporten-autentisering."
             )
 
         print(f"Successfully obtained access token: {response.json()['access_token']}")

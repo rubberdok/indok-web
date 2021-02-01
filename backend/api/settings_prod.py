@@ -2,7 +2,7 @@ import os
 
 from api.settings import *
 
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ["api.gamma.indokntnu.no"]
 
@@ -24,3 +24,8 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 DATAPORTEN_ID = os.environ.get("DATAPORTEN_ID")
 DATAPORTEN_SECRET = os.environ.get("DATAPORTEN_SECRET")
 DATAPORTEN_REDIRECT_URI = os.environ.get("DATAPORTEN_REDIRECT_URI")
+
+EMAIL_HOST_USER = os.environ.get("BOOKING_EMAIL")
+EMAIL_HOST_PASSWORD = os.environ.get("BOOKING_EMAIL_PASSWORD")
+
+GOOGLE_DRIVE_API_KEY = os.environ.get("GOOGLE_DRIVE_API_KEY")
