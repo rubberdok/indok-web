@@ -8,8 +8,8 @@ import React from "react";
 const useStyles = makeStyles((theme) => ({
   root: {
     position: "fixed",
-    bottom: theme.spacing(2),
-    right: theme.spacing(2),
+    bottom: theme.spacing(3),
+    left: theme.spacing(3),
   },
 }));
 
@@ -31,7 +31,7 @@ export default function ScrollTop() {
   return (
     <Zoom in={trigger}>
       <div onClick={handleClick} role="presentation" className={classes.root}>
-        <Fab color="secondary" size="small" aria-label="scroll back to top">
+        <Fab size="small" aria-label="scroll back to top">
           <KeyboardArrowUpIcon />
         </Fab>
       </div>
