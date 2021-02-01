@@ -1,6 +1,6 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { TextField } from "@material-ui/core";
+import { TextField, Container } from "@material-ui/core";
 import { FilterQuery } from "../..";
 
 interface Props {
@@ -12,7 +12,9 @@ const useStyles = makeStyles((theme) => ({
   container: {
     display: "flex",
     flexWrap: "wrap",
-    paddingLeft: theme.spacing(2),
+    padding: theme.spacing(2),
+    paddingBottom: 0,
+    paddingRight: 0,
   },
   textField: {
     width: "90%",
@@ -27,7 +29,7 @@ const DateTimeFilter: React.FC<Props> = ({ filters, onFiltersChange }) => {
   const classes = useStyles();
 
   return (
-    <div className={classes.container}>
+    <Container className={classes.container}>
       <TextField
         id="datetime-local"
         label="Starttid"
@@ -47,7 +49,7 @@ const DateTimeFilter: React.FC<Props> = ({ filters, onFiltersChange }) => {
         InputLabelProps={{ shrink: true }}
         onChange={(e) => onFiltersChange({ ...filters, endTime: e.currentTarget.value })}
       />
-    </div>
+    </Container>
   );
 };
 

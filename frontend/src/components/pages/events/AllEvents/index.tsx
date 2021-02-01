@@ -3,14 +3,12 @@ import { GET_USER } from "@graphql/auth/queries";
 import { GET_EVENTS } from "@graphql/events/queries";
 import { Event } from "@interfaces/events";
 import { User } from "@interfaces/users";
-import { Button, Grid, Typography, CircularProgress, Paper, Tabs, Tab, Paragraph } from "@material-ui/core";
+import { Button, Grid, Typography, CircularProgress, Paper, Tabs, Tab, Container, makeStyles } from "@material-ui/core";
 import Link from "next/link";
 import { PlusSquare } from "react-feather";
-import styled from "styled-components";
 import React, { useState } from "react";
-import color from "src/styles/theme";
 import { DATAPORTEN_SCOPES, generateAuthURL } from "../../../navbar/utils";
-import FilterMenu from "./FilterMenu";
+import FilterMenu from "./FilterMenu/index";
 
 export interface FilterQuery {
   organization?: string;
@@ -26,11 +24,40 @@ const signInURL = generateAuthURL(
   DATAPORTEN_SCOPES
 );
 
-interface TabPanelProps {
-  children?: React.ReactNode;
-  index: any;
-  value: any;
-}
+const useStyles = makeStyles((theme) => ({
+  container: {
+    padding: 0,
+  },
+  tabsContainer: {
+    width: "fit-content",
+    float: "left",
+  },
+  tabs: {},
+  progessContainer: {
+    paddingLeft: "45%",
+    paddingTop: theme.spacing(6),
+  },
+  headerContainer: {
+    padding: 0,
+  },
+  createButtonContainer: {
+    width: "fit-content",
+    float: "right",
+  },
+  grid: {
+    padding: theme.spacing(3),
+    paddingTop: theme.spacing(2),
+  },
+  eventContainer: {
+    border: "solid",
+    borderWidth: "0.05em 0.05em 0.05em 1.2em",
+    borderColor: theme.palette.primary,
+    borderRadius: "0.2em",
+    padding: theme.spacing(2),
+    marginBottom: theme.spacing(2),
+    backgroundColor: "#fff",
+  },
+}));
 
 const AllEvents: React.FC = () => {
   const [filters, setFilters] = useState({});
@@ -39,104 +66,71 @@ const AllEvents: React.FC = () => {
   const { loading, error, data, refetch } = useQuery(GET_EVENTS, {
     variables: filters,
   });
+  const classes = useStyles();
 
-  if (error) return <Paragraph>Kunne ikke hente arrangementer.</Paragraph>;
+  if (error) return <Typography variant="body1">Kunne ikke hente arrangementer.</Typography>;
 
   const onChange = (newFilters: FilterQuery) => {
     setFilters(newFilters);
     refetch(newFilters);
   };
+
   return (
-    <div>
-      <div>
-        <Paper square>
-          <Tabs
-            value={showCalenderView ? 0 : 1}
-            onChange={() => setShowCalenderView(!showCalenderView)}
-            indicatorColor="primary"
-            textColor="primary"
-          >
-            <Tab label="Liste" />
-            <Tab label="Kalender" />
-          </Tabs>
-        </Paper>
+    <Container className={classes.container}>
+      <Container className={classes.headerContainer}>
+        <Container className={classes.tabsContainer}>
+          <Paper square>
+            <Tabs
+              value={showCalenderView ? 1 : 0}
+              onChange={() => setShowCalenderView(!showCalenderView)}
+              indicatorColor="primary"
+              textColor="primary"
+              className={classes.tabs}
+            >
+              <Tab label="Liste" />
+              <Tab label="Kalender" />
+            </Tabs>
+          </Paper>
+        </Container>
 
-        <div style={{ float: "right" }}>
-          {userData && !userLoading && userData.user && !userError && (
-            // TODO: Redirect til `/events/create-event` når vi har funksjonalitet for dette.
+        {userData && !userLoading && userData.user && !userError && (
+          // TODO: Redirect til `/events/create-event` når vi har funksjonalitet for dette.
+          <Container className={classes.createButtonContainer}>
             <Link href={`/events/create-event`}>
-              <StyledIconButton>
+              <Button color="primary">
                 <PlusSquare />
-                <p style={{ margin: 0 }}>Opprett</p>
-              </StyledIconButton>
+                <Typography variant="body1">Opprett</Typography>
+              </Button>
             </Link>
-          )}
-        </div>
-      </div>
-
-      <div style={{ width: "100%", paddingTop: "1em" }}>
-        <div>
-          <FilterMenu filters={filters} onChange={onChange} />
-        </div>
-
-        {loading ? (
-          <div style={{ width: "70%", paddingLeft: "60%", paddingTop: "3em" }}>
-            <CircularProgress color={color.colors.primary} />
-          </div>
-        ) : (
-          <div style={{ width: "70%", float: "right" }}>
-            {showCalenderView ? (
-              <p>{"Kommer snart! :)"}</p>
-            ) : (
-              <>
-                {data.allEvents.length === 0 ? (
-                  <Paragraph>Ingen arrangementer passer til valgte filtre.</Paragraph>
-                ) : (
-                  data.allEvents.map((event: Event) => (
-                    <Link href={`/events/${event.id}`} key={event.id}>
-                      <EventContainerLink href={`/events/${event.id}`} style={{ color: "#000" }}>
-                        <EventContainer
-                          style={{
-                            borderColor: event.organization?.color ?? color.colors.primaryLight,
-                          }}
-                        >
-                          <p style={{ marginBottom: "0.2em" }}>{event.title}</p>
-                          <p style={{ marginTop: 0 }}>Starttid: {event.startTime.slice(0, 19).replace("T", " ")}</p>
-                        </EventContainer>
-                      </EventContainerLink>
-                    </Link>
-                  ))
-                )}
-              </>
-            )}
-          </div>
+          </Container>
         )}
-      </div>
+      </Container>
 
-      <Grid container>
+      <Grid container className={classes.grid}>
         <Grid item xs={3}>
           <FilterMenu filters={filters} onChange={onChange} />
         </Grid>
         <Grid item xs>
-          {showCalenderView ? (
-            <p>{"Kommer snart! :)"}</p>
+          {loading ? (
+            <Container className={classes.progessContainer}>
+              <CircularProgress />
+            </Container>
+          ) : showCalenderView ? (
+            <Typography variant="body1">Kommer snart! :)</Typography>
           ) : (
             <>
-              {data.allEvents.length === 0 ? (
+              {data?.allEvents === undefined || data.allEvents.length === 0 ? (
                 <Typography variant="body1">Ingen arrangementer passer til valgte filtre.</Typography>
               ) : (
                 data.allEvents.map((event: Event) => (
                   <Link href={`/events/${event.id}`} key={event.id}>
-                    <EventContainerLink style={{ color: "#000" }}>
-                      <EventContainer
-                        style={{
-                          borderColor: event.organization?.color ?? "#fff",
-                        }}
-                      >
-                        <p style={{ marginBottom: "0.2em" }}>{event.title}</p>
-                        <p style={{ marginTop: 0 }}>Starttid: {event.startTime.slice(0, 19).replace("T", " ")}</p>
-                      </EventContainer>
-                    </EventContainerLink>
+                    <Container
+                      className={classes.eventContainer}
+                      style={{ borderColor: event.organization?.color ?? "primary" }}
+                    >
+                      <Typography variant="h6">{event.title}</Typography>
+                      <Typography variant="body1">Begynner {event.startTime.slice(0, 19).replace("T", " ")}</Typography>
+                    </Container>
                   </Link>
                 ))
               )}
@@ -144,53 +138,8 @@ const AllEvents: React.FC = () => {
           )}
         </Grid>
       </Grid>
-    </div>
+    </Container>
   );
 };
 
 export default AllEvents;
-
-const StyledIconButton = styled.button`
-  background: transparent;
-  color: #fff;
-  font-family: "Montserrat";
-  font-size: 18px;
-  border: none;
-  display: flex;
-  align-items: stretch;
-  text-decoration: none !important;
-  transition: 0.3s all ease;
-  padding: 0;
-
-  &:hover {
-    cursor: pointer;
-  }
-
-  &:focus {
-    border: none;
-    outline: none;
-  }
-`;
-
-const EventContainer = styled.div`
-  border: solid;
-  border-width: 0.05em 0.05em 0.05em 1.2em;
-  border-color: #fff;
-  border-radius: 0.2em;
-  padding: 0.5em;
-  margin-bottom: 0.5em;
-  background-color: #fff;
-
-  &:hover {
-    cursor: pointer;
-    background-color: #f4f4f4;
-  }
-`;
-
-const EventContainerLink = styled.a`
-  text-decoration: none;
-
-  &:hover {
-    text-decoration: none;
-  }
-`;
