@@ -5,6 +5,9 @@ import FilterButton from "./FilterButtons";
 import ListDocuments from "./listDocuments";
 import { ContentWrapper } from "./wrapper";
 import YearSelector from "./yearSelector";
+import Button from "@components/ui/Button";
+import SearchDocuments from "./searchDocuments";
+import EditIcon from "@material-ui/icons/Edit";
 
 const DocumentListView: React.FC = () => {
   const [typeFilters, setTypeFilters] = useState<{ [key: string]: { active: boolean; title: string } }>({
@@ -35,7 +38,17 @@ const DocumentListView: React.FC = () => {
           }
         />
       </ContentWrapper>
-      <ContentWrapper style={{ marginLeft: "240px", marginBottom: "28px", marginTop: "-28px" }}>
+      <ContentWrapper
+        style={{
+          //justifyContent: "space-between",
+          justifyContent: "flex-end",
+          marginLeft: "15%",
+          marginRight: "15%",
+          marginBottom: "32px",
+          marginTop: "-16px",
+        }}
+      >
+        {/* <SearchDocuments /> */}
         <YearSelector />
       </ContentWrapper>
       <ListDocuments
@@ -43,6 +56,11 @@ const DocumentListView: React.FC = () => {
           .filter((key, _) => key[1].active)
           .map(([_, val]) => val.title)}
       />
+      <ContentWrapper style={{ marginTop: "32px", justifyContent: "center" }}>
+        <Button>
+          Rediger arkiv <EditIcon style={{ fontSize: "large" }} />
+        </Button>
+      </ContentWrapper>
     </div>
   );
 };
