@@ -6,32 +6,33 @@ const theme = createMuiTheme({
     fontFamily: ["Montserrat", "sans-serif"].join(","),
     h1: {
       fontFamily: ["Playfair Display", "sans-serif"].join(","),
-      fontSize: "50px",
+      fontSize: "4rem",
       fontWeight: 800,
     },
     h2: {
       fontFamily: ["Playfair Display", "sans-serif"].join(","),
-      fontSize: "48px",
+      fontSize: "3rem",
       fontWeight: 800,
     },
     h3: {
       fontFamily: ["Playfair Display", "sans-serif"].join(","),
-      fontSize: "30px",
+      fontSize: "2.5rem",
       fontWeight: 800,
     },
     h4: {
       fontFamily: ["Playfair Display", "sans-serif"].join(","),
       fontWeight: 700,
-      fontSize: "28px",
+      fontSize: "2rem",
     },
     h5: {
       fontFamily: ["Playfair Display", "sans-serif"].join(","),
       fontWeight: 700,
-      fontSize: "24px",
+      fontSize: "1.5rem",
     },
     h6: {
       fontFamily: ["Playfair Display", "sans-serif"].join(","),
       fontWeight: 800,
+      fontSize: "1.25rem",
     },
     overline: {
       fontSize: "12px",
