@@ -1,17 +1,29 @@
+import { ListItemIcon } from "@material-ui/core";
 import Collapse from "@material-ui/core/Collapse";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import { makeStyles } from "@material-ui/core/styles";
-import ExpandLess from "@material-ui/icons/ExpandLess";
-import ExpandMore from "@material-ui/icons/ExpandMore";
+import TreeIcon from "@material-ui/icons/AccountTreeOutlined";
+import InfoIcon from "@material-ui/icons/InfoOutlined";
+import PeopleIcon from "@material-ui/icons/PeopleAltOutlined";
 import React from "react";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
-    maxWidth: 360,
-    backgroundColor: theme.palette.background.paper,
+    //backgroundColor: theme.palette.background.paper,
+    padding: 0,
+
+    "& span": {
+      fontSize: 12,
+      fontWeight: 600,
+      textTransform: "uppercase",
+    },
+
+    "& > div": {
+      padding: "12px 24px",
+    },
   },
   nested: {
     paddingLeft: theme.spacing(4),
@@ -27,19 +39,27 @@ export default function NestedList() {
   };
 
   return (
-    <List component="nav" aria-labelledby="nested-list-subheader" className={classes.root}>
-      <ListItem button>
+    <List component="div" className={classes.root}>
+      <ListItem divider button>
+        <ListItemIcon>
+          <InfoIcon fontSize="small" />
+        </ListItemIcon>
         <ListItemText primary="Om oss" />
       </ListItem>
-      <ListItem button>
+      <ListItem divider button>
+        <ListItemIcon>
+          <PeopleIcon fontSize="small" />
+        </ListItemIcon>
         <ListItemText primary="Hovedstyret" />
       </ListItem>
       <ListItem button>
-        <ListItemText primary="Organisasjonskart" />
-      </ListItem>
-      <ListItem button onClick={handleClick}>
-        <ListItemText primary="Inbox" />
-        {open ? <ExpandLess /> : <ExpandMore />}
+        <ListItemIcon>
+          <TreeIcon fontSize="small" />
+        </ListItemIcon>
+        <ListItemText primary="Organisasjoner" />
+        {/* <Box pt="4px" onClick={handleClick}>
+          {open ? <ExpandLess /> : <ExpandMore />}
+        </Box> */}
       </ListItem>
       <Collapse in={open} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
