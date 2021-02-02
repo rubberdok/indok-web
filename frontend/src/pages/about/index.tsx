@@ -1,16 +1,53 @@
 import Layout from "@components/Layout";
 import Wrapper from "@components/pages/about/Wrapper";
-import { Typography } from "@material-ui/core";
+import { Box, Grid, makeStyles, Typography } from "@material-ui/core";
 import { NextPage } from "next";
 import React from "react";
 
+const useStyles = makeStyles(() => ({
+  title: {
+    color: "white",
+  },
+  titleImage: {
+    width: "100%",
+    height: "100%",
+    backgroundSize: "cover",
+    backgroundRepeat: "no-repeat",
+    backgroundPosition: "center",
+  },
+}));
+
 const AboutPage: NextPage = () => {
+  const classes = useStyles();
+
   return (
     <Layout>
       <Wrapper>
-        <Typography variant="h1">Om Foreningen</Typography>
-        <br />
-        <Typography variant="h3">Hvem er vi?</Typography>
+        <Box mb={5} position="relative" className={classes.title} height={300}>
+          <Grid style={{ height: "100%" }} container>
+            <Grid item xs={12}>
+              <Box
+                className={classes.titleImage}
+                style={{
+                  backgroundImage: `linear-gradient(to left, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.9)),
+        url('img/gang.jpg')`,
+                }}
+              ></Box>
+            </Grid>
+          </Grid>
+          <Grid container>
+            <Grid item xs={1}></Grid>
+            <Grid item xs={7}>
+              <Box display="flex" top="0" alignItems="center" position="absolute" height="100%" zIndex="4">
+                <Box width={650}>
+                  <Typography variant="overline">Om foreningen</Typography>
+                  <Typography variant="h2">Hvem er vi?</Typography>
+                </Box>
+              </Box>
+            </Grid>
+            <Grid item xs={4}></Grid>
+          </Grid>
+        </Box>
         <Typography variant="body1">
           Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse er den øverste instansen
           (moderorganisasjonen) for all studentfrivillighet på masterstudiet Indøk ved NTNU. Foreningen drives av over
@@ -21,8 +58,10 @@ const AboutPage: NextPage = () => {
           Foreningens øverste myndighet, hvor alle studentene på Indøk har stemmerett.
         </Typography>
         <br />
-        <Typography variant="h3">Hovedstyret blir født</Typography>
-        <Typography variant="body1">
+        <Typography gutterBottom variant="h3">
+          Hovedstyret blir født
+        </Typography>
+        <Typography variant="body2">
           Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse, NTNU er formaliseringen av all
           foreningsaktivitet på Indøk under ett og samme tak. På den måten kan vi si at Foreningen har eksistert så
           lenge studentfrivilligheten på Indøk har det. Allerede på det første Indøk-kullet i 86´ ble
