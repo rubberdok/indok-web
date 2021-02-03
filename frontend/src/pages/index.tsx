@@ -84,7 +84,7 @@ const IndexPage: NextPage = () => {
           <Grid container spacing={5}>
             <Grid item xs={12} md={3}>
               <Box height="100%" display="flex" alignItems="center">
-                <Typography variant="h3">
+                <Typography variant="h5">
                   Kommende <br />
                   arrangementer
                 </Typography>
@@ -95,7 +95,7 @@ const IndexPage: NextPage = () => {
                 <CardMedia component="img" src="/img/afterski.jpg" className={classes.cardMedia} />
                 <div className={classes.cardContent}>
                   <CardContent>
-                    <Typography gutterBottom variant="h4" component="h2">
+                    <Typography gutterBottom variant="h6">
                       Afterski i Bymarka
                     </Typography>
                     <Typography variant="body2" color="textSecondary" component="p">
@@ -110,7 +110,7 @@ const IndexPage: NextPage = () => {
                 <CardMedia component="img" src="/img/borsfest.jpg" className={classes.cardMedia} />
                 <div className={classes.cardContent}>
                   <CardContent>
-                    <Typography gutterBottom variant="h4" component="h2">
+                    <Typography gutterBottom variant="h6">
                       Woodøk i kjent stil
                     </Typography>
                     <Typography variant="body2" color="textSecondary" component="p">
@@ -132,7 +132,7 @@ const IndexPage: NextPage = () => {
                 <Paper>
                   <Box p={10}>
                     <Typography variant="overline">Hyttestyret</Typography>
-                    <Typography gutterBottom variant="h3">
+                    <Typography gutterBottom variant="h4">
                       Book en av hyttene våre til rimlig pris
                     </Typography>
                     <br />
@@ -163,7 +163,7 @@ const IndexPage: NextPage = () => {
               <Paper>
                 <Box p={10}>
                   <Typography variant="overline">Linjens historie</Typography>
-                  <Typography gutterBottom variant="h3">
+                  <Typography gutterBottom variant="h4">
                     INDØK siden 1986
                   </Typography>
                   <br />

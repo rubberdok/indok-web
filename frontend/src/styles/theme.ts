@@ -13,6 +13,7 @@ const theme = createMuiTheme({
       fontFamily: ["Playfair Display", "sans-serif"].join(","),
       fontSize: "3rem",
       fontWeight: 800,
+      lineHeight: "3.5rem",
     },
     h3: {
       fontFamily: ["Playfair Display", "sans-serif"].join(","),
@@ -38,10 +39,17 @@ const theme = createMuiTheme({
       fontSize: "12px",
       letterSpacing: "0.5px",
     },
-    body2: {
-      fontSize: "15px",
+    body1: {
+      fontFamily: ["Source Serif Pro", "sans-serif"].join(","),
+      fontSize: "1.1rem",
       fontWeight: 500,
-      lineHeight: "24px",
+      lineHeight: "1.6rem",
+    },
+    body2: {
+      fontFamily: ["Source Serif Pro", "sans-serif"].join(","),
+      fontSize: "0.9rem",
+      fontWeight: 500,
+      lineHeight: "1.3rem",
     },
   },
   overrides: {
@@ -50,6 +58,24 @@ const theme = createMuiTheme({
         padding: "16px 32px",
         fontWeight: 700,
         fontSize: 11,
+      },
+    },
+    MuiAppBar: {
+      root: {
+        fontFamily: ["Montserrat", "sans-serif"].join(","),
+      },
+      colorDefault: {
+        backgroundColor: "#ffffff",
+      },
+    },
+    MuiTabs: {
+      root: {
+        minHeight: 40,
+      },
+    },
+    MuiTab: {
+      root: {
+        padding: "24px 16px",
       },
     },
   },
