@@ -3,9 +3,11 @@ from django.contrib.auth import get_user_model
 
 
 class UserResolvers:
-    @login_required
     def resolve_user(parent, info):
-        return info.context.user
+        if isinstance(info.context.user, get_user_model()):
+            return info.context.user
+        else:
+            return None
 
     @staff_member_required
     def resolve_all_users(parent, info):
