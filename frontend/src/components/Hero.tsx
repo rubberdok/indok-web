@@ -35,7 +35,7 @@ const Hero: React.FC = () => {
       ></Box>
       <Container>
         <Box display="flex" top="0" alignItems="center" position="absolute" height="90vh" zIndex="4">
-          <Box width={650}>
+          <Box width={800}>
             <Typography variant="overline">Foreningen for studentene ved</Typography>
             <Typography variant="h1">Industriell Økonomi og Teknologiledelse</Typography>
           </Box>
@@ -45,7 +45,7 @@ const Hero: React.FC = () => {
             <Paper className={classes.heroCard}>
               <Box display="flex" alignItems="center">
                 <Box flexGrow={1}>
-                  <Typography variant="h5">Les de siste nyhetene fra Hovedstyret</Typography>
+                  <Typography variant="h6">Les de siste nyhetene fra Hovedstyret</Typography>
                 </Box>
                 <Link href="/about">
                   <Button variant="contained" endIcon={<NavigateNextIcon />}>

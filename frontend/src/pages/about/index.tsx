@@ -1,19 +1,80 @@
 import Layout from "@components/Layout";
 import Wrapper from "@components/pages/about/Wrapper";
-import { Typography } from "@material-ui/core";
-import { typography } from "@material-ui/system";
+import { AppBar, Box, Breadcrumbs, Container, Link, makeStyles, Tab, Tabs, Typography } from "@material-ui/core";
 import { NextPage } from "next";
 import React from "react";
 
+const useStyles = makeStyles(() => ({
+  title: {
+    color: "white",
+  },
+  titleImage: {
+    width: "100%",
+    height: "300px",
+    backgroundSize: "cover",
+    backgroundRepeat: "no-repeat",
+    backgroundPosition: "center",
+  },
+  navItem: {
+    fontWeight: 600,
+    fontSize: 12,
+    textTransform: "uppercase",
+    color: "black",
+    "&:hover": {
+      cursor: "pointer",
+    },
+  },
+  breadcrumb: {
+    color: "#fff",
+  },
+}));
+
 const AboutPage: NextPage = () => {
+  const classes = useStyles();
+  const [value, setValue] = React.useState(0);
+
   return (
     <Layout>
+      <Container>
+        <Box mt={5}>
+          <AppBar color="default" position="static">
+            <Tabs
+              indicatorColor="primary"
+              value={value}
+              onChange={() => setValue(value)}
+              aria-label="simple tabs example"
+            >
+              <Tab className={classes.navItem} label="Om oss" />
+              <Tab className={classes.navItem} label="Hovedstyret" />
+              <Tab className={classes.navItem} label="Organisasjon" />
+            </Tabs>
+          </AppBar>
+        </Box>
+        <Box position="relative" className={classes.title} height={300}>
+          <Box
+            display="flex"
+            alignItems="center"
+            flexDirection="column"
+            justifyContent="center"
+            className={classes.titleImage}
+            style={{
+              backgroundImage: `linear-gradient(to top, rgb(0 0 0 / 76%), rgb(0 0 0 / 86%)),
+                  url(img/gang.jpg)`,
+            }}
+          >
+            <Box mb={1}>
+              <Breadcrumbs className={classes.breadcrumb} aria-label="breadcrumb">
+                <Link variant="overline" color="inherit" href="/about">
+                  Om foreningen
+                </Link>
+                <Typography variant="overline">Om oss</Typography>
+              </Breadcrumbs>
+            </Box>
+            <Typography variant="h2">Hvem er vi?</Typography>
+          </Box>
+        </Box>
+      </Container>
       <Wrapper>
-        <Typography variant="h1">Om Foreningen</Typography>
-        <br />
-        <Typography gutterBottom variant="h3">
-          Hvem er vi?
-        </Typography>
         <Typography variant="body1">
           Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse er den øverste instansen
           (moderorganisasjonen) for all studentfrivillighet på masterstudiet Indøk ved NTNU. Foreningen drives av over
@@ -24,10 +85,11 @@ const AboutPage: NextPage = () => {
           Foreningens øverste myndighet, hvor alle studentene på Indøk har stemmerett.
         </Typography>
         <br />
-        <Typography gutterBottom variant="h3">
+        <Typography gutterBottom variant="h6">
           Hovedstyret blir født
         </Typography>
-        <Typography variant="body1">
+        <br />
+        <Typography variant="body2">
           Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse, NTNU er formaliseringen av all
           foreningsaktivitet på Indøk under ett og samme tak. På den måten kan vi si at Foreningen har eksistert så
           lenge studentfrivilligheten på Indøk har det. Allerede på det første Indøk-kullet i 86´ ble
@@ -57,19 +119,7 @@ const AboutPage: NextPage = () => {
           </ul>
         </Typography>
         <br />
-        <Typography gutterBottom variant="h3">
-          Foreningens formål
-        </Typography>
-        <Typography variant="body1">
-          <i>
-            «Foreningens formål er å støtte den samlede studentmassen på sivilingeniørstudiet Industriell Økonomi og
-            Teknologiledelse ved Norges Teknisk- Naturvitenskapelige Universitet (NTNU). Foreningens virksomhet skal
-            ubetinget basere seg på ideelle målsetninger, og all økonomisk støtte fra foreningen skal være av
-            allmennyttig art og tjene den jevne student ved studiet. Foreningen skal ikke drive ervervsmessig
-            virksomhet.»{" "}
-          </i>
-          <br /> &emsp;&emsp; – Foreningens vedtekter
-        </Typography>
+        <Typography variant="h6">Hovedstyret blir født</Typography>
       </Wrapper>
     </Layout>
   );

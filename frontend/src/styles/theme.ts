@@ -6,41 +6,51 @@ const theme = createMuiTheme({
     fontFamily: ["Montserrat", "sans-serif"].join(","),
     h1: {
       fontFamily: ["Playfair Display", "sans-serif"].join(","),
-      fontSize: "50px",
+      fontSize: "4rem",
       fontWeight: 800,
     },
     h2: {
       fontFamily: ["Playfair Display", "sans-serif"].join(","),
-      fontSize: "48px",
+      fontSize: "3rem",
       fontWeight: 800,
+      lineHeight: "3.5rem",
     },
     h3: {
       fontFamily: ["Playfair Display", "sans-serif"].join(","),
-      fontSize: "30px",
+      fontSize: "2.5rem",
       fontWeight: 800,
     },
     h4: {
       fontFamily: ["Playfair Display", "sans-serif"].join(","),
       fontWeight: 700,
-      fontSize: "28px",
+      fontSize: "2rem",
     },
     h5: {
       fontFamily: ["Playfair Display", "sans-serif"].join(","),
       fontWeight: 700,
-      fontSize: "24px",
+      fontSize: "1.5rem",
     },
     h6: {
       fontFamily: ["Playfair Display", "sans-serif"].join(","),
       fontWeight: 800,
+      fontSize: "1.4rem",
     },
     overline: {
       fontSize: "12px",
       letterSpacing: "0.5px",
     },
+    body1: {
+      fontFamily: ["Montserrat", "sans-serif"].join(","),
+      fontSize: "0.95rem",
+      fontWeight: 400,
+      lineHeight: "1.6rem",
+    },
     body2: {
-      fontSize: "15px",
-      fontWeight: 500,
-      lineHeight: "24px",
+      fontFamily: ["Montserrat", "sans-serif"].join(","),
+      fontSize: "0.8rem",
+      fontWeight: 400,
+      lineHeight: "1.2rem",
+      letterSpacing: "0.3px",
     },
   },
   overrides: {
@@ -49,6 +59,24 @@ const theme = createMuiTheme({
         padding: "16px 32px",
         fontWeight: 700,
         fontSize: 11,
+      },
+    },
+    MuiAppBar: {
+      root: {
+        fontFamily: ["Montserrat", "sans-serif"].join(","),
+      },
+      colorDefault: {
+        backgroundColor: "#ffffff",
+      },
+    },
+    MuiTabs: {
+      root: {
+        minHeight: 40,
+      },
+    },
+    MuiTab: {
+      root: {
+        padding: "24px 16px",
       },
     },
   },

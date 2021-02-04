@@ -1,17 +1,18 @@
-import Collapse from "@material-ui/core/Collapse";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import { makeStyles } from "@material-ui/core/styles";
-import ExpandLess from "@material-ui/icons/ExpandLess";
-import ExpandMore from "@material-ui/icons/ExpandMore";
 import React from "react";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
-    maxWidth: 360,
-    backgroundColor: theme.palette.background.paper,
+    //backgroundColor: theme.palette.background.paper,
+    padding: 0,
+
+    "& span": {
+      fontSize: 12,
+    },
   },
   nested: {
     paddingLeft: theme.spacing(4),
@@ -20,28 +21,27 @@ const useStyles = makeStyles((theme) => ({
 
 export default function NestedList() {
   const classes = useStyles();
-  const [open, setOpen] = React.useState(true);
+  // const [open, setOpen] = React.useState(true);
 
-  const handleClick = () => {
-    setOpen(!open);
-  };
+  // const handleClick = () => {
+  //   setOpen(!open);
+  // };
 
   return (
-    <List component="nav" aria-labelledby="nested-list-subheader" className={classes.root}>
-      <ListItem button>
+    <List component="div" className={classes.root}>
+      <ListItem selected button>
         <ListItemText primary="Om oss" />
       </ListItem>
       <ListItem button>
         <ListItemText primary="Hovedstyret" />
       </ListItem>
       <ListItem button>
-        <ListItemText primary="Organisasjonskart" />
+        <ListItemText primary="Organisasjoner" />
+        {/* <Box pt="4px" onClick={handleClick}>
+          {open ? <ExpandLess /> : <ExpandMore />}
+        </Box> */}
       </ListItem>
-      <ListItem button onClick={handleClick}>
-        <ListItemText primary="Inbox" />
-        {open ? <ExpandLess /> : <ExpandMore />}
-      </ListItem>
-      <Collapse in={open} timeout="auto" unmountOnExit>
+      {/* <Collapse in={open} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
           <ListItem button className={classes.nested}>
             <ListItemText primary="Bindeleddet" />
@@ -62,7 +62,7 @@ export default function NestedList() {
             <ListItemText primary="Kultur" />
           </ListItem>
         </List>
-      </Collapse>
+      </Collapse> */}
     </List>
   );
 }
