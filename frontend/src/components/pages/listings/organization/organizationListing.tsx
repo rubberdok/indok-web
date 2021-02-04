@@ -41,7 +41,7 @@ const OrganizationListing: React.FC<{ listing: Listing }> = ({ listing }) => {
           Lag søknad
         </button>
       )}
-      {surveyShown && listing.survey && <EditSurvey oldSurvey={listing.survey} />}
+      {surveyShown && listing.survey && <EditSurvey surveyId={listing.survey.id} />}
     </>
   );
 };

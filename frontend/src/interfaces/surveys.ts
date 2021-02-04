@@ -34,3 +34,11 @@ export interface Answer {
   answer: string;
   question: Question;
 }
+
+export interface QuestionVariables {
+  id: string;
+  question: string;
+  description: string;
+  position: string;
+  questionTypeId: string;
+}

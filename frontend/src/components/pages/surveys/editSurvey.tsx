@@ -1,97 +1,114 @@
 import { useQuery, useMutation } from "@apollo/client";
-import { QUESTIONTYPES } from "@graphql/surveys/queries";
-import { UPDATE_SURVEY, CREATE_QUESTION } from "@graphql/surveys/mutations";
-import { useState } from "react";
-import { Survey, QuestionType, Question } from "@interfaces/surveys";
+import { SURVEY, QUESTIONTYPES } from "@graphql/surveys/queries";
+import { CREATE_QUESTION, UPDATE_QUESTION } from "@graphql/surveys/mutations";
+import { useState, useEffect } from "react";
+import { Survey, QuestionType, Question, QuestionVariables } from "@interfaces/surveys";
 import QuestionDetail from "@components/pages/surveys/questionDetail";
 import EditQuestion from "@components/pages/surveys/editQuestion";
 
-const EditSurvey: React.FC<{ oldSurvey: Survey }> = ({ oldSurvey }) => {
-  const [survey, setSurvey] = useState<Survey>(oldSurvey);
+const EditSurvey: React.FC<{ surveyId: string }> = ({ surveyId }) => {
+  const { loading, error, data } = useQuery<{ survey: Survey }>(SURVEY, {
+    variables: { ID: surveyId },
+  });
   const [activeQuestion, setActiveQuestion] = useState<Question | undefined>();
-  const replaceOrAddQuestion = (questions: Question[], question: Question) => {
-    let added = false;
-    questions = questions.map((oldQuestion) => {
-      if (oldQuestion.id === question.id) {
-        added = true;
-        return question;
-      } else {
-        return oldQuestion;
-      }
-    });
-    if (!added) {
-      setActiveQuestion(question);
-      return [...questions, question];
-    }
-    return questions;
-  };
-  const setQuestion = (question: Question) => {
-    setSurvey({
-      ...survey,
-      questions: replaceOrAddQuestion(survey.questions, question),
-    });
-  };
+  const [createQuestion] = useMutation<{ createQuestion: { question: Question } }>(CREATE_QUESTION, {
+    refetchQueries: [
+      {
+        query: SURVEY,
+        variables: { ID: surveyId },
+      },
+    ],
+  });
+  const [updateQuestion] = useMutation<{ updateQuestion: { question: Question } }, QuestionVariables>(UPDATE_QUESTION, {
+    refetchQueries: [
+      {
+        query: SURVEY,
+        variables: { ID: surveyId },
+      },
+    ],
+  });
   const { loading: questionTypeLoading, error: questionTypeError, data: questionTypeData } = useQuery<{
     questionTypes: QuestionType[];
   }>(QUESTIONTYPES);
-  const [updateSurvey] = useMutation(UPDATE_SURVEY);
-  const [createQuestion] = useMutation<{ createQuestion: { question: Question } }>(CREATE_QUESTION, {
-    onCompleted({ createQuestion: { question } }) {
-      setQuestion(question);
-    },
-  });
-  if (questionTypeLoading) return <p>Loading...</p>;
-  if (questionTypeError) return <p>Error</p>;
+  const [standardQuestionType, setStandardQuestionType] = useState<QuestionType>();
+  useEffect(() => {
+    if (!questionTypeLoading && !questionTypeError && questionTypeData) {
+      setStandardQuestionType(questionTypeData.questionTypes.find((type) => type.name === "Short answer"));
+    }
+  }, [questionTypeLoading, questionTypeError, questionTypeData]);
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error</p>;
   return (
     <>
-      <h3>{survey.descriptiveName}</h3>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          updateSurvey();
-        }}
-      >
-        <button
-          onClick={(e) => {
-            e.preventDefault();
-            createQuestion({
-              variables: {
-                question: "",
-                description: "",
-                position:
-                  survey.questions
-                    .map((question) => parseInt(question.position))
-                    .reduce((prev, curr) => (prev > curr ? prev : curr), -1) + 1,
-                surveyId: `${survey.id}`,
-              },
-            });
-          }}
-        >
-          Nytt spørsmål
-        </button>
-        {questionTypeData && (
-          <ul>
-            {survey.questions.map((question) =>
-              question === activeQuestion ? (
-                <EditQuestion
-                  question={question}
-                  setQuestion={setQuestion}
-                  setActiveQuestion={setActiveQuestion}
-                  questionTypes={questionTypeData.questionTypes}
-                />
-              ) : (
-                <QuestionDetail
-                  question={question as Question}
-                  setActiveQuestion={setActiveQuestion}
-                  key={question.id}
-                />
-              )
-            )}
-          </ul>
-        )}
-        <br />
-        <button type="submit">Lagre søknad</button>
-      </form>
+      {data && (
+        <>
+          <h3>{data.survey.descriptiveName}</h3>
+          {questionTypeLoading ? (
+            <p>Loading...</p>
+          ) : questionTypeError ? (
+            <p>Error fetching question types</p>
+          ) : (
+            questionTypeData && (
+              <>
+                {standardQuestionType && (
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      createQuestion({
+                        variables: {
+                          question: "",
+                          description: "",
+                          // TODO: implement automatic position generation in backend
+                          position:
+                            data.survey.questions
+                              .map((question) => parseInt(question.position))
+                              .reduce((prev, curr) => (prev > curr ? prev : curr), -1) + 1,
+                          questionTypeId: standardQuestionType.id,
+                          surveyId: data.survey.id,
+                        },
+                      });
+                    }}
+                  >
+                    Nytt spørsmål
+                  </button>
+                )}
+                <ul>
+                  {data.survey.questions.map((question) => (
+                    <li key={question.id}>
+                      {question === activeQuestion ? (
+                        <EditQuestion
+                          oldQuestion={question}
+                          questionTypes={questionTypeData.questionTypes}
+                          updateQuestion={updateQuestion}
+                          setInactive={() => setActiveQuestion(undefined)}
+                        />
+                      ) : (
+                        <QuestionDetail
+                          question={question}
+                          setActive={() => {
+                            if (activeQuestion) {
+                              updateQuestion({
+                                variables: {
+                                  id: activeQuestion.id,
+                                  question: activeQuestion.question,
+                                  description: activeQuestion.description,
+                                  position: activeQuestion.position,
+                                  questionTypeId: activeQuestion.questionType.id,
+                                },
+                              });
+                            }
+                            setActiveQuestion(question);
+                          }}
+                        />
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )
+          )}
+        </>
+      )}
     </>
   );
 };

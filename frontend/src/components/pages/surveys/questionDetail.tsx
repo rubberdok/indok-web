@@ -2,22 +2,21 @@ import { Question } from "@interfaces/surveys";
 
 const QuestionDetail: React.FC<{
   question: Question;
-  setActiveQuestion: (question: Question) => void;
-  key?: string;
-}> = ({ question, setActiveQuestion, key }) => {
+  setActive: () => void;
+}> = ({ question, setActive }) => {
   return (
-    <li>
+    <>
       <button
         onClick={(e) => {
           e.preventDefault();
-          setActiveQuestion(question);
+          setActive();
         }}
       >
         Rediger spørsmål
       </button>
       <br />
       <p>{question.question}</p>
-    </li>
+    </>
   );
 };
 

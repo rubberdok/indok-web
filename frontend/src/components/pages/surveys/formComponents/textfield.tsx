@@ -7,7 +7,8 @@ const TextField: React.FC<{
   size?: "short" | "long";
   value?: string;
   key?: string;
-}> = ({ title, onChange, placeholder, size, value, key }) => {
+  disabled?: boolean;
+}> = ({ title, onChange, placeholder, size, value, key, disabled }) => {
   return (
     <label key={key}>
       {title}
@@ -20,9 +21,10 @@ const TextField: React.FC<{
           onChange={onChange}
           style={{ resize: "none" }}
           value={value}
+          disabled={disabled}
         />
       ) : (
-        <input type="text" placeholder={placeholder} onChange={onChange} value={value} />
+        <input type="text" placeholder={placeholder} disabled={disabled} onChange={onChange} value={value} />
       )}
     </label>
   );
