@@ -25,6 +25,7 @@ const Calendar: React.FC<CalendarProps> = ({ events, disabledDates, rangeChanged
   const [isRangeFreezed, setIsRangeFreezed] = useState(false);
 
   const getDaysOfMonth = (month: moment.Moment) => {
+    console.log(getDateRange("2021-02-01", "2021-02-05"));
     const daysOfMonth: JSX.Element[] = [];
     const today = moment();
     for (let i = 1; i <= month.daysInMonth(); i++) {

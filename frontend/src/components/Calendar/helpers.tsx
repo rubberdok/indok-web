@@ -1,6 +1,9 @@
 import moment from "moment";
 import { DATE_FORMAT } from "./constants";
 import { Day, DayCell } from "./styles";
+import dayjs from "dayjs";
+const hello = dayjs();
+console.log(hello.format());
 
 export const getDateRange = (start: string, end: string, format = DATE_FORMAT): string[] => {
   const currentDate = moment(start);
