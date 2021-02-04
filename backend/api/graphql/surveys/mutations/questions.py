@@ -65,7 +65,7 @@ class DeleteQuestion(graphene.Mutation):
         return cls(ok=ok, deleted_id=deleted_id)
 
 class QuestionTypeInput(graphene.InputObjectType):
-    description = graphene.String(required=False)
+    name = graphene.String(required=False)
 
 class CreateQuestionType(graphene.Mutation):
     question_type = graphene.Field(QuestionTypeType)
