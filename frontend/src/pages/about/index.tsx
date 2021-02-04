@@ -93,8 +93,8 @@ const AboutPage: NextPage = () => {
           Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse, NTNU er formaliseringen av all
           foreningsaktivitet på Indøk under ett og samme tak. På den måten kan vi si at Foreningen har eksistert så
           lenge studentfrivilligheten på Indøk har det. Allerede på det første Indøk-kullet i 86´ ble
-          næringslivskontakten Bindeleddet startet. I år 2000 hadde man den første festen på Janus-kjellerne. I løpet av
-          de neste 20 årene skulle flere titalls tilbud bli startet. <br />
+          næringslivskontakten Bindeleddet startet, og i år 2000 hadde man den første festen på Janus-kjellerne. I løpet
+          av de neste 20 årene skulle flere titalls tilbud bli startet. <br />
           <br />I tidligere år hadde linjeforeningene på Indøk ett «Fordelingsmøte» i semesteret der studenter og
           linjeforeninger på studiet kunne søke om støtte til ulike prosjekter eller arrangementer. Fordelingsmøtet
           hadde som mandat å behandle søknader og fremme en innstilling om bruk av tilgjengelige midler overfor Allmøtet
@@ -118,8 +118,22 @@ const AboutPage: NextPage = () => {
             <li> Én av ITV’ene</li>
           </ul>
         </Typography>
-        <br />
-        <Typography variant="h6">Hovedstyret blir født</Typography>
+
+        <Typography gutterBottom variant="h6">
+          Foreningens formål
+        </Typography>
+        <Typography variant="body2">
+          <i>
+            «Foreningens formål er å støtte den samlede studentmassen på sivilingeniørstudiet Industriell Økonomi og
+            Teknologiledelse ved Norges Teknisk- Naturvitenskapelige Universitet (NTNU). Foreningens virksomhet skal
+            ubetinget basere seg på ideelle målsetninger, og all økonomisk støtte fra foreningen skal være av
+            allmennyttig art og tjene den jevne student ved studiet. Foreningen skal ikke drive ervervsmessig
+            virksomhet.»
+          </i>
+        </Typography>
+        <Typography variant="body2">
+          &emsp; &emsp;<b>- Forenings vedtekter</b>
+        </Typography>
       </Wrapper>
     </Layout>
   );
