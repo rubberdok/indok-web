@@ -28,7 +28,6 @@ const useStyles = makeStyles((theme) => ({
   },
   filterContainer: {
     float: "left",
-    //width: "25%",
     backgroundColor: "#fff",
     padding: 0,
     paddingTop: theme.spacing(2),
@@ -49,10 +48,18 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.primary,
     float: "left",
     marginLeft: theme.spacing(1),
+    paddingLeft: theme.spacing(1),
+    paddingRight: theme.spacing(1),
+    paddingTop: theme.spacing(0.5),
+    paddingBottom: theme.spacing(0.5),
   },
   cancelButton: {
     backgroundColor: theme.palette.secondary,
     float: "left",
+    paddingLeft: theme.spacing(1),
+    paddingRight: theme.spacing(1),
+    paddingTop: theme.spacing(0.5),
+    paddingBottom: theme.spacing(0.5),
   },
 }));
 
@@ -88,6 +95,8 @@ const FilterMenu: React.FC<Props> = ({ filters, onChange }) => {
 
       <Container className={classes.buttonsContainer}>
         <Button
+          variant="contained"
+          color="primary"
           className={classes.cancelButton}
           onClick={() => {
             onChange({});
@@ -96,7 +105,12 @@ const FilterMenu: React.FC<Props> = ({ filters, onChange }) => {
         >
           <Typography variant="body1">Nullstill</Typography>
         </Button>
-        <Button className={classes.filterButton} onClick={() => onChange(currentFilters)}>
+        <Button
+          variant="contained"
+          color="primary"
+          className={classes.filterButton}
+          onClick={() => onChange(currentFilters)}
+        >
           <Typography variant="body1">Filtrer</Typography>
         </Button>
       </Container>

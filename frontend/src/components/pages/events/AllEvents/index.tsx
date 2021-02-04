@@ -3,7 +3,18 @@ import { GET_USER } from "@graphql/auth/queries";
 import { GET_EVENTS } from "@graphql/events/queries";
 import { Event } from "@interfaces/events";
 import { User } from "@interfaces/users";
-import { Button, Grid, Typography, CircularProgress, Paper, Tabs, Tab, Container, makeStyles } from "@material-ui/core";
+import {
+  Button,
+  Grid,
+  Typography,
+  CircularProgress,
+  Paper,
+  Tabs,
+  Tab,
+  Container,
+  makeStyles,
+  useTheme,
+} from "@material-ui/core";
 import Link from "next/link";
 import { PlusSquare } from "react-feather";
 import React, { useState } from "react";
@@ -51,7 +62,6 @@ const useStyles = makeStyles((theme) => ({
   eventContainer: {
     border: "solid",
     borderWidth: "0.05em 0.05em 0.05em 1.2em",
-    borderColor: theme.palette.primary,
     borderRadius: "0.2em",
     padding: theme.spacing(2),
     marginBottom: theme.spacing(2),
@@ -67,6 +77,7 @@ const AllEvents: React.FC = () => {
     variables: filters,
   });
   const classes = useStyles();
+  const theme = useTheme();
 
   if (error) return <Typography variant="body1">Kunne ikke hente arrangementer.</Typography>;
 
@@ -126,7 +137,7 @@ const AllEvents: React.FC = () => {
                   <Link href={`/events/${event.id}`} key={event.id}>
                     <Container
                       className={classes.eventContainer}
-                      style={{ borderColor: event.organization?.color ?? "primary" }}
+                      style={{ borderColor: event.organization?.color ?? theme.palette.primary.main }}
                     >
                       <Typography variant="h6">{event.title}</Typography>
                       <Typography variant="body1">Begynner {event.startTime.slice(0, 19).replace("T", " ")}</Typography>

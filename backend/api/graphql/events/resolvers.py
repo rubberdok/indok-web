@@ -40,8 +40,8 @@ class EventResolvers:
                     | Q(organization__parent__name__icontains=organization)
                 )
 
-            return filteredEvents.filter(*queries)
-        return Event.objects.all()
+            return filteredEvents.filter(*queries).order_by("start_time")
+        return Event.objects.all().order_by("start_time")
 
     def resolve_event(parent, info, id):
         try:
