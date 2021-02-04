@@ -44,11 +44,11 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-interface ListDocumentsProps {
+interface ListFeaturedDocumentsProps {
   document_types: string[];
 }
 
-const ListDocuments: React.FC<ListDocumentsProps> = ({ document_types }) => {
+const ListFeaturedDocuments: React.FC<ListFeaturedDocumentsProps> = ({ document_types }) => {
   const { refetch, loading, data, error } = useQuery(GET_DOCSBYTYPE, { variables: { document_types } });
 
   useEffect(() => {
@@ -56,13 +56,13 @@ const ListDocuments: React.FC<ListDocumentsProps> = ({ document_types }) => {
   }, [document_types]);
 
   const classes = useStyles();
-  if (loading) return <p style={{ textAlign: "center" }}>Laster...</p>;
+  if (loading) return <p style={{ textAlign: "center" }}></p>;
 
   if (error) return <p style={{ textAlign: "center" }}> Feil: {error.message} </p>;
 
   return (
     <Content>
-      <SubHeading>Alle dokumenter</SubHeading>
+      <SubHeading>Fremhevede dokumenter</SubHeading>
       <GridList cellHeight={144} className={classes.img} cols={4} spacing={8}>
         {data.archiveByType.length ? (
           data.archiveByType.map((doc: Document) => (
@@ -105,7 +105,7 @@ const ListDocuments: React.FC<ListDocumentsProps> = ({ document_types }) => {
           ))
         ) : (
           <Content>
-            <Typography> Fant ingen dokumenter som passer søket ditt </Typography>
+            <Typography> Kunne ikke laste inn dokumenter </Typography>
           </Content>
         )}
       </GridList>
@@ -113,4 +113,4 @@ const ListDocuments: React.FC<ListDocumentsProps> = ({ document_types }) => {
   );
 };
 
-export default ListDocuments;
+export default ListFeaturedDocuments;

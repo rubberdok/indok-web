@@ -5,9 +5,12 @@ import FilterButton from "./FilterButtons";
 import ListDocuments from "./listDocuments";
 import { ContentWrapper } from "./wrapper";
 import YearSelector from "./yearSelector";
+import ListFeaturedDocuments from "./listFeaturedDocuments";
 import Button from "@components/ui/Button";
+import CustomizedSlider from "./slider";
 import SearchDocuments from "./searchDocuments";
 import EditIcon from "@material-ui/icons/Edit";
+import { Heading, Paragraph, SubHeading } from "@components/ui/Typography";
 
 const DocumentListView: React.FC = () => {
   const [typeFilters, setTypeFilters] = useState<{ [key: string]: { active: boolean; title: string } }>({
@@ -41,16 +44,20 @@ const DocumentListView: React.FC = () => {
       <ContentWrapper
         style={{
           //justifyContent: "space-between",
-          justifyContent: "flex-end",
+          justifyContent: "center",
           marginLeft: "15%",
           marginRight: "15%",
           marginBottom: "32px",
           marginTop: "-16px",
         }}
       >
-        {/* <SearchDocuments /> */}
-        <YearSelector />
+        <CustomizedSlider />
       </ContentWrapper>
+      <ListFeaturedDocuments
+        document_types={Object.entries(typeFilters)
+          .filter((key, _) => key[1].active)
+          .map(([_, val]) => val.title)}
+      />
       <ListDocuments
         document_types={Object.entries(typeFilters)
           .filter((key, _) => key[1].active)
