@@ -141,11 +141,13 @@ const AllEvents: React.FC = () => {
                     >
                       <Typography variant="h6">{event.title}</Typography>
                       <Typography variant="body1">Begynner {event.startTime.slice(0, 19).replace("T", " ")}</Typography>
-                      {userData?.user.events.some((userevent) => event.id === userevent.id) ? (
-                        <Typography variant="body1">Påmeldt</Typography>
-                      ) : (
-                        <Typography variant="body1">Meld på</Typography>
-                      )}
+                      {userData && !userLoading && userData.user && !userError ? (
+                        userData?.user.events.some((userevent) => event.id === userevent.id) ? (
+                          <Typography variant="body1">Påmeldt</Typography>
+                        ) : (
+                          <Typography variant="body1">Meld på</Typography>
+                        )
+                      ) : null}
                     </Container>
                   </Link>
                 ))
