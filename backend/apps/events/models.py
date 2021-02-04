@@ -1,4 +1,5 @@
 # from django.contrib.auth import get_user_model
+from django.db.models.fields.related import ManyToManyField
 from apps.organizations.models import Organization
 from django.db import models
 from django.contrib.auth import get_user_model
@@ -34,10 +35,23 @@ class Event(models.Model):
         Category, on_delete=models.SET_NULL, blank=True, null=True
     )
     image = models.URLField(blank=True, null=True)
-    deadline = models.DateTimeField(blank=True, null=True)
 
-    # TODO: Integrate when models are finished
-    # author = models.ForeignKey(get_user_model(), on_delete=models.DO_NOTHING)
+    deadline = models.DateTimeField(blank=True, null=True)  # Deadline for signing up
+
+    available_slots = models.PositiveIntegerField(  # maximal number of users that can sign up for an event
+        blank=True,
+        null=True,  # TODO: Make this field conditionally required in frontend when is_attendable is True!
+    )
+
+    signed_up_users = models.ManyToManyField(
+        "users.User", related_name="events", blank=True,
+    )
+
+    price = models.FloatField(blank=True, null=True)
+
+    @property
+    def no_of_filled_slots(self):
+        return self.signed_up_users.count
 
     def __str__(self):
         return self.title

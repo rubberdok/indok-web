@@ -27,6 +27,12 @@ export const GET_EVENTS = gql`
         lastName
         dateJoined
       }
+      availableSlots
+      signedUpUsers {
+        id
+        username
+      }
+      price
     }
   }
 `;
@@ -57,6 +63,12 @@ export const GET_EVENT = gql`
         lastName
         dateJoined
       }
+      availableSlots
+      signedUpUsers {
+        id
+        username
+      }
+      price
     }
   }
 `;
