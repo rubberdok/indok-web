@@ -12,21 +12,25 @@ const EditSurvey: React.FC<{ surveyId: string }> = ({ surveyId }) => {
   });
   const [activeQuestion, setActiveQuestion] = useState<Question | undefined>();
   const [createQuestion] = useMutation<{ createQuestion: { question: Question } }>(CREATE_QUESTION, {
-    refetchQueries: [
-      {
+    update: (cache, { data }) => {
+      const newQuestion = data?.createQuestion.question;
+      const cachedSurvey = cache.readQuery<{ survey: Survey }>({
         query: SURVEY,
         variables: { ID: surveyId },
-      },
-    ],
+      });
+      if (cachedSurvey && newQuestion) {
+        cache.writeQuery({
+          query: SURVEY,
+          data: {
+            survey: {
+              questions: [...cachedSurvey.survey.questions, newQuestion],
+            },
+          },
+        });
+      }
+    },
   });
-  const [updateQuestion] = useMutation<{ updateQuestion: { question: Question } }, QuestionVariables>(UPDATE_QUESTION, {
-    refetchQueries: [
-      {
-        query: SURVEY,
-        variables: { ID: surveyId },
-      },
-    ],
-  });
+  const [updateQuestion] = useMutation<{ updateQuestion: { question: Question } }, QuestionVariables>(UPDATE_QUESTION);
   const { loading: questionTypeLoading, error: questionTypeError, data: questionTypeData } = useQuery<{
     questionTypes: QuestionType[];
   }>(QUESTIONTYPES);
