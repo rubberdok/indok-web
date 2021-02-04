@@ -3,13 +3,31 @@ import { UPDATE_QUESTION } from "@graphql/surveys/mutations";
 import { useMutation } from "@apollo/client";
 import TextField from "@components/pages/surveys/formComponents/textfield";
 import Dropdown from "@components/pages/surveys/formComponents/dropdown";
+import Choice from "@components/pages/surveys/formComponents/choice";
 
-const CreateQuestion: React.FC<{
+const EditQuestion: React.FC<{
   question: Question;
-  setQuestion: (question: Question) => void;
   questionTypes: QuestionType[];
+  setQuestion: (question: Question) => void;
+  setActiveQuestion: (question: Question) => void;
 }> = ({ question, setQuestion, questionTypes }) => {
   const [updateQuestion] = useMutation(UPDATE_QUESTION);
+  const questionComponent = (questionType: QuestionType) => {
+    switch (question.questionType.name) {
+      case "Textfield":
+        return <TextField title={question.question} size="short" />;
+      case "Choice":
+        return (
+          <Choice
+            title={question.question}
+            radio={true}
+            options={question.offeredAnswers.map((offeredAnswer) => offeredAnswer.answer)}
+          />
+        );
+      default:
+        return <TextField title={question.question} key={key} />;
+    }
+  };
   return (
     <>
       <TextField
@@ -30,9 +48,9 @@ const CreateQuestion: React.FC<{
           question.questionType = questionTypes.find((type) => type.name === e.target.value) ?? questionTypes[0];
         }}
       />
-      {/* TODO: Implement the remaining question details. */}
+      {}
     </>
   );
 };
 
-export default CreateQuestion;
+export default EditQuestion;

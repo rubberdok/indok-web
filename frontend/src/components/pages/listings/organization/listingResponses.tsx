@@ -26,7 +26,6 @@ const ListingResponses: React.FC<{ listing: Listing }> = ({ listing }) => {
   const { loading, error, data } = useQuery<{ listing: { responses: Response[] } }>(RESPONSES, {
     variables: { ID: Number(listing.id) },
   });
-  const [deleteResponse] = useMutation<{ deleteResponse: { ok: boolean; response: Response } }>(DELETE_RESPONSE);
   if (error) return <p>Error</p>;
   if (loading) return <p>Loading...</p>;
   return (
