@@ -1,4 +1,4 @@
-import { Paragraph } from "@components/ui/Typography";
+import { Typography } from "@material-ui/core";
 import React from "react";
 import { ContentWrapper } from "./wrapper";
 
@@ -29,7 +29,7 @@ export const FilterButtonLayout: React.FC<FilterButtonProps> = ({ active, title,
         }}
         onClick={() => onClick()}
       >
-        <Paragraph
+        <Typography
           style={{
             fontSize: "14px",
             //fontWeight: "bolder",
@@ -42,7 +42,7 @@ export const FilterButtonLayout: React.FC<FilterButtonProps> = ({ active, title,
           }}
         >
           {title}
-        </Paragraph>
+        </Typography>
       </button>
     </ContentWrapper>
   );

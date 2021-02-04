@@ -1,12 +1,13 @@
 import { ApolloClient, ApolloProvider, createHttpLink, InMemoryCache } from "@apollo/client";
-import "@styles/fonts.css";
+import { CssBaseline } from "@material-ui/core";
+import { ThemeProvider } from "@material-ui/styles";
 import "@styles/global.css";
 import theme from "@styles/theme";
 import { AppProps } from "next/app";
+import Head from "next/head";
+import React, { useEffect } from "react";
 import "slick-carousel/slick/slick-theme.css";
 import "slick-carousel/slick/slick.css";
-import { ThemeProvider } from "styled-components";
-import "../styles/global.css";
 
 const App = ({ Component, pageProps }: AppProps): JSX.Element => {
   const link = createHttpLink({
@@ -17,9 +18,22 @@ const App = ({ Component, pageProps }: AppProps): JSX.Element => {
     cache: new InMemoryCache(),
     link,
   });
+
+  useEffect(() => {
+    const jssStyles = document.querySelector("#jss-server-side");
+    if (jssStyles) {
+      jssStyles.parentElement?.removeChild(jssStyles);
+    }
+  }, []);
+
   return (
     <ApolloProvider client={client}>
+      <Head>
+        <title>Indøk NTNU - Foreningen for Industriell Økonomi og teknologiledelse</title>
+        <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
+      </Head>
       <ThemeProvider theme={theme}>
+        <CssBaseline />
         <Component {...pageProps} />
       </ThemeProvider>
     </ApolloProvider>

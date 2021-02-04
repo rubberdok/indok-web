@@ -1,18 +1,13 @@
 import styled from "styled-components";
 
 const Input = styled.input`
-  background: ${({ theme }) => theme.colors.primary};
-  border: 2px solid ${({ theme }) => theme.colors.primary};
+  background: #065a5a;
+  border: 2px solid #065a5a;
   font-family: "Montserrat";
   font-size: 17px;
   padding: 10px;
   text-decoration: none !important;
-  background: linear-gradient(
-      to bottom,
-      ${({ theme }) => theme.colors.primary} 50%,
-      ${({ theme }) => theme.colors.background} 50%
-    )
-    top;
+  background: linear-gradient(to bottom, #065a5a 50%, #f5f0eb 50%) top;
   background-size: 100% 200%;
   transition: all 0.2s ease-in-out;
   color: white;
@@ -27,9 +22,9 @@ const Input = styled.input`
   &:focus {
     background-position: 0% -100%;
     outline: none;
-    color: ${({ theme }) => theme.colors.primary};
+    color: #065a5a;
     ::placeholder {
-      color: ${({ theme }) => theme.colors.primary};
+      color: #065a5a;
     }
   }
 `;

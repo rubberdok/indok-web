@@ -1,8 +1,11 @@
 import os
 
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+
 from api.settings import *
 
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ["api.gamma.indokntnu.no"]
 
@@ -29,3 +32,13 @@ EMAIL_HOST_USER = os.environ.get("BOOKING_EMAIL")
 EMAIL_HOST_PASSWORD = os.environ.get("BOOKING_EMAIL_PASSWORD")
 
 GOOGLE_DRIVE_API_KEY = os.environ.get("GOOGLE_DRIVE_API_KEY")
+
+
+sentry_sdk.init(
+    dsn="https://6bd0cd5210c0448aa90879a01db24663@o514678.ingest.sentry.io/5618268",
+    integrations=[DjangoIntegration()],
+    traces_sample_rate=1.0,
+    # If you wish to associate users to errors (assuming you are using
+    # django.contrib.auth) you may enable sending PII data.
+    send_default_pii=True,
+)
