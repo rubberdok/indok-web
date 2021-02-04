@@ -60,7 +60,7 @@ const AboutPage: NextPage = () => {
             style={{
               backgroundImage: `linear-gradient(to top, rgb(0 0 0 / 76%), rgb(0 0 0 / 86%)),
                   url(img/gang.jpg)`,
-            }}
+            }} /* Husk å gjøre bakgrunnen turkis og ikke svart */
           >
             <Box mb={1}>
               <Breadcrumbs className={classes.breadcrumb} aria-label="breadcrumb">
