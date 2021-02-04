@@ -1,5 +1,4 @@
 import { useQuery } from "@apollo/client";
-import Content from "@components/ui/Content";
 import { GET_DOCSBYTYPE } from "@graphql/archive/queries";
 import { Document } from "@interfaces/archives";
 import Button from "@material-ui/core/Button";
@@ -12,7 +11,7 @@ import CardActionArea from "@material-ui/core/CardActionArea";
 import GridList from "@material-ui/core/GridList";
 import GridListTile from "@material-ui/core/GridListTile";
 import Typography from "@material-ui/core/Typography";
-import { Heading, Paragraph, SubHeading } from "@components/ui/Typography";
+import Container from "@material-ui/core/Container";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -61,8 +60,8 @@ const ListFeaturedDocuments: React.FC<ListFeaturedDocumentsProps> = ({ document_
   if (error) return <p style={{ textAlign: "center" }}> Feil: {error.message} </p>;
 
   return (
-    <Content>
-      <SubHeading>Fremhevede dokumenter</SubHeading>
+    <Container>
+      <Typography variant="body1">Fremhevede dokumenter</Typography>
       <GridList cellHeight={144} className={classes.img} cols={4} spacing={8}>
         {data.archiveByType.length ? (
           data.archiveByType.map((doc: Document) => (
@@ -88,12 +87,12 @@ const ListFeaturedDocuments: React.FC<ListFeaturedDocumentsProps> = ({ document_
                       title={doc.title}
                       subheader={doc.typeDoc.replace(/_/g, " ")}
                       titleTypographyProps={{
-                        variant: "heading",
+                        variant: "inherit",
                         component: "h2",
                         align: "left",
                       }}
                       subheaderTypographyProps={{
-                        variant: "heading",
+                        variant: "inherit",
                         component: "h4",
                         align: "left",
                       }}
@@ -104,12 +103,12 @@ const ListFeaturedDocuments: React.FC<ListFeaturedDocumentsProps> = ({ document_
             </GridListTile>
           ))
         ) : (
-          <Content>
+          <Container>
             <Typography> Kunne ikke laste inn dokumenter </Typography>
-          </Content>
+          </Container>
         )}
       </GridList>
-    </Content>
+    </Container>
   );
 };
 
