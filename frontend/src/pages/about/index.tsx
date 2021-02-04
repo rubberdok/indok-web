@@ -1,6 +1,7 @@
 import Layout from "@components/Layout";
 import Wrapper from "@components/pages/about/Wrapper";
 import { Typography } from "@material-ui/core";
+import { typography } from "@material-ui/system";
 import { NextPage } from "next";
 import React from "react";
 
@@ -10,7 +11,9 @@ const AboutPage: NextPage = () => {
       <Wrapper>
         <Typography variant="h1">Om Foreningen</Typography>
         <br />
-        <Typography variant="h3">Hvem er vi?</Typography>
+        <Typography gutterBottom variant="h3">
+          Hvem er vi?
+        </Typography>
         <Typography variant="body1">
           Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse er den øverste instansen
           (moderorganisasjonen) for all studentfrivillighet på masterstudiet Indøk ved NTNU. Foreningen drives av over
@@ -21,7 +24,9 @@ const AboutPage: NextPage = () => {
           Foreningens øverste myndighet, hvor alle studentene på Indøk har stemmerett.
         </Typography>
         <br />
-        <Typography variant="h3">Hovedstyret blir født</Typography>
+        <Typography gutterBottom variant="h3">
+          Hovedstyret blir født
+        </Typography>
         <Typography variant="body1">
           Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse, NTNU er formaliseringen av all
           foreningsaktivitet på Indøk under ett og samme tak. På den måten kan vi si at Foreningen har eksistert så
@@ -52,7 +57,19 @@ const AboutPage: NextPage = () => {
           </ul>
         </Typography>
         <br />
-        <Typography variant="h3">Hovedstyret blir født</Typography>
+        <Typography gutterBottom variant="h3">
+          Foreningens formål
+        </Typography>
+        <Typography variant="body1">
+          <i>
+            «Foreningens formål er å støtte den samlede studentmassen på sivilingeniørstudiet Industriell Økonomi og
+            Teknologiledelse ved Norges Teknisk- Naturvitenskapelige Universitet (NTNU). Foreningens virksomhet skal
+            ubetinget basere seg på ideelle målsetninger, og all økonomisk støtte fra foreningen skal være av
+            allmennyttig art og tjene den jevne student ved studiet. Foreningen skal ikke drive ervervsmessig
+            virksomhet.»{" "}
+          </i>
+          <br /> &emsp;&emsp; – Foreningens vedtekter
+        </Typography>
       </Wrapper>
     </Layout>
   );
