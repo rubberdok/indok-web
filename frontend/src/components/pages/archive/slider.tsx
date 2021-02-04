@@ -71,6 +71,7 @@ export default function CustomizedSlider() {
         <PrettoSlider
           valueLabelDisplay="on"
           aria-label="pretto slider"
+          track={false}
           defaultValue={2021}
           min={1986}
           max={new Date().getFullYear()}
