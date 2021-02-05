@@ -18,7 +18,9 @@ const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
   },
-  appBar: {},
+  appBar: {
+    // background: "transparent",
+  },
   toolBar: {
     padding: 0,
   },
@@ -58,11 +60,11 @@ const Navbar: React.FC = () => {
     <div className={classes.root}>
       <HideOnScroll>
         <AppBar color="default" className={classes.appBar}>
-          <Container>
+          <Container style={{ maxWidth: "90vw" }}>
             <Toolbar className={classes.toolBar}>
               <Link href="/">
                 <Typography variant="h6" className={classes.title}>
-                  INDØK
+                  {/* INDØK */}
                 </Typography>
               </Link>
               <div className={classes.sectionDesktop}>
@@ -77,7 +79,7 @@ const Navbar: React.FC = () => {
           </Container>
         </AppBar>
       </HideOnScroll>
-      <Toolbar id="back-to-top-anchor" />
+      {/* <Toolbar id="back-to-top-anchor" /> */}
       <Drawer anchor="right" open={openDrawer} onClose={() => setOpenDrawer(false)}>
         <NavbarLinks></NavbarLinks>
       </Drawer>
