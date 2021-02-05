@@ -5,6 +5,7 @@ import MailOutlineIcon from "@material-ui/icons/MailOutline";
 import MeetingRoomIcon from "@material-ui/icons/MeetingRoom";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import React, { useState } from "react";
+import { Fade } from "react-awesome-reveal";
 
 const organizations = [
   {
@@ -75,13 +76,16 @@ const useStyles = makeStyles(() => ({
   orgLink: {
     color: "black",
     position: "relative",
-    marginBottom: 16,
-    marginRight: -15,
+    left: 12,
     transition: "0.3s all linear",
 
     ["&:hover"]: {
       textDecoration: "none",
-      marginRight: 0,
+      left: 0,
+    },
+
+    ["& h2, & svg"]: {
+      marginBottom: 16,
     },
 
     // ["&::before"]: {
@@ -172,23 +176,25 @@ const Hero: React.FC = () => {
           <Grid item xs={5}>
             <Box height="100%" width="100%" display="flex" flexDirection="column" alignItems="flex-start">
               <Typography variant="overline">Foreningen for studentene ved</Typography>
-              <Typography variant="h3">
-                Industriell Økonomi <br />
-                og Teknologiledelse
-              </Typography>
-              <br />
-              <Button size="large" startIcon={<NavigateNextIcon />}>
-                Les om foreningen
-              </Button>
-              <Button size="large" startIcon={<NavigateNextIcon />}>
-                Arrangementer
-              </Button>
-              <Button size="large" startIcon={<NavigateNextIcon />}>
-                Book hytte
-              </Button>
-              <br />
-              <br />
-              <br />
+              <Fade duration={700} cascade triggerOnce direction="up">
+                <Typography variant="h3">
+                  Industriell Økonomi <br />
+                  og Teknologiledelse
+                </Typography>
+                <br />
+                <Button size="large" startIcon={<NavigateNextIcon />}>
+                  Les om foreningen
+                </Button>
+                <Button size="large" startIcon={<NavigateNextIcon />}>
+                  Arrangementer
+                </Button>
+                <Button size="large" startIcon={<NavigateNextIcon />}>
+                  Book hytte
+                </Button>
+                <br />
+                <br />
+                <br />
+              </Fade>
               <Typography variant="overline" gutterBottom>
                 Nyttige lenker
               </Typography>
@@ -200,22 +206,24 @@ const Hero: React.FC = () => {
           <Grid item xs={7}>
             <Box height="100%" width="100%" display="flex" flexDirection="column" alignItems="flex-end">
               <Typography variant="overline">Foreningene under hovedstyret</Typography>
-              {organizations.map((item) => (
-                <a
-                  target="_blank"
-                  rel="noreferrer"
-                  onMouseEnter={() => setIsShown(item.img)}
-                  onMouseLeave={() => setIsShown("")}
-                  href={item.link}
-                  className={classes.orgLink}
-                  key={item.id}
-                >
-                  <Box display="flex" alignItems="center">
-                    <Typography variant="h2">{item.title}</Typography>
-                    <NavigateNextIcon fontSize="large" className={classes.orgIcon} />
-                  </Box>
-                </a>
-              ))}
+              <Fade damping={0.1} cascade triggerOnce direction="up">
+                {organizations.map((item) => (
+                  <a
+                    target="_blank"
+                    rel="noreferrer"
+                    onMouseEnter={() => setIsShown(item.img)}
+                    onMouseLeave={() => setIsShown("")}
+                    href={item.link}
+                    className={classes.orgLink}
+                    key={item.id}
+                  >
+                    <Box display="flex" alignItems="center">
+                      <Typography variant="h2">{item.title}</Typography>
+                      <NavigateNextIcon fontSize="large" className={classes.orgIcon} />
+                    </Box>
+                  </a>
+                ))}
+              </Fade>
             </Box>
           </Grid>
         </Grid>
