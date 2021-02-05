@@ -136,7 +136,6 @@ const useStyles = makeStyles(() => ({
     zIndex: -2,
     height: "85vh",
     marginLeft: "-20vh",
-    display: "none",
   },
 }));
 
