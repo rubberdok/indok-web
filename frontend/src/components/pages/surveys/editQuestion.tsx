@@ -4,6 +4,8 @@ import TextField from "@components/ui/formComponents/textfield";
 import Dropdown from "@components/ui/formComponents/dropdown";
 import Choice from "@components/ui/formComponents/choice";
 import { useState } from "react";
+import { DELETE_QUESTION } from "@graphql/surveys/mutations";
+import { useMutation } from "@apollo/client";
 
 const EditQuestion: React.FC<{
   oldQuestion: Question;
@@ -20,14 +22,35 @@ const EditQuestion: React.FC<{
         >
       | undefined
   ) => Promise<
-    FetchResult<{
-      updateQuestion: {
-        question: Question;
-      };
-    }>
+    FetchResult<
+      {
+        updateQuestion: {
+          question: Question;
+        };
+      },
+      Record<string, any>
+    >
+  >;
+  deleteQuestion: (
+    options?:
+      | MutationFunctionOptions<{
+          deleteQuestion: {
+            deletedId: string;
+          };
+        }>
+      | undefined
+  ) => Promise<
+    FetchResult<
+      {
+        deleteQuestion: {
+          deletedId: string;
+        };
+      },
+      Record<string, any>
+    >
   >;
   setInactive: () => void;
-}> = ({ oldQuestion, questionTypes, updateQuestion, setInactive }) => {
+}> = ({ oldQuestion, questionTypes, updateQuestion, deleteQuestion, setInactive }) => {
   const [question, setQuestion] = useState<Question>(oldQuestion);
   const questionPreview = (questionType: QuestionType) => {
     console.log(question);
@@ -99,6 +122,17 @@ const EditQuestion: React.FC<{
         }}
       >
         Lagre spørsmål
+      </button>
+      <button
+        onClick={(e) => {
+          e.preventDefault();
+          setInactive();
+          deleteQuestion({
+            variables: { id: question.id },
+          });
+        }}
+      >
+        Slett spørsmål
       </button>
     </>
   );

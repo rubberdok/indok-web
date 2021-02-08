@@ -1,6 +1,6 @@
 import { useQuery, useMutation } from "@apollo/client";
 import { SURVEY, QUESTIONTYPES } from "@graphql/surveys/queries";
-import { CREATE_QUESTION, UPDATE_QUESTION } from "@graphql/surveys/mutations";
+import { CREATE_QUESTION, DELETE_QUESTION, UPDATE_QUESTION } from "@graphql/surveys/mutations";
 import { useState, useEffect } from "react";
 import { Survey, QuestionType, Question, QuestionVariables } from "@interfaces/surveys";
 import QuestionDetail from "@components/pages/surveys/questionDetail";
@@ -21,9 +21,30 @@ const EditSurvey: React.FC<{ surveyId: string }> = ({ surveyId }) => {
       if (cachedSurvey && newQuestion) {
         cache.writeQuery({
           query: SURVEY,
+          variables: { ID: surveyId },
           data: {
             survey: {
               questions: [...cachedSurvey.survey.questions, newQuestion],
+            },
+          },
+        });
+      }
+    },
+  });
+  const [deleteQuestion] = useMutation<{ deleteQuestion: { deletedId: string } }>(DELETE_QUESTION, {
+    update: (cache, { data }) => {
+      const cachedSurvey = cache.readQuery<{ survey: Survey }>({
+        query: SURVEY,
+        variables: { ID: surveyId },
+      });
+      const deletedId = data?.deleteQuestion.deletedId;
+      if (cachedSurvey && deletedId) {
+        cache.writeQuery({
+          query: SURVEY,
+          variables: { ID: surveyId },
+          data: {
+            survey: {
+              questions: cachedSurvey.survey.questions.filter((question) => question.id !== deletedId),
             },
           },
         });
@@ -84,6 +105,7 @@ const EditSurvey: React.FC<{ surveyId: string }> = ({ surveyId }) => {
                           oldQuestion={question}
                           questionTypes={questionTypeData.questionTypes}
                           updateQuestion={updateQuestion}
+                          deleteQuestion={deleteQuestion}
                           setInactive={() => setActiveQuestion(undefined)}
                         />
                       ) : (
