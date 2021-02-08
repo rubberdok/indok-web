@@ -25,7 +25,7 @@ const DocumentListView: React.FC = () => {
   return (
     <>
       <div style={{ flex: "100%" }}>
-        <Typography variant="h1" style={{ textAlign: "center" }}>
+        <Typography variant="h1" style={{ textAlign: "center", marginTop: "32px", marginBottom: "32px" }}>
           Arkiv
         </Typography>
       </div>
@@ -42,21 +42,25 @@ const DocumentListView: React.FC = () => {
           }
         />
       </ContentWrapper>
-      <ContentWrapper style={{ justifyContent: "center" }}>
+      <ContentWrapper style={{ justifyContent: "center", marginBottom: "32px" }}>
         <SliderSelector yearFilter={yearFilter} updateYearFilters={(value) => setYearFilter(value)} />
       </ContentWrapper>
-      <ListFeaturedDocuments
-        document_types={Object.entries(typeFilters)
-          .filter((key, _) => key[1].active)
-          .map(([_, val]) => val.title)}
-        year={yearFilter}
-      />
-      <ListDocuments
-        document_types={Object.entries(typeFilters)
-          .filter((key, _) => key[1].active)
-          .map(([_, val]) => val.title)}
-        year={yearFilter}
-      />
+      <ContentWrapper style={{ marginBottom: "16px" }}>
+        <ListFeaturedDocuments
+          document_types={Object.entries(typeFilters)
+            .filter((key, _) => key[1].active)
+            .map(([_, val]) => val.title)}
+          year={yearFilter}
+        />
+      </ContentWrapper>
+      <ContentWrapper style={{ marginTop: "16px" }}>
+        <ListDocuments
+          document_types={Object.entries(typeFilters)
+            .filter((key, _) => key[1].active)
+            .map(([_, val]) => val.title)}
+          year={yearFilter}
+        />
+      </ContentWrapper>
     </>
   );
 };
