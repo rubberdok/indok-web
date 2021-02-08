@@ -33,38 +33,39 @@ class Organization(models.Model):
         return f"{self.name}"
 
 
-class Member(models.Model):
-    member = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="memberships")
+class Membership(models.Model):
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="memberships")
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name="members")
     role = models.ForeignKey("Role", on_delete=models.DO_NOTHING)
 
     class Meta:
         constraints = [UniqueConstraint(
-            fields=["member", "organization"], name="unique_member_in_organization"
+            fields=["user", "organization"], name="unique_member_in_organization"
         )]
 
     def __str__(self) -> str:
-        return f"{self.organization.name}:{self.member.username}" 
+        return f"{self.organization.name}:{self.user.username}" 
 
 class Role(models.Model):
     name = models.TextField(max_length=50, default="Medlem", null=False)
     
 
 
-@receiver(post_save, sender=Member)
+@receiver(post_save, sender=Membership)
 def handle_new_member(sender, **kwargs):
-    member: Member = kwargs["instance"]
+    member: Membership = kwargs["instance"]
     group: Group = member.organization.group
     if group:
-        user: User = member.member
+        user: User = member.user
         user.groups.add(group)
         user.save()
 
 
-@receiver(pre_delete, sender=Member)
+@receiver(pre_delete, sender=Membership)
 def handle_removed_memeber(sender, **kwargs):
-    member: Member = kwargs["instance"]
+    member: Membership = kwargs["instance"]
     group: Group = member.organization.group
     if group:
-        user: User = member.member
+        user: User = member.user
         user.groups.remove(group)
+        user.save()

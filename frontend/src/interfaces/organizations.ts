@@ -3,3 +3,7 @@ export interface Organization {
   name: string;
   children?: Organization[];
 }
+
+export interface Member {
+  
+}

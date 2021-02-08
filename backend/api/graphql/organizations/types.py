@@ -1,6 +1,6 @@
 from graphene_django import DjangoObjectType
 
-from apps.organizations.models import Organization, Member, Role
+from apps.organizations.models import Organization, Membership, Role
 
 
 class OrganizationType(DjangoObjectType):
@@ -9,9 +9,9 @@ class OrganizationType(DjangoObjectType):
         fields = ["id", "name", "slug", "color", "description", "parent", "children"]
 
 
-class MemberType(DjangoObjectType):
+class MembershipType(DjangoObjectType):
     class Meta:
-        model = Member
+        model = Membership
 
 
 class RoleType(DjangoObjectType):

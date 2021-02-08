@@ -1,4 +1,4 @@
-from apps.organizations.models import Organization, Member, Role
+from apps.organizations.models import Organization, Membership, Role
 from django.db.models import Q
 
 
@@ -25,7 +25,7 @@ class OrganizationResolvers:
 
 class MemberResolvers:
     def resolve_all_memberships(self, info):
-        return Member.objects.all()
+        return Membership.objects.all()
 
     def resolve_all_rolves(self, info):
         return Role.objects.all()

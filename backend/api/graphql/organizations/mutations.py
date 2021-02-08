@@ -7,8 +7,8 @@ from django.contrib.auth import get_user_model
 from graphql_jwt.decorators import login_required, user_passes_test, permission_required
 
 from api.graphql.users.types import UserType
-from .types import OrganizationType, MemberType, RoleType
-from apps.organizations.models import Organization, Member, Role
+from .types import OrganizationType, MembershipType, RoleType
+from apps.organizations.models import Organization, Membership, Role
 import apps.organizations.permissions as perms
 
 class OrganizationInput(graphene.InputObjectType):
@@ -79,16 +79,16 @@ class MemberInput(graphene.InputObjectType):
     role_id = graphene.ID()
 
 class AssignMember(graphene.Mutation):
-    member = graphene.Field(MemberType)
+    Membership = graphene.Field(MembershipType)
     ok = graphene.Boolean()
 
     class Arguments:
         member_data = MemberInput(required=True)
 
     def mutate(self, info, member_data):
-        member = Member(
+        member = Membership(
             organization_id=member_data["organization_id"],
-            member_id=member_data["user_id"],
+            user_id=member_data["user_id"],
             role_id=member_data["role_id"],
         )
         member.save()
@@ -102,8 +102,8 @@ class RemoveMember(graphene.Mutation):
         member_id = graphene.ID()
 
     def mutate(self, info, member_id):
-        member = Member.objects.get(pk=member_id)
-        user: User = member.member
+        member = Membership.objects.get(pk=member_id)
+        user: User = member.user
         member.delete()
         return RemoveMember(removed_member=user, ok=True)
 

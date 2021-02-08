@@ -1,6 +1,6 @@
 import graphene
 from .mutations import CreateOrganization, UpdateOrganization, DeleteOrganization, CreateRole, AssignMember, RemoveMember
-from .types import OrganizationType, MemberType, RoleType
+from .types import OrganizationType, MembershipType, RoleType
 from .resolvers import OrganizationResolvers, MemberResolvers
 from django.db.models import Q
 
@@ -20,5 +20,5 @@ class OrganizationQueries(graphene.ObjectType, OrganizationResolvers, MemberReso
     organization = graphene.Field(OrganizationType, id=graphene.ID(required=True))
     event_filtered_organizations = graphene.List(OrganizationType)
 
-    all_memberships = graphene.List(MemberType)
+    all_memberships = graphene.List(MembershipType)
     all_roles = graphene.List(RoleType)
