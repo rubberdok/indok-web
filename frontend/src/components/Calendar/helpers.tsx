@@ -30,7 +30,7 @@ export const previousMonthDays = (
   selectedDay: dayjs.Dayjs,
   dateClicked: (date: dayjs.Dayjs) => void
 ): JSX.Element[] => {
-  const visable = false;
+  const visible = false;
   const previousDays: JSX.Element[] = [];
   const firstOfMonth = month.startOf("month");
   const mondayIndex = 0;
@@ -42,7 +42,7 @@ export const previousMonthDays = (
     for (let i = 0; i < dayDifference; i++) {
       const date = firstOfMonth.subtract(dayDifference - i, "day");
       previousDays.push(
-        visable ? (
+        visible ? (
           <DayCell
             isSelected={date.isSame(selectedDay, "day")}
             onClick={() => dateClicked(date)}

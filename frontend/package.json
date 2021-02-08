@@ -25,7 +25,6 @@
     "dayjs": "^1.10.4",
     "feather-icons": "^4.28.0",
     "graphql": "^15.3.0",
-    "moment": "^2.29.1",
     "next": "^10.0.3",
     "react": "^16.13.1",
     "react-awesome-reveal": "^3.3.1",
