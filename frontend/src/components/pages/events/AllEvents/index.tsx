@@ -140,14 +140,20 @@ const AllEvents: React.FC = () => {
                       style={{ borderColor: event.organization?.color ?? theme.palette.primary.main }}
                     >
                       <Typography variant="h6">{event.title}</Typography>
-                      <Typography variant="body1">Begynner {event.startTime.slice(0, 19).replace("T", " ")}</Typography>
-                      {userData && !userLoading && userData.user && !userError ? (
-                        userData?.user.events.some((userevent) => event.id === userevent.id) ? (
-                          <Typography variant="body1">Påmeldt</Typography>
-                        ) : (
-                          <Typography variant="body1">Meld på</Typography>
-                        )
-                      ) : null}
+                      <Grid container>
+                        <Grid item xs>
+                          <Typography variant="body1">
+                            Begynner {event.startTime.slice(0, 19).replace("T", " ")}
+                          </Typography>
+                        </Grid>
+                        {userData && !userLoading && userData.user && !userError && event.isAttendable ? (
+                          userData?.user.events.some((userevent) => event.id === userevent.id) ? (
+                            <Typography variant="body1">Påmeldt</Typography>
+                          ) : (
+                            <Typography variant="body1">Påmelding tilgjengelig</Typography>
+                          )
+                        ) : null}
+                      </Grid>
                     </Container>
                   </Link>
                 ))

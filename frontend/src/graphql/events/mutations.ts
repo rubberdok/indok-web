@@ -50,7 +50,7 @@ export const CREATE_EVENT = gql`
 `;
 
 export const EVENT_SIGN_UP = gql`
-  mutation EventSignUp($eventId: ID, $userId: ID) {
+  mutation EventSignUp($eventId: ID!, $userId: ID!) {
     eventSignUp(eventId: $eventId, userId: $userId) {
       event {
         signedUpUsers {
@@ -58,19 +58,21 @@ export const EVENT_SIGN_UP = gql`
           username
         }
       }
+      isFull
     }
   }
 `;
 
 export const EVENT_SIGN_OFF = gql`
-  mutation EventSignOff($eventId: ID, $userId: ID) {
-    eventSigOff(eventId: $eventId, userId: $userId) {
+  mutation EventSignOff($eventId: ID!, $userId: ID!) {
+    eventSignOff(eventId: $eventId, userId: $userId) {
       event {
         signedUpUsers {
           id
           username
         }
       }
+      isFull
     }
   }
 `;

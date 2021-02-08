@@ -10,9 +10,10 @@ export interface Event {
   organization: { id: string; name: string; color?: string };
   category: { id: string; name: string };
   image: string;
-  isAttendable: string;
+  isAttendable: boolean;
   deadline: string;
   publisher: User;
+  signedUpUsers: { userId: string };
 }
 
 export interface Category {
