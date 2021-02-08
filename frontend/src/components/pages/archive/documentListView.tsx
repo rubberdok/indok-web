@@ -63,9 +63,9 @@ const DocumentListView: React.FC = () => {
           .filter((key, _) => key[1].active)
           .map(([_, val]) => val.title)}
       />
-      <ContentWrapper style={{ marginTop: "32px", justifyContent: "center" }}>
-        <button>Rediger arkiv {/* <EditIcon style={{ fontSize: "large" }} /> */}</button>
-      </ContentWrapper>
+      {/*       <ContentWrapper style={{ marginTop: "32px", justifyContent: "center" }}>
+        <button>Rediger arkiv <EditIcon style={{ fontSize: "large" }} /></button>
+      </ContentWrapper> */}
     </>
   );
 };

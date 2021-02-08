@@ -104,7 +104,7 @@ const ListFeaturedDocuments: React.FC<ListFeaturedDocumentsProps> = ({ document_
           ))
         ) : (
           <Container>
-            <Typography> Kunne ikke laste inn dokumenter </Typography>
+            <Typography> Det er ingen fremhevede dokumenter akkurat nå</Typography>
           </Container>
         )}
       </GridList>

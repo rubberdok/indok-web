@@ -67,7 +67,6 @@ export default function CustomizedSlider() {
   return (
     <div className={classes.root}>
       <ContentWrapper style={{ justifyContent: "space-between" }}>
-        <Typography gutterBottom>Velg år</Typography>
         <PrettoSlider
           valueLabelDisplay="on"
           aria-label="pretto slider"
@@ -77,6 +76,9 @@ export default function CustomizedSlider() {
           max={new Date().getFullYear()}
         />
       </ContentWrapper>
+      <Typography style={{ marginTop: "-30px", marginLeft: "-70px", fontSize: "15px" }} gutterBottom>
+        Velg år
+      </Typography>
       <div className={classes.margin} />
     </div>
   );
