@@ -29,4 +29,5 @@ urlpatterns = [
     path("graphql", csrf_exempt(jwt_cookie(GraphQLView.as_view(graphiql=True)))),
     path("ping", Ping.as_view()),
     path("-/", include("django_alive.urls")),
+    path("vipps/", include("apps.vipps.urls")),
 ]
