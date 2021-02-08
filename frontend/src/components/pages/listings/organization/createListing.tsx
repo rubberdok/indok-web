@@ -1,4 +1,4 @@
-import TextField from "@components/pages/surveys/formComponents/textfield";
+import TextField from "@components/ui/formComponents/textfield";
 import { useState } from "react";
 import { Listing, Organization } from "@interfaces/listings";
 import { CREATE_LISTING } from "@graphql/listings/mutations";

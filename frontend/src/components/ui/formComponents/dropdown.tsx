@@ -1,13 +1,12 @@
 import { ChangeEvent } from "react";
 
 const Dropdown: React.FC<{
-  title: string;
-  onChange?: (event: ChangeEvent<HTMLSelectElement>) => void;
   options: string[];
-  key?: string;
-}> = ({ title, options, onChange, key }) => (
-  <label key={key}>
-    {title}
+  title?: string;
+  onChange?: (event: ChangeEvent<HTMLSelectElement>) => void;
+}> = ({ title, options, onChange }) => (
+  <>
+    {title && <label>{title}</label>}
     <select onBlur={onChange}>
       {options.map((option: string, index: number) => {
         return (
@@ -17,7 +16,7 @@ const Dropdown: React.FC<{
         );
       })}
     </select>
-  </label>
+  </>
 );
 
 export default Dropdown;

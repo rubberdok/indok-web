@@ -1,10 +1,8 @@
 import { Question, QuestionType, QuestionVariables } from "@interfaces/surveys";
-import { UPDATE_QUESTION } from "@graphql/surveys/mutations";
-import { SURVEY } from "@graphql/surveys/queries";
-import { useMutation, MutationFunctionOptions, FetchResult } from "@apollo/client";
-import TextField from "@components/pages/surveys/formComponents/textfield";
-import Dropdown from "@components/pages/surveys/formComponents/dropdown";
-import Choice from "@components/pages/surveys/formComponents/choice";
+import { MutationFunctionOptions, FetchResult } from "@apollo/client";
+import TextField from "@components/ui/formComponents/textfield";
+import Dropdown from "@components/ui/formComponents/dropdown";
+import Choice from "@components/ui/formComponents/choice";
 import { useState } from "react";
 
 const EditQuestion: React.FC<{
@@ -31,8 +29,7 @@ const EditQuestion: React.FC<{
   setInactive: () => void;
 }> = ({ oldQuestion, questionTypes, updateQuestion, setInactive }) => {
   const [question, setQuestion] = useState<Question>(oldQuestion);
-
-  const questionComponent = (questionType: QuestionType) => {
+  const questionPreview = (questionType: QuestionType) => {
     console.log(question);
     switch (questionType.name) {
       case "Short answer":
@@ -84,7 +81,7 @@ const EditQuestion: React.FC<{
           });
         }}
       />
-      {questionComponent(question.questionType)}
+      {questionPreview(question.questionType)}
       <br />
       <button
         onClick={(e) => {

@@ -4,7 +4,7 @@ import { Listing, Response } from "@interfaces/listings";
 import { GET_USER } from "@graphql/auth/queries";
 import { USER_RESPONSE } from "@graphql/listings/queries";
 import CreateResponse from "@components/pages/listings/createResponse";
-import TextField from "@components/pages/surveys/formComponents/textfield";
+import TextField from "@components/ui/formComponents/textfield";
 
 const Apply: React.FC<{
   listing: Listing;

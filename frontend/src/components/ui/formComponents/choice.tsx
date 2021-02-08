@@ -1,11 +1,10 @@
 const Choice: React.FC<{
-  title: string;
-  radio?: boolean;
   options: string[];
-  key?: string;
-}> = ({ title, radio, options, key }) => (
-  <label key={key}>
-    {title}
+  title?: string;
+  radio?: boolean;
+}> = ({ options, title, radio }) => (
+  <>
+    {title && <label>{title}</label>}
     <form>
       <ul>
         {options.map((option: string, index: number) => {
@@ -20,7 +19,7 @@ const Choice: React.FC<{
         })}
       </ul>
     </form>
-  </label>
+  </>
 );
 
 export default Choice;

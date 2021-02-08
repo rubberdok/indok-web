@@ -2,7 +2,7 @@ import { useMutation, gql } from "@apollo/client";
 import { CREATE_ORGANIZATION } from "@graphql/listings/mutations";
 import { Organization } from "@interfaces/listings";
 import { useState } from "react";
-import TextField from "@components/pages/surveys/formComponents/textfield";
+import TextField from "@components/ui/formComponents/textfield";
 
 const CreateOrganization: React.FC = () => {
   const [newOrganization, setNewOrganization] = useState<Organization>({} as Organization);

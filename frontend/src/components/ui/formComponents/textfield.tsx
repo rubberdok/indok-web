@@ -6,12 +6,11 @@ const TextField: React.FC<{
   placeholder?: string;
   size?: "short" | "long";
   value?: string;
-  key?: string;
   disabled?: boolean;
-}> = ({ title, onChange, placeholder, size, value, key, disabled }) => {
+}> = ({ title, onChange, placeholder, size, value, disabled }) => {
   return (
-    <label key={key}>
-      {title}
+    <>
+      {title && <label>{title}</label>}
       <br />
       {size ? (
         <textarea
@@ -26,7 +25,7 @@ const TextField: React.FC<{
       ) : (
         <input type="text" placeholder={placeholder} disabled={disabled} onChange={onChange} value={value} />
       )}
-    </label>
+    </>
   );
 };
 
