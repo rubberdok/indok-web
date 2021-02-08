@@ -3,8 +3,7 @@ import graphene
 
 from django.utils.text import slugify
 from django.contrib.auth.models import Group, User
-from django.contrib.auth import get_user_model
-from graphql_jwt.decorators import login_required, user_passes_test, permission_required
+from graphql_jwt.decorators import permission_required
 
 from api.graphql.users.types import UserType
 from .types import OrganizationType, MembershipType, RoleType
@@ -73,28 +72,28 @@ class DeleteOrganization(graphene.Mutation):
         ok = True
         return DeleteOrganization(ok=ok)
 
-class MemberInput(graphene.InputObjectType):
+class MembershipInput(graphene.InputObjectType):
     user_id = graphene.ID()
     organization_id = graphene.ID()
     role_id = graphene.ID()
 
-class AssignMember(graphene.Mutation):
+class AssignMembership(graphene.Mutation):
     Membership = graphene.Field(MembershipType)
     ok = graphene.Boolean()
 
     class Arguments:
-        member_data = MemberInput(required=True)
+        membership_data = MembershipInput(required=True)
 
-    def mutate(self, info, member_data):
-        member = Membership(
-            organization_id=member_data["organization_id"],
-            user_id=member_data["user_id"],
-            role_id=member_data["role_id"],
+    def mutate(self, info, membership_data):
+        membership = Membership(
+            organization_id=membership_data["organization_id"],
+            user_id=membership_data["user_id"],
+            role_id=membership_data["role_id"],
         )
-        member.save()
-        return AssignMember(member=member, ok=True)
+        membership.save()
+        return AssignMembership(membership=membership, ok=True)
 
-class RemoveMember(graphene.Mutation):
+class RemoveMembership(graphene.Mutation):
     removed_member = graphene.Field(UserType)
     ok = graphene.Boolean()
 
@@ -102,10 +101,10 @@ class RemoveMember(graphene.Mutation):
         member_id = graphene.ID()
 
     def mutate(self, info, member_id):
-        member = Membership.objects.get(pk=member_id)
-        user: User = member.user
-        member.delete()
-        return RemoveMember(removed_member=user, ok=True)
+        membership = Membership.objects.get(pk=member_id)
+        user: User = membership.user
+        membership.delete()
+        return RemoveMembership(removed_member=user, ok=True)
 
 class RoleInput(graphene.InputObjectType):
     name = graphene.String()

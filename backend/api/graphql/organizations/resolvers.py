@@ -23,7 +23,7 @@ class OrganizationResolvers:
             return None
 
 
-class MemberResolvers:
+class MembershipResolvers:
     def resolve_all_memberships(self, info):
         return Membership.objects.all()
 
