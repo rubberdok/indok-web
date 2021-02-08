@@ -9,6 +9,7 @@ export const SURVEY = gql`
         id
         question
         description
+        position
         questionType {
           id
           name

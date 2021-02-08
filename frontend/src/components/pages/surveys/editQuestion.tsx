@@ -36,9 +36,9 @@ const EditQuestion: React.FC<{
     console.log(question);
     switch (questionType.name) {
       case "Short answer":
-        return <TextField title={question.question} size="short" disabled value="Kortsvar" />;
+        return <TextField size="short" disabled value="Kortsvar" />;
       case "Paragraph":
-        return <TextField title={question.question} size="long" disabled value="Langsvar" />;
+        return <TextField size="long" disabled value="Langsvar" />;
       case "Multiple choice":
         return (
           <Choice

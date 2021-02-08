@@ -1,7 +1,7 @@
 import { ChangeEvent } from "react";
 
 const TextField: React.FC<{
-  title: string;
+  title?: string;
   onChange?: (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   placeholder?: string;
   size?: "short" | "long";
