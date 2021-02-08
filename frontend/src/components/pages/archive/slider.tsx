@@ -37,19 +37,20 @@ const PrettoSlider = withStyles({
     height: 8,
   },
   thumb: {
-    height: 24,
-    width: 24,
-    backgroundColor: "#fff",
+    height: 42,
+    width: 42,
+    backgroundColor: "#065a5a",
     border: "2px solid currentColor",
-    marginTop: -8,
-    marginLeft: -12,
+    marginTop: -19,
+    marginLeft: -14,
     "&:focus, &:hover, &$active": {
       boxShadow: "inherit",
     },
   },
   active: {},
   valueLabel: {
-    left: "calc(-50% + 4px)",
+    left: "calc(-10% + 6px)",
+    top: "calc(11px)",
   },
   track: {
     height: 8,
@@ -60,6 +61,8 @@ const PrettoSlider = withStyles({
     borderRadius: 4,
   },
 })(Slider);
+
+const yearValue = new Date().getFullYear();
 
 export default function CustomizedSlider() {
   const classes = useStyles();
@@ -76,9 +79,10 @@ export default function CustomizedSlider() {
           max={new Date().getFullYear()}
         />
       </ContentWrapper>
-      <Typography style={{ marginTop: "-30px", marginLeft: "-70px", fontSize: "15px" }} gutterBottom>
+      <Typography style={{ marginTop: "-28px", marginLeft: "-70px", fontSize: "14px" }} gutterBottom>
         Velg år
       </Typography>
+      <Typography style={{ marginTop: "-34px", marginLeft: "400px", fontSize: "20px" }} gutterBottom></Typography>
       <div className={classes.margin} />
     </div>
   );
