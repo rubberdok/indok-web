@@ -109,7 +109,6 @@ export const ORGANIZATIONS = gql`
       id
       name
       slug
-      absoluteSlug
       description
     }
   }
