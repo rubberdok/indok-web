@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { GET_DOCSBYTYPE } from "@graphql/archive/queries";
+import { GET_DOCSBYFILTERS, GET_DOCSBYTYPE } from "@graphql/archive/queries";
 import { Document } from "@interfaces/archives";
 import Button from "@material-ui/core/Button";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
@@ -45,14 +45,15 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface ListFeaturedDocumentsProps {
   document_types: string[];
+  year: string;
 }
 
-const ListFeaturedDocuments: React.FC<ListFeaturedDocumentsProps> = ({ document_types }) => {
-  const { refetch, loading, data, error } = useQuery(GET_DOCSBYTYPE, { variables: { document_types } });
+const ListFeaturedDocuments: React.FC<ListFeaturedDocumentsProps> = ({ document_types, year }) => {
+  const { refetch, loading, data, error } = useQuery(GET_DOCSBYFILTERS, { variables: { document_types, year } });
 
   useEffect(() => {
     refetch({ document_types });
-  }, [document_types]);
+  }, [document_types, year]);
 
   const classes = useStyles();
   if (loading) return <p style={{ textAlign: "center" }}></p>;
@@ -63,8 +64,8 @@ const ListFeaturedDocuments: React.FC<ListFeaturedDocumentsProps> = ({ document_
     <Container>
       <Typography variant="body1">Fremhevede dokumenter</Typography>
       <GridList cellHeight={144} className={classes.img} cols={4} spacing={8}>
-        {data.archiveByType.length ? (
-          data.archiveByType.map((doc: Document) => (
+        {data.archiveByTypes.length ? (
+          data.archiveByTypes.map((doc: Document) => (
             <GridListTile key={0}>
               <Card className={classes.root} elevation={1}>
                 <CardActionArea>

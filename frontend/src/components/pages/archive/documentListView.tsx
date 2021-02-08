@@ -1,9 +1,9 @@
 import { Typography } from "@material-ui/core";
 import React, { useState } from "react";
 import FilterButton from "./FilterButtons";
+import YearSelector from "./yearSelector";
 import ListDocuments from "./listDocuments";
 import { ContentWrapper } from "./wrapper";
-import YearSelector from "./yearSelector";
 import ListFeaturedDocuments from "./listFeaturedDocuments";
 import CustomizedSlider from "./slider";
 import SearchDocuments from "./searchDocuments";
@@ -11,6 +11,8 @@ import EditIcon from "@material-ui/icons/Edit";
 import { Heading, Paragraph, SubHeading } from "@components/ui/Typography";
 
 const DocumentListView: React.FC = () => {
+  const [yearFilter, setYearFilter] = useState<string>("");
+
   const [typeFilters, setTypeFilters] = useState<{ [key: string]: { active: boolean; title: string } }>({
     Budget: { active: false, title: "Budsjett og Regnskap" },
     Summary: { active: false, title: "Generalforsamling" },
@@ -41,27 +43,20 @@ const DocumentListView: React.FC = () => {
           }
         />
       </ContentWrapper>
-      <ContentWrapper
-        style={{
-          //justifyContent: "space-between",
-          justifyContent: "center",
-          marginLeft: "15%",
-          marginRight: "15%",
-          marginBottom: "32px",
-          marginTop: "-16px",
-        }}
-      >
-        <CustomizedSlider />
+      <ContentWrapper style={{ marginLeft: "240px", marginBottom: "28px", marginTop: "-28px" }}>
+        <YearSelector yearFilter={yearFilter} updateYearFilters={(value) => setYearFilter(value)} />
       </ContentWrapper>
       <ListFeaturedDocuments
         document_types={Object.entries(typeFilters)
           .filter((key, _) => key[1].active)
           .map(([_, val]) => val.title)}
+        year={yearFilter}
       />
       <ListDocuments
         document_types={Object.entries(typeFilters)
           .filter((key, _) => key[1].active)
           .map(([_, val]) => val.title)}
+        year={yearFilter}
       />
       <ContentWrapper style={{ marginTop: "32px", justifyContent: "center" }}>
         <button>Rediger arkiv {/* <EditIcon style={{ fontSize: "large" }} /> */}</button>

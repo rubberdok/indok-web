@@ -81,13 +81,13 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export default function YearSelector() {
-  const classes = useStyles();
-  const [year, setYear] = React.useState("");
+interface YearSelectorProps {
+  yearFilter: string;
+  updateYearFilters: (value: string) => void;
+}
 
-  const handleChange = (event) => {
-    setYear(event.target.value);
-  };
+const YearSelector: React.FC<YearSelectorProps> = ({ yearFilter, updateYearFilters }) => {
+  const classes = useStyles();
 
   return (
     <div className={classes.formControl}>
@@ -104,14 +104,14 @@ export default function YearSelector() {
               root: classes.selectRoot,
               icon: classes.icon,
             }}
-            value={year}
-            onChange={handleChange}
+            value={yearFilter}
+            onChange={(event) => updateYearFilters(event.target.value)}
             name="Årstall"
             inputProps={{
               id: "gpuChildQuantity",
             }}
           >
-            <option value="Alle">Alle år</option>
+            <option value="">Alle år</option>
             <option value="2021">2021</option>
             <option value="2020">2020</option>
             <option value="2019">2019</option>
@@ -121,4 +121,5 @@ export default function YearSelector() {
       </MuiThemeProvider>
     </div>
   );
-}
+};
+export default YearSelector;
