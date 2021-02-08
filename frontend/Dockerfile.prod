@@ -1,4 +1,4 @@
-FROM node:12
+FROM 777854691961.dkr.ecr.eu-north-1.amazonaws.com/node:12
 
 # Create app directory
 RUN mkdir -p /code
