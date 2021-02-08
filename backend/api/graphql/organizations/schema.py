@@ -17,7 +17,7 @@ class OrganizationMutations(graphene.ObjectType):
 
 class OrganizationQueries(graphene.ObjectType, OrganizationResolvers, MembershipResolvers):
     all_organizations = graphene.List(OrganizationType, search=graphene.String())
-    organization = graphene.Field(OrganizationType, id=graphene.ID(required=True))
+    organization = graphene.Field(OrganizationType, id=graphene.ID(required=False), slug=graphene.String(required=False))
     event_filtered_organizations = graphene.List(OrganizationType)
 
     all_memberships = graphene.List(MembershipType)
