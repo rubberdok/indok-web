@@ -11,8 +11,8 @@ class OrganizationMutations(graphene.ObjectType):
     delete_organization = DeleteOrganization.Field()
 
     create_role = CreateRole.Field()
-    assign_member = AssignMembership.Field()
-    remove_member = RemoveMembership.Field()
+    assign_membership = AssignMembership.Field()
+    remove_membership = RemoveMembership.Field()
 
 
 class OrganizationQueries(graphene.ObjectType, OrganizationResolvers, MembershipResolvers):

@@ -78,7 +78,7 @@ class MembershipInput(graphene.InputObjectType):
     role_id = graphene.ID()
 
 class AssignMembership(graphene.Mutation):
-    Membership = graphene.Field(MembershipType)
+    membership = graphene.Field(MembershipType)
     ok = graphene.Boolean()
 
     class Arguments:
