@@ -58,9 +58,9 @@ const DocumentListView: React.FC = () => {
           .map(([_, val]) => val.title)}
         year={yearFilter}
       />
-      <ContentWrapper style={{ marginTop: "32px", justifyContent: "center" }}>
-        <button>Rediger arkiv {/* <EditIcon style={{ fontSize: "large" }} /> */}</button>
-      </ContentWrapper>
+      {/*       <ContentWrapper style={{ marginTop: "32px", justifyContent: "center" }}>
+        <button>Rediger arkiv <EditIcon style={{ fontSize: "large" }} /></button>
+      </ContentWrapper> */}
     </>
   );
 };

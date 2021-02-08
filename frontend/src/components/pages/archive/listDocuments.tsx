@@ -2,10 +2,8 @@ import { useQuery } from "@apollo/client";
 import Content from "@components/ui/Content";
 import { GET_DOCSBYFILTERS } from "@graphql/archive/queries";
 import { Document } from "@interfaces/archives";
-import { Container, Typography } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
-import Grid from "@material-ui/core/Grid";
-import { makeStyles } from "@material-ui/core/styles";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import React, { useEffect } from "react";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
@@ -13,34 +11,38 @@ import CardMedia from "@material-ui/core/CardMedia";
 import CardActionArea from "@material-ui/core/CardActionArea";
 import GridList from "@material-ui/core/GridList";
 import GridListTile from "@material-ui/core/GridListTile";
+import Typography from "@material-ui/core/Typography";
+import Container from "@material-ui/core/Container";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-  },
-  paper: {
-    padding: theme.spacing(2),
-    marginLeft: "70px",
-  },
-  image: {
-    width: 128,
-    height: 128,
-  },
-  img: {
-    marginLeft: "80px",
-    display: "block",
-    maxWidth: "100%",
-    maxHeight: "100%",
-  },
-  article: {
-    width: "100%",
-  },
-  header: {
-    width: "100%",
-    fontSize: 10,
-    padding: -10,
-  },
-}));
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      flexGrow: 1,
+    },
+    paper: {
+      padding: theme.spacing(2),
+      marginLeft: "70px",
+    },
+    image: {
+      width: "128px",
+      height: "128px",
+      alignItems: "start",
+    },
+    img: {
+      marginLeft: "80px",
+      maxWidth: "100%",
+      maxHeight: "100%",
+    },
+    article: {
+      width: "100%",
+    },
+    header: {
+      width: "100%",
+      fontSize: 10,
+      padding: -10,
+    },
+  })
+);
 
 interface ListDocumentsProps {
   document_types: string[];
@@ -55,7 +57,7 @@ const ListDocuments: React.FC<ListDocumentsProps> = ({ document_types, year }) =
   }, [document_types, year]);
 
   const classes = useStyles();
-  if (loading) return <p style={{ textAlign: "center" }}>Laster...</p>;
+  if (loading) return <p style={{ textAlign: "center" }}></p>;
 
   if (error) return <p style={{ textAlign: "center" }}> Feil: {error.message} </p>;
 
@@ -104,7 +106,7 @@ const ListDocuments: React.FC<ListDocumentsProps> = ({ document_types, year }) =
           ))
         ) : (
           <Container>
-            <Typography> Fant ingen dokumenter som passer søket ditt </Typography>
+            <Typography> Fant ingen dokumenter som samsvarer med søket ditt </Typography>
           </Container>
         )}
       </GridList>
