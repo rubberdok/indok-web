@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { GET_DOCSBYFILTERS, GET_DOCSBYTYPE } from "@graphql/archive/queries";
+import { GET_DOCSBYFILTERS } from "@graphql/archive/queries";
 import { Document } from "@interfaces/archives";
 import Button from "@material-ui/core/Button";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
@@ -52,7 +52,7 @@ const ListFeaturedDocuments: React.FC<ListFeaturedDocumentsProps> = ({ document_
   const { refetch, loading, data, error } = useQuery(GET_DOCSBYFILTERS, { variables: { document_types, year } });
 
   useEffect(() => {
-    refetch({ document_types });
+    refetch({ document_types, year });
   }, [document_types, year]);
 
   const classes = useStyles();
@@ -105,7 +105,7 @@ const ListFeaturedDocuments: React.FC<ListFeaturedDocumentsProps> = ({ document_
           ))
         ) : (
           <Container>
-            <Typography> Det er ingen fremhevede dokumenter akkurat nå</Typography>
+            <Typography> Kunne ikke laste inn dokumenter </Typography>
           </Container>
         )}
       </GridList>

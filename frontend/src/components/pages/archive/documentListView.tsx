@@ -1,11 +1,10 @@
-import { Typography } from "@material-ui/core";
+import { Slider, Typography } from "@material-ui/core";
 import React, { useState } from "react";
 import FilterButton from "./FilterButtons";
-import YearSelector from "./yearSelector";
 import ListDocuments from "./listDocuments";
 import { ContentWrapper } from "./wrapper";
+import SliderSelector from "./slider";
 import ListFeaturedDocuments from "./listFeaturedDocuments";
-import CustomizedSlider from "./slider";
 import SearchDocuments from "./searchDocuments";
 import EditIcon from "@material-ui/icons/Edit";
 import { Heading, Paragraph, SubHeading } from "@components/ui/Typography";
@@ -43,8 +42,8 @@ const DocumentListView: React.FC = () => {
           }
         />
       </ContentWrapper>
-      <ContentWrapper style={{ marginLeft: "240px", marginBottom: "28px", marginTop: "-28px" }}>
-        <YearSelector yearFilter={yearFilter} updateYearFilters={(value) => setYearFilter(value)} />
+      <ContentWrapper style={{ justifyContent: "center" }}>
+        <SliderSelector yearFilter={yearFilter} updateYearFilters={(value) => setYearFilter(value)} />
       </ContentWrapper>
       <ListFeaturedDocuments
         document_types={Object.entries(typeFilters)
@@ -58,9 +57,6 @@ const DocumentListView: React.FC = () => {
           .map(([_, val]) => val.title)}
         year={yearFilter}
       />
-      {/*       <ContentWrapper style={{ marginTop: "32px", justifyContent: "center" }}>
-        <button>Rediger arkiv <EditIcon style={{ fontSize: "large" }} /></button>
-      </ContentWrapper> */}
     </>
   );
 };

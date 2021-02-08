@@ -62,9 +62,19 @@ const PrettoSlider = withStyles({
   },
 })(Slider);
 
-const yearValue = new Date().getFullYear();
+function convertYear(year: string) {
+  if (year === "") {
+    return "2021";
+  } else {
+    return parseInt(year);
+  }
+}
 
-export default function CustomizedSlider() {
+interface SliderProps {
+  yearFilter: string;
+  updateYearFilters: (value: string) => void;
+}
+const SliderSelector: React.FC<SliderProps> = ({ yearFilter, updateYearFilters }) => {
   const classes = useStyles();
 
   return (
@@ -77,6 +87,8 @@ export default function CustomizedSlider() {
           defaultValue={2021}
           min={1986}
           max={new Date().getFullYear()}
+          value={convertYear(yearFilter)}
+          onChange={(_, value) => updateYearFilters(value.toString())}
         />
       </ContentWrapper>
       <Typography style={{ marginTop: "-28px", marginLeft: "-70px", fontSize: "14px" }} gutterBottom>
@@ -86,4 +98,6 @@ export default function CustomizedSlider() {
       <div className={classes.margin} />
     </div>
   );
-}
+};
+
+export default SliderSelector;
