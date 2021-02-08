@@ -1,4 +1,3 @@
-import theme from "@styles/theme";
 import styled from "styled-components";
 
 export const BookingContainer = styled.div`
@@ -28,7 +27,7 @@ export const FlowContainer = styled.div`
 `;
 
 export const SelectContainer = styled.div<{ isSelected: boolean }>`
-  ${(props) => (props.isSelected ? `background-color: ${theme.colors.primary};` : ``)};
+  ${(props) => (props.isSelected ? `background-color: #065A5A;` : ``)};
   ${(props) => (props.isSelected ? `color: white;` : ``)};
   display: flex;
   flex-direction: column;
@@ -38,7 +37,7 @@ export const SelectContainer = styled.div<{ isSelected: boolean }>`
   height: 100%;
   &:hover {
     cursor: pointer;
-    background-color: ${theme.colors.primary};
+    background-color: #065a5a;
     color: white;
   }
   border-radius: 30px;
@@ -60,7 +59,7 @@ export const BookButton = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: ${theme.colors.primary};
+  background-color: #065a5a;
   color: white;
   border-radius: 25px;
   width: 50px;
@@ -69,7 +68,7 @@ export const BookButton = styled.div`
   margin-left: 5px;
   &:hover {
     cursor: pointer;
-    background-color: ${theme.colors.primaryLight};
+    background-color: #6a9997;
     color: white;
   }
 `;
@@ -80,7 +79,7 @@ export const DropdownButton = styled.div<{ isSelected: boolean }>`
   padding: 10px;
   &:hover {
     cursor: pointer;
-    background-color: ${theme.colors.background};
+    background-color: #f5f0eb;
     color: black;
   }
   display: flex;
