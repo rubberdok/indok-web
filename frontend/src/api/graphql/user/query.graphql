@@ -1,4 +1,4 @@
-query GetUser {
+query User {
   user {
     ...user
   }

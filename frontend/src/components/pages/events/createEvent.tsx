@@ -1,8 +1,8 @@
 import { gql, useMutation, useQuery } from "@apollo/client";
 import Button from "@components/ui/Button";
 import Select from "@components/ui/Select";
-import { CREATE_EVENT } from "src/graphql_old/events/mutations";
-import { GET_CATEGORIES, QUERY_EVENT_FILTERED_ORGANIZATIONS } from "src/graphql_old/events/queries";
+import { CREATE_EVENT } from "src/graphql/events/mutations";
+import { GET_CATEGORIES, QUERY_EVENT_FILTERED_ORGANIZATIONS } from "src/graphql/events/queries";
 import { Category, Event } from "@interfaces/events";
 import { Organization } from "@interfaces/organizations";
 import { useRouter } from "next/router";
