@@ -33,7 +33,9 @@ const OrganizationListings: React.FC<{ organization: Organization }> = ({ organi
             <ul>
               {data.organization.listings.map((listing) => (
                 <li key={listing.id}>
-                  <Link href={`/org/${organization.id}/listings/${listing.id}/responses`}>{listing.title}</Link>{" "}
+                  <Link href={`/organizations/${organization.id}/listings/${listing.id}/responses`}>
+                    {listing.title}
+                  </Link>{" "}
                   <button
                     onClick={(e) => {
                       e.preventDefault();

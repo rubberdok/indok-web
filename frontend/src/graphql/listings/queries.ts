@@ -109,6 +109,7 @@ export const ORGANIZATIONS = gql`
       id
       name
       slug
+      absoluteSlug
       description
     }
   }
@@ -120,6 +121,18 @@ export const ORGANIZATION = gql`
       id
       name
       slug
+      description
+    }
+  }
+`;
+
+export const ORGANIZATION_FROM_SLUG = gql`
+  query organization($slug: String!) {
+    organization(slug: $slug) {
+      id
+      name
+      slug
+      absoluteSlug
       description
     }
   }
