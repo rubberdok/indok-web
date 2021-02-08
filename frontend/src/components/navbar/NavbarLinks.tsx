@@ -25,6 +25,11 @@ const links = [
   },
   {
     id: "4",
+    title: "Verv",
+    href: "/listings",
+  },
+  {
+    id: "5",
     title: "Hyttebooking",
     href: "/cabins",
   },
