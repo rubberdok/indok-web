@@ -13,7 +13,7 @@ const Contract: React.FC = () => {
 
   const [cabins, setCabins] = useState<string[]>([]);
 
-  const handleBackButtonClick = () => Router.back();
+  const handleBackButtonClick = () => window.close();
 
   useEffect(() => {
     if (query.cabins) {

@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { HeaderComposition } from "./HeaderCompositon";
 
 const Rules: React.FC = () => {
-  const handleBackButtonClick = () => Router.back();
+  const handleBackButtonClick = () => window.close();
 
   return (
     <>
