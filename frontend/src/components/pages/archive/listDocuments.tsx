@@ -1,5 +1,4 @@
 import { useQuery } from "@apollo/client";
-import Content from "@components/ui/Content";
 import { GET_DOCSBYFILTERS } from "@graphql/archive/queries";
 import { Document } from "@interfaces/archives";
 import Button from "@material-ui/core/Button";
@@ -46,7 +45,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface ListDocumentsProps {
   document_types: string[];
-  year: number;
+  year: number | null;
 }
 
 const ListDocuments: React.FC<ListDocumentsProps> = ({ document_types, year }) => {

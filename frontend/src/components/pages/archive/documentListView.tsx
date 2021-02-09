@@ -1,16 +1,13 @@
-import { Slider, Typography } from "@material-ui/core";
+import { Typography } from "@material-ui/core";
 import React, { useState } from "react";
 import FilterButton from "./FilterButtons";
 import ListDocuments from "./listDocuments";
 import { ContentWrapper } from "./wrapper";
 import SliderSelector from "./slider";
 import ListFeaturedDocuments from "./listFeaturedDocuments";
-import SearchDocuments from "./searchDocuments";
-import EditIcon from "@material-ui/icons/Edit";
-import { Heading, Paragraph, SubHeading } from "@components/ui/Typography";
 
 const DocumentListView: React.FC = () => {
-  const [yearFilter, setYearFilter] = useState<number>(null);
+  const [yearFilter, setYearFilter] = useState<number | null>(null);
 
   const [typeFilters, setTypeFilters] = useState<{ [key: string]: { active: boolean; title: string } }>({
     Budget: { active: false, title: "Budsjett og Regnskap" },

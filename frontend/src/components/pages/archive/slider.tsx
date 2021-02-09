@@ -62,7 +62,7 @@ const PrettoSlider = withStyles({
   },
 })(Slider);
 
-function convertYear(year: number) {
+function convertYear(year: number | null) {
   if (year === null) {
     return new Date().getFullYear();
   } else {
@@ -71,8 +71,8 @@ function convertYear(year: number) {
 }
 
 interface SliderProps {
-  yearFilter: number;
-  updateYearFilters: (value: number) => void;
+  yearFilter: number | null;
+  updateYearFilters: (value: number | null) => void;
 }
 const SliderSelector: React.FC<SliderProps> = ({ yearFilter, updateYearFilters }) => {
   const classes = useStyles();
