@@ -1,5 +1,4 @@
 import { ArrowIcon } from "@components/ui/ArrowIcon";
-import Router from "next/router";
 import React from "react";
 import styled from "styled-components";
 import { HeaderComposition } from "./HeaderCompositon";
