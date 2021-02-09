@@ -62,17 +62,17 @@ const PrettoSlider = withStyles({
   },
 })(Slider);
 
-function convertYear(year: string) {
-  if (year === "") {
-    return "2021";
+function convertYear(year: number) {
+  if (year === null) {
+    return new Date().getFullYear();
   } else {
-    return parseInt(year);
+    return year;
   }
 }
 
 interface SliderProps {
-  yearFilter: string;
-  updateYearFilters: (value: string) => void;
+  yearFilter: number;
+  updateYearFilters: (value: number) => void;
 }
 const SliderSelector: React.FC<SliderProps> = ({ yearFilter, updateYearFilters }) => {
   const classes = useStyles();
@@ -84,11 +84,11 @@ const SliderSelector: React.FC<SliderProps> = ({ yearFilter, updateYearFilters }
           valueLabelDisplay="on"
           aria-label="pretto slider"
           track={false}
-          defaultValue={2021}
+          defaultValue={new Date().getFullYear()}
           min={1986}
           max={new Date().getFullYear()}
           value={convertYear(yearFilter)}
-          onChange={(_, value) => updateYearFilters(value.toString())}
+          onChange={(_, value) => updateYearFilters(value)}
         />
       </ContentWrapper>
       <Typography style={{ marginTop: "-28px", marginLeft: "-70px", fontSize: "14px" }} gutterBottom>

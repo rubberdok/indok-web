@@ -28,6 +28,6 @@ class ArchiveDocumentResolvers:
         documents = ArchiveDocument.objects.all()
         if type_doc:
             documents = documents.filter(type_doc__in=type_doc)
-        if year != "":
+        if year is not None:
             documents = documents.filter(year=year)
         return documents

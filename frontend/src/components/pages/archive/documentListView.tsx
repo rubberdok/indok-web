@@ -10,7 +10,7 @@ import EditIcon from "@material-ui/icons/Edit";
 import { Heading, Paragraph, SubHeading } from "@components/ui/Typography";
 
 const DocumentListView: React.FC = () => {
-  const [yearFilter, setYearFilter] = useState<string>("");
+  const [yearFilter, setYearFilter] = useState<number>(null);
 
   const [typeFilters, setTypeFilters] = useState<{ [key: string]: { active: boolean; title: string } }>({
     Budget: { active: false, title: "Budsjett og Regnskap" },

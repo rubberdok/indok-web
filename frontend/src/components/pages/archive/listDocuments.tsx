@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface ListDocumentsProps {
   document_types: string[];
-  year: string;
+  year: number;
 }
 
 const ListDocuments: React.FC<ListDocumentsProps> = ({ document_types, year }) => {

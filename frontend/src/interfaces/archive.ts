@@ -6,5 +6,5 @@ export interface ArchivedDocument {
   url: string;
   thumbnail: string;
   typeDoc: string;
-  year: string;
+  year: number | null;
 }

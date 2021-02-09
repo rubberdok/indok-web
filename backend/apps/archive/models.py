@@ -26,7 +26,7 @@ class ArchiveDocument(models.Model):
     )
     file_location = models.CharField(max_length=2000, default=None, null=False)
     uploaded_date = datetime.now()
-    year = models.CharField(max_length=6, default="2021", null=True, blank=True)
+    year = models.PositiveSmallIntegerField(blank=True, null=True)
 
     def __str__(self):
         return self.title
