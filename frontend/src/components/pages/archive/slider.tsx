@@ -88,7 +88,7 @@ const SliderSelector: React.FC<SliderProps> = ({ yearFilter, updateYearFilters }
           min={1986}
           max={new Date().getFullYear()}
           value={convertYear(yearFilter)}
-          onChange={(_, value) => updateYearFilters(value)}
+          onChange={(_, value) => typeof value === "number" && updateYearFilters(value)}
         />
       </ContentWrapper>
       <Typography style={{ marginTop: "-28px", marginLeft: "-70px", fontSize: "14px" }} gutterBottom>
