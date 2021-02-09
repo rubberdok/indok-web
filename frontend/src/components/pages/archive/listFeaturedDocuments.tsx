@@ -43,12 +43,12 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-interface ListDocumentsProps {
+interface ListFeaturedDocumentsProps {
   document_types: string[];
   year: number | null;
 }
 
-const ListDocuments: React.FC<ListDocumentsProps> = ({ document_types, year }) => {
+const ListFeaturedDocuments: React.FC<ListFeaturedDocumentsProps> = ({ document_types, year }) => {
   const { refetch, loading, data, error } = useQuery(GET_DOCSBYFILTERS, { variables: { document_types, year } });
 
   useEffect(() => {
@@ -62,7 +62,7 @@ const ListDocuments: React.FC<ListDocumentsProps> = ({ document_types, year }) =
 
   return (
     <Container>
-      <Typography variant="body1">Alle dokumenter</Typography>
+      <Typography variant="body1">Fremhevede dokumenter</Typography>
       <GridList cellHeight={144} className={classes.img} cols={4} spacing={8}>
         {data.archiveByTypes.length ? (
           data.archiveByTypes.map((doc: Document) => (
@@ -105,7 +105,7 @@ const ListDocuments: React.FC<ListDocumentsProps> = ({ document_types, year }) =
           ))
         ) : (
           <Container>
-            <Typography> Fant ingen dokumenter som samsvarer med søket ditt </Typography>
+            <Typography> Kunne ikke laste inn dokumenter </Typography>
           </Container>
         )}
       </GridList>
@@ -113,4 +113,4 @@ const ListDocuments: React.FC<ListDocumentsProps> = ({ document_types, year }) =
   );
 };
 
-export default ListDocuments;
+export default ListFeaturedDocuments;

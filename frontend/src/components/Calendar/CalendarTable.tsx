@@ -1,15 +1,11 @@
-import moment from "moment";
+import dayjs from "dayjs";
 import React from "react";
-import { NORWEGIAN_SHORT_DAY_NAMES } from "./constants";
 import { BigTable, CalendarTableContainer, Month, WeekDay, Year } from "./styles";
-
-moment.updateLocale("nb", {
-  weekdaysShort: NORWEGIAN_SHORT_DAY_NAMES,
-});
+import { DAYS_IN_WEEK } from "./constants";
 
 interface Props {
-  getRows: (month: moment.Moment) => React.ReactNode[];
-  month: moment.Moment;
+  getRows: (month: dayjs.Dayjs) => React.ReactNode[];
+  month: dayjs.Dayjs;
 }
 
 const CalendarTable: React.FC<Props> = ({ getRows, month }) => (
@@ -22,7 +18,7 @@ const CalendarTable: React.FC<Props> = ({ getRows, month }) => (
       <BigTable>
         <thead>
           <tr>
-            {moment.weekdaysShort(true).map((dow) => (
+            {DAYS_IN_WEEK.map((dow) => (
               <WeekDay key={dow}>{dow}</WeekDay>
             ))}
           </tr>
