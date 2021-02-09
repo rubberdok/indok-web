@@ -1,4 +1,4 @@
-query eventfiltered {
+query eventFilteredOrganizations {
   eventFilteredOrganizations {
     id
     name

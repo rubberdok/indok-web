@@ -1,8 +1,7 @@
-import { useQuery } from "@apollo/client";
-import { GET_EVENT } from "../../../graphql/events/queries";
+import { useEventQuery } from "src/api/generated/graphql";
 
 interface Props {
-  eventId: number;
+  eventId: string;
 }
 
 function parseDate(date: string) {
@@ -14,15 +13,13 @@ function getName(obj: any) {
 }
 
 const EventDetailPage: React.FC<Props> = ({ eventId }) => {
-  const { loading, error, data } = useQuery(GET_EVENT, {
-    variables: { id: eventId },
-  });
+  const { loading, error, data } = useEventQuery({ variables: { id: eventId } });
 
   if (loading) return <p>Loading...</p>;
 
   if (error) return <p>Error :(</p>;
 
-  if (data.event)
+  if (data?.event)
     return (
       <div>
         <h2 style={{ marginTop: -10, marginBottom: 10, textAlign: "center" }}>Event details</h2>

@@ -1,12 +1,11 @@
-import { gql, useMutation, useQuery } from "@apollo/client";
+import { gql, useMutation } from "@apollo/client";
 import Button from "@components/ui/Button";
 import Select from "@components/ui/Select";
 import { CREATE_EVENT } from "src/graphql/events/mutations";
-import { GET_CATEGORIES, QUERY_EVENT_FILTERED_ORGANIZATIONS } from "src/graphql/events/queries";
-import { Category, Event } from "@interfaces/events";
-import { Organization } from "@interfaces/organizations";
+import { Event } from "@interfaces/events";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import { useAllEventCategoriesQuery, useEventFilteredOrganizationsQuery } from "src/api/generated/graphql";
 
 const CreateEvent: React.FC = () => {
   const defaultInput = {
@@ -48,33 +47,36 @@ const CreateEvent: React.FC = () => {
     },
   });
 
-  const { loading: categoryLoading, error: categoryError, data: categoryData } = useQuery(GET_CATEGORIES);
-  const { loading: organizationLoading, error: organizationError, data: organizationData } = useQuery(
-    QUERY_EVENT_FILTERED_ORGANIZATIONS
-  );
+  const { loading: categoryLoading, error: categoryError, data: categoryData } = useAllEventCategoriesQuery();
+  const {
+    loading: organizationLoading,
+    error: organizationError,
+    data: organizationData,
+  } = useEventFilteredOrganizationsQuery();
 
   const getAllCategories = () => {
-    if (categoryLoading) return [];
+    if (categoryLoading || categoryError || !categoryData || !categoryData.allCategories) return [];
 
-    if (categoryError) return [];
-
-    return categoryData.allCategories.map((category: Category) => {
-      return { name: category.name, value: category.id, selected: category.id == eventData.categoryId };
+    return categoryData.allCategories.map((category) => {
+      return category
+        ? { name: category.name, value: category.id, selected: category.id == eventData.categoryId }
+        : { name: "", value: "", selected: false };
     });
   };
 
   const getAllOrganizations = () => {
     // should handle loading status
-    if (organizationLoading) return [];
+    if (organizationLoading || organizationError || !organizationData || !organizationData.eventFilteredOrganizations)
+      return [];
 
-    if (organizationError) return [];
-
-    return organizationData.eventFilteredOrganizations.map((organization: Organization) => {
-      return {
-        name: organization.name,
-        value: organization.id,
-        selected: organization.id == eventData.organizationId,
-      };
+    return organizationData.eventFilteredOrganizations.map((organization) => {
+      return organization
+        ? {
+            name: organization.name,
+            value: organization.id,
+            selected: organization.id == eventData.organizationId,
+          }
+        : { name: "", value: "", selected: false };
     });
   };
 

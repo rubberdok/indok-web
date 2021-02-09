@@ -1,9 +1,7 @@
-import { useQuery } from "@apollo/client";
-import { GET_EVENTS } from "src/graphql/events/queries";
-import { Event } from "@interfaces/events";
 import Link from "next/link";
 import React, { useState } from "react";
 import FilterMenu from "./filterMenu";
+import { useAllEventsQuery } from "src/api/generated/graphql";
 
 export interface FilterQuery {
   organization?: string;
@@ -15,10 +13,9 @@ export interface FilterQuery {
 const AllEvents: React.FC = () => {
   const [filters, setFilters] = useState({});
   const [showTableView, setShowTableView] = useState(false);
-  const { loading, error, data, refetch } = useQuery(GET_EVENTS, {
-    variables: filters,
-  });
-  // should handle loading status
+
+  const { loading, error, data, refetch } = useAllEventsQuery({ variables: filters });
+
   if (loading) return <p>Loading...</p>;
 
   if (error) return <p>Error :(</p>;
@@ -37,29 +34,32 @@ const AllEvents: React.FC = () => {
           <p>{"Kommer snart! :)"}</p>
         ) : (
           <>
-            {data.allEvents.length === 0 ? (
+            {data?.allEvents?.length === 0 ? (
               <h4>{"Ingen arrangementer passer til valgte filtere"}</h4>
             ) : (
-              data.allEvents.map((event: Event) => (
-                <Link href={`/events/${event.id}`} key={event.id}>
-                  <a href={`/events/${event.id}`} style={{ color: "#000" }}>
-                    <div
-                      style={{
-                        border: "solid",
-                        borderWidth: "0.05em",
-                        borderColor: "#6A9997",
-                        borderRadius: "0.2em",
-                        padding: "0.5em",
-                        marginBottom: "0.5em",
-                        backgroundColor: "#FFF",
-                      }}
-                    >
-                      <p style={{ marginBottom: "0.2em" }}>{event.title}</p>
-                      <p style={{ marginTop: 0 }}>Starttid: {event.startTime.slice(0, 19).replace("T", " ")}</p>
-                    </div>
-                  </a>
-                </Link>
-              ))
+              data?.allEvents?.map(
+                (event) =>
+                  event && (
+                    <Link href={`/events/${event.id}`} key={event.id}>
+                      <a href={`/events/${event.id}`} style={{ color: "#000" }}>
+                        <div
+                          style={{
+                            border: "solid",
+                            borderWidth: "0.05em",
+                            borderColor: "#6A9997",
+                            borderRadius: "0.2em",
+                            padding: "0.5em",
+                            marginBottom: "0.5em",
+                            backgroundColor: "#FFF",
+                          }}
+                        >
+                          <p style={{ marginBottom: "0.2em" }}>{event.title}</p>
+                          <p style={{ marginTop: 0 }}>Starttid: {event.startTime.slice(0, 19).replace("T", " ")}</p>
+                        </div>
+                      </a>
+                    </Link>
+                  )
+              )
             )}
           </>
         )}

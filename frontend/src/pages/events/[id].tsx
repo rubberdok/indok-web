@@ -8,7 +8,6 @@ import EventDetailPage from "../../components/pages/events/eventDetailPage";
 const EventInfo: NextPage = () => {
   const router = useRouter();
   const { id } = router.query;
-  const numberId = typeof id === "string" && parseInt(id);
 
   return (
     <Layout>
@@ -23,9 +22,7 @@ const EventInfo: NextPage = () => {
           margin: "0 auto",
         }}
       >
-        <div style={{ marginLeft: "auto", marginRight: "auto" }}>
-          {numberId && <EventDetailPage eventId={numberId} />}
-        </div>
+        <div style={{ marginLeft: "auto", marginRight: "auto" }}>{<EventDetailPage eventId={id} />}</div>
       </div>
       <div style={{ marginTop: "2em" }}>
         <Button styling="primary" link="/events" back>

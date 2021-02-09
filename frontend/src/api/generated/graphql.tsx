@@ -298,6 +298,78 @@ export type DeleteCategory = {
   category?: Maybe<CategoryType>;
 };
 
+export type AllEventCategoriesQueryVariables = Exact<{ [key: string]: never }>;
+
+export type AllEventCategoriesQuery = { __typename?: "Query" } & {
+  allCategories?: Maybe<Array<Maybe<{ __typename?: "CategoryType" } & EventCategoryFragment>>>;
+};
+
+export type EventCategoryFragment = { __typename?: "CategoryType" } & Pick<CategoryType, "id" | "name">;
+
+export type EventCategoryQueryVariables = Exact<{
+  id: Scalars["ID"];
+}>;
+
+export type EventCategoryQuery = { __typename?: "Query" } & {
+  category?: Maybe<{ __typename?: "CategoryType" } & EventCategoryFragment>;
+};
+
+export type AllEventsQueryVariables = Exact<{
+  organization?: Maybe<Scalars["String"]>;
+  category?: Maybe<Scalars["String"]>;
+  startTime?: Maybe<Scalars["DateTime"]>;
+  endTime?: Maybe<Scalars["DateTime"]>;
+}>;
+
+export type AllEventsQuery = { __typename?: "Query" } & {
+  allEvents?: Maybe<Array<Maybe<{ __typename?: "EventType" } & EventFragment>>>;
+};
+
+export type EventFragment = { __typename?: "EventType" } & Pick<
+  EventType,
+  | "id"
+  | "title"
+  | "startTime"
+  | "endTime"
+  | "location"
+  | "description"
+  | "image"
+  | "isAttendable"
+  | "deadline"
+  | "publisher"
+> & {
+    organization?: Maybe<{ __typename?: "OrganizationType" } & OrganizationFragment>;
+    category?: Maybe<{ __typename?: "CategoryType" } & EventCategoryFragment>;
+  };
+
+export type EventQueryVariables = Exact<{
+  id: Scalars["ID"];
+}>;
+
+export type EventQuery = { __typename?: "Query" } & { event?: Maybe<{ __typename?: "EventType" } & EventFragment> };
+
+export type EventFilteredOrganizationsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type EventFilteredOrganizationsQuery = { __typename?: "Query" } & {
+  eventFilteredOrganizations?: Maybe<
+    Array<
+      Maybe<
+        { __typename?: "OrganizationType" } & Pick<OrganizationType, "id" | "name"> & {
+            children: Array<{ __typename?: "OrganizationType" } & Pick<OrganizationType, "id" | "name">>;
+          }
+      >
+    >
+  >;
+};
+
+export type OrganizationFragment = { __typename?: "OrganizationType" } & Pick<
+  OrganizationType,
+  "id" | "name" | "slug" | "description"
+> & {
+    parent?: Maybe<{ __typename?: "OrganizationType" } & Pick<OrganizationType, "id" | "name">>;
+    children: Array<{ __typename?: "OrganizationType" } & Pick<OrganizationType, "id" | "name">>;
+  };
+
 export type AuthUserMutationVariables = Exact<{
   code: Scalars["String"];
 }>;
@@ -334,6 +406,50 @@ export type GetUserQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetUserQuery = { __typename?: "Query" } & { user?: Maybe<{ __typename?: "UserType" } & UserFragment> };
 
+export const OrganizationFragmentDoc = gql`
+  fragment organization on OrganizationType {
+    id
+    name
+    slug
+    description
+    parent {
+      id
+      name
+    }
+    children {
+      id
+      name
+    }
+  }
+`;
+export const EventCategoryFragmentDoc = gql`
+  fragment eventCategory on CategoryType {
+    id
+    name
+  }
+`;
+export const EventFragmentDoc = gql`
+  fragment event on EventType {
+    id
+    title
+    startTime
+    endTime
+    location
+    description
+    organization {
+      ...organization
+    }
+    category {
+      ...eventCategory
+    }
+    image
+    isAttendable
+    deadline
+    publisher
+  }
+  ${OrganizationFragmentDoc}
+  ${EventCategoryFragmentDoc}
+`;
 export const UserFragmentDoc = gql`
   fragment user on UserType {
     id
@@ -350,6 +466,213 @@ export const UserFragmentDoc = gql`
     year
   }
 `;
+export const AllEventCategoriesDocument = gql`
+  query allEventCategories {
+    allCategories {
+      ...eventCategory
+    }
+  }
+  ${EventCategoryFragmentDoc}
+`;
+
+/**
+ * __useAllEventCategoriesQuery__
+ *
+ * To run a query within a React component, call `useAllEventCategoriesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAllEventCategoriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAllEventCategoriesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useAllEventCategoriesQuery(
+  baseOptions?: Apollo.QueryHookOptions<AllEventCategoriesQuery, AllEventCategoriesQueryVariables>
+) {
+  return Apollo.useQuery<AllEventCategoriesQuery, AllEventCategoriesQueryVariables>(
+    AllEventCategoriesDocument,
+    baseOptions
+  );
+}
+export function useAllEventCategoriesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<AllEventCategoriesQuery, AllEventCategoriesQueryVariables>
+) {
+  return Apollo.useLazyQuery<AllEventCategoriesQuery, AllEventCategoriesQueryVariables>(
+    AllEventCategoriesDocument,
+    baseOptions
+  );
+}
+export type AllEventCategoriesQueryHookResult = ReturnType<typeof useAllEventCategoriesQuery>;
+export type AllEventCategoriesLazyQueryHookResult = ReturnType<typeof useAllEventCategoriesLazyQuery>;
+export type AllEventCategoriesQueryResult = Apollo.QueryResult<
+  AllEventCategoriesQuery,
+  AllEventCategoriesQueryVariables
+>;
+export const EventCategoryDocument = gql`
+  query EventCategory($id: ID!) {
+    category(id: $id) {
+      ...eventCategory
+    }
+  }
+  ${EventCategoryFragmentDoc}
+`;
+
+/**
+ * __useEventCategoryQuery__
+ *
+ * To run a query within a React component, call `useEventCategoryQuery` and pass it any options that fit your needs.
+ * When your component renders, `useEventCategoryQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useEventCategoryQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useEventCategoryQuery(
+  baseOptions: Apollo.QueryHookOptions<EventCategoryQuery, EventCategoryQueryVariables>
+) {
+  return Apollo.useQuery<EventCategoryQuery, EventCategoryQueryVariables>(EventCategoryDocument, baseOptions);
+}
+export function useEventCategoryLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<EventCategoryQuery, EventCategoryQueryVariables>
+) {
+  return Apollo.useLazyQuery<EventCategoryQuery, EventCategoryQueryVariables>(EventCategoryDocument, baseOptions);
+}
+export type EventCategoryQueryHookResult = ReturnType<typeof useEventCategoryQuery>;
+export type EventCategoryLazyQueryHookResult = ReturnType<typeof useEventCategoryLazyQuery>;
+export type EventCategoryQueryResult = Apollo.QueryResult<EventCategoryQuery, EventCategoryQueryVariables>;
+export const AllEventsDocument = gql`
+  query AllEvents($organization: String, $category: String, $startTime: DateTime, $endTime: DateTime) {
+    allEvents(organization: $organization, category: $category, startTime: $startTime, endTime: $endTime) {
+      ...event
+    }
+  }
+  ${EventFragmentDoc}
+`;
+
+/**
+ * __useAllEventsQuery__
+ *
+ * To run a query within a React component, call `useAllEventsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAllEventsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAllEventsQuery({
+ *   variables: {
+ *      organization: // value for 'organization'
+ *      category: // value for 'category'
+ *      startTime: // value for 'startTime'
+ *      endTime: // value for 'endTime'
+ *   },
+ * });
+ */
+export function useAllEventsQuery(baseOptions?: Apollo.QueryHookOptions<AllEventsQuery, AllEventsQueryVariables>) {
+  return Apollo.useQuery<AllEventsQuery, AllEventsQueryVariables>(AllEventsDocument, baseOptions);
+}
+export function useAllEventsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<AllEventsQuery, AllEventsQueryVariables>
+) {
+  return Apollo.useLazyQuery<AllEventsQuery, AllEventsQueryVariables>(AllEventsDocument, baseOptions);
+}
+export type AllEventsQueryHookResult = ReturnType<typeof useAllEventsQuery>;
+export type AllEventsLazyQueryHookResult = ReturnType<typeof useAllEventsLazyQuery>;
+export type AllEventsQueryResult = Apollo.QueryResult<AllEventsQuery, AllEventsQueryVariables>;
+export const EventDocument = gql`
+  query Event($id: ID!) {
+    event(id: $id) {
+      ...event
+    }
+  }
+  ${EventFragmentDoc}
+`;
+
+/**
+ * __useEventQuery__
+ *
+ * To run a query within a React component, call `useEventQuery` and pass it any options that fit your needs.
+ * When your component renders, `useEventQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useEventQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useEventQuery(baseOptions: Apollo.QueryHookOptions<EventQuery, EventQueryVariables>) {
+  return Apollo.useQuery<EventQuery, EventQueryVariables>(EventDocument, baseOptions);
+}
+export function useEventLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<EventQuery, EventQueryVariables>) {
+  return Apollo.useLazyQuery<EventQuery, EventQueryVariables>(EventDocument, baseOptions);
+}
+export type EventQueryHookResult = ReturnType<typeof useEventQuery>;
+export type EventLazyQueryHookResult = ReturnType<typeof useEventLazyQuery>;
+export type EventQueryResult = Apollo.QueryResult<EventQuery, EventQueryVariables>;
+export const EventFilteredOrganizationsDocument = gql`
+  query eventFilteredOrganizations {
+    eventFilteredOrganizations {
+      id
+      name
+      children {
+        id
+        name
+      }
+    }
+  }
+`;
+
+/**
+ * __useEventFilteredOrganizationsQuery__
+ *
+ * To run a query within a React component, call `useEventFilteredOrganizationsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useEventFilteredOrganizationsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useEventFilteredOrganizationsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useEventFilteredOrganizationsQuery(
+  baseOptions?: Apollo.QueryHookOptions<EventFilteredOrganizationsQuery, EventFilteredOrganizationsQueryVariables>
+) {
+  return Apollo.useQuery<EventFilteredOrganizationsQuery, EventFilteredOrganizationsQueryVariables>(
+    EventFilteredOrganizationsDocument,
+    baseOptions
+  );
+}
+export function useEventFilteredOrganizationsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<EventFilteredOrganizationsQuery, EventFilteredOrganizationsQueryVariables>
+) {
+  return Apollo.useLazyQuery<EventFilteredOrganizationsQuery, EventFilteredOrganizationsQueryVariables>(
+    EventFilteredOrganizationsDocument,
+    baseOptions
+  );
+}
+export type EventFilteredOrganizationsQueryHookResult = ReturnType<typeof useEventFilteredOrganizationsQuery>;
+export type EventFilteredOrganizationsLazyQueryHookResult = ReturnType<typeof useEventFilteredOrganizationsLazyQuery>;
+export type EventFilteredOrganizationsQueryResult = Apollo.QueryResult<
+  EventFilteredOrganizationsQuery,
+  EventFilteredOrganizationsQueryVariables
+>;
 export const AuthUserDocument = gql`
   mutation AuthUser($code: String!) {
     authUser(code: $code) {

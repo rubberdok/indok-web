@@ -1,5 +1,5 @@
-query Category($id: ID!) {
+query EventCategory($id: ID!) {
   category(id: $id) {
-    ...category
+    ...eventCategory
   }
 }

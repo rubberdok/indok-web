@@ -1,9 +1,6 @@
-import { useQuery } from "@apollo/client";
-import { GET_CATEGORIES, QUERY_EVENT_FILTERED_ORGANIZATIONS } from "src/graphql/events/queries";
-import { Category } from "@interfaces/events";
-import { Organization } from "@interfaces/organizations";
 import React from "react";
 import { FilterQuery } from ".";
+import { useAllEventCategoriesQuery, useEventFilteredOrganizationsQuery } from "src/api/generated/graphql";
 
 interface Props {
   filters: FilterQuery;
@@ -11,11 +8,8 @@ interface Props {
 }
 
 const FilterMenu: React.FC<Props> = ({ filters, onChange }) => {
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  const handleClick = () => {};
-
   const OrganizationFilter = () => {
-    const { loading, error, data } = useQuery(QUERY_EVENT_FILTERED_ORGANIZATIONS);
+    const { loading, error, data } = useEventFilteredOrganizationsQuery();
 
     // should handle loading status
     if (loading) return <p>Loading...</p>;
@@ -25,53 +19,57 @@ const FilterMenu: React.FC<Props> = ({ filters, onChange }) => {
     return (
       <div>
         <h5 style={{ margin: "0px" }}>{"Organisasjoner"}</h5>
-        {data.eventFilteredOrganizations.map((org: Organization) => (
-          <div key={org.name}>
-            <div
-              style={{
-                cursor: "pointer",
-                width: "fit-content",
-                color: filters?.organization === org.name ? "#065A5A" : "#707070",
-                fontWeight: filters?.organization === org.name ? 700 : 500,
-              }}
-              aria-hidden="true"
-              onClick={() => {
-                onChange({ ...filters, organization: org.name });
-              }}
-              onKeyDown={handleClick}
-            >
-              <p style={{ marginBottom: "0px", marginTop: "0.05em" }}>{org.name}</p>
-            </div>
+        {data?.eventFilteredOrganizations?.map(
+          (org) =>
+            org && (
+              <div key={org.name}>
+                <div
+                  style={{
+                    cursor: "pointer",
+                    width: "fit-content",
+                    color: filters?.organization === org.name ? "#065A5A" : "#707070",
+                    fontWeight: filters?.organization === org.name ? 700 : 500,
+                  }}
+                  aria-hidden="true"
+                  onClick={() => {
+                    onChange({ ...filters, organization: org.name });
+                  }}
+                >
+                  <p style={{ marginBottom: "0px", marginTop: "0.05em" }}>{org.name}</p>
+                </div>
 
-            {org.children?.map((subOrg: Organization) => (
-              <div
-                key={subOrg.name}
-                style={{
-                  marginLeft: "2em",
-                  fontSize: "15px",
-                  cursor: "pointer",
-                  width: "fit-content",
-                  color:
-                    filters?.organization === subOrg.name || filters?.organization === org.name ? "#065A5A" : "#909090",
-                  fontWeight: filters?.organization === subOrg.name || filters?.organization === org.name ? 700 : 500,
-                }}
-                aria-hidden="true"
-                onClick={() => {
-                  onChange({ ...filters, organization: subOrg.name });
-                }}
-                onKeyDown={handleClick}
-              >
-                <p style={{ margin: "0px" }}>{subOrg.name}</p>
+                {org.children?.map((subOrg) => (
+                  <div
+                    key={subOrg.name}
+                    style={{
+                      marginLeft: "2em",
+                      fontSize: "15px",
+                      cursor: "pointer",
+                      width: "fit-content",
+                      color:
+                        filters?.organization === subOrg.name || filters?.organization === org.name
+                          ? "#065A5A"
+                          : "#909090",
+                      fontWeight:
+                        filters?.organization === subOrg.name || filters?.organization === org.name ? 700 : 500,
+                    }}
+                    aria-hidden="true"
+                    onClick={() => {
+                      onChange({ ...filters, organization: subOrg.name });
+                    }}
+                  >
+                    <p style={{ margin: "0px" }}>{subOrg.name}</p>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-        ))}
+            )
+        )}
       </div>
     );
   };
 
   const CategoryFilter = () => {
-    const { loading, error, data } = useQuery(GET_CATEGORIES);
+    const { loading, error, data } = useAllEventCategoriesQuery();
 
     // should handle loading status
     if (loading) return <p>Loading...</p>;
@@ -81,24 +79,26 @@ const FilterMenu: React.FC<Props> = ({ filters, onChange }) => {
     return (
       <div>
         <h5 style={{ marginBottom: "0px" }}>{"Kategorier"}</h5>
-        {data.allCategories.map((category: Category) => (
-          <div
-            key={category.name}
-            style={{
-              cursor: "pointer",
-              width: "fit-content",
-              color: filters?.category === category.name ? "#065A5A" : "#707070",
-              fontWeight: filters?.category === category.name ? 700 : 500,
-            }}
-            aria-hidden="true"
-            onClick={() => {
-              onChange({ ...filters, category: category.name });
-            }}
-            onKeyDown={handleClick}
-          >
-            <p style={{ marginTop: "0px" }}>{category.name}</p>
-          </div>
-        ))}
+        {data?.allCategories?.map(
+          (category) =>
+            category && (
+              <div
+                key={category.name}
+                style={{
+                  cursor: "pointer",
+                  width: "fit-content",
+                  color: filters?.category === category.name ? "#065A5A" : "#707070",
+                  fontWeight: filters?.category === category.name ? 700 : 500,
+                }}
+                aria-hidden="true"
+                onClick={() => {
+                  onChange({ ...filters, category: category.name });
+                }}
+              >
+                <p style={{ marginTop: "0px" }}>{category.name}</p>
+              </div>
+            )
+        )}
       </div>
     );
   };

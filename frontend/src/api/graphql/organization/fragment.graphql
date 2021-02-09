@@ -3,6 +3,12 @@ fragment organization on OrganizationType {
   name
   slug
   description
-  parent
-  children
+  parent {
+    id
+    name
+  }
+  children {
+    id
+    name
+  }
 }
