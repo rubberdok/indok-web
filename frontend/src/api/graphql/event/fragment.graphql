@@ -14,5 +14,12 @@ fragment event on EventType {
   image
   isAttendable
   deadline
-  publisher
+  publisher {
+    id
+    username
+    email
+    firstName
+    lastName
+    dateJoined
+  }
 }

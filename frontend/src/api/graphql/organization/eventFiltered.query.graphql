@@ -2,6 +2,7 @@ query eventFilteredOrganizations {
   eventFilteredOrganizations {
     id
     name
+    color
     children {
       id
       name

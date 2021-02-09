@@ -3,6 +3,7 @@ fragment organization on OrganizationType {
   name
   slug
   description
+  color
   parent {
     id
     name

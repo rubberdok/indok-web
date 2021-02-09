@@ -12,6 +12,12 @@ export type Scalars = {
   Int: number;
   Float: number;
   /**
+   * The `Date` scalar type represents a Date
+   * value as specified by
+   * [iso8601](https://en.wikipedia.org/wiki/ISO_8601).
+   */
+  Date: any;
+  /**
    * The `DateTime` scalar type represents a DateTime
    * value as specified by
    * [iso8601](https://en.wikipedia.org/wiki/ISO_8601).
@@ -30,8 +36,16 @@ export type Query = {
   allOrganizations?: Maybe<Array<Maybe<OrganizationType>>>;
   organization?: Maybe<OrganizationType>;
   eventFilteredOrganizations?: Maybe<Array<Maybe<OrganizationType>>>;
+  allBookings?: Maybe<Array<Maybe<BookingType>>>;
+  bookingsByMonth?: Maybe<Array<Maybe<BookingType>>>;
+  booking?: Maybe<BookingType>;
+  cabins?: Maybe<Array<Maybe<CabinType>>>;
   allUsers?: Maybe<Array<Maybe<UserType>>>;
   user?: Maybe<UserType>;
+  allArchives?: Maybe<Array<Maybe<ArchiveDocumentType>>>;
+  archive?: Maybe<ArchiveDocumentType>;
+  archiveByYear?: Maybe<ArchiveDocumentType>;
+  archiveByType?: Maybe<Array<Maybe<ArchiveDocumentType>>>;
   allEvents?: Maybe<Array<Maybe<EventType>>>;
   event?: Maybe<EventType>;
   allCategories?: Maybe<Array<Maybe<CategoryType>>>;
@@ -44,6 +58,27 @@ export type QueryAllOrganizationsArgs = {
 
 export type QueryOrganizationArgs = {
   id: Scalars["ID"];
+};
+
+export type QueryBookingsByMonthArgs = {
+  year?: Maybe<Scalars["String"]>;
+  month?: Maybe<Scalars["String"]>;
+};
+
+export type QueryBookingArgs = {
+  bookingId: Scalars["ID"];
+};
+
+export type QueryArchiveArgs = {
+  id: Scalars["ID"];
+};
+
+export type QueryArchiveByYearArgs = {
+  date: Scalars["DateTime"];
+};
+
+export type QueryArchiveByTypeArgs = {
+  typeDocs: Array<Maybe<Scalars["String"]>>;
 };
 
 export type QueryAllEventsArgs = {
@@ -68,7 +103,28 @@ export type OrganizationType = {
   slug: Scalars["String"];
   description: Scalars["String"];
   parent?: Maybe<OrganizationType>;
+  color?: Maybe<Scalars["String"]>;
   children: Array<OrganizationType>;
+};
+
+export type BookingType = {
+  __typename?: "BookingType";
+  id: Scalars["ID"];
+  firstname: Scalars["String"];
+  surname: Scalars["String"];
+  phone: Scalars["Int"];
+  receiverEmail: Scalars["String"];
+  bookFrom: Scalars["Date"];
+  bookTo: Scalars["Date"];
+  price: Scalars["Int"];
+  cabins: Array<CabinType>;
+};
+
+export type CabinType = {
+  __typename?: "CabinType";
+  id: Scalars["ID"];
+  name: Scalars["String"];
+  bookingSet: Array<BookingType>;
 };
 
 export type UserType = {
@@ -90,6 +146,7 @@ export type UserType = {
   dateJoined: Scalars["DateTime"];
   year?: Maybe<Scalars["Int"]>;
   feideUserid: Scalars["String"];
+  eventSet: Array<EventType>;
 };
 
 export type EventType = {
@@ -99,7 +156,7 @@ export type EventType = {
   description: Scalars["String"];
   startTime: Scalars["DateTime"];
   isAttendable: Scalars["Boolean"];
-  publisher: Scalars["String"];
+  publisher: UserType;
   endTime?: Maybe<Scalars["DateTime"]>;
   location?: Maybe<Scalars["String"]>;
   organization?: Maybe<OrganizationType>;
@@ -114,16 +171,51 @@ export type CategoryType = {
   name: Scalars["String"];
 };
 
+export type ArchiveDocumentType = {
+  __typename?: "ArchiveDocumentType";
+  id: Scalars["ID"];
+  title: Scalars["String"];
+  typeDoc: ArchiveDocumentTypeDoc;
+  fileLocation: Scalars["String"];
+  url?: Maybe<Scalars["String"]>;
+  thumbnail?: Maybe<Scalars["String"]>;
+};
+
+/** An enumeration. */
+export enum ArchiveDocumentTypeDoc {
+  /** Budsjett og Regnskap */
+  BudsjettOgRegnskap = "BUDSJETT_OG_REGNSKAP",
+  /** Generalforsamling */
+  Generalforsamling = "GENERALFORSAMLING",
+  /** Årbøker */
+  Arboker = "ARBOKER",
+  /** Foreningens lover */
+  ForeningensLover = "FORENINGENS_LOVER",
+  /** Støtte fra HS */
+  StotteFraHs = "STOTTE_FRA_HS",
+  /** Utveksling */
+  Utveksling = "UTVEKSLING",
+  /** Annet */
+  Annet = "ANNET",
+}
+
 export type Mutations = {
   __typename?: "Mutations";
   createOrganization?: Maybe<CreateOrganization>;
   updateOrganization?: Maybe<UpdateOrganization>;
   deleteOrganization?: Maybe<DeleteOrganization>;
+  createCabin?: Maybe<CreateBooking>;
+  updateBooking?: Maybe<UpdateBooking>;
+  deleteBooking?: Maybe<DeleteBooking>;
+  sendEmail?: Maybe<SendEmail>;
   authUser?: Maybe<AuthUser>;
   updateUser?: Maybe<UpdateUser>;
   verifyToken?: Maybe<Verify>;
   refreshToken?: Maybe<Refresh>;
   deleteTokenCookie?: Maybe<DeleteJsonWebTokenCookie>;
+  createArchivedocument?: Maybe<CreateArchiveDocument>;
+  updateArchivedocument?: Maybe<UpdateArchiveDocument>;
+  deleteArchivedocument?: Maybe<DeleteArchiveDocument>;
   createEvent?: Maybe<CreateEvent>;
   updateEvent?: Maybe<UpdateEvent>;
   deleteEvent?: Maybe<DeleteEvent>;
@@ -145,6 +237,38 @@ export type MutationsDeleteOrganizationArgs = {
   id: Scalars["ID"];
 };
 
+export type MutationsCreateCabinArgs = {
+  bookFrom?: Maybe<Scalars["String"]>;
+  bookTo?: Maybe<Scalars["String"]>;
+  cabins?: Maybe<Array<Maybe<Scalars["Int"]>>>;
+  firstname?: Maybe<Scalars["String"]>;
+  phone?: Maybe<Scalars["Int"]>;
+  price?: Maybe<Scalars["Int"]>;
+  receiverEmail?: Maybe<Scalars["String"]>;
+  surname?: Maybe<Scalars["String"]>;
+};
+
+export type MutationsUpdateBookingArgs = {
+  bookingId?: Maybe<Scalars["ID"]>;
+  contactNum?: Maybe<Scalars["Int"]>;
+  contactPerson?: Maybe<Scalars["String"]>;
+  endDay?: Maybe<Scalars["String"]>;
+  startDay?: Maybe<Scalars["String"]>;
+};
+
+export type MutationsDeleteBookingArgs = {
+  bookingId?: Maybe<Scalars["ID"]>;
+};
+
+export type MutationsSendEmailArgs = {
+  bookFrom?: Maybe<Scalars["String"]>;
+  bookTo?: Maybe<Scalars["String"]>;
+  firstname?: Maybe<Scalars["String"]>;
+  price?: Maybe<Scalars["Int"]>;
+  receiverEmail?: Maybe<Scalars["String"]>;
+  surname?: Maybe<Scalars["String"]>;
+};
+
 export type MutationsAuthUserArgs = {
   code?: Maybe<Scalars["String"]>;
 };
@@ -163,6 +287,25 @@ export type MutationsVerifyTokenArgs = {
 
 export type MutationsRefreshTokenArgs = {
   token?: Maybe<Scalars["String"]>;
+};
+
+export type MutationsCreateArchivedocumentArgs = {
+  date?: Maybe<Scalars["DateTime"]>;
+  fileLocation?: Maybe<Scalars["String"]>;
+  title?: Maybe<Scalars["String"]>;
+  typeDoc?: Maybe<Scalars["String"]>;
+};
+
+export type MutationsUpdateArchivedocumentArgs = {
+  date?: Maybe<Scalars["DateTime"]>;
+  fileLocation?: Maybe<Scalars["String"]>;
+  id?: Maybe<Scalars["ID"]>;
+  title?: Maybe<Scalars["String"]>;
+  typeDoc?: Maybe<Scalars["String"]>;
+};
+
+export type MutationsDeleteArchivedocumentArgs = {
+  id?: Maybe<Scalars["ID"]>;
 };
 
 export type MutationsCreateEventArgs = {
@@ -215,6 +358,28 @@ export type DeleteOrganization = {
   ok?: Maybe<Scalars["Boolean"]>;
 };
 
+export type CreateBooking = {
+  __typename?: "CreateBooking";
+  ok?: Maybe<Scalars["Boolean"]>;
+  booking?: Maybe<BookingType>;
+};
+
+export type UpdateBooking = {
+  __typename?: "UpdateBooking";
+  ok?: Maybe<Scalars["Boolean"]>;
+  booking?: Maybe<BookingType>;
+};
+
+export type DeleteBooking = {
+  __typename?: "DeleteBooking";
+  ok?: Maybe<Scalars["Boolean"]>;
+};
+
+export type SendEmail = {
+  __typename?: "SendEmail";
+  ok?: Maybe<Scalars["Boolean"]>;
+};
+
 export type AuthUser = {
   __typename?: "AuthUser";
   token: Scalars["String"];
@@ -244,6 +409,24 @@ export type DeleteJsonWebTokenCookie = {
   deleted: Scalars["Boolean"];
 };
 
+export type CreateArchiveDocument = {
+  __typename?: "CreateArchiveDocument";
+  ok?: Maybe<Scalars["Boolean"]>;
+  arhiveDocument?: Maybe<ArchiveDocumentType>;
+};
+
+export type UpdateArchiveDocument = {
+  __typename?: "UpdateArchiveDocument";
+  ok?: Maybe<Scalars["Boolean"]>;
+  event?: Maybe<ArchiveDocumentType>;
+};
+
+export type DeleteArchiveDocument = {
+  __typename?: "DeleteArchiveDocument";
+  ok?: Maybe<Scalars["Boolean"]>;
+  archiveDocument?: Maybe<ArchiveDocumentType>;
+};
+
 export type CreateEvent = {
   __typename?: "CreateEvent";
   ok?: Maybe<Scalars["Boolean"]>;
@@ -261,7 +444,6 @@ export type EventInput = {
   image?: Maybe<Scalars["String"]>;
   isAttendable?: Maybe<Scalars["Boolean"]>;
   deadline?: Maybe<Scalars["DateTime"]>;
-  publisher?: Maybe<Scalars["String"]>;
 };
 
 export type UpdateEvent = {
@@ -327,19 +509,14 @@ export type AllEventsQuery = { __typename?: "Query" } & {
 
 export type EventFragment = { __typename?: "EventType" } & Pick<
   EventType,
-  | "id"
-  | "title"
-  | "startTime"
-  | "endTime"
-  | "location"
-  | "description"
-  | "image"
-  | "isAttendable"
-  | "deadline"
-  | "publisher"
+  "id" | "title" | "startTime" | "endTime" | "location" | "description" | "image" | "isAttendable" | "deadline"
 > & {
     organization?: Maybe<{ __typename?: "OrganizationType" } & OrganizationFragment>;
     category?: Maybe<{ __typename?: "CategoryType" } & EventCategoryFragment>;
+    publisher: { __typename?: "UserType" } & Pick<
+      UserType,
+      "id" | "username" | "email" | "firstName" | "lastName" | "dateJoined"
+    >;
   };
 
 export type EventQueryVariables = Exact<{
@@ -354,7 +531,7 @@ export type EventFilteredOrganizationsQuery = { __typename?: "Query" } & {
   eventFilteredOrganizations?: Maybe<
     Array<
       Maybe<
-        { __typename?: "OrganizationType" } & Pick<OrganizationType, "id" | "name"> & {
+        { __typename?: "OrganizationType" } & Pick<OrganizationType, "id" | "name" | "color"> & {
             children: Array<{ __typename?: "OrganizationType" } & Pick<OrganizationType, "id" | "name">>;
           }
       >
@@ -364,7 +541,7 @@ export type EventFilteredOrganizationsQuery = { __typename?: "Query" } & {
 
 export type OrganizationFragment = { __typename?: "OrganizationType" } & Pick<
   OrganizationType,
-  "id" | "name" | "slug" | "description"
+  "id" | "name" | "slug" | "description" | "color"
 > & {
     parent?: Maybe<{ __typename?: "OrganizationType" } & Pick<OrganizationType, "id" | "name">>;
     children: Array<{ __typename?: "OrganizationType" } & Pick<OrganizationType, "id" | "name">>;
@@ -412,6 +589,7 @@ export const OrganizationFragmentDoc = gql`
     name
     slug
     description
+    color
     parent {
       id
       name
@@ -445,7 +623,14 @@ export const EventFragmentDoc = gql`
     image
     isAttendable
     deadline
-    publisher
+    publisher {
+      id
+      username
+      email
+      firstName
+      lastName
+      dateJoined
+    }
   }
   ${OrganizationFragmentDoc}
   ${EventCategoryFragmentDoc}
@@ -628,6 +813,7 @@ export const EventFilteredOrganizationsDocument = gql`
     eventFilteredOrganizations {
       id
       name
+      color
       children {
         id
         name

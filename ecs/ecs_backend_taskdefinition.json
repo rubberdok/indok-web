@@ -28,6 +28,18 @@
         {
           "name": "DATAPORTEN_SECRET",
           "value": "%s"
+        },
+        {
+          "name": "BOOKING_EMAIL_PASSWORD",
+          "value": "%s"
+        },
+        {
+          "name": "GOOGLE_DRIVE_API_KEY",
+          "value": "%s"
+        },
+        {
+          "name": "DJANGO_SETTINGS_MODULE",
+          "value": "%s"
         }
       ],
       "logConfiguration": {

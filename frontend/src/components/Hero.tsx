@@ -1,78 +1,64 @@
-import Button from "@components/ui/Button";
-import Card from "@components/ui/Card";
-import Content from "@components/ui/Content";
-import { SubTitle, Title } from "@components/ui/Typography";
-import { Composition } from "atomic-layout";
-import { Fade, Slide } from "react-awesome-reveal";
-import styled from "styled-components";
+import { Box, Button, Container, Grid, Paper, Typography } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import NavigateNextIcon from "@material-ui/icons/NavigateNext";
+import Link from "next/link";
+import React from "react";
 
-const areasMobile = `
-    heading
-    action
-`;
+const useStyles = makeStyles(() => ({
+  hero: {
+    color: "white",
+  },
+  heroImage: {
+    width: "100%",
+    height: "100%",
+    backgroundSize: "cover",
+    backgroundRepeat: "no-repeat",
+    backgroundPosition: "center",
+  },
+  heroCard: {
+    marginTop: -70,
+    padding: "32px 48px",
+  },
+}));
 
-const Hero: React.FC = () => (
-  <Section>
-    <Fade triggerOnce>
-      <BackdropImage src="./nth.png" />
-      <Image src="/img/hero.jpg" />
-    </Fade>
-    <Slide direction="left" triggerOnce>
-      <Overlay>
-        <Content>
-          <Card>
-            <Composition areas={areasMobile} maxWidth={450} maxWidthMd={550} maxWidthLg={700}>
-              {(Areas) => (
-                <>
-                  <Areas.Heading paddingHorizontal={70} paddingTop={30}>
-                    <SubTitle>Foreningen for studentene ved</SubTitle>
-                    <Title>Industriell Økonomi og Teknologiledelse</Title>
-                  </Areas.Heading>
-                  <Areas.Action flex align="flex-end" justify="end">
-                    <Button styling="primary" link="/about">
-                      Les mer om foreningen
-                    </Button>
-                  </Areas.Action>
-                </>
-              )}
-            </Composition>
-          </Card>
-        </Content>
-      </Overlay>
-    </Slide>
-  </Section>
-);
+const Hero: React.FC = () => {
+  const classes = useStyles();
 
-const Section = styled.div`
-  height: calc(100vh - 100px);
-  width: 100%;
-  position: relative;
-`;
-
-const Overlay = styled.div`
-  position: absolute;
-  width: 100%;
-  height: calc(100vh - 100px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const Image = styled.img`
-  height: calc(100vh - 100px);
-  width: calc(50% + 312px);
-  max-width: 100%;
-  float: right;
-  object-fit: cover;
-  filter: drop-shadow(-10px 0px 100px rgba(0, 0, 0, 0.15));
-`;
-
-const BackdropImage = styled.img`
-  position: absolute;
-  top: -20vw;
-  left: -8vw;
-  width: 35vw;
-  opacity: 0.05;
-`;
+  return (
+    <Box className={classes.hero} height="calc(100vh - 130px)">
+      <Box
+        className={classes.heroImage}
+        style={{
+          backgroundImage: `linear-gradient(to left, rgba(0, 0, 0, 0.0), rgba(0, 0, 0, 0.95)),
+        url('img/hero.jpg')`,
+        }}
+      ></Box>
+      <Container>
+        <Box display="flex" top="0" alignItems="center" position="absolute" height="90vh" zIndex="4">
+          <Box width={650}>
+            <Typography variant="overline">Foreningen for studentene ved</Typography>
+            <Typography variant="h1">Industriell Økonomi og Teknologiledelse</Typography>
+          </Box>
+        </Box>
+        <Grid justify="center" container>
+          <Grid item xs={10}>
+            <Paper className={classes.heroCard}>
+              <Box display="flex" alignItems="center">
+                <Box flexGrow={1}>
+                  <Typography variant="h5">Les de siste nyhetene fra Hovedstyret</Typography>
+                </Box>
+                <Link href="/about">
+                  <Button variant="contained" endIcon={<NavigateNextIcon />}>
+                    Klikk her
+                  </Button>
+                </Link>
+              </Box>
+            </Paper>
+          </Grid>
+        </Grid>
+      </Container>
+    </Box>
+  );
+};
 
 export default Hero;
