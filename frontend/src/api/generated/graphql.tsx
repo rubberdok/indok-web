@@ -45,7 +45,7 @@ export type Query = {
   allArchives?: Maybe<Array<Maybe<ArchiveDocumentType>>>;
   archive?: Maybe<ArchiveDocumentType>;
   archiveByYear?: Maybe<ArchiveDocumentType>;
-  archiveByType?: Maybe<Array<Maybe<ArchiveDocumentType>>>;
+  archiveByTypes?: Maybe<Array<Maybe<ArchiveDocumentType>>>;
   allEvents?: Maybe<Array<Maybe<EventType>>>;
   event?: Maybe<EventType>;
   allCategories?: Maybe<Array<Maybe<CategoryType>>>;
@@ -77,8 +77,9 @@ export type QueryArchiveByYearArgs = {
   date: Scalars["DateTime"];
 };
 
-export type QueryArchiveByTypeArgs = {
-  typeDocs: Array<Maybe<Scalars["String"]>>;
+export type QueryArchiveByTypesArgs = {
+  typeDoc: Array<Maybe<Scalars["String"]>>;
+  year?: Maybe<Scalars["Int"]>;
 };
 
 export type QueryAllEventsArgs = {
@@ -177,6 +178,7 @@ export type ArchiveDocumentType = {
   title: Scalars["String"];
   typeDoc: ArchiveDocumentTypeDoc;
   fileLocation: Scalars["String"];
+  year?: Maybe<Scalars["Int"]>;
   url?: Maybe<Scalars["String"]>;
   thumbnail?: Maybe<Scalars["String"]>;
 };
