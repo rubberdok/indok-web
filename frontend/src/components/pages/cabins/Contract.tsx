@@ -1,5 +1,5 @@
 import { ArrowIcon } from "@components/ui/ArrowIcon";
-import Router, { useRouter } from "next/router";
+import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import { useState } from "react";
 import styled from "styled-components";
@@ -13,7 +13,7 @@ const Contract: React.FC = () => {
 
   const [cabins, setCabins] = useState<string[]>([]);
 
-  const handleBackButtonClick = () => Router.back();
+  const handleBackButtonClick = () => window.close();
 
   useEffect(() => {
     if (query.cabins) {
