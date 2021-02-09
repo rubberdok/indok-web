@@ -3,7 +3,7 @@ import { QueryResult, useQuery } from "@apollo/client";
 import { QUERY_ALL_BOOKINGS } from "@graphql/cabins/queries";
 import { Booking } from "@interfaces/cabins";
 import { createDateRange } from "@components/Calendar";
-import moment from "moment";
+import dayjs from "dayjs";
 
 interface AllBookingsQuery {
   allBookings: Booking[];
@@ -33,8 +33,8 @@ const useBookingRange = (initFromDate?: string, initToDate?: string): Output => 
           (booking) =>
             range.includes(booking.bookFrom) ||
             range.includes(booking.bookTo) ||
-            (moment(booking.bookFrom).isBefore(moment(fromDate)) && moment(booking.bookTo).isAfter(moment(toDate))) ||
-            (moment(booking.bookFrom).isAfter(moment(fromDate)) && moment(booking.bookTo).isBefore(moment(toDate)))
+            (dayjs(booking.bookFrom).isBefore(dayjs(fromDate)) && dayjs(booking.bookTo).isAfter(dayjs(toDate))) ||
+            (dayjs(booking.bookFrom).isAfter(dayjs(fromDate)) && dayjs(booking.bookTo).isBefore(dayjs(toDate)))
         ).length === 0
       );
     } else {
