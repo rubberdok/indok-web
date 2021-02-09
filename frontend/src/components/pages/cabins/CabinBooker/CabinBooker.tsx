@@ -4,21 +4,12 @@ import { QUERY_CABINS } from "@graphql/cabins/queries";
 import useBookingRange from "@hooks/cabins/useBookingRange";
 import { Cabin } from "@interfaces/cabins";
 import CheckIcon from "@material-ui/icons/Check";
+import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import Step from "./Step";
-import {
-  BookButton,
-  BookingContainer,
-  Dropdown,
-  DropdownButton,
-  FlowContainer,
-  Header,
-  SubHeader,
-  TextContainer,
-} from "./styles";
-
-// const DayEvent = (key: string) => <EventMarker key={key} />;
+import { BookingContainer, Dropdown, DropdownButton, FlowContainer, Header, SubHeader, TextContainer } from "./styles";
+import { IconButton } from "@material-ui/core";
 
 type BookState = "Choose Cabin" | "Set from date" | "Set to date" | "Book" | undefined;
 
@@ -35,18 +26,22 @@ const CabinBooker: React.FC = () => {
   const [cabins, setCabins] = useState<BookingCabin[]>();
 
   useEffect(() => {
-    if (allBookingsQuery.data) {
+    if (allBookingsQuery.data && cabins) {
       // Mark all occupied dates
-      const events = allBookingsQuery.data.allBookings.reduce((bookingDays, booking) => {
-        const rangeOfBooking = createDateRange(booking.bookFrom, booking.bookTo);
-        rangeOfBooking.forEach((dayDate: string) => {
-          bookingDays.push(dayDate);
-        });
+      const occupiedDates = allBookingsQuery.data.allBookings.reduce((bookingDays, booking) => {
+        const cabinIDs = getCheckedCabins().map((cabin) => cabin.id);
+        const validCabin = booking.cabins.filter((cabin) => cabinIDs.includes(cabin.id));
+        if (validCabin.length > 0) {
+          const rangeOfBooking = createDateRange(booking.bookFrom, booking.bookTo);
+          rangeOfBooking.forEach((dayDate: string) => {
+            bookingDays.push(dayDate);
+          });
+        }
         return bookingDays;
       }, [] as string[]);
-      setUnavailableDates(events);
+      setUnavailableDates(occupiedDates);
     }
-  }, [allBookingsQuery.data]);
+  }, [allBookingsQuery.data, cabins]);
 
   useEffect(() => {
     setCabins(cabinQuery.data?.cabins.map((cabin) => ({ ...cabin, checked: true })));
@@ -92,7 +87,7 @@ const CabinBooker: React.FC = () => {
           subHeader={range.toDate ? range.toDate : "Velg en dato"}
           onClick={() => handleStepClick("Set to date")}
         />
-        <BookButton
+        <IconButton
           onClick={() => {
             isAvailable
               ? router.push({
@@ -106,7 +101,9 @@ const CabinBooker: React.FC = () => {
                 })
               : null;
           }}
-        ></BookButton>
+        >
+          <ArrowForwardIosIcon fontSize="small" color="action" />
+        </IconButton>
       </FlowContainer>
       {activeStep == "Choose Cabin" ? (
         <Dropdown small>
