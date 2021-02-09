@@ -220,7 +220,7 @@ const InvisibleButton = styled.button<{ active?: boolean }>`
   padding: 0;
   border-bottom: 1px solid transparent;
   transition: border 500ms ease;
-  font-weight: ${(props) => (props.active ? "600" : "400")}; 
+  font-weight: ${(props) => (props.active ? "600" : "400")};
 
   &:hover {
     cursor: pointer;
@@ -230,8 +230,6 @@ const InvisibleButton = styled.button<{ active?: boolean }>`
   &:focus {
     border: none;
     outline: none;
-  }
-
   }
 `;
 
