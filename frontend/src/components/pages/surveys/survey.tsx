@@ -4,11 +4,10 @@ import { Survey } from "@interfaces/surveys";
 import QuestionDetail from "@components/pages/surveys/questionDetail";
 import { Typography } from "@material-ui/core";
 
-const SurveyDetail: React.FC<{ id: string }> = ({ id }) => {
-  const { error, loading, data } = useQuery<{ survey: Survey }>(SURVEY, { variables: { ID: Number(id) } });
+const SurveyDetail: React.FC<{ surveyId: string }> = ({ surveyId }) => {
+  const { error, loading, data } = useQuery<{ survey: Survey }>(SURVEY, { variables: { ID: Number(surveyId) } });
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error</p>;
-
   return (
     <>
       {data && (

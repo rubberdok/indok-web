@@ -67,14 +67,17 @@ const EditQuestion: React.FC<{
       <br />
       <Dropdown
         title="Type"
-        options={questionTypes.map((type) => type.name)}
+        options={questionTypes.map((type) => ({
+          text: type.name,
+          value: type.id,
+          ...(type === question.questionType && { selected: true }),
+        }))}
         onChange={(e) => {
           e.preventDefault();
           setQuestion({
             ...question,
-            questionType: questionTypes.find((type) => type.name === e.target.value) ?? questionTypes[0],
+            questionType: questionTypes.find((type) => type.id === e.target.value) ?? questionTypes[0],
           });
-          console.log(question);
         }}
       />
       <QuestionTypePreview question={question} />
@@ -91,7 +94,6 @@ const EditQuestion: React.FC<{
               questionTypeId: question.questionType.id,
             },
           });
-          console.log(question);
           setInactive();
         }}
       >
