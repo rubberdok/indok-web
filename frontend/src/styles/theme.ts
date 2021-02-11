@@ -3,7 +3,7 @@ import { Shadows } from "@material-ui/core/styles/shadows";
 
 const theme = createMuiTheme({
   typography: {
-    fontFamily: ["Montserrat", "sans-serif"].join(","),
+    fontFamily: ["Open-Sans", "sans-serif"].join(","),
     h1: {
       fontFamily: ["Playfair Display", "sans-serif"].join(","),
       fontSize: "4rem",
@@ -11,8 +11,8 @@ const theme = createMuiTheme({
     },
     h2: {
       fontFamily: ["Playfair Display", "sans-serif"].join(","),
-      fontSize: "3rem",
-      fontWeight: 800,
+      fontSize: "48px",
+      fontWeight: 700,
       lineHeight: "3.5rem",
     },
     h3: {
@@ -32,25 +32,35 @@ const theme = createMuiTheme({
     },
     h6: {
       fontFamily: ["Playfair Display", "sans-serif"].join(","),
-      fontWeight: 800,
-      fontSize: "1.4rem",
+      fontWeight: 700,
+      fontSize: "28px",
+      lineHeight: "43px",
+      marginTop: "10px",
+      marginBottom: 30,
+    },
+    subtitle1: {
+      fontFamily: ["Playfair Display", "sans-serif"].join(","),
+      fontWeight: 400,
+      fontSize: "25px",
+      lineHeight: "43px",
     },
     overline: {
       fontSize: "12px",
       letterSpacing: "0.5px",
     },
     body1: {
-      fontFamily: ["Montserrat", "sans-serif"].join(","),
-      fontSize: "0.95rem",
-      fontWeight: 400,
-      lineHeight: "1.6rem",
+      fontFamily: ["Open Sans", "sans-serif"].join(","),
+      fontSize: "24px",
+      marginTop: "32px",
+      fontWeight: 300,
+      lineHeight: "40px",
     },
     body2: {
-      fontFamily: ["Montserrat", "sans-serif"].join(","),
-      fontSize: "0.8rem",
-      fontWeight: 400,
-      lineHeight: "1.2rem",
-      letterSpacing: "0.3px",
+      fontFamily: ["Open Sans", "sans-serif"].join(","),
+      fontSize: "18px",
+      fontWeight: 300,
+      lineHeight: "30px",
+      marginBottom: 24,
     },
   },
   overrides: {
@@ -62,9 +72,9 @@ const theme = createMuiTheme({
       },
     },
     MuiAppBar: {
-      root: {
-        fontFamily: ["Montserrat", "sans-serif"].join(","),
-      },
+      // root: {
+      //   fontFamily: ["Montserrat", "sans-serif"].join(","),
+      // },
       colorDefault: {
         backgroundColor: "#ffffff",
       },

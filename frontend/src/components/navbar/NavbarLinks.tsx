@@ -40,6 +40,7 @@ const useStyles = makeStyles(() => ({
     "&:hover": {
       cursor: "pointer",
     },
+    color: "white",
   },
 }));
 

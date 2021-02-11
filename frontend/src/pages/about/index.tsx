@@ -1,16 +1,17 @@
 import Layout from "@components/Layout";
-import Wrapper from "@components/pages/about/Wrapper";
-import { AppBar, Box, Breadcrumbs, Container, Link, makeStyles, Tab, Tabs, Typography } from "@material-ui/core";
+import Wrapper from "@components/pages/about/Template";
+import { Box, Breadcrumbs, Container, Grid, Link, makeStyles, Paper, Typography } from "@material-ui/core";
 import { NextPage } from "next";
 import React from "react";
 
 const useStyles = makeStyles(() => ({
   title: {
     color: "white",
+    zIndex: -1,
   },
   titleImage: {
     width: "100%",
-    height: "300px",
+    height: "100%",
     backgroundSize: "cover",
     backgroundRepeat: "no-repeat",
     backgroundPosition: "center",
@@ -25,76 +26,87 @@ const useStyles = makeStyles(() => ({
     },
   },
   breadcrumb: {
-    color: "#fff",
+    fontSize: "13px",
+    textTransform: "uppercase",
+    color: "#676767",
+    marginTop: -32,
+  },
+  heroCard: {
+    marginTop: -112,
+    padding: "56px 64px",
+    textAlign: "center",
   },
 }));
 
 const AboutPage: NextPage = () => {
   const classes = useStyles();
-  const [value, setValue] = React.useState(0);
 
   return (
     <Layout>
+      <Box mt="-60px" position="relative" className={classes.title} height={450}>
+        <Box
+          display="flex"
+          alignItems="center"
+          flexDirection="column"
+          justifyContent="center"
+          className={classes.titleImage}
+          style={{
+            backgroundImage: `linear-gradient(to top, rgb(0 0 0 / 50%), rgb(0 0 0 / 60%)),
+                  url(img/hero.jpg)`,
+          }}
+        >
+          <Typography variant="h2">Om foreningen vår</Typography>
+        </Box>
+      </Box>
       <Container>
-        <Box mt={5}>
-          <AppBar color="default" position="static">
-            <Tabs
-              indicatorColor="primary"
-              value={value}
-              onChange={() => setValue(value)}
-              aria-label="simple tabs example"
-            >
-              <Tab className={classes.navItem} label="Om oss" />
-              <Tab className={classes.navItem} label="Hovedstyret" />
-              <Tab className={classes.navItem} label="Organisasjon" />
-            </Tabs>
-          </AppBar>
-        </Box>
-        <Box position="relative" className={classes.title} height={300}>
-          <Box
-            display="flex"
-            alignItems="center"
-            flexDirection="column"
-            justifyContent="center"
-            className={classes.titleImage}
-            style={{
-              backgroundImage: `linear-gradient(to top, rgb(0 0 0 / 76%), rgb(0 0 0 / 86%)),
-                  url(img/gang.jpg)`,
-            }} /* Husk å gjøre bakgrunnen turkis og ikke svart */
-          >
-            <Box mb={1}>
-              <Breadcrumbs className={classes.breadcrumb} aria-label="breadcrumb">
-                <Link variant="overline" color="inherit" href="/about">
-                  Om foreningen
-                </Link>
-                <Typography variant="overline">Om oss</Typography>
-              </Breadcrumbs>
-            </Box>
-            <Typography variant="h2">Hvem er vi?</Typography>
-          </Box>
-        </Box>
+        <Grid justify="center" container>
+          <Grid item xs={10}>
+            <Paper className={classes.heroCard}>
+              <Box display="flex" flexDirection="column" alignItems="center">
+                <Box>
+                  <Breadcrumbs className={classes.breadcrumb} aria-label="breadcrumb">
+                    <Link color="inherit" href="/about">
+                      Om foreningen
+                    </Link>
+                    <p>Om oss</p>
+                  </Breadcrumbs>
+                </Box>
+                <Typography variant="subtitle1">
+                  Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse er den øverste instansen
+                  (moderorganisasjonen) for all studentfrivillighet på masterstudiet Indøk ved NTNU.
+                </Typography>
+              </Box>
+            </Paper>
+          </Grid>
+        </Grid>
       </Container>
       <Wrapper>
-        <Typography variant="body1">
+        <Typography variant="h6">Introduksjon</Typography>
+        <Typography variant="body2">
           Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse er den øverste instansen
-          (moderorganisasjonen) for all studentfrivillighet på masterstudiet Indøk ved NTNU. Foreningen drives av over
-          200 ivrige sjeler og over 20 ulike organisasjoner, hvor alt fra veldedighet og ølbrygging til fadderuker og
-          case-trening står på agendaen. Foreningen ledes av Hovedstyret, som forvalter midlene og fungerer som et
-          koordinerende forum mellom de ulike studentforeningene. Hovedstyret består av et valgt lederpar, lederne for
-          hver av de større studentforeningene på Indøk og instituttillitsvalgt på IØT. Generalforsamlingen er
-          Foreningens øverste myndighet, hvor alle studentene på Indøk har stemmerett.
+          (moderorganisasjonen) for all studentfrivillighet på masterstudiet Indøk ved NTNU.
+        </Typography>
+        <Typography variant="body2">
+          Foreningen drives av over 200 ivrige sjeler og over 20 ulike organisasjoner, hvor alt fra veldedighet og
+          ølbrygging til fadderuker og case-trening står på agendaen.
+        </Typography>
+        <Typography variant="body2">
+          Foreningen ledes av Hovedstyret, som forvalter midlene og fungerer som et koordinerende forum mellom de ulike
+          studentforeningene. Hovedstyret består av et valgt lederpar, lederne for hver av de større studentforeningene
+          på Indøk og instituttillitsvalgt på IØT. Generalforsamlingen er Foreningens øverste myndighet, hvor alle
+          studentene på Indøk har stemmerett.
         </Typography>
         <br />
-        <Typography gutterBottom variant="h6">
-          Hovedstyret blir født
-        </Typography>
-        <br />
+        <Typography variant="h6">Starten på Hovedstyret</Typography>
         <Typography variant="body2">
           Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse, NTNU er formaliseringen av all
           foreningsaktivitet på Indøk under ett og samme tak. På den måten kan vi si at Foreningen har eksistert så
-          lenge studentfrivilligheten på Indøk har det. Allerede på det første Indøk-kullet i 86´ ble
-          næringslivskontakten Bindeleddet startet, og i år 2000 hadde man den første festen på Janus-kjellerne. I løpet
-          av de neste 20 årene skulle flere titalls tilbud bli startet. <br />
+          lenge studentfrivilligheten på Indøk har det.
+          <br />
+          <br />
+          Allerede på det første Indøk-kullet i 86´ ble næringslivskontakten Bindeleddet startet, og i år 2000 hadde man
+          den første festen på Janus-kjellerne. I løpet av de neste 20 årene skulle flere titalls tilbud bli startet.{" "}
+          <br />
           <br />I tidligere år hadde linjeforeningene på Indøk ett «Fordelingsmøte» i semesteret der studenter og
           linjeforeninger på studiet kunne søke om støtte til ulike prosjekter eller arrangementer. Fordelingsmøtet
           hadde som mandat å behandle søknader og fremme en innstilling om bruk av tilgjengelige midler overfor Allmøtet
@@ -119,9 +131,7 @@ const AboutPage: NextPage = () => {
           </ul>
         </Typography>
 
-        <Typography gutterBottom variant="h6">
-          Foreningens formål
-        </Typography>
+        <Typography variant="h6">Foreningens formål</Typography>
         <Typography variant="body2">
           <i>
             «Foreningens formål er å støtte den samlede studentmassen på sivilingeniørstudiet Industriell Økonomi og

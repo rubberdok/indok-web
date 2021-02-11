@@ -18,12 +18,16 @@ const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
   },
-  appBar: {},
+  appBar: {
+    background: "black",
+  },
   toolBar: {
     padding: 0,
   },
   title: {
     flexGrow: 1,
+    margin: 0,
+    fontSize: 24,
   },
   sectionDesktop: {
     display: "none",
@@ -57,7 +61,7 @@ const Navbar: React.FC = () => {
   return (
     <div className={classes.root}>
       <HideOnScroll>
-        <AppBar color="default" className={classes.appBar}>
+        <AppBar color="primary" className={classes.appBar}>
           <Container>
             <Toolbar className={classes.toolBar}>
               <Link href="/">
