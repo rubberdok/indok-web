@@ -21,6 +21,8 @@
         "paths": {
             "@components/*": ["src/components/*"],
             "@styles/*": ["src/styles/*"],
+            "@utils/*": ["src/utils/*"],
+            "@content/*": ["src/content/*"],
             "@public/*": ["public/*"],
             "@interfaces/*": ["src/interfaces/*"],
             "@graphql/*": ["src/graphql/*"],

@@ -24,6 +24,7 @@
     "atomic-layout": "^0.16.2",
     "feather-icons": "^4.28.0",
     "graphql": "^15.3.0",
+    "gray-matter": "^4.0.2",
     "moment": "^2.29.1",
     "next": "^10.0.3",
     "react": "^16.13.1",
@@ -32,6 +33,7 @@
     "react-dom": "^16.13.1",
     "react-feather": "^2.0.8",
     "react-icons": "^3.11.0",
+    "react-markdown": "^5.0.3",
     "react-slick": "^0.27.13",
     "slick-carousel": "^1.8.1",
     "styled-components": "^5.2.0"

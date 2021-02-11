@@ -1,6 +1,6 @@
 import Layout from "@components/Layout";
 import Wrapper from "@components/pages/about/Template";
-import { Box, Breadcrumbs, Container, Grid, Link, makeStyles, Paper, Typography } from "@material-ui/core";
+import { Box, Breadcrumbs, Container, Grid, makeStyles, Paper, Typography } from "@material-ui/core";
 import { NextPage } from "next";
 import React from "react";
 
@@ -65,9 +65,7 @@ const AboutPage: NextPage = () => {
               <Box display="flex" flexDirection="column" alignItems="center">
                 <Box>
                   <Breadcrumbs className={classes.breadcrumb} aria-label="breadcrumb">
-                    <Link color="inherit" href="/about">
-                      Om foreningen
-                    </Link>
+                    <p color="inherit">Om foreningen</p>
                     <p>Om oss</p>
                   </Breadcrumbs>
                 </Box>

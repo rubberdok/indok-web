@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function NestedList() {
+const Sidebar = () => {
   const classes = useStyles();
 
   return (
@@ -94,4 +94,6 @@ export default function NestedList() {
       </li>
     </Box>
   );
-}
+};
+
+export default Sidebar;
