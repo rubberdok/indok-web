@@ -11,6 +11,7 @@ import {
 } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React, { ReactElement } from "react";
 import NavbarLinks from "./NavbarLinks";
 
@@ -19,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
   appBar: {
-    // background: "transparent",
+    background: "black",
   },
   toolBar: {
     padding: 0,
@@ -53,18 +54,19 @@ const HideOnScroll: React.FC = ({ children }) => {
 
 const Navbar: React.FC = () => {
   const classes = useStyles();
+  const router = useRouter();
 
   const [openDrawer, setOpenDrawer] = React.useState(false);
 
   return (
     <div className={classes.root}>
       <HideOnScroll>
-        <AppBar color="default" className={classes.appBar}>
+        <AppBar color="primary" className={classes.appBar}>
           <Container style={{ maxWidth: "90vw" }}>
             <Toolbar className={classes.toolBar}>
               <Link href="/">
                 <Typography variant="h6" className={classes.title}>
-                  {/* INDØK */}
+                  INDØK
                 </Typography>
               </Link>
               <div className={classes.sectionDesktop}>
@@ -79,7 +81,7 @@ const Navbar: React.FC = () => {
           </Container>
         </AppBar>
       </HideOnScroll>
-      {/* <Toolbar id="back-to-top-anchor" /> */}
+      {router.pathname != "/" && <Toolbar id="back-to-top-anchor" />}
       <Drawer anchor="right" open={openDrawer} onClose={() => setOpenDrawer(false)}>
         <NavbarLinks></NavbarLinks>
       </Drawer>

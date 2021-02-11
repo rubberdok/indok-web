@@ -1,8 +1,6 @@
 import { Box, Button, Container, Grid, IconButton, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import FacebookIcon from "@material-ui/icons/Facebook";
-import MailOutlineIcon from "@material-ui/icons/MailOutline";
-import MeetingRoomIcon from "@material-ui/icons/MeetingRoom";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import React, { useState } from "react";
 import { Fade } from "react-awesome-reveal";
@@ -74,7 +72,7 @@ const useStyles = makeStyles(() => ({
     height: "inherit",
   },
   orgLink: {
-    color: "black",
+    color: "white",
     position: "relative",
     left: 12,
     transition: "0.3s all linear",
@@ -110,7 +108,7 @@ const useStyles = makeStyles(() => ({
     backgroundSize: "cover!important",
 
     ["&::before"]: {
-      background: "linear-gradient(to right, rgb(255 255 255 / 40%), rgb(255 255 255 / 88%))",
+      background: "linear-gradient(to right, rgb(0 0 0 / 40%), rgb(0 0 0 / 88%))",
       content: "''",
       display: "block",
       height: "100%",
@@ -120,7 +118,7 @@ const useStyles = makeStyles(() => ({
   },
   orgIcon: {
     marginTop: 9,
-    color: "rgb(0 0 0 / 55%)",
+    color: "rgb(255 255 255 / 55%)",
   },
   hide: {
     opacity: "0!important",
@@ -133,7 +131,6 @@ const useStyles = makeStyles(() => ({
     backgroundPosition: "left bottom!important",
     backgroundRepeat: "no-repeat",
     opacity: 0.03,
-    zIndex: -2,
     height: "85vh",
     marginLeft: "-20vh",
   },
@@ -145,7 +142,7 @@ const Hero: React.FC = () => {
 
   return (
     <Box id="back-to-top-anchor" height="100vh" position="relative">
-      <Grid container style={{ height: "100%", position: "absolute", zIndex: -1 }}>
+      <Grid container style={{ height: "100%", position: "absolute", zIndex: -1, background: "black" }}>
         <Grid item xs={6} className={classes.relative}>
           <Box position="absolute" width="100%" height="100%" style={{ background: "white" }} zIndex="-1"></Box>
         </Grid>
@@ -162,12 +159,20 @@ const Hero: React.FC = () => {
             ></Box>
           ))}
           <Box
+            className={[classes.orgBg, isShown == "" ? "" : classes.hide].join(" ")}
+            position="absolute"
+            width="100%"
+            height="100%"
+            zIndex="-3"
+            style={{ backgroundImage: "url(img/hero.jpg)" }}
+          ></Box>
+          {/* <Box
             className={[classes.nth, isShown == "" ? "" : classes.hide].join(" ")}
             position="absolute"
             width="100%"
             height="100%"
-            zIndex="-1"
-          ></Box>
+            zIndex="-2"
+          ></Box> */}
         </Grid>
       </Grid>
       <Container className={classes.container}>
@@ -227,7 +232,7 @@ const Hero: React.FC = () => {
           </Grid>
         </Grid>
       </Container>
-      <Box position="absolute" right="0" top="0" m="24px 24px 0 0">
+      {/* <Box position="absolute" right="0" top="0" m="24px 24px 0 0">
         <Button color="primary" size="medium" variant="contained" endIcon={<MeetingRoomIcon />}>
           Logg inn
         </Button>
@@ -236,7 +241,7 @@ const Hero: React.FC = () => {
         <Button color="primary" size="medium" variant="contained" startIcon={<MailOutlineIcon />}>
           Kontakt
         </Button>
-      </Box>
+      </Box> */}
     </Box>
   );
 };
