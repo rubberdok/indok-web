@@ -21,10 +21,11 @@ const EventInfo: NextPage = () => {
       <div
         style={{
           border: "solid",
-          borderRadius: "1em",
-          padding: "2em",
+          borderRadius: ".1em",
+          padding: "3em",
           backgroundColor: "#fff",
-          borderColor: "#6A9997",
+          borderWidth: ".1em",
+          // borderColor: "#6A9997",
           width: "70%",
           margin: "0 auto",
         }}
