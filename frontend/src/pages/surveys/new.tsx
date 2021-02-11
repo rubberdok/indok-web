@@ -1,14 +1,17 @@
 import { NextPage } from "next";
 import Layout from "@components/Layout";
-import Content from "@components/ui/Content";
-import { Title, Paragraph } from "@components/ui/Typography";
+
+import {
+  Container,
+  Typography
+} from "@material-ui/core";
 
 const NewPage: NextPage = () => (
   <Layout>
-    <Content>
-      <Title>Lag ny undersøkelse</Title>
-      <Paragraph>Denne siden er under utvilking!</Paragraph>
-    </Content>
+    <Container>
+      <Typography variant="h1" component="h1">Lag ny undersøkelse</Typography>
+      <Typography variant="p" component="p">Denne siden er under utvilking!</Typography>
+    </Container>
   </Layout>
 );
 export default NewPage;

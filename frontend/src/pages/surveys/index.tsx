@@ -1,20 +1,22 @@
 import { NextPage } from "next";
 import Layout from "@components/Layout";
-import Content from "@components/ui/Content";
-import { Title } from "@components/ui/Typography";
-import Button from "@components/ui/Button";
+import {
+  Container,
+  Button,
+  Typography
+} from "@material-ui/core";
 import AllSurveys from "@components/pages/surveys/allSurveys";
 import Link from "next/link";
 
 const IndexPage: NextPage = () => (
   <Layout>
-    <Content>
-      <Title>Stillingsutlysninger</Title>
+    <Container>
+      <Typography variant="h1" component="h1">Stillingsutlysninger</Typography>
       <AllSurveys />
       <Link href="surveys/new">
         <Button>Lag ny stillingsutlysning</Button>
       </Link>
-    </Content>
+    </Container>
   </Layout>
 );
 export default IndexPage;
