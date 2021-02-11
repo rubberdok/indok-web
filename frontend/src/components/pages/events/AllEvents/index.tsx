@@ -108,7 +108,7 @@ const AllEvents: React.FC = () => {
           // TODO: Redirect til `/events/create-event` når vi har funksjonalitet for dette.
           <Container className={classes.createButtonContainer}>
             <Link href={`/events/create-event`}>
-              <Button color="primary">
+              <Button color="primary" disableRipple>
                 <PlusSquare />
                 <Typography variant="body1">Opprett</Typography>
               </Button>
