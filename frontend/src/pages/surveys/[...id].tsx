@@ -1,13 +1,10 @@
 import { NextPage, GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Layout from "@components/Layout";
 import SurveyDetail from "@components/pages/surveys/survey";
-import Content from "@components/ui/Content";
 
 const SurveyPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ id }) => (
   <Layout>
-    <Content>
-      <SurveyDetail id={id[0]} />
-    </Content>
+    <SurveyDetail id={id[0]} />
   </Layout>
 );
 

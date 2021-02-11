@@ -3,8 +3,8 @@ import { SURVEY, QUESTIONTYPES } from "@graphql/surveys/queries";
 import { CREATE_QUESTION, DELETE_QUESTION, UPDATE_QUESTION } from "@graphql/surveys/mutations";
 import { useState, useEffect } from "react";
 import { Survey, QuestionType, Question, QuestionVariables } from "@interfaces/surveys";
-import QuestionDetail from "@components/pages/surveys/questionDetail";
-import EditQuestion from "@components/pages/surveys/editQuestion";
+import QuestionPreview from "@components/pages/surveys/surveyCreation/questionPreview";
+import EditQuestion from "@components/pages/surveys/surveyCreation/editQuestion";
 
 const EditSurvey: React.FC<{ surveyId: string }> = ({ surveyId }) => {
   const { loading, error, data } = useQuery<{ survey: Survey }>(SURVEY, {
@@ -130,7 +130,7 @@ const EditSurvey: React.FC<{ surveyId: string }> = ({ surveyId }) => {
                           setInactive={() => setActiveQuestion(undefined)}
                         />
                       ) : (
-                        <QuestionDetail
+                        <QuestionPreview
                           question={question}
                           setActive={() => {
                             if (activeQuestion) {

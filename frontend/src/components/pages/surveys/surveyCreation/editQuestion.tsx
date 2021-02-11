@@ -4,7 +4,7 @@ import TextField from "@components/ui/formComponents/textfield";
 import Dropdown from "@components/ui/formComponents/dropdown";
 import Choice from "@components/ui/formComponents/choice";
 import { useState } from "react";
-import QuestionPreview from "@components/pages/surveys/questionPreview";
+import QuestionTypePreview from "@components/pages/surveys/surveyCreation/questionTypePreview";
 
 const EditQuestion: React.FC<{
   oldQuestion: Question;
@@ -77,7 +77,7 @@ const EditQuestion: React.FC<{
           console.log(question);
         }}
       />
-      <QuestionPreview question={question} />
+      <QuestionTypePreview question={question} />
       <br />
       <button
         onClick={(e) => {

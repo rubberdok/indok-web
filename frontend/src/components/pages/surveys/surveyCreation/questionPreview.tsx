@@ -1,14 +1,14 @@
 import { Question } from "@interfaces/surveys";
-import QuestionPreview from "@components/pages/surveys/questionPreview";
+import QuestionTypePreview from "@components/pages/surveys/surveyCreation/questionTypePreview";
 
-const QuestionDetail: React.FC<{
+const QuestionPreview: React.FC<{
   question: Question;
   setActive: () => void;
 }> = ({ question, setActive }) => {
   return (
     <>
       {question.question}
-      <QuestionPreview question={question} />
+      <QuestionTypePreview question={question} />
       <br />
       <button
         onClick={(e) => {
@@ -22,4 +22,4 @@ const QuestionDetail: React.FC<{
   );
 };
 
-export default QuestionDetail;
+export default QuestionPreview;

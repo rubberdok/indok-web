@@ -3,7 +3,7 @@ import TextField from "@components/ui/formComponents/textfield";
 import Dropdown from "@components/ui/formComponents/dropdown";
 import Choice from "@components/ui/formComponents/choice";
 
-const QuestionPreview: React.FC<{
+const QuestionTypePreview: React.FC<{
   question: Question;
 }> = ({ question }) => {
   switch (question.questionType.name) {
@@ -32,4 +32,4 @@ const QuestionPreview: React.FC<{
   }
 };
 
-export default QuestionPreview;
+export default QuestionTypePreview;
