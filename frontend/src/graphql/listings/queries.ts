@@ -13,6 +13,7 @@ export const LISTINGS = gql`
       slug
       organization {
         name
+        color
       }
     }
   }

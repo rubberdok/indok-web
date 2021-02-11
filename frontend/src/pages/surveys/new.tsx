@@ -1,10 +1,17 @@
 import { NextPage } from "next";
 import Layout from "@components/Layout";
+import { Container, Typography } from "@material-ui/core";
 
 const NewPage: NextPage = () => (
   <Layout>
-    <h3>Lag ny undersøkelse</h3>
-    <p>Denne siden er under utvilking!</p>
+    <Container>
+      <Typography variant="h1" component="h1">
+        Lag ny undersøkelse
+      </Typography>
+      <Typography variant="p" component="p">
+        Denne siden er under utvilking!
+      </Typography>
+    </Container>
   </Layout>
 );
 export default NewPage;

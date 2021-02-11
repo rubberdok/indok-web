@@ -28,6 +28,8 @@ export interface Organization {
   description: string;
   parent?: Organization;
   children?: Organization[];
+  // TODO: Replace color with logo
+  color?: string;
 }
 
 export interface User {
