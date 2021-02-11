@@ -1,16 +1,12 @@
-import { 
-  Hidden,
-  Grid,
+import {
   Accordion,
-  AccordionSummary,
-  Typography,
-  AccordionDetails,
+  AccordionDetails, AccordionSummary,
   Card,
-  CardContent,
-  makeStyles
-} from "@material-ui/core";
-
+  CardContent, Grid, Hidden,
+  makeStyles, Typography
+} from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+
 
 const useStyles = makeStyles((theme) => ({
 filter: {

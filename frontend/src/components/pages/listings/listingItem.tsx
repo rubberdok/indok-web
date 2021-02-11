@@ -1,15 +1,11 @@
 import { Listing } from "@interfaces/listings";
-import Link from "next/link"
 import {
-  Grid,
   Card,
-  CardContent,
-  Typography,
-  makeStyles,
-  CardActions,
-  CardMedia,
-  CardActionArea,
+  CardActionArea, CardContent,
+  CardMedia, Grid,
+  makeStyles, Typography
 } from "@material-ui/core";
+import Link from "next/link";
 
 const useStyles = makeStyles({
   root: {

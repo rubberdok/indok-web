@@ -1,11 +1,11 @@
-import { NextPage } from "next";
 import Layout from "@components/Layout";
+import AllSurveys from "@components/pages/surveys/allSurveys";
 import {
-  Container,
-  Button,
+  Button, Container,
+
   Typography
 } from "@material-ui/core";
-import AllSurveys from "@components/pages/surveys/allSurveys";
+import { NextPage } from "next";
 import Link from "next/link";
 
 const IndexPage: NextPage = () => (

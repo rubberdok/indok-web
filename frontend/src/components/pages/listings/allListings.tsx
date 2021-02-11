@@ -1,23 +1,13 @@
 import { useQuery } from "@apollo/client";
-import { Listing } from "@interfaces/listings";
 import { LISTINGS } from "@graphql/listings/queries";
-import Link from "next/link";
+import { Listing } from "@interfaces/listings";
 import {
-  Typography,
-  Grid,
-  makeStyles,
-  Container,
-  Card,
-  CardContent,
-  Hidden,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails
-} from "@material-ui/core"
-
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
-import ListingItem from "./listingItem";
+  Container, Grid,
+  makeStyles, Typography
+} from "@material-ui/core";
 import Filter from "./filter";
+import ListingItem from "./listingItem";
+
 
 const useStyles = makeStyles((theme) => ({
 
