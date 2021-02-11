@@ -1,4 +1,5 @@
 import { Question } from "@interfaces/surveys";
+import QuestionPreview from "@components/pages/surveys/questionPreview";
 
 const QuestionDetail: React.FC<{
   question: Question;
@@ -6,6 +7,9 @@ const QuestionDetail: React.FC<{
 }> = ({ question, setActive }) => {
   return (
     <>
+      {question.question}
+      <QuestionPreview question={question} />
+      <br />
       <button
         onClick={(e) => {
           e.preventDefault();
@@ -14,8 +18,6 @@ const QuestionDetail: React.FC<{
       >
         Rediger spørsmål
       </button>
-      <br />
-      <p>{question.question}</p>
     </>
   );
 };

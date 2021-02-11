@@ -51,7 +51,28 @@ const EditSurvey: React.FC<{ surveyId: string }> = ({ surveyId }) => {
       }
     },
   });
-  const [updateQuestion] = useMutation<{ updateQuestion: { question: Question } }, QuestionVariables>(UPDATE_QUESTION);
+  const [updateQuestion] = useMutation<{ updateQuestion: { question: Question } }, QuestionVariables>(UPDATE_QUESTION, {
+    update: (cache, { data }) => {
+      const newQuestion = data?.updateQuestion.question;
+      const cachedSurvey = cache.readQuery<{ survey: Survey }>({
+        query: SURVEY,
+        variables: { ID: surveyId },
+      });
+      if (cachedSurvey && newQuestion) {
+        cache.writeQuery({
+          query: SURVEY,
+          variables: { ID: surveyId },
+          data: {
+            survey: {
+              questions: cachedSurvey.survey.questions.map((question) =>
+                question.id === newQuestion.id ? newQuestion : question
+              ),
+            },
+          },
+        });
+      }
+    },
+  });
   const { loading: questionTypeLoading, error: questionTypeError, data: questionTypeData } = useQuery<{
     questionTypes: QuestionType[];
   }>(QUESTIONTYPES);
