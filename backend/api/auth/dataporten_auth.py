@@ -99,7 +99,7 @@ class DataportenAuth:
         print("The id_token was successfully validated")
 
     @staticmethod
-    def confirm_indok_enrollment(access_token):
+    def confirm_indok_enrollment(access_token, id_token):
         print("\n3. Confirming indøk enrollment")
         if access_token is None:
             return None
@@ -115,6 +115,18 @@ class DataportenAuth:
             response.raise_for_status()
         except requests.exceptions.RequestException as err:
             print(f"Error confirming indøk enrollment: {err}")
+            # Log out the user from Feide
+            try:
+                logout_response = requests.get(
+                    "https://auth.dataporten.no/openid/endsession",
+                    headers={
+                        "post_logout_redirect_uri": "http://localhost:3000",
+                        "id_token_hint": id_token,
+                    },
+                )
+                logout_response.raise_for_status()
+            except requests.exceptions.RequestException as err:
+                print(f"Error ending session: {err}")
             raise PermissionDenied(
                 "Beklager, kun studenter som studerer Industriell Økonomi og Teknologiledelse (MTIØT) kan logge inn."
             )
@@ -179,9 +191,10 @@ class DataportenAuth:
         cls.validate_response(response)
 
         access_token = response.get("access_token")
+        id_token = response.get("id_token")
 
         # Check if user is member of MTIØT group (studies indøk)
-        cls.confirm_indok_enrollment(access_token)
+        cls.confirm_indok_enrollment(access_token, id_token)
 
         # Fetch user info from Dataporten
         user_info = cls.get_user_info(access_token)
@@ -199,7 +212,8 @@ class DataportenAuth:
             user.email = email
             user.first_name = name
             user.feide_userid = feide_userid
-            user.year = year
+            # user.year = year
+            user.id_token = id_token
             user.save()
 
         except UserModel.DoesNotExist:
@@ -210,7 +224,8 @@ class DataportenAuth:
                 email=email,
                 first_name=name,
                 feide_userid=feide_userid,
-                year=year,
+                # year=year,
+                id_token=id_token,
             )
             user.save()
         return user
