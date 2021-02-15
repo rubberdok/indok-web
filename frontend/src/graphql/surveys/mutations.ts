@@ -85,3 +85,36 @@ export const UPDATE_QUESTION = gql`
     }
   }
 `;
+
+export const CREATE_ANSWER = gql`
+  mutation createAnswer($questionId: ID!, $answer: String!) {
+    createAnswer(answerData: { questionId: $questionId, answer: $answer }) {
+      answer {
+        id
+        answer
+      }
+      ok
+    }
+  }
+`;
+
+export const UPDATE_ANSWER = gql`
+  mutation updateAnswer($id: ID!, $answer: String!) {
+    updateAnswer(id: $id, answerData: { answer: $answer }) {
+      answer {
+        id
+        answer
+      }
+      ok
+    }
+  }
+`;
+
+export const DELETE_ANSWER = gql`
+  mutation deleteAnswer($id: ID!) {
+    deleteAnswer(id: $id) {
+      deletedId
+      ok
+    }
+  }
+`;
