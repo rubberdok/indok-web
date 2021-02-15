@@ -1,10 +1,10 @@
 import { useQuery } from "@apollo/client";
 import { SURVEY } from "@graphql/surveys/queries";
 import { Survey } from "@interfaces/surveys";
-import QuestionDetail from "@components/pages/surveys/questionDetail";
+import QuestionAnswer from "@components/pages/surveys/questionAnswer";
 import { Typography } from "@material-ui/core";
 
-const SurveyDetail: React.FC<{ surveyId: string }> = ({ surveyId }) => {
+const SurveyAnswer: React.FC<{ surveyId: string }> = ({ surveyId }) => {
   const { error, loading, data } = useQuery<{ survey: Survey }>(SURVEY, { variables: { ID: Number(surveyId) } });
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error</p>;
@@ -17,7 +17,7 @@ const SurveyDetail: React.FC<{ surveyId: string }> = ({ surveyId }) => {
           </Typography>
           {data.survey.questions.map((question) => (
             <li key={question.id}>
-              <QuestionDetail question={question} />
+              <QuestionAnswer question={question} />
             </li>
           ))}
         </>
@@ -26,4 +26,4 @@ const SurveyDetail: React.FC<{ surveyId: string }> = ({ surveyId }) => {
   );
 };
 
-export default SurveyDetail;
+export default SurveyAnswer;
