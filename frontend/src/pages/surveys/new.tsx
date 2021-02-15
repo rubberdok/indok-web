@@ -8,9 +8,7 @@ const NewPage: NextPage = () => (
       <Typography variant="h1" component="h1">
         Lag ny undersøkelse
       </Typography>
-      <Typography variant="p" component="p">
-        Denne siden er under utvilking!
-      </Typography>
+      <Typography component="p">Denne siden er under utvilking!</Typography>
     </Container>
   </Layout>
 );
