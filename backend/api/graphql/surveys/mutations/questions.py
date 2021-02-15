@@ -1,13 +1,16 @@
 from apps.surveys.models import (
     QuestionType as QuestionTypeModel,
     Question,
+    Answer,
 )
 
 from ..types import (
     QuestionTypeType,
     QuestionType,
+    AnswerType
 )
 import graphene
+from graphql_jwt.decorators import login_required
 
 class QuestionInput(graphene.InputObjectType):
     survey_id = graphene.ID()
@@ -114,3 +117,67 @@ class DeleteQuestionType(graphene.Mutation):
         question_type.delete()
         ok = True
         return cls(deleted_id=deleted_id, ok=ok)
+
+class AnswerInput(graphene.InputObjectType):
+    question_id = graphene.ID()
+    answer = graphene.String(required=False)
+
+class CreateAnswer(graphene.Mutation):
+    ok = graphene.Boolean()
+    answer = graphene.Field(AnswerType)
+
+    class Arguments:
+        answer_data = AnswerInput(required=True)
+
+    @classmethod
+    @login_required
+    def mutate(cls, self, info, answer_data):
+        answer = Answer()
+        for k, v in answer_data.items():
+            setattr(answer, k, v)
+        answer.user = info.context.user
+        answer.save()
+        ok = True
+        return cls(answer=answer, ok=ok)
+
+class UpdateAnswer(graphene.Mutation):
+    ok = graphene.Boolean()
+    answer = graphene.Field(AnswerType)
+
+    class Arguments:
+        id = graphene.ID(required=True)
+        answer_data = AnswerInput(required=False)
+
+    @classmethod
+    @login_required
+    def mutate(cls, self, info, id, answer_data):
+        user = info.context.user
+        try:
+          answer = user.answer_set.get(pk=id)
+        except Answer.DoesNotExist as e:
+          return CreateAnswer(answer=None, ok=False)
+        for k, v, in answer_data.items():
+            setattr(answer, k, v)
+        answer.save()
+        ok = True
+        return cls(answer=answer, ok=ok)
+
+class DeleteAnswer(graphene.Mutation):
+    ok = graphene.Boolean()
+    deleted_id = graphene.ID()
+
+    class Arguments:
+        id = graphene.ID(required=True)
+
+    @classmethod
+    @login_required
+    def mutate(cls, self, info, id):
+        user = info.context.user
+        try:
+          answer = user.answer_set.get(pk=id)
+        except Answer.DoesNotExist as e:
+          return CreateAnswer(answer=None, ok=False)
+        deleted_id = answer.id
+        answer.delete()
+        ok = True
+        return cls(ok=ok, deleted_id=deleted_id)
