@@ -5,6 +5,7 @@ import { LISTING } from "@graphql/listings/queries";
 import { Listing } from "@interfaces/listings";
 import Link from "next/link";
 import Apply from "@components/pages/listings/apply";
+import SurveyAnswer from "@components/pages/surveys/surveyAnswer";
 
 const ListingPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ listingID }) => {
   const { loading, error, data } = useQuery<{ listing: Listing }>(LISTING, {
@@ -21,7 +22,7 @@ const ListingPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProp
           <h3>{data.listing.organization?.name}</h3>
           <p>{data.listing.description}</p>
           <p>Frist: {data.listing.deadline.slice(0, 16).replace("T", " ")}</p>
-          <Apply listing={data.listing} />
+          <SurveyAnswer surveyId={data.listing.survey!.id} />
         </Layout>
       )}
     </>
