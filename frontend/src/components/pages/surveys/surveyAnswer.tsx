@@ -43,7 +43,9 @@ const SurveyAnswer: React.FC<{ surveyId: string }> = ({ surveyId }) => {
               <button
                 onClick={(e) => {
                   e.preventDefault();
-                  createAnswer({ variables: { questionId: answers[0].question.id, answer: answers[0].answer } });
+                  for (const answer of answers) {
+                    createAnswer({ variables: { questionId: answer.question.id, answer: answer.answer } });
+                  }
                 }}
               >
                 Søk
