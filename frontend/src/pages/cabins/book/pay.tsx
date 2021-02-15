@@ -16,8 +16,8 @@ import { Composition } from "atomic-layout";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { CREATE_BOOKING } from "../../graphql/cabins/mutations";
-import useBookingRange from "../../hooks/cabins/useBookingRange";
+import { CREATE_BOOKING } from "../../../graphql/cabins/mutations";
+import useBookingRange from "../../../hooks/cabins/useBookingRange";
 
 interface BookingData {
   firstname: string;
