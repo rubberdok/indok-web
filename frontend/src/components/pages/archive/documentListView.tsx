@@ -3,8 +3,12 @@ import React, { useState } from "react";
 import FilterButton from "./FilterButtons";
 import ListDocuments from "./listDocuments";
 import { ContentWrapper } from "./wrapper";
+import SliderSelector from "./slider";
+import ListFeaturedDocuments from "./listFeaturedDocuments";
 
 const DocumentListView: React.FC = () => {
+  const [yearFilter, setYearFilter] = useState<number | null>(null);
+
   const [typeFilters, setTypeFilters] = useState<{ [key: string]: { active: boolean; title: string } }>({
     Budget: { active: false, title: "Budsjett og Regnskap" },
     Summary: { active: false, title: "Generalforsamling" },
@@ -18,7 +22,7 @@ const DocumentListView: React.FC = () => {
   return (
     <>
       <div style={{ flex: "100%" }}>
-        <Typography variant="h1" style={{ textAlign: "center" }}>
+        <Typography variant="h1" style={{ textAlign: "center", marginTop: "32px", marginBottom: "32px" }}>
           Arkiv
         </Typography>
       </div>
@@ -35,11 +39,25 @@ const DocumentListView: React.FC = () => {
           }
         />
       </ContentWrapper>
-      <ListDocuments
-        document_types={Object.entries(typeFilters)
-          .filter((key, _) => key[1].active)
-          .map(([_, val]) => val.title)}
-      />
+      <ContentWrapper style={{ justifyContent: "center", marginBottom: "32px" }}>
+        <SliderSelector yearFilter={yearFilter} updateYearFilters={(value) => setYearFilter(value)} />
+      </ContentWrapper>
+      <ContentWrapper style={{ marginBottom: "16px" }}>
+        <ListFeaturedDocuments
+          document_types={Object.entries(typeFilters)
+            .filter((key, _) => key[1].active)
+            .map(([_, val]) => val.title)}
+          year={yearFilter}
+        />
+      </ContentWrapper>
+      <ContentWrapper style={{ marginTop: "16px" }}>
+        <ListDocuments
+          document_types={Object.entries(typeFilters)
+            .filter((key, _) => key[1].active)
+            .map(([_, val]) => val.title)}
+          year={yearFilter}
+        />
+      </ContentWrapper>
     </>
   );
 };
