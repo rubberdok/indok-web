@@ -48,7 +48,6 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(1),
   },
   buttons: {
-    float: "right",
     marginInline: theme.spacing(1),
   },
 
@@ -80,7 +79,8 @@ const useStyles = makeStyles((theme) => ({
   paper: {
     textAlign: "center",
     color: theme.palette.text.secondary,
-    backgroundColor: "lightgrey",
+    padding: theme.spacing(2),
+    // backgroundColor: "lightgrey",
   },
 }));
 
@@ -140,25 +140,102 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
   if (data.event)
     return (
       <div>
+        <Grid container spacing={1}>
+          {/* Header card */}
+          <Grid item xs={12}>
+            <Paper variant="outlined" className={classes.paper}>
+              <Typography component="h1" variant="h4" align="center">
+                {data.event.title}
+              </Typography>
+
+              <Grid container justify="center">
+                <Typography variant="overline" display="block" className={classes.publisherContainer}>
+                  Arrangert av
+                </Typography>
+                <Typography
+                  variant="overline"
+                  display="block"
+                  style={{ fontWeight: 600 }}
+                  className={classes.publisherContainer}
+                >
+                  &nbsp;&nbsp;{getName(data.event.organization)}
+                </Typography>
+              </Grid>
+            </Paper>
+          </Grid>
+
+          {/* Description card */}
+          <Grid item xs={8}>
+            <Paper variant="outlined" className={classes.paper}>
+              <Grid container direction="column" justify="flex-end">
+                Description goes here
+              </Grid>
+            </Paper>
+          </Grid>
+
+          {/* Information card */}
+          <Grid item xs={4}>
+            <Paper variant="outlined" className={classes.paper}>
+              {/* <Grid item xs={4} direction="column" className={classes.detailContainer}> */}
+              <Grid item>
+                <Typography variant="overline" display="block" className={classes.publisherContainer}>
+                  Info{" "}
+                </Typography>
+                <Typography gutterBottom>
+                  <LocationOnIcon fontSize="small" /> {data.event.location}
+                </Typography>
+                <Typography gutterBottom>
+                  <CategoryIcon fontSize="small" /> {getName(data.event.category)}{" "}
+                </Typography>
+              </Grid>
+
+              <Grid item xs={4}>
+                <Typography variant="overline" display="block" className={classes.publisherContainer}>
+                  Starter{" "}
+                </Typography>
+              </Grid>
+              <Typography gutterBottom>
+                <EventIcon fontSize="small" /> {parseDate(data.event.startTime).split(" ")[0]}{" "}
+              </Typography>
+              <Typography gutterBottom>
+                <ScheduleIcon fontSize="small" /> kl. {parseDate(data.event.startTime).split(" ")[1].slice(0, 5)}
+              </Typography>
+
+              <Typography variant="overline" display="block" className={classes.publisherContainer}>
+                Slutter{" "}
+              </Typography>
+              <Typography gutterBottom>
+                <EventIcon fontSize="small" /> {parseDate(data.event.endTime).split(" ")[0]}{" "}
+              </Typography>
+              <Typography gutterBottom>
+                <ScheduleIcon fontSize="small" /> kl. {parseDate(data.event.endTime).split(" ")[1].slice(0, 5)}
+              </Typography>
+              {/* </Grid> */}
+            </Paper>
+          </Grid>
+
+          {/* Buttons row card */}
+          <Grid item justify="space-between" xs={12}>
+            <Paper variant="outlined" className={classes.paper}>
+              <Grid item justify="space-between" xs={12}>
+                <Grid item>
+                  <Button variant="outlined" color="primary" className={classes.buttons}>
+                    Meld på!
+                  </Button>
+                </Grid>
+
+                <Grid item>
+                  <Link href={`/events`}>
+                    <Button>Tilbake</Button>
+                  </Link>
+                </Grid>
+              </Grid>
+            </Paper>
+          </Grid>
+        </Grid>
+
         <>
           <CssBaseline />
-          <Typography component="h1" variant="h4" align="center">
-            {data.event.title}
-          </Typography>
-
-          <Grid container justify="center">
-            <Typography variant="overline" display="block" className={classes.publisherContainer}>
-              Arrangert av{" "}
-            </Typography>
-            <Typography
-              variant="overline"
-              display="block"
-              style={{ fontWeight: 600 }}
-              className={classes.publisherContainer}
-            >
-              &nbsp;&nbsp;{getName(data.event.organization)}
-            </Typography>
-          </Grid>
 
           {/* <Typography variant="overline" display="block" align="center">
             Arrangert av {getName(data.event.organization)}.
@@ -185,38 +262,6 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
               </Grid>
             </Grid>
             <Divider variant="middle" className={classes.mainDivider} orientation="vertical" flexItem />
-
-            <Grid container item xs={3} direction="column" className={classes.detailContainer}>
-              <Typography variant="overline" display="block" className={classes.publisherContainer}>
-                Info{" "}
-              </Typography>
-              <Typography gutterBottom>
-                <LocationOnIcon fontSize="small" /> {data.event.location}
-              </Typography>
-              <Typography gutterBottom>
-                <CategoryIcon fontSize="small" /> {getName(data.event.category)}{" "}
-              </Typography>
-
-              <Typography variant="overline" display="block" className={classes.publisherContainer}>
-                Starter{" "}
-              </Typography>
-              <Typography gutterBottom>
-                <EventIcon fontSize="small" /> {parseDate(data.event.startTime).split(" ")[0]}{" "}
-              </Typography>
-              <Typography gutterBottom>
-                <ScheduleIcon fontSize="small" /> kl. {parseDate(data.event.startTime).split(" ")[1].slice(0, 5)}
-              </Typography>
-
-              <Typography variant="overline" display="block" className={classes.publisherContainer}>
-                Slutter{" "}
-              </Typography>
-              <Typography gutterBottom>
-                <EventIcon fontSize="small" /> {parseDate(data.event.endTime).split(" ")[0]}{" "}
-              </Typography>
-              <Typography gutterBottom>
-                <ScheduleIcon fontSize="small" /> kl. {parseDate(data.event.endTime).split(" ")[1].slice(0, 5)}
-              </Typography>
-            </Grid>
           </Grid>
 
           <hr />
