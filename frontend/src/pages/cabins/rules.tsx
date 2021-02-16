@@ -9,7 +9,7 @@ const RulesPage: NextPage = () => {
     <>
       <Layout>
         <Container>
-          <Rules></Rules>
+          <Rules />
         </Container>
       </Layout>
     </>
