@@ -40,7 +40,7 @@ const BookPage: NextPage = () => {
   const defaultPriceExternal = 2700;
 
   const temporarilyDisableSubmitting = false;
-  const temporarilyDisableBooking = false;
+  const temporarilyDisableBooking = true;
 
   const router = useRouter();
   const urlData = router.query;
@@ -284,7 +284,7 @@ const BookPage: NextPage = () => {
                                 <Button
                                   color="primary"
                                   onClick={(e) => handleSubmit(e)}
-                                  disabled={temporarilyDisableBooking}
+                                  disabled={temporarilyDisableSubmitting}
                                   variant="contained"
                                   size="large"
                                 >
