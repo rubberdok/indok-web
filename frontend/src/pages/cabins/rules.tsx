@@ -1,6 +1,6 @@
 import Layout from "@components/Layout";
-import Container from "@components/pages/cabins/Container";
-import Rules from "@components/pages/cabins/Rules";
+import Rules from "@components/pages/cabins/Documents/Rules";
+import { Container } from "@material-ui/core";
 import { NextPage } from "next";
 import React from "react";
 

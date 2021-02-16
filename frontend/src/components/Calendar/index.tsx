@@ -1,5 +1,5 @@
 import moment from "moment";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import CalendarTable from "./CalendarTable";
 import { DATE_FORMAT, NORWEGIAN_SHORT_DAY_NAMES } from "./constants";
 import { getDateRange, previousMonthDays, rangeLength } from "./helpers";
@@ -117,6 +117,7 @@ const Calendar: React.FC<CalendarProps> = ({ events, disabledDates, rangeChanged
       </MonthSelector>
       <TwoCalendarsContainer>
         <CalendarTable getRows={getRows} month={selectedMonth.clone()} />
+        <hr />
         <CalendarTable getRows={getRows} month={selectedMonth.clone().add(1, "month")} />
       </TwoCalendarsContainer>
     </>

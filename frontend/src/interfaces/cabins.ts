@@ -1,3 +1,5 @@
+import { ChangeEvent } from "react";
+
 export interface Booking {
   id: string;
   firstname: string;
@@ -28,8 +30,8 @@ export interface QueryVariables {
 
 export interface ContractProps {
   contractData: {
-    firstname: string;
-    surname: string;
+    firstname: string | null;
+    surname: string | null;
     cabins: string[];
     fromDate: string;
     toDate: string;
@@ -46,5 +48,35 @@ export interface SummaryProps {
 }
 
 export interface ImageSliderProps {
-  cabin: "Bjørnen" | "Oksen";
+  cabins: string[] | "Oksen" | "Bjørnen";
+}
+
+export type InputFieldsEvent =
+  | ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  | React.ChangeEvent<{ name?: string | undefined; value: unknown }>;
+
+export interface InputValueTypes {
+  firstname: string;
+  surname: string;
+  receiverEmail: string;
+  phone: string;
+  numberIndok: number;
+  numberExternal: number;
+}
+
+export interface BookingData extends InputValueTypes {
+  bookFrom: string;
+  bookTo: string;
+  cabins: string[];
+  price: number;
+}
+
+export interface Validations {
+  firstname: boolean;
+  lastname: boolean;
+  email: boolean;
+  phone: boolean;
+  numberIndok: boolean;
+  numberExternal: boolean;
+  triggerError: boolean;
 }

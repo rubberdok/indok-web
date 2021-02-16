@@ -1,25 +1,36 @@
-import { ArrowIcon } from "@components/ui/ArrowIcon";
-import Router, { useRouter } from "next/router";
+import { Container, createStyles, makeStyles } from "@material-ui/core";
+import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import { useState } from "react";
-import styled from "styled-components";
-import { HeaderComposition } from "./HeaderCompositon";
+import HeaderComposition from "../HeaderComposition";
+
+const useStyles = makeStyles(() =>
+  createStyles({
+    root: {
+      flexGrow: 1,
+    },
+    logo: {
+      margin: "auto",
+      width: "30vh",
+    },
+  })
+);
 
 const Contract: React.FC = () => {
   const currentTime = new Date().toLocaleString();
-
   const router = useRouter();
   const query = router.query;
+  const classes = useStyles();
 
   const [cabins, setCabins] = useState<string[]>([]);
 
-  const handleBackButtonClick = () => Router.back();
+  const handleBackButtonClick = () => {
+    window.close();
+  };
 
   useEffect(() => {
     if (query.cabins) {
-      console.log(query);
       const cabinList = typeof query.cabins === "string" ? [query.cabins] : query.cabins;
-      console.log(cabinList);
       setCabins(cabinList);
     }
   }, [query]);
@@ -27,11 +38,8 @@ const Contract: React.FC = () => {
   return (
     <>
       <Container>
-        <Logo src="/static/cabins/hyttestyret_logo.png"></Logo>
-        <HeaderComposition headerText="KONTRAKT">
-          <ArrowIcon direction={"l"} size={35} onClick={handleBackButtonClick}></ArrowIcon>
-        </HeaderComposition>
-        {/* <h1>KONTRAKT</h1> */}
+        <img alt="logo" src="/static/cabins/hyttestyret_logo.png" className={classes.logo}></img>
+        <HeaderComposition headerText="KONTRAKT" arrowOnClick={handleBackButtonClick} />
         <h3>Utleieavtale</h3>
         <p>
           På vegne av Foreningen for studenter ved Industriell økonomi og teknologiledelse er det i dag inngått følgende
@@ -93,24 +101,20 @@ const Contract: React.FC = () => {
         <br />
         <p>Partene vedtar eiendommens verneting i alle tvister som måtte oppstå i forbindelse med avtalen.</p>
         <p>
+          Hyttestyret forbeholder seg retten til å kunne gjøre om på bookingen hvis det skulle oppstå uforutsette
+          hendelser.
+        </p>
+        <p>
           Flytter ikke leietager når leieperioden er utløpt, kan vedkommende kastes ut uten søksmål og dom etter § 13-2
           i Tvangsfullbyrdelsesloven.{" "}
         </p>
         <p> Denne leieavtalen er utstedt i 2 – to – eksemplarer, ett til hver av partene.</p>
         <p>
-          Sted/dato: <b>{currentTime}</b>
+          Dato/tid: <b>{currentTime}</b>
         </p>
       </Container>
     </>
   );
 };
-
-const Logo = styled.img`
-  margin: auto;
-  margin-bottom: 50px;
-  width: 30vh;
-`;
-
-const Container = styled.div``;
 
 export default Contract;

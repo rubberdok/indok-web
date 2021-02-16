@@ -48,9 +48,9 @@ const Summary = ({ from, to, cabins, price, nights }: SummaryProps): JSX.Element
           <Grid container spacing={1}>
             <Grid item xs={12}>
               <Paper className={classes.paper}>
-                <b>
+                <h2>
                   Hytte{cabins.length > 1 ? "r" : ""}: {cabins.map((cabin, i) => (i > 0 ? " og " + cabin : cabin))}
-                </b>
+                </h2>
               </Paper>
             </Grid>
             <Divider className={classes.separator} />
@@ -60,19 +60,17 @@ const Summary = ({ from, to, cabins, price, nights }: SummaryProps): JSX.Element
             <Grid item xs={6}>
               <Paper className={classes.paper}>Til: {to}</Paper>
             </Grid>
-            <Divider className={classes.lowSeparator} />
             <Grid item xs={12}>
               <Paper className={classes.paper}>
                 <Facilities />
               </Paper>
             </Grid>
-            <Divider className={classes.lowSeparator} />
             <Grid item xs={12}>
               <Paper className={classes.paper}>
                 {price} kr x {nights} dager
               </Paper>
             </Grid>
-            <Divider className={classes.separator} />
+            <Divider className={classes.lowSeparator} />
             <Grid item xs={12}>
               <Paper className={classes.paper}>Totalt: {price * nights}kr</Paper>
             </Grid>
