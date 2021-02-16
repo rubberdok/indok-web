@@ -9,6 +9,7 @@ export interface Booking {
   bookFrom: string;
   bookTo: string;
   price: number;
+  cabins: Cabin[];
 }
 
 export interface Cabin {

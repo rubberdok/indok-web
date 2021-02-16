@@ -1,7 +1,7 @@
-import moment from "moment";
-import React, { useEffect, useState } from "react";
+import dayjs from "dayjs";
+import { useEffect, useState } from "react";
 import CalendarTable from "./CalendarTable";
-import { DATE_FORMAT, NORWEGIAN_SHORT_DAY_NAMES } from "./constants";
+import { DATE_FORMAT } from "./constants";
 import { getDateRange, previousMonthDays, rangeLength } from "./helpers";
 import { Day, DayCell, EventMarkerWrapper, MonthPickButton, MonthSelector, TwoCalendarsContainer } from "./styles";
 
@@ -19,17 +19,16 @@ interface CalendarProps {
 }
 
 const Calendar: React.FC<CalendarProps> = ({ events, disabledDates, rangeChanged, initSelectedDay, disableRange }) => {
-  const [selectedMonth, setSelectedMonth] = useState(moment());
-  const [selectedDay, setSelectedDay] = useState(moment(initSelectedDay));
+  const [selectedMonth, setSelectedMonth] = useState(dayjs());
+  const [selectedDay, setSelectedDay] = useState(dayjs(initSelectedDay));
   const [hoverRange, setHoverRange] = useState<string[]>([]);
   const [isRangeFreezed, setIsRangeFreezed] = useState(false);
 
-  const getDaysOfMonth = (month: moment.Moment) => {
+  const getDaysOfMonth = (month: dayjs.Dayjs) => {
     const daysOfMonth: JSX.Element[] = [];
-    const today = moment();
+    const today = dayjs();
     for (let i = 1; i <= month.daysInMonth(); i++) {
-      const date = moment(month);
-      date.set("date", i);
+      const date = dayjs(month).set("date", i);
       const dateEvents = events?.filter((event) => event.date === date.format(DATE_FORMAT));
       daysOfMonth.push(
         <DayCell
@@ -57,9 +56,9 @@ const Calendar: React.FC<CalendarProps> = ({ events, disabledDates, rangeChanged
     return daysOfMonth;
   };
 
-  const getRows = (month: moment.Moment) => {
+  const getRows = (month: dayjs.Dayjs) => {
     const slots: JSX.Element[] = [
-      ...previousMonthDays(month, selectedDay, handleDateClicked, false, "next"),
+      ...previousMonthDays(month, selectedDay, handleDateClicked),
       ...getDaysOfMonth(month),
     ];
     let cells: JSX.Element[];
@@ -83,7 +82,7 @@ const Calendar: React.FC<CalendarProps> = ({ events, disabledDates, rangeChanged
     );
   };
 
-  const handleDateClicked = (date: moment.Moment) => {
+  const handleDateClicked = (date: dayjs.Dayjs) => {
     if (hoverRange.length > 0 && !isRangeFreezed) {
       rangeChanged(hoverRange[0], hoverRange[hoverRange.length - 1]);
       setIsRangeFreezed(true);
@@ -96,16 +95,12 @@ const Calendar: React.FC<CalendarProps> = ({ events, disabledDates, rangeChanged
   };
 
   const onChangeMonth = (months: number) => {
-    const newSelectedMonth = moment(selectedMonth);
-    newSelectedMonth.add(months, "months");
-    setSelectedMonth(newSelectedMonth);
+    setSelectedMonth(selectedMonth.add(months, "months"));
   };
 
   useEffect(() => {
     if (!selectedDay.isSame(selectedMonth, "month")) {
-      const newMonth = moment(selectedMonth);
-      newMonth.set("month", selectedDay.get("month"));
-      setSelectedMonth(newMonth);
+      setSelectedMonth(selectedMonth.set("month", selectedDay.get("month")));
     }
   }, [selectedDay]);
 
@@ -126,5 +121,4 @@ const Calendar: React.FC<CalendarProps> = ({ events, disabledDates, rangeChanged
 
 export const createDateRange = getDateRange;
 export const getRangeLength = (fromDate: string, toDate: string): number => rangeLength(fromDate, toDate);
-export const CONSTANTS = { NORWEGIAN_SHORT_DAY_NAMES, DATE_FORMAT };
 export default Calendar;

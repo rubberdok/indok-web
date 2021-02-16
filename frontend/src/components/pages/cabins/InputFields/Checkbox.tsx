@@ -46,7 +46,6 @@ const CheckBox: React.FC<CheckProps> = ({ onClick, errorMsg, checkable, contract
 
   const handleCheckBoxClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     if (!(checkable && contractViewed)) {
-      console.log("kan ikke trykke");
       e.preventDefault();
       setCheckErrorMsg("Du må lese kontrakten og fylle inn alle feltene først.");
     } else {

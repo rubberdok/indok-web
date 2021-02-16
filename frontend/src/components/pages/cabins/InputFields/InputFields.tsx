@@ -12,7 +12,7 @@ import {
   TextField,
   Theme,
 } from "@material-ui/core";
-import { range } from "lodash";
+import { range } from "@utils/helpers";
 import React, { ChangeEvent } from "react";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -40,7 +40,7 @@ interface InputFieldsProps {
       | ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
       | React.ChangeEvent<{ name?: string | undefined; value: unknown }>
   ) => void;
-  userData: User;
+  userData: User | undefined;
   cabins: string[];
   numberIndok: number;
   numberExternal: number;
@@ -123,7 +123,7 @@ export const InputFields: React.FC<InputFieldsProps> = ({
                     name="numberIndok"
                     error={!validations.numberIndok && validations.triggerError}
                   >
-                    {range(0, totalGuestsAllowed - numberExternal + 1).map((val) => (
+                    {range(0, totalGuestsAllowed - numberExternal + 1).map((val: number) => (
                       <MenuItem key={val} value={val}>
                         {val}
                       </MenuItem>
@@ -140,7 +140,7 @@ export const InputFields: React.FC<InputFieldsProps> = ({
                     name="numberExternal"
                     error={!validations.numberExternal && validations.triggerError}
                   >
-                    {range(0, totalGuestsAllowed - numberIndok + 1).map((val) => (
+                    {range(0, totalGuestsAllowed - numberIndok + 1).map((val: number) => (
                       <MenuItem key={val} value={val}>
                         {val}
                       </MenuItem>

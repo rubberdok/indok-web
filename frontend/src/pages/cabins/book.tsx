@@ -89,14 +89,13 @@ const BookPage: NextPage = () => {
 
     const updatedInputValues = {
       ...inputValues,
-      ...{
-        firstname: data?.user.firstName as string,
-        surname: data?.user.lastName as string,
-        receiverEmail: data?.user.email as string,
-      },
+      firstname: data?.user.firstName as string,
+      surname: data?.user.lastName as string,
+      receiverEmail: data?.user.email as string,
     };
 
     setInputValues(updatedInputValues);
+    setBookingData({ ...bookingData, ...updatedInputValues });
   }, [data]);
 
   useEffect(() => {
@@ -140,7 +139,7 @@ const BookPage: NextPage = () => {
   const validateSelect = (numberIndok: number, numberExternal: number): boolean =>
     numberIndok > 0 || numberExternal > 0;
 
-  const validatePhone = (phone: string): boolean => (phone ? validator.isMobilePhone(phone, "nn-NO") : false);
+  const validatePhone = (phone: string): boolean => (phone ? validator.isMobilePhone(phone) : false);
 
   const validateInputForm = (inputValues: InputValueTypes) => {
     const selectValidity = validateSelect(inputValues.numberIndok, inputValues.numberExternal);
@@ -170,7 +169,6 @@ const BookPage: NextPage = () => {
 
     // update checklist and checkable
     const checklist = Object.values(updatedInput).filter((value) => {
-      console.log(value);
       if (value != null) {
         return 1;
       }
@@ -262,7 +260,7 @@ const BookPage: NextPage = () => {
                         <CardC>
                           <Grid item>
                             <InputFields
-                              userData={userData as User}
+                              userData={userData}
                               onChange={handleInputChange}
                               cabins={bookingData.cabins}
                               numberIndok={bookingData.numberIndok}

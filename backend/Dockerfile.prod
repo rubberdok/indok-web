@@ -1,4 +1,4 @@
-FROM python:3.9
+FROM 777854691961.dkr.ecr.eu-north-1.amazonaws.com/python:3.9
 ENV PYTHONUNBUFFERED 1
 RUN mkdir -p /code
 WORKDIR /code
@@ -19,4 +19,4 @@ COPY . .
 
 EXPOSE 8000
 
-ENTRYPOINT ["/code/entrypoint_prod.sh"]
+ENTRYPOINT ["/code/entrypoint.sh"]
