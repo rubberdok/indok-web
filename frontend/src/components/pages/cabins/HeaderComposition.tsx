@@ -1,4 +1,4 @@
-import { makeStyles, Theme, createStyles, Grid } from "@material-ui/core";
+import { makeStyles, Theme, createStyles, Grid, Typography } from "@material-ui/core";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import Link from "next/link";
 import React from "react";
@@ -43,7 +43,7 @@ const HeaderComposition: React.FC<HeaderCompositionProps> = (props) => {
             )}
           </Grid>
           <Grid item>
-            <h1>{props.headerText}</h1>
+            <Typography variant="h2">{props.headerText}</Typography>
           </Grid>
         </Grid>
       </div>
