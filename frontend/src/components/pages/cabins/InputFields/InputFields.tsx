@@ -44,7 +44,7 @@ interface InputFieldsProps {
   cabins: string[];
   numberIndok: number;
   numberExternal: number;
-  validations: Validations;
+  validations: Validations | undefined;
 }
 
 export const InputFields: React.FC<InputFieldsProps> = ({
@@ -68,7 +68,7 @@ export const InputFields: React.FC<InputFieldsProps> = ({
         <Grid container spacing={5}>
           <Grid item xs={12} sm={6}>
             <TextField
-              error={!validations.firstname && validations.triggerError}
+              error={!validations?.firstname && validations?.triggerError}
               type="text"
               label="Fornavn"
               defaultValue={userData?.firstName}
@@ -79,7 +79,7 @@ export const InputFields: React.FC<InputFieldsProps> = ({
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
-              error={!validations.lastname && validations.triggerError}
+              error={!validations?.lastname && validations?.triggerError}
               type="text"
               id="standard-basic"
               label="Etternavn"
@@ -91,7 +91,7 @@ export const InputFields: React.FC<InputFieldsProps> = ({
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
-              error={!validations.email && validations.triggerError}
+              error={!validations?.email && validations?.triggerError}
               type="email"
               id="standard-basic"
               label="E-postadresse"
@@ -103,7 +103,7 @@ export const InputFields: React.FC<InputFieldsProps> = ({
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
-              error={!validations.phone && validations.triggerError}
+              error={!validations?.phone && validations?.triggerError}
               type="number"
               id="standard-basic"
               label="Mobilnummer"
@@ -121,7 +121,7 @@ export const InputFields: React.FC<InputFieldsProps> = ({
                     defaultValue={0}
                     onChange={(e) => onChange("numberIndok", e)}
                     name="numberIndok"
-                    error={!validations.numberIndok && validations.triggerError}
+                    error={!validations?.numberIndok && validations?.triggerError}
                   >
                     {range(0, totalGuestsAllowed - numberExternal).map((val: number) => (
                       <MenuItem key={val} value={val}>
@@ -138,7 +138,7 @@ export const InputFields: React.FC<InputFieldsProps> = ({
                     defaultValue={0}
                     onChange={(e) => onChange("numberExternal", e)}
                     name="numberExternal"
-                    error={!validations.numberExternal && validations.triggerError}
+                    error={!validations?.numberExternal && validations?.triggerError}
                   >
                     {range(0, totalGuestsAllowed - numberIndok).map((val: number) => (
                       <MenuItem key={val} value={val}>

@@ -2,6 +2,7 @@ import {
   Box,
   Container,
   createStyles,
+  Divider,
   List,
   ListItem,
   ListItemIcon,
@@ -52,11 +53,11 @@ const Contract: React.FC = () => {
           <HeaderComposition headerText="Kontrakt" arrowOnClick={handleBackButtonClick} />
           <Typography variant="body1">
             På vegne av Foreningen for studenter ved Industriell økonomi og teknologiledelse er det i dag inngått
-            følgende leiekontrakt mellom Hyttestyret og{" "}
+            følgende leiekontrakt mellom Hyttestyret og
             <Box display="inline" fontWeight="fontWeightBold">
-              {query.firstname} {query.surname}
+              {` ${query.firstname} ${query.surname}`}
             </Box>
-            <br />
+            <Divider component="br" />
           </Typography>
         </Box>
 
@@ -64,9 +65,9 @@ const Contract: React.FC = () => {
           <Typography variant="body1">
             Gjeldende Leieobjekt(er): <b>{cabins.map((cabin, i) => (i > 0 ? " og " + cabin : cabin))}</b>,
             Landsbygrenda, 7340 Oppdal
-            <br />
+            <Divider component="br" />
             Leieperiode: <b>{query.fromDate}</b> - <b>{query.toDate}</b> (yyyy-mm-dd)
-            <br />
+            <Divider component="br" />
             Leiesum: <b>{query.price}</b> NOK innbetalt til konto 9235.28.31311 i forkant av leieperioden.
           </Typography>
           <Typography variant="body1">
@@ -128,7 +129,7 @@ const Contract: React.FC = () => {
                 <ArrowRightIcon />
               </ListItemIcon>
               <ListItemText>
-                Lese grundig i gjennom hyttenes reglement som ligger tilgjengelig på indokhyttene.no.
+                lese grundig i gjennom hyttenes reglement som ligger tilgjengelig på indokhyttene.no.
               </ListItemText>
             </ListItem>
           </List>

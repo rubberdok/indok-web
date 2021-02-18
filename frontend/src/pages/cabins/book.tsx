@@ -12,15 +12,14 @@ import { SEND_EMAIL } from "@graphql/cabins/mutations";
 import { QUERY_CABINS } from "@graphql/cabins/queries";
 import { BookingData, Cabin, ContractProps, InputFieldsEvent, InputValueTypes, Validations } from "@interfaces/cabins";
 import { User } from "@interfaces/users";
-import { Button, Container, createStyles, Grid, makeStyles, Theme, Typography } from "@material-ui/core";
+import { Box, Button, Container, createStyles, Grid, makeStyles, Theme, Typography } from "@material-ui/core";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { CREATE_CABIN } from "../../graphql/cabins/mutations";
 import useBookingRange from "../../hooks/cabins/useBookingRange";
-import validator from "validator";
 import HeaderComposition from "@components/pages/cabins/HeaderComposition";
-import { allValuesDefined } from "@utils/helpers";
+import { allValuesDefined, validateInputForm } from "@utils/helpers";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -40,7 +39,7 @@ const BookPage: NextPage = () => {
   const defaultPriceExternal = 2700;
 
   const temporarilyDisableSubmitting = false;
-  const temporarilyDisableBooking = true;
+  const temporarilyDisableBooking = false;
 
   const router = useRouter();
   const urlData = router.query;
@@ -69,7 +68,7 @@ const BookPage: NextPage = () => {
   const [cabinIds, setCabinIDs] = useState<number[]>();
   const { data } = useQuery<{ user: User }>(GET_USER);
   const [userData, setUserData] = useState<User>();
-  const [validations, setValidations] = useState({} as Validations);
+  const [validations, setValidations] = useState<Validations>();
   const [isInputValidated, setIsInputValidated] = useState(false);
 
   const handleCheckboxClick = (isChecked: boolean) => {
@@ -79,23 +78,27 @@ const BookPage: NextPage = () => {
 
   useEffect(() => {
     // exclude triggerError when validating inputs
-    const { triggerError, ...evaluated } = validations;
-    setIsInputValidated(Object.values(evaluated).every((val) => val));
+    if (validations) {
+      const { triggerError, ...evaluated } = validations;
+      setIsInputValidated(Object.values(evaluated).every((val) => val));
+    }
   }, [validations]);
 
   useEffect(() => {
     // update user data and inputvalues data to automatically fill in input fields
-    setUserData(data?.user);
+    if (data) {
+      setUserData(data.user);
 
-    const updatedInputValues = {
-      ...inputValues,
-      firstname: data?.user.firstName as string,
-      surname: data?.user.lastName as string,
-      receiverEmail: data?.user.email as string,
-    };
+      const updatedInputValues = {
+        ...inputValues,
+        firstname: data.user.firstName,
+        surname: data.user.lastName,
+        receiverEmail: data.user.email,
+      };
 
-    setInputValues(updatedInputValues);
-    setBookingData({ ...bookingData, ...updatedInputValues });
+      setInputValues(updatedInputValues);
+      setBookingData({ ...bookingData, ...updatedInputValues });
+    }
   }, [data]);
 
   useEffect(() => {
@@ -106,10 +109,10 @@ const BookPage: NextPage = () => {
   }, [inputValues]);
 
   useEffect(() => {
-    if (cabinIds) {
+    if (cabinIds && cabinQuery.data) {
       setBookingData({
         ...bookingData,
-        cabins: cabinQuery.data?.cabins
+        cabins: cabinQuery.data.cabins
           .filter((cabin) => cabinIds.includes(parseInt(cabin.id)))
           .map((cabin) => cabin.name) as string[],
       });
@@ -131,31 +134,6 @@ const BookPage: NextPage = () => {
   useEffect(() => {
     setErrorMessage(isAvailable ? "" : "Den valgte perioden er ikke tilgjengelig.");
   }, [isAvailable]);
-
-  const validateName = (name: string) => name.length > 0;
-
-  const validateEmail = (email: string): boolean => validator.isEmail(email);
-
-  const validateSelect = (numberIndok: number, numberExternal: number): boolean =>
-    numberIndok > 0 || numberExternal > 0;
-
-  const validatePhone = (phone: string): boolean => (phone ? validator.isMobilePhone(phone) : false);
-
-  const validateInputForm = (inputValues: InputValueTypes) => {
-    const selectValidity = validateSelect(inputValues.numberIndok, inputValues.numberExternal);
-
-    const updatedValidations = {
-      firstname: validateName(inputValues.firstname),
-      lastname: validateName(inputValues.surname),
-      email: validateEmail(inputValues.receiverEmail),
-      phone: validatePhone(inputValues.phone),
-      numberIndok: selectValidity,
-      numberExternal: selectValidity,
-      triggerError: false,
-    };
-
-    return updatedValidations;
-  };
 
   const handleInputChange = (name: string, event: InputFieldsEvent) => {
     // update input data
@@ -207,7 +185,9 @@ const BookPage: NextPage = () => {
     }
 
     // trigger possible error messages
-    setValidations({ ...validations, triggerError: true });
+    if (validations) {
+      setValidations({ ...validations, triggerError: true });
+    }
 
     // create booking and send email, redirect to confirmation page
     if (checked && isAvailable && isInputValidated) {
@@ -241,7 +221,7 @@ const BookPage: NextPage = () => {
         <Container>
           <HeaderComposition headerText="Fullføring av booking" href={"/cabins"} />
           {isAvailable ? (
-            <div className={classes.root}>
+            <Box className={classes.root}>
               <Grid container spacing={2} direction={"row"}>
                 <Grid item xs={12} md={6}>
                   <Grid container spacing={3} direction={"column"}>
@@ -315,7 +295,7 @@ const BookPage: NextPage = () => {
                   </Grid>
                 </Grid>
               </Grid>
-            </div>
+            </Box>
           ) : (
             <>{allBookingsQuery.loading ? <p>Laster...</p> : <p>{errorMessage}</p>}</>
           )}
