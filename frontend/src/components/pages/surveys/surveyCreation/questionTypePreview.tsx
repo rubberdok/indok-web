@@ -14,17 +14,21 @@ const QuestionTypePreview: React.FC<{
     case "Multiple choice":
       return (
         <Choice
+          options={question.offeredAnswers.map((offeredAnswer) => offeredAnswer.answer)}
+          name={question.id}
           title={question.question}
           radio={true}
-          options={question.offeredAnswers.map((offeredAnswer) => offeredAnswer.answer)}
+          disabled
         />
       );
     case "Checkboxes":
       return (
         <Choice
-          title={question.question}
-          radio={false}
           options={question.offeredAnswers.map((offeredAnswer) => offeredAnswer.answer)}
+          name={question.id}
+          title={question.question}
+          radio={true}
+          disabled
         />
       );
     default:
