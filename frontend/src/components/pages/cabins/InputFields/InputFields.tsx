@@ -1,6 +1,7 @@
 import { Validations } from "@interfaces/cabins";
 import { User } from "@interfaces/users";
 import {
+  Box,
   Container,
   createStyles,
   FormControl,
@@ -64,14 +65,15 @@ export const InputFields: React.FC<InputFieldsProps> = ({
 
   return (
     <Container>
-      <div className={classes.root}>
+      <Box className={classes.root}>
         <Grid container spacing={5}>
           <Grid item xs={12} sm={6}>
             <TextField
               error={!validations?.firstname && validations?.triggerError}
               type="text"
               label="Fornavn"
-              defaultValue={userData?.firstName}
+              //defaultValue={userData ? userData.firstName : ""}
+              value={userData?.lastName}
               required
               name="firstname"
               onChange={(e) => onChange("firstname", e)}
@@ -83,7 +85,8 @@ export const InputFields: React.FC<InputFieldsProps> = ({
               type="text"
               id="standard-basic"
               label="Etternavn"
-              defaultValue={userData?.lastName}
+              //defaultValue={userData?.lastName}
+              value={userData?.lastName}
               name="lastname"
               required
               onChange={(e) => onChange("surname", e)}
@@ -95,7 +98,8 @@ export const InputFields: React.FC<InputFieldsProps> = ({
               type="email"
               id="standard-basic"
               label="E-postadresse"
-              defaultValue={userData?.email}
+              //defaultValue={userData?.email}
+              value={userData?.email}
               name="email"
               required
               onChange={(e) => onChange("receiverEmail", e)}
@@ -151,7 +155,7 @@ export const InputFields: React.FC<InputFieldsProps> = ({
             </Grid>
           </Grid>
         </Grid>
-      </div>
+      </Box>
     </Container>
   );
 };

@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import { ContractProps } from "@interfaces/cabins";
-import { Checkbox, createStyles, FormControlLabel, makeStyles } from "@material-ui/core";
+import { Box, Checkbox, createStyles, Divider, FormControlLabel, makeStyles, Typography } from "@material-ui/core";
 import Link from "next/link";
 import React, { useState } from "react";
 
@@ -57,7 +57,7 @@ const CheckBox: React.FC<CheckProps> = ({ onClick, errorMsg, checkable, contract
 
   return (
     <>
-      <div className={classes.wrapper}>
+      <Box className={classes.wrapper}>
         <FormControlLabel
           control={
             <Checkbox
@@ -69,7 +69,7 @@ const CheckBox: React.FC<CheckProps> = ({ onClick, errorMsg, checkable, contract
             />
           }
           label={
-            <span className={classes.labelText}>
+            <Box component="span" className={classes.labelText}>
               Jeg har lest gjennom og samtykker til{" "}
               <Link href="/cabins/rules" passHref>
                 <a aria-hidden="true" target="_blank" rel="noreferrer">
@@ -83,12 +83,12 @@ const CheckBox: React.FC<CheckProps> = ({ onClick, errorMsg, checkable, contract
                   kontrakten
                 </a>
               </Link>
-              .<br />
-              <p className={classes.error}>{checkErrorMsg}</p>
-            </span>
+              .<Divider component="br"></Divider>
+              <Typography className={classes.error}>{checkErrorMsg}</Typography>
+            </Box>
           }
         />
-      </div>
+      </Box>
     </>
   );
 };

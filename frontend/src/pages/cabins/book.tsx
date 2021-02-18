@@ -86,7 +86,7 @@ const BookPage: NextPage = () => {
 
   useEffect(() => {
     // update user data and inputvalues data to automatically fill in input fields
-    if (data) {
+    if (data?.user) {
       setUserData(data.user);
 
       const updatedInputValues = {
@@ -176,6 +176,16 @@ const BookPage: NextPage = () => {
       price: updatedBookingData.price,
     };
     setContractData({ contractData: updatedContractData });
+
+    const updatedUserData = {
+      firstName: updatedInput.firstname,
+      email: updatedInput.receiverEmail,
+      lastName: updatedInput.surname,
+    };
+
+    if (userData) {
+      setUserData({ ...userData, ...updatedUserData });
+    }
   };
 
   const handleSubmit = (e: React.FormEvent<EventTarget>) => {
@@ -222,9 +232,9 @@ const BookPage: NextPage = () => {
           <HeaderComposition headerText="Fullføring av booking" href={"/cabins"} />
           {isAvailable ? (
             <Box className={classes.root}>
-              <Grid container spacing={2} direction={"row"}>
+              <Grid container spacing={2} direction="row">
                 <Grid item xs={12} md={6}>
-                  <Grid container spacing={3} direction={"column"}>
+                  <Grid container spacing={3} direction="column">
                     <Grid item>
                       <Summary
                         from={range.fromDate ? range.fromDate : ""}
