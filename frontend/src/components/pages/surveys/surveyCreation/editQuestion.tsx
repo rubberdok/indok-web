@@ -80,7 +80,35 @@ const EditQuestion: React.FC<{
           });
         }}
       />
-      <QuestionTypePreview question={question} />
+      {question.questionType.name === "Checkboxes" || question.questionType.name === "Multiple Choice" ? (
+        <ul>
+          {question.offeredAnswers.map((offeredAnswer, index) => (
+            <li key={index}>
+              <label>
+                <input
+                  type={question.questionType.name === "Checkboxes" ? "checkbox" : "radio"}
+                  name={question.id}
+                  disabled
+                />
+                <TextField
+                  value={offeredAnswer.answer}
+                  onChange={(e) => {
+                    e.preventDefault();
+                    setQuestion({
+                      ...question,
+                      offeredAnswers: question.offeredAnswers.map((oldAnswer) =>
+                        oldAnswer.id === offeredAnswer.id ? { ...oldAnswer, answer: e.target.value } : oldAnswer
+                      ),
+                    });
+                  }}
+                />
+              </label>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <QuestionTypePreview question={question} />
+      )}
       <br />
       <button
         onClick={(e) => {
