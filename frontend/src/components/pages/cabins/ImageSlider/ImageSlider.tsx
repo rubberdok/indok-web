@@ -45,7 +45,7 @@ const ImageSlider = ({ cabins }: ImageSliderProps): JSX.Element => {
   const images =
     cabins?.length == 2
       ? imageData.bjørnen.concat(imageData.oksen)
-      : cabins == "Bjørnen"
+      : cabins == ["Bjørnen"]
       ? imageData.bjørnen
       : imageData.oksen;
   const maxSteps = images.length;

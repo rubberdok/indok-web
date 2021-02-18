@@ -49,7 +49,7 @@ export interface SummaryProps {
 }
 
 export interface ImageSliderProps {
-  cabins: string[] | "Oksen" | "Bjørnen";
+  cabins: string[];
 }
 
 export type InputFieldsEvent =
