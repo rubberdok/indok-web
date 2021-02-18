@@ -20,18 +20,23 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
   appBar: {
-    background: "black",
+    background: "#022A2A",
+    height: 75,
   },
   toolBar: {
     padding: 0,
+    height: 75,
   },
   title: {
     flexGrow: 1,
   },
   sectionDesktop: {
     display: "none",
+
     [theme.breakpoints.up("md")]: {
       display: "flex",
+      height: "100%",
+      alignItems: "center",
     },
   },
   sectionMobile: {

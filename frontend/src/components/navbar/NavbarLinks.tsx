@@ -2,6 +2,7 @@ import { useQuery } from "@apollo/client";
 import { GET_USER } from "@graphql/auth/queries";
 import { User } from "@interfaces/users";
 import { makeStyles } from "@material-ui/core";
+import PersonIcon from "@material-ui/icons/LockOpen";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
@@ -35,10 +36,31 @@ const useStyles = makeStyles(() => ({
     fontWeight: 600,
     fontSize: 12,
     textTransform: "uppercase",
-    margin: "0 25px",
+    marginLeft: 50,
     padding: "10px 0",
     "&:hover": {
       cursor: "pointer",
+    },
+  },
+  user: {
+    color: "white",
+    height: "100%",
+    background: "#065A5A",
+    padding: "25px 0",
+    paddingLeft: 35,
+
+    ["&::after"]: {
+      content: "''",
+      height: "100%",
+      width: "7vw",
+      background: "#065A5A",
+      position: "absolute",
+      top: 0,
+    },
+
+    ["&:hover, &:hover::after"]: {
+      background: "#0b6666",
+      textDecoration: "none",
     },
   },
 }));
@@ -64,7 +86,8 @@ const NavbarLinks: React.FC = () => {
       ))}
 
       {!userData || loading || !userData.user || error ? (
-        <a className={classes.navItem} href={signInURL}>
+        <a className={[classes.navItem, classes.user].join(" ")} href={signInURL}>
+          <PersonIcon fontSize="small" style={{ marginBottom: "-5px", marginRight: "16px" }} />
           Logg inn med Feide
         </a>
       ) : (
@@ -73,7 +96,7 @@ const NavbarLinks: React.FC = () => {
             <p className={classes.navItem}>Arkiv</p>
           </Link>
           <Link href="/profile">
-            <p className={classes.navItem}>{userData.user.firstName}</p>
+            <p className={[classes.navItem, classes.user].join(" ")}>{userData.user.firstName}</p>
           </Link>
           <Link href="/logout">
             <p className={classes.navItem}>Logg ut</p>

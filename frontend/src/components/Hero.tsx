@@ -1,6 +1,5 @@
-import { Box, Button, Container, Grid, IconButton, Typography } from "@material-ui/core";
+import { Box, Button, Container, Grid, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import FacebookIcon from "@material-ui/icons/Facebook";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import React, { useState } from "react";
 import { Fade } from "react-awesome-reveal";
@@ -46,7 +45,7 @@ const organizations = [
 
 const useStyles = makeStyles(() => ({
   hero: {
-    color: "white",
+    color: "black",
   },
   heroImage: {
     width: "100%",
@@ -66,24 +65,32 @@ const useStyles = makeStyles(() => ({
   container: {
     maxWidth: "90vw",
     height: "70vh",
-    paddingTop: "21vh",
+    paddingTop: "25vh",
   },
   height: {
     height: "inherit",
   },
   orgLink: {
-    color: "white",
+    color: "black",
     position: "relative",
     left: 12,
-    transition: "0.3s all linear",
+    transition: "0.3s all ease",
+    fontWeight: 100,
 
     ["&:hover"]: {
       textDecoration: "none",
       left: 0,
     },
 
+    ["&:hover h2"]: {
+      fontWeight: 800,
+    },
+
     ["& h2, & svg"]: {
       marginBottom: 16,
+      fontSize: 36,
+      fontWeight: 550,
+      transition: "0.3s all ease",
     },
 
     // ["&::before"]: {
@@ -108,7 +115,7 @@ const useStyles = makeStyles(() => ({
     backgroundSize: "cover!important",
 
     ["&::before"]: {
-      background: "linear-gradient(to right, rgb(0 0 0 / 40%), rgb(0 0 0 / 88%))",
+      background: "rgb(0 11 11 / 77%)",
       content: "''",
       display: "block",
       height: "100%",
@@ -118,7 +125,7 @@ const useStyles = makeStyles(() => ({
   },
   orgIcon: {
     marginTop: 9,
-    color: "rgb(255 255 255 / 55%)",
+    color: "rgb(0 0 0 / 55%)",
   },
   hide: {
     opacity: "0!important",
@@ -126,13 +133,14 @@ const useStyles = makeStyles(() => ({
   },
   nth: {
     transition: "0.7s all ease",
-    background: "url('nth.png')",
-    backgroundSize: "cover",
+    background: "url('nth.svg')",
+    backgroundSize: "contain",
     backgroundPosition: "left bottom!important",
     backgroundRepeat: "no-repeat",
-    opacity: 0.03,
-    height: "85vh",
-    marginLeft: "-20vh",
+    opacity: 0.04,
+    height: "70vh",
+    marginLeft: "-28vh",
+    top: "-4vh",
   },
 }));
 
@@ -143,10 +151,7 @@ const Hero: React.FC = () => {
   return (
     <Box id="back-to-top-anchor" height="100vh" position="relative">
       <Grid container style={{ height: "100%", position: "absolute", zIndex: -1, background: "black" }}>
-        <Grid item xs={6} className={classes.relative}>
-          <Box position="absolute" width="100%" height="100%" style={{ background: "white" }} zIndex="-1"></Box>
-        </Grid>
-        <Grid item xs={6} className={classes.relative}>
+        <Grid item xs={8} className={classes.relative}>
           {organizations.map((item) => (
             <Box
               key={item.id}
@@ -163,53 +168,58 @@ const Hero: React.FC = () => {
             position="absolute"
             width="100%"
             height="100%"
-            zIndex="-3"
+            zIndex="-1"
             style={{ backgroundImage: "url(img/hero.jpg)" }}
           ></Box>
-          {/* <Box
-            className={[classes.nth, isShown == "" ? "" : classes.hide].join(" ")}
-            position="absolute"
-            width="100%"
-            height="100%"
-            zIndex="-2"
-          ></Box> */}
+        </Grid>
+        <Grid item xs={4} className={classes.relative}>
+          <Box position="absolute" width="100%" height="100%" style={{ background: "white" }} zIndex="-3"></Box>
+
+          <Box className={classes.nth} position="absolute" width="100%" height="100%" zIndex="-2"></Box>
         </Grid>
       </Grid>
       <Container className={classes.container}>
         <Grid container className={classes.height}>
           <Grid item xs={5}>
-            <Box height="100%" width="100%" display="flex" flexDirection="column" alignItems="flex-start">
+            <Box
+              style={{ color: "white" }}
+              height="100%"
+              width="100%"
+              display="flex"
+              flexDirection="column"
+              alignItems="flex-start"
+            >
               <Typography variant="overline">Foreningen for studentene ved</Typography>
               <Fade duration={700} cascade triggerOnce direction="up">
-                <Typography variant="h3">
+                <Typography style={{ color: "white" }} variant="h2">
                   Industriell Økonomi <br />
                   og Teknologiledelse
                 </Typography>
                 <br />
-                <Button size="large" startIcon={<NavigateNextIcon />}>
+                <Button color="inherit" size="large" startIcon={<NavigateNextIcon />}>
                   Les om foreningen
                 </Button>
-                <Button size="large" startIcon={<NavigateNextIcon />}>
+                <Button color="inherit" size="large" startIcon={<NavigateNextIcon />}>
                   Arrangementer
                 </Button>
-                <Button size="large" startIcon={<NavigateNextIcon />}>
+                <Button color="inherit" size="large" startIcon={<NavigateNextIcon />}>
                   Book hytte
                 </Button>
                 <br />
                 <br />
                 <br />
               </Fade>
-              <Typography variant="overline" gutterBottom>
+              {/* <Typography variant="overline" gutterBottom>
                 Nyttige lenker
               </Typography>
               <IconButton>
                 <FacebookIcon />
-              </IconButton>
+              </IconButton> */}
             </Box>
           </Grid>
           <Grid item xs={7}>
             <Box height="100%" width="100%" display="flex" flexDirection="column" alignItems="flex-end">
-              <Typography variant="overline">Foreningene under hovedstyret</Typography>
+              <Typography variant="overline">Linjeforeningene våre</Typography>
               <Fade damping={0.1} cascade triggerOnce direction="up">
                 {organizations.map((item) => (
                   <a
