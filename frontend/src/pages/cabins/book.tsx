@@ -53,6 +53,7 @@ const BookPage: NextPage = () => {
     firstname: "",
     surname: "",
   });
+
   const [bookingData, setBookingData] = useState({ numberExternal: 0, numberIndok: 0 } as BookingData);
   const [pricePerNight, setPricePerNight] = useState(defaultPriceIndoker);
   const [contractData, setContractData] = useState({} as ContractProps);

@@ -4,7 +4,7 @@ import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import Facilities from "./Facilities";
-import { Container, Divider } from "@material-ui/core";
+import { Container, Divider, Typography } from "@material-ui/core";
 import { Card } from "@material-ui/core";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -42,40 +42,38 @@ const Summary = ({ from, to, cabins, price, nights }: SummaryProps): JSX.Element
   const classes = useStyles();
 
   return (
-    <Container>
+    <Container className={classes.root}>
       <Card className={classes.card}>
-        <div className={classes.root}>
-          <Grid container spacing={1}>
-            <Grid item xs={12}>
-              <Paper className={classes.paper}>
-                <h2>
-                  Hytte{cabins.length > 1 ? "r" : ""}: {cabins.map((cabin, i) => (i > 0 ? " og " + cabin : cabin))}
-                </h2>
-              </Paper>
-            </Grid>
-            <Divider className={classes.separator} />
-            <Grid item xs={6}>
-              <Paper className={classes.paper}>Fra: {from}</Paper>
-            </Grid>
-            <Grid item xs={6}>
-              <Paper className={classes.paper}>Til: {to}</Paper>
-            </Grid>
-            <Grid item xs={12}>
-              <Paper className={classes.paper}>
-                <Facilities />
-              </Paper>
-            </Grid>
-            <Grid item xs={12}>
-              <Paper className={classes.paper}>
-                {price} kr x {nights} dager
-              </Paper>
-            </Grid>
-            <Divider className={classes.lowSeparator} />
-            <Grid item xs={12}>
-              <Paper className={classes.paper}>Totalt: {price * nights}kr</Paper>
-            </Grid>
+        <Grid container spacing={1}>
+          <Grid item xs={12}>
+            <Paper className={classes.paper}>
+              <Typography variant="h4">
+                Hytte{cabins.length > 1 ? "r" : ""}: {cabins.map((cabin, i) => (i > 0 ? " og " + cabin : cabin))}
+              </Typography>
+            </Paper>
           </Grid>
-        </div>
+          <Divider className={classes.separator} />
+          <Grid item xs={6}>
+            <Paper className={classes.paper}>Fra: {from}</Paper>
+          </Grid>
+          <Grid item xs={6}>
+            <Paper className={classes.paper}>Til: {to}</Paper>
+          </Grid>
+          <Grid item xs={12}>
+            <Paper className={classes.paper}>
+              <Facilities />
+            </Paper>
+          </Grid>
+          <Grid item xs={12}>
+            <Paper className={classes.paper}>
+              {price} kr x {nights} dager
+            </Paper>
+          </Grid>
+          <Divider className={classes.lowSeparator} />
+          <Grid item xs={12}>
+            <Paper className={classes.paper}>Totalt: {price * nights}kr</Paper>
+          </Grid>
+        </Grid>
       </Card>
     </Container>
   );
