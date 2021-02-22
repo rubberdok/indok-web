@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import FilterButton from "./FilterButtons";
 import ListDocuments from "./listDocuments";
 import { ContentWrapper } from "./wrapper";
-import SliderSelector from "./slider";
+import YearSelector from "./yearSelector";
 import ListFeaturedDocuments from "./listFeaturedDocuments";
 
 const DocumentListView: React.FC = () => {
@@ -27,7 +27,7 @@ const DocumentListView: React.FC = () => {
         </Typography>
       </div>
       <ContentWrapper
-        style={{ marginLeft: "80px", marginRight: "80px", justifyContent: "space-evenly", paddingBottom: "50px" }}
+        style={{ marginLeft: "80px", marginRight: "80px", justifyContent: "space-evenly", paddingBottom: "8px" }}
       >
         <FilterButton
           typeFilters={typeFilters}
@@ -40,7 +40,7 @@ const DocumentListView: React.FC = () => {
         />
       </ContentWrapper>
       <ContentWrapper style={{ justifyContent: "center", marginBottom: "32px" }}>
-        <SliderSelector yearFilter={yearFilter} updateYearFilters={(value) => setYearFilter(value)} />
+        <YearSelector yearFilter={yearFilter} updateYearFilters={(value) => setYearFilter(value)} />
       </ContentWrapper>
       <ContentWrapper style={{ marginBottom: "16px" }}>
         <ListFeaturedDocuments
