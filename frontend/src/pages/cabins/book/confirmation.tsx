@@ -1,6 +1,5 @@
 import Layout from "@components/Layout";
-import Container from "@components/pages/cabins/Container";
-import { Typography } from "@material-ui/core";
+import { Container, Typography } from "@material-ui/core";
 import { NextPage } from "next";
 import Link from "next/link";
 import React from "react";
