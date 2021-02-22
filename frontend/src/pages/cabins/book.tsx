@@ -74,13 +74,16 @@ const BookPage: NextPage = () => {
 
   useEffect(() => {
     // update user data and inputvalues data to automatically fill in input fields
-    if (data?.user) {
-      setUserData(data.user);
+    if (data && data.user) {
+      // temporary solution to split user first name and last name
+      const fixedFirstname = data.user.firstName.split(" ").slice(0, -1).join(" ");
+      const fixedLastname = data.user.firstName.split(" ").slice(-1).join(" ");
+      setUserData({ ...data.user, firstName: fixedFirstname, lastName: fixedLastname });
 
       const updatedInputValues = {
         ...inputValues,
-        firstname: data.user.firstName,
-        surname: data.user.lastName,
+        firstname: fixedFirstname,
+        surname: fixedLastname,
         receiverEmail: data.user.email,
       };
 
@@ -210,8 +213,6 @@ const BookPage: NextPage = () => {
       setCheckError(checked ? "" : "Du må samtykke med retningslinjene før du booker.");
     }
   };
-
-  // const classes = useStyles();
 
   return (
     <>
