@@ -17,9 +17,6 @@ import React, { ChangeEvent } from "react";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    root: {
-      flexGrow: 1,
-    },
     formControl: {
       margin: theme.spacing(1),
       minWidth: "200px",
@@ -63,14 +60,14 @@ export const InputFields: React.FC<InputFieldsProps> = ({
     cabins?.length == 2 ? bjornenBeds + oksenBeds : cabins?.includes("Bjørnen") ? bjornenBeds : oksenBeds;
 
   return (
-    <Container className={classes.root}>
+    <Container>
       <Grid container spacing={5}>
         <Grid item xs={12} sm={6}>
           <TextField
             error={!validations?.firstname && validations?.triggerError}
             type="text"
             label="Fornavn"
-            value={userData?.lastName}
+            value={userData?.firstName}
             required
             name="firstname"
             onChange={(e) => onChange("firstname", e)}

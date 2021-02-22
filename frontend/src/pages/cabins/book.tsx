@@ -12,7 +12,7 @@ import { SEND_EMAIL } from "@graphql/cabins/mutations";
 import { QUERY_CABINS } from "@graphql/cabins/queries";
 import { BookingData, Cabin, ContractProps, InputFieldsEvent, InputValueTypes, Validations } from "@interfaces/cabins";
 import { User } from "@interfaces/users";
-import { Box, Button, Container, createStyles, Grid, makeStyles, Theme, Typography } from "@material-ui/core";
+import { Box, Button, Container, Grid, Typography } from "@material-ui/core";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
@@ -20,19 +20,6 @@ import { CREATE_CABIN } from "../../graphql/cabins/mutations";
 import useBookingRange from "../../hooks/cabins/useBookingRange";
 import HeaderComposition from "@components/pages/cabins/HeaderComposition";
 import { allValuesDefined, validateInputForm } from "@utils/helpers";
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      flexGrow: 1,
-    },
-    paper: {
-      padding: theme.spacing(2),
-      textAlign: "center",
-      color: theme.palette.text.secondary,
-    },
-  })
-);
 
 const BookPage: NextPage = () => {
   const defaultPriceIndoker = 1100;
@@ -224,7 +211,7 @@ const BookPage: NextPage = () => {
     }
   };
 
-  const classes = useStyles();
+  // const classes = useStyles();
 
   return (
     <>
@@ -232,7 +219,7 @@ const BookPage: NextPage = () => {
         <Container>
           <HeaderComposition headerText="Fullføring av booking" href={"/cabins"} />
           {isAvailable ? (
-            <Box className={classes.root}>
+            <Box>
               <Grid container spacing={2} direction="row">
                 <Grid item xs={12} md={6}>
                   <Grid container spacing={3} direction="column">

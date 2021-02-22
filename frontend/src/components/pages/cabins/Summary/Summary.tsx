@@ -9,9 +9,6 @@ import { Card } from "@material-ui/core";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    root: {
-      flexGrow: 1,
-    },
     paper: {
       padding: theme.spacing(2),
       textAlign: "center",
@@ -42,7 +39,7 @@ const Summary = ({ from, to, cabins, price, nights }: SummaryProps): JSX.Element
   const classes = useStyles();
 
   return (
-    <Container className={classes.root}>
+    <Container>
       <Card className={classes.card}>
         <Grid container spacing={1}>
           <Grid item xs={12}>

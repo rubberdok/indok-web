@@ -16,11 +16,9 @@ const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: "90%",
     flexGrow: 1,
     margin: "auto",
     borderRadius: "10px",
-    backgroundColor: theme.palette.background.paper,
   },
   img: {
     height: "100%",
@@ -63,53 +61,51 @@ const ImageSlider = ({ cabins }: ImageSliderProps): JSX.Element => {
   };
 
   return (
-    <Container>
+    <Container className={classes.root}>
       <CardC>
-        <div className={classes.root}>
-          <Paper square elevation={0}>
-            <Grid container direction="column" justify="center">
-              <Grid item>
-                <Typography variant="h4">{images[activeStep].label}</Typography>
-              </Grid>
-              <Grid item>
-                <Typography variant="overline">{images[activeStep].description}</Typography>
-              </Grid>
+        <Paper square elevation={0}>
+          <Grid container direction="column" justify="center">
+            <Grid item>
+              <Typography variant="h4">{images[activeStep].label}</Typography>
             </Grid>
-          </Paper>
-          <AutoPlaySwipeableViews
-            axis={theme.direction === "rtl" ? "x-reverse" : "x"}
-            index={activeStep}
-            onChangeIndex={handleStepChange}
-            enableMouseEvents
-          >
-            {images.map((step, index) => (
-              <div key={index}>
-                {Math.abs(activeStep - index) <= 2 ? (
-                  <img className={classes.img} src={step.imgPath} alt={step.label} />
-                ) : null}
-              </div>
-            ))}
-          </AutoPlaySwipeableViews>
-          <MobileStepper
-            steps={maxSteps}
-            position="static"
-            variant="text"
-            activeStep={activeStep}
-            className={classes.mobileStepper}
-            nextButton={
-              <Button size="small" onClick={handleNext} disabled={activeStep === maxSteps - 1}>
-                Next
-                {theme.direction === "rtl" ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
-              </Button>
-            }
-            backButton={
-              <Button size="small" onClick={handleBack} disabled={activeStep === 0}>
-                {theme.direction === "rtl" ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
-                Back
-              </Button>
-            }
-          />
-        </div>
+            <Grid item>
+              <Typography variant="overline">{images[activeStep].description}</Typography>
+            </Grid>
+          </Grid>
+        </Paper>
+        <AutoPlaySwipeableViews
+          axis={theme.direction === "rtl" ? "x-reverse" : "x"}
+          index={activeStep}
+          onChangeIndex={handleStepChange}
+          enableMouseEvents
+        >
+          {images.map((step, index) => (
+            <div key={index}>
+              {Math.abs(activeStep - index) <= 2 ? (
+                <img className={classes.img} src={step.imgPath} alt={step.label} />
+              ) : null}
+            </div>
+          ))}
+        </AutoPlaySwipeableViews>
+        <MobileStepper
+          steps={maxSteps}
+          position="static"
+          variant="text"
+          activeStep={activeStep}
+          className={classes.mobileStepper}
+          nextButton={
+            <Button size="small" onClick={handleNext} disabled={activeStep === maxSteps - 1}>
+              Next
+              {theme.direction === "rtl" ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
+            </Button>
+          }
+          backButton={
+            <Button size="small" onClick={handleBack} disabled={activeStep === 0}>
+              {theme.direction === "rtl" ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
+              Back
+            </Button>
+          }
+        />
       </CardC>
     </Container>
   );
