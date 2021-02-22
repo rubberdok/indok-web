@@ -1,25 +1,41 @@
+import { useQuery } from "@apollo/client";
 import Navbar from "@components/navbar/Navbar";
 import CabinAvailability from "@components/pages/cabins/CabinAvailability";
 import CabinDatePicker from "@components/pages/cabins/CabinDatePicker";
-import { Box, Grid, Step, StepLabel, Stepper, Button, Typography } from "@material-ui/core";
+import { QUERY_CABINS } from "@graphql/cabins/queries";
+import { Cabin } from "@interfaces/cabins";
+import { Box, Grid, Step, StepLabel, Stepper, Button, Typography, Paper } from "@material-ui/core";
 import { NextPage } from "next";
-import { useState } from "react";
-const steps = ["Velg hytte", "Velg innsjekk", "Velg utsjekk", "Betaling", "Kvittering"];
+import React, { useState } from "react";
+
+const steps = ["Velg hytte", "Innsjekk/Utsjekk", "Kontaktinfo", "Betaling", "Kvittering"];
 
 const CabinBookingPage: NextPage = () => {
   const [activeStep, setActiveStep] = useState(0);
+
+  // Velg Hytte
+  const [chosenCabins, setChosenCabins] = useState<Cabin[]>([]);
+
+  const cabinQuery = useQuery<{ cabins: Cabin[] }>(QUERY_CABINS);
 
   const getStepComponent = () => {
     switch (activeStep) {
       case 0:
         // Velg hytte
-        return <CabinAvailability />;
+        console.log("Velg Hytte");
+        return cabinQuery.data ? (
+          <CabinAvailability
+            allCabins={cabinQuery.data.cabins}
+            chosenCabins={chosenCabins}
+            setChosenCabins={setChosenCabins}
+          />
+        ) : null;
       case 1:
         // Velg innsjekk
         return <CabinDatePicker />;
       case 2:
-        // Velg utsjekk
-        return <CabinDatePicker />;
+        // Velg Kontaktinfo
+        return <Typography variant="h3">Kontaktinfo placeholder</Typography>;
       case 3:
         // Betaling
         return <Typography variant="h3">Betaling placeholder</Typography>;
@@ -34,9 +50,9 @@ const CabinBookingPage: NextPage = () => {
   return (
     <>
       <Navbar />
-      <Grid container direction="column" alignItems="center">
-        <Grid item>
-          <Box m={2}>
+      <Box m={10}>
+        <Grid container direction="column" alignItems="stretch">
+          <Grid item>
             <Stepper activeStep={activeStep}>
               {steps.map((label) => (
                 <Step key={label}>
@@ -44,24 +60,28 @@ const CabinBookingPage: NextPage = () => {
                 </Step>
               ))}
             </Stepper>
-          </Box>
+          </Grid>
+          <Grid item>
+            <Box m={2}>
+              <Paper>
+                <Box m={2}>{getStepComponent()}</Box>
+              </Paper>
+            </Box>
+          </Grid>
+          <Grid item container justify="space-between">
+            <Button variant="contained" disabled={activeStep === 0} onClick={() => setActiveStep((prev) => prev - 1)}>
+              Forrige
+            </Button>
+            <Button
+              variant="contained"
+              disabled={activeStep === steps.length - 1}
+              onClick={() => setActiveStep((prev) => prev + 1)}
+            >
+              Neste
+            </Button>
+          </Grid>
         </Grid>
-        <Grid item>
-          <Box m={2}>{getStepComponent()}</Box>
-        </Grid>
-        <Grid item container justify="space-around">
-          <Button variant="contained" disabled={activeStep === 0} onClick={() => setActiveStep((prev) => prev - 1)}>
-            Forrige
-          </Button>
-          <Button
-            variant="contained"
-            disabled={activeStep === steps.length - 1}
-            onClick={() => setActiveStep((prev) => prev + 1)}
-          >
-            Neste
-          </Button>
-        </Grid>
-      </Grid>
+      </Box>
     </>
   );
 };
