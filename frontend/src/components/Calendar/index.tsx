@@ -112,6 +112,7 @@ const Calendar: React.FC<CalendarProps> = ({ events, disabledDates, rangeChanged
       </MonthSelector>
       <TwoCalendarsContainer>
         <CalendarTable getRows={getRows} month={selectedMonth.clone()} />
+        <hr />
         <CalendarTable getRows={getRows} month={selectedMonth.clone().add(1, "month")} />
       </TwoCalendarsContainer>
     </>

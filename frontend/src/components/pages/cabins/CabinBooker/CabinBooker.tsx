@@ -19,7 +19,7 @@ interface BookingCabin extends Cabin {
 
 const CabinBooker: React.FC = () => {
   const router = useRouter();
-  const [activeStep, setActiveState] = useState<BookState>();
+  const [activeStep, setActiveState] = useState<BookState>("Choose Cabin");
   const { isAvailable, range, setRange, allBookingsQuery } = useBookingRange();
   const [unavailableDates, setUnavailableDates] = useState<string[]>([]);
   const cabinQuery = useQuery<{ cabins: Cabin[] }>(QUERY_CABINS);
