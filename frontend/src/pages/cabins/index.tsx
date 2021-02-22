@@ -10,6 +10,7 @@ import HotelIcon from "@material-ui/icons/Hotel";
 import RestaurantIcon from "@material-ui/icons/Restaurant";
 import { DirectionsBus, DirectionsCar, DirectionsTransit, LocalTaxi } from "@material-ui/icons";
 import React from "react";
+import ImageSlider from "@components/pages/cabins/ImageSlider/ImageSlider";
 
 const useStyles = makeStyles((theme: Theme) => ({
   hero: {
@@ -155,7 +156,9 @@ const CreateBookingPage: NextPage = () => {
                     </Typography>
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <Box>IMAGESLIDEER</Box>
+                    <Box>
+                      <ImageSlider cabins={["Bjørnen", "Oksen"]} />
+                    </Box>
                   </Grid>
                 </Grid>
               </Grid>

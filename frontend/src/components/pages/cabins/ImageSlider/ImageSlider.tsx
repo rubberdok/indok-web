@@ -9,14 +9,13 @@ import SwipeableViews from "react-swipeable-views";
 import { autoPlay } from "react-swipeable-views-utils";
 import { ImageSliderProps } from "@interfaces/cabins";
 import { Container, Grid, Typography } from "@material-ui/core";
-import CardC from "../CardC";
 import { imageData } from "./imageData";
 
 const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: "90%",
+    maxWidth: "80%",
     flexGrow: 1,
     margin: "auto",
     borderRadius: "10px",
@@ -27,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
     display: "block",
     maxWidth: "100%",
     overflow: "hidden",
-    width: "100%",
+    width: "99%",
     margin: "auto",
     borderRadius: "20px",
   },
@@ -63,9 +62,9 @@ const ImageSlider = ({ cabins }: ImageSliderProps): JSX.Element => {
   };
 
   return (
-    <Container>
-      <CardC>
-        <div className={classes.root}>
+    <Container className={classes.root}>
+      <Grid container direction="column">
+        <Grid item>
           <Paper square elevation={0}>
             <Grid container direction="column" justify="center">
               <Grid item>
@@ -76,6 +75,8 @@ const ImageSlider = ({ cabins }: ImageSliderProps): JSX.Element => {
               </Grid>
             </Grid>
           </Paper>
+        </Grid>
+        <Grid item>
           <AutoPlaySwipeableViews
             axis={theme.direction === "rtl" ? "x-reverse" : "x"}
             index={activeStep}
@@ -109,8 +110,8 @@ const ImageSlider = ({ cabins }: ImageSliderProps): JSX.Element => {
               </Button>
             }
           />
-        </div>
-      </CardC>
+        </Grid>
+      </Grid>
     </Container>
   );
 };
