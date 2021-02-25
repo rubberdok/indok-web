@@ -10,18 +10,24 @@ const TextField: React.FC<{
 }> = ({ title, onChange, placeholder, size, value, disabled }) => {
   return (
     <>
-      {title && <label>{title}</label>}
-      <br />
+      {title && (
+        <>
+          <label>{title}</label>
+          <br />
+        </>
+      )}
       {size ? (
-        <textarea
-          placeholder={placeholder}
-          rows={size === "short" ? 1 : 5}
-          cols={40}
-          onChange={onChange}
-          style={{ resize: "none" }}
-          value={value}
-          disabled={disabled}
-        />
+        <div>
+          <textarea
+            placeholder={placeholder}
+            rows={size === "short" ? 1 : 5}
+            cols={40}
+            onChange={onChange}
+            style={{ resize: "none" }}
+            value={value}
+            disabled={disabled}
+          />
+        </div>
       ) : (
         <input type="text" placeholder={placeholder} disabled={disabled} onChange={onChange} value={value} />
       )}

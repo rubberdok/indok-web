@@ -16,7 +16,6 @@ const QuestionTypePreview: React.FC<{
         <Choice
           options={question.offeredAnswers.map((offeredAnswer) => offeredAnswer.answer)}
           name={question.id}
-          title={question.question}
           radio={true}
           disabled
         />
@@ -26,13 +25,13 @@ const QuestionTypePreview: React.FC<{
         <Choice
           options={question.offeredAnswers.map((offeredAnswer) => offeredAnswer.answer)}
           name={question.id}
-          title={question.question}
-          radio={true}
+          radio={false}
           disabled
         />
       );
     default:
-      return <TextField title={question.question} disabled />;
+      // TODO: change implementation of question types to avoid failsafes like this
+      return <p>Error in question</p>;
   }
 };
 

@@ -2,7 +2,6 @@ import { Question, QuestionType, QuestionVariables } from "@interfaces/surveys";
 import { MutationFunctionOptions, FetchResult } from "@apollo/client";
 import TextField from "@components/ui/formComponents/textfield";
 import Dropdown from "@components/ui/formComponents/dropdown";
-import Choice from "@components/ui/formComponents/choice";
 import { useState } from "react";
 import QuestionTypePreview from "@components/pages/surveys/surveyCreation/questionTypePreview";
 
@@ -80,7 +79,9 @@ const EditQuestion: React.FC<{
           });
         }}
       />
-      {question.questionType.name === "Checkboxes" || question.questionType.name === "Multiple Choice" ? (
+      {question.questionType.name === "Checkboxes" ||
+      question.questionType.name === "Multiple choice" ||
+      question.questionType.name === "Dropdown" ? (
         <ul>
           {question.offeredAnswers.map((offeredAnswer, index) => (
             <li key={index}>
@@ -97,14 +98,28 @@ const EditQuestion: React.FC<{
                     setQuestion({
                       ...question,
                       offeredAnswers: question.offeredAnswers.map((oldAnswer) =>
-                        oldAnswer.id === offeredAnswer.id ? { ...oldAnswer, answer: e.target.value } : oldAnswer
+                        oldAnswer === offeredAnswer ? { ...oldAnswer, answer: e.target.value } : oldAnswer
                       ),
                     });
+                    console.log(question.offeredAnswers);
                   }}
                 />
               </label>
             </li>
           ))}
+          <li key={question.offeredAnswers?.length ?? 0}>
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                setQuestion({
+                  ...question,
+                  offeredAnswers: [...question.offeredAnswers, { id: "", answer: "" }],
+                });
+              }}
+            >
+              Nytt svaralternativ
+            </button>
+          </li>
         </ul>
       ) : (
         <QuestionTypePreview question={question} />

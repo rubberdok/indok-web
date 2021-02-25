@@ -1,40 +1,49 @@
 import { Answer } from "@interfaces/surveys";
 import TextField from "@components/ui/formComponents/textfield";
+import Choice from "@components/ui/formComponents/choice";
 
 const QuestionAnswer: React.FC<{
   answer: Answer;
   setAnswer: (answer: Answer) => void;
 }> = ({ answer, setAnswer }) => {
-  const questionInput = () => {
-    switch (answer.question.questionType.name) {
-      case "Short answer":
-        return (
-          <TextField
-            size="short"
-            onChange={(e) => {
-              e.preventDefault();
-              setAnswer({ ...answer, answer: e.target.value });
-            }}
-          />
-        );
-      case "Paragraph":
-        return (
-          <TextField
-            size="short"
-            onChange={(e) => {
-              e.preventDefault();
-              setAnswer({ ...answer, answer: e.target.value });
-            }}
-          />
-        );
-      default:
-        return <p>Question type error</p>;
-    }
-  };
   return (
     <>
-      {answer.question.question}
-      {questionInput()}
+      {answer.question.questionType.name === "Short answer" ? (
+        <TextField
+          title={answer.question.question}
+          size="short"
+          onChange={(e) => {
+            e.preventDefault();
+            setAnswer({ ...answer, answer: e.target.value });
+          }}
+        />
+      ) : answer.question.questionType.name === "Paragraph" ? (
+        <TextField
+          title={answer.question.question}
+          size="long"
+          onChange={(e) => {
+            e.preventDefault();
+            setAnswer({ ...answer, answer: e.target.value });
+          }}
+        />
+      ) : answer.question.questionType.name === "Multiple choice" ? (
+        <Choice
+          title={answer.question.question}
+          options={answer.question.offeredAnswers.map((offeredAnswer) => offeredAnswer.answer)}
+          name={answer.question.id}
+          radio={true}
+        />
+      ) : answer.question.questionType.name === "Checkboxes" ? (
+        <Choice
+          title={answer.question.question}
+          options={answer.question.offeredAnswers.map((offeredAnswer) => offeredAnswer.answer)}
+          name={answer.question.id}
+          radio={false}
+        />
+      ) : (
+        // TODO: change implementation of question types to avoid failsafes like this
+        <p>Error in question</p>
+      )}
     </>
   );
 };
