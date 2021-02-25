@@ -26,7 +26,7 @@ const CalendarTable: React.FC<Props> = ({ getRows, month }) => {
       <Grid container component="thead">
         <Grid item container xs component="tr">
           {DAYS_IN_WEEK.map((dow) => (
-            <Grid item xs component="th" key={dow} className={classes.weekday}>
+            <Grid item xs component="th" key={dow} className={classes.weekday} wrap="nowrap">
               {dow}
             </Grid>
           ))}
@@ -34,7 +34,7 @@ const CalendarTable: React.FC<Props> = ({ getRows, month }) => {
       </Grid>
       <Grid container component="tbody" direction="column">
         {getRows(month).map((row, index) => (
-          <Grid item container xs component="tr" key={`row-${index}`}>
+          <Grid item container xs component="tr" key={`row-${index}`} wrap="nowrap">
             {row}
           </Grid>
         ))}

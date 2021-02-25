@@ -22,7 +22,6 @@ const CabinBookingPage: NextPage = () => {
     switch (activeStep) {
       case 0:
         // Velg hytte
-        console.log("Velg Hytte");
         return cabinQuery.data ? (
           <CabinAvailability
             allCabins={cabinQuery.data.cabins}
@@ -51,7 +50,7 @@ const CabinBookingPage: NextPage = () => {
     <>
       <Navbar />
       <Box m={10}>
-        <Grid container direction="column" alignItems="stretch">
+        <Grid container direction="column" justify="center" spacing={1}>
           <Grid item>
             <Stepper activeStep={activeStep}>
               {steps.map((label) => (
@@ -62,11 +61,9 @@ const CabinBookingPage: NextPage = () => {
             </Stepper>
           </Grid>
           <Grid item>
-            <Box m={2}>
-              <Paper>
-                <Box m={2}>{getStepComponent()}</Box>
-              </Paper>
-            </Box>
+            <Paper>
+              <Box p={2}>{getStepComponent()}</Box>
+            </Paper>
           </Grid>
           <Grid item container justify="space-between">
             <Button variant="contained" disabled={activeStep === 0} onClick={() => setActiveStep((prev) => prev - 1)}>

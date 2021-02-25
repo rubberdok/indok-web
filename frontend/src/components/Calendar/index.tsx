@@ -101,7 +101,7 @@ const Calendar: React.FC<CalendarProps> = ({ disabledDates, rangeChanged, initSe
   }, [selectedDay]);
 
   return (
-    <Grid container direction="column" alignItems="stretch">
+    <Grid container direction="column">
       <Grid item container alignItems="center" justify="space-between" xs>
         <IconButton onClick={() => onChangeMonth(-1)}>
           <NavigateBeforeIcon />
