@@ -13,14 +13,8 @@ interface CheckProps {
 
 const useStyles = makeStyles(() =>
   createStyles({
-    root: {
-      flexGrow: 1,
-    },
     redBorder: {
       border: "2px solid red",
-    },
-    wrapper: {
-      padding: "5px",
     },
     labelText: {
       padding: "5px",
@@ -57,7 +51,7 @@ const CheckBox: React.FC<CheckProps> = ({ onClick, errorMsg, checkable, contract
 
   return (
     <>
-      <Box className={classes.wrapper}>
+      <Box padding="5px">
         <FormControlLabel
           control={
             <Checkbox

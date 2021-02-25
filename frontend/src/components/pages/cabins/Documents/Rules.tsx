@@ -4,9 +4,6 @@ import HeaderComposition from "../HeaderComposition";
 
 const useStyles = makeStyles(() =>
   createStyles({
-    root: {
-      flexGrow: 1,
-    },
     logo: {
       margin: "auto",
       width: "30vh",
