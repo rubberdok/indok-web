@@ -26,7 +26,7 @@ const BookPage: NextPage = () => {
   const defaultPriceExternal = 2700;
 
   const temporarilyDisableSubmitting = false;
-  const temporarilyDisableBooking = true;
+  const temporarilyDisableBooking = false;
 
   const router = useRouter();
   const urlData = router.query;
@@ -74,10 +74,11 @@ const BookPage: NextPage = () => {
 
   useEffect(() => {
     // update user data and inputvalues data to automatically fill in input fields
-    if (data && data.user) {
-      // temporary solution to split user first name and last name
+    if (data?.user) {
+      // temporary solution to split user first name and last name, set fixedlastname to empty string if equal to fixedFirstname
       const fixedFirstname = data.user.firstName.split(" ").slice(0, -1).join(" ");
-      const fixedLastname = data.user.firstName.split(" ").slice(-1).join(" ");
+      let fixedLastname = data.user.firstName.split(" ").slice(-1).join(" ");
+      fixedLastname = fixedLastname == fixedFirstname ? "" : fixedLastname;
       setUserData({ ...data.user, firstName: fixedFirstname, lastName: fixedLastname });
 
       const updatedInputValues = {
