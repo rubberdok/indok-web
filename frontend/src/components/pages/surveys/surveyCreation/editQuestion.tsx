@@ -69,7 +69,7 @@ const EditQuestion: React.FC<{
         options={questionTypes.map((type) => ({
           text: type.name,
           value: type.id,
-          ...(type === question.questionType && { selected: true }),
+          selected: type === question.questionType,
         }))}
         onChange={(e) => {
           e.preventDefault();
