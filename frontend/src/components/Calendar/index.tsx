@@ -1,9 +1,12 @@
+import { IconButton, Grid, Typography } from "@material-ui/core";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import CalendarTable from "./CalendarTable";
 import { DATE_FORMAT } from "./constants";
-import { getDateRange, previousMonthDays, rangeLength } from "./helpers";
-import { Day, DayCell, MonthPickButton, MonthSelector, TwoCalendarsContainer } from "./styles";
+import { getDateRange, nextMonthDays, previousMonthDays, rangeLength } from "./helpers";
+import NavigateNextIcon from "@material-ui/icons/NavigateNext";
+import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore";
+import DayCell from "./DayCell";
 
 export interface CalendarEvent {
   date: string;
@@ -29,33 +32,31 @@ const Calendar: React.FC<CalendarProps> = ({ disabledDates, rangeChanged, initSe
     for (let i = 1; i <= month.daysInMonth(); i++) {
       const date = dayjs(month).set("date", i);
       daysOfMonth.push(
-        <DayCell
-          onMouseOver={() =>
-            isRangeFreezed || disableRange
-              ? null
-              : setHoverRange(getDateRange(selectedDay.format(DATE_FORMAT), date.format(DATE_FORMAT)))
-          }
-          isInHoverRange={hoverRange.includes(date.format(DATE_FORMAT))}
-          isSelected={
-            date.isSame(selectedDay, "day") ||
-            (hoverRange[hoverRange.length - 1] !== undefined && date.isSame(hoverRange[hoverRange.length - 1], "day"))
-          }
-          onClick={() => handleDateClicked(date)}
-          key={date.format(DATE_FORMAT)}
-          isDisabled={date.isBefore(today, "day") || disabledDates?.includes(date.format(DATE_FORMAT))}
-        >
-          <Day>{i}</Day>
-        </DayCell>
+        <Grid item xs component="td" key={date.format(DATE_FORMAT)}>
+          <DayCell
+            onMouseOver={() =>
+              isRangeFreezed || disableRange
+                ? null
+                : setHoverRange(getDateRange(selectedDay.format(DATE_FORMAT), date.format(DATE_FORMAT)))
+            }
+            isInHoverRange={hoverRange.includes(date.format(DATE_FORMAT))}
+            isSelected={
+              date.isSame(selectedDay, "day") ||
+              (hoverRange[hoverRange.length - 1] !== undefined && date.isSame(hoverRange[hoverRange.length - 1], "day"))
+            }
+            onClick={() => handleDateClicked(date)}
+            isDisabled={date.isBefore(today, "day") || disabledDates?.includes(date.format(DATE_FORMAT))}
+          >
+            {i}
+          </DayCell>
+        </Grid>
       );
     }
     return daysOfMonth;
   };
 
   const getRows = (month: dayjs.Dayjs) => {
-    const slots: JSX.Element[] = [
-      ...previousMonthDays(month, selectedDay, handleDateClicked),
-      ...getDaysOfMonth(month),
-    ];
+    const slots: JSX.Element[] = [...previousMonthDays(month), ...getDaysOfMonth(month), ...nextMonthDays(month)];
     let cells: JSX.Element[];
     return slots.reduce(
       (prev: JSX.Element[][], curr, index) => {
@@ -100,15 +101,20 @@ const Calendar: React.FC<CalendarProps> = ({ disabledDates, rangeChanged, initSe
   }, [selectedDay]);
 
   return (
-    <>
-      <MonthSelector>
-        <MonthPickButton onClick={() => onChangeMonth(-1)}>{"<"}</MonthPickButton>
-        <MonthPickButton onClick={() => onChangeMonth(1)}>{">"}</MonthPickButton>
-      </MonthSelector>
-      <TwoCalendarsContainer>
+    <Grid container direction="column" alignItems="stretch">
+      <Grid item container alignItems="center" justify="space-between" xs>
+        <IconButton onClick={() => onChangeMonth(-1)}>
+          <NavigateBeforeIcon />
+        </IconButton>
+        <Typography variant="h6">{`${selectedMonth.format("MMMM")} - ${selectedMonth.format("YYYY")}`}</Typography>
+        <IconButton onClick={() => onChangeMonth(1)}>
+          <NavigateNextIcon />
+        </IconButton>
+      </Grid>
+      <Grid item>
         <CalendarTable getRows={getRows} month={selectedMonth.clone()} />
-      </TwoCalendarsContainer>
-    </>
+      </Grid>
+    </Grid>
   );
 };
 

@@ -1,10 +1,11 @@
-import { Day, DayCell } from "./styles";
+import DayCell from "./DayCell";
 import { DATE_FORMAT } from "./constants";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import weekday from "dayjs/plugin/weekday";
 import "dayjs/locale/nb";
+import { Grid } from "@material-ui/core";
 
 dayjs.locale("nb");
 dayjs.extend(duration);
@@ -25,12 +26,7 @@ export const rangeLength = (startDay: string, endDay: string): number => {
   return dayjs(endDay).diff(dayjs(startDay), "days") + 1;
 };
 
-export const previousMonthDays = (
-  month: dayjs.Dayjs,
-  selectedDay: dayjs.Dayjs,
-  dateClicked: (date: dayjs.Dayjs) => void
-): JSX.Element[] => {
-  const visible = false;
+export const previousMonthDays = (month: dayjs.Dayjs): JSX.Element[] => {
   const previousDays: JSX.Element[] = [];
   const firstOfMonth = month.startOf("month");
   const mondayIndex = 0;
@@ -42,31 +38,16 @@ export const previousMonthDays = (
     for (let i = 0; i < dayDifference; i++) {
       const date = firstOfMonth.subtract(dayDifference - i, "day");
       previousDays.push(
-        visible ? (
-          <DayCell
-            isSelected={date.isSame(selectedDay, "day")}
-            onClick={() => dateClicked(date)}
-            isDisabled={true}
-            key={`prev-${date.format(DATE_FORMAT)}`}
-          >
-            <Day>{date.format("D")}</Day>
-          </DayCell>
-        ) : (
-          <DayCell isHidden key={`prev-${date.format(DATE_FORMAT)}`}>
-            <Day></Day>
-          </DayCell>
-        )
+        <Grid item xs component="td" key={`prev-${date.format(DATE_FORMAT)}`}>
+          <DayCell isHidden></DayCell>
+        </Grid>
       );
     }
   }
   return previousDays;
 };
 
-export const nextMonthDays = (
-  month: dayjs.Dayjs,
-  selectedDay: dayjs.Dayjs,
-  dateClicked: (date: dayjs.Dayjs) => void
-): JSX.Element[] => {
+export const nextMonthDays = (month: dayjs.Dayjs): JSX.Element[] => {
   const nextDays: JSX.Element[] = [];
   const endOfMonth = month.endOf("month");
   const sundayIndex = 6;
@@ -79,14 +60,9 @@ export const nextMonthDays = (
     for (let i = 0; i < dayDifference; i++) {
       const date = dayjs(endOfMonth).add(i + 1, "day");
       nextDays.push(
-        <DayCell
-          isSelected={date.isSame(selectedDay, "day")}
-          onClick={() => dateClicked(date)}
-          isDisabled={true}
-          key={`${date.format(DATE_FORMAT)}`}
-        >
-          <Day>{date.format("D")}</Day>
-        </DayCell>
+        <Grid item xs component="td" key={`next-${date.format(DATE_FORMAT)}`}>
+          <DayCell isHidden></DayCell>
+        </Grid>
       );
     }
   }
