@@ -8,8 +8,7 @@ import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import SwipeableViews from "react-swipeable-views";
 import { autoPlay } from "react-swipeable-views-utils";
 import { ImageSliderProps } from "@interfaces/cabins";
-import { Grid, Typography } from "@material-ui/core";
-import CardC from "../CardC";
+import { Box, Grid, Typography } from "@material-ui/core";
 import { imageData } from "./imageData";
 
 const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
@@ -20,8 +19,7 @@ const useStyles = makeStyles((theme) => ({
     display: "block",
     maxWidth: "100%",
     overflow: "hidden",
-    width: "100%",
-    margin: "auto",
+    width: "99%",
     borderRadius: "20px",
   },
   mobileStepper: {
@@ -56,9 +54,9 @@ const ImageSlider = ({ cabins }: ImageSliderProps): JSX.Element => {
   };
 
   return (
-    <CardC>
+    <Box>
       <Paper square elevation={0}>
-        <Grid container direction="column" justify="center">
+        <Grid container direction="column" alignItems="center" justify="center">
           <Grid item>
             <Typography variant="h4">{images[activeStep].label}</Typography>
           </Grid>
@@ -100,7 +98,7 @@ const ImageSlider = ({ cabins }: ImageSliderProps): JSX.Element => {
           </Button>
         }
       />
-    </CardC>
+    </Box>
   );
 };
 
