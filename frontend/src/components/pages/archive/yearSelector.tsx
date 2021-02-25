@@ -77,8 +77,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface YearSelectorProps {
-  yearFilter: string;
-  updateYearFilters: (value: string) => void;
+  yearFilter: number | null;
+  updateYearFilters: (value: number | null) => void;
 }
 
 const YearSelector: React.FC<YearSelectorProps> = ({ yearFilter, updateYearFilters }) => {
@@ -95,7 +95,7 @@ const YearSelector: React.FC<YearSelectorProps> = ({ yearFilter, updateYearFilte
             icon: classes.icon,
           }}
           value={yearFilter}
-          onChange={(event) => updateYearFilters(event.target.value)}
+          onChange={(event) => updateYearFilters(parseInt(event.target.value))}
           name="Årstall"
           inputProps={{ "aria-label": "without label" }}
           MenuProps={{ classes: { paper: classes.selectPaper } }}
