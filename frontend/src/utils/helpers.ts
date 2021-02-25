@@ -3,7 +3,7 @@ export const generateQueryString = (values: Record<string, any>): string => {
 
   Object.keys(values).forEach((name) => {
     if (values[name]) {
-      const value = typeof values[name] === "object" ? JSON.stringify(values[name]) : String(values[name]);
+      const value = values[name];
       valueList.push(`${name}=${value}`);
     }
   });
