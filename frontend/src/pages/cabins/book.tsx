@@ -1,66 +1,64 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { getRangeLength } from "@components/Calendar";
-import Navbar from "@components/navbar/Navbar";
-import Button from "@components/pages/cabins/Button";
-import CheckBox from "@components/pages/cabins/Checkbox";
-import { HeaderComposition } from "@components/pages/cabins/HeaderCompositon";
-import ImageSlider from "@components/pages/cabins/ImageSlider";
-import { InputFields } from "@components/pages/cabins/InputFields";
+import Layout from "@components/Layout";
+import CardC from "@components/pages/cabins/CardC";
+import CheckBox from "@components/pages/cabins/InputFields/Checkbox";
+import { InputFields } from "@components/pages/cabins/InputFields/InputFields";
+import ImageSlider from "@components/pages/cabins/ImageSlider/ImageSlider";
+import PriceSummary from "@components/pages/cabins/Summary/PriceSummary";
 import Summary from "@components/pages/cabins/Summary/Summary";
-import { ArrowIcon } from "@components/ui/ArrowIcon";
+import { GET_USER } from "@graphql/auth/queries";
 import { SEND_EMAIL } from "@graphql/cabins/mutations";
 import { QUERY_CABINS } from "@graphql/cabins/queries";
-import { Cabin, ContractProps } from "@interfaces/cabins";
-import { Typography } from "@material-ui/core";
-import { Composition } from "atomic-layout";
+import { BookingData, Cabin, ContractProps, InputFieldsEvent, InputValueTypes, Validations } from "@interfaces/cabins";
+import { User } from "@interfaces/users";
+import { Box, Button, Container, createStyles, Grid, makeStyles, Theme, Typography } from "@material-ui/core";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { CREATE_BOOKING } from "../../graphql/cabins/mutations";
+import { CREATE_CABIN } from "../../graphql/cabins/mutations";
 import useBookingRange from "../../hooks/cabins/useBookingRange";
+import HeaderComposition from "@components/pages/cabins/HeaderComposition";
+import { allValuesDefined, validateInputForm } from "@utils/helpers";
 
-interface BookingData {
-  firstname: string;
-  surname: string;
-  receiverEmail: string;
-  phone: number;
-  bookFrom: string;
-  bookTo: string;
-  cabins: string[];
-  price: number;
-}
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      flexGrow: 1,
+    },
+    paper: {
+      padding: theme.spacing(2),
+      textAlign: "center",
+      color: theme.palette.text.secondary,
+    },
+  })
+);
 
 const BookPage: NextPage = () => {
-  const firstnameRef = React.createRef<HTMLInputElement>();
-  const surnameRef = React.createRef<HTMLInputElement>();
-  const emailRef = React.createRef<HTMLInputElement>();
-  const phoneRef = React.createRef<HTMLInputElement>();
-  const inputRefs = [firstnameRef, surnameRef, emailRef, phoneRef];
+  const defaultPriceIndoker = 1100;
+  const defaultPriceExternal = 2700;
 
   const temporarilyDisableSubmitting = false;
   const temporarilyDisableBooking = true;
 
-  const pricePerNight = 1000;
-
-  const templateDesktop = `
-        sum slider
-        inputs slider
-        / 1fr 1fr
-    `;
-
-  const templatePhone = `
-        slider
-        sum
-        inputs
-    `;
-
   const router = useRouter();
-  const data = router.query;
+  const urlData = router.query;
 
+  // default 0 for numberIndok and numberExternal
+  const [inputValues, setInputValues] = useState<InputValueTypes>({
+    numberIndok: 0,
+    numberExternal: 0,
+    phone: "",
+    receiverEmail: "",
+    firstname: "",
+    surname: "",
+  });
+
+  const [bookingData, setBookingData] = useState({ numberExternal: 0, numberIndok: 0 } as BookingData);
+  const [pricePerNight, setPricePerNight] = useState(defaultPriceIndoker);
   const [contractData, setContractData] = useState({} as ContractProps);
-  const [bookingData, setBookingData] = useState({} as BookingData);
   const [rangeLength, setRangeLength] = useState(0);
-  const [createBooking] = useMutation(CREATE_BOOKING);
+  const [createBooking] = useMutation(CREATE_CABIN);
   const [sendEmail] = useMutation(SEND_EMAIL);
   const [errorMessage, setErrorMessage] = useState("");
   const [checked, setChecked] = useState(false);
@@ -69,60 +67,104 @@ const BookPage: NextPage = () => {
   const { isAvailable, range, setRange, allBookingsQuery } = useBookingRange();
   const cabinQuery = useQuery<{ cabins: Cabin[] }>(QUERY_CABINS);
   const [cabinIds, setCabinIDs] = useState<number[]>();
+  const { data } = useQuery<{ user: User }>(GET_USER);
+  const [userData, setUserData] = useState<User>();
+  const [validations, setValidations] = useState<Validations>();
+  const [isInputValidated, setIsInputValidated] = useState(false);
 
-  const handleClick = (isChecked: boolean) => {
+  const handleCheckboxClick = (isChecked: boolean) => {
     setChecked(isChecked);
     setCheckError("");
   };
 
   useEffect(() => {
-    if (cabinIds) {
-      bookingData.cabins = cabinQuery.data?.cabins
-        .filter((cabin) => cabinIds.includes(parseInt(cabin.id)))
-        .map((cabin) => cabin.name) as string[];
+    // exclude triggerError when validating inputs
+    if (validations) {
+      const { triggerError, ...evaluated } = validations;
+      setIsInputValidated(Object.values(evaluated).every((val) => val));
+    }
+  }, [validations]);
+
+  useEffect(() => {
+    // update user data and inputvalues data to automatically fill in input fields
+    if (data?.user) {
+      setUserData(data.user);
+
+      const updatedInputValues = {
+        ...inputValues,
+        firstname: data.user.firstName,
+        surname: data.user.lastName,
+        receiverEmail: data.user.email,
+      };
+
+      setInputValues(updatedInputValues);
+      setBookingData({ ...bookingData, ...updatedInputValues });
+    }
+  }, [data]);
+
+  useEffect(() => {
+    // update validations on input change
+    if (allValuesDefined(inputValues) && Object.values(inputValues).length > 2) {
+      setValidations(validateInputForm(inputValues));
+    }
+  }, [inputValues]);
+
+  useEffect(() => {
+    if (cabinIds && cabinQuery.data) {
+      setBookingData({
+        ...bookingData,
+        cabins: cabinQuery.data.cabins
+          .filter((cabin) => cabinIds.includes(parseInt(cabin.id)))
+          .map((cabin) => cabin.name) as string[],
+      });
     }
   }, [cabinQuery.data, cabinIds]);
 
   useEffect(() => {
-    if (data.fromDate && data.toDate && data.cabins) {
-      const fromDate = data.fromDate as string;
+    if (urlData.fromDate && urlData.toDate && urlData.cabins) {
+      const fromDate = urlData.fromDate as string;
       const fromDateParsed = fromDate.split("/").reverse().join("-");
-      const toDate = data.toDate as string;
+      const toDate = urlData.toDate as string;
       const toDateParsed = toDate.split("/").reverse().join("-");
       setRange(fromDateParsed, toDateParsed);
       setRangeLength(getRangeLength(fromDate, toDate));
-      setCabinIDs((data.cabins as string).split("_").map((id) => parseInt(id)));
+      setCabinIDs((urlData.cabins as string).split("_").map((id) => parseInt(id)));
     }
-  }, [data]);
+  }, [urlData]);
 
   useEffect(() => {
     setErrorMessage(isAvailable ? "" : "Den valgte perioden er ikke tilgjengelig.");
   }, [isAvailable]);
 
-  const handleInputChange = () => {
-    // update checkbox
-    const checklist = inputRefs.filter((ref) => {
-      if (ref.current?.value) {
-        if (ref.current?.value.length > 0) {
-          return 1;
-        }
+  const handleInputChange = (name: string, event: InputFieldsEvent) => {
+    // update input data
+    const updatedInput = { ...inputValues, [name]: event.target.value };
+
+    setValidations(validateInputForm(updatedInput));
+    setInputValues(updatedInput);
+    setPricePerNight(
+      updatedInput.numberIndok >= updatedInput.numberExternal ? defaultPriceIndoker : defaultPriceExternal
+    );
+
+    // update checklist and checkable
+    const checklist = Object.values(updatedInput).filter((value) => {
+      if (value != null) {
+        return 1;
       }
     });
 
-    setCheckable(checklist.length == 4 ? true : false);
+    setCheckable(checklist.length == 6 ? true : false);
 
-    // update input data
+    // update bookingData with updated input data
     const updatedBookingData: BookingData = {
-      firstname: firstnameRef.current?.value as string,
-      surname: surnameRef.current?.value as string,
-      phone: parseInt(phoneRef.current?.value as string),
-      receiverEmail: emailRef.current?.value as string,
-      bookFrom: range.fromDate as string,
-      bookTo: range.toDate as string,
-      cabins: bookingData.cabins,
-      price: rangeLength * pricePerNight,
+      ...updatedInput,
+      ...{
+        bookFrom: range.fromDate as string,
+        bookTo: range.toDate as string,
+        cabins: bookingData.cabins,
+        price: rangeLength * pricePerNight,
+      },
     };
-
     setBookingData(updatedBookingData);
 
     // update contract data state
@@ -134,8 +176,17 @@ const BookPage: NextPage = () => {
       cabins: updatedBookingData.cabins,
       price: updatedBookingData.price,
     };
-
     setContractData({ contractData: updatedContractData });
+
+    const updatedUserData = {
+      firstName: updatedInput.firstname,
+      email: updatedInput.receiverEmail,
+      lastName: updatedInput.surname,
+    };
+
+    if (userData) {
+      setUserData({ ...userData, ...updatedUserData });
+    }
   };
 
   const handleSubmit = (e: React.FormEvent<EventTarget>) => {
@@ -144,8 +195,13 @@ const BookPage: NextPage = () => {
       return;
     }
 
+    // trigger possible error messages
+    if (validations) {
+      setValidations({ ...validations, triggerError: true });
+    }
+
     // create booking and send email, redirect to confirmation page
-    if (checked && isAvailable) {
+    if (checked && isAvailable && isInputValidated) {
       // only create booking and send mail if allowed
       if (!temporarilyDisableBooking) {
         createBooking({
@@ -168,49 +224,94 @@ const BookPage: NextPage = () => {
     }
   };
 
+  const classes = useStyles();
+
   return (
     <>
-      <Navbar></Navbar>
-      <HeaderComposition headerText="Fullføring av booking">
-        <ArrowIcon direction={"l"} size={35} href="/cabins"></ArrowIcon>
-      </HeaderComposition>
-      {isAvailable ? (
-        <Composition templateXs={templatePhone} templateLg={templateDesktop} padding={15} gutter={15} gutterLg={40}>
-          {({ Inputs, Sum, Slider }) => (
-            <>
-              <Inputs>
-                <InputFields refs={inputRefs} onChange={handleInputChange}>
-                  <CheckBox
-                    checked={checked}
-                    onClick={handleClick}
-                    errorMsg={checkerror}
-                    checkable={checkable}
-                    contractData={contractData}
-                  ></CheckBox>
-                  <Button url="#" onClick={(e) => handleSubmit(e)} disabled={temporarilyDisableSubmitting}>
-                    Gå til betaling
-                  </Button>
-                  <Typography>OBS: Det er dessverre ikke mulig å booke via nettsiden ennå.</Typography>
-                </InputFields>
-              </Inputs>
-              <Sum>
-                <Summary
-                  from={range.fromDate ? range.fromDate : ""}
-                  to={range.toDate ? range.toDate : ""}
-                  cabins={bookingData.cabins ? bookingData.cabins : [""]}
-                  price={pricePerNight}
-                  nights={rangeLength}
-                ></Summary>
-              </Sum>
-              <Slider>
-                <ImageSlider cabin="Bjørnen"></ImageSlider>
-              </Slider>
-            </>
+      <Layout>
+        <Container>
+          <HeaderComposition headerText="Fullføring av booking" href={"/cabins"} />
+          {isAvailable ? (
+            <Box className={classes.root}>
+              <Grid container spacing={2} direction="row">
+                <Grid item xs={12} md={6}>
+                  <Grid container spacing={3} direction="column">
+                    <Grid item>
+                      <Summary
+                        from={range.fromDate ? range.fromDate : ""}
+                        to={range.toDate ? range.toDate : ""}
+                        cabins={bookingData.cabins ? bookingData.cabins : [""]}
+                        price={pricePerNight}
+                        nights={rangeLength}
+                      />
+                    </Grid>
+
+                    <Grid item>
+                      <Container>
+                        <CardC>
+                          <Grid item>
+                            <InputFields
+                              userData={userData}
+                              onChange={handleInputChange}
+                              cabins={bookingData.cabins}
+                              numberIndok={bookingData.numberIndok}
+                              numberExternal={bookingData.numberExternal}
+                              validations={validations}
+                            />
+                          </Grid>
+                          <Grid item>
+                            <Grid container spacing={3}>
+                              <Grid item>
+                                <CheckBox
+                                  onClick={handleCheckboxClick}
+                                  errorMsg={checkerror}
+                                  checkable={checkable}
+                                  contractData={contractData}
+                                />
+                              </Grid>
+                              <Grid item>
+                                <Button
+                                  color="primary"
+                                  onClick={(e) => handleSubmit(e)}
+                                  disabled={temporarilyDisableSubmitting}
+                                  variant="contained"
+                                  size="large"
+                                >
+                                  Gå til betaling
+                                </Button>
+                              </Grid>
+                              <Grid item>
+                                <Typography>OBS: Det er dessverre ikke mulig å booke via nettsiden ennå.</Typography>
+                              </Grid>
+                            </Grid>
+                          </Grid>
+                        </CardC>
+                      </Container>
+                    </Grid>
+                  </Grid>
+                </Grid>
+
+                <Grid item xs={12} md={6}>
+                  <Grid container spacing={3} direction={"column"}>
+                    <Grid item>
+                      <ImageSlider cabins={bookingData.cabins} />
+                    </Grid>
+                    <Grid item>
+                      <PriceSummary
+                        numberIndok={bookingData.numberIndok}
+                        numberExternal={bookingData.numberExternal}
+                        pricePerNight={pricePerNight}
+                      />
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Box>
+          ) : (
+            <>{allBookingsQuery.loading ? <p>Laster...</p> : <p>{errorMessage}</p>}</>
           )}
-        </Composition>
-      ) : (
-        <>{allBookingsQuery.loading ? <p>Laster...</p> : <p>{errorMessage}</p>}</>
-      )}
+        </Container>
+      </Layout>
     </>
   );
 };
