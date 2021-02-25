@@ -3,7 +3,7 @@ import { GET_USER } from "@graphql/auth/queries";
 import { EVENT_SIGN_OFF, EVENT_SIGN_UP } from "@graphql/events/mutations";
 import { Event } from "@interfaces/events";
 import { User } from "@interfaces/users";
-import { Button, CssBaseline, Paper, Divider, Grid, Snackbar, Typography, useTheme } from "@material-ui/core";
+import { Button, CssBaseline, Paper, Divider, Box, Grid, Snackbar, Typography, useTheme } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import CategoryIcon from "@material-ui/icons/Category";
 import EventIcon from "@material-ui/icons/Event";
@@ -77,9 +77,9 @@ const useStyles = makeStyles((theme) => ({
   },
 
   paper: {
-    textAlign: "center",
     color: theme.palette.text.secondary,
     padding: theme.spacing(2),
+    height: "100%",
     // backgroundColor: "lightgrey",
   },
 }));
@@ -137,7 +137,8 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
     );
   };
 
-  if (data.event)
+  if (data.event) {
+    console.log(data.event.description);
     return (
       <div>
         <Grid container spacing={1}>
@@ -167,9 +168,12 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
           {/* Description card */}
           <Grid item xs={8}>
             <Paper variant="outlined" className={classes.paper}>
-              <Grid container direction="column" justify="flex-end">
-                Description goes here
-              </Grid>
+              <Typography variant="h5" gutterBottom>
+                Beskrivelse
+              </Typography>
+              <Typography variant="body1" display="block">
+                <pre style={{ fontFamily: "inherit" }}>{data.event.description}</pre>
+              </Typography>
             </Paper>
           </Grid>
 
@@ -177,8 +181,9 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
           <Grid item xs={4}>
             <Paper variant="outlined" className={classes.paper}>
               {/* <Grid item xs={4} direction="column" className={classes.detailContainer}> */}
-              <Grid item>
-                <Typography variant="overline" display="block" className={classes.publisherContainer}>
+
+              <Box my={1.5}>
+                <Typography variant="overline" display="block">
                   Info{" "}
                 </Typography>
                 <Typography gutterBottom>
@@ -187,29 +192,31 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
                 <Typography gutterBottom>
                   <CategoryIcon fontSize="small" /> {getName(data.event.category)}{" "}
                 </Typography>
-              </Grid>
+              </Box>
 
-              <Grid item xs={4}>
-                <Typography variant="overline" display="block" className={classes.publisherContainer}>
+              <Box my={2}>
+                <Typography variant="overline" display="block">
                   Starter{" "}
                 </Typography>
-              </Grid>
-              <Typography gutterBottom>
-                <EventIcon fontSize="small" /> {parseDate(data.event.startTime).split(" ")[0]}{" "}
-              </Typography>
-              <Typography gutterBottom>
-                <ScheduleIcon fontSize="small" /> kl. {parseDate(data.event.startTime).split(" ")[1].slice(0, 5)}
-              </Typography>
+                <Typography gutterBottom>
+                  <EventIcon fontSize="small" /> {parseDate(data.event.startTime).split(" ")[0]}{" "}
+                </Typography>
+                <Typography gutterBottom>
+                  <ScheduleIcon fontSize="small" /> kl. {parseDate(data.event.startTime).split(" ")[1].slice(0, 5)}
+                </Typography>
+              </Box>
 
-              <Typography variant="overline" display="block" className={classes.publisherContainer}>
-                Slutter{" "}
-              </Typography>
-              <Typography gutterBottom>
-                <EventIcon fontSize="small" /> {parseDate(data.event.endTime).split(" ")[0]}{" "}
-              </Typography>
-              <Typography gutterBottom>
-                <ScheduleIcon fontSize="small" /> kl. {parseDate(data.event.endTime).split(" ")[1].slice(0, 5)}
-              </Typography>
+              <Box my={2}>
+                <Typography variant="overline" display="block">
+                  Slutter{" "}
+                </Typography>
+                <Typography gutterBottom>
+                  <EventIcon fontSize="small" /> {parseDate(data.event.endTime).split(" ")[0]}{" "}
+                </Typography>
+                <Typography gutterBottom>
+                  <ScheduleIcon fontSize="small" /> kl. {parseDate(data.event.endTime).split(" ")[1].slice(0, 5)}
+                </Typography>
+              </Box>
               {/* </Grid> */}
             </Paper>
           </Grid>
@@ -217,159 +224,21 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
           {/* Buttons row card */}
           <Grid item justify="space-between" xs={12}>
             <Paper variant="outlined" className={classes.paper}>
-              <Grid item justify="space-between" xs={12}>
-                <Grid item>
-                  <Button variant="outlined" color="primary" className={classes.buttons}>
-                    Meld på!
-                  </Button>
-                </Grid>
+              <Container justify="space-between">
+                <Link href={`/events`}>
+                  <Button>Tilbake</Button>
+                </Link>
 
-                <Grid item>
-                  <Link href={`/events`}>
-                    <Button>Tilbake</Button>
-                  </Link>
-                </Grid>
-              </Grid>
+                <Button variant="outlined" color="primary" style={{ float: "right" }}>
+                  Meld på!
+                </Button>
+              </Container>
             </Paper>
           </Grid>
         </Grid>
-
-        <>
-          <CssBaseline />
-
-          {/* <Typography variant="overline" display="block" align="center">
-            Arrangert av {getName(data.event.organization)}.
-            </Typography> */}
-
-          <Grid container spacing={2} className={classes.mainContainer}>
-            <Grid container item xs={8} direction="column">
-              <Typography variant="h5" gutterBottom>
-                Beskrivelse
-              </Typography>
-              <Typography variant="body1">{data.event.description}</Typography>
-              <Grid container justify="center">
-                <Typography variant="overline" display="block" className={classes.publisherContainer}>
-                  Publisert av{" "}
-                </Typography>
-                <Typography
-                  variant="overline"
-                  display="block"
-                  style={{ fontWeight: 600 }}
-                  className={classes.publisherContainer}
-                >
-                  &nbsp;&nbsp;{`${data.event.publisher.firstName} ${data.event.publisher.lastName}`}
-                </Typography>
-              </Grid>
-            </Grid>
-            <Divider variant="middle" className={classes.mainDivider} orientation="vertical" flexItem />
-          </Grid>
-
-          <hr />
-
-          <Container className={classes.buttonsContainer}>
-            <Button variant="outlined" color="primary" className={classes.buttons}>
-              Meld på!
-            </Button>
-            <Link href={`/events`}>
-              <Button>Tilbake</Button>
-            </Link>
-          </Container>
-
-          {data.event.isAttendable && userData?.user ? (
-            data.event.signedUpUsers.length === data.event.availableSlots ? (
-              <Typography variant="body1" color="primary">
-                Arrangementet er fullt
-              </Typography>
-            ) : (
-              <>
-                <Button variant="contained" loading={signOffLoading || signUpLoading} onClick={handleClick}>
-                  <Typography variant="body1">
-                    {isSignedUp(data.event, userData?.user.id) ? "Meld av" : "Meld på"}
-                  </Typography>
-                </Button>
-                <Snackbar
-                  severity="error"
-                  anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-                  open={signUpData?.eventSignUp.isFull}
-                  autoHideDuration={5000}
-                  message="Arrangementet er fullt"
-                />
-              </>
-            )
-          ) : null}
-        </>
       </div>
-      /*<div>
-        <h2 style={{ marginTop: -10, marginBottom: 10, textAlign: "center" }}>Event details</h2>
-        <div style={{ marginBottom: 15 }}>
-          <h4 style={{ margin: 0 }}>Påkrevde felt</h4>
-          Id: {data.event.id}
-          <br />
-          Tittel: {data.event.title}
-          <br />
-          Starttid: {parseDate(data.event.startTime)}
-          <br />
-          Publisert av: {`${data.event.publisher.firstName} ${data.event.publisher.lastName}`}
-          <br />
-          Krever påmelding: {data.event.isAttendable ? "Ja" : "Nei"}
-          <br />
-          Beskrivelse: {data.event.description}
-          <br />
-        </div>
-
-        <div>
-          <h4 style={{ margin: 0 }}>Frivillige felt</h4>
-          Sluttid: {parseDate(data.event.endTime)}
-          <br />
-          Lokasjon: {data.event.location}
-          <br />
-          Organisasjon: {getName(data.event.organization)}
-          <br />
-          Kategori: {getName(data.event.category)}
-          <br />
-          Bilde URL: {data.event.image}
-          <br />
-          Deadline for påmelding: {parseDate(data.event.deadline)}
-          <br />
-        </div>
-      </div>*/
     );
-  else return null;
+  } else return null;
 };
-
-/*<>
-          <CssBaseline />
-          <Paper>
-            <Typography component="h1" variant="h4" align="center">
-              Opprett arrangement
-            </Typography>
-            <List>
-
-            {products.map((product) => (
-              <ListItem className={classes.listItem} key={product.name}>
-                <ListItemText primary={product.name} secondary={product.desc} />
-                <Typography variant="body2">{product.price}</Typography>
-              </ListItem>
-            ))}
-            </List>
-            
-            <>
-              <>
-                <Typography variant="h5" gutterBottom>
-                  Thank you for your order.
-                </Typography>
-                <Typography variant="subtitle1">
-                  Your order number is #2001539. We have emailed your order confirmation, and will send you an update
-                  when your order has shipped.
-                </Typography>
-              </>
-            </>
-          </Paper>
-          <Copyright />
-        </>
-      </div>
-    );
-  else return null;
-};*/
 
 export default EventDetailPage;

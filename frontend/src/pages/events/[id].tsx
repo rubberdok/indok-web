@@ -18,21 +18,8 @@ const EventInfo: NextPage = () => {
           <Button color="primary">Tilbake til arrangementer</Button>
         </Link>
       </div>
-      <div
-        style={{
-          border: "solid",
-          borderRadius: ".1em",
-          padding: "3em",
-          backgroundColor: "#fff",
-          borderWidth: ".1em",
-          // borderColor: "#6A9997",
-          width: "70%",
-          margin: "0 auto",
-        }}
-      >
-        <div style={{ marginLeft: "auto", marginRight: "auto" }}>
-          {numberId && <EventDetailPage eventId={numberId} />}
-        </div>
+      <div style={{ paddingLeft: "4em", paddingRight: "4em" }}>
+        {numberId && <EventDetailPage eventId={numberId} />}
       </div>
     </Layout>
   );
