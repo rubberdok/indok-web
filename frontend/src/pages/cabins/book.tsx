@@ -26,7 +26,7 @@ const BookPage: NextPage = () => {
   const defaultPriceExternal = 2700;
 
   const temporarilyDisableSubmitting = false;
-  const temporarilyDisableBooking = false;
+  const temporarilyDisableBooking = true;
 
   const router = useRouter();
   const urlData = router.query;
