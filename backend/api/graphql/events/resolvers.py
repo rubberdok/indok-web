@@ -51,9 +51,7 @@ class EventResolvers:
 
     def resolve_default_events(parent, info):
         organizations = Organization.objects.all()
-        all_events = Event.objects.filter(start_time__gte=date.today()).order_by(
-            "start_time"
-        )
+        all_events = Event.objects.filter(start_time__gte=date.today())
         events = []
         for organization in organizations:
             try:
@@ -61,7 +59,7 @@ class EventResolvers:
                 events.append(first_matching_event.id)
             except:
                 pass
-        return Event.objects.filter(id__in=events)
+        return Event.objects.filter(id__in=events).order_by("start_time")
 
     def resolve_event(parent, info, id):
         try:

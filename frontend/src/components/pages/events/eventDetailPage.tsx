@@ -3,15 +3,16 @@ import { GET_USER } from "@graphql/auth/queries";
 import { EVENT_SIGN_OFF, EVENT_SIGN_UP } from "@graphql/events/mutations";
 import { Event } from "@interfaces/events";
 import { User } from "@interfaces/users";
-import { Button, CssBaseline, Paper, Divider, Box, Grid, Snackbar, Typography, useTheme } from "@material-ui/core";
+import { Button, Paper, Box, Grid, Snackbar, Typography, useTheme } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import CategoryIcon from "@material-ui/icons/Category";
 import EventIcon from "@material-ui/icons/Event";
 import LocationOnIcon from "@material-ui/icons/LocationOn";
 import ScheduleIcon from "@material-ui/icons/Schedule";
+import CreditCard from "@material-ui/icons/CreditCard";
 import { Container } from "next/app";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 import { GET_EVENT } from "../../../graphql/events/queries";
 
 const useStyles = makeStyles((theme) => ({
@@ -75,12 +76,16 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(2),
     backgroundColor: "#fff",
   },
-
   paper: {
-    color: theme.palette.text.secondary,
+    color: theme.palette.text.primary,
     padding: theme.spacing(2),
     height: "100%",
-    // backgroundColor: "lightgrey",
+  },
+  signUpButton: {
+    padding: theme.spacing(1),
+    paddingLeft: theme.spacing(1.6),
+    paddingRight: theme.spacing(1.6),
+    float: "right",
   },
 }));
 
@@ -99,11 +104,12 @@ function getName(obj: any) {
 }
 
 function isSignedUp(event: Event, userId?: string) {
-  if (!userId) return false;
+  if (!userId) return undefined;
   return event.signedUpUsers?.some((user) => user.id === userId);
 }
 
 const EventDetailPage: React.FC<Props> = ({ eventId }) => {
+  const [hasClicked, setHasClicked] = useState(false);
   const [eventSignUp, { loading: signUpLoading, data: signUpData }] = useMutation<{
     eventSignUp: { event: Event; isFull: boolean };
   }>(EVENT_SIGN_UP);
@@ -126,6 +132,7 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
 
   const handleClick = () => {
     if (!userData?.user.id) return;
+    setHasClicked(true);
     if (isSignedUp(data.event, userData?.user.id)) {
       eventSignOff({ variables: { eventId: eventId.toString(), userId: userData?.user.id } }).then(() =>
         refetch({ id: eventId })
@@ -138,7 +145,6 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
   };
 
   if (data.event) {
-    console.log(data.event.description);
     return (
       <div>
         <Grid container spacing={1}>
@@ -148,12 +154,17 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
               <Typography component="h1" variant="h4" align="center">
                 {data.event.title}
               </Typography>
-
               <Grid container justify="center">
-                <Typography variant="overline" display="block" className={classes.publisherContainer}>
+                <Typography
+                  variant="overline"
+                  display="block"
+                  className={classes.publisherContainer}
+                  color={theme.palette.text.secondary}
+                >
                   Arrangert av
                 </Typography>
                 <Typography
+                  color={theme.palette.text.secondary}
                   variant="overline"
                   display="block"
                   style={{ fontWeight: 600 }}
@@ -171,7 +182,7 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
               <Typography variant="h5" gutterBottom>
                 Beskrivelse
               </Typography>
-              <Typography variant="body1" display="block">
+              <Typography variant="body1" display="block" color={theme.palette.text.secondary}>
                 <pre style={{ fontFamily: "inherit" }}>{data.event.description}</pre>
               </Typography>
             </Paper>
@@ -180,18 +191,25 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
           {/* Information card */}
           <Grid item xs={4}>
             <Paper variant="outlined" className={classes.paper}>
-              {/* <Grid item xs={4} direction="column" className={classes.detailContainer}> */}
-
               <Box my={1.5}>
                 <Typography variant="overline" display="block">
                   Info{" "}
                 </Typography>
-                <Typography gutterBottom>
-                  <LocationOnIcon fontSize="small" /> {data.event.location}
-                </Typography>
-                <Typography gutterBottom>
-                  <CategoryIcon fontSize="small" /> {getName(data.event.category)}{" "}
-                </Typography>
+                {data.event.price && (
+                  <Typography gutterBottom>
+                    <CreditCard fontSize="small" /> {data.event.price} kr
+                  </Typography>
+                )}
+                {data.event.location && (
+                  <Typography gutterBottom>
+                    <LocationOnIcon fontSize="small" /> {data.event.location}
+                  </Typography>
+                )}
+                {data.event.category && (
+                  <Typography gutterBottom>
+                    <CategoryIcon fontSize="small" /> {getName(data.event.category)}{" "}
+                  </Typography>
+                )}
               </Box>
 
               <Box my={2}>
@@ -206,17 +224,19 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
                 </Typography>
               </Box>
 
-              <Box my={2}>
-                <Typography variant="overline" display="block">
-                  Slutter{" "}
-                </Typography>
-                <Typography gutterBottom>
-                  <EventIcon fontSize="small" /> {parseDate(data.event.endTime).split(" ")[0]}{" "}
-                </Typography>
-                <Typography gutterBottom>
-                  <ScheduleIcon fontSize="small" /> kl. {parseDate(data.event.endTime).split(" ")[1].slice(0, 5)}
-                </Typography>
-              </Box>
+              {data.event.endTime && (
+                <Box my={2}>
+                  <Typography variant="overline" display="block">
+                    Slutter{" "}
+                  </Typography>
+                  <Typography gutterBottom>
+                    <EventIcon fontSize="small" /> {parseDate(data.event.endTime).split(" ")[0]}{" "}
+                  </Typography>
+                  <Typography gutterBottom>
+                    <ScheduleIcon fontSize="small" /> kl. {parseDate(data.event.endTime).split(" ")[1].slice(0, 5)}
+                  </Typography>
+                </Box>
+              )}
               {/* </Grid> */}
             </Paper>
           </Grid>
@@ -229,9 +249,58 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
                   <Button>Tilbake</Button>
                 </Link>
 
-                <Button variant="outlined" color="primary" style={{ float: "right" }}>
-                  Meld på!
-                </Button>
+                {data.event.isAttendable && userData?.user ? (
+                  data.event.signedUpUsers.length === data.event.availableSlots ? (
+                    <Typography variant="body1" color="primary">
+                      Arrangementet er fullt
+                    </Typography>
+                  ) : (
+                    <>
+                      <Button
+                        className={classes.signUpButton}
+                        variant="contained"
+                        color={isSignedUp(data.event, userData?.user.id) ? "#f75d2a" : "primary"}
+                        loading={signOffLoading || signUpLoading}
+                        onClick={handleClick}
+                      >
+                        {isSignedUp(data.event, userData?.user.id) ? "Meld av" : "Meld på"}
+                      </Button>
+
+                      <Snackbar
+                        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                        open={signUpData?.eventSignUp.isFull}
+                        autoHideDuration={3000}
+                        message="Arrangementet er fullt"
+                      />
+
+                      <Snackbar
+                        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                        open={
+                          signOffLoading || signUpLoading
+                            ? false
+                            : isSignedUp(data.event, userData?.user.id) === false && hasClicked
+                        }
+                        autoHideDuration={3000}
+                        message="Du er nå avmeldt"
+                        onClose={() => setHasClicked(false)}
+                      />
+
+                      <Snackbar
+                        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                        open={
+                          signOffLoading || signUpLoading
+                            ? false
+                            : isSignedUp(data.event, userData?.user.id) === true &&
+                              !signUpData?.eventSignUp.isFull &&
+                              hasClicked
+                        }
+                        autoHideDuration={3000}
+                        onClose={() => setHasClicked(false)}
+                        message="Du er nå påmeldt"
+                      />
+                    </>
+                  )
+                ) : null}
               </Container>
             </Paper>
           </Grid>

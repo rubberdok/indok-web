@@ -4,16 +4,17 @@ export interface Event {
   id: string;
   title: string;
   startTime: string;
-  endTime: string;
-  location: string;
+  endTime?: string;
+  location?: string;
   description: string;
-  organization: { id: string; name: string; color?: string };
-  category: { id: string; name: string };
-  image: string;
+  organization?: { id: string; name: string; color?: string };
+  category?: { id: string; name: string };
+  image?: string;
   isAttendable: boolean;
-  deadline: string;
+  deadline?: string;
   publisher: User;
-  signedUpUsers: { userId: string };
+  signedUpUsers: { userId: string }[];
+  availableSlots?: number;
 }
 
 export interface Category {

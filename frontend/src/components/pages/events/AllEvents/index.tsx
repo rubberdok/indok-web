@@ -14,6 +14,7 @@ import {
   Container,
   makeStyles,
   useTheme,
+  Box,
 } from "@material-ui/core";
 import Link from "next/link";
 import { PlusSquare } from "react-feather";
@@ -71,7 +72,56 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: "#f5f5f5",
     },
   },
+  signedUpBox: {
+    marginTop: "auto",
+    marginBottom: "auto",
+    color: "#ffffff",
+    background: theme.palette.primary.main,
+    borderRadius: "5px",
+    padding: "0.2em 0.5em",
+  },
+  signUpAvailableBox: {
+    marginTop: "auto",
+    marginBottom: "auto",
+    color: "#ffffff",
+    background: "#93bfa6",
+    borderRadius: "5px",
+    padding: "0.2em 0.5em",
+  },
+  fullBox: {
+    marginTop: "auto",
+    marginBottom: "auto",
+    color: "#ffffff",
+    background: "#db2e3f",
+    borderRadius: "5px",
+    padding: "0.2em 0.5em",
+  },
 }));
+
+const MONTHS = {
+  "01": "januar",
+  "02": "februar",
+  "03": "mars",
+  "04": "april",
+  "05": "mai",
+  "06": "juni",
+  "07": "juli",
+  "08": "august",
+  "09": "september",
+  "10": "oktober",
+  "11": "november",
+  "12": "desember",
+};
+
+const formatDate = (dateAndTime: string) => {
+  const fullDate = dateAndTime.split("T")[0];
+  const year = fullDate.split("-")[0];
+  const month = MONTHS[fullDate.split("-")[1]];
+  const date = fullDate.split("-")[2];
+  const fullTime = dateAndTime.split("T")[1];
+  const time = fullTime.slice(0, 5);
+  return `${date}.${month} ${year}, kl. ${time}`;
+};
 
 const AllEvents: React.FC = () => {
   const classes = useStyles();
@@ -157,18 +207,18 @@ const AllEvents: React.FC = () => {
                       className={classes.eventContainer}
                       style={{ borderColor: event.organization?.color ?? theme.palette.primary.main }}
                     >
-                      <Typography variant="h6">{event.title}</Typography>
                       <Grid container>
                         <Grid item xs>
-                          <Typography variant="body1">
-                            Begynner {event.startTime.slice(0, 19).replace("T", " ")}
-                          </Typography>
+                          <Typography variant="h6">{event.title}</Typography>
+                          <Typography variant="body1">{formatDate(event.startTime)}</Typography>
                         </Grid>
                         {userData && !userLoading && userData.user && !userError && event.isAttendable ? (
-                          userData?.user.events.some((userevent) => event.id === userevent.id) ? (
-                            <Typography variant="body1">Påmeldt</Typography>
+                          event.signedUpUsers.length === event.availableSlots ? (
+                            <Box className={classes.fullBox}>Fullt</Box>
+                          ) : userData?.user.events.some((userevent) => event.id === userevent.id) ? (
+                            <Box className={classes.signedUpBox}>Påmeldt</Box>
                           ) : (
-                            <Typography variant="body1">Påmelding tilgjengelig</Typography>
+                            <Box className={classes.signUpAvailableBox}>Påmelding tilgjengelig</Box>
                           )
                         ) : null}
                       </Grid>

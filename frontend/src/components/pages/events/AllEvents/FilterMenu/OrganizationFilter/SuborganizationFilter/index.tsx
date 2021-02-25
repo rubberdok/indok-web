@@ -35,7 +35,7 @@ const SuborganizationFilter: React.FC<Props> = ({ filters, onFiltersChange, orga
             <ListItem
               disablePadding
               button
-              className={classes.nested}
+              className={classes.doubleNestedList}
               selected={filters.organization === org.name}
               onClick={() =>
                 onFiltersChange({ ...filters, organization: filters.organization === org.name ? undefined : org.name })

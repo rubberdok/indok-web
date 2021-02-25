@@ -35,13 +35,24 @@ const useStyles = makeStyles((theme) => ({
       },
     },
   },
+  doubleNestedList: {
+    padding: 0,
+    margin: 0,
+    paddingLeft: theme.spacing(6),
+    ["&.Mui-selected"]: {
+      backgroundColor: theme.palette.primary.main,
+      color: "#fff",
+      ["&:hover"]: {
+        backgroundColor: theme.palette.primary.main,
+      },
+    },
+  },
   doubleNested: {
     padding: 0,
-    paddingLeft: theme.spacing(2),
   },
   doubleNestedHeader: {
     padding: 0,
-    paddingLeft: theme.spacing(2),
+    paddingLeft: theme.spacing(4),
     ["&.Mui-selected"]: {
       backgroundColor: theme.palette.primary.main,
       color: "#fff",
@@ -105,7 +116,13 @@ const FilterMenu: React.FC<Props> = ({ filters, onFiltersChange, showDefaultEven
       </Container>
 
       <List component="div" disablePadding>
-        <ListItem button onClick={() => onShowDefaultChange(!showDefaultEvents)}>
+        <ListItem
+          button
+          onClick={() => {
+            onShowDefaultChange(!showDefaultEvents);
+            onFiltersChange({});
+          }}
+        >
           <ListItemText primary={"Fremhevet"} />
           {showDefaultEvents ? (
             <StarRounded style={{ color: "#ffe100" }} />
