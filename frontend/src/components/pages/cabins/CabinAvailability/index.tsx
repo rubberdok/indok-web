@@ -1,5 +1,6 @@
+import Calendar from "@components/Calendar";
 import { Cabin } from "@interfaces/cabins";
-import { Box, Checkbox, List, ListItem, Grid, Typography } from "@material-ui/core";
+import { Checkbox, List, ListItem, Grid } from "@material-ui/core";
 import { NextPage } from "next";
 import React, { Dispatch, SetStateAction } from "react";
 
@@ -13,7 +14,7 @@ const CabinAvailability: NextPage<Props> = ({ allCabins, chosenCabins, setChosen
   return (
     <Grid container>
       <Grid item xs container justify="center">
-        <Grid item xs>
+        <Grid item xs={3}>
           <List>
             {allCabins.map((cabin) => (
               <ListItem key={cabin.id}>
@@ -33,10 +34,8 @@ const CabinAvailability: NextPage<Props> = ({ allCabins, chosenCabins, setChosen
           </List>
         </Grid>
       </Grid>
-      <Grid item xs>
-        <Typography variant="h3" align="center">
-          Calendar Placeholder
-        </Typography>
+      <Grid item xs={9}>
+        <Calendar rangeChanged={(from, to) => console.log(from, to)} />
       </Grid>
     </Grid>
   );

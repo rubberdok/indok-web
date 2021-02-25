@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import CalendarTable from "./CalendarTable";
 import { DATE_FORMAT } from "./constants";
 import { getDateRange, previousMonthDays, rangeLength } from "./helpers";
-import { Day, DayCell, EventMarkerWrapper, MonthPickButton, MonthSelector, TwoCalendarsContainer } from "./styles";
+import { Day, DayCell, MonthPickButton, MonthSelector, TwoCalendarsContainer } from "./styles";
 
 export interface CalendarEvent {
   date: string;
@@ -11,14 +11,13 @@ export interface CalendarEvent {
 }
 
 interface CalendarProps {
-  events?: CalendarEvent[];
   disabledDates?: string[];
   rangeChanged: (fromDate: string, toDate: string | undefined) => void;
   initSelectedDay?: string;
   disableRange?: boolean;
 }
 
-const Calendar: React.FC<CalendarProps> = ({ events, disabledDates, rangeChanged, initSelectedDay, disableRange }) => {
+const Calendar: React.FC<CalendarProps> = ({ disabledDates, rangeChanged, initSelectedDay, disableRange }) => {
   const [selectedMonth, setSelectedMonth] = useState(dayjs());
   const [selectedDay, setSelectedDay] = useState(dayjs(initSelectedDay));
   const [hoverRange, setHoverRange] = useState<string[]>([]);
@@ -29,7 +28,6 @@ const Calendar: React.FC<CalendarProps> = ({ events, disabledDates, rangeChanged
     const today = dayjs();
     for (let i = 1; i <= month.daysInMonth(); i++) {
       const date = dayjs(month).set("date", i);
-      const dateEvents = events?.filter((event) => event.date === date.format(DATE_FORMAT));
       daysOfMonth.push(
         <DayCell
           onMouseOver={() =>
@@ -47,9 +45,6 @@ const Calendar: React.FC<CalendarProps> = ({ events, disabledDates, rangeChanged
           isDisabled={date.isBefore(today, "day") || disabledDates?.includes(date.format(DATE_FORMAT))}
         >
           <Day>{i}</Day>
-          <EventMarkerWrapper>
-            {dateEvents ? dateEvents.map((event, index) => event.renderComponent(`${index}`)) : null}
-          </EventMarkerWrapper>
         </DayCell>
       );
     }
@@ -112,8 +107,6 @@ const Calendar: React.FC<CalendarProps> = ({ events, disabledDates, rangeChanged
       </MonthSelector>
       <TwoCalendarsContainer>
         <CalendarTable getRows={getRows} month={selectedMonth.clone()} />
-        <hr />
-        <CalendarTable getRows={getRows} month={selectedMonth.clone().add(1, "month")} />
       </TwoCalendarsContainer>
     </>
   );

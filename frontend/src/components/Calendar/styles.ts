@@ -25,22 +25,6 @@ export const BigTable = styled.table`
   width: 100%;
 `;
 
-export const EventMarkerWrapper = styled.div`
-  width: 100%;
-  position: absolute;
-  bottom: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-export const EventMarker = styled.div`
-  height: 4px;
-  width: 4px;
-  margin: 0px 1px;
-  border-radius: 50%;
-  background-color: #065a5a;
-`;
-
 export const Day = styled.div`
   display: flex;
   justify-content: center;
@@ -102,10 +86,6 @@ export const DayCell = styled.td<DayCellProps>`
   > ${Day} {
     ${(props) => props.isSelected && SelectedDayStyles};
     ${(props) => props.isInHoverRange && !props.isSelected && `background-color: #6A9997`};
-  }
-
-  ${EventMarker} {
-    ${(props) => props.isSelected && "background-color: white"};
   }
 
   &:hover {
