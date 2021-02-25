@@ -22,10 +22,17 @@ export const AUTHENTICATE = gql`
   }
 `;
 
-export const LOG_OUT_USER = gql`
+export const DELETE_TOKEN_COOKIE = gql`
   mutation {
-    logOutUser {
+    deleteTokenCookie {
       deleted
+    }
+  }
+`;
+
+export const GET_ID_TOKEN = gql`
+  mutation {
+    getIdToken {
       idToken
     }
   }
