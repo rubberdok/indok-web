@@ -81,7 +81,7 @@ const EditQuestion: React.FC<{
       />
       {question.questionType.name === "Checkboxes" ||
       question.questionType.name === "Multiple choice" ||
-      question.questionType.name === "Dropdown" ? (
+      question.questionType.name === "Drop-down" ? (
         <ul>
           {question.offeredAnswers.map((offeredAnswer, index) => (
             <li key={index}>

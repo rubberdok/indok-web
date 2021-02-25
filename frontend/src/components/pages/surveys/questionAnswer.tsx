@@ -1,6 +1,7 @@
 import { Answer } from "@interfaces/surveys";
 import TextField from "@components/ui/formComponents/textfield";
 import Choice from "@components/ui/formComponents/choice";
+import Dropdown from "@components/ui/formComponents/dropdown";
 
 const QuestionAnswer: React.FC<{
   answer: Answer;
@@ -39,6 +40,14 @@ const QuestionAnswer: React.FC<{
           options={answer.question.offeredAnswers.map((offeredAnswer) => offeredAnswer.answer)}
           name={answer.question.id}
           radio={false}
+        />
+      ) : answer.question.questionType.name === "Drop-down" ? (
+        <Dropdown
+          title={answer.question.question}
+          options={answer.question.offeredAnswers.map((offeredAnswer) => ({
+            text: offeredAnswer.answer,
+            value: offeredAnswer.answer,
+          }))}
         />
       ) : (
         // TODO: change implementation of question types to avoid failsafes like this

@@ -29,6 +29,14 @@ const QuestionTypePreview: React.FC<{
           disabled
         />
       );
+    case "Drop-down":
+      return (
+        <ol>
+          {question.offeredAnswers.map((offeredAnswer, index) => (
+            <li key={index}>{offeredAnswer.answer}</li>
+          ))}
+        </ol>
+      );
     default:
       // TODO: change implementation of question types to avoid failsafes like this
       return <p>Error in question</p>;
