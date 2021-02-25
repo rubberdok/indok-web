@@ -5,9 +5,8 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import Checkbox from "@material-ui/core/Checkbox";
 import { CheckBox } from "@material-ui/icons";
-import { Cabin } from "@interfaces/cabins";
 
-const CabinSelector = (cabins: Cabin[]) => {
+const CabinSelector = () => {
   return (
     <FormControl component="fieldset">
       <FormLabel component="legend">Assign responsibility</FormLabel>

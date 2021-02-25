@@ -20,7 +20,6 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: "100%",
     overflow: "hidden",
     width: "99%",
-    margin: "auto",
     borderRadius: "20px",
   },
   mobileStepper: {

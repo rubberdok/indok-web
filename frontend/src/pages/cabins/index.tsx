@@ -159,12 +159,10 @@ const CreateBookingPage: NextPage = () => {
                     </Typography>
                   </Grid>
 
-                  <Grid item xs={12} sm={6} justify="center" alignContent="center">
-                    <Grid container justify="center" alignContent="center">
-                      <Box width="65%">
-                        <ImageSlider cabins={["Bjørnen", "Oksen"]} />
-                      </Box>
-                    </Grid>
+                  <Grid item container xs={12} sm={6} justify="center" alignContent="center">
+                    <Box width="65%">
+                      <ImageSlider cabins={["Bjørnen", "Oksen"]} />
+                    </Box>
                   </Grid>
                 </Grid>
               </Grid>
@@ -175,17 +173,15 @@ const CreateBookingPage: NextPage = () => {
                       Hvordan komme seg til Indøkhyttene
                     </Typography>
                   </Grid>
-                  <Grid item>
-                    <Grid container spacing={10} direction="row">
-                      {transportData.map((transport) => (
-                        <Grid item sm={12} md={3} key={transport.text}>
-                          <Box textAlign="center">
-                            {transport.icon}
-                            <Typography variant="body2">{transport.text}</Typography>
-                          </Box>
-                        </Grid>
-                      ))}
-                    </Grid>
+                  <Grid item container spacing={10} direction="row">
+                    {transportData.map((transport) => (
+                      <Grid item sm={12} md={3} key={transport.text}>
+                        <Box textAlign="center">
+                          {transport.icon}
+                          <Typography variant="body2">{transport.text}</Typography>
+                        </Box>
+                      </Grid>
+                    ))}
                   </Grid>
                 </Grid>
               </Grid>

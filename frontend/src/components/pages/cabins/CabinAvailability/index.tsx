@@ -1,5 +1,5 @@
 import { Cabin } from "@interfaces/cabins";
-import { Box, Checkbox, List, ListItem, Grid, Typography } from "@material-ui/core";
+import { Checkbox, List, ListItem, Grid, Typography } from "@material-ui/core";
 import { NextPage } from "next";
 import React, { Dispatch, SetStateAction } from "react";
 
