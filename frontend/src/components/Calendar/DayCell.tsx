@@ -23,7 +23,7 @@ const DayCell = (props: Props & Omit<MuiButtonProps, keyof Props>) => {
   const classes = useStyles(props);
   return (
     <Grid item xs component="td">
-      <Box className={classes.root} {...other} />
+      {isDisabled ? <Box className={classes.root} {...other} /> : <Button className={classes.root} {...other} />}
     </Grid>
   );
 };

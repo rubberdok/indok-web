@@ -62,7 +62,7 @@ const CabinBookingPage: NextPage = () => {
           </Grid>
           <Grid item>
             <Paper>
-              <Box p={2}>{getStepComponent()}</Box>
+              <Box p={10}>{getStepComponent()}</Box>
             </Paper>
           </Grid>
           <Grid item container justify="space-between">
