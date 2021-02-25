@@ -181,3 +181,16 @@ class DeleteAnswer(graphene.Mutation):
         answer.delete()
         ok = True
         return cls(ok=ok, deleted_id=deleted_id)
+
+class SubmitAnswers(graphene.Mutation):
+    ok = graphene.Boolean()
+    answers = graphene.List(AnswerType)
+
+    class Arguments:
+        answers_data = graphene.List(AnswerInput)
+
+    @login_required
+    def mutate(self, info, answers_data):
+        user = info.context.user
+
+        

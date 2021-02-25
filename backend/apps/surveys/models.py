@@ -21,6 +21,7 @@ class Question(models.Model):
     offered_answers = models.ManyToManyField("OfferedAnswer")
     question_type = models.ForeignKey("QuestionType", on_delete=models.SET_NULL, null=True)
     position = models.IntegerField(unique=True)
+    mandatory = models.BooleanField(default=True)
 
     def __str__(self) -> str:
         return f"{self.survey}: {self.question}"
