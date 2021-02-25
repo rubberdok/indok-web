@@ -8,7 +8,7 @@ import ImageSlider from "@components/pages/cabins/ImageSlider/ImageSlider";
 import PriceSummary from "@components/pages/cabins/Summary/PriceSummary";
 import Summary from "@components/pages/cabins/Summary/Summary";
 import { GET_USER } from "@graphql/auth/queries";
-import { SEND_EMAIL } from "@graphql/cabins/mutations";
+import { SEND_EMAIL, CREATE_CABIN } from "@graphql/cabins/mutations";
 import { QUERY_CABINS } from "@graphql/cabins/queries";
 import { BookingData, Cabin, ContractProps, InputFieldsEvent, InputValueTypes, Validations } from "@interfaces/cabins";
 import { User } from "@interfaces/users";
@@ -16,8 +16,7 @@ import { Button, Container, Grid, Typography } from "@material-ui/core";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { CREATE_CABIN } from "../../graphql/cabins/mutations";
-import useBookingRange from "../../hooks/cabins/useBookingRange";
+import useBookingRange from "@hooks/cabins/useBookingRange";
 import HeaderComposition from "@components/pages/cabins/HeaderComposition";
 import { allValuesDefined, validateInputForm } from "@utils/helpers";
 
