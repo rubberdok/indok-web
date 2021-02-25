@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
 import { GET_USER } from "@graphql/auth/queries";
-import { GET_EVENTS } from "@graphql/events/queries";
+import { GET_EVENTS, GET_DEFAULT_EVENTS } from "@graphql/events/queries";
 import { Event } from "@interfaces/events";
 import { User } from "@interfaces/users";
 import {
@@ -66,22 +66,35 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2),
     marginBottom: theme.spacing(2),
     backgroundColor: "#fff",
+    ["&:hover"]: {
+      cursor: "pointer",
+      backgroundColor: "#f5f5f5",
+    },
   },
 }));
 
 const AllEvents: React.FC = () => {
-  const [filters, setFilters] = useState({});
-  const [showCalenderView, setShowCalenderView] = useState(false);
-  const { loading: userLoading, error: userError, data: userData } = useQuery<{ user: User }>(GET_USER);
-  const { loading, error, data, refetch } = useQuery(GET_EVENTS, {
-    variables: filters,
-  });
   const classes = useStyles();
   const theme = useTheme();
+  const [filters, setFilters] = useState({});
+  const [showDefaultEvents, setShowDefaultEvents] = useState(true);
+  const [showCalenderView, setShowCalenderView] = useState(false);
+  const { loading: userLoading, error: userError, data: userData } = useQuery<{ user: User }>(GET_USER);
 
+  const { loading: eventsLoading, error: eventsError, data: eventsData, refetch } = useQuery(GET_EVENTS, {
+    variables: filters,
+  });
+  const { loading: defaultEventsLoading, error: defaultEventsError, data: defaultEventsData } = useQuery(
+    GET_DEFAULT_EVENTS
+  );
+
+  const error = showDefaultEvents ? defaultEventsError : eventsError;
+  const loading = showDefaultEvents ? defaultEventsLoading : eventsLoading;
   if (error) return <Typography variant="body1">Kunne ikke hente arrangementer.</Typography>;
+  const data = showDefaultEvents ? defaultEventsData?.defaultEvents : eventsData?.allEvents;
 
   const onChange = (newFilters: FilterQuery) => {
+    if (Object.keys(newFilters).length > 0 && showDefaultEvents) setShowDefaultEvents(false);
     setFilters(newFilters);
     refetch(newFilters);
   };
@@ -119,7 +132,12 @@ const AllEvents: React.FC = () => {
 
       <Grid container className={classes.grid}>
         <Grid item xs={3}>
-          <FilterMenu filters={filters} onChange={onChange} />
+          <FilterMenu
+            filters={filters}
+            onFiltersChange={onChange}
+            showDefaultEvents={showDefaultEvents}
+            onShowDefaultChange={setShowDefaultEvents}
+          />
         </Grid>
         <Grid item xs>
           {loading ? (
@@ -130,10 +148,10 @@ const AllEvents: React.FC = () => {
             <Typography variant="body1">Kommer snart! :)</Typography>
           ) : (
             <>
-              {data?.allEvents === undefined || data.allEvents.length === 0 ? (
+              {data === undefined || data.length === 0 ? (
                 <Typography variant="body1">Ingen arrangementer passer til valgte filtre.</Typography>
               ) : (
-                data.allEvents.map((event: Event) => (
+                data.map((event: Event) => (
                   <Link href={`/events/${event.id}`} key={event.id}>
                     <Container
                       className={classes.eventContainer}

@@ -1,6 +1,6 @@
 import { Category } from "@interfaces/events";
 import React, { useState } from "react";
-import { List, ListItem, ListItemText, Collapse } from "@material-ui/core";
+import { useTheme, List, ListItem, ListItemText, Collapse, Badge, Grid } from "@material-ui/core";
 import { ExpandLess, ExpandMore } from "@material-ui/icons";
 import { FilterQuery } from "../..";
 import { useQuery } from "@apollo/client";
@@ -21,8 +21,10 @@ const CategoryFilter: React.FC<Props> = ({ filters, onFiltersChange, classes }) 
 
   return (
     <List component="div" className={classes.root} disablePadding>
-      <ListItem button onClick={() => setOpen(!open)}>
+      <ListItem button onClick={() => setOpen(!open)} selected={open}>
         <ListItemText primary={"Kategorier"} />
+        <Badge className={classes.badge} badgeContent={1} color="primary" invisible={!filters.category} />
+
         {open ? <ExpandLess /> : <ExpandMore />}
       </ListItem>
       <Collapse in={open} timeout="auto" unmountOnExit>
@@ -33,9 +35,14 @@ const CategoryFilter: React.FC<Props> = ({ filters, onFiltersChange, classes }) 
               button
               className={classes.nested}
               selected={filters.category === category.name}
-              onClick={() => onFiltersChange({ ...filters, category: category.name })}
+              onClick={() =>
+                onFiltersChange({
+                  ...filters,
+                  category: category.name === filters.category ? undefined : category.name,
+                })
+              }
             >
-              <ListItemText primary={category.name} />
+              <ListItemText variant="body2" primary={category.name} />
             </ListItem>
           ))}
         </List>

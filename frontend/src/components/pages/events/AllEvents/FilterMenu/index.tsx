@@ -1,8 +1,9 @@
 import { useQuery } from "@apollo/client";
-import { Filter } from "react-feather";
+import { Filter, RotateCcw } from "react-feather";
 import { QUERY_EVENT_FILTERED_ORGANIZATIONS } from "@graphql/events/queries";
 import React, { useState } from "react";
-import { makeStyles, Typography, Container, Button } from "@material-ui/core";
+import { makeStyles, Tooltip, Container, IconButton, List, ListItem, ListItemText } from "@material-ui/core";
+import { StarRounded, StarBorderRounded } from "@material-ui/icons";
 import OrganizationFilter from "./OrganizationFilter";
 import { FilterQuery } from "..";
 import CategoryFilter from "./CategoryFilter";
@@ -10,7 +11,9 @@ import DateTimeFilter from "./DateTimeFilter";
 
 interface Props {
   filters: FilterQuery;
-  onChange: (query: FilterQuery) => void;
+  onFiltersChange: (query: FilterQuery) => void;
+  showDefaultEvents: boolean;
+  onShowDefaultChange: (show: boolean) => void;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -21,17 +24,38 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: theme.spacing(0),
   },
   nested: {
+    padding: 0,
+    margin: 0,
     paddingLeft: theme.spacing(4),
+    ["&.Mui-selected"]: {
+      backgroundColor: theme.palette.primary.main,
+      color: "#fff",
+      ["&:hover"]: {
+        backgroundColor: theme.palette.primary.main,
+      },
+    },
   },
   doubleNested: {
+    padding: 0,
     paddingLeft: theme.spacing(2),
+  },
+  doubleNestedHeader: {
+    padding: 0,
+    paddingLeft: theme.spacing(2),
+    ["&.Mui-selected"]: {
+      backgroundColor: theme.palette.primary.main,
+      color: "#fff",
+      ["&:hover"]: {
+        backgroundColor: theme.palette.primary.main,
+      },
+    },
   },
   filterContainer: {
     float: "left",
     backgroundColor: "#fff",
     padding: 0,
     paddingTop: theme.spacing(2),
-    paddingBottom: theme.spacing(2),
+    paddingBottom: theme.spacing(4),
     maxWidth: "90%",
   },
   headerContainer: {
@@ -39,33 +63,22 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: 0,
     paddingBottom: 0,
   },
-  buttonsContainer: {
+  deleteButton: {
     padding: 0,
-    paddingTop: theme.spacing(2),
-    width: "fit-content",
+    margin: 0,
   },
-  filterButton: {
-    backgroundColor: theme.palette.primary,
-    float: "left",
-    marginLeft: theme.spacing(1),
-    paddingLeft: theme.spacing(1),
-    paddingRight: theme.spacing(1),
-    paddingTop: theme.spacing(0.5),
-    paddingBottom: theme.spacing(0.5),
+  badge: { marginRight: theme.spacing(1.5) },
+  tooltip: {
+    margin: 0,
+    padding: 0,
   },
-  cancelButton: {
-    backgroundColor: theme.palette.secondary,
-    float: "left",
-    paddingLeft: theme.spacing(1),
-    paddingRight: theme.spacing(1),
-    paddingTop: theme.spacing(0.5),
-    paddingBottom: theme.spacing(0.5),
+  simple: {
+    padding: 0,
   },
 }));
 
-const FilterMenu: React.FC<Props> = ({ filters, onChange }) => {
+const FilterMenu: React.FC<Props> = ({ filters, onFiltersChange, showDefaultEvents, onShowDefaultChange }) => {
   const classes = useStyles();
-  const [currentFilters, setCurrentFilters] = useState(filters);
 
   const { loading: organizationLoading, error: organizationError, data: organizationData } = useQuery(
     QUERY_EVENT_FILTERED_ORGANIZATIONS
@@ -76,44 +89,43 @@ const FilterMenu: React.FC<Props> = ({ filters, onChange }) => {
   return (
     <Container className={classes.filterContainer}>
       <Container className={classes.headerContainer}>
-        <Filter style={{ marginTop: "0.1em", marginRight: "0.3em", float: "left", color: "#222" }} />
-        <Typography variant="body1">Filtre</Typography>
-        <hr />
+        <List component="div" disablePadding>
+          <ListItem className={classes.simple}>
+            <Filter style={{ marginTop: "0.1em", marginRight: "0.3em", float: "left", color: "#222" }} />
+            <ListItemText primary={"Filtre"} />
+            <Tooltip className={classes.tooltip} title="Nullstill filtre" arrow>
+              <IconButton disableFocusRipple disableRipple onClick={() => onFiltersChange({})} aria-label="delete">
+                <RotateCcw style={{ color: "#222" }} />
+              </IconButton>
+            </Tooltip>
+          </ListItem>
+        </List>
+
+        <hr style={{ margin: 0, marginTop: "0.2em" }} />
       </Container>
 
+      <List component="div" disablePadding>
+        <ListItem button onClick={() => onShowDefaultChange(!showDefaultEvents)}>
+          <ListItemText primary={"Fremhevet"} />
+          {showDefaultEvents ? (
+            <StarRounded style={{ color: "#ffe100" }} />
+          ) : (
+            <StarBorderRounded style={{ color: "#ffe100" }} />
+          )}
+        </ListItem>
+      </List>
+
       <OrganizationFilter
-        filters={currentFilters}
-        onFiltersChange={setCurrentFilters}
+        filters={filters}
+        onFiltersChange={onFiltersChange}
         organizations={organizationData.eventFilteredOrganizations}
         name={"Organisasjoner"}
         classes={classes}
       />
 
-      <CategoryFilter filters={currentFilters} onFiltersChange={setCurrentFilters} classes={classes} />
+      <CategoryFilter filters={filters} onFiltersChange={onFiltersChange} classes={classes} />
 
-      <DateTimeFilter filters={currentFilters} onFiltersChange={setCurrentFilters} />
-
-      <Container className={classes.buttonsContainer}>
-        <Button
-          variant="contained"
-          color="primary"
-          className={classes.cancelButton}
-          onClick={() => {
-            onChange({});
-            setCurrentFilters({});
-          }}
-        >
-          <Typography variant="body1">Nullstill</Typography>
-        </Button>
-        <Button
-          variant="contained"
-          color="primary"
-          className={classes.filterButton}
-          onClick={() => onChange(currentFilters)}
-        >
-          <Typography variant="body1">Filtrer</Typography>
-        </Button>
-      </Container>
+      <DateTimeFilter filters={filters} onFiltersChange={onFiltersChange} />
     </Container>
   );
 };

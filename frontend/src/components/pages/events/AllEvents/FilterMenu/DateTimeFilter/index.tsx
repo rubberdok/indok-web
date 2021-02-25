@@ -31,23 +31,23 @@ const DateTimeFilter: React.FC<Props> = ({ filters, onFiltersChange }) => {
   return (
     <Container className={classes.container}>
       <TextField
-        id="datetime-local"
+        id="date"
         label="Starttid"
-        type="datetime-local"
+        type="date"
         className={classes.textField}
-        value={filters?.startTime}
+        value={filters?.startTime?.split("T")[0] ?? ""}
         InputLabelProps={{ shrink: true }}
-        onChange={(e) => onFiltersChange({ ...filters, startTime: e.currentTarget.value })}
+        onChange={(e) => onFiltersChange({ ...filters, startTime: `${e.currentTarget.value}T00:00` })}
       />
 
       <TextField
-        id="datetime-local"
+        id="date"
         label="Sluttid"
-        type="datetime-local"
-        value={filters?.endTime}
+        type="date"
+        value={filters?.endTime?.split("T")[0] ?? ""}
         className={classes.secondTextField}
         InputLabelProps={{ shrink: true }}
-        onChange={(e) => onFiltersChange({ ...filters, endTime: e.currentTarget.value })}
+        onChange={(e) => onFiltersChange({ ...filters, endTime: `${e.currentTarget.value}T00:00` })}
       />
     </Container>
   );

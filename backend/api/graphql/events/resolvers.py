@@ -1,5 +1,7 @@
 from apps.events.models import Category, Event
+from apps.organizations.models import Organization
 from django.db.models import Q
+from datetime import date
 
 
 class EventResolvers:
@@ -40,8 +42,26 @@ class EventResolvers:
                     | Q(organization__parent__name__icontains=organization)
                 )
 
-            return filteredEvents.filter(*queries).order_by("start_time")
-        return Event.objects.all().order_by("start_time")
+            return (
+                filteredEvents.filter(*queries)
+                .filter(start_time__gte=date.today())
+                .order_by("start_time")
+            )
+        return Event.objects.filter(start_time__gte=date.today()).order_by("start_time")
+
+    def resolve_default_events(parent, info):
+        organizations = Organization.objects.all()
+        all_events = Event.objects.filter(start_time__gte=date.today()).order_by(
+            "start_time"
+        )
+        events = []
+        for organization in organizations:
+            try:
+                first_matching_event = all_events.get(organization=organization)
+                events.append(first_matching_event.id)
+            except:
+                pass
+        return Event.objects.filter(id__in=events)
 
     def resolve_event(parent, info, id):
         try:

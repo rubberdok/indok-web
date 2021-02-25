@@ -37,6 +37,43 @@ export const GET_EVENTS = gql`
   }
 `;
 
+export const GET_DEFAULT_EVENTS = gql`
+  query defaultEvents {
+    defaultEvents {
+      id
+      title
+      startTime
+      endTime
+      location
+      description
+      organization {
+        name
+        color
+      }
+      category {
+        name
+      }
+      image
+      isAttendable
+      deadline
+      publisher {
+        id
+        username
+        email
+        firstName
+        lastName
+        dateJoined
+      }
+      availableSlots
+      signedUpUsers {
+        id
+        username
+      }
+      price
+    }
+  }
+`;
+
 export const GET_EVENT = gql`
   query Event($id: ID!) {
     event(id: $id) {
