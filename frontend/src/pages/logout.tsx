@@ -4,13 +4,16 @@ import { DELETE_TOKEN_COOKIE, GET_ID_TOKEN } from "@graphql/auth/mutations";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
+import { generateQueryString } from "src/utils/helpers";
 
 const LogoutPage: NextPage = () => {
-  const [getIdToken, { data, loading, error }] = useMutation(GET_ID_TOKEN, { errorPolicy: "all" });
+  const [getIdToken, { data, loading, error }] = useMutation<{ getIdToken: { idToken: string } }>(GET_ID_TOKEN, {
+    errorPolicy: "all",
+  });
   const [
     deleteCookie,
     { data: deleteCookieData, loading: deleteCookieLoading, error: deleteCookieError, client },
-  ] = useMutation(DELETE_TOKEN_COOKIE, { errorPolicy: "all" });
+  ] = useMutation<{ deleteTokenCookie: { deleted: boolean } }>(DELETE_TOKEN_COOKIE, { errorPolicy: "all" });
   const router = useRouter();
 
   useEffect(() => {
@@ -22,19 +25,13 @@ const LogoutPage: NextPage = () => {
 
   // If the request was sucessfull, the cookie is now deleted.
   // reset the apollo store and redirect. See // https://www.apollographql.com/docs/react/networking/authentication/#reset-store-on-logout
-  if (
-    deleteCookieData &&
-    deleteCookieData.deleteTokenCookie &&
-    deleteCookieData.deleteTokenCookie.deleted &&
-    data &&
-    data.getIdToken &&
-    data.getIdToken.idToken &&
-    data.getIdToken.idToken
-  ) {
-    let logOutUrl = "https://auth.dataporten.no/openid/endsession";
-    logOutUrl += `?post_logout_redirect_uri=${process.env.NEXT_PUBLIC_HOST_NAME}`;
-    logOutUrl += `&id_token_hint=${data.getIdToken.idToken}`;
-    // TODO: make queryparam generator function
+  if (deleteCookieData && data) {
+    const queryString = generateQueryString({
+      post_logout_redirect_uri: process.env.NEXT_PUBLIC_HOST_NAME,
+      id_token_hint: data.getIdToken.idToken,
+    });
+    const logOutUrl = "https://auth.dataporten.no/openid/endsession" + queryString;
+
     router.push(logOutUrl);
     client.resetStore();
     return null;
