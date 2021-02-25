@@ -1,6 +1,6 @@
 import Calendar from "@components/Calendar";
 import { Cabin } from "@interfaces/cabins";
-import { Checkbox, List, ListItem, Grid } from "@material-ui/core";
+import { Checkbox, List, ListItem, Grid, Box } from "@material-ui/core";
 import { NextPage } from "next";
 import React, { Dispatch, SetStateAction } from "react";
 
@@ -33,7 +33,9 @@ const CabinAvailability: NextPage<Props> = ({ allCabins, chosenCabins, setChosen
         </List>
       </Grid>
       <Grid item xs={8}>
-        <Calendar rangeChanged={(from, to) => console.log(from, to)} />
+        <Box p={5}>
+          <Calendar />
+        </Box>
       </Grid>
     </Grid>
   );

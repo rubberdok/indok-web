@@ -1,9 +1,9 @@
 import { IconButton, Grid, Typography } from "@material-ui/core";
 import dayjs from "dayjs";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import CalendarTable from "./CalendarTable";
 import { DATE_FORMAT } from "./constants";
-import { getDateRange, nextMonthDays, previousMonthDays, rangeLength } from "./helpers";
+import { getDateRange, rangeLength } from "./helpers";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore";
 import DayCell from "./DayCell";
@@ -15,16 +15,30 @@ export interface CalendarEvent {
 
 interface CalendarProps {
   disabledDates?: string[];
-  rangeChanged: (fromDate: string, toDate: string | undefined) => void;
+  handleDateClicked?: (date: string) => void;
   initSelectedDay?: string;
-  disableRange?: boolean;
 }
 
-const Calendar: React.FC<CalendarProps> = ({ disabledDates, rangeChanged, initSelectedDay, disableRange }) => {
+const Calendar: React.FC<CalendarProps> = ({ disabledDates, initSelectedDay, handleDateClicked }) => {
   const [selectedMonth, setSelectedMonth] = useState(dayjs());
-  const [selectedDay, setSelectedDay] = useState(dayjs(initSelectedDay));
-  const [hoverRange, setHoverRange] = useState<string[]>([]);
-  const [isRangeFreezed, setIsRangeFreezed] = useState(false);
+  const [selectedDay, setSelectedDay] = useState(initSelectedDay ? dayjs(initSelectedDay) : undefined);
+
+  const previousMonthDays = (month: dayjs.Dayjs): JSX.Element[] => {
+    const previousDays: JSX.Element[] = [];
+    const firstOfMonth = month.startOf("month");
+    const mondayIndex = 0;
+    // Check if Month starts with a Monday
+    if (firstOfMonth.weekday() !== mondayIndex) {
+      const previousMonday = firstOfMonth.subtract(1, "months").endOf("month").weekday(mondayIndex);
+      const dayDifference = firstOfMonth.diff(previousMonday, "days") + 1;
+
+      for (let i = 0; i < dayDifference; i++) {
+        const date = firstOfMonth.subtract(dayDifference - i, "day");
+        previousDays.push(<DayCell key={`prev-${date.format(DATE_FORMAT)}`} isHidden></DayCell>);
+      }
+    }
+    return previousDays;
+  };
 
   const getDaysOfMonth = (month: dayjs.Dayjs) => {
     const daysOfMonth: JSX.Element[] = [];
@@ -32,27 +46,44 @@ const Calendar: React.FC<CalendarProps> = ({ disabledDates, rangeChanged, initSe
     for (let i = 1; i <= month.daysInMonth(); i++) {
       const date = dayjs(month).set("date", i);
       daysOfMonth.push(
-        <Grid item xs component="td" key={date.format(DATE_FORMAT)}>
-          <DayCell
-            onMouseOver={() =>
-              isRangeFreezed || disableRange
-                ? null
-                : setHoverRange(getDateRange(selectedDay.format(DATE_FORMAT), date.format(DATE_FORMAT)))
+        <DayCell
+          isSelected={selectedDay ? date.isSame(selectedDay, "day") : false}
+          onClick={() => {
+            if (handleDateClicked) {
+              setSelectedDay(date);
+              handleDateClicked(date.format(DATE_FORMAT));
             }
-            isInHoverRange={hoverRange.includes(date.format(DATE_FORMAT))}
-            isSelected={
-              date.isSame(selectedDay, "day") ||
-              (hoverRange[hoverRange.length - 1] !== undefined && date.isSame(hoverRange[hoverRange.length - 1], "day"))
-            }
-            onClick={() => handleDateClicked(date)}
-            isDisabled={date.isBefore(today, "day") || disabledDates?.includes(date.format(DATE_FORMAT))}
-          >
-            {i}
-          </DayCell>
-        </Grid>
+          }}
+          isDisabled={date.isBefore(today, "day") || disabledDates?.includes(date.format(DATE_FORMAT))}
+          key={date.format(DATE_FORMAT)}
+        >
+          <Grid container justify="center" alignItems="center" style={{ height: "100%" }}>
+            <Grid item>
+              <Typography>{i}</Typography>
+            </Grid>
+          </Grid>
+        </DayCell>
       );
     }
     return daysOfMonth;
+  };
+
+  const nextMonthDays = (month: dayjs.Dayjs): JSX.Element[] => {
+    const nextDays: JSX.Element[] = [];
+    const endOfMonth = month.endOf("month");
+    const sundayIndex = 6;
+
+    // Check if Month ends with a sunday
+    if (endOfMonth.weekday() !== sundayIndex) {
+      const nextSunday = endOfMonth.add(1, "months").startOf("month").weekday(sundayIndex);
+      const dayDifference = nextSunday.diff(endOfMonth, "days") + 1;
+
+      for (let i = 0; i < dayDifference; i++) {
+        const date = dayjs(endOfMonth).add(i + 1, "day");
+        nextDays.push(<DayCell key={`next-${date.format(DATE_FORMAT)}`} isHidden></DayCell>);
+      }
+    }
+    return nextDays;
   };
 
   const getRows = (month: dayjs.Dayjs) => {
@@ -78,27 +109,9 @@ const Calendar: React.FC<CalendarProps> = ({ disabledDates, rangeChanged, initSe
     );
   };
 
-  const handleDateClicked = (date: dayjs.Dayjs) => {
-    if (hoverRange.length > 0 && !isRangeFreezed) {
-      rangeChanged(hoverRange[0], hoverRange[hoverRange.length - 1]);
-      setIsRangeFreezed(true);
-    } else {
-      rangeChanged(date.format(DATE_FORMAT), undefined);
-      setSelectedDay(date);
-      setIsRangeFreezed(false);
-      setHoverRange([]);
-    }
-  };
-
   const onChangeMonth = (months: number) => {
     setSelectedMonth(selectedMonth.add(months, "months"));
   };
-
-  useEffect(() => {
-    if (!selectedDay.isSame(selectedMonth, "month")) {
-      setSelectedMonth(selectedMonth.set("month", selectedDay.get("month")));
-    }
-  }, [selectedDay]);
 
   return (
     <Grid container direction="column">
@@ -106,7 +119,7 @@ const Calendar: React.FC<CalendarProps> = ({ disabledDates, rangeChanged, initSe
         <IconButton onClick={() => onChangeMonth(-1)}>
           <NavigateBeforeIcon />
         </IconButton>
-        <Typography variant="h6">{`${selectedMonth.format("MMMM")} - ${selectedMonth.format("YYYY")}`}</Typography>
+        <Typography variant="body1">{`${selectedMonth.format("MMMM")} - ${selectedMonth.format("YYYY")}`}</Typography>
         <IconButton onClick={() => onChangeMonth(1)}>
           <NavigateNextIcon />
         </IconButton>
