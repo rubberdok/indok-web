@@ -1,6 +1,7 @@
 ---
-title: Tekst
+title: Vedtekter
 description: Mer tekst
+image: /img/borsfest.jpg
 ---
 
 # En overskrift

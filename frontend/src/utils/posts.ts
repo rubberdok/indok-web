@@ -50,15 +50,12 @@ export const getPostsSlugs = (page: string) => {
   return paths;
 };
 
-export function getPostBySlug(slug: string, page: string) {
+export const getPostBySlug = (slug: string, page: string) => {
   const posts = getSortedPosts(page);
 
   const postIndex = posts.findIndex(({ slug: postSlug }) => postSlug === slug);
 
   const { frontmatter, content, excerpt } = posts[postIndex];
 
-  const previousPost = posts[postIndex + 1];
-  const nextPost = posts[postIndex - 1];
-
-  return { frontmatter, post: { content, excerpt }, previousPost, nextPost };
-}
+  return { frontmatter, post: { content, excerpt } };
+};

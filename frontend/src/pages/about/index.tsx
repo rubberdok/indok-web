@@ -79,7 +79,7 @@ const AboutPage: NextPage = () => {
         </Grid>
       </Container>
       <Wrapper>
-        <Typography variant="h6">Introduksjon</Typography>
+        <Typography variant="h5">Introduksjon</Typography>
         <Typography variant="body2">
           Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse er den øverste instansen
           (moderorganisasjonen) for all studentfrivillighet på masterstudiet Indøk ved NTNU.
@@ -95,7 +95,7 @@ const AboutPage: NextPage = () => {
           studentene på Indøk har stemmerett.
         </Typography>
         <br />
-        <Typography variant="h6">Starten på Hovedstyret</Typography>
+        <Typography variant="h5">Starten på Hovedstyret</Typography>
         <Typography variant="body2">
           Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse, NTNU er formaliseringen av all
           foreningsaktivitet på Indøk under ett og samme tak. På den måten kan vi si at Foreningen har eksistert så
@@ -129,7 +129,7 @@ const AboutPage: NextPage = () => {
           </ul>
         </Typography>
 
-        <Typography variant="h6">Foreningens formål</Typography>
+        <Typography variant="h5">Foreningens formål</Typography>
         <Typography variant="body2">
           <i>
             «Foreningens formål er å støtte den samlede studentmassen på sivilingeniørstudiet Industriell Økonomi og

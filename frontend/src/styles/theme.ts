@@ -29,14 +29,16 @@ const theme = createMuiTheme({
       fontFamily: ["Playfair Display", "sans-serif"].join(","),
       fontWeight: 700,
       fontSize: "1.5rem",
+      marginBottom: "24px",
     },
     h6: {
       fontFamily: ["Playfair Display", "sans-serif"].join(","),
       fontWeight: 700,
-      fontSize: "28px",
-      lineHeight: "43px",
+      fontSize: "22px",
+      lineHeight: "23px",
       marginTop: "10px",
       marginBottom: 30,
+      color: "rgb(43 39 28 / 35%)",
     },
     subtitle1: {
       fontFamily: ["Playfair Display", "sans-serif"].join(","),
@@ -64,11 +66,35 @@ const theme = createMuiTheme({
     },
   },
   overrides: {
+    MuiFab: {
+      root: {
+        justifyContent: "center",
+      },
+    },
+    MuiButtonBase: {
+      root: {
+        justifyContent: "none",
+      },
+    },
     MuiButton: {
       root: {
         padding: "16px 32px",
-        fontWeight: 700,
-        fontSize: 11,
+        fontWeight: 600,
+        fontSize: 14,
+        textTransform: "none",
+      },
+      outlined: {
+        padding: "16px 32px",
+        border: "2px solid rgb(0 0 0 / 10%)",
+      },
+      outlinedPrimary: {
+        borderWidth: 2,
+        color: "black",
+        background: "rgba(6, 90, 90, 0.07)",
+
+        ["&:hover"]: {
+          borderWidth: 2,
+        },
       },
     },
     MuiAppBar: {

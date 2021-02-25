@@ -17,7 +17,8 @@ type ArticleProps = {
   frontmatter: {
     description: string;
     title: string;
-    image?: string;
+    logo?: string;
+    alt?: string;
   };
 };
 
@@ -69,7 +70,7 @@ const Article: NextPage<ArticleProps> = ({ post, frontmatter }) => {
           className={classes.titleImage}
           style={{
             backgroundImage: `linear-gradient(to top, rgb(0 0 0 / 50%), rgb(0 0 0 / 60%)),
-                  url(${frontmatter.image})`,
+                  url()`,
           }}
         >
           <Typography variant="h2">{frontmatter.title}</Typography>
@@ -78,11 +79,12 @@ const Article: NextPage<ArticleProps> = ({ post, frontmatter }) => {
       <Container>
         <Grid justify="center" container>
           <Grid item xs={10}>
+            <img alt={frontmatter.alt} src={frontmatter.logo}></img>
             <Paper className={classes.heroCard}>
               <Box display="flex" flexDirection="column" alignItems="center">
                 <Box>
                   <Breadcrumbs className={classes.breadcrumb} aria-label="breadcrumb">
-                    <p color="inherit">Om foreningen</p>
+                    <p color="inherit">Linjeforeninger</p>
                     <p>{frontmatter.title}</p>
                   </Breadcrumbs>
                 </Box>
@@ -100,7 +102,7 @@ const Article: NextPage<ArticleProps> = ({ post, frontmatter }) => {
 };
 
 export const getStaticPaths = async () => {
-  const paths = getPostsSlugs("about");
+  const paths = getPostsSlugs("organizations");
 
   return {
     paths,
@@ -111,7 +113,7 @@ export const getStaticPaths = async () => {
 export const getStaticProps = async ({ params }: ArticleProps) => {
   const { slug } = params;
 
-  const postData = getPostBySlug(slug, "about");
+  const postData = getPostBySlug(slug, "organizations");
 
   return { props: postData };
 };
