@@ -1,6 +1,7 @@
+import { Box, Container } from "@material-ui/core";
+import React from "react";
 import { Speaker } from "react-feather";
 import { FaBed, FaLightbulb, FaThermometerFull, FaUtensils, FaWifi } from "react-icons/fa";
-import styled from "styled-components";
 
 const fontSize = 14;
 
@@ -36,9 +37,9 @@ const Facilities: React.FC = () => {
     <>
       <Container>
         {facilitiesData.map((item) => (
-          <Item key={facilitiesData.indexOf(item)}>
+          <Box display="inline-block" m="5px" fontSize={fontSize} key={facilitiesData.indexOf(item)}>
             {item.icon} {item.text}
-          </Item>
+          </Box>
         ))}
       </Container>
     </>
@@ -46,15 +47,3 @@ const Facilities: React.FC = () => {
 };
 
 export default Facilities;
-
-const Container = styled.div`
-  width: 80%;
-  margin: auto;
-`;
-
-const Item = styled.div`
-  display: inline-block;
-  margin: 5px;
-
-  font-size: ${fontSize}px;
-`;

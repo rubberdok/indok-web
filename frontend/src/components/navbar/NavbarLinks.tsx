@@ -5,7 +5,7 @@ import { makeStyles } from "@material-ui/core";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
-import { generateQueryString } from "src/utils/helpers";
+import { generateQueryString } from "@utils/helpers";
 
 const links = [
   {

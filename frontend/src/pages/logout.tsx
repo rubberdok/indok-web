@@ -4,7 +4,7 @@ import { DELETE_TOKEN_COOKIE, GET_ID_TOKEN } from "@graphql/auth/mutations";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-import { generateQueryString } from "src/utils/helpers";
+import { generateQueryString } from "@utils/helpers";
 
 const LogoutPage: NextPage = () => {
   const [getIdToken, { data, loading, error }] = useMutation<{ getIdToken: { idToken: string } }>(GET_ID_TOKEN, {
