@@ -1,21 +1,29 @@
+import { Card, createStyles, makeStyles } from "@material-ui/core";
 import React from "react";
-import styled from "styled-components";
 
 interface CardProps {
   children: React.ReactNode;
 }
 
-export const Card: React.FC<CardProps> = ({ children }) => {
+const useStyles = makeStyles(() =>
+  createStyles({
+    card: {
+      padding: "20px",
+      boxShadow: "0px 7px 17px -1px rgba(92, 92, 92, 0.62)",
+      borderRadius: "15px",
+      textAlign: "center",
+    },
+  })
+);
+
+const CardC: React.FC<CardProps> = ({ children }) => {
+  const classes = useStyles();
+
   return (
     <>
-      <StyledDiv>{children}</StyledDiv>
+      <Card className={classes.card}>{children}</Card>
     </>
   );
 };
 
-const StyledDiv = styled.div`
-  padding: 20px;
-  box-shadow: 0px 7px 17px -1px rgba(92, 92, 92, 0.62);
-  border-radius: 15px;
-  text-align: center;
-`;
+export default CardC;
