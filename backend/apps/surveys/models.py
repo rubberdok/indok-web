@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.db.models import UniqueConstraint
 from apps.organizations.models import Organization
 from apps.users.models import User
 
@@ -20,6 +21,7 @@ class Question(models.Model):
     offered_answers = models.ManyToManyField("OfferedAnswer")
     question_type = models.ForeignKey("QuestionType", on_delete=models.SET_NULL, null=True)
     position = models.IntegerField(unique=True)
+    mandatory = models.BooleanField(default=True)
 
     def __str__(self) -> str:
         return f"{self.survey}: {self.question}"
@@ -37,6 +39,9 @@ class Answer(models.Model):
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     answer = models.CharField(max_length=10000)
+
+    class Meta:
+        constraints = [UniqueConstraint(fields=["user", "question"], name="unique_answer_to_question_per_user")]
 
     def __str__(self) -> str:
         return f"User: {self.user}; Answer: {self.answer}"
