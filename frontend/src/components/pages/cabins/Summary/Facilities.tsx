@@ -1,4 +1,4 @@
-import { Container, createStyles, makeStyles } from "@material-ui/core";
+import { Box, Container } from "@material-ui/core";
 import React from "react";
 import { Speaker } from "react-feather";
 import { FaBed, FaLightbulb, FaThermometerFull, FaUtensils, FaWifi } from "react-icons/fa";
@@ -32,29 +32,14 @@ const facilitiesData = [
   },
 ];
 
-const useStyles = makeStyles(() =>
-  createStyles({
-    root: {
-      flexGrow: 1,
-    },
-    container: {
-      display: "inline-block",
-      margin: "5px",
-      fontSize: fontSize + "px",
-    },
-  })
-);
-
 const Facilities: React.FC = () => {
-  const classes = useStyles();
-
   return (
     <>
       <Container>
         {facilitiesData.map((item) => (
-          <div className={classes.container} key={facilitiesData.indexOf(item)}>
+          <Box display="inline-block" m="5px" fontSize={fontSize} key={facilitiesData.indexOf(item)}>
             {item.icon} {item.text}
-          </div>
+          </Box>
         ))}
       </Container>
     </>
