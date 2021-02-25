@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
@@ -6,6 +6,7 @@ import NativeSelect from "@material-ui/core/NativeSelect";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
+import Input from "@material-ui/core/Input";
 
 const useStyles = makeStyles((theme) => ({
   quantityRoot: {
@@ -77,25 +78,31 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface YearSelectorProps {
-  yearFilter: number | null;
-  updateYearFilters: (value: number | null) => void;
+  handleYearFilterChanged: (year: string) => void;
 }
 
-const YearSelector: React.FC<YearSelectorProps> = ({ yearFilter, updateYearFilters }) => {
+const YearSelector: React.FC<YearSelectorProps> = ({ handleYearFilterChanged }) => {
   const classes = useStyles();
+  const [year, setYear] = React.useState("");
+
+  useEffect(() => {
+    handleYearFilterChanged(year);
+  }, [year]);
 
   return (
     <div className={classes.quantityRoot}>
       <FormControl variant="outlined" className={classes.quantityRoot}>
         <Select
-          disableUnderline
           displayEmpty
           classes={{
             root: classes.selectRoot,
             icon: classes.icon,
           }}
-          value={yearFilter}
-          onChange={(event) => updateYearFilters(parseInt(event.target.value))}
+          value={year}
+          onChange={(event) => {
+            const value = event.target.value;
+            setYear(typeof value === "string" ? value : "");
+          }}
           name="Årstall"
           inputProps={{ "aria-label": "without label" }}
           MenuProps={{ classes: { paper: classes.selectPaper } }}
