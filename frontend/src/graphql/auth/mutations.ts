@@ -29,3 +29,11 @@ export const DELETE_TOKEN_COOKIE = gql`
     }
   }
 `;
+
+export const GET_ID_TOKEN = gql`
+  mutation {
+    getIdToken {
+      idToken
+    }
+  }
+`;
