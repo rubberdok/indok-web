@@ -99,7 +99,7 @@ class DataportenAuth:
         print("The id_token was successfully validated")
 
     @staticmethod
-    def confirm_indok_enrollment(access_token):
+    def confirm_indok_enrollment(access_token, id_token):
         print("\n3. Confirming indøk enrollment")
         if access_token is None:
             return None
