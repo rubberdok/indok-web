@@ -120,7 +120,6 @@ class DataportenAuth:
                 logout_response = requests.get(
                     "https://auth.dataporten.no/openid/endsession",
                     headers={
-                        "post_logout_redirect_uri": "http://localhost:3000",
                         "id_token_hint": id_token,
                     },
                 )
