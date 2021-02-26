@@ -11,7 +11,7 @@ class AuthUser(graphene.Mutation):
     class Arguments:
         code = graphene.String()
 
-    token = graphene.String(required=True)
+    token = graphene.String()
     user = graphene.Field(UserType)
     is_indok_student = graphene.Boolean()
     id_token = graphene.String()
@@ -20,9 +20,9 @@ class AuthUser(graphene.Mutation):
         user, enrolled, id_token = DataportenAuth.authenticate_and_get_user(code=code)
         if enrolled:
             token = get_token(user)
+            info.context.set_jwt_cookie = token
         else:
-            token = ""
-        info.context.set_jwt_cookie = token
+            token = None
         return AuthUser(
             user=user, token=token, is_indok_student=enrolled, id_token=id_token
         )
