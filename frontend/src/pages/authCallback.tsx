@@ -43,7 +43,7 @@ const AuthCallbackPage: NextPage = () => {
 
   if (!loading && data && data.authUser) {
     if (!data.authUser.isIndokStudent && data.authUser.idToken) {
-      // User does not attend indøk, log them out of Feide and redirect to this page without enrolled=false querystring
+      // User does not attend indøk, log them out of Feide and redirect to this page with enrolled=false querystring
       const queryString = generateQueryString({
         post_logout_redirect_uri: process.env.NEXT_PUBLIC_FRONTEND_URI + "/authCallback?enrolled=false",
         id_token_hint: data.authUser.idToken,
