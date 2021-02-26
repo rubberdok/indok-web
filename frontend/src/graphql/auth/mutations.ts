@@ -18,6 +18,8 @@ export const AUTHENTICATE = gql`
         dateJoined
         year
       }
+      isIndokStudent
+      idToken
     }
   }
 `;
