@@ -16,9 +16,10 @@ interface CalendarProps {
   disabledDates?: string[];
   handleDateClicked?: (date: string) => void;
   initSelectedDay?: string;
+  disableAll?: boolean;
 }
 
-const Calendar: React.FC<CalendarProps> = ({ disabledDates, initSelectedDay, handleDateClicked }) => {
+const Calendar: React.FC<CalendarProps> = ({ disabledDates, initSelectedDay, handleDateClicked, disableAll }) => {
   const [selectedMonth, setSelectedMonth] = useState(dayjs());
   const [selectedDay, setSelectedDay] = useState(initSelectedDay ? dayjs(initSelectedDay) : undefined);
 
@@ -53,7 +54,7 @@ const Calendar: React.FC<CalendarProps> = ({ disabledDates, initSelectedDay, han
               handleDateClicked(date.format(DATE_FORMAT));
             }
           }}
-          isDisabled={date.isBefore(today, "day") || disabledDates?.includes(date.format(DATE_FORMAT))}
+          isDisabled={disableAll || date.isBefore(today, "day") || disabledDates?.includes(date.format(DATE_FORMAT))}
           clickable={handleDateClicked === undefined}
           key={date.format(DATE_FORMAT)}
         >

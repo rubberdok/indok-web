@@ -62,7 +62,7 @@ const CabinAvailability: NextPage<Props> = ({ allCabins, chosenCabins, setChosen
           Tilgjengelighet for valgt kombinasjon
         </Typography>
         <Divider component="hr" />
-        <Calendar disabledDates={disabledDates} />
+        <Calendar disabledDates={disabledDates} disableAll={chosenCabins.length === 0} />
       </Grid>
     </Grid>
   );
