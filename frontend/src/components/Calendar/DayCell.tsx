@@ -18,8 +18,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const DayCell = (props: Props & Omit<MuiButtonProps, keyof Props>) => {
-  const { isDisabled, isSelected, isHidden, clickable, ...other } = props;
+const DayCell: React.FC<Props & Omit<MuiButtonProps, keyof Props>> = (props) => {
+  const { isDisabled, isHidden, clickable, ...other } = props;
   const classes = useStyles(props);
   return (
     <Grid item xs component="td">

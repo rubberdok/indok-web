@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { QueryResult, useQuery } from "@apollo/client";
 import { QUERY_ALL_BOOKINGS } from "@graphql/cabins/queries";
 import { Booking } from "@interfaces/cabins";
-import { createDateRange } from "@components/Calendar";
+import { getDateRange } from "@components/Calendar/helpers";
 import dayjs from "dayjs";
 
 interface AllBookingsQuery {
@@ -27,7 +27,7 @@ const useBookingRange = (initFromDate?: string, initToDate?: string): Output => 
 
   useEffect(() => {
     if (allBookingsQuery.data && fromDate && toDate) {
-      const range = createDateRange(fromDate, toDate);
+      const range = getDateRange(fromDate, toDate);
       setIsAvailable(
         allBookingsQuery.data.allBookings.filter(
           (booking) =>
