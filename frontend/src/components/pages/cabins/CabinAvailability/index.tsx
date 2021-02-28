@@ -1,8 +1,11 @@
+import { useQuery } from "@apollo/client";
 import Calendar from "@components/Calendar";
-import { Cabin } from "@interfaces/cabins";
-import { Checkbox, List, ListItem, Grid, Box, Typography, Divider } from "@material-ui/core";
+import { getDateRange } from "@components/Calendar/helpers";
+import { QUERY_ALL_BOOKINGS } from "@graphql/cabins/queries";
+import { Booking, Cabin } from "@interfaces/cabins";
+import { Checkbox, List, ListItem, Grid, Typography, Divider } from "@material-ui/core";
 import { NextPage } from "next";
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 interface Props {
   allCabins: Cabin[];
@@ -11,6 +14,24 @@ interface Props {
 }
 
 const CabinAvailability: NextPage<Props> = ({ allCabins, chosenCabins, setChosenCabins }) => {
+  const allBookingsQuery = useQuery<{
+    allBookings: Booking[];
+  }>(QUERY_ALL_BOOKINGS);
+  const [disabledDates, setDisabledDates] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (allBookingsQuery.data) {
+      const selectedMonthBookings = allBookingsQuery.data.allBookings.filter((booking) => {
+        return booking.cabins.some((cabin) => chosenCabins.map((cabin) => cabin.id).includes(cabin.id));
+      });
+      setDisabledDates(
+        selectedMonthBookings.reduce((newDisabledDates, booking) => {
+          return newDisabledDates.concat(getDateRange(booking.bookFrom, booking.bookTo));
+        }, [] as string[])
+      );
+    }
+  }, [allBookingsQuery.data, chosenCabins]);
+
   return (
     <Grid container spacing={10}>
       <Grid item xs={4} container direction="column" justify="center" alignItems="center">
@@ -41,7 +62,7 @@ const CabinAvailability: NextPage<Props> = ({ allCabins, chosenCabins, setChosen
           Tilgjengelighet for valgt kombinasjon
         </Typography>
         <Divider component="hr" />
-        <Calendar />
+        <Calendar disabledDates={disabledDates} />
       </Grid>
     </Grid>
   );

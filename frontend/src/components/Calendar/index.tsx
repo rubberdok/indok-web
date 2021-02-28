@@ -3,7 +3,6 @@ import dayjs from "dayjs";
 import { useState } from "react";
 import CalendarTable from "./CalendarTable";
 import { DATE_FORMAT } from "./constants";
-import { getDateRange, rangeLength } from "./helpers";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore";
 import DayCell from "./DayCell";
@@ -55,6 +54,7 @@ const Calendar: React.FC<CalendarProps> = ({ disabledDates, initSelectedDay, han
             }
           }}
           isDisabled={date.isBefore(today, "day") || disabledDates?.includes(date.format(DATE_FORMAT))}
+          clickable={handleDateClicked === undefined}
           key={date.format(DATE_FORMAT)}
         >
           <Grid container justify="center" alignItems="center" style={{ height: "100%" }}>
@@ -110,7 +110,8 @@ const Calendar: React.FC<CalendarProps> = ({ disabledDates, initSelectedDay, han
   };
 
   const onChangeMonth = (months: number) => {
-    setSelectedMonth(selectedMonth.add(months, "months"));
+    const newSelectedMonth = selectedMonth.add(months, "months");
+    setSelectedMonth(newSelectedMonth);
   };
 
   return (
@@ -131,6 +132,4 @@ const Calendar: React.FC<CalendarProps> = ({ disabledDates, initSelectedDay, han
   );
 };
 
-export const createDateRange = getDateRange;
-export const getRangeLength = (fromDate: string, toDate: string): number => rangeLength(fromDate, toDate);
 export default Calendar;
