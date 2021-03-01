@@ -99,7 +99,7 @@ class DataportenAuth:
         print("The id_token was successfully validated")
 
     @staticmethod
-    def confirm_indok_enrollment(access_token, id_token):
+    def confirm_indok_enrollment(access_token):
         print("\n3. Confirming indøk enrollment")
         if access_token is None:
             return None
@@ -115,20 +115,8 @@ class DataportenAuth:
             response.raise_for_status()
         except requests.exceptions.RequestException as err:
             print(f"Error confirming indøk enrollment: {err}")
-            # Log out the user from Feide
-            try:
-                logout_response = requests.get(
-                    "https://auth.dataporten.no/openid/endsession",
-                    headers={
-                        "id_token_hint": id_token,
-                    },
-                )
-                logout_response.raise_for_status()
-            except requests.exceptions.RequestException as err:
-                print(f"Error ending session: {err}")
-            raise PermissionDenied(
-                "Beklager, kun studenter som studerer Industriell Økonomi og Teknologiledelse (MTIØT) kan logge inn."
-            )
+            print("User is not enrolled at Indøk")
+            return False
 
         data = response.json()
         print(f"Indøk enrollment info: {json.dumps(data)}")
@@ -138,11 +126,11 @@ class DataportenAuth:
             enrolled = data["basic"] == "member" and data["active"] == True
 
         if not enrolled:
-            raise PermissionDenied(
-                "Beklager, kun studenter som studerer Industriell Økonomi og Teknologiledelse (MTIØT) kan logge inn."
-            )
+            print("User is not enrolled at Indøk")
+            return False
 
         print("User is enrolled at indøk")
+        return True
 
     @staticmethod
     def get_user_info(access_token):
@@ -193,7 +181,9 @@ class DataportenAuth:
         id_token = response.get("id_token")
 
         # Check if user is member of MTIØT group (studies indøk)
-        cls.confirm_indok_enrollment(access_token, id_token)
+        enrolled = cls.confirm_indok_enrollment(access_token)
+        if not enrolled:
+            return None, enrolled, id_token
 
         # Fetch user info from Dataporten
         user_info = cls.get_user_info(access_token)
@@ -227,4 +217,4 @@ class DataportenAuth:
                 id_token=id_token,
             )
             user.save()
-        return user
+        return user, enrolled, None

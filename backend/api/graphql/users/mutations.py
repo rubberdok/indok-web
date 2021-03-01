@@ -11,14 +11,21 @@ class AuthUser(graphene.Mutation):
     class Arguments:
         code = graphene.String()
 
-    token = graphene.String(required=True)
+    token = graphene.String()
     user = graphene.Field(UserType)
+    is_indok_student = graphene.Boolean()
+    id_token = graphene.String()
 
     def mutate(self, info, code):
-        user = DataportenAuth.authenticate_and_get_user(code=code)
-        token = get_token(user)
-        info.context.set_jwt_cookie = token
-        return AuthUser(user=user, token=token)
+        user, enrolled, id_token = DataportenAuth.authenticate_and_get_user(code=code)
+        if enrolled:
+            token = get_token(user)
+            info.context.set_jwt_cookie = token
+        else:
+            token = None
+        return AuthUser(
+            user=user, token=token, is_indok_student=enrolled, id_token=id_token
+        )
 
 
 class UpdateUser(graphene.Mutation):
