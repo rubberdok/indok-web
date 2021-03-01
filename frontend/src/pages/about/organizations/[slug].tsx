@@ -3,6 +3,7 @@ import Wrapper from "@components/pages/about/Template";
 import { Box, Breadcrumbs, Container, Grid, makeStyles, Paper, Typography } from "@material-ui/core";
 import { getPostBySlug, getPostsSlugs } from "@utils/posts";
 import { NextPage } from "next";
+import Link from "next/link";
 import React from "react";
 import ReactMarkdown from "react-markdown";
 
@@ -20,6 +21,8 @@ type ArticleProps = {
     logo?: string;
     alt?: string;
   };
+  nextPost: any;
+  previousPost: any;
 };
 
 const useStyles = makeStyles(() => ({
@@ -56,7 +59,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const Article: NextPage<ArticleProps> = ({ post, frontmatter }) => {
+const Article: NextPage<ArticleProps> = ({ post, frontmatter, nextPost, previousPost }) => {
   const classes = useStyles();
 
   return (
@@ -94,6 +97,25 @@ const Article: NextPage<ArticleProps> = ({ post, frontmatter }) => {
           </Grid>
         </Grid>
       </Container>
+      <nav>
+        {previousPost ? (
+          <Link href={"/about/organizations/[slug]"} as={`/about/organizations/${previousPost.slug}`}>
+            <a className="text-lg font-bold">← {previousPost.frontmatter.title}</a>
+          </Link>
+        ) : (
+          <div />
+        )}
+
+        <a href="./../organizations">Oversikt</a>
+
+        {nextPost ? (
+          <Link href={"/about/organizations/[slug]"} as={`/about/organizations/${nextPost.slug}`}>
+            <a className="text-lg font-bold">{nextPost.frontmatter.title} →</a>
+          </Link>
+        ) : (
+          <div />
+        )}
+      </nav>
       <Wrapper>
         <ReactMarkdown escapeHtml={false} source={post.content} renderers={{ heading: HeadingRenderer }} />
       </Wrapper>
@@ -114,6 +136,14 @@ export const getStaticProps = async ({ params }: ArticleProps) => {
   const { slug } = params;
 
   const postData = getPostBySlug(slug, "organizations");
+
+  if (!postData.previousPost) {
+    postData.previousPost;
+  }
+
+  if (!postData.nextPost) {
+    postData.nextPost;
+  }
 
   return { props: postData };
 };
