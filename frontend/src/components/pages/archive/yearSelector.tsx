@@ -78,16 +78,17 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface YearSelectorProps {
+  yearFilter: string;
   handleYearFilterChanged: (year: string) => void;
 }
 
-const YearSelector: React.FC<YearSelectorProps> = ({ handleYearFilterChanged }) => {
+const YearSelector: React.FC<YearSelectorProps> = ({ yearFilter, handleYearFilterChanged }) => {
   const classes = useStyles();
-  const [year, setYear] = React.useState("");
+  //const [year, setYear] = React.useState("");
 
-  useEffect(() => {
-    handleYearFilterChanged(year);
-  }, [year]);
+  //useEffect(() => {
+  //  handleYearFilterChanged(year);
+  //}, [year]);
 
   return (
     <div className={classes.quantityRoot}>
@@ -98,10 +99,13 @@ const YearSelector: React.FC<YearSelectorProps> = ({ handleYearFilterChanged }) 
             root: classes.selectRoot,
             icon: classes.icon,
           }}
-          value={year}
+          value={yearFilter}
+          //onChange={(event) => {
+          //  const value = event.target.value;
+          //  setYear(typeof value === "string" ? value : "");
+          //}}
           onChange={(event) => {
-            const value = event.target.value;
-            setYear(typeof value === "string" ? value : "");
+            typeof event.target.value === "string" && handleYearFilterChanged(event.target.value);
           }}
           name="Årstall"
           inputProps={{ "aria-label": "without label" }}
@@ -112,6 +116,9 @@ const YearSelector: React.FC<YearSelectorProps> = ({ handleYearFilterChanged }) 
           <MenuItem value="2020">2020</MenuItem>
           <MenuItem value="2019">2019</MenuItem>
           <MenuItem value="2018">2018</MenuItem>
+          <MenuItem value="2017">2017</MenuItem>
+          <MenuItem value="2016">2016</MenuItem>
+          <MenuItem value="2015">2015</MenuItem>
         </Select>
       </FormControl>
     </div>

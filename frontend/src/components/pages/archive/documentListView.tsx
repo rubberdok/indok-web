@@ -10,10 +10,6 @@ import SimpleSelector from "./simpleSelector";
 const DocumentListView: React.FC = () => {
   const [yearFilter, setYearFilter] = useState("");
 
-  const handleYearFilterChanged = (year: string) => {
-    setYearFilter(year);
-  };
-
   const [typeFilters, setTypeFilters] = useState<{ [key: string]: { active: boolean; title: string } }>({
     Budget: { active: false, title: "Budsjett og Regnskap" },
     Summary: { active: false, title: "Generalforsamling" },
@@ -45,7 +41,12 @@ const DocumentListView: React.FC = () => {
         />
       </ContentWrapper>
       <ContentWrapper style={{ justifyContent: "center", marginBottom: "32px" }}>
-        <YearSelector handleYearFilterChanged={handleYearFilterChanged} />
+        <YearSelector
+          yearFilter={yearFilter}
+          handleYearFilterChanged={(year: string) => {
+            setYearFilter(year);
+          }}
+        />
       </ContentWrapper>
       {/* <ContentWrapper style={{ marginBottom: "16px" }}>
         <ListFeaturedDocuments
