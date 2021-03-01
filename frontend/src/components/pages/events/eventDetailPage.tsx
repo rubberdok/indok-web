@@ -88,6 +88,15 @@ const useStyles = makeStyles((theme) => ({
     paddingRight: theme.spacing(1.6),
     float: "right",
   },
+  paragraph: {
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
+    display: "inline-block",
+  },
+  innerParagraph: {
+    paddingTop: theme.spacing(0),
+    paddingBottom: theme.spacing(0),
+  },
 }));
 
 const steps = ["Shipping address", "Payment details", "Review your order"];
@@ -102,6 +111,19 @@ function parseDate(date: string) {
 
 function getName(obj: any) {
   return obj != null ? obj.name : "null";
+}
+
+function wrapInTypo(para: string, className: any) {
+  return <Typography className={className}>{para}</Typography>;
+}
+
+function formatDescription(desc: string, innerClass: any, outerClass: any) {
+  return desc.split("\r\n\r\n").map((p) =>
+    wrapInTypo(
+      p.split("\r\n").map((t) => wrapInTypo(t, innerClass)),
+      outerClass
+    )
+  );
 }
 
 function isSignedUp(event: Event, userId?: string) {
@@ -186,7 +208,7 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
                 Beskrivelse
               </Typography>
               <Typography variant="body1" display="block" color={theme.palette.text.secondary}>
-                <pre style={{ fontFamily: "inherit" }}>{data.event.description}</pre>
+                {formatDescription(data.event.description, classes.innerParagraph, classes.paragraph)}
               </Typography>
             </Paper>
           </Grid>
