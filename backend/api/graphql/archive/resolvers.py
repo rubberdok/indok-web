@@ -26,7 +26,7 @@ class ArchiveDocumentResolvers:
     @login_required
     def resolve_archive_by_types(self, info, type_doc, year=None):
         # nonFilter = ["Foreningens lover", "Utveksling", "Annet", "Støtte fra HS"]
-        documents = ArchiveDocument.objects
+        documents = ArchiveDocument.objects.all()
         # filter_docs_year = []
         if type_doc:
             documents = documents.filter(type_doc__in=type_doc)

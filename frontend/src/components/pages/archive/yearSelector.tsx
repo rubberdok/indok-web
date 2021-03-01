@@ -84,11 +84,6 @@ interface YearSelectorProps {
 
 const YearSelector: React.FC<YearSelectorProps> = ({ yearFilter, handleYearFilterChanged }) => {
   const classes = useStyles();
-  //const [year, setYear] = React.useState("");
-
-  //useEffect(() => {
-  //  handleYearFilterChanged(year);
-  //}, [year]);
 
   return (
     <div className={classes.quantityRoot}>
@@ -100,10 +95,6 @@ const YearSelector: React.FC<YearSelectorProps> = ({ yearFilter, handleYearFilte
             icon: classes.icon,
           }}
           value={yearFilter}
-          //onChange={(event) => {
-          //  const value = event.target.value;
-          //  setYear(typeof value === "string" ? value : "");
-          //}}
           onChange={(event) => {
             typeof event.target.value === "string" && handleYearFilterChanged(event.target.value);
           }}
