@@ -50,7 +50,7 @@ class SurveyQueries(
     question_type = graphene.Field(QuestionTypeType, id=graphene.ID())
     question_types = graphene.List(QuestionTypeType, search=graphene.String())
 
-    survey = graphene.Field(SurveyType, id=graphene.ID())
+    survey = graphene.Field(SurveyType, survey_id=graphene.ID())
     surveys = graphene.List(SurveyType, search=graphene.String())
 
     question = graphene.Field(QuestionType, id=graphene.ID())
