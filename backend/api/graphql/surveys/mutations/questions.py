@@ -116,7 +116,7 @@ class DeleteQuestionType(graphene.Mutation):
 
 class AnswerInput(graphene.InputObjectType):
     question_id = graphene.ID()
-    answer = graphene.String(required=False)
+    answer = graphene.String(required=True)
 
 class CreateAnswer(graphene.Mutation):
     ok = graphene.Boolean()
@@ -191,6 +191,7 @@ class SubmitOrUpdateAnswers(graphene.Mutation):
         user = info.context.user
         answers = {int(answer_data["question_id"]): answer_data["answer"] for answer_data in answers_data}
         questions = Question.objects.filter(pk__in=answers)
+        print(questions)
 
         survey = None
         for question in questions:
@@ -202,20 +203,26 @@ class SubmitOrUpdateAnswers(graphene.Mutation):
         
         if survey:
 
+            mandatory_questions = set(survey.question_set.filter(mandatory=True).values_list("id", flat=True))
     
+            for qid, answer in answers.items():
+                if not len(answer) and qid in mandatory_questions:
+                    raise ValueError("You cannot submit empty answers to mandatory questions")
 
-        # Update existing answers
-            existing_answers = user.answer_set.filter(question__pk__in=answers, question__survey=survey)
+            # Update existing answers
+            existing_answers = user.answer_set.filter(question__survey=survey)
             for answer in existing_answers:
-                answer.answer = answers[answer.question.id]
-                del answers[answer.question.id]
-
+                qid = answer.question.id
+                if qid in answers:
+                    new_answer = answers[qid]
+                    if len(new_answer):
+                        answer.answer = new_answer
+                    del answers[qid]
             Answer.objects.bulk_update(existing_answers, ["answer"])
         
-            mandatory_questions = set(survey.question_set.filter(mandatory=True).values_list("id", flat=True))
+        
             new_answers = set(answers)
-            updated_answers = set(existing_answers.values_list("id", flat=True))
-
+            updated_answers = set(existing_answers.values_list("question__id", flat=True))
             if not mandatory_questions.issubset(temp := updated_answers.union(new_answers)):
                 raise AssertionError(f"Not all mandatory questions have been answered, expected {mandatory_questions}, got {temp}")
 
