@@ -12,27 +12,15 @@ import { SEND_EMAIL } from "@graphql/cabins/mutations";
 import { QUERY_CABINS } from "@graphql/cabins/queries";
 import { BookingData, Cabin, ContractProps, InputFieldsEvent, InputValueTypes, Validations } from "@interfaces/cabins";
 import { User } from "@interfaces/users";
-import { Box, Button, Container, createStyles, Grid, makeStyles, Theme, Typography } from "@material-ui/core";
+import { Button, Container, Grid, Typography } from "@material-ui/core";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { CREATE_CABIN } from "../../graphql/cabins/mutations";
 import useBookingRange from "../../hooks/cabins/useBookingRange";
 import HeaderComposition from "@components/pages/cabins/HeaderComposition";
-import { allValuesDefined, validateInputForm } from "@utils/helpers";
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      flexGrow: 1,
-    },
-    paper: {
-      padding: theme.spacing(2),
-      textAlign: "center",
-      color: theme.palette.text.secondary,
-    },
-  })
-);
+import { allValuesDefined } from "@utils/helpers";
+import { validateInputForm } from "@utils/cabins";
 
 const BookPage: NextPage = () => {
   const defaultPriceIndoker = 1100;
@@ -88,12 +76,16 @@ const BookPage: NextPage = () => {
   useEffect(() => {
     // update user data and inputvalues data to automatically fill in input fields
     if (data?.user) {
-      setUserData(data.user);
+      // temporary solution to split user first name and last name, set fixedlastname to empty string if equal to fixedFirstname
+      const fixedFirstname = data.user.firstName.split(" ").slice(0, -1).join(" ");
+      let fixedLastname = data.user.firstName.split(" ").slice(-1).join(" ");
+      fixedLastname = fixedLastname == fixedFirstname ? "" : fixedLastname;
+      setUserData({ ...data.user, firstName: fixedFirstname, lastName: fixedLastname });
 
       const updatedInputValues = {
         ...inputValues,
-        firstname: data.user.firstName,
-        surname: data.user.lastName,
+        firstname: fixedFirstname,
+        surname: fixedLastname,
         receiverEmail: data.user.email,
       };
 
@@ -224,89 +216,84 @@ const BookPage: NextPage = () => {
     }
   };
 
-  const classes = useStyles();
-
   return (
     <>
       <Layout>
         <Container>
           <HeaderComposition headerText="Fullføring av booking" href={"/cabins"} />
           {isAvailable ? (
-            <Box className={classes.root}>
-              <Grid container spacing={2} direction="row">
-                <Grid item xs={12} md={6}>
-                  <Grid container spacing={3} direction="column">
-                    <Grid item>
-                      <Summary
-                        from={range.fromDate ? range.fromDate : ""}
-                        to={range.toDate ? range.toDate : ""}
-                        cabins={bookingData.cabins ? bookingData.cabins : [""]}
-                        price={pricePerNight}
-                        nights={rangeLength}
-                      />
-                    </Grid>
-
-                    <Grid item>
-                      <Container>
-                        <CardC>
-                          <Grid item>
-                            <InputFields
-                              userData={userData}
-                              onChange={handleInputChange}
-                              cabins={bookingData.cabins}
-                              numberIndok={bookingData.numberIndok}
-                              numberExternal={bookingData.numberExternal}
-                              validations={validations}
-                            />
-                          </Grid>
-                          <Grid item>
-                            <Grid container spacing={3}>
-                              <Grid item>
-                                <CheckBox
-                                  onClick={handleCheckboxClick}
-                                  errorMsg={checkerror}
-                                  checkable={checkable}
-                                  contractData={contractData}
-                                />
-                              </Grid>
-                              <Grid item>
-                                <Button
-                                  color="primary"
-                                  onClick={(e) => handleSubmit(e)}
-                                  disabled={temporarilyDisableSubmitting}
-                                  variant="contained"
-                                  size="large"
-                                >
-                                  Gå til betaling
-                                </Button>
-                              </Grid>
-                              <Grid item>
-                                <Typography>OBS: Det er dessverre ikke mulig å booke via nettsiden ennå.</Typography>
-                              </Grid>
+            <Grid container spacing={4} direction="row">
+              <Grid item xs={12} md={6}>
+                <Grid container spacing={3} direction="column">
+                  <Grid item>
+                    <Summary
+                      from={range.fromDate ? range.fromDate : ""}
+                      to={range.toDate ? range.toDate : ""}
+                      cabins={bookingData.cabins ? bookingData.cabins : [""]}
+                      price={pricePerNight}
+                      nights={rangeLength}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <Grid container>
+                      <CardC>
+                        <Grid item>
+                          <InputFields
+                            userData={userData}
+                            onChange={handleInputChange}
+                            cabins={bookingData.cabins}
+                            numberIndok={bookingData.numberIndok}
+                            numberExternal={bookingData.numberExternal}
+                            validations={validations}
+                          />
+                        </Grid>
+                        <Grid item>
+                          <Grid container spacing={3}>
+                            <Grid item>
+                              <CheckBox
+                                onClick={handleCheckboxClick}
+                                errorMsg={checkerror}
+                                checkable={checkable}
+                                contractData={contractData}
+                              />
+                            </Grid>
+                            <Grid item>
+                              <Button
+                                color="primary"
+                                onClick={(e) => handleSubmit(e)}
+                                disabled={temporarilyDisableSubmitting}
+                                variant="contained"
+                                size="large"
+                              >
+                                Gå til betaling
+                              </Button>
+                            </Grid>
+                            <Grid item>
+                              <Typography>OBS: Det er dessverre ikke mulig å booke via nettsiden ennå.</Typography>
                             </Grid>
                           </Grid>
-                        </CardC>
-                      </Container>
-                    </Grid>
-                  </Grid>
-                </Grid>
-
-                <Grid item xs={12} md={6}>
-                  <Grid container spacing={3} direction={"column"}>
-                    <Grid item>
-                      <ImageSlider cabins={bookingData.cabins} />
-                    </Grid>
-                    <Grid item>
-                      <PriceSummary
-                        numberIndok={bookingData.numberIndok}
-                        numberExternal={bookingData.numberExternal}
-                        pricePerNight={pricePerNight}
-                      />
+                        </Grid>
+                      </CardC>
                     </Grid>
                   </Grid>
                 </Grid>
               </Grid>
-            </Box>
+
+              <Grid item xs={12} md={6}>
+                <Grid container spacing={3} direction={"column"}>
+                  <Grid item>
+                    <ImageSlider cabins={bookingData.cabins} />
+                  </Grid>
+                  <Grid item>
+                    <PriceSummary
+                      numberIndok={bookingData.numberIndok}
+                      numberExternal={bookingData.numberExternal}
+                      pricePerNight={pricePerNight}
+                    />
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
           ) : (
             <>{allBookingsQuery.loading ? <p>Laster...</p> : <p>{errorMessage}</p>}</>
           )}

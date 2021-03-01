@@ -1,7 +1,7 @@
 import graphene
 from api.auth.dataporten_auth import DataportenAuth
-from apps.users.models import User
 from django.contrib.auth import get_user_model
+from graphql_jwt.decorators import login_required
 from graphql_jwt.shortcuts import get_token
 
 from .types import UserType
@@ -41,7 +41,7 @@ class AuthUser(graphene.Mutation):
     token = graphene.String(required=True)
     user = graphene.Field(UserType)
 
-    def mutate(root, info, code):
+    def mutate(self, info, code):
         user = DataportenAuth.authenticate_and_get_user(code=code)
         token = get_token(user)
         info.context.set_jwt_cookie = token
@@ -60,7 +60,7 @@ class UpdateUser(graphene.Mutation):
     user = graphene.Field(UserType)
 
     def mutate(
-        root,
+        self,
         info,
         id,
         email=None,
@@ -84,3 +84,16 @@ class UpdateUser(graphene.Mutation):
 
         ok = True
         return UpdateUser(user=user, ok=ok)
+
+
+class GetIDToken(graphene.Mutation):
+    id_token = graphene.String(required=True)
+
+    @login_required
+    def mutate(self, info):
+        user = info.context.user
+        id_token = user.id_token
+
+        return GetIDToken(
+            id_token=id_token,
+        )

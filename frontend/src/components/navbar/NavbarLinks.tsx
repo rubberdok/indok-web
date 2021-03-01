@@ -5,7 +5,7 @@ import { makeStyles } from "@material-ui/core";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
-import { DATAPORTEN_SCOPES, generateAuthURL } from "./utils";
+import { generateQueryString } from "@utils/helpers";
 
 const links = [
   {
@@ -48,15 +48,28 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
+const DATAPORTEN_SCOPES = [
+  "openid",
+  "userid",
+  "userid-feide",
+  "userinfo-name",
+  "userinfo-photo",
+  "email",
+  "groups-edu",
+];
+
 const NavbarLinks: React.FC = () => {
   const classes = useStyles();
   const router = useRouter();
-  const signInURL = generateAuthURL(
-    process.env.NEXT_PUBLIC_DATAPORTEN_ID,
-    process.env.NEXT_PUBLIC_DATAPORTEN_STATE,
-    process.env.NEXT_PUBLIC_DATAPORTEN_REDIRECT_URI,
-    DATAPORTEN_SCOPES
-  );
+
+  const queryString = generateQueryString({
+    client_id: process.env.NEXT_PUBLIC_DATAPORTEN_ID,
+    state: process.env.NEXT_PUBLIC_DATAPORTEN_STATE,
+    redirect_uri: process.env.NEXT_PUBLIC_DATAPORTEN_REDIRECT_URI,
+    response_type: "code",
+    scope: DATAPORTEN_SCOPES.join(" "),
+  });
+  const signInURL = "https://auth.dataporten.no/oauth/authorization" + queryString;
 
   const { loading, error, data: userData } = useQuery<{ user: User }>(GET_USER);
 
