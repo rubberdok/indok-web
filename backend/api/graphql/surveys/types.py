@@ -1,18 +1,13 @@
+import graphene
+from api.graphql.users.types import UserType
+from apps.surveys.models import Answer, OfferedAnswer, Question
+from apps.surveys.models import QuestionType as QuestionTypeModel
+from apps.surveys.models import Survey
 from django.contrib.auth import get_user_model, login
 from django.db.models.query_utils import Q
-from apps.surveys.models import (
-    Survey,
-    QuestionType as QuestionTypeModel,
-    Answer,
-    OfferedAnswer,
-    Question,
-)
-
-from api.graphql.users.types import UserType
-
 from graphene_django import DjangoObjectType
 from graphql_jwt.decorators import login_required
-import graphene
+
 
 class OfferedAnswerType(DjangoObjectType):
     class Meta:
