@@ -1,9 +1,11 @@
+import { IconButton, Grid, Typography } from "@material-ui/core";
 import dayjs from "dayjs";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import CalendarTable from "./CalendarTable";
 import { DATE_FORMAT } from "./constants";
-import { getDateRange, previousMonthDays, rangeLength } from "./helpers";
-import { Day, DayCell, EventMarkerWrapper, MonthPickButton, MonthSelector, TwoCalendarsContainer } from "./styles";
+import NavigateNextIcon from "@material-ui/icons/NavigateNext";
+import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore";
+import DayCell from "./DayCell";
 
 export interface CalendarEvent {
   date: string;
@@ -11,56 +13,82 @@ export interface CalendarEvent {
 }
 
 interface CalendarProps {
-  events?: CalendarEvent[];
   disabledDates?: string[];
-  rangeChanged: (fromDate: string, toDate: string | undefined) => void;
+  handleDateClicked?: (date: string) => void;
   initSelectedDay?: string;
-  disableRange?: boolean;
+  disableAll?: boolean;
 }
 
-const Calendar: React.FC<CalendarProps> = ({ events, disabledDates, rangeChanged, initSelectedDay, disableRange }) => {
+const Calendar: React.FC<CalendarProps> = ({ disabledDates, initSelectedDay, handleDateClicked, disableAll }) => {
   const [selectedMonth, setSelectedMonth] = useState(dayjs());
-  const [selectedDay, setSelectedDay] = useState(dayjs(initSelectedDay));
-  const [hoverRange, setHoverRange] = useState<string[]>([]);
-  const [isRangeFreezed, setIsRangeFreezed] = useState(false);
+  const [selectedDay, setSelectedDay] = useState(initSelectedDay ? dayjs(initSelectedDay) : undefined);
+
+  const previousMonthDays = (month: dayjs.Dayjs): JSX.Element[] => {
+    const previousDays: JSX.Element[] = [];
+    const firstOfMonth = month.startOf("month");
+    const mondayIndex = 0;
+    // Check if Month starts with a Monday
+    if (firstOfMonth.weekday() !== mondayIndex) {
+      const previousMonday = firstOfMonth.subtract(1, "months").endOf("month").weekday(mondayIndex);
+      const dayDifference = firstOfMonth.diff(previousMonday, "days") + 1;
+
+      for (let i = 0; i < dayDifference; i++) {
+        const date = firstOfMonth.subtract(dayDifference - i, "day");
+        previousDays.push(<DayCell key={`prev-${date.format(DATE_FORMAT)}`} isHidden></DayCell>);
+      }
+    }
+    return previousDays;
+  };
 
   const getDaysOfMonth = (month: dayjs.Dayjs) => {
     const daysOfMonth: JSX.Element[] = [];
     const today = dayjs();
     for (let i = 1; i <= month.daysInMonth(); i++) {
       const date = dayjs(month).set("date", i);
-      const dateEvents = events?.filter((event) => event.date === date.format(DATE_FORMAT));
       daysOfMonth.push(
         <DayCell
-          onMouseOver={() =>
-            isRangeFreezed || disableRange
-              ? null
-              : setHoverRange(getDateRange(selectedDay.format(DATE_FORMAT), date.format(DATE_FORMAT)))
-          }
-          isInHoverRange={hoverRange.includes(date.format(DATE_FORMAT))}
-          isSelected={
-            date.isSame(selectedDay, "day") ||
-            (hoverRange[hoverRange.length - 1] !== undefined && date.isSame(hoverRange[hoverRange.length - 1], "day"))
-          }
-          onClick={() => handleDateClicked(date)}
+          isSelected={selectedDay ? date.isSame(selectedDay, "day") : false}
+          onClick={() => {
+            if (handleDateClicked) {
+              setSelectedDay(date);
+              handleDateClicked(date.format(DATE_FORMAT));
+            }
+          }}
+          isDisabled={disableAll || date.isBefore(today, "day") || disabledDates?.includes(date.format(DATE_FORMAT))}
+          clickable={handleDateClicked === undefined}
           key={date.format(DATE_FORMAT)}
-          isDisabled={date.isBefore(today, "day") || disabledDates?.includes(date.format(DATE_FORMAT))}
         >
-          <Day>{i}</Day>
-          <EventMarkerWrapper>
-            {dateEvents ? dateEvents.map((event, index) => event.renderComponent(`${index}`)) : null}
-          </EventMarkerWrapper>
+          <Grid container justify="center" alignItems="center" style={{ height: "100%" }}>
+            <Grid item>
+              <Typography>{i}</Typography>
+            </Grid>
+          </Grid>
         </DayCell>
       );
     }
     return daysOfMonth;
   };
 
+  const nextMonthDays = (month: dayjs.Dayjs): JSX.Element[] => {
+    const nextDays: JSX.Element[] = [];
+    const endOfMonth = month.endOf("month");
+    const sundayIndex = 6;
+
+    // Check if Month ends with a sunday
+    if (endOfMonth.weekday() !== sundayIndex) {
+      const nextSunday = endOfMonth.add(1, "months").startOf("month").weekday(sundayIndex);
+      const dayDifference = nextSunday.diff(endOfMonth, "days") + 1;
+
+      for (let i = 0; i < dayDifference; i++) {
+        const date = dayjs(endOfMonth).add(i + 1, "day");
+        nextDays.push(<DayCell key={`next-${date.format(DATE_FORMAT)}`} isHidden></DayCell>);
+      }
+    }
+    return nextDays;
+  };
+
   const getRows = (month: dayjs.Dayjs) => {
-    const slots: JSX.Element[] = [
-      ...previousMonthDays(month, selectedDay, handleDateClicked),
-      ...getDaysOfMonth(month),
-    ];
+    const slots: JSX.Element[] = [...previousMonthDays(month), ...getDaysOfMonth(month), ...nextMonthDays(month)];
     let cells: JSX.Element[];
     return slots.reduce(
       (prev: JSX.Element[][], curr, index) => {
@@ -82,43 +110,27 @@ const Calendar: React.FC<CalendarProps> = ({ events, disabledDates, rangeChanged
     );
   };
 
-  const handleDateClicked = (date: dayjs.Dayjs) => {
-    if (hoverRange.length > 0 && !isRangeFreezed) {
-      rangeChanged(hoverRange[0], hoverRange[hoverRange.length - 1]);
-      setIsRangeFreezed(true);
-    } else {
-      rangeChanged(date.format(DATE_FORMAT), undefined);
-      setSelectedDay(date);
-      setIsRangeFreezed(false);
-      setHoverRange([]);
-    }
-  };
-
   const onChangeMonth = (months: number) => {
-    setSelectedMonth(selectedMonth.add(months, "months"));
+    const newSelectedMonth = selectedMonth.add(months, "months");
+    setSelectedMonth(newSelectedMonth);
   };
-
-  useEffect(() => {
-    if (!selectedDay.isSame(selectedMonth, "month")) {
-      setSelectedMonth(selectedMonth.set("month", selectedDay.get("month")));
-    }
-  }, [selectedDay]);
 
   return (
-    <>
-      <MonthSelector>
-        <MonthPickButton onClick={() => onChangeMonth(-1)}>{"<"}</MonthPickButton>
-        <MonthPickButton onClick={() => onChangeMonth(1)}>{">"}</MonthPickButton>
-      </MonthSelector>
-      <TwoCalendarsContainer>
+    <Grid container direction="column">
+      <Grid item container alignItems="center" justify="space-between" xs>
+        <IconButton onClick={() => onChangeMonth(-1)}>
+          <NavigateBeforeIcon />
+        </IconButton>
+        <Typography variant="body1">{`${selectedMonth.format("MMMM")} - ${selectedMonth.format("YYYY")}`}</Typography>
+        <IconButton onClick={() => onChangeMonth(1)}>
+          <NavigateNextIcon />
+        </IconButton>
+      </Grid>
+      <Grid item>
         <CalendarTable getRows={getRows} month={selectedMonth.clone()} />
-        <hr />
-        <CalendarTable getRows={getRows} month={selectedMonth.clone().add(1, "month")} />
-      </TwoCalendarsContainer>
-    </>
+      </Grid>
+    </Grid>
   );
 };
 
-export const createDateRange = getDateRange;
-export const getRangeLength = (fromDate: string, toDate: string): number => rangeLength(fromDate, toDate);
 export default Calendar;

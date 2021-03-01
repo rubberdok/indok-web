@@ -4,25 +4,44 @@ import CabinAvailability from "@components/pages/cabins/CabinAvailability";
 import CabinDatePicker from "@components/pages/cabins/CabinDatePicker";
 import { QUERY_CABINS } from "@graphql/cabins/queries";
 import { Cabin } from "@interfaces/cabins";
-import { Box, Grid, Step, StepLabel, Stepper, Button, Typography, Paper } from "@material-ui/core";
+import { Box, Grid, Step, StepLabel, Stepper, Button, Typography, Paper, Tooltip } from "@material-ui/core";
 import { NextPage } from "next";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+
+interface StepReady {
+  [step: number]: { ready: boolean; stepName: string; errortext: string };
+}
 
 const steps = ["Velg hytte", "Innsjekk/Utsjekk", "Kontaktinfo", "Betaling", "Kvittering"];
 
+const initalStepReady: StepReady = steps.reduce((initialObject, step, index) => {
+  initialObject[index] = {
+    stepName: step,
+    ready: false,
+    errortext: "",
+  };
+  return initialObject;
+}, {} as StepReady);
+
 const CabinBookingPage: NextPage = () => {
   const [activeStep, setActiveStep] = useState(0);
+  const [stepReady, setStepReady] = useState<StepReady>(initalStepReady);
 
   // Velg Hytte
   const [chosenCabins, setChosenCabins] = useState<Cabin[]>([]);
-
   const cabinQuery = useQuery<{ cabins: Cabin[] }>(QUERY_CABINS);
+  useEffect(() => {
+    // Cannot go to next step if no cabin is chosen
+    setStepReady({
+      ...stepReady,
+      0: { ...stepReady[0], ready: chosenCabins.length > 0, errortext: "Du må velge en hytte for å gå videre" },
+    });
+  }, [chosenCabins]);
 
   const getStepComponent = () => {
     switch (activeStep) {
       case 0:
         // Velg hytte
-        console.log("Velg Hytte");
         return cabinQuery.data ? (
           <CabinAvailability
             allCabins={cabinQuery.data.cabins}
@@ -51,7 +70,7 @@ const CabinBookingPage: NextPage = () => {
     <>
       <Navbar />
       <Box m={10}>
-        <Grid container direction="column" alignItems="stretch">
+        <Grid container direction="column" justify="center" spacing={1}>
           <Grid item>
             <Stepper activeStep={activeStep}>
               {steps.map((label) => (
@@ -62,23 +81,29 @@ const CabinBookingPage: NextPage = () => {
             </Stepper>
           </Grid>
           <Grid item>
-            <Box m={2}>
-              <Paper>
-                <Box m={2}>{getStepComponent()}</Box>
-              </Paper>
-            </Box>
+            <Paper>
+              <Box p={10}>{getStepComponent()}</Box>
+            </Paper>
           </Grid>
           <Grid item container justify="space-between">
             <Button variant="contained" disabled={activeStep === 0} onClick={() => setActiveStep((prev) => prev - 1)}>
               Forrige
             </Button>
-            <Button
-              variant="contained"
-              disabled={activeStep === steps.length - 1}
-              onClick={() => setActiveStep((prev) => prev + 1)}
+            <Tooltip
+              title={stepReady[activeStep].errortext}
+              placement="left"
+              disableHoverListener={stepReady[activeStep].ready}
             >
-              Neste
-            </Button>
+              <Box>
+                <Button
+                  variant="contained"
+                  disabled={!stepReady[activeStep].ready}
+                  onClick={() => setActiveStep((prev) => prev + 1)}
+                >
+                  Neste
+                </Button>
+              </Box>
+            </Tooltip>
           </Grid>
         </Grid>
       </Box>

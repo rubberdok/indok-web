@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { getRangeLength } from "@components/Calendar";
+import { rangeLength as rangeLengtHelper } from "@components/Calendar/helpers";
 import Layout from "@components/Layout";
 import CardC from "@components/pages/cabins/CardC";
 import CheckBox from "@components/pages/cabins/InputFields/Checkbox";
@@ -117,7 +117,7 @@ const BookPage: NextPage = () => {
       const toDate = urlData.toDate as string;
       const toDateParsed = toDate.split("/").reverse().join("-");
       setRange(fromDateParsed, toDateParsed);
-      setRangeLength(getRangeLength(fromDate, toDate));
+      setRangeLength(rangeLengtHelper(fromDate, toDate));
       setCabinIDs((urlData.cabins as string).split("_").map((id) => parseInt(id)));
     }
   }, [urlData]);
