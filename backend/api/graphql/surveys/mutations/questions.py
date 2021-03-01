@@ -202,7 +202,7 @@ class SubmitOrUpdateAnswers(graphene.Mutation):
         
         if survey:
 
-            mandatory_questions = set(survey.question_set.filter(mandatory=True).values_list("id", flat=True))
+            mandatory_questions = set(survey.questions.filter(mandatory=True).values_list("id", flat=True))
     
             # Update existing answers
             existing_answers = user.answer_set.filter(question__survey=survey)

@@ -33,7 +33,7 @@ class OfferedAnswerResolvers:
         return OfferedAnswer.objects.all()
 
 class SurveyResolvers:
-    def resolve_survey(self, info, id: int):
+    def resolve_survey(self, info, survey_id: int, user_id: str=None):
         return Survey.objects.get(pk=id)
 
     def resolve_surveys(self, info, search: Optional[str]=None):

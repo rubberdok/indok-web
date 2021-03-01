@@ -18,7 +18,7 @@ class Survey(models.Model):
         return f"{self.descriptive_name}"
 
 class Question(models.Model):
-    survey = models.ForeignKey(Survey, on_delete=models.CASCADE)
+    survey = models.ForeignKey(Survey, on_delete=models.CASCADE, related_name="questions")
     question = models.CharField(max_length=300)
     description = models.CharField(max_length=1000, blank=True, default="")
     offered_answers = models.ManyToManyField("OfferedAnswer")
@@ -42,8 +42,8 @@ class OfferedAnswer(models.Model):
         return f"{self.answer}"
 
 class Answer(models.Model):
-    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="answers")
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name="answers")
     answer = models.CharField(max_length=10000)
 
     class Meta:

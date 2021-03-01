@@ -1,3 +1,5 @@
+from django.contrib.auth import get_user_model
+from django.db.models.query_utils import Q
 from apps.surveys.models import (
     Survey,
     QuestionType as QuestionTypeModel,
@@ -6,7 +8,10 @@ from apps.surveys.models import (
     Question,
 )
 
+from api.graphql.users.types import UserType
+
 from graphene_django import DjangoObjectType
+from graphql_jwt.decorators import login_required
 import graphene
 
 class OfferedAnswerType(DjangoObjectType):
@@ -24,6 +29,7 @@ class QuestionTypeType(DjangoObjectType):
 
 class QuestionType(DjangoObjectType):
     offered_answers = graphene.List(OfferedAnswerType)
+    answers = graphene.List(AnswerType)
 
     class Meta:
         model = Question
@@ -40,11 +46,14 @@ class QuestionType(DjangoObjectType):
         return root.offered_answers.all()
 
     @staticmethod
-    def resolve_answers(root: Question, info):
+    def resolve_answers(root: Question, info, user_id: str=None):
+        if user_id:
+            return root.answers.filter(user_id=user_id)
         return root.answers.all()
 
 class SurveyType(DjangoObjectType):
     questions = graphene.List(QuestionType)
+    responders = graphene.List(UserType)
 
     class Meta:
         model = Survey
@@ -56,8 +65,11 @@ class SurveyType(DjangoObjectType):
 
     @staticmethod
     def resolve_questions(root: Survey, info):
-        return root.question_set.all()
+        return root.questions.all()
 
+    @login_required
+    def resolve_responders(root: Survey, info):
+        return get_user_model().objects.filter(answers__question__survey=root).distinct()
 
 
 
