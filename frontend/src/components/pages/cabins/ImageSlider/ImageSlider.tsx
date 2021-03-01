@@ -6,12 +6,7 @@ import Button from "@material-ui/core/Button";
 import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import SwipeableViews from "react-swipeable-views";
-import { autoPlay } from "react-swipeable-views-utils";
-import { ImageSliderProps } from "@interfaces/cabins";
 import { Box, Grid, Typography } from "@material-ui/core";
-import { imageData } from "./imageData";
-
-const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 
 const useStyles = makeStyles((theme) => ({
   img: {
@@ -19,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
     display: "block",
     maxWidth: "100%",
     overflow: "hidden",
-    width: "99%",
+    width: "100%",
     borderRadius: "20px",
   },
   mobileStepper: {
@@ -27,19 +22,23 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ImageSlider = ({ cabins }: ImageSliderProps): JSX.Element => {
+interface ImageData {
+  label: string;
+  description: string;
+  imgPath: string;
+}
+
+interface imageSliderProps {
+  imageData: ImageData[];
+  displayLabelText: boolean;
+}
+
+const ImageSlider = ({ imageData, displayLabelText }: imageSliderProps): JSX.Element => {
   const classes = useStyles();
   const theme = useTheme();
   const [activeStep, setActiveStep] = React.useState(0);
 
-  // show all images of both cabins if both are chosen, else show only images from one
-  const images =
-    cabins?.length == 2
-      ? imageData.bjørnen.concat(imageData.oksen)
-      : cabins == ["Bjørnen"]
-      ? imageData.bjørnen
-      : imageData.oksen;
-  const maxSteps = images.length;
+  const maxSteps = imageData.length;
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -55,30 +54,36 @@ const ImageSlider = ({ cabins }: ImageSliderProps): JSX.Element => {
 
   return (
     <Box>
-      <Paper square elevation={0}>
-        <Grid container direction="column" alignItems="center" justify="center">
-          <Grid item>
-            <Typography variant="h4">{images[activeStep].label}</Typography>
+      {displayLabelText ? (
+        <Paper square elevation={0}>
+          <Grid container direction="column" alignItems="center" justify="center">
+            <Grid item>
+              <Typography variant="h4">{imageData[activeStep].label}</Typography>
+            </Grid>
+            <Grid item>
+              <Typography variant="overline">{imageData[activeStep].description}</Typography>
+            </Grid>
           </Grid>
-          <Grid item>
-            <Typography variant="overline">{images[activeStep].description}</Typography>
-          </Grid>
-        </Grid>
-      </Paper>
-      <AutoPlaySwipeableViews
+        </Paper>
+      ) : (
+        ""
+      )}
+
+      <SwipeableViews
         axis={theme.direction === "rtl" ? "x-reverse" : "x"}
         index={activeStep}
         onChangeIndex={handleStepChange}
         enableMouseEvents
+        disableLazyLoading
       >
-        {images.map((step, index) => (
+        {imageData.map((step, index) => (
           <div key={index}>
             {Math.abs(activeStep - index) <= 2 ? (
               <img className={classes.img} src={step.imgPath} alt={step.label} />
             ) : null}
           </div>
         ))}
-      </AutoPlaySwipeableViews>
+      </SwipeableViews>
       <MobileStepper
         steps={maxSteps}
         position="static"
