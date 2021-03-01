@@ -1,6 +1,9 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.db.models import UniqueConstraint
+from django.db.models.constraints import CheckConstraint
+from django.db.models.query_utils import Q
+from django.db.models.functions import Length
 from apps.organizations.models import Organization
 from apps.users.models import User
 
@@ -20,7 +23,7 @@ class Question(models.Model):
     description = models.CharField(max_length=1000, blank=True, default="")
     offered_answers = models.ManyToManyField("OfferedAnswer")
     question_type = models.ForeignKey("QuestionType", on_delete=models.SET_NULL, null=True)
-    position = models.IntegerField(unique=True)
+    position = models.IntegerField()
     mandatory = models.BooleanField(default=True)
 
     def __str__(self) -> str:
@@ -28,6 +31,9 @@ class Question(models.Model):
 
     class Meta:
         ordering = ["position"]
+        constraints = [
+            UniqueConstraint(fields=["position", "survey"], name="unique question position per survey")
+        ]
 
 class OfferedAnswer(models.Model):
     answer = models.CharField(max_length=500)
@@ -41,7 +47,10 @@ class Answer(models.Model):
     answer = models.CharField(max_length=10000)
 
     class Meta:
-        constraints = [UniqueConstraint(fields=["user", "question"], name="unique_answer_to_question_per_user")]
+        constraints = [
+            UniqueConstraint(fields=["user", "question"], name="unique_answer_to_question_per_user"),
+            CheckConstraint(check=~Q(answer=""), name="answer_not_empty")
+        ]
 
     def __str__(self) -> str:
         return f"User: {self.user}; Answer: {self.answer}"
