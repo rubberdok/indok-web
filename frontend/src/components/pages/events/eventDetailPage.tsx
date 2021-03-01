@@ -10,6 +10,7 @@ import EventIcon from "@material-ui/icons/Event";
 import LocationOnIcon from "@material-ui/icons/LocationOn";
 import ScheduleIcon from "@material-ui/icons/Schedule";
 import CreditCard from "@material-ui/icons/CreditCard";
+import MuiAlert from "@material-ui/lab/Alert";
 import { Container } from "next/app";
 import Link from "next/link";
 import React, { useState } from "react";
@@ -109,7 +110,8 @@ function isSignedUp(event: Event, userId?: string) {
 }
 
 const EventDetailPage: React.FC<Props> = ({ eventId }) => {
-  const [hasClicked, setHasClicked] = useState(false);
+  const [openSignUpSnackbar, setOpenSignUpSnackbar] = useState(false);
+  const [openSignOffSnackbar, setOpenSignOffSnackbar] = useState(false);
   const [eventSignUp, { loading: signUpLoading, data: signUpData }] = useMutation<{
     eventSignUp: { event: Event; isFull: boolean };
   }>(EVENT_SIGN_UP);
@@ -132,16 +134,17 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
 
   const handleClick = () => {
     if (!userData?.user.id) return;
-    setHasClicked(true);
     if (isSignedUp(data.event, userData?.user.id)) {
-      eventSignOff({ variables: { eventId: eventId.toString(), userId: userData?.user.id } }).then(() =>
-        refetch({ id: eventId })
-      );
+      eventSignOff({ variables: { eventId: eventId.toString(), userId: userData?.user.id } }).then(() => {
+        refetch({ id: eventId });
+        setOpenSignOffSnackbar(true);
+      });
       return;
     }
-    eventSignUp({ variables: { eventId: eventId.toString(), userId: userData?.user.id } }).then(() =>
-      refetch({ id: eventId })
-    );
+    eventSignUp({ variables: { eventId: eventId.toString(), userId: userData?.user.id } }).then(() => {
+      refetch({ id: eventId });
+      setOpenSignUpSnackbar(true);
+    });
   };
 
   if (data.event) {
@@ -275,27 +278,20 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
 
                       <Snackbar
                         anchorOrigin={{ vertical: "top", horizontal: "right" }}
-                        open={
-                          signOffLoading || signUpLoading
-                            ? false
-                            : isSignedUp(data.event, userData?.user.id) === false && hasClicked
-                        }
+                        open={openSignOffSnackbar}
                         autoHideDuration={3000}
-                        message="Du er nå avmeldt"
-                        onClose={() => setHasClicked(false)}
-                      />
+                        onClose={() => setOpenSignOffSnackbar(false)}
+                      >
+                        <MuiAlert elevation={6} variant="filled" severity="info">
+                          Du er nå avmeldt
+                        </MuiAlert>
+                      </Snackbar>
 
                       <Snackbar
                         anchorOrigin={{ vertical: "top", horizontal: "right" }}
-                        open={
-                          signOffLoading || signUpLoading
-                            ? false
-                            : isSignedUp(data.event, userData?.user.id) === true &&
-                              !signUpData?.eventSignUp.isFull &&
-                              hasClicked
-                        }
+                        open={openSignUpSnackbar}
                         autoHideDuration={3000}
-                        onClose={() => setHasClicked(false)}
+                        onClose={() => setOpenSignUpSnackbar(false)}
                         message="Du er nå påmeldt"
                       />
                     </>

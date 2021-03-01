@@ -38,6 +38,10 @@ class Event(models.Model):
 
     deadline = models.DateTimeField(blank=True, null=True)  # Deadline for signing up
 
+    signup_open_date = models.DateTimeField(
+        blank=True, null=True
+    )  # When the signup should become available
+
     available_slots = models.PositiveIntegerField(  # maximal number of users that can sign up for an event
         blank=True,
         null=True,  # TODO: Make this field conditionally required in frontend when is_attendable is True!
@@ -48,6 +52,8 @@ class Event(models.Model):
     )
 
     price = models.FloatField(blank=True, null=True)
+
+    short_description = models.CharField(max_length=100, blank=True, null=True)
 
     @property
     def no_of_filled_slots(self):

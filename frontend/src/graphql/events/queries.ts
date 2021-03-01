@@ -33,6 +33,8 @@ export const GET_EVENTS = gql`
         username
       }
       price
+      shortDescription
+      signupOpenDate
     }
   }
 `;
@@ -70,6 +72,8 @@ export const GET_DEFAULT_EVENTS = gql`
         username
       }
       price
+      shortDescription
+      signupOpenDate
     }
   }
 `;

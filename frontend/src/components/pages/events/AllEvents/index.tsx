@@ -211,6 +211,7 @@ const AllEvents: React.FC = () => {
                         <Grid item xs>
                           <Typography variant="h6">{event.title}</Typography>
                           <Typography variant="body1">{formatDate(event.startTime)}</Typography>
+                          {"Trykk for å lese mer aaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaaa aaaa aaaa aaaa aaaa"} {/* 75 */}
                         </Grid>
                         {userData && !userLoading && userData.user && !userError && event.isAttendable ? (
                           event.signedUpUsers.length === event.availableSlots ? (
