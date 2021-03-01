@@ -27,7 +27,7 @@ const LogoutPage: NextPage = () => {
   // reset the apollo store and redirect. See // https://www.apollographql.com/docs/react/networking/authentication/#reset-store-on-logout
   if (deleteCookieData && data) {
     const queryString = generateQueryString({
-      post_logout_redirect_uri: process.env.NEXT_PUBLIC_HOST_NAME,
+      post_logout_redirect_uri: process.env.NEXT_PUBLIC_FRONTEND_URI,
       id_token_hint: data.getIdToken.idToken,
     });
     const logOutUrl = "https://auth.dataporten.no/openid/endsession" + queryString;
