@@ -1,9 +1,9 @@
 import { Question, QuestionType, QuestionVariables } from "@interfaces/surveys";
 import { MutationFunctionOptions, FetchResult } from "@apollo/client";
-import TextField from "@components/ui/formComponents/textfield";
 import Dropdown from "@components/ui/formComponents/dropdown";
 import { useState } from "react";
 import QuestionTypePreview from "@components/pages/surveys/surveyCreation/questionTypePreview";
+import { Grid, Button, TextField, Select, MenuItem, Radio, Checkbox } from "@material-ui/core";
 
 const EditQuestion: React.FC<{
   oldQuestion: Question;
@@ -51,7 +51,7 @@ const EditQuestion: React.FC<{
 }> = ({ oldQuestion, questionTypes, updateQuestion, deleteQuestion, setInactive }) => {
   const [question, setQuestion] = useState<Question>(oldQuestion);
   return (
-    <>
+    <Grid container item direction="column">
       <TextField
         title="Spørsmål:"
         value={question.question}
@@ -64,96 +64,96 @@ const EditQuestion: React.FC<{
         }}
       />
       <br />
-      <Dropdown
-        title="Type"
-        options={questionTypes.map((type) => ({
-          text: type.name,
-          value: type.id,
-          selected: type === question.questionType,
-        }))}
+      <Select
+        value={question.questionType.id}
         onChange={(e) => {
           e.preventDefault();
           setQuestion({
             ...question,
-            questionType: questionTypes.find((type) => type.id === e.target.value) ?? questionTypes[0],
+            questionType: questionTypes.find((questionType) => questionType.id === e.target.value) ?? questionTypes[0],
           });
         }}
-      />
+      >
+        {questionTypes.map((questionType, index) => (
+          <MenuItem key={index} value={questionType.id}>
+            {questionType.name}
+          </MenuItem>
+        ))}
+      </Select>
       {question.questionType.name === "Checkboxes" ||
       question.questionType.name === "Multiple choice" ||
       question.questionType.name === "Drop-down" ? (
-        <ul>
+        <Grid container direction="column">
           {question.offeredAnswers.map((offeredAnswer, index) => (
-            <li key={index}>
-              <label>
-                <input
-                  type={question.questionType.name === "Checkboxes" ? "checkbox" : "radio"}
-                  name={question.id}
-                  disabled
-                />
-                <TextField
-                  value={offeredAnswer.answer}
-                  onChange={(e) => {
-                    e.preventDefault();
-                    setQuestion({
-                      ...question,
-                      offeredAnswers: question.offeredAnswers.map((oldAnswer) =>
-                        oldAnswer === offeredAnswer ? { ...oldAnswer, answer: e.target.value } : oldAnswer
-                      ),
-                    });
-                    console.log(question.offeredAnswers);
-                  }}
-                />
-              </label>
-            </li>
+            <Grid key={index} container direction="row">
+              {question.questionType.name === "Checkboxes" ? (
+                <Checkbox disabled />
+              ) : question.questionType.name === "Multiple choice" ? (
+                <Radio disabled />
+              ) : (
+                <p>{index + 1}.</p>
+              )}
+              <TextField
+                value={offeredAnswer.answer}
+                onChange={(e) => {
+                  e.preventDefault();
+                  setQuestion({
+                    ...question,
+                    offeredAnswers: question.offeredAnswers.map((oldAnswer) =>
+                      oldAnswer === offeredAnswer ? { ...oldAnswer, answer: e.target.value } : oldAnswer
+                    ),
+                  });
+                  console.log(question.offeredAnswers);
+                }}
+              />
+            </Grid>
           ))}
-          <li key={question.offeredAnswers?.length ?? 0}>
-            <button
-              onClick={(e) => {
-                e.preventDefault();
-                setQuestion({
-                  ...question,
-                  offeredAnswers: [...question.offeredAnswers, { id: "", answer: "" }],
-                });
-              }}
-            >
-              Nytt svaralternativ
-            </button>
-          </li>
-        </ul>
+          <Button
+            onClick={(e) => {
+              e.preventDefault();
+              setQuestion({
+                ...question,
+                offeredAnswers: [...question.offeredAnswers, { id: "", answer: "" }],
+              });
+            }}
+          >
+            Nytt svaralternativ
+          </Button>
+        </Grid>
       ) : (
         <QuestionTypePreview question={question} />
       )}
-      <br />
-      <button
-        onClick={(e) => {
-          e.preventDefault();
-          updateQuestion({
-            variables: {
-              id: question.id,
-              question: question.question,
-              description: question.description,
-              position: question.position,
-              questionTypeId: question.questionType.id,
-            },
-          });
-          setInactive();
-        }}
-      >
-        Lagre spørsmål
-      </button>
-      <button
-        onClick={(e) => {
-          e.preventDefault();
-          setInactive();
-          deleteQuestion({
-            variables: { id: question.id },
-          });
-        }}
-      >
-        Slett spørsmål
-      </button>
-    </>
+      <Grid container direction="row" justify="space-evenly">
+        <Button
+          onClick={(e) => {
+            e.preventDefault();
+            updateQuestion({
+              variables: {
+                id: question.id,
+                question: question.question,
+                description: question.description,
+                position: question.position,
+                questionTypeId: question.questionType.id,
+              },
+            });
+            setInactive();
+          }}
+        >
+          Lagre spørsmål
+        </Button>
+        <Button
+          onClick={(e) => {
+            e.preventDefault();
+            setInactive();
+            deleteQuestion({
+              variables: { id: question.id },
+            });
+          }}
+        >
+          Slett spørsmål
+        </Button>
+      </Grid>
+    </Grid>
   );
 };
 

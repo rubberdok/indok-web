@@ -1,28 +1,12 @@
 import { Listing, Response } from "@interfaces/listings";
 import { useQuery, useMutation } from "@apollo/client";
 import { RESPONSES } from "@graphql/listings/queries";
-import { DELETE_RESPONSE } from "@graphql/listings/mutations";
 import { useState } from "react";
 import OrganizationListing from "@components/pages/listings/organization/organizationListing";
-
-//Temporary styling components for demo
-//TODO: implement proper styledcomponents
-const horizontal = {
-  display: "flex",
-};
-const flexChild = {
-  marginLeft: "50px",
-};
-const responseView = {
-  backgroundColor: "#F5F0EB",
-  borderRadius: "6px",
-  padding: 10,
-  border: "1px solid grey",
-  width: "50%",
-};
+import { Grid, Box, Tabs, Tab } from "@material-ui/core";
 
 const ListingResponses: React.FC<{ listing: Listing }> = ({ listing }) => {
-  const [selectedResponse, selectResponse] = useState<Response>();
+  const [selectedResponse, selectResponse] = useState<Response | null>(null);
   const { loading, error, data } = useQuery<{ listing: { responses: Response[] } }>(RESPONSES, {
     variables: { ID: Number(listing.id) },
   });
@@ -31,40 +15,28 @@ const ListingResponses: React.FC<{ listing: Listing }> = ({ listing }) => {
   return (
     <>
       {data && (
-        <div style={horizontal}>
-          <ul>
-            {data.listing.responses.map((response) => (
-              <button
-                key={response.id}
-                onClick={(e) => {
-                  e.preventDefault();
-                  if (response === selectedResponse) {
-                    selectResponse(undefined);
-                  } else {
-                    selectResponse(response);
-                  }
-                }}
-              >
-                <li>
-                  {response === selectedResponse ? (
-                    <b>{response.applicant.firstName + " " + response.applicant.lastName}</b>
-                  ) : (
-                    response.applicant.firstName + " " + response.applicant.lastName
-                  )}
-                  <br />
-                  {`${response.applicant.year}. klasse`}
-                </li>
-              </button>
+        <Grid container direction="row">
+          <Tabs
+            orientation="vertical"
+            variant="scrollable"
+            value={selectedResponse}
+            onChange={(event, newResponse) => {
+              selectResponse(newResponse);
+            }}
+          >
+            <Tab value={null} label="Se verv og søknad" />
+            {data.listing.responses.map((response, index) => (
+              <Tab
+                key={index}
+                value={response}
+                label={`${response.applicant.firstName} ${response.applicant.lastName}`}
+              />
             ))}
-          </ul>
-          {selectedResponse ? (
-            <div style={{ ...responseView, ...flexChild }}>{selectedResponse.response}</div>
-          ) : (
-            <div style={flexChild}>
-              <OrganizationListing listing={listing} />
-            </div>
-          )}
-        </div>
+          </Tabs>
+          <Box marginLeft={3}>
+            {selectedResponse ? <p>{selectedResponse.response}</p> : <OrganizationListing listing={listing} />}
+          </Box>
+        </Grid>
       )}
     </>
   );

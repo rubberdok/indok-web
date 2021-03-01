@@ -1,33 +1,29 @@
 import { Question } from "@interfaces/surveys";
-import TextField from "@components/ui/formComponents/textfield";
-import Dropdown from "@components/ui/formComponents/dropdown";
-import Choice from "@components/ui/formComponents/choice";
+import { RadioGroup, Radio, TextField, FormControlLabel, FormGroup, Checkbox } from "@material-ui/core";
 
 const QuestionTypePreview: React.FC<{
   question: Question;
 }> = ({ question }) => {
   switch (question.questionType.name) {
     case "Short answer":
-      return <TextField size="short" disabled value="Kortsvar" />;
+      return <TextField disabled label="Kortsvar" variant="outlined" />;
     case "Paragraph":
-      return <TextField size="long" disabled value="Langsvar" />;
+      return <TextField disabled label="Langsvar" variant="outlined" multiline rows={4} />;
     case "Multiple choice":
       return (
-        <Choice
-          options={question.offeredAnswers.map((offeredAnswer) => offeredAnswer.answer)}
-          name={question.id}
-          radio={true}
-          disabled
-        />
+        <RadioGroup>
+          {question.offeredAnswers.map((offeredAnswer, index) => (
+            <FormControlLabel key={index} label={offeredAnswer.answer} control={<Radio disabled />} />
+          ))}
+        </RadioGroup>
       );
     case "Checkboxes":
       return (
-        <Choice
-          options={question.offeredAnswers.map((offeredAnswer) => offeredAnswer.answer)}
-          name={question.id}
-          radio={false}
-          disabled
-        />
+        <FormGroup>
+          {question.offeredAnswers.map((offeredAnswer, index) => (
+            <FormControlLabel key={index} label={offeredAnswer.answer} control={<Checkbox disabled />} />
+          ))}
+        </FormGroup>
       );
     case "Drop-down":
       return (

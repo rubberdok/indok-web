@@ -1,24 +1,26 @@
 import { Question } from "@interfaces/surveys";
 import QuestionTypePreview from "@components/pages/surveys/surveyCreation/questionTypePreview";
+import { Button, Grid } from "@material-ui/core";
 
 const QuestionPreview: React.FC<{
   question: Question;
   setActive: () => void;
 }> = ({ question, setActive }) => {
   return (
-    <>
-      {question.question}
+    <Grid>
+      <Grid container direction="row" justify="space-between">
+        {question.question}
+        <Button
+          onClick={(e) => {
+            e.preventDefault();
+            setActive();
+          }}
+        >
+          Rediger spørsmål
+        </Button>
+      </Grid>
       <QuestionTypePreview question={question} />
-      <br />
-      <button
-        onClick={(e) => {
-          e.preventDefault();
-          setActive();
-        }}
-      >
-        Rediger spørsmål
-      </button>
-    </>
+    </Grid>
   );
 };
 

@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { Survey, QuestionType, Question, QuestionVariables } from "@interfaces/surveys";
 import QuestionPreview from "@components/pages/surveys/surveyCreation/questionPreview";
 import EditQuestion from "@components/pages/surveys/surveyCreation/editQuestion";
+import { Button, Grid } from "@material-ui/core";
 
 const EditSurvey: React.FC<{ surveyId: string }> = ({ surveyId }) => {
   const { loading, error, data } = useQuery<{ survey: Survey }>(SURVEY, {
@@ -95,9 +96,38 @@ const EditSurvey: React.FC<{ surveyId: string }> = ({ surveyId }) => {
             <p>Error fetching question types</p>
           ) : (
             questionTypeData && (
-              <>
+              <Grid item container direction="column">
+                {data.survey.questions.map((question) =>
+                  question === activeQuestion ? (
+                    <EditQuestion
+                      oldQuestion={question}
+                      questionTypes={questionTypeData.questionTypes}
+                      updateQuestion={updateQuestion}
+                      deleteQuestion={deleteQuestion}
+                      setInactive={() => setActiveQuestion(undefined)}
+                    />
+                  ) : (
+                    <QuestionPreview
+                      question={question}
+                      setActive={() => {
+                        if (activeQuestion) {
+                          updateQuestion({
+                            variables: {
+                              id: activeQuestion.id,
+                              question: activeQuestion.question,
+                              description: activeQuestion.description,
+                              position: activeQuestion.position,
+                              questionTypeId: activeQuestion.questionType.id,
+                            },
+                          });
+                        }
+                        setActiveQuestion(question);
+                      }}
+                    />
+                  )
+                )}
                 {standardQuestionType && (
-                  <button
+                  <Button
                     onClick={(e) => {
                       e.preventDefault();
                       createQuestion({
@@ -115,43 +145,10 @@ const EditSurvey: React.FC<{ surveyId: string }> = ({ surveyId }) => {
                       });
                     }}
                   >
-                    Nytt spørsmål
-                  </button>
+                    Legg til spørsmål
+                  </Button>
                 )}
-                <ul>
-                  {data.survey.questions.map((question) => (
-                    <li key={question.id}>
-                      {question === activeQuestion ? (
-                        <EditQuestion
-                          oldQuestion={question}
-                          questionTypes={questionTypeData.questionTypes}
-                          updateQuestion={updateQuestion}
-                          deleteQuestion={deleteQuestion}
-                          setInactive={() => setActiveQuestion(undefined)}
-                        />
-                      ) : (
-                        <QuestionPreview
-                          question={question}
-                          setActive={() => {
-                            if (activeQuestion) {
-                              updateQuestion({
-                                variables: {
-                                  id: activeQuestion.id,
-                                  question: activeQuestion.question,
-                                  description: activeQuestion.description,
-                                  position: activeQuestion.position,
-                                  questionTypeId: activeQuestion.questionType.id,
-                                },
-                              });
-                            }
-                            setActiveQuestion(question);
-                          }}
-                        />
-                      )}
-                    </li>
-                  ))}
-                </ul>
-              </>
+              </Grid>
             )
           )}
         </>

@@ -5,6 +5,7 @@ import { Survey } from "@interfaces/surveys";
 import { CREATE_SURVEY } from "@graphql/surveys/mutations";
 import { useMutation } from "@apollo/client";
 import { UPDATE_LISTING } from "@graphql/listings/mutations";
+import { Button } from "@material-ui/core";
 
 const OrganizationListing: React.FC<{ listing: Listing }> = ({ listing }) => {
   const [surveyShown, showSurvey] = useState(false);
@@ -14,7 +15,7 @@ const OrganizationListing: React.FC<{ listing: Listing }> = ({ listing }) => {
       <h3>{listing.title}</h3>
       <p>{listing.description}</p>
       {listing.survey ? (
-        <button
+        <Button
           onClick={(e) => {
             e.preventDefault();
             if (surveyData && !listing.survey) {
@@ -24,9 +25,9 @@ const OrganizationListing: React.FC<{ listing: Listing }> = ({ listing }) => {
           }}
         >
           {surveyShown ? "Gjem søknad" : "Vis søknad"}
-        </button>
+        </Button>
       ) : (
-        <button
+        <Button
           onClick={(e) => {
             e.preventDefault();
             createSurvey({
@@ -39,7 +40,7 @@ const OrganizationListing: React.FC<{ listing: Listing }> = ({ listing }) => {
           }}
         >
           Lag søknad
-        </button>
+        </Button>
       )}
       {surveyShown && listing.survey && <EditSurvey surveyId={listing.survey.id} />}
     </>
