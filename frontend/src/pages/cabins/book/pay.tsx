@@ -19,6 +19,7 @@ import React, { useEffect, useState } from "react";
 import useBookingRange from "@hooks/cabins/useBookingRange";
 import HeaderComposition from "@components/pages/cabins/HeaderComposition";
 import { allValuesDefined, validateInputForm } from "@utils/helpers";
+import { cabinImages } from "@components/pages/cabins/ImageSlider/imageData";
 
 const BookPage: NextPage = () => {
   const defaultPriceIndoker = 1100;
@@ -280,7 +281,7 @@ const BookPage: NextPage = () => {
               <Grid item xs={12} md={6}>
                 <Grid container spacing={3} direction={"column"}>
                   <Grid item>
-                    <ImageSlider cabins={bookingData.cabins} />
+                    <ImageSlider imageData={cabinImages} displayLabelText />
                   </Grid>
                   <Grid item>
                     <PriceSummary
