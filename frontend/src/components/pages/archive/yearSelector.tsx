@@ -1,133 +1,119 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
 import NativeSelect from "@material-ui/core/NativeSelect";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
+import Input from "@material-ui/core/Input";
 
-const theme1 = createMuiTheme({
-  overrides: {
-    MuiSelect: {
-      select: {
-        "&:focus": {
-          background: "transparent",
-        },
-      },
+const useStyles = makeStyles((theme) => ({
+  quantityRoot: {
+    color: "black",
+    backgroundColor: "rgba(6, 90, 90,0.2)",
+    minWidth: 120,
+    borderRadius: "20px",
+    outline: "none",
+    "&:hover": {
+      color: "red",
+      backgroundColor: "#065a5a",
+      borderRadius: "20px",
+      outline: "none",
+      opacity: 1,
+    },
+    "&:focus-within": {
+      backgroundColor: "#065a5a",
+      opacity: 1,
+      borderRadius: "20px",
+      outline: "none",
+    },
+    "& .MuiOutlinedInput-notchedOutline": {
+      border: "0px solid transparent",
+    },
+    "&:hover .MuiOutlinedInput-notchedOutline": {
+      border: "0px solid transparent",
+    },
+    "& .Mui-focused .MuiOutlinedInput-notchedOutline": {
+      border: "0px solid transparent",
+      borderRadius: "5px 5px 0 0",
+    },
+    "& .Mui-disabled": {
+      color: "black",
+      opacity: 0.6,
+    },
+    "& .Mui-disabled .MuiOutlinedInput-notchedOutline": {
+      border: "0px solid transparent",
     },
   },
-});
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    formControl: {
-      margin: theme.spacing(1),
-      minWidth: 120,
+  selectRoot: {
+    color: "black",
+    opacity: 1,
+    fontFamily: "montserrat",
+    fontSize: "14px",
+    paddingTop: "8px",
+    paddingBottom: "8px",
+    justifyContent: "space-evenly",
+    "&:hover": {
+      color: "white",
     },
-    selectEmpty: {
-      marginTop: theme.spacing(2),
+  },
+  icon: {
+    color: "black",
+    "&:hover": {
+      color: "white",
     },
-    quantityRoot: {
-      color: "black",
-      backgroundColor: "transparent",
-      opacity: 0.6,
-      borderRadius: "5px",
-      "&:hover": {
-        backgroundColor: "transparent",
-        borderRadius: "5px",
-        opacity: 1,
-      },
-      "&:focus-within": {
-        backgroundColor: "transparent",
-        borderRadius: "5px",
-        opacity: 1,
-      },
-      "& .MuiOutlinedInput-notchedOutline": {
-        border: "1px solid transparent",
-      },
-      "&:hover .MuiOutlinedInput-notchedOutline": {
-        border: "1px solid transparent",
-      },
-      "& .Mui-focused .MuiOutlinedInput-notchedOutline": {
-        border: "1px solid transparent",
-        borderRadius: "5px",
-        outline: "none",
-      },
-      "& .Mui-disabled": {
-        color: "black",
-        opacity: 0.6,
-      },
-      "& .Mui-disabled .MuiOutlinedInput-notchedOutline": {
-        border: "1px solid transparent",
-      },
-      "& .MuiSelect-select:focus": {
-        backgroundColor: "transparent",
-      },
+  },
+  selectPaper: {
+    backgroundColor: "white",
+    border: "1px solid transparent",
+    borderRadius: "10px",
+    color: "black",
+    "& li:hover": {
+      backgroundColor: "#065a5a",
+      opacity: 0.5,
+      color: "white",
     },
-    selectRoot: {
-      color: "black",
-    },
-    icon: {
-      color: "black",
-    },
-    selectPaper: {
-      backgroundColor: "transparent",
-      border: "1px solid transparent",
-      borderRadius: "5px",
-      color: "black",
-      "& li:hover": {
-        backgroundColor: "transparent",
-      },
-    },
-  })
-);
+  },
+}));
 
 interface YearSelectorProps {
-  yearFilter: number | null;
-  updateYearFilters: (value: number | null) => void;
+  handleYearFilterChanged: (year: string) => void;
 }
 
-const YearSelector: React.FC<YearSelectorProps> = ({ yearFilter, updateYearFilters }) => {
+const YearSelector: React.FC<YearSelectorProps> = ({ handleYearFilterChanged }) => {
   const classes = useStyles();
+  const [year, setYear] = React.useState("");
+
+  useEffect(() => {
+    handleYearFilterChanged(year);
+  }, [year]);
 
   return (
-    <div className={classes.formControl}>
-      <MuiThemeProvider theme={theme1}>
-        <FormControl
-          variant="outlined"
+    <div className={classes.quantityRoot}>
+      <FormControl variant="outlined" className={classes.quantityRoot}>
+        <Select
+          displayEmpty
           classes={{
-            root: classes.quantityRoot,
+            root: classes.selectRoot,
+            icon: classes.icon,
           }}
+          value={year}
+          onChange={(event) => {
+            const value = event.target.value;
+            setYear(typeof value === "string" ? value : "");
+          }}
+          name="Årstall"
+          inputProps={{ "aria-label": "without label" }}
+          MenuProps={{ classes: { paper: classes.selectPaper } }}
         >
-          <InputLabel className={classes.selectPaper}></InputLabel>
-          <NativeSelect
-            classes={{
-              root: classes.selectRoot,
-              icon: classes.icon,
-            }}
-            value={yearFilter}
-            onChange={(event) => updateYearFilters(parseInt(event.target.value))}
-            name="Årstall"
-            inputProps={{
-              id: "gpuChildQuantity",
-            }}
-          >
-            <option value="">Alle år</option>
-            <option value="2021">2021</option>
-            <option value="2020">2020</option>
-            <option value="2019">2019</option>
-            <option value="2018">2018</option>
-            <option value="2017">2017</option>
-            <option value="2016">2016</option>
-            <option value="2015">2015</option>
-            <option value="2014">2014</option>
-            <option value="2013">2013</option>
-            <option value="2012">2012</option>
-            <option value="2011">2011</option>
-            <option value="2010">2010</option>
-            <option value="2009">2009</option>
-          </NativeSelect>
-        </FormControl>
-      </MuiThemeProvider>
+          <MenuItem value="">Alle år</MenuItem>
+          <MenuItem value="2021">2021</MenuItem>
+          <MenuItem value="2020">2020</MenuItem>
+          <MenuItem value="2019">2019</MenuItem>
+          <MenuItem value="2018">2018</MenuItem>
+        </Select>
+      </FormControl>
     </div>
   );
 };

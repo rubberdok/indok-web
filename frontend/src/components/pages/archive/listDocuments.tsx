@@ -66,7 +66,7 @@ const ListDocuments: React.FC<ListDocumentsProps> = ({ document_types, year }) =
       <GridList cellHeight={144} className={classes.img} cols={4} spacing={8}>
         {data.archiveByTypes.length ? (
           data.archiveByTypes.map((doc: Document) => (
-            <GridListTile key={0}>
+            <GridListTile key={doc.id}>
               <Card className={classes.root} elevation={1}>
                 <CardActionArea>
                   <Button

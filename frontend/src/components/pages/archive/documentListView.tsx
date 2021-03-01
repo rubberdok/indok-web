@@ -5,9 +5,14 @@ import ListDocuments from "./listDocuments";
 import { ContentWrapper } from "./wrapper";
 import YearSelector from "./yearSelector";
 import ListFeaturedDocuments from "./listFeaturedDocuments";
+import SimpleSelector from "./simpleSelector";
 
 const DocumentListView: React.FC = () => {
-  const [yearFilter, setYearFilter] = useState<number | null>(null);
+  const [yearFilter, setYearFilter] = useState("");
+
+  const handleYearFilterChanged = (year: string) => {
+    setYearFilter(year);
+  };
 
   const [typeFilters, setTypeFilters] = useState<{ [key: string]: { active: boolean; title: string } }>({
     Budget: { active: false, title: "Budsjett og Regnskap" },
@@ -27,7 +32,7 @@ const DocumentListView: React.FC = () => {
         </Typography>
       </div>
       <ContentWrapper
-        style={{ marginLeft: "80px", marginRight: "80px", justifyContent: "space-evenly", paddingBottom: "50px" }}
+        style={{ marginLeft: "80px", marginRight: "80px", justifyContent: "space-evenly", paddingBottom: "8px" }}
       >
         <FilterButton
           typeFilters={typeFilters}
@@ -40,22 +45,22 @@ const DocumentListView: React.FC = () => {
         />
       </ContentWrapper>
       <ContentWrapper style={{ justifyContent: "center", marginBottom: "32px" }}>
-        <YearSelector yearFilter={yearFilter} updateYearFilters={(value) => setYearFilter(value)} />
+        <YearSelector handleYearFilterChanged={handleYearFilterChanged} />
       </ContentWrapper>
-      <ContentWrapper style={{ marginBottom: "16px" }}>
+      {/* <ContentWrapper style={{ marginBottom: "16px" }}>
         <ListFeaturedDocuments
           document_types={Object.entries(typeFilters)
             .filter((key, _) => key[1].active)
             .map(([_, val]) => val.title)}
-          year={yearFilter}
+          year={parseInt(yearFilter)}
         />
-      </ContentWrapper>
+      </ContentWrapper> */}
       <ContentWrapper style={{ marginTop: "16px" }}>
         <ListDocuments
           document_types={Object.entries(typeFilters)
             .filter((key, _) => key[1].active)
             .map(([_, val]) => val.title)}
-          year={yearFilter}
+          year={parseInt(yearFilter)}
         />
       </ContentWrapper>
     </>

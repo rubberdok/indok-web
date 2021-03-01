@@ -12,11 +12,14 @@ import GridListTile from "@material-ui/core/GridListTile";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import { Document } from "@interfaces/archive";
+import CardContent from "@material-ui/core/CardContent";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       flexGrow: 1,
+      display: "flex",
+      flexDirection: "column",
     },
     paper: {
       padding: theme.spacing(2),
@@ -36,6 +39,11 @@ const useStyles = makeStyles((theme: Theme) =>
       width: "100%",
     },
     header: {
+      width: "100%",
+      fontSize: 10,
+      padding: -10,
+    },
+    year: {
       width: "100%",
       fontSize: 10,
       padding: -10,
