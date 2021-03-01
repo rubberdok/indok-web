@@ -51,7 +51,7 @@ const CabinBookingPage: NextPage = () => {
         ) : null;
       case 1:
         // Velg innsjekk
-        return <CabinDatePicker />;
+        return <CabinDatePicker chosenCabins={chosenCabins} />;
       case 2:
         // Velg Kontaktinfo
         return <Typography variant="h3">Kontaktinfo placeholder</Typography>;
