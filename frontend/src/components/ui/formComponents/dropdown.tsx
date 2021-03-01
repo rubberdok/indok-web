@@ -7,10 +7,10 @@ const Dropdown: React.FC<{
 }> = ({ title, options, onChange }) => (
   <>
     {title && <label>{title}</label>}
-    <select onBlur={onChange}>
+    <select onBlur={onChange} value={options.find((option) => option.selected)?.value}>
       {options.map((option, index) => {
         return (
-          <option value={option.value} selected={option.selected} key={index}>
+          <option value={option.value} key={index}>
             {option.text}
           </option>
         );

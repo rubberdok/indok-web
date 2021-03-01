@@ -17,7 +17,7 @@ const OrganizationsPage: NextPage = () => {
       {data &&
         data.allOrganizations.map((org) => (
           <div key={org.id}>
-            <Link href={`/organizations/${org.id}`}>{org.name}</Link>
+            <Link href={`/org/${org.id}`}>{org.name}</Link>
           </div>
         ))}
       <h4>Opprett ny forening</h4>

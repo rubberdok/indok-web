@@ -1,24 +1,7 @@
-import { makeStyles, Theme, createStyles, Grid, Typography } from "@material-ui/core";
+import { Grid, Typography, Box } from "@material-ui/core";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import Link from "next/link";
 import React from "react";
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      flexGrow: 1,
-    },
-    paper: {
-      padding: theme.spacing(2),
-      textAlign: "center",
-      color: theme.palette.text.primary,
-    },
-    container: {
-      padding: "10px",
-      display: "inline",
-    },
-  })
-);
 
 interface HeaderCompositionProps {
   headerText: string;
@@ -27,11 +10,9 @@ interface HeaderCompositionProps {
 }
 
 const HeaderComposition: React.FC<HeaderCompositionProps> = (props) => {
-  const classes = useStyles();
-
   return (
     <>
-      <div className={classes.container}>
+      <Box p="15px">
         <Grid container spacing={3} alignItems="center">
           <Grid item>
             {props.href ? (
@@ -46,7 +27,7 @@ const HeaderComposition: React.FC<HeaderCompositionProps> = (props) => {
             <Typography variant="h2">{props.headerText}</Typography>
           </Grid>
         </Grid>
-      </div>
+      </Box>
     </>
   );
 };

@@ -7,7 +7,7 @@ import CreateListing from "@components/pages/listings/organization/createListing
 import Link from "next/link";
 import Layout from "@components/Layout";
 
-const OrganizationListingsPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ orgID }) => {
+const OrganizationPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ orgID }) => {
   const { loading, error, data } = useQuery<{ organization: Organization }>(ORGANIZATION, {
     variables: {
       ID: orgID,
@@ -17,16 +17,18 @@ const OrganizationListingsPage: NextPage<InferGetServerSidePropsType<typeof getS
   if (loading) return <p>Loading...</p>;
   return (
     <Layout>
-      <Link href={`/organizations/${orgID}`}>Tilbake</Link>
+      <Link href="/org">
+        <a>Tilbake</a>
+      </Link>
       {data && (
         <>
           <div>
             <h3>{data.organization.name}</h3>
           </div>
-          <h4>Åpne verv:</h4>
-          <OrganizationListings organization={data.organization} />
-          <h4>Opprett verv:</h4>
-          <CreateListing organization={data.organization} />
+          <div>{data.organization.description}</div>
+          <Link href={`/org/${orgID}/listings`}>
+            <a>Verv</a>
+          </Link>
         </>
       )}
     </Layout>
@@ -34,10 +36,11 @@ const OrganizationListingsPage: NextPage<InferGetServerSidePropsType<typeof getS
 };
 
 export const getServerSideProps: GetServerSideProps<{ orgID: string }> = async (context) => {
+  console.log(context.query);
   const orgID = context.query.orgID as string;
   return {
     props: { orgID },
   };
 };
 
-export default OrganizationListingsPage;
+export default OrganizationPage;
