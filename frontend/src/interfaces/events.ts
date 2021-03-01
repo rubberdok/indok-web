@@ -16,7 +16,7 @@ export interface Event {
   signedUpUsers: { userId: string }[];
   availableSlots?: number;
   shortDescription?: string;
-  signup_open_date?: string;
+  signupOpenDate?: string;
 }
 
 export interface Category {

@@ -15,6 +15,7 @@ import { Container } from "next/app";
 import Link from "next/link";
 import React, { useState } from "react";
 import { GET_EVENT } from "../../../graphql/events/queries";
+import CountdownButton from "./CountdownButton";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -105,7 +106,7 @@ function getName(obj: any) {
 }
 
 function isSignedUp(event: Event, userId?: string) {
-  if (!userId) return undefined;
+  if (!userId) return false;
   return event.signedUpUsers?.some((user) => user.id === userId);
 }
 
@@ -259,23 +260,23 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
                     </Typography>
                   ) : (
                     <>
-                      <Button
-                        className={classes.signUpButton}
-                        variant="contained"
-                        color={isSignedUp(data.event, userData?.user.id) ? "#f75d2a" : "primary"}
+                      <CountdownButton
+                        countDownDate={data.event.signupOpenDate}
+                        isSignedUp={isSignedUp(data.event, userData?.user.id)}
                         loading={signOffLoading || signUpLoading}
                         onClick={handleClick}
-                      >
-                        {isSignedUp(data.event, userData?.user.id) ? "Meld av" : "Meld på"}
-                      </Button>
+                        styleClassName={classes.signUpButton}
+                      />
 
                       <Snackbar
                         anchorOrigin={{ vertical: "top", horizontal: "right" }}
                         open={signUpData?.eventSignUp.isFull}
                         autoHideDuration={3000}
-                        message="Arrangementet er fullt"
-                      />
-
+                      >
+                        <MuiAlert elevation={6} variant="filled" severity="error">
+                          Arrangementet er fullt
+                        </MuiAlert>
+                      </Snackbar>
                       <Snackbar
                         anchorOrigin={{ vertical: "top", horizontal: "right" }}
                         open={openSignOffSnackbar}
@@ -292,8 +293,11 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
                         open={openSignUpSnackbar}
                         autoHideDuration={3000}
                         onClose={() => setOpenSignUpSnackbar(false)}
-                        message="Du er nå påmeldt"
-                      />
+                      >
+                        <MuiAlert elevation={6} variant="filled" severity="success">
+                          Du er nå påmeldt
+                        </MuiAlert>
+                      </Snackbar>
                     </>
                   )
                 ) : null}

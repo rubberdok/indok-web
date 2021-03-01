@@ -96,6 +96,11 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: "5px",
     padding: "0.2em 0.5em",
   },
+  shortDescriptionText: {
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+  },
 }));
 
 const MONTHS = {
@@ -208,10 +213,11 @@ const AllEvents: React.FC = () => {
                       style={{ borderColor: event.organization?.color ?? theme.palette.primary.main }}
                     >
                       <Grid container>
-                        <Grid item xs>
+                        <Grid item xs className={classes.shortDescriptionText}>
                           <Typography variant="h6">{event.title}</Typography>
                           <Typography variant="body1">{formatDate(event.startTime)}</Typography>
-                          {"Trykk for å lese mer aaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaaa aaaa aaaa aaaa aaaa"} {/* 75 */}
+
+                          {event.shortDescription ?? "Trykk for å lese mer"}
                         </Grid>
                         {userData && !userLoading && userData.user && !userError && event.isAttendable ? (
                           event.signedUpUsers.length === event.availableSlots ? (

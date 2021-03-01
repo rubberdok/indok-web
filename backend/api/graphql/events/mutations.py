@@ -91,7 +91,11 @@ class EventSignUp(graphene.Mutation):
     def mutate(root, info, event_id, user_id):
         event = models.Event.objects.get(pk=event_id)
         user = User.objects.get(pk=user_id)
-        if event.signed_up_users.count() < event.available_slots:
+        if (
+            event.signed_up_users.count() < event.available_slots
+            if event.available_slots
+            else int(1e6)
+        ):
             event.signed_up_users.add(user)
             event.save()
             return EventSignUp(event=event, is_full=False)
