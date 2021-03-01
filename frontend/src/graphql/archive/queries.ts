@@ -5,9 +5,9 @@ export const DOCUMENTS = gql`
     allArchives {
       id
       title
-      url
       thumbnail
       typeDoc
+      webLink
     }
   }
 `;
@@ -17,9 +17,9 @@ export const DOCUMENT = gql`
     archive(id: $ID) {
       id
       title
-      url
       thumbnail
       typeDoc
+      webLink
     }
   }
 `;
@@ -29,10 +29,10 @@ export const GET_DOCSBYFILTERS = gql`
     archiveByTypes(typeDoc: $document_types, year: $year) {
       id
       title
-      url
       thumbnail
       typeDoc
       year
+      webLink
     }
   }
 `;

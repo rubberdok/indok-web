@@ -26,3 +26,6 @@ class ArchiveQueries(graphene.ObjectType, ArchiveDocumentResolvers):
         type_doc=graphene.List(graphene.String, required=True),
         year=graphene.Int(required=False),
     )
+    archive_by_names = graphene.List(
+        ArchiveDocumentType, names=graphene.List(graphene.String, required=False)
+    )

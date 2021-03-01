@@ -30,10 +30,19 @@ class ArchiveDocumentResolvers:
         filter_docs_year = []
         if type_doc:
             documents = documents.filter(type_doc__in=type_doc)
-        if year is not None:
+        elif year is not None:
             for doc in documents:
                 if doc.type_doc not in nonFilter and doc.year != year:
                     filter_docs_year.append(doc.id)
         if filter_docs_year:
             documents = documents.exclude(id__in=filter_docs_year)
         return documents
+
+    @login_required
+    def resolve_archive_by_names(self, info, names):
+        if names:
+            filteredDocs = ArchiveDocument.objects
+            for element in names:
+                filteredDocs = filteredDocs.filter(title__icontains=element)
+            return filteredDocs
+        return ArchiveDocument.objects.all()
