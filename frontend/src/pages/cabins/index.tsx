@@ -12,6 +12,7 @@ import RestaurantIcon from "@material-ui/icons/Restaurant";
 import { DirectionsBus, DirectionsCar, DirectionsTransit, LocalTaxi } from "@material-ui/icons";
 import React from "react";
 import ImageSlider from "@components/pages/cabins/ImageSlider/ImageSlider";
+import { cabinImages, outsideImages } from "@components/pages/cabins/ImageSlider/imageData";
 
 const useStyles = makeStyles((theme: Theme) => ({
   hero: {
@@ -160,8 +161,8 @@ const CreateBookingPage: NextPage = () => {
                   </Grid>
 
                   <Grid item container xs={12} sm={6} justify="center" alignContent="center">
-                    <Box width="65%">
-                      <ImageSlider cabins={["Bjørnen", "Oksen"]} />
+                    <Box width="75%">
+                      <ImageSlider imageData={cabinImages} displayLabelText={false} />
                     </Box>
                   </Grid>
                 </Grid>
@@ -185,29 +186,26 @@ const CreateBookingPage: NextPage = () => {
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid item>
-                <Grid container spacing={10} alignItems="center" direction="row">
-                  <Grid item sm={12} md={6}>
-                    <Box>
-                      <img alt="aktiviteter" src="img/aktiviteter.jpg" />
-                    </Box>
-                  </Grid>
-                  <Grid item sm={12} md={6}>
-                    <Typography variant="h3">Aktiviteter</Typography>
-                    <Divider component="br" />
-                    <Typography variant="body2">
-                      <b>Sommer</b>: I løpet av sommerhalvåret kan man delta på moskusturer, sykkelturer, fjellturer,
-                      rafting, golf, fallskjermhopping, jakt og fiske, rideturer, paintball og mye annet.
-                    </Typography>
-                    <Divider component="br" />
-                    <Typography variant="body2">
-                      <b>Vinter</b>: I løpet av vinterhalvåret er det hovedsakelig alpint og langrenn som står i
-                      sentrum. Det alpine skiområdet er blant de største i Norge med 14 blå, 10 grønne, 10 røde og 5
-                      svarte løyper, og normal skisesong er fra 15. november – 1. mai. Forholdene for langrenn er også
-                      gode med hele fem løyper som begynner ved Stølen, alt fra 15 km – 1,5 km løyper. Se Oppdal Booking
-                      for mer info.
-                    </Typography>
-                  </Grid>
+              <Grid item container spacing={10} alignItems="center" direction="row">
+                <Grid item container justify="center" alignContent="center" sm={12} md={6}>
+                  <Box width="80%">
+                    <ImageSlider imageData={outsideImages} displayLabelText={false}></ImageSlider>
+                  </Box>
+                </Grid>
+                <Grid item sm={12} md={6}>
+                  <Typography variant="h3">Aktiviteter</Typography>
+                  <Divider component="br" />
+                  <Typography variant="body2">
+                    <b>Sommer</b>: I løpet av sommerhalvåret kan man delta på moskusturer, sykkelturer, fjellturer,
+                    rafting, golf, fallskjermhopping, jakt og fiske, rideturer, paintball og mye annet.
+                  </Typography>
+                  <Divider component="br" />
+                  <Typography variant="body2">
+                    <b>Vinter</b>: I løpet av vinterhalvåret er det hovedsakelig alpint og langrenn som står i sentrum.
+                    Det alpine skiområdet er blant de største i Norge med 14 blå, 10 grønne, 10 røde og 5 svarte løyper,
+                    og normal skisesong er fra 15. november – 1. mai. Forholdene for langrenn er også gode med hele fem
+                    løyper som begynner ved Stølen, alt fra 15 km – 1,5 km løyper. Se Oppdal Booking for mer info.
+                  </Typography>
                 </Grid>
               </Grid>
             </Grid>
