@@ -3,7 +3,7 @@ from api.graphql.users.types import UserType
 from apps.surveys.models import Answer, OfferedAnswer, Question
 from apps.surveys.models import QuestionType as QuestionTypeModel
 from apps.surveys.models import Survey
-from django.contrib.auth import get_user_model, login
+from django.contrib.auth import get_user_model
 from django.db.models.query_utils import Q
 from graphene_django import DjangoObjectType
 from graphql_jwt.decorators import login_required
@@ -44,9 +44,10 @@ class QuestionType(DjangoObjectType):
     @staticmethod
     @login_required
     def resolve_answers(root: Question, info, user_id: int=None):
+        qs = root.answers
         if id:
-            return root.answers.filter(user__pk=user_id).first()
-        return root.answers.all()
+            return qs.filter(user__pk=user_id).distinct()
+        return qs.all()
     
     @staticmethod
     @login_required
@@ -72,7 +73,21 @@ class SurveyType(DjangoObjectType):
 
     @staticmethod
     @login_required
-    def resolve_responders(root: Survey, info, user_id=None):
+    def resolve_responders(root: Survey, info, user_id: int=None):
+        """ 
+        Parameters
+        ----------
+        root : Survey
+            The survey instance
+        info 
+            
+        user_id : int, optional
+            By default None
+
+        Returns
+        -------
+        A queryset of all users who have submitted answers to questions in a given survey
+        """
         q = Q(answers__question__survey=root)
         if user_id:
             q &= Q(pk=user_id)
