@@ -1,10 +1,10 @@
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from django.conf import settings
-import requests
 import json
+import time
 
-from django.shortcuts import redirect
+import requests
+from django.conf import settings
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 
 class VippsCallback(APIView):
@@ -49,7 +49,9 @@ class InitiateOrder(APIView):
                 "mobileNumber": "90942107"
             },  # Can pre-fill phone number here if we have
             "transaction": {
-                "orderId": "111111-9",  # must increment automatically
+                "orderId": str(
+                    time.asctime(time.localtime()).replace(" ", "-").replace(":", "-")
+                ),  # must be unique from previous orders
                 "amount": 1000,  # ører
                 "transactionText": "Hello world",
                 "skipLandingPage": False,
