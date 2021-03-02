@@ -24,14 +24,15 @@ export const DOCUMENT = gql`
   }
 `;
 
-export const GET_DOCSBYTYPE = gql`
-  query archiveByType($document_types: [String]!) {
-    archiveByType(typeDocs: $document_types) {
+export const GET_DOCSBYFILTERS = gql`
+  query archiveByTypes($document_types: [String]!, $year: Int) {
+    archiveByTypes(typeDoc: $document_types, year: $year) {
       id
       title
       url
       thumbnail
       typeDoc
+      year
     }
   }
 `;

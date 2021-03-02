@@ -21,6 +21,8 @@ class ArchiveQueries(graphene.ObjectType, ArchiveDocumentResolvers):
     archive_by_year = graphene.Field(
         ArchiveDocumentType, date=graphene.DateTime(required=True)
     )
-    archive_by_type = graphene.List(
-        ArchiveDocumentType, type_docs=graphene.List(graphene.String, required=True)
+    archive_by_types = graphene.List(
+        ArchiveDocumentType,
+        type_doc=graphene.List(graphene.String, required=True),
+        year=graphene.Int(required=False),
     )

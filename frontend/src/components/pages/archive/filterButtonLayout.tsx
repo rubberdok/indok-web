@@ -32,7 +32,7 @@ export const FilterButtonLayout: React.FC<FilterButtonProps> = ({ active, title,
         <Typography
           style={{
             fontSize: "14px",
-            fontWeight: "bolder",
+            //fontWeight: "bolder",
             marginBottom: "8px",
             marginTop: "8px",
             paddingLeft: "14px",

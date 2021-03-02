@@ -11,6 +11,7 @@ const Input = styled.input`
   background-size: 100% 200%;
   transition: all 0.2s ease-in-out;
   color: white;
+  width: 100%;
 
   ::placeholder {
     color: white;
