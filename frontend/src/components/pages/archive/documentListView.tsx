@@ -5,7 +5,7 @@ import ListDocuments from "./listDocuments";
 import { ContentWrapper } from "./wrapper";
 import YearSelector from "./yearSelector";
 import ListFeaturedDocuments from "./listFeaturedDocuments";
-import SimpleSelector from "./simpleSelector";
+import { RemoveFilters } from "./removeFilters";
 
 const DocumentListView: React.FC = () => {
   const [yearFilter, setYearFilter] = useState("");
@@ -46,6 +46,7 @@ const DocumentListView: React.FC = () => {
       </ContentWrapper>
       <ContentWrapper style={{ justifyContent: "center", marginBottom: "32px" }}>
         <YearSelector handleYearFilterChanged={handleYearFilterChanged} />
+        <RemoveFilters />
       </ContentWrapper>
       {/* <ContentWrapper style={{ marginBottom: "16px" }}>
         <ListFeaturedDocuments

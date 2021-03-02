@@ -112,6 +112,16 @@ const YearSelector: React.FC<YearSelectorProps> = ({ handleYearFilterChanged }) 
           <MenuItem value="2020">2020</MenuItem>
           <MenuItem value="2019">2019</MenuItem>
           <MenuItem value="2018">2018</MenuItem>
+          <MenuItem value="2017">2017</MenuItem>
+          <MenuItem value="2016">2016</MenuItem>
+          <MenuItem value="2015">2015</MenuItem>
+          <MenuItem value="2014">2014</MenuItem>
+          <MenuItem value="2013">2013</MenuItem>
+          <MenuItem value="2012">2012</MenuItem>
+          <MenuItem value="2011">2011</MenuItem>
+          <MenuItem value="2010">2010</MenuItem>
+          <MenuItem value="2009">2009</MenuItem>
+          <MenuItem value="2008">2008</MenuItem>
         </Select>
       </FormControl>
     </div>
