@@ -34,7 +34,7 @@ class ArchiveDocumentResolvers:
             l = list(names.split(" "))
             for element in l:
                 documents = documents.filter(title__icontains=element)
-        return documents
+        return reversed(documents)
 
     @login_required
     def resolve_archive_by_names(self, info, names):
