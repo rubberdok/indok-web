@@ -87,7 +87,10 @@ const ListDocuments: React.FC<ListDocumentsProps> = ({ document_types, year, nam
                     <CardHeader
                       className={classes.header}
                       title={doc.title}
-                      subheader={doc.typeDoc.replace(/_/g, " ")}
+                      subheader={doc.typeDoc
+                        .replace(/_/g, " ")
+                        .replace("ARBOKER", "ÅRBØKER")
+                        .replace("STOTTE FRA HS", "STØTTE FRA HS")}
                       titleTypographyProps={{
                         variant: "inherit",
                         component: "h2",
