@@ -110,6 +110,8 @@ export const GET_EVENT = gql`
         username
       }
       price
+      shortDescription
+      signupOpenDate
     }
   }
 `;
