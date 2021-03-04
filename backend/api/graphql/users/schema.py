@@ -1,7 +1,7 @@
 import graphene
 import graphql_jwt
 
-from .mutations import AuthUser, UpdateUser
+from .mutations import AuthUser, GetIDToken, UpdateUser
 from .resolvers import UserResolvers
 from .types import UserType
 
@@ -12,6 +12,7 @@ class UserMutations(graphene.ObjectType):
     verify_token = graphql_jwt.Verify.Field()
     refresh_token = graphql_jwt.Refresh.Field()
     delete_token_cookie = graphql_jwt.DeleteJSONWebTokenCookie.Field()
+    get_id_token = GetIDToken.Field()
 
 
 class UserQueries(graphene.ObjectType, UserResolvers):

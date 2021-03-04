@@ -19,7 +19,8 @@ import React, { useEffect, useState } from "react";
 import { CREATE_CABIN } from "../../graphql/cabins/mutations";
 import useBookingRange from "../../hooks/cabins/useBookingRange";
 import HeaderComposition from "@components/pages/cabins/HeaderComposition";
-import { allValuesDefined, validateInputForm } from "@utils/helpers";
+import { allValuesDefined } from "@utils/helpers";
+import { validateInputForm } from "@utils/cabins";
 
 const BookPage: NextPage = () => {
   const defaultPriceIndoker = 1100;

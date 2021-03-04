@@ -18,6 +18,8 @@ export const AUTHENTICATE = gql`
         dateJoined
         year
       }
+      isIndokStudent
+      idToken
     }
   }
 `;
@@ -26,6 +28,14 @@ export const DELETE_TOKEN_COOKIE = gql`
   mutation {
     deleteTokenCookie {
       deleted
+    }
+  }
+`;
+
+export const GET_ID_TOKEN = gql`
+  mutation {
+    getIdToken {
+      idToken
     }
   }
 `;

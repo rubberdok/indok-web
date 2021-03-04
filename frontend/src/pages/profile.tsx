@@ -32,7 +32,7 @@ const ProfilePage: NextPage = () => {
             <Typography variant="body1">
               <strong>Brukernavn:</strong> {user.username} <br />
               <strong>E-post:</strong> {user.email} <br />
-              <strong>Klassetrinn:</strong> {user.year} <br />
+              {/* <strong>Klassetrinn:</strong> {user.year} <br /> */}
             </Typography>
             <Typography variant="body2">
               Medlem siden {new Date(user.dateJoined).toLocaleString()} <br />
