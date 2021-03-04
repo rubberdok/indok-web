@@ -1,12 +1,22 @@
 ---
 title: Indøk Business Club
 description: Mer tekst
-image: /img/IBClogo.png
+logo: /img/IBClogo.png
+image: /img/IBCmote.jpeg
+styre:
+  ceo:
+    navn: Håkon Andreas Hyttedalen
+    mail: tlf. 974 09 177
+    tittel: Leder
+  cto:
+    navn: Anders Rønning
+    mail: tlf. 913 51 892
+    tittel: Nestleder
 ---
 
 # Hvem er vi?
 
-Indøk Business Club (IBC) er en case club for indøkere på alle trinn, hvor man får prøve seg på praktiske forretningsproblemer og dyrke sin interesse for teknologi og økonomi. Vi løser case annenhver uke, både fiktive bedriftsutfordringer eller for start-ups, og presenterer løsningen påfølgende uke. Etter presentasjonene holdes det nyttige workshops om teknikker for problemløsning, vanlige verktøy innen consulting og finans eller andre spennende temaer. Disse holdes av eksterne bedrifter som er eksperter innen feltet samt av styret i IBC.
+Indøk Business Club (IBC) er en Case-klubb for indøkere på alle årstrinn, hvor man får prøve seg på praktiske forretningsproblemer og dyrke sin interesse for teknologi og økonomi. Vi løser case annenhver uke, både fiktive bedriftsutfordringer eller for start-ups, og presenterer løsningen påfølgende uke. Etter presentasjonene holdes det nyttige workshops om teknikker for problemløsning, vanlige verktøy innen consulting og finans eller andre spennende temaer. Disse holdes av eksterne bedrifter som er eksperter innen feltet samt av styret i IBC.
 
 Verdiene våre er:
 
@@ -18,7 +28,6 @@ Verdiene våre er:
 
 For komme i kontakt med oss kan du sende email til ibcntnu@gmail.com eller henvende deg spesifikt til en av styremedlemmene under.
 
-![IBC nydelige logo](/img/IBClogo.png)
 ![IBC bilde](/img/IBCmote.jpeg)
 
 Håkon Andreas Hyttedalen

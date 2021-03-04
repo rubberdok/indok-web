@@ -1,7 +1,17 @@
 ---
 title: Eksperter i Vin
 description: Mer tekst
-image: /img/eivlogo.jpg
+logo: /img/eivlogo.jpg
+image: /img/eivbilde.jpg
+styre:
+  ceo:
+    navn: Phillip Kolkmeier
+    mail: tlf.
+    tittel: Sommelier
+  cto:
+    navn: Erlend Heir
+    mail: tlf.
+    tittel: Sommelier
 ---
 
 # Hvem er vi?

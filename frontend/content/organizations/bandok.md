@@ -1,7 +1,17 @@
 ---
 title: Bandøk
 description: Indøks helt egne band
+logo: /img/bandoklogo.png
 image: /img/bandoklogo.png
+styre:
+  ceo:
+    navn: Johanns Log Indbjo
+    mail: tlf.
+    tittel: Administrerende ansvarlig
+  cto:
+    navn: Sigurd Elias Halse
+    mail: tlf.
+    tittel: Økonomiansvarlig/utstyrsansvarlig
 ---
 
 # Hvem er vi?
@@ -14,3 +24,6 @@ Bandøk stiller med musikk til deg og ditt behov, være seg Immball, konsert ell
 _Bandøk – som skapt for norske forhold_
 
 ![Bandøks nydelige logo](/img/bandoklogo.png)
+
+Vegard Holm Gundersen
+Musikkansvarlig

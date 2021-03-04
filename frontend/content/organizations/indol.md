@@ -1,7 +1,17 @@
 ---
 title: Indøks Ølbryggerlaug
 description: Mer tekst
-image: /img/indollogo.png
+logo: /img/indollogo.png
+image: /img/indolbilde.jpg
+styre:
+  ceo:
+    navn: Hans Magnus Utne
+    mail: tlf. 975 18 033
+    tittel: Leder
+  cto:
+    navn: Phillip Kolkmeier
+    mail: tlf. 906 71 650
+    tittel: Nestleder
 ---
 
 # Hvem er vi?
@@ -13,7 +23,7 @@ Indøk Ølbryggelaug (Ind. Øl) er en sosial gjeng som samles regelmessig for å
 Er du en ølelsker? Lyst til å lære mer om hvordan øl brygges? Ta kontakt med oss! Finn oss på facebook eller send oss en mail.indo
 
 20/21
-Hans Magnus Utne
+
 Leder
 tlf. 975 18 033
 Phillip Kolkmeier
@@ -27,6 +37,6 @@ Marte Vingsnes
 PR-ansvarlig
 tlf. 482 60 767
 
-![Indølgjengen](/img/indølbilde.jpg)
+![Indølgjengen](/img/indolbilde.jpg)
 
 ![Indølgjengen](/img/indolbilde2.jpg)

@@ -1,7 +1,13 @@
 ---
 title: Bulldøk
 description: Indøks buldre- og klatregruppe
-image: /img/borsfest.jpg
+logo: /img/bulldok.jpeg
+image: /img/bulldok.jpeg
+styre:
+  ceo:
+    navn: Bendik Edvardsen
+    mail: tlf.
+    tittel: Leder
 ---
 
 # Hvem er vi?
@@ -13,3 +19,6 @@ Alt av informasjon om medlemskap og treninger finner dere i vår facebookgruppe.
 [Besøk vår Facebook-gruppe!](https://www.facebook.com/groups/221336962206774)
 
 ![Bulldøks nydelige logo](/img/bulldok.jpeg)
+
+Bendik Edvardsen
+Leder 20/21
