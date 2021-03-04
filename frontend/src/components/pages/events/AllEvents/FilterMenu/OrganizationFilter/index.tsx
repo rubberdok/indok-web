@@ -37,7 +37,6 @@ const OrganizationFilter: React.FC<Props> = ({ filters, onFiltersChange, organiz
               />
             ) : (
               <ListItem
-                disablePadding
                 button
                 className={classes.nested}
                 selected={filters.organization === org.name}

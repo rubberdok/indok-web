@@ -1,25 +1,22 @@
 import { useQuery } from "@apollo/client";
 import { GET_USER } from "@graphql/auth/queries";
-import { GET_EVENTS, GET_DEFAULT_EVENTS } from "@graphql/events/queries";
+import { GET_DEFAULT_EVENTS, GET_EVENTS } from "@graphql/events/queries";
 import { Event } from "@interfaces/events";
 import { User } from "@interfaces/users";
 import {
-  Button,
-  Grid,
-  Typography,
-  CircularProgress,
-  Paper,
-  Tabs,
-  Tab,
-  Container,
-  makeStyles,
-  useTheme,
   Box,
+  CircularProgress,
+  Container,
+  Grid,
+  makeStyles,
+  Paper,
+  Tab,
+  Tabs,
+  Typography,
+  useTheme,
 } from "@material-ui/core";
 import Link from "next/link";
-import { PlusSquare } from "react-feather";
 import React, { useState } from "react";
-import { DATAPORTEN_SCOPES, generateAuthURL } from "../../../navbar/utils";
 import FilterMenu from "./FilterMenu/index";
 
 export interface FilterQuery {
@@ -28,13 +25,6 @@ export interface FilterQuery {
   startTime?: string;
   endTime?: string;
 }
-
-const signInURL = generateAuthURL(
-  process.env.NEXT_PUBLIC_DATAPORTEN_ID,
-  process.env.NEXT_PUBLIC_DATAPORTEN_STATE,
-  process.env.NEXT_PUBLIC_DATAPORTEN_REDIRECT_URI,
-  DATAPORTEN_SCOPES
-);
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -103,7 +93,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const MONTHS = {
+const MONTHS: Record<string, string> = {
   "01": "januar",
   "02": "februar",
   "03": "mars",

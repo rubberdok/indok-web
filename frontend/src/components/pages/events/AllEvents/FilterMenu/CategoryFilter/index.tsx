@@ -1,6 +1,6 @@
 import { Category } from "@interfaces/events";
 import React, { useState } from "react";
-import { useTheme, List, ListItem, ListItemText, Collapse, Badge, Grid } from "@material-ui/core";
+import { List, ListItem, ListItemText, Collapse, Badge } from "@material-ui/core";
 import { ExpandLess, ExpandMore } from "@material-ui/icons";
 import { FilterQuery } from "../..";
 import { useQuery } from "@apollo/client";
@@ -42,7 +42,7 @@ const CategoryFilter: React.FC<Props> = ({ filters, onFiltersChange, classes }) 
                 })
               }
             >
-              <ListItemText variant="body2" primary={category.name} />
+              <ListItemText primary={category.name} />
             </ListItem>
           ))}
         </List>

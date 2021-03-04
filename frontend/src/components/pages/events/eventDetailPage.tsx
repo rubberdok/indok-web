@@ -3,7 +3,7 @@ import { GET_USER } from "@graphql/auth/queries";
 import { EVENT_SIGN_OFF, EVENT_SIGN_UP } from "@graphql/events/mutations";
 import { Event } from "@interfaces/events";
 import { User } from "@interfaces/users";
-import { Button, Paper, Box, Grid, Snackbar, Typography, useTheme } from "@material-ui/core";
+import { Button, Paper, Box, Grid, Snackbar, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import CategoryIcon from "@material-ui/icons/Category";
 import EventIcon from "@material-ui/icons/Event";
@@ -91,8 +91,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const steps = ["Shipping address", "Payment details", "Review your order"];
-
 interface Props {
   eventId: number;
 }
@@ -114,7 +112,7 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
   const [openSignUpSnackbar, setOpenSignUpSnackbar] = useState(false);
   const [openSignOffSnackbar, setOpenSignOffSnackbar] = useState(false);
   const [openErrorSnackbar, setOpenErrorSnackbar] = useState(false);
-  const [eventSignUp, { loading: signUpLoading, data: signUpData }] = useMutation<{
+  const [eventSignUp, { loading: signUpLoading }] = useMutation<{
     eventSignUp: { event: Event; isFull: boolean };
   }>(EVENT_SIGN_UP);
 
@@ -128,7 +126,6 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
     variables: { id: eventId },
   });
   const classes = useStyles();
-  const theme = useTheme();
 
   if (loading) return <p>Loading...</p>;
 
@@ -168,16 +165,10 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
                 {data.event.title}
               </Typography>
               <Grid container justify="center">
-                <Typography
-                  variant="overline"
-                  display="block"
-                  className={classes.publisherContainer}
-                  color={theme.palette.text.secondary}
-                >
+                <Typography variant="overline" display="block" className={classes.publisherContainer}>
                   Arrangert av
                 </Typography>
                 <Typography
-                  color={theme.palette.text.secondary}
                   variant="overline"
                   display="block"
                   style={{ fontWeight: 600 }}
@@ -195,7 +186,7 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
               <Typography variant="h5" gutterBottom>
                 Beskrivelse
               </Typography>
-              <Typography variant="body1" display="block" color={theme.palette.text.secondary}>
+              <Typography variant="body1" display="block">
                 <pre style={{ fontFamily: "inherit" }}>{data.event.description}</pre>
               </Typography>
             </Paper>
@@ -206,7 +197,7 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
             <Paper variant="outlined" className={classes.paper}>
               <Box my={1.5}>
                 <Typography variant="overline" display="block">
-                  Info{" "}
+                  Info
                 </Typography>
                 {data.event.price && (
                   <Typography gutterBottom>
@@ -220,17 +211,17 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
                 )}
                 {data.event.category && (
                   <Typography gutterBottom>
-                    <CategoryIcon fontSize="small" /> {getName(data.event.category)}{" "}
+                    <CategoryIcon fontSize="small" /> {getName(data.event.category)}
                   </Typography>
                 )}
               </Box>
 
               <Box my={2}>
                 <Typography variant="overline" display="block">
-                  Starter{" "}
+                  Starter
                 </Typography>
                 <Typography gutterBottom>
-                  <EventIcon fontSize="small" /> {parseDate(data.event.startTime).split(" ")[0]}{" "}
+                  <EventIcon fontSize="small" /> {parseDate(data.event.startTime).split(" ")[0]}
                 </Typography>
                 <Typography gutterBottom>
                   <ScheduleIcon fontSize="small" /> kl. {parseDate(data.event.startTime).split(" ")[1].slice(0, 5)}
@@ -240,10 +231,10 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
               {data.event.endTime && (
                 <Box my={2}>
                   <Typography variant="overline" display="block">
-                    Slutter{" "}
+                    Slutter
                   </Typography>
                   <Typography gutterBottom>
-                    <EventIcon fontSize="small" /> {parseDate(data.event.endTime).split(" ")[0]}{" "}
+                    <EventIcon fontSize="small" /> {parseDate(data.event.endTime).split(" ")[0]}
                   </Typography>
                   <Typography gutterBottom>
                     <ScheduleIcon fontSize="small" /> kl. {parseDate(data.event.endTime).split(" ")[1].slice(0, 5)}

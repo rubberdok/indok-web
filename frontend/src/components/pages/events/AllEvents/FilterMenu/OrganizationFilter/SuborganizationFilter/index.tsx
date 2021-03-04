@@ -33,7 +33,6 @@ const SuborganizationFilter: React.FC<Props> = ({ filters, onFiltersChange, orga
         {organizations.map((org: Organization) => (
           <List component="div" disablePadding key={org.name}>
             <ListItem
-              disablePadding
               button
               className={classes.doubleNestedList}
               selected={filters.organization === org.name}

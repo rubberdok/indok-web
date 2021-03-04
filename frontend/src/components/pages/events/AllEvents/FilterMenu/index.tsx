@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/client";
 import { Filter, RotateCcw } from "react-feather";
 import { QUERY_EVENT_FILTERED_ORGANIZATIONS } from "@graphql/events/queries";
-import React, { useState } from "react";
+import React from "react";
 import { makeStyles, Tooltip, Container, IconButton, List, ListItem, ListItemText } from "@material-ui/core";
 import { StarRounded, StarBorderRounded } from "@material-ui/icons";
 import OrganizationFilter from "./OrganizationFilter";
