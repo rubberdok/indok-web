@@ -81,3 +81,12 @@ export interface Validations {
   numberExternal: boolean;
   triggerError: boolean;
 }
+
+export interface ContactInfo {
+  firstname: string;
+  lastname: string;
+  email: string;
+  phone: string;
+  numberIndok: number;
+  numberExternal: number;
+}

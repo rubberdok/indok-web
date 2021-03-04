@@ -1,10 +1,12 @@
 import { useQuery } from "@apollo/client";
 import Navbar from "@components/navbar/Navbar";
 import CabinAvailability from "@components/pages/cabins/CabinAvailability";
+import CabinContactInfo from "@components/pages/cabins/CabinContactInfo";
 import CabinDatePicker from "@components/pages/cabins/CabinDatePicker";
 import { QUERY_CABINS } from "@graphql/cabins/queries";
-import { Cabin } from "@interfaces/cabins";
+import { Cabin, ContactInfo, Validations } from "@interfaces/cabins";
 import { Box, Grid, Step, StepLabel, Stepper, Button, Typography, Paper, Tooltip } from "@material-ui/core";
+import { isFormValid, validateInputForm } from "@utils/helpers";
 import { NextPage } from "next";
 import React, { useEffect, useState } from "react";
 
@@ -23,6 +25,15 @@ const initalStepReady: StepReady = steps.reduce((initialObject, step, index) => 
   return initialObject;
 }, {} as StepReady);
 
+const defaultContactInfo: ContactInfo = {
+  firstname: "",
+  lastname: "",
+  email: "",
+  phone: "",
+  numberIndok: 0,
+  numberExternal: 0,
+};
+
 const CabinBookingPage: NextPage = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [stepReady, setStepReady] = useState<StepReady>(initalStepReady);
@@ -37,6 +48,18 @@ const CabinBookingPage: NextPage = () => {
       0: { ...stepReady[0], ready: chosenCabins.length > 0, errortext: "Du må velge en hytte for å gå videre" },
     });
   }, [chosenCabins]);
+
+  // Contact info
+  const [contactInfo, setContactInfo] = useState<ContactInfo>(defaultContactInfo);
+  const [validations, setValidations] = useState<Validations>();
+  useEffect(() => {
+    // Cannot go to next step if validation is false
+    setValidations(validateInputForm(contactInfo));
+    setStepReady({
+      ...stepReady,
+      2: { ...stepReady[2], ready: isFormValid(contactInfo), errortext: "Du må fylle ut alle felt for å gå videre" },
+    });
+  }, [contactInfo]);
 
   const getStepComponent = () => {
     switch (activeStep) {
@@ -54,7 +77,7 @@ const CabinBookingPage: NextPage = () => {
         return <CabinDatePicker />;
       case 2:
         // Velg Kontaktinfo
-        return <Typography variant="h3">Kontaktinfo placeholder</Typography>;
+        return <CabinContactInfo contactInfo={contactInfo} setContactInfo={setContactInfo} validations={validations} />;
       case 3:
         // Betaling
         return <Typography variant="h3">Betaling placeholder</Typography>;
@@ -97,8 +120,10 @@ const CabinBookingPage: NextPage = () => {
               <Box>
                 <Button
                   variant="contained"
-                  disabled={!stepReady[activeStep].ready}
-                  onClick={() => setActiveStep((prev) => prev + 1)}
+                  disabled={!stepReady[activeStep].ready && activeStep != 1}
+                  onClick={() => {
+                    setActiveStep((prev) => prev + 1);
+                  }}
                 >
                   Neste
                 </Button>
