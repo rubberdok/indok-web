@@ -121,7 +121,6 @@ export const getStaticProps = async ({ params }: ArticleProps) => {
     postData.nextPost = null;
   }
 
-
   return { props: postData };
 };
 

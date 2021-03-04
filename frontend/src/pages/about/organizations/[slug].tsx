@@ -1,6 +1,5 @@
 import Layout from "@components/Layout";
-import Wrapper from "@components/pages/about/Template";
-import { Box, Breadcrumbs, Container, Grid, makeStyles, Paper, Typography } from "@material-ui/core";
+import { Box, Card, Container, Grid, makeStyles, Paper, Typography } from "@material-ui/core";
 import { getPostBySlug, getPostsSlugs } from "@utils/posts";
 import { NextPage } from "next";
 import Link from "next/link";
@@ -20,6 +19,8 @@ type ArticleProps = {
     title: string;
     logo?: string;
     alt?: string;
+    image?: string;
+    styre: Array<any>;
   };
   nextPost: any;
   previousPost: any;
@@ -54,8 +55,11 @@ const useStyles = makeStyles(() => ({
   },
   heroCard: {
     marginTop: -112,
-    padding: "56px 64px",
+
     textAlign: "center",
+  },
+  logo: {
+    height: 100,
   },
 }));
 
@@ -64,7 +68,7 @@ const Article: NextPage<ArticleProps> = ({ post, frontmatter, nextPost, previous
 
   return (
     <Layout>
-      <Box mt="-60px" position="relative" className={classes.title} height={450}>
+      <Box mt="-60px" position="relative" className={classes.title} height={350}>
         <Box
           display="flex"
           alignItems="center"
@@ -73,52 +77,67 @@ const Article: NextPage<ArticleProps> = ({ post, frontmatter, nextPost, previous
           className={classes.titleImage}
           style={{
             backgroundImage: `linear-gradient(to top, rgb(0 0 0 / 50%), rgb(0 0 0 / 60%)),
-                  url()`,
+            url(${frontmatter.image})`,
           }}
-        >
-          <Typography variant="h2">{frontmatter.title}</Typography>
-        </Box>
+        ></Box>
       </Box>
+
       <Container>
         <Grid justify="center" container>
           <Grid item xs={10}>
-            <img alt={frontmatter.alt} src={frontmatter.logo}></img>
             <Paper className={classes.heroCard}>
-              <Box display="flex" flexDirection="column" alignItems="center">
-                <Box>
-                  <Breadcrumbs className={classes.breadcrumb} aria-label="breadcrumb">
-                    <p color="inherit">Linjeforeninger</p>
-                    <p>{frontmatter.title}</p>
-                  </Breadcrumbs>
-                </Box>
-                <Typography variant="subtitle1">{frontmatter.description || post.excerpt}</Typography>
+              <Box py="40px" px="56px" display="flex" alignItems="center" justifyContent="space-between">
+                <Typography variant="h4">{frontmatter.title}</Typography>
+                <img className={classes.logo} alt={frontmatter.alt} src={frontmatter.logo}></img>
+              </Box>
+              <Box px="56px" mb="56px" pb="24px" display="flex" alignItems="center" justifyContent="space-between">
+                {previousPost ? (
+                  <Link href={"/about/organizations/[slug]"} as={`/about/organizations/${previousPost.slug}`}>
+                    <a>← {previousPost.frontmatter.title}</a>
+                  </Link>
+                ) : (
+                  <div />
+                )}
+
+                <a href="./../organizations">Oversikt</a>
+
+                {nextPost ? (
+                  <Link href={"/about/organizations/[slug]"} as={`/about/organizations/${nextPost.slug}`}>
+                    <a>{nextPost.frontmatter.title} →</a>
+                  </Link>
+                ) : (
+                  <div />
+                )}
               </Box>
             </Paper>
           </Grid>
         </Grid>
       </Container>
-      <nav>
-        {previousPost ? (
-          <Link href={"/about/organizations/[slug]"} as={`/about/organizations/${previousPost.slug}`}>
-            <a className="text-lg font-bold">← {previousPost.frontmatter.title}</a>
-          </Link>
-        ) : (
-          <div />
-        )}
 
-        <a href="./../organizations">Oversikt</a>
-
-        {nextPost ? (
-          <Link href={"/about/organizations/[slug]"} as={`/about/organizations/${nextPost.slug}`}>
-            <a className="text-lg font-bold">{nextPost.frontmatter.title} →</a>
-          </Link>
-        ) : (
-          <div />
-        )}
-      </nav>
-      <Wrapper>
-        <ReactMarkdown escapeHtml={false} source={post.content} renderers={{ heading: HeadingRenderer }} />
-      </Wrapper>
+      <Container>
+        <Grid container>
+          <Grid item xs={8}>
+            <ReactMarkdown escapeHtml={false} source={post.content} renderers={{ heading: HeadingRenderer }} />
+          </Grid>
+          <Grid item xs={4}>
+            {frontmatter.styre
+              ? Object.keys(frontmatter.styre).map((item: any) => (
+                  <>
+                    <br />
+                    <Card key={item}>
+                      <Box py={3} pt={5} px={5}>
+                        <Typography variant="body2">{frontmatter.styre[item].navn}</Typography>
+                        <Typography variant="body2">
+                          {frontmatter.styre[item].tittel} - {frontmatter.styre[item].mail}
+                        </Typography>
+                      </Box>
+                    </Card>
+                  </>
+                ))
+              : " "}
+          </Grid>
+        </Grid>
+      </Container>
     </Layout>
   );
 };
@@ -138,11 +157,11 @@ export const getStaticProps = async ({ params }: ArticleProps) => {
   const postData = getPostBySlug(slug, "organizations");
 
   if (!postData.previousPost) {
-    postData.previousPost;
+    postData.previousPost = null;
   }
 
   if (!postData.nextPost) {
-    postData.nextPost;
+    postData.nextPost = null;
   }
 
   return { props: postData };
