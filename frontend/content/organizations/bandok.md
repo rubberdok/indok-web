@@ -1,9 +1,16 @@
 ---
 title: Bandøk
-description: Mer tekst
-image: /img/borsfest.jpg
+description: Indøks helt egne band
+image: /img/bandoklogo.png
 ---
 
-# En overskrift
+# Hvem er vi?
 
-- band er fett
+Indøk har alt for lenge manglet eget husband, men den tid er forbi.
+Fra indøkrevyen springer et nyfødt, fresht, (u)strukturert band, med øre for detaljer. Med Gløshaugens minste blåserrekke blåser vi oss gjennom alt fra YMCA til Another One Bites the Dust med både takt og tone.
+
+Bandøk stiller med musikk til deg og ditt behov, være seg Immball, konsert eller bare en heidundrandes fest. Uansett; der du kommer for å more deg, dit kommer vi.
+
+_Bandøk – som skapt for norske forhold_
+
+![Bandøks nydelige logo](/img/bandoklogo.png)
