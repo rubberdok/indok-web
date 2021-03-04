@@ -6,9 +6,13 @@ import { ContentWrapper } from "./wrapper";
 import YearSelector from "./yearSelector";
 import ListFeaturedDocuments from "./listFeaturedDocuments";
 import SimpleSelector from "./simpleSelector";
+import SearchBar from "material-ui-search-bar";
+import SearchBarComp from "./searchBar";
 
 const DocumentListView: React.FC = () => {
   const [yearFilter, setYearFilter] = useState("");
+
+  const [searchFilter, setSearchFilter] = useState("");
 
   const [typeFilters, setTypeFilters] = useState<{ [key: string]: { active: boolean; title: string } }>({
     Budget: { active: false, title: "Budsjett og Regnskap" },
@@ -30,6 +34,12 @@ const DocumentListView: React.FC = () => {
       <ContentWrapper
         style={{ marginLeft: "80px", marginRight: "80px", justifyContent: "space-evenly", paddingBottom: "8px" }}
       >
+        <SearchBarComp
+          searchFilter={searchFilter}
+          handleSearchFilterChanged={(newValue: string) => {
+            setSearchFilter(newValue);
+          }}
+        />
         <FilterButton
           typeFilters={typeFilters}
           updateTypeFilters={(key) =>
@@ -62,6 +72,7 @@ const DocumentListView: React.FC = () => {
             .filter((key, _) => key[1].active)
             .map(([_, val]) => val.title)}
           year={parseInt(yearFilter)}
+          names={searchFilter}
         />
       </ContentWrapper>
     </>

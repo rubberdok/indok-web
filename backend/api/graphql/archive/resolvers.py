@@ -24,19 +24,16 @@ class ArchiveDocumentResolvers:
             return None
 
     @login_required
-    def resolve_archive_by_types(self, info, type_doc, year=None):
-        # nonFilter = ["Foreningens lover", "Utveksling", "Annet", "Støtte fra HS"]
+    def resolve_archive_by_types(self, info, type_doc, year=None, names=None):
         documents = ArchiveDocument.objects.all()
-        # filter_docs_year = []
         if type_doc:
             documents = documents.filter(type_doc__in=type_doc)
         if year is not None:
-            # for doc in documents:
-            # if doc.type_doc not in nonFilter and doc.year != year:
-            # filter_docs_year.append(doc.id)
             documents = documents.filter(year=year)
-        # if filter_docs_year:
-        #  documents = documents.exclude(id__in=filter_docs_year)
+        if names is not None:
+            l = list(names.split(" "))
+            for element in l:
+                documents = documents.filter(title__icontains=element)
         return documents
 
     @login_required

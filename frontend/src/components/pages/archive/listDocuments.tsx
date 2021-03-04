@@ -46,10 +46,11 @@ const useStyles = makeStyles((theme: Theme) =>
 interface ListDocumentsProps {
   document_types: string[];
   year: number | null;
+  names: string;
 }
 
-const ListDocuments: React.FC<ListDocumentsProps> = ({ document_types, year }) => {
-  const { refetch, loading, data, error } = useQuery(GET_DOCSBYFILTERS, { variables: { document_types, year } });
+const ListDocuments: React.FC<ListDocumentsProps> = ({ document_types, year, names }) => {
+  const { refetch, loading, data, error } = useQuery(GET_DOCSBYFILTERS, { variables: { document_types, year, names } });
 
   useEffect(() => {
     refetch({ document_types, year });

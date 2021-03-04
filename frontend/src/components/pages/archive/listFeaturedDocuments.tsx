@@ -54,10 +54,11 @@ const useStyles = makeStyles((theme: Theme) =>
 interface ListFeaturedDocumentsProps {
   document_types: string[];
   year: number | null;
+  names: string[];
 }
 
-const ListFeaturedDocuments: React.FC<ListFeaturedDocumentsProps> = ({ document_types, year }) => {
-  const { refetch, loading, data, error } = useQuery(GET_DOCSBYFILTERS, { variables: { document_types, year } });
+const ListFeaturedDocuments: React.FC<ListFeaturedDocumentsProps> = ({ document_types, year, names }) => {
+  const { refetch, loading, data, error } = useQuery(GET_DOCSBYFILTERS, { variables: { document_types, year, names } });
 
   useEffect(() => {
     refetch({ document_types, year });

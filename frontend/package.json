@@ -25,6 +25,7 @@
     "dayjs": "^1.10.4",
     "feather-icons": "^4.28.0",
     "graphql": "^15.3.0",
+    "material-ui-search-bar": "^1.0.0",
     "next": "^10.0.3",
     "react": "^16.13.1",
     "react-awesome-reveal": "^3.3.1",
@@ -34,7 +35,8 @@
     "react-icons": "^3.11.0",
     "react-slick": "^0.27.13",
     "slick-carousel": "^1.8.1",
-    "styled-components": "^5.2.0"
+    "styled-components": "^5.2.0",
+    "ts-debounce": "^3.0.0"
   },
   "devDependencies": {
     "@types/feather-icons": "^4.7.0",
