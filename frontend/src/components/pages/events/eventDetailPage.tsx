@@ -113,6 +113,7 @@ function isSignedUp(event: Event, userId?: string) {
 const EventDetailPage: React.FC<Props> = ({ eventId }) => {
   const [openSignUpSnackbar, setOpenSignUpSnackbar] = useState(false);
   const [openSignOffSnackbar, setOpenSignOffSnackbar] = useState(false);
+  const [openErrorSnackbar, setOpenErrorSnackbar] = useState(false);
   const [eventSignUp, { loading: signUpLoading, data: signUpData }] = useMutation<{
     eventSignUp: { event: Event; isFull: boolean };
   }>(EVENT_SIGN_UP);
@@ -136,16 +137,24 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
   const handleClick = () => {
     if (!userData?.user.id) return;
     if (isSignedUp(data.event, userData?.user.id)) {
-      eventSignOff({ variables: { eventId: eventId.toString(), userId: userData?.user.id } }).then(() => {
-        refetch({ id: eventId });
-        setOpenSignOffSnackbar(true);
-      });
+      eventSignOff({ variables: { eventId: eventId.toString(), userId: userData?.user.id } })
+        .then(() => {
+          refetch({ id: eventId });
+          setOpenSignOffSnackbar(true);
+        })
+        .catch(() => {
+          setOpenErrorSnackbar(true);
+        });
       return;
     }
-    eventSignUp({ variables: { eventId: eventId.toString(), userId: userData?.user.id } }).then(() => {
-      refetch({ id: eventId });
-      setOpenSignUpSnackbar(true);
-    });
+    eventSignUp({ variables: { eventId: eventId.toString(), userId: userData?.user.id } })
+      .then(() => {
+        refetch({ id: eventId });
+        setOpenSignUpSnackbar(true);
+      })
+      .catch(() => {
+        setOpenErrorSnackbar(true);
+      });
   };
 
   if (data.event) {
@@ -270,11 +279,12 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
 
                       <Snackbar
                         anchorOrigin={{ vertical: "top", horizontal: "right" }}
-                        open={signUpData?.eventSignUp.isFull}
+                        open={openErrorSnackbar}
                         autoHideDuration={3000}
+                        onClose={() => setOpenErrorSnackbar(false)}
                       >
                         <MuiAlert elevation={6} variant="filled" severity="error">
-                          Arrangementet er fullt
+                          Påmelding feilet
                         </MuiAlert>
                       </Snackbar>
                       <Snackbar

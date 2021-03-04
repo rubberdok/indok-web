@@ -172,6 +172,7 @@ const AllEvents: React.FC = () => {
           </Paper>
         </Container>
 
+        {/* Holder knappen for å opprette arrangementer skjult til det funker
         {userData && !userLoading && userData.user && !userError && (
           // TODO: Redirect til `/events/create-event` når vi har funksjonalitet for dette.
           <Container className={classes.createButtonContainer}>
@@ -182,7 +183,8 @@ const AllEvents: React.FC = () => {
               </Button>
             </Link>
           </Container>
-        )}
+        )}  
+        */}
       </Container>
 
       <Grid container className={classes.grid}>
