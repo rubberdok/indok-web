@@ -54,7 +54,7 @@ const useStyles = makeStyles((theme: Theme) =>
 interface ListFeaturedDocumentsProps {
   document_types: string[];
   year: number | null;
-  names: string[];
+  names: string;
 }
 
 const ListFeaturedDocuments: React.FC<ListFeaturedDocumentsProps> = ({ document_types, year, names }) => {

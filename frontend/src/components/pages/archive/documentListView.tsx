@@ -14,6 +14,8 @@ const DocumentListView: React.FC = () => {
 
   const [searchFilter, setSearchFilter] = useState("");
 
+  const [viewFeatured, setViewFeatured] = useState(true);
+
   const [typeFilters, setTypeFilters] = useState<{ [key: string]: { active: boolean; title: string } }>({
     Budget: { active: false, title: "Budsjett og Regnskap" },
     Summary: { active: false, title: "Generalforsamling" },
@@ -37,50 +39,60 @@ const DocumentListView: React.FC = () => {
         <SearchBarComp
           searchFilter={searchFilter}
           handleSearchFilterChanged={(newValue: string) => {
-            setSearchFilter(newValue);
+            [setSearchFilter(newValue), setViewFeatured(false)];
           }}
         />
         <FilterButton
           typeFilters={typeFilters}
-          updateTypeFilters={(key) =>
-            setTypeFilters({
-              ...typeFilters,
-              [key]: { active: !typeFilters[key].active, title: typeFilters[key].title },
-            })
-          }
+          updateTypeFilters={(key) => {
+            [
+              setTypeFilters({
+                ...typeFilters,
+                [key]: { active: !typeFilters[key].active, title: typeFilters[key].title },
+              }),
+              setViewFeatured(false),
+            ];
+          }}
         />
       </ContentWrapper>
       <ContentWrapper style={{ justifyContent: "center", marginBottom: "32px" }}>
         <YearSelector
           yearFilter={yearFilter}
           handleYearFilterChanged={(year: string) => {
-            setYearFilter(year);
+            [setYearFilter(year), setViewFeatured(false)];
           }}
         />
       </ContentWrapper>
       <RemoveFilters
-        handleRemoveFilterChanged={() => [
-          setYearFilter(""),
-          setSearchFilter(""),
-          setTypeFilters({
-            Budget: { active: false, title: "Budsjett og Regnskap" },
-            Summary: { active: false, title: "Generalforsamling" },
-            Yearbook: { active: false, title: "Årbøker" },
-            Guidelines: { active: false, title: "Støtte fra HS" },
-            Regulation: { active: false, title: "Foreningens lover" },
-            Statues: { active: false, title: "Utveksling" },
-            Others: { active: false, title: "Annet" },
-          }),
-        ]}
+        handleRemoveFilterChanged={() => {
+          [
+            setYearFilter(""),
+            setSearchFilter(""),
+            setTypeFilters({
+              Budget: { active: false, title: "Budsjett og Regnskap" },
+              Summary: { active: false, title: "Generalforsamling" },
+              Yearbook: { active: false, title: "Årbøker" },
+              Guidelines: { active: false, title: "Støtte fra HS" },
+              Regulation: { active: false, title: "Foreningens lover" },
+              Statues: { active: false, title: "Utveksling" },
+              Others: { active: false, title: "Annet" },
+            }),
+            setViewFeatured(true),
+          ];
+        }}
       />
-      {/* <ContentWrapper style={{ marginBottom: "16px" }}>
-        <ListFeaturedDocuments
-          document_types={Object.entries(typeFilters)
-            .filter((key, _) => key[1].active)
-            .map(([_, val]) => val.title)}
-          year={parseInt(yearFilter)}
-        />
-      </ContentWrapper> */}
+
+      {viewFeatured && (
+        <ContentWrapper style={{ marginBottom: "16px" }}>
+          <ListFeaturedDocuments
+            document_types={Object.entries(typeFilters)
+              .filter((key, _) => key[1].active)
+              .map(([_, val]) => val.title)}
+            year={parseInt(yearFilter)}
+            names={searchFilter}
+          />
+        </ContentWrapper>
+      )}
       <ContentWrapper style={{ marginTop: "16px" }}>
         <ListDocuments
           document_types={Object.entries(typeFilters)
