@@ -6,8 +6,8 @@ import { ContentWrapper } from "./wrapper";
 import YearSelector from "./yearSelector";
 import ListFeaturedDocuments from "./listFeaturedDocuments";
 import SimpleSelector from "./simpleSelector";
-import SearchBar from "material-ui-search-bar";
 import SearchBarComp from "./searchBar";
+import { RemoveFilters } from "./removeFilters";
 
 const DocumentListView: React.FC = () => {
   const [yearFilter, setYearFilter] = useState("");
@@ -58,6 +58,21 @@ const DocumentListView: React.FC = () => {
           }}
         />
       </ContentWrapper>
+      <RemoveFilters
+        handleRemoveFilterChanged={() => [
+          setYearFilter(""),
+          setSearchFilter(""),
+          setTypeFilters({
+            Budget: { active: false, title: "Budsjett og Regnskap" },
+            Summary: { active: false, title: "Generalforsamling" },
+            Yearbook: { active: false, title: "Årbøker" },
+            Guidelines: { active: false, title: "Støtte fra HS" },
+            Regulation: { active: false, title: "Foreningens lover" },
+            Statues: { active: false, title: "Utveksling" },
+            Others: { active: false, title: "Annet" },
+          }),
+        ]}
+      />
       {/* <ContentWrapper style={{ marginBottom: "16px" }}>
         <ListFeaturedDocuments
           document_types={Object.entries(typeFilters)
