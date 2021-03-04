@@ -4,9 +4,14 @@ import { debounce } from "ts-debounce";
 interface SearchBarProps {
   searchFilter: string;
   handleSearchFilterChanged: (name: string) => void;
+  handleSearchFilterCanceled: () => void;
 }
 
-const SearchBarComp: React.FC<SearchBarProps> = ({ searchFilter, handleSearchFilterChanged }) => {
+const SearchBarComp: React.FC<SearchBarProps> = ({
+  searchFilter,
+  handleSearchFilterChanged,
+  handleSearchFilterCanceled,
+}) => {
   return (
     <SearchBar
       value={searchFilter}
@@ -16,6 +21,7 @@ const SearchBarComp: React.FC<SearchBarProps> = ({ searchFilter, handleSearchFil
         margin: "0 auto",
         maxWidth: 300,
       }}
+      onCancelSearch={handleSearchFilterCanceled}
     />
   );
 };

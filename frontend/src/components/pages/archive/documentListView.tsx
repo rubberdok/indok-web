@@ -41,6 +41,7 @@ const DocumentListView: React.FC = () => {
           handleSearchFilterChanged={(newValue: string) => {
             [setSearchFilter(newValue), setViewFeatured(false)];
           }}
+          handleSearchFilterCanceled={() => setSearchFilter("")}
         />
         <FilterButton
           typeFilters={typeFilters}
