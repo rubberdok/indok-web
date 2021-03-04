@@ -1,6 +1,5 @@
 import { useQuery } from "@apollo/client";
 import { GET_DOCSBYFILTERS } from "@graphql/archive/queries";
-import { Document } from "@interfaces/archives";
 import Button from "@material-ui/core/Button";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import React, { useEffect } from "react";
@@ -12,6 +11,7 @@ import GridList from "@material-ui/core/GridList";
 import GridListTile from "@material-ui/core/GridListTile";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
+import { Document } from "@interfaces/archive";
 import CardContent from "@material-ui/core/CardContent";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -81,7 +81,7 @@ const ListFeaturedDocuments: React.FC<ListFeaturedDocumentsProps> = ({ document_
                     key={doc.id}
                     className={classes.article}
                     onClick={() => {
-                      window.open(doc.url, "_blank");
+                      window.open(doc.webLink, "_blank");
                     }}
                   >
                     <CardMedia

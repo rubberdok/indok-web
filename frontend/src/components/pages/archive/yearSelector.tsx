@@ -78,16 +78,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface YearSelectorProps {
+  yearFilter: string;
   handleYearFilterChanged: (year: string) => void;
 }
 
-const YearSelector: React.FC<YearSelectorProps> = ({ handleYearFilterChanged }) => {
+const YearSelector: React.FC<YearSelectorProps> = ({ yearFilter, handleYearFilterChanged }) => {
   const classes = useStyles();
-  const [year, setYear] = React.useState("");
-
-  useEffect(() => {
-    handleYearFilterChanged(year);
-  }, [year]);
 
   return (
     <div className={classes.quantityRoot}>
@@ -98,10 +94,9 @@ const YearSelector: React.FC<YearSelectorProps> = ({ handleYearFilterChanged }) 
             root: classes.selectRoot,
             icon: classes.icon,
           }}
-          value={year}
+          value={yearFilter}
           onChange={(event) => {
-            const value = event.target.value;
-            setYear(typeof value === "string" ? value : "");
+            typeof event.target.value === "string" && handleYearFilterChanged(event.target.value);
           }}
           name="Årstall"
           inputProps={{ "aria-label": "without label" }}
