@@ -53,8 +53,8 @@ export const getPostBySlug = (slug: string, page: string) => {
 
   const { frontmatter, content, excerpt } = posts[postIndex];
 
-  const previousPost = posts[postIndex + 1];
-  const nextPost = posts[postIndex - 1];
+  const previousPost: any = posts[postIndex + 1];
+  const nextPost: any = posts[postIndex - 1];
 
   return { frontmatter, post: { content, excerpt }, previousPost, nextPost };
 };

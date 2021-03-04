@@ -113,6 +113,15 @@ export const getStaticProps = async ({ params }: ArticleProps) => {
 
   const postData = getPostBySlug(slug, "about");
 
+  if (!postData.previousPost) {
+    postData.previousPost = null;
+  }
+
+  if (!postData.nextPost) {
+    postData.nextPost = null;
+  }
+
+
   return { props: postData };
 };
 
