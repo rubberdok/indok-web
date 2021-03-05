@@ -73,8 +73,8 @@ export interface BookingData extends InputValueTypes {
 }
 
 export interface Validations {
-  firstname: boolean;
-  lastname: boolean;
+  firstName: boolean;
+  lastName: boolean;
   email: boolean;
   phone: boolean;
   numberIndok: boolean;
@@ -83,8 +83,8 @@ export interface Validations {
 }
 
 export interface ContactInfo {
-  firstname: string;
-  lastname: string;
+  firstName: string;
+  lastName: string;
   email: string;
   phone: string;
   numberIndok: number;

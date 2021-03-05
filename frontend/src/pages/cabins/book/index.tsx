@@ -26,8 +26,8 @@ const initalStepReady: StepReady = steps.reduce((initialObject, step, index) => 
 }, {} as StepReady);
 
 const defaultContactInfo: ContactInfo = {
-  firstname: "",
-  lastname: "",
+  firstName: "",
+  lastName: "",
   email: "",
   phone: "",
   numberIndok: 0,
@@ -41,25 +41,23 @@ const CabinBookingPage: NextPage = () => {
   // Velg Hytte
   const [chosenCabins, setChosenCabins] = useState<Cabin[]>([]);
   const cabinQuery = useQuery<{ cabins: Cabin[] }>(QUERY_CABINS);
+
+  // Contact info state
+  const [contactInfo, setContactInfo] = useState<ContactInfo>(defaultContactInfo);
+  const [validations, setValidations] = useState<Validations>();
+
   useEffect(() => {
     // Cannot go to next step if no cabin is chosen
+
+    setValidations(validateInputForm(contactInfo)); // could be moved to a separate useEffect reliying on contactInfo change?
+
     setStepReady({
       ...stepReady,
       0: { ...stepReady[0], ready: chosenCabins.length > 0, errortext: "Du må velge en hytte for å gå videre" },
-    });
-  }, [chosenCabins]);
 
-  // Contact info
-  const [contactInfo, setContactInfo] = useState<ContactInfo>(defaultContactInfo);
-  const [validations, setValidations] = useState<Validations>();
-  useEffect(() => {
-    // Cannot go to next step if validation is false
-    setValidations(validateInputForm(contactInfo));
-    setStepReady({
-      ...stepReady,
       2: { ...stepReady[2], ready: isFormValid(contactInfo), errortext: "Du må fylle ut alle felt for å gå videre" },
     });
-  }, [contactInfo]);
+  }, [chosenCabins, contactInfo]);
 
   const getStepComponent = () => {
     switch (activeStep) {
@@ -120,10 +118,8 @@ const CabinBookingPage: NextPage = () => {
               <Box>
                 <Button
                   variant="contained"
-                  disabled={!stepReady[activeStep].ready && activeStep != 1}
-                  onClick={() => {
-                    setActiveStep((prev) => prev + 1);
-                  }}
+                  disabled={!stepReady[activeStep].ready}
+                  onClick={() => setActiveStep((prev) => prev + 1)}
                 >
                   Neste
                 </Button>

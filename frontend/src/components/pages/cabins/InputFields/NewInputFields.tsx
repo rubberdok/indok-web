@@ -26,6 +26,9 @@ const useStyles = makeStyles(() =>
     selectEmpty: {
       marginTop: theme.spacing(2),
     },
+    center: {
+      margin: "auto",
+    },
     border: {
       border: "1px solid red",
     },
@@ -44,8 +47,8 @@ export const InputFields: React.FC<Props> = ({ contactInfo, validations, onChang
 
   return (
     <>
-      <Grid container alignItems="center" spacing={3}>
-        <Grid item alignContent="center">
+      <Grid container alignItems="center" spacing={3} lg={8} md={12} className={classes.center}>
+        <Grid item>
           <Typography variant="h3">Kontaktinfo</Typography>
           <Divider component="hr" />
         </Grid>
@@ -55,10 +58,10 @@ export const InputFields: React.FC<Props> = ({ contactInfo, validations, onChang
               type="text"
               label="Fornavn"
               required
-              name="firstname"
-              onChange={(e) => onChange("firstname", e)}
-              error={!validations?.firstname}
-              value={contactInfo.firstname}
+              name="firstName"
+              onChange={(e) => onChange("firstName", e)}
+              error={!validations?.firstName}
+              value={contactInfo.firstName}
               fullWidth
             />
           </Grid>
@@ -66,11 +69,11 @@ export const InputFields: React.FC<Props> = ({ contactInfo, validations, onChang
             <TextField
               type="text"
               label="Etternavn"
-              name="lastname"
+              name="lastName"
               required
-              onChange={(e) => onChange("lastname", e)}
-              error={!validations?.lastname}
-              value={contactInfo.lastname}
+              onChange={(e) => onChange("lastName", e)}
+              error={!validations?.lastName}
+              value={contactInfo.lastName}
               fullWidth
             />
           </Grid>

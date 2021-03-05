@@ -1,5 +1,4 @@
 import { ContactInfo, InputValueTypes } from "@interfaces/cabins";
-import { VariablesInAllowedPositionRule } from "graphql";
 import validator from "validator";
 
 export const allValuesDefined = (obj: InputValueTypes): boolean => {
@@ -29,12 +28,12 @@ export const validateSelect = (numberIndok: number, numberExternal: number): boo
 
 export const validatePhone = (phone: string): boolean => (phone ? validator.isMobilePhone(phone) : false);
 
-export const validateInputForm = (inputValues: ContactInfo) => {
+export const validateInputForm = (inputValues: Record<string, any>) => {
   const selectValidity = validateSelect(inputValues.numberIndok, inputValues.numberExternal);
 
   const updatedValidations = {
-    firstname: validateName(inputValues.firstname),
-    lastname: validateName(inputValues.lastname),
+    firstName: validateName(inputValues.firstName),
+    lastName: validateName(inputValues.lastName),
     email: validateEmail(inputValues.email),
     phone: validatePhone(inputValues.phone),
     numberIndok: selectValidity,
