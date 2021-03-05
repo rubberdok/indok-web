@@ -1,10 +1,12 @@
 import { useQuery } from "@apollo/client";
 import Navbar from "@components/navbar/Navbar";
 import CabinAvailability from "@components/pages/cabins/CabinAvailability";
+import CabinContactInfo from "@components/pages/cabins/CabinContactInfo";
 import CabinDatePicker from "@components/pages/cabins/CabinDatePicker";
 import { QUERY_CABINS } from "@graphql/cabins/queries";
-import { Cabin } from "@interfaces/cabins";
+import { Cabin, ContactInfo, Validations } from "@interfaces/cabins";
 import { Box, Grid, Step, StepLabel, Stepper, Button, Typography, Paper, Tooltip } from "@material-ui/core";
+import { isFormValid, validateInputForm } from "@utils/helpers";
 import dayjs from "dayjs";
 import { NextPage } from "next";
 import React, { useEffect, useState } from "react";
@@ -28,6 +30,15 @@ const initalStepReady: StepReady = steps.reduce((initialObject, step, index) => 
   return initialObject;
 }, {} as StepReady);
 
+const defaultContactInfo: ContactInfo = {
+  firstName: "",
+  lastName: "",
+  email: "",
+  phone: "",
+  numberIndok: 0,
+  numberExternal: 0,
+};
+
 const CabinBookingPage: NextPage = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [stepReady, setStepReady] = useState<StepReady>(initalStepReady);
@@ -39,8 +50,15 @@ const CabinBookingPage: NextPage = () => {
   // Innsjekk/Utsjekk
   const [datePick, setDatePick] = useState<DatePick>({});
 
+  // Contact info state
+  const [contactInfo, setContactInfo] = useState<ContactInfo>(defaultContactInfo);
+  const [validations, setValidations] = useState<Validations>();
+
   useEffect(() => {
     // Cannot go to next step if no cabin is chosen
+
+    setValidations(validateInputForm(contactInfo)); // could be moved to a separate useEffect reliying on contactInfo change?
+
     setStepReady({
       ...stepReady,
       0: { ...stepReady[0], ready: chosenCabins.length > 0, errortext: "Du må velge en hytte for å gå videre" },
@@ -52,8 +70,9 @@ const CabinBookingPage: NextPage = () => {
             : false,
         errortext: "Du må velge innsjekk og utsjekk dato for å gå videre. Innsjekk må være før utsjekk.",
       },
+      2: { ...stepReady[2], ready: isFormValid(contactInfo), errortext: "Du må fylle ut alle felt for å gå videre" },
     });
-  }, [chosenCabins, datePick]);
+  }, [chosenCabins, datePick, contactInfo]);
 
   const getStepComponent = () => {
     switch (activeStep) {
@@ -71,7 +90,7 @@ const CabinBookingPage: NextPage = () => {
         return <CabinDatePicker chosenCabins={chosenCabins} datePick={datePick} setDatePick={setDatePick} />;
       case 2:
         // Velg Kontaktinfo
-        return <Typography variant="h3">Kontaktinfo placeholder</Typography>;
+        return <CabinContactInfo contactInfo={contactInfo} setContactInfo={setContactInfo} validations={validations} />;
       case 3:
         // Betaling
         return <Typography variant="h3">Betaling placeholder</Typography>;

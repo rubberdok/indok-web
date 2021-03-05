@@ -1,4 +1,4 @@
-import { InputValueTypes } from "@interfaces/cabins";
+import { ContactInfo, InputValueTypes } from "@interfaces/cabins";
 import validator from "validator";
 
 export const allValuesDefined = (obj: InputValueTypes): boolean => {
@@ -28,13 +28,13 @@ export const validateSelect = (numberIndok: number, numberExternal: number): boo
 
 export const validatePhone = (phone: string): boolean => (phone ? validator.isMobilePhone(phone) : false);
 
-export const validateInputForm = (inputValues: InputValueTypes) => {
+export const validateInputForm = (inputValues: Record<string, any>) => {
   const selectValidity = validateSelect(inputValues.numberIndok, inputValues.numberExternal);
 
   const updatedValidations = {
-    firstname: validateName(inputValues.firstname),
-    lastname: validateName(inputValues.surname),
-    email: validateEmail(inputValues.receiverEmail),
+    firstName: validateName(inputValues.firstName),
+    lastName: validateName(inputValues.lastName),
+    email: validateEmail(inputValues.email),
     phone: validatePhone(inputValues.phone),
     numberIndok: selectValidity,
     numberExternal: selectValidity,
@@ -42,4 +42,11 @@ export const validateInputForm = (inputValues: InputValueTypes) => {
   };
 
   return updatedValidations;
+};
+
+export const isFormValid = (inputValues: ContactInfo) => {
+  const validations = validateInputForm(inputValues);
+  const { triggerError, ...evaluated } = validations;
+
+  return Object.values(evaluated).every((val) => val);
 };

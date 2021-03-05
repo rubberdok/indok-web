@@ -62,7 +62,7 @@ export const InputFields: React.FC<InputFieldsProps> = ({
     <Grid container spacing={5}>
       <Grid item xs={12} sm={6}>
         <TextField
-          error={!validations?.firstname && validations?.triggerError}
+          error={!validations?.firstName && validations?.triggerError}
           type="text"
           label="Fornavn"
           value={userData?.firstName}
@@ -73,7 +73,7 @@ export const InputFields: React.FC<InputFieldsProps> = ({
       </Grid>
       <Grid item xs={12} sm={6}>
         <TextField
-          error={!validations?.lastname && validations?.triggerError}
+          error={!validations?.lastName && validations?.triggerError}
           type="text"
           id="standard-basic"
           label="Etternavn"
