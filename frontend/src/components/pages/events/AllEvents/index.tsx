@@ -5,6 +5,7 @@ import { Event } from "@interfaces/events";
 import { User } from "@interfaces/users";
 import {
   Box,
+  Chip,
   CircularProgress,
   Container,
   Grid,
@@ -61,35 +62,6 @@ const useStyles = makeStyles((theme) => ({
       cursor: "pointer",
       backgroundColor: "#f5f5f5",
     },
-  },
-  signedUpBox: {
-    marginTop: "auto",
-    marginBottom: "auto",
-    color: "#ffffff",
-    background: theme.palette.primary.main,
-    borderRadius: "5px",
-    padding: "0.2em 0.5em",
-  },
-  signUpAvailableBox: {
-    marginTop: "auto",
-    marginBottom: "auto",
-    color: "#ffffff",
-    background: "#93bfa6",
-    borderRadius: "5px",
-    padding: "0.2em 0.5em",
-  },
-  fullBox: {
-    marginTop: "auto",
-    marginBottom: "auto",
-    color: "#ffffff",
-    background: "#db2e3f",
-    borderRadius: "5px",
-    padding: "0.2em 0.5em",
-  },
-  shortDescriptionText: {
-    textOverflow: "ellipsis",
-    whiteSpace: "nowrap",
-    overflow: "hidden",
   },
 }));
 
@@ -200,28 +172,30 @@ const AllEvents: React.FC = () => {
               ) : (
                 data.map((event: Event) => (
                   <Link href={`/events/${event.id}`} key={event.id}>
-                    <Container
+                    <Box
+                      display="flex"
+                      alignItems="center"
+                      justifyContent="space-between"
                       className={classes.eventContainer}
                       style={{ borderColor: event.organization?.color ?? theme.palette.primary.main }}
                     >
-                      <Grid container>
-                        <Grid item xs className={classes.shortDescriptionText}>
-                          <Typography variant="h6">{event.title}</Typography>
-                          <Typography variant="body1">{formatDate(event.startTime)}</Typography>
+                      <Box>
+                        <Typography variant="h6">{event.title}</Typography>
+                        <Typography variant="body1">{formatDate(event.startTime)}</Typography>
 
-                          {event.shortDescription ?? "Trykk for å lese mer"}
-                        </Grid>
-                        {userData && !userLoading && userData.user && !userError && event.isAttendable ? (
-                          event.signedUpUsers.length === event.availableSlots ? (
-                            <Box className={classes.fullBox}>Fullt</Box>
-                          ) : userData?.user.events.some((userevent) => event.id === userevent.id) ? (
-                            <Box className={classes.signedUpBox}>Påmeldt</Box>
-                          ) : (
-                            <Box className={classes.signUpAvailableBox}>Påmelding tilgjengelig</Box>
-                          )
-                        ) : null}
-                      </Grid>
-                    </Container>
+                        {event.shortDescription ?? "Trykk for å lese mer"}
+                      </Box>
+
+                      {userData && !userLoading && userData.user && !userError && event.isAttendable ? (
+                        event.signedUpUsers.length === event.availableSlots ? (
+                          <Chip variant="outlined" label="Fullt" />
+                        ) : userData?.user.events.some((userevent) => event.id === userevent.id) ? (
+                          <Chip color="primary" label="Påmeldt" />
+                        ) : (
+                          <Chip label="Påmelding tilgjengelig" />
+                        )
+                      ) : null}
+                    </Box>
                   </Link>
                 ))
               )}
