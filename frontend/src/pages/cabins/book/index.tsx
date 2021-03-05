@@ -5,11 +5,16 @@ import CabinDatePicker from "@components/pages/cabins/CabinDatePicker";
 import { QUERY_CABINS } from "@graphql/cabins/queries";
 import { Cabin } from "@interfaces/cabins";
 import { Box, Grid, Step, StepLabel, Stepper, Button, Typography, Paper, Tooltip } from "@material-ui/core";
+import dayjs from "dayjs";
 import { NextPage } from "next";
 import React, { useEffect, useState } from "react";
 
 interface StepReady {
   [step: number]: { ready: boolean; stepName: string; errortext: string };
+}
+export interface DatePick {
+  checkInDate?: string;
+  checkOutDate?: string;
 }
 
 const steps = ["Velg hytte", "Innsjekk/Utsjekk", "Kontaktinfo", "Betaling", "Kvittering"];
@@ -30,13 +35,25 @@ const CabinBookingPage: NextPage = () => {
   // Velg Hytte
   const [chosenCabins, setChosenCabins] = useState<Cabin[]>([]);
   const cabinQuery = useQuery<{ cabins: Cabin[] }>(QUERY_CABINS);
+
+  // Innsjekk/Utsjekk
+  const [datePick, setDatePick] = useState<DatePick>({});
+
   useEffect(() => {
     // Cannot go to next step if no cabin is chosen
     setStepReady({
       ...stepReady,
       0: { ...stepReady[0], ready: chosenCabins.length > 0, errortext: "Du må velge en hytte for å gå videre" },
+      1: {
+        ...stepReady[1],
+        ready:
+          datePick.checkInDate && datePick.checkOutDate
+            ? dayjs(datePick.checkInDate).isBefore(dayjs(datePick.checkOutDate))
+            : false,
+        errortext: "Du må velge innsjekk og utsjekk dato for å gå videre. Innsjekk må være før utsjekk.",
+      },
     });
-  }, [chosenCabins]);
+  }, [chosenCabins, datePick]);
 
   const getStepComponent = () => {
     switch (activeStep) {
@@ -51,7 +68,7 @@ const CabinBookingPage: NextPage = () => {
         ) : null;
       case 1:
         // Velg innsjekk
-        return <CabinDatePicker />;
+        return <CabinDatePicker chosenCabins={chosenCabins} datePick={datePick} setDatePick={setDatePick} />;
       case 2:
         // Velg Kontaktinfo
         return <Typography variant="h3">Kontaktinfo placeholder</Typography>;
