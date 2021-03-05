@@ -1,66 +1,90 @@
-export const imageData = {
-  bjørnen: [
-    {
-      label: "Bjørnen",
-      description: "Badstue",
-      imgPath: "/static/cabins/bilde01.jpg",
-    },
-    {
-      label: "Bjørnen",
-      description: "Stue",
-      imgPath: "/static/cabins/bilde02.jpg",
-    },
-    {
-      label: "Bjørnen",
-      description: "Soverom",
-      imgPath: "/static/cabins/bilde03.jpg",
-    },
-    {
-      label: "Bjørnen",
-      description: "Kjøkken",
-      imgPath: "/static/cabins/bilde04.jpg",
-    },
-    {
-      label: "Bjørnen",
-      description: "Kjøkken",
-      imgPath: "/static/cabins/bilde05.jpg",
-    },
-    {
-      label: "Bjørnen",
-      description: "Spisebord",
-      imgPath: "/static/cabins/bilde06.jpg",
-    },
-  ],
-  oksen: [
-    {
-      label: "Oksen",
-      description: "Badstue",
-      imgPath: "/static/cabins/bilde01.jpg",
-    },
-    {
-      label: "Oksen",
-      description: "Stue",
-      imgPath: "/static/cabins/bilde02.jpg",
-    },
-    {
-      label: "Oksen",
-      description: "Soverom",
-      imgPath: "/static/cabins/bilde03.jpg",
-    },
-    {
-      label: "Oksen",
-      description: "Kjøkken",
-      imgPath: "/static/cabins/bilde04.jpg",
-    },
-    {
-      label: "Oksen",
-      description: "Kjøkken",
-      imgPath: "/static/cabins/bilde05.jpg",
-    },
-    {
-      label: "Oksen",
-      description: "Spisebord",
-      imgPath: "/static/cabins/bilde06.jpg",
-    },
-  ],
-};
+export const outsideImages = [
+  {
+    label: "",
+    description: "",
+    imgPath: "/static/cabins/ute1.jpg",
+  },
+  {
+    label: "",
+    description: "",
+    imgPath: "/static/cabins/ute2.jpg",
+  },
+  {
+    label: "",
+    description: "",
+    imgPath: "/static/cabins/ute6.jpg",
+  },
+];
+
+export const cabinImages = [
+  {
+    label: "Stue",
+    description: "",
+    imgPath: "/static/cabins/stue1.jpg",
+  },
+  {
+    label: "Kjøkken",
+    description: "",
+    imgPath: "/static/cabins/spis1.jpg",
+  },
+  {
+    label: "Kjøkken",
+    description: "",
+    imgPath: "/static/cabins/spis3.jpg",
+  },
+  {
+    label: "Gang",
+    description: "",
+    imgPath: "/static/cabins/gang1.jpg",
+  },
+  {
+    label: "Bad",
+    description: "",
+    imgPath: "/static/cabins/bad1.jpg",
+  },
+  {
+    label: "Bad",
+    description: "",
+    imgPath: "/static/cabins/bad2.jpg",
+  },
+  {
+    label: "Badstue",
+    description: "",
+    imgPath: "/static/cabins/badstue1.jpg",
+  },
+  {
+    label: "Soverom 1",
+    description: "",
+    imgPath: "/static/cabins/sov1.jpg",
+  },
+  {
+    label: "Soverom 2",
+    description: "",
+    imgPath: "/static/cabins/sov2.jpg",
+  },
+  {
+    label: "Soverom 3",
+    description: "",
+    imgPath: "/static/cabins/sov3.jpg",
+  },
+  {
+    label: "Soverom 4",
+    description: "",
+    imgPath: "/static/cabins/sov4.jpg",
+  },
+  {
+    label: "Utenfor",
+    description: "",
+    imgPath: "/static/cabins/utenfor1.jpg",
+  },
+  {
+    label: "Utenfor",
+    description: "",
+    imgPath: "/static/cabins/utenfor2.jpg",
+  },
+  {
+    label: "Utsikt",
+    description: "",
+    imgPath: "/static/cabins/utsikt1.jpg",
+  },
+];

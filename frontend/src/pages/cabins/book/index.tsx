@@ -53,7 +53,7 @@ const CabinBookingPage: NextPage = () => {
         errortext: "Du må velge innsjekk og utsjekk dato for å gå videre. Innsjekk må være før utsjekk.",
       },
     });
-  }, [chosenCabins]);
+  }, [chosenCabins, datePick]);
 
   const getStepComponent = () => {
     switch (activeStep) {
