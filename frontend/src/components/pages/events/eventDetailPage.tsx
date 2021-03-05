@@ -3,15 +3,14 @@ import { GET_USER } from "@graphql/auth/queries";
 import { EVENT_SIGN_OFF, EVENT_SIGN_UP } from "@graphql/events/mutations";
 import { Event } from "@interfaces/events";
 import { User } from "@interfaces/users";
-import { Button, Paper, Box, Grid, Snackbar, Typography } from "@material-ui/core";
+import { Box, Button, Grid, Paper, Snackbar, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import CategoryIcon from "@material-ui/icons/Category";
+import CreditCard from "@material-ui/icons/CreditCard";
 import EventIcon from "@material-ui/icons/Event";
 import LocationOnIcon from "@material-ui/icons/LocationOn";
 import ScheduleIcon from "@material-ui/icons/Schedule";
-import CreditCard from "@material-ui/icons/CreditCard";
-import MuiAlert from "@material-ui/lab/Alert";
-import { Container } from "next/app";
+import { Alert } from "@material-ui/lab";
 import Link from "next/link";
 import React, { useState } from "react";
 import { GET_EVENT } from "../../../graphql/events/queries";
@@ -270,61 +269,59 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
           {/* Buttons row card */}
           <Grid item justify="space-between" xs={12}>
             <Paper variant="outlined" className={classes.paper}>
-              <Container justify="space-between">
-                <Link href={`/events`}>
-                  <Button>Tilbake</Button>
-                </Link>
+              <Link href={`/events`}>
+                <Button>Tilbake</Button>
+              </Link>
 
-                {data.event.isAttendable && userData?.user ? (
-                  data.event.signedUpUsers.length === data.event.availableSlots ? (
-                    <Typography variant="body1" color="primary">
-                      Arrangementet er fullt
-                    </Typography>
-                  ) : (
-                    <>
-                      <CountdownButton
-                        countDownDate={data.event.signupOpenDate}
-                        isSignedUp={isSignedUp(data.event, userData?.user.id)}
-                        loading={signOffLoading || signUpLoading}
-                        onClick={handleClick}
-                        styleClassName={classes.signUpButton}
-                      />
+              {data.event.isAttendable && userData?.user ? (
+                data.event.signedUpUsers.length === data.event.availableSlots ? (
+                  <Typography variant="body1" color="primary">
+                    Arrangementet er fullt
+                  </Typography>
+                ) : (
+                  <>
+                    <CountdownButton
+                      countDownDate={data.event.signupOpenDate}
+                      isSignedUp={isSignedUp(data.event, userData?.user.id)}
+                      loading={signOffLoading || signUpLoading}
+                      onClick={handleClick}
+                      styleClassName={classes.signUpButton}
+                    />
 
-                      <Snackbar
-                        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-                        open={openErrorSnackbar}
-                        autoHideDuration={3000}
-                        onClose={() => setOpenErrorSnackbar(false)}
-                      >
-                        <MuiAlert elevation={6} variant="filled" severity="error">
-                          Påmelding feilet
-                        </MuiAlert>
-                      </Snackbar>
-                      <Snackbar
-                        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-                        open={openSignOffSnackbar}
-                        autoHideDuration={3000}
-                        onClose={() => setOpenSignOffSnackbar(false)}
-                      >
-                        <MuiAlert elevation={6} variant="filled" severity="info">
-                          Du er nå avmeldt
-                        </MuiAlert>
-                      </Snackbar>
+                    <Snackbar
+                      anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                      open={openErrorSnackbar}
+                      autoHideDuration={3000}
+                      onClose={() => setOpenErrorSnackbar(false)}
+                    >
+                      <Alert elevation={6} variant="filled" severity="error">
+                        Påmelding feilet
+                      </Alert>
+                    </Snackbar>
+                    <Snackbar
+                      anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                      open={openSignOffSnackbar}
+                      autoHideDuration={3000}
+                      onClose={() => setOpenSignOffSnackbar(false)}
+                    >
+                      <Alert elevation={6} variant="filled" severity="info">
+                        Du er nå avmeldt
+                      </Alert>
+                    </Snackbar>
 
-                      <Snackbar
-                        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-                        open={openSignUpSnackbar}
-                        autoHideDuration={3000}
-                        onClose={() => setOpenSignUpSnackbar(false)}
-                      >
-                        <MuiAlert elevation={6} variant="filled" severity="success">
-                          Du er nå påmeldt
-                        </MuiAlert>
-                      </Snackbar>
-                    </>
-                  )
-                ) : null}
-              </Container>
+                    <Snackbar
+                      anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                      open={openSignUpSnackbar}
+                      autoHideDuration={3000}
+                      onClose={() => setOpenSignUpSnackbar(false)}
+                    >
+                      <Alert elevation={6} variant="filled" severity="success">
+                        Du er nå påmeldt
+                      </Alert>
+                    </Snackbar>
+                  </>
+                )
+              ) : null}
             </Paper>
           </Grid>
         </Grid>
