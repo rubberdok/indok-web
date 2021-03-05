@@ -1,7 +1,7 @@
 import { Organization } from "@interfaces/organizations";
-import React, { useState } from "react";
-import { List, ListItem, ListItemText, Collapse, Badge } from "@material-ui/core";
+import { Badge, Collapse, List, ListItem, ListItemText } from "@material-ui/core";
 import { ExpandLess, ExpandMore } from "@material-ui/icons";
+import React, { useState } from "react";
 import { FilterQuery } from "../..";
 import SuborganizationFilter from "./SuborganizationFilter";
 
@@ -17,7 +17,7 @@ const OrganizationFilter: React.FC<Props> = ({ filters, onFiltersChange, organiz
   const [open, setOpen] = useState(false);
 
   return (
-    <List component="div" className={classes.root} disablePadding>
+    <>
       <ListItem button onClick={() => setOpen(!open)} selected={open}>
         <ListItemText primary={"Organisasjoner"} />
         <Badge className={classes.badge} badgeContent={1} color="primary" invisible={!filters.organization} />
@@ -26,7 +26,7 @@ const OrganizationFilter: React.FC<Props> = ({ filters, onFiltersChange, organiz
 
       <Collapse in={open} timeout="auto" unmountOnExit>
         {organizations.map((org: Organization) => (
-          <List component="div" disablePadding key={org.name}>
+          <List disablePadding key={org.name}>
             {org.children && org.children.length > 0 ? (
               <SuborganizationFilter
                 filters={filters}
@@ -53,7 +53,7 @@ const OrganizationFilter: React.FC<Props> = ({ filters, onFiltersChange, organiz
           </List>
         ))}
       </Collapse>
-    </List>
+    </>
   );
 };
 

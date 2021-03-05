@@ -1,10 +1,10 @@
-import { Category } from "@interfaces/events";
-import React, { useState } from "react";
-import { List, ListItem, ListItemText, Collapse, Badge } from "@material-ui/core";
-import { ExpandLess, ExpandMore } from "@material-ui/icons";
-import { FilterQuery } from "../..";
 import { useQuery } from "@apollo/client";
 import { GET_CATEGORIES } from "@graphql/events/queries";
+import { Category } from "@interfaces/events";
+import { Badge, Collapse, List, ListItem, ListItemText } from "@material-ui/core";
+import { ExpandLess, ExpandMore } from "@material-ui/icons";
+import React, { useState } from "react";
+import { FilterQuery } from "../..";
 
 interface Props {
   filters: FilterQuery;
@@ -20,7 +20,7 @@ const CategoryFilter: React.FC<Props> = ({ filters, onFiltersChange, classes }) 
   if (error) return <p>Error :(</p>;
 
   return (
-    <List component="div" className={classes.root} disablePadding>
+    <>
       <ListItem button onClick={() => setOpen(!open)} selected={open}>
         <ListItemText primary={"Kategorier"} />
         <Badge className={classes.badge} badgeContent={1} color="primary" invisible={!filters.category} />
@@ -28,7 +28,7 @@ const CategoryFilter: React.FC<Props> = ({ filters, onFiltersChange, classes }) 
         {open ? <ExpandLess /> : <ExpandMore />}
       </ListItem>
       <Collapse in={open} timeout="auto" unmountOnExit>
-        <List component="div" disablePadding>
+        <List disablePadding>
           {data.allCategories.map((category: Category) => (
             <ListItem
               key={category.name}
@@ -47,7 +47,7 @@ const CategoryFilter: React.FC<Props> = ({ filters, onFiltersChange, classes }) 
           ))}
         </List>
       </Collapse>
-    </List>
+    </>
   );
 };
 

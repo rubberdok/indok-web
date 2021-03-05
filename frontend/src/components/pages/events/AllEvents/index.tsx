@@ -149,7 +149,7 @@ const AllEvents: React.FC = () => {
         */}
       </Container>
 
-      <Grid container className={classes.grid}>
+      <Grid container className={classes.grid} spacing={3}>
         <Grid item xs={3}>
           <FilterMenu
             filters={filters}

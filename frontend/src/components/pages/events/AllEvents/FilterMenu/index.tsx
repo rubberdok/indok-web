@@ -1,13 +1,12 @@
 import { useQuery } from "@apollo/client";
-import { Filter, RotateCcw } from "react-feather";
 import { QUERY_EVENT_FILTERED_ORGANIZATIONS } from "@graphql/events/queries";
+import { Divider, IconButton, List, ListItem, ListItemText, makeStyles, Tooltip } from "@material-ui/core";
+import { Refresh, StarBorderRounded, StarRounded } from "@material-ui/icons";
 import React from "react";
-import { makeStyles, Tooltip, Container, IconButton, List, ListItem, ListItemText } from "@material-ui/core";
-import { StarRounded, StarBorderRounded } from "@material-ui/icons";
-import OrganizationFilter from "./OrganizationFilter";
 import { FilterQuery } from "..";
 import CategoryFilter from "./CategoryFilter";
 import DateTimeFilter from "./DateTimeFilter";
+import OrganizationFilter from "./OrganizationFilter";
 
 interface Props {
   filters: FilterQuery;
@@ -61,14 +60,6 @@ const useStyles = makeStyles((theme) => ({
       },
     },
   },
-  filterContainer: {
-    float: "left",
-    backgroundColor: "#fff",
-    padding: 0,
-    paddingTop: theme.spacing(2),
-    paddingBottom: theme.spacing(4),
-    maxWidth: "90%",
-  },
   headerContainer: {
     padding: theme.spacing(2),
     paddingTop: 0,
@@ -83,9 +74,6 @@ const useStyles = makeStyles((theme) => ({
     margin: 0,
     padding: 0,
   },
-  simple: {
-    padding: 0,
-  },
 }));
 
 const FilterMenu: React.FC<Props> = ({ filters, onFiltersChange, showDefaultEvents, onShowDefaultChange }) => {
@@ -98,24 +86,19 @@ const FilterMenu: React.FC<Props> = ({ filters, onFiltersChange, showDefaultEven
   if (organizationError) return null;
 
   return (
-    <Container className={classes.filterContainer}>
-      <Container className={classes.headerContainer}>
-        <List component="div" disablePadding>
-          <ListItem className={classes.simple}>
-            <Filter style={{ marginTop: "0.1em", marginRight: "0.3em", float: "left", color: "#222" }} />
-            <ListItemText primary={"Filtre"} />
-            <Tooltip className={classes.tooltip} title="Nullstill filtre" arrow>
-              <IconButton disableFocusRipple disableRipple onClick={() => onFiltersChange({})} aria-label="delete">
-                <RotateCcw style={{ color: "#222" }} />
-              </IconButton>
-            </Tooltip>
-          </ListItem>
-        </List>
+    <div className={classes.root}>
+      <List>
+        <ListItem>
+          <ListItemText primary={"Filtre"} />
+          <Tooltip className={classes.tooltip} title="Nullstill filtre" arrow>
+            <IconButton disableFocusRipple disableRipple onClick={() => onFiltersChange({})} aria-label="delete">
+              <Refresh />
+            </IconButton>
+          </Tooltip>
+        </ListItem>
 
-        <hr style={{ margin: 0, marginTop: "0.2em" }} />
-      </Container>
+        <Divider />
 
-      <List component="div" disablePadding>
         <ListItem
           button
           onClick={() => {
@@ -130,20 +113,20 @@ const FilterMenu: React.FC<Props> = ({ filters, onFiltersChange, showDefaultEven
             <StarBorderRounded style={{ color: "#ffe100" }} />
           )}
         </ListItem>
+
+        <OrganizationFilter
+          filters={filters}
+          onFiltersChange={onFiltersChange}
+          organizations={organizationData.eventFilteredOrganizations}
+          name={"Organisasjoner"}
+          classes={classes}
+        />
+
+        <CategoryFilter filters={filters} onFiltersChange={onFiltersChange} classes={classes} />
+
+        <DateTimeFilter filters={filters} onFiltersChange={onFiltersChange} />
       </List>
-
-      <OrganizationFilter
-        filters={filters}
-        onFiltersChange={onFiltersChange}
-        organizations={organizationData.eventFilteredOrganizations}
-        name={"Organisasjoner"}
-        classes={classes}
-      />
-
-      <CategoryFilter filters={filters} onFiltersChange={onFiltersChange} classes={classes} />
-
-      <DateTimeFilter filters={filters} onFiltersChange={onFiltersChange} />
-    </Container>
+    </div>
   );
 };
 

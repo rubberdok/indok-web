@@ -1,7 +1,7 @@
 import { Organization } from "@interfaces/organizations";
-import React, { useState } from "react";
-import { List, ListItem, ListItemText, Collapse } from "@material-ui/core";
+import { Collapse, List, ListItem, ListItemText } from "@material-ui/core";
 import { ExpandLess, ExpandMore } from "@material-ui/icons";
+import React, { useState } from "react";
 import { FilterQuery } from "../../..";
 
 interface Props {
@@ -16,7 +16,7 @@ const SuborganizationFilter: React.FC<Props> = ({ filters, onFiltersChange, orga
   const [open, setOpen] = useState(false);
 
   return (
-    <List component="div" className={classes.doubleNested} disablePadding>
+    <List className={classes.doubleNested}>
       <ListItem
         className={classes.doubleNestedHeader}
         button
