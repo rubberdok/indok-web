@@ -5,6 +5,7 @@ import { Grid, Typography, Divider, makeStyles } from "@material-ui/core";
 import { NextPage } from "next";
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
+import { DatePick } from "src/pages/cabins/book";
 
 const useStyles = makeStyles({
   header: {
@@ -14,16 +15,12 @@ const useStyles = makeStyles({
 
 interface Props {
   chosenCabins: Cabin[];
+  datePick: DatePick;
+  setDatePick: React.Dispatch<React.SetStateAction<DatePick>>;
 }
 
-interface DatePick {
-  checkInDate?: string;
-  checkOutDate?: string;
-}
-
-const CabinDatePicker: NextPage<Props> = ({ chosenCabins }) => {
+const CabinDatePicker: NextPage<Props> = ({ chosenCabins, datePick, setDatePick }) => {
   const classes = useStyles();
-  const [datePick, setDatePick] = useState<DatePick>({});
   const { disabledDates } = useDisabledDates(chosenCabins);
   const [disableAfter, setDisableAfter] = useState<string>();
   const getHeader = (header: string, prefix: string) => (
