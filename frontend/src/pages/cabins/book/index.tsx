@@ -7,11 +7,16 @@ import { QUERY_CABINS } from "@graphql/cabins/queries";
 import { Cabin, ContactInfo, Validations } from "@interfaces/cabins";
 import { Box, Grid, Step, StepLabel, Stepper, Button, Typography, Paper, Tooltip } from "@material-ui/core";
 import { isFormValid, validateInputForm } from "@utils/helpers";
+import dayjs from "dayjs";
 import { NextPage } from "next";
 import React, { useEffect, useState } from "react";
 
 interface StepReady {
   [step: number]: { ready: boolean; stepName: string; errortext: string };
+}
+export interface DatePick {
+  checkInDate?: string;
+  checkOutDate?: string;
 }
 
 const steps = ["Velg hytte", "Innsjekk/Utsjekk", "Kontaktinfo", "Betaling", "Kvittering"];
@@ -42,6 +47,9 @@ const CabinBookingPage: NextPage = () => {
   const [chosenCabins, setChosenCabins] = useState<Cabin[]>([]);
   const cabinQuery = useQuery<{ cabins: Cabin[] }>(QUERY_CABINS);
 
+  // Innsjekk/Utsjekk
+  const [datePick, setDatePick] = useState<DatePick>({});
+
   // Contact info state
   const [contactInfo, setContactInfo] = useState<ContactInfo>(defaultContactInfo);
   const [validations, setValidations] = useState<Validations>();
@@ -54,10 +62,17 @@ const CabinBookingPage: NextPage = () => {
     setStepReady({
       ...stepReady,
       0: { ...stepReady[0], ready: chosenCabins.length > 0, errortext: "Du må velge en hytte for å gå videre" },
-
+      1: {
+        ...stepReady[1],
+        ready:
+          datePick.checkInDate && datePick.checkOutDate
+            ? dayjs(datePick.checkInDate).isBefore(dayjs(datePick.checkOutDate))
+            : false,
+        errortext: "Du må velge innsjekk og utsjekk dato for å gå videre. Innsjekk må være før utsjekk.",
+      },
       2: { ...stepReady[2], ready: isFormValid(contactInfo), errortext: "Du må fylle ut alle felt for å gå videre" },
     });
-  }, [chosenCabins, contactInfo]);
+  }, [chosenCabins, datePick, contactInfo]);
 
   const getStepComponent = () => {
     switch (activeStep) {
@@ -72,7 +87,7 @@ const CabinBookingPage: NextPage = () => {
         ) : null;
       case 1:
         // Velg innsjekk
-        return <CabinDatePicker />;
+        return <CabinDatePicker chosenCabins={chosenCabins} datePick={datePick} setDatePick={setDatePick} />;
       case 2:
         // Velg Kontaktinfo
         return <CabinContactInfo contactInfo={contactInfo} setContactInfo={setContactInfo} validations={validations} />;

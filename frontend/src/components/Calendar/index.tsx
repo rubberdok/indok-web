@@ -7,21 +7,27 @@ import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore";
 import DayCell from "./DayCell";
 
-export interface CalendarEvent {
-  date: string;
-  renderComponent: (key: string) => React.ReactNode;
-}
-
 interface CalendarProps {
   disabledDates?: string[];
   handleDateClicked?: (date: string) => void;
   initSelectedDay?: string;
   disableAll?: boolean;
+  disableBefore?: string;
+  disableAfter?: string;
 }
 
-const Calendar: React.FC<CalendarProps> = ({ disabledDates, initSelectedDay, handleDateClicked, disableAll }) => {
+const Calendar: React.FC<CalendarProps> = ({
+  disabledDates,
+  initSelectedDay,
+  handleDateClicked,
+  disableAll,
+  disableBefore,
+  disableAfter,
+}) => {
   const [selectedMonth, setSelectedMonth] = useState(dayjs());
   const [selectedDay, setSelectedDay] = useState(initSelectedDay ? dayjs(initSelectedDay) : undefined);
+  const disableBeforeDate = disableBefore ? dayjs(disableBefore) : dayjs();
+  const disableAfterDate = disableAfter ? dayjs(disableAfter) : undefined;
 
   const previousMonthDays = (month: dayjs.Dayjs): JSX.Element[] => {
     const previousDays: JSX.Element[] = [];
@@ -42,7 +48,6 @@ const Calendar: React.FC<CalendarProps> = ({ disabledDates, initSelectedDay, han
 
   const getDaysOfMonth = (month: dayjs.Dayjs) => {
     const daysOfMonth: JSX.Element[] = [];
-    const today = dayjs();
     for (let i = 1; i <= month.daysInMonth(); i++) {
       const date = dayjs(month).set("date", i);
       daysOfMonth.push(
@@ -54,7 +59,12 @@ const Calendar: React.FC<CalendarProps> = ({ disabledDates, initSelectedDay, han
               handleDateClicked(date.format(DATE_FORMAT));
             }
           }}
-          isDisabled={disableAll || date.isBefore(today, "day") || disabledDates?.includes(date.format(DATE_FORMAT))}
+          isDisabled={
+            disableAll ||
+            date.isBefore(disableBeforeDate, "day") ||
+            (disableAfterDate ? date.isAfter(disableAfterDate) : false) ||
+            disabledDates?.includes(date.format(DATE_FORMAT))
+          }
           clickable={handleDateClicked === undefined}
           key={date.format(DATE_FORMAT)}
         >
