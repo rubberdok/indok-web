@@ -190,18 +190,18 @@ class DataportenAuth:
         if user_info is None:
             return None
 
-        username, feide_userid, email, name, year = user_info
+        username, feide_userid, email, name = user_info
 
+        first_login = False
         # Create or update user
         try:
             user = UserModel.objects.get(feide_userid=feide_userid)
             # User exists, update user info
             print(f"\nUser {username} exists, updating in the database")
             user.username = username
-            user.email = email
+            user.feide_email = email
             user.first_name = name
             user.feide_userid = feide_userid
-            # user.year = year
             user.id_token = id_token
             user.save()
 
@@ -210,11 +210,11 @@ class DataportenAuth:
             # User does not exist, create a new user
             user = UserModel(
                 username=username,
-                email=email,
+                feide_email=email,
                 first_name=name,
                 feide_userid=feide_userid,
-                # year=year,
                 id_token=id_token,
             )
             user.save()
-        return user, enrolled, None
+            first_login = True
+        return user, enrolled, None, first_login

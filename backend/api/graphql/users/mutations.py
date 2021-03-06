@@ -15,16 +15,28 @@ class AuthUser(graphene.Mutation):
     user = graphene.Field(UserType)
     is_indok_student = graphene.Boolean()
     id_token = graphene.String()
+    first_login = graphene.Boolean()
 
     def mutate(self, info, code):
-        user, enrolled, id_token = DataportenAuth.authenticate_and_get_user(code=code)
+        (
+            user,
+            enrolled,
+            id_token,
+            first_login,
+        ) = DataportenAuth.authenticate_and_get_user(code=code)
+
         if enrolled:
             token = get_token(user)
             info.context.set_jwt_cookie = token
         else:
             token = None
+
         return AuthUser(
-            user=user, token=token, is_indok_student=enrolled, id_token=id_token
+            user=user,
+            token=token,
+            is_indok_student=enrolled,
+            id_token=id_token,
+            first_login=first_login,
         )
 
 
@@ -33,8 +45,9 @@ class UpdateUser(graphene.Mutation):
         email = graphene.String()
         first_name = graphene.String()
         last_name = graphene.String()
-        year = graphene.String()
-        feide_userid = graphene.ID()
+        year = graphene.Int()
+        phone_number = graphene.String()  # TODO: string?
+        allergies = graphene.String()
 
     ok = graphene.Boolean()
     user = graphene.Field(UserType)
@@ -44,22 +57,22 @@ class UpdateUser(graphene.Mutation):
         info,
         id,
         email=None,
-        username=None,
         first_name=None,
         last_name=None,
         year=None,
-        feide_userid=None,
+        phone_number=None,
+        allergies=None,
     ):
         user = get_user_model().objects.get(pk=id)
         user.save(
             email=email if email is not None else user.email,
-            username=username if username is not None else user.username,
             first_name=first_name if first_name is not None else user.first_name,
             last_name=last_name if last_name is not None else user.last_name,
             year=year if year is not None else user.year,
-            feide_userid=feide_userid
-            if feide_userid is not None
-            else user.feide_userid,
+            phone_number=phone_number
+            if phone_number is not None
+            else user.phone_number,
+            allergies=allergies if allergies is not None else user.allergies,
         )
 
         ok = True
