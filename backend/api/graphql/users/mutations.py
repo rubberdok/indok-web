@@ -15,15 +15,9 @@ class AuthUser(graphene.Mutation):
     user = graphene.Field(UserType)
     is_indok_student = graphene.Boolean()
     id_token = graphene.String()
-    first_login = graphene.Boolean()
 
     def mutate(self, info, code):
-        (
-            user,
-            enrolled,
-            id_token,
-            first_login,
-        ) = DataportenAuth.authenticate_and_get_user(code=code)
+        user, enrolled, id_token = DataportenAuth.authenticate_and_get_user(code=code)
 
         if enrolled:
             token = get_token(user)
@@ -36,7 +30,6 @@ class AuthUser(graphene.Mutation):
             token=token,
             is_indok_student=enrolled,
             id_token=id_token,
-            first_login=first_login,
         )
 
 
@@ -46,10 +39,9 @@ class UpdateUser(graphene.Mutation):
         first_name = graphene.String()
         last_name = graphene.String()
         year = graphene.Int()
-        phone_number = graphene.String()  # TODO: string?
+        phone_number = graphene.String()
         allergies = graphene.String()
 
-    ok = graphene.Boolean()
     user = graphene.Field(UserType)
 
     def mutate(
@@ -64,8 +56,20 @@ class UpdateUser(graphene.Mutation):
         allergies=None,
     ):
         user = get_user_model().objects.get(pk=id)
+        first_login = user.first_login
+        if first_login:
+            if not phone_number:
+                raise Exception(
+                    "Du må spesifisere et telfonnummer ved første innlogging"
+                )
+            if year not in range(1, 6):
+                raise ValueError("Du må oppgi et gyldig årstrinn")
+            if not phone_number.isnumeric:
+                raise ValueError("Telefonnummeret må inneholde kun tallsiffer")
+            first_login = False
+
         user.save(
-            email=email if email is not None else user.email,
+            email=email if email is not None else user.feide_email,
             first_name=first_name if first_name is not None else user.first_name,
             last_name=last_name if last_name is not None else user.last_name,
             year=year if year is not None else user.year,
@@ -73,10 +77,10 @@ class UpdateUser(graphene.Mutation):
             if phone_number is not None
             else user.phone_number,
             allergies=allergies if allergies is not None else user.allergies,
+            first_login=first_login,
         )
 
-        ok = True
-        return UpdateUser(user=user, ok=ok)
+        return UpdateUser(user=user)
 
 
 class GetIDToken(graphene.Mutation):

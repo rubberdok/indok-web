@@ -4,17 +4,16 @@ export const GET_USER = gql`
   query {
     user {
       id
-      username
-      isStaff
-      isActive
-      isSuperuser
+      feideEmail
       email
+      username
       firstName
       lastName
-      feideUserid
-      lastLogin
       dateJoined
       year
+      allergies
+      phoneNumber
+      firstLogin
     }
   }
 `;

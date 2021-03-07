@@ -6,17 +6,16 @@ export const AUTHENTICATE = gql`
       token
       user {
         id
-        username
-        isStaff
-        isActive
-        isSuperuser
+        feideEmail
         email
+        username
         firstName
         lastName
-        feideUserid
-        lastLogin
         dateJoined
         year
+        allergies
+        phoneNumber
+        firstLogin
       }
       isIndokStudent
       idToken
@@ -36,6 +35,40 @@ export const GET_ID_TOKEN = gql`
   mutation {
     getIdToken {
       idToken
+    }
+  }
+`;
+
+export const UPDATE_USER = gql`
+  mutation UpdateUser(
+    $email: String
+    $firstName: String
+    $lastName: String
+    $year: Number
+    $phoneNumber: String
+    $allergies: String
+  ) {
+    UpdateUser(
+      email: $email
+      firstName: $firstName
+      lastName: $lastName
+      year: $year
+      phoneNumber: $phoneNumber
+      allergies: $allergies
+    ) {
+      user {
+        id
+        feideEmail
+        email
+        username
+        firstName
+        lastName
+        dateJoined
+        year
+        allergies
+        phoneNumber
+        firstLogin
+      }
     }
   }
 `;
