@@ -3,13 +3,13 @@ import { SURVEY, QUESTIONTYPES } from "@graphql/surveys/queries";
 import { CREATE_QUESTION, DELETE_QUESTION, UPDATE_QUESTION } from "@graphql/surveys/mutations";
 import { useState, useEffect } from "react";
 import { Survey, QuestionType, Question, QuestionVariables } from "@interfaces/surveys";
-import QuestionPreview from "@components/pages/surveys/surveyCreation/questionPreview";
-import EditQuestion from "@components/pages/surveys/surveyCreation/editQuestion";
+import QuestionPreview from "@components/pages/surveys/surveyAdmin/questionPreview";
+import EditQuestion from "@components/pages/surveys/surveyAdmin/editQuestion";
 import { Button, Grid } from "@material-ui/core";
 
 const EditSurvey: React.FC<{ surveyId: string }> = ({ surveyId }) => {
   const { loading, error, data } = useQuery<{ survey: Survey }>(SURVEY, {
-    variables: { ID: surveyId },
+    variables: { surveyId: surveyId },
   });
   const [activeQuestion, setActiveQuestion] = useState<Question | undefined>();
   const [createQuestion] = useMutation<{ createQuestion: { question: Question } }>(CREATE_QUESTION, {
@@ -17,12 +17,12 @@ const EditSurvey: React.FC<{ surveyId: string }> = ({ surveyId }) => {
       const newQuestion = data?.createQuestion.question;
       const cachedSurvey = cache.readQuery<{ survey: Survey }>({
         query: SURVEY,
-        variables: { ID: surveyId },
+        variables: { surveyId: surveyId },
       });
       if (cachedSurvey && newQuestion) {
         cache.writeQuery({
           query: SURVEY,
-          variables: { ID: surveyId },
+          variables: { surveyId: surveyId },
           data: {
             survey: {
               questions: [...cachedSurvey.survey.questions, newQuestion],
@@ -36,13 +36,13 @@ const EditSurvey: React.FC<{ surveyId: string }> = ({ surveyId }) => {
     update: (cache, { data }) => {
       const cachedSurvey = cache.readQuery<{ survey: Survey }>({
         query: SURVEY,
-        variables: { ID: surveyId },
+        variables: { surveyId: surveyId },
       });
       const deletedId = data?.deleteQuestion.deletedId;
       if (cachedSurvey && deletedId) {
         cache.writeQuery({
           query: SURVEY,
-          variables: { ID: surveyId },
+          variables: { surveyId: surveyId },
           data: {
             survey: {
               questions: cachedSurvey.survey.questions.filter((question) => question.id !== deletedId),
@@ -57,12 +57,12 @@ const EditSurvey: React.FC<{ surveyId: string }> = ({ surveyId }) => {
       const newQuestion = data?.updateQuestion.question;
       const cachedSurvey = cache.readQuery<{ survey: Survey }>({
         query: SURVEY,
-        variables: { ID: surveyId },
+        variables: { surveyId: surveyId },
       });
       if (cachedSurvey && newQuestion) {
         cache.writeQuery({
           query: SURVEY,
-          variables: { ID: surveyId },
+          variables: { surveyId: surveyId },
           data: {
             survey: {
               questions: cachedSurvey.survey.questions.map((question) =>

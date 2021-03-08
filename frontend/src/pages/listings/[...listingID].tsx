@@ -17,7 +17,7 @@ import localizedFormat from "dayjs/plugin/localizedFormat";
 const useStyles = makeStyles((theme) => ({
   container: {
     padding: theme.spacing(4),
-    paddingBottom: theme.spacing(2)
+    paddingBottom: theme.spacing(2),
   },
 
   title: {
