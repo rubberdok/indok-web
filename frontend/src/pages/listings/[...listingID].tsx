@@ -5,13 +5,13 @@ import { Listing } from "@interfaces/listings";
 import {
   Button, Card,
   CardContent,
+  CardMedia,
   Container,
   Grid, makeStyles, Typography
 } from "@material-ui/core";
 import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from "next";
 import dayjs from "dayjs";
 import nb from "dayjs/locale/nb";
-import localizedFormat from "dayjs/plugin/localizedFormat";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -46,6 +46,11 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2),
     spacing: theme.spacing(10),
   },
+
+  media: {
+    height: 150,
+    objectFit: "contain",
+  },
 }));
 
 const ListingPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ listingID }) => {
@@ -67,19 +72,19 @@ const ListingPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProp
                 <Grid container item direction="column" xs={8}>
                   <Card>
                     <CardContent>
-                      <Grid container className={classes.organizationContent} spacing={2}>
+                      <Grid container direction="column" spacing={2}>
                         
                         <Grid item>
-                          <Typography variant="h2" component="h2">
+                          <Typography variant="h1" component="h1">
                             {data.listing.title}
                           </Typography>
-                          <Typography variant="p" component="p" className={classes.date}> 
-                            {dayjs(data.listing.deadline).locale(nb).format("dddd D. MMMM YYYY [kl.] HH:mm")}
+                          <Typography variant="subtitle1" component="h2" className={classes.date}> 
+                            Søknadsfrist {dayjs(data.listing.deadline).locale(nb).format("dddd D. MMMM YYYY [kl.] HH:mm")}
                           </Typography>
                         </Grid>
 
                         <Grid item>
-                          <Typography variant="p" component="p">
+                          <Typography variant="body1" component="body1">
                             {data.listing.description}
                           </Typography>
                         </Grid>
@@ -94,17 +99,27 @@ const ListingPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProp
 
                 <Grid container item direction="column" xs={4}>
                   <Card>
+                    <CardMedia
+                      component="img"
+                      className={classes.media}
+                      image={
+                        data.listing.organization?.color ||
+                        "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg"
+                      }
+                      title="organization logo"
+                    />
+
                     <CardContent>
                       <Grid container className={classes.organizationContent} spacing={2}>
                         
                         <Grid item>
-                          <Typography variant="h4" component="h3">
+                          <Typography variant="h3" component="h3">
                             {data.listing.organization?.name || "Ingen organisasjon"}
                           </Typography>
                         </Grid>
 
                         <Grid item>
-                          <Typography variant="p" component="p">
+                          <Typography variant="body1" component="body1">
                             {data.listing.organization?.description || "Ingen organisasjon"}
                           </Typography>
                         </Grid>

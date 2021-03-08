@@ -32,6 +32,7 @@ export const LISTING = gql`
       organization {
         name
         description
+        color
       }
       survey {
         id
