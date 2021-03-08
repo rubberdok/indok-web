@@ -149,7 +149,7 @@ class UpdateAnswer(graphene.Mutation):
     def mutate(cls, self, info, id, answer_data):
         user = info.context.user
         try:
-          answer = user.answer_set.get(pk=id)
+          answer = user.answers.get(pk=id)
         except Answer.DoesNotExist as e:
           return CreateAnswer(answer=None, ok=False)
         for k, v, in answer_data.items():
@@ -170,7 +170,7 @@ class DeleteAnswer(graphene.Mutation):
     def mutate(cls, self, info, id):
         user = info.context.user
         try:
-          answer = user.answer_set.get(pk=id)
+          answer = user.answers.get(pk=id)
         except Answer.DoesNotExist as e:
           return DeleteAnswer(deleted_id=None, ok=False)
         deleted_id = answer.id
@@ -201,11 +201,10 @@ class SubmitOrUpdateAnswers(graphene.Mutation):
                     raise ValueError(f"Expected questions to answer the survey f{survey}, but got f{question.survey}.")
         
         if survey:
-
             mandatory_questions = set(survey.questions.filter(mandatory=True).values_list("id", flat=True))
     
             # Update existing answers
-            existing_answers = user.answer_set.filter(question__survey=survey)
+            existing_answers = user.answers.filter(question__survey=survey)
             for answer in existing_answers:
                 qid = answer.question.id
                 if qid in answers:

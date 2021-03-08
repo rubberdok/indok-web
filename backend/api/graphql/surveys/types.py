@@ -45,7 +45,7 @@ class QuestionType(DjangoObjectType):
     @login_required
     def resolve_answers(root: Question, info, user_id: int=None):
         qs = root.answers
-        if id:
+        if user_id:
             return qs.filter(user__pk=user_id).distinct()
         return qs.all()
     
