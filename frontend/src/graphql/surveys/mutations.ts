@@ -110,6 +110,14 @@ export const UPDATE_ANSWER = gql`
   }
 `;
 
+export const SUBMIT_ANSWERS = gql`
+  mutation submitAnswers($answersData: [AnswerInput]) {
+    submitAnswers(answersData: $answersData) {
+      ok
+    }
+  }
+`;
+
 export const DELETE_ANSWER = gql`
   mutation deleteAnswer($id: ID!) {
     deleteAnswer(id: $id) {

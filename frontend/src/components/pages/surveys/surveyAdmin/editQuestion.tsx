@@ -2,7 +2,7 @@ import { Question, QuestionType, QuestionVariables } from "@interfaces/surveys";
 import { MutationFunctionOptions, FetchResult } from "@apollo/client";
 import Dropdown from "@components/ui/formComponents/dropdown";
 import { useState } from "react";
-import QuestionTypePreview from "@components/pages/surveys/surveyCreation/questionTypePreview";
+import QuestionTypePreview from "@components/pages/surveys/surveyAdmin/questionTypePreview";
 import { Grid, Button, TextField, Select, MenuItem, Radio, Checkbox } from "@material-ui/core";
 
 const EditQuestion: React.FC<{

@@ -3,8 +3,8 @@ import { SURVEY, QUESTIONTYPES } from "@graphql/surveys/queries";
 import { CREATE_QUESTION, DELETE_QUESTION, UPDATE_QUESTION } from "@graphql/surveys/mutations";
 import { useState, useEffect } from "react";
 import { Survey, QuestionType, Question, QuestionVariables } from "@interfaces/surveys";
-import QuestionPreview from "@components/pages/surveys/surveyCreation/questionPreview";
-import EditQuestion from "@components/pages/surveys/surveyCreation/editQuestion";
+import QuestionPreview from "@components/pages/surveys/surveyAdmin/questionPreview";
+import EditQuestion from "@components/pages/surveys/surveyAdmin/editQuestion";
 import { Button, Grid } from "@material-ui/core";
 
 const EditSurvey: React.FC<{ surveyId: string }> = ({ surveyId }) => {

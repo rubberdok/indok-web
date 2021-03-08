@@ -1,5 +1,5 @@
 import { Question } from "@interfaces/surveys";
-import QuestionTypePreview from "@components/pages/surveys/surveyCreation/questionTypePreview";
+import QuestionTypePreview from "@components/pages/surveys/surveyAdmin/questionTypePreview";
 import { Button, Grid } from "@material-ui/core";
 
 const QuestionPreview: React.FC<{

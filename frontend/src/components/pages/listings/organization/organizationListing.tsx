@@ -1,6 +1,6 @@
 import { Listing } from "@interfaces/listings";
 import { useState } from "react";
-import EditSurvey from "@components/pages/surveys/surveyCreation/editSurvey";
+import EditSurvey from "@components/pages/surveys/surveyAdmin/editSurvey";
 import { Survey } from "@interfaces/surveys";
 import { CREATE_SURVEY } from "@graphql/surveys/mutations";
 import { useMutation } from "@apollo/client";
