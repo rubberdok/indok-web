@@ -1,7 +1,9 @@
 from apps.events.models import Category, Event
 from apps.organizations.models import Organization
 from django.db.models import Q
+from django.http import HttpResponse
 from datetime import date
+import pandas as pd
 
 
 class EventResolvers:
@@ -75,3 +77,31 @@ class EventResolvers:
             return Category.objects.get(id=id)
         except Category.DoesNotExist:
             return None
+
+    def resolve_csv_attendee_export(parent, info, id, columns=None):
+        columns = DEFAULT_REPORT_COLUMNS if columns is None else columns
+        df = create_attendee_report(id, columns)
+        return to_csv_response(df, filename=f"attendee_report_{id}.csv")
+
+    def resolve_csv_attendee_exports(parent, info, ids, columns=None):
+        columns = DEFAULT_REPORT_COLUMNS if columns is None else columns
+        df = pd.concat([create_attendee_report(id, columns) for id in ids])
+        filename = f"attendee_report_{'|'.join(str(id) for id in ids)}.csv"
+        return to_csv_response(df, filename=filename)
+
+
+DEFAULT_REPORT_COLUMNS = ['username', 'first_name', 'last_name', 'email', 'is_staff', 'year']
+
+def to_csv_response(dataframe, filename):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = f'attachment; filename={filename}'
+    dataframe.to_csv(path_or_buf=response)
+    return response
+
+def create_attendee_report(id_, columns):
+    query_set = Event.objects.get(id=id_).signed_up_users.all().values()
+    if query_set:
+        return pd.DataFrame.from_records(query_set) \
+                           .drop('password', errors='ignore', axis=1) \
+                           .loc[:, columns]
+    return pd.DataFrame()
