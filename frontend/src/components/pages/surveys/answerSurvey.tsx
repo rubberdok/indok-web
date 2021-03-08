@@ -4,7 +4,7 @@ import { Survey, Answer } from "@interfaces/surveys";
 import QuestionAnswer from "@components/pages/surveys/questionAnswer";
 import { Typography } from "@material-ui/core";
 import { useState } from "react";
-import { CREATE_ANSWER } from "@graphql/surveys/mutations";
+import { SUBMIT_ANSWERS } from "@graphql/surveys/mutations";
 
 const AnswerSurvey: React.FC<{ surveyId: string }> = ({ surveyId }) => {
   const [answers, setAnswers] = useState<Answer[]>();
@@ -16,7 +16,7 @@ const AnswerSurvey: React.FC<{ surveyId: string }> = ({ surveyId }) => {
       }
     },
   });
-  const [createAnswer] = useMutation(CREATE_ANSWER);
+  const [submitAnswers] = useMutation(SUBMIT_ANSWERS);
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error</p>;
   return (
@@ -43,9 +43,9 @@ const AnswerSurvey: React.FC<{ surveyId: string }> = ({ surveyId }) => {
               <button
                 onClick={(e) => {
                   e.preventDefault();
-                  for (const answer of answers) {
-                    createAnswer({ variables: { questionId: answer.question.id, answer: answer.answer } });
-                  }
+                  submitAnswers({
+                    variables: answers.map((answer) => ({ questionId: answer.question.id, answer: answer.answer })),
+                  });
                 }}
               >
                 Søk

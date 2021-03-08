@@ -22,7 +22,7 @@ const SurveyAnswers: React.FC<{
         data.survey.questions.map((question) => (
           <>
             <p>{question.question}</p>
-            <p>{question.answer}</p>
+            <p>{question.answer.answer}</p>
           </>
         ))}
     </>
