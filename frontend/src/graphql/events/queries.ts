@@ -137,8 +137,8 @@ export const QUERY_EVENT_FILTERED_ORGANIZATIONS = gql`
 `;
 
 export const QUERY_USER_ATTENDING_EVENT = gql`
-  query {
-    userAttendingRelation(eventId: 1, userId: 1) {
+  query UserAttendingRelation($eventId: ID!, $userId: ID!) {
+    userAttendingRelation(eventId: $eventId, userId: $userId) {
       isSignedUp
       isOnWaitinglist
       isFull

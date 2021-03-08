@@ -70,14 +70,6 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(3),
     paddingTop: theme.spacing(2),
   },
-  eventContainer: {
-    border: "solid",
-    borderWidth: "0.05em 0.05em 0.05em 1.2em",
-    borderRadius: "0.2em",
-    padding: theme.spacing(2),
-    marginBottom: theme.spacing(2),
-    backgroundColor: "#fff",
-  },
   paper: {
     color: theme.palette.text.primary,
     padding: theme.spacing(2),
@@ -119,14 +111,15 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
 
   const { data: userData } = useQuery<{ user: User }>(GET_USER);
 
-  const { data: userAttendingEventData } = useQuery<{ isOnWaitingList: boolean; isSignedUp: boolean; isFull: boolean }>(
-    QUERY_USER_ATTENDING_EVENT,
-    {
-      variables: { eventId, userId: userData?.user.id },
-    }
-  );
+  const {
+    data: userAttendingEventData,
+    loading: userAttendingEventLoading,
+    refetch: refetchAttendingRelation,
+  } = useQuery(QUERY_USER_ATTENDING_EVENT, {
+    variables: { eventId: eventId.toString(), userId: userData?.user.id },
+  });
 
-  const { loading, error, data, refetch } = useQuery(GET_EVENT, {
+  const { loading, error, data } = useQuery(GET_EVENT, {
     variables: { id: eventId },
   });
   const classes = useStyles();
@@ -138,10 +131,10 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
 
   const handleClick = () => {
     if (!userData?.user.id) return;
-    if (userAttendingEventData?.isSignedUp) {
+    if (userAttendingEventData?.userAttendingRelation.isSignedUp) {
       eventSignOff({ variables: { eventId: eventId.toString(), userId: userData?.user.id } })
         .then(() => {
-          refetch({ id: eventId });
+          refetchAttendingRelation({ eventId: eventId.toString(), userId: userData?.user.id });
           setOpenSignOffSnackbar(true);
         })
         .catch(() => {
@@ -151,7 +144,7 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
     }
     eventSignUp({ variables: { eventId: eventId.toString(), userId: userData?.user.id } })
       .then(() => {
-        refetch({ id: eventId });
+        refetchAttendingRelation({ eventId: eventId.toString(), userId: userData?.user.id });
         setOpenSignUpSnackbar(true);
       })
       .catch(() => {
@@ -264,14 +257,14 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
                   <Button>Tilbake</Button>
                 </Link>
 
-                {data.event.isAttendable && userData?.user ? (
+                {data.event.isAttendable && userData?.user && userAttendingEventData?.userAttendingRelation ? (
                   <>
                     <CountdownButton
                       countDownDate={data.event.signupOpenDate}
-                      isSignedUp={userAttendingEventData?.isSignedUp ?? false}
-                      isOnWaitingList={userAttendingEventData?.isOnWaitingList ?? false}
-                      isFull={userAttendingEventData?.isFull ?? false}
-                      loading={signOffLoading || signUpLoading}
+                      isSignedUp={userAttendingEventData.userAttendingRelation.isSignedUp ?? false}
+                      isOnWaitingList={userAttendingEventData?.userAttendingRelation.isOnWaitingList ?? false}
+                      isFull={userAttendingEventData.userAttendingRelation.isFull ?? false}
+                      loading={signOffLoading || signUpLoading || userAttendingEventLoading}
                       onClick={handleClick}
                       styleClassName={classes.signUpButton}
                     />

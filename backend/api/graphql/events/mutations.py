@@ -91,15 +91,15 @@ class EventSignUp(graphene.Mutation):
     def mutate(root, info, event_id, user_id):
         event = models.Event.objects.get(pk=event_id)
         user = User.objects.get(pk=user_id)
-        is_full = False
-        if (
-            event.signed_up_users.count() < event.available_slots
-            if event.available_slots
-            else int(1e6)
-        ):
-            is_full = True
+
         event.signed_up_users.add(user)
         event.save()
+
+        is_full = True
+        slots = event.available_slots if event.available_slots else int(1e6)
+        if event.signed_up_users.count() <= slots:
+            is_full = False
+
         return EventSignUp(event=event, is_full=is_full)
 
 
@@ -114,15 +114,15 @@ class EventSignOff(graphene.Mutation):
     def mutate(root, info, event_id, user_id):
         event = models.Event.objects.get(pk=event_id)
         user = User.objects.get(pk=user_id)
+
         event.signed_up_users.remove(user)
         event.save()
+
         is_full = True
-        if (
-            event.signed_up_users.count() < event.available_slots
-            if event.available_slots
-            else int(1e6)
-        ):
+        slots = event.available_slots if event.available_slots else int(1e6)
+        if event.signed_up_users.count() <= slots:
             is_full = False
+
         return EventSignOff(event=event, is_full=is_full)
 
 

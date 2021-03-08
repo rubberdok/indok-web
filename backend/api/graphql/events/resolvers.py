@@ -68,7 +68,7 @@ class EventResolvers:
         return {
             "is_signed_up": user in event.signed_up_users.all(),
             "is_on_waitinglist": user in event.users_on_waiting_list,
-            "is_full": len(event.users_on_waiting_list) == 0 and event.is_attenable,
+            "is_full": len(event.users_on_waiting_list) > 0 and event.is_attendable,
         }
 
     def resolve_event(parent, info, id):

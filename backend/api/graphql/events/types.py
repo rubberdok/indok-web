@@ -23,7 +23,6 @@ class EventType(DjangoObjectType):
             "price",
             "signup_open_date",
             "short_description",
-            "is_full",
         ]
 
 

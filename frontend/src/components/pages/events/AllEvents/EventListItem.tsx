@@ -41,12 +41,9 @@ interface Props {
 const EventListItem: React.FC<Props> = ({ event, user, userIsValid, classes }) => {
   const theme = useTheme();
 
-  const { data: userAttendingEventData } = useQuery<{ isOnWaitingList: boolean; isSignedUp: boolean; isFull: boolean }>(
-    QUERY_USER_ATTENDING_EVENT,
-    {
-      variables: { eventId: event.id, userId: user?.id },
-    }
-  );
+  const { data: userAttendingEventData } = useQuery(QUERY_USER_ATTENDING_EVENT, {
+    variables: { eventId: event.id, userId: user?.id },
+  });
 
   return (
     <Link href={`/events/${event.id}`} key={event.id}>
@@ -62,11 +59,11 @@ const EventListItem: React.FC<Props> = ({ event, user, userIsValid, classes }) =
             {event.shortDescription ?? "Trykk for å lese mer"}
           </Grid>
           {userIsValid && event.isAttendable ? (
-            userAttendingEventData?.isFull ? (
+            userAttendingEventData?.userAttendingRelation.isFull ? (
               <Box className={classes.fullBox}>Meld på venteliste</Box>
-            ) : userAttendingEventData?.isSignedUp ? (
+            ) : userAttendingEventData?.userAttendingRelation.isSignedUp ? (
               <Box className={classes.signedUpBox}>Påmeldt</Box>
-            ) : userAttendingEventData?.isOnWaitingList ? (
+            ) : userAttendingEventData?.userAttendingRelation.isOnWaitingList ? (
               <Box className={classes.signedUpBox}>På venteliste</Box>
             ) : (
               <Box className={classes.signUpAvailableBox}>Påmelding tilgjengelig</Box>

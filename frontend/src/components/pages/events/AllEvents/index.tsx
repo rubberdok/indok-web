@@ -104,7 +104,6 @@ const useStyles = makeStyles((theme) => ({
 
 const AllEvents: React.FC = () => {
   const classes = useStyles();
-  const theme = useTheme();
   const [filters, setFilters] = useState({});
   const [showDefaultEvents, setShowDefaultEvents] = useState(true);
   const [showCalenderView, setShowCalenderView] = useState(false);
