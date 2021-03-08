@@ -91,15 +91,16 @@ class EventSignUp(graphene.Mutation):
     def mutate(root, info, event_id, user_id):
         event = models.Event.objects.get(pk=event_id)
         user = User.objects.get(pk=user_id)
+        is_full = False
         if (
             event.signed_up_users.count() < event.available_slots
             if event.available_slots
             else int(1e6)
         ):
-            event.signed_up_users.add(user)
-            event.save()
-            return EventSignUp(event=event, is_full=False)
-        return EventSignUp(event=event, is_full=True)
+            is_full = True
+        event.signed_up_users.add(user)
+        event.save()
+        return EventSignUp(event=event, is_full=is_full)
 
 
 class EventSignOff(graphene.Mutation):
@@ -115,7 +116,14 @@ class EventSignOff(graphene.Mutation):
         user = User.objects.get(pk=user_id)
         event.signed_up_users.remove(user)
         event.save()
-        return EventSignOff(event=event, is_full=False)
+        is_full = True
+        if (
+            event.signed_up_users.count() < event.available_slots
+            if event.available_slots
+            else int(1e6)
+        ):
+            is_full = False
+        return EventSignOff(event=event, is_full=is_full)
 
 
 class CategoryInput(graphene.InputObjectType):

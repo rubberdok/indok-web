@@ -18,12 +18,22 @@ function calculateTimeLeft(countdownTime: string) {
 interface Props {
   countDownDate: string;
   isSignedUp: boolean;
+  isOnWaitingList: boolean;
+  isFull: boolean;
   loading: boolean;
   onClick: () => void;
   styleClassName: any;
 }
 
-const CountdownButton: React.FC<Props> = ({ countDownDate, isSignedUp, loading, onClick, styleClassName }) => {
+const CountdownButton: React.FC<Props> = ({
+  countDownDate,
+  isSignedUp,
+  isOnWaitingList,
+  isFull,
+  loading,
+  onClick,
+  styleClassName,
+}) => {
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft(countDownDate));
 
   useEffect(() => {
@@ -57,6 +67,10 @@ const CountdownButton: React.FC<Props> = ({ countDownDate, isSignedUp, loading, 
         ? `Åpner om ${timeLeft[currentTimePart]} ${translate(currentTimePart, timeLeft[currentTimePart])}`
         : isSignedUp
         ? "Meld av"
+        : isOnWaitingList
+        ? "Meld av venteliste"
+        : isFull
+        ? "Meld på venteliste"
         : "Meld på"}
     </Button>
   );

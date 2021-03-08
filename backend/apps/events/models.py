@@ -59,5 +59,12 @@ class Event(models.Model):
     def no_of_filled_slots(self):
         return self.signed_up_users.count
 
+    @property
+    def users_on_waiting_list(self):
+        result = []
+        if self.signed_up_users.count() > self.available_slots:
+            result = self.signed_up_users[self.available_slots + 1 :]
+        return result
+
     def __str__(self):
         return self.title

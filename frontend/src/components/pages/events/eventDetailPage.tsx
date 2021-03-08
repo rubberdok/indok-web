@@ -14,7 +14,7 @@ import MuiAlert from "@material-ui/lab/Alert";
 import { Container } from "next/app";
 import Link from "next/link";
 import React, { useState } from "react";
-import { GET_EVENT } from "../../../graphql/events/queries";
+import { GET_EVENT, QUERY_USER_ATTENDING_EVENT } from "../../../graphql/events/queries";
 import CountdownButton from "./CountdownButton";
 
 const useStyles = makeStyles((theme) => ({
@@ -105,16 +105,11 @@ function getName(obj: any) {
   return obj != null ? obj.name : "null";
 }
 
-function isSignedUp(event: Event, userId?: string) {
-  if (!userId) return false;
-  return event.signedUpUsers?.some((user) => user.id === userId);
-}
-
 const EventDetailPage: React.FC<Props> = ({ eventId }) => {
   const [openSignUpSnackbar, setOpenSignUpSnackbar] = useState(false);
   const [openSignOffSnackbar, setOpenSignOffSnackbar] = useState(false);
   const [openErrorSnackbar, setOpenErrorSnackbar] = useState(false);
-  const [eventSignUp, { loading: signUpLoading, data: signUpData }] = useMutation<{
+  const [eventSignUp, { loading: signUpLoading }] = useMutation<{
     eventSignUp: { event: Event; isFull: boolean };
   }>(EVENT_SIGN_UP);
 
@@ -123,6 +118,13 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
   }>(EVENT_SIGN_OFF);
 
   const { data: userData } = useQuery<{ user: User }>(GET_USER);
+
+  const { data: userAttendingEventData } = useQuery<{ isOnWaitingList: boolean; isSignedUp: boolean; isFull: boolean }>(
+    QUERY_USER_ATTENDING_EVENT,
+    {
+      variables: { eventId, userId: userData?.user.id },
+    }
+  );
 
   const { loading, error, data, refetch } = useQuery(GET_EVENT, {
     variables: { id: eventId },
@@ -136,7 +138,7 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
 
   const handleClick = () => {
     if (!userData?.user.id) return;
-    if (isSignedUp(data.event, userData?.user.id)) {
+    if (userAttendingEventData?.isSignedUp) {
       eventSignOff({ variables: { eventId: eventId.toString(), userId: userData?.user.id } })
         .then(() => {
           refetch({ id: eventId });
@@ -263,53 +265,49 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
                 </Link>
 
                 {data.event.isAttendable && userData?.user ? (
-                  data.event.signedUpUsers.length === data.event.availableSlots ? (
-                    <Typography variant="body1" color="primary">
-                      Arrangementet er fullt
-                    </Typography>
-                  ) : (
-                    <>
-                      <CountdownButton
-                        countDownDate={data.event.signupOpenDate}
-                        isSignedUp={isSignedUp(data.event, userData?.user.id)}
-                        loading={signOffLoading || signUpLoading}
-                        onClick={handleClick}
-                        styleClassName={classes.signUpButton}
-                      />
+                  <>
+                    <CountdownButton
+                      countDownDate={data.event.signupOpenDate}
+                      isSignedUp={userAttendingEventData?.isSignedUp ?? false}
+                      isOnWaitingList={userAttendingEventData?.isOnWaitingList ?? false}
+                      isFull={userAttendingEventData?.isFull ?? false}
+                      loading={signOffLoading || signUpLoading}
+                      onClick={handleClick}
+                      styleClassName={classes.signUpButton}
+                    />
 
-                      <Snackbar
-                        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-                        open={openErrorSnackbar}
-                        autoHideDuration={3000}
-                        onClose={() => setOpenErrorSnackbar(false)}
-                      >
-                        <MuiAlert elevation={6} variant="filled" severity="error">
-                          Påmelding feilet
-                        </MuiAlert>
-                      </Snackbar>
-                      <Snackbar
-                        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-                        open={openSignOffSnackbar}
-                        autoHideDuration={3000}
-                        onClose={() => setOpenSignOffSnackbar(false)}
-                      >
-                        <MuiAlert elevation={6} variant="filled" severity="info">
-                          Du er nå avmeldt
-                        </MuiAlert>
-                      </Snackbar>
+                    <Snackbar
+                      anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                      open={openErrorSnackbar}
+                      autoHideDuration={3000}
+                      onClose={() => setOpenErrorSnackbar(false)}
+                    >
+                      <MuiAlert elevation={6} variant="filled" severity="error">
+                        Påmelding feilet
+                      </MuiAlert>
+                    </Snackbar>
+                    <Snackbar
+                      anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                      open={openSignOffSnackbar}
+                      autoHideDuration={3000}
+                      onClose={() => setOpenSignOffSnackbar(false)}
+                    >
+                      <MuiAlert elevation={6} variant="filled" severity="info">
+                        Du er nå avmeldt
+                      </MuiAlert>
+                    </Snackbar>
 
-                      <Snackbar
-                        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-                        open={openSignUpSnackbar}
-                        autoHideDuration={3000}
-                        onClose={() => setOpenSignUpSnackbar(false)}
-                      >
-                        <MuiAlert elevation={6} variant="filled" severity="success">
-                          Du er nå påmeldt
-                        </MuiAlert>
-                      </Snackbar>
-                    </>
-                  )
+                    <Snackbar
+                      anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                      open={openSignUpSnackbar}
+                      autoHideDuration={3000}
+                      onClose={() => setOpenSignUpSnackbar(false)}
+                    >
+                      <MuiAlert elevation={6} variant="filled" severity="success">
+                        Du er nå påmeldt
+                      </MuiAlert>
+                    </Snackbar>
+                  </>
                 ) : null}
               </Container>
             </Paper>
