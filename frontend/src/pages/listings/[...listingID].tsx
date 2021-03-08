@@ -12,6 +12,9 @@ import {
 import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from "next";
 import dayjs from "dayjs";
 import nb from "dayjs/locale/nb";
+import SurveyAnswers from "@components/pages/surveys/surveyAdmin/surveyAnswers";
+import AnswerSurvey from "@components/pages/surveys/answerSurvey";
+import { useState } from "react";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -57,6 +60,8 @@ const ListingPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProp
     variables: { ID: Number(listingID[0]) },
   });
   const classes = useStyles();
+  const [surveyDisplayed, displaySurvey] = useState<Boolean>(false)
+
 
   if (error) return <p>Error</p>;
   if (loading) return <p>Loading...</p>;
@@ -89,9 +94,14 @@ const ListingPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProp
                       </Grid>
                     </CardContent>
                   </Card>
-                  <Button variant="contained" color="primary">
+                  <Button variant="contained" color="primary" onClick={() => displaySurvey(!surveyDisplayed)}>
                     Søk her
                   </Button>
+
+                  {data.listing.survey && surveyDisplayed &&
+                    <AnswerSurvey surveyId={data.listing.survey.id} />
+                  }
+
                 </Grid>
 
                 <Grid container item direction="column" xs={4}>
