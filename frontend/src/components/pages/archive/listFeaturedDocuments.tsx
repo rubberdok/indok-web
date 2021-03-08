@@ -1,8 +1,7 @@
 import { useQuery } from "@apollo/client";
-import { GET_DOCSBYFILTERS } from "@graphql/archive/queries";
+import { GET_FEATURED } from "@graphql/archive/queries";
 import Button from "@material-ui/core/Button";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import React, { useEffect } from "react";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardMedia from "@material-ui/core/CardMedia";
@@ -12,7 +11,6 @@ import GridListTile from "@material-ui/core/GridListTile";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import { Document } from "@interfaces/archive";
-import CardContent from "@material-ui/core/CardContent";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -51,18 +49,15 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-interface ListFeaturedDocumentsProps {
-  document_types: string[];
-  year: number | null;
-  names: string;
-}
+const ListFeaturedDocuments: React.FC = () => {
+  const featured_names = [
+    "Foreningens Vedtekter",
+    "Budsjett Foreningen V21",
+    "Info om søknad om Støtte fra HS",
+    "Statutter for foreningen",
+  ];
 
-const ListFeaturedDocuments: React.FC<ListFeaturedDocumentsProps> = ({ document_types, year, names }) => {
-  const { refetch, loading, data, error } = useQuery(GET_DOCSBYFILTERS, { variables: { document_types, year, names } });
-
-  useEffect(() => {
-    refetch({ document_types, year });
-  }, [document_types, year]);
+  const { loading, data, error } = useQuery(GET_FEATURED, { variables: { featured_names } });
 
   const classes = useStyles();
   if (loading) return <p style={{ textAlign: "center" }}></p>;
@@ -73,8 +68,8 @@ const ListFeaturedDocuments: React.FC<ListFeaturedDocumentsProps> = ({ document_
     <Container>
       <Typography variant="body1">Fremhevede dokumenter</Typography>
       <GridList cellHeight={144} className={classes.img} cols={4} spacing={8}>
-        {data.archiveByTypes.length ? (
-          data.archiveByTypes.map((doc: Document) => (
+        {data.featuredArchive.length ? (
+          data.featuredArchive.map((doc: Document) => (
             <GridListTile key={0}>
               <Card className={classes.root} elevation={1}>
                 <CardActionArea>
