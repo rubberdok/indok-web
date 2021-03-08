@@ -7,6 +7,7 @@ import YearSelector from "./yearSelector";
 import ListFeaturedDocuments from "./listFeaturedDocuments";
 import SearchBarComp from "./searchBar";
 import { RemoveFilters } from "./removeFilters";
+import { typography } from "@material-ui/system";
 
 const DocumentListView: React.FC = () => {
   const [yearFilter, setYearFilter] = useState("");
@@ -54,10 +55,17 @@ const DocumentListView: React.FC = () => {
           />
         </ContentWrapper>
       </ContentWrapper>
-      <ContentWrapper
-        style={{ justifyContent: "space-between", marginLeft: "10px", marginBottom: "32px", marginRight: "20px" }}
-      >
-        {!viewFeatured && (
+      <ContentWrapper style={{ justifyContent: "flex-end", marginTop: "16px", marginBottom: "32px" }}>
+        <SearchBarComp
+          searchFilter={searchFilter}
+          handleSearchFilterChanged={(newValue: string) => {
+            [setSearchFilter(newValue), setViewFeatured(false)];
+          }}
+          handleSearchFilterCanceled={() => setSearchFilter("")}
+        />
+      </ContentWrapper>
+      {!viewFeatured && (
+        <ContentWrapper style={{ paddingLeft: "85%", marginTop: "-6.5%" }}>
           <RemoveFilters
             handleRemoveFilterChanged={() => {
               [
@@ -76,17 +84,8 @@ const DocumentListView: React.FC = () => {
               ];
             }}
           />
-        )}
-        <ContentWrapper style={{ marginLeft: "500px", marginTop: "24px", marginBottom: "16px" }}>
-          <SearchBarComp
-            searchFilter={searchFilter}
-            handleSearchFilterChanged={(newValue: string) => {
-              [setSearchFilter(newValue), setViewFeatured(false)];
-            }}
-            handleSearchFilterCanceled={() => setSearchFilter("")}
-          />
         </ContentWrapper>
-      </ContentWrapper>
+      )}
 
       {viewFeatured && (
         <ContentWrapper style={{ marginBottom: "16px" }}>
