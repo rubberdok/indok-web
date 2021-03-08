@@ -13,7 +13,6 @@ import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from "next"
 import dayjs from "dayjs";
 import nb from "dayjs/locale/nb";
 
-
 const useStyles = makeStyles((theme) => ({
   container: {
     padding: theme.spacing(4),
@@ -23,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
   title: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center"
+    alignItems: "center",
   },
 
   content: {
@@ -38,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
 
   organization: {
     flexDirection: "column",
-    justifyContent: "space-between"
+    justifyContent: "space-between",
   },
 
   organizationContent: {
@@ -68,7 +67,6 @@ const ListingPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProp
           <Container>
             <Container className={classes.container}>
               <Grid container direction="row" justify="space-between" spacing={2}>
-                
                 <Grid container item direction="column" xs={8}>
                   <Card>
                     <CardContent>
@@ -88,7 +86,6 @@ const ListingPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProp
                             {data.listing.description}
                           </Typography>
                         </Grid>
-
                       </Grid>
                     </CardContent>
                   </Card>
@@ -111,7 +108,6 @@ const ListingPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProp
 
                     <CardContent>
                       <Grid container className={classes.organizationContent} spacing={2}>
-                        
                         <Grid item>
                           <Typography variant="h3" component="h3">
                             {data.listing.organization?.name || "Ingen organisasjon"}
@@ -123,12 +119,10 @@ const ListingPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProp
                             {data.listing.organization?.description || "Ingen organisasjon"}
                           </Typography>
                         </Grid>
-
                       </Grid>
                     </CardContent>
                   </Card>
                 </Grid>
-
               </Grid>
             </Container>
           </Container>

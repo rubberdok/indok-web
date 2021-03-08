@@ -10,16 +10,10 @@ export interface Listing {
   url: string;
   slug: string;
   organization?: Organization;
-  responses?: Response[];
   survey?: Survey;
 }
 
-export interface Response {
-  id: string;
-  response: string;
-  applicant: User;
-}
-
+// TODO: remove, replace references with organization from organizations.ts
 export interface Organization {
   id: string;
   name: string;
@@ -30,13 +24,4 @@ export interface Organization {
   children?: Organization[];
   // TODO: Replace color with logo
   color?: string;
-}
-
-export interface User {
-  id: string;
-  username: string;
-  firstName: string;
-  lastName: string;
-  year: string;
-  email: string;
 }
