@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
 export const SURVEY = gql`
-  query survey($ID: ID!) {
-    survey(id: $ID) {
+  query survey($surveyId: ID!) {
+    survey(surveyId: $surveyId) {
       id
       descriptiveName
       questions {
@@ -42,8 +42,8 @@ export const SURVEYS = gql`
 `;
 
 export const SURVEY_RESPONDERS = gql`
-  query survey($ID: ID!) {
-    survey(id: $ID) {
+  query survey($surveyId: ID!) {
+    survey(surveyId: $surveyId) {
       responders {
         id
         firstName

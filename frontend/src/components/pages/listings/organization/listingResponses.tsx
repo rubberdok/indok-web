@@ -10,7 +10,7 @@ import { Grid, Box, Tabs, Tab } from "@material-ui/core";
 const ListingResponses: React.FC<{ listing: Listing }> = ({ listing }) => {
   const [selectedApplicant, selectApplicant] = useState<User | null>(null);
   const { loading, error, data } = useQuery<{ survey: { responders: User[] } }>(SURVEY_RESPONDERS, {
-    variables: { ID: Number(listing.survey!.id) },
+    variables: { ID: parseInt(listing.survey!.id) },
   });
   if (error) return <p>Error</p>;
   if (loading) return <p>Loading...</p>;

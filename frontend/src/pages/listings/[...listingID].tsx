@@ -4,26 +4,19 @@ import { LISTING } from "@graphql/listings/queries";
 import { Listing } from "@interfaces/listings";
 import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from "next";
 import Link from "next/link";
-import {
-  Card,
-  CardContent,
-  Container,
-  CardHeader,
-  Typography,
-  makeStyles
-} from "@material-ui/core";
+import { Card, CardContent, Container, CardHeader, Typography, makeStyles } from "@material-ui/core";
 import theme from "@styles/theme";
 
 const useStyles = makeStyles((theme) => ({
   container: {
     padding: theme.spacing(4),
-    paddingBottom: theme.spacing(2)
+    paddingBottom: theme.spacing(2),
   },
 
   title: {
     flexDirection: "row",
-    justifyContent: "flex-end"
-  }
+    justifyContent: "flex-end",
+  },
 }));
 
 const ListingPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ listingID }) => {
@@ -52,7 +45,6 @@ const ListingPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProp
                   </Typography>
                 </div>
               </div>
-
             </Container>
           </Container>
         </Layout>

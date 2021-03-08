@@ -9,7 +9,7 @@ import { CREATE_ANSWER } from "@graphql/surveys/mutations";
 const SurveyAnswer: React.FC<{ surveyId: string }> = ({ surveyId }) => {
   const [answers, setAnswers] = useState<Answer[]>();
   const { error, loading, data } = useQuery<{ survey: Survey }>(SURVEY, {
-    variables: { ID: Number(surveyId) },
+    variables: { surveyId: parseInt(surveyId) },
     onCompleted({ survey }) {
       if (survey) {
         setAnswers(survey.questions.map((question) => ({ id: "", answer: "", question: question })));
