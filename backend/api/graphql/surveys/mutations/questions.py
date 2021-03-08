@@ -227,8 +227,6 @@ class SubmitOrUpdateAnswers(graphene.Mutation):
         return SubmitOrUpdateAnswers(ok=False)
 
 
-
-
 class DeleteAnswersToSurvey(graphene.Mutation):
     ok = graphene.Boolean()
 

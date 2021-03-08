@@ -35,6 +35,7 @@ class QuestionType(DjangoObjectType):
             "id",
             "question_type",
             "position",
+            "mandatory",
         ]
 
     @staticmethod
