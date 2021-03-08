@@ -1,8 +1,7 @@
-import { Button, Typography } from "@material-ui/core";
+import { Button } from "@material-ui/core";
 import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import React from "react";
 
 const useStyles = makeStyles((theme) => ({
@@ -26,21 +25,20 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Sidebar = () => {
-  const router = useRouter();
+const Sidebar = (props: { active: string }) => {
   const classes = useStyles();
 
   return (
     <Box component="ul" className={classes.root}>
-      <li>
+      {/* <li>
         <Typography variant="h6">Om oss</Typography>
-      </li>
+      </li> */}
       <li>
         <Link href="/about">
           <Button
             component="a"
             variant="outlined"
-            className={router.pathname == "/about" ? "MuiButton-outlinedPrimary" : ""}
+            className={props.active == "" ? "MuiButton-outlinedPrimary" : ""}
             fullWidth
           >
             Introduksjon
@@ -48,54 +46,28 @@ const Sidebar = () => {
         </Link>
       </li>
       <li>
-        <Link href="/about/historie">
+        <Link href="/about/organisasjonskart">
           <Button
             component="a"
             variant="outlined"
-            className={router.pathname == "/about/historie" ? "MuiButton-outlinedPrimary" : ""}
+            className={props.active == "organisasjonskart" ? "MuiButton-outlinedPrimary" : ""}
             fullWidth
           >
-            Historie
+            Organisasjonskart
           </Button>
         </Link>
       </li>
       <li>
-        <Link href="/about/hvem">
+        <Link href="/about/hovedstyret">
           <Button
             component="a"
             variant="outlined"
-            className={router.pathname == "/about/hvem" ? "MuiButton-outlinedPrimary" : ""}
+            className={props.active == "hovedstyret" ? "MuiButton-outlinedPrimary" : ""}
             fullWidth
           >
-            Hvem er Hovedstyret?
+            Hovedstyret
           </Button>
         </Link>
-      </li>
-      <li>
-        <Link href="/about/vedtekter">
-          <Button
-            component="a"
-            variant="outlined"
-            className={router.pathname == "/about/vedtekter" ? "MuiButton-outlinedPrimary" : ""}
-            fullWidth
-          >
-            Vedtekter
-          </Button>
-        </Link>
-      </li>
-      <br />
-      <li>
-        <Typography variant="h6">Organisasjoner</Typography>
-      </li>
-      <li>
-        <Button variant="outlined" fullWidth>
-          Organisasjonstre
-        </Button>
-      </li>
-      <li>
-        <Button variant="outlined" fullWidth>
-          Indøk Kultur
-        </Button>
       </li>
     </Box>
   );

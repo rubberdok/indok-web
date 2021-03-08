@@ -42,11 +42,11 @@ interface Props {
   children: React.ReactNode;
   img?: string;
   title: string;
-  page?: string;
   description: string;
+  page: string;
 }
 
-const Template: React.FC<Props> = ({ children, img, title, page, description }) => {
+const Template: React.FC<Props> = ({ children, img, title, description, page }) => {
   const classes = useStyles();
 
   return (
@@ -89,7 +89,7 @@ const Template: React.FC<Props> = ({ children, img, title, page, description }) 
               {children}
             </Grid>
             <Grid item xs={4}>
-              <Sidebar />
+              <Sidebar active={page} />
             </Grid>
           </Grid>
         </Box>

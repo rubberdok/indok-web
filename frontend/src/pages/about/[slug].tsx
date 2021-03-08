@@ -18,14 +18,15 @@ type ArticleProps = {
     title: string;
     image?: string;
   };
+  slug: string;
 };
 
-const Article: NextPage<ArticleProps> = ({ post, frontmatter }) => {
+const Article: NextPage<ArticleProps> = ({ post, frontmatter, slug }) => {
   return (
     <Template
       img={frontmatter.image}
       title={frontmatter.title}
-      page={frontmatter.title}
+      page={slug}
       description={frontmatter.description || post.excerpt}
     >
       <ReactMarkdown escapeHtml={false} source={post.content} renderers={{ heading: HeadingRenderer }} />

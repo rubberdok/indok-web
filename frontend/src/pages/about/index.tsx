@@ -8,7 +8,7 @@ const AboutPage: NextPage = () => {
     <Template
       img="img/hero.jpg"
       title="Om foreningen vår"
-      page="Om oss"
+      page=""
       description="Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse er den øverste instansen
       (moderorganisasjonen) for all studentfrivillighet på masterstudiet Indøk ved NTNU."
     >
