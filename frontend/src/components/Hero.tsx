@@ -92,22 +92,6 @@ const useStyles = makeStyles(() => ({
       fontWeight: 550,
       transition: "0.3s all ease",
     },
-
-    // ["&::before"]: {
-    //   content: "''",
-    //   transition: "1s all ease",
-    // },
-
-    // ["&:hover::before"]: {
-    //   width: "calc(100% + 32px)",
-    //   height: 30,
-    //   content: "''",
-    //   position: "absolute",
-    //   background: "rgb(11 60 60 / 58%)",
-    //   bottom: -2,
-    //   zIndex: -1,
-    //   right: 0,
-    // },
   },
   orgBg: {
     transition: "0.4s all linear",
@@ -205,16 +189,7 @@ const Hero: React.FC = () => {
                 <Button color="inherit" size="large" startIcon={<NavigateNextIcon />}>
                   Book hytte
                 </Button>
-                <br />
-                <br />
-                <br />
               </Fade>
-              {/* <Typography variant="overline" gutterBottom>
-                Nyttige lenker
-              </Typography>
-              <IconButton>
-                <FacebookIcon />
-              </IconButton> */}
             </Box>
           </Grid>
           <Grid item xs={7}>
@@ -242,16 +217,6 @@ const Hero: React.FC = () => {
           </Grid>
         </Grid>
       </Container>
-      {/* <Box position="absolute" right="0" top="0" m="24px 24px 0 0">
-        <Button color="primary" size="medium" variant="contained" endIcon={<MeetingRoomIcon />}>
-          Logg inn
-        </Button>
-      </Box>
-      <Box position="absolute" left="0" top="0" m="24px 0 0 24px">
-        <Button color="primary" size="medium" variant="contained" startIcon={<MailOutlineIcon />}>
-          Kontakt
-        </Button>
-      </Box> */}
     </Box>
   );
 };
