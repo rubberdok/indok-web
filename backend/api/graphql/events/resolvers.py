@@ -66,9 +66,9 @@ class EventResolvers:
         event = Event.objects.get(pk=event_id)
         user = User.objects.get(pk=user_id)
         return {
-            "is_signed_up": user in event.signed_up_users.all(),
+            "is_signed_up": user in event.signed_up_users.all() and user not in event.users_on_waiting_list,
             "is_on_waitinglist": user in event.users_on_waiting_list,
-            "is_full": len(event.users_on_waiting_list) > 0 and event.is_attendable,
+            "is_full": event.signed_up_users.count() == event.available_slots,
         }
 
     def resolve_event(parent, info, id):

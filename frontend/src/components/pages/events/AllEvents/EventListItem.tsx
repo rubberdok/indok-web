@@ -63,10 +63,10 @@ const EventListItem: React.FC<Props> = ({ event, user, userIsValid, classes }) =
 
         {userIsValid && event.isAttendable ? (
           userAttendingEventData?.userAttendingRelation.isFull ? (
-            <Chip variant="outlined" label="Ventelite" />
+            <Chip label="Venteliste tilgjengelig" />
           ) : userAttendingEventData?.userAttendingRelation.isSignedUp ? (
             <Chip color="primary" label="Påmeldt" />
-          ) : userAttendingEventData?.userAttendingRelation.isOnWaitingList ? (
+          ) : userAttendingEventData?.userAttendingRelation.isOnWaitinglist ? (
             <Chip color="primary" label="På venteliste" />
           ) : (
             <Chip label="Påmelding tilgjengelig" />

@@ -97,7 +97,7 @@ class EventSignUp(graphene.Mutation):
 
         is_full = True
         slots = event.available_slots if event.available_slots else int(1e6)
-        if event.signed_up_users.count() <= slots:
+        if event.signed_up_users.count() < slots:
             is_full = False
 
         return EventSignUp(event=event, is_full=is_full)
@@ -120,7 +120,7 @@ class EventSignOff(graphene.Mutation):
 
         is_full = True
         slots = event.available_slots if event.available_slots else int(1e6)
-        if event.signed_up_users.count() <= slots:
+        if event.signed_up_users.count() < slots:
             is_full = False
 
         return EventSignOff(event=event, is_full=is_full)

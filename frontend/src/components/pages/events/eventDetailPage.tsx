@@ -119,7 +119,10 @@ function formatDescription(desc: string, innerClass: any, outerClass: any) {
 const EventDetailPage: React.FC<Props> = ({ eventId }) => {
   const [openSignUpSnackbar, setOpenSignUpSnackbar] = useState(false);
   const [openSignOffSnackbar, setOpenSignOffSnackbar] = useState(false);
+  const [openOnWaitingListSnackbar, setOpenOnWaitingListSnackbar] = useState(false);
+  const [openOffWaitingListSnackbar, setOpenOffWaitingListSnackbar] = useState(false);
   const [openErrorSnackbar, setOpenErrorSnackbar] = useState(false);
+
   const [eventSignUp, { loading: signUpLoading }] = useMutation<{
     eventSignUp: { event: Event; isFull: boolean };
   }>(EVENT_SIGN_UP);
@@ -135,7 +138,7 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
     loading: userAttendingEventLoading,
     refetch: refetchAttendingRelation,
   } = useQuery(QUERY_USER_ATTENDING_EVENT, {
-    variables: { eventId: eventId.toString(), userId: userData?.user.id },
+    variables: { eventId: eventId.toString(), userId: userData?.user.id ?? 3 },
   });
 
   const { loading, error, data } = useQuery(GET_EVENT, {
@@ -160,15 +163,29 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
         });
       return;
     }
+    if (userAttendingEventData?.userAttendingRelation.isOnWaitinglist) {
+      eventSignOff({ variables: { eventId: eventId.toString(), userId: userData?.user.id } })
+        .then(() => {
+          refetchAttendingRelation({ eventId: eventId.toString(), userId: userData?.user.id });
+          setOpenOffWaitingListSnackbar(true);
+        })
+        .catch(() => {
+          setOpenErrorSnackbar(true);
+        });
+      return;
+    }
     eventSignUp({ variables: { eventId: eventId.toString(), userId: userData?.user.id } })
       .then(() => {
-        refetchAttendingRelation({ eventId: eventId.toString(), userId: userData?.user.id });
-        setOpenSignUpSnackbar(true);
+        refetchAttendingRelation({ eventId: eventId.toString(), userId: userData?.user.id }).then((res) => {
+          res.data.userAttendingRelation.isSignedUp ? setOpenSignUpSnackbar(true) : setOpenOnWaitingListSnackbar(true);
+        });
       })
       .catch(() => {
         setOpenErrorSnackbar(true);
       });
   };
+
+  console.log(userAttendingEventData);
 
   if (data.event) {
     return (
@@ -272,9 +289,9 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
                 <>
                   <CountdownButton
                     countDownDate={data.event.signupOpenDate}
-                    isSignedUp={userAttendingEventData.userAttendingRelation.isSignedUp ?? false}
-                    isOnWaitingList={userAttendingEventData?.userAttendingRelation.isOnWaitingList ?? false}
-                    isFull={userAttendingEventData.userAttendingRelation.isFull ?? false}
+                    isSignedUp={userAttendingEventData.userAttendingRelation.isSignedUp}
+                    isOnWaitingList={userAttendingEventData.userAttendingRelation.isOnWaitinglist}
+                    isFull={userAttendingEventData.userAttendingRelation.isFull}
                     loading={signOffLoading || signUpLoading || userAttendingEventLoading}
                     onClick={handleClick}
                     styleClassName={classes.signUpButton}
@@ -309,6 +326,28 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
                   >
                     <Alert elevation={6} variant="filled" severity="success">
                       Du er nå påmeldt
+                    </Alert>
+                  </Snackbar>
+
+                  <Snackbar
+                    anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                    open={openOnWaitingListSnackbar}
+                    autoHideDuration={3000}
+                    onClose={() => setOpenOnWaitingListSnackbar(false)}
+                  >
+                    <Alert elevation={6} variant="filled" severity="info">
+                      Du er på ventelisten
+                    </Alert>
+                  </Snackbar>
+
+                  <Snackbar
+                    anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                    open={openOffWaitingListSnackbar}
+                    autoHideDuration={3000}
+                    onClose={() => setOpenOffWaitingListSnackbar(false)}
+                  >
+                    <Alert elevation={6} variant="filled" severity="info">
+                      Du er ikke lenger på ventelisten
                     </Alert>
                   </Snackbar>
                 </>

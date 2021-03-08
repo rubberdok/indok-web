@@ -54,11 +54,13 @@ const CountdownButton: React.FC<Props> = ({
     if (timeWord === "seconds") return time > 1 ? "sekunder" : "sekund";
   };
 
+  console.log(isSignedUp, isOnWaitingList, isFull);
+
   return (
     <Button
       className={styleClassName}
       variant="contained"
-      color={isSignedUp ? "inherit" : "primary"}
+      color={isSignedUp || isOnWaitingList ? "inherit" : "primary"}
       onClick={onClick}
       disabled={currentTimePart !== undefined}
       loading={loading}
