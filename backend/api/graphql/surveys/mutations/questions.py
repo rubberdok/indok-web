@@ -238,7 +238,7 @@ class DeleteAnswersToSurvey(graphene.Mutation):
     @login_required
     def mutate(self, info, survey_id):
         user = info.context.user
-        user.answers.filter(survey_id=survey_id).delete()
+        user.answers.filter(question__survey_id=survey_id).delete()
 
         return DeleteAnswersToSurvey(ok = True)
 
