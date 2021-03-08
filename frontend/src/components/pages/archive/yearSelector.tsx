@@ -1,17 +1,13 @@
-import React, { useEffect } from "react";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import InputLabel from "@material-ui/core/InputLabel";
+import React from "react";
+import { makeStyles } from "@material-ui/core/styles";
 import FormControl from "@material-ui/core/FormControl";
-import NativeSelect from "@material-ui/core/NativeSelect";
-import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
-import Input from "@material-ui/core/Input";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   quantityRoot: {
     color: "black",
-    backgroundColor: "rgba(6, 90, 90,0.2)",
+    backgroundColor: "rgba(6, 90, 90, 0.6)",
     minWidth: 120,
     borderRadius: "20px",
     outline: "none",
@@ -47,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   selectRoot: {
-    color: "black",
+    color: "white",
     opacity: 1,
     fontFamily: "montserrat",
     fontSize: "14px",

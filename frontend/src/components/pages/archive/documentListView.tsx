@@ -55,7 +55,7 @@ const DocumentListView: React.FC = () => {
           />
         </ContentWrapper>
       </ContentWrapper>
-      <ContentWrapper style={{ justifyContent: "flex-end", marginTop: "16px", marginBottom: "32px" }}>
+      <ContentWrapper style={{ justifyContent: "flex-end", marginTop: "16px", marginBottom: "5%" }}>
         <SearchBarComp
           searchFilter={searchFilter}
           handleSearchFilterChanged={(newValue: string) => {
@@ -65,7 +65,7 @@ const DocumentListView: React.FC = () => {
         />
       </ContentWrapper>
       {!viewFeatured && (
-        <ContentWrapper style={{ paddingLeft: "85%", marginTop: "-6.5%" }}>
+        <ContentWrapper style={{ paddingLeft: "85.6%", marginTop: "-9%", marginBottom: "5%" }}>
           <RemoveFilters
             handleRemoveFilterChanged={() => {
               [
