@@ -29,6 +29,10 @@ export const LISTING = gql`
       deadline
       endDatetime
       url
+      organization {
+        name
+        description
+      }
       survey {
         id
         descriptiveName
