@@ -3,6 +3,7 @@ import Navbar from "@components/navbar/Navbar";
 import CabinAvailability from "@components/pages/cabins/CabinAvailability";
 import CabinContactInfo from "@components/pages/cabins/CabinContactInfo";
 import CabinDatePicker from "@components/pages/cabins/CabinDatePicker";
+import ContractModal from "@components/pages/cabins/Popup/ContractModal";
 import { QUERY_CABINS } from "@graphql/cabins/queries";
 import { Cabin, ContactInfo, Validations } from "@interfaces/cabins";
 import { Box, Grid, Step, StepLabel, Stepper, Button, Typography, Paper, Tooltip } from "@material-ui/core";
@@ -17,6 +18,11 @@ interface StepReady {
 export interface DatePick {
   checkInDate?: string;
   checkOutDate?: string;
+}
+
+export interface ModalData {
+  contractViewed: boolean;
+  displayPopUp: boolean;
 }
 
 const steps = ["Velg hytte", "Innsjekk/Utsjekk", "Kontaktinfo", "Betaling", "Kvittering"];
@@ -39,6 +45,11 @@ const defaultContactInfo: ContactInfo = {
   numberExternal: 0,
 };
 
+const defaultModalData: ModalData = {
+  contractViewed: false,
+  displayPopUp: false,
+};
+
 const CabinBookingPage: NextPage = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [stepReady, setStepReady] = useState<StepReady>(initalStepReady);
@@ -46,6 +57,7 @@ const CabinBookingPage: NextPage = () => {
   // Velg Hytte
   const [chosenCabins, setChosenCabins] = useState<Cabin[]>([]);
   const cabinQuery = useQuery<{ cabins: Cabin[] }>(QUERY_CABINS);
+  const [modalData, setModalData] = useState<ModalData>(defaultModalData);
 
   // Innsjekk/Utsjekk
   const [datePick, setDatePick] = useState<DatePick>({});
@@ -102,9 +114,24 @@ const CabinBookingPage: NextPage = () => {
     }
   };
 
+  const handleNextClick = () => {
+    if (activeStep == 2 && !modalData.contractViewed) {
+      setModalData({ ...modalData, displayPopUp: true });
+    } else {
+      setActiveStep((prev) => prev + 1);
+    }
+  };
+
   return (
     <>
       <Navbar />
+      <ContractModal
+        modalData={modalData}
+        setModalData={setModalData}
+        chosenCabins={chosenCabins}
+        datePick={datePick}
+        contactInfo={contactInfo}
+      />
       <Box m={10}>
         <Grid container direction="column" justify="center" spacing={1}>
           <Grid item>
@@ -131,11 +158,7 @@ const CabinBookingPage: NextPage = () => {
               disableHoverListener={stepReady[activeStep].ready}
             >
               <Box>
-                <Button
-                  variant="contained"
-                  disabled={!stepReady[activeStep].ready}
-                  onClick={() => setActiveStep((prev) => prev + 1)}
-                >
+                <Button variant="contained" disabled={!stepReady[activeStep].ready} onClick={() => handleNextClick()}>
                   Neste
                 </Button>
               </Box>
