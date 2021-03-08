@@ -36,21 +36,6 @@ export const LISTING = gql`
       }
       survey {
         id
-        descriptiveName
-        questions {
-          id
-          question
-          description
-          position
-          questionType {
-            id
-            name
-          }
-          offeredAnswers {
-            id
-            answer
-          }
-        }
       }
     }
   }
