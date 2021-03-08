@@ -14,31 +14,31 @@ const organizations = [
   {
     id: 2,
     title: "ESTIEM",
-    link: "https://bindeleddet.no/",
+    link: "https://sites.google.com/view/estiem-ntnu",
     img: "img/estiem.jpg",
   },
   {
     id: 3,
     title: "Indøk Kultur",
-    link: "https://bindeleddet.no/",
+    link: "./about/organizations/culture",
     img: "img/indok-kultur.jpg",
   },
   {
     id: 4,
     title: "Hyttestyret",
-    link: "https://bindeleddet.no/",
+    link: "./about/organizations/hyttestyret",
     img: "img/hytte.jpg",
   },
   {
     id: 5,
     title: "Janus",
-    link: "https://bindeleddet.no/",
+    link: "https://www.januslinjeforening.no/",
     img: "img/gang.jpg",
   },
   {
     id: 6,
     title: "Janus IF",
-    link: "https://bindeleddet.no/",
+    link: "./about/organizations/sports",
     img: "img/janus-if.jpg",
   },
 ];
