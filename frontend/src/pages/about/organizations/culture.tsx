@@ -6,7 +6,7 @@ import { NextPage } from "next";
 import Link from "next/link";
 import React from "react";
 
-type OrganizationsProps = {
+type Props = {
   slug: string;
   frontmatter: {
     description: string;
@@ -17,21 +17,23 @@ type OrganizationsProps = {
   posts: Array<any>;
 };
 
-const OrganizationsPage: NextPage<OrganizationsProps> = ({ posts }) => {
+const CulturePage: NextPage<Props> = ({ posts }) => {
   return (
     <Layout>
       <Container>
         <Grid container>
-          {posts.map(({ frontmatter: { title, description }, slug }: OrganizationsProps) => (
-            <Grid key={slug} item xs={3}>
-              <h3>
-                <Link href={"./organizations/[slug]"} as={`./organizations/${slug}`}>
-                  <a className="text-4xl font-bold text-yellow-600 font-display">{title}</a>
-                </Link>
-              </h3>
-              <p>{description}</p>
-            </Grid>
-          ))}
+          {posts
+            .filter((post) => post.frontmatter.tag == "kultur")
+            .map(({ frontmatter: { title, description }, slug }: Props) => (
+              <Grid key={slug} item xs={3}>
+                <h3>
+                  <Link href={"./[slug]"} as={`./${slug}`}>
+                    <a className="text-4xl font-bold text-yellow-600 font-display">{title}</a>
+                  </Link>
+                </h3>
+                <p>{description}</p>
+              </Grid>
+            ))}
         </Grid>
       </Container>
     </Layout>
@@ -48,4 +50,4 @@ export async function getStaticProps() {
   };
 }
 
-export default OrganizationsPage;
+export default CulturePage;

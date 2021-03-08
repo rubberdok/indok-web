@@ -8,6 +8,7 @@ styre:
     navn: Bendik Edvardsen
     mail: tlf.
     tittel: Leder
+tag: idrett
 ---
 
 # Hvem er vi?

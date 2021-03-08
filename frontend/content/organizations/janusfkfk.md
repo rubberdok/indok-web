@@ -12,6 +12,7 @@ styre:
     navn: Elin Ulsaker
     mail: tlf.
     tittel: Chief Financial Officer
+tag: idrett
 ---
 
 # Hvem er vi?

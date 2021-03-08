@@ -8,6 +8,7 @@ styre:
     navn: Richard Rogstad
     mail: tlf. 924 34 994
     tittel: Leder
+tag: idrett
 ---
 
 # Om oss

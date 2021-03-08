@@ -12,6 +12,7 @@ styre:
     navn: Christian Bakke Vennerød
     mail: tlf. 906 71 650
     tittel: Trener
+tag: idrett
 ---
 
 # Hvem er vi?

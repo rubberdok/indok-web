@@ -7,3 +7,7 @@ image: /img/woodok.jpg
 # INDØK blir født
 
 Tekst dhteds
+
+[Janus IF](./organizations/sports)
+[Janus Kultur](./organizations/culture)
+[Alle organisasjoner](./organizations)
