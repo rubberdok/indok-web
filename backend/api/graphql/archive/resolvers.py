@@ -6,8 +6,12 @@ from graphql_jwt.decorators import login_required
 
 class ArchiveDocumentResolvers:
     @login_required
-    def resolve_all_archives(self, info):
-        return ArchiveDocument.objects.all()
+    def resolve_featured_archive(self, info, featured_names):
+        featured = []
+        if featured_names:
+            for title in featured_names:
+                featured.append(ArchiveDocument.objects.get(title__icontains=title))
+        return featured
 
     @login_required
     def resolve_archive(self, info, id):
