@@ -54,8 +54,6 @@ const CountdownButton: React.FC<Props> = ({
     if (timeWord === "seconds") return time > 1 ? "sekunder" : "sekund";
   };
 
-  console.log(isSignedUp, isOnWaitingList, isFull);
-
   return (
     <Button
       className={styleClassName}

@@ -185,8 +185,6 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
       });
   };
 
-  console.log(userAttendingEventData);
-
   if (data.event) {
     return (
       <div>
