@@ -53,7 +53,7 @@ class QuestionType(DjangoObjectType):
     @staticmethod
     @login_required
     def resolve_answer(root: Question, info, user_id: int):
-        return QuestionType.resolve_answers(root, info, user_id)
+        return root.answers.filter(user__pk=user_id).first()
 
 class SurveyType(DjangoObjectType):
     questions = graphene.List(QuestionType)
