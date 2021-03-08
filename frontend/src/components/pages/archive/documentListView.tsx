@@ -5,7 +5,6 @@ import ListDocuments from "./listDocuments";
 import { ContentWrapper } from "./wrapper";
 import YearSelector from "./yearSelector";
 import ListFeaturedDocuments from "./listFeaturedDocuments";
-import SimpleSelector from "./simpleSelector";
 import SearchBarComp from "./searchBar";
 import { RemoveFilters } from "./removeFilters";
 
@@ -33,16 +32,7 @@ const DocumentListView: React.FC = () => {
           Arkiv
         </Typography>
       </div>
-      <ContentWrapper
-        style={{ marginLeft: "80px", marginRight: "80px", justifyContent: "space-evenly", paddingBottom: "8px" }}
-      >
-        <SearchBarComp
-          searchFilter={searchFilter}
-          handleSearchFilterChanged={(newValue: string) => {
-            [setSearchFilter(newValue), setViewFeatured(false)];
-          }}
-          handleSearchFilterCanceled={() => setSearchFilter("")}
-        />
+      <ContentWrapper style={{ justifyContent: "space-evenly", paddingBottom: "8px" }}>
         <FilterButton
           typeFilters={typeFilters}
           updateTypeFilters={(key) => {
@@ -55,33 +45,48 @@ const DocumentListView: React.FC = () => {
             ];
           }}
         />
+        <ContentWrapper style={{ marginLeft: "-16px" }}>
+          <YearSelector
+            yearFilter={yearFilter}
+            handleYearFilterChanged={(year: string) => {
+              [setYearFilter(year), setViewFeatured(false)];
+            }}
+          />
+        </ContentWrapper>
       </ContentWrapper>
-      <ContentWrapper style={{ justifyContent: "center", marginBottom: "32px" }}>
-        <YearSelector
-          yearFilter={yearFilter}
-          handleYearFilterChanged={(year: string) => {
-            [setYearFilter(year), setViewFeatured(false)];
-          }}
-        />
+      <ContentWrapper
+        style={{ justifyContent: "space-between", marginLeft: "10px", marginBottom: "32px", marginRight: "20px" }}
+      >
+        {!viewFeatured && (
+          <RemoveFilters
+            handleRemoveFilterChanged={() => {
+              [
+                setYearFilter(""),
+                setSearchFilter(""),
+                setTypeFilters({
+                  Budget: { active: false, title: "Budsjett og Regnskap" },
+                  Summary: { active: false, title: "Generalforsamling" },
+                  Yearbook: { active: false, title: "Årbøker" },
+                  Guidelines: { active: false, title: "Støtte fra HS" },
+                  Regulation: { active: false, title: "Foreningens lover" },
+                  Statues: { active: false, title: "Utveksling" },
+                  Others: { active: false, title: "Annet" },
+                }),
+                setViewFeatured(true),
+              ];
+            }}
+          />
+        )}
+        <ContentWrapper style={{ marginLeft: "500px", marginTop: "24px", marginBottom: "16px" }}>
+          <SearchBarComp
+            searchFilter={searchFilter}
+            handleSearchFilterChanged={(newValue: string) => {
+              [setSearchFilter(newValue), setViewFeatured(false)];
+            }}
+            handleSearchFilterCanceled={() => setSearchFilter("")}
+          />
+        </ContentWrapper>
       </ContentWrapper>
-      <RemoveFilters
-        handleRemoveFilterChanged={() => {
-          [
-            setYearFilter(""),
-            setSearchFilter(""),
-            setTypeFilters({
-              Budget: { active: false, title: "Budsjett og Regnskap" },
-              Summary: { active: false, title: "Generalforsamling" },
-              Yearbook: { active: false, title: "Årbøker" },
-              Guidelines: { active: false, title: "Støtte fra HS" },
-              Regulation: { active: false, title: "Foreningens lover" },
-              Statues: { active: false, title: "Utveksling" },
-              Others: { active: false, title: "Annet" },
-            }),
-            setViewFeatured(true),
-          ];
-        }}
-      />
 
       {viewFeatured && (
         <ContentWrapper style={{ marginBottom: "16px" }}>

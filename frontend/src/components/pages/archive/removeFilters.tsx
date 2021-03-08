@@ -17,7 +17,7 @@ export const RemoveFilters: React.FC<RemoveFiltersProps> = ({ handleRemoveFilter
     >
       <button
         style={{
-          background: "rgb(255, 0, 0, 0.2)",
+          background: "rgb(220, 220, 220, 1)",
           borderRadius: "20px",
           margin: "6px",
           outline: "none",
