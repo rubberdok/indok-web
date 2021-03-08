@@ -18,20 +18,24 @@ import {
 } from "@material-ui/core";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const ProfilePage: NextPage = () => {
   const { loading, error, data } = useQuery<{ user: User }>(GET_USER);
   const [updateUser] = useMutation<{
-    user: User;
+    updateUser: {
+      user: User;
+    };
   }>(UPDATE_USER);
   const router = useRouter();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [updateUserInput, setUpdateUserInput] = useState({});
+  const [userData, setUserData] = useState<Partial<User>>();
 
   if (loading) {
-    return <h1>Loading ...</h1>;
+    return <Typography variant="h1">Laster ...</Typography>;
   }
+
   if (!data || !data.user || error) {
     if (typeof window !== "undefined") {
       // redirect user to homepage if no user data and client side
@@ -39,21 +43,30 @@ const ProfilePage: NextPage = () => {
       return null;
     }
   }
-  const user = data?.user;
 
-  if (user?.firstLogin && !dialogOpen) {
-    console.log("ye");
-    setDialogOpen(true);
-  }
+  useEffect(() => {
+    if (data?.user) {
+      setUserData(data.user);
+
+      if (data.user.firstLogin && !dialogOpen) {
+        setDialogOpen(true);
+      }
+    }
+  }, [data]);
+
+  const onChange = (key: string, e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+    setUserData({ ...userData, [key]: e.target.value });
+    setUpdateUserInput({ ...updateUserInput, [key]: e.target.value });
+  };
 
   const handleSubmit = () => {
     updateUser({
       variables: { updateUserInput },
-      update: (cache, { updateUserData }) => {
-        if (!updateUserData || !updateUserData.updateUser || !updateUserData.updateUser.user) {
+      update: (cache, { data }) => {
+        if (!data || !data.updateUser || !data.updateUser.user) {
           return;
         }
-        cache.writeQuery<User>({ query: GET_USER, data: updateUserData.updateUser.user });
+        cache.writeQuery<User>({ query: GET_USER, data: data.updateUser.user });
       },
     });
   };
@@ -62,7 +75,7 @@ const ProfilePage: NextPage = () => {
     <Layout>
       <Container>
         <Typography variant="h1">Brukerprofil</Typography>
-        {user ? (
+        {userData ? (
           <>
             <Dialog open={dialogOpen} aria-labelledby="form-dialog-title">
               <DialogTitle id="form-dialog-title">Første innlogging</DialogTitle>
@@ -77,8 +90,9 @@ const ProfilePage: NextPage = () => {
                     <TextField
                       id="standard-basic"
                       type="email"
-                      value={user.feideEmail}
-                      onChange={(e) => setUpdateUserInput({ ...updateUserInput, email: e.target.value })}
+                      name="email"
+                      value={userData.feideEmail}
+                      onChange={(e) => onChange("email", e)}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -87,8 +101,9 @@ const ProfilePage: NextPage = () => {
                       id="standard-basic"
                       required
                       type="tel"
-                      value={user.phoneNumber}
-                      onChange={(e) => setUpdateUserInput({ ...updateUserInput, phoneNumber: e.target.value })}
+                      name="phone"
+                      value={userData.phoneNumber}
+                      onChange={(e) => onChange("phoneNumber", e)}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -96,9 +111,9 @@ const ProfilePage: NextPage = () => {
                     <TextField
                       id="standard-basic"
                       required
-                      type="tel"
-                      value={user.allergies}
-                      onChange={(e) => setUpdateUserInput({ ...updateUserInput, allergies: e.target.value })}
+                      type="text"
+                      value={userData.allergies}
+                      onChange={(e) => onChange("allergies", e)}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -106,9 +121,9 @@ const ProfilePage: NextPage = () => {
                     <TextField
                       id="standard-basic"
                       required
-                      type="tel"
-                      value={user.year}
-                      onChange={(e) => setUpdateUserInput({ ...updateUserInput, year: e.target.value })}
+                      type="number"
+                      value={userData.year}
+                      onChange={(e) => onChange("year", e)}
                     />
                   </Grid>
                 </Grid>
@@ -119,15 +134,17 @@ const ProfilePage: NextPage = () => {
                 </Button>
               </DialogActions>
             </Dialog>
-            <Typography variant="h3">{user.firstName}</Typography>
+            <Typography variant="h3">{userData.firstName}</Typography>
             <Typography variant="body1">
-              <strong>Brukernavn:</strong> {user.username} <br />
-              <strong>E-post:</strong> {user.email} <br />
-              {/* <strong>Klassetrinn:</strong> {user.year} <br /> */}
+              <strong>Brukernavn:</strong> {userData.username} <br />
+              <strong>E-post:</strong> {userData.email} <br />
+              <strong>Klassetrinn:</strong> {userData.year} <br />
             </Typography>
-            <Typography variant="body2">
-              Medlem siden {new Date(user.dateJoined).toLocaleString()} <br />
-            </Typography>
+            {userData.dateJoined && (
+              <Typography variant="body2">
+                Medlem siden {new Date(userData.dateJoined).toLocaleString()} <br />
+              </Typography>
+            )}
           </>
         ) : (
           <> Du er ikke logget inn! Vennligst logg inn med Feide. </>
