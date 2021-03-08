@@ -6,7 +6,7 @@ import { Typography } from "@material-ui/core";
 import { useState } from "react";
 import { CREATE_ANSWER } from "@graphql/surveys/mutations";
 
-const SurveyAnswer: React.FC<{ surveyId: string }> = ({ surveyId }) => {
+const AnswerSurvey: React.FC<{ surveyId: string }> = ({ surveyId }) => {
   const [answers, setAnswers] = useState<Answer[]>();
   const { error, loading, data } = useQuery<{ survey: Survey }>(SURVEY, {
     variables: { surveyId: parseInt(surveyId) },
@@ -58,4 +58,4 @@ const SurveyAnswer: React.FC<{ surveyId: string }> = ({ surveyId }) => {
   );
 };
 
-export default SurveyAnswer;
+export default AnswerSurvey;

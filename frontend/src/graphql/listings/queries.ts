@@ -29,76 +29,27 @@ export const LISTING = gql`
       deadline
       endDatetime
       url
-      survey {
-        id
-        descriptiveName
-        questions {
-          id
-          question
-          description
-          position
-          questionType {
-            id
-            name
-          }
-          offeredAnswers {
-            id
-            answer
-          }
-        }
-      }
     }
   }
 `;
 
-export const RESPONSES = gql`
+export const LISTING_WITH_RESPONDERS = gql`
   query listing($ID: ID!) {
     listing(id: $ID) {
-      responses {
+      id
+      title
+      description
+      startDatetime
+      deadline
+      endDatetime
+      url
+      survey {
         id
-        response
-        applicant {
+        responders {
           id
-          username
           firstName
           lastName
-          year
-          email
         }
-      }
-    }
-  }
-`;
-
-export const RESPONSE = gql`
-  query response($responseID: ID!) {
-    response(id: $responseID) {
-      id
-      response
-      applicant {
-        id
-        username
-        firstName
-        lastName
-        year
-        email
-      }
-    }
-  }
-`;
-
-export const USER_RESPONSE = gql`
-  query userResponse($listingID: ID!) {
-    response(listingId: $listingID) {
-      id
-      response
-      applicant {
-        id
-        username
-        firstName
-        lastName
-        year
-        email
       }
     }
   }
@@ -150,32 +101,6 @@ export const ORGANIZATION_LISTINGS = gql`
         endDatetime
         url
       }
-    }
-  }
-`;
-
-export const USERS = gql`
-  query {
-    users {
-      id
-      username
-      firstName
-      lastName
-      year
-      email
-    }
-  }
-`;
-
-export const USER = gql`
-  query user($ID: ID!) {
-    oldUser(id: $ID) {
-      id
-      username
-      firstName
-      lastName
-      year
-      email
     }
   }
 `;

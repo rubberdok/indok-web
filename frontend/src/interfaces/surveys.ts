@@ -1,11 +1,11 @@
-import { Listing } from "@interfaces/listings";
+import { User } from "@interfaces/users";
 
 export interface Survey {
   id: string;
   descriptiveName: string;
   description: string;
   questions: Question[];
-  listing: Listing;
+  responders: User[];
 }
 
 export interface Question {
