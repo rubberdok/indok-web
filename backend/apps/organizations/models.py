@@ -22,33 +22,41 @@ class Organization(models.Model):
     logo = models.ImageField(upload_to="organizations", blank=True, null=True)
     color = models.CharField(max_length=100, blank=True, null=True)
 
-    group = models.ForeignKey(Group, on_delete=models.CASCADE, null=True)
+    group = models.ForeignKey(Group, on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
-        constraints = [UniqueConstraint(
-            fields=["parent", "name"], name="unique_child_organization_name"
-        )]
+        constraints = [
+            UniqueConstraint(
+                fields=["parent", "name"], name="unique_child_organization_name"
+            )
+        ]
 
     def __str__(self):
         return f"{self.name}"
 
 
 class Membership(models.Model):
-    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="memberships")
-    organization = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name="members")
+    user = models.ForeignKey(
+        get_user_model(), on_delete=models.CASCADE, related_name="memberships"
+    )
+    organization = models.ForeignKey(
+        Organization, on_delete=models.CASCADE, related_name="members"
+    )
     role = models.ForeignKey("Role", on_delete=models.DO_NOTHING)
 
     class Meta:
-        constraints = [UniqueConstraint(
-            fields=["user", "organization"], name="unique_member_in_organization"
-        )]
+        constraints = [
+            UniqueConstraint(
+                fields=["user", "organization"], name="unique_member_in_organization"
+            )
+        ]
 
     def __str__(self) -> str:
-        return f"{self.organization.name}:{self.user.username}" 
+        return f"{self.organization.name}:{self.user.username}"
+
 
 class Role(models.Model):
     name = models.TextField(max_length=50, default="Medlem", null=False)
-    
 
 
 @receiver(post_save, sender=Membership)
