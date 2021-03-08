@@ -3,7 +3,7 @@ import { Shadows } from "@material-ui/core/styles/shadows";
 
 const theme = createMuiTheme({
   typography: {
-    fontFamily: ["Open-Sans", "sans-serif"].join(","),
+    fontFamily: ["Open Sans", "sans-serif"].join(","),
     h1: {
       fontFamily: ["Playfair Display", "sans-serif"].join(","),
       fontSize: "4rem",
@@ -17,8 +17,8 @@ const theme = createMuiTheme({
     },
     h3: {
       fontFamily: ["Playfair Display", "sans-serif"].join(","),
-      fontSize: "2.5rem",
-      fontWeight: 800,
+      fontSize: "48px",
+      fontWeight: 500,
     },
     h4: {
       fontFamily: ["Playfair Display", "sans-serif"].join(","),
@@ -47,8 +47,10 @@ const theme = createMuiTheme({
       lineHeight: "43px",
     },
     overline: {
-      fontSize: "12px",
-      letterSpacing: "0.5px",
+      fontSize: "13px",
+      letterSpacing: "0.05em",
+      fontWeight: 600,
+      color: "#b0aca5",
     },
     body1: {
       fontFamily: ["Open Sans", "sans-serif"].join(","),
@@ -74,6 +76,10 @@ const theme = createMuiTheme({
     MuiButtonBase: {
       root: {
         justifyContent: "none",
+        padding: "16px 32px",
+        fontSize: 11,
+        fontWeight: 600,
+        textTransform: "none",
       },
     },
     MuiButton: {
@@ -113,6 +119,8 @@ const theme = createMuiTheme({
     MuiTab: {
       root: {
         padding: "24px 16px",
+        fontSize: 11,
+        textTransform: "none",
       },
     },
   },
@@ -121,7 +129,7 @@ const theme = createMuiTheme({
       default: "#f2efea",
     },
     primary: {
-      main: "#065A5A",
+      main: "#0b3c3c",
     },
     secondary: {
       main: "#11cb5f",
