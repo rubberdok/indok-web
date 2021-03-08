@@ -2,7 +2,7 @@ import { useQuery } from "@apollo/client";
 import { QUERY_USER_ATTENDING_EVENT } from "@graphql/events/queries";
 import { Event } from "@interfaces/events";
 import { User } from "@interfaces/users";
-import { Grid, Typography, Container, useTheme, Box } from "@material-ui/core";
+import { Typography, Chip, useTheme, Box } from "@material-ui/core";
 import Link from "next/link";
 import React from "react";
 
@@ -47,30 +47,32 @@ const EventListItem: React.FC<Props> = ({ event, user, userIsValid, classes }) =
 
   return (
     <Link href={`/events/${event.id}`} key={event.id}>
-      <Container
+      <Box
+        display="flex"
+        alignItems="center"
+        justifyContent="space-between"
         className={classes.eventContainer}
         style={{ borderColor: event.organization?.color ?? theme.palette.primary.main }}
       >
-        <Grid container>
-          <Grid item xs className={classes.shortDescriptionText}>
-            <Typography variant="h6">{event.title}</Typography>
-            <Typography variant="body1">{formatDate(event.startTime)}</Typography>
+        <Box>
+          <Typography variant="h6">{event.title}</Typography>
+          <Typography variant="body1">{formatDate(event.startTime)}</Typography>
 
-            {event.shortDescription ?? "Trykk for å lese mer"}
-          </Grid>
-          {userIsValid && event.isAttendable ? (
-            userAttendingEventData?.userAttendingRelation.isFull ? (
-              <Box className={classes.fullBox}>Meld på venteliste</Box>
-            ) : userAttendingEventData?.userAttendingRelation.isSignedUp ? (
-              <Box className={classes.signedUpBox}>Påmeldt</Box>
-            ) : userAttendingEventData?.userAttendingRelation.isOnWaitingList ? (
-              <Box className={classes.signedUpBox}>På venteliste</Box>
-            ) : (
-              <Box className={classes.signUpAvailableBox}>Påmelding tilgjengelig</Box>
-            )
-          ) : null}
-        </Grid>
-      </Container>
+          {event.shortDescription ?? "Trykk for å lese mer"}
+        </Box>
+
+        {userIsValid && event.isAttendable ? (
+          userAttendingEventData?.userAttendingRelation.isFull ? (
+            <Chip variant="outlined" label="Ventelite" />
+          ) : userAttendingEventData?.userAttendingRelation.isSignedUp ? (
+            <Chip color="primary" label="Påmeldt" />
+          ) : userAttendingEventData?.userAttendingRelation.isOnWaitingList ? (
+            <Chip color="primary" label="På venteliste" />
+          ) : (
+            <Chip label="Påmelding tilgjengelig" />
+          )
+        ) : null}
+      </Box>
     </Link>
   );
 };

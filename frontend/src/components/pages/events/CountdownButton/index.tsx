@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "@material-ui/core";
 
-function calculateTimeLeft(countdownTime: string) {
+const calculateTimeLeft = (countdownTime: string): Record<string, number> => {
   const difference = +new Date(countdownTime) - +new Date();
 
   if (difference > 0)
@@ -13,7 +13,7 @@ function calculateTimeLeft(countdownTime: string) {
     };
 
   return {};
-}
+};
 
 interface Props {
   countDownDate: string;
@@ -58,10 +58,10 @@ const CountdownButton: React.FC<Props> = ({
     <Button
       className={styleClassName}
       variant="contained"
-      color={isSignedUp ? "#f75d2a" : "primary"}
-      loading={loading}
+      color={isSignedUp ? "inherit" : "primary"}
       onClick={onClick}
       disabled={currentTimePart !== undefined}
+      loading={loading}
     >
       {currentTimePart
         ? `Åpner om ${timeLeft[currentTimePart]} ${translate(currentTimePart, timeLeft[currentTimePart])}`

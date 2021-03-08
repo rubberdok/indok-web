@@ -1,23 +1,10 @@
 import { useQuery } from "@apollo/client";
 import { GET_USER } from "@graphql/auth/queries";
-import { GET_EVENTS, GET_DEFAULT_EVENTS, QUERY_USER_ATTENDING_EVENT } from "@graphql/events/queries";
+import { GET_DEFAULT_EVENTS, GET_EVENTS } from "@graphql/events/queries";
 import { Event } from "@interfaces/events";
 import { User } from "@interfaces/users";
-import {
-  Button,
-  Grid,
-  Typography,
-  CircularProgress,
-  Paper,
-  Tabs,
-  Tab,
-  Container,
-  makeStyles,
-  useTheme,
-} from "@material-ui/core";
-import { PlusSquare } from "react-feather";
+import { CircularProgress, Container, Grid, makeStyles, Paper, Tab, Tabs, Typography } from "@material-ui/core";
 import React, { useState } from "react";
-import { DATAPORTEN_SCOPES, generateAuthURL } from "../../../navbar/utils";
 import FilterMenu from "./FilterMenu/index";
 import EventListItem from "./EventListItem";
 
@@ -27,13 +14,6 @@ export interface FilterQuery {
   startTime?: string;
   endTime?: string;
 }
-
-const signInURL = generateAuthURL(
-  process.env.NEXT_PUBLIC_DATAPORTEN_ID,
-  process.env.NEXT_PUBLIC_DATAPORTEN_STATE,
-  process.env.NEXT_PUBLIC_DATAPORTEN_REDIRECT_URI,
-  DATAPORTEN_SCOPES
-);
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -70,35 +50,6 @@ const useStyles = makeStyles((theme) => ({
       cursor: "pointer",
       backgroundColor: "#f5f5f5",
     },
-  },
-  signedUpBox: {
-    marginTop: "auto",
-    marginBottom: "auto",
-    color: "#ffffff",
-    background: theme.palette.primary.main,
-    borderRadius: "5px",
-    padding: "0.2em 0.5em",
-  },
-  signUpAvailableBox: {
-    marginTop: "auto",
-    marginBottom: "auto",
-    color: "#ffffff",
-    background: "#93bfa6",
-    borderRadius: "5px",
-    padding: "0.2em 0.5em",
-  },
-  fullBox: {
-    marginTop: "auto",
-    marginBottom: "auto",
-    color: "#ffffff",
-    background: "#db2e3f",
-    borderRadius: "5px",
-    padding: "0.2em 0.5em",
-  },
-  shortDescriptionText: {
-    textOverflow: "ellipsis",
-    whiteSpace: "nowrap",
-    overflow: "hidden",
   },
 }));
 
@@ -159,7 +110,7 @@ const AllEvents: React.FC = () => {
         */}
       </Container>
 
-      <Grid container className={classes.grid}>
+      <Grid container className={classes.grid} spacing={3}>
         <Grid item xs={3}>
           <FilterMenu
             filters={filters}
