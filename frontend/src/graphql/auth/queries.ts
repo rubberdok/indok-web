@@ -15,6 +15,9 @@ export const GET_USER = gql`
       lastLogin
       dateJoined
       year
+      events {
+        id
+      }
     }
   }
 `;

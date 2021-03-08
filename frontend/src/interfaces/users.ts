@@ -11,4 +11,5 @@ export interface User {
   lastLogin: string;
   dateJoined: string;
   year: number;
+  events: { id: string }[];
 }

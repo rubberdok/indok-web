@@ -2,6 +2,7 @@ from datetime import datetime
 
 import graphene
 from apps.events import models
+from apps.users.models import User
 from django.contrib import auth
 from django.shortcuts import get_object_or_404
 from django.utils.text import slugify
@@ -22,6 +23,8 @@ class EventInput(graphene.InputObjectType):
     image = graphene.String(required=False)
     is_attendable = graphene.Boolean(required=False)
     deadline = graphene.DateTime(required=False)
+    available_slots = graphene.Int(required=False)
+    price = graphene.Float(required=False)
 
 
 class CreateEvent(graphene.Mutation):
@@ -71,6 +74,48 @@ class DeleteEvent(graphene.Mutation):
         event.delete()
         ok = True
         return DeleteEvent(event=event, ok=ok)
+
+
+class EventSignUpOrOffInput(graphene.InputObjectType):
+    user_id = graphene.ID(required=True)
+
+
+class EventSignUp(graphene.Mutation):
+    class Arguments:
+        event_id = graphene.ID(required=True)
+        user_id = graphene.ID(required=True)
+
+    is_full = graphene.Boolean()
+    event = graphene.Field(EventType)
+
+    def mutate(root, info, event_id, user_id):
+        event = models.Event.objects.get(pk=event_id)
+        user = User.objects.get(pk=user_id)
+        if (
+            event.signed_up_users.count() < event.available_slots
+            if event.available_slots
+            else int(1e6)
+        ):
+            event.signed_up_users.add(user)
+            event.save()
+            return EventSignUp(event=event, is_full=False)
+        return EventSignUp(event=event, is_full=True)
+
+
+class EventSignOff(graphene.Mutation):
+    class Arguments:
+        event_id = graphene.ID(required=True)
+        user_id = graphene.ID(required=True)
+
+    is_full = graphene.Boolean()
+    event = graphene.Field(EventType)
+
+    def mutate(root, info, event_id, user_id):
+        event = models.Event.objects.get(pk=event_id)
+        user = User.objects.get(pk=user_id)
+        event.signed_up_users.remove(user)
+        event.save()
+        return EventSignOff(event=event, is_full=False)
 
 
 class CategoryInput(graphene.InputObjectType):
