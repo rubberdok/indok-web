@@ -62,7 +62,7 @@ class Event(models.Model):
     @property
     def users_on_waiting_list(self):
         result = []
-        if self.signed_up_users.count() > self.available_slots:
+        if self.available_slots and self.signed_up_users.count() > self.available_slots:
             result = list(self.signed_up_users.all())[self.available_slots :]
         return result
 
