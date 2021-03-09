@@ -11,14 +11,9 @@ import React, { useEffect, useState } from "react";
 
 const ProfilePage: NextPage = () => {
   const { loading, error, data } = useQuery<{ user: User }>(GET_USER);
-  const [updateUser] = useMutation<{
-    updateUser: {
-      user: User;
-    };
-  }>(UPDATE_USER);
+
   const router = useRouter();
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [updateUserInput, setUpdateUserInput] = useState({});
   const [userData, setUserData] = useState<Partial<User>>();
 
   useEffect(() => {
@@ -45,19 +40,6 @@ const ProfilePage: NextPage = () => {
 
   const onChange = (key: string, e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     setUserData({ ...userData, [key]: e.target.value });
-    setUpdateUserInput({ ...updateUserInput, [key]: e.target.value });
-  };
-
-  const handleSubmit = () => {
-    updateUser({
-      variables: { updateUserInput },
-      update: (cache, { data }) => {
-        if (!data || !data.updateUser || !data.updateUser.user) {
-          return;
-        }
-        cache.writeQuery<User>({ query: GET_USER, data: data.updateUser.user });
-      },
-    });
   };
 
   return (
