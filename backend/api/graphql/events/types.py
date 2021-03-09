@@ -1,5 +1,6 @@
 from apps.events.models import Category, Event
 from graphene_django import DjangoObjectType
+import graphene
 
 
 class EventType(DjangoObjectType):
@@ -19,7 +20,6 @@ class EventType(DjangoObjectType):
             "deadline",
             "publisher",
             "available_slots",
-            "signed_up_users",
             "price",
             "signup_open_date",
             "short_description",
@@ -33,3 +33,9 @@ class CategoryType(DjangoObjectType):
             "id",
             "name",
         ]
+
+
+class UserAttendingType(graphene.ObjectType):
+    is_signed_up = graphene.Boolean()
+    is_on_waitinglist = graphene.Boolean()
+    is_full = graphene.Boolean()
