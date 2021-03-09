@@ -6,7 +6,7 @@ import { Typography, Chip, useTheme, Box } from "@material-ui/core";
 import Link from "next/link";
 import React from "react";
 
-const MONTHS = {
+const MONTHS: Record<string, string> = {
   "01": "januar",
   "02": "februar",
   "03": "mars",
