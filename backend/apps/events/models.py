@@ -58,10 +58,6 @@ class Event(models.Model):
     short_description = models.CharField(max_length=100, blank=True, null=True)
 
     @property
-    def no_of_filled_slots(self):
-        return self.signed_up_users.count
-
-    @property
     def users_on_waiting_list(self):
         result = []
         if (
@@ -74,7 +70,7 @@ class Event(models.Model):
     @property
     def is_full(self):
         if self.available_slots is not None:
-            return self.signed_up_users.count() < self.available_slots
+            return self.signed_up_users.count() >= self.available_slots
         return False
 
     def __str__(self):
