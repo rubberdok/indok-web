@@ -71,7 +71,6 @@ const CountdownButton: React.FC<Props> = ({
     if (timeWord === "minutes") return time > 1 ? "minutter" : "minutt";
     if (timeWord === "seconds") return time > 1 ? "sekunder" : "sekund";
   };
-  loading = true;
 
   return (
     <div className={classes.wrapper}>
