@@ -48,7 +48,9 @@ class Event(models.Model):
     )
 
     signed_up_users = models.ManyToManyField(
-        "users.User", related_name="events", blank=True,
+        "users.User",
+        related_name="events",
+        blank=True,
     )
 
     price = models.FloatField(blank=True, null=True)
@@ -65,6 +67,12 @@ class Event(models.Model):
         if self.available_slots and self.signed_up_users.count() > self.available_slots:
             result = list(self.signed_up_users.all())[self.available_slots :]
         return result
+
+    @property
+    def is_full(self):
+        if self.available_slots:
+            return self.signed_up_users.count() < self.available_slots
+        return False
 
     def __str__(self):
         return self.title
