@@ -13,7 +13,7 @@ import ScheduleIcon from "@material-ui/icons/Schedule";
 import { Alert } from "@material-ui/lab";
 import Link from "next/link";
 import React, { useState } from "react";
-import { GET_EVENT } from "../../../graphql/events/queries";
+import { GET_EVENT, QUERY_USER_ATTENDING_EVENT } from "../../../graphql/events/queries";
 import CountdownButton from "./CountdownButton";
 
 const useStyles = makeStyles((theme) => ({
@@ -69,14 +69,6 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(3),
     paddingTop: theme.spacing(2),
   },
-  eventContainer: {
-    border: "solid",
-    borderWidth: "0.05em 0.05em 0.05em 1.2em",
-    borderRadius: "0.2em",
-    padding: theme.spacing(2),
-    marginBottom: theme.spacing(2),
-    backgroundColor: "#fff",
-  },
   paper: {
     color: theme.palette.text.primary,
     padding: theme.spacing(2),
@@ -124,15 +116,13 @@ function formatDescription(desc: string, innerClass: any, outerClass: any) {
   );
 }
 
-function isSignedUp(event: Event, userId?: string) {
-  if (!userId) return false;
-  return event.signedUpUsers?.some((user) => user.id === userId);
-}
-
 const EventDetailPage: React.FC<Props> = ({ eventId }) => {
   const [openSignUpSnackbar, setOpenSignUpSnackbar] = useState(false);
   const [openSignOffSnackbar, setOpenSignOffSnackbar] = useState(false);
+  const [openOnWaitingListSnackbar, setOpenOnWaitingListSnackbar] = useState(false);
+  const [openOffWaitingListSnackbar, setOpenOffWaitingListSnackbar] = useState(false);
   const [openErrorSnackbar, setOpenErrorSnackbar] = useState(false);
+
   const [eventSignUp, { loading: signUpLoading }] = useMutation<{
     eventSignUp: { event: Event; isFull: boolean };
   }>(EVENT_SIGN_UP);
@@ -143,7 +133,15 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
 
   const { data: userData } = useQuery<{ user: User }>(GET_USER);
 
-  const { loading, error, data, refetch } = useQuery(GET_EVENT, {
+  const {
+    data: userAttendingEventData,
+    loading: userAttendingEventLoading,
+    refetch: refetchAttendingRelation,
+  } = useQuery(QUERY_USER_ATTENDING_EVENT, {
+    variables: { eventId: eventId.toString(), userId: userData?.user.id ?? 3 },
+  });
+
+  const { loading, error, data } = useQuery(GET_EVENT, {
     variables: { id: eventId },
   });
   const classes = useStyles();
@@ -154,11 +152,22 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
 
   const handleClick = () => {
     if (!userData?.user.id) return;
-    if (isSignedUp(data.event, userData?.user.id)) {
+    if (userAttendingEventData?.userAttendingRelation.isSignedUp) {
       eventSignOff({ variables: { eventId: eventId.toString(), userId: userData?.user.id } })
         .then(() => {
-          refetch({ id: eventId });
+          refetchAttendingRelation({ eventId: eventId.toString(), userId: userData?.user.id });
           setOpenSignOffSnackbar(true);
+        })
+        .catch(() => {
+          setOpenErrorSnackbar(true);
+        });
+      return;
+    }
+    if (userAttendingEventData?.userAttendingRelation.isOnWaitinglist) {
+      eventSignOff({ variables: { eventId: eventId.toString(), userId: userData?.user.id } })
+        .then(() => {
+          refetchAttendingRelation({ eventId: eventId.toString(), userId: userData?.user.id });
+          setOpenOffWaitingListSnackbar(true);
         })
         .catch(() => {
           setOpenErrorSnackbar(true);
@@ -167,8 +176,9 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
     }
     eventSignUp({ variables: { eventId: eventId.toString(), userId: userData?.user.id } })
       .then(() => {
-        refetch({ id: eventId });
-        setOpenSignUpSnackbar(true);
+        refetchAttendingRelation({ eventId: eventId.toString(), userId: userData?.user.id }).then((res) => {
+          res.data.userAttendingRelation.isSignedUp ? setOpenSignUpSnackbar(true) : setOpenOnWaitingListSnackbar(true);
+        });
       })
       .catch(() => {
         setOpenErrorSnackbar(true);
@@ -273,54 +283,72 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
                 <Button>Tilbake</Button>
               </Link>
 
-              {data.event.isAttendable && userData?.user ? (
-                data.event.signedUpUsers.length === data.event.availableSlots ? (
-                  <Typography variant="body1" color="primary">
-                    Arrangementet er fullt
-                  </Typography>
-                ) : (
-                  <>
-                    <CountdownButton
-                      countDownDate={data.event.signupOpenDate}
-                      isSignedUp={isSignedUp(data.event, userData?.user.id)}
-                      loading={signOffLoading || signUpLoading}
-                      onClick={handleClick}
-                      styleClassName={classes.signUpButton}
-                    />
+              {data.event.isAttendable && userData?.user && userAttendingEventData?.userAttendingRelation ? (
+                <>
+                  <CountdownButton
+                    countDownDate={data.event.signupOpenDate}
+                    isSignedUp={userAttendingEventData.userAttendingRelation.isSignedUp}
+                    isOnWaitingList={userAttendingEventData.userAttendingRelation.isOnWaitinglist}
+                    isFull={userAttendingEventData.userAttendingRelation.isFull}
+                    loading={signOffLoading || signUpLoading || userAttendingEventLoading}
+                    onClick={handleClick}
+                    styleClassName={classes.signUpButton}
+                  />
 
-                    <Snackbar
-                      anchorOrigin={{ vertical: "top", horizontal: "right" }}
-                      open={openErrorSnackbar}
-                      autoHideDuration={3000}
-                      onClose={() => setOpenErrorSnackbar(false)}
-                    >
-                      <Alert elevation={6} variant="filled" severity="error">
-                        Påmelding feilet
-                      </Alert>
-                    </Snackbar>
-                    <Snackbar
-                      anchorOrigin={{ vertical: "top", horizontal: "right" }}
-                      open={openSignOffSnackbar}
-                      autoHideDuration={3000}
-                      onClose={() => setOpenSignOffSnackbar(false)}
-                    >
-                      <Alert elevation={6} variant="filled" severity="info">
-                        Du er nå avmeldt
-                      </Alert>
-                    </Snackbar>
+                  <Snackbar
+                    anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                    open={openErrorSnackbar}
+                    autoHideDuration={3000}
+                    onClose={() => setOpenErrorSnackbar(false)}
+                  >
+                    <Alert elevation={6} variant="filled" severity="error">
+                      Påmelding feilet
+                    </Alert>
+                  </Snackbar>
+                  <Snackbar
+                    anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                    open={openSignOffSnackbar}
+                    autoHideDuration={3000}
+                    onClose={() => setOpenSignOffSnackbar(false)}
+                  >
+                    <Alert elevation={6} variant="filled" severity="info">
+                      Du er nå avmeldt
+                    </Alert>
+                  </Snackbar>
 
-                    <Snackbar
-                      anchorOrigin={{ vertical: "top", horizontal: "right" }}
-                      open={openSignUpSnackbar}
-                      autoHideDuration={3000}
-                      onClose={() => setOpenSignUpSnackbar(false)}
-                    >
-                      <Alert elevation={6} variant="filled" severity="success">
-                        Du er nå påmeldt
-                      </Alert>
-                    </Snackbar>
-                  </>
-                )
+                  <Snackbar
+                    anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                    open={openSignUpSnackbar}
+                    autoHideDuration={3000}
+                    onClose={() => setOpenSignUpSnackbar(false)}
+                  >
+                    <Alert elevation={6} variant="filled" severity="success">
+                      Du er nå påmeldt
+                    </Alert>
+                  </Snackbar>
+
+                  <Snackbar
+                    anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                    open={openOnWaitingListSnackbar}
+                    autoHideDuration={3000}
+                    onClose={() => setOpenOnWaitingListSnackbar(false)}
+                  >
+                    <Alert elevation={6} variant="filled" severity="info">
+                      Du er på ventelisten
+                    </Alert>
+                  </Snackbar>
+
+                  <Snackbar
+                    anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                    open={openOffWaitingListSnackbar}
+                    autoHideDuration={3000}
+                    onClose={() => setOpenOffWaitingListSnackbar(false)}
+                  >
+                    <Alert elevation={6} variant="filled" severity="info">
+                      Du er ikke lenger på ventelisten
+                    </Alert>
+                  </Snackbar>
+                </>
               ) : null}
             </Paper>
           </Grid>

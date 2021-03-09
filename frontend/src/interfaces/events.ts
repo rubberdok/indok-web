@@ -13,7 +13,6 @@ export interface Event {
   isAttendable: boolean;
   deadline?: string;
   publisher: User;
-  signedUpUsers: { id: string }[];
   availableSlots?: number;
   shortDescription?: string;
   signupOpenDate?: string;
