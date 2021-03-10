@@ -11,6 +11,7 @@ class UserAttendingType(graphene.ObjectType):
 
 class EventType(DjangoObjectType):
     user_attendance = graphene.Field(UserAttendingType, user_id=graphene.ID())
+    is_full = graphene.Boolean()
 
     class Meta:
         model = Event
@@ -33,6 +34,10 @@ class EventType(DjangoObjectType):
             "short_description",
             "is_full",
         ]
+
+    @staticmethod
+    def resolve_is_full(event, info):
+        return event.is_full
 
     @staticmethod
     def resolve_user_attendance(event, info, user_id):
