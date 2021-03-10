@@ -7,7 +7,7 @@ import {
   CardContent,
   CardMedia,
   Container,
-  Grid, makeStyles, Typography
+  Grid, Hidden, makeStyles, Typography
 } from "@material-ui/core";
 import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from "next";
 import dayjs from "dayjs";
@@ -103,36 +103,38 @@ const ListingPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProp
                   }
 
                 </Grid>
+                
+                <Hidden only={["xs", "sm"]}>
+                  <Grid container item direction="column" xs={4}>
+                    <Card>
+                      <CardMedia
+                        component="img"
+                        className={classes.media}
+                        image={
+                          data.listing.organization?.color ||
+                          "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg"
+                        }
+                        title="organization logo"
+                      />
 
-                <Grid container item direction="column" xs={4}>
-                  <Card>
-                    <CardMedia
-                      component="img"
-                      className={classes.media}
-                      image={
-                        data.listing.organization?.color ||
-                        "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg"
-                      }
-                      title="organization logo"
-                    />
+                      <CardContent>
+                        <Grid container className={classes.organizationContent} spacing={2}>
+                          <Grid item>
+                            <Typography variant="h3" component="h3">
+                              {data.listing.organization?.name || "Ingen organisasjon"}
+                            </Typography>
+                          </Grid>
 
-                    <CardContent>
-                      <Grid container className={classes.organizationContent} spacing={2}>
-                        <Grid item>
-                          <Typography variant="h3" component="h3">
-                            {data.listing.organization?.name || "Ingen organisasjon"}
-                          </Typography>
+                          <Grid item>
+                            <Typography variant="body1" component="body1">
+                              {data.listing.organization?.description || "Ingen organisasjon"}
+                            </Typography>
+                          </Grid>
                         </Grid>
-
-                        <Grid item>
-                          <Typography variant="body1" component="body1">
-                            {data.listing.organization?.description || "Ingen organisasjon"}
-                          </Typography>
-                        </Grid>
-                      </Grid>
-                    </CardContent>
-                  </Card>
-                </Grid>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                </Hidden>
               </Grid>
             </Container>
           </Container>
