@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 import graphene
 from api.auth.dataporten_auth import DataportenAuth
 from django.contrib.auth import get_user_model
@@ -47,7 +48,6 @@ class UpdateUser(graphene.Mutation):
     def mutate(
         self,
         info,
-        id,
         email=None,
         first_name=None,
         last_name=None,
@@ -55,30 +55,43 @@ class UpdateUser(graphene.Mutation):
         phone_number=None,
         allergies=None,
     ):
-        user = get_user_model().objects.get(pk=id)
+        user = info.context.user
         first_login = user.first_login
         if first_login:
-            if not phone_number:
-                raise Exception(
-                    "Du må spesifisere et telfonnummer ved første innlogging"
-                )
-            if year not in range(1, 6):
-                raise ValueError("Du må oppgi et gyldig årstrinn")
-            if not phone_number.isnumeric:
-                raise ValueError("Telefonnummeret må inneholde kun tallsiffer")
             first_login = False
 
-        user.save(
-            email=email if email is not None else user.feide_email,
-            first_name=first_name if first_name is not None else user.first_name,
-            last_name=last_name if last_name is not None else user.last_name,
-            year=year if year is not None else user.year,
-            phone_number=phone_number
-            if phone_number is not None
-            else user.phone_number,
-            allergies=allergies if allergies is not None else user.allergies,
-            first_login=first_login,
+        # TODO: fix validation. both phoneNumberField and emailFiled should validate automatically?
+
+        if year and year not in range(1, 6):
+            raise ValidationError(
+                "Du må oppgi et gyldig årstrinn", params={"year": year}
+            )
+        if phone_number:
+            valid = True
+            if phone_number.startswith("+"):
+                valid = phone_number[1:].isnumeric() and len(phone_number[3:]) == 8
+            else:
+                valid = phone_number.isnumeric() and len(phone_number) == 8
+            if not valid:
+                raise ValidationError(
+                    "Ugyldig telefonnummer",
+                    params={"phone_number": phone_number},
+                )
+
+        if user.email:
+            email = email if email is not None else user.email
+        else:
+            email = email if email is not None else user.feide_email
+        user.email = email
+        user.first_name = first_name if first_name is not None else user.first_name
+        user.last_name = last_name if last_name is not None else user.last_name
+        user.year = year if year is not None else user.year
+        user.phone_number = (
+            phone_number if phone_number is not None else user.phone_number
         )
+        user.allergies = allergies if allergies is not None else user.allergies
+        user.first_login = first_login
+        user.save()
 
         return UpdateUser(user=user)
 

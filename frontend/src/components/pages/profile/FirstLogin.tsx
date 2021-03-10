@@ -14,150 +14,165 @@ import {
   TextField,
   Typography,
 } from "@material-ui/core";
+import { Check, Close } from "@material-ui/icons";
 import { useEffect, useState } from "react";
 import validator from "validator";
 
 interface FirstLoginProps {
   open: boolean;
-  onChange: (key: string, e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => void;
-  userData?: Partial<User> | undefined;
+  onSubmit: (refetch: boolean) => void;
 }
 
 interface UpdateUserInput {
   email: string;
-  phone: string;
-  foodPreferences: string;
+  phoneNumber: string;
+  allergies: string;
   year: number;
 }
 
 interface Validations {
   email: boolean;
-  phone: boolean;
+  phoneNumber: boolean;
   year: boolean;
-  triggerError: boolean;
 }
 
 const validateInput = (input: Partial<UpdateUserInput>): Validations => {
-  const { email, phone, year } = input;
+  const { email, phoneNumber, year } = input;
   return {
     email: email ? validator.isEmail(email) : true,
-    phone: phone ? validator.isMobilePhone(phone) : true,
+    phoneNumber: phoneNumber ? validator.isMobilePhone(phoneNumber) : true,
     year: year ? Number.isInteger(year) && year > 0 && year < 6 : true,
-    triggerError: false,
   };
 };
 
-export const FirstLogin: React.FC<FirstLoginProps> = ({ open, onChange, userData }) => {
-  const [updateUser] = useMutation<{
+export const FirstLogin: React.FC<FirstLoginProps> = ({ open, onSubmit }) => {
+  const [updateUser, { error }] = useMutation<{
     updateUser: {
       user: User;
     };
-  }>(UPDATE_USER);
+  }>(UPDATE_USER, { errorPolicy: "all" });
 
-  const [updateUserInput, setUpdateUserInput] = useState({});
-  const [validations, setValidations] = useState<Validations>();
+  const defaultValidations = {
+    email: true,
+    phoneNumber: true,
+    year: true,
+  };
 
-  // useEffect(() => {
-  //   if (validations && Object.values(validations).any() {
-  //     validations.triggerError = true;
-  //   }
-  // }, [validations]);
+  const [updateUserInput, setUpdateUserInput] = useState<Partial<UpdateUserInput>>();
+  const [validations, setValidations] = useState<Validations>(defaultValidations);
+
+  const validationTriggered = () => !Object.values(validations).every((v) => !!v);
+
+  useEffect(() => {
+    // Reset errors when typing
+    if (validationTriggered()) {
+      setValidations(defaultValidations);
+    }
+  }, [updateUserInput]);
 
   const onInputChange = (key: string, event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-    setUpdateUserInput({ ...updateUserInput, [key]: event.target.value });
-    setValidations(validateInput(updateUserInput));
-    onChange(key, event);
+    setUpdateUserInput({
+      ...updateUserInput,
+      [key]: key === "year" ? parseInt(event.target.value) : event.target.value,
+    });
   };
 
   const handleSubmit = () => {
+    updateUserInput && setValidations(validateInput(updateUserInput));
     updateUser({
-      variables: { updateUserInput },
+      variables: updateUserInput,
       update: (cache, { data }) => {
         if (!data || !data.updateUser || !data.updateUser.user) {
           return;
         }
         cache.writeQuery<User>({ query: GET_USER, data: data.updateUser.user });
+        onSubmit(true);
       },
     });
   };
 
   return (
-    <Dialog open={open} aria-labelledby="form-dialog-title">
+    <Dialog open={open} aria-labelledby="form-dialog-title" fullWidth>
       <DialogTitle id="form-dialog-title">Første innlogging</DialogTitle>
       <DialogContent>
-        <DialogContentText>
-          <Typography variant="body1">
-            Det ser ut som at dette er første gang du logger inn på nettsiden. Dersom du ønsker kan du fylle ut
-            informasjon under for å forbedre brukeropplevelsen.
-          </Typography>
-          <Typography variant="body2">
-            Dersom du ikke oppgir en foretrukket e-post vil stud-mailen din brukes dersom det blir nødvendig å kontakte
-            deg via e-post.
-          </Typography>
-          <Typography variant="body2">
-            Telefonnummer vil kun benyttes til eventuell smittesporing ved påmelding på arrangementer.{" "}
-            <strong>
-              Dersom du ikke oppgir et telefonnummer innen du ønsker å melde deg på et arrangement vil det per nå ikke
-              være mulig å melde seg på da dette er påkrevd av arrangører.{" "}
-            </strong>
-          </Typography>
-          <Typography variant="body2">
-            Dersom du oppgir eventuelle allergier vil dette kun brukes under til kartlegging av matprefereanser ved
-            eventuell påmelding på arrangementer.
-          </Typography>
-          <Typography variant="body2">
-            Merk: Du kan til enhver tid oppdatere eller slette informasjon som er lagret om deg på profilen din.
-          </Typography>
+        <DialogContentText variant="h6">
+          Det ser ut som at dette er første gang du logger inn på nettsiden. Dersom du ønsker kan du fylle ut
+          informasjon under for å forbedre brukeropplevelsen.
+        </DialogContentText>
+        <DialogContentText variant="body2">
+          Dersom du ikke oppgir en foretrukket e-post vil stud-mailen din brukes dersom det blir nødvendig å kontakte
+          deg via e-post.
+        </DialogContentText>
+        <DialogContentText variant="body2">
+          Telefonnummer vil kun benyttes til eventuell smittesporing ved påmelding på arrangementer.{" "}
+          <strong>
+            Dersom du ikke oppgir et telefonnummer innen du ønsker å melde deg på et arrangement vil det per nå ikke
+            være mulig å melde seg på da dette er påkrevd av arrangører.{" "}
+          </strong>
+        </DialogContentText>
+        <DialogContentText variant="body2">
+          Dersom du oppgir eventuelle allergier vil dette kun brukes under til kartlegging av matprefereanser ved
+          eventuell påmelding på arrangementer.
+        </DialogContentText>
+        <DialogContentText variant="body2">
+          Merk: Du kan til enhver tid oppdatere eller slette informasjon som er lagret om deg på profilen din.
         </DialogContentText>
         <Grid container direction="column" spacing={4}>
           <Grid item>
             <InputLabel>Foretrukket e-post </InputLabel>
             <TextField
-              id="standard-basic"
-              error={!validations?.email}
+              id="email"
+              error={!validations.email}
               type="email"
               name="email"
-              value={userData?.feideEmail}
+              value={updateUserInput?.email}
               onChange={(e) => onInputChange("email", e)}
+              placeholder="olaNordmann@gmail.no"
             />
           </Grid>
           <Grid item>
             <InputLabel>Telefonnummer</InputLabel>
             <TextField
-              id="standard-basic"
-              error={!validations?.phone}
+              id="phoneNumber"
+              error={!validations.phoneNumber}
               type="tel"
-              name="phone"
-              value={userData?.phoneNumber}
+              name="phoneNumber"
+              value={updateUserInput?.phoneNumber}
               onChange={(e) => onInputChange("phoneNumber", e)}
+              placeholder="99887766"
             />
           </Grid>
           <Grid item>
             <InputLabel>Matpreferanser eller allergier</InputLabel>
             <TextField
-              id="standard-basic"
+              id="allergies"
               type="text"
-              value={userData?.allergies}
+              name="allergies"
+              value={updateUserInput?.allergies}
               onChange={(e) => onInputChange("allergies", e)}
+              multiline
+              placeholder="Vegetar og glutenallergi"
             />
           </Grid>
           <Grid item>
             <InputLabel>Årstrinn</InputLabel>
             <TextField
-              id="standard-basic"
-              error={!validations?.year}
+              id="year"
+              error={!validations.year}
               type="number"
-              value={userData?.year}
+              name="year"
+              value={updateUserInput?.year}
               onChange={(e) => onInputChange("year", e)}
             />
           </Grid>
         </Grid>
+        {error && validationTriggered() && <Typography color="error">{error.message}</Typography>}
       </DialogContent>
       <DialogActions>
-        <Button type="submit" color="primary">
+        <Button color="primary" onClick={() => onSubmit(false)} startIcon={<Close />}>
           Jeg ønsker ikke å fylle ut noe informasjon nå
         </Button>
-        <Button onClick={() => handleSubmit()} color="primary">
+        <Button onClick={() => handleSubmit()} color="primary" startIcon={<Check />}>
           Send
         </Button>
       </DialogActions>

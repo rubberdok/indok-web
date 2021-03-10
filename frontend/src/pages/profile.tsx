@@ -1,20 +1,36 @@
-import { useMutation, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import Layout from "@components/Layout";
 import { FirstLogin } from "@components/pages/profile/FirstLogin";
-import { UPDATE_USER } from "@graphql/auth/mutations";
 import { GET_USER } from "@graphql/auth/queries";
 import { User } from "@interfaces/users";
-import { Container, Typography } from "@material-ui/core";
+import {
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  Container,
+  createStyles,
+  makeStyles,
+  Typography,
+} from "@material-ui/core";
+import EditIcon from "@material-ui/icons/Edit";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 
-const ProfilePage: NextPage = () => {
-  const { loading, error, data } = useQuery<{ user: User }>(GET_USER);
+const useStyles = makeStyles(() =>
+  createStyles({
+    card: { width: "fit-content" },
+  })
+);
 
-  const router = useRouter();
+const ProfilePage: NextPage = () => {
+  const { loading, error, data, refetch: refetchUser } = useQuery<{ user: User }>(GET_USER);
+
   const [dialogOpen, setDialogOpen] = useState(false);
   const [userData, setUserData] = useState<Partial<User>>();
+  const classes = useStyles();
+  const router = useRouter();
 
   useEffect(() => {
     if (data?.user) {
@@ -38,32 +54,54 @@ const ProfilePage: NextPage = () => {
     }
   }
 
-  const onChange = (key: string, e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-    setUserData({ ...userData, [key]: e.target.value });
+  const onFirstLoginSubmit = (refetch: boolean) => {
+    setDialogOpen(false);
+    refetch && refetchUser();
   };
 
   return (
     <Layout>
       <Container>
         <Typography variant="h1">Brukerprofil</Typography>
-        {userData ? (
-          <>
-            <FirstLogin open={dialogOpen} onChange={onChange} />
-            <Typography variant="h3">{userData.firstName}</Typography>
-            <Typography variant="body1">
-              <strong>Brukernavn:</strong> {userData.username} <br />
-              <strong>E-post:</strong> {userData.email} <br />
-              <strong>Klassetrinn:</strong> {userData.year} <br />
-            </Typography>
-            {userData.dateJoined && (
-              <Typography variant="body2">
-                Medlem siden {new Date(userData.dateJoined).toLocaleString()} <br />
-              </Typography>
-            )}
-          </>
-        ) : (
-          <> Du er ikke logget inn! Vennligst logg inn med Feide. </>
-        )}
+        <Card variant="outlined" className={classes.card}>
+          {userData ? (
+            <>
+              <FirstLogin open={dialogOpen} onSubmit={onFirstLoginSubmit} />
+              <CardContent>
+                <Typography variant="h3">{userData.firstName}</Typography>
+                <Typography variant="body1">
+                  <strong>Brukernavn:</strong> {userData.username}
+                </Typography>
+                <Typography variant="body1">
+                  <strong>E-post:</strong> {userData.email || userData.feideEmail}
+                </Typography>
+                {userData.phoneNumber && (
+                  <Typography variant="body1">
+                    <strong>Mobilnummer:</strong> {userData.phoneNumber}
+                  </Typography>
+                )}
+                <Typography variant="body1">
+                  <strong>Klassetrinn:</strong> {userData.year}
+                </Typography>
+                {userData.allergies && (
+                  <Typography variant="body1">
+                    <strong>Allergier/matpreferanser:</strong> {userData.allergies}
+                  </Typography>
+                )}
+                {userData.dateJoined && (
+                  <Typography variant="body2">
+                    Medlem siden {new Date(userData.dateJoined).toLocaleString()} <br />
+                  </Typography>
+                )}
+              </CardContent>
+              <CardActions>
+                <Button startIcon={<EditIcon />}>Rediger bruker</Button>
+              </CardActions>
+            </>
+          ) : (
+            <> Du er ikke logget inn! Vennligst logg inn med Feide. </>
+          )}
+        </Card>
       </Container>
     </Layout>
   );

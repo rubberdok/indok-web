@@ -193,6 +193,7 @@ class DataportenAuth:
             print(f"\nUser {username} exists, updating in the database")
             user.id_token = id_token
             user.save()
+            enrolled = True
 
         except UserModel.DoesNotExist:
             # Check if user is member of MTIØT group (studies indøk)

@@ -44,11 +44,11 @@ export const UPDATE_USER = gql`
     $email: String
     $firstName: String
     $lastName: String
-    $year: Number
+    $year: Int
     $phoneNumber: String
     $allergies: String
   ) {
-    UpdateUser(
+    updateUser(
       email: $email
       firstName: $firstName
       lastName: $lastName
