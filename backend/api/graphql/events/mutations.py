@@ -2,8 +2,8 @@ from datetime import datetime
 
 import graphene
 from apps.events import models
-from apps.users.models import User
 from django.contrib import auth
+from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from django.utils.text import slugify
 from graphene_django import DjangoObjectType
@@ -90,7 +90,7 @@ class EventSignUp(graphene.Mutation):
 
     def mutate(self, info, event_id, user_id):
         event = models.Event.objects.get(pk=event_id)
-        user = User.objects.get(pk=user_id)
+        user = get_user_model().objects.get(pk=user_id)
 
         event.signed_up_users.add(user)
         event.save()
@@ -108,7 +108,7 @@ class EventSignOff(graphene.Mutation):
 
     def mutate(self, info, event_id, user_id):
         event = models.Event.objects.get(pk=event_id)
-        user = User.objects.get(pk=user_id)
+        user = get_user_model().objects.get(pk=user_id)
 
         event.signed_up_users.remove(user)
         event.save()

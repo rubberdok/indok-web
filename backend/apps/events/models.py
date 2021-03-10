@@ -1,8 +1,7 @@
-# from django.contrib.auth import get_user_model
 from django.db.models.fields.related import ManyToManyField
 from apps.organizations.models import Organization
 from django.db import models
-from django.contrib.auth import get_user_model
+from django.conf import settings
 
 
 # Create your models here.
@@ -23,7 +22,7 @@ class Event(models.Model):
     description = models.TextField()
     start_time = models.DateTimeField()
     is_attendable = models.BooleanField()
-    publisher = models.ForeignKey(get_user_model(), on_delete=models.DO_NOTHING)
+    publisher = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING)
 
     # Optional fields
     end_time = models.DateTimeField(blank=True, null=True)
@@ -48,7 +47,7 @@ class Event(models.Model):
     )
 
     signed_up_users = models.ManyToManyField(
-        "users.User",
+        settings.AUTH_USER_MODEL,
         related_name="events",
         blank=True,
     )

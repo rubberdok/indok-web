@@ -1,8 +1,8 @@
+from datetime import date
+
 from apps.events.models import Category, Event
-from apps.users.models import User
 from apps.organizations.models import Organization
 from django.db.models import Q
-from datetime import date
 
 
 class EventResolvers:
@@ -61,16 +61,6 @@ class EventResolvers:
             except:
                 pass
         return Event.objects.filter(id__in=events).order_by("start_time")
-
-    def resolve_user_attending_relation(self, info, event_id, user_id):
-        event = Event.objects.get(pk=event_id)
-        user = User.objects.get(pk=user_id)
-        return {
-            "is_signed_up": user in event.signed_up_users.all()
-            and user not in event.users_on_waiting_list,
-            "is_on_waitinglist": user in event.users_on_waiting_list,
-            "is_full": event.is_full,
-        }
 
     def resolve_event(self, info, id):
         try:
