@@ -39,6 +39,7 @@ const useStyles = makeStyles((theme: Theme) =>
       width: "100%",
       fontSize: 10,
       padding: -10,
+      textTransform: "full-size-kana",
     },
   })
 );
@@ -92,14 +93,16 @@ const ListDocuments: React.FC<ListDocumentsProps> = ({ document_types, year, nam
                         .replace("ARBOKER", "ÅRBØKER")
                         .replace("STOTTE FRA HS", "STØTTE FRA HS")}
                       titleTypographyProps={{
-                        variant: "inherit",
-                        component: "h2",
-                        align: "left",
+                        variant: "overline",
+                        component: "h3",
+                        align: "center",
+                        gutterBottom: true,
+                        paragraph: true,
                       }}
                       subheaderTypographyProps={{
                         variant: "inherit",
                         component: "h4",
-                        align: "left",
+                        align: "center",
                       }}
                     />
                   </Button>
