@@ -31,6 +31,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     margin: 0,
     fontSize: 24,
+    color: "#ffffff",
   },
   sectionDesktop: {
     display: "none",
