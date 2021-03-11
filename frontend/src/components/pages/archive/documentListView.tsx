@@ -7,7 +7,6 @@ import YearSelector from "./yearSelector";
 import ListFeaturedDocuments from "./listFeaturedDocuments";
 import SearchBarComp from "./searchBar";
 import { RemoveFilters } from "./removeFilters";
-import { typography } from "@material-ui/system";
 
 const DocumentListView: React.FC = () => {
   const [yearFilter, setYearFilter] = useState("");
@@ -89,13 +88,7 @@ const DocumentListView: React.FC = () => {
 
       {viewFeatured && (
         <ContentWrapper style={{ marginBottom: "16px" }}>
-          <ListFeaturedDocuments
-            document_types={Object.entries(typeFilters)
-              .filter((key, _) => key[1].active)
-              .map(([_, val]) => val.title)}
-            year={parseInt(yearFilter)}
-            names={searchFilter}
-          />
+          <ListFeaturedDocuments />
         </ContentWrapper>
       )}
       <ContentWrapper style={{ marginTop: "16px" }}>
