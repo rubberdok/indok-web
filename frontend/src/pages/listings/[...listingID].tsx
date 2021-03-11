@@ -2,13 +2,7 @@ import { useQuery } from "@apollo/client";
 import Layout from "@components/Layout";
 import { LISTING } from "@graphql/listings/queries";
 import { Listing } from "@interfaces/listings";
-import {
-  Button, Card,
-  CardContent,
-  CardMedia,
-  Container,
-  Grid, makeStyles, Typography
-} from "@material-ui/core";
+import { Button, Card, CardContent, CardMedia, Container, Grid, makeStyles, Typography } from "@material-ui/core";
 import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from "next";
 import dayjs from "dayjs";
 import nb from "dayjs/locale/nb";
@@ -60,8 +54,7 @@ const ListingPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProp
     variables: { ID: Number(listingID[0]) },
   });
   const classes = useStyles();
-  const [surveyDisplayed, displaySurvey] = useState<Boolean>(false)
-
+  const [surveyDisplayed, displaySurvey] = useState<boolean>(false);
 
   if (error) return <p>Error</p>;
   if (loading) return <p>Loading...</p>;
@@ -76,13 +69,13 @@ const ListingPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProp
                   <Card>
                     <CardContent>
                       <Grid container direction="column" spacing={2}>
-                        
                         <Grid item>
                           <Typography variant="h1" component="h1">
                             {data.listing.title}
                           </Typography>
-                          <Typography variant="subtitle1" component="h2" className={classes.date}> 
-                            Søknadsfrist {dayjs(data.listing.deadline).locale(nb).format("dddd D. MMMM YYYY [kl.] HH:mm")}
+                          <Typography variant="subtitle1" component="h2" className={classes.date}>
+                            Søknadsfrist{" "}
+                            {dayjs(data.listing.deadline).locale(nb).format("dddd D. MMMM YYYY [kl.] HH:mm")}
                           </Typography>
                         </Grid>
 
@@ -98,10 +91,7 @@ const ListingPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProp
                     Søk her
                   </Button>
 
-                  {data.listing.survey && surveyDisplayed &&
-                    <AnswerSurvey surveyId={data.listing.survey.id} />
-                  }
-
+                  {data.listing.survey && surveyDisplayed && <AnswerSurvey surveyId={data.listing.survey.id} />}
                 </Grid>
 
                 <Grid container item direction="column" xs={4}>

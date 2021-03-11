@@ -1,8 +1,8 @@
 import { useQuery, useMutation } from "@apollo/client";
 import { SURVEY } from "@graphql/surveys/queries";
 import { Survey, Answer } from "@interfaces/surveys";
-import QuestionAnswer from "@components/pages/surveys/questionAnswer";
-import { Typography } from "@material-ui/core";
+import AnswerQuestion from "@components/pages/surveys/answerQuestion";
+import { Typography, Grid, Button } from "@material-ui/core";
 import { useState } from "react";
 import { SUBMIT_ANSWERS } from "@graphql/surveys/mutations";
 
@@ -27,20 +27,24 @@ const AnswerSurvey: React.FC<{ surveyId: string }> = ({ surveyId }) => {
             {data.survey.descriptiveName}
           </Typography>
           {answers && (
-            <>
+            <Grid container direction="column">
               {answers.map((answer, index) => (
-                <li key={index}>
-                  <QuestionAnswer
+                <Grid item container key={index}>
+                  <AnswerQuestion
                     answer={answer}
                     setAnswer={(newAnswer: Answer) =>
                       setAnswers(
-                        answers.map((oldAnswer) => (oldAnswer.question === newAnswer.question ? newAnswer : oldAnswer))
+                        answers.map((oldAnswer) =>
+                          oldAnswer.question.id === newAnswer.question.id ? newAnswer : oldAnswer
+                        )
                       )
                     }
                   />
-                </li>
+                </Grid>
               ))}
-              <button
+              <Button
+                variant="contained"
+                color="primary"
                 onClick={(e) => {
                   e.preventDefault();
                   submitAnswers({
@@ -51,8 +55,8 @@ const AnswerSurvey: React.FC<{ surveyId: string }> = ({ surveyId }) => {
                 }}
               >
                 Søk
-              </button>
-            </>
+              </Button>
+            </Grid>
           )}
         </>
       )}
