@@ -32,3 +32,4 @@ google-api-python-client==1.12.5
 google_auth_oauthlib==0.4.1
 pillow==7.2.0
 urllib3==1.25.11
+whitenoise==5.2.0
