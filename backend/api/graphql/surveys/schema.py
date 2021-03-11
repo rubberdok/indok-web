@@ -1,12 +1,12 @@
 from .types import (
-    OfferedAnswerType,
+    OptionType,
     AnswerType,
     QuestionTypeType,
     SurveyType,
     QuestionType,
 )
 from .resolvers import (
-    OfferedAnswerResolvers,
+    OptionResolvers,
     QuestionTypeResolvers,
     SurveyResolvers,
     QuestionResolvers,
@@ -14,7 +14,7 @@ from .resolvers import (
 )
 
 from .mutations.questions import (
-    CreateQuestion, DeleteAnswersToSurvey,
+    CreateQuestion, CreateUpdateAndDeleteOptions, DeleteAnswersToSurvey,
     UpdateQuestion,
     DeleteQuestion,
     CreateQuestionType,
@@ -38,14 +38,14 @@ import graphene
 
 class SurveyQueries(
     graphene.ObjectType,
-    OfferedAnswerResolvers,
+    OptionResolvers,
     QuestionTypeResolvers,
     SurveyResolvers,
     QuestionResolvers,
     AnswerResolvers
 ):
-    offered_answer = graphene.Field(OfferedAnswerType, id=graphene.ID())
-    offered_answers = graphene.List(OfferedAnswerType, search=graphene.String())
+    option = graphene.Field(OptionType, id=graphene.ID())
+    options = graphene.List(OptionType, search=graphene.String())
 
     question_type = graphene.Field(QuestionTypeType, id=graphene.ID())
     question_types = graphene.List(QuestionTypeType, search=graphene.String())
@@ -78,3 +78,5 @@ class SurveyMutations(graphene.ObjectType):
 
     submit_answers = SubmitOrUpdateAnswers.Field()
     delete_answers = DeleteAnswersToSurvey.Field()
+
+    create_update_and_delete_options = CreateUpdateAndDeleteOptions.Field()

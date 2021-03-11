@@ -1,5 +1,5 @@
+from django.conf import settings
 from django.db import models
-from django.contrib.auth import get_user_model
 from django.db.models import UniqueConstraint
 from django.db.models.constraints import CheckConstraint
 from django.db.models.query_utils import Q
@@ -21,7 +21,6 @@ class Question(models.Model):
     survey = models.ForeignKey(Survey, on_delete=models.CASCADE, related_name="questions")
     question = models.CharField(max_length=300)
     description = models.CharField(max_length=1000, blank=True, default="")
-    offered_answers = models.ManyToManyField("OfferedAnswer")
     question_type = models.ForeignKey("QuestionType", on_delete=models.SET_NULL, null=True)
     position = models.IntegerField()
     mandatory = models.BooleanField(default=True)
@@ -35,14 +34,15 @@ class Question(models.Model):
             UniqueConstraint(fields=["position", "survey"], name="unique question position per survey")
         ]
 
-class OfferedAnswer(models.Model):
+class Option(models.Model):
     answer = models.CharField(max_length=500)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name="options")
 
     def __str__(self) -> str:
         return f"{self.answer}"
 
 class Answer(models.Model):
-    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="answers")
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="answers")
     question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name="answers")
     answer = models.CharField(max_length=10000)
 

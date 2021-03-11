@@ -1,11 +1,11 @@
 import graphene
-from apps.surveys.models import Answer, Question
+from apps.surveys.models import Answer, Question, Option
 from apps.surveys.models import QuestionType as QuestionTypeModel
 from apps.surveys.models import Survey
 from django.db.models import Q
 from graphql_jwt.decorators import login_required
 
-from ..types import AnswerType, QuestionType, QuestionTypeType
+from ..types import AnswerType, OptionType, QuestionType, QuestionTypeType
 
 
 class QuestionInput(graphene.InputObjectType):
@@ -241,4 +241,52 @@ class DeleteAnswersToSurvey(graphene.Mutation):
         return DeleteAnswersToSurvey(ok = True)
 
 
+class OptionInput(graphene.InputObjectType):
+    answer = graphene.String(required=True)
+    id = graphene.ID()
+    question_id = graphene.ID(required=True)
+
+class CreateUpdateAndDeleteOptions(graphene.Mutation):
+    ok = graphene.Boolean()
+    options = graphene.List(OptionType)
+
+    class Arguments:
+        option_data = graphene.List(OptionInput)
+
+    def mutate(self, info, option_data):
+        question_id = None
+        for data in option_data:
+            if not question_id:
+                question_id = data["question_id"]
+            elif data["question_id"] != question_id:
+                raise ValueError("Cannot submit options to multiple questions simultaneously.")
+                
+
+        existing_options = Option.objects.filter(question__pk=option_data[0]["question_id"])
+        submitted_ids = [option.get("id", -1) for option in option_data]
+
+        existing_options.filter(~Q(pk__in=submitted_ids)).delete()
+        existing_options = existing_options.filter(Q(pk__in=submitted_ids))
+
+        new_options = []
+        updated_options = []
+        for data in option_data:
+            if "id" in data:
+                updated_option = existing_options.get(pk=data["id"])
+                updated_option.answer = data["answer"]
+                updated_options.append(updated_option)
+            else:
+                new_options.append(Option(answer=data["answer"], question_id=data["question_id"]))
+
+        Option.objects.bulk_update(updated_options, fields=["answer"])
+        Option.objects.bulk_create(new_options)
+
+        return CreateUpdateAndDeleteOptions(options=[updated_option for updated_option in updated_options] + new_options, ok=True)
+
+
+
         
+        
+
+
+

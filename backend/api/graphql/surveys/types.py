@@ -1,6 +1,6 @@
 import graphene
 from api.graphql.users.types import UserType
-from apps.surveys.models import Answer, OfferedAnswer, Question
+from apps.surveys.models import Answer, Option, Question
 from apps.surveys.models import QuestionType as QuestionTypeModel
 from apps.surveys.models import Survey
 from django.contrib.auth import get_user_model
@@ -9,9 +9,9 @@ from graphene_django import DjangoObjectType
 from graphql_jwt.decorators import login_required
 
 
-class OfferedAnswerType(DjangoObjectType):
+class OptionType(DjangoObjectType):
     class Meta:
-        model = OfferedAnswer
+        model = Option
 
 
 class AnswerType(DjangoObjectType):
@@ -23,7 +23,7 @@ class QuestionTypeType(DjangoObjectType):
         model = QuestionTypeModel
 
 class QuestionType(DjangoObjectType):
-    offered_answers = graphene.List(OfferedAnswerType)
+    options = graphene.List(OptionType)
     answers = graphene.List(AnswerType, user_id=graphene.ID())
     answer = graphene.Field(AnswerType, user_id=graphene.ID(required=True))
 
@@ -39,8 +39,8 @@ class QuestionType(DjangoObjectType):
         ]
 
     @staticmethod
-    def resolve_offered_answers(root: Question, info):
-        return root.offered_answers.all()
+    def resolve_options(root: Question, info):
+        return root.options.all()
 
     @staticmethod
     @login_required

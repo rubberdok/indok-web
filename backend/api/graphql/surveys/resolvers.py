@@ -1,6 +1,6 @@
 from apps.surveys.models import (
     QuestionType,
-    OfferedAnswer,
+    Option,
     Survey,
     Question,
     Answer,
@@ -20,17 +20,17 @@ class QuestionTypeResolvers:
             return QuestionType.objects.all()
         return QuestionType.objects.all()
 
-class OfferedAnswerResolvers:
+class OptionResolvers:
     def resolve_offered_answer(self, info, id: int):
-        return OfferedAnswer.objects.get(pk=id)
+        return Option.objects.get(pk=id)
 
     def resolve_offered_answers(self, info, search: Optional[str]=None):
         """
         TODO: Search implementation
         """
         if search:
-            return OfferedAnswer.objects.all()
-        return OfferedAnswer.objects.all()
+            return Option.objects.all()
+        return Option.objects.all()
 
 class SurveyResolvers:
     def resolve_survey(self, info, survey_id: int):
