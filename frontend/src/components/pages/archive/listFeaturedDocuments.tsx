@@ -66,7 +66,9 @@ const ListFeaturedDocuments: React.FC = () => {
 
   return (
     <Container>
-      <Typography variant="body1">Fremhevede dokumenter</Typography>
+      <Typography variant="body1" style={{ marginBottom: "8px" }}>
+        Fremhevede dokumenter
+      </Typography>
       <GridList cellHeight={144} className={classes.img} cols={4} spacing={8}>
         {data.featuredArchive.length ? (
           data.featuredArchive.map((doc: Document) => (

@@ -28,7 +28,6 @@ const useStyles = makeStyles((theme: Theme) =>
       alignItems: "start",
     },
     img: {
-      marginLeft: "80px",
       maxWidth: "100%",
       maxHeight: "100%",
     },
@@ -64,7 +63,9 @@ const ListDocuments: React.FC<ListDocumentsProps> = ({ document_types, year, nam
 
   return (
     <Container>
-      <Typography variant="body1">Alle dokumenter</Typography>
+      <Typography variant="body1" style={{ marginBottom: "8px" }}>
+        Alle dokumenter
+      </Typography>
       <GridList cellHeight={144} className={classes.img} cols={4} spacing={8}>
         {data.archiveByTypes.length ? (
           data.archiveByTypes.map((doc: Document) => (
@@ -86,23 +87,30 @@ const ListDocuments: React.FC<ListDocumentsProps> = ({ document_types, year, nam
                   />
                   <CardHeader
                     className={classes.header}
-                    title={doc.title}
-                    subheader={doc.typeDoc
-                      .replace(/_/g, " ")
-                      .replace("ARBOKER", "ÅRBØKER")
-                      .replace("STOTTE FRA HS", "STØTTE FRA HS")}
-                    titleTypographyProps={{
-                      variant: "overline",
-                      component: "h3",
-                      align: "center",
-                      gutterBottom: true,
-                      paragraph: true,
-                    }}
-                    subheaderTypographyProps={{
-                      variant: "inherit",
-                      component: "h4",
-                      align: "center",
-                    }}
+                    disableTypography
+                    title={
+                      <Typography
+                        component="h2"
+                        variant="inherit"
+                        gutterBottom
+                        paragraph
+                        style={{ fontSize: "5", fontWeight: "lighter", textAlign: "center" }}
+                      >
+                        {doc.title}
+                      </Typography>
+                    }
+                    subheader={
+                      <Typography
+                        component="h4"
+                        variant="inherit"
+                        style={{ fontWeight: "lighter", textAlign: "center" }}
+                      >
+                        {doc.typeDoc
+                          .replace(/_/g, " ")
+                          .replace("ARBOKER", "ÅRBØKER")
+                          .replace("STOTTE FRA HS", "STØTTE FRA HS")}
+                      </Typography>
+                    }
                   />
                 </Button>
               </Card>
