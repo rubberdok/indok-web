@@ -1,6 +1,5 @@
 import { useQuery } from "@apollo/client";
 import Layout from "@components/Layout";
-import { GET_EVENTS } from "@graphql/events/queries";
 import { Event } from "@interfaces/events";
 import {
   Grid,
@@ -9,62 +8,108 @@ import {
   Card,
   CardContent,
   CardHeader,
-  List,
-  ListItem,
-  CircularProgress,
   Divider,
+  Table,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TableCell,
+  makeStyles,
+  Chip,
+  TableBody,
 } from "@material-ui/core";
-import dayjs from "dayjs";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { GET_ORGANIZATION } from "@graphql/orgs/queries";
+import { Organization } from "@interfaces/organizations";
+import dayjs from "dayjs";
+interface HeaderValuePair<T> {
+  header: string;
+  field: keyof T;
+}
+
+const eventFields: HeaderValuePair<Event>[] = [
+  { header: "Navn", field: "title" },
+  { header: "Antall Plasser", field: "availableSlots" },
+];
+
+const useStyles = makeStyles(() => ({
+  hover: {
+    "&:hover": {
+      cursor: "pointer",
+    },
+  },
+}));
 
 const OrganizationDetailPage: NextPage = () => {
   const router = useRouter();
   const { orgId } = router.query;
-  const numberId = typeof orgId === "string" && parseInt(orgId);
+  const orgNumberId = typeof orgId === "string" ? parseInt(orgId) : -1;
 
-  const { loading, data } = useQuery(GET_EVENTS, {
-    variables: {},
+  const classes = useStyles();
+
+  const { loading, data } = useQuery<{ organization: Organization }, { orgId: number }>(GET_ORGANIZATION, {
+    variables: { orgId: orgNumberId },
   });
 
   return (
     <Layout>
       <Box m={10}>
-        <Grid container direction="column">
-          <Grid item>
-            <Typography variant="h1" align="center">
-              Adminside for Organisasjon {numberId}
-            </Typography>
-          </Grid>
-          <Grid item container>
+        {!loading && data?.organization?.events ? (
+          <Grid container direction="column" spacing={10}>
             <Grid item>
-              <Card variant="outlined">
-                <CardHeader title="Arragementer" />
-                <Divider variant="middle" />
-                <CardContent>
-                  {!loading ? (
-                    <List>
-                      {data.allEvents.map((event: Event) => (
-                        <Link href={`${numberId}/events/${event.id}`} passHref key={event.id}>
-                          <ListItem button>{`${dayjs(event.startTime).format("DD-MM-YY")}: ${event.title}`}</ListItem>
-                        </Link>
-                      ))}
-                    </List>
-                  ) : (
-                    <CircularProgress />
-                  )}
-                </CardContent>
-              </Card>
+              <Typography variant="h1" align="center">
+                {data.organization.name}
+              </Typography>
+            </Grid>
+            <Grid item container>
+              <Grid item xs>
+                <Card variant="outlined">
+                  <CardHeader title="Arragementer" />
+                  <Divider variant="middle" />
+                  <CardContent>
+                    <TableContainer>
+                      <Table>
+                        <TableHead>
+                          <TableRow>
+                            <TableCell>Dato</TableCell>
+                            {eventFields.map((field: HeaderValuePair<Event>) => (
+                              <TableCell key={`header-${field.header}`}>{field.header}</TableCell>
+                            ))}
+                            <TableCell>Antall påmeldte</TableCell>
+                            <TableCell>Status</TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {data.organization.events.map((event: Event) => (
+                            <Link href={`${orgNumberId}/events/${event.id}`} passHref key={event.id}>
+                              <TableRow className={classes.hover} hover>
+                                <TableCell>{dayjs(event.startTime).format("HH:mm DD-MM-YYYY")}</TableCell>
+                                {eventFields.map((field: HeaderValuePair<Event>) => (
+                                  <TableCell key={`event-${event.id}-cell-${field.field}`}>
+                                    {event[field.field]}
+                                  </TableCell>
+                                ))}
+                                <TableCell>{event.signedUpUsers?.length}</TableCell>
+                                <TableCell>
+                                  <Chip
+                                    label={event.isFull ? "Fullt" : "Ledige Plasser"}
+                                    color={event.isFull ? "default" : "secondary"}
+                                  />
+                                </TableCell>
+                              </TableRow>
+                            </Link>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  </CardContent>
+                </Card>
+              </Grid>
             </Grid>
           </Grid>
-          <Typography variant="body1">
-            Dette er adminsiden til en gitt organisasjon. Her skal man kunne se en oversikt over for eksempel alle
-            nåværende åpne arrangementer (tenk et kort per arrangement med oppsumert info som antall påmeldte). Andre
-            ting som er nyttig her vil være liste over åpne vervstillinger, administrere medlemmer, kanskje
-            organisasjonsspesifikk info elns.
-          </Typography>
-        </Grid>
+        ) : null}
       </Box>
     </Layout>
   );

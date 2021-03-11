@@ -13,10 +13,12 @@ export interface Event {
   isAttendable: boolean;
   deadline?: string;
   publisher: User;
+  isFull?: boolean;
   availableSlots?: number;
   shortDescription?: string;
   signupOpenDate?: string;
   signedUpUsers?: User[];
+  usersOnWaitingList?: User[];
 }
 
 export interface Category {

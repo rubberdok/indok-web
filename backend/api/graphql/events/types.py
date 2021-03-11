@@ -1,30 +1,15 @@
+from api.graphql.users.types import UserType
 from apps.events.models import Category, Event
 from graphene_django import DjangoObjectType
 import graphene
 
 
 class EventType(DjangoObjectType):
+    users_on_waiting_list = graphene.List(UserType, source="users_on_waiting_list")
+    is_full = graphene.Boolean(source="is_full")
+
     class Meta:
         model = Event
-        fields = [
-            "id",
-            "title",
-            "start_time",
-            "end_time",
-            "location",
-            "description",
-            "organization",
-            "category",
-            "image",
-            "is_attendable",
-            "deadline",
-            "publisher",
-            "available_slots",
-            "price",
-            "signup_open_date",
-            "short_description",
-            "signed_up_users",
-        ]
 
 
 class CategoryType(DjangoObjectType):

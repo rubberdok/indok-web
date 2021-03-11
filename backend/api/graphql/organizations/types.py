@@ -9,8 +9,7 @@ class OrganizationType(DjangoObjectType):
 
     class Meta:
         model = Organization
-        fields = ["id", "name", "slug", "color", "description", "parent", "children"]
-    
+
     @staticmethod
     def resolve_absolute_slug(organization: Organization, info):
         slug_list = [organization.slug]
