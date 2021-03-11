@@ -44,7 +44,9 @@ const AnswerSurvey: React.FC<{ surveyId: string }> = ({ surveyId }) => {
                 onClick={(e) => {
                   e.preventDefault();
                   submitAnswers({
-                    variables: answers.map((answer) => ({ questionId: answer.question.id, answer: answer.answer })),
+                    variables: {
+                      answersData: answers.map((answer) => ({ questionId: answer.question.id, answer: answer.answer })),
+                    },
                   });
                 }}
               >
