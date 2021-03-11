@@ -1,3 +1,5 @@
+import { Organization } from "./organizations";
+
 export interface User {
   id: string;
   username: string;
@@ -13,4 +15,5 @@ export interface User {
   year: number;
   phone: string;
   events?: { id: string }[];
+  organizations?: Organization[];
 }

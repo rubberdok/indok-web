@@ -18,6 +18,10 @@ export const GET_USER = gql`
       events {
         id
       }
+      organizations {
+        id
+        name
+      }
     }
   }
 `;
