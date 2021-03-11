@@ -2,7 +2,7 @@ import { useQuery, useMutation } from "@apollo/client";
 import { SURVEY } from "@graphql/surveys/queries";
 import { Survey, Answer } from "@interfaces/surveys";
 import AnswerQuestion from "@components/pages/surveys/answerQuestion";
-import { Typography, Grid, Button } from "@material-ui/core";
+import { Typography, Grid, Button, Card, CardContent } from "@material-ui/core";
 import { useState } from "react";
 import { SUBMIT_ANSWERS } from "@graphql/surveys/mutations";
 
@@ -22,14 +22,16 @@ const AnswerSurvey: React.FC<{ surveyId: string }> = ({ surveyId }) => {
   return (
     <>
       {data && (
-        <>
-          <Typography variant="h1" component="h1">
-            {data.survey.descriptiveName}
-          </Typography>
+        <Card>
+          <CardContent>
+            <Typography variant="h1" component="h1">
+              {data.survey.descriptiveName}
+            </Typography>
+          </CardContent>
           {answers && (
             <Grid container direction="column">
               {answers.map((answer, index) => (
-                <Grid item container key={index}>
+                <CardContent key={index}>
                   <AnswerQuestion
                     answer={answer}
                     setAnswer={(newAnswer: Answer) =>
@@ -40,7 +42,7 @@ const AnswerSurvey: React.FC<{ surveyId: string }> = ({ surveyId }) => {
                       )
                     }
                   />
-                </Grid>
+                </CardContent>
               ))}
               <Button
                 variant="contained"
@@ -49,7 +51,10 @@ const AnswerSurvey: React.FC<{ surveyId: string }> = ({ surveyId }) => {
                   e.preventDefault();
                   submitAnswers({
                     variables: {
-                      answersData: answers.map((answer) => ({ questionId: answer.question.id, answer: answer.answer })),
+                      answersData: answers.map((answer) => ({
+                        questionId: answer.question.id,
+                        answer: answer.answer,
+                      })),
                     },
                   });
                 }}
@@ -58,7 +63,7 @@ const AnswerSurvey: React.FC<{ surveyId: string }> = ({ surveyId }) => {
               </Button>
             </Grid>
           )}
-        </>
+        </Card>
       )}
     </>
   );
