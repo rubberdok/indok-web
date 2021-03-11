@@ -103,7 +103,6 @@ const EditQuestion: React.FC<{
                       oldAnswer === offeredAnswer ? { ...oldAnswer, answer: e.target.value } : oldAnswer
                     ),
                   });
-                  console.log(question.offeredAnswers);
                 }}
               />
             </Grid>

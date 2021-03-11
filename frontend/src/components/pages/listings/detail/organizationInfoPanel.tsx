@@ -1,13 +1,5 @@
 import { Organization } from "@interfaces/listings";
-import {
-  Hidden,
-  Grid,
-  Card,
-  CardMedia,
-  CardContent,
-  Typography,
-  makeStyles
-} from "@material-ui/core";
+import { Hidden, Grid, Card, CardMedia, CardContent, Typography, makeStyles } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   organization: {
@@ -25,46 +17,40 @@ const useStyles = makeStyles((theme) => ({
     maxHeight: 150,
     width: "1",
     objectFit: "contain",
-    padding: 8
+    padding: 8,
   },
 }));
 
-
 interface OrganizationInfoPanelProps {
-  organization: Organization
+  organization: Organization;
 }
 
 const OrganizationInfoPanel: React.FC<OrganizationInfoPanelProps> = ({ organization }) => {
   const classes = useStyles();
   return (
-      <Card>
-        <CardMedia
-          component="img"
-          className={classes.media}
-          image={
-            organization?.color ||
-            "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg"
-          }
-          title="organization logo"
-        />
+    <Card>
+      <CardMedia
+        component="img"
+        className={classes.media}
+        image={organization?.color || "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg"}
+        title="organization logo"
+      />
 
-        <CardContent>
-          <Grid container className={classes.organizationContent} spacing={2}>
-            <Grid item>
-              <Typography variant="h3" component="h3">
-                {organization.name || "Ingen organisasjon"}
-              </Typography>
-            </Grid>
-
-            <Grid item>
-              <Typography variant="body1">
-                {organization.description || "Ingen organisasjon"}
-              </Typography>
-            </Grid>
+      <CardContent>
+        <Grid container className={classes.organizationContent} spacing={2}>
+          <Grid item>
+            <Typography variant="h3" component="h3">
+              {organization.name || "Ingen organisasjon"}
+            </Typography>
           </Grid>
-        </CardContent>
-      </Card>
-  )
+
+          <Grid item>
+            <Typography variant="body1">{organization.description || "Ingen organisasjon"}</Typography>
+          </Grid>
+        </Grid>
+      </CardContent>
+    </Card>
+  );
 };
 
-export default OrganizationInfoPanel
+export default OrganizationInfoPanel;

@@ -44,6 +44,7 @@ export const SURVEYS = gql`
 export const SURVEY_ANSWERS = gql`
   query survey($surveyId: ID!, $userId: ID!) {
     survey(surveyId: $surveyId) {
+      descriptiveName
       questions {
         id
         question

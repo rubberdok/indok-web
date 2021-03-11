@@ -1,8 +1,8 @@
 import { useQuery, useMutation } from "@apollo/client";
 import { SURVEY } from "@graphql/surveys/queries";
 import { Survey, Answer } from "@interfaces/surveys";
-import QuestionAnswer from "@components/pages/surveys/questionAnswer";
-import { Typography } from "@material-ui/core";
+import AnswerQuestion from "@components/pages/surveys/answerQuestion";
+import { Typography, Grid, Button, Card, CardContent } from "@material-ui/core";
 import { useState } from "react";
 import { SUBMIT_ANSWERS } from "@graphql/surveys/mutations";
 
@@ -22,39 +22,48 @@ const AnswerSurvey: React.FC<{ surveyId: string }> = ({ surveyId }) => {
   return (
     <>
       {data && (
-        <>
-          <Typography variant="h1" component="h1">
-            {data.survey.descriptiveName}
-          </Typography>
+        <Card>
+          <CardContent>
+            <Typography variant="h1" component="h1">
+              {data.survey.descriptiveName}
+            </Typography>
+          </CardContent>
           {answers && (
-            <>
+            <Grid container direction="column">
               {answers.map((answer, index) => (
-                <li key={index}>
-                  <QuestionAnswer
+                <CardContent key={index}>
+                  <AnswerQuestion
                     answer={answer}
                     setAnswer={(newAnswer: Answer) =>
                       setAnswers(
-                        answers.map((oldAnswer) => (oldAnswer.question === newAnswer.question ? newAnswer : oldAnswer))
+                        answers.map((oldAnswer) =>
+                          oldAnswer.question.id === newAnswer.question.id ? newAnswer : oldAnswer
+                        )
                       )
                     }
                   />
-                </li>
+                </CardContent>
               ))}
-              <button
+              <Button
+                variant="contained"
+                color="primary"
                 onClick={(e) => {
                   e.preventDefault();
                   submitAnswers({
                     variables: {
-                      answersData: answers.map((answer) => ({ questionId: answer.question.id, answer: answer.answer })),
+                      answersData: answers.map((answer) => ({
+                        questionId: answer.question.id,
+                        answer: answer.answer,
+                      })),
                     },
                   });
                 }}
               >
                 Søk
-              </button>
-            </>
+              </Button>
+            </Grid>
           )}
-        </>
+        </Card>
       )}
     </>
   );

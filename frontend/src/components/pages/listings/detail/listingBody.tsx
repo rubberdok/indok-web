@@ -1,28 +1,18 @@
-import { Listing } from "@interfaces/listings";
-import {
-  Card,
-  CardContent,
-  Grid,
-  Typography,
-  Hidden,
-} from "@material-ui/core"
+import { Listing } from "@interfaces/listings";
+import { Card, CardContent, Grid, Typography, Hidden } from "@material-ui/core";
 
 import dayjs from "dayjs";
 import nb from "dayjs/locale/nb";
 
-
 interface ListingBodyProps {
-  listing: Listing
+  listing: Listing;
 }
 
-
-
-const ListingBody: React.FC<ListingBodyProps> = ({ listing }) => { 
+const ListingBody: React.FC<ListingBodyProps> = ({ listing }) => {
   return (
     <Card>
       <CardContent>
         <Grid container direction="column" spacing={2}>
-          
           <Grid item>
             <Hidden smDown>
               <Typography variant="h1" component="h1">
@@ -30,11 +20,11 @@ const ListingBody: React.FC<ListingBodyProps> = ({ listing }) => {
               </Typography>
             </Hidden>
             <Hidden mdUp>
-            <Typography variant="h3" component="h1">
+              <Typography variant="h3" component="h1">
                 {listing.title}
               </Typography>
             </Hidden>
-            <Typography variant="caption" component="h2"> 
+            <Typography variant="caption" component="h2">
               Søknadsfrist {dayjs(listing.deadline).locale(nb).format("dddd D. MMMM YYYY [kl.] HH:mm")}
             </Typography>
           </Grid>
@@ -47,7 +37,7 @@ const ListingBody: React.FC<ListingBodyProps> = ({ listing }) => {
         </Grid>
       </CardContent>
     </Card>
-  )
+  );
 };
 
 export default ListingBody;
