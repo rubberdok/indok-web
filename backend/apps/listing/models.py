@@ -1,6 +1,6 @@
 from django.db import models
 from django.db.models import UniqueConstraint
-from django.contrib.auth import get_user_model
+from django.conf import settings
 import uuid
 
 from apps.organizations.models import Organization
@@ -34,7 +34,7 @@ class Listing(models.Model):
 
 class Response(models.Model):
     id = models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True)
-    applicant = models.ForeignKey(get_user_model(), blank=False, null=False, on_delete=models.CASCADE, related_name="responses")
+    applicant = models.ForeignKey(settings.AUTH_USER_MODEL, blank=False, null=False, on_delete=models.CASCADE, related_name="responses")
     listing = models.ForeignKey(Listing, blank=False, null=False, on_delete=models.CASCADE, related_name="responses")
     response = models.CharField(max_length=5000)
 
