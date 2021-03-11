@@ -12,9 +12,11 @@ import {
 import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from "next";
 import dayjs from "dayjs";
 import nb from "dayjs/locale/nb";
-import SurveyAnswers from "@components/pages/surveys/surveyAdmin/surveyAnswers";
 import AnswerSurvey from "@components/pages/surveys/answerSurvey";
 import { useState } from "react";
+import OrganizationInfoPanel from "@components/pages/listings/detail/organizationInfoPanel"
+import InlineOrganizationInfoPanel from "@components/pages/listings/detail/inlineOrganizationInfoPanel";
+import ListingBody from "@components/pages/listings/detail/listingBody";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -38,21 +40,17 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(4),
   },
 
-  organization: {
-    flexDirection: "column",
-    justifyContent: "space-between",
-  },
-
-  organizationContent: {
-    flexDirection: "column",
-    padding: theme.spacing(2),
-    spacing: theme.spacing(10),
-  },
-
-  media: {
-    height: 150,
-    objectFit: "contain",
-  },
+  root: {
+    spacing: 2,
+    [theme.breakpoints.down("sm")]: {
+      flexDirection: "column",
+      justifyContent: "flex-start"
+    },
+    [theme.breakpoints.up("md")]: {
+      justifyContent: "space-between",
+      flexDirection: "row-reverse"
+    },
+  }
 }));
 
 const ListingPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ listingID }) => {
@@ -71,70 +69,32 @@ const ListingPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProp
         <Layout>
           <Container>
             <Container className={classes.container}>
-              <Grid container direction="row" justify="space-between" spacing={2}>
-                <Grid container item direction="column" xs={8}>
-                  <Card>
-                    <CardContent>
-                      <Grid container direction="column" spacing={2}>
-                        
-                        <Grid item>
-                          <Typography variant="h1" component="h1">
-                            {data.listing.title}
-                          </Typography>
-                          <Typography variant="subtitle1" component="h2" className={classes.date}> 
-                            Søknadsfrist {dayjs(data.listing.deadline).locale(nb).format("dddd D. MMMM YYYY [kl.] HH:mm")}
-                          </Typography>
-                        </Grid>
-
-                        <Grid item>
-                          <Typography variant="body1" component="body1">
-                            {data.listing.description}
-                          </Typography>
-                        </Grid>
+              <Grid container className={classes.root} spacing={2}>
+                {data.listing.organization &&
+                  <>
+                    <Hidden smDown>
+                      <Grid item md={4}>
+                        <OrganizationInfoPanel organization={data.listing.organization} />
                       </Grid>
-                    </CardContent>
-                  </Card>
+                    </Hidden>
+                    <Hidden mdUp>
+                      <Grid item sm={12}>
+                        <InlineOrganizationInfoPanel organization={data.listing.organization} />
+                      </Grid>
+                    </Hidden>
+                  </>
+                }
+                <Grid container item direction="column" sm={12} md={8}>
+                  <ListingBody listing={data.listing}/>
                   <Button variant="contained" color="primary" onClick={() => displaySurvey(!surveyDisplayed)}>
                     Søk her
                   </Button>
 
                   {data.listing.survey && surveyDisplayed &&
                     <AnswerSurvey surveyId={data.listing.survey.id} />
-                  }
-
+                  } 
                 </Grid>
                 
-                <Hidden only={["xs", "sm"]}>
-                  <Grid container item direction="column" xs={4}>
-                    <Card>
-                      <CardMedia
-                        component="img"
-                        className={classes.media}
-                        image={
-                          data.listing.organization?.color ||
-                          "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg"
-                        }
-                        title="organization logo"
-                      />
-
-                      <CardContent>
-                        <Grid container className={classes.organizationContent} spacing={2}>
-                          <Grid item>
-                            <Typography variant="h3" component="h3">
-                              {data.listing.organization?.name || "Ingen organisasjon"}
-                            </Typography>
-                          </Grid>
-
-                          <Grid item>
-                            <Typography variant="body1" component="body1">
-                              {data.listing.organization?.description || "Ingen organisasjon"}
-                            </Typography>
-                          </Grid>
-                        </Grid>
-                      </CardContent>
-                    </Card>
-                  </Grid>
-                </Hidden>
               </Grid>
             </Container>
           </Container>
