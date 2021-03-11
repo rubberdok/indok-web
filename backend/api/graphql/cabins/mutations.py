@@ -22,7 +22,16 @@ class CreateBooking(graphene.Mutation):
     booking = graphene.Field(BookingType)
 
     def mutate(
-        self, info, firstname, surname, phone, receiverEmail, bookFrom, bookTo, price, cabins
+        self,
+        info,
+        firstname,
+        surname,
+        phone,
+        receiverEmail,
+        bookFrom,
+        bookTo,
+        price,
+        cabins,
     ):
         booking = BookingModel.objects.create(
             firstname=firstname,
@@ -31,7 +40,7 @@ class CreateBooking(graphene.Mutation):
             receiverEmail=receiverEmail,
             bookFrom=bookFrom,
             bookTo=bookTo,
-            price=price
+            price=price,
         )
         booking.cabins.set(CabinModel.objects.filter(id__in=cabins))
         ok = True

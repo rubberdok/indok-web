@@ -5,3 +5,4 @@ from django.db import models
 class User(AbstractUser):
     year = models.IntegerField(null=True, blank=True)
     feide_userid = models.CharField(max_length=255, db_index=True)
+    id_token = models.CharField(max_length=1000, null=True, blank=True)

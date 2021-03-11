@@ -1,14 +1,24 @@
 import { useQuery } from "@apollo/client";
 import { GET_USER } from "@graphql/auth/queries";
-import { GET_EVENTS } from "@graphql/events/queries";
+import { GET_DEFAULT_EVENTS, GET_EVENTS } from "@graphql/events/queries";
 import { Event } from "@interfaces/events";
 import { User } from "@interfaces/users";
-import { Button, Grid, Typography } from "@material-ui/core";
+import {
+  Box,
+  Chip,
+  CircularProgress,
+  Container,
+  Grid,
+  makeStyles,
+  Paper,
+  Tab,
+  Tabs,
+  Typography,
+  useTheme,
+} from "@material-ui/core";
 import Link from "next/link";
 import React, { useState } from "react";
-import { PlusSquare } from "react-feather";
-import styled from "styled-components";
-import FilterMenu from "./filterMenu";
+import FilterMenu from "./FilterMenu/index";
 
 export interface FilterQuery {
   organization?: string;
@@ -17,76 +27,175 @@ export interface FilterQuery {
   endTime?: string;
 }
 
+const useStyles = makeStyles((theme) => ({
+  container: {
+    padding: 0,
+  },
+  tabsContainer: {
+    width: "fit-content",
+    float: "left",
+  },
+  tabs: {},
+  progessContainer: {
+    paddingLeft: "45%",
+    paddingTop: theme.spacing(6),
+  },
+  headerContainer: {
+    padding: 0,
+  },
+  createButtonContainer: {
+    width: "fit-content",
+    float: "right",
+  },
+  grid: {
+    padding: theme.spacing(3),
+    paddingTop: theme.spacing(2),
+  },
+  eventContainer: {
+    border: "solid",
+    borderWidth: "0.05em 0.05em 0.05em 1.2em",
+    borderRadius: "0.2em",
+    padding: theme.spacing(2),
+    marginBottom: theme.spacing(2),
+    backgroundColor: "#fff",
+    ["&:hover"]: {
+      cursor: "pointer",
+      backgroundColor: "#f5f5f5",
+    },
+  },
+}));
+
+const MONTHS: Record<string, string> = {
+  "01": "januar",
+  "02": "februar",
+  "03": "mars",
+  "04": "april",
+  "05": "mai",
+  "06": "juni",
+  "07": "juli",
+  "08": "august",
+  "09": "september",
+  "10": "oktober",
+  "11": "november",
+  "12": "desember",
+};
+
+const formatDate = (dateAndTime: string) => {
+  const fullDate = dateAndTime.split("T")[0];
+  const year = fullDate.split("-")[0];
+  const month = MONTHS[fullDate.split("-")[1]];
+  const date = fullDate.split("-")[2];
+  const fullTime = dateAndTime.split("T")[1];
+  const time = fullTime.slice(0, 5);
+  return `${date}.${month} ${year}, kl. ${time}`;
+};
+
 const AllEvents: React.FC = () => {
+  const classes = useStyles();
+  const theme = useTheme();
   const [filters, setFilters] = useState({});
-  const [showTableView, setShowTableView] = useState(false);
+  const [showDefaultEvents, setShowDefaultEvents] = useState(true);
+  const [showCalenderView, setShowCalenderView] = useState(false);
   const { loading: userLoading, error: userError, data: userData } = useQuery<{ user: User }>(GET_USER);
-  const { loading, error, data, refetch } = useQuery(GET_EVENTS, {
+
+  const { loading: eventsLoading, error: eventsError, data: eventsData, refetch } = useQuery(GET_EVENTS, {
     variables: filters,
   });
-  // should handle loading status
-  if (loading) return <Typography>Laster inn...</Typography>;
+  const { loading: defaultEventsLoading, error: defaultEventsError, data: defaultEventsData } = useQuery(
+    GET_DEFAULT_EVENTS
+  );
 
-  if (error) return <Typography>Kunne ikke hente arrangementer.</Typography>;
+  const error = showDefaultEvents ? defaultEventsError : eventsError;
+  const loading = showDefaultEvents ? defaultEventsLoading : eventsLoading;
+  if (error) return <Typography variant="body1">Kunne ikke hente arrangementer.</Typography>;
+  const data = showDefaultEvents ? defaultEventsData?.defaultEvents : eventsData?.allEvents;
 
   const onChange = (newFilters: FilterQuery) => {
+    if (Object.keys(newFilters).length > 0 && showDefaultEvents) setShowDefaultEvents(false);
     setFilters(newFilters);
     refetch(newFilters);
   };
 
   return (
-    <>
-      <Button
-        style={{ paddingBottom: "0px", paddingTop: "0px", margin: "0px", fontSize: "1.1em" }}
-        className={!showTableView ? "active" : ""}
-        onClick={() => setShowTableView(!showTableView)}
-      >
-        Liste
-      </Button>
-      <Button
-        style={{ paddingBottom: "0px", paddingTop: "0px", fontSize: "1.1em" }}
-        className={showTableView ? "active" : ""}
-        onClick={() => setShowTableView(!showTableView)}
-      >
-        Kalender
-      </Button>
+    <Container className={classes.container}>
+      <Container className={classes.headerContainer}>
+        <Container className={classes.tabsContainer}>
+          <Paper square>
+            <Tabs
+              value={showCalenderView ? 1 : 0}
+              onChange={() => setShowCalenderView(!showCalenderView)}
+              indicatorColor="primary"
+              textColor="primary"
+              className={classes.tabs}
+            >
+              <Tab label="Liste" />
+              <Tab label="Kalender" />
+            </Tabs>
+          </Paper>
+        </Container>
 
-      <div style={{ float: "right" }}>
+        {/* Holder knappen for å opprette arrangementer skjult til det funker
         {userData && !userLoading && userData.user && !userError && (
           // TODO: Redirect til `/events/create-event` når vi har funksjonalitet for dette.
-          <Link href="/events/create-event">
-            <StyledIconButton>
-              <PlusSquare />
-              <p style={{ margin: 0 }}>Opprett</p>
-            </StyledIconButton>
-          </Link>
-        )}
-      </div>
+          <Container className={classes.createButtonContainer}>
+            <Link href={`/events/create-event`}>
+              <Button color="primary" disableRipple>
+                <PlusSquare />
+                <Typography variant="body1">Opprett</Typography>
+              </Button>
+            </Link>
+          </Container>
+        )}  
+        */}
+      </Container>
 
-      <Grid container>
+      <Grid container className={classes.grid} spacing={3}>
         <Grid item xs={3}>
-          <FilterMenu filters={filters} onChange={onChange} />
+          <FilterMenu
+            filters={filters}
+            onFiltersChange={onChange}
+            showDefaultEvents={showDefaultEvents}
+            onShowDefaultChange={setShowDefaultEvents}
+          />
         </Grid>
         <Grid item xs>
-          {showTableView ? (
-            <p>{"Kommer snart! :)"}</p>
+          {loading ? (
+            <Container className={classes.progessContainer}>
+              <CircularProgress />
+            </Container>
+          ) : showCalenderView ? (
+            <Typography variant="body1">Kommer snart! :)</Typography>
           ) : (
             <>
-              {data.allEvents.length === 0 ? (
+              {data === undefined || data.length === 0 ? (
                 <Typography variant="body1">Ingen arrangementer passer til valgte filtre.</Typography>
               ) : (
-                data.allEvents.map((event: Event) => (
+                data.map((event: Event) => (
                   <Link href={`/events/${event.id}`} key={event.id}>
-                    <EventContainerLink style={{ color: "#000" }}>
-                      <EventContainer
-                        style={{
-                          borderColor: event.organization?.color ?? "#fff",
-                        }}
-                      >
-                        <p style={{ marginBottom: "0.2em" }}>{event.title}</p>
-                        <p style={{ marginTop: 0 }}>Starttid: {event.startTime.slice(0, 19).replace("T", " ")}</p>
-                      </EventContainer>
-                    </EventContainerLink>
+                    <Box
+                      display="flex"
+                      alignItems="center"
+                      justifyContent="space-between"
+                      className={classes.eventContainer}
+                      style={{ borderColor: event.organization?.color ?? theme.palette.primary.main }}
+                    >
+                      <Box>
+                        <Typography variant="h6">{event.title}</Typography>
+                        <Typography variant="body1">{formatDate(event.startTime)}</Typography>
+
+                        {event.shortDescription ?? "Trykk for å lese mer"}
+                      </Box>
+
+                      {userData && !userLoading && userData.user && !userError && event.isAttendable ? (
+                        event.signedUpUsers.length === event.availableSlots ? (
+                          <Chip variant="outlined" label="Fullt" />
+                        ) : userData?.user.events.some((userevent) => event.id === userevent.id) ? (
+                          <Chip color="primary" label="Påmeldt" />
+                        ) : (
+                          <Chip label="Påmelding tilgjengelig" />
+                        )
+                      ) : null}
+                    </Box>
                   </Link>
                 ))
               )}
@@ -94,53 +203,8 @@ const AllEvents: React.FC = () => {
           )}
         </Grid>
       </Grid>
-    </>
+    </Container>
   );
 };
 
 export default AllEvents;
-
-const StyledIconButton = styled.button`
-  background: transparent;
-  color: #000;
-  font-family: "Montserrat";
-  font-size: 18px;
-  border: none;
-  display: flex;
-  align-items: stretch;
-  text-decoration: none !important;
-  transition: 0.3s all ease;
-  padding: 0;
-
-  &:hover {
-    cursor: pointer;
-  }
-
-  &:focus {
-    border: none;
-    outline: none;
-  }
-`;
-
-const EventContainer = styled.div`
-  border: solid;
-  border-width: 0.05em 0.05em 0.05em 1.2em;
-  border-color: #fff;
-  border-radius: 0.2em;
-  padding: 0.5em;
-  margin-bottom: 0.5em;
-  background-color: #fff;
-
-  &:hover {
-    cursor: pointer;
-    background-color: #f4f4f4;
-  }
-`;
-
-const EventContainerLink = styled.a`
-  text-decoration: none;
-
-  &:hover {
-    text-decoration: none;
-  }
-`;

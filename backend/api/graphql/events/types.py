@@ -18,6 +18,11 @@ class EventType(DjangoObjectType):
             "is_attendable",
             "deadline",
             "publisher",
+            "available_slots",
+            "signed_up_users",
+            "price",
+            "signup_open_date",
+            "short_description",
         ]
 
 

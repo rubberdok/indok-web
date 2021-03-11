@@ -1,8 +1,8 @@
 import graphene
-from graphql_jwt.shortcuts import get_token
-from django.contrib.auth import get_user_model
 from api.auth.dataporten_auth import DataportenAuth
-
+from django.contrib.auth import get_user_model
+from graphql_jwt.decorators import login_required
+from graphql_jwt.shortcuts import get_token
 
 from .types import UserType
 
@@ -11,14 +11,21 @@ class AuthUser(graphene.Mutation):
     class Arguments:
         code = graphene.String()
 
-    token = graphene.String(required=True)
+    token = graphene.String()
     user = graphene.Field(UserType)
+    is_indok_student = graphene.Boolean()
+    id_token = graphene.String()
 
-    def mutate(root, info, code):
-        user = DataportenAuth.authenticate_and_get_user(code=code)
-        token = get_token(user)
-        info.context.set_jwt_cookie = token
-        return AuthUser(user=user, token=token)
+    def mutate(self, info, code):
+        user, enrolled, id_token = DataportenAuth.authenticate_and_get_user(code=code)
+        if enrolled:
+            token = get_token(user)
+            info.context.set_jwt_cookie = token
+        else:
+            token = None
+        return AuthUser(
+            user=user, token=token, is_indok_student=enrolled, id_token=id_token
+        )
 
 
 class UpdateUser(graphene.Mutation):
@@ -33,7 +40,7 @@ class UpdateUser(graphene.Mutation):
     user = graphene.Field(UserType)
 
     def mutate(
-        root,
+        self,
         info,
         id,
         email=None,
@@ -57,3 +64,16 @@ class UpdateUser(graphene.Mutation):
 
         ok = True
         return UpdateUser(user=user, ok=ok)
+
+
+class GetIDToken(graphene.Mutation):
+    id_token = graphene.String(required=True)
+
+    @login_required
+    def mutate(self, info):
+        user = info.context.user
+        id_token = user.id_token
+
+        return GetIDToken(
+            id_token=id_token,
+        )
