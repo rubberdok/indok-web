@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     paper: {
       width: "80%",
-      margin: "20px auto",
+      margin: "30px auto",
       backgroundColor: theme.palette.background.paper,
       border: "2px solid #000",
       boxShadow: theme.shadows[5],
@@ -53,7 +53,7 @@ const ContractModal = ({ modalData, setModalData, datePick, chosenCabins, contac
       <Grid container sm={12} md={8} alignContent="center" spacing={3} className={classes.paper}>
         <Grid item>
           <IconButton onClick={(_e) => setModalData({ ...modalData, displayPopUp: false })}>
-            <ClearIcon></ClearIcon>
+            <ClearIcon />
           </IconButton>
         </Grid>
         <Grid item>
