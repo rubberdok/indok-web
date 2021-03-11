@@ -24,6 +24,12 @@ class Organization(models.Model):
 
     group = models.ForeignKey(Group, on_delete=models.CASCADE, null=True, blank=True)
 
+    users = models.ManyToManyField(
+        "users.User",
+        related_name="organizations",
+        blank=True,
+    )
+
     class Meta:
         constraints = [
             UniqueConstraint(

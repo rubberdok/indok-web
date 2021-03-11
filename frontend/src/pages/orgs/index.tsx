@@ -1,9 +1,13 @@
+import { useQuery } from "@apollo/client";
 import Layout from "@components/Layout";
+import { GET_USER } from "@graphql/auth/queries";
+import { User } from "@interfaces/users";
 import { Container, Typography } from "@material-ui/core";
 import { NextPage } from "next";
 import React from "react";
 
 const OrganizationPage: NextPage = () => {
+  const { data } = useQuery<User>(GET_USER);
   return (
     <Layout>
       <Container>
