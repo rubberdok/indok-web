@@ -40,6 +40,7 @@ const useStyles = makeStyles((theme: Theme) =>
       width: "100%",
       fontSize: 10,
       padding: -10,
+      textTransform: "none",
     },
     year: {
       width: "100%",
@@ -74,41 +75,48 @@ const ListFeaturedDocuments: React.FC = () => {
           data.featuredArchive.map((doc: Document) => (
             <GridListTile key={0}>
               <Card className={classes.root} elevation={1}>
-                <CardActionArea>
-                  <Button
+                <Button
+                  key={doc.id}
+                  className={classes.article}
+                  onClick={() => {
+                    window.open(doc.webLink, "_blank");
+                  }}
+                >
+                  <CardMedia
                     key={doc.id}
-                    className={classes.article}
-                    onClick={() => {
-                      window.open(doc.webLink, "_blank");
-                    }}
-                  >
-                    <CardMedia
-                      key={doc.id}
-                      className={classes.image}
-                      component="img"
-                      height="128"
-                      image={doc.thumbnail}
-                    />
-                    <CardHeader
-                      className={classes.header}
-                      title={doc.title}
-                      subheader={doc.typeDoc
-                        .replace(/_/g, " ")
-                        .replace("ARBOKER", "ÅRBØKER")
-                        .replace("STOTTE FRA HS", "STØTTE FRA HS")}
-                      titleTypographyProps={{
-                        variant: "inherit",
-                        component: "h2",
-                        align: "left",
-                      }}
-                      subheaderTypographyProps={{
-                        variant: "inherit",
-                        component: "h4",
-                        align: "left",
-                      }}
-                    />
-                  </Button>
-                </CardActionArea>
+                    className={classes.image}
+                    component="img"
+                    height="128"
+                    image={doc.thumbnail}
+                  />
+                  <CardHeader
+                    className={classes.header}
+                    disableTypography
+                    title={
+                      <Typography
+                        component="h2"
+                        variant="inherit"
+                        gutterBottom
+                        paragraph
+                        style={{ fontSize: "5", fontWeight: "lighter", textAlign: "center" }}
+                      >
+                        {doc.title}
+                      </Typography>
+                    }
+                    subheader={
+                      <Typography
+                        component="h4"
+                        variant="inherit"
+                        style={{ fontWeight: "lighter", textAlign: "center" }}
+                      >
+                        {doc.typeDoc
+                          .replace(/_/g, " ")
+                          .replace("ARBOKER", "ÅRBØKER")
+                          .replace("STOTTE FRA HS", "STØTTE FRA HS")}
+                      </Typography>
+                    }
+                  />
+                </Button>
               </Card>
             </GridListTile>
           ))
