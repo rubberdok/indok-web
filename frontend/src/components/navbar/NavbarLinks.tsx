@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/client";
 import { GET_USER } from "@graphql/auth/queries";
 import { User } from "@interfaces/users";
-import { Button, makeStyles, Menu, MenuItem, Typography } from "@material-ui/core";
+import { Button, makeStyles, Menu, MenuItem } from "@material-ui/core";
 import { AccountCircleOutlined } from "@material-ui/icons";
 import PersonIcon from "@material-ui/icons/LockOpen";
 import Link from "next/link";
@@ -26,12 +26,10 @@ const links = [
     href: "/about/organizations",
     dropdown: [
       {
-        id: 1,
         title: "Janus IF",
         href: "/about/organizations/sports",
       },
       {
-        id: 2,
         title: "Indøk Kultur",
         href: "/about/organizations/culture",
       },
@@ -44,7 +42,7 @@ const links = [
   },
   {
     id: 5,
-    title: "Hyttebooking",
+    title: "Indøk Hyttene",
     href: "/cabins",
   },
 ];
@@ -92,7 +90,11 @@ const useStyles = makeStyles(() => ({
     },
   },
   menu: {
-    width: 300,
+    width: 400,
+
+    "& li": {
+      margin: 0,
+    },
   },
 
   dropdown: {
@@ -141,7 +143,7 @@ const NavbarLinks: React.FC = () => {
             {item.dropdown ? (
               <div className={classes.dropdown}>
                 {item.dropdown.map((dropItem) => (
-                  <Link key={dropItem.id} href={dropItem.href}>
+                  <Link key={dropItem.title} href={dropItem.href}>
                     <a className={[router.pathname == dropItem.href ? "active" : "", classes.navItem].join(" ")}>
                       {dropItem.title}
                     </a>
@@ -156,10 +158,11 @@ const NavbarLinks: React.FC = () => {
       ))}
 
       {!userData || loading || !userData.user || error ? (
-        <a className={[classes.navItem, classes.user].join(" ")} href={signInURL}>
-          <PersonIcon fontSize="small" style={{ marginBottom: "-5px", marginRight: "16px" }} />
-          Logg inn med Feide
-        </a>
+        <Link href={signInURL} passHref>
+          <Button className={[classes.navItem, classes.user].join(" ")} startIcon={<PersonIcon fontSize="small" />}>
+            Logg inn med Feide
+          </Button>
+        </Link>
       ) : (
         <>
           <Link href="/archive">
@@ -171,8 +174,8 @@ const NavbarLinks: React.FC = () => {
             aria-controls="menu-appbar"
             aria-haspopup="true"
             onClick={handleMenu}
+            startIcon={<AccountCircleOutlined fontSize="small" />}
           >
-            <AccountCircleOutlined fontSize="small" style={{ marginRight: "16px" }} />
             {userData.user.firstName}
           </Button>
           <Menu
@@ -192,13 +195,11 @@ const NavbarLinks: React.FC = () => {
             className={classes.menu}
           >
             <MenuItem onClick={handleClose}>
-              <Link href="/profile">
-                <Typography variant="body1">Profil</Typography>
-              </Link>
+              <Link href="/profile">Profil</Link>
             </MenuItem>
             <MenuItem onClick={handleClose}>
               <Link href="/logout">
-                <Typography variant="body1">Logg ut</Typography>
+                <a>Logg ut</a>
               </Link>
             </MenuItem>
           </Menu>
