@@ -1,12 +1,13 @@
+from datetime import date
+
 from apps.events.models import Category, Event
 from apps.organizations.models import Organization
 from django.db.models import Q
-from datetime import date
 
 
 class EventResolvers:
     def resolve_all_events(
-        parent, info, category=None, organization=None, start_time=None, end_time=None
+        self, info, category=None, organization=None, start_time=None, end_time=None
     ):
         string_names = ["category", "example_filter_1", "example_filter_2"]
         kwargs = {
@@ -39,7 +40,7 @@ class EventResolvers:
             if organization:
                 queries.append(
                     Q(organization__name__icontains=organization)
-                    | Q(organization__parent__name__icontains=organization)
+                    | Q(organization__self__name__icontains=organization)
                 )
 
             return (
@@ -49,7 +50,7 @@ class EventResolvers:
             )
         return Event.objects.filter(start_time__gte=date.today()).order_by("start_time")
 
-    def resolve_default_events(parent, info):
+    def resolve_default_events(self, info):
         organizations = Organization.objects.all()
         all_events = Event.objects.filter(start_time__gte=date.today())
         events = []
@@ -61,16 +62,16 @@ class EventResolvers:
                 pass
         return Event.objects.filter(id__in=events).order_by("start_time")
 
-    def resolve_event(parent, info, id):
+    def resolve_event(self, info, id):
         try:
             return Event.objects.get(id=id)
         except Event.DoesNotExist:
             return None
 
-    def resolve_all_categories(parent, info):
+    def resolve_all_categories(self, info):
         return Category.objects.all()
 
-    def resolve_category(parent, info, id):
+    def resolve_category(self, info, id):
         try:
             return Category.objects.get(id=id)
         except Category.DoesNotExist:

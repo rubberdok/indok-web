@@ -28,13 +28,14 @@ export const GET_EVENTS = gql`
         dateJoined
       }
       availableSlots
-      signedUpUsers {
-        id
-        username
-      }
       price
       shortDescription
       signupOpenDate
+      userAttendance {
+        isSignedUp
+        isOnWaitingList
+      }
+      isFull
     }
   }
 `;
@@ -67,13 +68,14 @@ export const GET_DEFAULT_EVENTS = gql`
         dateJoined
       }
       availableSlots
-      signedUpUsers {
-        id
-        username
-      }
       price
       shortDescription
       signupOpenDate
+      userAttendance {
+        isSignedUp
+        isOnWaitingList
+      }
+      isFull
     }
   }
 `;
@@ -105,13 +107,14 @@ export const GET_EVENT = gql`
         dateJoined
       }
       availableSlots
-      signedUpUsers {
-        id
-        username
-      }
       price
       shortDescription
       signupOpenDate
+      userAttendance {
+        isSignedUp
+        isOnWaitingList
+      }
+      isFull
     }
   }
 `;

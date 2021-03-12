@@ -3,21 +3,9 @@ import { GET_USER } from "@graphql/auth/queries";
 import { GET_DEFAULT_EVENTS, GET_EVENTS } from "@graphql/events/queries";
 import { Event } from "@interfaces/events";
 import { User } from "@interfaces/users";
-import {
-  Box,
-  Chip,
-  CircularProgress,
-  Container,
-  Grid,
-  makeStyles,
-  Paper,
-  Tab,
-  Tabs,
-  Typography,
-  useTheme,
-} from "@material-ui/core";
-import Link from "next/link";
+import { CircularProgress, Container, Grid, makeStyles, Paper, Tab, Tabs, Typography } from "@material-ui/core";
 import React, { useState } from "react";
+import EventListItem from "./EventListItem";
 import FilterMenu from "./FilterMenu/index";
 
 export interface FilterQuery {
@@ -65,50 +53,26 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const MONTHS: Record<string, string> = {
-  "01": "januar",
-  "02": "februar",
-  "03": "mars",
-  "04": "april",
-  "05": "mai",
-  "06": "juni",
-  "07": "juli",
-  "08": "august",
-  "09": "september",
-  "10": "oktober",
-  "11": "november",
-  "12": "desember",
-};
-
-const formatDate = (dateAndTime: string) => {
-  const fullDate = dateAndTime.split("T")[0];
-  const year = fullDate.split("-")[0];
-  const month = MONTHS[fullDate.split("-")[1]];
-  const date = fullDate.split("-")[2];
-  const fullTime = dateAndTime.split("T")[1];
-  const time = fullTime.slice(0, 5);
-  return `${date}.${month} ${year}, kl. ${time}`;
-};
-
 const AllEvents: React.FC = () => {
   const classes = useStyles();
-  const theme = useTheme();
   const [filters, setFilters] = useState({});
   const [showDefaultEvents, setShowDefaultEvents] = useState(true);
   const [showCalenderView, setShowCalenderView] = useState(false);
-  const { loading: userLoading, error: userError, data: userData } = useQuery<{ user: User }>(GET_USER);
+  const { loading: userLoading, data: userData } = useQuery<{ user: User }>(GET_USER);
 
   const { loading: eventsLoading, error: eventsError, data: eventsData, refetch } = useQuery(GET_EVENTS, {
     variables: filters,
   });
+
   const { loading: defaultEventsLoading, error: defaultEventsError, data: defaultEventsData } = useQuery(
     GET_DEFAULT_EVENTS
   );
-
   const error = showDefaultEvents ? defaultEventsError : eventsError;
   const loading = showDefaultEvents ? defaultEventsLoading : eventsLoading;
-  if (error) return <Typography variant="body1">Kunne ikke hente arrangementer.</Typography>;
   const data = showDefaultEvents ? defaultEventsData?.defaultEvents : eventsData?.allEvents;
+
+  if (loading || userLoading) return <Typography variant="body1">Laster..</Typography>;
+  if (error) return <Typography variant="body1">Kunne ikke hente arrangementer.</Typography>;
 
   const onChange = (newFilters: FilterQuery) => {
     if (Object.keys(newFilters).length > 0 && showDefaultEvents) setShowDefaultEvents(false);
@@ -171,32 +135,7 @@ const AllEvents: React.FC = () => {
                 <Typography variant="body1">Ingen arrangementer passer til valgte filtre.</Typography>
               ) : (
                 data.map((event: Event) => (
-                  <Link href={`/events/${event.id}`} key={event.id}>
-                    <Box
-                      display="flex"
-                      alignItems="center"
-                      justifyContent="space-between"
-                      className={classes.eventContainer}
-                      style={{ borderColor: event.organization?.color ?? theme.palette.primary.main }}
-                    >
-                      <Box>
-                        <Typography variant="h6">{event.title}</Typography>
-                        <Typography variant="body1">{formatDate(event.startTime)}</Typography>
-
-                        {event.shortDescription ?? "Trykk for å lese mer"}
-                      </Box>
-
-                      {userData && !userLoading && userData.user && !userError && event.isAttendable ? (
-                        event.signedUpUsers.length === event.availableSlots ? (
-                          <Chip variant="outlined" label="Fullt" />
-                        ) : userData?.user.events.some((userevent) => event.id === userevent.id) ? (
-                          <Chip color="primary" label="Påmeldt" />
-                        ) : (
-                          <Chip label="Påmelding tilgjengelig" />
-                        )
-                      ) : null}
-                    </Box>
-                  </Link>
+                  <EventListItem key={event.id} event={event} user={userData?.user} classes={classes} />
                 ))
               )}
             </>
