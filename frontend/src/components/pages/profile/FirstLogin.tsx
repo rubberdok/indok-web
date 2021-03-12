@@ -4,6 +4,7 @@ import { GET_USER } from "@graphql/users/queries";
 import { User } from "@interfaces/users";
 import {
   Button,
+  createStyles,
   Dialog,
   DialogActions,
   DialogContent,
@@ -11,7 +12,9 @@ import {
   DialogTitle,
   Grid,
   InputLabel,
+  makeStyles,
   TextField,
+  Theme,
   Typography,
 } from "@material-ui/core";
 import { Check, Close } from "@material-ui/icons";
@@ -36,6 +39,15 @@ interface Validations {
   year: boolean;
 }
 
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    textField: {
+      marginBottom: theme.spacing(1),
+      minWidth: "30%",
+    },
+  })
+);
+
 const validateInput = (input: Partial<UpdateUserInput>): Validations => {
   const { email, phoneNumber, year } = input;
   return {
@@ -46,6 +58,7 @@ const validateInput = (input: Partial<UpdateUserInput>): Validations => {
 };
 
 export const FirstLogin: React.FC<FirstLoginProps> = ({ open, onSubmit }) => {
+  const classes = useStyles();
   const [updateUser, { error }] = useMutation<{
     updateUser: {
       user: User;
@@ -61,24 +74,18 @@ export const FirstLogin: React.FC<FirstLoginProps> = ({ open, onSubmit }) => {
   const [updateUserInput, setUpdateUserInput] = useState<Partial<UpdateUserInput>>();
   const [validations, setValidations] = useState<Validations>(defaultValidations);
 
-  const validationTriggered = () => !Object.values(validations).every((v) => !!v);
-
-  useEffect(() => {
-    // Reset errors when typing
-    if (validationTriggered()) {
-      setValidations(defaultValidations);
-    }
-  }, [updateUserInput]);
+  const invalidInput = () => !Object.values(validations).every(Boolean);
 
   const onInputChange = (key: string, event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-    setUpdateUserInput({
+    const newInput = {
       ...updateUserInput,
       [key]: key === "year" ? parseInt(event.target.value) : event.target.value,
-    });
+    };
+    setUpdateUserInput(newInput);
+    setValidations(validateInput(newInput));
   };
 
   const handleSubmit = () => {
-    updateUserInput && setValidations(validateInput(updateUserInput));
     updateUser({
       variables: updateUserInput,
       update: (cache, { data }) => {
@@ -92,7 +99,7 @@ export const FirstLogin: React.FC<FirstLoginProps> = ({ open, onSubmit }) => {
   };
 
   return (
-    <Dialog open={open} aria-labelledby="form-dialog-title" fullWidth>
+    <Dialog open={open} aria-labelledby="form-dialog-title" fullWidth maxWidth="md">
       <DialogTitle id="form-dialog-title">Første innlogging</DialogTitle>
       <DialogContent>
         <DialogContentText variant="h6">
@@ -128,6 +135,7 @@ export const FirstLogin: React.FC<FirstLoginProps> = ({ open, onSubmit }) => {
               value={updateUserInput?.email}
               onChange={(e) => onInputChange("email", e)}
               placeholder="olaNordmann@gmail.no"
+              className={classes.textField}
             />
           </Grid>
           <Grid item>
@@ -140,6 +148,7 @@ export const FirstLogin: React.FC<FirstLoginProps> = ({ open, onSubmit }) => {
               value={updateUserInput?.phoneNumber}
               onChange={(e) => onInputChange("phoneNumber", e)}
               placeholder="99887766"
+              className={classes.textField}
             />
           </Grid>
           <Grid item>
@@ -152,6 +161,7 @@ export const FirstLogin: React.FC<FirstLoginProps> = ({ open, onSubmit }) => {
               onChange={(e) => onInputChange("allergies", e)}
               multiline
               placeholder="Vegetar og glutenallergi"
+              className={classes.textField}
             />
           </Grid>
           <Grid item>
@@ -163,16 +173,17 @@ export const FirstLogin: React.FC<FirstLoginProps> = ({ open, onSubmit }) => {
               name="year"
               value={updateUserInput?.year}
               onChange={(e) => onInputChange("year", e)}
+              className={classes.textField}
             />
           </Grid>
         </Grid>
-        {error && validationTriggered() && <Typography color="error">{error.message}</Typography>}
+        {error && invalidInput() && <Typography color="error">{error.message}</Typography>}
       </DialogContent>
       <DialogActions>
         <Button color="primary" onClick={() => onSubmit(false)} startIcon={<Close />}>
           Jeg ønsker ikke å fylle ut noe informasjon nå
         </Button>
-        <Button onClick={() => handleSubmit()} color="primary" startIcon={<Check />}>
+        <Button onClick={() => handleSubmit()} color="primary" startIcon={<Check />} disabled={invalidInput()}>
           Send
         </Button>
       </DialogActions>

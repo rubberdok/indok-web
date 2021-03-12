@@ -4,6 +4,8 @@ import { FirstLogin } from "@components/pages/profile/FirstLogin";
 import { GET_USER } from "@graphql/users/queries";
 import { User } from "@interfaces/users";
 import {
+  Avatar,
+  Box,
   Button,
   Card,
   CardActions,
@@ -16,7 +18,7 @@ import {
 import EditIcon from "@material-ui/icons/Edit";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -28,19 +30,8 @@ const ProfilePage: NextPage = () => {
   const { loading, error, data, refetch: refetchUser } = useQuery<{ user: User }>(GET_USER);
 
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [userData, setUserData] = useState<Partial<User>>();
   const classes = useStyles();
   const router = useRouter();
-
-  useEffect(() => {
-    if (data?.user) {
-      setUserData(data.user);
-
-      if (data.user.firstLogin && !dialogOpen) {
-        setDialogOpen(true);
-      }
-    }
-  }, [data]);
 
   if (loading) {
     return <Typography variant="h1">Laster ...</Typography>;
@@ -54,6 +45,10 @@ const ProfilePage: NextPage = () => {
     }
   }
 
+  if (data?.user?.firstLogin && !dialogOpen) {
+    setDialogOpen(true);
+  }
+
   const onFirstLoginSubmit = (refetch: boolean) => {
     setDialogOpen(false);
     refetch && refetchUser();
@@ -63,45 +58,46 @@ const ProfilePage: NextPage = () => {
     <Layout>
       <Container>
         <Typography variant="h1">Brukerprofil</Typography>
-        <Card variant="outlined" className={classes.card}>
-          {userData ? (
-            <>
-              <FirstLogin open={dialogOpen} onSubmit={onFirstLoginSubmit} />
+        {data?.user && (
+          <>
+            <FirstLogin open={dialogOpen} onSubmit={onFirstLoginSubmit} />
+            <Card variant="outlined" className={classes.card}>
               <CardContent>
-                <Typography variant="h3">{userData.firstName}</Typography>
+                <Box style={{ display: "flex", justifyContent: "center" }}>
+                  <Avatar>{data.user.firstName[0]}</Avatar>
+                </Box>
+                <Typography variant="h4">{data.user.firstName}</Typography>
                 <Typography variant="body1">
-                  <strong>Brukernavn:</strong> {userData.username}
+                  <strong>Brukernavn:</strong> {data.user.username}
                 </Typography>
                 <Typography variant="body1">
-                  <strong>E-post:</strong> {userData.email || userData.feideEmail}
+                  <strong>E-post:</strong> {data.user.email || data.user.feideEmail}
                 </Typography>
-                {userData.phoneNumber && (
+                {data.user.phoneNumber && (
                   <Typography variant="body1">
-                    <strong>Mobilnummer:</strong> {userData.phoneNumber}
+                    <strong>Mobilnummer:</strong> {data.user.phoneNumber}
                   </Typography>
                 )}
                 <Typography variant="body1">
-                  <strong>Klassetrinn:</strong> {userData.year}
+                  <strong>Klassetrinn:</strong> {data.user.year}
                 </Typography>
-                {userData.allergies && (
+                {data.user.allergies && (
                   <Typography variant="body1">
-                    <strong>Allergier/matpreferanser:</strong> {userData.allergies}
+                    <strong>Allergier/matpreferanser:</strong> {data.user.allergies}
                   </Typography>
                 )}
-                {userData.dateJoined && (
+                {data.user.dateJoined && (
                   <Typography variant="body2">
-                    Medlem siden {new Date(userData.dateJoined).toLocaleString()} <br />
+                    Medlem siden {new Date(data.user.dateJoined).toLocaleString()} <br />
                   </Typography>
                 )}
               </CardContent>
               <CardActions>
                 <Button startIcon={<EditIcon />}>Rediger bruker</Button>
               </CardActions>
-            </>
-          ) : (
-            <> Du er ikke logget inn! Vennligst logg inn med Feide. </>
-          )}
-        </Card>
+            </Card>
+          </>
+        )}
       </Container>
     </Layout>
   );
