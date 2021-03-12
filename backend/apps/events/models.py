@@ -63,20 +63,14 @@ class Event(models.Model):
             and self.available_slots is not None
             and self.signed_up_users.count() > self.available_slots
         ):
-            result = list(self.signed_up_users.all())[self.available_slots :]
+            result = list(self.signed_up_users.all()[self.available_slots :])
         return result
 
     @property
     def users_attending(self):
-        result = []
         if self.is_attendable and self.available_slots is not None:
-            if self.signed_up_users.count() > self.available_slots:
-                result = list(self.signed_up_users.all())[: self.available_slots]
-            else:
-                result = list(self.signed_up_users.all())[
-                    : self.signed_up_users.count()
-                ]
-        return result
+            return list(self.signed_up_users.all()[: self.available_slots])
+        return []
 
     @property
     def is_full(self):
