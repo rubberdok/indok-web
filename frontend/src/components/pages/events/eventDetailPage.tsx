@@ -274,7 +274,7 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
             <Button>Tilbake</Button>
           </Link>
 
-          {eventData.event.isAttendable && (
+          {eventData.event.isAttendable && userData.user && (
             <>
               <CountdownButton
                 countDownDate={(eventData.event as AttendableEvent).signupOpenDate}

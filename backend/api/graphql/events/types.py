@@ -42,8 +42,6 @@ class EventType(DjangoObjectType):
     @staticmethod
     def resolve_user_attendance(event, info):
         user = info.context.user
-        if not user:
-            return {"is_signed_up": False, "is_on_waiting_list": False}
         return {
             "is_signed_up": user in event.users_attending,
             "is_on_waiting_list": user in event.users_on_waiting_list,
