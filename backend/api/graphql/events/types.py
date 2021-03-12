@@ -37,7 +37,7 @@ class EventType(DjangoObjectType):
             "price",
             "signup_open_date",
             "short_description",
-            "signed_up_users"
+            "signed_up_users",
         ]
 
     @staticmethod

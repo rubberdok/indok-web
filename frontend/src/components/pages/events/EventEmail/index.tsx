@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { SEND_EVENT_EMAILS } from "@graphql/events/mutations";
 import { QUERY_SIGNED_UP_USERS } from "@graphql/events/queries";
-import { Event } from "@interfaces/events";
+import { AttendableEvent, Event } from "@interfaces/events";
 import {
   Box,
   Button,
@@ -57,22 +57,22 @@ const EmailForm = ({ eventId }: EmailFormProps) => {
   const [emailProps, setEmailProps] = useState<SendEmailProps>(defaultMailProps);
   const [validations, setValidations] = useState(defaultValidations);
 
-  const { data } = useQuery<{ event: Event }>(QUERY_SIGNED_UP_USERS, {
+  const { data } = useQuery<{ event: AttendableEvent }>(QUERY_SIGNED_UP_USERS, {
     variables: { id: eventId },
   });
 
   const [sendEventMail] = useMutation(SEND_EVENT_EMAILS);
 
   useEffect(() => {
-    const users = data?.event.signedUpUsers;
+    const users = data?.event.usersAttending;
 
     console.log(users);
 
     if (data?.event && users) {
-      const availableSlots = data.event.availableSlots;
-      const signedUpUsers = availableSlots && users.length >= availableSlots ? users.slice(0, availableSlots) : users;
-      console.log("signed up users", signedUpUsers);
-      setEmailProps({ ...emailProps, receiverEmails: signedUpUsers.map((user) => user.email) });
+      // const availableSlots = data.event.availableSlots;
+      // const signedUpUsers = availableSlots && users.length >= availableSlots ? users.slice(0, availableSlots) : users;
+      console.log("users attending ", users);
+      setEmailProps({ ...emailProps, receiverEmails: users.map((user) => user.email) });
     }
   }, [data]);
 
