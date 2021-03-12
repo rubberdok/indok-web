@@ -50,11 +50,7 @@ class EventType(DjangoObjectType):
     @staticmethod
     def resolve_users_on_waiting_list(event, info):
         user = info.context.user
-        if (
-            user is not None
-            and user in event.organization.members.all()
-            or user.is_superuser
-        ):
+        if user in event.organization.members.all() or user.is_superuser:
             return event.users_on_waiting_list
         else:
             raise PermissionDenied("Du har ikke tilgang til den forespurte dataen")
@@ -62,11 +58,7 @@ class EventType(DjangoObjectType):
     @staticmethod
     def resolve_users_attending(event, info):
         user = info.context.user
-        if (
-            user is not None
-            and user in event.organization.members.all()
-            or user.is_superuser
-        ):
+        if user in event.organization.members.all() or user.is_superuser:
             return event.users_attending
         else:
             raise PermissionDenied("Du har ikke tilgang til den forespurte dataen")
