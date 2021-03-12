@@ -5,8 +5,6 @@ from apps.events import models
 from django.contrib import auth
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
-from django.utils.text import slugify
-from graphene_django import DjangoObjectType
 from graphql_jwt.decorators import login_required
 
 from .types import CategoryType, EventType

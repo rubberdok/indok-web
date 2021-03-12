@@ -1,4 +1,3 @@
-from django.db.models.fields.related import ManyToManyField
 from apps.organizations.models import Organization
 from django.db import models
 from django.conf import settings
@@ -68,7 +67,7 @@ class Event(models.Model):
         return result
 
     @property
-    def users_signed_up(self):
+    def users_attending(self):
         result = []
         if self.is_attendable and self.available_slots is not None:
             if self.signed_up_users.count() > self.available_slots:

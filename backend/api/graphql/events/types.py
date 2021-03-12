@@ -14,9 +14,9 @@ class UserAttendingType(graphene.ObjectType):
 
 class EventType(DjangoObjectType):
     user_attendance = graphene.Field(UserAttendingType, user_id=graphene.ID())
-    is_full = graphene.Boolean()
+    is_full = graphene.Boolean(source="is_full")
     users_on_waiting_list = graphene.List(UserType)
-    users_signed_up = graphene.List(UserType)
+    users_attending = graphene.List(UserType)
 
     class Meta:
         model = Event
@@ -40,16 +40,12 @@ class EventType(DjangoObjectType):
         ]
 
     @staticmethod
-    def resolve_is_full(event, info):
-        return event.is_full
-
-    @staticmethod
     def resolve_user_attendance(event, info, user_id=None):
         if not user_id:
             return {"is_signed_up": False, "is_on_waiting_list": False}
         user = get_user_model().objects.get(pk=user_id)
         return {
-            "is_signed_up": user in event.users_signed_up,
+            "is_signed_up": user in event.users_attending,
             "is_on_waiting_list": user in event.users_on_waiting_list,
         }
 
@@ -66,14 +62,14 @@ class EventType(DjangoObjectType):
             raise PermissionDenied("Du har ikke tilgang til den forespurte dataen")
 
     @staticmethod
-    def resolve_users_signed_up(event, info):
+    def resolve_users_attending(event, info):
         user = info.context.user
         if (
             user is not None
             and user in event.organization.members.all()
             or user.is_superuser
         ):
-            return event.users_signed_up
+            return event.users_attending
         else:
             raise PermissionDenied("Du har ikke tilgang til den forespurte dataen")
 
