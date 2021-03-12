@@ -16,7 +16,6 @@ export interface Event {
   availableSlots?: number;
   shortDescription?: string;
   signupOpenDate?: string;
-  signedUpUsers: User[];
   userAttendance?: { isSignedUp: boolean; isOnWaitingList: boolean };
   isFull?: boolean;
   price?: number;
