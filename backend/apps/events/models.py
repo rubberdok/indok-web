@@ -1,8 +1,6 @@
-# from django.contrib.auth import get_user_model
-from django.db.models.fields.related import ManyToManyField
 from apps.organizations.models import Organization
 from django.db import models
-from django.contrib.auth import get_user_model
+from django.conf import settings
 
 
 # Create your models here.
@@ -23,7 +21,7 @@ class Event(models.Model):
     description = models.TextField()
     start_time = models.DateTimeField()
     is_attendable = models.BooleanField()
-    publisher = models.ForeignKey(get_user_model(), on_delete=models.DO_NOTHING)
+    publisher = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING)
 
     # Optional fields
     end_time = models.DateTimeField(blank=True, null=True)
@@ -47,8 +45,8 @@ class Event(models.Model):
         null=True,  # TODO: Make this field conditionally required in frontend when is_attendable is True!
     )
 
-    signed_up_users = models.ManyToManyField(
-        "users.User",
+    signed_up_users = models.ManyToManyField(  # Internal list of users who are signed up (including waiting list)
+        settings.AUTH_USER_MODEL,
         related_name="events",
         blank=True,
     )
@@ -61,15 +59,28 @@ class Event(models.Model):
     def users_on_waiting_list(self):
         result = []
         if (
-            self.available_slots is not None
+            self.is_attendable
+            and self.available_slots is not None
             and self.signed_up_users.count() > self.available_slots
         ):
             result = list(self.signed_up_users.all())[self.available_slots :]
         return result
 
     @property
+    def users_attending(self):
+        result = []
+        if self.is_attendable and self.available_slots is not None:
+            if self.signed_up_users.count() > self.available_slots:
+                result = list(self.signed_up_users.all())[: self.available_slots]
+            else:
+                result = list(self.signed_up_users.all())[
+                    : self.signed_up_users.count()
+                ]
+        return result
+
+    @property
     def is_full(self):
-        if self.available_slots is not None:
+        if self.is_attendable and self.available_slots is not None:
             return self.signed_up_users.count() >= self.available_slots
         return False
 

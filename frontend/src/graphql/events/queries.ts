@@ -31,6 +31,11 @@ export const GET_EVENTS = gql`
       price
       shortDescription
       signupOpenDate
+      userAttendance {
+        isSignedUp
+        isOnWaitingList
+      }
+      isFull
     }
   }
 `;
@@ -66,6 +71,11 @@ export const GET_DEFAULT_EVENTS = gql`
       price
       shortDescription
       signupOpenDate
+      userAttendance {
+        isSignedUp
+        isOnWaitingList
+      }
+      isFull
     }
   }
 `;
@@ -100,6 +110,11 @@ export const GET_EVENT = gql`
       price
       shortDescription
       signupOpenDate
+      userAttendance {
+        isSignedUp
+        isOnWaitingList
+      }
+      isFull
     }
   }
 `;
