@@ -23,7 +23,7 @@ const links = [
   {
     id: 3,
     title: "Organisasjoner",
-    href: "/organizations",
+    href: "/about/organizations",
     dropdown: [
       {
         id: 1,

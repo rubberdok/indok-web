@@ -1,5 +1,14 @@
 import Layout from "@components/Layout";
-import { Container } from "@material-ui/core";
+import {
+  Box,
+  Card,
+  CardActionArea,
+  CardContent,
+  CardMedia,
+  Container,
+  makeStyles,
+  Typography,
+} from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import { getSortedPosts } from "@utils/posts";
 import { NextPage } from "next";
@@ -13,28 +22,63 @@ type Props = {
     title: string;
     image?: string;
     tag?: string;
+    logo: string;
   };
   posts: Array<any>;
 };
 
+const useStyles = makeStyles(() => ({
+  media: {
+    width: "100px",
+    minHeight: "100px",
+    backgroundSize: "contain",
+    backgroundPosition: "center",
+  },
+  card: {
+    display: "flex",
+    alignItems: "center",
+    height: "180px",
+  },
+}));
+
 const CulturePage: NextPage<Props> = ({ posts }) => {
+  const classes = useStyles();
+
   return (
     <Layout>
       <Container>
-        <Grid container>
-          {posts
-            .filter((post) => post.frontmatter.tag == "kultur")
-            .map(({ frontmatter: { title, description }, slug }: Props) => (
-              <Grid key={slug} item xs={3}>
-                <h3>
-                  <Link href={"./[slug]"} as={`./${slug}`}>
-                    <a className="text-4xl font-bold text-yellow-600 font-display">{title}</a>
-                  </Link>
-                </h3>
-                <p>{description}</p>
-              </Grid>
-            ))}
-        </Grid>
+        <Box pb={10} />
+        <Typography variant="h2">Indøk Kultur</Typography>
+        <Typography variant="body1">
+          Indøk Kultur er paraplyorganisasjonen for alle kulturaktiviteter på Indøk, og innbefatter Indøkrevyen,
+          Mannskoret Klingende Mynt, et Indøk-band (Bandøk), et ølbryggerlag (Indøl) samt en veldedig organisasjon
+          (IVI).{" "}
+        </Typography>
+        <Box my={10}>
+          <Grid container spacing={2}>
+            {posts
+              .filter((post) => post.frontmatter.tag == "kultur")
+              .map(({ frontmatter: { title, description, logo }, slug }: Props) => (
+                <Grid key={slug} item xs={12} sm={6} md={4}>
+                  <Card>
+                    <Link href={"./[slug]"} as={`./${slug}`} passHref>
+                      <CardActionArea className={classes.card}>
+                        {logo ? <CardMedia className={classes.media} image={logo} /> : ""}
+                        <CardContent>
+                          <Typography gutterBottom variant="h5" component="h2">
+                            {title}
+                          </Typography>
+                          <Typography gutterBottom variant="body2">
+                            {description}
+                          </Typography>
+                        </CardContent>
+                      </CardActionArea>
+                    </Link>
+                  </Card>
+                </Grid>
+              ))}
+          </Grid>
+        </Box>
       </Container>
     </Layout>
   );

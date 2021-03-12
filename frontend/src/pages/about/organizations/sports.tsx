@@ -1,5 +1,14 @@
 import Layout from "@components/Layout";
-import { Box, Button, Card, CardContent, CardMedia, Container, makeStyles, Typography } from "@material-ui/core";
+import {
+  Box,
+  Card,
+  CardActionArea,
+  CardContent,
+  CardMedia,
+  Container,
+  makeStyles,
+  Typography,
+} from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import { getSortedPosts } from "@utils/posts";
 import { NextPage } from "next";
@@ -18,19 +27,17 @@ type Props = {
   posts: Array<any>;
 };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   media: {
-    width: "100%",
-    height: "100%",
+    width: "100px",
+    minHeight: "100px",
     backgroundSize: "contain",
     backgroundPosition: "center",
   },
   card: {
     display: "flex",
-    flexDirection: "row",
     alignItems: "center",
-    height: "200px",
-    padding: theme.spacing(2),
+    height: "180px",
   },
 }));
 
@@ -52,30 +59,21 @@ const SportsPage: NextPage<Props> = ({ posts }) => {
             {posts
               .filter((post) => post.frontmatter.tag == "idrett")
               .map(({ frontmatter: { title, description, logo }, slug }: Props) => (
-                <Grid key={slug} item xs={4}>
-                  <Card className={classes.card}>
-                    <Grid container spacing={1}>
-                      {logo ? (
-                        <Grid item xs={6}>
-                          <CardMedia className={classes.media} image={logo} title="Contemplative Reptile" />
-                        </Grid>
-                      ) : (
-                        ""
-                      )}
-                      <Grid item xs={6}>
+                <Grid key={slug} item xs={12} sm={6} md={4}>
+                  <Card>
+                    <Link href={"./[slug]"} as={`./${slug}`} passHref>
+                      <CardActionArea className={classes.card}>
+                        {logo ? <CardMedia className={classes.media} image={logo} /> : ""}
                         <CardContent>
                           <Typography gutterBottom variant="h5" component="h2">
                             {title}
                           </Typography>
-                          <Typography variant="body2" color="textSecondary" component="p">
+                          <Typography gutterBottom variant="body2">
                             {description}
                           </Typography>
-                          <Link href={"./[slug]"} as={`./${slug}`}>
-                            <Button component="a">Les mer</Button>
-                          </Link>
                         </CardContent>
-                      </Grid>
-                    </Grid>
+                      </CardActionArea>
+                    </Link>
                   </Card>
                 </Grid>
               ))}
