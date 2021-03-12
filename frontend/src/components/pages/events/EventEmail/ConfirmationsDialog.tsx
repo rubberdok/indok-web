@@ -1,5 +1,4 @@
-import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from "@material-ui/core";
-import Link from "next/link";
+import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button, Link } from "@material-ui/core";
 import React, { Dispatch, SetStateAction } from "react";
 import { SendEmailProps } from ".";
 import ClearIcon from "@material-ui/icons/Clear";

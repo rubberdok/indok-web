@@ -8,8 +8,6 @@ import {
   Tooltip,
   Grid,
   Box,
-  makeStyles,
-  createStyles,
 } from "@material-ui/core";
 import React, { Dispatch, SetStateAction } from "react";
 import { SendEmailProps } from ".";
@@ -25,14 +23,6 @@ interface EmailFormDialogProps {
   sendEmail: () => void;
 }
 
-const useStyles = makeStyles(() =>
-  createStyles({
-    form: {
-      border: "0px solid black",
-    },
-  })
-);
-
 const EmailFormDialog = ({
   showEmailForm,
   setShowEmailForm,
@@ -41,7 +31,6 @@ const EmailFormDialog = ({
   validations,
   sendEmail,
 }: EmailFormDialogProps) => {
-  const classes = useStyles();
   return (
     <Dialog
       fullWidth
@@ -58,7 +47,6 @@ const EmailFormDialog = ({
           md={6}
           direction="column"
           spacing={3}
-          className={classes.form}
           alignContent="center"
           style={{ margin: "auto" }}
         >
@@ -99,7 +87,6 @@ const EmailFormDialog = ({
               onClick={(_e) => sendEmail()}
               color="primary"
             >
-              {/* <SendIcon style={{ margin: "5px" }} /> */}
               Send e-post
             </Button>
           </Box>
