@@ -6,7 +6,7 @@ from graphene_django import DjangoObjectType
 
 class UserAttendingType(graphene.ObjectType):
     is_signed_up = graphene.Boolean()
-    is_on_waitinglist = graphene.Boolean()
+    is_on_waiting_list = graphene.Boolean()
 
 
 class EventType(DjangoObjectType):
@@ -39,12 +39,14 @@ class EventType(DjangoObjectType):
         return event.is_full
 
     @staticmethod
-    def resolve_user_attendance(event, info, user_id):
+    def resolve_user_attendance(event, info, user_id=None):
+        if not user_id:
+            return {"is_signed_up": False, "is_on_waiting_list": False}
         user = get_user_model().objects.get(pk=user_id)
         return {
             "is_signed_up": user in event.signed_up_users.all()
             and user not in event.users_on_waiting_list,
-            "is_on_waitinglist": user in event.users_on_waiting_list,
+            "is_on_waiting_list": user in event.users_on_waiting_list,
         }
 
 
@@ -55,6 +57,3 @@ class CategoryType(DjangoObjectType):
             "id",
             "name",
         ]
-
-
-

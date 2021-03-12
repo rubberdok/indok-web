@@ -1,5 +1,3 @@
-import { useQuery } from "@apollo/client";
-import { QUERY_USER_ATTENDING_EVENT } from "@graphql/events/queries";
 import { Event } from "@interfaces/events";
 import { User } from "@interfaces/users";
 import { Typography, Chip, useTheme, Box } from "@material-ui/core";
@@ -34,16 +32,11 @@ const formatDate = (dateAndTime: string) => {
 interface Props {
   event: Event;
   user?: User;
-  userIsValid?: boolean;
   classes: any;
 }
 
-const EventListItem: React.FC<Props> = ({ event, user, userIsValid, classes }) => {
+const EventListItem: React.FC<Props> = ({ event, user, classes }) => {
   const theme = useTheme();
-
-  const { data: userAttendingEventData } = useQuery(QUERY_USER_ATTENDING_EVENT, {
-    variables: { eventId: event.id, userId: user?.id },
-  });
 
   return (
     <Link href={`/events/${event.id}`} key={event.id}>
@@ -61,12 +54,12 @@ const EventListItem: React.FC<Props> = ({ event, user, userIsValid, classes }) =
           {event.shortDescription ?? "Trykk for å lese mer"}
         </Box>
 
-        {userIsValid && event.isAttendable ? (
-          userAttendingEventData?.userAttendingRelation.isFull ? (
+        {user && event.isAttendable ? (
+          event.isFull ? (
             <Chip label="Venteliste tilgjengelig" />
-          ) : userAttendingEventData?.userAttendingRelation.isSignedUp ? (
+          ) : event.userAttendance?.isSignedUp ? (
             <Chip color="primary" label="Påmeldt" />
-          ) : userAttendingEventData?.userAttendingRelation.isOnWaitinglist ? (
+          ) : event.userAttendance?.isOnWaitingList ? (
             <Chip color="primary" label="På venteliste" />
           ) : (
             <Chip label="Påmelding tilgjengelig" />

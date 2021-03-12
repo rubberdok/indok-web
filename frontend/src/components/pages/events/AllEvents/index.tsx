@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/client";
+import { useLazyQuery, useQuery } from "@apollo/client";
 import { GET_USER } from "@graphql/auth/queries";
 import { GET_DEFAULT_EVENTS, GET_EVENTS } from "@graphql/events/queries";
 import { Event } from "@interfaces/events";
@@ -61,20 +61,26 @@ const AllEvents: React.FC = () => {
   const { loading: userLoading, error: userError, data: userData } = useQuery<{ user: User }>(GET_USER);
 
   const { loading: eventsLoading, error: eventsError, data: eventsData, refetch } = useQuery(GET_EVENTS, {
-    variables: filters,
+    variables: { ...filters, userId: userData?.user?.id },
   });
+
   const { loading: defaultEventsLoading, error: defaultEventsError, data: defaultEventsData } = useQuery(
-    GET_DEFAULT_EVENTS
+    GET_DEFAULT_EVENTS,
+    {
+      variables: { userId: userData?.user?.id },
+    }
   );
   const error = showDefaultEvents ? defaultEventsError : eventsError;
   const loading = showDefaultEvents ? defaultEventsLoading : eventsLoading;
-  if (error) return <Typography variant="body1">Kunne ikke hente arrangementer.</Typography>;
   const data = showDefaultEvents ? defaultEventsData?.defaultEvents : eventsData?.allEvents;
+
+  if (loading || userLoading) return <Typography variant="body1">Laster..</Typography>;
+  if (error) return <Typography variant="body1">Kunne ikke hente arrangementer.</Typography>;
 
   const onChange = (newFilters: FilterQuery) => {
     if (Object.keys(newFilters).length > 0 && showDefaultEvents) setShowDefaultEvents(false);
     setFilters(newFilters);
-    refetch(newFilters);
+    refetch({ ...newFilters, userId: userData?.user.id });
   };
 
   return (
@@ -132,13 +138,7 @@ const AllEvents: React.FC = () => {
                 <Typography variant="body1">Ingen arrangementer passer til valgte filtre.</Typography>
               ) : (
                 data.map((event: Event) => (
-                  <EventListItem
-                    key={event.id}
-                    event={event}
-                    userIsValid={userData && !userLoading && userData.user && !userError}
-                    user={userData?.user}
-                    classes={classes}
-                  />
+                  <EventListItem key={event.id} event={event} user={userData?.user} classes={classes} />
                 ))
               )}
             </>

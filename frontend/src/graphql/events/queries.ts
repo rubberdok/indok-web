@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 export const GET_EVENTS = gql`
-  query AllEvents($organization: String, $category: String, $startTime: DateTime, $endTime: DateTime) {
+  query AllEvents($organization: String, $category: String, $startTime: DateTime, $endTime: DateTime, $userId: ID) {
     allEvents(organization: $organization, category: $category, startTime: $startTime, endTime: $endTime) {
       id
       title
@@ -31,12 +31,17 @@ export const GET_EVENTS = gql`
       price
       shortDescription
       signupOpenDate
+      userAttendance(userId: $userId) {
+        isSignedUp
+        isOnWaitingList
+      }
+      isFull
     }
   }
 `;
 
 export const GET_DEFAULT_EVENTS = gql`
-  query defaultEvents {
+  query defaultEvents($userId: ID) {
     defaultEvents {
       id
       title
@@ -66,12 +71,17 @@ export const GET_DEFAULT_EVENTS = gql`
       price
       shortDescription
       signupOpenDate
+      userAttendance(userId: $userId) {
+        isSignedUp
+        isOnWaitingList
+      }
+      isFull
     }
   }
 `;
 
 export const GET_EVENT = gql`
-  query Event($id: ID!) {
+  query Event($id: ID!, $userId: ID) {
     event(id: $id) {
       id
       title
@@ -100,6 +110,11 @@ export const GET_EVENT = gql`
       price
       shortDescription
       signupOpenDate
+      userAttendance(userId: $userId) {
+        isSignedUp
+        isOnWaitingList
+      }
+      isFull
     }
   }
 `;
@@ -132,16 +147,6 @@ export const QUERY_EVENT_FILTERED_ORGANIZATIONS = gql`
         id
         name
       }
-    }
-  }
-`;
-
-export const QUERY_USER_ATTENDING_EVENT = gql`
-  query UserAttendingRelation($eventId: ID!, $userId: ID!) {
-    userAttendingRelation(eventId: $eventId, userId: $userId) {
-      isSignedUp
-      isOnWaitinglist
-      isFull
     }
   }
 `;

@@ -7,7 +7,7 @@ export interface Event {
   endTime?: string;
   location?: string;
   description: string;
-  organization?: { id: string; name: string; color?: string };
+  organization: { id: string; name: string; color?: string };
   category?: { id: string; name: string };
   image?: string;
   isAttendable: boolean;
@@ -16,6 +16,17 @@ export interface Event {
   availableSlots?: number;
   shortDescription?: string;
   signupOpenDate?: string;
+  userAttendance?: { isSignedUp: boolean; isOnWaitingList: boolean };
+  isFull?: boolean;
+  price?: number;
+}
+
+export interface AttendableEvent extends Event {
+  deadline: string;
+  availableSlots: number;
+  signupOpenDate: string;
+  userAttendance: { isSignedUp: boolean; isOnWaitingList: boolean };
+  isFull: boolean;
 }
 
 export interface Category {
