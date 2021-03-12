@@ -1,8 +1,8 @@
 import graphene
 from apps.events.models import Category, Event
-from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
 from graphene_django import DjangoObjectType
+from graphql_jwt.decorators import login_required
 
 from ..users.types import UserType
 
@@ -48,17 +48,25 @@ class EventType(DjangoObjectType):
         }
 
     @staticmethod
+    @login_required
     def resolve_users_on_waiting_list(event, info):
         user = info.context.user
-        if user in event.organization.members.all() or user.is_superuser:
+        if (
+            user.memberships.filter(organization=event.organization).exists()
+            or user.is_superuser
+        ):
             return event.users_on_waiting_list
         else:
             raise PermissionDenied("Du har ikke tilgang til den forespurte dataen")
 
     @staticmethod
+    @login_required
     def resolve_users_attending(event, info):
         user = info.context.user
-        if user in event.organization.members.all() or user.is_superuser:
+        if (
+            user.memberships.filter(organization=event.organization).exists()
+            or user.is_superuser
+        ):
             return event.users_attending
         else:
             raise PermissionDenied("Du har ikke tilgang til den forespurte dataen")

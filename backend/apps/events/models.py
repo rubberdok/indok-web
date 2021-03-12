@@ -63,7 +63,7 @@ class Event(models.Model):
             and self.available_slots is not None
             and self.signed_up_users.count() > self.available_slots
         ):
-            result = list(self.signed_up_users.all())[self.available_slots :]
+            result = list(self.signed_up_users.all()[self.available_slots :])
         return result
 
     @property
