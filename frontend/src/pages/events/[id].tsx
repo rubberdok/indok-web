@@ -7,12 +7,11 @@ import EventDetailPage from "../../components/pages/events/eventDetailPage";
 const EventInfo: NextPage = () => {
   const router = useRouter();
   const { id } = router.query;
-  const numberId = typeof id === "string" && parseInt(id);
 
   return (
     <Layout>
       <div style={{ paddingLeft: "4em", paddingRight: "4em" }}>
-        {numberId && <EventDetailPage eventId={numberId} />}
+        {id && typeof id === "string" && <EventDetailPage eventId={id} />}
       </div>
     </Layout>
   );

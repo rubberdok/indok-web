@@ -31,6 +31,11 @@ export const GET_EVENTS = gql`
       price
       shortDescription
       signupOpenDate
+      userAttendance {
+        isSignedUp
+        isOnWaitingList
+      }
+      isFull
     }
   }
 `;
@@ -66,6 +71,11 @@ export const GET_DEFAULT_EVENTS = gql`
       price
       shortDescription
       signupOpenDate
+      userAttendance {
+        isSignedUp
+        isOnWaitingList
+      }
+      isFull
     }
   }
 `;
@@ -100,6 +110,11 @@ export const GET_EVENT = gql`
       price
       shortDescription
       signupOpenDate
+      userAttendance {
+        isSignedUp
+        isOnWaitingList
+      }
+      isFull
     }
   }
 `;
@@ -132,16 +147,6 @@ export const QUERY_EVENT_FILTERED_ORGANIZATIONS = gql`
         id
         name
       }
-    }
-  }
-`;
-
-export const QUERY_USER_ATTENDING_EVENT = gql`
-  query UserAttendingRelation($eventId: ID!, $userId: ID!) {
-    userAttendingRelation(eventId: $eventId, userId: $userId) {
-      isSignedUp
-      isOnWaitinglist
-      isFull
     }
   }
 `;
