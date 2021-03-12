@@ -151,15 +151,6 @@ export const QUERY_EVENT_FILTERED_ORGANIZATIONS = gql`
   }
 `;
 
-export const QUERY_USER_ATTENDING_EVENT = gql`
-  query UserAttendingRelation($eventId: ID!, $userId: ID!) {
-    userAttendingRelation(eventId: $eventId, userId: $userId) {
-      isSignedUp
-      isOnWaitinglist
-      isFull
-    }
-  }
-`;
 
 export const QUERY_SIGNED_UP_USERS = gql`
   query Event($id: ID!) {
