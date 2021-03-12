@@ -10,7 +10,9 @@ const EventInfo: NextPage = () => {
 
   return (
     <Layout>
-      <div style={{ paddingLeft: "4em", paddingRight: "4em" }}>{id && <EventDetailPage eventId={id} />}</div>
+      <div style={{ paddingLeft: "4em", paddingRight: "4em" }}>
+        {id && typeof id === "string" && <EventDetailPage eventId={id} />}
+      </div>
     </Layout>
   );
 };

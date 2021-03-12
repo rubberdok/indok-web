@@ -1,12 +1,12 @@
-import { useLazyQuery, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { GET_USER } from "@graphql/auth/queries";
 import { GET_DEFAULT_EVENTS, GET_EVENTS } from "@graphql/events/queries";
 import { Event } from "@interfaces/events";
 import { User } from "@interfaces/users";
 import { CircularProgress, Container, Grid, makeStyles, Paper, Tab, Tabs, Typography } from "@material-ui/core";
 import React, { useState } from "react";
-import FilterMenu from "./FilterMenu/index";
 import EventListItem from "./EventListItem";
+import FilterMenu from "./FilterMenu/index";
 
 export interface FilterQuery {
   organization?: string;
@@ -58,7 +58,7 @@ const AllEvents: React.FC = () => {
   const [filters, setFilters] = useState({});
   const [showDefaultEvents, setShowDefaultEvents] = useState(true);
   const [showCalenderView, setShowCalenderView] = useState(false);
-  const { loading: userLoading, error: userError, data: userData } = useQuery<{ user: User }>(GET_USER);
+  const { loading: userLoading, data: userData } = useQuery<{ user: User }>(GET_USER);
 
   const { loading: eventsLoading, error: eventsError, data: eventsData, refetch } = useQuery(GET_EVENTS, {
     variables: { ...filters, userId: userData?.user?.id },
