@@ -156,13 +156,22 @@ const NavbarLinks: React.FC = () => {
           </div>
         </>
       ))}
-
       {!userData || loading || !userData.user || error ? (
-        <Link href={signInURL} passHref>
-          <Button className={[classes.navItem, classes.user].join(" ")} startIcon={<PersonIcon fontSize="small" />}>
-            Logg inn med Feide
-          </Button>
-        </Link>
+        <>
+          <a
+            className={classes.navItem}
+            href="https://www.ntnu.no/studier/mtiot"
+            target="_blank"
+            rel="noreferrer noopener"
+          >
+            Om studiet
+          </a>
+          <Link href={signInURL} passHref>
+            <Button className={[classes.navItem, classes.user].join(" ")} startIcon={<PersonIcon fontSize="small" />}>
+              Logg inn med Feide
+            </Button>
+          </Link>
+        </>
       ) : (
         <>
           <Link href="/archive">
