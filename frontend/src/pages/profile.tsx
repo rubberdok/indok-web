@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/client";
 import Layout from "@components/Layout";
 import { FirstLogin } from "@components/pages/profile/FirstLogin";
-import { GET_USER } from "@graphql/auth/queries";
+import { GET_USER } from "@graphql/users/queries";
 import { User } from "@interfaces/users";
 import {
   Button,
