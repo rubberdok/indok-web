@@ -150,3 +150,16 @@ export const QUERY_EVENT_FILTERED_ORGANIZATIONS = gql`
     }
   }
 `;
+
+
+export const QUERY_SIGNED_UP_USERS = gql`
+  query Event($id: ID!) {
+    event(id: $id) {
+      isAttendable
+      usersAttending {
+        id
+        email
+      }
+    }
+  }
+`;
