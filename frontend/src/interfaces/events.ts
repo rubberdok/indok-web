@@ -16,6 +16,7 @@ export interface Event {
   availableSlots?: number;
   shortDescription?: string;
   signupOpenDate?: string;
+  signedUpUsers: User[];
 }
 
 export interface Category {

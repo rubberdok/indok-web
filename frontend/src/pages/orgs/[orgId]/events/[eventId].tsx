@@ -1,4 +1,5 @@
 import Layout from "@components/Layout";
+import EmailForm from "@components/pages/events/EventEmail";
 import { Container, Typography } from "@material-ui/core";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
@@ -8,6 +9,7 @@ const EventAdminPage: NextPage = () => {
   const router = useRouter();
   const { eventId } = router.query;
   const numberId = typeof eventId === "string" && parseInt(eventId);
+  console.log(eventId, numberId);
 
   return (
     <Layout>
@@ -20,6 +22,7 @@ const EventAdminPage: NextPage = () => {
           /events/ og /events/[id] burde man kunne finne en link som tar deg til denne siden dersom du er superuser
           eller medlem av organisasjonen som arrangerer arrangementet.
         </Typography>
+        {eventId ? <EmailForm eventId={eventId} /> : <p>Laster...</p>}
       </Container>
     </Layout>
   );
