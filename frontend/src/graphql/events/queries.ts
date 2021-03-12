@@ -164,6 +164,7 @@ export const QUERY_USER_ATTENDING_EVENT = gql`
 export const QUERY_SIGNED_UP_USERS = gql`
   query Event($id: ID!) {
     event(id: $id) {
+      isAttendable
       usersAttending {
         id
         email
