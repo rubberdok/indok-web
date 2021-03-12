@@ -11,44 +11,78 @@ import { DATAPORTEN_SCOPES, generateAuthURL } from "./utils";
 
 const links = [
   {
-    id: "1",
+    id: 1,
     title: "Hjem",
     href: "/",
   },
   {
-    id: "2",
+    id: 2,
     title: "Om Foreningen",
     href: "/about",
   },
   {
-    id: "3",
+    id: 3,
+    title: "Organisasjoner",
+    href: "/organizations",
+    dropdown: [
+      {
+        id: 1,
+        title: "Janus IF",
+        href: "/about/organizations/sports",
+      },
+      {
+        id: 2,
+        title: "Indøk Kultur",
+        href: "/about/organizations/culture",
+      },
+    ],
+  },
+  {
+    id: 4,
     title: "Arrangementer",
     href: "/events",
   },
   {
-    id: "4",
+    id: 5,
     title: "Hyttebooking",
     href: "/cabins",
   },
 ];
 
 const useStyles = makeStyles(() => ({
+  nav: {
+    position: "relative",
+
+    "&:hover $dropdown": {
+      display: "block",
+    },
+  },
   navItem: {
     fontWeight: 600,
     fontSize: 12,
     textTransform: "uppercase",
-    marginLeft: 50,
-    padding: "10px 0",
+    height: "100%",
+    display: "flex",
+    alignItems: "center",
+    padding: "0 32px",
+    color: "#b0aca5",
+
     "&:hover": {
       cursor: "pointer",
+      color: "#fff",
+      textDecoration: "none",
     },
-    color: "white",
+
+    "&.active": {
+      color: "#fff",
+    },
   },
   user: {
     color: "white",
     height: "100%",
     background: "#065A5A",
     padding: "25px 0",
+    marginLeft: 16,
     paddingLeft: 35,
     paddingRight: "calc(5vw + 15px)",
     marginRight: "calc(-15px - 5vw)",
@@ -59,6 +93,18 @@ const useStyles = makeStyles(() => ({
   },
   menu: {
     width: 300,
+  },
+
+  dropdown: {
+    display: "none",
+    width: "100%",
+    background: "#022a2a",
+    position: "absolute",
+    paddingTop: 16,
+    ["& $navItem"]: {
+      marginTop: 10,
+      marginBottom: 10,
+    },
   },
 }));
 
@@ -87,9 +133,26 @@ const NavbarLinks: React.FC = () => {
   return (
     <>
       {links.map((item) => (
-        <Link key={item.id} href={item.href}>
-          <p className={[router.pathname == item.href ? "active" : "", classes.navItem].join(" ")}>{item.title}</p>
-        </Link>
+        <>
+          <div className={classes.nav}>
+            <Link key={item.id} href={item.href}>
+              <a className={[router.pathname == item.href ? "active" : "", classes.navItem].join(" ")}>{item.title}</a>
+            </Link>
+            {item.dropdown ? (
+              <div className={classes.dropdown}>
+                {item.dropdown.map((dropItem) => (
+                  <Link key={dropItem.id} href={dropItem.href}>
+                    <a className={[router.pathname == dropItem.href ? "active" : "", classes.navItem].join(" ")}>
+                      {dropItem.title}
+                    </a>
+                  </Link>
+                ))}
+              </div>
+            ) : (
+              ""
+            )}
+          </div>
+        </>
       ))}
 
       {!userData || loading || !userData.user || error ? (
@@ -100,7 +163,7 @@ const NavbarLinks: React.FC = () => {
       ) : (
         <>
           <Link href="/archive">
-            <p className={classes.navItem}>Arkiv</p>
+            <a className={[router.pathname == "/archive" ? "active" : "", classes.navItem].join(" ")}>Arkiv</a>
           </Link>
           <Button
             className={[classes.navItem, classes.user].join(" ")}
@@ -109,7 +172,7 @@ const NavbarLinks: React.FC = () => {
             aria-haspopup="true"
             onClick={handleMenu}
           >
-            <AccountCircleOutlined fontSize="small" style={{ marginBottom: "-7px", marginRight: "16px" }} />
+            <AccountCircleOutlined fontSize="small" style={{ marginRight: "16px" }} />
             {userData.user.firstName}
           </Button>
           <Menu

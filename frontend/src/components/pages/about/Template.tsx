@@ -59,7 +59,7 @@ const Template: React.FC<Props> = ({ children, img, title, description, page }) 
           justifyContent="center"
           className={classes.titleImage}
           style={{
-            backgroundImage: `linear-gradient(to top, rgb(0 0 0 / 50%), rgb(0 0 0 / 60%)),
+            backgroundImage: `linear-gradient(to top, rgb(2 28 28 / 60%), rgb(1 12 12 / 93%)),
                   url(${img})`,
           }}
         >
