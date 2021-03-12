@@ -87,15 +87,19 @@ const EmailFormDialog = ({
         </Grid>
       </DialogContent>
       <DialogActions>
-        <Button onClick={(_e) => setShowEmailForm(false)} color="primary">
-          <ClearIcon />
+        <Button startIcon={<ClearIcon />} onClick={(_e) => setShowEmailForm(false)} color="primary">
           Lukk
         </Button>
 
         <Tooltip disableHoverListener={Object.values(validations).every(Boolean)} title="Du må fylle inn alle feltene.">
           <Box>
-            <Button disabled={!Object.values(validations).every(Boolean)} onClick={(_e) => sendEmail()} color="primary">
-              <SendIcon style={{ margin: "5px" }} />
+            <Button
+              startIcon={<SendIcon />}
+              disabled={!Object.values(validations).every(Boolean)}
+              onClick={(_e) => sendEmail()}
+              color="primary"
+            >
+              {/* <SendIcon style={{ margin: "5px" }} /> */}
               Send e-post
             </Button>
           </Box>

@@ -37,24 +37,24 @@ const ConfirmationDialog = ({
       <DialogContent>
         <DialogContentText>
           <b>
-            Mail sendt til følgende {emailProps.receiverEmails.length > 1 ? emailProps.receiverEmails.length : ""}{" "}
-            adresse{emailProps.receiverEmails.length > 1 ? "r" : ""}:
-          </b>{" "}
-          <br />
-          {emailProps.receiverEmails.map((email, index) => (
-            <Typography key={index} component="span">
-              {email}
-              <br />
-            </Typography>
-          ))}
+            {`Mail sendt til følgende ${
+              emailProps.receiverEmails.length > 1 ? emailProps.receiverEmails.length : ""
+            }  adresse${emailProps.receiverEmails.length > 1 ? "r" : ""}:`}
+          </b>
         </DialogContentText>
+
+        {emailProps.receiverEmails.map((email, index) => (
+          <DialogContentText key={index} component="div">
+            {email}
+          </DialogContentText>
+        ))}
+
         <DialogContentText variant="body2">
           Kontakt <Link href="mailto:hswebkom@gmail.com">web@indokhs.no</Link> dersom det skulle oppstå spørsmål.
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={(_e) => handleConfirmationClose()} color="primary">
-          <ClearIcon />
+        <Button startIcon={<ClearIcon />} onClick={(_e) => handleConfirmationClose()} color="primary">
           Lukk
         </Button>
       </DialogActions>
