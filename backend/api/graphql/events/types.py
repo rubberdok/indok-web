@@ -1,7 +1,10 @@
 import graphene
 from apps.events.models import Category, Event
 from django.contrib.auth import get_user_model
+from django.core.exceptions import PermissionDenied
 from graphene_django import DjangoObjectType
+
+from ..users.types import UserType
 
 
 class UserAttendingType(graphene.ObjectType):
@@ -12,6 +15,8 @@ class UserAttendingType(graphene.ObjectType):
 class EventType(DjangoObjectType):
     user_attendance = graphene.Field(UserAttendingType, user_id=graphene.ID())
     is_full = graphene.Boolean()
+    users_on_waiting_list = graphene.List(UserType)
+    users_signed_up = graphene.List(UserType)
 
     class Meta:
         model = Event
@@ -44,10 +49,33 @@ class EventType(DjangoObjectType):
             return {"is_signed_up": False, "is_on_waiting_list": False}
         user = get_user_model().objects.get(pk=user_id)
         return {
-            "is_signed_up": user in event.signed_up_users.all()
-            and user not in event.users_on_waiting_list,
+            "is_signed_up": user in event.users_signed_up,
             "is_on_waiting_list": user in event.users_on_waiting_list,
         }
+
+    @staticmethod
+    def resolve_users_on_waiting_list(event, info):
+        user = info.context.user
+        if (
+            user is not None
+            and user in event.organization.members.all()
+            or user.is_superuser
+        ):
+            return event.users_on_waiting_list
+        else:
+            raise PermissionDenied("Du har ikke tilgang til den forespurte dataen")
+
+    @staticmethod
+    def resolve_users_signed_up(event, info):
+        user = info.context.user
+        if (
+            user is not None
+            and user in event.organization.members.all()
+            or user.is_superuser
+        ):
+            return event.users_signed_up
+        else:
+            raise PermissionDenied("Du har ikke tilgang til den forespurte dataen")
 
 
 class CategoryType(DjangoObjectType):
