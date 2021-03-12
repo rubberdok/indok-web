@@ -10,4 +10,5 @@ export interface User {
   allergies: string;
   phoneNumber: string;
   firstLogin: boolean;
+  events: Partial<Event>[];
 }
