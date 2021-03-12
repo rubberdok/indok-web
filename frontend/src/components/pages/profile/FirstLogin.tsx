@@ -1,6 +1,6 @@
 import { useMutation } from "@apollo/client";
-import { UPDATE_USER } from "@graphql/auth/mutations";
-import { GET_USER } from "@graphql/auth/queries";
+import { UPDATE_USER } from "@graphql/users/mutations";
+import { GET_USER } from "@graphql/users/queries";
 import { User } from "@interfaces/users";
 import {
   Button,
