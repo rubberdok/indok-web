@@ -11,7 +11,7 @@ from .mutations import (
     EventSignOff,
 )
 from .resolvers import EventResolvers
-from .types import CategoryType, EventType, UserAttendingType
+from .types import CategoryType, EventType
 
 
 class EventMutations(graphene.ObjectType):
@@ -35,10 +35,5 @@ class EventQueries(graphene.ObjectType, EventResolvers):
     )
     default_events = graphene.List(EventType)
     event = graphene.Field(EventType, id=graphene.ID(required=True))
-    user_attending_relation = graphene.Field(
-        UserAttendingType,
-        event_id=graphene.ID(required=True),
-        user_id=graphene.ID(required=True),
-    )
     all_categories = graphene.List(CategoryType)
     category = graphene.Field(CategoryType, id=graphene.ID(required=True))
