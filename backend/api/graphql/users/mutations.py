@@ -1,7 +1,8 @@
-from django.core.exceptions import ValidationError
+import datetime
+
 import graphene
 from api.auth.dataporten_auth import DataportenAuth
-from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
 from graphql_jwt.decorators import login_required
 from graphql_jwt.shortcuts import get_token
 
@@ -39,7 +40,7 @@ class UpdateUser(graphene.Mutation):
         email = graphene.String()
         first_name = graphene.String()
         last_name = graphene.String()
-        year = graphene.Int()
+        graduation_year = graphene.Int()
         phone_number = graphene.String()
         allergies = graphene.String()
 
@@ -51,7 +52,7 @@ class UpdateUser(graphene.Mutation):
         email=None,
         first_name=None,
         last_name=None,
-        year=None,
+        graduation_year=None,
         phone_number=None,
         allergies=None,
     ):
@@ -60,12 +61,21 @@ class UpdateUser(graphene.Mutation):
         if first_login:
             first_login = False
 
-        # TODO: fix validation. both phoneNumberField and emailFiled should validate automatically?
+        if graduation_year:
+            valid_year = True
+            now = datetime.datetime.now()
+            if now.month < 8:
+                if graduation_year not in range(now.year, now.year + 5):
+                    valid_year = False
+            else:
+                if graduation_year not in range(now.year, now.year + 6):
+                    valid_year = False
+            if not valid_year:
+                raise ValidationError(
+                    "Du må oppgi et gyldig årstrinn",
+                    params={"graduation_year": graduation_year},
+                )
 
-        if year and year not in range(1, 6):
-            raise ValidationError(
-                "Du må oppgi et gyldig årstrinn", params={"year": year}
-            )
         if phone_number:
             valid = True
             if phone_number.startswith("+"):
@@ -85,7 +95,9 @@ class UpdateUser(graphene.Mutation):
         user.email = email
         user.first_name = first_name if first_name is not None else user.first_name
         user.last_name = last_name if last_name is not None else user.last_name
-        user.year = year if year is not None else user.year
+        user.graduation_year = (
+            graduation_year if graduation_year is not None else user.graduation_year
+        )
         user.phone_number = (
             phone_number if phone_number is not None else user.phone_number
         )

@@ -33,6 +33,8 @@ const ProfilePage: NextPage = () => {
   const classes = useStyles();
   const router = useRouter();
 
+  let pendingRefetch = false;
+
   if (loading) {
     return <Typography variant="h1">Laster ...</Typography>;
   }
@@ -45,13 +47,16 @@ const ProfilePage: NextPage = () => {
     }
   }
 
-  if (data?.user?.firstLogin && !dialogOpen) {
+  if (data?.user?.firstLogin && !dialogOpen && !pendingRefetch) {
+    console.log("ye");
+    console.log("loading", loading);
     setDialogOpen(true);
   }
 
   const onFirstLoginSubmit = (refetch: boolean) => {
-    setDialogOpen(false);
+    pendingRefetch = true;
     refetch && refetchUser();
+    setDialogOpen(false);
   };
 
   return (
@@ -79,7 +84,7 @@ const ProfilePage: NextPage = () => {
                   </Typography>
                 )}
                 <Typography variant="body1">
-                  <strong>Klassetrinn:</strong> {data.user.year}
+                  <strong>Klassetrinn:</strong> {`${data.user.gradeYear} (avgangsår ${data.user.graduationYear})`}
                 </Typography>
                 {data.user.allergies && (
                   <Typography variant="body1">

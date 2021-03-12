@@ -6,7 +6,8 @@ export interface User {
   firstName: string;
   lastName: string;
   dateJoined: string;
-  year: number;
+  graduationYear: number;
+  gradeYear: number;
   allergies: string;
   phoneNumber: string;
   firstLogin: boolean;

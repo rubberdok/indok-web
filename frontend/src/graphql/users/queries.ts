@@ -10,7 +10,8 @@ export const GET_USER = gql`
       firstName
       lastName
       dateJoined
-      year
+      graduationYear
+      gradeYear
       allergies
       phoneNumber
       firstLogin

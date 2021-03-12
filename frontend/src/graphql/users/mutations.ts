@@ -12,7 +12,8 @@ export const AUTHENTICATE = gql`
         firstName
         lastName
         dateJoined
-        year
+        graduationYear
+        gradeYear
         allergies
         phoneNumber
         firstLogin
@@ -44,7 +45,7 @@ export const UPDATE_USER = gql`
     $email: String
     $firstName: String
     $lastName: String
-    $year: Int
+    $graduationYear: Int
     $phoneNumber: String
     $allergies: String
   ) {
@@ -52,7 +53,7 @@ export const UPDATE_USER = gql`
       email: $email
       firstName: $firstName
       lastName: $lastName
-      year: $year
+      graduationYear: $graduationYear
       phoneNumber: $phoneNumber
       allergies: $allergies
     ) {
@@ -64,7 +65,8 @@ export const UPDATE_USER = gql`
         firstName
         lastName
         dateJoined
-        year
+        graduationYear
+        gradeYear
         allergies
         phoneNumber
         firstLogin

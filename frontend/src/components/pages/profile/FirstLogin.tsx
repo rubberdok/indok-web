@@ -18,7 +18,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import { Check, Close } from "@material-ui/icons";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import validator from "validator";
 
 interface FirstLoginProps {
@@ -30,13 +30,13 @@ interface UpdateUserInput {
   email: string;
   phoneNumber: string;
   allergies: string;
-  year: number;
+  graduationYear: number;
 }
 
 interface Validations {
   email: boolean;
   phoneNumber: boolean;
-  year: boolean;
+  graduationYear: boolean;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -49,11 +49,17 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const validateInput = (input: Partial<UpdateUserInput>): Validations => {
-  const { email, phoneNumber, year } = input;
+  const { email, phoneNumber, graduationYear } = input;
+  const currentMonth = new Date().getMonth() + 1;
+  const currentYear = new Date().getFullYear();
   return {
     email: email ? validator.isEmail(email) : true,
     phoneNumber: phoneNumber ? validator.isMobilePhone(phoneNumber) : true,
-    year: year ? Number.isInteger(year) && year > 0 && year < 6 : true,
+    graduationYear: graduationYear
+      ? Number.isInteger(graduationYear) && currentMonth < 8
+        ? graduationYear >= currentYear && graduationYear <= currentYear + 4
+        : graduationYear >= currentYear && graduationYear <= currentYear + 5
+      : true,
   };
 };
 
@@ -68,7 +74,7 @@ export const FirstLogin: React.FC<FirstLoginProps> = ({ open, onSubmit }) => {
   const defaultValidations = {
     email: true,
     phoneNumber: true,
-    year: true,
+    graduationYear: true,
   };
 
   const [updateUserInput, setUpdateUserInput] = useState<Partial<UpdateUserInput>>();
@@ -79,7 +85,12 @@ export const FirstLogin: React.FC<FirstLoginProps> = ({ open, onSubmit }) => {
   const onInputChange = (key: string, event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     const newInput = {
       ...updateUserInput,
-      [key]: key === "year" ? parseInt(event.target.value) : event.target.value,
+      [key]:
+        key === "graduationYear"
+          ? event.target.value === ""
+            ? undefined
+            : parseInt(event.target.value)
+          : event.target.value,
     };
     setUpdateUserInput(newInput);
     setValidations(validateInput(newInput));
@@ -107,26 +118,15 @@ export const FirstLogin: React.FC<FirstLoginProps> = ({ open, onSubmit }) => {
           informasjon under for å forbedre brukeropplevelsen.
         </DialogContentText>
         <DialogContentText variant="body2">
-          Dersom du ikke oppgir en foretrukket e-post vil stud-mailen din brukes dersom det blir nødvendig å kontakte
-          deg via e-post.
-        </DialogContentText>
-        <DialogContentText variant="body2">
-          Telefonnummer vil kun benyttes til eventuell smittesporing ved påmelding på arrangementer.{" "}
-          <strong>
-            Dersom du ikke oppgir et telefonnummer innen du ønsker å melde deg på et arrangement vil det per nå ikke
-            være mulig å melde seg på da dette er påkrevd av arrangører.{" "}
-          </strong>
-        </DialogContentText>
-        <DialogContentText variant="body2">
-          Dersom du oppgir eventuelle allergier vil dette kun brukes under til kartlegging av matprefereanser ved
-          eventuell påmelding på arrangementer.
-        </DialogContentText>
-        <DialogContentText variant="body2">
           Merk: Du kan til enhver tid oppdatere eller slette informasjon som er lagret om deg på profilen din.
         </DialogContentText>
         <Grid container direction="column" spacing={4}>
           <Grid item>
             <InputLabel>Foretrukket e-post </InputLabel>
+            <DialogContentText variant="body2">
+              Dersom du ikke oppgir en foretrukket e-post vil stud-mailen din brukes dersom det blir nødvendig å
+              kontakte deg via e-post.
+            </DialogContentText>
             <TextField
               id="email"
               error={!validations.email}
@@ -140,6 +140,13 @@ export const FirstLogin: React.FC<FirstLoginProps> = ({ open, onSubmit }) => {
           </Grid>
           <Grid item>
             <InputLabel>Telefonnummer</InputLabel>
+            <DialogContentText variant="body2">
+              Telefonnummer vil kun benyttes til eventuell smittesporing ved påmelding på arrangementer.{" "}
+              <strong>
+                Dersom du ikke oppgir et telefonnummer innen du ønsker å melde deg på et arrangement vil det per nå ikke
+                være mulig å melde seg på da dette er påkrevd av arrangører.{" "}
+              </strong>
+            </DialogContentText>
             <TextField
               id="phoneNumber"
               error={!validations.phoneNumber}
@@ -153,6 +160,10 @@ export const FirstLogin: React.FC<FirstLoginProps> = ({ open, onSubmit }) => {
           </Grid>
           <Grid item>
             <InputLabel>Matpreferanser eller allergier</InputLabel>
+            <DialogContentText variant="body2">
+              Dersom du oppgir eventuelle allergier vil dette kun brukes under til kartlegging av matprefereanser ved
+              eventuell påmelding på arrangementer.
+            </DialogContentText>
             <TextField
               id="allergies"
               type="text"
@@ -165,14 +176,15 @@ export const FirstLogin: React.FC<FirstLoginProps> = ({ open, onSubmit }) => {
             />
           </Grid>
           <Grid item>
-            <InputLabel>Årstrinn</InputLabel>
+            <InputLabel>Avgangsår</InputLabel>
             <TextField
-              id="year"
-              error={!validations.year}
+              id="graduationYear"
+              error={!validations.graduationYear}
               type="number"
-              name="year"
-              value={updateUserInput?.year}
-              onChange={(e) => onInputChange("year", e)}
+              name="graduationYear"
+              value={updateUserInput?.graduationYear}
+              onChange={(e) => onInputChange("graduationYear", e)}
+              placeholder="2024"
               className={classes.textField}
             />
           </Grid>
