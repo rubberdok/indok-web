@@ -13,7 +13,7 @@ class UserAttendingType(graphene.ObjectType):
 
 
 class EventType(DjangoObjectType):
-    user_attendance = graphene.Field(UserAttendingType, user_id=graphene.ID())
+    user_attendance = graphene.Field(UserAttendingType)
     is_full = graphene.Boolean(source="is_full")
     users_on_waiting_list = graphene.List(UserType)
     users_attending = graphene.List(UserType)
@@ -40,10 +40,10 @@ class EventType(DjangoObjectType):
         ]
 
     @staticmethod
-    def resolve_user_attendance(event, info, user_id=None):
-        if not user_id:
+    def resolve_user_attendance(event, info):
+        user = info.context.user
+        if not user:
             return {"is_signed_up": False, "is_on_waiting_list": False}
-        user = get_user_model().objects.get(pk=user_id)
         return {
             "is_signed_up": user in event.users_attending,
             "is_on_waiting_list": user in event.users_on_waiting_list,

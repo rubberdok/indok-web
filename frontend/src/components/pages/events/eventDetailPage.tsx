@@ -132,7 +132,7 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
   const { data: eventData, error: eventError, loading: eventLoading, refetch: refetchEventData } = useQuery<{
     event: Event;
   }>(GET_EVENT, {
-    variables: { id: eventId, userId: userData?.user.id },
+    variables: { id: eventId },
   });
 
   const classes = useStyles();

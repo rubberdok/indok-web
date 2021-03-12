@@ -61,14 +61,11 @@ const AllEvents: React.FC = () => {
   const { loading: userLoading, data: userData } = useQuery<{ user: User }>(GET_USER);
 
   const { loading: eventsLoading, error: eventsError, data: eventsData, refetch } = useQuery(GET_EVENTS, {
-    variables: { ...filters, userId: userData?.user?.id },
+    variables: filters,
   });
 
   const { loading: defaultEventsLoading, error: defaultEventsError, data: defaultEventsData } = useQuery(
-    GET_DEFAULT_EVENTS,
-    {
-      variables: { userId: userData?.user?.id },
-    }
+    GET_DEFAULT_EVENTS
   );
   const error = showDefaultEvents ? defaultEventsError : eventsError;
   const loading = showDefaultEvents ? defaultEventsLoading : eventsLoading;
@@ -80,7 +77,7 @@ const AllEvents: React.FC = () => {
   const onChange = (newFilters: FilterQuery) => {
     if (Object.keys(newFilters).length > 0 && showDefaultEvents) setShowDefaultEvents(false);
     setFilters(newFilters);
-    refetch({ ...newFilters, userId: userData?.user.id });
+    refetch(newFilters);
   };
 
   return (

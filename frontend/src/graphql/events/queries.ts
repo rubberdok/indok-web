@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 export const GET_EVENTS = gql`
-  query AllEvents($organization: String, $category: String, $startTime: DateTime, $endTime: DateTime, $userId: ID) {
+  query AllEvents($organization: String, $category: String, $startTime: DateTime, $endTime: DateTime) {
     allEvents(organization: $organization, category: $category, startTime: $startTime, endTime: $endTime) {
       id
       title
@@ -31,7 +31,7 @@ export const GET_EVENTS = gql`
       price
       shortDescription
       signupOpenDate
-      userAttendance(userId: $userId) {
+      userAttendance {
         isSignedUp
         isOnWaitingList
       }
@@ -41,7 +41,7 @@ export const GET_EVENTS = gql`
 `;
 
 export const GET_DEFAULT_EVENTS = gql`
-  query defaultEvents($userId: ID) {
+  query defaultEvents {
     defaultEvents {
       id
       title
@@ -71,7 +71,7 @@ export const GET_DEFAULT_EVENTS = gql`
       price
       shortDescription
       signupOpenDate
-      userAttendance(userId: $userId) {
+      userAttendance {
         isSignedUp
         isOnWaitingList
       }
@@ -81,7 +81,7 @@ export const GET_DEFAULT_EVENTS = gql`
 `;
 
 export const GET_EVENT = gql`
-  query Event($id: ID!, $userId: ID) {
+  query Event($id: ID!) {
     event(id: $id) {
       id
       title
@@ -110,7 +110,7 @@ export const GET_EVENT = gql`
       price
       shortDescription
       signupOpenDate
-      userAttendance(userId: $userId) {
+      userAttendance {
         isSignedUp
         isOnWaitingList
       }
