@@ -12,6 +12,14 @@ styre:
     navn: Phillip Kolkmeier
     mail: tlf. 906 71 650
     tittel: Nestleder
+  brygg:
+    navn: Olav Førland
+    mail: tlf. 902 25 335
+    tittel: Bryggeansvarlig
+  pr:
+    navn: Marte Vingsnes
+    mail: tlf. 482 60 767
+    tittel: PR-ansvarlig
 ---
 
 # Hvem er vi?
@@ -21,21 +29,6 @@ Indøk Ølbryggelaug (Ind. Øl) er en sosial gjeng som samles regelmessig for å
 # Vil du bli med?
 
 Er du en ølelsker? Lyst til å lære mer om hvordan øl brygges? Ta kontakt med oss! Finn oss på facebook eller send oss en mail.indo
-
-20/21
-
-Leder
-tlf. 975 18 033
-Phillip Kolkmeier
-Nestleder
-tlf. 906 71 650
-
-Olav Førland
-Bryggeansvarlig
-tlf. 902 25 335
-Marte Vingsnes
-PR-ansvarlig
-tlf. 482 60 767
 
 ![Indølgjengen](/img/indolbilde.jpg)
 
