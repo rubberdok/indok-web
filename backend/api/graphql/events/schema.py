@@ -38,6 +38,10 @@ class EventQueries(graphene.ObjectType, EventResolvers):
     event = graphene.Field(EventType, id=graphene.ID(required=True))
     all_categories = graphene.List(CategoryType)
     category = graphene.Field(CategoryType, id=graphene.ID(required=True))
-    csv_attendee_export = graphene.String(id=graphene.ID(required=True))
-    csv_attendee_exports = graphene.String(ids=graphene.List(graphene.ID))
+    attendee_report = graphene.String(id=graphene.ID(required=True), 
+        fields=graphene.List(graphene.String, required=False), 
+        filetype=graphene.String(required=False))
+    attendee_report_org = graphene.String(ids=graphene.List(graphene.ID), 
+        fields=graphene.List(graphene.String), 
+        filetype=graphene.String(required=False))
     

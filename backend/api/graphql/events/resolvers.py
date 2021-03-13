@@ -4,6 +4,24 @@ from django.db.models import Q
 from django.http import HttpResponse
 from datetime import date
 import pandas as pd
+import json
+import io
+
+from collections import namedtuple
+import base64
+
+
+DEFAULT_REPORT_FIELDS = ['users__username', 'users__first_name', 'users__last_name', 'users__email', 'users__year']
+
+FiletypeSpec = namedtuple('Filetype', ['content_type', 'extension'])
+filetype_specs = {
+    "xlsx": FiletypeSpec(content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                         extension="xlsx"),
+    "csv": FiletypeSpec(content_type="text/csv",
+                         extension="csv"),
+    "html": FiletypeSpec(content_type="text/html",
+                         extension="html"),
+}
 
 
 class EventResolvers:
@@ -78,30 +96,72 @@ class EventResolvers:
         except Category.DoesNotExist:
             return None
 
-    def resolve_csv_attendee_export(parent, info, id, columns=None):
-        columns = DEFAULT_REPORT_COLUMNS if columns is None else columns
-        df = create_attendee_report(id, columns)
-        return to_csv_response(df, filename=f"attendee_report_{id}.csv")
 
-    def resolve_csv_attendee_exports(parent, info, ids, columns=None):
-        columns = DEFAULT_REPORT_COLUMNS if columns is None else columns
-        df = pd.concat([create_attendee_report(id, columns) for id in ids])
+    def resolve_attendee_report(parent, info, id, fields=None, filetype='csv'):
+        fields = DEFAULT_REPORT_FIELDS if fields is None else fields
+        df = create_attendee_report(id, fields)
+        file_basename = f"attendee_report_{id}"
+        return wrap_attendee_report_json(df, file_basename, filetype)
+
+    def resolve_attendee_report_org(parent, info, ids, fields=None, filetype='xlsx'):
+        fields = DEFAULT_REPORT_FIELDS if fields is None else fields
+        df = pd.concat([create_attendee_report(id, fields) for id in ids])
         filename = f"attendee_report_{'|'.join(str(id) for id in ids)}.csv"
-        return to_csv_response(df, filename=filename)
+
+        fields = DEFAULT_REPORT_FIELDS if fields is None else fields
+        event_ids = next(iter(Organization.objects.get(id=1).event_set.values_list("id")), [])
+        df = create_attendee_report(id, fields)
+        file_basename = f"attendee_report_{'|'.join(str(id) for id in ids)}"
+        return wrap_attendee_report_json(df, file_basename, filetype)
 
 
-DEFAULT_REPORT_COLUMNS = ['username', 'first_name', 'last_name', 'email', 'is_staff', 'year']
+def create_attendee_report(id, fields):
+    #df_events = pd.DataFrame.from_records(Event.objects.filter(id__in=ids))
+    #df_users = pd.DataFrame.from_records(User.objects.filter(id__in=ids))
+    #df_joined = df_events_users.join(df_events.set_index('id').add_prefix('events__'), on='user_id')
+#                           .join(df_users.set_index('id').add_prefix('users__'), on='event_id')
 
-def to_csv_response(dataframe, filename):
-    response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = f'attachment; filename={filename}'
-    dataframe.to_csv(path_or_buf=response)
-    return response
+    #event_id = 
+    query_set = Event.objects.get(id=id).signed_up_users.all().values()
+    if query_set:
+        return pd.DataFrame.from_records(query_set) \
+                           .add_prefix('users__') \
+                           .loc[:, DEFAULT_REPORT_FIELDS] \
+                           .drop('password', errors='ignore', axis=1) \
+                           .loc[:, fields]
+    return pd.DataFrame()
 
-def create_attendee_report(id_, columns):
+
+def wrap_attendee_report_json(df, file_basename, filetype):
+    # Handle different content types
+    if filetype == "xlsx":
+        buffer = io.BytesIO()
+        with pd.ExcelWriter(buffer, engine='xlsxwriter', options={'remove_timezone': True}) as writer:
+            df.to_excel(writer, index=False)
+        data = base64.b64encode(buffer.getvalue()).decode("utf-8")
+    elif filetype == "csv":
+        data = df.to_csv(index=False)
+    elif filetype == "html":
+        data = df.to_html(index=False)
+    else:
+        raise ValueError(f"Filetype not supported: '{filetype}'")
+    
+    spec = filetype_specs[filetype]
+    response = {
+        "data": data,
+        "filename": f"{file_basename}.{spec.extension}",
+        "contentType": spec.content_type
+    }
+    return json.dumps(response)
+
+
+def create_attendee_report_org(id_, fields):
     query_set = Event.objects.get(id=id_).signed_up_users.all().values()
     if query_set:
         return pd.DataFrame.from_records(query_set) \
+                           .loc[:, DEFAULT_REPORT_FIELDS] \
                            .drop('password', errors='ignore', axis=1) \
-                           .loc[:, columns]
+                           .loc[:, fields]
     return pd.DataFrame()
+
+qs = Organization.objects.get(id=1).event_set.all().values_list("id", "title", "start_time")
