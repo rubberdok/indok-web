@@ -41,7 +41,7 @@ class ArchiveDocumentResolvers:
         return documents.reverse()
 
     @login_required
-    def resolve_archive_by_names(self, info, names):
+def resolve_archive_by_names(self, info, names=None):
         if names:
             filteredDocs = ArchiveDocument.objects
             for element in names:
