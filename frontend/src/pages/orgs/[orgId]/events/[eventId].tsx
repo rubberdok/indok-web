@@ -1,7 +1,7 @@
 import { useLazyQuery } from "@apollo/client";
 import Layout from "@components/Layout";
 import { QUERY_ATTENDEE_REPORT } from "@graphql/events/queries";
-import { Button, CircularProgress, Container, Grid, Typography } from "@material-ui/core";
+import { Button, ButtonGroup, CircularProgress, Container, Grid, Typography } from "@material-ui/core";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import EmailForm from "@components/pages/events/EventEmail";
 import { NextPage } from "next";
@@ -17,10 +17,11 @@ const EventAdminPage: NextPage = () => {
     onCompleted: (data) => promptDownloadFromPayload(JSON.parse(data.attendeeReport)),
   });
 
-  const wrapDownloadButton = (eventId: string, filetype: string) => {
+  const wrapDownloadButtonReport = (eventId: string, filetype: string) => {
     return (
-      <Button onClick={() => getAttendeeReport({ variables: { id: eventId, filetype: filetype } })}>
-        <GetAppIcon fontSize="small" />({filetype})
+      <Button onClick={() => getAttendeeReport({ variables: { eventId: eventId, filetype: filetype } })}>
+        <GetAppIcon fontSize="small" />
+        {filetype}
       </Button>
     );
   };
@@ -43,10 +44,18 @@ const EventAdminPage: NextPage = () => {
           eller medlem av organisasjonen som arrangerer arrangementet.
         </Typography>
 
+        <br />
         <Grid container>
-          <Grid item>{wrapDownloadButton(typedEventId, "csv")}</Grid>
-          <Grid item>{wrapDownloadButton(typedEventId, "xlsx")}</Grid>
-          <Grid item>{wrapDownloadButton(typedEventId, "html")}</Grid>
+          <Grid item xs={12}>
+            <Typography variant="overline" display="block">
+              Eksportér påmeldingsliste
+            </Typography>
+          </Grid>
+          <ButtonGroup variant="text" color="primary" aria-label="text primary button group">
+            <Grid item>{wrapDownloadButtonReport(typedEventId, "csv")}</Grid>
+            <Grid item>{wrapDownloadButtonReport(typedEventId, "xlsx")}</Grid>
+            <Grid item>{wrapDownloadButtonReport(typedEventId, "html")}</Grid>
+          </ButtonGroup>
         </Grid>
         {eventId ? <EmailForm eventId={eventId} /> : <CircularProgress color="primary" />}
       </Container>

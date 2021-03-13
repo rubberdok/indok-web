@@ -2,6 +2,7 @@ from datetime import date
 
 from apps.events.models import Category, Event
 from apps.organizations.models import Organization
+from apps.users.models import User
 from django.db.models import Q
 from django.http import HttpResponse
 from datetime import date
@@ -13,7 +14,7 @@ from collections import namedtuple
 import base64
 
 
-DEFAULT_REPORT_FIELDS = ['users__username', 'users__first_name', 'users__last_name', 'users__email', 'users__year']
+DEFAULT_REPORT_FIELDS = ['event_id', 'event_title', 'user_id', 'user_username', 'user_first_name', 'user_last_name', 'user_email', 'user_year']
 
 FiletypeSpec = namedtuple('Filetype', ['content_type', 'extension'])
 filetype_specs = {
@@ -98,43 +99,53 @@ class EventResolvers:
         except Category.DoesNotExist:
             return None
 
+    def resolve_attendee_report(parent, info, event_id, fields=None, filetype='xlsx'):
+        df = create_attendee_report([event_id], fields)
+        file_basename = f"attendee_report__eventid_{event_id}"
+        return wrap_attendee_report_as_json(df, file_basename, filetype)
 
-    def resolve_attendee_report(parent, info, id, fields=None, filetype='csv'):
-        fields = DEFAULT_REPORT_FIELDS if fields is None else fields
-        df = create_attendee_report(id, fields)
-        file_basename = f"attendee_report_{id}"
-        return wrap_attendee_report_json(df, file_basename, filetype)
+    def resolve_attendee_reports(parent, info, event_ids, fields=None, filetype='xlsx'):
+        df = create_attendee_report(event_ids, fields)
+        file_basename = f"attendee_report__eventid_{'|'.join(str(id_) for id_ in event_ids)}"
+        return wrap_attendee_report_as_json(df, file_basename, filetype)
 
-    def resolve_attendee_report_org(parent, info, ids, fields=None, filetype='xlsx'):
-        fields = DEFAULT_REPORT_FIELDS if fields is None else fields
-        df = pd.concat([create_attendee_report(id, fields) for id in ids])
-        filename = f"attendee_report_{'|'.join(str(id) for id in ids)}.csv"
-
-        fields = DEFAULT_REPORT_FIELDS if fields is None else fields
-        event_ids = next(iter(Organization.objects.get(id=1).event_set.values_list("id")), [])
-        df = create_attendee_report(id, fields)
-        file_basename = f"attendee_report_{'|'.join(str(id) for id in ids)}"
-        return wrap_attendee_report_json(df, file_basename, filetype)
-
-
-def create_attendee_report(id, fields):
-    #df_events = pd.DataFrame.from_records(Event.objects.filter(id__in=ids))
-    #df_users = pd.DataFrame.from_records(User.objects.filter(id__in=ids))
-    #df_joined = df_events_users.join(df_events.set_index('id').add_prefix('events__'), on='user_id')
-#                           .join(df_users.set_index('id').add_prefix('users__'), on='event_id')
-
-    #event_id = 
-    query_set = Event.objects.get(id=id).signed_up_users.all().values()
-    if query_set:
-        return pd.DataFrame.from_records(query_set) \
-                           .add_prefix('users__') \
-                           .loc[:, DEFAULT_REPORT_FIELDS] \
-                           .drop('password', errors='ignore', axis=1) \
-                           .loc[:, fields]
-    return pd.DataFrame()
+    def resolve_attendee_report_org(parent, info, org_id, fields=None, filetype='xlsx'):
+        event_ids = Organization.objects \
+                                .get(id=org_id) \
+                                .event_set \
+                                .values_list("id", flat=True)
+        df = create_attendee_report(event_ids, fields)
+        file_basename = f"attendee_report__orgid_{org_id}"
+        return wrap_attendee_report_as_json(df, file_basename, filetype)
 
 
-def wrap_attendee_report_json(df, file_basename, filetype):
+def create_attendee_report(event_ids, fields):
+    fields = fields if fields is not None else DEFAULT_REPORT_FIELDS
+    user_ids = Event.objects.filter(id__in=event_ids) \
+                            .values_list("signed_up_users__id", flat=True)
+
+    # Fetch data
+    df_events = pd.DataFrame(Event.objects.filter(id__in=event_ids).values()) \
+                            .set_index('id') \
+                            .add_prefix('event_')
+    df_users = pd.DataFrame(User.objects.filter(id__in=user_ids).values()) \
+                            .set_index('id') \
+                            .add_prefix('user_')
+    df_events_users = pd.DataFrame(Event.signed_up_users.through.objects.all().values())
+    df_joined = df_events_users.join(df_events, on='event_id', how='inner') \
+                               .join(df_users, on='user_id', how='inner') \
+                               .sort_values(["event_id", "user_id"])
+
+    # Return empty dataframe, lookups on an empty frame will raise an exception
+    if df_joined.empty:
+        return pd.DataFrame()
+    return df_joined.loc[:, DEFAULT_REPORT_FIELDS] \
+                    .drop('password', errors='ignore', axis=1) \
+                    .loc[:, fields]
+    
+
+
+def wrap_attendee_report_as_json(df, file_basename, filetype):
     # Handle different content types
     if filetype == "xlsx":
         buffer = io.BytesIO()
@@ -155,15 +166,3 @@ def wrap_attendee_report_json(df, file_basename, filetype):
         "contentType": spec.content_type
     }
     return json.dumps(response)
-
-
-def create_attendee_report_org(id_, fields):
-    query_set = Event.objects.get(id=id_).signed_up_users.all().values()
-    if query_set:
-        return pd.DataFrame.from_records(query_set) \
-                           .loc[:, DEFAULT_REPORT_FIELDS] \
-                           .drop('password', errors='ignore', axis=1) \
-                           .loc[:, fields]
-    return pd.DataFrame()
-
-qs = Organization.objects.get(id=1).event_set.all().values_list("id", "title", "start_time")

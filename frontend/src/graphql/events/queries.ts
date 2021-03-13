@@ -152,14 +152,20 @@ export const QUERY_EVENT_FILTERED_ORGANIZATIONS = gql`
 `;
 
 export const QUERY_ATTENDEE_REPORT = gql`
-  query attendeeReport($id: ID!, $fields: [String], $filetype: String) {
-    attendeeReport(id: $id, fields: $fields, filetype: $filetype)
+  query attendeeReport($eventId: ID!, $fields: [String], $filetype: String) {
+    attendeeReport(eventId: $eventId, fields: $fields, filetype: $filetype)
   }
 `;
 
 export const QUERY_ATTENDEE_REPORT_ORG = gql`
-  query attendeeReportOrg($id: ID!, $fields: [String], $filetype: String) {
-    attendeeReportOrg(id: $id, fields: $fields, filetype: $filetype)
+  query attendeeReportOrg($orgId: ID!, $fields: [String], $filetype: String) {
+    attendeeReportOrg(orgId: $orgId, fields: $fields, filetype: $filetype)
+  }
+`;
+
+export const QUERY_ATTENDEE_REPORTS = gql`
+  query attendeeReports($eventIds: [ID]!, $fields: [String], $filetype: String) {
+    attendeeReports(eventIds: $eventIds, fields: $fields, filetype: $filetype)
   }
 `;
 
