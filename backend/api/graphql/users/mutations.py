@@ -72,20 +72,8 @@ class UpdateUser(graphene.Mutation):
                     valid_year = False
             if not valid_year:
                 raise ValidationError(
-                    "Du må oppgi et gyldig årstrinn",
+                    "Du må oppgi et gyldig avgangsår",
                     params={"graduation_year": graduation_year},
-                )
-
-        if phone_number:
-            valid = True
-            if phone_number.startswith("+"):
-                valid = phone_number[1:].isnumeric() and len(phone_number[3:]) == 8
-            else:
-                valid = phone_number.isnumeric() and len(phone_number) == 8
-            if not valid:
-                raise ValidationError(
-                    "Ugyldig telefonnummer",
-                    params={"phone_number": phone_number},
                 )
 
         if user.email:
@@ -103,7 +91,10 @@ class UpdateUser(graphene.Mutation):
         )
         user.allergies = allergies if allergies is not None else user.allergies
         user.first_login = first_login
-        user.save()
+
+        # Validate fields
+        user.full_clean(exclude=["password"])
+        user.save(update_fields=[])
 
         return UpdateUser(user=user)
 
