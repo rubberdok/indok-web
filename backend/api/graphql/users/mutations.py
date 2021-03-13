@@ -62,7 +62,7 @@ class UpdateUser(graphene.Mutation):
         user = info.context.user
 
         if user.first_login:
-            user.first_login = True
+            user.first_login = False
 
         graduation_year = user_data.get("graduation_year")
         if graduation_year:
@@ -90,7 +90,7 @@ class UpdateUser(graphene.Mutation):
 
         # Validate fields
         user.full_clean(exclude=["password"])
-        user.save(update_fields=[])
+        user.save()
 
         return UpdateUser(user=user)
 

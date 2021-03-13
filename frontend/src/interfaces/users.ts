@@ -20,5 +20,5 @@ export interface UserInput {
   email: string;
   phoneNumber: string;
   allergies: string;
-  graduationYear: number;
+  graduationYear: string;
 }

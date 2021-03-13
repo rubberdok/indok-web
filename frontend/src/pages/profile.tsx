@@ -33,8 +33,6 @@ const ProfilePage: NextPage = () => {
   const classes = useStyles();
   const router = useRouter();
 
-  let pendingRefetch = false;
-
   if (loading) {
     return <Typography variant="h1">Laster ...</Typography>;
   }
@@ -47,15 +45,14 @@ const ProfilePage: NextPage = () => {
     }
   }
 
-  if (data?.user?.firstLogin && !dialogOpen && !pendingRefetch) {
+  if (data?.user?.firstLogin && !dialogOpen) {
     console.log("ye");
     console.log("loading", loading);
     setDialogOpen(true);
   }
 
-  const onFirstLoginSubmit = (refetch: boolean) => {
-    pendingRefetch = true;
-    refetch && refetchUser();
+  const onFirstLoginSubmit = async () => {
+    await refetchUser();
     setDialogOpen(false);
   };
 
