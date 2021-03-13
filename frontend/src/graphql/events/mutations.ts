@@ -52,12 +52,6 @@ export const CREATE_EVENT = gql`
 export const EVENT_SIGN_UP = gql`
   mutation EventSignUp($eventId: ID!, $userId: ID!) {
     eventSignUp(eventId: $eventId, userId: $userId) {
-      event {
-        signedUpUsers {
-          id
-          username
-        }
-      }
       isFull
     }
   }
@@ -66,12 +60,6 @@ export const EVENT_SIGN_UP = gql`
 export const EVENT_SIGN_OFF = gql`
   mutation EventSignOff($eventId: ID!, $userId: ID!) {
     eventSignOff(eventId: $eventId, userId: $userId) {
-      event {
-        signedUpUsers {
-          id
-          username
-        }
-      }
       isFull
     }
   }
@@ -84,6 +72,14 @@ export const CREATE_CATEGORY = gql`
         id
         name
       }
+      ok
+    }
+  }
+`;
+
+export const SEND_EVENT_EMAILS = gql`
+  mutation SendEventMails($receiverEmails: [String], $content: String, $subject: String) {
+    sendEventMails(receiverEmails: $receiverEmails, content: $content, subject: $subject) {
       ok
     }
   }

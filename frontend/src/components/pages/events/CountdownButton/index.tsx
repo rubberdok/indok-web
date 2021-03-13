@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button } from "@material-ui/core";
+import { Button, CircularProgress, createStyles, makeStyles } from "@material-ui/core";
 
 const calculateTimeLeft = (countdownTime: string): Record<string, number> => {
   const difference = +new Date(countdownTime) - +new Date();
@@ -15,16 +15,44 @@ const calculateTimeLeft = (countdownTime: string): Record<string, number> => {
   return {};
 };
 
+const useStyles = makeStyles(() =>
+  createStyles({
+    wrapper: {
+      position: "relative",
+      float: "right",
+    },
+    buttonLoading: {
+      color: "background",
+      position: "absolute",
+      top: "50%",
+      left: "50%",
+      marginTop: -12,
+      marginLeft: -12,
+    },
+  })
+);
+
 interface Props {
   countDownDate: string;
   isSignedUp: boolean;
+  isOnWaitingList: boolean;
+  isFull: boolean;
   loading: boolean;
   onClick: () => void;
   styleClassName: any;
 }
 
-const CountdownButton: React.FC<Props> = ({ countDownDate, isSignedUp, onClick, styleClassName }) => {
+const CountdownButton: React.FC<Props> = ({
+  countDownDate,
+  isSignedUp,
+  isOnWaitingList,
+  isFull,
+  loading,
+  onClick,
+  styleClassName,
+}) => {
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft(countDownDate));
+  const classes = useStyles();
 
   useEffect(() => {
     const id = setTimeout(() => {
@@ -45,19 +73,26 @@ const CountdownButton: React.FC<Props> = ({ countDownDate, isSignedUp, onClick, 
   };
 
   return (
-    <Button
-      className={styleClassName}
-      variant="contained"
-      color={isSignedUp ? "inherit" : "primary"}
-      onClick={onClick}
-      disabled={currentTimePart !== undefined}
-    >
-      {currentTimePart
-        ? `Åpner om ${timeLeft[currentTimePart]} ${translate(currentTimePart, timeLeft[currentTimePart])}`
-        : isSignedUp
-        ? "Meld av"
-        : "Meld på"}
-    </Button>
+    <div className={classes.wrapper}>
+      <Button
+        className={styleClassName}
+        variant="contained"
+        color={isSignedUp || isOnWaitingList ? "inherit" : "primary"}
+        onClick={onClick}
+        disabled={currentTimePart !== undefined}
+      >
+        {currentTimePart
+          ? `Åpner om ${timeLeft[currentTimePart]} ${translate(currentTimePart, timeLeft[currentTimePart])}`
+          : isSignedUp
+          ? "Meld av"
+          : isOnWaitingList
+          ? "Meld av venteliste"
+          : isFull
+          ? "Meld på venteliste"
+          : "Meld på"}
+      </Button>
+      {loading && <CircularProgress size={24} className={classes.buttonLoading} />}
+    </div>
   );
 };
 

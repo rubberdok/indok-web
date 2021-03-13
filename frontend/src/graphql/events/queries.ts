@@ -28,13 +28,14 @@ export const GET_EVENTS = gql`
         dateJoined
       }
       availableSlots
-      signedUpUsers {
-        id
-        username
-      }
       price
       shortDescription
       signupOpenDate
+      userAttendance {
+        isSignedUp
+        isOnWaitingList
+      }
+      isFull
     }
   }
 `;
@@ -67,13 +68,14 @@ export const GET_DEFAULT_EVENTS = gql`
         dateJoined
       }
       availableSlots
-      signedUpUsers {
-        id
-        username
-      }
       price
       shortDescription
       signupOpenDate
+      userAttendance {
+        isSignedUp
+        isOnWaitingList
+      }
+      isFull
     }
   }
 `;
@@ -105,13 +107,14 @@ export const GET_EVENT = gql`
         dateJoined
       }
       availableSlots
-      signedUpUsers {
-        id
-        username
-      }
       price
       shortDescription
       signupOpenDate
+      userAttendance {
+        isSignedUp
+        isOnWaitingList
+      }
+      isFull
     }
   }
 `;
@@ -157,5 +160,17 @@ export const QUERY_ATTENDEE_REPORT = gql`
 export const QUERY_ATTENDEE_REPORT_ORG = gql`
   query attendeeReportOrg($id: ID!, $fields: [String], $filetype: String) {
     attendeeReportOrg(id: $id, fields: $fields, filetype: $filetype)
+  }
+`;
+
+export const QUERY_SIGNED_UP_USERS = gql`
+  query Event($id: ID!) {
+    event(id: $id) {
+      isAttendable
+      usersAttending {
+        id
+        email
+      }
+    }
   }
 `;

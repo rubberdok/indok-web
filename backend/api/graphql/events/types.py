@@ -1,8 +1,23 @@
+import graphene
 from apps.events.models import Category, Event
+from django.core.exceptions import PermissionDenied
 from graphene_django import DjangoObjectType
+from graphql_jwt.decorators import login_required
+
+from ..users.types import UserType
+
+
+class UserAttendingType(graphene.ObjectType):
+    is_signed_up = graphene.Boolean()
+    is_on_waiting_list = graphene.Boolean()
 
 
 class EventType(DjangoObjectType):
+    user_attendance = graphene.Field(UserAttendingType)
+    is_full = graphene.Boolean(source="is_full")
+    users_on_waiting_list = graphene.List(UserType)
+    users_attending = graphene.List(UserType)
+
     class Meta:
         model = Event
         fields = [
@@ -19,11 +34,42 @@ class EventType(DjangoObjectType):
             "deadline",
             "publisher",
             "available_slots",
-            "signed_up_users",
             "price",
             "signup_open_date",
             "short_description",
         ]
+
+    @staticmethod
+    def resolve_user_attendance(event, info):
+        user = info.context.user
+        return {
+            "is_signed_up": user in event.users_attending,
+            "is_on_waiting_list": user in event.users_on_waiting_list,
+        }
+
+    @staticmethod
+    @login_required
+    def resolve_users_on_waiting_list(event, info):
+        user = info.context.user
+        if (
+            user.memberships.filter(organization=event.organization).exists()
+            or user.is_superuser
+        ):
+            return event.users_on_waiting_list
+        else:
+            raise PermissionDenied("Du har ikke tilgang til den forespurte dataen")
+
+    @staticmethod
+    @login_required
+    def resolve_users_attending(event, info):
+        user = info.context.user
+        if (
+            user.memberships.filter(organization=event.organization).exists()
+            or user.is_superuser
+        ):
+            return event.users_attending
+        else:
+            raise PermissionDenied("Du har ikke tilgang til den forespurte dataen")
 
 
 class CategoryType(DjangoObjectType):

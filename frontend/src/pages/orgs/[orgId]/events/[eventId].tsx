@@ -1,8 +1,9 @@
 import { useLazyQuery } from "@apollo/client";
 import Layout from "@components/Layout";
 import { QUERY_ATTENDEE_REPORT } from "@graphql/events/queries";
-import { Button, Container, Grid, Typography } from "@material-ui/core";
+import { Button, CircularProgress, Container, Grid, Typography } from "@material-ui/core";
 import GetAppIcon from "@material-ui/icons/GetApp";
+import EmailForm from "@components/pages/events/EventEmail";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { promptDownloadFromPayload } from "@utils/exports";
@@ -47,6 +48,7 @@ const EventAdminPage: NextPage = () => {
           <Grid item>{wrapDownloadButton(typedEventId, "xlsx")}</Grid>
           <Grid item>{wrapDownloadButton(typedEventId, "html")}</Grid>
         </Grid>
+        {eventId ? <EmailForm eventId={eventId} /> : <CircularProgress color="primary" />}
       </Container>
     </Layout>
   );
