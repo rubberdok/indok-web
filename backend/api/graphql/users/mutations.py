@@ -71,11 +71,9 @@ class UpdateUser(graphene.Mutation):
             valid_year = True
             now = datetime.datetime.now()
             if now.month < 8:
-                if graduation_year not in range(now.year, now.year + 5):
-                    valid_year = False
+                valid_year = graduation_year in range(now.year, now.year + 5)
             else:
-                if graduation_year not in range(now.year + 1, now.year + 6):
-                    valid_year = False
+                valid_year = graduation_year in range(now.year + 1, now.year + 6)
             if not valid_year:
                 raise ValidationError(
                     "Du må oppgi et gyldig avgangsår",
