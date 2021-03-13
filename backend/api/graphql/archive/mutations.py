@@ -21,14 +21,13 @@ class CreateArchiveDocument(graphene.Mutation):
     arhiveDocument = graphene.Field(ArchiveDocumentType)
 
     @login_required
-    def mutate(root, info, title, date, type_doc, file_location, web_link):
+    def mutate(root, info, title, date, type_doc, file_location):
         archiveDocument = ArchiveDocumentModel.objects.create(
             title=title,
             date=date,
             uploaded_date=datetime.now(),
             type_doc=type_doc,
             file_location=file_location,
-            web_link=web_link,
         )
         ok = True
         return CreateArchiveDocument(archiveDocument=archiveDocument, ok=ok)
