@@ -12,4 +12,4 @@ class ArchiveDocumentType(DjangoObjectType):
 
     @staticmethod
     def resolve_thumbnail(root: ArchiveDocument, info):
-        return get_thumbnail(root.file_location)
+        return f"{get_thumbnail(root.file_location)}"

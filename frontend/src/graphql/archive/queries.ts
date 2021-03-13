@@ -14,18 +14,6 @@ export const GET_FEATURED = gql`
   }
 `;
 
-export const DOCUMENT = gql`
-  query archive($ID: ID!) {
-    archive(id: $ID) {
-      id
-      title
-      thumbnail
-      typeDoc
-      webLink
-    }
-  }
-`;
-
 export const GET_DOCSBYFILTERS = gql`
   query archiveByTypes($document_types: [String]!, $year: Int, $names: String) {
     archiveByTypes(typeDoc: $document_types, year: $year, names: $names) {
@@ -36,5 +24,11 @@ export const GET_DOCSBYFILTERS = gql`
       year
       webLink
     }
+  }
+`;
+
+export const GET_YEARS_SELECTOR = gql`
+  query {
+    yearsSelector
   }
 `;

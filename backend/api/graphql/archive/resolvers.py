@@ -1,5 +1,5 @@
 from apps.archive.models import ArchiveDocument
-from django.db.models import Q
+from django.db.models import Max, Min
 from django.db.models.sql import Query
 from graphql_jwt.decorators import login_required
 
@@ -8,20 +8,6 @@ class ArchiveDocumentResolvers:
     @login_required
     def resolve_featured_archive(self, info):
         return ArchiveDocument.objects.filter(featured=True)
-
-    @login_required
-    def resolve_archive(self, info, id):
-        try:
-            return ArchiveDocument.objects.get(id=id)
-        except ArchiveDocument.DoesNotExist:
-            return None
-
-    @login_required
-    def resolve_archive_by_date(self, info, date):
-        try:
-            return ArchiveDocument.objects.get(date=date)
-        except ArchiveDocument.DoesNotExist:
-            return None
 
     @login_required
     def resolve_archive_by_types(self, info, type_doc, year=None, names=None):
@@ -37,10 +23,7 @@ class ArchiveDocumentResolvers:
         return documents.reverse()
 
     @login_required
-    def resolve_archive_by_names(self, info, names):
-        if names:
-            filteredDocs = ArchiveDocument.objects
-            for element in names:
-                filteredDocs = filteredDocs.filter(title__icontains=element)
-            return filteredDocs
-        return ArchiveDocument.objects.all()
+    def resolve_years_selector(self, info):
+        min_year = ArchiveDocument.objects.aggregate(Min("year"))
+        max_year = ArchiveDocument.objects.aggregate(Max("year"))
+        return [min_year, max_year]
