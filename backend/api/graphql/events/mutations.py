@@ -1,4 +1,4 @@
-from datetime import datetime
+from django.utils import timezone
 
 import graphene
 from apps.events import models
@@ -74,24 +74,37 @@ class DeleteEvent(graphene.Mutation):
         return DeleteEvent(event=event, ok=ok)
 
 
-class EventSignUpOrOffInput(graphene.InputObjectType):
-    user_id = graphene.ID(required=True)
+class EventSignUpInput(graphene.InputObjectType):
+    extra_information = graphene.String(required=False)
 
 
 class EventSignUp(graphene.Mutation):
     class Arguments:
         event_id = graphene.ID(required=True)
-        user_id = graphene.ID(required=True)
+        data = EventSignUpInput(required=False)
 
     is_full = graphene.Boolean()
     event = graphene.Field(EventType)
 
-    def mutate(self, info, event_id, user_id):
+    @login_required
+    def mutate(self, info, event_id, data):
         event = models.Event.objects.get(pk=event_id)
-        user = get_user_model().objects.get(pk=user_id)
+        user = info.context.user
 
-        event.signed_up_users.add(user)
-        event.save()
+        sign_up = models.SignUp()
+        if data.extra_information:
+            setattr(sign_up, "extra_information", data.extra_information)
+
+        setattr(sign_up, "timestamp", timezone.now())
+        setattr(sign_up, "is_attending", True)
+        setattr(sign_up, "event", event)
+        setattr(sign_up, "user", user)
+        setattr(sign_up, "user_email", user.email)
+        setattr(sign_up, "user_allergies", user.allergies)
+        setattr(sign_up, "user_phone_number", user.phone_number)
+        setattr(sign_up, "user_grade_year", user.grade_year)
+
+        sign_up.save()
 
         return EventSignUp(event=event, is_full=event.is_full)
 
@@ -99,17 +112,20 @@ class EventSignUp(graphene.Mutation):
 class EventSignOff(graphene.Mutation):
     class Arguments:
         event_id = graphene.ID(required=True)
-        user_id = graphene.ID(required=True)
 
     is_full = graphene.Boolean()
     event = graphene.Field(EventType)
 
-    def mutate(self, info, event_id, user_id):
+    @login_required
+    def mutate(self, info, event_id):
         event = models.Event.objects.get(pk=event_id)
-        user = get_user_model().objects.get(pk=user_id)
+        user = info.context.user
 
-        event.signed_up_users.remove(user)
-        event.save()
+        sign_up = models.SignUp.objects.order_by("-timestamp").get(
+            user=user, event=event
+        )
+        setattr(sign_up, "is_attending", False)
+        sign_up.save()
 
         return EventSignOff(event=event, is_full=event.is_full)
 

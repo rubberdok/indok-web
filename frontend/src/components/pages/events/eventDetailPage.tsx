@@ -3,7 +3,7 @@ import { GET_USER } from "@graphql/users/queries";
 import { EVENT_SIGN_OFF, EVENT_SIGN_UP } from "@graphql/events/mutations";
 import { AttendableEvent, Event } from "@interfaces/events";
 import { User } from "@interfaces/users";
-import { Box, Button, Grid, Paper, Snackbar, Typography } from "@material-ui/core";
+import { Box, Button, Grid, Paper, Snackbar, Typography, TextField } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import CategoryIcon from "@material-ui/icons/Category";
 import CreditCard from "@material-ui/icons/CreditCard";
@@ -117,14 +117,16 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
   const [openSignOffSnackbar, setOpenSignOffSnackbar] = useState(false);
   const [openOnWaitingListSnackbar, setOpenOnWaitingListSnackbar] = useState(false);
   const [openOffWaitingListSnackbar, setOpenOffWaitingListSnackbar] = useState(false);
-  const [openErrorSnackbar, setOpenErrorSnackbar] = useState(false);
+  const [openSignUpErrorSnackbar, setOpenSignUpErrorSnackbar] = useState(false);
+  const [openSignOffErrorSnackbar, setOpenSignOffErrorSnackbar] = useState(false);
+  const [extraInformation, setExtraInformation] = useState<string>();
 
   const [eventSignUp, { loading: signUpLoading }] = useMutation<{
-    eventSignUp: { event: Event; isFull: boolean };
+    eventSignUp: { isFull: boolean };
   }>(EVENT_SIGN_UP);
 
   const [eventSignOff, { loading: signOffLoading }] = useMutation<{
-    eventSignOff: { event: Event; isFull: boolean };
+    eventSignOff: { isFull: boolean };
   }>(EVENT_SIGN_OFF);
 
   const { data: userData } = useQuery<{ user: User }>(GET_USER);
@@ -146,35 +148,35 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
   const handleClick = () => {
     if (!userData.user) return;
     if (eventData.event.userAttendance?.isSignedUp) {
-      eventSignOff({ variables: { eventId: eventId.toString(), userId: userData?.user.id } })
+      eventSignOff({ variables: { eventId: eventId.toString() } })
         .then(() => {
-          refetchEventData({ eventId: eventId.toString(), userId: userData?.user.id });
+          refetchEventData({ eventId: eventId.toString() });
           setOpenSignOffSnackbar(true);
         })
         .catch(() => {
-          setOpenErrorSnackbar(true);
+          setOpenSignOffErrorSnackbar(true);
         });
       return;
     }
     if (eventData.event.userAttendance?.isOnWaitingList) {
-      eventSignOff({ variables: { eventId: eventId.toString(), userId: userData?.user.id } })
+      eventSignOff({ variables: { eventId: eventId.toString() } })
         .then(() => {
-          refetchEventData({ eventId: eventId.toString(), userId: userData?.user.id });
+          refetchEventData({ eventId: eventId.toString() });
           setOpenOffWaitingListSnackbar(true);
         })
         .catch(() => {
-          setOpenErrorSnackbar(true);
+          setOpenSignOffErrorSnackbar(true);
         });
       return;
     }
-    eventSignUp({ variables: { eventId: eventId.toString(), userId: userData.user.id } })
+    eventSignUp({ variables: { eventId: eventId.toString(), data: extraInformation } })
       .then(() => {
-        refetchEventData({ eventId: eventId.toString(), userId: userData.user.id }).then((res) => {
+        refetchEventData({ eventId: eventId.toString() }).then((res) => {
           res.data.event.userAttendance?.isSignedUp ? setOpenSignUpSnackbar(true) : setOpenOnWaitingListSnackbar(true);
         });
       })
       .catch(() => {
-        setOpenErrorSnackbar(true);
+        setOpenSignUpErrorSnackbar(true);
       });
   };
 
@@ -282,20 +284,58 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
                 isOnWaitingList={(eventData.event as AttendableEvent).userAttendance.isOnWaitingList}
                 isFull={(eventData.event as AttendableEvent).isFull}
                 loading={signOffLoading || signUpLoading || eventLoading}
+                disabled={
+                  eventData.event.hasExtraInformation &&
+                  (!extraInformation || extraInformation === "") &&
+                  !eventData.event.userAttendance?.isSignedUp &&
+                  !eventData.event.userAttendance?.isOnWaitingList
+                }
                 onClick={handleClick}
                 styleClassName={classes.signUpButton}
               />
 
+              {eventData.event.hasExtraInformation &&
+                !eventData.event.userAttendance?.isSignedUp &&
+                !eventData.event.userAttendance?.isOnWaitingList && (
+                  <TextField
+                    style={{
+                      position: "relative",
+                      float: "right",
+                      paddingRight: "1em",
+                      paddingBottom: "1em",
+                    }}
+                    label="Ekstrainformasjon"
+                    multiline
+                    rows={2}
+                    required
+                    placeholder="Skriv her..."
+                    variant="outlined"
+                    onChange={(e) => setExtraInformation(e.target.value)}
+                  />
+                )}
+
               <Snackbar
                 anchorOrigin={{ vertical: "top", horizontal: "right" }}
-                open={openErrorSnackbar}
+                open={openSignUpErrorSnackbar}
                 autoHideDuration={3000}
-                onClose={() => setOpenErrorSnackbar(false)}
+                onClose={() => setOpenSignUpErrorSnackbar(false)}
               >
                 <Alert elevation={6} variant="filled" severity="error">
                   Påmelding feilet
                 </Alert>
               </Snackbar>
+
+              <Snackbar
+                anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                open={openSignOffErrorSnackbar}
+                autoHideDuration={3000}
+                onClose={() => setOpenSignUpErrorSnackbar(false)}
+              >
+                <Alert elevation={6} variant="filled" severity="error">
+                  Avmelding feilet
+                </Alert>
+              </Snackbar>
+
               <Snackbar
                 anchorOrigin={{ vertical: "top", horizontal: "right" }}
                 open={openSignOffSnackbar}
