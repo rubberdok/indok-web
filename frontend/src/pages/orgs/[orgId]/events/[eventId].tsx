@@ -1,12 +1,12 @@
 import { useLazyQuery } from "@apollo/client";
 import Layout from "@components/Layout";
+import EmailForm from "@components/pages/events/EventEmail";
 import { QUERY_ATTENDEE_REPORT } from "@graphql/events/queries";
 import { Button, ButtonGroup, CircularProgress, Container, Grid, Typography } from "@material-ui/core";
 import GetAppIcon from "@material-ui/icons/GetApp";
-import EmailForm from "@components/pages/events/EventEmail";
+import { promptDownloadFromPayload } from "@utils/exports";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
-import { promptDownloadFromPayload } from "@utils/exports";
 
 const EventAdminPage: NextPage = () => {
   const router = useRouter();
