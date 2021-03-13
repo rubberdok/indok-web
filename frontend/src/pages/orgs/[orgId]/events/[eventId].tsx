@@ -61,10 +61,10 @@ const dateEventFields: HeaderValuePair<Event>[] = [
 const EventAdminPage: NextPage = () => {
   const router = useRouter();
   const { eventId } = router.query;
-  const numberId = typeof eventId === "string" ? parseInt(eventId) : -1;
+  const eventNumberID = parseInt(eventId as string);
 
   const { loading, data } = useQuery<{ event: Event }, { id: number }>(GET_EVENT, {
-    variables: { id: numberId },
+    variables: { id: eventNumberID },
   });
 
   const renderInfo = (label: string, value: string) => (

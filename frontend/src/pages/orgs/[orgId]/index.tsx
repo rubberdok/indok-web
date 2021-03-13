@@ -45,7 +45,7 @@ const useStyles = makeStyles(() => ({
 const OrganizationDetailPage: NextPage = () => {
   const router = useRouter();
   const { orgId } = router.query;
-  const orgNumberId = typeof orgId === "string" ? parseInt(orgId) : -1;
+  const orgNumberId = parseInt(orgId as string);
 
   const classes = useStyles();
 
