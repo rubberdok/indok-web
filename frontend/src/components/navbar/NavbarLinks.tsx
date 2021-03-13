@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { GET_USER } from "@graphql/auth/queries";
+import { GET_USER } from "@graphql/users/queries";
 import { User } from "@interfaces/users";
 import { makeStyles } from "@material-ui/core";
 import Link from "next/link";

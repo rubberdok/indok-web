@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "graphene_django",
     "rest_framework",
+    "phonenumber_field",
 ]
 
 AUTH_USER_MODEL = "users.User"

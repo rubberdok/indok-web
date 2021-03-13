@@ -1,15 +1,15 @@
 export interface User {
   id: string;
-  username: string;
-  isStaff: boolean;
-  isActive: boolean;
-  isSuperuser: boolean;
+  feideEmail: string;
   email: string;
+  username: string;
   firstName: string;
   lastName: string;
-  feideUserid: string;
-  lastLogin: string;
   dateJoined: string;
-  year: number;
-  events: { id: string }[];
+  graduationYear: number;
+  gradeYear: number;
+  allergies: string;
+  phoneNumber: string;
+  firstLogin: boolean;
+  events: Partial<Event>[];
 }
