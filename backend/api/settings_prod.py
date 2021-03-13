@@ -5,7 +5,7 @@ from sentry_sdk.integrations.django import DjangoIntegration
 
 from api.settings import *
 
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ["api.gamma.indokntnu.no"]
 

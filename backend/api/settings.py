@@ -73,6 +73,7 @@ MIDDLEWARE = [
     "django_alive.middleware.healthcheck_bypass_host_check",
     "api.auth.middleware.IndokWebJWTMiddleware",
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -162,7 +163,10 @@ PHONENUMBER_DEFAULT_REGION = "NO"
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = "/static/"
-STATICFILES_DIRS = ["backend/static/cabins"]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
+
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+
 
 # CONFIG
 EMAIL_HOST_USER = env("BOOKING_EMAIL")
