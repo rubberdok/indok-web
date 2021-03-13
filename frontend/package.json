@@ -34,9 +34,12 @@
     "react-dom": "^16.13.1",
     "react-feather": "^2.0.8",
     "react-icons": "^3.11.0",
-    "ts-debounce": "^3.0.0",
+    "react-slick": "^0.28.1",
     "react-swipeable-views": "^0.13.9",
     "react-swipeable-views-utils": "^0.14.0-alpha.0",
+    "slick-carousel": "^1.8.1",
+    "styled-components": "^5.2.1",
+    "ts-debounce": "^3.0.0",
     "validator": "^13.5.2"
   },
   "devDependencies": {
