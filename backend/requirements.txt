@@ -14,6 +14,7 @@ graphene==2.1.8
 graphene-django==2.13.0
 graphql-core==2.3.2
 graphql-relay==2.0.1
+gunicorn==20.0.4
 idna==2.10
 promise==2.3
 psycopg2-binary==2.8.5
@@ -32,3 +33,4 @@ google-api-python-client==1.12.5
 google_auth_oauthlib==0.4.1
 pillow==7.2.0
 urllib3==1.25.11
+whitenoise==5.2.0
