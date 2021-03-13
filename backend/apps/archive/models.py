@@ -8,8 +8,6 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from datetime import datetime
 
 
-# Create your models here.
-
 
 class FileType(models.TextChoices):
     BUD = ("Budsjett og Regnskap",)
