@@ -41,22 +41,8 @@ export const GET_ID_TOKEN = gql`
 `;
 
 export const UPDATE_USER = gql`
-  mutation UpdateUser(
-    $email: String
-    $firstName: String
-    $lastName: String
-    $graduationYear: Int
-    $phoneNumber: String
-    $allergies: String
-  ) {
-    updateUser(
-      email: $email
-      firstName: $firstName
-      lastName: $lastName
-      graduationYear: $graduationYear
-      phoneNumber: $phoneNumber
-      allergies: $allergies
-    ) {
+  mutation UpdateUser($userData: UserInput) {
+    updateUser(userData: $userData) {
       user {
         id
         feideEmail

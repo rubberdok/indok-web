@@ -1,7 +1,7 @@
 import { useMutation } from "@apollo/client";
 import { UPDATE_USER } from "@graphql/users/mutations";
 import { GET_USER } from "@graphql/users/queries";
-import { User } from "@interfaces/users";
+import { User, UserInput } from "@interfaces/users";
 import {
   Button,
   createStyles,
@@ -26,13 +26,6 @@ interface FirstLoginProps {
   onSubmit: (refetch: boolean) => void;
 }
 
-interface UpdateUserInput {
-  email: string;
-  phoneNumber: string;
-  allergies: string;
-  graduationYear: number;
-}
-
 interface Validations {
   email: boolean;
   phoneNumber: boolean;
@@ -48,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const validateInput = (input: Partial<UpdateUserInput>): Validations => {
+const validateInput = (input: Partial<UserInput>): Validations => {
   const { email, phoneNumber, graduationYear } = input;
   const currentMonth = new Date().getMonth() + 1;
   const currentYear = new Date().getFullYear();
@@ -58,7 +51,7 @@ const validateInput = (input: Partial<UpdateUserInput>): Validations => {
     graduationYear: graduationYear
       ? Number.isInteger(graduationYear) && currentMonth < 8
         ? graduationYear >= currentYear && graduationYear <= currentYear + 4
-        : graduationYear >= currentYear && graduationYear <= currentYear + 5
+        : graduationYear >= currentYear + 1 && graduationYear <= currentYear + 5
       : true,
   };
 };
@@ -77,7 +70,7 @@ export const FirstLogin: React.FC<FirstLoginProps> = ({ open, onSubmit }) => {
     graduationYear: true,
   };
 
-  const [updateUserInput, setUpdateUserInput] = useState<Partial<UpdateUserInput>>();
+  const [updateUserInput, setUpdateUserInput] = useState<Partial<UserInput>>();
   const [validations, setValidations] = useState<Validations>(defaultValidations);
 
   const invalidInput = () => !Object.values(validations).every(Boolean);
@@ -98,7 +91,7 @@ export const FirstLogin: React.FC<FirstLoginProps> = ({ open, onSubmit }) => {
 
   const handleSubmit = () => {
     updateUser({
-      variables: updateUserInput,
+      variables: { userData: updateUserInput },
       update: (cache, { data }) => {
         if (!data || !data.updateUser || !data.updateUser.user) {
           return;
@@ -186,6 +179,7 @@ export const FirstLogin: React.FC<FirstLoginProps> = ({ open, onSubmit }) => {
               onChange={(e) => onInputChange("graduationYear", e)}
               placeholder="2024"
               className={classes.textField}
+              required
             />
           </Grid>
         </Grid>

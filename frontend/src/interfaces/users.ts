@@ -13,3 +13,12 @@ export interface User {
   firstLogin: boolean;
   events: Partial<Event>[];
 }
+
+export interface UserInput {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber: string;
+  allergies: string;
+  graduationYear: number;
+}
