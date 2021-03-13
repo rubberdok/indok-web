@@ -3,6 +3,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
+import { GET_AVAILABLE_YEARS } from "@graphql/archive/queries";
+import { CircularProgress } from "@material-ui/core";
+import { useQuery } from "@apollo/client";
 
 const useStyles = makeStyles(() => ({
   quantityRoot: {
@@ -81,6 +84,12 @@ interface YearSelectorProps {
 const YearSelector: React.FC<YearSelectorProps> = ({ yearFilter, handleYearFilterChanged }) => {
   const classes = useStyles();
 
+  const { loading, data, error } = useQuery<{ availableYears: string[] }>(GET_AVAILABLE_YEARS);
+
+  if (loading) return <CircularProgress />;
+
+  if (error) return <p style={{ textAlign: "center" }}> Feil: {error.message} </p>;
+
   return (
     <div className={classes.quantityRoot}>
       <FormControl variant="outlined" className={classes.quantityRoot}>
@@ -99,20 +108,12 @@ const YearSelector: React.FC<YearSelectorProps> = ({ yearFilter, handleYearFilte
           MenuProps={{ classes: { paper: classes.selectPaper } }}
         >
           <MenuItem value="">Alle år</MenuItem>
-          <MenuItem value="2021">2021</MenuItem>
-          <MenuItem value="2020">2020</MenuItem>
-          <MenuItem value="2019">2019</MenuItem>
-          <MenuItem value="2018">2018</MenuItem>
-          <MenuItem value="2017">2017</MenuItem>
-          <MenuItem value="2016">2016</MenuItem>
-          <MenuItem value="2015">2015</MenuItem>
-          <MenuItem value="2014">2014</MenuItem>
-          <MenuItem value="2013">2013</MenuItem>
-          <MenuItem value="2012">2012</MenuItem>
-          <MenuItem value="2011">2011</MenuItem>
-          <MenuItem value="2010">2010</MenuItem>
-          <MenuItem value="2009">2009</MenuItem>
-          <MenuItem value="2008">2008</MenuItem>
+          {data &&
+            data.availableYears.map((year) => (
+              <MenuItem key={year} value={year}>
+                {year}
+              </MenuItem>
+            ))}
         </Select>
       </FormControl>
     </div>

@@ -24,7 +24,10 @@ class ArchiveDocumentResolvers:
         return documents.reverse()
 
     @login_required
-    def resolve_years_selector(self, info):
-        min_year = ArchiveDocument.objects.aggregate(Min("year"))
-        max_year = ArchiveDocument.objects.aggregate(Max("year"))
-        return [min_year, max_year]
+    def resolve_available_years(self, info):
+        return (
+            ArchiveDocument.objects.distinct("year")
+            .exclude(year=None)
+            .values_list("year", flat=True)
+            .order_by("-year")
+        )

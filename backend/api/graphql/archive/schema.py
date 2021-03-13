@@ -25,4 +25,4 @@ class ArchiveQueries(graphene.ObjectType, ArchiveDocumentResolvers):
         year=graphene.Int(required=False),
         names=graphene.String(required=False),
     )
-    years_selector = graphene.List(graphene.String)
+    available_years = graphene.List(graphene.String)

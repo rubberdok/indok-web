@@ -27,8 +27,8 @@ export const GET_DOCSBYFILTERS = gql`
   }
 `;
 
-export const GET_YEARS_SELECTOR = gql`
+export const GET_AVAILABLE_YEARS = gql`
   query {
-    yearsSelector
+    availableYears
   }
 `;
