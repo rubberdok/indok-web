@@ -22,3 +22,9 @@ export interface UserInput {
   allergies: string;
   graduationYear: string;
 }
+
+export interface UserInputValidations {
+  email: boolean;
+  phoneNumber: boolean;
+  graduationYear: boolean;
+}
