@@ -1,11 +1,12 @@
 import { gql } from "@apollo/client";
 
 export const GET_FEATURED = gql`
-  query featuredArchive($featured_names: [String]!) {
-    featuredArchive(featuredNames: $featured_names) {
+  query {
+    featuredArchive {
       id
       title
       thumbnail
+      featured
       typeDoc
       year
       webLink

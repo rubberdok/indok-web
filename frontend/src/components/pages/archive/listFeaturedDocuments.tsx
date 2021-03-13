@@ -50,14 +50,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const ListFeaturedDocuments: React.FC = () => {
-  const featured_names = [
-    "Foreningens Vedtekter",
-    "Budsjett Foreningen V21",
-    "Info om søknad om Støtte fra HS",
-    "Statutter for foreningen",
-  ];
-
-  const { loading, data, error } = useQuery(GET_FEATURED, { variables: { featured_names } });
+  const { loading, data, error } = useQuery(GET_FEATURED);
 
   const classes = useStyles();
   if (loading) return <p style={{ textAlign: "center" }}></p>;
