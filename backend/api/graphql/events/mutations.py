@@ -6,7 +6,7 @@ from django.contrib import auth
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from graphql_jwt.decorators import login_required
-
+from .mail import send_event_emails
 from .types import CategoryType, EventType
 
 
@@ -163,3 +163,19 @@ class DeleteCategory(graphene.Mutation):
         category.delete()
         ok = True
         return DeleteCategory(category=category, ok=ok)
+
+
+class SendEventEmails(graphene.Mutation):
+    class Arguments:
+        receiverEmails = graphene.List(graphene.String)
+        content = graphene.String()
+        subject = graphene.String()
+
+    ok = graphene.Boolean()
+
+    def mutate(self, info, receiverEmails, content, subject):
+
+        send_event_emails(info, receiverEmails, content, subject)
+
+        ok = True
+        return SendEventEmails(ok=ok)

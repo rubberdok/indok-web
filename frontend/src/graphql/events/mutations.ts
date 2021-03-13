@@ -76,3 +76,11 @@ export const CREATE_CATEGORY = gql`
     }
   }
 `;
+
+export const SEND_EVENT_EMAILS = gql`
+  mutation SendEventMails($receiverEmails: [String], $content: String, $subject: String) {
+    sendEventMails(receiverEmails: $receiverEmails, content: $content, subject: $subject) {
+      ok
+    }
+  }
+`;

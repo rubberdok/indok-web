@@ -19,8 +19,10 @@ import {
   TableBody,
   CircularProgress,
   TableContainer,
+  CardActions,
 } from "@material-ui/core";
 import dayjs from "dayjs";
+import EmailForm from "@components/pages/events/EventEmail";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import React from "react";
@@ -109,6 +111,9 @@ const EventAdminPage: NextPage = () => {
               <Grid item xs>
                 <Card variant="outlined">
                   <CardHeader title="Påmeldte" />
+                  <CardActions>
+                    {eventId ? <EmailForm eventId={eventId} /> : <CircularProgress color="primary" />}
+                  </CardActions>
                   <CardContent>
                     <TableContainer style={{ maxHeight: 600 }}>
                       <Table>

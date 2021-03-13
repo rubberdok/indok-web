@@ -28,6 +28,7 @@ export interface AttendableEvent extends Event {
   availableSlots: number;
   signupOpenDate: string;
   userAttendance: { isSignedUp: boolean; isOnWaitingList: boolean };
+  usersAttending: User[];
   isFull: boolean;
 }
 
