@@ -14,6 +14,7 @@ import {
   createStyles,
   Grid,
   makeStyles,
+  Theme,
   Typography,
 } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";

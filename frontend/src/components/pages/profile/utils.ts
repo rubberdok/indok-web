@@ -5,7 +5,7 @@ export const validateInput = (input: Partial<UserInput>): UserInputValidations =
   const { email, phoneNumber, graduationYear } = input;
   const currentMonth = new Date().getMonth() + 1;
   const currentYear = new Date().getFullYear();
-  const validationResult: Validations = {
+  const validationResult: UserInputValidations = {
     email: email ? validator.isEmail(email) : true,
     phoneNumber: phoneNumber ? validator.isMobilePhone(phoneNumber) : true,
     graduationYear: false, // required field
@@ -22,7 +22,7 @@ export const validateInput = (input: Partial<UserInput>): UserInputValidations =
   return validationResult;
 };
 
-export const suggestNames = (name: string) => {
+export const suggestNames = (name: string): { suggestedFirstName: string; suggestedLastName: string } => {
   const names = name.split(" ");
   if (names.length === 1) return { suggestedFirstName: name, suggestedLastName: "" };
   if (names.length % 2 == 0)
