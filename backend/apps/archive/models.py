@@ -8,7 +8,6 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from datetime import datetime
 
 
-
 class FileType(models.TextChoices):
     BUD = ("Budsjett og Regnskap",)
     SUM = ("Generalforsamling",)
@@ -29,10 +28,6 @@ class ArchiveDocument(models.Model):
     year = models.PositiveSmallIntegerField(
         blank=True,
         null=True,
-        validators=[
-            MinValueValidator(0),
-            MaxValueValidator(int(datetime.now().year)),
-        ],
     )
     web_link = models.CharField(
         max_length=2050,
