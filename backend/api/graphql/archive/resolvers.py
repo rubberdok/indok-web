@@ -20,6 +20,7 @@ class ArchiveDocumentResolvers:
             l = list(names.split(" "))
             for element in l:
                 documents = documents.filter(title__icontains=element)
+
         return documents.reverse()
 
     @login_required
