@@ -18,6 +18,7 @@ export const GET_USER = gql`
       memberships {
         organization {
           id
+          name
         }
       }
     }
