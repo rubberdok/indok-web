@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
 import Layout from "@components/Layout";
-import { GET_USER } from "@graphql/auth/queries";
+import { GET_USER } from "@graphql/users/queries";
 import { Organization } from "@interfaces/organizations";
 import { User } from "@interfaces/users";
 import { Box, CircularProgress, Grid, makeStyles, Paper, Typography } from "@material-ui/core";

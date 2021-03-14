@@ -1,7 +1,7 @@
 import { useMutation } from "@apollo/client";
 import Layout from "@components/Layout";
-import { AUTHENTICATE } from "@graphql/auth/mutations";
-import { GET_USER } from "@graphql/auth/queries";
+import { AUTHENTICATE } from "@graphql/users/mutations";
+import { GET_USER } from "@graphql/users/queries";
 import { User } from "@interfaces/users";
 import { Button, Container, Typography } from "@material-ui/core";
 import { generateQueryString } from "@utils/helpers";

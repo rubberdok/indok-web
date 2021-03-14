@@ -110,16 +110,12 @@ export const GET_EVENT = gql`
       price
       shortDescription
       signupOpenDate
-      signedUpUsers {
+      usersAttending {
         id
         username
-        isStaff
-        isActive
-        isSuperuser
         email
         firstName
         lastName
-        feideUserid
         lastLogin
         dateJoined
         year
