@@ -3,6 +3,7 @@ from django.db import models
 from django.conf import settings
 from phonenumber_field.modelfields import PhoneNumberField
 from apps.users.models import User
+from multiselectfield import MultiSelectField
 
 
 # Create your models here.
@@ -56,6 +57,9 @@ class Event(models.Model):
     binding_signup = models.BooleanField(
         default=False
     )  # Disables sign-off from users_attending if true
+
+    GRADE_CHOICES = ((1, "1"), (2, "2"), (3, "3"), (4, "4"), (5, "5"))
+    allowed_grade_years = MultiSelectField(choices=GRADE_CHOICES, default="1,2,3,4,5")
 
     @property
     def signed_up_users(self):

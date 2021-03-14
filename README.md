@@ -75,7 +75,7 @@ docker-compose build
 ```
 docker-compose up
 docker-compose exec backend python manage.py migrate
-docker-compose exec backend ptyhon manage.py createsuperuser
+docker-compose exec backend python manage.py createsuperuser
 ```
 
 4. Install commit hooks by installing the frontend locally

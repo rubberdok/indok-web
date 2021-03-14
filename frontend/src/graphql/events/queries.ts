@@ -37,6 +37,7 @@ export const GET_EVENTS = gql`
       }
       isFull
       hasExtraInformation
+      allowedGradeYearsList
     }
   }
 `;
@@ -78,6 +79,7 @@ export const GET_DEFAULT_EVENTS = gql`
       }
       isFull
       hasExtraInformation
+      allowedGradeYearsList
     }
   }
 `;
@@ -120,6 +122,7 @@ export const GET_EVENT = gql`
       hasExtraInformation
       bindingSignup
       contactEmail
+      allowedGradeYearsList
     }
   }
 `;
