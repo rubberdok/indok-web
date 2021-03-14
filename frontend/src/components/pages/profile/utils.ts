@@ -13,11 +13,10 @@ export const validateInput = (input: Partial<UserInput>): UserInputValidations =
 
   if (graduationYear) {
     const graduationYearNumber = parseInt(graduationYear);
-    validationResult.graduationYear = graduationYear
-      ? Number.isInteger(graduationYear) && currentMonth < 8
+    validationResult.graduationYear =
+      Number.isInteger(graduationYear) && currentMonth < 8
         ? graduationYearNumber >= currentYear && graduationYearNumber <= currentYear + 4
-        : graduationYearNumber >= currentYear + 1 && graduationYearNumber <= currentYear + 5
-      : false;
+        : graduationYearNumber >= currentYear + 1 && graduationYearNumber <= currentYear + 5;
   }
   return validationResult;
 };
@@ -25,11 +24,6 @@ export const validateInput = (input: Partial<UserInput>): UserInputValidations =
 export const suggestNames = (name: string): { suggestedFirstName: string; suggestedLastName: string } => {
   const names = name.split(" ");
   if (names.length === 1) return { suggestedFirstName: name, suggestedLastName: "" };
-  if (names.length % 2 == 0)
-    return {
-      suggestedFirstName: names.slice(0, names.length / 2).join(" "),
-      suggestedLastName: names.slice(names.length / 2).join(" "),
-    };
   return {
     suggestedFirstName: names.slice(0, Math.floor(names.length / 2)).join(" "),
     suggestedLastName: names.slice(Math.floor(names.length / 2)).join(" "),
