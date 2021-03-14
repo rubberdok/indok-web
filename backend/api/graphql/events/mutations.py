@@ -9,19 +9,32 @@ from .mail import send_event_emails
 from .types import CategoryType, EventType
 
 
-class EventInput(graphene.InputObjectType):
-    title = graphene.String(required=False)
-    start_time = graphene.DateTime(required=False)
+class CreateEventInput(graphene.InputObjectType):
+    title = graphene.String(required=True)
+    description = graphene.String(required=True)
+    start_time = graphene.DateTime(required=True)
     end_time = graphene.DateTime(required=False)
     location = graphene.String(required=False)
-    description = graphene.String(required=False)
-    organization_id = graphene.ID(required=False)
+    organization_id = graphene.ID(required=True)
     category_id = graphene.ID(required=False)
     image = graphene.String(required=False)
-    is_attendable = graphene.Boolean(required=False)
+    is_attendable = graphene.Boolean(required=True)
     deadline = graphene.DateTime(required=False)
+    signup_open_date = graphene.DateTime(required=False)
     available_slots = graphene.Int(required=False)
     price = graphene.Float(required=False)
+    short_description = graphene.String(required=False)
+    has_extra_information = graphene.Boolean(required=False)
+    contact_email = graphene.String(required=False)
+    binding_signup = graphene.Boolean(required=False)
+
+
+class UpdateEventInput(CreateEventInput):
+    title = graphene.String(required=False)
+    description = graphene.String(required=False)
+    start_time = graphene.DateTime(required=False)
+    organization_id = graphene.ID(required=False)
+    is_attendable = graphene.Boolean(required=False)
 
 
 class CreateEvent(graphene.Mutation):
@@ -29,10 +42,15 @@ class CreateEvent(graphene.Mutation):
     event = graphene.Field(EventType)
 
     class Arguments:
-        event_data = EventInput(required=True)
+        event_data = CreateEventInput(required=True)
 
     @login_required
     def mutate(self, info, event_data):
+        organization = models.Organization.objects.get(
+            id=event_data.get("organization_id")
+        )
+        check_user_membership(info.context.user, organization)
+
         event = models.Event()
         for k, v in event_data.items():
             setattr(event, k, v)
@@ -45,7 +63,7 @@ class CreateEvent(graphene.Mutation):
 class UpdateEvent(graphene.Mutation):
     class Arguments:
         id = graphene.ID(required=True)
-        event_data = EventInput(required=False)
+        event_data = UpdateEventInput(required=False)
 
     ok = graphene.Boolean()
     event = graphene.Field(EventType)

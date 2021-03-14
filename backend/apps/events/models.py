@@ -28,9 +28,7 @@ class Event(models.Model):
     # Optional fields
     end_time = models.DateTimeField(blank=True, null=True)
     location = models.CharField(max_length=128, blank=True, null=True)
-    organization = models.ForeignKey(
-        Organization, on_delete=models.CASCADE, blank=True, null=True
-    )
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
     category = models.ForeignKey(
         Category, on_delete=models.SET_NULL, blank=True, null=True
     )

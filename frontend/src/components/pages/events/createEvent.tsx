@@ -20,6 +20,13 @@ const CreateEvent: React.FC = () => {
     image: "",
     isAttendable: false,
     deadline: "",
+    signupOpenDate: "",
+    availableSlots: "",
+    price: "",
+    shortDescription: "",
+    hasExtraInformation: false,
+    contactEmail: "",
+    bindingSignup: false,
   };
 
   const [eventData, setEventData] = useState(defaultInput);
