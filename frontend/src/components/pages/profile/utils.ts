@@ -11,10 +11,10 @@ export const validateInput = (input: Partial<UserInput>): UserInputValidations =
     graduationYear: false, // required field
   };
 
-  if (graduationYear) {
+  if (graduationYear && Number.isInteger(parseInt(graduationYear))) {
     const graduationYearNumber = parseInt(graduationYear);
     validationResult.graduationYear =
-      Number.isInteger(graduationYear) && currentMonth < 8
+      currentMonth < 8
         ? graduationYearNumber >= currentYear && graduationYearNumber <= currentYear + 4
         : graduationYearNumber >= currentYear + 1 && graduationYearNumber <= currentYear + 5;
   }
