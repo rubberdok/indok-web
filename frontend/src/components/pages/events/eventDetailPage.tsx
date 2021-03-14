@@ -15,7 +15,7 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { GET_EVENT } from "../../../graphql/events/queries";
 import CountdownButton from "./CountdownButton";
-import { ContactMail, ErrorOutline } from "@material-ui/icons";
+import { ContactMail, ErrorOutline, Warning } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -259,6 +259,9 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
                 isFull={(eventData.event as AttendableEvent).isFull}
                 loading={signOffLoading || signUpLoading || eventLoading}
                 disabled={
+                  (!userData.user.phoneNumber &&
+                    !eventData.event.userAttendance?.isSignedUp &&
+                    !eventData.event.userAttendance?.isOnWaitingList) ||
                   (eventData.event.bindingSignup && eventData.event.userAttendance?.isSignedUp) ||
                   (eventData.event.hasExtraInformation &&
                     !extraInformation &&
@@ -268,6 +271,14 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
                 onClick={handleClick}
                 styleClassName={classes.signUpButton}
               />
+              {!userData.user.phoneNumber &&
+                !eventData.event.userAttendance?.isSignedUp &&
+                !eventData.event.userAttendance?.isOnWaitingList && (
+                  <Typography color="error">
+                    <Warning fontSize="small" />
+                    Du må oppgi et telefonnummer på brukeren din for å kunne melde deg på
+                  </Typography>
+                )}
 
               {eventData.event.hasExtraInformation &&
                 !eventData.event.userAttendance?.isSignedUp &&
