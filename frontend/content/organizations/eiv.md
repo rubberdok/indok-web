@@ -12,6 +12,16 @@ styre:
     navn: Erlend Heir
     mail: tlf.
     tittel: Sommelier
+  cfo:
+    navn: Haakon Døssland
+    mail: tlf.
+    tittel: Sommelier
+  cmo:
+    navn: Ane Sandvik Rognskaug
+    mail: tlf.
+    tittel: Sommelier
+
+tag: kultur
 ---
 
 # Hvem er vi?

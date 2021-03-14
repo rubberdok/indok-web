@@ -1,20 +1,24 @@
 ---
 title: Typisk Indøk
 description: Mer tekst
-logo: /img/FK_logo.jpg
-image: /img/fkbilde.jpg
+logo: /img/typisk.jpg
+image: /img/hero.jpg
 styre:
   ceo:
-    navn: Henrik Planke Berg
-    mail: tlf. 975 18 033
-    tittel: Leder
+    navn: Jakob Fougner Engebretsen
+    mail:
+    tittel: Podcasthost
   cto:
-    navn: Christian Bakke Vennerød
-    mail: tlf. 906 71 650
-    tittel: Trener
-tag: idrett
+    navn: Håkon Melgård Sveen
+    mail:
+    tittel: Podcasthost
+tag: kultur
 ---
 
-# En overskrift
+# Hvem er vi?
 
-- snakking er fett
+For å demystifisere indøkere intervjuer vi artige og interessante studenter fra alle trinn for å bli kjent med hvem de er. Podcasten finnes på Spotify, Podcaster og iPhone og ellers der du hører podcast!
+
+_God lytt!_
+
+![podcast](/img/typisk.jpg)
