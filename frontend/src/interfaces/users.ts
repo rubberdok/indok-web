@@ -1,3 +1,5 @@
+import { Organization } from "./organizations";
+
 export interface User {
   id: string;
   feideEmail: string;
@@ -12,6 +14,7 @@ export interface User {
   phoneNumber: string;
   firstLogin: boolean;
   events: Partial<Event>[];
+  memberships: { organization: Organization }[];
 }
 
 export interface UserInput {

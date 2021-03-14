@@ -15,6 +15,11 @@ export const GET_USER = gql`
       allergies
       phoneNumber
       firstLogin
+      memberships {
+        organization {
+          id
+        }
+      }
     }
   }
 `;
