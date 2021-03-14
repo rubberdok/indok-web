@@ -3,7 +3,7 @@ import Navbar from "@components/navbar/Navbar";
 import CabinAvailability from "@components/pages/cabins/CabinAvailability";
 import CabinContactInfo from "@components/pages/cabins/CabinContactInfo";
 import CabinDatePicker from "@components/pages/cabins/CabinDatePicker";
-import ContractModal from "@components/pages/cabins/Popup/ContractModal";
+import ContractDialog from "@components/pages/cabins/Popup/ContractDialog";
 import { QUERY_CABINS } from "@graphql/cabins/queries";
 import { Cabin, ContactInfo, Validations } from "@interfaces/cabins";
 import { Box, Grid, Step, StepLabel, Stepper, Button, Typography, Paper, Tooltip } from "@material-ui/core";
@@ -125,7 +125,7 @@ const CabinBookingPage: NextPage = () => {
   return (
     <>
       <Navbar />
-      <ContractModal
+      <ContractDialog
         modalData={modalData}
         setModalData={setModalData}
         chosenCabins={chosenCabins}
