@@ -8,7 +8,7 @@ export interface User {
   firstName: string;
   lastName: string;
   dateJoined: string;
-  organizations?: Organization[];
+  organizations: Organization[];
   graduationYear: number;
   gradeYear: number;
   allergies: string;

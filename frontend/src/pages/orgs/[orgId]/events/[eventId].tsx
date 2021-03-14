@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
 import Layout from "@components/Layout";
-import { GET_EVENT } from "@graphql/events/queries";
+import { ADMIN_GET_EVENT } from "@graphql/events/queries";
 import { Event } from "@interfaces/events";
 import { User } from "@interfaces/users";
 import {
@@ -35,8 +35,8 @@ interface HeaderValuePair<T> {
 const userFields: HeaderValuePair<User>[] = [
   { header: "Brukernavn", field: "username" },
   { header: "Navn", field: "firstName" },
-  { header: "Mobilnummer", field: "phone" },
-  { header: "Klassetrinn", field: "year" },
+  { header: "Mobilnummer", field: "phoneNumber" },
+  { header: "Klassetrinn", field: "gradeYear" },
 ];
 
 const stringEventFields: HeaderValuePair<Event>[] = [
@@ -63,12 +63,13 @@ const EventAdminPage: NextPage = () => {
   const { eventId } = router.query;
   const eventNumberID = parseInt(eventId as string);
 
-  const { loading, data } = useQuery<{ event: Event }, { id: number }>(GET_EVENT, {
+  const { loading, data } = useQuery<{ event: Event }, { id: number }>(ADMIN_GET_EVENT, {
     variables: { id: eventNumberID },
+    skip: Number.isNaN(eventNumberID),
   });
 
   const renderInfo = (label: string, value: string) => (
-    <ListItem>
+    <ListItem key={`${label}-${value}`}>
       <Typography>
         <Box fontWeight={1000} m={1} display="inline">
           {`${label}: `}
@@ -77,6 +78,7 @@ const EventAdminPage: NextPage = () => {
       </Typography>
     </ListItem>
   );
+
   return (
     <Layout>
       {!loading && data?.event ? (
@@ -115,18 +117,18 @@ const EventAdminPage: NextPage = () => {
                     {eventId ? <EmailForm eventId={eventId} /> : <CircularProgress color="primary" />}
                   </CardActions>
                   <CardContent>
-                    <TableContainer style={{ maxHeight: 600 }}>
-                      <Table>
-                        <TableHead>
-                          <TableRow>
-                            {userFields.map((field) => (
-                              <TableCell key={`user-header-${field.header}`}>{field.header}</TableCell>
-                            ))}
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {!loading && data.event.signedUpUsers ? (
-                            data.event.signedUpUsers.map((user: User) => (
+                    {data?.event?.usersAttending?.length !== 0 ? (
+                      <TableContainer style={{ maxHeight: 600 }}>
+                        <Table>
+                          <TableHead>
+                            <TableRow>
+                              {userFields.map((field) => (
+                                <TableCell key={`user-header-${field.header}`}>{field.header}</TableCell>
+                              ))}
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {data?.event?.usersAttending?.map((user: User) => (
                               <TableRow key={`user-row-${user.id}`}>
                                 {userFields.map((field) => (
                                   <TableCell key={`user-${user.id}-cell--${field.field}`}>
@@ -134,24 +136,19 @@ const EventAdminPage: NextPage = () => {
                                   </TableCell>
                                 ))}
                               </TableRow>
-                            ))
-                          ) : (
-                            <CircularProgress />
-                          )}
-                        </TableBody>
-                      </Table>
-                    </TableContainer>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                    ) : (
+                      <Typography align="center" variant="body1">
+                        Ingen påmeldte
+                      </Typography>
+                    )}
                   </CardContent>
                 </Card>
               </Grid>
             </Grid>
-            <Typography variant="body1">
-              Dette er adminsiden for et gitt arrangement. Her skal man kunne detaljert admin-informasjon angående
-              eventet og kunne redigere eventet. Man skal kunne se en liste over påmeldte (navn, trinn, tlf(korona),
-              allergier, extra_info) og ha mulighet til å eksportere dette som CSV-fil (eller noe som kan åpnes i
-              excel). Tenker på /events/ og /events/[id] burde man kunne finne en link som tar deg til denne siden
-              dersom du er superuser eller medlem av organisasjonen som arrangerer arrangementet.
-            </Typography>
           </Grid>
         </Box>
       ) : null}

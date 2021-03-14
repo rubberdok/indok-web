@@ -12,7 +12,7 @@ export const GET_ORGANIZATION = gql`
         shortDescription
         availableSlots
         isFull
-        signedUpUsers {
+        usersAttending {
           id
           username
           firstName

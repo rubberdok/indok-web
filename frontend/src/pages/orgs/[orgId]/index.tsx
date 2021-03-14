@@ -51,6 +51,7 @@ const OrganizationDetailPage: NextPage = () => {
 
   const { loading, data } = useQuery<{ organization: Organization }, { orgId: number }>(GET_ORGANIZATION, {
     variables: { orgId: orgNumberId },
+    skip: Number.isNaN(orgNumberId),
   });
 
   return (
@@ -91,7 +92,7 @@ const OrganizationDetailPage: NextPage = () => {
                                     {event[field.field]}
                                   </TableCell>
                                 ))}
-                                <TableCell>{event.signedUpUsers?.length}</TableCell>
+                                <TableCell>{event.usersAttending?.length}</TableCell>
                                 <TableCell>
                                   <Chip
                                     label={event.isFull ? "Fullt" : "Ledige Plasser"}

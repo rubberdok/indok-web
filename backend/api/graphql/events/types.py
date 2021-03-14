@@ -21,6 +21,37 @@ class EventType(DjangoObjectType):
 
     class Meta:
         model = Event
+        fields = [
+            "id",
+            "title",
+            "start_time",
+            "end_time",
+            "location",
+            "description",
+            "organization",
+            "category",
+            "image",
+            "is_attendable",
+            "deadline",
+            "publisher",
+            "available_slots",
+            "price",
+            "signup_open_date",
+            "short_description"
+        ]
+
+    class PermissionDecorators:
+        @staticmethod
+        def is_in_event_organization(resolver):
+            def wrapper(event: Event, info):
+                user = info.context.user
+                if user.memberships.filter(organization=event.organization).exists() or user.is_superuser:
+                    return resolver(event, info)
+                else:
+                    raise PermissionError(
+                        f"Du må være medlem av organisasjonen {event.organization.name} for å gjøre dette kallet")
+
+            return wrapper
 
     @staticmethod
     def resolve_user_attendance(event, info):
@@ -32,27 +63,15 @@ class EventType(DjangoObjectType):
 
     @staticmethod
     @login_required
+    @PermissionDecorators.is_in_event_organization
     def resolve_users_on_waiting_list(event, info):
-        user = info.context.user
-        if (
-            user.memberships.filter(organization=event.organization).exists()
-            or user.is_superuser
-        ):
-            return event.users_on_waiting_list
-        else:
-            raise PermissionDenied("Du har ikke tilgang til den forespurte dataen")
+        return event.users_on_waiting_list
 
     @staticmethod
     @login_required
+    @PermissionDecorators.is_in_event_organization
     def resolve_users_attending(event, info):
-        user = info.context.user
-        if (
-            user.memberships.filter(organization=event.organization).exists()
-            or user.is_superuser
-        ):
-            return event.users_attending
-        else:
-            raise PermissionDenied("Du har ikke tilgang til den forespurte dataen")
+        return event.users_attending
 
 
 class CategoryType(DjangoObjectType):
