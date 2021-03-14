@@ -118,6 +118,8 @@ export const GET_EVENT = gql`
       }
       isFull
       hasExtraInformation
+      bindingSignup
+      contactEmail
     }
   }
 `;

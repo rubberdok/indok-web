@@ -38,6 +38,8 @@ class EventType(DjangoObjectType):
             "signup_open_date",
             "short_description",
             "has_extra_information",
+            "binding_signup",
+            "contact_email",
         ]
 
     @staticmethod

@@ -20,6 +20,8 @@ export interface Event {
   isFull?: boolean;
   price?: number;
   hasExtraInformation?: boolean;
+  bindingSignup?: boolean;
+  contactEmail?: string;
 }
 
 export interface AttendableEvent extends Event {

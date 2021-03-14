@@ -53,6 +53,12 @@ class Event(models.Model):
 
     has_extra_information = models.BooleanField(default=False)
 
+    contact_email = models.EmailField(blank=True, default="")
+
+    binding_signup = models.BooleanField(
+        default=False
+    )  # Disables sign-off from users_attending if true
+
     @property
     def signed_up_users(self):
         sign_ups = SignUp.objects.filter(event=self, is_attending=True).order_by(

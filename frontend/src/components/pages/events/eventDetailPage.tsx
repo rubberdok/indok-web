@@ -3,7 +3,7 @@ import { GET_USER } from "@graphql/users/queries";
 import { EVENT_SIGN_OFF, EVENT_SIGN_UP } from "@graphql/events/mutations";
 import { AttendableEvent, Event } from "@interfaces/events";
 import { User } from "@interfaces/users";
-import { Box, Button, Grid, Paper, Snackbar, Typography, TextField } from "@material-ui/core";
+import { Box, Button, Grid, Paper, Snackbar, Typography, TextField, Link as MuiLink } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import CategoryIcon from "@material-ui/icons/Category";
 import CreditCard from "@material-ui/icons/CreditCard";
@@ -15,6 +15,7 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { GET_EVENT } from "../../../graphql/events/queries";
 import CountdownButton from "./CountdownButton";
+import { ContactMail, ErrorOutline } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -200,6 +201,17 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
                 <CategoryIcon fontSize="small" /> {eventData.event.category?.name}
               </Typography>
             )}
+            {eventData.event.contactEmail && (
+              <Typography gutterBottom>
+                <ContactMail fontSize="small" />
+                <MuiLink href={`mailto:${eventData.event.contactEmail}`}>{eventData.event.contactEmail}</MuiLink>
+              </Typography>
+            )}
+            {eventData.event.bindingSignup && (
+              <Typography gutterBottom color="error">
+                <ErrorOutline fontSize="small" /> Bindende påmelding
+              </Typography>
+            )}
           </Box>
 
           <Box my={2}>
@@ -247,10 +259,11 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
                 isFull={(eventData.event as AttendableEvent).isFull}
                 loading={signOffLoading || signUpLoading || eventLoading}
                 disabled={
-                  eventData.event.hasExtraInformation &&
-                  !extraInformation &&
-                  !eventData.event.userAttendance?.isSignedUp &&
-                  !eventData.event.userAttendance?.isOnWaitingList
+                  (eventData.event.bindingSignup && eventData.event.userAttendance?.isSignedUp) ||
+                  (eventData.event.hasExtraInformation &&
+                    !extraInformation &&
+                    !eventData.event.userAttendance?.isSignedUp &&
+                    !eventData.event.userAttendance?.isOnWaitingList)
                 }
                 onClick={handleClick}
                 styleClassName={classes.signUpButton}

@@ -127,6 +127,11 @@ class EventSignOff(graphene.Mutation):
         event = models.Event.objects.get(pk=event_id)
         user = info.context.user
 
+        if event.binding_signup and user in event.users_attending:
+            raise Exception(
+                "Du kan ikke melde deg av et arrangement med bindende påmelding."
+            )
+
         sign_up = (
             models.SignUp.objects.filter(is_attending=True)
             .order_by("-timestamp")
