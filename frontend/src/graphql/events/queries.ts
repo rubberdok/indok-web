@@ -110,15 +110,60 @@ export const GET_EVENT = gql`
       price
       shortDescription
       signupOpenDate
+      userAttendance {
+        isSignedUp
+        isOnWaitingList
+      }
+      isFull
+    }
+  }
+`;
+
+export const ADMIN_GET_EVENT = gql`
+  query Event($id: ID!) {
+    event(id: $id) {
+      id
+      title
+      startTime
+      endTime
+      location
+      description
+      organization {
+        name
+      }
+      category {
+        name
+      }
+      image
+      isAttendable
+      deadline
+      publisher {
+        id
+        username
+        email
+        firstName
+        lastName
+        dateJoined
+      }
+      availableSlots
+      price
+      shortDescription
+      signupOpenDate
       usersAttending {
         id
         username
         email
         firstName
         lastName
-        lastLogin
-        dateJoined
-        year
+        gradeYear
+      }
+      usersOnWaitingList {
+        id
+        username
+        email
+        firstName
+        lastName
+        gradeYear
       }
       userAttendance {
         isSignedUp

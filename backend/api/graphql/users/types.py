@@ -26,4 +26,5 @@ class UserType(DjangoObjectType):
             "graduation_year",
             "memberships",
             "events",
+            "organizations"
         ]

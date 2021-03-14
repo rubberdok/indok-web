@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
 import Layout from "@components/Layout";
-import { GET_EVENT } from "@graphql/events/queries";
+import { ADMIN_GET_EVENT } from "@graphql/events/queries";
 import { Event } from "@interfaces/events";
 import { User } from "@interfaces/users";
 import {
@@ -35,8 +35,8 @@ interface HeaderValuePair<T> {
 const userFields: HeaderValuePair<User>[] = [
   { header: "Brukernavn", field: "username" },
   { header: "Navn", field: "firstName" },
-  { header: "Mobilnummer", field: "phone" },
-  { header: "Klassetrinn", field: "year" },
+  { header: "Mobilnummer", field: "phoneNumber" },
+  { header: "Klassetrinn", field: "gradeYear" },
 ];
 
 const stringEventFields: HeaderValuePair<Event>[] = [
@@ -63,7 +63,7 @@ const EventAdminPage: NextPage = () => {
   const { eventId } = router.query;
   const eventNumberID = parseInt(eventId as string);
 
-  const { loading, data } = useQuery<{ event: Event }, { id: number }>(GET_EVENT, {
+  const { loading, data } = useQuery<{ event: Event }, { id: number }>(ADMIN_GET_EVENT, {
     variables: { id: eventNumberID },
   });
 
@@ -125,8 +125,8 @@ const EventAdminPage: NextPage = () => {
                           </TableRow>
                         </TableHead>
                         <TableBody>
-                          {!loading && data.event.signedUpUsers ? (
-                            data.event.signedUpUsers.map((user: User) => (
+                          {!loading && data.event.usersAttending ? (
+                            data.event.usersAttending.map((user: User) => (
                               <TableRow key={`user-row-${user.id}`}>
                                 {userFields.map((field) => (
                                   <TableCell key={`user-${user.id}-cell--${field.field}`}>
@@ -145,13 +145,6 @@ const EventAdminPage: NextPage = () => {
                 </Card>
               </Grid>
             </Grid>
-            <Typography variant="body1">
-              Dette er adminsiden for et gitt arrangement. Her skal man kunne detaljert admin-informasjon angående
-              eventet og kunne redigere eventet. Man skal kunne se en liste over påmeldte (navn, trinn, tlf(korona),
-              allergier, extra_info) og ha mulighet til å eksportere dette som CSV-fil (eller noe som kan åpnes i
-              excel). Tenker på /events/ og /events/[id] burde man kunne finne en link som tar deg til denne siden
-              dersom du er superuser eller medlem av organisasjonen som arrangerer arrangementet.
-            </Typography>
           </Grid>
         </Box>
       ) : null}
