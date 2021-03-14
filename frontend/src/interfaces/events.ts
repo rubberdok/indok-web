@@ -19,6 +19,7 @@ export interface Event {
   userAttendance?: { isSignedUp: boolean; isOnWaitingList: boolean };
   isFull?: boolean;
   price?: number;
+  hasExtraInformation?: boolean;
 }
 
 export interface AttendableEvent extends Event {

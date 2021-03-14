@@ -1,6 +1,8 @@
 from apps.organizations.models import Organization
 from django.db import models
 from django.conf import settings
+from phonenumber_field.modelfields import PhoneNumberField
+from apps.users.models import User
 
 
 # Create your models here.
@@ -42,18 +44,22 @@ class Event(models.Model):
 
     available_slots = models.PositiveIntegerField(  # maximal number of users that can sign up for an event
         blank=True,
-        null=True,  # TODO: Make this field conditionally required in frontend when is_attendable is True!
-    )
-
-    signed_up_users = models.ManyToManyField(  # Internal list of users who are signed up (including waiting list)
-        settings.AUTH_USER_MODEL,
-        related_name="events",
-        blank=True,
+        null=True,  # TODO: Make this field conditionally required when is_attendable is True!
     )
 
     price = models.FloatField(blank=True, null=True)
 
     short_description = models.CharField(max_length=100, blank=True, null=True)
+
+    has_extra_information = models.BooleanField(default=False)
+
+    @property
+    def signed_up_users(self):
+        sign_ups = SignUp.objects.filter(event=self, is_attending=True).order_by(
+            "timestamp"
+        )
+        user_ids = sign_ups.values_list("user__id", flat=True)
+        return User.objects.filter(id__in=user_ids)
 
     @property
     def users_on_waiting_list(self):
@@ -80,3 +86,26 @@ class Event(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class SignUp(models.Model):
+    """
+    Intermediary model between users and events representing a single sign up.
+    The signups for an event represent users that are attending and those on the waiting list.
+    Attending lists and waiting lists are inferred based on the signups and the set available slots.
+    If a user sings off (meld av), a new row is added if they sign up again.
+    For history's sake, old rows are kept upon sign-off, but is_attending is set to False.
+    """
+
+    timestamp = models.DateTimeField()
+    is_attending = models.BooleanField()
+    extra_information = models.TextField(blank=True, default="")
+
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+
+    user_email = models.EmailField()
+    user_allergies = models.CharField(max_length=1000, blank=True, default="")
+    user_phone_number = PhoneNumberField()
+    user_grade_year = models.IntegerField()

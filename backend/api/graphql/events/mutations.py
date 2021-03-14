@@ -1,11 +1,10 @@
-from datetime import datetime
-
 import graphene
 from apps.events import models
-from django.contrib import auth
-from django.contrib.auth import get_user_model
+from backend.apps.organizations.permissions import check_user_membership
 from django.shortcuts import get_object_or_404
-from graphql_jwt.decorators import login_required
+from django.utils import timezone
+from graphql_jwt.decorators import login_required, staff_member_required
+
 from .mail import send_event_emails
 from .types import CategoryType, EventType
 
@@ -51,8 +50,11 @@ class UpdateEvent(graphene.Mutation):
     ok = graphene.Boolean()
     event = graphene.Field(EventType)
 
+    @login_required
     def mutate(self, info, event_data):
         event = models.Event.objects.get(pk=id)
+        check_user_membership(info.context.user, event.organization)
+
         for k, v in event_data.items():
             setattr(event, k, v)
         event.save()
@@ -67,31 +69,48 @@ class DeleteEvent(graphene.Mutation):
     ok = graphene.Boolean()
     event = graphene.Field(EventType)
 
+    @login_required
     def mutate(self, info, id):
         event = get_object_or_404(models.Event, pk=id)
+
+        check_user_membership(info.context.user, event.organization)
+
         event.delete()
         ok = True
         return DeleteEvent(event=event, ok=ok)
 
 
-class EventSignUpOrOffInput(graphene.InputObjectType):
-    user_id = graphene.ID(required=True)
+class EventSignUpInput(graphene.InputObjectType):
+    extra_information = graphene.String(required=False)
 
 
 class EventSignUp(graphene.Mutation):
     class Arguments:
         event_id = graphene.ID(required=True)
-        user_id = graphene.ID(required=True)
+        data = EventSignUpInput(required=False)
 
     is_full = graphene.Boolean()
     event = graphene.Field(EventType)
 
-    def mutate(self, info, event_id, user_id):
+    @login_required
+    def mutate(self, info, event_id, data):
         event = models.Event.objects.get(pk=event_id)
-        user = get_user_model().objects.get(pk=user_id)
+        user = info.context.user
 
-        event.signed_up_users.add(user)
-        event.save()
+        sign_up = models.SignUp()
+        if data.extra_information:
+            setattr(sign_up, "extra_information", data.extra_information)
+
+        setattr(sign_up, "timestamp", timezone.now())
+        setattr(sign_up, "is_attending", True)
+        setattr(sign_up, "event", event)
+        setattr(sign_up, "user", user)
+        setattr(sign_up, "user_email", user.email)
+        setattr(sign_up, "user_allergies", user.allergies)
+        setattr(sign_up, "user_phone_number", user.phone_number)
+        setattr(sign_up, "user_grade_year", user.grade_year)
+
+        sign_up.save()
 
         return EventSignUp(event=event, is_full=event.is_full)
 
@@ -99,17 +118,22 @@ class EventSignUp(graphene.Mutation):
 class EventSignOff(graphene.Mutation):
     class Arguments:
         event_id = graphene.ID(required=True)
-        user_id = graphene.ID(required=True)
 
     is_full = graphene.Boolean()
     event = graphene.Field(EventType)
 
-    def mutate(self, info, event_id, user_id):
+    @login_required
+    def mutate(self, info, event_id):
         event = models.Event.objects.get(pk=event_id)
-        user = get_user_model().objects.get(pk=user_id)
+        user = info.context.user
 
-        event.signed_up_users.remove(user)
-        event.save()
+        sign_up = (
+            models.SignUp.objects.filter(is_attending=True)
+            .order_by("-timestamp")
+            .get(user=user, event=event)
+        )
+        setattr(sign_up, "is_attending", False)
+        sign_up.save()
 
         return EventSignOff(event=event, is_full=event.is_full)
 
@@ -125,6 +149,7 @@ class CreateCategory(graphene.Mutation):
     class Arguments:
         category_data = CategoryInput(required=True)
 
+    @staff_member_required
     def mutate(self, info, category_data):
         category = models.Category()
         for k, v in category_data.items():
@@ -142,6 +167,7 @@ class UpdateCategory(graphene.Mutation):
     ok = graphene.Boolean()
     category = graphene.Field(CategoryType)
 
+    @staff_member_required
     def mutate(self, info, category_data):
         category = models.Category.objects.get(pk=id)
         for k, v in category_data.items():
@@ -158,6 +184,7 @@ class DeleteCategory(graphene.Mutation):
     ok = graphene.Boolean()
     category = graphene.Field(CategoryType)
 
+    @staff_member_required
     def mutate(self, info, id):
         category = get_object_or_404(models.Category, pk=id)
         category.delete()
@@ -167,15 +194,19 @@ class DeleteCategory(graphene.Mutation):
 
 class SendEventEmails(graphene.Mutation):
     class Arguments:
+        event_id = graphene.ID(required=True)
         receiverEmails = graphene.List(graphene.String)
         content = graphene.String()
         subject = graphene.String()
 
     ok = graphene.Boolean()
 
-    def mutate(self, info, receiverEmails, content, subject):
+    @login_required
+    def mutate(self, info, event_id, receiverEmails, content, subject):
+        event = models.Event.objects.get(pk=event_id)
+        check_user_membership(info.context.user, event.organization)
 
-        send_event_emails(info, receiverEmails, content, subject)
+        send_event_emails(receiverEmails, content, subject)
 
         ok = True
         return SendEventEmails(ok=ok)

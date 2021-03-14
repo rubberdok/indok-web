@@ -50,16 +50,16 @@ export const CREATE_EVENT = gql`
 `;
 
 export const EVENT_SIGN_UP = gql`
-  mutation EventSignUp($eventId: ID!, $userId: ID!) {
-    eventSignUp(eventId: $eventId, userId: $userId) {
+  mutation EventSignUp($eventId: ID!, $extraInformation: String) {
+    eventSignUp(eventId: $eventId, data: { extraInformation: $extraInformation }) {
       isFull
     }
   }
 `;
 
 export const EVENT_SIGN_OFF = gql`
-  mutation EventSignOff($eventId: ID!, $userId: ID!) {
-    eventSignOff(eventId: $eventId, userId: $userId) {
+  mutation EventSignOff($eventId: ID!) {
+    eventSignOff(eventId: $eventId) {
       isFull
     }
   }
@@ -78,8 +78,8 @@ export const CREATE_CATEGORY = gql`
 `;
 
 export const SEND_EVENT_EMAILS = gql`
-  mutation SendEventMails($receiverEmails: [String], $content: String, $subject: String) {
-    sendEventMails(receiverEmails: $receiverEmails, content: $content, subject: $subject) {
+  mutation SendEventMails($eventId: ID!, $receiverEmails: [String], $content: String, $subject: String) {
+    sendEventMails(eventId: $eventId, receiverEmails: $receiverEmails, content: $content, subject: $subject) {
       ok
     }
   }
