@@ -7,7 +7,7 @@ export const validateInput = (input: Partial<UserInput>): UserInputValidations =
   const currentYear = new Date().getFullYear();
   const validationResult: UserInputValidations = {
     email: email ? validator.isEmail(email) : true,
-    phoneNumber: phoneNumber ? validator.isMobilePhone(phoneNumber) : true,
+    phoneNumber: phoneNumber ? validator.isMobilePhone(phoneNumber, "nn-NO") : true,
     graduationYear: false, // required field
   };
 
