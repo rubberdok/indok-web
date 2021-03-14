@@ -8,3 +8,23 @@ class UserType(DjangoObjectType):
 
     class Meta:
         model = get_user_model()
+
+        fields = [
+            "id",
+            "lastLogin",
+            "username",
+            "firstName",
+            "lastName",
+            "email",
+            "dateJoined",
+            "feideUserid",
+            "feideEmail",
+            "idToken",
+            "allergies",
+            "phoneNumber",
+            "firstLogin",
+            "graduationYear",
+            "memberships",
+            "events",
+            "gradeYear",
+        ]
