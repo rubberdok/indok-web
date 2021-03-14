@@ -1,72 +1,127 @@
 import { useQuery } from "@apollo/client";
-import ImageCard from "@components/ui/ImageCard";
-import { GET_DOCSBYTYPE } from "@graphql/archive/queries";
-import { Document } from "@interfaces/archives";
-import { Container, Typography } from "@material-ui/core";
+import { GET_DOCSBYFILTERS } from "@graphql/archive/queries";
 import Button from "@material-ui/core/Button";
-import Grid from "@material-ui/core/Grid";
-import { makeStyles } from "@material-ui/core/styles";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import React, { useEffect } from "react";
+import Card from "@material-ui/core/Card";
+import CardHeader from "@material-ui/core/CardHeader";
+import CardMedia from "@material-ui/core/CardMedia";
+import GridList from "@material-ui/core/GridList";
+import GridListTile from "@material-ui/core/GridListTile";
+import Typography from "@material-ui/core/Typography";
+import Container from "@material-ui/core/Container";
+import { Document } from "@interfaces/archive";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-  },
-  paper: {
-    padding: theme.spacing(2),
-    marginLeft: "70px",
-  },
-  image: {
-    width: 128,
-    height: 128,
-  },
-  img: {
-    marginLeft: "80px",
-    display: "block",
-    maxWidth: "100%",
-    maxHeight: "100%",
-  },
-}));
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      flexGrow: 1,
+    },
+    paper: {
+      padding: theme.spacing(2),
+      marginLeft: "70px",
+    },
+    image: {
+      width: "128px",
+      height: "128px",
+      alignItems: "start",
+    },
+    img: {
+      maxWidth: "100%",
+      maxHeight: "100%",
+    },
+    article: {
+      width: "100%",
+    },
+    header: {
+      width: "100%",
+      fontSize: 10,
+      padding: -10,
+      textTransform: "none",
+    },
+  })
+);
 
 interface ListDocumentsProps {
   document_types: string[];
+  year: number | null;
+  names: string;
 }
 
-const ListDocuments: React.FC<ListDocumentsProps> = ({ document_types }) => {
-  const { refetch, loading, data, error } = useQuery(GET_DOCSBYTYPE, { variables: { document_types } });
+const ListDocuments: React.FC<ListDocumentsProps> = ({ document_types, year, names }) => {
+  const { refetch, loading, data, error } = useQuery(GET_DOCSBYFILTERS, { variables: { document_types, year, names } });
 
   useEffect(() => {
-    refetch({ document_types });
-  }, [document_types]);
+    refetch({ document_types, year });
+  }, [document_types, year]);
 
   const classes = useStyles();
-  if (loading) return <p>Laster...</p>;
+  if (loading) return <p style={{ textAlign: "center" }}></p>;
 
-  if (error) return <p> Feil: {error.message} </p>;
+  if (error) return <p style={{ textAlign: "center" }}> Feil: {error.message} </p>;
 
   return (
-    <Grid container className={classes.root} justify="flex-start" spacing={2}>
-      <Grid item xs>
-        <Grid container className={classes.img} justify="flex-start" spacing={2}>
-          {data.archiveByType.length ? (
-            data.archiveByType.map((doc: Document) => (
-              <Button
-                key={doc.id}
-                onClick={() => {
-                  window.open(doc.url, "_blank");
-                }}
-              >
-                <ImageCard key={doc.id} title={doc.title} subtitle={doc.typeDoc} imageUrl={doc.thumbnail} />
-              </Button>
-            ))
-          ) : (
-            <Container>
-              <Typography> Fant ingen dokumenter som passer søket ditt </Typography>
-            </Container>
-          )}
-        </Grid>
-      </Grid>
-    </Grid>
+    <Container>
+      <Typography variant="body1" style={{ marginBottom: "8px" }}>
+        Alle dokumenter
+      </Typography>
+      <GridList cellHeight={144} className={classes.img} cols={4} spacing={8}>
+        {data.archiveByTypes.length ? (
+          data.archiveByTypes.map((doc: Document) => (
+            <GridListTile key={doc.id}>
+              <Card className={classes.root} elevation={1}>
+                <Button
+                  key={doc.id}
+                  className={classes.article}
+                  onClick={() => {
+                    window.open(doc.webLink, "_blank");
+                  }}
+                >
+                  <CardMedia
+                    key={doc.id}
+                    className={classes.image}
+                    component="img"
+                    height="128"
+                    image={doc.thumbnail}
+                  />
+                  <CardHeader
+                    className={classes.header}
+                    disableTypography
+                    title={
+                      <Typography
+                        component="h2"
+                        variant="inherit"
+                        gutterBottom
+                        paragraph
+                        style={{ fontSize: "5", fontWeight: "lighter", textAlign: "center" }}
+                      >
+                        {doc.title}
+                      </Typography>
+                    }
+                    subheader={
+                      <Typography
+                        component="h4"
+                        variant="inherit"
+                        style={{ fontWeight: "lighter", textAlign: "center" }}
+                      >
+                        {doc.typeDoc
+                          .replace(/_/g, " ")
+                          .replace("ARBOKER", "ÅRBØKER")
+                          .replace("STOTTE FRA HS", "STØTTE FRA HS")}
+                      </Typography>
+                    }
+                  />
+                </Button>
+              </Card>
+            </GridListTile>
+          ))
+        ) : (
+          <Container>
+            <Typography> Fant ingen dokumenter som samsvarer med søket ditt </Typography>
+          </Container>
+        )}
+      </GridList>
+    </Container>
   );
 };
 

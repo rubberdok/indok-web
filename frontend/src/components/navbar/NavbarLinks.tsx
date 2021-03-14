@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { GET_USER } from "@graphql/auth/queries";
+import { GET_USER } from "@graphql/users/queries";
 import { User } from "@interfaces/users";
 import { Button, makeStyles, Menu, MenuItem } from "@material-ui/core";
 import { AccountCircleOutlined } from "@material-ui/icons";
@@ -7,7 +7,8 @@ import PersonIcon from "@material-ui/icons/LockOpen";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
-import { DATAPORTEN_SCOPES, generateAuthURL } from "./utils";
+import { generateQueryString } from "@utils/helpers";
+import { DATAPORTEN_SCOPES } from "@utils/auth";
 
 const links = [
   {
@@ -113,12 +114,15 @@ const useStyles = makeStyles(() => ({
 const NavbarLinks: React.FC = () => {
   const classes = useStyles();
   const router = useRouter();
-  const signInURL = generateAuthURL(
-    process.env.NEXT_PUBLIC_DATAPORTEN_ID,
-    process.env.NEXT_PUBLIC_DATAPORTEN_STATE,
-    process.env.NEXT_PUBLIC_DATAPORTEN_REDIRECT_URI,
-    DATAPORTEN_SCOPES
-  );
+
+  const queryString = generateQueryString({
+    client_id: process.env.NEXT_PUBLIC_DATAPORTEN_ID,
+    state: process.env.NEXT_PUBLIC_DATAPORTEN_STATE,
+    redirect_uri: process.env.NEXT_PUBLIC_DATAPORTEN_REDIRECT_URI,
+    response_type: "code",
+    scope: DATAPORTEN_SCOPES.join(" "),
+  });
+  const signInURL = "https://auth.dataporten.no/oauth/authorization" + queryString;
 
   const { loading, error, data: userData } = useQuery<{ user: User }>(GET_USER);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
