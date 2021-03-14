@@ -7,7 +7,7 @@ import { InputFields } from "@components/pages/cabins/InputFields/InputFields";
 import ImageSlider from "@components/pages/cabins/ImageSlider/ImageSlider";
 import PriceSummary from "@components/pages/cabins/Summary/PriceSummary";
 import Summary from "@components/pages/cabins/Summary/Summary";
-import { GET_USER } from "@graphql/auth/queries";
+import { GET_USER } from "@graphql/users/queries";
 import { SEND_EMAIL } from "@graphql/cabins/mutations";
 import { QUERY_CABINS } from "@graphql/cabins/queries";
 import { BookingData, Cabin, ContractProps, InputFieldsEvent, InputValueTypes, Validations } from "@interfaces/cabins";

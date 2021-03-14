@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "graphene_django",
     "rest_framework",
+    "phonenumber_field",
 ]
 
 AUTH_USER_MODEL = "users.User"
@@ -153,6 +154,9 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+PHONENUMBER_DB_FORMAT = "NATIONAL"
+PHONENUMBER_DEFAULT_REGION = "NO"
 
 
 # Static files (CSS, JavaScript, Images)
