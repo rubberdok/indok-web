@@ -1,6 +1,6 @@
 import graphene
 from apps.events import models
-from backend.apps.organizations.permissions import check_user_membership
+from apps.organizations.permissions import check_user_membership
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from graphql_jwt.decorators import login_required, staff_member_required
