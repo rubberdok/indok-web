@@ -25,5 +25,4 @@ class UserType(DjangoObjectType):
             "first_login",
             "graduation_year",
             "memberships",
-            "events",
         ]

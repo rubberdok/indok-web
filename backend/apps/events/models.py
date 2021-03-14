@@ -58,7 +58,7 @@ class Event(models.Model):
         sign_ups = SignUp.objects.filter(event=self, is_attending=True).order_by(
             "timestamp"
         )
-        user_ids = [sign_up.user.id for sign_up in sign_ups]
+        user_ids = sign_ups.values_list("user__id", flat=True)
         return User.objects.filter(id__in=user_ids)
 
     @property
@@ -89,8 +89,16 @@ class Event(models.Model):
 
 
 class SignUp(models.Model):
+    """
+    Intermediary model between users and events representing a single sign up.
+    The signups for an event represent users that are attending and those on the waiting list.
+    Attending lists and waiting lists are inferred based on the signups and the set available slots.
+    If a user sings off (meld av), a new row is added if they sign up again.
+    For history's sake, old rows are kept upon sign-off, but is_attending is set to False.
+    """
+
     timestamp = models.DateTimeField()
-    is_attending = models.BooleanField()  # Whether the user is currently signed up
+    is_attending = models.BooleanField()
     extra_information = models.TextField(blank=True, default="")
 
     event = models.ForeignKey(Event, on_delete=models.CASCADE)

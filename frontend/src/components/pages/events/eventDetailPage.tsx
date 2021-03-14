@@ -286,7 +286,7 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
                 loading={signOffLoading || signUpLoading || eventLoading}
                 disabled={
                   eventData.event.hasExtraInformation &&
-                  (!extraInformation || extraInformation === "") &&
+                  !extraInformation &&
                   !eventData.event.userAttendance?.isSignedUp &&
                   !eventData.event.userAttendance?.isOnWaitingList
                 }
