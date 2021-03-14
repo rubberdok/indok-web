@@ -26,5 +26,5 @@ export interface UserInput {
 export interface UserInputValidations {
   email: boolean;
   phoneNumber: boolean;
-  graduationYear: boolean;
+  graduationYear?: boolean;
 }

@@ -8,10 +8,10 @@ export const validateInput = (input: Partial<UserInput>): UserInputValidations =
   const validationResult: UserInputValidations = {
     email: email ? validator.isEmail(email) : true,
     phoneNumber: phoneNumber ? validator.isMobilePhone(phoneNumber, "nn-NO") : true,
-    graduationYear: false, // required field
   };
 
   if (graduationYear && Number.isInteger(parseInt(graduationYear))) {
+    validationResult.graduationYear = false; // required field
     const graduationYearNumber = parseInt(graduationYear);
     validationResult.graduationYear =
       currentMonth < 8
