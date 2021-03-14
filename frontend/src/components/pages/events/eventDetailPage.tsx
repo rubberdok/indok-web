@@ -89,6 +89,12 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: theme.spacing(0),
     paddingBottom: theme.spacing(0),
   },
+  extraInformation: {
+    position: "relative",
+    float: "right",
+    paddingRight: "1em",
+    paddingBottom: "1em",
+  },
 }));
 
 interface Props {
@@ -298,12 +304,7 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
                 !eventData.event.userAttendance?.isSignedUp &&
                 !eventData.event.userAttendance?.isOnWaitingList && (
                   <TextField
-                    style={{
-                      position: "relative",
-                      float: "right",
-                      paddingRight: "1em",
-                      paddingBottom: "1em",
-                    }}
+                    className={classes.extraInformation}
                     label="Ekstrainformasjon"
                     multiline
                     rows={2}

@@ -78,8 +78,8 @@ export const CREATE_CATEGORY = gql`
 `;
 
 export const SEND_EVENT_EMAILS = gql`
-  mutation SendEventMails($receiverEmails: [String], $content: String, $subject: String) {
-    sendEventMails(receiverEmails: $receiverEmails, content: $content, subject: $subject) {
+  mutation SendEventMails($eventId: ID!, $receiverEmails: [String], $content: String, $subject: String) {
+    sendEventMails(eventId: $eventId, receiverEmails: $receiverEmails, content: $content, subject: $subject) {
       ok
     }
   }
