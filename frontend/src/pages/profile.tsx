@@ -68,7 +68,7 @@ const ProfilePage: NextPage = () => {
           <>
             <FirstLogin open={dialogOpen} onSubmit={onFirstLoginSubmit} fullName={data?.user?.firstName} />
             <Grid container>
-              <Grid xs={6}>
+              <Grid item xs={6}>
                 <Card variant="outlined" className={classes.card}>
                   <CardContent>
                     <Box className={classes.content}>

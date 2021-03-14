@@ -71,12 +71,7 @@ export const FirstLogin: React.FC<FirstLoginProps> = ({ open, onSubmit, fullName
   const onInputChange = (key: string, event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     const newInput = {
       ...updateUserInput,
-      [key]:
-        key === "graduationYear"
-          ? event.target.value === ""
-            ? undefined
-            : parseInt(event.target.value)
-          : event.target.value,
+      [key]: event.target.value,
     };
     setUpdateUserInput(newInput);
     setValidations(validateInput(newInput));
