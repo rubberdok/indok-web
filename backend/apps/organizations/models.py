@@ -28,6 +28,8 @@ class Organization(models.Model):
         "users.User",
         related_name="organizations",
         blank=True,
+        through="Membership",
+        through_fields=("organization", "user")
     )
 
     class Meta:
