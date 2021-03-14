@@ -16,13 +16,13 @@ class ArchiveMutations(graphene.ObjectType):
 
 
 class ArchiveQueries(graphene.ObjectType, ArchiveDocumentResolvers):
-    all_archives = graphene.List(ArchiveDocumentType)
-    archive = graphene.Field(ArchiveDocumentType, id=graphene.ID(required=True))
-    archive_by_year = graphene.Field(
-        ArchiveDocumentType, date=graphene.DateTime(required=True)
+    featured_archive = graphene.List(
+        ArchiveDocumentType,
     )
     archive_by_types = graphene.List(
         ArchiveDocumentType,
         type_doc=graphene.List(graphene.String, required=True),
         year=graphene.Int(required=False),
+        names=graphene.String(required=False),
     )
+    available_years = graphene.List(graphene.String)

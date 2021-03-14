@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { GET_USER } from "@graphql/auth/queries";
+import { GET_USER } from "@graphql/users/queries";
 import { EVENT_SIGN_OFF, EVENT_SIGN_UP } from "@graphql/events/mutations";
 import { AttendableEvent, Event } from "@interfaces/events";
 import { User } from "@interfaces/users";
