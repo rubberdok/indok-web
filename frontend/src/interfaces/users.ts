@@ -13,3 +13,18 @@ export interface User {
   firstLogin: boolean;
   events: Partial<Event>[];
 }
+
+export interface UserInput {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber: string;
+  allergies: string;
+  graduationYear: string;
+}
+
+export interface UserInputValidations {
+  email: boolean;
+  phoneNumber: boolean;
+  graduationYear: boolean;
+}

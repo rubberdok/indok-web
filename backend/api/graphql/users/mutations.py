@@ -35,74 +35,59 @@ class AuthUser(graphene.Mutation):
         )
 
 
+class UserInput(graphene.InputObjectType):
+    email = graphene.String()
+    first_name = graphene.String()
+    last_name = graphene.String()
+    graduation_year = graphene.Int()
+    phone_number = graphene.String()
+    allergies = graphene.String()
+
+
 class UpdateUser(graphene.Mutation):
     class Arguments:
-        email = graphene.String()
-        first_name = graphene.String()
-        last_name = graphene.String()
-        graduation_year = graphene.Int()
-        phone_number = graphene.String()
-        allergies = graphene.String()
+        user_data = UserInput(required=False)
 
     user = graphene.Field(UserType)
 
+    @login_required
     def mutate(
         self,
         info,
-        email=None,
-        first_name=None,
-        last_name=None,
-        graduation_year=None,
-        phone_number=None,
-        allergies=None,
+        user_data=None,
     ):
-        user = info.context.user
-        first_login = user.first_login
-        if first_login:
-            first_login = False
+        if user_data is None:
+            return None
 
+        user = info.context.user
+
+        if user.first_login:
+            user.first_login = False
+
+        graduation_year = user_data.get("graduation_year")
         if graduation_year:
+            # Check that graduation year is within the next five years
+            # After August, current year should not be allowed, and a new year is allowed
             valid_year = True
             now = datetime.datetime.now()
             if now.month < 8:
-                if graduation_year not in range(now.year, now.year + 5):
-                    valid_year = False
+                valid_year = graduation_year in range(now.year, now.year + 5)
             else:
-                if graduation_year not in range(now.year, now.year + 6):
-                    valid_year = False
+                valid_year = graduation_year in range(now.year + 1, now.year + 6)
             if not valid_year:
                 raise ValidationError(
-                    "Du må oppgi et gyldig årstrinn",
+                    "Du må oppgi et gyldig avgangsår",
                     params={"graduation_year": graduation_year},
                 )
 
-        if phone_number:
-            valid = True
-            if phone_number.startswith("+"):
-                valid = phone_number[1:].isnumeric() and len(phone_number[3:]) == 8
-            else:
-                valid = phone_number.isnumeric() and len(phone_number) == 8
-            if not valid:
-                raise ValidationError(
-                    "Ugyldig telefonnummer",
-                    params={"phone_number": phone_number},
-                )
+        if not user.email and not user_data.get("email"):
+            user.email = user.feide_email
 
-        if user.email:
-            email = email if email is not None else user.email
-        else:
-            email = email if email is not None else user.feide_email
-        user.email = email
-        user.first_name = first_name if first_name is not None else user.first_name
-        user.last_name = last_name if last_name is not None else user.last_name
-        user.graduation_year = (
-            graduation_year if graduation_year is not None else user.graduation_year
-        )
-        user.phone_number = (
-            phone_number if phone_number is not None else user.phone_number
-        )
-        user.allergies = allergies if allergies is not None else user.allergies
-        user.first_login = first_login
+        for k, v in user_data.items():
+            setattr(user, k, v)
+
+        # Validate fields
+        user.full_clean(exclude=["password"])
         user.save()
 
         return UpdateUser(user=user)
