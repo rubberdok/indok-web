@@ -20,54 +20,10 @@ const useStyles = makeStyles((theme) => ({
   container: {
     padding: 0,
   },
-  tabsContainer: {
-    width: "fit-content",
-    float: "left",
-  },
   publisherContainer: {
     marginTop: theme.spacing(1),
     width: "fit-content",
     float: "left",
-  },
-  detailContainer: {
-    marginTop: theme.spacing(1),
-    marginLeft: theme.spacing(1),
-    width: "fit-content",
-    float: "left",
-  },
-  mainContainer: {
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1),
-  },
-
-  mainDivider: {
-    paddingTop: theme.spacing(5),
-    paddingBottom: theme.spacing(5),
-  },
-
-  buttonsContainer: {
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1),
-  },
-  buttons: {
-    marginInline: theme.spacing(1),
-  },
-
-  tabs: {},
-  progessContainer: {
-    paddingLeft: "45%",
-    paddingTop: theme.spacing(6),
-  },
-  headerContainer: {
-    padding: 0,
-  },
-  createButtonContainer: {
-    width: "fit-content",
-    float: "right",
-  },
-  grid: {
-    padding: theme.spacing(3),
-    paddingTop: theme.spacing(2),
   },
   paper: {
     color: theme.palette.text.primary,
