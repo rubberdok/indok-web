@@ -12,14 +12,11 @@ const AboutPage: NextPage = () => {
       description="Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse er den øverste instansen
       (moderorganisasjonen) for all studentfrivillighet på masterstudiet Indøk ved NTNU."
     >
-      <Typography variant="h5">Introduksjon</Typography>
       <Typography variant="body2">
         Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse er den øverste instansen
-        (moderorganisasjonen) for all studentfrivillighet på masterstudiet Indøk ved NTNU.
-      </Typography>
-      <Typography variant="body2">
-        Foreningen drives av over 200 ivrige sjeler og over 20 ulike organisasjoner, hvor alt fra veldedighet og
-        ølbrygging til fadderuker og case-trening står på agendaen.
+        («mororganisasjonen») for all studentfrivillighet på masterstudiet Indøk ved NTNU. Foreningen drives av over 200
+        ivrige sjeler og over 20 ulike organisasjoner, hvor alt fra veldedighet og ølbrygging til fadderuker og
+        case-trening står på agendaen.
       </Typography>
       <Typography variant="body2">
         Foreningen ledes av Hovedstyret, som forvalter midlene og fungerer som et koordinerende forum mellom de ulike
@@ -27,52 +24,63 @@ const AboutPage: NextPage = () => {
         Indøk og instituttillitsvalgt på IØT. Generalforsamlingen er Foreningens øverste myndighet, hvor alle studentene
         på Indøk har stemmerett.
       </Typography>
-      <br />
-      <Typography variant="h5">Starten på Hovedstyret</Typography>
+      <Typography variant="h5">Historie</Typography>
       <Typography variant="body2">
-        Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse, NTNU er formaliseringen av all
-        foreningsaktivitet på Indøk under ett og samme tak. På den måten kan vi si at Foreningen har eksistert så lenge
-        studentfrivilligheten på Indøk har det.
-        <br />
-        <br />
-        Allerede på det første Indøk-kullet i 86´ ble næringslivskontakten Bindeleddet startet, og i år 2000 hadde man
-        den første festen på Janus-kjellerne. I løpet av de neste 20 årene skulle flere titalls tilbud bli startet.{" "}
-        <br />
-        <br />I tidligere år hadde linjeforeningene på Indøk ett «Fordelingsmøte» i semesteret der studenter og
-        linjeforeninger på studiet kunne søke om støtte til ulike prosjekter eller arrangementer. Fordelingsmøtet hadde
-        som mandat å behandle søknader og fremme en innstilling om bruk av tilgjengelige midler overfor Allmøtet på IØT.
-        Da denne ordningen ikke viste seg å være tilstrekkelig for å sikre langsiktighet, og da linjeforeningene så
-        behov for et koordinerende forum, ble det i 2008 opprettet et Hovedstyre for studentene på Indøk med tilhørende
-        vedtekter.
-        <br />
-        <br /> For å formalisere dette organet i høyere grad, og for å tilfredsstille krav til vedtekter fra
-        Brønnøysundregisteret, opprettet studentene på Indøk Foreningen for studentene ved Industriell Økonomi og
-        Teknologiledelse, NTNU, i februar 2010. Dette er en forening for alle studentene på sivilingeniørstudiet
-        Industriell Økonomi og Teknologiledelse på NTNU, og denne foreningen styres av det som kalles Hovedstyret. I
-        dette styret sitter følgende personer i ett år:
-        <ul>
-          <li>Et lederpar (valgt på Generalforsamlingen i april)</li>
-          <li> President for Janus</li>
-          <li> Leder i Bindeleddet NTNU</li>
-          <li> Leder i ESTIEM</li>
-          <li> Leder i Hyttestyret</li>
-          <li> Leder av Janus IF</li>
-          <li> Leder av Indøk Kultur</li>
-          <li> Én av ITV’ene</li>
-        </ul>
+        Foreningen er formaliseringen av all foreningsaktivitet på Indøk under ett og samme tak. På den måten kan vi si
+        at Foreningen har eksistert så lenge studentfrivilligheten på Indøk har det.
       </Typography>
-
+      <Typography variant="body2">
+        Allerede på det første Indøk-kullet i 86´ ble næringslivskontakten Bindeleddet startet. I år 2000 hadde man den
+        første festen på Janus-kjellerne. I løpet av de neste 20 årene skulle flere titalls tilbud bli startet, med alt
+        fra veldedighet og ølbrygging til fadderuker og case-trening på agendaen.
+      </Typography>
+      <Typography variant="body2">
+        <blockquote>
+          En detaljert historie om all foreningsaktivitet på Indøk er under utarbeidelse. Har du eksklusiv kunnskap om
+          denne? Send en mail til leder@indokhs.no
+        </blockquote>
+      </Typography>
       <Typography variant="h5">Foreningens formål</Typography>
+      <Typography variant="body2">Fra vedtektene:</Typography>
       <Typography variant="body2">
-        <i>
-          «Foreningens formål er å støtte den samlede studentmassen på sivilingeniørstudiet Industriell Økonomi og
-          Teknologiledelse ved Norges Teknisk- Naturvitenskapelige Universitet (NTNU). Foreningens virksomhet skal
-          ubetinget basere seg på ideelle målsetninger, og all økonomisk støtte fra foreningen skal være av allmennyttig
-          art og tjene den jevne student ved studiet. Foreningen skal ikke drive ervervsmessig virksomhet.»
-        </i>
+        <blockquote>
+          <i>
+            «Foreningens formål [..] å støtte den samlede studentmassen på sivilingeniørstudiet Industriell Økonomi og
+            Teknologiledelse ved Norges Teknisk- Naturvitenskapelige Universitet (NTNU). Foreningens virksomhet skal
+            ubetinget basere seg på ideelle målsetninger, og all økonomisk støtte fra foreningen skal være av
+            allmennyttig art og tjene den jevne student ved studiet. Foreningen skal ikke drive ervervsmessig
+            virksomhet.»
+          </i>
+        </blockquote>
+      </Typography>
+      <Typography variant="h5">Hovedstyret</Typography>
+      <Typography variant="body2">
+        Hovedstyret (HS) er styret i Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse, NTNU.
+        Styrets fremste oppgave er å sørge for god kommunikasjon og samarbeid mellom de ulike studentinitiativene, samt
+        forvalte og disponere Indøks midler på en forsvarlig måte.{" "}
       </Typography>
       <Typography variant="body2">
-        &emsp; &emsp;<b>- Forenings vedtekter</b>
+        Hovedstyret er videre ansvarlig for å forberede og avholde generalforsamling for studentene ved Indøk.
+        Generalforsamlingen er Foreningens øverste organ og er studentenes mulighet til å direkte påvirke budsjetter og
+        avgjørelser som blir fattet på linjen.
+      </Typography>
+      <Typography variant="body2">Opp gjennom historien har Foreningen hatt følgende lederpar: </Typography>
+      <Typography variant="body2">
+        <ul>
+          <li>2008-2009: Ole Heliesen og Georg Øiesvold</li>
+          <li>2009-2010: Magnus Valmot og Ole-Christen Enger</li>
+          <li>2010-2011: Thomas Eide og Ole-Daniel Nitter</li>
+          <li>2011-2012: Michael Wiik og Iver Roen Velo</li>
+          <li>2012-2013: Anja Graff Nesse og Steinar H. Fretheim</li>
+          <li>2013-2014: Ove Mørch og Christian Fredrik Scheel</li>
+          <li>2014-2015: Lars Arild Wold og Marianne Engseth</li>
+          <li>2015-2016: Marius Lie Morken og Hanne Sandven</li>
+          <li>2016-2017: Simen Nygaard Hansen og Kristoffer Birkeland</li>
+          <li>2017-2018: Gard Rystad og Vemund Wøien</li>
+          <li>2018-2019: Daniel Kittilsen Henriksen og Amanda Borge Byrkjeland</li>
+          <li>2019-2020: Peder Gjerstad og Mette Liset</li>
+          <li>2020-2021: Andreas Johannesen og Lars Lien Ankile</li>
+        </ul>
       </Typography>
     </Template>
   );

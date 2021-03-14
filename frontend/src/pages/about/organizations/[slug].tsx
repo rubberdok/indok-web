@@ -2,7 +2,6 @@ import Layout from "@components/Layout";
 import { Box, Card, Container, Grid, makeStyles, Paper, Typography } from "@material-ui/core";
 import { getPostBySlug, getPostsSlugs } from "@utils/posts";
 import { NextPage } from "next";
-import Link from "next/link";
 import React from "react";
 import ReactMarkdown from "react-markdown";
 
@@ -38,24 +37,8 @@ const useStyles = makeStyles(() => ({
     backgroundRepeat: "no-repeat",
     backgroundPosition: "center",
   },
-  navItem: {
-    fontWeight: 600,
-    fontSize: 12,
-    textTransform: "uppercase",
-    color: "black",
-    "&:hover": {
-      cursor: "pointer",
-    },
-  },
-  breadcrumb: {
-    fontSize: "13px",
-    textTransform: "uppercase",
-    color: "#676767",
-    marginTop: -32,
-  },
   heroCard: {
     marginTop: -112,
-
     textAlign: "center",
   },
   logo: {
@@ -63,7 +46,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const Article: NextPage<ArticleProps> = ({ post, frontmatter, nextPost, previousPost }) => {
+const Article: NextPage<ArticleProps> = ({ post, frontmatter }) => {
   const classes = useStyles();
 
   return (
@@ -86,11 +69,11 @@ const Article: NextPage<ArticleProps> = ({ post, frontmatter, nextPost, previous
         <Grid justify="center" container>
           <Grid item xs={10}>
             <Paper className={classes.heroCard}>
-              <Box py="40px" px="56px" display="flex" alignItems="center" justifyContent="space-between">
+              <Box mb="56px" py="40px" px="56px" display="flex" alignItems="center" justifyContent="space-between">
                 <Typography variant="h4">{frontmatter.title}</Typography>
                 <img className={classes.logo} alt={frontmatter.alt} src={frontmatter.logo}></img>
               </Box>
-              <Box px="56px" mb="56px" pb="24px" display="flex" alignItems="center" justifyContent="space-between">
+              {/* <Box px="56px" mb="56px" pb="24px" display="flex" alignItems="center" justifyContent="space-between">
                 {previousPost ? (
                   <Link href={"/about/organizations/[slug]"} as={`/about/organizations/${previousPost.slug}`}>
                     <a>← {previousPost.frontmatter.title}</a>
@@ -108,22 +91,21 @@ const Article: NextPage<ArticleProps> = ({ post, frontmatter, nextPost, previous
                 ) : (
                   <div />
                 )}
-              </Box>
+              </Box> */}
             </Paper>
           </Grid>
         </Grid>
-      </Container>
 
-      <Container>
-        <Grid container>
+        <Grid container spacing={4}>
           <Grid item xs={8}>
             <ReactMarkdown escapeHtml={false} source={post.content} renderers={{ heading: HeadingRenderer }} />
           </Grid>
           <Grid item xs={4}>
-            {frontmatter.styre
-              ? Object.keys(frontmatter.styre).map((item: any) => (
+            {frontmatter.styre ? (
+              <>
+                <Typography variant="h5">Personer</Typography>
+                {Object.keys(frontmatter.styre).map((item: any) => (
                   <>
-                    <br />
                     <Card key={item}>
                       <Box py={3} pt={5} px={5}>
                         <Typography variant="body2">{frontmatter.styre[item].navn}</Typography>
@@ -132,9 +114,13 @@ const Article: NextPage<ArticleProps> = ({ post, frontmatter, nextPost, previous
                         </Typography>
                       </Box>
                     </Card>
+                    <br />
                   </>
-                ))
-              : " "}
+                ))}
+              </>
+            ) : (
+              " "
+            )}
           </Grid>
         </Grid>
       </Container>

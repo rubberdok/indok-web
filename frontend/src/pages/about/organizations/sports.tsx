@@ -1,6 +1,7 @@
 import Layout from "@components/Layout";
 import {
   Box,
+  Button,
   Card,
   CardActionArea,
   CardContent,
@@ -10,6 +11,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
+import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore";
 import { getSortedPosts } from "@utils/posts";
 import { NextPage } from "next";
 import Link from "next/link";
@@ -54,6 +56,12 @@ const SportsPage: NextPage<Props> = ({ posts }) => {
           studenter under én felles paraply, med et bredt spekter av idretter. Tilbudet blir stadig bredere, og ønsker
           og idéer til nye lag og idretter tas alltid imot med åpne armer!{" "}
         </Typography>
+        <br />
+        <Link href="./" passHref>
+          <Button color="inherit" size="large" startIcon={<NavigateBeforeIcon />}>
+            Oversikt
+          </Button>
+        </Link>
         <Box my={10}>
           <Grid container spacing={2}>
             {posts
@@ -84,7 +92,7 @@ const SportsPage: NextPage<Props> = ({ posts }) => {
   );
 };
 
-export async function getStaticProps() {
+export const getStaticProps = async () => {
   const posts = getSortedPosts("organizations");
 
   return {
@@ -92,6 +100,6 @@ export async function getStaticProps() {
       posts,
     },
   };
-}
+};
 
 export default SportsPage;

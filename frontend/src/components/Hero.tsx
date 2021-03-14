@@ -1,6 +1,7 @@
 import { Box, Button, Container, Grid, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
+import Link from "next/link";
 import React, { useState } from "react";
 import { Fade } from "react-awesome-reveal";
 
@@ -180,15 +181,21 @@ const Hero: React.FC = () => {
                   og Teknologiledelse
                 </Typography>
                 <br />
-                <Button color="inherit" size="large" startIcon={<NavigateNextIcon />}>
-                  Les om foreningen
-                </Button>
-                <Button color="inherit" size="large" startIcon={<NavigateNextIcon />}>
-                  Arrangementer
-                </Button>
-                <Button color="inherit" size="large" startIcon={<NavigateNextIcon />}>
-                  Book hytte
-                </Button>
+                <Link href="./about" passHref>
+                  <Button color="inherit" size="large" startIcon={<NavigateNextIcon />}>
+                    Les om foreningen
+                  </Button>
+                </Link>
+                <Link href="./events" passHref>
+                  <Button color="inherit" size="large" startIcon={<NavigateNextIcon />}>
+                    Arrangementer
+                  </Button>
+                </Link>
+                <Link href="./cabins" passHref>
+                  <Button color="inherit" size="large" startIcon={<NavigateNextIcon />}>
+                    Book hytte
+                  </Button>
+                </Link>
               </Fade>
             </Box>
           </Grid>
@@ -198,7 +205,6 @@ const Hero: React.FC = () => {
               <Fade damping={0.1} cascade triggerOnce direction="up">
                 {organizations.map((item) => (
                   <a
-                    target="_blank"
                     rel="noreferrer"
                     onMouseEnter={() => setIsShown(item.img)}
                     onMouseLeave={() => setIsShown("")}

@@ -42,7 +42,7 @@ const links = [
   },
   {
     id: 5,
-    title: "Indøk Hyttene",
+    title: "Indøkhyttene",
     href: "/cabins",
   },
 ];
@@ -136,8 +136,8 @@ const NavbarLinks: React.FC = () => {
     <>
       {links.map((item) => (
         <>
-          <div className={classes.nav}>
-            <Link key={item.id} href={item.href}>
+          <div key={item.id} className={classes.nav}>
+            <Link href={item.href}>
               <a className={[router.pathname == item.href ? "active" : "", classes.navItem].join(" ")}>{item.title}</a>
             </Link>
             {item.dropdown ? (
@@ -204,7 +204,9 @@ const NavbarLinks: React.FC = () => {
             className={classes.menu}
           >
             <MenuItem onClick={handleClose}>
-              <Link href="/profile">Profil</Link>
+              <Link href="/profile">
+                <a>Profil</a>
+              </Link>
             </MenuItem>
             <MenuItem onClick={handleClose}>
               <Link href="/logout">

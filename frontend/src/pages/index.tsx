@@ -1,8 +1,9 @@
 import Hero from "@components/Hero";
 import Layout from "@components/Layout";
-import { Box, Button, makeStyles, Typography } from "@material-ui/core";
+import { Box, Button, Container, makeStyles, Typography } from "@material-ui/core";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import { NextPage } from "next";
+import Link from "next/link";
 import React from "react";
 import { Parallax } from "react-parallax";
 
@@ -57,61 +58,25 @@ const IndexPage: NextPage = () => {
         bgImageAlt="the cat"
         strength={200}
       >
-        <Box m="0 auto" maxWidth="90vw" height={600}>
-          <Box display="flex" top="0" alignItems="center" position="absolute" height="100%" zIndex="4">
-            <Box width={650}>
-              <Typography variant="overline">Foreningen bak</Typography>
-              <Typography variant="h3">
-                Et av de beste <br />
-                sosiale miljøene ved NTNU.
-              </Typography>
-              <br />
-              <Button color="inherit" size="large" startIcon={<NavigateNextIcon />}>
-                Utforsk kalenderen
-              </Button>
+        <Container>
+          <Box height={600}>
+            <Box display="flex" top="0" alignItems="center" position="absolute" height="100%" zIndex="4">
+              <Box width={650}>
+                <Typography variant="overline">Foreningen bak</Typography>
+                <Typography variant="h3">
+                  Et av de beste <br />
+                  sosiale miljøene ved NTNU.
+                </Typography>
+                <br />
+                <Link href="./events" passHref>
+                  <Button color="inherit" size="large" startIcon={<NavigateNextIcon />}>
+                    Utforsk kalenderen
+                  </Button>
+                </Link>
+              </Box>
             </Box>
           </Box>
-        </Box>
-      </Parallax>
-      <Parallax
-        bgImageStyle={{ zIndex: -1 }}
-        className={classes.title}
-        bgImage="img/hytte.jpg"
-        bgImageAlt="the cat"
-        strength={200}
-      >
-        <Box m="0 auto" maxWidth="90vw" height={600}>
-          <Box display="flex" top="0" alignItems="center" position="absolute" height="100%" zIndex="4">
-            <Box width={650}>
-              <Typography variant="overline">Hyttestyret</Typography>
-              <Typography variant="h3">Book en av hyttene våre til rimlig pris</Typography>
-              <br />
-              <Button color="inherit" size="large" startIcon={<NavigateNextIcon />}>
-                Book hytte
-              </Button>
-            </Box>
-          </Box>
-        </Box>
-      </Parallax>
-      <Parallax
-        bgImageStyle={{ zIndex: -1 }}
-        className={classes.title}
-        bgImage="img/hero.jpg"
-        bgImageAlt="the cat"
-        strength={200}
-      >
-        <Box m="0 auto" maxWidth="90vw" height={600}>
-          <Box display="flex" top="0" alignItems="center" position="absolute" height="100%" zIndex="4">
-            <Box width={650}>
-              <Typography variant="overline">Historien vår</Typography>
-              <Typography variant="h3">Indøk siden 1986</Typography>
-              <br />
-              <Button color="inherit" size="large" startIcon={<NavigateNextIcon />}>
-                Les om historien
-              </Button>
-            </Box>
-          </Box>
-        </Box>
+        </Container>
       </Parallax>
       {/* <Container>
 

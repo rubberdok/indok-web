@@ -1,6 +1,7 @@
 import Layout from "@components/Layout";
 import {
   Box,
+  Button,
   Card,
   CardActionArea,
   CardContent,
@@ -10,6 +11,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
+import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import { getSortedPosts } from "@utils/posts";
 import { NextPage } from "next";
 import Link from "next/link";
@@ -49,6 +51,19 @@ const OrganizationsPage: NextPage<Props> = ({ posts }) => {
       <Container>
         <Box pb={10} />
         <Typography variant="h2">Organisasjonene under Hovedstyret</Typography>
+        <br />
+        <Link href="./organizations/sports" passHref>
+          <Button color="inherit" size="large" startIcon={<NavigateNextIcon />}>
+            Janus IF
+          </Button>
+        </Link>
+        <br />
+        <Link href="./organizations/culture" passHref>
+          <Button color="inherit" size="large" startIcon={<NavigateNextIcon />}>
+            Indøk Kultur
+          </Button>
+        </Link>
+
         <Box my={10}>
           <Grid container spacing={2}>
             {posts.map(({ frontmatter: { title, description, logo }, slug }: Props) => (
@@ -77,7 +92,7 @@ const OrganizationsPage: NextPage<Props> = ({ posts }) => {
   );
 };
 
-export async function getStaticProps() {
+export const getStaticProps = async () => {
   const posts = getSortedPosts("organizations");
 
   return {
@@ -85,6 +100,6 @@ export async function getStaticProps() {
       posts,
     },
   };
-}
+};
 
 export default OrganizationsPage;
