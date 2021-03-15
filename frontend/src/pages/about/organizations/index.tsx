@@ -53,13 +53,13 @@ const OrganizationsPage: NextPage<Props> = ({ posts }) => {
         <Typography variant="h2" gutterBottom>
           Organisasjonene under Hovedstyret
         </Typography>
-        <Link href="./organizations/sports" passHref>
+        <Link href="/about/organizations/sports" passHref>
           <Button color="inherit" size="large" startIcon={<NavigateNextIcon />}>
             Janus IF
           </Button>
         </Link>
         <br />
-        <Link href="./organizations/culture" passHref>
+        <Link href="/about/organizations/culture" passHref>
           <Button color="inherit" size="large" startIcon={<NavigateNextIcon />}>
             Indøk Kultur
           </Button>
@@ -70,7 +70,7 @@ const OrganizationsPage: NextPage<Props> = ({ posts }) => {
             {posts.map(({ frontmatter: { title, description, logo }, slug }: Props) => (
               <Grid key={slug} item xs={12} sm={6} md={4}>
                 <Card>
-                  <Link href={"./organizations/[slug]"} as={`./organizations/${slug}`} passHref>
+                  <Link href={"/about/organizations/[slug]"} as={`/about/organizations/${slug}`} passHref>
                     <CardActionArea className={classes.card}>
                       {logo ? <CardMedia className={classes.media} image={logo} /> : ""}
                       <CardContent>

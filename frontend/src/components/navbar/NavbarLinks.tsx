@@ -4,11 +4,11 @@ import { User } from "@interfaces/users";
 import { Button, makeStyles, Menu, MenuItem } from "@material-ui/core";
 import { AccountCircleOutlined } from "@material-ui/icons";
 import PersonIcon from "@material-ui/icons/LockOpen";
+import { DATAPORTEN_SCOPES } from "@utils/auth";
+import { generateQueryString } from "@utils/helpers";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
-import { generateQueryString } from "@utils/helpers";
-import { DATAPORTEN_SCOPES } from "@utils/auth";
 
 const links = [
   {
@@ -20,8 +20,14 @@ const links = [
     id: 2,
     title: "Om Foreningen",
     href: "/about",
+    dropdown: [
+      {
+        id: 2_1,
+        title: "Organisasjoner",
+        href: "/about/organizations",
+      },
+    ],
   },
-
   {
     id: 3,
     title: "Arrangementer",
@@ -128,7 +134,13 @@ const NavbarLinks: React.FC = () => {
         <>
           <div key={item.id} className={classes.nav}>
             <Link href={item.href}>
-              <a className={[router.pathname == item.href ? "active" : "", classes.navItem].join(" ")}>{item.title}</a>
+              <a
+                className={[item.href == "/" + router.pathname.split("/")[1] ? "active" : "", classes.navItem].join(
+                  " "
+                )}
+              >
+                {item.title}
+              </a>
             </Link>
             {item.dropdown ? (
               <div className={classes.dropdown}>

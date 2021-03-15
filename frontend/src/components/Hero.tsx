@@ -27,19 +27,19 @@ const organizations = [
   {
     id: 4,
     title: "Hyttestyret",
-    link: "./about/organizations/hyttestyret",
+    link: "/about/organizations/hyttestyret",
     img: "img/hytte.jpg",
   },
   {
     id: 5,
     title: "Indøk Kultur",
-    link: "./about/organizations/culture",
+    link: "/about/organizations/culture",
     img: "img/indok-kultur.jpg",
   },
   {
     id: 6,
     title: "Janus IF",
-    link: "./about/organizations/sports",
+    link: "/about/organizations/sports",
     img: "img/janus-if.jpg",
   },
 ];

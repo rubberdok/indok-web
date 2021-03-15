@@ -58,7 +58,7 @@ const SportsPage: NextPage<Props> = ({ posts }) => {
           studenter under én felles paraply, med et bredt spekter av idretter. Tilbudet blir stadig bredere, og ønsker
           og idéer til nye lag og idretter tas alltid imot med åpne armer!{" "}
         </Typography>
-        <Link href="./" passHref>
+        <Link href="/about/organizations/" passHref>
           <Button color="inherit" size="large" startIcon={<NavigateBeforeIcon />}>
             Oversikt
           </Button>
@@ -70,7 +70,7 @@ const SportsPage: NextPage<Props> = ({ posts }) => {
               .map(({ frontmatter: { title, description, logo }, slug }: Props) => (
                 <Grid key={slug} item xs={12} sm={6} md={4}>
                   <Card>
-                    <Link href={"./[slug]"} as={`./${slug}`} passHref>
+                    <Link href={"/about/organizations/[slug]"} as={`/about/organizations/${slug}`} passHref>
                       <CardActionArea className={classes.card}>
                         {logo ? <CardMedia className={classes.media} image={logo} /> : ""}
                         <CardContent>

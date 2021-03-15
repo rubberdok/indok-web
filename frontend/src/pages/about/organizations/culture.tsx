@@ -58,7 +58,7 @@ const CulturePage: NextPage<Props> = ({ posts }) => {
           Mannskoret Klingende Mynt, et Indøk-band (Bandøk), et ølbryggerlag (Indøl) samt en veldedig organisasjon
           (IVI).{" "}
         </Typography>
-        <Link href="./" passHref>
+        <Link href="/about/organizations" passHref>
           <Button color="inherit" size="large" startIcon={<NavigateBeforeIcon />}>
             Oversikt
           </Button>
