@@ -32,6 +32,11 @@ const useStyles = makeStyles((theme) => ({
     margin: 0,
     fontSize: 24,
     color: "#b0aca5",
+
+    "&:hover": {
+      cursor: "pointer",
+      color: "#fff",
+    },
   },
   sectionDesktop: {
     display: "none",

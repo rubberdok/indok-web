@@ -8,21 +8,21 @@ import { Fade } from "react-awesome-reveal";
 const organizations = [
   {
     id: 1,
+    title: "Janus",
+    link: "https://www.januslinjeforening.no/",
+    img: "img/gang.jpg",
+  },
+  {
+    id: 2,
     title: "Bindeleddet",
     link: "https://bindeleddet.no/",
     img: "img/bindeleddet.jpg",
   },
   {
-    id: 2,
+    id: 3,
     title: "ESTIEM",
     link: "https://sites.google.com/view/estiem-ntnu",
     img: "img/estiem.jpg",
-  },
-  {
-    id: 3,
-    title: "Indøk Kultur",
-    link: "./about/organizations/culture",
-    img: "img/indok-kultur.jpg",
   },
   {
     id: 4,
@@ -32,9 +32,9 @@ const organizations = [
   },
   {
     id: 5,
-    title: "Janus",
-    link: "https://www.januslinjeforening.no/",
-    img: "img/gang.jpg",
+    title: "Indøk Kultur",
+    link: "./about/organizations/culture",
+    img: "img/indok-kultur.jpg",
   },
   {
     id: 6,
