@@ -1,10 +1,8 @@
 ---
-title: Vedtekter
-description: Mer tekst
+title: Hovedstyret
+description: Hovedstyret (HS) er styret i Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse, NTNU.
 image: /img/borsfest.jpg
 ---
 
-# En overskrift
-
-- asds
-- asdasd
+Andreas Johannesen
+Lars Lien Ankile
