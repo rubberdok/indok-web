@@ -9,7 +9,6 @@ import {
   Button,
   Checkbox,
   CircularProgress,
-  Container,
   FormControl,
   FormControlLabel,
   FormHelperText,
@@ -49,10 +48,7 @@ const CreateEvent: React.FC = () => {
 
   const router = useRouter();
 
-  const [
-    createEvent,
-    { loading: createEventLoading, error: createEventError, data: createEventData, called },
-  ] = useMutation<{
+  const [createEvent, { loading: createEventLoading, error: createEventError }] = useMutation<{
     createEvent: { event: Event };
   }>(CREATE_EVENT, {
     update: (cache, { data }) => {

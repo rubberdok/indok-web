@@ -1,4 +1,4 @@
-import { gql, useMutation, useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { UPDATE_EVENT } from "@graphql/events/mutations";
 import { GET_CATEGORIES, GET_EVENT } from "@graphql/events/queries";
 import { Category, Event } from "@interfaces/events";
