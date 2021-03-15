@@ -176,7 +176,7 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
                 &nbsp;&nbsp;{eventData.event.organization?.name}
               </Typography>
             </Box>
-            {userData.user.organizations
+            {userData.user?.organizations
               .map((organization) => organization.id)
               .includes(eventData.event.organization.id) && (
               <Button
