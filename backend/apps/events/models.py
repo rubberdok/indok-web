@@ -3,6 +3,7 @@ from django.db import models
 from django.conf import settings
 from phonenumber_field.modelfields import PhoneNumberField
 from django.contrib.auth import get_user_model
+from multiselectfield import MultiSelectField
 
 
 # Create your models here.
@@ -29,7 +30,7 @@ class Event(models.Model):
     end_time = models.DateTimeField(blank=True, null=True)
     location = models.CharField(max_length=128, blank=True, null=True)
     organization = models.ForeignKey(
-        Organization, on_delete=models.CASCADE, blank=True, null=True, related_name="events"
+        Organization, on_delete=models.CASCADE, related_name="events"
     )
     category = models.ForeignKey(
         Category, on_delete=models.SET_NULL, blank=True, null=True
@@ -52,6 +53,15 @@ class Event(models.Model):
     short_description = models.CharField(max_length=100, blank=True, null=True)
 
     has_extra_information = models.BooleanField(default=False)
+
+    contact_email = models.EmailField(blank=True, default="")
+
+    binding_signup = models.BooleanField(
+        default=False
+    )  # Disables sign-off from users_attending if true
+
+    GRADE_CHOICES = ((1, "1"), (2, "2"), (3, "3"), (4, "4"), (5, "5"))
+    allowed_grade_years = MultiSelectField(choices=GRADE_CHOICES, default="1,2,3,4,5")
 
     @property
     def signed_up_users(self):

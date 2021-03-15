@@ -19,7 +19,7 @@ const CreateEventsPage: NextPage = () => {
           padding: "2em",
           backgroundColor: "#fff",
           borderColor: "#6A9997",
-          width: "450px",
+          width: "50%",
           margin: "0 auto",
         }}
       >

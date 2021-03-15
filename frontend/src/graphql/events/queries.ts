@@ -27,7 +27,6 @@ export const GET_EVENTS = gql`
         lastName
         dateJoined
       }
-      availableSlots
       price
       shortDescription
       signupOpenDate
@@ -37,6 +36,7 @@ export const GET_EVENTS = gql`
       }
       isFull
       hasExtraInformation
+      allowedGradeYearsList
     }
   }
 `;
@@ -68,7 +68,6 @@ export const GET_DEFAULT_EVENTS = gql`
         lastName
         dateJoined
       }
-      availableSlots
       price
       shortDescription
       signupOpenDate
@@ -78,6 +77,7 @@ export const GET_DEFAULT_EVENTS = gql`
       }
       isFull
       hasExtraInformation
+      allowedGradeYearsList
     }
   }
 `;
@@ -92,9 +92,11 @@ export const GET_EVENT = gql`
       location
       description
       organization {
+        id
         name
       }
       category {
+        id
         name
       }
       image
@@ -108,7 +110,6 @@ export const GET_EVENT = gql`
         lastName
         dateJoined
       }
-      availableSlots
       price
       shortDescription
       signupOpenDate
@@ -118,6 +119,9 @@ export const GET_EVENT = gql`
       }
       isFull
       hasExtraInformation
+      bindingSignup
+      contactEmail
+      allowedGradeYearsList
     }
   }
 `;
