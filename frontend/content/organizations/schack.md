@@ -1,5 +1,5 @@
 ---
-title: Jnaus Schack-klubb
+title: Janus Schack Klub
 description: Mer tekst
 logo: /img/schacklogo.jpg
 image: /img/hero.jpg

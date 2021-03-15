@@ -41,7 +41,7 @@ const Sidebar = (props: { active: string }) => {
             className={props.active == "" ? "MuiButton-outlinedPrimary" : ""}
             fullWidth
           >
-            Introduksjon
+            Om oss
           </Button>
         </Link>
       </li>

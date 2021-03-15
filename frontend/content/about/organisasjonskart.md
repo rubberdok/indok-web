@@ -1,12 +1,12 @@
 ---
-title: Historie
-description: Les litt om Indøk siden 1986.
-image: /img/woodok.jpg
+title: Organisasjonskart
+description: Les mer om alle studentforeningene ved Indøk
+image: /img/hero.jpg
 ---
 
-# INDØK blir født
+# Organisasjonskart
 
-Tekst dhteds
+![Organisasjonskart](/img/organizationmap.svg)
 
 [Janus IF](./organizations/sports)
 [Janus Kultur](./organizations/culture)
