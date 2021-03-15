@@ -83,6 +83,7 @@ class SurveyType(DjangoObjectType):
             "id",
             "descriptive_name",
             "description",
+            "organization",
         ]
 
     @staticmethod
