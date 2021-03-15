@@ -5,6 +5,7 @@ import { GET_USER } from "@graphql/users/queries";
 import { Category, Event } from "@interfaces/events";
 import { Organization } from "@interfaces/organizations";
 import {
+  Box,
   Button,
   Checkbox,
   CircularProgress,
@@ -120,10 +121,10 @@ const CreateEvent: React.FC = () => {
   };
 
   return (
-    <Container>
-      <Typography variant="h2" style={{ marginTop: -10, marginBottom: 10, textAlign: "center" }}>
-        Opprett nytt arrangement
-      </Typography>
+    <>
+      <Box marginTop="-10" marginBottom="10" textAlign="center">
+        <Typography variant="h2">Opprett nytt arrangement</Typography>
+      </Box>
       <Typography variant="h4">Påkrevde felt</Typography>
       <Grid container spacing={3}>
         <Grid item xs={6}>
@@ -376,7 +377,7 @@ const CreateEvent: React.FC = () => {
           {createEventError && <Typography color="error">Feil: {createEventError.message}</Typography>}
         </Grid>
       </Grid>
-    </Container>
+    </>
   );
 };
 

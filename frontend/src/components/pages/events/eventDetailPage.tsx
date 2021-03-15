@@ -272,7 +272,7 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
       {/* Buttons row card */}
       <Grid item xs={12}>
         <Paper variant="outlined" className={classes.paper}>
-          <Link href={`/events`}>
+          <Link href="/events" passHref>
             <Button>Tilbake</Button>
           </Link>
 
