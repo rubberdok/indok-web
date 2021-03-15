@@ -27,7 +27,6 @@ export const GET_EVENTS = gql`
         lastName
         dateJoined
       }
-      availableSlots
       price
       shortDescription
       signupOpenDate
@@ -36,6 +35,8 @@ export const GET_EVENTS = gql`
         isOnWaitingList
       }
       isFull
+      hasExtraInformation
+      allowedGradeYearsList
     }
   }
 `;
@@ -67,7 +68,6 @@ export const GET_DEFAULT_EVENTS = gql`
         lastName
         dateJoined
       }
-      availableSlots
       price
       shortDescription
       signupOpenDate
@@ -76,11 +76,57 @@ export const GET_DEFAULT_EVENTS = gql`
         isOnWaitingList
       }
       isFull
+      hasExtraInformation
+      allowedGradeYearsList
     }
   }
 `;
 
 export const GET_EVENT = gql`
+  query Event($id: ID!) {
+    event(id: $id) {
+      id
+      title
+      startTime
+      endTime
+      location
+      description
+      organization {
+        id
+        name
+      }
+      category {
+        id
+        name
+      }
+      image
+      isAttendable
+      deadline
+      publisher {
+        id
+        username
+        email
+        firstName
+        lastName
+        dateJoined
+      }
+      price
+      shortDescription
+      signupOpenDate
+      userAttendance {
+        isSignedUp
+        isOnWaitingList
+      }
+      isFull
+      hasExtraInformation
+      bindingSignup
+      contactEmail
+      allowedGradeYearsList
+    }
+  }
+`;
+
+export const ADMIN_GET_EVENT = gql`
   query Event($id: ID!) {
     event(id: $id) {
       id
@@ -110,6 +156,22 @@ export const GET_EVENT = gql`
       price
       shortDescription
       signupOpenDate
+      usersAttending {
+        id
+        username
+        email
+        firstName
+        lastName
+        gradeYear
+      }
+      usersOnWaitingList {
+        id
+        username
+        email
+        firstName
+        lastName
+        gradeYear
+      }
       userAttendance {
         isSignedUp
         isOnWaitingList

@@ -1,9 +1,9 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { GET_USER } from "@graphql/auth/queries";
+import { GET_USER } from "@graphql/users/queries";
 import { EVENT_SIGN_OFF, EVENT_SIGN_UP } from "@graphql/events/mutations";
 import { AttendableEvent, Event } from "@interfaces/events";
 import { User } from "@interfaces/users";
-import { Box, Button, Grid, Paper, Snackbar, Typography } from "@material-ui/core";
+import { Box, Button, Grid, Paper, Snackbar, Typography, TextField, Link as MuiLink } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import CategoryIcon from "@material-ui/icons/Category";
 import CreditCard from "@material-ui/icons/CreditCard";
@@ -15,59 +15,17 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { GET_EVENT } from "../../../graphql/events/queries";
 import CountdownButton from "./CountdownButton";
+import { ArrowRight, ContactMail, Edit, ErrorOutline, Warning } from "@material-ui/icons";
+import EditEvent from "./editEvent";
 
 const useStyles = makeStyles((theme) => ({
   container: {
     padding: 0,
   },
-  tabsContainer: {
-    width: "fit-content",
-    float: "left",
-  },
   publisherContainer: {
     marginTop: theme.spacing(1),
     width: "fit-content",
     float: "left",
-  },
-  detailContainer: {
-    marginTop: theme.spacing(1),
-    marginLeft: theme.spacing(1),
-    width: "fit-content",
-    float: "left",
-  },
-  mainContainer: {
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1),
-  },
-
-  mainDivider: {
-    paddingTop: theme.spacing(5),
-    paddingBottom: theme.spacing(5),
-  },
-
-  buttonsContainer: {
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1),
-  },
-  buttons: {
-    marginInline: theme.spacing(1),
-  },
-
-  tabs: {},
-  progessContainer: {
-    paddingLeft: "45%",
-    paddingTop: theme.spacing(6),
-  },
-  headerContainer: {
-    padding: 0,
-  },
-  createButtonContainer: {
-    width: "fit-content",
-    float: "right",
-  },
-  grid: {
-    padding: theme.spacing(3),
-    paddingTop: theme.spacing(2),
   },
   paper: {
     color: theme.palette.text.primary,
@@ -88,6 +46,12 @@ const useStyles = makeStyles((theme) => ({
   innerParagraph: {
     paddingTop: theme.spacing(0),
     paddingBottom: theme.spacing(0),
+  },
+  extraInformation: {
+    position: "relative",
+    float: "right",
+    paddingRight: "1em",
+    paddingBottom: "1em",
   },
 }));
 
@@ -117,14 +81,16 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
   const [openSignOffSnackbar, setOpenSignOffSnackbar] = useState(false);
   const [openOnWaitingListSnackbar, setOpenOnWaitingListSnackbar] = useState(false);
   const [openOffWaitingListSnackbar, setOpenOffWaitingListSnackbar] = useState(false);
-  const [openErrorSnackbar, setOpenErrorSnackbar] = useState(false);
+  const [openSignUpErrorSnackbar, setOpenSignUpErrorSnackbar] = useState(false);
+  const [openSignOffErrorSnackbar, setOpenSignOffErrorSnackbar] = useState(false);
+  const [extraInformation, setExtraInformation] = useState<string>();
 
   const [eventSignUp, { loading: signUpLoading }] = useMutation<{
-    eventSignUp: { event: Event; isFull: boolean };
+    eventSignUp: { isFull: boolean };
   }>(EVENT_SIGN_UP);
 
   const [eventSignOff, { loading: signOffLoading }] = useMutation<{
-    eventSignOff: { event: Event; isFull: boolean };
+    eventSignOff: { isFull: boolean };
   }>(EVENT_SIGN_OFF);
 
   const { data: userData } = useQuery<{ user: User }>(GET_USER);
@@ -137,6 +103,8 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
 
   const classes = useStyles();
 
+  const [openEditEvent, setOpenEditEvent] = useState(false);
+
   if (eventLoading) return <p>Loading...</p>;
 
   if (eventError) return <p>Error :(</p>;
@@ -146,59 +114,81 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
   const handleClick = () => {
     if (!userData.user) return;
     if (eventData.event.userAttendance?.isSignedUp) {
-      eventSignOff({ variables: { eventId: eventId.toString(), userId: userData?.user.id } })
+      eventSignOff({ variables: { eventId: eventId.toString() } })
         .then(() => {
-          refetchEventData({ eventId: eventId.toString(), userId: userData?.user.id });
+          refetchEventData({ eventId: eventId.toString() });
           setOpenSignOffSnackbar(true);
         })
         .catch(() => {
-          setOpenErrorSnackbar(true);
+          setOpenSignOffErrorSnackbar(true);
         });
       return;
     }
     if (eventData.event.userAttendance?.isOnWaitingList) {
-      eventSignOff({ variables: { eventId: eventId.toString(), userId: userData?.user.id } })
+      eventSignOff({ variables: { eventId: eventId.toString() } })
         .then(() => {
-          refetchEventData({ eventId: eventId.toString(), userId: userData?.user.id });
+          refetchEventData({ eventId: eventId.toString() });
           setOpenOffWaitingListSnackbar(true);
         })
         .catch(() => {
-          setOpenErrorSnackbar(true);
+          setOpenSignOffErrorSnackbar(true);
         });
       return;
     }
-    eventSignUp({ variables: { eventId: eventId.toString(), userId: userData.user.id } })
+    eventSignUp({ variables: { eventId: eventId.toString(), data: extraInformation } })
       .then(() => {
-        refetchEventData({ eventId: eventId.toString(), userId: userData.user.id }).then((res) => {
+        refetchEventData({ eventId: eventId.toString() }).then((res) => {
           res.data.event.userAttendance?.isSignedUp ? setOpenSignUpSnackbar(true) : setOpenOnWaitingListSnackbar(true);
         });
       })
       .catch(() => {
-        setOpenErrorSnackbar(true);
+        setOpenSignUpErrorSnackbar(true);
       });
   };
 
   return (
     <Grid container spacing={1}>
+      {openEditEvent && (
+        <EditEvent
+          open={openEditEvent}
+          onClose={() => setOpenEditEvent(false)}
+          event={eventData.event}
+          user={userData.user}
+        />
+      )}
       {/* Header card */}
       <Grid item xs={12}>
         <Paper variant="outlined" className={classes.paper}>
           <Typography component="h1" variant="h4" align="center">
             {eventData.event.title}
           </Typography>
-          <Grid container justify="center">
-            <Typography variant="overline" display="block" className={classes.publisherContainer}>
-              Arrangert av
-            </Typography>
-            <Typography
-              variant="overline"
-              display="block"
-              style={{ fontWeight: 600 }}
-              className={classes.publisherContainer}
-            >
-              &nbsp;&nbsp;{eventData.event.organization?.name}
-            </Typography>
-          </Grid>
+          <Box display="flex" flexDirection="column" alignItems="center">
+            <Box>
+              <Typography variant="overline" display="block" className={classes.publisherContainer}>
+                Arrangert av
+              </Typography>
+              <Typography
+                variant="overline"
+                display="block"
+                style={{ fontWeight: 600 }}
+                className={classes.publisherContainer}
+              >
+                &nbsp;&nbsp;{eventData.event.organization?.name}
+              </Typography>
+            </Box>
+            {userData.user.organizations
+              .map((organization) => organization.id)
+              .includes(eventData.event.organization.id) && (
+              <Button
+                startIcon={<Edit />}
+                onClick={() => {
+                  setOpenEditEvent(true);
+                }}
+              >
+                Rediger
+              </Button>
+            )}
+          </Box>
         </Paper>
       </Grid>
 
@@ -236,6 +226,17 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
                 <CategoryIcon fontSize="small" /> {eventData.event.category?.name}
               </Typography>
             )}
+            {eventData.event.contactEmail && (
+              <Typography gutterBottom>
+                <ContactMail fontSize="small" />
+                <MuiLink href={`mailto:${eventData.event.contactEmail}`}>{eventData.event.contactEmail}</MuiLink>
+              </Typography>
+            )}
+            {eventData.event.bindingSignup && (
+              <Typography gutterBottom color="error">
+                <ErrorOutline fontSize="small" /> Bindende påmelding
+              </Typography>
+            )}
           </Box>
 
           <Box my={2}>
@@ -263,84 +264,143 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
               </Typography>
             </Box>
           )}
-          {/* </Grid> */}
+
+          {eventData.event.allowedGradeYearsList.length < 5 && (
+            <Box my={2}>
+              <Typography variant="overline" display="block">
+                Åpent for
+              </Typography>
+              {eventData.event.allowedGradeYearsList.map((grade) => (
+                <Typography gutterBottom key={grade}>
+                  <ArrowRight fontSize="small" /> {`${grade}. klasse`}
+                </Typography>
+              ))}
+            </Box>
+          )}
         </Paper>
       </Grid>
 
       {/* Buttons row card */}
-      <Grid item justify="space-between" xs={12}>
+      <Grid item xs={12}>
         <Paper variant="outlined" className={classes.paper}>
-          <Link href={`/events`}>
+          <Link href="/events" passHref>
             <Button>Tilbake</Button>
           </Link>
 
-          {eventData.event.isAttendable && userData.user && (
-            <>
-              <CountdownButton
-                countDownDate={(eventData.event as AttendableEvent).signupOpenDate}
-                isSignedUp={(eventData.event as AttendableEvent).userAttendance.isSignedUp}
-                isOnWaitingList={(eventData.event as AttendableEvent).userAttendance.isOnWaitingList}
-                isFull={(eventData.event as AttendableEvent).isFull}
-                loading={signOffLoading || signUpLoading || eventLoading}
-                onClick={handleClick}
-                styleClassName={classes.signUpButton}
-              />
+          {eventData.event.isAttendable &&
+            userData.user &&
+            eventData.event.allowedGradeYearsList.includes(userData.user.gradeYear) && (
+              <>
+                <CountdownButton
+                  countDownDate={(eventData.event as AttendableEvent).signupOpenDate}
+                  isSignedUp={(eventData.event as AttendableEvent).userAttendance.isSignedUp}
+                  isOnWaitingList={(eventData.event as AttendableEvent).userAttendance.isOnWaitingList}
+                  isFull={(eventData.event as AttendableEvent).isFull}
+                  loading={signOffLoading || signUpLoading || eventLoading}
+                  disabled={
+                    (!userData.user.phoneNumber &&
+                      !eventData.event.userAttendance?.isSignedUp &&
+                      !eventData.event.userAttendance?.isOnWaitingList) ||
+                    (eventData.event.bindingSignup && eventData.event.userAttendance?.isSignedUp) ||
+                    (eventData.event.hasExtraInformation &&
+                      !extraInformation &&
+                      !eventData.event.userAttendance?.isSignedUp &&
+                      !eventData.event.userAttendance?.isOnWaitingList)
+                  }
+                  onClick={handleClick}
+                  styleClassName={classes.signUpButton}
+                />
+                {!userData.user.phoneNumber &&
+                  !eventData.event.userAttendance?.isSignedUp &&
+                  !eventData.event.userAttendance?.isOnWaitingList && (
+                    <Typography color="error">
+                      <Warning fontSize="small" />
+                      Du må oppgi et telefonnummer på brukeren din for å kunne melde deg på
+                    </Typography>
+                  )}
 
-              <Snackbar
-                anchorOrigin={{ vertical: "top", horizontal: "right" }}
-                open={openErrorSnackbar}
-                autoHideDuration={3000}
-                onClose={() => setOpenErrorSnackbar(false)}
-              >
-                <Alert elevation={6} variant="filled" severity="error">
-                  Påmelding feilet
-                </Alert>
-              </Snackbar>
-              <Snackbar
-                anchorOrigin={{ vertical: "top", horizontal: "right" }}
-                open={openSignOffSnackbar}
-                autoHideDuration={3000}
-                onClose={() => setOpenSignOffSnackbar(false)}
-              >
-                <Alert elevation={6} variant="filled" severity="info">
-                  Du er nå avmeldt
-                </Alert>
-              </Snackbar>
+                {eventData.event.hasExtraInformation &&
+                  !eventData.event.userAttendance?.isSignedUp &&
+                  !eventData.event.userAttendance?.isOnWaitingList && (
+                    <TextField
+                      className={classes.extraInformation}
+                      label="Ekstrainformasjon"
+                      multiline
+                      rows={2}
+                      required
+                      placeholder="Skriv her..."
+                      variant="outlined"
+                      onChange={(e) => setExtraInformation(e.target.value)}
+                    />
+                  )}
 
-              <Snackbar
-                anchorOrigin={{ vertical: "top", horizontal: "right" }}
-                open={openSignUpSnackbar}
-                autoHideDuration={3000}
-                onClose={() => setOpenSignUpSnackbar(false)}
-              >
-                <Alert elevation={6} variant="filled" severity="success">
-                  Du er nå påmeldt
-                </Alert>
-              </Snackbar>
+                <Snackbar
+                  anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                  open={openSignUpErrorSnackbar}
+                  autoHideDuration={3000}
+                  onClose={() => setOpenSignUpErrorSnackbar(false)}
+                >
+                  <Alert elevation={6} variant="filled" severity="error">
+                    Påmelding feilet
+                  </Alert>
+                </Snackbar>
 
-              <Snackbar
-                anchorOrigin={{ vertical: "top", horizontal: "right" }}
-                open={openOnWaitingListSnackbar}
-                autoHideDuration={3000}
-                onClose={() => setOpenOnWaitingListSnackbar(false)}
-              >
-                <Alert elevation={6} variant="filled" severity="info">
-                  Du er på ventelisten
-                </Alert>
-              </Snackbar>
+                <Snackbar
+                  anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                  open={openSignOffErrorSnackbar}
+                  autoHideDuration={3000}
+                  onClose={() => setOpenSignUpErrorSnackbar(false)}
+                >
+                  <Alert elevation={6} variant="filled" severity="error">
+                    Avmelding feilet
+                  </Alert>
+                </Snackbar>
 
-              <Snackbar
-                anchorOrigin={{ vertical: "top", horizontal: "right" }}
-                open={openOffWaitingListSnackbar}
-                autoHideDuration={3000}
-                onClose={() => setOpenOffWaitingListSnackbar(false)}
-              >
-                <Alert elevation={6} variant="filled" severity="info">
-                  Du er ikke lenger på ventelisten
-                </Alert>
-              </Snackbar>
-            </>
-          )}
+                <Snackbar
+                  anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                  open={openSignOffSnackbar}
+                  autoHideDuration={3000}
+                  onClose={() => setOpenSignOffSnackbar(false)}
+                >
+                  <Alert elevation={6} variant="filled" severity="info">
+                    Du er nå avmeldt
+                  </Alert>
+                </Snackbar>
+
+                <Snackbar
+                  anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                  open={openSignUpSnackbar}
+                  autoHideDuration={3000}
+                  onClose={() => setOpenSignUpSnackbar(false)}
+                >
+                  <Alert elevation={6} variant="filled" severity="success">
+                    Du er nå påmeldt
+                  </Alert>
+                </Snackbar>
+
+                <Snackbar
+                  anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                  open={openOnWaitingListSnackbar}
+                  autoHideDuration={3000}
+                  onClose={() => setOpenOnWaitingListSnackbar(false)}
+                >
+                  <Alert elevation={6} variant="filled" severity="info">
+                    Du er på ventelisten
+                  </Alert>
+                </Snackbar>
+
+                <Snackbar
+                  anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                  open={openOffWaitingListSnackbar}
+                  autoHideDuration={3000}
+                  onClose={() => setOpenOffWaitingListSnackbar(false)}
+                >
+                  <Alert elevation={6} variant="filled" severity="info">
+                    Du er ikke lenger på ventelisten
+                  </Alert>
+                </Snackbar>
+              </>
+            )}
         </Paper>
       </Grid>
     </Grid>

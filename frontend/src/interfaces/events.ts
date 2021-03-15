@@ -13,17 +13,23 @@ export interface Event {
   isAttendable: boolean;
   deadline?: string;
   publisher: User;
-  availableSlots?: number;
+  availableSlots?: string;
   shortDescription?: string;
   signupOpenDate?: string;
+  usersOnWaitingList?: User[];
   userAttendance?: { isSignedUp: boolean; isOnWaitingList: boolean };
   isFull?: boolean;
-  price?: number;
+  price?: string;
+  usersAttending?: User[];
+  hasExtraInformation?: boolean;
+  bindingSignup?: boolean;
+  contactEmail?: string;
+  allowedGradeYearsList: number[];
 }
 
 export interface AttendableEvent extends Event {
   deadline: string;
-  availableSlots: number;
+  availableSlots: string;
   signupOpenDate: string;
   userAttendance: { isSignedUp: boolean; isOnWaitingList: boolean };
   usersAttending: User[];

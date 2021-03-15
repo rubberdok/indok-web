@@ -50,7 +50,7 @@ const EmailForm = ({ eventId }: EmailFormProps) => {
   }, [data]);
 
   const sendEmail = () => {
-    sendEventMail({ variables: emailProps });
+    sendEventMail({ variables: { eventId, ...emailProps } });
     setShowConfirmation(true);
     setShowEmailForm(false);
   };
