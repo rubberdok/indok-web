@@ -137,7 +137,7 @@ const ProfilePage: NextPage = () => {
                         <Typography>{`Her kommer en liste over alle arrangementer ${data.user.firstName} har meldt seg på`}</Typography>
                       </CardContent>
                       <CardActions>
-                        <Link href="/events">
+                        <Link href="/events" passHref>
                           <Button>Gå til arrangmenter</Button>
                         </Link>
                       </CardActions>
