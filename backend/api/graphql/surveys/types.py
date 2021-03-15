@@ -13,7 +13,7 @@ from graphql_jwt.decorators import login_required
 class OptionType(DjangoObjectType):
     class Meta:
         model = Option
-        fields = ["answer", "question"]
+        fields = ["answer", "question", "id"]
 
 
 class AnswerType(DjangoObjectType):
@@ -21,7 +21,7 @@ class AnswerType(DjangoObjectType):
 
     class Meta:
         model = Answer
-        fields = ["answer", "question"]
+        fields = ["answer", "question", "id"]
     
     @staticmethod
     @login_required
@@ -37,7 +37,7 @@ class AnswerType(DjangoObjectType):
 class QuestionTypeType(DjangoObjectType):
     class Meta:
         model = QuestionTypeModel
-        fields = ["name"]
+        fields = ["name", "id"]
 
 class QuestionType(DjangoObjectType):
     options = graphene.List(OptionType)
