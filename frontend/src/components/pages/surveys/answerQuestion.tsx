@@ -14,6 +14,7 @@ import {
   FormLabel,
   FormGroup,
 } from "@material-ui/core";
+import AnswerCheckboxes from "./answerCheckboxes";
 
 const AnswerQuestion: React.FC<{
   answer: Answer;
@@ -52,6 +53,22 @@ const AnswerQuestion: React.FC<{
             <FormControlLabel key={index} value={option.answer} label={option.answer} control={<Radio />} />
           ))}
         </RadioGroup>
+      ) : answer.question.questionType.name === "Checkboxes" ? (
+        <AnswerCheckboxes answer={answer} setAnswer={setAnswer} />
+      ) : answer.question.questionType.name === "Drop-down" ? (
+        <Select
+          onChange={(e) => {
+            e.preventDefault();
+            // ugly typecasting, but necessary with Material UI's Select component
+            setAnswer({ ...answer, answer: e.target.value as string });
+          }}
+        >
+          {answer.question.options.map((option, index) => (
+            <MenuItem key={index} value={option.answer}>
+              {option.answer}
+            </MenuItem>
+          ))}
+        </Select>
       ) : (
         // TODO: change implementation of question types to avoid failsafes like this
         <p>Error in question</p>

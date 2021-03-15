@@ -65,7 +65,14 @@ export const DELETE_QUESTION = gql`
 `;
 
 export const UPDATE_QUESTION = gql`
-  mutation updateQuestion($id: ID!, $question: String!, $description: String!, $position: Int!, $questionTypeId: ID!) {
+  mutation updateQuestion(
+    $id: ID!
+    $question: String!
+    $description: String!
+    $position: Int!
+    $questionTypeId: ID!
+    $options: [OptionInput]!
+  ) {
     updateQuestion(
       id: $id
       questionData: {
@@ -80,6 +87,12 @@ export const UPDATE_QUESTION = gql`
         question
         description
         position
+      }
+      ok
+    }
+    createUpdateAndDeleteOptions(optionData: $options) {
+      options {
+        answer
       }
       ok
     }

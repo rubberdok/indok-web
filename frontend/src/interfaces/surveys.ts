@@ -41,4 +41,9 @@ export interface QuestionVariables {
   description: string;
   position: string;
   questionTypeId: string;
+  options: {
+    answer: string;
+    questionId?: string;
+    id?: string;
+  }[];
 }

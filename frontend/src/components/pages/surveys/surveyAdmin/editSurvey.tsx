@@ -118,6 +118,11 @@ const EditSurvey: React.FC<{ surveyId: string }> = ({ surveyId }) => {
                               description: activeQuestion.description,
                               position: activeQuestion.position,
                               questionTypeId: activeQuestion.questionType.id,
+                              options: activeQuestion.options.map((option) => ({
+                                answer: option.answer,
+                                questionId: activeQuestion.id,
+                                ...(option.id ? { id: option.id } : {}),
+                              })),
                             },
                           });
                         }

@@ -1,6 +1,5 @@
 import { Question, QuestionType, QuestionVariables } from "@interfaces/surveys";
 import { MutationFunctionOptions, FetchResult } from "@apollo/client";
-import Dropdown from "@components/ui/formComponents/dropdown";
 import { useState } from "react";
 import QuestionTypePreview from "@components/pages/surveys/surveyAdmin/questionTypePreview";
 import { Grid, Button, TextField, Select, MenuItem, Radio, Checkbox } from "@material-ui/core";
@@ -133,6 +132,11 @@ const EditQuestion: React.FC<{
                 description: question.description,
                 position: question.position,
                 questionTypeId: question.questionType.id,
+                options: question.options.map((option) => ({
+                  answer: option.answer,
+                  questionId: question.id,
+                  ...(option.id ? { id: option.id } : {}),
+                })),
               },
             });
             setInactive();
