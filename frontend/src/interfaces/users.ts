@@ -1,3 +1,5 @@
+import { Organization } from "./organizations";
+
 export interface User {
   id: string;
   feideEmail: string;
@@ -6,6 +8,7 @@ export interface User {
   firstName: string;
   lastName: string;
   dateJoined: string;
+  organizations: Organization[];
   graduationYear: number;
   gradeYear: number;
   allergies: string;
