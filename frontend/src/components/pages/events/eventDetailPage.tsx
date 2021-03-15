@@ -15,7 +15,7 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { GET_EVENT } from "../../../graphql/events/queries";
 import CountdownButton from "./CountdownButton";
-import { ContactMail, Edit, ErrorOutline, Warning } from "@material-ui/icons";
+import { ArrowRight, ContactMail, Edit, ErrorOutline, Warning } from "@material-ui/icons";
 import { Organization } from "@interfaces/organizations";
 import EditEvent from "./editEvent";
 
@@ -265,7 +265,19 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
               </Typography>
             </Box>
           )}
-          {/* </Grid> */}
+
+          {eventData.event.allowedGradeYearsList.length < 5 && (
+            <Box my={2}>
+              <Typography variant="overline" display="block">
+                Åpent for
+              </Typography>
+              {eventData.event.allowedGradeYearsList.map((grade) => (
+                <Typography gutterBottom key={grade}>
+                  <ArrowRight fontSize="small" /> {`${grade}. klasse`}
+                </Typography>
+              ))}
+            </Box>
+          )}
         </Paper>
       </Grid>
 
