@@ -1,11 +1,11 @@
+from functools import wraps
+from typing import Union
+
 from django.apps import apps
 from django.db.models import Model
 from django.db.models.base import ModelBase
 from django.db.models.query import QuerySet
-from typing import Union
-from functools import wraps
 from graphql_jwt.decorators import context
-
 
 
 def permission_required(perms, lookup_variables=None, **kwargs):
