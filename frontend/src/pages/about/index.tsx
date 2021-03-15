@@ -36,18 +36,21 @@ const AboutPage: NextPage = () => {
         første festen på Janus-kjellerne. I løpet av de neste 20 årene skulle flere titalls tilbud bli startet, med alt
         fra veldedighet og ølbrygging til fadderuker og case-trening på agendaen.
       </Typography>
-      <Typography variant="body2" paragraph>
-        <blockquote>
+
+      <blockquote>
+        <Typography variant="body2" paragraph>
           En detaljert historie om all foreningsaktivitet på Indøk er under utarbeidelse. Har du eksklusiv kunnskap om
           denne? Send en mail til leder@indokhs.no
-        </blockquote>
-      </Typography>
+        </Typography>
+      </blockquote>
+
       <Typography variant="h5" gutterBottom>
         Foreningens formål
       </Typography>
       <Typography variant="body2">Fra vedtektene:</Typography>
-      <Typography variant="body2" paragraph>
-        <blockquote>
+
+      <blockquote>
+        <Typography variant="body2" paragraph>
           <i>
             «Foreningens formål [..] å støtte den samlede studentmassen på sivilingeniørstudiet Industriell Økonomi og
             Teknologiledelse ved Norges Teknisk- Naturvitenskapelige Universitet (NTNU). Foreningens virksomhet skal
@@ -55,8 +58,9 @@ const AboutPage: NextPage = () => {
             allmennyttig art og tjene den jevne student ved studiet. Foreningen skal ikke drive ervervsmessig
             virksomhet.»
           </i>
-        </blockquote>
-      </Typography>
+        </Typography>
+      </blockquote>
+
       <Typography variant="h5" gutterBottom>
         Hovedstyret
       </Typography>
@@ -73,23 +77,22 @@ const AboutPage: NextPage = () => {
       <Typography variant="body2" paragraph>
         Opp gjennom historien har Foreningen hatt følgende lederpar:{" "}
       </Typography>
-      <Typography variant="body2" paragraph>
-        <ul>
-          <li>2008-2009: Ole Heliesen og Georg Øiesvold</li>
-          <li>2009-2010: Magnus Valmot og Ole-Christen Enger</li>
-          <li>2010-2011: Thomas Eide og Ole-Daniel Nitter</li>
-          <li>2011-2012: Michael Wiik og Iver Roen Velo</li>
-          <li>2012-2013: Anja Graff Nesse og Steinar H. Fretheim</li>
-          <li>2013-2014: Ove Mørch og Christian Fredrik Scheel</li>
-          <li>2014-2015: Lars Arild Wold og Marianne Engseth</li>
-          <li>2015-2016: Marius Lie Morken og Hanne Sandven</li>
-          <li>2016-2017: Simen Nygaard Hansen og Kristoffer Birkeland</li>
-          <li>2017-2018: Gard Rystad og Vemund Wøien</li>
-          <li>2018-2019: Daniel Kittilsen Henriksen og Amanda Borge Byrkjeland</li>
-          <li>2019-2020: Peder Gjerstad og Mette Liset</li>
-          <li>2020-2021: Andreas Johannesen og Lars Lien Ankile</li>
-        </ul>
-      </Typography>
+
+      <ul>
+        <li>2008-2009: Ole Heliesen og Georg Øiesvold</li>
+        <li>2009-2010: Magnus Valmot og Ole-Christen Enger</li>
+        <li>2010-2011: Thomas Eide og Ole-Daniel Nitter</li>
+        <li>2011-2012: Michael Wiik og Iver Roen Velo</li>
+        <li>2012-2013: Anja Graff Nesse og Steinar H. Fretheim</li>
+        <li>2013-2014: Ove Mørch og Christian Fredrik Scheel</li>
+        <li>2014-2015: Lars Arild Wold og Marianne Engseth</li>
+        <li>2015-2016: Marius Lie Morken og Hanne Sandven</li>
+        <li>2016-2017: Simen Nygaard Hansen og Kristoffer Birkeland</li>
+        <li>2017-2018: Gard Rystad og Vemund Wøien</li>
+        <li>2018-2019: Daniel Kittilsen Henriksen og Amanda Borge Byrkjeland</li>
+        <li>2019-2020: Peder Gjerstad og Mette Liset</li>
+        <li>2020-2021: Andreas Johannesen og Lars Lien Ankile</li>
+      </ul>
     </Template>
   );
 };
