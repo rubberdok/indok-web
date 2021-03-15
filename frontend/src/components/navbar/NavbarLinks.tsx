@@ -125,12 +125,11 @@ const NavbarLinks: React.FC = () => {
   return (
     <>
       {links.map((item) => (
-        <>
-          <div key={item.id} className={classes.nav}>
-            <Link href={item.href}>
-              <a className={[router.pathname == item.href ? "active" : "", classes.navItem].join(" ")}>{item.title}</a>
-            </Link>
-            {item.dropdown ? (
+        <div key={item.id} className={classes.nav}>
+          <Link href={item.href}>
+            <a className={[router.pathname == item.href ? "active" : "", classes.navItem].join(" ")}>{item.title}</a>
+          </Link>
+          {/* {item.dropdown ? (
               <div className={classes.dropdown}>
                 {item.dropdown.map((dropItem) => (
                   <Link key={dropItem.title} href={dropItem.href}>
@@ -142,9 +141,8 @@ const NavbarLinks: React.FC = () => {
               </div>
             ) : (
               ""
-            )}
-          </div>
-        </>
+            )} */}
+        </div>
       ))}
       {!userData || loading || !userData.user || error ? (
         <>
