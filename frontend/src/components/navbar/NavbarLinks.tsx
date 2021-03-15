@@ -131,32 +131,28 @@ const NavbarLinks: React.FC = () => {
   return (
     <>
       {links.map((item) => (
-        <>
-          <div key={item.id} className={classes.nav}>
-            <Link href={item.href}>
-              <a
-                className={[item.href == "/" + router.pathname.split("/")[1] ? "active" : "", classes.navItem].join(
-                  " "
-                )}
-              >
-                {item.title}
-              </a>
-            </Link>
-            {item.dropdown ? (
-              <div className={classes.dropdown}>
-                {item.dropdown.map((dropItem) => (
-                  <Link key={dropItem.title} href={dropItem.href}>
-                    <a className={[router.pathname == dropItem.href ? "active" : "", classes.navItem].join(" ")}>
-                      {dropItem.title}
-                    </a>
-                  </Link>
-                ))}
-              </div>
-            ) : (
-              ""
-            )}
-          </div>
-        </>
+        <div key={item.id} className={classes.nav}>
+          <Link href={item.href}>
+            <a
+              className={[item.href == "/" + router.pathname.split("/")[1] ? "active" : "", classes.navItem].join(" ")}
+            >
+              {item.title}
+            </a>
+          </Link>
+          {item.dropdown ? (
+            <div className={classes.dropdown}>
+              {item.dropdown.map((dropItem) => (
+                <Link key={dropItem.title} href={dropItem.href}>
+                  <a className={[router.pathname == dropItem.href ? "active" : "", classes.navItem].join(" ")}>
+                    {dropItem.title}
+                  </a>
+                </Link>
+              ))}
+            </div>
+          ) : (
+            ""
+          )}
+        </div>
       ))}
       {!userData || loading || !userData.user || error ? (
         <>
