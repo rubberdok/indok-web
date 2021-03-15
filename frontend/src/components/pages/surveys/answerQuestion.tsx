@@ -48,13 +48,8 @@ const AnswerQuestion: React.FC<{
             setAnswer({ ...answer, answer: e.target.value });
           }}
         >
-          {answer.question.offeredAnswers.map((offeredAnswer, index) => (
-            <FormControlLabel
-              key={index}
-              value={offeredAnswer.answer}
-              label={offeredAnswer.answer}
-              control={<Radio />}
-            />
+          {answer.question.options.map((option, index) => (
+            <FormControlLabel key={index} value={option.answer} label={option.answer} control={<Radio />} />
           ))}
         </RadioGroup>
       ) : (

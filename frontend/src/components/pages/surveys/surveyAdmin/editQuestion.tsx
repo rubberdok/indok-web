@@ -84,7 +84,7 @@ const EditQuestion: React.FC<{
       question.questionType.name === "Multiple choice" ||
       question.questionType.name === "Drop-down" ? (
         <Grid container direction="column">
-          {question.offeredAnswers.map((offeredAnswer, index) => (
+          {question.options.map((option, index) => (
             <Grid key={index} container direction="row">
               {question.questionType.name === "Checkboxes" ? (
                 <Checkbox disabled />
@@ -94,13 +94,13 @@ const EditQuestion: React.FC<{
                 <p>{index + 1}.</p>
               )}
               <TextField
-                value={offeredAnswer.answer}
+                value={option.answer}
                 onChange={(e) => {
                   e.preventDefault();
                   setQuestion({
                     ...question,
-                    offeredAnswers: question.offeredAnswers.map((oldAnswer) =>
-                      oldAnswer === offeredAnswer ? { ...oldAnswer, answer: e.target.value } : oldAnswer
+                    options: question.options.map((oldAnswer) =>
+                      oldAnswer === option ? { ...oldAnswer, answer: e.target.value } : oldAnswer
                     ),
                   });
                 }}
@@ -112,7 +112,7 @@ const EditQuestion: React.FC<{
               e.preventDefault();
               setQuestion({
                 ...question,
-                offeredAnswers: [...question.offeredAnswers, { id: "", answer: "" }],
+                options: [...question.options, { id: "", answer: "" }],
               });
             }}
           >

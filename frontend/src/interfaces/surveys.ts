@@ -15,7 +15,7 @@ export interface Question {
   description: string;
   position: string;
   questionType: QuestionType;
-  offeredAnswers: OfferedAnswer[];
+  options: Option[];
   answers: Answer[];
 }
 
@@ -24,7 +24,7 @@ export interface QuestionType {
   name: string;
 }
 
-export interface OfferedAnswer {
+export interface Option {
   id: string;
   answer: string;
 }

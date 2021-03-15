@@ -14,7 +14,7 @@ export const SURVEY = gql`
           id
           name
         }
-        offeredAnswers {
+        options {
           id
           answer
         }
@@ -54,7 +54,7 @@ export const SURVEY_ANSWERS = gql`
           id
           name
         }
-        offeredAnswers {
+        options {
           id
           answer
         }
