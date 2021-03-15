@@ -1,11 +1,12 @@
 import { useQuery } from "@apollo/client";
-import { GET_USER } from "@graphql/auth/queries";
+import { GET_USER } from "@graphql/users/queries";
 import { User } from "@interfaces/users";
 import { makeStyles } from "@material-ui/core";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 import { generateQueryString } from "@utils/helpers";
+import { DATAPORTEN_SCOPES } from "@utils/auth";
 
 const links = [
   {
@@ -47,16 +48,6 @@ const useStyles = makeStyles(() => ({
     },
   },
 }));
-
-const DATAPORTEN_SCOPES = [
-  "openid",
-  "userid",
-  "userid-feide",
-  "userinfo-name",
-  "userinfo-photo",
-  "email",
-  "groups-edu",
-];
 
 const NavbarLinks: React.FC = () => {
   const classes = useStyles();

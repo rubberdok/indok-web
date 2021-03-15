@@ -27,6 +27,55 @@ export const GET_EVENTS = gql`
         lastName
         dateJoined
       }
+      availableSlots
+      price
+      shortDescription
+      signupOpenDate
+      userAttendance {
+        isSignedUp
+        isOnWaitingList
+      }
+      isFull
+    }
+  }
+`;
+
+export const GET_DEFAULT_EVENTS = gql`
+  query defaultEvents {
+    defaultEvents {
+      id
+      title
+      startTime
+      endTime
+      location
+      description
+      organization {
+        name
+        color
+      }
+      category {
+        name
+      }
+      image
+      isAttendable
+      deadline
+      publisher {
+        id
+        username
+        email
+        firstName
+        lastName
+        dateJoined
+      }
+      availableSlots
+      price
+      shortDescription
+      signupOpenDate
+      userAttendance {
+        isSignedUp
+        isOnWaitingList
+      }
+      isFull
     }
   }
 `;
@@ -57,6 +106,15 @@ export const GET_EVENT = gql`
         lastName
         dateJoined
       }
+      availableSlots
+      price
+      shortDescription
+      signupOpenDate
+      userAttendance {
+        isSignedUp
+        isOnWaitingList
+      }
+      isFull
     }
   }
 `;

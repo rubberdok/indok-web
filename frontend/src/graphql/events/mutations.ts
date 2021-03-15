@@ -49,6 +49,22 @@ export const CREATE_EVENT = gql`
   }
 `;
 
+export const EVENT_SIGN_UP = gql`
+  mutation EventSignUp($eventId: ID!, $userId: ID!) {
+    eventSignUp(eventId: $eventId, userId: $userId) {
+      isFull
+    }
+  }
+`;
+
+export const EVENT_SIGN_OFF = gql`
+  mutation EventSignOff($eventId: ID!, $userId: ID!) {
+    eventSignOff(eventId: $eventId, userId: $userId) {
+      isFull
+    }
+  }
+`;
+
 export const CREATE_CATEGORY = gql`
   mutation CreateCategory($name: String) {
     createCategory(categoryData: { name: $name }) {

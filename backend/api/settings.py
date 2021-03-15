@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     "graphene_django",
     "django_filters",
     "rest_framework",
+    "phonenumber_field",
 ]
 
 AUTH_USER_MODEL = "users.User"
@@ -76,6 +77,7 @@ MIDDLEWARE = [
     "django_alive.middleware.healthcheck_bypass_host_check",
     "api.auth.middleware.IndokWebJWTMiddleware",
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -157,12 +159,18 @@ USE_L10N = True
 
 USE_TZ = True
 
+PHONENUMBER_DB_FORMAT = "NATIONAL"
+PHONENUMBER_DEFAULT_REGION = "NO"
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = "/static/"
-STATICFILES_DIRS = ["backend/static/cabins"]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
+
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+
 
 # CONFIG
 EMAIL_HOST_USER = env("BOOKING_EMAIL")
