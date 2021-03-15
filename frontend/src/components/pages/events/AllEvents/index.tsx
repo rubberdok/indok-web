@@ -102,9 +102,8 @@ const AllEvents: React.FC = () => {
 
         {userData && !userLoading && userData.user && !!userData.user.memberships.length && (
           <Container className={classes.createButtonContainer}>
-            <Link href={`/events/create-event`}>
-              <Button color="primary" disableRipple>
-                <Add />
+            <Link href={`/events/create-event`} passHref>
+              <Button color="primary" disableRipple startIcon={<Add />}>
                 <Typography variant="body1">Opprett</Typography>
               </Button>
             </Link>

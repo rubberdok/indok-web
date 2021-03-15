@@ -1,21 +1,21 @@
 import graphene
-from apps.events import models
+from apps.events.models import Event, SignUp, Category
 from apps.organizations.permissions import check_user_membership
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from graphql_jwt.decorators import login_required, staff_member_required
+from apps.organizations.models import Organization
 
 from .mail import send_event_emails
 from .types import CategoryType, EventType
 
 
-class CreateEventInput(graphene.InputObjectType):
+class BaseEventInput:
     title = graphene.String(required=True)
     description = graphene.String(required=True)
     start_time = graphene.DateTime(required=True)
     end_time = graphene.DateTime(required=False)
     location = graphene.String(required=False)
-    organization_id = graphene.ID(required=True)
     category_id = graphene.ID(required=False)
     image = graphene.String(required=False)
     is_attendable = graphene.Boolean(required=True)
@@ -29,7 +29,11 @@ class CreateEventInput(graphene.InputObjectType):
     binding_signup = graphene.Boolean(required=False)
 
 
-class UpdateEventInput(CreateEventInput):
+class CreateEventInput(BaseEventInput, graphene.InputObjectType):
+    organization_id = graphene.ID(required=True)
+
+
+class UpdateEventInput(BaseEventInput, graphene.InputObjectType):
     title = graphene.String(required=False)
     description = graphene.String(required=False)
     start_time = graphene.DateTime(required=False)
@@ -46,12 +50,15 @@ class CreateEvent(graphene.Mutation):
 
     @login_required
     def mutate(self, info, event_data):
-        organization = models.Organization.objects.get(
-            id=event_data.get("organization_id")
-        )
+        try:
+            organization = Organization.objects.get(
+                id=event_data.get("organization_id")
+            )
+        except Organization.DoesNotExist:
+            raise ValueError("Ugyldig organisasjon oppgitt")
         check_user_membership(info.context.user, organization)
 
-        event = models.Event()
+        event = Event()
         for k, v in event_data.items():
             setattr(event, k, v)
         event.publisher = info.context.user
@@ -69,8 +76,12 @@ class UpdateEvent(graphene.Mutation):
     event = graphene.Field(EventType)
 
     @login_required
-    def mutate(self, info, event_data):
-        event = models.Event.objects.get(pk=id)
+    def mutate(self, info, id, event_data):
+        try:
+            event = Event.objects.get(pk=id)
+        except Event.DoesNotExist:
+            raise ValueError("Ugyldig arrangement")
+
         check_user_membership(info.context.user, event.organization)
 
         for k, v in event_data.items():
@@ -89,7 +100,10 @@ class DeleteEvent(graphene.Mutation):
 
     @login_required
     def mutate(self, info, id):
-        event = get_object_or_404(models.Event, pk=id)
+        try:
+            event = Event.objects.get(pk=id)
+        except Event.DoesNotExist:
+            raise ValueError("Ugyldig arrangement")
 
         check_user_membership(info.context.user, event.organization)
 
@@ -112,10 +126,14 @@ class EventSignUp(graphene.Mutation):
 
     @login_required
     def mutate(self, info, event_id, data):
-        event = models.Event.objects.get(pk=event_id)
+        try:
+            event = Event.objects.get(pk=id)
+        except Event.DoesNotExist:
+            raise ValueError("Ugyldig arrangement")
+
         user = info.context.user
 
-        sign_up = models.SignUp()
+        sign_up = SignUp()
         if data.extra_information:
             setattr(sign_up, "extra_information", data.extra_information)
 
@@ -142,7 +160,11 @@ class EventSignOff(graphene.Mutation):
 
     @login_required
     def mutate(self, info, event_id):
-        event = models.Event.objects.get(pk=event_id)
+        try:
+            event = Event.objects.get(pk=id)
+        except Event.DoesNotExist:
+            raise ValueError("Ugyldig arrangement")
+
         user = info.context.user
 
         if event.binding_signup and user in event.users_attending:
@@ -150,11 +172,15 @@ class EventSignOff(graphene.Mutation):
                 "Du kan ikke melde deg av et arrangement med bindende påmelding."
             )
 
-        sign_up = (
-            models.SignUp.objects.filter(is_attending=True)
-            .order_by("-timestamp")
-            .get(user=user, event=event)
-        )
+        try:
+            sign_up = (
+                SignUp.objects.filter(is_attending=True)
+                .order_by("-timestamp")
+                .get(user=user, event=event)
+            )
+        except SignUp.DoesNotExist:
+            raise Exception("Du er ikke påmeldt")
+
         setattr(sign_up, "is_attending", False)
         sign_up.save()
 
@@ -174,7 +200,7 @@ class CreateCategory(graphene.Mutation):
 
     @staff_member_required
     def mutate(self, info, category_data):
-        category = models.Category()
+        category = Category()
         for k, v in category_data.items():
             setattr(category, k, v)
         category.save()
@@ -192,7 +218,8 @@ class UpdateCategory(graphene.Mutation):
 
     @staff_member_required
     def mutate(self, info, category_data):
-        category = models.Category.objects.get(pk=id)
+        category = get_object_or_404(Category, pk=id)
+
         for k, v in category_data.items():
             setattr(category, k, v)
         category.save()
@@ -209,7 +236,7 @@ class DeleteCategory(graphene.Mutation):
 
     @staff_member_required
     def mutate(self, info, id):
-        category = get_object_or_404(models.Category, pk=id)
+        category = get_object_or_404(Category, pk=id)
         category.delete()
         ok = True
         return DeleteCategory(category=category, ok=ok)
@@ -226,7 +253,11 @@ class SendEventEmails(graphene.Mutation):
 
     @login_required
     def mutate(self, info, event_id, receiverEmails, content, subject):
-        event = models.Event.objects.get(pk=event_id)
+        try:
+            event = Event.objects.get(pk=event_id)
+        except Event.DoesNotExist:
+            raise ValueError("Ugyldig arrangement")
+
         check_user_membership(info.context.user, event.organization)
 
         send_event_emails(receiverEmails, content, subject)

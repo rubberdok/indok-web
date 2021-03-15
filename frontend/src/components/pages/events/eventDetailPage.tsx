@@ -15,7 +15,9 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { GET_EVENT } from "../../../graphql/events/queries";
 import CountdownButton from "./CountdownButton";
-import { ContactMail, ErrorOutline, Warning } from "@material-ui/icons";
+import { ContactMail, Edit, ErrorOutline, Warning } from "@material-ui/icons";
+import { Organization } from "@interfaces/organizations";
+import EditEvent from "./editEvent";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -102,6 +104,8 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
 
   const classes = useStyles();
 
+  const [openEditEvent, setOpenEditEvent] = useState(false);
+
   if (eventLoading) return <p>Loading...</p>;
 
   if (eventError) return <p>Error :(</p>;
@@ -145,25 +149,47 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
 
   return (
     <Grid container spacing={1}>
+      {openEditEvent && (
+        <EditEvent
+          open={openEditEvent}
+          onClose={() => setOpenEditEvent(false)}
+          event={eventData.event}
+          user={userData.user}
+        />
+      )}
       {/* Header card */}
       <Grid item xs={12}>
         <Paper variant="outlined" className={classes.paper}>
           <Typography component="h1" variant="h4" align="center">
             {eventData.event.title}
           </Typography>
-          <Grid container justify="center">
-            <Typography variant="overline" display="block" className={classes.publisherContainer}>
-              Arrangert av
-            </Typography>
-            <Typography
-              variant="overline"
-              display="block"
-              style={{ fontWeight: 600 }}
-              className={classes.publisherContainer}
-            >
-              &nbsp;&nbsp;{eventData.event.organization?.name}
-            </Typography>
-          </Grid>
+          <Box display="flex" flexDirection="column" alignItems="center">
+            <Box>
+              <Typography variant="overline" display="block" className={classes.publisherContainer}>
+                Arrangert av
+              </Typography>
+              <Typography
+                variant="overline"
+                display="block"
+                style={{ fontWeight: 600 }}
+                className={classes.publisherContainer}
+              >
+                &nbsp;&nbsp;{eventData.event.organization?.name}
+              </Typography>
+            </Box>
+            {userData.user.memberships
+              .map(({ organization }: { organization: Organization }) => organization.id)
+              .includes(eventData.event.organization.id) && (
+              <Button
+                startIcon={<Edit />}
+                onClick={() => {
+                  setOpenEditEvent(true);
+                }}
+              >
+                Rediger
+              </Button>
+            )}
+          </Box>
         </Paper>
       </Grid>
 
@@ -244,9 +270,9 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
       </Grid>
 
       {/* Buttons row card */}
-      <Grid item justify="space-between" xs={12}>
+      <Grid item xs={12}>
         <Paper variant="outlined" className={classes.paper}>
-          <Link href={`/events`}>
+          <Link href="/events" passHref>
             <Button>Tilbake</Button>
           </Link>
 
