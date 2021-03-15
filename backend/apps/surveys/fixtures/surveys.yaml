@@ -1,0 +1,28 @@
+- model: surveys.Survey
+  pk: 1
+  fields:
+    organization: 1
+    descriptive_name: Søknadsskjema for 'Søk Estiem'
+    description: Søknaden vil bli behandlet av opptaksgruppen til ESTIEM. Alle som søker vil bli kalt inn til intervju.
+- model: surveys.Survey
+  pk: 2
+  fields:
+    organization: 2
+    descriptive_name: Søknadsskjema for 'Søk Janus'
+    description: Søknaden vil bli behandlet av studentene ved indøk. Alle som søker vil bli kalt inn til intervju med alle studentene ved indøk.
+- model: surveys.QuestionType
+  pk: 1
+  fields:
+    name: Short answer
+- model: surveys.QuestionType
+  pk: 2
+  fields:
+    name: Paragraph
+- model: surveys.QuestionType
+  pk: 3
+  fields:
+    name: Multiple choice
+- model: surveys.QuestionType
+  pk: 4
+  fields:
+    name: Drop-down
