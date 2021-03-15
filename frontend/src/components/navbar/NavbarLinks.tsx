@@ -21,28 +21,14 @@ const links = [
     title: "Om Foreningen",
     href: "/about",
   },
+
   {
     id: 3,
-    title: "Organisasjoner",
-    href: "/about/organizations",
-    dropdown: [
-      {
-        title: "Janus IF",
-        href: "/about/organizations/sports",
-      },
-      {
-        title: "Indøk Kultur",
-        href: "/about/organizations/culture",
-      },
-    ],
-  },
-  {
-    id: 4,
     title: "Arrangementer",
     href: "/events",
   },
   {
-    id: 5,
+    id: 4,
     title: "Indøkhyttene",
     href: "/cabins",
   },

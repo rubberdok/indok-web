@@ -30,8 +30,8 @@ export const RemoveFilters: React.FC<RemoveFiltersProps> = ({ handleRemoveFilter
         <ContentWrapper
           style={{
             justifyContent: "center",
-            marginBottom: "7px",
-            marginTop: "7px",
+            marginBottom: "0px",
+            marginTop: "0px",
             paddingLeft: "14px",
             paddingRight: "8px",
           }}
@@ -39,7 +39,6 @@ export const RemoveFilters: React.FC<RemoveFiltersProps> = ({ handleRemoveFilter
           <Typography
             style={{
               fontSize: "14px",
-              //fontWeight: "bolder",
               justifyContent: "space-evenly",
               color: "black",
             }}
