@@ -8,7 +8,7 @@ import React, { useState } from "react";
 import EventListItem from "./EventListItem";
 import FilterMenu from "./FilterMenu/index";
 import Link from "next/link";
-import { Add } from "@material-ui/icons";
+import { Add, List } from "@material-ui/icons";
 
 export interface FilterQuery {
   organization?: string;
@@ -102,9 +102,21 @@ const AllEvents: React.FC = () => {
 
         {userData && !userLoading && userData.user && !!userData.user.organizations.length && (
           <Container className={classes.createButtonContainer}>
-            <Link href={`/events/create-event`} passHref>
+            <Link href="/events/create-event" passHref>
               <Button color="primary" disableRipple startIcon={<Add />}>
                 <Typography variant="body1">Opprett</Typography>
+              </Button>
+            </Link>
+          </Container>
+        )}
+        {userData && !userLoading && userData.user && !!userData.user.organizations.length && (
+          <Container className={classes.createButtonContainer}>
+            <Link
+              href={userData.user.organizations.length > 1 ? "/orgs" : `/orgs/${userData.user.organizations[0].id}`}
+              passHref
+            >
+              <Button color="primary" disableRipple startIcon={<List />}>
+                <Typography variant="body1">Administrer</Typography>
               </Button>
             </Link>
           </Container>

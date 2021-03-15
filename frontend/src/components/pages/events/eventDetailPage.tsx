@@ -16,7 +16,6 @@ import React, { useState } from "react";
 import { GET_EVENT } from "../../../graphql/events/queries";
 import CountdownButton from "./CountdownButton";
 import { ArrowRight, ContactMail, Edit, ErrorOutline, Warning } from "@material-ui/icons";
-import { Organization } from "@interfaces/organizations";
 import EditEvent from "./editEvent";
 
 const useStyles = makeStyles((theme) => ({
