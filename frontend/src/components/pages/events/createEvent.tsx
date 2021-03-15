@@ -3,7 +3,7 @@ import { CREATE_EVENT } from "@graphql/events/mutations";
 import { GET_CATEGORIES } from "@graphql/events/queries";
 import { GET_USER } from "@graphql/users/queries";
 import { Category, Event } from "@interfaces/events";
-import { Organization } from "@interfaces/organizations";
+import { User } from "@interfaces/users";
 import {
   Box,
   Button,
@@ -72,16 +72,17 @@ const CreateEvent: React.FC = () => {
   });
 
   const { loading: categoryLoading, error: categoryError, data: categoryData } = useQuery(GET_CATEGORIES);
-  const { loading: userLoading, error: userError, data: userData } = useQuery(GET_USER);
+  const { loading: userLoading, error: userError, data: userData } = useQuery<{ user: User }>(GET_USER);
 
   if (categoryLoading || userLoading) return <CircularProgress />;
   if (categoryError || userError) return <Typography>Det oppstod en feil.</Typography>;
 
-  if (!userData.user || !userData.user.memberships.length) {
+  if (!userData || !userData.user || !userData.user.organizations.length) {
     router.push("/events");
+    return null;
   }
   if (!eventData.organizationId) {
-    setEventData({ ...eventData, organizationId: userData.user.memberships[0].organization.id });
+    setEventData({ ...eventData, organizationId: userData.user.organizations[0].id });
   }
 
   const onIsAttendableChange = (attendable: boolean) => {
@@ -167,7 +168,7 @@ const CreateEvent: React.FC = () => {
           />
         </Grid>
 
-        {userData.user.memberships.length > 1 && (
+        {userData.user.organizations.length > 1 && (
           <Grid item xs={6}>
             <FormControl>
               <InputLabel id="select-org-label">Organisasjon</InputLabel>
@@ -176,9 +177,9 @@ const CreateEvent: React.FC = () => {
                 id="select-org"
                 name="organization"
                 value={eventData.organizationId}
-                onChange={(e) => setEventData({ ...eventData, organizationId: e.currentTarget.value as string })}
+                onChange={(e) => setEventData({ ...eventData, organizationId: e.target.value })}
               >
-                {userData.user.memberships.map(({ organization }: { organization: Organization }) => (
+                {userData.user.organizations.map((organization) => (
                   <MenuItem key={organization.id} value={organization.id}>
                     {organization.name}
                   </MenuItem>

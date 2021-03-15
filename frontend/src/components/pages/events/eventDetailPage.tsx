@@ -16,7 +16,6 @@ import React, { useState } from "react";
 import { GET_EVENT } from "../../../graphql/events/queries";
 import CountdownButton from "./CountdownButton";
 import { ArrowRight, ContactMail, Edit, ErrorOutline, Warning } from "@material-ui/icons";
-import { Organization } from "@interfaces/organizations";
 import EditEvent from "./editEvent";
 
 const useStyles = makeStyles((theme) => ({
@@ -177,8 +176,8 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
                 &nbsp;&nbsp;{eventData.event.organization?.name}
               </Typography>
             </Box>
-            {userData.user.memberships
-              .map(({ organization }: { organization: Organization }) => organization.id)
+            {userData.user.organizations
+              .map((organization) => organization.id)
               .includes(eventData.event.organization.id) && (
               <Button
                 startIcon={<Edit />}

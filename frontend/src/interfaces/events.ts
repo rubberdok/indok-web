@@ -16,9 +16,11 @@ export interface Event {
   availableSlots?: string;
   shortDescription?: string;
   signupOpenDate?: string;
+  usersOnWaitingList?: User[];
   userAttendance?: { isSignedUp: boolean; isOnWaitingList: boolean };
   isFull?: boolean;
   price?: string;
+  usersAttending?: User[];
   hasExtraInformation?: boolean;
   bindingSignup?: boolean;
   contactEmail?: string;

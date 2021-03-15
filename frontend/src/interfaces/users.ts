@@ -8,13 +8,13 @@ export interface User {
   firstName: string;
   lastName: string;
   dateJoined: string;
+  organizations: Organization[];
   graduationYear: number;
   gradeYear: number;
   allergies: string;
   phoneNumber: string;
   firstLogin: boolean;
   events: Partial<Event>[];
-  memberships: { organization: Organization }[];
 }
 
 export interface UserInput {

@@ -2,7 +2,7 @@ from apps.organizations.models import Organization
 from django.db import models
 from django.conf import settings
 from phonenumber_field.modelfields import PhoneNumberField
-from apps.users.models import User
+from django.contrib.auth import get_user_model
 from multiselectfield import MultiSelectField
 
 
@@ -29,7 +29,9 @@ class Event(models.Model):
     # Optional fields
     end_time = models.DateTimeField(blank=True, null=True)
     location = models.CharField(max_length=128, blank=True, null=True)
-    organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
+    organization = models.ForeignKey(
+        Organization, on_delete=models.CASCADE, related_name="events"
+    )
     category = models.ForeignKey(
         Category, on_delete=models.SET_NULL, blank=True, null=True
     )
@@ -67,7 +69,7 @@ class Event(models.Model):
             "timestamp"
         )
         user_ids = sign_ups.values_list("user__id", flat=True)
-        return User.objects.filter(id__in=user_ids)
+        return get_user_model().objects.filter(id__in=user_ids)
 
     @property
     def users_on_waiting_list(self):

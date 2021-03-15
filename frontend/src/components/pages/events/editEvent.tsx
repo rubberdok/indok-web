@@ -97,7 +97,7 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event, user }) => 
   if (categoryLoading) return <CircularProgress />;
   if (categoryError) return <Typography>Det oppstod en feil.</Typography>;
 
-  if (!user || !user.memberships.length) {
+  if (!user || !user.organizations.length) {
     router.push("/events");
   }
 

@@ -5,6 +5,9 @@ import datetime
 
 
 # Create your models here.
+from apps.events.models import SignUp, Event
+
+
 class User(AbstractUser):
     feide_userid = models.CharField(max_length=255, db_index=True)
     feide_email = models.EmailField(blank=True, default="")
@@ -13,6 +16,12 @@ class User(AbstractUser):
     phone_number = PhoneNumberField(blank=True)
     first_login = models.BooleanField(default=True)
     graduation_year = models.IntegerField(null=True, blank=True)
+
+    @property
+    def events(self):
+        sign_ups = SignUp.objects.filter(user=self, is_attending=True)
+        event_ids = sign_ups.values_list("event__id", flat=True)
+        return Event.objects.filter(id__in=event_ids)
 
     @property
     def grade_year(self):

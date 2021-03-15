@@ -126,6 +126,61 @@ export const GET_EVENT = gql`
   }
 `;
 
+export const ADMIN_GET_EVENT = gql`
+  query Event($id: ID!) {
+    event(id: $id) {
+      id
+      title
+      startTime
+      endTime
+      location
+      description
+      organization {
+        name
+      }
+      category {
+        name
+      }
+      image
+      isAttendable
+      deadline
+      publisher {
+        id
+        username
+        email
+        firstName
+        lastName
+        dateJoined
+      }
+      availableSlots
+      price
+      shortDescription
+      signupOpenDate
+      usersAttending {
+        id
+        username
+        email
+        firstName
+        lastName
+        gradeYear
+      }
+      usersOnWaitingList {
+        id
+        username
+        email
+        firstName
+        lastName
+        gradeYear
+      }
+      userAttendance {
+        isSignedUp
+        isOnWaitingList
+      }
+      isFull
+    }
+  }
+`;
+
 export const GET_CATEGORIES = gql`
   query {
     allCategories {
