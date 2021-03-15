@@ -28,9 +28,7 @@ class Event(models.Model):
     # Optional fields
     end_time = models.DateTimeField(blank=True, null=True)
     location = models.CharField(max_length=128, blank=True, null=True)
-    organization = models.ForeignKey(
-        Organization, on_delete=models.CASCADE, blank=True, null=True
-    )
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
     category = models.ForeignKey(
         Category, on_delete=models.SET_NULL, blank=True, null=True
     )
@@ -52,6 +50,12 @@ class Event(models.Model):
     short_description = models.CharField(max_length=100, blank=True, null=True)
 
     has_extra_information = models.BooleanField(default=False)
+
+    contact_email = models.EmailField(blank=True, default="")
+
+    binding_signup = models.BooleanField(
+        default=False
+    )  # Disables sign-off from users_attending if true
 
     @property
     def signed_up_users(self):

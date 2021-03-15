@@ -3,10 +3,12 @@ import { GET_USER } from "@graphql/users/queries";
 import { GET_DEFAULT_EVENTS, GET_EVENTS } from "@graphql/events/queries";
 import { Event } from "@interfaces/events";
 import { User } from "@interfaces/users";
-import { CircularProgress, Container, Grid, makeStyles, Paper, Tab, Tabs, Typography } from "@material-ui/core";
+import { Button, CircularProgress, Container, Grid, makeStyles, Paper, Tab, Tabs, Typography } from "@material-ui/core";
 import React, { useState } from "react";
 import EventListItem from "./EventListItem";
 import FilterMenu from "./FilterMenu/index";
+import Link from "next/link";
+import { Add } from "@material-ui/icons";
 
 export interface FilterQuery {
   organization?: string;
@@ -57,7 +59,7 @@ const AllEvents: React.FC = () => {
   const classes = useStyles();
   const [filters, setFilters] = useState({});
   const [showDefaultEvents, setShowDefaultEvents] = useState(true);
-  const [showCalenderView, setShowCalenderView] = useState(false);
+  const [showCalendarView, setShowCalenderView] = useState(false);
   const { loading: userLoading, data: userData } = useQuery<{ user: User }>(GET_USER);
 
   const { loading: eventsLoading, error: eventsError, data: eventsData, refetch } = useQuery(GET_EVENTS, {
@@ -86,8 +88,8 @@ const AllEvents: React.FC = () => {
         <Container className={classes.tabsContainer}>
           <Paper square>
             <Tabs
-              value={showCalenderView ? 1 : 0}
-              onChange={() => setShowCalenderView(!showCalenderView)}
+              value={showCalendarView ? 1 : 0}
+              onChange={() => setShowCalenderView(!showCalendarView)}
               indicatorColor="primary"
               textColor="primary"
               className={classes.tabs}
@@ -98,19 +100,15 @@ const AllEvents: React.FC = () => {
           </Paper>
         </Container>
 
-        {/* Holder knappen for å opprette arrangementer skjult til det funker
-        {userData && !userLoading && userData.user && !userError && (
-          // TODO: Redirect til `/events/create-event` når vi har funksjonalitet for dette.
+        {userData && !userLoading && userData.user && !!userData.user.memberships.length && (
           <Container className={classes.createButtonContainer}>
-            <Link href={`/events/create-event`}>
-              <Button color="primary" disableRipple>
-                <PlusSquare />
+            <Link href={`/events/create-event`} passHref>
+              <Button color="primary" disableRipple startIcon={<Add />}>
                 <Typography variant="body1">Opprett</Typography>
               </Button>
             </Link>
           </Container>
-        )}  
-        */}
+        )}
       </Container>
 
       <Grid container className={classes.grid} spacing={3}>
@@ -127,7 +125,7 @@ const AllEvents: React.FC = () => {
             <Container className={classes.progessContainer}>
               <CircularProgress />
             </Container>
-          ) : showCalenderView ? (
+          ) : showCalendarView ? (
             <Typography variant="body1">Kommer snart! :)</Typography>
           ) : (
             <>
