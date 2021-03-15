@@ -1,6 +1,6 @@
 ---
 title: Eksperter i Vin
-description: Mer tekst
+description: Hever indøks vinkompetanse
 logo: /img/eivlogo.jpg
 image: /img/eivbilde.jpg
 styre:

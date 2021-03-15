@@ -37,12 +37,12 @@ const AboutPage: NextPage = () => {
         fra veldedighet og ølbrygging til fadderuker og case-trening på agendaen.
       </Typography>
 
-      <blockquote>
-        <Typography variant="body2" paragraph>
+      <Typography variant="h6" paragraph>
+        <i>
           En detaljert historie om all foreningsaktivitet på Indøk er under utarbeidelse. Har du eksklusiv kunnskap om
           denne? Send en mail til leder@indokhs.no
-        </Typography>
-      </blockquote>
+        </i>
+      </Typography>
 
       <Typography variant="h5" gutterBottom>
         Foreningens formål

@@ -1,6 +1,6 @@
 ---
 title: Janustrikk
-description: Mer tekst
+description: Indøks strikkelag for alle kjønn
 logo: /img/janusstrikk.jpg
 image: /img/janusstrikk.jpg
 styre:

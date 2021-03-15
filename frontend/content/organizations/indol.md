@@ -1,6 +1,6 @@
 ---
 title: Indøks Ølbryggerlaug
-description: Mer tekst
+description: Et helt lovlig bryggeri
 logo: /img/indollogo.png
 image: /img/indolbilde.jpg
 styre:
@@ -20,6 +20,7 @@ styre:
     navn: Marte Vingsnes
     mail: tlf. 482 60 767
     tittel: PR-ansvarlig
+tag: kultur
 ---
 
 # Hvem er vi?

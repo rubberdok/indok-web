@@ -1,6 +1,6 @@
 ---
 title: Pandemics
-description: Mer tekst
+description: Indøks amerikanske fotballag
 logo: /img/pandemicslogo.jpg
 image: /img/pandemics.jpg
 styre:

@@ -1,6 +1,6 @@
 ---
 title: Hyttestyret
-description: Mer tekst
+description: Gjengen som passer på hyttene våre
 logo: /img/hylogo.jpg
 image: /img/hy1.jpg
 styre:

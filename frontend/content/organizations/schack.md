@@ -1,6 +1,6 @@
 ---
 title: Janus Schack Klub
-description: Mer tekst
+description: Sjakk matt
 logo: /img/schacklogo.jpg
 image: /img/hero.jpg
 styre:

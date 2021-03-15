@@ -1,17 +1,10 @@
 ---
 title: Indøkrevyen
-description: Mer tekst
+description: Norges beste studentrevy?
 logo: /img/indokrevylogo.jpg
 image: /img/indokrevyenbilde.jpg
 styre:
-  ceo:
-    navn: Revy Revyesen
-    mail: tlf.
-    tittel: Dirigent
-  cto:
-    navn: Revy Lættissen
-    mail: tlf.
-    tittel: Sketsjansvarlig
+tag: kultur
 ---
 
 # En overskrift
