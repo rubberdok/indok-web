@@ -12,6 +12,11 @@ const theme = createMuiTheme({
         ...typography.body2,
       },
     },
+    MuiFormLabel: {
+      root: {
+        ...typography.body2,
+      },
+    },
     MuiTypography: {
       gutterBottom: {
         marginBottom: 32,
