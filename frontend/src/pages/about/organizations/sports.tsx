@@ -50,13 +50,14 @@ const SportsPage: NextPage<Props> = ({ posts }) => {
     <Layout>
       <Container>
         <Box pb={10} />
-        <Typography variant="h2">Janus IF</Typography>
-        <Typography variant="body1">
+        <Typography variant="h2" gutterBottom>
+          Janus IF
+        </Typography>
+        <Typography variant="body1" paragraph>
           Fra en sped start som Janus FK i 2006, har foreningen vokst til å forene godt over hundre sporty og engasjerte
           studenter under én felles paraply, med et bredt spekter av idretter. Tilbudet blir stadig bredere, og ønsker
           og idéer til nye lag og idretter tas alltid imot med åpne armer!{" "}
         </Typography>
-        <br />
         <Link href="./" passHref>
           <Button color="inherit" size="large" startIcon={<NavigateBeforeIcon />}>
             Oversikt
@@ -73,12 +74,10 @@ const SportsPage: NextPage<Props> = ({ posts }) => {
                       <CardActionArea className={classes.card}>
                         {logo ? <CardMedia className={classes.media} image={logo} /> : ""}
                         <CardContent>
-                          <Typography gutterBottom variant="h5" component="h2">
+                          <Typography variant="h5" component="h2">
                             {title}
                           </Typography>
-                          <Typography gutterBottom variant="body2">
-                            {description}
-                          </Typography>
+                          <Typography variant="body2">{description}</Typography>
                         </CardContent>
                       </CardActionArea>
                     </Link>

@@ -50,13 +50,14 @@ const CulturePage: NextPage<Props> = ({ posts }) => {
     <Layout>
       <Container>
         <Box pb={10} />
-        <Typography variant="h2">Indøk Kultur</Typography>
-        <Typography variant="body1">
+        <Typography variant="h2" gutterBottom>
+          Indøk Kultur
+        </Typography>
+        <Typography variant="body1" paragraph>
           Indøk Kultur er paraplyorganisasjonen for alle kulturaktiviteter på Indøk, og innbefatter Indøkrevyen,
           Mannskoret Klingende Mynt, et Indøk-band (Bandøk), et ølbryggerlag (Indøl) samt en veldedig organisasjon
           (IVI).{" "}
         </Typography>
-        <br />
         <Link href="./" passHref>
           <Button color="inherit" size="large" startIcon={<NavigateBeforeIcon />}>
             Oversikt
@@ -73,12 +74,10 @@ const CulturePage: NextPage<Props> = ({ posts }) => {
                       <CardActionArea className={classes.card}>
                         {logo ? <CardMedia className={classes.media} image={logo} /> : ""}
                         <CardContent>
-                          <Typography gutterBottom variant="h5" component="h2">
+                          <Typography variant="h5" component="h2">
                             {title}
                           </Typography>
-                          <Typography gutterBottom variant="body2">
-                            {description}
-                          </Typography>
+                          <Typography variant="body2">{description}</Typography>
                         </CardContent>
                       </CardActionArea>
                     </Link>

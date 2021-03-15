@@ -50,8 +50,9 @@ const OrganizationsPage: NextPage<Props> = ({ posts }) => {
     <Layout>
       <Container>
         <Box pb={10} />
-        <Typography variant="h2">Organisasjonene under Hovedstyret</Typography>
-        <br />
+        <Typography variant="h2" gutterBottom>
+          Organisasjonene under Hovedstyret
+        </Typography>
         <Link href="./organizations/sports" passHref>
           <Button color="inherit" size="large" startIcon={<NavigateNextIcon />}>
             Janus IF
@@ -73,12 +74,10 @@ const OrganizationsPage: NextPage<Props> = ({ posts }) => {
                     <CardActionArea className={classes.card}>
                       {logo ? <CardMedia className={classes.media} image={logo} /> : ""}
                       <CardContent>
-                        <Typography gutterBottom variant="h5" component="h2">
+                        <Typography variant="h5" component="h2">
                           {title}
                         </Typography>
-                        <Typography gutterBottom variant="body2">
-                          {description}
-                        </Typography>
+                        <Typography variant="body2">{description}</Typography>
                       </CardContent>
                     </CardActionArea>
                   </Link>

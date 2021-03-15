@@ -98,12 +98,18 @@ const Article: NextPage<ArticleProps> = ({ post, frontmatter }) => {
 
         <Grid container spacing={4}>
           <Grid item xs={8}>
-            <ReactMarkdown escapeHtml={false} source={post.content} renderers={{ heading: HeadingRenderer }} />
+            <ReactMarkdown
+              escapeHtml={false}
+              source={post.content}
+              renderers={{ heading: HeadingRenderer, paragraph: ParagraphRenderer }}
+            />
           </Grid>
           <Grid item xs={4}>
             {frontmatter.styre ? (
               <>
-                <Typography variant="h5">Personer</Typography>
+                <Typography variant="h5" gutterBottom>
+                  Personer
+                </Typography>
                 {Object.keys(frontmatter.styre).map((item: any) => (
                   <>
                     <Card key={item}>
@@ -154,7 +160,19 @@ export const getStaticProps = async ({ params }: ArticleProps) => {
 };
 
 const HeadingRenderer = (props: { children: React.ReactNode }) => {
-  return <Typography variant="h5">{props.children}</Typography>;
+  return (
+    <Typography variant="h5" gutterBottom>
+      {props.children}
+    </Typography>
+  );
+};
+
+const ParagraphRenderer = (props: { children: React.ReactNode }) => {
+  return (
+    <Typography variant="body2" paragraph>
+      {props.children}
+    </Typography>
+  );
 };
 
 export default Article;

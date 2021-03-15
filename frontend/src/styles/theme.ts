@@ -11,13 +11,13 @@ const theme = createMuiTheme({
     },
     h2: {
       fontFamily: ["Playfair Display", "sans-serif"].join(","),
-      fontSize: "48px",
+      fontSize: 48,
       fontWeight: 700,
       lineHeight: "3.5rem",
     },
     h3: {
       fontFamily: ["Playfair Display", "sans-serif"].join(","),
-      fontSize: "48px",
+      fontSize: 48,
       fontWeight: 500,
     },
     h4: {
@@ -29,45 +29,49 @@ const theme = createMuiTheme({
       fontFamily: ["Playfair Display", "sans-serif"].join(","),
       fontWeight: 700,
       fontSize: "1.5rem",
-      marginBottom: "24px",
+      margin: "5px 0",
     },
     h6: {
       fontFamily: ["Playfair Display", "sans-serif"].join(","),
       fontWeight: 700,
-      fontSize: "22px",
+      fontSize: 22,
       lineHeight: "23px",
-      marginTop: "10px",
-      marginBottom: 30,
       color: "rgb(43 39 28 / 35%)",
     },
     subtitle1: {
       fontFamily: ["Playfair Display", "sans-serif"].join(","),
       fontWeight: 400,
-      fontSize: "25px",
+      fontSize: 25,
       lineHeight: "43px",
     },
     overline: {
-      fontSize: "13px",
+      fontSize: 13,
       letterSpacing: "0.05em",
       fontWeight: 600,
       color: "#b0aca5",
     },
     body1: {
       fontFamily: ["Open Sans", "sans-serif"].join(","),
-      fontSize: "24px",
-      marginTop: "32px",
+      fontSize: 24,
       fontWeight: 300,
       lineHeight: "40px",
     },
     body2: {
       fontFamily: ["Open Sans", "sans-serif"].join(","),
-      fontSize: "18px",
+      fontSize: 18,
       fontWeight: 300,
       lineHeight: "30px",
-      marginBottom: 24,
     },
   },
   overrides: {
+    MuiTypography: {
+      gutterBottom: {
+        marginBottom: 32,
+      },
+      paragraph: {
+        marginBottom: 32,
+      },
+    },
     MuiFab: {
       root: {
         justifyContent: "center",
