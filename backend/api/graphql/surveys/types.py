@@ -1,5 +1,6 @@
 import graphene
 from api.graphql.users.types import UserType
+from apps.organizations.permissions import check_user_membership
 from apps.surveys.models import Answer, Option, Question
 from apps.surveys.models import QuestionType as QuestionTypeModel
 from apps.surveys.models import Survey
@@ -12,15 +13,31 @@ from graphql_jwt.decorators import login_required
 class OptionType(DjangoObjectType):
     class Meta:
         model = Option
+        fields = ["answer", "question"]
 
 
 class AnswerType(DjangoObjectType):
+    user = graphene.Field(UserType)
+
     class Meta:
         model = Answer
+        fields = ["answer", "question"]
+    
+    @staticmethod
+    @login_required
+    def resolve_user(answer, info):
+        user = info.context.user
+        if user == answer.user:
+            return user
+            
+        check_user_membership(user, answer.question.survey.organization)
+        return answer.user
+
 
 class QuestionTypeType(DjangoObjectType):
     class Meta:
         model = QuestionTypeModel
+        fields = ["name"]
 
 class QuestionType(DjangoObjectType):
     options = graphene.List(OptionType)
