@@ -13,14 +13,13 @@ class OrganizationType(DjangoObjectType):
 
     class Meta:
         model = Organization
-        fields = ["id", "name", "slug", "color", "description", "parent", "children"]
+        fields = ["id", "name", "slug", "color", "description", "parent", "children", "users", "events"]
 
     @staticmethod
     def resolve_listings(root: Organization, info):
         listing_loader = ListingsByOrganizationIdLoader()
         return listing_loader.load(root.id)
     
-        fields = ["id", "name", "slug", "color", "description", "parent", "children", "users", "events"]
 
     class PermissionDecorators:
         @staticmethod
