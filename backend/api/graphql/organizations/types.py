@@ -1,5 +1,6 @@
 import graphene
 from graphene_django import DjangoObjectType
+from graphql_jwt.decorators import login_required
 
 from apps.organizations.models import Organization, Membership, Role
 
@@ -9,8 +10,19 @@ class OrganizationType(DjangoObjectType):
 
     class Meta:
         model = Organization
-        fields = ["id", "name", "slug", "color", "description", "parent", "children"]
-    
+        fields = ["id", "name", "slug", "color", "description", "parent", "children", "users", "events"]
+
+    class PermissionDecorators:
+        @staticmethod
+        def is_in_organization(resolver):
+            def wrapper(organization: Organization, info):
+                if organization.users.filter(pk=info.context.user.id).exists():
+                    return resolver(organization, info)
+                else:
+                    raise PermissionError(f"Du må være medlem av organisasjonen {organization.name} for å gjøre dette kallet")
+
+            return wrapper
+
     @staticmethod
     def resolve_absolute_slug(organization: Organization, info):
         slug_list = [organization.slug]
@@ -19,6 +31,17 @@ class OrganizationType(DjangoObjectType):
             slug_list.insert(0, organization.slug)
         return "/".join(slug_list)
 
+    @staticmethod
+    @login_required
+    @PermissionDecorators.is_in_organization
+    def resolve_users(organization: Organization, info):
+        return organization.users
+
+    @staticmethod
+    @login_required
+    @PermissionDecorators.is_in_organization
+    def resolve_events(organization: Organization, info):
+        return organization.events
 
 
 class MembershipType(DjangoObjectType):

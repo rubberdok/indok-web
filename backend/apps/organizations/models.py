@@ -5,6 +5,7 @@ from django.contrib.auth.models import Group, User
 from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
 
+
 # Create your models here.
 class Organization(models.Model):
     name = models.CharField(max_length=100)
@@ -23,6 +24,14 @@ class Organization(models.Model):
     color = models.CharField(max_length=100, blank=True, null=True)
 
     group = models.ForeignKey(Group, on_delete=models.CASCADE, null=True, blank=True)
+
+    users = models.ManyToManyField(
+        "users.User",
+        related_name="organizations",
+        blank=True,
+        through="Membership",
+        through_fields=("organization", "user")
+    )
 
     class Meta:
         constraints = [

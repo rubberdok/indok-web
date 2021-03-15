@@ -38,6 +38,7 @@ interface Props {
   isOnWaitingList: boolean;
   isFull: boolean;
   loading: boolean;
+  disabled?: boolean;
   onClick: () => void;
   styleClassName: any;
 }
@@ -48,6 +49,7 @@ const CountdownButton: React.FC<Props> = ({
   isOnWaitingList,
   isFull,
   loading,
+  disabled,
   onClick,
   styleClassName,
 }) => {
@@ -79,7 +81,7 @@ const CountdownButton: React.FC<Props> = ({
         variant="contained"
         color={isSignedUp || isOnWaitingList ? "inherit" : "primary"}
         onClick={onClick}
-        disabled={currentTimePart !== undefined}
+        disabled={currentTimePart !== undefined || disabled}
       >
         {currentTimePart
           ? `Åpner om ${timeLeft[currentTimePart]} ${translate(currentTimePart, timeLeft[currentTimePart])}`

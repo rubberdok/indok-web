@@ -12,10 +12,17 @@ from static.cabins.mailcontent import get_no_html_mail
 from datetime import datetime
 
 
-
 def sendmail(ctx, subject, receiver, mailtype):
-    content = get_template("usermail.html").render(ctx) if mailtype == "user" else get_template("adminmail.html").render(ctx)
-    no_html_content = get_no_html_mail(ctx, "user") if mailtype == "user" else get_no_html_mail(ctx, "admin")
+    content = (
+        get_template("usermail.html").render(ctx)
+        if mailtype == "user"
+        else get_template("adminmail.html").render(ctx)
+    )
+    no_html_content = (
+        get_no_html_mail(ctx, "user")
+        if mailtype == "user"
+        else get_no_html_mail(ctx, "admin")
+    )
     image_path = "static/cabins/hyttestyret_logo.png"
     image_name = Path(image_path).name
 
@@ -67,8 +74,8 @@ def send_mails(info, firstname, surname, receiverEmail, bookFrom, bookTo, price)
     user_subject = "Bekreftelsesmail for booking av Indøkhytte"
     admin_subject = "Booking av Indøkhytte"
 
-    #send_mail(user_subject, get_no_html_mail(ctx, "user"), "", [receiverEmail], html_message=render_to_string("usermail.html", ctx))
-    #send_mail(admin_subject, get_no_html_mail(ctx, "admin"), "", ["herman.holmoy12@gmail.com"], html_message=render_to_string("adminmail.html", ctx))
+    # send_mail(user_subject, get_no_html_mail(ctx, "user"), "", [receiverEmail], html_message=render_to_string("usermail.html", ctx))
+    # send_mail(admin_subject, get_no_html_mail(ctx, "admin"), "", ["herman.holmoy12@gmail.com"], html_message=render_to_string("adminmail.html", ctx))
 
     sendmail(ctx, user_subject, receiverEmail, "user")
     sendmail(ctx, admin_subject, "herman.holmoy12@gmail.com", "admin")

@@ -1,6 +1,5 @@
 import graphene
 from apps.events.models import Category, Event
-from django.core.exceptions import PermissionDenied
 from graphene_django import DjangoObjectType
 from graphql_jwt.decorators import login_required
 
@@ -17,6 +16,7 @@ class EventType(DjangoObjectType):
     is_full = graphene.Boolean(source="is_full")
     users_on_waiting_list = graphene.List(UserType)
     users_attending = graphene.List(UserType)
+    allowed_grade_years_list = graphene.List(graphene.Int)
 
     class Meta:
         model = Event
@@ -37,7 +37,24 @@ class EventType(DjangoObjectType):
             "price",
             "signup_open_date",
             "short_description",
+            "has_extra_information",
+            "binding_signup",
+            "contact_email",
+            "allowed_grade_years_list",
         ]
+
+    class PermissionDecorators:
+        @staticmethod
+        def is_in_event_organization(resolver):
+            def wrapper(event: Event, info):
+                user = info.context.user
+                if user.memberships.filter(organization=event.organization).exists() or user.is_superuser:
+                    return resolver(event, info)
+                else:
+                    raise PermissionError(
+                        f"Du må være medlem av organisasjonen {event.organization.name} for å gjøre dette kallet")
+
+            return wrapper
 
     @staticmethod
     def resolve_user_attendance(event, info):
@@ -48,28 +65,20 @@ class EventType(DjangoObjectType):
         }
 
     @staticmethod
-    @login_required
-    def resolve_users_on_waiting_list(event, info):
-        user = info.context.user
-        if (
-            user.memberships.filter(organization=event.organization).exists()
-            or user.is_superuser
-        ):
-            return event.users_on_waiting_list
-        else:
-            raise PermissionDenied("Du har ikke tilgang til den forespurte dataen")
+    def resolve_allowed_grade_years_list(event, info):
+        return [int(grade) for grade in event.allowed_grade_years]
 
     @staticmethod
     @login_required
+    @PermissionDecorators.is_in_event_organization
+    def resolve_users_on_waiting_list(event, info):
+        return event.users_on_waiting_list
+
+    @staticmethod
+    @login_required
+    @PermissionDecorators.is_in_event_organization
     def resolve_users_attending(event, info):
-        user = info.context.user
-        if (
-            user.memberships.filter(organization=event.organization).exists()
-            or user.is_superuser
-        ):
-            return event.users_attending
-        else:
-            raise PermissionDenied("Du har ikke tilgang til den forespurte dataen")
+        return event.users_attending
 
 
 class CategoryType(DjangoObjectType):
