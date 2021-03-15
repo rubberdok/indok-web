@@ -24,7 +24,7 @@ import { useRouter } from "next/router";
 import React, { useState } from "react";
 
 const CreateEvent: React.FC = () => {
-  const defaultInput = {
+  const defaultInput: Record<string, any> = {
     title: "",
     description: "",
     startTime: "",
@@ -37,6 +37,7 @@ const CreateEvent: React.FC = () => {
     deadline: "",
     signupOpenDate: "",
     availableSlots: "",
+    // price: undefined,
     shortDescription: "",
     hasExtraInformation: false,
     contactEmail: "",
@@ -47,7 +48,10 @@ const CreateEvent: React.FC = () => {
 
   const router = useRouter();
 
-  const [createEvent, { loading: createEventLoading, error: createEventError, data: createEventData }] = useMutation<{
+  const [
+    createEvent,
+    { loading: createEventLoading, error: createEventError, data: createEventData, called },
+  ] = useMutation<{
     createEvent: { event: Event };
   }>(CREATE_EVENT, {
     update: (cache, { data }) => {
@@ -100,11 +104,19 @@ const CreateEvent: React.FC = () => {
     }
   };
 
-  const onSubmit = async () => {
-    await createEvent({ variables: { eventData } }).then(() => setEventData(defaultInput));
-    if (createEventData) {
-      router.push("/events");
-    }
+  const onSubmit = () => {
+    const input = { ...eventData };
+    Object.keys(eventData).forEach((key) => {
+      if (eventData[key] === "") {
+        input[key] = undefined;
+      }
+    });
+    createEvent({ variables: { eventData: input } }).then((res) => {
+      if (res.data?.createEvent) {
+        setEventData(defaultInput);
+        router.push("/events");
+      }
+    });
   };
 
   return (
@@ -167,7 +179,7 @@ const CreateEvent: React.FC = () => {
                 id="select-org"
                 name="organization"
                 value={eventData.organizationId}
-                onChange={(e) => setEventData({ ...eventData, organizationId: e.currentTarget.value })}
+                onChange={(e) => setEventData({ ...eventData, organizationId: e.currentTarget.value as string })}
               >
                 {userData.user.memberships.map(({ organization }: { organization: Organization }) => (
                   <MenuItem key={organization.id} value={organization.id}>
@@ -226,7 +238,7 @@ const CreateEvent: React.FC = () => {
               name="category"
               value={eventData.categoryId}
               onChange={(e) => {
-                setEventData({ ...eventData, categoryId: e.target.value });
+                setEventData({ ...eventData, categoryId: e.target.value as string });
               }}
               displayEmpty
             >
@@ -248,12 +260,15 @@ const CreateEvent: React.FC = () => {
           />
         </Grid>
         <Grid item xs={6}>
-          <TextField
-            label="Bilde (URL)"
-            placeholder="Bilde URL"
-            value={eventData.image}
-            onChange={(e) => setEventData({ ...eventData, image: e.currentTarget.value })}
-          />
+          <Tooltip title="Kommer snart!">
+            <TextField
+              label="Bilde (URL)"
+              placeholder="Bilde URL"
+              value={eventData.image}
+              onChange={(e) => setEventData({ ...eventData, image: e.currentTarget.value })}
+              disabled
+            />
+          </Tooltip>
           <FormHelperText>Bildet vil bli vist på infosiden til eventet</FormHelperText>
         </Grid>
         <Grid item xs={12}>
@@ -330,7 +345,7 @@ const CreateEvent: React.FC = () => {
             />
           </Tooltip>
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={6}>
           <InputLabel>Sluttid for arrangement</InputLabel>
           <TextField
             type="datetime-local"
@@ -338,6 +353,18 @@ const CreateEvent: React.FC = () => {
             onChange={(e) => setEventData({ ...eventData, endTime: e.currentTarget.value })}
             margin={"dense"}
           />
+        </Grid>
+        <Grid item xs={6}>
+          <InputLabel>Pris</InputLabel>
+          <Tooltip title="Kommer snart!">
+            <TextField
+              type="number"
+              // value={eventData.price}
+              // onChange={(e) => setEventData({ ...eventData, price: e.currentTarget.value })}
+              margin={"dense"}
+              disabled
+            />
+          </Tooltip>
         </Grid>
         <Grid item xs={5}>
           <Button onClick={() => onSubmit()} color="primary">

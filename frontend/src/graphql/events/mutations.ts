@@ -11,14 +11,67 @@ export const CREATE_EVENT = gql`
         location
         description
         organization {
+          id
           name
         }
         category {
+          id
           name
         }
         image
         isAttendable
         deadline
+        availableSlots
+        price
+        shortDescription
+        signupOpenDate
+        userAttendance {
+          isSignedUp
+          isOnWaitingList
+        }
+        isFull
+        hasExtraInformation
+        bindingSignup
+        contactEmail
+      }
+      ok
+    }
+  }
+`;
+
+export const UPDATE_EVENT = gql`
+  mutation UpdateEvent($id: ID!, $eventData: UpdateEventInput) {
+    updateEvent(id: $id, eventData: $eventData) {
+      event {
+        id
+        title
+        startTime
+        endTime
+        location
+        description
+        organization {
+          id
+          name
+        }
+        category {
+          id
+          name
+        }
+        image
+        isAttendable
+        deadline
+        availableSlots
+        price
+        shortDescription
+        signupOpenDate
+        userAttendance {
+          isSignedUp
+          isOnWaitingList
+        }
+        isFull
+        hasExtraInformation
+        bindingSignup
+        contactEmail
       }
       ok
     }

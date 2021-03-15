@@ -9,13 +9,12 @@ from .mail import send_event_emails
 from .types import CategoryType, EventType
 
 
-class CreateEventInput(graphene.InputObjectType):
+class BaseEventInput:
     title = graphene.String(required=True)
     description = graphene.String(required=True)
     start_time = graphene.DateTime(required=True)
     end_time = graphene.DateTime(required=False)
     location = graphene.String(required=False)
-    organization_id = graphene.ID(required=True)
     category_id = graphene.ID(required=False)
     image = graphene.String(required=False)
     is_attendable = graphene.Boolean(required=True)
@@ -29,7 +28,11 @@ class CreateEventInput(graphene.InputObjectType):
     binding_signup = graphene.Boolean(required=False)
 
 
-class UpdateEventInput(CreateEventInput):
+class CreateEventInput(BaseEventInput, graphene.InputObjectType):
+    organization_id = graphene.ID(required=True)
+
+
+class UpdateEventInput(BaseEventInput, graphene.InputObjectType):
     title = graphene.String(required=False)
     description = graphene.String(required=False)
     start_time = graphene.DateTime(required=False)
@@ -69,7 +72,7 @@ class UpdateEvent(graphene.Mutation):
     event = graphene.Field(EventType)
 
     @login_required
-    def mutate(self, info, event_data):
+    def mutate(self, info, id, event_data):
         event = models.Event.objects.get(pk=id)
         check_user_membership(info.context.user, event.organization)
 

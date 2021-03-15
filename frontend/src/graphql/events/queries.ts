@@ -92,9 +92,11 @@ export const GET_EVENT = gql`
       location
       description
       organization {
+        id
         name
       }
       category {
+        id
         name
       }
       image
