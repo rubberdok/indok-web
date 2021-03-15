@@ -1,5 +1,6 @@
 import { useQuery } from "@apollo/client";
 import Layout from "@components/Layout";
+import { EditUser } from "@components/pages/profile/EditUser";
 import { FirstLogin } from "@components/pages/profile/FirstLogin";
 import { GET_USER } from "@graphql/users/queries";
 import { User } from "@interfaces/users";
@@ -35,7 +36,8 @@ const useStyles = makeStyles((theme: Theme) =>
 const ProfilePage: NextPage = () => {
   const { loading, error, data, refetch: refetchUser } = useQuery<{ user: User }>(GET_USER);
 
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const [firstLoginOpen, setFirstLoginOpen] = useState(false);
+  const [editUserOpen, setEditUserOpen] = useState(false);
   const classes = useStyles();
   const router = useRouter();
 
@@ -51,13 +53,14 @@ const ProfilePage: NextPage = () => {
     }
   }
 
-  if (data?.user?.firstLogin && !dialogOpen) {
-    setDialogOpen(true);
+  if (data?.user?.firstLogin && !firstLoginOpen) {
+    setFirstLoginOpen(true);
   }
 
-  const onFirstLoginSubmit = async () => {
+  const onSubmit = async () => {
     await refetchUser();
-    setDialogOpen(false);
+    firstLoginOpen && setFirstLoginOpen(false);
+    editUserOpen && setEditUserOpen(false);
   };
 
   return (
@@ -66,7 +69,8 @@ const ProfilePage: NextPage = () => {
         <Typography variant="h1">Brukerprofil</Typography>
         {data?.user && (
           <>
-            <FirstLogin open={dialogOpen} onSubmit={onFirstLoginSubmit} fullName={data?.user?.firstName} />
+            <FirstLogin open={firstLoginOpen} onSubmit={onSubmit} fullName={data?.user?.firstName} />
+            <EditUser open={editUserOpen} onSubmit={onSubmit} user={data.user} onClose={() => setEditUserOpen(false)} />
             <Grid container>
               <Grid item xs={6}>
                 <Card variant="outlined" className={classes.card}>
@@ -85,10 +89,12 @@ const ProfilePage: NextPage = () => {
                             <strong>Mobilnummer:</strong> {data.user.phoneNumber}
                           </Typography>
                         )}
-                        <Typography variant="body1">
-                          <strong>Klassetrinn:</strong>{" "}
-                          {`${data.user.gradeYear} (avgangsår ${data.user.graduationYear})`}
-                        </Typography>
+                        {data.user.gradeYear && (
+                          <Typography variant="body1">
+                            <strong>Klassetrinn:</strong>{" "}
+                            {`${data.user.gradeYear} (avgangsår ${data.user.graduationYear})`}
+                          </Typography>
+                        )}
                         {data.user.allergies && (
                           <Typography variant="body1">
                             <strong>Allergier/matpreferanser:</strong> {data.user.allergies}
@@ -103,12 +109,27 @@ const ProfilePage: NextPage = () => {
                     </Box>
                   </CardContent>
                   <CardActions className={classes.content}>
-                    <Button startIcon={<EditIcon />}>Rediger bruker</Button>
+                    <Button onClick={() => setEditUserOpen(true)} startIcon={<EditIcon />}>
+                      Rediger bruker
+                    </Button>
                   </CardActions>
                 </Card>
               </Grid>
               <Grid item xs={6}>
                 <Grid container spacing={2}>
+                  <Grid item xs={12}>
+                    <Card>
+                      <CardContent>
+                        <Typography variant="h4">Mine organisasjoner</Typography>
+                        <Typography>{`Her kommer en liste over alle organisasjoner ${data.user.firstName} er medlem av`}</Typography>
+                      </CardContent>
+                      <CardActions>
+                        <Link href="/orgs">
+                          <Button>Gå til organisasjoner</Button>
+                        </Link>
+                      </CardActions>
+                    </Card>
+                  </Grid>
                   <Grid item xs={12}>
                     <Card>
                       <CardContent>
