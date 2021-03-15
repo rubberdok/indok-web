@@ -40,6 +40,7 @@ class EventResolvers:
             if organization:
                 queries.append(
                     Q(organization__name__icontains=organization)
+                    | Q(organization__parent__name__icontains=organization)
                 )
 
             return (
