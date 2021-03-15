@@ -1,7 +1,5 @@
 import graphene
-from api.graphql.users.types import UserType
 from apps.events.models import Category, Event
-from django.core.exceptions import PermissionDenied
 from graphene_django import DjangoObjectType
 from graphql_jwt.decorators import login_required
 
@@ -37,7 +35,8 @@ class EventType(DjangoObjectType):
             "available_slots",
             "price",
             "signup_open_date",
-            "short_description"
+            "short_description",
+            "has_extra_information",
         ]
 
     class PermissionDecorators:

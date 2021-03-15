@@ -41,7 +41,7 @@ const ConfirmationDialog = ({
         ))}
 
         <DialogContentText variant="body2">
-          Kontakt <Link href="mailto:hswebkom@gmail.com">web@indokhs.no</Link> dersom det skulle oppstå spørsmål.
+          Kontakt <Link href="mailto:web@indokhs.no">web@indokhs.no</Link> dersom det skulle oppstå spørsmål.
         </DialogContentText>
       </DialogContent>
       <DialogActions>

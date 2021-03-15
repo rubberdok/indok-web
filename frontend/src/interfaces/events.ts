@@ -21,6 +21,7 @@ export interface Event {
   isFull?: boolean;
   price?: number;
   usersAttending?: User[];
+  hasExtraInformation?: boolean;
 }
 
 export interface AttendableEvent extends Event {

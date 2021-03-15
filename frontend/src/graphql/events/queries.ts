@@ -36,6 +36,7 @@ export const GET_EVENTS = gql`
         isOnWaitingList
       }
       isFull
+      hasExtraInformation
     }
   }
 `;
@@ -76,6 +77,7 @@ export const GET_DEFAULT_EVENTS = gql`
         isOnWaitingList
       }
       isFull
+      hasExtraInformation
     }
   }
 `;
@@ -115,6 +117,7 @@ export const GET_EVENT = gql`
         isOnWaitingList
       }
       isFull
+      hasExtraInformation
     }
   }
 `;

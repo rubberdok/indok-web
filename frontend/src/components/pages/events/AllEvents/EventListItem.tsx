@@ -55,12 +55,12 @@ const EventListItem: React.FC<Props> = ({ event, user, classes }) => {
         </Box>
 
         {user && event.isAttendable ? (
-          event.isFull ? (
-            <Chip label="Venteliste tilgjengelig" />
+          event.isFull && event.userAttendance?.isOnWaitingList ? (
+            <Chip label="På venteliste" />
+          ) : event.isFull ? (
+            <Chip color="primary" label="På venteliste" />
           ) : event.userAttendance?.isSignedUp ? (
             <Chip color="primary" label="Påmeldt" />
-          ) : event.userAttendance?.isOnWaitingList ? (
-            <Chip color="primary" label="På venteliste" />
           ) : (
             <Chip label="Påmelding tilgjengelig" />
           )
