@@ -22,6 +22,7 @@ export interface Event {
   hasExtraInformation?: boolean;
   bindingSignup?: boolean;
   contactEmail?: string;
+  allowedGradeYearsList: number[];
 }
 
 export interface AttendableEvent extends Event {
