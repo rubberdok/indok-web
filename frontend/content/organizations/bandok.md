@@ -5,7 +5,7 @@ logo: /img/bandoklogo.png
 image: /img/bandoklogo.png
 styre:
   ceo:
-    navn: Johanns Log Indbjo
+    navn: Johannes Log Indbjo
     mail: tlf.
     tittel: Administrerende ansvarlig
   cto:
