@@ -17,6 +17,7 @@ class EventType(DjangoObjectType):
     users_on_waiting_list = graphene.List(UserType)
     users_attending = graphene.List(UserType)
     allowed_grade_years_list = graphene.List(graphene.Int)
+    available_slots = graphene.Int()
 
     class Meta:
         model = Event
@@ -33,7 +34,6 @@ class EventType(DjangoObjectType):
             "is_attendable",
             "deadline",
             "publisher",
-            "available_slots",
             "price",
             "signup_open_date",
             "short_description",
@@ -79,6 +79,14 @@ class EventType(DjangoObjectType):
     @PermissionDecorators.is_in_event_organization
     def resolve_users_attending(event, info):
         return event.users_attending
+
+    @staticmethod
+    def resolve_available_slots(event, info):
+        user = info.context.user
+        if not user or not user.memberships.filter(organization=event.organization).exists():
+            return None
+        return event.available_slots
+            
 
 
 class CategoryType(DjangoObjectType):

@@ -138,7 +138,10 @@ const EventAdminPage: NextPage = () => {
                   <CardActions>
                     {eventId ? <EmailForm eventId={eventId} /> : <CircularProgress color="primary" />}
                     <Box>
-                      <Typography variant="overline">Eksportér påmeldingsliste</Typography>
+                      <Typography gutterBottom variant="overline">
+                        Eksportér påmeldingsliste
+                      </Typography>
+                      <br />
                       <ButtonGroup variant="text" color="primary" aria-label="text primary button group">
                         {wrapDownloadButtonReport(eventNumberID, "csv")}
                         {wrapDownloadButtonReport(eventNumberID, "xlsx")}
