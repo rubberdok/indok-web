@@ -244,25 +244,17 @@ class DeleteAnswersToSurvey(graphene.Mutation):
 class OptionInput(graphene.InputObjectType):
     answer = graphene.String(required=True)
     id = graphene.ID()
-    question_id = graphene.ID(required=True)
 
 class CreateUpdateAndDeleteOptions(graphene.Mutation):
     ok = graphene.Boolean()
     options = graphene.List(OptionType)
 
     class Arguments:
+        question_id = graphene.ID(required=True)
         option_data = graphene.List(OptionInput)
 
-    def mutate(self, info, option_data):
-        question_id = None
-        for data in option_data:
-            if not question_id:
-                question_id = data["question_id"]
-            elif data["question_id"] != question_id:
-                raise ValueError("Cannot submit options to multiple questions simultaneously.")
-                
-
-        existing_options = Option.objects.filter(question__pk=option_data[0]["question_id"])
+    def mutate(self, info, question_id, option_data):
+        existing_options = Option.objects.filter(question__pk=question_id)
         submitted_ids = [option.get("id", -1) for option in option_data]
 
         existing_options.filter(~Q(pk__in=submitted_ids)).delete()
@@ -276,7 +268,7 @@ class CreateUpdateAndDeleteOptions(graphene.Mutation):
                 updated_option.answer = data["answer"]
                 updated_options.append(updated_option)
             else:
-                new_options.append(Option(answer=data["answer"], question_id=data["question_id"]))
+                new_options.append(Option(answer=data["answer"], question_id=question_id))
 
         Option.objects.bulk_update(updated_options, fields=["answer"])
         Option.objects.bulk_create(new_options)
