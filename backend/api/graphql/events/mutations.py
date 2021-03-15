@@ -1,10 +1,11 @@
 import graphene
-from apps.events.models import Event, SignUp, Category
+from apps.events.models import Category, Event, SignUp
+from apps.organizations.models import Organization
 from apps.organizations.permissions import check_user_membership
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from graphql_jwt.decorators import login_required, staff_member_required
-from apps.organizations.models import Organization
 
 from .mail import send_event_emails
 from .types import CategoryType, EventType
@@ -127,11 +128,17 @@ class EventSignUp(graphene.Mutation):
     @login_required
     def mutate(self, info, event_id, data):
         try:
-            event = Event.objects.get(pk=id)
+            event = Event.objects.get(pk=event_id)
         except Event.DoesNotExist:
             raise ValueError("Ugyldig arrangement")
 
         user = info.context.user
+
+        if not str(user.grade_year) in event.allowed_grade_years:
+            raise PermissionDenied(
+                "Kun studenter i følgende trinn kan melde seg på",
+                event.allowed_grade_years,
+            )
 
         sign_up = SignUp()
         if data.extra_information:
@@ -161,7 +168,7 @@ class EventSignOff(graphene.Mutation):
     @login_required
     def mutate(self, info, event_id):
         try:
-            event = Event.objects.get(pk=id)
+            event = Event.objects.get(pk=event_id)
         except Event.DoesNotExist:
             raise ValueError("Ugyldig arrangement")
 
@@ -217,7 +224,7 @@ class UpdateCategory(graphene.Mutation):
     category = graphene.Field(CategoryType)
 
     @staff_member_required
-    def mutate(self, info, category_data):
+    def mutate(self, info, id, category_data):
         category = get_object_or_404(Category, pk=id)
 
         for k, v in category_data.items():

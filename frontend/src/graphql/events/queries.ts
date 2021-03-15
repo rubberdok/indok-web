@@ -27,7 +27,6 @@ export const GET_EVENTS = gql`
         lastName
         dateJoined
       }
-      availableSlots
       price
       shortDescription
       signupOpenDate
@@ -69,7 +68,6 @@ export const GET_DEFAULT_EVENTS = gql`
         lastName
         dateJoined
       }
-      availableSlots
       price
       shortDescription
       signupOpenDate
@@ -112,7 +110,6 @@ export const GET_EVENT = gql`
         lastName
         dateJoined
       }
-      availableSlots
       price
       shortDescription
       signupOpenDate

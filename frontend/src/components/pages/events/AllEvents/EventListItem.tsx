@@ -57,7 +57,7 @@ const EventListItem: React.FC<Props> = ({ event, user, classes }) => {
         {user && event.isAttendable && event.allowedGradeYearsList.includes(user.gradeYear) ? (
           event.isFull && event.userAttendance?.isOnWaitingList ? (
             <Chip label="På venteliste" />
-          ) : event.isFull ? (
+          ) : event.isFull && !event.userAttendance?.isSignedUp ? (
             <Chip color="primary" label="Venteliste tilgjengelig" />
           ) : event.userAttendance?.isSignedUp ? (
             <Chip color="primary" label="Påmeldt" />
