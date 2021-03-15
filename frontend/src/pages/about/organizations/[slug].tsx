@@ -113,7 +113,7 @@ const Article: NextPage<ArticleProps> = ({ post, frontmatter }) => {
                 {Object.keys(frontmatter.styre).map((item: any) => (
                   <>
                     <Card key={item}>
-                      <Box py={3} pt={5} px={5}>
+                      <Box p={4}>
                         <Typography variant="body2">{frontmatter.styre[item].navn}</Typography>
                         <Typography variant="body2">
                           {frontmatter.styre[item].tittel} - {frontmatter.styre[item].mail}

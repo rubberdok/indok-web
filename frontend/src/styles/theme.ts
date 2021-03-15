@@ -1,69 +1,17 @@
 import { createMuiTheme } from "@material-ui/core/styles";
 import { Shadows } from "@material-ui/core/styles/shadows";
+import typography from "./typography";
 
 const theme = createMuiTheme({
   typography: {
-    fontFamily: ["Open Sans", "sans-serif"].join(","),
-    h1: {
-      fontFamily: ["Playfair Display", "sans-serif"].join(","),
-      fontSize: "4rem",
-      fontWeight: 800,
-    },
-    h2: {
-      fontFamily: ["Playfair Display", "sans-serif"].join(","),
-      fontSize: 48,
-      fontWeight: 700,
-      lineHeight: "3.5rem",
-    },
-    h3: {
-      fontFamily: ["Playfair Display", "sans-serif"].join(","),
-      fontSize: 48,
-      fontWeight: 500,
-    },
-    h4: {
-      fontFamily: ["Playfair Display", "sans-serif"].join(","),
-      fontWeight: 700,
-      fontSize: "2rem",
-    },
-    h5: {
-      fontFamily: ["Playfair Display", "sans-serif"].join(","),
-      fontWeight: 700,
-      fontSize: "1.5rem",
-      margin: "5px 0",
-    },
-    h6: {
-      fontFamily: ["Playfair Display", "sans-serif"].join(","),
-      fontWeight: 700,
-      fontSize: 22,
-      lineHeight: "23px",
-      color: "rgb(43 39 28 / 35%)",
-    },
-    subtitle1: {
-      fontFamily: ["Playfair Display", "sans-serif"].join(","),
-      fontWeight: 400,
-      fontSize: 25,
-      lineHeight: "43px",
-    },
-    overline: {
-      fontSize: 13,
-      letterSpacing: "0.05em",
-      fontWeight: 600,
-      color: "#b0aca5",
-    },
-    body1: {
-      fontFamily: ["Open Sans", "sans-serif"].join(","),
-      fontSize: 24,
-      fontWeight: 300,
-      lineHeight: "40px",
-    },
-    body2: {
-      fontFamily: ["Open Sans", "sans-serif"].join(","),
-      fontSize: 18,
-      fontWeight: 300,
-      lineHeight: "30px",
-    },
+    ...typography,
   },
   overrides: {
+    MuiInputBase: {
+      root: {
+        ...typography.body2,
+      },
+    },
     MuiTypography: {
       gutterBottom: {
         marginBottom: 32,
@@ -81,7 +29,6 @@ const theme = createMuiTheme({
       root: {
         justifyContent: "none",
         padding: "16px 32px",
-        fontSize: 11,
         fontWeight: 600,
         textTransform: "none",
       },
@@ -107,23 +54,8 @@ const theme = createMuiTheme({
         },
       },
     },
-    MuiAppBar: {
-      // root: {
-      //   fontFamily: ["Montserrat", "sans-serif"].join(","),
-      // },
-      colorDefault: {
-        backgroundColor: "#ffffff",
-      },
-    },
-    MuiTabs: {
-      root: {
-        minHeight: 40,
-      },
-    },
     MuiTab: {
       root: {
-        padding: "24px 16px",
-        fontSize: 11,
         textTransform: "none",
       },
     },
@@ -137,6 +69,14 @@ const theme = createMuiTheme({
     },
     secondary: {
       main: "#11cb5f",
+    },
+  },
+  props: {
+    MuiTypography: {
+      variant: "body2",
+    },
+    MuiList: {
+      dense: true,
     },
   },
   shape: {
