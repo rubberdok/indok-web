@@ -32,8 +32,6 @@ class ResponseType(DjangoObjectType):
         return response.answers
 
 class AnswerType(DjangoObjectType):
-    user = graphene.Field(UserType)
-
     class Meta:
         model = Answer
         fields = [
