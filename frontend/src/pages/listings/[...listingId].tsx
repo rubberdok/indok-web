@@ -78,10 +78,14 @@ const ListingPage: NextPage = () => {
                 )}
                 <Grid container item direction="column" sm={12} md={8}>
                   <ListingBody listing={data.listing} />
-                  <Button variant="contained" color="primary" onClick={() => displaySurvey(!surveyDisplayed)}>
-                    Søk her
-                  </Button>
-                  {data.listing.survey && surveyDisplayed && <AnswerSurvey surveyId={data.listing.survey.id} />}
+                  {data.listing?.survey && (
+                    <>
+                      <Button variant="contained" color="primary" onClick={() => displaySurvey(!surveyDisplayed)}>
+                        Søk her
+                      </Button>
+                      {surveyDisplayed && <AnswerSurvey surveyId={data.listing.survey.id} />}
+                    </>
+                  )}
                 </Grid>
               </Grid>
             </Container>

@@ -98,16 +98,3 @@ export const DELETE_LISTING = gql`
     }
   }
 `;
-
-export const CREATE_ORGANIZATION = gql`
-  mutation createOrganization($name: String!, $description: String!) {
-    createOrganization(organizationData: { name: $name, description: $description }) {
-      organization {
-        id
-        name
-        description
-        slug
-      }
-    }
-  }
-`;

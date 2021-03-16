@@ -18,6 +18,7 @@ import {
   Chip,
   TableBody,
   Button,
+  CardActions,
 } from "@material-ui/core";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
@@ -117,29 +118,33 @@ const OrganizationDetailPage: NextPage = () => {
                   <Card variant="outlined">
                     <CardHeader title="Verv" />
                     <Divider variant="middle" />
-                    <CardContent>
+                    {data.organization.listings.length !== 0 && (
+                      <CardContent>
+                        <TableContainer>
+                          <Table>
+                            <TableHead>
+                              <TableRow>
+                                <TableCell>Tittel</TableCell>
+                                <TableCell>Søknadsfrist</TableCell>
+                              </TableRow>
+                            </TableHead>
+                            <TableBody>
+                              {data.organization.listings.map((listing: Listing) => (
+                                <Link href={`${orgNumberId}/listings/${listing.id}`} passHref key={listing.id}>
+                                  <TableRow className={classes.hover} hover>
+                                    <TableCell>{listing.title}</TableCell>
+                                    <TableCell>{dayjs(listing.deadline).format("HH:mm DD-MM-YYYY")}</TableCell>
+                                  </TableRow>
+                                </Link>
+                              ))}
+                            </TableBody>
+                          </Table>
+                        </TableContainer>
+                      </CardContent>
+                    )}
+                    <CardActions>
                       <Button variant="contained">Opprett nytt verv</Button>
-                      <TableContainer>
-                        <Table>
-                          <TableHead>
-                            <TableRow>
-                              <TableCell>Tittel</TableCell>
-                              <TableCell>Frist</TableCell>
-                            </TableRow>
-                          </TableHead>
-                          <TableBody>
-                            {data.organization.listings.map((listing: Listing) => (
-                              <Link href={`${orgNumberId}/listings/${listing.id}`} passHref key={listing.id}>
-                                <TableRow className={classes.hover} hover>
-                                  <TableCell>{listing.title}</TableCell>
-                                  <TableCell>{dayjs(listing.deadline).format("HH:mm DD-MM-YYYY")}</TableCell>
-                                </TableRow>
-                              </Link>
-                            ))}
-                          </TableBody>
-                        </Table>
-                      </TableContainer>
-                    </CardContent>
+                    </CardActions>
                   </Card>
                 </Grid>
               </Grid>
