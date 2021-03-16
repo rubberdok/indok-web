@@ -2,20 +2,9 @@ import { useQuery } from "@apollo/client";
 import Layout from "@components/Layout";
 import { LISTING } from "@graphql/listings/queries";
 import { Listing } from "@interfaces/listings";
-import {
-  Button,
-  Card,
-  CardContent,
-  CardMedia,
-  Container,
-  Grid,
-  Hidden,
-  makeStyles,
-  Typography,
-} from "@material-ui/core";
-import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from "next";
-import dayjs from "dayjs";
-import nb from "dayjs/locale/nb";
+import { Button, Container, Grid, Hidden, makeStyles } from "@material-ui/core";
+import { NextPage } from "next";
+import { useRouter } from "next/router";
 import AnswerSurvey from "@components/pages/surveys/answerSurvey";
 import { useState } from "react";
 import OrganizationInfoPanel from "@components/pages/listings/detail/organizationInfoPanel";
@@ -27,23 +16,19 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(4),
     paddingBottom: theme.spacing(2),
   },
-
   title: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
   },
-
   content: {
     flexDirection: "column",
     padding: theme.spacing(4),
   },
-
   wrapper: {
     flexDirection: "row",
     padding: theme.spacing(4),
   },
-
   root: {
     spacing: 2,
     [theme.breakpoints.down("sm")]: {
@@ -57,11 +42,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ListingPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ listingID }) => {
+// the page to show details about a listing and its organization, and let the user apply to the listing
+const ListingPage: NextPage = () => {
+  const { listingId } = useRouter().query;
   const { loading, error, data } = useQuery<{ listing: Listing }>(LISTING, {
-    variables: { ID: Number(listingID[0]) },
+    variables: { ID: parseInt(listingId as string) },
   });
   const classes = useStyles();
+
+  // state to determine whether to show the survey (where the user applies to the listing)
   const [surveyDisplayed, displaySurvey] = useState<boolean>(false);
 
   if (error) return <p>Error</p>;
@@ -105,9 +94,14 @@ const ListingPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProp
 
 export default ListingPage;
 
-export const getServerSideProps: GetServerSideProps<{ listingID: string }> = async (context) => {
-  const listingID = context.query.listingID as string;
+// TODO: implement server-side rendering once Apollo client is exported
+/* export const getServerSideProps: GetServerSideProps<{ listingId: string }> = async (context) => {
+  const listingId = parseInt(context.query.listingId as string);
+  const { data } = client.query({
+    query: LISTING,
+    variables: { ID: listingId },
+  });
   return {
-    props: { listingID },
+    props: { data.listing },
   };
-};
+}; */
