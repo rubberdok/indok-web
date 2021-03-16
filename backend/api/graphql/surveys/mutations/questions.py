@@ -1,5 +1,5 @@
 import graphene
-from apps.surveys.models import Answer, Question, Option
+from apps.surveys.models import Answer, Question, Option, Response
 from apps.surveys.models import QuestionType as QuestionTypeModel
 from apps.surveys.models import Survey
 from django.db.models import Q
@@ -115,96 +115,54 @@ class DeleteQuestionType(graphene.Mutation):
         return cls(deleted_id=deleted_id, ok=ok)
 
 class AnswerInput(graphene.InputObjectType):
-    question_id = graphene.ID()
+    question_id = graphene.ID(required=True)
     answer = graphene.String(required=True)
-
-class CreateAnswer(graphene.Mutation):
-    ok = graphene.Boolean()
-    answer = graphene.Field(AnswerType)
-
-    class Arguments:
-        answer_data = AnswerInput(required=True)
-
-    @classmethod
-    @login_required
-    def mutate(cls, self, info, answer_data):
-        answer = Answer()
-        for k, v in answer_data.items():
-            setattr(answer, k, v)
-        answer.user = info.context.user
-        answer.save()
-        ok = True
-        return cls(answer=answer, ok=ok)
-
-class UpdateAnswer(graphene.Mutation):
-    ok = graphene.Boolean()
-    answer = graphene.Field(AnswerType)
-
-    class Arguments:
-        id = graphene.ID(required=True)
-        answer_data = AnswerInput(required=False)
-
-    @classmethod
-    @login_required
-    def mutate(cls, self, info, id, answer_data):
-        user = info.context.user
-        try:
-          answer = user.answers.get(pk=id)
-        except Answer.DoesNotExist as e:
-          return CreateAnswer(answer=None, ok=False)
-        for k, v, in answer_data.items():
-            setattr(answer, k, v)
-        answer.save()
-        ok = True
-        return cls(answer=answer, ok=ok)
 
 class DeleteAnswer(graphene.Mutation):
     ok = graphene.Boolean()
-    deleted_id = graphene.ID()
+    deleted_uuid = graphene.ID()
 
     class Arguments:
-        id = graphene.ID(required=True)
+        uuid = graphene.ID(required=True)
 
-    @classmethod
     @login_required
-    def mutate(cls, self, info, id):
+    def mutate(self, info, uuid):
         user = info.context.user
         try:
-          answer = user.answers.get(pk=id)
+          answer = user.answers.get(pk=uuid)
         except Answer.DoesNotExist as e:
-          return DeleteAnswer(deleted_id=None, ok=False)
-        deleted_id = answer.id
+          return DeleteAnswer(deleted_uuid=None, ok=False)
+        deleted_uuid = answer.pk
         if answer.question.mandatory:
-            return DeleteAnswer(deleted_id=None, ok=False)
+            return DeleteAnswer(deleted_uuid=None, ok=False)
         answer.delete()
         ok = True
-        return cls(ok=ok, deleted_id=deleted_id)
+        return DeleteAnswer(ok=ok, deleted_uuid=deleted_uuid)
 
 class SubmitOrUpdateAnswers(graphene.Mutation):
     ok = graphene.Boolean()
 
     class Arguments:
+        survey_id = graphene.ID(required=True)
         answers_data = graphene.List(AnswerInput)
 
     @login_required
-    def mutate(self, info, answers_data):
+    def mutate(self, info, survey_id, answers_data):
         user = info.context.user
-        answers = {int(answer_data["question_id"]): answer_data["answer"] for answer_data in answers_data}
-        questions = Question.objects.filter(pk__in=answers)
+        try:
+            survey = Survey.objects.get(pk=survey_id)
+        except Survey.DoesNotExist:
+            raise KeyError(f"The survey with id {survey_id} does not exist.")
 
-        survey = None
-        for question in questions:
-            if not survey:
-                survey = question.survey
-            else:
-                if survey != question.survey:
-                    raise ValueError(f"Expected questions to answer the survey f{survey}, but got f{question.survey}.")
-        
+        response, _ = Response.objects.get_or_create(survey_id=survey_id, responder=user)
+
+        answers = {int(answer_data["question_id"]): answer_data["answer"] for answer_data in answers_data}
+
         if survey:
-            mandatory_questions = set(survey.questions.filter(mandatory=True).values_list("id", flat=True))
+            mandatory_questions = survey.mandatory_questions
     
             # Update existing answers
-            existing_answers = user.answers.filter(question__survey=survey)
+            existing_answers = set(response.answers)
             for answer in existing_answers:
                 qid = answer.question.id
                 if qid in answers:
@@ -221,7 +179,7 @@ class SubmitOrUpdateAnswers(graphene.Mutation):
                 raise AssertionError(f"Not all mandatory questions have been answered, expected {mandatory_questions}, got {temp}")
 
             Answer.objects.bulk_create([
-                Answer(user=user, question_id=question_id, answer=answer) for question_id, answer in answers.items()
+                Answer(response=response, question_id=question_id, answer=answer) for question_id, answer in answers.items()
             ])
             return SubmitOrUpdateAnswers(ok=True)
         return SubmitOrUpdateAnswers(ok=False)
@@ -236,8 +194,7 @@ class DeleteAnswersToSurvey(graphene.Mutation):
     @login_required
     def mutate(self, info, survey_id):
         user = info.context.user
-        user.answers.filter(question__survey_id=survey_id).delete()
-
+        Response.objects.get(survey_id=survey_id, responder=user).delete()
         return DeleteAnswersToSurvey(ok = True)
 
 

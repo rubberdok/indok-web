@@ -11,7 +11,6 @@ from django.utils.translation import gettext_lazy as _
 from apps.organizations.models import Organization
 
 
-# Create your models here.
 class Survey(models.Model):
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE, null=True)
     descriptive_name = models.CharField(max_length=100)
@@ -82,6 +81,11 @@ class Response(models.Model):
         GREEN = 2, _("Green")
         
         __empty__ = _("Unknown")
+
+    class Meta:
+        constraints = [
+            UniqueConstraint(fields=["respondent", "survey"], name="only_one_response_per_survey")
+        ]
 
     status = models.IntegerField(choices=Status.choices, blank=True, null=True)
 

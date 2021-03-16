@@ -1,7 +1,6 @@
 import graphene
 from api.graphql.users.types import UserType
-from apps.organizations.permissions import check_user_membership
-from apps.surveys.models import Answer, Option, Question
+from apps.surveys.models import Answer, Option, Question, Response
 from apps.surveys.models import QuestionType as QuestionTypeModel
 from apps.surveys.models import Survey
 from django.contrib.auth import get_user_model
@@ -16,23 +15,33 @@ class OptionType(DjangoObjectType):
         fields = ["answer", "question", "id"]
 
 
+class ResponseType(DjangoObjectType):
+    answers = graphene.List("AnswerType")
+
+    class Meta:
+        model = Response
+        field = [
+            "uuid",
+            "respondent",
+            "survey",
+            "status"
+        ]
+
+    @staticmethod
+    def resolve_answers(response, info):
+        return response.answers
+
 class AnswerType(DjangoObjectType):
     user = graphene.Field(UserType)
 
     class Meta:
         model = Answer
-        fields = ["answer", "question", "id"]
+        fields = [
+            "answer",
+            "question",
+            "uuid"
+        ]
     
-    @staticmethod
-    @login_required
-    def resolve_user(answer, info):
-        user = info.context.user
-        if user == answer.user:
-            return user
-            
-        check_user_membership(user, answer.question.survey.organization)
-        return answer.user
-
 
 class QuestionTypeType(DjangoObjectType):
     class Meta:
@@ -76,6 +85,7 @@ class SurveyType(DjangoObjectType):
     questions = graphene.List(QuestionType)
     responders = graphene.List(UserType, user_id=graphene.ID())
     responder = graphene.Field(UserType, user_id=graphene.ID(required=True))
+    responses = graphene.List(ResponseType)
 
     class Meta:
         model = Survey
@@ -93,21 +103,7 @@ class SurveyType(DjangoObjectType):
     @staticmethod
     @login_required
     def resolve_responders(root: Survey, info, user_id: int=None):
-        """ 
-        Parameters
-        ----------
-        root : Survey
-            The survey instance
-        info 
-            
-        user_id : int, optional
-            By default None
-
-        Returns
-        -------
-        A queryset of all users who have submitted answers to questions in a given survey
-        """
-        q = Q(answers__question__survey=root)
+        q = Q(responses__survey=root)
         if user_id:
             q &= Q(pk=user_id)
         return get_user_model().objects.filter(q).distinct()
@@ -116,6 +112,12 @@ class SurveyType(DjangoObjectType):
     @login_required
     def resolve_responder(root: Survey, info, user_id: int):
         return SurveyType.resolve_responders(root, info, user_id).first()
+
+    @staticmethod
+    @login_required
+    def resolve_responses(survey, info):
+        # TODO: Permissions
+        return survey.responses
 
     
 

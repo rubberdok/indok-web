@@ -4,6 +4,7 @@ from apps.surveys.models import (
     Survey,
     Question,
     Answer,
+    Response
 )
 
 from typing import Optional
@@ -61,3 +62,17 @@ class AnswerResolvers:
         TODO: Search implementation
         """
         return Answer.objects.all()
+
+class ResponseResolvers:
+    def resolve_response(self, info, survey_id, response_id=None):
+        try:
+            if response_id:
+                return Response.objects.get(pk=response_id)
+            return Response.objects.get(survey__pk=survey_id, responder=info.context.user)
+        except Response.DoesNotExist:
+            raise KeyError("No such response found.")
+    
+    def resolve_responses(self, info, survey_id):
+        # TODO: Permissions
+        return Response.objects.filter(survey__pk=survey_id)
+                
