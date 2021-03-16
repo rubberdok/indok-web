@@ -1,4 +1,5 @@
-import { NextPage, GetServerSideProps, InferGetServerSidePropsType } from "next";
+import { NextPage } from "next";
+import { useRouter } from "next/router";
 import { useQuery } from "@apollo/client";
 import { Listing } from "@interfaces/listings";
 import { LISTING_WITH_RESPONDERS } from "@graphql/listings/queries";
@@ -10,7 +11,8 @@ import { User } from "@interfaces/users";
 import SurveyAnswers from "@components/pages/surveys/surveyAdmin/surveyAnswers";
 import OrganizationListing from "@components/pages/listings/organization/organizationListing";
 
-const ListingAdminPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ listingId, orgId }) => {
+const ListingAdminPage: NextPage = () => {
+  const { orgId, listingId } = useRouter().query;
   const { loading, error, data } = useQuery<{ listing: Listing }>(LISTING_WITH_RESPONDERS, {
     variables: {
       ID: listingId,
@@ -28,7 +30,7 @@ const ListingAdminPage: NextPage<InferGetServerSidePropsType<typeof getServerSid
             orientation="vertical"
             variant="scrollable"
             value={selectedApplicant}
-            onChange={(event, applicant) => {
+            onChange={(_, applicant) => {
               selectApplicant(applicant);
             }}
           >
@@ -52,17 +54,6 @@ const ListingAdminPage: NextPage<InferGetServerSidePropsType<typeof getServerSid
       )}
     </Layout>
   );
-};
-
-export const getServerSideProps: GetServerSideProps<{
-  listingId: string;
-  orgId: string;
-}> = async (context) => {
-  const listingId = context.query.listingId as string;
-  const orgId = context.query.orgId as string;
-  return {
-    props: { listingId, orgId },
-  };
 };
 
 export default ListingAdminPage;
