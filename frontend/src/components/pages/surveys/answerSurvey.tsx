@@ -6,19 +6,32 @@ import { Typography, Grid, Button, Card, CardContent } from "@material-ui/core";
 import { useState } from "react";
 import { SUBMIT_ANSWERS } from "@graphql/surveys/mutations";
 
+// component for a user to answer a survey
+// props: ID of the survey
 const AnswerSurvey: React.FC<{ surveyId: string }> = ({ surveyId }) => {
+  // state to manage the user's answers before submitting
   const [answers, setAnswers] = useState<Answer[]>();
+
+  // fetches the survey
   const { error, loading, data } = useQuery<{ survey: Survey }>(SURVEY, {
     variables: { surveyId: parseInt(surveyId) },
+
+    // when the fetch completes, map the answers state to the survey's questions
     onCompleted({ survey }) {
       if (survey) {
         setAnswers(survey.questions.map((question) => ({ id: "", answer: "", question: question })));
       }
     },
   });
+
+  // mutation to submit answers
   const [submitAnswers] = useMutation(SUBMIT_ANSWERS);
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error</p>;
+
+  // maps the answers (which, after the fetch, includes each question) to AnswerQuestion components
+  // passes setAnswer prop to each AnswerQuestion component, that updates the relevant Answer on this component's state
   return (
     <>
       {data && (

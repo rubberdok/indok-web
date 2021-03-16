@@ -8,36 +8,35 @@ interface ListingBodyProps {
   listing: Listing;
 }
 
-const ListingBody: React.FC<ListingBodyProps> = ({ listing }) => {
-  return (
-    <Card>
-      <CardContent>
-        <Grid container direction="column" spacing={2}>
-          <Grid item>
-            <Hidden smDown>
-              <Typography variant="h1" component="h1">
-                {listing.title}
-              </Typography>
-            </Hidden>
-            <Hidden mdUp>
-              <Typography variant="h3" component="h1">
-                {listing.title}
-              </Typography>
-            </Hidden>
-            <Typography variant="caption" component="h2">
-              Søknadsfrist {dayjs(listing.deadline).locale(nb).format("dddd D. MMMM YYYY [kl.] HH:mm")}
+// component for the main body of a listing's detail
+const ListingBody: React.FC<ListingBodyProps> = ({ listing }) => (
+  <Card>
+    <CardContent>
+      <Grid container direction="column" spacing={2}>
+        <Grid item>
+          <Hidden smDown>
+            <Typography variant="h1" component="h1">
+              {listing.title}
             </Typography>
-          </Grid>
-
-          <Grid item>
-            <Typography variant="body1" component="p">
-              {listing.description}
+          </Hidden>
+          <Hidden mdUp>
+            <Typography variant="h3" component="h1">
+              {listing.title}
             </Typography>
-          </Grid>
+          </Hidden>
+          <Typography variant="caption" component="h2">
+            Søknadsfrist {dayjs(listing.deadline).locale(nb).format("dddd D. MMMM YYYY [kl.] HH:mm")}
+          </Typography>
         </Grid>
-      </CardContent>
-    </Card>
-  );
-};
+
+        <Grid item>
+          <Typography variant="body1" component="p">
+            {listing.description}
+          </Typography>
+        </Grid>
+      </Grid>
+    </CardContent>
+  </Card>
+);
 
 export default ListingBody;

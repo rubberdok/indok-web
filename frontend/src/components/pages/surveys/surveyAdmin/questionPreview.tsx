@@ -2,6 +2,7 @@ import { Question } from "@interfaces/surveys";
 import QuestionTypePreview from "@components/pages/surveys/surveyAdmin/questionTypePreview";
 import { Button, Grid } from "@material-ui/core";
 
+// component to show a question when not in editing mode
 const QuestionPreview: React.FC<{
   question: Question;
   setActive: () => void;

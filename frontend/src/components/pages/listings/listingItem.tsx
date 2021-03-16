@@ -38,9 +38,7 @@ const ListingItem: React.FC<ListItemProps> = ({ listing }) => {
               <Typography gutterBottom variant="h4" component="h4">
                 {listing.title}
               </Typography>
-              <Typography variant="p" component="p">
-                {listing.organization?.name || "N/A"}
-              </Typography>
+              <Typography component="p">{listing.organization?.name || "N/A"}</Typography>
             </CardContent>
           </CardActionArea>
         </Card>

@@ -17,6 +17,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+// component to filter the overview of listings (not yet implemented fully)
 const Filter: React.FC<{ filters: string[] }> = ({ filters }) => {
   const classes = useStyles();
 

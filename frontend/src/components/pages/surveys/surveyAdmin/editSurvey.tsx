@@ -7,12 +7,20 @@ import QuestionPreview from "@components/pages/surveys/surveyAdmin/questionPrevi
 import EditQuestion from "@components/pages/surveys/surveyAdmin/editQuestion";
 import { Button, Grid } from "@material-ui/core";
 
+// component to edit surveys (for example the applications to listings)
+// props: ID of the survey to edit
 const EditSurvey: React.FC<{ surveyId: string }> = ({ surveyId }) => {
+  // fetches the survey
   const { loading, error, data } = useQuery<{ survey: Survey }>(SURVEY, {
     variables: { surveyId: surveyId },
   });
+
+  //state to manage which question on the survey is currently being edited (ensures one at a time)
   const [activeQuestion, setActiveQuestion] = useState<Question | undefined>();
+
+  // mutation to create a new question
   const [createQuestion] = useMutation<{ createQuestion: { question: Question } }>(CREATE_QUESTION, {
+    // updates the cache upon creating the question, keeping the client consistent with the database
     update: (cache, { data }) => {
       const newQuestion = data?.createQuestion.question;
       const cachedSurvey = cache.readQuery<{ survey: Survey }>({
@@ -32,7 +40,10 @@ const EditSurvey: React.FC<{ surveyId: string }> = ({ surveyId }) => {
       }
     },
   });
+
+  // mutation to delete a question
   const [deleteQuestion] = useMutation<{ deleteQuestion: { deletedId: string } }>(DELETE_QUESTION, {
+    // updates the cache upon deleting the question
     update: (cache, { data }) => {
       const cachedSurvey = cache.readQuery<{ survey: Survey }>({
         query: SURVEY,
@@ -52,7 +63,10 @@ const EditSurvey: React.FC<{ surveyId: string }> = ({ surveyId }) => {
       }
     },
   });
+
+  // mutation to update a question (and its options)
   const [updateQuestion] = useMutation<{ updateQuestion: { question: Question } }, QuestionVariables>(UPDATE_QUESTION, {
+    // updates the cache upon updating the question
     update: (cache, { data }) => {
       const newQuestion = data?.updateQuestion.question;
       const cachedSurvey = cache.readQuery<{ survey: Survey }>({
@@ -74,17 +88,27 @@ const EditSurvey: React.FC<{ surveyId: string }> = ({ surveyId }) => {
       }
     },
   });
+
+  // fetches the different question types that a question can have
   const { loading: questionTypeLoading, error: questionTypeError, data: questionTypeData } = useQuery<{
     questionTypes: QuestionType[];
   }>(QUESTIONTYPES);
+
+  // state to determine the standard question type for newly created questions
   const [standardQuestionType, setStandardQuestionType] = useState<QuestionType>();
+
+  // once the question types are fetched, set "Short answer" as standard question type
   useEffect(() => {
     if (!questionTypeLoading && !questionTypeError && questionTypeData) {
       setStandardQuestionType(questionTypeData.questionTypes.find((type) => type.name === "Short answer"));
     }
   }, [questionTypeLoading, questionTypeError, questionTypeData]);
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error</p>;
+
+  // renders a list of the survey's question, with a button to create new ones
+  // question view changes based on whether they are being edited or not
   return (
     <>
       {data && (
@@ -118,6 +142,7 @@ const EditSurvey: React.FC<{ surveyId: string }> = ({ surveyId }) => {
                               description: activeQuestion.description,
                               position: activeQuestion.position,
                               questionTypeId: activeQuestion.questionType.id,
+                              // TODO: update to reflect new position of questionId in OptionInput
                               options: activeQuestion.options.map((option) => ({
                                 answer: option.answer,
                                 questionId: activeQuestion.id,

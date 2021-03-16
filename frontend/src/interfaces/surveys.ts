@@ -35,6 +35,7 @@ export interface Answer {
   question: Question;
 }
 
+// interface for the variables in certain question mutations
 export interface QuestionVariables {
   id: string;
   question: string;

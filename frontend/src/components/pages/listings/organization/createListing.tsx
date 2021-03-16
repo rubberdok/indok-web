@@ -5,14 +5,20 @@ import { Organization } from "@interfaces/organizations";
 import { CREATE_LISTING } from "@graphql/listings/mutations";
 import { useMutation, gql } from "@apollo/client";
 
+// component for authorized organization members to create new listings
+// props: the organization for which to create the listing
 const CreateListing: React.FC<{ organization: Organization }> = ({ organization }) => {
+  //state to manage the new listing before posting
   const [newListing, setNewListing] = useState<Listing>({} as Listing);
+
+  // mutation to create the new listing, and update the cache to show it instantly
   const [createListing] = useMutation<{ createListing: { listing: Listing } }>(CREATE_LISTING, {
     update: (cache, { data }) => {
       data &&
         cache.modify({
           fields: {
             listings: (existingListings) => {
+              // creates a fragment of the new listing, as that is what the cache stores
               const newListing = cache.writeFragment<Listing>({
                 data: data.createListing.listing,
                 fragment: gql`
@@ -27,6 +33,7 @@ const CreateListing: React.FC<{ organization: Organization }> = ({ organization 
         });
     },
   });
+
   return (
     <form
       onSubmit={(e) => {

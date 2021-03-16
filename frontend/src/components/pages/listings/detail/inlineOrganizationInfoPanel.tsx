@@ -7,6 +7,7 @@ interface InlineOrganizationInfoPanelProps {
   organization: Organization;
 }
 
+// component for organization detail on mobile
 const InlineOrganizationInfoPanel: React.FC<InlineOrganizationInfoPanelProps> = ({ organization }) => {
   return (
     <Accordion>
@@ -26,9 +27,7 @@ const InlineOrganizationInfoPanel: React.FC<InlineOrganizationInfoPanelProps> = 
           </Grid>
         </Grid>
       </AccordionSummary>
-      <AccordionDetails variant="body1" component="span">
-        {organization.description}
-      </AccordionDetails>
+      <AccordionDetails>{organization.description}</AccordionDetails>
     </Accordion>
   );
 };

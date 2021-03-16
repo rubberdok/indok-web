@@ -1,5 +1,5 @@
 import { Organization } from "@interfaces/organizations";
-import { Hidden, Grid, Card, CardMedia, CardContent, Typography, makeStyles } from "@material-ui/core";
+import { Grid, Card, CardMedia, CardContent, Typography, makeStyles } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   organization: {
@@ -25,6 +25,7 @@ interface OrganizationInfoPanelProps {
   organization: Organization;
 }
 
+// component for organization detail on desktop
 const OrganizationInfoPanel: React.FC<OrganizationInfoPanelProps> = ({ organization }) => {
   const classes = useStyles();
   return (

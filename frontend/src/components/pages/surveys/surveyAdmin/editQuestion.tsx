@@ -4,6 +4,15 @@ import { useState } from "react";
 import QuestionTypePreview from "@components/pages/surveys/surveyAdmin/questionTypePreview";
 import { Grid, Button, TextField, Select, MenuItem, Radio, Checkbox } from "@material-ui/core";
 
+// component to edit a question on a survey
+/*
+  props:
+  the question to edit
+  the question types a question can have
+  updateQuestion mutation to persist the new question to the database (crazy type declaration from Apollo)
+  deleteQuestion mutation to delete the question
+  setInactive function to exit the edit mode on this question
+*/
 const EditQuestion: React.FC<{
   oldQuestion: Question;
   questionTypes: QuestionType[];
@@ -48,7 +57,11 @@ const EditQuestion: React.FC<{
   >;
   setInactive: () => void;
 }> = ({ oldQuestion, questionTypes, updateQuestion, deleteQuestion, setInactive }) => {
+  // state to manage the question being edited before updating it in the database
   const [question, setQuestion] = useState<Question>(oldQuestion);
+
+  // renders input fields to change the question's details
+  // if the question's type allows options, allows the creation of such; otherwise, shows a preview
   return (
     <Grid container item direction="column">
       <TextField

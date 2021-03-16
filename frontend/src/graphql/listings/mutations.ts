@@ -99,29 +99,6 @@ export const DELETE_LISTING = gql`
   }
 `;
 
-export const CREATE_RESPONSE = gql`
-  mutation createResponse($response: String!, $applicantId: ID!, $listingId: ID!) {
-    createResponse(responseData: { response: $response, applicantId: $applicantId, listingId: $listingId }) {
-      response {
-        id
-        response
-      }
-      ok
-    }
-  }
-`;
-
-export const DELETE_RESPONSE = gql`
-  mutation deleteResponse($ID: ID!) {
-    deleteResponse(responseId: $ID) {
-      response {
-        id
-      }
-      ok
-    }
-  }
-`;
-
 export const CREATE_ORGANIZATION = gql`
   mutation createOrganization($name: String!, $description: String!) {
     createOrganization(organizationData: { name: $name, description: $description }) {

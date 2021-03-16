@@ -1,27 +1,25 @@
 import { Answer } from "@interfaces/surveys";
 import {
-  Grid,
-  Button,
   TextField,
   Select,
   MenuItem,
   Radio,
-  Checkbox,
-  Typography,
   RadioGroup,
   FormControl,
   FormControlLabel,
   FormLabel,
-  FormGroup,
 } from "@material-ui/core";
 import AnswerCheckboxes from "./answerCheckboxes";
 
+// component to answer a question on a survey
+// props: the answer/setAnswer state, which alters the state of the higher component
 const AnswerQuestion: React.FC<{
   answer: Answer;
   setAnswer: (answer: Answer) => void;
 }> = ({ answer, setAnswer }) => {
+  // returns a form, with input types determined by the question type of each answer's question
+  // each input type calls on setAnswer
   return (
-    // TODO: Implement checkboxes & drop-down
     <FormControl>
       <FormLabel>{answer.question.question}</FormLabel>
       {answer.question.questionType.name === "Short answer" ? (

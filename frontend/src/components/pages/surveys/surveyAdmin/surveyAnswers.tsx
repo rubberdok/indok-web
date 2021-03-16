@@ -4,20 +4,25 @@ import { useQuery } from "@apollo/client";
 import { Question, Answer } from "@interfaces/surveys";
 import { Typography } from "@material-ui/core";
 
+// specific type for this component to tie a question to a single answer
 type QuestionWithAnswer = Question & {
   answer: Answer;
 };
 
+// component to see a user's answers to a survey
+// props: ID of the relevant survey, and the applicant user
 const SurveyAnswers: React.FC<{
   surveyId: number;
   user: User;
 }> = ({ surveyId, user }) => {
+  // fetches answers to the survey by the given user
   const { loading, error, data } = useQuery<{ survey: { descriptiveName: string; questions: QuestionWithAnswer[] } }>(
     SURVEY_ANSWERS,
     {
       variables: { surveyId: surveyId, userId: parseInt(user.id) },
     }
   );
+
   if (error) return <p>Error...</p>;
   if (loading) return <p>Loading...</p>;
   return (

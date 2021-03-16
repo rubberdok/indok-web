@@ -26,7 +26,6 @@ export const UPDATE_SURVEY = gql`
   }
 `;
 
-//temporary implementation until bulk mutation is implemented
 export const CREATE_QUESTION = gql`
   mutation CreateQuestion(
     $question: String!
