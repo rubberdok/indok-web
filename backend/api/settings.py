@@ -52,7 +52,6 @@ INSTALLED_APPS = [
     "apps.cabins",
     "apps.events",
     "apps.listing",
-    "apps.listing_response",
     "apps.organizations",
     "apps.surveys",
     "apps.users",
