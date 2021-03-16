@@ -17,6 +17,7 @@ import {
   makeStyles,
   Chip,
   TableBody,
+  Button,
 } from "@material-ui/core";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
@@ -24,6 +25,7 @@ import Link from "next/link";
 import { GET_ORGANIZATION } from "@graphql/orgs/queries";
 import { Organization } from "@interfaces/organizations";
 import dayjs from "dayjs";
+import { Listing } from "@interfaces/listings";
 interface HeaderValuePair<T> {
   header: string;
   field: keyof T;
@@ -109,6 +111,39 @@ const OrganizationDetailPage: NextPage = () => {
                 </Card>
               </Grid>
             </Grid>
+            {data?.organization?.listings && (
+              <Grid item container>
+                <Grid item xs>
+                  <Card variant="outlined">
+                    <CardHeader title="Verv" />
+                    <Divider variant="middle" />
+                    <CardContent>
+                      <Button variant="contained">Opprett nytt verv</Button>
+                      <TableContainer>
+                        <Table>
+                          <TableHead>
+                            <TableRow>
+                              <TableCell>Tittel</TableCell>
+                              <TableCell>Frist</TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {data.organization.listings.map((listing: Listing) => (
+                              <Link href={`${orgNumberId}/listings/${listing.id}`} passHref key={listing.id}>
+                                <TableRow className={classes.hover} hover>
+                                  <TableCell>{listing.title}</TableCell>
+                                  <TableCell>{dayjs(listing.deadline).format("HH:mm DD-MM-YYYY")}</TableCell>
+                                </TableRow>
+                              </Link>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              </Grid>
+            )}
           </Grid>
         ) : null}
       </Box>

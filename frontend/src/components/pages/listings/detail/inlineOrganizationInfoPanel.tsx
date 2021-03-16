@@ -1,4 +1,4 @@
-import { Organization } from "@interfaces/listings";
+import { Organization } from "@interfaces/organizations";
 import { Typography, Grid, Accordion, AccordionSummary, AccordionDetails, Avatar } from "@material-ui/core";
 
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";

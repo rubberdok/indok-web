@@ -1,6 +1,7 @@
 import TextField from "@components/ui/formComponents/textfield";
 import { useState } from "react";
-import { Listing, Organization } from "@interfaces/listings";
+import { Listing } from "@interfaces/listings";
+import { Organization } from "@interfaces/organizations";
 import { CREATE_LISTING } from "@graphql/listings/mutations";
 import { useMutation, gql } from "@apollo/client";
 

@@ -10,10 +10,10 @@ import { User } from "@interfaces/users";
 import SurveyAnswers from "@components/pages/surveys/surveyAdmin/surveyAnswers";
 import OrganizationListing from "@components/pages/listings/organization/organizationListing";
 
-const ListingAdminPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ listingID, orgID }) => {
+const ListingAdminPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ listingId, orgId }) => {
   const { loading, error, data } = useQuery<{ listing: Listing }>(LISTING_WITH_RESPONDERS, {
     variables: {
-      ID: listingID,
+      ID: listingId,
     },
   });
   const [selectedApplicant, selectApplicant] = useState<User | null>(null);
@@ -21,7 +21,7 @@ const ListingAdminPage: NextPage<InferGetServerSidePropsType<typeof getServerSid
   if (loading) return <p>Loading...</p>;
   return (
     <Layout>
-      <Link href={`/org/${orgID}/listings`}>Tilbake</Link>
+      <Link href={`/orgs/${orgId}/listings`}>Tilbake</Link>
       {data && (
         <Grid container direction="row">
           <Tabs
@@ -55,13 +55,13 @@ const ListingAdminPage: NextPage<InferGetServerSidePropsType<typeof getServerSid
 };
 
 export const getServerSideProps: GetServerSideProps<{
-  listingID: string;
-  orgID: string;
+  listingId: string;
+  orgId: string;
 }> = async (context) => {
-  const listingID = context.query.listingID as string;
-  const orgID = context.query.orgID as string;
+  const listingId = context.query.listingId as string;
+  const orgId = context.query.orgId as string;
   return {
-    props: { listingID, orgID },
+    props: { listingId, orgId },
   };
 };
 

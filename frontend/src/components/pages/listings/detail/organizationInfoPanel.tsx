@@ -1,4 +1,4 @@
-import { Organization } from "@interfaces/listings";
+import { Organization } from "@interfaces/organizations";
 import { Hidden, Grid, Card, CardMedia, CardContent, Typography, makeStyles } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
