@@ -1,11 +1,14 @@
+import uuid
+
 from django.conf import settings
 from django.db import models
 from django.db.models import UniqueConstraint
 from django.db.models.constraints import CheckConstraint
+from django.db.models.fields import UUIDField
 from django.db.models.query_utils import Q
-from django.db.models.functions import Length
+from django.utils.translation import gettext_lazy as _
+
 from apps.organizations.models import Organization
-from apps.users.models import User
 
 
 # Create your models here.
@@ -16,6 +19,10 @@ class Survey(models.Model):
 
     def __str__(self) -> str:
         return f"{self.descriptive_name}"
+
+    @property
+    def mandatory_questions(self):
+        return self.questions.filter(mandatory=True)
 
 class Question(models.Model):
     survey = models.ForeignKey(Survey, on_delete=models.CASCADE, related_name="questions")
@@ -42,6 +49,7 @@ class Option(models.Model):
         return f"{self.answer}"
 
 class Answer(models.Model):
+    uuid = UUIDField(primary_key=True, default=uuid.uuid4)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="answers")
     question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name="answers")
     answer = models.CharField(max_length=10000)
@@ -60,3 +68,23 @@ class QuestionType(models.Model):
 
     def __str__(self) -> str:
         return f"{self.name}"
+
+class Response(models.Model):
+    uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    respondent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="responses")
+    survey = models.ForeignKey(Survey, on_delete=models.CASCADE, related_name="responses")
+
+    class Status(models.IntegerChoices):
+        RED = 0, _("Red")
+        YELLOW = 1, _("Yellow")
+        GREEN = 2, _("Green")
+        
+        __empty__ = _("Unknown")
+
+    status = models.IntegerField(choices=Status.choices)
+
+class Comment(models.Model):
+    uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="comments")
+    response = models.ForeignKey(Response, on_delete=models.CASCADE, related_name="comments")
+    comment = models.CharField(max_length=2048)
