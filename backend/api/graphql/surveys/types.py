@@ -32,6 +32,8 @@ class ResponseType(DjangoObjectType):
         return response.answers
 
 class AnswerType(DjangoObjectType):
+    user = graphene.Field(UserType)
+
     class Meta:
         model = Answer
         fields = [
@@ -40,6 +42,10 @@ class AnswerType(DjangoObjectType):
             "uuid"
         ]
     
+    @staticmethod
+    @login_required
+    def resolve_user(answer, info):
+        return answer.response.respondent
 
 class QuestionTypeType(DjangoObjectType):
     class Meta:
