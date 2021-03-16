@@ -104,12 +104,13 @@ const OrganizationPage: NextPage<Props> = ({ posts }) => {
 
   return (
     <Template
-      img="img/hero.jpg"
+      img="/img/hero.jpg"
       title="Organisasjonene under Hovedstyret"
       page=""
       description="Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse er den øverste instansen
       (moderorganisasjonen) for all studentfrivillighet på masterstudiet Indøk ved NTNU."
     >
+      <img src="/img/orgmap.svg" alt="Organisasjonskart"></img>
       <Typography variant="h5" gutterBottom>
         Se organisasjonene våre under
       </Typography>
