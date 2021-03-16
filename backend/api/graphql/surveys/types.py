@@ -17,6 +17,8 @@ class OptionType(DjangoObjectType):
 
 class ResponseType(DjangoObjectType):
     answers = graphene.List("AnswerType")
+    id = graphene.Field(graphene.ID(), source="uuid")
+
 
     class Meta:
         model = Response
@@ -33,6 +35,7 @@ class ResponseType(DjangoObjectType):
 
 class AnswerType(DjangoObjectType):
     user = graphene.Field(UserType)
+    id = graphene.Field(graphene.ID(), source="uuid")
 
     class Meta:
         model = Answer
