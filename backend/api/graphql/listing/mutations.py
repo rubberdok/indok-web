@@ -27,7 +27,7 @@ class CreateListing(graphene.Mutation):
         listing_data = ListingInput(required=True)
 
     @classmethod
-    @user_passes_test(lambda user: user.is_staff)
+    @login_required
     def mutate(cls, self, info, listing_data):
         listing = Listing()
 
@@ -48,7 +48,7 @@ class DeleteListing(graphene.Mutation):
         id = graphene.ID()
 
     @classmethod
-    @user_passes_test(lambda user: user.is_staff)
+    @login_required
     def mutate(cls, self, info, **kwargs):
         listing = Listing.objects.get(pk=kwargs["id"])
         listing_id = listing.id
@@ -65,7 +65,7 @@ class UpdateListing(graphene.Mutation):
         listing_data = ListingInput(required=False)
 
     @classmethod
-    @user_passes_test(lambda user: user.is_staff)
+    @login_required
     def mutate(cls, self, info, id, listing_data=None):
         listing = Listing.objects.get(pk=id)
 
