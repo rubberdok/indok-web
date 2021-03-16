@@ -1,12 +1,11 @@
-from django.contrib.auth import login
-from django.contrib.auth.models import Permission
 import graphene
-
-from django.utils.text import slugify
-
-from .types import ListingType, ResponseType
 from apps.listing.models import Listing, Response
-from graphql_jwt.decorators import login_required, user_passes_test
+from django.contrib.auth.models import Permission
+from django.utils.text import slugify
+from graphql_jwt.decorators import login_required
+
+from .types import ListingType
+
 
 class ListingInput(graphene.InputObjectType):
     title = graphene.String(required=False)
@@ -75,67 +74,6 @@ class UpdateListing(graphene.Mutation):
         listing.save()
         ok = True
         return cls(listing=listing, ok=ok)
-
-class ResponseInput(graphene.InputObjectType):
-    response = graphene.String(required=False)
-    listing_id = graphene.ID(required=False)
-
-class CreateResponse(graphene.Mutation):
-    response = graphene.Field(ResponseType)
-    ok = graphene.Boolean()
-
-    class Arguments:
-        response_data = ResponseInput(required=True)
-
-    @classmethod
-    @login_required
-    def mutate(cls, self, info, response_data):
-        response = Response()
-        user = info.context.user
-        for k, v in response_data.items():
-            setattr(response, k, v)
-        setattr(response, "applicant", user)
-        response.save()
-        ok = True
-        return cls(response=response, ok=ok)
-
-class UpdateResponse(graphene.Mutation):
-    response = graphene.Field(ResponseType)
-    ok = graphene.Boolean()
-
-    class Arguments:
-        response_id = graphene.ID()
-        response_data = ResponseInput(required=False)
-
-    @classmethod
-    @login_required
-    def mutate(cls, self, info, response_id, response_data=None):
-        user = info.context.user
-        response = user.responses.get(pk=response_id)
-
-        for k, v in response_data.items():
-            setattr(response, k, v)
-            
-        response.save()
-        ok = True
-        return cls(response=response, ok=ok)
-
-class DeleteResponse(graphene.Mutation):
-    response = graphene.Field(ResponseType)
-    ok = graphene.Boolean()
-
-    class Arguments:
-        response_id = graphene.ID()
-
-    @classmethod
-    @login_required
-    def mutate(cls, self, info, response_id):
-        user = info.context.user
-        response = user.responses.get(pk=response_id)
-        response.delete()
-        ok = True
-        return cls(ok=ok)
-
 
 class AddPermission(graphene.Mutation):
     ok = graphene.Boolean()
