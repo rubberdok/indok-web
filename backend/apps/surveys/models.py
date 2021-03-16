@@ -52,6 +52,8 @@ class Answer(models.Model):
     uuid = UUIDField(primary_key=True, default=uuid.uuid4)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="answers")
     question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name="answers")
+    response = models.ForeignKey("Response", on_delete=models.CASCADE, related_name="answers")
+    
     answer = models.CharField(max_length=10000)
 
     class Meta:
@@ -81,7 +83,7 @@ class Response(models.Model):
         
         __empty__ = _("Unknown")
 
-    status = models.IntegerField(choices=Status.choices)
+    status = models.IntegerField(choices=Status.choices, blank=True, null=True)
 
 class Comment(models.Model):
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
