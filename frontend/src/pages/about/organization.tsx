@@ -51,6 +51,32 @@ const routes = {
   },
 };
 
+interface TabPanelProps {
+  children?: React.ReactNode;
+  index: any;
+  value: any;
+}
+
+function TabPanel(props: TabPanelProps) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`scrollable-auto-tabpanel-${index}`}
+      aria-labelledby={`scrollable-auto-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Typography variant="body2" paragraph>
+          {children}
+        </Typography>
+      )}
+    </div>
+  );
+}
+
 const OrganizationPage: NextPage<Props> = ({ posts }) => {
   const classes = useStyles();
   const router = useRouter();
@@ -96,7 +122,17 @@ const OrganizationPage: NextPage<Props> = ({ posts }) => {
           <Tab key={i} label={routes[keyName].title} />
         ))}
       </Tabs>
+
       <br />
+      <TabPanel value={typeof router.query.category == "string" ? router.query.category : ""} index="kultur">
+        Indøk Kultur er paraplyorganisasjonen for alle kulturaktiviteter på Indøk, og innbefatter Indøkrevyen,
+        Mannskoret Klingende Mynt, et Indøk-band (Bandøk), et ølbryggerlag (Indøl) samt en veldedig organisasjon (IVI).
+      </TabPanel>
+      <TabPanel value={typeof router.query.category == "string" ? router.query.category : ""} index="idrett">
+        Fra en sped start som Janus FK i 2006, har foreningen vokst til å forene godt over hundre sporty og engasjerte
+        studenter under én felles paraply, med et bredt spekter av idretter. Tilbudet blir stadig bredere, og ønsker og
+        idéer til nye lag og idretter tas alltid imot med åpne armer!
+      </TabPanel>
 
       <Grid container spacing={2}>
         {posts
