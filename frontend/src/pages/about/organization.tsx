@@ -64,7 +64,7 @@ const OrganizationPage: NextPage<Props> = ({ posts }) => {
     if (value != 0) {
       Router.push(
         {
-          pathname: this,
+          pathname: "/about/organization",
           query: { category: Object.keys(routes)[value] },
         },
         undefined,
@@ -73,7 +73,7 @@ const OrganizationPage: NextPage<Props> = ({ posts }) => {
     } else {
       Router.push(
         {
-          pathname: this,
+          pathname: "/about/organization",
         },
         undefined,
         { shallow: true, scroll: false }
