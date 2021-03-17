@@ -1,34 +1,100 @@
-import Template from "@components/pages/about/Template";
-import { Typography } from "@material-ui/core";
+import Layout from "@components/Layout";
+import {
+  Box,
+  Button,
+  Card,
+  CardActionArea,
+  CardContent,
+  CardMedia,
+  Container,
+  makeStyles,
+  Typography,
+} from "@material-ui/core";
+import Grid from "@material-ui/core/Grid";
+import NavigateNextIcon from "@material-ui/icons/NavigateNext";
+import { getSortedPosts } from "@utils/posts";
 import { NextPage } from "next";
+import Link from "next/link";
 import React from "react";
 
-const BoardPage: NextPage = () => {
+type Props = {
+  slug: string;
+  frontmatter: {
+    description: string;
+    title: string;
+    image?: string;
+    tag?: string;
+    logo: string;
+  };
+  posts: Array<any>;
+};
+
+const useStyles = makeStyles(() => ({
+  media: {
+    width: "200px",
+    minHeight: "200px",
+    backgroundSize: "contain",
+    backgroundPosition: "center",
+  },
+  card: {
+    display: "flex",
+    alignItems: "center",
+    height: "450px",
+  },
+}));
+
+const OrganizationsPage: NextPage<Props> = ({ posts }) => {
+  const classes = useStyles();
+
   return (
-    <Template
-      img="img/hero.jpg"
-      title="Om foreningen vår"
-      page=""
-      description="Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse er den øverste instansen
-      (moderorganisasjonen) for all studentfrivillighet på masterstudiet Indøk ved NTNU."
-    >
-      <ul>
-        <li>2008-2009: Ole Heliesen og Georg Øiesvold</li>
-        <li>2009-2010: Magnus Valmot og Ole-Christen Enger</li>
-        <li>2010-2011: Thomas Eide og Ole-Daniel Nitter</li>
-        <li>2011-2012: Michael Wiik og Iver Roen Velo</li>
-        <li>2012-2013: Anja Graff Nesse og Steinar H. Fretheim</li>
-        <li>2013-2014: Ove Mørch og Christian Fredrik Scheel</li>
-        <li>2014-2015: Lars Arild Wold og Marianne Engseth</li>
-        <li>2015-2016: Marius Lie Morken og Hanne Sandven</li>
-        <li>2016-2017: Simen Nygaard Hansen og Kristoffer Birkeland</li>
-        <li>2017-2018: Gard Rystad og Vemund Wøien</li>
-        <li>2018-2019: Daniel Kittilsen Henriksen og Amanda Borge Byrkjeland</li>
-        <li>2019-2020: Peder Gjerstad og Mette Liset</li>
-        <li>2020-2021: Andreas Johannesen og Lars Lien Ankile</li>
-      </ul>
-    </Template>
+    <Layout>
+      <Container>
+        <Box pb={10} />
+        <Typography variant="h2" gutterBottom>
+          Hovedstyret
+        </Typography>
+        <Typography variant="body" gutterBottom>
+          Hovedstyret (HS) er styret i Foreningen for studentene ved Industriell økonomi og teknologiledelse, NTNU.
+          Hovedstyret består av et valgt lederpar, instituttilittsvalgt ved IØT, samt leder for hver av linjeforeningene
+          Janus, Bindeleddet, ESTIEM, Hyttestyret, Janus IF og Indøk Kultur. Hovedstyrets fremste oppgave er å sørge for
+          god kommunikasjon og samarbeid mellom de ulike studentinitiativene, og forvalte og disponere Indøks midler på
+          en forsvarlig måte. Hovedstyret er ansvarlig for å forberede og avholde generalforsamling for studentene ved
+          Indøk. Generalforsamlingen er Foreningens øverste organ og er studentenes mulighet til å direkte påvirke
+          budsjetter og avgjørelser som blir fattet på linjen.
+        </Typography>
+
+        <Box my={10}>
+          <Grid container spacing={5}>
+            {posts.map(({ frontmatter: { title, description, logo }, slug }: Props) => (
+              <Grid key={slug} item xs={12} sm={6} md={4}>
+                <Card>
+                  <CardActionArea className={classes.card}>
+                    {logo ? <CardMedia className={classes.media} image={logo} /> : ""}
+                    <CardContent>
+                      <Typography variant="h5" component="h2">
+                        {"Lars Lien Ankile"}
+                      </Typography>
+                      <Typography variant="body2">{"Leder"}</Typography>
+                    </CardContent>
+                  </CardActionArea>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
+      </Container>
+    </Layout>
   );
 };
 
-export default BoardPage;
+export const getStaticProps = async () => {
+  const posts = getSortedPosts("organizations");
+
+  return {
+    props: {
+      posts,
+    },
+  };
+};
+
+export default OrganizationsPage;
