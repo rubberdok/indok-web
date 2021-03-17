@@ -1,7 +1,19 @@
-import { ContactInfo, InputValueTypes } from "@interfaces/cabins";
+import { ContactInfo } from "@interfaces/cabins";
 import validator from "validator";
 
-export const allValuesDefined = (obj: InputValueTypes): boolean => {
+export const generateQueryString = (values: Record<string, any>): string => {
+  const valueList: string[] = [];
+
+  Object.keys(values).forEach((name) => {
+    if (values[name]) {
+      const value = values[name];
+      valueList.push(`${name}=${value}`);
+    }
+  });
+  return "?" + valueList.join("&");
+};
+
+export const allValuesDefined = (obj: Record<string, any>): boolean => {
   let empty = true;
   Object.values(obj).forEach((val) => {
     if (val === undefined && val != 0) {

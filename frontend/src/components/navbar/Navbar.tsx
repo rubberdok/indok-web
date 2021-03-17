@@ -11,6 +11,7 @@ import {
 } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React, { ReactElement } from "react";
 import NavbarLinks from "./NavbarLinks";
 
@@ -18,17 +19,32 @@ const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
   },
-  appBar: {},
+  appBar: {
+    background: "#022A2A",
+    height: 75,
+  },
   toolBar: {
     padding: 0,
+    height: 75,
   },
   title: {
     flexGrow: 1,
+    margin: 0,
+    fontSize: 24,
+    color: "#b0aca5",
+
+    "&:hover": {
+      cursor: "pointer",
+      color: "#fff",
+    },
   },
   sectionDesktop: {
     display: "none",
+
     [theme.breakpoints.up("md")]: {
       display: "flex",
+      height: "100%",
+      alignItems: "center",
     },
   },
   sectionMobile: {
@@ -51,14 +67,15 @@ const HideOnScroll: React.FC = ({ children }) => {
 
 const Navbar: React.FC = () => {
   const classes = useStyles();
+  const router = useRouter();
 
   const [openDrawer, setOpenDrawer] = React.useState(false);
 
   return (
     <div className={classes.root}>
       <HideOnScroll>
-        <AppBar color="default" className={classes.appBar}>
-          <Container>
+        <AppBar color="primary" className={classes.appBar}>
+          <Container style={{ maxWidth: "90vw" }}>
             <Toolbar className={classes.toolBar}>
               <Link href="/">
                 <Typography variant="h6" className={classes.title}>
@@ -77,7 +94,7 @@ const Navbar: React.FC = () => {
           </Container>
         </AppBar>
       </HideOnScroll>
-      <Toolbar id="back-to-top-anchor" />
+      {router.pathname != "/" && <Toolbar id="back-to-top-anchor" />}
       <Drawer anchor="right" open={openDrawer} onClose={() => setOpenDrawer(false)}>
         <NavbarLinks></NavbarLinks>
       </Drawer>

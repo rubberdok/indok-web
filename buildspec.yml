@@ -4,10 +4,11 @@ env:
   variables:
     AWS_REGION: "eu-north-1"
     NEXT_PUBLIC_GRAPHQL_BACKEND_URI: "https://api.gamma.indokntnu.no/graphql"
+    NEXT_PUBLIC_FRONTEND_URI: "https://gamma.indokntnu.no"
     DATAPORTEN_ID: "f17d2ea0-a7c9-4458-83bf-35cf5b555cae"
     DATAPORTEN_REDIRECT_URI: "https://gamma.indokntnu.no/authCallback"
     NEXT_PUBLIC_DATAPORTEN_STATE: "RGpBPYszuqXVvsma1suHJJ4X7ZJjkfS6njRHnx4p"
-    BOOKING_EMAIL: "RGpBPYszuqXVvsma1suHJJ4X7ZJjkfS6njRHnx4p"
+    BOOKING_EMAIL: "hswebkom@gmail.com"
 
 phases:
   pre_build:
@@ -32,6 +33,7 @@ phases:
           -f frontend/Dockerfile.prod \
           -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/indokweb-frontend:prod \
           --build-arg NEXT_PUBLIC_GRAPHQL_BACKEND_URI=$NEXT_PUBLIC_GRAPHQL_BACKEND_URI \
+          --build-arg NEXT_PUBLIC_FRONTEND_URI=$NEXT_PUBLIC_FRONTEND_URI \
           --build-arg NEXT_PUBLIC_DATAPORTEN_ID=$DATAPORTEN_ID \
           --build-arg NEXT_PUBLIC_DATAPORTEN_REDIRECT_URI=$DATAPORTEN_REDIRECT_URI \
           --build-arg NEXT_PUBLIC_DATAPORTEN_STATE=$NEXT_PUBLIC_DATAPORTEN_STATE \

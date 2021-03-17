@@ -14,7 +14,6 @@ import {
   TableRow,
   Typography,
 } from "@material-ui/core";
-import Container from "@material-ui/core/Container";
 import CloseIcon from "@material-ui/icons/Close";
 import React from "react";
 
@@ -46,8 +45,8 @@ const Footer: React.FC = () => {
 
   return (
     <>
-      <Box mt={10} className={classes.credits}>
-        <Container>
+      <Box className={classes.credits}>
+        <Box margin="0 auto" maxWidth="90vw">
           <Button variant="contained" onClick={() => setOpen(!open)}>
             Hall of Fame
           </Button>
@@ -60,7 +59,7 @@ const Footer: React.FC = () => {
             Kopirett © 2021 Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse. Alle rettigheter
             reservert.
           </Typography>
-        </Container>
+        </Box>
       </Box>
       <Dialog
         maxWidth="xl"

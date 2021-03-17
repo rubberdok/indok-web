@@ -15,6 +15,7 @@ class CreateArchiveDocument(graphene.Mutation):
         date = graphene.DateTime()
         type_doc = graphene.String()
         file_location = graphene.String()
+        web_link = graphene.String()
 
     ok = graphene.Boolean()
     arhiveDocument = graphene.Field(ArchiveDocumentType)
@@ -39,6 +40,7 @@ class UpdateArchiveDocument(graphene.Mutation):
         date = graphene.DateTime()
         type_doc = graphene.String()
         file_location = graphene.String()
+        web_link = graphene.String()
 
     ok = graphene.Boolean()
     event = graphene.Field(ArchiveDocumentType)
