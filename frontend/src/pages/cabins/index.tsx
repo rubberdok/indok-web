@@ -17,7 +17,7 @@ import { cabinImages, outsideImages } from "@components/pages/cabins/ImageSlider
 const useStyles = makeStyles((theme: Theme) => ({
   hero: {
     color: "white",
-    height: "calc(100vh - 130px)",
+    height: "calc(100vh - 200px)",
     width: "100%",
     backgroundColor: "black",
     backgroundSize: "cover",
@@ -40,10 +40,6 @@ const CreateBookingPage: NextPage = () => {
   const classes = useStyles();
 
   const facilitiesData = [
-    {
-      icon: <WifiIcon className={classes.icon} />,
-      text: "Trådløst internett",
-    },
     {
       icon: <FireplaceIcon className={classes.icon} />,
       text: "Varmekabler",
@@ -91,15 +87,15 @@ const CreateBookingPage: NextPage = () => {
         <Grid xs={12} sm={6} item container justify="center">
           <Box>
             <Typography variant="h1">Hyttebooking</Typography>
-            <Typography variant="overline">Reservasjon av indøkhyttene</Typography>
+            <Typography variant="overline">På denne siden blir det snart mulig å reservere indøkhyttene</Typography>
           </Box>
         </Grid>
         <Grid xs={12} sm={6} item container justify="center">
-          <Link href="/cabins/book" passHref>
+          {/*<Link href="/cabins/book" passHref>
             <Button variant="contained" endIcon={<NavigateNextIcon />}>
               Book nå
             </Button>
-          </Link>
+          </Link> */}
         </Grid>
       </Grid>
       <Box m={5}>
