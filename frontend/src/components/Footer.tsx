@@ -83,47 +83,49 @@ const Footer: React.FC = () => {
 
   return (
     <>
-      <Box className={classes.footer}>
-        <Container>
-          <Grid container>
-            <Grid item xs={6}>
-              <Link href="/" passHref>
-                <Typography variant="h5" className={classes.title} gutterBottom>
-                  INDØK
+      <div>
+        <Box className={classes.footer}>
+          <Container>
+            <Grid container>
+              <Grid item xs={6}>
+                <Link href="/" passHref>
+                  <Typography variant="h5" className={classes.title} gutterBottom>
+                    INDØK
+                  </Typography>
+                </Link>
+                <Typography variant="body2">
+                  Foreningen for studentene ved Industriell Økonomi og Teknologiledelse, NTNU
                 </Typography>
-              </Link>
-              <Typography variant="body2">
-                Foreningen for studentene ved Industriell Økonomi og Teknologiledelse, NTNU
-              </Typography>
-              <Typography variant="body2">Kolbjørn Hejes vei 1E, 7034 Trondheim</Typography>
-              <Typography variant="body2">Org.nr. 994 778 463</Typography>
+                <Typography variant="body2">Kolbjørn Hejes vei 1E, 7034 Trondheim</Typography>
+                <Typography variant="body2">Org.nr. 994 778 463</Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Box className={classes.nth} position="absolute" width="600px" height="100%" top={0} zIndex={-1}></Box>
+              </Grid>
             </Grid>
-            <Grid item xs={6}>
-              <Box className={classes.nth} position="absolute" width="600px" height="100%" top={0} zIndex={-1}></Box>
-            </Grid>
-          </Grid>
-        </Container>
-      </Box>
-      <Box className={classes.credits}>
-        <Container>
-          <Box height="100%" display="flex" alignItems="center">
-            <img className={classes.rdLogo} src="/rd-logo.svg" alt="Rubberdøk logo" />
-            <Box flexGrow="1">
-              <Typography variant="caption">
-                Utviklet av{" "}
-                <a href="https://github.com/hovedstyret/indok-web" rel="norefferer noopener">
-                  RubberDøk
-                </a>
-                , Hovedstyrets Webkomité. Kopirett © 2020 Foreningen for studentene ved Indøk. Alle rettigheter
-                reservert
-              </Typography>
+          </Container>
+        </Box>
+        <Box className={classes.credits}>
+          <Container>
+            <Box height="100%" display="flex" alignItems="center">
+              <img className={classes.rdLogo} src="/rd-logo.svg" alt="Rubberdøk logo" />
+              <Box flexGrow="1">
+                <Typography variant="caption">
+                  Utviklet av{" "}
+                  <a href="https://github.com/hovedstyret/indok-web" rel="norefferer noopener">
+                    RubberDøk
+                  </a>
+                  , Hovedstyrets Webkomité. Kopirett © 2020 Foreningen for studentene ved Indøk. Alle rettigheter
+                  reservert
+                </Typography>
+              </Box>
+              <Button color="inherit" onClick={() => setOpen(!open)}>
+                Hall of Fame
+              </Button>
             </Box>
-            <Button color="inherit" onClick={() => setOpen(!open)}>
-              Hall of Fame
-            </Button>
-          </Box>
-        </Container>
-      </Box>
+          </Container>
+        </Box>
+      </div>
       <Dialog
         maxWidth="xl"
         fullWidth={false}
