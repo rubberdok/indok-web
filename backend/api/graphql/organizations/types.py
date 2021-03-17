@@ -56,9 +56,26 @@ class OrganizationType(DjangoObjectType):
 class MembershipType(DjangoObjectType):
     class Meta:
         model = Membership
+        fields = ["id", "role", "organization", "user"]
+
+    class PermissionDecorators:
+        @staticmethod
+        def is_in_organization(resolver):
+            def wrapper(membership: Membership, info):
+                if membership.organization.users.filter(pk=info.context.user.id).exists():
+                    return resolver(membership, info)
+                else:
+                    raise PermissionError(f"Du må være medlem av organisasjonen {membership.organization.name} for å gjøre dette kallet")
+
+            return wrapper
+
+    @PermissionDecorators.is_in_organization
+    def resolve_user(membership, info):
+        return membership.user
 
 
 class RoleType(DjangoObjectType):
     class Meta:
         model = Role
+        fields = ["id", "name"]
         
