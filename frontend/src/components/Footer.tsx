@@ -1,9 +1,11 @@
 import {
   Box,
   Button,
+  Container,
   Dialog,
   DialogContent,
   DialogTitle,
+  Grid,
   IconButton,
   makeStyles,
   Paper,
@@ -15,13 +17,26 @@ import {
   Typography,
 } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
+import Link from "next/link";
 import React from "react";
 
 const useStyles = makeStyles((theme) => ({
+  footer: {
+    color: "#b0aca5",
+    background: "#fff",
+    paddingBottom: theme.spacing(6),
+    paddingTop: theme.spacing(6),
+    position: "relative",
+    zIndex: 0,
+  },
   credits: {
-    padding: "30px 0",
+    background: "#022a2a",
+    position: "relative",
+    display: "flex",
+    height: 88,
+    paddingTop: theme.spacing(4),
+    paddingBottom: theme.spacing(4),
     color: "#fff",
-    background: "#000",
   },
   table: {
     minWidth: 800,
@@ -32,9 +47,32 @@ const useStyles = makeStyles((theme) => ({
     top: theme.spacing(1),
     color: theme.palette.grey[500],
   },
-  text: {
-    position: "absolute",
-    marginLeft: 40,
+  title: {
+    color: "#022a2a",
+
+    "&:hover": {
+      cursor: "pointer",
+    },
+  },
+  nth: {
+    background: "url('/nth.svg')",
+    backgroundSize: 500,
+    backgroundPosition: "right center",
+    backgroundRepeat: "no-repeat",
+    opacity: 0.05,
+  },
+  rdLogo: {
+    height: "100%",
+    float: "left",
+    marginRight: theme.spacing(4),
+
+    "&:hover": {
+      cursor: "pointer",
+    },
+  },
+  infoBox: {
+    marginTop: -80,
+    marginBottom: 72,
   },
 }));
 
@@ -45,21 +83,46 @@ const Footer: React.FC = () => {
 
   return (
     <>
+      <Box className={classes.footer}>
+        <Container>
+          <Grid container>
+            <Grid item xs={6}>
+              <Link href="/" passHref>
+                <Typography variant="h5" className={classes.title} gutterBottom>
+                  INDØK
+                </Typography>
+              </Link>
+              <Typography variant="body2">
+                Foreningen for studentene ved Industriell Økonomi og Teknologiledelse, NTNU
+              </Typography>
+              <Typography variant="body2">Kolbjørn Hejes vei 1E, 7034 Trondheim</Typography>
+              <Typography variant="body2">Org.nr. 994 778 463</Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <Box className={classes.nth} position="absolute" width="600px" height="100%" top={0} zIndex={-1}></Box>
+            </Grid>
+          </Grid>
+        </Container>
+      </Box>
       <Box className={classes.credits}>
-        <Box margin="0 auto" maxWidth="90vw">
-          <Button variant="contained" onClick={() => setOpen(!open)}>
-            Hall of Fame
-          </Button>
-          <Typography className={classes.text} variant="caption">
-            Under konstruksjon av{" "}
-            <a href="https://github.com/hovedstyret/indok-web" rel="noreferrer" target="_blank">
-              RubberDøk
-            </a>
-            , Hovedstyret på Indøk sin webkomité. <br />
-            Kopirett © 2021 Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse. Alle rettigheter
-            reservert.
-          </Typography>
-        </Box>
+        <Container>
+          <Box height="100%" display="flex" alignItems="center">
+            <img className={classes.rdLogo} src="/rd-logo.svg" alt="Rubberdøk logo" />
+            <Box flexGrow="1">
+              <Typography variant="caption">
+                Utviklet av{" "}
+                <a href="https://github.com/hovedstyret/indok-web" rel="norefferer noopener">
+                  RubberDøk
+                </a>
+                , Hovedstyrets Webkomité. Kopirett © 2020 Foreningen for studentene ved Indøk. Alle rettigheter
+                reservert
+              </Typography>
+            </Box>
+            <Button color="inherit" onClick={() => setOpen(!open)}>
+              Hall of Fame
+            </Button>
+          </Box>
+        </Container>
       </Box>
       <Dialog
         maxWidth="xl"
