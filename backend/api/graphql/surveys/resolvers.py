@@ -1,5 +1,4 @@
 from apps.surveys.models import (
-    QuestionType,
     Option,
     Survey,
     Question,
