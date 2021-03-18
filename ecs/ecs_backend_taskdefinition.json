@@ -6,8 +6,8 @@
       "name": "backend",
       "image": "%s.dkr.ecr.eu-north-1.amazonaws.com/indokweb-backend:prod",
       "essential": true,
-      "memory": "512",
-      "cpu": "100",
+      "memory": 512,
+      "cpu": 100,
       "portMappings": [
         {
           "protocol": "tcp",
@@ -56,6 +56,6 @@
   ],
   "family": "indokweb-backend-td",
   "executionRoleArn": "arn:aws:iam::777854691961:role/ecsTaskExecutionRole",
-  "memory": "1024",
-  "cpu": "256"
+  "memory": 1024,
+  "cpu": 256
 }
