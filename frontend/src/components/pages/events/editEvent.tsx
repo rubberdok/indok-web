@@ -130,7 +130,6 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event, user }) => 
         input[key] = undefined;
       }
     });
-    console.log(input)
     updateEvent({ variables: { id: event.id, eventData: input } });
     onClose();
   };
