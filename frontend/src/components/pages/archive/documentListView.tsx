@@ -45,7 +45,7 @@ const DocumentListView: React.FC = () => {
             ];
           }}
         />
-        <ContentWrapper style={{ marginLeft: "-16px" }}>
+        <ContentWrapper style={{ flex: 1 }}>
           <YearSelector
             yearFilter={yearFilter}
             handleYearFilterChanged={(year: string) => {
