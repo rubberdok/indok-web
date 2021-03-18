@@ -64,7 +64,7 @@ const DocumentListView: React.FC = () => {
         />
       </ContentWrapper>
       {!viewFeatured && (
-        <ContentWrapper style={{ paddingLeft: "85.6%", marginTop: "-9%", marginBottom: "5%" }}>
+        <ContentWrapper style={{ paddingLeft: "78.7%", marginTop: "-9%", marginBottom: "5%" }}>
           <RemoveFilters
             handleRemoveFilterChanged={() => {
               [
