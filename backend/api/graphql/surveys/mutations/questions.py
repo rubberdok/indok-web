@@ -24,7 +24,6 @@ class BaseQuestionInput(graphene.InputObjectType):
 
 class CreateQuestionInput(BaseQuestionInput):
     survey_id = graphene.ID(required=True)
-    question_type = graphene.String(required=True)
     question = graphene.String(required=True)
 
 class CreateQuestion(graphene.Mutation):

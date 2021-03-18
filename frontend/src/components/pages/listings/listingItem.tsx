@@ -1,8 +1,10 @@
 import { Listing } from "@interfaces/listings";
 import { Card, CardActionArea, CardContent, CardMedia, Grid, makeStyles, Typography } from "@material-ui/core";
 import Link from "next/link";
+import dayjs from "dayjs";
+import nb from "dayjs/locale/nb"
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   root: {
     minWidth: 275,
   },
@@ -11,7 +13,7 @@ const useStyles = makeStyles({
     height: 150,
     objectFit: "contain",
   },
-});
+}));
 
 interface ListItemProps {
   listing: Listing;
@@ -35,10 +37,21 @@ const ListingItem: React.FC<ListItemProps> = ({ listing }) => {
               title="organization logo"
             />
             <CardContent>
-              <Typography gutterBottom variant="h4" component="h4">
-                {listing.title}
-              </Typography>
-              <Typography component="p">{listing.organization?.name || "N/A"}</Typography>
+              <Grid container direction="column">
+                <Grid item xs={12}>
+                  <Typography variant="h5" component="h2">
+                    {listing.title}
+                  </Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  <Typography variant="caption" component="span" >
+                    {dayjs(listing.deadline).locale(nb).format("D. MMMM")}
+                  </Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  <Typography component="p">{listing.organization?.name || "N/A"}</Typography>
+                </Grid>
+              </Grid>
             </CardContent>
           </CardActionArea>
         </Card>
