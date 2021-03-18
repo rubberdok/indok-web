@@ -10,7 +10,7 @@ from ..types import AnswerType, OptionType, QuestionType
 
 class QuestionInput(graphene.InputObjectType):
     survey_id = graphene.ID()
-    question_type = graphene.Int()
+    question_type = graphene.String()
     question = graphene.String(required=False)
     description = graphene.String(required=False)
     position = graphene.Int()
