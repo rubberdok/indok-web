@@ -117,8 +117,8 @@ const Footer: React.FC = () => {
                   <a href="https://github.com/hovedstyret/indok-web" rel="norefferer noopener">
                     RubberDøk
                   </a>
-                  , Hovedstyrets Webkomité. Kopirett © 2020 Foreningen for studentene ved Indøk. Alle rettigheter
-                  reservert
+                  , Hovedstyrets Webkomité. Kopirett © {new Date().getFullYear()} Foreningen for studentene ved Indøk.
+                  Alle rettigheter reservert
                 </Typography>
               </Box>
               <Button color="inherit" onClick={() => setOpen(!open)}>
