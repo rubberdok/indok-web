@@ -113,7 +113,7 @@ const ListFeaturedDocuments: React.FC = () => {
             </GridListTile>
           ))
         ) : (
-          <Container style={{flex:1}}>
+          <Container style={{ flex: 1 }}>
             <Typography> Kunne ikke laste inn dokumenter </Typography>
           </Container>
         )}

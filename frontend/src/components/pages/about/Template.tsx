@@ -89,7 +89,7 @@ const Template: React.FC<Props> = ({ children, img, title, description, page }) 
               {children}
             </Grid>
             <Grid item xs={4}>
-              <Sidebar active={page} />
+              <Sidebar />
             </Grid>
           </Grid>
         </Box>

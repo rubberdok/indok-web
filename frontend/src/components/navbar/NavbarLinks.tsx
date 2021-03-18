@@ -23,8 +23,18 @@ const links = [
     dropdown: [
       {
         id: 2_1,
+        title: "Om oss",
+        href: "/about",
+      },
+      {
+        id: 2_2,
         title: "Organisasjoner",
-        href: "/about/organizations",
+        href: "/about/organization",
+      },
+      {
+        id: 2_3,
+        title: "Hovedstyret",
+        href: "/about/board",
       },
     ],
   },

@@ -1,6 +1,6 @@
 ---
 title: Indøk Business Club
-description: Mer tekst
+description: Indøks helt egne case-klubb
 logo: /img/IBClogo.png
 image: /img/IBCmote.jpeg
 styre:

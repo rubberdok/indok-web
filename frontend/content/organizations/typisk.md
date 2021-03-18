@@ -1,6 +1,6 @@
 ---
 title: Typisk Indøk
-description: Mer tekst
+description: Podcasten som umenneskeliggjør Indøkere
 logo: /img/typisk.jpg
 image: /img/hero.jpg
 styre:
