@@ -23,20 +23,20 @@ import React from "react";
 const useStyles = makeStyles((theme) => ({
   footer: {
     color: "#b0aca5",
-    background: "#fff",
+    background: "#022a2a",
     paddingBottom: theme.spacing(6),
     paddingTop: theme.spacing(6),
     position: "relative",
     zIndex: 0,
   },
   credits: {
-    background: "#022a2a",
+    background: "#021c1c",
     position: "relative",
     display: "flex",
     height: 88,
     paddingTop: theme.spacing(4),
     paddingBottom: theme.spacing(4),
-    color: "#fff",
+    color: "#b0aca5",
   },
   table: {
     minWidth: 800,
@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.grey[500],
   },
   title: {
-    color: "#022a2a",
+    color: "#fff",
 
     "&:hover": {
       cursor: "pointer",
@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundSize: 500,
     backgroundPosition: "right center",
     backgroundRepeat: "no-repeat",
-    opacity: 0.05,
+    opacity: 0.25,
   },
   rdLogo: {
     height: "100%",
@@ -93,11 +93,13 @@ const Footer: React.FC = () => {
                     INDØK
                   </Typography>
                 </Link>
-                <Typography variant="body2">
+                <Typography variant="caption">
                   Foreningen for studentene ved Industriell Økonomi og Teknologiledelse, NTNU
                 </Typography>
-                <Typography variant="body2">Kolbjørn Hejes vei 1E, 7034 Trondheim</Typography>
-                <Typography variant="body2">Org.nr. 994 778 463</Typography>
+                <br />
+                <Typography variant="caption">Kolbjørn Hejes vei 1E, 7034 Trondheim</Typography>
+                <br />
+                <Typography variant="caption">Org.nr. 994 778 463</Typography>
               </Grid>
               <Grid item xs={6}>
                 <Box className={classes.nth} position="absolute" width="600px" height="100%" top={0} zIndex={-1}></Box>
