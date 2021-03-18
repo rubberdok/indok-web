@@ -1,6 +1,6 @@
 ---
 title: Janus HK
-description: Mer tekst
+description: Indøks håndballag
 logo: /img/FK_logo.jpg
 image: /img/janushklogo.jpg
 styre:
@@ -9,7 +9,7 @@ styre:
     mail: tlf. 916 49 220
     tittel: Leder
   cto:
-    navn: Emile Bakke-Jakobsen
+    navn: Emilie Bakke-Jakobsen
     mail: tlf. 414 99 925
     tittel: Økonomiansvarlig
 tag: idrett

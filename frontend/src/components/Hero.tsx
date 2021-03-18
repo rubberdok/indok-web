@@ -33,13 +33,13 @@ const organizations = [
   {
     id: 5,
     title: "Indøk Kultur",
-    link: "/about/organizations/culture",
+    link: "/about/organization?category=kultur#orgList",
     img: "img/indok-kultur.jpg",
   },
   {
     id: 6,
     title: "Janus IF",
-    link: "/about/organizations/sports",
+    link: "/about/organization?category=idrett#orgList",
     img: "img/janus-if.jpg",
   },
 ];

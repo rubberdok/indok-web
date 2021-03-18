@@ -2,6 +2,7 @@ import { Button } from "@material-ui/core";
 import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React from "react";
 
 const useStyles = makeStyles((theme) => ({
@@ -25,32 +26,30 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Sidebar = (props: { active: string }) => {
+const Sidebar = () => {
   const classes = useStyles();
+  const router = useRouter();
 
   return (
     <Box component="ul" className={classes.root}>
-      {/* <li>
-        <Typography variant="h6">Om oss</Typography>
-      </li> */}
       <li>
-        <Link href="/about">
+        <Link href="/about" passHref>
           <Button
             component="a"
             variant="outlined"
-            className={props.active == "" ? "MuiButton-outlinedPrimary" : ""}
+            className={router.pathname == "/about" ? "MuiButton-outlinedPrimary" : ""}
             fullWidth
           >
-            Introduksjon
+            Om oss
           </Button>
         </Link>
       </li>
       <li>
-        <Link href="/about/organisasjonskart">
+        <Link href="/about/organization" passHref>
           <Button
             component="a"
             variant="outlined"
-            className={props.active == "organisasjonskart" ? "MuiButton-outlinedPrimary" : ""}
+            className={router.pathname == "/about/organization" ? "MuiButton-outlinedPrimary" : ""}
             fullWidth
           >
             Organisasjonskart
@@ -58,11 +57,11 @@ const Sidebar = (props: { active: string }) => {
         </Link>
       </li>
       <li>
-        <Link href="/about/hovedstyret">
+        <Link href="/about/board" passHref>
           <Button
             component="a"
             variant="outlined"
-            className={props.active == "hovedstyret" ? "MuiButton-outlinedPrimary" : ""}
+            className={router.pathname == "/about/board" ? "MuiButton-outlinedPrimary" : ""}
             fullWidth
           >
             Hovedstyret

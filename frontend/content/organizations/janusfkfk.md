@@ -1,6 +1,6 @@
 ---
 title: Janus FKFK
-description: Mer tekst
+description: Indøks fotballag for kvinner
 logo: /img/fkfklogo.png
 image: /img/fkfkbilde.png
 styre:
