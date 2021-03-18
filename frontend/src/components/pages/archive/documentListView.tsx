@@ -32,26 +32,28 @@ const DocumentListView: React.FC = () => {
           Arkiv
         </Typography>
       </div>
-      <ContentWrapper style={{ justifyContent: "space-evenly", paddingBottom: "8px" }}>
-        <FilterButton
-          typeFilters={typeFilters}
-          updateTypeFilters={(key) => {
-            [
-              setTypeFilters({
-                ...typeFilters,
-                [key]: { active: !typeFilters[key].active, title: typeFilters[key].title },
-              }),
-              setViewFeatured(false),
-            ];
-          }}
-        />
-        <ContentWrapper style={{ flex: 1 }}>
-          <YearSelector
-            yearFilter={yearFilter}
-            handleYearFilterChanged={(year: string) => {
-              [setYearFilter(year), setViewFeatured(false)];
+      <ContentWrapper style={{ justifyContent: "center" }}>
+        <ContentWrapper style={{ paddingBottom: "8px" }}>
+          <FilterButton
+            typeFilters={typeFilters}
+            updateTypeFilters={(key) => {
+              [
+                setTypeFilters({
+                  ...typeFilters,
+                  [key]: { active: !typeFilters[key].active, title: typeFilters[key].title },
+                }),
+                setViewFeatured(false),
+              ];
             }}
           />
+          <ContentWrapper style={{ flex: 1 }}>
+            <YearSelector
+              yearFilter={yearFilter}
+              handleYearFilterChanged={(year: string) => {
+                [setYearFilter(year), setViewFeatured(false)];
+              }}
+            />
+          </ContentWrapper>
         </ContentWrapper>
       </ContentWrapper>
       <ContentWrapper style={{ justifyContent: "flex-end", marginTop: "16px", marginBottom: "5%" }}>
