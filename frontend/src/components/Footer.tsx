@@ -14,10 +14,9 @@ import {
   TableCell,
   TableContainer,
   TableRow,
-  Tooltip,
   Typography,
 } from "@material-ui/core";
-import { Close, Facebook, GitHub, Star, StarHalf } from "@material-ui/icons";
+import { Close, Facebook, GitHub } from "@material-ui/icons";
 import Link from "next/link";
 import React from "react";
 
@@ -179,7 +178,7 @@ const Footer: React.FC = () => {
                   <TableCell>
                     Morgan Heggland &apos;22
                     <br />
-                    <Typography variant="caption">Prosjektleder</Typography>
+                    <Typography variant="caption">Big Boss Morgan</Typography>
                   </TableCell>
                   <TableCell>
                     Lars Lien Ankile &apos;22
@@ -211,7 +210,7 @@ const Footer: React.FC = () => {
                   <TableCell>
                     Patrik Kjærran &apos;22
                     <br />
-                    <Typography variant="caption">Events</Typography>
+                    <Typography variant="caption">Event</Typography>
                   </TableCell>
                   <TableCell>
                     Anna Sofie Lunde &apos;22
@@ -223,17 +222,17 @@ const Footer: React.FC = () => {
                   <TableCell>
                     Hermann Mørkrid &apos;23
                     <br />
-                    <Typography variant="caption">Vervsøking</Typography>
+                    <Typography variant="caption">Verv-søking</Typography>
                   </TableCell>
                   <TableCell>
                     Mathias Raa &apos;25
                     <br />
-                    <Typography variant="caption">Chief of design</Typography>
+                    <Typography variant="caption">Chief of Design</Typography>
                   </TableCell>
                   <TableCell>
                     Mathilde Marie Solberg &apos;23
                     <br />
-                    <Typography variant="caption">Events</Typography>
+                    <Typography variant="caption">Event</Typography>
                   </TableCell>
                   <TableCell>
                     Sverre Spetalen &apos;21
@@ -245,7 +244,7 @@ const Footer: React.FC = () => {
                   <TableCell>
                     Lars Waage &apos;23
                     <br />
-                    <Typography variant="caption">Vervsøking</Typography>
+                    <Typography variant="caption">Verv-søking</Typography>
                   </TableCell>
                 </TableRow>
               </TableBody>
