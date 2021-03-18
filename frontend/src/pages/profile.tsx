@@ -122,7 +122,7 @@ const ProfilePage: NextPage = () => {
                   <Grid item xs={12}>
                     <Card>
                       <CardContent>
-                        <Typography gutterBottom="true" variant="h4">
+                        <Typography gutterBottom variant="h4">
                           Mine organisasjoner
                         </Typography>
                         <Typography>{`Her kommer en liste over alle organisasjoner ${data.user.firstName} er medlem av`}</Typography>
@@ -137,7 +137,7 @@ const ProfilePage: NextPage = () => {
                   <Grid item xs={12}>
                     <Card>
                       <CardContent>
-                        <Typography gutterBottom="true" variant="h4">
+                        <Typography gutterBottom variant="h4">
                           Mine arrangementer
                         </Typography>
                         <Typography>{`Her kommer en liste over alle arrangementer ${data.user.firstName} har meldt seg på`}</Typography>
@@ -152,7 +152,7 @@ const ProfilePage: NextPage = () => {
                   <Grid item xs={12}>
                     <Card>
                       <CardContent>
-                        <Typography gutterBottom="true" variant="h4">
+                        <Typography gutterBottom variant="h4">
                           Mine vervsøknader
                         </Typography>
                         <Typography>{`Her kommer en liste over verv ${data.user.firstName} har søkt på`}</Typography>
