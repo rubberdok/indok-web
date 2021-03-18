@@ -116,7 +116,7 @@ const AllEvents: React.FC = () => {
               passHref
             >
               <Button color="primary" disableRipple startIcon={<List />}>
-                <Typography variant="body1">Administrer</Typography>
+                <Typography variant="body1">Mine arrangementer</Typography>
               </Button>
             </Link>
           </Container>

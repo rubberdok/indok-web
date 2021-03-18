@@ -22,7 +22,7 @@ const CategoryFilter: React.FC<Props> = ({ filters, onFiltersChange, classes }) 
   return (
     <>
       <ListItem button onClick={() => setOpen(!open)} selected={open}>
-        <ListItemText primary={"Kategorier"} />
+        <ListItemText primary={"Type arrangement"} />
         <Badge className={classes.badge} badgeContent={1} color="primary" invisible={!filters.category} />
 
         {open ? <ExpandLess /> : <ExpandMore />}
