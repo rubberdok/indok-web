@@ -58,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
 const AllEvents: React.FC = () => {
   const classes = useStyles();
   const [filters, setFilters] = useState({});
-  const [showDefaultEvents, setShowDefaultEvents] = useState(true);
+  const [showDefaultEvents, setShowDefaultEvents] = useState(false);
   const [showCalendarView, setShowCalenderView] = useState(false);
   const { loading: userLoading, data: userData } = useQuery<{ user: User }>(GET_USER);
 
