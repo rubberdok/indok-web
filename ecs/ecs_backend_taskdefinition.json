@@ -56,6 +56,6 @@
   ],
   "family": "indokweb-backend-td",
   "executionRoleArn": "arn:aws:iam::777854691961:role/ecsTaskExecutionRole",
-  "memory": 1024,
-  "cpu": 256
+  "memory": "1024",
+  "cpu": "256"
 }
