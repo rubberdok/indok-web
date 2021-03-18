@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client/react";
-import { GET_USER } from "@graphql/auth/queries";
+import { GET_USER } from "@graphql/users/queries";
 import { ContactInfo, InputFieldsEvent, Validations } from "@interfaces/cabins";
 import { User } from "@interfaces/users";
 import { Grid } from "@material-ui/core";

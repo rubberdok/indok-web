@@ -2,13 +2,12 @@ import Navbar from "@components/navbar/Navbar";
 import { Typography, makeStyles, Box, Grid, Button, Paper, Divider, Theme } from "@material-ui/core";
 import { NextPage } from "next";
 import Link from "next/link";
-import NavigateNextIcon from "@material-ui/icons/NavigateNext";
-import WifiIcon from "@material-ui/icons/Wifi";
 import FireplaceIcon from "@material-ui/icons/Fireplace";
 import PowerIcon from "@material-ui/icons/Power";
 import SpeakerIcon from "@material-ui/icons/Speaker";
 import HotelIcon from "@material-ui/icons/Hotel";
 import RestaurantIcon from "@material-ui/icons/Restaurant";
+import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import { DirectionsBus, DirectionsCar, DirectionsTransit, LocalTaxi } from "@material-ui/icons";
 import React from "react";
 import ImageSlider from "@components/pages/cabins/ImageSlider/ImageSlider";
@@ -91,11 +90,11 @@ const CreateBookingPage: NextPage = () => {
           </Box>
         </Grid>
         <Grid xs={12} sm={6} item container justify="center">
-          {/*<Link href="/cabins/book" passHref>
+          <Link href="/cabins/book" passHref>
             <Button variant="contained" endIcon={<NavigateNextIcon />}>
               Book nå
             </Button>
-          </Link> */}
+          </Link>
         </Grid>
       </Grid>
       <Box m={5}>
