@@ -2,17 +2,17 @@ export const outsideImages = [
   {
     label: "",
     description: "",
-    imgPath: "/static/cabins/ute1.jpg",
+    imgPath: "/static/cabins_images/ute1.jpg",
   },
   {
     label: "",
     description: "",
-    imgPath: "/static/cabins/ute2.jpg",
+    imgPath: "/static/cabins_images/ute2.jpg",
   },
   {
     label: "",
     description: "",
-    imgPath: "/static/cabins/ute6.jpg",
+    imgPath: "/static/cabins_images/ute6.jpg",
   },
 ];
 
@@ -20,71 +20,71 @@ export const cabinImages = [
   {
     label: "Stue",
     description: "",
-    imgPath: "/static/cabins/stue1.jpg",
+    imgPath: "/static/cabins_images/stue1.jpg",
   },
   {
     label: "Kjøkken",
     description: "",
-    imgPath: "/static/cabins/spis1.jpg",
+    imgPath: "/static/cabins_images/spis1.jpg",
   },
   {
     label: "Kjøkken",
     description: "",
-    imgPath: "/static/cabins/spis3.jpg",
+    imgPath: "/static/cabins_images/spis3.jpg",
   },
   {
     label: "Gang",
     description: "",
-    imgPath: "/static/cabins/gang1.jpg",
+    imgPath: "/static/cabins_images/gang1.jpg",
   },
   {
     label: "Bad",
     description: "",
-    imgPath: "/static/cabins/bad1.jpg",
+    imgPath: "/static/cabins_images/bad1.jpg",
   },
   {
     label: "Bad",
     description: "",
-    imgPath: "/static/cabins/bad2.jpg",
+    imgPath: "/static/cabins_images/bad2.jpg",
   },
   {
     label: "Badstue",
     description: "",
-    imgPath: "/static/cabins/badstue1.jpg",
+    imgPath: "/static/cabins_images/badstue1.jpg",
   },
   {
     label: "Soverom 1",
     description: "",
-    imgPath: "/static/cabins/sov1.jpg",
+    imgPath: "/static/cabins_images/sov1.jpg",
   },
   {
     label: "Soverom 2",
     description: "",
-    imgPath: "/static/cabins/sov2.jpg",
+    imgPath: "/static/cabins_images/sov2.jpg",
   },
   {
     label: "Soverom 3",
     description: "",
-    imgPath: "/static/cabins/sov3.jpg",
+    imgPath: "/static/cabins_images/sov3.jpg",
   },
   {
     label: "Soverom 4",
     description: "",
-    imgPath: "/static/cabins/sov4.jpg",
+    imgPath: "/static/cabins_images/sov4.jpg",
   },
   {
     label: "Utenfor",
     description: "",
-    imgPath: "/static/cabins/utenfor1.jpg",
+    imgPath: "/static/cabins_images/utenfor1.jpg",
   },
   {
     label: "Utenfor",
     description: "",
-    imgPath: "/static/cabins/utenfor2.jpg",
+    imgPath: "/static/cabins_images/utenfor2.jpg",
   },
   {
     label: "Utsikt",
     description: "",
-    imgPath: "/static/cabins/utsikt1.jpg",
+    imgPath: "/static/cabins_images/utsikt1.jpg",
   },
 ];
