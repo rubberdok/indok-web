@@ -64,20 +64,25 @@ const ListingPage: NextPage = () => {
               <Grid container className={classes.root} spacing={2}>
                 {data.listing.organization && (
                   <>
+                  
                     <Hidden smDown>
                       <Grid item md={4}>
                         <OrganizationInfoPanel organization={data.listing.organization} />
                       </Grid>
                     </Hidden>
+
                     <Hidden mdUp>
                       <Grid item sm={12}>
                         <InlineOrganizationInfoPanel organization={data.listing.organization} />
                       </Grid>
                     </Hidden>
+
                   </>
                 )}
                 <Grid container item direction="column" sm={12} md={8}>
+
                   <ListingBody listing={data.listing} />
+
                   {data.listing?.survey && (
                     <>
                       <Button variant="contained" color="primary" onClick={() => displaySurvey(!surveyDisplayed)}>
@@ -86,6 +91,7 @@ const ListingPage: NextPage = () => {
                       {surveyDisplayed && <AnswerSurvey surveyId={data.listing.survey.id} />}
                     </>
                   )}
+
                 </Grid>
               </Grid>
             </Container>
