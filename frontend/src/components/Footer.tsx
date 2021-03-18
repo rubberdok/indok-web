@@ -200,7 +200,7 @@ const Footer: React.FC = () => {
                   <TableCell>
                     Fredrik Ahlborg &apos;22
                     <br />
-                    <Typography variant="caption">Content creator</Typography>
+                    <Typography variant="caption">Content Creator</Typography>
                   </TableCell>
                   <TableCell>
                     Herman Holmøy &apos;25
