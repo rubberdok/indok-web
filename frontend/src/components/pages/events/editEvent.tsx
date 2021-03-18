@@ -26,6 +26,8 @@ import {
 import { Check, Close, Warning } from "@material-ui/icons";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
+import dayjs from "dayjs";
+import nb from "dayjs/locale/nb";
 
 interface EditEventProps {
   open: boolean;
@@ -80,16 +82,16 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event, user }) => 
     });
     initialEventData.categoryId = event.category ? event.category.id : "";
 
-    initialEventData.startTime = new Date(event.startTime).toJSON().slice(0, -1);
+    initialEventData.startTime = dayjs(event.startTime).locale(nb);
 
     if (event.signupOpenDate) {
-      initialEventData.signupOpenDate = new Date(event.signupOpenDate).toJSON().slice(0, -1);
+      initialEventData.signupOpenDate = dayjs(event.signupOpenDate).locale(nb);
     }
     if (event.deadline) {
-      initialEventData.deadline = new Date(event.deadline).toJSON().slice(0, -1);
+      initialEventData.deadline = dayjs(event.deadline).locale(nb);
     }
     if (event.endTime) {
-      initialEventData.endTime = new Date(event.endTime).toJSON().slice(0, -1);
+      initialEventData.endTime = dayjs(event.endTime).locale(nb);
     }
     setEventData(initialEventData);
   }, []);

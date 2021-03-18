@@ -17,6 +17,8 @@ import { GET_EVENT } from "../../../graphql/events/queries";
 import CountdownButton from "./CountdownButton";
 import { ArrowRight, ContactMail, Edit, ErrorOutline, Warning } from "@material-ui/icons";
 import EditEvent from "./editEvent";
+import dayjs from "dayjs";
+import nb from "dayjs/locale/nb";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -244,10 +246,10 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
               Starter
             </Typography>
             <Typography gutterBottom>
-              <EventIcon fontSize="small" /> {parseDate(eventData.event.startTime).split(" ")[0]}
+              <EventIcon fontSize="small" /> {dayjs(eventData.event.startTime).locale(nb).format("DD.MMM YYYY")}
             </Typography>
             <Typography gutterBottom>
-              <ScheduleIcon fontSize="small" /> kl. {parseDate(eventData.event.startTime).split(" ")[1].slice(0, 5)}
+              <ScheduleIcon fontSize="small" /> kl. {dayjs(eventData.event.startTime).locale(nb).format("HH:mm")}
             </Typography>
           </Box>
 
@@ -257,10 +259,10 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
                 Slutter
               </Typography>
               <Typography gutterBottom>
-                <EventIcon fontSize="small" /> {parseDate(eventData.event.endTime).split(" ")[0]}
+                <EventIcon fontSize="small" /> {dayjs(eventData.event.endTime).locale(nb).format("DD.MMM YYYY")}
               </Typography>
               <Typography gutterBottom>
-                <ScheduleIcon fontSize="small" /> kl. {parseDate(eventData.event.endTime).split(" ")[1].slice(0, 5)}
+                <ScheduleIcon fontSize="small" /> kl. {dayjs(eventData.event.endTime).locale(nb).format("HH:mm")}
               </Typography>
             </Box>
           )}
