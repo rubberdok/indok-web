@@ -16,10 +16,8 @@ import {
   TableRow,
   Tooltip,
   Typography,
-  Link as MuiLink,
 } from "@material-ui/core";
-import { Facebook, GitHub, Star, StarHalf } from "@material-ui/icons";
-import CloseIcon from "@material-ui/icons/Close";
+import { Close, Facebook, GitHub, Star, StarHalf } from "@material-ui/icons";
 import Link from "next/link";
 import React from "react";
 
@@ -36,9 +34,9 @@ const useStyles = makeStyles((theme) => ({
     background: "#021c1c",
     position: "relative",
     display: "flex",
-    height: 88,
-    paddingTop: theme.spacing(4),
-    paddingBottom: theme.spacing(4),
+    height: 112,
+    paddingTop: theme.spacing(5),
+    paddingBottom: theme.spacing(5),
     color: "#b0aca5",
   },
   table: {
@@ -105,19 +103,22 @@ const Footer: React.FC = () => {
                 <Typography variant="caption">Org.nr. 994 778 463</Typography>
                 <br />
                 <a href="mailto:Leder@indokhs.no">
-                  <Typography variant="caption">Leder@indokhs.no</Typography>
+                  <Typography variant="caption" gutterBottom>
+                    Leder@indokhs.no
+                  </Typography>
                 </a>
-                <br />
-                <MuiLink
-                  href="https://www.facebook.com/HovedstyretIndok"
-                  color="inherit"
-                  style={{ paddingRight: "1%" }}
-                >
-                  <Facebook />
-                </MuiLink>
-                <MuiLink href="https://github.com/hovedstyret/indok-web" color="inherit">
-                  <GitHub />
-                </MuiLink>
+                <Box mt={2}>
+                  <a href="https://www.facebook.com/HovedstyretIndok" rel="noreferrer noopener" target="_blank">
+                    <IconButton edge="start" size="small" aria-label="facebook" color="inherit">
+                      <Facebook />
+                    </IconButton>
+                  </a>
+                  <a href="https://github.com/hovedstyret/indok-web" rel="noreferrer noopener" target="_blank">
+                    <IconButton size="small" aria-label="github" color="inherit">
+                      <GitHub />
+                    </IconButton>
+                  </a>
+                </Box>
               </Grid>
               <Grid item xs={6}>
                 <Box className={classes.nth} position="absolute" width="600px" height="100%" top={0} zIndex={-1}></Box>
@@ -167,7 +168,7 @@ const Footer: React.FC = () => {
           </Typography>
           <Typography variant="body1">Progget med blod, svette, tårer og kjærlighet av</Typography>
           <IconButton className={classes.closeButton} aria-label="close" onClick={() => setOpen(!open)}>
-            <CloseIcon />
+            <Close />
           </IconButton>
         </DialogTitle>
         <DialogContent>
