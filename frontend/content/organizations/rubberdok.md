@@ -1,8 +1,8 @@
 ---
 title: Rubberdøk Webkomité
 description: Webkomitéen til Hovedstyret på Indøk
-logo: /img/rubberdoklogo1.png
-image: /img/hero.jpg
+logo: /img/rubberdok_black.svg
+image: /img/rubberdoklogo1.png
 alt: Logoen til rubberdøk
 styre:
   ceo:
