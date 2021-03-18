@@ -119,7 +119,6 @@ const EditSurvey: React.FC<{ surveyId: string }> = ({ surveyId }) => {
                           question: activeQuestion.question,
                           description: activeQuestion.description,
                           questionType: activeQuestion.questionType,
-                          // TODO: update to reflect new position of questionId in OptionInput
                           options: activeQuestion.options.map((option) => ({
                             answer: option.answer,
                             ...(option.id ? { id: option.id } : {}),
@@ -139,7 +138,6 @@ const EditSurvey: React.FC<{ surveyId: string }> = ({ surveyId }) => {
                   variables: {
                     question: "",
                     description: "",
-                    // TODO: implement automatic position generation in backend
                     surveyId: data.survey.id,
                     // TODO: remove when backend fixes default handling
                     questionType: "Paragraph",

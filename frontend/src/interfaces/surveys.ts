@@ -37,7 +37,6 @@ export interface QuestionVariables {
   questionType: string;
   options: {
     answer: string;
-    questionId?: string;
     id?: string;
   }[];
 }

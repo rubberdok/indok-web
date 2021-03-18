@@ -27,19 +27,9 @@ export const UPDATE_SURVEY = gql`
 `;
 
 export const CREATE_QUESTION = gql`
-  mutation CreateQuestion(
-    $question: String!
-    $description: String!
-    $surveyId: ID!
-    $questionType: String
-  ) {
+  mutation CreateQuestion($surveyId: ID!, $question: String!, $description: String, $questionType: QuestionTypeEnum) {
     createQuestion(
-      questionData: {
-        question: $question
-        description: $description
-        surveyId: $surveyId
-        questionType: $questionType
-      }
+      questionData: { question: $question, description: $description, surveyId: $surveyId, questionType: $questionType }
     ) {
       question {
         id
@@ -64,10 +54,10 @@ export const DELETE_QUESTION = gql`
 export const UPDATE_QUESTION = gql`
   mutation updateQuestion(
     $id: ID!
-    $question: String!
-    $description: String!
-    $options: [OptionInput]!
-    $questionType: String
+    $question: String
+    $description: String
+    $questionType: QuestionTypeEnum
+    $options: [OptionInput]
   ) {
     updateQuestion(
       id: $id
@@ -115,8 +105,8 @@ export const UPDATE_ANSWER = gql`
 `;
 
 export const SUBMIT_ANSWERS = gql`
-  mutation submitAnswers($answersData: [AnswerInput]) {
-    submitAnswers(answersData: $answersData) {
+  mutation submitAnswers($surveyId: ID!, $answersData: [AnswerInput]) {
+    submitAnswers(surveyId: $surveyId, answersData: $answersData) {
       ok
     }
   }
