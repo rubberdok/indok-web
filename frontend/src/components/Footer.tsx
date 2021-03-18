@@ -14,8 +14,11 @@ import {
   TableCell,
   TableContainer,
   TableRow,
+  Tooltip,
   Typography,
+  Link as MuiLink,
 } from "@material-ui/core";
+import { Facebook, GitHub, Star, StarHalf } from "@material-ui/icons";
 import CloseIcon from "@material-ui/icons/Close";
 import Link from "next/link";
 import React from "react";
@@ -94,12 +97,27 @@ const Footer: React.FC = () => {
                   </Typography>
                 </Link>
                 <Typography variant="caption">
-                  Foreningen for studentene ved Industriell Økonomi og Teknologiledelse, NTNU
+                  Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse, NTNU
                 </Typography>
                 <br />
                 <Typography variant="caption">Kolbjørn Hejes vei 1E, 7034 Trondheim</Typography>
                 <br />
                 <Typography variant="caption">Org.nr. 994 778 463</Typography>
+                <br />
+                <a href="mailto:Leder@indokhs.no">
+                  <Typography variant="caption">Leder@indokhs.no</Typography>
+                </a>
+                <br />
+                <MuiLink
+                  href="https://www.facebook.com/HovedstyretIndok"
+                  color="inherit"
+                  style={{ paddingRight: "1%" }}
+                >
+                  <Facebook />
+                </MuiLink>
+                <MuiLink href="https://github.com/hovedstyret/indok-web" color="inherit">
+                  <GitHub />
+                </MuiLink>
               </Grid>
               <Grid item xs={6}>
                 <Box className={classes.nth} position="absolute" width="600px" height="100%" top={0} zIndex={-1}></Box>
@@ -110,18 +128,26 @@ const Footer: React.FC = () => {
         <Box className={classes.credits}>
           <Container>
             <Box height="100%" display="flex" alignItems="center">
-              <img className={classes.rdLogo} src="/rd-logo.svg" alt="Rubberdøk logo" />
+              <a href="https://github.com/hovedstyret/indok-web" rel="noreferrer noopener" style={{ height: "100%" }}>
+                <img className={classes.rdLogo} src="/rd-logo.svg" alt="Rubberdøk logo" />
+              </a>
               <Box flexGrow="1">
+                <Typography variant="caption">
+                  Forslag til nettsiden eller oppdaget en feil? Lag en issue på{" "}
+                  <a href="https://github.com/hovedstyret/indok-web/issues">GitHub</a>, eller send mail til{" "}
+                  <a href="mailto:web@indokhs.no">web@indokhs.no</a>.
+                </Typography>
+                <br />
                 <Typography variant="caption">
                   Utviklet av{" "}
                   <a href="https://github.com/hovedstyret/indok-web" rel="norefferer noopener">
                     RubberDøk
                   </a>
-                  , Hovedstyrets Webkomité. Kopirett © {new Date().getFullYear()} Foreningen for studentene ved Indøk.
-                  Alle rettigheter reservert
+                  , Hovedstyrets Webkomité. Kopirett © {new Date().getFullYear()} Foreningen for Studentene ved Indøk.
+                  Alle rettigheter reservert.
                 </Typography>
               </Box>
-              <Button color="inherit" onClick={() => setOpen(!open)}>
+              <Button color="inherit" disableRipple onClick={() => setOpen(!open)}>
                 Hall of Fame
               </Button>
             </Box>
@@ -139,7 +165,7 @@ const Footer: React.FC = () => {
           <Typography gutterBottom variant="h4">
             Hall of Fame 2020/2021
           </Typography>
-          <Typography variant="body1">Laget med blod, svette, tårer og kjærlighet av</Typography>
+          <Typography variant="body1">Progget med blod, svette, tårer og kjærlighet av</Typography>
           <IconButton className={classes.closeButton} aria-label="close" onClick={() => setOpen(!open)}>
             <CloseIcon />
           </IconButton>
@@ -150,19 +176,28 @@ const Footer: React.FC = () => {
               <TableBody>
                 <TableRow>
                   <TableCell>
-                    <p>Morgan Heggland &apos;22</p> <p>(prosjektleder)</p>
+                    Morgan Heggland &apos;22
+                    <Tooltip title="Prosjektleder">
+                      <Star />
+                    </Tooltip>
                   </TableCell>
                   <TableCell>
-                    <p>Lars Lien Ankile &apos;22</p> <p>(Lederpar Hovedstyret)</p>
+                    Lars Lien Ankile &apos;22
+                    <Tooltip title="Lederpar Hovedstyret">
+                      <StarHalf />
+                    </Tooltip>
                   </TableCell>
                   <TableCell>
-                    <p>Andreas Johannesen &apos;22</p> <p>(Lederpar Hovedstyret)</p>
+                    Andreas Johannesen &apos;22
+                    <Tooltip title="Lederpar Hovedstyret">
+                      <StarHalf />
+                    </Tooltip>
                   </TableCell>
                   <TableCell>Ingrid Aaseng &apos;22</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell>Herman Holmøy &apos;25</TableCell>
                   <TableCell>Fredrik Ahlborg &apos;22</TableCell>
+                  <TableCell>Herman Holmøy &apos;25</TableCell>
                   <TableCell>Patrik Kjærran &apos;22</TableCell>
                   <TableCell>Anna Sofie Lunde &apos;22</TableCell>
                 </TableRow>
