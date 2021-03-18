@@ -138,7 +138,7 @@ const ProfilePage: NextPage = () => {
                       </CardContent>
                       <CardActions>
                         <Link href="/events" passHref>
-                          <Button>Gå til arrangmenter</Button>
+                          <Button>Gå til arrangementer</Button>
                         </Link>
                       </CardActions>
                     </Card>
