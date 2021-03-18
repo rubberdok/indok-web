@@ -27,7 +27,7 @@ const CalendarTable: React.FC<Props> = ({ getRows, month }) => {
       <Box component="table" className={classes.table}>
         <Grid container component="thead">
           <Grid item container xs component="tr">
-            {DAYS_IN_WEEK.map((dow) => (
+            {DAYS_IN_WEEK.map((dow: string) => (
               <Grid item xs component="th" key={dow} className={classes.weekday}>
                 {dow}
               </Grid>

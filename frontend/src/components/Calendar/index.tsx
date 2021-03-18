@@ -42,7 +42,7 @@ const Calendar: React.FC<CalendarProps> = ({
 
       for (let i = 0; i < dayDifference; i++) {
         const date = firstOfMonth.subtract(dayDifference - i, "day");
-        previousDays.push(<DayCell key={`prev-${date.format(DATE_FORMAT)}`} isHidden></DayCell>);
+        previousDays.push(<DayCell key={`prev-${date.format(DATE_FORMAT)}`} isHidden />);
       }
     }
     return previousDays;
@@ -54,6 +54,7 @@ const Calendar: React.FC<CalendarProps> = ({
       const date = dayjs(month).set("date", i);
       daysOfMonth.push(
         <DayCell
+          value={i}
           isSelected={selectedDay ? date.isSame(selectedDay, "day") : false}
           onClick={() => {
             if (handleDateClicked) {
@@ -67,15 +68,8 @@ const Calendar: React.FC<CalendarProps> = ({
             (disableAfterDate ? date.isAfter(disableAfterDate) : false) ||
             disabledDates?.includes(date.format(DATE_FORMAT))
           }
-          clickable={handleDateClicked === undefined}
           key={date.format(DATE_FORMAT)}
-        >
-          <Grid container justify="center" alignItems="center" style={{ height: "100%" }}>
-            <Grid item>
-              <Typography>{i}</Typography>
-            </Grid>
-          </Grid>
-        </DayCell>
+        />
       );
     }
     return daysOfMonth;
@@ -93,7 +87,7 @@ const Calendar: React.FC<CalendarProps> = ({
 
       for (let i = 0; i < dayDifference; i++) {
         const date = dayjs(endOfMonth).add(i + 1, "day");
-        nextDays.push(<DayCell key={`next-${date.format(DATE_FORMAT)}`} isHidden></DayCell>);
+        nextDays.push(<DayCell key={`next-${date.format(DATE_FORMAT)}`} isHidden />);
       }
     }
     return nextDays;

@@ -44,7 +44,11 @@ const CheckInOut: NextPage<Props> = ({ allCabins, chosenCabins, setChosenCabins,
         </Grid>
       </Grid>
       <Grid item xs={10}>
-        <Calendar title="Velg innsjekk og utsjekk" />
+        <Calendar
+          title="Velg innsjekk og utsjekk"
+          disabledDates={disabledDates}
+          disableAll={chosenCabins.length === 0}
+        />
       </Grid>
     </Grid>
   );
