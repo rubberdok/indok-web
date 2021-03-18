@@ -143,7 +143,6 @@ const EditQuestion: React.FC<{
                 id: question.id,
                 question: question.question,
                 description: question.description,
-                position: question.position,
                 questionType: question.questionType,
                 options: question.options.map((option) => ({
                   answer: option.answer,

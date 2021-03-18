@@ -47,7 +47,6 @@ class Question(models.Model):
     question = models.CharField(max_length=300)
     description = models.CharField(max_length=1000, blank=True, default="")
     question_type = models.CharField(max_length=20, choices=QUESTION_TYPE_CHOICES, default=PARAGRAPH)
-    position = models.IntegerField()
     mandatory = models.BooleanField(default=True)
 
 
@@ -55,10 +54,7 @@ class Question(models.Model):
         return f"{self.survey}: {self.question}"
 
     class Meta:
-        ordering = ["position"]
-        constraints = [
-            UniqueConstraint(fields=["position", "survey"], name="unique question position per survey"),
-        ]
+        ordering = ["question"]
 
 class Option(models.Model):
     answer = models.CharField(max_length=500)

@@ -7,28 +7,40 @@ from graphql_jwt.decorators import login_required
 from ..types import AnswerType, OptionType, QuestionType
 
 
-class QuestionInput(graphene.InputObjectType):
+
+class QuestionTypeEnum(graphene.Enum):
+    PARAGRAPH = "Paragraph"
+    SHORT_ANSWER = "Short answer"
+    CHECKBOXES = "Checkboxes"
+    MULTIPLE_CHOICE = "Multiple choice"
+    FILE_UPLOAD = "File upload"
+    SLIDER = "Slider"
+
+class BaseQuestionInput(graphene.InputObjectType):
     survey_id = graphene.ID()
-    question_type = graphene.String()
-    question = graphene.String(required=False)
-    description = graphene.String(required=False)
-    position = graphene.Int()
+    question_type = graphene.Field(QuestionTypeEnum)
+    question = graphene.String()
+    description = graphene.String()
+
+class CreateQuestionInput(BaseQuestionInput):
+    survey_id = graphene.ID(required=True)
+    question_type = graphene.String(required=True)
+    question = graphene.String(required=True)
 
 class CreateQuestion(graphene.Mutation):
     ok = graphene.Boolean()
     question = graphene.Field(QuestionType)
 
     class Arguments:
-        question_data = QuestionInput(required=True)
+        question_data = CreateQuestionInput(required=True)
 
-    @classmethod
-    def mutate(cls, self, info, question_data):
+    def mutate(self, info, question_data):
         question = Question()
         for k, v in question_data.items():
             setattr(question, k, v)
         question.save()
         ok = True
-        return cls(question=question, ok=ok)
+        return CreateQuestion(question=question, ok=ok)
 
 class UpdateQuestion(graphene.Mutation):
     ok = graphene.Boolean()
@@ -36,16 +48,15 @@ class UpdateQuestion(graphene.Mutation):
 
     class Arguments:
         id = graphene.ID(required=True)
-        question_data = QuestionInput(required=False)
+        question_data = BaseQuestionInput(required=True)
 
-    @classmethod
-    def mutate(cls, self, info, id, question_data):
+    def mutate(self, info, id, question_data):
         question = Question.objects.get(pk=id)
         for k, v, in question_data.items():
             setattr(question, k, v)
         question.save()
         ok = True
-        return cls(question=question, ok=ok)
+        return UpdateQuestion(question=question, ok=ok)
 
 class DeleteQuestion(graphene.Mutation):
     ok = graphene.Boolean()
@@ -54,13 +65,12 @@ class DeleteQuestion(graphene.Mutation):
     class Arguments:
         id = graphene.ID(required=True)
 
-    @classmethod
-    def mutate(cls, self, info, id):
+    def mutate(self, info, id):
         question = Question.objects.get(pk=id)
         deleted_id = question.id
         question.delete()
         ok = True
-        return cls(ok=ok, deleted_id=deleted_id)
+        return DeleteQuestion(ok=ok, deleted_id=deleted_id)
 
 class AnswerInput(graphene.InputObjectType):
     question_id = graphene.ID(required=True)

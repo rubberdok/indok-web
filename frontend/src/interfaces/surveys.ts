@@ -13,7 +13,6 @@ export interface Question {
   survey: Survey;
   question: string;
   description: string;
-  position: string;
   questionType: string;
   options: Option[];
   answers: Answer[];
@@ -35,7 +34,6 @@ export interface QuestionVariables {
   id: string;
   question: string;
   description: string;
-  position: string;
   questionType: string;
   options: {
     answer: string;

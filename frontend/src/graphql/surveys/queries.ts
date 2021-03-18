@@ -9,7 +9,6 @@ export const SURVEY = gql`
         id
         question
         description
-        position
         questionType
         options {
           id
@@ -37,7 +36,6 @@ export const SURVEY_ANSWERS = gql`
         id
         question
         description
-        position
         questionType
         options {
           id
