@@ -48,8 +48,8 @@ const EventListItem: React.FC<Props> = ({ event, user, classes }) => {
         style={{ borderColor: event.organization?.color ?? theme.palette.primary.main }}
       >
         <Box>
-          <Typography variant="h6">{event.title}</Typography>
-          <Typography variant="body1">{formatDate(event.startTime)}</Typography>
+          <Typography variant="h5">{event.title}</Typography>
+          <Typography variant="body2">{formatDate(event.startTime)}</Typography>
 
           {event.shortDescription ?? "Trykk for å lese mer"}
         </Box>

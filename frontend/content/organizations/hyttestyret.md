@@ -24,6 +24,7 @@ styre:
     navn: Haakon Døssland
     mail: tlf. 976 30 582
     tittel: Økonomiansvarlig
+tag: annet
 ---
 
 # Hvem er vi?

@@ -110,6 +110,7 @@ export const GET_EVENT = gql`
         lastName
         dateJoined
       }
+      availableSlots
       price
       shortDescription
       signupOpenDate

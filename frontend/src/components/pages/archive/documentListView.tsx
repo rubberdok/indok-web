@@ -45,7 +45,7 @@ const DocumentListView: React.FC = () => {
             ];
           }}
         />
-        <ContentWrapper style={{ marginLeft: "-16px" }}>
+        <ContentWrapper style={{ flex: 1 }}>
           <YearSelector
             yearFilter={yearFilter}
             handleYearFilterChanged={(year: string) => {
@@ -64,7 +64,7 @@ const DocumentListView: React.FC = () => {
         />
       </ContentWrapper>
       {!viewFeatured && (
-        <ContentWrapper style={{ paddingLeft: "85.6%", marginTop: "-9%", marginBottom: "5%" }}>
+        <ContentWrapper style={{ paddingLeft: "78.7%", marginTop: "-9%", marginBottom: "5%" }}>
           <RemoveFilters
             handleRemoveFilterChanged={() => {
               [

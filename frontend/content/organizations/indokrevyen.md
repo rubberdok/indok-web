@@ -7,7 +7,7 @@ styre:
 tag: kultur
 ---
 
-# En overskrift
+# Hvem er vi?
 
 Indøkrevyen ble arrangert første gang i 2011, i forbindelse med feiringen av Indøk sitt 25 års-jubileum. Det hele var en stor suksess, og siden 2014 har det vært arrangert revy fem ganger. Som en del av revygjengen får man en unik mulighet til å bli kjent med Indøkere på tvers av klassetrinn samtidig som man setter opp tidenes forestilling!
 Revygjengen tas opp på høsten hvert år og revyen settes opp i februar.
