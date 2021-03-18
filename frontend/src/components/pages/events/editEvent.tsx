@@ -28,6 +28,10 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import nb from "dayjs/locale/nb";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 interface EditEventProps {
   open: boolean;
@@ -59,7 +63,6 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event, user }) => 
   const [eventData, setEventData] = useState(defaultInput);
 
   const router = useRouter();
-
   const [updateEvent, { loading: updateEventLoading, error: updateEventError }] = useMutation<{
     updateEvent: { event: Event };
   }>(UPDATE_EVENT, {
@@ -82,16 +85,16 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event, user }) => 
     });
     initialEventData.categoryId = event.category ? event.category.id : "";
 
-    initialEventData.startTime = dayjs(event.startTime).locale(nb).format("YYYY-MM-DDTHH:mm:ss+02:00");
+    initialEventData.startTime = dayjs(event.startTime).tz("Europe/Oslo").locale(nb).format("YYYY-MM-DDTHH:mm:ss");
 
     if (event.signupOpenDate) {
-      initialEventData.signupOpenDate = dayjs(event.signupOpenDate).locale(nb).format("YYYY-MM-DDTHH:mm:ss+02:00");
+      initialEventData.signupOpenDate = dayjs(event.signupOpenDate).tz("Europe/Oslo").locale(nb).format("YYYY-MM-DDTHH:mm:ss");
     }
     if (event.deadline) {
-      initialEventData.deadline = dayjs(event.deadline).locale(nb).format("YYYY-MM-DDTHH:mm:ss+02:00");
+      initialEventData.deadline = dayjs(event.deadline).locale(nb).tz("Europe/Oslo").format("YYYY-MM-DDTHH:mm:ss");
     }
     if (event.endTime) {
-      initialEventData.endTime = dayjs(event.endTime).locale(nb).format("YYYY-MM-DDTHH:mm:ss+02:00");
+      initialEventData.endTime = dayjs(event.endTime).locale(nb).tz("Europe/Oslo").format("YYYY-MM-DDTHH:mm:ss");
     }
     setEventData(initialEventData);
   }, []);
@@ -127,6 +130,7 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event, user }) => 
         input[key] = undefined;
       }
     });
+    console.log(input)
     updateEvent({ variables: { id: event.id, eventData: input } });
     onClose();
   };
