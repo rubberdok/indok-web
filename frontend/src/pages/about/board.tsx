@@ -1,12 +1,13 @@
 import Template from "@components/pages/about/Template";
-import { Typography } from "@material-ui/core";
+import { Box, Card, Typography } from "@material-ui/core";
+import Grid from "@material-ui/core/Grid";
 import { NextPage } from "next";
 import React from "react";
 
 const BoardPage: NextPage = () => {
   return (
     <Template
-      img="img/hero.jpg"
+      img="/img/hero.jpg"
       title="Hovedstyret"
       page=""
       description="Hovedstyret (HS) er styret i Foreningen for studentene ved Industriell økonomi og teknologiledelse, NTNU. 
@@ -22,17 +23,111 @@ const BoardPage: NextPage = () => {
         avholde generalforsamling for studentene ved Indøk. Generalforsamlingen er Foreningens øverste organ og er
         studentenes mulighet til å direkte påvirke budsjetter og avgjørelser som blir fattet på linjen.
       </Typography>
-      {/* To be formatted */}
-      <Typography variant="body2" paragraph>
-        Leder Hovedstyret Lars Ankile E-mail: leder@indokhs.no Tlf: 948 97 416 Leder Hovedstyret Andreas Johannesen
-        E-mail: leder@indokhs.no Tlf: 902 29 730 President Janus Robin Aakvik E-mail: president@janulinjeforening.no
-        Tlf: 402 33 395 Instituttstillitsvalg Vilde Hem E-mail: itv@iot.ntnu.no tlf. 984 01 347 Leder Bindeleddet Erlend
-        Heir E-mail: eheir@bindeleddet.ntnu.no Tlf: 482 25 043 Leder Janus IF Christian Bakke Vennerød E-mail:
-        if@indokhs.no Tlf: 954 68 351 Leder Indøk Kultur Hans Magnus Utne E-mail: kultur@indokhs.no Tlf: 975 18 033
-        Leder Hyttestyret Phillip Kolkmeier E-mail: leder@indokhyttene.no Tlf: 906 71 650 Leder ESTIEM Gustav Fosse
-        Hansen E-mail: gustav.fosse.hansen@estiem.org Tlf: 941 76 416 Interim Finanssjef Fredrik Shaughnessy Ahlborg
-        Email: finans@indokhs.no Tlf: 993 74 307
+      <Typography variant="h5" gutterBottom>
+        Medlemmer
       </Typography>
+      <Grid container spacing={2}>
+        <Grid item xs={6}>
+          <Card>
+            <Box p={4}>
+              <Typography variant="h5">Lars Lien Ankile</Typography>
+              <Typography variant="body2">Leder Hovedstyret</Typography>
+              <Typography variant="body2">Email: leder@indokhs.no</Typography>
+              <Typography variant="body2">Tlf: 948 97 416</Typography>
+            </Box>
+          </Card>
+        </Grid>
+        <Grid item xs={6}>
+          <Card>
+            <Box p={4}>
+              <Typography variant="h5">Andreas Johannesen</Typography>
+              <Typography variant="body2">Leder Hovedstyret</Typography>
+              <Typography variant="body2">Email: leder@indokhs.no</Typography>
+              <Typography variant="body2">Tlf: 902 29 730</Typography>
+            </Box>
+          </Card>
+        </Grid>
+        <Grid item xs={6}>
+          <Card>
+            <Box p={4}>
+              <Typography variant="h5">Robin Aakvik</Typography>
+              <Typography variant="body2">President Janus</Typography>
+              <Typography variant="body2">Email: president@janulinjeforening.no</Typography>
+              <Typography variant="body2">Tlf: 402 33 395</Typography>
+            </Box>
+          </Card>
+        </Grid>
+        <Grid item xs={6}>
+          <Card>
+            <Box p={4}>
+              <Typography variant="h5">Vilde Hem</Typography>
+              <Typography variant="body2">Instituttstillitsvalg</Typography>
+              <Typography variant="body2">Email: itv@iot.ntnu.no</Typography>
+              <Typography variant="body2">Tlf: 984 01 347</Typography>
+            </Box>
+          </Card>
+        </Grid>
+        <Grid item xs={6}>
+          <Card>
+            <Box p={4}>
+              <Typography variant="h5">Erlend Heir</Typography>
+              <Typography variant="body2">Leder Bindeleddet</Typography>
+              <Typography variant="body2">Email: eheir@bindeleddet.ntnu.no</Typography>
+              <Typography variant="body2">Tlf: 482 25 043</Typography>
+            </Box>
+          </Card>
+        </Grid>
+        <Grid item xs={6}>
+          <Card>
+            <Box p={4}>
+              <Typography variant="h5">Christian Bakke Vennerød</Typography>
+              <Typography variant="body2">Leder Janus IF</Typography>
+              <Typography variant="body2">Email: if@indokhs.no</Typography>
+              <Typography variant="body2">Tlf: 954 68 351</Typography>
+            </Box>
+          </Card>
+        </Grid>
+        <Grid item xs={6}>
+          <Card>
+            <Box p={4}>
+              <Typography variant="h5">Hans Magnus Utne</Typography>
+              <Typography variant="body2">Leder Indøk Kultur</Typography>
+              <Typography variant="body2">Email: kultur@indokhs.no</Typography>
+              <Typography variant="body2">Tlf: 975 18 033</Typography>
+            </Box>
+          </Card>
+        </Grid>
+        <Grid item xs={6}>
+          <Card>
+            <Box p={4}>
+              <Typography variant="h5">Phillip Kolkmeier</Typography>
+              <Typography variant="body2">Leder Hyttestyret</Typography>
+              <Typography variant="body2">Email: leder@indokhyttene.no</Typography>
+              <Typography variant="body2">Tlf: 906 71 650</Typography>
+            </Box>
+          </Card>
+        </Grid>
+        <Grid item xs={6}>
+          <Card>
+            <Box p={4}>
+              <Typography variant="h5">Gustav Fosse Hansen</Typography>
+              <Typography variant="body2">Leder ESTIEM</Typography>
+              <Typography variant="body2">Email: gustav.fosse.hansen@estiem.org</Typography>
+              <Typography variant="body2">Tlf: 941 76 416</Typography>
+            </Box>
+          </Card>
+        </Grid>
+        <Grid item xs={6}>
+          <Card>
+            <Box p={4}>
+              <Typography variant="h5">Fredrik Shaughnessy Ahlborg</Typography>
+              <Typography variant="body2">Interim Finanssjef</Typography>
+              <Typography variant="body2">Email: finans@indokhs.no</Typography>
+              <Typography variant="body2">Tlf: 993 74 307</Typography>
+            </Box>
+          </Card>
+        </Grid>
+      </Grid>
     </Template>
   );
 };

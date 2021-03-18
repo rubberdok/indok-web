@@ -12,7 +12,7 @@ styre:
     navn: Amanda Krutnes
     mail:
     tittel: Leder
-tag: kultur
+tag: annet
 ---
 
 # Hvem er vi?

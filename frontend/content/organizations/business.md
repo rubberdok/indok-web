@@ -12,6 +12,7 @@ styre:
     navn: Anders Rønning
     mail: tlf. 913 51 892
     tittel: Nestleder
+tag: annet
 ---
 
 # Hvem er vi?

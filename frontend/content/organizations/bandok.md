@@ -12,6 +12,7 @@ styre:
     navn: Sigurd Elias Halse
     mail: tlf.
     tittel: Økonomiansvarlig/utstyrsansvarlig
+tag: kultur
 ---
 
 # Hvem er vi?

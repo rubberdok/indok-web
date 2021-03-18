@@ -126,6 +126,54 @@ const OrganizationPage: NextPage<Props> = ({ posts }) => {
               </Card>
             </Grid>
           ))}
+        {router.query.category == undefined || router.query.category == "annet" ? (
+          <>
+            <Grid item xs={12} sm={6} md={4}>
+              <Card>
+                <a href="https://bindeleddet.no/" rel="norefferer noopener">
+                  <CardActionArea className={classes.card}>
+                    <CardMedia className={classes.media} image="/img/bindeleddetlogo.png" />
+                    <Box>
+                      <Typography variant="body2" color="textPrimary">
+                        Bindeleddet
+                      </Typography>
+                    </Box>
+                  </CardActionArea>
+                </a>
+              </Card>
+            </Grid>
+            <Grid item xs={12} sm={6} md={4}>
+              <Card>
+                <a href="https://sites.google.com/view/estiem-ntnu" rel="norefferer noopener">
+                  <CardActionArea className={classes.card}>
+                    <CardMedia className={classes.media} image="/img/estiemlogo.png" />
+                    <Box>
+                      <Typography variant="body2" color="textPrimary">
+                        ESTIEM
+                      </Typography>
+                    </Box>
+                  </CardActionArea>
+                </a>
+              </Card>
+            </Grid>
+            <Grid item xs={12} sm={6} md={4}>
+              <Card>
+                <a href="https://januslinjeforening.no/" rel="norefferer noopener">
+                  <CardActionArea className={classes.card}>
+                    <CardMedia className={classes.media} image="/img/januslogo.png" />
+                    <Box>
+                      <Typography variant="body2" color="textPrimary">
+                        Janus
+                      </Typography>
+                    </Box>
+                  </CardActionArea>
+                </a>
+              </Card>
+            </Grid>
+          </>
+        ) : (
+          ""
+        )}
       </Grid>
     </Template>
   );
