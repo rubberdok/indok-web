@@ -22,7 +22,7 @@ const AnswerQuestion: React.FC<{
   return (
     <FormControl>
       <FormLabel>{answer.question.question}</FormLabel>
-      {answer.question.questionType.name === "Short answer" ? (
+      {answer.question.questionType === "Short answer" ? (
         <TextField
           variant="outlined"
           onChange={(e) => {
@@ -30,7 +30,7 @@ const AnswerQuestion: React.FC<{
             setAnswer({ ...answer, answer: e.target.value });
           }}
         />
-      ) : answer.question.questionType.name === "Paragraph" ? (
+      ) : answer.question.questionType === "Paragraph" ? (
         <TextField
           variant="outlined"
           multiline
@@ -40,7 +40,7 @@ const AnswerQuestion: React.FC<{
             setAnswer({ ...answer, answer: e.target.value });
           }}
         />
-      ) : answer.question.questionType.name === "Multiple choice" ? (
+      ) : answer.question.questionType === "Multiple choice" ? (
         <RadioGroup
           onChange={(e) => {
             e.preventDefault();
@@ -51,9 +51,9 @@ const AnswerQuestion: React.FC<{
             <FormControlLabel key={index} value={option.answer} label={option.answer} control={<Radio />} />
           ))}
         </RadioGroup>
-      ) : answer.question.questionType.name === "Checkboxes" ? (
+      ) : answer.question.questionType === "Checkboxes" ? (
         <AnswerCheckboxes answer={answer} setAnswer={setAnswer} />
-      ) : answer.question.questionType.name === "Drop-down" ? (
+      ) : answer.question.questionType === "Drop-down" ? (
         <Select
           onChange={(e) => {
             e.preventDefault();
@@ -67,6 +67,12 @@ const AnswerQuestion: React.FC<{
             </MenuItem>
           ))}
         </Select>
+      ) : answer.question.questionType === "Slider" ? (
+        // TODO: implement slider
+        <p>To be implemented</p>
+      ) : answer.question.questionType === "File upload" ? (
+        // TODO: implement File upload
+        <p>To be implemented</p>
       ) : (
         // TODO: change implementation of question types to avoid failsafes like this
         <p>Error in question</p>

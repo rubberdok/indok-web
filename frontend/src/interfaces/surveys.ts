@@ -14,14 +14,9 @@ export interface Question {
   question: string;
   description: string;
   position: string;
-  questionType: QuestionType;
+  questionType: string;
   options: Option[];
   answers: Answer[];
-}
-
-export interface QuestionType {
-  id: string;
-  name: string;
 }
 
 export interface Option {
@@ -41,7 +36,7 @@ export interface QuestionVariables {
   question: string;
   description: string;
   position: string;
-  questionTypeId: string;
+  questionType: string;
   options: {
     answer: string;
     questionId?: string;

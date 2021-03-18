@@ -5,11 +5,11 @@ import { RadioGroup, Radio, TextField, FormControlLabel, FormGroup, Checkbox } f
 const QuestionTypePreview: React.FC<{
   question: Question;
 }> = ({ question }) => {
-  switch (question.questionType.name) {
-    case "Short answer":
-      return <TextField disabled label="Kortsvar" variant="outlined" />;
+  switch (question.questionType) {
     case "Paragraph":
       return <TextField disabled label="Langsvar" variant="outlined" multiline rows={4} />;
+    case "Short answer":
+      return <TextField disabled label="Kortsvar" variant="outlined" />;
     case "Multiple choice":
       return (
         <RadioGroup>

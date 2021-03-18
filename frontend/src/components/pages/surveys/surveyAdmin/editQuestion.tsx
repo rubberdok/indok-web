@@ -1,8 +1,9 @@
-import { Question, QuestionType, QuestionVariables } from "@interfaces/surveys";
+import { Question, QuestionVariables } from "@interfaces/surveys";
 import { MutationFunctionOptions, FetchResult } from "@apollo/client";
 import { useState } from "react";
 import QuestionTypePreview from "@components/pages/surveys/surveyAdmin/questionTypePreview";
 import { Grid, Button, TextField, Select, MenuItem, Radio, Checkbox } from "@material-ui/core";
+import questionTypes from "@components/pages/surveys/surveyAdmin/questionTypes";
 
 // component to edit a question on a survey
 /*
@@ -15,7 +16,6 @@ import { Grid, Button, TextField, Select, MenuItem, Radio, Checkbox } from "@mat
 */
 const EditQuestion: React.FC<{
   oldQuestion: Question;
-  questionTypes: QuestionType[];
   updateQuestion: (
     options?:
       | MutationFunctionOptions<
@@ -56,7 +56,7 @@ const EditQuestion: React.FC<{
     >
   >;
   setInactive: () => void;
-}> = ({ oldQuestion, questionTypes, updateQuestion, deleteQuestion, setInactive }) => {
+}> = ({ oldQuestion, updateQuestion, deleteQuestion, setInactive }) => {
   // state to manage the question being edited before updating it in the database
   const [question, setQuestion] = useState<Question>(oldQuestion);
 
@@ -77,30 +77,30 @@ const EditQuestion: React.FC<{
       />
       <br />
       <Select
-        value={question.questionType.id}
+        value={question.questionType}
         onChange={(e) => {
           e.preventDefault();
           setQuestion({
             ...question,
-            questionType: questionTypes.find((questionType) => questionType.id === e.target.value) ?? questionTypes[0],
+            questionType: e.target.value as string,
           });
         }}
       >
-        {questionTypes.map((questionType, index) => (
-          <MenuItem key={index} value={questionType.id}>
-            {questionType.name}
+        {Object.entries(questionTypes).map(([questionType, label], index) => (
+          <MenuItem key={index} value={questionType}>
+            {label}
           </MenuItem>
         ))}
       </Select>
-      {question.questionType.name === "Checkboxes" ||
-      question.questionType.name === "Multiple choice" ||
-      question.questionType.name === "Drop-down" ? (
+      {question.questionType === "Checkboxes" ||
+      question.questionType === "Multiple choice" ||
+      question.questionType === "Drop-down" ? (
         <Grid container direction="column">
           {question.options.map((option, index) => (
             <Grid key={index} container direction="row">
-              {question.questionType.name === "Checkboxes" ? (
+              {question.questionType === "Checkboxes" ? (
                 <Checkbox disabled />
-              ) : question.questionType.name === "Multiple choice" ? (
+              ) : question.questionType === "Multiple choice" ? (
                 <Radio disabled />
               ) : (
                 <p>{index + 1}.</p>
@@ -144,7 +144,7 @@ const EditQuestion: React.FC<{
                 question: question.question,
                 description: question.description,
                 position: question.position,
-                questionTypeId: question.questionType.id,
+                questionType: question.questionType,
                 options: question.options.map((option) => ({
                   answer: option.answer,
                   questionId: question.id,
