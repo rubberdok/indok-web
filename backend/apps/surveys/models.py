@@ -84,12 +84,6 @@ class Answer(models.Model):
     def __str__(self) -> str:
         return f"User: {self.user}; Answer: {self.answer}"
 
-class QuestionType(models.Model):
-    name = models.CharField(max_length=100)
-
-    def __str__(self) -> str:
-        return f"{self.name}"
-
 class Response(models.Model):
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     respondent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="responses")
