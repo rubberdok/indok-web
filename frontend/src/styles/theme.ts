@@ -25,6 +25,12 @@ const theme = createMuiTheme({
         marginBottom: 32,
       },
     },
+    MuiToolbar: {
+      regular: {
+        minHeight: "75px!important",
+        padding: 0,
+      },
+    },
     MuiFab: {
       root: {
         justifyContent: "center",

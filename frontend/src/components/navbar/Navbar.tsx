@@ -21,11 +21,6 @@ const useStyles = makeStyles((theme) => ({
   },
   appBar: {
     background: "#022A2A",
-    height: 75,
-  },
-  toolBar: {
-    padding: 0,
-    height: 75,
   },
   title: {
     flexGrow: 1,
@@ -76,7 +71,7 @@ const Navbar: React.FC = () => {
       <HideOnScroll>
         <AppBar color="primary" className={classes.appBar}>
           <Container style={{ maxWidth: "90vw" }}>
-            <Toolbar className={classes.toolBar}>
+            <Toolbar>
               <Link href="/">
                 <Typography variant="h6" className={classes.title}>
                   INDØK
