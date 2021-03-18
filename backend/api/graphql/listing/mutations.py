@@ -1,5 +1,5 @@
 import graphene
-from apps.listing.models import Listing, Response
+from apps.listing.models import Listing
 from django.contrib.auth.models import Permission
 from django.utils.text import slugify
 from graphql_jwt.decorators import login_required

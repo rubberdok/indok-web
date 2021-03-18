@@ -15,9 +15,27 @@ class OptionType(DjangoObjectType):
         fields = ["answer", "question", "id"]
 
 
+
+class AnswerType(DjangoObjectType):
+    user = graphene.Field(UserType)
+    id = graphene.ID(source="uuid")
+
+    class Meta:
+        model = Answer
+        fields = [
+            "answer",
+            "question",
+            "uuid"
+        ]
+    
+    @staticmethod
+    @login_required
+    def resolve_user(answer, info):
+        return answer.response.respondent
+
 class ResponseType(DjangoObjectType):
-    answers = graphene.List("AnswerType")
-    id = graphene.Field(graphene.ID(), source="uuid")
+    answers = graphene.List(AnswerType)
+    id = graphene.ID(source="uuid")
 
 
     class Meta:
@@ -33,22 +51,6 @@ class ResponseType(DjangoObjectType):
     def resolve_answers(response, info):
         return response.answers
 
-class AnswerType(DjangoObjectType):
-    user = graphene.Field(UserType)
-    id = graphene.Field(graphene.ID(), source="uuid")
-
-    class Meta:
-        model = Answer
-        fields = [
-            "answer",
-            "question",
-            "uuid"
-        ]
-    
-    @staticmethod
-    @login_required
-    def resolve_user(answer, info):
-        return answer.response.respondent
 
 class QuestionTypeType(DjangoObjectType):
     class Meta:
