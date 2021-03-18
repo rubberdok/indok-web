@@ -1,13 +1,13 @@
 {
+  "requiresCompatibilities": ["FARGATE"],
+  "networkMode": "awsvpc",
   "containerDefinitions": [
     {
-      "requiresCompatibilities": ["FARGATE"],
       "name": "backend",
       "image": "%s.dkr.ecr.eu-north-1.amazonaws.com/indokweb-backend:prod",
       "essential": true,
       "memory": "512",
       "cpu": "100",
-      "networkMode": "awsvpc",
       "portMappings": [
         {
           "protocol": "tcp",
