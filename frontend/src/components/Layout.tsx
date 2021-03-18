@@ -24,9 +24,9 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       <Navbar />
       <div className={classes.content}>
         <div>{children}</div>
-        <ScrollTop />
         <Footer />
       </div>
+      <ScrollTop />
     </>
   );
 };
