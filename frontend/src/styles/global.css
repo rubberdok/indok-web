@@ -28,3 +28,22 @@ img {
   max-width: 100%;
   display: block;
 }
+
+#mobile-warning {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  padding: 30px;
+  background: red;
+  color: white;
+  z-index: 100000;
+
+}
+
+
+@media only screen and (min-width: 970px) {
+  #mobile-warning  {
+    display: none;
+  }
+}
