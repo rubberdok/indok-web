@@ -23,8 +23,18 @@ const links = [
     dropdown: [
       {
         id: 2_1,
+        title: "Om oss",
+        href: "/about",
+      },
+      {
+        id: 2_2,
         title: "Organisasjoner",
-        href: "/about/organizations",
+        href: "/about/organization",
+      },
+      {
+        id: 2_3,
+        title: "Hovedstyret",
+        href: "/about/board",
       },
     ],
   },
@@ -77,7 +87,7 @@ const useStyles = makeStyles(() => ({
     color: "white",
     height: "100%",
     background: "#065A5A",
-    padding: "25px 0",
+    padding: "27px 0",
     marginLeft: 16,
     paddingLeft: 35,
     paddingRight: "calc(5vw + 15px)",

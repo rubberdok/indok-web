@@ -1,6 +1,6 @@
 ---
 title: Janus Ski- og Løpeklubb
-description: Mer tekst
+description: Den raskeste gjengen
 logo: /img/jslklogo.png
 image: /img/jslk.jpg
 styre:

@@ -202,7 +202,12 @@ export const FirstLogin: React.FC<FirstLoginProps> = ({ open, onSubmit, fullName
         {error && invalidInput() && <Typography color="error">{error.message}</Typography>}
       </DialogContent>
       <DialogActions>
-        <Button onClick={() => handleSubmit()} color="primary" startIcon={<Check />} disabled={invalidInput()}>
+        <Button
+          onClick={() => handleSubmit()}
+          color="primary"
+          startIcon={<Check />}
+          disabled={invalidInput() || !updateUserInput.graduationYear}
+        >
           Send
         </Button>
       </DialogActions>

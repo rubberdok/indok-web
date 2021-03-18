@@ -19,7 +19,7 @@ const OrganizationFilter: React.FC<Props> = ({ filters, onFiltersChange, organiz
   return (
     <>
       <ListItem button onClick={() => setOpen(!open)} selected={open}>
-        <ListItemText primary={"Organisasjoner"} />
+        <ListItemText primary={"Arrangert av"} />
         <Badge className={classes.badge} badgeContent={1} color="primary" invisible={!filters.organization} />
         {open ? <ExpandLess /> : <ExpandMore />}
       </ListItem>
