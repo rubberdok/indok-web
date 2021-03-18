@@ -7,6 +7,7 @@ import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import SwipeableViews from "react-swipeable-views";
 import { Box, Grid, Typography } from "@material-ui/core";
+import Image from "next/image";
 
 const useStyles = makeStyles((theme) => ({
   img: {
