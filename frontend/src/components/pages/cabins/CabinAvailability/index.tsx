@@ -20,12 +20,14 @@ const CheckInOut: NextPage<Props> = ({ allCabins, chosenCabins, setChosenCabins,
     <Grid container spacing={10}>
       <Grid item xs={2} container direction="column" justify="center" alignItems="center">
         <Grid item>
-          <Typography variant="h6">Velg hytta du vil booke</Typography>
+          <Typography variant="h5">Velg hytte</Typography>
           <Divider component="hr" />
           <List>
             {allCabins.map((cabin) => (
               <ListItem key={cabin.id}>
                 <Checkbox
+                  color="primary"
+                  disableRipple
                   checked={chosenCabins.map((chosenCabin) => chosenCabin.id).includes(cabin.id)}
                   onChange={(e) => {
                     if (e.target.checked) {
