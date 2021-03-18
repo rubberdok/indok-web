@@ -10,24 +10,12 @@ export const SURVEY = gql`
         question
         description
         position
-        questionType {
-          id
-          name
-        }
+        questionType
         options {
           id
           answer
         }
       }
-    }
-  }
-`;
-
-export const QUESTIONTYPES = gql`
-  query {
-    questionTypes {
-      id
-      name
     }
   }
 `;
@@ -50,10 +38,7 @@ export const SURVEY_ANSWERS = gql`
         question
         description
         position
-        questionType {
-          id
-          name
-        }
+        questionType
         options {
           id
           answer

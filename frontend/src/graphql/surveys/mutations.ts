@@ -31,7 +31,7 @@ export const CREATE_QUESTION = gql`
     $question: String!
     $description: String!
     $position: Int!
-    $questionTypeId: ID!
+    $questionType: ID
     $surveyId: ID!
   ) {
     createQuestion(
@@ -39,7 +39,7 @@ export const CREATE_QUESTION = gql`
         question: $question
         description: $description
         position: $position
-        questionTypeId: $questionTypeId
+        questionType: $questionType
         surveyId: $surveyId
       }
     ) {
@@ -69,7 +69,7 @@ export const UPDATE_QUESTION = gql`
     $question: String!
     $description: String!
     $position: Int!
-    $questionTypeId: ID!
+    $questionType: ID
     $options: [OptionInput]!
   ) {
     updateQuestion(
@@ -78,7 +78,7 @@ export const UPDATE_QUESTION = gql`
         question: $question
         description: $description
         position: $position
-        questionTypeId: $questionTypeId
+        questionType: $questionType
       }
     ) {
       question {
