@@ -24,20 +24,29 @@ class Survey(models.Model):
         return self.questions.filter(mandatory=True)
 
 class Question(models.Model):
-    class QuestionTypeChoices(models.IntegerChoices):
-        PARAGRAPH = 0, _("Paragraph")
-        SHORT_ANSWER = 1, _("Short answer")
-        DROPDOWN = 2, _("Drop-down")
-        MCQ = 3, _("Multiple choice")
-        CHECKBOX = 4, _("Checkboxes")
-        SLIDER = 5, _("Slider")
-        FILE_UPLOAD = 6, _("File upload")
+    PARAGRAPH = "Paragraph"
+    SHORT_ANSWER = "Short answer"
+    DROPDOWN = "Drop-down"
+    MCQ = "Multiple choice"
+    CHECKBOX = "Checkboxes"
+    SLIDER = "Slider"
+    FILE_UPLOAD = "File upload"
+
+    QUESTION_TYPE_CHOICES = [
+        (PARAGRAPH, "Paragraph"),
+        (SHORT_ANSWER, "Short answer"),
+        (DROPDOWN, "Drop-down"),
+        (MCQ, "Multiple choice"),
+        (CHECKBOX, "Checkboxes"),
+        (SLIDER, "Slider"),
+        (FILE_UPLOAD, "File upload")
+    ]
         
 
     survey = models.ForeignKey(Survey, on_delete=models.CASCADE, related_name="questions")
     question = models.CharField(max_length=300)
     description = models.CharField(max_length=1000, blank=True, default="")
-    question_type = models.IntegerField(choices=QuestionTypeChoices.choices, default=0)
+    question_type = models.CharField(max_length=20, choices=QUESTION_TYPE_CHOICES, default=PARAGRAPH)
     position = models.IntegerField()
     mandatory = models.BooleanField(default=True)
 
@@ -48,7 +57,7 @@ class Question(models.Model):
     class Meta:
         ordering = ["position"]
         constraints = [
-            UniqueConstraint(fields=["position", "survey"], name="unique question position per survey")
+            UniqueConstraint(fields=["position", "survey"], name="unique question position per survey"),
         ]
 
 class Option(models.Model):

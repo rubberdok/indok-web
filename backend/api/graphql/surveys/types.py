@@ -14,7 +14,6 @@ class OptionType(DjangoObjectType):
         fields = ["answer", "question", "id"]
 
 
-
 class AnswerType(DjangoObjectType):
     user = graphene.Field(UserType)
     id = graphene.ID(source="uuid")
@@ -64,12 +63,10 @@ class QuestionType(DjangoObjectType):
             "description",
             "id",
             "position",
+            "question_type",
             "mandatory",
         ]
 
-    @staticmethod
-    def resolve_question_type(question, info):
-        return Question.QuestionTypeChoices(question.question_type).label
 
     @staticmethod
     def resolve_options(root: Question, info):
