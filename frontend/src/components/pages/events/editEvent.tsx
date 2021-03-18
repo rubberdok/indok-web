@@ -82,16 +82,16 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event, user }) => 
     });
     initialEventData.categoryId = event.category ? event.category.id : "";
 
-    initialEventData.startTime = dayjs(event.startTime).locale(nb);
+    initialEventData.startTime = dayjs(event.startTime).locale(nb).format("YYYY-MM-DDTHH:mm:ss+02:00");
 
     if (event.signupOpenDate) {
-      initialEventData.signupOpenDate = dayjs(event.signupOpenDate).locale(nb);
+      initialEventData.signupOpenDate = dayjs(event.signupOpenDate).locale(nb).format("YYYY-MM-DDTHH:mm:ss+02:00");
     }
     if (event.deadline) {
-      initialEventData.deadline = dayjs(event.deadline).locale(nb);
+      initialEventData.deadline = dayjs(event.deadline).locale(nb).format("YYYY-MM-DDTHH:mm:ss+02:00");
     }
     if (event.endTime) {
-      initialEventData.endTime = dayjs(event.endTime).locale(nb);
+      initialEventData.endTime = dayjs(event.endTime).locale(nb).format("YYYY-MM-DDTHH:mm:ss+02:00");
     }
     setEventData(initialEventData);
   }, []);
