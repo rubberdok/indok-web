@@ -95,6 +95,8 @@ const CabinBookingPage: NextPage = () => {
             allCabins={cabinQuery.data.cabins}
             chosenCabins={chosenCabins}
             setChosenCabins={setChosenCabins}
+            datePick={datePick}
+            setDatePick={setDatePick}
           />
         ) : null;
       case 1:

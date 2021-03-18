@@ -4,18 +4,21 @@ import { Cabin } from "@interfaces/cabins";
 import { Checkbox, List, ListItem, Grid, Typography, Divider } from "@material-ui/core";
 import { NextPage } from "next";
 import React, { Dispatch, SetStateAction } from "react";
+import { DatePick } from "src/pages/cabins/book";
 
 interface Props {
   allCabins: Cabin[];
   chosenCabins: Cabin[];
   setChosenCabins: Dispatch<SetStateAction<Cabin[]>>;
+  datePick: DatePick;
+  setDatePick: React.Dispatch<React.SetStateAction<DatePick>>;
 }
 
-const CabinAvailability: NextPage<Props> = ({ allCabins, chosenCabins, setChosenCabins }) => {
+const CheckInOut: NextPage<Props> = ({ allCabins, chosenCabins, setChosenCabins, datePick, setDatePick }) => {
   const { disabledDates } = useDisabledDates(chosenCabins);
   return (
     <Grid container spacing={10}>
-      <Grid item xs={4} container direction="column" justify="center" alignItems="center">
+      <Grid item xs={2} container direction="column" justify="center" alignItems="center">
         <Grid item>
           <Typography variant="h6">Velg hytta du vil booke</Typography>
           <Divider component="hr" />
@@ -38,15 +41,11 @@ const CabinAvailability: NextPage<Props> = ({ allCabins, chosenCabins, setChosen
           </List>
         </Grid>
       </Grid>
-      <Grid item xs={8}>
-        <Typography variant="h6" align="center">
-          Tilgjengelighet for valgt kombinasjon
-        </Typography>
-        <Divider component="hr" />
-        <Calendar disabledDates={disabledDates} disableAll={chosenCabins.length === 0} />
+      <Grid item xs={10}>
+        <Calendar title="Velg innsjekk og utsjekk" />
       </Grid>
     </Grid>
   );
 };
 
-export default CabinAvailability;
+export default CheckInOut;

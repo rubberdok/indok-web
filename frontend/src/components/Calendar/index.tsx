@@ -1,6 +1,6 @@
-import { IconButton, Grid, Typography } from "@material-ui/core";
+import { IconButton, Grid, Typography, Divider } from "@material-ui/core";
 import dayjs from "dayjs";
-import { useState } from "react";
+import React, { useState } from "react";
 import CalendarTable from "./CalendarTable";
 import { DATE_FORMAT } from "./constants";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
@@ -14,6 +14,7 @@ interface CalendarProps {
   disableAll?: boolean;
   disableBefore?: string;
   disableAfter?: string;
+  title?: string;
 }
 
 const Calendar: React.FC<CalendarProps> = ({
@@ -23,6 +24,7 @@ const Calendar: React.FC<CalendarProps> = ({
   disableAll,
   disableBefore,
   disableAfter,
+  title,
 }) => {
   const [selectedMonth, setSelectedMonth] = useState(dayjs());
   const [selectedDay, setSelectedDay] = useState(initSelectedDay ? dayjs(initSelectedDay) : undefined);
@@ -126,18 +128,27 @@ const Calendar: React.FC<CalendarProps> = ({
   };
 
   return (
-    <Grid container direction="column">
+    <Grid container direction="column" spacing={2}>
       <Grid item container alignItems="center" justify="space-between" xs>
         <IconButton onClick={() => onChangeMonth(-1)}>
           <NavigateBeforeIcon />
         </IconButton>
-        <Typography variant="body1">{`${selectedMonth.format("MMMM")} - ${selectedMonth.format("YYYY")}`}</Typography>
+        <Typography variant="h5" align="center">
+          {title}
+        </Typography>
         <IconButton onClick={() => onChangeMonth(1)}>
           <NavigateNextIcon />
         </IconButton>
       </Grid>
-      <Grid item>
-        <CalendarTable getRows={getRows} month={selectedMonth.clone()} />
+      <Divider variant="middle" />
+      <Grid item container>
+        <Grid item xs>
+          <CalendarTable getRows={getRows} month={selectedMonth.clone()} />
+        </Grid>
+        <Divider variant="fullWidth" orientation="vertical" />
+        <Grid item xs>
+          <CalendarTable getRows={getRows} month={selectedMonth.clone().add(1, "month")} />
+        </Grid>
       </Grid>
     </Grid>
   );
