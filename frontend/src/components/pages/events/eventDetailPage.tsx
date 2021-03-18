@@ -61,10 +61,6 @@ interface Props {
   eventId: string;
 }
 
-function parseDate(date: string) {
-  return date != null ? date.replace("T", " ").split("+")[0] : "null";
-}
-
 function wrapInTypo(para: JSX.Element[] | string, className: any) {
   return <Typography className={className}>{para}</Typography>;
 }
