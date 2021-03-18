@@ -4,7 +4,7 @@ from apps.surveys.models import Survey
 from django.db.models import Q
 from graphql_jwt.decorators import login_required
 
-from ..types import AnswerType, OptionType, QuestionType
+from ..types import OptionType, QuestionType
 
 
 

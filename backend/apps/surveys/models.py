@@ -24,29 +24,20 @@ class Survey(models.Model):
         return self.questions.filter(mandatory=True)
 
 class Question(models.Model):
-    PARAGRAPH = "Paragraph"
-    SHORT_ANSWER = "Short answer"
-    DROPDOWN = "Drop-down"
-    MCQ = "Multiple choice"
-    CHECKBOX = "Checkboxes"
-    SLIDER = "Slider"
-    FILE_UPLOAD = "File upload"
 
-    QUESTION_TYPE_CHOICES = [
-        (PARAGRAPH, "Paragraph"),
-        (SHORT_ANSWER, "Short answer"),
-        (DROPDOWN, "Drop-down"),
-        (MCQ, "Multiple choice"),
-        (CHECKBOX, "Checkboxes"),
-        (SLIDER, "Slider"),
-        (FILE_UPLOAD, "File upload")
-    ]
-        
+    class QuestionTypeChoices(models.TextChoices):
+        PARAGRAPH = "Paragraph", _("Paragraph")
+        SHORT_ANSWER = "Short answer", _("Short answer")
+        DROPDOWN = "Drop-down", _("Drop-down")
+        MCQ = "Multiple choice", _("Multiple choice")
+        CHECKBOX = "Checkboxes", _("Checkboxes")
+        SLIDER = "Slider", _("Slider")
+        FILE_UPLOAD = "File upload", _("File upload")
 
     survey = models.ForeignKey(Survey, on_delete=models.CASCADE, related_name="questions")
     question = models.CharField(max_length=300)
     description = models.CharField(max_length=1000, blank=True, default="")
-    question_type = models.CharField(max_length=20, choices=QUESTION_TYPE_CHOICES, default=PARAGRAPH)
+    question_type = models.CharField(max_length=20, choices=QuestionTypeChoices.choices, default=QuestionTypeChoices.PARAGRAPH)
     mandatory = models.BooleanField(default=True)
 
 

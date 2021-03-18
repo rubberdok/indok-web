@@ -63,10 +63,8 @@ class QuestionType(DjangoObjectType):
             "description",
             "id",
             "position",
-            "question_type",
             "mandatory",
         ]
-
 
     @staticmethod
     def resolve_options(root: Question, info):
