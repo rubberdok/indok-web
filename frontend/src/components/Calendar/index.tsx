@@ -9,7 +9,6 @@ import DayCell from "./DayCell";
 
 interface CalendarProps {
   disabledDates?: string[];
-  handleDateClicked?: (date: string) => void;
   initSelectedDay?: string;
   disableAll?: boolean;
   disableBefore?: string;
@@ -20,7 +19,6 @@ interface CalendarProps {
 const Calendar: React.FC<CalendarProps> = ({
   disabledDates,
   initSelectedDay,
-  handleDateClicked,
   disableAll,
   disableBefore,
   disableAfter,
@@ -30,6 +28,19 @@ const Calendar: React.FC<CalendarProps> = ({
   const [selectedDay, setSelectedDay] = useState(initSelectedDay ? dayjs(initSelectedDay) : undefined);
   const disableBeforeDate = disableBefore ? dayjs(disableBefore) : dayjs();
   const disableAfterDate = disableAfter ? dayjs(disableAfter) : undefined;
+
+  const handleDateClicked = (date: dayjs.Dayjs) => {
+    setSelectedDay(isDisabled(date) ? undefined : date);
+  };
+
+  const isDisabled = (date: dayjs.Dayjs) => {
+    return (
+      disableAll ||
+      date.isBefore(disableBeforeDate, "day") ||
+      (disableAfterDate ? date.isAfter(disableAfterDate) : false) ||
+      disabledDates?.includes(date.format(DATE_FORMAT))
+    );
+  };
 
   const previousMonthDays = (month: dayjs.Dayjs): JSX.Element[] => {
     const previousDays: JSX.Element[] = [];
@@ -56,18 +67,8 @@ const Calendar: React.FC<CalendarProps> = ({
         <DayCell
           value={i}
           isSelected={selectedDay ? date.isSame(selectedDay, "day") : false}
-          onClick={() => {
-            if (handleDateClicked) {
-              setSelectedDay(date);
-              handleDateClicked(date.format(DATE_FORMAT));
-            }
-          }}
-          isDisabled={
-            disableAll ||
-            date.isBefore(disableBeforeDate, "day") ||
-            (disableAfterDate ? date.isAfter(disableAfterDate) : false) ||
-            disabledDates?.includes(date.format(DATE_FORMAT))
-          }
+          onClick={() => handleDateClicked(date)}
+          isDisabled={isDisabled(date)}
           key={date.format(DATE_FORMAT)}
         />
       );

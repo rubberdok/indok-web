@@ -24,13 +24,13 @@ const DayCell: React.FC<Props> = (props) => {
   const { onClick, value } = props;
   return (
     <Grid item xs component="td" onClick={onClick}>
-      <Grid container justify="center" alignItems="center" style={{ height: "100%" }}>
-        <Grid item>
-          <Box className={classes.root}>
+      <Box className={classes.root}>
+        <Grid container justify="center" alignItems="center" style={{ height: "100%" }}>
+          <Grid item>
             <Typography>{value}</Typography>
-          </Box>
+          </Grid>
         </Grid>
-      </Grid>
+      </Box>
     </Grid>
   );
 };
