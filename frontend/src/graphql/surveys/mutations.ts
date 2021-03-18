@@ -86,7 +86,7 @@ export const UPDATE_QUESTION = gql`
       }
       ok
     }
-    createUpdateAndDeleteOptions(optionData: $options) {
+    createUpdateAndDeleteOptions(questionId: $id, optionData: $options) {
       options {
         answer
       }

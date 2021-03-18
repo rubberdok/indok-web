@@ -123,7 +123,6 @@ const EditSurvey: React.FC<{ surveyId: string }> = ({ surveyId }) => {
                           // TODO: update to reflect new position of questionId in OptionInput
                           options: activeQuestion.options.map((option) => ({
                             answer: option.answer,
-                            questionId: activeQuestion.id,
                             ...(option.id ? { id: option.id } : {}),
                           })),
                         },
@@ -147,6 +146,8 @@ const EditSurvey: React.FC<{ surveyId: string }> = ({ surveyId }) => {
                         .map((question) => parseInt(question.position))
                         .reduce((prev, curr) => (prev > curr ? prev : curr), -1) + 1,
                     surveyId: data.survey.id,
+                    // TODO: remove when backend fixes default handling
+                    questionType: "Paragraph",
                   },
                 });
               }}
