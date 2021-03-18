@@ -9,18 +9,6 @@ from apps.surveys.models import (
 
 from typing import Optional
 
-class QuestionTypeResolvers:
-    def resolve_question_type(self, info, id: int):
-        return QuestionType.objects.get(pk=id)
-
-    def resolve_question_types(self, info, search: Optional[str]=None):
-        """
-        TODO: Search implementation
-        """
-        if search:
-            return QuestionType.objects.all()
-        return QuestionType.objects.all()
-
 class OptionResolvers:
     def resolve_offered_answer(self, info, id: int):
         return Option.objects.get(pk=id)

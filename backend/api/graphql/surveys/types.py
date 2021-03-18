@@ -1,7 +1,6 @@
 import graphene
 from api.graphql.users.types import UserType
 from apps.surveys.models import Answer, Option, Question, Response
-from apps.surveys.models import QuestionType as QuestionTypeModel
 from apps.surveys.models import Survey
 from django.contrib.auth import get_user_model
 from django.db.models.query_utils import Q
@@ -51,11 +50,6 @@ class ResponseType(DjangoObjectType):
     def resolve_answers(response, info):
         return response.answers
 
-
-class QuestionTypeType(DjangoObjectType):
-    class Meta:
-        model = QuestionTypeModel
-        fields = ["name", "id"]
 
 class QuestionType(DjangoObjectType):
     options = graphene.List(OptionType)

@@ -5,12 +5,12 @@ from apps.surveys.models import Survey
 from django.db.models import Q
 from graphql_jwt.decorators import login_required
 
-from ..types import AnswerType, OptionType, QuestionType, QuestionTypeType
+from ..types import AnswerType, OptionType, QuestionType
 
 
 class QuestionInput(graphene.InputObjectType):
     survey_id = graphene.ID()
-    question_type_id = graphene.ID()
+    question_type = graphene.Int()
     question = graphene.String(required=False)
     description = graphene.String(required=False)
     position = graphene.Int()
@@ -62,57 +62,6 @@ class DeleteQuestion(graphene.Mutation):
         question.delete()
         ok = True
         return cls(ok=ok, deleted_id=deleted_id)
-
-class QuestionTypeInput(graphene.InputObjectType):
-    name = graphene.String(required=False)
-
-class CreateQuestionType(graphene.Mutation):
-    question_type = graphene.Field(QuestionTypeType)
-    ok = graphene.Boolean()
-
-    class Arguments:
-        question_type_data = QuestionTypeInput(required=True)
-
-    @classmethod
-    def mutate(cls, self, info, question_type_data):
-        question_type = QuestionTypeModel()
-        for key, value in question_type_data.items():
-            setattr(question_type, key, value)
-        question_type.save()
-        ok = True
-        return cls(question_type=question_type, ok=ok)
-
-class UpdateQuestionType(graphene.Mutation):
-    question_type = graphene.Field(QuestionTypeType)
-    ok = graphene.Boolean()
-
-    class Arguments:
-        id = graphene.ID(required=True)
-        question_type_data = QuestionTypeInput(required=False)
-
-    @classmethod
-    def mutate(cls, self, info, id, question_type_data):
-        question_type = QuestionTypeModel.objects.get(id=id)
-        for key, value in question_type_data.items():
-            setattr(question_type, key, value)
-        question_type.save()
-        ok = True
-        return cls(question_type=question_type, ok=ok)
-
-class DeleteQuestionType(graphene.Mutation):
-    deleted_id = graphene.ID()
-    ok = graphene.Boolean()
-
-    class Arguments:
-        id = graphene.ID(required=True)
-
-    @classmethod
-    def mutate(cls, self, info, id):
-        question_type = QuestionTypeModel.objects.get(pk=id)
-        deleted_id = question_type.id
-        question_type.delete()
-        ok = True
-        return cls(deleted_id=deleted_id, ok=ok)
 
 class AnswerInput(graphene.InputObjectType):
     question_id = graphene.ID(required=True)
