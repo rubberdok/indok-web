@@ -1,6 +1,6 @@
 ---
 title: Mannskoret Klingende Mynt
-description: Mer tekst
+description: Musical management consulting
 logo: /img/mkmlogo.png
 image: /img/mkm.jpg
 styre:
