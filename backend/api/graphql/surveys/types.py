@@ -62,7 +62,6 @@ class QuestionType(DjangoObjectType):
             "question",
             "description",
             "id",
-            "position",
             "mandatory",
         ]
 
