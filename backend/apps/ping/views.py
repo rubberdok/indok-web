@@ -8,5 +8,6 @@ class Ping(APIView):
             {
                 "message": "Yoinks!",
                 "status": "success",
+                "platform": "Fargate",
             }
         )

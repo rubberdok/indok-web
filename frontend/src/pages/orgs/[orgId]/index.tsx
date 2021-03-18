@@ -70,7 +70,7 @@ const OrganizationDetailPage: NextPage = () => {
             <Grid item container>
               <Grid item xs>
                 <Card variant="outlined">
-                  <CardHeader title="Arragementer" />
+                  <CardHeader title="Arrangementer" />
                   <Divider variant="middle" />
                   <CardContent>
                     <TableContainer>

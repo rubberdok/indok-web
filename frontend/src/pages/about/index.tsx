@@ -1,5 +1,5 @@
 import Template from "@components/pages/about/Template";
-import { Typography } from "@material-ui/core";
+import { Box, Paper, Typography } from "@material-ui/core";
 import { NextPage } from "next";
 import React from "react";
 
@@ -7,7 +7,7 @@ const AboutPage: NextPage = () => {
   return (
     <Template
       img="img/hero.jpg"
-      title="Om foreningen vår"
+      title="Om oss"
       page=""
       description="Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse er den øverste instansen
       (moderorganisasjonen) for all studentfrivillighet på masterstudiet Indøk ved NTNU."
@@ -36,13 +36,14 @@ const AboutPage: NextPage = () => {
         første festen på Janus-kjellerne. I løpet av de neste 20 årene skulle flere titalls tilbud bli startet, med alt
         fra veldedighet og ølbrygging til fadderuker og case-trening på agendaen.
       </Typography>
-
-      <blockquote>
-        <Typography variant="body2" paragraph>
-          En detaljert historie om all foreningsaktivitet på Indøk er under utarbeidelse. Har du eksklusiv kunnskap om
-          denne? Send en mail til leder@indokhs.no
-        </Typography>
-      </blockquote>
+      <Paper>
+        <Box p={4} my={3}>
+          <Typography variant="body2">
+            En detaljert historie om all foreningsaktivitet på Indøk er under utarbeidelse. Har du eksklusiv kunnskap om
+            denne? Send en mail til leder@indokhs.no
+          </Typography>
+        </Box>
+      </Paper>
 
       <Typography variant="h5" gutterBottom>
         Foreningens formål

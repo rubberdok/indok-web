@@ -1,6 +1,6 @@
 ---
 title: Indøks Veldedige Initiativ
-description: Mer tekst
+description: Gjør verden til et bedre sted
 image: /img/ivibilde.jpg
 logo: /img/ivilogo.png
 styre:
@@ -12,6 +12,8 @@ styre:
     navn: Maria Ruiz Ulltveit-Moe
     mail:
     tittel: Leder
+
+tag: kultur
 ---
 
 # Hvem er vi?

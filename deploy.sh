@@ -30,7 +30,7 @@ deploy_cluster() {
   cluster="indokweb-cluster"
 
   # backend
-  service="indokweb-backend-service"
+  service="indokweb-backend-fg-service"
   template="ecs_backend_taskdefinition.json"
   task_template=$(cat "ecs/$template")
   task_def=$(printf "$task_template" $AWS_ACCOUNT_ID $AWS_RDS_HOST $AWS_RDS_PASSWORD $PRODUCTION_SECRET_KEY $DATAPORTEN_SECRET $BOOKING_EMAIL_PASSWORD $GOOGLE_DRIVE_API_KEY $DJANGO_SETTINGS_MODULE)
@@ -39,7 +39,7 @@ deploy_cluster() {
   update_service
 
   # frontend
-  service="indokweb-frontend-service"
+  service="indokweb-frontend-fg-service"
   template="ecs_frontend_taskdefinition.json"
   task_template=$(cat "ecs/$template")
   task_def=$(printf "$task_template" $AWS_ACCOUNT_ID)

@@ -58,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
 const AllEvents: React.FC = () => {
   const classes = useStyles();
   const [filters, setFilters] = useState({});
-  const [showDefaultEvents, setShowDefaultEvents] = useState(true);
+  const [showDefaultEvents, setShowDefaultEvents] = useState(false);
   const [showCalendarView, setShowCalenderView] = useState(false);
   const { loading: userLoading, data: userData } = useQuery<{ user: User }>(GET_USER);
 
@@ -116,7 +116,7 @@ const AllEvents: React.FC = () => {
               passHref
             >
               <Button color="primary" disableRipple startIcon={<List />}>
-                <Typography variant="body1">Administrer</Typography>
+                <Typography variant="body1">Mine arrangementer</Typography>
               </Button>
             </Link>
           </Container>
