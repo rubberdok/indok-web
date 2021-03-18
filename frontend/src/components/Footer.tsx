@@ -14,10 +14,9 @@ import {
   TableCell,
   TableContainer,
   TableRow,
-  Tooltip,
   Typography,
 } from "@material-ui/core";
-import { Close, Facebook, GitHub, Star, StarHalf } from "@material-ui/icons";
+import { Close, Facebook, GitHub } from "@material-ui/icons";
 import Link from "next/link";
 import React from "react";
 
@@ -178,38 +177,75 @@ const Footer: React.FC = () => {
                 <TableRow>
                   <TableCell>
                     Morgan Heggland &apos;22
-                    <Tooltip title="Prosjektleder">
-                      <Star />
-                    </Tooltip>
+                    <br />
+                    <Typography variant="caption">Big Boss Morgan</Typography>
                   </TableCell>
                   <TableCell>
                     Lars Lien Ankile &apos;22
-                    <Tooltip title="Lederpar Hovedstyret">
-                      <StarHalf />
-                    </Tooltip>
+                    <br />
+                    <Typography variant="caption">Lederpar Hovedstyret</Typography>
                   </TableCell>
                   <TableCell>
                     Andreas Johannesen &apos;22
-                    <Tooltip title="Lederpar Hovedstyret">
-                      <StarHalf />
-                    </Tooltip>
+                    <br />
+                    <Typography variant="caption">Lederpar Hovedstyret</Typography>
                   </TableCell>
-                  <TableCell>Ingrid Aaseng &apos;22</TableCell>
+                  <TableCell>
+                    Ingrid Aaseng &apos;22
+                    <br />
+                    <Typography variant="caption">Arkiv</Typography>
+                  </TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell>Fredrik Ahlborg &apos;22</TableCell>
-                  <TableCell>Herman Holmøy &apos;25</TableCell>
-                  <TableCell>Patrik Kjærran &apos;22</TableCell>
-                  <TableCell>Anna Sofie Lunde &apos;22</TableCell>
+                  <TableCell>
+                    Fredrik Ahlborg &apos;22
+                    <br />
+                    <Typography variant="caption">Content Creator</Typography>
+                  </TableCell>
+                  <TableCell>
+                    Herman Holmøy &apos;25
+                    <br />
+                    <Typography variant="caption">Hyttebooking </Typography>
+                  </TableCell>
+                  <TableCell>
+                    Patrik Kjærran &apos;22
+                    <br />
+                    <Typography variant="caption">Event</Typography>
+                  </TableCell>
+                  <TableCell>
+                    Anna Sofie Lunde &apos;22
+                    <br />
+                    <Typography variant="caption">Arkiv</Typography>
+                  </TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell>Hermann Mørkrid &apos;23</TableCell>
-                  <TableCell>Mathias Raa &apos;25</TableCell>
-                  <TableCell>Mathilde Marie Solberg &apos;23</TableCell>
-                  <TableCell>Sverre Spetalen &apos;21</TableCell>
+                  <TableCell>
+                    Hermann Mørkrid &apos;23
+                    <br />
+                    <Typography variant="caption">Verv-søking</Typography>
+                  </TableCell>
+                  <TableCell>
+                    Mathias Raa &apos;25
+                    <br />
+                    <Typography variant="caption">Chief of Design</Typography>
+                  </TableCell>
+                  <TableCell>
+                    Mathilde Marie Solberg &apos;23
+                    <br />
+                    <Typography variant="caption">Event</Typography>
+                  </TableCell>
+                  <TableCell>
+                    Sverre Spetalen &apos;21
+                    <br />
+                    <Typography variant="caption">Hyttebooking</Typography>
+                  </TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell>Lars Waage &apos;23</TableCell>
+                  <TableCell>
+                    Lars Waage &apos;23
+                    <br />
+                    <Typography variant="caption">Verv-søking</Typography>
+                  </TableCell>
                 </TableRow>
               </TableBody>
             </Table>
