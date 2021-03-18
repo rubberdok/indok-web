@@ -1,5 +1,5 @@
 import Template from "@components/pages/about/Template";
-import { Typography } from "@material-ui/core";
+import { Box, Paper, Typography } from "@material-ui/core";
 import { NextPage } from "next";
 import React from "react";
 
@@ -36,13 +36,14 @@ const AboutPage: NextPage = () => {
         første festen på Janus-kjellerne. I løpet av de neste 20 årene skulle flere titalls tilbud bli startet, med alt
         fra veldedighet og ølbrygging til fadderuker og case-trening på agendaen.
       </Typography>
-
-      <Typography variant="h6" paragraph>
-        <i>
-          En detaljert historie om all foreningsaktivitet på Indøk er under utarbeidelse. Har du eksklusiv kunnskap om
-          denne? Send en mail til leder@indokhs.no
-        </i>
-      </Typography>
+      <Paper>
+        <Box p={4} my={3}>
+          <Typography variant="body2">
+            En detaljert historie om all foreningsaktivitet på Indøk er under utarbeidelse. Har du eksklusiv kunnskap om
+            denne? Send en mail til leder@indokhs.no
+          </Typography>
+        </Box>
+      </Paper>
 
       <Typography variant="h5" gutterBottom>
         Foreningens formål
