@@ -57,6 +57,11 @@ const useStyles = makeStyles((theme) => ({
       display: "none",
     },
   },
+  container: {
+    [theme.breakpoints.up("md")]: {
+      maxWidth: "90vw",
+    },
+  },
 }));
 
 const HideOnScroll: React.FC = ({ children }) => {
@@ -79,7 +84,7 @@ const Navbar: React.FC = () => {
     <div className={classes.root}>
       <HideOnScroll>
         <AppBar color="primary" className={classes.appBar}>
-          <Container style={{ maxWidth: "90vw" }}>
+          <Container className={classes.container}>
             <Toolbar>
               <Link href="/">
                 <Typography variant="h6" className={classes.title}>

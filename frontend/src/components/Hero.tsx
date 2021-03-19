@@ -44,7 +44,7 @@ const organizations = [
   },
 ];
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   hero: {
     color: "black",
   },
@@ -64,7 +64,9 @@ const useStyles = makeStyles(() => ({
     height: "100%",
   },
   container: {
-    maxWidth: "90vw",
+    [theme.breakpoints.up("md")]: {
+      maxWidth: "90vw",
+    },
     height: "70vh",
     paddingTop: "25vh",
   },
@@ -181,7 +183,10 @@ const Hero: React.FC = () => {
               <Typography variant="overline">Foreningen for studentene ved</Typography>
               <Fade duration={700} cascade triggerOnce direction="up">
                 <Typography style={{ color: "white" }} variant="h2">
-                  Industriell Økonomi <br />
+                  Industriell Økonomi{" "}
+                  <Hidden smDown>
+                    <br />
+                  </Hidden>
                   og Teknologiledelse
                 </Typography>
                 <br />
