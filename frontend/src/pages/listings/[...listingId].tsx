@@ -2,7 +2,9 @@ import { useQuery } from "@apollo/client";
 import Layout from "@components/Layout";
 import { LISTING } from "@graphql/listings/queries";
 import { Listing } from "@interfaces/listings";
-import { Button, Container, Grid, Hidden, makeStyles } from "@material-ui/core";
+import { Button, Container, Grid, Hidden, makeStyles, Card, CardContent, Typography, Box, Divider, IconButton } from "@material-ui/core";
+import ArrowForward from "@material-ui/icons/ArrowForward"
+import InfoOutlined from "@material-ui/icons/InfoOutlined";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import AnswerSurvey from "@components/pages/surveys/answerSurvey";
@@ -10,6 +12,10 @@ import { useState } from "react";
 import OrganizationInfoPanel from "@components/pages/listings/detail/organizationInfoPanel";
 import InlineOrganizationInfoPanel from "@components/pages/listings/detail/inlineOrganizationInfoPanel";
 import ListingBody from "@components/pages/listings/detail/listingBody";
+import Hero from "@components/pages/listings/detail/hero";
+import dayjs from "dayjs"
+import nb from "dayjs/locale/nb";
+dayjs.locale(nb)
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -59,38 +65,40 @@ const ListingPage: NextPage = () => {
     <>
       {data && (
         <Layout>
+          <Hidden smDown>
+            <Hero
+              img="img/bindeleddet.jpg"
+              title={data.listing.title}
+              subtitle1={data.listing.organization?.name}
+              subtitle2={dayjs(data.listing.deadline).format("DD. MMMM YYYY, kl. HH:mm")}
+              buttonText="Søk her"
+            />
+          </Hidden>
           <Container>
-            <Container className={classes.container}>
-              <Grid container className={classes.root} spacing={2}>
-                {data.listing.organization && (
-                  <>
-                    <Hidden smDown>
-                      <Grid item md={4}>
-                        <OrganizationInfoPanel organization={data.listing.organization} />
-                      </Grid>
-                    </Hidden>
-
-                    <Hidden mdUp>
-                      <Grid item sm={12}>
-                        <InlineOrganizationInfoPanel organization={data.listing.organization} />
-                      </Grid>
-                    </Hidden>
-                  </>
-                )}
-                <Grid container item direction="column" sm={12} md={8}>
-                  <ListingBody listing={data.listing} />
-
-                  {data.listing?.survey && (
-                    <>
-                      <Button variant="contained" color="primary" onClick={() => displaySurvey(!surveyDisplayed)}>
-                        Søk her
-                      </Button>
-                      {surveyDisplayed && <AnswerSurvey surveyId={data.listing.survey.id} />}
-                    </>
-                  )}
+            <Card>
+              <CardContent>
+                <Grid container direction="column" alignItems="center">
+                  <Grid item>
+                    <Typography variant="subtitle1" component="h1">{data.listing.title}</Typography>
+                  </Grid>
+                  <Grid item>
+                    <Typography variant="overline" component="span">{data.listing.organization.name}</Typography>
+                  </Grid>
+                  <Grid item>
+                    <Typography variant="overline" component="span">{dayjs(data.listing.deadline).format("DD. MMMM YYYY, kl. HH:mm")}</Typography>
+                  </Grid>
+                  <Grid item>
+                    <Button variant="contained" color="primary" endIcon={<ArrowForward />}>
+                      Søk her 
+                    </Button>
+                  </Grid>
                 </Grid>
-              </Grid>
-            </Container>
+              </CardContent>
+            </Card>
+
+            <Card>
+
+            </Card>
           </Container>
         </Layout>
       )}

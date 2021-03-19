@@ -44,21 +44,6 @@ const ListingsPage: NextPage = () => {
   if (loading) return <p>Loading...</p>;
   return (
     <Layout>
-      <Grid container className={classes.hero} alignItems="center" justify="center">
-        <Grid xs={12} sm={6} item container justify="center">
-          <Box>
-            <Typography variant="h1">Verv</Typography>
-            <Typography variant="overline">Oversikt over åpne verv på Indøk</Typography>
-          </Box>
-        </Grid>
-        <Grid xs={12} sm={6} item container justify="center">
-          {/*<Link href="/cabins/book" passHref>
-            <Button variant="contained" endIcon={<NavigateNextIcon />}>
-              Book nå
-            </Button>
-          </Link> */}
-        </Grid>
-      </Grid>
       <Container>
         <Grid container className={classes.container} spacing={2}>
           <Filter filters={filters} />
