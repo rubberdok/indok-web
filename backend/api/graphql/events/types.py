@@ -16,7 +16,7 @@ class EventType(DjangoObjectType):
     is_full = graphene.Boolean(source="is_full")
     users_on_waiting_list = graphene.List(UserType)
     users_attending = graphene.List(UserType)
-    allowed_grade_years_list = graphene.List(graphene.Int)
+    allowed_grade_years = graphene.List(graphene.Int)
     available_slots = graphene.Int()
 
     class Meta:
@@ -40,7 +40,6 @@ class EventType(DjangoObjectType):
             "has_extra_information",
             "binding_signup",
             "contact_email",
-            "allowed_grade_years_list",
         ]
 
     class PermissionDecorators:
@@ -69,7 +68,7 @@ class EventType(DjangoObjectType):
         }
 
     @staticmethod
-    def resolve_allowed_grade_years_list(event, info):
+    def resolve_allowed_grade_years(event, info):
         return [int(grade) for grade in event.allowed_grade_years]
 
     @staticmethod
