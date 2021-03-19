@@ -34,7 +34,7 @@
     "react-feather": "^2.0.8",
     "react-icons": "^3.11.0",
     "react-markdown": "^5.0.3",
-    "react-parallax": "^3.1.2",
+    "react-parallax": "^3.2.1",
     "react-swipeable-views": "^0.13.9",
     "react-swipeable-views-utils": "^0.14.0-alpha.0",
     "ts-debounce": "^3.0.0",
