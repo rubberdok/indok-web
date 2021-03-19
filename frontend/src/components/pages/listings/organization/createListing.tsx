@@ -1,9 +1,10 @@
-import TextField from "@components/ui/formComponents/textfield";
 import { useState } from "react";
 import { Listing } from "@interfaces/listings";
 import { Organization } from "@interfaces/organizations";
 import { CREATE_LISTING } from "@graphql/listings/mutations";
-import { useMutation, gql } from "@apollo/client";
+import { GET_ORGANIZATION } from "@graphql/orgs/queries";
+import { useMutation } from "@apollo/client";
+import { TextField } from "@material-ui/core";
 
 // component for authorized organization members to create new listings
 // props: the organization for which to create the listing
@@ -13,24 +14,24 @@ const CreateListing: React.FC<{ organization: Organization }> = ({ organization 
 
   // mutation to create the new listing, and update the cache to show it instantly
   const [createListing] = useMutation<{ createListing: { listing: Listing } }>(CREATE_LISTING, {
+    // updates the cache upon creating the listing, so it can show up instantly
     update: (cache, { data }) => {
-      data &&
-        cache.modify({
-          fields: {
-            listings: (existingListings) => {
-              // creates a fragment of the new listing, as that is what the cache stores
-              const newListing = cache.writeFragment<Listing>({
-                data: data.createListing.listing,
-                fragment: gql`
-                  fragment NewListing on Listing {
-                    id
-                  }
-                `,
-              });
-              return [...existingListings, newListing];
+      const newListing = data?.createListing.listing;
+      const cachedOrg = cache.readQuery<{ org: Organization }>({
+        query: GET_ORGANIZATION,
+        variables: { orgId: parseInt(organization.id) },
+      });
+      if (cachedOrg && newListing) {
+        cache.writeQuery({
+          query: GET_ORGANIZATION,
+          variables: { orgId: parseInt(organization.id) },
+          data: {
+            organization: {
+              listings: [...(cachedOrg.org.listings ?? []), newListing],
             },
           },
         });
+      }
     },
   });
 
@@ -61,7 +62,8 @@ const CreateListing: React.FC<{ organization: Organization }> = ({ organization 
       <br />
       <TextField
         title="Beskrivelse av vervet: "
-        size="short"
+        multiline
+        rows={4}
         onChange={(e) => setNewListing({ ...newListing, description: e.target.value })}
         value={newListing.description}
       />

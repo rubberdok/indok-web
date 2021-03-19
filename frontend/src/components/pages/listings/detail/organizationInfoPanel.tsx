@@ -45,7 +45,9 @@ const OrganizationInfoPanel: React.FC<OrganizationInfoPanelProps> = ({ organizat
           </Grid>
 
           <Grid item>
-            <Typography variant="body2" component="span">{organization.description || "Ingen organisasjon"}</Typography>
+            <Typography variant="body2" component="span">
+              {organization.description || "Ingen organisasjon"}
+            </Typography>
           </Grid>
         </Grid>
       </CardContent>

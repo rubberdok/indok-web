@@ -1,21 +1,27 @@
 import { Organization } from "@interfaces/organizations";
-import { Accordion, AccordionDetails, AccordionSummary, Avatar, Card, CardMedia, Grid, makeStyles, Typography } from "@material-ui/core";
-import { Spacing } from "@material-ui/system";
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Avatar,
+  Card,
+  CardMedia,
+  Grid,
+  makeStyles,
+  Typography,
+} from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-
 
 interface InlineOrganizationInfoPanelProps {
   organization: Organization;
 }
 
 const useStyles = makeStyles((theme) => ({
-
   large: {
     width: theme.spacing(8),
     height: theme.spacing(8),
     objectFit: "contain",
   },
-
 }));
 
 // component for organization detail on mobile

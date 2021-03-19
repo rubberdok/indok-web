@@ -7,7 +7,6 @@ import { Container, Grid, makeStyles, Typography, Box, Card, CardContent } from 
 import Filter from "@components/pages/listings/filter";
 import ListingItem from "@components/pages/listings/listingItem";
 
-
 const useStyles = makeStyles((theme) => ({
   title: {
     paddingBottom: theme.spacing(4),

@@ -2,7 +2,7 @@ import { Listing } from "@interfaces/listings";
 import { Card, CardActionArea, CardContent, CardMedia, Grid, makeStyles, Typography } from "@material-ui/core";
 import Link from "next/link";
 import dayjs from "dayjs";
-import nb from "dayjs/locale/nb"
+import nb from "dayjs/locale/nb";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -44,7 +44,7 @@ const ListingItem: React.FC<ListItemProps> = ({ listing }) => {
                   </Typography>
                 </Grid>
                 <Grid item xs={12}>
-                  <Typography variant="caption" component="span" >
+                  <Typography variant="caption" component="span">
                     {dayjs(listing.deadline).locale(nb).format("D. MMMM")}
                   </Typography>
                 </Grid>

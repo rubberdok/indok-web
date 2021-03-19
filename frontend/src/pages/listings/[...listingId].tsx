@@ -64,7 +64,6 @@ const ListingPage: NextPage = () => {
               <Grid container className={classes.root} spacing={2}>
                 {data.listing.organization && (
                   <>
-                  
                     <Hidden smDown>
                       <Grid item md={4}>
                         <OrganizationInfoPanel organization={data.listing.organization} />
@@ -76,11 +75,9 @@ const ListingPage: NextPage = () => {
                         <InlineOrganizationInfoPanel organization={data.listing.organization} />
                       </Grid>
                     </Hidden>
-
                   </>
                 )}
                 <Grid container item direction="column" sm={12} md={8}>
-
                   <ListingBody listing={data.listing} />
 
                   {data.listing?.survey && (
@@ -91,7 +88,6 @@ const ListingPage: NextPage = () => {
                       {surveyDisplayed && <AnswerSurvey surveyId={data.listing.survey.id} />}
                     </>
                   )}
-
                 </Grid>
               </Grid>
             </Container>
