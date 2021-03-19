@@ -90,16 +90,17 @@ const ImageSlider = ({ imageData, displayLabelText }: imageSliderProps): JSX.Ele
         position="static"
         activeStep={activeStep}
         className={classes.mobileStepper}
+        variant="progress"
         nextButton={
           <Button size="small" onClick={handleNext} disabled={activeStep === maxSteps - 1}>
-            Next
+            Neste
             {theme.direction === "rtl" ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
           </Button>
         }
         backButton={
           <Button size="small" onClick={handleBack} disabled={activeStep === 0}>
             {theme.direction === "rtl" ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
-            Back
+            Forrige
           </Button>
         }
       />
