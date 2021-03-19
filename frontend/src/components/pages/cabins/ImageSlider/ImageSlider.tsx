@@ -16,10 +16,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     overflow: "hidden",
     width: "100%",
   },
-  imageContainer: {
-    boxShadow: "1px 2px 8px 0px rgba(0,0,0,0.75)",
-    marginBottom: "10px",
-  },
   mobileStepper: {
     backgroundColor: theme.palette.background.paper,
   },
@@ -71,7 +67,7 @@ const ImageSlider = ({ imageData, displayLabelText }: imageSliderProps): JSX.Ele
       ) : (
         ""
       )}
-      <Box className={classes.imageContainer}>
+      <Box>
         <SwipeableViews
           axis={theme.direction === "rtl" ? "x-reverse" : "x"}
           index={activeStep}
