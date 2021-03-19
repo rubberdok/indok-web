@@ -182,7 +182,7 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
                 >
                   Rediger
                 </Button>
-                <Link href={`/orgs/${eventData.event.organization.id}/${eventData.event.id}`} passHref>
+                <Link href={`/orgs/${eventData.event.organization.id}/events/${eventId}`} passHref>
                   <Button color="primary" disableRipple startIcon={<List />}>
                     Administrer
                   </Button>
