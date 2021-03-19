@@ -1,6 +1,6 @@
 ---
 title: Janus FK
-description: Mer tekst
+description: Indøks fotballag for herrer
 logo: /img/FK_logo.jpg
 image: /img/fkbilde.jpg
 styre:

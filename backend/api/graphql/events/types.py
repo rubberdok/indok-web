@@ -88,7 +88,7 @@ class EventType(DjangoObjectType):
     def resolve_available_slots(event, info):
         user = info.context.user
         if (
-            not user
+            not user.is_authenticated
             or not user.memberships.filter(organization=event.organization).exists()
         ):
             return None

@@ -1,6 +1,6 @@
 ---
 title: Indøk Business Club
-description: Mer tekst
+description: Indøks helt egne case-klubb
 logo: /img/IBClogo.png
 image: /img/IBCmote.jpeg
 styre:
@@ -12,6 +12,7 @@ styre:
     navn: Anders Rønning
     mail: tlf. 913 51 892
     tittel: Nestleder
+tag: annet
 ---
 
 # Hvem er vi?
