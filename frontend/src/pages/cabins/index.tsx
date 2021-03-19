@@ -100,7 +100,7 @@ const CreateBookingPage: NextPage = () => {
       <Layout>
         <Hero />
         <Container>
-          <Box m={5}>
+          <Box my={5}>
             <Paper>
               <Box p={5}>
                 <Grid container alignItems="center" spacing={10} direction="column">
