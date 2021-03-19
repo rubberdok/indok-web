@@ -15,12 +15,21 @@ import { useRouter } from "next/router";
 import React, { ReactElement } from "react";
 import NavbarLinks from "./NavbarLinks";
 
+//set navbar style breakpoint, should be adjusted according to width of NavbarLinks
+export const breakpoint = 1070;
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
   },
   appBar: {
     background: "#022A2A",
+  },
+  drawer: {
+    [theme.breakpoints.down(breakpoint)]: {
+      flexDirection: "column-reverse",
+      justifyContent: "flex-end",
+    },
   },
   title: {
     flexGrow: 1,
@@ -36,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
   sectionDesktop: {
     display: "none",
 
-    [theme.breakpoints.up("md")]: {
+    [theme.breakpoints.up(breakpoint)]: {
       display: "flex",
       height: "100%",
       alignItems: "center",
@@ -44,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
   },
   sectionMobile: {
     display: "flex",
-    [theme.breakpoints.up("md")]: {
+    [theme.breakpoints.up(breakpoint)]: {
       display: "none",
     },
   },
@@ -90,7 +99,12 @@ const Navbar: React.FC = () => {
         </AppBar>
       </HideOnScroll>
       {router.pathname != "/" && <Toolbar id="back-to-top-anchor" />}
-      <Drawer anchor="right" open={openDrawer} onClose={() => setOpenDrawer(false)}>
+      <Drawer
+        PaperProps={{ className: classes.drawer }}
+        anchor="right"
+        open={openDrawer}
+        onClose={() => setOpenDrawer(false)}
+      >
         <NavbarLinks></NavbarLinks>
       </Drawer>
     </div>
