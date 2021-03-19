@@ -1,8 +1,7 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { UPDATE_EVENT } from "@graphql/events/mutations";
-import { GET_CATEGORIES, GET_EVENT } from "@graphql/events/queries";
+import { ADMIN_GET_EVENT, GET_CATEGORIES, GET_EVENT } from "@graphql/events/queries";
 import { Category, Event } from "@interfaces/events";
-import { User } from "@interfaces/users";
 import {
   Button,
   Checkbox,
@@ -24,7 +23,6 @@ import {
   Typography,
 } from "@material-ui/core";
 import { Check, Close, Warning } from "@material-ui/icons";
-import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import nb from "dayjs/locale/nb";
@@ -33,10 +31,9 @@ interface EditEventProps {
   open: boolean;
   onClose: () => void;
   event: Event;
-  user: User;
 }
 
-const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event, user }) => {
+const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
   const defaultInput: Record<string, any> = {
     title: "",
     description: "",
@@ -58,13 +55,13 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event, user }) => 
 
   const [eventData, setEventData] = useState(defaultInput);
 
-  const router = useRouter();
-
   const [updateEvent, { loading: updateEventLoading, error: updateEventError }] = useMutation<{
     updateEvent: { event: Event };
   }>(UPDATE_EVENT, {
     update: (cache, { data }) => {
-      data && cache.writeQuery<Event>({ query: GET_EVENT, data: data.updateEvent.event });
+      data &&
+        cache.writeQuery<Event>({ query: GET_EVENT, data: data.updateEvent.event }) &&
+        cache.writeQuery<Event>({ query: ADMIN_GET_EVENT, data: { ...event, ...data.updateEvent.event } });
     },
   });
 
@@ -98,10 +95,6 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event, user }) => 
 
   if (categoryLoading) return <CircularProgress />;
   if (categoryError) return <Typography>Det oppstod en feil.</Typography>;
-
-  if (!user || !user.organizations.length) {
-    router.push("/events");
-  }
 
   const onIsAttendableChange = (attendable: boolean) => {
     // Reset all fields depending on isAttendable if isAttendable is disabled

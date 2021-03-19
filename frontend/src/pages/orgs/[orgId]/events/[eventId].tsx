@@ -1,12 +1,14 @@
 import { useQuery } from "@apollo/client";
 import Layout from "@components/Layout";
 import AttendeeExport from "@components/pages/events/attendeeExport";
+import EditEvent from "@components/pages/events/editEvent";
 import EmailForm from "@components/pages/events/EventEmail";
 import { ADMIN_GET_EVENT } from "@graphql/events/queries";
 import { Event } from "@interfaces/events";
 import { User } from "@interfaces/users";
 import {
   Box,
+  Button,
   Card,
   CardActions,
   CardContent,
@@ -23,9 +25,11 @@ import {
   TableRow,
   Typography,
 } from "@material-ui/core";
+import { Edit } from "@material-ui/icons";
 import dayjs from "dayjs";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
+import React, { useState } from "react";
 
 interface HeaderValuePair<T> {
   header: string;
@@ -68,6 +72,8 @@ const EventAdminPage: NextPage = () => {
     skip: Number.isNaN(eventNumberID),
   });
 
+  const [openEditEvent, setOpenEditEvent] = useState(false);
+
   if (loading) {
     return <CircularProgress />;
   }
@@ -93,6 +99,9 @@ const EventAdminPage: NextPage = () => {
     <Layout>
       {data?.event ? (
         <Box m={10}>
+          {openEditEvent && (
+            <EditEvent open={openEditEvent} onClose={() => setOpenEditEvent(false)} event={data.event} />
+          )}
           <Grid container direction="column" spacing={5}>
             <Grid item>
               <Typography variant="h1" align="center">
@@ -103,6 +112,11 @@ const EventAdminPage: NextPage = () => {
               <Grid item xs={4}>
                 <Card variant="outlined">
                   <CardHeader title="Generell informasjon" />
+                  <CardActions>
+                    <Button startIcon={<Edit />} onClick={() => setOpenEditEvent(true)}>
+                      Rediger
+                    </Button>
+                  </CardActions>
                   <CardContent>
                     <List>
                       {stringEventFields.map((headerPair: HeaderValuePair<Event>) =>
