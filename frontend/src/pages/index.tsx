@@ -55,7 +55,7 @@ const IndexPage: NextPage = () => {
         bgImageStyle={{ zIndex: -1, objectFit: "cover", objectPosition: "50% -19vh" }}
         className={classes.title}
         bgImage="img/gang.jpg"
-        bgImageAlt="the cat"
+        bgImageAlt="bilde av indøkstudenter"
         strength={200}
         renderLayer={(percentage) => (
           <div
