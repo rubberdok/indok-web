@@ -230,29 +230,35 @@ const CreateEvent: React.FC = () => {
           </Tooltip>
         </Grid>
         <Grid item xs={6}>
-          <FormControl fullWidth>
-            <InputLabel id="select-grade-years-label" shrink>
-              Åpent for
-            </InputLabel>
-            <Select
-              labelId="select-grade-years-label"
-              id="select-grade-years"
-              name="grade-years"
-              value={eventData.allowedGradeYears}
-              multiple
-              onChange={(e) => {
-                setEventData({ ...eventData, allowedGradeYears: e.target.value });
-                console.log(e.target.value);
-              }}
-              displayEmpty
-            >
-              {[1, 2, 3, 4, 5].map((year: number) => (
-                <MenuItem key={year} value={year}>
-                  {`${year}. klasse`}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+          <Tooltip
+            disableHoverListener={eventData.isAttendable}
+            disableFocusListener={eventData.isAttendable}
+            title="Kun aktuelt ved påmelding"
+          >
+            <FormControl fullWidth>
+              <InputLabel id="select-grade-years-label" shrink>
+                Åpent for
+              </InputLabel>
+              <Select
+                labelId="select-grade-years-label"
+                id="select-grade-years"
+                name="grade-years"
+                value={eventData.allowedGradeYears}
+                multiple
+                onChange={(e) => {
+                  setEventData({ ...eventData, allowedGradeYears: e.target.value });
+                }}
+                displayEmpty
+                disabled={!eventData.isAttendable}
+              >
+                {[1, 2, 3, 4, 5].map((year: number) => (
+                  <MenuItem key={year} value={year}>
+                    {`${year}. klasse`}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Tooltip>
         </Grid>
         <Grid item xs={6}>
           <TextField
