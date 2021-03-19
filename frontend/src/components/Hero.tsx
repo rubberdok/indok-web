@@ -136,7 +136,7 @@ const Hero: React.FC = () => {
   return (
     <Box id="back-to-top-anchor" height="100vh" position="relative">
       <Grid container style={{ height: "100%", position: "absolute", zIndex: -1, background: "black" }}>
-        <Grid item sm={12} md={8} className={classes.relative}>
+        <Grid item xs={12} md={8} className={classes.relative}>
           <Hidden smDown>
             {organizations.map((item) => (
               <Box
@@ -169,7 +169,7 @@ const Hero: React.FC = () => {
       </Grid>
       <Container className={classes.container}>
         <Grid container className={classes.height}>
-          <Grid item sm={12} md={5}>
+          <Grid item xs={12} md={5}>
             <Box
               style={{ color: "white" }}
               height="100%"
