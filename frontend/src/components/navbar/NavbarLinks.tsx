@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/client";
 import { GET_USER } from "@graphql/users/queries";
 import { User } from "@interfaces/users";
-import { Button, makeStyles, Menu, MenuItem } from "@material-ui/core";
+import { Box, Button, makeStyles, Menu, MenuItem } from "@material-ui/core";
 import { AccountCircleOutlined } from "@material-ui/icons";
 import PersonIcon from "@material-ui/icons/LockOpen";
 import { DATAPORTEN_SCOPES } from "@utils/auth";
@@ -9,48 +9,10 @@ import { generateQueryString } from "@utils/helpers";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
+import links from "./links";
+import { breakpoint } from "./Navbar";
 
-const links = [
-  {
-    id: 1,
-    title: "Hjem",
-    href: "/",
-  },
-  {
-    id: 2,
-    title: "Om Foreningen",
-    href: "/about",
-    dropdown: [
-      {
-        id: 2_1,
-        title: "Om oss",
-        href: "/about",
-      },
-      {
-        id: 2_2,
-        title: "Organisasjoner",
-        href: "/about/organization",
-      },
-      {
-        id: 2_3,
-        title: "Hovedstyret",
-        href: "/about/board",
-      },
-    ],
-  },
-  {
-    id: 3,
-    title: "Arrangementer",
-    href: "/events",
-  },
-  {
-    id: 4,
-    title: "Indøkhyttene",
-    href: "/cabins",
-  },
-];
-
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   nav: {
     position: "relative",
 
@@ -68,25 +30,43 @@ const useStyles = makeStyles(() => ({
     padding: "0 32px",
     color: "#b0aca5",
 
+    [theme.breakpoints.down(breakpoint)]: {
+      marginBottom: theme.spacing(3),
+    },
+
     "&:hover": {
       cursor: "pointer",
       color: "#fff",
       textDecoration: "none",
+
+      [theme.breakpoints.down(breakpoint)]: {
+        color: theme.palette.primary.main,
+      },
     },
 
     "&.active": {
       color: "#fff",
+
+      [theme.breakpoints.down(breakpoint)]: {
+        color: theme.palette.primary.main,
+      },
     },
   },
   user: {
-    color: "white",
-    height: "100%",
     background: "#065A5A",
-    padding: "27px 0",
-    marginLeft: 16,
-    paddingLeft: 35,
-    paddingRight: "calc(5vw + 15px)",
-    marginRight: "calc(-15px - 5vw)",
+    color: "white",
+    paddingTop: 27,
+    paddingBottom: 27,
+    height: "unset",
+
+    [theme.breakpoints.up(breakpoint)]: {
+      height: "100%",
+      marginLeft: 16,
+      padding: "27px 0",
+      paddingLeft: 35,
+      paddingRight: "calc(5vw + 15px)",
+      marginRight: "calc(-15px - 5vw)",
+    },
 
     ["&:hover"]: {
       background: "#0b6666",
@@ -109,6 +89,9 @@ const useStyles = makeStyles(() => ({
     ["& $navItem"]: {
       marginTop: 10,
       marginBottom: 10,
+    },
+    [theme.breakpoints.down(breakpoint)]: {
+      display: "none!important",
     },
   },
 }));
@@ -166,14 +149,16 @@ const NavbarLinks: React.FC = () => {
       ))}
       {!userData || loading || !userData.user || error ? (
         <>
-          <a
-            className={classes.navItem}
-            href="https://www.ntnu.no/studier/mtiot"
-            target="_blank"
-            rel="noreferrer noopener"
-          >
-            Om studiet
-          </a>
+          <Box position="relative">
+            <a
+              className={classes.navItem}
+              href="https://www.ntnu.no/studier/mtiot"
+              target="_blank"
+              rel="noreferrer noopener"
+            >
+              Om studiet
+            </a>
+          </Box>
           <Link href={signInURL} passHref>
             <Button className={[classes.navItem, classes.user].join(" ")} startIcon={<PersonIcon fontSize="small" />}>
               Logg inn med Feide
@@ -182,9 +167,11 @@ const NavbarLinks: React.FC = () => {
         </>
       ) : (
         <>
-          <Link href="/archive">
-            <a className={[router.pathname == "/archive" ? "active" : "", classes.navItem].join(" ")}>Arkiv</a>
-          </Link>
+          <Box position="relative">
+            <Link href="/archive">
+              <a className={[router.pathname == "/archive" ? "active" : "", classes.navItem].join(" ")}>Arkiv</a>
+            </Link>
+          </Box>
           <Button
             className={[classes.navItem, classes.user].join(" ")}
             aria-label="account of current user"
