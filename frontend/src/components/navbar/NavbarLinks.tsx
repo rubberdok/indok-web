@@ -90,8 +90,8 @@ const useStyles = makeStyles((theme) => ({
       marginTop: 10,
       marginBottom: 10,
     },
-    [theme.breakpoints.up(breakpoint)]: {
-      display: "none",
+    [theme.breakpoints.down(breakpoint)]: {
+      display: "none!important",
     },
   },
 }));
@@ -149,14 +149,16 @@ const NavbarLinks: React.FC = () => {
       ))}
       {!userData || loading || !userData.user || error ? (
         <>
-          <a
-            className={classes.navItem}
-            href="https://www.ntnu.no/studier/mtiot"
-            target="_blank"
-            rel="noreferrer noopener"
-          >
-            Om studiet
-          </a>
+          <Box position="relative">
+            <a
+              className={classes.navItem}
+              href="https://www.ntnu.no/studier/mtiot"
+              target="_blank"
+              rel="noreferrer noopener"
+            >
+              Om studiet
+            </a>
+          </Box>
           <Link href={signInURL} passHref>
             <Button className={[classes.navItem, classes.user].join(" ")} startIcon={<PersonIcon fontSize="small" />}>
               Logg inn med Feide
