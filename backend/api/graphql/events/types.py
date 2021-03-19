@@ -1,5 +1,5 @@
 import graphene
-from apps.events.models import Category, Event
+from apps.events.models import Category, Event, SignUp
 from graphene_django import DjangoObjectType
 from graphql_jwt.decorators import login_required
 
@@ -48,11 +48,15 @@ class EventType(DjangoObjectType):
         def is_in_event_organization(resolver):
             def wrapper(event: Event, info):
                 user = info.context.user
-                if user.memberships.filter(organization=event.organization).exists() or user.is_superuser:
+                if (
+                    user.memberships.filter(organization=event.organization).exists()
+                    or user.is_superuser
+                ):
                     return resolver(event, info)
                 else:
                     raise PermissionError(
-                        f"Du må være medlem av organisasjonen {event.organization.name} for å gjøre dette kallet")
+                        f"Du må være medlem av organisasjonen {event.organization.name} for å gjøre dette kallet"
+                    )
 
             return wrapper
 
@@ -83,10 +87,12 @@ class EventType(DjangoObjectType):
     @staticmethod
     def resolve_available_slots(event, info):
         user = info.context.user
-        if not user or not user.memberships.filter(organization=event.organization).exists():
+        if (
+            not user
+            or not user.memberships.filter(organization=event.organization).exists()
+        ):
             return None
         return event.available_slots
-            
 
 
 class CategoryType(DjangoObjectType):
@@ -95,4 +101,21 @@ class CategoryType(DjangoObjectType):
         fields = [
             "id",
             "name",
+        ]
+
+
+class SignUpType(DjangoObjectType):
+    class Meta:
+        model = SignUp
+        fields = [
+            "id",
+            "event",
+            "user",
+            "timestamp",
+            "is_attending",
+            "extra_information",
+            "user_email",
+            "user_allergies",
+            "user_phone_number",
+            "user_grade_year",
         ]

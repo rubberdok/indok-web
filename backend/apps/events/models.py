@@ -119,3 +119,6 @@ class SignUp(models.Model):
     user_allergies = models.CharField(max_length=1000, blank=True, default="")
     user_phone_number = PhoneNumberField()
     user_grade_year = models.IntegerField()
+
+    def __str__(self):
+        return f"{self.user.username}-{self.event.title}"

@@ -1,7 +1,8 @@
 from datetime import date
 
-from apps.events.models import Category, Event
+from apps.events.models import Category, Event, SignUp
 from apps.organizations.models import Organization
+from apps.organizations.permissions import check_user_membership
 from django.db.models import Q
 from django.contrib.auth import get_user_model
 from django.http import HttpResponse
@@ -15,14 +16,15 @@ import base64
 
 
 DEFAULT_REPORT_FIELDS = [
+    "signup_timestamp",
     "event_title",
-    "user_last_name",
     "user_first_name",
-    "user_phone_number",
-    "user_email",
-    "user_year",
-    "user_allergies",
-]
+    "user_last_name",
+    "signup_user_grade_year",
+    "signup_user_email",
+    "signup_user_phone_number",
+    "signup_user_allergies",
+]  # in addition to fields stored on signup model
 
 FiletypeSpec = namedtuple("Filetype", ["content_type", "extension"])
 filetype_specs = {
@@ -108,11 +110,24 @@ class EventResolvers:
             return None
 
     def resolve_attendee_report(self, info, event_id, fields=None, filetype="xlsx"):
+        try:
+            event = Event.objects.get(id=event_id)
+        except Event.DoesNotExist:
+            return None
+        check_user_membership(info.context.user, event.organization)
+
         df = create_attendee_report([event_id], fields)
         file_basename = f"attendee_report__eventid_{event_id}"
         return wrap_attendee_report_as_json(df, file_basename, filetype)
 
     def resolve_attendee_reports(self, info, event_ids, fields=None, filetype="xlsx"):
+        for event_id in event_ids:
+            try:
+                event = Event.objects.get(id=event_id)
+            except Event.DoesNotExist:
+                return None
+            check_user_membership(info.context.user, event.organization)
+
         df = create_attendee_report(event_ids, fields)
         file_basename = (
             f"attendee_report__eventid_{'|'.join(str(id_) for id_ in event_ids)}"
@@ -120,6 +135,12 @@ class EventResolvers:
         return wrap_attendee_report_as_json(df, file_basename, filetype)
 
     def resolve_attendee_report_org(self, info, org_id, fields=None, filetype="xlsx"):
+        try:
+            org = Organization.objects.get(id=org_id)
+        except Organization.DoesNotExist:
+            return None
+        check_user_membership(info.context.user, org)
+
         event_ids = Organization.objects.get(id=org_id).event_set.values_list(
             "id", flat=True
         )
@@ -127,11 +148,21 @@ class EventResolvers:
         file_basename = f"attendee_report__orgid_{org_id}"
         return wrap_attendee_report_as_json(df, file_basename, filetype)
 
+    def resolve_sign_ups(self, info, event_id):
+        try:
+            event = Event.objects.get(id=event_id)
+        except Event.DoesNotExist:
+            return None
+
+        check_user_membership(info.context.user, event.organization)
+
+        return SignUp.objects.filter(event=event)
+
 
 def create_attendee_report(event_ids, fields):
     fields = fields if fields is not None else DEFAULT_REPORT_FIELDS
-    user_ids = Event.objects.filter(id__in=event_ids).values_list(
-        "signed_up_users__id", flat=True
+    user_ids = SignUp.objects.filter(event_id__in=event_ids).values_list(
+        "user_id", flat=True
     )
 
     # Fetch data
@@ -145,7 +176,15 @@ def create_attendee_report(event_ids, fields):
         .set_index("id")
         .add_prefix("user_")
     )
-    df_events_users = pd.DataFrame(Event.signed_up_users.through.objects.all().values())
+    df_events_users = (
+        pd.DataFrame(
+            SignUp.objects.filter(is_attending=True, event_id__in=event_ids)
+            .order_by("timestamp")
+            .values()
+        )
+        .add_prefix("signup_")
+        .rename(columns={"signup_event_id": "event_id", "signup_user_id": "user_id"})
+    )
     df_joined = (
         df_events_users.join(df_events, on="event_id", how="inner")
         .join(df_users, on="user_id", how="inner")
@@ -165,6 +204,10 @@ def create_attendee_report(event_ids, fields):
 def wrap_attendee_report_as_json(df, file_basename, filetype):
     # Handle different content types
     if filetype == "xlsx":
+        if "signup_timestamp" in df:
+            df["signup_timestamp"] = df["signup_timestamp"].apply(
+                lambda a: pd.to_datetime(a).tz_localize(None)
+            )
         buffer = io.BytesIO()
         with pd.ExcelWriter(
             buffer, engine="xlsxwriter", options={"remove_timezone": True}

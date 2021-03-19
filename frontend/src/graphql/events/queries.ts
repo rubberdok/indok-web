@@ -178,6 +178,10 @@ export const ADMIN_GET_EVENT = gql`
         isOnWaitingList
       }
       isFull
+      hasExtraInformation
+      bindingSignup
+      contactEmail
+      allowedGradeYearsList
     }
   }
 `;
