@@ -1,5 +1,5 @@
 import graphene
-from apps.events.models import Category, Event
+from apps.events.models import Category, Event, SignUp
 from graphene_django import DjangoObjectType
 from graphql_jwt.decorators import login_required
 
@@ -34,7 +34,6 @@ class EventType(DjangoObjectType):
             "is_attendable",
             "deadline",
             "publisher",
-            "available_slots",
             "price",
             "signup_open_date",
             "short_description",
@@ -102,4 +101,21 @@ class CategoryType(DjangoObjectType):
         fields = [
             "id",
             "name",
+        ]
+
+
+class SignUpType(DjangoObjectType):
+    class Meta:
+        model = SignUp
+        fields = [
+            "id",
+            "event",
+            "user",
+            "timestamp",
+            "is_attending",
+            "extra_information",
+            "user_email",
+            "user_allergies",
+            "user_phone_number",
+            "user_grade_year",
         ]
