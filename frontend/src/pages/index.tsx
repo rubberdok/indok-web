@@ -52,16 +52,26 @@ const IndexPage: NextPage = () => {
     <Layout>
       <Hero />
       <Parallax
-        bgImageStyle={{ zIndex: -1 }}
+        bgImageStyle={{ zIndex: -1, objectFit: "cover", objectPosition: "50% -19vh" }}
         className={classes.title}
         bgImage="img/gang.jpg"
         bgImageAlt="the cat"
         strength={200}
+        renderLayer={(percentage) => (
+          <div
+            style={{
+              background: "rgba(2, 42, 42, " + (1 - percentage) + ")",
+              height: "100%",
+              width: "100%",
+              position: "absolute",
+            }}
+          />
+        )}
       >
         <Container>
           <Box height={600}>
             <Box display="flex" top="0" alignItems="center" position="absolute" height="100%" zIndex="4">
-              <Box width={650}>
+              <Box maxWidth={650}>
                 <Typography variant="overline">Foreningen bak</Typography>
                 <Typography variant="h3">Et fantastisk studentmiljø.</Typography>
                 <br />
