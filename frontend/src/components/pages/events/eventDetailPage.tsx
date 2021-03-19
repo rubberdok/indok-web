@@ -266,12 +266,12 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
             </Box>
           )}
 
-          {eventData.event.allowedGradeYearsList.length < 5 && (
+          {eventData.event.allowedGradeYears.length < 5 && (
             <Box my={2}>
               <Typography variant="overline" display="block">
                 Åpent for
               </Typography>
-              {eventData.event.allowedGradeYearsList.map((grade) => (
+              {eventData.event.allowedGradeYears.map((grade) => (
                 <Typography gutterBottom key={grade}>
                   <ArrowRight fontSize="small" /> {`${grade}. klasse`}
                 </Typography>
@@ -290,7 +290,7 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
 
           {eventData.event.isAttendable &&
             userData.user &&
-            eventData.event.allowedGradeYearsList.includes(userData.user.gradeYear) && (
+            eventData.event.allowedGradeYears.includes(userData.user.gradeYear) && (
               <>
                 <CountdownButton
                   countDownDate={(eventData.event as AttendableEvent).signupOpenDate}

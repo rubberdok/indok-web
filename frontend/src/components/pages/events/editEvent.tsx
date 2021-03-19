@@ -51,6 +51,7 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
     hasExtraInformation: false,
     contactEmail: "",
     bindingSignup: false,
+    allowedGradeYears: [1, 2, 3, 4, 5],
   };
 
   const [eventData, setEventData] = useState(defaultInput);
@@ -109,6 +110,7 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
         hasExtraInformation: false,
         signupOpenDate: "",
         deadline: "",
+        allowedGradeYears: [1, 2, 3, 4, 5],
       });
     }
   };
@@ -204,6 +206,31 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
                 disabled={!eventData.isAttendable}
               />
             </Tooltip>
+          </Grid>
+          <Grid item xs={6}>
+            <FormControl fullWidth>
+              <InputLabel id="select-grade-years-label" shrink>
+                Åpent for
+              </InputLabel>
+              <Select
+                labelId="select-grade-years-label"
+                id="select-grade-years"
+                name="grade-years"
+                value={eventData.allowedGradeYears}
+                multiple
+                onChange={(e) => {
+                  setEventData({ ...eventData, allowedGradeYears: e.target.value });
+                  console.log(e.target.value);
+                }}
+                displayEmpty
+              >
+                {[1, 2, 3, 4, 5].map((year: number) => (
+                  <MenuItem key={year} value={year}>
+                    {`${year}. klasse`}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </Grid>
           <Grid item xs={6}>
             <TextField

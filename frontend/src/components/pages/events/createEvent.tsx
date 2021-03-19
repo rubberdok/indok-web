@@ -7,6 +7,8 @@ import { User } from "@interfaces/users";
 import {
   Box,
   Button,
+  Card,
+  CardActions,
   Checkbox,
   CircularProgress,
   FormControl,
@@ -14,6 +16,7 @@ import {
   FormHelperText,
   Grid,
   InputLabel,
+  makeStyles,
   MenuItem,
   Select,
   TextField,
@@ -23,7 +26,17 @@ import {
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 
+const useStyles = makeStyles((theme) => ({
+  content: {
+    padding: theme.spacing(5),
+    width: "50%",
+    margin: "0 auto",
+  },
+}));
+
 const CreateEvent: React.FC = () => {
+  const classes = useStyles();
+
   const defaultInput: Record<string, any> = {
     title: "",
     description: "",
@@ -42,6 +55,7 @@ const CreateEvent: React.FC = () => {
     hasExtraInformation: false,
     contactEmail: "",
     bindingSignup: false,
+    allowedGradeYears: [1, 2, 3, 4, 5],
   };
 
   const [eventData, setEventData] = useState(defaultInput);
@@ -98,6 +112,7 @@ const CreateEvent: React.FC = () => {
         hasExtraInformation: false,
         signupOpenDate: "",
         deadline: "",
+        allowedGradeYears: [1, 2, 3, 4, 5],
       });
     }
   };
@@ -118,7 +133,7 @@ const CreateEvent: React.FC = () => {
   };
 
   return (
-    <>
+    <Card className={classes.content}>
       <Box marginTop="-10" marginBottom="10" textAlign="center">
         <Typography variant="h2">Opprett nytt arrangement</Typography>
       </Box>
@@ -213,6 +228,31 @@ const CreateEvent: React.FC = () => {
               disabled={!eventData.isAttendable}
             />
           </Tooltip>
+        </Grid>
+        <Grid item xs={6}>
+          <FormControl fullWidth>
+            <InputLabel id="select-grade-years-label" shrink>
+              Åpent for
+            </InputLabel>
+            <Select
+              labelId="select-grade-years-label"
+              id="select-grade-years"
+              name="grade-years"
+              value={eventData.allowedGradeYears}
+              multiple
+              onChange={(e) => {
+                setEventData({ ...eventData, allowedGradeYears: e.target.value });
+                console.log(e.target.value);
+              }}
+              displayEmpty
+            >
+              {[1, 2, 3, 4, 5].map((year: number) => (
+                <MenuItem key={year} value={year}>
+                  {`${year}. klasse`}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         </Grid>
         <Grid item xs={6}>
           <TextField
@@ -362,17 +402,17 @@ const CreateEvent: React.FC = () => {
             />
           </Tooltip>
         </Grid>
-        <Grid item xs={5}>
-          <Button onClick={() => onSubmit()} color="primary">
-            Opprett arrangement
-          </Button>
-        </Grid>
         <Grid item xs={7}>
           {createEventLoading && <CircularProgress />}
           {createEventError && <Typography color="error">Feil: {createEventError.message}</Typography>}
         </Grid>
       </Grid>
-    </>
+      <CardActions>
+        <Button onClick={() => onSubmit()} color="primary">
+          Opprett arrangement
+        </Button>
+      </CardActions>
+    </Card>
   );
 };
 
