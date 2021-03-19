@@ -167,27 +167,25 @@ const CreateEvent: React.FC = () => {
             label="Krever påmelding"
           />
         </Grid>
-
-        {userData.user.organizations.length > 1 && (
-          <Grid item xs={6}>
-            <FormControl>
-              <InputLabel id="select-org-label">Organisasjon</InputLabel>
-              <Select
-                labelId="select-org-label"
-                id="select-org"
-                name="organization"
-                value={eventData.organizationId}
-                onChange={(e) => setEventData({ ...eventData, organizationId: e.target.value })}
-              >
-                {userData.user.organizations.map((organization) => (
-                  <MenuItem key={organization.id} value={organization.id}>
-                    {organization.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-        )}
+        <Grid item xs={6}>
+          <FormControl>
+            <InputLabel id="select-org-label">Organisasjon</InputLabel>
+            <Select
+              labelId="select-org-label"
+              id="select-org"
+              name="organization"
+              value={eventData.organizationId}
+              onChange={(e) => setEventData({ ...eventData, organizationId: e.target.value })}
+              disabled={userData.user.organizations.length < 2}
+            >
+              {userData.user.organizations.map((organization) => (
+                <MenuItem key={organization.id} value={organization.id}>
+                  {organization.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Grid>
         <Grid item xs={12}>
           <Typography variant="h4">Frivillige felt</Typography>
         </Grid>

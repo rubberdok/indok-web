@@ -92,7 +92,6 @@ export const FirstLogin: React.FC<FirstLoginProps> = ({ open, onSubmit, fullName
 
   return (
     <Dialog open={open} aria-labelledby="form-dialog-title" maxWidth="sm" fullWidth>
-      <DialogTitle id="form-dialog-title">Første innlogging</DialogTitle>
       <DialogContent>
         <DialogContentText variant="body1">
           Det ser ut som at dette er første gang du logger inn på nettsiden. Dersom du ønsker kan du fylle ut
@@ -200,17 +199,17 @@ export const FirstLogin: React.FC<FirstLoginProps> = ({ open, onSubmit, fullName
           </Grid>
         </Grid>
         {error && invalidInput() && <Typography color="error">{error.message}</Typography>}
+        <DialogActions>
+          <Button
+            onClick={() => handleSubmit()}
+            color="primary"
+            startIcon={<Check />}
+            disabled={invalidInput() || !updateUserInput.graduationYear}
+          >
+            Send
+          </Button>
+        </DialogActions>
       </DialogContent>
-      <DialogActions>
-        <Button
-          onClick={() => handleSubmit()}
-          color="primary"
-          startIcon={<Check />}
-          disabled={invalidInput() || !updateUserInput.graduationYear}
-        >
-          Send
-        </Button>
-      </DialogActions>
     </Dialog>
   );
 };
