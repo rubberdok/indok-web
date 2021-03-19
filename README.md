@@ -26,7 +26,7 @@ Website for the students at Industrial Economics and Technology Management at NT
 
 <p align="center">
   <a href="https://www.indokntnu.no/">
-    <img width="800" alt="Landing Page" title="Indøk NTNU" src="https://user-images.githubusercontent.com/19520716/111795780-cb8fcb00-88c7-11eb-96c7-42167216b43f.png">
+    <img alt="Landing Page" title="Indøk NTNU" src="https://user-images.githubusercontent.com/19520716/111795780-cb8fcb00-88c7-11eb-96c7-42167216b43f.png">
   </a>
 </p>
 
