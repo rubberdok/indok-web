@@ -15,7 +15,7 @@ from collections import namedtuple
 import base64
 
 
-DEFAULT_REPORT_FIELDS = [
+DEFAULT_REPORT_FIELDS = {
     "signup_timestamp",
     "event_title",
     "user_first_name",
@@ -24,7 +24,7 @@ DEFAULT_REPORT_FIELDS = [
     "signup_user_email",
     "signup_user_phone_number",
     "signup_user_allergies",
-]  # in addition to fields stored on signup model
+}
 
 FiletypeSpec = namedtuple("Filetype", ["content_type", "extension"])
 filetype_specs = {
@@ -141,7 +141,7 @@ class EventResolvers:
             return None
         check_user_membership(info.context.user, org)
 
-        event_ids = Organization.objects.get(id=org_id).event_set.values_list(
+        event_ids = Organization.objects.get(id=org_id).events.values_list(
             "id", flat=True
         )
         df = create_attendee_report(event_ids, fields)
@@ -160,7 +160,11 @@ class EventResolvers:
 
 
 def create_attendee_report(event_ids, fields):
-    fields = fields if fields is not None else DEFAULT_REPORT_FIELDS
+    fields = (
+        set(fields).intersection(DEFAULT_REPORT_FIELDS)
+        if fields is not None
+        else DEFAULT_REPORT_FIELDS
+    )
     user_ids = SignUp.objects.filter(event_id__in=event_ids).values_list(
         "user_id", flat=True
     )

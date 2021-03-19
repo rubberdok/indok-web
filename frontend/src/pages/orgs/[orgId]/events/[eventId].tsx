@@ -1,13 +1,12 @@
-import { useLazyQuery, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import Layout from "@components/Layout";
+import AttendeeExport from "@components/pages/events/attendeeExport";
 import EmailForm from "@components/pages/events/EventEmail";
-import { ADMIN_GET_EVENT, QUERY_ATTENDEE_REPORT } from "@graphql/events/queries";
+import { ADMIN_GET_EVENT } from "@graphql/events/queries";
 import { Event } from "@interfaces/events";
 import { User } from "@interfaces/users";
 import {
   Box,
-  Button,
-  ButtonGroup,
   Card,
   CardActions,
   CardContent,
@@ -24,8 +23,6 @@ import {
   TableRow,
   Typography,
 } from "@material-ui/core";
-import GetAppIcon from "@material-ui/icons/GetApp";
-import { promptDownloadFromPayload } from "@utils/exports";
 import dayjs from "dayjs";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
@@ -66,27 +63,12 @@ const EventAdminPage: NextPage = () => {
   const { eventId } = router.query;
   const eventNumberID = parseInt(eventId as string);
 
-  const [getAttendeeReport, { loading: attendeeReportLoading }] = useLazyQuery(QUERY_ATTENDEE_REPORT, {
-    onCompleted: (data) => promptDownloadFromPayload(JSON.parse(data.attendeeReport)),
-  });
-
   const { loading, data } = useQuery<{ event: Event }, { id: number }>(ADMIN_GET_EVENT, {
     variables: { id: eventNumberID },
     skip: Number.isNaN(eventNumberID),
   });
 
-  const wrapDownloadButtonReport = (eventId: number, filetype: string) => {
-    return (
-      <Button
-        startIcon={<GetAppIcon fontSize="small" />}
-        onClick={() => getAttendeeReport({ variables: { eventId: eventId, filetype: filetype } })}
-      >
-        {filetype}
-      </Button>
-    );
-  };
-
-  if (loading || attendeeReportLoading) {
+  if (loading) {
     return <CircularProgress />;
   }
 
@@ -143,17 +125,7 @@ const EventAdminPage: NextPage = () => {
                   <CardHeader title="Påmeldte" />
                   <CardActions>
                     {eventId ? <EmailForm eventId={eventId} /> : <CircularProgress color="primary" />}
-                    <Box>
-                      <Typography gutterBottom variant="overline">
-                        Eksportér påmeldingsliste
-                      </Typography>
-                      <br />
-                      <ButtonGroup variant="text" color="primary" aria-label="text primary button group">
-                        {wrapDownloadButtonReport(eventNumberID, "csv")}
-                        {wrapDownloadButtonReport(eventNumberID, "xlsx")}
-                        {wrapDownloadButtonReport(eventNumberID, "html")}
-                      </ButtonGroup>
-                    </Box>
+                    <AttendeeExport eventId={eventNumberID} />
                   </CardActions>
                   <CardContent>
                     {data?.event?.usersAttending?.length !== 0 ? (
@@ -190,19 +162,6 @@ const EventAdminPage: NextPage = () => {
               <Grid item xs>
                 <Card variant="outlined">
                   <CardHeader title="Venteliste" />
-                  <CardActions>
-                    <Box>
-                      <Typography gutterBottom variant="overline">
-                        Eksportér påmeldingsliste
-                      </Typography>
-                      <br />
-                      <ButtonGroup variant="text" color="primary" aria-label="text primary button group">
-                        {wrapDownloadButtonReport(eventNumberID, "csv")}
-                        {wrapDownloadButtonReport(eventNumberID, "xlsx")}
-                        {wrapDownloadButtonReport(eventNumberID, "html")}
-                      </ButtonGroup>
-                    </Box>
-                  </CardActions>
                   <CardContent>
                     {data?.event?.usersOnWaitingList?.length !== 0 ? (
                       <TableContainer style={{ maxHeight: 600 }}>
