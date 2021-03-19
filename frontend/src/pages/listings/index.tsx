@@ -5,12 +5,11 @@ import { LISTINGS } from "@graphql/listings/queries";
 import { Listing } from "@interfaces/listings";
 import { Container, Grid, makeStyles, Typography, Box, Card, CardContent } from "@material-ui/core";
 import Filter from "@components/pages/listings/filter";
-import ListingItem from "@components/pages/listings/listingItem";
+import ListingItemCard from "@components/pages/listings/listingItemCard";
 
 const useStyles = makeStyles((theme) => ({
-  title: {
-    paddingBottom: theme.spacing(4),
-    paddingTop: theme.spacing(8),
+  root: {
+    marginTop: theme.spacing(4)
   },
   hero: {
     color: "white",
@@ -23,13 +22,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundImage: `linear-gradient(to left, rgba(0, 0, 0, 0.0), rgba(0, 0, 0, 0.8)), url('img/bindeleddet.jpg')`,
     marginBottom: 20,
   },
-  container: {
-    flexDirection: "row",
-    justifyContent: "center",
-  },
-  filter: {
-    width: "100%",
-  },
+
 }));
 
 // the page to show all listings open to users
@@ -45,22 +38,21 @@ const ListingsPage: NextPage = () => {
   return (
     <Layout>
       <Container>
-        <Grid container className={classes.container} spacing={2}>
-          <Filter filters={filters} />
-          <Grid item xs={8}>
-            <Card>
-              <CardContent>
-                <Grid container spacing={2}>
-                  {data &&
-                    data.listings.map((listing) => (
-                      <Grid item xs key={listing.id}>
-                        <ListingItem listing={listing} />
-                      </Grid>
-                    ))}
-                </Grid>
-              </CardContent>
-            </Card>
-          </Grid>
+        <Grid container direction="column" spacing={2} className={classes.root}>
+          {data &&
+            data.listings.map((listing) => (
+              <Grid item>
+                <ListingItemCard 
+                  title={listing.title}
+                  subtitle={listing.description}
+                  chips={["intervju", "case", "søknad"]}
+                  number={15}
+                  img={"img/tindoklogo.png"}
+                />
+              </Grid>
+            ))
+          
+          }
         </Grid>
       </Container>
     </Layout>

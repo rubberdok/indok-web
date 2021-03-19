@@ -67,7 +67,7 @@ class Event(models.Model):
     def signed_up_users(self):
         sign_ups = SignUp.objects.filter(event=self, is_attending=True).order_by(
             "timestamp"
-        )
+        ).only("user")[:self.available_slots]
         user_ids = sign_ups.values_list("user__id", flat=True)
         return get_user_model().objects.filter(id__in=user_ids)
 
