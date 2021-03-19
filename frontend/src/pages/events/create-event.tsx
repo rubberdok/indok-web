@@ -1,9 +1,9 @@
+import Layout from "@components/Layout";
+import CreateEvent from "@components/pages/events/createEvent";
 import { Button, Container, makeStyles } from "@material-ui/core";
 import { NextPage } from "next";
-import React from "react";
-import CreateEvent from "@components/pages/events/createEvent";
 import Link from "next/link";
-import Layout from "@components/Layout";
+import React from "react";
 
 const useStyles = makeStyles((theme) => ({
   container: {
