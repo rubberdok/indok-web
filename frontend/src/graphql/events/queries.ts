@@ -178,6 +178,10 @@ export const ADMIN_GET_EVENT = gql`
         isOnWaitingList
       }
       isFull
+      hasExtraInformation
+      bindingSignup
+      contactEmail
+      allowedGradeYearsList
     }
   }
 `;
@@ -211,6 +215,24 @@ export const QUERY_EVENT_FILTERED_ORGANIZATIONS = gql`
         name
       }
     }
+  }
+`;
+
+export const QUERY_ATTENDEE_REPORT = gql`
+  query attendeeReport($eventId: ID!, $fields: [String], $filetype: String) {
+    attendeeReport(eventId: $eventId, fields: $fields, filetype: $filetype)
+  }
+`;
+
+export const QUERY_ATTENDEE_REPORT_ORG = gql`
+  query attendeeReportOrg($orgId: ID!, $fields: [String], $filetype: String) {
+    attendeeReportOrg(orgId: $orgId, fields: $fields, filetype: $filetype)
+  }
+`;
+
+export const QUERY_ATTENDEE_REPORTS = gql`
+  query attendeeReports($eventIds: [ID]!, $fields: [String], $filetype: String) {
+    attendeeReports(eventIds: $eventIds, fields: $fields, filetype: $filetype)
   }
 `;
 
