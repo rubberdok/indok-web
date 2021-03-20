@@ -11,7 +11,7 @@ django-environ==0.4.5
 django-graphql-jwt==0.3.1
 django-multiselectfield==0.1.12
 django-phonenumber-field==5.0.0
-djangorestframework==3.11.1
+djangorestframework==3.11.2
 graphene==2.1.8
 graphene-django==2.13.0
 graphql-core==2.3.2
