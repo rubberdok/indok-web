@@ -41,10 +41,16 @@ const Calendar: React.FC<CalendarProps> = ({
       setFunc(isDisabled(date) ? undefined : date);
       setSelectingFromDate((prev) => !prev);
     };
-    if (selectingFromDate) {
-      setDate(date, setSelectedFromDay);
+    if (range.length > 0 && !range.includes(date.format(DATE_FORMAT))) {
+      setSelectedFromDay(date);
+      setselectedToDay(undefined);
+      setSelectingFromDate(false);
     } else {
-      setDate(date, setselectedToDay);
+      if (selectingFromDate) {
+        setDate(date, setSelectedFromDay);
+      } else {
+        setDate(date, setselectedToDay);
+      }
     }
   };
 
