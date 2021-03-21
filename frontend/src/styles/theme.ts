@@ -81,6 +81,9 @@ const theme = createMuiTheme({
     secondary: {
       main: "#11cb5f",
     },
+    error: {
+      main: "#d21f3c",
+    },
   },
   props: {
     MuiTypography: {

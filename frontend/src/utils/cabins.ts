@@ -43,5 +43,9 @@ export const cabinOrderStepReady = (
   if (!datePick.checkOutDate) {
     return { ready: false, errortext: "Du må velge en dato for utsjekk" };
   }
+  // The chosen range must be vaild
+  if (!datePick?.isValid) {
+    return { ready: false, errortext: "Den valgte perioden er ikke tilgjengelig" };
+  }
   return { ready: true, errortext: "" };
 };

@@ -8,6 +8,7 @@ interface Props {
   value?: number;
   onClick?: () => void;
   isInRange?: boolean;
+  isInvalidRange?: boolean;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -25,7 +26,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     backgroundColor: (props: Props) => {
       if (props.isFromDate || props.isToDate) {
-        return theme.palette.primary.dark;
+        if (props.isInvalidRange) {
+          return theme.palette.error.dark;
+        } else {
+          return theme.palette.primary.dark;
+        }
+      }
+      if (props.isInRange && props.isInvalidRange) {
+        return theme.palette.error.light;
       }
       if (props.isInRange) {
         return theme.palette.primary.light;

@@ -17,6 +17,7 @@ interface StepReady {
 export interface DatePick {
   checkInDate?: string;
   checkOutDate?: string;
+  isValid?: boolean;
 }
 
 export interface ModalData {

@@ -16,10 +16,11 @@ interface Props {
 const CheckInOut: NextPage<Props> = ({ allCabins, chosenCabins, setChosenCabins, setDatePick }) => {
   const { disabledDates } = useDisabledDates(chosenCabins);
 
-  const handleRangeChange = (fromDate: string | undefined, toDate: string | undefined) => {
+  const handleRangeChange = (fromDate: string | undefined, toDate: string | undefined, validRange: boolean) => {
     setDatePick({
       checkInDate: fromDate,
       checkOutDate: toDate,
+      isValid: validRange,
     });
   };
   return (
