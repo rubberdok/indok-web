@@ -9,28 +9,32 @@ import DayCell from "./DayCell";
 
 interface CalendarProps {
   disabledDates?: string[];
-  initSelectedDay?: string;
   disableAll?: boolean;
   disableBefore?: string;
   disableAfter?: string;
   title?: string;
 }
 
-const Calendar: React.FC<CalendarProps> = ({
-  disabledDates,
-  initSelectedDay,
-  disableAll,
-  disableBefore,
-  disableAfter,
-  title,
-}) => {
+const Calendar: React.FC<CalendarProps> = ({ disabledDates, disableAll, disableBefore, disableAfter, title }) => {
   const [selectedMonth, setSelectedMonth] = useState(dayjs());
-  const [selectedDay, setSelectedDay] = useState(initSelectedDay ? dayjs(initSelectedDay) : undefined);
+
+  const [selectingFromDate, setselectingFromDate] = useState(true);
+  const [selectedFromDay, setSelectedFromDay] = useState<dayjs.Dayjs | undefined>(undefined);
+  const [selectedToDay, setselectedToDay] = useState<dayjs.Dayjs | undefined>(undefined);
+
   const disableBeforeDate = disableBefore ? dayjs(disableBefore) : dayjs();
   const disableAfterDate = disableAfter ? dayjs(disableAfter) : undefined;
 
   const handleDateClicked = (date: dayjs.Dayjs) => {
-    setSelectedDay(isDisabled(date) ? undefined : date);
+    const setDate = (date: dayjs.Dayjs, setFunc: React.Dispatch<React.SetStateAction<dayjs.Dayjs | undefined>>) => {
+      setFunc(isDisabled(date) ? undefined : date);
+      setselectingFromDate((prev) => !prev);
+    };
+    if (selectingFromDate) {
+      setDate(date, setSelectedFromDay);
+    } else {
+      setDate(date, setselectedToDay);
+    }
   };
 
   const isDisabled = (date: dayjs.Dayjs) => {
@@ -66,7 +70,8 @@ const Calendar: React.FC<CalendarProps> = ({
       daysOfMonth.push(
         <DayCell
           value={i}
-          isSelected={selectedDay ? date.isSame(selectedDay, "day") : false}
+          isFromDate={selectedFromDay ? date.isSame(selectedFromDay, "day") : false}
+          isToDate={selectedToDay ? date.isSame(selectedToDay, "day") : false}
           onClick={() => handleDateClicked(date)}
           isDisabled={isDisabled(date)}
           key={date.format(DATE_FORMAT)}

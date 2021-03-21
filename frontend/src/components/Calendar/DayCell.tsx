@@ -2,7 +2,8 @@ import { makeStyles, Theme } from "@material-ui/core/styles";
 import { Grid, Box, Typography } from "@material-ui/core";
 interface Props {
   isDisabled?: boolean;
-  isSelected?: boolean;
+  isFromDate?: boolean;
+  isToDate?: boolean;
   isHidden?: boolean;
   value?: number;
   onClick?: () => void;
@@ -12,9 +13,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     width: "100%",
     height: 60,
-    color: (props: Props) => (props.isDisabled ? "#cecece" : "black"),
+    color: (props: Props) => (props.isDisabled || props.isFromDate || props.isToDate ? "#cecece" : "black"),
     backgroundColor: (props: Props) =>
-      props.isSelected ? theme.palette.primary.light : props.isHidden ? "transparent" : theme.palette.background.paper,
+      props.isFromDate || props.isToDate
+        ? theme.palette.primary.light
+        : props.isHidden
+        ? "transparent"
+        : theme.palette.background.paper,
     cursor: (props: Props) => (props.isDisabled || props.isHidden ? "default" : "pointer"),
   },
 }));
