@@ -10,12 +10,18 @@ interface Props {
   allCabins: Cabin[];
   chosenCabins: Cabin[];
   setChosenCabins: Dispatch<SetStateAction<Cabin[]>>;
-  datePick: DatePick;
   setDatePick: React.Dispatch<React.SetStateAction<DatePick>>;
 }
 
-const CheckInOut: NextPage<Props> = ({ allCabins, chosenCabins, setChosenCabins, datePick, setDatePick }) => {
+const CheckInOut: NextPage<Props> = ({ allCabins, chosenCabins, setChosenCabins, setDatePick }) => {
   const { disabledDates } = useDisabledDates(chosenCabins);
+
+  const handleRangeChange = (fromDate: string | undefined, toDate: string | undefined) => {
+    setDatePick({
+      checkInDate: fromDate,
+      checkOutDate: toDate,
+    });
+  };
   return (
     <Grid container spacing={10}>
       <Grid item xs={2} container direction="column" justify="center" alignItems="center">
@@ -48,6 +54,7 @@ const CheckInOut: NextPage<Props> = ({ allCabins, chosenCabins, setChosenCabins,
           title="Velg innsjekk og utsjekk"
           disabledDates={disabledDates}
           disableAll={chosenCabins.length === 0}
+          onRangeChange={handleRangeChange}
         />
       </Grid>
     </Grid>

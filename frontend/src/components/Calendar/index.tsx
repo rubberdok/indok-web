@@ -1,6 +1,6 @@
 import { IconButton, Grid, Typography, Divider } from "@material-ui/core";
 import dayjs from "dayjs";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CalendarTable from "./CalendarTable";
 import { DATE_FORMAT } from "./constants";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
@@ -13,9 +13,17 @@ interface CalendarProps {
   disableBefore?: string;
   disableAfter?: string;
   title?: string;
+  onRangeChange?: (fromDate: string | undefined, toDate: string | undefined) => void;
 }
 
-const Calendar: React.FC<CalendarProps> = ({ disabledDates, disableAll, disableBefore, disableAfter, title }) => {
+const Calendar: React.FC<CalendarProps> = ({
+  disabledDates,
+  disableAll,
+  disableBefore,
+  disableAfter,
+  title,
+  onRangeChange,
+}) => {
   const [selectedMonth, setSelectedMonth] = useState(dayjs());
 
   const [selectingFromDate, setselectingFromDate] = useState(true);
@@ -36,6 +44,14 @@ const Calendar: React.FC<CalendarProps> = ({ disabledDates, disableAll, disableB
       setDate(date, setselectedToDay);
     }
   };
+
+  useEffect(() => {
+    if (onRangeChange) {
+      const dateToString = (date: dayjs.Dayjs | undefined): string | undefined =>
+        date ? date.format(DATE_FORMAT) : undefined;
+      onRangeChange(dateToString(selectedFromDay), dateToString(selectedToDay));
+    }
+  }, [selectedFromDay, selectedToDay]);
 
   const isDisabled = (date: dayjs.Dayjs) => {
     return (

@@ -72,7 +72,7 @@ export interface BookingData extends InputValueTypes {
   price: number;
 }
 
-export interface Validations {
+export interface ContactInfoValidations {
   firstName: boolean;
   lastName: boolean;
   email: boolean;
