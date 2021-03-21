@@ -6,6 +6,7 @@ import { DATE_FORMAT } from "./constants";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore";
 import DayCell from "./DayCell";
+import { getDateRange } from "./helpers";
 
 interface CalendarProps {
   disabledDates?: string[];
@@ -26,17 +27,19 @@ const Calendar: React.FC<CalendarProps> = ({
 }) => {
   const [selectedMonth, setSelectedMonth] = useState(dayjs());
 
-  const [selectingFromDate, setselectingFromDate] = useState(true);
+  const [selectingFromDate, setSelectingFromDate] = useState(true);
   const [selectedFromDay, setSelectedFromDay] = useState<dayjs.Dayjs | undefined>(undefined);
   const [selectedToDay, setselectedToDay] = useState<dayjs.Dayjs | undefined>(undefined);
 
   const disableBeforeDate = disableBefore ? dayjs(disableBefore) : dayjs();
   const disableAfterDate = disableAfter ? dayjs(disableAfter) : undefined;
 
+  const [range, setRange] = useState<string[]>([]);
+
   const handleDateClicked = (date: dayjs.Dayjs) => {
     const setDate = (date: dayjs.Dayjs, setFunc: React.Dispatch<React.SetStateAction<dayjs.Dayjs | undefined>>) => {
       setFunc(isDisabled(date) ? undefined : date);
-      setselectingFromDate((prev) => !prev);
+      setSelectingFromDate((prev) => !prev);
     };
     if (selectingFromDate) {
       setDate(date, setSelectedFromDay);
@@ -50,6 +53,11 @@ const Calendar: React.FC<CalendarProps> = ({
       const dateToString = (date: dayjs.Dayjs | undefined): string | undefined =>
         date ? date.format(DATE_FORMAT) : undefined;
       onRangeChange(dateToString(selectedFromDay), dateToString(selectedToDay));
+    }
+    if (selectedFromDay && selectedToDay) {
+      setRange(getDateRange(selectedFromDay.format(DATE_FORMAT), selectedToDay.format(DATE_FORMAT)));
+    } else {
+      setRange([]);
     }
   }, [selectedFromDay, selectedToDay]);
 
@@ -90,6 +98,7 @@ const Calendar: React.FC<CalendarProps> = ({
           isToDate={selectedToDay ? date.isSame(selectedToDay, "day") : false}
           onClick={() => handleDateClicked(date)}
           isDisabled={isDisabled(date)}
+          isInRange={range.includes(date.format(DATE_FORMAT))}
           key={date.format(DATE_FORMAT)}
         />
       );

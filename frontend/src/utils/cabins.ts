@@ -31,7 +31,6 @@ export const cabinOrderStepReady = (
   chosenCabins: Cabin[],
   datePick: DatePick
 ): { ready: boolean; errortext: string } => {
-  console.log(datePick);
   // At least one cabin has to be selected
   if (chosenCabins.length == 0) {
     return { ready: false, errortext: "Du må velge minst en hytte å booke" };

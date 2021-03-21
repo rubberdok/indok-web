@@ -7,19 +7,34 @@ interface Props {
   isHidden?: boolean;
   value?: number;
   onClick?: () => void;
+  isInRange?: boolean;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     width: "100%",
     height: 60,
-    color: (props: Props) => (props.isDisabled || props.isFromDate || props.isToDate ? "#cecece" : "black"),
-    backgroundColor: (props: Props) =>
-      props.isFromDate || props.isToDate
-        ? theme.palette.primary.light
-        : props.isHidden
-        ? "transparent"
-        : theme.palette.background.paper,
+    color: (props: Props) => {
+      if (props.isDisabled) {
+        return "#cecece";
+      } else if (props.isFromDate || props.isToDate || props.isInRange) {
+        return "white";
+      } else {
+        return "black";
+      }
+    },
+    backgroundColor: (props: Props) => {
+      if (props.isFromDate || props.isToDate) {
+        return theme.palette.primary.dark;
+      }
+      if (props.isInRange) {
+        return theme.palette.primary.light;
+      }
+      if (props.isHidden) {
+        return "transparent";
+      }
+      return theme.palette.background.paper;
+    },
     cursor: (props: Props) => (props.isDisabled || props.isHidden ? "default" : "pointer"),
   },
 }));
