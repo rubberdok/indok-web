@@ -1,4 +1,4 @@
-import { IconButton, Grid, Typography, Divider } from "@material-ui/core";
+import { IconButton, Grid, Typography, Divider, Switch } from "@material-ui/core";
 import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
 import CalendarTable from "./CalendarTable";
@@ -152,6 +152,10 @@ const Calendar: React.FC<CalendarProps> = ({
     setSelectedMonth(newSelectedMonth);
   };
 
+  const handleChangeCheckInOutSwitch = () => {
+    setSelectingFromDate((prev) => !prev);
+  };
+
   return (
     <Grid container direction="column" spacing={2}>
       <Grid item container alignItems="center" justify="space-between" xs>
@@ -174,6 +178,25 @@ const Calendar: React.FC<CalendarProps> = ({
         <Grid item xs>
           <CalendarTable getRows={getRows} month={selectedMonth.clone().add(1, "month")} />
         </Grid>
+      </Grid>
+      <Divider variant="middle" />
+      <Grid item xs container justify="center">
+        <Typography component="div">
+          <Grid component="label" container alignItems="center" spacing={1}>
+            <Grid item>Innsjekk</Grid>
+            <Grid item>
+              <Switch
+                color="primary"
+                disableRipple
+                disabled={selectedFromDay === undefined}
+                inputProps={{ "aria-label": "checkbox with default color" }}
+                checked={!selectingFromDate}
+                onChange={handleChangeCheckInOutSwitch}
+              />
+            </Grid>
+            <Grid item>Utsjekk</Grid>
+          </Grid>
+        </Typography>
       </Grid>
     </Grid>
   );
