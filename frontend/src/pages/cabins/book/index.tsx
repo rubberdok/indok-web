@@ -123,6 +123,8 @@ const CabinBookingPage: NextPage = () => {
         chosenCabins={chosenCabins}
         datePick={datePick}
         contactInfo={contactInfo}
+        activeStep={activeStep}
+        setActiveStep={setActiveStep}
       />
       <Box m={10}>
         <Grid container direction="column" justify="center" spacing={1}>
