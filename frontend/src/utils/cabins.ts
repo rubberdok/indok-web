@@ -1,4 +1,4 @@
-import { Cabin, InputValueTypes } from "@interfaces/cabins";
+import { Cabin, ContactInfo, InputValueTypes } from "@interfaces/cabins";
 import { DatePick } from "src/pages/cabins/book";
 import validator from "validator";
 
@@ -25,6 +25,15 @@ export const validateInputForm = (inputValues: InputValueTypes) => {
   };
 
   return updatedValidations;
+};
+
+export const allValuesFilled = (contactInfo: ContactInfo) => {
+  const selectValidity = validateSelect(contactInfo.numberIndok, contactInfo.numberExternal);
+
+  const { numberIndok, numberExternal, ...nonSelectContactInfo } = contactInfo;
+  const filled = Object.values(nonSelectContactInfo).filter((info) => info != "" || info != 0);
+
+  return selectValidity || filled.length == Object.keys(nonSelectContactInfo).length;
 };
 
 export const cabinOrderStepReady = (

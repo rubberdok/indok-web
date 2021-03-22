@@ -11,9 +11,10 @@ interface ContractInfoProps {
   contactInfo: ContactInfo;
   setContactInfo: Dispatch<SetStateAction<ContactInfo>>;
   validations: ContactInfoValidations | undefined;
+  errorTrigger: boolean;
 }
 
-const CabinContactInfo: NextPage<ContractInfoProps> = ({ contactInfo, setContactInfo, validations }) => {
+const CabinContactInfo: NextPage<ContractInfoProps> = ({ contactInfo, setContactInfo, validations, errorTrigger }) => {
   const { data } = useQuery<{ user: User }>(GET_USER);
 
   useEffect(() => {
@@ -39,7 +40,12 @@ const CabinContactInfo: NextPage<ContractInfoProps> = ({ contactInfo, setContact
 
   return (
     <Grid container>
-      <InputFields onChange={handleInputChange} contactInfo={contactInfo} validations={validations}></InputFields>
+      <InputFields
+        onChange={handleInputChange}
+        contactInfo={contactInfo}
+        validations={validations}
+        errorTrigger={errorTrigger}
+      ></InputFields>
     </Grid>
   );
 };

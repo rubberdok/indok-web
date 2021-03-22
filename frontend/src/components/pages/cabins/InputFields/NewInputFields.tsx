@@ -19,6 +19,7 @@ interface Props {
   contactInfo: ContactInfo;
   validations: ContactInfoValidations | undefined;
   onChange: (name: string, event: InputFieldsEvent) => void;
+  errorTrigger: boolean;
 }
 
 const useStyles = makeStyles(() =>
@@ -41,7 +42,7 @@ const useStyles = makeStyles(() =>
   })
 );
 
-export const InputFields: React.FC<Props> = ({ contactInfo, validations, onChange }) => {
+export const InputFields: React.FC<Props> = ({ contactInfo, validations, onChange, errorTrigger }) => {
   const classes = useStyles();
   const totalGuestsAllowed = 40; // change
 
@@ -60,7 +61,7 @@ export const InputFields: React.FC<Props> = ({ contactInfo, validations, onChang
               required
               name="firstName"
               onChange={(e) => onChange("firstName", e)}
-              error={!validations?.firstName}
+              error={!validations?.firstName && errorTrigger}
               value={contactInfo.firstName}
               fullWidth
             />
@@ -72,7 +73,7 @@ export const InputFields: React.FC<Props> = ({ contactInfo, validations, onChang
               name="lastName"
               required
               onChange={(e) => onChange("lastName", e)}
-              error={!validations?.lastName}
+              error={!validations?.lastName && errorTrigger}
               value={contactInfo.lastName}
               fullWidth
             />
@@ -84,7 +85,7 @@ export const InputFields: React.FC<Props> = ({ contactInfo, validations, onChang
               name="email"
               required
               onChange={(e) => onChange("email", e)}
-              error={!validations?.email}
+              error={!validations?.email && errorTrigger}
               value={contactInfo.email}
               fullWidth
             />
@@ -96,7 +97,7 @@ export const InputFields: React.FC<Props> = ({ contactInfo, validations, onChang
               name="phone"
               required
               onChange={(e) => onChange("phone", e)}
-              error={!validations?.phone}
+              error={!validations?.phone && errorTrigger}
               value={contactInfo.phone}
               fullWidth
             />
@@ -108,7 +109,7 @@ export const InputFields: React.FC<Props> = ({ contactInfo, validations, onChang
                 defaultValue={0}
                 onChange={(e) => onChange("numberIndok", e)}
                 name="numberIndok"
-                error={!validations?.numberIndok}
+                error={!validations?.numberIndok && errorTrigger}
                 value={contactInfo.numberIndok}
               >
                 {range(0, totalGuestsAllowed - contactInfo.numberExternal).map((val: number) => (
@@ -127,7 +128,7 @@ export const InputFields: React.FC<Props> = ({ contactInfo, validations, onChang
                 defaultValue={0}
                 onChange={(e) => onChange("numberExternal", e)}
                 name="numberExternal"
-                error={!validations?.numberExternal}
+                error={!validations?.numberExternal && errorTrigger}
                 value={contactInfo.numberExternal}
               >
                 {range(0, totalGuestsAllowed - contactInfo.numberIndok).map((val: number) => (
