@@ -10,6 +10,7 @@ import ListingItemCard from "@components/pages/listings/listingItemCard";
 const useStyles = makeStyles((theme) => ({
   root: {
     marginTop: theme.spacing(4),
+    marginBottom: theme.spacing(4),
   },
   hero: {
     color: "white",
@@ -37,16 +38,18 @@ const ListingsPage: NextPage = () => {
   return (
     <Layout>
       <Container>
-        <Grid container direction="column" spacing={2} className={classes.root}>
+        <Grid container direction="column" spacing={2} className={classes.root} justify="center" alignItems="center">
           {data &&
             data.listings.map((listing) => (
-              <Grid item key={listing.id}>
+              <Grid container item key={listing.id} xs={12}>
                 <ListingItemCard
                   title={listing.title}
                   subtitle={listing.description}
                   chips={["intervju", "case", "søknad"]}
                   number={15}
                   img={"img/tindoklogo.png"}
+                  id={listing.id}
+                  slug={listing.slug}
                 />
               </Grid>
             ))}
