@@ -1,5 +1,7 @@
 import graphene
 from django.shortcuts import get_object_or_404
+import pytz
+import datetime
 
 from .types import BookingType
 from apps.cabins.models import Booking as BookingModel
@@ -12,9 +14,9 @@ class CreateBooking(graphene.Mutation):
         firstname = graphene.String()
         surname = graphene.String()
         phone = graphene.Int()
-        receiverEmail = graphene.String()
-        bookFrom = graphene.String()
-        bookTo = graphene.String()
+        receiver_email = graphene.String()
+        check_in = graphene.Date()
+        check_out = graphene.Date()
         price = graphene.Int()
         cabins = graphene.List(graphene.Int)
 
@@ -27,20 +29,22 @@ class CreateBooking(graphene.Mutation):
         firstname,
         surname,
         phone,
-        receiverEmail,
-        bookFrom,
-        bookTo,
+        receiver_email,
+        check_in,
+        check_out,
         price,
         cabins,
+
     ):
         booking = BookingModel.objects.create(
             firstname=firstname,
             surname=surname,
             phone=phone,
-            receiverEmail=receiverEmail,
-            bookFrom=bookFrom,
-            bookTo=bookTo,
+            receiver_email=receiver_email,
+            check_in=check_in,
+            check_out=check_out,
             price=price,
+            timestamp=datetime.datetime.now(tz=pytz.timezone("Europe/Amsterdam"))
         )
         booking.cabins.set(CabinModel.objects.filter(id__in=cabins))
         ok = True
