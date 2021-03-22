@@ -9,7 +9,6 @@ from graphql_jwt.decorators import login_required, staff_member_required
 
 from .mail import send_event_emails
 from .types import CategoryType, EventType
-from datetime import datetime
 
 
 class BaseEventInput:
