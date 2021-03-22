@@ -33,6 +33,7 @@ export const CREATE_EVENT = gql`
         hasExtraInformation
         bindingSignup
         contactEmail
+        allowedGradeYears
       }
       ok
     }
@@ -72,6 +73,7 @@ export const UPDATE_EVENT = gql`
         hasExtraInformation
         bindingSignup
         contactEmail
+        allowedGradeYears
       }
       ok
     }

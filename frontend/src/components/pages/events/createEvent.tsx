@@ -7,6 +7,8 @@ import { User } from "@interfaces/users";
 import {
   Box,
   Button,
+  Card,
+  CardActions,
   Checkbox,
   CircularProgress,
   FormControl,
@@ -14,6 +16,7 @@ import {
   FormHelperText,
   Grid,
   InputLabel,
+  makeStyles,
   MenuItem,
   Select,
   TextField,
@@ -23,7 +26,17 @@ import {
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 
+const useStyles = makeStyles((theme) => ({
+  content: {
+    padding: theme.spacing(5),
+    width: "50%",
+    margin: "0 auto",
+  },
+}));
+
 const CreateEvent: React.FC = () => {
+  const classes = useStyles();
+
   const defaultInput: Record<string, any> = {
     title: "",
     description: "",
@@ -42,6 +55,7 @@ const CreateEvent: React.FC = () => {
     hasExtraInformation: false,
     contactEmail: "",
     bindingSignup: false,
+    allowedGradeYears: [1, 2, 3, 4, 5],
   };
 
   const [eventData, setEventData] = useState(defaultInput);
@@ -98,6 +112,7 @@ const CreateEvent: React.FC = () => {
         hasExtraInformation: false,
         signupOpenDate: "",
         deadline: "",
+        allowedGradeYears: [1, 2, 3, 4, 5],
       });
     }
   };
@@ -118,7 +133,7 @@ const CreateEvent: React.FC = () => {
   };
 
   return (
-    <>
+    <Card className={classes.content}>
       <Box marginTop="-10" marginBottom="10" textAlign="center">
         <Typography variant="h2">Opprett nytt arrangement</Typography>
       </Box>
@@ -167,27 +182,25 @@ const CreateEvent: React.FC = () => {
             label="Krever påmelding"
           />
         </Grid>
-
-        {userData.user.organizations.length > 1 && (
-          <Grid item xs={6}>
-            <FormControl>
-              <InputLabel id="select-org-label">Organisasjon</InputLabel>
-              <Select
-                labelId="select-org-label"
-                id="select-org"
-                name="organization"
-                value={eventData.organizationId}
-                onChange={(e) => setEventData({ ...eventData, organizationId: e.target.value })}
-              >
-                {userData.user.organizations.map((organization) => (
-                  <MenuItem key={organization.id} value={organization.id}>
-                    {organization.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-        )}
+        <Grid item xs={6}>
+          <FormControl>
+            <InputLabel id="select-org-label">Organisasjon</InputLabel>
+            <Select
+              labelId="select-org-label"
+              id="select-org"
+              name="organization"
+              value={eventData.organizationId}
+              onChange={(e) => setEventData({ ...eventData, organizationId: e.target.value })}
+              disabled={userData.user.organizations.length < 2}
+            >
+              {userData.user.organizations.map((organization) => (
+                <MenuItem key={organization.id} value={organization.id}>
+                  {organization.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Grid>
         <Grid item xs={12}>
           <Typography variant="h4">Frivillige felt</Typography>
         </Grid>
@@ -214,6 +227,37 @@ const CreateEvent: React.FC = () => {
               onChange={(e) => setEventData({ ...eventData, availableSlots: e.currentTarget.value })}
               disabled={!eventData.isAttendable}
             />
+          </Tooltip>
+        </Grid>
+        <Grid item xs={6}>
+          <Tooltip
+            disableHoverListener={eventData.isAttendable}
+            disableFocusListener={eventData.isAttendable}
+            title="Kun aktuelt ved påmelding"
+          >
+            <FormControl fullWidth>
+              <InputLabel id="select-grade-years-label" shrink>
+                Åpent for
+              </InputLabel>
+              <Select
+                labelId="select-grade-years-label"
+                id="select-grade-years"
+                name="grade-years"
+                value={eventData.allowedGradeYears}
+                multiple
+                onChange={(e) => {
+                  setEventData({ ...eventData, allowedGradeYears: e.target.value });
+                }}
+                displayEmpty
+                disabled={!eventData.isAttendable}
+              >
+                {[1, 2, 3, 4, 5].map((year: number) => (
+                  <MenuItem key={year} value={year}>
+                    {`${year}. klasse`}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </Tooltip>
         </Grid>
         <Grid item xs={6}>
@@ -364,17 +408,17 @@ const CreateEvent: React.FC = () => {
             />
           </Tooltip>
         </Grid>
-        <Grid item xs={5}>
-          <Button onClick={() => onSubmit()} color="primary">
-            Opprett arrangement
-          </Button>
-        </Grid>
         <Grid item xs={7}>
           {createEventLoading && <CircularProgress />}
           {createEventError && <Typography color="error">Feil: {createEventError.message}</Typography>}
         </Grid>
       </Grid>
-    </>
+      <CardActions>
+        <Button onClick={() => onSubmit()} color="primary">
+          Opprett arrangement
+        </Button>
+      </CardActions>
+    </Card>
   );
 };
 
