@@ -79,7 +79,6 @@ export interface ContactInfoValidations {
   phone: boolean;
   numberIndok: boolean;
   numberExternal: boolean;
-  triggerError: boolean;
 }
 
 export interface ContactInfo {

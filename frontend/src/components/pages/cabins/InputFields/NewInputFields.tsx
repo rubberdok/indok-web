@@ -48,7 +48,7 @@ export const InputFields: React.FC<Props> = ({ contactInfo, validations, onChang
 
   return (
     <>
-      <Grid container alignItems="center" spacing={3} lg={8} md={12} className={classes.center}>
+      <Grid container item alignItems="center" spacing={3} lg={8} md={12} className={classes.center}>
         <Grid item>
           <Typography variant="h3">Kontaktinfo</Typography>
           <Divider component="hr" />
