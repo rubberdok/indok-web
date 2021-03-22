@@ -1,9 +1,13 @@
 import Layout from "@components/Layout";
 import { Box, Card, Container, Grid, makeStyles, Paper, Typography } from "@material-ui/core";
+import typography from "@styles/typography";
 import { getPostBySlug, getPostsSlugs } from "@utils/posts";
 import { NextPage } from "next";
 import React from "react";
 import ReactMarkdown from "react-markdown";
+import IconButton from "@material-ui/core/IconButton";
+import MailOutlineIcon from "@material-ui/icons/MailOutline";
+import PhoneIcon from "@material-ui/icons/Phone";
 
 type ArticleProps = {
   params: {
@@ -42,6 +46,9 @@ const useStyles = makeStyles(() => ({
     textAlign: "center",
   },
   logo: {
+    height: 100,
+  },
+  avatar: {
     height: 100,
   },
 }));
@@ -114,9 +121,30 @@ const Article: NextPage<ArticleProps> = ({ post, frontmatter }) => {
                   <>
                     <Card key={item}>
                       <Box p={4}>
+                        {frontmatter.styre[item].avatar ? (
+                          <img
+                            className={classes.avatar}
+                            alt={frontmatter.alt}
+                            src={frontmatter.styre[item].avatar}
+                          ></img>
+                        ) : (
+                          ""
+                        )}
                         <Typography variant="body2">{frontmatter.styre[item].navn}</Typography>
                         <Typography variant="body2">
-                          {frontmatter.styre[item].tittel} - {frontmatter.styre[item].mail}
+                          {frontmatter.styre[item].tittel} - tlf: {frontmatter.styre[item].telefon}
+                        </Typography>
+                        <Typography>
+                          <a href={"mailto:" + frontmatter.styre[item].mail}>
+                            <IconButton size="small" edge="start" aria-label="delete">
+                              <MailOutlineIcon />
+                            </IconButton>
+                          </a>
+                          <a href={"tel:" + frontmatter.styre[item].telefon}>
+                            <IconButton size="small" aria-label="delete">
+                              <PhoneIcon />
+                            </IconButton>
+                          </a>
                         </Typography>
                       </Box>
                     </Card>
