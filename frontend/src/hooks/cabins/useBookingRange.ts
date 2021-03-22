@@ -22,7 +22,7 @@ interface Output {
 const useBookingRange = (initFromDate?: string, initToDate?: string): Output => {
   const [fromDate, setFromDate] = useState(initFromDate);
   const [toDate, setToDate] = useState(initToDate);
-  const [isAvailable, setIsAvailable] = useState(f);
+  const [isAvailable, setIsAvailable] = useState(true);
   const allBookingsQuery = useQuery<AllBookingsQuery>(QUERY_ALL_BOOKINGS);
 
   useEffect(() => {

@@ -98,7 +98,6 @@ const CabinBookingPage: NextPage = () => {
       case 2:
         // Betaling
         return <Typography variant="h3">Betaling placeholder</Typography>;
-        2222222;
       case 3:
         // Kvittering
         return <Typography variant="h3">Kvittering placeholder</Typography>;

@@ -49,7 +49,7 @@ const Calendar: React.FC<CalendarProps> = ({
         setFunc(isDisabled(date) ? undefined : date);
         setSelectingFromDate((prev) => !prev);
       };
-      if (range.length > 0 || (!selectingFromDate && selectedFromDay && date.isBefore(selectedFromDay))) {
+      if (range.length > 0 || (!selectingFromDate && selectedFromDay && date.isSameOrBefore(selectedFromDay))) {
         setSelectedFromDay(date);
         setSelectedToDay(undefined);
         setSelectingFromDate(false);
