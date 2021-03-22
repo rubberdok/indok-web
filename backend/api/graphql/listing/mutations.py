@@ -20,7 +20,7 @@ class BaseListingInput(graphene.InputObjectType):
 
 class CreateListingInput(BaseListingInput):
     title = graphene.String(required=True)
-    organization_id = graphene.String(required=True)
+    organization_id = graphene.ID(required=True)
     deadline = graphene.DateTime(required=True)
 
 class CreateListing(graphene.Mutation):
