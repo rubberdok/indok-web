@@ -1,33 +1,92 @@
-import { IconButton, Grid, Typography } from "@material-ui/core";
+import { IconButton, Grid, Typography, Divider } from "@material-ui/core";
 import dayjs from "dayjs";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CalendarTable from "./CalendarTable";
 import { DATE_FORMAT } from "./constants";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore";
 import DayCell from "./DayCell";
+import { getDateRange } from "./helpers";
 
 interface CalendarProps {
   disabledDates?: string[];
-  handleDateClicked?: (date: string) => void;
-  initSelectedDay?: string;
   disableAll?: boolean;
   disableBefore?: string;
   disableAfter?: string;
+  title?: string;
+  onRangeChange?: (fromDate: string | undefined, toDate: string | undefined, validRange: boolean) => void;
 }
 
 const Calendar: React.FC<CalendarProps> = ({
   disabledDates,
-  initSelectedDay,
-  handleDateClicked,
   disableAll,
   disableBefore,
   disableAfter,
+  title,
+  onRangeChange,
 }) => {
   const [selectedMonth, setSelectedMonth] = useState(dayjs());
-  const [selectedDay, setSelectedDay] = useState(initSelectedDay ? dayjs(initSelectedDay) : undefined);
+
+  const [selectingFromDate, setSelectingFromDate] = useState(true);
+  const [selectedFromDay, setSelectedFromDay] = useState<dayjs.Dayjs | undefined>(undefined);
+  const [selectedToDay, setSelectedToDay] = useState<dayjs.Dayjs | undefined>(undefined);
+
   const disableBeforeDate = disableBefore ? dayjs(disableBefore) : dayjs();
   const disableAfterDate = disableAfter ? dayjs(disableAfter) : undefined;
+
+  const [range, setRange] = useState<string[]>([]);
+  const [isRangeValid, setIsRangeValid] = useState(false);
+
+  useEffect(() => {
+    setRange([]);
+    setSelectedFromDay(undefined);
+    setSelectedToDay(undefined);
+  }, [disableAll]);
+
+  const handleDateClicked = (date: dayjs.Dayjs) => {
+    if (!isDisabled(date)) {
+      const setDate = (date: dayjs.Dayjs, setFunc: React.Dispatch<React.SetStateAction<dayjs.Dayjs | undefined>>) => {
+        setFunc(isDisabled(date) ? undefined : date);
+        setSelectingFromDate((prev) => !prev);
+      };
+      if (range.length > 0 || (!selectingFromDate && selectedFromDay && date.isSameOrBefore(selectedFromDay))) {
+        setSelectedFromDay(date);
+        setSelectedToDay(undefined);
+        setSelectingFromDate(false);
+      } else {
+        if (selectingFromDate) {
+          setDate(date, setSelectedFromDay);
+        } else {
+          setDate(date, setSelectedToDay);
+        }
+      }
+    }
+  };
+
+  useEffect(() => {
+    const dateToString = (date: dayjs.Dayjs | undefined): string | undefined =>
+      date ? date.format(DATE_FORMAT) : undefined;
+    if (selectedFromDay && selectedToDay) {
+      const newRange = getDateRange(selectedFromDay.format(DATE_FORMAT), selectedToDay.format(DATE_FORMAT));
+      setRange(newRange);
+      const newIsRangeValid = disabledDates ? !disabledDates.some((date: string) => newRange.includes(date)) : true;
+      setIsRangeValid(newIsRangeValid);
+      onRangeChange && onRangeChange(dateToString(selectedFromDay), dateToString(selectedToDay), newIsRangeValid);
+    } else {
+      setRange([]);
+      setIsRangeValid(true);
+      onRangeChange && onRangeChange(dateToString(selectedFromDay), dateToString(selectedToDay), true);
+    }
+  }, [selectedFromDay, selectedToDay]);
+
+  const isDisabled = (date: dayjs.Dayjs) => {
+    return (
+      disableAll ||
+      date.isBefore(disableBeforeDate, "day") ||
+      (disableAfterDate ? date.isAfter(disableAfterDate) : false) ||
+      disabledDates?.includes(date.format(DATE_FORMAT))
+    );
+  };
 
   const previousMonthDays = (month: dayjs.Dayjs): JSX.Element[] => {
     const previousDays: JSX.Element[] = [];
@@ -40,7 +99,7 @@ const Calendar: React.FC<CalendarProps> = ({
 
       for (let i = 0; i < dayDifference; i++) {
         const date = firstOfMonth.subtract(dayDifference - i, "day");
-        previousDays.push(<DayCell key={`prev-${date.format(DATE_FORMAT)}`} isHidden></DayCell>);
+        previousDays.push(<DayCell key={`prev-${date.format(DATE_FORMAT)}`} isHidden />);
       }
     }
     return previousDays;
@@ -52,28 +111,15 @@ const Calendar: React.FC<CalendarProps> = ({
       const date = dayjs(month).set("date", i);
       daysOfMonth.push(
         <DayCell
-          isSelected={selectedDay ? date.isSame(selectedDay, "day") : false}
-          onClick={() => {
-            if (handleDateClicked) {
-              setSelectedDay(date);
-              handleDateClicked(date.format(DATE_FORMAT));
-            }
-          }}
-          isDisabled={
-            disableAll ||
-            date.isBefore(disableBeforeDate, "day") ||
-            (disableAfterDate ? date.isAfter(disableAfterDate) : false) ||
-            disabledDates?.includes(date.format(DATE_FORMAT))
-          }
-          clickable={handleDateClicked === undefined}
+          value={i}
+          isFromDate={selectedFromDay ? date.isSame(selectedFromDay, "day") : false}
+          isToDate={selectedToDay ? date.isSame(selectedToDay, "day") : false}
+          onClick={() => handleDateClicked(date)}
+          isDisabled={isDisabled(date)}
+          isInRange={range.includes(date.format(DATE_FORMAT))}
+          isInvalidRange={!isRangeValid}
           key={date.format(DATE_FORMAT)}
-        >
-          <Grid container justify="center" alignItems="center" style={{ height: "100%" }}>
-            <Grid item>
-              <Typography>{i}</Typography>
-            </Grid>
-          </Grid>
-        </DayCell>
+        />
       );
     }
     return daysOfMonth;
@@ -91,7 +137,7 @@ const Calendar: React.FC<CalendarProps> = ({
 
       for (let i = 0; i < dayDifference; i++) {
         const date = dayjs(endOfMonth).add(i + 1, "day");
-        nextDays.push(<DayCell key={`next-${date.format(DATE_FORMAT)}`} isHidden></DayCell>);
+        nextDays.push(<DayCell key={`next-${date.format(DATE_FORMAT)}`} isHidden />);
       }
     }
     return nextDays;
@@ -126,19 +172,29 @@ const Calendar: React.FC<CalendarProps> = ({
   };
 
   return (
-    <Grid container direction="column">
+    <Grid container direction="column" spacing={2}>
       <Grid item container alignItems="center" justify="space-between" xs>
         <IconButton onClick={() => onChangeMonth(-1)}>
           <NavigateBeforeIcon />
         </IconButton>
-        <Typography variant="body1">{`${selectedMonth.format("MMMM")} - ${selectedMonth.format("YYYY")}`}</Typography>
+        <Typography variant="h5" align="center">
+          {title}
+        </Typography>
         <IconButton onClick={() => onChangeMonth(1)}>
           <NavigateNextIcon />
         </IconButton>
       </Grid>
-      <Grid item>
-        <CalendarTable getRows={getRows} month={selectedMonth.clone()} />
+      <Divider variant="middle" />
+      <Grid item container>
+        <Grid item xs>
+          <CalendarTable getRows={getRows} month={selectedMonth.clone()} />
+        </Grid>
+        <Divider variant="fullWidth" orientation="vertical" />
+        <Grid item xs>
+          <CalendarTable getRows={getRows} month={selectedMonth.clone().add(1, "month")} />
+        </Grid>
       </Grid>
+      <Divider variant="middle" />
     </Grid>
   );
 };

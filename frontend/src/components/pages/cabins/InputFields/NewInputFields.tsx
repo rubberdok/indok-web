@@ -1,4 +1,4 @@
-import { ContactInfo, InputFieldsEvent, Validations } from "@interfaces/cabins";
+import { ContactInfo, InputFieldsEvent, ContactInfoValidations } from "@interfaces/cabins";
 import {
   createStyles,
   Divider,
@@ -17,7 +17,7 @@ import React from "react";
 
 interface Props {
   contactInfo: ContactInfo;
-  validations: Validations | undefined;
+  validations: ContactInfoValidations | undefined;
   onChange: (name: string, event: InputFieldsEvent) => void;
 }
 

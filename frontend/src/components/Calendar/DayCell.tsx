@@ -1,31 +1,64 @@
 import { makeStyles, Theme } from "@material-ui/core/styles";
-import { BoxProps } from "@material-ui/core/Box";
-import { Omit } from "@material-ui/types";
-import { Grid, Box } from "@material-ui/core";
+import { Grid, Box, Typography } from "@material-ui/core";
 interface Props {
   isDisabled?: boolean;
-  isSelected?: boolean;
+  isFromDate?: boolean;
+  isToDate?: boolean;
   isHidden?: boolean;
-  clickable?: boolean;
+  value?: number;
+  onClick?: () => void;
+  isInRange?: boolean;
+  isInvalidRange?: boolean;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     width: "100%",
     height: 60,
-    color: (props: Props) => (props.isDisabled ? "#cecece" : "black"),
-    backgroundColor: (props: Props) =>
-      props.isSelected ? theme.palette.primary.light : props.isHidden ? "transparent" : theme.palette.background.paper,
-    cursor: (props: Props) => (props.clickable ? "pointer" : "defualt"),
+    color: (props: Props) => {
+      if (props.isDisabled) {
+        return "#cecece";
+      } else if (props.isFromDate || props.isToDate || props.isInRange) {
+        return "white";
+      } else {
+        return "black";
+      }
+    },
+    backgroundColor: (props: Props) => {
+      if (props.isFromDate || props.isToDate) {
+        if (props.isInvalidRange) {
+          return theme.palette.error.dark;
+        } else {
+          return theme.palette.primary.dark;
+        }
+      }
+      if (props.isInRange && props.isInvalidRange) {
+        return theme.palette.error.light;
+      }
+      if (props.isInRange) {
+        return theme.palette.primary.light;
+      }
+      if (props.isHidden) {
+        return "transparent";
+      }
+      return theme.palette.background.paper;
+    },
+    cursor: (props: Props) => (props.isDisabled || props.isHidden ? "default" : "pointer"),
   },
 }));
 
-const DayCell: React.FC<Props & Omit<BoxProps, keyof Props>> = (props) => {
-  const { isDisabled, isHidden, clickable, ...other } = props;
+const DayCell: React.FC<Props> = (props) => {
   const classes = useStyles(props);
+  const { onClick, value } = props;
   return (
-    <Grid item xs component="td">
-      <Box className={classes.root} {...other} />
+    <Grid item xs component="td" onClick={onClick}>
+      <Box className={classes.root}>
+        <Grid container justify="center" alignItems="center" style={{ height: "100%" }}>
+          <Grid item>
+            <Typography>{value}</Typography>
+          </Grid>
+        </Grid>
+      </Box>
     </Grid>
   );
 };

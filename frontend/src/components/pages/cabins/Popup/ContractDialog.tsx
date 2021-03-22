@@ -41,7 +41,7 @@ const ContractDialog = ({ modalData, setModalData, datePick, chosenCabins, conta
     <>
       <Dialog open={modalData.displayPopUp} onClose={handleClose} fullWidth maxWidth="md">
         <DialogContent>
-          <Grid container sm={12} alignContent="center" spacing={3}>
+          <Grid container alignContent="center" spacing={3}>
             <Grid item>
               <IconButton onClick={(_e) => setModalData({ ...modalData, displayPopUp: false })}>
                 <ClearIcon />

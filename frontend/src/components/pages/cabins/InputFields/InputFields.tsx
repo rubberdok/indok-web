@@ -1,4 +1,4 @@
-import { Validations } from "@interfaces/cabins";
+import { ContactInfoValidations } from "@interfaces/cabins";
 import { User } from "@interfaces/users";
 import {
   createStyles,
@@ -40,7 +40,7 @@ interface InputFieldsProps {
   cabins: string[];
   numberIndok: number;
   numberExternal: number;
-  validations: Validations | undefined;
+  validations: ContactInfoValidations | undefined;
 }
 
 export const InputFields: React.FC<InputFieldsProps> = ({
