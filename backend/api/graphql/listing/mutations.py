@@ -62,8 +62,8 @@ class DeleteListing(graphene.Mutation):
         try:
             listing = Listing.objects.get(pk=kwargs["id"])
         except Listing.DoesNotExist:
-            return DeleteListing(ok=False)
-        listing_id = listing.id
+            return DeleteListing(ok=False, listing_id=kwargs["id"])
+        listing_id = kwargs["id"]
         listing.delete()
         return DeleteListing(ok=True, listing_id=listing_id)
 
