@@ -80,7 +80,7 @@ const CountdownButton: React.FC<Props> = ({
      * ex. 3 days, 14 minutes and 3 seconds yields: ["days", "minutes", "seconds"]
      * The actual time left is stored in the Record<string, number> called timeLeft
      *
-     * Shows remaining time until the event opens on the format:
+     * Shows remaining time until the event opens on the following formats depending on how much time is left:
      * XX days and YY hours
      * XX hours and YY minutes
      * XX minutes  (minutes left >= 10)
