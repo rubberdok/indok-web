@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
 import Navbar from "@components/navbar/Navbar";
-import CabinAvailability from "@components/pages/cabins/CabinAvailability";
+import CheckInOut from "@components/pages/cabins/CheckInOut";
 import CabinContactInfo from "@components/pages/cabins/CabinContactInfo";
 import ContractDialog from "@components/pages/cabins/Popup/ContractDialog";
 import { QUERY_CABINS } from "@graphql/cabins/queries";
@@ -10,6 +10,7 @@ import { cabinOrderStepReady } from "@utils/cabins";
 import { isFormValid, validateInputForm } from "@utils/helpers";
 import { NextPage } from "next";
 import React, { useEffect, useState } from "react";
+import PaymentSite from "@components/pages/cabins/PaymentSite";
 
 interface StepReady {
   [step: number]: { ready: boolean; errortext: string };
@@ -85,7 +86,7 @@ const CabinBookingPage: NextPage = () => {
       case 0:
         // Velg hytte
         return cabinQuery.data ? (
-          <CabinAvailability
+          <CheckInOut
             allCabins={cabinQuery.data.cabins}
             chosenCabins={chosenCabins}
             setChosenCabins={setChosenCabins}
@@ -97,7 +98,7 @@ const CabinBookingPage: NextPage = () => {
         return <CabinContactInfo contactInfo={contactInfo} setContactInfo={setContactInfo} validations={validations} />;
       case 2:
         // Betaling
-        return <Typography variant="h3">Betaling placeholder</Typography>;
+        return <PaymentSite chosenCabins={chosenCabins} datePick={datePick} contactInfo={contactInfo} />;
       case 3:
         // Kvittering
         return <Typography variant="h3">Kvittering placeholder</Typography>;
