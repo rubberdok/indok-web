@@ -75,6 +75,18 @@ const CountdownButton: React.FC<Props> = ({
   };
 
   const getCurrentTimeLeft = (timeparts: string[]) => {
+    /**
+     * timeparts is a list containing the elements of time that are not 0
+     * ex. 3 days, 14 minutes and 3 seconds yields: ["days", "minutes", "seconds"]
+     * The actual time left is stored in the Record<string, number> called timeLeft
+     *
+     * Shows remaining time until the event opens on the format:
+     * XX days and YY hours
+     * XX hours and YY minutes
+     * XX minutes  (minutes left >= 10)
+     * XX minutes and YY seconds (minutes left < 10)
+     * */
+
     if (timeparts.length === 1) {
       return `Åpner om ${timeLeft[timeparts[0]]} ${translate(timeparts[0], timeLeft[timeparts[0]])}`;
     }
