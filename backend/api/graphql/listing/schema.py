@@ -1,7 +1,6 @@
 import graphene
 
 from .mutations import (
-    AddPermission,
     CreateListing,
     DeleteListing,
     UpdateListing
@@ -18,5 +17,3 @@ class ListingMutations(graphene.ObjectType):
     create_listing = CreateListing.Field()
     update_listing = UpdateListing.Field()
     delete_listing = DeleteListing.Field()
-
-    add_permission = AddPermission.Field()
