@@ -40,7 +40,7 @@ class CreateListing(graphene.Mutation):
 
         for k, v in listing_data.items():
             setattr(listing, k, v)
-        setattr(listing, "end_datetime", listing_data["start_datetime"] + datetime.timedelta(days=30))
+        setattr(listing, "end_datetime", listing_data["deadline"] + datetime.timedelta(days=30))
         setattr(listing, "slug", slugify(listing_data['title']))
 
         listing.save()
