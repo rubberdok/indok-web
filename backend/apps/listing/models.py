@@ -19,9 +19,6 @@ class Listing(models.Model):
 
     survey = models.ForeignKey(Survey, null=True, on_delete=models.SET_NULL)
 
-    class Meta:
-        permissions = [("view_responses", "Can view all responses to a given listing")]
-
     def __str__(self):
         return f"{self.title} (Open: {self.start_datetime} - {self.end_datetime}: {self.description}"
 
