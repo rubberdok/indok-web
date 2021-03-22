@@ -34,6 +34,7 @@ import Link from "next/link";
 import { Listing } from "@interfaces/listings";
 import { useRouter } from "next/router";
 import { default as React, useState } from "react";
+import CreateListing from "@components/pages/listings/organization/createListing";
 
 interface HeaderValuePair<T> {
   header: string;
@@ -57,6 +58,9 @@ const OrganizationDetailPage: NextPage = () => {
   const router = useRouter();
   const { orgId } = router.query;
   const orgNumberId = parseInt(orgId as string);
+
+  // state for whether the CreateListing dialog is open
+  const [createListingOpen, openCreateListing] = useState(false);
 
   const [selectedEvents, setSelectedEvents] = useState(["1", "2", "3"]);
 
@@ -194,41 +198,58 @@ const OrganizationDetailPage: NextPage = () => {
               </Grid>
             </Grid>
             {data?.organization?.listings && (
-              <Grid item container>
-                <Grid item xs>
-                  <Card variant="outlined">
-                    <CardHeader title="Verv" />
-                    <Divider variant="middle" />
-                    {data.organization.listings.length !== 0 && (
-                      <CardContent>
-                        <TableContainer>
-                          <Table>
-                            <TableHead>
-                              <TableRow>
-                                <TableCell>Tittel</TableCell>
-                                <TableCell>Søknadsfrist</TableCell>
-                              </TableRow>
-                            </TableHead>
-                            <TableBody>
-                              {data.organization.listings.map((listing: Listing) => (
-                                <Link href={`${orgNumberId}/listings/${listing.id}`} passHref key={listing.id}>
-                                  <TableRow className={classes.hover} hover>
-                                    <TableCell>{listing.title}</TableCell>
-                                    <TableCell>{dayjs(listing.deadline).format("HH:mm DD-MM-YYYY")}</TableCell>
-                                  </TableRow>
-                                </Link>
-                              ))}
-                            </TableBody>
-                          </Table>
-                        </TableContainer>
-                      </CardContent>
-                    )}
-                    <CardActions>
-                      <Button variant="contained">Opprett nytt verv</Button>
-                    </CardActions>
-                  </Card>
+              <>
+                <CreateListing
+                  organization={data.organization}
+                  open={createListingOpen}
+                  onClose={() => {
+                    openCreateListing(false);
+                  }}
+                />
+                <Grid item container>
+                  <Grid item xs>
+                    <Card variant="outlined">
+                      <CardHeader title="Verv" />
+                      <Divider variant="middle" />
+                      {data.organization.listings.length !== 0 && (
+                        <CardContent>
+                          <TableContainer>
+                            <Table>
+                              <TableHead>
+                                <TableRow>
+                                  <TableCell>Tittel</TableCell>
+                                  <TableCell>Søknadsfrist</TableCell>
+                                </TableRow>
+                              </TableHead>
+                              <TableBody>
+                                {data.organization.listings.map((listing: Listing) => (
+                                  <Link href={`${orgNumberId}/listings/${listing.id}`} passHref key={listing.id}>
+                                    <TableRow className={classes.hover} hover>
+                                      <TableCell>{listing.title}</TableCell>
+                                      <TableCell>{dayjs(listing.deadline).format("HH:mm DD-MM-YYYY")}</TableCell>
+                                    </TableRow>
+                                  </Link>
+                                ))}
+                              </TableBody>
+                            </Table>
+                          </TableContainer>
+                        </CardContent>
+                      )}
+                      <CardActions>
+                        <Button
+                          variant="contained"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            openCreateListing(true);
+                          }}
+                        >
+                          Opprett nytt verv
+                        </Button>
+                      </CardActions>
+                    </Card>
+                  </Grid>
                 </Grid>
-              </Grid>
+              </>
             )}
           </Grid>
         ) : null}
