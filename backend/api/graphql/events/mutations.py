@@ -9,6 +9,7 @@ from graphql_jwt.decorators import login_required, staff_member_required
 
 from .mail import send_event_emails
 from .types import CategoryType, EventType
+from datetime import datetime
 
 
 class BaseEventInput:
@@ -135,7 +136,7 @@ class EventSignUp(graphene.Mutation):
 
         now = timezone.now()
 
-        if now < event.signUpOpenDate:
+        if now < event.signup_open_date:
             raise Exception("Arrangementet er ikke åpent for påmelding enda")
 
         user = info.context.user
@@ -147,7 +148,7 @@ class EventSignUp(graphene.Mutation):
             )
 
         if SignUp.objects.filter(
-            event_id=event_id, is_active=True, user_id=info.context.user.id
+            event_id=event_id, is_attending=True, user_id=info.context.user.id
         ).exists():
             raise Exception("Du kan ikke melde deg på samme arrangement flere ganger")
 
