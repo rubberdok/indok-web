@@ -3,9 +3,10 @@ import Layout from "@components/Layout";
 import { useQuery } from "@apollo/client";
 import { LISTINGS } from "@graphql/listings/queries";
 import { Listing } from "@interfaces/listings";
-import { Container, Grid, makeStyles, Typography, Box, Card, CardContent } from "@material-ui/core";
+import { Container, Grid, makeStyles, Typography, Box, Card, CardContent, Hidden } from "@material-ui/core";
 import Filter from "@components/pages/listings/filter";
 import ListingItemCard from "@components/pages/listings/listingItemCard";
+import ListingCard from "@components/pages/listings/listingCard";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -52,6 +53,34 @@ const ListingsPage: NextPage = () => {
                   slug={listing.slug}
                 />
               </Grid>
+            ))}
+        </Grid>
+        <Grid container direction="row" spacing={2} className={classes.root} justify="center" alignItems="stretch">
+          {data &&
+            data.listings.map((listing) => (
+              <>
+                <Hidden smDown>
+                  <Grid container item key={listing.id} xs={6}>
+                    <ListingCard
+                      listing={listing}
+                    />
+                  </Grid>
+                </Hidden>
+                <Hidden mdUp xsDown>
+                  <Grid container item key={listing.id} xs={8}>
+                    <ListingCard 
+                      listing={listing}
+                    />
+                  </Grid>
+                </Hidden>
+                <Hidden smUp>
+                <Grid container item key={listing.id} xs={12}>
+                    <ListingCard 
+                      listing={listing}
+                    />
+                  </Grid>
+                </Hidden>
+              </>
             ))}
         </Grid>
       </Container>
