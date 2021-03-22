@@ -1,33 +1,40 @@
 import graphene
 from apps.listing.models import Listing
-from django.contrib.auth.models import Permission
 from django.utils.text import slugify
-from graphql_jwt.decorators import login_required
+from graphql_jwt.decorators import login_required, permission_required
 
 from .types import ListingType
 
 
-class ListingInput(graphene.InputObjectType):
-    title = graphene.String(required=False)
-    description = graphene.String(required=False)
-    start_datetime = graphene.DateTime(required=False)
-    end_datetime = graphene.DateTime(required=False)
-    deadline = graphene.DateTime(required=False)
-    url = graphene.String(required=False)
-    organization_id = graphene.ID(required=False)
-    survey_id = graphene.ID(required=False)
+class BaseListingInput(graphene.InputObjectType):
+    title = graphene.String()
+    description = graphene.String()
+    start_datetime = graphene.DateTime()
+    end_datetime = graphene.DateTime()
+    deadline = graphene.DateTime()
+    url = graphene.String()
+    organization_id = graphene.ID()
+    survey_id = graphene.ID()
 
+
+class CreateListingInput(BaseListingInput):
+    title = graphene.String(required=True)
+    organization_id = graphene.String(required=True)
+    deadline = graphene.DateTime(required=True)
 
 class CreateListing(graphene.Mutation):
+    """
+    Creates a new listing
+    """
     ok = graphene.Boolean()
     listing = graphene.Field(ListingType)
 
     class Arguments:
-        listing_data = ListingInput(required=True)
+        listing_data = CreateListingInput(required=True)
 
-    @classmethod
     @login_required
-    def mutate(cls, self, info, listing_data):
+    @permission_required("surveys.create_listing")
+    def mutate(self, info, listing_data):
         listing = Listing()
 
         for k, v in listing_data.items():
@@ -36,24 +43,28 @@ class CreateListing(graphene.Mutation):
         setattr(listing, "slug", slugify(listing_data['title']))
 
         listing.save()
-        ok = True
-        return cls(listing=listing, ok=ok)
+        return CreateListing(listing=listing, ok=True)
 
 class DeleteListing(graphene.Mutation):
+    """
+    Deletes the listing with the given ID
+    """
     ok = graphene.Boolean()
     listing_id = graphene.ID()
 
     class Arguments:
         id = graphene.ID()
 
-    @classmethod
     @login_required
-    def mutate(cls, self, info, **kwargs):
-        listing = Listing.objects.get(pk=kwargs["id"])
+    @permission_required("surveys.delete_listing")
+    def mutate(self, info, **kwargs):
+        try:
+            listing = Listing.objects.get(pk=kwargs["id"])
+        except Listing.DoesNotExist:
+            return DeleteListing(ok=False)
         listing_id = listing.id
         listing.delete()
-        ok = True
-        return cls(ok=ok, listing_id=listing_id)
+        return DeleteListing(ok=True, listing_id=listing_id)
 
 class UpdateListing(graphene.Mutation):
     listing = graphene.Field(ListingType)
@@ -61,30 +72,18 @@ class UpdateListing(graphene.Mutation):
 
     class Arguments:
         id = graphene.ID(required=True)
-        listing_data = ListingInput(required=False)
+        listing_data = BaseListingInput(required=False)
 
-    @classmethod
     @login_required
-    def mutate(cls, self, info, id, listing_data=None):
-        listing = Listing.objects.get(pk=id)
+    @permission_required("surveys.update_listing")
+    def mutate(self, info, id, listing_data=None):
+        try:
+            listing = Listing.objects.get(pk=id)
+        except Listing.DoesNotExist:
+            return UpdateListing(listing=None, ok=False)
 
         for k, v in listing_data.items():
             setattr(listing, k, v)
 
         listing.save()
-        ok = True
-        return cls(listing=listing, ok=ok)
-
-class AddPermission(graphene.Mutation):
-    ok = graphene.Boolean()
-
-    class Arguments:
-        permission = graphene.String()
-    
-    @classmethod
-    def mutate(cls, self, info, permission):
-        user = info.context.user
-        user.user_permissions.add(Permission.objects.get(codename=permission))
-        user.save()
-        ok = True
-        return cls(ok=ok)
+        return UpdateListing(listing=listing, ok=True)
