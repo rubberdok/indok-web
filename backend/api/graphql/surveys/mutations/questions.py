@@ -9,13 +9,13 @@ from ..types import OptionType, QuestionType
 
 
 class QuestionTypeEnum(graphene.Enum):
-    PARAGRAPH = "Paragraph"
-    SHORT_ANSWER = "Short answer"
-    MULTIPLE_CHOICE = "Multiple choice"
-    CHECKBOXES = "Checkboxes"
-    DROPDOWN = "Drop-down"
-    SLIDER = "Slider"
-    FILE_UPLOAD = "File upload"
+    PARAGRAPH = "PARAGRAPH"
+    SHORT_ANSWER = "SHORT_ANSWER"
+    MULTIPLE_CHOICE = "MULTIPLE_CHOICE"
+    CHECKBOXES = "CHECKBOXES"
+    DROPDOWN = "DROPDOWN"
+    SLIDER = "SLIDER"
+    FILE_UPLOAD = "FILE_UPLOAD"
 
 class BaseQuestionInput(graphene.InputObjectType):
     survey_id = graphene.ID()

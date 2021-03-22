@@ -27,7 +27,7 @@ class Question(models.Model):
     survey = models.ForeignKey(Survey, on_delete=models.CASCADE, related_name="questions")
     question = models.CharField(max_length=300)
     description = models.CharField(max_length=1000, blank=True, default="")
-    question_type = models.CharField(max_length=32, default="Paragraph")
+    question_type = models.CharField(max_length=32, default="PARAGRAPH")
     mandatory = models.BooleanField(default=True)
 
 
