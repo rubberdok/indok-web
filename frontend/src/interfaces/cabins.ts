@@ -15,6 +15,9 @@ export interface Booking {
 export interface Cabin {
   id: string;
   name: string;
+  maxGuests: number;
+  internalPrice: number;
+  externalPrice: number;
 }
 
 export interface BookingFromTo {
