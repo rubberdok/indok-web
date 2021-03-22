@@ -10,7 +10,7 @@ class Listing(models.Model):
     title = models.CharField(max_length=250)
     slug = models.SlugField(max_length=255, allow_unicode=True, blank=True, default="")
 
-    start_datetime = models.DateTimeField(default='django.utils.timezone.now')
+    start_datetime = models.DateTimeField(default=timezone.now)
     end_datetime = models.DateTimeField()
     deadline = models.DateTimeField()
 
