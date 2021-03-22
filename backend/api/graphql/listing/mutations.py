@@ -34,7 +34,7 @@ class CreateListing(graphene.Mutation):
         listing_data = CreateListingInput(required=True)
 
     @login_required
-    @permission_required("listing.create_listing")
+    @permission_required("listing.add_listing")
     def mutate(self, info, listing_data):
         listing = Listing()
 

@@ -21,7 +21,7 @@ class CreateSurvey(graphene.Mutation):
         listing_id = graphene.ID(required=False)
 
     @login_required
-    @permission_required("surveys.create_survey")
+    @permission_required("surveys.add_survey")
     def mutate(self, info, survey_data, listing_id=None):
         survey = Survey()
         for key, value in survey_data.items():

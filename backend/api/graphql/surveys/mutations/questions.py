@@ -34,7 +34,7 @@ class CreateQuestion(graphene.Mutation):
         question_data = CreateQuestionInput(required=True)
 
     @login_required
-    @permission_required("surveys.create_question")
+    @permission_required("surveys.add_question")
     def mutate(self, info, question_data):
         question = Question()
         for k, v in question_data.items():
@@ -116,7 +116,7 @@ class SubmitOrUpdateAnswers(graphene.Mutation):
         answers_data = graphene.List(AnswerInput)
 
     @login_required
-    @permission_required(["surveys.create_answer", "surveys.update_answers"])
+    @permission_required(["surveys.add_answer", "surveys.update_answers"])
     def mutate(self, info, survey_id, answers_data):
         """Creates new answers to previously unanswered questions, updates already existings answers.
 
@@ -200,7 +200,7 @@ class CreateUpdateAndDeleteOptions(graphene.Mutation):
         option_data = graphene.List(OptionInput)
 
     @login_required
-    @permission_required(["surveys.create_option", "surveys.update_option", "surveys.delete_option"])
+    @permission_required(["surveys.add_option", "surveys.update_option", "surveys.delete_option"])
     def mutate(self, info, question_id, option_data):
         """Bulk operation to refresh the options to a given question. Has three main operations:
         (1): Creates new options for inputs without an option_id
