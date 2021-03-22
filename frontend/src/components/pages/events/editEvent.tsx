@@ -32,6 +32,9 @@ import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 dayjs.extend(utc);
 dayjs.extend(timezone);
+dayjs.locale(nb);
+dayjs.tz.setDefault("Europe/Oslo");
+const DATE_FORMAT = "YYYY-MM-DDTHH:mm:ss";
 
 interface EditEventProps {
   open: boolean;
@@ -85,16 +88,16 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event, user }) => 
     });
     initialEventData.categoryId = event.category ? event.category.id : "";
 
-    initialEventData.startTime = dayjs(event.startTime).tz("Europe/Oslo").locale(nb).format("YYYY-MM-DDTHH:mm:ss");
+    initialEventData.startTime = dayjs(event.startTime).format(DATE_FORMAT);
 
     if (event.signupOpenDate) {
-      initialEventData.signupOpenDate = dayjs(event.signupOpenDate).tz("Europe/Oslo").locale(nb).format("YYYY-MM-DDTHH:mm:ss");
+      initialEventData.signupOpenDate = dayjs(event.signupOpenDate).format(DATE_FORMAT);
     }
     if (event.deadline) {
-      initialEventData.deadline = dayjs(event.deadline).locale(nb).tz("Europe/Oslo").format("YYYY-MM-DDTHH:mm:ss");
+      initialEventData.deadline = dayjs(event.deadline).format(DATE_FORMAT);
     }
     if (event.endTime) {
-      initialEventData.endTime = dayjs(event.endTime).locale(nb).tz("Europe/Oslo").format("YYYY-MM-DDTHH:mm:ss");
+      initialEventData.endTime = dayjs(event.endTime).format(DATE_FORMAT);
     }
     setEventData(initialEventData);
   }, []);
