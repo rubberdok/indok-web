@@ -22,11 +22,6 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  TableCell,
-  makeStyles,
-  Chip,
-  TableBody,
-  Button,
   CardActions,
   TextField,
   Typography,
@@ -36,9 +31,6 @@ import { promptDownloadFromPayload } from "@utils/exports";
 import dayjs from "dayjs";
 import { NextPage } from "next";
 import Link from "next/link";
-import { GET_ORGANIZATION } from "@graphql/orgs/queries";
-import { Organization } from "@interfaces/organizations";
-import dayjs from "dayjs";
 import { Listing } from "@interfaces/listings";
 import { useRouter } from "next/router";
 import { default as React, useState } from "react";
