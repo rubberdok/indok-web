@@ -33,7 +33,7 @@ class CreateListing(graphene.Mutation):
         listing_data = CreateListingInput(required=True)
 
     @login_required
-    @permission_required("surveys.create_listing")
+    @permission_required("listing.create_listing")
     def mutate(self, info, listing_data):
         listing = Listing()
 
@@ -56,7 +56,7 @@ class DeleteListing(graphene.Mutation):
         id = graphene.ID()
 
     @login_required
-    @permission_required("surveys.delete_listing")
+    @permission_required("listing.delete_listing")
     def mutate(self, info, **kwargs):
         try:
             listing = Listing.objects.get(pk=kwargs["id"])
@@ -75,7 +75,7 @@ class UpdateListing(graphene.Mutation):
         listing_data = BaseListingInput(required=False)
 
     @login_required
-    @permission_required("surveys.update_listing")
+    @permission_required("listing.update_listing")
     def mutate(self, info, id, listing_data=None):
         try:
             listing = Listing.objects.get(pk=id)
