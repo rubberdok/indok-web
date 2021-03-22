@@ -54,7 +54,7 @@ const CreateListing: React.FC<{
     // updates the cache upon creating the listing, so it can show up instantly
     update: (cache, { data }) => {
       const newListing = data?.createListing.listing;
-      const cachedOrg = cache.readQuery<{ org: Organization }>({
+      const cachedOrg = cache.readQuery<{ organization: Organization }>({
         query: GET_ORGANIZATION,
         variables: { orgId: parseInt(organization.id) },
       });
@@ -64,7 +64,7 @@ const CreateListing: React.FC<{
           variables: { orgId: parseInt(organization.id) },
           data: {
             organization: {
-              listings: [...(cachedOrg.org.listings ?? []), newListing],
+              listings: [...(cachedOrg.organization.listings ?? []), newListing],
             },
           },
         });

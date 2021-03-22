@@ -5,7 +5,7 @@ import { Listing } from "@interfaces/listings";
 import { LISTING_WITH_RESPONDERS } from "@graphql/listings/queries";
 import Link from "next/link";
 import Layout from "@components/Layout";
-import { makeStyles, Grid, Box, Tabs, Tab, Container, Card, CardContent } from "@material-ui/core";
+import { makeStyles, Grid, Tabs, Tab, Container, Card, CardContent } from "@material-ui/core";
 import { useState } from "react";
 import { User } from "@interfaces/users";
 import SurveyAnswers from "@components/pages/surveys/surveyAdmin/surveyAnswers";
