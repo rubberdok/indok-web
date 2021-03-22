@@ -16,6 +16,8 @@ import {
   FormHelperText,
 } from "@material-ui/core";
 
+// variables to pass into the CreateListing mutation
+// TODO: replace with graphQL code-gen
 interface CreateListingVariables {
   title: string;
   description: string;
@@ -70,6 +72,7 @@ const CreateListing: React.FC<{
     },
   });
 
+  // renders a dialog with a form to create a new listing
   return (
     <Dialog open={open} onClose={onClose} fullWidth>
       <DialogContent>
