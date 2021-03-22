@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 from apps.organizations.models import Organization
 from apps.surveys.models import Survey
@@ -9,7 +10,7 @@ class Listing(models.Model):
     title = models.CharField(max_length=250)
     slug = models.SlugField(max_length=255, allow_unicode=True, blank=True, default="")
 
-    start_datetime = models.DateTimeField()
+    start_datetime = models.DateTimeField(default=timezone.now())
     end_datetime = models.DateTimeField()
     deadline = models.DateTimeField()
 
