@@ -14,10 +14,9 @@ import {
   TableCell,
   TableContainer,
   TableRow,
-  Tooltip,
   Typography,
 } from "@material-ui/core";
-import { Close, Facebook, GitHub, Star, StarHalf } from "@material-ui/icons";
+import { Close, Facebook, GitHub } from "@material-ui/icons";
 import Link from "next/link";
 import React from "react";
 
@@ -38,6 +37,20 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: theme.spacing(5),
     paddingBottom: theme.spacing(5),
     color: "#b0aca5",
+    [theme.breakpoints.down("sm")]: {
+      height: "unset",
+      flexDirection: "column",
+    },
+  },
+  creditsContent: {
+    [theme.breakpoints.down("sm")]: {
+      flexDirection: "column",
+      alignItems: "center",
+    },
+
+    "& > *": {
+      marginBottom: theme.spacing(2),
+    },
   },
   table: {
     minWidth: 800,
@@ -61,11 +74,19 @@ const useStyles = makeStyles((theme) => ({
     backgroundPosition: "right center",
     backgroundRepeat: "no-repeat",
     opacity: 0.25,
+
+    [theme.breakpoints.down("md")]: {
+      width: "100%",
+      left: 0,
+    },
   },
   rdLogo: {
     height: "100%",
     float: "left",
-    marginRight: theme.spacing(4),
+
+    [theme.breakpoints.up("md")]: {
+      marginRight: theme.spacing(4),
+    },
 
     "&:hover": {
       cursor: "pointer",
@@ -88,7 +109,7 @@ const Footer: React.FC = () => {
         <Box className={classes.footer}>
           <Container>
             <Grid container>
-              <Grid item xs={6}>
+              <Grid item xs={12} md={6}>
                 <Link href="/" passHref>
                   <Typography variant="h5" className={classes.title} gutterBottom>
                     INDØK
@@ -120,7 +141,7 @@ const Footer: React.FC = () => {
                   </a>
                 </Box>
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={12} md={6}>
                 <Box className={classes.nth} position="absolute" width="600px" height="100%" top={0} zIndex={-1}></Box>
               </Grid>
             </Grid>
@@ -128,7 +149,7 @@ const Footer: React.FC = () => {
         </Box>
         <Box className={classes.credits}>
           <Container>
-            <Box height="100%" display="flex" alignItems="center">
+            <Box height="100%" display="flex" alignItems="center" className={classes.creditsContent}>
               <a href="https://github.com/hovedstyret/indok-web" rel="noreferrer noopener" style={{ height: "100%" }}>
                 <img className={classes.rdLogo} src="/rd-logo.svg" alt="Rubberdøk logo" />
               </a>
@@ -178,38 +199,75 @@ const Footer: React.FC = () => {
                 <TableRow>
                   <TableCell>
                     Morgan Heggland &apos;22
-                    <Tooltip title="Prosjektleder">
-                      <Star />
-                    </Tooltip>
+                    <br />
+                    <Typography variant="caption">Big Boss Morgan</Typography>
                   </TableCell>
                   <TableCell>
                     Lars Lien Ankile &apos;22
-                    <Tooltip title="Lederpar Hovedstyret">
-                      <StarHalf />
-                    </Tooltip>
+                    <br />
+                    <Typography variant="caption">LP &amp; Chief Devops Architect</Typography>
                   </TableCell>
                   <TableCell>
                     Andreas Johannesen &apos;22
-                    <Tooltip title="Lederpar Hovedstyret">
-                      <StarHalf />
-                    </Tooltip>
+                    <br />
+                    <Typography variant="caption">LP &amp; Chief Visionary</Typography>
                   </TableCell>
-                  <TableCell>Ingrid Aaseng &apos;22</TableCell>
+                  <TableCell>
+                    Ingrid Aaseng &apos;22
+                    <br />
+                    <Typography variant="caption">Head of Archive Solutions</Typography>
+                  </TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell>Fredrik Ahlborg &apos;22</TableCell>
-                  <TableCell>Herman Holmøy &apos;25</TableCell>
-                  <TableCell>Patrik Kjærran &apos;22</TableCell>
-                  <TableCell>Anna Sofie Lunde &apos;22</TableCell>
+                  <TableCell>
+                    Fredrik Ahlborg &apos;22
+                    <br />
+                    <Typography variant="caption">Content Creator &amp; Social Chair</Typography>
+                  </TableCell>
+                  <TableCell>
+                    Herman Holmøy &apos;25
+                    <br />
+                    <Typography variant="caption">Cabin Management System</Typography>
+                  </TableCell>
+                  <TableCell>
+                    Patrik Kjærran &apos;22
+                    <br />
+                    <Typography variant="caption">Event Backend Strategist</Typography>
+                  </TableCell>
+                  <TableCell>
+                    Anna Sofie Lunde &apos;22
+                    <br />
+                    <Typography variant="caption">Head of Archive Solutions</Typography>
+                  </TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell>Hermann Mørkrid &apos;23</TableCell>
-                  <TableCell>Mathias Raa &apos;25</TableCell>
-                  <TableCell>Mathilde Marie Solberg &apos;23</TableCell>
-                  <TableCell>Sverre Spetalen &apos;21</TableCell>
+                  <TableCell>
+                    Hermann Mørkrid &apos;23
+                    <br />
+                    <Typography variant="caption">Head of Extracurricular System</Typography>
+                  </TableCell>
+                  <TableCell>
+                    Mathias Raa &apos;25
+                    <br />
+                    <Typography variant="caption">Art Director &amp; UX Architect</Typography>
+                  </TableCell>
+                  <TableCell>
+                    Mathilde Marie Solberg &apos;23
+                    <br />
+                    <Typography variant="caption">Global Head of Event</Typography>
+                  </TableCell>
+                  <TableCell>
+                    Sverre Spetalen &apos;21
+                    <br />
+                    <Typography variant="caption">Cabin Management System</Typography>
+                  </TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell>Lars Waage &apos;23</TableCell>
+                  <TableCell>
+                    Lars Waage &apos;23
+                    <br />
+                    <Typography variant="caption">Head of Extracurricular System</Typography>
+                  </TableCell>
                 </TableRow>
               </TableBody>
             </Table>

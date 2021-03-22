@@ -1,17 +1,37 @@
-import styled from "styled-components";
+import Box from "@material-ui/core/Box";
+import React from "react";
 
-export const Wrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-around;
-  align-content: strech;
-`;
+interface WrapperProps {
+  style?: React.CSSProperties;
+  children: React.ReactNode;
+}
 
-export const ContentWrapper = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: row;
-  justify-content: start;
-  align-items: center;
-`;
+export const Wrapper: React.FC<WrapperProps> = (props) => {
+  return (
+    <Box
+      style={props.style}
+      display="flex"
+      flexDirection="row"
+      flexWrap="wrap"
+      justifyContent="space-around"
+      alignContent="stretch"
+    >
+      {props.children}
+    </Box>
+  );
+};
+
+export const ContentWrapper: React.FC<WrapperProps> = (props) => {
+  return (
+    <Box
+      style={props.style}
+      display="flex"
+      flexDirection="row"
+      flexWrap="wrap"
+      justifyContent="start"
+      alignContent="center"
+    >
+      {props.children}
+    </Box>
+  );
+};

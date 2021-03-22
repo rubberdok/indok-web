@@ -15,7 +15,7 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { GET_EVENT } from "../../../graphql/events/queries";
 import CountdownButton from "./CountdownButton";
-import { ArrowRight, ContactMail, Edit, ErrorOutline, Warning } from "@material-ui/icons";
+import { ArrowRight, ContactMail, Edit, ErrorOutline, List, Warning } from "@material-ui/icons";
 import EditEvent from "./editEvent";
 import dayjs from "dayjs";
 import nb from "dayjs/locale/nb";
@@ -147,12 +147,7 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
   return (
     <Grid container spacing={1}>
       {openEditEvent && (
-        <EditEvent
-          open={openEditEvent}
-          onClose={() => setOpenEditEvent(false)}
-          event={eventData.event}
-          user={userData.user}
-        />
+        <EditEvent open={openEditEvent} onClose={() => setOpenEditEvent(false)} event={eventData.event} />
       )}
       {/* Header card */}
       <Grid item xs={12}>
@@ -177,14 +172,22 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
             {userData.user?.organizations
               .map((organization) => organization.id)
               .includes(eventData.event.organization.id) && (
-              <Button
-                startIcon={<Edit />}
-                onClick={() => {
-                  setOpenEditEvent(true);
-                }}
-              >
-                Rediger
-              </Button>
+              <Box>
+                <Button
+                  startIcon={<Edit />}
+                  color="primary"
+                  onClick={() => {
+                    setOpenEditEvent(true);
+                  }}
+                >
+                  Rediger
+                </Button>
+                <Link href={`/orgs/${eventData.event.organization.id}/events/${eventId}`} passHref>
+                  <Button color="primary" disableRipple startIcon={<List />}>
+                    Administrer
+                  </Button>
+                </Link>
+              </Box>
             )}
           </Box>
         </Paper>
@@ -263,12 +266,12 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
             </Box>
           )}
 
-          {eventData.event.allowedGradeYearsList.length < 5 && (
+          {eventData.event.allowedGradeYears.length < 5 && (
             <Box my={2}>
               <Typography variant="overline" display="block">
                 Åpent for
               </Typography>
-              {eventData.event.allowedGradeYearsList.map((grade) => (
+              {eventData.event.allowedGradeYears.map((grade) => (
                 <Typography gutterBottom key={grade}>
                   <ArrowRight fontSize="small" /> {`${grade}. klasse`}
                 </Typography>
@@ -287,7 +290,7 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
 
           {eventData.event.isAttendable &&
             userData.user &&
-            eventData.event.allowedGradeYearsList.includes(userData.user.gradeYear) && (
+            eventData.event.allowedGradeYears.includes(userData.user.gradeYear) && (
               <>
                 <CountdownButton
                   countDownDate={(eventData.event as AttendableEvent).signupOpenDate}

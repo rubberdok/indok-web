@@ -11,7 +11,7 @@ styre:
 tag: idrett
 ---
 
-# Pandemics
+# Hvem er vi?
 
 Janus Pandemics er et amerikansk fotballag for studentene ved sivilingeniørstudiet Industriell økonomi og teknologiledelse (Indøk) ved NTNU. Janus Pandemics ble startet høsten 2009, og har siden den gang utviklet seg helt fra scratch til å bli et sammensveiset og engasjert lag, drevet av studentene selv.
 
