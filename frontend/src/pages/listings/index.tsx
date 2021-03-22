@@ -9,7 +9,7 @@ import ListingItemCard from "@components/pages/listings/listingItemCard";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    marginTop: theme.spacing(4)
+    marginTop: theme.spacing(4),
   },
   hero: {
     color: "white",
@@ -22,7 +22,6 @@ const useStyles = makeStyles((theme) => ({
     backgroundImage: `linear-gradient(to left, rgba(0, 0, 0, 0.0), rgba(0, 0, 0, 0.8)), url('img/bindeleddet.jpg')`,
     marginBottom: 20,
   },
-
 }));
 
 // the page to show all listings open to users
@@ -41,8 +40,8 @@ const ListingsPage: NextPage = () => {
         <Grid container direction="column" spacing={2} className={classes.root}>
           {data &&
             data.listings.map((listing) => (
-              <Grid item>
-                <ListingItemCard 
+              <Grid item key={listing.id}>
+                <ListingItemCard
                   title={listing.title}
                   subtitle={listing.description}
                   chips={["intervju", "case", "søknad"]}
@@ -50,9 +49,7 @@ const ListingsPage: NextPage = () => {
                   img={"img/tindoklogo.png"}
                 />
               </Grid>
-            ))
-          
-          }
+            ))}
         </Grid>
       </Container>
     </Layout>
