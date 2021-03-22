@@ -1,27 +1,9 @@
 import { gql } from "@apollo/client";
 
 export const CREATE_LISTING = gql`
-  mutation createListing(
-    $title: String!
-    $description: String!
-    $startDatetime: DateTime!
-    $deadline: DateTime!
-    $endDatetime: DateTime!
-    $url: String!
-    $organizationId: ID
-    $surveyId: ID
-  ) {
+  mutation createListing($title: String!, $description: String!, $deadline: DateTime!, $organizationId: ID!) {
     createListing(
-      listingData: {
-        title: $title
-        description: $description
-        startDatetime: $startDatetime
-        deadline: $deadline
-        endDatetime: $endDatetime
-        url: $url
-        organizationId: $organizationId
-        surveyId: $surveyId
-      }
+      listingData: { title: $title, description: $description, deadline: $deadline, organizationId: $organizationId }
     ) {
       listing {
         id

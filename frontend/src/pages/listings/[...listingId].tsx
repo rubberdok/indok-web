@@ -2,8 +2,20 @@ import { useQuery } from "@apollo/client";
 import Layout from "@components/Layout";
 import { LISTING } from "@graphql/listings/queries";
 import { Listing } from "@interfaces/listings";
-import { Button, Container, Grid, Hidden, makeStyles, Card, CardContent, Typography, Box, Divider, IconButton } from "@material-ui/core";
-import ArrowForward from "@material-ui/icons/ArrowForward"
+import {
+  Button,
+  Container,
+  Grid,
+  Hidden,
+  makeStyles,
+  Card,
+  CardContent,
+  Typography,
+  Box,
+  Divider,
+  IconButton,
+} from "@material-ui/core";
+import ArrowForward from "@material-ui/icons/ArrowForward";
 import InfoOutlined from "@material-ui/icons/InfoOutlined";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
@@ -13,9 +25,9 @@ import OrganizationInfoPanel from "@components/pages/listings/detail/organizatio
 import InlineOrganizationInfoPanel from "@components/pages/listings/detail/inlineOrganizationInfoPanel";
 import ListingBody from "@components/pages/listings/detail/listingBody";
 import Hero from "@components/pages/listings/detail/hero";
-import dayjs from "dayjs"
+import dayjs from "dayjs";
 import nb from "dayjs/locale/nb";
-dayjs.locale(nb)
+dayjs.locale(nb);
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -79,26 +91,30 @@ const ListingPage: NextPage = () => {
               <CardContent>
                 <Grid container direction="column" alignItems="center">
                   <Grid item>
-                    <Typography variant="subtitle1" component="h1">{data.listing.title}</Typography>
+                    <Typography variant="subtitle1" component="h1">
+                      {data.listing.title}
+                    </Typography>
                   </Grid>
                   <Grid item>
-                    <Typography variant="overline" component="span">{data.listing.organization.name}</Typography>
+                    <Typography variant="overline" component="span">
+                      {data.listing.organization.name}
+                    </Typography>
                   </Grid>
                   <Grid item>
-                    <Typography variant="overline" component="span">{dayjs(data.listing.deadline).format("DD. MMMM YYYY, kl. HH:mm")}</Typography>
+                    <Typography variant="overline" component="span">
+                      {dayjs(data.listing.deadline).format("DD. MMMM YYYY, kl. HH:mm")}
+                    </Typography>
                   </Grid>
                   <Grid item>
                     <Button variant="contained" color="primary" endIcon={<ArrowForward />}>
-                      Søk her 
+                      Søk her
                     </Button>
                   </Grid>
                 </Grid>
               </CardContent>
             </Card>
 
-            <Card>
-
-            </Card>
+            <Card></Card>
           </Container>
         </Layout>
       )}
