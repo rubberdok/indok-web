@@ -1,17 +1,19 @@
-import graphene
-from api.graphql.users.types import UserType
-from apps.surveys.models import Answer, Option, Question, Response
-from apps.surveys.models import Survey
 from django.contrib.auth import get_user_model
 from django.db.models.query_utils import Q
+
+import graphene
 from graphene_django import DjangoObjectType
 from graphql_jwt.decorators import login_required
+
+from api.graphql.users.types import UserType
+from apps.surveys.models import Answer, Option, Question, Response, Survey
 
 
 class OptionType(DjangoObjectType):
     class Meta:
         model = Option
         fields = ["answer", "question", "id"]
+        description = "Option for multiple choice questions"
 
 
 class AnswerType(DjangoObjectType):
@@ -25,16 +27,18 @@ class AnswerType(DjangoObjectType):
             "question",
             "uuid"
         ]
+        description = "A user's answer to a question."
     
     @staticmethod
     @login_required
     def resolve_user(answer, info):
+        raise NotImplementedError("Dette kallet er ikke implementert enda")
+        # TODO: Add row level permissions
         return answer.response.respondent
 
 class ResponseType(DjangoObjectType):
     answers = graphene.List(AnswerType)
     id = graphene.ID(source="uuid")
-
 
     class Meta:
         model = Response
@@ -44,10 +48,15 @@ class ResponseType(DjangoObjectType):
             "survey",
             "status"
         ]
+        description = "A response instance that contains information about a user's response to a survey."
 
     @staticmethod
+    @login_required
     def resolve_answers(response, info):
-        return response.answers
+        if response.respondent == info.context.user:
+            return response.answers
+        else:
+            raise PermissionError("Du har ikke tilgang til dette.")
 
 
 class QuestionType(DjangoObjectType):
@@ -64,6 +73,7 @@ class QuestionType(DjangoObjectType):
             "id",
             "mandatory",
         ]
+        description = "A question on a survey."
 
     @staticmethod
     def resolve_options(root: Question, info):
@@ -96,6 +106,7 @@ class SurveyType(DjangoObjectType):
             "description",
             "organization",
         ]
+        description = "A survey containing questions, optionally linked to a listing."
 
     @staticmethod
     def resolve_questions(root: Survey, info):
@@ -104,6 +115,8 @@ class SurveyType(DjangoObjectType):
     @staticmethod
     @login_required
     def resolve_responders(root: Survey, info, user_id: int=None):
+        raise NotImplementedError("Dette kallet er ikke implementert enda")
+        # TODO: Row level permissions
         q = Q(responses__survey=root)
         if user_id:
             q &= Q(pk=user_id)
@@ -112,15 +125,6 @@ class SurveyType(DjangoObjectType):
     @staticmethod
     @login_required
     def resolve_responder(root: Survey, info, user_id: int):
-        return SurveyType.resolve_responders(root, info, user_id).first()
-
-    @staticmethod
-    @login_required
-    def resolve_responses(survey, info):
-        # TODO: Permissions
-        return survey.responses
-
-    
-
-
-
+        raise NotImplementedError("Dette kallet er ikke implementert end")
+        # TODO: Row level permissions
+        return get_user_model().objects.get(responses__survey=root, pk=user_id)

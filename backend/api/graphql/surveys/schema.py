@@ -1,3 +1,5 @@
+import graphene
+
 from .types import (
     OptionType,
     AnswerType,
@@ -14,7 +16,9 @@ from .resolvers import (
 )
 
 from .mutations.questions import (
-    CreateQuestion, CreateUpdateAndDeleteOptions, DeleteAnswersToSurvey,
+    CreateQuestion,
+    CreateUpdateAndDeleteOptions,
+    DeleteAnswersToSurvey,
     UpdateQuestion,
     DeleteQuestion,
     DeleteAnswer,
@@ -26,9 +30,6 @@ from .mutations.surveys import (
     UpdateSurvey,
     DeleteSurvey,
 )
-
-
-import graphene
 
 
 class SurveyQueries(

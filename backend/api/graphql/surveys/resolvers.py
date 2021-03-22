@@ -42,16 +42,23 @@ class QuestionResolvers:
 
 class AnswerResolvers:
     def resolve_answer(self, info, id: int):
+        raise NotImplementedError("Dette kallet er ikke implementert enda.")
+        # TODO: Row level permissions
         return Answer.objects.get(pk=id)
 
     def resolve_answers(self, info, search: Optional[str]=None):
         """
-        TODO: Search implementation
+        TODO:
+        - Search
+        - Row level permissions
         """
+        raise NotImplementedError("Dette kallet er ikke implementert enda.")
         return Answer.objects.all()
 
 class ResponseResolvers:
     def resolve_response(self, info, survey_id, response_id=None):
+        raise NotImplementedError("Dette kallet er ikke implementert enda.")
+        # TODO: Row level permissions
         try:
             if response_id:
                 return Response.objects.get(pk=response_id)
@@ -60,6 +67,7 @@ class ResponseResolvers:
             raise KeyError("No such response found.")
     
     def resolve_responses(self, info, survey_id):
-        # TODO: Permissions
+        raise NotImplementedError("Dette kallet er ikke implementert enda.")
+        # TODO: Row level permissions
         return Response.objects.filter(survey__pk=survey_id)
                 
