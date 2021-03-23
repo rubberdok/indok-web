@@ -37,8 +37,11 @@ def _get_organization_from_slug(slug: str) -> Optional[Organization]:
 
 
 class MembershipResolvers:
-    def resolve_all_memberships(self, info):
-        return Membership.objects.all()
+    def resolve_memberships(self, info, organization_id):
+        organization = Organization.objects.get(pk=organization_id)
+        if organization.users.filter(user=info.context.user).exists():
+            return Membership.objects.filter(organization=organization)
+        raise PermissionError(f"Du må være medlem av {organization} for å gjøre dette kallet.")
 
-    def resolve_all_rolves(self, info):
+    def resolve_all_roles(self, info):
         return Role.objects.all()

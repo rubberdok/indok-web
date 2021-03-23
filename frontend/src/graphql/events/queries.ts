@@ -36,7 +36,7 @@ export const GET_EVENTS = gql`
       }
       isFull
       hasExtraInformation
-      allowedGradeYearsList
+      allowedGradeYears
     }
   }
 `;
@@ -77,7 +77,7 @@ export const GET_DEFAULT_EVENTS = gql`
       }
       isFull
       hasExtraInformation
-      allowedGradeYearsList
+      allowedGradeYears
     }
   }
 `;
@@ -110,6 +110,7 @@ export const GET_EVENT = gql`
         lastName
         dateJoined
       }
+      availableSlots
       price
       shortDescription
       signupOpenDate
@@ -121,7 +122,7 @@ export const GET_EVENT = gql`
       hasExtraInformation
       bindingSignup
       contactEmail
-      allowedGradeYearsList
+      allowedGradeYears
     }
   }
 `;
@@ -177,6 +178,10 @@ export const ADMIN_GET_EVENT = gql`
         isOnWaitingList
       }
       isFull
+      hasExtraInformation
+      bindingSignup
+      contactEmail
+      allowedGradeYears
     }
   }
 `;
@@ -210,6 +215,24 @@ export const QUERY_EVENT_FILTERED_ORGANIZATIONS = gql`
         name
       }
     }
+  }
+`;
+
+export const QUERY_ATTENDEE_REPORT = gql`
+  query attendeeReport($eventId: ID!, $fields: [String], $filetype: String) {
+    attendeeReport(eventId: $eventId, fields: $fields, filetype: $filetype)
+  }
+`;
+
+export const QUERY_ATTENDEE_REPORT_ORG = gql`
+  query attendeeReportOrg($orgId: ID!, $fields: [String], $filetype: String) {
+    attendeeReportOrg(orgId: $orgId, fields: $fields, filetype: $filetype)
+  }
+`;
+
+export const QUERY_ATTENDEE_REPORTS = gql`
+  query attendeeReports($eventIds: [ID]!, $fields: [String], $filetype: String) {
+    attendeeReports(eventIds: $eventIds, fields: $fields, filetype: $filetype)
   }
 `;
 

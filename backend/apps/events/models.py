@@ -65,11 +65,11 @@ class Event(models.Model):
 
     @property
     def signed_up_users(self):
-        sign_ups = SignUp.objects.filter(event=self, is_attending=True).order_by(
-            "timestamp"
+        return (
+            get_user_model()
+            .objects.filter(signup__event=self.id, signup__is_attending=True)
+            .order_by("signup__timestamp")
         )
-        user_ids = sign_ups.values_list("user__id", flat=True)
-        return get_user_model().objects.filter(id__in=user_ids)
 
     @property
     def users_on_waiting_list(self):
@@ -119,3 +119,6 @@ class SignUp(models.Model):
     user_allergies = models.CharField(max_length=1000, blank=True, default="")
     user_phone_number = PhoneNumberField()
     user_grade_year = models.IntegerField()
+
+    def __str__(self):
+        return f"{self.user.username}-{self.event.title}"

@@ -27,9 +27,11 @@ import React, { useState } from "react";
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     card: { width: "fit-content" },
-    content: { marginLeft: theme.spacing(2) },
-    avatarBox: { display: "flex", flexDirection: "column", alignItems: "center" },
+    content: { marginLeft: theme.spacing(2), marginRight: theme.spacing(2) },
+    avatarBox: { display: "flex", flexDirection: "column", alignItems: "center", padding: theme.spacing(2) },
     userInfoBox: { marginTop: theme.spacing(2), marginBottom: theme.spacing(2) },
+    padding: { padding: theme.spacing(4) },
+    cardPadding: { paddingTop: theme.spacing(4) },
   })
 );
 
@@ -65,13 +67,13 @@ const ProfilePage: NextPage = () => {
 
   return (
     <Layout>
-      <Container>
+      <Container className={classes.padding}>
         <Typography variant="h1">Brukerprofil</Typography>
         {data?.user && (
           <>
             <FirstLogin open={firstLoginOpen} onSubmit={onSubmit} fullName={data?.user?.firstName} />
             <EditUser open={editUserOpen} onSubmit={onSubmit} user={data.user} onClose={() => setEditUserOpen(false)} />
-            <Grid container>
+            <Grid container className={classes.cardPadding}>
               <Grid item xs={6}>
                 <Card variant="outlined" className={classes.card}>
                   <CardContent>
@@ -120,7 +122,9 @@ const ProfilePage: NextPage = () => {
                   <Grid item xs={12}>
                     <Card>
                       <CardContent>
-                        <Typography variant="h4">Mine organisasjoner</Typography>
+                        <Typography gutterBottom variant="h4">
+                          Mine organisasjoner
+                        </Typography>
                         <Typography>{`Her kommer en liste over alle organisasjoner ${data.user.firstName} er medlem av`}</Typography>
                       </CardContent>
                       <CardActions>
@@ -133,12 +137,14 @@ const ProfilePage: NextPage = () => {
                   <Grid item xs={12}>
                     <Card>
                       <CardContent>
-                        <Typography variant="h4">Mine arrangementer</Typography>
+                        <Typography gutterBottom variant="h4">
+                          Mine arrangementer
+                        </Typography>
                         <Typography>{`Her kommer en liste over alle arrangementer ${data.user.firstName} har meldt seg på`}</Typography>
                       </CardContent>
                       <CardActions>
                         <Link href="/events" passHref>
-                          <Button>Gå til arrangmenter</Button>
+                          <Button>Gå til arrangementer</Button>
                         </Link>
                       </CardActions>
                     </Card>
@@ -146,7 +152,9 @@ const ProfilePage: NextPage = () => {
                   <Grid item xs={12}>
                     <Card>
                       <CardContent>
-                        <Typography variant="h4">Mine vervsøknader</Typography>
+                        <Typography gutterBottom variant="h4">
+                          Mine vervsøknader
+                        </Typography>
                         <Typography>{`Her kommer en liste over verv ${data.user.firstName} har søkt på`}</Typography>
                       </CardContent>
                       <CardActions>

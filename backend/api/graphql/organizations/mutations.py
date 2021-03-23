@@ -101,6 +101,7 @@ class RemoveMembership(graphene.Mutation):
         member_id = graphene.ID()
 
     def mutate(self, info, member_id):
+        raise NotImplementedError("Denne funksjonaliteten er ikke implementert.")
         membership = Membership.objects.get(pk=member_id)
         user: User = membership.user
         membership.delete()

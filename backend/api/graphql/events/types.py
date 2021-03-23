@@ -1,5 +1,5 @@
 import graphene
-from apps.events.models import Category, Event
+from apps.events.models import Category, Event, SignUp
 from graphene_django import DjangoObjectType
 from graphql_jwt.decorators import login_required
 
@@ -16,7 +16,8 @@ class EventType(DjangoObjectType):
     is_full = graphene.Boolean(source="is_full")
     users_on_waiting_list = graphene.List(UserType)
     users_attending = graphene.List(UserType)
-    allowed_grade_years_list = graphene.List(graphene.Int)
+    allowed_grade_years = graphene.List(graphene.Int)
+    available_slots = graphene.Int()
 
     class Meta:
         model = Event
@@ -33,14 +34,12 @@ class EventType(DjangoObjectType):
             "is_attendable",
             "deadline",
             "publisher",
-            "available_slots",
             "price",
             "signup_open_date",
             "short_description",
             "has_extra_information",
             "binding_signup",
             "contact_email",
-            "allowed_grade_years_list",
         ]
 
     class PermissionDecorators:
@@ -48,11 +47,15 @@ class EventType(DjangoObjectType):
         def is_in_event_organization(resolver):
             def wrapper(event: Event, info):
                 user = info.context.user
-                if user.memberships.filter(organization=event.organization).exists() or user.is_superuser:
+                if (
+                    user.memberships.filter(organization=event.organization).exists()
+                    or user.is_superuser
+                ):
                     return resolver(event, info)
                 else:
                     raise PermissionError(
-                        f"Du må være medlem av organisasjonen {event.organization.name} for å gjøre dette kallet")
+                        f"Du må være medlem av organisasjonen {event.organization.name} for å gjøre dette kallet"
+                    )
 
             return wrapper
 
@@ -65,7 +68,7 @@ class EventType(DjangoObjectType):
         }
 
     @staticmethod
-    def resolve_allowed_grade_years_list(event, info):
+    def resolve_allowed_grade_years(event, info):
         return [int(grade) for grade in event.allowed_grade_years]
 
     @staticmethod
@@ -80,6 +83,16 @@ class EventType(DjangoObjectType):
     def resolve_users_attending(event, info):
         return event.users_attending
 
+    @staticmethod
+    def resolve_available_slots(event, info):
+        user = info.context.user
+        if (
+            not user.is_authenticated
+            or not user.memberships.filter(organization=event.organization).exists()
+        ):
+            return None
+        return event.available_slots
+
 
 class CategoryType(DjangoObjectType):
     class Meta:
@@ -87,4 +100,21 @@ class CategoryType(DjangoObjectType):
         fields = [
             "id",
             "name",
+        ]
+
+
+class SignUpType(DjangoObjectType):
+    class Meta:
+        model = SignUp
+        fields = [
+            "id",
+            "event",
+            "user",
+            "timestamp",
+            "is_attending",
+            "extra_information",
+            "user_email",
+            "user_allergies",
+            "user_phone_number",
+            "user_grade_year",
         ]

@@ -1,8 +1,7 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { UPDATE_EVENT } from "@graphql/events/mutations";
-import { GET_CATEGORIES, GET_EVENT } from "@graphql/events/queries";
+import { ADMIN_GET_EVENT, GET_CATEGORIES, GET_EVENT } from "@graphql/events/queries";
 import { Category, Event } from "@interfaces/events";
-import { User } from "@interfaces/users";
 import {
   Button,
   Checkbox,
@@ -24,17 +23,17 @@ import {
   Typography,
 } from "@material-ui/core";
 import { Check, Close, Warning } from "@material-ui/icons";
-import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
+import dayjs from "dayjs";
+import nb from "dayjs/locale/nb";
 
 interface EditEventProps {
   open: boolean;
   onClose: () => void;
   event: Event;
-  user: User;
 }
 
-const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event, user }) => {
+const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
   const defaultInput: Record<string, any> = {
     title: "",
     description: "",
@@ -52,17 +51,18 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event, user }) => 
     hasExtraInformation: false,
     contactEmail: "",
     bindingSignup: false,
+    allowedGradeYears: [1, 2, 3, 4, 5],
   };
 
   const [eventData, setEventData] = useState(defaultInput);
-
-  const router = useRouter();
 
   const [updateEvent, { loading: updateEventLoading, error: updateEventError }] = useMutation<{
     updateEvent: { event: Event };
   }>(UPDATE_EVENT, {
     update: (cache, { data }) => {
-      data && cache.writeQuery<Event>({ query: GET_EVENT, data: data.updateEvent.event });
+      data &&
+        cache.writeQuery<Event>({ query: GET_EVENT, data: data.updateEvent.event }) &&
+        cache.writeQuery<Event>({ query: ADMIN_GET_EVENT, data: { ...event, ...data.updateEvent.event } });
     },
   });
 
@@ -80,26 +80,22 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event, user }) => 
     });
     initialEventData.categoryId = event.category ? event.category.id : "";
 
-    initialEventData.startTime = new Date(event.startTime).toJSON().slice(0, -1);
+    initialEventData.startTime = dayjs(event.startTime).locale(nb).format("YYYY-MM-DDTHH:mm:ss+02:00");
 
     if (event.signupOpenDate) {
-      initialEventData.signupOpenDate = new Date(event.signupOpenDate).toJSON().slice(0, -1);
+      initialEventData.signupOpenDate = dayjs(event.signupOpenDate).locale(nb).format("YYYY-MM-DDTHH:mm:ss+02:00");
     }
     if (event.deadline) {
-      initialEventData.deadline = new Date(event.deadline).toJSON().slice(0, -1);
+      initialEventData.deadline = dayjs(event.deadline).locale(nb).format("YYYY-MM-DDTHH:mm:ss+02:00");
     }
     if (event.endTime) {
-      initialEventData.endTime = new Date(event.endTime).toJSON().slice(0, -1);
+      initialEventData.endTime = dayjs(event.endTime).locale(nb).format("YYYY-MM-DDTHH:mm:ss+02:00");
     }
     setEventData(initialEventData);
   }, []);
 
   if (categoryLoading) return <CircularProgress />;
   if (categoryError) return <Typography>Det oppstod en feil.</Typography>;
-
-  if (!user || !user.organizations.length) {
-    router.push("/events");
-  }
 
   const onIsAttendableChange = (attendable: boolean) => {
     // Reset all fields depending on isAttendable if isAttendable is disabled
@@ -114,6 +110,7 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event, user }) => 
         hasExtraInformation: false,
         signupOpenDate: "",
         deadline: "",
+        allowedGradeYears: [1, 2, 3, 4, 5],
       });
     }
   };
@@ -208,6 +205,37 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event, user }) => 
                 onChange={(e) => setEventData({ ...eventData, availableSlots: e.currentTarget.value })}
                 disabled={!eventData.isAttendable}
               />
+            </Tooltip>
+          </Grid>
+          <Grid item xs={6}>
+            <Tooltip
+              disableHoverListener={eventData.isAttendable}
+              disableFocusListener={eventData.isAttendable}
+              title="Kun aktuelt ved påmelding"
+            >
+              <FormControl fullWidth>
+                <InputLabel id="select-grade-years-label" shrink>
+                  Åpent for
+                </InputLabel>
+                <Select
+                  labelId="select-grade-years-label"
+                  id="select-grade-years"
+                  name="grade-years"
+                  value={eventData.allowedGradeYears}
+                  multiple
+                  onChange={(e) => {
+                    setEventData({ ...eventData, allowedGradeYears: e.target.value });
+                  }}
+                  displayEmpty
+                  disabled={!eventData.isAttendable}
+                >
+                  {[1, 2, 3, 4, 5].map((year: number) => (
+                    <MenuItem key={year} value={year}>
+                      {`${year}. klasse`}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Tooltip>
           </Grid>
           <Grid item xs={6}>

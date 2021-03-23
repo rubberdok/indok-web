@@ -15,8 +15,10 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { GET_EVENT } from "../../../graphql/events/queries";
 import CountdownButton from "./CountdownButton";
-import { ArrowRight, ContactMail, Edit, ErrorOutline, Warning } from "@material-ui/icons";
+import { ArrowRight, ContactMail, Edit, ErrorOutline, List, Warning } from "@material-ui/icons";
 import EditEvent from "./editEvent";
+import dayjs from "dayjs";
+import nb from "dayjs/locale/nb";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -57,10 +59,6 @@ const useStyles = makeStyles((theme) => ({
 
 interface Props {
   eventId: string;
-}
-
-function parseDate(date: string) {
-  return date != null ? date.replace("T", " ").split("+")[0] : "null";
 }
 
 function wrapInTypo(para: JSX.Element[] | string, className: any) {
@@ -149,12 +147,7 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
   return (
     <Grid container spacing={1}>
       {openEditEvent && (
-        <EditEvent
-          open={openEditEvent}
-          onClose={() => setOpenEditEvent(false)}
-          event={eventData.event}
-          user={userData.user}
-        />
+        <EditEvent open={openEditEvent} onClose={() => setOpenEditEvent(false)} event={eventData.event} />
       )}
       {/* Header card */}
       <Grid item xs={12}>
@@ -176,17 +169,25 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
                 &nbsp;&nbsp;{eventData.event.organization?.name}
               </Typography>
             </Box>
-            {userData.user.organizations
+            {userData.user?.organizations
               .map((organization) => organization.id)
               .includes(eventData.event.organization.id) && (
-              <Button
-                startIcon={<Edit />}
-                onClick={() => {
-                  setOpenEditEvent(true);
-                }}
-              >
-                Rediger
-              </Button>
+              <Box>
+                <Button
+                  startIcon={<Edit />}
+                  color="primary"
+                  onClick={() => {
+                    setOpenEditEvent(true);
+                  }}
+                >
+                  Rediger
+                </Button>
+                <Link href={`/orgs/${eventData.event.organization.id}/events/${eventId}`} passHref>
+                  <Button color="primary" disableRipple startIcon={<List />}>
+                    Administrer
+                  </Button>
+                </Link>
+              </Box>
             )}
           </Box>
         </Paper>
@@ -244,10 +245,10 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
               Starter
             </Typography>
             <Typography gutterBottom>
-              <EventIcon fontSize="small" /> {parseDate(eventData.event.startTime).split(" ")[0]}
+              <EventIcon fontSize="small" /> {dayjs(eventData.event.startTime).locale(nb).format("DD.MMM YYYY")}
             </Typography>
             <Typography gutterBottom>
-              <ScheduleIcon fontSize="small" /> kl. {parseDate(eventData.event.startTime).split(" ")[1].slice(0, 5)}
+              <ScheduleIcon fontSize="small" /> kl. {dayjs(eventData.event.startTime).locale(nb).format("HH:mm")}
             </Typography>
           </Box>
 
@@ -257,20 +258,20 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
                 Slutter
               </Typography>
               <Typography gutterBottom>
-                <EventIcon fontSize="small" /> {parseDate(eventData.event.endTime).split(" ")[0]}
+                <EventIcon fontSize="small" /> {dayjs(eventData.event.endTime).locale(nb).format("DD.MMM YYYY")}
               </Typography>
               <Typography gutterBottom>
-                <ScheduleIcon fontSize="small" /> kl. {parseDate(eventData.event.endTime).split(" ")[1].slice(0, 5)}
+                <ScheduleIcon fontSize="small" /> kl. {dayjs(eventData.event.endTime).locale(nb).format("HH:mm")}
               </Typography>
             </Box>
           )}
 
-          {eventData.event.allowedGradeYearsList.length < 5 && (
+          {eventData.event.allowedGradeYears.length < 5 && (
             <Box my={2}>
               <Typography variant="overline" display="block">
                 Åpent for
               </Typography>
-              {eventData.event.allowedGradeYearsList.map((grade) => (
+              {eventData.event.allowedGradeYears.map((grade) => (
                 <Typography gutterBottom key={grade}>
                   <ArrowRight fontSize="small" /> {`${grade}. klasse`}
                 </Typography>
@@ -289,7 +290,7 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
 
           {eventData.event.isAttendable &&
             userData.user &&
-            eventData.event.allowedGradeYearsList.includes(userData.user.gradeYear) && (
+            eventData.event.allowedGradeYears.includes(userData.user.gradeYear) && (
               <>
                 <CountdownButton
                   countDownDate={(eventData.event as AttendableEvent).signupOpenDate}

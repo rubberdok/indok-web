@@ -1,54 +1,74 @@
 import { createMuiTheme } from "@material-ui/core/styles";
 import { Shadows } from "@material-ui/core/styles/shadows";
+import breakpoints from "./breakpoints";
+import typography from "./typography";
 
 const theme = createMuiTheme({
   typography: {
-    fontFamily: ["Montserrat", "sans-serif"].join(","),
-    h1: {
-      fontFamily: ["Playfair Display", "sans-serif"].join(","),
-      fontSize: "50px",
-      fontWeight: 800,
-    },
-    h2: {
-      fontFamily: ["Playfair Display", "sans-serif"].join(","),
-      fontSize: "48px",
-      fontWeight: 800,
-    },
-    h3: {
-      fontFamily: ["Playfair Display", "sans-serif"].join(","),
-      fontSize: "30px",
-      fontWeight: 800,
-    },
-    h4: {
-      fontFamily: ["Playfair Display", "sans-serif"].join(","),
-      fontWeight: 700,
-      fontSize: "28px",
-    },
-    h5: {
-      fontFamily: ["Playfair Display", "sans-serif"].join(","),
-      fontWeight: 700,
-      fontSize: "24px",
-    },
-    h6: {
-      fontFamily: ["Playfair Display", "sans-serif"].join(","),
-      fontWeight: 800,
-    },
-    overline: {
-      fontSize: "12px",
-      letterSpacing: "0.5px",
-    },
-    body2: {
-      fontSize: "15px",
-      fontWeight: 500,
-      lineHeight: "24px",
-    },
+    ...typography,
   },
   overrides: {
+    MuiInputBase: {
+      root: {
+        ...typography.body2,
+      },
+    },
+    MuiFormLabel: {
+      root: {
+        ...typography.body2,
+      },
+    },
+    MuiTypography: {
+      gutterBottom: {
+        marginBottom: 32,
+      },
+      paragraph: {
+        marginBottom: 32,
+      },
+    },
+    MuiToolbar: {
+      regular: {
+        minHeight: "75px!important",
+        padding: 0,
+      },
+    },
+    MuiFab: {
+      root: {
+        justifyContent: "center",
+      },
+    },
+    MuiButtonBase: {
+      root: {
+        justifyContent: "none",
+        padding: "16px 24px",
+        fontWeight: 600,
+        textTransform: "none",
+      },
+    },
     MuiButton: {
       root: {
         padding: "16px 32px",
-        fontWeight: 700,
-        fontSize: 11,
+        fontWeight: 600,
+        fontSize: 14,
+        textTransform: "none",
+      },
+      outlined: {
+        padding: "16px 32px",
+        border: "2px solid rgb(0 0 0 / 10%)",
+      },
+      outlinedPrimary: {
+        borderWidth: 2,
+        color: "black",
+        background: "rgba(6, 90, 90, 0.07)",
+
+        ["&:hover"]: {
+          borderWidth: 2,
+        },
+      },
+    },
+    MuiTab: {
+      root: {
+        textTransform: "none",
       },
     },
   },
@@ -57,23 +77,25 @@ const theme = createMuiTheme({
       default: "#f2efea",
     },
     primary: {
-      main: "#065A5A",
+      main: "#0b3c3c",
     },
     secondary: {
       main: "#11cb5f",
+    },
+  },
+  props: {
+    MuiTypography: {
+      variant: "body2",
+    },
+    MuiList: {
+      dense: true,
     },
   },
   shape: {
     borderRadius: 0,
   },
   breakpoints: {
-    values: {
-      xs: 0,
-      sm: 600,
-      md: 960,
-      lg: 1300,
-      xl: 1920,
-    },
+    ...breakpoints,
   },
   shadows: Array(25).fill("none") as Shadows,
 });
