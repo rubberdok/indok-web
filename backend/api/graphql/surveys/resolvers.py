@@ -42,9 +42,11 @@ class QuestionResolvers:
 
 class AnswerResolvers:
     def resolve_answer(self, info, id: int):
-        raise NotImplementedError("Dette kallet er ikke implementert enda.")
         # TODO: Row level permissions
-        return Answer.objects.get(pk=id)
+        if info.context.user.is_superuser:
+            return Answer.objects.get(pk=id)
+        else:
+            raise NotImplementedError("Dette kallet er ikke implementert enda.")
 
     def resolve_answers(self, info, search: Optional[str]=None):
         """
@@ -52,22 +54,29 @@ class AnswerResolvers:
         - Search
         - Row level permissions
         """
-        raise NotImplementedError("Dette kallet er ikke implementert enda.")
-        return Answer.objects.all()
+        if info.context.user.is_supseruser:
+            return Answer.objects.all()
+        else:
+            raise NotImplementedError("Dette kallet er ikke implementert enda.")
 
 class ResponseResolvers:
     def resolve_response(self, info, survey_id, response_id=None):
-        raise NotImplementedError("Dette kallet er ikke implementert enda.")
         # TODO: Row level permissions
-        try:
-            if response_id:
-                return Response.objects.get(pk=response_id)
-            return Response.objects.get(survey__pk=survey_id, responder=info.context.user)
-        except Response.DoesNotExist:
-            raise KeyError("No such response found.")
+        if info.context.user.is_superuser:
+            try:
+                if response_id:
+                    return Response.objects.get(pk=response_id)
+                return Response.objects.get(survey__pk=survey_id, responder=info.context.user)
+            except Response.DoesNotExist:
+                return None
+        else:
+            raise NotImplementedError("Dette kallet er ikke implementert enda.")
+            
     
     def resolve_responses(self, info, survey_id):
-        raise NotImplementedError("Dette kallet er ikke implementert enda.")
         # TODO: Row level permissions
-        return Response.objects.filter(survey__pk=survey_id)
+        if info.context.user.is_supseruser:
+            return Response.objects.filter(survey__pk=survey_id)
+        else:
+            raise NotImplementedError("Dette kallet er ikke implementert enda.")
                 
