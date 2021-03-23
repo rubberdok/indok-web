@@ -1,5 +1,6 @@
 from apps.listing.models import Listing
 from django.db.models import Q
+from django.utils import timezone
 
 
 class ListingResolvers:
@@ -11,7 +12,7 @@ class ListingResolvers:
                 Q(organization__name__icontains=search)
             )
             return Listing.objects.filter(filter)
-        return Listing.objects.all()
+        return Listing.objects.filter(deadline__gte=timezone.now())
 
     def resolve_listing(self, info, id):
         try:
