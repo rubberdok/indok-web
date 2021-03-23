@@ -64,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
 const ListingPage: NextPage = () => {
   const { listingId } = useRouter().query;
   const { loading, error, data } = useQuery<{ listing: Listing }>(LISTING, {
-    variables: { ID: parseInt(listingId as string) },
+    variables: { id: parseInt(listingId as string) },
   });
   const classes = useStyles();
 
@@ -97,7 +97,7 @@ const ListingPage: NextPage = () => {
                   </Grid>
                   <Grid item>
                     <Typography variant="overline" component="span">
-                      {data.listing.organization.name}
+                      {data.listing.organization?.name}
                     </Typography>
                   </Grid>
                   <Grid item>
@@ -129,7 +129,7 @@ export default ListingPage;
   const listingId = parseInt(context.query.listingId as string);
   const { data } = client.query({
     query: LISTING,
-    variables: { ID: listingId },
+    variables: { id: listingId },
   });
   return {
     props: { data.listing },

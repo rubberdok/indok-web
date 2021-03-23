@@ -1,5 +1,6 @@
 import { Organization } from "@interfaces/organizations";
 import CreateListing from "@components/pages/listings/organization/createListing";
+import DeleteListing from "@components/pages/listings/organization/deleteListing";
 import {
   Button,
   Card,
@@ -20,9 +21,6 @@ import { useState } from "react";
 import dayjs from "dayjs";
 import Link from "next/link";
 import { Listing } from "@interfaces/listings";
-import { useMutation } from "@apollo/client";
-import { DELETE_LISTING } from "@graphql/listings/mutations";
-import { GET_ORGANIZATION } from "@graphql/orgs/queries";
 
 // cursor style on hovering over a listing
 const useStyles = makeStyles(() => ({
@@ -38,32 +36,12 @@ const useStyles = makeStyles(() => ({
 const OrganizationListings: React.FC<{
   organization: Organization;
 }> = ({ organization }) => {
-  // state to determine whether to show the CreateListing dialog
+  // state for whether to show the CreateListing dialog
   const [createListingOpen, openCreateListing] = useState(false);
 
-  const [deleteListing] = useMutation<{ ok: boolean; listingId: string }, { id: string }>(DELETE_LISTING, {
-    // updates the cache upon deleting the listing, so changes are reflected instantly
-    update: (cache, { data }) => {
-      const deletedListingId = data?.listingId;
-      const cachedOrg = cache.readQuery<{ organization: Organization }>({
-        query: GET_ORGANIZATION,
-        variables: { orgId: parseInt(organization.id) },
-      });
-      console.log(deletedListingId);
-      console.log(cachedOrg);
-      if (cachedOrg && deletedListingId) {
-        cache.writeQuery({
-          query: GET_ORGANIZATION,
-          variables: { orgId: parseInt(organization.id) },
-          data: {
-            organization: {
-              listings: (cachedOrg.organization.listings ?? []).filter((listing) => listing.id !== deletedListingId),
-            },
-          },
-        });
-      }
-    },
-  });
+  // state for whether to show the DeleteListing confirmation dialog
+  // if not null, contains the listing to be deleted for use by the dialog
+  const [confirmDelete, setConfirmDelete] = useState<Listing | null>(null);
 
   const classes = useStyles();
 
@@ -74,6 +52,13 @@ const OrganizationListings: React.FC<{
         open={createListingOpen}
         onClose={() => {
           openCreateListing(false);
+        }}
+      />
+      <DeleteListing
+        listing={confirmDelete}
+        organizationId={parseInt(organization.id)}
+        onClose={() => {
+          setConfirmDelete(null);
         }}
       />
       <Grid item container>
@@ -104,11 +89,7 @@ const OrganizationListings: React.FC<{
                                 color="primary"
                                 onClick={(e) => {
                                   e.preventDefault();
-                                  deleteListing({
-                                    variables: {
-                                      id: listing.id,
-                                    },
-                                  });
+                                  setConfirmDelete(listing);
                                 }}
                               >
                                 Slett verv

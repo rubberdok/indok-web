@@ -20,8 +20,8 @@ export const LISTINGS = gql`
 `;
 
 export const LISTING = gql`
-  query listing($ID: ID!) {
-    listing(id: $ID) {
+  query listing($id: ID!) {
+    listing(id: $id) {
       id
       title
       description
@@ -42,8 +42,8 @@ export const LISTING = gql`
 `;
 
 export const LISTING_WITH_RESPONDERS = gql`
-  query listing($ID: ID!) {
-    listing(id: $ID) {
+  query listing($id: ID!) {
+    listing(id: $id) {
       id
       title
       description
