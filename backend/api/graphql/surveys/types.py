@@ -115,16 +115,20 @@ class SurveyType(DjangoObjectType):
     @staticmethod
     @login_required
     def resolve_responders(root: Survey, info, user_id: int=None):
-        raise NotImplementedError("Dette kallet er ikke implementert enda")
         # TODO: Row level permissions
-        q = Q(responses__survey=root)
-        if user_id:
-            q &= Q(pk=user_id)
-        return get_user_model().objects.filter(q).distinct()
+        if info.context.user.is_superuser:
+            q = Q(responses__survey=root)
+            if user_id:
+                q &= Q(pk=user_id)
+            return get_user_model().objects.filter(q).distinct()
+        else:
+            raise NotImplementedError("Dette kallet er ikke implementert enda")
     
     @staticmethod
     @login_required
     def resolve_responder(root: Survey, info, user_id: int):
-        raise NotImplementedError("Dette kallet er ikke implementert end")
         # TODO: Row level permissions
-        return get_user_model().objects.get(responses__survey=root, pk=user_id)
+        if info.context.user.is_superuser:
+            return get_user_model().objects.get(responses__survey=root, pk=user_id)
+        else:
+            raise NotImplementedError("Dette kallet er ikke implementert end")
