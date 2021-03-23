@@ -111,11 +111,13 @@ const Hero: React.FC<HeroProps> = ({ listing, buttonText }) => {
                     </Typography>
                   </Grid>
                 </Grid>
-                <Grid item>
-                  <Button variant="contained" color="primary" endIcon={<ArrowForward />}>
-                    Søk her
-                  </Button>
-                </Grid>
+                {buttonText &&
+                  <Grid item>
+                    <Button variant="contained" color="primary" endIcon={<ArrowForward />}>
+                      {buttonText}
+                    </Button>
+                  </Grid>
+                }
               </Grid>
             </Grid>
           </Grid>
