@@ -1,3 +1,4 @@
+import { Listing } from "@interfaces/listings";
 import {
   Box,
   makeStyles,
@@ -9,82 +10,113 @@ import {
   CardActions,
   CardMedia,
 } from "@material-ui/core";
+import ArrowForward from "@material-ui/icons/ArrowForward";
+import dayjs from "dayjs";
+import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
+import nb from "dayjs/locale/nb";
+dayjs.extend(timezone);
+dayjs.extend(utc);
+dayjs.tz.setDefault("Europe/Oslo");
+dayjs.locale(nb);
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    height: "40vh",
-    marginTop: "20vh",
+    marginBottom: theme.spacing(4),
   },
   hero: {
-    position: "absolute",
-    height: "40vh",
     width: "100%",
-    zIndex: -1,
+    maxHeight: "25vh",
+    height: "25vh",
   },
+  background: {
+    background: "url(/nth.svg)",
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    opacity: 0.04,
+  },
+  container: {
+    position: "relative",
+    display: "inline-block",
+    width: "100%",
+    height: "100%",
+    "&::before": {
+      content: "''",
+      display: "block",
+      paddingTop: "33%",
+    }
+  },
+  backdrop: {
+    marginTop: "-5%",
+    padding: theme.spacing(2),
+    backgroundColor: "white",
+    width: "100%",
+    objectPosition: "center",
+  },
+  titleContent: {
+    position: "absolute",
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    objectPosition: "center",
+    width: "100%",
+    height: "100%",
+  },
+  deadline: {
+    "&::before": {
+      content: "'Frist '",
+      fontWeight: "bold",
+      color: theme.palette.primary.main
+    }
+  },
+  card: {
+    position: "relative",
+    zIndex: 10,
+  }
 }));
 
 interface HeroProps {
-  img: string;
-  title: string;
-  subtitle1?: string;
-  subtitle2?: string;
-  buttonText?: string;
-  url?: string;
+  listing: Listing,
+  buttonText?: string
 }
 
-const Hero: React.FC<HeroProps> = ({ img, title, subtitle1, subtitle2, buttonText, url }) => {
+const Hero: React.FC<HeroProps> = ({ listing, buttonText }) => {
   const classes = useStyles();
-  const bgImg = {
-    backgroundImage: `linear-gradient(to top, rgb(2 28 28 / 60%), rgb(1 12 12 / 93%)), url(/${img})`,
-    backgroundRepeat: `no-repeat`,
-    backgroundSize: `cover`,
-    height: `100%`,
-  };
   return (
     <>
-      <Box className={classes.hero}>
-        <Box style={bgImg} />
-      </Box>
-      <Box>
-        <Grid container direction="column" className={classes.root} justify="center" alignItems="center">
-          <Grid container direction="row" alignItems="center" justify="center">
-            <Grid item xs={5}>
-              <Card variant="outlined">
-                <CardContent>
-                  <Grid container direction="column" alignItems="center">
+      <Box className={classes.root}>
+        <Box className={`${classes.background} ${classes.hero}`} />
+        <Grid container direction="column" justify="space-between" alignItems="center" className={classes.card}>
+          <Grid container item xs={6} direction="column" justify="center" alignItems="center" className={classes.backdrop}>
+            <Grid container item className={classes.container} direction="column" justify="center" alignItems="center">
+              <Grid container item direction="column" justify="space-between" alignItems="center" className={classes.titleContent}>
+                <Grid container item direction="column" justify="flex-start" alignItems="center">
+                  <Grid item>
+                    <Typography variant="h1" component="h1" align="center">
+                      {listing.title}
+                    </Typography>
+                  </Grid>
+                  {listing.organization &&
                     <Grid item>
-                      <Typography variant="h5" component="h1">
-                        {title}
+                      <Typography variant="subtitle1" component="h2" align="center">
+                        {listing.organization.name}
                       </Typography>
                     </Grid>
-                    {subtitle1 && (
-                      <Grid item>
-                        <Typography variant="subtitle1" component="h2">
-                          {subtitle1}
-                        </Typography>
-                      </Grid>
-                    )}
-                    {subtitle2 && (
-                      <Grid item>
-                        <Typography variant="subtitle2" component="h3">
-                          {subtitle2}
-                        </Typography>
-                      </Grid>
-                    )}
+                  }
+                  <Grid item>
+                    <Typography variant="subtitle2" component="h3" align="center" className={classes.deadline}>
+                      {dayjs(listing.deadline).format("DD. MMMM YYYY [kl.] HH:mm")}
+                    </Typography>
                   </Grid>
-                </CardContent>
-                {buttonText && (
-                  <CardActions>
-                    <Grid container direction="row" alignItems="center" justify="center">
-                      <Grid item>
-                        <Button variant="contained" color="primary">
-                          {buttonText}
-                        </Button>
-                      </Grid>
-                    </Grid>
-                  </CardActions>
-                )}
-              </Card>
+                </Grid>
+                <Grid item>
+                  <Button variant="contained" color="primary" endIcon={<ArrowForward />}>
+                    Søk her
+                  </Button>
+                </Grid>
+              </Grid>
             </Grid>
           </Grid>
         </Grid>

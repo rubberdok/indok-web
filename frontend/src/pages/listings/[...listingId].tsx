@@ -11,19 +11,11 @@ import {
   Card,
   CardContent,
   Typography,
-  Box,
-  Divider,
-  IconButton,
 } from "@material-ui/core";
 import ArrowForward from "@material-ui/icons/ArrowForward";
-import InfoOutlined from "@material-ui/icons/InfoOutlined";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
-import AnswerSurvey from "@components/pages/surveys/answerSurvey";
 import { useState } from "react";
-import OrganizationInfoPanel from "@components/pages/listings/detail/organizationInfoPanel";
-import InlineOrganizationInfoPanel from "@components/pages/listings/detail/inlineOrganizationInfoPanel";
-import ListingBody from "@components/pages/listings/detail/listingBody";
 import Hero from "@components/pages/listings/detail/hero";
 import dayjs from "dayjs";
 import nb from "dayjs/locale/nb";
@@ -79,10 +71,7 @@ const ListingPage: NextPage = () => {
         <Layout>
           <Hidden smDown>
             <Hero
-              img="img/bindeleddet.jpg"
-              title={data.listing.title}
-              subtitle1={data.listing.organization?.name}
-              subtitle2={dayjs(data.listing.deadline).format("DD. MMMM YYYY, kl. HH:mm")}
+              listing={data.listing}
               buttonText="Søk her"
             />
           </Hidden>
