@@ -105,7 +105,7 @@ const ProfilePage: NextPage = () => {
                       </Box>
                       {data.user.dateJoined && (
                         <Typography variant="body2">
-                          Medlem siden {new Date(data.user.dateJoined).toLocaleString()} <br />
+                          Medlem siden {new Date(data.user.dateJoined).toLocaleString().split(",")[0]} <br />
                         </Typography>
                       )}
                     </Box>

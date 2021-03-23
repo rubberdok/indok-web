@@ -1,30 +1,21 @@
-import {
-  Card,
-  CardContent,
-  CardMedia,
-  CardActionArea,
-  Typography,
-  makeStyles,
-  Grid,
-  Avatar
-} from "@material-ui/core"
-import CheckIcon from '@material-ui/icons/Check';
+import { Card, CardContent, CardMedia, CardActionArea, Typography, makeStyles, Grid, Avatar } from "@material-ui/core";
+import CheckIcon from "@material-ui/icons/Check";
 
 import Link from "next/link";
 import { Listing } from "@interfaces/listings";
 import dayjs from "dayjs";
 
 interface ListingCardProps {
-  listing: Listing
+  listing: Listing;
 }
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    height:"100%",
-    padding: theme.spacing(0)
+    height: "100%",
+    padding: theme.spacing(0),
   },
   logo: {
-    marginTop: "-50%"
+    marginTop: "-50%",
   },
 }));
 
@@ -38,23 +29,15 @@ const ListingCard: React.FC<ListingCardProps> = ({ listing }) => {
             <CardContent>
               <Grid container direction="column" justify="center" alignItems="center">
                 <Grid item>
-                  <CardMedia
-                    component="img"
-                    image={"/img/bindeleddet.jpg"}
-                  />
+                  <CardMedia component="img" image={"/img/bindeleddet.jpg"} />
                 </Grid>
 
                 <Grid container item alignItems="center" justify="center">
                   <Grid item xs={2}>
-                    <CardMedia
-                      className={classes.logo}
-                      component="img"
-                      image={"/img/tindoklogo.png"}
-                    />
+                    <CardMedia className={classes.logo} component="img" image={"/img/tindoklogo.png"} />
                   </Grid>
                 </Grid>
-                
-                
+
                 <Grid container item alignItems="center" direction="column">
                   <Grid item>
                     <Typography variant="h4" component="h4">
@@ -73,19 +56,18 @@ const ListingCard: React.FC<ListingCardProps> = ({ listing }) => {
                       </Typography>
                     </Grid>
                     <Grid container item direction="row" justify="space-between" alignItems="center">
-                    {["intervju", "case", "søknad"].map((chip) => (
-                      <Grid container xs={4} item direction="column" alignItems="center">
-                        <Grid item>
-                          <Typography variant="caption" component="span">
-                            {chip}
-                          </Typography>
+                      {["intervju", "case", "søknad"].map((chip) => (
+                        <Grid container xs={4} item direction="column" alignItems="center" key={chip}>
+                          <Grid item>
+                            <Typography variant="caption" component="span">
+                              {chip}
+                            </Typography>
+                          </Grid>
+                          <Grid item>
+                            <CheckIcon />
+                          </Grid>
                         </Grid>
-                        <Grid item>
-                          <CheckIcon />
-                        </Grid>
-                      </Grid>
-                    ))
-                    }
+                      ))}
                     </Grid>
                   </Grid>
                 </Grid>
@@ -95,7 +77,7 @@ const ListingCard: React.FC<ListingCardProps> = ({ listing }) => {
         </Link>
       </Card>
     </>
-  )
-}
+  );
+};
 
 export default ListingCard;

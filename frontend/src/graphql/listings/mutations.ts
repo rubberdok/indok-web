@@ -73,8 +73,8 @@ export const UPDATE_LISTING = gql`
 `;
 
 export const DELETE_LISTING = gql`
-  mutation deleteListing($ID: ID!) {
-    deleteListing(id: $ID) {
+  mutation deleteListing($id: ID!) {
+    deleteListing(id: $id) {
       ok
       listingId
     }

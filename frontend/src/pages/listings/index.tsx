@@ -61,23 +61,17 @@ const ListingsPage: NextPage = () => {
               <>
                 <Hidden smDown>
                   <Grid container item key={listing.id} xs={6}>
-                    <ListingCard
-                      listing={listing}
-                    />
+                    <ListingCard listing={listing} />
                   </Grid>
                 </Hidden>
                 <Hidden mdUp xsDown>
                   <Grid container item key={listing.id} xs={8}>
-                    <ListingCard 
-                      listing={listing}
-                    />
+                    <ListingCard listing={listing} />
                   </Grid>
                 </Hidden>
                 <Hidden smUp>
-                <Grid container item key={listing.id} xs={12}>
-                    <ListingCard 
-                      listing={listing}
-                    />
+                  <Grid container item key={listing.id} xs={12}>
+                    <ListingCard listing={listing} />
                   </Grid>
                 </Hidden>
               </>

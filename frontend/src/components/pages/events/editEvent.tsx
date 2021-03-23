@@ -26,6 +26,13 @@ import { Check, Close, Warning } from "@material-ui/icons";
 import React, { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import nb from "dayjs/locale/nb";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.locale(nb);
+dayjs.tz.setDefault("Europe/Oslo");
+const DATE_FORMAT = "YYYY-MM-DDTHH:mm:ss";
 
 interface EditEventProps {
   open: boolean;
@@ -80,16 +87,16 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
     });
     initialEventData.categoryId = event.category ? event.category.id : "";
 
-    initialEventData.startTime = dayjs(event.startTime).locale(nb).format("YYYY-MM-DDTHH:mm:ss+02:00");
+    initialEventData.startTime = dayjs(event.startTime).format(DATE_FORMAT);
 
     if (event.signupOpenDate) {
-      initialEventData.signupOpenDate = dayjs(event.signupOpenDate).locale(nb).format("YYYY-MM-DDTHH:mm:ss+02:00");
+      initialEventData.signupOpenDate = dayjs(event.signupOpenDate).format(DATE_FORMAT);
     }
     if (event.deadline) {
-      initialEventData.deadline = dayjs(event.deadline).locale(nb).format("YYYY-MM-DDTHH:mm:ss+02:00");
+      initialEventData.deadline = dayjs(event.deadline).format(DATE_FORMAT);
     }
     if (event.endTime) {
-      initialEventData.endTime = dayjs(event.endTime).locale(nb).format("YYYY-MM-DDTHH:mm:ss+02:00");
+      initialEventData.endTime = dayjs(event.endTime).format(DATE_FORMAT);
     }
     setEventData(initialEventData);
   }, []);

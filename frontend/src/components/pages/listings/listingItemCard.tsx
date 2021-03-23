@@ -14,12 +14,11 @@ interface ListingItemCardProps {
 }
 
 const useStyles = makeStyles((theme) => ({
-
   media: {
     objectFit: "cover",
   },
   card: {
-    width: "100%"
+    width: "100%",
   },
   content: {
     padding: theme.spacing(4),
@@ -41,7 +40,15 @@ const ListingItemCard: React.FC<ListingItemCardProps> = ({ title, subtitle, img,
               <Grid item xs={2}>
                 <CardMedia component="img" image={img} className={classes.media} />
               </Grid>
-              <Grid container item xs={10} className={classes.content} direction="column" justify="space-between" alignItems="stretch">
+              <Grid
+                container
+                item
+                xs={10}
+                className={classes.content}
+                direction="column"
+                justify="space-between"
+                alignItems="stretch"
+              >
                 <Grid item xs>
                   <Typography variant="h5" component="h2">
                     {title}
