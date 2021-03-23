@@ -51,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
   },
-  banner: {
+  hero: {
     marginBottom: 0,
     maxHeight: "10em",
     height: "10em",
@@ -76,12 +76,16 @@ const useStyles = makeStyles((theme) => ({
   },
   deadline: {
     ["&::before"]: {
-      color: "rgba(11,60,60)",
+      color: theme.palette.primary.main,
       content: "'Frist '",
       fontWeight: "bold",
     }
   },
   logoContainer: {
+    /* 
+    https://stackoverflow.com/a/51447865
+    Maintain a 1:1 aspect ratio on the logo content  
+    */
     display: "inline-block",
     position: "relative",
     width: "100%",
@@ -91,12 +95,9 @@ const useStyles = makeStyles((theme) => ({
       paddingTop: "100%",
     }
   },
-  dummy: {
-    marginTop: "100%",
-  },
   logoBackdrop: {
     marginTop: "-50%",
-    padding: 4,
+    padding: 2,
     backgroundColor: "white",
     width: "100%",
     maxWidth: "6em",
@@ -124,7 +125,7 @@ const ListingCard: React.FC<ListingCardProps> = ({ listing }) => {
       <Card className={classes.root}>
         <Link href={`listings/${listing.id}/${listing.slug}/`} passHref>
           <CardActionArea className={classes.root}>
-            <CardMedia component="img" image={listing.banner ? listing.banner : ""} className={`${classes.banner} ${!listing.banner ? classes.background : ""}`} />
+            <CardMedia component="img" image={listing.hero ? listing.hero : ""} className={`${classes.hero} ${!listing.hero ? classes.background : ""}`} />
             
             <CardContent className={classes.content}>
             

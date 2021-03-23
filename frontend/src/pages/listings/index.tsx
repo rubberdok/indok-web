@@ -3,10 +3,8 @@ import Layout from "@components/Layout";
 import { useQuery } from "@apollo/client";
 import { LISTINGS } from "@graphql/listings/queries";
 import { Listing } from "@interfaces/listings";
-import { Container, Grid, makeStyles, Typography, Box, Card, CardContent, Hidden } from "@material-ui/core";
-import Filter from "@components/pages/listings/filter";
-import ListingItemCard from "@components/pages/listings/listingItemCard";
 import ListingCard from "@components/pages/listings/listingCard";
+import { Container, Grid, makeStyles, Typography, Hidden } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -30,9 +28,6 @@ const useStyles = makeStyles((theme) => ({
 const ListingsPage: NextPage = () => {
   const { loading, error, data } = useQuery<{ listings: Listing[] }>(LISTINGS);
   const classes = useStyles();
-
-  // TODO: remove example organizations
-  const filters = ["Bindeleddet", "Janus", "Estiem", "Hovedstyret", "Janus FK", "Indøl"];
 
   if (error) return <p>Error</p>;
   if (loading) return <p>Loading...</p>;
