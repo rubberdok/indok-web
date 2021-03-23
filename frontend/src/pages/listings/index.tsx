@@ -39,38 +39,22 @@ const ListingsPage: NextPage = () => {
   return (
     <Layout>
       <Container>
-        <Grid container direction="column" spacing={2} className={classes.root} justify="center" alignItems="center">
-          {data &&
-            data.listings.map((listing) => (
-              <Grid container item key={listing.id} xs={12}>
-                <ListingItemCard
-                  title={listing.title}
-                  subtitle={listing.description}
-                  chips={["intervju", "case", "søknad"]}
-                  number={15}
-                  img={"img/tindoklogo.png"}
-                  id={listing.id}
-                  slug={listing.slug}
-                />
-              </Grid>
-            ))}
-        </Grid>
         <Grid container direction="row" spacing={2} className={classes.root} justify="center" alignItems="stretch">
           {data &&
             data.listings.map((listing) => (
               <>
                 <Hidden smDown>
-                  <Grid container item key={listing.id} xs={6}>
+                  <Grid container item key={listing.id} xs={5}>
                     <ListingCard listing={listing} />
                   </Grid>
                 </Hidden>
                 <Hidden mdUp xsDown>
-                  <Grid container item key={listing.id} xs={8}>
+                  <Grid container item key={listing.id} xs={7}>
                     <ListingCard listing={listing} />
                   </Grid>
                 </Hidden>
                 <Hidden smUp>
-                  <Grid container item key={listing.id} xs={12}>
+                  <Grid container item key={listing.id} xs={10}>
                     <ListingCard listing={listing} />
                   </Grid>
                 </Hidden>

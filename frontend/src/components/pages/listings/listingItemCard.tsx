@@ -20,6 +20,16 @@ const useStyles = makeStyles((theme) => ({
   card: {
     width: "100%",
   },
+  descriptionText: {
+    /* https://stackoverflow.com/questions/3922739/limit-text-length-to-n-lines-using-css */
+    /* Limits the description text to three lines. lines = maxHeight / lineHeight */ 
+    display: "inline-block", /* or inline-block */
+    textOverflow: "ellipsis",
+    wordWrap: "break-word",
+    overflow: "hidden",
+    maxHeight: "3.6em",
+    lineHeight: "1.8em",
+  },
   content: {
     padding: theme.spacing(4),
   },
@@ -55,7 +65,7 @@ const ListingItemCard: React.FC<ListingItemCardProps> = ({ title, subtitle, img,
                   </Typography>
                 </Grid>
                 <Grid item xs>
-                  <Typography variant="body2" component="span">
+                  <Typography variant="body2" component="span" className={classes.descriptionText}>
                     {subtitle}
                   </Typography>
                 </Grid>
