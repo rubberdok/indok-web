@@ -3,12 +3,10 @@ import {
   Box,
   makeStyles,
   Grid,
-  Card,
-  CardContent,
   Typography,
   Button,
-  CardActions,
-  CardMedia,
+  Hidden,
+  Container,
 } from "@material-ui/core";
 import ArrowForward from "@material-ui/icons/ArrowForward";
 import dayjs from "dayjs";
@@ -22,7 +20,11 @@ dayjs.locale(nb);
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    marginBottom: theme.spacing(4),
+  },
+  cardRoot: {
+    marginTop: "-5%",
+    position: "relative",
+    zIndex: 10,
   },
   hero: {
     width: "100%",
@@ -36,33 +38,9 @@ const useStyles = makeStyles((theme) => ({
     backgroundPosition: "center",
     opacity: 0.04,
   },
-  container: {
-    position: "relative",
-    display: "inline-block",
-    width: "100%",
-    height: "100%",
-    "&::before": {
-      content: "''",
-      display: "block",
-      paddingTop: "33%",
-    }
-  },
-  backdrop: {
-    marginTop: "-5%",
-    padding: theme.spacing(2),
-    backgroundColor: "white",
-    width: "100%",
+  cardContent: {
+    padding: theme.spacing(4),
     objectPosition: "center",
-  },
-  titleContent: {
-    position: "absolute",
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    objectPosition: "center",
-    width: "100%",
-    height: "100%",
   },
   deadline: {
     "&::before": {
@@ -72,8 +50,9 @@ const useStyles = makeStyles((theme) => ({
     }
   },
   card: {
-    position: "relative",
-    zIndex: 10,
+    backgroundColor: "white",
+    width: "100%",
+    height: "100%",
   },
 
 }));
@@ -85,14 +64,16 @@ interface HeroProps {
 
 const Hero: React.FC<HeroProps> = ({ listing, buttonText }) => {
   const classes = useStyles();
+  const buttonStyle = 2;
+  const fakeImage = true;
   return (
     <>
       <Box className={classes.root}>
-        {listing.hero 
+        {(listing.hero || fakeImage)
           ? <Box 
               className={`${classes.hero}`}
               style={{
-                background: `url("/img/bindeleddet.jpg")`,
+                background: `url(${fakeImage ? "/img/bindeleddet.jpg" : listing.hero})`,
                 backgroundPosition: "center",
                 backgroundSize: "cover",
                 backgroundRepeat: "no-repeat",
@@ -101,42 +82,64 @@ const Hero: React.FC<HeroProps> = ({ listing, buttonText }) => {
             />
           : <Box className={`${classes.background} ${classes.hero}`} />
         }
-        {
-          }
-        <Grid container direction="column" justify="space-between" alignItems="center" className={classes.card}>
-          <Grid container item xs={4} direction="column" justify="center" alignItems="center" className={classes.backdrop}>
-            <Grid container item className={classes.container} direction="column" justify="center" alignItems="center">
-              <Grid container item direction="column" justify="space-between" alignItems="center" className={classes.titleContent}>
-                <Grid container item direction="column" justify="flex-start" alignItems="center">
-                  <Grid item>
-                    <Typography variant="h3" component="h1" align="center">
-                      {listing.title}
-                    </Typography>
-                  </Grid>
-                  {listing.organization &&
+        <Container>
+          <Grid container direction="row" justify="center" alignItems="stretch" spacing={4}>
+            <Grid container item xs={3} direction="column" justify="center" alignItems="stretch" className={classes.cardRoot}>
+              <Grid container item direction="column" alignItems="center" justify="flex-start" className={`${classes.card} ${classes.cardContent}`}>
+                <Grid item>
+                  <Typography variant="h4" component="h2" align="center" gutterBottom>
+                    {listing.organization.name}
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Typography variant="body2" component="span" align="center">
+                    {listing.organization.description}
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid container item xs={7} direction="column" justify="center" alignItems="center" className={classes.cardRoot}>
+              <Grid container item direction="column" justify="center" alignItems="stretch">
+                <Grid container item direction="row" justify="space-between" alignItems="stretch" className={classes.card}>
+                  <Grid container item xs direction="column" justify="center" alignItems="center" className={classes.cardContent}>
                     <Grid item>
-                      <Typography variant="subtitle2" component="h2" align="center" style={{margin: 2}}>
-                        {listing.organization.name}
+                      <Typography variant="h3" component="h1" align="center">
+                        {listing.title}
                       </Typography>
                     </Grid>
-                  }
-                  <Grid item>
-                    <Typography variant="caption" component="h3" align="center" className={classes.deadline}>
-                      {dayjs(listing.deadline).format("DD. MMMM YYYY [kl.] HH:mm")}
-                    </Typography>
+
+                    <Grid item>
+                      <Typography variant="caption" component="h3" align="center" className={classes.deadline} gutterBottom>
+                        {dayjs(listing.deadline).format("DD. MMMM YYYY [kl.] HH:mm")}
+                      </Typography>
+                    </Grid>
+                    {buttonText && buttonStyle === 0 &&
+                      <Grid item>
+                        <Button variant="contained" color="primary" endIcon={<ArrowForward />}>
+                          {buttonText}
+                        </Button>
+                      </Grid>
+                    }
                   </Grid>
+                  {buttonText && buttonStyle === 1 &&
+                    <Grid item>
+                      <Button variant="contained" endIcon={<ArrowForward />} color="primary" style={{height: "100%"}}>
+                        Søk her
+                      </Button>
+                    </Grid>
+                  }
                 </Grid>
-                {buttonText &&
+                {buttonText && buttonStyle === 2 &&
                   <Grid item>
-                    <Button variant="contained" color="primary" endIcon={<ArrowForward />}>
-                      {buttonText}
+                    <Button variant="contained" endIcon={<ArrowForward />} color="primary" style={{width: "100%"}}>
+                      Søk her
                     </Button>
                   </Grid>
                 }
               </Grid>
             </Grid>
           </Grid>
-        </Grid>
+        </Container>
       </Box>
     </>
   );

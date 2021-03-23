@@ -3,20 +3,16 @@ import Layout from "@components/Layout";
 import { LISTING } from "@graphql/listings/queries";
 import { Listing } from "@interfaces/listings";
 import {
-  Button,
   Container,
-  Grid,
   Hidden,
   makeStyles,
-  Card,
-  CardContent,
   Typography,
 } from "@material-ui/core";
-import ArrowForward from "@material-ui/icons/ArrowForward";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import Hero from "@components/pages/listings/detail/hero";
+import ListingBody from "@components/pages/listings/detail/listingBody";
 import dayjs from "dayjs";
 import nb from "dayjs/locale/nb";
 dayjs.locale(nb);
@@ -75,35 +71,8 @@ const ListingPage: NextPage = () => {
               buttonText="Søk her"
             />
           </Hidden>
-          <Container>
-            <Card>
-              <CardContent>
-                <Grid container direction="column" alignItems="center">
-                  <Grid item>
-                    <Typography variant="subtitle1" component="h1">
-                      {data.listing.title}
-                    </Typography>
-                  </Grid>
-                  <Grid item>
-                    <Typography variant="overline" component="span">
-                      {data.listing.organization?.name}
-                    </Typography>
-                  </Grid>
-                  <Grid item>
-                    <Typography variant="overline" component="span">
-                      {dayjs(data.listing.deadline).format("DD. MMMM YYYY, kl. HH:mm")}
-                    </Typography>
-                  </Grid>
-                  <Grid item>
-                    <Button variant="contained" color="primary" endIcon={<ArrowForward />}>
-                      Søk her
-                    </Button>
-                  </Grid>
-                </Grid>
-              </CardContent>
-            </Card>
-
-            <Card></Card>
+          <Container className={classes.container}>
+              <ListingBody listing={data.listing} />
           </Container>
         </Layout>
       )}
