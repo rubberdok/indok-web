@@ -86,8 +86,8 @@ const EditQuestion: React.FC<{
           });
         }}
       >
-        {Object.entries(questionTypes).map(([questionType, label], index) => (
-          <MenuItem key={index} value={questionType}>
+        {Object.entries(questionTypes).map(([questionType, label]) => (
+          <MenuItem key={questionType} value={questionType}>
             {label}
           </MenuItem>
         ))}
