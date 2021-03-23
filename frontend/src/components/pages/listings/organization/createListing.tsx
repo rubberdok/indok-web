@@ -49,7 +49,7 @@ const CreateListing: React.FC<{
   // state to show error on incomplete input
   const [invalidError, showInvalidError] = useState(false);
 
-  // mutation to create the new listing, and update the cache to show it instantly
+  // mutation to create the new listing
   const [createListing] = useMutation<{ createListing: { ok: boolean; listing: Listing } }>(CREATE_LISTING, {
     // updates the cache upon creating the listing, so it can show up instantly
     update: (cache, { data }) => {
