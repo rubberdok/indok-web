@@ -17,7 +17,7 @@ class Queries(
     CabinQueries,
     OrganizationQueries,
     ListingQueries,
-    SurveyQueries
+    SurveyQueries,
     UtilQueries
 ):
     pass
