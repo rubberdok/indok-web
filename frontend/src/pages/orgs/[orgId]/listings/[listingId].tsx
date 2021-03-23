@@ -27,7 +27,7 @@ const ListingAdminPage: NextPage = () => {
   // fetches the listing along with all users who have applied to it
   const { loading, error, data } = useQuery<{ listing: Listing }>(LISTING_WITH_RESPONDERS, {
     variables: {
-      ID: parseInt(listingId as string),
+      id: parseInt(listingId as string),
     },
   });
 
