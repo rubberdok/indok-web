@@ -83,7 +83,7 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
   const [openSignOffErrorSnackbar, setOpenSignOffErrorSnackbar] = useState(false);
   const [extraInformation, setExtraInformation] = useState<string>();
 
-  const [eventSignUp, { loading: signUpLoading }] = useMutation<{
+  const [eventSignUp, { loading: signUpLoading, error: signUpError }] = useMutation<{
     eventSignUp: { isFull: boolean };
   }>(EVENT_SIGN_UP);
 
@@ -342,7 +342,7 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
                   onClose={() => setOpenSignUpErrorSnackbar(false)}
                 >
                   <Alert elevation={6} variant="filled" severity="error">
-                    Påmelding feilet
+                    {signUpError ? signUpError.message : "Påmelding feilet"}
                   </Alert>
                 </Snackbar>
 
