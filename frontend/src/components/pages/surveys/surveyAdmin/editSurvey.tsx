@@ -139,8 +139,8 @@ const EditSurvey: React.FC<{ surveyId: string }> = ({ surveyId }) => {
                     question: "",
                     description: "",
                     surveyId: data.survey.id,
-                    // TODO: remove when backend fixes default handling
-                    questionType: "Paragraph",
+                    // TODO: remove when default handling is fixed backend
+                    questionType: "PARAGRAPH",
                   },
                 });
               }}

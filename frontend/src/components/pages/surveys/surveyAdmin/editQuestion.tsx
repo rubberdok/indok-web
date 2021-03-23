@@ -92,15 +92,15 @@ const EditQuestion: React.FC<{
           </MenuItem>
         ))}
       </Select>
-      {question.questionType === "Checkboxes" ||
-      question.questionType === "Multiple choice" ||
-      question.questionType === "Drop-down" ? (
+      {question.questionType === "CHECKBOXES" ||
+      question.questionType === "MULTIPLE_CHOICE" ||
+      question.questionType === "DROPDOWN" ? (
         <Grid container direction="column">
           {question.options.map((option, index) => (
             <Grid key={index} container direction="row">
-              {question.questionType === "Checkboxes" ? (
+              {question.questionType === "CHECKBOXES" ? (
                 <Checkbox disabled />
-              ) : question.questionType === "Multiple choice" ? (
+              ) : question.questionType === "MULTIPLE_CHOICE" ? (
                 <Radio disabled />
               ) : (
                 <p>{index + 1}.</p>

@@ -6,11 +6,11 @@ const QuestionTypePreview: React.FC<{
   question: Question;
 }> = ({ question }) => {
   switch (question.questionType) {
-    case "Paragraph":
+    case "PARAGRAPH":
       return <TextField disabled label="Langsvar" variant="outlined" multiline rows={4} />;
-    case "Short answer":
+    case "SHORT_ANSWER":
       return <TextField disabled label="Kortsvar" variant="outlined" />;
-    case "Multiple choice":
+    case "MULTIPLE_CHOICE":
       return (
         <RadioGroup>
           {question.options.map((option, index) => (
@@ -18,7 +18,7 @@ const QuestionTypePreview: React.FC<{
           ))}
         </RadioGroup>
       );
-    case "Checkboxes":
+    case "CHECKBOXES":
       return (
         <FormGroup>
           {question.options.map((option, index) => (
@@ -26,7 +26,7 @@ const QuestionTypePreview: React.FC<{
           ))}
         </FormGroup>
       );
-    case "Drop-down":
+    case "DROPDOWN":
       return (
         <ol>
           {question.options.map((option, index) => (
@@ -34,6 +34,10 @@ const QuestionTypePreview: React.FC<{
           ))}
         </ol>
       );
+    case "SLIDER":
+      return <p>To be implemented</p>;
+    case "FILE_UPLOAD":
+      return <p>To be implemented</p>;
     default:
       // TODO: change implementation of question types to avoid failsafes like this
       return <p>Error in question</p>;
