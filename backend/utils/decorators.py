@@ -98,13 +98,3 @@ def has_permissions(user, perms: list[str], obj=None, accept_global_perms: bool=
           (accept_global_perms and all(user.has_perm(perm) for perm in perms))
           or all(user.has_perm(perm, obj) for perm in perms)
         )
-
-
-
- 
-
-
-
-
-
-
