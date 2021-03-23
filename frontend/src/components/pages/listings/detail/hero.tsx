@@ -74,7 +74,8 @@ const useStyles = makeStyles((theme) => ({
   card: {
     position: "relative",
     zIndex: 10,
-  }
+  },
+
 }));
 
 interface HeroProps {
@@ -87,26 +88,40 @@ const Hero: React.FC<HeroProps> = ({ listing, buttonText }) => {
   return (
     <>
       <Box className={classes.root}>
-        <Box className={`${classes.background} ${classes.hero}`} />
+        {listing.hero 
+          ? <Box 
+              className={`${classes.hero}`}
+              style={{
+                background: `url("/img/bindeleddet.jpg")`,
+                backgroundPosition: "center",
+                backgroundSize: "cover",
+                backgroundRepeat: "no-repeat",
+                opacity: 0.5
+              }}
+            />
+          : <Box className={`${classes.background} ${classes.hero}`} />
+        }
+        {
+          }
         <Grid container direction="column" justify="space-between" alignItems="center" className={classes.card}>
-          <Grid container item xs={6} direction="column" justify="center" alignItems="center" className={classes.backdrop}>
+          <Grid container item xs={4} direction="column" justify="center" alignItems="center" className={classes.backdrop}>
             <Grid container item className={classes.container} direction="column" justify="center" alignItems="center">
               <Grid container item direction="column" justify="space-between" alignItems="center" className={classes.titleContent}>
                 <Grid container item direction="column" justify="flex-start" alignItems="center">
                   <Grid item>
-                    <Typography variant="h1" component="h1" align="center">
+                    <Typography variant="h3" component="h1" align="center">
                       {listing.title}
                     </Typography>
                   </Grid>
                   {listing.organization &&
                     <Grid item>
-                      <Typography variant="subtitle1" component="h2" align="center">
+                      <Typography variant="subtitle2" component="h2" align="center" style={{margin: 2}}>
                         {listing.organization.name}
                       </Typography>
                     </Grid>
                   }
                   <Grid item>
-                    <Typography variant="subtitle2" component="h3" align="center" className={classes.deadline}>
+                    <Typography variant="caption" component="h3" align="center" className={classes.deadline}>
                       {dayjs(listing.deadline).format("DD. MMMM YYYY [kl.] HH:mm")}
                     </Typography>
                   </Grid>
