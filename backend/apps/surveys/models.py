@@ -20,7 +20,7 @@ class Survey(models.Model):
         return f"{self.descriptive_name}"
 
     @property
-    def mandatory_questions(self):
+    def mandatory_questions(self: "Survey"):
         return self.questions.filter(mandatory=True)
 
 class Question(models.Model):
@@ -29,7 +29,6 @@ class Question(models.Model):
     description = models.CharField(max_length=1000, blank=True, default="")
     question_type = models.CharField(max_length=32, default="PARAGRAPH")
     mandatory = models.BooleanField(default=True)
-
 
     def __str__(self) -> str:
         return f"{self.survey}: {self.question}"

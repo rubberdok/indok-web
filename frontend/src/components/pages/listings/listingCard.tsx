@@ -4,6 +4,7 @@ import CheckIcon from "@material-ui/icons/Check";
 import Link from "next/link";
 import { Listing } from "@interfaces/listings";
 import dayjs from "dayjs";
+import { ThemeConsumer } from "styled-components";
 
 interface ListingCardProps {
   listing: Listing;
@@ -17,6 +18,19 @@ const useStyles = makeStyles((theme) => ({
   logo: {
     marginTop: "-50%",
   },
+  description: {
+    height: "6em",
+    fontSize: theme.typography.body2.fontSize,
+    padding: theme.spacing(2)
+  },
+  title: {
+  },
+  banner: {
+    marginBottom: 0
+  },
+  content: {
+    paddingTop: 0
+  }
 }));
 
 const ListingCard: React.FC<ListingCardProps> = ({ listing }) => {
@@ -26,12 +40,9 @@ const ListingCard: React.FC<ListingCardProps> = ({ listing }) => {
       <Card className={classes.root}>
         <Link href={`listings/${listing.id}/${listing.slug}/`} passHref>
           <CardActionArea className={classes.root}>
-            <CardContent>
+            <CardMedia component="img" image={"/img/bindeleddet.jpg"} className={classes.banner}/>
+            <CardContent className={classes.content}>
               <Grid container direction="column" justify="center" alignItems="center">
-                <Grid item>
-                  <CardMedia component="img" image={"/img/bindeleddet.jpg"} />
-                </Grid>
-
                 <Grid container item alignItems="center" justify="center">
                   <Grid item xs={2}>
                     <CardMedia className={classes.logo} component="img" image={"/img/tindoklogo.png"} />
@@ -39,13 +50,13 @@ const ListingCard: React.FC<ListingCardProps> = ({ listing }) => {
                 </Grid>
 
                 <Grid container item alignItems="center" direction="column">
-                  <Grid item>
-                    <Typography variant="h4" component="h4">
+                  <Grid item className={classes.title}>
+                    <Typography variant="h5" component="h2">
                       {listing.title}
                     </Typography>
                   </Grid>
-                  <Grid item>
-                    <Typography variant="body1" component="span">
+                  <Grid item className={classes.description} zeroMinWidth>
+                    <Typography variant="body2" component="span">
                       {listing.description}
                     </Typography>
                   </Grid>
