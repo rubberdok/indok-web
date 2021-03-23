@@ -50,7 +50,7 @@ const CreateListing: React.FC<{
   const [invalidError, showInvalidError] = useState(false);
 
   // mutation to create the new listing, and update the cache to show it instantly
-  const [createListing] = useMutation<{ createListing: { listing: Listing } }>(CREATE_LISTING, {
+  const [createListing] = useMutation<{ createListing: { ok: boolean; listing: Listing } }>(CREATE_LISTING, {
     // updates the cache upon creating the listing, so it can show up instantly
     update: (cache, { data }) => {
       const newListing = data?.createListing.listing;
@@ -58,7 +58,7 @@ const CreateListing: React.FC<{
         query: GET_ORGANIZATION,
         variables: { orgId: parseInt(organization.id) },
       });
-      if (cachedOrg && newListing) {
+      if (data?.createListing?.ok && newListing && cachedOrg) {
         cache.writeQuery({
           query: GET_ORGANIZATION,
           variables: { orgId: parseInt(organization.id) },

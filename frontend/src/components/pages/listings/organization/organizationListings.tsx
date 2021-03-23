@@ -41,29 +41,30 @@ const OrganizationListings: React.FC<{
   // state to determine whether to show the CreateListing dialog
   const [createListingOpen, openCreateListing] = useState(false);
 
-  const [deleteListing] = useMutation<{ ok: boolean; listingId: string }, { id: string }>(DELETE_LISTING, {
-    // updates the cache upon deleting the listing, so changes are reflected instantly
-    update: (cache, { data }) => {
-      const deletedListingId = data?.listingId;
-      const cachedOrg = cache.readQuery<{ organization: Organization }>({
-        query: GET_ORGANIZATION,
-        variables: { orgId: parseInt(organization.id) },
-      });
-      console.log(deletedListingId);
-      console.log(cachedOrg);
-      if (cachedOrg && deletedListingId) {
-        cache.writeQuery({
+  const [deleteListing] = useMutation<{ deleteListing: { ok: boolean; listingId: string } }, { id: string }>(
+    DELETE_LISTING,
+    {
+      // updates the cache upon deleting the listing, so changes are reflected instantly
+      update: (cache, { data }) => {
+        const deletedListingId = data?.deleteListing.listingId;
+        const cachedOrg = cache.readQuery<{ organization: Organization }>({
           query: GET_ORGANIZATION,
           variables: { orgId: parseInt(organization.id) },
-          data: {
-            organization: {
-              listings: (cachedOrg.organization.listings ?? []).filter((listing) => listing.id !== deletedListingId),
-            },
-          },
         });
-      }
-    },
-  });
+        if (data?.deleteListing?.ok && deletedListingId && cachedOrg) {
+          cache.writeQuery({
+            query: GET_ORGANIZATION,
+            variables: { orgId: parseInt(organization.id) },
+            data: {
+              organization: {
+                listings: (cachedOrg.organization.listings ?? []).filter((listing) => listing.id !== deletedListingId),
+              },
+            },
+          });
+        }
+      },
+    }
+  );
 
   const classes = useStyles();
 
