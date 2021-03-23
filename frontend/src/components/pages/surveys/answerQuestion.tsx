@@ -22,15 +22,7 @@ const AnswerQuestion: React.FC<{
   return (
     <FormControl>
       <FormLabel>{answer.question.question}</FormLabel>
-      {answer.question.questionType === "Short answer" ? (
-        <TextField
-          variant="outlined"
-          onChange={(e) => {
-            e.preventDefault();
-            setAnswer({ ...answer, answer: e.target.value });
-          }}
-        />
-      ) : answer.question.questionType === "Paragraph" ? (
+      {answer.question.questionType === "PARAGRAPH" ? (
         <TextField
           variant="outlined"
           multiline
@@ -40,7 +32,15 @@ const AnswerQuestion: React.FC<{
             setAnswer({ ...answer, answer: e.target.value });
           }}
         />
-      ) : answer.question.questionType === "Multiple choice" ? (
+      ) : answer.question.questionType === "SHORT_ANSWER" ? (
+        <TextField
+          variant="outlined"
+          onChange={(e) => {
+            e.preventDefault();
+            setAnswer({ ...answer, answer: e.target.value });
+          }}
+        />
+      ) : answer.question.questionType === "MULTIPLE_CHOICE" ? (
         <RadioGroup
           onChange={(e) => {
             e.preventDefault();
@@ -51,9 +51,9 @@ const AnswerQuestion: React.FC<{
             <FormControlLabel key={index} value={option.answer} label={option.answer} control={<Radio />} />
           ))}
         </RadioGroup>
-      ) : answer.question.questionType === "Checkboxes" ? (
+      ) : answer.question.questionType === "CHECKBOXES" ? (
         <AnswerCheckboxes answer={answer} setAnswer={setAnswer} />
-      ) : answer.question.questionType === "Drop-down" ? (
+      ) : answer.question.questionType === "DROPDOWN" ? (
         <Select
           onChange={(e) => {
             e.preventDefault();
@@ -67,10 +67,10 @@ const AnswerQuestion: React.FC<{
             </MenuItem>
           ))}
         </Select>
-      ) : answer.question.questionType === "Slider" ? (
+      ) : answer.question.questionType === "SLIDER" ? (
         // TODO: implement slider
         <p>To be implemented</p>
-      ) : answer.question.questionType === "File upload" ? (
+      ) : answer.question.questionType === "FILE_UPLOAD" ? (
         // TODO: implement File upload
         <p>To be implemented</p>
       ) : (

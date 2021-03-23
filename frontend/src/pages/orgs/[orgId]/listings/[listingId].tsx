@@ -41,39 +41,43 @@ const ListingAdminPage: NextPage = () => {
       <Container className={classes.container}>
         <Card>
           <CardContent>
-            <Link href={`/orgs/${orgId}/listings`}>Tilbake</Link>
+            <Link href={`/orgs/${orgId}`}>Tilbake</Link>
           </CardContent>
         </Card>
         {data && (
           <Grid container direction="row">
-            <Card>
-              <Tabs
-                orientation="vertical"
-                variant="scrollable"
-                value={selectedApplicant}
-                onChange={(_, applicant) => {
-                  selectApplicant(applicant);
-                }}
-              >
-                <Tab value={null} label="Se verv og søknad" />
-                {data.listing.survey?.responders.map((responder, index) => (
-                  <Tab key={index} value={responder} label={`${responder.firstName} ${responder.lastName}`} />
-                ))}
-              </Tabs>
-            </Card>
-            <Card>
-              <CardContent>
-                {selectedApplicant ? (
-                  <>
-                    {data.listing.survey && (
-                      <SurveyAnswers user={selectedApplicant} surveyId={parseInt(data.listing.survey.id)} />
-                    )}
-                  </>
-                ) : (
-                  <OrganizationListing listing={data.listing} />
-                )}
-              </CardContent>
-            </Card>
+            <Grid item xs={2}>
+              <Card>
+                <Tabs
+                  orientation="vertical"
+                  variant="scrollable"
+                  value={selectedApplicant}
+                  onChange={(_, applicant) => {
+                    selectApplicant(applicant);
+                  }}
+                >
+                  <Tab value={null} label="Se verv og søknad" />
+                  {data.listing.survey?.responders.map((responder, index) => (
+                    <Tab key={index} value={responder} label={`${responder.firstName} ${responder.lastName}`} />
+                  ))}
+                </Tabs>
+              </Card>
+            </Grid>
+            <Grid item xs={10}>
+              <Card>
+                <CardContent>
+                  {selectedApplicant ? (
+                    <>
+                      {data.listing.survey && (
+                        <SurveyAnswers user={selectedApplicant} surveyId={parseInt(data.listing.survey.id)} />
+                      )}
+                    </>
+                  ) : (
+                    <OrganizationListing listing={data.listing} />
+                  )}
+                </CardContent>
+              </Card>
+            </Grid>
           </Grid>
         )}
       </Container>

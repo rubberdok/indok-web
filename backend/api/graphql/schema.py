@@ -7,6 +7,7 @@ from .listing.schema import ListingMutations, ListingQueries
 from .organizations.schema import OrganizationMutations, OrganizationQueries
 from .users.schema import UserMutations, UserQueries
 from .surveys.schema import SurveyMutations, SurveyQueries
+from .utils.schema import UtilQueries
 
 
 class Queries(
@@ -17,7 +18,7 @@ class Queries(
     OrganizationQueries,
     ListingQueries,
     SurveyQueries
-    
+    UtilQueries
 ):
     pass
 
