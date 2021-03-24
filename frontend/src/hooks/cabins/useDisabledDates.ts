@@ -22,7 +22,7 @@ const useDisabledDates = (chosenCabins: Cabin[]): Output => {
       });
       setDisabledDates(
         selectedMonthBookings.reduce((newDisabledDates, booking) => {
-          return newDisabledDates.concat(getDateRange(booking.bookFrom, booking.bookTo));
+          return newDisabledDates.concat(getDateRange(booking.checkIn, booking.checkOut));
         }, [] as string[])
       );
     }

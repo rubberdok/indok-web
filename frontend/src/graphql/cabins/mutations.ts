@@ -15,9 +15,9 @@ export const CREATE_CABIN = gql`
       firstname: $firstname
       surname: $surname
       phone: $phone
-      receiver_email: $receiverEmail
-      check_in: $bookFrom
-      check_out: $bookTo
+      receiverEmail: $receiverEmail
+      checkIn: $bookFrom
+      checkOut: $bookTo
       price: $price
       cabins: $cabins
     ) {
