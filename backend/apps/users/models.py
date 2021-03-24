@@ -35,5 +35,6 @@ class User(AbstractUser):
         else:
             return 6 - (self.graduation_year - current_year)
 
+
 def get_anonymous_user_instance(User):
-    return User(feide_userid = "AnonymousUser")
+    return User(feide_userid="AnonymousUser")
