@@ -44,7 +44,7 @@ const useStyles = makeStyles(() =>
 
 export const InputFields: React.FC<Props> = ({ contactInfo, validations, onChange, chosenCabins }) => {
   const classes = useStyles();
-  const totalGuestsAllowed = chosenCabins.reduce((a, b) => a + (b.maxGuests || 0), 0);
+  const totalGuestsAllowed = chosenCabins.reduce((sum, currentCabin) => sum + (currentCabin.maxGuests || 0), 0);
 
   return (
     <>
