@@ -1,4 +1,4 @@
-import { Cabin, InputValueTypes } from "@interfaces/cabins";
+import { Cabin, ContactInfo, InputValueTypes } from "@interfaces/cabins";
 import { DatePick } from "src/pages/cabins/book";
 import validator from "validator";
 
@@ -48,4 +48,18 @@ export const cabinOrderStepReady = (
     return { ready: false, errortext: "Den valgte perioden er ikke tilgjengelig" };
   }
   return { ready: true, errortext: "" };
+};
+
+export const calculatePrice = (chosenCabins: Cabin[], contactInfo: ContactInfo, datePick: DatePick) => {
+  const internalPrice = contactInfo.numberIndok >= contactInfo.numberExternal ? true : false;
+  const pricePerNight = chosenCabins
+    .map((cabin) => (internalPrice ? cabin.internalPrice : cabin.externalPrice))
+    .reduce((a, b) => a + b);
+
+  if (datePick.checkInDate && datePick.checkOutDate) {
+    const checkInDate = new Date(datePick.checkInDate);
+    const checkOutDate = new Date(datePick.checkOutDate);
+    const rangeLength = (checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 3600 * 24);
+    return pricePerNight * rangeLength;
+  }
 };
