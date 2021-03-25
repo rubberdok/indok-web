@@ -1,11 +1,11 @@
 import { gql } from "@apollo/client";
 
 export const CREATE_SURVEY = gql`
-  mutation CreateSurvey($descriptiveName: String!, $description: String, $listingId: ID) {
-    createSurvey(listingId: $listingId, surveyData: { descriptiveName: $descriptiveName, description: $description }) {
+  mutation CreateSurvey($name: String!, $description: String, $listingId: ID) {
+    createSurvey(listingId: $listingId, surveyData: { name: $name, description: $description }) {
       survey {
         id
-        descriptiveName
+        name
         description
       }
       ok
@@ -14,11 +14,11 @@ export const CREATE_SURVEY = gql`
 `;
 
 export const UPDATE_SURVEY = gql`
-  mutation UpdateSurvey($id: ID!, $descriptiveName: String!, $description: String) {
-    createSurvey(id: $id, surveyData: { descriptiveName: $descriptiveName, description: $description }) {
+  mutation UpdateSurvey($id: ID!, $name: String!, $description: String) {
+    createSurvey(id: $id, surveyData: { name: $name, description: $description }) {
       survey {
         id
-        descriptiveName
+        name
         description
       }
       ok

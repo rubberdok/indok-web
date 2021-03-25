@@ -2,7 +2,7 @@ import { User } from "@interfaces/users";
 
 export interface Survey {
   id: string;
-  descriptiveName: string;
+  name: string;
   description: string;
   questions: Question[];
   responders: User[];

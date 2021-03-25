@@ -38,7 +38,7 @@ const AnswerSurvey: React.FC<{ surveyId: string }> = ({ surveyId }) => {
         <Card>
           <CardContent>
             <Typography variant="h1" component="h1">
-              {data.survey.descriptiveName}
+              {data.survey.name}
             </Typography>
           </CardContent>
           {answers && (

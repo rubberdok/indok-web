@@ -16,7 +16,7 @@ const SurveyAnswers: React.FC<{
   user: User;
 }> = ({ surveyId, user }) => {
   // fetches answers to the survey by the given user
-  const { loading, error, data } = useQuery<{ survey: { descriptiveName: string; questions: QuestionWithAnswer[] } }>(
+  const { loading, error, data } = useQuery<{ survey: { name: string; questions: QuestionWithAnswer[] } }>(
     SURVEY_ANSWERS,
     {
       variables: { surveyId: surveyId, userId: parseInt(user.id) },
@@ -29,7 +29,7 @@ const SurveyAnswers: React.FC<{
     <>
       {data && (
         <>
-          <Typography variant="h3">{data.survey.descriptiveName}</Typography>
+          <Typography variant="h3">{data.survey.name}</Typography>
           <Typography>
             <b>Søker:</b> {user.firstName} {user.lastName}
           </Typography>

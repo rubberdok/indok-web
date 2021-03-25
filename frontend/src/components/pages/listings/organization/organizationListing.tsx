@@ -16,7 +16,7 @@ const OrganizationListing: React.FC<{ listing: Listing }> = ({ listing }) => {
   // mutation to create a new survey
   const [createSurvey, { data: surveyData }] = useMutation<
     { createSurvey: { ok: boolean; survey: Survey } },
-    { descriptiveName: string; description: string; listingId: string }
+    { name: string; description: string; listingId: string }
   >(CREATE_SURVEY, {
     // updates the cache so the new survey can show instantly
     update: (cache, { data }) => {
@@ -68,7 +68,7 @@ const OrganizationListing: React.FC<{ listing: Listing }> = ({ listing }) => {
             e.preventDefault();
             createSurvey({
               variables: {
-                descriptiveName: `Søknad: ${listing.title}`,
+                name: `Søknad: ${listing.title}`,
                 description: "",
                 listingId: listing.id,
               },

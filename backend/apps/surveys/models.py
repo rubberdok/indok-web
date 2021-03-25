@@ -13,11 +13,11 @@ from apps.organizations.models import Organization
 
 class Survey(models.Model):
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE, null=True)
-    descriptive_name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100)
     description = models.CharField(max_length=3000, blank=True, default="")
 
     def __str__(self) -> str:
-        return f"{self.descriptive_name}"
+        return f"{self.name}"
 
     @property
     def mandatory_questions(self: "Survey"):

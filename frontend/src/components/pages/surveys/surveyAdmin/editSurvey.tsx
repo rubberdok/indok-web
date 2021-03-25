@@ -108,7 +108,7 @@ const EditSurvey: React.FC<{ surveyId: string }> = ({ surveyId }) => {
     <>
       {data && (
         <>
-          <h3>{data.survey.descriptiveName}</h3>
+          <h3>{data.survey.name}</h3>
           <Grid item container direction="column">
             {data.survey.questions.map((question) => (
               <Box key={question.id} border={1} borderColor="primary" className={classes.questionBox}>
