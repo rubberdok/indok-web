@@ -1,5 +1,5 @@
 import { Listing } from "@interfaces/listings";
-import { makeStyles, Box } from "@material-ui/core";
+import { Box, makeStyles } from "@material-ui/core";
 
 interface BannerProps {
   listing: Listing

@@ -1,5 +1,5 @@
 import { Listing } from "@interfaces/listings";
-import { Card, CardContent, Grid, Typography, Hidden, makeStyles } from "@material-ui/core";
+import { Card, CardContent, Grid, makeStyles, Typography } from "@material-ui/core";
 
 
 const useStyles = makeStyles((theme) => ({

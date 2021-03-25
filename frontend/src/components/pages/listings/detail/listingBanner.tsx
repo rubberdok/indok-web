@@ -1,11 +1,11 @@
 import { Listing } from "@interfaces/listings";
-import { Box, makeStyles, Grid, Typography, Button, Hidden, Container } from "@material-ui/core";
+import { Button, Grid, Hidden, makeStyles, Typography } from "@material-ui/core";
 import ArrowForward from "@material-ui/icons/ArrowForward";
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import dayjs from "dayjs";
+import nb from "dayjs/locale/nb";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
-import nb from "dayjs/locale/nb";
 import Link from "next/link";
 dayjs.extend(timezone);
 dayjs.extend(utc);
