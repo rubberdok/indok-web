@@ -1,5 +1,5 @@
-import { Question } from "@interfaces/surveys";
 import QuestionTypePreview from "@components/pages/surveys/surveyAdmin/questionTypePreview";
+import { Question } from "@interfaces/surveys";
 import { Button, Grid } from "@material-ui/core";
 
 // component to preview a question in a survey when not in editing mode

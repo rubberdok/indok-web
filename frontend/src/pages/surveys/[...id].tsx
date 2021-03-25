@@ -1,7 +1,7 @@
-import { NextPage, GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Layout from "@components/Layout";
 import SurveyAnswer from "@components/pages/surveys/surveyAnswer";
 import { Container } from "@material-ui/core";
+import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from "next";
 
 const SurveyPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ id }) => (
   <Layout>

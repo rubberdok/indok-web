@@ -1,6 +1,6 @@
-import { NextPage } from "next";
 import Layout from "@components/Layout";
 import { Container, Typography } from "@material-ui/core";
+import { NextPage } from "next";
 
 const NewPage: NextPage = () => (
   <Layout>

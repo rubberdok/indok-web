@@ -1,7 +1,7 @@
-import { User } from "@interfaces/users";
-import { SURVEY_ANSWERS } from "@graphql/surveys/queries";
 import { useQuery } from "@apollo/client";
-import { Question, Answer } from "@interfaces/surveys";
+import { SURVEY_ANSWERS } from "@graphql/surveys/queries";
+import { Answer, Question } from "@interfaces/surveys";
+import { User } from "@interfaces/users";
 import { Typography } from "@material-ui/core";
 
 // specific type for this component to tie a question to a single answer

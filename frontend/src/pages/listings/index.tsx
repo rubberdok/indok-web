@@ -1,10 +1,10 @@
-import { NextPage } from "next";
-import Layout from "@components/Layout";
 import { useQuery } from "@apollo/client";
+import Layout from "@components/Layout";
+import ListingItem from "@components/pages/listings/listingItem";
 import { LISTINGS } from "@graphql/listings/queries";
 import { Listing } from "@interfaces/listings";
-import ListingItem from "@components/pages/listings/listingItem";
-import { Container, Grid, makeStyles, Typography, Hidden } from "@material-ui/core";
+import { Container, Grid, Hidden, makeStyles } from "@material-ui/core";
+import { NextPage } from "next";
 
 const useStyles = makeStyles((theme) => ({
   root: {

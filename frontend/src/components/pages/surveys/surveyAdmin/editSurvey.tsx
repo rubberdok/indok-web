@@ -1,11 +1,11 @@
-import { useQuery, useMutation } from "@apollo/client";
-import { SURVEY } from "@graphql/surveys/queries";
-import { CREATE_QUESTION, DELETE_QUESTION, UPDATE_QUESTION } from "@graphql/surveys/mutations";
-import { useState } from "react";
-import { Survey, Question, QuestionVariables } from "@interfaces/surveys";
-import QuestionPreview from "@components/pages/surveys/surveyAdmin/questionPreview";
+import { useMutation, useQuery } from "@apollo/client";
 import EditQuestion from "@components/pages/surveys/surveyAdmin/editQuestion";
-import { Button, Grid, makeStyles, Box, Typography } from "@material-ui/core";
+import QuestionPreview from "@components/pages/surveys/surveyAdmin/questionPreview";
+import { CREATE_QUESTION, DELETE_QUESTION, UPDATE_QUESTION } from "@graphql/surveys/mutations";
+import { SURVEY } from "@graphql/surveys/queries";
+import { Question, QuestionVariables, Survey } from "@interfaces/surveys";
+import { Box, Button, Grid, makeStyles, Typography } from "@material-ui/core";
+import { useState } from "react";
 
 const useStyles = makeStyles((theme) => ({
   questionBox: {

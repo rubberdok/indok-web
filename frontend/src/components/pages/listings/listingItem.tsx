@@ -1,13 +1,13 @@
-import { Card, CardContent, CardMedia, CardActionArea, Typography, makeStyles, Grid, Chip } from "@material-ui/core";
-import People from "@material-ui/icons/People";
-
-import Link from "next/link";
 import { Listing } from "@interfaces/listings";
+import { Card, CardActionArea, CardContent, CardMedia, Chip, Grid, makeStyles, Typography } from "@material-ui/core";
+import People from "@material-ui/icons/People";
 import dayjs from "dayjs";
 import nb from "dayjs/locale/nb";
+import relativeTime from "dayjs/plugin/isSameOrAfter";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
-import relativeTime from "dayjs/plugin/isSameOrAfter";
+import Link from "next/link";
+
 dayjs.extend(timezone);
 dayjs.extend(utc);
 dayjs.extend(relativeTime);

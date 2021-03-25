@@ -1,6 +1,6 @@
 import { Answer, Option } from "@interfaces/surveys";
-import { useState, useEffect } from "react";
-import { FormControlLabel, Checkbox } from "@material-ui/core";
+import { Checkbox, FormControlLabel } from "@material-ui/core";
+import { useEffect, useState } from "react";
 
 // component to answer questions of the Checkboxes type
 // separated into its own component, since multiple possible answers requires its own logic

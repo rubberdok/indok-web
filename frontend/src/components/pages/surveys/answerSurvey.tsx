@@ -1,10 +1,10 @@
-import { useQuery, useMutation } from "@apollo/client";
-import { SURVEY } from "@graphql/surveys/queries";
-import { Survey, Answer } from "@interfaces/surveys";
+import { useMutation, useQuery } from "@apollo/client";
 import AnswerQuestion from "@components/pages/surveys/answerQuestion";
-import { Typography, Grid, Button, Card, CardContent } from "@material-ui/core";
-import { useState } from "react";
 import { SUBMIT_ANSWERS } from "@graphql/surveys/mutations";
+import { SURVEY } from "@graphql/surveys/queries";
+import { Answer, Survey } from "@interfaces/surveys";
+import { Button, Card, CardContent, Grid, Typography } from "@material-ui/core";
+import { useState } from "react";
 
 // component for a user to answer a survey
 // props: ID of the survey

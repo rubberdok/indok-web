@@ -1,4 +1,4 @@
-import { makeStyles, Grid, Card, Typography, Chip, CardMedia, CardActionArea } from "@material-ui/core";
+import { Card, CardActionArea, CardMedia, Chip, Grid, makeStyles, Typography } from "@material-ui/core";
 import People from "@material-ui/icons/People";
 import Link from "next/link";
 
