@@ -3,7 +3,7 @@ import Layout from "@components/Layout";
 import ListingItem from "@components/pages/listings/listingItem";
 import { LISTINGS } from "@graphql/listings/queries";
 import { Listing } from "@interfaces/listings";
-import { Container, Grid, Hidden, makeStyles, Typography } from "@material-ui/core";
+import { Container, Grid, makeStyles, Typography } from "@material-ui/core";
 import { NextPage } from "next";
 
 const useStyles = makeStyles((theme) => ({
@@ -41,21 +41,9 @@ const ListingsPage: NextPage = () => {
           {data &&
             data.listings.map((listing) => (
               <>
-                <Hidden smDown>
-                  <Grid container item key={listing.id} xs={5}>
-                    <ListingItem listing={listing} />
-                  </Grid>
-                </Hidden>
-                <Hidden mdUp xsDown>
-                  <Grid container item key={listing.id} xs={7}>
-                    <ListingItem listing={listing} />
-                  </Grid>
-                </Hidden>
-                <Hidden smUp>
-                  <Grid container item key={listing.id} xs={10}>
-                    <ListingItem listing={listing} />
-                  </Grid>
-                </Hidden>
+                <Grid container item key={listing.id} md={5} sm={7} xs={10}>
+                  <ListingItem listing={listing} />
+                </Grid>
               </>
             ))}
         </Grid>
