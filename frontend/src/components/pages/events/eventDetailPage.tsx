@@ -292,7 +292,7 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
             <Button>Tilbake</Button>
           </Link>
 
-          {eventData.event.isAttendable && !userData.user ? (
+          {!eventData.event.isAttendable ? null : !userData.user ? (
             <Typography variant="h6" className={classes.signUpText}>
               Logg inn for å melde deg på
             </Typography>
