@@ -35,6 +35,10 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "white",
     width: "100%",
     height: "100%",
+    maxWidth: "100%",
+    [theme.breakpoints.down("xs")]: {
+      minWidth: "min-content",
+    }
   },
   descriptionText: {
     /* https://stackoverflow.com/a/13924997 */
@@ -148,17 +152,19 @@ const ListingBanner: React.FC<{
                     {dayjs(listing.deadline).format("DD. MMMM YYYY [kl.] HH:mm")}
                   </Typography>
                 </Grid>
-                <Grid item>
-                  {listing.url && (
-                    <Link href={listing.url}>
-                      <a>
-                        <Button variant="contained" color="primary" endIcon={<ArrowForward />}>
-                          Søk her
-                        </Button>
-                      </a>
-                    </Link>
-                  )}
-                </Grid>
+                <Hidden xsDown>
+                  <Grid item>
+                    {listing.url && (
+                      <Link href={listing.url}>
+                        <a>
+                          <Button variant="contained" color="primary" endIcon={<ArrowForward />}>
+                            Søk her
+                          </Button>
+                        </a>
+                      </Link>
+                    )}
+                  </Grid>
+                </Hidden>
               </Grid>
             </Grid>
           </Grid>

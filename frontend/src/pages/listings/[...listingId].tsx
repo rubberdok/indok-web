@@ -1,15 +1,18 @@
 import { useQuery } from "@apollo/client";
 import Layout from "@components/Layout";
+import Banner from "@components/pages/listings/detail/banner";
+import ListingBanner from "@components/pages/listings/detail/listingBanner";
+import ListingBody from "@components/pages/listings/detail/listingBody";
 import { LISTING } from "@graphql/listings/queries";
 import { Listing } from "@interfaces/listings";
-import { Container, Grid, makeStyles, Hidden } from "@material-ui/core";
-import { NextPage } from "next";
-import { useRouter } from "next/router";
-import ListingBanner from "@components/pages/listings/detail/listingBanner";
-import Banner from "@components/pages/listings/detail/banner";
-import ListingBody from "@components/pages/listings/detail/listingBody";
+import { Button, Container, Grid, Hidden, makeStyles, Paper } from "@material-ui/core";
+import ArrowForward from "@material-ui/icons/ArrowForward";
+import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import dayjs from "dayjs";
 import nb from "dayjs/locale/nb";
+import { NextPage } from "next";
+import { useRouter } from "next/router";
+
 dayjs.locale(nb);
 
 const useStyles = makeStyles((theme) => ({
@@ -19,6 +22,15 @@ const useStyles = makeStyles((theme) => ({
       marginTop: theme.spacing(4)
     }
   },
+  bottom: {
+    position: "sticky",
+    bottom: 0,
+    padding: theme.spacing(2),
+    zIndex: 100,
+  },
+  apply: {
+    fontSize: theme.typography.caption.fontSize,
+  }
 }));
 
 // the page to show details about a listing and its organization
@@ -48,6 +60,26 @@ const ListingPage: NextPage = () => {
               </Grid>
             </Grid>
           </Container>
+          <Hidden mdUp>
+            <Paper className={classes.bottom}>
+              <Grid container direction="row" justify="space-between" alignItems="center">
+                <Grid item xs>
+                  <Button size="small" endIcon={<OpenInNewIcon />} href={`/about/organizations/${data.listing.organization.slug}/`}>
+                    {data.listing.organization.name.slice(0, 20)}
+                  </Button>
+                </Grid>
+                <Hidden smUp>
+                  {data.listing.url &&
+                    <Grid item>
+                      <Button variant="contained" color="primary" href={data.listing.url} className={classes.apply} endIcon={<ArrowForward />}>
+                        Søk her
+                      </Button>
+                    </Grid>
+                  }
+                </Hidden>
+              </Grid>
+            </Paper>
+          </Hidden>
         </Layout>
       )}
     </>
