@@ -296,7 +296,7 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
             <Typography variant="h6" className={classes.signUpText}>
               Logg inn for å melde deg på
             </Typography>
-          ) : eventData.event.allowedGradeYears.includes(userData.user.gradeYear) ? (
+          ) : !eventData.event.allowedGradeYears.includes(userData.user.gradeYear) ? (
             <Typography variant="h6" className={classes.signUpText}>
               Ikke aktuell
             </Typography>
