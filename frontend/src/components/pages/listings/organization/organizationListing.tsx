@@ -15,17 +15,21 @@ const OrganizationListing: React.FC<{ listing: Listing }> = ({ listing }) => {
 
   // mutation to create a new survey
   const [createSurvey, { data: surveyData }] = useMutation<
+    // interface of surveyData returned from mutation
     { createSurvey: { ok: boolean; survey: Survey } },
+    // interface for variables passed to createSurvey
     { name: string; description: string; listingId: string }
   >(CREATE_SURVEY, {
     // updates the cache so the new survey can show instantly
     update: (cache, { data }) => {
       const newSurvey = data?.createSurvey.survey;
+      // reads the cached listing to which to add the survey
       const cachedListing = cache.readQuery<{ listing: Listing }>({
         query: LISTING_WITH_RESPONDERS,
         variables: { id: parseInt(listing.id) },
       });
       if (newSurvey && cachedListing) {
+        // writes the survey to the cached listing
         cache.writeQuery({
           query: LISTING_WITH_RESPONDERS,
           variables: { id: parseInt(listing.id) },

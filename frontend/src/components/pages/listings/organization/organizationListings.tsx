@@ -37,11 +37,11 @@ const OrganizationListings: React.FC<{
   organization: Organization;
 }> = ({ organization }) => {
   // state for whether to show the CreateListing dialog
-  const [createListingOpen, openCreateListing] = useState(false);
+  const [createListingShown, showCreateListing] = useState(false);
 
   // state for whether to show the DeleteListing confirmation dialog
   // if not null, contains the listing to be deleted for use by the dialog
-  const [confirmDelete, setConfirmDelete] = useState<Listing | null>(null);
+  const [listingToDelete, setListingToDelete] = useState<Listing | null>(null);
 
   const classes = useStyles();
 
@@ -49,16 +49,16 @@ const OrganizationListings: React.FC<{
     <>
       <CreateListing
         organization={organization}
-        open={createListingOpen}
+        open={createListingShown}
         onClose={() => {
-          openCreateListing(false);
+          showCreateListing(false);
         }}
       />
       <DeleteListing
-        listing={confirmDelete}
+        listing={listingToDelete}
         organizationId={parseInt(organization.id)}
         onClose={() => {
-          setConfirmDelete(null);
+          setListingToDelete(null);
         }}
       />
       <Grid item container>
@@ -89,7 +89,7 @@ const OrganizationListings: React.FC<{
                                 color="primary"
                                 onClick={(e) => {
                                   e.preventDefault();
-                                  setConfirmDelete(listing);
+                                  setListingToDelete(listing);
                                 }}
                               >
                                 Slett verv
@@ -109,7 +109,7 @@ const OrganizationListings: React.FC<{
                 color="primary"
                 onClick={(e) => {
                   e.preventDefault();
-                  openCreateListing(true);
+                  showCreateListing(true);
                 }}
               >
                 Opprett nytt verv
