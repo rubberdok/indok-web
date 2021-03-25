@@ -45,7 +45,6 @@ const useStyles = makeStyles((theme) => ({
     "-webkit-box-orient": "vertical",
     minHeight: "4em",
   },
-  title: {},
   hero: {
     marginBottom: 0,
     maxHeight: "10em",
@@ -149,7 +148,7 @@ const ListingItem: React.FC<{
                   direction="column"
                   style={{ height: `100%` }}
                 >
-                  <Grid item className={classes.title}>
+                  <Grid item>
                     <Typography variant="h5" component="h2" align="center">
                       {listing.title}
                     </Typography>

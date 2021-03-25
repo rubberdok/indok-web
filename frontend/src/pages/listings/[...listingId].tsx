@@ -28,9 +28,6 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2),
     zIndex: 100,
   },
-  apply: {
-    fontSize: theme.typography.caption.fontSize,
-  }
 }));
 
 // the page to show details about a listing and its organization
@@ -73,7 +70,7 @@ const ListingPage: NextPage = () => {
                 <Hidden smUp>
                   {data.listing.url &&
                     <Grid item>
-                      <Button variant="contained" color="primary" href={data.listing.url} className={classes.apply} endIcon={<ArrowForward />}>
+                      <Button variant="contained" color="primary" href={data.listing.url} endIcon={<ArrowForward />}>
                         Søk her
                       </Button>
                     </Grid>
