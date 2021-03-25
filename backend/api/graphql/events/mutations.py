@@ -1,6 +1,7 @@
 import graphene
 from apps.events.models import Category, Event, SignUp
 from apps.organizations.models import Organization
+from apps.users.models import User
 from apps.organizations.permissions import check_user_membership
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404
@@ -198,6 +199,43 @@ class EventSignOff(graphene.Mutation):
             )
         except SignUp.DoesNotExist:
             raise Exception("Du er ikke påmeldt")
+
+        setattr(sign_up, "is_attending", False)
+        sign_up.save()
+
+        return EventSignOff(event=event, is_full=event.is_full)
+
+
+class AdminEventSignOff(graphene.Mutation):
+    class Arguments:
+        event_id = graphene.ID(required=True)
+        user_id = graphene.ID(required=True)
+
+    is_full = graphene.Boolean()
+    event = graphene.Field(EventType)
+
+    @login_required
+    def mutate(self, info, event_id, user_id):
+        try:
+            event = Event.objects.get(pk=event_id)
+        except Event.DoesNotExist:
+            raise ValueError("Ugyldig arrangement")
+
+        check_user_membership(info.context.user, event.organization)
+
+        try:
+            user = User.objects.get(pk=user_id)
+        except Event.DoesNotExist:
+            raise ValueError("Kunne ikke finne brukeren")
+
+        try:
+            sign_up = (
+                SignUp.objects.filter(is_attending=True)
+                .order_by("-timestamp")
+                .get(user=user, event=event)
+            )
+        except SignUp.DoesNotExist:
+            raise Exception("Kunne ikke finne brukeren")
 
         setattr(sign_up, "is_attending", False)
         sign_up.save()
