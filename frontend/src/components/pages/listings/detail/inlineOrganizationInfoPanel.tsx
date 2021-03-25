@@ -12,10 +12,6 @@ import {
 } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
-interface InlineOrganizationInfoPanelProps {
-  organization: Organization;
-}
-
 const useStyles = makeStyles((theme) => ({
   large: {
     width: theme.spacing(8),
@@ -25,7 +21,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 // component for organization detail on mobile
-const InlineOrganizationInfoPanel: React.FC<InlineOrganizationInfoPanelProps> = ({ organization }) => {
+const InlineOrganizationInfoPanel: React.FC<{
+  organization: Organization;
+}> = ({ organization }) => {
   const classes = useStyles();
   return (
     <Accordion>

@@ -21,12 +21,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-interface OrganizationInfoPanelProps {
-  organization: Organization;
-}
-
 // component for organization detail on desktop
-const OrganizationInfoPanel: React.FC<OrganizationInfoPanelProps> = ({ organization }) => {
+const OrganizationInfoPanel: React.FC<{
+  organization: Organization;
+}> = ({ organization }) => {
   const classes = useStyles();
   return (
     <Card>
