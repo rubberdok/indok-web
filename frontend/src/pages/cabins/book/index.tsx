@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
 import Navbar from "@components/navbar/Navbar";
-import CabinAvailability from "@components/pages/cabins/CabinAvailability";
+import CheckInOut from "@components/pages/cabins/CheckInOut";
 import CabinContactInfo from "@components/pages/cabins/CabinContactInfo";
 import ContractDialog from "@components/pages/cabins/Popup/ContractDialog";
 import { QUERY_CABINS } from "@graphql/cabins/queries";
@@ -10,6 +10,8 @@ import { cabinOrderStepReady } from "@utils/cabins";
 import { isFormValid, validateInputForm } from "@utils/helpers";
 import { NextPage } from "next";
 import React, { useEffect, useState } from "react";
+import PaymentSite from "@components/pages/cabins/PaymentSite";
+import ReceiptSite from "@components/pages/cabins/ReceiptSite";
 
 interface StepReady {
   [step: number]: { ready: boolean; errortext: string };
@@ -77,6 +79,7 @@ const CabinBookingPage: NextPage = () => {
     setStepReady({
       ...stepReady,
       1: { ready: isFormValid(contactInfo), errortext: "Du må fylle ut alle felt for å gå videre" },
+      2: { ready: true, errortext: "" },
     });
   }, [contactInfo]);
 
@@ -85,7 +88,7 @@ const CabinBookingPage: NextPage = () => {
       case 0:
         // Velg hytte
         return cabinQuery.data ? (
-          <CabinAvailability
+          <CheckInOut
             allCabins={cabinQuery.data.cabins}
             chosenCabins={chosenCabins}
             setChosenCabins={setChosenCabins}
@@ -104,10 +107,11 @@ const CabinBookingPage: NextPage = () => {
         );
       case 2:
         // Betaling
-        return <Typography variant="h3">Betaling placeholder</Typography>;
+        return <PaymentSite chosenCabins={chosenCabins} datePick={datePick} contactInfo={contactInfo} />;
       case 3:
         // Kvittering
-        return <Typography variant="h3">Kvittering placeholder</Typography>;
+        return <ReceiptSite chosenCabins={chosenCabins} datePick={datePick} contactInfo={contactInfo} />;
+
       default:
         <Typography>Step not found</Typography>;
     }
@@ -158,7 +162,7 @@ const CabinBookingPage: NextPage = () => {
               placement="left"
               disableHoverListener={stepReady[activeStep].ready}
             >
-              <Box>
+              <Box display={activeStep == 3 ? "none" : "block"}>
                 <Button variant="contained" disabled={!stepReady[activeStep].ready} onClick={() => handleNextClick()}>
                   Neste
                 </Button>

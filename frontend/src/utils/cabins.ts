@@ -51,6 +51,9 @@ export const cabinOrderStepReady = (
   return { ready: true, errortext: "" };
 };
 
+export const toStringChosenCabins = (chosenCabins: Cabin[]) =>
+  chosenCabins.map((cabin, i) => (i > 0 ? " og " + cabin.name : cabin.name));
+
 export const calculatePrice = (chosenCabins: Cabin[], contactInfo: ContactInfo, datePick: DatePick) => {
   const internalPrice = contactInfo.numberIndok >= contactInfo.numberExternal;
   const pricePerNight = chosenCabins
