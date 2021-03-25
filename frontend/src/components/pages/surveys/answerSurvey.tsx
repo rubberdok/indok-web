@@ -37,9 +37,7 @@ const AnswerSurvey: React.FC<{ surveyId: string }> = ({ surveyId }) => {
       {data && (
         <Card>
           <CardContent>
-            <Typography variant="h1" component="h1">
-              {data.survey.name}
-            </Typography>
+            <Typography variant="h5">{data.survey.name}</Typography>
           </CardContent>
           {answers && (
             <Grid container direction="column">

@@ -5,7 +5,7 @@ import { useState } from "react";
 import { Survey, Question, QuestionVariables } from "@interfaces/surveys";
 import QuestionPreview from "@components/pages/surveys/surveyAdmin/questionPreview";
 import EditQuestion from "@components/pages/surveys/surveyAdmin/editQuestion";
-import { Button, Grid, makeStyles, Box, Card } from "@material-ui/core";
+import { Button, Grid, makeStyles, Box, Card, Typography } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   questionBox: {
@@ -108,7 +108,7 @@ const EditSurvey: React.FC<{ surveyId: string }> = ({ surveyId }) => {
     <>
       {data && (
         <>
-          <h3>{data.survey.name}</h3>
+          <Typography variant="h5">{data.survey.name}</Typography>
           <Grid item container direction="column">
             {data.survey.questions.map((question) => (
               <Box key={question.id} border={1} borderColor="primary" className={classes.questionBox}>

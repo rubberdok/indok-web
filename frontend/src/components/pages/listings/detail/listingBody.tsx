@@ -5,10 +5,6 @@ import { Card, CardContent, Grid, Typography, Hidden, makeStyles } from "@materi
 import dayjs from "dayjs";
 import nb from "dayjs/locale/nb";
 
-interface ListingBodyProps {
-  listing: Listing;
-}
-
 const useStyles = makeStyles((theme) => ({
   root: {
     marginBottom: theme.spacing(4),
@@ -20,7 +16,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 // component for the main body of a listing's detail
-const ListingBody: React.FC<ListingBodyProps> = ({ listing }) => {
+const ListingBody: React.FC<{
+  listing: Listing;
+}> = ({ listing }) => {
   const classes = useStyles();
 
   return (

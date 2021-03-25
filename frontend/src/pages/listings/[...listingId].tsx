@@ -2,11 +2,10 @@ import { useQuery } from "@apollo/client";
 import Layout from "@components/Layout";
 import { LISTING } from "@graphql/listings/queries";
 import { Listing } from "@interfaces/listings";
-import { Container, Hidden, makeStyles, Typography } from "@material-ui/core";
+import { Container, Hidden, makeStyles } from "@material-ui/core";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
-import { useState } from "react";
-import Hero from "@components/pages/listings/detail/hero";
+import ListingBanner from "@components/pages/listings/detail/listingBanner";
 import ListingBody from "@components/pages/listings/detail/listingBody";
 import dayjs from "dayjs";
 import nb from "dayjs/locale/nb";
@@ -43,16 +42,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-// the page to show details about a listing and its organization, and let the user apply to the listing
+// the page to show details about a listing and its organization
 const ListingPage: NextPage = () => {
   const { listingId } = useRouter().query;
   const { loading, error, data } = useQuery<{ listing: Listing }>(LISTING, {
     variables: { id: parseInt(listingId as string) },
   });
   const classes = useStyles();
-
-  // state to determine whether to show the survey (where the user applies to the listing)
-  const [surveyDisplayed, displaySurvey] = useState<boolean>(false);
 
   if (error) return <p>Error</p>;
   if (loading) return <p>Loading...</p>;
@@ -61,7 +57,7 @@ const ListingPage: NextPage = () => {
       {data && (
         <Layout>
           <Hidden smDown>
-            <Hero listing={data.listing} buttonText="Søk her" />
+            <ListingBanner listing={data.listing} />
           </Hidden>
           <Container className={classes.container}>
             <ListingBody listing={data.listing} />
