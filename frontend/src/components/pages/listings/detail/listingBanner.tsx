@@ -1,7 +1,7 @@
 import { Listing } from "@interfaces/listings";
 import { Button, Grid, Hidden, makeStyles, Typography } from "@material-ui/core";
 import ArrowForward from "@material-ui/icons/ArrowForward";
-import OpenInNewIcon from '@material-ui/icons/OpenInNew';
+import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import dayjs from "dayjs";
 import nb from "dayjs/locale/nb";
 import timezone from "dayjs/plugin/timezone";
@@ -43,10 +43,10 @@ const useStyles = makeStyles((theme) => ({
     "-webkit-box-orient": "vertical",
   },
   organizationName: {
-    [theme.breakpoints.down('md')]: {
-      fontSize: theme.typography.h6.fontSize
-    }
-  }
+    [theme.breakpoints.down("md")]: {
+      fontSize: theme.typography.h6.fontSize,
+    },
+  },
 }));
 
 /*
@@ -79,8 +79,13 @@ const ListingBanner: React.FC<{
                 justify="space-between"
                 className={`${classes.card} ${classes.cardContent}`}
               >
-                <Grid item style={{width: "100%"}}>
-                  <Typography variant="h5" component="h2" align="center" className={`${classes.organizationName} ${classes.descriptionText}`}>
+                <Grid item style={{ width: "100%" }}>
+                  <Typography
+                    variant="h5"
+                    component="h2"
+                    align="center"
+                    className={`${classes.organizationName} ${classes.descriptionText}`}
+                  >
                     {listing.organization?.name}
                   </Typography>
                 </Grid>
@@ -90,14 +95,13 @@ const ListingBanner: React.FC<{
                   </Typography>
                 </Grid>
                 <Grid item>
-                  <Button endIcon={<OpenInNewIcon />} href={`/about/organizations/${listing.organization?.slug}`} >
+                  <Button endIcon={<OpenInNewIcon />} href={`/about/organizations/${listing.organization?.slug}`}>
                     Les mer
                   </Button>
                 </Grid>
               </Grid>
             </Grid>
-          <Grid item xs={1}>
-          </Grid>
+            <Grid item xs={1}></Grid>
           </Hidden>
           <Grid
             container

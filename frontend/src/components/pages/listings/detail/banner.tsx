@@ -2,7 +2,7 @@ import { Listing } from "@interfaces/listings";
 import { Box, makeStyles } from "@material-ui/core";
 
 interface BannerProps {
-  listing: Listing
+  listing: Listing;
 }
 
 const useStyles = makeStyles(() => ({
@@ -24,22 +24,22 @@ const Banner: React.FC<BannerProps> = ({ listing }) => {
   const classes = useStyles();
   return (
     <>
-    {listing.hero ? (
-          <Box
-            className={`${classes.hero}`}
-            style={{
-              background: `url(${listing.hero})`,
-              backgroundPosition: "center",
-              backgroundSize: "cover",
-              backgroundRepeat: "no-repeat",
-              opacity: 0.5,
-            }}
-          />
-        ) : (
-          <Box className={`${classes.background} ${classes.hero}`} />
-        )}
-  </>
-  )
+      {listing.hero ? (
+        <Box
+          className={`${classes.hero}`}
+          style={{
+            background: `url(${listing.hero})`,
+            backgroundPosition: "center",
+            backgroundSize: "cover",
+            backgroundRepeat: "no-repeat",
+            opacity: 0.5,
+          }}
+        />
+      ) : (
+        <Box className={`${classes.background} ${classes.hero}`} />
+      )}
+    </>
+  );
 };
 
 export default Banner;

@@ -2,9 +2,12 @@ import { Answer } from "@interfaces/surveys";
 import {
   FormControl,
   FormControlLabel,
-  FormLabel, MenuItem,
+  FormLabel,
+  MenuItem,
   Radio,
-  RadioGroup, Select, TextField
+  RadioGroup,
+  Select,
+  TextField,
 } from "@material-ui/core";
 import AnswerCheckboxes from "./answerCheckboxes";
 
