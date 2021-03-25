@@ -8,13 +8,14 @@ export const QUERY_ALL_BOOKINGS = gql`
       surname
       phone
       receiverEmail
-      bookFrom
-      bookTo
+      checkIn
+      checkOut
       price
       cabins {
         id
         name
       }
+      timestamp
     }
   }
 `;
@@ -36,6 +37,9 @@ export const QUERY_CABINS = gql`
     cabins {
       id
       name
+      maxGuests
+      internalPrice
+      externalPrice
     }
   }
 `;

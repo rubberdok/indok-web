@@ -12,6 +12,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
+import { calculatePrice } from "@utils/cabins";
 import React from "react";
 import { DatePick } from "src/pages/cabins/book";
 
@@ -33,6 +34,7 @@ interface Contract2Props {
 const Contract2 = ({ chosenCabins, contactInfo, datePick }: Contract2Props) => {
   const currentTime = new Date().toLocaleString();
   const classes = useStyles();
+  const price = calculatePrice(chosenCabins, contactInfo, datePick);
 
   return (
     <>
@@ -61,7 +63,7 @@ const Contract2 = ({ chosenCabins, contactInfo, datePick }: Contract2Props) => {
             <Divider component="br" />
             Leieperiode: <b>{datePick.checkInDate}</b> - <b>{datePick.checkOutDate}</b> (yyyy-mm-dd)
             <Divider component="br" />
-            Leiesum: <b>__PRIS__</b> NOK innbetalt til konto 9235.28.31311 i forkant av leieperioden.
+            Leiesum: <b>{price}</b> NOK innbetalt til konto 9235.28.31311 i forkant av leieperioden.
           </Typography>
           <Typography variant="body1">
             Leietager betaler ikke depositum i forkant av leieperioden, men eventuelle skader på hytte eller inventar
