@@ -7,8 +7,6 @@ import {
   makeStyles,
   Grid,
   Chip,
-  Paper,
-  Box,
 } from "@material-ui/core";
 import People from "@material-ui/icons/People";
 
@@ -19,6 +17,7 @@ import nb from "dayjs/locale/nb";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import relativeTime from "dayjs/plugin/isSameOrAfter";
+import { Organization } from "@interfaces/organizations";
 dayjs.extend(timezone);
 dayjs.extend(utc);
 dayjs.extend(relativeTime);
@@ -145,7 +144,12 @@ const ListingCard: React.FC<ListingCardProps> = ({ listing }) => {
                 <Grid container item alignItems="center" justify="center" xs={3} sm={3} md={2}>
                   <Grid container item className={classes.logoBackdrop} alignItems="center" justify="center">
                     <Grid container item className={classes.logoContainer} alignItems="center" justify="center">
-                      <img src={listing.logo || "/nth.svg"} className={classes.logo} alt="Vervlogo" />
+                      <img 
+                        src={listing.organization ? `/img/${listing.organization.name.toLowerCase()}logo.png` : '/nth.sv'}
+                        className={classes.logo}
+                        alt="Organisasjonslogo"
+                        onError={(e) => (e.target.onerror = null, e.target.src = '/nth.svg')}
+                      />
                     </Grid>
                   </Grid>
                 </Grid>
