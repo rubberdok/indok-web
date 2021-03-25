@@ -5,7 +5,7 @@ import { useState } from "react";
 import { Survey, Question, QuestionVariables } from "@interfaces/surveys";
 import QuestionPreview from "@components/pages/surveys/surveyAdmin/questionPreview";
 import EditQuestion from "@components/pages/surveys/surveyAdmin/editQuestion";
-import { Button, Grid, makeStyles, Box, Card, Typography } from "@material-ui/core";
+import { Button, Grid, makeStyles, Box, Typography } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   questionBox: {
@@ -33,11 +33,13 @@ const EditSurvey: React.FC<{ surveyId: string }> = ({ surveyId }) => {
     // updates the cache upon creating the question, keeping the client consistent with the database
     update: (cache, { data }) => {
       const newQuestion = data?.createQuestion.question;
+      // reads the cached survey to which to add the question
       const cachedSurvey = cache.readQuery<{ survey: Survey }>({
         query: SURVEY,
         variables: { surveyId: surveyId },
       });
       if (cachedSurvey && newQuestion) {
+        // writes the new question to the survey
         cache.writeQuery({
           query: SURVEY,
           variables: { surveyId: surveyId },

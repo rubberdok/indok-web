@@ -25,7 +25,12 @@ const AnswerSurvey: React.FC<{ surveyId: string }> = ({ surveyId }) => {
   });
 
   // mutation to submit answers
-  const [submitAnswers] = useMutation(SUBMIT_ANSWERS);
+  const [submitAnswers] = useMutation<
+    // object returned from the mutation
+    { ok: boolean },
+    // variables of the mutation
+    { surveyId: string; answersData: { questionId: string; answer: string }[] }
+  >(SUBMIT_ANSWERS);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error</p>;
