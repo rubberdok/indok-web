@@ -114,8 +114,8 @@ const Article: NextPage<ArticleProps> = ({ post, frontmatter }) => {
                   <>
                     <Card key={item}>
                       <Box p={4}>
-                        <Typography variant="body2">{frontmatter.styre[item].navn}</Typography>
-                        <Typography variant="body2">
+                        <Typography variant="body1">{frontmatter.styre[item].navn}</Typography>
+                        <Typography variant="body1">
                           {frontmatter.styre[item].tittel} - {frontmatter.styre[item].mail}
                         </Typography>
                       </Box>
@@ -169,7 +169,7 @@ const HeadingRenderer = (props: { children: React.ReactNode }) => {
 
 const ParagraphRenderer = (props: { children: React.ReactNode }) => {
   return (
-    <Typography variant="body2" paragraph>
+    <Typography variant="body1" paragraph>
       {props.children}
     </Typography>
   );

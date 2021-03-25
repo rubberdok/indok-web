@@ -119,7 +119,7 @@ const OrganizationPage: NextPage<Props> = ({ posts }) => {
                   <CardActionArea className={classes.card}>
                     {logo ? <CardMedia className={classes.media} image={logo} /> : ""}
                     <Box>
-                      <Typography variant="body2">{title}</Typography>
+                      <Typography variant="body1">{title}</Typography>
                     </Box>
                   </CardActionArea>
                 </Link>
@@ -134,7 +134,7 @@ const OrganizationPage: NextPage<Props> = ({ posts }) => {
                   <CardActionArea className={classes.card}>
                     <CardMedia className={classes.media} image="/img/bindeleddetlogo.png" />
                     <Box>
-                      <Typography variant="body2" color="textPrimary">
+                      <Typography variant="body1" color="textPrimary">
                         Bindeleddet
                       </Typography>
                     </Box>
@@ -148,7 +148,7 @@ const OrganizationPage: NextPage<Props> = ({ posts }) => {
                   <CardActionArea className={classes.card}>
                     <CardMedia className={classes.media} image="/img/estiemlogo.png" />
                     <Box>
-                      <Typography variant="body2" color="textPrimary">
+                      <Typography variant="body1" color="textPrimary">
                         ESTIEM
                       </Typography>
                     </Box>
@@ -162,7 +162,7 @@ const OrganizationPage: NextPage<Props> = ({ posts }) => {
                   <CardActionArea className={classes.card}>
                     <CardMedia className={classes.media} image="/img/januslogo.png" />
                     <Box>
-                      <Typography variant="body2" color="textPrimary">
+                      <Typography variant="body1" color="textPrimary">
                         Janus
                       </Typography>
                     </Box>

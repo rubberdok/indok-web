@@ -78,21 +78,21 @@ const useStyles = makeStyles((theme) => ({
     position: "relative",
     left: 12,
     transition: "0.3s all ease",
-    fontWeight: 100,
+
+    ["& h3"]: {
+      fontWeight: 500,
+    },
 
     ["&:hover"]: {
       textDecoration: "none",
       left: 0,
     },
 
-    ["&:hover h2"]: {
+    ["&:hover h3"]: {
       fontWeight: 800,
     },
 
-    ["& h2, & svg"]: {
-      marginBottom: 16,
-      fontSize: 36,
-      fontWeight: 550,
+    ["& h3, & svg"]: {
       transition: "0.3s all ease",
     },
   },
@@ -111,7 +111,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   orgIcon: {
-    marginTop: 9,
+    marginBottom: 18,
     color: "rgb(0 0 0 / 55%)",
   },
   hide: {
@@ -182,12 +182,8 @@ const Hero: React.FC = () => {
             >
               <Typography variant="overline">Foreningen for studentene ved</Typography>
               <Fade duration={700} cascade triggerOnce direction="up">
-                <Typography style={{ color: "white" }} variant="h2">
-                  Industriell Økonomi{" "}
-                  <Hidden smDown>
-                    <br />
-                  </Hidden>
-                  og Teknologiledelse
+                <Typography style={{ color: "white" }} variant="h1">
+                  Industriell Økonomi og Teknologiledelse
                 </Typography>
                 <br />
                 <Link href="./about" passHref>
@@ -223,7 +219,9 @@ const Hero: React.FC = () => {
                       key={item.id}
                     >
                       <Box display="flex" alignItems="center">
-                        <Typography variant="h2">{item.title}</Typography>
+                        <Typography variant="h3" gutterBottom>
+                          {item.title}
+                        </Typography>
                         <NavigateNextIcon fontSize="large" className={classes.orgIcon} />
                       </Box>
                     </a>
