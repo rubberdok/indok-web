@@ -2,7 +2,7 @@ import { useQuery } from "@apollo/client";
 import Layout from "@components/Layout";
 import { LISTING } from "@graphql/listings/queries";
 import { Listing } from "@interfaces/listings";
-import { Container, Grid, makeStyles } from "@material-ui/core";
+import { Container, Grid, makeStyles, Hidden } from "@material-ui/core";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import ListingBanner from "@components/pages/listings/detail/listingBanner";
@@ -14,8 +14,10 @@ dayjs.locale(nb);
 
 const useStyles = makeStyles((theme) => ({
   container: {
-    padding: theme.spacing(4),
     paddingBottom: theme.spacing(2),
+    [theme.breakpoints.down("sm")]: {
+      marginTop: theme.spacing(4)
+    }
   },
 }));
 
@@ -33,7 +35,9 @@ const ListingPage: NextPage = () => {
     <>
       {data && (
         <Layout>
-          <Banner listing={data.listing} />
+          <Hidden smDown>
+            <Banner listing={data.listing} />
+          </Hidden>
           <Container className={classes.container}>
             <Grid container direction="column" spacing={4}>
               <Grid container item direction="row" justify="center">

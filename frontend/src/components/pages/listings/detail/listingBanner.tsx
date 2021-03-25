@@ -14,9 +14,11 @@ dayjs.locale(nb);
 
 const useStyles = makeStyles((theme) => ({
   cardRoot: {
-    marginTop: "-7%",
     position: "relative",
     zIndex: 10,
+    [theme.breakpoints.up("md")]: {
+      marginTop: "-7%",
+    }
   },
   cardContent: {
     padding: theme.spacing(4),
