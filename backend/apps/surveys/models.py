@@ -7,7 +7,6 @@ from django.db.models.constraints import CheckConstraint
 from django.db.models.fields import UUIDField
 from django.db.models.query_utils import Q
 from django.utils.translation import gettext_lazy as _
-from django.contrib.auth.models import Group
 
 from apps.organizations.models import Organization
 
@@ -16,7 +15,6 @@ class Survey(models.Model):
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE, null=True)
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=3000, blank=True, default="")
-    responsible_group = models.ForeignKey(Group, on_delete=models.CASCADE, null=True)
 
     def __str__(self) -> str:
         return f"{self.name}"
