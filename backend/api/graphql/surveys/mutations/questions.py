@@ -41,7 +41,8 @@ class CreateQuestion(graphene.Mutation):
     def mutate(self, info, question_data):
         question = Question()
         for k, v in question_data.items():
-            setattr(question, k, v)
+            if v is not None:
+                setattr(question, k, v)
         question.save()
         ok = True
         return CreateQuestion(question=question, ok=ok)
