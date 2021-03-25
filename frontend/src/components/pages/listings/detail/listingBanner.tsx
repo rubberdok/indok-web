@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import nb from "dayjs/locale/nb";
+import Link from "next/link";
 dayjs.extend(timezone);
 dayjs.extend(utc);
 dayjs.tz.setDefault("Europe/Oslo");
@@ -47,23 +48,22 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-interface HeroProps {
+/*
+  component for the banner on the listing detail page (with "hero image")
+  props: the listing for which to show the banner
+*/
+const ListingBanner: React.FC<{
   listing: Listing;
-  buttonText?: string;
-}
-
-const Hero: React.FC<HeroProps> = ({ listing, buttonText }) => {
+}> = ({ listing }) => {
   const classes = useStyles();
-  const buttonStyle = 2;
-  const fakeImage = true;
   return (
     <>
       <Box className={classes.root}>
-        {listing.hero || fakeImage ? (
+        {listing.hero ? (
           <Box
             className={`${classes.hero}`}
             style={{
-              background: `url(${fakeImage ? "/img/bindeleddet.jpg" : listing.hero})`,
+              background: `url(${listing.hero})`,
               backgroundPosition: "center",
               backgroundSize: "cover",
               backgroundRepeat: "no-repeat",
@@ -94,12 +94,12 @@ const Hero: React.FC<HeroProps> = ({ listing, buttonText }) => {
               >
                 <Grid item>
                   <Typography variant="h4" component="h2" align="center" gutterBottom>
-                    {listing.organization.name}
+                    {listing.organization?.name}
                   </Typography>
                 </Grid>
                 <Grid item>
                   <Typography variant="body2" component="span" align="center">
-                    {listing.organization.description}
+                    {listing.organization?.description}
                   </Typography>
                 </Grid>
               </Grid>
@@ -148,29 +148,19 @@ const Hero: React.FC<HeroProps> = ({ listing, buttonText }) => {
                         {dayjs(listing.deadline).format("DD. MMMM YYYY [kl.] HH:mm")}
                       </Typography>
                     </Grid>
-                    {buttonText && buttonStyle === 0 && (
-                      <Grid item>
-                        <Button variant="contained" color="primary" endIcon={<ArrowForward />}>
-                          {buttonText}
-                        </Button>
-                      </Grid>
-                    )}
-                  </Grid>
-                  {buttonText && buttonStyle === 1 && (
                     <Grid item>
-                      <Button variant="contained" endIcon={<ArrowForward />} color="primary" style={{ height: "100%" }}>
-                        Søk her
-                      </Button>
+                      {listing.url && (
+                        <Link href={listing.url}>
+                          <a>
+                            <Button variant="contained" color="primary" endIcon={<ArrowForward />}>
+                              Søk her
+                            </Button>
+                          </a>
+                        </Link>
+                      )}
                     </Grid>
-                  )}
-                </Grid>
-                {buttonText && buttonStyle === 2 && (
-                  <Grid item>
-                    <Button variant="contained" endIcon={<ArrowForward />} color="primary" style={{ width: "100%" }}>
-                      Søk her
-                    </Button>
                   </Grid>
-                )}
+                </Grid>
               </Grid>
             </Grid>
           </Grid>
@@ -180,4 +170,4 @@ const Hero: React.FC<HeroProps> = ({ listing, buttonText }) => {
   );
 };
 
-export default Hero;
+export default ListingBanner;
