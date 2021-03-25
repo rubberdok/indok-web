@@ -10,6 +10,8 @@ export interface Listing {
   endDatetime: string;
   url: string;
   slug: string;
+  hero?: string;
+  logo?: string;
   organization?: Organization;
   survey?: Survey;
 }
