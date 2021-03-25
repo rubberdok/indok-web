@@ -22,8 +22,8 @@ const useStyles = makeStyles((theme) => ({
   },
   descriptionText: {
     /* https://stackoverflow.com/questions/3922739/limit-text-length-to-n-lines-using-css */
-    /* Limits the description text to three lines. lines = maxHeight / lineHeight */ 
-    display: "inline-block", /* or inline-block */
+    /* Limits the description text to three lines. lines = maxHeight / lineHeight */
+    display: "inline-block" /* or inline-block */,
     textOverflow: "ellipsis",
     wordWrap: "break-word",
     overflow: "hidden",

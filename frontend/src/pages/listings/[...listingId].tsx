@@ -2,12 +2,7 @@ import { useQuery } from "@apollo/client";
 import Layout from "@components/Layout";
 import { LISTING } from "@graphql/listings/queries";
 import { Listing } from "@interfaces/listings";
-import {
-  Container,
-  Hidden,
-  makeStyles,
-  Typography,
-} from "@material-ui/core";
+import { Container, Hidden, makeStyles, Typography } from "@material-ui/core";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useState } from "react";
@@ -66,13 +61,10 @@ const ListingPage: NextPage = () => {
       {data && (
         <Layout>
           <Hidden smDown>
-            <Hero
-              listing={data.listing}
-              buttonText="Søk her"
-            />
+            <Hero listing={data.listing} buttonText="Søk her" />
           </Hidden>
           <Container className={classes.container}>
-              <ListingBody listing={data.listing} />
+            <ListingBody listing={data.listing} />
           </Container>
         </Layout>
       )}
