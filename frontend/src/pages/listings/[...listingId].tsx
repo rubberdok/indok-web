@@ -2,7 +2,7 @@ import { useQuery } from "@apollo/client";
 import Layout from "@components/Layout";
 import { LISTING } from "@graphql/listings/queries";
 import { Listing } from "@interfaces/listings";
-import { Container, Hidden, Grid, makeStyles } from "@material-ui/core";
+import { Container, Grid, makeStyles } from "@material-ui/core";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import ListingBanner from "@components/pages/listings/detail/listingBanner";
