@@ -11,6 +11,7 @@ import { isFormValid, validateInputForm } from "@utils/helpers";
 import { NextPage } from "next";
 import React, { useEffect, useState } from "react";
 import PaymentSite from "@components/pages/cabins/PaymentSite";
+import ReceiptSite from "@components/pages/cabins/ReceiptSite";
 
 interface StepReady {
   [step: number]: { ready: boolean; errortext: string };
@@ -78,6 +79,7 @@ const CabinBookingPage: NextPage = () => {
     setStepReady({
       ...stepReady,
       1: { ready: isFormValid(contactInfo), errortext: "Du må fylle ut alle felt for å gå videre" },
+      2: { ready: true, errortext: "" },
     });
   }, [contactInfo]);
 
@@ -101,7 +103,8 @@ const CabinBookingPage: NextPage = () => {
         return <PaymentSite chosenCabins={chosenCabins} datePick={datePick} contactInfo={contactInfo} />;
       case 3:
         // Kvittering
-        return <Typography variant="h3">Kvittering placeholder</Typography>;
+        return <ReceiptSite chosenCabins={chosenCabins} datePick={datePick} contactInfo={contactInfo} />;
+
       default:
         <Typography>Step not found</Typography>;
     }
@@ -152,7 +155,7 @@ const CabinBookingPage: NextPage = () => {
               placement="left"
               disableHoverListener={stepReady[activeStep].ready}
             >
-              <Box>
+              <Box display={activeStep == 3 ? "none" : "block"}>
                 <Button variant="contained" disabled={!stepReady[activeStep].ready} onClick={() => handleNextClick()}>
                   Neste
                 </Button>
