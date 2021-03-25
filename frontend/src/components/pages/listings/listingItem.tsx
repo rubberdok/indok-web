@@ -1,5 +1,15 @@
 import { Listing } from "@interfaces/listings";
-import { Card, CardActionArea, CardContent, CardMedia, Chip, Grid, makeStyles, Typography } from "@material-ui/core";
+import {
+  Box,
+  Card,
+  CardActionArea,
+  CardContent,
+  CardMedia,
+  Chip,
+  Grid,
+  makeStyles,
+  Typography,
+} from "@material-ui/core";
 import People from "@material-ui/icons/People";
 import dayjs from "dayjs";
 import nb from "dayjs/locale/nb";
@@ -16,25 +26,18 @@ dayjs.locale(nb);
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    padding: theme.spacing(0),
     width: "100%",
     height: "100%",
+    padding: 0,
   },
   logo: {
     objectFit: "contain",
-    position: "absolute",
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
     objectPosition: "center",
-    width: "100%",
-    height: "100%",
-  },
-  description: {
-    padding: theme.spacing(2),
-    paddingLeft: theme.spacing(4),
-    paddingRight: theme.spacing(4),
+    width: 112,
+    height: 112,
+    margin: "-50px auto 0",
+    marginBottom: theme.spacing(2),
+    background: theme.palette.background.paper,
   },
   descriptionText: {
     /* https://stackoverflow.com/a/13924997 */
@@ -44,21 +47,16 @@ const useStyles = makeStyles((theme) => ({
     "-webkit-line-clamp": 3 /* number of lines to show */,
     "-webkit-box-orient": "vertical",
     minHeight: "4em",
+    marginTop: theme.spacing(2),
   },
-  title: {},
   hero: {
-    marginBottom: 0,
-    maxHeight: "10em",
     height: "10em",
     objectFit: "cover",
-    position: "relative",
     opacity: 0.65,
-    zIndex: 0,
   },
   content: {
     paddingTop: 0,
     position: "relative",
-    zIndex: 10,
   },
   background: {
     background: "url('/nth.svg')",
@@ -68,34 +66,6 @@ const useStyles = makeStyles((theme) => ({
     backgroundPosition: "center",
     /* Primary color */
     backgroundColor: "rgba(11,60,60,0.5)",
-  },
-  deadline: {
-    ["&::before"]: {
-      color: theme.palette.primary.main,
-      content: "'Frist '",
-      fontWeight: "bold",
-    },
-  },
-  logoContainer: {
-    /* 
-    https://stackoverflow.com/a/51447865
-    Maintain a 1:1 aspect ratio on the logo content  
-    */
-    display: "inline-block",
-    position: "relative",
-    width: "100%",
-    "&::before": {
-      content: "''",
-      display: "block",
-      paddingTop: "100%",
-    },
-  },
-  logoBackdrop: {
-    marginTop: "-50%",
-    padding: 2,
-    backgroundColor: "white",
-    width: "100%",
-    maxWidth: "6em",
   },
 }));
 
@@ -126,73 +96,53 @@ const ListingItem: React.FC<{
               className={`${classes.hero} ${!listing.hero ? classes.background : ""}`}
             />
             <CardContent className={classes.content}>
-              <Grid container direction="column" alignItems="center">
-                <Grid container item alignItems="center" justify="center" xs={3}>
-                  <Grid container item className={classes.logoBackdrop} alignItems="center" justify="center">
-                    <Grid container item className={classes.logoContainer} alignItems="center" justify="center">
-                      <img
-                        src={
-                          listing.organization ? `/img/${listing.organization.name.toLowerCase()}logo.png` : "/nth.sv"
-                        }
-                        className={classes.logo}
-                        alt="Organisasjonslogo"
-                        onError={(e) => (((e.target as HTMLImageElement).onerror = null), ((e.target as HTMLIFrameElement).src = "/nth.svg"))}
+              <img
+                src={listing.organization ? `/img/${listing.organization.name.toLowerCase()}logo.png` : "/nth.sv"}
+                className={classes.logo}
+                alt="Organisasjonslogo"
+                onError={(e) => (
+                  ((e.target as HTMLImageElement).onerror = null), ((e.target as HTMLIFrameElement).src = "/nth.svg")
+                )}
+              />
+              <Box px={3} display="flex" flexDirection="column" justifyContent="space-between">
+                <Box overflow="hidden" textAlign="center" height="12em">
+                  <Typography variant="h5" component="h2">
+                    {listing.title}
+                  </Typography>
+                  <Typography variant="caption" component="p">
+                    <b>Frist: </b>
+                    {timestamp(listing.deadline)}
+                  </Typography>
+                  <Typography variant="body2" className={classes.descriptionText}>
+                    {listing.description}
+                  </Typography>
+                </Box>
+                <Grid container direction="row" justify="center" alignItems="center" spacing={2}>
+                  {["intervju", "søknad", "case"].map((chip) => (
+                    <Grid item key={chip}>
+                      <Chip
+                        label={chip}
+                        size="small"
+                        style={{
+                          fontSize: 12,
+                        }}
                       />
                     </Grid>
-                  </Grid>
-                </Grid>
-                <Grid
-                  container
-                  item
-                  justify="space-between"
-                  alignItems="center"
-                  direction="column"
-                  style={{ height: `100%` }}
-                >
-                  <Grid item className={classes.title}>
-                    <Typography variant="h5" component="h2" align="center">
-                      {listing.title}
-                    </Typography>
-                  </Grid>
-                  <Grid item>
-                    <Typography variant="caption" component="span" className={classes.deadline}>
-                      {timestamp(listing.deadline)}
-                    </Typography>
-                  </Grid>
-                  <Grid container item className={classes.description} justify="center">
-                    <Typography variant="body2" component="span" className={classes.descriptionText} align="center">
-                      {listing.description}
-                    </Typography>
-                  </Grid>
-                  <Grid container item direction="row" justify="center">
-                    <Grid container item direction="row" justify="center" alignItems="center" spacing={2}>
-                      {["intervju", "søknad", "case"].map((chip) => (
-                        <Grid item key={chip}>
-                          <Chip
-                            label={chip}
-                            size="small"
-                            style={{
-                              fontSize: 12,
-                            }}
-                          />
-                        </Grid>
-                      ))}
-                      {
-                        <Grid item>
-                          <Chip
-                            label={15}
-                            icon={<People />}
-                            size="small"
-                            style={{
-                              fontSize: 12,
-                            }}
-                          />
-                        </Grid>
-                      }
+                  ))}
+                  {
+                    <Grid item>
+                      <Chip
+                        label={15}
+                        icon={<People />}
+                        size="small"
+                        style={{
+                          fontSize: 12,
+                        }}
+                      />
                     </Grid>
-                  </Grid>
+                  }
                 </Grid>
-              </Grid>
+              </Box>
             </CardContent>
           </CardActionArea>
         </Link>
