@@ -3,6 +3,8 @@ from django.shortcuts import get_object_or_404
 import pytz
 import datetime
 
+from django.utils import timezone
+
 from .types import BookingType
 from apps.cabins.models import Booking as BookingModel
 from apps.cabins.models import Cabin as CabinModel
@@ -44,7 +46,7 @@ class CreateBooking(graphene.Mutation):
             check_in=check_in,
             check_out=check_out,
             price=price,
-            timestamp=datetime.datetime.now(tz=pytz.timezone("Europe/Amsterdam"))
+            timestamp=timezone.now()
         )
         booking.cabins.set(CabinModel.objects.filter(id__in=cabins))
         ok = True
