@@ -10,7 +10,6 @@ from .types import OrganizationType, MembershipType, RoleType
 from apps.organizations.models import Organization, Membership, Role
 import apps.organizations.permissions as perms
 
-
 class OrganizationInput(graphene.InputObjectType):
     name = graphene.String(required=False)
     description = graphene.String(required=False)
@@ -36,7 +35,6 @@ class CreateOrganization(graphene.Mutation):
         ok = True
         return CreateOrganization(organization=organization, ok=ok)
 
-
 class UpdateOrganization(graphene.Mutation):
     organization = graphene.Field(OrganizationType)
     ok = graphene.Boolean()
@@ -59,7 +57,6 @@ class UpdateOrganization(graphene.Mutation):
         ok = True
         return UpdateOrganization(organization=organization, ok=ok)
 
-
 class DeleteOrganization(graphene.Mutation):
     organization = graphene.Field(OrganizationType)
     ok = graphene.Boolean()
@@ -71,16 +68,14 @@ class DeleteOrganization(graphene.Mutation):
     def mutate(self, info, id):
         organization = Organization.objects.get(pk=id)
         organization.delete()
-
+        
         ok = True
         return DeleteOrganization(ok=ok)
-
 
 class MembershipInput(graphene.InputObjectType):
     user_id = graphene.ID()
     organization_id = graphene.ID()
     role_id = graphene.ID()
-
 
 class AssignMembership(graphene.Mutation):
     membership = graphene.Field(MembershipType)
@@ -98,7 +93,6 @@ class AssignMembership(graphene.Mutation):
         membership.save()
         return AssignMembership(membership=membership, ok=True)
 
-
 class RemoveMembership(graphene.Mutation):
     removed_member = graphene.Field(UserType)
     ok = graphene.Boolean()
@@ -113,10 +107,8 @@ class RemoveMembership(graphene.Mutation):
         membership.delete()
         return RemoveMembership(removed_member=user, ok=True)
 
-
 class RoleInput(graphene.InputObjectType):
     name = graphene.String()
-
 
 class CreateRole(graphene.Mutation):
     role = graphene.Field(RoleType)
@@ -124,7 +116,7 @@ class CreateRole(graphene.Mutation):
 
     class Arguments:
         role_data = RoleInput(required=True)
-
+    
     def mutate(self, info, role_data):
         role = Role(name=role_data["name"])
         role.save()

@@ -10,17 +10,7 @@ class OrganizationType(DjangoObjectType):
 
     class Meta:
         model = Organization
-        fields = [
-            "id",
-            "name",
-            "slug",
-            "color",
-            "description",
-            "parent",
-            "children",
-            "users",
-            "events",
-        ]
+        fields = ["id", "name", "slug", "color", "description", "parent", "children", "users", "events"]
 
     class PermissionDecorators:
         @staticmethod
@@ -29,18 +19,14 @@ class OrganizationType(DjangoObjectType):
                 if organization.users.filter(pk=info.context.user.id).exists():
                     return resolver(organization, info)
                 else:
-                    raise PermissionError(
-                        f"Du må være medlem av organisasjonen {organization.name} for å gjøre dette kallet"
-                    )
+                    raise PermissionError(f"Du må være medlem av organisasjonen {organization.name} for å gjøre dette kallet")
 
             return wrapper
 
     @staticmethod
     def resolve_absolute_slug(organization: Organization, info):
         slug_list = [organization.slug]
-        while (
-            organization := organization.parent
-        ) and organization.parent != organization:
+        while (organization := organization.parent) and organization.parent != organization:
             print(slug_list)
             slug_list.insert(0, organization.slug)
         return "/".join(slug_list)
@@ -67,14 +53,10 @@ class MembershipType(DjangoObjectType):
         @staticmethod
         def is_in_organization(resolver):
             def wrapper(membership: Membership, info):
-                if membership.organization.users.filter(
-                    pk=info.context.user.id
-                ).exists():
+                if membership.organization.users.filter(pk=info.context.user.id).exists():
                     return resolver(membership, info)
                 else:
-                    raise PermissionError(
-                        f"Du må være medlem av organisasjonen {membership.organization.name} for å gjøre dette kallet"
-                    )
+                    raise PermissionError(f"Du må være medlem av organisasjonen {membership.organization.name} for å gjøre dette kallet")
 
             return wrapper
 
@@ -87,3 +69,4 @@ class RoleType(DjangoObjectType):
     class Meta:
         model = Role
         fields = ["id", "name"]
+        
