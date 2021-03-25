@@ -18,25 +18,23 @@ const ListingBody: React.FC<{
   const classes = useStyles();
 
   return (
-    <Grid container direction="column" justify="flex-start" alignItems="center">
-      <Grid container item xs={10} direction="column" alignItems="stretch">
-        <Card className={classes.root}>
-          <CardContent>
-            <Grid container direction="column" justify="flex-start">
-              <Grid item>
-                <Typography variant="h4" component="h2" gutterBottom>
-                  Beskrivelse
-                </Typography>
-              </Grid>
-              <Grid item>
-                <Typography variant="body1" component="span" paragraph className={classes.description}>
-                  {listing.description}
-                </Typography>
-              </Grid>
+    <Grid container item xs={10} direction="column" alignItems="stretch" style={{paddingLeft:16, paddingRight: 16}}>
+      <Card className={classes.root}>
+        <CardContent>
+          <Grid container direction="column" justify="flex-start">
+            <Grid item>
+              <Typography variant="h4" component="h2" gutterBottom>
+                Beskrivelse
+              </Typography>
             </Grid>
-          </CardContent>
-        </Card>
-      </Grid>
+            <Grid item>
+              <Typography variant="body1" component="span" paragraph className={classes.description}>
+                {listing.description}
+              </Typography>
+            </Grid>
+          </Grid>
+        </CardContent>
+      </Card>
     </Grid>
   );
 };

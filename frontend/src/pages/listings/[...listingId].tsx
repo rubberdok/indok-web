@@ -17,30 +17,6 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(4),
     paddingBottom: theme.spacing(2),
   },
-  title: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  content: {
-    flexDirection: "column",
-    padding: theme.spacing(4),
-  },
-  wrapper: {
-    flexDirection: "row",
-    padding: theme.spacing(4),
-  },
-  root: {
-    spacing: 2,
-    [theme.breakpoints.down("sm")]: {
-      flexDirection: "column",
-      justifyContent: "flex-start",
-    },
-    [theme.breakpoints.up("md")]: {
-      justifyContent: "space-between",
-      flexDirection: "row-reverse",
-    },
-  },
 }));
 
 // the page to show details about a listing and its organization
@@ -60,10 +36,10 @@ const ListingPage: NextPage = () => {
           <Banner listing={data.listing} />
           <Container className={classes.container}>
             <Grid container direction="column" spacing={4}>
-              <Grid item>
+              <Grid container item direction="row" justify="center">
                 <ListingBanner listing={data.listing} />
               </Grid>
-              <Grid item>
+              <Grid container item direction="row" justify="center">
                 <ListingBody listing={data.listing} />
               </Grid>
             </Grid>
