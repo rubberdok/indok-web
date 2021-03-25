@@ -6,8 +6,8 @@ export interface Booking {
   surname: string;
   phone: number;
   receiverEmail: string;
-  bookFrom: string;
-  bookTo: string;
+  checkIn: string;
+  checkOut: string;
   price: number;
   cabins: Cabin[];
 }
@@ -15,6 +15,9 @@ export interface Booking {
 export interface Cabin {
   id: string;
   name: string;
+  maxGuests: number;
+  internalPrice: number;
+  externalPrice: number;
 }
 
 export interface BookingFromTo {

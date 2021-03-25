@@ -97,7 +97,14 @@ const CabinBookingPage: NextPage = () => {
         ) : null;
       case 1:
         // Velg Kontaktinfo
-        return <CabinContactInfo contactInfo={contactInfo} setContactInfo={setContactInfo} validations={validations} />;
+        return (
+          <CabinContactInfo
+            contactInfo={contactInfo}
+            setContactInfo={setContactInfo}
+            validations={validations}
+            chosenCabins={chosenCabins}
+          />
+        );
       case 2:
         // Betaling
         return <PaymentSite chosenCabins={chosenCabins} datePick={datePick} contactInfo={contactInfo} />;

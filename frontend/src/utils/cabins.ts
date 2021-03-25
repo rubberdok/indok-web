@@ -1,4 +1,5 @@
-import { Cabin, InputValueTypes } from "@interfaces/cabins";
+import { Cabin, ContactInfo, InputValueTypes } from "@interfaces/cabins";
+import dayjs from "dayjs";
 import { DatePick } from "src/pages/cabins/book";
 import validator from "validator";
 
@@ -52,3 +53,16 @@ export const cabinOrderStepReady = (
 
 export const toStringChosenCabins = (chosenCabins: Cabin[]) =>
   chosenCabins.map((cabin, i) => (i > 0 ? " og " + cabin.name : cabin.name));
+
+export const calculatePrice = (chosenCabins: Cabin[], contactInfo: ContactInfo, datePick: DatePick) => {
+  const internalPrice = contactInfo.numberIndok >= contactInfo.numberExternal;
+  const pricePerNight = chosenCabins
+    .map((cabin) => (internalPrice ? cabin.internalPrice : cabin.externalPrice))
+    .reduce((sum, currentPrice) => sum + currentPrice);
+
+  if (datePick.checkInDate && datePick.checkOutDate) {
+    const checkOutDate = dayjs(datePick.checkOutDate);
+    const rangeLength = checkOutDate.diff(datePick.checkInDate, "day");
+    return pricePerNight * rangeLength;
+  }
+};
