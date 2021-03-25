@@ -24,9 +24,19 @@ interface ContractDialogProps {
   datePick: DatePick;
   chosenCabins: Cabin[];
   contactInfo: ContactInfo;
+  activeStep: number;
+  setActiveStep: Dispatch<SetStateAction<number>>;
 }
 
-const ContractDialog = ({ modalData, setModalData, datePick, chosenCabins, contactInfo }: ContractDialogProps) => {
+const ContractDialog = ({
+  modalData,
+  setModalData,
+  datePick,
+  chosenCabins,
+  contactInfo,
+  activeStep,
+  setActiveStep,
+}: ContractDialogProps) => {
   const classes = useStyles();
 
   const handleClose = () => {
@@ -35,6 +45,7 @@ const ContractDialog = ({ modalData, setModalData, datePick, chosenCabins, conta
 
   const handleAccept = () => {
     setModalData({ displayPopUp: false, contractViewed: true });
+    setActiveStep(activeStep + 1);
   };
 
   return (
