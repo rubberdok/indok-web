@@ -136,7 +136,7 @@ const ListingItem: React.FC<{
                         }
                         className={classes.logo}
                         alt="Organisasjonslogo"
-                        onError={(e) => ((e.target.onerror = null), (e.target.src = "/nth.svg"))}
+                        onError={(e) => (((e.target as HTMLImageElement).onerror = null), ((e.target as HTMLIFrameElement).src = "/nth.svg"))}
                       />
                     </Grid>
                   </Grid>
