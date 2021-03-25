@@ -5,7 +5,7 @@ import { User } from "@interfaces/users";
 import { Grid } from "@material-ui/core";
 import { NextPage } from "next";
 import React, { Dispatch, SetStateAction, useEffect } from "react";
-import { InputFields } from "../InputFields/NewInputFields";
+import { InputFields } from "../InputFields/InputFields";
 
 interface ContractInfoProps {
   contactInfo: ContactInfo;

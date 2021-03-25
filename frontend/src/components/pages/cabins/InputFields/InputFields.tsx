@@ -1,7 +1,7 @@
-import { ContactInfoValidations } from "@interfaces/cabins";
-import { User } from "@interfaces/users";
+import { ContactInfo, InputFieldsEvent, ContactInfoValidations } from "@interfaces/cabins";
 import {
   createStyles,
+  Divider,
   FormControl,
   Grid,
   InputLabel,
@@ -9,115 +9,110 @@ import {
   MenuItem,
   Select,
   TextField,
-  Theme,
+  Typography,
 } from "@material-ui/core";
+import theme from "@styles/theme";
 import { range } from "@utils/helpers";
-import React, { ChangeEvent } from "react";
+import React from "react";
 
-const useStyles = makeStyles((theme: Theme) =>
+interface Props {
+  contactInfo: ContactInfo;
+  validations: ContactInfoValidations | undefined;
+  onChange: (name: string, event: InputFieldsEvent) => void;
+  errorTrigger: boolean;
+}
+
+const useStyles = makeStyles(() =>
   createStyles({
-    formControl: {
-      margin: theme.spacing(1),
-      minWidth: "200px",
-    },
     selectEmpty: {
       marginTop: theme.spacing(2),
+    },
+    center: {
+      margin: "auto",
     },
     border: {
       border: "1px solid red",
     },
+    blue: {
+      border: "1px solid blue",
+    },
+    input: {
+      width: "500px",
+    },
   })
 );
 
-interface InputFieldsProps {
-  onChange: (
-    name: string,
-    event:
-      | ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-      | React.ChangeEvent<{ name?: string | undefined; value: unknown }>
-  ) => void;
-  userData: User | undefined;
-  cabins: string[];
-  numberIndok: number;
-  numberExternal: number;
-  validations: ContactInfoValidations | undefined;
-}
-
-export const InputFields: React.FC<InputFieldsProps> = ({
-  onChange,
-  userData,
-  cabins,
-  numberIndok,
-  numberExternal,
-  validations,
-}) => {
+export const InputFields: React.FC<Props> = ({ contactInfo, validations, onChange, errorTrigger }) => {
   const classes = useStyles();
-
-  const bjornenBeds = 20;
-  const oksenBeds = 20;
-  const totalGuestsAllowed =
-    cabins?.length == 2 ? bjornenBeds + oksenBeds : cabins?.includes("Bjørnen") ? bjornenBeds : oksenBeds;
+  const totalGuestsAllowed = 40; // change
 
   return (
-    <Grid container spacing={5}>
-      <Grid item xs={12} sm={6}>
-        <TextField
-          error={!validations?.firstName && validations?.triggerError}
-          type="text"
-          label="Fornavn"
-          value={userData?.firstName}
-          required
-          name="firstname"
-          onChange={(e) => onChange("firstname", e)}
-        />
-      </Grid>
-      <Grid item xs={12} sm={6}>
-        <TextField
-          error={!validations?.lastName && validations?.triggerError}
-          type="text"
-          id="standard-basic"
-          label="Etternavn"
-          value={userData?.lastName}
-          name="lastname"
-          required
-          onChange={(e) => onChange("surname", e)}
-        />
-      </Grid>
-      <Grid item xs={12} sm={6}>
-        <TextField
-          error={!validations?.email && validations?.triggerError}
-          type="email"
-          id="standard-basic"
-          label="E-postadresse"
-          value={userData?.email}
-          name="email"
-          required
-          onChange={(e) => onChange("receiverEmail", e)}
-        />
-      </Grid>
-      <Grid item xs={12} sm={6}>
-        <TextField
-          error={!validations?.phone && validations?.triggerError}
-          type="number"
-          id="standard-basic"
-          label="Mobilnummer"
-          name="phone"
-          required
-          onChange={(e) => onChange("phone", e)}
-        />
-      </Grid>
-      <Grid item xs={12} xl={12}>
-        <Grid container direction={"row"}>
-          <Grid item md={6} xs={12}>
-            <FormControl className={classes.formControl}>
+    <>
+      <Grid container item alignItems="center" spacing={3} lg={8} md={12} className={classes.center}>
+        <Grid item>
+          <Typography variant="h3">Kontaktinfo</Typography>
+          <Divider component="hr" />
+        </Grid>
+        <Grid item container spacing={5}>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              type="text"
+              label="Fornavn"
+              required
+              name="firstName"
+              onChange={(e) => onChange("firstName", e)}
+              error={!validations?.firstName && errorTrigger}
+              value={contactInfo.firstName}
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              type="text"
+              label="Etternavn"
+              name="lastName"
+              required
+              onChange={(e) => onChange("lastName", e)}
+              error={!validations?.lastName && errorTrigger}
+              value={contactInfo.lastName}
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              type="email"
+              label="E-postadresse"
+              name="email"
+              required
+              onChange={(e) => onChange("email", e)}
+              error={!validations?.email && errorTrigger}
+              value={contactInfo.email}
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              type="number"
+              label="Mobilnummer"
+              name="phone"
+              required
+              onChange={(e) => onChange("phone", e)}
+              error={!validations?.phone && errorTrigger}
+              value={contactInfo.phone}
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <FormControl fullWidth>
               <InputLabel>Antall indøkere</InputLabel>
               <Select
                 defaultValue={0}
                 onChange={(e) => onChange("numberIndok", e)}
                 name="numberIndok"
-                error={!validations?.numberIndok && validations?.triggerError}
+                error={!validations?.numberIndok && errorTrigger}
+                value={contactInfo.numberIndok}
               >
-                {range(0, totalGuestsAllowed - numberExternal).map((val: number) => (
+                {range(0, totalGuestsAllowed - contactInfo.numberExternal).map((val: number) => (
                   <MenuItem key={val} value={val}>
                     {val}
                   </MenuItem>
@@ -125,16 +120,18 @@ export const InputFields: React.FC<InputFieldsProps> = ({
               </Select>
             </FormControl>
           </Grid>
-          <Grid item md={6} xs={12}>
-            <FormControl className={classes.formControl}>
+
+          <Grid item xs={12} sm={6}>
+            <FormControl fullWidth>
               <InputLabel>Antall eksterne</InputLabel>
               <Select
                 defaultValue={0}
                 onChange={(e) => onChange("numberExternal", e)}
                 name="numberExternal"
-                error={!validations?.numberExternal && validations?.triggerError}
+                error={!validations?.numberExternal && errorTrigger}
+                value={contactInfo.numberExternal}
               >
-                {range(0, totalGuestsAllowed - numberIndok).map((val: number) => (
+                {range(0, totalGuestsAllowed - contactInfo.numberIndok).map((val: number) => (
                   <MenuItem key={val} value={val}>
                     {val}
                   </MenuItem>
@@ -144,6 +141,6 @@ export const InputFields: React.FC<InputFieldsProps> = ({
           </Grid>
         </Grid>
       </Grid>
-    </Grid>
+    </>
   );
 };
