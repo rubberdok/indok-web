@@ -49,3 +49,6 @@ export const cabinOrderStepReady = (
   }
   return { ready: true, errortext: "" };
 };
+
+export const toStringChosenCabins = (chosenCabins: Cabin[]) =>
+  chosenCabins.map((cabin, i) => (i > 0 ? " og " + cabin.name : cabin.name));

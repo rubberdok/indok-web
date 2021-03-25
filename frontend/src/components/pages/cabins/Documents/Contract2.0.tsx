@@ -12,6 +12,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
+import { toStringChosenCabins } from "@utils/cabins";
 import React from "react";
 import { DatePick } from "src/pages/cabins/book";
 
@@ -55,9 +56,7 @@ const Contract2 = ({ chosenCabins, contactInfo, datePick }: Contract2Props) => {
 
         <Box m={2}>
           <Typography variant="body1">
-            Gjeldende Leieobjekt(er):{" "}
-            <b>{chosenCabins.map((cabin, i) => (i > 0 ? " og " + cabin.name : cabin.name))}</b>, Landsbygrenda, 7340
-            Oppdal
+            Gjeldende Leieobjekt(er): <b>{toStringChosenCabins(chosenCabins)}</b>, Landsbygrenda, 7340 Oppdal
             <Divider component="br" />
             Leieperiode: <b>{datePick.checkInDate}</b> - <b>{datePick.checkOutDate}</b> (yyyy-mm-dd)
             <Divider component="br" />

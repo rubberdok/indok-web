@@ -5,6 +5,7 @@ import { DatePick } from "src/pages/cabins/book";
 import dayjs from "dayjs";
 import { ReactNode } from "react";
 import { TypographyProps } from "@material-ui/core/Typography";
+import { toStringChosenCabins } from "@utils/cabins";
 
 interface Props {
   chosenCabins: Cabin[];
@@ -36,7 +37,7 @@ const CabinBookingStatus: NextPage<Props> = ({ chosenCabins, datePick, contactIn
       info: chosenCabins,
       renderComponent: (
         <InfoText>
-          {cabinText ?? "Du booker nå"} <Box className={classes.bold}>{chosenCabins.map((cabin) => cabin.name)}</Box>
+          {cabinText ?? "Du booker nå"} <Box className={classes.bold}>{toStringChosenCabins(chosenCabins)}</Box>
         </InfoText>
       ),
     },
