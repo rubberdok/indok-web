@@ -18,7 +18,6 @@ class QuestionTypeEnum(graphene.Enum):
 
 
 class BaseQuestionInput(graphene.InputObjectType):
-    survey_id = graphene.ID()
     question_type = graphene.Field(QuestionTypeEnum)
     question = graphene.String()
     description = graphene.String()

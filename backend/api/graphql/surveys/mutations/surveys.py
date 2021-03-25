@@ -12,13 +12,26 @@ class SurveyInput(graphene.InputObjectType):
     description = graphene.String(required=False)
 
 
+class BaseSurveyInput(graphene.InputObjectType):
+    name = graphene.String()
+    organization_id = graphene.ID()
+    description = graphene.String()
+    group_id = graphene.ID()
+
+
+class CreateSurveyInput(BaseSurveyInput):
+    name = graphene.String(required=True)
+    organization_id = graphene.ID(required=True)
+    group_id = graphene.ID(required=True)
+
+
 class CreateSurvey(graphene.Mutation):
     survey = graphene.Field(SurveyType)
     ok = graphene.Boolean()
 
     class Arguments:
-        survey_data = SurveyInput(required=False)
-        listing_id = graphene.ID(required=False)
+        listing_id = graphene.ID()
+        survey_data = CreateSurveyInput(required=True)
 
     @login_required
     @permission_required("surveys.add_survey")
@@ -40,7 +53,7 @@ class UpdateSurvey(graphene.Mutation):
 
     class Arguments:
         id = graphene.ID()
-        survey_data = SurveyInput(required=False)
+        survey_data = BaseSurveyInput(required=True)
 
     @login_required
     @permission_required("surveys.update_survey")
