@@ -2,7 +2,7 @@ import { Question, QuestionVariables } from "@interfaces/surveys";
 import { MutationFunctionOptions, FetchResult } from "@apollo/client";
 import { useState } from "react";
 import QuestionTypePreview from "@components/pages/surveys/surveyAdmin/questionTypePreview";
-import { Grid, Button, TextField, Select, MenuItem, Radio, Checkbox } from "@material-ui/core";
+import { Grid, Button, TextField, Select, MenuItem, Radio, Checkbox, InputLabel } from "@material-ui/core";
 import questionTypes from "@components/pages/surveys/surveyAdmin/questionTypes";
 
 // component to edit a question on a survey
@@ -75,23 +75,24 @@ const EditQuestion: React.FC<{
           });
         }}
       />
-      <br />
-      <Select
-        value={question.questionType}
-        onChange={(e) => {
-          e.preventDefault();
-          setQuestion({
-            ...question,
-            questionType: e.target.value as string,
-          });
-        }}
-      >
-        {Object.entries(questionTypes).map(([questionType, label]) => (
-          <MenuItem key={questionType} value={questionType}>
-            {label}
-          </MenuItem>
-        ))}
-      </Select>
+      <Grid item>
+        <Select
+          value={question.questionType}
+          onChange={(e) => {
+            e.preventDefault();
+            setQuestion({
+              ...question,
+              questionType: e.target.value as string,
+            });
+          }}
+        >
+          {Object.entries(questionTypes).map(([questionType, label]) => (
+            <MenuItem key={questionType} value={questionType}>
+              {label}
+            </MenuItem>
+          ))}
+        </Select>
+      </Grid>
       {question.questionType === "CHECKBOXES" ||
       question.questionType === "MULTIPLE_CHOICE" ||
       question.questionType === "DROPDOWN" ? (
@@ -134,8 +135,10 @@ const EditQuestion: React.FC<{
       ) : (
         <QuestionTypePreview question={question} />
       )}
-      <Grid container direction="row" justify="space-evenly">
+      <Grid container direction="row">
         <Button
+          variant="contained"
+          color="primary"
           onClick={(e) => {
             e.preventDefault();
             updateQuestion({
@@ -156,6 +159,7 @@ const EditQuestion: React.FC<{
           Lagre spørsmål
         </Button>
         <Button
+          variant="contained"
           onClick={(e) => {
             e.preventDefault();
             setInactive();

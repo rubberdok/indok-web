@@ -8,10 +8,11 @@ const QuestionPreview: React.FC<{
   setActive: () => void;
 }> = ({ question, setActive }) => {
   return (
-    <Grid>
+    <Grid container direction="column">
       <Grid container direction="row" justify="space-between">
         {question.question}
         <Button
+          variant="contained"
           onClick={(e) => {
             e.preventDefault();
             setActive();

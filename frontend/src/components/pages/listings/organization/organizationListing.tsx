@@ -50,6 +50,8 @@ const OrganizationListing: React.FC<{ listing: Listing }> = ({ listing }) => {
       <Typography>{listing.description}</Typography>
       {listing.survey ? (
         <Button
+          variant="contained"
+          color="primary"
           onClick={(e) => {
             e.preventDefault();
             if (surveyData && !listing.survey) {

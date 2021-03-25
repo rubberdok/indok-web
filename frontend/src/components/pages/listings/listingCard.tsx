@@ -1,4 +1,15 @@
-import { Card, CardContent, CardMedia, CardActionArea, Typography, makeStyles, Grid, Chip, Paper, Box } from "@material-ui/core";
+import {
+  Card,
+  CardContent,
+  CardMedia,
+  CardActionArea,
+  Typography,
+  makeStyles,
+  Grid,
+  Chip,
+  Paper,
+  Box,
+} from "@material-ui/core";
 import People from "@material-ui/icons/People";
 
 import Link from "next/link";
@@ -8,11 +19,11 @@ import nb from "dayjs/locale/nb";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import relativeTime from "dayjs/plugin/isSameOrAfter";
-dayjs.extend(timezone)
-dayjs.extend(utc)
-dayjs.extend(relativeTime)
-dayjs.tz.setDefault("Europe/Oslo")
-dayjs.locale(nb)
+dayjs.extend(timezone);
+dayjs.extend(utc);
+dayjs.extend(relativeTime);
+dayjs.tz.setDefault("Europe/Oslo");
+dayjs.locale(nb);
 
 interface ListingCardProps {
   listing: Listing;
@@ -45,12 +56,11 @@ const useStyles = makeStyles((theme) => ({
     overflow: "hidden",
     textOverflow: "ellipsis",
     display: "-webkit-box",
-    "-webkit-line-clamp": 3, /* number of lines to show */
+    "-webkit-line-clamp": 3 /* number of lines to show */,
     "-webkit-box-orient": "vertical",
     minHeight: "4em",
   },
-  title: {
-  },
+  title: {},
   hero: {
     marginBottom: 0,
     maxHeight: "10em",
@@ -72,14 +82,14 @@ const useStyles = makeStyles((theme) => ({
     backgroundSize: "cover",
     backgroundPosition: "center",
     /* Primary color */
-    backgroundColor: "rgba(11,60,60,0.5)"
+    backgroundColor: "rgba(11,60,60,0.5)",
   },
   deadline: {
     ["&::before"]: {
       color: theme.palette.primary.main,
       content: "'Frist '",
       fontWeight: "bold",
-    }
+    },
   },
   logoContainer: {
     /* 
@@ -93,7 +103,7 @@ const useStyles = makeStyles((theme) => ({
       content: "''",
       display: "block",
       paddingTop: "100%",
-    }
+    },
   },
   logoBackdrop: {
     marginTop: "-50%",
@@ -101,22 +111,21 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "white",
     width: "100%",
     maxWidth: "6em",
-  }
+  },
 }));
-
 
 const timestamp = (datetime: string) => {
   /**
    * Returns: monday 23:59 if < 2 days remaining, 02. february 1999 otherwise
    */
-  const now = dayjs()
-  const deadline = dayjs(datetime)
+  const now = dayjs();
+  const deadline = dayjs(datetime);
   if (now.add(2, "day").isSameOrAfter(deadline)) {
-    return deadline.format("dddd HH:mm")
+    return deadline.format("dddd HH:mm");
   } else {
-    return deadline.format("DD. MMMM YYYY [kl.] HH:mm")
+    return deadline.format("DD. MMMM YYYY [kl.] HH:mm");
   }
-} 
+};
 
 const ListingCard: React.FC<ListingCardProps> = ({ listing }) => {
   const classes = useStyles();
@@ -125,20 +134,30 @@ const ListingCard: React.FC<ListingCardProps> = ({ listing }) => {
       <Card className={classes.root}>
         <Link href={`listings/${listing.id}/${listing.slug}/`} passHref>
           <CardActionArea className={classes.root}>
-            <CardMedia component="img" image={listing.hero ? listing.hero : ""} className={`${classes.hero} ${!listing.hero ? classes.background : ""}`} />
-            
+            <CardMedia
+              component="img"
+              image={listing.hero ? listing.hero : ""}
+              className={`${classes.hero} ${!listing.hero ? classes.background : ""}`}
+            />
+
             <CardContent className={classes.content}>
-            
               <Grid container direction="column" alignItems="center">
                 <Grid container item alignItems="center" justify="center" xs={3} sm={3} md={2}>
-                    <Grid container item className={classes.logoBackdrop} alignItems="center" justify="center">
-                      <Grid container item className={classes.logoContainer} alignItems="center" justify="center">
-                        <img src={listing.logo || "/nth.svg"} className={classes.logo} />
-                      </Grid>
+                  <Grid container item className={classes.logoBackdrop} alignItems="center" justify="center">
+                    <Grid container item className={classes.logoContainer} alignItems="center" justify="center">
+                      <img src={listing.logo || "/nth.svg"} className={classes.logo} alt="Vervlogo" />
                     </Grid>
+                  </Grid>
                 </Grid>
 
-                <Grid container item justify="space-between" alignItems="center" direction="column" style={{height: `100%`}}>
+                <Grid
+                  container
+                  item
+                  justify="space-between"
+                  alignItems="center"
+                  direction="column"
+                  style={{ height: `100%` }}
+                >
                   <Grid item className={classes.title}>
                     <Typography variant="h5" component="h2" align="center">
                       {listing.title}
@@ -152,36 +171,37 @@ const ListingCard: React.FC<ListingCardProps> = ({ listing }) => {
                   </Grid>
 
                   <Grid container item className={classes.description} justify="center">
-                      <Typography
-                        variant="body2"
-                        component="span"
-                        className={classes.descriptionText}
-                        align="center"
-                      >
-                        {listing.description}
-                      </Typography>
+                    <Typography variant="body2" component="span" className={classes.descriptionText} align="center">
+                      {listing.description}
+                    </Typography>
                   </Grid>
                   <Grid container item direction="row" justify="center">
                     <Grid container item direction="row" justify="center" alignItems="center" spacing={2}>
                       {["intervju", "søknad", "case"].map((chip) => (
-                            <Grid item>
-                              <Chip label={chip} size="small" style={{
-                                fontSize: 12,
-                              }} />
-                            </Grid>
-                          )
-                        )
-                      }
-                      { 
+                        <Grid item key={chip}>
+                          <Chip
+                            label={chip}
+                            size="small"
+                            style={{
+                              fontSize: 12,
+                            }}
+                          />
+                        </Grid>
+                      ))}
+                      {
                         <Grid item>
-                          <Chip label={15} icon={<People />} size="small" style={{
-                            fontSize: 12,
-                          }}/>
+                          <Chip
+                            label={15}
+                            icon={<People />}
+                            size="small"
+                            style={{
+                              fontSize: 12,
+                            }}
+                          />
                         </Grid>
                       }
                     </Grid>
                   </Grid>
-
                 </Grid>
               </Grid>
             </CardContent>
