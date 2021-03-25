@@ -15,7 +15,7 @@ const Demo: NextPage = () => {
           e.preventDefault();
           createSurvey({
             variables: {
-              descriptiveName: "Test",
+              name: "Test",
               description: "",
             },
           });

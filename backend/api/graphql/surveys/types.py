@@ -95,7 +95,7 @@ class SurveyType(DjangoObjectType):
         model = Survey
         fields = [
             "id",
-            "descriptive_name",
+            "name",
             "description",
             "organization",
         ]

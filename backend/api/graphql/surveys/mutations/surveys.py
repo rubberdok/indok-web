@@ -7,7 +7,7 @@ from ..types import SurveyType
 
 
 class SurveyInput(graphene.InputObjectType):
-    descriptive_name = graphene.String(required=False)
+    name = graphene.String(required=False)
     organization_id = graphene.ID(required=False)
     description = graphene.String(required=False)
 
