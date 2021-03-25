@@ -34,3 +34,7 @@ class User(AbstractUser):
             return 5 - (self.graduation_year - current_year)
         else:
             return 6 - (self.graduation_year - current_year)
+
+
+def get_anonymous_user_instance(User):
+    return User(feide_userid="AnonymousUser")
