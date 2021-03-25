@@ -8,22 +8,17 @@ const theme = createMuiTheme({
     ...typography,
   },
   overrides: {
-    MuiInputBase: {
-      root: {
-        ...typography.body2,
-      },
-    },
-    MuiFormLabel: {
-      root: {
-        ...typography.body2,
-      },
-    },
     MuiTypography: {
       gutterBottom: {
         marginBottom: 32,
       },
       paragraph: {
         marginBottom: 32,
+      },
+    },
+    MuiBreadcrumbs: {
+      root: {
+        ...typography.overline,
       },
     },
     MuiToolbar: {
@@ -40,20 +35,19 @@ const theme = createMuiTheme({
     MuiButtonBase: {
       root: {
         justifyContent: "none",
-        padding: "16px 24px",
-        fontWeight: 600,
+        //padding: "16px 24px",
         textTransform: "none",
+        fontWeight: 600,
       },
     },
     MuiButton: {
       root: {
         padding: "16px 32px",
-        fontWeight: 600,
-        fontSize: 14,
         textTransform: "none",
+        fontWeight: 600,
       },
       outlined: {
-        padding: "16px 32px",
+        //padding: "16px 32px",
         border: "2px solid rgb(0 0 0 / 10%)",
       },
       outlinedPrimary: {
@@ -81,14 +75,6 @@ const theme = createMuiTheme({
     },
     secondary: {
       main: "#11cb5f",
-    },
-  },
-  props: {
-    MuiTypography: {
-      variant: "body2",
-    },
-    MuiList: {
-      dense: true,
     },
   },
   shape: {
