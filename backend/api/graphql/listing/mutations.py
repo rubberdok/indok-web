@@ -23,10 +23,12 @@ class CreateListingInput(BaseListingInput):
     organization_id = graphene.ID(required=True)
     deadline = graphene.DateTime(required=True)
 
+
 class CreateListing(graphene.Mutation):
     """
     Creates a new listing
     """
+
     ok = graphene.Boolean()
     listing = graphene.Field(ListingType)
 
@@ -40,16 +42,22 @@ class CreateListing(graphene.Mutation):
 
         for k, v in listing_data.items():
             setattr(listing, k, v)
-        setattr(listing, "end_datetime", listing_data["deadline"] + datetime.timedelta(days=30))
-        setattr(listing, "slug", slugify(listing_data['title']))
+        setattr(
+            listing,
+            "end_datetime",
+            listing_data["deadline"] + datetime.timedelta(days=30),
+        )
+        setattr(listing, "slug", slugify(listing_data["title"]))
 
         listing.save()
         return CreateListing(listing=listing, ok=True)
+
 
 class DeleteListing(graphene.Mutation):
     """
     Deletes the listing with the given ID
     """
+
     ok = graphene.Boolean()
     listing_id = graphene.ID()
 
@@ -66,6 +74,7 @@ class DeleteListing(graphene.Mutation):
         listing_id = kwargs["id"]
         listing.delete()
         return DeleteListing(ok=True, listing_id=listing_id)
+
 
 class UpdateListing(graphene.Mutation):
     listing = graphene.Field(ListingType)

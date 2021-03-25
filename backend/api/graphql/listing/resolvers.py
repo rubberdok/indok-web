@@ -7,9 +7,9 @@ class ListingResolvers:
     def resolve_listings(self, info, search=None):
         if search:
             filter = (
-                Q(title__icontains=search) |
-                Q(description__icontains=search) |
-                Q(organization__name__icontains=search)
+                Q(title__icontains=search)
+                | Q(description__icontains=search)
+                | Q(organization__name__icontains=search)
             )
             return Listing.objects.filter(filter)
         return Listing.objects.filter(deadline__gte=timezone.now())

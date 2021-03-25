@@ -16,15 +16,18 @@ class QuestionTypeEnum(graphene.Enum):
     SLIDER = "SLIDER"
     FILE_UPLOAD = "FILE_UPLOAD"
 
+
 class BaseQuestionInput(graphene.InputObjectType):
     survey_id = graphene.ID()
     question_type = graphene.Field(QuestionTypeEnum)
     question = graphene.String()
     description = graphene.String()
 
+
 class CreateQuestionInput(BaseQuestionInput):
     survey_id = graphene.ID(required=True)
     question = graphene.String(required=True)
+
 
 class CreateQuestion(graphene.Mutation):
     ok = graphene.Boolean()
@@ -43,6 +46,7 @@ class CreateQuestion(graphene.Mutation):
         ok = True
         return CreateQuestion(question=question, ok=ok)
 
+
 class UpdateQuestion(graphene.Mutation):
     ok = graphene.Boolean()
     question = graphene.Field(QuestionType)
@@ -57,10 +61,14 @@ class UpdateQuestion(graphene.Mutation):
             question = Question.objects.get(pk=id)
         except Question.DoesNotExist:
             return UpdateQuestion(question=None, ok=False)
-        for k, v, in question_data.items():
+        for (
+            k,
+            v,
+        ) in question_data.items():
             setattr(question, k, v)
         question.save()
         return UpdateQuestion(question=question, ok=True)
+
 
 class DeleteQuestion(graphene.Mutation):
     ok = graphene.Boolean()
@@ -81,9 +89,11 @@ class DeleteQuestion(graphene.Mutation):
         ok = True
         return DeleteQuestion(ok=ok, deleted_id=deleted_id)
 
+
 class AnswerInput(graphene.InputObjectType):
     question_id = graphene.ID(required=True)
     answer = graphene.String(required=True)
+
 
 class DeleteAnswer(graphene.Mutation):
     ok = graphene.Boolean()
@@ -97,9 +107,9 @@ class DeleteAnswer(graphene.Mutation):
     def mutate(self, info, uuid):
         user = info.context.user
         try:
-          answer = user.answers.get(pk=uuid)
+            answer = user.answers.get(pk=uuid)
         except Answer.DoesNotExist as e:
-          return DeleteAnswer(deleted_uuid=None, ok=False)
+            return DeleteAnswer(deleted_uuid=None, ok=False)
         deleted_uuid = answer.pk
         if answer.question.mandatory:
             return DeleteAnswer(deleted_uuid=None, ok=False)
@@ -107,9 +117,9 @@ class DeleteAnswer(graphene.Mutation):
         ok = True
         return DeleteAnswer(ok=ok, deleted_uuid=deleted_uuid)
 
+
 class SubmitOrUpdateAnswers(graphene.Mutation):
     ok = graphene.Boolean()
-
 
     class Arguments:
         survey_id = graphene.ID(required=True)
@@ -141,13 +151,18 @@ class SubmitOrUpdateAnswers(graphene.Mutation):
         except Survey.DoesNotExist:
             raise KeyError(f"The survey with id {survey_id} does not exist.")
 
-        response, _ = Response.objects.get_or_create(survey_id=survey_id, responder=user)
+        response, _ = Response.objects.get_or_create(
+            survey_id=survey_id, responder=user
+        )
 
-        answers = {int(answer_data["question_id"]): answer_data["answer"] for answer_data in answers_data}
+        answers = {
+            int(answer_data["question_id"]): answer_data["answer"]
+            for answer_data in answers_data
+        }
 
         if survey:
             mandatory_questions = survey.mandatory_questions
-    
+
             # Update existing answers
             existing_answers = set(response.answers)
             for answer in existing_answers:
@@ -158,17 +173,26 @@ class SubmitOrUpdateAnswers(graphene.Mutation):
                     del answers[qid]
 
             Answer.objects.bulk_update(existing_answers, ["answer"])
-        
+
             new_answers = set(answers)
-            updated_answers = set(existing_answers.values_list("question__id", flat=True))
+            updated_answers = set(
+                existing_answers.values_list("question__id", flat=True)
+            )
 
-            if not mandatory_questions.issubset(temp := updated_answers.union(new_answers)):
+            if not mandatory_questions.issubset(
+                temp := updated_answers.union(new_answers)
+            ):
                 # Not all mandatory questions have been answered
-                raise AssertionError(f"Not all mandatory questions have been answered, expected {mandatory_questions}, got {temp}")
+                raise AssertionError(
+                    f"Not all mandatory questions have been answered, expected {mandatory_questions}, got {temp}"
+                )
 
-            Answer.objects.bulk_create([
-                Answer(response=response, question_id=question_id, answer=answer) for question_id, answer in answers.items()
-            ])
+            Answer.objects.bulk_create(
+                [
+                    Answer(response=response, question_id=question_id, answer=answer)
+                    for question_id, answer in answers.items()
+                ]
+            )
             return SubmitOrUpdateAnswers(ok=True)
         return SubmitOrUpdateAnswers(ok=False)
 
@@ -178,18 +202,19 @@ class DeleteAnswersToSurvey(graphene.Mutation):
 
     class Arguments:
         survey_id = graphene.ID()
-    
+
     @login_required
     @permission_required("surveys.delete_answer")
     def mutate(self, info, survey_id):
         user = info.context.user
         Response.objects.get(survey_id=survey_id, responder=user).delete()
-        return DeleteAnswersToSurvey(ok = True)
+        return DeleteAnswersToSurvey(ok=True)
 
 
 class OptionInput(graphene.InputObjectType):
     answer = graphene.String(required=True)
     id = graphene.ID()
+
 
 class CreateUpdateAndDeleteOptions(graphene.Mutation):
     ok = graphene.Boolean()
@@ -200,7 +225,9 @@ class CreateUpdateAndDeleteOptions(graphene.Mutation):
         option_data = graphene.List(OptionInput)
 
     @login_required
-    @permission_required(["surveys.add_option", "surveys.update_option", "surveys.delete_option"])
+    @permission_required(
+        ["surveys.add_option", "surveys.update_option", "surveys.delete_option"]
+    )
     def mutate(self, info, question_id, option_data):
         """Bulk operation to refresh the options to a given question. Has three main operations:
         (1): Creates new options for inputs without an option_id
@@ -229,17 +256,15 @@ class CreateUpdateAndDeleteOptions(graphene.Mutation):
                 updated_option.answer = data["answer"]
                 updated_options.append(updated_option)
             else:
-                new_options.append(Option(answer=data["answer"], question_id=question_id))
+                new_options.append(
+                    Option(answer=data["answer"], question_id=question_id)
+                )
 
         Option.objects.bulk_update(updated_options, fields=["answer"])
         Option.objects.bulk_create(new_options)
 
-        return CreateUpdateAndDeleteOptions(options=[updated_option for updated_option in updated_options] + new_options, ok=True)
-
-
-
-        
-        
-
-
-
+        return CreateUpdateAndDeleteOptions(
+            options=[updated_option for updated_option in updated_options]
+            + new_options,
+            ok=True,
+        )

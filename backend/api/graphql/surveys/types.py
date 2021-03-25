@@ -22,13 +22,9 @@ class AnswerType(DjangoObjectType):
 
     class Meta:
         model = Answer
-        fields = [
-            "answer",
-            "question",
-            "uuid"
-        ]
+        fields = ["answer", "question", "uuid"]
         description = "A user's answer to a question."
-    
+
     @staticmethod
     @login_required
     def resolve_user(answer, info):
@@ -36,18 +32,14 @@ class AnswerType(DjangoObjectType):
         # TODO: Add row level permissions
         return answer.response.respondent
 
+
 class ResponseType(DjangoObjectType):
     answers = graphene.List(AnswerType)
     id = graphene.ID(source="uuid")
 
     class Meta:
         model = Response
-        field = [
-            "uuid",
-            "respondent",
-            "survey",
-            "status"
-        ]
+        field = ["uuid", "respondent", "survey", "status"]
         description = "A response instance that contains information about a user's response to a survey."
 
     @staticmethod
@@ -81,16 +73,17 @@ class QuestionType(DjangoObjectType):
 
     @staticmethod
     @login_required
-    def resolve_answers(root: Question, info, user_id: int=None):
+    def resolve_answers(root: Question, info, user_id: int = None):
         qs = root.answers
         if user_id:
             return qs.filter(user__pk=user_id).distinct()
         return qs.all()
-    
+
     @staticmethod
     @login_required
     def resolve_answer(root: Question, info, user_id: int):
         return root.answers.filter(user__pk=user_id).first()
+
 
 class SurveyType(DjangoObjectType):
     questions = graphene.List(QuestionType)
@@ -114,7 +107,7 @@ class SurveyType(DjangoObjectType):
 
     @staticmethod
     @login_required
-    def resolve_responders(root: Survey, info, user_id: int=None):
+    def resolve_responders(root: Survey, info, user_id: int = None):
         # TODO: Row level permissions
         if info.context.user.is_superuser:
             q = Q(responses__survey=root)
@@ -123,7 +116,7 @@ class SurveyType(DjangoObjectType):
             return get_user_model().objects.filter(q).distinct()
         else:
             raise NotImplementedError("Dette kallet er ikke implementert enda")
-    
+
     @staticmethod
     @login_required
     def resolve_responder(root: Survey, info, user_id: int):

@@ -3,7 +3,6 @@ from graphene_django import DjangoObjectType
 
 
 class ListingType(DjangoObjectType):
-
     class Meta:
         model = Listing
         fields = [
