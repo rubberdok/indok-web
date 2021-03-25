@@ -2,10 +2,11 @@ import { useQuery } from "@apollo/client";
 import Layout from "@components/Layout";
 import { LISTING } from "@graphql/listings/queries";
 import { Listing } from "@interfaces/listings";
-import { Container, Hidden, makeStyles } from "@material-ui/core";
+import { Container, Hidden, Grid, makeStyles } from "@material-ui/core";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import ListingBanner from "@components/pages/listings/detail/listingBanner";
+import Banner from "@components/pages/listings/detail/banner";
 import ListingBody from "@components/pages/listings/detail/listingBody";
 import dayjs from "dayjs";
 import nb from "dayjs/locale/nb";
@@ -56,11 +57,16 @@ const ListingPage: NextPage = () => {
     <>
       {data && (
         <Layout>
-          <Hidden smDown>
-            <ListingBanner listing={data.listing} />
-          </Hidden>
+          <Banner listing={data.listing} />
           <Container className={classes.container}>
-            <ListingBody listing={data.listing} />
+            <Grid container direction="column" spacing={4}>
+              <Grid item>
+                <ListingBanner listing={data.listing} />
+              </Grid>
+              <Grid item>
+                <ListingBody listing={data.listing} />
+              </Grid>
+            </Grid>
           </Container>
         </Layout>
       )}

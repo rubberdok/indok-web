@@ -9,4 +9,5 @@ export interface Organization {
   children?: Organization[];
   events?: Event[];
   listings?: Listing[];
+  slug: string;
 }

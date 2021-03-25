@@ -13,7 +13,7 @@ export const LISTINGS = gql`
       slug
       organization {
         name
-        color
+        slug
       }
     }
   }
@@ -32,7 +32,7 @@ export const LISTING = gql`
       organization {
         name
         description
-        color
+        slug
       }
       survey {
         id

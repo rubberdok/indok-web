@@ -1,9 +1,6 @@
-import classes from "*.module.css";
 import { Listing } from "@interfaces/listings";
 import { Card, CardContent, Grid, Typography, Hidden, makeStyles } from "@material-ui/core";
 
-import dayjs from "dayjs";
-import nb from "dayjs/locale/nb";
 
 const useStyles = makeStyles((theme) => ({
   root: {
