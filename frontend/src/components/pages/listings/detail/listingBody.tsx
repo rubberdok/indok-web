@@ -1,7 +1,6 @@
 import { Listing } from "@interfaces/listings";
 import { Card, CardContent, Grid, makeStyles, Typography } from "@material-ui/core";
 
-
 const useStyles = makeStyles((theme) => ({
   root: {
     marginBottom: theme.spacing(4),
