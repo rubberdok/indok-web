@@ -63,11 +63,13 @@ const ListingPage: NextPage = () => {
           <Hidden mdUp>
             <Paper className={classes.bottom}>
               <Grid container direction="row" justify="space-between" alignItems="center">
-                <Grid item xs>
-                  <Button size="small" endIcon={<OpenInNewIcon />} href={`/about/organizations/${data.listing.organization.slug}/`}>
-                    {data.listing.organization.name.slice(0, 20)}
-                  </Button>
-                </Grid>
+                {data.listing.organization &&
+                  <Grid item xs>
+                    <Button size="small" endIcon={<OpenInNewIcon />} href={`/about/organizations/${data.listing.organization.slug}/`}>
+                      {data.listing.organization.name.slice(0, 20)}
+                    </Button>
+                  </Grid>
+                }
                 <Hidden smUp>
                   {data.listing.url &&
                     <Grid item>
