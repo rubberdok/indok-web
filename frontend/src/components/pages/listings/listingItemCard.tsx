@@ -1,17 +1,6 @@
-import { CardContent, makeStyles, Grid, Card, Typography, Chip, CardMedia, CardActionArea } from "@material-ui/core";
+import { makeStyles, Grid, Card, Typography, Chip, CardMedia, CardActionArea } from "@material-ui/core";
 import People from "@material-ui/icons/People";
 import Link from "next/link";
-
-interface ListingItemCardProps {
-  title: string;
-  subtitle?: string;
-  survey?: boolean;
-  number?: number;
-  img: string;
-  chips: string[];
-  id: string;
-  slug: string;
-}
 
 const useStyles = makeStyles((theme) => ({
   media: {
@@ -35,7 +24,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ListingItemCard: React.FC<ListingItemCardProps> = ({ title, subtitle, img, number, chips, id, slug }) => {
+// alternative view of ListingItem
+// currently not used, but may be used in the future
+const ListingItemCard: React.FC<{
+  title: string;
+  subtitle?: string;
+  survey?: boolean;
+  number?: number;
+  img: string;
+  chips: string[];
+  id: string;
+  slug: string;
+}> = ({ title, subtitle, img, number, chips, id, slug }) => {
   const classes = useStyles();
   return (
     <>
