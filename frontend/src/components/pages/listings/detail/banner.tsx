@@ -5,7 +5,7 @@ interface BannerProps {
   listing: Listing
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   hero: {
     width: "100%",
     maxHeight: "25vh",
