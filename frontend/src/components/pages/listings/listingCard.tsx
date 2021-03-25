@@ -141,7 +141,7 @@ const ListingCard: React.FC<ListingCardProps> = ({ listing }) => {
 
             <CardContent className={classes.content}>
               <Grid container direction="column" alignItems="center">
-                <Grid container item alignItems="center" justify="center" xs={3} sm={3} md={2}>
+                <Grid container item alignItems="center" justify="center" xs={3}>
                   <Grid container item className={classes.logoBackdrop} alignItems="center" justify="center">
                     <Grid container item className={classes.logoContainer} alignItems="center" justify="center">
                       <img 
