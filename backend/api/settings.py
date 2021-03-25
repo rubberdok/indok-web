@@ -131,7 +131,6 @@ AUTHENTICATION_BACKENDS = [
 # https://django-guardian.readthedocs.io/en/stable/userguide/custom-user-model.html#anonymous-user-creation
 GUARDIAN_GET_INIT_ANONYMOUS_USER = "apps.users.models.get_anonymous_user_instance"
 
-
 DATAPORTEN_ID = env("DATAPORTEN_ID")
 DATAPORTEN_SECRET = env("DATAPORTEN_SECRET")
 DATAPORTEN_REDIRECT_URI = env("DATAPORTEN_REDIRECT_URI")

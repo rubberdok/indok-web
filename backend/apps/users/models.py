@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from guardian.conf import settings as guardian_settings
 from phonenumber_field.modelfields import PhoneNumberField
 import datetime
 
@@ -37,4 +38,6 @@ class User(AbstractUser):
 
 
 def get_anonymous_user_instance(User):
-    return User(feide_userid="AnonymousUser")
+    anonymous_username = guardian_settings.ANONYMOUS_USER_NAME
+    attributes = {"feide_userid": anonymous_username, User.USERNAME_FIELD: anonymous_username}
+    return User(**attributes)
