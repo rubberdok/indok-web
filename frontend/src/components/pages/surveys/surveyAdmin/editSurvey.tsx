@@ -5,11 +5,21 @@ import { useState } from "react";
 import { Survey, Question, QuestionVariables } from "@interfaces/surveys";
 import QuestionPreview from "@components/pages/surveys/surveyAdmin/questionPreview";
 import EditQuestion from "@components/pages/surveys/surveyAdmin/editQuestion";
-import { Button, Grid } from "@material-ui/core";
+import { Button, Grid, makeStyles, Box, Card } from "@material-ui/core";
+
+const useStyles = makeStyles((theme) => ({
+  questionBox: {
+    padding: theme.spacing(1),
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1),
+  },
+}));
 
 // component to edit surveys (for example the applications to listings)
 // props: ID of the survey to edit
 const EditSurvey: React.FC<{ surveyId: string }> = ({ surveyId }) => {
+  const classes = useStyles();
+
   // fetches the survey
   const { loading, error, data } = useQuery<{ survey: Survey }>(SURVEY, {
     variables: { surveyId: surveyId },
@@ -100,38 +110,42 @@ const EditSurvey: React.FC<{ surveyId: string }> = ({ surveyId }) => {
         <>
           <h3>{data.survey.name}</h3>
           <Grid item container direction="column">
-            {data.survey.questions.map((question) =>
-              question === activeQuestion ? (
-                <EditQuestion
-                  oldQuestion={question}
-                  updateQuestion={updateQuestion}
-                  deleteQuestion={deleteQuestion}
-                  setInactive={() => setActiveQuestion(undefined)}
-                />
-              ) : (
-                <QuestionPreview
-                  question={question}
-                  setActive={() => {
-                    if (activeQuestion) {
-                      updateQuestion({
-                        variables: {
-                          id: activeQuestion.id,
-                          question: activeQuestion.question,
-                          description: activeQuestion.description,
-                          questionType: activeQuestion.questionType,
-                          options: activeQuestion.options.map((option) => ({
-                            answer: option.answer,
-                            ...(option.id ? { id: option.id } : {}),
-                          })),
-                        },
-                      });
-                    }
-                    setActiveQuestion(question);
-                  }}
-                />
-              )
-            )}
+            {data.survey.questions.map((question) => (
+              <Box key={question.id} border={1} borderColor="primary" className={classes.questionBox}>
+                {question === activeQuestion ? (
+                  <EditQuestion
+                    oldQuestion={question}
+                    updateQuestion={updateQuestion}
+                    deleteQuestion={deleteQuestion}
+                    setInactive={() => setActiveQuestion(undefined)}
+                  />
+                ) : (
+                  <QuestionPreview
+                    question={question}
+                    setActive={() => {
+                      if (activeQuestion) {
+                        updateQuestion({
+                          variables: {
+                            id: activeQuestion.id,
+                            question: activeQuestion.question,
+                            description: activeQuestion.description,
+                            questionType: activeQuestion.questionType,
+                            options: activeQuestion.options.map((option) => ({
+                              answer: option.answer,
+                              ...(option.id ? { id: option.id } : {}),
+                            })),
+                          },
+                        });
+                      }
+                      setActiveQuestion(question);
+                    }}
+                  />
+                )}
+              </Box>
+            ))}
             <Button
+              variant="contained"
+              color="primary"
               onClick={(e) => {
                 e.preventDefault();
                 createQuestion({

@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
   },
   description: {
     wordBreak: "break-word",
-  }
+  },
 }));
 
 // component for the main body of a listing's detail
@@ -39,13 +39,12 @@ const ListingBody: React.FC<ListingBodyProps> = ({ listing }) => {
                   {listing.description}
                 </Typography>
               </Grid>
-
             </Grid>
           </CardContent>
         </Card>
       </Grid>
     </Grid>
-  )
+  );
 };
 
 export default ListingBody;

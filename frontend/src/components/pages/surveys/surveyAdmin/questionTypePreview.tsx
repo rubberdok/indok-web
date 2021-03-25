@@ -14,7 +14,7 @@ const QuestionTypePreview: React.FC<{
       return (
         <RadioGroup>
           {question.options.map((option, index) => (
-            <FormControlLabel key={index} label={option.answer} control={<Radio disabled />} />
+            <FormControlLabel value={null} key={index} label={option.answer} control={<Radio disabled />} />
           ))}
         </RadioGroup>
       );
