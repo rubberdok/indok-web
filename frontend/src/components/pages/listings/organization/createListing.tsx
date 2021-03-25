@@ -54,11 +54,13 @@ const CreateListing: React.FC<{
     // updates the cache upon creating the listing, so it can show up instantly
     update: (cache, { data }) => {
       const newListing = data?.createListing.listing;
+      // reads the cached Organization on which the listing should be added
       const cachedOrg = cache.readQuery<{ organization: Organization }>({
         query: GET_ORGANIZATION,
         variables: { orgId: parseInt(organization.id) },
       });
       if (data?.createListing?.ok && newListing && cachedOrg) {
+        // writes the new listing to the cached organization's listings
         cache.writeQuery({
           query: GET_ORGANIZATION,
           variables: { orgId: parseInt(organization.id) },

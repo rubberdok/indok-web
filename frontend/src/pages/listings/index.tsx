@@ -3,7 +3,7 @@ import Layout from "@components/Layout";
 import { useQuery } from "@apollo/client";
 import { LISTINGS } from "@graphql/listings/queries";
 import { Listing } from "@interfaces/listings";
-import ListingCard from "@components/pages/listings/listingCard";
+import ListingItem from "@components/pages/listings/listingItem";
 import { Container, Grid, makeStyles, Typography, Hidden } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
@@ -40,17 +40,17 @@ const ListingsPage: NextPage = () => {
               <>
                 <Hidden smDown>
                   <Grid container item key={listing.id} xs={5}>
-                    <ListingCard listing={listing} />
+                    <ListingItem listing={listing} />
                   </Grid>
                 </Hidden>
                 <Hidden mdUp xsDown>
                   <Grid container item key={listing.id} xs={7}>
-                    <ListingCard listing={listing} />
+                    <ListingItem listing={listing} />
                   </Grid>
                 </Hidden>
                 <Hidden smUp>
                   <Grid container item key={listing.id} xs={10}>
-                    <ListingCard listing={listing} />
+                    <ListingItem listing={listing} />
                   </Grid>
                 </Hidden>
               </>

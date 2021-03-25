@@ -1,13 +1,4 @@
-import {
-  Card,
-  CardContent,
-  CardMedia,
-  CardActionArea,
-  Typography,
-  makeStyles,
-  Grid,
-  Chip,
-} from "@material-ui/core";
+import { Card, CardContent, CardMedia, CardActionArea, Typography, makeStyles, Grid, Chip } from "@material-ui/core";
 import People from "@material-ui/icons/People";
 
 import Link from "next/link";
@@ -17,16 +8,11 @@ import nb from "dayjs/locale/nb";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import relativeTime from "dayjs/plugin/isSameOrAfter";
-import { Organization } from "@interfaces/organizations";
 dayjs.extend(timezone);
 dayjs.extend(utc);
 dayjs.extend(relativeTime);
 dayjs.tz.setDefault("Europe/Oslo");
 dayjs.locale(nb);
-
-interface ListingCardProps {
-  listing: Listing;
-}
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -114,9 +100,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const timestamp = (datetime: string) => {
-  /**
-   * Returns: monday 23:59 if < 2 days remaining, 02. february 1999 otherwise
-   */
+  // returns monday 23:59 if < 2 days remaining, 02. february 1999 otherwise
   const now = dayjs();
   const deadline = dayjs(datetime);
   if (now.add(2, "day").isSameOrAfter(deadline)) {
@@ -126,7 +110,10 @@ const timestamp = (datetime: string) => {
   }
 };
 
-const ListingCard: React.FC<ListingCardProps> = ({ listing }) => {
+// component for listing item in overview of listings
+const ListingItem: React.FC<{
+  listing: Listing;
+}> = ({ listing }) => {
   const classes = useStyles();
   return (
     <>
@@ -138,22 +125,22 @@ const ListingCard: React.FC<ListingCardProps> = ({ listing }) => {
               image={listing.hero ? listing.hero : ""}
               className={`${classes.hero} ${!listing.hero ? classes.background : ""}`}
             />
-
             <CardContent className={classes.content}>
               <Grid container direction="column" alignItems="center">
                 <Grid container item alignItems="center" justify="center" xs={3}>
                   <Grid container item className={classes.logoBackdrop} alignItems="center" justify="center">
                     <Grid container item className={classes.logoContainer} alignItems="center" justify="center">
-                      <img 
-                        src={listing.organization ? `/img/${listing.organization.name.toLowerCase()}logo.png` : '/nth.sv'}
+                      <img
+                        src={
+                          listing.organization ? `/img/${listing.organization.name.toLowerCase()}logo.png` : "/nth.sv"
+                        }
                         className={classes.logo}
                         alt="Organisasjonslogo"
-                        onError={(e) => (e.target.onerror = null, e.target.src = '/nth.svg')}
+                        onError={(e) => ((e.target.onerror = null), (e.target.src = "/nth.svg"))}
                       />
                     </Grid>
                   </Grid>
                 </Grid>
-
                 <Grid
                   container
                   item
@@ -167,13 +154,11 @@ const ListingCard: React.FC<ListingCardProps> = ({ listing }) => {
                       {listing.title}
                     </Typography>
                   </Grid>
-
                   <Grid item>
                     <Typography variant="caption" component="span" className={classes.deadline}>
                       {timestamp(listing.deadline)}
                     </Typography>
                   </Grid>
-
                   <Grid container item className={classes.description} justify="center">
                     <Typography variant="body2" component="span" className={classes.descriptionText} align="center">
                       {listing.description}
@@ -216,4 +201,4 @@ const ListingCard: React.FC<ListingCardProps> = ({ listing }) => {
   );
 };
 
-export default ListingCard;
+export default ListingItem;

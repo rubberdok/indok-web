@@ -21,7 +21,7 @@ import {
   props:
   - the listing to delete (if null: do not show the dialog)
   - the id of the organization that owns the listing (for use in the cache update function)
-  - onClose function
+  - onClose function to execute when the dialog is closed
  */
 const DeleteListing: React.FC<{
   listing: Listing | null;
@@ -35,11 +35,13 @@ const DeleteListing: React.FC<{
       // updates the cache upon deleting the listing, so changes are reflected instantly
       update: (cache, { data }) => {
         const deletedListingId = data?.deleteListing.listingId;
+        // reads the cached organization from which to delete the listing
         const cachedOrg = cache.readQuery<{ organization: Organization }>({
           query: GET_ORGANIZATION,
           variables: { orgId: organizationId },
         });
         if (data?.deleteListing?.ok && deletedListingId && cachedOrg) {
+          // removes the deleted listing from the cached organization's listings
           cache.writeQuery({
             query: GET_ORGANIZATION,
             variables: { orgId: organizationId },
