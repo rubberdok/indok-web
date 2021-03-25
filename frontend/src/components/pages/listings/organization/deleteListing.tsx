@@ -4,15 +4,12 @@ import { GET_ORGANIZATION } from "@graphql/orgs/queries";
 import { Organization } from "@interfaces/organizations";
 import { Listing } from "@interfaces/listings";
 import {
-  TextField,
   Dialog,
   DialogContent,
   DialogActions,
   DialogTitle,
   DialogContentText,
   Button,
-  Grid,
-  InputLabel,
   FormHelperText,
 } from "@material-ui/core";
 
