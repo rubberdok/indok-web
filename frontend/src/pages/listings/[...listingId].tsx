@@ -19,8 +19,8 @@ const useStyles = makeStyles((theme) => ({
   container: {
     paddingBottom: theme.spacing(2),
     [theme.breakpoints.down("sm")]: {
-      marginTop: theme.spacing(4)
-    }
+      marginTop: theme.spacing(4),
+    },
   },
   bottom: {
     position: "sticky",
@@ -28,9 +28,6 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2),
     zIndex: 100,
   },
-  apply: {
-    fontSize: theme.typography.caption.fontSize,
-  }
 }));
 
 // the page to show details about a listing and its organization
@@ -63,21 +60,25 @@ const ListingPage: NextPage = () => {
           <Hidden mdUp>
             <Paper className={classes.bottom}>
               <Grid container direction="row" justify="space-between" alignItems="center">
-                {data.listing.organization &&
+                {data.listing.organization && (
                   <Grid item xs>
-                    <Button size="small" endIcon={<OpenInNewIcon />} href={`/about/organizations/${data.listing.organization.slug}/`}>
+                    <Button
+                      size="small"
+                      endIcon={<OpenInNewIcon />}
+                      href={`/about/organizations/${data.listing.organization.slug}/`}
+                    >
                       {data.listing.organization.name.slice(0, 20)}
                     </Button>
                   </Grid>
-                }
+                )}
                 <Hidden smUp>
-                  {data.listing.url &&
+                  {data.listing.url && (
                     <Grid item>
-                      <Button variant="contained" color="primary" href={data.listing.url} className={classes.apply} endIcon={<ArrowForward />}>
+                      <Button variant="contained" color="primary" href={data.listing.url} endIcon={<ArrowForward />}>
                         Søk her
                       </Button>
                     </Grid>
-                  }
+                  )}
                 </Hidden>
               </Grid>
             </Paper>
