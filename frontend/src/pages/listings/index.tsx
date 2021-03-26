@@ -41,7 +41,7 @@ const ListingsPage: NextPage = () => {
           {data &&
             data.listings.map((listing) => (
               <>
-                <Grid container item key={listing.id} md={5} sm={7} xs={10}>
+                <Grid container item key={listing.id} md={4} sm={7} xs={10}>
                   <ListingItem listing={listing} />
                 </Grid>
               </>
