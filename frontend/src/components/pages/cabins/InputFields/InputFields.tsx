@@ -1,4 +1,4 @@
-import { ContactInfo, InputFieldsEvent, ContactInfoValidations } from "@interfaces/cabins";
+import { ContactInfo, InputFieldsEvent, ContactInfoValidations, Cabin } from "@interfaces/cabins";
 import {
   createStyles,
   Divider,
@@ -20,6 +20,7 @@ interface Props {
   validations: ContactInfoValidations | undefined;
   onChange: (name: string, event: InputFieldsEvent) => void;
   errorTrigger: boolean;
+  chosenCabins: Cabin[];
 }
 
 const useStyles = makeStyles(() =>
@@ -42,9 +43,9 @@ const useStyles = makeStyles(() =>
   })
 );
 
-export const InputFields: React.FC<Props> = ({ contactInfo, validations, onChange, errorTrigger }) => {
+export const InputFields: React.FC<Props> = ({ contactInfo, validations, onChange, errorTrigger, chosenCabins }) => {
   const classes = useStyles();
-  const totalGuestsAllowed = 40; // change
+  const totalGuestsAllowed = chosenCabins.reduce((sum, currentCabin) => sum + (currentCabin.maxGuests || 0), 0);
 
   return (
     <>
