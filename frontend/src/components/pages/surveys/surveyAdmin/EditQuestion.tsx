@@ -1,5 +1,5 @@
 import { FetchResult, MutationFunctionOptions } from "@apollo/client";
-import QuestionTypePreview from "@components/pages/surveys/surveyAdmin/questionTypePreview";
+import QuestionTypePreview from "@components/pages/surveys/surveyAdmin/QuestionTypePreview";
 import questionTypes from "@components/pages/surveys/surveyAdmin/questionTypes";
 import { Question, QuestionVariables } from "@interfaces/surveys";
 import { Button, Checkbox, Grid, MenuItem, Radio, Select, TextField } from "@material-ui/core";

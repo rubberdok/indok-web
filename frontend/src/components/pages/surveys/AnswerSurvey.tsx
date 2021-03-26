@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
-import AnswerQuestion from "@components/pages/surveys/answerQuestion";
+import AnswerQuestion from "@components/pages/surveys/AnswerQuestion";
 import { SUBMIT_ANSWERS } from "@graphql/surveys/mutations";
 import { SURVEY } from "@graphql/surveys/queries";
 import { Answer, Survey } from "@interfaces/surveys";

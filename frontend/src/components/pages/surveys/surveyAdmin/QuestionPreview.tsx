@@ -1,4 +1,4 @@
-import QuestionTypePreview from "@components/pages/surveys/surveyAdmin/questionTypePreview";
+import QuestionTypePreview from "@components/pages/surveys/surveyAdmin/QuestionTypePreview";
 import { Question } from "@interfaces/surveys";
 import { Button, Grid } from "@material-ui/core";
 

@@ -1,6 +1,6 @@
 import { Organization } from "@interfaces/organizations";
-import CreateListing from "@components/pages/listings/organization/createListing";
-import DeleteListing from "@components/pages/listings/organization/deleteListing";
+import CreateListing from "@components/pages/listings/organization/CreateListing";
+import DeleteListing from "@components/pages/listings/organization/DeleteListing";
 import {
   Button,
   Card,

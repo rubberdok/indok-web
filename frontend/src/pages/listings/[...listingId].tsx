@@ -1,8 +1,8 @@
 import { useQuery } from "@apollo/client";
 import Layout from "@components/Layout";
-import Banner from "@components/pages/listings/detail/banner";
-import ListingBanner from "@components/pages/listings/detail/listingBanner";
-import ListingBody from "@components/pages/listings/detail/listingBody";
+import Banner from "@components/pages/listings/detail/Banner";
+import ListingBanner from "@components/pages/listings/detail/ListingBanner";
+import ListingBody from "@components/pages/listings/detail/ListingBody";
 import { LISTING } from "@graphql/listings/queries";
 import { Listing } from "@interfaces/listings";
 import { Button, Container, Grid, Hidden, makeStyles, Paper } from "@material-ui/core";
@@ -10,7 +10,6 @@ import ArrowForward from "@material-ui/icons/ArrowForward";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
-
 
 const useStyles = makeStyles((theme) => ({
   container: {

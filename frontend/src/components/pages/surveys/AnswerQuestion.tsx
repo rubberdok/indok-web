@@ -9,7 +9,7 @@ import {
   Select,
   TextField,
 } from "@material-ui/core";
-import AnswerCheckboxes from "./answerCheckboxes";
+import AnswerCheckboxes from "@components/pages/surveys/AnswerCheckboxes";
 
 // component to answer a question on a survey
 // props: the answer/setAnswer state, which alters the state of the higher component

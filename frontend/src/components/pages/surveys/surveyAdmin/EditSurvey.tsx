@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@apollo/client";
-import EditQuestion from "@components/pages/surveys/surveyAdmin/editQuestion";
-import QuestionPreview from "@components/pages/surveys/surveyAdmin/questionPreview";
+import EditQuestion from "@components/pages/surveys/surveyAdmin/EditQuestion";
+import QuestionPreview from "@components/pages/surveys/surveyAdmin/QuestionPreview";
 import { CREATE_QUESTION, DELETE_QUESTION, UPDATE_QUESTION } from "@graphql/surveys/mutations";
 import { SURVEY } from "@graphql/surveys/queries";
 import { Question, QuestionVariables, Survey } from "@interfaces/surveys";

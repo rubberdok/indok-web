@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
     zIndex: 10,
     [theme.breakpoints.up("md")]: {
       marginTop: "-7%",
-    }
+    },
   },
   cardContent: {
     padding: theme.spacing(4),
@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: "100%",
     [theme.breakpoints.down("xs")]: {
       minWidth: "min-content",
-    }
+    },
   },
   descriptionText: {
     /* https://stackoverflow.com/a/13924997 */
@@ -55,10 +55,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-/*
-  component for the banner on the listing detail page (with "hero image")
-  props: the listing for which to show the banner
-*/
+// component for the banner on the listing detail page (with "hero image")
 const ListingBanner: React.FC<{
   listing: Listing;
 }> = ({ listing }) => {
@@ -118,14 +115,7 @@ const ListingBanner: React.FC<{
           className={classes.cardRoot}
         >
           <Grid container item direction="column" justify="center" alignItems="stretch">
-            <Grid
-              container
-              item
-              direction="row"
-              justify="space-between"
-              alignItems="stretch"
-              className={classes.card}
-            >
+            <Grid container item direction="row" justify="space-between" alignItems="stretch" className={classes.card}>
               <Grid
                 container
                 item
@@ -142,13 +132,7 @@ const ListingBanner: React.FC<{
                 </Grid>
 
                 <Grid item>
-                  <Typography
-                    variant="caption"
-                    component="h3"
-                    align="center"
-                    className={classes.deadline}
-                    gutterBottom
-                  >
+                  <Typography variant="caption" component="h3" align="center" className={classes.deadline} gutterBottom>
                     {dayjs(listing.deadline).format("DD. MMMM YYYY [kl.] HH:mm")}
                   </Typography>
                 </Grid>

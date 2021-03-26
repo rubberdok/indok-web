@@ -1,10 +1,6 @@
 import { Listing } from "@interfaces/listings";
 import { Box, makeStyles } from "@material-ui/core";
 
-interface BannerProps {
-  listing: Listing;
-}
-
 const useStyles = makeStyles(() => ({
   hero: {
     width: "100%",
@@ -20,7 +16,9 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const Banner: React.FC<BannerProps> = ({ listing }) => {
+const Banner: React.FC<{
+  listing: Listing;
+}> = ({ listing }) => {
   const classes = useStyles();
   return (
     <>

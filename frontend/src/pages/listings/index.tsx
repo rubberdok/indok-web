@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
 import Layout from "@components/Layout";
-import ListingItem from "@components/pages/listings/listingItem";
+import ListingItem from "@components/pages/listings/ListingItem";
 import { LISTINGS } from "@graphql/listings/queries";
 import { Listing } from "@interfaces/listings";
 import { Container, Grid, makeStyles, Typography } from "@material-ui/core";

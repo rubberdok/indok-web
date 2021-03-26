@@ -19,7 +19,7 @@ import {
   - the listing to delete (if null: do not show the dialog)
   - the id of the organization that owns the listing (for use in the cache update function)
   - onClose function to execute when the dialog is closed
- */
+*/
 const DeleteListing: React.FC<{
   listing: Listing | null;
   organizationId: number;
