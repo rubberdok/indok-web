@@ -8,12 +8,9 @@ import { Listing } from "@interfaces/listings";
 import { Button, Container, Grid, Hidden, makeStyles, Paper } from "@material-ui/core";
 import ArrowForward from "@material-ui/icons/ArrowForward";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
-import dayjs from "dayjs";
-import nb from "dayjs/locale/nb";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 
-dayjs.locale(nb);
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -90,15 +87,3 @@ const ListingPage: NextPage = () => {
 };
 
 export default ListingPage;
-
-// TODO: implement server-side rendering once Apollo client is exported
-/* export const getServerSideProps: GetServerSideProps<{ listingId: string }> = async (context) => {
-  const listingId = parseInt(context.query.listingId as string);
-  const { data } = client.query({
-    query: LISTING,
-    variables: { id: listingId },
-  });
-  return {
-    props: { data.listing },
-  };
-}; */

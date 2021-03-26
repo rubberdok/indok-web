@@ -10,7 +10,6 @@ import {
   makeStyles,
   Typography,
 } from "@material-ui/core";
-import People from "@material-ui/icons/People";
 import dayjs from "dayjs";
 import nb from "dayjs/locale/nb";
 import relativeTime from "dayjs/plugin/isSameOrAfter";
