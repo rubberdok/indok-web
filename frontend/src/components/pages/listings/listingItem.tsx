@@ -129,18 +129,6 @@ const ListingItem: React.FC<{
                       />
                     </Grid>
                   ))}
-                  {
-                    <Grid item>
-                      <Chip
-                        label={15}
-                        icon={<People />}
-                        size="small"
-                        style={{
-                          fontSize: 12,
-                        }}
-                      />
-                    </Grid>
-                  }
                 </Grid>
               </Box>
             </CardContent>
