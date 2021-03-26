@@ -33,11 +33,18 @@ const useStyles = makeStyles((theme) => ({
   logo: {
     objectFit: "contain",
     objectPosition: "center",
-    width: 112,
-    height: 112,
-    margin: "-50px auto 0",
     marginBottom: theme.spacing(2),
     background: theme.palette.background.paper,
+    [theme.breakpoints.up("sm")]: {
+      margin: "-50px auto 0",
+      width: 112,
+      height: 112,
+    },
+    [theme.breakpoints.down("xs")]: {
+      margin: "-44px auto 0",
+      width: 100,
+      height: 100,
+    },
   },
   descriptionText: {
     /* https://stackoverflow.com/a/13924997 */
