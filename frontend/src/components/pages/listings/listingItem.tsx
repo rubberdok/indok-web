@@ -107,7 +107,7 @@ const ListingItem: React.FC<{
                 className={classes.logo}
                 alt="Organisasjonslogo"
                 onError={(e) => (
-                  ((e.target as HTMLImageElement).onerror = null), ((e.target as HTMLIFrameElement).src = "/nth.svg")
+                  ((e.target as HTMLImageElement).onerror = null), ((e.target as HTMLImageElement).src = "/nth.svg")
                 )}
               />
               <Box px={3} display="flex" flexDirection="column" justifyContent="space-between">
