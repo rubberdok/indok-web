@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client/react";
 import { GET_USER } from "@graphql/users/queries";
-import { ContactInfo, InputFieldsEvent, ContactInfoValidations } from "@interfaces/cabins";
+import { ContactInfo, InputFieldsEvent, ContactInfoValidations, Cabin } from "@interfaces/cabins";
 import { User } from "@interfaces/users";
 import { Grid } from "@material-ui/core";
 import { NextPage } from "next";
@@ -12,9 +12,16 @@ interface ContractInfoProps {
   setContactInfo: Dispatch<SetStateAction<ContactInfo>>;
   validations: ContactInfoValidations | undefined;
   errorTrigger: boolean;
+  chosenCabins: Cabin[];
 }
 
-const CabinContactInfo: NextPage<ContractInfoProps> = ({ contactInfo, setContactInfo, validations, errorTrigger }) => {
+const CabinContactInfo: NextPage<ContractInfoProps> = ({
+  contactInfo,
+  setContactInfo,
+  validations,
+  chosenCabins,
+  errorTrigger,
+}) => {
   const { data } = useQuery<{ user: User }>(GET_USER);
 
   useEffect(() => {
@@ -50,6 +57,7 @@ const CabinContactInfo: NextPage<ContractInfoProps> = ({ contactInfo, setContact
         contactInfo={contactInfo}
         validations={validations}
         errorTrigger={errorTrigger}
+        chosenCabins={chosenCabins}
       ></InputFields>
     </Grid>
   );

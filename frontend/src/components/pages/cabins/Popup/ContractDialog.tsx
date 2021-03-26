@@ -4,7 +4,7 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import { createStyles, Grid, IconButton, makeStyles, Theme } from "@material-ui/core";
-import Contract2 from "../Documents/Contract2.0";
+import Contract from "../Documents/Contract";
 import ClearIcon from "@material-ui/icons/Clear";
 import CheckIcon from "@material-ui/icons/Check";
 import { Cabin, ContactInfo } from "@interfaces/cabins";
@@ -59,7 +59,7 @@ const ContractDialog = ({
               </IconButton>
             </Grid>
             <Grid item>
-              <Contract2 chosenCabins={chosenCabins} datePick={datePick} contactInfo={contactInfo} />
+              <Contract chosenCabins={chosenCabins} datePick={datePick} contactInfo={contactInfo} />
             </Grid>
           </Grid>
         </DialogContent>

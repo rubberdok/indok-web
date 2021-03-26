@@ -31,10 +31,10 @@ const useBookingRange = (initFromDate?: string, initToDate?: string): Output => 
       setIsAvailable(
         allBookingsQuery.data.allBookings.filter(
           (booking) =>
-            range.includes(booking.bookFrom) ||
-            range.includes(booking.bookTo) ||
-            (dayjs(booking.bookFrom).isBefore(dayjs(fromDate)) && dayjs(booking.bookTo).isAfter(dayjs(toDate))) ||
-            (dayjs(booking.bookFrom).isAfter(dayjs(fromDate)) && dayjs(booking.bookTo).isBefore(dayjs(toDate)))
+            range.includes(booking.checkIn) ||
+            range.includes(booking.checkOut) ||
+            (dayjs(booking.checkIn).isBefore(dayjs(fromDate)) && dayjs(booking.checkOut).isAfter(dayjs(toDate))) ||
+            (dayjs(booking.checkIn).isAfter(dayjs(fromDate)) && dayjs(booking.checkOut).isBefore(dayjs(toDate)))
         ).length === 0
       );
     } else {
