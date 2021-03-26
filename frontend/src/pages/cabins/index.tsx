@@ -12,6 +12,7 @@ import { DirectionsBus, DirectionsCar, DirectionsTransit, LocalTaxi } from "@mat
 import React from "react";
 import ImageSlider from "@components/pages/cabins/ImageSlider/ImageSlider";
 import { cabinImages, outsideImages } from "@components/pages/cabins/ImageSlider/imageData";
+import FAQ from "@components/pages/cabins/Documents/FAQ";
 
 const useStyles = makeStyles((theme: Theme) => ({
   hero: {
@@ -103,6 +104,9 @@ const CreateBookingPage: NextPage = () => {
             <Grid container alignItems="center" spacing={10} direction="column">
               <Grid item>
                 <Grid container alignItems="center" spacing={10}>
+                  {/* <Grid xs={12} sm={6} item>
+                    <FAQ />
+                  </Grid> */}
                   <Grid xs={12} sm={6} item>
                     <Box textAlign="center">
                       <Typography variant="h3">Fasiliteter</Typography>
@@ -201,6 +205,11 @@ const CreateBookingPage: NextPage = () => {
                     og normal skisesong er fra 15. november – 1. mai. Forholdene for langrenn er også gode med hele fem
                     løyper som begynner ved Stølen, alt fra 15 km – 1,5 km løyper. Se Oppdal Booking for mer info.
                   </Typography>
+                </Grid>
+              </Grid>
+              <Grid item container spacing={10} alignItems="center" direction="row">
+                <Grid item container justify="center" alignContent="center" xs={12}>
+                  <FAQ />
                 </Grid>
               </Grid>
             </Grid>

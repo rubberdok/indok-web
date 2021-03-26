@@ -1,17 +1,5 @@
 import { Cabin, ContactInfo } from "@interfaces/cabins";
-import {
-  Box,
-  createStyles,
-  Divider,
-  Grid,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  makeStyles,
-  Typography,
-} from "@material-ui/core";
-import ArrowRightIcon from "@material-ui/icons/ArrowRight";
+import { Box, createStyles, Divider, Grid, makeStyles, Typography } from "@material-ui/core";
 import { toStringChosenCabins } from "@utils/cabins";
 import { calculatePrice } from "@utils/cabins";
 import React from "react";
@@ -103,7 +91,7 @@ const Contract = ({ chosenCabins, contactInfo, datePick }: ContractProps) => {
             <li>
               <Typography variant="body2">
                 straks melde fra om skader eller mangler som må utbedres uten opphold, til utleier ved bookingansvarlig
-                Ellie Berglund på telefon 943 58 380. Annen skade eller mangler meldes fra til utleier i sammenheng med
+                Ellie Berglund på telefon 942 58 380. Annen skade eller mangler meldes fra til utleier i sammenheng med
                 tilbakelevering av nøkler ved endt leieperiode.
               </Typography>
             </li>
