@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/client";
 import Layout from "@components/Layout";
-import Banner from "@components/pages/listings/detail/Banner";
 import ListingBanner from "@components/pages/listings/detail/ListingBanner";
+import ListingTitle from "@components/pages/listings/detail/ListingTitle";
 import ListingBody from "@components/pages/listings/detail/ListingBody";
 import { LISTING } from "@graphql/listings/queries";
 import { Listing } from "@interfaces/listings";
@@ -26,27 +26,31 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-// the page to show details about a listing and its organization
+// page to show details about a listing and its organization
 const ListingPage: NextPage = () => {
   const { listingId } = useRouter().query;
+
+  // fetches the listing, using the URL parameter as the argument
   const { loading, error, data } = useQuery<{ listing: Listing }>(LISTING, {
     variables: { id: parseInt(listingId as string) },
   });
+
   const classes = useStyles();
 
-  if (error) return <p>Error</p>;
   if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error</p>;
+
   return (
     <>
       {data && (
         <Layout>
           <Hidden smDown>
-            <Banner listing={data.listing} />
+            <ListingBanner listing={data.listing} />
           </Hidden>
           <Container className={classes.container}>
             <Grid container direction="column" spacing={4}>
               <Grid container item direction="row" justify="center">
-                <ListingBanner listing={data.listing} />
+                <ListingTitle listing={data.listing} />
               </Grid>
               <Grid container item direction="row" justify="center">
                 <ListingBody listing={data.listing} />
