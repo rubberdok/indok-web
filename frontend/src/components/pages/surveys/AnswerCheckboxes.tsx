@@ -2,9 +2,11 @@ import { Answer, Option } from "@interfaces/surveys";
 import { Checkbox, FormControlLabel } from "@material-ui/core";
 import { useEffect, useState } from "react";
 
-// component to answer questions of the Checkboxes type
-// separated into its own component, since multiple possible answers requires its own logic
-// props: the answer/setAnswer state, passed down from answerSurvey
+/**
+ * component to answer questions of the Checkboxes type
+ * separated into its own component, since multiple possible answers requires its own logic
+ * props: the answer/setAnswer state, passed down from answerSurvey
+ */
 const AnswerCheckboxes: React.FC<{
   answer: Answer;
   setAnswer: (answer: Answer) => void;

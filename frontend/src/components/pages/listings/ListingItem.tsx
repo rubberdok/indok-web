@@ -86,7 +86,10 @@ const timestamp = (datetime: string) => {
   }
 };
 
-// component for listing item in overview of listings
+/**
+ * component for listing item in overview of listings
+ * props: the listing to render
+ */
 const ListingItem: React.FC<{
   listing: Listing;
 }> = ({ listing }) => {

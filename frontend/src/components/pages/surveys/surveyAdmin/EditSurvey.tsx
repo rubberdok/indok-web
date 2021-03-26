@@ -15,8 +15,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-// component to edit surveys (for example the applications to listings)
-// props: ID of the survey to edit
+/**
+ * component to edit surveys (for example the applications to listings)
+ * props: ID of the survey to edit
+ */
 const EditSurvey: React.FC<{ surveyId: string }> = ({ surveyId }) => {
   const classes = useStyles();
 

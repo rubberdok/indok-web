@@ -9,8 +9,12 @@ type QuestionWithAnswer = Question & {
   answer: Answer;
 };
 
-// component to see a user's answers to a survey
-// props: ID of the relevant survey, and the applicant user
+/**
+ * component to see a user's answers to a survey
+ * props:
+ * - ID of the relevant survey
+ * - the applicant user
+ */
 const SurveyAnswers: React.FC<{
   surveyId: number;
   user: User;
@@ -23,8 +27,10 @@ const SurveyAnswers: React.FC<{
     }
   );
 
-  if (error) return <p>Error...</p>;
   if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error...</p>;
+
+  // renders the applicant's answers to the survey's questions
   return (
     <>
       {data && (

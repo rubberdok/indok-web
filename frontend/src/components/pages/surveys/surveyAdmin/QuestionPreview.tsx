@@ -2,7 +2,12 @@ import QuestionTypePreview from "@components/pages/surveys/surveyAdmin/QuestionT
 import { Question } from "@interfaces/surveys";
 import { Button, Grid } from "@material-ui/core";
 
-// component to preview a question in a survey when not in editing mode
+/**
+ * component to preview a question in a survey when not in editing mode
+ * props:
+ * - the question to preview
+ * - setActive function to activate editing mode on this question
+ */
 const QuestionPreview: React.FC<{
   question: Question;
   setActive: () => void;

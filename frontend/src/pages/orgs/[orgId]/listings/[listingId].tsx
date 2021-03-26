@@ -24,7 +24,7 @@ const ListingAdminPage: NextPage = () => {
 
   const classes = useStyles();
 
-  // fetches the listing along with all users who have applied to it
+  // fetches the listing along with all users who have applied to it, using URL parameter as argument
   const { loading, error, data } = useQuery<{ listing: Listing }>(LISTING_WITH_RESPONDERS, {
     variables: {
       id: parseInt(listingId as string),
@@ -34,8 +34,10 @@ const ListingAdminPage: NextPage = () => {
   // state to determine whether to show the applicant view or the listing/survey view
   const [selectedApplicant, selectApplicant] = useState<User | null>(null);
 
-  if (error) return <p>Error</p>;
   if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error</p>;
+
+  // renders an overview of applicants, and either an applicant's application or the listing itself (depending on selectedApplicant state)
   return (
     <Layout>
       <Container className={classes.container}>

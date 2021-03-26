@@ -5,15 +5,15 @@ import { Question, QuestionVariables } from "@interfaces/surveys";
 import { Button, Checkbox, Grid, MenuItem, Radio, Select, TextField } from "@material-ui/core";
 import { useState } from "react";
 
-// component to edit a question on a survey
-/*
-  props:
-  the question to edit
-  the question types a question can have
-  updateQuestion mutation to persist the new question to the database (crazy type declaration from Apollo)
-  deleteQuestion mutation to delete the question
-  setInactive function to exit the edit mode on this question
-*/
+/**
+ * component to edit a question on a survey
+ * props:
+ * - the question to edit
+ * - the question types a question can have
+ * - updateQuestion mutation to persist the new question to the database (crazy type declaration from Apollo)
+ * - deleteQuestion mutation to delete the question
+ * - setInactive function to exit the edit mode on this question
+ */
 const EditQuestion: React.FC<{
   oldQuestion: Question;
   updateQuestion: (

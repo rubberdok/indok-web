@@ -31,12 +31,12 @@ const emptyListing: CreateListingVariables = {
   deadline: "",
 };
 
-/* 
-component for authorized organization members to create new listings
-props:
-- the organization for which to create the listing
-- the "open" boolean for whether to show the dialog
-- "onClose" function to execute when the dialog is closed
+/**
+ * component for authorized organization members to create new listings
+ * props:
+ * - the organization for which to create the listing
+ * - the "open" boolean for whether to show the dialog
+ * - "onClose" function to execute when the dialog is closed
  */
 const CreateListing: React.FC<{
   organization: Organization;

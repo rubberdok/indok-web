@@ -24,13 +24,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-// the page to show all listings open to users
+// page to show all listings open to users
 const ListingsPage: NextPage = () => {
+  // fetches all listings
   const { loading, error, data } = useQuery<{ listings: Listing[] }>(LISTINGS);
+
   const classes = useStyles();
 
-  if (error) return <p>Error</p>;
   if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error</p>;
+
+  // renders a ListingItem for each listing
   return (
     <Layout>
       <Container>

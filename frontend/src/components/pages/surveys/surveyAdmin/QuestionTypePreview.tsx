@@ -1,7 +1,10 @@
 import { Question } from "@interfaces/surveys";
 import { Checkbox, FormControlLabel, FormGroup, Radio, RadioGroup, TextField } from "@material-ui/core";
 
-// component to show a preview of how a survey question's input will look like to the end user
+/**
+ * component to show a preview of how a survey question's input will look like to the end user
+ * props: the question with questionType to preview
+ */
 const QuestionTypePreview: React.FC<{
   question: Question;
 }> = ({ question }) => {

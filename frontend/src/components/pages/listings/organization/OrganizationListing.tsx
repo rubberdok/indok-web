@@ -7,7 +7,10 @@ import { CREATE_SURVEY } from "@graphql/surveys/mutations";
 import { useMutation } from "@apollo/client";
 import { Button, Typography } from "@material-ui/core";
 
-// component for authorized organization members to administer their listing
+/**
+ * component for authorized organization members to administer their listing
+ * props: the listing to administrate
+ */
 // TODO: functionality to edit the listing's name/description
 const OrganizationListing: React.FC<{ listing: Listing }> = ({ listing }) => {
   // state to determine whether to show the listing's survey (where the user applies)

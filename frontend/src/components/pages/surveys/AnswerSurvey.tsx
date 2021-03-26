@@ -6,8 +6,10 @@ import { Answer, Survey } from "@interfaces/surveys";
 import { Button, Card, CardContent, Grid, Typography } from "@material-ui/core";
 import { useState } from "react";
 
-// component for a user to answer a survey
-// props: ID of the survey
+/**
+ * component for a user to answer a survey
+ * props: ID of the survey
+ */
 const AnswerSurvey: React.FC<{ surveyId: string }> = ({ surveyId }) => {
   // state to manage the user's answers before submitting
   const [answers, setAnswers] = useState<Answer[]>();
@@ -36,7 +38,7 @@ const AnswerSurvey: React.FC<{ surveyId: string }> = ({ surveyId }) => {
   if (error) return <p>Error</p>;
 
   // maps the answers (which, after the fetch, includes each question) to AnswerQuestion components
-  // passes setAnswer prop to each AnswerQuestion component, that updates the relevant Answer on this component's state
+  // passes setAnswer prop to each AnswerQuestion component, which updates the relevant Answer on this component's state
   return (
     <>
       {data && (

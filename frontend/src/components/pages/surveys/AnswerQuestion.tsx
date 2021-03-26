@@ -11,8 +11,10 @@ import {
 } from "@material-ui/core";
 import AnswerCheckboxes from "@components/pages/surveys/AnswerCheckboxes";
 
-// component to answer a question on a survey
-// props: the answer/setAnswer state, which alters the state of the higher component
+/**
+ * component to answer a question on a survey
+ * props: the answer/setAnswer state, which alters the state of the higher component
+ */
 const AnswerQuestion: React.FC<{
   answer: Answer;
   setAnswer: (answer: Answer) => void;
