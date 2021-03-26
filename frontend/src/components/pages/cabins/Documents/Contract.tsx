@@ -41,7 +41,7 @@ const Contract = ({ chosenCabins, contactInfo, datePick }: ContractProps) => {
     <>
       <Grid container>
         <Box m={2}>
-          <img alt="logo" src="/static/cabins/hyttestyret_logo.png" className={classes.logo} />
+          <img alt="logo" src="/img/hyttestyret_logo.png" className={classes.logo} />
           <Typography variant="h2" align="center">
             Leiekontrakt
           </Typography>
