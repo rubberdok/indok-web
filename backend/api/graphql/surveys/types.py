@@ -74,10 +74,10 @@ class QuestionType(DjangoObjectType):
     @staticmethod
     @login_required
     def resolve_answers(root: Question, info, user_id: int = None):
-        qs = root.answers
+        answers = root.answers
         if user_id:
-            return qs.filter(user__pk=user_id).distinct()
-        return qs.all()
+            return answers.filter(user__pk=user_id).distinct()
+        return answers.all()
 
     @staticmethod
     @login_required
