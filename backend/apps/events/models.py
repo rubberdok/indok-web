@@ -24,7 +24,11 @@ class Event(models.Model):
     description = models.TextField()
     start_time = models.DateTimeField()
     is_attendable = models.BooleanField()
-    publisher = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING)
+    publisher = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+    )
 
     # Optional fields
     end_time = models.DateTimeField(blank=True, null=True)
