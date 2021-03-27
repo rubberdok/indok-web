@@ -13,11 +13,6 @@ const calculateTimeLeft = (countdownTime: string, now: any): Record<string, numb
   const countdown = dayjs(countdownTime);
   const difference = countdown.diff(now);
 
-  console.log("\n\n");
-  console.log(countdown);
-  console.log(now);
-  console.log("\n\n");
-
   if (difference > 0)
     return {
       days: Math.floor(difference / (1000 * 60 * 60 * 24)),
