@@ -11,8 +11,6 @@ class OptionResolvers:
         """
         TODO: Search implementation
         """
-        if search:
-            return Option.objects.all()
         return Option.objects.all()
 
 

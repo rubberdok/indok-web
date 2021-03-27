@@ -62,8 +62,7 @@ class UpdateSurvey(graphene.Mutation):
         for key, value in survey_data.items():
             setattr(survey, key, value)
         survey.save()
-        ok = True
-        return UpdateSurvey(survey=survey, ok=ok)
+        return UpdateSurvey(survey=survey, ok=True)
 
 
 class DeleteSurvey(graphene.Mutation):
