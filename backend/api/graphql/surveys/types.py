@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.db.models.query_utils import Q
+from guardian.shortcuts import get_objects_for_user
 
 import graphene
 from graphene_django import DjangoObjectType
@@ -7,6 +8,7 @@ from graphql_jwt.decorators import login_required
 
 from api.graphql.users.types import UserType
 from apps.surveys.models import Answer, Option, Question, Response, Survey
+from utils.decorators import permission_required
 
 
 class OptionType(DjangoObjectType):
@@ -17,38 +19,21 @@ class OptionType(DjangoObjectType):
 
 
 class AnswerType(DjangoObjectType):
-    user = graphene.Field(UserType)
     id = graphene.ID(source="uuid")
 
     class Meta:
         model = Answer
-        fields = ["answer", "question", "uuid"]
+        fields = ["answer", "question", "uuid", "user"]
         description = "A user's answer to a question."
-
-    @staticmethod
-    @login_required
-    def resolve_user(answer, info):
-        raise NotImplementedError("Dette kallet er ikke implementert enda")
-        # TODO: Add row level permissions
-        return answer.response.respondent
 
 
 class ResponseType(DjangoObjectType):
-    answers = graphene.List(AnswerType)
     id = graphene.ID(source="uuid")
 
     class Meta:
         model = Response
-        field = ["uuid", "respondent", "survey", "status"]
+        field = ["uuid", "respondent", "survey", "status", "answers"]
         description = "A response instance that contains information about a user's response to a survey."
-
-    @staticmethod
-    @login_required
-    def resolve_answers(response, info):
-        if response.respondent == info.context.user:
-            return response.answers
-        else:
-            raise PermissionError("Du har ikke tilgang til dette.")
 
 
 class QuestionType(DjangoObjectType):
@@ -73,11 +58,8 @@ class QuestionType(DjangoObjectType):
 
     @staticmethod
     @login_required
-    def resolve_answers(root: Question, info, user_id: int = None):
-        answers = root.answers
-        if user_id:
-            return answers.filter(user__pk=user_id).distinct()
-        return answers.all()
+    def resolve_answers(root: Question, info):
+        return get_objects_for_user(info.context.user, "surveys.view_answer").filter(question=root)
 
     @staticmethod
     @login_required
@@ -107,21 +89,18 @@ class SurveyType(DjangoObjectType):
 
     @staticmethod
     @login_required
-    def resolve_responders(root: Survey, info, user_id: int = None):
-        # TODO: Row level permissions
-        if info.context.user.is_superuser:
-            q = Q(responses__survey=root)
-            if user_id:
-                q &= Q(pk=user_id)
-            return get_user_model().objects.filter(q).distinct()
-        else:
-            raise NotImplementedError("Dette kallet er ikke implementert enda")
+    @permission_required("surveys.view_response", obj_arg_pos=0)
+    def resolve_responders(root: Survey, info):
+        return get_user_model().objects.filter(responses__survey=root).distinct()
 
     @staticmethod
     @login_required
+    @permission_required("surveys.view_response", obj_arg_pos=0)
     def resolve_responder(root: Survey, info, user_id: int):
-        # TODO: Row level permissions
-        if info.context.user.is_superuser:
-            return get_user_model().objects.get(responses__survey=root, pk=user_id)
-        else:
-            raise NotImplementedError("Dette kallet er ikke implementert end")
+        return get_user_model().objects.get(responses__survey=root, pk=user_id)
+
+    @staticmethod
+    @login_required
+    @permission_required("surveys.view_response", obj_arg_pos=0)
+    def resolve_responses(survey, info):
+        return survey.responses

@@ -1,7 +1,9 @@
 from django.db.models import Q
 
 import graphene
-from graphql_jwt.decorators import login_required, permission_required
+from graphql_jwt.decorators import login_required
+from guardian.shortcuts import assign_perm
+from utils.decorators import permission_required
 
 from apps.surveys.models import Answer, Option, Question, Response, Survey
 from ..types import OptionType, QuestionType
@@ -105,7 +107,7 @@ class DeleteAnswer(graphene.Mutation):
         uuid = graphene.ID(required=True)
 
     @login_required
-    @permission_required("surveys.delete_answer")
+    @permission_required("surveys.delete_answer", (Answer, "pk", "uuid"))
     def mutate(self, info, uuid):
         user = info.context.user
         try:
@@ -116,8 +118,7 @@ class DeleteAnswer(graphene.Mutation):
         if answer.question.mandatory:
             return DeleteAnswer(deleted_uuid=None, ok=False)
         answer.delete()
-        ok = True
-        return DeleteAnswer(ok=ok, deleted_uuid=deleted_uuid)
+        return DeleteAnswer(ok=True, deleted_uuid=deleted_uuid)
 
 
 class SubmitOrUpdateAnswers(graphene.Mutation):
@@ -128,7 +129,7 @@ class SubmitOrUpdateAnswers(graphene.Mutation):
         answers_data = graphene.List(AnswerInput)
 
     @login_required
-    @permission_required(["surveys.add_answer", "surveys.update_answers"])
+    @permission_required(["surveys.add_answer", "surveys.update_answer"])
     def mutate(self, info, survey_id, answers_data):
         """Creates new answers to previously unanswered questions, updates already existings answers.
 
@@ -195,6 +196,8 @@ class SubmitOrUpdateAnswers(graphene.Mutation):
                     for question_id, answer in answers.items()
                 ]
             )
+            
+            assign_perm("surveys.view_response", survey.responsible_group, response)
             return SubmitOrUpdateAnswers(ok=True)
         return SubmitOrUpdateAnswers(ok=False)
 
@@ -209,7 +212,7 @@ class DeleteAnswersToSurvey(graphene.Mutation):
     @permission_required("surveys.delete_answer")
     def mutate(self, info, survey_id):
         user = info.context.user
-        Response.objects.get(survey_id=survey_id, responder=user).delete()
+        user.responses.get(survey_id=survey_id).delete()
         return DeleteAnswersToSurvey(ok=True)
 
 

@@ -1,5 +1,7 @@
 import graphene
-from graphql_jwt.decorators import login_required, permission_required
+from graphql_jwt.decorators import login_required
+from utils.decorators import permission_required
+from guardian.shortcuts import assign_perm, remove_perm
 
 from apps.listing.models import Listing
 from apps.surveys.models import Survey
@@ -44,6 +46,10 @@ class CreateSurvey(graphene.Mutation):
             listing = Listing.objects.get(pk=listing_id)
             listing.survey = survey
             listing.save()
+        
+        # Assign permission to the responsible group
+        for perm in ["surveys.update_survey", "surveys.delete_survey"]:
+            assign_perm(perm, survey.responsible_group, survey)
         return CreateSurvey(survey=survey, ok=True)
 
 
@@ -56,12 +62,18 @@ class UpdateSurvey(graphene.Mutation):
         survey_data = BaseSurveyInput(required=True)
 
     @login_required
-    @permission_required("surveys.update_survey")
+    @permission_required("surveys.update_survey", lookup_variables=(Survey, "pk", "id"))
     def mutate(self, info, id, survey_data):
         survey = Survey.objects.get(pk=id)
+        old_group = survey.group
         for key, value in survey_data.items():
             setattr(survey, key, value)
         survey.save()
+        new_group = survey.group
+        if old_group != new_group:
+            for perm in ["surveys.update_survey", "surveys.delete_survey"]:
+                remove_perm(perm, old_group, survey)
+                assign_perm(perm, new_group, survey)
         return UpdateSurvey(survey=survey, ok=True)
 
 
@@ -73,7 +85,7 @@ class DeleteSurvey(graphene.Mutation):
         id = graphene.ID(required=True)
 
     @login_required
-    @permission_required("surveys.delete_survey")
+    @permission_required("surveys.delete_survey", lookup_variables=(Survey, "pk", "id"))
     def mutate(cls, self, info, id):
         survey = Survey.objects.get(pk=id)
         deleted_id = survey.id
