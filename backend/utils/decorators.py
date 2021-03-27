@@ -21,6 +21,14 @@ def permission_required(
         A permission or list of permissions in the format app_label.action_modelname.
     lookup_variables : tuple[Union[Model, ModelBase, str], ...], optional
         A tuple with: (1) the model which to look up, (2) a series of attribute name, parameter name pairs to use for the lookup, by default None
+    obj_arg_post : int, optional
+        The argument position of the object to use for checking object permissions. For example:
+        
+        @permission_required("app.some_permission", obj_arg_pos=0)
+        def resolve_field(obj, info):
+            ...
+
+        Here, we will check if user.has_perm("app.some_permission", obj) where user is the currently logged in user.
     accept_global_perms : bool
         Whether global permissions are permitted, i.e. does not require object-level permission, by default False
 
