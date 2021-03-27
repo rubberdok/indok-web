@@ -35,19 +35,23 @@ const theme = createMuiTheme({
     MuiButtonBase: {
       root: {
         justifyContent: "none",
-        //padding: "16px 24px",
         textTransform: "none",
         fontWeight: 600,
       },
     },
     MuiButton: {
       root: {
-        padding: "16px 32px",
         textTransform: "none",
         fontWeight: 600,
       },
+      text: {
+        padding: "8px 24px",
+      },
+      contained: {
+        padding: "8px 24px",
+      },
       outlined: {
-        //padding: "16px 32px",
+        padding: "8px 24px",
         border: "2px solid rgb(0 0 0 / 10%)",
       },
       outlinedPrimary: {
@@ -58,6 +62,9 @@ const theme = createMuiTheme({
         ["&:hover"]: {
           borderWidth: 2,
         },
+      },
+      sizeLarge: {
+        padding: "16px 32px",
       },
     },
     MuiTab: {
