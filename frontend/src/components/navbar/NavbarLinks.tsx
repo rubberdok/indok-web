@@ -21,7 +21,6 @@ const useStyles = makeStyles((theme) => ({
   },
   navItem: {
     ...theme.typography.overline,
-    fontSize: "0.75rem",
     display: "flex",
     padding: "0 24px",
 

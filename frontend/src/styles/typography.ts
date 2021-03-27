@@ -49,7 +49,7 @@ const typography = {
     lineHeight: 1.57,
   },
   overline: {
-    fontSize: "1rem",
+    fontSize: "0.8rem",
     fontWeight: 600,
     color: "#b0aca5",
     letterSpacing: "0.02rem",
