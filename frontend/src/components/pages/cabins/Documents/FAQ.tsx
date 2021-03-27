@@ -24,12 +24,7 @@ const faqs = [
   {
     id: "2",
     question: "Hvordan kommer jeg meg til hyttene?",
-    answer: (
-      <Typography>
-        Du kan ta tog/buss til Oppdal og taxi opp til hytta, eller kjøre bil hele veien. Transportalternativer finner du
-        under <Link href="/cabins">her.</Link>
-      </Typography>
-    ),
+    answer: <Typography>Du kan ta tog/buss til Oppdal og taxi opp til hytta, eller kjøre bil hele veien.</Typography>,
   },
   {
     id: "3",
@@ -76,13 +71,7 @@ const faqs = [
   {
     id: "7",
     question: "Kan jeg reservere en hytte for min eksterne vennegjeng eller eksterne linjeforening?",
-    answer: (
-      <Typography>
-        Ja. Dette forutsetter leie av hel hytte, og ekstern pris gjelder, 2700,- per natt. Slike forespørsler vil ha
-        laveste prioritet, men utenfor høysesong er det stort sett ledig kapasitet. Booking foregår via mail til
-        bookingansvarlig.
-      </Typography>
-    ),
+    answer: <Typography>Ja. Dette forutsetter leie av hel hytte, og ekstern pris gjelder, 2700,- per natt.</Typography>,
   },
 
   {
