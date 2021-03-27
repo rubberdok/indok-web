@@ -39,6 +39,5 @@ class User(AbstractUser):
 def get_anonymous_user_instance(User):
     return User(feide_userid="AnonymousUser")
 
-
 def __str__(self):
     return f"User(name='{self.first_name} {self.last_name}')"
