@@ -6,7 +6,7 @@ import ContractDialog from "@components/pages/cabins/Popup/ContractDialog";
 import { QUERY_CABINS } from "@graphql/cabins/queries";
 import { Cabin, ContactInfo, ContactInfoValidations } from "@interfaces/cabins";
 import { Box, Grid, Step, StepLabel, Stepper, Button, Typography, Paper, Tooltip } from "@material-ui/core";
-import { cabinOrderStepReady } from "@utils/cabins";
+import { allValuesFilled, cabinOrderStepReady } from "@utils/cabins";
 import { isFormValid, validateInputForm } from "@utils/helpers";
 import { NextPage } from "next";
 import React, { useEffect, useState } from "react";
@@ -66,6 +66,7 @@ const CabinBookingPage: NextPage = () => {
   // Contact info state
   const [contactInfo, setContactInfo] = useState<ContactInfo>(defaultContactInfo);
   const [validations, setValidations] = useState<ContactInfoValidations>();
+  const [errorTrigger, setErrorTrigger] = useState(false);
 
   useEffect(() => {
     setStepReady({
@@ -76,6 +77,9 @@ const CabinBookingPage: NextPage = () => {
 
   useEffect(() => {
     setValidations(validateInputForm(contactInfo));
+    if (allValuesFilled(contactInfo)) {
+      setErrorTrigger(true);
+    }
     setStepReady({
       ...stepReady,
       1: { ready: isFormValid(contactInfo), errortext: "Du må fylle ut alle felt for å gå videre" },
@@ -102,6 +106,7 @@ const CabinBookingPage: NextPage = () => {
             contactInfo={contactInfo}
             setContactInfo={setContactInfo}
             validations={validations}
+            errorTrigger={errorTrigger}
             chosenCabins={chosenCabins}
           />
         );
