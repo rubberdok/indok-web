@@ -1,7 +1,7 @@
 from django.db import models
 from enum import Enum
 from datetime import datetime
-from django.db.models.signals import pre_save, post_save
+from django.db.models.signals import post_save
 from django.dispatch import receiver
 from .google_drive_api import get_url
 from datetime import datetime

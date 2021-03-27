@@ -40,6 +40,10 @@ const useStyles = makeStyles((theme) => ({
     paddingRight: theme.spacing(1.6),
     float: "right",
   },
+  signUpText: {
+    float: "right",
+    paddingTop: theme.spacing(0.7),
+  },
   paragraph: {
     paddingTop: theme.spacing(1),
     paddingBottom: theme.spacing(1),
@@ -288,120 +292,126 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
             <Button>Tilbake</Button>
           </Link>
 
-          {eventData.event.isAttendable &&
-            userData.user &&
-            eventData.event.allowedGradeYears.includes(userData.user.gradeYear) && (
-              <>
-                <CountdownButton
-                  countDownDate={(eventData.event as AttendableEvent).signupOpenDate}
-                  isSignedUp={(eventData.event as AttendableEvent).userAttendance.isSignedUp}
-                  isOnWaitingList={(eventData.event as AttendableEvent).userAttendance.isOnWaitingList}
-                  isFull={(eventData.event as AttendableEvent).isFull}
-                  loading={signOffLoading || signUpLoading || eventLoading}
-                  disabled={
-                    (!userData.user.phoneNumber &&
-                      !eventData.event.userAttendance?.isSignedUp &&
-                      !eventData.event.userAttendance?.isOnWaitingList) ||
-                    (eventData.event.bindingSignup && eventData.event.userAttendance?.isSignedUp) ||
-                    (eventData.event.hasExtraInformation &&
-                      !extraInformation &&
-                      !eventData.event.userAttendance?.isSignedUp &&
-                      !eventData.event.userAttendance?.isOnWaitingList)
-                  }
-                  onClick={handleClick}
-                  styleClassName={classes.signUpButton}
-                />
-                {!userData.user.phoneNumber &&
-                  !eventData.event.userAttendance?.isSignedUp &&
-                  !eventData.event.userAttendance?.isOnWaitingList && (
-                    <Typography color="error">
-                      <Warning fontSize="small" />
-                      Du må oppgi et telefonnummer på brukeren din for å kunne melde deg på
-                    </Typography>
-                  )}
+          {!eventData.event.isAttendable ? null : !userData.user ? (
+            <Typography variant="h6" className={classes.signUpText}>
+              Logg inn for å melde deg på
+            </Typography>
+          ) : !eventData.event.allowedGradeYears.includes(userData.user.gradeYear) ? (
+            <Typography variant="h6" className={classes.signUpText}>
+              Ikke aktuell
+            </Typography>
+          ) : (
+            <>
+              <CountdownButton
+                countDownDate={(eventData.event as AttendableEvent).signupOpenDate}
+                isSignedUp={(eventData.event as AttendableEvent).userAttendance.isSignedUp}
+                isOnWaitingList={(eventData.event as AttendableEvent).userAttendance.isOnWaitingList}
+                isFull={(eventData.event as AttendableEvent).isFull}
+                loading={signOffLoading || signUpLoading || eventLoading}
+                disabled={
+                  (!userData.user.phoneNumber &&
+                    !eventData.event.userAttendance?.isSignedUp &&
+                    !eventData.event.userAttendance?.isOnWaitingList) ||
+                  (eventData.event.bindingSignup && eventData.event.userAttendance?.isSignedUp) ||
+                  (eventData.event.hasExtraInformation &&
+                    !extraInformation &&
+                    !eventData.event.userAttendance?.isSignedUp &&
+                    !eventData.event.userAttendance?.isOnWaitingList)
+                }
+                onClick={handleClick}
+                styleClassName={classes.signUpButton}
+              />
+              {!userData.user.phoneNumber &&
+                !eventData.event.userAttendance?.isSignedUp &&
+                !eventData.event.userAttendance?.isOnWaitingList && (
+                  <Typography color="error">
+                    <Warning fontSize="small" />
+                    Du må oppgi et telefonnummer på brukeren din for å kunne melde deg på
+                  </Typography>
+                )}
 
-                {eventData.event.hasExtraInformation &&
-                  !eventData.event.userAttendance?.isSignedUp &&
-                  !eventData.event.userAttendance?.isOnWaitingList && (
-                    <TextField
-                      className={classes.extraInformation}
-                      label="Ekstrainformasjon"
-                      multiline
-                      rows={2}
-                      required
-                      placeholder="Skriv her..."
-                      variant="outlined"
-                      onChange={(e) => setExtraInformation(e.target.value)}
-                    />
-                  )}
+              {eventData.event.hasExtraInformation &&
+                !eventData.event.userAttendance?.isSignedUp &&
+                !eventData.event.userAttendance?.isOnWaitingList && (
+                  <TextField
+                    className={classes.extraInformation}
+                    label="Ekstrainformasjon"
+                    multiline
+                    rows={2}
+                    required
+                    placeholder="Skriv her..."
+                    variant="outlined"
+                    onChange={(e) => setExtraInformation(e.target.value)}
+                  />
+                )}
 
-                <Snackbar
-                  anchorOrigin={{ vertical: "top", horizontal: "right" }}
-                  open={openSignUpErrorSnackbar}
-                  autoHideDuration={3000}
-                  onClose={() => setOpenSignUpErrorSnackbar(false)}
-                >
-                  <Alert elevation={6} variant="filled" severity="error">
-                    {signUpError ? signUpError.message : "Påmelding feilet"}
-                  </Alert>
-                </Snackbar>
+              <Snackbar
+                anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                open={openSignUpErrorSnackbar}
+                autoHideDuration={3000}
+                onClose={() => setOpenSignUpErrorSnackbar(false)}
+              >
+                <Alert elevation={6} variant="filled" severity="error">
+                  {signUpError ? signUpError.message : "Påmelding feilet"}
+                </Alert>
+              </Snackbar>
 
-                <Snackbar
-                  anchorOrigin={{ vertical: "top", horizontal: "right" }}
-                  open={openSignOffErrorSnackbar}
-                  autoHideDuration={3000}
-                  onClose={() => setOpenSignUpErrorSnackbar(false)}
-                >
-                  <Alert elevation={6} variant="filled" severity="error">
-                    Avmelding feilet
-                  </Alert>
-                </Snackbar>
+              <Snackbar
+                anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                open={openSignOffErrorSnackbar}
+                autoHideDuration={3000}
+                onClose={() => setOpenSignUpErrorSnackbar(false)}
+              >
+                <Alert elevation={6} variant="filled" severity="error">
+                  Avmelding feilet
+                </Alert>
+              </Snackbar>
 
-                <Snackbar
-                  anchorOrigin={{ vertical: "top", horizontal: "right" }}
-                  open={openSignOffSnackbar}
-                  autoHideDuration={3000}
-                  onClose={() => setOpenSignOffSnackbar(false)}
-                >
-                  <Alert elevation={6} variant="filled" severity="info">
-                    Du er nå avmeldt
-                  </Alert>
-                </Snackbar>
+              <Snackbar
+                anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                open={openSignOffSnackbar}
+                autoHideDuration={3000}
+                onClose={() => setOpenSignOffSnackbar(false)}
+              >
+                <Alert elevation={6} variant="filled" severity="info">
+                  Du er nå avmeldt
+                </Alert>
+              </Snackbar>
 
-                <Snackbar
-                  anchorOrigin={{ vertical: "top", horizontal: "right" }}
-                  open={openSignUpSnackbar}
-                  autoHideDuration={3000}
-                  onClose={() => setOpenSignUpSnackbar(false)}
-                >
-                  <Alert elevation={6} variant="filled" severity="success">
-                    Du er nå påmeldt
-                  </Alert>
-                </Snackbar>
+              <Snackbar
+                anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                open={openSignUpSnackbar}
+                autoHideDuration={3000}
+                onClose={() => setOpenSignUpSnackbar(false)}
+              >
+                <Alert elevation={6} variant="filled" severity="success">
+                  Du er nå påmeldt
+                </Alert>
+              </Snackbar>
 
-                <Snackbar
-                  anchorOrigin={{ vertical: "top", horizontal: "right" }}
-                  open={openOnWaitingListSnackbar}
-                  autoHideDuration={3000}
-                  onClose={() => setOpenOnWaitingListSnackbar(false)}
-                >
-                  <Alert elevation={6} variant="filled" severity="info">
-                    Du er på ventelisten
-                  </Alert>
-                </Snackbar>
+              <Snackbar
+                anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                open={openOnWaitingListSnackbar}
+                autoHideDuration={3000}
+                onClose={() => setOpenOnWaitingListSnackbar(false)}
+              >
+                <Alert elevation={6} variant="filled" severity="info">
+                  Du er på ventelisten
+                </Alert>
+              </Snackbar>
 
-                <Snackbar
-                  anchorOrigin={{ vertical: "top", horizontal: "right" }}
-                  open={openOffWaitingListSnackbar}
-                  autoHideDuration={3000}
-                  onClose={() => setOpenOffWaitingListSnackbar(false)}
-                >
-                  <Alert elevation={6} variant="filled" severity="info">
-                    Du er ikke lenger på ventelisten
-                  </Alert>
-                </Snackbar>
-              </>
-            )}
+              <Snackbar
+                anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                open={openOffWaitingListSnackbar}
+                autoHideDuration={3000}
+                onClose={() => setOpenOffWaitingListSnackbar(false)}
+              >
+                <Alert elevation={6} variant="filled" severity="info">
+                  Du er ikke lenger på ventelisten
+                </Alert>
+              </Snackbar>
+            </>
+          )}
         </Paper>
       </Grid>
     </Grid>

@@ -45,6 +45,9 @@ class User(AbstractUser):
     def is_anonymous(self):
         return not self.is_authenticated
 
+    def __str__(self):
+        return f"User(name='{self.first_name} {self.last_name}')"
+
 
 def get_anonymous_user_instance(User):
     anonymous_username = guardian_settings.ANONYMOUS_USER_NAME
