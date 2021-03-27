@@ -3,6 +3,8 @@ import datetime
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from phonenumber_field.modelfields import PhoneNumberField
 from guardian.conf import settings as guardian_settings
 
@@ -45,6 +47,9 @@ class User(AbstractUser):
     def is_anonymous(self):
         return not self.is_authenticated
 
+    class Meta:
+        permissions = [("view_sensitive_info", "Can view sensitive information about a user")]
+
 
 def get_anonymous_user_instance(User):
     anonymous_username = guardian_settings.ANONYMOUS_USER_NAME
@@ -53,3 +58,11 @@ def get_anonymous_user_instance(User):
         User.USERNAME_FIELD: anonymous_username,
     }
     return User(**attributes)
+
+@receiver(post_save, sender=User)
+def assign_default_permissions(sender, instance, created, **kwargs):
+    from guardian.shortcuts import assign_perm
+    if created:
+        assign_perm("users.view_sensitive_info", instance, instance)
+        
+

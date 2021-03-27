@@ -1,6 +1,8 @@
 import graphene
 from django.contrib.auth import get_user_model
 from graphene_django import DjangoObjectType
+from graphql_jwt.decorators import login_required
+from utils.decorators import permission_required
 
 
 class UserType(DjangoObjectType):
@@ -29,3 +31,10 @@ class UserType(DjangoObjectType):
             "events",
             "organizations",
         ]
+
+    
+    @staticmethod
+    @login_required
+    @permission_required("users.view_sensitive_info", obj_arg_pos=0)
+    def resolve_allergies(user, info):
+        return user.allergies

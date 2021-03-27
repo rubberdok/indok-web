@@ -10,6 +10,7 @@ from graphql_jwt.decorators import context
 def permission_required(
     perms: Union[list[str], str],
     lookup_variables: tuple[Union[Model, ModelBase, str], ...] = None,
+    obj_arg_pos: int = None,
     **kwargs,
 ):
     """Decorator to check for row level permissions
@@ -78,6 +79,8 @@ def permission_required(
                     lookup_dict[lookup] = kwargs[resolver_arg]
 
                 obj = model.objects.get(**lookup_dict)
+            elif obj_arg_pos is not None:
+                obj = args[obj_arg_pos]
 
             if has_permissions(
                 user=context.user,
