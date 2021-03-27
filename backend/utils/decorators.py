@@ -80,7 +80,8 @@ def permission_required(
 
                 obj = model.objects.get(**lookup_dict)
             elif obj_arg_pos is not None:
-                obj = args[obj_arg_pos]
+                if isinstance(args[obj_arg_pos], Model):
+                    obj = args[obj_arg_pos]
 
             if has_permissions(
                 user=context.user,

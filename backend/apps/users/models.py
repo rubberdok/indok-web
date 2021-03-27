@@ -7,6 +7,8 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from phonenumber_field.modelfields import PhoneNumberField
 from guardian.conf import settings as guardian_settings
+from guardian.shortcuts import assign_perm
+
 
 # Create your models here.
 from apps.events.models import Event, SignUp
@@ -61,7 +63,6 @@ def get_anonymous_user_instance(User):
 
 @receiver(post_save, sender=User)
 def assign_default_permissions(sender, instance, created, **kwargs):
-    from guardian.shortcuts import assign_perm
     if created:
         assign_perm("users.view_sensitive_info", instance, instance)
         
