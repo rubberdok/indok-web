@@ -54,7 +54,7 @@ const CreateBookingPage: NextPage = () => {
     },
     {
       icon: <HotelIcon className={classes.icon} />,
-      text: "20 soveplasser",
+      text: "18 soveplasser",
     },
     {
       icon: <RestaurantIcon className={classes.icon} />,
