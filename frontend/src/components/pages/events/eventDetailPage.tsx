@@ -19,6 +19,7 @@ import { ArrowRight, ContactMail, Edit, ErrorOutline, List, Warning } from "@mat
 import EditEvent from "./editEvent";
 import dayjs from "dayjs";
 import nb from "dayjs/locale/nb";
+import { GET_SERVER_TIME } from "@graphql/utils/time/queries";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -96,6 +97,8 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
   }>(EVENT_SIGN_OFF);
 
   const { data: userData } = useQuery<{ user: User }>(GET_USER);
+
+  const { data: timeData } = useQuery(GET_SERVER_TIME);
 
   const { data: eventData, error: eventError, loading: eventLoading, refetch: refetchEventData } = useQuery<{
     event: Event;
@@ -320,6 +323,7 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
                 }
                 onClick={handleClick}
                 styleClassName={classes.signUpButton}
+                currentTime={timeData.serverTime}
               />
               {!userData.user.phoneNumber &&
                 !eventData.event.userAttendance?.isSignedUp &&
