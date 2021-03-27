@@ -50,7 +50,9 @@ class User(AbstractUser):
         return not self.is_authenticated
 
     class Meta:
-        permissions = [("view_sensitive_info", "Can view sensitive information about a user")]
+        permissions = [
+            ("view_sensitive_info", "Can view sensitive information about a user")
+        ]
 
 
 def get_anonymous_user_instance(User):
@@ -61,9 +63,8 @@ def get_anonymous_user_instance(User):
     }
     return User(**attributes)
 
+
 @receiver(post_save, sender=User)
 def assign_default_permissions(sender, instance, created, **kwargs):
     if created:
         assign_perm("users.view_sensitive_info", instance, instance)
-        
-

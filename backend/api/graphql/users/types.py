@@ -32,7 +32,6 @@ class UserType(DjangoObjectType):
             "organizations",
         ]
 
-    
     @staticmethod
     @login_required
     @permission_required("users.view_sensitive_info", obj_arg_pos=0)
