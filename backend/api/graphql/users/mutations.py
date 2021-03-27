@@ -9,33 +9,6 @@ from graphql_jwt.shortcuts import get_token
 from .types import UserType
 
 
-# Old
-class UserInput(graphene.InputObjectType):
-    username = graphene.String()
-    year = graphene.Int()
-    password = graphene.String()
-    first_name = graphene.String()
-    last_name = graphene.String()
-
-
-# Old
-class CreateUser(graphene.Mutation):
-    user = graphene.Field(UserType)
-    ok = graphene.Boolean()
-
-    class Arguments:
-        user_data = UserInput(required=True)
-
-    @classmethod
-    def mutate(cls, self, info, user_data):
-        user: User = User()
-        for key, value in user_data.items():
-            setattr(user, key, value)
-        user.save()
-        ok = True
-        return cls(user=user, ok=ok)
-
-
 class AuthUser(graphene.Mutation):
     class Arguments:
         code = graphene.String()
