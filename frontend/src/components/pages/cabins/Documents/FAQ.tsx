@@ -126,30 +126,28 @@ const FAQ = () => {
   };
 
   return (
-    <Box>
-      <Grid container spacing={5}>
-        <Grid item xs={12}>
-          <Typography variant="h3" align="center">
-            FAQ
-          </Typography>
-        </Grid>
-
-        <Grid item container xs={12} spacing={5}>
-          {faqs.map((faq) => (
-            <Grid item xs={12} md={6} key={faq.id}>
-              <Box>
-                <Accordion expanded={expanded === faq.id} onChange={handleChange(faq.id)}>
-                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    <Typography variant="subtitle1">{faq.question}</Typography>
-                  </AccordionSummary>
-                  <AccordionDetails>{faq.answer}</AccordionDetails>
-                </Accordion>
-              </Box>
-            </Grid>
-          ))}
-        </Grid>
+    <Grid container spacing={5}>
+      <Grid item xs={12}>
+        <Typography variant="h3" align="center">
+          FAQ
+        </Typography>
       </Grid>
-    </Box>
+
+      <Grid item container xs={12} spacing={5}>
+        {faqs.map((faq) => (
+          <Grid item xs={12} md={6} key={faq.id}>
+            <Box>
+              <Accordion expanded={expanded === faq.id} onChange={handleChange(faq.id)}>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                  <Typography variant="subtitle1">{faq.question}</Typography>
+                </AccordionSummary>
+                <AccordionDetails>{faq.answer}</AccordionDetails>
+              </Accordion>
+            </Box>
+          </Grid>
+        ))}
+      </Grid>
+    </Grid>
   );
 };
 

@@ -104,9 +104,6 @@ const CreateBookingPage: NextPage = () => {
             <Grid container alignItems="center" spacing={10} direction="column">
               <Grid item>
                 <Grid container alignItems="center" spacing={10}>
-                  {/* <Grid xs={12} sm={6} item>
-                    <FAQ />
-                  </Grid> */}
                   <Grid xs={12} sm={6} item>
                     <Box textAlign="center">
                       <Typography variant="h3">Fasiliteter</Typography>
@@ -209,7 +206,9 @@ const CreateBookingPage: NextPage = () => {
               </Grid>
               <Grid item container spacing={10} alignItems="center" direction="row">
                 <Grid item container justify="center" alignContent="center" xs={12}>
-                  <FAQ />
+                  <Grid item>
+                    <FAQ />
+                  </Grid>
                 </Grid>
               </Grid>
             </Grid>
