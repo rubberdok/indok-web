@@ -95,56 +95,54 @@ const ListingItem: React.FC<{
 }> = ({ listing }) => {
   const classes = useStyles();
   return (
-    <>
-      <Card className={classes.root}>
-        <Link href={`listings/${listing.id}/${listing.slug}/`} passHref>
-          <CardActionArea className={classes.root}>
-            <CardMedia
-              component="img"
-              image={listing.hero ? listing.hero : ""}
-              className={`${classes.hero} ${!listing.hero ? classes.background : ""}`}
+    <Card className={classes.root}>
+      <Link href={`listings/${listing.id}/${listing.slug}/`} passHref>
+        <CardActionArea className={classes.root}>
+          <CardMedia
+            component="img"
+            image={listing.hero ? listing.hero : ""}
+            className={`${classes.hero} ${!listing.hero ? classes.background : ""}`}
+          />
+          <CardContent className={classes.content}>
+            <img
+              src={listing.organization ? `/img/${listing.organization.name.toLowerCase()}logo.png` : "/nth.sv"}
+              className={classes.logo}
+              alt="Organisasjonslogo"
+              onError={(e) => (
+                ((e.target as HTMLImageElement).onerror = null), ((e.target as HTMLImageElement).src = "/nth.svg")
+              )}
             />
-            <CardContent className={classes.content}>
-              <img
-                src={listing.organization ? `/img/${listing.organization.name.toLowerCase()}logo.png` : "/nth.sv"}
-                className={classes.logo}
-                alt="Organisasjonslogo"
-                onError={(e) => (
-                  ((e.target as HTMLImageElement).onerror = null), ((e.target as HTMLImageElement).src = "/nth.svg")
-                )}
-              />
-              <Box px={3} display="flex" flexDirection="column" justifyContent="space-between">
-                <Box overflow="hidden" textAlign="center" height="12em">
-                  <Typography variant="h5" component="h2">
-                    {listing.title}
-                  </Typography>
-                  <Typography variant="caption" component="p">
-                    <b>Frist: </b>
-                    {timestamp(listing.deadline)}
-                  </Typography>
-                  <Typography variant="body2" className={classes.descriptionText}>
-                    {listing.description}
-                  </Typography>
-                </Box>
-                <Grid container direction="row" justify="center" alignItems="center" spacing={2}>
-                  {["intervju", "søknad", "case"].map((chip) => (
-                    <Grid item key={chip}>
-                      <Chip
-                        label={chip}
-                        size="small"
-                        style={{
-                          fontSize: 12,
-                        }}
-                      />
-                    </Grid>
-                  ))}
-                </Grid>
+            <Box px={3} display="flex" flexDirection="column" justifyContent="space-between">
+              <Box overflow="hidden" textAlign="center" height="12em">
+                <Typography variant="h5" component="h2">
+                  {listing.title}
+                </Typography>
+                <Typography variant="caption" component="p">
+                  <b>Frist: </b>
+                  {timestamp(listing.deadline)}
+                </Typography>
+                <Typography variant="body2" className={classes.descriptionText}>
+                  {listing.description}
+                </Typography>
               </Box>
-            </CardContent>
-          </CardActionArea>
-        </Link>
-      </Card>
-    </>
+              <Grid container direction="row" justify="center" alignItems="center" spacing={2}>
+                {["intervju", "søknad", "case"].map((chip) => (
+                  <Grid item key={chip}>
+                    <Chip
+                      label={chip}
+                      size="small"
+                      style={{
+                        fontSize: 12,
+                      }}
+                    />
+                  </Grid>
+                ))}
+              </Grid>
+            </Box>
+          </CardContent>
+        </CardActionArea>
+      </Link>
+    </Card>
   );
 };
 
