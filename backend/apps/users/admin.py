@@ -6,3 +6,4 @@ from .models import User
 class UserAdmin(admin.ModelAdmin):
     exclude = ("password",)
     search_fields = ["username", "first_name", "last_name"]
+    list_display = ("username", "first_name", "last_name", "last_login")
