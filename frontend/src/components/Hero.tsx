@@ -111,7 +111,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   orgIcon: {
-    marginBottom: 18,
+    marginBottom: 21,
     color: "rgb(0 0 0 / 55%)",
   },
   hide: {
@@ -182,23 +182,13 @@ const Hero: React.FC = () => {
             >
               <Typography variant="overline">Foreningen for studentene ved</Typography>
               <Fade duration={700} cascade triggerOnce direction="up">
-                <Typography style={{ color: "white" }} variant="h1">
+                <Typography style={{ color: "white" }} variant="h1" gutterBottom>
                   Industriell Økonomi og Teknologiledelse
                 </Typography>
                 <br />
                 <Link href="./about" passHref>
-                  <Button color="inherit" size="large" startIcon={<NavigateNextIcon />}>
+                  <Button color="inherit" variant="outlined">
                     Les om foreningen
-                  </Button>
-                </Link>
-                <Link href="./events" passHref>
-                  <Button color="inherit" size="large" startIcon={<NavigateNextIcon />}>
-                    Arrangementer
-                  </Button>
-                </Link>
-                <Link href="./cabins" passHref>
-                  <Button color="inherit" size="large" startIcon={<NavigateNextIcon />}>
-                    Book hytte
                   </Button>
                 </Link>
               </Fade>

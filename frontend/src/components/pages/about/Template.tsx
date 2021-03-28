@@ -26,7 +26,6 @@ const useStyles = makeStyles(() => ({
     },
   },
   breadcrumb: {
-    fontSize: "0.75rem",
     textTransform: "uppercase",
     marginTop: -24,
   },

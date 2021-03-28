@@ -19,7 +19,7 @@ type Props = {
   posts: Array<any>;
 };
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   media: {
     height: "100px",
     width: "100%",
@@ -33,6 +33,7 @@ const useStyles = makeStyles(() => ({
     flexDirection: "column",
     justifyContent: "space-between",
     textAlign: "center",
+    padding: theme.spacing(2, 3),
   },
 }));
 
@@ -90,7 +91,7 @@ const OrganizationPage: NextPage<Props> = ({ posts }) => {
       (moderorganisasjonen) for all studentfrivillighet på masterstudiet Indøk ved NTNU."
     >
       <img src="/img/orgmap.svg" alt="Organisasjonskart"></img>
-      <Typography id="orgList" variant="h5" gutterBottom>
+      <Typography id="orgList" variant="h3" gutterBottom>
         Se organisasjonene våre under
       </Typography>
       <Tabs indicatorColor="primary" value={value} onChange={pushQuery}>
@@ -119,7 +120,7 @@ const OrganizationPage: NextPage<Props> = ({ posts }) => {
                   <CardActionArea className={classes.card}>
                     {logo ? <CardMedia className={classes.media} image={logo} /> : ""}
                     <Box>
-                      <Typography variant="body1">{title}</Typography>
+                      <Typography variant="body2">{title}</Typography>
                     </Box>
                   </CardActionArea>
                 </Link>

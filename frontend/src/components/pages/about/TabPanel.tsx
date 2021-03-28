@@ -18,7 +18,7 @@ const TabPanel = (props: TabPanelProps) => {
       {...other}
     >
       {value === index && (
-        <Typography variant="body2" paragraph>
+        <Typography variant="body1" paragraph>
           {children}
         </Typography>
       )}

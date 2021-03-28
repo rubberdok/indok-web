@@ -1,7 +1,6 @@
 import Hero from "@components/Hero";
 import Layout from "@components/Layout";
 import { Box, Button, Container, makeStyles, Typography } from "@material-ui/core";
-import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import { NextPage } from "next";
 import Link from "next/link";
 import React from "react";
@@ -76,8 +75,8 @@ const IndexPage: NextPage = () => {
                 <Typography variant="h2">Et fantastisk studentmiljø.</Typography>
                 <br />
                 <Link href="./events" passHref>
-                  <Button color="inherit" size="large" startIcon={<NavigateNextIcon />}>
-                    Utforsk kalenderen
+                  <Button color="inherit" variant="outlined">
+                    Se kommende arrangementer
                   </Button>
                 </Link>
               </Box>
