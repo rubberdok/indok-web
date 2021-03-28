@@ -66,6 +66,11 @@ const typography = {
     fontWeight: 300,
     lineHeight: 1.75,
   },
+  button: {
+    fontSize: "0.8rem",
+    fontWeight: 600,
+    letterSpacing: "0.02rem",
+  },
 };
 
 export default typography;
