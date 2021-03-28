@@ -201,68 +201,68 @@ const Footer: React.FC = () => {
                   <TableCell>
                     Lars Lien Ankile &apos;22
                     <br />
-                    <Typography variant="caption">Lederpar Hovedstyret</Typography>
+                    <Typography variant="caption">LP &amp; Chief Devops Architect</Typography>
                   </TableCell>
                   <TableCell>
                     Andreas Johannesen &apos;22
                     <br />
-                    <Typography variant="caption">Lederpar Hovedstyret</Typography>
+                    <Typography variant="caption">LP &amp; Chief Visionary</Typography>
                   </TableCell>
                   <TableCell>
                     Ingrid Aaseng &apos;22
                     <br />
-                    <Typography variant="caption">Arkiv</Typography>
+                    <Typography variant="caption">Head of Archive Solutions</Typography>
                   </TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>
                     Fredrik Ahlborg &apos;22
                     <br />
-                    <Typography variant="caption">Content Creator</Typography>
+                    <Typography variant="caption">Content Creator &amp; Social Chair</Typography>
                   </TableCell>
                   <TableCell>
                     Herman Holmøy &apos;25
                     <br />
-                    <Typography variant="caption">Hyttebooking </Typography>
+                    <Typography variant="caption">Cabin Management System</Typography>
                   </TableCell>
                   <TableCell>
                     Patrik Kjærran &apos;22
                     <br />
-                    <Typography variant="caption">Event</Typography>
+                    <Typography variant="caption">Event Backend Strategist</Typography>
                   </TableCell>
                   <TableCell>
                     Anna Sofie Lunde &apos;22
                     <br />
-                    <Typography variant="caption">Arkiv</Typography>
+                    <Typography variant="caption">Head of Archive Solutions</Typography>
                   </TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>
                     Hermann Mørkrid &apos;23
                     <br />
-                    <Typography variant="caption">Verv-søking</Typography>
+                    <Typography variant="caption">Head of Extracurricular System</Typography>
                   </TableCell>
                   <TableCell>
                     Mathias Raa &apos;25
                     <br />
-                    <Typography variant="caption">Chief of Design</Typography>
+                    <Typography variant="caption">Art Director &amp; UX Architect</Typography>
                   </TableCell>
                   <TableCell>
                     Mathilde Marie Solberg &apos;23
                     <br />
-                    <Typography variant="caption">Event</Typography>
+                    <Typography variant="caption">Global Head of Event</Typography>
                   </TableCell>
                   <TableCell>
                     Sverre Spetalen &apos;21
                     <br />
-                    <Typography variant="caption">Hyttebooking</Typography>
+                    <Typography variant="caption">Cabin Management System</Typography>
                   </TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>
                     Lars Waage &apos;23
                     <br />
-                    <Typography variant="caption">Verv-søking</Typography>
+                    <Typography variant="caption">Head of Extracurricular System</Typography>
                   </TableCell>
                 </TableRow>
               </TableBody>

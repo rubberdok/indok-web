@@ -90,9 +90,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+let username: string | null = null;
+
 const NavbarLinks: React.FC = () => {
   const classes = useStyles();
   const router = useRouter();
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+
+  const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
 
   const queryString = generateQueryString({
     client_id: process.env.NEXT_PUBLIC_DATAPORTEN_ID,
@@ -103,13 +111,9 @@ const NavbarLinks: React.FC = () => {
   });
   const signInURL = "https://auth.dataporten.no/oauth/authorization" + queryString;
 
-  const { loading, error, data: userData } = useQuery<{ user: User }>(GET_USER);
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
+  const { error, data: userData } = useQuery<{ user: User }>(GET_USER);
 
-  const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
+  username = userData?.user ? userData.user.firstName : username;
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -141,7 +145,7 @@ const NavbarLinks: React.FC = () => {
           )}
         </div>
       ))}
-      {!userData || loading || !userData.user || error ? (
+      {!username || error ? (
         <>
           <Box position="relative">
             <a
@@ -174,7 +178,7 @@ const NavbarLinks: React.FC = () => {
             onClick={handleMenu}
             startIcon={<AccountCircleOutlined fontSize="small" />}
           >
-            {userData.user.firstName}
+            {username}
           </Button>
           <Menu
             id="menu-appbar"
