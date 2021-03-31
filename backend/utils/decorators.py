@@ -1,5 +1,5 @@
 from functools import wraps
-from typing import Union
+from typing import Callable, Union
 
 from django.apps import apps
 from django.db.models import Model
@@ -11,6 +11,7 @@ def permission_required(
     perms: Union[list[str], str],
     lookup_variables: tuple[Union[Model, ModelBase, str], ...] = None,
     obj_arg_pos: int = None,
+    fn: Callable = None,
     **kwargs,
 ):
     """Decorator to check for row level permissions
@@ -55,7 +56,9 @@ def permission_required(
         @context(resolver)
         def wrapper(context, *args, **kwargs):
             obj = None
-            if lookup_variables:
+            if fn:
+                obj = fn(context, *args, **kwargs)
+            elif lookup_variables:
                 model, lookups = lookup_variables[0], lookup_variables[1:]
 
                 if isinstance(model, str):
