@@ -16,13 +16,10 @@ class BaseSurveyInput(graphene.InputObjectType):
     name = graphene.String()
     organization_id = graphene.ID()
     description = graphene.String()
-    group_id = graphene.ID()
 
 
 class CreateSurveyInput(BaseSurveyInput):
     name = graphene.String(required=True)
-    organization_id = graphene.ID(required=True)
-    group_id = graphene.ID(required=True)
 
 
 class CreateSurvey(graphene.Mutation):
