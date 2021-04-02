@@ -1,6 +1,6 @@
 import { useMutation } from "@apollo/client";
 import Layout from "@components/Layout";
-import { DELETE_TOKEN_COOKIE, GET_ID_TOKEN } from "@graphql/auth/mutations";
+import { DELETE_TOKEN_COOKIE, GET_ID_TOKEN } from "@graphql/users/mutations";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useEffect } from "react";

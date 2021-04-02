@@ -1,22 +1,22 @@
 import { useQuery } from "@apollo/client";
-import { GET_DOCSBYFILTERS } from "@graphql/archive/queries";
-import { Document } from "@interfaces/archives";
+import { GET_FEATURED } from "@graphql/archive/queries";
 import Button from "@material-ui/core/Button";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import React, { useEffect } from "react";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardMedia from "@material-ui/core/CardMedia";
-import CardActionArea from "@material-ui/core/CardActionArea";
 import GridList from "@material-ui/core/GridList";
 import GridListTile from "@material-ui/core/GridListTile";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
+import { Document } from "@interfaces/archive";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       flexGrow: 1,
+      display: "flex",
+      flexDirection: "column",
     },
     paper: {
       padding: theme.spacing(2),
@@ -39,21 +39,18 @@ const useStyles = makeStyles((theme: Theme) =>
       width: "100%",
       fontSize: 10,
       padding: -10,
+      textTransform: "none",
+    },
+    year: {
+      width: "100%",
+      fontSize: 10,
+      padding: -10,
     },
   })
 );
 
-interface ListFeaturedDocumentsProps {
-  document_types: string[];
-  year: number | null;
-}
-
-const ListFeaturedDocuments: React.FC<ListFeaturedDocumentsProps> = ({ document_types, year }) => {
-  const { refetch, loading, data, error } = useQuery(GET_DOCSBYFILTERS, { variables: { document_types, year } });
-
-  useEffect(() => {
-    refetch({ document_types, year });
-  }, [document_types, year]);
+const ListFeaturedDocuments: React.FC = () => {
+  const { loading, data, error } = useQuery(GET_FEATURED);
 
   const classes = useStyles();
   if (loading) return <p style={{ textAlign: "center" }}></p>;
@@ -62,49 +59,61 @@ const ListFeaturedDocuments: React.FC<ListFeaturedDocumentsProps> = ({ document_
 
   return (
     <Container>
-      <Typography variant="body1">Fremhevede dokumenter</Typography>
+      <Typography variant="body1" style={{ marginBottom: "8px" }}>
+        Fremhevede dokumenter
+      </Typography>
       <GridList cellHeight={144} className={classes.img} cols={4} spacing={8}>
-        {data.archiveByTypes.length ? (
-          data.archiveByTypes.map((doc: Document) => (
+        {data.featuredArchive.length ? (
+          data.featuredArchive.map((doc: Document) => (
             <GridListTile key={0}>
               <Card className={classes.root} elevation={1}>
-                <CardActionArea>
-                  <Button
+                <Button
+                  key={doc.id}
+                  className={classes.article}
+                  onClick={() => {
+                    window.open(doc.webLink, "_blank");
+                  }}
+                >
+                  <CardMedia
                     key={doc.id}
-                    className={classes.article}
-                    onClick={() => {
-                      window.open(doc.url, "_blank");
-                    }}
-                  >
-                    <CardMedia
-                      key={doc.id}
-                      className={classes.image}
-                      component="img"
-                      height="128"
-                      image={doc.thumbnail}
-                    />
-                    <CardHeader
-                      className={classes.header}
-                      title={doc.title}
-                      subheader={doc.typeDoc.replace(/_/g, " ")}
-                      titleTypographyProps={{
-                        variant: "inherit",
-                        component: "h2",
-                        align: "left",
-                      }}
-                      subheaderTypographyProps={{
-                        variant: "inherit",
-                        component: "h4",
-                        align: "left",
-                      }}
-                    />
-                  </Button>
-                </CardActionArea>
+                    className={classes.image}
+                    component="img"
+                    height="128"
+                    image={doc.thumbnail}
+                  />
+                  <CardHeader
+                    className={classes.header}
+                    disableTypography
+                    title={
+                      <Typography
+                        component="h2"
+                        variant="inherit"
+                        gutterBottom
+                        paragraph
+                        style={{ fontSize: "5", fontWeight: "lighter", textAlign: "center" }}
+                      >
+                        {doc.title}
+                      </Typography>
+                    }
+                    subheader={
+                      <Typography
+                        component="h4"
+                        variant="inherit"
+                        style={{ fontWeight: "lighter", textAlign: "center" }}
+                      >
+                        {doc.typeDoc
+                          .replace(/_/g, " ")
+                          .replace("ARBOKER", "ÅRBØKER")
+                          .replace("STOTTE FRA HS", "STØTTE FRA HS")}
+                      </Typography>
+                    }
+                  />
+                </Button>
               </Card>
             </GridListTile>
           ))
         ) : (
-          <Container>
+          <Container style={{ flex: 1 }}>
             <Typography> Kunne ikke laste inn dokumenter </Typography>
           </Container>
         )}

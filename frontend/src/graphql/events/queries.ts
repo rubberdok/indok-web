@@ -27,11 +27,107 @@ export const GET_EVENTS = gql`
         lastName
         dateJoined
       }
+      price
+      shortDescription
+      signupOpenDate
+      userAttendance {
+        isSignedUp
+        isOnWaitingList
+      }
+      isFull
+      hasExtraInformation
+      allowedGradeYears
+    }
+  }
+`;
+
+export const GET_DEFAULT_EVENTS = gql`
+  query defaultEvents {
+    defaultEvents {
+      id
+      title
+      startTime
+      endTime
+      location
+      description
+      organization {
+        name
+        color
+      }
+      category {
+        name
+      }
+      image
+      isAttendable
+      deadline
+      publisher {
+        id
+        username
+        email
+        firstName
+        lastName
+        dateJoined
+      }
+      price
+      shortDescription
+      signupOpenDate
+      userAttendance {
+        isSignedUp
+        isOnWaitingList
+      }
+      isFull
+      hasExtraInformation
+      allowedGradeYears
     }
   }
 `;
 
 export const GET_EVENT = gql`
+  query Event($id: ID!) {
+    event(id: $id) {
+      id
+      title
+      startTime
+      endTime
+      location
+      description
+      organization {
+        id
+        name
+      }
+      category {
+        id
+        name
+      }
+      image
+      isAttendable
+      deadline
+      publisher {
+        id
+        username
+        email
+        firstName
+        lastName
+        dateJoined
+      }
+      availableSlots
+      price
+      shortDescription
+      signupOpenDate
+      userAttendance {
+        isSignedUp
+        isOnWaitingList
+      }
+      isFull
+      hasExtraInformation
+      bindingSignup
+      contactEmail
+      allowedGradeYears
+    }
+  }
+`;
+
+export const ADMIN_GET_EVENT = gql`
   query Event($id: ID!) {
     event(id: $id) {
       id
@@ -57,6 +153,35 @@ export const GET_EVENT = gql`
         lastName
         dateJoined
       }
+      availableSlots
+      price
+      shortDescription
+      signupOpenDate
+      usersAttending {
+        id
+        username
+        email
+        firstName
+        lastName
+        gradeYear
+      }
+      usersOnWaitingList {
+        id
+        username
+        email
+        firstName
+        lastName
+        gradeYear
+      }
+      userAttendance {
+        isSignedUp
+        isOnWaitingList
+      }
+      isFull
+      hasExtraInformation
+      bindingSignup
+      contactEmail
+      allowedGradeYears
     }
   }
 `;
@@ -88,6 +213,36 @@ export const QUERY_EVENT_FILTERED_ORGANIZATIONS = gql`
       children {
         id
         name
+      }
+    }
+  }
+`;
+
+export const QUERY_ATTENDEE_REPORT = gql`
+  query attendeeReport($eventId: ID!, $fields: [String], $filetype: String) {
+    attendeeReport(eventId: $eventId, fields: $fields, filetype: $filetype)
+  }
+`;
+
+export const QUERY_ATTENDEE_REPORT_ORG = gql`
+  query attendeeReportOrg($orgId: ID!, $fields: [String], $filetype: String) {
+    attendeeReportOrg(orgId: $orgId, fields: $fields, filetype: $filetype)
+  }
+`;
+
+export const QUERY_ATTENDEE_REPORTS = gql`
+  query attendeeReports($eventIds: [ID]!, $fields: [String], $filetype: String) {
+    attendeeReports(eventIds: $eventIds, fields: $fields, filetype: $filetype)
+  }
+`;
+
+export const QUERY_SIGNED_UP_USERS = gql`
+  query Event($id: ID!) {
+    event(id: $id) {
+      isAttendable
+      usersAttending {
+        id
+        email
       }
     }
   }

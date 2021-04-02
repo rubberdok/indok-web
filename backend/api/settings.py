@@ -57,6 +57,8 @@ INSTALLED_APPS = [
     "corsheaders",
     "graphene_django",
     "rest_framework",
+    "phonenumber_field",
+    "guardian",
 ]
 
 AUTH_USER_MODEL = "users.User"
@@ -65,6 +67,7 @@ GRAPHENE = {
     "SCHEMA": "api.graphql.schema.schema",
     "MIDDLEWARE": [
         "graphql_jwt.middleware.JSONWebTokenMiddleware",
+        "api.auth.middleware.AnonymousUserMiddleware",
     ],
 }
 
@@ -72,6 +75,7 @@ MIDDLEWARE = [
     "django_alive.middleware.healthcheck_bypass_host_check",
     "api.auth.middleware.IndokWebJWTMiddleware",
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -121,7 +125,15 @@ DATABASES = {
 AUTHENTICATION_BACKENDS = [
     "graphql_jwt.backends.JSONWebTokenBackend",
     "django.contrib.auth.backends.ModelBackend",
+    "guardian.backends.ObjectPermissionBackend",
 ]
+
+# Guardian custom user fix
+# https://django-guardian.readthedocs.io/en/stable/userguide/custom-user-model.html#anonymous-user-creation
+GUARDIAN_GET_INIT_ANONYMOUS_USER = "apps.users.models.get_anonymous_user_instance"
+
+ANONYMOUS_USER_NAME = "AnonymousUser"
+
 
 DATAPORTEN_ID = env("DATAPORTEN_ID")
 DATAPORTEN_SECRET = env("DATAPORTEN_SECRET")
@@ -153,12 +165,18 @@ USE_L10N = True
 
 USE_TZ = True
 
+PHONENUMBER_DB_FORMAT = "NATIONAL"
+PHONENUMBER_DEFAULT_REGION = "NO"
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = "/static/"
-STATICFILES_DIRS = ["backend/static/cabins"]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
+
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+
 
 # CONFIG
 EMAIL_HOST_USER = env("BOOKING_EMAIL")

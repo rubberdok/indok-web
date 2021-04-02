@@ -1,34 +1,28 @@
-import Navbar from "@components/navbar/Navbar";
-import { Button } from "@material-ui/core";
-import { NextPage } from "next";
-import React from "react";
+import Layout from "@components/Layout";
 import CreateEvent from "@components/pages/events/createEvent";
+import { Button, Container, makeStyles } from "@material-ui/core";
+import { NextPage } from "next";
 import Link from "next/link";
+import React from "react";
+
+const useStyles = makeStyles((theme) => ({
+  container: {
+    paddingTop: theme.spacing(4),
+    paddingBottom: theme.spacing(4),
+  },
+}));
 
 const CreateEventsPage: NextPage = () => {
+  const classes = useStyles();
   return (
-    <>
-      <Navbar />
-      <Link href="/events">
-        <Button color="primary">Tilbake til arrangementer</Button>
-      </Link>
-      <div
-        style={{
-          border: "solid",
-          borderRadius: "1em",
-          padding: "2em",
-          backgroundColor: "#fff",
-          borderColor: "#6A9997",
-          width: "450px",
-          margin: "0 auto",
-        }}
-      >
-        {" "}
-        <div style={{ marginLeft: "auto", marginRight: "auto" }}>
-          <CreateEvent />
-        </div>
-      </div>
-    </>
+    <Layout>
+      <Container className={classes.container}>
+        <Link href="/events">
+          <Button color="primary">Tilbake til arrangementer</Button>
+        </Link>
+        <CreateEvent />
+      </Container>
+    </Layout>
   );
 };
 

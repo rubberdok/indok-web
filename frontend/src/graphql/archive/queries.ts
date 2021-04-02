@@ -1,38 +1,34 @@
 import { gql } from "@apollo/client";
 
-export const DOCUMENTS = gql`
+export const GET_FEATURED = gql`
   query {
-    allArchives {
+    featuredArchive {
       id
       title
-      url
       thumbnail
+      featured
       typeDoc
-    }
-  }
-`;
-
-export const DOCUMENT = gql`
-  query archive($ID: ID!) {
-    archive(id: $ID) {
-      id
-      title
-      url
-      thumbnail
-      typeDoc
+      year
+      webLink
     }
   }
 `;
 
 export const GET_DOCSBYFILTERS = gql`
-  query archiveByTypes($document_types: [String]!, $year: Int) {
-    archiveByTypes(typeDoc: $document_types, year: $year) {
+  query archiveByTypes($document_types: [String]!, $year: Int, $names: String) {
+    archiveByTypes(typeDoc: $document_types, year: $year, names: $names) {
       id
       title
-      url
       thumbnail
       typeDoc
       year
+      webLink
     }
+  }
+`;
+
+export const GET_AVAILABLE_YEARS = gql`
+  query {
+    availableYears
   }
 `;

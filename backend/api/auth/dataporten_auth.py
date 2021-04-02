@@ -3,9 +3,10 @@ import json
 import jwt
 import requests
 from django.contrib.auth import get_user_model
-from django.core.exceptions import PermissionDenied, ValidationError
+from django.core.exceptions import ValidationError
 from requests.auth import HTTPBasicAuth
 from django.conf import settings
+from django.utils import timezone
 
 UserModel = get_user_model()
 
@@ -164,8 +165,7 @@ class DataportenAuth:
         email = user_info["email"]
         name = user_info["name"]
         # picture = "https://api.dataporten.no/userinfo/v1/user/media/" + user_info["profilephoto"] #TODO: add profile photo
-        year = 4  # TODO: update when access to study year
-        return (username, feide_userid, email, name, year)
+        return (username, feide_userid, email, name)
 
     @classmethod
     def authenticate_and_get_user(cls, code=None):
@@ -180,41 +180,38 @@ class DataportenAuth:
         access_token = response.get("access_token")
         id_token = response.get("id_token")
 
-        # Check if user is member of MTIØT group (studies indøk)
-        enrolled = cls.confirm_indok_enrollment(access_token)
-        if not enrolled:
-            return None, enrolled, id_token
-
         # Fetch user info from Dataporten
         user_info = cls.get_user_info(access_token)
         if user_info is None:
             return None
 
-        username, feide_userid, email, name, year = user_info
+        username, feide_userid, email, name = user_info
 
         # Create or update user
         try:
             user = UserModel.objects.get(feide_userid=feide_userid)
             # User exists, update user info
             print(f"\nUser {username} exists, updating in the database")
-            user.username = username
-            user.email = email
-            user.first_name = name
-            user.feide_userid = feide_userid
-            # user.year = year
             user.id_token = id_token
+            user.last_login = timezone.now()
             user.save()
+            enrolled = True
 
         except UserModel.DoesNotExist:
+            # Check if user is member of MTIØT group (studies indøk)
+            enrolled = cls.confirm_indok_enrollment(access_token)
+            if not enrolled:
+                return None, enrolled, id_token
+
             print(f"\nUser {username} does not exist, creating in the database")
             # User does not exist, create a new user
             user = UserModel(
                 username=username,
-                email=email,
+                feide_email=email,
                 first_name=name,
                 feide_userid=feide_userid,
-                # year=year,
                 id_token=id_token,
+                last_login=timezone.now(),
             )
             user.save()
         return user, enrolled, None

@@ -3,11 +3,17 @@ import React, { useState } from "react";
 import FilterButton from "./FilterButtons";
 import ListDocuments from "./listDocuments";
 import { ContentWrapper } from "./wrapper";
-import SliderSelector from "./slider";
+import YearSelector from "./yearSelector";
 import ListFeaturedDocuments from "./listFeaturedDocuments";
+import SearchBarComp from "./searchBar";
+import { RemoveFilters } from "./removeFilters";
 
 const DocumentListView: React.FC = () => {
-  const [yearFilter, setYearFilter] = useState<number | null>(null);
+  const [yearFilter, setYearFilter] = useState("");
+
+  const [searchFilter, setSearchFilter] = useState("");
+
+  const [viewFeatured, setViewFeatured] = useState(true);
 
   const [typeFilters, setTypeFilters] = useState<{ [key: string]: { active: boolean; title: string } }>({
     Budget: { active: false, title: "Budsjett og Regnskap" },
@@ -26,36 +32,74 @@ const DocumentListView: React.FC = () => {
           Arkiv
         </Typography>
       </div>
-      <ContentWrapper
-        style={{ marginLeft: "80px", marginRight: "80px", justifyContent: "space-evenly", paddingBottom: "50px" }}
-      >
-        <FilterButton
-          typeFilters={typeFilters}
-          updateTypeFilters={(key) =>
-            setTypeFilters({
-              ...typeFilters,
-              [key]: { active: !typeFilters[key].active, title: typeFilters[key].title },
-            })
-          }
+      <ContentWrapper style={{ justifyContent: "center" }}>
+        <ContentWrapper style={{ paddingBottom: "8px" }}>
+          <FilterButton
+            typeFilters={typeFilters}
+            updateTypeFilters={(key) => {
+              [
+                setTypeFilters({
+                  ...typeFilters,
+                  [key]: { active: !typeFilters[key].active, title: typeFilters[key].title },
+                }),
+                setViewFeatured(false),
+              ];
+            }}
+          />
+          <ContentWrapper style={{ flex: 1 }}>
+            <YearSelector
+              yearFilter={yearFilter}
+              handleYearFilterChanged={(year: string) => {
+                [setYearFilter(year), setViewFeatured(false)];
+              }}
+            />
+          </ContentWrapper>
+        </ContentWrapper>
+      </ContentWrapper>
+      <ContentWrapper style={{ justifyContent: "flex-end", marginTop: "16px", marginBottom: "5%" }}>
+        <SearchBarComp
+          searchFilter={searchFilter}
+          handleSearchFilterChanged={(newValue: string) => {
+            [setSearchFilter(newValue), setViewFeatured(false)];
+          }}
+          handleSearchFilterCanceled={() => setSearchFilter("")}
         />
       </ContentWrapper>
-      <ContentWrapper style={{ justifyContent: "center", marginBottom: "32px" }}>
-        <SliderSelector yearFilter={yearFilter} updateYearFilters={(value) => setYearFilter(value)} />
-      </ContentWrapper>
-      <ContentWrapper style={{ marginBottom: "16px" }}>
-        <ListFeaturedDocuments
-          document_types={Object.entries(typeFilters)
-            .filter((key, _) => key[1].active)
-            .map(([_, val]) => val.title)}
-          year={yearFilter}
-        />
-      </ContentWrapper>
+      {!viewFeatured && (
+        <ContentWrapper style={{ paddingLeft: "83.8%", marginTop: "-9%", marginBottom: "5%" }}>
+          <RemoveFilters
+            handleRemoveFilterChanged={() => {
+              [
+                setYearFilter(""),
+                setSearchFilter(""),
+                setTypeFilters({
+                  Budget: { active: false, title: "Budsjett og Regnskap" },
+                  Summary: { active: false, title: "Generalforsamling" },
+                  Yearbook: { active: false, title: "Årbøker" },
+                  Guidelines: { active: false, title: "Støtte fra HS" },
+                  Regulation: { active: false, title: "Foreningens lover" },
+                  Statues: { active: false, title: "Utveksling" },
+                  Others: { active: false, title: "Annet" },
+                }),
+                setViewFeatured(true),
+              ];
+            }}
+          />
+        </ContentWrapper>
+      )}
+
+      {viewFeatured && (
+        <ContentWrapper style={{ marginBottom: "16px" }}>
+          <ListFeaturedDocuments />
+        </ContentWrapper>
+      )}
       <ContentWrapper style={{ marginTop: "16px" }}>
         <ListDocuments
           document_types={Object.entries(typeFilters)
             .filter((key, _) => key[1].active)
             .map(([_, val]) => val.title)}
-          year={yearFilter}
+          year={parseInt(yearFilter)}
+          names={searchFilter}
         />
       </ContentWrapper>
     </>

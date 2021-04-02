@@ -3,12 +3,12 @@ version: 0.2
 env:
   variables:
     AWS_REGION: "eu-north-1"
-    NEXT_PUBLIC_GRAPHQL_BACKEND_URI: "https://api.gamma.indokntnu.no/graphql"
-    NEXT_PUBLIC_FRONTEND_URI: "https://gamma.indokntnu.no"
+    NEXT_PUBLIC_GRAPHQL_BACKEND_URI: "https://api.indokntnu.no/graphql"
+    NEXT_PUBLIC_FRONTEND_URI: "https://indokntnu.no"
     DATAPORTEN_ID: "f17d2ea0-a7c9-4458-83bf-35cf5b555cae"
-    DATAPORTEN_REDIRECT_URI: "https://gamma.indokntnu.no/authCallback"
+    DATAPORTEN_REDIRECT_URI: "https://indokntnu.no/authCallback"
     NEXT_PUBLIC_DATAPORTEN_STATE: "RGpBPYszuqXVvsma1suHJJ4X7ZJjkfS6njRHnx4p"
-    BOOKING_EMAIL: "RGpBPYszuqXVvsma1suHJJ4X7ZJjkfS6njRHnx4p"
+    BOOKING_EMAIL: "hswebkom@gmail.com"
 
 phases:
   pre_build:

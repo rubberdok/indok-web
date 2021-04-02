@@ -5,16 +5,11 @@ from graphene_django import DjangoObjectType
 
 
 class ArchiveDocumentType(DjangoObjectType):
-    url = graphene.String()
     thumbnail = graphene.String()
 
     class Meta:
         model = ArchiveDocument
 
     @staticmethod
-    def resolve_url(root: ArchiveDocument, info):
-        return f"{get_url(root.file_location)}"
-
-    @staticmethod
     def resolve_thumbnail(root: ArchiveDocument, info):
-        return f"{get_thumbnail(root.file_location)}"
+        return get_thumbnail(root.file_location)
