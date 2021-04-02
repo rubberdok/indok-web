@@ -1,3 +1,5 @@
+import uuid
+
 from django.conf import settings
 from django.db import models
 from django.db.models.fields import DateTimeField
@@ -15,6 +17,10 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+
+
+def get_auth_token():
+    return uuid.uuid4().hex
 
 
 class Order(models.Model):
@@ -39,6 +45,9 @@ class Order(models.Model):
         max_length=255, choices=PAYMENT_STATUS_CHOICES, default="initiated"
     )
     date = DateTimeField(auto_now_add=True)
+    auth_token = models.CharField(
+        max_length=32, default=get_auth_token
+    )  # For authenticating Vipps callback
 
     def __str__(self):
         return f"Order(product={self.product}, user={self.user})"

@@ -1,9 +1,8 @@
 from django.urls import path
 
-from .views import VippsCallback, InitiateOrder
+from .views import VippsCallback
 
 
 urlpatterns = [
-    path("order/", InitiateOrder.as_view()),
     path("callback/", VippsCallback.as_view()),
 ]

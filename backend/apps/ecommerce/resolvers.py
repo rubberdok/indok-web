@@ -1,4 +1,4 @@
-from graphql_jwt.decoratos import login_required
+from graphql_jwt.decorators import login_required
 
 from .models import Order, Product
 

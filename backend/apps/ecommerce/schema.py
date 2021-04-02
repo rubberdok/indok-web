@@ -6,7 +6,7 @@ from .types import OrderType, ProductType
 
 
 class EcommerceMutations(graphene.ObjectType):
-    intiate_order = InitiateOrder.Field()
+    initiate_order = InitiateOrder.Field()
 
 
 class EcommerceQueries(graphene.ObjectType, EcommerceResolvers):
