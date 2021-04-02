@@ -1,7 +1,8 @@
 import graphene
+from apps.ecommerce.schema import EcommerceMutations, EcommerceQueries
 
-from .cabins.schema import CabinMutations, CabinQueries
 from .archive.schema import ArchiveMutations, ArchiveQueries
+from .cabins.schema import CabinMutations, CabinQueries
 from .events.schema import EventMutations, EventQueries
 from .organizations.schema import OrganizationMutations, OrganizationQueries
 from .users.schema import UserMutations, UserQueries
@@ -14,7 +15,8 @@ class Query(
     UserQueries,
     CabinQueries,
     OrganizationQueries,
-    UtilQueries
+    UtilQueries,
+    EcommerceQueries,
 ):
     pass
 
@@ -25,6 +27,7 @@ class Mutations(
     UserMutations,
     CabinMutations,
     OrganizationMutations,
+    EcommerceMutations,
 ):
     pass
 

@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     "apps.events",
     "apps.organizations",
     "apps.users",
+    "apps.ecommerce",
     # External apps
     "corsheaders",
     "graphene_django",
