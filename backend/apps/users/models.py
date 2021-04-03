@@ -53,7 +53,7 @@ class User(AbstractUser):
         permissions = [
             ("view_sensitive_info", "Can view sensitive information about a user")
         ]
-        
+
     def __str__(self):
         return f"User(name='{self.first_name} {self.last_name}')"
 
