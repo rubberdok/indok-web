@@ -1,8 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { Button, CircularProgress, createStyles, makeStyles } from "@material-ui/core";
+import dayjs from "dayjs";
+import nb from "dayjs/locale/nb";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.locale(nb);
+dayjs.tz.setDefault("Europe/Oslo");
 
-const calculateTimeLeft = (countdownTime: string): Record<string, number> => {
-  const difference = +new Date(countdownTime) - +new Date();
+const calculateTimeLeft = (countdownTime: string, now: any): Record<string, number> => {
+  const countdown = dayjs(countdownTime);
+  const difference = countdown.diff(now);
 
   if (difference > 0)
     return {
@@ -34,6 +43,7 @@ const useStyles = makeStyles(() =>
 
 interface Props {
   countDownDate: string;
+  currentTime: string;
   isSignedUp: boolean;
   isOnWaitingList: boolean;
   isFull: boolean;
@@ -45,6 +55,7 @@ interface Props {
 
 const CountdownButton: React.FC<Props> = ({
   countDownDate,
+  currentTime,
   isSignedUp,
   isOnWaitingList,
   isFull,
@@ -53,12 +64,14 @@ const CountdownButton: React.FC<Props> = ({
   onClick,
   styleClassName,
 }) => {
-  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft(countDownDate));
+  const [now, setNow] = useState(dayjs(currentTime));
+  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft(countDownDate, now));
   const classes = useStyles();
 
   useEffect(() => {
     const id = setTimeout(() => {
-      setTimeLeft(calculateTimeLeft(countDownDate));
+      setTimeLeft(calculateTimeLeft(countDownDate, now));
+      setNow(now.add(1, "second"));
     }, 1000);
     return () => {
       clearTimeout(id);
