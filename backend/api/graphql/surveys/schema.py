@@ -2,11 +2,8 @@ import graphene
 
 from .types import OptionType, AnswerType, SurveyType, QuestionType, ResponseType
 from .resolvers import (
-    OptionResolvers,
     ResponseResolvers,
     SurveyResolvers,
-    QuestionResolvers,
-    AnswerResolvers,
 )
 
 from .mutations.questions import (
@@ -28,23 +25,11 @@ from .mutations.surveys import (
 
 class SurveyQueries(
     graphene.ObjectType,
-    OptionResolvers,
     SurveyResolvers,
-    QuestionResolvers,
-    AnswerResolvers,
     ResponseResolvers,
 ):
-    option = graphene.Field(OptionType, id=graphene.ID())
-    options = graphene.List(OptionType, search=graphene.String())
-
     survey = graphene.Field(SurveyType, survey_id=graphene.ID())
     surveys = graphene.List(SurveyType, search=graphene.String())
-
-    question = graphene.Field(QuestionType, id=graphene.ID())
-    questions = graphene.List(QuestionType, search=graphene.String())
-
-    answer = graphene.Field(AnswerType, id=graphene.ID())
-    answers = graphene.List(AnswerType, search=graphene.String())
 
     response = graphene.Field(
         ResponseType, survey_id=graphene.ID(required=True), response_id=graphene.ID()

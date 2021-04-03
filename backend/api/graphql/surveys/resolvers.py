@@ -2,7 +2,6 @@ from apps.surveys.models import Option, Survey, Question, Answer, Response
 from guardian.shortcuts import get_objects_for_user
 from graphql_jwt.decorators import login_required
 
-from typing import Optional
 
 from utils.decorators import permission_required
 
