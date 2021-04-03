@@ -2,7 +2,7 @@ import graphene
 from django.contrib.auth import get_user_model
 from graphene_django import DjangoObjectType
 from graphql_jwt.decorators import login_required
-from utils.decorators import permission_required, get_resolver_parent, permission_required_or_return_none
+from utils.decorators import permission_required, get_resolver_parent, permission_required_or_none
 
 
 class UserType(DjangoObjectType):
@@ -34,6 +34,6 @@ class UserType(DjangoObjectType):
 
     @staticmethod
     @login_required
-    @permission_required_or_return_none("users.view_sensitive_info", fn=get_resolver_parent)
+    @permission_required_or_none("users.view_sensitive_info", fn=get_resolver_parent)
     def resolve_allergies(user, info):
         return user.allergies

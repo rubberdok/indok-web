@@ -130,7 +130,7 @@ def has_permissions(
         user.has_perm(perm, obj) for perm in perms
     )
 
-def permission_required_or_return_none(
+def permission_required_or_none(
     perms: Union[list[str], str],
     lookup_variables: tuple[Union[Model, ModelBase, str], ...] = None,
     fn: Callable = None,
