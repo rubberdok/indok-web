@@ -6,6 +6,7 @@ import { LISTINGS } from "@graphql/listings/queries";
 import { Listing } from "@interfaces/listings";
 import { Container, Grid, makeStyles, Typography } from "@material-ui/core";
 import { NextPage } from "next";
+import { useState } from "react";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -31,9 +32,26 @@ const ListingsPage: NextPage = () => {
   const { loading, error, data } = useQuery<{ listings: Listing[] }>(LISTINGS);
 
   const classes = useStyles();
+  
+  const [filtered, setFiltered] = useState<string[]>([]);
+  
+  const handleChange = ({ target : { name, checked }}) => {
+    if (checked) {
+      setFiltered([...filtered, name]);
+    }
+    else {
+      setFiltered([...filtered.filter(org => name != org)])
+    }
+  }
+
+  const handleReset = (event) => {
+    setFiltered([]);
+  }
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error</p>;
+  console.log(filtered)
+  
 
   // renders a ListingItem for each listing
   return (
@@ -44,10 +62,10 @@ const ListingsPage: NextPage = () => {
         </Typography>
         {data &&
           <>
-            <Filter organizations={data.listings.map(listing => listing.organization!)}/>
+            <Filter organizations={data.listings.map(listing => listing.organization!)} handleChange={handleChange} filtered={filtered} handleReset={handleReset}/>
             <Grid container direction="row" spacing={2} className={classes.root} justify="center" alignItems="stretch">
               {data &&
-                data.listings.map((listing) => (
+                data.listings.filter(listing => !filtered.length || filtered.includes(listing.organization.id)).map((listing) => (
                   <>
                     <Grid container item key={listing.id} md={5} sm={7} xs={10}>
                       <ListingItem listing={listing} />

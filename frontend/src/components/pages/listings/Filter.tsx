@@ -16,69 +16,43 @@ const useStyles = makeStyles((theme) => ({
 
 interface FilterProps {
   organizations: Organization[],
+  filtered: string[]
+  handleChange: (event) => void,
+  handleReset: (event) => void,
 };
 
-interface Checkbox {
-  organization: Organization,
-  checked: boolean,
-  count: number,
-};
-
-
-const Filter: React.FC<FilterProps> = ({ organizations }) => {
-  const checkboxes: Record<string, Checkbox> = organizations.reduce((accumulator, organization) => {
-    const count: number = (accumulator[organization.id] && accumulator[organization.id].count) || 0;
-    accumulator[organization.id] = {organization: organization, checked: false, count: count + 1};
-    return accumulator;
-  }, {} as Record<string, Checkbox>)
-
-  const [toggled, setToggle] = useState(false);
-  const [filtered, setFiltered] = useState(checkboxes);
-  const toggle = (e) => setToggle(!toggled);
-  console.log(filtered)
-
-  const handleChange = (event) => {
-    setFiltered({...filtered, [event.target.name] : {...filtered[event.target.name], checked: event.target.checked} });
-  }
-/*
-  const ids: string[] = organizations.map(organization => (organization.id))
-  console.log(ids)
-  const checkboxes: Checkbox[] = organizations
-    .filter((organization, index) => !ids.includes(organization.id, index + 1))
-    .map((organization) => ({organization: organization, checked: false}));
-*/
-
+const Filter: React.FC<FilterProps> = ({ organizations, filtered, handleChange, handleReset }) => {
   const classes = useStyles();
+  const [showFilter, setShowFilter] = useState(false);
+
   return (
     <>
       <Box>
-        <Button onClick={toggle} className={classes.button}>
-          Filter {`${toggled}`}
+        <Button className={classes.button} onClick={(e) => setShowFilter(!showFilter)}>
+          Filter
         </Button>
-        {toggled &&
+        {showFilter &&
           <Paper className={classes.filterMenu}>
             <Typography variant="h5" component="h3">
-              Filter bla bla bla bal
+              Filter
             </Typography>
-            {checkboxes &&
+            {organizations &&
               <FormGroup>
-                {Object.entries(checkboxes).map(([key, checkbox]) => (
+                {Array.from(new Set(organizations)).map(organization => (
                   <FormControlLabel
                     control={<Checkbox color="primary" />}
-                    label={`${checkbox.organization.name} (${checkbox.count})`}
-                    checked={filtered[checkbox.organization.id].checked}
-                    name={checkbox.organization.id}
+                    label={organization.name}
+                    checked={filtered.includes(organization.id) || false}
+                    name={organization.id}
                     onChange={handleChange}
+                    key={organization.id}
                   />
                 ))
                 }
               </FormGroup>
             } 
-            <Button onClick={toggle}>
-              Filtrer
-            </Button>
-            <Button onClick={toggle}>
-              Close
+            <Button onClick={handleReset}>
+              Reset
             </Button>
           </Paper>
         }
