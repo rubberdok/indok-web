@@ -1,6 +1,4 @@
 from django.contrib.auth import get_user_model
-from django.db.models.query_utils import Q
-from guardian.shortcuts import get_objects_for_user
 
 import graphene
 from graphene_django import DjangoObjectType
@@ -19,7 +17,7 @@ class OptionType(DjangoObjectType):
 
 
 class AnswerType(DjangoObjectType):
-    id = graphene.ID(source="uuid")
+    id = graphene.UUID(source="uuid")
 
     class Meta:
         model = Answer
@@ -27,19 +25,9 @@ class AnswerType(DjangoObjectType):
         description = "A user's answer to a question."
 
 
-class ResponseType(DjangoObjectType):
-    id = graphene.ID(source="uuid")
-
-    class Meta:
-        model = Response
-        field = ["uuid", "respondent", "survey", "status", "answers"]
-        description = "A response instance that contains information about a user's response to a survey."
-
-
 class QuestionType(DjangoObjectType):
     options = graphene.List(OptionType)
     answers = graphene.List(AnswerType, user_id=graphene.ID())
-    answer = graphene.Field(AnswerType, user_id=graphene.ID(required=True))
     question_type = graphene.String()
 
     class Meta:
@@ -53,25 +41,36 @@ class QuestionType(DjangoObjectType):
         description = "A question on a survey."
 
     @staticmethod
-    def resolve_options(root: Question, info):
-        return root.options.all()
+    @login_required
+    def resolve_options(parent: Question, info):
+        return parent.options.all()
 
     @staticmethod
     @login_required
-    def resolve_answers(root: Question, info):
-        return get_objects_for_user(info.context.user, "surveys.view_answer").filter(question=root)
+    def resolve_answers(parent: Question, info):
+        if info.context.user.has_perm("surveys.manage_survey", parent.survey):
+            return parent.answers
+
+
+class ResponseType(DjangoObjectType):
+    id = graphene.UUID(source="uuid")
+    questions = graphene.List(QuestionType)
+
+    class Meta:
+        model = Response
+        field = ["uuid", "respondent", "survey", "status", "answers"]
+        description = "A response instance that contains information about a user's response to a survey."
 
     @staticmethod
-    @login_required
-    def resolve_answer(root: Question, info, user_id: int):
-        return root.answers.filter(user__pk=user_id).first()
+    def resolve_questions(parent: Response, info):
+        return parent.survey.questions
 
 
 class SurveyType(DjangoObjectType):
-    questions = graphene.List(QuestionType)
     responders = graphene.List(UserType, user_id=graphene.ID())
     responder = graphene.Field(UserType, user_id=graphene.ID(required=True))
     responses = graphene.List(ResponseType)
+    response = graphene.Field(ResponseType, response_pk=graphene.UUID())
 
     class Meta:
         model = Survey
@@ -80,27 +79,26 @@ class SurveyType(DjangoObjectType):
             "name",
             "description",
             "organization",
+            "questions"
         ]
         description = "A survey containing questions, optionally linked to a listing."
 
     @staticmethod
-    def resolve_questions(root: Survey, info):
-        return root.questions.all()
-
-    @staticmethod
-    @login_required
-    @permission_required("surveys.view_response", obj_arg_pos=0)
-    def resolve_responders(root: Survey, info):
+    @permission_required("surveys.manage_survey")
+    def resolve_responders(parent: Survey, info):
         return get_user_model().objects.filter(responses__survey=root).distinct()
 
     @staticmethod
-    @login_required
-    @permission_required("surveys.view_response", obj_arg_pos=0)
-    def resolve_responder(root: Survey, info, user_id: int):
+    @permission_required("surveys.manage_survey")
+    def resolve_responder(parent: Survey, info, user_id: int):
         return get_user_model().objects.get(responses__survey=root, pk=user_id)
 
     @staticmethod
-    @login_required
-    @permission_required("surveys.view_response", obj_arg_pos=0)
-    def resolve_responses(survey, info):
-        return survey.responses
+    @permission_required("surveys.manage_survey")
+    def resolve_responses(parent, info):
+        return parent.responses
+
+    @staticmethod
+    @permission_required("surveys.manage_survey")
+    def resolve_response(parent, info, response_pk):
+        return parent.responses.get(pk=response_pk)

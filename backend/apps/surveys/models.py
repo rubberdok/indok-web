@@ -16,7 +16,7 @@ class Survey(models.Model):
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE, null=True)
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=3000, blank=True, default="")
-    responsible_group = models.ForeignKey(Group, on_delete=models.CASCADE)
+    responsible_group = models.ForeignKey(Group, on_delete=models.CASCADE, null=True)
 
     def __str__(self) -> str:
         return f"{self.name}"
