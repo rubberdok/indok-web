@@ -195,8 +195,6 @@ class SubmitOrUpdateAnswers(graphene.Mutation):
                     for question_id, answer in answers.items()
                 ]
             )
-            if not survey.responsible_group.has_perm("surveys.view_response", response):
-                assign_perm("surveys.view_response", survey.responsible_group, response)
             return SubmitOrUpdateAnswers(ok=True)
         return SubmitOrUpdateAnswers(ok=False)
 
