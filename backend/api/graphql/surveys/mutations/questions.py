@@ -47,8 +47,7 @@ class CreateQuestion(graphene.Mutation):
             if v is not None:
                 setattr(question, k, v)
         question.save()
-        ok = True
-        return CreateQuestion(question=question, ok=ok)
+        return CreateQuestion(question=question, ok=True)
 
 
 class UpdateQuestion(graphene.Mutation):
@@ -196,8 +195,8 @@ class SubmitOrUpdateAnswers(graphene.Mutation):
                     for question_id, answer in answers.items()
                 ]
             )
-            
-            assign_perm("surveys.view_response", survey.responsible_group, response)
+            if not survey.responsible_group.has_perm("surveys.view_response", response):
+                assign_perm("surveys.view_response", survey.responsible_group, response)
             return SubmitOrUpdateAnswers(ok=True)
         return SubmitOrUpdateAnswers(ok=False)
 

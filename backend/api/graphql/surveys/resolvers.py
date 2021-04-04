@@ -24,7 +24,7 @@ class ResponseResolvers:
 
     def resolve_responses(self, info, survey_id=None):
         # Returns the responses for which the given user has permissions, filtering on survey_id if it is included.
-        responses = get_objects_for_user(info.context.user, "surveys.view_response")
+        responses = get_objects_for_user(info.context.user, "surveys.view_response", klass=Response)
         if survey_id:
             return responses.filter(survey__pk=survey_id)
         return responses
