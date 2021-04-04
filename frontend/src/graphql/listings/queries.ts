@@ -12,6 +12,7 @@ export const LISTINGS = gql`
       url
       slug
       organization {
+        id
         name
         slug
       }
@@ -30,6 +31,7 @@ export const LISTING = gql`
       endDatetime
       url
       organization {
+        id
         name
         description
         slug
