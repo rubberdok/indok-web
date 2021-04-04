@@ -35,5 +35,5 @@ class UserType(DjangoObjectType):
     @staticmethod
     @login_required
     @permission_required_or_none("users.view_sensitive_info", fn=get_resolver_parent)
-    def resolve_allergies(user, info):
-        return user.allergies
+    def resolve_allergies(parent, info):
+        return parent.allergies

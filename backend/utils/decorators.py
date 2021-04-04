@@ -52,7 +52,7 @@ def permission_required(
         @context(resolver)
         def wrapper(context, *args, **kwargs):
             obj = None
-            if fn and isinstance(fn, Callable):
+            if callable(fn):
                 obj = fn(context, *args, **kwargs)
 
             elif lookup_variables:
@@ -155,17 +155,17 @@ def permission_required_or_none(
     """
     return permission_required(perms=perms, lookup_variables=lookup_variables, fn=fn, return_none=True, **kwargs)
 
-def get_resolver_parent(context, *args, **kwargs):
+def get_resolver_parent(parent, *args):
     """Default objectgetter for field resolvers
 
     Parameters
     ----------
-    context
-        The GraphQL context
+    parent : Model
+        The parent resolver
 
     Returns
     -------
     Model
         The root resolver object, i.e. the object type to which we wish to resolve the field.
     """
-    return args[0]
+    return parent
