@@ -25,6 +25,11 @@ class Survey(models.Model):
     def mandatory_questions(self: "Survey"):
         return self.questions.filter(mandatory=True)
 
+    class Meta:
+        permissions = [
+            ("surveys.manage_survey", "Has admin survey privileges")
+        ]
+
 
 class Question(models.Model):
     survey = models.ForeignKey(
