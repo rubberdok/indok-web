@@ -1,5 +1,6 @@
 import { useQuery } from "@apollo/client";
 import Layout from "@components/Layout";
+import Filter from "@components/pages/listings/Filter";
 import ListingItem from "@components/pages/listings/ListingItem";
 import { LISTINGS } from "@graphql/listings/queries";
 import { Listing } from "@interfaces/listings";
@@ -41,16 +42,21 @@ const ListingsPage: NextPage = () => {
         <Typography variant="h1" component="h1" align="center">
           Verv
         </Typography>
-        <Grid container direction="row" spacing={2} className={classes.root} justify="center" alignItems="stretch">
-          {data &&
-            data.listings.map((listing) => (
-              <>
-                <Grid container item key={listing.id} md={5} sm={7} xs={10}>
-                  <ListingItem listing={listing} />
-                </Grid>
-              </>
-            ))}
-        </Grid>
+        {data &&
+          <>
+            <Filter organizations={data.listings.map(listing => listing.organization!)}/>
+            <Grid container direction="row" spacing={2} className={classes.root} justify="center" alignItems="stretch">
+              {data &&
+                data.listings.map((listing) => (
+                  <>
+                    <Grid container item key={listing.id} md={5} sm={7} xs={10}>
+                      <ListingItem listing={listing} />
+                    </Grid>
+                  </>
+                ))}
+            </Grid>
+          </>
+        }
       </Container>
     </Layout>
   );
