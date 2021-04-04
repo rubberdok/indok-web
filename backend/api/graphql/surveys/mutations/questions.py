@@ -2,21 +2,11 @@ from django.db.models import Q
 
 import graphene
 from graphql_jwt.decorators import login_required
-from guardian.shortcuts import assign_perm
 from utils.decorators import permission_required
 
 from apps.surveys.models import Answer, Option, Question, Response, Survey
-from ..types import OptionType, QuestionType
+from ..types import OptionType, QuestionType, QuestionTypeEnum
 
-
-class QuestionTypeEnum(graphene.Enum):
-    PARAGRAPH = "PARAGRAPH"
-    SHORT_ANSWER = "SHORT_ANSWER"
-    MULTIPLE_CHOICE = "MULTIPLE_CHOICE"
-    CHECKBOXES = "CHECKBOXES"
-    DROPDOWN = "DROPDOWN"
-    SLIDER = "SLIDER"
-    FILE_UPLOAD = "FILE_UPLOAD"
 
 
 class BaseQuestionInput(graphene.InputObjectType):
@@ -37,8 +27,7 @@ class CreateQuestion(graphene.Mutation):
     class Arguments:
         question_data = CreateQuestionInput(required=True)
 
-    @login_required
-    @permission_required("surveys.add_question")
+    @permission_required("surveys.manage_survey", (Survey, "questions__pk", "id"))
     def mutate(self, info, question_data):
         question = Question()
         for k, v in question_data.items():
@@ -58,7 +47,7 @@ class UpdateQuestion(graphene.Mutation):
         id = graphene.ID(required=True)
         question_data = BaseQuestionInput(required=True)
 
-    @permission_required("surveys.update_question")
+    @permission_required("surveys.manage_survey", (Survey, "questions__pk", "id"))
     def mutate(self, info, id, question_data):
         try:
             question = Question.objects.get(pk=id)
@@ -80,8 +69,7 @@ class DeleteQuestion(graphene.Mutation):
     class Arguments:
         id = graphene.ID(required=True)
 
-    @login_required
-    @permission_required("surveys.delete_question")
+    @permission_required("surveys.manage_survey", (Survey, "questions__pk", "id"))
     def mutate(self, info, id):
         try:
             question = Question.objects.get(pk=id)
@@ -106,7 +94,6 @@ class DeleteAnswer(graphene.Mutation):
         uuid = graphene.ID(required=True)
 
     @login_required
-    @permission_required("surveys.delete_answer", (Answer, "pk", "uuid"))
     def mutate(self, info, uuid):
         user = info.context.user
         try:
@@ -206,7 +193,6 @@ class DeleteAnswersToSurvey(graphene.Mutation):
         survey_id = graphene.ID()
 
     @login_required
-    @permission_required("surveys.delete_answer")
     def mutate(self, info, survey_id):
         user = info.context.user
         user.responses.get(survey_id=survey_id).delete()
@@ -226,10 +212,7 @@ class CreateUpdateAndDeleteOptions(graphene.Mutation):
         question_id = graphene.ID(required=True)
         option_data = graphene.List(OptionInput)
 
-    @login_required
-    @permission_required(
-        ["surveys.add_option", "surveys.update_option", "surveys.delete_option"]
-    )
+    @permission_required("surveys.manage_survey", (Survey, "questions__pk", "question_id"))
     def mutate(self, info, question_id, option_data):
         """Bulk operation to refresh the options to a given question. Has three main operations:
         (1): Creates new options for inputs without an option_id

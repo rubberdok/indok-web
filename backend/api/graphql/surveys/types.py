@@ -1,3 +1,4 @@
+from typing import Optional
 from django.contrib.auth import get_user_model
 
 import graphene
@@ -7,6 +8,16 @@ from graphql_jwt.decorators import login_required
 from api.graphql.users.types import UserType
 from apps.surveys.models import Answer, Option, Question, Response, Survey
 from utils.decorators import permission_required
+
+
+class QuestionTypeEnum(graphene.Enum):
+    PARAGRAPH = "PARAGRAPH"
+    SHORT_ANSWER = "SHORT_ANSWER"
+    MULTIPLE_CHOICE = "MULTIPLE_CHOICE"
+    CHECKBOXES = "CHECKBOXES"
+    DROPDOWN = "DROPDOWN"
+    SLIDER = "SLIDER"
+    FILE_UPLOAD = "FILE_UPLOAD"
 
 
 class OptionType(DjangoObjectType):
@@ -28,7 +39,8 @@ class AnswerType(DjangoObjectType):
 class QuestionType(DjangoObjectType):
     options = graphene.List(OptionType)
     answers = graphene.List(AnswerType, user_id=graphene.ID())
-    question_type = graphene.String()
+    question_type = graphene.Field(QuestionTypeEnum)
+    answer = graphene.Field(AnswerType)
 
     class Meta:
         model = Question
@@ -47,9 +59,18 @@ class QuestionType(DjangoObjectType):
 
     @staticmethod
     @login_required
-    def resolve_answers(parent: Question, info):
+    def resolve_answers(parent: Question, info) -> Optional[list[Answer]]:
+        # Can be changed to @permission_required_or_none("surveys.manage_survey", fn=get_resolver_parent) if #141 is merged
         if info.context.user.has_perm("surveys.manage_survey", parent.survey):
             return parent.answers
+
+    @staticmethod
+    @login_required
+    def resolve_answer(parent: Question, info):
+        try:
+            return info.context.user.answers.get(question=parent)
+        except Answer.DoesNotExist:
+            return None
 
 
 class ResponseType(DjangoObjectType):
@@ -63,7 +84,7 @@ class ResponseType(DjangoObjectType):
 
     @staticmethod
     def resolve_questions(parent: Response, info):
-        return parent.survey.questions
+        return parent.survey.questions.all()
 
 
 class SurveyType(DjangoObjectType):
@@ -84,21 +105,33 @@ class SurveyType(DjangoObjectType):
         description = "A survey containing questions, optionally linked to a listing."
 
     @staticmethod
-    @permission_required("surveys.manage_survey")
+    @login_required
     def resolve_responders(parent: Survey, info):
-        return get_user_model().objects.filter(responses__survey=root).distinct()
+        # Can be changed to @permission_required_or_none("surveys.manage_survey", fn=get_resolver_parent) if #141 is merged
+        if info.context.user.has_perm("surveys.manage_survey", parent):
+            return get_user_model().objects.filter(responses__survey=parent).distinct()
+        return None
 
     @staticmethod
-    @permission_required("surveys.manage_survey")
+    @login_required
     def resolve_responder(parent: Survey, info, user_id: int):
-        return get_user_model().objects.get(responses__survey=root, pk=user_id)
+        # Can be changed to @permission_required_or_none("surveys.manage_survey", fn=get_resolver_parent) if #141 is merged
+        if info.context.user.has_perm("surveys.manage_survey", parent):
+            return get_user_model().objects.get(responses__survey=parent, pk=user_id)
+        return None
 
     @staticmethod
-    @permission_required("surveys.manage_survey")
+    @login_required
     def resolve_responses(parent, info):
-        return parent.responses
+        # Can be changed to @permission_required_or_none("surveys.manage_survey", fn=get_resolver_parent) if #141 is merged
+        if info.context.user.has_perm("surveys.manage_survey", parent):
+            return parent.responses.all()
+        return None
 
     @staticmethod
-    @permission_required("surveys.manage_survey")
+    @login_required
     def resolve_response(parent, info, response_pk):
-        return parent.responses.get(pk=response_pk)
+        # Can be changed to @permission_required_or_none("surveys.manage_survey", fn=get_resolver_parent) if #141 is merged
+        if info.context.user.has_perm("surveys.manage_survey", parent):
+            return parent.responses.get(pk=response_pk)
+        return None

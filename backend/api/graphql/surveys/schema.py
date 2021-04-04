@@ -1,6 +1,6 @@
 import graphene
 
-from .types import OptionType, AnswerType, SurveyType, QuestionType, ResponseType
+from .types import SurveyType, ResponseType
 from .resolvers import (
     ResponseResolvers,
     SurveyResolvers,
@@ -29,7 +29,7 @@ class SurveyQueries(
     ResponseResolvers,
 ):
     survey = graphene.Field(SurveyType, survey_id=graphene.ID())
-    surveys = graphene.List(SurveyType, search=graphene.String())
+    surveys = graphene.List(SurveyType)
 
     response = graphene.Field(
         ResponseType, survey_id=graphene.ID(required=True), response_id=graphene.ID()

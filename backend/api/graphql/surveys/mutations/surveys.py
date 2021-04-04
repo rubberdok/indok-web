@@ -32,7 +32,6 @@ class CreateSurvey(graphene.Mutation):
         listing_id = graphene.ID()
         survey_data = CreateSurveyInput(required=True)
 
-    @login_required
     @permission_required("surveys.add_survey")
     def mutate(self, info, survey_data, listing_id=None):
         survey = Survey()
@@ -57,7 +56,6 @@ class UpdateSurvey(graphene.Mutation):
         id = graphene.ID()
         survey_data = BaseSurveyInput(required=True)
 
-    @login_required
     @permission_required("surveys.manage_survey", lookup_variables=(Survey, "pk", "id"))
     def mutate(self, info, id, survey_data):
         survey = Survey.objects.get(pk=id)
@@ -80,7 +78,6 @@ class DeleteSurvey(graphene.Mutation):
     class Arguments:
         id = graphene.ID(required=True)
 
-    @login_required
     @permission_required("surveys.manage_survey", lookup_variables=(Survey, "pk", "id"))
     def mutate(cls, self, info, id):
         survey = Survey.objects.get(pk=id)

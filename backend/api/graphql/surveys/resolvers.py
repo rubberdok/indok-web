@@ -12,8 +12,8 @@ class SurveyResolvers:
         return Survey.objects.get(pk=survey_id)
 
     @permission_required("surveys.view_survey")
-    def resolve_surveys(self, info, organization_id):
-        return get_objects_for_user(info.context.user, "surveys.view_survey").filter(organization__pk=organization_id)
+    def resolve_surveys(self, info):
+        return Survey.objects.all()
 
 
 class ResponseResolvers:
