@@ -141,12 +141,10 @@ const ListingTitle: React.FC<{
               <Hidden xsDown>
                 <Grid item>
                   {listing.url && (
-                    <Link href={listing.url}>
-                      <a>
-                        <Button variant="contained" color="primary" endIcon={<ArrowForward />}>
-                          Søk her
-                        </Button>
-                      </a>
+                    <Link href={listing.url} passHref>
+                      <Button variant="contained" color="primary" endIcon={<ArrowForward />}>
+                        Søk her
+                      </Button>
                     </Link>
                   )}
                 </Grid>
