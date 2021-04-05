@@ -1,9 +1,7 @@
-import json
-
-from graphene_django.utils.testing import GraphQLTestCase
+from utils.ExtendedGraphQLTestCase import ExtendedGraphQLTestCase
 
 
-class CabinsResolversTestCase(GraphQLTestCase):
+class CabinsResolversTestCase(ExtendedGraphQLTestCase):
     """
     Testing all resolvers for cabins
     """
@@ -13,8 +11,8 @@ class CabinsResolversTestCase(GraphQLTestCase):
             query {
                 allBookings {
                     id
-                    firstName
-                    surName
+                    firstname
+                    surname
                     phone
                     receiverEmail
                     checkIn
@@ -28,11 +26,6 @@ class CabinsResolversTestCase(GraphQLTestCase):
                 }
             }
             ''',
-            op_name='allBookings'
         )
-
-        content = json.loads(response.content)
-
         # This validates the status code and if you get errors
         self.assertResponseNoErrors(response)
-
