@@ -1,4 +1,3 @@
-import { Listing } from "@interfaces/listings";
 import { Card, CardContent, Grid, makeStyles } from "@material-ui/core";
 import ReactMarkdown from "react-markdown";
 import renderers from "@components/pages/listings/markdown/renderer";
@@ -20,8 +19,8 @@ const useStyles = makeStyles((theme) => ({
  * props: the listing to render
  */
 const ListingBody: React.FC<{
-  listing: Listing;
-}> = ({ listing }) => {
+  body: string;
+}> = ({ body }) => {
   const classes = useStyles();
 
   return (
@@ -31,7 +30,7 @@ const ListingBody: React.FC<{
           <ReactMarkdown
             renderers={renderers}
           >
-            {listing.description}
+            {body}
           </ReactMarkdown>
         </CardContent>
       </Card>
