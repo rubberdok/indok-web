@@ -8,7 +8,7 @@ import Layout from "@components/Layout";
 import { makeStyles, Grid, Tabs, Tab, Container, Card, CardContent } from "@material-ui/core";
 import { useState } from "react";
 import { User } from "@interfaces/users";
-import SurveyAnswers from "@components/pages/surveys/surveyAdmin/SurveyAnswers";
+import SurveyAnswers from "@components/surveys/surveyAdmin/SurveyAnswers";
 import OrganizationListing from "@components/pages/listings/organization/OrganizationListing";
 
 const useStyles = makeStyles((theme) => ({
