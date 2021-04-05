@@ -42,15 +42,6 @@ export const CREATE_QUESTION = gql`
   }
 `;
 
-export const DELETE_QUESTION = gql`
-  mutation deleteQuestion($id: ID!) {
-    deleteQuestion(id: $id) {
-      deletedId
-      ok
-    }
-  }
-`;
-
 export const UPDATE_QUESTION = gql`
   mutation updateQuestion(
     $id: ID!
@@ -80,25 +71,10 @@ export const UPDATE_QUESTION = gql`
   }
 `;
 
-export const CREATE_ANSWER = gql`
-  mutation createAnswer($questionId: ID!, $answer: String!) {
-    createAnswer(answerData: { questionId: $questionId, answer: $answer }) {
-      answer {
-        id
-        answer
-      }
-      ok
-    }
-  }
-`;
-
-export const UPDATE_ANSWER = gql`
-  mutation updateAnswer($id: ID!, $answer: String!) {
-    updateAnswer(id: $id, answerData: { answer: $answer }) {
-      answer {
-        id
-        answer
-      }
+export const DELETE_QUESTION = gql`
+  mutation deleteQuestion($id: ID!) {
+    deleteQuestion(id: $id) {
+      deletedId
       ok
     }
   }
@@ -107,15 +83,6 @@ export const UPDATE_ANSWER = gql`
 export const SUBMIT_ANSWERS = gql`
   mutation submitAnswers($surveyId: ID!, $answersData: [AnswerInput]) {
     submitAnswers(surveyId: $surveyId, answersData: $answersData) {
-      ok
-    }
-  }
-`;
-
-export const DELETE_ANSWER = gql`
-  mutation deleteAnswer($id: ID!) {
-    deleteAnswer(id: $id) {
-      deletedId
       ok
     }
   }
