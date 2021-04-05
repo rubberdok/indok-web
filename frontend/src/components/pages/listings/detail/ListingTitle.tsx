@@ -64,7 +64,7 @@ const ListingTitle: React.FC<{
 }> = ({ listing }) => {
   const classes = useStyles();
   return (
-    <Grid container item direction="row" justify="space-between" alignItems="stretch" xs={10} spacing={4}>
+    <Grid container item direction="row" justify="space-between" alignItems="stretch" xs={10} spacing={4} className={classes.cardRoot}>
       <Hidden smDown>
         <Grid
           container
@@ -73,7 +73,6 @@ const ListingTitle: React.FC<{
           direction="column"
           justify="center"
           alignItems="stretch"
-          className={classes.cardRoot}
         >
           <Grid
             container
@@ -114,42 +113,39 @@ const ListingTitle: React.FC<{
         direction="column"
         justify="center"
         alignItems="center"
-        className={classes.cardRoot}
       >
-        <Grid container item direction="column" justify="center" alignItems="stretch">
-          <Grid container item direction="row" justify="space-between" alignItems="stretch" className={classes.card}>
-            <Grid
-              container
-              item
-              xs
-              direction="column"
-              justify="center"
-              alignItems="center"
-              className={classes.cardContent}
-            >
-              <Grid item>
-                <Typography variant="h3" component="h1" align="center">
-                  {listing.title}
-                </Typography>
-              </Grid>
-
-              <Grid item>
-                <Typography variant="caption" component="h3" align="center" className={classes.deadline} gutterBottom>
-                  {dayjs(listing.deadline).format("DD. MMMM YYYY [kl.] HH:mm")}
-                </Typography>
-              </Grid>
-              <Hidden xsDown>
-                <Grid item>
-                  {listing.url && (
-                    <Link href={listing.url} passHref>
-                      <Button variant="contained" color="primary" endIcon={<ArrowForward />}>
-                        Søk her
-                      </Button>
-                    </Link>
-                  )}
-                </Grid>
-              </Hidden>
+        <Grid container item direction="row" justify="space-between" alignItems="stretch" className={classes.card}>
+          <Grid
+            container
+            item
+            xs
+            direction="column"
+            justify="center"
+            alignItems="center"
+            className={classes.cardContent}
+          >
+            <Grid item>
+              <Typography variant="h3" component="h1" align="center">
+                {listing.title}
+              </Typography>
             </Grid>
+
+            <Grid item>
+              <Typography variant="caption" component="h3" align="center" className={classes.deadline} gutterBottom>
+                {dayjs(listing.deadline).format("DD. MMMM YYYY [kl.] HH:mm")}
+              </Typography>
+            </Grid>
+            <Hidden xsDown>
+              <Grid item>
+                {listing.url && (
+                  <Link href={listing.url} passHref>
+                    <Button variant="contained" color="primary" endIcon={<ArrowForward />}>
+                      Søk her
+                    </Button>
+                  </Link>
+                )}
+              </Grid>
+            </Hidden>
           </Grid>
         </Grid>
       </Grid>
