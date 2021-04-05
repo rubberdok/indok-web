@@ -1,9 +1,8 @@
-import classes from "*.module.css";
 import { TextField, Grid, Paper, makeStyles } from "@material-ui/core"
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    padding: theme.spacing(4),
+    padding: theme.spacing(6),
     width: "100%",
   }
 }));

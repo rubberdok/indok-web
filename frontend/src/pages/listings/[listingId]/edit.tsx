@@ -24,12 +24,12 @@ const Edit: NextPage = () => {
     setContent(data?.listing.description)
   }, [data?.listing.description]);
 
-  const handleClick = (event) => {
-    setEditing(!editing)
-  };
-
   const onChange = (event) => {
     setContent(event.target.value)
+  }
+
+  const save = (event) => {
+    
   }
 
   if (loading) return <p>Loading...</p>;
@@ -39,11 +39,18 @@ const Edit: NextPage = () => {
   return (
     <Layout>
       <Container>
-        <ButtonGroup>
-          <Button variant={editing ? "contained" : "outlined"} color={editing ? "primary" : "default"} onClick={handleClick}>Rediger</Button>
-          <Button variant={editing ? "outlined" : "contained"} color={editing ? "default" : "primary"} onClick={handleClick}>Forhåndsvisning</Button>
-        </ButtonGroup>
         <Grid container direction="column" justify="center" alignItems="center">
+          <Grid container item xs={10} direction="row" justify="space-between" style={{background: "white"}}>
+            <Grid item>
+              <ButtonGroup>
+                <Button variant={editing ? "contained" : "outlined"} color={editing ? "primary" : "default"} onClick={(e) => setEditing(true)}>Rediger</Button>
+                <Button variant={editing ? "outlined" : "contained"} color={editing ? "default" : "primary"} onClick={(e) => setEditing(false)}>Forhåndsvisning</Button>
+              </ButtonGroup>
+            </Grid>
+            <Grid item>
+              <Button variant="contained" color="primary" onClick={save}>Lagre</Button>
+            </Grid>
+          </Grid>
           {data && (editing
             ? <EditingListingBody
                 content={content || ""}
