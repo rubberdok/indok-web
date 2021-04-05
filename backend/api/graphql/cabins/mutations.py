@@ -1,7 +1,5 @@
 import graphene
 from django.shortcuts import get_object_or_404
-import pytz
-import datetime
 
 from django.utils import timezone
 
