@@ -8,10 +8,11 @@ import random
 class BookingFactory(DjangoModelFactory):
     class Meta:
         model = BookingModel
-    firstname = Faker(['no-NO']).first_name()
-    surname = Faker(['no-NO']).last_name()
+
+    firstname = Faker(["no-NO"]).first_name()
+    surname = Faker(["no-NO"]).last_name()
     phone = factory.LazyAttribute(lambda obj: random.randint(40039737, 49939737))
-    receiver_email = Faker(['no-NO']).ascii_company_email()
+    receiver_email = Faker(["no-NO"]).ascii_company_email()
     price = factory.LazyAttribute(lambda obj: random.randint(1000, 5000))
     timestamp = factory.Faker("date")
 

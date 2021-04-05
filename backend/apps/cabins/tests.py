@@ -1,6 +1,6 @@
 import json
 
-from apps.cabins.models import Booking
+from apps.cabins.models import Booking, Cabin
 from utils.testing.ExtendedGraphQLTestCase import ExtendedGraphQLTestCase
 from utils.testing.cabins_factories import BookingFactory
 import datetime
@@ -11,16 +11,22 @@ class CabinsBaseTestCase(ExtendedGraphQLTestCase):
         super().setUp()
         # Create three bookings
         self.now = datetime.datetime.now()
+        self.bjornen_cabin = Cabin.objects.get(name="Bjørnen")
+        self.osken_cabin = Cabin.objects.get(name="Oksen")
         self.firstBooking = BookingFactory(
-            check_in=self.now, check_out=self.now + datetime.timedelta(days=4)
+            check_in=self.now,
+            check_out=self.now + datetime.timedelta(days=4),
+            cabins=[self.bjornen_cabin],
         )
         self.secondBooking = BookingFactory(
             check_in=self.now + datetime.timedelta(days=6),
             check_out=self.now + datetime.timedelta(days=12),
+            cabins=[self.osken_cabin, self.bjornen_cabin],
         )
         self.thirdBooking = BookingFactory(
             check_in=self.now + datetime.timedelta(days=24),
             check_out=self.now + datetime.timedelta(days=30),
+            cabins=[self.osken_cabin],
         )
 
 
@@ -102,7 +108,7 @@ class CabinsMutationsTestCase(CabinsBaseTestCase):
                   checkIn: \"{new_fake_booking.check_in.strftime("%Y-%m-%d")}\",
                   checkOut: \"{new_fake_booking.check_out.strftime("%Y-%m-%d")}\",
                   price: {new_fake_booking.price},
-                  cabins: [1],
+                  cabins: [{self.osken_cabin.id}],
                 ) {{
                   ok
                 }}
@@ -122,3 +128,25 @@ class CabinsMutationsTestCase(CabinsBaseTestCase):
                 )
             ),
         )
+
+    def test_add_invalid_booking(self):
+        # Try to add invalid booking
+        query = f"""
+                    mutation CreateBooking {{
+                        createBooking(
+                          firstname: \"{self.firstBooking.firstname}\",
+                          surname: \"{self.firstBooking.surname}\",
+                          phone: {self.firstBooking.phone},
+                          receiverEmail: \"{self.firstBooking.receiver_email}\",
+                          checkIn: \"{self.firstBooking.check_in.strftime("%Y-%m-%d")}\",
+                          checkOut: \"{self.firstBooking.check_out.strftime("%Y-%m-%d")}\",
+                          price: {self.firstBooking.price},
+                          cabins: [{self.bjornen_cabin.id}],
+                        ) {{
+                          ok
+                        }}
+                        }}
+                    """
+        response = self.query(query)
+        # This validates the status code and if you get errors
+        self.assertResponseHasErrors(response)
