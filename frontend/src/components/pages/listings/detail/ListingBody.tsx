@@ -20,7 +20,7 @@ const ListingBody: React.FC<{
   const classes = useStyles();
 
   return (
-    <Grid container item xs={10} direction="column" alignItems="stretch" style={{ paddingLeft: 16, paddingRight: 16 }}>
+    <Grid item xs={10}>
       <Card className={classes.root}>
         <CardContent>
           <Grid container direction="column" justify="flex-start">
