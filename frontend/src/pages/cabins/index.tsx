@@ -12,6 +12,7 @@ import { DirectionsBus, DirectionsCar, DirectionsTransit, LocalTaxi } from "@mat
 import React from "react";
 import ImageSlider from "@components/pages/cabins/ImageSlider/ImageSlider";
 import { cabinImages, outsideImages } from "@components/pages/cabins/ImageSlider/imageData";
+import FAQ from "@components/pages/cabins/Documents/FAQ";
 
 const useStyles = makeStyles((theme: Theme) => ({
   hero: {
@@ -53,7 +54,7 @@ const CreateBookingPage: NextPage = () => {
     },
     {
       icon: <HotelIcon className={classes.icon} />,
-      text: "20 soveplasser",
+      text: "18 soveplasser",
     },
     {
       icon: <RestaurantIcon className={classes.icon} />,
@@ -201,6 +202,13 @@ const CreateBookingPage: NextPage = () => {
                     og normal skisesong er fra 15. november – 1. mai. Forholdene for langrenn er også gode med hele fem
                     løyper som begynner ved Stølen, alt fra 15 km – 1,5 km løyper. Se Oppdal Booking for mer info.
                   </Typography>
+                </Grid>
+              </Grid>
+              <Grid item container spacing={10} alignItems="center" direction="row">
+                <Grid item container justify="center" alignContent="center" xs={12}>
+                  <Grid item>
+                    <FAQ />
+                  </Grid>
                 </Grid>
               </Grid>
             </Grid>

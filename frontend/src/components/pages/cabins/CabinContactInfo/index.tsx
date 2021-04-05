@@ -5,16 +5,23 @@ import { User } from "@interfaces/users";
 import { Grid } from "@material-ui/core";
 import { NextPage } from "next";
 import React, { Dispatch, SetStateAction, useEffect } from "react";
-import { InputFields } from "../InputFields/NewInputFields";
+import { InputFields } from "../InputFields/InputFields";
 
 interface ContractInfoProps {
   contactInfo: ContactInfo;
   setContactInfo: Dispatch<SetStateAction<ContactInfo>>;
   validations: ContactInfoValidations | undefined;
+  errorTrigger: boolean;
   chosenCabins: Cabin[];
 }
 
-const CabinContactInfo: NextPage<ContractInfoProps> = ({ contactInfo, setContactInfo, validations, chosenCabins }) => {
+const CabinContactInfo: NextPage<ContractInfoProps> = ({
+  contactInfo,
+  setContactInfo,
+  validations,
+  chosenCabins,
+  errorTrigger,
+}) => {
   const { data } = useQuery<{ user: User }>(GET_USER);
 
   useEffect(() => {
@@ -30,7 +37,12 @@ const CabinContactInfo: NextPage<ContractInfoProps> = ({ contactInfo, setContact
         lname = temp;
       }
 
-      setContactInfo({ ...contactInfo, ...{ ...data.user, firstName: fname, lastName: lname } });
+      setContactInfo({
+        ...contactInfo,
+        firstName: data.user.firstName,
+        lastName: data.user.lastName,
+        email: data.user.email,
+      });
     }
   }, [data]);
 
@@ -39,11 +51,12 @@ const CabinContactInfo: NextPage<ContractInfoProps> = ({ contactInfo, setContact
   };
 
   return (
-    <Grid container>
+    <Grid container justify="center">
       <InputFields
         onChange={handleInputChange}
         contactInfo={contactInfo}
         validations={validations}
+        errorTrigger={errorTrigger}
         chosenCabins={chosenCabins}
       ></InputFields>
     </Grid>

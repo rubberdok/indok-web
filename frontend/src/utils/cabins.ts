@@ -22,10 +22,18 @@ export const validateInputForm = (inputValues: InputValueTypes) => {
     phone: validatePhone(inputValues.phone),
     numberIndok: selectValidity,
     numberExternal: selectValidity,
-    triggerError: false,
   };
 
   return updatedValidations;
+};
+
+export const allValuesFilled = (contactInfo: ContactInfo) => {
+  const selectValidity = validateSelect(contactInfo.numberIndok, contactInfo.numberExternal);
+
+  const { numberIndok, numberExternal, ...nonSelectContactInfo } = contactInfo;
+  const filled = Object.values(nonSelectContactInfo).filter((info) => info != "" || info != 0);
+
+  return selectValidity && filled.length == Object.keys(nonSelectContactInfo).length;
 };
 
 export const cabinOrderStepReady = (
