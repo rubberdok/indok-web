@@ -16,6 +16,8 @@ import relativeTime from "dayjs/plugin/isSameOrAfter";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import Link from "next/link";
+import ReactMarkdown from "react-markdown";
+import renderers from "@components/pages/listings/markdown/renderer"
 
 dayjs.extend(timezone);
 dayjs.extend(utc);
@@ -121,9 +123,13 @@ const ListingItem: React.FC<{
                   <b>Frist: </b>
                   {timestamp(listing.deadline)}
                 </Typography>
-                <Typography variant="body2" className={classes.descriptionText}>
+                <ReactMarkdown
+                  allowedTypes={["text", "paragraph"]}
+                  className={classes.descriptionText}
+                  renderers={renderers}
+                >
                   {listing.description}
-                </Typography>
+                </ReactMarkdown>
               </Box>
               <Grid container direction="row" justify="center" alignItems="center" spacing={2}>
                 {["intervju", "søknad", "case"].map((chip) => (
