@@ -1,14 +1,5 @@
 import { Answer } from "@interfaces/surveys";
-import {
-  FormControl,
-  FormControlLabel,
-  FormLabel,
-  MenuItem,
-  Radio,
-  RadioGroup,
-  Select,
-  TextField,
-} from "@material-ui/core";
+import { FormControlLabel, MenuItem, Radio, RadioGroup, Select, TextField } from "@material-ui/core";
 import AnswerCheckboxes from "@components/surveys/AnswerCheckboxes";
 
 /**
@@ -19,12 +10,11 @@ const AnswerQuestion: React.FC<{
   answer: Answer;
   setAnswer: (answer: Answer) => void;
 }> = ({ answer, setAnswer }) => {
-  // returns a form, with input types determined by the question type of each answer's question
-  // each input type calls on setAnswer
-  return (
-    <FormControl>
-      <FormLabel>{answer.question.question}</FormLabel>
-      {answer.question.questionType === "PARAGRAPH" ? (
+  // returns a form input based on the type of the answer's question
+  // each input calls on setAnswer to change the state of AnswerSurvey
+  switch (answer.question.questionType) {
+    case "PARAGRAPH":
+      return (
         <TextField
           variant="outlined"
           multiline
@@ -34,7 +24,9 @@ const AnswerQuestion: React.FC<{
             setAnswer({ ...answer, answer: e.target.value });
           }}
         />
-      ) : answer.question.questionType === "SHORT_ANSWER" ? (
+      );
+    case "SHORT_ANSWER":
+      return (
         <TextField
           variant="outlined"
           onChange={(e) => {
@@ -42,7 +34,9 @@ const AnswerQuestion: React.FC<{
             setAnswer({ ...answer, answer: e.target.value });
           }}
         />
-      ) : answer.question.questionType === "MULTIPLE_CHOICE" ? (
+      );
+    case "MULTIPLE_CHOICE":
+      return (
         <RadioGroup
           onChange={(e) => {
             e.preventDefault();
@@ -53,9 +47,11 @@ const AnswerQuestion: React.FC<{
             <FormControlLabel key={index} value={option.answer} label={option.answer} control={<Radio />} />
           ))}
         </RadioGroup>
-      ) : answer.question.questionType === "CHECKBOXES" ? (
-        <AnswerCheckboxes answer={answer} setAnswer={setAnswer} />
-      ) : answer.question.questionType === "DROPDOWN" ? (
+      );
+    case "CHECKBOXES":
+      return <AnswerCheckboxes answer={answer} setAnswer={setAnswer} />;
+    case "DROPDOWN":
+      return (
         <Select
           onChange={(e) => {
             e.preventDefault();
@@ -69,18 +65,12 @@ const AnswerQuestion: React.FC<{
             </MenuItem>
           ))}
         </Select>
-      ) : answer.question.questionType === "SLIDER" ? (
-        // TODO: implement slider
-        <p>To be implemented</p>
-      ) : answer.question.questionType === "FILE_UPLOAD" ? (
-        // TODO: implement File upload
-        <p>To be implemented</p>
-      ) : (
-        // TODO: change implementation of question types to avoid failsafes like this
-        <p>Error in question</p>
-      )}
-    </FormControl>
-  );
+      );
+    case "SLIDER":
+      return <p>To be implemented</p>;
+    case "FILE_UPLOAD":
+      return <p>To be implemented</p>;
+  }
 };
 
 export default AnswerQuestion;

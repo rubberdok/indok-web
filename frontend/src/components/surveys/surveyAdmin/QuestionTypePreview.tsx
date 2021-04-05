@@ -41,9 +41,6 @@ const QuestionTypePreview: React.FC<{
       return <p>To be implemented</p>;
     case "FILE_UPLOAD":
       return <p>To be implemented</p>;
-    default:
-      // TODO: change implementation of question types to avoid failsafes like this
-      return <p>Error in question</p>;
   }
 };
 

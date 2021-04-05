@@ -1,7 +1,7 @@
 import { FetchResult, MutationFunctionOptions } from "@apollo/client";
 import QuestionTypePreview from "@components/surveys/surveyAdmin/QuestionTypePreview";
-import questionTypes from "@components/surveys/surveyAdmin/questionTypes";
-import { Question, QuestionVariables } from "@interfaces/surveys";
+import questionTypeLabels from "@components/surveys/surveyAdmin/questionTypeLabels";
+import { Question, QuestionVariables, QuestionType } from "@interfaces/surveys";
 import { Button, Checkbox, Grid, MenuItem, Radio, Select, TextField } from "@material-ui/core";
 import { useState } from "react";
 
@@ -82,11 +82,11 @@ const EditQuestion: React.FC<{
             e.preventDefault();
             setQuestion({
               ...question,
-              questionType: e.target.value as string,
+              questionType: e.target.value as QuestionType,
             });
           }}
         >
-          {Object.entries(questionTypes).map(([questionType, label]) => (
+          {Object.entries(questionTypeLabels).map(([questionType, label]) => (
             <MenuItem key={questionType} value={questionType}>
               {label}
             </MenuItem>

@@ -3,7 +3,7 @@ import AnswerQuestion from "@components/surveys/AnswerQuestion";
 import { SUBMIT_ANSWERS } from "@graphql/surveys/mutations";
 import { SURVEY } from "@graphql/surveys/queries";
 import { Answer, Survey } from "@interfaces/surveys";
-import { Button, Card, CardContent, Grid, Typography } from "@material-ui/core";
+import { Button, Card, CardContent, Grid, Typography, FormControl, FormLabel } from "@material-ui/core";
 import { useState } from "react";
 
 /**
@@ -50,16 +50,19 @@ const AnswerSurvey: React.FC<{ surveyId: string }> = ({ surveyId }) => {
             <Grid container direction="column">
               {answers.map((answer, index) => (
                 <CardContent key={index}>
-                  <AnswerQuestion
-                    answer={answer}
-                    setAnswer={(newAnswer: Answer) =>
-                      setAnswers(
-                        answers.map((oldAnswer) =>
-                          oldAnswer.question.id === newAnswer.question.id ? newAnswer : oldAnswer
+                  <FormControl>
+                    <FormLabel>{answer.question.question}</FormLabel>
+                    <AnswerQuestion
+                      answer={answer}
+                      setAnswer={(newAnswer: Answer) =>
+                        setAnswers(
+                          answers.map((oldAnswer) =>
+                            oldAnswer.question.id === newAnswer.question.id ? newAnswer : oldAnswer
+                          )
                         )
-                      )
-                    }
-                  />
+                      }
+                    />
+                  </FormControl>
                 </CardContent>
               ))}
               <Button
