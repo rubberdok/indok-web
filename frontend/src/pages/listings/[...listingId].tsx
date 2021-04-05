@@ -53,7 +53,7 @@ const ListingPage: NextPage = () => {
                 <ListingTitle listing={data.listing} />
               </Grid>
               <Grid container item direction="row" justify="center">
-                <ListingBody listing={data.listing} />
+                <ListingBody body={data.listing.description} />
               </Grid>
             </Grid>
           </Container>

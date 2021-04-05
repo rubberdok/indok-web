@@ -13,10 +13,19 @@ export interface Question {
   survey: Survey;
   question: string;
   description: string;
-  questionType: string;
+  questionType: QuestionType;
   options: Option[];
   answers: Answer[];
 }
+
+export type QuestionType =
+  | "PARAGRAPH"
+  | "SHORT_ANSWER"
+  | "MULTIPLE_CHOICE"
+  | "CHECKBOXES"
+  | "DROPDOWN"
+  | "SLIDER"
+  | "FILE_UPLOAD";
 
 export interface Option {
   id: string;
@@ -34,7 +43,7 @@ export interface QuestionVariables {
   id: string;
   question: string;
   description: string;
-  questionType: string;
+  questionType: QuestionType;
   options: {
     answer: string;
     id?: string;

@@ -1,4 +1,3 @@
-import { Listing } from "@interfaces/listings";
 import { Card, CardContent, Grid, makeStyles, Typography } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
@@ -16,12 +15,12 @@ const useStyles = makeStyles((theme) => ({
  * props: the listing to render
  */
 const ListingBody: React.FC<{
-  listing: Listing;
-}> = ({ listing }) => {
+  body: string;
+}> = ({ body }) => {
   const classes = useStyles();
 
   return (
-    <Grid container item xs={10} direction="column" alignItems="stretch" style={{ paddingLeft: 16, paddingRight: 16 }}>
+    <Grid item xs={10}>
       <Card className={classes.root}>
         <CardContent>
           <Grid container direction="column" justify="flex-start">
@@ -32,7 +31,7 @@ const ListingBody: React.FC<{
             </Grid>
             <Grid item>
               <Typography variant="body1" component="span" paragraph className={classes.description}>
-                {listing.description}
+                {body}
               </Typography>
             </Grid>
           </Grid>

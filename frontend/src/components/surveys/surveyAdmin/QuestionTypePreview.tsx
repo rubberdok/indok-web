@@ -1,5 +1,6 @@
 import { Question } from "@interfaces/surveys";
 import { Checkbox, FormControlLabel, FormGroup, Radio, RadioGroup, TextField } from "@material-ui/core";
+import questionTypeLabels from "@components/surveys/surveyAdmin/questionTypeLabels";
 
 /**
  * component to show a preview of how a survey question's input will look like to the end user
@@ -10,9 +11,11 @@ const QuestionTypePreview: React.FC<{
 }> = ({ question }) => {
   switch (question.questionType) {
     case "PARAGRAPH":
-      return <TextField disabled label="Langsvar" variant="outlined" multiline rows={4} />;
+      return (
+        <TextField disabled label={questionTypeLabels[question.questionType]} variant="outlined" multiline rows={4} />
+      );
     case "SHORT_ANSWER":
-      return <TextField disabled label="Kortsvar" variant="outlined" />;
+      return <TextField disabled label={questionTypeLabels[question.questionType]} variant="outlined" />;
     case "MULTIPLE_CHOICE":
       return (
         <RadioGroup>
@@ -41,9 +44,6 @@ const QuestionTypePreview: React.FC<{
       return <p>To be implemented</p>;
     case "FILE_UPLOAD":
       return <p>To be implemented</p>;
-    default:
-      // TODO: change implementation of question types to avoid failsafes like this
-      return <p>Error in question</p>;
   }
 };
 

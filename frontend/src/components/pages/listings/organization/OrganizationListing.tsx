@@ -1,7 +1,7 @@
 import { Listing } from "@interfaces/listings";
 import { LISTING_WITH_RESPONDERS } from "@graphql/listings/queries";
 import { useState } from "react";
-import EditSurvey from "@components/pages/surveys/surveyAdmin/EditSurvey";
+import EditSurvey from "@components/surveys/surveyAdmin/EditSurvey";
 import { Survey } from "@interfaces/surveys";
 import { CREATE_SURVEY } from "@graphql/surveys/mutations";
 import { useMutation } from "@apollo/client";

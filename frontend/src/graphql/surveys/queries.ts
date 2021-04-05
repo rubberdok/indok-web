@@ -19,15 +19,6 @@ export const SURVEY = gql`
   }
 `;
 
-export const SURVEYS = gql`
-  query {
-    surveys {
-      id
-      name
-    }
-  }
-`;
-
 export const SURVEY_ANSWERS = gql`
   query survey($surveyId: ID!, $userId: ID!) {
     survey(surveyId: $surveyId) {
