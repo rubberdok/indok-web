@@ -1,10 +1,21 @@
-import { TextField, Grid } from "@material-ui/core"
+import classes from "*.module.css";
+import { TextField, Grid, Paper, makeStyles } from "@material-ui/core"
 
-const EditListingBody: React.FC<{content: string}> = ({ content }) => {
+const useStyles = makeStyles((theme) => ({
+  root: {
+    padding: theme.spacing(4),
+    width: "100%",
+  }
+}));
+
+const EditListingBody: React.FC<{content: string, onChange: (event) => void}> = ({ content, onChange }) => {
+  const classes = useStyles();
   return (
     <>
       <Grid container xs={10}>
-          <TextField id="content" variant="outlined" multiline value={content} fullWidth rows={24} />
+        <Paper className={classes.root}>
+          <TextField id="content" variant="outlined" multiline value={content} fullWidth rows={24} onChange={onChange} />
+        </Paper>
       </Grid>
     </>
   )

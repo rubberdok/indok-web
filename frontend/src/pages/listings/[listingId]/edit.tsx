@@ -1,7 +1,7 @@
 import { NextPage } from "next";
 import Layout from "@components/Layout";
 import { Container, Grid, ButtonGroup, Button } from "@material-ui/core";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ListingBody from "@components/pages/listings/detail/ListingBody";
 import { useQuery } from "@apollo/client";
 import { LISTING } from "@graphql/listings/queries";
@@ -19,9 +19,17 @@ const Edit: NextPage = () => {
   
   const [editing, setEditing] = useState(true)
   const [content, setContent] = useState(data?.listing.description)
+  
+  useEffect(() => {
+    setContent(data?.listing.description)
+  }, [data?.listing.description]);
 
   const handleClick = (event) => {
     setEditing(!editing)
+  };
+
+  const onChange = (event) => {
+    setContent(event.target.value)
   }
 
   if (loading) return <p>Loading...</p>;
@@ -39,9 +47,10 @@ const Edit: NextPage = () => {
           {data && (editing
             ? <EditingListingBody
                 content={content || ""}
+                onChange={onChange}
               />
             : <ListingBody 
-                listing={data.listing}
+                body={content || ""}
               />
             )
           }
