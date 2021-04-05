@@ -9,7 +9,7 @@ import {
   Select,
   TextField,
 } from "@material-ui/core";
-import AnswerCheckboxes from "@components/pages/surveys/AnswerCheckboxes";
+import AnswerCheckboxes from "@components/surveys/AnswerCheckboxes";
 
 /**
  * component to answer a question on a survey
