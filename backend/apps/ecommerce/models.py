@@ -24,13 +24,12 @@ def get_auth_token():
 
 
 class Order(models.Model):
-    PAYMENT_STATUS_CHOICES = (
-        ("initiated", "INITIATED"),
-        ("reserved", "RESERVED"),
-        ("captured", "CAPTURED"),
-        ("cancelled", "CANCELLED"),
-        ("refunded", "REFUNDED"),
-    )
+    class PaymentStatus(models.TextChoices):
+        INITIATED = "INITIATED", "initiated"
+        RESERVED = "RESERVED", "reserved"
+        CAPTURED = "CAPTURED", "captured"
+        CANCELLED = "CANCELLED", "cancelled"
+        REFUNDED = "REFUNDED", "refunded"
 
     order_id = models.CharField(primary_key=True, max_length=50)  # Used with Vipps
     product = models.ForeignKey(
@@ -42,7 +41,7 @@ class Order(models.Model):
     quantity = models.IntegerField(default=1)
     total_price = models.DecimalField(max_digits=11, decimal_places=2)
     payment_status = models.CharField(
-        max_length=255, choices=PAYMENT_STATUS_CHOICES, default="initiated"
+        max_length=255, choices=PaymentStatus.choices, default=PaymentStatus.INITIATED
     )
     date = DateTimeField(auto_now_add=True)
     auth_token = models.CharField(
@@ -51,3 +50,13 @@ class Order(models.Model):
 
     def __str__(self):
         return f"Order(product={self.product}, user={self.user})"
+
+
+class VippsAccessToken(models.Model):
+    """
+    Stores access tokens from Vipps to use upon Vipps requests.
+
+    """
+
+    token = models.CharField(primary_key=True, max_length=2048)
+    expires_on = DateTimeField()

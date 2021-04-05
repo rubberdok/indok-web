@@ -19,8 +19,8 @@ const PayWithVipps: React.FC = () => {
 
   if (loading) return <CircularProgress />;
 
-  if (data && data.redirect) {
-    router.push(data.redirect);
+  if (data && data.initiateOrder) {
+    router.push(data.initiateOrder.redirect);
     return null;
   }
 

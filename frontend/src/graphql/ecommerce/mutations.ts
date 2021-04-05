@@ -7,3 +7,11 @@ export const INITIATE_ORDER = gql`
     }
   }
 `;
+
+export const ATTEMPT_CAPTURE_PAYMENT = gql`
+  mutation AttemptCapturePayment($orderId: ID!) {
+    attemptCapturePayment(orderId: $orderId) {
+      status
+    }
+  }
+`;

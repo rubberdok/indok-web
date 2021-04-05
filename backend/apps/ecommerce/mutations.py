@@ -1,13 +1,9 @@
-import json
-
 import graphene
-import requests
-from django.conf import settings
+from django.core.exceptions import PermissionDenied
 from graphql_jwt.decorators import login_required
 
 from .models import Order, Product
-
-VIPPS_BASE_URL = "https://apitest.vipps.no"
+from .vipps_utils import capture_payment, get_payment_status, initiate_payment
 
 
 class InitiateOrder(graphene.Mutation):
@@ -28,7 +24,7 @@ class InitiateOrder(graphene.Mutation):
             raise ValueError("Ugyldig produkt")
 
         counter = Order.objects.filter(product=product).count()
-        order_id = f"indokntnu-{product.organization.name if len(product.organization.name) < 34 else product.organization.name[:34]}-{counter + 1}".replace(
+        order_id = f"indok-{product.organization.name if len(product.organization.name) < 34 else product.organization.name[:34]}-{counter + 1}".replace(
             " ", "-"
         )
 
@@ -40,68 +36,42 @@ class InitiateOrder(graphene.Mutation):
         order.total_price = product.price * quantity
         order.save()
 
-        access_token = get_access_token()
-
-        headers, order_data = build_vipps_request(access_token, order)
-
-        try:
-            order_response = requests.post(
-                f"{VIPPS_BASE_URL}/ecomm/v2/payments/",
-                headers=headers,
-                data=json.dumps(order_data),
-            )
-        except requests.exceptions.RequestException as err:
-            print(f"Error initiating Vipps order: {err}")
-            order.delete()
-            raise Exception("En feil oppstod under initiering av Vipps-betalingen.")
-
-        print(order_response.json())
-
-        redirect = order_response.json()["url"]
+        redirect = initiate_payment(order)
 
         return InitiateOrder(redirect=redirect)
 
 
-# TODO: Store globally and fetch periodically
-def get_access_token():
+class AttemptCapturePayment(graphene.Mutation):
 
-    headers = {
-        "client_id": settings.VIPPS_CLIENT_ID,
-        "client_secret": settings.VIPPS_SECRET,
-        "Ocp-Apim-Subscription-Key": settings.VIPPS_SUBSCRIPTION_KEY,
-    }
+    status = graphene.String()
 
-    # Get access token (expires after 1h/24h test/prod)
-    tokenResponse = requests.post(
-        f"{VIPPS_BASE_URL}/accessToken/get",
-        headers=headers,
-    )
+    class Arguments:
+        order_id = graphene.ID(required=True)
 
-    access_token = tokenResponse.json()["access_token"]
-    return access_token
+    @login_required
+    def mutate(self, info, order_id):
+        try:
+            order = Order.objects.get(pk=order_id)
+        except Order.DoesNotExist:
+            raise ValueError("Ugyldig ordre")
 
+        if order.user != info.context.user:
+            raise PermissionDenied("Du har ikke tilgang til denne ordren")
 
-def build_vipps_request(access_token, order):
-    headers = {
-        "Authorization": f"Bearer {access_token}",
-        "Ocp-Apim-Subscription-Key": settings.VIPPS_SUBSCRIPTION_KEY,
-        "Content-Type": "application/json",
-    }
+        if order.payment_status == Order.PaymentStatus.INITIATED:
+            # Update status according to Vipps payment details
+            status, status_success = get_payment_status(order_id)
 
-    order_data = {
-        "merchantInfo": {
-            "merchantSerialNumber": settings.VIPPS_MERCHANT_SERIAL_NUMBER,
-            "callbackPrefix": "http://example.com/vipps/callback/",
-            "fallBack": "http://127.0.0.1:3000/shop/fallback/",
-            "authToken": order.auth_token,
-            "isApp": False,
-        },
-        "customerInfo": {"mobileNumber": str(order.user.phone_number)},
-        "transaction": {
-            "orderId": order.order_id,
-            "amount": int(order.total_price * 100),  # ører
-            "transactionText": order.product.name,
-            "skipLandingPage": False,
-        },
-    }
-    return headers, order_data
+            if status_success and status == "RESERVE":
+                order.payment_status = Order.PaymentStatus.RESERVED
+                order.save()
+
+        if order.payment_status == Order.PaymentStatus.RESERVED:
+            try:
+                capture_payment(order)
+                order.payment_status = Order.PaymentStatus.CAPTURED
+                order.save()
+            except Exception as err:
+                print(err)
+
+        return AttemptCapturePayment(status=order.payment_status)
