@@ -60,12 +60,12 @@ const ListingTitle: React.FC<{
 }> = ({ listing }) => {
   const classes = useStyles();
   return (
-    <Grid container item direction="row" justify="space-between" alignItems="stretch" xs={10} spacing={4} className={classes.root}>
+    <Grid container item direction="row" justify="space-between" alignItems="stretch" xs={10} className={classes.root}>
 
       <Hidden smDown>
-        <Grid item xs={4}>
+        <Grid item xs={4} style={{marginRight: 32}}>
           <Paper className={classes.card}>
-            <Grid container direction="column" spacing={0} justify="space-evenly" alignItems="center" style={{height: "100%"}}>
+            <Grid container direction="column" justify="space-evenly" alignItems="center" style={{height: "100%"}}>
               <Grid item>
                 <Typography
                   variant="h5"
@@ -90,7 +90,7 @@ const ListingTitle: React.FC<{
         </Grid>
       </Hidden>
 
-      <Grid item sm={12} md={8}>
+      <Grid item xs>
         <Paper className={classes.card}>
           <Grid container direction="column" justify="space-between" alignItems="center">
             <Grid item>
