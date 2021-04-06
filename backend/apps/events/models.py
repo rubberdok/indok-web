@@ -1,9 +1,11 @@
-from apps.organizations.models import Organization
-from django.db import models
 from django.conf import settings
-from phonenumber_field.modelfields import PhoneNumberField
 from django.contrib.auth import get_user_model
+from django.db import models
 from multiselectfield import MultiSelectField
+from phonenumber_field.modelfields import PhoneNumberField
+
+from apps.ecommerce.models import Product
+from apps.organizations.models import Organization
 
 
 # Create your models here.
@@ -100,6 +102,17 @@ class Event(models.Model):
 
     def __str__(self):
         return self.title
+
+    @property
+    def ticket_product_id(self):
+        if self.price is None:
+            return None
+        try:
+            return Product.objects.get(
+                name=f"Billett til {self.title}", organization=self.organization
+            ).id
+        except Product.DoesNotExist:
+            return None
 
 
 class SignUp(models.Model):

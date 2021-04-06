@@ -30,6 +30,8 @@ class Order(models.Model):
         CAPTURED = "CAPTURED", "captured"
         CANCELLED = "CANCELLED", "cancelled"
         REFUNDED = "REFUNDED", "refunded"
+        FAILED = "FAILED", "failed"
+        REJECTED = "REJECTED", "rejected"
 
     order_id = models.CharField(primary_key=True, max_length=50)  # Used with Vipps
     product = models.ForeignKey(
@@ -47,6 +49,7 @@ class Order(models.Model):
     auth_token = models.CharField(
         max_length=32, default=get_auth_token
     )  # For authenticating Vipps callback
+    payment_attempt = models.IntegerField(default=1)
 
     def __str__(self):
         return f"Order(product={self.product}, user={self.user})"

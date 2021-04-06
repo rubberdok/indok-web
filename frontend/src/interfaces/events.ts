@@ -17,7 +17,7 @@ export interface Event {
   shortDescription?: string;
   signupOpenDate?: string;
   usersOnWaitingList?: User[];
-  userAttendance?: { isSignedUp: boolean; isOnWaitingList: boolean };
+  userAttendance?: { isSignedUp: boolean; isOnWaitingList: boolean; hasBoughtTicket: boolean };
   isFull?: boolean;
   price?: string;
   usersAttending?: User[];
@@ -25,13 +25,14 @@ export interface Event {
   bindingSignup?: boolean;
   contactEmail?: string;
   allowedGradeYears: number[];
+  ticketProductId: string;
 }
 
 export interface AttendableEvent extends Event {
   deadline: string;
   availableSlots: string;
   signupOpenDate: string;
-  userAttendance: { isSignedUp: boolean; isOnWaitingList: boolean };
+  userAttendance: { isSignedUp: boolean; isOnWaitingList: boolean; hasBoughtTicket: boolean };
   usersAttending: User[];
   isFull: boolean;
 }

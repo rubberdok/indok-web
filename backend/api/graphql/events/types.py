@@ -1,4 +1,5 @@
 import graphene
+from apps.ecommerce.models import Order
 from apps.events.models import Category, Event, SignUp
 from graphene_django import DjangoObjectType
 from graphql_jwt.decorators import login_required
@@ -9,6 +10,7 @@ from ..users.types import UserType
 class UserAttendingType(graphene.ObjectType):
     is_signed_up = graphene.Boolean()
     is_on_waiting_list = graphene.Boolean()
+    has_bought_ticket = graphene.Boolean()
 
 
 class EventType(DjangoObjectType):
@@ -18,6 +20,7 @@ class EventType(DjangoObjectType):
     users_attending = graphene.List(UserType)
     allowed_grade_years = graphene.List(graphene.Int)
     available_slots = graphene.Int()
+    ticket_product_id = graphene.ID(source="ticket_product_id")
 
     class Meta:
         model = Event
@@ -65,6 +68,16 @@ class EventType(DjangoObjectType):
         return {
             "is_signed_up": user in event.users_attending,
             "is_on_waiting_list": user in event.users_on_waiting_list,
+            "has_bought_ticket": Order.objects.filter(
+                product__id=event.ticket_product_id,
+                user=user,
+                payment_status__in=[
+                    Order.PaymentStatus.RESERVED,
+                    Order.PaymentStatus.CAPTURED,
+                ],
+            ).exists()
+            if event.ticket_product_id is not None
+            else False,
         }
 
     @staticmethod

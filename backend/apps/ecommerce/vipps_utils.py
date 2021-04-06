@@ -58,6 +58,11 @@ def build_headers():
         "Authorization": f"Bearer {access_token}",
         "Ocp-Apim-Subscription-Key": settings.VIPPS_SUBSCRIPTION_KEY,
         "Content-Type": "application/json",
+        "Merchant-Serial-Number": settings.VIPPS_MERCHANT_SERIAL_NUMBER,
+        "Vipps-System-Name": "indokntnu.no",
+        "Vipps-System-Version": "1.0",
+        "Vipps-System-Plugin-Name": "vipps-indokntnu.no",
+        "Vipps-System-Plugin-Version": "1.0",
     }
 
 
@@ -73,7 +78,7 @@ def build_initiate_payment_request(order):
         },
         "customerInfo": {"mobileNumber": str(order.user.phone_number)},
         "transaction": {
-            "orderId": order.order_id,
+            "orderId": f"{order.order_id}-{order.payment_attempt}",
             "amount": int(order.total_price * 100),  # ører
             "transactionText": f"{order.quantity}stk {order.product.name}",
             "skipLandingPage": False,
@@ -110,26 +115,26 @@ def get_payment_status(order_id):
     except Exception as err:
         print(f"Error retrieving Vipps details: {err}")
         raise Exception(
-            "En feil oppstod under forsøk på å hente betalingsdetljer fra Vipps."
+            "En feil oppstod under forsøk på å hente betalingsdetaljer fra Vipps."
         )
     history = details["transactionLogHistory"]
     return history[0]["operation"], history[0]["operationSuccess"]
 
 
-def build_capture_payment_request(order):
+def build_capture_payment_request(order, method):
     return {
         "merchantInfo": {"merchantSerialNumber": settings.VIPPS_MERCHANT_SERIAL_NUMBER},
         "transaction": {
             "amount": int(order.total_price * 100),
-            "transactionText": "Transaction captured from polling",
+            "transactionText": f"Transaction captured from {method}",
         },
     }
 
 
-def capture_payment(order):
+def capture_payment(order, method):
     headers = build_headers()
     headers["X-Request-Id"] = f"{order.order_id}XIDC1"
-    capture_data = build_capture_payment_request(order)
+    capture_data = build_capture_payment_request(order, method)
 
     try:
         capture_response = requests.post(

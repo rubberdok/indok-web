@@ -9,7 +9,14 @@ DEBUG = False
 
 ALLOWED_HOSTS = ["api.gamma.indokntnu.no", "api.indokntnu.no"]
 
-CORS_ORIGIN_WHITELIST = ["https://gamma.indokntnu.no", "https://indokntnu.no"]
+CORS_ORIGIN_WHITELIST = [
+    "https://gamma.indokntnu.no",
+    "https://indokntnu.no",
+    "callback-1.vipps.no",
+    "callback-2.vipps.no",
+    "callback-3.vipps.no",
+    "callback-4.vipps.no",
+]
 
 DATABASES = {
     "default": {

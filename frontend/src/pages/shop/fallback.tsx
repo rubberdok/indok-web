@@ -1,7 +1,8 @@
 import { useMutation } from "@apollo/client";
 import Layout from "@components/Layout";
 import { ATTEMPT_CAPTURE_PAYMENT } from "@graphql/ecommerce/mutations";
-import { CircularProgress, Container, Typography } from "@material-ui/core";
+import { Button, CircularProgress, Container, Typography } from "@material-ui/core";
+import { KeyboardArrowLeft } from "@material-ui/icons";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
@@ -11,11 +12,11 @@ const FallbackPage: NextPage = () => {
   const { orderId } = router.query;
 
   const [attemptCapturePayment, { data, loading, error }] = useMutation(ATTEMPT_CAPTURE_PAYMENT);
-  const [paymentStatus, setPaymentStatus] = useState("");
+  const [paymentStatus, setPaymentStatus] = useState("RESERVED");
   const [captureInterval, setCaptureInterval] = useState<NodeJS.Timeout>();
 
   useEffect(() => {
-    if (orderId && paymentStatus !== "CAPTURED") {
+    if (orderId && paymentStatus == "RESERVED") {
       const interval = setInterval(() => {
         attemptCapturePayment({ variables: { orderId } });
       }, 2000);
@@ -26,7 +27,8 @@ const FallbackPage: NextPage = () => {
   useEffect(() => {
     if (data) {
       setPaymentStatus(data.attemptCapturePayment.status);
-      if (data.attemptCapturePayment.status === "CAPTURED" && captureInterval) {
+      if (data.attemptCapturePayment.status !== "RESERVED" && captureInterval) {
+        // We either sucessfully captured payment or the payment was somehow cancelled
         clearInterval(captureInterval);
       }
     }
@@ -35,15 +37,20 @@ const FallbackPage: NextPage = () => {
   return (
     <Layout>
       <Container>
-        {paymentStatus !== "CAPTURED" || loading ? (
-          <>
-            <Typography variant="h1">Behandler betaling...</Typography> <CircularProgress />
-          </>
-        ) : (
+        <Button startIcon={<KeyboardArrowLeft />} onClick={() => router.back()}>
+          Tilbake
+        </Button>
+        {paymentStatus === "CAPTURED" ? (
           <>
             <Typography variant="h1">Betaling fullført!</Typography>
             <Typography variant="body1">YAYYYYYY</Typography>
           </>
+        ) : paymentStatus === "RESERVED" || loading ? (
+          <>
+            <Typography variant="h1">Behandler...</Typography> <CircularProgress />
+          </>
+        ) : (
+          <Typography>Det ser ut som at betalingen ble avbrutt</Typography>
         )}
         {error && <Typography>{error.message}</Typography>}
       </Container>

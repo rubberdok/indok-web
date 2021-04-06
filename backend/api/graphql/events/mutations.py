@@ -1,4 +1,5 @@
 import graphene
+from apps.ecommerce.models import Product
 from apps.events.models import Category, Event, SignUp
 from apps.organizations.models import Organization
 from apps.organizations.permissions import check_user_membership
@@ -65,6 +66,15 @@ class CreateEvent(graphene.Mutation):
             setattr(event, k, v)
         event.publisher = info.context.user
         event.save()
+
+        # Create ticket product if attendance costs money
+        if event.price is not None:
+            product = Product()
+            product.name = f"Billett til {event.title}"
+            product.price = event.price
+            product.description = event.description
+            product.organization = organization
+            product.save()
         ok = True
         return CreateEvent(event=event, ok=ok)
 
@@ -86,9 +96,30 @@ class UpdateEvent(graphene.Mutation):
 
         check_user_membership(info.context.user, event.organization)
 
+        already_has_ticket = Product.objects.filter(
+            name=f"Billett til {event.title}", organization=event.organization
+        ).exists()
+
+        # Update ticket name if title is changed
+        if already_has_ticket and "title" in event_data:
+            product = Product.objects.get(
+                name=f"Billett til {event.title}", organization=event.organization
+            )
+            product.name = f"Billett til {event_data.get('title')}"
+            product.save()
+
         for k, v in event_data.items():
             setattr(event, k, v)
         event.save()
+
+        # Create new ticket if price is added
+        if not already_has_ticket and event.price is not None:
+            product = Product()
+            product.name = f"Billett til {event.title}"
+            product.price = event.price
+            product.description = event.description
+            product.organization = event.organization
+
         ok = True
         return UpdateEvent(event=event, ok=ok)
 

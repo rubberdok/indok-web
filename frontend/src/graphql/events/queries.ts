@@ -33,10 +33,12 @@ export const GET_EVENTS = gql`
       userAttendance {
         isSignedUp
         isOnWaitingList
+        hasBoughtTicket
       }
       isFull
       hasExtraInformation
       allowedGradeYears
+      ticketProductId
     }
   }
 `;
@@ -74,10 +76,12 @@ export const GET_DEFAULT_EVENTS = gql`
       userAttendance {
         isSignedUp
         isOnWaitingList
+        hasBoughtTicket
       }
       isFull
       hasExtraInformation
       allowedGradeYears
+      ticketProductId
     }
   }
 `;
@@ -117,12 +121,14 @@ export const GET_EVENT = gql`
       userAttendance {
         isSignedUp
         isOnWaitingList
+        hasBoughtTicket
       }
       isFull
       hasExtraInformation
       bindingSignup
       contactEmail
       allowedGradeYears
+      ticketProductId
     }
   }
 `;
@@ -176,12 +182,14 @@ export const ADMIN_GET_EVENT = gql`
       userAttendance {
         isSignedUp
         isOnWaitingList
+        hasBoughtTicket
       }
       isFull
       hasExtraInformation
       bindingSignup
       contactEmail
       allowedGradeYears
+      ticketProductId
     }
   }
 `;

@@ -23,18 +23,37 @@ class InitiateOrder(graphene.Mutation):
         except Product.DoesNotExist:
             raise ValueError("Ugyldig produkt")
 
-        counter = Order.objects.filter(product=product).count()
-        order_id = f"indok-{product.organization.name if len(product.organization.name) < 34 else product.organization.name[:34]}-{counter + 1}".replace(
-            " ", "-"
-        )
+        # If the user has attempted this order before, retry it
+        try:
+            order = Order.objects.get(
+                product__id=product_id,
+                user=user,
+                payment_status__in=[
+                    Order.PaymentStatus.INITIATED,
+                    Order.PaymentStatus.CANCELLED,
+                    Order.PaymentStatus.REJECTED,
+                    Order.PaymentStatus.FAILED,
+                ],
+            )
+            order.payment_attempt = order.payment_attempt + 1
+            order.save()
+        except Order.DoesNotExist:
+            # Note: we need to ensure the order id is unique for Vipps
+            # below fails if orders are deleted
+            counter = Order.objects.filter(
+                product__organization=product.organization
+            ).count()
+            order_id = f"indok-{product.organization.name if len(product.organization.name) < 34 else product.organization.name[:34]}-{counter + 1}".replace(
+                " ", "-"
+            )
 
-        order = Order()
-        order.order_id = order_id
-        order.product = product
-        order.user = user
-        order.quantity = quantity
-        order.total_price = product.price * quantity
-        order.save()
+            order = Order()
+            order.order_id = order_id
+            order.product = product
+            order.user = user
+            order.quantity = quantity
+            order.total_price = product.price * quantity
+            order.save()
 
         redirect = initiate_payment(order)
 
@@ -68,7 +87,7 @@ class AttemptCapturePayment(graphene.Mutation):
 
         if order.payment_status == Order.PaymentStatus.RESERVED:
             try:
-                capture_payment(order)
+                capture_payment(order, method="polling")
                 order.payment_status = Order.PaymentStatus.CAPTURED
                 order.save()
             except Exception as err:

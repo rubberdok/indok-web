@@ -3,7 +3,18 @@ import { GET_USER } from "@graphql/users/queries";
 import { EVENT_SIGN_OFF, EVENT_SIGN_UP } from "@graphql/events/mutations";
 import { AttendableEvent, Event } from "@interfaces/events";
 import { User } from "@interfaces/users";
-import { Box, Button, Grid, Paper, Snackbar, Typography, TextField, Link as MuiLink } from "@material-ui/core";
+import {
+  Box,
+  Button,
+  Grid,
+  Paper,
+  Snackbar,
+  Typography,
+  TextField,
+  Link as MuiLink,
+  Card,
+  CardMedia,
+} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import CategoryIcon from "@material-ui/icons/Category";
 import CreditCard from "@material-ui/icons/CreditCard";
@@ -20,6 +31,7 @@ import EditEvent from "./editEvent";
 import dayjs from "dayjs";
 import nb from "dayjs/locale/nb";
 import { GET_SERVER_TIME } from "@graphql/utils/time/queries";
+import PayWithVipps from "@components/ecommerce/PayWithVipps";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -59,6 +71,9 @@ const useStyles = makeStyles((theme) => ({
     float: "right",
     paddingRight: "1em",
     paddingBottom: "1em",
+  },
+  vippsPayment: {
+    float: "right",
   },
 }));
 
@@ -325,6 +340,18 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
                 styleClassName={classes.signUpButton}
                 currentTime={timeData.serverTime}
               />
+              {eventData.event.userAttendance?.isSignedUp && eventData.event.price && eventData.event.ticketProductId && (
+                <Box className={classes.vippsPayment}>
+                  {eventData.event.userAttendance?.hasBoughtTicket ? (
+                    <Card>
+                      <Typography>Betalt med Vipps</Typography>
+                      <CardMedia component="img" alt="Vipps mark" image="/img/vipps_mark.svg" title="Vipps mark" />
+                    </Card>
+                  ) : (
+                    <PayWithVipps productId={eventData.event.ticketProductId} />
+                  )}
+                </Box>
+              )}
               {!userData.user.phoneNumber &&
                 !eventData.event.userAttendance?.isSignedUp &&
                 !eventData.event.userAttendance?.isOnWaitingList && (

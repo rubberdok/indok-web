@@ -53,7 +53,7 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
     deadline: "",
     signupOpenDate: "",
     availableSlots: "",
-    price: undefined,
+    price: "",
     shortDescription: "",
     hasExtraInformation: false,
     contactEmail: "",
@@ -118,6 +118,7 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
         signupOpenDate: "",
         deadline: "",
         allowedGradeYears: [1, 2, 3, 4, 5],
+        price: "",
       });
     }
   };
@@ -383,15 +384,20 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
           </Grid>
           <Grid item xs={6}>
             <InputLabel>Pris</InputLabel>
-            <Tooltip title="Kommer snart!">
+            <Tooltip
+              disableHoverListener={eventData.isAttendable}
+              disableFocusListener={eventData.isAttendable}
+              title="Kun aktuelt ved påmelding"
+            >
               <TextField
                 type="number"
                 value={eventData.price}
                 onChange={(e) => setEventData({ ...eventData, price: e.currentTarget.value })}
+                disabled={!eventData.isAttendable}
                 margin={"dense"}
-                disabled
               />
             </Tooltip>
+            <FormHelperText>Åpner for salg av biletter</FormHelperText>
           </Grid>
         </Grid>
       </DialogContent>

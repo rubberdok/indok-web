@@ -25,15 +25,16 @@ class VippsCallback(APIView):
         if status == "RESERVED":
             if order.payment_status == Order.PaymentStatus.INITIATED:
                 order.payment_status = Order.PaymentStatus.RESERVED
-                order.save()
-        elif status in ["RESERVE_FAILED", "SALE_FAILED", "CANCELLED"]:
-            order.payment_status = Order.PaymentStatus.CANCELLED
-            order.save()
+        elif status in Order.PaymentStatus.values:
+            order.payment_status = status
+        elif status in ["RESERVE_FAILED", "SALE_FAILED"]:
+            order.payment_status = Order.PaymentStatus.FAILED
+        order.save()
 
         # Capture payment
         if order.payment_status == Order.PaymentStatus.RESERVED:
             try:
-                capture_payment(order)
+                capture_payment(order, method="callback")
                 order.payment_status = Order.PaymentStatus.CAPTURED
                 order.save()
             except Exception as err:
