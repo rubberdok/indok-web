@@ -5,12 +5,14 @@ from utils.testing.ExtendedGraphQLTestCase import ExtendedGraphQLTestCase
 from utils.testing.cabins_factories import BookingFactory
 import datetime
 
+from django.utils import timezone
+
 
 class CabinsBaseTestCase(ExtendedGraphQLTestCase):
     def setUp(self) -> None:
         super().setUp()
         # Create three bookings
-        self.now = datetime.datetime.now()
+        self.now = timezone.make_aware(datetime.datetime.now())
         self.bjornen_cabin = Cabin.objects.get(name="Bjørnen")
         self.osken_cabin = Cabin.objects.get(name="Oksen")
         self.firstBooking = BookingFactory(
@@ -101,14 +103,16 @@ class CabinsMutationsTestCase(CabinsBaseTestCase):
         query = f"""
             mutation CreateBooking {{
                 createBooking(
-                  firstname: \"{new_fake_booking.firstname}\",
-                  surname: \"{new_fake_booking.surname}\",
-                  phone: {new_fake_booking.phone},
-                  receiverEmail: \"{new_fake_booking.receiver_email}\",
-                  checkIn: \"{new_fake_booking.check_in.strftime("%Y-%m-%d")}\",
-                  checkOut: \"{new_fake_booking.check_out.strftime("%Y-%m-%d")}\",
-                  price: {new_fake_booking.price},
-                  cabins: [{self.osken_cabin.id}],
+                bookingData: {{
+                    firstname: \"{new_fake_booking.firstname}\",
+                    surname: \"{new_fake_booking.surname}\",
+                    phone: {new_fake_booking.phone},
+                    receiverEmail: \"{new_fake_booking.receiver_email}\",
+                    checkIn: \"{new_fake_booking.check_in.strftime("%Y-%m-%d")}\",
+                    checkOut: \"{new_fake_booking.check_out.strftime("%Y-%m-%d")}\",
+                    price: {new_fake_booking.price},
+                    cabins: [{self.osken_cabin.id}],
+                    }}
                 ) {{
                   ok
                 }}
@@ -130,23 +134,75 @@ class CabinsMutationsTestCase(CabinsBaseTestCase):
         )
 
     def test_add_invalid_booking(self):
-        # Try to add invalid booking
+        # Try to add booking before current time
         query = f"""
-                    mutation CreateBooking {{
-                        createBooking(
-                          firstname: \"{self.firstBooking.firstname}\",
-                          surname: \"{self.firstBooking.surname}\",
-                          phone: {self.firstBooking.phone},
-                          receiverEmail: \"{self.firstBooking.receiver_email}\",
-                          checkIn: \"{self.firstBooking.check_in.strftime("%Y-%m-%d")}\",
-                          checkOut: \"{self.firstBooking.check_out.strftime("%Y-%m-%d")}\",
-                          price: {self.firstBooking.price},
-                          cabins: [{self.bjornen_cabin.id}],
-                        ) {{
-                          ok
-                        }}
-                        }}
-                    """
+            mutation CreateBooking {{
+                createBooking(
+                bookingData: {{
+                    firstname: \"{self.firstBooking.firstname}\",
+                    surname: \"{self.firstBooking.surname}\",
+                    phone: {self.firstBooking.phone},
+                    receiverEmail: \"{self.firstBooking.receiver_email}\",
+                    checkIn: \"{(timezone.now()-datetime.timedelta(days=10)).strftime("%Y-%m-%d")}\",
+                    checkOut: \"{(timezone.now()-datetime.timedelta(days=5)).strftime("%Y-%m-%d")}\",
+                    price: {self.firstBooking.price},
+                    cabins: [{self.bjornen_cabin.id}],
+                }}
+                ) {{
+                  ok
+                }}
+            }}
+        """
+        response = self.query(query)
+        # This validates the status code and if you get errors
+        self.assertResponseHasErrors(response)
+        # Check that booking is not created
+        self.assertEqual(3, len(Booking.objects.all()))
+
+        # Try to add booking where checkin is after checkout
+        query = f"""
+            mutation CreateBooking {{
+                createBooking(
+                    bookingData: {{
+                        firstname: \"{self.firstBooking.firstname}\",
+                        surname: \"{self.firstBooking.surname}\",
+                        phone: {self.firstBooking.phone},
+                        receiverEmail: \"{self.firstBooking.receiver_email}\",
+                        checkIn: \"{(timezone.now() + datetime.timedelta(days=10)).strftime("%Y-%m-%d")}\",
+                        checkOut: \"{(timezone.now()).strftime("%Y-%m-%d")}\",
+                        price: {self.firstBooking.price},
+                        cabins: [{self.bjornen_cabin.id}],
+                    }}
+                ) {{
+                  ok
+                }}
+            }}
+        """
+        response = self.query(query)
+        # This validates the status code and if you get errors
+        self.assertResponseHasErrors(response)
+        # Check that booking is not created
+        self.assertEqual(3, len(Booking.objects.all()))
+
+        # Try to add booking within the same time as another booking
+        query = f"""
+            mutation CreateBooking {{
+                createBooking(
+                    bookingData: {{
+                        firstname: \"{self.firstBooking.firstname}\",
+                        surname: \"{self.firstBooking.surname}\",
+                        phone: {self.firstBooking.phone},
+                        receiverEmail: \"{self.firstBooking.receiver_email}\",
+                        checkIn: \"{self.firstBooking.check_in.strftime("%Y-%m-%d")}\",
+                        checkOut: \"{self.firstBooking.check_out.strftime("%Y-%m-%d")}\",
+                        price: {self.firstBooking.price},
+                        cabins: [{self.bjornen_cabin.id}],
+                    }}
+                ) {{
+                  ok
+                }}
+            }}
+        """
         response = self.query(query)
         # This validates the status code and if you get errors
         self.assertResponseHasErrors(response)
