@@ -1,30 +1,36 @@
-import { Cabin, ContactInfo, InputValueTypes } from "@interfaces/cabins";
+import { Cabin, ContactInfo } from "@interfaces/cabins";
 import dayjs from "dayjs";
 import { DatePick } from "src/pages/cabins/book";
 import validator from "validator";
 
-export const validateName = (name: string) => name.length > 0;
+export const validateName = (name: string) => name?.length > 0;
 
-export const validateEmail = (email: string): boolean => validator.isEmail(email);
+export const validateEmail = (email: string): boolean => (email ? validator.isEmail(email) : false);
 
 export const validateSelect = (numberIndok: number, numberExternal: number): boolean =>
   numberIndok > 0 || numberExternal > 0;
 
-export const validatePhone = (phone: string): boolean => (phone ? validator.isMobilePhone(phone) : false);
+export const validatePhone = (phone: string): boolean => (phone ? validator.isMobilePhone(phone, "nb-NO") : false);
 
-export const validateInputForm = (inputValues: InputValueTypes) => {
+export const validateInputForm = (inputValues: ContactInfo) => {
   const selectValidity = validateSelect(inputValues.numberIndok, inputValues.numberExternal);
 
   const updatedValidations = {
-    firstname: validateName(inputValues.firstname),
-    lastname: validateName(inputValues.surname),
-    email: validateEmail(inputValues.receiverEmail),
+    firstName: validateName(inputValues.firstName),
+    lastName: validateName(inputValues.lastName),
+    email: validateEmail(inputValues.email),
     phone: validatePhone(inputValues.phone),
     numberIndok: selectValidity,
     numberExternal: selectValidity,
   };
 
   return updatedValidations;
+};
+
+export const isFormValid = (inputValues: ContactInfo) => {
+  const validations = validateInputForm(inputValues);
+
+  return Object.values(validations).every((val) => val);
 };
 
 export const allValuesFilled = (contactInfo: ContactInfo) => {
