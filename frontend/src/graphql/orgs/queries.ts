@@ -23,11 +23,6 @@ export const GET_ORGANIZATION = gql`
           firstName
         }
       }
-      listings {
-        id
-        title
-        deadline
-      }
     }
   }
 `;
