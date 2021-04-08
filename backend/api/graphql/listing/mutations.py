@@ -15,7 +15,7 @@ class BaseListingInput(graphene.InputObjectType):
     deadline = graphene.DateTime()
     url = graphene.String()
     organization_id = graphene.ID()
-    survey_id = graphene.ID()
+    form_id = graphene.ID()
 
 
 class CreateListingInput(BaseListingInput):

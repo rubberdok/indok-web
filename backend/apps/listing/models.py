@@ -2,7 +2,7 @@ from django.db import models
 from django.utils import timezone
 
 from apps.organizations.models import Organization
-from apps.surveys.models import Survey
+from apps.forms.models import Form
 
 
 class Listing(models.Model):
@@ -20,7 +20,7 @@ class Listing(models.Model):
 
     url = models.URLField(null=True, blank=True)
 
-    survey = models.ForeignKey(Survey, null=True, on_delete=models.SET_NULL)
+    form = models.ForeignKey(Form, null=True, on_delete=models.SET_NULL)
 
     def __str__(self):
         return f"{self.title} (Open: {self.start_datetime} - {self.end_datetime}: {self.description}"

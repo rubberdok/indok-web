@@ -6,7 +6,7 @@ from .events.schema import EventMutations, EventQueries
 from .listing.schema import ListingMutations, ListingQueries
 from .organizations.schema import OrganizationMutations, OrganizationQueries
 from .users.schema import UserMutations, UserQueries
-from .surveys.schema import SurveyMutations, SurveyQueries
+from .forms.schema import FormMutations, FormQueries
 from .utils.schema import UtilQueries
 
 
@@ -17,7 +17,7 @@ class Queries(
     CabinQueries,
     OrganizationQueries,
     ListingQueries,
-    SurveyQueries,
+    FormQueries,
     UtilQueries
 ):
     pass
@@ -30,7 +30,7 @@ class Mutations(
     CabinMutations,
     OrganizationMutations,
     ListingMutations,
-    SurveyMutations
+    FormMutations
 ):
     pass
 

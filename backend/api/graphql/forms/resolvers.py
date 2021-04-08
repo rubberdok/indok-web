@@ -1,4 +1,4 @@
-from apps.surveys.models import Option, Survey, Question, Answer, Response
+from apps.forms.models import Option, Form, Question, Answer, Response
 
 from typing import Optional
 
@@ -14,15 +14,15 @@ class OptionResolvers:
         return Option.objects.all()
 
 
-class SurveyResolvers:
-    def resolve_survey(self, info, survey_id: int):
-        return Survey.objects.get(pk=survey_id)
+class FormResolvers:
+    def resolve_form(self, info, form_id: int):
+        return Form.objects.get(pk=form_id)
 
-    def resolve_surveys(self, info, search: Optional[str] = None):
+    def resolve_forms(self, info, search: Optional[str] = None):
         """
         TODO: Search implementation
         """
-        return Survey.objects.all()
+        return Form.objects.all()
 
 
 class QuestionResolvers:
@@ -57,23 +57,23 @@ class AnswerResolvers:
 
 
 class ResponseResolvers:
-    def resolve_response(self, info, survey_id, response_id=None):
+    def resolve_response(self, info, form_id, response_id=None):
         # TODO: Row level permissions
         if info.context.user.is_superuser:
             try:
                 if response_id:
                     return Response.objects.get(pk=response_id)
                 return Response.objects.get(
-                    survey__pk=survey_id, responder=info.context.user
+                    form__pk=form_id, responder=info.context.user
                 )
             except Response.DoesNotExist:
                 return None
         else:
             raise NotImplementedError("Dette kallet er ikke implementert enda.")
 
-    def resolve_responses(self, info, survey_id):
+    def resolve_responses(self, info, form_id):
         # TODO: Row level permissions
         if info.context.user.is_supseruser:
-            return Response.objects.filter(survey__pk=survey_id)
+            return Response.objects.filter(form__pk=form_id)
         else:
             raise NotImplementedError("Dette kallet er ikke implementert enda.")
