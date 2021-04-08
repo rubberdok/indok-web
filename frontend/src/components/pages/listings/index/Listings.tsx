@@ -53,14 +53,6 @@ const Listings: React.FC<ListingsProps> = ({ handleClick }) => {
           </Grid>
         ))
       )}
-      {(data && !data.listings.length) && (
-        <Grid item xs={6}>
-          <Typography variant="body2" gutterBottom>Vi fant ingen åpne verv, men kanskje du vil bidra til å gjøre nettsidene bedre?</Typography>
-          <a href="https://github.com/hovedstyret/indok-web">
-            <img src="/img/rubberdok_black.svg" alt="Rubberdøk logo" width="100%"/>
-          </a>
-        </Grid>
-      )}
     </Grid>
   )
 }
