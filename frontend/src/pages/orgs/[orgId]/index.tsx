@@ -32,7 +32,6 @@ import { NextPage } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { default as React, useState } from "react";
-import OrganizationListings from "@components/pages/listings/organization/OrganizationListings";
 
 interface HeaderValuePair<T> {
   header: string;
@@ -192,7 +191,6 @@ const OrganizationDetailPage: NextPage = () => {
                 </ButtonGroup>
               </Grid>
             </Grid>
-            {data?.organization?.listings && <OrganizationListings organization={data.organization} />}
           </Grid>
         ) : null}
       </Box>

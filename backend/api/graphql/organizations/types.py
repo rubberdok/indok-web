@@ -1,15 +1,12 @@
 import graphene
-from apps.organizations.models import Organization, Membership, Role
 from graphene_django import DjangoObjectType
 from graphql_jwt.decorators import login_required
 
-from ..listings.types import ListingType
-from .dataloader import ListingsByOrganizationIdLoader
+from apps.organizations.models import Organization, Membership, Role
 
 
 class OrganizationType(DjangoObjectType):
     absolute_slug = graphene.String()
-    listings = graphene.List(ListingType)
 
     class Meta:
         model = Organization
@@ -24,12 +21,6 @@ class OrganizationType(DjangoObjectType):
             "users",
             "events",
         ]
-
-    @staticmethod
-    def resolve_listings(root: Organization, info):
-        listing_loader = ListingsByOrganizationIdLoader()
-        return listing_loader.load(root.id)
-    
 
     class PermissionDecorators:
         @staticmethod
