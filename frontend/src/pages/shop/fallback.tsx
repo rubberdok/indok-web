@@ -40,10 +40,11 @@ const FallbackPage: NextPage = () => {
         <Button startIcon={<KeyboardArrowLeft />} onClick={() => router.back()}>
           Tilbake
         </Button>
+        <Typography variant="h1">Betaling</Typography>
         {paymentStatus === "CAPTURED" ? (
           <>
-            <Typography variant="h1">Betaling fullført!</Typography>
-            <Typography variant="body1">YAYYYYYY</Typography>
+            <Typography variant="h3">Betaling fullført!</Typography>
+            <Typography variant="body1">Betalingen var vellykket og du har nå kjøpt produktet. </Typography>
           </>
         ) : paymentStatus === "RESERVED" || loading ? (
           <>

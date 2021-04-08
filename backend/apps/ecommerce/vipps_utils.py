@@ -9,6 +9,8 @@ from .models import VippsAccessToken
 
 VIPPS_BASE_URL = "https://apitest.vipps.no"
 
+# TODO: Clean this code up by making a class, inspiration from https://github.com/almazkun/vipps-python
+
 
 def get_access_token():
     # Get Vipps access token from db or fetch new if necessary
@@ -46,7 +48,9 @@ def get_new_access_token():
         raise Exception("En feil oppstod under autentisering med Vipps.")
 
     access_token = token_response["access_token"]
-    expires_on = datetime.datetime.fromtimestamp(int(token_response["expires_on"]))
+    expires_on = timezone.make_aware(
+        datetime.datetime.fromtimestamp(int(token_response["expires_on"]))
+    )
     return access_token, expires_on
 
 
@@ -59,10 +63,8 @@ def build_headers():
         "Ocp-Apim-Subscription-Key": settings.VIPPS_SUBSCRIPTION_KEY,
         "Content-Type": "application/json",
         "Merchant-Serial-Number": settings.VIPPS_MERCHANT_SERIAL_NUMBER,
-        "Vipps-System-Name": "indokntnu.no",
+        "Vipps-System-Name": "indokntnu",
         "Vipps-System-Version": "1.0",
-        "Vipps-System-Plugin-Name": "vipps-indokntnu.no",
-        "Vipps-System-Plugin-Version": "1.0",
     }
 
 
@@ -92,14 +94,16 @@ def initiate_payment(order):
     order_data = build_initiate_payment_request(order)
 
     try:
-        redirect = requests.post(
+        response = requests.post(
             f"{VIPPS_BASE_URL}/ecomm/v2/payments/",
             headers=headers,
             data=json.dumps(order_data),
-        ).json()["url"]
-    except Exception as err:
+        )
+        response.raise_for_status()
+        redirect = response.json()["url"]
+
+    except requests.exceptions.RequestException as err:
         print(f"Error initiating Vipps order: {err}")
-        order.delete()
         raise Exception("En feil oppstod under initiering av Vipps-betalingen.")
     return redirect
 
@@ -108,15 +112,16 @@ def get_payment_status(order_id):
     headers = build_headers()
 
     try:
-        details = requests.get(
+        response = requests.get(
             f"{VIPPS_BASE_URL}/ecomm/v2/payments/{order_id}/details",
             headers=headers,
-        ).json()
-    except Exception as err:
-        print(f"Error retrieving Vipps details: {err}")
-        raise Exception(
-            "En feil oppstod under forsøk på å hente betalingsdetaljer fra Vipps."
         )
+        response.raise_for_status()
+        details = response.json()
+    except requests.exceptions.RequestException as err:
+        print(f"Error retrieving Vipps details: {err}")
+        raise Exception("En feil oppstod ved henting av betalingsdetaljer fra Vipps.")
+
     history = details["transactionLogHistory"]
     return history[0]["operation"], history[0]["operationSuccess"]
 
@@ -133,18 +138,17 @@ def build_capture_payment_request(order, method):
 
 def capture_payment(order, method):
     headers = build_headers()
-    headers["X-Request-Id"] = f"{order.order_id}XIDC1"
+    headers["X-Request-Id"] = f"{order.order_id}-{order.payment_attempt}XIDC1"
     capture_data = build_capture_payment_request(order, method)
 
     try:
         capture_response = requests.post(
-            f"{VIPPS_BASE_URL}/ecomm/v2/payments/{order.order_id}/capture",
+            f"{VIPPS_BASE_URL}/ecomm/v2/payments/{order.order_id}-{order.payment_attempt}/capture",
             headers=headers,
             data=json.dumps(capture_data),
         )
+        capture_response.raise_for_status()
 
-    except Exception as err:
+    except requests.exceptions.RequestException as err:
         print(f"Error capturing Vipps payment: {err}")
-        raise Exception("En feil oppstod under Vipps-betaling.")
-    if capture_response.status_code != 200:
         raise Exception("En feil oppstod under Vipps-betaling.")

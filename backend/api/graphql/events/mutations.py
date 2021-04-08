@@ -96,15 +96,11 @@ class UpdateEvent(graphene.Mutation):
 
         check_user_membership(info.context.user, event.organization)
 
-        already_has_ticket = Product.objects.filter(
-            name=f"Billett til {event.title}", organization=event.organization
-        ).exists()
+        already_has_ticket = event.ticket_product_id is not None
 
         # Update ticket name if title is changed
         if already_has_ticket and "title" in event_data:
-            product = Product.objects.get(
-                name=f"Billett til {event.title}", organization=event.organization
-            )
+            product = Product.objects.get(id=event.ticket_product_id)
             product.name = f"Billett til {event_data.get('title')}"
             product.save()
 

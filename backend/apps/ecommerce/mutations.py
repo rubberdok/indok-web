@@ -23,6 +23,14 @@ class InitiateOrder(graphene.Mutation):
         except Product.DoesNotExist:
             raise ValueError("Ugyldig produkt")
 
+        # For now, only allow a single successfull purchase of a product
+        if Order.objects.filter(
+            product__id=product_id,
+            user=user,
+            payment_status=Order.PaymentStatus.CAPTURED,
+        ).exists():
+            raise Exception("Du har allerede kjøpt dette produktet.")
+
         # If the user has attempted this order before, retry it
         try:
             order = Order.objects.get(
@@ -61,6 +69,9 @@ class InitiateOrder(graphene.Mutation):
 
 
 class AttemptCapturePayment(graphene.Mutation):
+    # Polling request to capture payment in case callback does not succeed
+    # Also returns payment status
+    # TODO: see if /details endpoint can reveal FAILED / REJECTED / CANCELLED state
 
     status = graphene.String()
 
@@ -79,7 +90,9 @@ class AttemptCapturePayment(graphene.Mutation):
 
         if order.payment_status == Order.PaymentStatus.INITIATED:
             # Update status according to Vipps payment details
-            status, status_success = get_payment_status(order_id)
+            status, status_success = get_payment_status(
+                f"{order.order_id}-{order.payment_attempt}"
+            )
 
             if status_success and status == "RESERVE":
                 order.payment_status = Order.PaymentStatus.RESERVED

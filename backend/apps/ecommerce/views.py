@@ -11,6 +11,9 @@ class VippsCallback(APIView):
     def post(self, request, order_id):
         # Upon callback from Vipps, update status and attempt to capture payment
 
+        # Remove payment_attempt to get internal order_id
+        order_id = order_id.rpartition("-")[0]
+
         try:
             order = Order.objects.get(pk=order_id)
         except Order.DoesNotExist:
