@@ -21,11 +21,13 @@ class BaseQuestionInput(graphene.InputObjectType):
     question_type = graphene.Field(QuestionTypeEnum)
     question = graphene.String()
     description = graphene.String()
+    mandatory = graphene.Boolean()
 
 
 class CreateQuestionInput(BaseQuestionInput):
     form_id = graphene.ID(required=True)
     question = graphene.String(required=True)
+    mandatory = graphene.Boolean(required=True)
 
 
 class CreateQuestion(graphene.Mutation):
