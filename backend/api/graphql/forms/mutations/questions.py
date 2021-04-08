@@ -114,7 +114,6 @@ class SubmitOrUpdateAnswers(graphene.Mutation):
         form_id = graphene.ID(required=True)
         answers_data = graphene.List(AnswerInput)
 
-    @login_required
     @permission_required(["forms.add_answer", "forms.update_answer"])
     def mutate(self, info, form_id, answers_data):
         """Creates new answers to previously unanswered questions, updates already existings answers.
