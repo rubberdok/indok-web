@@ -44,6 +44,7 @@ def permission_required(
     """
 
     accept_global_perms = kwargs.pop("accept_global_perms", False)
+    any_perm = kwargs.pop("any_perm", False)
     if isinstance(perms, str):
         perms = [perms]
 
@@ -87,12 +88,13 @@ def permission_required(
                     lookup_dict[lookup] = kwargs[resolver_arg]
 
                 obj = model.objects.get(**lookup_dict)
-            
+
             if has_permissions(
                 user=context.user,
                 perms=perms,
                 obj=obj,
                 accept_global_perms=accept_global_perms,
+                any_perm=any_perm,
             ):
                 return resolver(*args, **kwargs)
             elif return_none:
@@ -106,7 +108,11 @@ def permission_required(
 
 
 def has_permissions(
-    user, perms: list[str], obj=None, accept_global_perms: bool = False
+    user,
+    perms: list[str],
+    obj=None,
+    accept_global_perms: bool = False,
+    any_perm: bool = False,
 ) -> bool:
     """Check if the user has the required permissions
 
@@ -120,15 +126,20 @@ def has_permissions(
         The requested object, by default None
     accept_global_perms : bool, optional
         Whether global permissions are permitted, i.e. does not require object-level permission, by default False
+    any_perm : bool, optional
+        If permission should be granted if any of the required permissions are valid, by default False
 
     Returns
     -------
     bool
         True if the user has permission, False otherwise
     """
-    return (accept_global_perms and all(user.has_perm(perm) for perm in perms)) or all(
-        user.has_perm(perm, obj) for perm in perms
+    return (
+        (accept_global_perms and all(user.has_perm(perm) for perm in perms))
+        or (any_perm and any(user.has_perm(perm, obj) for perm in perms))
+        or all(user.has_perm(perm, obj) for perm in perms)
     )
+
 
 def permission_required_or_none(
     perms: Union[list[str], str],
@@ -153,7 +164,14 @@ def permission_required_or_none(
     None
         If the user does not have the given permission, wrapped function otherwise.
     """
-    return permission_required(perms=perms, lookup_variables=lookup_variables, fn=fn, return_none=True, **kwargs)
+    return permission_required(
+        perms=perms,
+        lookup_variables=lookup_variables,
+        fn=fn,
+        return_none=True,
+        **kwargs,
+    )
+
 
 def get_resolver_parent(parent, *args):
     """Default objectgetter for field resolvers
