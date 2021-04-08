@@ -15,5 +15,5 @@ class ListingType(DjangoObjectType):
             "slug",
             "deadline",
             "organization",
-            "survey",
+            "form",
         ]

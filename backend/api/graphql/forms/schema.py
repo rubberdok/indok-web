@@ -1,10 +1,10 @@
 import graphene
 
-from .types import OptionType, AnswerType, SurveyType, QuestionType, ResponseType
+from .types import OptionType, AnswerType, FormType, QuestionType, ResponseType
 from .resolvers import (
     OptionResolvers,
     ResponseResolvers,
-    SurveyResolvers,
+    FormResolvers,
     QuestionResolvers,
     AnswerResolvers,
 )
@@ -12,24 +12,24 @@ from .resolvers import (
 from .mutations.questions import (
     CreateQuestion,
     CreateUpdateAndDeleteOptions,
-    DeleteAnswersToSurvey,
+    DeleteAnswersToForm,
     UpdateQuestion,
     DeleteQuestion,
     DeleteAnswer,
     SubmitOrUpdateAnswers,
 )
 
-from .mutations.surveys import (
-    CreateSurvey,
-    UpdateSurvey,
-    DeleteSurvey,
+from .mutations.forms import (
+    CreateForm,
+    UpdateForm,
+    DeleteForm,
 )
 
 
-class SurveyQueries(
+class FormQueries(
     graphene.ObjectType,
     OptionResolvers,
-    SurveyResolvers,
+    FormResolvers,
     QuestionResolvers,
     AnswerResolvers,
     ResponseResolvers,
@@ -37,8 +37,8 @@ class SurveyQueries(
     option = graphene.Field(OptionType, id=graphene.ID())
     options = graphene.List(OptionType, search=graphene.String())
 
-    survey = graphene.Field(SurveyType, survey_id=graphene.ID())
-    surveys = graphene.List(SurveyType, search=graphene.String())
+    form = graphene.Field(FormType, form_id=graphene.ID())
+    forms = graphene.List(FormType, search=graphene.String())
 
     question = graphene.Field(QuestionType, id=graphene.ID())
     questions = graphene.List(QuestionType, search=graphene.String())
@@ -47,23 +47,23 @@ class SurveyQueries(
     answers = graphene.List(AnswerType, search=graphene.String())
 
     response = graphene.Field(
-        ResponseType, survey_id=graphene.ID(required=True), response_id=graphene.ID()
+        ResponseType, form_id=graphene.ID(required=True), response_id=graphene.ID()
     )
-    responses = graphene.List(ResponseType, survey_id=graphene.ID(required=True))
+    responses = graphene.List(ResponseType, form_id=graphene.ID(required=True))
 
 
-class SurveyMutations(graphene.ObjectType):
+class FormMutations(graphene.ObjectType):
     create_question = CreateQuestion.Field()
     update_question = UpdateQuestion.Field()
     delete_question = DeleteQuestion.Field()
 
-    create_survey = CreateSurvey.Field()
-    update_survey = UpdateSurvey.Field()
-    delete_survey = DeleteSurvey.Field()
+    create_form = CreateForm.Field()
+    update_form = UpdateForm.Field()
+    delete_form = DeleteForm.Field()
 
     delete_answer = DeleteAnswer.Field()
 
     submit_answers = SubmitOrUpdateAnswers.Field()
-    delete_answers = DeleteAnswersToSurvey.Field()
+    delete_answers = DeleteAnswersToForm.Field()
 
     create_update_and_delete_options = CreateUpdateAndDeleteOptions.Field()

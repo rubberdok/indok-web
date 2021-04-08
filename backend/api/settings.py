@@ -53,14 +53,16 @@ INSTALLED_APPS = [
     "apps.events",
     "apps.listing",
     "apps.organizations",
-    "apps.surveys",
     "apps.users",
+    "apps.forms",
     # External apps
     "corsheaders",
     "graphene_django",
     "rest_framework",
     "phonenumber_field",
     "guardian",
+    # Deprecated
+    "apps.surveys",
 ]
 
 AUTH_USER_MODEL = "users.User"

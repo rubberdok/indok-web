@@ -6,7 +6,7 @@ from graphene_django import DjangoObjectType
 from graphql_jwt.decorators import login_required
 
 from api.graphql.users.types import UserType
-from apps.surveys.models import Answer, Option, Question, Response, Survey
+from apps.forms.models import Answer, Option, Question, Response, Form
 
 
 class OptionType(DjangoObjectType):
@@ -39,8 +39,8 @@ class ResponseType(DjangoObjectType):
 
     class Meta:
         model = Response
-        field = ["uuid", "respondent", "survey", "status"]
-        description = "A response instance that contains information about a user's response to a survey."
+        field = ["uuid", "respondent", "form", "status"]
+        description = "A response instance that contains information about a user's response to a form."
 
     @staticmethod
     @login_required
@@ -65,7 +65,7 @@ class QuestionType(DjangoObjectType):
             "id",
             "mandatory",
         ]
-        description = "A question on a survey."
+        description = "A question on a form."
 
     @staticmethod
     def resolve_options(root: Question, info):
@@ -85,32 +85,32 @@ class QuestionType(DjangoObjectType):
         return root.answers.filter(user__pk=user_id).first()
 
 
-class SurveyType(DjangoObjectType):
+class FormType(DjangoObjectType):
     questions = graphene.List(QuestionType)
     responders = graphene.List(UserType, user_id=graphene.ID())
     responder = graphene.Field(UserType, user_id=graphene.ID(required=True))
     responses = graphene.List(ResponseType)
 
     class Meta:
-        model = Survey
+        model = Form
         fields = [
             "id",
             "name",
             "description",
             "organization",
         ]
-        description = "A survey containing questions, optionally linked to a listing."
+        description = "A form containing questions, optionally linked to a listing."
 
     @staticmethod
-    def resolve_questions(root: Survey, info):
+    def resolve_questions(root: Form, info):
         return root.questions.all()
 
     @staticmethod
     @login_required
-    def resolve_responders(root: Survey, info, user_id: int = None):
+    def resolve_responders(root: Form, info, user_id: int = None):
         # TODO: Row level permissions
         if info.context.user.is_superuser:
-            q = Q(responses__survey=root)
+            q = Q(responses__form=root)
             if user_id:
                 q &= Q(pk=user_id)
             return get_user_model().objects.filter(q).distinct()
@@ -119,9 +119,9 @@ class SurveyType(DjangoObjectType):
 
     @staticmethod
     @login_required
-    def resolve_responder(root: Survey, info, user_id: int):
+    def resolve_responder(root: Form, info, user_id: int):
         # TODO: Row level permissions
         if info.context.user.is_superuser:
-            return get_user_model().objects.get(responses__survey=root, pk=user_id)
+            return get_user_model().objects.get(responses__form=root, pk=user_id)
         else:
             raise NotImplementedError("Dette kallet er ikke implementert end")
