@@ -3,6 +3,7 @@ from factory.django import DjangoModelFactory
 import factory
 from apps.cabins.models import Booking as BookingModel
 import random
+from django.utils import timezone
 
 
 class BookingFactory(DjangoModelFactory):
@@ -14,7 +15,7 @@ class BookingFactory(DjangoModelFactory):
     phone = factory.LazyAttribute(lambda obj: random.randint(40039737, 49939737))
     receiver_email = Faker(["no-NO"]).ascii_company_email()
     price = factory.LazyAttribute(lambda obj: random.randint(1000, 5000))
-    timestamp = factory.Faker("date")
+    timestamp = timezone.now()
 
     @factory.post_generation
     def cabins(self, create, extracted, **kwargs):

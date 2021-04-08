@@ -1,4 +1,5 @@
 import json
+from graphql import GraphQLError
 
 from apps.cabins.models import Booking, Cabin
 from utils.testing.ExtendedGraphQLTestCase import ExtendedGraphQLTestCase
@@ -12,9 +13,9 @@ class CabinsBaseTestCase(ExtendedGraphQLTestCase):
     def setUp(self) -> None:
         super().setUp()
         # Create three bookings
-        self.now = timezone.make_aware(datetime.datetime.now())
+        self.now = timezone.now()
         self.bjornen_cabin = Cabin.objects.get(name="Bjørnen")
-        self.osken_cabin = Cabin.objects.get(name="Oksen")
+        self.oksen_cabin = Cabin.objects.get(name="Oksen")
         self.firstBooking = BookingFactory(
             check_in=self.now,
             check_out=self.now + datetime.timedelta(days=4),
@@ -23,12 +24,12 @@ class CabinsBaseTestCase(ExtendedGraphQLTestCase):
         self.secondBooking = BookingFactory(
             check_in=self.now + datetime.timedelta(days=6),
             check_out=self.now + datetime.timedelta(days=12),
-            cabins=[self.osken_cabin, self.bjornen_cabin],
+            cabins=[self.oksen_cabin, self.bjornen_cabin],
         )
         self.thirdBooking = BookingFactory(
             check_in=self.now + datetime.timedelta(days=24),
             check_out=self.now + datetime.timedelta(days=30),
-            cabins=[self.osken_cabin],
+            cabins=[self.oksen_cabin],
         )
 
 
@@ -111,7 +112,7 @@ class CabinsMutationsTestCase(CabinsBaseTestCase):
                     checkIn: \"{new_fake_booking.check_in.strftime("%Y-%m-%d")}\",
                     checkOut: \"{new_fake_booking.check_out.strftime("%Y-%m-%d")}\",
                     price: {new_fake_booking.price},
-                    cabins: [{self.osken_cabin.id}],
+                    cabins: [{self.oksen_cabin.id}],
                     }}
                 ) {{
                   ok

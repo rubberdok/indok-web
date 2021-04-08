@@ -2,19 +2,24 @@
 
 import datetime
 from django.db import migrations, models
+from django.utils import timezone
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cabins', '0006_auto_20210322_2007'),
+        ("cabins", "0006_auto_20210322_2007"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='booking',
-            name='timestamp',
-            field=models.DateTimeField(default=datetime.datetime(2021, 3, 22, 20, 10, 8, 577923)),
+            model_name="booking",
+            name="timestamp",
+            field=models.DateTimeField(
+                default=timezone.make_aware(
+                    datetime.datetime(2021, 3, 22, 20, 10, 8, 577923)
+                )
+            ),
             preserve_default=False,
         ),
     ]
