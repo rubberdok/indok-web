@@ -1,7 +1,7 @@
 import graphene
 from graphql_jwt.decorators import login_required, permission_required
 
-from apps.listing.models import Listing
+from apps.listings.models import Listing
 from apps.forms.models import Form
 from ..types import FormType
 

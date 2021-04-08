@@ -1,6 +1,6 @@
 import datetime
 import graphene
-from apps.listing.models import Listing
+from apps.listings.models import Listing
 from django.utils.text import slugify
 from graphql_jwt.decorators import login_required, permission_required
 

@@ -6,7 +6,7 @@
   pk: 2
   fields:
     name: Bjørnen
-- model: listing.listing
+- model: listings.listing
   pk: 9
   fields:
     description: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
@@ -22,7 +22,7 @@
     organization: 17
     url: http://vg.no
     form: 4
-- model: listing.listing
+- model: listings.listing
   pk: 10
   fields:
     description: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
@@ -38,7 +38,7 @@
     organization: 19
     url: http://bindeleddet.no
     form: 5
-- model: listing.listing
+- model: listings.listing
   pk: 11
   fields:
     description: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
