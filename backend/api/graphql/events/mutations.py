@@ -1,7 +1,7 @@
 import graphene
 from apps.events.models import Category, Event, SignUp
 from apps.organizations.models import Organization
-from apps.users.models import User
+from django.contrib.auth import get_user_model
 from apps.organizations.permissions import check_user_membership
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404
@@ -192,11 +192,7 @@ class EventSignOff(graphene.Mutation):
             )
 
         try:
-            sign_up = (
-                SignUp.objects.filter(is_attending=True)
-                .order_by("-timestamp")
-                .get(user=user, event=event)
-            )
+            sign_up = SignUp.objects.get(is_attending=True, user=user, event=event)
         except SignUp.DoesNotExist:
             raise Exception("Du er ikke påmeldt")
 
@@ -211,7 +207,6 @@ class AdminEventSignOff(graphene.Mutation):
         event_id = graphene.ID(required=True)
         user_id = graphene.ID(required=True)
 
-    is_full = graphene.Boolean()
     event = graphene.Field(EventType)
 
     @login_required
@@ -224,23 +219,19 @@ class AdminEventSignOff(graphene.Mutation):
         check_user_membership(info.context.user, event.organization)
 
         try:
-            user = User.objects.get(pk=user_id)
+            user = get_user_model().objects.get(pk=user_id)
         except Event.DoesNotExist:
             raise ValueError("Kunne ikke finne brukeren")
 
         try:
-            sign_up = (
-                SignUp.objects.filter(is_attending=True)
-                .order_by("-timestamp")
-                .get(user=user, event=event)
-            )
+            sign_up = SignUp.objects.get(is_attending=True, user=user, event=event)
         except SignUp.DoesNotExist:
-            raise Exception("Kunne ikke finne brukeren")
+            raise Exception("Kunne ikke finne påmeldingen")
 
         setattr(sign_up, "is_attending", False)
         sign_up.save()
 
-        return EventSignOff(event=event, is_full=event.is_full)
+        return AdminEventSignOff(event=event)
 
 
 class CategoryInput(graphene.InputObjectType):

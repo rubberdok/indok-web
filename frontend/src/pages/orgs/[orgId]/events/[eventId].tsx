@@ -78,9 +78,7 @@ const EventAdminPage: NextPage = () => {
     skip: Number.isNaN(eventNumberID),
   });
 
-  const [adminEventSignOff, { loading: signOffLoading, error: signOffError }] = useMutation<{
-    adminEventSignOff: { isFull: boolean };
-  }>(ADMIN_EVENT_SIGN_OFF);
+  const [adminEventSignOff, { loading: signOffLoading, error: signOffError }] = useMutation(ADMIN_EVENT_SIGN_OFF);
 
   const [openEditEvent, setOpenEditEvent] = useState(false);
   const [openSignOffErrorSnackbar, setOpenSignOffErrorSnackbar] = useState(false);
