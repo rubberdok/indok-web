@@ -14,6 +14,7 @@ export interface Question {
   question: string;
   description: string;
   questionType: QuestionType;
+  mandatory: boolean;
   options: Option[];
   answers: Answer[];
 }

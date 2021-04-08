@@ -10,6 +10,7 @@ export const FORM = gql`
         question
         description
         questionType
+        mandatory
         options {
           id
           answer
@@ -28,6 +29,7 @@ export const FORM_ANSWERS = gql`
         question
         description
         questionType
+        mandatory
         options {
           id
           answer
