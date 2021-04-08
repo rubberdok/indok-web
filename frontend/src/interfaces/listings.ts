@@ -1,4 +1,4 @@
-import { Survey } from "@interfaces/surveys";
+import { Form } from "@interfaces/forms";
 import { Organization } from "@interfaces/organizations";
 
 export interface Listing {
@@ -13,5 +13,5 @@ export interface Listing {
   hero?: string;
   logo?: string;
   organization?: Organization;
-  survey?: Survey;
+  form?: Form;
 }

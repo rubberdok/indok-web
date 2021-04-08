@@ -34,7 +34,7 @@ export const LISTING = gql`
         description
         slug
       }
-      survey {
+      form {
         id
       }
     }
@@ -51,7 +51,7 @@ export const LISTING_WITH_RESPONDERS = gql`
       deadline
       endDatetime
       url
-      survey {
+      form {
         id
         responders {
           id

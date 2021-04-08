@@ -1,6 +1,6 @@
 import datetime
 import graphene
-from apps.listing.models import Listing
+from apps.listings.models import Listing
 from django.utils.text import slugify
 from graphql_jwt.decorators import login_required, permission_required
 
@@ -15,7 +15,7 @@ class BaseListingInput(graphene.InputObjectType):
     deadline = graphene.DateTime()
     url = graphene.String()
     organization_id = graphene.ID()
-    survey_id = graphene.ID()
+    form_id = graphene.ID()
 
 
 class CreateListingInput(BaseListingInput):
@@ -36,7 +36,7 @@ class CreateListing(graphene.Mutation):
         listing_data = CreateListingInput(required=True)
 
     @login_required
-    @permission_required("listing.add_listing")
+    @permission_required("listings.add_listing")
     def mutate(self, info, listing_data):
         listing = Listing()
 
@@ -65,7 +65,7 @@ class DeleteListing(graphene.Mutation):
         id = graphene.ID()
 
     @login_required
-    @permission_required("listing.delete_listing")
+    @permission_required("listings.delete_listing")
     def mutate(self, info, **kwargs):
         try:
             listing = Listing.objects.get(pk=kwargs["id"])
@@ -85,7 +85,7 @@ class UpdateListing(graphene.Mutation):
         listing_data = BaseListingInput(required=False)
 
     @login_required
-    @permission_required("listing.update_listing")
+    @permission_required("listings.update_listing")
     def mutate(self, info, id, listing_data=None):
         try:
             listing = Listing.objects.get(pk=id)

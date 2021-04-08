@@ -1,4 +1,4 @@
-from apps.listing.models import Listing
+from apps.listings.models import Listing
 from graphene_django import DjangoObjectType
 
 
@@ -15,5 +15,5 @@ class ListingType(DjangoObjectType):
             "slug",
             "deadline",
             "organization",
-            "survey",
+            "form",
         ]

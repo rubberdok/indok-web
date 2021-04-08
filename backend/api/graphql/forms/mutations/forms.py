@@ -1,9 +1,7 @@
 import graphene
-from graphql_jwt.decorators import login_required
-from utils.decorators import permission_required
-from guardian.shortcuts import assign_perm, remove_perm
+from graphql_jwt.decorators import login_required, permission_required
 
-from apps.listing.models import Listing
+from apps.listings.models import Listing
 from apps.forms.models import Form
 from ..types import FormType
 
@@ -32,6 +30,7 @@ class CreateForm(graphene.Mutation):
         listing_id = graphene.ID()
         form_data = CreateFormInput(required=True)
 
+    @login_required
     @permission_required("forms.add_form")
     def mutate(self, info, form_data, listing_id=None):
         form = Form()
@@ -42,9 +41,6 @@ class CreateForm(graphene.Mutation):
             listing = Listing.objects.get(pk=listing_id)
             listing.form = form
             listing.save()
-        
-        # Assign permission to the responsible group
-        assign_perm("forms.manage_form", form.responsible_group, form)
         return CreateForm(form=form, ok=True)
 
 
@@ -56,18 +52,13 @@ class UpdateForm(graphene.Mutation):
         id = graphene.ID()
         form_data = BaseFormInput(required=True)
 
-    @permission_required("forms.manage_form", lookup_variables=(Form, "pk", "id"))
+    @login_required
+    @permission_required("forms.update_form")
     def mutate(self, info, id, form_data):
         form = Form.objects.get(pk=id)
-        old_group = form.group
         for key, value in form_data.items():
             setattr(form, key, value)
         form.save()
-        new_group = form.group
-        if old_group != new_group:
-            perm = "forms.manage_form"
-            remove_perm(perm, old_group, form)
-            assign_perm(perm, new_group, form)
         return UpdateForm(form=form, ok=True)
 
 
@@ -78,7 +69,8 @@ class DeleteForm(graphene.Mutation):
     class Arguments:
         id = graphene.ID(required=True)
 
-    @permission_required("forms.manage_form", lookup_variables=(Form, "pk", "id"))
+    @login_required
+    @permission_required("forms.delete_form")
     def mutate(cls, self, info, id):
         form = Form.objects.get(pk=id)
         deleted_id = form.id

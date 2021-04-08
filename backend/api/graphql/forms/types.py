@@ -6,7 +6,7 @@ from graphene_django import DjangoObjectType
 from graphql_jwt.decorators import login_required
 
 from api.graphql.users.types import UserType
-from apps.surveys.models import Answer, Option, Question, Response, Survey
+from apps.forms.models import Answer, Option, Question, Response, Form
 from utils.decorators import permission_required
 
 
@@ -50,7 +50,7 @@ class QuestionType(DjangoObjectType):
             "id",
             "mandatory",
         ]
-        description = "A question on a survey."
+        description = "A question on a form."
 
     @staticmethod
     @login_required
@@ -60,8 +60,8 @@ class QuestionType(DjangoObjectType):
     @staticmethod
     @login_required
     def resolve_answers(parent: Question, info) -> Optional[list[Answer]]:
-        # Can be changed to @permission_required_or_none("surveys.manage_survey", fn=get_resolver_parent) if #141 is merged
-        if info.context.user.has_perm("surveys.manage_survey", parent.survey):
+        # Can be changed to @permission_required_or_none("forms.manage_form", fn=get_resolver_parent) if #141 is merged
+        if info.context.user.has_perm("forms.manage_form", parent.form):
             return parent.answers
 
     @staticmethod
@@ -79,22 +79,22 @@ class ResponseType(DjangoObjectType):
 
     class Meta:
         model = Response
-        field = ["uuid", "respondent", "survey", "status", "answers"]
-        description = "A response instance that contains information about a user's response to a survey."
+        field = ["uuid", "respondent", "form", "status", "answers"]
+        description = "A response instance that contains information about a user's response to a form."
 
     @staticmethod
     def resolve_questions(parent: Response, info):
-        return parent.survey.questions.all()
+        return parent.form.questions.all()
 
 
-class SurveyType(DjangoObjectType):
+class FormType(DjangoObjectType):
     responders = graphene.List(UserType, user_id=graphene.ID())
     responder = graphene.Field(UserType, user_id=graphene.ID(required=True))
     responses = graphene.List(ResponseType)
     response = graphene.Field(ResponseType, response_pk=graphene.UUID())
 
     class Meta:
-        model = Survey
+        model = Form
         fields = [
             "id",
             "name",
@@ -102,36 +102,36 @@ class SurveyType(DjangoObjectType):
             "organization",
             "questions"
         ]
-        description = "A survey containing questions, optionally linked to a listing."
+        description = "A form containing questions, optionally linked to a listing."
 
     @staticmethod
     @login_required
-    def resolve_responders(parent: Survey, info):
-        # Can be changed to @permission_required_or_none("surveys.manage_survey", fn=get_resolver_parent) if #141 is merged
-        if info.context.user.has_perm("surveys.manage_survey", parent):
-            return get_user_model().objects.filter(responses__survey=parent).distinct()
+    def resolve_responders(parent: Form, info):
+        # Can be changed to @permission_required_or_none("forms.manage_form", fn=get_resolver_parent) if #141 is merged
+        if info.context.user.has_perm("forms.manage_form", parent):
+            return get_user_model().objects.filter(responses__form=parent).distinct()
         return None
 
     @staticmethod
     @login_required
-    def resolve_responder(parent: Survey, info, user_id: int):
-        # Can be changed to @permission_required_or_none("surveys.manage_survey", fn=get_resolver_parent) if #141 is merged
-        if info.context.user.has_perm("surveys.manage_survey", parent):
-            return get_user_model().objects.get(responses__survey=parent, pk=user_id)
+    def resolve_responder(parent: Form, info, user_id: int):
+        # Can be changed to @permission_required_or_none("forms.manage_form", fn=get_resolver_parent) if #141 is merged
+        if info.context.user.has_perm("forms.manage_form", parent):
+            return get_user_model().objects.get(responses__form=parent, pk=user_id)
         return None
 
     @staticmethod
     @login_required
     def resolve_responses(parent, info):
-        # Can be changed to @permission_required_or_none("surveys.manage_survey", fn=get_resolver_parent) if #141 is merged
-        if info.context.user.has_perm("surveys.manage_survey", parent):
+        # Can be changed to @permission_required_or_none("forms.manage_form", fn=get_resolver_parent) if #141 is merged
+        if info.context.user.has_perm("forms.manage_form", parent):
             return parent.responses.all()
         return None
 
     @staticmethod
     @login_required
     def resolve_response(parent, info, response_pk):
-        # Can be changed to @permission_required_or_none("surveys.manage_survey", fn=get_resolver_parent) if #141 is merged
-        if info.context.user.has_perm("surveys.manage_survey", parent):
+        # Can be changed to @permission_required_or_none("forms.manage_form", fn=get_resolver_parent) if #141 is merged
+        if info.context.user.has_perm("forms.manage_form", parent):
             return parent.responses.get(pk=response_pk)
         return None
