@@ -27,15 +27,28 @@ export const UPDATE_FORM = gql`
 `;
 
 export const CREATE_QUESTION = gql`
-  mutation CreateQuestion($formId: ID!, $question: String!, $description: String, $questionType: QuestionTypeEnum) {
+  mutation CreateQuestion(
+    $formId: ID!
+    $question: String!
+    $description: String
+    $questionType: QuestionTypeEnum
+    $mandatory: Boolean
+  ) {
     createQuestion(
-      questionData: { question: $question, description: $description, formId: $formId, questionType: $questionType }
+      questionData: {
+        question: $question
+        description: $description
+        formId: $formId
+        questionType: $questionType
+        mandatory: $mandatory
+      }
     ) {
       question {
         id
         question
         description
         questionType
+        mandatory
       }
       ok
     }
@@ -48,17 +61,24 @@ export const UPDATE_QUESTION = gql`
     $question: String
     $description: String
     $questionType: QuestionTypeEnum
+    $mandatory: Boolean
     $options: [OptionInput]
   ) {
     updateQuestion(
       id: $id
-      questionData: { question: $question, description: $description, questionType: $questionType }
+      questionData: {
+        question: $question
+        description: $description
+        questionType: $questionType
+        mandatory: $mandatory
+      }
     ) {
       question {
         id
         question
         description
         questionType
+        mandatory
       }
       ok
     }
