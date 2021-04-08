@@ -24,7 +24,7 @@ const Listings: React.FC<ListingsProps> = ({ handleClick }) => {
     <Grid container direction="row" spacing={2} className={classes.root} justify="center" alignItems="stretch">
       {loading &&
         <Grid item>
-          <CircularProgress />
+          <CircularProgress color="primary" />
         </Grid>
       }
       {error &&
