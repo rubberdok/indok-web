@@ -99,7 +99,9 @@ export const EVENT_SIGN_OFF = gql`
 export const ADMIN_EVENT_SIGN_OFF = gql`
   mutation AdminEventSignOff($eventId: ID!, $userId: ID!) {
     adminEventSignOff(eventId: $eventId, userId: $userId) {
-      isFull
+      event {
+        id
+      }
     }
   }
 `;
