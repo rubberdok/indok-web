@@ -17,7 +17,7 @@ export const CREATE_LISTING = gql`
           id
           name
         }
-        survey {
+        form {
           id
         }
       }
@@ -36,7 +36,7 @@ export const UPDATE_LISTING = gql`
     $deadline: Datetime
     $url: String
     $organizationId: ID
-    $surveyId: ID
+    $formId: ID
   ) {
     updateListing(
       id: $listingId
@@ -48,7 +48,7 @@ export const UPDATE_LISTING = gql`
         endDatetime: $endDatetime
         url: $url
         organizationId: $organizationId
-        surveyId: $surveyId
+        formId: $formId
       }
     ) {
       listing {
@@ -63,7 +63,7 @@ export const UPDATE_LISTING = gql`
           id
           name
         }
-        survey {
+        form {
           id
         }
       }

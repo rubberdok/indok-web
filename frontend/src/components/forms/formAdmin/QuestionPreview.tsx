@@ -1,9 +1,9 @@
-import QuestionTypePreview from "@components/surveys/surveyAdmin/QuestionTypePreview";
-import { Question } from "@interfaces/surveys";
+import QuestionTypePreview from "@components/forms/formAdmin/QuestionTypePreview";
+import { Question } from "@interfaces/forms";
 import { Button, Grid } from "@material-ui/core";
 
 /**
- * component to preview a question in a survey when not in editing mode
+ * component to preview a question in a form when not in editing mode
  * props:
  * - the question to preview
  * - setActive function to activate editing mode on this question
