@@ -9,6 +9,8 @@ env:
     DATAPORTEN_REDIRECT_URI: "https://indokntnu.no/authCallback"
     NEXT_PUBLIC_DATAPORTEN_STATE: "RGpBPYszuqXVvsma1suHJJ4X7ZJjkfS6njRHnx4p"
     BOOKING_EMAIL: "hswebkom@gmail.com"
+    VIPPS_CLIENT_ID: "f0596e3b-5d19-4457-8725-fc5f315d9e87"
+    VIPPS_MERCHANT_SERIAL_NUMBER: "646983"
 
 phases:
   pre_build:
@@ -27,6 +29,8 @@ phases:
           --build-arg DATAPORTEN_ID=$DATAPORTEN_ID \
           --build-arg DATAPORTEN_REDIRECT_URI=$DATAPORTEN_REDIRECT_URI \
           --build-arg BOOKING_EMAIL=$BOOKING_EMAIL \
+          --build-arg VIPPS_CLIENT_ID=$VIPPS_CLIENT_ID \
+          --build-arg VIPPS_MERCHANT_SERIAL_NUMBER=$VIPPS_MERCHANT_SERIAL_NUMBER \
           ./backend
       - >
         docker build \

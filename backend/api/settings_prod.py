@@ -40,6 +40,11 @@ EMAIL_HOST_PASSWORD = os.environ.get("BOOKING_EMAIL_PASSWORD")
 
 GOOGLE_DRIVE_API_KEY = os.environ.get("GOOGLE_DRIVE_API_KEY")
 
+VIPPS_CLIENT_ID = os.environ.get("VIPPS_CLIENT_ID")
+VIPPS_SECRET = os.environ.get("VIPPS_SECRET")
+VIPPS_MERCHANT_SERIAL_NUMBER = os.environ.get("VIPPS_MERCHANT_SERIAL_NUMBER")
+VIPPS_SUBSCRIPTION_KEY = os.environ.get("VIPPS_SUBSCRIPTION_KEY")
+
 
 sentry_sdk.init(
     dsn="https://6bd0cd5210c0448aa90879a01db24663@o514678.ingest.sentry.io/5618268",
