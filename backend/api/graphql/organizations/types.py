@@ -3,7 +3,7 @@ from apps.organizations.models import Organization, Membership, Role
 from graphene_django import DjangoObjectType
 from graphql_jwt.decorators import login_required
 
-from ..listing.types import ListingType
+from ..listings.types import ListingType
 from .dataloader import ListingsByOrganizationIdLoader
 
 

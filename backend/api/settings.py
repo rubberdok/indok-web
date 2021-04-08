@@ -51,10 +51,10 @@ INSTALLED_APPS = [
     "apps.archive",
     "apps.cabins",
     "apps.events",
-    "apps.listing",
     "apps.organizations",
-    "apps.surveys",
     "apps.users",
+    "apps.forms",
+    "apps.listings",
     # External apps
     "corsheaders",
     "graphene_django",

@@ -1,9 +1,9 @@
 import { Listing } from "@interfaces/listings";
 import { LISTING_WITH_RESPONDERS } from "@graphql/listings/queries";
 import { useState } from "react";
-import EditSurvey from "@components/surveys/surveyAdmin/EditSurvey";
-import { Survey } from "@interfaces/surveys";
-import { CREATE_SURVEY } from "@graphql/surveys/mutations";
+import EditForm from "@components/forms/formAdmin/EditForm";
+import { Form } from "@interfaces/forms";
+import { CREATE_FORM } from "@graphql/forms/mutations";
 import { useMutation } from "@apollo/client";
 import { Button, Typography } from "@material-ui/core";
 
@@ -13,67 +13,67 @@ import { Button, Typography } from "@material-ui/core";
  */
 // TODO: functionality to edit the listing's name/description
 const OrganizationListing: React.FC<{ listing: Listing }> = ({ listing }) => {
-  // state to determine whether to show the listing's survey (where the user applies)
-  const [surveyShown, showSurvey] = useState(false);
+  // state to determine whether to show the listing's application form
+  const [formShown, showForm] = useState(false);
 
-  // mutation to create a new survey
-  const [createSurvey, { data: surveyData }] = useMutation<
-    // interface of surveyData returned from mutation
-    { createSurvey: { ok: boolean; survey: Survey } },
-    // interface for variables passed to createSurvey
+  // mutation to create a new form
+  const [createForm, { data: formData }] = useMutation<
+    // interface of formData returned from mutation
+    { createForm: { ok: boolean; form: Form } },
+    // interface for variables passed to createForm
     { name: string; description: string; listingId: string }
-  >(CREATE_SURVEY, {
-    // updates the cache so the new survey can show instantly
+  >(CREATE_FORM, {
+    // updates the cache so the new form can show instantly
     update: (cache, { data }) => {
-      const newSurvey = data?.createSurvey.survey;
-      // reads the cached listing to which to add the survey
+      const newForm = data?.createForm.form;
+      // reads the cached listing to which to add the form
       const cachedListing = cache.readQuery<{ listing: Listing }>({
         query: LISTING_WITH_RESPONDERS,
         variables: { id: parseInt(listing.id) },
       });
-      if (newSurvey && cachedListing) {
-        // writes the survey to the cached listing
+      if (newForm && cachedListing) {
+        // writes the form to the cached listing
         cache.writeQuery({
           query: LISTING_WITH_RESPONDERS,
           variables: { id: parseInt(listing.id) },
           data: {
             listing: {
-              survey: newSurvey,
+              form: newForm,
             },
           },
         });
       }
     },
-    // upon creating the survey, show it
+    // upon creating the form, show it
     onCompleted: () => {
-      showSurvey(true);
+      showForm(true);
     },
   });
 
-  // if the listing has no survey, shows create button; otherwise, shows button to show the survey
+  // if the listing has no form, shows create button; otherwise, shows button to show the form
   return (
     <>
       <Typography variant="h3">{listing.title}</Typography>
       <Typography>{listing.description}</Typography>
-      {listing.survey ? (
+      {listing.form ? (
         <Button
           variant="contained"
           color="primary"
           onClick={(e) => {
             e.preventDefault();
-            if (surveyData && !listing.survey) {
-              listing.survey = surveyData.createSurvey.survey;
+            if (formData && !listing.form) {
+              listing.form = formData.createForm.form;
             }
-            showSurvey(!surveyShown);
+            showForm(!formShown);
           }}
         >
-          {surveyShown ? "Gjem søknad" : "Vis søknad"}
+          {formShown ? "Gjem søknad" : "Vis søknad"}
         </Button>
       ) : (
         <Button
           onClick={(e) => {
             e.preventDefault();
-            createSurvey({
+            createForm({
               variables: {
                 name: `Søknad: ${listing.title}`,
                 description: "",
@@ -85,7 +85,7 @@ const OrganizationListing: React.FC<{ listing: Listing }> = ({ listing }) => {
           Lag søknad
         </Button>
       )}
-      {surveyShown && listing.survey && <EditSurvey surveyId={listing.survey.id} />}
+      {formShown && listing.form && <EditForm formId={listing.form.id} />}
     </>
   );
 };
