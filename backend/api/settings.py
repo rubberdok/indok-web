@@ -61,9 +61,6 @@ INSTALLED_APPS = [
     "rest_framework",
     "phonenumber_field",
     "guardian",
-    # Deprecated
-    "apps.surveys",
-    "apps.listing",
 ]
 
 AUTH_USER_MODEL = "users.User"
