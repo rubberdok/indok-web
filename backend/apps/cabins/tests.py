@@ -1,5 +1,4 @@
 import json
-from graphql import GraphQLError
 
 from apps.cabins.models import Booking, Cabin
 from utils.testing.ExtendedGraphQLTestCase import ExtendedGraphQLTestCase
@@ -83,6 +82,7 @@ class CabinsResolversTestCase(CabinsBaseTestCase):
             """,
         )
         # This validates the status code and if you get errors
+
         self.assertResponseNoErrors(response)
         # Fetching content of response
         content = json.loads(response.content)
