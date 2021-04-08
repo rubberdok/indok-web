@@ -51,10 +51,10 @@ INSTALLED_APPS = [
     "apps.archive",
     "apps.cabins",
     "apps.events",
-    "apps.listing",
     "apps.organizations",
     "apps.users",
     "apps.forms",
+    "apps.listings",
     # External apps
     "corsheaders",
     "graphene_django",
@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     "guardian",
     # Deprecated
     "apps.surveys",
+    "apps.listing",
 ]
 
 AUTH_USER_MODEL = "users.User"

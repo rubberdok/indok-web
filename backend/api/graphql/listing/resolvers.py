@@ -1,4 +1,4 @@
-from apps.listing.models import Listing
+from apps.listings.models import Listing
 from django.db.models import Q
 from django.utils import timezone
 

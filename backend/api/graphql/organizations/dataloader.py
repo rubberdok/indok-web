@@ -2,7 +2,7 @@ from collections import defaultdict
 
 from promise import Promise
 from promise.dataloader import DataLoader
-from apps.listing.models import Listing
+from apps.listings.models import Listing
 from apps.organizations.models import Organization
 
 class ListingsByOrganizationIdLoader(DataLoader):
