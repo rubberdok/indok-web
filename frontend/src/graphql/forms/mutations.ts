@@ -1,9 +1,9 @@
 import { gql } from "@apollo/client";
 
-export const CREATE_SURVEY = gql`
-  mutation CreateSurvey($name: String!, $description: String, $listingId: ID) {
-    createSurvey(listingId: $listingId, surveyData: { name: $name, description: $description }) {
-      survey {
+export const CREATE_FORM = gql`
+  mutation CreateForm($name: String!, $description: String, $listingId: ID) {
+    createForm(listingId: $listingId, formData: { name: $name, description: $description }) {
+      form {
         id
         name
         description
@@ -13,10 +13,10 @@ export const CREATE_SURVEY = gql`
   }
 `;
 
-export const UPDATE_SURVEY = gql`
-  mutation UpdateSurvey($id: ID!, $name: String!, $description: String) {
-    createSurvey(id: $id, surveyData: { name: $name, description: $description }) {
-      survey {
+export const UPDATE_FORM = gql`
+  mutation UpdateForm($id: ID!, $name: String!, $description: String) {
+    createForm(id: $id, formData: { name: $name, description: $description }) {
+      form {
         id
         name
         description
@@ -27,9 +27,9 @@ export const UPDATE_SURVEY = gql`
 `;
 
 export const CREATE_QUESTION = gql`
-  mutation CreateQuestion($surveyId: ID!, $question: String!, $description: String, $questionType: QuestionTypeEnum) {
+  mutation CreateQuestion($formId: ID!, $question: String!, $description: String, $questionType: QuestionTypeEnum) {
     createQuestion(
-      questionData: { question: $question, description: $description, surveyId: $surveyId, questionType: $questionType }
+      questionData: { question: $question, description: $description, formId: $formId, questionType: $questionType }
     ) {
       question {
         id
@@ -43,7 +43,7 @@ export const CREATE_QUESTION = gql`
 `;
 
 export const UPDATE_QUESTION = gql`
-  mutation updateQuestion(
+  mutation UpdateQuestion(
     $id: ID!
     $question: String
     $description: String
@@ -72,7 +72,7 @@ export const UPDATE_QUESTION = gql`
 `;
 
 export const DELETE_QUESTION = gql`
-  mutation deleteQuestion($id: ID!) {
+  mutation DeleteQuestion($id: ID!) {
     deleteQuestion(id: $id) {
       deletedId
       ok
@@ -81,8 +81,8 @@ export const DELETE_QUESTION = gql`
 `;
 
 export const SUBMIT_ANSWERS = gql`
-  mutation submitAnswers($surveyId: ID!, $answersData: [AnswerInput]) {
-    submitAnswers(surveyId: $surveyId, answersData: $answersData) {
+  mutation SubmitAnswers($formId: ID!, $answersData: [AnswerInput]) {
+    submitAnswers(formId: $formId, answersData: $answersData) {
       ok
     }
   }

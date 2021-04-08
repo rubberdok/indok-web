@@ -1,12 +1,12 @@
 import { FetchResult, MutationFunctionOptions } from "@apollo/client";
-import QuestionTypePreview from "@components/surveys/surveyAdmin/QuestionTypePreview";
-import questionTypeLabels from "@components/surveys/surveyAdmin/questionTypeLabels";
-import { Question, QuestionVariables, QuestionType } from "@interfaces/surveys";
+import QuestionTypePreview from "@components/forms/formAdmin/QuestionTypePreview";
+import questionTypeLabels from "@components/forms/formAdmin/questionTypeLabels";
+import { Question, QuestionVariables, QuestionType } from "@interfaces/forms";
 import { Button, Checkbox, Grid, MenuItem, Radio, Select, TextField } from "@material-ui/core";
 import { useState } from "react";
 
 /**
- * component to edit a question on a survey
+ * component to edit a question on a form
  * props:
  * - the question to edit
  * - the question types a question can have

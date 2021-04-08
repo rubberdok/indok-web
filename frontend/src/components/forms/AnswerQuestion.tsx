@@ -1,9 +1,9 @@
-import { Answer } from "@interfaces/surveys";
+import { Answer } from "@interfaces/forms";
 import { FormControlLabel, MenuItem, Radio, RadioGroup, Select, TextField } from "@material-ui/core";
-import AnswerCheckboxes from "@components/surveys/AnswerCheckboxes";
+import AnswerCheckboxes from "@components/forms/AnswerCheckboxes";
 
 /**
- * component to answer a question on a survey
+ * component to answer a question on a form
  * props: the answer/setAnswer state, which alters the state of the higher component
  */
 const AnswerQuestion: React.FC<{
@@ -11,7 +11,7 @@ const AnswerQuestion: React.FC<{
   setAnswer: (answer: Answer) => void;
 }> = ({ answer, setAnswer }) => {
   // returns a form input based on the type of the answer's question
-  // each input calls on setAnswer to change the state of AnswerSurvey
+  // each input calls on setAnswer to change the state of AnswerForm
   switch (answer.question.questionType) {
     case "PARAGRAPH":
       return (

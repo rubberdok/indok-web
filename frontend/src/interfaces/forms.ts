@@ -1,6 +1,6 @@
 import { User } from "@interfaces/users";
 
-export interface Survey {
+export interface Form {
   id: string;
   name: string;
   description: string;
@@ -10,7 +10,7 @@ export interface Survey {
 
 export interface Question {
   id: string;
-  survey: Survey;
+  form: Form;
   question: string;
   description: string;
   questionType: QuestionType;

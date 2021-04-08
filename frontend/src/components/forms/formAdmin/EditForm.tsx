@@ -1,9 +1,9 @@
 import { useMutation, useQuery } from "@apollo/client";
-import EditQuestion from "@components/surveys/surveyAdmin/EditQuestion";
-import QuestionPreview from "@components/surveys/surveyAdmin/QuestionPreview";
-import { CREATE_QUESTION, DELETE_QUESTION, UPDATE_QUESTION } from "@graphql/surveys/mutations";
-import { SURVEY } from "@graphql/surveys/queries";
-import { Question, QuestionVariables, Survey } from "@interfaces/surveys";
+import EditQuestion from "@components/forms/formAdmin/EditQuestion";
+import QuestionPreview from "@components/forms/formAdmin/QuestionPreview";
+import { CREATE_QUESTION, DELETE_QUESTION, UPDATE_QUESTION } from "@graphql/forms/mutations";
+import { FORM } from "@graphql/forms/queries";
+import { Question, QuestionVariables, Form } from "@interfaces/forms";
 import { Box, Button, Grid, makeStyles, Typography } from "@material-ui/core";
 import { useState } from "react";
 
@@ -16,18 +16,18 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 /**
- * component to edit surveys (for example the applications to listings)
- * props: ID of the survey to edit
+ * component to edit forms (for example the applications to listings)
+ * props: ID of the form to edit
  */
-const EditSurvey: React.FC<{ surveyId: string }> = ({ surveyId }) => {
+const EditForm: React.FC<{ formId: string }> = ({ formId }) => {
   const classes = useStyles();
 
-  // fetches the survey
-  const { loading, error, data } = useQuery<{ survey: Survey }>(SURVEY, {
-    variables: { surveyId: surveyId },
+  // fetches the form
+  const { loading, error, data } = useQuery<{ form: Form }>(FORM, {
+    variables: { formId: formId },
   });
 
-  //state to manage which question on the survey is currently being edited (ensures one at a time)
+  //state to manage which question on the form is currently being edited (ensures one at a time)
   const [activeQuestion, setActiveQuestion] = useState<Question | undefined>();
 
   // mutation to create a new question
@@ -35,19 +35,19 @@ const EditSurvey: React.FC<{ surveyId: string }> = ({ surveyId }) => {
     // updates the cache upon creating the question, keeping the client consistent with the database
     update: (cache, { data }) => {
       const newQuestion = data?.createQuestion.question;
-      // reads the cached survey to which to add the question
-      const cachedSurvey = cache.readQuery<{ survey: Survey }>({
-        query: SURVEY,
-        variables: { surveyId: surveyId },
+      // reads the cached form to which to add the question
+      const cachedForm = cache.readQuery<{ form: Form }>({
+        query: FORM,
+        variables: { formId: formId },
       });
-      if (cachedSurvey && newQuestion) {
-        // writes the new question to the survey
+      if (cachedForm && newQuestion) {
+        // writes the new question to the form
         cache.writeQuery({
-          query: SURVEY,
-          variables: { surveyId: surveyId },
+          query: FORM,
+          variables: { formId: formId },
           data: {
-            survey: {
-              questions: [...cachedSurvey.survey.questions, newQuestion],
+            form: {
+              questions: [...cachedForm.form.questions, newQuestion],
             },
           },
         });
@@ -59,18 +59,18 @@ const EditSurvey: React.FC<{ surveyId: string }> = ({ surveyId }) => {
   const [deleteQuestion] = useMutation<{ deleteQuestion: { deletedId: string } }>(DELETE_QUESTION, {
     // updates the cache upon deleting the question
     update: (cache, { data }) => {
-      const cachedSurvey = cache.readQuery<{ survey: Survey }>({
-        query: SURVEY,
-        variables: { surveyId: surveyId },
+      const cachedForm = cache.readQuery<{ form: Form }>({
+        query: FORM,
+        variables: { formId: formId },
       });
       const deletedId = data?.deleteQuestion.deletedId;
-      if (cachedSurvey && deletedId) {
+      if (cachedForm && deletedId) {
         cache.writeQuery({
-          query: SURVEY,
-          variables: { surveyId: surveyId },
+          query: FORM,
+          variables: { formId: formId },
           data: {
-            survey: {
-              questions: cachedSurvey.survey.questions.filter((question) => question.id !== deletedId),
+            form: {
+              questions: cachedForm.form.questions.filter((question) => question.id !== deletedId),
             },
           },
         });
@@ -83,17 +83,17 @@ const EditSurvey: React.FC<{ surveyId: string }> = ({ surveyId }) => {
     // updates the cache upon updating the question
     update: (cache, { data }) => {
       const newQuestion = data?.updateQuestion.question;
-      const cachedSurvey = cache.readQuery<{ survey: Survey }>({
-        query: SURVEY,
-        variables: { surveyId: surveyId },
+      const cachedForm = cache.readQuery<{ form: Form }>({
+        query: FORM,
+        variables: { formId: formId },
       });
-      if (cachedSurvey && newQuestion) {
+      if (cachedForm && newQuestion) {
         cache.writeQuery({
-          query: SURVEY,
-          variables: { surveyId: surveyId },
+          query: FORM,
+          variables: { formId: formId },
           data: {
-            survey: {
-              questions: cachedSurvey.survey.questions.map((question) =>
+            form: {
+              questions: cachedForm.form.questions.map((question) =>
                 question.id === newQuestion.id ? newQuestion : question
               ),
             },
@@ -106,15 +106,15 @@ const EditSurvey: React.FC<{ surveyId: string }> = ({ surveyId }) => {
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error</p>;
 
-  // renders a list of the survey's question, with a button to create new ones
+  // renders a list of the form's question, with a button to create new ones
   // question view changes based on whether they are being edited or not
   return (
     <>
       {data && (
         <>
-          <Typography variant="h5">{data.survey.name}</Typography>
+          <Typography variant="h5">{data.form.name}</Typography>
           <Grid item container direction="column">
-            {data.survey.questions.map((question) => (
+            {data.form.questions.map((question) => (
               <Box key={question.id} border={1} borderColor="primary" className={classes.questionBox}>
                 {question === activeQuestion ? (
                   <EditQuestion
@@ -156,7 +156,7 @@ const EditSurvey: React.FC<{ surveyId: string }> = ({ surveyId }) => {
                   variables: {
                     question: "",
                     description: "",
-                    surveyId: data.survey.id,
+                    formId: data.form.id,
                     // TODO: remove when default handling is fixed backend
                     questionType: "PARAGRAPH",
                   },
@@ -172,4 +172,4 @@ const EditSurvey: React.FC<{ surveyId: string }> = ({ surveyId }) => {
   );
 };
 
-export default EditSurvey;
+export default EditForm;

@@ -1,27 +1,27 @@
 import { useMutation, useQuery } from "@apollo/client";
-import AnswerQuestion from "@components/surveys/AnswerQuestion";
-import { SUBMIT_ANSWERS } from "@graphql/surveys/mutations";
-import { SURVEY } from "@graphql/surveys/queries";
-import { Answer, Survey } from "@interfaces/surveys";
+import AnswerQuestion from "@components/forms/AnswerQuestion";
+import { SUBMIT_ANSWERS } from "@graphql/forms/mutations";
+import { FORM } from "@graphql/forms/queries";
+import { Answer, Form } from "@interfaces/forms";
 import { Button, Card, CardContent, Grid, Typography, FormControl, FormLabel } from "@material-ui/core";
 import { useState } from "react";
 
 /**
- * component for a user to answer a survey
- * props: ID of the survey
+ * component for a user to answer a form
+ * props: ID of the form
  */
-const AnswerSurvey: React.FC<{ surveyId: string }> = ({ surveyId }) => {
+const AnswerForm: React.FC<{ formId: string }> = ({ formId }) => {
   // state to manage the user's answers before submitting
   const [answers, setAnswers] = useState<Answer[]>();
 
-  // fetches the survey
-  const { error, loading, data } = useQuery<{ survey: Survey }>(SURVEY, {
-    variables: { surveyId: parseInt(surveyId) },
+  // fetches the form
+  const { error, loading, data } = useQuery<{ form: Form }>(FORM, {
+    variables: { formId: parseInt(formId) },
 
-    // when the fetch completes, map the answers state to the survey's questions
-    onCompleted({ survey }) {
-      if (survey) {
-        setAnswers(survey.questions.map((question) => ({ id: "", answer: "", question: question })));
+    // when the fetch completes, map the answers state to the form's questions
+    onCompleted({ form }) {
+      if (form) {
+        setAnswers(form.questions.map((question) => ({ id: "", answer: "", question: question })));
       }
     },
   });
@@ -31,7 +31,7 @@ const AnswerSurvey: React.FC<{ surveyId: string }> = ({ surveyId }) => {
     // object returned from the mutation
     { ok: boolean },
     // variables of the mutation
-    { surveyId: string; answersData: { questionId: string; answer: string }[] }
+    { formId: string; answersData: { questionId: string; answer: string }[] }
   >(SUBMIT_ANSWERS);
 
   if (loading) return <p>Loading...</p>;
@@ -44,7 +44,7 @@ const AnswerSurvey: React.FC<{ surveyId: string }> = ({ surveyId }) => {
       {data && (
         <Card>
           <CardContent>
-            <Typography variant="h5">{data.survey.name}</Typography>
+            <Typography variant="h5">{data.form.name}</Typography>
           </CardContent>
           {answers && (
             <Grid container direction="column">
@@ -72,7 +72,7 @@ const AnswerSurvey: React.FC<{ surveyId: string }> = ({ surveyId }) => {
                   e.preventDefault();
                   submitAnswers({
                     variables: {
-                      surveyId: surveyId,
+                      formId: formId,
                       answersData: answers.map((answer) => ({
                         questionId: answer.question.id,
                         answer: answer.answer,
@@ -91,4 +91,4 @@ const AnswerSurvey: React.FC<{ surveyId: string }> = ({ surveyId }) => {
   );
 };
 
-export default AnswerSurvey;
+export default AnswerForm;

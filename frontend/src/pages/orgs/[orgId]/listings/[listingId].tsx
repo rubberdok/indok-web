@@ -8,7 +8,7 @@ import Layout from "@components/Layout";
 import { makeStyles, Grid, Tabs, Tab, Container, Card, CardContent } from "@material-ui/core";
 import { useState } from "react";
 import { User } from "@interfaces/users";
-import SurveyAnswers from "@components/surveys/surveyAdmin/SurveyAnswers";
+import FormAnswers from "@components/forms/formAdmin/FormAnswers";
 import OrganizationListing from "@components/pages/listings/organization/OrganizationListing";
 
 const useStyles = makeStyles((theme) => ({
@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-// the page for organization admins to administer a listing, edit its survey, and review applicants
+// the page for organization admins to administer a listing, edit its application form, and review applicants
 const ListingAdminPage: NextPage = () => {
   const { orgId, listingId } = useRouter().query;
 
@@ -31,7 +31,7 @@ const ListingAdminPage: NextPage = () => {
     },
   });
 
-  // state to determine whether to show the applicant view or the listing/survey view
+  // state to determine whether to show the applicant view or the listing/form view
   const [selectedApplicant, selectApplicant] = useState<User | null>(null);
 
   if (loading) return <p>Loading...</p>;
@@ -55,7 +55,7 @@ const ListingAdminPage: NextPage = () => {
                   }}
                 >
                   <Tab value={null} label="Se verv og søknad" />
-                  {data.listing.survey?.responders.map((responder, index) => (
+                  {data.listing.form?.responders.map((responder, index) => (
                     <Tab key={index} value={responder} label={`${responder.firstName} ${responder.lastName}`} />
                   ))}
                 </Tabs>
@@ -66,8 +66,8 @@ const ListingAdminPage: NextPage = () => {
                 <CardContent>
                   {selectedApplicant ? (
                     <>
-                      {data.listing.survey && (
-                        <SurveyAnswers user={selectedApplicant} surveyId={parseInt(data.listing.survey.id)} />
+                      {data.listing.form && (
+                        <FormAnswers user={selectedApplicant} formId={parseInt(data.listing.form.id)} />
                       )}
                     </>
                   ) : (

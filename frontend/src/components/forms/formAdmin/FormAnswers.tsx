@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
-import { SURVEY_ANSWERS } from "@graphql/surveys/queries";
-import { Answer, Question } from "@interfaces/surveys";
+import { FORM_ANSWERS } from "@graphql/forms/queries";
+import { Answer, Question } from "@interfaces/forms";
 import { User } from "@interfaces/users";
 import { Typography } from "@material-ui/core";
 
@@ -10,36 +10,33 @@ type QuestionWithAnswer = Question & {
 };
 
 /**
- * component to see a user's answers to a survey
+ * component to see a user's answers to a form
  * props:
- * - ID of the relevant survey
+ * - ID of the relevant form
  * - the applicant user
  */
-const SurveyAnswers: React.FC<{
-  surveyId: number;
+const FormAnswers: React.FC<{
+  formId: number;
   user: User;
-}> = ({ surveyId, user }) => {
-  // fetches answers to the survey by the given user
-  const { loading, error, data } = useQuery<{ survey: { name: string; questions: QuestionWithAnswer[] } }>(
-    SURVEY_ANSWERS,
-    {
-      variables: { surveyId: surveyId, userId: parseInt(user.id) },
-    }
-  );
+}> = ({ formId, user }) => {
+  // fetches answers to the form by the given user
+  const { loading, error, data } = useQuery<{ form: { name: string; questions: QuestionWithAnswer[] } }>(FORM_ANSWERS, {
+    variables: { formId: formId, userId: parseInt(user.id) },
+  });
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error...</p>;
 
-  // renders the applicant's answers to the survey's questions
+  // renders the applicant's answers to the form's questions
   return (
     <>
       {data && (
         <>
-          <Typography variant="h3">{data.survey.name}</Typography>
+          <Typography variant="h3">{data.form.name}</Typography>
           <Typography>
             <b>Søker:</b> {user.firstName} {user.lastName}
           </Typography>
-          {data.survey.questions.map((question) => (
+          {data.form.questions.map((question) => (
             <>
               <Typography>
                 <b>{question.question}</b>
@@ -53,4 +50,4 @@ const SurveyAnswers: React.FC<{
   );
 };
 
-export default SurveyAnswers;
+export default FormAnswers;

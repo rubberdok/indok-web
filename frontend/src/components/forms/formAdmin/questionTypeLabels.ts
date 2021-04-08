@@ -1,4 +1,4 @@
-import { QuestionType } from "@interfaces/surveys";
+import { QuestionType } from "@interfaces/forms";
 
 // maps question types to Norwegian labels
 const questionTypeLabels: { [key in QuestionType]: string } = {
