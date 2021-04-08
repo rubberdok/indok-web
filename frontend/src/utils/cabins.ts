@@ -10,7 +10,7 @@ export const validateEmail = (email: string): boolean => (email ? validator.isEm
 export const validateSelect = (numberIndok: number, numberExternal: number): boolean =>
   numberIndok > 0 || numberExternal > 0;
 
-export const validatePhone = (phone: string): boolean => (phone ? validator.isMobilePhone(phone, "nn-NO") : false);
+export const validatePhone = (phone: string): boolean => (phone ? validator.isMobilePhone(phone, "nb-NO") : false);
 
 export const validateInputForm = (inputValues: ContactInfo) => {
   const selectValidity = validateSelect(inputValues.numberIndok, inputValues.numberExternal);
