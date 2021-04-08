@@ -5,6 +5,7 @@ from .archive.schema import ArchiveMutations, ArchiveQueries
 from .events.schema import EventMutations, EventQueries
 from .organizations.schema import OrganizationMutations, OrganizationQueries
 from .users.schema import UserMutations, UserQueries
+from .utils.schema import UtilQueries
 
 
 class Query(
@@ -13,6 +14,7 @@ class Query(
     UserQueries,
     CabinQueries,
     OrganizationQueries,
+    UtilQueries
 ):
     pass
 
