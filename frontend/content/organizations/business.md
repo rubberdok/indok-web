@@ -6,43 +6,37 @@ image: /img/IBCmote.jpeg
 styre:
   ceo:
     navn: Håkon Andreas Hyttedalen
-    mail: tlf. 974 09 177
+    telefon: 974 09 177
     tittel: Leder
   cto:
     navn: Anders Rønning
-    mail: tlf. 913 51 892
+    telefon: 913 51 892
     tittel: Nestleder
+  styre:
+    navn: Tobias Spinnangr Sindre
+    telefon: 954 57 507
+    tittel: Styremedlem
+  markedsføring:
+    navn: Camilla Elise Espelund
+    telefon: 942 97 714
+    tittel: Styremedlem/Markedsføring
 tag: annet
 ---
 
 # Hvem er vi?
 
-Indøk Business Club (IBC) er en Case-klubb for indøkere på alle årstrinn, hvor man får prøve seg på praktiske forretningsproblemer og dyrke sin interesse for teknologi og økonomi. Vi løser case annenhver uke, både fiktive bedriftsutfordringer eller for start-ups, og presenterer løsningen påfølgende uke. Etter presentasjonene holdes det nyttige workshops om teknikker for problemløsning, vanlige verktøy innen consulting og finans eller andre spennende temaer. Disse holdes av eksterne bedrifter som er eksperter innen feltet samt av styret i IBC.
+IIBC er en case club for studenter tilknyttet sivilingeniørstudiet Industriell økonomi og teknologiledelse ved NTNU Trondheim. Vi ønsker å være en møteplass der studenter med interesse for business forberedes til næringslivet og får utvidet praktisk forretningsforståelse.
 
-Verdiene våre er:
+Vi løser case annenhver uke, både fiktive bedriftsutfordringer og for etablerte start-ups. Internt holder vi nyttige workshops om teknikker for problemløsning, vanlige verktøy innen konsulent- eller finansbransjen, samt andre spennende og dagsaktuelle temaer.
 
-1. For alle indøkere - tilbudene våre skal i størst mulig grad være for alle.
+Våre verdier er:
 
-2. Likestilling - på tvers av trinn, erfaring og kjønn.
+1. Mangfold - tilbudene våre skal i størst mulig grad være for alle indøkere.
+2. Likestilling - på tvers av trinn, erfaring, kjønn og etnisitet.
+3. Lidenskap - erfaring er ikke viktig, men interesse for caseløsning og business er positivt.
 
-3. Lidenskap for case og business - erfaring er ikke viktig, men interesse er bra.
+Lurer du på noe, eller ønsker du å komme i kontakt med oss?
+Send en mail til ibcntnu@gmail.com eller følg oss på Instagram @Ibcntnu for direkte innblikk i hva vi driver med!
 
-For komme i kontakt med oss kan du sende email til ibcntnu@gmail.com eller henvende deg spesifikt til en av styremedlemmene under.
-
+![IBC bilde](/img/ibcmote.png)
 ![IBC bilde](/img/IBCmote.jpeg)
-
-Håkon Andreas Hyttedalen
-Leder
-tlf: 974 09 177
-
-Anders Rønning
-Nestleder
-tlf. 913 51 892
-
-Tobias Spinnangr Sindre
-Styremedlem
-tlf: 954 57 507
-
-Camilla Elise Espelund
-Styremedlem/Markedsføring
-tlf: 942 97 714
