@@ -4,7 +4,7 @@ from django.conf import settings
 from django.contrib.auth.models import Group, User
 from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
-
+from apps.permissions.models import ResponsibleGroup
 
 # Create your models here.
 class Organization(models.Model):
@@ -23,7 +23,7 @@ class Organization(models.Model):
     logo = models.ImageField(upload_to="organizations", blank=True, null=True)
     color = models.CharField(max_length=100, blank=True, null=True)
 
-    group = models.ForeignKey(Group, on_delete=models.CASCADE, null=True, blank=True)
+    group = models.OneToOneField(to=ResponsibleGroup, on_delete=models.CASCADE)
 
     users = models.ManyToManyField(
         "users.User",
