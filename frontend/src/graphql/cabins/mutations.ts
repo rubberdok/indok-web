@@ -28,20 +28,28 @@ export const CREATE_CABIN = gql`
 
 export const SEND_EMAIL = gql`
   mutation SendEmail(
-    $firstname: String
-    $surname: String
-    $receiverEmail: String
-    $bookFrom: String
-    $bookTo: String
-    $price: Int
+    $firstName: String
+    $lastName: String
+    $email: String
+    $phone: String
+    $numberIndok: Int
+    $numberExternal: Int
+    $cabinIds: [String]
+    $checkInDate: String
+    $checkOutDate: String
+    $rangeLength: Int
   ) {
     sendEmail(
-      firstname: $firstname
-      surname: $surname
-      receiverEmail: $receiverEmail
-      bookFrom: $bookFrom
-      bookTo: $bookTo
-      price: $price
+      firstname: $firstName
+      lastname: $lastName
+      email: $email
+      phone: $phone
+      numberIndok: $numberIndok
+      numberExternal: $numberExternal
+      cabinIds: $cabinIds
+      checkInDate: $checkInDate
+      checkOutDate: $checkOutDate
+      rangeLength: $rangeLength
     ) {
       ok
     }

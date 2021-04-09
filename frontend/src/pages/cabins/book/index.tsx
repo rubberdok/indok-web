@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import Navbar from "@components/navbar/Navbar";
 import CheckInOut from "@components/pages/cabins/CheckInOut";
 import CabinContactInfo from "@components/pages/cabins/CabinContactInfo";
@@ -6,11 +6,18 @@ import ContractDialog from "@components/pages/cabins/Popup/ContractDialog";
 import { QUERY_CABINS } from "@graphql/cabins/queries";
 import { Cabin, ContactInfo, ContactInfoValidations } from "@interfaces/cabins";
 import { Box, Grid, Step, StepLabel, Stepper, Button, Typography, Paper, Tooltip } from "@material-ui/core";
-import { allValuesFilled, cabinOrderStepReady, isFormValid, validateInputForm } from "@utils/cabins";
+import {
+  allValuesFilled,
+  cabinOrderStepReady,
+  generateAdminEmailInput,
+  isFormValid,
+  validateInputForm,
+} from "@utils/cabins";
 import { NextPage } from "next";
 import React, { useEffect, useState } from "react";
 import PaymentSite from "@components/pages/cabins/PaymentSite";
 import ReceiptSite from "@components/pages/cabins/ReceiptSite";
+import { SEND_EMAIL } from "@graphql/cabins/mutations";
 
 interface StepReady {
   [step: number]: { ready: boolean; errortext: string };
@@ -66,6 +73,9 @@ const CabinBookingPage: NextPage = () => {
   const [contactInfo, setContactInfo] = useState<ContactInfo>(defaultContactInfo);
   const [validations, setValidations] = useState<ContactInfoValidations>();
   const [errorTrigger, setErrorTrigger] = useState(false);
+
+  // Email mutations
+  const [send_email] = useMutation(SEND_EMAIL);
 
   useEffect(() => {
     setStepReady({
@@ -125,6 +135,9 @@ const CabinBookingPage: NextPage = () => {
     if (activeStep == 1 && !modalData.contractViewed) {
       setModalData({ ...modalData, displayPopUp: true });
     } else {
+      if (activeStep == 2) {
+        send_email({ variables: generateAdminEmailInput(contactInfo, datePick, chosenCabins) });
+      }
       setActiveStep((prev) => prev + 1);
     }
   };

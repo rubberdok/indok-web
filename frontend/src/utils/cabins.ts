@@ -80,3 +80,14 @@ export const calculatePrice = (chosenCabins: Cabin[], contactInfo: ContactInfo, 
     return pricePerNight * rangeLength;
   }
 };
+
+export const generateAdminEmailInput = (contactInfo: ContactInfo, datePick: DatePick, chosenCabins: Cabin[]) => {
+  const rangeLength = dayjs(datePick.checkOutDate).diff(dayjs(datePick.checkInDate), "d");
+  return {
+    ...contactInfo,
+    cabinIds: chosenCabins.map((cabin) => cabin.id),
+    checkInDate: datePick.checkInDate,
+    checkOutDate: datePick.checkOutDate,
+    rangeLength: rangeLength,
+  };
+};

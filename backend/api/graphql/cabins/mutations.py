@@ -8,7 +8,7 @@ from django.utils import timezone
 from .types import BookingType
 from apps.cabins.models import Booking as BookingModel
 from apps.cabins.models import Cabin as CabinModel
-from .mail import send_mails
+from .mail import send_admin_mail, calculate_booking_price, send_user_confirmation_mail
 
 
 class CreateBooking(graphene.Mutation):
@@ -105,17 +105,42 @@ class DeleteBooking(graphene.Mutation):
 class SendEmail(graphene.Mutation):
     class Arguments:
         firstname = graphene.String()
-        surname = graphene.String()
-        receiverEmail = graphene.String()
-        bookFrom = graphene.String()
-        bookTo = graphene.String()
-        price = graphene.Int()
+        lastname = graphene.String()
+        email = graphene.String()
+        phone = graphene.String()
+        number_indok = graphene.Int()
+        number_external = graphene.Int()
+        cabin_ids = graphene.List(graphene.String)
+        check_in_date = graphene.String()
+        check_out_date = graphene.String()
+        range_length = graphene.Int()
 
     ok = graphene.Boolean()
 
-    def mutate(self, info, firstname, surname, receiverEmail, bookFrom, bookTo, price):
+    def mutate(self, info, firstname, lastname,
+               email, phone, number_indok, number_external,
+               cabin_ids, check_in_date, check_out_date, range_length):
 
-        send_mails(info, firstname, surname, receiverEmail, bookFrom, bookTo, price)
+        cabins = CabinModel.objects.all().filter(id__in=cabin_ids)
+        chosen_cabins_names = [cabin.name for cabin in cabins]
+        chosen_cabins_string = cabins[0].name if len(cabins) == 1 else ",".join(chosen_cabins_names[:-1]) + f" og {chosen_cabins_names[-1]}"
+        price = calculate_booking_price(cabins=cabins, number_indok=number_indok, number_external=number_external) * range_length
 
-        ok = True
-        return SendEmail(ok=ok)
+        booking_info = {
+            "firstname": firstname,
+            "lastname": lastname,
+            "email": email,
+            "phone": phone,
+            "number_indok": number_indok,
+            "number_external": number_external,
+            "chosen_cabins_string": chosen_cabins_string,
+            "price": price,
+            "check_in_date": check_in_date,
+            "check_out_date": check_out_date,
+            "range_length": range_length
+        }
+
+        send_admin_mail(info, booking_info)
+        send_user_confirmation_mail(info, booking_info)
+
+        return SendEmail(ok=True)
