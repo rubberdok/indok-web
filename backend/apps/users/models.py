@@ -3,11 +3,8 @@ import datetime
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 from phonenumber_field.modelfields import PhoneNumberField
 from guardian.conf import settings as guardian_settings
-from guardian.shortcuts import assign_perm
 
 
 # Create your models here.
@@ -65,9 +62,3 @@ def get_anonymous_user_instance(User):
         User.USERNAME_FIELD: anonymous_username,
     }
     return User(**attributes)
-
-
-@receiver(post_save, sender=User)
-def assign_default_permissions(sender, instance, created, **kwargs):
-    if created:
-        assign_perm("users.view_sensitive_info", instance, instance)
