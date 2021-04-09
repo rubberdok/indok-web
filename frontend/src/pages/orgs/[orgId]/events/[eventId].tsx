@@ -1,11 +1,13 @@
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import Layout from "@components/Layout";
 import AttendeeExport from "@components/pages/events/attendeeExport";
 import EditEvent from "@components/pages/events/editEvent";
 import EmailForm from "@components/pages/events/EventEmail";
+import { ADMIN_EVENT_SIGN_OFF } from "@graphql/events/mutations";
 import { ADMIN_GET_EVENT } from "@graphql/events/queries";
 import { Event } from "@interfaces/events";
 import { User } from "@interfaces/users";
+import { Alert } from "@material-ui/lab";
 import {
   Box,
   Button,
@@ -15,17 +17,21 @@ import {
   CardHeader,
   CircularProgress,
   Grid,
+  IconButton,
   List,
   ListItem,
+  Snackbar,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
+  Tooltip,
   Typography,
 } from "@material-ui/core";
 import { Edit } from "@material-ui/icons";
+import DeleteIcon from "@material-ui/icons/Delete";
 import dayjs from "dayjs";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
@@ -67,12 +73,16 @@ const EventAdminPage: NextPage = () => {
   const { eventId } = router.query;
   const eventNumberID = parseInt(eventId as string);
 
-  const { loading, data } = useQuery<{ event: Event }, { id: number }>(ADMIN_GET_EVENT, {
+  const { loading, data, refetch } = useQuery<{ event: Event }, { id: number }>(ADMIN_GET_EVENT, {
     variables: { id: eventNumberID },
     skip: Number.isNaN(eventNumberID),
   });
 
+  const [adminEventSignOff, { loading: signOffLoading, error: signOffError }] = useMutation(ADMIN_EVENT_SIGN_OFF);
+
   const [openEditEvent, setOpenEditEvent] = useState(false);
+  const [openSignOffErrorSnackbar, setOpenSignOffErrorSnackbar] = useState(false);
+  const [openSignOffSuccessSnackbar, setOpenSignOffSuccessSnackbar] = useState(false);
 
   if (loading) {
     return <CircularProgress />;
@@ -93,6 +103,17 @@ const EventAdminPage: NextPage = () => {
         </Typography>
       </ListItem>
     );
+  };
+
+  const handleDeleteSignUp = (userId: string) => {
+    adminEventSignOff({ variables: { eventId: eventNumberID, userId: userId } })
+      .then(() => {
+        refetch({ id: eventNumberID });
+        setOpenSignOffSuccessSnackbar(true);
+      })
+      .catch(() => {
+        setOpenSignOffErrorSnackbar(true);
+      });
   };
 
   return (
@@ -160,6 +181,17 @@ const EventAdminPage: NextPage = () => {
                                     {user[field.field]}
                                   </TableCell>
                                 ))}
+                                <TableCell>
+                                  <Tooltip title="Fjern påmelding" arrow>
+                                    {signOffLoading ? (
+                                      <CircularProgress />
+                                    ) : (
+                                      <IconButton aria-label="delete" onClick={() => handleDeleteSignUp(user.id)}>
+                                        <DeleteIcon fontSize="small" />
+                                      </IconButton>
+                                    )}
+                                  </Tooltip>
+                                </TableCell>
                               </TableRow>
                             ))}
                           </TableBody>
@@ -212,6 +244,26 @@ const EventAdminPage: NextPage = () => {
           </Grid>
         </Box>
       ) : null}
+      <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        open={openSignOffErrorSnackbar}
+        autoHideDuration={3000}
+        onClose={() => setOpenSignOffErrorSnackbar(false)}
+      >
+        <Alert elevation={6} variant="filled" severity="error">
+          {signOffError ? signOffError.message : "Avmelding feilet"}
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        open={openSignOffSuccessSnackbar}
+        autoHideDuration={3000}
+        onClose={() => setOpenSignOffSuccessSnackbar(false)}
+      >
+        <Alert elevation={6} variant="filled" severity="success">
+          Avmelding fullført
+        </Alert>
+      </Snackbar>
     </Layout>
   );
 };
