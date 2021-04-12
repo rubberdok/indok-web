@@ -96,6 +96,16 @@ export const EVENT_SIGN_OFF = gql`
   }
 `;
 
+export const ADMIN_EVENT_SIGN_OFF = gql`
+  mutation AdminEventSignOff($eventId: ID!, $userId: ID!) {
+    adminEventSignOff(eventId: $eventId, userId: $userId) {
+      event {
+        id
+      }
+    }
+  }
+`;
+
 export const CREATE_CATEGORY = gql`
   mutation CreateCategory($name: String) {
     createCategory(categoryData: { name: $name }) {
