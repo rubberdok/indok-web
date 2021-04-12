@@ -43,7 +43,7 @@ const ListingAdminPage: NextPage = () => {
       <Container className={classes.container}>
         <Link href={`/orgs/${orgId}`}>Tilbake</Link>
         {data && (
-          <Grid container direction="row" justify="center">
+          <Grid container direction="row" justify="center" spacing={1}>
             <Grid item xs={2}>
               <Card>
                 <Tabs
@@ -62,19 +62,15 @@ const ListingAdminPage: NextPage = () => {
               </Card>
             </Grid>
             <Grid item xs={8}>
-              <Card>
-                <CardContent>
-                  {selectedApplicant ? (
-                    <>
-                      {data.listing.form && (
-                        <FormAnswers user={selectedApplicant} formId={parseInt(data.listing.form.id)} />
-                      )}
-                    </>
-                  ) : (
-                    <OrganizationListing listing={data.listing} />
+              {selectedApplicant ? (
+                <>
+                  {data.listing.form && (
+                    <FormAnswers user={selectedApplicant} formId={parseInt(data.listing.form.id)} />
                   )}
-                </CardContent>
-              </Card>
+                </>
+              ) : (
+                <OrganizationListing listing={data.listing} />
+              )}
             </Grid>
           </Grid>
         )}

@@ -4,24 +4,14 @@ import QuestionPreview from "@components/forms/formAdmin/QuestionPreview";
 import { CREATE_QUESTION, DELETE_QUESTION, UPDATE_QUESTION } from "@graphql/forms/mutations";
 import { FORM } from "@graphql/forms/queries";
 import { Question, QuestionVariables, Form } from "@interfaces/forms";
-import { Box, Button, Grid, makeStyles, Typography } from "@material-ui/core";
+import { Button, Grid, Typography, Card, CardContent } from "@material-ui/core";
 import { useState } from "react";
-
-const useStyles = makeStyles((theme) => ({
-  questionBox: {
-    padding: theme.spacing(1),
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1),
-  },
-}));
 
 /**
  * component to edit forms (for example the applications to listings)
  * props: ID of the form to edit
  */
 const EditForm: React.FC<{ formId: string }> = ({ formId }) => {
-  const classes = useStyles();
-
   // fetches the form
   const { loading, error, data } = useQuery<{ form: Form }>(FORM, {
     variables: { formId: formId },
@@ -112,61 +102,75 @@ const EditForm: React.FC<{ formId: string }> = ({ formId }) => {
     <>
       {data && (
         <>
-          <Typography variant="h5">{data.form.name}</Typography>
-          <Grid item container direction="column">
+          <Grid item container direction="column" spacing={1}>
+            <Grid item>
+              <Card>
+                <CardContent>
+                  <Typography variant="h5">{data.form.name}</Typography>
+                  <Typography>* = obligatorisk spørsmål</Typography>
+                </CardContent>
+              </Card>
+            </Grid>
             {data.form.questions.map((question) => (
-              <Box key={question.id} border={1} borderColor="primary" className={classes.questionBox}>
-                {question === activeQuestion ? (
-                  <EditQuestion
-                    oldQuestion={question}
-                    updateQuestion={updateQuestion}
-                    deleteQuestion={deleteQuestion}
-                    setInactive={() => setActiveQuestion(undefined)}
-                  />
-                ) : (
-                  <QuestionPreview
-                    question={question}
-                    setActive={() => {
-                      if (activeQuestion) {
-                        updateQuestion({
-                          variables: {
-                            id: activeQuestion.id,
-                            question: activeQuestion.question,
-                            description: activeQuestion.description,
-                            questionType: activeQuestion.questionType,
-                            mandatory: activeQuestion.mandatory,
-                            options: activeQuestion.options.map((option) => ({
-                              answer: option.answer,
-                              ...(option.id ? { id: option.id } : {}),
-                            })),
-                          },
-                        });
-                      }
-                      setActiveQuestion(question);
-                    }}
-                  />
-                )}
-              </Box>
+              <Grid item key={question.id}>
+                <Card>
+                  <CardContent>
+                    {question === activeQuestion ? (
+                      <EditQuestion
+                        oldQuestion={question}
+                        updateQuestion={updateQuestion}
+                        deleteQuestion={deleteQuestion}
+                        setInactive={() => setActiveQuestion(undefined)}
+                      />
+                    ) : (
+                      <QuestionPreview
+                        question={question}
+                        setActive={() => {
+                          if (activeQuestion) {
+                            updateQuestion({
+                              variables: {
+                                id: activeQuestion.id,
+                                question: activeQuestion.question,
+                                description: activeQuestion.description,
+                                questionType: activeQuestion.questionType,
+                                mandatory: activeQuestion.mandatory,
+                                options: activeQuestion.options.map((option) => ({
+                                  answer: option.answer,
+                                  ...(option.id ? { id: option.id } : {}),
+                                })),
+                              },
+                            });
+                          }
+                          setActiveQuestion(question);
+                        }}
+                      />
+                    )}
+                  </CardContent>
+                </Card>
+              </Grid>
             ))}
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={(e) => {
-                e.preventDefault();
-                createQuestion({
-                  variables: {
-                    question: "",
-                    description: "",
-                    formId: data.form.id,
-                    // TODO: remove when default handling is fixed backend
-                    questionType: "PARAGRAPH",
-                    mandatory: true,
-                  },
-                });
-              }}
-            >
-              Legg til spørsmål
-            </Button>
+            <Grid item>
+              <Button
+                fullWidth
+                variant="contained"
+                color="primary"
+                onClick={(e) => {
+                  e.preventDefault();
+                  createQuestion({
+                    variables: {
+                      question: "",
+                      description: "",
+                      formId: data.form.id,
+                      // TODO: remove when default handling is fixed backend
+                      questionType: "PARAGRAPH",
+                      mandatory: true,
+                    },
+                  });
+                }}
+              >
+                Nytt spørsmål
+              </Button>
+            </Grid>
           </Grid>
         </>
       )}

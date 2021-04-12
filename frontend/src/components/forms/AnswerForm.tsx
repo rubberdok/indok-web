@@ -51,7 +51,10 @@ const AnswerForm: React.FC<{ formId: string }> = ({ formId }) => {
               {answers.map((answer, index) => (
                 <CardContent key={index}>
                   <FormControl>
-                    <FormLabel>{answer.question.question}</FormLabel>
+                    <FormLabel>
+                      {answer.question.question}
+                      {answer.question.mandatory && " *"}
+                    </FormLabel>
                     <AnswerQuestion
                       answer={answer}
                       setAnswer={(newAnswer: Answer) =>
@@ -65,6 +68,7 @@ const AnswerForm: React.FC<{ formId: string }> = ({ formId }) => {
                   </FormControl>
                 </CardContent>
               ))}
+              <Typography>* = obligatorisk spørsmål</Typography>
               <Button
                 variant="contained"
                 color="primary"
