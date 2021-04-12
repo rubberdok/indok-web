@@ -24,11 +24,11 @@ class VippsCallback(APIView):
             raise PermissionDenied("Unauthorized request")
 
         # Update payment status
+        if order.payment_status == Order.PaymentStatus.CAPTURED:
+            return Response()
+
         status = request.data.get("transactionInfo").get("status")
-        if status == "RESERVED":
-            if order.payment_status == Order.PaymentStatus.INITIATED:
-                order.payment_status = Order.PaymentStatus.RESERVED
-        elif status in Order.PaymentStatus.values:
+        if status in Order.PaymentStatus.values:
             order.payment_status = status
         elif status in ["RESERVE_FAILED", "SALE_FAILED"]:
             order.payment_status = Order.PaymentStatus.FAILED

@@ -48,7 +48,7 @@ const FallbackPage: NextPage = () => {
           </>
         ) : paymentStatus === "RESERVED" || loading ? (
           <>
-            <Typography variant="h1">Behandler...</Typography> <CircularProgress />
+            <Typography variant="h3">Behandler...</Typography> <CircularProgress />
           </>
         ) : (
           <Typography>Det ser ut som at betalingen ble avbrutt</Typography>
