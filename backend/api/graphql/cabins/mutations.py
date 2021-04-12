@@ -16,14 +16,11 @@ def checkin_validation(check_in, check_out, cabin_ids):
         raise GraphQLError("invalid input: Checkin is after checkout")
     # https://stackoverflow.com/questions/325933/determine-whether-two-date-ranges-overlap
     if (
-        len(
-            BookingModel.objects.filter(
-                check_in__lte=check_out,
-                check_out__gt=check_in,
-                cabins__id__in=cabin_ids,
-            )
-        )
-        > 0
+        BookingModel.objects.filter(
+            check_in__lte=check_out,
+            check_out__gt=check_in,
+            cabins__id__in=cabin_ids,
+        ).exists()
     ):
         raise GraphQLError("Input dates overlaps existing booking")
 
