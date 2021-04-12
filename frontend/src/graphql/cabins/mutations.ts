@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
-export const CREATE_CABIN = gql`
-  mutation CreateCabin(
+export const CREATE_BOOKING = gql`
+  mutation CreateBooking(
     $firstname: String
     $surname: String
     $phone: Int
@@ -11,7 +11,7 @@ export const CREATE_CABIN = gql`
     $price: Int
     $cabins: [Int]
   ) {
-    createCabin(
+    createBooking(
       firstname: $firstname
       surname: $surname
       phone: $phone
