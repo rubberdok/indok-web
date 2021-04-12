@@ -44,7 +44,8 @@ class CreateListing(graphene.Mutation):
         listing = Listing()
 
         for k, v in listing_data.items():
-            setattr(listing, k, v)
+            if v is not None:
+                setattr(listing, k, v)
         setattr(
             listing,
             "end_datetime",

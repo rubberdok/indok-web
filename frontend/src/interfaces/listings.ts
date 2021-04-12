@@ -14,4 +14,5 @@ export interface Listing {
   logo?: string;
   organization?: Organization;
   form?: Form;
+  chips: string[];
 }

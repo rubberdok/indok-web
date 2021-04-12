@@ -11,6 +11,7 @@ export const LISTINGS = gql`
       endDatetime
       url
       slug
+      chips
       organization {
         name
         slug
