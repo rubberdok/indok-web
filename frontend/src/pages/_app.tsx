@@ -6,8 +6,6 @@ import theme from "@styles/theme";
 import { AppProps } from "next/app";
 import Head from "next/head";
 import React, { useEffect } from "react";
-import "slick-carousel/slick/slick-theme.css";
-import "slick-carousel/slick/slick.css";
 
 const App = ({ Component, pageProps }: AppProps): JSX.Element => {
   const link = createHttpLink({
@@ -35,6 +33,9 @@ const App = ({ Component, pageProps }: AppProps): JSX.Element => {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <Component {...pageProps} />
+        {/* <div id="mobile-warning">
+          Denne siden fungerer ikke optimalt på mobil enda. Prøv nettsiden på en større skjerm.
+        </div> */}
       </ThemeProvider>
     </ApolloProvider>
   );

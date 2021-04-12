@@ -22,4 +22,16 @@ fragment event on EventType {
     lastName
     dateJoined
   }
+  price
+  shortDescription
+  signupOpenDate
+  userAttendance {
+    isSignedUp
+    isOnWaitingList
+  }
+  isFull
+  hasExtraInformation
+  allowedGradeYears
+  contactEmail
+  bindingSignup
 }
