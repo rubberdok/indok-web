@@ -100,7 +100,7 @@ const ListingTitle: React.FC<{
   )
 
   return (
-    <Grid container item direction="row" justify="space-between" alignItems="stretch" xs={10} className={classes.root}>
+    <Grid container item direction="row" justify="space-between" alignItems="stretch" className={classes.root}>
       {listing.organization && 
         <Hidden smDown>
           <Grid item xs={4} style= {{ marginRight: 32 }}>

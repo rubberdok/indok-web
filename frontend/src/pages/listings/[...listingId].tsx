@@ -53,11 +53,11 @@ const ListingPage: NextPage = () => {
             <ListingBanner listing={data.listing} />
           </Hidden>
           <Container className={classes.container}>
-            <Grid container direction="column" spacing={4}>
-              <Grid container item direction="row" justify="center">
+            <Grid container direction="column" spacing={4} alignItems="stretch">
+              <Grid container item direction="row" justify="space-between" alignItems="stretch" xs={10}>
                 <ListingTitle listing={data.listing} />
               </Grid>
-              <Grid container item direction="row" justify="center">
+              <Grid item xs={10}>
                 <ListingBody>
                   <ReactMarkdown
                     renderers={renderers}
