@@ -12,17 +12,20 @@ from .validators import (
     name_validation,
     norwegian_phone_number_validation,
     strip_phone_number,
+    participants_validation,
 )
 
 
 class BookingInput(graphene.InputObjectType):
     firstname = graphene.String()
     surname = graphene.String()
-    phone = graphene.Int()
+    phone = graphene.String()
     receiver_email = graphene.String()
     check_in = graphene.Date()
     check_out = graphene.Date()
-    price = graphene.Int()
+    typo = graphene.String()
+    internal_participants = graphene.Int()
+    external_participants = graphene.Int()
     cabins = graphene.List(graphene.Int)
 
 
@@ -38,6 +41,8 @@ class CreateBooking(graphene.Mutation):
         info,
         booking_data,
     ):
+
+        # Validations
         checkin_validation(
             booking_data["check_in"], booking_data["check_out"], booking_data["cabins"]
         )
@@ -45,6 +50,12 @@ class CreateBooking(graphene.Mutation):
         name_validation(booking_data["firstname"], booking_data["surname"])
         booking_data["phone"] = strip_phone_number(booking_data["phone"])
         norwegian_phone_number_validation(booking_data["phone"])
+        participants_validation(
+            booking_data["internal_participants"],
+            booking_data["internal_participants"],
+            booking_data["cabins"],
+        )
+
         booking = BookingModel()
         for input_field, input_value in booking_data.items():
             if input_field != "cabins":

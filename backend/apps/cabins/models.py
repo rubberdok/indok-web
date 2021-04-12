@@ -19,9 +19,30 @@ class Booking(models.Model):
     receiver_email = models.CharField(max_length=100)
     check_in = models.DateField()
     check_out = models.DateField()
-    price = models.IntegerField()
     cabins = models.ManyToManyField(Cabin)
     timestamp = models.DateTimeField()
+    internal_participants = models.IntegerField()
+    external_participants = models.IntegerField()
+
+    @property
+    def number_of_nights(self):
+        return (self.check_out - self.check_in).days
+
+    @property
+    def is_internal_price(self):
+        return self.internal_participants >= self.external_participants
+
+    @property
+    def price(self):
+        if self.is_internal_price:
+            price_pr_night = self.cabins.aggregate(models.Sum("internal_price"))[
+                "internal_price__sum"
+            ]
+        else:
+            price_pr_night = self.cabins.aggregate(models.Sum("external_price"))[
+                "external_price__sum"
+            ]
+        return price_pr_night * self.number_of_nights
 
     def __str__(self):
         return f"Booking {self.id}, {self.firstname} {self.surname}"

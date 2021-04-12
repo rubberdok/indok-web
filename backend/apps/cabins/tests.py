@@ -104,19 +104,20 @@ class CabinsMutationsTestCase(CabinsBaseTestCase):
         query = f"""
                 mutation CreateBooking {{
                     createBooking(
-                    bookingData: {{
-                        firstname: \"{booking.firstname}\",
-                        surname: \"{booking.surname}\",
-                        phone: {booking.phone},
-                        receiverEmail: \"{booking.receiver_email}\",
-                        checkIn: \"{booking.check_in.strftime("%Y-%m-%d")}\",
-                        checkOut: \"{booking.check_out.strftime("%Y-%m-%d")}\",
-                        price: {booking.price},
-                        cabins: [{cabins_field}],
-                        }}
-                    ) {{
+                        bookingData: {{
+                            firstname: \"{booking.firstname}\",
+                            surname: \"{booking.surname}\",
+                            phone: \"{booking.phone}\",
+                            receiverEmail: \"{booking.receiver_email}\",
+                            checkIn: \"{booking.check_in.strftime("%Y-%m-%d")}\",
+                            checkOut: \"{booking.check_out.strftime("%Y-%m-%d")}\",
+                            internalParticipants: {booking.internal_participants},
+                            externalParticipants: {booking.external_participants},
+                            cabins: [{cabins_field}],
+                            }}
+                        ) {{
                       ok
-                    }}
+                        }}
                     }}
                 """
         return self.query(query)
@@ -130,6 +131,7 @@ class CabinsMutationsTestCase(CabinsBaseTestCase):
         response = self.create_booking(
             self.no_conflict_booking, f"{self.bjornen_cabin.id}"
         )
+        print(json.loads(response.content))
         self.assertResponseNoErrors(response)
         # Check that booking is created
         self.assertTrue(
@@ -165,7 +167,7 @@ class CabinsMutationsTestCase(CabinsBaseTestCase):
         self.check_create_with_error(response)
 
     def test_empty_firstname(self):
-        # Try to make cabin with no first name variable
+        # Try to add a booking with no first name variable
         self.no_conflict_booking.firstname = ""
         response = self.create_booking(
             self.no_conflict_booking, f"{self.oksen_cabin.id}"
@@ -173,7 +175,7 @@ class CabinsMutationsTestCase(CabinsBaseTestCase):
         self.check_create_with_error(response)
 
     def test_empty_surname(self):
-        # Try to make cabin with no last name variable
+        # Try to add a booking with no last name variable
         self.no_conflict_booking.surname = ""
         response = self.create_booking(
             self.no_conflict_booking, f"{self.oksen_cabin.id}"
@@ -186,4 +188,26 @@ class CabinsMutationsTestCase(CabinsBaseTestCase):
         response = self.create_booking(
             self.no_conflict_booking, f"{self.oksen_cabin.id}"
         )
+        self.check_create_with_error(response)
+
+    def test_sum_of_participants_cannot_exceed_limit(self):
+        # Try to add a booking with more participants than total capacity of cabin
+        self.no_conflict_booking.internal_participants = 15
+        self.no_conflict_booking.external_participants = 7
+        response = self.create_booking(
+            self.no_conflict_booking, f"{self.oksen_cabin.id}"
+        )
+        self.check_create_with_error(response)
+        # Try to add a booking with more participants than total capacity of cabins
+        self.no_conflict_booking.internal_participants = 19
+        self.no_conflict_booking.external_participants = 21
+        response = self.create_booking(
+            self.no_conflict_booking, f"{self.oksen_cabin.id}, {self.bjornen_cabin}"
+        )
+        self.check_create_with_error(response)
+
+    def test_no_checkin_and_checkout_on_same_day(self):
+        self.first_booking.check_in = timezone.now()
+        self.first_booking.check_in = timezone.now()
+        response = self.create_booking(self.first_booking, f"{self.bjornen_cabin.id}")
         self.check_create_with_error(response)
