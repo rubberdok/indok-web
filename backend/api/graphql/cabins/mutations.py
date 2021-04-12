@@ -6,7 +6,13 @@ from .types import BookingType
 from apps.cabins.models import Booking as BookingModel
 from apps.cabins.models import Cabin as CabinModel
 from .mail import send_mails
-from .validators import checkin_validation, email_validation, name_validation
+from .validators import (
+    checkin_validation,
+    email_validation,
+    name_validation,
+    norwegian_phone_number_validation,
+    strip_phone_number,
+)
 
 
 class BookingInput(graphene.InputObjectType):
@@ -37,6 +43,8 @@ class CreateBooking(graphene.Mutation):
         )
         email_validation(booking_data["receiver_email"])
         name_validation(booking_data["firstname"], booking_data["surname"])
+        booking_data["phone"] = strip_phone_number(booking_data["phone"])
+        norwegian_phone_number_validation(booking_data["phone"])
         booking = BookingModel()
         for input_field, input_value in booking_data.items():
             if input_field != "cabins":

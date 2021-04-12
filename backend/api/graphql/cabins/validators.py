@@ -28,3 +28,28 @@ def email_validation(email):
 def name_validation(firstname, surname):
     if firstname == "" or surname == "":
         raise GraphQLError("Both first and last name must be non-empty strings")
+
+
+def norwegian_phone_number_validation(stripped_phone_number):
+    error_message = "Invalid phone number. Has to be a norwegian phone number"
+    # https://www.nkom.no/telefoni-og-telefonnummer/telefonnummer-og-den-norske-nummerplan/alle-nummerserier-for-norske-telefonnumre#8_og_12sifrede_nummer
+    if len(stripped_phone_number) != 8:
+        raise GraphQLError(error_message)
+    if not (
+        stripped_phone_number.startswith("4") or stripped_phone_number.startswith("9")
+    ):
+        raise GraphQLError(error_message)
+
+
+def strip_phone_number(phone_number):
+    cleaned_phone_number = str(phone_number).replace(" ", "")
+    cleaned_phone_number = (
+        cleaned_phone_number[3:]
+        if cleaned_phone_number.startswith("+47")
+        else cleaned_phone_number
+    )
+    return (
+        cleaned_phone_number[4:]
+        if cleaned_phone_number.startswith("0047")
+        else cleaned_phone_number
+    )

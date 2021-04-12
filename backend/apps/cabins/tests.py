@@ -173,8 +173,16 @@ class CabinsMutationsTestCase(CabinsBaseTestCase):
         self.check_create_with_error(response)
 
     def test_empty_surname(self):
-        # Try to make cabin with no first name variable
+        # Try to make cabin with no last name variable
         self.no_conflict_booking.surname = ""
+        response = self.create_booking(
+            self.no_conflict_booking, f"{self.oksen_cabin.id}"
+        )
+        self.check_create_with_error(response)
+
+    def test_phone_number(self):
+        # Try to make cabin with invalid phone number
+        self.no_conflict_booking.phone = "26832732"
         response = self.create_booking(
             self.no_conflict_booking, f"{self.oksen_cabin.id}"
         )
