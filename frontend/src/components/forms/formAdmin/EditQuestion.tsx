@@ -2,8 +2,20 @@ import { FetchResult, MutationFunctionOptions } from "@apollo/client";
 import QuestionTypePreview from "@components/forms/formAdmin/QuestionTypePreview";
 import questionTypeLabels from "@components/forms/formAdmin/questionTypeLabels";
 import { Question, QuestionVariables, QuestionType } from "@interfaces/forms";
-import { Button, Checkbox, Grid, MenuItem, Radio, Select, TextField } from "@material-ui/core";
-import { useState } from "react";
+import {
+  Button,
+  Checkbox,
+  Grid,
+  MenuItem,
+  Radio,
+  Select,
+  TextField,
+  Switch,
+  FormControlLabel,
+  FormControl,
+  InputLabel,
+} from "@material-ui/core";
+import React, { useState } from "react";
 
 /**
  * component to edit a question on a form
@@ -63,35 +75,58 @@ const EditQuestion: React.FC<{
   // renders input fields to change the question's details
   // if the question's type allows options, allows the creation of such; otherwise, shows a preview
   return (
-    <Grid container item direction="column">
-      <TextField
-        title="Spørsmål:"
-        value={question.question}
-        onChange={(e) => {
-          e.preventDefault();
-          setQuestion({
-            ...question,
-            question: e.target.value,
-          });
-        }}
-      />
+    <Grid container direction="column" spacing={1}>
       <Grid item>
-        <Select
-          value={question.questionType}
+        <TextField
+          label="Spørsmål"
+          fullWidth
+          value={question.question}
           onChange={(e) => {
             e.preventDefault();
             setQuestion({
               ...question,
-              questionType: e.target.value as QuestionType,
+              question: e.target.value,
             });
           }}
-        >
-          {Object.entries(questionTypeLabels).map(([questionType, label]) => (
-            <MenuItem key={questionType} value={questionType}>
-              {label}
-            </MenuItem>
-          ))}
-        </Select>
+          variant="filled"
+        />
+      </Grid>
+      <Grid item container direction="row" alignItems="center" spacing={3}>
+        <Grid item xs={12} md={4}>
+          <FormControl fullWidth>
+            <InputLabel>Type</InputLabel>
+            <Select
+              fullWidth
+              value={question.questionType}
+              onChange={(e) => {
+                e.preventDefault();
+                setQuestion({
+                  ...question,
+                  questionType: e.target.value as QuestionType,
+                });
+              }}
+              variant="filled"
+            >
+              {Object.entries(questionTypeLabels).map(([questionType, label]) => (
+                <MenuItem key={questionType} value={questionType}>
+                  {label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Grid>
+        <Grid item xs={12} md={8}>
+          <FormControlLabel
+            label="Obligatorisk"
+            control={
+              <Switch
+                checked={question.mandatory}
+                onChange={(event) => setQuestion({ ...question, mandatory: event.target.checked })}
+                color="primary"
+              />
+            }
+          />
+        </Grid>
       </Grid>
       {question.questionType === "CHECKBOXES" ||
       question.questionType === "MULTIPLE_CHOICE" ||
@@ -133,43 +168,50 @@ const EditQuestion: React.FC<{
           </Button>
         </Grid>
       ) : (
-        <QuestionTypePreview question={question} />
+        <Grid item>
+          <QuestionTypePreview question={question} />
+        </Grid>
       )}
-      <Grid container direction="row">
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={(e) => {
-            e.preventDefault();
-            updateQuestion({
-              variables: {
-                id: question.id,
-                question: question.question,
-                description: question.description,
-                questionType: question.questionType,
-                options: question.options.map((option) => ({
-                  answer: option.answer,
-                  ...(option.id ? { id: option.id } : {}),
-                })),
-              },
-            });
-            setInactive();
-          }}
-        >
-          Lagre spørsmål
-        </Button>
-        <Button
-          variant="contained"
-          onClick={(e) => {
-            e.preventDefault();
-            setInactive();
-            deleteQuestion({
-              variables: { id: question.id },
-            });
-          }}
-        >
-          Slett spørsmål
-        </Button>
+      <Grid item container direction="row" spacing={1}>
+        <Grid item>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={(e) => {
+              e.preventDefault();
+              updateQuestion({
+                variables: {
+                  id: question.id,
+                  question: question.question,
+                  description: question.description,
+                  questionType: question.questionType,
+                  mandatory: question.mandatory,
+                  options: question.options.map((option) => ({
+                    answer: option.answer,
+                    ...(option.id ? { id: option.id } : {}),
+                  })),
+                },
+              });
+              setInactive();
+            }}
+          >
+            Lagre spørsmål
+          </Button>
+        </Grid>
+        <Grid item>
+          <Button
+            variant="contained"
+            onClick={(e) => {
+              e.preventDefault();
+              setInactive();
+              deleteQuestion({
+                variables: { id: question.id },
+              });
+            }}
+          >
+            Slett spørsmål
+          </Button>
+        </Grid>
       </Grid>
     </Grid>
   );

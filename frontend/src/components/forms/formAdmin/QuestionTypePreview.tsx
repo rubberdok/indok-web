@@ -12,10 +12,17 @@ const QuestionTypePreview: React.FC<{
   switch (question.questionType) {
     case "PARAGRAPH":
       return (
-        <TextField disabled label={questionTypeLabels[question.questionType]} variant="outlined" multiline rows={4} />
+        <TextField
+          fullWidth
+          disabled
+          label={questionTypeLabels[question.questionType]}
+          variant="outlined"
+          multiline
+          rows={4}
+        />
       );
     case "SHORT_ANSWER":
-      return <TextField disabled label={questionTypeLabels[question.questionType]} variant="outlined" />;
+      return <TextField fullWidth disabled label={questionTypeLabels[question.questionType]} variant="outlined" />;
     case "MULTIPLE_CHOICE":
       return (
         <RadioGroup>
