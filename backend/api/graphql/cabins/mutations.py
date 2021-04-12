@@ -1,28 +1,12 @@
 import graphene
 
 from django.utils import timezone
-from graphql import GraphQLError
 
 from .types import BookingType
 from apps.cabins.models import Booking as BookingModel
 from apps.cabins.models import Cabin as CabinModel
 from .mail import send_mails
-
-
-def checkin_validation(check_in, check_out, cabin_ids):
-    if check_in < timezone.now().date() or check_out < timezone.now().date():
-        raise GraphQLError("Input dates are before current time")
-    if check_in > check_out:
-        raise GraphQLError("invalid input: Checkin is after checkout")
-    # https://stackoverflow.com/questions/325933/determine-whether-two-date-ranges-overlap
-    if (
-        BookingModel.objects.filter(
-            check_in__lte=check_out,
-            check_out__gt=check_in,
-            cabins__id__in=cabin_ids,
-        ).exists()
-    ):
-        raise GraphQLError("Input dates overlaps existing booking")
+from .validators import checkin_validation, email_validation, name_validation
 
 
 class BookingInput(graphene.InputObjectType):
@@ -51,6 +35,8 @@ class CreateBooking(graphene.Mutation):
         checkin_validation(
             booking_data["check_in"], booking_data["check_out"], booking_data["cabins"]
         )
+        email_validation(booking_data["receiver_email"])
+        name_validation(booking_data["firstname"], booking_data["surname"])
         booking = BookingModel()
         for input_field, input_value in booking_data.items():
             if input_field != "cabins":
