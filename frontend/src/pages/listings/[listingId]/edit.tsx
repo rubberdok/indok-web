@@ -7,6 +7,7 @@ import { LISTING } from "@graphql/listings/queries";
 import { useRouter } from "next/router";
 import EditListing from "@components/pages/listings/detail/EditListing";
 import { ListingInput } from "@interfaces/listings"
+import ListingBanner from "@components/pages/listings/detail/ListingBanner";
 
 const EmptyListing: ListingInput = {
   title: "",
@@ -34,21 +35,20 @@ const Edit: NextPage = () => {
 
   return (
     <Layout>
+      <ListingBanner />
       <Container>
-        <Grid container direction="column" justify="center" alignItems="center">
-          <Grid container item xs={10} direction="column">
-            {loading &&
-              <CircularProgress color="primary" />
-            }
-            {error &&
-              <Typography variant="caption">
-                Nå har det skjedd noe gærnt her.
-              </Typography>
-            }
-            {data &&
-              <EditListing listingState={listingState} setListingState={setListingState} />
-            }
-          </Grid>
+        <Grid container direction="column" justify="center" alignItems="center" spacing={4}>
+          {loading &&
+            <CircularProgress color="primary" />
+          }
+          {error &&
+            <Typography variant="caption">
+              Nå har det skjedd noe gærnt her.
+            </Typography>
+          }
+          {data &&
+            <EditListing listingState={listingState} setListingState={setListingState} />
+          }
         </Grid>
       </Container>
     </Layout>
@@ -57,3 +57,5 @@ const Edit: NextPage = () => {
 
 
 export default Edit;
+
+

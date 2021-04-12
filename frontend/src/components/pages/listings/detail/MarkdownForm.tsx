@@ -17,40 +17,38 @@ const Markdown: React.FC<MarkdownProps> = ({ markdown, onChange }) => {
   }
 
   return (
-    <Grid item xs>
-      <Card>
-        <CardContent>
-          <Tabs 
-            value={preview}
-            indicatorColor="primary"
-            textColor="primary"
-            onChange={handleChange}
-            aria-label="Redigering og forhåndsvisningstabs"
-          >
+    <Card>
+      <CardContent>
+        <Tabs 
+          value={preview}
+          indicatorColor="primary"
+          textColor="primary"
+          onChange={handleChange}
+          aria-label="Redigering og forhåndsvisningstabs"
+        >
 
-            <Tab label="Rediger" />
-            <Tab label="Forhåndsvisning" />
-          </Tabs>
-          {preview
-            ? <ReactMarkdown
-                renderers={renderers}
-              >
-                {markdown}
-              </ReactMarkdown>
-            
-            : <TextField
-                fullWidth
-                rows={24}
-                variant="outlined"
-                value={markdown} 
-                multiline
-                onChange={onChange}
-              />
+          <Tab label="Rediger" />
+          <Tab label="Forhåndsvisning" />
+        </Tabs>
+        {preview
+          ? <ReactMarkdown
+              renderers={renderers}
+            >
+              {markdown}
+            </ReactMarkdown>
+          
+          : <TextField
+              fullWidth
+              rows={24}
+              variant="outlined"
+              value={markdown} 
+              multiline
+              onChange={onChange}
+            />
 
-          } 
-        </CardContent>
-      </Card>
-    </Grid>
+        } 
+      </CardContent>
+    </Card>
   )
 }
 
