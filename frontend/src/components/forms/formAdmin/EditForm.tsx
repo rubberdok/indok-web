@@ -134,6 +134,7 @@ const EditForm: React.FC<{ formId: string }> = ({ formId }) => {
                             question: activeQuestion.question,
                             description: activeQuestion.description,
                             questionType: activeQuestion.questionType,
+                            mandatory: activeQuestion.mandatory,
                             options: activeQuestion.options.map((option) => ({
                               answer: option.answer,
                               ...(option.id ? { id: option.id } : {}),
@@ -159,6 +160,7 @@ const EditForm: React.FC<{ formId: string }> = ({ formId }) => {
                     formId: data.form.id,
                     // TODO: remove when default handling is fixed backend
                     questionType: "PARAGRAPH",
+                    mandatory: true,
                   },
                 });
               }}

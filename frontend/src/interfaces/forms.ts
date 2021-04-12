@@ -45,6 +45,7 @@ export interface QuestionVariables {
   question: string;
   description: string;
   questionType: QuestionType;
+  mandatory: boolean;
   options: {
     answer: string;
     id?: string;
