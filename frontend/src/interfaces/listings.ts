@@ -15,3 +15,14 @@ export interface Listing {
   organization?: Organization;
   form?: Form;
 }
+
+export interface ListingInput {
+  title: string;
+  description: string;
+  startDatetime: string;
+  deadline?: string;
+  url?: string;
+  organization?: Organization;
+  form?: Form;
+  hero?: string;
+}
