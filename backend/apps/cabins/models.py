@@ -1,7 +1,6 @@
 from django.db import models
 
 
-# Create your models here.
 class Cabin(models.Model):
     name = models.CharField(max_length=100)
     max_guests = models.IntegerField(default=18)

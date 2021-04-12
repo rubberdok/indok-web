@@ -19,26 +19,17 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    volumes:
-      - ./backend:/backend
     ports:
       - "8000:8000"
     depends_on:
       - db
-
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    volumes:
-      - ./frontend/:/code
-      - /code/node_modules
-      - /code/.next
-    ports:
-      - 3000:3000
-    expose:
-      - 3000
-
+    environment:
+      - DATAPORTEN_ID=$DATAPORTEN_ID
+      - DATAPORTEN_REDIRECT_URI=$DATAPORTEN_REDIRECT_URI
+      - DATAPORTEN_SECRET=$DATAPORTEN_SECRET
+      - BOOKING_EMAIL=$BOOKING_EMAIL
+      - BOOKING_EMAIL_PASSWORD=$BOOKING_EMAIL_PASSWORD
+      - GOOGLE_DRIVE_API_KEY=$GOOGLE_DRIVE_API_KEY
 volumes:
   postgres_data:
     driver: local
