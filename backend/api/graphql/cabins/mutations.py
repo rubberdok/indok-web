@@ -1,14 +1,13 @@
 import graphene
 from django.shortcuts import get_object_or_404
-import pytz
-import datetime
+from datetime import datetime
 
 from django.utils import timezone
 
 from .types import BookingType
 from apps.cabins.models import Booking as BookingModel
 from apps.cabins.models import Cabin as CabinModel
-from .mail import send_admin_mail, calculate_booking_price, send_user_confirmation_mail
+from .mail import send_admin_reservation_mail, calculate_booking_price, send_user_reservation_mail
 
 
 class CreateBooking(graphene.Mutation):
@@ -102,45 +101,41 @@ class DeleteBooking(graphene.Mutation):
         return DeleteBooking(ok=ok)
 
 
+class EmailInput(graphene.InputObjectType):
+    firstname = graphene.String()
+    lastname = graphene.String()
+    email = graphene.String()
+    phone = graphene.String()
+    number_indok = graphene.Int()
+    number_external = graphene.Int()
+    cabin_ids = graphene.List(graphene.String)
+    check_in_date = graphene.String()
+    check_out_date = graphene.String()
+
+
 class SendEmail(graphene.Mutation):
     class Arguments:
-        firstname = graphene.String()
-        lastname = graphene.String()
-        email = graphene.String()
-        phone = graphene.String()
-        number_indok = graphene.Int()
-        number_external = graphene.Int()
-        cabin_ids = graphene.List(graphene.String)
-        check_in_date = graphene.String()
-        check_out_date = graphene.String()
-        range_length = graphene.Int()
+        email_input = EmailInput()
+        email_type = graphene.String()
 
     ok = graphene.Boolean()
 
-    def mutate(self, info, firstname, lastname,
-               email, phone, number_indok, number_external,
-               cabin_ids, check_in_date, check_out_date, range_length):
-
-        cabins = CabinModel.objects.all().filter(id__in=cabin_ids)
+    def mutate(self, info, email_input: EmailInput, email_type):
+        cabins = CabinModel.objects.all().filter(id__in=email_input.cabin_ids)
         chosen_cabins_names = [cabin.name for cabin in cabins]
         chosen_cabins_string = cabins[0].name if len(cabins) == 1 else ",".join(chosen_cabins_names[:-1]) + f" og {chosen_cabins_names[-1]}"
-        price = calculate_booking_price(cabins=cabins, number_indok=number_indok, number_external=number_external) * range_length
 
-        booking_info = {
-            "firstname": firstname,
-            "lastname": lastname,
-            "email": email,
-            "phone": phone,
-            "number_indok": number_indok,
-            "number_external": number_external,
-            "chosen_cabins_string": chosen_cabins_string,
-            "price": price,
-            "check_in_date": check_in_date,
-            "check_out_date": check_out_date,
-            "range_length": range_length
-        }
+        # Reformat check in and out dates
+        email_input.check_in_date = datetime.strptime(email_input.check_in_date, "%Y-%m-%d").strftime("%d-%m-%Y")
+        email_input.check_out_date = datetime.strptime(email_input.check_out_date, "%Y-%m-%d").strftime("%d-%m-%Y")
 
-        send_admin_mail(info, booking_info)
-        send_user_confirmation_mail(info, booking_info)
+        price = calculate_booking_price(email_input, cabins)
+        booking_info = {**email_input.__dict__, "chosen_cabins_string": chosen_cabins_string, "price": price}
+
+        if email_type == "reserve_booking":
+            send_admin_reservation_mail(info, booking_info)
+            send_user_reservation_mail(info, booking_info)
+        elif email_type == "confirm_booking":
+            pass
 
         return SendEmail(ok=True)
