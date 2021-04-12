@@ -5,8 +5,6 @@ import {
   CardActionArea,
   CardContent,
   CardMedia,
-  Chip,
-  Grid,
   makeStyles,
   Typography,
 } from "@material-ui/core";
@@ -131,19 +129,6 @@ const ListingItem: React.FC<{
                   {listing.description}
                 </ReactMarkdown>
               </Box>
-              <Grid container direction="row" justify="center" alignItems="center" spacing={2}>
-                {["intervju", "søknad", "case"].map((chip) => (
-                  <Grid item key={chip}>
-                    <Chip
-                      label={chip}
-                      size="small"
-                      style={{
-                        fontSize: 12,
-                      }}
-                    />
-                  </Grid>
-                ))}
-              </Grid>
             </Box>
           </CardContent>
         </CardActionArea>

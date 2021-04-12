@@ -6,9 +6,9 @@ from apps.forms.models import Form
 
 
 class Listing(models.Model):
-    description = models.CharField(max_length=2000, blank=True, default="")
     title = models.CharField(max_length=250)
     slug = models.SlugField(max_length=255, allow_unicode=True, blank=True, default="")
+    description = models.CharField(max_length=2000, blank=True, default="")
 
     start_datetime = models.DateTimeField(default=timezone.now)
     end_datetime = models.DateTimeField()
