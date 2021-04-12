@@ -136,7 +136,11 @@ const CabinBookingPage: NextPage = () => {
       setModalData({ ...modalData, displayPopUp: true });
     } else {
       if (activeStep == 2) {
-        send_email({ variables: generateAdminEmailInput(contactInfo, datePick, chosenCabins) });
+        console.log("contact info", contactInfo);
+        console.log("sending emails with", generateAdminEmailInput(contactInfo, datePick, chosenCabins));
+        send_email({
+          variables: { ...generateAdminEmailInput(contactInfo, datePick, chosenCabins), emailType: "reserve_booking" },
+        });
       }
       setActiveStep((prev) => prev + 1);
     }

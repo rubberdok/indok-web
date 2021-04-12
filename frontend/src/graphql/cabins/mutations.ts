@@ -37,19 +37,21 @@ export const SEND_EMAIL = gql`
     $cabinIds: [String]
     $checkInDate: String
     $checkOutDate: String
-    $rangeLength: Int
+    $emailType: String
   ) {
     sendEmail(
-      firstname: $firstName
-      lastname: $lastName
-      email: $email
-      phone: $phone
-      numberIndok: $numberIndok
-      numberExternal: $numberExternal
-      cabinIds: $cabinIds
-      checkInDate: $checkInDate
-      checkOutDate: $checkOutDate
-      rangeLength: $rangeLength
+      emailInput: {
+        firstname: $firstName
+        lastname: $lastName
+        email: $email
+        phone: $phone
+        numberIndok: $numberIndok
+        numberExternal: $numberExternal
+        cabinIds: $cabinIds
+        checkInDate: $checkInDate
+        checkOutDate: $checkOutDate
+      }
+      emailType: $emailType
     ) {
       ok
     }
