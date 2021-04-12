@@ -10,6 +10,8 @@ import ArrowForward from "@material-ui/icons/ArrowForward";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
+import ReactMarkdown from "react-markdown";
+import renderers from "@components/pages/listings/markdown/renderer";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -23,6 +25,9 @@ const useStyles = makeStyles((theme) => ({
     bottom: 0,
     padding: theme.spacing(2),
     zIndex: 100,
+  },
+  description: {
+    wordBreak: "break-word",
   },
 }));
 
@@ -53,7 +58,13 @@ const ListingPage: NextPage = () => {
                 <ListingTitle listing={data.listing} />
               </Grid>
               <Grid container item direction="row" justify="center">
-                <ListingBody body={data.listing.description} />
+                <ListingBody>
+                  <ReactMarkdown
+                    renderers={renderers}
+                  >
+                    {data.listing.description}
+                  </ReactMarkdown>
+                </ListingBody>
               </Grid>
             </Grid>
           </Container>
