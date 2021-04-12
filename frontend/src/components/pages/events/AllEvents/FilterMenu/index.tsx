@@ -4,8 +4,8 @@ import { Divider, IconButton, List, ListItem, ListItemText, makeStyles, Tooltip 
 import { Refresh, StarBorderRounded, StarRounded } from "@material-ui/icons";
 import React from "react";
 import { FilterQuery } from "..";
-import CategoryFilter from "./CategoryFilter";
-import DateTimeFilter from "./DateTimeFilter";
+import CategoryFilter from "./categoryFilter";
+import DateTimeFilter from "./dateTimeFilter";
 import OrganizationFilter from "./OrganizationFilter";
 
 interface Props {

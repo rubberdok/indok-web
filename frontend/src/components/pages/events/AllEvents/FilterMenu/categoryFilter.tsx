@@ -4,7 +4,7 @@ import { Category } from "@interfaces/events";
 import { Badge, Collapse, List, ListItem, ListItemText } from "@material-ui/core";
 import { ExpandLess, ExpandMore } from "@material-ui/icons";
 import React, { useState } from "react";
-import { FilterQuery } from "../..";
+import { FilterQuery } from "..";
 
 interface Props {
   filters: FilterQuery;
