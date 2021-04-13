@@ -28,5 +28,5 @@ class ListingType(DjangoObjectType):
         if parent.case:
             res.append("case")
         if parent.interview:
-            res.append("interview")
+            res.append("intervju")
         return res
