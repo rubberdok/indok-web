@@ -106,15 +106,33 @@ const CreateListing: React.FC<{
             <FormLabel component="legend">Opptaksprosessen</FormLabel>
             <FormGroup>
               <FormControlLabel
-                control={<Checkbox checked={listing.application} onChange={(e) => setListing({...listing, application: e.target.checked})} color="primary" />}
+                control={
+                  <Checkbox
+                    checked={listing.application}
+                    onChange={(e) => setListing({ ...listing, application: e.target.checked })}
+                    color="primary"
+                  />
+                }
                 label="Søknad"
               />
               <FormControlLabel
-                control={<Checkbox checked={listing.interview} onChange={(e) => setListing({...listing, interview: e.target.checked})} color="primary" />}
+                control={
+                  <Checkbox
+                    checked={listing.interview}
+                    onChange={(e) => setListing({ ...listing, interview: e.target.checked })}
+                    color="primary"
+                  />
+                }
                 label="Intervju"
               />
               <FormControlLabel
-                control={<Checkbox checked={listing.case} onChange={(e) => setListing({...listing, case: e.target.checked})} color="primary" />}
+                control={
+                  <Checkbox
+                    checked={listing.case}
+                    onChange={(e) => setListing({ ...listing, case: e.target.checked })}
+                    color="primary"
+                  />
+                }
                 label="Case"
               />
             </FormGroup>
