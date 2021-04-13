@@ -23,7 +23,6 @@ class BookingInput(graphene.InputObjectType):
     receiver_email = graphene.String()
     check_in = graphene.Date()
     check_out = graphene.Date()
-    typo = graphene.String()
     internal_participants = graphene.Int()
     external_participants = graphene.Int()
     cabins = graphene.List(graphene.Int)
