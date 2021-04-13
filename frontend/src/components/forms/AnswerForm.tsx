@@ -19,7 +19,7 @@ const AnswerForm: React.FC<{ formId: string }> = ({ formId }) => {
     variables: { formId: parseInt(formId) },
 
     // when the fetch completes, map the answers state to the form's questions
-    onCompleted({ form }) {
+    onCompleted: ({ form }) => {
       if (form) {
         setAnswers(form.questions.map((question) => ({ id: "", answer: "", question: question })));
       }

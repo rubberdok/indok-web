@@ -43,8 +43,8 @@ const OrganizationListings: React.FC<{
   const [createListingShown, showCreateListing] = useState(false);
 
   // state for whether to show the DeleteListing confirmation dialog
-  // if not null, contains the listing to be deleted for use by the dialog
-  const [listingToDelete, setListingToDelete] = useState<Listing | null>(null);
+  // if not undefined, contains the listing to be deleted for use by the dialog
+  const [listingToDelete, setListingToDelete] = useState<Listing | undefined>();
 
   const classes = useStyles();
 
@@ -61,7 +61,7 @@ const OrganizationListings: React.FC<{
         listing={listingToDelete}
         organizationId={parseInt(organization.id)}
         onClose={() => {
-          setListingToDelete(null);
+          setListingToDelete(undefined);
         }}
       />
       <Grid item container>

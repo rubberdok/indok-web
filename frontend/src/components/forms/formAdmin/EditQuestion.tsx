@@ -23,7 +23,7 @@ import { Save, Delete, Add, Close } from "@material-ui/icons";
  * props:
  * - the question to edit (inherited "activeQuestion" state from EditForm)
  * - setQuestion function to set question (inherited "setActiveQuestion" setState from EditForm)
- * - saveQuestion function to save this question to the database and set it as inactive
+ * - saveQuestion function to save this question to the database and then set it as inactive
  * - deleteQuestion mutation to delete the question
  */
 const EditQuestion: React.FC<{
