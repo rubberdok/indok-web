@@ -11,12 +11,20 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+/**
+ * component to show an overview of all open listings
+ * props:
+ * - handleClick function to reload the page on an error
+ */
 const Listings: React.FC<{
   handleClick: () => void;
 }> = ({ handleClick }) => {
+  // fetches all open listings
   const { loading, error, data } = useQuery<{ listings: Listing[] }>(LISTINGS);
+
   const classes = useStyles();
 
+  // if the data is fetched, renders a ListingItem for each listing
   return (
     <Grid container direction="row" spacing={2} className={classes.root} justify="center" alignItems="stretch">
       {loading && (
