@@ -21,6 +21,7 @@ import { useState } from "react";
 import dayjs from "dayjs";
 import Link from "next/link";
 import { Listing } from "@interfaces/listings";
+import { Delete, Add } from "@material-ui/icons";
 
 // cursor style on hovering over a listing
 const useStyles = makeStyles(() => ({
@@ -85,16 +86,17 @@ const OrganizationListings: React.FC<{
                           <TableRow className={classes.hover} hover>
                             <TableCell>{listing.title}</TableCell>
                             <TableCell>{dayjs(listing.deadline).format("HH:mm DD-MM-YYYY")}</TableCell>
-                            <TableCell>
+                            <TableCell size="small" align="right">
                               <Button
                                 variant="contained"
                                 color="primary"
+                                startIcon={<Delete />}
                                 onClick={(e) => {
                                   e.preventDefault();
                                   setListingToDelete(listing);
                                 }}
                               >
-                                Slett verv
+                                Slett
                               </Button>
                             </TableCell>
                           </TableRow>
@@ -109,6 +111,7 @@ const OrganizationListings: React.FC<{
               <Button
                 variant="contained"
                 color="primary"
+                startIcon={<Add />}
                 onClick={(e) => {
                   e.preventDefault();
                   showCreateListing(true);

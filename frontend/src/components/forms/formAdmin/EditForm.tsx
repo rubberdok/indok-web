@@ -6,6 +6,7 @@ import { FORM } from "@graphql/forms/queries";
 import { Question, QuestionVariables, Form } from "@interfaces/forms";
 import { Button, Grid, Typography, Card, CardContent } from "@material-ui/core";
 import { useState } from "react";
+import { Add } from "@material-ui/icons";
 
 /**
  * component to edit forms (for example the applications to listings)
@@ -154,6 +155,7 @@ const EditForm: React.FC<{ formId: string }> = ({ formId }) => {
                 fullWidth
                 variant="contained"
                 color="primary"
+                startIcon={<Add />}
                 onClick={(e) => {
                   e.preventDefault();
                   createQuestion({

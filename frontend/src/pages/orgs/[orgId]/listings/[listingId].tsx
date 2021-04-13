@@ -5,16 +5,17 @@ import { Listing } from "@interfaces/listings";
 import { LISTING_WITH_RESPONDERS } from "@graphql/listings/queries";
 import Link from "next/link";
 import Layout from "@components/Layout";
-import { makeStyles, Grid, Tabs, Tab, Container, Card, CardContent } from "@material-ui/core";
+import { makeStyles, Grid, Tabs, Tab, Container, Card, CardContent, Button, Typography, Box } from "@material-ui/core";
 import { useState } from "react";
 import { User } from "@interfaces/users";
 import FormAnswers from "@components/forms/formAdmin/FormAnswers";
 import OrganizationListing from "@components/pages/listings/organization/OrganizationListing";
+import { ArrowBack } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
   container: {
-    padding: theme.spacing(4),
-    paddingBottom: theme.spacing(2),
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1),
   },
 }));
 
@@ -41,26 +42,47 @@ const ListingAdminPage: NextPage = () => {
   return (
     <Layout>
       <Container className={classes.container}>
-        <Link href={`/orgs/${orgId}`}>Tilbake</Link>
-        {data && (
-          <Grid container direction="row" justify="center" spacing={1}>
-            <Grid item xs={2}>
-              <Card>
-                <Tabs
-                  orientation="vertical"
-                  variant="scrollable"
-                  value={selectedApplicant}
-                  onChange={(_, applicant) => {
-                    selectApplicant(applicant);
-                  }}
-                >
-                  <Tab value={null} label="Se verv og søknad" />
-                  {data.listing.form?.responders.map((responder, index) => (
-                    <Tab key={index} value={responder} label={`${responder.firstName} ${responder.lastName}`} />
-                  ))}
-                </Tabs>
-              </Card>
+        <Grid container direction="row" justify="center" spacing={1} xs={12} sm={12} md={12}>
+          <Grid item>
+            <Grid container direction="column" spacing={1}>
+              <Grid item>
+                <Link href={`/orgs/${orgId}`} passHref>
+                  <Button fullWidth variant="contained" startIcon={<ArrowBack />}>
+                    Tilbake
+                  </Button>
+                </Link>
+              </Grid>
+              <Grid item>
+                <Card>
+                  <Tabs
+                    orientation="vertical"
+                    variant="scrollable"
+                    value={selectedApplicant}
+                    onChange={(_, applicant) => {
+                      selectApplicant(applicant);
+                    }}
+                  >
+                    <Tab value={null} label="Verv & søknad" />
+                    <Box textAlign="center">
+                      <Typography variant="h5">Søkere</Typography>
+                    </Box>
+                    {data && (data.listing.form?.responders ?? []).length > 0 ? (
+                      <>
+                        {data.listing.form?.responders.map((responder, index) => (
+                          <Tab key={index} value={responder} label={`${responder.firstName} ${responder.lastName}`} />
+                        ))}
+                      </>
+                    ) : (
+                      <CardContent>
+                        <Typography>Ingen søkere enda.</Typography>
+                      </CardContent>
+                    )}
+                  </Tabs>
+                </Card>
+              </Grid>
             </Grid>
+          </Grid>
+          {data && (
             <Grid item xs={8}>
               {selectedApplicant ? (
                 <>
@@ -72,8 +94,8 @@ const ListingAdminPage: NextPage = () => {
                 <OrganizationListing listing={data.listing} />
               )}
             </Grid>
-          </Grid>
-        )}
+          )}
+        </Grid>
       </Container>
     </Layout>
   );
