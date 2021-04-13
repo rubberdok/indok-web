@@ -18,21 +18,72 @@ const EditForm: React.FC<{ formId: string }> = ({ formId }) => {
     variables: { formId: formId },
   });
 
-  //state to manage which question on the form is currently being edited (ensures one at a time)
-  const [activeQuestion, setActiveQuestion] = useState<Question | undefined>();
-
-  // mutation to create a new question
-  const [createQuestion] = useMutation<{ createQuestion: { question: Question } }>(CREATE_QUESTION, {
-    // updates the cache upon creating the question, keeping the client consistent with the database
+  // mutation to update a question (and its options)
+  const [updateQuestion] = useMutation<{ updateQuestion: { question: Question } }, QuestionVariables>(UPDATE_QUESTION, {
+    // updates the cache upon updating the question, keeping the client consistent with the database
     update: (cache, { data }) => {
-      const newQuestion = data?.createQuestion.question;
-      // reads the cached form to which to add the question
+      const newQuestion = data?.updateQuestion.question;
+      // reads the cached form on which to update the question
       const cachedForm = cache.readQuery<{ form: Form }>({
         query: FORM,
         variables: { formId: formId },
       });
       if (cachedForm && newQuestion) {
-        // writes the new question to the form
+        // overwrites the outdated question with the updated one
+        cache.writeQuery({
+          query: FORM,
+          variables: { formId: formId },
+          data: {
+            form: {
+              questions: cachedForm.form.questions.map((question) =>
+                question.id === newQuestion.id ? newQuestion : question
+              ),
+            },
+          },
+        });
+      }
+    },
+  });
+
+  // state to manage the question on the form currently being edited
+  // undefined if no question is currently being edited
+  const [activeQuestion, setActiveQuestion] = useState<Question | undefined>();
+
+  // function to update the current active question to the database and then set a new one
+  const switchActiveQuestion = (question: Question | undefined) => {
+    if (activeQuestion) {
+      updateQuestion({
+        variables: {
+          id: activeQuestion.id,
+          question: activeQuestion.question,
+          description: activeQuestion.description,
+          questionType: activeQuestion.questionType,
+          mandatory: activeQuestion.mandatory,
+          options:
+            activeQuestion.questionType === "CHECKBOXES" ||
+            activeQuestion.questionType === "MULTIPLE_CHOICE" ||
+            activeQuestion.questionType === "DROPDOWN"
+              ? activeQuestion.options.map((option) => ({
+                  answer: option.answer,
+                  ...(option.id ? { id: option.id } : {}),
+                }))
+              : [],
+        },
+      });
+    }
+    setActiveQuestion(question);
+  };
+
+  // mutation to create a new question
+  const [createQuestion] = useMutation<{ createQuestion: { question: Question } }>(CREATE_QUESTION, {
+    // updates the cache upon creating the question
+    update: (cache, { data }) => {
+      const newQuestion = data?.createQuestion.question;
+      const cachedForm = cache.readQuery<{ form: Form }>({
+        query: FORM,
+        variables: { formId: formId },
+      });
+      if (cachedForm && newQuestion) {
         cache.writeQuery({
           query: FORM,
           variables: { formId: formId },
@@ -42,6 +93,11 @@ const EditForm: React.FC<{ formId: string }> = ({ formId }) => {
             },
           },
         });
+      }
+    },
+    onCompleted: ({ createQuestion }) => {
+      if (createQuestion) {
+        switchActiveQuestion(createQuestion.question);
       }
     },
   });
@@ -62,31 +118,6 @@ const EditForm: React.FC<{ formId: string }> = ({ formId }) => {
           data: {
             form: {
               questions: cachedForm.form.questions.filter((question) => question.id !== deletedId),
-            },
-          },
-        });
-      }
-    },
-  });
-
-  // mutation to update a question (and its options)
-  const [updateQuestion] = useMutation<{ updateQuestion: { question: Question } }, QuestionVariables>(UPDATE_QUESTION, {
-    // updates the cache upon updating the question
-    update: (cache, { data }) => {
-      const newQuestion = data?.updateQuestion.question;
-      const cachedForm = cache.readQuery<{ form: Form }>({
-        query: FORM,
-        variables: { formId: formId },
-      });
-      if (cachedForm && newQuestion) {
-        cache.writeQuery({
-          query: FORM,
-          variables: { formId: formId },
-          data: {
-            form: {
-              questions: cachedForm.form.questions.map((question) =>
-                question.id === newQuestion.id ? newQuestion : question
-              ),
             },
           },
         });
@@ -116,35 +147,15 @@ const EditForm: React.FC<{ formId: string }> = ({ formId }) => {
               <Grid item key={question.id}>
                 <Card>
                   <CardContent>
-                    {question === activeQuestion ? (
+                    {question.id === activeQuestion?.id ? (
                       <EditQuestion
-                        oldQuestion={question}
-                        updateQuestion={updateQuestion}
-                        deleteQuestion={deleteQuestion}
-                        setInactive={() => setActiveQuestion(undefined)}
+                        question={activeQuestion}
+                        setQuestion={(question) => setActiveQuestion(question)}
+                        saveQuestion={() => switchActiveQuestion(undefined)}
+                        deleteQuestion={(arg) => deleteQuestion(arg)}
                       />
                     ) : (
-                      <QuestionPreview
-                        question={question}
-                        setActive={() => {
-                          if (activeQuestion) {
-                            updateQuestion({
-                              variables: {
-                                id: activeQuestion.id,
-                                question: activeQuestion.question,
-                                description: activeQuestion.description,
-                                questionType: activeQuestion.questionType,
-                                mandatory: activeQuestion.mandatory,
-                                options: activeQuestion.options.map((option) => ({
-                                  answer: option.answer,
-                                  ...(option.id ? { id: option.id } : {}),
-                                })),
-                              },
-                            });
-                          }
-                          setActiveQuestion(question);
-                        }}
-                      />
+                      <QuestionPreview question={question} setActive={() => switchActiveQuestion(question)} />
                     )}
                   </CardContent>
                 </Card>
