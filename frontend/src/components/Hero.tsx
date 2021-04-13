@@ -1,4 +1,4 @@
-import { Box, Button, Container, Grid, Typography } from "@material-ui/core";
+import { Box, Button, Container, Grid, Hidden, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import Link from "next/link";
@@ -44,7 +44,7 @@ const organizations = [
   },
 ];
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   hero: {
     color: "black",
   },
@@ -64,7 +64,9 @@ const useStyles = makeStyles(() => ({
     height: "100%",
   },
   container: {
-    maxWidth: "90vw",
+    [theme.breakpoints.up("md")]: {
+      maxWidth: "90vw",
+    },
     height: "70vh",
     paddingTop: "25vh",
   },
@@ -136,18 +138,20 @@ const Hero: React.FC = () => {
   return (
     <Box id="back-to-top-anchor" height="100vh" position="relative">
       <Grid container style={{ height: "100%", position: "absolute", zIndex: -1, background: "black" }}>
-        <Grid item xs={8} className={classes.relative}>
-          {organizations.map((item) => (
-            <Box
-              key={item.id}
-              className={[classes.orgBg, isShown == item.img ? "" : classes.hide].join(" ")}
-              position="absolute"
-              width="100%"
-              height="100%"
-              style={{ backgroundImage: "url(" + item.img + ")" }}
-              zIndex="-1"
-            ></Box>
-          ))}
+        <Grid item xs={12} md={8} className={classes.relative}>
+          <Hidden smDown>
+            {organizations.map((item) => (
+              <Box
+                key={item.id}
+                className={[classes.orgBg, isShown == item.img ? "" : classes.hide].join(" ")}
+                position="absolute"
+                width="100%"
+                height="100%"
+                style={{ backgroundImage: "url(" + item.img + ")" }}
+                zIndex="-1"
+              ></Box>
+            ))}
+          </Hidden>
           <Box
             className={[classes.orgBg, isShown == "" ? "" : classes.hide].join(" ")}
             position="absolute"
@@ -157,15 +161,17 @@ const Hero: React.FC = () => {
             style={{ backgroundImage: "url(img/hero.jpg)" }}
           ></Box>
         </Grid>
-        <Grid item xs={4} className={classes.relative}>
-          <Box position="absolute" width="100%" height="100%" style={{ background: "white" }} zIndex="-3"></Box>
+        <Hidden smDown>
+          <Grid item xs={4} className={classes.relative}>
+            <Box position="absolute" width="100%" height="100%" style={{ background: "white" }} zIndex="-3"></Box>
 
-          <Box className={classes.nth} position="absolute" width="100%" height="100%" zIndex="-2"></Box>
-        </Grid>
+            <Box className={classes.nth} position="absolute" width="100%" height="100%" zIndex="-2"></Box>
+          </Grid>
+        </Hidden>
       </Grid>
       <Container className={classes.container}>
         <Grid container className={classes.height}>
-          <Grid item xs={5}>
+          <Grid item xs={12} md={5}>
             <Box
               style={{ color: "white" }}
               height="100%"
@@ -177,7 +183,10 @@ const Hero: React.FC = () => {
               <Typography variant="overline">Foreningen for studentene ved</Typography>
               <Fade duration={700} cascade triggerOnce direction="up">
                 <Typography style={{ color: "white" }} variant="h2">
-                  Industriell Økonomi <br />
+                  Industriell Økonomi{" "}
+                  <Hidden smDown>
+                    <br />
+                  </Hidden>
                   og Teknologiledelse
                 </Typography>
                 <br />
@@ -199,28 +208,30 @@ const Hero: React.FC = () => {
               </Fade>
             </Box>
           </Grid>
-          <Grid item xs={7}>
-            <Box height="100%" width="100%" display="flex" flexDirection="column" alignItems="flex-end">
-              <Typography variant="overline">Linjeforeningene våre</Typography>
-              <Fade damping={0.1} cascade triggerOnce direction="up">
-                {organizations.map((item) => (
-                  <a
-                    rel="noreferrer"
-                    onMouseEnter={() => setIsShown(item.img)}
-                    onMouseLeave={() => setIsShown("")}
-                    href={item.link}
-                    className={classes.orgLink}
-                    key={item.id}
-                  >
-                    <Box display="flex" alignItems="center">
-                      <Typography variant="h2">{item.title}</Typography>
-                      <NavigateNextIcon fontSize="large" className={classes.orgIcon} />
-                    </Box>
-                  </a>
-                ))}
-              </Fade>
-            </Box>
-          </Grid>
+          <Hidden smDown>
+            <Grid item xs={7}>
+              <Box height="100%" width="100%" display="flex" flexDirection="column" alignItems="flex-end">
+                <Typography variant="overline">Linjeforeningene våre</Typography>
+                <Fade damping={0.1} cascade triggerOnce direction="up">
+                  {organizations.map((item) => (
+                    <a
+                      rel="noreferrer"
+                      onMouseEnter={() => setIsShown(item.img)}
+                      onMouseLeave={() => setIsShown("")}
+                      href={item.link}
+                      className={classes.orgLink}
+                      key={item.id}
+                    >
+                      <Box display="flex" alignItems="center">
+                        <Typography variant="h2">{item.title}</Typography>
+                        <NavigateNextIcon fontSize="large" className={classes.orgIcon} />
+                      </Box>
+                    </a>
+                  ))}
+                </Fade>
+              </Box>
+            </Grid>
+          </Hidden>
         </Grid>
       </Container>
     </Box>

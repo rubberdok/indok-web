@@ -3,9 +3,10 @@ import json
 import jwt
 import requests
 from django.contrib.auth import get_user_model
-from django.core.exceptions import PermissionDenied, ValidationError
+from django.core.exceptions import ValidationError
 from requests.auth import HTTPBasicAuth
 from django.conf import settings
+from django.utils import timezone
 
 UserModel = get_user_model()
 
@@ -192,6 +193,7 @@ class DataportenAuth:
             # User exists, update user info
             print(f"\nUser {username} exists, updating in the database")
             user.id_token = id_token
+            user.last_login = timezone.now()
             user.save()
             enrolled = True
 
@@ -209,6 +211,7 @@ class DataportenAuth:
                 first_name=name,
                 feide_userid=feide_userid,
                 id_token=id_token,
+                last_login=timezone.now(),
             )
             user.save()
         return user, enrolled, None

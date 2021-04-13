@@ -1,5 +1,6 @@
 import { createMuiTheme } from "@material-ui/core/styles";
 import { Shadows } from "@material-ui/core/styles/shadows";
+import breakpoints from "./breakpoints";
 import typography from "./typography";
 
 const theme = createMuiTheme({
@@ -97,13 +98,7 @@ const theme = createMuiTheme({
     borderRadius: 0,
   },
   breakpoints: {
-    values: {
-      xs: 0,
-      sm: 600,
-      md: 960,
-      lg: 1300,
-      xl: 1920,
-    },
+    ...breakpoints,
   },
   shadows: Array(25).fill("none") as Shadows,
 });

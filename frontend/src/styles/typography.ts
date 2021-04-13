@@ -1,3 +1,8 @@
+import breakpoints from "./breakpoints";
+
+//TODO: convert all fontsizes from px to root em, then make the website root fontsize responsive
+//TODO: make fontsizes follow correct type hierarchy
+
 const typography = {
   fontFamily: ["Open Sans", "sans-serif"].join(","),
   h1: {
@@ -10,11 +15,19 @@ const typography = {
     fontSize: 48,
     fontWeight: 700,
     lineHeight: "3.5rem",
+
+    ["@media (max-width: " + breakpoints.values.sm + "px)"]: {
+      fontSize: 40,
+    },
   },
   h3: {
     fontFamily: ["Playfair Display", "sans-serif"].join(","),
     fontSize: 48,
     fontWeight: 500,
+
+    ["@media (max-width: " + breakpoints.values.sm + "px)"]: {
+      fontSize: 40,
+    },
   },
   h4: {
     fontFamily: ["Playfair Display", "sans-serif"].join(","),

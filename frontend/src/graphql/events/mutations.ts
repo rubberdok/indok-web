@@ -33,6 +33,7 @@ export const CREATE_EVENT = gql`
         hasExtraInformation
         bindingSignup
         contactEmail
+        allowedGradeYears
       }
       ok
     }
@@ -72,6 +73,7 @@ export const UPDATE_EVENT = gql`
         hasExtraInformation
         bindingSignup
         contactEmail
+        allowedGradeYears
       }
       ok
     }
@@ -90,6 +92,16 @@ export const EVENT_SIGN_OFF = gql`
   mutation EventSignOff($eventId: ID!) {
     eventSignOff(eventId: $eventId) {
       isFull
+    }
+  }
+`;
+
+export const ADMIN_EVENT_SIGN_OFF = gql`
+  mutation AdminEventSignOff($eventId: ID!, $userId: ID!) {
+    adminEventSignOff(eventId: $eventId, userId: $userId) {
+      event {
+        id
+      }
     }
   }
 `;
