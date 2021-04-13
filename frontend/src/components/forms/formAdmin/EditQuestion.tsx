@@ -24,14 +24,14 @@ import { Save, Delete, Add, Close } from "@material-ui/icons";
  * - the question to edit (inherited "activeQuestion" state from EditForm)
  * - setQuestion function to set question (inherited "setActiveQuestion" setState from EditForm)
  * - saveQuestion function to save this question to the database and then set it as inactive
- * - deleteQuestion mutation to delete the question
+ * - showDeleteDialog function to show the DeleteQuestion confirmation dialog
  */
 const EditQuestion: React.FC<{
   question: Question;
   setQuestion: (question: Question | undefined) => void;
   saveQuestion: () => void;
-  deleteQuestion: (arg: { variables: { id: string } }) => void;
-}> = ({ question, setQuestion, saveQuestion, deleteQuestion }) => (
+  showDeleteDialog: () => void;
+}> = ({ question, setQuestion, saveQuestion, showDeleteDialog }) => (
   <Grid container direction="column" spacing={1}>
     <Grid item>
       <TextField
@@ -61,7 +61,7 @@ const EditQuestion: React.FC<{
               let firstOption: Option | undefined = undefined;
               if (
                 (questionType === "CHECKBOXES" || questionType === "MULTIPLE_CHOICE" || questionType === "DROPDOWN") &&
-                question.options.length === 0
+                (question.options ?? []).length === 0
               ) {
                 firstOption = { id: "", answer: "" };
               }
@@ -179,10 +179,7 @@ const EditQuestion: React.FC<{
           startIcon={<Delete />}
           onClick={(e) => {
             e.preventDefault();
-            setQuestion(undefined);
-            deleteQuestion({
-              variables: { id: question.id },
-            });
+            showDeleteDialog();
           }}
         >
           Slett

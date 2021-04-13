@@ -1,12 +1,13 @@
 import { useMutation, useQuery } from "@apollo/client";
 import EditQuestion from "@components/forms/formAdmin/EditQuestion";
 import QuestionPreview from "@components/forms/formAdmin/QuestionPreview";
-import { CREATE_QUESTION, DELETE_QUESTION, UPDATE_QUESTION } from "@graphql/forms/mutations";
+import { CREATE_QUESTION, UPDATE_QUESTION } from "@graphql/forms/mutations";
 import { FORM } from "@graphql/forms/queries";
 import { Question, QuestionVariables, Form } from "@interfaces/forms";
 import { Button, Grid, Typography, Card, CardContent } from "@material-ui/core";
 import { useState } from "react";
 import { Add } from "@material-ui/icons";
+import DeleteQuestion from "@components/forms/formAdmin/DeleteQuestion";
 
 /**
  * component to edit forms (for example the applications to listings)
@@ -48,6 +49,9 @@ const EditForm: React.FC<{ formId: string }> = ({ formId }) => {
   // state to manage the question on the form currently being edited
   // undefined if no question is currently being edited
   const [activeQuestion, setActiveQuestion] = useState<Question | undefined>();
+
+  // state for whether to show the DeleteQuestion confirmation dialog
+  const [deleteDialogShown, showDeleteDialog] = useState<boolean>();
 
   // function to update the current active question to the database and then set a new one
   const switchActiveQuestion = (question: Question | undefined) => {
@@ -102,29 +106,6 @@ const EditForm: React.FC<{ formId: string }> = ({ formId }) => {
     },
   });
 
-  // mutation to delete a question
-  const [deleteQuestion] = useMutation<{ deleteQuestion: { deletedId: string } }>(DELETE_QUESTION, {
-    // updates the cache upon deleting the question
-    update: (cache, { data }) => {
-      const cachedForm = cache.readQuery<{ form: Form }>({
-        query: FORM,
-        variables: { formId: formId },
-      });
-      const deletedId = data?.deleteQuestion.deletedId;
-      if (cachedForm && deletedId) {
-        cache.writeQuery({
-          query: FORM,
-          variables: { formId: formId },
-          data: {
-            form: {
-              questions: cachedForm.form.questions.filter((question) => question.id !== deletedId),
-            },
-          },
-        });
-      }
-    },
-  });
-
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error</p>;
 
@@ -134,6 +115,13 @@ const EditForm: React.FC<{ formId: string }> = ({ formId }) => {
     <>
       {data && (
         <>
+          {deleteDialogShown && activeQuestion && (
+            <DeleteQuestion
+              questionId={activeQuestion.id}
+              formId={data.form.id}
+              onClose={() => showDeleteDialog(false)}
+            />
+          )}
           <Grid item container direction="column" spacing={1}>
             <Grid item>
               <Card>
@@ -152,7 +140,7 @@ const EditForm: React.FC<{ formId: string }> = ({ formId }) => {
                         question={activeQuestion}
                         setQuestion={(question) => setActiveQuestion(question)}
                         saveQuestion={() => switchActiveQuestion(undefined)}
-                        deleteQuestion={(arg) => deleteQuestion(arg)}
+                        showDeleteDialog={() => showDeleteDialog(true)}
                       />
                     ) : (
                       <QuestionPreview question={question} setActive={() => switchActiveQuestion(question)} />
