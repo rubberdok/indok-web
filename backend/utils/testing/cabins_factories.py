@@ -12,10 +12,11 @@ class BookingFactory(DjangoModelFactory):
 
     firstname = Faker(["no-NO"]).first_name()
     surname = Faker(["no-NO"]).last_name()
-    phone = factory.LazyAttribute(lambda obj: random.randint(40039737, 49939737))
+    phone = "".join([random.choice(["4", "9"]), str(random.randint(1000000, 9999999))])
     receiver_email = Faker(["no-NO"]).ascii_company_email()
-    price = factory.LazyAttribute(lambda obj: random.randint(1000, 5000))
     timestamp = timezone.now()
+    internal_participants = random.randint(1, 5)
+    external_participants = random.randint(0, 5)
 
     @factory.post_generation
     def cabins(self, create, extracted, **kwargs):

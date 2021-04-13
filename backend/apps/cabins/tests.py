@@ -15,20 +15,24 @@ class CabinsBaseTestCase(ExtendedGraphQLTestCase):
         self.now = timezone.now()
         self.bjornen_cabin = Cabin.objects.get(name="Bjørnen")
         self.oksen_cabin = Cabin.objects.get(name="Oksen")
-        self.firstBooking = BookingFactory(
+        self.first_booking = BookingFactory(
             check_in=self.now,
             check_out=self.now + datetime.timedelta(days=4),
             cabins=[self.bjornen_cabin],
         )
-        self.secondBooking = BookingFactory(
+        self.second_booking = BookingFactory(
             check_in=self.now + datetime.timedelta(days=6),
             check_out=self.now + datetime.timedelta(days=12),
             cabins=[self.oksen_cabin, self.bjornen_cabin],
         )
-        self.thirdBooking = BookingFactory(
+        self.third_booking = BookingFactory(
             check_in=self.now + datetime.timedelta(days=24),
             check_out=self.now + datetime.timedelta(days=30),
             cabins=[self.oksen_cabin],
+        )
+        self.no_conflict_booking = BookingFactory.build(
+            check_in=self.now + datetime.timedelta(days=50),
+            check_out=self.now + datetime.timedelta(days=52),
         )
 
 
@@ -96,114 +100,113 @@ class CabinsMutationsTestCase(CabinsBaseTestCase):
     Testing all mutations for cabins
     """
 
-    def test_create_booking(self):
-        new_fake_booking = BookingFactory.build(
-            check_in=self.now + datetime.timedelta(days=50),
-            check_out=self.now + datetime.timedelta(days=52),
-        )
+    def create_booking(self, booking, cabins_field):
         query = f"""
-            mutation CreateBooking {{
-                createBooking(
-                bookingData: {{
-                    firstname: \"{new_fake_booking.firstname}\",
-                    surname: \"{new_fake_booking.surname}\",
-                    phone: {new_fake_booking.phone},
-                    receiverEmail: \"{new_fake_booking.receiver_email}\",
-                    checkIn: \"{new_fake_booking.check_in.strftime("%Y-%m-%d")}\",
-                    checkOut: \"{new_fake_booking.check_out.strftime("%Y-%m-%d")}\",
-                    price: {new_fake_booking.price},
-                    cabins: [{self.oksen_cabin.id}],
+                mutation CreateBooking {{
+                    createBooking(
+                        bookingData: {{
+                            firstname: \"{booking.firstname}\",
+                            surname: \"{booking.surname}\",
+                            phone: \"{booking.phone}\",
+                            receiverEmail: \"{booking.receiver_email}\",
+                            checkIn: \"{booking.check_in.strftime("%Y-%m-%d")}\",
+                            checkOut: \"{booking.check_out.strftime("%Y-%m-%d")}\",
+                            internalParticipants: {booking.internal_participants},
+                            externalParticipants: {booking.external_participants},
+                            cabins: [{cabins_field}],
+                            }}
+                        ) {{
+                      ok
+                        }}
                     }}
-                ) {{
-                  ok
-                }}
-                }}
-            """
-        response = self.query(query)
+                """
+        return self.query(query)
 
-        # This validates the status code and if you get errors
+    def check_create_with_error(self, response):
+        self.assertResponseHasErrors(response)
+        # Check that booking is not created
+        self.assertEqual(3, len(Booking.objects.all()))
+
+    def test_create_booking(self):
+        response = self.create_booking(
+            self.no_conflict_booking, f"{self.bjornen_cabin.id}"
+        )
         self.assertResponseNoErrors(response)
-
         # Check that booking is created
-        self.assertEqual(
-            1,
-            len(
-                Booking.objects.filter(
-                    firstname=new_fake_booking.firstname, phone=new_fake_booking.phone
-                )
-            ),
+        self.assertTrue(
+            Booking.objects.filter(
+                firstname=self.no_conflict_booking.firstname,
+                phone=self.no_conflict_booking.phone,
+            ).exists()
         )
 
     def test_add_invalid_booking(self):
         # Try to add booking before current time
-        query = f"""
-            mutation CreateBooking {{
-                createBooking(
-                bookingData: {{
-                    firstname: \"{self.firstBooking.firstname}\",
-                    surname: \"{self.firstBooking.surname}\",
-                    phone: {self.firstBooking.phone},
-                    receiverEmail: \"{self.firstBooking.receiver_email}\",
-                    checkIn: \"{(timezone.now()-datetime.timedelta(days=10)).strftime("%Y-%m-%d")}\",
-                    checkOut: \"{(timezone.now()-datetime.timedelta(days=5)).strftime("%Y-%m-%d")}\",
-                    price: {self.firstBooking.price},
-                    cabins: [{self.bjornen_cabin.id}],
-                }}
-                ) {{
-                  ok
-                }}
-            }}
-        """
-        response = self.query(query)
-        # This validates the status code and if you get errors
-        self.assertResponseHasErrors(response)
-        # Check that booking is not created
-        self.assertEqual(3, len(Booking.objects.all()))
+        self.first_booking.check_in = timezone.now() - datetime.timedelta(days=10)
+        self.first_booking.check_in = timezone.now() - datetime.timedelta(days=5)
+        response = self.create_booking(self.first_booking, f"{self.bjornen_cabin.id}")
+        self.check_create_with_error(response)
 
         # Try to add booking where checkin is after checkout
-        query = f"""
-            mutation CreateBooking {{
-                createBooking(
-                    bookingData: {{
-                        firstname: \"{self.firstBooking.firstname}\",
-                        surname: \"{self.firstBooking.surname}\",
-                        phone: {self.firstBooking.phone},
-                        receiverEmail: \"{self.firstBooking.receiver_email}\",
-                        checkIn: \"{(timezone.now() + datetime.timedelta(days=10)).strftime("%Y-%m-%d")}\",
-                        checkOut: \"{(timezone.now()).strftime("%Y-%m-%d")}\",
-                        price: {self.firstBooking.price},
-                        cabins: [{self.bjornen_cabin.id}],
-                    }}
-                ) {{
-                  ok
-                }}
-            }}
-        """
-        response = self.query(query)
-        # This validates the status code and if you get errors
-        self.assertResponseHasErrors(response)
-        # Check that booking is not created
-        self.assertEqual(3, len(Booking.objects.all()))
+        self.first_booking.check_in = timezone.now() + datetime.timedelta(days=10)
+        self.first_booking.check_in = timezone.now()
+        response = self.create_booking(self.first_booking, f"{self.bjornen_cabin.id}")
+        self.check_create_with_error(response)
 
         # Try to add booking within the same time as another booking
-        query = f"""
-            mutation CreateBooking {{
-                createBooking(
-                    bookingData: {{
-                        firstname: \"{self.firstBooking.firstname}\",
-                        surname: \"{self.firstBooking.surname}\",
-                        phone: {self.firstBooking.phone},
-                        receiverEmail: \"{self.firstBooking.receiver_email}\",
-                        checkIn: \"{self.firstBooking.check_in.strftime("%Y-%m-%d")}\",
-                        checkOut: \"{self.firstBooking.check_out.strftime("%Y-%m-%d")}\",
-                        price: {self.firstBooking.price},
-                        cabins: [{self.bjornen_cabin.id}],
-                    }}
-                ) {{
-                  ok
-                }}
-            }}
-        """
-        response = self.query(query)
+        response = self.create_booking(self.third_booking, f"{self.oksen_cabin.id}")
         # This validates the status code and if you get errors
-        self.assertResponseHasErrors(response)
+        self.check_create_with_error(response)
+
+    def test_invalid_email(self):
+        self.no_conflict_booking.receiver_email = "oda.norwegian123.no"
+        response = self.create_booking(
+            self.no_conflict_booking, f"{self.oksen_cabin.id}"
+        )
+        self.check_create_with_error(response)
+
+    def test_empty_firstname(self):
+        # Try to add a booking with no first name variable
+        self.no_conflict_booking.firstname = ""
+        response = self.create_booking(
+            self.no_conflict_booking, f"{self.oksen_cabin.id}"
+        )
+        self.check_create_with_error(response)
+
+    def test_empty_surname(self):
+        # Try to add a booking with no last name variable
+        self.no_conflict_booking.surname = ""
+        response = self.create_booking(
+            self.no_conflict_booking, f"{self.oksen_cabin.id}"
+        )
+        self.check_create_with_error(response)
+
+    def test_phone_number(self):
+        # Try to make cabin with invalid phone number
+        self.no_conflict_booking.phone = "26832732"
+        response = self.create_booking(
+            self.no_conflict_booking, f"{self.oksen_cabin.id}"
+        )
+        self.check_create_with_error(response)
+
+    def test_sum_of_participants_cannot_exceed_limit(self):
+        # Try to add a booking with more participants than total capacity of cabin
+        self.no_conflict_booking.internal_participants = 15
+        self.no_conflict_booking.external_participants = 7
+        response = self.create_booking(
+            self.no_conflict_booking, f"{self.oksen_cabin.id}"
+        )
+        self.check_create_with_error(response)
+        # Try to add a booking with more participants than total capacity of cabins
+        self.no_conflict_booking.internal_participants = 19
+        self.no_conflict_booking.external_participants = 21
+        response = self.create_booking(
+            self.no_conflict_booking, f"{self.oksen_cabin.id}, {self.bjornen_cabin}"
+        )
+        self.check_create_with_error(response)
+
+    def test_no_checkin_and_checkout_on_same_day(self):
+        self.first_booking.check_in = timezone.now()
+        self.first_booking.check_in = timezone.now()
+        response = self.create_booking(self.first_booking, f"{self.bjornen_cabin.id}")
+        self.check_create_with_error(response)
