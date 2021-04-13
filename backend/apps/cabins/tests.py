@@ -131,7 +131,6 @@ class CabinsMutationsTestCase(CabinsBaseTestCase):
         response = self.create_booking(
             self.no_conflict_booking, f"{self.bjornen_cabin.id}"
         )
-        print(json.loads(response.content))
         self.assertResponseNoErrors(response)
         # Check that booking is created
         self.assertTrue(

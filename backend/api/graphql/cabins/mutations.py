@@ -6,14 +6,7 @@ from .types import BookingType
 from apps.cabins.models import Booking as BookingModel
 from apps.cabins.models import Cabin as CabinModel
 from .mail import send_mails
-from .validators import (
-    checkin_validation,
-    email_validation,
-    name_validation,
-    norwegian_phone_number_validation,
-    strip_phone_number,
-    participants_validation,
-)
+from .validators import create_booking_validation
 
 
 class BookingInput(graphene.InputObjectType):
@@ -42,18 +35,7 @@ class CreateBooking(graphene.Mutation):
     ):
 
         # Validations
-        checkin_validation(
-            booking_data["check_in"], booking_data["check_out"], booking_data["cabins"]
-        )
-        email_validation(booking_data["receiver_email"])
-        name_validation(booking_data["firstname"], booking_data["surname"])
-        booking_data["phone"] = strip_phone_number(booking_data["phone"])
-        norwegian_phone_number_validation(booking_data["phone"])
-        participants_validation(
-            booking_data["internal_participants"],
-            booking_data["internal_participants"],
-            booking_data["cabins"],
-        )
+        create_booking_validation(booking_data)
 
         booking = BookingModel()
         for input_field, input_value in booking_data.items():
@@ -61,7 +43,7 @@ class CreateBooking(graphene.Mutation):
                 setattr(booking, input_field, input_value)
         booking.timestamp = timezone.now()
         booking.save()
-        booking.cabins.set(CabinModel.objects.filter(id__in=booking_data.get("cabins")))
+        booking.cabins.set(CabinModel.objects.filter(id__in=booking_data.cabins))
         booking.save()
         ok = True
         return CreateBooking(booking=booking, ok=ok)
