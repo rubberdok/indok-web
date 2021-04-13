@@ -11,23 +11,20 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-interface ListingsProps {
-  handleClick: () => void,
-}
-
-const Listings: React.FC<ListingsProps> = ({ handleClick }) => {
+const Listings: React.FC<{
+  handleClick: () => void;
+}> = ({ handleClick }) => {
   const { loading, error, data } = useQuery<{ listings: Listing[] }>(LISTINGS);
   const classes = useStyles();
 
-
   return (
     <Grid container direction="row" spacing={2} className={classes.root} justify="center" alignItems="stretch">
-      {loading &&
+      {loading && (
         <Grid item>
           <CircularProgress color="primary" />
         </Grid>
-      }
-      {error &&
+      )}
+      {error && (
         <Grid container item direction="column" alignItems="center">
           <Grid item>
             <Typography variant="body1" align="center">
@@ -36,25 +33,24 @@ const Listings: React.FC<ListingsProps> = ({ handleClick }) => {
           </Grid>
           <Grid item>
             <Typography variant="caption" align="center">
-              Skjer dette ofte?
-              Ta kontakt på med <a href="mailto:web@indokhs.no">Indøks Webkomité</a>
+              Skjer dette ofte? Ta kontakt på med <a href="mailto:web@indokhs.no">Indøks Webkomité</a>
             </Typography>
           </Grid>
           <Grid item>
-            <Button variant="contained" onClick={handleClick}>Prøv på nytt</Button>        
+            <Button variant="contained" onClick={handleClick}>
+              Prøv på nytt
+            </Button>
           </Grid>
         </Grid>
-        
-      } 
-      {data && (
+      )}
+      {data &&
         data.listings.map((listing) => (
           <Grid container item key={listing.id} md={5} sm={7} xs={10}>
             <ListingItem listing={listing} />
           </Grid>
-        ))
-      )}
+        ))}
     </Grid>
-  )
-}
+  );
+};
 
 export default Listings;
