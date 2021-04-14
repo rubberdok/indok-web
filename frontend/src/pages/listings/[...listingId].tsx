@@ -53,8 +53,8 @@ const ListingPage: NextPage = () => {
             <ListingBanner listing={data.listing} />
           </Hidden>
           <Container className={classes.container}>
-            <Grid container direction="column" spacing={4} alignItems="stretch">
-              <Grid container item direction="row" justify="space-between" alignItems="stretch" xs={10}>
+            <Grid container direction="column" spacing={4} alignItems="stretch" justify="center">
+              <Grid item xs={10}>
                 <ListingTitle listing={data.listing} />
               </Grid>
               <Grid item xs={10}>

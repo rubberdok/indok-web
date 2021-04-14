@@ -1,10 +1,9 @@
-import { Card, CardContent, makeStyles } from "@material-ui/core";
+import { Card, CardContent, Grid, makeStyles } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     marginBottom: theme.spacing(4),
     padding: theme.spacing(4),
-    width: "100%"
   },
 }));
 
@@ -16,11 +15,13 @@ const ListingBody: React.FC = (props) => {
   const classes = useStyles();
 
   return (
-    <Card className={classes.root}>
-      <CardContent>
-        {props.children}
-      </CardContent>
-    </Card>
+    <Grid item xs={10}>
+      <Card className={classes.root}>
+        <CardContent>
+          {props.children}
+        </CardContent>
+      </Card>
+    </Grid>
   );
 };
 

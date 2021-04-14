@@ -1,5 +1,5 @@
 import { Listing } from "@interfaces/listings";
-import { Button, Grid, Hidden, makeStyles, Typography } from "@material-ui/core";
+import { Button, Grid, Hidden, makeStyles, Typography, Paper } from "@material-ui/core";
 import ArrowForward from "@material-ui/icons/ArrowForward";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import dayjs from "dayjs";
@@ -7,8 +7,6 @@ import nb from "dayjs/locale/nb";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import Link from "next/link";
-import InfoCard from "./InfoCard";
-import TitleCard from "./TitleCard";
 dayjs.extend(timezone);
 dayjs.extend(utc);
 dayjs.tz.setDefault("Europe/Oslo");
@@ -27,6 +25,15 @@ const useStyles = makeStyles((theme) => ({
       content: "'Frist '",
       fontWeight: "bold",
       color: theme.palette.primary.main,
+    },
+  },
+  card: {
+    height: "100%",
+    width: "100%",
+    maxWidth: "100%",
+    padding: theme.spacing(4),
+    [theme.breakpoints.down("xs")]: {
+      minWidth: "min-content",
     },
   },
   descriptionText: {
@@ -52,72 +59,62 @@ const ListingTitle: React.FC<{
   listing: Listing;
 }> = ({ listing }) => {
   const classes = useStyles();
-
-  const Deadline: React.FC<{ deadline: string }> = ({ deadline }) => (
-    <Typography variant="caption" component="h3" align="center" className={classes.deadline} gutterBottom>
-      {dayjs(deadline).format("DD. MMMM YYYY [kl.] HH:mm")}
-    </Typography>
-  )
-
-  const Title: React.FC<{ title: string }> = ({ title }) => (
-    <Typography variant="h3" component="h1" align="center">
-      {title}
-    </Typography>
-  )
-
-  const Apply: React.FC<{ url: string }> = ({ url }) => (
-    <>
-      {url &&
-        <Link href={url} passHref>
-          <Button variant="contained" color="primary" endIcon={<ArrowForward />}>
-            Søk her
-          </Button>
-        </Link>
-      }
-    </>
-  )
-
-  const OrganizationName: React.FC<{ name: string }> = ({ name }) => (
-    <Typography
-    variant="h5"
-    component="h2"
-    className={`${classes.organizationName} ${classes.descriptionText}`}
-    >
-      {name}
-    </Typography>
-  )
-
-  const OrganizationDescription: React.FC<{description: string}> = ({ description }) => (
-    <Typography variant="caption" align="center" component="span" className={classes.descriptionText}>
-      {description}
-    </Typography>
-  )
-
-  const About: React.FC<{slug: string}> = ({ slug }) => (
-    <Button endIcon={<OpenInNewIcon />} href={`/about/organizations/${slug}`}>
-      Les mer
-    </Button>
-  )
-
   return (
-    <Grid container item direction="row" justify="space-between" alignItems="stretch" className={classes.root}>
-      {listing.organization && 
-        <Hidden smDown>
-          <Grid item xs={4} style= {{ marginRight: 32 }}>
-            <InfoCard
-              title={<OrganizationName name={listing.organization.name} />}
-              description={<OrganizationDescription description={listing.organization.description} />}
-              action={<About slug={listing.organization.slug} />}
-            />
-          </Grid>
-        </Hidden>
-      }
+    <Grid container item direction="row" justify="space-between" alignItems="stretch" xs={10} className={classes.root}>
+      <Hidden smDown>
+        <Grid item xs={4} style={{ marginRight: 32 }}>
+          <Paper className={classes.card}>
+            <Grid container direction="column" justify="space-evenly" alignItems="center" style={{ height: "100%" }}>
+              <Grid item>
+                <Typography
+                  variant="h5"
+                  component="h2"
+                  className={`${classes.organizationName} ${classes.descriptionText}`}
+                >
+                  {listing.organization?.name}
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Typography variant="caption" align="center" component="span" className={classes.descriptionText}>
+                  {listing.organization?.description}
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Button endIcon={<OpenInNewIcon />} href={`/about/organizations/${listing.organization?.slug}`}>
+                  Les mer
+                </Button>
+              </Grid>
+            </Grid>
+          </Paper>
+        </Grid>
+      </Hidden>
+
       <Grid item xs>
-        <TitleCard
-          title={<Title title={listing.title} />}
-          subtitle={<Deadline deadline={listing.deadline} />}
-          action={<Apply url={listing.url} />}
-        />
+        <Paper className={classes.card}>
+          <Grid container direction="column" justify="space-between" alignItems="center">
+            <Grid item>
+              <Typography variant="h3" component="h1" align="center">
+                {listing.title}
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Typography variant="caption" component="h3" align="center" className={classes.deadline} gutterBottom>
+                {dayjs(listing.deadline).format("DD. MMMM YYYY [kl.] HH:mm")}
+              </Typography>
+            </Grid>
+            <Hidden xsDown>
+              <Grid item>
+                {listing.url && (
+                  <Link href={listing.url} passHref>
+                    <Button variant="contained" color="primary" endIcon={<ArrowForward />}>
+                      Søk her
+                    </Button>
+                  </Link>
+                )}
+              </Grid>
+            </Hidden>
+          </Grid>
+        </Paper>
       </Grid>
     </Grid>
   );

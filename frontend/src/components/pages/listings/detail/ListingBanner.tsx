@@ -21,12 +21,12 @@ const useStyles = makeStyles(() => ({
  * props: the listing from the detail page
  */
 const ListingBanner: React.FC<{
-  listing?: Listing;
+  listing: Listing;
 }> = ({ listing }) => {
   const classes = useStyles();
   return (
     <>
-      {listing?.hero ? (
+      {listing.hero ? (
         <Box
           className={`${classes.hero}`}
           style={{
