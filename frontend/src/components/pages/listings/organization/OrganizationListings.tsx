@@ -1,5 +1,4 @@
 import { Organization } from "@interfaces/organizations";
-import CreateListing from "@components/pages/listings/organization/CreateListing";
 import DeleteListing from "@components/pages/listings/organization/DeleteListing";
 import {
   Button,
@@ -38,8 +37,6 @@ const useStyles = makeStyles(() => ({
 const OrganizationListings: React.FC<{
   organization: Organization;
 }> = ({ organization }) => {
-  // state for whether to show the CreateListing dialog
-  const [createListingShown, showCreateListing] = useState(false);
 
   // state for whether to show the DeleteListing confirmation dialog
   // if not null, contains the listing to be deleted for use by the dialog

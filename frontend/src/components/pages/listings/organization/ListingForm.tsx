@@ -1,8 +1,8 @@
-import { Card, CardContent, CardActions, Button, Grid, Typography, TextField, Checkbox, MenuItem, makeStyles, Select, InputLabel, FormControl } from "@material-ui/core"
-import MarkdownForm from "@components/pages/listings/detail/MarkdownForm"
+import MarkdownForm from "@components/pages/listings/detail/MarkdownForm";
 import { Listing, ListingInput } from "@interfaces/listings";
 import { Organization } from "@interfaces/organizations";
-import Save from "@material-ui/icons/Save"
+import { Button, Card, CardActions, CardContent, FormControl, Grid, InputLabel, makeStyles, MenuItem, Select, TextField, Typography } from "@material-ui/core";
+import Save from "@material-ui/icons/Save";
 
 const useStyles = makeStyles((theme) => ({
   inputGroup: {
