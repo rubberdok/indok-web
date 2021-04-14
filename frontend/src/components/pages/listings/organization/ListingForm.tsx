@@ -2,6 +2,7 @@ import { Card, CardContent, CardActions, Button, Grid, Typography, TextField, Ch
 import MarkdownForm from "@components/pages/listings/detail/MarkdownForm"
 import { Listing, ListingInput } from "@interfaces/listings";
 import { Organization } from "@interfaces/organizations";
+import Save from "@material-ui/icons/Save"
 
 const useStyles = makeStyles((theme) => ({
   inputGroup: {
@@ -11,36 +12,39 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down("sm")]: {
       flexDirection: "column"
     }
+  },
+  root: {
+    marginBottom: theme.spacing(4)
   }
 }));
 
-const ListingForm: React.FC<{state: Listing | ListingInput, setState: (state: Listing | ListingInput) => void, onSubmit: (e: React.MouseEvent<HTMLButtonElement>) => void, organizations: Organization[] }> = ({ state, setState, onSubmit, organizations }) => {
+const ListingForm: React.FC<{state: Listing | ListingInput , setState: (state: Listing | ListingInput ) => void, onSubmit: (e: React.MouseEvent<HTMLButtonElement>) => void, organizations: Organization[] | undefined }> = ({ state, setState, onSubmit, organizations }) => {
   const classes = useStyles();
-
+  
   const handleChange = (event: React.ChangeEvent< HTMLTextAreaElement | HTMLInputElement>, property: string) => {
     setState({...state, [property]: event.target.value})
   }
 
   return (
-    <Card>
+    <Card className={classes.root}>
       <CardContent>
         <Grid container direction="column" spacing={4}>
           <Grid item>
             <Typography variant="h3">
               Informasjon
             </Typography>
-            <TextField label="Tittel" fullWidth onChange={(e) => handleChange(e, "title")} />
+            <TextField label="Tittel" value={state.title} fullWidth onChange={(e) => handleChange(e, "title")} />
           </Grid>
           <Grid item>
             <Grid container spacing={2} className={classes.inputGroup}>
               <Grid item xs>
-                <TextField label="Søknadsfrist" fullWidth type="date" onChange={(e) => handleChange(e, "deadline")} />
+                <TextField label="Søknadsfrist" value={state.deadline || ""} fullWidth type="date" onChange={(e) => handleChange(e, "deadline")} />
               </Grid>
               <Grid item xs>
-                <TextField label="Åpningsdato" fullWidth type="date" onChange={(e) => handleChange(e, "startDatetime")} />
+                <TextField label="Åpningsdato" value={state.startDatetime || ""} fullWidth type="date" onChange={(e) => handleChange(e, "startDatetime")} />
               </Grid>
               <Grid item xs>
-                <TextField label="Søknadslink" fullWidth type="url" onChange={(e) => handleChange(e, "url")} />
+                <TextField label="Søknadslink"  value={state.url || ""} fullWidth onChange={(e) => handleChange(e, "url")} />
               </Grid>
             </Grid>
           </Grid>
@@ -48,17 +52,22 @@ const ListingForm: React.FC<{state: Listing | ListingInput, setState: (state: Li
             <Typography variant="h3">
               Organisasjon
             </Typography>
-            <FormControl>
-              <InputLabel>Velg organisasjon</InputLabel>
-              <Select
-                value={state.organization}
-                onChange={(e) => setState({...state, organization: organizations.find(organization => organization.id === e.target.value)})}
-              >
-                {organizations.map((organization) => (
-                  <MenuItem key={organization.id} value={organization.id}>{organization.name}</MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+            {organizations && state.organization &&
+              <FormControl fullWidth variant="outlined">
+                <InputLabel id="select-organization-label">Velg organisasjon</InputLabel>
+                <Select
+                  labelId="select-organization-label"
+                  id="select-organization"
+                  value={state.organization.id}
+                  onChange={(e) => setState({...state, organization: organizations.find(organization => organization.id === e.target.value)})}
+                  fullWidth
+                  >
+                    {organizations.map((organization) => (
+                      <MenuItem key={organization.id} value={organization.id}>{organization.name}</MenuItem>
+                    ))}
+                </Select>
+              </FormControl>
+            }
           </Grid>
           {/*<Grid item>
             <Grid container spacing={2} className={classes.inputGroup}>
@@ -82,7 +91,7 @@ const ListingForm: React.FC<{state: Listing | ListingInput, setState: (state: Li
       <CardActions>
         <Grid container direction="row-reverse">
           <Grid item>
-            <Button color="primary" variant="contained" onClick={onSubmit}>
+            <Button color="primary" variant="contained" onClick={onSubmit} startIcon={<Save />} >
               Lagre
             </Button>
           </Grid>

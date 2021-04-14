@@ -49,13 +49,6 @@ const OrganizationListings: React.FC<{
 
   return (
     <>
-      <CreateListing
-        organization={organization}
-        open={createListingShown}
-        onClose={() => {
-          showCreateListing(false);
-        }}
-      />
       <DeleteListing
         listing={listingToDelete}
         organizationId={parseInt(organization.id)}
@@ -106,16 +99,14 @@ const OrganizationListings: React.FC<{
               </CardContent>
             )}
             <CardActions>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={(e) => {
-                  e.preventDefault();
-                  showCreateListing(true);
-                }}
-              >
-                Opprett nytt verv
-              </Button>
+              <Link passHref href={"/listings/new"}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                >
+                  Opprett nytt verv
+                </Button>
+              </Link>
             </CardActions>
           </Card>
         </Grid>

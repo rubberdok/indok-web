@@ -73,3 +73,27 @@ export const USER_WITH_ORGANIZATIONS = gql`
     }
   }
 `;
+
+export const LISTING_AND_USER_WITH_ORGANIZATIONS = gql`
+  query listing($id: ID!){
+    listing(id: $id) {
+      id
+      title
+      description
+      startDatetime
+      deadline
+      endDatetime
+      url
+      organization {
+        id
+        name
+      }
+    }
+    user {
+      organizations {
+        id
+        name
+      }
+    }
+  }
+`;

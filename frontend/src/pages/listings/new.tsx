@@ -11,6 +11,7 @@ import { USER_WITH_ORGANIZATIONS } from "@graphql/listings/queries";
 import { useRouter } from "next/router";
 
 const EmptyListing: ListingInput = {
+  id: "",
   description: "",
   title: "",
   startDatetime: "",
@@ -19,32 +20,37 @@ const EmptyListing: ListingInput = {
 
 const NewListingPage: NextPage = () => {
   const router = useRouter()
-  const { loading, error, data } = useQuery(USER_WITH_ORGANIZATIONS)
-  const [listing, setListing] = useState(EmptyListing)
+  const [listing, setListing] = useState<Listing | ListingInput >(EmptyListing)
+  const { loading, error, data } = useQuery(USER_WITH_ORGANIZATIONS, {
+    onCompleted: (data) => setListing({...listing, organization: data.user.organizations[0]})
+  })
   const [createListing] = useMutation<{createListing: { ok: boolean, listing: Listing }}>(CREATE_LISTING, {
     onCompleted: (data) => router.push(`/listings/${data.createListing.listing.id}/${data.createListing.listing.slug}`)
   })
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error...</p>;
-
   return (
     <Layout>
       <Container>
-        <Typography variant="h1">
+        <Typography variant="h1" gutterBottom>
           Ny vervutlysning
         </Typography>
         <Grid container justify="center">
           <Grid item xs={10}>
-            <ListingForm state={listing} setState={setListing} organizations={data.user.organizations} onSubmit={(_) => createListing({
-              variables: {
-                title: listing.title,
-                description: listing.description,
-                startDatetime: listing.startDatetime,
-                deadline: listing.deadline,
-                organizationId: listing.organization?.id
-              }
-            })} />
+            <ListingForm state={listing} setState={setListing} organizations={data.user.organizations} onSubmit={(_) => {
+              createListing({
+                variables: {
+                  input: {
+                    title: listing.title,
+                    description: listing.description || undefined,
+                    startDatetime: listing.startDatetime || undefined,
+                    deadline: listing.deadline,
+                    organizationId: listing.organization?.id
+                  }
+                }
+              })
+            }}/>
           </Grid>
         </Grid>
       </Container>

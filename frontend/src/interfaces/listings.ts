@@ -17,10 +17,11 @@ export interface Listing {
 }
 
 export interface ListingInput {
+  id: string;
   title: string;
   description: string;
-  startDatetime: string;
-  deadline?: string;
+  deadline: string;
+  startDatetime?: string;
   url?: string;
   organization?: Organization;
   form?: Form;
