@@ -51,7 +51,7 @@ const ListingPage: NextPage = () => {
 
   const descriptionWithTitle = (desc: string) => {
     if (!desc.startsWith("#")) {
-      return "### Beskrivelse\n" + desc
+      return "### Om vervet\n" + desc
     }
     return desc
   }

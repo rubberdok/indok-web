@@ -62,3 +62,14 @@ export const LISTING_WITH_RESPONDERS = gql`
     }
   }
 `;
+
+export const USER_WITH_ORGANIZATIONS = gql`
+  query {
+    user {
+      organizations {
+      id
+      name
+    }
+    }
+  }
+`;
