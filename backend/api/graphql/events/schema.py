@@ -9,10 +9,11 @@ from .mutations import (
     UpdateEvent,
     EventSignUp,
     EventSignOff,
-    SendEventEmails
+    AdminEventSignOff,
+    SendEventEmails,
 )
 from .resolvers import EventResolvers
-from .types import CategoryType, EventType
+from .types import CategoryType, EventType, SignUpType
 
 
 class EventMutations(graphene.ObjectType):
@@ -20,6 +21,7 @@ class EventMutations(graphene.ObjectType):
     update_event = UpdateEvent.Field()
     event_sign_up = EventSignUp.Field()
     event_sign_off = EventSignOff.Field()
+    admin_event_sign_off = AdminEventSignOff.Field()
     delete_event = DeleteEvent.Field()
     create_category = CreateCategory.Field()
     update_category = UpdateCategory.Field()
@@ -39,3 +41,19 @@ class EventQueries(graphene.ObjectType, EventResolvers):
     event = graphene.Field(EventType, id=graphene.ID(required=True))
     all_categories = graphene.List(CategoryType)
     category = graphene.Field(CategoryType, id=graphene.ID(required=True))
+    attendee_report = graphene.String(
+        event_id=graphene.ID(required=True),
+        fields=graphene.List(graphene.String, required=False),
+        filetype=graphene.String(required=False),
+    )
+    attendee_reports = graphene.String(
+        event_ids=graphene.List(graphene.ID, required=True),
+        fields=graphene.List(graphene.String),
+        filetype=graphene.String(required=False),
+    )
+    attendee_report_org = graphene.String(
+        org_id=graphene.ID(required=True),
+        fields=graphene.List(graphene.String),
+        filetype=graphene.String(required=False),
+    )
+    sign_ups = graphene.Field(SignUpType, event_id=graphene.ID(required=True))

@@ -6,16 +6,15 @@ import Button from "@material-ui/core/Button";
 import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import SwipeableViews from "react-swipeable-views";
-import { Box, Grid, Typography } from "@material-ui/core";
+import { Box, Grid, Theme, Typography } from "@material-ui/core";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   img: {
     height: "100%",
     display: "block",
     maxWidth: "100%",
     overflow: "hidden",
     width: "100%",
-    borderRadius: "20px",
   },
   mobileStepper: {
     backgroundColor: theme.palette.background.paper,
@@ -68,38 +67,40 @@ const ImageSlider = ({ imageData, displayLabelText }: imageSliderProps): JSX.Ele
       ) : (
         ""
       )}
+      <Box>
+        <SwipeableViews
+          axis={theme.direction === "rtl" ? "x-reverse" : "x"}
+          index={activeStep}
+          onChangeIndex={handleStepChange}
+          enableMouseEvents
+          disableLazyLoading
+        >
+          {imageData.map((step, index) => (
+            <Box key={index}>
+              {Math.abs(activeStep - index) <= 2 ? (
+                <img className={classes.img} src={step.imgPath} alt={step.label} />
+              ) : null}
+            </Box>
+          ))}
+        </SwipeableViews>
+      </Box>
 
-      <SwipeableViews
-        axis={theme.direction === "rtl" ? "x-reverse" : "x"}
-        index={activeStep}
-        onChangeIndex={handleStepChange}
-        enableMouseEvents
-        disableLazyLoading
-      >
-        {imageData.map((step, index) => (
-          <div key={index}>
-            {Math.abs(activeStep - index) <= 2 ? (
-              <img className={classes.img} src={step.imgPath} alt={step.label} />
-            ) : null}
-          </div>
-        ))}
-      </SwipeableViews>
       <MobileStepper
         steps={maxSteps}
         position="static"
-        variant="text"
         activeStep={activeStep}
         className={classes.mobileStepper}
+        variant="progress"
         nextButton={
           <Button size="small" onClick={handleNext} disabled={activeStep === maxSteps - 1}>
-            Next
+            Neste
             {theme.direction === "rtl" ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
           </Button>
         }
         backButton={
           <Button size="small" onClick={handleBack} disabled={activeStep === 0}>
             {theme.direction === "rtl" ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
-            Back
+            Forrige
           </Button>
         }
       />

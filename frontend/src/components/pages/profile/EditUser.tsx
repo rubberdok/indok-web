@@ -9,7 +9,6 @@ import {
   DialogActions,
   DialogContent,
   DialogContentText,
-  DialogTitle,
   FormHelperText,
   Grid,
   InputLabel,
@@ -90,7 +89,6 @@ export const EditUser: React.FC<EditUserProps> = ({ open, user, onSubmit, onClos
 
   return (
     <Dialog open={open} aria-labelledby="form-dialog-title" maxWidth="sm" fullWidth onClose={() => onClose()}>
-      <DialogTitle id="form-dialog-title">Rediger bruker</DialogTitle>
       <DialogContent>
         <DialogContentText variant="body2" className={classes.graduationYearInfo}>
           OBS: Dersom du er registrert i feil årstrinn, kontakt <Link href="mailto:web@indokhs.no">web@indokhs.no</Link>
@@ -178,15 +176,15 @@ export const EditUser: React.FC<EditUserProps> = ({ open, user, onSubmit, onClos
           </Grid>
         </Grid>
         {error && invalidInput() && <Typography color="error">{error.message}</Typography>}
+        <DialogActions>
+          <Button onClick={() => onClose()} color="primary" startIcon={<Close />}>
+            Avbryt
+          </Button>
+          <Button onClick={() => handleSubmit()} color="primary" startIcon={<Check />} disabled={invalidInput()}>
+            Send
+          </Button>
+        </DialogActions>
       </DialogContent>
-      <DialogActions>
-        <Button onClick={() => onClose()} color="primary" startIcon={<Close />}>
-          Avbryt
-        </Button>
-        <Button onClick={() => handleSubmit()} color="primary" startIcon={<Check />} disabled={invalidInput()}>
-          Send
-        </Button>
-      </DialogActions>
     </Dialog>
   );
 };
