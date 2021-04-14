@@ -79,6 +79,13 @@ const OrganizationListings: React.FC<{
                             <TableCell>{listing.title}</TableCell>
                             <TableCell>{dayjs(listing.deadline).format("HH:mm DD-MM-YYYY")}</TableCell>
                             <TableCell>
+                              <Link passHref href={`/listings/edit/${listing.id}/`}>
+                                <Button variant="contained" color="primary">
+                                  Endre
+                                </Button>
+                              </Link>
+                            </TableCell>
+                            <TableCell>
                               <Button
                                 variant="contained"
                                 color="primary"
