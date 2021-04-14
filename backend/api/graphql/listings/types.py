@@ -4,7 +4,7 @@ import graphene
 
 
 class ListingType(DjangoObjectType):
-    chips = graphene.List(graphene.String() ,required=True)
+    chips = graphene.List(graphene.String, required=True)
 
     class Meta:
         model = Listing
