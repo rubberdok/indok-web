@@ -12,7 +12,7 @@ interface TitleCardProps {
 
 const TitleCard: React.FC<TitleCardProps> = ({ title, subtitle, action }) => {
   return (
-      <Card>
+      <Card style={{height: "100%"}}>
         <CardContent>
           <Grid container direction="column" justify="space-between" alignItems="center">
             <Grid item>
