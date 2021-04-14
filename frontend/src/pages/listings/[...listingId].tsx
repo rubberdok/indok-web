@@ -5,13 +5,11 @@ import ListingTitle from "@components/pages/listings/detail/ListingTitle";
 import ListingBody from "@components/pages/listings/detail/ListingBody";
 import { LISTING } from "@graphql/listings/queries";
 import { Listing } from "@interfaces/listings";
-import { Button, Container, Grid, Hidden, makeStyles, Paper } from "@material-ui/core";
+import { Button, Container, Grid, Hidden, makeStyles, Paper, Typography } from "@material-ui/core";
 import ArrowForward from "@material-ui/icons/ArrowForward";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
-import ReactMarkdown from "react-markdown";
-import renderers from "@components/pages/listings/markdown/renderer";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -53,17 +51,24 @@ const ListingPage: NextPage = () => {
             <ListingBanner listing={data.listing} />
           </Hidden>
           <Container className={classes.container}>
-            <Grid container direction="column" spacing={4} alignItems="stretch" justify="center">
-              <Grid item xs={10}>
+            <Grid container direction="column" spacing={4}>
+              <Grid container item direction="row" justify="center">
                 <ListingTitle listing={data.listing} />
               </Grid>
-              <Grid item xs={10}>
+              <Grid container item direction="row" justify="center">
                 <ListingBody>
-                  <ReactMarkdown
-                    renderers={renderers}
-                  >
-                    {data.listing.description}
-                  </ReactMarkdown>
+                  <Grid container direction="column" justify="flex-start">
+                    <Grid item>
+                      <Typography variant="h4" component="h2" gutterBottom>
+                        Beskrivelse
+                      </Typography>
+                    </Grid>
+                    <Grid item>
+                      <Typography variant="body1" component="span" paragraph className={classes.description}>
+                        {data.listing.description}
+                      </Typography>
+                    </Grid>
+                  </Grid>
                 </ListingBody>
               </Grid>
             </Grid>
