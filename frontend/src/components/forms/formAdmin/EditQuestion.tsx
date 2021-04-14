@@ -73,11 +73,14 @@ const EditQuestion: React.FC<{
             }}
             variant="filled"
           >
-            {Object.entries(questionTypeLabels).map(([questionType, label]) => (
-              <MenuItem key={questionType} value={questionType}>
-                {label}
-              </MenuItem>
-            ))}
+            {Object.entries(questionTypeLabels)
+              // TODO: remove below line once Slider and File Upload question types are implemented
+              .filter(([questionType, _]) => !(questionType === "SLIDER" || questionType === "FILE_UPLOAD"))
+              .map(([questionType, label]) => (
+                <MenuItem key={questionType} value={questionType}>
+                  {label}
+                </MenuItem>
+              ))}
           </Select>
         </FormControl>
       </Grid>

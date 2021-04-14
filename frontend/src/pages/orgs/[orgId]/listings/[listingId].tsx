@@ -42,7 +42,7 @@ const ListingAdminPage: NextPage = () => {
   return (
     <Layout>
       <Container className={classes.container}>
-        <Grid container direction="row" justify="center" spacing={1} xs={12} sm={12} md={12}>
+        <Grid container direction="row" justify="center" spacing={1}>
           <Grid item>
             <Grid container direction="column" spacing={1}>
               <Grid item>
