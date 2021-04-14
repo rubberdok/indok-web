@@ -5,6 +5,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import get_template
 from django.utils.html import strip_tags
 
+from api.graphql.cabins.types import EmailInput
 from apps.cabins.models import Cabin
 
 user_templates = {
@@ -40,9 +41,9 @@ def send_user_reservation_mail(booking_info: dict) -> None:
     email.send()
 
 
-def calculate_booking_price(email_input: dict, cabins: List[Cabin]) -> int:
-    check_in = datetime.strptime(email_input["check_in"], "%d-%m-%Y")
-    check_out = datetime.strptime(email_input["check_out"], "%d-%m-%Y")
+def calculate_booking_price(email_input: EmailInput, cabins: List[Cabin]) -> int:
+    check_in = datetime.strptime(email_input.check_in, "%d-%m-%Y")
+    check_out = datetime.strptime(email_input.check_out, "%d-%m-%Y")
     booking_length = (check_out - check_in).days
-    price_per_night = sum([cabin.internal_price for cabin in cabins]) if email_input["internal_participants"] >= email_input["external_participants"] else sum([cabin.external_price for cabin in cabins])
+    price_per_night = sum([cabin.internal_price for cabin in cabins]) if email_input.internal_participants >= email_input.external_participants else sum([cabin.external_price for cabin in cabins])
     return price_per_night * booking_length

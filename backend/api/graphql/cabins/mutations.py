@@ -4,7 +4,7 @@ from datetime import datetime
 from django.utils import timezone
 from graphql import GraphQLError
 
-from .types import BookingType
+from .types import BookingType, EmailInput
 from apps.cabins.models import Booking as BookingModel
 from apps.cabins.models import Cabin as CabinModel
 from .mail import send_admin_reservation_mail, calculate_booking_price, send_user_reservation_mail
@@ -64,43 +64,29 @@ class CreateBooking(graphene.Mutation):
         return CreateBooking(booking=booking, ok=ok)
 
 
-class EmailInput(graphene.InputObjectType):
-    first_name = graphene.String()
-    last_name = graphene.String()
-    email = graphene.String()
-    phone = graphene.String()
-    internal_participants = graphene.Int()
-    external_participants = graphene.Int()
-    cabin_ids = graphene.List(graphene.String)
-    check_in = graphene.String()
-    check_out = graphene.String()
-    email_type = graphene.String()
-
-
 class SendEmail(graphene.Mutation):
     class Arguments:
         email_input = EmailInput()
 
     ok = graphene.Boolean()
 
-    def mutate(self, info, email_input: dict):
-        print("email send", email_input)
-        cabins = CabinModel.objects.all().filter(id__in=email_input["cabin_ids"])
+    def mutate(self, info, email_input: EmailInput):
+        cabins = CabinModel.objects.all().filter(id__in=email_input.cabin_ids)
         chosen_cabins_names = [cabin.name for cabin in cabins]
         chosen_cabins_string = cabins[0].name if len(cabins) == 1 else ",".join(chosen_cabins_names[:-1]) + f" og {chosen_cabins_names[-1]}"
 
         # Reformat check in and out dates
-        email_input["check_in"] = datetime.strptime(email_input["check_in"], "%Y-%m-%d").strftime("%d-%m-%Y")
-        email_input["check_out"] = datetime.strptime(email_input["check_out"], "%Y-%m-%d").strftime("%d-%m-%Y")
+        email_input.check_in = datetime.strptime(email_input.check_in, "%Y-%m-%d").strftime("%d-%m-%Y")
+        email_input.check_out = datetime.strptime(email_input.check_out, "%Y-%m-%d").strftime("%d-%m-%Y")
 
         price = calculate_booking_price(email_input, cabins)
-        booking_info = {**email_input, "chosen_cabins_string": chosen_cabins_string, "price": price}
+        booking_info = {**vars(email_input), "chosen_cabins_string": chosen_cabins_string, "price": price}
 
         # Send different mails for reservation and confirmation
-        if email_input["email_type"] == "reserve_booking":
+        if email_input.email_type == "reserve_booking":
             send_admin_reservation_mail(booking_info)
             send_user_reservation_mail(booking_info)
-        elif email_input["email_type"] == "confirm_booking":
+        elif email_input.email_type == "confirm_booking":
             pass
 
         return SendEmail(ok=True)
