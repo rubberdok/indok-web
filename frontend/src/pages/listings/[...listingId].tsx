@@ -1,7 +1,6 @@
 import { useQuery } from "@apollo/client";
 import Layout from "@components/Layout";
 import ListingBanner from "@components/pages/listings/detail/ListingBanner";
-import ListingTitle from "@components/pages/listings/detail/ListingTitle";
 import ListingBody from "@components/pages/listings/detail/ListingBody";
 import { LISTING } from "@graphql/listings/queries";
 import { Listing } from "@interfaces/listings";
@@ -12,6 +11,8 @@ import { NextPage } from "next";
 import { useRouter } from "next/router";
 import ReactMarkdown from "react-markdown";
 import renderers from "@components/pages/listings/markdown/renderer";
+import InfoCard from "@components/pages/listings/detail/InfoCard";
+import TitleCard from "@components/pages/listings/detail/TitleCard";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -20,11 +21,17 @@ const useStyles = makeStyles((theme) => ({
       marginTop: theme.spacing(4),
     },
   },
+  root: {
+    position: "relative",
+    [theme.breakpoints.up("md")]: {
+      marginTop: "-7%",
+    },
+  },
   bottom: {
     position: "sticky",
     bottom: 0,
     padding: theme.spacing(2),
-    zIndex: 100,
+    zIndex: theme.zIndex.snackbar,
   },
   description: {
     wordBreak: "break-word",
@@ -53,10 +60,17 @@ const ListingPage: NextPage = () => {
             <ListingBanner listing={data.listing} />
           </Hidden>
           <Container className={classes.container}>
-            <Grid container direction="column" alignItems="center" justify="center">
-              <Grid item container direction="column" spacing={4} alignItems="stretch" justify="center" xs={10}>
-                <Grid item>
-                  <ListingTitle listing={data.listing} />
+            <Grid container justify="center">
+              <Grid container item xs={10} direction="column" alignItems="center" spacing={4} className={classes.root}>
+                <Grid container item direction="row" alignItems="stretch" justify="center" spacing={4}>
+                  <Hidden smDown>
+                    <Grid item xs={4}>
+                      <InfoCard listing={data.listing} />
+                    </Grid>
+                  </Hidden>
+                  <Grid item xs>
+                    <TitleCard listing={data.listing} />
+                  </Grid>
                 </Grid>
                 <Grid item>
                   <ListingBody>
