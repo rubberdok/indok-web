@@ -51,25 +51,27 @@ const ListingPage: NextPage = () => {
             <ListingBanner listing={data.listing} />
           </Hidden>
           <Container className={classes.container}>
-            <Grid container direction="column" spacing={4}>
-              <Grid container item direction="row" justify="center">
-                <ListingTitle listing={data.listing} />
-              </Grid>
-              <Grid container item direction="row" justify="center">
-                <ListingBody>
-                  <Grid container direction="column" justify="flex-start">
-                    <Grid item>
-                      <Typography variant="h4" component="h2" gutterBottom>
-                        Beskrivelse
-                      </Typography>
+            <Grid container direction="column" alignItems="center" justify="center">
+              <Grid item container direction="column" spacing={4} alignItems="stretch" justify="center" xs={10}>
+                <Grid item>
+                  <ListingTitle listing={data.listing} />
+                </Grid>
+                <Grid item>
+                  <ListingBody>
+                    <Grid container direction="column" justify="flex-start">
+                      <Grid item>
+                        <Typography variant="h4" component="h2" gutterBottom>
+                          Beskrivelse
+                        </Typography>
+                      </Grid>
+                      <Grid item>
+                        <Typography variant="body1" component="span" paragraph className={classes.description}>
+                          {data.listing.description}
+                        </Typography>
+                      </Grid>
                     </Grid>
-                    <Grid item>
-                      <Typography variant="body1" component="span" paragraph className={classes.description}>
-                        {data.listing.description}
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                </ListingBody>
+                  </ListingBody>
+                </Grid>
               </Grid>
             </Grid>
           </Container>

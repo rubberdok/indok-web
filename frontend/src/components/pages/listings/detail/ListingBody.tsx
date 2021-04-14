@@ -1,4 +1,4 @@
-import { Card, CardContent, Grid, makeStyles } from "@material-ui/core";
+import { Card, CardContent, makeStyles } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -15,13 +15,11 @@ const ListingBody: React.FC = (props) => {
   const classes = useStyles();
 
   return (
-    <Grid item xs={10}>
-      <Card className={classes.root}>
-        <CardContent>
-          {props.children}
-        </CardContent>
-      </Card>
-    </Grid>
+    <Card className={classes.root}>
+      <CardContent>
+        {props.children}
+      </CardContent>
+    </Card>
   );
 };
 
