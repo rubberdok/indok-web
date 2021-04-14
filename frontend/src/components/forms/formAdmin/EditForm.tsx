@@ -162,9 +162,6 @@ const EditForm: React.FC<{ formId: string }> = ({ formId }) => {
                       question: "",
                       description: "",
                       formId: data.form.id,
-                      // TODO: remove when default handling is fixed backend
-                      questionType: "PARAGRAPH",
-                      mandatory: true,
                     },
                   });
                 }}

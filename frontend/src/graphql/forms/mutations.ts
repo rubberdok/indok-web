@@ -32,7 +32,7 @@ export const CREATE_QUESTION = gql`
     $question: String!
     $description: String
     $questionType: QuestionTypeEnum
-    $mandatory: Boolean!
+    $mandatory: Boolean
   ) {
     createQuestion(
       questionData: {

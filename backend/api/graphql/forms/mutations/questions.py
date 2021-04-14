@@ -27,7 +27,7 @@ class BaseQuestionInput(graphene.InputObjectType):
 class CreateQuestionInput(BaseQuestionInput):
     form_id = graphene.ID(required=True)
     question = graphene.String(required=True)
-    mandatory = graphene.Boolean(required=True)
+    mandatory = graphene.Boolean()
 
 
 class CreateQuestion(graphene.Mutation):
