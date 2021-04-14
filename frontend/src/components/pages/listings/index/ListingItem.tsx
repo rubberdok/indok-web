@@ -1,13 +1,5 @@
 import { Listing } from "@interfaces/listings";
-import {
-  Box,
-  Card,
-  CardActionArea,
-  CardContent,
-  CardMedia,
-  makeStyles,
-  Typography,
-} from "@material-ui/core";
+import { Box, Card, CardActionArea, CardContent, CardMedia, makeStyles, Typography } from "@material-ui/core";
 import dayjs from "dayjs";
 import nb from "dayjs/locale/nb";
 import relativeTime from "dayjs/plugin/isSameOrAfter";
