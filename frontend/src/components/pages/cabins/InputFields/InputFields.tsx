@@ -74,12 +74,12 @@ export const InputFields: React.FC<Props> = ({ contactInfo, validations, onChang
             <InputLabel>Antall indøkere</InputLabel>
             <Select
               defaultValue={0}
-              onChange={(e) => onChange("numberIndok", e)}
-              name="numberIndok"
-              error={!validations?.numberIndok && errorTrigger}
-              value={contactInfo.numberIndok}
+              onChange={(e) => onChange("internalParticipants", e)}
+              name="internalParticipants"
+              error={!validations?.internalParticipants && errorTrigger}
+              value={contactInfo.internalParticipants}
             >
-              {range(0, totalGuestsAllowed - contactInfo.numberExternal).map((val: number) => (
+              {range(0, totalGuestsAllowed - contactInfo.externalParticipants).map((val: number) => (
                 <MenuItem key={val} value={val}>
                   {val}
                 </MenuItem>
@@ -93,12 +93,12 @@ export const InputFields: React.FC<Props> = ({ contactInfo, validations, onChang
             <InputLabel>Antall eksterne</InputLabel>
             <Select
               defaultValue={0}
-              onChange={(e) => onChange("numberExternal", e)}
-              name="numberExternal"
-              error={!validations?.numberExternal && errorTrigger}
-              value={contactInfo.numberExternal}
+              onChange={(e) => onChange("externalParticipants", e)}
+              name="externalParticipants"
+              error={!validations?.externalParticipants && errorTrigger}
+              value={contactInfo.externalParticipants}
             >
-              {range(0, totalGuestsAllowed - contactInfo.numberIndok).map((val: number) => (
+              {range(0, totalGuestsAllowed - contactInfo.internalParticipants).map((val: number) => (
                 <MenuItem key={val} value={val}>
                   {val}
                 </MenuItem>

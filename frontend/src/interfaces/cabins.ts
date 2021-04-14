@@ -64,8 +64,8 @@ export interface InputValueTypes {
   surname: string;
   receiverEmail: string;
   phone: string;
-  numberIndok: number;
-  numberExternal: number;
+  internalParticipants: number;
+  externalParticipants: number;
 }
 
 export interface BookingData extends InputValueTypes {
@@ -80,8 +80,8 @@ export interface ContactInfoValidations {
   lastName: boolean;
   email: boolean;
   phone: boolean;
-  numberIndok: boolean;
-  numberExternal: boolean;
+  internalParticipants: boolean;
+  externalParticipants: boolean;
 }
 
 export interface ContactInfo {
@@ -89,6 +89,6 @@ export interface ContactInfo {
   lastName: string;
   email: string;
   phone: string;
-  numberIndok: number;
-  numberExternal: number;
+  internalParticipants: number;
+  externalParticipants: number;
 }

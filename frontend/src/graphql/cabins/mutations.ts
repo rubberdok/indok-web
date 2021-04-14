@@ -27,32 +27,8 @@ export const CREATE_BOOKING = gql`
 `;
 
 export const SEND_EMAIL = gql`
-  mutation SendEmail(
-    $firstName: String
-    $lastName: String
-    $email: String
-    $phone: String
-    $numberIndok: Int
-    $numberExternal: Int
-    $cabinIds: [String]
-    $checkInDate: String
-    $checkOutDate: String
-    $emailType: String
-  ) {
-    sendEmail(
-      emailInput: {
-        firstname: $firstName
-        lastname: $lastName
-        email: $email
-        phone: $phone
-        numberIndok: $numberIndok
-        numberExternal: $numberExternal
-        cabinIds: $cabinIds
-        checkInDate: $checkInDate
-        checkOutDate: $checkOutDate
-      }
-      emailType: $emailType
-    ) {
+  mutation SendEmail($emailInput: EmailInput) {
+    sendEmail(emailInput: $emailInput) {
       ok
     }
   }

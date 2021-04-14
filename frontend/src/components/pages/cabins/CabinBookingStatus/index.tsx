@@ -62,15 +62,15 @@ const CabinBookingStatus: NextPage<Props> = ({ chosenCabins, datePick, contactIn
         <>
           <InfoText>
             <Box className={classes.bold}>Gjester: </Box>
-            {contactInfo.numberIndok > 0 ? `${contactInfo.numberIndok} indøkere` : null}
-            {contactInfo.numberIndok > 0 && contactInfo.numberExternal > 0 ? ", " : null}
-            {contactInfo.numberExternal > 0 ? `${contactInfo.numberExternal} eksterne` : null}
+            {contactInfo.internalParticipants > 0 ? `${contactInfo.internalParticipants} indøkere` : null}
+            {contactInfo.internalParticipants > 0 && contactInfo.externalParticipants > 0 ? ", " : null}
+            {contactInfo.externalParticipants > 0 ? `${contactInfo.externalParticipants} eksterne` : null}
           </InfoText>
           <InfoText>
             <Box className={classes.bold}>Pris: </Box>
             <Tooltip
               title={
-                contactInfo.numberIndok >= contactInfo.numberExternal
+                contactInfo.internalParticipants >= contactInfo.externalParticipants
                   ? "Du har fått internpris da det er flest indøkere med"
                   : "Du har fått eksternpris da det er for få indøkere med"
               }

@@ -48,8 +48,8 @@ const defaultContactInfo: ContactInfo = {
   lastName: "",
   email: "",
   phone: "",
-  numberIndok: 0,
-  numberExternal: 0,
+  internalParticipants: 0,
+  externalParticipants: 0,
 };
 
 const defaultModalData: ModalData = {
@@ -137,9 +137,11 @@ const CabinBookingPage: NextPage = () => {
     } else {
       if (activeStep == 2) {
         console.log("contact info", contactInfo);
-        console.log("sending emails with", generateAdminEmailInput(contactInfo, datePick, chosenCabins));
+
+        const sent = { ...generateAdminEmailInput(contactInfo, datePick, chosenCabins), emailType: "reserve_booking" };
+        console.log("sending email with", sent);
         send_email({
-          variables: { ...generateAdminEmailInput(contactInfo, datePick, chosenCabins), emailType: "reserve_booking" },
+          variables: { emailInput: sent },
         });
       }
       setActiveStep((prev) => prev + 1);

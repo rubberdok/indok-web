@@ -65,40 +65,42 @@ class CreateBooking(graphene.Mutation):
 
 
 class EmailInput(graphene.InputObjectType):
-    firstname = graphene.String()
-    lastname = graphene.String()
+    first_name = graphene.String()
+    last_name = graphene.String()
     email = graphene.String()
     phone = graphene.String()
-    number_indok = graphene.Int()
-    number_external = graphene.Int()
+    internal_participants = graphene.Int()
+    external_participants = graphene.Int()
     cabin_ids = graphene.List(graphene.String)
-    check_in_date = graphene.String()
-    check_out_date = graphene.String()
+    check_in = graphene.String()
+    check_out = graphene.String()
+    email_type = graphene.String()
 
 
 class SendEmail(graphene.Mutation):
     class Arguments:
         email_input = EmailInput()
-        email_type = graphene.String()
 
     ok = graphene.Boolean()
 
-    def mutate(self, info, email_input: EmailInput, email_type):
-        cabins = CabinModel.objects.all().filter(id__in=email_input.cabin_ids)
+    def mutate(self, info, email_input: dict):
+        print("email send", email_input)
+        cabins = CabinModel.objects.all().filter(id__in=email_input["cabin_ids"])
         chosen_cabins_names = [cabin.name for cabin in cabins]
         chosen_cabins_string = cabins[0].name if len(cabins) == 1 else ",".join(chosen_cabins_names[:-1]) + f" og {chosen_cabins_names[-1]}"
 
         # Reformat check in and out dates
-        email_input.check_in_date = datetime.strptime(email_input.check_in_date, "%Y-%m-%d").strftime("%d-%m-%Y")
-        email_input.check_out_date = datetime.strptime(email_input.check_out_date, "%Y-%m-%d").strftime("%d-%m-%Y")
+        email_input["check_in"] = datetime.strptime(email_input["check_in"], "%Y-%m-%d").strftime("%d-%m-%Y")
+        email_input["check_out"] = datetime.strptime(email_input["check_out"], "%Y-%m-%d").strftime("%d-%m-%Y")
 
         price = calculate_booking_price(email_input, cabins)
-        booking_info = {**email_input.__dict__, "chosen_cabins_string": chosen_cabins_string, "price": price}
+        booking_info = {**email_input, "chosen_cabins_string": chosen_cabins_string, "price": price}
 
-        if email_type == "reserve_booking":
-            send_admin_reservation_mail(info, booking_info)
-            send_user_reservation_mail(info, booking_info)
-        elif email_type == "confirm_booking":
+        # Send different mails for reservation and confirmation
+        if email_input["email_type"] == "reserve_booking":
+            send_admin_reservation_mail(booking_info)
+            send_user_reservation_mail(booking_info)
+        elif email_input["email_type"] == "confirm_booking":
             pass
 
         return SendEmail(ok=True)

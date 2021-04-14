@@ -38,18 +38,18 @@
           <h2>Opprettelse av booking</h2>
                <p>
             Det har kommet en søknad om opprettelse av en booking av {{ chosen_cabins_string }} fra
-            <span><b>{{ check_in_date }}</b></span> til
-            <span><b>{{ check_out_date }}</b>.</span>
+            <span><b>{{ check_in }}</b></span> til
+            <span><b>{{ check_out }}</b>.</span>
           </p>
-          <p><b>Dere må gå inn på adminsiden og ta stilling om dere vil godkjenne bookingen eller ikke.</b></p>
+          <p><b>Dere må gå inn på adminsiden og ta stilling til om dere vil godkjenne bookingen eller ikke.</b></p>
             <h3>Bookinginfo</h3>
-            <p>Antall indøkere: {{ number_indok }}</p>
-            <p>Antall eksterne: {{ number_external }}</p>
+            <p>Antall indøkere: {{ internal_participants }}</p>
+            <p>Antall eksterne: {{ external_participants }}</p>
 
           <p>Prisen kommer på <b>{{ price }} kr</b>.</p>
 
           <h3>Kontaktinfo</h3>
-          <p>Navn: {{ firstname }} {{ lastname }}</p>
+          <p>Navn: {{ first_name }} {{ last_name }}</p>
           <p>Mobilnummer: {{ phone }}</p>
           <p>E-post: {{ email }}</p>
 
