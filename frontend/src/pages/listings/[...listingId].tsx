@@ -49,6 +49,13 @@ const ListingPage: NextPage = () => {
 
   const classes = useStyles();
 
+  const descriptionWithTitle = (desc: string) => {
+    if (!desc.startsWith("#")) {
+      return "### Beskrivelse\n" + desc
+    }
+    return desc
+  }
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error</p>;
 
@@ -77,7 +84,7 @@ const ListingPage: NextPage = () => {
                     <ReactMarkdown
                       renderers={renderers}
                     >
-                      {data.listing.description}
+                      {descriptionWithTitle(data.listing.description)}
                     </ReactMarkdown>
                   </ListingBody>
                 </Grid>
