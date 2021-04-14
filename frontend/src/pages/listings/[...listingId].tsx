@@ -10,6 +10,8 @@ import ArrowForward from "@material-ui/icons/ArrowForward";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
+import ReactMarkdown from "react-markdown";
+import renderers from "@components/pages/listings/markdown/renderer";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -57,18 +59,11 @@ const ListingPage: NextPage = () => {
               </Grid>
               <Grid container item direction="row" justify="center">
                 <ListingBody>
-                  <Grid container direction="column" justify="flex-start">
-                    <Grid item>
-                      <Typography variant="h4" component="h2" gutterBottom>
-                        Beskrivelse
-                      </Typography>
-                    </Grid>
-                    <Grid item>
-                      <Typography variant="body1" component="span" paragraph className={classes.description}>
-                        {data.listing.description}
-                      </Typography>
-                    </Grid>
-                  </Grid>
+                  <ReactMarkdown
+                    renderers={renderers}
+                  >
+                    {data.listing.description}
+                  </ReactMarkdown>
                 </ListingBody>
               </Grid>
             </Grid>
