@@ -68,7 +68,7 @@ const ListingPage: NextPage = () => {
           </Hidden>
           <Container className={classes.container}>
             <Grid container justify="center">
-              <Grid container item xs={10} direction="column" alignItems="center" spacing={4} className={classes.root}>
+              <Grid container item xs={10} direction="column" alignItems="stretch" spacing={4} className={classes.root}>
                 <Grid container item direction="row" alignItems="stretch" justify="center" spacing={4}>
                   <Hidden smDown>
                     <Grid item xs={4}>
