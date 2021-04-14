@@ -1,5 +1,5 @@
 import { Listing } from "@interfaces/listings";
-import { Button, Grid, Hidden, makeStyles, Typography, Paper, CardContent, Card, CardActions } from "@material-ui/core";
+import { Button, Grid, Hidden, makeStyles, Typography, CardContent, Card } from "@material-ui/core";
 import ArrowForward from "@material-ui/icons/ArrowForward";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import dayjs from "dayjs";
