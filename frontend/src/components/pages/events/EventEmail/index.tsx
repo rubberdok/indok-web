@@ -45,7 +45,10 @@ const EmailForm = ({ eventId }: EmailFormProps) => {
     const users = data?.event.usersAttending;
 
     if (data?.event && users) {
-      setEmailProps({ ...emailProps, receiverEmails: users.map((user) => user.email) });
+      setEmailProps({
+        ...emailProps,
+        receiverEmails: users.map((user) => (user.email != "" ? user.email : user.feideEmail)),
+      });
     }
   }, [data]);
 
