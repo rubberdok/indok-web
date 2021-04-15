@@ -9,6 +9,7 @@ from .mutations import (
     UpdateEvent,
     EventSignUp,
     EventSignOff,
+    AdminEventSignOff,
     SendEventEmails,
 )
 from .resolvers import EventResolvers
@@ -20,6 +21,7 @@ class EventMutations(graphene.ObjectType):
     update_event = UpdateEvent.Field()
     event_sign_up = EventSignUp.Field()
     event_sign_off = EventSignOff.Field()
+    admin_event_sign_off = AdminEventSignOff.Field()
     delete_event = DeleteEvent.Field()
     create_category = CreateCategory.Field()
     update_category = UpdateCategory.Field()
