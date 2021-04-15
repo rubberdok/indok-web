@@ -45,11 +45,16 @@ const EmailForm = ({ eventId }: EmailFormProps) => {
     const users = data?.event.usersAttending;
 
     if (data?.event && users) {
-      setEmailProps({ ...emailProps, receiverEmails: users.map((user) => user.email) });
+      console.log("users attending", users);
+      setEmailProps({
+        ...emailProps,
+        receiverEmails: users.map((user) => (user.email != "" ? user.email : user.feideEmail)),
+      });
     }
   }, [data]);
 
   const sendEmail = () => {
+    console.log("sending email with", { eventId, ...emailProps });
     sendEventMail({ variables: { eventId, ...emailProps } });
     setShowConfirmation(true);
     setShowEmailForm(false);
@@ -61,6 +66,7 @@ const EmailForm = ({ eventId }: EmailFormProps) => {
   };
 
   useEffect(() => {
+    console.log("email props", emailProps);
     setValidations({ content: emailProps.content.length > 0, subject: emailProps.subject.length > 0 });
   }, [emailProps]);
 
