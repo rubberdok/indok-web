@@ -3,22 +3,19 @@ import ReactMarkdown from "react-markdown";
 import renderers from "../markdown/renderer";
 import { useState } from "react";
 
-interface MarkdownProps {
-  markdown: string,
-  onChange: (e: any) => void,
-}
-
-
-const MarkdownForm: React.FC<MarkdownProps> = ({ markdown, onChange }) => {
+const MarkdownForm: React.FC<{
+  markdown: string;
+  onChange: (e: any) => void;
+}> = ({ markdown, onChange }) => {
   const [preview, setPreview] = useState(0);
 
-  const handleChange = (_: React.ChangeEvent<{}>, newValue: number) => {
-    setPreview(newValue)
-  }
+  const handleChange = (_: React.ChangeEvent<any>, newValue: number) => {
+    setPreview(newValue);
+  };
 
   return (
     <>
-      <Tabs 
+      <Tabs
         value={preview}
         indicatorColor="primary"
         textColor="primary"
@@ -27,29 +24,16 @@ const MarkdownForm: React.FC<MarkdownProps> = ({ markdown, onChange }) => {
         variant="scrollable"
         scrollButtons="auto"
       >
-
         <Tab label="Rediger" />
         <Tab label="Forhåndsvisning" />
       </Tabs>
-      {preview
-        ? <ReactMarkdown
-            renderers={renderers}
-          >
-            {markdown}
-          </ReactMarkdown>
-        
-        : <TextField
-            fullWidth
-            rows={24}
-            variant="outlined"
-            value={markdown} 
-            multiline
-            onChange={onChange}
-          />
-
-      }
+      {preview ? (
+        <ReactMarkdown renderers={renderers}>{markdown}</ReactMarkdown>
+      ) : (
+        <TextField fullWidth rows={24} variant="outlined" value={markdown} multiline onChange={onChange} />
+      )}
     </>
-  )
-}
+  );
+};
 
 export default MarkdownForm;

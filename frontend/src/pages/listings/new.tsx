@@ -5,7 +5,7 @@ import { ListingInput } from "@interfaces/listings";
 import { Container, Typography, Grid } from "@material-ui/core";
 import { NextPage } from "next";
 import { useState } from "react";
-import { Listing } from "@interfaces/listings"
+import { Listing } from "@interfaces/listings";
 import { CREATE_LISTING } from "@graphql/listings/mutations";
 import { USER_WITH_ORGANIZATIONS } from "@graphql/listings/queries";
 import { useRouter } from "next/router";
@@ -16,17 +16,17 @@ const EmptyListing: ListingInput = {
   title: "",
   startDatetime: "",
   deadline: "",
-}
+};
 
 const NewListingPage: NextPage = () => {
-  const router = useRouter()
-  const [listing, setListing] = useState<Listing | ListingInput >(EmptyListing)
+  const router = useRouter();
+  const [listing, setListing] = useState<Listing | ListingInput>(EmptyListing);
   const { loading, error, data } = useQuery(USER_WITH_ORGANIZATIONS, {
-    onCompleted: (data) => setListing({...listing, organization: data.user.organizations[0]})
-  })
-  const [createListing] = useMutation<{createListing: { ok: boolean, listing: Listing }}>(CREATE_LISTING, {
-    onCompleted: (data) => router.push(`/listings/${data.createListing.listing.id}/${data.createListing.listing.slug}`)
-  })
+    onCompleted: (data) => setListing({ ...listing, organization: data.user.organizations[0] }),
+  });
+  const [createListing] = useMutation<{ createListing: { ok: boolean; listing: Listing } }>(CREATE_LISTING, {
+    onCompleted: (data) => router.push(`/listings/${data.createListing.listing.id}/${data.createListing.listing.slug}`),
+  });
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error...</p>;
@@ -38,19 +38,24 @@ const NewListingPage: NextPage = () => {
         </Typography>
         <Grid container justify="center">
           <Grid item xs={10}>
-            <ListingForm state={listing} setState={setListing} organizations={data.user.organizations} onSubmit={(_) => {
-              createListing({
-                variables: {
-                  input: {
-                    title: listing.title,
-                    description: listing.description || undefined,
-                    startDatetime: listing.startDatetime || undefined,
-                    deadline: listing.deadline,
-                    organizationId: listing.organization?.id
-                  }
-                }
-              })
-            }}/>
+            <ListingForm
+              state={listing}
+              setState={setListing}
+              organizations={data.user.organizations}
+              onSubmit={(_) => {
+                createListing({
+                  variables: {
+                    input: {
+                      title: listing.title,
+                      description: listing.description || undefined,
+                      startDatetime: listing.startDatetime || undefined,
+                      deadline: listing.deadline,
+                      organizationId: listing.organization?.id,
+                    },
+                  },
+                });
+              }}
+            />
           </Grid>
         </Grid>
       </Container>

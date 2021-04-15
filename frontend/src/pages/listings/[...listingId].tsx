@@ -51,10 +51,10 @@ const ListingPage: NextPage = () => {
 
   const descriptionWithTitle = (desc: string) => {
     if (!desc.startsWith("#")) {
-      return "### Om vervet\n" + desc
+      return "### Om vervet\n" + desc;
     }
-    return desc
-  }
+    return desc;
+  };
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error</p>;
@@ -81,9 +81,7 @@ const ListingPage: NextPage = () => {
                 </Grid>
                 <Grid item>
                   <ListingBody>
-                    <ReactMarkdown
-                      renderers={renderers}
-                    >
+                    <ReactMarkdown renderers={renderers}>
                       {descriptionWithTitle(data.listing.description)}
                     </ReactMarkdown>
                   </ListingBody>

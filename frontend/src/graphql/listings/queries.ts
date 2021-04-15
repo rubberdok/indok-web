@@ -67,15 +67,15 @@ export const USER_WITH_ORGANIZATIONS = gql`
   query {
     user {
       organizations {
-      id
-      name
-    }
+        id
+        name
+      }
     }
   }
 `;
 
 export const LISTING_AND_USER_WITH_ORGANIZATIONS = gql`
-  query listing($id: ID!){
+  query listing($id: ID!) {
     listing(id: $id) {
       id
       title

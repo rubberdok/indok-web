@@ -27,9 +27,9 @@ const InfoCard: React.FC<{
 }> = ({ listing }) => {
   const classes = useStyles();
   return (
-    <Card style={{height: "100%"}}>
-      <CardContent style={{height: "100%"}}>
-        <Grid container direction="column" alignItems="center" justify="space-between" style={{height: "100%"}}>
+    <Card style={{ height: "100%" }}>
+      <CardContent style={{ height: "100%" }}>
+        <Grid container direction="column" alignItems="center" justify="space-between" style={{ height: "100%" }}>
           <Grid item>
             <Typography
               variant="h5"

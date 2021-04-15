@@ -37,7 +37,6 @@ const useStyles = makeStyles(() => ({
 const OrganizationListings: React.FC<{
   organization: Organization;
 }> = ({ organization }) => {
-
   // state for whether to show the DeleteListing confirmation dialog
   // if not null, contains the listing to be deleted for use by the dialog
   const [listingToDelete, setListingToDelete] = useState<Listing | null>(null);
@@ -104,10 +103,7 @@ const OrganizationListings: React.FC<{
             )}
             <CardActions>
               <Link passHref href={"/listings/new"}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                >
+                <Button variant="contained" color="primary">
                   Opprett nytt verv
                 </Button>
               </Link>

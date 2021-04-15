@@ -2,9 +2,7 @@ import { gql } from "@apollo/client";
 
 export const CREATE_LISTING = gql`
   mutation createListing($input: CreateListingInput!) {
-    createListing(
-      listingData: $input
-    ) {
+    createListing(listingData: $input) {
       listing {
         id
         slug
@@ -15,14 +13,8 @@ export const CREATE_LISTING = gql`
 `;
 
 export const UPDATE_LISTING = gql`
-  mutation updateListing(
-    $id: ID!
-    $input: BaseListingInput
-  ) {
-    updateListing(
-      id: $id
-      listingData: $input
-    ) {
+  mutation updateListing($id: ID!, $input: BaseListingInput) {
+    updateListing(id: $id, listingData: $input) {
       listing {
         id
         slug

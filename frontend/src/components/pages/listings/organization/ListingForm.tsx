@@ -1,73 +1,111 @@
 import MarkdownForm from "@components/pages/listings/detail/MarkdownForm";
 import { Listing, ListingInput } from "@interfaces/listings";
 import { Organization } from "@interfaces/organizations";
-import { Button, Card, CardActions, CardContent, FormControl, Grid, InputLabel, makeStyles, MenuItem, Select, TextField, Typography } from "@material-ui/core";
+import {
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  FormControl,
+  Grid,
+  InputLabel,
+  makeStyles,
+  MenuItem,
+  Select,
+  TextField,
+  Typography,
+} from "@material-ui/core";
 import Save from "@material-ui/icons/Save";
 
 const useStyles = makeStyles((theme) => ({
   inputGroup: {
     [theme.breakpoints.up("md")]: {
-      flexDirection: "row"
+      flexDirection: "row",
     },
     [theme.breakpoints.down("sm")]: {
-      flexDirection: "column"
-    }
+      flexDirection: "column",
+    },
   },
   root: {
-    marginBottom: theme.spacing(4)
-  }
+    marginBottom: theme.spacing(4),
+  },
 }));
 
-const ListingForm: React.FC<{state: Listing | ListingInput , setState: (state: Listing | ListingInput ) => void, onSubmit: (e: React.MouseEvent<HTMLButtonElement>) => void, organizations: Organization[] | undefined }> = ({ state, setState, onSubmit, organizations }) => {
+const ListingForm: React.FC<{
+  state: Listing | ListingInput;
+  setState: (state: Listing | ListingInput) => void;
+  onSubmit: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  organizations: Organization[] | undefined;
+}> = ({ state, setState, onSubmit, organizations }) => {
   const classes = useStyles();
-  
-  const handleChange = (event: React.ChangeEvent< HTMLTextAreaElement | HTMLInputElement>, property: string) => {
-    setState({...state, [property]: event.target.value})
-  }
+
+  const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>, property: string) => {
+    setState({ ...state, [property]: event.target.value });
+  };
 
   return (
     <Card className={classes.root}>
       <CardContent>
         <Grid container direction="column" spacing={4}>
           <Grid item>
-            <Typography variant="h3">
-              Informasjon
-            </Typography>
+            <Typography variant="h3">Informasjon</Typography>
             <TextField label="Tittel" value={state.title} fullWidth onChange={(e) => handleChange(e, "title")} />
           </Grid>
           <Grid item>
             <Grid container spacing={2} className={classes.inputGroup}>
               <Grid item xs>
-                <TextField label="Søknadsfrist" value={state.deadline || ""} fullWidth type="date" onChange={(e) => handleChange(e, "deadline")} />
+                <TextField
+                  label="Søknadsfrist"
+                  value={state.deadline || ""}
+                  fullWidth
+                  type="date"
+                  onChange={(e) => handleChange(e, "deadline")}
+                />
               </Grid>
               <Grid item xs>
-                <TextField label="Åpningsdato" value={state.startDatetime || ""} fullWidth type="date" onChange={(e) => handleChange(e, "startDatetime")} />
+                <TextField
+                  label="Åpningsdato"
+                  value={state.startDatetime || ""}
+                  fullWidth
+                  type="date"
+                  onChange={(e) => handleChange(e, "startDatetime")}
+                />
               </Grid>
               <Grid item xs>
-                <TextField label="Søknadslink"  value={state.url || ""} fullWidth onChange={(e) => handleChange(e, "url")} />
+                <TextField
+                  label="Søknadslink"
+                  value={state.url || ""}
+                  fullWidth
+                  onChange={(e) => handleChange(e, "url")}
+                />
               </Grid>
             </Grid>
           </Grid>
           <Grid item>
-            <Typography variant="h3">
-              Organisasjon
-            </Typography>
-            {organizations && state.organization &&
+            <Typography variant="h3">Organisasjon</Typography>
+            {organizations && state.organization && (
               <FormControl fullWidth variant="outlined">
                 <InputLabel id="select-organization-label">Velg organisasjon</InputLabel>
                 <Select
                   labelId="select-organization-label"
                   id="select-organization"
                   value={state.organization.id}
-                  onChange={(e) => setState({...state, organization: organizations.find(organization => organization.id === e.target.value)})}
+                  onChange={(e) =>
+                    setState({
+                      ...state,
+                      organization: organizations.find((organization) => organization.id === e.target.value),
+                    })
+                  }
                   fullWidth
-                  >
-                    {organizations.map((organization) => (
-                      <MenuItem key={organization.id} value={organization.id}>{organization.name}</MenuItem>
-                    ))}
+                >
+                  {organizations.map((organization) => (
+                    <MenuItem key={organization.id} value={organization.id}>
+                      {organization.name}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
-            }
+            )}
           </Grid>
           {/*<Grid item>
             <Grid container spacing={2} className={classes.inputGroup}>
@@ -91,14 +129,14 @@ const ListingForm: React.FC<{state: Listing | ListingInput , setState: (state: L
       <CardActions>
         <Grid container direction="row-reverse">
           <Grid item>
-            <Button color="primary" variant="contained" onClick={onSubmit} startIcon={<Save />} >
+            <Button color="primary" variant="contained" onClick={onSubmit} startIcon={<Save />}>
               Lagre
             </Button>
           </Grid>
         </Grid>
       </CardActions>
     </Card>
-  )
-}
+  );
+};
 
 export default ListingForm;
