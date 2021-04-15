@@ -7,19 +7,24 @@ import { Question, QuestionVariables, Form } from "@interfaces/forms";
 import { Button, Grid, Typography, Card, CardContent } from "@material-ui/core";
 import { useState } from "react";
 import { Add } from "@material-ui/icons";
-import DeleteQuestion from "@components/forms/formAdmin/DeleteQuestion";
+import ConfirmFormChange from "@components/forms/formAdmin/ConfirmFormChange";
 
 /**
- * component to edit forms (for example the applications to listings)
- * props: the form to edit
+ * component for editing forms (for example: the applications to listings)
+ *
+ * props:
+ * - the form to edit
  */
 const EditForm: React.FC<{ form: Form }> = ({ form }) => {
   // state to manage the question on the form currently being edited
   // undefined if no question is currently being edited
   const [activeQuestion, setActiveQuestion] = useState<Question | undefined>();
 
-  // state for whether to show the DeleteQuestion confirmation dialog
-  const [deleteDialogShown, showDeleteDialog] = useState<boolean>();
+  // state for whether to show a confirmation dialog after changing the form
+  // "update" type also includes toSwitch for question to switch to after confirming
+  const [confirmationDialog, setConfirmationDialog] = useState<
+    { type: "update"; toSwitch: Question | undefined } | { type: "delete" } | undefined
+  >(undefined);
 
   // mutation to create a new question
   const [createQuestion] = useMutation<{ createQuestion: { question: Question } }>(CREATE_QUESTION, {
@@ -97,37 +102,61 @@ const EditForm: React.FC<{ form: Form }> = ({ form }) => {
   // function to update the current active question to the database and then set a new one
   const switchActiveQuestion = (question: Question | undefined) => {
     if (activeQuestion) {
-      updateQuestion({
-        variables: {
-          id: activeQuestion.id,
-          question: activeQuestion.question,
-          description: activeQuestion.description,
-          questionType: activeQuestion.questionType,
-          mandatory: activeQuestion.mandatory,
-          options:
-            activeQuestion.questionType === "CHECKBOXES" ||
-            activeQuestion.questionType === "MULTIPLE_CHOICE" ||
-            activeQuestion.questionType === "DROPDOWN"
-              ? activeQuestion.options.map((option) => ({
-                  answer: option.answer,
-                  ...(option.id ? { id: option.id } : {}),
-                }))
-              : [],
-        },
-      });
+      if (form.responders.length > 0 && confirmationDialog?.type !== "update") {
+        setConfirmationDialog({ type: "update", toSwitch: question });
+        return;
+      } else {
+        updateQuestion({
+          variables: {
+            id: activeQuestion.id,
+            question: activeQuestion.question,
+            description: activeQuestion.description,
+            questionType: activeQuestion.questionType,
+            mandatory: activeQuestion.mandatory,
+            options:
+              activeQuestion.questionType === "CHECKBOXES" ||
+              activeQuestion.questionType === "MULTIPLE_CHOICE" ||
+              activeQuestion.questionType === "DROPDOWN"
+                ? activeQuestion.options.map((option) => ({
+                    answer: option.answer,
+                    ...(option.id ? { id: option.id } : {}),
+                  }))
+                : [],
+          },
+        });
+      }
     }
     setActiveQuestion(question);
+  };
+
+  // function to delete the current active question from the database and then set it as inactive
+  const deleteActiveQuestion = () => {
+    if (activeQuestion) {
+      if (form.responders.length > 0 && confirmationDialog?.type !== "delete") {
+        setConfirmationDialog({ type: "delete" });
+      } else {
+        deleteQuestion({ variables: { id: activeQuestion.id } });
+        setActiveQuestion(undefined);
+      }
+    }
   };
 
   // renders a list of the form's question, with a button to create new ones
   // question view changes based on whether they are being edited or not
   return (
     <>
-      {deleteDialogShown && activeQuestion && (
-        <DeleteQuestion
-          questionId={activeQuestion.id}
-          deleteQuestion={(id) => deleteQuestion({ variables: { id: id } })}
-          onClose={() => showDeleteDialog(false)}
+      {confirmationDialog && activeQuestion && (
+        <ConfirmFormChange
+          type={confirmationDialog.type}
+          open={confirmationDialog !== undefined}
+          onConfirm={() => {
+            if (confirmationDialog.type === "update") {
+              switchActiveQuestion(confirmationDialog.toSwitch);
+            } else {
+              deleteActiveQuestion();
+            }
+          }}
+          onClose={() => setConfirmationDialog(undefined)}
         />
       )}
       <Grid item container direction="column" spacing={1}>
@@ -148,7 +177,7 @@ const EditForm: React.FC<{ form: Form }> = ({ form }) => {
                     question={activeQuestion}
                     setQuestion={(question) => setActiveQuestion(question)}
                     saveQuestion={() => switchActiveQuestion(undefined)}
-                    showDeleteDialog={() => showDeleteDialog(true)}
+                    deleteQuestion={deleteActiveQuestion}
                   />
                 ) : (
                   <QuestionPreview question={question} setActive={() => switchActiveQuestion(question)} />

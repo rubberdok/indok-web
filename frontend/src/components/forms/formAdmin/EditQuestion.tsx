@@ -1,4 +1,5 @@
 import questionTypeLabels from "@components/forms/formAdmin/questionTypeLabels";
+import { DELETE_QUESTION } from "@graphql/forms/mutations";
 import { Question, QuestionType, Option } from "@interfaces/forms";
 import {
   Button,
@@ -18,20 +19,23 @@ import { Save, Delete, Add, Close } from "@material-ui/icons";
 
 /**
  * component to edit a question on a form
+ *
  * renders input fields to change the question's details
+ *
  * if the question's type allows options, allows the creation of such; otherwise, shows a preview
+ *
  * props:
  * - the question to edit (inherited "activeQuestion" state from EditForm)
  * - setQuestion function to set question (inherited "setActiveQuestion" setState from EditForm)
  * - saveQuestion function to save this question to the database and then set it as inactive
- * - showDeleteDialog function to show the DeleteQuestion confirmation dialog
+ * - deleteQuestion function to delete this question from the database
  */
 const EditQuestion: React.FC<{
   question: Question;
   setQuestion: (question: Question | undefined) => void;
   saveQuestion: () => void;
-  showDeleteDialog: () => void;
-}> = ({ question, setQuestion, saveQuestion, showDeleteDialog }) => (
+  deleteQuestion: () => void;
+}> = ({ question, setQuestion, saveQuestion, deleteQuestion }) => (
   <Grid container direction="column" spacing={1}>
     <Grid item>
       <TextField
@@ -182,7 +186,7 @@ const EditQuestion: React.FC<{
           startIcon={<Delete />}
           onClick={(e) => {
             e.preventDefault();
-            showDeleteDialog();
+            deleteQuestion();
           }}
         >
           Slett

@@ -23,14 +23,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-// the page for organization admins to administer a listing, edit its application form, and review applicants
+/**
+ * page for organization admins to administer a listing, edit its application form, and review applicants
+ */
 const ListingAdminPage: NextPage = () => {
   const { orgId, listingId } = useRouter().query;
 
   const classes = useStyles();
 
   // state to determine whether to show the applicant view or the listing/form view
-  const [selectedApplicant, selectApplicant] = useState<User | undefined>(undefined);
+  const [selectedApplicant, selectApplicant] = useState<User | "listing">("listing");
 
   // fetches the listing along with all users who have applied to it, using URL parameter as argument
   const { loading, error, data } = useQuery<{ listing: Listing }>(LISTING_WITH_RESPONDERS, {
@@ -48,6 +50,7 @@ const ListingAdminPage: NextPage = () => {
   >(CREATE_FORM, {
     // updates the cache so the new form can show instantly
     update: (cache, { data }) => {
+      // gets the new form from the mutation's return
       const newForm = data?.createForm.form;
       // reads the cached listing to which to add the form
       const cachedListing = cache.readFragment<Listing>({
@@ -94,20 +97,28 @@ const ListingAdminPage: NextPage = () => {
                       selectApplicant(applicant);
                     }}
                   >
-                    <Tab value={undefined} label="Verv & søknad" />
-                    <Box textAlign="center">
-                      <Typography variant="h5">Søkere</Typography>
-                    </Box>
-                    {data && (data.listing.form?.responders ?? []).length > 0 ? (
+                    <Tab value={"listing"} label="Verv & søknad" />
+                    {data?.listing.form && (
                       <>
-                        {data.listing.form?.responders.map((responder, index) => (
-                          <Tab key={index} value={responder} label={`${responder.firstName} ${responder.lastName}`} />
-                        ))}
+                        <Box textAlign="center">
+                          <Typography variant="h5">Søkere</Typography>
+                        </Box>
+                        {(data.listing.form.responders ?? []).length > 0 ? (
+                          <>
+                            {data.listing.form.responders.map((responder, index) => (
+                              <Tab
+                                key={index}
+                                value={responder}
+                                label={`${responder.firstName} ${responder.lastName}`}
+                              />
+                            ))}
+                          </>
+                        ) : (
+                          <CardContent>
+                            <Typography>Ingen søkere enda.</Typography>
+                          </CardContent>
+                        )}
                       </>
-                    ) : (
-                      <CardContent>
-                        <Typography>Ingen søkere enda.</Typography>
-                      </CardContent>
                     )}
                   </Tabs>
                 </Card>
@@ -116,13 +127,7 @@ const ListingAdminPage: NextPage = () => {
           </Grid>
           {data && (
             <Grid item xs={8}>
-              {selectedApplicant ? (
-                <>
-                  {data.listing.form && (
-                    <FormResponse user={selectedApplicant} formId={parseInt(data.listing.form.id)} />
-                  )}
-                </>
-              ) : (
+              {selectedApplicant === "listing" ? (
                 <Grid container direction="column" spacing={1}>
                   <Grid item>
                     <OrganizationListing listing={data.listing} />
@@ -151,6 +156,12 @@ const ListingAdminPage: NextPage = () => {
                     )}
                   </Grid>
                 </Grid>
+              ) : (
+                <>
+                  {data.listing.form && (
+                    <FormResponse user={selectedApplicant} formId={parseInt(data.listing.form.id)} />
+                  )}
+                </>
               )}
             </Grid>
           )}
