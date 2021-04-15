@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
 export const QUERY_ALL_BOOKINGS = gql`
-  query {
-    allBookings {
+  query AllBookings($after: String) {
+    allBookings(after: $after) {
       id
       firstname
       surname
