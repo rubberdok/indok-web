@@ -26,6 +26,13 @@ import { Check, Close, Warning } from "@material-ui/icons";
 import React, { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import nb from "dayjs/locale/nb";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.locale(nb);
+dayjs.tz.setDefault("Europe/Oslo");
+const DATE_FORMAT = "YYYY-MM-DDTHH:mm:ss";
 
 interface EditEventProps {
   open: boolean;
@@ -51,6 +58,7 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
     hasExtraInformation: false,
     contactEmail: "",
     bindingSignup: false,
+    allowedGradeYears: [1, 2, 3, 4, 5],
   };
 
   const [eventData, setEventData] = useState(defaultInput);
@@ -79,16 +87,16 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
     });
     initialEventData.categoryId = event.category ? event.category.id : "";
 
-    initialEventData.startTime = dayjs(event.startTime).locale(nb).format("YYYY-MM-DDTHH:mm:ss+02:00");
+    initialEventData.startTime = dayjs(event.startTime).format(DATE_FORMAT);
 
     if (event.signupOpenDate) {
-      initialEventData.signupOpenDate = dayjs(event.signupOpenDate).locale(nb).format("YYYY-MM-DDTHH:mm:ss+02:00");
+      initialEventData.signupOpenDate = dayjs(event.signupOpenDate).format(DATE_FORMAT);
     }
     if (event.deadline) {
-      initialEventData.deadline = dayjs(event.deadline).locale(nb).format("YYYY-MM-DDTHH:mm:ss+02:00");
+      initialEventData.deadline = dayjs(event.deadline).format(DATE_FORMAT);
     }
     if (event.endTime) {
-      initialEventData.endTime = dayjs(event.endTime).locale(nb).format("YYYY-MM-DDTHH:mm:ss+02:00");
+      initialEventData.endTime = dayjs(event.endTime).format(DATE_FORMAT);
     }
     setEventData(initialEventData);
   }, []);
@@ -109,6 +117,7 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
         hasExtraInformation: false,
         signupOpenDate: "",
         deadline: "",
+        allowedGradeYears: [1, 2, 3, 4, 5],
       });
     }
   };
@@ -203,6 +212,37 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
                 onChange={(e) => setEventData({ ...eventData, availableSlots: e.currentTarget.value })}
                 disabled={!eventData.isAttendable}
               />
+            </Tooltip>
+          </Grid>
+          <Grid item xs={6}>
+            <Tooltip
+              disableHoverListener={eventData.isAttendable}
+              disableFocusListener={eventData.isAttendable}
+              title="Kun aktuelt ved påmelding"
+            >
+              <FormControl fullWidth>
+                <InputLabel id="select-grade-years-label" shrink>
+                  Åpent for
+                </InputLabel>
+                <Select
+                  labelId="select-grade-years-label"
+                  id="select-grade-years"
+                  name="grade-years"
+                  value={eventData.allowedGradeYears}
+                  multiple
+                  onChange={(e) => {
+                    setEventData({ ...eventData, allowedGradeYears: e.target.value });
+                  }}
+                  displayEmpty
+                  disabled={!eventData.isAttendable}
+                >
+                  {[1, 2, 3, 4, 5].map((year: number) => (
+                    <MenuItem key={year} value={year}>
+                      {`${year}. klasse`}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Tooltip>
           </Grid>
           <Grid item xs={6}>

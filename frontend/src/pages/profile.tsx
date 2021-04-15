@@ -105,7 +105,7 @@ const ProfilePage: NextPage = () => {
                       </Box>
                       {data.user.dateJoined && (
                         <Typography variant="body2">
-                          Medlem siden {new Date(data.user.dateJoined).toLocaleString()} <br />
+                          Medlem siden {new Date(data.user.dateJoined).toLocaleString().split(",")[0]} <br />
                         </Typography>
                       )}
                     </Box>
@@ -125,7 +125,7 @@ const ProfilePage: NextPage = () => {
                         <Typography gutterBottom variant="h4">
                           Mine organisasjoner
                         </Typography>
-                        <Typography>{`Her kommer en liste over alle organisasjoner ${data.user.firstName} er medlem av`}</Typography>
+                        <Typography>{`Her kommer en liste over alle organisasjoner du er medlem av`}</Typography>
                       </CardContent>
                       <CardActions>
                         <Link href="/orgs">
@@ -140,7 +140,7 @@ const ProfilePage: NextPage = () => {
                         <Typography gutterBottom variant="h4">
                           Mine arrangementer
                         </Typography>
-                        <Typography>{`Her kommer en liste over alle arrangementer ${data.user.firstName} har meldt seg på`}</Typography>
+                        <Typography>{`Her kommer en liste over alle arrangementer du har meldt deg på`}</Typography>
                       </CardContent>
                       <CardActions>
                         <Link href="/events" passHref>
@@ -155,7 +155,7 @@ const ProfilePage: NextPage = () => {
                         <Typography gutterBottom variant="h4">
                           Mine vervsøknader
                         </Typography>
-                        <Typography>{`Her kommer en liste over verv ${data.user.firstName} har søkt på`}</Typography>
+                        <Typography>{`Her kommer en liste over verv du har søkt på`}</Typography>
                       </CardContent>
                       <CardActions>
                         <Button disabled>Gå til vervsøking</Button>

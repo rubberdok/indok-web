@@ -1,11 +1,13 @@
+import datetime
+
+from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
-import datetime
-
+from guardian.conf import settings as guardian_settings
 
 # Create your models here.
-from apps.events.models import SignUp, Event
+from apps.events.models import Event, SignUp
 
 
 class User(AbstractUser):
@@ -34,3 +36,23 @@ class User(AbstractUser):
             return 5 - (self.graduation_year - current_year)
         else:
             return 6 - (self.graduation_year - current_year)
+
+    @property
+    def is_authenticated(self):
+        return self.username != settings.ANONYMOUS_USER_NAME
+
+    @property
+    def is_anonymous(self):
+        return not self.is_authenticated
+
+    def __str__(self):
+        return f"User(name='{self.first_name} {self.last_name}')"
+
+
+def get_anonymous_user_instance(User):
+    anonymous_username = guardian_settings.ANONYMOUS_USER_NAME
+    attributes = {
+        "feide_userid": anonymous_username,
+        User.USERNAME_FIELD: anonymous_username,
+    }
+    return User(**attributes)
