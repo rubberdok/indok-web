@@ -1,18 +1,18 @@
 import {
-  Dialog,
-  DialogContent,
-  Typography,
-  TextField,
-  DialogActions,
-  Button,
-  Tooltip,
-  Grid,
   Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  Grid,
+  TextField,
+  Tooltip,
+  Typography,
 } from "@material-ui/core";
-import React, { Dispatch, SetStateAction } from "react";
-import { SendEmailProps } from ".";
 import ClearIcon from "@material-ui/icons/Clear";
 import SendIcon from "@material-ui/icons/Send";
+import React, { Dispatch, SetStateAction } from "react";
+import { SendEmailProps } from "./EmailForm";
 
 interface EmailFormDialogProps {
   showEmailForm: boolean;

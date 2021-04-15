@@ -1,13 +1,12 @@
 import { useMutation, useQuery } from "@apollo/client";
 import Layout from "@components/Layout";
-import AttendeeExport from "@components/pages/events/attendeeExport";
-import EditEvent from "@components/pages/events/editEvent";
-import EmailForm from "@components/pages/events/EventEmail";
+import AttendeeExport from "@components/pages/events/AttendeeExport";
+import EmailForm from "@components/pages/events/email/EmailForm";
+import EditEvent from "@components/pages/events/EventEditor";
 import { ADMIN_EVENT_SIGN_OFF } from "@graphql/events/mutations";
 import { ADMIN_GET_EVENT } from "@graphql/events/queries";
 import { Event } from "@interfaces/events";
 import { User } from "@interfaces/users";
-import { Alert } from "@material-ui/lab";
 import {
   Box,
   Button,
@@ -32,6 +31,7 @@ import {
 } from "@material-ui/core";
 import { Edit } from "@material-ui/icons";
 import DeleteIcon from "@material-ui/icons/Delete";
+import { Alert } from "@material-ui/lab";
 import dayjs from "dayjs";
 import { NextPage } from "next";
 import { useRouter } from "next/router";

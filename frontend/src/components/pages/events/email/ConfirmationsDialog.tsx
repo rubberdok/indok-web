@@ -1,7 +1,7 @@
-import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button, Link } from "@material-ui/core";
-import React, { Dispatch, SetStateAction } from "react";
-import { SendEmailProps } from ".";
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Link } from "@material-ui/core";
 import ClearIcon from "@material-ui/icons/Clear";
+import React, { Dispatch, SetStateAction } from "react";
+import { SendEmailProps } from "./EmailForm";
 
 interface ConfirmationDialogProps {
   showConfirmation: boolean;

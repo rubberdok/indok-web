@@ -3,9 +3,9 @@ import { QUERY_EVENT_FILTERED_ORGANIZATIONS } from "@graphql/events/queries";
 import { Divider, IconButton, List, ListItem, ListItemText, makeStyles, Tooltip } from "@material-ui/core";
 import { Refresh, StarBorderRounded, StarRounded } from "@material-ui/icons";
 import React from "react";
-import { FilterQuery } from "..";
-import CategoryFilter from "./categoryFilter";
-import DateTimeFilter from "./dateTimeFilter";
+import { FilterQuery } from "../AllEvents";
+import CategoryFilter from "./CategoryFilter";
+import DateTimeFilter from "./DateTimeFilter";
 import OrganizationFilter from "./OrganizationFilter";
 
 interface Props {

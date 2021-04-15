@@ -3,7 +3,7 @@ import { Container, makeStyles } from "@material-ui/core";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import React from "react";
-import EventDetailPage from "../../components/pages/events/eventDetailPage";
+import EventDetailPage from "../../components/pages/events/EventDetails";
 
 const useStyles = makeStyles((theme) => ({
   container: {

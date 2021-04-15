@@ -1,14 +1,14 @@
 import { useQuery } from "@apollo/client";
-import { GET_USER } from "@graphql/users/queries";
 import { GET_DEFAULT_EVENTS, GET_EVENTS } from "@graphql/events/queries";
+import { GET_USER } from "@graphql/users/queries";
 import { Event } from "@interfaces/events";
 import { User } from "@interfaces/users";
-import { Button, CircularProgress, Container, Grid, makeStyles, Paper, Tab, Tabs, Typography } from "@material-ui/core";
+import { Button, CircularProgress, Grid, makeStyles, Typography } from "@material-ui/core";
+import { Add, List } from "@material-ui/icons";
+import Link from "next/link";
 import React, { useState } from "react";
 import EventListItem from "./EventListItem";
-import FilterMenu from "./FilterMenu/index";
-import Link from "next/link";
-import { Add, List } from "@material-ui/icons";
+import FilterMenu from "./filterMenu/FilterMenu";
 
 export interface FilterQuery {
   organization?: string;
@@ -18,25 +18,6 @@ export interface FilterQuery {
 }
 
 const useStyles = makeStyles((theme) => ({
-  container: {
-    padding: 0,
-  },
-  tabsContainer: {
-    width: "fit-content",
-    float: "left",
-  },
-  tabs: {},
-  progessContainer: {
-    paddingLeft: "45%",
-    paddingTop: theme.spacing(6),
-  },
-  headerContainer: {
-    padding: 0,
-  },
-  createButtonContainer: {
-    width: "fit-content",
-    float: "right",
-  },
   grid: {
     padding: theme.spacing(3),
     paddingTop: theme.spacing(2),
@@ -59,7 +40,7 @@ const AllEvents: React.FC = () => {
   const classes = useStyles();
   const [filters, setFilters] = useState({});
   const [showDefaultEvents, setShowDefaultEvents] = useState(false);
-  const [showCalendarView, setShowCalenderView] = useState(false);
+
   const { loading: userLoading, data: userData } = useQuery<{ user: User }>(GET_USER);
 
   const { loading: eventsLoading, error: eventsError, data: eventsData, refetch } = useQuery(GET_EVENTS, {
@@ -83,45 +64,24 @@ const AllEvents: React.FC = () => {
   };
 
   return (
-    <Container className={classes.container}>
-      <Container className={classes.headerContainer}>
-        <Container className={classes.tabsContainer}>
-          <Paper square>
-            <Tabs
-              value={showCalendarView ? 1 : 0}
-              onChange={() => setShowCalenderView(!showCalendarView)}
-              indicatorColor="primary"
-              textColor="primary"
-              className={classes.tabs}
-            >
-              <Tab label="Liste" />
-              <Tab label="Kalender" />
-            </Tabs>
-          </Paper>
-        </Container>
-
-        {userData && !userLoading && userData.user && !!userData.user.organizations.length && (
-          <Container className={classes.createButtonContainer}>
-            <Link href="/events/create-event" passHref>
-              <Button color="primary" disableRipple startIcon={<Add />}>
-                <Typography variant="body1">Opprett</Typography>
-              </Button>
-            </Link>
-          </Container>
-        )}
-        {userData && !userLoading && userData.user && !!userData.user.organizations.length && (
-          <Container className={classes.createButtonContainer}>
-            <Link
-              href={userData.user.organizations.length > 1 ? "/orgs" : `/orgs/${userData.user.organizations[0].id}`}
-              passHref
-            >
-              <Button color="primary" disableRipple startIcon={<List />}>
-                <Typography variant="body1">Mine arrangementer</Typography>
-              </Button>
-            </Link>
-          </Container>
-        )}
-      </Container>
+    <>
+      {userData && !userLoading && userData.user && !!userData.user.organizations.length && (
+        <Link href="/events/create-event" passHref>
+          <Button color="primary" disableRipple startIcon={<Add />}>
+            <Typography variant="body1">Opprett</Typography>
+          </Button>
+        </Link>
+      )}
+      {userData && !userLoading && userData.user && !!userData.user.organizations.length && (
+        <Link
+          href={userData.user.organizations.length > 1 ? "/orgs" : `/orgs/${userData.user.organizations[0].id}`}
+          passHref
+        >
+          <Button color="primary" disableRipple startIcon={<List />}>
+            <Typography variant="body1">Mine arrangementer</Typography>
+          </Button>
+        </Link>
+      )}
 
       <Grid container className={classes.grid} spacing={3}>
         <Grid item xs={3}>
@@ -134,19 +94,7 @@ const AllEvents: React.FC = () => {
         </Grid>
         <Grid item xs>
           {loading ? (
-            <Container className={classes.progessContainer}>
-              <CircularProgress />
-            </Container>
-          ) : showCalendarView ? (
-            <iframe
-              src="https://calendar.google.com/calendar/embed?src=sp3rre4hhjfofj8124jp5k093o%40group.calendar.google.com&ctz=Europe%2FOslo"
-              style={{ border: 0 }}
-              width="800"
-              height="600"
-              frameBorder="0"
-              scrolling="no"
-              title="indok-kalenderen"
-            ></iframe>
+            <CircularProgress />
           ) : (
             <>
               {data === undefined || data.length === 0 ? (
@@ -160,7 +108,7 @@ const AllEvents: React.FC = () => {
           )}
         </Grid>
       </Grid>
-    </Container>
+    </>
   );
 };
 

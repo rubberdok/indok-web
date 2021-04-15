@@ -1,25 +1,25 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { GET_USER } from "@graphql/users/queries";
 import { EVENT_SIGN_OFF, EVENT_SIGN_UP } from "@graphql/events/mutations";
+import { GET_USER } from "@graphql/users/queries";
+import { GET_SERVER_TIME } from "@graphql/utils/time/queries";
 import { AttendableEvent, Event } from "@interfaces/events";
 import { User } from "@interfaces/users";
-import { Box, Button, Grid, Paper, Snackbar, Typography, TextField, Link as MuiLink } from "@material-ui/core";
+import { Box, Button, Grid, Link as MuiLink, Paper, Snackbar, TextField, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import { ArrowRight, ContactMail, Edit, ErrorOutline, List, Warning } from "@material-ui/icons";
 import CategoryIcon from "@material-ui/icons/Category";
 import CreditCard from "@material-ui/icons/CreditCard";
 import EventIcon from "@material-ui/icons/Event";
 import LocationOnIcon from "@material-ui/icons/LocationOn";
 import ScheduleIcon from "@material-ui/icons/Schedule";
 import { Alert } from "@material-ui/lab";
+import dayjs from "dayjs";
+import nb from "dayjs/locale/nb";
 import Link from "next/link";
 import React, { useState } from "react";
 import { GET_EVENT } from "../../../graphql/events/queries";
 import CountdownButton from "./CountdownButton";
-import { ArrowRight, ContactMail, Edit, ErrorOutline, List, Warning } from "@material-ui/icons";
-import EditEvent from "./editEvent";
-import dayjs from "dayjs";
-import nb from "dayjs/locale/nb";
-import { GET_SERVER_TIME } from "@graphql/utils/time/queries";
+import EditEvent from "./EventEditor";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -79,7 +79,7 @@ function formatDescription(desc: string, innerClass: any, outerClass: any) {
   );
 }
 
-const EventDetailPage: React.FC<Props> = ({ eventId }) => {
+const EventDetails: React.FC<Props> = ({ eventId }) => {
   const [openSignUpSnackbar, setOpenSignUpSnackbar] = useState(false);
   const [openSignOffSnackbar, setOpenSignOffSnackbar] = useState(false);
   const [openOnWaitingListSnackbar, setOpenOnWaitingListSnackbar] = useState(false);
@@ -422,4 +422,4 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
   );
 };
 
-export default EventDetailPage;
+export default EventDetails;
