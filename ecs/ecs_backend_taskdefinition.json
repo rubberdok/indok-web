@@ -44,7 +44,7 @@
         {
           "name": "AWS_SECRET_ACCESS_KEY",
           "value": "%s"
-        },
+        }
       ],
       "logConfiguration": {
         "logDriver": "awslogs",
