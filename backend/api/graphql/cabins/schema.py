@@ -14,5 +14,9 @@ class CabinMutations(graphene.ObjectType):
 
 
 class CabinQueries(graphene.ObjectType, CabinResolvers):
-    all_bookings = graphene.List(BookingType)
+    all_bookings = graphene.List(
+        BookingType,
+        before=graphene.String(required=False),
+        after=graphene.String(required=False),
+    )
     cabins = graphene.List(CabinType)
