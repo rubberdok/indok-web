@@ -1,21 +1,28 @@
 import { gql } from "@apollo/client";
 
+export const FORM_FRAGMENT = gql`
+  fragment FormFields on FormType {
+    id
+    name
+    questions {
+      id
+      question
+      description
+      questionType
+      mandatory
+      options {
+        id
+        answer
+      }
+    }
+  }
+`;
+
 export const FORM = gql`
+  ${FORM_FRAGMENT}
   query Form($formId: ID!) {
     form(formId: $formId) {
-      id
-      name
-      questions {
-        id
-        question
-        description
-        questionType
-        mandatory
-        options {
-          id
-          answer
-        }
-      }
+      ...FormFields
     }
   }
 `;

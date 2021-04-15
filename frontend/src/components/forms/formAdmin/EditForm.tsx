@@ -1,8 +1,8 @@
 import { useMutation, useQuery } from "@apollo/client";
 import EditQuestion from "@components/forms/formAdmin/EditQuestion";
 import QuestionPreview from "@components/forms/formAdmin/QuestionPreview";
-import { CREATE_QUESTION, UPDATE_QUESTION } from "@graphql/forms/mutations";
-import { FORM } from "@graphql/forms/queries";
+import { CREATE_QUESTION, UPDATE_QUESTION, DELETE_QUESTION } from "@graphql/forms/mutations";
+import { FORM, FORM_FRAGMENT } from "@graphql/forms/queries";
 import { Question, QuestionVariables, Form } from "@interfaces/forms";
 import { Button, Grid, Typography, Card, CardContent } from "@material-ui/core";
 import { useState } from "react";
@@ -25,21 +25,19 @@ const EditForm: React.FC<{ formId: string }> = ({ formId }) => {
     update: (cache, { data }) => {
       const newQuestion = data?.updateQuestion.question;
       // reads the cached form on which to update the question
-      const cachedForm = cache.readQuery<{ form: Form }>({
-        query: FORM,
-        variables: { formId: formId },
+      const cachedForm = cache.readFragment<Form>({
+        id: `FormType:${formId}`,
+        fragment: FORM_FRAGMENT,
       });
       if (cachedForm && newQuestion) {
         // overwrites the outdated question with the updated one
-        cache.writeQuery({
-          query: FORM,
-          variables: { formId: formId },
+        cache.writeFragment({
+          id: `FormType:${formId}`,
+          fragment: FORM_FRAGMENT,
           data: {
-            form: {
-              questions: cachedForm.form.questions.map((question) =>
-                question.id === newQuestion.id ? newQuestion : question
-              ),
-            },
+            questions: cachedForm.questions.map((question) =>
+              question.id === newQuestion.id ? newQuestion : question
+            ),
           },
         });
       }
@@ -83,18 +81,16 @@ const EditForm: React.FC<{ formId: string }> = ({ formId }) => {
     // updates the cache upon creating the question
     update: (cache, { data }) => {
       const newQuestion = data?.createQuestion.question;
-      const cachedForm = cache.readQuery<{ form: Form }>({
-        query: FORM,
-        variables: { formId: formId },
+      const cachedForm = cache.readFragment<Form>({
+        id: `FormType:${formId}`,
+        fragment: FORM_FRAGMENT,
       });
       if (cachedForm && newQuestion) {
-        cache.writeQuery({
-          query: FORM,
-          variables: { formId: formId },
+        cache.writeFragment({
+          id: `FormType:${formId}`,
+          fragment: FORM_FRAGMENT,
           data: {
-            form: {
-              questions: [...cachedForm.form.questions, newQuestion],
-            },
+            questions: [...cachedForm.questions, newQuestion],
           },
         });
       }
@@ -102,6 +98,27 @@ const EditForm: React.FC<{ formId: string }> = ({ formId }) => {
     onCompleted: ({ createQuestion }) => {
       if (createQuestion) {
         switchActiveQuestion(createQuestion.question);
+      }
+    },
+  });
+
+  // mutation to delete the question
+  const [deleteQuestion] = useMutation<{ deleteQuestion: { deletedId: string } }>(DELETE_QUESTION, {
+    // updates the cache upon deleting the question
+    update: (cache, { data }) => {
+      const cachedForm = cache.readFragment<Form>({
+        id: `FormType:${formId}`,
+        fragment: FORM_FRAGMENT,
+      });
+      const deletedId = data?.deleteQuestion.deletedId;
+      if (cachedForm && deletedId) {
+        cache.writeFragment({
+          id: `FormType:${formId}`,
+          fragment: FORM_FRAGMENT,
+          data: {
+            questions: cachedForm.questions.filter((question) => question.id !== deletedId),
+          },
+        });
       }
     },
   });
@@ -118,7 +135,7 @@ const EditForm: React.FC<{ formId: string }> = ({ formId }) => {
           {deleteDialogShown && activeQuestion && (
             <DeleteQuestion
               questionId={activeQuestion.id}
-              formId={data.form.id}
+              deleteQuestion={(id) => deleteQuestion({ variables: { id: id } })}
               onClose={() => showDeleteDialog(false)}
             />
           )}
