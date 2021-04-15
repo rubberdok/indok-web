@@ -1,0 +1,27 @@
+name: Django Tests
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches:
+      - "**"
+
+env:
+  DATAPORTEN_ID: ${{ secrets.DATAPORTEN_ID }}
+  DATAPORTEN_REDIRECT_URI: ${{ secrets.DATAPORTEN_REDIRECT_URI }}
+  DATAPORTEN_SECRET: ${{ secrets.DATAPORTEN_SECRET }}
+  GOOGLE_DRIVE_API_KEY: ${{ secrets.GOOGLE_DRIVE_API_KEY }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: echo
+        run: echo $GOOGLE_DRIVE_API_KEY
+      - uses: actions/checkout@v2
+      - name: Build the project
+        run: docker-compose -f docker-compose.test.yml up -d
+      - name: Run the django tests
+        run: docker-compose exec -T backend python manage.py tests
