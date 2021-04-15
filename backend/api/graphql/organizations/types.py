@@ -23,6 +23,7 @@ class OrganizationType(DjangoObjectType):
             "children",
             "users",
             "events",
+            "logo_url",
         ]
 
     @staticmethod

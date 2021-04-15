@@ -33,7 +33,7 @@ deploy_cluster() {
   service="indokweb-backend-fg-service"
   template="ecs_backend_taskdefinition.json"
   task_template=$(cat "ecs/$template")
-  task_def=$(printf "$task_template" $AWS_ACCOUNT_ID $AWS_RDS_HOST $AWS_RDS_PASSWORD $PRODUCTION_SECRET_KEY $DATAPORTEN_SECRET $BOOKING_EMAIL_PASSWORD $GOOGLE_DRIVE_API_KEY $DJANGO_SETTINGS_MODULE)
+  task_def=$(printf "$task_template" $AWS_ACCOUNT_ID $AWS_RDS_HOST $AWS_RDS_PASSWORD $PRODUCTION_SECRET_KEY $DATAPORTEN_SECRET $GOOGLE_DRIVE_API_KEY $DJANGO_SETTINGS_MODULE $AWS_SECRET_ACCESS_KEY)
   echo "$task_def"
   register_definition
   update_service

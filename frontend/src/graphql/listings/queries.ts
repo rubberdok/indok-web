@@ -14,6 +14,7 @@ export const LISTINGS = gql`
       organization {
         name
         slug
+        logoUrl
       }
     }
   }
