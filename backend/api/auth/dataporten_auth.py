@@ -194,8 +194,6 @@ class DataportenAuth:
             print(f"\nUser {username} exists, updating in the database")
             user.id_token = id_token
             user.last_login = timezone.now()
-            if not user.feide_email:
-                user.feide_email = email
             user.save()
             enrolled = True
 
