@@ -7,7 +7,7 @@ import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
-import renderers from "@components/pages/listings/markdown/renderer";
+import renderers from "@components/pages/listings/markdown/renderers";
 
 dayjs.extend(timezone);
 dayjs.extend(utc);

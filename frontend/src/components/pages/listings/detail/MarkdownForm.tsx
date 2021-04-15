@@ -1,6 +1,6 @@
 import { Tab, Tabs, TextField } from "@material-ui/core";
 import ReactMarkdown from "react-markdown";
-import renderers from "../markdown/renderer";
+import renderers from "@components/pages/listings/markdown/renderers";
 import { ChangeEventHandler, useState } from "react";
 
 const MarkdownForm: React.FC<{
