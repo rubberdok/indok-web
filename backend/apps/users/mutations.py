@@ -80,11 +80,11 @@ class UpdateUser(graphene.Mutation):
                     params={"graduation_year": graduation_year},
                 )
 
-        if not user.email and not user_data.get("email"):
-            user.email = user.feide_email
-
         for k, v in user_data.items():
             setattr(user, k, v)
+
+        if not user.email and not user_data.get("email"):
+            user.email = user.feide_email
 
         # Validate fields
         user.full_clean(exclude=["password"])
