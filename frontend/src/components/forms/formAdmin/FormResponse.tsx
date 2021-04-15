@@ -15,7 +15,7 @@ type QuestionWithAnswer = Question & {
  * - ID of the relevant form
  * - the applicant user
  */
-const FormAnswers: React.FC<{
+const FormResponse: React.FC<{
   formId: number;
   user: User;
 }> = ({ formId, user }) => {
@@ -50,4 +50,4 @@ const FormAnswers: React.FC<{
   );
 };
 
-export default FormAnswers;
+export default FormResponse;
