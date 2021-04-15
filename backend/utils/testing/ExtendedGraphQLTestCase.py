@@ -9,4 +9,4 @@ class ExtendedGraphQLTestCase(GraphQLTestCase):
 
     def auth_query(self, query, user, **kwargs):
         token = get_token(user)
-        self.query(self, query, headers={"cookie": {"JWT": token}}, **kwargs)
+        self.query(self, query, headers={"cookie": f"JWT={token}"}, **kwargs)
