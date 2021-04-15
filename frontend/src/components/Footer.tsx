@@ -1,9 +1,11 @@
 import {
   Box,
   Button,
+  Container,
   Dialog,
   DialogContent,
   DialogTitle,
+  Grid,
   IconButton,
   makeStyles,
   Paper,
@@ -14,14 +16,41 @@ import {
   TableRow,
   Typography,
 } from "@material-ui/core";
-import CloseIcon from "@material-ui/icons/Close";
+import { Close, Facebook, GitHub } from "@material-ui/icons";
+import Link from "next/link";
 import React from "react";
 
 const useStyles = makeStyles((theme) => ({
+  footer: {
+    color: "#b0aca5",
+    background: "#022a2a",
+    paddingBottom: theme.spacing(6),
+    paddingTop: theme.spacing(6),
+    position: "relative",
+    zIndex: 0,
+  },
   credits: {
-    padding: "30px 0",
-    color: "#fff",
-    background: "#000",
+    background: "#021c1c",
+    position: "relative",
+    display: "flex",
+    height: 112,
+    paddingTop: theme.spacing(5),
+    paddingBottom: theme.spacing(5),
+    color: "#b0aca5",
+    [theme.breakpoints.down("sm")]: {
+      height: "unset",
+      flexDirection: "column",
+    },
+  },
+  creditsContent: {
+    [theme.breakpoints.down("sm")]: {
+      flexDirection: "column",
+      alignItems: "center",
+    },
+
+    "& > *": {
+      marginBottom: theme.spacing(2),
+    },
   },
   table: {
     minWidth: 800,
@@ -32,9 +61,40 @@ const useStyles = makeStyles((theme) => ({
     top: theme.spacing(1),
     color: theme.palette.grey[500],
   },
-  text: {
-    position: "absolute",
-    marginLeft: 40,
+  title: {
+    color: "#fff",
+
+    "&:hover": {
+      cursor: "pointer",
+    },
+  },
+  nth: {
+    background: "url('/nth.svg')",
+    backgroundSize: 500,
+    backgroundPosition: "right center",
+    backgroundRepeat: "no-repeat",
+    opacity: 0.25,
+
+    [theme.breakpoints.down("md")]: {
+      width: "100%",
+      left: 0,
+    },
+  },
+  rdLogo: {
+    height: "100%",
+    float: "left",
+
+    [theme.breakpoints.up("md")]: {
+      marginRight: theme.spacing(4),
+    },
+
+    "&:hover": {
+      cursor: "pointer",
+    },
+  },
+  infoBox: {
+    marginTop: -80,
+    marginBottom: 72,
   },
 }));
 
@@ -45,22 +105,77 @@ const Footer: React.FC = () => {
 
   return (
     <>
-      <Box className={classes.credits}>
-        <Box margin="0 auto" maxWidth="90vw">
-          <Button variant="contained" onClick={() => setOpen(!open)}>
-            Hall of Fame
-          </Button>
-          <Typography className={classes.text} variant="caption">
-            Under konstruksjon av{" "}
-            <a href="https://github.com/hovedstyret/indok-web" rel="noreferrer" target="_blank">
-              RubberDøk
-            </a>
-            , Hovedstyret på Indøk sin webkomité. <br />
-            Kopirett © 2021 Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse. Alle rettigheter
-            reservert.
-          </Typography>
+      <div>
+        <Box className={classes.footer}>
+          <Container>
+            <Grid container>
+              <Grid item xs={12} md={6}>
+                <Link href="/" passHref>
+                  <Typography variant="h5" className={classes.title} gutterBottom>
+                    INDØK
+                  </Typography>
+                </Link>
+                <Typography variant="caption">
+                  Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse, NTNU
+                </Typography>
+                <br />
+                <Typography variant="caption">Kolbjørn Hejes vei 1E, 7034 Trondheim</Typography>
+                <br />
+                <Typography variant="caption">Org.nr. 994 778 463</Typography>
+                <br />
+                <a href="mailto:Leder@indokhs.no">
+                  <Typography variant="caption" gutterBottom>
+                    Leder@indokhs.no
+                  </Typography>
+                </a>
+                <Box mt={2}>
+                  <a href="https://www.facebook.com/HovedstyretIndok" rel="noreferrer noopener" target="_blank">
+                    <IconButton edge="start" size="small" aria-label="facebook" color="inherit">
+                      <Facebook />
+                    </IconButton>
+                  </a>
+                  <a href="https://github.com/hovedstyret/indok-web" rel="noreferrer noopener" target="_blank">
+                    <IconButton size="small" aria-label="github" color="inherit">
+                      <GitHub />
+                    </IconButton>
+                  </a>
+                </Box>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <Box className={classes.nth} position="absolute" width="600px" height="100%" top={0} zIndex={-1}></Box>
+              </Grid>
+            </Grid>
+          </Container>
         </Box>
-      </Box>
+        <Box className={classes.credits}>
+          <Container>
+            <Box height="100%" display="flex" alignItems="center" className={classes.creditsContent}>
+              <a href="https://github.com/hovedstyret/indok-web" rel="noreferrer noopener" style={{ height: "100%" }}>
+                <img className={classes.rdLogo} src="/rd-logo.svg" alt="Rubberdøk logo" />
+              </a>
+              <Box flexGrow="1">
+                <Typography variant="caption">
+                  Forslag til nettsiden eller oppdaget en feil? Lag en issue på{" "}
+                  <a href="https://github.com/hovedstyret/indok-web/issues">GitHub</a>, eller send mail til{" "}
+                  <a href="mailto:web@indokhs.no">web@indokhs.no</a>.
+                </Typography>
+                <br />
+                <Typography variant="caption">
+                  Utviklet av{" "}
+                  <a href="https://github.com/hovedstyret/indok-web" rel="norefferer noopener">
+                    RubberDøk
+                  </a>
+                  , Hovedstyrets Webkomité. Kopirett © {new Date().getFullYear()} Foreningen for Studentene ved Indøk.
+                  Alle rettigheter reservert.
+                </Typography>
+              </Box>
+              <Button color="inherit" disableRipple onClick={() => setOpen(!open)}>
+                Hall of Fame
+              </Button>
+            </Box>
+          </Container>
+        </Box>
+      </div>
       <Dialog
         maxWidth="xl"
         fullWidth={false}
@@ -72,9 +187,9 @@ const Footer: React.FC = () => {
           <Typography gutterBottom variant="h4">
             Hall of Fame 2020/2021
           </Typography>
-          <Typography variant="body1">Laget med blod, svette, tårer og kjærlighet av</Typography>
+          <Typography variant="body1">Progget med blod, svette, tårer og kjærlighet av</Typography>
           <IconButton className={classes.closeButton} aria-label="close" onClick={() => setOpen(!open)}>
-            <CloseIcon />
+            <Close />
           </IconButton>
         </DialogTitle>
         <DialogContent>
@@ -83,30 +198,76 @@ const Footer: React.FC = () => {
               <TableBody>
                 <TableRow>
                   <TableCell>
-                    <p>Morgan Heggland &apos;22</p> <p>(prosjektleder)</p>
+                    Morgan Heggland &apos;22
+                    <br />
+                    <Typography variant="caption">Big Boss Morgan</Typography>
                   </TableCell>
                   <TableCell>
-                    <p>Lars Lien Ankile &apos;22</p> <p>(Lederpar Hovedstyret)</p>
+                    Lars Lien Ankile &apos;22
+                    <br />
+                    <Typography variant="caption">LP &amp; Chief Devops Architect</Typography>
                   </TableCell>
                   <TableCell>
-                    <p>Andreas Johannesen &apos;22</p> <p>(Lederpar Hovedstyret)</p>
+                    Andreas Johannesen &apos;22
+                    <br />
+                    <Typography variant="caption">LP &amp; Chief Visionary</Typography>
                   </TableCell>
-                  <TableCell>Ingrid Aaseng &apos;22</TableCell>
+                  <TableCell>
+                    Ingrid Aaseng &apos;22
+                    <br />
+                    <Typography variant="caption">Head of Archive Solutions</Typography>
+                  </TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell>Herman Holmøy &apos;25</TableCell>
-                  <TableCell>Fredrik Ahlborg &apos;22</TableCell>
-                  <TableCell>Patrik Kjærran &apos;22</TableCell>
-                  <TableCell>Anna Sofie Lunde &apos;22</TableCell>
+                  <TableCell>
+                    Fredrik Ahlborg &apos;22
+                    <br />
+                    <Typography variant="caption">Content Creator &amp; Social Chair</Typography>
+                  </TableCell>
+                  <TableCell>
+                    Herman Holmøy &apos;25
+                    <br />
+                    <Typography variant="caption">Cabin Management System</Typography>
+                  </TableCell>
+                  <TableCell>
+                    Patrik Kjærran &apos;22
+                    <br />
+                    <Typography variant="caption">Event Backend Strategist</Typography>
+                  </TableCell>
+                  <TableCell>
+                    Anna Sofie Lunde &apos;22
+                    <br />
+                    <Typography variant="caption">Head of Archive Solutions</Typography>
+                  </TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell>Hermann Mørkrid &apos;23</TableCell>
-                  <TableCell>Mathias Raa &apos;25</TableCell>
-                  <TableCell>Mathilde Marie Solberg &apos;23</TableCell>
-                  <TableCell>Sverre Spetalen &apos;21</TableCell>
+                  <TableCell>
+                    Hermann Mørkrid &apos;23
+                    <br />
+                    <Typography variant="caption">Head of Extracurricular System</Typography>
+                  </TableCell>
+                  <TableCell>
+                    Mathias Raa &apos;25
+                    <br />
+                    <Typography variant="caption">Art Director &amp; UX Architect</Typography>
+                  </TableCell>
+                  <TableCell>
+                    Mathilde Marie Solberg &apos;23
+                    <br />
+                    <Typography variant="caption">Global Head of Event</Typography>
+                  </TableCell>
+                  <TableCell>
+                    Sverre Spetalen &apos;21
+                    <br />
+                    <Typography variant="caption">Cabin Management System</Typography>
+                  </TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell>Lars Waage &apos;23</TableCell>
+                  <TableCell>
+                    Lars Waage &apos;23
+                    <br />
+                    <Typography variant="caption">Head of Extracurricular System</Typography>
+                  </TableCell>
                 </TableRow>
               </TableBody>
             </Table>

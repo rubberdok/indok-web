@@ -50,8 +50,8 @@ const useStyles = makeStyles(() => ({
     opacity: 1,
     fontFamily: "montserrat",
     fontSize: "14px",
-    paddingTop: "6px",
-    paddingBottom: "6px",
+    paddingTop: "0px",
+    paddingBottom: "0px",
     justifyContent: "space-evenly",
     "&:hover": {
       color: "white",

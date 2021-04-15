@@ -53,11 +53,14 @@ INSTALLED_APPS = [
     "apps.events",
     "apps.organizations",
     "apps.users",
+    "apps.forms",
+    "apps.listings",
     # External apps
     "corsheaders",
     "graphene_django",
     "rest_framework",
     "phonenumber_field",
+    "guardian",
 ]
 
 AUTH_USER_MODEL = "users.User"
@@ -66,6 +69,7 @@ GRAPHENE = {
     "SCHEMA": "api.graphql.schema.schema",
     "MIDDLEWARE": [
         "graphql_jwt.middleware.JSONWebTokenMiddleware",
+        "api.auth.middleware.AnonymousUserMiddleware",
     ],
 }
 
@@ -123,7 +127,15 @@ DATABASES = {
 AUTHENTICATION_BACKENDS = [
     "graphql_jwt.backends.JSONWebTokenBackend",
     "django.contrib.auth.backends.ModelBackend",
+    "guardian.backends.ObjectPermissionBackend",
 ]
+
+# Guardian custom user fix
+# https://django-guardian.readthedocs.io/en/stable/userguide/custom-user-model.html#anonymous-user-creation
+GUARDIAN_GET_INIT_ANONYMOUS_USER = "apps.users.models.get_anonymous_user_instance"
+
+ANONYMOUS_USER_NAME = "AnonymousUser"
+
 
 DATAPORTEN_ID = env("DATAPORTEN_ID")
 DATAPORTEN_SECRET = env("DATAPORTEN_SECRET")

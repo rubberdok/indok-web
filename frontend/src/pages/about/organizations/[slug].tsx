@@ -108,7 +108,7 @@ const Article: NextPage<ArticleProps> = ({ post, frontmatter }) => {
             {frontmatter.styre ? (
               <>
                 <Typography variant="h5" gutterBottom>
-                  Personer
+                  Styret
                 </Typography>
                 {Object.keys(frontmatter.styre).map((item: any) => (
                   <>

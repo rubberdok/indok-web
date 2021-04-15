@@ -1,6 +1,7 @@
 import graphene
 from apps.events.models import Category, Event, SignUp
 from apps.organizations.models import Organization
+from django.contrib.auth import get_user_model
 from apps.organizations.permissions import check_user_membership
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404
@@ -28,6 +29,7 @@ class BaseEventInput:
     has_extra_information = graphene.Boolean(required=False)
     contact_email = graphene.String(required=False)
     binding_signup = graphene.Boolean(required=False)
+    allowed_grade_years = graphene.List(graphene.Int)
 
 
 class CreateEventInput(BaseEventInput, graphene.InputObjectType):
@@ -132,6 +134,11 @@ class EventSignUp(graphene.Mutation):
         except Event.DoesNotExist:
             raise ValueError("Ugyldig arrangement")
 
+        now = timezone.now()
+
+        if now < event.signup_open_date:
+            raise Exception("Arrangementet er ikke åpent for påmelding enda")
+
         user = info.context.user
 
         if not str(user.grade_year) in event.allowed_grade_years:
@@ -140,11 +147,16 @@ class EventSignUp(graphene.Mutation):
                 event.allowed_grade_years,
             )
 
+        if SignUp.objects.filter(
+            event_id=event_id, is_attending=True, user_id=info.context.user.id
+        ).exists():
+            raise Exception("Du kan ikke melde deg på samme arrangement flere ganger")
+
         sign_up = SignUp()
         if data.extra_information:
             setattr(sign_up, "extra_information", data.extra_information)
 
-        setattr(sign_up, "timestamp", timezone.now())
+        setattr(sign_up, "timestamp", now)
         setattr(sign_up, "is_attending", True)
         setattr(sign_up, "event", event)
         setattr(sign_up, "user", user)
@@ -180,11 +192,7 @@ class EventSignOff(graphene.Mutation):
             )
 
         try:
-            sign_up = (
-                SignUp.objects.filter(is_attending=True)
-                .order_by("-timestamp")
-                .get(user=user, event=event)
-            )
+            sign_up = SignUp.objects.get(is_attending=True, user=user, event=event)
         except SignUp.DoesNotExist:
             raise Exception("Du er ikke påmeldt")
 
@@ -192,6 +200,38 @@ class EventSignOff(graphene.Mutation):
         sign_up.save()
 
         return EventSignOff(event=event, is_full=event.is_full)
+
+
+class AdminEventSignOff(graphene.Mutation):
+    class Arguments:
+        event_id = graphene.ID(required=True)
+        user_id = graphene.ID(required=True)
+
+    event = graphene.Field(EventType)
+
+    @login_required
+    def mutate(self, info, event_id, user_id):
+        try:
+            event = Event.objects.get(pk=event_id)
+        except Event.DoesNotExist:
+            raise ValueError("Ugyldig arrangement")
+
+        check_user_membership(info.context.user, event.organization)
+
+        try:
+            user = get_user_model().objects.get(pk=user_id)
+        except Event.DoesNotExist:
+            raise ValueError("Kunne ikke finne brukeren")
+
+        try:
+            sign_up = SignUp.objects.get(is_attending=True, user=user, event=event)
+        except SignUp.DoesNotExist:
+            raise Exception("Kunne ikke finne påmeldingen")
+
+        setattr(sign_up, "is_attending", False)
+        sign_up.save()
+
+        return AdminEventSignOff(event=event)
 
 
 class CategoryInput(graphene.InputObjectType):

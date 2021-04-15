@@ -116,7 +116,7 @@ const ListDocuments: React.FC<ListDocumentsProps> = ({ document_types, year, nam
             </GridListTile>
           ))
         ) : (
-          <Container>
+          <Container style={{ flex: 1 }}>
             <Typography> Fant ingen dokumenter som samsvarer med søket ditt </Typography>
           </Container>
         )}

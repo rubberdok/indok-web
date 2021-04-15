@@ -3,30 +3,11 @@ import { User } from "@interfaces/users";
 import { Typography, Chip, useTheme, Box } from "@material-ui/core";
 import Link from "next/link";
 import React from "react";
-
-const MONTHS: Record<string, string> = {
-  "01": "januar",
-  "02": "februar",
-  "03": "mars",
-  "04": "april",
-  "05": "mai",
-  "06": "juni",
-  "07": "juli",
-  "08": "august",
-  "09": "september",
-  "10": "oktober",
-  "11": "november",
-  "12": "desember",
-};
+import dayjs from "dayjs";
+import nb from "dayjs/locale/nb";
 
 const formatDate = (dateAndTime: string) => {
-  const fullDate = dateAndTime.split("T")[0];
-  const year = fullDate.split("-")[0];
-  const month = MONTHS[fullDate.split("-")[1]];
-  const date = fullDate.split("-")[2];
-  const fullTime = dateAndTime.split("T")[1];
-  const time = fullTime.slice(0, 5);
-  return `${date}.${month} ${year}, kl. ${time}`;
+  return dayjs(dateAndTime).locale(nb).format(`DD.MMM YYYY, kl. HH:mm`);
 };
 
 interface Props {
@@ -54,7 +35,7 @@ const EventListItem: React.FC<Props> = ({ event, user, classes }) => {
           {event.shortDescription ?? "Trykk for å lese mer"}
         </Box>
 
-        {user && event.isAttendable && event.allowedGradeYearsList.includes(user.gradeYear) ? (
+        {user && event.isAttendable && event.allowedGradeYears.includes(user.gradeYear) ? (
           event.isFull && event.userAttendance?.isOnWaitingList ? (
             <Chip label="På venteliste" />
           ) : event.isFull && !event.userAttendance?.isSignedUp ? (

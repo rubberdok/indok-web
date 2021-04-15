@@ -58,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
 const AllEvents: React.FC = () => {
   const classes = useStyles();
   const [filters, setFilters] = useState({});
-  const [showDefaultEvents, setShowDefaultEvents] = useState(true);
+  const [showDefaultEvents, setShowDefaultEvents] = useState(false);
   const [showCalendarView, setShowCalenderView] = useState(false);
   const { loading: userLoading, data: userData } = useQuery<{ user: User }>(GET_USER);
 
@@ -116,7 +116,7 @@ const AllEvents: React.FC = () => {
               passHref
             >
               <Button color="primary" disableRipple startIcon={<List />}>
-                <Typography variant="body1">Administrer</Typography>
+                <Typography variant="body1">Mine arrangementer</Typography>
               </Button>
             </Link>
           </Container>
@@ -138,7 +138,15 @@ const AllEvents: React.FC = () => {
               <CircularProgress />
             </Container>
           ) : showCalendarView ? (
-            <Typography variant="body1">Kommer snart! :)</Typography>
+            <iframe
+              src="https://calendar.google.com/calendar/embed?src=sp3rre4hhjfofj8124jp5k093o%40group.calendar.google.com&ctz=Europe%2FOslo"
+              style={{ border: 0 }}
+              width="800"
+              height="600"
+              frameBorder="0"
+              scrolling="no"
+              title="indok-kalenderen"
+            ></iframe>
           ) : (
             <>
               {data === undefined || data.length === 0 ? (

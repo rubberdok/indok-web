@@ -20,6 +20,7 @@ class OrganizationMutations(graphene.ObjectType):
     create_role = CreateRole.Field()
     assign_membership = AssignMembership.Field()
 
+
 class OrganizationQueries(
     graphene.ObjectType, OrganizationResolvers, MembershipResolvers
 ):

@@ -1,5 +1,6 @@
 import { createMuiTheme } from "@material-ui/core/styles";
 import { Shadows } from "@material-ui/core/styles/shadows";
+import breakpoints from "./breakpoints";
 import typography from "./typography";
 
 const theme = createMuiTheme({
@@ -25,6 +26,12 @@ const theme = createMuiTheme({
         marginBottom: 32,
       },
     },
+    MuiToolbar: {
+      regular: {
+        minHeight: "75px!important",
+        padding: 0,
+      },
+    },
     MuiFab: {
       root: {
         justifyContent: "center",
@@ -33,7 +40,7 @@ const theme = createMuiTheme({
     MuiButtonBase: {
       root: {
         justifyContent: "none",
-        padding: "16px 32px",
+        padding: "16px 24px",
         fontWeight: 600,
         textTransform: "none",
       },
@@ -88,13 +95,7 @@ const theme = createMuiTheme({
     borderRadius: 0,
   },
   breakpoints: {
-    values: {
-      xs: 0,
-      sm: 600,
-      md: 960,
-      lg: 1300,
-      xl: 1920,
-    },
+    ...breakpoints,
   },
   shadows: Array(25).fill("none") as Shadows,
 });

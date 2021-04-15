@@ -1,6 +1,6 @@
 ---
 title: Tindøk
-description: Mer tekst
+description: Bestiger Norges fjelltopper
 logo: /img/tindoklogo.png
 image: /img/tindok3.jpg
 styre:

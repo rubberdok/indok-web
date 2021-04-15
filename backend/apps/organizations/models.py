@@ -30,7 +30,7 @@ class Organization(models.Model):
         related_name="organizations",
         blank=True,
         through="Membership",
-        through_fields=("organization", "user")
+        through_fields=("organization", "user"),
     )
 
     class Meta:
@@ -66,6 +66,9 @@ class Membership(models.Model):
 
 class Role(models.Model):
     name = models.TextField(max_length=50, default="Medlem", null=False)
+
+    def __str__(self) -> str:
+        return f"{self.name}"
 
 
 @receiver(post_save, sender=Membership)

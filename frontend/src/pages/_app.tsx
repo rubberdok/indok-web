@@ -33,6 +33,9 @@ const App = ({ Component, pageProps }: AppProps): JSX.Element => {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <Component {...pageProps} />
+        {/* <div id="mobile-warning">
+          Denne siden fungerer ikke optimalt på mobil enda. Prøv nettsiden på en større skjerm.
+        </div> */}
       </ThemeProvider>
     </ApolloProvider>
   );
