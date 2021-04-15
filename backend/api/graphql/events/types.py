@@ -11,11 +11,28 @@ class UserAttendingType(graphene.ObjectType):
     is_on_waiting_list = graphene.Boolean()
 
 
+class SignUpType(DjangoObjectType):
+    class Meta:
+        model = SignUp
+        fields = [
+            "id",
+            "event",
+            "user",
+            "timestamp",
+            "is_attending",
+            "extra_information",
+            "user_email",
+            "user_allergies",
+            "user_phone_number",
+            "user_grade_year",
+        ]
+
+
 class EventType(DjangoObjectType):
     user_attendance = graphene.Field(UserAttendingType)
     is_full = graphene.Boolean(source="is_full")
-    users_on_waiting_list = graphene.List(UserType)
-    users_attending = graphene.List(UserType)
+    users_on_waiting_list = graphene.List(SignUpType)
+    users_attending = graphene.List(SignUpType)
     allowed_grade_years = graphene.List(graphene.Int)
     available_slots = graphene.Int()
 
@@ -75,13 +92,17 @@ class EventType(DjangoObjectType):
     @login_required
     @PermissionDecorators.is_in_event_organization
     def resolve_users_on_waiting_list(event, info):
-        return event.users_on_waiting_list
+        return SignUp.objects.filter(
+            event=event, user__in=event.users_on_waiting_list, is_attending=True
+        )
 
     @staticmethod
     @login_required
     @PermissionDecorators.is_in_event_organization
     def resolve_users_attending(event, info):
-        return event.users_attending
+        return SignUp.objects.filter(
+            event=event, user__in=event.users_attending, is_attending=True
+        )
 
     @staticmethod
     def resolve_available_slots(event, info):
@@ -100,21 +121,4 @@ class CategoryType(DjangoObjectType):
         fields = [
             "id",
             "name",
-        ]
-
-
-class SignUpType(DjangoObjectType):
-    class Meta:
-        model = SignUp
-        fields = [
-            "id",
-            "event",
-            "user",
-            "timestamp",
-            "is_attending",
-            "extra_information",
-            "user_email",
-            "user_allergies",
-            "user_phone_number",
-            "user_grade_year",
         ]
