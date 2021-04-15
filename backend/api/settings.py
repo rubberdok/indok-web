@@ -30,7 +30,7 @@ SECRET_KEY = "*snrr!^gn0zg)1*=&l4ecaghm-o+9-j)=ig-so$!@&f7*c+713"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["localhost"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 
 CORS_ALLOW_CREDENTIALS = True
 
@@ -66,7 +66,7 @@ INSTALLED_APPS = [
 AUTH_USER_MODEL = "users.User"
 
 GRAPHENE = {
-    "SCHEMA": "api.graphql.schema.schema",
+    "SCHEMA": "api.graphql_schema.schema",
     "MIDDLEWARE": [
         "graphql_jwt.middleware.JSONWebTokenMiddleware",
         "api.auth.middleware.AnonymousUserMiddleware",
