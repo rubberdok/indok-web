@@ -124,7 +124,7 @@ const CabinBookingPage: NextPage = () => {
         return <PaymentSite chosenCabins={chosenCabins} datePick={datePick} contactInfo={contactInfo} />;
       case 3:
         // Kvittering
-        return <ReceiptSite chosenCabins={chosenCabins} datePick={datePick} contactInfo={contactInfo} />;
+        return <ReceiptSite chosenCabins={chosenCabins} datePick={datePick} contactInfo={contactInfo} mailSent />;
 
       default:
         <Typography>Step not found</Typography>;
@@ -188,7 +188,7 @@ const CabinBookingPage: NextPage = () => {
             >
               <Box display={activeStep == 3 ? "none" : "block"}>
                 <Button variant="contained" disabled={!stepReady[activeStep].ready} onClick={() => handleNextClick()}>
-                  Neste
+                  {activeStep == 2 ? "Send søknad" : "Neste"}
                 </Button>
               </Box>
             </Tooltip>
