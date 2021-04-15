@@ -8,20 +8,29 @@ import re
 
 
 def create_booking_validation(booking_data):
-    checkin_validation(
-        booking_data.check_in,
-        booking_data.check_out,
-        booking_data.cabins,
-    )
-    email_validation(booking_data.receiver_email)
-    name_validation(booking_data.firstname, booking_data.surname)
-    booking_data.phone = strip_phone_number(booking_data.phone)
-    norwegian_phone_number_validation(booking_data.phone)
-    participants_validation(
-        booking_data.internal_participants,
-        booking_data.internal_participants,
-        booking_data.cabins,
-    )
+    if booking_data.check_out and booking_data.check_in and booking_data.cabins:
+        checkin_validation(
+            booking_data.check_in,
+            booking_data.check_out,
+            booking_data.cabins,
+        )
+    if booking_data.receiver_email:
+        email_validation(booking_data.receiver_email)
+    if booking_data.firstname and booking_data.surname:
+        name_validation(booking_data.firstname, booking_data.surname)
+    if booking_data.phone:
+        booking_data.phone = strip_phone_number(booking_data.phone)
+        norwegian_phone_number_validation(booking_data.phone)
+    if (
+        booking_data.cabins
+        and booking_data.internal_participants
+        and booking_data.eternal_participants
+    ):
+        participants_validation(
+            booking_data.internal_participants,
+            booking_data.eternal_participants,
+            booking_data.cabins,
+        )
 
 
 def checkin_validation(check_in, check_out, cabin_ids):
