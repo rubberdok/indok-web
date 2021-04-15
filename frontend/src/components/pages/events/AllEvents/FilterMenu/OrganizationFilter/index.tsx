@@ -3,7 +3,7 @@ import { Badge, Collapse, List, ListItem, ListItemText } from "@material-ui/core
 import { ExpandLess, ExpandMore } from "@material-ui/icons";
 import React, { useState } from "react";
 import { FilterQuery } from "../..";
-import SuborganizationFilter from "./SuborganizationFilter";
+import SuborganizationFilter from "./suborganizationFilter";
 
 interface Props {
   filters: FilterQuery;
