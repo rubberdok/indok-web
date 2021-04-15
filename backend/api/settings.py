@@ -181,11 +181,11 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 
 # CONFIG
-EMAIL_HOST_USER = env("BOOKING_EMAIL")
-EMAIL_HOST_PASSWORD = env("BOOKING_EMAIL_PASSWORD")
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_USE_TLS = True
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_PORT = 587
+EMAIL_BACKEND = 'django_ses.SESBackend'
+
+AWS_SES_REGION_NAME = 'eu-north-1'
+AWS_SES_REGION_ENDPOINT = 'email.eu-north-1.amazonaws.com'
+AWS_ACCESS_KEY_ID = 'AKIA3KG6AVJ476JEMRTF'
+AWS_SECRET_ACCESS_KEY = env("AWS_SECRET_ACCESS_KEY")
 
 GOOGLE_DRIVE_API_KEY = env("GOOGLE_DRIVE_API_KEY")
