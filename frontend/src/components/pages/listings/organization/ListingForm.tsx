@@ -39,7 +39,7 @@ const ListingForm: React.FC<{
 }> = ({ state, setState, onSubmit, organizations }) => {
   const classes = useStyles();
 
-  const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>, property: string) => {
+  const handlePropertyChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>, property: string) => {
     setState({ ...state, [property]: event.target.value });
   };
 
@@ -49,7 +49,7 @@ const ListingForm: React.FC<{
         <Grid container direction="column" spacing={4}>
           <Grid item>
             <Typography variant="h3">Informasjon</Typography>
-            <TextField label="Tittel" value={state.title} fullWidth onChange={(e) => handleChange(e, "title")} />
+            <TextField label="Tittel" value={state.title} fullWidth onChange={(e) => handlePropertyChange(e, "title")} />
           </Grid>
           <Grid item>
             <Grid container spacing={2} className={classes.inputGroup}>
@@ -59,7 +59,7 @@ const ListingForm: React.FC<{
                   value={state.deadline || ""}
                   fullWidth
                   type="date"
-                  onChange={(e) => handleChange(e, "deadline")}
+                  onChange={(e) => handlePropertyChange(e, "deadline")}
                 />
               </Grid>
               <Grid item xs>
@@ -68,7 +68,7 @@ const ListingForm: React.FC<{
                   value={state.startDatetime || ""}
                   fullWidth
                   type="date"
-                  onChange={(e) => handleChange(e, "startDatetime")}
+                  onChange={(e) => handlePropertyChange(e, "startDatetime")}
                 />
               </Grid>
               <Grid item xs>
@@ -76,7 +76,7 @@ const ListingForm: React.FC<{
                   label="Søknadslink"
                   value={state.url || ""}
                   fullWidth
-                  onChange={(e) => handleChange(e, "url")}
+                  onChange={(e) => handlePropertyChange(e, "url")}
                 />
               </Grid>
             </Grid>
@@ -122,7 +122,7 @@ const ListingForm: React.FC<{
           </Grid>*/}
           <Grid item>
             <Typography variant="h3">Beskrivelse</Typography>
-            <MarkdownForm markdown={state.description} onChange={(e) => handleChange(e, "description")} />
+            <MarkdownForm markdown={state.description} onTextChange={(e) => handlePropertyChange(e, "description")} />
           </Grid>
         </Grid>
       </CardContent>

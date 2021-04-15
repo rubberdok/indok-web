@@ -1,12 +1,12 @@
 import { Tab, Tabs, TextField } from "@material-ui/core";
 import ReactMarkdown from "react-markdown";
 import renderers from "../markdown/renderer";
-import { useState } from "react";
+import { ChangeEventHandler, useState } from "react";
 
 const MarkdownForm: React.FC<{
   markdown: string;
-  onChange: (e: any) => void;
-}> = ({ markdown, onChange }) => {
+  onTextChange: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
+}> = ({ markdown, onTextChange }) => {
   const [preview, setPreview] = useState(0);
 
   const handleChange = (_: React.ChangeEvent<any>, newValue: number) => {
@@ -30,7 +30,7 @@ const MarkdownForm: React.FC<{
       {preview ? (
         <ReactMarkdown renderers={renderers}>{markdown}</ReactMarkdown>
       ) : (
-        <TextField fullWidth rows={24} variant="outlined" value={markdown} multiline onChange={onChange} />
+        <TextField fullWidth rows={24} variant="outlined" value={markdown} multiline onChange={onTextChange} />
       )}
     </>
   );
