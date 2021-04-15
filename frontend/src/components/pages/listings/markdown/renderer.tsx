@@ -1,18 +1,30 @@
 import { Typography } from "@material-ui/core";
-import React, { ElementType } from "react";
+import React, { ReactNode, ReactElement } from "react";
 import { Variant } from "@material-ui/core/styles/createTypography";
+import { Content } from "mdast";
 
-const heading = (props: any) => <Typography variant={`h${props.level}` as Variant}>{props.children}</Typography>;
 
-const paragraph = (props: any) => (
-  <Typography variant="body2" component="p" paragraph>
-    {props.children}
-  </Typography>
-);
+type NodeToProps<T> = {
+  node: T;
+  children: T extends { children: any } ? ReactNode : never;
+};
 
-const renderers: { [nodeType: string]: ElementType } = {
-  heading: heading,
-  paragraph: paragraph,
+type CustomRenderers = {
+  [K in Content["type"]]?: (
+    props: NodeToProps<Extract<Content, { type: K }>>
+  ) => ReactElement;
+};
+
+const renderers: CustomRenderers = {
+  heading: ({ node, children }) => {
+    const { depth } = node
+    return <Typography variant={`h${depth}` as Variant}>{children}</Typography>
+  },
+  paragraph: ({ children }) => (
+    <Typography variant="body2" component="p" paragraph>
+      {children}
+    </Typography>
+  ),
 };
 
 export default renderers;
