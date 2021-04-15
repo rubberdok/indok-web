@@ -2,11 +2,11 @@ import { useQuery } from "@apollo/client";
 import { FORM_ANSWERS } from "@graphql/forms/queries";
 import { Answer, Question } from "@interfaces/forms";
 import { User } from "@interfaces/users";
-import { Typography } from "@material-ui/core";
+import { Typography, Box } from "@material-ui/core";
 
 // specific type for this component to tie a question to a single answer
 type QuestionWithAnswer = Question & {
-  answer: Answer;
+  answer?: Answer;
 };
 
 /**
@@ -34,14 +34,22 @@ const FormResponse: React.FC<{
         <>
           <Typography variant="h3">{data.form.name}</Typography>
           <Typography>
-            <b>Søker:</b> {user.firstName} {user.lastName}
+            <Box fontWeight="bold">Søker:</Box> {user.firstName} {user.lastName}
           </Typography>
+          <Typography>* = obligatorisk spørsmål</Typography>
           {data.form.questions.map((question) => (
             <>
               <Typography>
-                <b>{question.question}</b>
+                <Box fontWeight="bold">{question.question}</Box>
+                {question.mandatory && " *"}
               </Typography>
-              <Typography>{question.answer.answer}</Typography>
+              <Typography>
+                {question.answer ? (
+                  question.answer.answer
+                ) : (
+                  <Box fontStyle="italic">Søker svarte ikke på spørsmålet</Box>
+                )}
+              </Typography>
             </>
           ))}
         </>
