@@ -10,4 +10,5 @@ export interface Organization {
   events?: Event[];
   listings?: Listing[];
   slug: string;
+  logoUrl: string;
 }
