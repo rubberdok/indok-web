@@ -20,11 +20,13 @@ const renderers: CustomRenderers = {
     const { depth } = node
     return <Typography variant={`h${depth}` as Variant}>{children}</Typography>
   },
-  paragraph: ({ children }) => (
-    <Typography variant="body2" component="p" paragraph>
-      {children}
-    </Typography>
-  ),
+  paragraph: ({ children }) => {
+    return (
+      <Typography variant="body2" component="p" paragraph>
+        {children}
+      </Typography>
+    )
+  },
 };
 
 export default renderers;
