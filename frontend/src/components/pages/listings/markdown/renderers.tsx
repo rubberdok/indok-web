@@ -1,5 +1,5 @@
 import { Typography } from "@material-ui/core";
-import React, { ElementType, ReactElement, ReactNode } from "react";
+import React, { ElementType, ReactNode } from "react";
 import { Content } from "mdast";
 import { Variant } from "@material-ui/core/styles/createTypography";
 
