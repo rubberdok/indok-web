@@ -39,9 +39,9 @@ const CabinContactInfo: NextPage<ContractInfoProps> = ({
 
       setContactInfo({
         ...contactInfo,
-        firstName: data.user.firstName,
-        lastName: data.user.lastName,
-        email: data.user.email,
+        firstname: data.user.firstName,
+        lastname: data.user.lastName,
+        receiverEmail: data.user.email,
       });
     }
   }, [data]);
@@ -58,7 +58,7 @@ const CabinContactInfo: NextPage<ContractInfoProps> = ({
         validations={validations}
         errorTrigger={errorTrigger}
         chosenCabins={chosenCabins}
-      ></InputFields>
+      />
     </Grid>
   );
 };

@@ -90,7 +90,7 @@ const CabinBookingStatus: NextPage<Props> = ({ chosenCabins, datePick, contactIn
         <>
           <InfoText>
             <Box>
-              <Typography>Vi har sendt en mail til {contactInfo.email} med informasjon om søknaden.</Typography>
+              <Typography>Vi har sendt en mail til {contactInfo.receiverEmail} med informasjon om søknaden.</Typography>
             </Box>
           </InfoText>
         </>

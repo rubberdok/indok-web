@@ -9,7 +9,7 @@ import { Box, Grid, Step, StepLabel, Stepper, Button, Typography, Paper, Tooltip
 import {
   allValuesFilled,
   cabinOrderStepReady,
-  generateAdminEmailInput,
+  generateEmailInput,
   isFormValid,
   validateInputForm,
 } from "@utils/cabins";
@@ -44,9 +44,9 @@ const initalStepReady: StepReady = steps.reduce((initialObject, _step, index) =>
 }, {} as StepReady);
 
 const defaultContactInfo: ContactInfo = {
-  firstName: "",
-  lastName: "",
-  email: "",
+  firstname: "",
+  lastname: "",
+  receiverEmail: "",
   phone: "",
   internalParticipants: 0,
   externalParticipants: 0,
@@ -139,7 +139,7 @@ const CabinBookingPage: NextPage = () => {
         send_email({
           variables: {
             emailInput: {
-              ...generateAdminEmailInput(contactInfo, datePick, chosenCabins),
+              ...generateEmailInput(contactInfo, datePick, chosenCabins),
               emailType: "reserve_booking",
             },
           },

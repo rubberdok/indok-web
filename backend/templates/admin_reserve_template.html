@@ -37,7 +37,7 @@
 
           <h2>Opprettelse av booking</h2>
                <p>
-            Det har kommet en søknad om opprettelse av en booking av {{ chosen_cabins_string }} fra
+                   Det har kommet en søknad om opprettelse av en booking av <b>{{ chosen_cabins_string }}</b> fra
             <span><b>{{ check_in }}</b></span> til
             <span><b>{{ check_out }}</b>.</span>
           </p>
@@ -49,9 +49,9 @@
           <p>Prisen kommer på <b>{{ price }} kr</b>.</p>
 
           <h3>Kontaktinfo</h3>
-          <p>Navn: {{ first_name }} {{ last_name }}</p>
+          <p>Navn: {{ firstname }} {{ lastname }}</p>
           <p>Mobilnummer: {{ phone }}</p>
-          <p>E-post: {{ email }}</p>
+          <p>E-post: {{ receiver_email }}</p>
 
 
       </div>

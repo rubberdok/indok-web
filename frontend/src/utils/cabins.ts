@@ -1,4 +1,4 @@
-import { Cabin, ContactInfo } from "@interfaces/cabins";
+import { Cabin, ContactInfo, ContactInfoValidations } from "@interfaces/cabins";
 import dayjs from "dayjs";
 import { DatePick } from "src/pages/cabins/book";
 import validator from "validator";
@@ -15,10 +15,10 @@ export const validatePhone = (phone: string): boolean => (phone ? validator.isMo
 export const validateInputForm = (inputValues: ContactInfo) => {
   const selectValidity = validateSelect(inputValues.internalParticipants, inputValues.externalParticipants);
 
-  const updatedValidations = {
-    firstName: validateName(inputValues.firstName),
-    lastName: validateName(inputValues.lastName),
-    email: validateEmail(inputValues.email),
+  const updatedValidations: ContactInfoValidations = {
+    firstname: validateName(inputValues.firstname),
+    lastname: validateName(inputValues.lastname),
+    receiverEmail: validateEmail(inputValues.receiverEmail),
     phone: validatePhone(inputValues.phone),
     internalParticipants: selectValidity,
     externalParticipants: selectValidity,
@@ -81,10 +81,10 @@ export const calculatePrice = (chosenCabins: Cabin[], contactInfo: ContactInfo, 
   }
 };
 
-export const generateAdminEmailInput = (contactInfo: ContactInfo, datePick: DatePick, chosenCabins: Cabin[]) => {
+export const generateEmailInput = (contactInfo: ContactInfo, datePick: DatePick, chosenCabins: Cabin[]) => {
   return {
     ...contactInfo,
-    cabinIds: chosenCabins.map((cabin) => cabin.id),
+    cabins: chosenCabins.map((cabin) => cabin.id),
     checkIn: datePick.checkInDate,
     checkOut: datePick.checkOutDate,
   };

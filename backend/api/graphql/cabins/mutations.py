@@ -1,35 +1,22 @@
-import graphene
 from datetime import datetime
+
+import graphene
 
 from django.utils import timezone
 from graphql import GraphQLError
 
-from .types import BookingType, EmailInput
-from apps.cabins.models import Booking as BookingModel
+from .helpers import price
+from .types import BookingType
+from apps.cabins.models import Booking as BookingModel, Booking
 from apps.cabins.models import Cabin as CabinModel
-from .mail import send_admin_reservation_mail, calculate_booking_price, send_user_reservation_mail
+from .mail import send_admin_reservation_mail, send_user_reservation_mail
 from .validators import create_booking_validation
 
 
-def checkin_validation(check_in, check_out, cabin_ids):
-    if check_in < timezone.now().date() or check_out < timezone.now().date():
-        raise GraphQLError("Input dates are before current time")
-    if check_in > check_out:
-        raise GraphQLError("invalid input: Checkin is after checkout")
-    # https://stackoverflow.com/questions/325933/determine-whether-two-date-ranges-overlap
-    if (
-        BookingModel.objects.filter(
-            check_in__lte=check_out,
-            check_out__gt=check_in,
-            cabins__id__in=cabin_ids,
-        ).exists()
-    ):
-        raise GraphQLError("Input dates overlaps existing booking")
-
-
 class BookingInput(graphene.InputObjectType):
+    id = graphene.ID()
     firstname = graphene.String()
-    surname = graphene.String()
+    lastname = graphene.String()
     phone = graphene.String()
     receiver_email = graphene.String()
     check_in = graphene.Date()
@@ -37,6 +24,10 @@ class BookingInput(graphene.InputObjectType):
     internal_participants = graphene.Int()
     external_participants = graphene.Int()
     cabins = graphene.List(graphene.Int)
+
+
+class EmailInput(BookingInput):
+    email_type = graphene.String()
 
 
 class CreateBooking(graphene.Mutation):
@@ -73,17 +64,16 @@ class SendEmail(graphene.Mutation):
 
     ok = graphene.Boolean()
 
-    def mutate(self, info, email_input: EmailInput):
-        cabins = CabinModel.objects.all().filter(id__in=email_input.cabin_ids)
+    def mutate(self, info, email_input):
+        cabins = CabinModel.objects.all().filter(id__in=email_input.cabins)
         chosen_cabins_names = [cabin.name for cabin in cabins]
         chosen_cabins_string = cabins[0].name if len(cabins) == 1 else ",".join(chosen_cabins_names[:-1]) + f" og {chosen_cabins_names[-1]}"
 
-        # Reformat check in and out dates
-        email_input.check_in = datetime.strptime(email_input.check_in, "%Y-%m-%d").strftime("%d-%m-%Y")
-        email_input.check_out = datetime.strptime(email_input.check_out, "%Y-%m-%d").strftime("%d-%m-%Y")
-
-        price = calculate_booking_price(email_input, cabins)
-        booking_info = {**vars(email_input), "chosen_cabins_string": chosen_cabins_string, "price": price}
+        booking_info = {**vars(email_input), "chosen_cabins_string": chosen_cabins_string,
+                        "price": price(cabins, email_input.check_in, email_input.check_out,
+                                       email_input.internal_participants, email_input.external_participants),
+                        "check_in": email_input.check_in.strftime("%d-%m-%Y"),
+                        "check_out": email_input.check_out.strftime("%d-%m-%Y")}
 
         # Send different mails for reservation and confirmation
         if email_input.email_type == "reserve_booking":

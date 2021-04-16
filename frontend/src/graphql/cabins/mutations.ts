@@ -3,7 +3,7 @@ import { gql } from "@apollo/client";
 export const CREATE_BOOKING = gql`
   mutation CreateBooking(
     $firstname: String
-    $surname: String
+    $lastname: String
     $phone: Int
     $receiverEmail: String
     $bookFrom: String
@@ -13,7 +13,7 @@ export const CREATE_BOOKING = gql`
   ) {
     createBooking(
       firstname: $firstname
-      surname: $surname
+      lastname: $lastname
       phone: $phone
       receiverEmail: $receiverEmail
       checkIn: $bookFrom

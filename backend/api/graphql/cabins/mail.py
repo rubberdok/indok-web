@@ -1,12 +1,7 @@
-from datetime import datetime
-from typing import List
-
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import get_template
 from django.utils.html import strip_tags
 
-from api.graphql.cabins.types import EmailInput
-from apps.cabins.models import Cabin
 
 user_templates = {
     "reserve_booking": "user_reserve_template.html",
@@ -25,7 +20,7 @@ def send_admin_reservation_mail(booking_info: dict) -> None:
     text_content = strip_tags(html_content)
 
     email = EmailMultiAlternatives(
-        "Booking av indøkhytte", body=text_content, bcc=[booking_info["email"]]
+        "Booking av indøkhytte", body=text_content, bcc=[booking_info["receiver_email"]]
     )
     email.attach_alternative(html_content, "text/html")
     email.send()
@@ -39,21 +34,9 @@ def send_user_reservation_mail(booking_info: dict) -> None:
     email = EmailMultiAlternatives(
         "Bekreftelse på booking av indøkhytte",
         body=text_content,
-        bcc=[booking_info["email"]],
+        bcc=[booking_info["receiver_email"]],
     )
     email.attach_alternative(html_content, "text/html")
     email.attach_file("static/cabins/Sjekkliste.pdf")
     email.attach_file("static/cabins/Reglement.pdf")
     email.send()
-
-
-def calculate_booking_price(email_input: EmailInput, cabins: List[Cabin]) -> int:
-    check_in = datetime.strptime(email_input.check_in, "%d-%m-%Y")
-    check_out = datetime.strptime(email_input.check_out, "%d-%m-%Y")
-    booking_length = (check_out - check_in).days
-    price_per_night = (
-        sum([cabin.internal_price for cabin in cabins])
-        if email_input.internal_participants >= email_input.external_participants
-        else sum([cabin.external_price for cabin in cabins])
-    )
-    return price_per_night * booking_length
