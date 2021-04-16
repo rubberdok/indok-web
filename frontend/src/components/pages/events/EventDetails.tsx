@@ -4,14 +4,24 @@ import { GET_USER } from "@graphql/users/queries";
 import { GET_SERVER_TIME } from "@graphql/utils/time/queries";
 import { AttendableEvent, Event } from "@interfaces/events";
 import { User } from "@interfaces/users";
-import { Box, Button, Grid, Link as MuiLink, Paper, Snackbar, TextField, Typography } from "@material-ui/core";
+import {
+  Box,
+  Button,
+  Container,
+  Grid,
+  Link as MuiLink,
+  Paper,
+  Snackbar,
+  TextField,
+  Typography,
+  useTheme,
+} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { ArrowRight, ContactMail, Edit, ErrorOutline, List, Warning } from "@material-ui/icons";
+import { ArrowRight, ContactMail, Edit, ErrorOutline, KeyboardBackspace, List, Warning } from "@material-ui/icons";
 import CategoryIcon from "@material-ui/icons/Category";
 import CreditCard from "@material-ui/icons/CreditCard";
 import EventIcon from "@material-ui/icons/Event";
 import LocationOnIcon from "@material-ui/icons/LocationOn";
-import ScheduleIcon from "@material-ui/icons/Schedule";
 import { Alert } from "@material-ui/lab";
 import dayjs from "dayjs";
 import nb from "dayjs/locale/nb";
@@ -23,7 +33,8 @@ import EditEvent from "./EventEditor";
 
 const useStyles = makeStyles((theme) => ({
   container: {
-    padding: 0,
+    paddingTop: theme.spacing(8),
+    paddingBottom: theme.spacing(4),
   },
   publisherContainer: {
     marginTop: theme.spacing(1),
@@ -59,6 +70,17 @@ const useStyles = makeStyles((theme) => ({
     float: "right",
     paddingRight: "1em",
     paddingBottom: "1em",
+  },
+  wrapIcon: {
+    verticalAlign: "middle",
+    display: "inline-flex",
+    width: "100%",
+    marginBottom: theme.spacing(1),
+
+    "& > svg": {
+      height: "unset",
+      marginRight: theme.spacing(2),
+    },
   },
 }));
 
@@ -107,6 +129,7 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
   });
 
   const classes = useStyles();
+  const theme = useTheme();
 
   const [openEditEvent, setOpenEditEvent] = useState(false);
 
@@ -152,149 +175,41 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
   };
 
   return (
-    <Grid container spacing={1}>
+    <>
       {openEditEvent && (
         <EditEvent open={openEditEvent} onClose={() => setOpenEditEvent(false)} event={eventData.event} />
       )}
-      {/* Header card */}
-      <Grid item xs={12}>
-        <Paper variant="outlined" className={classes.paper}>
-          <Typography component="h1" variant="h4" align="center">
+      <Box width="100%" py={10} bgcolor={theme.palette.background.paper}>
+        <Container>
+          <Link href="/events" passHref>
+            <Button startIcon={<KeyboardBackspace />}>Tilbake til oversikt</Button>
+          </Link>
+          <Typography variant="h1" gutterBottom>
             {eventData.event.title}
           </Typography>
-          <Box display="flex" flexDirection="column" alignItems="center">
+          <Typography variant="subtitle1" display="block" gutterBottom>
+            Arrangert av {eventData.event.organization?.name}
+          </Typography>
+          {userData.user?.organizations
+            .map((organization) => organization.id)
+            .includes(eventData.event.organization.id) && (
             <Box>
-              <Typography variant="overline" display="block" className={classes.publisherContainer}>
-                Arrangert av
-              </Typography>
-              <Typography
-                variant="overline"
-                display="block"
-                style={{ fontWeight: 600 }}
-                className={classes.publisherContainer}
+              <Button
+                variant="contained"
+                startIcon={<Edit />}
+                onClick={() => {
+                  setOpenEditEvent(true);
+                }}
               >
-                &nbsp;&nbsp;{eventData.event.organization?.name}
-              </Typography>
-            </Box>
-            {userData.user?.organizations
-              .map((organization) => organization.id)
-              .includes(eventData.event.organization.id) && (
-              <Box>
-                <Button
-                  startIcon={<Edit />}
-                  color="primary"
-                  onClick={() => {
-                    setOpenEditEvent(true);
-                  }}
-                >
-                  Rediger
+                Rediger
+              </Button>
+              <Link href={`/orgs/${eventData.event.organization.id}/events/${eventId}`} passHref>
+                <Button variant="contained" startIcon={<List />}>
+                  Administrer
                 </Button>
-                <Link href={`/orgs/${eventData.event.organization.id}/events/${eventId}`} passHref>
-                  <Button color="primary" disableRipple startIcon={<List />}>
-                    Administrer
-                  </Button>
-                </Link>
-              </Box>
-            )}
-          </Box>
-        </Paper>
-      </Grid>
-
-      {/* Description card */}
-      <Grid item xs={8}>
-        <Paper variant="outlined" className={classes.paper}>
-          <Typography variant="h5" gutterBottom>
-            Beskrivelse
-          </Typography>
-          <Typography variant="body1" display="block">
-            {formatDescription(eventData.event.description, classes.innerParagraph, classes.paragraph)}
-          </Typography>
-        </Paper>
-      </Grid>
-
-      {/* Information card */}
-      <Grid item xs={4}>
-        <Paper variant="outlined" className={classes.paper}>
-          <Box my={1.5}>
-            <Typography variant="overline" display="block">
-              Info
-            </Typography>
-            {eventData.event.price && (
-              <Typography gutterBottom>
-                <CreditCard fontSize="small" /> {eventData.event.price} kr
-              </Typography>
-            )}
-            {eventData.event.location && (
-              <Typography gutterBottom>
-                <LocationOnIcon fontSize="small" /> {eventData.event.location}
-              </Typography>
-            )}
-            {eventData.event.category && (
-              <Typography gutterBottom>
-                <CategoryIcon fontSize="small" /> {eventData.event.category?.name}
-              </Typography>
-            )}
-            {eventData.event.contactEmail && (
-              <Typography gutterBottom>
-                <ContactMail fontSize="small" />
-                <MuiLink href={`mailto:${eventData.event.contactEmail}`}>{eventData.event.contactEmail}</MuiLink>
-              </Typography>
-            )}
-            {eventData.event.bindingSignup && (
-              <Typography gutterBottom color="error">
-                <ErrorOutline fontSize="small" /> Bindende påmelding
-              </Typography>
-            )}
-          </Box>
-
-          <Box my={2}>
-            <Typography variant="overline" display="block">
-              Starter
-            </Typography>
-            <Typography gutterBottom>
-              <EventIcon fontSize="small" /> {dayjs(eventData.event.startTime).locale(nb).format("DD.MMM YYYY")}
-            </Typography>
-            <Typography gutterBottom>
-              <ScheduleIcon fontSize="small" /> kl. {dayjs(eventData.event.startTime).locale(nb).format("HH:mm")}
-            </Typography>
-          </Box>
-
-          {eventData.event.endTime && (
-            <Box my={2}>
-              <Typography variant="overline" display="block">
-                Slutter
-              </Typography>
-              <Typography gutterBottom>
-                <EventIcon fontSize="small" /> {dayjs(eventData.event.endTime).locale(nb).format("DD.MMM YYYY")}
-              </Typography>
-              <Typography gutterBottom>
-                <ScheduleIcon fontSize="small" /> kl. {dayjs(eventData.event.endTime).locale(nb).format("HH:mm")}
-              </Typography>
+              </Link>
             </Box>
           )}
-
-          {eventData.event.allowedGradeYears.length < 5 && (
-            <Box my={2}>
-              <Typography variant="overline" display="block">
-                Åpent for
-              </Typography>
-              {eventData.event.allowedGradeYears.map((grade) => (
-                <Typography gutterBottom key={grade}>
-                  <ArrowRight fontSize="small" /> {`${grade}. klasse`}
-                </Typography>
-              ))}
-            </Box>
-          )}
-        </Paper>
-      </Grid>
-
-      {/* Buttons row card */}
-      <Grid item xs={12}>
-        <Paper variant="outlined" className={classes.paper}>
-          <Link href="/events" passHref>
-            <Button>Tilbake</Button>
-          </Link>
-
           {!eventData.event.isAttendable ? null : !userData.user ? (
             <Typography variant="h6" className={classes.signUpText}>
               Logg inn for å melde deg på
@@ -416,9 +331,85 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
               </Snackbar>
             </>
           )}
-        </Paper>
-      </Grid>
-    </Grid>
+        </Container>
+      </Box>
+      <Container className={classes.container}>
+        <Grid container spacing={1}>
+          {/* Description card */}
+          <Grid item xs={12} md={8}>
+            <Typography variant="h3" gutterBottom>
+              Beskrivelse
+            </Typography>
+            <Typography variant="body1" display="block">
+              {formatDescription(eventData.event.description, classes.innerParagraph, classes.paragraph)}
+            </Typography>
+          </Grid>
+
+          {/* Information card */}
+          <Grid item xs={12} md={4}>
+            <Paper className={classes.paper}>
+              <Box my={2} mx={2}>
+                <Typography variant="h4" gutterBottom>
+                  Info
+                </Typography>
+                {eventData.event.price && (
+                  <Typography variant="body1" className={classes.wrapIcon}>
+                    <CreditCard fontSize="small" /> {eventData.event.price} kr
+                  </Typography>
+                )}
+                {eventData.event.location && (
+                  <Typography variant="body1" className={classes.wrapIcon}>
+                    <LocationOnIcon fontSize="small" /> {eventData.event.location}
+                  </Typography>
+                )}
+                {eventData.event.category && (
+                  <Typography variant="body1" className={classes.wrapIcon}>
+                    <CategoryIcon fontSize="small" /> {eventData.event.category?.name}
+                  </Typography>
+                )}
+                {eventData.event.contactEmail && (
+                  <Typography variant="body1" className={classes.wrapIcon}>
+                    <ContactMail fontSize="small" />
+                    <MuiLink href={`mailto:${eventData.event.contactEmail}`}>{eventData.event.contactEmail}</MuiLink>
+                  </Typography>
+                )}
+                {eventData.event.bindingSignup && (
+                  <Typography variant="body1" className={classes.wrapIcon} color="error">
+                    <ErrorOutline fontSize="small" /> Bindende påmelding
+                  </Typography>
+                )}
+                <Typography variant="overline">Åpner</Typography>
+                <Typography variant="body1" className={classes.wrapIcon}>
+                  <EventIcon fontSize="small" />
+                  {dayjs(eventData.event.startTime).locale(nb).format("DD.MMM YYYY, kl. HH:mm")}
+                </Typography>
+                {eventData.event.endTime && (
+                  <>
+                    <Typography variant="overline">Slutter</Typography>
+                    <Typography variant="body1" className={classes.wrapIcon}>
+                      <EventIcon fontSize="small" />{" "}
+                      {dayjs(eventData.event.endTime).locale(nb).format("DD.MMM YYYY, kl. HH:mm")}
+                    </Typography>
+                  </>
+                )}
+                {eventData.event.allowedGradeYears.length < 5 && (
+                  <>
+                    <Typography variant="overline" gutterBottom>
+                      Åpent for
+                    </Typography>
+                    {eventData.event.allowedGradeYears.map((grade) => (
+                      <Typography variant="body1" className={classes.wrapIcon} key={grade}>
+                        <ArrowRight fontSize="small" /> {`${grade}. klasse`}
+                      </Typography>
+                    ))}
+                  </>
+                )}
+              </Box>
+            </Paper>
+          </Grid>
+        </Grid>
+      </Container>
+    </>
   );
 };
 
