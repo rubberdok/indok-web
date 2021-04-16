@@ -1,6 +1,7 @@
 import { useQuery } from "@apollo/client";
 import { GET_DEFAULT_EVENTS, GET_EVENTS } from "@graphql/events/queries";
 import { GET_USER } from "@graphql/users/queries";
+import { Event } from "@interfaces/events";
 import { User } from "@interfaces/users";
 import { Button, CircularProgress, Drawer, Grid, Hidden, makeStyles, Typography } from "@material-ui/core";
 import { Add, List, Tune } from "@material-ui/icons";
@@ -106,19 +107,13 @@ const AllEvents: React.FC = () => {
           {loading ? (
             <CircularProgress />
           ) : (
-            <>
-              <Grid container spacing={2}>
-                {data === undefined || data.length === 0 ? (
-                  <Typography variant="body1">Ingen arrangementer passer til valgte filtre.</Typography>
-                ) : (
-                  data.map((event: Event) => (
-                    <Grid key={event.id} item xs={12}>
-                      <EventListItem event={event} user={userData?.user} />
-                    </Grid>
-                  ))
-                )}
-              </Grid>
-            </>
+            <Grid container spacing={2}>
+              {data === undefined || data.length === 0 ? (
+                <Typography variant="body1">Ingen arrangementer passer til valgte filtre.</Typography>
+              ) : (
+                data.map((event: Event) => <EventListItem key={event.id} event={event} user={userData?.user} />)
+              )}
+            </Grid>
           )}
         </Grid>
       </Grid>
