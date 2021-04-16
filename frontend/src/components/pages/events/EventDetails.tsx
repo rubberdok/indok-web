@@ -11,7 +11,8 @@ import {
   Grid,
   Link as MuiLink,
   Paper,
-  Snackbar,
+  Snackbar as MuiSnackbar,
+  SnackbarCloseReason,
   TextField,
   Typography,
   useTheme,
@@ -22,7 +23,7 @@ import CategoryIcon from "@material-ui/icons/Category";
 import CreditCard from "@material-ui/icons/CreditCard";
 import EventIcon from "@material-ui/icons/Event";
 import LocationOnIcon from "@material-ui/icons/LocationOn";
-import { Alert } from "@material-ui/lab";
+import { Alert as MuiAlert } from "@material-ui/lab";
 import dayjs from "dayjs";
 import nb from "dayjs/locale/nb";
 import Link from "next/link";
@@ -88,6 +89,13 @@ interface Props {
   eventId: string;
 }
 
+interface AlertProps {
+  open: boolean;
+  onClose: ((event: React.SyntheticEvent<any, globalThis.Event>, reason: SnackbarCloseReason) => void) | undefined;
+  severity: "success" | "info" | "warning" | "error";
+  children: string | undefined;
+}
+
 function wrapInTypo(para: JSX.Element[] | string, className: any) {
   return <Typography className={className}>{para}</Typography>;
 }
@@ -100,6 +108,21 @@ function formatDescription(desc: string, innerClass: any, outerClass: any) {
     )
   );
 }
+
+const Alert: React.FC<AlertProps> = ({ open, onClose, children, severity }) => {
+  return (
+    <MuiSnackbar
+      autoHideDuration={3000}
+      anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      open={open}
+      onClose={onClose}
+    >
+      <MuiAlert elevation={6} variant="filled" severity={severity}>
+        {children}
+      </MuiAlert>
+    </MuiSnackbar>
+  );
+};
 
 const EventDetails: React.FC<Props> = ({ eventId }) => {
   const [openSignUpSnackbar, setOpenSignUpSnackbar] = useState(false);
@@ -211,13 +234,9 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
             </Box>
           )}
           {!eventData.event.isAttendable ? null : !userData.user ? (
-            <Typography variant="h6" className={classes.signUpText}>
-              Logg inn for å melde deg på
-            </Typography>
+            <Typography variant="h6">Logg inn for å melde deg på</Typography>
           ) : !eventData.event.allowedGradeYears.includes(userData.user.gradeYear) ? (
-            <Typography variant="h6" className={classes.signUpText}>
-              Ikke aktuell
-            </Typography>
+            <Typography variant="h6">Ikke aktuell</Typography>
           ) : (
             <>
               <CountdownButton
@@ -264,71 +283,37 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
                   />
                 )}
 
-              <Snackbar
-                anchorOrigin={{ vertical: "top", horizontal: "right" }}
-                open={openSignUpErrorSnackbar}
-                autoHideDuration={3000}
-                onClose={() => setOpenSignUpErrorSnackbar(false)}
-              >
-                <Alert elevation={6} variant="filled" severity="error">
-                  {signUpError ? signUpError.message : "Påmelding feilet"}
-                </Alert>
-              </Snackbar>
+              <Alert severity="error" open={openSignUpErrorSnackbar} onClose={() => setOpenSignUpErrorSnackbar(false)}>
+                {signUpError ? signUpError.message : "Påmelding feilet"}
+              </Alert>
 
-              <Snackbar
-                anchorOrigin={{ vertical: "top", horizontal: "right" }}
-                open={openSignOffErrorSnackbar}
-                autoHideDuration={3000}
-                onClose={() => setOpenSignUpErrorSnackbar(false)}
-              >
-                <Alert elevation={6} variant="filled" severity="error">
-                  Avmelding feilet
-                </Alert>
-              </Snackbar>
+              <Alert open={openSignOffErrorSnackbar} severity="error" onClose={() => setOpenSignUpErrorSnackbar(false)}>
+                Avmelding feilet
+              </Alert>
 
-              <Snackbar
-                anchorOrigin={{ vertical: "top", horizontal: "right" }}
-                open={openSignOffSnackbar}
-                autoHideDuration={3000}
-                onClose={() => setOpenSignOffSnackbar(false)}
-              >
-                <Alert elevation={6} variant="filled" severity="info">
-                  Du er nå avmeldt
-                </Alert>
-              </Snackbar>
+              <Alert severity="info" open={openSignOffSnackbar} onClose={() => setOpenSignOffSnackbar(false)}>
+                Du er nå avmeldt
+              </Alert>
 
-              <Snackbar
-                anchorOrigin={{ vertical: "top", horizontal: "right" }}
-                open={openSignUpSnackbar}
-                autoHideDuration={3000}
-                onClose={() => setOpenSignUpSnackbar(false)}
-              >
-                <Alert elevation={6} variant="filled" severity="success">
-                  Du er nå påmeldt
-                </Alert>
-              </Snackbar>
+              <Alert severity="success" open={openSignUpSnackbar} onClose={() => setOpenSignUpSnackbar(false)}>
+                Du er nå påmeldt
+              </Alert>
 
-              <Snackbar
-                anchorOrigin={{ vertical: "top", horizontal: "right" }}
+              <Alert
+                severity="info"
                 open={openOnWaitingListSnackbar}
-                autoHideDuration={3000}
                 onClose={() => setOpenOnWaitingListSnackbar(false)}
               >
-                <Alert elevation={6} variant="filled" severity="info">
-                  Du er på ventelisten
-                </Alert>
-              </Snackbar>
+                Du er på ventelisten
+              </Alert>
 
-              <Snackbar
-                anchorOrigin={{ vertical: "top", horizontal: "right" }}
+              <Alert
+                severity="info"
                 open={openOffWaitingListSnackbar}
-                autoHideDuration={3000}
                 onClose={() => setOpenOffWaitingListSnackbar(false)}
               >
-                <Alert elevation={6} variant="filled" severity="info">
-                  Du er ikke lenger på ventelisten
-                </Alert>
-              </Snackbar>
+                Du er ikke lenger på ventelisten
+              </Alert>
             </>
           )}
         </Container>
