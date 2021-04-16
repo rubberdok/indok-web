@@ -8,22 +8,20 @@ export interface Listing {
   startDatetime: string;
   deadline: string;
   endDatetime: string;
-  url: string;
+  url?: string;
   slug: string;
   hero?: string;
   logo?: string;
   organization?: Organization;
   form?: Form;
+  chips: string[];
 }
 
-export interface ListingInput {
-  id: string;
-  title: string;
-  description: string;
-  deadline: string;
+export interface ListingInput extends Omit<Listing, "startDatetime"|"endDatetime"|"chips"|"slug">{
   startDatetime?: string;
+  endDatetime?: string;
   url?: string;
-  organization?: Organization;
-  form?: Form;
-  hero?: string;
+  case?: boolean;
+  application?: boolean;
+  interview?: boolean;
 }

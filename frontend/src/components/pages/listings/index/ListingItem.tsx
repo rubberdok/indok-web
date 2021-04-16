@@ -1,5 +1,15 @@
 import { Listing } from "@interfaces/listings";
-import { Box, Card, CardActionArea, CardContent, CardMedia, makeStyles, Typography } from "@material-ui/core";
+import {
+  Box,
+  Card,
+  CardActionArea,
+  CardContent,
+  CardMedia,
+  makeStyles,
+  Typography,
+  Chip,
+  Grid,
+} from "@material-ui/core";
 import dayjs from "dayjs";
 import nb from "dayjs/locale/nb";
 import relativeTime from "dayjs/plugin/isSameOrAfter";
@@ -121,6 +131,19 @@ const ListingItem: React.FC<{
                   {listing.description}
                 </ReactMarkdown>
               </Box>
+              <Grid container direction="row" justify="center" alignItems="center" spacing={2}>
+                {listing.chips.map((chip) => (
+                  <Grid item key={chip}>
+                    <Chip
+                      label={chip}
+                      size="small"
+                      style={{
+                        fontSize: 12,
+                      }}
+                    />
+                  </Grid>
+                ))}
+              </Grid>
             </Box>
           </CardContent>
         </CardActionArea>

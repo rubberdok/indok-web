@@ -20,7 +20,7 @@ const EmptyListing: ListingInput = {
 
 const NewListingPage: NextPage = () => {
   const router = useRouter();
-  const [listing, setListing] = useState<Listing | ListingInput>(EmptyListing);
+  const [listing, setListing] = useState<ListingInput>(EmptyListing);
   const { loading, error, data } = useQuery(USER_WITH_ORGANIZATIONS, {
     onCompleted: (data) => setListing({ ...listing, organization: data.user.organizations[0] }),
   });
@@ -51,6 +51,9 @@ const NewListingPage: NextPage = () => {
                       startDatetime: listing.startDatetime || undefined,
                       deadline: listing.deadline,
                       organizationId: listing.organization?.id,
+                      case: listing.case || undefined,
+                      interview: listing.interview || undefined,
+                      application: listing.application || undefined,
                     },
                   },
                 });

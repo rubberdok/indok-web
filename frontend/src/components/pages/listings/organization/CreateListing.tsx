@@ -14,6 +14,11 @@ import {
   Grid,
   InputLabel,
   FormHelperText,
+  FormControl,
+  FormLabel,
+  FormGroup,
+  FormControlLabel,
+  Checkbox,
 } from "@material-ui/core";
 
 // variables to pass into the CreateListing mutation
@@ -22,6 +27,9 @@ interface CreateListingVariables {
   title: string;
   description: string;
   deadline: string;
+  case?: boolean;
+  interview?: boolean;
+  application?: boolean;
 }
 
 // empty createListing variables for initializing and resetting state
@@ -29,6 +37,9 @@ const emptyListing: CreateListingVariables = {
   title: "",
   description: "",
   deadline: "",
+  case: false,
+  interview: false,
+  application: false,
 };
 
 /**
@@ -91,6 +102,41 @@ const CreateListing: React.FC<{
           />
           <InputLabel>Søknadsfrist:</InputLabel>
           <TextField type="datetime-local" onChange={(e) => setListing({ ...listing, deadline: e.target.value })} />
+          <FormControl component="fieldset">
+            <FormLabel component="legend">Opptaksprosessen</FormLabel>
+            <FormGroup>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={listing.application}
+                    onChange={(e) => setListing({ ...listing, application: e.target.checked })}
+                    color="primary"
+                  />
+                }
+                label="Søknad"
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={listing.interview}
+                    onChange={(e) => setListing({ ...listing, interview: e.target.checked })}
+                    color="primary"
+                  />
+                }
+                label="Intervju"
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={listing.case}
+                    onChange={(e) => setListing({ ...listing, case: e.target.checked })}
+                    color="primary"
+                  />
+                }
+                label="Case"
+              />
+            </FormGroup>
+          </FormControl>
         </Grid>
         {invalidError && <FormHelperText error>Du må fylle inn alle felter.</FormHelperText>}
         <DialogActions>
@@ -104,6 +150,9 @@ const CreateListing: React.FC<{
                     description: listing.description,
                     deadline: listing.deadline,
                     organizationId: organization.id,
+                    application: listing.application,
+                    interview: listing.interview,
+                    case: listing.case,
                   },
                 });
                 setListing(emptyListing);

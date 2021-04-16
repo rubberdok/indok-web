@@ -25,9 +25,9 @@ class ListingType(DjangoObjectType):
     def resolve_chips(parent: Listing, info):
         res = []
         if parent.application:
-            res += "søknad"
+            res.append("søknad")
         if parent.case:
-            res += "case"
+            res.append("case")
         if parent.interview:
-            res += "interview"
+            res.append("intervju")
         return res

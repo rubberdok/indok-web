@@ -14,12 +14,12 @@ const EditListingPage: NextPage = () => {
   const router = useRouter();
   const { listingId } = router.query;
 
-  const [listing, setListing] = useState<Listing | ListingInput | undefined>(undefined);
+  const [listing, setListing] = useState<ListingInput | undefined>(undefined);
   const { loading, error, data } = useQuery<{ listing: Listing; user: { organizations: Organization[] } }>(
     LISTING_AND_USER_WITH_ORGANIZATIONS,
     {
       variables: { id: parseInt(listingId as string) },
-      onCompleted: (data) => setListing(data.listing),
+      onCompleted: (data) => setListing(data.listing as ListingInput),
     }
   );
 
@@ -54,7 +54,10 @@ const EditListingPage: NextPage = () => {
                         url: listing.url || undefined,
                         startDatetime: listing.startDatetime || undefined,
                         deadline: listing.deadline || undefined,
-                        organizationId: listing.organization?.id,
+                        organizationId: listing.organization?.id || undefined,
+                        case: listing.case || undefined,
+                        interview: listing.interview || undefined,
+                        application: listing.application || undefined,
                       },
                     },
                   });

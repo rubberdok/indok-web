@@ -1,5 +1,5 @@
 import MarkdownForm from "@components/pages/listings/detail/MarkdownForm";
-import { Listing, ListingInput } from "@interfaces/listings";
+import { ListingInput } from "@interfaces/listings";
 import { Organization } from "@interfaces/organizations";
 import {
   Button,
@@ -14,8 +14,11 @@ import {
   Select,
   TextField,
   Typography,
+  Checkbox,
+  FormControlLabel,
 } from "@material-ui/core";
 import Save from "@material-ui/icons/Save";
+import React, { ChangeEvent } from "react";
 
 const useStyles = makeStyles((theme) => ({
   inputGroup: {
@@ -32,8 +35,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ListingForm: React.FC<{
-  state: Listing | ListingInput;
-  setState: (state: Listing | ListingInput) => void;
+  state: ListingInput;
+  setState: (state: ListingInput) => void;
   onSubmit: (e: React.MouseEvent<HTMLButtonElement>) => void;
   organizations: Organization[] | undefined;
 }> = ({ state, setState, onSubmit, organizations }) => {
@@ -42,6 +45,10 @@ const ListingForm: React.FC<{
   const handlePropertyChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>, property: string) => {
     setState({ ...state, [property]: event.target.value });
   };
+
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>, property: string) => {
+    setState({ ...state, [property]: event.target.checked})
+  }
 
   return (
     <Card className={classes.root}>
@@ -107,19 +114,47 @@ const ListingForm: React.FC<{
               </FormControl>
             )}
           </Grid>
-          {/*<Grid item>
+          <Grid item>
             <Grid container spacing={2} className={classes.inputGroup}>
               <Grid item xs>
-                <Checkbox color="primary" checked={listing.application} />
+                <FormControlLabel
+                  control={
+                    <Checkbox 
+                      color="primary"
+                      checked={state.application}
+                      onChange={(e) => handleCheckboxChange(e, "application")}
+                    />
+                  }
+                  label={"Søknad"}
+                />
               </Grid>
               <Grid item xs>
-                <Checkbox color="primary" checked={listing.case} />
+                <FormControlLabel
+                  control={
+                    <Checkbox 
+                      color="primary"
+                      checked={state.interview}
+                      onChange={(e) => handleCheckboxChange(e, "interview")} 
+                    />
+                  }
+                  label={"Intervju"}
+                />
               </Grid>
               <Grid item xs>
-                <Checkbox color="primary" checked={listing.interview} />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      color="primary"
+                      checked={state.case}
+                      onChange={(e) => handleCheckboxChange(e, "case")} 
+                    />
+                  }
+                  label={"Case"}
+                />
+
               </Grid>
             </Grid>
-          </Grid>*/}
+          </Grid>
           <Grid item>
             <Typography variant="h3">Beskrivelse</Typography>
             <MarkdownForm markdown={state.description} onTextChange={(e) => handlePropertyChange(e, "description")} />
