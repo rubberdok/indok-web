@@ -14,13 +14,17 @@ export const GET_ORGANIZATION = gql`
         isFull
         usersAttending {
           id
-          username
-          firstName
+          user {
+            username
+            firstName
+          }
         }
         usersOnWaitingList {
           id
-          username
-          firstName
+          user {
+            username
+            firstName
+          }
         }
       }
       listings {
