@@ -42,11 +42,11 @@ const ListingForm: React.FC<{
 }> = ({ state, setState, onSubmit, organizations }) => {
   const classes = useStyles();
 
-  const handlePropertyChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>, property: string) => {
+  const handlePropertyChange = (event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>, property: string) => {
     setState({ ...state, [property]: event.target.value });
   };
 
-  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>, property: string) => {
+  const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>, property: string) => {
     setState({ ...state, [property]: event.target.checked})
   }
 
