@@ -42,13 +42,10 @@ const EmailForm = ({ eventId }: EmailFormProps) => {
   const [sendEventMail] = useMutation(SEND_EVENT_EMAILS);
 
   useEffect(() => {
-    const users = data?.event.usersAttending;
+    const signUps = data?.event.usersAttending;
 
-    if (data?.event && users) {
-      setEmailProps({
-        ...emailProps,
-        receiverEmails: users.map((user) => (user.email != "" ? user.email : user.feideEmail)),
-      });
+    if (data?.event && signUps) {
+      setEmailProps({ ...emailProps, receiverEmails: signUps.map((signUp) => signUp.userEmail) });
     }
   }, [data]);
 
