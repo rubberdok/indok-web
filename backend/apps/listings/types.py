@@ -1,9 +1,12 @@
 from graphene_django import DjangoObjectType
+import graphene
 
 from .models import Listing
 
 
 class ListingType(DjangoObjectType):
+    chips = graphene.List(graphene.String, required=True)
+
     class Meta:
         model = Listing
         fields = [
@@ -18,3 +21,13 @@ class ListingType(DjangoObjectType):
             "organization",
             "form",
         ]
+
+    def resolve_chips(parent: Listing, info):
+        res = []
+        if parent.application:
+            res += "søknad"
+        if parent.case:
+            res += "case"
+        if parent.interview:
+            res += "interview"
+        return res

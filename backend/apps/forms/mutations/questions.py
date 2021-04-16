@@ -150,52 +150,53 @@ class SubmitOrUpdateAnswers(graphene.Mutation):
         """
         user = info.context.user
         try:
-            form = Form.objects.get(pk=form_id)
+            form = Form.objects.prefetch_related("questions").get(pk=form_id)
         except Form.DoesNotExist:
             raise KeyError(f"The form with id {form_id} does not exist.")
 
-        response, _ = Response.objects.get_or_create(form_id=form_id, responder=user)
+        response, _ = Response.objects.prefetch_related("answers").get_or_create(form_id=form_id, respondent=user)
 
+        # Restructure the data for easier manipulation
         answers = {
             int(answer_data["question_id"]): answer_data["answer"]
             for answer_data in answers_data
         }
 
-        if form:
-            mandatory_questions = form.mandatory_questions
+        # Update existing answers
+        # Find all existing answers, iterate over the ones that should be updated
+        existing_answers = response.answers.distinct()
+        for answer in existing_answers.filter(question__pk__in=answers.keys()):
+            answer.answer = answers[answer.question.pk]
+            del answers[answer.question.pk]
 
-            # Update existing answers
-            existing_answers = set(response.answers)
-            for answer in existing_answers:
-                qid = answer.question.id
-                if qid in answers:
-                    new_answer = answers[qid]
-                    answer.answer = new_answer
-                    del answers[qid]
+        # A mandatory question is unanswered if:
+        # (1) it is in the form
+        # (2) it is mandatory
+        # (3) it is not in the list of existing answers
+        # (4) it is not part of the new, incoming answers
+        unanswered_mandatory_questions = form.questions.filter(
+            Q(mandatory=True)
+            & ~Q(pk__in=existing_answers.values_list("question__id", flat=True)) 
+            & ~Q(pk__in=answers.keys())
+        ).exists()
 
-            Answer.objects.bulk_update(existing_answers, ["answer"])
-
-            new_answers = set(answers)
-            updated_answers = set(
-                existing_answers.values_list("question__id", flat=True)
+        if unanswered_mandatory_questions:
+            # Not all mandatory questions have been answered
+            raise AssertionError(
+                f"Not all mandatory questions have been answered"
             )
+        
+        # Iterate over the questions to prevent users from answering other forms than the current one
+        questions = form.questions.filter(pk__in=answers.keys())
 
-            if not mandatory_questions.issubset(
-                temp := updated_answers.union(new_answers)
-            ):
-                # Not all mandatory questions have been answered
-                raise AssertionError(
-                    f"Not all mandatory questions have been answered, expected {mandatory_questions}, got {temp}"
-                )
-
-            Answer.objects.bulk_create(
-                [
-                    Answer(response=response, question_id=question_id, answer=answer)
-                    for question_id, answer in answers.items()
-                ]
-            )
-            return SubmitOrUpdateAnswers(ok=True)
-        return SubmitOrUpdateAnswers(ok=False)
+        Answer.objects.bulk_update(existing_answers, ["answer"])
+        Answer.objects.bulk_create(
+            [
+                Answer(response=response, question=question, answer=answers[question.pk])
+                for question in questions
+            ]
+        )
+        return SubmitOrUpdateAnswers(ok=True)
 
 
 class DeleteAnswersToForm(graphene.Mutation):

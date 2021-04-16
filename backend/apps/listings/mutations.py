@@ -17,6 +17,9 @@ class BaseListingInput(graphene.InputObjectType):
     url = graphene.String()
     organization_id = graphene.ID()
     form_id = graphene.ID()
+    application = graphene.Boolean()
+    interview = graphene.Boolean()
+    case = graphene.Boolean()
 
 
 class CreateListingInput(BaseListingInput):

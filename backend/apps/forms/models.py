@@ -2,7 +2,7 @@ import uuid
 
 from django.conf import settings
 from django.db import models
-from django.db.models import UniqueConstraint
+from django.db.models import UniqueConstraint, F
 from django.db.models.constraints import CheckConstraint
 from django.db.models.fields import UUIDField
 from django.db.models.query_utils import Q
@@ -52,9 +52,6 @@ class Option(models.Model):
 
 class Answer(models.Model):
     uuid = UUIDField(primary_key=True, default=uuid.uuid4)
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="answers"
-    )
     question = models.ForeignKey(
         Question, on_delete=models.CASCADE, related_name="answers"
     )
@@ -73,7 +70,7 @@ class Answer(models.Model):
         ]
 
     def __str__(self) -> str:
-        return f"User: {self.user}; Answer: {self.answer}"
+        return f"Answer: {self.answer}"
 
 
 class Response(models.Model):
