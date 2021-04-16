@@ -2,7 +2,7 @@ import { useQuery } from "@apollo/client";
 import { FORM_ANSWERS } from "@graphql/forms/queries";
 import { Answer, Question } from "@interfaces/forms";
 import { User } from "@interfaces/users";
-import { Typography, Box } from "@material-ui/core";
+import { Typography, Box, Grid, Card, CardContent } from "@material-ui/core";
 
 // specific type for this component to tie a question to a single answer
 type QuestionWithAnswer = Question & {
@@ -31,28 +31,63 @@ const FormResponse: React.FC<{
   return (
     <>
       {data && (
-        <>
-          <Typography variant="h3">{data.form.name}</Typography>
-          <Typography>
-            <Box fontWeight="bold">Søker:</Box> {user.firstName} {user.lastName}
-          </Typography>
-          <Typography>* = obligatorisk spørsmål</Typography>
-          {data.form.questions.map((question) => (
-            <>
-              <Typography>
-                <Box fontWeight="bold">{question.question}</Box>
-                {question.mandatory && " *"}
-              </Typography>
-              <Typography>
-                {question.answer ? (
-                  question.answer.answer
-                ) : (
-                  <Box fontStyle="italic">Søker svarte ikke på spørsmålet</Box>
-                )}
-              </Typography>
-            </>
-          ))}
-        </>
+        <Grid container direction="column" spacing={1}>
+          <Grid item>
+            <Card>
+              <CardContent>
+                <Typography variant="h5">{data.form.name}</Typography>
+                <Typography>* = obligatorisk spørsmål</Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item>
+            <Card>
+              <CardContent>
+                <Grid container direction="row" spacing={1}>
+                  <Grid item>
+                    <Typography>
+                      <Box fontWeight="bold">Søker:</Box>
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <Typography>
+                      {user.firstName} {user.lastName}
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item>
+            <Grid container direction="column" spacing={1}>
+              {data.form.questions.map((question) => (
+                <Grid item key={question.id}>
+                  <Card>
+                    <CardContent>
+                      <Grid container direction="row" spacing={1}>
+                        <Grid item>
+                          <Typography>
+                            <Box fontWeight="bold">{question.question}</Box>
+                          </Typography>
+                        </Grid>
+                        <Grid item>
+                          <Typography>{question.mandatory && " *"}</Typography>
+                        </Grid>
+                      </Grid>
+                      <Typography>
+                        {question.answer ? (
+                          question.answer.answer
+                        ) : (
+                          <Box fontStyle="italic">Søker svarte ikke på spørsmålet</Box>
+                        )}
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              ))}
+            </Grid>
+          </Grid>
+        </Grid>
       )}
     </>
   );
