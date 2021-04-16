@@ -35,6 +35,10 @@ def remove_default_permission_for_existing_users(apps, schema_editor):
         )
     for user in User.objects.all():
         remove_perm("users.view_sensitive_info", user_or_group=user, obj=user)
+        try:
+            Permission.objects.get(codename="view_sensitive_info").delete()
+        except Permission.DoesNotExist:
+            pass
 
 class Migration(migrations.Migration):
 
