@@ -152,48 +152,40 @@ class SubmitOrUpdateAnswers(graphene.Mutation):
         except Form.DoesNotExist:
             raise KeyError(f"The form with id {form_id} does not exist.")
 
-        response, _ = Response.objects.get_or_create(form_id=form_id, responder=user)
+        response, _ = Response.objects.get_or_create(form_id=form_id, respondent=user)
 
         answers = {
             int(answer_data["question_id"]): answer_data["answer"]
             for answer_data in answers_data
         }
 
-        if form:
-            mandatory_questions = form.mandatory_questions
 
-            # Update existing answers
-            existing_answers = set(response.answers)
-            for answer in existing_answers:
-                qid = answer.question.id
-                if qid in answers:
-                    new_answer = answers[qid]
-                    answer.answer = new_answer
-                    del answers[qid]
+        # Update existing answers
+        existing_answers = response.answers.filter(question__pk__in=answers.keys()).distinct()
+        for answer in existing_answers:
+            answer.answer = answers[answer.pk]
+            del answers[answer.pk]
 
-            Answer.objects.bulk_update(existing_answers, ["answer"])
+        Answer.objects.bulk_update(existing_answers, ["answer"])
 
-            new_answers = set(answers)
-            updated_answers = set(
-                existing_answers.values_list("question__id", flat=True)
+        unanswered_mandatory_questions = form.mandatory_questions.filter(
+            ~Q(pk__in=existing_answers.values_list("question_id", flat=True)) 
+            & ~Q(pk__in=answers.keys())
+        ).exists()
+
+        if unanswered_mandatory_questions:
+            # Not all mandatory questions have been answered
+            raise AssertionError(
+                f"Not all mandatory questions have been answered"
             )
 
-            if not mandatory_questions.issubset(
-                temp := updated_answers.union(new_answers)
-            ):
-                # Not all mandatory questions have been answered
-                raise AssertionError(
-                    f"Not all mandatory questions have been answered, expected {mandatory_questions}, got {temp}"
-                )
-
-            Answer.objects.bulk_create(
-                [
-                    Answer(response=response, question_id=question_id, answer=answer)
-                    for question_id, answer in answers.items()
-                ]
-            )
-            return SubmitOrUpdateAnswers(ok=True)
-        return SubmitOrUpdateAnswers(ok=False)
+        Answer.objects.bulk_create(
+            [
+                Answer(response=response, question_id=question_id, answer=answer, user=user)
+                for question_id, answer in answers.items()
+            ]
+        )
+        return SubmitOrUpdateAnswers(ok=True)
 
 
 class DeleteAnswersToForm(graphene.Mutation):
