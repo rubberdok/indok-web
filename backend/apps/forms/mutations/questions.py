@@ -148,28 +148,28 @@ class SubmitOrUpdateAnswers(graphene.Mutation):
         """
         user = info.context.user
         try:
-            form = Form.objects.get(pk=form_id)
+            form = Form.objects.prefetch_related("questions").get(pk=form_id)
         except Form.DoesNotExist:
             raise KeyError(f"The form with id {form_id} does not exist.")
 
-        response, _ = Response.objects.get_or_create(form_id=form_id, respondent=user)
+        response, _ = Response.objects.prefetch_related("answers").get_or_create(form_id=form_id, respondent=user)
 
         answers = {
             int(answer_data["question_id"]): answer_data["answer"]
             for answer_data in answers_data
         }
 
-
         # Update existing answers
-        existing_answers = response.answers.filter(question__pk__in=answers.keys()).distinct()
-        for answer in existing_answers:
-            answer.answer = answers[answer.pk]
-            del answers[answer.pk]
+        existing_answers = response.answers.distinct()
+        for answer in existing_answers.filter(question__pk__in=answers.keys()):
+            answer.answer = answers[answer.question.pk]
+            del answers[answer.question.pk]
 
         Answer.objects.bulk_update(existing_answers, ["answer"])
 
-        unanswered_mandatory_questions = form.mandatory_questions.filter(
-            ~Q(pk__in=existing_answers.values_list("question_id", flat=True)) 
+        unanswered_mandatory_questions = form.questions.filter(
+            Q(mandatory=True)
+            & ~Q(pk__in=existing_answers.values_list("question__id", flat=True)) 
             & ~Q(pk__in=answers.keys())
         ).exists()
 
@@ -178,11 +178,11 @@ class SubmitOrUpdateAnswers(graphene.Mutation):
             raise AssertionError(
                 f"Not all mandatory questions have been answered"
             )
-
+        questions = form.questions.filter(pk__in=answers.keys())
         Answer.objects.bulk_create(
             [
-                Answer(response=response, question_id=question_id, answer=answer, user=user)
-                for question_id, answer in answers.items()
+                Answer(response=response, question=question, answer=answers[question.pk])
+                for question in questions
             ]
         )
         return SubmitOrUpdateAnswers(ok=True)
