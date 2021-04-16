@@ -23,13 +23,6 @@ export interface Cabin {
   externalPrice: number;
 }
 
-export interface QueryVariables {
-  year: string;
-  month: string;
-  start?: string;
-  end?: string;
-}
-
 export interface ContractProps {
   contractData: {
     firstname: string | null;
@@ -39,18 +32,6 @@ export interface ContractProps {
     toDate: string;
     price: number;
   };
-}
-
-export interface SummaryProps {
-  from: string;
-  to: string;
-  cabins: string[];
-  price: number;
-  nights: number;
-}
-
-export interface ImageSliderProps {
-  cabins: string[];
 }
 
 export type InputFieldsEvent =
