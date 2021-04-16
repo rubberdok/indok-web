@@ -25,7 +25,7 @@ const FormResponse: React.FC<{
   });
 
   if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error...</p>;
+  if (error) return <p>Error</p>;
 
   // renders the applicant's answers to the form's questions
   return (

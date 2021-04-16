@@ -16,9 +16,7 @@ const ListingBody: React.FC = (props) => {
 
   return (
     <Card className={classes.root}>
-      <CardContent>
-        {props.children}
-      </CardContent>
+      <CardContent>{props.children}</CardContent>
     </Card>
   );
 };

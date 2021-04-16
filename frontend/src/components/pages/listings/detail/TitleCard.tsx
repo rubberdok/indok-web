@@ -30,7 +30,7 @@ const TitleCard: React.FC<{
 }> = ({ listing }) => {
   const classes = useStyles();
   return (
-    <Card style={{height: "100%"}}>
+    <Card style={{ height: "100%" }}>
       <CardContent>
         <Grid container direction="column" justify="space-between" alignItems="center">
           <Grid item>
