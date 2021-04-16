@@ -2,8 +2,8 @@ import { useQuery } from "@apollo/client";
 import { GET_DEFAULT_EVENTS, GET_EVENTS } from "@graphql/events/queries";
 import { GET_USER } from "@graphql/users/queries";
 import { User } from "@interfaces/users";
-import { Button, CircularProgress, Grid, makeStyles, Typography } from "@material-ui/core";
-import { Add, List } from "@material-ui/icons";
+import { Button, CircularProgress, Drawer, Grid, Hidden, makeStyles, Typography } from "@material-ui/core";
+import { Add, List, Tune } from "@material-ui/icons";
 import Link from "next/link";
 import React, { useState } from "react";
 import EventListItem from "./EventListItem";
@@ -18,27 +18,19 @@ export interface FilterQuery {
 
 const useStyles = makeStyles((theme) => ({
   grid: {
-    padding: theme.spacing(3),
-    paddingTop: theme.spacing(2),
+    padding: theme.spacing(3, 0),
   },
-  // eventContainer: {
-  //   border: "solid",
-  //   borderWidth: "0.05em 0.05em 0.05em 1.2em",
-  //   borderRadius: "0.2em",
-  //   padding: theme.spacing(2),
-  //   marginBottom: theme.spacing(2),
-  //   backgroundColor: "#fff",
-  //   ["&:hover"]: {
-  //     cursor: "pointer",
-  //     backgroundColor: "#f5f5f5",
-  //   },
-  // },
+  drawer: {
+    width: 500,
+    maxWidth: "80%",
+  },
 }));
 
 const AllEvents: React.FC = () => {
   const classes = useStyles();
   const [filters, setFilters] = useState({});
   const [showDefaultEvents, setShowDefaultEvents] = useState(false);
+  const [openFilterDrawer, setOpenFilterDrawer] = React.useState(false);
 
   const { loading: userLoading, data: userData } = useQuery<{ user: User }>(GET_USER);
 
@@ -64,15 +56,35 @@ const AllEvents: React.FC = () => {
 
   return (
     <>
-      <Grid container className={classes.grid} spacing={3}>
-        <Grid item md={3}>
+      <Hidden mdUp>
+        <Button onClick={() => setOpenFilterDrawer(true)} variant="contained" startIcon={<Tune />}>
+          Filtre
+        </Button>
+        <Drawer
+          PaperProps={{ className: classes.drawer }}
+          anchor="left"
+          open={openFilterDrawer}
+          onClose={() => setOpenFilterDrawer(false)}
+        >
           <FilterMenu
             filters={filters}
             onFiltersChange={onChange}
             showDefaultEvents={showDefaultEvents}
             onShowDefaultChange={setShowDefaultEvents}
           />
-        </Grid>
+        </Drawer>
+      </Hidden>
+      <Grid container className={classes.grid} spacing={3}>
+        <Hidden smDown>
+          <Grid item md={3}>
+            <FilterMenu
+              filters={filters}
+              onFiltersChange={onChange}
+              showDefaultEvents={showDefaultEvents}
+              onShowDefaultChange={setShowDefaultEvents}
+            />
+          </Grid>
+        </Hidden>
         <Grid item xs>
           {userData && !userLoading && userData.user && !!userData.user.organizations.length && (
             <Link href="/events/create-event" passHref>

@@ -1,6 +1,6 @@
 import { Event } from "@interfaces/events";
 import { User } from "@interfaces/users";
-import { Box, Card, CardActionArea, Chip, makeStyles, Typography, useTheme } from "@material-ui/core";
+import { Box, Card, CardActionArea, Chip, makeStyles, Typography, useMediaQuery, useTheme } from "@material-ui/core";
 import dayjs from "dayjs";
 import nb from "dayjs/locale/nb";
 import Link from "next/link";
@@ -22,6 +22,11 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(3),
     alignItems: "flex-end",
     justifyContent: "space-between",
+
+    [theme.breakpoints.down("sm")]: {
+      alignItems: "stretch",
+      flexDirection: "column",
+    },
   },
   cardContent: {},
 }));
@@ -29,6 +34,7 @@ const useStyles = makeStyles((theme) => ({
 const EventListItem: React.FC<Props> = ({ event, user }) => {
   const theme = useTheme();
   const classes = useStyles();
+  const smallScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
     <Card>
@@ -44,7 +50,9 @@ const EventListItem: React.FC<Props> = ({ event, user }) => {
 
             <Typography variant="body2">Dato: {formatDate(event.startTime)}</Typography>
 
-            <Typography variant="body2">{event.shortDescription ?? "Trykk for å lese mer"}</Typography>
+            <Typography variant="body2" gutterBottom={smallScreen ?? "false"}>
+              {event.shortDescription ?? "Trykk for å lese mer"}
+            </Typography>
           </Box>
           {user && event.isAttendable && event.allowedGradeYears.includes(user.gradeYear) ? (
             event.isFull && event.userAttendance?.isOnWaitingList ? (

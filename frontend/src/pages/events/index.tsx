@@ -6,7 +6,8 @@ import React, { useState } from "react";
 
 const useStyles = makeStyles((theme) => ({
   container: {
-    padding: theme.spacing(4, 0),
+    paddingTop: theme.spacing(4),
+    paddingBottom: theme.spacing(4),
   },
 }));
 
