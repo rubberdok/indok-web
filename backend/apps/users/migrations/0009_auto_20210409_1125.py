@@ -6,11 +6,33 @@ from django.contrib.auth import get_user_model
 
 def assign_default_permission_for_existing_users(apps, schema_editor):
     User = get_user_model()
+    Permission = apps.get_model("auth", "Permission")
+    try:
+        Permission.objects.get(codename="view_sensitive_info")
+    except Permission.DoesNotExist:
+        ContentType = apps.get_model("contenttypes", "ContentType")
+        content_type = ContentType.objects.get_for_model(User)
+        Permission.objects.create(
+            codename="view_sensitive_info",
+            name="Can view sensitive information about a user",
+            content_type=content_type
+        )
     for user in User.objects.all():
         assign_perm("users.view_sensitive_info", user_or_group=user, obj=user)
 
 def remove_default_permission_for_existing_users(apps, schema_editor):
     User = get_user_model()
+    Permission = apps.get_model("auth", "Permission")
+    try:
+        Permission.objects.get(codename="view_sensitive_info")
+    except Permission.DoesNotExist:
+        ContentType = apps.get_model("contenttypes", "ContentType")
+        content_type = ContentType.objects.get_for_model(User)
+        Permission.objects.create(
+            codename="view_sensitive_info",
+            name="Can view sensitive information about a user",
+            content_type=content_type
+        )
     for user in User.objects.all():
         remove_perm("users.view_sensitive_info", user_or_group=user, obj=user)
 
