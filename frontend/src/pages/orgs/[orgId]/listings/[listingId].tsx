@@ -56,12 +56,14 @@ const ListingAdminPage: NextPage = () => {
       const cachedListing = cache.readFragment<Listing>({
         id: `ListingType:${listingId as string}`,
         fragment: LISTING_WITH_RESPONDERS_FRAGMENT,
+        fragmentName: "ListingWithRespondersFragment",
       });
       if (newForm && cachedListing) {
         // writes the form to the cached listing
         cache.writeFragment({
           id: `ListingType:${listingId as string}`,
           fragment: LISTING_WITH_RESPONDERS_FRAGMENT,
+          fragmentName: "ListingWithRespondersFragment",
           data: {
             form: newForm,
           },
@@ -87,42 +89,34 @@ const ListingAdminPage: NextPage = () => {
                   </Button>
                 </Link>
               </Grid>
-              <Grid item>
-                <Card>
-                  <Tabs
-                    orientation="vertical"
-                    variant="scrollable"
-                    value={selectedApplicant}
-                    onChange={(_, applicant) => {
-                      selectApplicant(applicant);
-                    }}
-                  >
-                    <Tab value={"listing"} label="Verv & søknad" />
-                    {data?.listing.form && (
-                      <>
+              {data?.listing.form && (
+                <Grid item>
+                  <Card>
+                    {(data.listing.form.responders ?? []).length > 0 ? (
+                      <Tabs
+                        orientation="vertical"
+                        variant="scrollable"
+                        value={selectedApplicant}
+                        onChange={(_, applicant) => {
+                          selectApplicant(applicant);
+                        }}
+                      >
+                        <Tab value={"listing"} label="Verv & søknad" />
                         <Box textAlign="center">
                           <Typography variant="h5">Søkere</Typography>
                         </Box>
-                        {(data.listing.form.responders ?? []).length > 0 ? (
-                          <>
-                            {data.listing.form.responders.map((responder, index) => (
-                              <Tab
-                                key={index}
-                                value={responder}
-                                label={`${responder.firstName} ${responder.lastName}`}
-                              />
-                            ))}
-                          </>
-                        ) : (
-                          <CardContent>
-                            <Typography>Ingen søkere enda.</Typography>
-                          </CardContent>
-                        )}
-                      </>
+                        {data.listing.form.responders.map((responder, index) => (
+                          <Tab key={index} value={responder} label={`${responder.firstName} ${responder.lastName}`} />
+                        ))}
+                      </Tabs>
+                    ) : (
+                      <CardContent>
+                        <Typography>Ingen søkere enda.</Typography>
+                      </CardContent>
                     )}
-                  </Tabs>
-                </Card>
-              </Grid>
+                  </Card>
+                </Grid>
+              )}
             </Grid>
           </Grid>
           {data && (
