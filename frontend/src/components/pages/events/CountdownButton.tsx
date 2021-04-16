@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { Button, CircularProgress, createStyles, makeStyles } from "@material-ui/core";
+import { Button, CircularProgress, makeStyles } from "@material-ui/core";
 import dayjs from "dayjs";
 import nb from "dayjs/locale/nb";
-import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
+import React, { useEffect, useState } from "react";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.locale(nb);
@@ -24,22 +24,19 @@ const calculateTimeLeft = (countdownTime: string, now: any): Record<string, numb
   return {};
 };
 
-const useStyles = makeStyles(() =>
-  createStyles({
-    wrapper: {
-      position: "relative",
-      float: "right",
-    },
-    buttonLoading: {
-      color: "background",
-      position: "absolute",
-      top: "50%",
-      left: "50%",
-      marginTop: -12,
-      marginLeft: -12,
-    },
-  })
-);
+const useStyles = makeStyles(() => ({
+  buttonLoading: {
+    color: "background",
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    marginTop: -12,
+    marginLeft: -12,
+  },
+  positionLeft: {
+    float: "left",
+  },
+}));
 
 interface Props {
   countDownDate: string;
@@ -50,7 +47,6 @@ interface Props {
   loading: boolean;
   disabled?: boolean;
   onClick: () => void;
-  styleClassName: any;
 }
 
 const CountdownButton: React.FC<Props> = ({
@@ -62,7 +58,6 @@ const CountdownButton: React.FC<Props> = ({
   loading,
   disabled,
   onClick,
-  styleClassName,
 }) => {
   const [now, setNow] = useState(dayjs(currentTime));
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft(countDownDate, now));
@@ -117,9 +112,9 @@ const CountdownButton: React.FC<Props> = ({
   };
 
   return (
-    <div className={classes.wrapper}>
+    <div className={classes.positionLeft}>
       <Button
-        className={styleClassName}
+        size="large"
         variant="contained"
         color={isSignedUp || isOnWaitingList ? "inherit" : "primary"}
         onClick={onClick}

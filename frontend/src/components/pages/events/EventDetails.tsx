@@ -35,23 +35,12 @@ import EditEvent from "./EventEditor";
 const useStyles = makeStyles((theme) => ({
   container: {
     paddingTop: theme.spacing(8),
-    paddingBottom: theme.spacing(4),
-  },
-  publisherContainer: {
-    marginTop: theme.spacing(1),
-    width: "fit-content",
-    float: "left",
+    paddingBottom: theme.spacing(8),
   },
   paper: {
     color: theme.palette.text.primary,
     padding: theme.spacing(2),
     height: "100%",
-  },
-  signUpButton: {
-    padding: theme.spacing(1),
-    paddingLeft: theme.spacing(1.6),
-    paddingRight: theme.spacing(1.6),
-    float: "right",
   },
   signUpText: {
     float: "right",
@@ -62,10 +51,7 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: theme.spacing(1),
     display: "inline-block",
   },
-  innerParagraph: {
-    paddingTop: theme.spacing(0),
-    paddingBottom: theme.spacing(0),
-  },
+  innerParagraph: {},
   extraInformation: {
     position: "relative",
     float: "right",
@@ -213,56 +199,21 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
           <Typography variant="subtitle1" display="block" gutterBottom>
             Arrangert av {eventData.event.organization?.name}
           </Typography>
-          {userData.user?.organizations
-            .map((organization) => organization.id)
-            .includes(eventData.event.organization.id) && (
-            <Box>
-              <Button
-                variant="contained"
-                startIcon={<Edit />}
-                onClick={() => {
-                  setOpenEditEvent(true);
-                }}
-              >
-                Rediger
-              </Button>
-              <Link href={`/orgs/${eventData.event.organization.id}/events/${eventId}`} passHref>
-                <Button variant="contained" startIcon={<List />}>
-                  Administrer
-                </Button>
-              </Link>
-            </Box>
-          )}
+
           {!eventData.event.isAttendable ? null : !userData.user ? (
-            <Typography variant="h6">Logg inn for å melde deg på</Typography>
+            <Typography variant="h5" gutterBottom>
+              Logg inn for å melde deg på
+            </Typography>
           ) : !eventData.event.allowedGradeYears.includes(userData.user.gradeYear) ? (
-            <Typography variant="h6">Ikke aktuell</Typography>
+            <Typography variant="h5" gutterBottom>
+              Ikke aktuell
+            </Typography>
           ) : (
             <>
-              <CountdownButton
-                countDownDate={(eventData.event as AttendableEvent).signupOpenDate}
-                isSignedUp={(eventData.event as AttendableEvent).userAttendance.isSignedUp}
-                isOnWaitingList={(eventData.event as AttendableEvent).userAttendance.isOnWaitingList}
-                isFull={(eventData.event as AttendableEvent).isFull}
-                loading={signOffLoading || signUpLoading || eventLoading}
-                disabled={
-                  (!userData.user.phoneNumber &&
-                    !eventData.event.userAttendance?.isSignedUp &&
-                    !eventData.event.userAttendance?.isOnWaitingList) ||
-                  (eventData.event.bindingSignup && eventData.event.userAttendance?.isSignedUp) ||
-                  (eventData.event.hasExtraInformation &&
-                    !extraInformation &&
-                    !eventData.event.userAttendance?.isSignedUp &&
-                    !eventData.event.userAttendance?.isOnWaitingList)
-                }
-                onClick={handleClick}
-                styleClassName={classes.signUpButton}
-                currentTime={timeData.serverTime}
-              />
               {!userData.user.phoneNumber &&
                 !eventData.event.userAttendance?.isSignedUp &&
                 !eventData.event.userAttendance?.isOnWaitingList && (
-                  <Typography color="error">
+                  <Typography variant="body1" color="error" className={classes.wrapIcon}>
                     <Warning fontSize="small" />
                     Du må oppgi et telefonnummer på brukeren din for å kunne melde deg på
                   </Typography>
@@ -282,39 +233,47 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
                     onChange={(e) => setExtraInformation(e.target.value)}
                   />
                 )}
-
-              <Alert severity="error" open={openSignUpErrorSnackbar} onClose={() => setOpenSignUpErrorSnackbar(false)}>
-                {signUpError ? signUpError.message : "Påmelding feilet"}
-              </Alert>
-
-              <Alert open={openSignOffErrorSnackbar} severity="error" onClose={() => setOpenSignUpErrorSnackbar(false)}>
-                Avmelding feilet
-              </Alert>
-
-              <Alert severity="info" open={openSignOffSnackbar} onClose={() => setOpenSignOffSnackbar(false)}>
-                Du er nå avmeldt
-              </Alert>
-
-              <Alert severity="success" open={openSignUpSnackbar} onClose={() => setOpenSignUpSnackbar(false)}>
-                Du er nå påmeldt
-              </Alert>
-
-              <Alert
-                severity="info"
-                open={openOnWaitingListSnackbar}
-                onClose={() => setOpenOnWaitingListSnackbar(false)}
-              >
-                Du er på ventelisten
-              </Alert>
-
-              <Alert
-                severity="info"
-                open={openOffWaitingListSnackbar}
-                onClose={() => setOpenOffWaitingListSnackbar(false)}
-              >
-                Du er ikke lenger på ventelisten
-              </Alert>
+              <CountdownButton
+                countDownDate={(eventData.event as AttendableEvent).signupOpenDate}
+                isSignedUp={(eventData.event as AttendableEvent).userAttendance.isSignedUp}
+                isOnWaitingList={(eventData.event as AttendableEvent).userAttendance.isOnWaitingList}
+                isFull={(eventData.event as AttendableEvent).isFull}
+                loading={signOffLoading || signUpLoading || eventLoading}
+                disabled={
+                  (!userData.user.phoneNumber &&
+                    !eventData.event.userAttendance?.isSignedUp &&
+                    !eventData.event.userAttendance?.isOnWaitingList) ||
+                  (eventData.event.bindingSignup && eventData.event.userAttendance?.isSignedUp) ||
+                  (eventData.event.hasExtraInformation &&
+                    !extraInformation &&
+                    !eventData.event.userAttendance?.isSignedUp &&
+                    !eventData.event.userAttendance?.isOnWaitingList)
+                }
+                onClick={handleClick}
+                currentTime={timeData.serverTime}
+              />
             </>
+          )}
+          {userData.user?.organizations
+            .map((organization) => organization.id)
+            .includes(eventData.event.organization.id) && (
+            <div>
+              <Button
+                variant="contained"
+                size="large"
+                startIcon={<Edit />}
+                onClick={() => {
+                  setOpenEditEvent(true);
+                }}
+              >
+                Rediger
+              </Button>
+              <Link href={`/orgs/${eventData.event.organization.id}/events/${eventId}`} passHref>
+                <Button size="large" variant="contained" startIcon={<List />}>
+                  Administrer
+                </Button>
+              </Link>
+            </div>
           )}
         </Container>
       </Box>
@@ -325,7 +284,7 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
             <Typography variant="h3" gutterBottom>
               Beskrivelse
             </Typography>
-            <Typography variant="body1" display="block">
+            <Typography variant="body1" display="block" gutterBottom>
               {formatDescription(eventData.event.description, classes.innerParagraph, classes.paragraph)}
             </Typography>
           </Grid>
@@ -394,6 +353,30 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
           </Grid>
         </Grid>
       </Container>
+      {/* Alerts */}
+      <Alert severity="error" open={openSignUpErrorSnackbar} onClose={() => setOpenSignUpErrorSnackbar(false)}>
+        {signUpError ? signUpError.message : "Påmelding feilet"}
+      </Alert>
+
+      <Alert open={openSignOffErrorSnackbar} severity="error" onClose={() => setOpenSignUpErrorSnackbar(false)}>
+        Avmelding feilet
+      </Alert>
+
+      <Alert severity="info" open={openSignOffSnackbar} onClose={() => setOpenSignOffSnackbar(false)}>
+        Du er nå avmeldt
+      </Alert>
+
+      <Alert severity="success" open={openSignUpSnackbar} onClose={() => setOpenSignUpSnackbar(false)}>
+        Du er nå påmeldt
+      </Alert>
+
+      <Alert severity="info" open={openOnWaitingListSnackbar} onClose={() => setOpenOnWaitingListSnackbar(false)}>
+        Du er på ventelisten
+      </Alert>
+
+      <Alert severity="info" open={openOffWaitingListSnackbar} onClose={() => setOpenOffWaitingListSnackbar(false)}>
+        Du er ikke lenger på ventelisten
+      </Alert>
     </>
   );
 };
