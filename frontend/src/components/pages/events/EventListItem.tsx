@@ -1,53 +1,65 @@
 import { Event } from "@interfaces/events";
 import { User } from "@interfaces/users";
-import { Typography, Chip, useTheme, Box } from "@material-ui/core";
-import Link from "next/link";
-import React from "react";
+import { Box, Card, CardActionArea, Chip, makeStyles, Typography, useTheme } from "@material-ui/core";
 import dayjs from "dayjs";
 import nb from "dayjs/locale/nb";
+import Link from "next/link";
+import React from "react";
 
 const formatDate = (dateAndTime: string) => {
-  return dayjs(dateAndTime).locale(nb).format(`DD.MMM YYYY, kl. HH:mm`);
+  return dayjs(dateAndTime).locale(nb).format(`D. MMM`);
 };
 
 interface Props {
   event: Event;
   user?: User;
-  classes: any;
 }
 
-const EventListItem: React.FC<Props> = ({ event, user, classes }) => {
+const useStyles = makeStyles((theme) => ({
+  card: {
+    display: "flex",
+    borderLeft: "16px solid",
+    padding: theme.spacing(3),
+    alignItems: "flex-end",
+    justifyContent: "space-between",
+  },
+  cardContent: {},
+}));
+
+const EventListItem: React.FC<Props> = ({ event, user }) => {
   const theme = useTheme();
+  const classes = useStyles();
 
   return (
-    <Link href={`/events/${event.id}`} key={event.id}>
-      <Box
-        display="flex"
-        alignItems="center"
-        justifyContent="space-between"
-        className={classes.eventContainer}
-        style={{ borderColor: event.organization?.color ?? theme.palette.primary.main }}
-      >
-        <Box>
-          <Typography variant="h5">{event.title}</Typography>
-          <Typography variant="body2">{formatDate(event.startTime)}</Typography>
+    <Card>
+      <Link href={`/events/${event.id}`} key={event.id}>
+        <CardActionArea
+          className={classes.card}
+          style={{ borderColor: event.organization?.color ?? theme.palette.primary.main }}
+        >
+          <Box className={classes.cardContent}>
+            <Typography variant="h4" gutterBottom>
+              {event.title}
+            </Typography>
 
-          {event.shortDescription ?? "Trykk for å lese mer"}
-        </Box>
+            <Typography variant="body2">Dato: {formatDate(event.startTime)}</Typography>
 
-        {user && event.isAttendable && event.allowedGradeYears.includes(user.gradeYear) ? (
-          event.isFull && event.userAttendance?.isOnWaitingList ? (
-            <Chip label="På venteliste" />
-          ) : event.isFull && !event.userAttendance?.isSignedUp ? (
-            <Chip color="primary" label="Venteliste tilgjengelig" />
-          ) : event.userAttendance?.isSignedUp ? (
-            <Chip color="primary" label="Påmeldt" />
-          ) : (
-            <Chip label="Påmelding tilgjengelig" />
-          )
-        ) : null}
-      </Box>
-    </Link>
+            <Typography variant="body2">{event.shortDescription ?? "Trykk for å lese mer"}</Typography>
+          </Box>
+          {user && event.isAttendable && event.allowedGradeYears.includes(user.gradeYear) ? (
+            event.isFull && event.userAttendance?.isOnWaitingList ? (
+              <Chip label="På venteliste" />
+            ) : event.isFull && !event.userAttendance?.isSignedUp ? (
+              <Chip color="primary" label="Venteliste tilgjengelig" />
+            ) : event.userAttendance?.isSignedUp ? (
+              <Chip color="primary" label="Påmeldt" />
+            ) : (
+              <Chip label="Påmelding tilgjengelig" />
+            )
+          ) : null}
+        </CardActionArea>
+      </Link>
+    </Card>
   );
 };
 

@@ -1,7 +1,6 @@
 import { useQuery } from "@apollo/client";
 import { GET_DEFAULT_EVENTS, GET_EVENTS } from "@graphql/events/queries";
 import { GET_USER } from "@graphql/users/queries";
-import { Event } from "@interfaces/events";
 import { User } from "@interfaces/users";
 import { Button, CircularProgress, Grid, makeStyles, Typography } from "@material-ui/core";
 import { Add, List } from "@material-ui/icons";
@@ -22,18 +21,18 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(3),
     paddingTop: theme.spacing(2),
   },
-  eventContainer: {
-    border: "solid",
-    borderWidth: "0.05em 0.05em 0.05em 1.2em",
-    borderRadius: "0.2em",
-    padding: theme.spacing(2),
-    marginBottom: theme.spacing(2),
-    backgroundColor: "#fff",
-    ["&:hover"]: {
-      cursor: "pointer",
-      backgroundColor: "#f5f5f5",
-    },
-  },
+  // eventContainer: {
+  //   border: "solid",
+  //   borderWidth: "0.05em 0.05em 0.05em 1.2em",
+  //   borderRadius: "0.2em",
+  //   padding: theme.spacing(2),
+  //   marginBottom: theme.spacing(2),
+  //   backgroundColor: "#fff",
+  //   ["&:hover"]: {
+  //     cursor: "pointer",
+  //     backgroundColor: "#f5f5f5",
+  //   },
+  // },
 }));
 
 const AllEvents: React.FC = () => {
@@ -65,26 +64,8 @@ const AllEvents: React.FC = () => {
 
   return (
     <>
-      {userData && !userLoading && userData.user && !!userData.user.organizations.length && (
-        <Link href="/events/create-event" passHref>
-          <Button color="primary" disableRipple startIcon={<Add />}>
-            <Typography variant="body1">Opprett</Typography>
-          </Button>
-        </Link>
-      )}
-      {userData && !userLoading && userData.user && !!userData.user.organizations.length && (
-        <Link
-          href={userData.user.organizations.length > 1 ? "/orgs" : `/orgs/${userData.user.organizations[0].id}`}
-          passHref
-        >
-          <Button color="primary" disableRipple startIcon={<List />}>
-            <Typography variant="body1">Mine arrangementer</Typography>
-          </Button>
-        </Link>
-      )}
-
       <Grid container className={classes.grid} spacing={3}>
-        <Grid item xs={3}>
+        <Grid item md={3}>
           <FilterMenu
             filters={filters}
             onFiltersChange={onChange}
@@ -93,17 +74,38 @@ const AllEvents: React.FC = () => {
           />
         </Grid>
         <Grid item xs>
+          {userData && !userLoading && userData.user && !!userData.user.organizations.length && (
+            <Link href="/events/create-event" passHref>
+              <Button color="primary" disableRipple startIcon={<Add />}>
+                <Typography variant="body1">Opprett</Typography>
+              </Button>
+            </Link>
+          )}
+          {userData && !userLoading && userData.user && !!userData.user.organizations.length && (
+            <Link
+              href={userData.user.organizations.length > 1 ? "/orgs" : `/orgs/${userData.user.organizations[0].id}`}
+              passHref
+            >
+              <Button color="primary" disableRipple startIcon={<List />}>
+                <Typography variant="body1">Mine arrangementer</Typography>
+              </Button>
+            </Link>
+          )}
           {loading ? (
             <CircularProgress />
           ) : (
             <>
-              {data === undefined || data.length === 0 ? (
-                <Typography variant="body1">Ingen arrangementer passer til valgte filtre.</Typography>
-              ) : (
-                data.map((event: Event) => (
-                  <EventListItem key={event.id} event={event} user={userData?.user} classes={classes} />
-                ))
-              )}
+              <Grid container spacing={2}>
+                {data === undefined || data.length === 0 ? (
+                  <Typography variant="body1">Ingen arrangementer passer til valgte filtre.</Typography>
+                ) : (
+                  data.map((event: Event) => (
+                    <Grid key={event.id} item xs={12}>
+                      <EventListItem event={event} user={userData?.user} />
+                    </Grid>
+                  ))
+                )}
+              </Grid>
             </>
           )}
         </Grid>
