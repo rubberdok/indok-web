@@ -75,13 +75,13 @@ class QuestionType(DjangoObjectType):
     def resolve_answers(root: Question, info, user_id: int = None):
         answers = root.answers
         if user_id:
-            return answers.filter(response__user__pk=user_id).distinct()
+            return answers.filter(response__respondent__pk=user_id)
         return answers.all()
 
     @staticmethod
     @login_required
     def resolve_answer(root: Question, info, user_id: int):
-        return root.answers.filter(response__user__pk=user_id).first()
+        return root.answers.get(response__respondent__pk=user_id)
 
 
 class FormType(DjangoObjectType):
