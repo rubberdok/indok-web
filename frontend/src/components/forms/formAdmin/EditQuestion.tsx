@@ -1,5 +1,4 @@
 import questionTypeLabels from "@components/forms/formAdmin/questionTypeLabels";
-import { DELETE_QUESTION } from "@graphql/forms/mutations";
 import { Question, QuestionType, Option } from "@interfaces/forms";
 import {
   Button,
