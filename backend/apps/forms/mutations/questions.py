@@ -154,19 +154,24 @@ class SubmitOrUpdateAnswers(graphene.Mutation):
 
         response, _ = Response.objects.prefetch_related("answers").get_or_create(form_id=form_id, respondent=user)
 
+        # Restructure the data for easier manipulation
         answers = {
             int(answer_data["question_id"]): answer_data["answer"]
             for answer_data in answers_data
         }
 
         # Update existing answers
+        # Find all existing answers, iterate over the ones that should be updated
         existing_answers = response.answers.distinct()
         for answer in existing_answers.filter(question__pk__in=answers.keys()):
             answer.answer = answers[answer.question.pk]
             del answers[answer.question.pk]
 
-        Answer.objects.bulk_update(existing_answers, ["answer"])
-
+        # A mandatory question is unanswered if:
+        # (1) it is in the form
+        # (2) it is mandatory
+        # (3) it is not in the list of existing answers
+        # (4) it is not part of the new, incoming answers
         unanswered_mandatory_questions = form.questions.filter(
             Q(mandatory=True)
             & ~Q(pk__in=existing_answers.values_list("question__id", flat=True)) 
@@ -178,7 +183,11 @@ class SubmitOrUpdateAnswers(graphene.Mutation):
             raise AssertionError(
                 f"Not all mandatory questions have been answered"
             )
+        
+        # Iterate over the questions to prevent users from answering other forms than the current one
         questions = form.questions.filter(pk__in=answers.keys())
+
+        Answer.objects.bulk_update(existing_answers, ["answer"])
         Answer.objects.bulk_create(
             [
                 Answer(response=response, question=question, answer=answers[question.pk])
