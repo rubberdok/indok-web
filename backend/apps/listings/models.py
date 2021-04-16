@@ -32,4 +32,4 @@ class Listing(models.Model):
         return self.__str__()
 
     class Meta:
-        ordering = ["-deadline"]
+        ordering = ["deadline"]
