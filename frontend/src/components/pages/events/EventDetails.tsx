@@ -278,7 +278,7 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
         </Container>
       </Box>
       <Container className={classes.container}>
-        <Grid container spacing={1}>
+        <Grid container spacing={8}>
           {/* Description card */}
           <Grid item xs={12} md={8}>
             <Typography variant="h3" gutterBottom>

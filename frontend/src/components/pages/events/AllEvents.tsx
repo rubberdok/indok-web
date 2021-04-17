@@ -90,7 +90,7 @@ const AllEvents: React.FC = () => {
           {userData && !userLoading && userData.user && !!userData.user.organizations.length && (
             <Link href="/events/create-event" passHref>
               <Button color="primary" disableRipple startIcon={<Add />}>
-                <Typography variant="body1">Opprett</Typography>
+                Opprett
               </Button>
             </Link>
           )}
@@ -100,7 +100,7 @@ const AllEvents: React.FC = () => {
               passHref
             >
               <Button color="primary" disableRipple startIcon={<List />}>
-                <Typography variant="body1">Mine arrangementer</Typography>
+                Mine arrangementer
               </Button>
             </Link>
           )}
