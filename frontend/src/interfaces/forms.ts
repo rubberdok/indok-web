@@ -5,18 +5,17 @@ export interface Form {
   name: string;
   description: string;
   questions: Question[];
-  responders: User[];
+  responses?: Response[];
 }
 
 export interface Question {
   id: string;
-  form: Form;
   question: string;
   description: string;
-  questionType: QuestionType;
   mandatory: boolean;
-  options: Option[];
-  answers: Answer[];
+  questionType: QuestionType;
+  options?: Option[];
+  answers?: Answer[];
 }
 
 export type QuestionType =
@@ -35,8 +34,14 @@ export interface Option {
 
 export interface Answer {
   id: string;
-  answer: string;
-  question: Question;
+  answer?: string;
+  question?: Question;
+}
+
+export interface Response {
+  id: string;
+  respondent: User;
+  answers: Answer[];
 }
 
 // interface for the variables in certain question mutations

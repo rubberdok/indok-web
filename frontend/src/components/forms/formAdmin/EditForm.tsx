@@ -2,7 +2,7 @@ import { useMutation } from "@apollo/client";
 import EditQuestion from "@components/forms/formAdmin/EditQuestion";
 import QuestionPreview from "@components/forms/formAdmin/QuestionPreview";
 import { CREATE_QUESTION, UPDATE_QUESTION, DELETE_QUESTION } from "@graphql/forms/mutations";
-import { FORM_FRAGMENT } from "@graphql/forms/fragments";
+import { FORM_RESPONSES_FRAGMENT } from "@graphql/forms/fragments";
 import { Question, QuestionVariables, Form } from "@interfaces/forms";
 import { Button, Grid, Typography, Card, CardContent } from "@material-ui/core";
 import { useState } from "react";
@@ -35,13 +35,15 @@ const EditForm: React.FC<{ form: Form }> = ({ form }) => {
       // reads the cached form on which to update the question
       const cachedForm = cache.readFragment<Form>({
         id: `FormType:${form.id}`,
-        fragment: FORM_FRAGMENT,
+        fragment: FORM_RESPONSES_FRAGMENT,
+        fragmentName: "FormResponsesFragment",
       });
       if (cachedForm && newQuestion) {
         // adds the new question to the questions field of the cached form
         cache.writeFragment({
           id: `FormType:${form.id}`,
-          fragment: FORM_FRAGMENT,
+          fragment: FORM_RESPONSES_FRAGMENT,
+          fragmentName: "FormResponsesFragment",
           data: {
             questions: [...cachedForm.questions, newQuestion],
           },
@@ -62,12 +64,14 @@ const EditForm: React.FC<{ form: Form }> = ({ form }) => {
       const newQuestion = data?.updateQuestion.question;
       const cachedForm = cache.readFragment<Form>({
         id: `FormType:${form.id}`,
-        fragment: FORM_FRAGMENT,
+        fragment: FORM_RESPONSES_FRAGMENT,
+        fragmentName: "FormResponsesFragment",
       });
       if (cachedForm && newQuestion) {
         cache.writeFragment({
           id: `FormType:${form.id}`,
-          fragment: FORM_FRAGMENT,
+          fragment: FORM_RESPONSES_FRAGMENT,
+          fragmentName: "FormResponsesFragment",
           data: {
             questions: cachedForm.questions.map((question) =>
               question.id === newQuestion.id ? newQuestion : question
@@ -84,13 +88,15 @@ const EditForm: React.FC<{ form: Form }> = ({ form }) => {
     update: (cache, { data }) => {
       const cachedForm = cache.readFragment<Form>({
         id: `FormType:${form.id}`,
-        fragment: FORM_FRAGMENT,
+        fragment: FORM_RESPONSES_FRAGMENT,
+        fragmentName: "FormResponsesFragment",
       });
       const deletedId = data?.deleteQuestion.deletedId;
       if (cachedForm && deletedId) {
         cache.writeFragment({
           id: `FormType:${form.id}`,
-          fragment: FORM_FRAGMENT,
+          fragment: FORM_RESPONSES_FRAGMENT,
+          fragmentName: "FormResponsesFragment",
           data: {
             questions: cachedForm.questions.filter((question) => question.id !== deletedId),
           },
@@ -102,7 +108,7 @@ const EditForm: React.FC<{ form: Form }> = ({ form }) => {
   // function to update the current active question to the database and then set a new one
   const switchActiveQuestion = (question: Question | undefined) => {
     if (activeQuestion) {
-      if ((activeQuestion.answers ?? []).length > 0 && confirmationDialog?.type !== "update") {
+      if (activeQuestion.answers && activeQuestion.answers.length > 0 && confirmationDialog?.type !== "update") {
         setConfirmationDialog({ type: "update", toSwitch: question });
         return;
       } else {
@@ -114,9 +120,10 @@ const EditForm: React.FC<{ form: Form }> = ({ form }) => {
             questionType: activeQuestion.questionType,
             mandatory: activeQuestion.mandatory,
             options:
-              activeQuestion.questionType === "CHECKBOXES" ||
-              activeQuestion.questionType === "MULTIPLE_CHOICE" ||
-              activeQuestion.questionType === "DROPDOWN"
+              activeQuestion.options &&
+              (activeQuestion.questionType === "CHECKBOXES" ||
+                activeQuestion.questionType === "MULTIPLE_CHOICE" ||
+                activeQuestion.questionType === "DROPDOWN")
                 ? activeQuestion.options.map((option) => ({
                     answer: option.answer,
                     ...(option.id ? { id: option.id } : {}),
@@ -129,10 +136,9 @@ const EditForm: React.FC<{ form: Form }> = ({ form }) => {
     setActiveQuestion(question);
   };
 
-  // function to create a new question and set it as active
-  // shows confirmation dialog if form has responses
+  // function to create a new question, showing a confirmation dialog if the form already has responses
   const newQuestion = () => {
-    if (form.responders.length > 0 && confirmationDialog?.type !== "create") {
+    if (form.responses && form.responses.length > 0 && confirmationDialog?.type !== "create") {
       setConfirmationDialog({ type: "create" });
     } else {
       createQuestion({
@@ -142,7 +148,6 @@ const EditForm: React.FC<{ form: Form }> = ({ form }) => {
           formId: form.id,
         },
       });
-      setActiveQuestion(undefined);
     }
   };
 
@@ -150,7 +155,7 @@ const EditForm: React.FC<{ form: Form }> = ({ form }) => {
   // shows confirmation dialog if question has answers
   const deleteActiveQuestion = () => {
     if (activeQuestion) {
-      if ((activeQuestion.answers ?? []).length > 0 && confirmationDialog?.type !== "delete") {
+      if (activeQuestion.answers && activeQuestion.answers.length > 0 && confirmationDialog?.type !== "delete") {
         setConfirmationDialog({ type: "delete" });
       } else {
         deleteQuestion({ variables: { id: activeQuestion.id } });
@@ -218,6 +223,7 @@ const EditForm: React.FC<{ form: Form }> = ({ form }) => {
             startIcon={<Add />}
             onClick={(e) => {
               e.preventDefault();
+              newQuestion();
             }}
           >
             Nytt spørsmål

@@ -26,7 +26,7 @@ const QuestionTypePreview: React.FC<{
     case "MULTIPLE_CHOICE":
       return (
         <RadioGroup>
-          {question.options.map((option, index) => (
+          {(question.options ?? []).map((option, index) => (
             <FormControlLabel value={null} key={index} label={option.answer} control={<Radio disabled />} />
           ))}
         </RadioGroup>
@@ -34,7 +34,7 @@ const QuestionTypePreview: React.FC<{
     case "CHECKBOXES":
       return (
         <FormGroup>
-          {question.options.map((option, index) => (
+          {(question.options ?? []).map((option, index) => (
             <FormControlLabel key={index} label={option.answer} control={<Checkbox disabled />} />
           ))}
         </FormGroup>
@@ -42,7 +42,7 @@ const QuestionTypePreview: React.FC<{
     case "DROPDOWN":
       return (
         <ol>
-          {question.options.map((option, index) => (
+          {(question.options ?? []).map((option, index) => (
             <li key={index}>{option.answer}</li>
           ))}
         </ol>

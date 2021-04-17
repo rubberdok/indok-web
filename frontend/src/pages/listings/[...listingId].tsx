@@ -2,7 +2,7 @@ import { useQuery } from "@apollo/client";
 import Layout from "@components/Layout";
 import ListingBanner from "@components/pages/listings/detail/ListingBanner";
 import ListingBody from "@components/pages/listings/detail/ListingBody";
-import { LISTING } from "@graphql/listings/queries";
+import { LISTING_APPLICATION } from "@graphql/listings/queries";
 import { Listing } from "@interfaces/listings";
 import { Button, Container, Grid, Hidden, makeStyles, Paper, Typography } from "@material-ui/core";
 import ArrowForward from "@material-ui/icons/ArrowForward";
@@ -41,7 +41,7 @@ const ListingPage: NextPage = () => {
   const { listingId } = useRouter().query;
 
   // fetches the listing, using the URL parameter as the argument
-  const { loading, error, data } = useQuery<{ listing: Listing }>(LISTING, {
+  const { loading, error, data } = useQuery<{ listing: Listing }>(LISTING_APPLICATION, {
     variables: { id: parseInt(listingId as string) },
   });
 

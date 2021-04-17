@@ -4,14 +4,14 @@ import { Organization } from "@interfaces/organizations";
 export interface Listing {
   id: string;
   title: string;
+  slug: string;
   description: string;
   startDatetime: string;
   deadline: string;
   endDatetime: string;
-  url: string;
-  slug: string;
+  organization?: Organization;
+  url?: string;
+  form?: Form;
   hero?: string;
   logo?: string;
-  organization?: Organization;
-  form?: Form;
 }

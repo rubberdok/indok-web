@@ -1,12 +1,12 @@
 import { gql } from "@apollo/client";
+import { FORM_RESPONSES_FRAGMENT, QUESTION_ANSWERS_FRAGMENT } from "@graphql/forms/fragments";
 
 export const CREATE_FORM = gql`
+  ${FORM_RESPONSES_FRAGMENT}
   mutation CreateForm($name: String!, $description: String, $listingId: ID) {
     createForm(listingId: $listingId, formData: { name: $name, description: $description }) {
       form {
-        id
-        name
-        description
+        ...FormResponsesFragment
       }
       ok
     }
@@ -14,12 +14,11 @@ export const CREATE_FORM = gql`
 `;
 
 export const UPDATE_FORM = gql`
+  ${FORM_RESPONSES_FRAGMENT}
   mutation UpdateForm($id: ID!, $name: String!, $description: String) {
-    createForm(id: $id, formData: { name: $name, description: $description }) {
+    updateForm(id: $id, formData: { name: $name, description: $description }) {
       form {
-        id
-        name
-        description
+        ...FormResponsesFragment
       }
       ok
     }
@@ -27,6 +26,7 @@ export const UPDATE_FORM = gql`
 `;
 
 export const CREATE_QUESTION = gql`
+  ${QUESTION_ANSWERS_FRAGMENT}
   mutation CreateQuestion(
     $formId: ID!
     $question: String!
@@ -44,11 +44,7 @@ export const CREATE_QUESTION = gql`
       }
     ) {
       question {
-        id
-        question
-        description
-        questionType
-        mandatory
+        ...QuestionAnswersFragment
       }
       ok
     }
@@ -56,6 +52,7 @@ export const CREATE_QUESTION = gql`
 `;
 
 export const UPDATE_QUESTION = gql`
+  ${QUESTION_ANSWERS_FRAGMENT}
   mutation UpdateQuestion(
     $id: ID!
     $question: String
@@ -64,6 +61,9 @@ export const UPDATE_QUESTION = gql`
     $mandatory: Boolean
     $options: [OptionInput]
   ) {
+    createUpdateAndDeleteOptions(questionId: $id, optionData: $options) {
+      ok
+    }
     updateQuestion(
       id: $id
       questionData: {
@@ -74,17 +74,7 @@ export const UPDATE_QUESTION = gql`
       }
     ) {
       question {
-        id
-        question
-        description
-        questionType
-        mandatory
-      }
-      ok
-    }
-    createUpdateAndDeleteOptions(questionId: $id, optionData: $options) {
-      options {
-        answer
+        ...QuestionAnswersFragment
       }
       ok
     }

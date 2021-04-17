@@ -1,25 +1,14 @@
 import { gql } from "@apollo/client";
+import { LISTING_RESPONSES_FRAGMENT } from "@graphql/listings/fragments";
 
 export const CREATE_LISTING = gql`
+  ${LISTING_RESPONSES_FRAGMENT}
   mutation createListing($title: String!, $description: String!, $deadline: DateTime!, $organizationId: ID!) {
     createListing(
       listingData: { title: $title, description: $description, deadline: $deadline, organizationId: $organizationId }
     ) {
       listing {
-        id
-        title
-        description
-        startDatetime
-        deadline
-        endDatetime
-        url
-        organization {
-          id
-          name
-        }
-        form {
-          id
-        }
+        ...ListingResponsesFragment
       }
       ok
     }
@@ -27,6 +16,7 @@ export const CREATE_LISTING = gql`
 `;
 
 export const UPDATE_LISTING = gql`
+  ${LISTING_RESPONSES_FRAGMENT}
   mutation updateListing(
     $listingId: ID!
     $title: String
@@ -52,20 +42,7 @@ export const UPDATE_LISTING = gql`
       }
     ) {
       listing {
-        id
-        title
-        description
-        startDatetime
-        deadline
-        endDatetime
-        url
-        organization {
-          id
-          name
-        }
-        form {
-          id
-        }
+        ...ListingResponsesFragment
       }
       ok
     }
@@ -75,8 +52,8 @@ export const UPDATE_LISTING = gql`
 export const DELETE_LISTING = gql`
   mutation deleteListing($id: ID!) {
     deleteListing(id: $id) {
-      ok
       listingId
+      ok
     }
   }
 `;

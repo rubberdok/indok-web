@@ -63,8 +63,9 @@ const EditQuestion: React.FC<{
               const questionType = e.target.value as QuestionType;
               let firstOption: Option | undefined = undefined;
               if (
-                (questionType === "CHECKBOXES" || questionType === "MULTIPLE_CHOICE" || questionType === "DROPDOWN") &&
-                (question.options ?? []).length === 0
+                question.options &&
+                question.options.length === 0 &&
+                (questionType === "CHECKBOXES" || questionType === "MULTIPLE_CHOICE" || questionType === "DROPDOWN")
               ) {
                 firstOption = { id: "", answer: "" };
               }
@@ -104,37 +105,38 @@ const EditQuestion: React.FC<{
       question.questionType === "MULTIPLE_CHOICE" ||
       question.questionType === "DROPDOWN") && (
       <Grid item container direction="column" spacing={1}>
-        {question.options.map((option, index) => (
-          <Grid key={index} item container direction="row" alignItems="center">
-            <Grid item>
-              {question.questionType === "CHECKBOXES" ? (
-                <Checkbox disabled />
-              ) : question.questionType === "MULTIPLE_CHOICE" ? (
-                <Radio disabled />
-              ) : (
-                <Box pl={1} pr={1}>
-                  {index + 1}.
-                </Box>
-              )}
+        {question.options &&
+          question.options.map((option, index) => (
+            <Grid key={index} item container direction="row" alignItems="center">
+              <Grid item>
+                {question.questionType === "CHECKBOXES" ? (
+                  <Checkbox disabled />
+                ) : question.questionType === "MULTIPLE_CHOICE" ? (
+                  <Radio disabled />
+                ) : (
+                  <Box pl={1} pr={1}>
+                    {index + 1}.
+                  </Box>
+                )}
+              </Grid>
+              <Grid item xs>
+                <TextField
+                  variant="filled"
+                  fullWidth
+                  value={option.answer}
+                  onChange={(e) => {
+                    e.preventDefault();
+                    setQuestion({
+                      ...question,
+                      options: (question.options ?? []).map((oldAnswer) =>
+                        oldAnswer === option ? { ...oldAnswer, answer: e.target.value } : oldAnswer
+                      ),
+                    });
+                  }}
+                />
+              </Grid>
             </Grid>
-            <Grid item xs>
-              <TextField
-                variant="filled"
-                fullWidth
-                value={option.answer}
-                onChange={(e) => {
-                  e.preventDefault();
-                  setQuestion({
-                    ...question,
-                    options: question.options.map((oldAnswer) =>
-                      oldAnswer === option ? { ...oldAnswer, answer: e.target.value } : oldAnswer
-                    ),
-                  });
-                }}
-              />
-            </Grid>
-          </Grid>
-        ))}
+          ))}
         <Grid item>
           <Button
             variant="outlined"
@@ -144,7 +146,7 @@ const EditQuestion: React.FC<{
               e.preventDefault();
               setQuestion({
                 ...question,
-                options: [...question.options, { id: "", answer: "" }],
+                options: [...(question.options ?? []), { id: "", answer: "" }],
               });
             }}
           >
