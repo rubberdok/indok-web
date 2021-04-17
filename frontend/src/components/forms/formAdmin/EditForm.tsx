@@ -23,7 +23,7 @@ const EditForm: React.FC<{ form: Form }> = ({ form }) => {
   // state for whether to show a confirmation dialog after changing the form
   // "update" type also includes toSwitch for question to switch to after confirming
   const [confirmationDialog, setConfirmationDialog] = useState<
-    { type: "update"; toSwitch: Question | undefined } | { type: "delete" } | undefined
+    { type: "create" } | { type: "update"; toSwitch: Question | undefined } | { type: "delete" } | undefined
   >(undefined);
 
   // mutation to create a new question
@@ -102,7 +102,7 @@ const EditForm: React.FC<{ form: Form }> = ({ form }) => {
   // function to update the current active question to the database and then set a new one
   const switchActiveQuestion = (question: Question | undefined) => {
     if (activeQuestion) {
-      if (form.responders.length > 0 && confirmationDialog?.type !== "update") {
+      if ((activeQuestion.answers ?? []).length > 0 && confirmationDialog?.type !== "update") {
         setConfirmationDialog({ type: "update", toSwitch: question });
         return;
       } else {
@@ -129,10 +129,28 @@ const EditForm: React.FC<{ form: Form }> = ({ form }) => {
     setActiveQuestion(question);
   };
 
+  // function to create a new question and set it as active
+  // shows confirmation dialog if form has responses
+  const newQuestion = () => {
+    if (form.responders.length > 0 && confirmationDialog?.type !== "create") {
+      setConfirmationDialog({ type: "create" });
+    } else {
+      createQuestion({
+        variables: {
+          question: "",
+          description: "",
+          formId: form.id,
+        },
+      });
+      setActiveQuestion(undefined);
+    }
+  };
+
   // function to delete the current active question from the database and then set it as inactive
+  // shows confirmation dialog if question has answers
   const deleteActiveQuestion = () => {
     if (activeQuestion) {
-      if (form.responders.length > 0 && confirmationDialog?.type !== "delete") {
+      if ((activeQuestion.answers ?? []).length > 0 && confirmationDialog?.type !== "delete") {
         setConfirmationDialog({ type: "delete" });
       } else {
         deleteQuestion({ variables: { id: activeQuestion.id } });
@@ -150,10 +168,16 @@ const EditForm: React.FC<{ form: Form }> = ({ form }) => {
           type={confirmationDialog.type}
           open={confirmationDialog !== undefined}
           onConfirm={() => {
-            if (confirmationDialog.type === "update") {
-              switchActiveQuestion(confirmationDialog.toSwitch);
-            } else {
-              deleteActiveQuestion();
+            switch (confirmationDialog.type) {
+              case "create":
+                newQuestion();
+                return;
+              case "update":
+                switchActiveQuestion(confirmationDialog.toSwitch);
+                return;
+              case "delete":
+                deleteActiveQuestion();
+                return;
             }
           }}
           onClose={() => setConfirmationDialog(undefined)}
@@ -194,13 +218,6 @@ const EditForm: React.FC<{ form: Form }> = ({ form }) => {
             startIcon={<Add />}
             onClick={(e) => {
               e.preventDefault();
-              createQuestion({
-                variables: {
-                  question: "",
-                  description: "",
-                  formId: form.id,
-                },
-              });
             }}
           >
             Nytt spørsmål

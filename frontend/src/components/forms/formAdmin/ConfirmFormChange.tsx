@@ -9,8 +9,14 @@ import {
 } from "@material-ui/core";
 
 // utility function to return text for the dialog based on its type
-const dialogText = (type: "update" | "delete") => {
+const dialogText = (type: "create" | "update" | "delete") => {
   switch (type) {
+    case "create":
+      return {
+        title: "Nytt spørsmål",
+        body: "Er du sikker på at du vil legge til et nytt spørsmål på søknaden?",
+        warning: "Søkere har allerede svart på søknaden uten dette spørsmålet.",
+      };
     case "update":
       return {
         title: "Oppdater spørsmål",
@@ -38,7 +44,7 @@ const dialogText = (type: "update" | "delete") => {
  * - optional warningText string
  */
 const ConfirmFormChange: React.FC<{
-  type: "update" | "delete";
+  type: "create" | "update" | "delete";
   open: boolean;
   onConfirm: () => void;
   onClose: () => void;
