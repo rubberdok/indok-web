@@ -4,8 +4,7 @@ import AccordionDetails from "@material-ui/core/AccordionDetails";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
 import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import { Grid } from "@material-ui/core";
-import { Box } from "atomic-layout";
+import { Box, Grid } from "@material-ui/core";
 import Link from "next/link";
 
 const faqs = [

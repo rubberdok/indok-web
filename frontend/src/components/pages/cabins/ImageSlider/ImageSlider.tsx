@@ -27,12 +27,12 @@ interface ImageData {
   imgPath: string;
 }
 
-interface imageSliderProps {
+interface ImageSliderProps {
   imageData: ImageData[];
   displayLabelText: boolean;
 }
 
-const ImageSlider = ({ imageData, displayLabelText }: imageSliderProps): JSX.Element => {
+const ImageSlider = ({ imageData, displayLabelText }: ImageSliderProps): JSX.Element => {
   const classes = useStyles();
   const theme = useTheme();
   const [activeStep, setActiveStep] = React.useState(0);

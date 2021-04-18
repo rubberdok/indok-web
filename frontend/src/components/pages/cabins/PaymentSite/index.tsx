@@ -1,5 +1,5 @@
 import { NextPage } from "next";
-import { Grid, Typography, Divider, Box } from "@material-ui/core";
+import { Grid, Typography, Divider } from "@material-ui/core";
 import { Cabin, ContactInfo } from "@interfaces/cabins";
 import { DatePick } from "src/pages/cabins/book";
 import CabinBookingStatus from "../CabinBookingStatus";
@@ -18,15 +18,6 @@ const PaymentSite: NextPage<Props> = (props) => {
         <Divider />
       </Grid>
       <Grid item container justify="space-evenly" alignItems="stretch">
-        <Grid item>
-          <Box p={3} border={3} borderColor="warning.main" style={{ height: "100%" }}>
-            <Grid container justify="center" alignItems="center" style={{ height: "100%" }}>
-              <Grid item>
-                <Typography variant="body1">Vipps placeholder</Typography>
-              </Grid>
-            </Grid>
-          </Box>
-        </Grid>
         <Grid item>
           <CabinBookingStatus {...props} />
         </Grid>

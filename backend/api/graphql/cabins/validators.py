@@ -14,7 +14,7 @@ def create_booking_validation(booking_data):
         booking_data.cabins,
     )
     email_validation(booking_data.receiver_email)
-    name_validation(booking_data.firstname, booking_data.surname)
+    name_validation(booking_data.firstname, booking_data.lastname)
     booking_data.phone = strip_phone_number(booking_data.phone)
     norwegian_phone_number_validation(booking_data.phone)
     participants_validation(
@@ -48,8 +48,8 @@ def email_validation(email):
         raise GraphQLError("Input email is invalid")
 
 
-def name_validation(firstname, surname):
-    if firstname == "" or surname == "":
+def name_validation(firstname, lastname):
+    if firstname == "" or lastname == "":
         raise GraphQLError("Both first and last name must be non-empty strings")
 
 

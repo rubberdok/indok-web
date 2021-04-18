@@ -26,10 +26,10 @@ export const InputFields: React.FC<Props> = ({ contactInfo, validations, onChang
             type="text"
             label="Fornavn"
             required
-            name="firstName"
-            onChange={(e) => onChange("firstName", e)}
-            error={!validations?.firstName && errorTrigger}
-            value={contactInfo.firstName}
+            name="firstname"
+            onChange={(e) => onChange("firstname", e)}
+            error={!validations?.firstname && errorTrigger}
+            value={contactInfo.firstname}
             fullWidth
           />
         </Grid>
@@ -37,11 +37,11 @@ export const InputFields: React.FC<Props> = ({ contactInfo, validations, onChang
           <TextField
             type="text"
             label="Etternavn"
-            name="lastName"
+            name="lastname"
             required
-            onChange={(e) => onChange("lastName", e)}
-            error={!validations?.lastName && errorTrigger}
-            value={contactInfo.lastName}
+            onChange={(e) => onChange("lastname", e)}
+            error={!validations?.lastname && errorTrigger}
+            value={contactInfo.lastname}
             fullWidth
           />
         </Grid>
@@ -49,11 +49,11 @@ export const InputFields: React.FC<Props> = ({ contactInfo, validations, onChang
           <TextField
             type="email"
             label="E-postadresse"
-            name="email"
+            name="receiverEmail"
             required
-            onChange={(e) => onChange("email", e)}
-            error={!validations?.email && errorTrigger}
-            value={contactInfo.email}
+            onChange={(e) => onChange("receiverEmail", e)}
+            error={!validations?.receiverEmail && errorTrigger}
+            value={contactInfo.receiverEmail}
             fullWidth
           />
         </Grid>
@@ -74,12 +74,12 @@ export const InputFields: React.FC<Props> = ({ contactInfo, validations, onChang
             <InputLabel>Antall indøkere</InputLabel>
             <Select
               defaultValue={0}
-              onChange={(e) => onChange("numberIndok", e)}
-              name="numberIndok"
-              error={!validations?.numberIndok && errorTrigger}
-              value={contactInfo.numberIndok}
+              onChange={(e) => onChange("internalParticipants", e)}
+              name="internalParticipants"
+              error={!validations?.internalParticipants && errorTrigger}
+              value={contactInfo.internalParticipants}
             >
-              {range(0, totalGuestsAllowed - contactInfo.numberExternal).map((val: number) => (
+              {range(0, totalGuestsAllowed - contactInfo.externalParticipants).map((val: number) => (
                 <MenuItem key={val} value={val}>
                   {val}
                 </MenuItem>
@@ -93,12 +93,12 @@ export const InputFields: React.FC<Props> = ({ contactInfo, validations, onChang
             <InputLabel>Antall eksterne</InputLabel>
             <Select
               defaultValue={0}
-              onChange={(e) => onChange("numberExternal", e)}
-              name="numberExternal"
-              error={!validations?.numberExternal && errorTrigger}
-              value={contactInfo.numberExternal}
+              onChange={(e) => onChange("externalParticipants", e)}
+              name="externalParticipants"
+              error={!validations?.externalParticipants && errorTrigger}
+              value={contactInfo.externalParticipants}
             >
-              {range(0, totalGuestsAllowed - contactInfo.numberIndok).map((val: number) => (
+              {range(0, totalGuestsAllowed - contactInfo.internalParticipants).map((val: number) => (
                 <MenuItem key={val} value={val}>
                   {val}
                 </MenuItem>

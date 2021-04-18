@@ -1,11 +1,14 @@
 import { ChangeEvent } from "react";
 
-export interface Booking {
-  id: string;
+export interface BasicBooking {
   firstname: string;
-  surname: string;
-  phone: number;
+  lastname: string;
+  phone: string;
   receiverEmail: string;
+}
+
+export interface Booking extends BasicBooking {
+  id: string;
   checkIn: string;
   checkOut: string;
   price: number;
@@ -20,22 +23,10 @@ export interface Cabin {
   externalPrice: number;
 }
 
-export interface BookingFromTo {
-  from: Date;
-  to: Date;
-}
-
-export interface QueryVariables {
-  year: string;
-  month: string;
-  start?: string;
-  end?: string;
-}
-
 export interface ContractProps {
   contractData: {
     firstname: string | null;
-    surname: string | null;
+    lastname: string | null;
     cabins: string[];
     fromDate: string;
     toDate: string;
@@ -43,52 +34,20 @@ export interface ContractProps {
   };
 }
 
-export interface SummaryProps {
-  from: string;
-  to: string;
-  cabins: string[];
-  price: number;
-  nights: number;
-}
-
-export interface ImageSliderProps {
-  cabins: string[];
-}
-
 export type InputFieldsEvent =
   | ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   | React.ChangeEvent<{ name?: string | undefined; value: unknown }>;
 
-export interface InputValueTypes {
-  firstname: string;
-  surname: string;
-  receiverEmail: string;
-  phone: string;
-  numberIndok: number;
-  numberExternal: number;
-}
-
-export interface BookingData extends InputValueTypes {
-  bookFrom: string;
-  bookTo: string;
-  cabins: string[];
-  price: number;
-}
-
 export interface ContactInfoValidations {
-  firstName: boolean;
-  lastName: boolean;
-  email: boolean;
+  firstname: boolean;
+  lastname: boolean;
+  receiverEmail: boolean;
   phone: boolean;
-  numberIndok: boolean;
-  numberExternal: boolean;
+  internalParticipants: boolean;
+  externalParticipants: boolean;
 }
 
-export interface ContactInfo {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  numberIndok: number;
-  numberExternal: number;
+export interface ContactInfo extends BasicBooking {
+  internalParticipants: number;
+  externalParticipants: number;
 }

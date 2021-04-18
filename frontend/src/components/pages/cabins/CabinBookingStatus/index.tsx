@@ -12,6 +12,7 @@ interface Props {
   datePick: DatePick;
   contactInfo: ContactInfo;
   cabinText?: string;
+  mailSent?: boolean;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -29,7 +30,7 @@ const InfoText: NextComponentType<TypographyProps> = (props) => (
 
 const convertDateFormat = (date: string) => dayjs(date).format("DD-MM-YYYY");
 
-const CabinBookingStatus: NextPage<Props> = ({ chosenCabins, datePick, contactInfo, cabinText }) => {
+const CabinBookingStatus: NextPage<Props> = ({ chosenCabins, datePick, contactInfo, cabinText, mailSent }) => {
   const classes = useStyles();
 
   const infos: { info: Cabin[] | DatePick | ContactInfo; renderComponent: ReactNode }[] = [
@@ -37,7 +38,8 @@ const CabinBookingStatus: NextPage<Props> = ({ chosenCabins, datePick, contactIn
       info: chosenCabins,
       renderComponent: (
         <InfoText>
-          {cabinText ?? "Du booker nå"} <Box className={classes.bold}>{toStringChosenCabins(chosenCabins)}</Box>
+          {cabinText ?? "Du søker nå om å booke"}{" "}
+          <Box className={classes.bold}>{toStringChosenCabins(chosenCabins)}</Box>
         </InfoText>
       ),
     },
@@ -62,15 +64,15 @@ const CabinBookingStatus: NextPage<Props> = ({ chosenCabins, datePick, contactIn
         <>
           <InfoText>
             <Box className={classes.bold}>Gjester: </Box>
-            {contactInfo.numberIndok > 0 ? `${contactInfo.numberIndok} indøkere` : null}
-            {contactInfo.numberIndok > 0 && contactInfo.numberExternal > 0 ? ", " : null}
-            {contactInfo.numberExternal > 0 ? `${contactInfo.numberExternal} eksterne` : null}
+            {contactInfo.internalParticipants > 0 ? `${contactInfo.internalParticipants} indøkere` : null}
+            {contactInfo.internalParticipants > 0 && contactInfo.externalParticipants > 0 ? ", " : null}
+            {contactInfo.externalParticipants > 0 ? `${contactInfo.externalParticipants} eksterne` : null}
           </InfoText>
           <InfoText>
             <Box className={classes.bold}>Pris: </Box>
             <Tooltip
               title={
-                contactInfo.numberIndok >= contactInfo.numberExternal
+                contactInfo.internalParticipants >= contactInfo.externalParticipants
                   ? "Du har fått internpris da det er flest indøkere med"
                   : "Du har fått eksternpris da det er for få indøkere med"
               }
@@ -82,11 +84,23 @@ const CabinBookingStatus: NextPage<Props> = ({ chosenCabins, datePick, contactIn
         </>
       ),
     },
+    {
+      info: contactInfo,
+      renderComponent: (
+        <>
+          <InfoText>
+            <Box>
+              <Typography>Vi har sendt en mail til {contactInfo.receiverEmail} med informasjon om søknaden.</Typography>
+            </Box>
+          </InfoText>
+        </>
+      ),
+    },
   ];
   return (
     <Box p={3} border={3} borderColor="primary.main">
       {infos
-        .filter((info) => info.info !== undefined)
+        .filter((info, index) => (info.info !== undefined && index != 3 && !mailSent) || mailSent)
         .map((info, index) => (
           <Box key={index}>
             <Box p={3}>{info.renderComponent}</Box>

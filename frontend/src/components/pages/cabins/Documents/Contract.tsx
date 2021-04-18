@@ -38,7 +38,7 @@ const Contract = ({ chosenCabins, contactInfo, datePick }: ContractProps) => {
             På vegne av Foreningen for studenter ved Industriell Økonomi og Teknologiledelse er det i dag inngått
             følgende leiekontrakt mellom Hyttestyret og
             <Box display="inline" fontWeight="fontWeightBold">
-              {` ${contactInfo.firstName} ${contactInfo.lastName}`}.
+              {` ${contactInfo.firstname} ${contactInfo.lastname}`}.
             </Box>
             <Divider component="br" />
           </Typography>

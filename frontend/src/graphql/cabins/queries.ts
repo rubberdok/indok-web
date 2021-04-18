@@ -5,7 +5,7 @@ export const QUERY_ALL_BOOKINGS = gql`
     allBookings {
       id
       firstname
-      surname
+      lastname
       phone
       receiverEmail
       checkIn

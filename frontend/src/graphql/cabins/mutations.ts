@@ -3,7 +3,7 @@ import { gql } from "@apollo/client";
 export const CREATE_BOOKING = gql`
   mutation CreateBooking(
     $firstname: String
-    $surname: String
+    $lastname: String
     $phone: Int
     $receiverEmail: String
     $bookFrom: String
@@ -13,7 +13,7 @@ export const CREATE_BOOKING = gql`
   ) {
     createBooking(
       firstname: $firstname
-      surname: $surname
+      lastname: $lastname
       phone: $phone
       receiverEmail: $receiverEmail
       checkIn: $bookFrom
@@ -27,22 +27,8 @@ export const CREATE_BOOKING = gql`
 `;
 
 export const SEND_EMAIL = gql`
-  mutation SendEmail(
-    $firstname: String
-    $surname: String
-    $receiverEmail: String
-    $bookFrom: String
-    $bookTo: String
-    $price: Int
-  ) {
-    sendEmail(
-      firstname: $firstname
-      surname: $surname
-      receiverEmail: $receiverEmail
-      bookFrom: $bookFrom
-      bookTo: $bookTo
-      price: $price
-    ) {
+  mutation SendEmail($emailInput: EmailInput) {
+    sendEmail(emailInput: $emailInput) {
       ok
     }
   }
