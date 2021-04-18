@@ -71,7 +71,7 @@ class DeleteForm(graphene.Mutation):
 
     @login_required
     @permission_required("forms.delete_form")
-    def mutate(cls, self, info, id):
+    def mutate(self, info, id):
         form = Form.objects.get(pk=id)
         deleted_id = form.id
         form.delete()

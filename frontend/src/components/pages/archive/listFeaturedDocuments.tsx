@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     article: {
       width: "100%",
-      height: "160px"
+      height: "160px",
     },
     header: {
       width: "100%",
@@ -63,7 +63,7 @@ const ListFeaturedDocuments: React.FC = () => {
       <Typography variant="body1" style={{ marginBottom: "8px" }}>
         Fremhevede dokumenter
       </Typography>
-      <GridList cellHeight={'auto'} className={classes.img} cols={4} spacing={8}>
+      <GridList cellHeight={"auto"} className={classes.img} cols={4} spacing={8}>
         {data.featuredArchive.length ? (
           data.featuredArchive.map((doc: Document) => (
             <GridListTile key={0}>

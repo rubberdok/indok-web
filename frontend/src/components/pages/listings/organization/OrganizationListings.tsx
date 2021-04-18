@@ -20,6 +20,7 @@ import { useState } from "react";
 import dayjs from "dayjs";
 import Link from "next/link";
 import { Listing } from "@interfaces/listings";
+import { Delete, Add, Create } from "@material-ui/icons";
 
 // cursor style on hovering over a listing
 const useStyles = makeStyles(() => ({
@@ -38,8 +39,8 @@ const OrganizationListings: React.FC<{
   organization: Organization;
 }> = ({ organization }) => {
   // state for whether to show the DeleteListing confirmation dialog
-  // if not null, contains the listing to be deleted for use by the dialog
-  const [listingToDelete, setListingToDelete] = useState<Listing | null>(null);
+  // if not undefined, contains the listing to be deleted for use by the dialog
+  const [listingToDelete, setListingToDelete] = useState<Listing | undefined>();
 
   const classes = useStyles();
 
@@ -49,7 +50,7 @@ const OrganizationListings: React.FC<{
         listing={listingToDelete}
         organizationId={parseInt(organization.id)}
         onClose={() => {
-          setListingToDelete(null);
+          setListingToDelete(undefined);
         }}
       />
       <Grid item container>
@@ -66,6 +67,7 @@ const OrganizationListings: React.FC<{
                         <TableCell>Tittel</TableCell>
                         <TableCell>Søknadsfrist</TableCell>
                         <TableCell />
+                        <TableCell />
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -74,23 +76,24 @@ const OrganizationListings: React.FC<{
                           <TableRow className={classes.hover} hover>
                             <TableCell>{listing.title}</TableCell>
                             <TableCell>{dayjs(listing.deadline).format("HH:mm DD-MM-YYYY")}</TableCell>
-                            <TableCell>
+                            <TableCell size="small" align="right">
                               <Link passHref href={`/listings/edit/${listing.id}/`}>
-                                <Button variant="contained" color="primary">
+                                <Button variant="contained" color="primary" startIcon={<Create />}>
                                   Endre
                                 </Button>
                               </Link>
                             </TableCell>
-                            <TableCell>
+                            <TableCell size="small" align="right">
                               <Button
                                 variant="contained"
                                 color="primary"
+                                startIcon={<Delete />}
                                 onClick={(e) => {
                                   e.preventDefault();
                                   setListingToDelete(listing);
                                 }}
                               >
-                                Slett verv
+                                Slett
                               </Button>
                             </TableCell>
                           </TableRow>
@@ -103,7 +106,7 @@ const OrganizationListings: React.FC<{
             )}
             <CardActions>
               <Link passHref href={"/listings/new"}>
-                <Button variant="contained" color="primary">
+                <Button variant="contained" color="primary" startIcon={<Add />}>
                   Opprett nytt verv
                 </Button>
               </Link>

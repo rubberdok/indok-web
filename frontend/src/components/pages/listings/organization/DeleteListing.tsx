@@ -16,12 +16,12 @@ import {
 /**
  * component for confirmation dialog when organization admin tries to delete a listing
  * props:
- * - the listing to delete (if null: do not show the dialog)
+ * - the listing to delete (if undefined: do not show the dialog)
  * - the id of the organization that owns the listing (for use in the cache update function)
  * - onClose function to execute when the dialog is closed
  */
 const DeleteListing: React.FC<{
-  listing: Listing | null;
+  listing: Listing | undefined;
   organizationId: number;
   onClose: () => void;
 }> = ({ listing, organizationId, onClose }) => {
@@ -53,7 +53,7 @@ const DeleteListing: React.FC<{
     }
   );
   return (
-    <Dialog open={listing !== null} onClose={onClose} fullWidth>
+    <Dialog open={listing !== undefined} onClose={onClose} fullWidth>
       {listing && (
         <>
           <DialogContent>

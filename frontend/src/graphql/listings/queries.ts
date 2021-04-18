@@ -1,66 +1,34 @@
 import { gql } from "@apollo/client";
+import { FORM_FRAGMENT } from "@graphql/forms/fragments";
+import { LISTING_FRAGMENT, LISTING_RESPONSES_FRAGMENT } from "@graphql/listings/fragments";
 
 export const LISTINGS = gql`
+  ${LISTING_FRAGMENT}
   query {
     listings {
-      id
-      title
-      description
-      startDatetime
-      deadline
-      endDatetime
-      url
-      slug
-      chips
-      organization {
-        name
-        slug
-        logoUrl
+      ...ListingFragment
+    }
+  }
+`;
+
+export const LISTING_APPLICATION = gql`
+  ${LISTING_FRAGMENT}
+  ${FORM_FRAGMENT}
+  query listing($id: ID!) {
+    listing(id: $id) {
+      ...ListingFragment
+      form {
+        ...FormFragment
       }
     }
   }
 `;
 
-export const LISTING = gql`
+export const LISTING_RESPONSES = gql`
+  ${LISTING_RESPONSES_FRAGMENT}
   query listing($id: ID!) {
     listing(id: $id) {
-      id
-      title
-      description
-      startDatetime
-      deadline
-      endDatetime
-      url
-      organization {
-        name
-        description
-        slug
-      }
-      form {
-        id
-      }
-    }
-  }
-`;
-
-export const LISTING_WITH_RESPONDERS = gql`
-  query listing($id: ID!) {
-    listing(id: $id) {
-      id
-      title
-      description
-      startDatetime
-      deadline
-      endDatetime
-      url
-      form {
-        id
-        responders {
-          id
-          firstName
-          lastName
-        }
-      }
+      ...ListingResponsesFragment
     }
   }
 `;

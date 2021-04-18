@@ -1,14 +1,17 @@
-import { Answer } from "@interfaces/forms";
 import { FormControlLabel, MenuItem, Radio, RadioGroup, Select, TextField } from "@material-ui/core";
 import AnswerCheckboxes from "@components/forms/AnswerCheckboxes";
+import { AnswerState } from "@components/forms/AnswerForm";
 
 /**
  * component to answer a question on a form
- * props: the answer/setAnswer state, which alters the state of the higher component
+ *
+ * props:
+ * - the answer state, passed down from answerForm
+ * - setAnswer function to change answer state
  */
 const AnswerQuestion: React.FC<{
-  answer: Answer;
-  setAnswer: (answer: Answer) => void;
+  answer: AnswerState;
+  setAnswer: (answer: AnswerState) => void;
 }> = ({ answer, setAnswer }) => {
   // returns a form input based on the type of the answer's question
   // each input calls on setAnswer to change the state of AnswerForm
@@ -17,8 +20,10 @@ const AnswerQuestion: React.FC<{
       return (
         <TextField
           variant="outlined"
+          fullWidth
           multiline
           rows={4}
+          value={answer.answer}
           onChange={(e) => {
             e.preventDefault();
             setAnswer({ ...answer, answer: e.target.value });
@@ -29,6 +34,8 @@ const AnswerQuestion: React.FC<{
       return (
         <TextField
           variant="outlined"
+          fullWidth
+          value={answer.answer}
           onChange={(e) => {
             e.preventDefault();
             setAnswer({ ...answer, answer: e.target.value });
@@ -43,7 +50,7 @@ const AnswerQuestion: React.FC<{
             setAnswer({ ...answer, answer: e.target.value });
           }}
         >
-          {answer.question.options.map((option, index) => (
+          {(answer.question.options ?? []).map((option, index) => (
             <FormControlLabel key={index} value={option.answer} label={option.answer} control={<Radio />} />
           ))}
         </RadioGroup>
@@ -59,7 +66,7 @@ const AnswerQuestion: React.FC<{
             setAnswer({ ...answer, answer: e.target.value as string });
           }}
         >
-          {answer.question.options.map((option, index) => (
+          {(answer.question.options ?? []).map((option, index) => (
             <MenuItem key={index} value={option.answer}>
               {option.answer}
             </MenuItem>
