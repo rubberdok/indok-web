@@ -47,7 +47,7 @@ const ListingForm: React.FC<{
   state: ListingInput;
   setState: (state: ListingInput) => void;
   onSubmit: (e: React.MouseEvent<HTMLButtonElement>) => void;
-  organizations: Organization[] | undefined;
+  organizations: Organization[];
 }> = ({ state, setState, onSubmit, organizations }) => {
   const classes = useStyles();
 
@@ -167,10 +167,11 @@ const ListingForm: React.FC<{
                   labelId="select-organization-label"
                   id="select-organization"
                   value={state.organization.id}
+                  disabled={organizations.length === 1}
                   onChange={(e) =>
                     setState({
                       ...state,
-                      organization: organizations.find((organization) => organization.id === e.target.value),
+                      organization: organizations.find((organization) => organization.id === e.target.value) || state.organization,
                     })
                   }
                   fullWidth

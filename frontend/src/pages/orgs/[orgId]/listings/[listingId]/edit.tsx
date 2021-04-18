@@ -6,9 +6,8 @@ import { NextPage } from "next";
 import { useState } from "react";
 import { Listing, ListingInput } from "@interfaces/listings";
 import { UPDATE_LISTING } from "@graphql/listings/mutations";
-import { LISTING_AND_USER_WITH_ORGANIZATIONS } from "@graphql/listings/queries";
 import { useRouter } from "next/router";
-import { Organization } from "@interfaces/organizations";
+import { LISTING } from "@graphql/listings/queries";
 
 /**
  * @description Page for editing an existings listing
@@ -20,8 +19,7 @@ const EditListingPage: NextPage = () => {
   const [listing, setListing] = useState<ListingInput | undefined>(undefined);
 
   // Load the listing and set the state on completion
-  const { loading, error, data } = useQuery<{ listing: Listing; user: { organizations: Organization[] } }>(
-    LISTING_AND_USER_WITH_ORGANIZATIONS,
+  const { loading, error } = useQuery<{ listing: Listing }>(LISTING,
     {
       variables: { id: parseInt(listingId as string) },
       onCompleted: (data) => setListing(data.listing as ListingInput),
@@ -48,7 +46,7 @@ const EditListingPage: NextPage = () => {
               <ListingForm
                 state={listing}
                 setState={setListing}
-                organizations={data?.user.organizations}
+                organizations={[listing.organization]}
                 onSubmit={(e) => {
                   e.preventDefault();
                   updateListing({
@@ -60,7 +58,6 @@ const EditListingPage: NextPage = () => {
                         url: listing.url || undefined,
                         startDatetime: listing.startDatetime || undefined,
                         deadline: listing.deadline || undefined,
-                        organizationId: listing.organization?.id || undefined,
                         case: listing.case || undefined,
                         interview: listing.interview || undefined,
                         application: listing.application || undefined,

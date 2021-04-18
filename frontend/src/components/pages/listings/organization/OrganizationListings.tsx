@@ -77,7 +77,7 @@ const OrganizationListings: React.FC<{
                             <TableCell>{listing.title}</TableCell>
                             <TableCell>{dayjs(listing.deadline).format("HH:mm DD-MM-YYYY")}</TableCell>
                             <TableCell size="small" align="right">
-                              <Link passHref href={`/listings/edit/${listing.id}/`}>
+                              <Link passHref href={`${organization.id}/listings/${listing.id}/edit/`}>
                                 <Button variant="contained" color="primary" startIcon={<Create />}>
                                   Rediger
                                 </Button>

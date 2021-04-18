@@ -20,7 +20,7 @@ const OrganizationListing: React.FC<{ listing: Listing }> = ({ listing }) => (
           </ReactMarkdown>
         </CardContent>
         <CardActions>
-         <Link passHref href={`/listings/edit/${listing.id}/`}>
+          <Link passHref href={`/orgs/${listing.organization.id}/listings/${listing.id}/edit/`}>
             <Button startIcon={<Create />}>
               Rediger
             </Button>
