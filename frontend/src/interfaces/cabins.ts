@@ -9,6 +9,7 @@ export interface Booking {
   checkIn: string;
   checkOut: string;
   price: number;
+  isTentative: boolean;
   cabins: Cabin[];
 }
 

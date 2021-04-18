@@ -11,6 +11,7 @@ export const QUERY_ALL_BOOKINGS = gql`
       checkIn
       checkOut
       price
+      isTentative
       cabins {
         id
         name
