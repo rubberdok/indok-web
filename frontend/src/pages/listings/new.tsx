@@ -16,6 +16,13 @@ const EmptyListing: ListingInput = {
   title: "",
   startDatetime: "",
   deadline: "",
+  organization: {
+    name: "",
+    id: "",
+    color: "",
+    description: "",
+    slug: "",
+  }
 };
 
 /**
