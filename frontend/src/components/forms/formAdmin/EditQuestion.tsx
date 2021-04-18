@@ -79,7 +79,7 @@ const EditQuestion: React.FC<{
           >
             {Object.entries(questionTypeLabels)
               // TODO: remove below line once Slider and File Upload question types are implemented
-              .filter(([questionType, _]) => !(questionType === "SLIDER" || questionType === "FILE_UPLOAD"))
+              .filter(([questionType]) => !(questionType === "SLIDER" || questionType === "FILE_UPLOAD"))
               .map(([questionType, label]) => (
                 <MenuItem key={questionType} value={questionType}>
                   {label}

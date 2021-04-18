@@ -34,10 +34,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-/** 
+/**
  * @description A form to create or edit a listing
- * 
- * @param state: ListingInput, the current state of the listing 
+ *
+ * @param state: ListingInput, the current state of the listing
  * @param setState: (state: ListingInput) => void, the function for setting the listing state
  * @param onSubmit: (e: React.MouseEvent<HTMLButtonElement>) => void, the function to call when submitting
  * @param organizations: Organization[] | undefined, a list of organizations which the user is part of.
@@ -56,18 +56,24 @@ const ListingForm: React.FC<{
    * @param event
    * @param property the property on state to update, e.g. description
    */
-  const handlePropertyChange = (event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>, property: Extract<keyof typeof state, string>) => {
+  const handlePropertyChange = (
+    event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
+    property: Extract<keyof typeof state, string>
+  ) => {
     setState({ ...state, [property]: event.target.value });
   };
 
   /**
    * @description Helper method to handle changes to boolean fields using checkboxes.
-   * @param event 
+   * @param event
    * @param property the property on state to update, e.g. case
    */
-  const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>, property: Extract<keyof typeof state, string>) => {
-    setState({ ...state, [property]: event.target.checked})
-  }
+  const handleCheckboxChange = (
+    event: ChangeEvent<HTMLInputElement>,
+    property: Extract<keyof typeof state, string>
+  ) => {
+    setState({ ...state, [property]: event.target.checked });
+  };
 
   return (
     <Card className={classes.root}>
@@ -115,14 +121,12 @@ const ListingForm: React.FC<{
             </Grid>
           </Grid>
           <Grid item>
-            <Typography variant="h4">
-              Opptaksprosessen
-            </Typography>
+            <Typography variant="h4">Opptaksprosessen</Typography>
             <Grid container className={classes.inputGroup}>
               <Grid item xs>
                 <FormControlLabel
                   control={
-                    <Checkbox 
+                    <Checkbox
                       color="primary"
                       checked={state.application}
                       onChange={(e) => handleCheckboxChange(e, "application")}
@@ -134,10 +138,10 @@ const ListingForm: React.FC<{
               <Grid item xs>
                 <FormControlLabel
                   control={
-                    <Checkbox 
+                    <Checkbox
                       color="primary"
                       checked={state.interview}
-                      onChange={(e) => handleCheckboxChange(e, "interview")} 
+                      onChange={(e) => handleCheckboxChange(e, "interview")}
                     />
                   }
                   label={"Intervju"}
@@ -146,20 +150,17 @@ const ListingForm: React.FC<{
               <Grid item xs>
                 <FormControlLabel
                   control={
-                    <Checkbox
-                      color="primary"
-                      checked={state.case}
-                      onChange={(e) => handleCheckboxChange(e, "case")} 
-                    />
+                    <Checkbox color="primary" checked={state.case} onChange={(e) => handleCheckboxChange(e, "case")} />
                   }
                   label={"Case"}
                 />
-
               </Grid>
             </Grid>
           </Grid>
           <Grid item>
-            <Typography variant="h3" gutterBottom>Organisasjon</Typography>
+            <Typography variant="h3" gutterBottom>
+              Organisasjon
+            </Typography>
             {organizations && state.organization && (
               <FormControl fullWidth variant="outlined">
                 <InputLabel id="select-organization-label">Velg organisasjon</InputLabel>
@@ -171,7 +172,8 @@ const ListingForm: React.FC<{
                   onChange={(e) =>
                     setState({
                       ...state,
-                      organization: organizations.find((organization) => organization.id === e.target.value) || state.organization,
+                      organization:
+                        organizations.find((organization) => organization.id === e.target.value) || state.organization,
                     })
                   }
                   fullWidth

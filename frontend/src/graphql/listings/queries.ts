@@ -68,7 +68,6 @@ export const LISTING_AND_USER_WITH_ORGANIZATIONS = gql`
   }
 `;
 
-
 export const LISTING = gql`
   ${LISTING_FRAGMENT}
   query listing($id: ID!) {
@@ -76,4 +75,4 @@ export const LISTING = gql`
       ...ListingFragment
     }
   }
-`
+`;

@@ -1,7 +1,7 @@
 import { Listing } from "@interfaces/listings";
 import { Typography, Card, CardContent, Grid, CardActions, Button } from "@material-ui/core";
 import Link from "next/link";
-import { Create } from "@material-ui/icons"
+import { Create } from "@material-ui/icons";
 import renderers from "@components/pages/listings/markdown/renderers";
 import ReactMarkdown from "react-markdown";
 
@@ -14,16 +14,14 @@ const OrganizationListing: React.FC<{ listing: Listing }> = ({ listing }) => (
     <Grid item>
       <Card>
         <CardContent>
-          <Typography variant="h3" gutterBottom>{listing.title}</Typography>
-          <ReactMarkdown renderers={renderers}>
-            {listing.description}
-          </ReactMarkdown>
+          <Typography variant="h3" gutterBottom>
+            {listing.title}
+          </Typography>
+          <ReactMarkdown renderers={renderers}>{listing.description}</ReactMarkdown>
         </CardContent>
         <CardActions>
           <Link passHref href={`/orgs/${listing.organization.id}/listings/${listing.id}/edit/`}>
-            <Button startIcon={<Create />}>
-              Rediger
-            </Button>
+            <Button startIcon={<Create />}>Rediger</Button>
           </Link>
         </CardActions>
       </Card>

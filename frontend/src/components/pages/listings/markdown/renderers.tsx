@@ -1,11 +1,11 @@
 import { Typography } from "@material-ui/core";
 import React, { ElementType, ReactNode } from "react";
-import { Content } from "mdast";
+import { Content } from "mdast";
 import { Variant } from "@material-ui/core/styles/createTypography";
 
 /*
 import React, { ElementType, ReactElement, ReactNode } from "react";
-import { Content } from "mdast";
+import { Content } from "mdast";
 
 The below type declarations will not work, likely due to
 https://github.com/microsoft/TypeScript/issues/10530
@@ -24,11 +24,10 @@ type CustomRenderers = {
 };
 */
 
-
 const heading = ({ node, children }: NodeToProps<Extract<Content, { type: "heading" }>>) => {
   const { depth } = node;
   return <Typography variant={`h${depth}` as Variant}>{children}</Typography>;
-}
+};
 
 const paragraph = ({ children }: NodeToProps<Extract<Content, { type: "paragraph" }>>) => (
   <Typography variant="body2" component="p" paragraph>
@@ -40,7 +39,7 @@ const paragraph = ({ children }: NodeToProps<Extract<Content, { type: "paragraph
  * @description Custom markdown renderers to override the default renderers of React-Markdown
  * @todo update to use the new components API with React-Markdown 6.0.0
  */
-const renderers: {[nodeType: string]: ElementType} = {
+const renderers: { [nodeType: string]: ElementType } = {
   heading: heading,
   paragraph: paragraph,
 };

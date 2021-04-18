@@ -19,13 +19,11 @@ const EditListingPage: NextPage = () => {
   const [listing, setListing] = useState<ListingInput | undefined>(undefined);
 
   // Load the listing and set the state on completion
-  const { loading, error } = useQuery<{ listing: Listing }>(LISTING,
-    {
-      variables: { id: parseInt(listingId as string) },
-      onCompleted: (data) => setListing(data.listing as ListingInput),
-    }
-  );
-  
+  const { loading, error } = useQuery<{ listing: Listing }>(LISTING, {
+    variables: { id: parseInt(listingId as string) },
+    onCompleted: (data) => setListing(data.listing as ListingInput),
+  });
+
   // Return to the previous page after updating.
   const [updateListing] = useMutation<{ updateListing: { ok: boolean; listing: Listing } }>(UPDATE_LISTING, {
     onCompleted: () => router.back(),
@@ -58,7 +56,7 @@ const EditListingPage: NextPage = () => {
                         url: listing.url || undefined,
                         startDatetime: listing.startDatetime || undefined,
                         deadline: listing.deadline || undefined,
-                        case: listing.case || undefined,
+                        case: listing.case || undefined,
                         interview: listing.interview || undefined,
                         application: listing.application || undefined,
                       },
