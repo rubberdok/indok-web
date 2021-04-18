@@ -105,7 +105,7 @@ const OrganizationListings: React.FC<{
               </CardContent>
             )}
             <CardActions>
-              <Link passHref href={"/listings/new"}>
+              <Link passHref href={`${organization.id}/listings/new`}>
                 <Button variant="contained" color="primary" startIcon={<Add />}>
                   Opprett nytt verv
                 </Button>
