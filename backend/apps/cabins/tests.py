@@ -102,8 +102,8 @@ class CabinsMutationsTestCase(CabinsBaseTestCase):
 
     def create_booking(self, booking, cabins_field):
         query = f"""
-                mutation CreateBooking {{
-                    createBooking(
+                mutation MutateBooking {{
+                    mutateBooking(
                         bookingData: {{
                             firstname: \"{booking.firstname}\",
                             surname: \"{booking.surname}\",
@@ -131,6 +131,7 @@ class CabinsMutationsTestCase(CabinsBaseTestCase):
         response = self.create_booking(
             self.no_conflict_booking, f"{self.bjornen_cabin.id}"
         )
+        print(json.loads(response.content))
         self.assertResponseNoErrors(response)
         # Check that booking is created
         self.assertTrue(

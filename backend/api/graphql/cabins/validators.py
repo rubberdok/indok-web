@@ -16,7 +16,7 @@ def create_booking_validation(booking_data):
         )
     if booking_data.receiver_email:
         email_validation(booking_data.receiver_email)
-    if booking_data.firstname and booking_data.surname:
+    if booking_data.firstname or booking_data.surname:
         name_validation(booking_data.firstname, booking_data.surname)
     if booking_data.phone:
         booking_data.phone = strip_phone_number(booking_data.phone)
@@ -24,11 +24,11 @@ def create_booking_validation(booking_data):
     if (
         booking_data.cabins
         and booking_data.internal_participants
-        and booking_data.eternal_participants
+        and booking_data.external_participants
     ):
         participants_validation(
             booking_data.internal_participants,
-            booking_data.eternal_participants,
+            booking_data.external_participants,
             booking_data.cabins,
         )
 
