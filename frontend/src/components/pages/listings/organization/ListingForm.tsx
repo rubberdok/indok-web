@@ -75,7 +75,13 @@ const ListingForm: React.FC<{
         <Grid container direction="column" spacing={4}>
           <Grid item>
             <Typography variant="h3">Informasjon</Typography>
-            <TextField label="Tittel" value={state.title} fullWidth onChange={(e) => handlePropertyChange(e, "title")} />
+            <TextField
+              label="Tittel"
+              value={state.title}
+              fullWidth
+              onChange={(e) => handlePropertyChange(e, "title")}
+              required
+            />
           </Grid>
           <Grid item>
             <Grid container spacing={2} className={classes.inputGroup}>
@@ -85,6 +91,7 @@ const ListingForm: React.FC<{
                   value={state.deadline || ""}
                   fullWidth
                   type="date"
+                  required
                   onChange={(e) => handlePropertyChange(e, "deadline")}
                 />
               </Grid>
@@ -108,33 +115,10 @@ const ListingForm: React.FC<{
             </Grid>
           </Grid>
           <Grid item>
-            <Typography variant="h3">Organisasjon</Typography>
-            {organizations && state.organization && (
-              <FormControl fullWidth variant="outlined">
-                <InputLabel id="select-organization-label">Velg organisasjon</InputLabel>
-                <Select
-                  labelId="select-organization-label"
-                  id="select-organization"
-                  value={state.organization.id}
-                  onChange={(e) =>
-                    setState({
-                      ...state,
-                      organization: organizations.find((organization) => organization.id === e.target.value),
-                    })
-                  }
-                  fullWidth
-                >
-                  {organizations.map((organization) => (
-                    <MenuItem key={organization.id} value={organization.id}>
-                      {organization.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            )}
-          </Grid>
-          <Grid item>
-            <Grid container spacing={2} className={classes.inputGroup}>
+            <Typography variant="h4">
+              Opptaksprosessen
+            </Typography>
+            <Grid container className={classes.inputGroup}>
               <Grid item xs>
                 <FormControlLabel
                   control={
@@ -173,6 +157,32 @@ const ListingForm: React.FC<{
 
               </Grid>
             </Grid>
+          </Grid>
+          <Grid item>
+            <Typography variant="h3" gutterBottom>Organisasjon</Typography>
+            {organizations && state.organization && (
+              <FormControl fullWidth variant="outlined">
+                <InputLabel id="select-organization-label">Velg organisasjon</InputLabel>
+                <Select
+                  labelId="select-organization-label"
+                  id="select-organization"
+                  value={state.organization.id}
+                  onChange={(e) =>
+                    setState({
+                      ...state,
+                      organization: organizations.find((organization) => organization.id === e.target.value),
+                    })
+                  }
+                  fullWidth
+                >
+                  {organizations.map((organization) => (
+                    <MenuItem key={organization.id} value={organization.id}>
+                      {organization.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            )}
           </Grid>
           <Grid item>
             <Typography variant="h3">Beskrivelse</Typography>
