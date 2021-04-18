@@ -10,11 +10,16 @@ import { LISTING_AND_USER_WITH_ORGANIZATIONS } from "@graphql/listings/queries";
 import { useRouter } from "next/router";
 import { Organization } from "@interfaces/organizations";
 
+/**
+ * @description Page for editing an existings listing
+ */
 const EditListingPage: NextPage = () => {
   const router = useRouter();
   const { listingId } = router.query;
 
   const [listing, setListing] = useState<ListingInput | undefined>(undefined);
+
+  // Load the listing and set the state on completion
   const { loading, error, data } = useQuery<{ listing: Listing; user: { organizations: Organization[] } }>(
     LISTING_AND_USER_WITH_ORGANIZATIONS,
     {
@@ -22,7 +27,8 @@ const EditListingPage: NextPage = () => {
       onCompleted: (data) => setListing(data.listing as ListingInput),
     }
   );
-
+  
+  // Return to the previous page after updating.
   const [updateListing] = useMutation<{ updateListing: { ok: boolean; listing: Listing } }>(UPDATE_LISTING, {
     onCompleted: () => router.back(),
   });

@@ -34,6 +34,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+/** 
+ * @description A form to create or edit a listing
+ * 
+ * @param state: ListingInput, the current state of the listing 
+ * @param setState: (state: ListingInput) => void, the function for setting the listing state
+ * @param onSubmit: (e: React.MouseEvent<HTMLButtonElement>) => void, the function to call when submitting
+ * @param organizations: Organization[] | undefined, a list of organizations which the user is part of.
+ * @returns ListingForm: React.FC, the listing form.
+ */
 const ListingForm: React.FC<{
   state: ListingInput;
   setState: (state: ListingInput) => void;
@@ -42,11 +51,21 @@ const ListingForm: React.FC<{
 }> = ({ state, setState, onSubmit, organizations }) => {
   const classes = useStyles();
 
-  const handlePropertyChange = (event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>, property: string) => {
+  /**
+   * @description Helper method to handle changes to TextFields
+   * @param event
+   * @param property the property on state to update, e.g. description
+   */
+  const handlePropertyChange = (event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>, property: Extract<keyof typeof state, string>) => {
     setState({ ...state, [property]: event.target.value });
   };
 
-  const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>, property: string) => {
+  /**
+   * @description Helper method to handle changes to boolean fields using checkboxes.
+   * @param event 
+   * @param property the property on state to update, e.g. case
+   */
+  const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>, property: Extract<keyof typeof state, string>) => {
     setState({ ...state, [property]: event.target.checked})
   }
 

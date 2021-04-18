@@ -18,12 +18,22 @@ const EmptyListing: ListingInput = {
   deadline: "",
 };
 
+/**
+ * @description Page for creating new listings, navigates to the newly created listing upon completion
+ */
 const NewListingPage: NextPage = () => {
   const router = useRouter();
   const [listing, setListing] = useState<ListingInput>(EmptyListing);
+
+  /**
+   * @description Load the organizations to which the user belongs
+   * @todo Currently assumes the user belongs to an organization, which must be the case, yet this should allow for dynamically setting the default organization.
+   */
   const { loading, error, data } = useQuery(USER_WITH_ORGANIZATIONS, {
     onCompleted: (data) => setListing({ ...listing, organization: data.user.organizations[0] }),
   });
+
+  // Create the listing, navigate to the newly created listing upon completion.
   const [createListing] = useMutation<{ createListing: { ok: boolean; listing: Listing } }>(CREATE_LISTING, {
     onCompleted: (data) => router.push(`/listings/${data.createListing.listing.id}/${data.createListing.listing.slug}`),
   });

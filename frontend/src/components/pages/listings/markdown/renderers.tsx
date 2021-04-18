@@ -30,15 +30,19 @@ const heading = ({ node, children }: NodeToProps<Extract<Content, { type: "headi
   return <Typography variant={`h${depth}` as Variant}>{children}</Typography>;
 }
 
- const paragraph = ({ children }: NodeToProps<Extract<Content, { type: "paragraph" }>>) => (
-   <Typography variant="body2" component="p" paragraph>
-     {children}
-   </Typography>
- );
+const paragraph = ({ children }: NodeToProps<Extract<Content, { type: "paragraph" }>>) => (
+  <Typography variant="body2" component="p" paragraph>
+    {children}
+  </Typography>
+);
 
- const renderers: {[nodeType: string]: ElementType} = {
-   heading: heading,
-   paragraph: paragraph,
- };
+/**
+ * @description Custom markdown renderers to override the default renderers of React-Markdown
+ * @todo update to use the new components API with React-Markdown 6.0.0
+ */
+const renderers: {[nodeType: string]: ElementType} = {
+  heading: heading,
+  paragraph: paragraph,
+};
 
 export default renderers;
