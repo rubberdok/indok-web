@@ -15,7 +15,6 @@ class BaseListingInput(graphene.InputObjectType):
     end_datetime = graphene.DateTime()
     deadline = graphene.DateTime()
     url = graphene.String()
-    organization_id = graphene.ID()
     form_id = graphene.ID()
     application = graphene.Boolean()
     interview = graphene.Boolean()
