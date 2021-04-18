@@ -28,13 +28,12 @@ const QuestionTypePreview: React.FC<{
       return <TextField fullWidth disabled label={questionTypeLabels[question.questionType]} variant="outlined" />;
     case "MULTIPLE_CHOICE":
       return (
-        <RadioGroup value={value}>
+        <RadioGroup>
           {(question.options ?? []).map((option, index) => (
             <FormControlLabel
-              value={value === option.answer ? value : undefined}
               key={index}
               label={<Box fontWeight={value === option.answer ? "bold" : undefined}>{option.answer}</Box>}
-              control={<Radio disabled />}
+              control={<Radio checked={value === option.answer} disabled />}
             />
           ))}
         </RadioGroup>
@@ -45,7 +44,9 @@ const QuestionTypePreview: React.FC<{
           {(question.options ?? []).map((option, index) => (
             <FormControlLabel
               key={index}
-              label={<Box fontWeight={values && values.includes(option.answer) && "bold"}>{option.answer}</Box>}
+              label={
+                <Box fontWeight={values && values.includes(option.answer) ? "bold" : undefined}>{option.answer}</Box>
+              }
               control={<Checkbox checked={values && values.includes(option.answer)} disabled />}
             />
           ))}
