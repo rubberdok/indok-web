@@ -12,7 +12,7 @@ export interface Listing {
   url?: string;
   hero?: string;
   logo?: string;
-  organization?: Organization;
+  organization: Organization;
   form?: Form;
   chips: string[];
 }
