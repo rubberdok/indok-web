@@ -4,13 +4,14 @@ certifi==2020.12.5
 cffi==1.14.4
 chardet==3.0.4
 cryptography==3.3.2
-Django==3.1.6
+Django==3.1.8
 django-alive==1.1.0
 django-cors-headers==3.5.0
 django-environ==0.4.5
 django-graphql-jwt==0.3.1
 django-multiselectfield==0.1.12
 django-phonenumber-field==5.0.0
+django-ses==2.0.0
 djangorestframework==3.11.2
 graphene==2.1.8
 graphene-django==2.13.0

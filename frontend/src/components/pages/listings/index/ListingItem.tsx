@@ -95,7 +95,7 @@ const ListingItem: React.FC<{
           />
           <CardContent className={classes.content}>
             <img
-              src={listing.organization ? `/img/${listing.organization.name.toLowerCase()}logo.png` : "/nth.sv"}
+              src={listing.organization?.logoUrl || "/nth.svg"}
               className={classes.logo}
               alt="Organisasjonslogo"
               onError={(e) => (

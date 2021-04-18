@@ -22,8 +22,8 @@ const useStyles = makeStyles((theme: Theme) =>
       marginLeft: "70px",
     },
     image: {
-      width: "128px",
-      height: "128px",
+      width: "90px",
+      height: "148px",
       alignItems: "start",
     },
     img: {
@@ -33,6 +33,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     article: {
       width: "100%",
+      height: "160px",
     },
     header: {
       width: "100%",
@@ -61,7 +62,7 @@ const FeaturedDocumentsList: React.FC = () => {
       <Typography variant="h4" gutterBottom>
         Fremhevede dokumenter
       </Typography>
-      <GridList cellHeight={144} className={classes.img} cols={4} spacing={8}>
+      <GridList cellHeight={"auto"} className={classes.img} cols={4} spacing={8}>
         {data.featuredArchive.length ? (
           data.featuredArchive.map((doc: Document) => (
             <GridListTile key={0}>
@@ -87,7 +88,6 @@ const FeaturedDocumentsList: React.FC = () => {
                       <Typography
                         component="h2"
                         variant="inherit"
-                        gutterBottom
                         paragraph
                         style={{ fontSize: "5", fontWeight: "lighter", textAlign: "center" }}
                       >

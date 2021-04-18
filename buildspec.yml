@@ -8,7 +8,6 @@ env:
     DATAPORTEN_ID: "f17d2ea0-a7c9-4458-83bf-35cf5b555cae"
     DATAPORTEN_REDIRECT_URI: "https://indokntnu.no/authCallback"
     NEXT_PUBLIC_DATAPORTEN_STATE: "RGpBPYszuqXVvsma1suHJJ4X7ZJjkfS6njRHnx4p"
-    BOOKING_EMAIL: "hswebkom@gmail.com"
 
 phases:
   pre_build:
@@ -26,7 +25,6 @@ phases:
           -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/indokweb-backend:prod \
           --build-arg DATAPORTEN_ID=$DATAPORTEN_ID \
           --build-arg DATAPORTEN_REDIRECT_URI=$DATAPORTEN_REDIRECT_URI \
-          --build-arg BOOKING_EMAIL=$BOOKING_EMAIL \
           ./backend
       - >
         docker build \
