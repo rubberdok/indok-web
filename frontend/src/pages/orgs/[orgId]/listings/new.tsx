@@ -10,7 +10,7 @@ const NewListingPage: NextPage = () => {
   const { orgId } = router.query
 
   return (
-    <NewListing defaultOrganizationId={orgId}/>
+    <NewListing defaultOrganizationId={orgId as string}/>
   );
 };
 export default NewListingPage;
