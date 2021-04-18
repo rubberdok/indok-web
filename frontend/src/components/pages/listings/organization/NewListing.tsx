@@ -1,8 +1,7 @@
 import { useMutation, useQuery } from "@apollo/client";
-import Layout from "@components/Layout";
 import ListingForm from "@components/pages/listings/organization/ListingForm";
 import { ListingInput } from "@interfaces/listings";
-import { Container, Typography, Grid } from "@material-ui/core";
+import { Typography, Grid } from "@material-ui/core";
 import { useState } from "react";
 import { Listing } from "@interfaces/listings";
 import { CREATE_LISTING } from "@graphql/listings/mutations";
