@@ -1,9 +1,9 @@
 import { useQuery } from "@apollo/client";
+import { FilterQuery } from "@components/pages/events/AllEvents";
 import { QUERY_EVENT_FILTERED_ORGANIZATIONS } from "@graphql/events/queries";
 import { IconButton, List, ListItem, ListItemText, makeStyles, Tooltip, Typography } from "@material-ui/core";
 import { Refresh, StarBorderRounded, StarRounded } from "@material-ui/icons";
 import React from "react";
-import { FilterQuery } from "../AllEvents";
 import CategoryFilter from "./CategoryFilter";
 import DateTimeFilter from "./DateTimeFilter";
 import OrganizationFilter from "./OrganizationFilter";
