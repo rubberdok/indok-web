@@ -79,7 +79,7 @@ const OrganizationListings: React.FC<{
                             <TableCell size="small" align="right">
                               <Link passHref href={`/listings/edit/${listing.id}/`}>
                                 <Button variant="contained" color="primary" startIcon={<Create />}>
-                                  Endre
+                                  Rediger
                                 </Button>
                               </Link>
                             </TableCell>
