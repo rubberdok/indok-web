@@ -15,18 +15,27 @@ import {
   TableCell,
   TableBody,
   IconButton,
+  Snackbar,
 } from "@material-ui/core";
 import { toStringChosenCabins } from "@utils/cabins";
 import dayjs from "dayjs";
 import { NextPage } from "next";
 import { CONFIRM_BOOKING } from "@graphql/cabins/mutations";
+import { useState } from "react";
 const BookingAdminPage: NextPage = () => {
   const { data } = useQuery<{
     allBookings: Booking[];
   }>(QUERY_ALL_BOOKINGS, { variables: { after: dayjs().format("YYYY-MM-DD") } });
   const [confirmBooking] = useMutation(CONFIRM_BOOKING, { refetchQueries: [{ query: QUERY_ALL_BOOKINGS }] });
+  const [openSnackbar, setOpenSnackbar] = useState(false);
   return (
     <Layout>
+      <Snackbar
+        open={openSnackbar}
+        message="Booking bekreftet. Bekreftelsesmail sendt."
+        autoHideDuration={6000}
+        onClose={() => setOpenSnackbar(false)}
+      />
       <Grid container direction="column" spacing={3}>
         <Grid item>
           <Box p={3}>
@@ -66,7 +75,10 @@ const BookingAdminPage: NextPage = () => {
                       <TableCell align="right">
                         <IconButton
                           disabled={!booking.isTentative}
-                          onClick={() => confirmBooking({ variables: { id: booking.id } })}
+                          onClick={() => {
+                            confirmBooking({ variables: { id: booking.id } });
+                            setOpenSnackbar(true);
+                          }}
                         >
                           <CheckIcon />
                         </IconButton>
