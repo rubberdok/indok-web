@@ -44,7 +44,7 @@ const AnswerForm: React.FC<{
         <Card>
           <CardContent>
             <Typography variant="h5">{form.name}</Typography>
-            <Typography>* = obligatorisk spørsmål</Typography>
+            <FormHelperText>* Obligatorisk spørsmål</FormHelperText>
           </CardContent>
         </Card>
       </Grid>
@@ -54,15 +54,15 @@ const AnswerForm: React.FC<{
             <CardContent>
               <FormControl fullWidth>
                 <FormLabel>
-                  {answer.question?.question}
-                  {answer.question?.mandatory && " *"}
+                  {answer.question.question}
+                  {answer.question.mandatory && " *"}
                 </FormLabel>
                 <AnswerQuestion
                   answer={answer}
                   setAnswer={(newAnswer: AnswerState) =>
                     setAnswers(
                       answers.map((oldAnswer) =>
-                        oldAnswer.question?.id === newAnswer.question?.id ? newAnswer : oldAnswer
+                        oldAnswer.question.id === newAnswer.question.id ? newAnswer : oldAnswer
                       )
                     )
                   }

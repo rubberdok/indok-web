@@ -33,7 +33,7 @@ const AnswerCheckboxes: React.FC<{
 
   return (
     <>
-      {(answer.question?.options ?? []).map((option, index) => (
+      {(answer.question.options ?? []).map((option, index) => (
         <FormControlLabel
           key={index}
           value={option.answer}

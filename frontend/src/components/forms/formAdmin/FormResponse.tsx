@@ -1,5 +1,5 @@
 import { Form, Answer, Response } from "@interfaces/forms";
-import { Typography, Box, Grid, Card, CardContent } from "@material-ui/core";
+import { Typography, Box, Grid, Card, CardContent, FormHelperText } from "@material-ui/core";
 
 /**
  * component to see a user's answers to a form
@@ -17,7 +17,7 @@ const FormResponse: React.FC<{
       <Card>
         <CardContent>
           <Typography variant="h5">{form.name}</Typography>
-          <Typography>* = obligatorisk spørsmål</Typography>
+          <FormHelperText>* Obligatorisk spørsmål</FormHelperText>
         </CardContent>
       </Card>
     </Grid>

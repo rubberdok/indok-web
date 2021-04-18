@@ -52,32 +52,30 @@ const ConfirmFormChange: React.FC<{
   const { title, body, warning } = dialogText(type);
   return (
     <Dialog open={open} onClose={onClose} fullWidth>
-      <>
-        <DialogContent>
-          <DialogTitle>{title}</DialogTitle>
-          <DialogContentText>{body}</DialogContentText>
-          <FormHelperText error>{warning}</FormHelperText>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={(e) => {
-              e.preventDefault();
-              onConfirm();
-              onClose();
-            }}
-          >
-            {title}
-          </Button>
-          <Button
-            onClick={(e) => {
-              e.preventDefault();
-              onClose();
-            }}
-          >
-            Avbryt
-          </Button>
-        </DialogActions>
-      </>
+      <DialogContent>
+        <DialogTitle>{title}</DialogTitle>
+        <DialogContentText>{body}</DialogContentText>
+        <FormHelperText error>{warning}</FormHelperText>
+      </DialogContent>
+      <DialogActions>
+        <Button
+          onClick={(e) => {
+            e.preventDefault();
+            onConfirm();
+            onClose();
+          }}
+        >
+          {title}
+        </Button>
+        <Button
+          onClick={(e) => {
+            e.preventDefault();
+            onClose();
+          }}
+        >
+          Avbryt
+        </Button>
+      </DialogActions>
     </Dialog>
   );
 };
