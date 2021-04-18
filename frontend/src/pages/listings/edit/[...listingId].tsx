@@ -24,7 +24,7 @@ const EditListingPage: NextPage = () => {
   );
 
   const [updateListing] = useMutation<{ updateListing: { ok: boolean; listing: Listing } }>(UPDATE_LISTING, {
-    onCompleted: (data) => router.push(`/listings/${data.updateListing.listing.id}/${data.updateListing.listing.slug}`),
+    onCompleted: () => router.back(),
   });
 
   if (loading) return <p>Loading...</p>;
