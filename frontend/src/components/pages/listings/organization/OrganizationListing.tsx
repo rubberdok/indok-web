@@ -9,7 +9,6 @@ import ReactMarkdown from "react-markdown";
  * component for authorized organization members to administer their listing
  * props: the listing to administrate
  */
-// TODO: functionality to edit the listing's name/description
 const OrganizationListing: React.FC<{ listing: Listing }> = ({ listing }) => (
   <Grid container direction="column" spacing={1}>
     <Grid item>
