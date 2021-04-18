@@ -1,5 +1,7 @@
 import { Listing } from "@interfaces/listings";
 import { Typography, Card, CardContent, Grid } from "@material-ui/core";
+import renderers from "@components/pages/listings/markdown/renderers";
+import ReactMarkdown from "react-markdown";
 
 /**
  * component for authorized organization members to administer their listing
@@ -11,8 +13,10 @@ const OrganizationListing: React.FC<{ listing: Listing }> = ({ listing }) => (
     <Grid item>
       <Card>
         <CardContent>
-          <Typography variant="h3">{listing.title}</Typography>
-          <Typography>{listing.description}</Typography>
+          <Typography variant="h3" gutterBottom>{listing.title}</Typography>
+          <ReactMarkdown renderers={renderers}>
+            {listing.description}
+          </ReactMarkdown>
         </CardContent>
       </Card>
     </Grid>
