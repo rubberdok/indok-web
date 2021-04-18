@@ -57,7 +57,7 @@ const FormResponse: React.FC<{
                 </Grid>
                 <Typography>
                   {((answer: Answer | undefined) =>
-                    answer ? answer.answer : <Box fontStyle="italic">Søker svarte ikke på spørsmålet</Box>)(
+                    answer ? answer.answer : <Box fontStyle="italic">Søker svarte ikke på spørsmålet.</Box>)(
                     response.answers.find((answer) => answer.question?.id === question.id)
                   )}
                 </Typography>

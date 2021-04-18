@@ -168,7 +168,7 @@ const EditForm: React.FC<{ form: Form }> = ({ form }) => {
   // question view changes based on whether they are being edited or not
   return (
     <>
-      {confirmationDialog && activeQuestion && (
+      {confirmationDialog && (
         <ConfirmFormChange
           type={confirmationDialog.type}
           open={confirmationDialog !== undefined}
