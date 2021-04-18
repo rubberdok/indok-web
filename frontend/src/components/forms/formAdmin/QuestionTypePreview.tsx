@@ -1,14 +1,17 @@
 import { Question } from "@interfaces/forms";
-import { Checkbox, FormControlLabel, FormGroup, Radio, RadioGroup, TextField } from "@material-ui/core";
+import { Checkbox, FormControlLabel, FormGroup, Radio, RadioGroup, TextField, Box } from "@material-ui/core";
 import questionTypeLabels from "@components/forms/formAdmin/questionTypeLabels";
 
 /**
  * component to show a preview of how a form question's input will look like to the end user
+ *
  * props: the question with questionType to preview
  */
 const QuestionTypePreview: React.FC<{
   question: Question;
-}> = ({ question }) => {
+  value?: string;
+  values?: string[];
+}> = ({ question, value, values }) => {
   switch (question.questionType) {
     case "PARAGRAPH":
       return (
@@ -25,9 +28,14 @@ const QuestionTypePreview: React.FC<{
       return <TextField fullWidth disabled label={questionTypeLabels[question.questionType]} variant="outlined" />;
     case "MULTIPLE_CHOICE":
       return (
-        <RadioGroup>
+        <RadioGroup value={value}>
           {(question.options ?? []).map((option, index) => (
-            <FormControlLabel value={null} key={index} label={option.answer} control={<Radio disabled />} />
+            <FormControlLabel
+              value={value === option.answer ? value : undefined}
+              key={index}
+              label={<Box fontWeight={value === option.answer ? "bold" : undefined}>{option.answer}</Box>}
+              control={<Radio disabled />}
+            />
           ))}
         </RadioGroup>
       );
@@ -35,7 +43,11 @@ const QuestionTypePreview: React.FC<{
       return (
         <FormGroup>
           {(question.options ?? []).map((option, index) => (
-            <FormControlLabel key={index} label={option.answer} control={<Checkbox disabled />} />
+            <FormControlLabel
+              key={index}
+              label={<Box fontWeight={values && values.includes(option.answer) && "bold"}>{option.answer}</Box>}
+              control={<Checkbox checked={values && values.includes(option.answer)} disabled />}
+            />
           ))}
         </FormGroup>
       );
@@ -43,7 +55,9 @@ const QuestionTypePreview: React.FC<{
       return (
         <ol>
           {(question.options ?? []).map((option, index) => (
-            <li key={index}>{option.answer}</li>
+            <li key={index}>
+              <Box fontWeight={value === option.answer ? "bold" : undefined}>{option.answer}</Box>
+            </li>
           ))}
         </ol>
       );

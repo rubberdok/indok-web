@@ -21,7 +21,7 @@ const AnswerCheckboxes: React.FC<{
 
   // every time selectedOptions changes, set answer to the concatenation of selected options
   useEffect(() => {
-    setAnswer({ ...answer, answer: selectedOptions.map((option) => option.answer).join("||") });
+    setAnswer({ ...answer, answer: selectedOptions.map((option) => option.answer).join("|||") });
   }, [selectedOptions]);
   /*
     Why concatenate?

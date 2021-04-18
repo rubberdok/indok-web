@@ -125,7 +125,8 @@ const EditForm: React.FC<{ form: Form }> = ({ form }) => {
                 activeQuestion.questionType === "MULTIPLE_CHOICE" ||
                 activeQuestion.questionType === "DROPDOWN")
                 ? activeQuestion.options.map((option) => ({
-                    answer: option.answer,
+                    // replaces "|||" with empty string in options, as ||| is used to separate checkbox answers (see AnswerCheckboxes)
+                    answer: option.answer.replace(/\|\|\|/g, ""),
                     ...(option.id ? { id: option.id } : {}),
                   }))
                 : [],
