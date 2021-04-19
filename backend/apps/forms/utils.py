@@ -1,22 +1,59 @@
+def change_question_position(
+  ascending,
+  index,
+  form_questions,
+  existing_positions,
+  updated_question,
+  updated_question_old_position,
+  updated_question_new_position
+):
+  this_question = form_questions[index]
+  this_position = existing_positions[index]
+  if this_position == updated_question_old_position:
+    setattr(updated_question, "position", updated_question_new_position)
+    setattr(this_question, "position", updated_question_old_position)
+  else:
+    skip = 1 if ascending else -1
+    new_position = this_position + skip
+    if new_position in existing_positions:
+      change_question_position(
+        ascending
+        index=index + skip,
+        form_questions,
+        existing_positions,
+        updated_question,
+        updated_question_old_position,
+        updated_question_new_position
+      )
+      setattr(this_question, "position", new_position)
+    else:
+      setattr(this_question, "position", new_position)
+      setattr(updated_question, "position", updated_question_new_position)
+
+
 """
 Takes in a question along with a new position
 Adjusts positions of questions between the old and new positions
 Then updates the question with its new position
 """
-def change_question_position(question, new_position):
+def insert_question(question, new_position):
   old_position = question.position
-  form_questions = question.form.questions
+  ascending = old_position < new_position
+  form_questions = question.form.questions.filter(
+    position__lte=(new_position if ascending else old_position),
+    position__gte=(old_position if ascending else new_position)
+  )
   existing_positions = form_questions.values_list("position", flat=True)
+  new_position_index = existing_positions.index(new_position)
   if new_position in existing_positions:
-    
+    change_question_position(
+      ascending,
+      index=new_position_index,
+      form_questions,
+      existing_positions,
+      updated_question=question,
+      updated_question_old_position=old_position,
+      updated_question_new_position=new_position
+    )  
   else:
     setattr(question, "position", new_position)
-  if old_position < new_position:
-    for position in range(old_position, new_position):
-      setattr(form_questions[position], "position", position - 1)
-  elif old_position > new_position:
-    for position in range(new_position, old_position):
-      setattr(form_questions[position], "position", position + 1)
-  else:
-    return
-  setattr(question, "position", new_position)
