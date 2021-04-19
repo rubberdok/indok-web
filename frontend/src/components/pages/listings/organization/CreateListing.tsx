@@ -95,8 +95,7 @@ const CreateListing: React.FC<{
         {invalidError && <FormHelperText error>Du må fylle inn alle felter.</FormHelperText>}
         <DialogActions>
           <Button
-            onClick={(e) => {
-              e.preventDefault();
+            onClick={() => {
               if (listing.title && listing.description && listing.deadline) {
                 createListing({
                   variables: {
@@ -117,8 +116,7 @@ const CreateListing: React.FC<{
             Legg til verv
           </Button>
           <Button
-            onClick={(e) => {
-              e.preventDefault();
+            onClick={() => {
               onClose();
             }}
           >

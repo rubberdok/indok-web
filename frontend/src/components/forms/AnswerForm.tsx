@@ -2,13 +2,13 @@ import { useMutation } from "@apollo/client";
 import AnswerQuestion from "@components/forms/AnswerQuestion";
 import { SUBMIT_ANSWERS } from "@graphql/forms/mutations";
 import { Form, Question } from "@interfaces/forms";
-import { Button, Card, CardContent, Grid, Typography, FormControl, FormLabel, FormHelperText } from "@material-ui/core";
+import { Button, Card, CardContent, Grid, Typography, FormHelperText } from "@material-ui/core";
 import { useState } from "react";
 import { Send } from "@material-ui/icons";
 
 // interface for the state of answers before pushing to the database
 export interface AnswerState {
-  answer: string | undefined;
+  answer: string;
   question: Question;
 }
 
@@ -22,7 +22,7 @@ const AnswerForm: React.FC<{
 }> = ({ form }) => {
   // state to manage the user's answers before submitting
   const [answers, setAnswers] = useState<AnswerState[]>(
-    form.questions.map((question) => ({ answer: undefined, question: question }))
+    form.questions.map((question) => ({ answer: "", question: question }))
   );
 
   // state to store feedback to the user
@@ -52,22 +52,26 @@ const AnswerForm: React.FC<{
         <Grid item key={answer.question.id}>
           <Card>
             <CardContent>
-              <FormControl fullWidth>
-                <FormLabel>
-                  {answer.question.question}
-                  {answer.question.mandatory && " *"}
-                </FormLabel>
-                <AnswerQuestion
-                  answer={answer}
-                  setAnswer={(newAnswer: AnswerState) =>
-                    setAnswers(
-                      answers.map((oldAnswer) =>
-                        oldAnswer.question.id === newAnswer.question.id ? newAnswer : oldAnswer
+              <Grid container direction="column">
+                <Grid item>
+                  <Typography>
+                    {answer.question.question}
+                    {answer.question.mandatory && " *"}
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <AnswerQuestion
+                    answer={answer}
+                    setAnswer={(newAnswer: AnswerState) =>
+                      setAnswers(
+                        answers.map((oldAnswer) =>
+                          oldAnswer.question.id === newAnswer.question.id ? newAnswer : oldAnswer
+                        )
                       )
-                    )
-                  }
-                />
-              </FormControl>
+                    }
+                  />
+                </Grid>
+              </Grid>
             </CardContent>
           </Card>
         </Grid>
@@ -87,11 +91,10 @@ const AnswerForm: React.FC<{
           variant="contained"
           color="primary"
           startIcon={<Send />}
-          onClick={(e) => {
-            e.preventDefault();
+          onClick={() => {
             const answersData: { answer: string; questionId: string }[] = [];
             for (const answer of answers) {
-              if (answer.answer) {
+              if (answer.answer !== "") {
                 answersData.push({ answer: answer.answer, questionId: answer.question.id });
               } else if (answer.question.mandatory) {
                 setErrorMessage("Du må svare på alle obligatoriske spørsmål.");

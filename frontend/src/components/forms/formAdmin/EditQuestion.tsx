@@ -42,7 +42,6 @@ const EditQuestion: React.FC<{
         fullWidth
         value={question.question}
         onChange={(e) => {
-          e.preventDefault();
           setQuestion({
             ...question,
             question: e.target.value,
@@ -59,7 +58,6 @@ const EditQuestion: React.FC<{
             fullWidth
             value={question.questionType}
             onChange={(e) => {
-              e.preventDefault();
               const questionType = e.target.value as QuestionType;
               let firstOption: Option | undefined = undefined;
               if (
@@ -125,7 +123,6 @@ const EditQuestion: React.FC<{
                   fullWidth
                   value={option.answer}
                   onChange={(e) => {
-                    e.preventDefault();
                     setQuestion({
                       ...question,
                       options: (question.options ?? []).map((oldAnswer) =>
@@ -142,8 +139,7 @@ const EditQuestion: React.FC<{
             variant="outlined"
             fullWidth
             startIcon={<Add />}
-            onClick={(e) => {
-              e.preventDefault();
+            onClick={() => {
               setQuestion({
                 ...question,
                 options: [...(question.options ?? []), { id: "", answer: "" }],
@@ -161,8 +157,7 @@ const EditQuestion: React.FC<{
           variant="contained"
           color="primary"
           startIcon={<Save />}
-          onClick={(e) => {
-            e.preventDefault();
+          onClick={() => {
             saveQuestion();
           }}
         >
@@ -173,8 +168,7 @@ const EditQuestion: React.FC<{
         <Button
           variant="contained"
           startIcon={<Close />}
-          onClick={(e) => {
-            e.preventDefault();
+          onClick={() => {
             setQuestion(undefined);
           }}
         >
@@ -185,8 +179,7 @@ const EditQuestion: React.FC<{
         <Button
           variant="contained"
           startIcon={<Delete />}
-          onClick={(e) => {
-            e.preventDefault();
+          onClick={() => {
             deleteQuestion();
           }}
         >

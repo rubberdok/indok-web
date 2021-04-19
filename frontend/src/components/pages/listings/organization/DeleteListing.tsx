@@ -65,8 +65,7 @@ const DeleteListing: React.FC<{
           </DialogContent>
           <DialogActions>
             <Button
-              onClick={(e) => {
-                e.preventDefault();
+              onClick={() => {
                 deleteListing({ variables: { id: listing.id } });
                 onClose();
               }}
@@ -74,8 +73,7 @@ const DeleteListing: React.FC<{
               Slett verv
             </Button>
             <Button
-              onClick={(e) => {
-                e.preventDefault();
+              onClick={() => {
                 onClose();
               }}
             >

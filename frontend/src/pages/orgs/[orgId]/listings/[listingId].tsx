@@ -93,6 +93,7 @@ const ListingAdminPage: NextPage = () => {
                   <Card>
                     {data.listing.form.responses.length > 0 ? (
                       <Tabs
+                        color="primary"
                         orientation="vertical"
                         variant="scrollable"
                         value={selectedView}
@@ -150,8 +151,7 @@ const ListingAdminPage: NextPage = () => {
                         fullWidth
                         variant="contained"
                         color="primary"
-                        onClick={(e) => {
-                          e.preventDefault();
+                        onClick={() => {
                           createForm({
                             variables: {
                               name: `Søknad: ${data.listing.title}`,

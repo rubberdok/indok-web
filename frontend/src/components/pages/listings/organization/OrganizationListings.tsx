@@ -91,8 +91,7 @@ const OrganizationListings: React.FC<{
                                 variant="contained"
                                 color="primary"
                                 startIcon={<Delete />}
-                                onClick={(e) => {
-                                  e.preventDefault();
+                                onClick={() => {
                                   setListingToDelete(listing);
                                 }}
                               >
@@ -112,8 +111,7 @@ const OrganizationListings: React.FC<{
                 variant="contained"
                 color="primary"
                 startIcon={<Add />}
-                onClick={(e) => {
-                  e.preventDefault();
+                onClick={() => {
                   showCreateListing(true);
                 }}
               >
