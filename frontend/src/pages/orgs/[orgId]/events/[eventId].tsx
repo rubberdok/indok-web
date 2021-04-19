@@ -1,11 +1,12 @@
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import Layout from "@components/Layout";
 import AttendeeExport from "@components/pages/events/attendeeExport";
 import EditEvent from "@components/pages/events/editEvent";
 import EmailForm from "@components/pages/events/EventEmail";
+import { ADMIN_EVENT_SIGN_OFF } from "@graphql/events/mutations";
 import { ADMIN_GET_EVENT } from "@graphql/events/queries";
-import { Event } from "@interfaces/events";
-import { User } from "@interfaces/users";
+import { Event, SignUp } from "@interfaces/events";
+import { Alert } from "@material-ui/lab";
 import {
   Box,
   Button,
@@ -15,17 +16,21 @@ import {
   CardHeader,
   CircularProgress,
   Grid,
+  IconButton,
   List,
   ListItem,
+  Snackbar,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
+  Tooltip,
   Typography,
 } from "@material-ui/core";
 import { Edit } from "@material-ui/icons";
+import DeleteIcon from "@material-ui/icons/Delete";
 import dayjs from "dayjs";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
@@ -36,13 +41,12 @@ interface HeaderValuePair<T> {
   field: keyof T;
 }
 
-const userFields: HeaderValuePair<User>[] = [
-  { header: "Fornavn", field: "firstName" },
-  { header: "Etternavn", field: "lastName" },
-  { header: "Mobilnummer", field: "phoneNumber" },
-  { header: "Klassetrinn", field: "gradeYear" },
-  { header: "Matpreferanser", field: "allergies" },
-  { header: "epost", field: "email" },
+const signUpFields: HeaderValuePair<SignUp>[] = [
+  { header: "Navn", field: "user" },
+  { header: "Mobilnummer", field: "userPhoneNumber" },
+  { header: "Klassetrinn", field: "userGradeYear" },
+  { header: "Matpreferanser", field: "userAllergies" },
+  { header: "E-post", field: "userEmail" },
 ];
 
 const stringEventFields: HeaderValuePair<Event>[] = [
@@ -67,12 +71,16 @@ const EventAdminPage: NextPage = () => {
   const { eventId } = router.query;
   const eventNumberID = parseInt(eventId as string);
 
-  const { loading, data } = useQuery<{ event: Event }, { id: number }>(ADMIN_GET_EVENT, {
+  const { loading, data, refetch } = useQuery<{ event: Event }, { id: number }>(ADMIN_GET_EVENT, {
     variables: { id: eventNumberID },
     skip: Number.isNaN(eventNumberID),
   });
 
+  const [adminEventSignOff, { loading: signOffLoading, error: signOffError }] = useMutation(ADMIN_EVENT_SIGN_OFF);
+
   const [openEditEvent, setOpenEditEvent] = useState(false);
+  const [openSignOffErrorSnackbar, setOpenSignOffErrorSnackbar] = useState(false);
+  const [openSignOffSuccessSnackbar, setOpenSignOffSuccessSnackbar] = useState(false);
 
   if (loading) {
     return <CircularProgress />;
@@ -93,6 +101,17 @@ const EventAdminPage: NextPage = () => {
         </Typography>
       </ListItem>
     );
+  };
+
+  const handleDeleteSignUp = (userId: string) => {
+    adminEventSignOff({ variables: { eventId: eventNumberID, userId: userId } })
+      .then(() => {
+        refetch({ id: eventNumberID });
+        setOpenSignOffSuccessSnackbar(true);
+      })
+      .catch(() => {
+        setOpenSignOffErrorSnackbar(true);
+      });
   };
 
   return (
@@ -147,19 +166,40 @@ const EventAdminPage: NextPage = () => {
                         <Table>
                           <TableHead>
                             <TableRow>
-                              {userFields.map((field) => (
+                              {signUpFields.map((field) => (
                                 <TableCell key={`user-header-${field.header}`}>{field.header}</TableCell>
                               ))}
+                              <TableCell key={`user-header-delete`} />
                             </TableRow>
                           </TableHead>
                           <TableBody>
-                            {data?.event?.usersAttending?.map((user: User) => (
-                              <TableRow key={`user-row-${user.id}`}>
-                                {userFields.map((field) => (
-                                  <TableCell key={`user-${user.id}-cell--${field.field}`}>
-                                    {user[field.field]}
+                            {data?.event?.usersAttending?.map((signUp: SignUp) => (
+                              <TableRow key={`user-row-${signUp.user.id}`}>
+                                {signUpFields.map((field) => (
+                                  <TableCell key={`user-${signUp.user.id}-cell--${field.field}`}>
+                                    {field.header === "Navn"
+                                      ? `${signUp.user.firstName} ${signUp.user.lastName}`
+                                      : field.header === "Mobilnummer"
+                                      ? signUp.userPhoneNumber.slice(3)
+                                      : signUp[field.field]
+                                      ? signUp[field.field]
+                                      : "━"}
                                   </TableCell>
                                 ))}
+                                <TableCell>
+                                  <Tooltip title="Fjern påmelding" arrow>
+                                    {signOffLoading ? (
+                                      <CircularProgress />
+                                    ) : (
+                                      <IconButton
+                                        aria-label="delete"
+                                        onClick={() => handleDeleteSignUp(signUp.user.id)}
+                                      >
+                                        <DeleteIcon fontSize="small" />
+                                      </IconButton>
+                                    )}
+                                  </Tooltip>
+                                </TableCell>
                               </TableRow>
                             ))}
                           </TableBody>
@@ -182,17 +222,23 @@ const EventAdminPage: NextPage = () => {
                         <Table>
                           <TableHead>
                             <TableRow>
-                              {userFields.map((field) => (
+                              {signUpFields.map((field) => (
                                 <TableCell key={`user-header-${field.header}`}>{field.header}</TableCell>
                               ))}
                             </TableRow>
                           </TableHead>
                           <TableBody>
-                            {data?.event?.usersOnWaitingList?.map((user: User) => (
-                              <TableRow key={`user-row-${user.id}`}>
-                                {userFields.map((field) => (
-                                  <TableCell key={`user-${user.id}-cell--${field.field}`}>
-                                    {user[field.field]}
+                            {data?.event?.usersOnWaitingList?.map((signUp: SignUp) => (
+                              <TableRow key={`user-row-${signUp.user.id}`}>
+                                {signUpFields.map((field) => (
+                                  <TableCell key={`user-${signUp.user.id}-cell--${field.field}`}>
+                                    {field.header === "Navn"
+                                      ? `${signUp.user.firstName} ${signUp.user.lastName}`
+                                      : field.header === "Mobilnummer"
+                                      ? signUp.userPhoneNumber.slice(3)
+                                      : signUp[field.field]
+                                      ? signUp[field.field]
+                                      : "━"}
                                   </TableCell>
                                 ))}
                               </TableRow>
@@ -212,6 +258,26 @@ const EventAdminPage: NextPage = () => {
           </Grid>
         </Box>
       ) : null}
+      <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        open={openSignOffErrorSnackbar}
+        autoHideDuration={3000}
+        onClose={() => setOpenSignOffErrorSnackbar(false)}
+      >
+        <Alert elevation={6} variant="filled" severity="error">
+          {signOffError ? signOffError.message : "Avmelding feilet"}
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        open={openSignOffSuccessSnackbar}
+        autoHideDuration={3000}
+        onClose={() => setOpenSignOffSuccessSnackbar(false)}
+      >
+        <Alert elevation={6} variant="filled" severity="success">
+          Avmelding fullført
+        </Alert>
+      </Snackbar>
     </Layout>
   );
 };
