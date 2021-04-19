@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@apollo/client";
 import Layout from "@components/Layout";
-import { QUERY_ALL_BOOKINGS } from "@graphql/cabins/queries";
+import { QUERY_ADMIN_ALL_BOOKINGS } from "@graphql/cabins/queries";
 import { Booking } from "@interfaces/cabins";
 import CheckIcon from "@material-ui/icons/Check";
 import {
@@ -16,18 +16,29 @@ import {
   TableBody,
   IconButton,
   Snackbar,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  Button,
 } from "@material-ui/core";
 import { toStringChosenCabins } from "@utils/cabins";
 import dayjs from "dayjs";
 import { NextPage } from "next";
 import { CONFIRM_BOOKING } from "@graphql/cabins/mutations";
 import { useState } from "react";
+import { useRouter } from "next/router";
+
 const BookingAdminPage: NextPage = () => {
-  const { data } = useQuery<{
-    allBookings: Booking[];
-  }>(QUERY_ALL_BOOKINGS, { variables: { after: dayjs().format("YYYY-MM-DD") } });
-  const [confirmBooking] = useMutation(CONFIRM_BOOKING, { refetchQueries: [{ query: QUERY_ALL_BOOKINGS }] });
+  const { data, error } = useQuery<{
+    adminAllBookings: Booking[];
+  }>(QUERY_ADMIN_ALL_BOOKINGS, { variables: { after: dayjs().format("YYYY-MM-DD") } });
+  const [confirmBooking] = useMutation(CONFIRM_BOOKING, { refetchQueries: [{ query: QUERY_ADMIN_ALL_BOOKINGS }] });
   const [openSnackbar, setOpenSnackbar] = useState(false);
+  const router = useRouter();
+
+  const handleDialogClose = () => router.push("/");
   return (
     <Layout>
       <Snackbar
@@ -36,6 +47,17 @@ const BookingAdminPage: NextPage = () => {
         autoHideDuration={6000}
         onClose={() => setOpenSnackbar(false)}
       />
+      <Dialog open={error != undefined} onClose={handleDialogClose}>
+        <DialogTitle>{`Det har oppstått en feilmelding: ${error?.name}`}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>{error?.message}</DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDialogClose} color="primary" variant="contained">
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
       <Grid container direction="column" spacing={3}>
         <Grid item>
           <Box p={3}>
@@ -61,10 +83,10 @@ const BookingAdminPage: NextPage = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {data?.allBookings.map((booking: Booking) => (
+                  {data?.adminAllBookings.map((booking: Booking) => (
                     <TableRow key={booking.id}>
                       <TableCell component="th" scope="row">
-                        {booking.firstname + " " + booking.surname}
+                        {booking.firstname + " " + booking.lastname}
                       </TableCell>
                       <TableCell align="right">{booking.receiverEmail}</TableCell>
                       <TableCell align="right">{booking.phone}</TableCell>

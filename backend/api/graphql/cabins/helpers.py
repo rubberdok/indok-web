@@ -1,7 +1,7 @@
 from django.db import models
 
 
-def number_of_nights(check_in, check_out):
+def number_of_nights(check_out, check_in):
     return (check_out - check_in).days
 
 
@@ -18,4 +18,4 @@ def price(cabins, check_in, check_out, internal_participants, external_participa
         price_pr_night = cabins.aggregate(models.Sum("external_price"))[
             "external_price__sum"
         ]
-    return price_pr_night * number_of_nights(check_in, check_out)
+    return price_pr_night * number_of_nights(check_out, check_in)

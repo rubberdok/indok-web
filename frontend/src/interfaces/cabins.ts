@@ -1,5 +1,3 @@
-import { ChangeEvent } from "react";
-
 export interface BasicBooking {
   firstname: string;
   lastname: string;
@@ -7,13 +5,21 @@ export interface BasicBooking {
   receiverEmail: string;
 }
 
-export interface Booking extends BasicBooking {
+export interface PublicBooking {
   id: string;
   checkIn: string;
   checkOut: string;
+  cabins: Cabin[];
+}
+
+interface Participants {
+  internalParticipants: number;
+  externalParticipants: number;
+}
+
+export interface Booking extends BasicBooking, PublicBooking, Participants {
   price: number;
   isTentative: boolean;
-  cabins: Cabin[];
 }
 
 export interface Cabin {
@@ -24,31 +30,7 @@ export interface Cabin {
   externalPrice: number;
 }
 
-export interface ContractProps {
-  contractData: {
-    firstname: string | null;
-    lastname: string | null;
-    cabins: string[];
-    fromDate: string;
-    toDate: string;
-    price: number;
-  };
-}
-
-export type InputFieldsEvent =
-  | ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  | React.ChangeEvent<{ name?: string | undefined; value: unknown }>;
-
-export interface ContactInfoValidations {
-  firstname: boolean;
-  lastname: boolean;
-  receiverEmail: boolean;
-  phone: boolean;
-  internalParticipants: boolean;
-  externalParticipants: boolean;
-}
-
-export interface ContactInfo extends BasicBooking {
-  internalParticipants: number;
-  externalParticipants: number;
-}
+export type ContactInfo = BasicBooking & Participants;
+export type ContactInfoValidations = {
+  [key in keyof ContactInfo]: boolean;
+};

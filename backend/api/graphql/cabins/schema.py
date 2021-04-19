@@ -1,21 +1,24 @@
 import graphene
 
-from api.graphql.cabins.types import BookingType, CabinType
+from api.graphql.cabins.types import AllBookingsType, CabinType, AdminBookingType
 from api.graphql.cabins.mutations import (
-    BookingMutation,
+    CreateBooking,
+    UpdateBooking,
     SendEmail,
 )
 from api.graphql.cabins.resolvers import CabinResolvers
 
 
 class CabinMutations(graphene.ObjectType):
-    mutate_booking = BookingMutation.Field()
+    create_booking = CreateBooking.Field()
+    update_booking = UpdateBooking.Field()
     send_email = SendEmail.Field()
 
 
 class CabinQueries(graphene.ObjectType, CabinResolvers):
-    all_bookings = graphene.List(
-        BookingType,
+    all_bookings = graphene.List(AllBookingsType)
+    admin_all_bookings = graphene.List(
+        AdminBookingType,
         before=graphene.String(required=False),
         after=graphene.String(required=False),
     )

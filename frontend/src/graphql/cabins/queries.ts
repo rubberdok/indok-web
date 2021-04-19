@@ -1,8 +1,21 @@
 import { gql } from "@apollo/client";
 
 export const QUERY_ALL_BOOKINGS = gql`
-  query AllBookings($after: String) {
-    allBookings(after: $after) {
+  query AllBookings {
+    allBookings {
+      id
+      checkIn
+      checkOut
+      cabins {
+        id
+        name
+      }
+    }
+  }
+`;
+export const QUERY_ADMIN_ALL_BOOKINGS = gql`
+  query AdminAllBookings($after: String) {
+    adminAllBookings(after: $after) {
       id
       firstname
       lastname
@@ -10,13 +23,14 @@ export const QUERY_ALL_BOOKINGS = gql`
       receiverEmail
       checkIn
       checkOut
-      price
-      isTentative
       cabins {
         id
         name
       }
-      timestamp
+      externalParticipants
+      internalParticipants
+      price
+      isTentative
     }
   }
 `;

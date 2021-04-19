@@ -3,15 +3,15 @@ import graphene
 from django.utils import timezone
 
 from .helpers import price
-from .types import BookingType
+from .types import AllBookingsType
 from apps.cabins.models import Booking as BookingModel
 from apps.cabins.models import Cabin as CabinModel
 from .mail import send_admin_reservation_mail, send_user_reservation_mail
 from .validators import create_booking_validation
+from graphql_jwt.decorators import login_required, permission_required
 
 
 class BookingInput(graphene.InputObjectType):
-    id = graphene.ID()
     firstname = graphene.String()
     lastname = graphene.String()
     phone = graphene.String()
@@ -21,42 +21,82 @@ class BookingInput(graphene.InputObjectType):
     internal_participants = graphene.Int()
     external_participants = graphene.Int()
     cabins = graphene.List(graphene.Int)
-    is_tentative = graphene.Boolean()
 
 
 class EmailInput(BookingInput):
     email_type = graphene.String()
 
 
-class BookingMutation(graphene.Mutation):
+class UpdateBookingInput(BookingInput):
+    id = graphene.ID(required=True)
+    is_tentative = graphene.Boolean()
+
+
+class CreateBooking(graphene.Mutation):
     class Arguments:
         booking_data = BookingInput()
 
     ok = graphene.Boolean()
-    booking = graphene.Field(BookingType)
+    booking = graphene.Field(AllBookingsType)
 
     def mutate(
         self,
         info,
         booking_data,
     ):
-
-        # Validations
+        ok = True
+        # Check that incoming fields are ok
         create_booking_validation(booking_data)
-        if booking_data.id and BookingModel.objects.filter(pk=booking_data.id).exists():
-            booking = BookingModel.objects.get(pk=booking_data.id)
-        else:
-            booking = BookingModel()
+        booking = BookingModel()
         for input_field, input_value in booking_data.items():
             if input_field and input_field != "cabins":
                 setattr(booking, input_field, input_value)
         booking.timestamp = timezone.now()
+        booking.is_tentative = True
         booking.save()
-        if not booking.id:
-            booking.cabins.set(CabinModel.objects.filter(id__in=booking_data.cabins))
-            booking.save()
+        booking.cabins.set(CabinModel.objects.filter(id__in=booking_data.cabins))
+        booking.save()
+
+        return CreateBooking(booking=booking, ok=ok)
+
+
+class UpdateBooking(graphene.Mutation):
+    class Arguments:
+        booking_data = UpdateBookingInput()
+
+    ok = graphene.Boolean()
+    booking = graphene.Field(AllBookingsType)
+
+    @login_required
+    @permission_required("cabins.update_cabin")
+    def mutate(
+        self,
+        info,
+        booking_data,
+    ):
         ok = True
-        return BookingMutation(booking=booking, ok=ok)
+        print(info.context.user.username, info.context.user.is_superuser)
+        # Fetch booking object if id is provided
+        if BookingModel.objects.filter(pk=booking_data.id).exists():
+            booking = BookingModel.objects.get(pk=booking_data.id)
+            # Check that incoming fields are ok
+            create_booking_validation(booking_data)
+            for input_field, input_value in booking_data.items():
+                print(input_field)
+                if input_field and input_field != "cabins":
+                    setattr(booking, input_field, input_value)
+            booking.save()
+            if booking_data.cabins:
+                booking.cabins.set(
+                    CabinModel.objects.filter(id__in=booking_data.cabins)
+                )
+                booking.save()
+            return UpdateBooking(booking=booking, ok=ok)
+        else:
+            return UpdateBooking(
+                booking=None,
+                ok=False,
+            )
 
 
 class SendEmail(graphene.Mutation):

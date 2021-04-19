@@ -6,7 +6,26 @@ from apps.cabins.models import Cabin as CabinModel
 from apps.cabins.models import Booking as BookingModel
 
 
-class BookingType(DjangoObjectType):
+class AllBookingsType(DjangoObjectType):
+    """
+    Booking type for fields available for not logged in users
+    """
+
+    class Meta:
+        model = BookingModel
+        fields = [
+            "id",
+            "check_in",
+            "check_out",
+            "cabins",
+        ]
+
+
+class AdminBookingType(DjangoObjectType):
+    """
+    Booking type for admin users
+    """
+
     price = graphene.Int(source="price")
     number_of_nights = graphene.Int(source="number_of_nights")
     is_internal_price = graphene.Int(source="is_internal_price")
@@ -18,3 +37,4 @@ class BookingType(DjangoObjectType):
 class CabinType(DjangoObjectType):
     class Meta:
         model = CabinModel
+        fields = ["id", "name", "max_guests", "internal_price", "external_price"]

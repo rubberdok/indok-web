@@ -16,8 +16,8 @@ def create_booking_validation(booking_data):
         )
     if booking_data.receiver_email:
         email_validation(booking_data.receiver_email)
-    if booking_data.firstname or booking_data.surname:
-        name_validation(booking_data.firstname, booking_data.surname)
+    if booking_data.firstname or booking_data.lastname:
+        name_validation(booking_data.firstname, booking_data.lastname)
     if booking_data.phone:
         booking_data.phone = strip_phone_number(booking_data.phone)
         norwegian_phone_number_validation(booking_data.phone)
