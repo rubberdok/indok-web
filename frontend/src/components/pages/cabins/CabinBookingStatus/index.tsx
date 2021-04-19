@@ -5,7 +5,7 @@ import { DatePick } from "src/pages/cabins/book";
 import dayjs from "dayjs";
 import { ReactNode } from "react";
 import { TypographyProps } from "@material-ui/core/Typography";
-import { toStringChosenCabins } from "@utils/cabins";
+import { calculatePrice, toStringChosenCabins } from "@utils/cabins";
 
 interface Props {
   chosenCabins: Cabin[];
@@ -78,7 +78,7 @@ const CabinBookingStatus: NextPage<Props> = ({ chosenCabins, datePick, contactIn
               }
               placement="right"
             >
-              <Box display="inline">20000</Box>
+              <Box display="inline">{calculatePrice(chosenCabins, contactInfo, datePick)} kr</Box>
             </Tooltip>
           </InfoText>
         </>
