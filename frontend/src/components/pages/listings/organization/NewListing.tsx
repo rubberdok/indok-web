@@ -33,7 +33,6 @@ const emptyListing: ListingInput = {
 
 /**
  * @description Page for creating new listings, navigates to the newly created listing upon completion
- * @param defaultOrganizationId - Optional id of the organization for which to create the listing
  */
 const NewListing: React.FC<{
   defaultOrganizationId?: string;

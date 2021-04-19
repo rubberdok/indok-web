@@ -6,8 +6,6 @@ import { ChangeEventHandler, useState } from "react";
 /**
  * @description component for a simple markdown form with a live preview
  * @todo Add a more user-friendly way of interacting with markdown, i.e. allowing users to set heading level through a UI
- * @param markdown: string, the string containing the markdown content
- * @param onTextChange: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>, the function to be called when editing the markdown content.
  */
 const MarkdownForm: React.FC<{
   markdown: string;

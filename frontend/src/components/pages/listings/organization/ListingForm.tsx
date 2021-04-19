@@ -33,13 +33,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 /**
- * @description A form to create or edit a listing
+ * A form to create or edit a listing
  *
- * @param listing: ListingInput, the current state of the listing
- * @param setListing: (state: ListingInput) => void, the function for setting the listing state
- * @param onSubmit: (e: React.MouseEvent<HTMLButtonElement>) => void, the function to call when submitting
- * @param organizations: Organization[] | undefined, a list of organizations which the user is part of.
- * @returns ListingForm: React.FC, the listing form.
  */
 const ListingForm: React.FC<{
   listing: ListingInput;
@@ -51,8 +46,6 @@ const ListingForm: React.FC<{
 
   /**
    * @description Helper method to handle changes to TextFields
-   * @param event
-   * @param property the property on state to update, e.g. description
    */
   const handlePropertyChange = (
     event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
@@ -63,8 +56,6 @@ const ListingForm: React.FC<{
 
   /**
    * @description Helper method to handle changes to boolean fields using checkboxes.
-   * @param event
-   * @param property the property on state to update, e.g. case
    */
   const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>, property: keyof ListingInput) => {
     setListing({ ...listing, [property]: event.target.checked });
