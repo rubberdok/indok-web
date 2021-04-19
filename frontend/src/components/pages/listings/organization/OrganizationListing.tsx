@@ -20,9 +20,13 @@ const OrganizationListing: React.FC<{ listing: Listing }> = ({ listing }) => (
           <ReactMarkdown renderers={renderers}>{listing.description}</ReactMarkdown>
         </CardContent>
         <CardActions>
-          <Link passHref href={`/orgs/${listing.organization.id}/listings/${listing.id}/edit/`}>
-            <Button startIcon={<Create />}>Rediger</Button>
-          </Link>
+          <Grid container justify="flex-end">
+            <Grid item>
+              <Link passHref href={`/orgs/${listing.organization.id}/listings/${listing.id}/edit/`}>
+                <Button startIcon={<Create />}>Rediger</Button>
+              </Link>
+            </Grid>
+          </Grid>
         </CardActions>
       </Card>
     </Grid>
