@@ -71,6 +71,7 @@ const EditListingPage: NextPage = () => {
                     },
                   });
                 }}
+                onCancel={() => router.back()}
               />
             )}
           </Grid>

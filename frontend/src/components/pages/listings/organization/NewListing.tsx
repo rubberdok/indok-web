@@ -93,6 +93,7 @@ const NewListing: React.FC<{
                   },
                 });
               }}
+              onCancel={() => router.back()}
             />
           </Grid>
         </Grid>

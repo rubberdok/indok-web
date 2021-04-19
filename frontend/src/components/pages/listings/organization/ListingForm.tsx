@@ -19,7 +19,7 @@ import {
   InputAdornment,
   InputLabel,
 } from "@material-ui/core";
-import { HelpOutline, Save } from "@material-ui/icons";
+import { Close, HelpOutline, Save } from "@material-ui/icons";
 import React, { ChangeEvent } from "react";
 
 const useStyles = makeStyles((theme) => ({
@@ -39,15 +39,17 @@ const useStyles = makeStyles((theme) => ({
  * Props:
  * - the state of the listing to create/edit
  * - setListing function to set the state
- * - onSubmit function for updating the database
+ * - onSubmit callback for updating the database
+ * - onCancel callback for discarding changes
  * - organizations of which the listing editor is an authorized member
  */
 const ListingForm: React.FC<{
   listing: ListingInput;
   setListing: (listing: ListingInput) => void;
   onSubmit: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  onCancel: () => void;
   organizations: Organization[];
-}> = ({ listing, setListing, onSubmit, organizations }) => {
+}> = ({ listing, setListing, onSubmit, onCancel, organizations }) => {
   const classes = useStyles();
 
   /**
@@ -251,7 +253,12 @@ const ListingForm: React.FC<{
         </Grid>
       </CardContent>
       <CardActions>
-        <Grid container justify="flex-end">
+        <Grid container justify="flex-end" spacing={1}>
+          <Grid item>
+            <Button variant="contained" onClick={onCancel} startIcon={<Close />}>
+              Avbryt
+            </Button>
+          </Grid>
           <Grid item>
             <Button color="primary" variant="contained" onClick={onSubmit} startIcon={<Save />}>
               Lagre
