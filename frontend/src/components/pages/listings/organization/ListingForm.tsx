@@ -67,7 +67,7 @@ const ListingForm: React.FC<{
       <CardContent>
         <Grid container direction="column" spacing={4}>
           <Grid item>
-            <Typography variant="h5">Organisasjon</Typography>
+            <Typography variant="h5" component="h2">Organisasjon</Typography>
             {organizations && listing.organization && (
               <>
                 {organizations.length === 1 ? (
@@ -101,7 +101,7 @@ const ListingForm: React.FC<{
             )}
           </Grid>
           <Grid item>
-            <Typography variant="h5">Informasjon</Typography>
+            <Typography variant="h5" component="h2">Informasjon</Typography>
             <TextField
               label="Tittel"
               variant="filled"
@@ -164,7 +164,7 @@ const ListingForm: React.FC<{
             </Grid>
           </Grid>
           <Grid item>
-            <Typography variant="h5">Opptaksprosessen</Typography>
+            <Typography variant="h5" component="h2">Opptaksprosessen</Typography>
             <Grid container className={classes.inputGroup}>
               <Grid item xs>
                 <FormControlLabel
@@ -207,7 +207,7 @@ const ListingForm: React.FC<{
           <Grid item>
             <Grid container direction="row" spacing={1} alignItems="flex-end">
               <Grid item>
-                <Typography variant="h5">Beskrivelse</Typography>
+                <Typography variant="h5" component="h2">Beskrivelse</Typography>
               </Grid>
               <Grid item>
                 <Tooltip
