@@ -1,4 +1,4 @@
-import MarkdownForm from "@components/pages/listings/detail/MarkdownForm";
+import MarkdownForm from "@components/pages/listings/markdown/MarkdownForm";
 import { ListingInput } from "@interfaces/listings";
 import { Organization } from "@interfaces/organizations";
 import {
@@ -16,8 +16,10 @@ import {
   Typography,
   Checkbox,
   FormControlLabel,
+  Tooltip,
+  InputAdornment,
 } from "@material-ui/core";
-import Save from "@material-ui/icons/Save";
+import { HelpOutline, Save } from "@material-ui/icons";
 import React, { ChangeEvent } from "react";
 
 const useStyles = makeStyles((theme) => ({
@@ -29,26 +31,23 @@ const useStyles = makeStyles((theme) => ({
       flexDirection: "column",
     },
   },
-  root: {
-    marginBottom: theme.spacing(4),
-  },
 }));
 
 /**
  * @description A form to create or edit a listing
  *
- * @param state: ListingInput, the current state of the listing
- * @param setState: (state: ListingInput) => void, the function for setting the listing state
+ * @param listing: ListingInput, the current state of the listing
+ * @param setListing: (state: ListingInput) => void, the function for setting the listing state
  * @param onSubmit: (e: React.MouseEvent<HTMLButtonElement>) => void, the function to call when submitting
  * @param organizations: Organization[] | undefined, a list of organizations which the user is part of.
  * @returns ListingForm: React.FC, the listing form.
  */
 const ListingForm: React.FC<{
-  state: ListingInput;
-  setState: (state: ListingInput) => void;
+  listing: ListingInput;
+  setListing: (listing: ListingInput) => void;
   onSubmit: (e: React.MouseEvent<HTMLButtonElement>) => void;
   organizations: Organization[];
-}> = ({ state, setState, onSubmit, organizations }) => {
+}> = ({ listing, setListing, onSubmit, organizations }) => {
   const classes = useStyles();
 
   /**
@@ -58,9 +57,9 @@ const ListingForm: React.FC<{
    */
   const handlePropertyChange = (
     event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
-    property: Extract<keyof typeof state, string>
+    property: keyof ListingInput
   ) => {
-    setState({ ...state, [property]: event.target.value });
+    setListing({ ...listing, [property]: event.target.value });
   };
 
   /**
@@ -68,22 +67,53 @@ const ListingForm: React.FC<{
    * @param event
    * @param property the property on state to update, e.g. case
    */
-  const handleCheckboxChange = (
-    event: ChangeEvent<HTMLInputElement>,
-    property: Extract<keyof typeof state, string>
-  ) => {
-    setState({ ...state, [property]: event.target.checked });
+  const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>, property: keyof ListingInput) => {
+    setListing({ ...listing, [property]: event.target.checked });
   };
 
   return (
-    <Card className={classes.root}>
+    <Card>
       <CardContent>
-        <Grid container direction="column" spacing={4}>
+        <Grid container direction="column" spacing={1}>
           <Grid item>
-            <Typography variant="h3">Informasjon</Typography>
+            <Typography variant="h5">Organisasjon</Typography>
+            {organizations && listing.organization && (
+              <>
+                {organizations.length === 1 ? (
+                  <Typography>{listing.organization.name}</Typography>
+                ) : (
+                  <FormControl fullWidth variant="outlined">
+                    <InputLabel id="select-organization-label">Velg organisasjon</InputLabel>
+                    <Select
+                      labelId="select-organization-label"
+                      id="select-organization"
+                      value={listing.organization.id}
+                      onChange={(e) =>
+                        setListing({
+                          ...listing,
+                          organization:
+                            organizations.find((organization) => organization.id === e.target.value) ||
+                            listing.organization,
+                        })
+                      }
+                      fullWidth
+                    >
+                      {organizations.map((organization) => (
+                        <MenuItem key={organization.id} value={organization.id}>
+                          {organization.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                )}
+              </>
+            )}
+          </Grid>
+          <Grid item>
+            <Typography variant="h5">Informasjon</Typography>
             <TextField
               label="Tittel"
-              value={state.title}
+              value={listing.title}
               fullWidth
               onChange={(e) => handlePropertyChange(e, "title")}
               required
@@ -93,42 +123,63 @@ const ListingForm: React.FC<{
             <Grid container spacing={2} className={classes.inputGroup}>
               <Grid item xs>
                 <TextField
-                  label="Søknadsfrist"
-                  value={state.deadline || ""}
+                  label="Publiseringsdato"
+                  value={listing.startDatetime || ""}
                   fullWidth
                   type="date"
-                  required
-                  onChange={(e) => handlePropertyChange(e, "deadline")}
+                  onChange={(e) => handlePropertyChange(e, "startDatetime")}
+                  InputLabelProps={{ shrink: true }}
                 />
               </Grid>
               <Grid item xs>
                 <TextField
-                  label="Åpningsdato"
-                  value={state.startDatetime || ""}
+                  label="Søknadsfrist"
+                  value={listing.deadline || ""}
                   fullWidth
                   type="date"
-                  onChange={(e) => handlePropertyChange(e, "startDatetime")}
+                  required
+                  onChange={(e) => handlePropertyChange(e, "deadline")}
+                  InputLabelProps={{ shrink: true }}
                 />
               </Grid>
               <Grid item xs>
                 <TextField
                   label="Søknadslink"
-                  value={state.url || ""}
+                  value={listing.url || ""}
                   fullWidth
                   onChange={(e) => handlePropertyChange(e, "url")}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <Tooltip
+                          placement="left"
+                          enterTouchDelay={0}
+                          leaveTouchDelay={2500}
+                          title={
+                            <>
+                              <Typography>Søknad på indokntnu.no</Typography>
+                              Du kan også lage søknad og håndtere alt av søknadsbehandling på denne nettsida.
+                            </>
+                          }
+                        >
+                          <HelpOutline />
+                        </Tooltip>
+                      </InputAdornment>
+                    ),
+                  }}
                 />
               </Grid>
             </Grid>
           </Grid>
           <Grid item>
-            <Typography variant="h4">Opptaksprosessen</Typography>
+            <Typography variant="h5">Opptaksprosessen</Typography>
             <Grid container className={classes.inputGroup}>
               <Grid item xs>
                 <FormControlLabel
                   control={
                     <Checkbox
                       color="primary"
-                      checked={state.application}
+                      checked={listing.application ?? false}
                       onChange={(e) => handleCheckboxChange(e, "application")}
                     />
                   }
@@ -140,7 +191,7 @@ const ListingForm: React.FC<{
                   control={
                     <Checkbox
                       color="primary"
-                      checked={state.interview}
+                      checked={listing.interview ?? false}
                       onChange={(e) => handleCheckboxChange(e, "interview")}
                     />
                   }
@@ -150,7 +201,11 @@ const ListingForm: React.FC<{
               <Grid item xs>
                 <FormControlLabel
                   control={
-                    <Checkbox color="primary" checked={state.case} onChange={(e) => handleCheckboxChange(e, "case")} />
+                    <Checkbox
+                      color="primary"
+                      checked={listing.case ?? false}
+                      onChange={(e) => handleCheckboxChange(e, "case")}
+                    />
                   }
                   label={"Case"}
                 />
@@ -158,43 +213,37 @@ const ListingForm: React.FC<{
             </Grid>
           </Grid>
           <Grid item>
-            <Typography variant="h3" gutterBottom>
-              Organisasjon
-            </Typography>
-            {organizations && state.organization && (
-              <FormControl fullWidth variant="outlined">
-                <InputLabel id="select-organization-label">Velg organisasjon</InputLabel>
-                <Select
-                  labelId="select-organization-label"
-                  id="select-organization"
-                  value={state.organization.id}
-                  disabled={organizations.length === 1}
-                  onChange={(e) =>
-                    setState({
-                      ...state,
-                      organization:
-                        organizations.find((organization) => organization.id === e.target.value) || state.organization,
-                    })
+            <Grid container direction="row" spacing={1} alignItems="flex-end">
+              <Grid item>
+                <Typography variant="h5">Beskrivelse</Typography>
+              </Grid>
+              <Grid item>
+                <Tooltip
+                  placement="right"
+                  enterTouchDelay={0}
+                  leaveTouchDelay={3000}
+                  title={
+                    <>
+                      <Typography>Vi støtter Markdown!</Typography>
+                      Enkel guide:
+                      <br />
+                      ##### Overskrift
+                      <br />*<em>Kursiv</em>*
+                      <br />
+                      **<b>Fet skrift</b>**
+                    </>
                   }
-                  fullWidth
                 >
-                  {organizations.map((organization) => (
-                    <MenuItem key={organization.id} value={organization.id}>
-                      {organization.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            )}
-          </Grid>
-          <Grid item>
-            <Typography variant="h3">Beskrivelse</Typography>
-            <MarkdownForm markdown={state.description} onTextChange={(e) => handlePropertyChange(e, "description")} />
+                  <HelpOutline />
+                </Tooltip>
+              </Grid>
+            </Grid>
+            <MarkdownForm markdown={listing.description} onTextChange={(e) => handlePropertyChange(e, "description")} />
           </Grid>
         </Grid>
       </CardContent>
       <CardActions>
-        <Grid container direction="row-reverse">
+        <Grid container justify="flex-end">
           <Grid item>
             <Button color="primary" variant="contained" onClick={onSubmit} startIcon={<Save />}>
               Lagre
