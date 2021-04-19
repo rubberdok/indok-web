@@ -23,7 +23,7 @@ class UserFactory(DjangoModelFactory):
     class Meta:
         model = get_user_model()
 
-    username = fake.user_name()
+    username = factory.Sequence(lambda n: "user%d" % n)
     first_name = fake.first_name()
     last_name = fake.last_name()
     email = fake.email()
