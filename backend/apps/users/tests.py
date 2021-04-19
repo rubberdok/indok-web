@@ -52,15 +52,21 @@ class UsersResolversTestCase(UsersBaseTestCase):
         response = self.query(query)
         self.assertResponseHasErrors(response)
 
+        # Fetching content of response
+        content = json.loads(response.content)
+
+        # Should not leak any user data
+        self.assertIsNone(content["data"]["allUsers"])
+
         # Regular logged in users users should not be able to retrieve all users
         response = self.query(query, user=self.user)
         self.assertResponseHasErrors(response)
+        content = json.loads(response.content)
+        self.assertIsNone(content["data"]["allUsers"])
 
         # Only super users (is_staffmember) should be able to retrieve all users
         response = self.query(query, user=self.super_user)
         self.assertResponseNoErrors(response)
-
-        # Fetching content of response
         content = json.loads(response.content)
 
         # There are three users in the database (AnonymousUser, self.user and self.super_user)
