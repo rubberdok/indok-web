@@ -9,11 +9,11 @@ const useStyles = makeStyles((theme) => ({
 
 /**
  * component for the main body of a listing's detail
+ *
  * props: the listing to render
  */
 const ListingBody: React.FC = (props) => {
   const classes = useStyles();
-
   return (
     <Card className={classes.root}>
       <CardContent>{props.children}</CardContent>

@@ -86,9 +86,9 @@ class QuestionType(DjangoObjectType):
 
 class FormType(DjangoObjectType):
     questions = graphene.List(QuestionType)
-    responders = graphene.List(UserType, user_id=graphene.ID())
+    responders = graphene.List(UserType, user_id=graphene.ID(), required=True)
     responder = graphene.Field(UserType, user_id=graphene.ID(required=True))
-    responses = graphene.List(ResponseType)
+    responses = graphene.List(ResponseType, required=True)
 
     class Meta:
         model = Form

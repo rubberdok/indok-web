@@ -2,7 +2,7 @@ import uuid
 
 from django.conf import settings
 from django.db import models
-from django.db.models import UniqueConstraint, F
+from django.db.models import UniqueConstraint
 from django.db.models.constraints import CheckConstraint
 from django.db.models.fields import UUIDField
 from django.db.models.query_utils import Q

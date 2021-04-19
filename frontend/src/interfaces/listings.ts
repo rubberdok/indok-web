@@ -9,9 +9,18 @@ export interface Listing {
   startDatetime: string;
   deadline: string;
   endDatetime: string;
-  organization?: Organization;
   url?: string;
-  form?: Form;
   hero?: string;
   logo?: string;
+  organization: Organization;
+  form?: Form;
+  chips: string[];
+}
+
+export interface ListingInput extends Omit<Listing, "startDatetime" | "endDatetime" | "chips" | "slug"> {
+  startDatetime?: string;
+  endDatetime?: string;
+  case?: boolean;
+  application?: boolean;
+  interview?: boolean;
 }

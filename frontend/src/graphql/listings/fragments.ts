@@ -11,6 +11,7 @@ export const LISTING_FRAGMENT = gql`
     deadline
     endDatetime
     url
+    chips
     organization {
       id
       name

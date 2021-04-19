@@ -4,11 +4,13 @@ import ListingBanner from "@components/pages/listings/detail/ListingBanner";
 import ListingBody from "@components/pages/listings/detail/ListingBody";
 import { LISTING_APPLICATION } from "@graphql/listings/queries";
 import { Listing } from "@interfaces/listings";
-import { Button, Container, Grid, Hidden, makeStyles, Paper, Typography } from "@material-ui/core";
+import { Button, Container, Grid, Hidden, makeStyles, Paper } from "@material-ui/core";
 import ArrowForward from "@material-ui/icons/ArrowForward";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
+import ReactMarkdown from "react-markdown";
+import renderers from "@components/pages/listings/markdown/renderers";
 import InfoCard from "@components/pages/listings/detail/InfoCard";
 import TitleCard from "@components/pages/listings/detail/TitleCard";
 
@@ -47,6 +49,13 @@ const ListingPage: NextPage = () => {
 
   const classes = useStyles();
 
+  const descriptionWithTitle = (desc: string) => {
+    if (!desc.startsWith("#")) {
+      return "### Om vervet\n" + desc;
+    }
+    return desc;
+  };
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error</p>;
 
@@ -81,18 +90,9 @@ const ListingPage: NextPage = () => {
                 </Grid>
                 <Grid item>
                   <ListingBody>
-                    <Grid container direction="column" justify="flex-start">
-                      <Grid item>
-                        <Typography variant="h4" component="h2" gutterBottom>
-                          Beskrivelse
-                        </Typography>
-                      </Grid>
-                      <Grid item>
-                        <Typography variant="body1" component="span" paragraph className={classes.description}>
-                          {data.listing.description}
-                        </Typography>
-                      </Grid>
-                    </Grid>
+                    <ReactMarkdown renderers={renderers}>
+                      {descriptionWithTitle(data.listing.description)}
+                    </ReactMarkdown>
                   </ListingBody>
                 </Grid>
               </Grid>

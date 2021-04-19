@@ -32,3 +32,47 @@ export const LISTING_RESPONSES = gql`
     }
   }
 `;
+
+export const USER_WITH_ORGANIZATIONS = gql`
+  query {
+    user {
+      organizations {
+        id
+        name
+      }
+    }
+  }
+`;
+
+export const LISTING_AND_USER_WITH_ORGANIZATIONS = gql`
+  query listing($id: ID!) {
+    listing(id: $id) {
+      id
+      title
+      description
+      startDatetime
+      deadline
+      endDatetime
+      url
+      organization {
+        id
+        name
+      }
+    }
+    user {
+      organizations {
+        id
+        name
+      }
+    }
+  }
+`;
+
+export const LISTING = gql`
+  ${LISTING_FRAGMENT}
+  query listing($id: ID!) {
+    listing(id: $id) {
+      ...ListingFragment
+    }
+  }
+`;

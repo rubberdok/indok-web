@@ -15,7 +15,6 @@ class BaseListingInput(graphene.InputObjectType):
     end_datetime = graphene.DateTime()
     deadline = graphene.DateTime()
     url = graphene.String()
-    organization_id = graphene.ID()
     form_id = graphene.ID()
     application = graphene.Boolean()
     interview = graphene.Boolean()
@@ -45,7 +44,8 @@ class CreateListing(graphene.Mutation):
         listing = Listing()
 
         for k, v in listing_data.items():
-            setattr(listing, k, v)
+            if v is not None:
+                setattr(listing, k, v)
         setattr(
             listing,
             "end_datetime",
