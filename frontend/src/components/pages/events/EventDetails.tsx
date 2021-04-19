@@ -34,8 +34,8 @@ import EditEvent from "./EventEditor";
 
 const useStyles = makeStyles((theme) => ({
   container: {
-    paddingTop: theme.spacing(8),
-    paddingBottom: theme.spacing(8),
+    paddingTop: theme.spacing(9),
+    paddingBottom: theme.spacing(9),
   },
   paper: {
     color: theme.palette.text.primary,
@@ -68,6 +68,9 @@ const useStyles = makeStyles((theme) => ({
       height: "unset",
       marginRight: theme.spacing(2),
     },
+  },
+  backButton: {
+    marginLeft: -20,
   },
 }));
 
@@ -189,15 +192,17 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
       {openEditEvent && (
         <EditEvent open={openEditEvent} onClose={() => setOpenEditEvent(false)} event={eventData.event} />
       )}
-      <Box width="100%" py={10} bgcolor={theme.palette.background.paper}>
+      <Box width="100%" py={6} bgcolor={theme.palette.background.paper}>
         <Container>
           <Link href="/events" passHref>
-            <Button startIcon={<KeyboardBackspace />}>Tilbake til oversikt</Button>
+            <Button className={classes.backButton} startIcon={<KeyboardBackspace />}>
+              Tilbake til oversikt
+            </Button>
           </Link>
-          <Typography variant="h1" gutterBottom>
+          <Typography variant="h2" gutterBottom>
             {eventData.event.title}
           </Typography>
-          <Typography variant="subtitle1" display="block" gutterBottom>
+          <Typography variant="subtitle2" display="block" gutterBottom>
             Arrangert av {eventData.event.organization?.name}
           </Typography>
 
