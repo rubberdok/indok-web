@@ -63,6 +63,7 @@ const AnswerQuestion: React.FC<{
     case "DROPDOWN":
       return (
         <Select
+          fullWidth
           value={answer.answer}
           onChange={(e) => {
             // ugly typecasting, but necessary with Material UI's Select component

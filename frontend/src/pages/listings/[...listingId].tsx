@@ -11,7 +11,6 @@ import { NextPage } from "next";
 import { useRouter } from "next/router";
 import InfoCard from "@components/pages/listings/detail/InfoCard";
 import TitleCard from "@components/pages/listings/detail/TitleCard";
-import AnswerForm from "@components/forms/AnswerForm";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -98,7 +97,6 @@ const ListingPage: NextPage = () => {
                 </Grid>
               </Grid>
             </Grid>
-            <AnswerForm form={data.listing.form!} />
           </Container>
           <Hidden mdUp>
             <Paper className={classes.bottom}>
