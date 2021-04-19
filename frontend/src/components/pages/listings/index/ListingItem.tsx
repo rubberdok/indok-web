@@ -88,6 +88,17 @@ const timestamp = (datetime: string) => {
   }
 };
 
+const translateChip = (chip: string) => {
+  switch (chip) {
+    case "application":
+      return "søknad";
+    case "interview":
+      return "intervju";
+    default:
+      return chip;
+  }
+};
+
 /**
  * component for listing item in overview of listings
  * props: the listing to render
@@ -135,7 +146,7 @@ const ListingItem: React.FC<{
                 {listing.chips.map((chip) => (
                   <Grid item key={chip}>
                     <Chip
-                      label={chip}
+                      label={translateChip(chip)}
                       size="small"
                       style={{
                         fontSize: 12,
