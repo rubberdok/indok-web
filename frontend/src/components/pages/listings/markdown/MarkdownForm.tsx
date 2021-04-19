@@ -9,8 +9,9 @@ import { ChangeEventHandler, useState } from "react";
  */
 const MarkdownForm: React.FC<{
   markdown: string;
-  onTextChange: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
-}> = ({ markdown, onTextChange }) => {
+  onChange?: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
+  onBlur?: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
+}> = ({ markdown, onChange, onBlur }) => {
   const [view, setView] = useState<"edit" | "preview">("edit");
 
   return (
@@ -28,7 +29,16 @@ const MarkdownForm: React.FC<{
         <Tab label="Forhåndsvisning" value="preview" />
       </Tabs>
       {view === "edit" && (
-        <TextField fullWidth multiline rows={20} variant="outlined" value={markdown} onChange={onTextChange} />
+        <TextField 
+          id="markdown"
+          fullWidth
+          multiline
+          rows={20}
+          variant="outlined"
+          value={markdown}
+          onChange={onChange}
+          onBlur={onBlur}
+        />
       )}
       {view === "preview" && <ReactMarkdown renderers={renderers}>{markdown}</ReactMarkdown>}
     </>

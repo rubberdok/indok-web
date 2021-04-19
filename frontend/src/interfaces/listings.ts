@@ -17,8 +17,7 @@ export interface Listing {
   chips: string[];
 }
 
-export interface ListingInput extends Omit<Listing, "startDatetime" | "endDatetime" | "chips" | "slug"> {
-  startDatetime?: string;
+export interface ListingInput extends Omit<Listing, | "endDatetime" | "chips" | "slug"> {
   endDatetime?: string;
   case?: boolean;
   application?: boolean;

@@ -24,8 +24,8 @@ const EditListingPage: NextPage = () => {
     onCompleted: (data) =>
       setListing({
         ...(data.listing as ListingInput),
-        startDatetime: data.listing.startDatetime.slice(0, 10),
-        deadline: data.listing.deadline.slice(0, 10),
+        startDatetime: data.listing.startDatetime,
+        deadline: data.listing.deadline,
         application: data.listing.chips.includes("application"),
         interview: data.listing.chips.includes("interview"),
         case: data.listing.chips.includes("case"),
@@ -51,10 +51,8 @@ const EditListingPage: NextPage = () => {
             {listing && (
               <ListingForm
                 listing={listing}
-                setListing={setListing}
                 organizations={[listing.organization]}
-                onSubmit={(e) => {
-                  e.preventDefault();
+                onSubmit={(listing) => {
                   updateListing({
                     variables: {
                       id: listing.id,
@@ -62,8 +60,8 @@ const EditListingPage: NextPage = () => {
                         title: listing.title || undefined,
                         description: listing.description || undefined,
                         url: listing.url || undefined,
-                        startDatetime: listing.startDatetime ? `${listing.startDatetime}T00:00:00+02:00` : undefined,
-                        deadline: listing.deadline ? `${listing.deadline}T23:59:00+02:00` : undefined,
+                        startDatetime: listing.startDatetime || undefined, // defaults to today
+                        deadline: listing.deadline || undefined,
                         application: listing.application || undefined,
                         interview: listing.interview || undefined,
                         case: listing.case || undefined,

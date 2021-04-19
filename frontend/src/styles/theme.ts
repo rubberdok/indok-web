@@ -98,6 +98,7 @@ const theme = createMuiTheme({
     ...breakpoints,
   },
   shadows: Array(25).fill("none") as Shadows,
+
 });
 
 export default theme;

@@ -9,6 +9,12 @@ import { USER_WITH_ORGANIZATIONS } from "@graphql/listings/queries";
 import { useRouter } from "next/router";
 import { Organization } from "@interfaces/organizations";
 import Layout from "@components/Layout";
+import dayjs from "dayjs";
+import tz from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
+dayjs.extend(utc);
+dayjs.extend(tz);
+dayjs.tz.setDefault("europe/oslo");
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -20,8 +26,8 @@ const emptyListing: ListingInput = {
   id: "",
   description: "",
   title: "",
-  startDatetime: "",
-  deadline: "",
+  startDatetime: dayjs().toISOString(),
+  deadline: dayjs().hour(0).minute(0).toISOString(),
   organization: {
     name: "",
     id: "",
@@ -75,17 +81,18 @@ const NewListing: React.FC<{
           <Grid item xs={10}>
             <ListingForm
               listing={listing}
-              setListing={setListing}
               organizations={data?.user.organizations || []}
-              onSubmit={() => {
+              onSubmit={(listing) => {
                 createListing({
                   variables: {
                     input: {
+                      // Required fields
                       title: listing.title,
+                      deadline: listing.deadline.slice(16),
+                      organizationId: listing.organization.id,
+                      // Optional fields
                       description: listing.description || undefined,
-                      startDatetime: listing.startDatetime ? `${listing.startDatetime}T00:00:00+02:00` : undefined,
-                      deadline: `${listing.deadline}T23:59:00+02:00`,
-                      organizationId: listing.organization?.id,
+                      startDatetime: listing.startDatetime?.slice(16) || undefined, // defaults to today
                       case: listing.case || undefined,
                       interview: listing.interview || undefined,
                       application: listing.application || undefined,
