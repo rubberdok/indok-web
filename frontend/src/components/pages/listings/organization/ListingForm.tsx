@@ -8,7 +8,6 @@ import {
   CardContent,
   FormControl,
   Grid,
-  InputLabel,
   makeStyles,
   MenuItem,
   Select,
