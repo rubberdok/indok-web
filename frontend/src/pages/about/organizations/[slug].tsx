@@ -1,13 +1,11 @@
 import Layout from "@components/Layout";
-import { Box, Card, Container, Grid, makeStyles, Paper, Typography } from "@material-ui/core";
-import typography from "@styles/typography";
+import { Box, Card, Chip, Container, Divider, Grid, makeStyles, Paper, Typography } from "@material-ui/core";
+import MailOutlineIcon from "@material-ui/icons/MailOutline";
+import PhoneIcon from "@material-ui/icons/Phone";
 import { getPostBySlug, getPostsSlugs } from "@utils/posts";
 import { NextPage } from "next";
 import React from "react";
 import ReactMarkdown from "react-markdown";
-import IconButton from "@material-ui/core/IconButton";
-import MailOutlineIcon from "@material-ui/icons/MailOutline";
-import PhoneIcon from "@material-ui/icons/Phone";
 
 type ArticleProps = {
   params: {
@@ -80,25 +78,6 @@ const Article: NextPage<ArticleProps> = ({ post, frontmatter }) => {
                 <Typography variant="h4">{frontmatter.title}</Typography>
                 <img className={classes.logo} alt={frontmatter.alt} src={frontmatter.logo}></img>
               </Box>
-              {/* <Box px="56px" mb="56px" pb="24px" display="flex" alignItems="center" justifyContent="space-between">
-                {previousPost ? (
-                  <Link href={"/about/organizations/[slug]"} as={`/about/organizations/${previousPost.slug}`}>
-                    <a>← {previousPost.frontmatter.title}</a>
-                  </Link>
-                ) : (
-                  <div />
-                )}
-
-                <a href="./../organizations">Oversikt</a>
-
-                {nextPost ? (
-                  <Link href={"/about/organizations/[slug]"} as={`/about/organizations/${nextPost.slug}`}>
-                    <a>{nextPost.frontmatter.title} →</a>
-                  </Link>
-                ) : (
-                  <div />
-                )}
-              </Box> */}
             </Paper>
           </Grid>
         </Grid>
@@ -112,48 +91,33 @@ const Article: NextPage<ArticleProps> = ({ post, frontmatter }) => {
             />
           </Grid>
           <Grid item xs={4}>
-            {frontmatter.styre ? (
+            {frontmatter.styre && (
               <>
                 <Typography variant="h5" gutterBottom>
                   Styret
                 </Typography>
-                {Object.keys(frontmatter.styre).map((item: any) => (
+                {Object.keys(frontmatter.styre).map((item: any, index) => (
                   <>
+                    {index != 0 && <Divider />}
                     <Card key={item}>
                       <Box p={4}>
-                        {frontmatter.styre[item].avatar ? (
-                          <img
-                            className={classes.avatar}
-                            alt={frontmatter.alt}
-                            src={frontmatter.styre[item].avatar}
-                          ></img>
-                        ) : (
-                          ""
-                        )}
                         <Typography variant="body2">{frontmatter.styre[item].navn}</Typography>
-                        <Typography variant="body2">
-                          {frontmatter.styre[item].tittel} - tlf: {frontmatter.styre[item].telefon}
+                        <Typography variant="caption" gutterBottom>
+                          {frontmatter.styre[item].tittel}
                         </Typography>
-                        <Typography>
-                          <a href={"mailto:" + frontmatter.styre[item].mail}>
-                            <IconButton size="small" edge="start" aria-label="delete">
-                              <MailOutlineIcon />
-                            </IconButton>
-                          </a>
-                          <a href={"tel:" + frontmatter.styre[item].telefon}>
-                            <IconButton size="small" aria-label="delete">
-                              <PhoneIcon />
-                            </IconButton>
-                          </a>
-                        </Typography>
+                        <br />
+                        {frontmatter.styre[item].mail && (
+                          <Chip size="small" label={frontmatter.styre[item].mail} icon={<MailOutlineIcon />} />
+                        )}
+                        {frontmatter.styre[item].mail && frontmatter.styre[item].telefon && <br />}
+                        {frontmatter.styre[item].telefon && (
+                          <Chip size="small" label={frontmatter.styre[item].telefon} icon={<PhoneIcon />} />
+                        )}
                       </Box>
                     </Card>
-                    <br />
                   </>
                 ))}
               </>
-            ) : (
-              " "
             )}
           </Grid>
         </Grid>
