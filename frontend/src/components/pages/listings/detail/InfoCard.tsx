@@ -1,6 +1,7 @@
 import { Listing } from "@interfaces/listings";
 import { Button, Grid, makeStyles, Typography, CardContent, Card } from "@material-ui/core";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
+import Link from "next/link";
 
 const useStyles = makeStyles((theme) => ({
   descriptionText: {
@@ -48,9 +49,9 @@ const InfoCard: React.FC<{
             </Typography>
           </Grid>
           <Grid item>
-            <Button endIcon={<OpenInNewIcon />} href={`/about/organizations/${listing.organization?.slug}`}>
-              Les mer
-            </Button>
+            <Link passHref href={`/about/organizations/${listing.organization?.slug}`}>
+              <Button endIcon={<OpenInNewIcon />}>Les mer</Button>
+            </Link>
           </Grid>
         </Grid>
       </CardContent>
