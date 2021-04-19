@@ -12,11 +12,11 @@ const useStyles = makeStyles(() => ({
 }));
 
 /**
- * component to show an answer to a question on a form
+ * Component to show an answer to a question on a form.
  *
- * props:
+ * Props:
  * - the question on the form
- * - the responder's answer
+ * - the responder's answer (undefined if responder gave no answer)
  */
 const FormAnswer: React.FC<{
   question: Question;
@@ -36,9 +36,9 @@ const FormAnswer: React.FC<{
       {answer?.answer ? (
         <>
           {question.questionType === "MULTIPLE_CHOICE" || question.questionType === "DROPDOWN" ? (
-            <QuestionTypePreview question={question} value={answer.answer} />
+            <QuestionTypePreview question={question} answer={answer.answer} />
           ) : question.questionType === "CHECKBOXES" ? (
-            <QuestionTypePreview question={question} values={answer.answer.split("|||")} />
+            <QuestionTypePreview question={question} answers={answer.answer.split("|||")} />
           ) : (
             <Typography>{answer.answer}</Typography>
           )}

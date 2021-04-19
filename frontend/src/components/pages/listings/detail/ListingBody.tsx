@@ -8,9 +8,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 /**
- * component for the main body of a listing's detail
- *
- * props: the listing to render
+ * Wrapper component for the main body of a listing's detail.
  */
 const ListingBody: React.FC = (props) => {
   const classes = useStyles();

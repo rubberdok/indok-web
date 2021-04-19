@@ -6,8 +6,10 @@ import renderers from "@components/pages/listings/markdown/renderers";
 import ReactMarkdown from "react-markdown";
 
 /**
- * component for authorized organization members to administer their listing
- * props: the listing to administrate
+ * Component for authorized organization members to administer their listing.
+ *
+ * Props:
+ * - the listing to administrate
  */
 const OrganizationListing: React.FC<{ listing: Listing }> = ({ listing }) => (
   <Grid container direction="column" spacing={1}>

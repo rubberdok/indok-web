@@ -13,9 +13,10 @@ export interface AnswerState {
 }
 
 /**
- * component for a user to answer a form
+ * Component for a user to answer a form.
  *
- * props: the form
+ * Props:
+ * - the form to answer
  */
 const AnswerForm: React.FC<{
   form: Form;

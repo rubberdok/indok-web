@@ -15,9 +15,10 @@ import {
 import WarningButton from "@components/ui/WarningButton";
 
 /**
- * component for confirmation dialog when organization admin tries to delete a listing
- * props:
- * - the listing to delete (if undefined: do not show the dialog)
+ * Component for confirmation dialog when an organization admin tries to delete a listing.
+ *
+ * Props:
+ * - the listing to delete (if undefined: hides the dialog)
  * - the id of the organization that owns the listing (for use in the cache update function)
  * - onClose function to execute when the dialog is closed
  */

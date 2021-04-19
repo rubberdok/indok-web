@@ -100,8 +100,10 @@ const translateChip = (chip: string) => {
 };
 
 /**
- * component for listing item in overview of listings
- * props: the listing to render
+ * Component for listing item in overview of listings.
+ *
+ * Props:
+ * - the listing to render
  */
 const ListingItem: React.FC<{
   listing: Listing;

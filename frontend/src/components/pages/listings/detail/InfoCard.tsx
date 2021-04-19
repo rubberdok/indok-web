@@ -19,8 +19,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 /**
- * component for title and organization info on the listing detail page
- * props: the listing to render
+ * Component for title and organization info on the listing detail page.
+ *
+ * Props:
+ * - the listing to render
  */
 const InfoCard: React.FC<{
   listing: Listing;

@@ -3,9 +3,9 @@ import AnswerCheckboxes from "@components/forms/AnswerCheckboxes";
 import { AnswerState } from "@components/forms/AnswerForm";
 
 /**
- * component to answer a question on a form
+ * Component to answer a question on a form.
  *
- * props:
+ * Props:
  * - the answer state, passed down from answerForm
  * - setAnswer function to change answer state
  */

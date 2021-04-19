@@ -10,7 +10,7 @@ import { useRouter } from "next/router";
 import { LISTING } from "@graphql/listings/queries";
 
 /**
- * @description Page for editing an existing listing
+ * Page for editing an existing listing.
  */
 const EditListingPage: NextPage = () => {
   const router = useRouter();

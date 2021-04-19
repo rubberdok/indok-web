@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 /**
- * page for organization admins to administer a listing, edit its application form, and review applicants
+ * Page for organization admins to administer a listing, edit its application form, and review applicants.
  */
 const ListingAdminPage: NextPage = () => {
   const { orgId, listingId } = useRouter().query;

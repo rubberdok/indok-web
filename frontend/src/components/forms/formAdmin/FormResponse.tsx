@@ -9,10 +9,10 @@ const useStyles = makeStyles(() => ({
 }));
 
 /**
- * component to see a user's answers to a form
+ * Component to see a user's answers to a form.
  *
- * props:
- * - the form
+ * Props:
+ * - the answered form
  * - the response from an applicant
  */
 const FormResponse: React.FC<{

@@ -17,15 +17,13 @@ import {
 import { Save, Delete, Add, Close } from "@material-ui/icons";
 
 /**
- * component to edit a question on a form
+ * Component to edit a question on a form.
+ * Renders input fields to change the question's details.
+ * If the question's type allows options, allows the creation of such.
  *
- * renders input fields to change the question's details
- *
- * if the question's type allows options, allows the creation of such; otherwise, shows a preview
- *
- * props:
- * - the question to edit (inherited "activeQuestion" state from EditForm)
- * - setQuestion function to set question (inherited "setActiveQuestion" setState from EditForm)
+ * Props:
+ * - state of the question to edit
+ * - setQuestion function to set question state
  * - saveQuestion function to save this question to the database and then set it as inactive
  * - deleteQuestion function to delete this question from the database
  */

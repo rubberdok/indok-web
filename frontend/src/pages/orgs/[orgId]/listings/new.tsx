@@ -3,7 +3,7 @@ import NewListing from "@components/pages/listings/organization/NewListing";
 import { useRouter } from "next/router";
 
 /**
- * @description Page for creating new listings, navigates to the newly created listing upon completion
+ * Page for creating new listings, navigates to the newly created listing upon completion.
  */
 const NewListingPage: NextPage = () => {
   const router = useRouter();

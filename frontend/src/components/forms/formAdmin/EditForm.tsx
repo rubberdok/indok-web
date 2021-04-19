@@ -10,9 +10,9 @@ import { Add } from "@material-ui/icons";
 import ConfirmFormChange from "@components/forms/formAdmin/ConfirmFormChange";
 
 /**
- * component for editing forms (for example: the applications to listings)
+ * Component for editing forms (for example: the applications to listings).
  *
- * props:
+ * Props:
  * - the form to edit
  */
 const EditForm: React.FC<{ form: Form }> = ({ form }) => {

@@ -32,8 +32,10 @@ const useStyles = makeStyles(() => ({
 }));
 
 /**
- * component to show a list of listings connected to an organization for its administrators
- * props: the organization for which to show listings
+ * Component to show a list of listings connected to an organization for its administrators.
+ *
+ * Props:
+ * - the organization for which to show listings
  */
 const OrganizationListings: React.FC<{
   organization: Organization;

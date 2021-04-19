@@ -4,9 +4,9 @@ import { Button, Grid, Typography } from "@material-ui/core";
 import { Edit } from "@material-ui/icons";
 
 /**
- * component to preview a question in a form when not in editing mode
+ * Component to preview a question in a form when not in editing mode.
  *
- * props:
+ * Props:
  * - the question to preview
  * - setActive function to activate editing mode on this question
  */

@@ -12,13 +12,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 /**
- * component to show an overview of all open listings
- * props:
- * - handleClick function to reload the page on an error
+ * Component to show an overview of all open listings.
+ *
+ * Props:
+ * - reload function to reload the page on an error
  */
 const Listings: React.FC<{
-  handleClick: () => void;
-}> = ({ handleClick }) => {
+  reload: () => void;
+}> = ({ reload }) => {
   // fetches all open listings
   const { loading, error, data } = useQuery<{ listings: Listing[] }>(LISTINGS);
 
@@ -45,7 +46,7 @@ const Listings: React.FC<{
             </Typography>
           </Grid>
           <Grid item>
-            <Button variant="contained" onClick={handleClick}>
+            <Button variant="contained" onClick={reload}>
               Prøv på nytt
             </Button>
           </Grid>

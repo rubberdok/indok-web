@@ -34,8 +34,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 /**
- * A form to create or edit a listing
+ * A form to create or edit a listing.
  *
+ * Props:
+ * - the state of the listing to create/edit
+ * - setListing function to set the state
+ * - onSubmit function for updating the database
+ * - organizations of which the listing editor is an authorized member
  */
 const ListingForm: React.FC<{
   listing: ListingInput;
@@ -46,7 +51,7 @@ const ListingForm: React.FC<{
   const classes = useStyles();
 
   /**
-   * @description Helper method to handle changes to TextFields
+   * Helper method to handle changes to TextFields.
    */
   const handlePropertyChange = (
     event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
@@ -56,7 +61,7 @@ const ListingForm: React.FC<{
   };
 
   /**
-   * @description Helper method to handle changes to boolean fields using checkboxes.
+   * Helper method to handle changes to boolean fields using checkboxes.
    */
   const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>, property: keyof ListingInput) => {
     setListing({ ...listing, [property]: event.target.checked });
@@ -67,7 +72,9 @@ const ListingForm: React.FC<{
       <CardContent>
         <Grid container direction="column" spacing={4}>
           <Grid item>
-            <Typography variant="h5" component="h2">Organisasjon</Typography>
+            <Typography variant="h5" component="h2">
+              Organisasjon
+            </Typography>
             {organizations && listing.organization && (
               <>
                 {organizations.length === 1 ? (
@@ -101,7 +108,9 @@ const ListingForm: React.FC<{
             )}
           </Grid>
           <Grid item>
-            <Typography variant="h5" component="h2">Informasjon</Typography>
+            <Typography variant="h5" component="h2">
+              Informasjon
+            </Typography>
             <TextField
               label="Tittel"
               variant="filled"
@@ -164,7 +173,9 @@ const ListingForm: React.FC<{
             </Grid>
           </Grid>
           <Grid item>
-            <Typography variant="h5" component="h2">Opptaksprosessen</Typography>
+            <Typography variant="h5" component="h2">
+              Opptaksprosessen
+            </Typography>
             <Grid container className={classes.inputGroup}>
               <Grid item xs>
                 <FormControlLabel
@@ -207,7 +218,9 @@ const ListingForm: React.FC<{
           <Grid item>
             <Grid container direction="row" spacing={1} alignItems="flex-end">
               <Grid item>
-                <Typography variant="h5" component="h2">Beskrivelse</Typography>
+                <Typography variant="h5" component="h2">
+                  Beskrivelse
+                </Typography>
               </Grid>
               <Grid item>
                 <Tooltip

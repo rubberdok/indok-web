@@ -4,11 +4,10 @@ import { AnswerState } from "@components/forms/AnswerForm";
 import { Option } from "@interfaces/forms";
 
 /**
- * component to answer questions of the Checkboxes type
+ * Component to answer questions of the Checkboxes type.
+ * Separated into its own component, since multiple possible answers requires its own logic.
  *
- * separated into its own component, since multiple possible answers requires its own logic
- *
- * props:
+ * Props:
  * - the answer state, passed down from answerForm
  * - setAnswer function to change answer state
  */

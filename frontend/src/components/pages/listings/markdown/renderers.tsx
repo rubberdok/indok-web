@@ -36,7 +36,7 @@ const paragraph = ({ children }: NodeToProps<Extract<Content, { type: "paragraph
 );
 
 /**
- * @description Custom markdown renderers to override the default renderers of React-Markdown
+ * Custom markdown renderers to override the default renderers of React-Markdown.
  * @todo update to use the new components API with React-Markdown 6.0.0
  */
 const renderers: { [nodeType: string]: ElementType } = {

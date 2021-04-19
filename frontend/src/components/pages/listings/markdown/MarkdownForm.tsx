@@ -4,8 +4,12 @@ import renderers from "@components/pages/listings/markdown/renderers";
 import { ChangeEventHandler, useState } from "react";
 
 /**
- * @description component for a simple markdown form with a live preview
- * @todo Add a more user-friendly way of interacting with markdown, i.e. allowing users to set heading level through a UI
+ * Component for a simple markdown form with a live preview.
+ * @todo Add a more user-friendly way of interacting with markdown, i.e. allowing users to set heading level through a UI.
+ *
+ * Props:
+ * - the markdown text to edit/render
+ * - onTextChange callback
  */
 const MarkdownForm: React.FC<{
   markdown: string;

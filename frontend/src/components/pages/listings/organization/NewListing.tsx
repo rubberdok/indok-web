@@ -32,7 +32,7 @@ const emptyListing: ListingInput = {
 };
 
 /**
- * @description Page for creating new listings, navigates to the newly created listing upon completion
+ * Page for creating new listings, navigates to the newly created listing upon completion.
  */
 const NewListing: React.FC<{
   defaultOrganizationId?: string;
@@ -45,7 +45,7 @@ const NewListing: React.FC<{
   const [listing, setListing] = useState<ListingInput>(emptyListing);
 
   /**
-   * @description Load the organizations to which the user belongs
+   * Load the organizations to which the user belongs.
    * @todo Currently assumes the user belongs to an organization, which must be the case, yet this should allow for dynamically setting the default organization.
    */
   const { loading, error, data } = useQuery<{ user: { organizations: Organization[] } }>(USER_WITH_ORGANIZATIONS, {
