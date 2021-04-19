@@ -10,7 +10,7 @@ import { useRouter } from "next/router";
 import { LISTING } from "@graphql/listings/queries";
 
 /**
- * @description Page for editing an existings listing
+ * @description Page for editing an existing listing
  */
 const EditListingPage: NextPage = () => {
   const router = useRouter();
@@ -20,8 +20,16 @@ const EditListingPage: NextPage = () => {
 
   // Load the listing and set the state on completion
   const { loading, error } = useQuery<{ listing: Listing }>(LISTING, {
-    variables: { id: parseInt(listingId as string) },
-    onCompleted: (data) => setListing(data.listing as ListingInput),
+    variables: { id: listingId as string },
+    onCompleted: (data) =>
+      setListing({
+        ...(data.listing as ListingInput),
+        startDatetime: data.listing.startDatetime.slice(0, 10),
+        deadline: data.listing.deadline.slice(0, 10),
+        application: data.listing.chips.includes("application"),
+        interview: data.listing.chips.includes("interview"),
+        case: data.listing.chips.includes("case"),
+      }),
   });
 
   // Return to the previous page after updating.
@@ -30,7 +38,7 @@ const EditListingPage: NextPage = () => {
   });
 
   if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error...</p>;
+  if (error) return <p>Error</p>;
 
   return (
     <Layout>
@@ -42,8 +50,8 @@ const EditListingPage: NextPage = () => {
           <Grid item xs={10}>
             {listing && (
               <ListingForm
-                state={listing}
-                setState={setListing}
+                listing={listing}
+                setListing={setListing}
                 organizations={[listing.organization]}
                 onSubmit={(e) => {
                   e.preventDefault();
@@ -54,11 +62,11 @@ const EditListingPage: NextPage = () => {
                         title: listing.title || undefined,
                         description: listing.description || undefined,
                         url: listing.url || undefined,
-                        startDatetime: listing.startDatetime || undefined,
-                        deadline: listing.deadline || undefined,
-                        case: listing.case || undefined,
-                        interview: listing.interview || undefined,
+                        startDatetime: listing.startDatetime ? `${listing.startDatetime}T00:00:00+02:00` : undefined,
+                        deadline: listing.deadline ? `${listing.deadline}T23:59:00+02:00` : undefined,
                         application: listing.application || undefined,
+                        interview: listing.interview || undefined,
+                        case: listing.case || undefined,
                       },
                     },
                   });
