@@ -14,27 +14,26 @@ const MarkdownForm: React.FC<{
   onTextChange: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
 }> = ({ markdown, onTextChange }) => {
   //state to manage whether
-  const [preview, setPreview] = useState<0 | 1>(0);
+  const [view, setView] = useState<"edit" | "preview">("edit");
 
   return (
     <>
       <Tabs
-        value={preview}
+        value={view}
         indicatorColor="primary"
         textColor="primary"
-        onChange={(_, preview) => setPreview(preview)}
+        onChange={(_, view) => setView(view)}
         aria-label="Redigering og forhåndsvisningstabs"
         variant="scrollable"
         scrollButtons="auto"
       >
-        <Tab label="Rediger" />
-        <Tab label="Forhåndsvisning" />
+        <Tab label="Rediger" value="edit" />
+        <Tab label="Forhåndsvisning" value="preview" />
       </Tabs>
-      {preview ? (
-        <ReactMarkdown renderers={renderers}>{markdown}</ReactMarkdown>
-      ) : (
-        <TextField fullWidth rows={20} variant="outlined" value={markdown} multiline onChange={onTextChange} />
+      {view === "edit" && (
+        <TextField fullWidth multiline rows={20} variant="outlined" value={markdown} onChange={onTextChange} />
       )}
+      {view === "preview" && <ReactMarkdown renderers={renderers}>{markdown}</ReactMarkdown>}
     </>
   );
 };
