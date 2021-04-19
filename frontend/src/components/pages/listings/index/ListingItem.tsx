@@ -135,7 +135,7 @@ const ListingItem: React.FC<{
                   {timestamp(listing.deadline)}
                 </Typography>
                 <ReactMarkdown
-                  allowedTypes={["text", "paragraph"]}
+                  allowedTypes={["text", "paragraph", "emphasis", "strong"]}
                   className={classes.descriptionText}
                   renderers={renderers}
                 >
