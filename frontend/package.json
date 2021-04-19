@@ -21,8 +21,10 @@
     "@material-ui/core": "^4.11.3",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.57",
+    "@material-ui/pickers": "^3.3.10",
     "@material-ui/system": "^4.11.2",
     "dayjs": "^1.10.4",
+    "formik": "^2.2.6",
     "graphql": "^15.3.0",
     "gray-matter": "^4.0.2",
     "material-ui-search-bar": "^1.0.0",
@@ -38,7 +40,8 @@
     "react-swipeable-views": "^0.13.9",
     "react-swipeable-views-utils": "^0.14.0-alpha.0",
     "ts-debounce": "^3.0.0",
-    "validator": "^13.5.2"
+    "validator": "^13.5.2",
+    "yup": "^0.32.9"
   },
   "devDependencies": {
     "@types/feather-icons": "^4.7.0",
