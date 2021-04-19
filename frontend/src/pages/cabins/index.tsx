@@ -36,6 +36,10 @@ const useStyles = makeStyles((theme: Theme) => ({
       fontSize: "30px",
     },
   },
+  readMoreButton: {
+    position: "absolute",
+    bottom: 0,
+  },
 }));
 
 const CreateBookingPage: NextPage = () => {
@@ -123,6 +127,7 @@ const CreateBookingPage: NextPage = () => {
       </Grid>
       <Grid xs={12} sm={6} item container justify="center">
         <Button
+          className={classes.readMoreButton}
           variant="contained"
           color="primary"
           startIcon={<ExpandMoreIcon fontSize="large" />}
