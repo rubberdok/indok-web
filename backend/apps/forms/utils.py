@@ -1,3 +1,5 @@
+from .models import Question
+
 def change_question_position(
   ascending,
   index,
@@ -38,22 +40,22 @@ Then updates the question with its new position
 """
 def insert_question(question, new_position):
   old_position = question.position
-  ascending = old_position < new_position
+  ascending: bool = old_position < new_position
   form_questions = question.form.questions.filter(
     position__lte=(new_position if ascending else old_position),
     position__gte=(old_position if ascending else new_position)
   )
   existing_positions = form_questions.values_list("position", flat=True)
-  new_position_index = existing_positions.index(new_position)
   if new_position in existing_positions:
     change_question_position(
       ascending,
-      index=new_position_index,
+      index=existing_positions.index(new_position),
       form_questions,
       existing_positions,
       updated_question=question,
       updated_question_old_position=old_position,
       updated_question_new_position=new_position
-    )  
+    )
+    Question.objects.bulk_update(form_questions)
   else:
     setattr(question, "position", new_position)
