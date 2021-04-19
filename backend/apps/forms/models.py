@@ -31,13 +31,19 @@ class Question(models.Model):
     question = models.CharField(max_length=300)
     description = models.CharField(max_length=1000, blank=True, default="")
     question_type = models.CharField(max_length=32, default="PARAGRAPH")
-    mandatory = models.BooleanField(default=True)
+    mandatory = onCancel={() => router.back()}models.BooleanField(default=True)
+    position = models.IntegerField()
 
     def __str__(self) -> str:
         return f"{self.form}: {self.question}"
 
     class Meta:
-        ordering = ["question"]
+        ordering = ["position"]
+        constraints = [
+            UniqueConstraint(
+                fields=["form", "position"], name="unique_question_position_on_form"
+            )
+        ]
 
 
 class Option(models.Model):
