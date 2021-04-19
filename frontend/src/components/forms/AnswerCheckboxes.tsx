@@ -1,6 +1,7 @@
 import { Checkbox, FormControlLabel, FormGroup } from "@material-ui/core";
 import { useEffect, useState } from "react";
 import { AnswerState } from "@components/forms/AnswerForm";
+import { Option } from "@interfaces/forms";
 
 /**
  * component to answer questions of the Checkboxes type
@@ -16,13 +17,13 @@ const AnswerCheckboxes: React.FC<{
   setAnswer: (answer: AnswerState) => void;
 }> = ({ answer, setAnswer }) => {
   // state to manage which options are selected
-  const [selectedOptions, selectOptions] = useState<string[]>([]);
+  const [selectedOptions, selectOptions] = useState<Option[]>([]);
 
   // every time options changes, set answer to the concatenation of selected options
   useEffect(() => {
     setAnswer({
       ...answer,
-      answer: selectedOptions.join("|||"),
+      answer: selectedOptions.map((option) => option.answer).join("|||"),
     });
   }, [selectedOptions]);
   /*
@@ -40,16 +41,16 @@ const AnswerCheckboxes: React.FC<{
           label={option.answer}
           control={
             <Checkbox
-              checked={selectedOptions.includes(option.answer)}
+              checked={selectedOptions.includes(option)}
               color="primary"
               onChange={(e) => {
                 if (e.target.checked) {
-                  if (!selectedOptions.includes(option.answer)) {
-                    selectOptions([...selectedOptions, option.answer]);
+                  if (!selectedOptions.includes(option)) {
+                    selectOptions([...selectedOptions, option]);
                   }
                 } else {
-                  if (selectedOptions.includes(option.answer)) {
-                    selectOptions(selectedOptions.filter((selectedOption) => selectedOption !== option.answer));
+                  if (selectedOptions.includes(option)) {
+                    selectOptions(selectedOptions.filter((selectedOption) => selectedOption !== option));
                   }
                 }
               }}
