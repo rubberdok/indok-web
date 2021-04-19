@@ -74,7 +74,7 @@ const ListingForm: React.FC<{
   return (
     <Card>
       <CardContent>
-        <Grid container direction="column" spacing={1}>
+        <Grid container direction="column" spacing={4}>
           <Grid item>
             <Typography variant="h5">Organisasjon</Typography>
             {organizations && listing.organization && (
@@ -83,9 +83,7 @@ const ListingForm: React.FC<{
                   <Typography>{listing.organization.name}</Typography>
                 ) : (
                   <FormControl fullWidth variant="outlined">
-                    <InputLabel id="select-organization-label">Velg organisasjon</InputLabel>
                     <Select
-                      labelId="select-organization-label"
                       id="select-organization"
                       value={listing.organization.id}
                       onChange={(e) =>
