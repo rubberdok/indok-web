@@ -68,7 +68,7 @@ class CreateEvent(graphene.Mutation):
                 or event_data.get("available_slots") is None
             ):
                 raise Exception(
-                    "For arrangementer som krever påmelding må når påmeldingen åpner og antall plasser oppgis"
+                    "For arrangementer som krever påmelding, må tidspunktet når påmeldingen åpner og antall plasser oppgis"
                 )
 
             if (
@@ -82,11 +82,11 @@ class CreateEvent(graphene.Mutation):
         else:
             if (
                 event_data.get("deadline") is not None
-                or event_data.get("deadline") is not None
+                or event_data.get("price") is not None
                 or event_data.get("binding_signup")
             ):
                 raise Exception(
-                    "Deadline for påmelding og bindende påmelding er kun relevant for arrangementer som krever påmelding."
+                    "Pris, deadline for påmelding og bindende påmelding er kun relevant for arrangementer som krever påmelding."
                 )
 
         event = Event()
@@ -124,7 +124,7 @@ class UpdateEvent(graphene.Mutation):
                 and event_data.get("available_slots") is None
             ):
                 raise Exception(
-                    "For arrangementer som krever påmelding må når påmeldingen åpner og antall plasser oppgis"
+                    "For arrangementer som krever påmelding, må tidspunktet når påmeldingen åpner og antall plasser oppgis"
                 )
 
             if (event.price is not None or event_data.get("price") is not None) and (
