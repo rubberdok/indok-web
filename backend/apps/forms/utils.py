@@ -40,6 +40,30 @@ Then updates the question with its new position
 """
 def insert_question(question, new_position):
   old_position = question.position
+  if old_position == new_position:
+    return
+  move_fowards = old_position < new_position
+  form_questions = question.form.questions.filter(
+    position__lte=(new_position if move_back else old_position),
+    position__gte=(old_position if move_back else new_position)
+  )
+  existing_positions = form_questions.values_list("position", flat=True)
+  questions_length = len(form_questions)
+  if move_forwards:
+    if existing_positions[0] != new_position:
+      setattr(question, "position", new_position)
+      return
+    for i in range(questions_length):
+      
+  else:
+    if existing_positions[questions_length - 1] != new_position:
+      setattr(question, "position", new_position)
+      return
+    for i in range(questions_length, 0, -1):
+
+
+""" def insert_question(question, new_position):
+  old_position = question.position
   ascending: bool = old_position < new_position
   form_questions = question.form.questions.filter(
     position__lte=(new_position if ascending else old_position),
@@ -58,4 +82,4 @@ def insert_question(question, new_position):
     )
     Question.objects.bulk_update(form_questions)
   else:
-    setattr(question, "position", new_position)
+    setattr(question, "position", new_position) """
