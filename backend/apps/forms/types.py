@@ -44,8 +44,8 @@ class ResponseType(DjangoObjectType):
     @staticmethod
     @login_required
     def resolve_answers(response, info):
-        if response.respondent == info.context.user:
-            return response.answers
+        if response.respondent == info.context.user or info.context.user.is_superuser:
+            return response.answers.all()
         else:
             raise PermissionError("Du har ikke tilgang til dette.")
 
@@ -75,20 +75,20 @@ class QuestionType(DjangoObjectType):
     def resolve_answers(root: Question, info, user_id: int = None):
         answers = root.answers
         if user_id:
-            return answers.filter(user__pk=user_id).distinct()
+            return answers.filter(response__respondent__pk=user_id)
         return answers.all()
 
     @staticmethod
     @login_required
     def resolve_answer(root: Question, info, user_id: int):
-        return root.answers.filter(user__pk=user_id).first()
+        return root.answers.get(response__respondent__pk=user_id)
 
 
 class FormType(DjangoObjectType):
     questions = graphene.List(QuestionType)
-    responders = graphene.List(UserType, user_id=graphene.ID())
+    responders = graphene.List(UserType, user_id=graphene.ID(), required=True)
     responder = graphene.Field(UserType, user_id=graphene.ID(required=True))
-    responses = graphene.List(ResponseType)
+    responses = graphene.List(ResponseType, required=True)
 
     class Meta:
         model = Form
@@ -124,3 +124,12 @@ class FormType(DjangoObjectType):
             return get_user_model().objects.get(responses__form=root, pk=user_id)
         else:
             raise NotImplementedError("Dette kallet er ikke implementert end")
+
+    @staticmethod
+    @login_required
+    def resolve_responses(root: Form, info):
+        # TODO: Row level permissions
+        if info.context.user.is_superuser:
+            return root.responses.all()
+        else:
+            raise NotImplementedError("Dette kallet er ikke implementert enda")
