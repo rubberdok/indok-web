@@ -1,12 +1,10 @@
-from datetime import datetime
 import json
-import re
+from datetime import datetime
+
+from graphene.utils.str_converters import to_snake_case
 
 from ...utils.testing.ExtendedGraphQLTestCase import ExtendedGraphQLTestCase
 from ...utils.testing.factories.users import UserFactory
-
-from graphene.utils.str_converters import to_snake_case
-from django.db.models.query import QuerySet
 
 
 class UsersBaseTestCase(ExtendedGraphQLTestCase):

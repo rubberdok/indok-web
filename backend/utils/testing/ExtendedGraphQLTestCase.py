@@ -1,6 +1,6 @@
 from graphene_django.utils.testing import GraphQLTestCase
-from graphql_jwt.shortcuts import get_token
 from graphql_jwt.settings import jwt_settings
+from graphql_jwt.shortcuts import get_token
 
 
 class ExtendedGraphQLTestCase(GraphQLTestCase):
