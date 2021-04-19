@@ -65,19 +65,38 @@ const CreateBookingPage: NextPage = () => {
   const transportData = [
     {
       icon: <DirectionsBus fontSize="large" style={{ fontSize: "80px" }} />,
-      text: "Kom deg til Oppdal med NOR-WAY Bussekspress eller Lavprisekspressen",
+      text: (
+        <Typography>
+          Kom deg til Oppdal med <Link href="https://www.atb.no/buss-regioner/">AtB Region</Link> eller{" "}
+          <Link href="https://www.lavprisekspressen.no/">Lavprisekspressen</Link>
+        </Typography>
+      ),
     },
     {
       icon: <DirectionsCar fontSize="large" style={{ fontSize: "80px" }} />,
-      text: "Sixt: pris ca. 1200,- for en helg, ekskl. bensin. Kjøretiden er ca. to timer.",
+      text: (
+        <Typography>
+          <Link href="https://www.sixt.no/">Sixt</Link>: pris ca. 1200,- for en helg, ekskl. bensin. Kjøretiden er ca.
+          to timer.
+        </Typography>
+      ),
     },
     {
       icon: <DirectionsTransit fontSize="large" style={{ fontSize: "80px" }} />,
-      text: "Ta toget med NSB til Oppdal for en billig penge.",
+      text: (
+        <Typography>
+          Ta toget med <Link href="https://www.vy.no/">VY</Link> til Oppdal for en billig penge.
+        </Typography>
+      ),
     },
     {
       icon: <LocalTaxi fontSize="large" style={{ fontSize: "80px" }} />,
-      text: "Taxi fra togstasjonen til hyttene tar 5-10 min. Taxi Oppdal, tlf: 72 42 12 05",
+      text: (
+        <Typography>
+          Taxi fra togstasjonen til hyttene tar 5-10 min.{" "}
+          <Link href="https://www.visitnorway.no/listings/oppdal-taxi/203941/">Taxi Oppdal</Link>, tlf: 72 42 12 05
+        </Typography>
+      ),
     },
   ];
 
@@ -136,7 +155,8 @@ const CreateBookingPage: NextPage = () => {
                         bylivet. Indøks egne hyttestyre arrangerer flere forskjellige turer i løpet av året. Dette er en
                         flott mulighet til både å bli kjent med hyttene, området rundt hyttene, og å bli kjent med andre
                         indøkere på tvers av klassetrinnene. Hyttestyret har det daglige ansvaret for drift og utbedring
-                        av Indøkhyttene, organisering av utleie og felles hytteturer.
+                        av Indøkhyttene, organisering av utleie og felles hytteturer. Du kan lese mer om hyttestyret
+                        <Link href="/about/organizations/hyttestyret"> her.</Link>
                       </Typography>
                     </Grid>
                   </Grid>
@@ -175,8 +195,8 @@ const CreateBookingPage: NextPage = () => {
                       </Typography>
                     </Grid>
                     <Grid item container spacing={10} direction="row">
-                      {transportData.map((transport) => (
-                        <Grid item sm={12} md={3} key={transport.text}>
+                      {transportData.map((transport, index) => (
+                        <Grid item sm={12} md={3} key={index}>
                           <Box textAlign="center">
                             {transport.icon}
                             <Typography variant="body2">{transport.text}</Typography>
