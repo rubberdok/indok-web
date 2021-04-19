@@ -1,26 +1,8 @@
 import { gql } from "@apollo/client";
 
 export const CREATE_BOOKING = gql`
-  mutation CreateBooking(
-    $firstname: String
-    $lastname: String
-    $phone: Int
-    $receiverEmail: String
-    $bookFrom: String
-    $bookTo: String
-    $price: Int
-    $cabins: [Int]
-  ) {
-    createBooking(
-      firstname: $firstname
-      lastname: $lastname
-      phone: $phone
-      receiverEmail: $receiverEmail
-      checkIn: $bookFrom
-      checkOut: $bookTo
-      price: $price
-      cabins: $cabins
-    ) {
+  mutation CreateBooking($bookingData: BookingInput) {
+    createBooking(bookingData: $bookingData) {
       ok
     }
   }
