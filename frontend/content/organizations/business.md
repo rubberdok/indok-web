@@ -25,7 +25,7 @@ tag: annet
 
 # Hvem er vi?
 
-IIBC er en case club for studenter tilknyttet sivilingeniørstudiet Industriell økonomi og teknologiledelse ved NTNU Trondheim. Vi ønsker å være en møteplass der studenter med interesse for business forberedes til næringslivet og får utvidet praktisk forretningsforståelse.
+IBC er en case club for studenter tilknyttet sivilingeniørstudiet Industriell økonomi og teknologiledelse ved NTNU Trondheim. Vi ønsker å være en møteplass der studenter med interesse for business forberedes til næringslivet og får utvidet praktisk forretningsforståelse.
 
 Vi løser case annenhver uke, både fiktive bedriftsutfordringer og for etablerte start-ups. Internt holder vi nyttige workshops om teknikker for problemløsning, vanlige verktøy innen konsulent- eller finansbransjen, samt andre spennende og dagsaktuelle temaer.
 
