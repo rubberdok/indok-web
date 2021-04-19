@@ -11,7 +11,6 @@ const MarkdownForm: React.FC<{
   markdown: string;
   onTextChange: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
 }> = ({ markdown, onTextChange }) => {
-  //state to manage whether
   const [view, setView] = useState<"edit" | "preview">("edit");
 
   return (

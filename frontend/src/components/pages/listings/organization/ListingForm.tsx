@@ -17,6 +17,7 @@ import {
   FormControlLabel,
   Tooltip,
   InputAdornment,
+  InputLabel,
 } from "@material-ui/core";
 import { HelpOutline, Save } from "@material-ui/icons";
 import React, { ChangeEvent } from "react";
@@ -72,8 +73,10 @@ const ListingForm: React.FC<{
                 {organizations.length === 1 ? (
                   <Typography>{listing.organization.name}</Typography>
                 ) : (
-                  <FormControl fullWidth variant="outlined">
+                  <FormControl fullWidth variant="filled">
+                    <InputLabel id="select-organization-label">Velg organisasjon</InputLabel>
                     <Select
+                      labelId="select-organization-label"
                       id="select-organization"
                       value={listing.organization.id}
                       onChange={(e) =>
@@ -101,6 +104,7 @@ const ListingForm: React.FC<{
             <Typography variant="h5">Informasjon</Typography>
             <TextField
               label="Tittel"
+              variant="filled"
               value={listing.title}
               fullWidth
               onChange={(e) => handlePropertyChange(e, "title")}
@@ -111,28 +115,28 @@ const ListingForm: React.FC<{
             <Grid container spacing={2} className={classes.inputGroup}>
               <Grid item xs>
                 <TextField
+                  variant="filled"
                   label="Publiseringsdato"
                   value={listing.startDatetime || ""}
                   fullWidth
                   type="date"
                   onChange={(e) => handlePropertyChange(e, "startDatetime")}
-                  InputLabelProps={{ shrink: true }}
                 />
               </Grid>
               <Grid item xs>
                 <TextField
+                  variant="filled"
                   label="Søknadsfrist"
                   value={listing.deadline || ""}
-                  fullWidth
                   type="date"
                   required
                   onChange={(e) => handlePropertyChange(e, "deadline")}
-                  InputLabelProps={{ shrink: true }}
                 />
               </Grid>
               <Grid item xs>
                 <TextField
                   label="Søknadslink"
+                  variant="filled"
                   value={listing.url || ""}
                   fullWidth
                   onChange={(e) => handlePropertyChange(e, "url")}
