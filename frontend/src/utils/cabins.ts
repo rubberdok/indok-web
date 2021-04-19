@@ -81,7 +81,7 @@ export const calculatePrice = (chosenCabins: Cabin[], contactInfo: ContactInfo, 
   }
 };
 
-export const generateEmailInput = (contactInfo: ContactInfo, datePick: DatePick, chosenCabins: Cabin[]) => {
+export const generateEmailAndBookingInput = (contactInfo: ContactInfo, datePick: DatePick, chosenCabins: Cabin[]) => {
   return {
     ...contactInfo,
     cabins: chosenCabins.map((cabin) => cabin.id),

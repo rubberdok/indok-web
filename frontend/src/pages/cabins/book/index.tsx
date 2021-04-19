@@ -9,7 +9,7 @@ import { Box, Grid, Step, StepLabel, Stepper, Button, Typography, Paper, Tooltip
 import {
   allValuesFilled,
   cabinOrderStepReady,
-  generateEmailInput,
+  generateEmailAndBookingInput,
   isFormValid,
   validateInputForm,
 } from "@utils/cabins";
@@ -17,7 +17,7 @@ import { NextPage } from "next";
 import React, { useEffect, useState } from "react";
 import PaymentSite from "@components/pages/cabins/PaymentSite";
 import ReceiptSite from "@components/pages/cabins/ReceiptSite";
-import { SEND_EMAIL } from "@graphql/cabins/mutations";
+import { CREATE_BOOKING, SEND_EMAIL } from "@graphql/cabins/mutations";
 
 interface StepReady {
   [step: number]: { ready: boolean; errortext: string };
@@ -74,7 +74,8 @@ const CabinBookingPage: NextPage = () => {
   const [validations, setValidations] = useState<ContactInfoValidations>();
   const [errorTrigger, setErrorTrigger] = useState(false);
 
-  // Email mutations
+  // Booking creation and email mutations
+  const [create_booking] = useMutation(CREATE_BOOKING);
   const [send_email] = useMutation(SEND_EMAIL);
 
   useEffect(() => {
@@ -139,9 +140,14 @@ const CabinBookingPage: NextPage = () => {
         send_email({
           variables: {
             emailInput: {
-              ...generateEmailInput(contactInfo, datePick, chosenCabins),
+              ...generateEmailAndBookingInput(contactInfo, datePick, chosenCabins),
               emailType: "reserve_booking",
             },
+          },
+        });
+        create_booking({
+          variables: {
+            bookingData: generateEmailAndBookingInput(contactInfo, datePick, chosenCabins),
           },
         });
       }
