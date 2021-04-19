@@ -1,5 +1,4 @@
 import { Card, CardContent, makeStyles } from "@material-ui/core";
-import React from "react";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -10,6 +9,7 @@ const useStyles = makeStyles((theme) => ({
 
 /**
  * component for the main body of a listing's detail
+ *
  * props: the listing to render
  */
 const ListingBody: React.FC = (props) => {
