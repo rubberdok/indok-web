@@ -59,8 +59,7 @@ const ConfirmFormChange: React.FC<{
       </DialogContent>
       <DialogActions>
         <Button
-          onClick={(e) => {
-            e.preventDefault();
+          onClick={() => {
             onConfirm();
             onClose();
           }}
@@ -68,8 +67,7 @@ const ConfirmFormChange: React.FC<{
           {title}
         </Button>
         <Button
-          onClick={(e) => {
-            e.preventDefault();
+          onClick={() => {
             onClose();
           }}
         >

@@ -33,7 +33,7 @@ const QuestionTypePreview: React.FC<{
             <FormControlLabel
               key={index}
               label={<Box fontWeight={value === option.answer ? "bold" : undefined}>{option.answer}</Box>}
-              control={<Radio checked={value === option.answer} disabled />}
+              control={<Radio color="primary" checked={value === option.answer} disabled />}
             />
           ))}
         </RadioGroup>
@@ -47,7 +47,7 @@ const QuestionTypePreview: React.FC<{
               label={
                 <Box fontWeight={values && values.includes(option.answer) ? "bold" : undefined}>{option.answer}</Box>
               }
-              control={<Checkbox checked={values && values.includes(option.answer)} disabled />}
+              control={<Checkbox color="primary" checked={values && values.includes(option.answer)} disabled />}
             />
           ))}
         </FormGroup>

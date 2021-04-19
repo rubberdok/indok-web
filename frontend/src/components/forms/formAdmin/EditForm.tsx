@@ -222,8 +222,7 @@ const EditForm: React.FC<{ form: Form }> = ({ form }) => {
             variant="contained"
             color="primary"
             startIcon={<Add />}
-            onClick={(e) => {
-              e.preventDefault();
+            onClick={() => {
               newQuestion();
             }}
           >

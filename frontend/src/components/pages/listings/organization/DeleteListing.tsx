@@ -12,6 +12,7 @@ import {
   Button,
   FormHelperText,
 } from "@material-ui/core";
+import WarningButton from "@components/ui/WarningButton";
 
 /**
  * component for confirmation dialog when organization admin tries to delete a listing
@@ -64,18 +65,16 @@ const DeleteListing: React.FC<{
             <FormHelperText error>Dette vil også slette alle søknader du har fått på vervet.</FormHelperText>
           </DialogContent>
           <DialogActions>
-            <Button
-              onClick={(e) => {
-                e.preventDefault();
+            <WarningButton
+              onClick={() => {
                 deleteListing({ variables: { id: listing.id } });
                 onClose();
               }}
             >
               Slett verv
-            </Button>
+            </WarningButton>
             <Button
-              onClick={(e) => {
-                e.preventDefault();
+              onClick={() => {
                 onClose();
               }}
             >

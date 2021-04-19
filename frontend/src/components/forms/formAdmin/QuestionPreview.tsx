@@ -26,8 +26,7 @@ const QuestionPreview: React.FC<{
         <Button
           variant="contained"
           color="primary"
-          onClick={(e) => {
-            e.preventDefault();
+          onClick={() => {
             setActive();
           }}
           startIcon={<Edit />}

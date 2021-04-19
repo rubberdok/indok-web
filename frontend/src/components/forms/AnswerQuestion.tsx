@@ -25,7 +25,6 @@ const AnswerQuestion: React.FC<{
           rows={4}
           value={answer.answer}
           onChange={(e) => {
-            e.preventDefault();
             setAnswer({ ...answer, answer: e.target.value });
           }}
         />
@@ -37,7 +36,6 @@ const AnswerQuestion: React.FC<{
           fullWidth
           value={answer.answer}
           onChange={(e) => {
-            e.preventDefault();
             setAnswer({ ...answer, answer: e.target.value });
           }}
         />
@@ -45,13 +43,18 @@ const AnswerQuestion: React.FC<{
     case "MULTIPLE_CHOICE":
       return (
         <RadioGroup
+          value={answer.answer}
           onChange={(e) => {
-            e.preventDefault();
             setAnswer({ ...answer, answer: e.target.value });
           }}
         >
           {(answer.question.options ?? []).map((option, index) => (
-            <FormControlLabel key={index} value={option.answer} label={option.answer} control={<Radio />} />
+            <FormControlLabel
+              key={index}
+              value={option.answer}
+              label={option.answer}
+              control={<Radio color="primary" />}
+            />
           ))}
         </RadioGroup>
       );
@@ -60,8 +63,9 @@ const AnswerQuestion: React.FC<{
     case "DROPDOWN":
       return (
         <Select
+          fullWidth
+          value={answer.answer}
           onChange={(e) => {
-            e.preventDefault();
             // ugly typecasting, but necessary with Material UI's Select component
             setAnswer({ ...answer, answer: e.target.value as string });
           }}
