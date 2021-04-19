@@ -130,6 +130,7 @@ const ListingForm: React.FC<{
                   fullWidth
                   type="date"
                   onChange={(e) => handlePropertyChange(e, "startDatetime")}
+                  InputLabelProps={{ shrink: true }}
                 />
               </Grid>
               <Grid item xs>
@@ -137,9 +138,11 @@ const ListingForm: React.FC<{
                   variant="filled"
                   label="Søknadsfrist"
                   value={listing.deadline || ""}
+                  fullWidth
                   type="date"
                   required
                   onChange={(e) => handlePropertyChange(e, "deadline")}
+                  InputLabelProps={{ shrink: true }}
                 />
               </Grid>
               <Grid item xs>
