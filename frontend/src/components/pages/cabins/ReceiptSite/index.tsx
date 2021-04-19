@@ -8,6 +8,7 @@ interface Props {
   chosenCabins: Cabin[];
   datePick: DatePick;
   contactInfo: ContactInfo;
+  mailSent?: boolean;
 }
 
 const ReceiptSite: NextPage<Props> = (props) => {
@@ -19,7 +20,7 @@ const ReceiptSite: NextPage<Props> = (props) => {
       </Grid>
       <Grid item container justify="space-evenly" alignItems="stretch">
         <Grid item xs>
-          <CabinBookingStatus cabinText="Du har nå booket" {...props} />
+          <CabinBookingStatus cabinText="Du har nå søkt om å booke" {...props} />
         </Grid>
       </Grid>
     </Grid>

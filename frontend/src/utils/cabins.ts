@@ -1,4 +1,4 @@
-import { Cabin, ContactInfo } from "@interfaces/cabins";
+import { Cabin, ContactInfo, ContactInfoValidations } from "@interfaces/cabins";
 import dayjs from "dayjs";
 import { DatePick } from "src/pages/cabins/book";
 import validator from "validator";
@@ -7,21 +7,21 @@ export const validateName = (name: string) => name?.length > 0;
 
 export const validateEmail = (email: string): boolean => (email ? validator.isEmail(email) : false);
 
-export const validateSelect = (numberIndok: number, numberExternal: number): boolean =>
-  numberIndok > 0 || numberExternal > 0;
+export const validateSelect = (internalParticipants: number, externalParticipants: number): boolean =>
+  internalParticipants > 0 || externalParticipants > 0;
 
 export const validatePhone = (phone: string): boolean => (phone ? validator.isMobilePhone(phone, "nb-NO") : false);
 
 export const validateInputForm = (inputValues: ContactInfo) => {
-  const selectValidity = validateSelect(inputValues.numberIndok, inputValues.numberExternal);
+  const selectValidity = validateSelect(inputValues.internalParticipants, inputValues.externalParticipants);
 
-  const updatedValidations = {
-    firstName: validateName(inputValues.firstName),
-    lastName: validateName(inputValues.lastName),
-    email: validateEmail(inputValues.email),
+  const updatedValidations: ContactInfoValidations = {
+    firstname: validateName(inputValues.firstname),
+    lastname: validateName(inputValues.lastname),
+    receiverEmail: validateEmail(inputValues.receiverEmail),
     phone: validatePhone(inputValues.phone),
-    numberIndok: selectValidity,
-    numberExternal: selectValidity,
+    internalParticipants: selectValidity,
+    externalParticipants: selectValidity,
   };
 
   return updatedValidations;
@@ -34,9 +34,9 @@ export const isFormValid = (inputValues: ContactInfo) => {
 };
 
 export const allValuesFilled = (contactInfo: ContactInfo) => {
-  const selectValidity = validateSelect(contactInfo.numberIndok, contactInfo.numberExternal);
+  const selectValidity = validateSelect(contactInfo.internalParticipants, contactInfo.externalParticipants);
 
-  const { numberIndok, numberExternal, ...nonSelectContactInfo } = contactInfo;
+  const { internalParticipants, externalParticipants, ...nonSelectContactInfo } = contactInfo;
   const filled = Object.values(nonSelectContactInfo).filter((info) => info != "" || info != 0);
 
   return selectValidity && filled.length == Object.keys(nonSelectContactInfo).length;
@@ -69,7 +69,7 @@ export const toStringChosenCabins = (chosenCabins: Cabin[]) =>
   chosenCabins.map((cabin, i) => (i > 0 ? " og " + cabin.name : cabin.name));
 
 export const calculatePrice = (chosenCabins: Cabin[], contactInfo: ContactInfo, datePick: DatePick) => {
-  const internalPrice = contactInfo.numberIndok >= contactInfo.numberExternal;
+  const internalPrice = contactInfo.internalParticipants >= contactInfo.externalParticipants;
   const pricePerNight = chosenCabins
     .map((cabin) => (internalPrice ? cabin.internalPrice : cabin.externalPrice))
     .reduce((sum, currentPrice) => sum + currentPrice);
@@ -79,4 +79,13 @@ export const calculatePrice = (chosenCabins: Cabin[], contactInfo: ContactInfo, 
     const rangeLength = checkOutDate.diff(datePick.checkInDate, "day");
     return pricePerNight * rangeLength;
   }
+};
+
+export const generateEmailInput = (contactInfo: ContactInfo, datePick: DatePick, chosenCabins: Cabin[]) => {
+  return {
+    ...contactInfo,
+    cabins: chosenCabins.map((cabin) => cabin.id),
+    checkIn: datePick.checkInDate,
+    checkOut: datePick.checkOutDate,
+  };
 };

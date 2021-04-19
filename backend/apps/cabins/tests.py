@@ -34,7 +34,7 @@ class CabinsBaseTestCase(ExtendedGraphQLTestCase):
             check_in=self.now + datetime.timedelta(days=50),
             check_out=self.now + datetime.timedelta(days=52),
         )
-
+        
 
 class CabinsResolversTestCase(CabinsBaseTestCase):
     """
@@ -48,7 +48,7 @@ class CabinsResolversTestCase(CabinsBaseTestCase):
                 allBookings {
                     id
                     firstname
-                    surname
+                    lastname
                     phone
                     receiverEmail
                     checkIn
@@ -106,7 +106,7 @@ class CabinsMutationsTestCase(CabinsBaseTestCase):
                     mutateBooking(
                         bookingData: {{
                             firstname: \"{booking.firstname}\",
-                            surname: \"{booking.surname}\",
+                            lastname: \"{booking.lastname}\",
                             phone: \"{booking.phone}\",
                             receiverEmail: \"{booking.receiver_email}\",
                             checkIn: \"{booking.check_in.strftime("%Y-%m-%d")}\",
@@ -174,9 +174,9 @@ class CabinsMutationsTestCase(CabinsBaseTestCase):
         )
         self.check_create_with_error(response)
 
-    def test_empty_surname(self):
+    def test_empty_lastname(self):
         # Try to add a booking with no last name variable
-        self.no_conflict_booking.surname = ""
+        self.no_conflict_booking.lastname = ""
         response = self.create_booking(
             self.no_conflict_booking, f"{self.oksen_cabin.id}"
         )

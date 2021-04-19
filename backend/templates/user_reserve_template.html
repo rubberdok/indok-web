@@ -30,24 +30,19 @@
         padding: 50px;
         background-color: #f5f0eb;
         width: 80%;
-        box-shadow: 11px 17px 52px -12px rgba(0, 0, 0, 0.48);
       "
     >
       {% load static %}
 
-      <img
-        src="cid:hyttestyret_logo.png"
-        alt=""
-        style="width: 270px; margin: auto"
-      />
       <h2>Hei {{ firstname }}!</h2>
       <p>
-        Vi har nå reservert {{ cabin }} fra
-        <span><b>{{fromDate }}</b></span> til
-        <span><b>{{ toDate }}</b>.</span>
+          Din søknad for booking av <b>{{ chosen_cabins_string }}</b> fra
+        <span><b>{{check_in }}</b></span> til
+        <span><b>{{ check_out }}</b> er mottatt.</span>
       </p>
-      Prisen kommer på <b>{{ price }} kr</b>. Betaling skjer via faktura, se
-      vedlegg.
+        <p><b>Hyttestyret kommer til å ta stilling til å søknaden din snart. Når de har gjort det får du en
+            mail med beslutningen deres.</b></p>
+      Prisen kommer på <b>{{ price }} kr</b>. Betaling skjer via Tripletex, der det blir sendt ut en faktura på mail etter at hyttestyret har godkjent søknaden deres.
       <div class="contentDiv">
         <p>
           Hytten skal forlates i minst like god stand som den ble funnet, og
@@ -68,19 +63,6 @@
           >januslinjeforening.no/indokhyttene/</a
         >
       </p>
-
-      <a
-        style="
-          color: white;
-          background-color: #065a5a;
-          display: inline-block;
-          margin: 10px;
-          padding: 15px;
-          text-decoration: none;
-        "
-        href="{{ link }}"
-        >Legg til i Google Calendar</a
-      >
     </div>
   </body>
 </html>

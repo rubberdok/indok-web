@@ -57,8 +57,8 @@ def email_validation(email):
         raise GraphQLError("Input email is invalid")
 
 
-def name_validation(firstname, surname):
-    if firstname == "" or surname == "":
+def name_validation(firstname, lastname):
+    if firstname == "" or lastname == "":
         raise GraphQLError("Both first and last name must be non-empty strings")
 
 
