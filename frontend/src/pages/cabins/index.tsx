@@ -6,6 +6,8 @@ import PowerIcon from "@material-ui/icons/Power";
 import SpeakerIcon from "@material-ui/icons/Speaker";
 import HotelIcon from "@material-ui/icons/Hotel";
 import RestaurantIcon from "@material-ui/icons/Restaurant";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import HotTubIcon from "@material-ui/icons/HotTub";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import { DirectionsBus, DirectionsCar, DirectionsTransit, LocalTaxi } from "@material-ui/icons";
 import React from "react";
@@ -17,7 +19,7 @@ import Layout from "@components/Layout";
 const useStyles = makeStyles((theme: Theme) => ({
   hero: {
     color: "white",
-    height: "calc(100vh - 200px)",
+    height: "100vh",
     width: "100%",
     backgroundColor: "black",
     backgroundSize: "cover",
@@ -60,6 +62,10 @@ const CreateBookingPage: NextPage = () => {
       icon: <RestaurantIcon className={classes.icon} />,
       text: "Kjøkken",
     },
+    {
+      icon: <HotTubIcon className={classes.icon} />,
+      text: "Badstue",
+    },
   ];
 
   const transportData = [
@@ -68,7 +74,7 @@ const CreateBookingPage: NextPage = () => {
       text: (
         <Typography>
           Kom deg til Oppdal med <Link href="https://www.atb.no/buss-regioner/">AtB Region</Link> eller{" "}
-          <Link href="https://www.lavprisekspressen.no/">Lavprisekspressen</Link>
+          <Link href="https://www.lavprisekspressen.no/">Lavprisekspressen</Link>.
         </Typography>
       ),
     },
@@ -94,7 +100,7 @@ const CreateBookingPage: NextPage = () => {
       text: (
         <Typography>
           Taxi fra togstasjonen til hyttene tar 5-10 min.{" "}
-          <Link href="https://www.visitnorway.no/listings/oppdal-taxi/203941/">Taxi Oppdal</Link>, tlf: 72 42 12 05
+          <Link href="https://www.visitnorway.no/listings/oppdal-taxi/203941/">Taxi Oppdal</Link>, tlf: 72 42 12 05.
         </Typography>
       ),
     },
@@ -115,13 +121,23 @@ const CreateBookingPage: NextPage = () => {
           </Button>
         </Link>
       </Grid>
+      <Grid xs={12} sm={6} item container justify="center">
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={<ExpandMoreIcon fontSize="large" />}
+          onClick={() => document.querySelector("#anchorBox")?.scrollIntoView({ behavior: "smooth" })}
+        >
+          Les mer om Indøkhyttene
+        </Button>
+      </Grid>
     </Grid>
   );
   return (
     <Layout>
       <Hero />
       <Container>
-        <Box my={5}>
+        <Box my={5} id="anchorBox">
           <Paper>
             <Box p={5}>
               <Grid container alignItems="center" spacing={10} direction="column">
@@ -167,7 +183,7 @@ const CreateBookingPage: NextPage = () => {
                       <Typography variant="h3">Hyttenes standard</Typography>
                       <Divider component="br" />
                       <Typography variant="body2">
-                        Med sine to etasjer, er Bjørnen og Oksen estimert til å romme 20 personer per hytte. Den
+                        Med sine to etasjer, er Bjørnen og Oksen estimert til å romme 18 personer per hytte. Den
                         generelle standarden er tilnærmet lik et vanlig bolighus. Hyttene har innlagt strøm og vann samt
                         at de også har WiFi. I første etasje finner du to bad, hvorav ett med badstue, og tre soverom
                         med tre til fire sengeplasser per rom. I andre etasje ligger stue, kjøkken og et fjerde soverom
@@ -224,7 +240,7 @@ const CreateBookingPage: NextPage = () => {
                       <b>Vinter</b>: I løpet av vinterhalvåret er det hovedsakelig alpint og langrenn som står i
                       sentrum. Det alpine skiområdet er blant de største i Norge med 14 blå, 10 grønne, 10 røde og 5
                       svarte løyper, og normal skisesong er fra 15. november – 1. mai. Forholdene for langrenn er også
-                      gode med hele fem løyper som begynner ved Stølen, alt fra 15 km – 1,5 km løyper. Se Oppdal Booking
+                      gode med hele fem løyper som begynner ved Stølen, alt fra 1,5 km – 15 km løyper. Se Oppdal Booking
                       for mer info.
                     </Typography>
                   </Grid>
