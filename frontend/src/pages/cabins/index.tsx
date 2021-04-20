@@ -76,7 +76,7 @@ const CreateBookingPage: NextPage = () => {
     {
       icon: <DirectionsBus fontSize="large" style={{ fontSize: "80px" }} />,
       text: (
-        <Typography>
+        <Typography component="span">
           Kom deg til Oppdal med <Link href="https://www.atb.no/buss-regioner/">AtB Region</Link> eller{" "}
           <Link href="https://www.lavprisekspressen.no/">Lavprisekspressen</Link>.
         </Typography>
@@ -85,7 +85,7 @@ const CreateBookingPage: NextPage = () => {
     {
       icon: <DirectionsCar fontSize="large" style={{ fontSize: "80px" }} />,
       text: (
-        <Typography>
+        <Typography component="span">
           <Link href="https://www.sixt.no/">Sixt</Link>: pris ca. 1200,- for en helg, ekskl. bensin. Kjøretiden er ca.
           to timer.
         </Typography>
@@ -94,7 +94,7 @@ const CreateBookingPage: NextPage = () => {
     {
       icon: <DirectionsTransit fontSize="large" style={{ fontSize: "80px" }} />,
       text: (
-        <Typography>
+        <Typography component="span">
           Ta toget med <Link href="https://www.vy.no/">VY</Link> til Oppdal for en billig penge.
         </Typography>
       ),
@@ -102,7 +102,7 @@ const CreateBookingPage: NextPage = () => {
     {
       icon: <LocalTaxi fontSize="large" style={{ fontSize: "80px" }} />,
       text: (
-        <Typography>
+        <Typography component="span">
           Taxi fra togstasjonen til hyttene tar 5-10 min.{" "}
           <Link href="https://www.visitnorway.no/listings/oppdal-taxi/203941/">Taxi Oppdal</Link>, tlf: 72 42 12 05.
         </Typography>
