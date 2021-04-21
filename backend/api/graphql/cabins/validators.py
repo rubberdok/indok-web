@@ -19,7 +19,7 @@ def create_booking_validation(booking_data):
     norwegian_phone_number_validation(booking_data.phone)
     participants_validation(
         booking_data.internal_participants,
-        booking_data.internal_participants,
+        booking_data.external_participants,
         booking_data.cabins,
     )
 
