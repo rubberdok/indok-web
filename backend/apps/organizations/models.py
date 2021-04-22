@@ -21,6 +21,7 @@ class Organization(models.Model):
     )
 
     logo = models.ImageField(upload_to="organizations", blank=True, null=True)
+    logo_url = models.URLField(null=True, blank=True)
     color = models.CharField(max_length=100, blank=True, null=True)
 
     group = models.OneToOneField(to=ResponsibleGroup, on_delete=models.CASCADE)

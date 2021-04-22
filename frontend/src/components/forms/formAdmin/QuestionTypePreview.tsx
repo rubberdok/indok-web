@@ -1,42 +1,67 @@
 import { Question } from "@interfaces/forms";
-import { Checkbox, FormControlLabel, FormGroup, Radio, RadioGroup, TextField } from "@material-ui/core";
+import { Checkbox, FormControlLabel, FormGroup, Radio, RadioGroup, TextField, Box } from "@material-ui/core";
 import questionTypeLabels from "@components/forms/formAdmin/questionTypeLabels";
 
 /**
- * component to show a preview of how a form question's input will look like to the end user
- * props: the question with questionType to preview
+ * Component to show a preview of how a form question's input will look like to the end user.
+ *
+ * Props:
+ * - the question with questionType to preview
+ * - optional answer for showing selected answer in questions with options
+ * - optional answers for showing selected answers in checkbox questions
  */
 const QuestionTypePreview: React.FC<{
   question: Question;
-}> = ({ question }) => {
+  answer?: string;
+  answers?: string[];
+}> = ({ question, answer, answers }) => {
   switch (question.questionType) {
     case "PARAGRAPH":
       return (
-        <TextField disabled label={questionTypeLabels[question.questionType]} variant="outlined" multiline rows={4} />
+        <TextField
+          fullWidth
+          disabled
+          label={questionTypeLabels[question.questionType]}
+          variant="outlined"
+          multiline
+          rows={4}
+        />
       );
     case "SHORT_ANSWER":
-      return <TextField disabled label={questionTypeLabels[question.questionType]} variant="outlined" />;
+      return <TextField fullWidth disabled label={questionTypeLabels[question.questionType]} variant="outlined" />;
     case "MULTIPLE_CHOICE":
       return (
         <RadioGroup>
-          {question.options.map((option, index) => (
-            <FormControlLabel value={null} key={index} label={option.answer} control={<Radio disabled />} />
+          {(question.options ?? []).map((option, index) => (
+            <FormControlLabel
+              key={index}
+              label={<Box fontWeight={answer === option.answer ? "bold" : undefined}>{option.answer}</Box>}
+              control={<Radio color="primary" checked={answer === option.answer} disabled />}
+            />
           ))}
         </RadioGroup>
       );
     case "CHECKBOXES":
       return (
         <FormGroup>
-          {question.options.map((option, index) => (
-            <FormControlLabel key={index} label={option.answer} control={<Checkbox disabled />} />
+          {(question.options ?? []).map((option, index) => (
+            <FormControlLabel
+              key={index}
+              label={
+                <Box fontWeight={answers && answers.includes(option.answer) ? "bold" : undefined}>{option.answer}</Box>
+              }
+              control={<Checkbox color="primary" checked={answers && answers.includes(option.answer)} disabled />}
+            />
           ))}
         </FormGroup>
       );
     case "DROPDOWN":
       return (
         <ol>
-          {question.options.map((option, index) => (
-            <li key={index}>{option.answer}</li>
+          {(question.options ?? []).map((option, index) => (
+            <li key={index}>
+              <Box fontWeight={answer === option.answer ? "bold" : undefined}>{option.answer}</Box>
+            </li>
           ))}
         </ol>
       );
