@@ -1,8 +1,3 @@
-import random
-
-import factory
-from django.contrib.auth import get_user_model
-from django.utils import timezone
 from factory.django import DjangoModelFactory
 from faker import Faker
 from apps.organizations.models import Membership, Organization, Role
