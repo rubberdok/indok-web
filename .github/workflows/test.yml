@@ -14,13 +14,12 @@ env:
   BOOKING_EMAIL: ${{ secrets.BOOKING_EMAIL }}
   BOOKING_EMAIL_PASSWORD: ${{ secrets.BOOKING_EMAIL_PASSWORD }}
   GOOGLE_DRIVE_API_KEY: ${{ secrets.GOOGLE_DRIVE_API_KEY }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - name: echo
-        run: echo $GOOGLE_DRIVE_API_KEY
       - uses: actions/checkout@v2
       - name: Build the project
         run: docker-compose -f docker-compose.test.yml up -d

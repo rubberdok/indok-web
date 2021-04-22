@@ -17,8 +17,10 @@ const useStyles = makeStyles(() => ({
 }));
 
 /**
- * component for banner image on listing detail page
- * props: the listing from the detail page
+ * Component for banner image on listing detail page.
+ *
+ * Props:
+ * - the listing from the detail page
  */
 const ListingBanner: React.FC<{
   listing: Listing;
