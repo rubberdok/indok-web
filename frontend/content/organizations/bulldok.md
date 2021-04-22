@@ -6,7 +6,7 @@ image: /img/bulldok.jpeg
 styre:
   ceo:
     navn: Bendik Edvardsen
-    mail: tlf.
+    mail:
     tittel: Leder
 tag: idrett
 ---
