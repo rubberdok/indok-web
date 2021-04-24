@@ -2,10 +2,9 @@ import { NextPage, NextComponentType } from "next";
 import { makeStyles, Theme, Typography, Box, Divider, Tooltip } from "@material-ui/core";
 import { Cabin, ContactInfo } from "@interfaces/cabins";
 import { DatePick } from "src/pages/cabins/book";
-import dayjs from "dayjs";
 import { ReactNode } from "react";
 import { TypographyProps } from "@material-ui/core/Typography";
-import { toStringChosenCabins } from "@utils/cabins";
+import { calculatePrice, convertDateFormat, toStringChosenCabins } from "@utils/cabins";
 
 interface Props {
   chosenCabins: Cabin[];
@@ -27,8 +26,6 @@ const InfoText: NextComponentType<TypographyProps> = (props) => (
     {props.children}
   </Typography>
 );
-
-const convertDateFormat = (date: string) => dayjs(date).format("DD-MM-YYYY");
 
 const CabinBookingStatus: NextPage<Props> = ({ chosenCabins, datePick, contactInfo, cabinText, mailSent }) => {
   const classes = useStyles();
@@ -78,7 +75,7 @@ const CabinBookingStatus: NextPage<Props> = ({ chosenCabins, datePick, contactIn
               }
               placement="right"
             >
-              <Box display="inline">20000</Box>
+              <Box display="inline">{calculatePrice(chosenCabins, contactInfo, datePick)} kr</Box>
             </Tooltip>
           </InfoText>
         </>

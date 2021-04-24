@@ -184,9 +184,11 @@ const CabinBookingPage: NextPage = () => {
             </Paper>
           </Grid>
           <Grid item container justify="space-between">
-            <Button variant="contained" disabled={activeStep === 0} onClick={() => setActiveStep((prev) => prev - 1)}>
-              Forrige
-            </Button>
+            <Box display={activeStep == 3 ? "none" : "block"}>
+              <Button variant="contained" disabled={activeStep === 0} onClick={() => setActiveStep((prev) => prev - 1)}>
+                Forrige
+              </Button>
+            </Box>
             <Tooltip
               title={stepReady[activeStep].errortext}
               placement="left"
