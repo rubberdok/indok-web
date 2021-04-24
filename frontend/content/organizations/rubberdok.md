@@ -7,12 +7,14 @@ alt: Logoen til rubberdøk
 styre:
   ceo:
     navn: Morgan Heggland
-    mail: web@indokhs.no
     tittel: Leder
+    mail: web@indokhs.no
+    telefon: 69420420
   cto:
     navn: Fredrik Ahlborg
-    mail:
+    mail: fredrik.sha@gmail.com
     tittel: Content
+    telefon: 99374307
 tag: annet
 ---
 

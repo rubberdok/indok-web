@@ -1,11 +1,23 @@
 import { Listing } from "@interfaces/listings";
-import { Box, Card, CardActionArea, CardContent, CardMedia, makeStyles, Typography } from "@material-ui/core";
+import {
+  Box,
+  Card,
+  CardActionArea,
+  CardContent,
+  CardMedia,
+  makeStyles,
+  Typography,
+  Chip,
+  Grid,
+} from "@material-ui/core";
 import dayjs from "dayjs";
 import nb from "dayjs/locale/nb";
 import relativeTime from "dayjs/plugin/isSameOrAfter";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import Link from "next/link";
+import ReactMarkdown from "react-markdown";
+import renderers from "@components/pages/listings/markdown/renderers";
 
 dayjs.extend(timezone);
 dayjs.extend(utc);
@@ -76,9 +88,22 @@ const timestamp = (datetime: string) => {
   }
 };
 
+const translateChip = (chip: string) => {
+  switch (chip) {
+    case "application":
+      return "søknad";
+    case "interview":
+      return "intervju";
+    default:
+      return chip;
+  }
+};
+
 /**
- * component for listing item in overview of listings
- * props: the listing to render
+ * Component for listing item in overview of listings.
+ *
+ * Props:
+ * - the listing to render
  */
 const ListingItem: React.FC<{
   listing: Listing;
@@ -95,7 +120,7 @@ const ListingItem: React.FC<{
           />
           <CardContent className={classes.content}>
             <img
-              src={listing.organization ? `/img/${listing.organization.name.toLowerCase()}logo.png` : "/nth.sv"}
+              src={listing.organization?.logoUrl || "/nth.svg"}
               className={classes.logo}
               alt="Organisasjonslogo"
               onError={(e) => (
@@ -111,10 +136,27 @@ const ListingItem: React.FC<{
                   <b>Frist: </b>
                   {timestamp(listing.deadline)}
                 </Typography>
-                <Typography variant="body2" className={classes.descriptionText}>
+                <ReactMarkdown
+                  allowedTypes={["text", "paragraph", "emphasis", "strong"]}
+                  className={classes.descriptionText}
+                  renderers={renderers}
+                >
                   {listing.description}
-                </Typography>
+                </ReactMarkdown>
               </Box>
+              <Grid container direction="row" justify="center" alignItems="center" spacing={2}>
+                {listing.chips.map((chip) => (
+                  <Grid item key={chip}>
+                    <Chip
+                      label={translateChip(chip)}
+                      size="small"
+                      style={{
+                        fontSize: 12,
+                      }}
+                    />
+                  </Grid>
+                ))}
+              </Grid>
             </Box>
           </CardContent>
         </CardActionArea>

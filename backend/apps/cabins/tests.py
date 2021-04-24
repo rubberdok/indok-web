@@ -7,6 +7,10 @@ import datetime
 
 from django.utils import timezone
 
+from utils.testing.factories.users import UserFactory
+from django.contrib.auth.models import Permission
+from django.contrib.contenttypes.models import ContentType
+
 
 class CabinsBaseTestCase(ExtendedGraphQLTestCase):
     def setUp(self) -> None:
@@ -34,7 +38,17 @@ class CabinsBaseTestCase(ExtendedGraphQLTestCase):
             check_in=self.now + datetime.timedelta(days=50),
             check_out=self.now + datetime.timedelta(days=52),
         )
-        
+
+        # Create two (logged in) users
+        self.user = UserFactory()
+        self.super_user = UserFactory(is_staff=True, is_superuser=True)
+
+    def add_booking_permission(self, codename):
+        content_type = ContentType.objects.get_for_model(Booking)
+        self.user.user_permissions.add(
+            Permission.objects.get(codename=codename, content_type=content_type)
+        )
+
 
 class CabinsResolversTestCase(CabinsBaseTestCase):
     """
@@ -47,18 +61,12 @@ class CabinsResolversTestCase(CabinsBaseTestCase):
             query {
                 allBookings {
                     id
-                    firstname
-                    lastname
-                    phone
-                    receiverEmail
                     checkIn
                     checkOut
-                    price
                     cabins {
                         id
                         name
                     }
-                    timestamp
                 }
             }
             """,
@@ -70,6 +78,37 @@ class CabinsResolversTestCase(CabinsBaseTestCase):
 
         # There are three bookings in the database
         self.assertEqual(len(content["data"]["allBookings"]), 3)
+
+    def test_resolve_admin_all_bookings(self):
+        query = """
+            query {
+                adminAllBookings {
+                    id
+                    checkIn
+                    checkOut
+                    cabins {
+                        id
+                        name
+                    }
+                    firstname
+                    lastname
+                }
+            }
+            """
+        # Try to make query without permission
+        response = self.query(query, user=self.user)
+        # This validates the status code and if you get errors
+        self.assertResponseHasErrors(response)
+
+        # Try to make query with permission
+        self.add_booking_permission("view_booking")
+        response = self.query(query, user=self.user)
+        self.assertResponseNoErrors(response)
+        # Fetching content of response
+        content = json.loads(response.content)
+
+        # There are three bookings in the database
+        self.assertEqual(len(content["data"]["adminAllBookings"]), 3)
 
     def test_resolve_cabins(self):
         response = self.query(
@@ -102,8 +141,8 @@ class CabinsMutationsTestCase(CabinsBaseTestCase):
 
     def create_booking(self, booking, cabins_field):
         query = f"""
-                mutation MutateBooking {{
-                    mutateBooking(
+                mutation CreateBooking {{
+                    createBooking(
                         bookingData: {{
                             firstname: \"{booking.firstname}\",
                             lastname: \"{booking.lastname}\",
@@ -131,7 +170,6 @@ class CabinsMutationsTestCase(CabinsBaseTestCase):
         response = self.create_booking(
             self.no_conflict_booking, f"{self.bjornen_cabin.id}"
         )
-        print(json.loads(response.content))
         self.assertResponseNoErrors(response)
         # Check that booking is created
         self.assertTrue(
@@ -211,3 +249,25 @@ class CabinsMutationsTestCase(CabinsBaseTestCase):
         self.first_booking.check_in = timezone.now()
         response = self.create_booking(self.first_booking, f"{self.bjornen_cabin.id}")
         self.check_create_with_error(response)
+
+    def test_update_booking(self):
+        query = f"""
+        mutation {{
+          updateBooking(bookingData: {{id: {self.first_booking.id}, firstname: \"Sverre\", lastname: \"Spetalen\"}}) {{
+            ok
+            booking {{
+              id
+            }}
+          }}
+        }}
+        """
+        response = self.query(query)
+        self.assertResponseHasErrors(response)
+        self.add_booking_permission("change_booking")
+        response = self.query(query, user=self.user)
+
+        # Fetch updated booking
+        self.first_booking = Booking.objects.get(pk=self.first_booking.id)
+        self.assertResponseNoErrors(response)
+        self.assertEqual("Sverre", self.first_booking.firstname)
+        self.assertEqual("Spetalen", self.first_booking.lastname)

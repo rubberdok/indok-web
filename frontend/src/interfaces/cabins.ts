@@ -1,3 +1,4 @@
+import { ChangeEvent } from "react";
 export interface BasicBooking {
   firstname: string;
   lastname: string;
@@ -21,6 +22,10 @@ export interface Booking extends BasicBooking, PublicBooking, Participants {
   price: number;
   isTentative: boolean;
 }
+
+export type InputFieldsEvent =
+  | ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  | React.ChangeEvent<{ name?: string | undefined; value: unknown }>;
 
 export interface Cabin {
   id: string;

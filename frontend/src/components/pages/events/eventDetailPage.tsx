@@ -114,7 +114,8 @@ const EventDetailPage: React.FC<Props> = ({ eventId }) => {
 
   if (eventError) return <p>Error :(</p>;
 
-  if (!eventData || !userData) return <Typography variant="body1">Kunne ikke laste arrangementet</Typography>;
+  if (!eventData || !eventData.event || !userData)
+    return <Typography variant="body1">Kunne ikke laste arrangementet</Typography>;
 
   const handleClick = () => {
     if (!userData.user) return;

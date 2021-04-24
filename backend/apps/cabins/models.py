@@ -1,6 +1,6 @@
 from django.db import models
 
-from api.graphql.cabins.helpers import number_of_nights, is_internal_price, price
+from apps.cabins.helpers import number_of_nights, is_internal_price, price
 
 
 class Cabin(models.Model):
@@ -37,7 +37,13 @@ class Booking(models.Model):
 
     @property
     def price(self):
-        return price(self.cabins, self.check_in, self.check_out, self.internal_participants, self.external_participants)
+        return price(
+            self.cabins,
+            self.check_in,
+            self.check_out,
+            self.internal_participants,
+            self.external_participants,
+        )
 
     def __str__(self):
         return f"Booking {self.id}, {self.firstname} {self.lastname}"
