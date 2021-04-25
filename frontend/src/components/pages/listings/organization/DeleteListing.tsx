@@ -12,16 +12,18 @@ import {
   Button,
   FormHelperText,
 } from "@material-ui/core";
+import WarningButton from "@components/ui/WarningButton";
 
 /**
- * component for confirmation dialog when organization admin tries to delete a listing
- * props:
- * - the listing to delete (if null: do not show the dialog)
+ * Component for confirmation dialog when an organization admin tries to delete a listing.
+ *
+ * Props:
+ * - the listing to delete (if undefined: hides the dialog)
  * - the id of the organization that owns the listing (for use in the cache update function)
  * - onClose function to execute when the dialog is closed
  */
 const DeleteListing: React.FC<{
-  listing: Listing | null;
+  listing: Listing | undefined;
   organizationId: number;
   onClose: () => void;
 }> = ({ listing, organizationId, onClose }) => {
@@ -53,7 +55,7 @@ const DeleteListing: React.FC<{
     }
   );
   return (
-    <Dialog open={listing !== null} onClose={onClose} fullWidth>
+    <Dialog open={listing !== undefined} onClose={onClose} fullWidth>
       {listing && (
         <>
           <DialogContent>
@@ -64,18 +66,16 @@ const DeleteListing: React.FC<{
             <FormHelperText error>Dette vil også slette alle søknader du har fått på vervet.</FormHelperText>
           </DialogContent>
           <DialogActions>
-            <Button
-              onClick={(e) => {
-                e.preventDefault();
+            <WarningButton
+              onClick={() => {
                 deleteListing({ variables: { id: listing.id } });
                 onClose();
               }}
             >
               Slett verv
-            </Button>
+            </WarningButton>
             <Button
-              onClick={(e) => {
-                e.preventDefault();
+              onClick={() => {
                 onClose();
               }}
             >

@@ -1,42 +1,11 @@
 import { gql } from "@apollo/client";
+import { FORM_RESPONSES_FRAGMENT } from "@graphql/forms/fragments";
 
-export const FORM = gql`
+export const FORM_RESPONSES = gql`
+  ${FORM_RESPONSES_FRAGMENT}
   query Form($formId: ID!) {
     form(formId: $formId) {
-      id
-      name
-      questions {
-        id
-        question
-        description
-        questionType
-        options {
-          id
-          answer
-        }
-      }
-    }
-  }
-`;
-
-export const FORM_ANSWERS = gql`
-  query FormAnswers($formId: ID!, $userId: ID!) {
-    form(formId: $formId) {
-      name
-      questions {
-        id
-        question
-        description
-        questionType
-        options {
-          id
-          answer
-        }
-        answer(userId: $userId) {
-          id
-          answer
-        }
-      }
+      ...FormResponsesFragment
     }
   }
 `;
