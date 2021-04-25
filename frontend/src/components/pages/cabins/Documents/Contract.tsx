@@ -1,6 +1,6 @@
 import { Cabin, ContactInfo } from "@interfaces/cabins";
 import { Box, createStyles, Divider, Grid, makeStyles, Typography } from "@material-ui/core";
-import { toStringChosenCabins } from "@utils/cabins";
+import { convertDateFormat, toStringChosenCabins } from "@utils/cabins";
 import { calculatePrice } from "@utils/cabins";
 import React from "react";
 import { DatePick } from "src/pages/cabins/book";
@@ -48,7 +48,8 @@ const Contract = ({ chosenCabins, contactInfo, datePick }: ContractProps) => {
           <Typography variant="body2">
             Gjeldende Leieobjekt(er): <b>{toStringChosenCabins(chosenCabins)}</b>, Landsbygrenda, 7340 Oppdal
             <Divider component="br" />
-            Leieperiode: <b>{datePick.checkInDate}</b> - <b>{datePick.checkOutDate}</b> (yyyy-mm-dd)
+            Leieperiode: <b>{datePick.checkInDate && convertDateFormat(datePick.checkInDate)}</b> -{" "}
+            <b>{datePick.checkOutDate && convertDateFormat(datePick.checkOutDate)}</b>
             <Divider component="br" />
             Leiesum: <b>{price}</b> NOK innbetalt til konto <b>9235.28.31311</b> i forkant av leieperioden.
           </Typography>

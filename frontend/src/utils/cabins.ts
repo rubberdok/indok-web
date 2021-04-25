@@ -89,3 +89,5 @@ export const generateEmailAndBookingInput = (contactInfo: ContactInfo, datePick:
     checkOut: datePick.checkOutDate,
   };
 };
+
+export const convertDateFormat = (date: string) => dayjs(date).format("DD-MM-YYYY");
