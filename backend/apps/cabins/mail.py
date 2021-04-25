@@ -20,7 +20,7 @@ def send_admin_reservation_mail(booking_info: dict) -> None:
     text_content = strip_tags(html_content)
 
     email = EmailMultiAlternatives(
-        "Booking av indøkhytte", body=text_content, bcc=[booking_info["receiver_email"]]
+        "Booking av indøkhytte", body=text_content, from_email="noreply@indokntnu.no", bcc=[booking_info["receiver_email"]]
     )
     email.attach_alternative(html_content, "text/html")
     email.send()
@@ -34,6 +34,7 @@ def send_user_reservation_mail(booking_info: dict) -> None:
     email = EmailMultiAlternatives(
         "Bekreftelse på booking av indøkhytte",
         body=text_content,
+        from_email="noreply@indokntnu.no",
         bcc=[booking_info["receiver_email"]],
     )
     email.attach_alternative(html_content, "text/html")
