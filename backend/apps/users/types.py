@@ -3,11 +3,12 @@ from django.contrib.auth import get_user_model
 from graphene_django import DjangoObjectType
 from graphql_jwt.decorators import login_required
 from utils.decorators import permission_required, get_resolver_parent, permission_required_or_none
+from apps.events.types import EventType
 
 
 class UserType(DjangoObjectType):
     grade_year = graphene.Int(source="grade_year")
-    events = graphene.List("api.graphql.events.types.EventType", source="events")
+    events = graphene.List(EventType, source="events")
     allergies = graphene.String(required=False)
 
     class Meta:
