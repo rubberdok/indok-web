@@ -173,6 +173,38 @@ const CabinBookingPage: NextPage = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const getMargin = () => (isMobile ? 2 : 10);
 
+  const NextButton = () => (
+    <Tooltip
+      title={stepReady[activeStep].errortext}
+      placement="left"
+      disableHoverListener={stepReady[activeStep].ready}
+    >
+      <Box display={activeStep == 3 ? "none" : "block"}>
+        <Button
+          onClick={handleNextClick}
+          disabled={!stepReady[activeStep].ready}
+          variant={isMobile ? "text" : "contained"}
+        >
+          {activeStep == 2 ? "Send søknad" : "Neste"}
+          {theme.direction === "rtl" ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
+        </Button>
+      </Box>
+    </Tooltip>
+  );
+
+  const BackButton = () => (
+    <Box display={activeStep == 3 ? "none" : "block"}>
+      <Button
+        onClick={() => setActiveStep((prev) => prev - 1)}
+        disabled={activeStep === 0}
+        variant={isMobile ? "text" : "contained"}
+      >
+        {theme.direction === "rtl" ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
+        Back
+      </Button>
+    </Box>
+  );
+
   return (
     <>
       <Navbar />
@@ -207,46 +239,24 @@ const CabinBookingPage: NextPage = () => {
               <Box p={getMargin()}>{getStepComponent()}</Box>
             </Paper>
           </Grid>
-        </Grid>
-        {isMobile && activeStep != 3 ? (
-          <MobileStepper
-            steps={4}
-            position="bottom"
-            variant="progress"
-            activeStep={activeStep}
-            nextButton={
-              <Button size="small" onClick={handleNextClick} disabled={!stepReady[activeStep].ready}>
-                {activeStep == 2 ? "Send søknad" : "Neste"}
-                {theme.direction === "rtl" ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
-              </Button>
-            }
-            backButton={
-              <Button size="small" onClick={() => setActiveStep((prev) => prev - 1)} disabled={activeStep === 0}>
-                {theme.direction === "rtl" ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
-                Back
-              </Button>
-            }
-          />
-        ) : (
-          <Grid item container justify="space-between">
-            <Box display={activeStep == 3 ? "none" : "block"}>
-              <Button variant="contained" disabled={activeStep === 0} onClick={() => setActiveStep((prev) => prev - 1)}>
-                Forrige
-              </Button>
-            </Box>
-            <Tooltip
-              title={stepReady[activeStep].errortext}
-              placement="left"
-              disableHoverListener={stepReady[activeStep].ready}
-            >
-              <Box display={activeStep == 3 ? "none" : "block"}>
-                <Button variant="contained" disabled={!stepReady[activeStep].ready} onClick={() => handleNextClick()}>
-                  {activeStep == 2 ? "Send søknad" : "Neste"}
-                </Button>
-              </Box>
-            </Tooltip>
+          <Grid item>
+            {isMobile && activeStep != 3 ? (
+              <MobileStepper
+                steps={4}
+                position="bottom"
+                variant="progress"
+                activeStep={activeStep}
+                nextButton={<NextButton />}
+                backButton={<BackButton />}
+              />
+            ) : (
+              <Grid item container justify="space-between">
+                <BackButton />
+                <NextButton />
+              </Grid>
+            )}
           </Grid>
-        )}
+        </Grid>
       </Box>
     </>
   );
