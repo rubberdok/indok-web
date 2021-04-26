@@ -1,4 +1,4 @@
-import { IconButton, Grid, Typography, Divider, useTheme, useMediaQuery } from "@material-ui/core";
+import { IconButton, Grid, Typography, Divider, Hidden } from "@material-ui/core";
 import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
 import CalendarTable from "./CalendarTable";
@@ -170,57 +170,38 @@ const Calendar: React.FC<CalendarProps> = ({
     const newSelectedMonth = selectedMonth.add(months, "months");
     setSelectedMonth(newSelectedMonth);
   };
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   return (
     <Grid container direction="column" spacing={5}>
       <Grid item container alignItems="center" justify="space-between">
-        {!isMobile ? (
+        <Hidden mdDown>
           <IconButton onClick={() => onChangeMonth(-1)}>
             <NavigateBeforeIcon />
           </IconButton>
-        ) : null}
+        </Hidden>
         <Typography variant="h5" align="center">
           {title}
         </Typography>
-        {!isMobile ? (
+        <Hidden mdDown>
           <IconButton onClick={() => onChangeMonth(1)}>
             <NavigateNextIcon />
           </IconButton>
-        ) : null}
+        </Hidden>
       </Grid>
       <Divider variant="middle" />
       <Grid item container spacing={5}>
         <Grid item xs>
-          <CalendarTable
-            getRows={getRows}
-            month={selectedMonth.clone()}
-            backButton={
-              isMobile
-                ? () => (
-                    <IconButton onClick={() => onChangeMonth(-1)}>
-                      <NavigateBeforeIcon />
-                    </IconButton>
-                  )
-                : undefined
-            }
-            nextButton={
-              isMobile
-                ? () => (
-                    <IconButton onClick={() => onChangeMonth(1)}>
-                      <NavigateNextIcon />
-                    </IconButton>
-                  )
-                : undefined
-            }
-          />
+          <CalendarTable getRows={getRows} month={selectedMonth.clone()} onChangeMonth={onChangeMonth} />
         </Grid>
         <Divider variant="fullWidth" orientation="vertical" />
-        {!isMobile ? (
+        <Hidden mdDown>
           <Grid item xs>
-            <CalendarTable getRows={getRows} month={selectedMonth.clone().add(1, "month")} />
+            <CalendarTable
+              getRows={getRows}
+              month={selectedMonth.clone().add(1, "month")}
+              onChangeMonth={onChangeMonth}
+            />
           </Grid>
-        ) : null}
+        </Hidden>
       </Grid>
       <Divider variant="middle" />
     </Grid>

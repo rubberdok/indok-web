@@ -1,7 +1,9 @@
 import dayjs from "dayjs";
 import React from "react";
 import { DAYS_IN_WEEK } from "./constants";
-import { Grid, makeStyles, Typography } from "@material-ui/core";
+import { Grid, Hidden, IconButton, makeStyles, Typography, useMediaQuery, useTheme } from "@material-ui/core";
+import NavigateNextIcon from "@material-ui/icons/NavigateNext";
+import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore";
 
 const useStyles = makeStyles(() => ({
   table: {
@@ -17,18 +19,28 @@ const useStyles = makeStyles(() => ({
 interface Props {
   getRows: (month: dayjs.Dayjs) => React.ReactNode[];
   month: dayjs.Dayjs;
-  backButton?: () => React.ReactNode;
-  nextButton?: () => React.ReactNode;
+  onChangeMonth: (months: number) => void;
 }
 
-const CalendarTable: React.FC<Props> = ({ getRows, month, backButton, nextButton }) => {
+const CalendarTable: React.FC<Props> = ({ getRows, month, onChangeMonth }) => {
   const classes = useStyles();
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   return (
     <Grid container>
-      <Grid item container justify={backButton && nextButton ? "space-between" : "center"}>
-        {backButton ? <Grid item>{backButton()}</Grid> : null}
+      <Grid item container alignItems="center" justify={isMobile ? "space-between" : "center"}>
+        <Hidden mdUp>
+          <IconButton onClick={() => onChangeMonth(-1)}>
+            <NavigateBeforeIcon />
+          </IconButton>
+        </Hidden>
         <Typography variant="body1" align="center">{`${month.format("MMMM")} - ${month.format("YYYY")}`}</Typography>
-        {nextButton ? <Grid item>{nextButton()}</Grid> : null}
+        <Hidden mdUp>
+          <IconButton onClick={() => onChangeMonth(1)}>
+            <NavigateNextIcon />
+          </IconButton>
+        </Hidden>
       </Grid>
       <Grid item component="table" className={classes.table}>
         <Grid container component="thead">
