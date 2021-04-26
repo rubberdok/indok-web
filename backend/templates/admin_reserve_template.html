@@ -35,7 +35,7 @@
       {% load static %}
       <div class="contentDiv">
 
-          <h2>Opprettelse av booking</h2>
+          <h2>Søknad om booking av {{ chosen_cabins_string }}</h2>
                <p>
                    Det har kommet en søknad om opprettelse av en booking av <b>{{ chosen_cabins_string }}</b> fra
             <span><b>{{ check_in }}</b></span> til
@@ -58,7 +58,7 @@
 
       </div>
       <a
-        href="#"
+        href="https://indokntnu.no/cabins/admin"
         style="
           color: white;
           background-color: #065a5a;
@@ -69,7 +69,7 @@
         "
         >Link til admin-sider</a
       >
-        <p>På admin-sidene kan dere administrere alle bookinger. Vennligst kontakt webkom hvis det skulle oppstå spørsmål</p>
+        <p>På admin-sidene kan dere administrere alle bookinger (dere må være logget inn med en admin-bruker). Vennligst kontakt webkom hvis det skulle oppstå spørsmål.</p>
         <b>
           <p>Med vennlig hilsen,</p>
           <p>
