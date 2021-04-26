@@ -4,14 +4,37 @@ from django.utils.html import strip_tags
 
 
 user_templates = {
+    "subject": "Bekreftelse på mottat søknad",
     "reserve_booking": "user_reserve_template.html",
-    "confirm_booking": "user_confirm_template.html",
+    "confirm_booking": "user_approved_template.html",
 }
 
 admin_templates = {
+    "subject": "Booking av indøkhyttene",
     "reserve_booking": "admin_reserve_template.html",
     "confirm_booking": "admin_confirm_template.html",
 }
+
+
+def send_mail(booking_info: dict, email_type: str, admin: bool) -> None:
+    template = admin_templates[email_type] if admin else user_templates[email_type]
+    subject = admin_templates["subject"] if admin else user_templates["subject"]
+
+    html_content = get_template(template).render(booking_info)
+    text_content = strip_tags(html_content)
+
+    email = EmailMultiAlternatives(
+        subject,
+        body=text_content,
+        bcc=[booking_info["receiver_email"]],
+    )
+    email.attach_alternative(html_content, "text/html")
+
+    if email_type != "disapprove_booking":
+        email.attach_file("static/cabins/Sjekkliste.pdf")
+        email.attach_file("static/cabins/Reglement.pdf")
+
+    email.send()
 
 
 def send_admin_reservation_mail(booking_info: dict) -> None:
