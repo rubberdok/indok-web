@@ -62,7 +62,7 @@ const BookingAdminPage: NextPage = () => {
 
   const deleteBookingDialog = () => (
     <Dialog open={bookingToBeDeleted != undefined} onClose={handleDeleteBookingOnClose}>
-      <DialogTitle>{`Nå er nå iferd med å gjøre en irreversibel handling`}</DialogTitle>
+      <DialogTitle>{`Du er nå i ferd med å gjøre en irreversibel handling`}</DialogTitle>
       <DialogContent>
         <DialogContentText>Er du sikker på at du vil slette denne bookingen?</DialogContentText>
       </DialogContent>
