@@ -28,20 +28,25 @@ import {
 import { toStringChosenCabins } from "@utils/cabins";
 import dayjs from "dayjs";
 import { NextPage } from "next";
-import { CONFIRM_BOOKING, DELETE_BOOKING } from "@graphql/cabins/mutations";
+import { CONFIRM_BOOKING, DELETE_BOOKING, SEND_EMAIL } from "@graphql/cabins/mutations";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import theme from "@styles/theme";
 
+interface BookingFromQuery extends Booking {
+  __typename: string;
+}
+
 const BookingAdminPage: NextPage = () => {
   const { data, error, refetch } = useQuery<{
-    adminAllBookings: Booking[];
+    adminAllBookings: BookingFromQuery[];
   }>(QUERY_ADMIN_ALL_BOOKINGS, { variables: { after: dayjs().format("YYYY-MM-DD") } });
   const [confirmBooking] = useMutation(CONFIRM_BOOKING, { refetchQueries: [{ query: QUERY_ADMIN_ALL_BOOKINGS }] });
   const [deleteBooking] = useMutation(DELETE_BOOKING, { refetchQueries: [{ query: QUERY_ADMIN_ALL_BOOKINGS }] });
+  const [send_email] = useMutation(SEND_EMAIL);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [bookingToBeDeleted, setBookingToBeDeleted] = useState<Booking | undefined>();
+  const [bookingToBeDeleted, setBookingToBeDeleted] = useState<BookingFromQuery | undefined>();
   const router = useRouter();
 
   const errorMessageDialog = () => (
@@ -78,6 +83,7 @@ const BookingAdminPage: NextPage = () => {
                 setOpenSnackbar(true);
                 refetch();
               });
+              sendDecisionEmail(bookingToBeDeleted, false);
             }
             handleDeleteBookingOnClose();
           }}
@@ -89,6 +95,21 @@ const BookingAdminPage: NextPage = () => {
       </DialogActions>
     </Dialog>
   );
+
+  const sendDecisionEmail = (booking: BookingFromQuery, approved: boolean) => {
+    // omit unwanted fields
+    const { isTentative, price, cabins, id, __typename, ...emailInput } = booking;
+
+    send_email({
+      variables: {
+        emailInput: {
+          ...emailInput,
+          cabins: booking.cabins.map((cabin) => parseInt(cabin.id)),
+          emailType: approved ? "approve_booking" : "disapprove_booking",
+        },
+      },
+    });
+  };
 
   const handleErrorDialogClose = () => router.push("/");
   return (
@@ -126,7 +147,7 @@ const BookingAdminPage: NextPage = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {data?.adminAllBookings.map((booking: Booking) => (
+                  {data?.adminAllBookings.map((booking: BookingFromQuery) => (
                     <TableRow key={booking.id}>
                       <TableCell component="th" scope="row">
                         {booking.firstname + " " + booking.lastname}
@@ -148,6 +169,7 @@ const BookingAdminPage: NextPage = () => {
                                   setOpenSnackbar(true);
                                   refetch();
                                 });
+                                sendDecisionEmail(booking, true);
                               }}
                               color="secondary"
                             >

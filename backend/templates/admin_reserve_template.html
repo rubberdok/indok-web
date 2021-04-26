@@ -33,7 +33,7 @@
       "
     >
       {% load static %}
-      <div>
+      <div class="contentDiv">
 
           <h2>Opprettelse av booking</h2>
                <p>
@@ -41,7 +41,9 @@
             <span><b>{{ check_in }}</b></span> til
             <span><b>{{ check_out }}</b>.</span>
           </p>
-          <p><b>Dere må gå inn på adminsiden og ta stilling til om dere vil godkjenne bookingen eller ikke.</b></p>
+          <p><b>Dere må gå inn på adminsiden og ta stilling til om dere vil godkjenne bookingen eller ikke.
+              Når dere har gjort det, får vedkommende en mail om avgjørelsen deres. </b></p>
+          <p><b>Deretter må dere fortsette kontakten med {{ firstname }} for å fullføre bookingen. Kontaktinfo står nedenfor. </b></p>
             <h3>Bookinginfo</h3>
             <p>Antall indøkere: {{ internal_participants }}</p>
             <p>Antall eksterne: {{ external_participants }}</p>
