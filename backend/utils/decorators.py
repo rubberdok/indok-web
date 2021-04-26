@@ -173,7 +173,7 @@ def permission_required_or_none(
     )
 
 
-def get_resolver_parent(parent, *args):
+def get_resolver_parent(context, parent, *args):
     """Default objectgetter for field resolvers
 
     Parameters
