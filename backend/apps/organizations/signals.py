@@ -27,8 +27,10 @@ def handle_removed_memeber(sender, **kwargs):
 @receiver(pre_save, sender=Organization)
 def create_primary_group(sender, instance, created, **kwargs):
   """
-  Creates and assigns a new group when a new organization is created.
+  Creates and assigns a primary group and HR group to members of the organization.
   """
   if created and instance.primary_group is None:
     primary_group = ResponsibleGroup.objects.create(name=instance.name, description=f"Medlemmer av {instance.name}.")
+    hr_group = ResponsibleGroup.objects.create(name="HR", description=f"HR-gruppen til {instance.name}. Tillatelser for å se og behandle søknader.")
     instance.primary_group = primary_group
+    instance.hr_group = hr_group

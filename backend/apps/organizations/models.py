@@ -1,9 +1,6 @@
 from django.db import models
 from django.db.models import UniqueConstraint
 from django.conf import settings
-from django.contrib.auth.models import Group, User
-from django.db.models.signals import post_save, pre_delete
-from django.dispatch import receiver
 from apps.permissions.models import ResponsibleGroup
 
 class Organization(models.Model):
@@ -26,8 +23,11 @@ class Organization(models.Model):
     # Permission groups
     # All members are added to the primary group
     # Members can be added to groups programatically
-    primary_group = models.OneToOneField(to=ResponsibleGroup, on_delete=models.CASCADE)
-    groups = models.ManyToManyField(ResponsibleGroup, related_name="organizations")
+    # The HR-group has the "forms.manage_form" permission, allowing them to view and manage responses to e.g. listings.
+    # The primary group is intended to act as a group for organizations who need any kind of special permission, e.g. hyttestyret
+    # Or if we wish to limit the creation of events or listings to certain organizations.
+    primary_group = models.OneToOneField(to=ResponsibleGroup, on_delete=models.CASCADE, related_name="organization")    
+    hr_group = models.OneToOneField(to=ResponsibleGroup, on_delete=models.CASCADE, related_name="hr_organization", null=True)
 
     users = models.ManyToManyField(
         "users.User",
