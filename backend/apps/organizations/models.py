@@ -6,7 +6,6 @@ from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
 from apps.permissions.models import ResponsibleGroup
 
-# Create your models here.
 class Organization(models.Model):
     name = models.CharField(max_length=100)
     slug = models.SlugField(max_length=100)
@@ -24,7 +23,11 @@ class Organization(models.Model):
     logo_url = models.URLField(null=True, blank=True)
     color = models.CharField(max_length=100, blank=True, null=True)
 
-    group = models.OneToOneField(to=ResponsibleGroup, on_delete=models.CASCADE)
+    # Permission groups
+    # All members are added to the primary group
+    # Members can be added to groups programatically
+    primary_group = models.OneToOneField(to=ResponsibleGroup, on_delete=models.CASCADE)
+    groups = models.ManyToManyField(ResponsibleGroup, related_name="organizations")
 
     users = models.ManyToManyField(
         "users.User",
@@ -70,23 +73,3 @@ class Role(models.Model):
 
     def __str__(self) -> str:
         return f"{self.name}"
-
-
-@receiver(post_save, sender=Membership)
-def handle_new_member(sender, **kwargs):
-    member: Membership = kwargs["instance"]
-    group: Group = member.organization.group
-    if group:
-        user: User = member.user
-        user.groups.add(group)
-        user.save()
-
-
-@receiver(pre_delete, sender=Membership)
-def handle_removed_memeber(sender, **kwargs):
-    member: Membership = kwargs["instance"]
-    group: Group = member.organization.group
-    if group:
-        user: User = member.user
-        user.groups.remove(group)
-        user.save()

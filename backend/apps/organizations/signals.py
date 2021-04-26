@@ -8,7 +8,7 @@ from apps.permissions.models import ResponsibleGroup
 @receiver(post_save, sender=Membership)
 def handle_new_member(sender, **kwargs):
     member: Membership = kwargs["instance"]
-    group: Group = member.organization.group
+    group: Group = member.organization.primary_group.group
     if group:
         user= member.user
         user.groups.add(group)
@@ -18,15 +18,17 @@ def handle_new_member(sender, **kwargs):
 @receiver(pre_delete, sender=Membership)
 def handle_removed_memeber(sender, **kwargs):
     member: Membership = kwargs["instance"]
-    group: Group = member.organization.group
+    group: Group = member.organization.primary_group.group
     if group:
         user = member.user
         user.groups.remove(group)
         user.save()
 
-
 @receiver(pre_save, sender=Organization)
-def create_default_group_if_none_is_set(sender, instance, **kwrags):
-  if instance.group is None:
-    group = ResponsibleGroup.objects.create(name=instance.name)
-    instance.group = group
+def create_primary_group(sender, instance, created, **kwargs):
+  """
+  Creates and assigns a new group when a new organization is created.
+  """
+  if created and instance.primary_group is None:
+    primary_group = ResponsibleGroup.objects.create(name=instance.name, description=f"Medlemmer av {instance.name}.")
+    instance.primary_group = primary_group
