@@ -2,7 +2,7 @@ from typing import Optional
 
 from django.db.models import Q
 
-from .models import Membership, Organization, Role
+from .models import Membership, Organization
 
 
 class OrganizationResolvers:
@@ -46,6 +46,3 @@ class MembershipResolvers:
         raise PermissionError(
             f"Du må være medlem av {organization} for å gjøre dette kallet."
         )
-
-    def resolve_all_roles(self, info):
-        return Role.objects.all()

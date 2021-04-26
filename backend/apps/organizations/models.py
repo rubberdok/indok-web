@@ -55,7 +55,9 @@ class Membership(models.Model):
     organization = models.ForeignKey(
         Organization, on_delete=models.CASCADE, related_name="members"
     )
-    role = models.ForeignKey("Role", on_delete=models.DO_NOTHING)
+    group = models.ForeignKey(
+        ResponsibleGroup, on_delete=models.CASCADE, related_name="members", null=True
+    )
 
     class Meta:
         constraints = [
@@ -66,10 +68,3 @@ class Membership(models.Model):
 
     def __str__(self) -> str:
         return f"{self.organization.name}:{self.user.username}"
-
-
-class Role(models.Model):
-    name = models.TextField(max_length=50, default="Medlem", null=False)
-
-    def __str__(self) -> str:
-        return f"{self.name}"
