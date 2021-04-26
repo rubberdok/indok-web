@@ -33,6 +33,10 @@ class UpdateBookingInput(BookingInput):
 
 
 class CreateBooking(graphene.Mutation):
+    """
+    Add a new booking to the database
+    """
+
     class Arguments:
         booking_data = BookingInput()
 
@@ -61,6 +65,10 @@ class CreateBooking(graphene.Mutation):
 
 
 class UpdateBooking(graphene.Mutation):
+    """
+    Change the given booking
+    """
+
     class Arguments:
         booking_data = UpdateBookingInput()
 
@@ -75,14 +83,12 @@ class UpdateBooking(graphene.Mutation):
         booking_data,
     ):
         ok = True
-        print(info.context.user.username, info.context.user.is_superuser)
         # Fetch booking object if id is provided
         if BookingModel.objects.filter(pk=booking_data.id).exists():
             booking = BookingModel.objects.get(pk=booking_data.id)
             # Check that incoming fields are ok
             create_booking_validation(booking_data)
             for input_field, input_value in booking_data.items():
-                print(input_field)
                 if input_field and input_field != "cabins":
                     setattr(booking, input_field, input_value)
             booking.save()
@@ -97,6 +103,29 @@ class UpdateBooking(graphene.Mutation):
                 booking=None,
                 ok=False,
             )
+
+
+class DeleteBooking(graphene.Mutation):
+    """
+    Deletes the booking with the given ID
+    """
+
+    ok = graphene.Boolean()
+    booking_id = graphene.ID()
+
+    class Arguments:
+        id = graphene.ID()
+
+    @login_required
+    @permission_required("cabins.delete_booking")
+    def mutate(self, info, **kwargs):
+        try:
+            booking = BookingModel.objects.get(pk=kwargs["id"])
+        except BookingModel.DoesNotExist:
+            return DeleteBooking(ok=False, booking_id=kwargs["id"])
+        listing_id = kwargs["id"]
+        booking.delete()
+        return DeleteBooking(ok=True, booking_id=listing_id)
 
 
 class SendEmail(graphene.Mutation):
