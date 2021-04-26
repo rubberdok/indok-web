@@ -4,7 +4,6 @@ from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from graphql_jwt.decorators import login_required, staff_member_required
-from guardian.shortcuts import assign_perm, remove_perm
 
 from ..organizations.models import Organization
 from ..organizations.permissions import check_user_membership
@@ -167,10 +166,6 @@ class EventSignUp(graphene.Mutation):
         setattr(sign_up, "user_grade_year", user.grade_year)
 
         sign_up.save()
-
-        # Assign the permission to view the sensitive information about the signed up user.
-        primary_group = event.organization.primary_group
-        assign_perm("users.view_sensitive_info", primary_group, user)
         return EventSignUp(event=event, is_full=event.is_full)
 
 
@@ -202,10 +197,6 @@ class EventSignOff(graphene.Mutation):
 
         setattr(sign_up, "is_attending", False)
         sign_up.save()
-
-        # Remove the permission to view a users' sensitive info
-        primary_group = event.organization.primary_group
-        remove_perm("users.view_sensitive_info", primary_group, user)
         return EventSignOff(event=event, is_full=event.is_full)
 
 
