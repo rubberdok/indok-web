@@ -166,6 +166,7 @@ class EventSignUp(graphene.Mutation):
         setattr(sign_up, "user_grade_year", user.grade_year)
 
         sign_up.save()
+        primary
 
         return EventSignUp(event=event, is_full=event.is_full)
 
