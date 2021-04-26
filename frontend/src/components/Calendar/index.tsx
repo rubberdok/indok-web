@@ -1,4 +1,4 @@
-import { IconButton, Grid, Typography, Divider } from "@material-ui/core";
+import { IconButton, Grid, Typography, Divider, useTheme, useMediaQuery } from "@material-ui/core";
 import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
 import CalendarTable from "./CalendarTable";
@@ -170,29 +170,57 @@ const Calendar: React.FC<CalendarProps> = ({
     const newSelectedMonth = selectedMonth.add(months, "months");
     setSelectedMonth(newSelectedMonth);
   };
-
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   return (
-    <Grid container direction="column" spacing={2}>
-      <Grid item container alignItems="center" justify="space-between" xs>
-        <IconButton onClick={() => onChangeMonth(-1)}>
-          <NavigateBeforeIcon />
-        </IconButton>
+    <Grid container direction="column" spacing={5}>
+      <Grid item container alignItems="center" justify="space-between">
+        {!isMobile ? (
+          <IconButton onClick={() => onChangeMonth(-1)}>
+            <NavigateBeforeIcon />
+          </IconButton>
+        ) : null}
         <Typography variant="h5" align="center">
           {title}
         </Typography>
-        <IconButton onClick={() => onChangeMonth(1)}>
-          <NavigateNextIcon />
-        </IconButton>
+        {!isMobile ? (
+          <IconButton onClick={() => onChangeMonth(1)}>
+            <NavigateNextIcon />
+          </IconButton>
+        ) : null}
       </Grid>
       <Divider variant="middle" />
-      <Grid item container>
+      <Grid item container spacing={5}>
         <Grid item xs>
-          <CalendarTable getRows={getRows} month={selectedMonth.clone()} />
+          <CalendarTable
+            getRows={getRows}
+            month={selectedMonth.clone()}
+            backButton={
+              isMobile
+                ? () => (
+                    <IconButton onClick={() => onChangeMonth(-1)}>
+                      <NavigateBeforeIcon />
+                    </IconButton>
+                  )
+                : undefined
+            }
+            nextButton={
+              isMobile
+                ? () => (
+                    <IconButton onClick={() => onChangeMonth(1)}>
+                      <NavigateNextIcon />
+                    </IconButton>
+                  )
+                : undefined
+            }
+          />
         </Grid>
         <Divider variant="fullWidth" orientation="vertical" />
-        <Grid item xs>
-          <CalendarTable getRows={getRows} month={selectedMonth.clone().add(1, "month")} />
-        </Grid>
+        {!isMobile ? (
+          <Grid item xs>
+            <CalendarTable getRows={getRows} month={selectedMonth.clone().add(1, "month")} />
+          </Grid>
+        ) : null}
       </Grid>
       <Divider variant="middle" />
     </Grid>

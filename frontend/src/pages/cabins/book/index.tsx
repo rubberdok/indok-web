@@ -5,7 +5,20 @@ import CabinContactInfo from "@components/pages/cabins/CabinContactInfo";
 import ContractDialog from "@components/pages/cabins/Popup/ContractDialog";
 import { QUERY_CABINS } from "@graphql/cabins/queries";
 import { Cabin, ContactInfo, ContactInfoValidations } from "@interfaces/cabins";
-import { Box, Grid, Step, StepLabel, Stepper, Button, Typography, Paper, Tooltip } from "@material-ui/core";
+import {
+  Box,
+  Grid,
+  Step,
+  StepLabel,
+  Stepper,
+  Button,
+  Typography,
+  Paper,
+  Tooltip,
+  useTheme,
+  useMediaQuery,
+  MobileStepper,
+} from "@material-ui/core";
 import {
   allValuesFilled,
   cabinOrderStepReady,
@@ -18,6 +31,7 @@ import React, { useEffect, useState } from "react";
 import PaymentSite from "@components/pages/cabins/PaymentSite";
 import ReceiptSite from "@components/pages/cabins/ReceiptSite";
 import { CREATE_BOOKING, SEND_EMAIL } from "@graphql/cabins/mutations";
+import { KeyboardArrowLeft, KeyboardArrowRight } from "@material-ui/icons";
 
 interface StepReady {
   [step: number]: { ready: boolean; errortext: string };
@@ -155,6 +169,10 @@ const CabinBookingPage: NextPage = () => {
     }
   };
 
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const getMargin = () => (isMobile ? 2 : 10);
+
   return (
     <>
       <Navbar />
@@ -167,22 +185,49 @@ const CabinBookingPage: NextPage = () => {
         activeStep={activeStep}
         setActiveStep={setActiveStep}
       />
-      <Box m={10}>
-        <Grid container direction="column" justify="center" spacing={1}>
+      <Box m={getMargin()}>
+        <Grid container direction="column" justify="center" alignItems="stretch" spacing={1}>
           <Grid item>
-            <Stepper activeStep={activeStep}>
-              {steps.map((label) => (
-                <Step key={label}>
-                  <StepLabel>{label}</StepLabel>
-                </Step>
-              ))}
-            </Stepper>
+            {isMobile ? (
+              <Typography variant="h4" align="center">
+                {steps[activeStep]}
+              </Typography>
+            ) : (
+              <Stepper activeStep={activeStep}>
+                {steps.map((label) => (
+                  <Step key={label}>
+                    <StepLabel>{label}</StepLabel>
+                  </Step>
+                ))}
+              </Stepper>
+            )}
           </Grid>
           <Grid item>
             <Paper>
-              <Box p={10}>{getStepComponent()}</Box>
+              <Box p={getMargin()}>{getStepComponent()}</Box>
             </Paper>
           </Grid>
+        </Grid>
+        {isMobile && activeStep != 3 ? (
+          <MobileStepper
+            steps={4}
+            position="bottom"
+            variant="progress"
+            activeStep={activeStep}
+            nextButton={
+              <Button size="small" onClick={handleNextClick} disabled={!stepReady[activeStep].ready}>
+                {activeStep == 2 ? "Send søknad" : "Neste"}
+                {theme.direction === "rtl" ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
+              </Button>
+            }
+            backButton={
+              <Button size="small" onClick={() => setActiveStep((prev) => prev - 1)} disabled={activeStep === 0}>
+                {theme.direction === "rtl" ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
+                Back
+              </Button>
+            }
+          />
+        ) : (
           <Grid item container justify="space-between">
             <Box display={activeStep == 3 ? "none" : "block"}>
               <Button variant="contained" disabled={activeStep === 0} onClick={() => setActiveStep((prev) => prev - 1)}>
@@ -201,7 +246,7 @@ const CabinBookingPage: NextPage = () => {
               </Box>
             </Tooltip>
           </Grid>
-        </Grid>
+        )}
       </Box>
     </>
   );

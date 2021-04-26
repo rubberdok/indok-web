@@ -9,17 +9,28 @@ interface Props {
   onChange: (name: string, event: InputFieldsEvent) => void;
   errorTrigger: boolean;
   chosenCabins: Cabin[];
+  header?: string;
 }
 
-export const InputFields: React.FC<Props> = ({ contactInfo, validations, onChange, errorTrigger, chosenCabins }) => {
+export const InputFields: React.FC<Props> = ({
+  contactInfo,
+  validations,
+  onChange,
+  errorTrigger,
+  chosenCabins,
+  header,
+}) => {
   const totalGuestsAllowed = chosenCabins.reduce((sum, currentCabin) => sum + (currentCabin.maxGuests || 0), 0);
 
   return (
     <Grid container item spacing={3} lg={8} md={12} justify="center">
-      <Grid item>
-        <Typography variant="h3">Kontaktinfo</Typography>
-        <Divider component="hr" />
-      </Grid>
+      {header ? (
+        <Grid item>
+          <Typography variant="h3">{header}</Typography>
+          <Divider component="hr" />
+        </Grid>
+      ) : null}
+
       <Grid item container spacing={5}>
         <Grid item xs={12} sm={6}>
           <TextField

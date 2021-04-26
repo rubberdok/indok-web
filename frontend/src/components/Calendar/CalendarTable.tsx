@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import React from "react";
 import { DAYS_IN_WEEK } from "./constants";
-import { Box, Grid, makeStyles, Typography } from "@material-ui/core";
+import { Grid, makeStyles, Typography } from "@material-ui/core";
 
 const useStyles = makeStyles(() => ({
   table: {
@@ -17,14 +17,20 @@ const useStyles = makeStyles(() => ({
 interface Props {
   getRows: (month: dayjs.Dayjs) => React.ReactNode[];
   month: dayjs.Dayjs;
+  backButton?: () => React.ReactNode;
+  nextButton?: () => React.ReactNode;
 }
 
-const CalendarTable: React.FC<Props> = ({ getRows, month }) => {
+const CalendarTable: React.FC<Props> = ({ getRows, month, backButton, nextButton }) => {
   const classes = useStyles();
   return (
-    <Box>
-      <Typography variant="body1" align="center">{`${month.format("MMMM")} - ${month.format("YYYY")}`}</Typography>
-      <Box component="table" className={classes.table}>
+    <Grid container>
+      <Grid item container justify={backButton && nextButton ? "space-between" : "center"}>
+        {backButton ? <Grid item>{backButton()}</Grid> : null}
+        <Typography variant="body1" align="center">{`${month.format("MMMM")} - ${month.format("YYYY")}`}</Typography>
+        {nextButton ? <Grid item>{nextButton()}</Grid> : null}
+      </Grid>
+      <Grid item component="table" className={classes.table}>
         <Grid container component="thead">
           <Grid item container xs component="tr">
             {DAYS_IN_WEEK.map((dow: string) => (
@@ -41,8 +47,8 @@ const CalendarTable: React.FC<Props> = ({ getRows, month }) => {
             </Grid>
           ))}
         </Grid>
-      </Box>
-    </Box>
+      </Grid>
+    </Grid>
   );
 };
 export default CalendarTable;
