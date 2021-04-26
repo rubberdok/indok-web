@@ -62,33 +62,6 @@ class CreateEvent(graphene.Mutation):
 
         check_user_membership(info.context.user, organization)
 
-        if event_data.get("is_attendable"):
-            if (
-                event_data.get("signup_open_date") is None
-                or event_data.get("available_slots") is None
-            ):
-                raise Exception(
-                    "For arrangementer som krever påmelding må når påmeldingen åpner og antall plasser oppgis"
-                )
-
-            if (
-                event_data.get("price") is not None
-                and event_data.get("binding_signup") is None
-            ):
-                raise Exception(
-                    "Arrangementer der man betaler for deltagelse krever bindende påmelding"
-                )
-
-        else:
-            if (
-                event_data.get("deadline") is not None
-                or event_data.get("deadline") is not None
-                or event_data.get("binding_signup")
-            ):
-                raise Exception(
-                    "Deadline for påmelding og bindende påmelding er kun relevant for arrangementer som krever påmelding."
-                )
-
         event = Event()
         for k, v in event_data.items():
             setattr(event, k, v)
@@ -114,38 +87,6 @@ class UpdateEvent(graphene.Mutation):
             raise ValueError("Ugyldig arrangement")
 
         check_user_membership(info.context.user, event.organization)
-
-        if event.is_attendable or event_data.get("is_attendable"):
-            if (
-                event.signup_open_date is None
-                and event_data.get("signup_open_date") is None
-            ) or (
-                event.available_slots is None
-                and event_data.get("available_slots") is None
-            ):
-                raise Exception(
-                    "For arrangementer som krever påmelding må når påmeldingen åpner og antall plasser oppgis"
-                )
-
-            if (event.price is not None or event_data.get("price") is not None) and (
-                event_data.get("binding_signup") is None
-                or event_data.binding_signup is None
-            ):
-                raise Exception(
-                    "Arrangementer der man betaler for deltagelse krever bindende påmelding"
-                )
-
-        else:
-            if (
-                (event.deadline is not None or event_data.get("deadline") is not None)
-                or (event.price is not None or event_data.get("price") is not None)
-                or (
-                    event.binding_signup is not None or event_data.get("binding_signup")
-                )
-            ):
-                raise Exception(
-                    "Pris, deadline for påmelding og bindende påmelding er kun relevant for arrangementer som krever påmelding."
-                )
 
         for k, v in event_data.items():
             setattr(event, k, v)
