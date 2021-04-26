@@ -11,6 +11,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+/**
+ * Component for showing the detail page of an event
+ */
+
 const EventInfo: NextPage = () => {
   const router = useRouter();
   const { id } = router.query;

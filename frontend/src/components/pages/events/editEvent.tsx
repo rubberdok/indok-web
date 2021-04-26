@@ -40,6 +40,15 @@ interface EditEventProps {
   event: Event;
 }
 
+/**
+ * Component (Dialog) for editing an event
+ *
+ * Props:
+ * - open: whether the dialog should be open
+ * - onClose: called when the doalog should be closed
+ * - event: The event to be edited
+ */
+
 const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
   const defaultInput: Record<string, any> = {
     title: "",

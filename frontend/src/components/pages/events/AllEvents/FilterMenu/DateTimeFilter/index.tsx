@@ -7,6 +7,14 @@ interface Props {
   onFiltersChange: (query: FilterQuery) => void;
 }
 
+/**
+ * Component for the date filter in the filter menu
+ *
+ * Props:
+ * - filters: the currently applied filters
+ * - onFiltersChange: method called when filters are updated
+ */
+
 const DateTimeFilter: React.FC<Props> = ({ filters, onFiltersChange }) => {
   return (
     <>
