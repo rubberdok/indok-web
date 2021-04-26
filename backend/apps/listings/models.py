@@ -18,7 +18,7 @@ class Listing(models.Model):
     deadline = models.DateTimeField()
 
     organization = models.ForeignKey(
-        Organization, on_delete=models.CASCADE, null=True, related_name="listings"
+        Organization, on_delete=models.CASCADE, related_name="listings"
     )
 
     url = models.URLField(null=True, blank=True)
@@ -30,3 +30,6 @@ class Listing(models.Model):
 
     def __repl__(self):
         return self.__str__()
+
+    class Meta:
+        ordering = ["deadline"]

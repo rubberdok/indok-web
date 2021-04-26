@@ -57,9 +57,6 @@ class Option(models.Model):
 
 class Answer(models.Model):
     uuid = UUIDField(primary_key=True, default=uuid.uuid4)
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="answers"
-    )
     question = models.ForeignKey(
         Question, on_delete=models.CASCADE, related_name="answers"
     )
@@ -78,7 +75,7 @@ class Answer(models.Model):
         ]
 
     def __str__(self) -> str:
-        return f"User: {self.user}; Answer: {self.answer}"
+        return f"Answer: {self.answer}"
 
 
 class Response(models.Model):
