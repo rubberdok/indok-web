@@ -3,6 +3,7 @@ import Layout from "@components/Layout";
 import { QUERY_ADMIN_ALL_BOOKINGS } from "@graphql/cabins/queries";
 import { Booking } from "@interfaces/cabins";
 import CheckIcon from "@material-ui/icons/Check";
+import ClearIcon from "@material-ui/icons/Clear";
 import {
   Typography,
   Grid,
@@ -22,42 +23,84 @@ import {
   DialogContentText,
   DialogActions,
   Button,
+  Tooltip,
 } from "@material-ui/core";
 import { toStringChosenCabins } from "@utils/cabins";
 import dayjs from "dayjs";
 import { NextPage } from "next";
-import { CONFIRM_BOOKING } from "@graphql/cabins/mutations";
+import { CONFIRM_BOOKING, DELETE_BOOKING } from "@graphql/cabins/mutations";
 import { useState } from "react";
 import { useRouter } from "next/router";
+import theme from "@styles/theme";
 
 const BookingAdminPage: NextPage = () => {
-  const { data, error } = useQuery<{
+  const { data, error, refetch } = useQuery<{
     adminAllBookings: Booking[];
   }>(QUERY_ADMIN_ALL_BOOKINGS, { variables: { after: dayjs().format("YYYY-MM-DD") } });
   const [confirmBooking] = useMutation(CONFIRM_BOOKING, { refetchQueries: [{ query: QUERY_ADMIN_ALL_BOOKINGS }] });
+  const [deleteBooking] = useMutation(DELETE_BOOKING, { refetchQueries: [{ query: QUERY_ADMIN_ALL_BOOKINGS }] });
   const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [bookingToBeDeleted, setBookingToBeDeleted] = useState<Booking | undefined>();
   const router = useRouter();
 
-  const handleDialogClose = () => router.push("/");
+  const errorMessageDialog = () => (
+    <Dialog open={error != undefined} onClose={handleErrorDialogClose}>
+      <DialogTitle>{`Det har oppstått en feilmelding: ${error?.name}`}</DialogTitle>
+      <DialogContent>
+        <DialogContentText>{error?.message}</DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleErrorDialogClose} color="primary" variant="contained">
+          OK
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+
+  const handleDeleteBookingOnClose = () => setBookingToBeDeleted(undefined);
+
+  const deleteBookingDialog = () => (
+    <Dialog open={bookingToBeDeleted != undefined} onClose={handleDeleteBookingOnClose}>
+      <DialogTitle>{`Nå er nå iferd med å gjøre en irreversibel handling`}</DialogTitle>
+      <DialogContent>
+        <DialogContentText>Er du sikker på at du vil slette denne bookingen?</DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleDeleteBookingOnClose} variant="contained">
+          Avbryt
+        </Button>
+        <Button
+          onClick={() => {
+            if (bookingToBeDeleted) {
+              deleteBooking({ variables: { id: bookingToBeDeleted.id } }).then(() => {
+                setSnackbarMessage("Bookingen ble slettet");
+                setOpenSnackbar(true);
+                refetch();
+              });
+            }
+            handleDeleteBookingOnClose();
+          }}
+          color="primary"
+          variant="contained"
+        >
+          Slett booking
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+
+  const handleErrorDialogClose = () => router.push("/");
   return (
     <Layout>
       <Snackbar
         open={openSnackbar}
-        message="Booking bekreftet. Bekreftelsesmail sendt."
+        message={snackbarMessage}
         autoHideDuration={6000}
         onClose={() => setOpenSnackbar(false)}
       />
-      <Dialog open={error != undefined} onClose={handleDialogClose}>
-        <DialogTitle>{`Det har oppstått en feilmelding: ${error?.name}`}</DialogTitle>
-        <DialogContent>
-          <DialogContentText>{error?.message}</DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleDialogClose} color="primary" variant="contained">
-            OK
-          </Button>
-        </DialogActions>
-      </Dialog>
+      {errorMessageDialog()}
+      {deleteBookingDialog()}
       <Grid container direction="column" spacing={3}>
         <Grid item>
           <Box p={3}>
@@ -95,15 +138,34 @@ const BookingAdminPage: NextPage = () => {
                       <TableCell align="right">{toStringChosenCabins(booking.cabins)}</TableCell>
                       <TableCell align="right">{booking.isTentative ? "Ikke godkjent" : "Godkjent"}</TableCell>
                       <TableCell align="right">
-                        <IconButton
-                          disabled={!booking.isTentative}
-                          onClick={() => {
-                            confirmBooking({ variables: { id: booking.id } });
-                            setOpenSnackbar(true);
-                          }}
-                        >
-                          <CheckIcon />
-                        </IconButton>
+                        <Tooltip title="Godkjenn">
+                          <Box display="inline" component="span">
+                            <IconButton
+                              disabled={!booking.isTentative}
+                              onClick={() => {
+                                confirmBooking({ variables: { id: booking.id } }).then(() => {
+                                  setSnackbarMessage("Booking bekreftet. Bekreftelsesmail sendt.");
+                                  setOpenSnackbar(true);
+                                  refetch();
+                                });
+                              }}
+                              color="secondary"
+                            >
+                              <CheckIcon />
+                            </IconButton>
+                          </Box>
+                        </Tooltip>
+                        <Tooltip title="Avkreft">
+                          <Box color={theme.palette.error.main} display="inline" component="span">
+                            <IconButton
+                              disabled={!booking.isTentative}
+                              onClick={() => setBookingToBeDeleted(booking)}
+                              color="inherit"
+                            >
+                              <ClearIcon />
+                            </IconButton>
+                          </Box>
+                        </Tooltip>
                       </TableCell>
                     </TableRow>
                   ))}

@@ -4,6 +4,7 @@ from apps.cabins.types import AllBookingsType, CabinType, AdminBookingType
 from apps.cabins.mutations import (
     CreateBooking,
     UpdateBooking,
+    DeleteBooking,
     SendEmail,
 )
 from apps.cabins.resolvers import CabinResolvers
@@ -12,6 +13,7 @@ from apps.cabins.resolvers import CabinResolvers
 class CabinMutations(graphene.ObjectType):
     create_booking = CreateBooking.Field()
     update_booking = UpdateBooking.Field()
+    delete_booking = DeleteBooking.Field()
     send_email = SendEmail.Field()
 
 

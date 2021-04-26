@@ -271,3 +271,27 @@ class CabinsMutationsTestCase(CabinsBaseTestCase):
         self.assertResponseNoErrors(response)
         self.assertEqual("Sverre", self.first_booking.firstname)
         self.assertEqual("Spetalen", self.first_booking.lastname)
+
+    def test_delete_booking(self):
+        query = f"""
+                mutation {{
+                  deleteBooking(id: {self.first_booking.id}) {{
+                    ok
+                    bookingId
+                  }}
+                }}
+                """
+        response = self.query(query)
+        # Check that unauthorized user cannot delete booking
+        self.assertResponseHasErrors(response)
+        try:
+            booking = Booking.objects.get(pk=self.first_booking.id)
+        except Booking.DoesNotExist:
+            self.assertTrue(
+                True, "The booking was deleted after unauthorized user tried to delete"
+            )
+        self.add_booking_permission("delete_booking")
+        response = self.query(query, user=self.user)
+        self.assertResponseNoErrors(response)
+        with self.assertRaises(Booking.DoesNotExist):
+            booking = Booking.objects.get(pk=self.first_booking.id)
