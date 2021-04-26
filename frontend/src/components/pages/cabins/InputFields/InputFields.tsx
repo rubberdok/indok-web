@@ -1,5 +1,15 @@
 import { ContactInfo, InputFieldsEvent, ContactInfoValidations, Cabin } from "@interfaces/cabins";
-import { Divider, FormControl, Grid, InputLabel, MenuItem, Select, TextField, Typography } from "@material-ui/core";
+import {
+  Divider,
+  FormControl,
+  Grid,
+  Hidden,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+  Typography,
+} from "@material-ui/core";
 import { range } from "@utils/helpers";
 import React from "react";
 
@@ -12,24 +22,17 @@ interface Props {
   header?: string;
 }
 
-export const InputFields: React.FC<Props> = ({
-  contactInfo,
-  validations,
-  onChange,
-  errorTrigger,
-  chosenCabins,
-  header,
-}) => {
+export const InputFields: React.FC<Props> = ({ contactInfo, validations, onChange, errorTrigger, chosenCabins }) => {
   const totalGuestsAllowed = chosenCabins.reduce((sum, currentCabin) => sum + (currentCabin.maxGuests || 0), 0);
 
   return (
     <Grid container item spacing={3} lg={8} md={12} justify="center">
-      {header ? (
+      <Hidden mdDown>
         <Grid item>
-          <Typography variant="h3">{header}</Typography>
+          <Typography variant="h3">Kontaktinfo</Typography>
           <Divider component="hr" />
         </Grid>
-      ) : null}
+      </Hidden>
 
       <Grid item container spacing={5}>
         <Grid item xs={12} sm={6}>

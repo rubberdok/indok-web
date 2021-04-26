@@ -2,7 +2,7 @@ import { useQuery } from "@apollo/client/react";
 import { GET_USER } from "@graphql/users/queries";
 import { ContactInfo, InputFieldsEvent, ContactInfoValidations, Cabin } from "@interfaces/cabins";
 import { User } from "@interfaces/users";
-import { Grid, useMediaQuery, useTheme } from "@material-ui/core";
+import { Grid } from "@material-ui/core";
 import { NextPage } from "next";
 import React, { Dispatch, SetStateAction, useEffect } from "react";
 import { InputFields } from "../InputFields/InputFields";
@@ -49,8 +49,6 @@ const CabinContactInfo: NextPage<ContractInfoProps> = ({
   const handleInputChange = (name: string, event: InputFieldsEvent) => {
     setContactInfo({ ...contactInfo, [name]: event.target.value });
   };
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
     <Grid container justify="center">
@@ -60,7 +58,6 @@ const CabinContactInfo: NextPage<ContractInfoProps> = ({
         validations={validations}
         errorTrigger={errorTrigger}
         chosenCabins={chosenCabins}
-        header={isMobile ? undefined : "Kontaktinfo"}
       />
     </Grid>
   );
