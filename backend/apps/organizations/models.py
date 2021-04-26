@@ -26,8 +26,8 @@ class Organization(models.Model):
     # The HR-group has the "forms.manage_form" permission, allowing them to view and manage responses to e.g. listings.
     # The primary group is intended to act as a group for organizations who need any kind of special permission, e.g. hyttestyret
     # Or if we wish to limit the creation of events or listings to certain organizations.
-    primary_group = models.OneToOneField(to=ResponsibleGroup, on_delete=models.CASCADE, related_name="organization")    
-    hr_group = models.OneToOneField(to=ResponsibleGroup, on_delete=models.CASCADE, related_name="hr_organization", null=True)
+    primary_group = models.OneToOneField(to=ResponsibleGroup, on_delete=models.DO_NOTHING, related_name="organization")    
+    hr_group = models.OneToOneField(to=ResponsibleGroup, on_delete=models.DO_NOTHING, related_name="hr_organization")
 
     users = models.ManyToManyField(
         "users.User",

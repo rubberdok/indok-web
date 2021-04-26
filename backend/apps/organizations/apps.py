@@ -2,7 +2,7 @@ from django.apps import AppConfig
 
 
 class OrganizationsConfig(AppConfig):
-    name = "organizations"
+    name = "apps.organizations"
 
     def ready(self):
-        import apps.organizations.signals
+        import apps.organizations.signals #noqa
