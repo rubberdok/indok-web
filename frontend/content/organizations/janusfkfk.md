@@ -6,11 +6,11 @@ image: /img/fkfkbilde.png
 styre:
   ceo:
     navn: Sunniva Økland
-    mail: tlf.
+    mail:
     tittel: Chief Executive Officer
   cto:
     navn: Elin Ulsaker
-    mail: tlf.
+    mail:
     tittel: Chief Financial Officer
 tag: idrett
 ---

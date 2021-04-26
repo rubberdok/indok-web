@@ -6,26 +6,26 @@ image: /img/indolbilde.jpg
 styre:
   ceo:
     navn: Hans Magnus Utne
-    mail: tlf. 975 18 033
+    telefon: 975 18 033
     tittel: Leder
   cto:
     navn: Phillip Kolkmeier
-    mail: tlf. 906 71 650
+    telefon: 906 71 650
     tittel: Nestleder
   brygg:
     navn: Olav Førland
-    mail: tlf. 902 25 335
+    telefon: 902 25 335
     tittel: Bryggeansvarlig
   pr:
     navn: Marte Vingsnes
-    mail: tlf. 482 60 767
+    telefon: 482 60 767
     tittel: PR-ansvarlig
 tag: kultur
 ---
 
 # Hvem er vi?
 
-Indøk Ølbryggelaug (Ind. Øl) er en sosial gjeng som samles regelmessig for å brygge øl. Vi brygger alt fra lyst til mørkt ved hjelp av tipp topp utstyr. Sammen utforsker vi de uendelige mulighetene ølverdenen har å by på. Ølet distribueres og selges på/til ulike indøkarrangementer.
+Indøk Ølbryggelaug (Indøl) er en sosial gjeng som samles regelmessig for å brygge øl. Vi brygger alt fra lyst til mørkt ved hjelp av tipp topp utstyr. Sammen utforsker vi de uendelige mulighetene ølverdenen har å by på. Ølet distribueres og selges på/til ulike indøkarrangementer.
 
 # Vil du bli med?
 

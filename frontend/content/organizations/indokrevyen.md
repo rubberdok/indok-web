@@ -4,6 +4,7 @@ description: Norges beste studentrevy?
 logo: /img/indokrevylogo.jpg
 image: /img/indokrevyenbilde.jpg
 styre:
+
 tag: kultur
 ---
 
@@ -18,6 +19,8 @@ Revygjengen tas opp på høsten hvert år og revyen settes opp i februar.
 - Indøkrevyen 2017 – Sjukt å melde
 - Indøkrevyen 2018 – Kunstig intelligente
 - Indøkrevyen 2019 - Retusjert
+- Indøkrevyen 2020 - Fingrene på fatet
+- Indøkrevyen 2021 - Børs og katedral
 
 [Se et klipp fra Revyen 2016!](https://youtu.be/sepqsdHY9C0)
 

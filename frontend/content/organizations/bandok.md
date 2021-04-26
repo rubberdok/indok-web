@@ -6,11 +6,11 @@ image: /img/bandoklogo.png
 styre:
   ceo:
     navn: Johannes Log Indbjo
-    mail: tlf.
+    mail:
     tittel: Administrerende ansvarlig
   cto:
     navn: Sigurd Elias Halse
-    mail: tlf.
+    mail:
     tittel: Økonomiansvarlig/utstyrsansvarlig
 tag: kultur
 ---
