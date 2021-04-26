@@ -85,6 +85,9 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
   const { loading: categoryLoading, error: categoryError, data: categoryData } = useQuery(GET_CATEGORIES);
 
   useEffect(() => {
+    // Used to get an initial event data object, keeping all fields except for the date related ones
+    // equal to the event we get from the event prop (the date fields are changed to make TS happy)
+
     const initialEventData = {
       ...eventData,
     };
