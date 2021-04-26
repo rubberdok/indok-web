@@ -6,11 +6,11 @@ image: /img/janushklogo.jpg
 styre:
   ceo:
     navn: Maren Larsen
-    mail: tlf. 916 49 220
+    telefon: 916 49 220
     tittel: Leder
   cto:
     navn: Emilie Bakke-Jakobsen
-    mail: tlf. 414 99 925
+    telefon: 414 99 925
     tittel: Økonomiansvarlig
 tag: idrett
 ---

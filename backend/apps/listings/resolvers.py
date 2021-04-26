@@ -13,7 +13,7 @@ class ListingResolvers:
                 | Q(organization__name__icontains=search)
             )
             return Listing.objects.filter(filter)
-        return Listing.objects.filter(deadline__gte=timezone.now())
+        return Listing.objects.filter(Q(deadline__gte=timezone.now()) & Q(start_datetime__lte=timezone.now()))
 
     def resolve_listing(self, info, id):
         try:

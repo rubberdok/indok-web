@@ -13,6 +13,7 @@ django-multiselectfield==0.1.12
 django-phonenumber-field==5.0.0
 django-ses==2.0.0
 djangorestframework==3.11.2
+factory-boy==3.2.0
 graphene==2.1.8
 graphene-django==2.13.0
 graphql-core==2.3.2

@@ -17,7 +17,7 @@ const ListingsPage: NextPage = () => {
         <Typography variant="h1" component="h1" align="center">
           Verv
         </Typography>
-        <Listings handleClick={reload} />
+        <Listings reload={reload} />
       </Container>
     </Layout>
   );
