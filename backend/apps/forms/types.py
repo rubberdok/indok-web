@@ -7,6 +7,7 @@ from graphql_jwt.decorators import login_required
 
 from apps.users.types import UserType
 from apps.forms.models import Answer, Option, Question, Response, Form
+from utils.decorators import get_resolver_parent, permission_required_or_none
 
 
 class QuestionTypeEnum(graphene.Enum):
@@ -57,11 +58,9 @@ class QuestionType(DjangoObjectType):
         return parent.options.all()
 
     @staticmethod
-    @login_required
+    @permission_required_or_none("forms.manage_form", fn=get_resolver_parent)
     def resolve_answers(parent: Question, info) -> Optional[list[Answer]]:
-        # Can be changed to @permission_required_or_none("forms.manage_form", fn=get_resolver_parent) if #141 is merged
-        if info.context.user.has_perm("forms.manage_form", parent.form):
-            return parent.answers
+        return parent.answers
 
     @staticmethod
     @login_required
@@ -104,33 +103,21 @@ class FormType(DjangoObjectType):
         description = "A form containing questions, optionally linked to a listing."
 
     @staticmethod
-    @login_required
+    @permission_required_or_none("forms.manage_form", fn=get_resolver_parent)
     def resolve_responders(parent: Form, info):
-        # Can be changed to @permission_required_or_none("forms.manage_form", fn=get_resolver_parent) if #141 is merged
-        if info.context.user.has_perm("forms.manage_form", parent):
-            return get_user_model().objects.filter(responses__form=parent).distinct()
-        return None
+        return get_user_model().objects.filter(responses__form=parent).distinct()
 
     @staticmethod
-    @login_required
+    @permission_required_or_none("forms.manage_form", fn=get_resolver_parent)
     def resolve_responder(parent: Form, info, user_id: int):
-        # Can be changed to @permission_required_or_none("forms.manage_form", fn=get_resolver_parent) if #141 is merged
-        if info.context.user.has_perm("forms.manage_form", parent):
-            return get_user_model().objects.get(responses__form=parent, pk=user_id)
-        return None
+        return get_user_model().objects.get(responses__form=parent, pk=user_id)
 
     @staticmethod
-    @login_required
+    @permission_required_or_none("forms.manage_form", fn=get_resolver_parent)
     def resolve_responses(parent, info):
-        # Can be changed to @permission_required_or_none("forms.manage_form", fn=get_resolver_parent) if #141 is merged
-        if info.context.user.has_perm("forms.manage_form", parent):
-            return parent.responses.all()
-        return None
+        return parent.responses.all()
 
     @staticmethod
-    @login_required
+    @permission_required_or_none("forms.manage_form", fn=get_resolver_parent)
     def resolve_response(parent, info, response_pk):
-        # Can be changed to @permission_required_or_none("forms.manage_form", fn=get_resolver_parent) if #141 is merged
-        if info.context.user.has_perm("forms.manage_form", parent):
-            return parent.responses.get(pk=response_pk)
-        return None
+        return parent.responses.get(pk=response_pk)
