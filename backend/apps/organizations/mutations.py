@@ -1,12 +1,14 @@
 import graphene
 from django.contrib.auth.models import Group, User
+from django.contrib.auth import get_user_model
 from django.utils.text import slugify
 from graphql_jwt.decorators import permission_required
 
 from ..users.types import UserType
 from . import permissions as perms
-from .models import Membership, Organization, Role
-from .types import MembershipType, OrganizationType, RoleType
+from .models import Membership, Organization
+from .types import MembershipType, OrganizationType
+from apps.permissions.models import ResponsibleGroup
 
 
 class OrganizationInput(graphene.InputObjectType):
@@ -77,7 +79,7 @@ class DeleteOrganization(graphene.Mutation):
 class MembershipInput(graphene.InputObjectType):
     user_id = graphene.ID()
     organization_id = graphene.ID()
-    role_id = graphene.ID()
+    group_id = graphene.ID()
 
 
 class AssignMembership(graphene.Mutation):
@@ -88,12 +90,15 @@ class AssignMembership(graphene.Mutation):
         membership_data = MembershipInput(required=True)
 
     def mutate(self, info, membership_data):
+        user = get_user_model().objects.get(pk=membership_data["user_id"])
+        group = ResponsibleGroup.objects.get(pk=membership_data["group_id"])
         membership = Membership(
             organization_id=membership_data["organization_id"],
-            user_id=membership_data["user_id"],
-            role_id=membership_data["role_id"],
+            user=user,
+            group=group,
         )
         membership.save()
+        user.groups.add(group.group)
         return AssignMembership(membership=membership, ok=True)
 
 
@@ -110,20 +115,3 @@ class RemoveMembership(graphene.Mutation):
         user: User = membership.user
         membership.delete()
         return RemoveMembership(removed_member=user, ok=True)
-
-
-class RoleInput(graphene.InputObjectType):
-    name = graphene.String()
-
-
-class CreateRole(graphene.Mutation):
-    role = graphene.Field(RoleType)
-    ok = graphene.Boolean()
-
-    class Arguments:
-        role_data = RoleInput(required=True)
-
-    def mutate(self, info, role_data):
-        role = Role(name=role_data["name"])
-        role.save()
-        return CreateRole(role=role, ok=True)

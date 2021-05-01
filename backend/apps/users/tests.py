@@ -2,6 +2,7 @@ import json
 from datetime import datetime
 
 from graphene.utils.str_converters import to_snake_case
+from guardian.shortcuts import assign_perm
 
 from ...utils.testing.ExtendedGraphQLTestCase import ExtendedGraphQLTestCase
 from ...utils.testing.factories.users import UserFactory
@@ -13,6 +14,7 @@ class UsersBaseTestCase(ExtendedGraphQLTestCase):
 
         # Create two (logged in) users
         self.user = UserFactory()
+        assign_perm("view_sensitive_info", self.user, self.user)
         self.super_user = UserFactory(is_staff=True, is_superuser=True)
 
 
@@ -102,7 +104,6 @@ class UsersResolversTestCase(UsersBaseTestCase):
         response = self.query(query, user=self.user)
         self.assertResponseNoErrors(response)
         content = json.loads(response.content)
-
         # Confirm content of query
         # TODO: Should look into better ways of doing this assertion
         for k, v in content["data"]["user"].items():
