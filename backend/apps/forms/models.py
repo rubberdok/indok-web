@@ -31,7 +31,7 @@ class Question(models.Model):
     question = models.CharField(max_length=300)
     description = models.CharField(max_length=1000, blank=True, default="")
     question_type = models.CharField(max_length=32, default="PARAGRAPH")
-    mandatory = onCancel={() => router.back()}models.BooleanField(default=True)
+    mandatory = models.BooleanField(default=True)
     position = models.IntegerField()
 
     def __str__(self) -> str:

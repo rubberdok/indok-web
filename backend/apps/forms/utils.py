@@ -1,85 +1,61 @@
 from .models import Question
 
-def change_question_position(
-  ascending,
-  index,
-  form_questions,
-  existing_positions,
-  updated_question,
-  updated_question_old_position,
-  updated_question_new_position
-):
-  this_question = form_questions[index]
-  this_position = existing_positions[index]
-  if this_position == updated_question_old_position:
-    setattr(updated_question, "position", updated_question_new_position)
-    setattr(this_question, "position", updated_question_old_position)
-  else:
-    skip = 1 if ascending else -1
-    new_position = this_position + skip
-    if new_position in existing_positions:
-      change_question_position(
-        ascending
-        index=index + skip,
-        form_questions,
-        existing_positions,
-        updated_question,
-        updated_question_old_position,
-        updated_question_new_position
-      )
-      setattr(this_question, "position", new_position)
-    else:
-      setattr(this_question, "position", new_position)
-      setattr(updated_question, "position", updated_question_new_position)
-
-
 """
 Takes in a question along with a new position
 Adjusts positions of questions between the old and new positions
 Then updates the question with its new position
 """
-def insert_question(question, new_position):
+def update_question_position(question, new_position):
   old_position = question.position
+
+  # If question position has not changed, return
   if old_position == new_position:
     return
-  move_fowards = old_position < new_position
-  form_questions = question.form.questions.filter(
-    position__lte=(new_position if move_back else old_position),
-    position__gte=(old_position if move_back else new_position)
+
+  # Determine whether question is moving forwards (decreasing position) or back (increasing position)
+  move_forwards = new_position < old_position
+
+  # Get the questions in the form between the updated question's old and new positions
+  questions_between = question.form.questions.filter(
+    position__lte=(old_position if move_forwards else new_position),
+    position__gte=(new_position if move_forwards else old_position)
   )
-  existing_positions = form_questions.values_list("position", flat=True)
-  questions_length = len(form_questions)
+  positions_between = questions_between.values_list("position", flat=True)
+  number_of_questions_between = len(questions_between)
+
+  changed_questions = []
+
+  setattr(question, "position", new_position)
+
   if move_forwards:
-    if existing_positions[0] != new_position:
-      setattr(question, "position", new_position)
+    # If new position is not taken, return
+    if positions_between[0] != new_position:
       return
-    for i in range(questions_length):
-      
+
+    # Loop through question indices except the last one, as that is the updated question
+    for i in range(number_of_questions_between - 1):
+      # Increment positions of questions between the new and old positions of the updated question
+      setattr(questions_between[i], "position", positions_between[i] + 1)
+      changed_questions.append(questions_between[i])
+
+      # If there is available space before next position, then all questions now have unique positions
+      if (positions_between[i + 1] != positions_between[i] + 1):
+        break
+
   else:
-    if existing_positions[questions_length - 1] != new_position:
-      setattr(question, "position", new_position)
+    # If new position is not taken, return (since we're moving backwards, this is now the last question)
+    if positions_between[questions_length - 1] != new_position:
       return
-    for i in range(questions_length, 0, -1):
 
+    # Loop through question indices except the first one, as that is the updated question
+    for i in range(number_of_questions_between, 1, -1):
+      # Decrement positions of questions between the old and new positions of the updated question
+      setattr(questions_between[i], "position", positions_between[i] - 1)
+      changed_questions.append(questions_between[i])
 
-""" def insert_question(question, new_position):
-  old_position = question.position
-  ascending: bool = old_position < new_position
-  form_questions = question.form.questions.filter(
-    position__lte=(new_position if ascending else old_position),
-    position__gte=(old_position if ascending else new_position)
-  )
-  existing_positions = form_questions.values_list("position", flat=True)
-  if new_position in existing_positions:
-    change_question_position(
-      ascending,
-      index=existing_positions.index(new_position),
-      form_questions,
-      existing_positions,
-      updated_question=question,
-      updated_question_old_position=old_position,
-      updated_question_new_position=new_position
-    )
-    Question.objects.bulk_update(form_questions)
-  else:
-    setattr(question, "position", new_position) """
+      # If there is available space before next position, then all questions now have unique positions
+      if (positions_between[i - 1] != positions_between[i] - 1):
+        break
+
+  for changed_question in reversed(changed_questions):
+    changed_question.save()

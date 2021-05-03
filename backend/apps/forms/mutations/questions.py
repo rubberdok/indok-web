@@ -4,7 +4,7 @@ from graphql_jwt.decorators import login_required, permission_required
 
 from ..models import Answer, Form, Option, Question, Response
 from ..types import OptionType, QuestionType
-from ..utils import insert_question
+from ..utils import update_question_position
 
 
 class QuestionTypeEnum(graphene.Enum):
@@ -28,6 +28,7 @@ class CreateQuestionInput(BaseQuestionInput):
     form_id = graphene.ID(required=True)
     question = graphene.String(required=True)
     mandatory = graphene.Boolean()
+    position = graphene.Int(required=True)
 
 
 class CreateQuestion(graphene.Mutation):
@@ -67,7 +68,7 @@ class UpdateQuestion(graphene.Mutation):
             return UpdateQuestion(question=None, ok=False)
         for k, v in question_data.items():
             if k == "position":
-                insert_question(question=question, new_position=v)
+                update_question_position(question=question, new_position=v)
             else:
                 setattr(question, k, v)
         question.save()
