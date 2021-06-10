@@ -1,5 +1,7 @@
 import json
 
+from django.core import mail
+
 from apps.cabins.models import Booking, Cabin
 from utils.testing.ExtendedGraphQLTestCase import ExtendedGraphQLTestCase
 from utils.testing.cabins_factories import BookingFactory
@@ -179,6 +181,7 @@ class CabinsMutationsTestCase(CabinsBaseTestCase):
             ).exists()
         )
 
+
     def test_add_invalid_booking(self):
         # Try to add booking before current time
         self.first_booking.check_in = timezone.now() - datetime.timedelta(days=10)
@@ -295,3 +298,41 @@ class CabinsMutationsTestCase(CabinsBaseTestCase):
         self.assertResponseNoErrors(response)
         with self.assertRaises(Booking.DoesNotExist):
             booking = Booking.objects.get(pk=self.first_booking.id)
+
+
+class EmailTestCase(CabinsBaseTestCase):
+    def test_send_email(self):
+        # Send message.
+
+        print("testing")
+
+        query = f"""
+            mutation {{
+              sendEmail(
+                emailInput: {{
+                  firstname: \"{self.first_booking.firstname}\", 
+                  lastname: \"{self.first_booking.lastname}\", 
+                  receiverEmail: "herman.holmoy12@gmail.com", 
+                  phone: "42345678", 	
+                  internalParticipants: 3, 
+                  externalParticipants: 3, 
+                  cabins: [1, 2], 
+                  checkIn: "2021-04-20", 
+                  checkOut: "2021-04-23",
+                  emailType:"reserve_booking"
+                }}
+              ){{
+                 {{
+                ok
+              }}
+            }}
+        """
+
+        response = self.query(query)
+        print(mail.outbox)
+
+        # Test that one message has been sent.
+        self.assertEqual(len(mail.outbox), 1)
+
+        # Verify that the subject of the first message is correct.
+        self.assertEqual(mail.outbox[0].subject, 'Subject here')
