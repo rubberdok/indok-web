@@ -17,7 +17,7 @@ import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
-import renderers from "@components/pages/listings/markdown/renderers";
+import * as markdownComponents from "@components/pages/listings/markdown/components";
 
 dayjs.extend(timezone);
 dayjs.extend(utc);
@@ -137,9 +137,9 @@ const ListingItem: React.FC<{
                   {timestamp(listing.deadline)}
                 </Typography>
                 <ReactMarkdown
-                  allowedTypes={["text", "paragraph", "emphasis", "strong"]}
+                  allowedElements={["text", "paragraph", "emphasis", "strong"]}
                   className={classes.descriptionText}
-                  renderers={renderers}
+                  components={markdownComponents}
                 >
                   {listing.description}
                 </ReactMarkdown>
