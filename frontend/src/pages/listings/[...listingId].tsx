@@ -10,7 +10,7 @@ import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import ReactMarkdown from "react-markdown";
-import * as markdownComponents from "@components/pages/listings/markdown/components";
+import * as markdownComponents from "@components/markdown/components";
 import InfoCard from "@components/pages/listings/detail/InfoCard";
 import TitleCard from "@components/pages/listings/detail/TitleCard";
 
