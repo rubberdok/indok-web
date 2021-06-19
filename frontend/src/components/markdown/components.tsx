@@ -9,7 +9,7 @@ import { Variant } from "@material-ui/core/styles/createTypography";
 type HeadingComponentWithId = (
   props: ReactBaseProps &
     ReactMarkdownProps & {
-      level: 1 | 2 | 3 | 4 | 5 | 6;
+      level: number;
       id?: string;
     }
 ) => ReactNode;
@@ -19,7 +19,7 @@ type Paragraph = (
 ) => ReactNode;
 
 const Heading: HeadingComponentWithId = ({ children, id, level }) => {
-  const variant: Variant = `h${level}`;
+  const variant = `h${level}` as Variant;
   return (
     <Typography id={id} variant={variant} gutterBottom>
       {children}

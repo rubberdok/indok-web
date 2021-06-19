@@ -138,8 +138,8 @@ const ListingItem: React.FC<{
                 </Typography>
                 <ReactMarkdown
                   allowedElements={["text", "paragraph", "emphasis", "strong"]}
-                  className={classes.descriptionText}
                   components={markdownComponents}
+                  className={classes.descriptionText}
                 >
                   {listing.description}
                 </ReactMarkdown>
