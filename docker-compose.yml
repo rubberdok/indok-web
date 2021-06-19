@@ -2,6 +2,7 @@ version: "3"
 
 services:
   db:
+    container_name: indok-db
     image: postgres
     environment:
       - POSTGRES_DB=postgres
@@ -15,25 +16,27 @@ services:
       - postgres_data:/var/lib/postgresql/data/:cached
 
   backend:
+    container_name: indok-api
     restart: always
     build:
       context: ./backend
       dockerfile: Dockerfile
     volumes:
-      - ./backend:/backend
+      - ./backend:/usr/src/api
     ports:
       - "8000:8000"
     depends_on:
       - db
 
   frontend:
+    container_name: indok-app
     build:
       context: ./frontend
       dockerfile: Dockerfile
     volumes:
-      - ./frontend/:/code
-      - /code/node_modules
-      - /code/.next
+      - ./frontend:/usr/src/app
+      - /usr/src/app/node_modules
+      - /usr/src/app/.next
     ports:
       - 3000:3000
     expose:
