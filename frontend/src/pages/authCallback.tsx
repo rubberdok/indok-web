@@ -49,11 +49,14 @@ const AuthCallbackPage: NextPage = () => {
         id_token_hint: data.authUser.idToken,
       });
       const logOutUrl = "https://auth.dataporten.no/openid/endsession" + queryString;
-
       router.push(logOutUrl);
       return null;
     }
-    router.push("/profile");
+    if (data.authUser.user.firstLogin) {
+      router.push("/onboarding");
+    } else {
+      router.replace("/");
+    }
     return null;
   }
   return (
