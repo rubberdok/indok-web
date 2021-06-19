@@ -15,7 +15,7 @@ styre:
 tag: kultur
 ---
 
-# Hvem er vi?
+##### Hvem er vi?
 
 Indøk har alt for lenge manglet eget husband, men den tid er forbi.
 Fra indøkrevyen springer et nyfødt, fresht, (u)strukturert band, med øre for detaljer. Med Gløshaugens minste blåserrekke blåser vi oss gjennom alt fra YMCA til Another One Bites the Dust med både takt og tone.

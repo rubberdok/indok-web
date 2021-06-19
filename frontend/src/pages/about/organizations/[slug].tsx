@@ -6,6 +6,7 @@ import { getPostBySlug, getPostsSlugs } from "@utils/posts";
 import { NextPage } from "next";
 import React from "react";
 import ReactMarkdown from "react-markdown";
+import * as markdownComponents from "@components/markdown/components";
 
 type ArticleProps = {
   params: {
@@ -85,9 +86,8 @@ const Article: NextPage<ArticleProps> = ({ post, frontmatter }) => {
         <Grid container spacing={4}>
           <Grid item xs={8}>
             <ReactMarkdown
-              escapeHtml={false}
-              source={post.content}
-              renderers={{ heading: HeadingRenderer, paragraph: ParagraphRenderer }}
+              children={post.content}
+              components={markdownComponents}
             />
           </Grid>
           <Grid item xs={4}>
@@ -149,22 +149,6 @@ export const getStaticProps = async ({ params }: ArticleProps) => {
   }
 
   return { props: postData };
-};
-
-const HeadingRenderer = (props: { children: React.ReactNode }) => {
-  return (
-    <Typography variant="h5" gutterBottom>
-      {props.children}
-    </Typography>
-  );
-};
-
-const ParagraphRenderer = (props: { children: React.ReactNode }) => {
-  return (
-    <Typography variant="body2" paragraph>
-      {props.children}
-    </Typography>
-  );
 };
 
 export default Article;

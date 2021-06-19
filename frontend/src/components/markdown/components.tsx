@@ -9,7 +9,7 @@ import { Variant } from "@material-ui/core/styles/createTypography";
 type HeadingComponentWithId = (
   props: ReactBaseProps &
     ReactMarkdownProps & {
-      level: number;
+      level: 1 | 2 | 3 | 4 | 5 | 6;
       id?: string;
     }
 ) => ReactNode;
@@ -19,9 +19,9 @@ type Paragraph = (
 ) => ReactNode;
 
 const Heading: HeadingComponentWithId = ({ children, id, level }) => {
-  const variant = `h${Math.min(level, 6)}` as Variant;
+  const variant: Variant = `h${level}`;
   return (
-    <Typography id={id} variant={variant}>
+    <Typography id={id} variant={variant} gutterBottom>
       {children}
     </Typography>
   );
@@ -34,5 +34,5 @@ export const h4 = Heading;
 export const h5 = Heading;
 export const h6 = Heading;
 export const p: Paragraph = ({ children }) => {
-  return <Typography variant="body1">{children}</Typography>
+  return <Typography variant="body2" paragraph>{children}</Typography>
 }

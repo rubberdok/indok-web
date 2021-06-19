@@ -23,7 +23,7 @@ styre:
 tag: annet
 ---
 
-# Hvem er vi?
+##### Hvem er vi?
 
 IBC er en case club for studenter tilknyttet sivilingeniørstudiet Industriell økonomi og teknologiledelse ved NTNU Trondheim. Vi ønsker å være en møteplass der studenter med interesse for business forberedes til næringslivet og får utvidet praktisk forretningsforståelse.
 
