@@ -1,7 +1,7 @@
 FROM python:3.9
 ENV PYTHONUNBUFFERED 1
-RUN mkdir -p /backend
-WORKDIR /backend
+
+WORKDIR /usr/src/api
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 
@@ -9,4 +9,4 @@ COPY . .
 
 EXPOSE 8000
 
-ENTRYPOINT ["/backend/entrypoint.sh"]
+ENTRYPOINT ["/usr/src/api/entrypoint.sh"]

@@ -1,12 +1,10 @@
 FROM node:12
 
 # Create app directory
-RUN mkdir -p /code
-WORKDIR /code
+WORKDIR /usr/src/app
 
 # Installing dependencies
-COPY package.json .
-COPY package-lock.json .
+COPY package*.json ./
 RUN npm install
 
 # Copying source files
