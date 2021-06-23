@@ -4,7 +4,6 @@ import { Container } from "@material-ui/core";
 import OnboardingForm from "@components/OnboardingForm";
 import client from "../apollo-client";
 import { GET_USER } from "@graphql/users/queries";
-import { gql } from "@apollo/client";
 
 const OnboardingPage: NextPage = ({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   return (
