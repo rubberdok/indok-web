@@ -301,38 +301,82 @@ class CabinsMutationsTestCase(CabinsBaseTestCase):
 
 
 class EmailTestCase(CabinsBaseTestCase):
-    def test_send_email(self):
-        # Send message.
+    def setUp(self) -> None:
+        super().setUp()
+        mail.outbox = []
 
-        print("testing")
-
+    def send_email(self, booking, email_type: str = "reserve_booking"):
         query = f"""
             mutation {{
               sendEmail(
                 emailInput: {{
-                  firstname: \"{self.first_booking.firstname}\", 
-                  lastname: \"{self.first_booking.lastname}\", 
-                  receiverEmail: "herman.holmoy12@gmail.com", 
-                  phone: "42345678", 	
-                  internalParticipants: 3, 
-                  externalParticipants: 3, 
-                  cabins: [1, 2], 
-                  checkIn: "2021-04-20", 
-                  checkOut: "2021-04-23",
-                  emailType:"reserve_booking"
+                  firstname: \"{booking.firstname}\", 
+                  lastname: \"{booking.lastname}\", 
+                  receiverEmail: \"{booking.receiver_email}\", 
+                  phone: \"{booking.phone}\", 
+                  internalParticipants: {booking.internal_participants}, 
+                  externalParticipants: {booking.external_participants}, 
+                  cabins: [1], 
+                  checkIn: \"{booking.check_in.strftime("%Y-%m-%d")}\", 
+                  checkOut: \"{booking.check_out.strftime("%Y-%m-%d")}\", 
+                  emailType: \"{email_type}\"
                 }}
               ){{
-                 {{
                 ok
               }}
             }}
         """
 
-        response = self.query(query)
-        print(mail.outbox)
+        return self.query(query)
 
-        # Test that one message has been sent.
+    def test_outbox_size_reservation(self):
+        # Check outbox size when sending reservation mails to both admin and user
+        response = self.send_email(self.first_booking, "reserve_booking")
+        self.assertResponseNoErrors(resp=response)
+        self.assertEqual(len(mail.outbox), 2)
+
+    def test_outbox_size_decision(self):
+        # Check outbox size when sending the decision (approve or disapprove) mail to the user
+        response = self.send_email(self.first_booking, "approve_booking")
+        self.assertResponseNoErrors(resp=response)
         self.assertEqual(len(mail.outbox), 1)
 
+    def test_subject_reservation(self):
+        response = self.send_email(self.first_booking)
+        self.assertResponseNoErrors(resp=response)
+
         # Verify that the subject of the first message is correct.
-        self.assertEqual(mail.outbox[0].subject, 'Subject here')
+        self.assertEqual(mail.outbox[0].subject, 'Bekreftelse på mottat søknad om booking av Oksen')
+
+    def test_subject_approval(self):
+        response = self.send_email(self.first_booking, "approve_booking")
+        self.assertResponseNoErrors(resp=response)
+
+        # Verify that the subject of the first message is correct.
+        self.assertTrue("Hyttestyret har tatt stilling til søknaden din om booking av " in mail.outbox[0].subject)
+
+    def test_reservation_mail_content(self):
+        response = self.send_email(self.first_booking, "reserve_booking")
+        self.assertResponseNoErrors(resp=response)
+
+        # Verify that the mails contain the price
+        self.assertTrue(str(self.first_booking.price) in mail.outbox[0].body)
+        self.assertTrue(str(self.first_booking.price) in mail.outbox[1].body)
+
+        # Verify that the admin email contains the correct contact info
+        self.assertTrue(self.first_booking.firstname in mail.outbox[1].body)
+        self.assertTrue(self.first_booking.lastname in mail.outbox[1].body)
+        self.assertTrue(self.first_booking.firstname in mail.outbox[1].body)
+        self.assertTrue(str(self.first_booking.phone) in mail.outbox[1].body)
+        self.assertTrue(f"Antall indøkere: {self.first_booking.internal_participants}" in mail.outbox[1].body)
+        self.assertTrue(f"Antall eksterne: {self.first_booking.external_participants}" in mail.outbox[1].body)
+
+        # Verify that the checkin and checkout for admin and user email is correct
+        self.assertTrue(self.first_booking.check_in.strftime("%d-%m-%Y") in mail.outbox[0].body)
+        self.assertTrue(self.first_booking.check_out.strftime("%d-%m-%Y") in mail.outbox[0].body)
+        self.assertTrue(self.first_booking.check_in.strftime("%d-%m-%Y") in mail.outbox[1].body)
+        self.assertTrue(self.first_booking.check_out.strftime("%d-%m-%Y") in mail.outbox[1].body)
+
+
+
+
