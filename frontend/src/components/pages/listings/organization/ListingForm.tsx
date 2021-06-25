@@ -1,4 +1,4 @@
-import MarkdownForm from "@components/pages/listings/markdown/MarkdownForm";
+import MarkdownForm from "@components/markdown/MarkdownForm";
 import { ListingInput } from "@interfaces/listings";
 import { Organization } from "@interfaces/organizations";
 import {
