@@ -10,18 +10,18 @@ interface ConfirmationDialogProps {
   handleConfirmationClose: () => void;
 }
 
-const ConfirmationDialog = ({
+const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
   showConfirmation,
   setShowConfirmation,
   emailProps,
   handleConfirmationClose,
-}: ConfirmationDialogProps) => {
+}) => {
   return (
     <Dialog
       fullWidth
       maxWidth="md"
       open={showConfirmation}
-      onClose={(_e) => setShowConfirmation(false)}
+      onClose={() => setShowConfirmation(false)}
       aria-labelledby="max-width-dialog-title"
     >
       <DialogTitle id="max-width-dialog-title">Mail sendt</DialogTitle>
@@ -45,7 +45,7 @@ const ConfirmationDialog = ({
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button startIcon={<ClearIcon />} onClick={(_e) => handleConfirmationClose()} color="primary">
+        <Button startIcon={<ClearIcon />} onClick={() => handleConfirmationClose()} color="primary">
           Lukk
         </Button>
       </DialogActions>

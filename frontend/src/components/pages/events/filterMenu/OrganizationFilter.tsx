@@ -10,7 +10,13 @@ interface Props {
   onFiltersChange: (query: FilterQuery) => void;
   organizations: Organization[];
   name: string;
-  classes: any;
+  classes: {
+    badge: string;
+    nested: string;
+    doubleNested: string;
+    doubleNestedHeader: string;
+    doubleNestedList: string;
+  };
 }
 
 const OrganizationFilter: React.FC<Props> = ({ filters, onFiltersChange, organizations, classes }) => {

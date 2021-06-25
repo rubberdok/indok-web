@@ -8,7 +8,7 @@ interface Props {
   filters: FilterQuery;
   onFiltersChange: (query: FilterQuery) => void;
   organizations: Organization[];
-  classes: any;
+  classes: { doubleNested: string; doubleNestedHeader: string; doubleNestedList: string };
   name: string;
 }
 

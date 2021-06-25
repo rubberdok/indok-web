@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Sidebar = () => {
+const Sidebar: React.FC = () => {
   const classes = useStyles();
   const router = useRouter();
 

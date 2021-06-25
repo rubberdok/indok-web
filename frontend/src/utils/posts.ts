@@ -1,5 +1,6 @@
 import fs from "fs";
 import matter from "gray-matter";
+import { Post } from "src/types/posts";
 
 export const getPostsFolders = (page: string) => {
   const postsFolders = fs.readdirSync(`${process.cwd()}/content/${page}/`).map((file) => ({
@@ -9,13 +10,13 @@ export const getPostsFolders = (page: string) => {
   return postsFolders;
 };
 
-export const getSortedPosts = (page: string) => {
+export const getSortedPosts = (page: string): Post[] => {
   const postFolders = getPostsFolders(page);
 
   const posts = postFolders.map(({ filename }) => {
     const markdownWithMetadata = fs.readFileSync(`content/${page}/${filename}`).toString();
 
-    const { data, excerpt, content } = matter(markdownWithMetadata);
+    const { data, excerpt, content }: matter.GrayMatterFile<string> = matter(markdownWithMetadata);
 
     const frontmatter = {
       ...data,
@@ -53,8 +54,9 @@ export const getPostBySlug = (slug: string, page: string) => {
 
   const { frontmatter, content, excerpt } = posts[postIndex];
 
-  const previousPost: any = posts[postIndex + 1];
-  const nextPost: any = posts[postIndex - 1];
+  const previousPost: Post | undefined =
+    postIndex >= 0 && postIndex < posts.length - 1 ? posts[postIndex + 1] : undefined;
+  const nextPost: Post | undefined = postIndex > 1 && postIndex <= posts.length ? posts[postIndex - 1] : undefined;
 
   return { frontmatter, post: { content, excerpt }, previousPost, nextPost, slug };
 };

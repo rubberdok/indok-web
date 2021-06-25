@@ -112,8 +112,8 @@ const Archive: NextPage = () => {
         {viewFeatured && <FeaturedDocumentsList />}
         <DocumentList
           document_types={Object.entries(typeFilters)
-            .filter((key, _) => key[1].active)
-            .map(([_, val]) => val.title)}
+            .filter((key) => key[1].active)
+            .map(([, val]) => val.title)}
           year={parseInt(yearFilter)}
           names={searchFilter}
         />

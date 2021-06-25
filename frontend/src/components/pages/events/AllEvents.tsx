@@ -35,13 +35,18 @@ const AllEvents: React.FC = () => {
 
   const { loading: userLoading, data: userData } = useQuery<{ user: User }>(GET_USER);
 
-  const { loading: eventsLoading, error: eventsError, data: eventsData, refetch } = useQuery(GET_EVENTS, {
-    variables: filters,
-  });
+  const {
+    loading: eventsLoading,
+    error: eventsError,
+    data: eventsData,
+    refetch,
+  } = useQuery(GET_EVENTS, { variables: filters });
 
-  const { loading: defaultEventsLoading, error: defaultEventsError, data: defaultEventsData } = useQuery(
-    GET_DEFAULT_EVENTS
-  );
+  const {
+    loading: defaultEventsLoading,
+    error: defaultEventsError,
+    data: defaultEventsData,
+  } = useQuery(GET_DEFAULT_EVENTS);
   const error = showDefaultEvents ? defaultEventsError : eventsError;
   const loading = showDefaultEvents ? defaultEventsLoading : eventsLoading;
   const data = showDefaultEvents ? defaultEventsData?.defaultEvents : eventsData?.allEvents;

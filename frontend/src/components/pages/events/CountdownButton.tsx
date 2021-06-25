@@ -1,5 +1,5 @@
 import { Button, CircularProgress, makeStyles } from "@material-ui/core";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import nb from "dayjs/locale/nb";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
@@ -9,7 +9,7 @@ dayjs.extend(timezone);
 dayjs.locale(nb);
 dayjs.tz.setDefault("Europe/Oslo");
 
-const calculateTimeLeft = (countdownTime: string, now: any): Record<string, number> => {
+const calculateTimeLeft = (countdownTime: string, now: Dayjs): Record<string, number> => {
   const countdown = dayjs(countdownTime);
   const difference = countdown.diff(now);
 

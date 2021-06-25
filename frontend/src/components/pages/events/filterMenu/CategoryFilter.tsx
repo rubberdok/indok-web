@@ -9,7 +9,7 @@ import React, { useState } from "react";
 interface Props {
   filters: FilterQuery;
   onFiltersChange: (query: FilterQuery) => void;
-  classes: any;
+  classes: { badge: string; nested: string };
 }
 
 const CategoryFilter: React.FC<Props> = ({ filters, onFiltersChange, classes }) => {

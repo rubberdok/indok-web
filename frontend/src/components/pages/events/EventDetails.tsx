@@ -85,11 +85,11 @@ interface AlertProps {
   children: string | undefined;
 }
 
-function wrapInTypo(para: JSX.Element[] | string, className: any) {
+function wrapInTypo(para: JSX.Element[] | string, className: string) {
   return <Typography className={className}>{para}</Typography>;
 }
 
-function formatDescription(desc: string, innerClass: any, outerClass: any) {
+function formatDescription(desc: string, innerClass: string, outerClass: string) {
   return desc.split("\r\n\r\n").map((p) =>
     wrapInTypo(
       p.split("\r\n").map((t) => wrapInTypo(t, innerClass)),
@@ -134,11 +134,12 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
 
   const { data: timeData } = useQuery(GET_SERVER_TIME);
 
-  const { data: eventData, error: eventError, loading: eventLoading, refetch: refetchEventData } = useQuery<{
-    event: Event;
-  }>(GET_EVENT, {
-    variables: { id: eventId },
-  });
+  const {
+    data: eventData,
+    error: eventError,
+    loading: eventLoading,
+    refetch: refetchEventData,
+  } = useQuery<{ event: Event }>(GET_EVENT, { variables: { id: eventId } });
 
   const classes = useStyles();
   const theme = useTheme();

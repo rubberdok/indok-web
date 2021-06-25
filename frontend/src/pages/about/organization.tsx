@@ -3,7 +3,7 @@ import Template from "@components/pages/about/Template";
 import { Box, Card, CardActionArea, CardMedia, makeStyles, Tab, Tabs, Typography } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import { getSortedPosts } from "@utils/posts";
-import { NextPage } from "next";
+import { GetStaticProps, NextPage } from "next";
 import Link from "next/link";
 import Router, { useRouter } from "next/router";
 import React from "react";
@@ -180,7 +180,7 @@ const OrganizationPage: NextPage<Props> = ({ posts }) => {
   );
 };
 
-export const getStaticProps = async () => {
+export const getStaticProps: GetStaticProps = async () => {
   const posts = getSortedPosts("organizations");
 
   return {
