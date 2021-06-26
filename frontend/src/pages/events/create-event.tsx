@@ -12,6 +12,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+/**
+ * Component for showing the create event page
+ */
+
 const CreateEventsPage: NextPage = () => {
   const classes = useStyles();
   return (

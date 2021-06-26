@@ -6,7 +6,6 @@ from django.contrib.auth import get_user_model
 from multiselectfield import MultiSelectField
 
 
-# Create your models here.
 class Category(models.Model):
     name = models.CharField(max_length=64, unique=True)
 
@@ -14,7 +13,6 @@ class Category(models.Model):
         return self.name
 
     class Meta:
-        # Add verbose name
         verbose_name_plural = "Categories"
 
 
