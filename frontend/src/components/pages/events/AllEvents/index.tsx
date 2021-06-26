@@ -55,6 +55,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+/**
+ * Component for the event list page, containing the filter menu and the event list items.
+ * Responsible for handling and updating events based on applied filters, as well as changing
+ * between calendar and list view of the events
+ */
+
 const AllEvents: React.FC = () => {
   const classes = useStyles();
   const [filters, setFilters] = useState({});

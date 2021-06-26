@@ -11,6 +11,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+/**
+ * Component for showing the list page for event (for showing all events)
+ */
+
 const Events: NextPage = () => {
   const classes = useStyles();
 

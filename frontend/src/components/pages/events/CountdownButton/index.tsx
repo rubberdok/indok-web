@@ -10,6 +10,7 @@ dayjs.locale(nb);
 dayjs.tz.setDefault("Europe/Oslo");
 
 const calculateTimeLeft = (countdownTime: string, now: any): Record<string, number> => {
+  // calculate time left until the countdownTime (sign up time)
   const countdown = dayjs(countdownTime);
   const difference = countdown.diff(now);
 
@@ -53,6 +54,21 @@ interface Props {
   styleClassName: any;
 }
 
+/**
+ * Component for the count down button on the detail page of an attendable event
+ *
+ * Props:
+ * - countDownDate: the date that is counted down to
+ * - currentTime: the time right now
+ * - isSignedUp: whether the user viewing the page is signed up to the event
+ * - isOnWaitingList: whether the user viewing the page is on the waiting list for the event
+ * - isFull: whether the event is full (all available slots are taken)
+ * - loading: whether the button should show a loading symbol
+ * - disabled: whether the button should be disabled
+ * - onClick: metod called when the count down button is clicked
+ * - styleClassName: styled class
+ */
+
 const CountdownButton: React.FC<Props> = ({
   countDownDate,
   currentTime,
@@ -69,6 +85,7 @@ const CountdownButton: React.FC<Props> = ({
   const classes = useStyles();
 
   useEffect(() => {
+    // Update timeLeft and now (current time) each second
     const id = setTimeout(() => {
       setTimeLeft(calculateTimeLeft(countDownDate, now));
       setNow(now.add(1, "second"));

@@ -12,6 +12,15 @@ interface Props {
   classes: any;
 }
 
+/**
+ * Component for the category filter in the filter menu
+ *
+ * Props:
+ * - filters: the currently applied filters
+ * - onFiltersChange: method called when filters are updated
+ * - classes: styled classes
+ */
+
 const CategoryFilter: React.FC<Props> = ({ filters, onFiltersChange, classes }) => {
   const [open, setOpen] = useState(false);
 

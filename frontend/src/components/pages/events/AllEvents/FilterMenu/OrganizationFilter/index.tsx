@@ -9,9 +9,18 @@ interface Props {
   filters: FilterQuery;
   onFiltersChange: (query: FilterQuery) => void;
   organizations: Organization[];
-  name: string;
   classes: any;
 }
+
+/**
+ * Component for the organization filter in the filter menu
+ *
+ * Props:
+ * - filters: the currently applied filters
+ * - onFiltersChange: method called when filters are updated
+ * - organizations: list of organizations
+ * - classes: styled classes
+ */
 
 const OrganizationFilter: React.FC<Props> = ({ filters, onFiltersChange, organizations, classes }) => {
   const [open, setOpen] = useState(false);

@@ -7,19 +7,23 @@ styre:
   ceo:
     navn: Fredrik Sollerud
     mail:
-    tittel: Leder
+    tittel: Turleder
   cto:
     navn: Trym Wian
     mail:
-    tittel: Leder
+    tittel: Turleder
 tag: idrett
 ---
 
-# Hvem er vi?
+##### Hvem er vi?
 
-Tindøk er for den turglade indøker, sommer som vinter. Fellesturer er typisk helgeturer med en topp eller fire i sikte. Av toppene som har blitt besteget kan man nevne Blåhø i Trollheimen, Dronningkrona og Fløtatind i Sunndalsøra, og (ikke minst!) Kyrkjetaket og Blånebba i Romsdalen.
+I Tindøk søker vi å oppleve de luftigste toppene og det vakreste turterrenget Norge har å by på! Om sommeren spaserer vi til fots, og om vinteren nyter vi pudderføre med randonee eller splitboard. Så langt har Tindøk blant annet besøkt steder som Jotunheimen, Romsdalen, Sunndalsøra og Snasahögarna i Sverige, som alle er beryktet for sine unike toppturmuligheter.
 
-Ønskelisten for fremtiden består av topper som omtales både som nasjonalsymboler og himmelstiger. Turer blir annonsert på facebooksiden vår i god tid. Bli med da vel!
+##### Hvem kan delta på tur med Tindøk?
+
+Alle turglade indøkere er hjertelig velkommen på tur med Tindøk! Det er ingen spesielle krav til turutstyr utenom skredutstyr på vinteren. Våre kjerneverdier er trivsel, trygghet og turopplevelse. Dette betyr at vi ønsker å dele flotte turopplevelser på en trygg måte, og samtidig ha en sosial og trivelig turhelg sammen. Høres dette spennende ut? Da må du gå inn og like vår facebookside så du er klar når turene annonseres.
+
+Vi ses på tindøktur!
 
 ![bilde](/img/tindok1.jpg)
 ![bilde](/img/tindok2.jpeg)

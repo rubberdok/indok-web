@@ -7,16 +7,18 @@ alt: Logoen til rubberdøk
 styre:
   ceo:
     navn: Morgan Heggland
-    mail: web@indokhs.no
     tittel: Leder
+    mail: web@indokhs.no
+    telefon: 69420420
   cto:
     navn: Fredrik Ahlborg
-    mail:
+    mail: fredrik.sha@gmail.com
     tittel: Content
+    telefon: 99374307
 tag: annet
 ---
 
-# Hvem er vi?
+##### Hvem er vi?
 
 Rubberdøk er Hovedstyrets webkomité, og består av 11 ildsjeler (pluss lederparet i Hovedstyret) som har tatt på seg ansvaret for å bygge nettsiden du er inne på akkurat nå - en custom made hyttebooking, arrangementsmodul og generell landingsside for alle nåværende og fremtidige Indøkere!
 
