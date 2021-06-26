@@ -25,8 +25,8 @@ type ArticleProps = {
     image?: string;
     board: BoardMember[];
   };
-  nextPost?: Post;
-  previousPost?: Post;
+  nextPost: Post | null;
+  previousPost: Post | null;
 };
 
 type BoardMember = {

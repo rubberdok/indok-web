@@ -9,7 +9,6 @@ interface Props {
   filters: FilterQuery;
   onFiltersChange: (query: FilterQuery) => void;
   organizations: Organization[];
-  name: string;
   classes: {
     badge: string;
     nested: string;
