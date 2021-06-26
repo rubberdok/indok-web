@@ -45,6 +45,10 @@ class UpdateEventInput(BaseEventInput, graphene.InputObjectType):
 
 
 class CreateEvent(graphene.Mutation):
+    """
+    Create a new event
+    """
+
     ok = graphene.Boolean()
     event = graphene.Field(EventType)
 
@@ -71,6 +75,10 @@ class CreateEvent(graphene.Mutation):
 
 
 class UpdateEvent(graphene.Mutation):
+    """
+    Updates the event with a given ID with the data in event_data
+    """
+
     class Arguments:
         id = graphene.ID(required=True)
         event_data = UpdateEventInput(required=False)
@@ -95,6 +103,10 @@ class UpdateEvent(graphene.Mutation):
 
 
 class DeleteEvent(graphene.Mutation):
+    """
+    Deletes the event with the given ID
+    """
+
     class Arguments:
         id = graphene.ID()
 
@@ -120,6 +132,11 @@ class EventSignUpInput(graphene.InputObjectType):
 
 
 class EventSignUp(graphene.Mutation):
+    """
+    Creates a new Sign Up for the user that sent the request, for the event
+    with the given ID
+    """
+
     class Arguments:
         event_id = graphene.ID(required=True)
         data = EventSignUpInput(required=False)
@@ -171,6 +188,13 @@ class EventSignUp(graphene.Mutation):
 
 
 class EventSignOff(graphene.Mutation):
+    """
+    Sets the field is_attending to False in the Sign Up for the user that
+    sent the request, for the event with the given ID
+    NOTE: The sign up still exists, it is not deleted from the database
+          when a user signs off an event
+    """
+
     class Arguments:
         event_id = graphene.ID(required=True)
 
@@ -203,6 +227,13 @@ class EventSignOff(graphene.Mutation):
 
 
 class AdminEventSignOff(graphene.Mutation):
+    """
+    Sets the field is_attending to False in the Sign Up for the user with the
+    given ID, for the event with the given ID
+    NOTE: The sign up still exists, it is not deleted from the database
+          when a user signs off an event
+    """
+
     class Arguments:
         event_id = graphene.ID(required=True)
         user_id = graphene.ID(required=True)
@@ -239,6 +270,10 @@ class CategoryInput(graphene.InputObjectType):
 
 
 class CreateCategory(graphene.Mutation):
+    """
+    Create a new event category
+    """
+
     ok = graphene.Boolean()
     category = graphene.Field(CategoryType)
 
@@ -256,6 +291,10 @@ class CreateCategory(graphene.Mutation):
 
 
 class UpdateCategory(graphene.Mutation):
+    """
+    Updates the category with a given ID with the data in category_data
+    """
+
     class Arguments:
         id = graphene.ID(required=True)
         category_data = CategoryInput(required=False)
@@ -275,6 +314,10 @@ class UpdateCategory(graphene.Mutation):
 
 
 class DeleteCategory(graphene.Mutation):
+    """
+    Deletes the category with a given ID
+    """
+
     class Arguments:
         id = graphene.ID()
 
@@ -290,6 +333,10 @@ class DeleteCategory(graphene.Mutation):
 
 
 class SendEventEmails(graphene.Mutation):
+    """
+    Send an email to all users signed up to an event
+    """
+
     class Arguments:
         event_id = graphene.ID(required=True)
         receiverEmails = graphene.List(graphene.String)

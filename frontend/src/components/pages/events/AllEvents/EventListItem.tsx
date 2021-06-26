@@ -16,6 +16,15 @@ interface Props {
   classes: any;
 }
 
+/**
+ * Component for each event list item in the event list page
+ *
+ * Props:
+ * - event: an event
+ * - user: the user currently viewing the page, used to decide what Chip to show on the event
+ * - classes: styled classes
+ */
+
 const EventListItem: React.FC<Props> = ({ event, user, classes }) => {
   const theme = useTheme();
 

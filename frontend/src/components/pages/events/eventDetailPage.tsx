@@ -79,6 +79,13 @@ function formatDescription(desc: string, innerClass: any, outerClass: any) {
   );
 }
 
+/**
+ * Component for the detail page of each event
+ *
+ * Props:
+ * - eventId: ID of the event to display
+ */
+
 const EventDetailPage: React.FC<Props> = ({ eventId }) => {
   const [openSignUpSnackbar, setOpenSignUpSnackbar] = useState(false);
   const [openSignOffSnackbar, setOpenSignOffSnackbar] = useState(false);
