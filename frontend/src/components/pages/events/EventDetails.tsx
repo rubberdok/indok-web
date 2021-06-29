@@ -193,7 +193,7 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
       {openEditEvent && (
         <EditEvent open={openEditEvent} onClose={() => setOpenEditEvent(false)} event={eventData.event} />
       )}
-      <Box width="100%" py={6} bgcolor={theme.palette.background.paper}>
+      <Box width="100%" py={6} bgcolor={theme.palette.background.paper} pb={10}>
         <Container>
           <Link href="/events" passHref>
             <Button className={classes.backButton} startIcon={<KeyboardBackspace />}>
