@@ -1,15 +1,21 @@
+import { FilterQuery } from "@components/pages/events/AllEvents";
 import { Organization } from "@interfaces/organizations";
 import { Badge, Collapse, List, ListItem, ListItemText } from "@material-ui/core";
 import { ExpandLess, ExpandMore } from "@material-ui/icons";
 import React, { useState } from "react";
-import { FilterQuery } from "../..";
-import SuborganizationFilter from "./SuborganizationFilter";
+import SuborganizationFilter from "./SubOrganizationFilter";
 
 interface Props {
   filters: FilterQuery;
   onFiltersChange: (query: FilterQuery) => void;
   organizations: Organization[];
-  classes: any;
+  classes: {
+    badge: string;
+    nested: string;
+    doubleNested: string;
+    doubleNestedHeader: string;
+    doubleNestedList: string;
+  };
 }
 
 /**

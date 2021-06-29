@@ -1,16 +1,15 @@
 import { useQuery } from "@apollo/client";
 import { GET_DOCSBYFILTERS } from "@graphql/archive/queries";
+import { Document } from "@interfaces/archive";
 import Button from "@material-ui/core/Button";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import React, { useEffect } from "react";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardMedia from "@material-ui/core/CardMedia";
 import GridList from "@material-ui/core/GridList";
 import GridListTile from "@material-ui/core/GridListTile";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import Container from "@material-ui/core/Container";
-import { Document } from "@interfaces/archive";
+import React, { useEffect } from "react";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -43,13 +42,13 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-interface ListDocumentsProps {
+interface DocumentListProps {
   document_types: string[];
   year: number | null;
   names: string;
 }
 
-const ListDocuments: React.FC<ListDocumentsProps> = ({ document_types, year, names }) => {
+const DocumentList: React.FC<DocumentListProps> = ({ document_types, year, names }) => {
   const { refetch, loading, data, error } = useQuery(GET_DOCSBYFILTERS, { variables: { document_types, year, names } });
 
   useEffect(() => {
@@ -62,8 +61,8 @@ const ListDocuments: React.FC<ListDocumentsProps> = ({ document_types, year, nam
   if (error) return <p style={{ textAlign: "center" }}> Feil: {error.message} </p>;
 
   return (
-    <Container>
-      <Typography variant="body1" style={{ marginBottom: "8px" }}>
+    <>
+      <Typography variant="h4" gutterBottom>
         Alle dokumenter
       </Typography>
       <GridList cellHeight={"auto"} className={classes.img} cols={4} spacing={8}>
@@ -116,13 +115,11 @@ const ListDocuments: React.FC<ListDocumentsProps> = ({ document_types, year, nam
             </GridListTile>
           ))
         ) : (
-          <Container style={{ flex: 1 }}>
-            <Typography> Fant ingen dokumenter som samsvarer med søket ditt </Typography>
-          </Container>
+          <Typography> Fant ingen dokumenter som samsvarer med søket ditt </Typography>
         )}
       </GridList>
-    </Container>
+    </>
   );
 };
 
-export default ListDocuments;
+export default DocumentList;

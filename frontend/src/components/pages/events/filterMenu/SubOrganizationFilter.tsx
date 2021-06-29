@@ -1,14 +1,14 @@
+import { FilterQuery } from "@components/pages/events/AllEvents";
 import { Organization } from "@interfaces/organizations";
 import { Collapse, List, ListItem, ListItemText } from "@material-ui/core";
 import { ExpandLess, ExpandMore } from "@material-ui/icons";
 import React, { useState } from "react";
-import { FilterQuery } from "../../..";
 
 interface Props {
   filters: FilterQuery;
   onFiltersChange: (query: FilterQuery) => void;
   organizations: Organization[];
-  classes: any;
+  classes: { doubleNested: string; doubleNestedHeader: string; doubleNestedList: string };
   name: string;
 }
 

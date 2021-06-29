@@ -1,6 +1,6 @@
+import { FilterQuery } from "@components/pages/events/AllEvents";
 import { ListItem, TextField } from "@material-ui/core";
 import React from "react";
-import { FilterQuery } from "../..";
 
 interface Props {
   filters: FilterQuery;

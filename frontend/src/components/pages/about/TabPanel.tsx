@@ -6,7 +6,7 @@ type TabPanelProps = {
   value: string | number;
 };
 
-const TabPanel = (props: TabPanelProps) => {
+const TabPanel: React.FC<TabPanelProps> = (props) => {
   const { children, value, index, ...other } = props;
 
   return (
@@ -18,7 +18,7 @@ const TabPanel = (props: TabPanelProps) => {
       {...other}
     >
       {value === index && (
-        <Typography variant="body2" paragraph>
+        <Typography variant="body1" paragraph>
           {children}
         </Typography>
       )}
