@@ -74,12 +74,15 @@ def norwegian_phone_number_validation(stripped_phone_number):
 
 
 def strip_phone_number(phone_number):
+    # Remove spacing
     cleaned_phone_number = phone_number.replace(" ", "")
+    # Remove country code
     cleaned_phone_number = (
         cleaned_phone_number[3:]
         if cleaned_phone_number.startswith("+47")
         else cleaned_phone_number
     )
+    # Remove country code
     return (
         cleaned_phone_number[4:]
         if cleaned_phone_number.startswith("0047")

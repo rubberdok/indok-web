@@ -12,6 +12,10 @@ from graphql_jwt.decorators import login_required, permission_required
 
 
 class BookingInput(graphene.InputObjectType):
+    """
+    Basic booking object type used as a base for other types and as a standalone
+    """
+
     firstname = graphene.String()
     lastname = graphene.String()
     phone = graphene.String()
