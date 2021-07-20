@@ -1,9 +1,9 @@
 import { useQuery } from "@apollo/client";
+import { FilterQuery } from "@components/pages/events/AllEvents";
 import { QUERY_EVENT_FILTERED_ORGANIZATIONS } from "@graphql/events/queries";
-import { Divider, IconButton, List, ListItem, ListItemText, makeStyles, Tooltip } from "@material-ui/core";
+import { IconButton, List, ListItem, ListItemText, makeStyles, Tooltip, Typography } from "@material-ui/core";
 import { Refresh, StarBorderRounded, StarRounded } from "@material-ui/icons";
 import React from "react";
-import { FilterQuery } from "..";
 import CategoryFilter from "./CategoryFilter";
 import DateTimeFilter from "./DateTimeFilter";
 import OrganizationFilter from "./OrganizationFilter";
@@ -76,6 +76,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+/**
+ * Component for the filter menu on the event list page
+ *
+ * Props:
+ * - filters: the currently applied filters
+ * - onFiltersChange: method called when filters are updated
+ * - showDefaultEvents: whether to show the default event or all (possibly filtered) events
+ * - onShowDefaultChange: method called when whether to show default events or not changes
+ */
+
 const FilterMenu: React.FC<Props> = ({ filters, onFiltersChange, showDefaultEvents, onShowDefaultChange }) => {
   const classes = useStyles();
 
@@ -86,18 +96,16 @@ const FilterMenu: React.FC<Props> = ({ filters, onFiltersChange, showDefaultEven
   if (organizationError) return null;
 
   return (
-    <div className={classes.root}>
+    <>
       <List>
         <ListItem>
-          <ListItemText primary={"Filtre"} />
+          <ListItemText primary={<Typography variant="h4">Filtre</Typography>} />
           <Tooltip className={classes.tooltip} title="Nullstill filtre" arrow>
             <IconButton disableFocusRipple disableRipple onClick={() => onFiltersChange({})} aria-label="delete">
               <Refresh />
             </IconButton>
           </Tooltip>
         </ListItem>
-
-        <Divider />
 
         <ListItem
           button
@@ -107,18 +115,13 @@ const FilterMenu: React.FC<Props> = ({ filters, onFiltersChange, showDefaultEven
           }}
         >
           <ListItemText primary={"Fremhevet"} />
-          {showDefaultEvents ? (
-            <StarRounded style={{ color: "#ffe100" }} />
-          ) : (
-            <StarBorderRounded style={{ color: "#ffe100" }} />
-          )}
+          {showDefaultEvents ? <StarRounded /> : <StarBorderRounded />}
         </ListItem>
 
         <OrganizationFilter
           filters={filters}
           onFiltersChange={onFiltersChange}
           organizations={organizationData.eventFilteredOrganizations}
-          name={"Organisasjoner"}
           classes={classes}
         />
 
@@ -126,7 +129,7 @@ const FilterMenu: React.FC<Props> = ({ filters, onFiltersChange, showDefaultEven
 
         <DateTimeFilter filters={filters} onFiltersChange={onFiltersChange} />
       </List>
-    </div>
+    </>
   );
 };
 

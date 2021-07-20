@@ -1,5 +1,9 @@
 from django.db import models
 
+"""
+Helper method used in the app
+"""
+
 
 def number_of_nights(check_out, check_in):
     return (check_out - check_in).days

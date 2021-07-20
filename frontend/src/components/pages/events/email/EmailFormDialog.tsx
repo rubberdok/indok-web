@@ -1,18 +1,18 @@
 import {
-  Dialog,
-  DialogContent,
-  Typography,
-  TextField,
-  DialogActions,
-  Button,
-  Tooltip,
-  Grid,
   Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  Grid,
+  TextField,
+  Tooltip,
+  Typography,
 } from "@material-ui/core";
-import React, { Dispatch, SetStateAction } from "react";
-import { SendEmailProps } from ".";
 import ClearIcon from "@material-ui/icons/Clear";
 import SendIcon from "@material-ui/icons/Send";
+import React, { Dispatch, SetStateAction } from "react";
+import { SendEmailProps } from "./EmailForm";
 
 interface EmailFormDialogProps {
   showEmailForm: boolean;
@@ -23,20 +23,20 @@ interface EmailFormDialogProps {
   sendEmail: () => void;
 }
 
-const EmailFormDialog = ({
+const EmailFormDialog: React.FC<EmailFormDialogProps> = ({
   showEmailForm,
   setShowEmailForm,
   emailProps,
   setEmailProps,
   validations,
   sendEmail,
-}: EmailFormDialogProps) => {
+}) => {
   return (
     <Dialog
       fullWidth
       maxWidth="md"
       open={showEmailForm}
-      onClose={(_e) => setShowEmailForm(false)}
+      onClose={() => setShowEmailForm(false)}
       aria-labelledby="max-width-dialog-title"
     >
       <DialogContent>
@@ -75,7 +75,7 @@ const EmailFormDialog = ({
         </Grid>
       </DialogContent>
       <DialogActions>
-        <Button startIcon={<ClearIcon />} onClick={(_e) => setShowEmailForm(false)} color="primary">
+        <Button startIcon={<ClearIcon />} onClick={() => setShowEmailForm(false)} color="primary">
           Lukk
         </Button>
 
@@ -84,7 +84,7 @@ const EmailFormDialog = ({
             <Button
               startIcon={<SendIcon />}
               disabled={!Object.values(validations).every(Boolean)}
-              onClick={(_e) => sendEmail()}
+              onClick={() => sendEmail()}
               color="primary"
             >
               Send e-post

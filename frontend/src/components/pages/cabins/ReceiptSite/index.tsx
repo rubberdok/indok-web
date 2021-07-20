@@ -1,5 +1,5 @@
 import { NextPage } from "next";
-import { Grid, Typography, Divider } from "@material-ui/core";
+import { Grid, Typography, Divider, Hidden } from "@material-ui/core";
 import { Cabin, ContactInfo } from "@interfaces/cabins";
 import { DatePick } from "src/pages/cabins/book";
 import CabinBookingStatus from "../CabinBookingStatus";
@@ -11,15 +11,21 @@ interface Props {
   mailSent?: boolean;
 }
 
+/*
+Step in the cabins/book site. Shows a confirmation of the booking made after the payment site.
+*/
 const ReceiptSite: NextPage<Props> = (props) => {
   return (
-    <Grid container alignItems="center" direction="column" spacing={5}>
-      <Grid item>
-        <Typography variant="h4">Takk for din bestilling</Typography>
-        <Divider />
-      </Grid>
+    <Grid container alignItems="center" direction="column">
+      <Hidden mdDown>
+        <Grid item>
+          <Typography variant="h4">Takk for din bestilling</Typography>
+          <Divider />
+        </Grid>
+      </Hidden>
+
       <Grid item container justify="space-evenly" alignItems="stretch">
-        <Grid item xs>
+        <Grid item>
           <CabinBookingStatus cabinText="Du har nå søkt om å booke" {...props} />
         </Grid>
       </Grid>

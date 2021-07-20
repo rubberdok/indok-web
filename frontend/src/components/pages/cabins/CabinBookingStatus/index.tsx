@@ -27,6 +27,10 @@ const InfoText: NextComponentType<TypographyProps> = (props) => (
   </Typography>
 );
 
+/*
+Statusbox with information about the current cabin booking.
+Renders fields based on the props given.
+*/
 const CabinBookingStatus: NextPage<Props> = ({ chosenCabins, datePick, contactInfo, cabinText, mailSent }) => {
   const classes = useStyles();
 

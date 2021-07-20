@@ -1,15 +1,16 @@
-import React, { useEffect, useState } from "react";
-import { Button, CircularProgress, createStyles, makeStyles } from "@material-ui/core";
-import dayjs from "dayjs";
+import { Button, CircularProgress, makeStyles } from "@material-ui/core";
+import dayjs, { Dayjs } from "dayjs";
 import nb from "dayjs/locale/nb";
-import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
+import React, { useEffect, useState } from "react";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.locale(nb);
 dayjs.tz.setDefault("Europe/Oslo");
 
-const calculateTimeLeft = (countdownTime: string, now: any): Record<string, number> => {
+const calculateTimeLeft = (countdownTime: string, now: Dayjs): Record<string, number> => {
+  // calculate time left until the countdownTime (sign up time)
   const countdown = dayjs(countdownTime);
   const difference = countdown.diff(now);
 
@@ -24,22 +25,19 @@ const calculateTimeLeft = (countdownTime: string, now: any): Record<string, numb
   return {};
 };
 
-const useStyles = makeStyles(() =>
-  createStyles({
-    wrapper: {
-      position: "relative",
-      float: "right",
-    },
-    buttonLoading: {
-      color: "background",
-      position: "absolute",
-      top: "50%",
-      left: "50%",
-      marginTop: -12,
-      marginLeft: -12,
-    },
-  })
-);
+const useStyles = makeStyles(() => ({
+  buttonLoading: {
+    color: "background",
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    marginTop: -12,
+    marginLeft: -12,
+  },
+  positionLeft: {
+    float: "left",
+  },
+}));
 
 interface Props {
   countDownDate: string;
@@ -50,8 +48,22 @@ interface Props {
   loading: boolean;
   disabled?: boolean;
   onClick: () => void;
-  styleClassName: any;
 }
+
+/**
+ * Component for the count down button on the detail page of an attendable event
+ *
+ * Props:
+ * - countDownDate: the date that is counted down to
+ * - currentTime: the time right now
+ * - isSignedUp: whether the user viewing the page is signed up to the event
+ * - isOnWaitingList: whether the user viewing the page is on the waiting list for the event
+ * - isFull: whether the event is full (all available slots are taken)
+ * - loading: whether the button should show a loading symbol
+ * - disabled: whether the button should be disabled
+ * - onClick: metod called when the count down button is clicked
+ * - styleClassName: styled class
+ */
 
 const CountdownButton: React.FC<Props> = ({
   countDownDate,
@@ -62,13 +74,13 @@ const CountdownButton: React.FC<Props> = ({
   loading,
   disabled,
   onClick,
-  styleClassName,
 }) => {
   const [now, setNow] = useState(dayjs(currentTime));
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft(countDownDate, now));
   const classes = useStyles();
 
   useEffect(() => {
+    // Update timeLeft and now (current time) each second
     const id = setTimeout(() => {
       setTimeLeft(calculateTimeLeft(countDownDate, now));
       setNow(now.add(1, "second"));
@@ -117,9 +129,9 @@ const CountdownButton: React.FC<Props> = ({
   };
 
   return (
-    <div className={classes.wrapper}>
+    <div className={classes.positionLeft}>
       <Button
-        className={styleClassName}
+        size="large"
         variant="contained"
         color={isSignedUp || isOnWaitingList ? "inherit" : "primary"}
         onClick={onClick}

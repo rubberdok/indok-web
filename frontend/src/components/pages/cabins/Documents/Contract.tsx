@@ -19,7 +19,9 @@ interface ContractProps {
   contactInfo: ContactInfo;
   datePick: DatePick;
 }
-
+/*
+Renders the contract of a booking.
+*/
 const Contract = ({ chosenCabins, contactInfo, datePick }: ContractProps) => {
   const currentTime = new Date().toLocaleString();
   const classes = useStyles();

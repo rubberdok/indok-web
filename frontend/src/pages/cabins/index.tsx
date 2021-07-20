@@ -42,7 +42,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const CreateBookingPage: NextPage = () => {
+/*
+Front page for cabins. Includes info about the cabins and link to the booking page (cabins/book).
+*/
+const CabinsPage: NextPage = () => {
   const classes = useStyles();
 
   const facilitiesData = [
@@ -266,4 +269,4 @@ const CreateBookingPage: NextPage = () => {
   );
 };
 
-export default CreateBookingPage;
+export default CabinsPage;

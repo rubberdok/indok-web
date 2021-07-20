@@ -27,7 +27,7 @@ styre:
 tag: annet
 ---
 
-# Hvem er vi?
+##### Hvem er vi?
 
 Hyttestyret er ansvarlig for drift og vedlikehold av Indøks to store stoltheter – Indøkhyttene “Oksen” og “Bjørnen”. De driver også med utleie av hyttene til både interne og eksterne, noe noe som kan gjøres på denne [linken](https://indokntnu.no/cabins).
 

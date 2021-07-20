@@ -1,17 +1,32 @@
+import { FilterQuery } from "@components/pages/events/AllEvents";
 import { Organization } from "@interfaces/organizations";
 import { Badge, Collapse, List, ListItem, ListItemText } from "@material-ui/core";
 import { ExpandLess, ExpandMore } from "@material-ui/icons";
 import React, { useState } from "react";
-import { FilterQuery } from "../..";
-import SuborganizationFilter from "./SuborganizationFilter";
+import SuborganizationFilter from "./SubOrganizationFilter";
 
 interface Props {
   filters: FilterQuery;
   onFiltersChange: (query: FilterQuery) => void;
   organizations: Organization[];
-  name: string;
-  classes: any;
+  classes: {
+    badge: string;
+    nested: string;
+    doubleNested: string;
+    doubleNestedHeader: string;
+    doubleNestedList: string;
+  };
 }
+
+/**
+ * Component for the organization filter in the filter menu
+ *
+ * Props:
+ * - filters: the currently applied filters
+ * - onFiltersChange: method called when filters are updated
+ * - organizations: list of organizations
+ * - classes: styled classes
+ */
 
 const OrganizationFilter: React.FC<Props> = ({ filters, onFiltersChange, organizations, classes }) => {
   const [open, setOpen] = useState(false);

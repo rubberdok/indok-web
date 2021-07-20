@@ -1,16 +1,25 @@
 import { useQuery } from "@apollo/client";
+import { FilterQuery } from "@components/pages/events/AllEvents";
 import { GET_CATEGORIES } from "@graphql/events/queries";
 import { Category } from "@interfaces/events";
 import { Badge, Collapse, List, ListItem, ListItemText } from "@material-ui/core";
 import { ExpandLess, ExpandMore } from "@material-ui/icons";
 import React, { useState } from "react";
-import { FilterQuery } from "../..";
 
 interface Props {
   filters: FilterQuery;
   onFiltersChange: (query: FilterQuery) => void;
-  classes: any;
+  classes: { badge: string; nested: string };
 }
+
+/**
+ * Component for the category filter in the filter menu
+ *
+ * Props:
+ * - filters: the currently applied filters
+ * - onFiltersChange: method called when filters are updated
+ * - classes: styled classes
+ */
 
 const CategoryFilter: React.FC<Props> = ({ filters, onFiltersChange, classes }) => {
   const [open, setOpen] = useState(false);

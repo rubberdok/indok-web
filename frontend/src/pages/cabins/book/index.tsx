@@ -1,11 +1,23 @@
 import { useMutation, useQuery } from "@apollo/client";
-import Navbar from "@components/navbar/Navbar";
 import CheckInOut from "@components/pages/cabins/CheckInOut";
 import CabinContactInfo from "@components/pages/cabins/CabinContactInfo";
 import ContractDialog from "@components/pages/cabins/Popup/ContractDialog";
 import { QUERY_CABINS } from "@graphql/cabins/queries";
 import { Cabin, ContactInfo, ContactInfoValidations } from "@interfaces/cabins";
-import { Box, Grid, Step, StepLabel, Stepper, Button, Typography, Paper, Tooltip } from "@material-ui/core";
+import {
+  Box,
+  Grid,
+  Step,
+  StepLabel,
+  Stepper,
+  Button,
+  Typography,
+  Paper,
+  Tooltip,
+  useTheme,
+  useMediaQuery,
+  MobileStepper,
+} from "@material-ui/core";
 import {
   allValuesFilled,
   cabinOrderStepReady,
@@ -18,6 +30,8 @@ import React, { useEffect, useState } from "react";
 import PaymentSite from "@components/pages/cabins/PaymentSite";
 import ReceiptSite from "@components/pages/cabins/ReceiptSite";
 import { CREATE_BOOKING, SEND_EMAIL } from "@graphql/cabins/mutations";
+import { KeyboardArrowLeft, KeyboardArrowRight } from "@material-ui/icons";
+import Layout from "@components/Layout";
 
 interface StepReady {
   [step: number]: { ready: boolean; errortext: string };
@@ -56,7 +70,10 @@ const defaultModalData: ModalData = {
   contractViewed: false,
   displayPopUp: false,
 };
-
+/*
+Main page for the booking of a cabin. 
+The page renders different components depending on the step variale chosen.
+*/
 const CabinBookingPage: NextPage = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [stepReady, setStepReady] = useState<StepReady>(initalStepReady);
@@ -155,9 +172,44 @@ const CabinBookingPage: NextPage = () => {
     }
   };
 
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const getMargin = () => (isMobile ? 2 : 10);
+
+  const NextButton = () => (
+    <Tooltip
+      title={stepReady[activeStep].errortext}
+      placement="left"
+      disableHoverListener={stepReady[activeStep].ready}
+    >
+      <Box display={activeStep == 3 ? "none" : "block"}>
+        <Button
+          onClick={handleNextClick}
+          disabled={!stepReady[activeStep].ready}
+          variant={isMobile ? "text" : "contained"}
+        >
+          {activeStep == 2 ? "Send søknad" : "Neste"}
+          <KeyboardArrowRight />
+        </Button>
+      </Box>
+    </Tooltip>
+  );
+
+  const BackButton = () => (
+    <Box display={activeStep == 3 ? "none" : "block"}>
+      <Button
+        onClick={() => setActiveStep((prev) => prev - 1)}
+        disabled={activeStep === 0}
+        variant={isMobile ? "text" : "contained"}
+      >
+        <KeyboardArrowLeft />
+        Tilbake
+      </Button>
+    </Box>
+  );
+
   return (
-    <>
-      <Navbar />
+    <Layout>
       <ContractDialog
         modalData={modalData}
         setModalData={setModalData}
@@ -167,43 +219,48 @@ const CabinBookingPage: NextPage = () => {
         activeStep={activeStep}
         setActiveStep={setActiveStep}
       />
-      <Box m={10}>
-        <Grid container direction="column" justify="center" spacing={1}>
+      <Box m={getMargin()}>
+        <Grid container direction="column" justify="center" alignItems="stretch" spacing={1}>
           <Grid item>
-            <Stepper activeStep={activeStep}>
-              {steps.map((label) => (
-                <Step key={label}>
-                  <StepLabel>{label}</StepLabel>
-                </Step>
-              ))}
-            </Stepper>
+            {isMobile ? (
+              <Typography variant="h4" align="center">
+                {steps[activeStep]}
+              </Typography>
+            ) : (
+              <Stepper activeStep={activeStep}>
+                {steps.map((label) => (
+                  <Step key={label}>
+                    <StepLabel>{label}</StepLabel>
+                  </Step>
+                ))}
+              </Stepper>
+            )}
           </Grid>
           <Grid item>
             <Paper>
-              <Box p={10}>{getStepComponent()}</Box>
+              <Box p={getMargin()}>{getStepComponent()}</Box>
             </Paper>
           </Grid>
-          <Grid item container justify="space-between">
-            <Box display={activeStep == 3 ? "none" : "block"}>
-              <Button variant="contained" disabled={activeStep === 0} onClick={() => setActiveStep((prev) => prev - 1)}>
-                Forrige
-              </Button>
-            </Box>
-            <Tooltip
-              title={stepReady[activeStep].errortext}
-              placement="left"
-              disableHoverListener={stepReady[activeStep].ready}
-            >
-              <Box display={activeStep == 3 ? "none" : "block"}>
-                <Button variant="contained" disabled={!stepReady[activeStep].ready} onClick={() => handleNextClick()}>
-                  {activeStep == 2 ? "Send søknad" : "Neste"}
-                </Button>
-              </Box>
-            </Tooltip>
+          <Grid item>
+            {isMobile && activeStep != 3 ? (
+              <MobileStepper
+                steps={4}
+                position="bottom"
+                variant="progress"
+                activeStep={activeStep}
+                nextButton={<NextButton />}
+                backButton={<BackButton />}
+              />
+            ) : (
+              <Grid item container justify="space-between">
+                <BackButton />
+                <NextButton />
+              </Grid>
+            )}
           </Grid>
         </Grid>
       </Box>
-    </>
+    </Layout>
   );
 };
 

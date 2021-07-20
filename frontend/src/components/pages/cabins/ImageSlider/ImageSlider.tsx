@@ -32,6 +32,9 @@ interface ImageSliderProps {
   displayLabelText: boolean;
 }
 
+/*
+Carousel compoent for showing images
+*/
 const ImageSlider = ({ imageData, displayLabelText }: ImageSliderProps): JSX.Element => {
   const classes = useStyles();
   const theme = useTheme();

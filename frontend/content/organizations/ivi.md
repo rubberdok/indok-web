@@ -16,12 +16,12 @@ styre:
 tag: kultur
 ---
 
-# Hvem er vi?
+##### Hvem er vi?
 
 IVI koordinerer det veldige arbeidet på INDØK. Hvert år samler vi inn penger til en ny veldedig organisasjon. Hovedarrangementet vårt er Auksjonskvelden, en festfylt aften der Indøkere fra alle trinn samles og byr på både det ene og det andre til lommebøkene sier stopp.
 Vi ønsker også å spre så mye kunnskap og engasjement om veldedighet som mulig blant indøkere. Dette gjøres gjennom foredrag og andre arrangement. Her er det kun IVI-medlemmenes kreativitet som setter grenser! Hvis du har en idé, vil vi mer enn gjerne høre om den! I tillegg til dette driver vi mye intern skolering om nettopp veldedighet, veldedige organisasjoner og globale spørsmål.
 
-# Mottakerorganisasjon 20/21 – Cool Earth
+##### Mottakerorganisasjon 20/21 – Cool Earth
 
 Fjorårets vinner, Cool Earth, ble også i år valgt som mottakerorganisasjon. På Auksjonskvelden 2020 samlet indøk inn hele 182 399kr til denne organisasjonen.
 

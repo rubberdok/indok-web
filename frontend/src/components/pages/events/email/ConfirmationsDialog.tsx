@@ -1,7 +1,7 @@
-import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button, Link } from "@material-ui/core";
-import React, { Dispatch, SetStateAction } from "react";
-import { SendEmailProps } from ".";
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Link } from "@material-ui/core";
 import ClearIcon from "@material-ui/icons/Clear";
+import React, { Dispatch, SetStateAction } from "react";
+import { SendEmailProps } from "./EmailForm";
 
 interface ConfirmationDialogProps {
   showConfirmation: boolean;
@@ -10,18 +10,18 @@ interface ConfirmationDialogProps {
   handleConfirmationClose: () => void;
 }
 
-const ConfirmationDialog = ({
+const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
   showConfirmation,
   setShowConfirmation,
   emailProps,
   handleConfirmationClose,
-}: ConfirmationDialogProps) => {
+}) => {
   return (
     <Dialog
       fullWidth
       maxWidth="md"
       open={showConfirmation}
-      onClose={(_e) => setShowConfirmation(false)}
+      onClose={() => setShowConfirmation(false)}
       aria-labelledby="max-width-dialog-title"
     >
       <DialogTitle id="max-width-dialog-title">Mail sendt</DialogTitle>
@@ -45,7 +45,7 @@ const ConfirmationDialog = ({
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button startIcon={<ClearIcon />} onClick={(_e) => handleConfirmationClose()} color="primary">
+        <Button startIcon={<ClearIcon />} onClick={() => handleConfirmationClose()} color="primary">
           Lukk
         </Button>
       </DialogActions>

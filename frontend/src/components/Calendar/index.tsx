@@ -1,4 +1,4 @@
-import { IconButton, Grid, Typography, Divider } from "@material-ui/core";
+import { IconButton, Grid, Typography, Divider, Hidden } from "@material-ui/core";
 import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
 import CalendarTable from "./CalendarTable";
@@ -170,29 +170,38 @@ const Calendar: React.FC<CalendarProps> = ({
     const newSelectedMonth = selectedMonth.add(months, "months");
     setSelectedMonth(newSelectedMonth);
   };
-
   return (
-    <Grid container direction="column" spacing={2}>
-      <Grid item container alignItems="center" justify="space-between" xs>
-        <IconButton onClick={() => onChangeMonth(-1)}>
-          <NavigateBeforeIcon />
-        </IconButton>
+    <Grid container direction="column" spacing={5}>
+      <Grid item container alignItems="center" justify="space-between">
+        <Hidden mdDown>
+          <IconButton onClick={() => onChangeMonth(-1)}>
+            <NavigateBeforeIcon />
+          </IconButton>
+        </Hidden>
         <Typography variant="h5" align="center">
           {title}
         </Typography>
-        <IconButton onClick={() => onChangeMonth(1)}>
-          <NavigateNextIcon />
-        </IconButton>
+        <Hidden mdDown>
+          <IconButton onClick={() => onChangeMonth(1)}>
+            <NavigateNextIcon />
+          </IconButton>
+        </Hidden>
       </Grid>
       <Divider variant="middle" />
-      <Grid item container>
+      <Grid item container spacing={5}>
         <Grid item xs>
-          <CalendarTable getRows={getRows} month={selectedMonth.clone()} />
+          <CalendarTable getRows={getRows} month={selectedMonth.clone()} onChangeMonth={onChangeMonth} />
         </Grid>
         <Divider variant="fullWidth" orientation="vertical" />
-        <Grid item xs>
-          <CalendarTable getRows={getRows} month={selectedMonth.clone().add(1, "month")} />
-        </Grid>
+        <Hidden mdDown>
+          <Grid item xs>
+            <CalendarTable
+              getRows={getRows}
+              month={selectedMonth.clone().add(1, "month")}
+              onChangeMonth={onChangeMonth}
+            />
+          </Grid>
+        </Hidden>
       </Grid>
       <Divider variant="middle" />
     </Grid>
