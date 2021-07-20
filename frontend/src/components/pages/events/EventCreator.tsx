@@ -34,6 +34,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+/**
+ * Component for the creating a new event
+ */
+
 const CreateEvent: React.FC = () => {
   const classes = useStyles();
 

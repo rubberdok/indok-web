@@ -1,24 +1,33 @@
-import { FilterButtonLayout } from "./filterButtonLayout";
-import { Wrapper } from "./wrapper";
+import { Checkbox, FormControlLabel, Typography } from "@material-ui/core";
+import { CheckBox as CheckBoxIcon, CheckBoxOutlineBlank as CheckBoxOutlineBlankIcon } from "@material-ui/icons";
+import React from "react";
 
 interface FilterButtonProps {
   typeFilters: { [key: string]: { active: boolean; title: string } };
   updateTypeFilters: (key: string) => void;
 }
 
-const FilterButton: React.FC<FilterButtonProps> = ({ typeFilters, updateTypeFilters }) => {
+const FilterButtons: React.FC<FilterButtonProps> = ({ typeFilters, updateTypeFilters }) => {
   return (
-    <Wrapper>
+    <>
       {Object.entries(typeFilters).map(([key, val]) => (
-        <FilterButtonLayout
+        <FormControlLabel
           key={key}
-          active={val.active}
-          title={val.title}
-          onClick={() => updateTypeFilters(key)}
-        ></FilterButtonLayout>
+          control={
+            <Checkbox
+              color="primary"
+              icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+              checkedIcon={<CheckBoxIcon fontSize="small" />}
+              checked={val.active}
+              onChange={() => updateTypeFilters(key)}
+              name={val.title}
+            />
+          }
+          label={<Typography variant="body2">{val.title}</Typography>}
+        />
       ))}
-    </Wrapper>
+    </>
   );
 };
 
-export default FilterButton;
+export default FilterButtons;

@@ -1,15 +1,14 @@
 import { useQuery } from "@apollo/client";
 import { GET_FEATURED } from "@graphql/archive/queries";
+import { Document } from "@interfaces/archive";
 import Button from "@material-ui/core/Button";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardMedia from "@material-ui/core/CardMedia";
 import GridList from "@material-ui/core/GridList";
 import GridListTile from "@material-ui/core/GridListTile";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import Container from "@material-ui/core/Container";
-import { Document } from "@interfaces/archive";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -50,7 +49,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const ListFeaturedDocuments: React.FC = () => {
+const FeaturedDocumentsList: React.FC = () => {
   const { loading, data, error } = useQuery(GET_FEATURED);
 
   const classes = useStyles();
@@ -59,8 +58,8 @@ const ListFeaturedDocuments: React.FC = () => {
   if (error) return <p style={{ textAlign: "center" }}> Feil: {error.message} </p>;
 
   return (
-    <Container>
-      <Typography variant="body1" style={{ marginBottom: "8px" }}>
+    <>
+      <Typography variant="h4" gutterBottom>
         Fremhevede dokumenter
       </Typography>
       <GridList cellHeight={"auto"} className={classes.img} cols={4} spacing={8}>
@@ -113,13 +112,11 @@ const ListFeaturedDocuments: React.FC = () => {
             </GridListTile>
           ))
         ) : (
-          <Container style={{ flex: 1 }}>
-            <Typography> Kunne ikke laste inn dokumenter </Typography>
-          </Container>
+          <Typography> Kunne ikke laste inn dokumenter </Typography>
         )}
       </GridList>
-    </Container>
+    </>
   );
 };
 
-export default ListFeaturedDocuments;
+export default FeaturedDocumentsList;

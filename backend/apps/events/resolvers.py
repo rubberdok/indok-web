@@ -38,13 +38,10 @@ class EventResolvers:
     def resolve_all_events(
         self, info, category=None, organization=None, start_time=None, end_time=None
     ):
-        string_names = ["category", "example_filter_1", "example_filter_2"]
-        kwargs = {
-            f"{string_names[i]}": element
-            for i, element in enumerate([category])
-            if element != None
-        }
-        if kwargs or organization or start_time or end_time:
+        """
+        Get all events that fit the given filters
+        """
+        if category or organization or start_time or end_time:
             filteredEvents = Event.objects
 
             if start_time and end_time:
@@ -59,27 +56,35 @@ class EventResolvers:
                 filteredEvents = filteredEvents.filter(start_time__lte=(end_time))
 
             queries = []
+            kwargs = {}
             if category != None:
                 kwargs["category__name"] = category
-                del kwargs["category"]
 
+            # For generalization, if more filters are added later
             new_kwargs = {f"{k}__icontains": v for k, v in kwargs.items()}
             queries = [Q(**{k: v}) for k, v in new_kwargs.items()]
 
-            if organization:
-                queries.append(
+            if (
+                organization
+            ):  # for organizations, check if the organization argument corresponds to either
+                queries.append(  # the organization of the event itself and the parent organization (if it exists)
                     Q(organization__name__icontains=organization)
                     | Q(organization__parent__name__icontains=organization)
                 )
 
             return (
                 filteredEvents.filter(*queries)
-                .filter(start_time__gte=date.today())
+                .filter(
+                    start_time__gte=date.today()
+                )  # Only show events that have yet to pass
                 .order_by("start_time")
             )
         return Event.objects.filter(start_time__gte=date.today()).order_by("start_time")
 
     def resolve_default_events(self, info):
+        """
+        For each organization, get the most recent (future) event
+        """
         organizations = Organization.objects.all()
         all_events = Event.objects.filter(start_time__gte=date.today())
         events = []

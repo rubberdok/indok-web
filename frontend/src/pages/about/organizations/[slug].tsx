@@ -3,9 +3,11 @@ import { Box, Card, Chip, Container, Divider, Grid, makeStyles, Paper, Typograph
 import MailOutlineIcon from "@material-ui/icons/MailOutline";
 import PhoneIcon from "@material-ui/icons/Phone";
 import { getPostBySlug, getPostsSlugs } from "@utils/posts";
-import { NextPage } from "next";
+import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import React from "react";
 import ReactMarkdown from "react-markdown";
+import * as markdownComponents from "@components/markdown/components";
+import { Post } from "src/types/posts";
 
 type ArticleProps = {
   params: {
@@ -21,10 +23,17 @@ type ArticleProps = {
     logo?: string;
     alt?: string;
     image?: string;
-    styre: Array<any>;
+    board: BoardMember[];
   };
-  nextPost: any;
-  previousPost: any;
+  nextPost: Post | null;
+  previousPost: Post | null;
+};
+
+type BoardMember = {
+  name: string;
+  mail: string;
+  title: string;
+  phoneNumber: string;
 };
 
 const useStyles = makeStyles(() => ({
@@ -84,35 +93,27 @@ const Article: NextPage<ArticleProps> = ({ post, frontmatter }) => {
 
         <Grid container spacing={4}>
           <Grid item xs={8}>
-            <ReactMarkdown
-              escapeHtml={false}
-              source={post.content}
-              renderers={{ heading: HeadingRenderer, paragraph: ParagraphRenderer }}
-            />
+            <ReactMarkdown components={markdownComponents}>{post.content}</ReactMarkdown>
           </Grid>
           <Grid item xs={4}>
-            {frontmatter.styre && (
+            {frontmatter.board && (
               <>
                 <Typography variant="h5" gutterBottom>
                   Styret
                 </Typography>
-                {Object.keys(frontmatter.styre).map((item: any, index) => (
+                {frontmatter.board.map((member, index) => (
                   <>
                     {index != 0 && <Divider />}
-                    <Card key={item}>
+                    <Card key={index}>
                       <Box p={4}>
-                        <Typography variant="body2">{frontmatter.styre[item].navn}</Typography>
+                        <Typography variant="body2">{member.name}</Typography>
                         <Typography variant="caption" gutterBottom>
-                          {frontmatter.styre[item].tittel}
+                          {member.title}
                         </Typography>
                         <br />
-                        {frontmatter.styre[item].mail && (
-                          <Chip size="small" label={frontmatter.styre[item].mail} icon={<MailOutlineIcon />} />
-                        )}
-                        {frontmatter.styre[item].mail && frontmatter.styre[item].telefon && <br />}
-                        {frontmatter.styre[item].telefon && (
-                          <Chip size="small" label={frontmatter.styre[item].telefon} icon={<PhoneIcon />} />
-                        )}
+                        {member.mail && <Chip size="small" label={member.mail} icon={<MailOutlineIcon />} />}
+                        {member.mail && member.phoneNumber && <br />}
+                        {member.phoneNumber && <Chip size="small" label={member.phoneNumber} icon={<PhoneIcon />} />}
                       </Box>
                     </Card>
                   </>
@@ -126,7 +127,7 @@ const Article: NextPage<ArticleProps> = ({ post, frontmatter }) => {
   );
 };
 
-export const getStaticPaths = async () => {
+export const getStaticPaths: GetStaticPaths = async () => {
   const paths = getPostsSlugs("organizations");
 
   return {
@@ -135,36 +136,20 @@ export const getStaticPaths = async () => {
   };
 };
 
-export const getStaticProps = async ({ params }: ArticleProps) => {
-  const { slug } = params;
-
-  const postData = getPostBySlug(slug, "organizations");
-
-  if (!postData.previousPost) {
-    postData.previousPost = null;
+export const getStaticProps: GetStaticProps = async ({ params }) => {
+  if (params) {
+    const { slug } = params;
+    let postData = undefined;
+    if (typeof slug === "string") {
+      postData = getPostBySlug(slug, "organizations");
+    } else if (Array.isArray(slug)) {
+      postData = getPostBySlug(slug[0], "organizations");
+    } else {
+      return { notFound: true };
+    }
+    return { props: postData };
   }
-
-  if (!postData.nextPost) {
-    postData.nextPost = null;
-  }
-
-  return { props: postData };
-};
-
-const HeadingRenderer = (props: { children: React.ReactNode }) => {
-  return (
-    <Typography variant="h5" gutterBottom>
-      {props.children}
-    </Typography>
-  );
-};
-
-const ParagraphRenderer = (props: { children: React.ReactNode }) => {
-  return (
-    <Typography variant="body2" paragraph>
-      {props.children}
-    </Typography>
-  );
+  return { notFound: true };
 };
 
 export default Article;

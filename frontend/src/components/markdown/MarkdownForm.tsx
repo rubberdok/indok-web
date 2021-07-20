@@ -1,6 +1,6 @@
 import { Tab, Tabs, TextField } from "@material-ui/core";
 import ReactMarkdown from "react-markdown";
-import renderers from "@components/pages/listings/markdown/renderers";
+import * as markdownComponents from "@components/markdown/components";
 import { ChangeEventHandler, useState } from "react";
 
 /**
@@ -34,7 +34,7 @@ const MarkdownForm: React.FC<{
       {view === "edit" && (
         <TextField fullWidth multiline rows={20} variant="outlined" value={markdown} onChange={onTextChange} />
       )}
-      {view === "preview" && <ReactMarkdown renderers={renderers}>{markdown}</ReactMarkdown>}
+      {view === "preview" && <ReactMarkdown components={markdownComponents}>{markdown}</ReactMarkdown>}
     </>
   );
 };

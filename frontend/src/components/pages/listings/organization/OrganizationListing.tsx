@@ -2,7 +2,7 @@ import { Listing } from "@interfaces/listings";
 import { Typography, Card, CardContent, Grid, CardActions, Button } from "@material-ui/core";
 import Link from "next/link";
 import { Create } from "@material-ui/icons";
-import renderers from "@components/pages/listings/markdown/renderers";
+import * as components from "@components/markdown/components";
 import ReactMarkdown from "react-markdown";
 
 /**
@@ -19,7 +19,7 @@ const OrganizationListing: React.FC<{ listing: Listing }> = ({ listing }) => (
           <Typography variant="h3" gutterBottom>
             {listing.title}
           </Typography>
-          <ReactMarkdown renderers={renderers}>{listing.description}</ReactMarkdown>
+          <ReactMarkdown components={components}>{listing.description}</ReactMarkdown>
         </CardContent>
         <CardActions>
           <Grid container justify="flex-end">
