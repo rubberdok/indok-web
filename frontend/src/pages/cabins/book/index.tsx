@@ -1,5 +1,4 @@
 import { useMutation, useQuery } from "@apollo/client";
-import Navbar from "@components/navbar/Navbar";
 import CheckInOut from "@components/pages/cabins/CheckInOut";
 import CabinContactInfo from "@components/pages/cabins/CabinContactInfo";
 import ContractDialog from "@components/pages/cabins/Popup/ContractDialog";
@@ -32,6 +31,7 @@ import PaymentSite from "@components/pages/cabins/PaymentSite";
 import ReceiptSite from "@components/pages/cabins/ReceiptSite";
 import { CREATE_BOOKING, SEND_EMAIL } from "@graphql/cabins/mutations";
 import { KeyboardArrowLeft, KeyboardArrowRight } from "@material-ui/icons";
+import Layout from "@components/Layout";
 
 interface StepReady {
   [step: number]: { ready: boolean; errortext: string };
@@ -186,7 +186,7 @@ const CabinBookingPage: NextPage = () => {
           variant={isMobile ? "text" : "contained"}
         >
           {activeStep == 2 ? "Send søknad" : "Neste"}
-          {theme.direction === "rtl" ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
+          <KeyboardArrowRight />
         </Button>
       </Box>
     </Tooltip>
@@ -199,15 +199,14 @@ const CabinBookingPage: NextPage = () => {
         disabled={activeStep === 0}
         variant={isMobile ? "text" : "contained"}
       >
-        {theme.direction === "rtl" ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
-        Back
+        <KeyboardArrowLeft />
+        Tilbake
       </Button>
     </Box>
   );
 
   return (
-    <>
-      <Navbar />
+    <Layout>
       <ContractDialog
         modalData={modalData}
         setModalData={setModalData}
@@ -258,7 +257,7 @@ const CabinBookingPage: NextPage = () => {
           </Grid>
         </Grid>
       </Box>
-    </>
+    </Layout>
   );
 };
 
