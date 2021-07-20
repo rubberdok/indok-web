@@ -22,6 +22,9 @@ interface Props {
   header?: string;
 }
 
+/*
+Component for rendering all input fields for the contact info of a booking
+*/
 export const InputFields: React.FC<Props> = ({ contactInfo, validations, onChange, errorTrigger, chosenCabins }) => {
   const totalGuestsAllowed = chosenCabins.reduce((sum, currentCabin) => sum + (currentCabin.maxGuests || 0), 0);
 

@@ -106,6 +106,9 @@ const faqs = [
   },
 ];
 
+/*
+Renders all frequently asked questions regarding the cabins.
+*/
 const FAQ = () => {
   const [expanded, setExpanded] = React.useState<string | false>(false);
 

@@ -1,3 +1,6 @@
+/*
+Data with all paths, labels and descriptions for images used in the image slider
+*/
 export const outsideImages = [
   {
     label: "",

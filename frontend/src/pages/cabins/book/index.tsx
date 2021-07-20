@@ -70,7 +70,10 @@ const defaultModalData: ModalData = {
   contractViewed: false,
   displayPopUp: false,
 };
-
+/*
+Main page for the booking of a cabin. 
+The page renders different components depending on the step variale chosen.
+*/
 const CabinBookingPage: NextPage = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [stepReady, setStepReady] = useState<StepReady>(initalStepReady);

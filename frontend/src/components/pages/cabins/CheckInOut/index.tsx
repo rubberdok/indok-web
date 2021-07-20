@@ -12,7 +12,9 @@ interface Props {
   setChosenCabins: Dispatch<SetStateAction<Cabin[]>>;
   setDatePick: React.Dispatch<React.SetStateAction<DatePick>>;
 }
-
+/*
+One of the steps in the cabins/book page. In this step the user chooses a cabin and the check-in and check-out dates.
+*/
 const CheckInOut: NextPage<Props> = ({ allCabins, chosenCabins, setChosenCabins, setDatePick }) => {
   const { disabledDates } = useDisabledDates(chosenCabins);
   const isMobile = useMediaQuery(useTheme().breakpoints.down("sm"));

@@ -11,6 +11,9 @@ interface Props {
   mailSent?: boolean;
 }
 
+/*
+Step in the cabins/book site. Shows a confirmation of the booking made after the payment site.
+*/
 const ReceiptSite: NextPage<Props> = (props) => {
   return (
     <Grid container alignItems="center" direction="column">

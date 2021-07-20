@@ -14,7 +14,10 @@ interface ContractInfoProps {
   errorTrigger: boolean;
   chosenCabins: Cabin[];
 }
-
+/*
+One of the steps in the cabins/book page.
+Fetches the current user and tries to input its values to the InputFields.
+*/
 const CabinContactInfo: NextPage<ContractInfoProps> = ({
   contactInfo,
   setContactInfo,

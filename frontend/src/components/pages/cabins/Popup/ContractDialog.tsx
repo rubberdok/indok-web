@@ -28,6 +28,9 @@ interface ContractDialogProps {
   setActiveStep: Dispatch<SetStateAction<number>>;
 }
 
+/*
+Dialog component for the contract component
+*/
 const ContractDialog = ({
   modalData,
   setModalData,
