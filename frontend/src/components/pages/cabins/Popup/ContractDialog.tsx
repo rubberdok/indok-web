@@ -9,6 +9,7 @@ import ClearIcon from "@material-ui/icons/Clear";
 import CheckIcon from "@material-ui/icons/Check";
 import { Cabin, ContactInfo } from "@interfaces/cabins";
 import { ModalData, DatePick } from "src/pages/cabins/book";
+import { NextPage } from "next";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -31,7 +32,7 @@ interface ContractDialogProps {
 /*
 Dialog component for the contract component
 */
-const ContractDialog = ({
+const ContractDialog: NextPage<ContractDialogProps> = ({
   modalData,
   setModalData,
   datePick,
@@ -57,7 +58,7 @@ const ContractDialog = ({
         <DialogContent>
           <Grid container alignContent="center" spacing={3}>
             <Grid item>
-              <IconButton onClick={(_e) => setModalData({ ...modalData, displayPopUp: false })}>
+              <IconButton onClick={() => setModalData({ ...modalData, displayPopUp: false })}>
                 <ClearIcon />
               </IconButton>
             </Grid>

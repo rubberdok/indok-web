@@ -101,12 +101,22 @@ const BookingAdminPage: NextPage = () => {
 
   const sendDecisionEmail = (booking: BookingFromQuery, approved: boolean) => {
     // omit unwanted fields
-    const { isTentative, price, cabins, id, __typename, ...emailInput } = booking;
+    const { checkIn, checkOut, externalParticipants, firstname, internalParticipants, lastname, phone, receiverEmail } =
+      booking;
 
     send_email({
       variables: {
         emailInput: {
-          ...emailInput,
+          ...{
+            checkIn,
+            checkOut,
+            externalParticipants,
+            firstname,
+            internalParticipants,
+            lastname,
+            phone,
+            receiverEmail,
+          },
           cabins: booking.cabins.map((cabin) => parseInt(cabin.id)),
           emailType: approved ? "approve_booking" : "disapprove_booking",
         },
