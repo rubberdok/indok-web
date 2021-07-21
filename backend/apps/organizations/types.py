@@ -1,3 +1,4 @@
+from typing import Optional
 import graphene
 from .models import Organization, Membership, Role
 from graphene_django import DjangoObjectType
@@ -45,14 +46,12 @@ class OrganizationType(DjangoObjectType):
             return wrapper
 
     @staticmethod
-    def resolve_absolute_slug(organization: Organization, info):
-        slug_list = [organization.slug]
-        while (
-            organization := organization.parent
-        ) and organization.parent != organization:
-            print(slug_list)
-            slug_list.insert(0, organization.slug)
-        return "/".join(slug_list)
+    def resolve_absolute_slug(organization: Optional[Organization], _):
+        if organization:
+            slug_list = [organization.slug]
+            while (organization := organization.parent) and organization.parent != organization:
+                slug_list.insert(0, organization.slug)
+            return "/".join(slug_list)
 
     @staticmethod
     @login_required
@@ -76,9 +75,7 @@ class MembershipType(DjangoObjectType):
         @staticmethod
         def is_in_organization(resolver):
             def wrapper(membership: Membership, info):
-                if membership.organization.users.filter(
-                    pk=info.context.user.id
-                ).exists():
+                if membership.organization.users.filter(pk=info.context.user.id).exists():
                     return resolver(membership, info)
                 else:
                     raise PermissionError(

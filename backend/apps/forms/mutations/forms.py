@@ -1,9 +1,9 @@
 import graphene
 from graphql_jwt.decorators import login_required, permission_required
 
-from ...listings.models import Listing
-from ..models import Form
-from ..types import FormType
+from apps.listings.models import Listing
+from apps.forms.models import Form
+from apps.forms.types import FormType
 
 
 class FormInput(graphene.InputObjectType):
