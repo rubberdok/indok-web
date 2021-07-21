@@ -145,9 +145,7 @@ DATAPORTEN_REDIRECT_URI = env("DATAPORTEN_REDIRECT_URI")
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"
-    },
+    {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
     {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
@@ -181,11 +179,11 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 
 # CONFIG
-EMAIL_BACKEND = 'django_ses.SESBackend'
+EMAIL_BACKEND = "django_ses.SESBackend"
 
-AWS_SES_REGION_NAME = 'eu-north-1'
-AWS_SES_REGION_ENDPOINT = 'email.eu-north-1.amazonaws.com'
-AWS_ACCESS_KEY_ID = 'AKIA3KG6AVJ476JEMRTF'
+AWS_SES_REGION_NAME = "eu-north-1"
+AWS_SES_REGION_ENDPOINT = "email.eu-north-1.amazonaws.com"
+AWS_ACCESS_KEY_ID = "AKIA3KG6AVJ476JEMRTF"
 AWS_SECRET_ACCESS_KEY = env("AWS_SECRET_ACCESS_KEY")
 
 GOOGLE_DRIVE_API_KEY = env("GOOGLE_DRIVE_API_KEY")
