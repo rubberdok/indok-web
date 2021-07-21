@@ -1,13 +1,11 @@
-from rest_framework.views import APIView
-from rest_framework.response import Response
+from django.http import JsonResponse
 
 
-class Ping(APIView):
-    def get(self, request):
-        return Response(
-            {
-                "message": "Yoinks!",
-                "status": "success",
-                "platform": "Fargate",
-            }
-        )
+def ping(_):
+    return JsonResponse(
+        {
+            "message": "Yoinks!",
+            "status": "success",
+            "platform": "Fargate",
+        }
+    )
