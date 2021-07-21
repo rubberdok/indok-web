@@ -69,6 +69,7 @@
     "src/**/*.{ts,tsx}": [
       "npm run lint:fix",
       "prettier --write"
-    ]
+    ],
+    "../**/*.py": ["black"]
   }
 }
