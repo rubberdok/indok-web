@@ -29,7 +29,7 @@ const defaultValidations: { subject: boolean; content: boolean } = {
   content: false,
 };
 
-const EmailForm = ({ eventId }: EmailFormProps) => {
+const EmailForm: React.FC<EmailFormProps> = ({ eventId }) => {
   const [showEmailForm, setShowEmailForm] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [emailProps, setEmailProps] = useState<SendEmailProps>(defaultMailProps);
@@ -88,7 +88,7 @@ const EmailForm = ({ eventId }: EmailFormProps) => {
         placement="bottom-start"
       >
         <Box>
-          <Button disabled={!data?.event.isAttendable} onClick={(_e) => setShowEmailForm(true)} color="primary">
+          <Button disabled={!data?.event.isAttendable} onClick={() => setShowEmailForm(true)} color="primary">
             <SendIcon style={{ margin: "5px" }} />
             Send e-post til alle påmeldte
           </Button>

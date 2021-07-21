@@ -13,7 +13,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const Layout = ({ children }: { children: React.ReactNode }) => {
+const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const classes = useStyles();
 
   return (

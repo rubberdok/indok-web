@@ -11,7 +11,6 @@ const useStyles = makeStyles((theme) => ({
     //backgroundColor: theme.palette.background.paper,
     padding: 0,
     listStyle: "none",
-    borderLeft: "1px solid rgb(0 0 0 / 13%)",
     paddingLeft: 40,
     paddingBottom: 20,
 
@@ -26,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Sidebar = () => {
+const Sidebar: React.FC = () => {
   const classes = useStyles();
   const router = useRouter();
 
@@ -37,6 +36,7 @@ const Sidebar = () => {
           <Button
             component="a"
             variant="outlined"
+            size="large"
             className={router.pathname == "/about" ? "MuiButton-outlinedPrimary" : ""}
             fullWidth
           >
@@ -49,6 +49,7 @@ const Sidebar = () => {
           <Button
             component="a"
             variant="outlined"
+            size="large"
             className={router.pathname == "/about/organization" ? "MuiButton-outlinedPrimary" : ""}
             fullWidth
           >
@@ -61,6 +62,7 @@ const Sidebar = () => {
           <Button
             component="a"
             variant="outlined"
+            size="large"
             className={router.pathname == "/about/board" ? "MuiButton-outlinedPrimary" : ""}
             fullWidth
           >

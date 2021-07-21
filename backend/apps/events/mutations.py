@@ -16,11 +16,11 @@ class BaseEventInput:
     title = graphene.String(required=True)
     description = graphene.String(required=True)
     start_time = graphene.DateTime(required=True)
+    is_attendable = graphene.Boolean(required=True)
     end_time = graphene.DateTime(required=False)
     location = graphene.String(required=False)
     category_id = graphene.ID(required=False)
     image = graphene.String(required=False)
-    is_attendable = graphene.Boolean(required=True)
     deadline = graphene.DateTime(required=False)
     signup_open_date = graphene.DateTime(required=False)
     available_slots = graphene.Int(required=False)
@@ -63,6 +63,7 @@ class CreateEvent(graphene.Mutation):
             )
         except Organization.DoesNotExist:
             raise ValueError("Ugyldig organisasjon oppgitt")
+
         check_user_membership(info.context.user, organization)
 
         event = Event()
