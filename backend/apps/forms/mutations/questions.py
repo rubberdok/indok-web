@@ -1,19 +1,11 @@
 import graphene
+from graphql_jwt.decorators import login_required
+from utils.decorators import permission_required
 from django.db.models import Q
-from graphql_jwt.decorators import login_required, permission_required
 
-from ..models import Answer, Form, Option, Question, Response
-from ..types import OptionType, QuestionType
+from apps.forms.models import Answer, Option, Question, Response, Form
+from apps.forms.types import OptionType, QuestionType, QuestionTypeEnum
 
-
-class QuestionTypeEnum(graphene.Enum):
-    PARAGRAPH = "PARAGRAPH"
-    SHORT_ANSWER = "SHORT_ANSWER"
-    MULTIPLE_CHOICE = "MULTIPLE_CHOICE"
-    CHECKBOXES = "CHECKBOXES"
-    DROPDOWN = "DROPDOWN"
-    SLIDER = "SLIDER"
-    FILE_UPLOAD = "FILE_UPLOAD"
 
 
 class BaseQuestionInput(graphene.InputObjectType):
@@ -36,8 +28,7 @@ class CreateQuestion(graphene.Mutation):
     class Arguments:
         question_data = CreateQuestionInput(required=True)
 
-    @login_required
-    @permission_required("forms.add_question")
+    @permission_required("forms.manage_form", (Form, "questions__pk", "id"))
     def mutate(self, info, question_data):
         question = Question()
         for k, v in question_data.items():
@@ -46,8 +37,7 @@ class CreateQuestion(graphene.Mutation):
             if v is not None:
                 setattr(question, k, v)
         question.save()
-        ok = True
-        return CreateQuestion(question=question, ok=ok)
+        return CreateQuestion(question=question, ok=True)
 
 
 class UpdateQuestion(graphene.Mutation):
@@ -58,7 +48,7 @@ class UpdateQuestion(graphene.Mutation):
         id = graphene.ID(required=True)
         question_data = BaseQuestionInput(required=True)
 
-    @permission_required("forms.update_question")
+    @permission_required("forms.manage_form", (Form, "questions__pk", "id"))
     def mutate(self, info, id, question_data):
         try:
             question = Question.objects.get(pk=id)
@@ -80,8 +70,7 @@ class DeleteQuestion(graphene.Mutation):
     class Arguments:
         id = graphene.ID(required=True)
 
-    @login_required
-    @permission_required("forms.delete_question")
+    @permission_required("forms.manage_form", (Form, "questions__pk", "id"))
     def mutate(self, info, id):
         try:
             question = Question.objects.get(pk=id)
@@ -106,7 +95,6 @@ class DeleteAnswer(graphene.Mutation):
         uuid = graphene.ID(required=True)
 
     @login_required
-    @permission_required("forms.delete_answer")
     def mutate(self, info, uuid):
         user = info.context.user
         try:
@@ -117,8 +105,7 @@ class DeleteAnswer(graphene.Mutation):
         if answer.question.mandatory:
             return DeleteAnswer(deleted_uuid=None, ok=False)
         answer.delete()
-        ok = True
-        return DeleteAnswer(ok=ok, deleted_uuid=deleted_uuid)
+        return DeleteAnswer(ok=True, deleted_uuid=deleted_uuid)
 
 
 class SubmitOrUpdateAnswers(graphene.Mutation):
@@ -128,8 +115,7 @@ class SubmitOrUpdateAnswers(graphene.Mutation):
         form_id = graphene.ID(required=True)
         answers_data = graphene.List(AnswerInput)
 
-    @login_required
-    @permission_required(["forms.add_answer", "forms.update_answers"])
+    @permission_required(["forms.add_answer", "forms.update_answer"])
     def mutate(self, info, form_id, answers_data):
         """Creates new answers to previously unanswered questions, updates already existings answers.
 
@@ -206,10 +192,9 @@ class DeleteAnswersToForm(graphene.Mutation):
         form_id = graphene.ID()
 
     @login_required
-    @permission_required("forms.delete_answer")
     def mutate(self, info, form_id):
         user = info.context.user
-        Response.objects.get(form_id=form_id, responder=user).delete()
+        user.responses.get(form_id=form_id).delete()
         return DeleteAnswersToForm(ok=True)
 
 
@@ -226,10 +211,7 @@ class CreateUpdateAndDeleteOptions(graphene.Mutation):
         question_id = graphene.ID(required=True)
         option_data = graphene.List(OptionInput)
 
-    @login_required
-    @permission_required(
-        ["forms.add_option", "forms.update_option", "forms.delete_option"]
-    )
+    @permission_required("forms.manage_form", (Form, "questions__pk", "question_id"))
     def mutate(self, info, question_id, option_data):
         """Bulk operation to refresh the options to a given question. Has three main operations:
         (1): Creates new options for inputs without an option_id

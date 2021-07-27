@@ -28,4 +28,5 @@ class UserType(DjangoObjectType):
             "memberships",
             "events",
             "organizations",
+            "responses",
         ]

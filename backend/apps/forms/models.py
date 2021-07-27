@@ -14,7 +14,7 @@ from apps.organizations.models import Organization
 class Form(models.Model):
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE, null=True)
     name = models.CharField(max_length=100)
-    description = models.CharField(max_length=3000, blank=True, default="")
+    description = models.TextField(blank=True, default="")
 
     def __str__(self) -> str:
         return f"{self.name}"
@@ -22,14 +22,19 @@ class Form(models.Model):
     @property
     def mandatory_questions(self: "Form"):
         return self.questions.filter(mandatory=True)
+    
+    class Meta:
+        permissions = [
+            ("forms.manage_form", "Has admin form privileges")
+        ]
 
 
 class Question(models.Model):
     form = models.ForeignKey(
         Form, on_delete=models.CASCADE, related_name="questions"
     )
-    question = models.CharField(max_length=300)
-    description = models.CharField(max_length=1000, blank=True, default="")
+    question = models.CharField(max_length=100)
+    description = models.CharField(max_length=100, blank=True, default="")
     question_type = models.CharField(max_length=32, default="PARAGRAPH")
     mandatory = models.BooleanField(default=True)
 
@@ -41,7 +46,7 @@ class Question(models.Model):
 
 
 class Option(models.Model):
-    answer = models.CharField(max_length=500)
+    answer = models.CharField(max_length=100)
     question = models.ForeignKey(
         Question, on_delete=models.CASCADE, related_name="options"
     )
@@ -59,7 +64,7 @@ class Answer(models.Model):
         "Response", on_delete=models.CASCADE, related_name="answers"
     )
 
-    answer = models.CharField(max_length=10000)
+    answer = models.TextField()
 
     class Meta:
         constraints = [
@@ -107,4 +112,4 @@ class Comment(models.Model):
     response = models.ForeignKey(
         Response, on_delete=models.CASCADE, related_name="comments"
     )
-    comment = models.CharField(max_length=2048)
+    comment = models.TextField()
