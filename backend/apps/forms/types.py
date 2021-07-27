@@ -37,7 +37,7 @@ class AnswerType(DjangoObjectType):
 
 class QuestionType(DjangoObjectType):
     options = graphene.List(OptionType)
-    answers = graphene.List(AnswerType, user_id=graphene.ID())
+    answers = graphene.List(AnswerType, user_id=graphene.ID(), required=False)
     question_type = graphene.Field(QuestionTypeEnum)
     answer = graphene.Field(AnswerType)
 
@@ -61,13 +61,13 @@ class QuestionType(DjangoObjectType):
     def resolve_answers(parent: Question, info) -> Optional[list[Answer]]:
         # Can be changed to @permission_required_or_none("forms.manage_form", fn=get_resolver_parent) if #141 is merged
         if info.context.user.has_perm("forms.manage_form", parent.form):
-            return parent.answers
+            return parent.answers.all()
 
     @staticmethod
     @login_required
     def resolve_answer(parent: Question, info):
         try:
-            return info.context.user.answers.get(question=parent)
+            return parent.answers.get(response__respondent=info.context.user)
         except Answer.DoesNotExist:
             return None
 
@@ -90,17 +90,11 @@ class FormType(DjangoObjectType):
     responders = graphene.List(UserType, user_id=graphene.ID())
     responder = graphene.Field(UserType, user_id=graphene.ID(required=True))
     responses = graphene.List(ResponseType)
-    response = graphene.Field(ResponseType, response_pk=graphene.UUID())
+    response = graphene.Field(ResponseType, response_pk=graphene.UUID(required=False))
 
     class Meta:
         model = Form
-        fields = [
-            "id",
-            "name",
-            "description",
-            "organization",
-            "questions"
-        ]
+        fields = ["id", "name", "description", "organization", "questions"]
         description = "A form containing questions, optionally linked to a listing."
 
     @staticmethod
@@ -129,8 +123,11 @@ class FormType(DjangoObjectType):
 
     @staticmethod
     @login_required
-    def resolve_response(parent, info, response_pk):
+    def resolve_response(parent, info, response_pk: Optional[str] = None):
         # Can be changed to @permission_required_or_none("forms.manage_form", fn=get_resolver_parent) if #141 is merged
         if info.context.user.has_perm("forms.manage_form", parent):
             return parent.responses.get(pk=response_pk)
-        return None
+        try:
+            return parent.responses.get(respondent=info.context.user)
+        except Response.DoesNotExist:
+            return None
