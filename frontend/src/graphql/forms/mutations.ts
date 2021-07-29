@@ -94,6 +94,7 @@ export const SUBMIT_ANSWERS = gql`
   mutation SubmitAnswers($formId: ID!, $answersData: [AnswerInput]) {
     submitAnswers(formId: $formId, answersData: $answersData) {
       ok
+      message
     }
   }
 `;

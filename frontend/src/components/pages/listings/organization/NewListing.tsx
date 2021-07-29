@@ -69,7 +69,7 @@ const NewListing: React.FC<{
     <Layout>
       <Container className={classes.root}>
         <Typography variant="h1" gutterBottom>
-          Ny vervutlysning med mye kult.
+          Ny vervutlysning.
         </Typography>
         <Grid container justify="center">
           <Grid item xs={10}>

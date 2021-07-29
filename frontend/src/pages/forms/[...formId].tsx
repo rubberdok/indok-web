@@ -3,13 +3,13 @@ import Layout from "@components/Layout";
 import { Container } from "@material-ui/core";
 import AnswerForm from "@components/forms/AnswerForm";
 import { useQuery } from "@apollo/client";
-import { Form } from "@interfaces/forms";
-import { FORM_RESPONSES } from "@graphql/forms/queries";
+import { FORM_WITH_QUESTIONS_AND_ANSWERS } from "@graphql/forms/queries";
 import { useRouter } from "next/router";
+import { Form } from "@interfaces/forms";
 
 const FormPage: NextPage = () => {
 	const { formId } = useRouter().query
-	const { loading, error, data } = useQuery<{ form: Form }>(FORM_RESPONSES, {
+	const { loading, error, data } = useQuery<{ form: Form }>(FORM_WITH_QUESTIONS_AND_ANSWERS, {
 		variables: {
 			formId: (formId && formId[0] as string)
 		}

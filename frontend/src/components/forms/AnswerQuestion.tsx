@@ -1,21 +1,24 @@
 import { FormControlLabel, MenuItem, Radio, RadioGroup, Select, TextField } from "@material-ui/core";
 import AnswerCheckboxes from "@components/forms/AnswerCheckboxes";
-import { AnswerState } from "@components/forms/AnswerForm";
+import { Question } from "@interfaces/forms";
 
+
+type Props = {
+  question: Question;
+  answer: string;
+  onValueChanged: (value: string) => void;
+}
 /**
  * Component to answer a question on a form.
  *
  * Props:
  * - the answer state, passed down from answerForm
- * - setAnswer function to change answer state
+ * - onValueChanged function to change answer state
  */
-const AnswerQuestion: React.FC<{
-  answer: AnswerState;
-  setAnswer: (answer: AnswerState) => void;
-}> = ({ answer, setAnswer }) => {
+const AnswerQuestion: React.FC<Props> = ({ answer, question, onValueChanged }) => {
   // returns a form input based on the type of the answer's question
-  // each input calls on setAnswer to change the state of AnswerForm
-  switch (answer.question.questionType) {
+  // each input calls on onValueChanged to change the state of AnswerForm
+  switch (question.questionType) {
     case "PARAGRAPH":
       return (
         <TextField
@@ -23,10 +26,8 @@ const AnswerQuestion: React.FC<{
           fullWidth
           multiline
           rows={4}
-          value={answer.answer}
-          onChange={(e) => {
-            setAnswer({ ...answer, answer: e.target.value });
-          }}
+          value={answer}
+          onChange={(e) => onValueChanged(e.target.value)}
         />
       );
     case "SHORT_ANSWER":
@@ -34,21 +35,18 @@ const AnswerQuestion: React.FC<{
         <TextField
           variant="outlined"
           fullWidth
-          value={answer.answer}
-          onChange={(e) => {
-            setAnswer({ ...answer, answer: e.target.value });
-          }}
+          value={answer}
+          onChange={(e) => onValueChanged(e.target.value)}
         />
       );
     case "MULTIPLE_CHOICE":
       return (
         <RadioGroup
-          value={answer.answer}
-          onChange={(e) => {
-            setAnswer({ ...answer, answer: e.target.value });
-          }}
+          value={answer}
+          onChange={(e) => onValueChanged(e.target.value)}
+
         >
-          {(answer.question.options ?? []).map((option, index) => (
+          {(question.options ?? []).map((option, index) => (
             <FormControlLabel
               key={index}
               value={option.answer}
@@ -59,18 +57,17 @@ const AnswerQuestion: React.FC<{
         </RadioGroup>
       );
     case "CHECKBOXES":
-      return <AnswerCheckboxes answer={answer} setAnswer={setAnswer} />;
+      return <AnswerCheckboxes answer={answer} onChange={onValueChanged}
+      />;
     case "DROPDOWN":
       return (
         <Select
           fullWidth
-          value={answer.answer}
-          onChange={(e) => {
-            // ugly typecasting, but necessary with Material UI's Select component
-            setAnswer({ ...answer, answer: e.target.value as string });
-          }}
+          value={answer}
+          onChange={(e) => onValueChanged(e.target.value as string)}
+
         >
-          {(answer.question.options ?? []).map((option, index) => (
+          {(question.options ?? []).map((option, index) => (
             <MenuItem key={index} value={option.answer}>
               {option.answer}
             </MenuItem>
