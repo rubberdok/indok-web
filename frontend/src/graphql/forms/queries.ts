@@ -19,6 +19,10 @@ export const FORM_WITH_QUESTIONS_AND_ANSWERS = gql`
       questions {
         id
         question
+        options {
+          answer
+          id
+        }
         questionType
         mandatory
         answer {

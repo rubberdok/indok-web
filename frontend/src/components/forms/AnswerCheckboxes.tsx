@@ -1,7 +1,6 @@
 import { Checkbox, FormControlLabel, FormGroup } from "@material-ui/core";
 import { useEffect, useState } from "react";
-import { AnswerState } from "@components/forms/AnswerForm";
-import { Option } from "@interfaces/forms";
+import { Option, Question } from "@interfaces/forms";
 
 /**
  * Component to answer questions of the Checkboxes type.
@@ -9,21 +8,19 @@ import { Option } from "@interfaces/forms";
  *
  * Props:
  * - the answer state, passed down from answerForm
- * - setAnswer function to change answer state
+ * - onValueChanged function to change answer state
  */
 const AnswerCheckboxes: React.FC<{
-  answer: AnswerState;
-  setAnswer: (answer: AnswerState) => void;
-}> = ({ answer, setAnswer }) => {
+  answer: string
+  question: Question
+  onValueChanged: (value: string) => void;
+}> = ({ answer, question, onValueChanged }) => {
   // state to manage which options are selected
-  const [selectedOptions, selectOptions] = useState<Option[]>([]);
+  const [selectedOptions, selectOptions] = useState<Option[]>(question.options ? question.options?.filter((option) => answer.split("|||").includes(option.answer)) : []);
 
   // every time options changes, set answer to the concatenation of selected options
   useEffect(() => {
-    setAnswer({
-      ...answer,
-      answer: selectedOptions.map((option) => option.answer).join("|||"),
-    });
+    onValueChanged(selectedOptions.map((option) => option.answer).join("|||"));
   }, [selectedOptions]);
   /*
     Why concatenate?
@@ -34,7 +31,7 @@ const AnswerCheckboxes: React.FC<{
 
   return (
     <FormGroup>
-      {(answer.question.options ?? []).map((option) => (
+      {(question.options ?? []).map((option) => (
         <FormControlLabel
           key={option.id}
           label={option.answer}

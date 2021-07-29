@@ -35,10 +35,10 @@ export const CREATE_QUESTION = gql`
     $mandatory: Boolean
   ) {
     createQuestion(
+      formId: $formId
       questionData: {
         question: $question
         description: $description
-        formId: $formId
         questionType: $questionType
         mandatory: $mandatory
       }

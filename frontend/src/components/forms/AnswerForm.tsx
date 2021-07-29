@@ -26,7 +26,7 @@ const AnswerForm: React.FC<{
     Object.fromEntries(form.questions.map((question) => [question.id, { question: question, answer: question.answer?.answer || "" }]))
   );
 
-  const router = useRouter()
+  const router = useRouter();
 
   // state to store feedback to the user
   const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
@@ -39,7 +39,6 @@ const AnswerForm: React.FC<{
     { formId: string; answersData: { questionId: string; answer: string }[] }
   >(SUBMIT_ANSWERS, {
     onCompleted: ({ submitAnswers }) => {
-      console.log(submitAnswers.ok);
       if (submitAnswers.ok) {
         router.push("/");
       } else {

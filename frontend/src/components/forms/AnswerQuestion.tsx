@@ -44,7 +44,6 @@ const AnswerQuestion: React.FC<Props> = ({ answer, question, onValueChanged }) =
         <RadioGroup
           value={answer}
           onChange={(e) => onValueChanged(e.target.value)}
-
         >
           {(question.options ?? []).map((option, index) => (
             <FormControlLabel
@@ -57,7 +56,7 @@ const AnswerQuestion: React.FC<Props> = ({ answer, question, onValueChanged }) =
         </RadioGroup>
       );
     case "CHECKBOXES":
-      return <AnswerCheckboxes answer={answer} onChange={onValueChanged}
+      return <AnswerCheckboxes answer={answer} question={question} onValueChanged={onValueChanged}
       />;
     case "DROPDOWN":
       return (
