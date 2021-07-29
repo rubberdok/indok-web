@@ -31,6 +31,13 @@ const TitleCard: React.FC<{
   listing: Listing;
 }> = ({ listing }) => {
   const classes = useStyles();
+  let link: string | undefined = undefined
+  if (listing.form) {
+    link = `/forms/${listing.form.id}/`;
+  } else if (listing.url) {
+    link = listing.url
+  }
+
   return (
     <Card style={{ height: "100%" }}>
       <CardContent>
@@ -47,8 +54,8 @@ const TitleCard: React.FC<{
           </Grid>
           <Hidden xsDown>
             <Grid item>
-              {listing.url && (
-                <Link href={listing.url} passHref>
+              {link && (
+                <Link href={link} passHref>
                   <Button variant="contained" color="primary" endIcon={<ArrowForward />}>
                     Søk her
                   </Button>
