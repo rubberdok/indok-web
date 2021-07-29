@@ -17,7 +17,6 @@ class BaseQuestionInput(graphene.InputObjectType):
 
 
 class CreateQuestionInput(BaseQuestionInput):
-    form_id = graphene.ID(required=True)
     question = graphene.String(required=True)
     mandatory = graphene.Boolean()
 
@@ -27,16 +26,18 @@ class CreateQuestion(graphene.Mutation):
     question = graphene.Field(QuestionType)
 
     class Arguments:
+        form_id = graphene.ID()
         question_data = CreateQuestionInput(required=True)
 
-    @permission_required("forms.manage_form", (Form, "questions__pk", "id"))
-    def mutate(self, info, question_data):
+    @permission_required("forms.manage_form", (Form, "pk", "form_id"))
+    def mutate(self, info, form_id, question_data):
         question = Question()
         for k, v in question_data.items():
             # Necessary as graphene-django passes None into kwargs if no value is submitted.
             # Can be removed if https://github.com/graphql-python/graphene/pull/1300 is merged
             if v is not None:
                 setattr(question, k, v)
+        question.form_id = form_id
         question.save()
         return CreateQuestion(question=question, ok=True)
 
@@ -192,6 +193,7 @@ class SubmitOrUpdateAnswers(graphene.Mutation):
                         answer=answers[question.pk],
                     )
                     for question in questions
+                    if question.mandatory or answers[question.pk] != ""
                 ]
             )
         except IntegrityError as err:
