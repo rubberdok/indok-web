@@ -2,10 +2,11 @@ import graphene
 from graphql_jwt.decorators import login_required
 from utils.decorators import permission_required
 from django.db.models import Q
+from django.db import IntegrityError
+from django.utils import timezone
 
 from apps.forms.models import Answer, Option, Question, Response, Form
 from apps.forms.types import OptionType, QuestionType, QuestionTypeEnum
-
 
 
 class BaseQuestionInput(graphene.InputObjectType):
@@ -110,12 +111,13 @@ class DeleteAnswer(graphene.Mutation):
 
 class SubmitOrUpdateAnswers(graphene.Mutation):
     ok = graphene.Boolean()
+    message = graphene.String(required=False)
 
     class Arguments:
         form_id = graphene.ID(required=True)
         answers_data = graphene.List(AnswerInput)
 
-    @permission_required(["forms.add_answer", "forms.update_answer"])
+    @permission_required(["forms.add_answer", "forms.change_answer"])
     def mutate(self, info, form_id, answers_data):
         """Creates new answers to previously unanswered questions, updates already existings answers.
 
@@ -136,24 +138,31 @@ class SubmitOrUpdateAnswers(graphene.Mutation):
         """
         user = info.context.user
         try:
-            form = Form.objects.prefetch_related("questions").get(pk=form_id)
+            form: Form = Form.objects.prefetch_related("questions").get(pk=form_id)
         except Form.DoesNotExist:
             raise KeyError(f"The form with id {form_id} does not exist.")
 
-        response, _ = Response.objects.prefetch_related("answers").get_or_create(form_id=form_id, respondent=user)
+        if form.listing and form.listing.deadline <= timezone.now():
+            return SubmitOrUpdateAnswers(
+                ok=False,
+                message="Søknadsfristen har utløpt og det er ikke lenger mulig å sende inn eller endre svar på denne søknaden.",
+            )
+
+        response, _ = Response.objects.prefetch_related("answers").get_or_create(
+            form_id=form_id, respondent=user
+        )
 
         # Restructure the data for easier manipulation
         answers = {
             int(answer_data["question_id"]): answer_data["answer"]
             for answer_data in answers_data
         }
-
-        # Update existing answers
-        # Find all existing answers, iterate over the ones that should be updated
         existing_answers = response.answers.distinct()
-        for answer in existing_answers.filter(question__pk__in=answers.keys()):
+        updated_existing_answers = list(
+            existing_answers.filter(question__pk__in=answers.keys())
+        )
+        for answer in updated_existing_answers:
             answer.answer = answers[answer.question.pk]
-            del answers[answer.question.pk]
 
         # A mandatory question is unanswered if:
         # (1) it is in the form
@@ -162,26 +171,36 @@ class SubmitOrUpdateAnswers(graphene.Mutation):
         # (4) it is not part of the new, incoming answers
         unanswered_mandatory_questions = form.questions.filter(
             Q(mandatory=True)
-            & ~Q(pk__in=existing_answers.values_list("question__id", flat=True)) 
+            & ~Q(pk__in=existing_answers.values_list("question__id", flat=True))
             & ~Q(pk__in=answers.keys())
         ).exists()
 
-        if unanswered_mandatory_questions:
-            # Not all mandatory questions have been answered
-            raise AssertionError(
-                f"Not all mandatory questions have been answered"
-            )
-        
-        # Iterate over the questions to prevent users from answering other forms than the current one
-        questions = form.questions.filter(pk__in=answers.keys())
+        assert not unanswered_mandatory_questions
 
-        Answer.objects.bulk_update(existing_answers, ["answer"])
-        Answer.objects.bulk_create(
-            [
-                Answer(response=response, question=question, answer=answers[question.pk])
-                for question in questions
-            ]
+        # Iterate over the questions to prevent users from answering other forms than the current one
+        questions = form.questions.filter(
+            Q(pk__in=answers.keys())
+            & ~Q(pk__in=existing_answers.values_list("question__id", flat=True))
         )
+        try:
+            Answer.objects.bulk_update(updated_existing_answers, ["answer"])
+            Answer.objects.bulk_create(
+                [
+                    Answer(
+                        response=response,
+                        question=question,
+                        answer=answers[question.pk],
+                    )
+                    for question in questions
+                ]
+            )
+        except IntegrityError as err:
+            if "answers_not_empty" in err.args[0]:
+                return SubmitOrUpdateAnswers(
+                    ok=False, message="Du må svare på alle obligatoriske spørsmål."
+                )
+            else:
+                raise err
         return SubmitOrUpdateAnswers(ok=True)
 
 
