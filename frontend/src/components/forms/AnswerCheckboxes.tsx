@@ -11,12 +11,14 @@ import { Option, Question } from "@interfaces/forms";
  * - onValueChanged function to change answer state
  */
 const AnswerCheckboxes: React.FC<{
-  answer: string
-  question: Question
+  answer: string;
+  question: Question;
   onValueChanged: (value: string) => void;
 }> = ({ answer, question, onValueChanged }) => {
   // state to manage which options are selected
-  const [selectedOptions, selectOptions] = useState<Option[]>(question.options ? question.options?.filter((option) => answer.split("|||").includes(option.answer)) : []);
+  const [selectedOptions, selectOptions] = useState<Option[]>(
+    question.options ? question.options?.filter((option) => answer.split("|||").includes(option.answer)) : []
+  );
 
   // every time options changes, set answer to the concatenation of selected options
   useEffect(() => {

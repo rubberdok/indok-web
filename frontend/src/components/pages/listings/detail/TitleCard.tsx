@@ -31,11 +31,11 @@ const TitleCard: React.FC<{
   listing: Listing;
 }> = ({ listing }) => {
   const classes = useStyles();
-  let link: string | undefined = undefined
+  let link: string | undefined = undefined;
   if (listing.form) {
     link = `/forms/${listing.form.id}/`;
   } else if (listing.url) {
-    link = listing.url
+    link = listing.url;
   }
 
   return (

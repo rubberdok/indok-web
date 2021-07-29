@@ -9,8 +9,8 @@ import { useRouter } from "next/router";
 
 // interface for the state of answers before pushing to the database
 type Questions = {
-  [key: string]: { question: Question, answer: string };
-}
+  [key: string]: { question: Question; answer: string };
+};
 
 /**
  * Component for a user to answer a form.
@@ -23,7 +23,9 @@ const AnswerForm: React.FC<{
 }> = ({ form }) => {
   // state to manage the user's answers before submitting
   const [questions, setQuestions] = useState<Questions>(
-    Object.fromEntries(form.questions.map((question) => [question.id, { question: question, answer: question.answer?.answer || "" }]))
+    Object.fromEntries(
+      form.questions.map((question) => [question.id, { question: question, answer: question.answer?.answer || "" }])
+    )
   );
 
   const router = useRouter();
@@ -34,7 +36,7 @@ const AnswerForm: React.FC<{
   // mutation to submit answers
   const [submitAnswers] = useMutation<
     // object returned from the mutation
-    { submitAnswers: { ok: boolean, message: string } },
+    { submitAnswers: { ok: boolean; message: string } },
     // variables of the mutation
     { formId: string; answersData: { questionId: string; answer: string }[] }
   >(SUBMIT_ANSWERS, {
@@ -43,14 +45,14 @@ const AnswerForm: React.FC<{
         router.push("/");
       } else {
         setErrorMessage(submitAnswers.message);
-      };
-    }
+      }
+    },
   });
 
   // maps the answers/questions to AnswerQuestion components
   // passes setAnswer prop to each AnswerQuestion, which updates the relevant Answer on this component's state
   return (
-    <Grid container direction="column" spacing={1} style={{marginTop: 32, marginBottom: 16}}>
+    <Grid container direction="column" spacing={1} style={{ marginTop: 32, marginBottom: 16 }}>
       <Grid item>
         <Card>
           <CardContent>
@@ -74,7 +76,9 @@ const AnswerForm: React.FC<{
                   <AnswerQuestion
                     question={question}
                     answer={answer}
-                    onValueChanged={(value) => setQuestions((prevState) => ({ ...prevState, [id]: { ...prevState[id], answer: value }}))}
+                    onValueChanged={(value) =>
+                      setQuestions((prevState) => ({ ...prevState, [id]: { ...prevState[id], answer: value } }))
+                    }
                   />
                 </Grid>
               </Grid>
@@ -98,13 +102,14 @@ const AnswerForm: React.FC<{
           color="primary"
           startIcon={<Send />}
           onClick={() => {
-            const answersData = Object.entries(questions).map(([id, { answer }]) => (
-              { answer: answer, questionId: id }
-            ));
+            const answersData = Object.entries(questions).map(([id, { answer }]) => ({
+              answer: answer,
+              questionId: id,
+            }));
             let error = { error: false, message: "" };
             Object.entries(questions).forEach(([, { question, answer }]) => {
               if (question.mandatory && answer === "") {
-                error = { error: true, message: "Du må svare på alle obligatoriske spørsmål."}
+                error = { error: true, message: "Du må svare på alle obligatoriske spørsmål." };
               }
             });
             if (error.error) {
@@ -114,10 +119,10 @@ const AnswerForm: React.FC<{
               submitAnswers({
                 variables: {
                   formId: form.id,
-                  answersData: answersData
-                }
+                  answersData: answersData,
+                },
               });
-            };
+            }
           }}
         >
           Send søknad

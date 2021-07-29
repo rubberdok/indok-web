@@ -2,12 +2,11 @@ import { FormControlLabel, MenuItem, Radio, RadioGroup, Select, TextField } from
 import AnswerCheckboxes from "@components/forms/AnswerCheckboxes";
 import { Question } from "@interfaces/forms";
 
-
 type Props = {
   question: Question;
   answer: string;
   onValueChanged: (value: string) => void;
-}
+};
 /**
  * Component to answer a question on a form.
  *
@@ -31,20 +30,10 @@ const AnswerQuestion: React.FC<Props> = ({ answer, question, onValueChanged }) =
         />
       );
     case "SHORT_ANSWER":
-      return (
-        <TextField
-          variant="outlined"
-          fullWidth
-          value={answer}
-          onChange={(e) => onValueChanged(e.target.value)}
-        />
-      );
+      return <TextField variant="outlined" fullWidth value={answer} onChange={(e) => onValueChanged(e.target.value)} />;
     case "MULTIPLE_CHOICE":
       return (
-        <RadioGroup
-          value={answer}
-          onChange={(e) => onValueChanged(e.target.value)}
-        >
+        <RadioGroup value={answer} onChange={(e) => onValueChanged(e.target.value)}>
           {(question.options ?? []).map((option, index) => (
             <FormControlLabel
               key={index}
@@ -56,16 +45,10 @@ const AnswerQuestion: React.FC<Props> = ({ answer, question, onValueChanged }) =
         </RadioGroup>
       );
     case "CHECKBOXES":
-      return <AnswerCheckboxes answer={answer} question={question} onValueChanged={onValueChanged}
-      />;
+      return <AnswerCheckboxes answer={answer} question={question} onValueChanged={onValueChanged} />;
     case "DROPDOWN":
       return (
-        <Select
-          fullWidth
-          value={answer}
-          onChange={(e) => onValueChanged(e.target.value as string)}
-
-        >
+        <Select fullWidth value={answer} onChange={(e) => onValueChanged(e.target.value as string)}>
           {(question.options ?? []).map((option, index) => (
             <MenuItem key={index} value={option.answer}>
               {option.answer}
