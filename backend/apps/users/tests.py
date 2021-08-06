@@ -3,8 +3,8 @@ from datetime import datetime
 
 from graphene.utils.str_converters import to_snake_case
 
-from ...utils.testing.ExtendedGraphQLTestCase import ExtendedGraphQLTestCase
-from ...utils.testing.factories.users import UserFactory
+from utils.testing.ExtendedGraphQLTestCase import ExtendedGraphQLTestCase
+from utils.testing.factories.users import UserFactory
 
 
 class UsersBaseTestCase(ExtendedGraphQLTestCase):

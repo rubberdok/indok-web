@@ -51,7 +51,7 @@ class UpdateForm(graphene.Mutation):
         id = graphene.ID()
         form_data = BaseFormInput(required=True)
 
-    @permission_required("forms.manage_form", (Form, "pk", "id"))
+    @permission_required("forms.change_form", (Form, "pk", "id"))
     def mutate(self, info, id, form_data):
         form = Form.objects.get(pk=id)
         for key, value in form_data.items():
@@ -67,7 +67,7 @@ class DeleteForm(graphene.Mutation):
     class Arguments:
         id = graphene.ID(required=True)
 
-    @permission_required("forms.manage_form", (Form, "pk", "id"))
+    @permission_required("forms.delete_form", (Form, "pk", "id"))
     def mutate(self, info, id):
         form = Form.objects.get(pk=id)
         deleted_id = form.id
