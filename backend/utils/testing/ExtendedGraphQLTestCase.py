@@ -60,10 +60,26 @@ class ExtendedGraphQLTestCase(GraphQLTestCase):
         self, data: dict[str, Any], obj: Union[models.Model, factory.Factory]
     ) -> None:
         for k, v in data.items():
-            value = getattr(obj, to_snake_case(k))
-            if type(value) == datetime:
-                self.assertEqual(v, str(value.isoformat()))
-            elif isinstance(value, (models.Model, factory.Factory)):
-                self.deep_assert_equal(v, value)
-            else:
-                self.assertEqual(str(v), str(value))
+            if hasattr(obj, to_snake_case(k)):
+                value = getattr(obj, to_snake_case(k))
+                if type(value) == datetime:
+                    self.assertEqual(
+                        v,
+                        str(value.isoformat()),
+                        msg=f"{v=}, {str(value.isoformat())=} failed for key {k=}",
+                    )
+                elif isinstance(value, (models.Model, factory.Factory)):
+                    self.deep_assert_equal(v, value)
+                elif hasattr(value, "all") and callable(value.all):
+                    # Likely a related manager, fetch the objects prior to continuing
+                    self.assertEqual(
+                        str(v),
+                        str(list(value.all())),
+                        msg=f"{str(v)=}, {str(list(value.all()))=} failed for key {k=}",
+                    )
+                else:
+                    self.assertEqual(
+                        str(v),
+                        str(value),
+                        msg=f"{str(v)=}, {str(value)=} failed for key {k=}",
+                    )

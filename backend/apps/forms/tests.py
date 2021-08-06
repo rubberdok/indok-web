@@ -1,5 +1,7 @@
 import json
-from typing import Optional
+from typing import Any, Optional
+
+from django.contrib.auth import get_user_model
 from apps.forms.models import Form, Question
 from utils.testing.ExtendedGraphQLTestCase import ExtendedGraphQLTestCase
 from utils.testing.factories.forms import (
@@ -34,7 +36,11 @@ class FormBaseTestCase(ExtendedGraphQLTestCase):
         assign_perm("forms.add_form", self.authorized_user)
         assign_perm("forms.change_form", self.authorized_user, self.form)
         assign_perm("forms.delete_form", self.authorized_user, self.form)
-        assign_perm("forms.manage_form", self.authorized_user, self.form)
+        assign_perm(
+            "forms.manage_form",
+            get_user_model().objects.get(pk=self.authorized_user.pk),
+            self.form,
+        )
 
         assign_perm("forms.view_form", self.unauthorized_user)
         assign_perm("forms.add_answer", self.unauthorized_user)
@@ -198,7 +204,7 @@ class FormsMutationTestCase(FormBaseTestCase):
         self.assertResponseNoErrors(response)
         data = json.loads(response.content)["data"]
         response_form = data["createForm"]["form"]
-        form = Form.objects.last()
+        form = Form.objects.get(pk=response_form["id"])
         if form is None:
             self.assertIsNotNone(form, msg=f"Expected form after creation, got {None}")
         else:
@@ -221,11 +227,13 @@ class FormsMutationTestCase(FormBaseTestCase):
         self.assertTrue(data["deleteForm"]["ok"])
         self.assertFalse(Form.objects.filter(pk=self.form.id).exists())
 
-    def test_authorized_add_question_to_form(self):
+    def test_authorized_add_question(self):
         response = self.query(self.CREATE_QUESTION_MUTATION, user=self.authorized_user)
         self.assertResponseNoErrors(response)
         data = json.loads(response.content)["data"]
-        question: Optional[Question] = Question.objects.last()
+        question: Optional[Question] = Question.objects.get(
+            pk=data["createQuestion"]["question"]["id"]
+        )
 
         if question is None:
             self.assertIsNotNone(question)
@@ -298,4 +306,15 @@ class FormsQueryTestCase(FormBaseTestCase):
 
     def test_authorized_get_forms(self):
         response = self.query(self.FORMS_WITH_RESPONSES, user=self.authorized_user)
+        data = json.loads(response.content)["data"]
+        forms = Form.objects.all()
+        forms_response: list[dict[str, Any]] = data["forms"]
+
+        for form_response in forms_response:
+            form = forms.get(pk=form_response["id"])
+            if form_response["id"] == str(self.form.id):
+                self.deep_assert_equal(form_response, form)
+            else:
+                self.assert_null_fields(form_response, ["responses", "responders"])
+
         self.assertResponseNoErrors(response)
