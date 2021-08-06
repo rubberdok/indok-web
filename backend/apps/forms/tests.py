@@ -2,7 +2,7 @@ import json
 from typing import Any, Optional
 
 from django.contrib.auth import get_user_model
-from apps.forms.models import Form, Question
+from guardian.shortcuts import assign_perm
 from utils.testing.ExtendedGraphQLTestCase import ExtendedGraphQLTestCase
 from utils.testing.factories.forms import (
     AnswerFactory,
@@ -13,7 +13,8 @@ from utils.testing.factories.forms import (
 )
 from utils.testing.factories.organizations import MembershipFactory, OrganizationFactory
 from utils.testing.factories.users import UserFactory
-from guardian.shortcuts import assign_perm
+
+from apps.forms.models import Form, Question
 
 
 class FormBaseTestCase(ExtendedGraphQLTestCase):

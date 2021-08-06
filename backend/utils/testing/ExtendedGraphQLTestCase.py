@@ -1,9 +1,10 @@
-from datetime import datetime
 import json
+from datetime import datetime
 from typing import Any, Final, Union
+
+import factory
 from django.db import models
 from django.http.response import HttpResponse
-import factory
 from graphene.utils.str_converters import to_snake_case
 from graphene_django.utils.testing import GraphQLTestCase
 from graphql_jwt.settings import jwt_settings
