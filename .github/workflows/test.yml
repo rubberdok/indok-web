@@ -1,9 +1,11 @@
-name: Django Tests
+name: API Tests
 
 on:
   push:
     branches: [master]
   pull_request:
+    paths:
+      - "**.py"
     branches:
       - "**"
 
