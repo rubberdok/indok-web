@@ -87,9 +87,9 @@ const ReportsPage: NextPage = () => {
                 <CardContent>
                   <iframe
                     title="Reports"
-                    src="https://docs.google.com/forms/d/e/1FAIpQLScrCLVDKoSqHElnDcUoq-o_Nuk7hr3bKrXJ-3I13BMxIjdZmA/viewform?embedded=true"
+                    src="https://docs.google.com/forms/d/e/1FAIpQLSf9yxNEZoXYYDIPSsDTLUhgnFKr-pbFWPJNkPaTDN86oI7Sjg/viewform?embedded=true"
                     width="100%"
-                    height="1371px"
+                    height="943px"
                     frameBorder="0"
                   >
                     <CircularProgress />
