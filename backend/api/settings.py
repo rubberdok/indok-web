@@ -10,10 +10,13 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
-from pathlib import Path
 import os
+from pathlib import Path
 
 import environ
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+from sentry_sdk.integrations.logging import ignore_logger
 
 env = environ.Env()
 environ.Env.read_env()
@@ -68,9 +71,11 @@ AUTH_USER_MODEL = "users.User"
 
 GRAPHENE = {
     "SCHEMA": "api.graphql_schema.schema",
+    "SCHEMA_OUTPUT": "api.schema.graphql",
     "MIDDLEWARE": [
         "graphql_jwt.middleware.JSONWebTokenMiddleware",
         "api.auth.middleware.AnonymousUserMiddleware",
+        "api.auth.middleware.SentryMiddleware",
     ],
 }
 
@@ -182,11 +187,22 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 
 # CONFIG
-EMAIL_BACKEND = 'django_ses.SESBackend'
+EMAIL_BACKEND = "django_ses.SESBackend"
 
-AWS_SES_REGION_NAME = 'eu-north-1'
-AWS_SES_REGION_ENDPOINT = 'email.eu-north-1.amazonaws.com'
-AWS_ACCESS_KEY_ID = 'AKIA3KG6AVJ476JEMRTF'
+AWS_SES_REGION_NAME = "eu-north-1"
+AWS_SES_REGION_ENDPOINT = "email.eu-north-1.amazonaws.com"
+AWS_ACCESS_KEY_ID = "AKIA3KG6AVJ476JEMRTF"
 AWS_SECRET_ACCESS_KEY = env("AWS_SECRET_ACCESS_KEY")
 
 GOOGLE_DRIVE_API_KEY = env("GOOGLE_DRIVE_API_KEY")
+
+sentry_sdk.init(
+    dsn="https://6bd0cd5210c0448aa90879a01db24663@o514678.ingest.sentry.io/5618268",
+    integrations=[DjangoIntegration()],
+    traces_sample_rate=1.0,
+    # If you wish to associate users to errors (assuming you are using
+    # django.contrib.auth) you may enable sending PII data.
+    send_default_pii=True,
+    environment="development",
+)
+ignore_logger("graphql.execution.utils")
