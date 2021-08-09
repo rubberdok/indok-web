@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
 const CreateEventsPage: NextPage = () => {
   const classes = useStyles();
   return (
-    <Layout>
+    <Layout title="Lag nytt arrangement">
       <Container className={classes.container}>
         <Link href="/events">
           <Button color="primary">Tilbake til arrangementer</Button>

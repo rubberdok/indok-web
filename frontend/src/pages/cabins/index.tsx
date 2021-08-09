@@ -97,7 +97,7 @@ const CreateBookingPage: NextPage = () => {
   );
   return (
     <>
-      <Layout>
+      <Layout title="Hyttebooking">
         <Hero />
         <Container>
           <Box my={5}>

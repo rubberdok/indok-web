@@ -21,7 +21,7 @@ const Events: NextPage = () => {
   const [showCalendarView, setShowCalenderView] = useState(false);
 
   return (
-    <Layout>
+    <Layout title="Arrangementer">
       <Box width="100%" pt={10} bgcolor={theme.palette.background.paper}>
         <Container>
           <Typography variant="h1" gutterBottom>

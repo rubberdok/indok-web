@@ -66,7 +66,7 @@ const NewListing: React.FC<{
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error...</p>;
   return (
-    <Layout>
+    <Layout title="Lag en ny stillingsutlysning">
       <Container className={classes.root}>
         <Typography variant="h1" gutterBottom>
           Ny vervutlysning med mye kult.

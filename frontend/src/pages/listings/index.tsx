@@ -12,7 +12,7 @@ const ListingsPage: NextPage = () => {
   };
   // renders a ListingItem for each listing
   return (
-    <Layout>
+    <Layout title="Verv">
       <Container>
         <Typography variant="h1" component="h1" align="center">
           Verv

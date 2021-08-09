@@ -2,6 +2,7 @@ import Hero from "@components/Hero";
 import Layout from "@components/Layout";
 import { Box, Button, Container, makeStyles, Typography } from "@material-ui/core";
 import { NextPage } from "next";
+import Head from "next/head";
 import Link from "next/link";
 import React from "react";
 import { Parallax } from "react-parallax";
@@ -48,7 +49,14 @@ const IndexPage: NextPage = () => {
   const classes = useStyles();
 
   return (
-    <Layout>
+    <Layout title={"Foreningen for Industriell Økonomi og Teknologiledelse"}>
+      <Head>
+        <meta
+          name="description"
+          content="Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse er den øverste instansen for all studentfrivillighet på masterstudiet Indøk ved NTNU. Foreningen drives av over 200 ivrige sjeler og over 20 ulike organisasjoner, hvor alt fra veldedighet og ølbrygging til fadderuker og case-trening står på agendaen."
+        />
+        <meta property="og:image" content="img/gang.jpg" key="image" />
+      </Head>
       <Hero />
       <Parallax
         bgImageStyle={{ zIndex: -1, objectFit: "cover", objectPosition: "50% -19vh" }}

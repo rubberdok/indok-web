@@ -48,7 +48,7 @@ const Template: React.FC<Props> = ({ children, img, title, description, page }) 
   const classes = useStyles();
 
   return (
-    <Layout>
+    <Layout title={title}>
       <Box mt="-60px" position="relative" className={classes.title} height={500}>
         <Box
           display="flex"

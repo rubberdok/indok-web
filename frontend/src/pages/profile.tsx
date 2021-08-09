@@ -66,7 +66,7 @@ const ProfilePage: NextPage = () => {
   };
 
   return (
-    <Layout>
+    <Layout title="Profil">
       <Container className={classes.padding}>
         <Typography variant="h1">Brukerprofil</Typography>
         {data?.user && (

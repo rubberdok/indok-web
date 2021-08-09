@@ -12,7 +12,9 @@ const EventInfo: NextPage = () => {
   const router = useRouter();
   const { id } = router.query;
 
-  return <Layout>{id && typeof id === "string" ? <EventDetailPage eventId={id} /> : <></>}</Layout>;
+  return (
+    <Layout title={"Arrangement"}>{id && typeof id === "string" ? <EventDetailPage eventId={id} /> : <></>}</Layout>
+  );
 };
 
 export default EventInfo;

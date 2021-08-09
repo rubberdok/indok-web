@@ -76,7 +76,7 @@ const ListingAdminPage: NextPage = () => {
 
   // renders an overview of applicants, and either an applicant's application or the listing itself (along with its form, or a button to create one)
   return (
-    <Layout>
+    <Layout title={`Administrer ${data?.listing.title}`}>
       <Container className={classes.container}>
         <Grid container direction="row" justify="center" spacing={1}>
           <Grid item>

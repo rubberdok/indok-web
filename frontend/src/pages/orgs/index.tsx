@@ -23,7 +23,7 @@ const OrganizationPage: NextPage = () => {
   const classes = useStyles();
 
   return (
-    <Layout>
+    <Layout title="Dine organisasjoner">
       <Container className={classes.container}>
         <Grid container direction="column" spacing={10}>
           <Grid item>

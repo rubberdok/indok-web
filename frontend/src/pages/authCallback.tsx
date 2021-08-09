@@ -57,7 +57,7 @@ const AuthCallbackPage: NextPage = () => {
     return null;
   }
   return (
-    <Layout>
+    <Layout title="Log inn">
       <Container>
         <Typography variant="h2">Feide-innlogging</Typography>
         {loading ? (

@@ -64,7 +64,7 @@ const Article: NextPage<ArticleProps> = ({ post, frontmatter }) => {
   const classes = useStyles();
 
   return (
-    <Layout>
+    <Layout title={frontmatter.title}>
       <Box mt="-60px" position="relative" className={classes.title} height={350}>
         <Box
           display="flex"

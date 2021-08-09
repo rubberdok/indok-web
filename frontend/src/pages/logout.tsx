@@ -39,7 +39,7 @@ const LogoutPage: NextPage = () => {
   }
 
   return (
-    <Layout>
+    <Layout title="Logger ut">
       {error && <div> ERROR: {error.message}</div>}
       {deleteCookieError && <div> ERROR: {deleteCookieError.message}</div>}
     </Layout>

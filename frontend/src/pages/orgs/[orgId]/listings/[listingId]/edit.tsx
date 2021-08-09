@@ -41,7 +41,7 @@ const EditListingPage: NextPage = () => {
   if (error) return <p>Error</p>;
 
   return (
-    <Layout>
+    <Layout title={`Endre ${listing?.title || "vervutlysning"}`}>
       <Container>
         <Typography variant="h1" gutterBottom>
           Oppdater vervutlysningen

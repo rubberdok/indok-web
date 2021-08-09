@@ -41,7 +41,7 @@ const Archive: NextPage = () => {
   });
 
   return (
-    <Layout>
+    <Layout title="Arkiv">
       <Box width="100%" pt={10} pb={7} mb={4} bgcolor={theme.palette.background.paper}>
         <Container>
           <Typography variant="h1" gutterBottom>

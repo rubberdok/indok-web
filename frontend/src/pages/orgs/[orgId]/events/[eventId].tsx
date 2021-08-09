@@ -120,7 +120,7 @@ const EventAdminPage: NextPage = () => {
   };
 
   return (
-    <Layout>
+    <Layout title={data?.event.title || "Arrangement"}>
       {data?.event ? (
         <Box m={10}>
           {openEditEvent && (

@@ -104,7 +104,7 @@ const OrganizationDetailPage: NextPage = () => {
   };
 
   return (
-    <Layout>
+    <Layout title={data?.organization.name || "Organisasjon"}>
       <Box m={10}>
         {data?.organization?.events ? (
           <Grid container spacing={10}>

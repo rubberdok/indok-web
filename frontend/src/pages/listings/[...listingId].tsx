@@ -62,7 +62,7 @@ const ListingPage: NextPage = () => {
   return (
     <>
       {data && (
-        <Layout>
+        <Layout title={data.listing.title}>
           <Hidden smDown>
             <ListingBanner listing={data.listing} />
           </Hidden>
