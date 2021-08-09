@@ -17,6 +17,7 @@ import environ
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
 from sentry_sdk.integrations.logging import ignore_logger
+from corsheaders.defaults import default_headers
 
 env = environ.Env()
 environ.Env.read_env()
@@ -39,6 +40,7 @@ CORS_ALLOW_CREDENTIALS = True
 
 CORS_ORIGIN_WHITELIST = ["http://localhost:3000", "http://127.0.0.1:3000"]
 
+CORS_ALLOW_HEADERS = list(default_headers) + ["sentry-trace"]
 
 # Application definition
 
