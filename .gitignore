@@ -265,3 +265,6 @@ devcontainer.json
 
 # Notes
 .notes.txt
+
+# Sentry
+sentry.properties
