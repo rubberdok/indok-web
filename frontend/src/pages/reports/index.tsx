@@ -352,19 +352,15 @@ const ReportsPage: NextPage = () => {
           </Grid>
 
           <Grid style={{ width: "100%" }} item ref={formRef}>
-            <Card style={{ width: "100%" }}>
-              <CardContent style={{ width: "100%" }}>
-                <iframe
-                  title="Reports"
-                  src="https://docs.google.com/forms/d/e/1FAIpQLScP9hqHr2lzlbh1Ie7xXaLAjRkQx9MdRf5Hl1EDLb1kpulmjg/viewform?embedded=true"
-                  width="100%"
-                  height="1842px"
-                  frameBorder="0"
-                >
-                  <CircularProgress />
-                </iframe>
-              </CardContent>
-            </Card>
+            <iframe
+              title="Reports"
+              src="https://docs.google.com/forms/d/e/1FAIpQLScP9hqHr2lzlbh1Ie7xXaLAjRkQx9MdRf5Hl1EDLb1kpulmjg/viewform?embedded=true"
+              width="100%"
+              height="1842px"
+              frameBorder="0"
+            >
+              <CircularProgress />
+            </iframe>
           </Grid>
         </Grid>
       </Grid>
