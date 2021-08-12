@@ -16,6 +16,7 @@ import {
 import { amber, deepOrange, deepPurple, green, indigo, red } from "@material-ui/core/colors";
 import { ArrowRight } from "@material-ui/icons";
 import { NextPage } from "next";
+import Head from "next/head";
 import { useRef } from "react";
 
 const ReportsPage: NextPage = () => {
@@ -69,6 +70,10 @@ const ReportsPage: NextPage = () => {
 
   return (
     <Layout>
+      <Head>
+        <title>Varsler | Forening for studenter ved Industriell Økonomi og Teknologiledelse</title>
+        <meta name="og:title" content="Varsling | Indøk NTNU" key="title" />
+      </Head>
       <Grid
         container
         direction="row"
