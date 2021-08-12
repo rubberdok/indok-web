@@ -43,7 +43,7 @@ const links = [
   },
   {
     id: 6,
-    title: "Varslinger",
+    title: "Varsler",
     href: "/reports",
   },
 ];
