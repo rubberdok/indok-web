@@ -14,9 +14,6 @@ import os
 from pathlib import Path
 
 import environ
-import sentry_sdk
-from sentry_sdk.integrations.django import DjangoIntegration
-from sentry_sdk.integrations.logging import ignore_logger
 from corsheaders.defaults import default_headers
 
 env = environ.Env()
@@ -197,14 +194,3 @@ AWS_ACCESS_KEY_ID = "AKIA3KG6AVJ476JEMRTF"
 AWS_SECRET_ACCESS_KEY = env("AWS_SECRET_ACCESS_KEY")
 
 GOOGLE_DRIVE_API_KEY = env("GOOGLE_DRIVE_API_KEY")
-
-sentry_sdk.init(
-    dsn="https://6bd0cd5210c0448aa90879a01db24663@o514678.ingest.sentry.io/5618268",
-    integrations=[DjangoIntegration()],
-    traces_sample_rate=1.0,
-    # If you wish to associate users to errors (assuming you are using
-    # django.contrib.auth) you may enable sending PII data.
-    send_default_pii=True,
-    environment="development",
-)
-ignore_logger("graphql.execution.utils")
