@@ -130,7 +130,7 @@ const ListingForm: React.FC<{
                   label="Publiseringsdato"
                   value={listing.startDatetime || ""}
                   fullWidth
-                  type="date"
+                  type="datetime-local"
                   onChange={(e) => handlePropertyChange(e, "startDatetime")}
                   InputLabelProps={{ shrink: true }}
                 />
@@ -141,7 +141,7 @@ const ListingForm: React.FC<{
                   label="Søknadsfrist"
                   value={listing.deadline || ""}
                   fullWidth
-                  type="date"
+                  type="datetime-local"
                   required
                   onChange={(e) => handlePropertyChange(e, "deadline")}
                   InputLabelProps={{ shrink: true }}
