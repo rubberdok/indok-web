@@ -5,7 +5,8 @@ import FilterButtons from "@components/pages/archive/FilterButtons";
 import { RemoveFiltersButton } from "@components/pages/archive/RemoveFiltersButton";
 import SearchBar from "@components/pages/archive/SearchBar";
 import YearSelector from "@components/pages/archive/YearSelector";
-import { Box, Container, FormGroup, Grid, makeStyles, Typography, useTheme } from "@material-ui/core";
+import Title from "@components/Title";
+import { Box, Container, FormGroup, Grid, makeStyles } from "@material-ui/core";
 import { NextPage } from "next";
 import React, { useState } from "react";
 import { redirectIfNotLoggedIn } from "src/utils/redirect";
@@ -22,7 +23,6 @@ const Archive: NextPage = () => {
     return null;
   }
   const classes = useStyles();
-  const theme = useTheme();
 
   const [yearFilter, setYearFilter] = useState("");
 
@@ -42,13 +42,7 @@ const Archive: NextPage = () => {
 
   return (
     <Layout>
-      <Box width="100%" pt={10} pb={7} mb={4} bgcolor={theme.palette.background.paper}>
-        <Container>
-          <Typography variant="h1" gutterBottom>
-            Arkiv
-          </Typography>
-        </Container>
-      </Box>
+      <Title>Arkiv</Title>
 
       <Container className={classes.container}>
         <Grid container spacing={4}>
