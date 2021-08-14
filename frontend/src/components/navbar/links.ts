@@ -41,11 +41,6 @@ const links = [
     title: "Indøkhyttene",
     href: "/cabins",
   },
-  {
-    id: 6,
-    title: "Varsler",
-    href: "/reports",
-  },
 ];
 
 export default links;

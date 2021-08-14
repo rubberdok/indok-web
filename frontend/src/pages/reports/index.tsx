@@ -1,6 +1,6 @@
 import Layout from "@components/Layout";
+import ContactInfo from "@components/pages/reports/ContactInfo";
 import {
-  Avatar,
   Button,
   Card,
   CardContent,
@@ -8,20 +8,26 @@ import {
   Grid,
   List,
   ListItem,
-  ListItemAvatar,
   ListItemIcon,
   ListItemText,
   Typography,
+  useTheme,
 } from "@material-ui/core";
 import { amber, deepOrange, deepPurple, green, indigo, red } from "@material-ui/core/colors";
 import { ArrowRight } from "@material-ui/icons";
 import { NextPage } from "next";
 import Head from "next/head";
+import Amund from "public/img/reportsProfileImages/Amund.jpg";
+import Benjamin from "public/img/reportsProfileImages/Benjamin.jpg";
+import Christine from "public/img/reportsProfileImages/Christine.jpeg";
+import Laila from "public/img/reportsProfileImages/Laila.jpg";
+import Maria from "public/img/reportsProfileImages/Maria.jpg";
 import { useRef } from "react";
 
 const ReportsPage: NextPage = () => {
   const formRef = useRef<null | HTMLDivElement>(null);
   const scrollToForm = () => formRef.current?.scrollIntoView({ behavior: "smooth" });
+  const theme = useTheme();
 
   const responsibles = [
     {
@@ -30,41 +36,46 @@ const ReportsPage: NextPage = () => {
       position: "Leder",
       initials: "AA",
       color: red[800],
+      image: Amund,
+      email: "amunan@stud.ntnu.no",
     },
     {
       id: 2,
       name: "Christine Lindberg",
-      position: "Medlem",
       initials: "CL",
       color: deepOrange[500],
+      email: "chrislli@stud.ntnu.no",
+      image: Christine,
     },
     {
       id: 3,
       name: "Laila Voll",
-      position: "Medlem",
       initials: "LV",
       color: amber[500],
+      image: Laila,
+      email: "lailaov@stud.ntnu.no",
     },
     {
       id: 4,
       name: "Benjamin Pettersen",
-      position: "Medlem",
       initials: "BP",
       color: green[500],
+      image: Benjamin,
+      email: "benjamin-pettersen@hotmail.com",
     },
     {
       id: 5,
       name: "Jesper Engvik Skovdahl",
-      position: "Medlem",
       initials: "JS",
       color: indigo[500],
+      email: "jesperes@stud.ntnu.no",
     },
     {
       id: 6,
       name: "Maria Ruiz Ulltveit-Moe (permisjon)",
-      position: "Medlem",
       initials: "MM",
       color: deepPurple[500],
+      image: Maria,
     },
   ];
 
@@ -259,38 +270,20 @@ const ReportsPage: NextPage = () => {
                   egenhånd kan du ta med deg en kontaktperson gjennom prosessen.
                 </Typography>
 
-                <Typography variant="h4" component="h3">
+                <Typography variant="h4" component="h3" gutterBottom>
                   Kontaktinfo Baksideutvalget
                 </Typography>
-                <Grid container direction="row">
-                  <Grid item>
-                    <List dense>
-                      {responsibles.slice(0, 3).map((responsible) => (
-                        <ListItem key={responsible.id}>
-                          <ListItemAvatar>
-                            <Avatar style={{ backgroundColor: responsible.color }}>
-                              <Typography variant="body2">{responsible.initials}</Typography>
-                            </Avatar>
-                          </ListItemAvatar>
-                          <ListItemText primary={responsible.name} secondary={responsible.position} />
-                        </ListItem>
-                      ))}
-                    </List>
-                  </Grid>
-                  <Grid item>
-                    <List dense>
-                      {responsibles.slice(3).map((responsible) => (
-                        <ListItem key={responsible.id}>
-                          <ListItemAvatar>
-                            <Avatar style={{ backgroundColor: responsible.color }}>
-                              <Typography variant="body2">{responsible.initials}</Typography>
-                            </Avatar>
-                          </ListItemAvatar>
-                          <ListItemText primary={responsible.name} secondary={responsible.position} />
-                        </ListItem>
-                      ))}
-                    </List>
-                  </Grid>
+                <Grid container direction="row" justify="center" spacing={8} style={{ marginBottom: theme.spacing(8) }}>
+                  {responsibles.map((responsible) => (
+                    <Grid item md={6} key={responsible.id}>
+                      <ContactInfo
+                        name={responsible.name}
+                        email={responsible.email}
+                        image={responsible.image}
+                        position={responsible.position}
+                      />
+                    </Grid>
+                  ))}
                 </Grid>
 
                 <Typography variant="subtitle1">Den som varsler oppfordres til å informere om:</Typography>
