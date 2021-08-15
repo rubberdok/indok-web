@@ -35,6 +35,7 @@ phases:
           --build-arg NEXT_PUBLIC_DATAPORTEN_ID=$DATAPORTEN_ID \
           --build-arg NEXT_PUBLIC_DATAPORTEN_REDIRECT_URI=$DATAPORTEN_REDIRECT_URI \
           --build-arg NEXT_PUBLIC_DATAPORTEN_STATE=$NEXT_PUBLIC_DATAPORTEN_STATE \
+          --build-arg SENTRY_AUTH_TOKEN=$SENTRY_AUTH_TOKEN \
           ./frontend
   post_build:
     commands:
