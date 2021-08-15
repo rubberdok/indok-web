@@ -17,11 +17,11 @@ import { amber, deepOrange, deepPurple, green, indigo, red } from "@material-ui/
 import { ArrowRight } from "@material-ui/icons";
 import { NextPage } from "next";
 import Head from "next/head";
-import Amund from "public/img/reportsProfileImages/Amund.jpg";
-import Benjamin from "public/img/reportsProfileImages/Benjamin.jpg";
-import Christine from "public/img/reportsProfileImages/Christine.jpeg";
-import Laila from "public/img/reportsProfileImages/Laila.jpg";
-import Maria from "public/img/reportsProfileImages/Maria.jpg";
+import Amund from "@public/img/reportsProfileImages/Amund.jpg";
+import Benjamin from "@public/img/reportsProfileImages/Benjamin.jpg";
+import Christine from "@public/img/reportsProfileImages/Christine.jpeg";
+import Laila from "@public/img/reportsProfileImages/Laila.jpg";
+import Maria from "@public/img/reportsProfileImages/Maria.jpg";
 import { useRef } from "react";
 
 const ReportsPage: NextPage = () => {
@@ -349,7 +349,7 @@ const ReportsPage: NextPage = () => {
               title="Reports"
               src="https://docs.google.com/forms/d/e/1FAIpQLScP9hqHr2lzlbh1Ie7xXaLAjRkQx9MdRf5Hl1EDLb1kpulmjg/viewform?embedded=true"
               width="100%"
-              height="1842px"
+              height="2003px"
               frameBorder="0"
             >
               <CircularProgress />
