@@ -17,11 +17,11 @@ import { amber, deepOrange, deepPurple, green, indigo, red } from "@material-ui/
 import { ArrowRight } from "@material-ui/icons";
 import { NextPage } from "next";
 import Head from "next/head";
-import Amund from "@public/img/reportsProfileImages/Amund.jpg";
-import Benjamin from "@public/img/reportsProfileImages/Benjamin.jpg";
-import Christine from "@public/img/reportsProfileImages/Christine.jpeg";
-import Laila from "@public/img/reportsProfileImages/Laila.jpg";
-import Maria from "@public/img/reportsProfileImages/Maria.jpg";
+import Amund from "@public/img/Amund.jpg";
+import Benjamin from "@public/img/Benjamin.jpg";
+import Christine from "@public/img/Christine.jpeg";
+import Laila from "@public/img/Laila.jpg";
+import Maria from "@public/img/Maria.JPG";
 import { useRef } from "react";
 
 const ReportsPage: NextPage = () => {
