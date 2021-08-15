@@ -21,7 +21,7 @@ import Amund from "@public/img/Amund.jpg";
 import Benjamin from "@public/img/Benjamin.jpg";
 import Christine from "@public/img/Christine.jpeg";
 import Laila from "@public/img/Laila.jpg";
-import Maria from "@public/img/Maria.JPG";
+import Maria from "@public/img/Maria.jpg";
 import { useRef } from "react";
 
 const ReportsPage: NextPage = () => {
