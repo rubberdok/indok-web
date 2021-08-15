@@ -2,4 +2,9 @@ from django.apps import AppConfig
 
 
 class FormsConfig(AppConfig):
-    name = "forms"
+    name = "apps.forms"
+
+    def ready(self) -> None:
+        import apps.forms.signals
+
+        return super().ready()
