@@ -20,6 +20,7 @@ class BaseFormInput(graphene.InputObjectType):
 
 class CreateFormInput(BaseFormInput):
     name = graphene.String(required=True)
+    organization_id = graphene.ID(required=True)
 
 
 class CreateForm(graphene.Mutation):
