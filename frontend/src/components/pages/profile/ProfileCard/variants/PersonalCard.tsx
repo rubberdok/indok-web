@@ -1,5 +1,5 @@
 import { Button, Grid, Typography } from "@material-ui/core";
-import Profile from "@public/static/illustrations/Profile.svg";
+import Profile from "../../../../../../public/Event.svg";
 import Link from "next/link";
 import { User } from "src/types/users";
 import ProfileCard from "..";

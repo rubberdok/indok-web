@@ -9,7 +9,7 @@ import { Avatar, Container, Grid, Typography, useTheme } from "@material-ui/core
 import { NextPage } from "next";
 import Head from "next/head";
 import { User } from "src/types/users";
-import useStyles from "./styles";
+import useStyles from "@components/pages/profile/styles";
 import { indigo } from "@material-ui/core/colors";
 
 const ProfilePage: NextPage = () => {
@@ -43,7 +43,7 @@ const ProfilePage: NextPage = () => {
                 {data && (
                   <Typography
                     variant="h3"
-                    component="span"
+                    component="p"
                   >{`${data.user.firstName[0]}${data.user.lastName[0]}`}</Typography>
                 )}
               </Avatar>
