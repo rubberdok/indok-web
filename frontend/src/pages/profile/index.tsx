@@ -7,8 +7,10 @@ import PersonalCard from "@components/pages/profile/ProfileCard/variants/Persona
 import { GET_USER_PROFILE } from "@graphql/users/queries";
 import { Avatar, Container, Grid, Typography, useTheme } from "@material-ui/core";
 import { NextPage } from "next";
+import Head from "next/head";
 import { User } from "src/types/users";
 import useStyles from "./styles";
+import { indigo } from "@material-ui/core/colors";
 
 const ProfilePage: NextPage = () => {
   const { data, error } = useQuery<{ user: User }>(GET_USER_PROFILE);
@@ -23,6 +25,10 @@ const ProfilePage: NextPage = () => {
     );
   return (
     <Layout>
+      <Head>
+        <title>Profil | Forening for studentene ved Industriell Økonomi og Teknologiledelse</title>
+        <meta name="description" content="Profilside" />
+      </Head>
       <Container>
         <Grid
           container
@@ -33,8 +39,13 @@ const ProfilePage: NextPage = () => {
         >
           <>
             <Grid item>
-              <Avatar className={classes.large}>
-                {data && <Typography variant="h3">{`${data.user.firstName[0]}${data.user.lastName[0]}`}</Typography>}
+              <Avatar className={classes.large} style={{ backgroundColor: indigo[500] }}>
+                {data && (
+                  <Typography
+                    variant="h3"
+                    component="span"
+                  >{`${data.user.firstName[0]}${data.user.lastName[0]}`}</Typography>
+                )}
               </Avatar>
             </Grid>
             <Grid
@@ -45,7 +56,9 @@ const ProfilePage: NextPage = () => {
               xs={10}
               style={{ marginBottom: theme.spacing(4) }}
             >
-              <Grid item>{data && <Typography variant="subtitle1">{`Hei, ${data.user.firstName}`}</Typography>}</Grid>
+              <Grid item>
+                {data && <Typography variant="subtitle1" component="h1">{`Hei, ${data.user.firstName}`}</Typography>}
+              </Grid>
               <Grid item>
                 <Typography variant="body2" align="center">
                   Her kan du endre din informasjon, se tidligere arrangementer og organisasjonene der du er medlem.

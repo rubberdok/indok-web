@@ -14,6 +14,7 @@ const FormCard: React.VFC = () => {
         </Grid>
       }
       image={Form}
+      alt=""
     >
       <Grid container direction="column">
         <Grid item>
