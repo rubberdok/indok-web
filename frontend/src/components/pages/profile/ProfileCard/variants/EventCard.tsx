@@ -14,8 +14,9 @@ const EventCard: React.VFC = () => {
         </Grid>
       }
       image={Event}
+      alt=""
     >
-      <Grid container direction="column" xs>
+      <Grid container direction="column">
         <Grid item>
           <Typography variant="body2">
             Her kan du se en oversikt over alle arrangementer du har vært påmeldt.

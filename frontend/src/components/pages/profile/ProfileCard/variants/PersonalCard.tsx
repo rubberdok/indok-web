@@ -22,6 +22,7 @@ const PersonalCard: React.VFC<Props> = ({ user }) => {
         </Grid>
       }
       image={Profile}
+      alt=""
     >
       <Grid container direction="column">
         <Grid item>{user && <Typography variant="body2">{`${user.firstName} ${user.lastName}`}</Typography>}</Grid>

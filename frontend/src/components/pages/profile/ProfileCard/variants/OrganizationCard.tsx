@@ -14,6 +14,7 @@ const OrganizationCard: React.VFC = () => {
         </Grid>
       }
       image={Organization}
+      alt=""
     >
       <Grid container direction="column">
         <Grid item>
