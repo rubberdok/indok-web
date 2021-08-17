@@ -37,7 +37,14 @@ const ProfilePage: NextPage = () => {
                 {data && <Typography variant="h3">{`${data.user.firstName[0]}${data.user.lastName[0]}`}</Typography>}
               </Avatar>
             </Grid>
-            <Grid container item direction="column" alignItems="center" xs={10}>
+            <Grid
+              container
+              item
+              direction="column"
+              alignItems="center"
+              xs={10}
+              style={{ marginBottom: theme.spacing(4) }}
+            >
               <Grid item>{data && <Typography variant="subtitle1">{`Hei, ${data.user.firstName}`}</Typography>}</Grid>
               <Grid item>
                 <Typography variant="body2" align="center">
