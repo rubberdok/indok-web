@@ -32,7 +32,13 @@ const InfoCard: React.FC<{
   return (
     <Card style={{ height: "100%" }}>
       <CardContent style={{ height: "100%" }}>
-        <Grid container direction="column" alignItems="center" justifyContent="space-between" style={{ height: "100%" }}>
+        <Grid
+          container
+          direction="column"
+          alignItems="center"
+          justifyContent="space-between"
+          style={{ height: "100%" }}
+        >
           <Grid item>
             <Typography
               variant="h5"
