@@ -71,7 +71,7 @@ const ProfilePage: NextPage = () => {
               item
               className={classes.cards}
               spacing={4}
-              justify="center"
+              justifyContent="center"
               sm={10}
               xs={12}
               alignItems="stretch"

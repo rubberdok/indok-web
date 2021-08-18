@@ -7,7 +7,7 @@ const EventCard: React.VFC = () => {
     <ProfileCard
       title="Arrangementer"
       cardActions={
-        <Grid container direction="row" justify="flex-end">
+        <Grid container direction="row" justifyContent="flex-end">
           <Grid item>
             <Button>Se arrangementer</Button>
           </Grid>

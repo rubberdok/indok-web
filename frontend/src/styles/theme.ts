@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import { createTheme } from "@material-ui/core";
+=======
+import { createTheme } from "@material-ui/core/styles";
+>>>>>>> 9e1791c3 (chore: bump versions)
 import { Shadows } from "@material-ui/core/styles/shadows";
 import breakpoints from "./breakpoints";
 import typography from "./typography";
