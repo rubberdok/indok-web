@@ -1,5 +1,5 @@
 import { Button, Grid, Typography } from "@material-ui/core";
-import Event from "../../../../../../public/Event.svg";
+import Event from "@public/illustrations/Event.svg";
 import ProfileCard from "..";
 
 const EventCard: React.VFC = () => {
