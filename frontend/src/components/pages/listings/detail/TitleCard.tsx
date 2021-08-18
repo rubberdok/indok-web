@@ -34,7 +34,7 @@ const TitleCard: React.FC<{
   return (
     <Card style={{ height: "100%" }}>
       <CardContent>
-        <Grid container direction="column" justify="space-between" alignItems="center">
+        <Grid container direction="column" justifyContent="space-between" alignItems="center">
           <Grid item>
             <Typography variant="h3" component="h1" align="center">
               {listing.title}
