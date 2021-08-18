@@ -7,7 +7,7 @@ const FormCard: React.VFC = () => {
     <ProfileCard
       title="Verv"
       cardActions={
-        <Grid container direction="row" justify="flex-end">
+        <Grid container direction="row" justifyContent="flex-end">
           <Grid item>
             <Button>Se verv</Button>
           </Grid>

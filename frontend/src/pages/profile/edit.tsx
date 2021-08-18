@@ -25,7 +25,7 @@ const EditProfilePage: NextPage = () => {
   return (
     <Layout>
       <Container>
-        <Grid container direction="row" justify="center">
+        <Grid container direction="row" justifyContent="center">
           <Grid item md={8}>
             <Card style={{ marginTop: theme.spacing(8), marginBottom: theme.spacing(8) }}>
               <CardHeader title="Oppdater profil" />
@@ -90,13 +90,13 @@ const EditProfilePage: NextPage = () => {
                 </Grid>
               </CardContent>
               <CardActions>
-                <Grid container direction="row" justify="space-between" spacing={2}>
+                <Grid container direction="row" justifyContent="space-between" spacing={2}>
                   <Grid item md>
                     <Button variant="contained" style={{ backgroundColor: red[800], color: "white" }}>
                       Slett bruker
                     </Button>
                   </Grid>
-                  <Grid container item md direction="row" justify="flex-end">
+                  <Grid container item md direction="row" justifyContent="flex-end">
                     <Grid item>
                       <Button onClick={router.back}>Avbryt</Button>
                     </Grid>

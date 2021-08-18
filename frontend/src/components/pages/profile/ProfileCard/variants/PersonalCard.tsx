@@ -1,5 +1,5 @@
 import { Button, Grid, Typography } from "@material-ui/core";
-import Profile from "../../../../../../public/Event.svg";
+import Profile from "@public/Profile.svg";
 import Link from "next/link";
 import { User } from "src/types/users";
 import ProfileCard from "..";
@@ -13,7 +13,7 @@ const PersonalCard: React.VFC<Props> = ({ user }) => {
     <ProfileCard
       title="Personlig informasjon"
       cardActions={
-        <Grid container direction="row" justify="flex-end">
+        <Grid container direction="row" justifyContent="flex-end">
           <Grid item>
             <Link passHref href="/profile/edit/">
               <Button>Rediger</Button>
