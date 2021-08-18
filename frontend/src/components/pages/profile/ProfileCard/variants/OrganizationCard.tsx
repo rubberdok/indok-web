@@ -1,6 +1,6 @@
 import { Button, Grid, Typography } from "@material-ui/core";
+import Organization from "@public/illustrations/Organization.svg";
 import ProfileCard from "..";
-import Organization from "../../../../../../public/Event.svg";
 
 const OrganizationCard: React.VFC = () => {
   return (
