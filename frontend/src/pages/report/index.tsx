@@ -82,7 +82,7 @@ const ReportsPage: NextPage = () => {
   return (
     <Layout>
       <Head>
-        <title>Varsler | Forening for studenter ved Industriell Økonomi og Teknologiledelse</title>
+        <title>Varsling | Forening for studenter ved Industriell Økonomi og Teknologiledelse</title>
         <meta name="og:title" content="Varsling | Indøk NTNU" key="title" />
       </Head>
       <Grid
