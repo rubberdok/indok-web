@@ -22,7 +22,7 @@ const OrganizationListing: React.FC<{ listing: Listing }> = ({ listing }) => (
           <ReactMarkdown components={components}>{listing.description}</ReactMarkdown>
         </CardContent>
         <CardActions>
-          <Grid container justify="flex-end">
+          <Grid container justifyContent="flex-end">
             <Grid item>
               <Link passHref href={`/orgs/${listing.organization.id}/listings/${listing.id}/edit/`}>
                 <Button startIcon={<Create />}>Rediger</Button>

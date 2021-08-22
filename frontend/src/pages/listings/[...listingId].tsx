@@ -67,7 +67,7 @@ const ListingPage: NextPage = () => {
             <ListingBanner listing={data.listing} />
           </Hidden>
           <Container className={classes.container}>
-            <Grid container justify="center">
+            <Grid container justifyContent="center">
               <Grid
                 container
                 item
@@ -78,7 +78,7 @@ const ListingPage: NextPage = () => {
                 spacing={4}
                 className={classes.root}
               >
-                <Grid container item direction="row" alignItems="stretch" justify="center" spacing={4}>
+                <Grid container item direction="row" alignItems="stretch" justifyContent="center" spacing={4}>
                   <Hidden smDown>
                     <Grid item xs={4}>
                       <InfoCard listing={data.listing} />
@@ -100,7 +100,7 @@ const ListingPage: NextPage = () => {
           </Container>
           <Hidden mdUp>
             <Paper className={classes.bottom}>
-              <Grid container direction="row" justify="space-between" alignItems="center">
+              <Grid container direction="row" justifyContent="space-between" alignItems="center">
                 {data.listing.organization && (
                   <Grid item xs>
                     <Button
