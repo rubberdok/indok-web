@@ -138,14 +138,6 @@ const ReportsPage: NextPage = () => {
                 </Typography>
 
                 <Typography variant="h4" component="h3">
-                  Hvem kan varsle?
-                </Typography>
-                <Typography variant="body1" gutterBottom>
-                  Et varsel er å melde ifra om bekymringsverdige forhold. Det kan være å si ifra om noe som ikke er
-                  greit, noe som føles ubehagelig eller skremmende, eller handlinger som er ulovlige.
-                </Typography>
-
-                <Typography variant="h4" component="h3">
                   Hva kan jeg varsle om?
                 </Typography>
                 <Typography variant="body1" gutterBottom>
