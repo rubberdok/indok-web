@@ -6,9 +6,9 @@ from apps.forms.models import Form
 
 
 class Listing(models.Model):
-    title = models.CharField(max_length=250)
-    slug = models.SlugField(max_length=255, allow_unicode=True, blank=True, default="")
-    description = models.CharField(max_length=2000, blank=True, default="")
+    title = models.CharField(max_length=50)
+    slug = models.SlugField(max_length=50, allow_unicode=True, blank=True, default="")
+    description = models.TextField(blank=True, default="")
     case = models.BooleanField(default=False)
     application = models.BooleanField(default=False)
     interview = models.BooleanField(default=False)

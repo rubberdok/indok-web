@@ -144,7 +144,7 @@ const ListingItem: React.FC<{
                   {listing.description}
                 </ReactMarkdown>
               </Box>
-              <Grid container direction="row" justify="center" alignItems="center" spacing={2}>
+              <Grid container direction="row" justifyContent="center" alignItems="center" spacing={2}>
                 {listing.chips.map((chip) => (
                   <Grid item key={chip}>
                     <Chip

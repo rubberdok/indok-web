@@ -71,7 +71,7 @@ const NewListing: React.FC<{
         <Typography variant="h1" gutterBottom>
           Ny vervutlysning med mye kult.
         </Typography>
-        <Grid container justify="center">
+        <Grid container justifyContent="center">
           <Grid item xs={10}>
             <ListingForm
               listing={listing}

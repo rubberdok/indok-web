@@ -65,7 +65,7 @@ const Template: React.FC<Props> = ({ children, img, title, description, page }) 
         </Box>
       </Box>
       <Container>
-        <Grid justify="center" container>
+        <Grid justifyContent="center" container>
           <Grid item xs={12} sm={10}>
             <Paper className={classes.heroCard}>
               <Box display="flex" flexDirection="column" alignItems="center">
@@ -82,7 +82,7 @@ const Template: React.FC<Props> = ({ children, img, title, description, page }) 
         </Grid>
 
         <Box pt={8} pb={16}>
-          <Grid container direction="row" justify="center" spacing={5}>
+          <Grid container direction="row" justifyContent="center" spacing={5}>
             <Grid item xs={8}>
               {children}
             </Grid>
