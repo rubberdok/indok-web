@@ -7,7 +7,6 @@ from apps.forms.models import Form
 
 @receiver(post_save, sender=Form)
 def handle_new_form(sender, instance: Form, created: bool, **kwargs) -> None:
-    print("signal executed")
     if created:
         perms = ["forms.manage_form", "forms.change_form", "forms.delete_form"]
         group = instance.organization.hr_group.group
