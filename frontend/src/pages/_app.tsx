@@ -1,5 +1,5 @@
 import { ApolloClient, ApolloProvider, createHttpLink, InMemoryCache } from "@apollo/client";
-import { CssBaseline } from "@material-ui/core";
+import { CssBaseline, responsiveFontSizes } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/styles";
 import "@styles/global.css";
 import theme from "@styles/theme";
@@ -24,13 +24,15 @@ const App = ({ Component, pageProps }: AppProps): JSX.Element => {
     }
   }, []);
 
+  const responsiveTheme = responsiveFontSizes(theme, { breakpoints: ["sm", "md", "lg", "xl"], factor: 2 });
+
   return (
     <ApolloProvider client={client}>
       <Head>
         <title>Indøk NTNU - Foreningen for Industriell Økonomi og teknologiledelse</title>
         <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
       </Head>
-      <ThemeProvider theme={theme}>
+      <ThemeProvider theme={responsiveTheme}>
         <CssBaseline />
         <Component {...pageProps} />
         {/* <div id="mobile-warning">

@@ -16,7 +16,7 @@ import React, { ReactElement } from "react";
 import NavbarLinks from "./NavbarLinks";
 
 //set navbar style breakpoint, should be adjusted according to width of NavbarLinks
-export const breakpoint = 1070;
+export const breakpoint = 1216;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -34,7 +34,6 @@ const useStyles = makeStyles((theme) => ({
   title: {
     flexGrow: 1,
     margin: 0,
-    fontSize: 24,
     color: "#b0aca5",
 
     "&:hover": {
@@ -87,7 +86,7 @@ const Navbar: React.FC = () => {
           <Container className={classes.container}>
             <Toolbar>
               <Link href="/">
-                <Typography variant="h6" className={classes.title}>
+                <Typography variant="h5" className={classes.title}>
                   INDØK
                 </Typography>
               </Link>
