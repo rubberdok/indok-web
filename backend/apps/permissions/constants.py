@@ -22,6 +22,7 @@ DEFAULT_INDOK_PERMISSIONS: DefaultPermissionsType = [
     ("forms", "add_answer"),
     ("forms", "change_answer"),
     ("forms", "view_answer"),
+    ("forms", "view_form"),
     ("forms", "add_response"),
     ("events", "add_signup"),
     ("events", "view_signup"),
