@@ -1,9 +1,9 @@
-import { createMuiTheme } from "@material-ui/core/styles";
+import { createTheme } from "@material-ui/core/styles";
 import { Shadows } from "@material-ui/core/styles/shadows";
 import breakpoints from "./breakpoints";
 import typography from "./typography";
 
-const theme = createMuiTheme({
+const theme = createTheme({
   typography: {
     ...typography,
   },
