@@ -12,6 +12,8 @@ from apps.permissions.constants import (
     ORGANIZATION,
 )
 
+User = get_user_model()
+
 
 @receiver(post_migrate)
 def assign_standard_organization_permissions(**kwargs):
@@ -27,8 +29,8 @@ def assign_standard_organization_permissions(**kwargs):
     permissions = Permission.objects.filter(query)
     group.permissions.set(permissions)
     group.user_set.set(
-        get_user_model().objects.filter(
-            ~Q(username=settings.ANONYMOUS_USER_NAME), ~Q(organizations=None)
+        User.objects.exclude(username=settings.ANONYMOUS_USER_NAME).exclude(
+            organizations=None
         )
     )
 
@@ -46,6 +48,4 @@ def assign_standard_indok_permissions(**kwargs):
 
     permissions = Permission.objects.filter(query)
     group.permissions.set(permissions)
-    group.user_set.set(
-        get_user_model().objects.filter(~Q(username=settings.ANONYMOUS_USER_NAME))
-    )
+    group.user_set.set(User.objects.exclude(username=settings.ANONYMOUS_USER_NAME))
