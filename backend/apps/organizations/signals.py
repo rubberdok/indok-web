@@ -4,15 +4,18 @@ from django.contrib.auth.models import Group
 from guardian.shortcuts import assign_perm
 
 from apps.organizations.models import Membership, Organization
+from apps.permissions.constants import ORGANIZATION
 from apps.permissions.models import ResponsibleGroup
 
 
 @receiver(post_save, sender=Membership)
 def handle_new_member(sender, instance: Membership, **kwargs):
     group: Group = instance.organization.primary_group.group
+    org_group: Group = Group.objects.get(name=ORGANIZATION)
     if group:
         user = instance.user
         user.groups.add(group)
+        user.groups.add(org_group)
         user.save()
 
 
