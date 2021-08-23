@@ -15,7 +15,7 @@ const QuestionPreview: React.FC<{
   setActive: () => void;
 }> = ({ question, setActive }) => (
   <Grid container direction="column" spacing={1}>
-    <Grid item container direction="row" justify="space-between" alignItems="center">
+    <Grid item container direction="row" justifyContent="space-between" alignItems="center">
       <Grid item>
         <Typography>
           {question.question}

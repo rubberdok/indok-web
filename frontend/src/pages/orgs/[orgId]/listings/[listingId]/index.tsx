@@ -78,7 +78,7 @@ const ListingAdminPage: NextPage = () => {
   return (
     <Layout>
       <Container className={classes.container}>
-        <Grid container direction="row" justify="center" spacing={1}>
+        <Grid container direction="row" justifyContent="center" spacing={1}>
           <Grid item>
             <Grid container direction="column" spacing={1}>
               <Grid item>
