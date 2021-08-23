@@ -23,11 +23,12 @@ class Form(models.Model):
     def mandatory_questions(self: "Form"):
         return self.questions.filter(mandatory=True)
 
+    class Meta:
+        permissions = [("manage_form", "Has admin form privileges")]
+
 
 class Question(models.Model):
-    form = models.ForeignKey(
-        Form, on_delete=models.CASCADE, related_name="questions"
-    )
+    form = models.ForeignKey(Form, on_delete=models.CASCADE, related_name="questions")
     question = models.CharField(max_length=100)
     description = models.CharField(max_length=100, blank=True, default="")
     question_type = models.CharField(max_length=32, default="PARAGRAPH")
@@ -78,9 +79,7 @@ class Response(models.Model):
     respondent = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="responses"
     )
-    form = models.ForeignKey(
-        Form, on_delete=models.CASCADE, related_name="responses"
-    )
+    form = models.ForeignKey(Form, on_delete=models.CASCADE, related_name="responses")
 
     class Status(models.IntegerChoices):
         RED = 0, _("Red")

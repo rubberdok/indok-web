@@ -45,7 +45,7 @@ const ListingAdminPage: NextPage = () => {
     // interface of formData returned from mutation
     { createForm: { ok: boolean; form: Form } },
     // interface for variables passed to createForm
-    { name: string; description: string; listingId: string }
+    { name: string; description: string; listingId: string; organizationId: string }
   >(CREATE_FORM, {
     // updates the cache so the new form can show instantly
     update: (cache, { data }) => {
@@ -157,6 +157,7 @@ const ListingAdminPage: NextPage = () => {
                               name: `Søknad: ${data.listing.title}`,
                               description: "",
                               listingId: data.listing.id,
+                              organizationId: orgId as string,
                             },
                           });
                         }}

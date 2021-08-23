@@ -3,8 +3,11 @@ import { FORM_RESPONSES_FRAGMENT, QUESTION_ANSWERS_FRAGMENT } from "@graphql/for
 
 export const CREATE_FORM = gql`
   ${FORM_RESPONSES_FRAGMENT}
-  mutation CreateForm($name: String!, $description: String, $listingId: ID) {
-    createForm(listingId: $listingId, formData: { name: $name, description: $description }) {
+  mutation CreateForm($name: String!, $description: String, $listingId: ID, $organizationId: ID!) {
+    createForm(
+      listingId: $listingId
+      formData: { name: $name, description: $description, organizationId: $organizationId }
+    ) {
       form {
         ...FormResponsesFragment
       }
@@ -35,10 +38,10 @@ export const CREATE_QUESTION = gql`
     $mandatory: Boolean
   ) {
     createQuestion(
+      formId: $formId
       questionData: {
         question: $question
         description: $description
-        formId: $formId
         questionType: $questionType
         mandatory: $mandatory
       }
@@ -94,6 +97,7 @@ export const SUBMIT_ANSWERS = gql`
   mutation SubmitAnswers($formId: ID!, $answersData: [AnswerInput]) {
     submitAnswers(formId: $formId, answersData: $answersData) {
       ok
+      message
     }
   }
 `;

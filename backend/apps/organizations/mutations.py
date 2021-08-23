@@ -1,14 +1,15 @@
 import graphene
-from django.contrib.auth.models import Group, User
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group, User
 from django.utils.text import slugify
 from graphql_jwt.decorators import permission_required
+
+from apps.permissions.models import ResponsibleGroup
 
 from ..users.types import UserType
 from . import permissions as perms
 from .models import Membership, Organization
 from .types import MembershipType, OrganizationType
-from apps.permissions.models import ResponsibleGroup
 
 
 class OrganizationInput(graphene.InputObjectType):
@@ -32,7 +33,6 @@ class CreateOrganization(graphene.Mutation):
 
         setattr(organization, "slug", slugify(organization.name))
         organization.save()
-        Group.objects.create(name=organization.name)
         ok = True
         return CreateOrganization(organization=organization, ok=ok)
 
