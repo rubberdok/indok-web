@@ -1,3 +1,4 @@
+from typing import Optional
 from django.db.models.signals import post_save, pre_delete, pre_save
 from django.dispatch import receiver
 from django.contrib.auth.models import Group
@@ -10,12 +11,15 @@ from apps.permissions.models import ResponsibleGroup
 
 @receiver(post_save, sender=Membership)
 def handle_new_member(sender, instance: Membership, **kwargs):
+    optional_group: Optional[ResponsibleGroup] = instance.group
     group: Group = instance.organization.primary_group.group
     org_group: Group = Group.objects.get(name=ORGANIZATION)
     if group:
         user = instance.user
         user.groups.add(group)
         user.groups.add(org_group)
+        if optional_group:
+            user.groups.add(optional_group.group)
         user.save()
 
 

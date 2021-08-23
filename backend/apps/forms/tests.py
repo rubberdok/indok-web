@@ -26,26 +26,14 @@ class FormBaseTestCase(ExtendedGraphQLTestCase):
         self.unauthorized_user = UserFactory()
         self.preexisting_user = UserFactory()
         self.organization = OrganizationFactory()
-        MembershipFactory(user=self.authorized_user, organization=self.organization)
+        MembershipFactory(
+            user=self.authorized_user,
+            organization=self.organization,
+            group=self.organization.hr_group,
+        )
 
         # Create the form
         self.form = FormFactory(organization=self.organization)
-
-        # Assign permissions
-        # TODO: Replace these with signals and groups
-        assign_perm("forms.view_form", self.authorized_user)
-        assign_perm("forms.add_form", self.authorized_user)
-        assign_perm("forms.change_form", self.authorized_user, self.form)
-        assign_perm("forms.delete_form", self.authorized_user, self.form)
-        assign_perm(
-            "forms.manage_form",
-            get_user_model().objects.get(pk=self.authorized_user.pk),
-            self.form,
-        )
-
-        assign_perm("forms.view_form", self.unauthorized_user)
-        assign_perm("forms.add_answer", self.unauthorized_user)
-        assign_perm("forms.change_answer", self.unauthorized_user)
 
         # Create some questions
         self.paragraph = QuestionFactory(form=self.form)
