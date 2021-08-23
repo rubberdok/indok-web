@@ -41,10 +41,9 @@ const ProfilePage: NextPage = () => {
             <Grid item>
               <Avatar className={classes.large} style={{ backgroundColor: indigo[500] }}>
                 {data && (
-                  <Typography
-                    variant="h3"
-                    component="p"
-                  >{`${data.user.firstName[0]}${data.user.lastName[0]}`}</Typography>
+                  <Typography variant="h3" component="p">{`${data.user.firstName[0]}${
+                    data.user.lastName && data.user.lastName[0]
+                  }`}</Typography>
                 )}
               </Avatar>
             </Grid>
