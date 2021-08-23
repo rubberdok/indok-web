@@ -17,7 +17,7 @@ def handle_new_member(_, instance: Membership, **kwargs):
 
 
 @receiver(pre_delete, sender=Membership)
-def handle_removed_memeber(_, instance: Membership, **kwargs):
+def handle_removed_member(_, instance: Membership, **kwargs):
     group: Group = instance.organization.primary_group.group
     if group:
         user = instance.user
