@@ -8,21 +8,19 @@ from apps.permissions.models import ResponsibleGroup
 
 
 @receiver(post_save, sender=Membership)
-def handle_new_member(sender, **kwargs):
-    member: Membership = kwargs["instance"]
-    group: Group = member.organization.primary_group.group
+def handle_new_member(sender, instance: Membership, **kwargs):
+    group: Group = instance.organization.primary_group.group
     if group:
-        user = member.user
+        user = instance.user
         user.groups.add(group)
         user.save()
 
 
 @receiver(pre_delete, sender=Membership)
-def handle_removed_memeber(sender, **kwargs):
-    member: Membership = kwargs["instance"]
-    group: Group = member.organization.primary_group.group
+def handle_removed_member(sender, instance: Membership, **kwargs):
+    group: Group = instance.organization.primary_group.group
     if group:
-        user = member.user
+        user = instance.user
         user.groups.remove(group)
         user.save()
 

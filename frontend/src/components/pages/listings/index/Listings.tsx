@@ -27,7 +27,7 @@ const Listings: React.FC<{
 
   // if the data is fetched, renders a ListingItem for each listing
   return (
-    <Grid container direction="row" spacing={2} className={classes.root} justify="center" alignItems="stretch">
+    <Grid container direction="row" spacing={2} className={classes.root} justifyContent="center" alignItems="stretch">
       {loading && (
         <Grid item>
           <CircularProgress color="primary" />

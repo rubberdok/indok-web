@@ -52,7 +52,7 @@ const EditListingPage: NextPage = () => {
         <Typography variant="h1" gutterBottom>
           Oppdater vervutlysningen
         </Typography>
-        <Grid container justify="center">
+        <Grid container justifyContent="center">
           <Grid item xs={10}>
             {listing && (
               <ListingForm

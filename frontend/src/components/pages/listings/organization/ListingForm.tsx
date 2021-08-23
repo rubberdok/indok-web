@@ -253,7 +253,7 @@ const ListingForm: React.FC<{
         </Grid>
       </CardContent>
       <CardActions>
-        <Grid container justify="flex-end" spacing={1}>
+        <Grid container justifyContent="flex-end" spacing={1}>
           <Grid item>
             <Button variant="contained" onClick={onCancel} startIcon={<Close />}>
               Avbryt
