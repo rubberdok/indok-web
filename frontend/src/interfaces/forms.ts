@@ -6,6 +6,7 @@ export interface Form {
   description: string;
   questions: Question[];
   responses?: Response[];
+  response?: Response;
 }
 
 export interface Question {
@@ -16,6 +17,7 @@ export interface Question {
   questionType: QuestionType;
   options?: Option[];
   answers?: Answer[];
+  answer?: Answer;
 }
 
 export type QuestionType =

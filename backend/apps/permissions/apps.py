@@ -2,4 +2,4 @@ from django.apps import AppConfig
 
 
 class PermissionsConfig(AppConfig):
-    name = 'permissions'
+    name = "apps.permissions"

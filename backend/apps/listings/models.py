@@ -23,7 +23,7 @@ class Listing(models.Model):
 
     url = models.URLField(null=True, blank=True)
 
-    form = models.ForeignKey(Form, null=True, on_delete=models.SET_NULL)
+    form = models.OneToOneField(Form, null=True, on_delete=models.SET_NULL)
 
     def __str__(self):
         return f"{self.title} (Open: {self.start_datetime} - {self.end_datetime}: {self.description}"

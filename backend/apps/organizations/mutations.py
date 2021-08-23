@@ -1,14 +1,15 @@
 import graphene
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group, User
 from django.utils.text import slugify
 from utils.decorators import permission_required
 
 from apps.users.types import UserType
+from apps.permissions.models import ResponsibleGroup
 
 from . import permissions as perms
 from .models import Membership, Organization
 from .types import MembershipType, OrganizationType
-
 
 def get_organization_from_data(*_, membership_data, **kwargs) -> Organization:
     return Organization.objects.get(pk=membership_data["organization_id"])
