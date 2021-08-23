@@ -11,6 +11,7 @@ from . import permissions as perms
 from .models import Membership, Organization
 from .types import MembershipType, OrganizationType
 
+
 def get_organization_from_data(*_, membership_data, **kwargs) -> Organization:
     return Organization.objects.get(pk=membership_data["organization_id"])
 
@@ -98,7 +99,7 @@ class AssignMembership(graphene.Mutation):
     def mutate(self, _, membership_data):
         membership = Membership(
             organization_id=membership_data["organization_id"],
-            user=membership_data["user_id"],
+            user_id=membership_data["user_id"],
             group_id=membership_data.get("group_id", None),
         )
         membership.save()
