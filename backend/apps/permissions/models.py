@@ -1,4 +1,4 @@
-from typing import Literal
+from typing import Iterable, Literal, Optional
 from django.db import models
 from django.contrib.auth.models import Group
 import uuid
@@ -13,9 +13,6 @@ class ResponsibleGroup(models.Model):
     Recommended workaround to extend the Group model.
     See https://groups.google.com/g/django-developers/c/llQJZUKejXg/discussion
     """
-
-    PRIMARY: Literal["PRIMARY"] = "PRIMARY"
-    HR: Literal["HR"] = "HR"
 
     # To avoid any chance of enumerating groups, we use UUIDs
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4)

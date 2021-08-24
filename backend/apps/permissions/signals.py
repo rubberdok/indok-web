@@ -5,6 +5,7 @@ from django.contrib.auth.models import Group, Permission
 from django.db.models import Q
 from django.db.models.signals import post_migrate, pre_save
 from django.dispatch import receiver
+from django.core.exceptions import ObjectDoesNotExist
 
 from apps.permissions.constants import (
     DEFAULT_INDOK_PERMISSIONS,
@@ -20,8 +21,10 @@ User = get_user_model()
 @receiver(pre_save, sender=ResponsibleGroup)
 def create_named_group(sender, instance: ResponsibleGroup, **kwargs):
     try:
-        group = instance.group
-    except Group.DoesNotExist:
+        instance.group
+        print("did not error??")
+    except ObjectDoesNotExist:
+        print("errored")
         prefix: str = instance.organization.name
         group = Group.objects.create(name=f"{prefix}:{instance.name}:{uuid4().hex}")
         instance.group = group

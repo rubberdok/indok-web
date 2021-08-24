@@ -2,6 +2,7 @@ from typing import Optional
 from django.db import models
 from django.db.models import UniqueConstraint
 from django.conf import settings
+from apps.permissions.constants import HR, PRIMARY
 
 from apps.permissions.models import ResponsibleGroup
 
@@ -41,14 +42,14 @@ class Organization(models.Model):
     @property
     def hr_group(self) -> Optional["ResponsibleGroup"]:
         try:
-            return self.permission_groups.get(group_type=ResponsibleGroup.HR)
+            return self.permission_groups.get(group_type=HR)
         except ResponsibleGroup.DoesNotExist:
             return None
 
     @property
     def primary_group(self) -> Optional["ResponsibleGroup"]:
         try:
-            return self.permission_groups.get(group_type=ResponsibleGroup.PRIMARY)
+            return self.permission_groups.get(group_type=PRIMARY)
         except ResponsibleGroup.DoesNotExist:
             return None
 
