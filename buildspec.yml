@@ -19,6 +19,7 @@ phases:
   build:
     commands:
       - echo building images...
+      - echo $CODEBUILD_RESOLVED_SOURCE_VERSION
       - >
         docker build \
           -f backend/Dockerfile.prod \
@@ -38,7 +39,7 @@ phases:
           ./frontend
   post_build:
     commands:
-      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/indokweb-backend:prod
-      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/indokweb-frontend:prod
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/indokweb-backend:$CODEBUILD_RESOLVED_SOURCE_VERSION
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/indokweb-frontend:$CODEBUILD_RESOLVED_SOURCE_VERSION
       - chmod +x ./deploy.sh
       - bash deploy.sh

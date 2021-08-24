@@ -6,7 +6,7 @@
   "containerDefinitions": [
     {
       "name": "backend",
-      "image": "%s.dkr.ecr.eu-north-1.amazonaws.com/indokweb-backend:prod",
+      "image": "%s.dkr.ecr.eu-north-1.amazonaws.com/indokweb-backend:%s",
       "essential": true,
       "memory": 512,
       "cpu": 100,

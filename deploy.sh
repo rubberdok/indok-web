@@ -33,7 +33,7 @@ deploy_cluster() {
   service="indokweb-backend-fg-service"
   template="ecs_backend_taskdefinition.json"
   task_template=$(cat "ecs/$template")
-  task_def=$(printf "$task_template" $AWS_ACCOUNT_ID $AWS_RDS_HOST $AWS_RDS_PASSWORD $PRODUCTION_SECRET_KEY $DATAPORTEN_SECRET $GOOGLE_DRIVE_API_KEY $DJANGO_SETTINGS_MODULE $AWS_SECRET_ACCESS_KEY)
+  task_def=$(printf "$task_template" $AWS_ACCOUNT_ID $CODEBUILD_RESOLVED_SOURCE_VERSION $AWS_RDS_HOST $AWS_RDS_PASSWORD $PRODUCTION_SECRET_KEY $DATAPORTEN_SECRET $GOOGLE_DRIVE_API_KEY $DJANGO_SETTINGS_MODULE $AWS_SECRET_ACCESS_KEY $CODEBUILD_RESOLVED_SOURCE_VERSION)
   echo "$task_def"
   register_definition
   update_service
@@ -42,13 +42,14 @@ deploy_cluster() {
   service="indokweb-frontend-fg-service"
   template="ecs_frontend_taskdefinition.json"
   task_template=$(cat "ecs/$template")
-  task_def=$(printf "$task_template" $AWS_ACCOUNT_ID)
+  task_def=$(printf "$task_template" $AWS_ACCOUNT_ID $CODEBUILD_RESOLVED_SOURCE_VERSION)
   echo "$task_def"
   register_definition
   update_service
 
 }
 
+echo $CODEBUILD_RESOLVED_SOURCE_VERSION
 echo $CODEBUILD_WEBHOOK_BASE_REF
 echo $CODEBUILD_WEBHOOK_HEAD_REF
 echo $CODEBUILD_WEBHOOK_TRIGGER
