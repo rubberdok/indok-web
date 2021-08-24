@@ -1,11 +1,22 @@
-import graphene
+from typing import Optional
 from django.contrib.auth import get_user_model
-from django.db.models.query_utils import Q
+
+import graphene
 from graphene_django import DjangoObjectType
 from graphql_jwt.decorators import login_required
 
-from ..users.types import UserType
-from .models import Answer, Form, Option, Question, Response
+from apps.users.types import UserType
+from apps.forms.models import Answer, Option, Question, Response, Form
+
+
+class QuestionTypeEnum(graphene.Enum):
+    PARAGRAPH = "PARAGRAPH"
+    SHORT_ANSWER = "SHORT_ANSWER"
+    MULTIPLE_CHOICE = "MULTIPLE_CHOICE"
+    CHECKBOXES = "CHECKBOXES"
+    DROPDOWN = "DROPDOWN"
+    SLIDER = "SLIDER"
+    FILE_UPLOAD = "FILE_UPLOAD"
 
 
 class OptionType(DjangoObjectType):
@@ -16,45 +27,19 @@ class OptionType(DjangoObjectType):
 
 
 class AnswerType(DjangoObjectType):
-    user = graphene.Field(UserType)
-    id = graphene.ID(source="uuid")
+    id = graphene.UUID(source="uuid")
 
     class Meta:
         model = Answer
-        fields = ["answer", "question", "uuid"]
+        fields = ["answer", "question", "uuid", "user"]
         description = "A user's answer to a question."
-
-    @staticmethod
-    @login_required
-    def resolve_user(answer, info):
-        raise NotImplementedError("Dette kallet er ikke implementert enda")
-        # TODO: Add row level permissions
-        return answer.response.respondent
-
-
-class ResponseType(DjangoObjectType):
-    answers = graphene.List(AnswerType)
-    id = graphene.ID(source="uuid")
-
-    class Meta:
-        model = Response
-        field = ["uuid", "respondent", "form", "status"]
-        description = "A response instance that contains information about a user's response to a form."
-
-    @staticmethod
-    @login_required
-    def resolve_answers(response, info):
-        if response.respondent == info.context.user or info.context.user.is_superuser:
-            return response.answers.all()
-        else:
-            raise PermissionError("Du har ikke tilgang til dette.")
 
 
 class QuestionType(DjangoObjectType):
     options = graphene.List(OptionType)
-    answers = graphene.List(AnswerType, user_id=graphene.ID())
-    answer = graphene.Field(AnswerType, user_id=graphene.ID(required=True))
-    question_type = graphene.String()
+    answers = graphene.List(AnswerType, user_id=graphene.ID(), required=False)
+    question_type = graphene.Field(QuestionTypeEnum)
+    answer = graphene.Field(AnswerType)
 
     class Meta:
         model = Question
@@ -67,69 +52,82 @@ class QuestionType(DjangoObjectType):
         description = "A question on a form."
 
     @staticmethod
-    def resolve_options(root: Question, info):
-        return root.options.all()
+    @login_required
+    def resolve_options(parent: Question, info):
+        return parent.options.all()
 
     @staticmethod
     @login_required
-    def resolve_answers(root: Question, info, user_id: int = None):
-        answers = root.answers
-        if user_id:
-            return answers.filter(response__respondent__pk=user_id)
-        return answers.all()
+    def resolve_answers(parent: Question, info) -> Optional[list[Answer]]:
+        # Can be changed to @permission_required_or_none("forms.manage_form", fn=get_resolver_parent) if #141 is merged
+        if info.context.user.has_perm("forms.manage_form", parent.form):
+            return parent.answers.all()
 
     @staticmethod
     @login_required
-    def resolve_answer(root: Question, info, user_id: int):
-        return root.answers.get(response__respondent__pk=user_id)
+    def resolve_answer(parent: Question, info):
+        try:
+            return parent.answers.get(response__respondent=info.context.user)
+        except Answer.DoesNotExist:
+            return None
+
+
+class ResponseType(DjangoObjectType):
+    id = graphene.UUID(source="uuid")
+    questions = graphene.List(QuestionType)
+
+    class Meta:
+        model = Response
+        field = ["uuid", "respondent", "form", "status", "answers"]
+        description = "A response instance that contains information about a user's response to a form."
+
+    @staticmethod
+    def resolve_questions(parent: Response, info):
+        return parent.form.questions.all()
 
 
 class FormType(DjangoObjectType):
-    questions = graphene.List(QuestionType)
-    responders = graphene.List(UserType, user_id=graphene.ID(), required=True)
+    responders = graphene.List(UserType, user_id=graphene.ID())
     responder = graphene.Field(UserType, user_id=graphene.ID(required=True))
-    responses = graphene.List(ResponseType, required=True)
+    responses = graphene.List(ResponseType)
+    response = graphene.Field(ResponseType, response_pk=graphene.UUID(required=False))
 
     class Meta:
         model = Form
-        fields = [
-            "id",
-            "name",
-            "description",
-            "organization",
-        ]
+        fields = ["id", "name", "description", "organization", "questions"]
         description = "A form containing questions, optionally linked to a listing."
 
     @staticmethod
-    def resolve_questions(root: Form, info):
-        return root.questions.all()
+    @login_required
+    def resolve_responders(parent: Form, info):
+        # Can be changed to @permission_required_or_none("forms.manage_form", fn=get_resolver_parent) if #141 is merged
+        if info.context.user.has_perm("forms.manage_form", parent):
+            return get_user_model().objects.filter(responses__form=parent).distinct()
+        return None
 
     @staticmethod
     @login_required
-    def resolve_responders(root: Form, info, user_id: int = None):
-        # TODO: Row level permissions
-        if info.context.user.is_superuser:
-            q = Q(responses__form=root)
-            if user_id:
-                q &= Q(pk=user_id)
-            return get_user_model().objects.filter(q).distinct()
-        else:
-            raise NotImplementedError("Dette kallet er ikke implementert enda")
+    def resolve_responder(parent: Form, info, user_id: int):
+        # Can be changed to @permission_required_or_none("forms.manage_form", fn=get_resolver_parent) if #141 is merged
+        if info.context.user.has_perm("forms.manage_form", parent):
+            return get_user_model().objects.get(responses__form=parent, pk=user_id)
+        return None
 
     @staticmethod
     @login_required
-    def resolve_responder(root: Form, info, user_id: int):
-        # TODO: Row level permissions
-        if info.context.user.is_superuser:
-            return get_user_model().objects.get(responses__form=root, pk=user_id)
-        else:
-            raise NotImplementedError("Dette kallet er ikke implementert end")
+    def resolve_responses(parent, info):
+        # Can be changed to @permission_required_or_none("forms.manage_form", fn=get_resolver_parent) if #141 is merged
+        if info.context.user.has_perm("forms.manage_form", parent):
+            return parent.responses.all()
+        return None
 
     @staticmethod
     @login_required
-    def resolve_responses(root: Form, info):
-        # TODO: Row level permissions
-        if info.context.user.is_superuser:
-            return root.responses.all()
-        else:
-            raise NotImplementedError("Dette kallet er ikke implementert enda")
+    def resolve_response(parent, info, response_pk: Optional[str] = None):
+        # Can be changed to @permission_required_or_none("forms.manage_form", fn=get_resolver_parent) if #141 is merged
+        if info.context.user.has_perm("forms.manage_form", parent):
+            return parent.responses.get(pk=response_pk)
+        try:
+            return parent.responses.get(respondent=info.context.user)
+        except Response.DoesNotExist:
+            return None

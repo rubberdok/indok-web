@@ -45,7 +45,7 @@ const ListingAdminPage: NextPage = () => {
     // interface of formData returned from mutation
     { createForm: { ok: boolean; form: Form } },
     // interface for variables passed to createForm
-    { name: string; description: string; listingId: string }
+    { name: string; description: string; listingId: string; organizationId: string }
   >(CREATE_FORM, {
     // updates the cache so the new form can show instantly
     update: (cache, { data }) => {
@@ -78,7 +78,7 @@ const ListingAdminPage: NextPage = () => {
   return (
     <Layout>
       <Container className={classes.container}>
-        <Grid container direction="row" justify="center" spacing={1}>
+        <Grid container direction="row" justifyContent="center" spacing={1}>
           <Grid item>
             <Grid container direction="column" spacing={1}>
               <Grid item>
@@ -157,6 +157,7 @@ const ListingAdminPage: NextPage = () => {
                               name: `Søknad: ${data.listing.title}`,
                               description: "",
                               listingId: data.listing.id,
+                              organizationId: orgId as string,
                             },
                           });
                         }}

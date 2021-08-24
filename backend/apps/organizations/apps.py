@@ -5,4 +5,4 @@ class OrganizationsConfig(AppConfig):
     name = "apps.organizations"
 
     def ready(self):
-        import apps.organizations.signals #noqa
+        import apps.organizations.signals  # noqa
