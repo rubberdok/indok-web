@@ -1,10 +1,11 @@
 from django.db import migrations, models
 from apps.permissions.constants import ORGANIZATION
-from django.contrib.auth.models import Group
 
 def add_org_members_to_permission_groups(apps, schema_editor):
   MembershipModel = apps.get_model('organizations', 'Membership')
-  organization_member_group = Group.objects.get(name=ORGANIZATION)
+  GroupModel = apps.get_model('auth', 'Group')
+
+  organization_member_group = GroupModel.objects.get(name=ORGANIZATION)
 
   for membership in MembershipModel.objects.all():
     user_changed = False
@@ -12,7 +13,7 @@ def add_org_members_to_permission_groups(apps, schema_editor):
     user_groups = membership.user.groups
 
     if organization_member_group not in user_groups.all():
-      user_groups.add(organization_member_group.pk)
+      user_groups.add(organization_member_group)
       user_changed = True
       print(f"User {membership.user.username} added to Organization member group")
 
@@ -29,8 +30,11 @@ def add_org_members_to_permission_groups(apps, schema_editor):
     
 
 def remove_org_members_from_permission_groups(apps, schema_editor):
-  MembershipModel = apps.get_model('organizations', 'Membership')
-  organization_member_group = Group.objects.get(name=ORGANIZATION)
+  print("reversed, remove groups manually in Django admin")
+  """ MembershipModel = apps.get_model('organizations', 'Membership')
+  GroupModel = apps.get_model('auth', 'Group')
+
+  organization_member_group = GroupModel.objects.get(name=ORGANIZATION)
 
   for membership in MembershipModel.objects.all():
     user_changed = False
@@ -38,7 +42,7 @@ def remove_org_members_from_permission_groups(apps, schema_editor):
     user_groups = membership.user.groups
 
     if organization_member_group in user_groups.all():
-      user_groups.remove(organization_member_group.pk)
+      user_groups.remove(organization_member_group)
       user_changed = True
       print(f"User {membership.user.username} removed from Organization member group")
 
@@ -51,7 +55,7 @@ def remove_org_members_from_permission_groups(apps, schema_editor):
 
     if user_changed:
       membership.user.save()
-      print(f"{membership.user.username} updated")
+      print(f"{membership.user.username} updated") """
 
 class Migration(migrations.Migration):
 
