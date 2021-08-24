@@ -4,6 +4,8 @@ DefaultPermissionsType = Final[list[tuple[str, str]]]
 
 ORGANIZATION: Final = "Organization member"
 INDOK: Final = "Indøk"
+PRIMARY_GROUP_NAME: Final = "Medlem"
+HR_GROUP_NAME: Final = "HR"
 
 DEFAULT_ORGANIZATION_PERMISSIONS: DefaultPermissionsType = [
     ("events", "add_event"),

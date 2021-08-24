@@ -5,7 +5,7 @@ from django.contrib.auth.models import Group
 from guardian.shortcuts import assign_perm
 
 from apps.organizations.models import Membership, Organization
-from apps.permissions.constants import ORGANIZATION
+from apps.permissions.constants import ORGANIZATION, HR_GROUP_NAME, PRIMARY_GROUP_NAME
 from apps.permissions.models import ResponsibleGroup
 
 
@@ -33,24 +33,25 @@ def handle_removed_member(sender, instance: Membership, **kwargs):
 
 
 @receiver(pre_save, sender=Organization)
-def create_primary_group(sender, instance, **kwargs):
+def create_primary_group(sender, instance: Organization, **kwargs):
     """
     Creates and assigns a primary group and HR group to members of the organization.
     """
     try:
         instance.primary_group
     except ResponsibleGroup.DoesNotExist:
-        primary_group = ResponsibleGroup.objects.create(
-            name=instance.name, description=f"Medlemmer av {instance.name}."
+        ResponsibleGroup.objects.create(
+            name=PRIMARY_GROUP_NAME,
+            description=f"Medlemmer av {instance.name}.",
+            organization=instance,
         )
-        instance.primary_group = primary_group
 
     try:
         instance.hr_group
     except ResponsibleGroup.DoesNotExist:
         hr_group = ResponsibleGroup.objects.create(
-            name="HR",
+            name=HR_GROUP_NAME,
             description=f"HR-gruppen til {instance.name}. Tillatelser for å se og behandle søknader.",
+            hr_organization=instance,
         )
         assign_perm("forms.add_form", hr_group.group)
-        instance.hr_group = hr_group
