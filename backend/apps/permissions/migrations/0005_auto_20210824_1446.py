@@ -20,18 +20,19 @@ def move_permission_groups_to_fk(apps, _):
         primary_group = organization.primary_group
         hr_group = organization.hr_group
 
-        primary_group.group_type = ResponsibleGroup.PRIMARY
-        hr_group.group_type = ResponsibleGroup.HR
+        if primary_group and hr_group:
+            primary_group.group_type = "PRIMARY"
+            hr_group.group_type = "HR"
 
-        primary_group.temp_organization = organization
-        hr_group.temp_organization = organization
+            primary_group.temp_organization = organization
+            hr_group.temp_organization = organization
 
-        primary_group.save()
-        hr_group.save()
+            primary_group.save()
+            hr_group.save()
 
-        organization.primary_group = None
-        organization.hr_group = None
-        organization.save()
+            organization.primary_group = None
+            organization.hr_group = None
+            organization.save()
 
     ResponsibleGroup.objects.filter(organization=None).delete()
 
@@ -40,18 +41,13 @@ def move_permission_groups_to_one_to_one_field(apps, _):
     Organization: Type["org_models.Organization"] = apps.get_model(
         "organizations", "Organization"
     )
-    ResponsibleGroup: Type["perm_models.ResponsibleGroup"] = apps.get_model(
-        "permissions", "ResponsibleGroup"
-    )
 
     organization: "org_models.Organization"
     for organization in Organization.objects.all():
         organization.primary_group = organization.responsiblegroup_set.get(
-            group_type=ResponsibleGroup.PRIMARY
+            group_type="PRIMARY"
         )
-        organization.hr_group = organization.responsiblegroup_set.get(
-            group_type=ResponsibleGroup.HR
-        )
+        organization.hr_group = organization.responsiblegroup_set.get(group_type="HR")
         organization.save()
 
 
