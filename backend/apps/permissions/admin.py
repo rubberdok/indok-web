@@ -1,3 +1,5 @@
 from django.contrib import admin
 
-# Register your models here.
+from apps.permissions.models import ResponsibleGroup
+
+admin.site.register(ResponsibleGroup)

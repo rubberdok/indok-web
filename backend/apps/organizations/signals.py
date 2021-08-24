@@ -33,17 +33,18 @@ def handle_removed_member(sender, instance: Membership, **kwargs):
 
 
 @receiver(pre_save, sender=Organization)
-def create_primary_group(sender, instance, **kwargs):
+def create_primary_group(sender, instance: Organization, **kwargs):
     """
     Creates and assigns a primary group and HR group to members of the organization.
     """
     try:
         instance.primary_group
     except ResponsibleGroup.DoesNotExist:
-        primary_group = ResponsibleGroup.objects.create(
-            name=instance.name, description=f"Medlemmer av {instance.name}."
+        ResponsibleGroup.objects.create(
+            name=instance.name,
+            description=f"Medlemmer av {instance.name}.",
+            organization=instance,
         )
-        instance.primary_group = primary_group
 
     try:
         instance.hr_group
@@ -51,6 +52,6 @@ def create_primary_group(sender, instance, **kwargs):
         hr_group = ResponsibleGroup.objects.create(
             name="HR",
             description=f"HR-gruppen til {instance.name}. Tillatelser for å se og behandle søknader.",
+            hr_organization=instance,
         )
         assign_perm("forms.add_form", hr_group.group)
-        instance.hr_group = hr_group
