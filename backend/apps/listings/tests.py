@@ -1,121 +1,215 @@
 import json
-import datetime
+from datetime import timedelta
+
 from django.utils import timezone
-from graphene.utils.str_converters import to_snake_case
-from guardian.shortcuts import assign_perm
+from utils.testing.ExtendedGraphQLTestCase import ExtendedGraphQLTestCase
+from utils.testing.factories.listings import ListingFactory
+from utils.testing.factories.organizations import MembershipFactory, OrganizationFactory
+from utils.testing.factories.users import UserFactory
 
 from apps.listings.models import Listing
 
-from ...utils.testing.ExtendedGraphQLTestCase import ExtendedGraphQLTestCase
-from ...utils.testing.factories.organizations import OrganizationFactory, MembershipFactory, RoleFactory
-from ...utils.testing.factories.listings import ListingFactory
-from ...utils.testing.factories.users import UserFactory
 
-class ListingsBaseTestCase(ExtendedGraphQLTestCase):
-  def setUp(self) -> None:
-    super().setUp()
+class ListingBaseTestCase(ExtendedGraphQLTestCase):
+    def setUp(self) -> None:
+        self.authorized_user = UserFactory()
+        self.unauthorized_user = UserFactory()
 
-    # Create a normal user
-    self.user = UserFactory()
+        self.organization = OrganizationFactory()
+        MembershipFactory(user=self.authorized_user, organization=self.organization)
 
-    # Create a user belonging to an organization
-    self.organization_with_listing = OrganizationFactory()
-    self.organization_without_listing = OrganizationFactory()
+        self.now = timezone.now()
+        self.one_day_ago = timezone.now() - timedelta(days=1)
+        self.two_days_ago = timezone.now() - timedelta(days=2)
+        self.one_day_ahead = timezone.now() + timedelta(days=1)
+        self.two_days_ahead = timezone.now() + timedelta(days=2)
+        self.thirty_days_ahead = timezone.now() + timedelta(days=30)
 
-    self.organization_user = UserFactory()
-    self.membership = MembershipFactory(
-      user=self.organization_user,
-      organization=self.organization_with_listing,
-      role=RoleFactory()
-    )
+        self.visible_listing = ListingFactory(
+            start_datetime=self.one_day_ago,
+            deadline=self.one_day_ahead,
+            organization=self.organization,
+            end_datetime=self.thirty_days_ahead,
+        )
+        self.expired_listing = ListingFactory(
+            start_datetime=self.two_days_ago,
+            deadline=self.one_day_ago,
+            organization=self.organization,
+            end_datetime=self.thirty_days_ahead,
+        )
+        self.future_listing = ListingFactory(
+            start_datetime=self.one_day_ahead,
+            deadline=self.two_days_ahead,
+            organization=self.organization,
+            end_datetime=self.thirty_days_ahead,
+        )
 
-    # Create a few listings
-    self.valid_future_listing = ListingFactory(
-      organization=self.organization_with_listing,
-      start_datetime=timezone.now().isoformat(),
-      end_datetime=(timezone.now() + datetime.timedelta(days=30)).isoformat(),
-      deadline=(timezone.now() + datetime.timedelta(days=30)).isoformat(),
-    )
-
-    # Create listings in the past
-    self.listing_in_the_past = ListingFactory(
-      organization=self.organization_with_listing,
-      start_datetime=(timezone.now() - datetime.timedelta(days=10)).isoformat(),
-      end_datetime=timezone.now().isoformat(),
-      deadline=(timezone.now() - datetime.timedelta(days=1)).isoformat()
-    )
+        return super().setUp()
 
 
-class ListingsResolversTestCase(ListingsBaseTestCase):
-  def test_resolve_listings(self):
-    query = """
-      query {
-        listings {
-          id
-          description
-          title
-          startDatetime
-          endDatetime
-          deadline
-          organization {
-            id
-            name
-          }
-        }
-      }
-    """
+class ListingResolverTestCase(ListingBaseTestCase):
+    def setUp(self) -> None:
+        return super().setUp()
 
-    response = self.query(query)
-    self.assertResponseNoErrors(response)
+    def test_resolve_listings(self):
+        """
+        Expect to find all listings whose start datetime is in the past and deadline is in the future.
+        """
+        query = f"""
+            query {{
+                listings {{
+                    id
+                }}
+            }}
+        """
+        response = self.query(query)
+        self.assertResponseNoErrors(response)
+        data = json.loads(response.content)["data"]
+        listings = data["listings"]
+        self.assertEqual(
+            len(listings),
+            1,
+            f"Only expected the listing with id {self.visible_listing.id} to be visible, but found multiple: {[listing['id'] for listing in listings]}",
+        )
+        for listing in listings:
+            self.deep_assert_equal(listing, self.visible_listing)
 
-    content = json.loads(response.content)
-    listings = content["data"]["listings"]
+    def test_resolve_listing(self):
+        query = f"""
+            query {{
+                listing(id: {self.visible_listing.id}) {{
+                    id
+                    title
+                    description
+                    startDatetime
+                    endDatetime
+                    url
+                    deadline
+                    organization {{
+                        id
+                    }}
+                }}
+            }}
+        """
+        response = self.query(query)
+        self.assertResponseNoErrors(response)
+        data = json.loads(response.content)["data"]
+        listing = data["listing"]
+        self.deep_assert_equal(listing, self.visible_listing)
 
-    # Ensure only future listings are shown
-    self.assertEquals(len(listings), 1)
-  
-  def create_listing(self, listing: Listing, user=None):
-    print(listing.title)
-    print(listing.description)
-    print(listing.organization.id)
-    print(listing.deadline)
-    print(listing.start_datetime)
-    mutation = f"""
-      mutation {{
-        createListing(
-          listingData: {{
-            title: \"{listing.title}\"
-            description: \"{listing.description}\"
-            deadline: \"{listing.deadline}\"
-            startDatetime: \"{listing.start_datetime}\"
-            organizationId: \"{listing.organization.id}\"
-          }}
-        ) {{
-            ok
-        }}
-      }} 
-    """
-    print(mutation)
-    if user is not None:
-      self.query(mutation, user=user)
-    return self.query(mutation)
-  
-  def test_create_listing(self):
-    # Attempt to create a listing without the required permission
-    response = self.create_listing(listing=self.valid_future_listing)
-    self.assertResponseHasErrors(response)
 
-    # Temporarily add add_listing permission
-    assign_perm("listings.add_listing", self.organization_user)
-    # Create listing with a user in an organization
-    response = self.create_listing(
-      listing=self.valid_future_listing,
-      user=self.organization_user
-    )
-    print(response)
-    self.assertResponseNoErrors(response)
+class ListingMutationTestCase(ListingBaseTestCase):
+    def setUp(self) -> None:
+        super().setUp()
+        self.TITLE = "TITLE"
+        self.DESCRIPTION = "DESCRIPTION"
+        self.URL = "https://www.google.com/"
+        self.create_mutation = f"""
+            mutation {{
+                createListing(listingData: {{
+                    title: "{self.TITLE}"
+                    description: "{self.DESCRIPTION}"
+                    organizationId: {self.organization.pk}
+                    startDatetime: "{self.now.isoformat()}"
+                    deadline: "{self.one_day_ahead.isoformat()}"
+                    url: "{self.URL}"
+                }}) {{
+                    ok
+                    listing {{
+                        id
+                        title
+                        description
+                        url
+                        startDatetime
+                        organization {{
+                            id
+                            name
+                        }}
+                        deadline
+                    }}
+                }}
+            }}
+        """
+        self.update_mutation = f"""
+            mutation {{
+                updateListing(
+                    id: {self.visible_listing.id},
+                    listingData: {{
+                        title: "{self.TITLE} NEW"
+                        description: "{self.DESCRIPTION}"
+                        startDatetime: "{self.one_day_ago.isoformat()}"
+                        deadline: "{self.two_days_ahead.isoformat()}"
+                        url: "{self.URL}"
+                    }}
+                ) {{
+                    ok
+                    listing {{
+                        id
+                        title
+                        description
+                        url
+                        startDatetime
+                        organization {{
+                            id
+                            name
+                        }}
+                        deadline
+                    }}
+                }}
+            }}
+        """
 
-    # Attempt to create a listing without permissions
-    response = self.create_listing(self.valid_future_listing, user=self.user)
-    self.assertResponseHasErrors(response)
+        self.delete_mutation = f"""
+            mutation {{
+                deleteListing(id: {self.visible_listing.id}) {{
+                    ok
+                }}
+            }}
+        """
 
+    def test_unauthorized_create_listing(self):
+        response = self.query(self.create_mutation)
+        self.assert_permission_error(response)
+        response = self.query(self.create_mutation, user=self.unauthorized_user)
+        self.assert_permission_error(response)
+
+    def test_unauthorized_change_listing(self):
+        response = self.query(self.update_mutation)
+        self.assert_permission_error(response)
+        response = self.query(self.update_mutation, user=self.unauthorized_user)
+        self.assert_permission_error(response)
+
+    def test_unauthorized_delete_listing(self):
+        response = self.query(self.delete_mutation)
+        self.assert_permission_error(response)
+        response = self.query(self.delete_mutation, user=self.unauthorized_user)
+        self.assert_permission_error(response)
+
+    def test_authorized_create_listing(self):
+        response = self.query(self.create_mutation, user=self.authorized_user)
+        self.assertResponseNoErrors(response)
+
+        data = json.loads(response.content)["data"]
+        listing_data = data["createListing"]["listing"]
+        listing = Listing.objects.get(pk=listing_data["id"])
+        self.deep_assert_equal(listing_data, listing)
+
+    def test_authorized_change_listing(self):
+        response = self.query(self.update_mutation, user=self.authorized_user)
+        self.assertResponseNoErrors(response)
+
+        data = json.loads(response.content)["data"]
+        listing_data = data["updateListing"]["listing"]
+        self.deep_assert_equal(
+            listing_data, Listing.objects.get(pk=self.visible_listing.pk)
+        )
+
+    def test_authorized_delete_listing(self):
+        response = self.query(self.delete_mutation, user=self.authorized_user)
+        self.assertResponseNoErrors(response)
+
+        try:
+            Listing.objects.get(pk=self.visible_listing.pk)
+            self.fail("Expected the listing to be deleted, but it was not.")
+        except Listing.DoesNotExist:
+            pass

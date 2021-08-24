@@ -11,6 +11,7 @@ from graphql_jwt.settings import jwt_settings
 from graphql_jwt.shortcuts import get_token
 
 PERMISSION_ERROR_MESSAGE: Final = "You do not have the permissions required."
+ALTERNATE_PERMISSION: Final = "You do not have permission to perform this action"
 
 
 class ExtendedGraphQLTestCase(GraphQLTestCase):
@@ -32,6 +33,7 @@ class ExtendedGraphQLTestCase(GraphQLTestCase):
         self.assertTrue(
             any(
                 PERMISSION_ERROR_MESSAGE in error["message"]
+                or ALTERNATE_PERMISSION in error["message"]
                 for error in content["errors"]
             ),
             msg=f"Permission error not found in {content.items()}",

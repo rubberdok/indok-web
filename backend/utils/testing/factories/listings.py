@@ -7,11 +7,12 @@ fake: Faker = Faker(["no-NO"])
 
 from apps.listings.models import Listing
 
+
 class ListingFactory(DjangoModelFactory):
-  class Meta:
-    model = Listing
-  
-  description = fake.paragraph(nb_sentences=10)
-  start_datetime = fake.date_time().isoformat()
-  deadline = fake.date_time().isoformat()
-  title = fake.catch_phrase()
+    class Meta:
+        model = Listing
+
+    description = fake.paragraph(nb_sentences=10)
+    start_datetime = fake.date_time().isoformat()
+    deadline = fake.date_time().isoformat()
+    title = fake.catch_phrase()
