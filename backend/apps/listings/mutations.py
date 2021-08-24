@@ -89,7 +89,7 @@ class UpdateListing(graphene.Mutation):
         listing_data = BaseListingInput(required=False)
 
     @login_required
-    @permission_required("listings.update_listing")
+    @permission_required("listings.change_listing")
     def mutate(self, info, id, listing_data=None):
         try:
             listing = Listing.objects.get(pk=id)

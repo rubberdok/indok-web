@@ -31,7 +31,7 @@ const OrganizationPage: NextPage = () => {
               Dine Organisasjoner
             </Typography>
           </Grid>
-          <Grid item container spacing={10} justify="center">
+          <Grid item container spacing={10} justifyContent="center">
             {data?.user?.organizations ? (
               data.user.organizations.map((org: Organization) => (
                 <Grid item key={org.id}>

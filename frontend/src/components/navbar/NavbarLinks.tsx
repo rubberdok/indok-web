@@ -2,8 +2,7 @@ import { useQuery } from "@apollo/client";
 import { GET_USER } from "@graphql/users/queries";
 import { User } from "@interfaces/users";
 import { Box, Button, makeStyles, Menu, MenuItem } from "@material-ui/core";
-import { AccountCircleOutlined } from "@material-ui/icons";
-import PersonIcon from "@material-ui/icons/LockOpen";
+import { AccountCircleOutlined, LockOpen } from "@material-ui/icons";
 import { DATAPORTEN_SCOPES } from "@utils/auth";
 import { generateQueryString } from "@utils/helpers";
 import Link from "next/link";
@@ -21,14 +20,9 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   navItem: {
-    fontWeight: 600,
-    fontSize: 12,
-    textTransform: "uppercase",
-    height: "100%",
+    ...theme.typography.overline,
     display: "flex",
-    alignItems: "center",
-    padding: "0 32px",
-    color: "#b0aca5",
+    padding: "0 24px",
 
     [theme.breakpoints.down(breakpoint)]: {
       marginBottom: theme.spacing(3),
@@ -55,8 +49,8 @@ const useStyles = makeStyles((theme) => ({
   user: {
     background: "#065A5A",
     color: "white",
-    paddingTop: 27,
-    paddingBottom: 27,
+    paddingTop: 23,
+    paddingBottom: 22,
     height: "unset",
 
     [theme.breakpoints.up(breakpoint)]: {
@@ -164,7 +158,7 @@ const NavbarLinks: React.FC = () => {
             </a>
           </Box>
           <Link href={signInURL} passHref>
-            <Button className={[classes.navItem, classes.user].join(" ")} startIcon={<PersonIcon fontSize="small" />}>
+            <Button className={[classes.navItem, classes.user].join(" ")} startIcon={<LockOpen fontSize="small" />}>
               Logg inn med Feide
             </Button>
           </Link>

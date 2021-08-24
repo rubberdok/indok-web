@@ -15,7 +15,7 @@ styre:
 tag: idrett
 ---
 
-# Hvem er vi?
+##### Hvem er vi?
 
 Janus FK er Indøks fotballag for menn. Vi trener to ganger i uken, og spiller kamper mot andre studentlag i Studentligaen. FK er tilbudet for deg som er glad i å spille fotball, og er også en glimrende arena for å få venner på tvers av klassetrinnene. I tillegg til å spille fotball har vi lagfester og andre morsomme arrangementer, og generelt veldig godt samhold. Vi har opptakstreninger etter fadderukene, hvor alle som vil kan få prøve seg.
 

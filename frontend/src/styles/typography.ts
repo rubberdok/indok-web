@@ -1,75 +1,75 @@
-import breakpoints from "./breakpoints";
-
-//TODO: convert all fontsizes from px to root em, then make the website root fontsize responsive
-//TODO: make fontsizes follow correct type hierarchy
-
 const typography = {
   fontFamily: ["Open Sans", "sans-serif"].join(","),
+  fontSize: 16,
+  htmlFontSize: 16,
+
   h1: {
     fontFamily: ["Playfair Display", "sans-serif"].join(","),
-    fontSize: "4rem",
-    fontWeight: 800,
+    fontSize: "4.209rem",
+    fontWeight: 700,
+    lineHeight: 1.11,
   },
   h2: {
     fontFamily: ["Playfair Display", "sans-serif"].join(","),
-    fontSize: 48,
+    fontSize: "3.157rem",
     fontWeight: 700,
-    lineHeight: "3.5rem",
-
-    ["@media (max-width: " + breakpoints.values.sm + "px)"]: {
-      fontSize: 40,
-    },
+    lineHeight: 1.1,
   },
   h3: {
     fontFamily: ["Playfair Display", "sans-serif"].join(","),
-    fontSize: 48,
-    fontWeight: 500,
-
-    ["@media (max-width: " + breakpoints.values.sm + "px)"]: {
-      fontSize: 40,
-    },
+    fontSize: "2.369rem",
+    fontWeight: 700,
   },
   h4: {
     fontFamily: ["Playfair Display", "sans-serif"].join(","),
     fontWeight: 700,
-    fontSize: "2rem",
+    fontSize: "1.777rem",
   },
   h5: {
     fontFamily: ["Playfair Display", "sans-serif"].join(","),
     fontWeight: 700,
-    fontSize: "1.5rem",
+    fontSize: "1.333rem",
     margin: "5px 0",
   },
   h6: {
     fontFamily: ["Playfair Display", "sans-serif"].join(","),
-    fontWeight: 700,
-    fontSize: 22,
-    lineHeight: "23px",
-    color: "rgb(43 39 28 / 35%)",
+    fontWeight: 800,
+    fontSize: "1rem",
   },
   subtitle1: {
     fontFamily: ["Playfair Display", "sans-serif"].join(","),
     fontWeight: 400,
-    fontSize: 25,
-    lineHeight: "43px",
+    fontSize: "1.777rem",
+    lineHeight: 1.72,
+  },
+  subtitle2: {
+    fontFamily: ["Open Sans", "sans-serif"].join(","),
+    fontSize: "1.333rem",
+    fontWeight: 300,
+    lineHeight: 1.57,
   },
   overline: {
-    fontSize: 13,
-    letterSpacing: "0.05em",
+    fontSize: "0.8rem",
     fontWeight: 600,
     color: "#b0aca5",
+    letterSpacing: "0.02rem",
   },
   body1: {
     fontFamily: ["Open Sans", "sans-serif"].join(","),
-    fontSize: 24,
+    fontSize: "1.333rem",
     fontWeight: 300,
-    lineHeight: "40px",
+    lineHeight: 1.65,
   },
   body2: {
     fontFamily: ["Open Sans", "sans-serif"].join(","),
-    fontSize: 18,
+    fontSize: "1rem",
     fontWeight: 300,
-    lineHeight: "30px",
+    lineHeight: 1.75,
+  },
+  button: {
+    fontSize: "0.8rem",
+    fontWeight: 600,
+    letterSpacing: "0.02rem",
   },
 };
 

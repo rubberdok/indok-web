@@ -1,5 +1,7 @@
 import graphene
-from .models import Organization, Membership, Role
+
+from apps.permissions.types import ResponsibleGroupType
+from .models import Organization, Membership
 from graphene_django import DjangoObjectType
 from graphql_jwt.decorators import login_required
 
@@ -10,6 +12,8 @@ from .dataloader import ListingsByOrganizationIdLoader
 class OrganizationType(DjangoObjectType):
     absolute_slug = graphene.String()
     listings = graphene.List(ListingType)
+    primary_group = graphene.Field(source="primary_group", type=ResponsibleGroupType)
+    hr_group = graphene.Field(source="hr_group", type=ResponsibleGroupType)
 
     class Meta:
         model = Organization
@@ -24,6 +28,8 @@ class OrganizationType(DjangoObjectType):
             "users",
             "events",
             "logo_url",
+            "primary_group",
+            "hr_group",
         ]
 
     @staticmethod
@@ -70,7 +76,7 @@ class OrganizationType(DjangoObjectType):
 class MembershipType(DjangoObjectType):
     class Meta:
         model = Membership
-        fields = ["id", "role", "organization", "user"]
+        fields = ["id", "group", "organization", "user"]
 
     class PermissionDecorators:
         @staticmethod
@@ -90,9 +96,3 @@ class MembershipType(DjangoObjectType):
     @PermissionDecorators.is_in_organization
     def resolve_user(membership, info):
         return membership.user
-
-
-class RoleType(DjangoObjectType):
-    class Meta:
-        model = Role
-        fields = ["id", "name"]

@@ -20,7 +20,7 @@ styre:
 tag: idrett
 ---
 
-# Hvem er vi?
+##### Hvem er vi?
 
 Janus Ski- og Løpeklubb ble opprettet for å spre og dele treningsglede blant den jevne indøker. Har så vokst seg stor (300+ støttemedlemmer), med fokus på løpeøkter, men også noen ski og styrkeøkter.
 
