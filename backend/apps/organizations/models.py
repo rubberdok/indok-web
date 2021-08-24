@@ -1,3 +1,4 @@
+from typing import Optional
 from django.db import models
 from django.db.models import UniqueConstraint
 from django.conf import settings
@@ -38,12 +39,18 @@ class Organization(models.Model):
     )
 
     @property
-    def hr_group(self):
-        return self.permission_groups.get(group_type=ResponsibleGroup.HR)
+    def hr_group(self) -> Optional["ResponsibleGroup"]:
+        try:
+            return self.permission_groups.get(group_type=ResponsibleGroup.HR)
+        except ResponsibleGroup.DoesNotExist:
+            return None
 
     @property
-    def primary_group(self):
-        return self.permission_groups.get(group_type=ResponsibleGroup.PRIMARY)
+    def primary_group(self) -> Optional["ResponsibleGroup"]:
+        try:
+            return self.permission_groups.get(group_type=ResponsibleGroup.PRIMARY)
+        except ResponsibleGroup.DoesNotExist:
+            return None
 
     class Meta:
         constraints = [

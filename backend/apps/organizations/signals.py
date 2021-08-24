@@ -1,5 +1,6 @@
 from typing import Optional
-from django.db.models.signals import post_save, pre_delete
+from django.db.models.query_utils import Q
+from django.db.models.signals import post_migrate, post_save, pre_delete
 from django.dispatch import receiver
 from django.contrib.auth.models import Group
 from guardian.shortcuts import assign_perm
@@ -49,3 +50,24 @@ def create_default_groups(sender, instance: Organization, created, **kwargs):
             group_type=ResponsibleGroup.HR,
         )
         assign_perm("forms.add_form", hr_group.group)
+
+
+@receiver(post_migrate)
+def create_missing_default_groups(**kwargs):
+    orgs = Organization.objects.all()
+
+    for org in orgs:
+        ResponsibleGroup.objects.get_or_create(
+            name=org.name,
+            description=f"Medlemmer av {org.name}.",
+            organization=org,
+            group_type=ResponsibleGroup.PRIMARY,
+        )
+        hr_group, created = ResponsibleGroup.objects.get_or_create(
+            name="HR",
+            description=f"HR-gruppen til {org.name}. Tillatelser for å se og behandle søknader.",
+            organization=org,
+            group_type=ResponsibleGroup.HR,
+        )
+        if created:
+            assign_perm("forms.add_form", hr_group.group)

@@ -5,7 +5,6 @@ from django.contrib.auth.models import Group, Permission
 from django.db.models import Q
 from django.db.models.signals import post_migrate, pre_save
 from django.dispatch import receiver
-from apps.organizations.models import Organization
 
 from apps.permissions.constants import (
     DEFAULT_INDOK_PERMISSIONS,
