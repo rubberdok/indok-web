@@ -25,6 +25,11 @@ update_service() {
   fi
 }
 
+push_images() {
+  docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/indokweb-backend:$CODEBUILD_RESOLVED_SOURCE_VERSION
+  docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/indokweb-frontend:$CODEBUILD_RESOLVED_SOURCE_VERSION
+}
+
 deploy_cluster() {
 
   cluster="indokweb-cluster"
@@ -54,6 +59,7 @@ echo $CODEBUILD_WEBHOOK_BASE_REF
 echo $CODEBUILD_WEBHOOK_HEAD_REF
 echo $CODEBUILD_WEBHOOK_TRIGGER
 echo $CODEBUILD_WEBHOOK_EVENT
+push_images
 
 if  [ "$CODEBUILD_WEBHOOK_TRIGGER" == "branch/master" ] && \
     ([ "$CODEBUILD_WEBHOOK_HEAD_REF" == "refs/heads/master" ] || ["$CODEBUILD_WEBHOOK_WEBHOOK_EVENT" == "PULL_REQUEST_MERGED"])
