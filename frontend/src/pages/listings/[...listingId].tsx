@@ -1,18 +1,19 @@
 import { useQuery } from "@apollo/client";
 import Layout from "@components/Layout";
+import * as markdownComponents from "@components/markdown/components";
+import InfoCard from "@components/pages/listings/detail/InfoCard";
 import ListingBanner from "@components/pages/listings/detail/ListingBanner";
 import ListingBody from "@components/pages/listings/detail/ListingBody";
+import TitleCard from "@components/pages/listings/detail/TitleCard";
 import { LISTING_APPLICATION } from "@graphql/listings/queries";
 import { Listing } from "@interfaces/listings";
 import { Button, Container, Grid, Hidden, makeStyles, Paper } from "@material-ui/core";
 import ArrowForward from "@material-ui/icons/ArrowForward";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import { NextPage } from "next";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import ReactMarkdown from "react-markdown";
-import * as markdownComponents from "@components/markdown/components";
-import InfoCard from "@components/pages/listings/detail/InfoCard";
-import TitleCard from "@components/pages/listings/detail/TitleCard";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -101,15 +102,13 @@ const ListingPage: NextPage = () => {
           <Hidden mdUp>
             <Paper className={classes.bottom}>
               <Grid container direction="row" justifyContent="space-between" alignItems="center">
-                {data.listing.organization && (
+                {data.listing.readMore && (
                   <Grid item xs>
-                    <Button
-                      size="small"
-                      endIcon={<OpenInNewIcon />}
-                      href={`/about/organizations/${data.listing.organization.slug}/`}
-                    >
-                      {data.listing.organization.name.slice(0, 20)}
-                    </Button>
+                    <Link passHref href={data.listing.readMore}>
+                      <Button size="small" endIcon={<OpenInNewIcon />}>
+                        {data.listing.organization.name.slice(0, 20)}
+                      </Button>
+                    </Link>
                   </Grid>
                 )}
                 <Hidden smUp>

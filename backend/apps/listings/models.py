@@ -22,6 +22,7 @@ class Listing(models.Model):
     )
 
     url = models.URLField(null=True, blank=True)
+    read_more = models.URLField(null=True, blank=True)
 
     form = models.OneToOneField(Form, null=True, on_delete=models.SET_NULL)
 

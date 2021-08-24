@@ -12,6 +12,7 @@ export const LISTING_FRAGMENT = gql`
     endDatetime
     url
     chips
+    readMore
     organization {
       id
       name

@@ -20,6 +20,7 @@ class ListingType(DjangoObjectType):
             "deadline",
             "organization",
             "form",
+            "read_more",
         ]
 
     def resolve_chips(parent: Listing, info):
