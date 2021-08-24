@@ -98,6 +98,24 @@ class ListingResolverTestCase(ListingBaseTestCase):
         listing = data["listing"]
         self.deep_assert_equal(listing, self.visible_listing)
 
+    def test_view_counter(self):
+        query = f"""
+            query {{
+                listing(id: {self.visible_listing.id}) {{
+                    viewCount
+                }}
+            }}
+        """
+        response = self.query(query)
+        view_count = json.loads(response.content)["data"]["listing"]["viewCount"]
+        self.assertEqual(view_count, 1)
+
+        for _ in range(5):
+            response = self.query(query)
+
+        view_count = json.loads(response.content)["data"]["listing"]["viewCount"]
+        self.assertEqual(view_count, 6)
+
 
 class ListingMutationTestCase(ListingBaseTestCase):
     def setUp(self) -> None:
