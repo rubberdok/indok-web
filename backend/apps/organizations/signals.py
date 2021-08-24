@@ -5,7 +5,7 @@ from django.contrib.auth.models import Group
 from guardian.shortcuts import assign_perm
 
 from apps.organizations.models import Membership, Organization
-from apps.permissions.constants import ORGANIZATION
+from apps.permissions.constants import ORGANIZATION, HR_GROUP_NAME, PRIMARY_GROUP_NAME
 from apps.permissions.models import ResponsibleGroup
 
 
@@ -41,7 +41,7 @@ def create_primary_group(sender, instance: Organization, **kwargs):
         instance.primary_group
     except ResponsibleGroup.DoesNotExist:
         ResponsibleGroup.objects.create(
-            name=instance.name,
+            name=PRIMARY_GROUP_NAME,
             description=f"Medlemmer av {instance.name}.",
             organization=instance,
         )
@@ -50,7 +50,7 @@ def create_primary_group(sender, instance: Organization, **kwargs):
         instance.hr_group
     except ResponsibleGroup.DoesNotExist:
         hr_group = ResponsibleGroup.objects.create(
-            name="HR",
+            name=HR_GROUP_NAME,
             description=f"HR-gruppen til {instance.name}. Tillatelser for å se og behandle søknader.",
             hr_organization=instance,
         )
