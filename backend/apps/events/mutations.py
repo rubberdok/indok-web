@@ -16,11 +16,11 @@ class BaseEventInput:
     title = graphene.String(required=True)
     description = graphene.String(required=True)
     start_time = graphene.DateTime(required=True)
+    is_attendable = graphene.Boolean(required=True)
     end_time = graphene.DateTime(required=False)
     location = graphene.String(required=False)
     category_id = graphene.ID(required=False)
     image = graphene.String(required=False)
-    is_attendable = graphene.Boolean(required=True)
     deadline = graphene.DateTime(required=False)
     signup_open_date = graphene.DateTime(required=False)
     available_slots = graphene.Int(required=False)
@@ -45,6 +45,10 @@ class UpdateEventInput(BaseEventInput, graphene.InputObjectType):
 
 
 class CreateEvent(graphene.Mutation):
+    """
+    Create a new event
+    """
+
     ok = graphene.Boolean()
     event = graphene.Field(EventType)
 
@@ -59,6 +63,7 @@ class CreateEvent(graphene.Mutation):
             )
         except Organization.DoesNotExist:
             raise ValueError("Ugyldig organisasjon oppgitt")
+
         check_user_membership(info.context.user, organization)
 
         event = Event()
@@ -71,6 +76,10 @@ class CreateEvent(graphene.Mutation):
 
 
 class UpdateEvent(graphene.Mutation):
+    """
+    Updates the event with a given ID with the data in event_data
+    """
+
     class Arguments:
         id = graphene.ID(required=True)
         event_data = UpdateEventInput(required=False)
@@ -95,6 +104,10 @@ class UpdateEvent(graphene.Mutation):
 
 
 class DeleteEvent(graphene.Mutation):
+    """
+    Deletes the event with the given ID
+    """
+
     class Arguments:
         id = graphene.ID()
 
@@ -120,6 +133,11 @@ class EventSignUpInput(graphene.InputObjectType):
 
 
 class EventSignUp(graphene.Mutation):
+    """
+    Creates a new Sign Up for the user that sent the request, for the event
+    with the given ID
+    """
+
     class Arguments:
         event_id = graphene.ID(required=True)
         data = EventSignUpInput(required=False)
@@ -166,11 +184,17 @@ class EventSignUp(graphene.Mutation):
         setattr(sign_up, "user_grade_year", user.grade_year)
 
         sign_up.save()
-
         return EventSignUp(event=event, is_full=event.is_full)
 
 
 class EventSignOff(graphene.Mutation):
+    """
+    Sets the field is_attending to False in the Sign Up for the user that
+    sent the request, for the event with the given ID
+    NOTE: The sign up still exists, it is not deleted from the database
+          when a user signs off an event
+    """
+
     class Arguments:
         event_id = graphene.ID(required=True)
 
@@ -198,11 +222,17 @@ class EventSignOff(graphene.Mutation):
 
         setattr(sign_up, "is_attending", False)
         sign_up.save()
-
         return EventSignOff(event=event, is_full=event.is_full)
 
 
 class AdminEventSignOff(graphene.Mutation):
+    """
+    Sets the field is_attending to False in the Sign Up for the user with the
+    given ID, for the event with the given ID
+    NOTE: The sign up still exists, it is not deleted from the database
+          when a user signs off an event
+    """
+
     class Arguments:
         event_id = graphene.ID(required=True)
         user_id = graphene.ID(required=True)
@@ -239,6 +269,10 @@ class CategoryInput(graphene.InputObjectType):
 
 
 class CreateCategory(graphene.Mutation):
+    """
+    Create a new event category
+    """
+
     ok = graphene.Boolean()
     category = graphene.Field(CategoryType)
 
@@ -256,6 +290,10 @@ class CreateCategory(graphene.Mutation):
 
 
 class UpdateCategory(graphene.Mutation):
+    """
+    Updates the category with a given ID with the data in category_data
+    """
+
     class Arguments:
         id = graphene.ID(required=True)
         category_data = CategoryInput(required=False)
@@ -275,6 +313,10 @@ class UpdateCategory(graphene.Mutation):
 
 
 class DeleteCategory(graphene.Mutation):
+    """
+    Deletes the category with a given ID
+    """
+
     class Arguments:
         id = graphene.ID()
 
@@ -290,6 +332,10 @@ class DeleteCategory(graphene.Mutation):
 
 
 class SendEventEmails(graphene.Mutation):
+    """
+    Send an email to all users signed up to an event
+    """
+
     class Arguments:
         event_id = graphene.ID(required=True)
         receiverEmails = graphene.List(graphene.String)

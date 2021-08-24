@@ -15,7 +15,7 @@ styre:
 tag: annet
 ---
 
-# Hvem er vi?
+##### Hvem er vi?
 
 Janustrikk er indøks nyoppstartede strikkegruppe der indøkere fra alle trinn samles for å prate, spise snacks, slappe av, kose seg og strikke!
 

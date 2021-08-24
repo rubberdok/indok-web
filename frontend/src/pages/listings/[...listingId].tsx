@@ -10,7 +10,7 @@ import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import ReactMarkdown from "react-markdown";
-import renderers from "@components/pages/listings/markdown/renderers";
+import * as markdownComponents from "@components/markdown/components";
 import InfoCard from "@components/pages/listings/detail/InfoCard";
 import TitleCard from "@components/pages/listings/detail/TitleCard";
 
@@ -67,7 +67,7 @@ const ListingPage: NextPage = () => {
             <ListingBanner listing={data.listing} />
           </Hidden>
           <Container className={classes.container}>
-            <Grid container justify="center">
+            <Grid container justifyContent="center">
               <Grid
                 container
                 item
@@ -78,7 +78,7 @@ const ListingPage: NextPage = () => {
                 spacing={4}
                 className={classes.root}
               >
-                <Grid container item direction="row" alignItems="stretch" justify="center" spacing={4}>
+                <Grid container item direction="row" alignItems="stretch" justifyContent="center" spacing={4}>
                   <Hidden smDown>
                     <Grid item xs={4}>
                       <InfoCard listing={data.listing} />
@@ -90,7 +90,7 @@ const ListingPage: NextPage = () => {
                 </Grid>
                 <Grid item>
                   <ListingBody>
-                    <ReactMarkdown renderers={renderers}>
+                    <ReactMarkdown components={markdownComponents}>
                       {descriptionWithTitle(data.listing.description)}
                     </ReactMarkdown>
                   </ListingBody>
@@ -100,7 +100,7 @@ const ListingPage: NextPage = () => {
           </Container>
           <Hidden mdUp>
             <Paper className={classes.bottom}>
-              <Grid container direction="row" justify="space-between" alignItems="center">
+              <Grid container direction="row" justifyContent="space-between" alignItems="center">
                 {data.listing.organization && (
                   <Grid item xs>
                     <Button
