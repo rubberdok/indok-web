@@ -1,7 +1,9 @@
 from django.db import models
 from django.db.models import UniqueConstraint
 from django.conf import settings
+
 from apps.permissions.models import ResponsibleGroup
+
 
 class Organization(models.Model):
     name = models.CharField(max_length=100)
@@ -26,16 +28,22 @@ class Organization(models.Model):
     # The HR-group has the "forms.manage_form" permission, allowing them to view and manage responses to e.g. listings.
     # The primary group is intended to act as a group for organizations who need any kind of special permission, e.g. hyttestyret
     # Or if we wish to limit the creation of events or listings to certain organizations.
-    primary_group = models.OneToOneField(to=ResponsibleGroup, on_delete=models.DO_NOTHING, related_name="organization")    
-    hr_group = models.OneToOneField(to=ResponsibleGroup, on_delete=models.DO_NOTHING, related_name="hr_organization")
 
     users = models.ManyToManyField(
-        "users.User",
+        settings.AUTH_USER_MODEL,
         related_name="organizations",
         blank=True,
         through="Membership",
         through_fields=("organization", "user"),
     )
+
+    @property
+    def hr_group(self):
+        return self.permission_groups.get(group_type=ResponsibleGroup.HR)
+
+    @property
+    def primary_group(self):
+        return self.permission_groups.get(group_type=ResponsibleGroup.PRIMARY)
 
     class Meta:
         constraints = [
@@ -56,7 +64,10 @@ class Membership(models.Model):
         Organization, on_delete=models.CASCADE, related_name="members"
     )
     group = models.ForeignKey(
-        ResponsibleGroup, on_delete=models.CASCADE, related_name="members", null=True
+        "permissions.ResponsibleGroup",
+        on_delete=models.CASCADE,
+        related_name="members",
+        null=True,
     )
 
     class Meta:

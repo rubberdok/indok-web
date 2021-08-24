@@ -23,11 +23,7 @@ def create_named_group(sender, instance: ResponsibleGroup, **kwargs):
     try:
         group = instance.group
     except Group.DoesNotExist:
-        try:
-            prefix: str = instance.hr_organization.name
-        except Organization.DoesNotExist:
-            prefix: str = instance.organization.name
-
+        prefix: str = instance.organization.name
         group = Group.objects.create(name=f"{prefix}:{instance.name}:{uuid4().hex}")
         instance.group = group
 
