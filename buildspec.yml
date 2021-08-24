@@ -19,18 +19,18 @@ phases:
   build:
     commands:
       - echo building images...
-      - echo $CODEBUILD_SOURCE_VERSION
+      - echo $CODEBUILD_RESOLVED_SOURCE_VERSION
       - >
         docker build \
           -f backend/Dockerfile.prod \
-          -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/indokweb-backend:$CODEBUILD_SOURCE_VERSION \
+          -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/indokweb-backend:$CODEBUILD_RESOLVED_SOURCE_VERSION \
           --build-arg DATAPORTEN_ID=$DATAPORTEN_ID \
           --build-arg DATAPORTEN_REDIRECT_URI=$DATAPORTEN_REDIRECT_URI \
           ./backend
       - >
         docker build \
           -f frontend/Dockerfile.prod \
-          -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/indokweb-frontend:$CODEBUILD_SOURCE_VERSION \
+          -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/indokweb-frontend:$CODEBUILD_RESOLVED_SOURCE_VERSION \
           --build-arg NEXT_PUBLIC_GRAPHQL_BACKEND_URI=$NEXT_PUBLIC_GRAPHQL_BACKEND_URI \
           --build-arg NEXT_PUBLIC_FRONTEND_URI=$NEXT_PUBLIC_FRONTEND_URI \
           --build-arg NEXT_PUBLIC_DATAPORTEN_ID=$DATAPORTEN_ID \
@@ -39,7 +39,5 @@ phases:
           ./frontend
   post_build:
     commands:
-      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/indokweb-backend:$CODEBUILD_SOURCE_VERSION
-      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/indokweb-frontend:$CODEBUILD_SOURCE_VERSION
       - chmod +x ./deploy.sh
       - bash deploy.sh
