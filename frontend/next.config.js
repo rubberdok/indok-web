@@ -7,7 +7,14 @@
 const { withSentryConfig } = require("@sentry/nextjs");
 
 const moduleExports = {
-  // Your existing module.exports
+  async rewrites() {
+    return [
+      {
+        source: "/varsle",
+        destination: "/report",
+      },
+    ];
+  },
 };
 
 const SentryWebpackPluginOptions = {

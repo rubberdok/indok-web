@@ -2,4 +2,9 @@ from django.apps import AppConfig
 
 
 class PermissionsConfig(AppConfig):
-    name = 'permissions'
+    name = "apps.permissions"
+
+    def ready(self) -> None:
+        import apps.permissions.signals
+
+        return super().ready()
