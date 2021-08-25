@@ -33,3 +33,5 @@ DEFAULT_INDOK_PERMISSIONS: DefaultPermissionsType = [
     ("events", "add_signup"),
     ("events", "view_signup"),
 ]
+
+DEFAULT_HR_GROUP_PERMISSIONS: DefaultPermissionsType = [("forms", "manage_form")]

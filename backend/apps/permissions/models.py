@@ -1,7 +1,7 @@
-from typing import Iterable, Literal, Optional
-from django.db import models
-from django.contrib.auth.models import Group
 import uuid
+
+from django.contrib.auth.models import Group
+from django.db import models
 
 
 def hex_uuid_group():
