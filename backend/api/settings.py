@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     # External apps
     "corsheaders",
     "graphene_django",
+    "rest_framework",
     "phonenumber_field",
     "guardian",
 ]
