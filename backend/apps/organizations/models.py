@@ -1,12 +1,8 @@
 from django.db import models
 from django.db.models import UniqueConstraint
 from django.conf import settings
-from django.contrib.auth.models import Group, User
-from django.db.models.signals import post_save, pre_delete
-from django.dispatch import receiver
+from apps.permissions.models import ResponsibleGroup
 
-
-# Create your models here.
 class Organization(models.Model):
     name = models.CharField(max_length=100)
     slug = models.SlugField(max_length=100)
@@ -24,7 +20,14 @@ class Organization(models.Model):
     logo_url = models.URLField(null=True, blank=True)
     color = models.CharField(max_length=100, blank=True, null=True)
 
-    group = models.ForeignKey(Group, on_delete=models.CASCADE, null=True, blank=True)
+    # Permission groups
+    # All members are added to the primary group
+    # Members can be added to groups programatically
+    # The HR-group has the "forms.manage_form" permission, allowing them to view and manage responses to e.g. listings.
+    # The primary group is intended to act as a group for organizations who need any kind of special permission, e.g. hyttestyret
+    # Or if we wish to limit the creation of events or listings to certain organizations.
+    primary_group = models.OneToOneField(to=ResponsibleGroup, on_delete=models.DO_NOTHING, related_name="organization")    
+    hr_group = models.OneToOneField(to=ResponsibleGroup, on_delete=models.DO_NOTHING, related_name="hr_organization")
 
     users = models.ManyToManyField(
         "users.User",
@@ -52,7 +55,9 @@ class Membership(models.Model):
     organization = models.ForeignKey(
         Organization, on_delete=models.CASCADE, related_name="members"
     )
-    role = models.ForeignKey("Role", on_delete=models.DO_NOTHING)
+    group = models.ForeignKey(
+        ResponsibleGroup, on_delete=models.CASCADE, related_name="members", null=True
+    )
 
     class Meta:
         constraints = [
@@ -63,30 +68,3 @@ class Membership(models.Model):
 
     def __str__(self) -> str:
         return f"{self.organization.name}:{self.user.username}"
-
-
-class Role(models.Model):
-    name = models.TextField(max_length=50, default="Medlem", null=False)
-
-    def __str__(self) -> str:
-        return f"{self.name}"
-
-
-@receiver(post_save, sender=Membership)
-def handle_new_member(sender, **kwargs):
-    member: Membership = kwargs["instance"]
-    group: Group = member.organization.group
-    if group:
-        user: User = member.user
-        user.groups.add(group)
-        user.save()
-
-
-@receiver(pre_delete, sender=Membership)
-def handle_removed_memeber(sender, **kwargs):
-    member: Membership = kwargs["instance"]
-    group: Group = member.organization.group
-    if group:
-        user: User = member.user
-        user.groups.remove(group)
-        user.save()

@@ -23,7 +23,7 @@ class UserFactory(DjangoModelFactory):
     class Meta:
         model = get_user_model()
 
-    username = factory.Sequence(lambda n: "user%d" % n)
+    username = factory.Sequence(lambda n: f"user{n}")
     first_name = fake.first_name()
     last_name = fake.last_name()
     email = fake.email()
@@ -33,4 +33,4 @@ class UserFactory(DjangoModelFactory):
     id_token = fake.uuid4()
     allergies = fake.bs()
     first_login = False
-    graduation_year = factory.lazy_attribute(lambda obj: get_valid_graduation_year())
+    graduation_year = factory.lazy_attribute(lambda _: get_valid_graduation_year())

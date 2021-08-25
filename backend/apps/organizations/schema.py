@@ -3,12 +3,11 @@ import graphene
 from .mutations import (
     AssignMembership,
     CreateOrganization,
-    CreateRole,
     DeleteOrganization,
     UpdateOrganization,
 )
 from .resolvers import MembershipResolvers, OrganizationResolvers
-from .types import MembershipType, OrganizationType, RoleType
+from .types import MembershipType, OrganizationType
 
 
 class OrganizationMutations(graphene.ObjectType):
@@ -16,7 +15,6 @@ class OrganizationMutations(graphene.ObjectType):
     update_organization = UpdateOrganization.Field()
     delete_organization = DeleteOrganization.Field()
 
-    create_role = CreateRole.Field()
     assign_membership = AssignMembership.Field()
 
 
@@ -32,4 +30,3 @@ class OrganizationQueries(
     event_filtered_organizations = graphene.List(OrganizationType)
 
     memberships = graphene.List(MembershipType, organization_id=graphene.ID())
-    all_roles = graphene.List(RoleType)
