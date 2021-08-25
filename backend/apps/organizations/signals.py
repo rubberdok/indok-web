@@ -17,10 +17,6 @@ from apps.permissions.constants import (
 )
 from apps.permissions.models import ResponsibleGroup
 
-if TYPE_CHECKING:
-    from apps.organizations import models
-    from apps.permissions import models as perm_models
-
 
 @receiver(post_save, sender=Membership)
 def handle_new_member(sender, instance: Membership, **kwargs):
@@ -37,10 +33,11 @@ def handle_new_member(sender, instance: Membership, **kwargs):
 
 @receiver(pre_delete, sender=Membership)
 def handle_removed_member(sender, instance: Membership, **kwargs):
-    group: Group = instance.organization.primary_group.group
-    if group:
+    primary_group = instance.organization.primary_group
+    if primary_group:
         user = instance.user
-        user.groups.remove(group)
+        user.groups.remove(primary_group.group)
+        user.groups.remove(instance.group.group)
 
 
 @receiver(post_save, sender=Organization)
