@@ -1,13 +1,20 @@
-from typing import Optional, TYPE_CHECKING, Type
+from typing import TYPE_CHECKING, Optional, Type
+
+from django.contrib.auth.models import Group
 from django.core.exceptions import FieldError
 from django.db.models.query_utils import Q
 from django.db.models.signals import post_migrate, post_save, pre_delete
 from django.dispatch import receiver
-from django.contrib.auth.models import Group
 from guardian.shortcuts import assign_perm
 
 from apps.organizations.models import Membership, Organization
-from apps.permissions.constants import HR, ORGANIZATION, PRIMARY
+from apps.permissions.constants import (
+    HR_GROUP_NAME,
+    HR_TYPE,
+    ORGANIZATION,
+    PRIMARY_GROUP_NAME,
+    PRIMARY_TYPE,
+)
 from apps.permissions.models import ResponsibleGroup
 
 if TYPE_CHECKING:
@@ -43,16 +50,16 @@ def create_default_groups(sender, instance: Organization, created, **kwargs):
     """
     if created:
         ResponsibleGroup.objects.create(
-            name=instance.name,
+            name=PRIMARY_GROUP_NAME,
             description=f"Medlemmer av {instance.name}.",
             organization=instance,
-            group_type=PRIMARY,
+            group_type=PRIMARY_TYPE,
         )
         hr_group = ResponsibleGroup.objects.create(
-            name="HR",
+            name=HR_GROUP_NAME,
             description=f"HR-gruppen til {instance.name}. Tillatelser for å se og behandle søknader.",
             organization=instance,
-            group_type=HR,
+            group_type=HR_TYPE,
         )
         assign_perm("forms.add_form", hr_group.group)
 
@@ -75,14 +82,14 @@ def create_missing_default_groups(apps, **kwargs):
                     name=org.name,
                     description=f"HR-gruppen til {org.name}. Tillatelser for å se og behandle søknader.",
                     organization=org,
-                    group_type=PRIMARY,
+                    group_type=PRIMARY_TYPE,
                 )
             except ResponsibleGroup.DoesNotExist:
                 ResponsibleGroup.objects.create(
                     name=org.name,
                     description=f"HR-gruppen til {org.name}. Tillatelser for å se og behandle søknader.",
                     organization=org,
-                    group_type=PRIMARY,
+                    group_type=PRIMARY_TYPE,
                 )
 
             try:
@@ -90,7 +97,7 @@ def create_missing_default_groups(apps, **kwargs):
                     name="HR",
                     description=f"HR-gruppen til {org.name}. Tillatelser for å se og behandle søknader.",
                     organization=org,
-                    group_type=HR,
+                    group_type=HR_TYPE,
                 )
                 assign_perm("forms.add_form", hr_group.group)
             except ResponsibleGroup.DoesNotExist:
@@ -98,7 +105,7 @@ def create_missing_default_groups(apps, **kwargs):
                     name="HR",
                     description=f"HR-gruppen til {org.name}. Tillatelser for å se og behandle søknader.",
                     organization=org,
-                    group_type=HR,
+                    group_type=HR_TYPE,
                 )
                 assign_perm("forms.add_form", hr_group.group)
         except FieldError:

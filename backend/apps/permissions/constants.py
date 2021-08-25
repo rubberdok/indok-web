@@ -3,11 +3,13 @@ from typing import Final, Literal
 DefaultPermissionsType = Final[list[tuple[str, str]]]
 
 # Default ResponsibleGroup types
-PRIMARY: Literal["PRIMARY"] = "PRIMARY"
-HR: Literal["HR"] = "HR"
+PRIMARY_TYPE: Literal["PRIMARY"] = "PRIMARY"
+HR_TYPE: Literal["HR"] = "HR"
 
 ORGANIZATION: Final = "Organization member"
 INDOK: Final = "Indøk"
+PRIMARY_GROUP_NAME: Final = "Medlem"
+HR_GROUP_NAME: Final = "HR"
 
 DEFAULT_ORGANIZATION_PERMISSIONS: DefaultPermissionsType = [
     ("events", "add_event"),
