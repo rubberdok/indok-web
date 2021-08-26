@@ -73,7 +73,6 @@ const EditListingPage: NextPage = () => {
                         application: listing.application || undefined,
                         interview: listing.interview || undefined,
                         case: listing.case || undefined,
-                        readMore: listing.readMore || undefined,
                       },
                     },
                   });

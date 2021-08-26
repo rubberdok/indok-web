@@ -90,7 +90,6 @@ const NewListing: React.FC<{
                       interview: listing.interview || undefined,
                       application: listing.application || undefined,
                       url: listing.url || undefined,
-                      readMore: listing.readMore || undefined,
                     },
                   },
                 });

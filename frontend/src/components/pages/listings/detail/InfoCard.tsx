@@ -55,8 +55,8 @@ const InfoCard: React.FC<{
             </Typography>
           </Grid>
           <Grid item>
-            {listing.readMore && (
-              <Link passHref href={listing.readMore}>
+            {listing.organization?.orgPageUrl && (
+              <Link passHref href={listing.organization?.orgPageUrl}>
                 <Button endIcon={<OpenInNewIcon />}>Les mer</Button>
               </Link>
             )}

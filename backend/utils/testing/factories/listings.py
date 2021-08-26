@@ -18,5 +18,4 @@ class ListingFactory(DjangoModelFactory):
     deadline = fake.date_time().isoformat()
     title = fake.catch_phrase()
     url = fake.url()
-    read_more = fake.url()
     organization = factory.SubFactory(OrganizationFactory)

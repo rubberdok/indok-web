@@ -102,9 +102,9 @@ const ListingPage: NextPage = () => {
           <Hidden mdUp>
             <Paper className={classes.bottom}>
               <Grid container direction="row" justifyContent="space-between" alignItems="center">
-                {data.listing.readMore && (
+                {data.listing.organization?.orgPageUrl && (
                   <Grid item xs>
-                    <Link passHref href={data.listing.readMore}>
+                    <Link passHref href={data.listing.organization.orgPageUrl}>
                       <Button size="small" endIcon={<OpenInNewIcon />}>
                         {data.listing.organization.name.slice(0, 20)}
                       </Button>

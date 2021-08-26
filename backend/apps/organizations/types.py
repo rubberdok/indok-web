@@ -30,6 +30,7 @@ class OrganizationType(DjangoObjectType):
             "logo_url",
             "primary_group",
             "hr_group",
+            "org_page_url",
         ]
 
     @staticmethod

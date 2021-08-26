@@ -85,7 +85,6 @@ class ListingResolverTestCase(ListingBaseTestCase):
                     endDatetime
                     url
                     deadline
-                    readMore
                     organization {{
                         id
                     }}
@@ -132,7 +131,6 @@ class ListingMutationTestCase(ListingBaseTestCase):
                     startDatetime: "{self.now.isoformat()}"
                     deadline: "{self.one_day_ahead.isoformat()}"
                     url: "{self.URL}"
-                    readMore: "{self.URL}"
                 }}) {{
                     ok
                     listing {{
@@ -146,7 +144,6 @@ class ListingMutationTestCase(ListingBaseTestCase):
                             name
                         }}
                         deadline
-                        readMore
                     }}
                 }}
             }}
@@ -161,7 +158,6 @@ class ListingMutationTestCase(ListingBaseTestCase):
                         startDatetime: "{self.one_day_ago.isoformat()}"
                         deadline: "{self.two_days_ahead.isoformat()}"
                         url: "{self.URL}"
-                        readMore: "{self.URL}"
                     }}
                 ) {{
                     ok
@@ -176,7 +172,6 @@ class ListingMutationTestCase(ListingBaseTestCase):
                             name
                         }}
                         deadline
-                        readMore
                     }}
                 }}
             }}

@@ -7,6 +7,7 @@ class Organization(models.Model):
     name = models.CharField(max_length=100)
     slug = models.SlugField(max_length=100)
     description = models.CharField(max_length=4000, blank=True)
+    org_page_url = models.URLField(null=True, blank=True)
 
     parent = models.ForeignKey(
         "Organization",
