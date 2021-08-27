@@ -13,8 +13,12 @@ export interface Listing {
   hero?: string;
   logo?: string;
   organization: Organization;
-  form?: Form;
+  form?: Pick<Form, "id">;
   chips: string[];
+}
+
+export interface ListingWithForm extends Listing {
+  form?: Form;
 }
 
 export interface ListingInput extends Omit<Listing, "startDatetime" | "endDatetime" | "chips" | "slug"> {

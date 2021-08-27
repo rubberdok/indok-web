@@ -130,7 +130,7 @@ const ListingForm: React.FC<{
                   label="Publiseringsdato"
                   value={listing.startDatetime || ""}
                   fullWidth
-                  type="date"
+                  type="datetime-local"
                   onChange={(e) => handlePropertyChange(e, "startDatetime")}
                   InputLabelProps={{ shrink: true }}
                 />
@@ -141,7 +141,7 @@ const ListingForm: React.FC<{
                   label="Søknadsfrist"
                   value={listing.deadline || ""}
                   fullWidth
-                  type="date"
+                  type="datetime-local"
                   required
                   onChange={(e) => handlePropertyChange(e, "deadline")}
                   InputLabelProps={{ shrink: true }}
@@ -253,7 +253,7 @@ const ListingForm: React.FC<{
         </Grid>
       </CardContent>
       <CardActions>
-        <Grid container justify="flex-end" spacing={1}>
+        <Grid container justifyContent="flex-end" spacing={1}>
           <Grid item>
             <Button variant="contained" onClick={onCancel} startIcon={<Close />}>
               Avbryt

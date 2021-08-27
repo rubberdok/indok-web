@@ -1,7 +1,7 @@
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useQuery, useMutation } from "@apollo/client";
-import { Listing } from "@interfaces/listings";
+import { ListingWithForm } from "@interfaces/listings";
 import { Form, Response } from "@interfaces/forms";
 import { LISTING_RESPONSES } from "@graphql/listings/queries";
 import { LISTING_RESPONSES_FRAGMENT } from "@graphql/listings/fragments";
@@ -34,7 +34,7 @@ const ListingAdminPage: NextPage = () => {
   const [selectedView, selectView] = useState<Response | "listing">("listing");
 
   // fetches the listing along with all users who have applied to it, using URL parameter as argument
-  const { loading, error, data } = useQuery<{ listing: Listing }>(LISTING_RESPONSES, {
+  const { loading, error, data } = useQuery<{ listing: ListingWithForm }>(LISTING_RESPONSES, {
     variables: {
       id: listingId as string,
     },
@@ -45,14 +45,14 @@ const ListingAdminPage: NextPage = () => {
     // interface of formData returned from mutation
     { createForm: { ok: boolean; form: Form } },
     // interface for variables passed to createForm
-    { name: string; description: string; listingId: string }
+    { name: string; description: string; listingId: string; organizationId: string }
   >(CREATE_FORM, {
     // updates the cache so the new form can show instantly
     update: (cache, { data }) => {
       // gets the new form from the mutation's return
       const newForm = data?.createForm.form;
       // reads the cached listing to which to add the form
-      const cachedListing = cache.readFragment<Listing>({
+      const cachedListing = cache.readFragment<ListingWithForm>({
         id: `ListingType:${listingId as string}`,
         fragment: LISTING_RESPONSES_FRAGMENT,
         fragmentName: "ListingResponsesFragment",
@@ -78,7 +78,7 @@ const ListingAdminPage: NextPage = () => {
   return (
     <Layout>
       <Container className={classes.container}>
-        <Grid container direction="row" justify="center" spacing={1}>
+        <Grid container direction="row" justifyContent="center" spacing={1}>
           <Grid item>
             <Grid container direction="column" spacing={1}>
               <Grid item>
@@ -157,6 +157,7 @@ const ListingAdminPage: NextPage = () => {
                               name: `Søknad: ${data.listing.title}`,
                               description: "",
                               listingId: data.listing.id,
+                              organizationId: orgId as string,
                             },
                           });
                         }}
