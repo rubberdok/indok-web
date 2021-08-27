@@ -13,7 +13,7 @@ export interface Listing {
   hero?: string;
   logo?: string;
   organization: Organization;
-  form?: Pick<Form, "id">;
+  form?: Form;
   chips: string[];
 }
 
