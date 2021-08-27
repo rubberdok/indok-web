@@ -71,6 +71,8 @@
       "npm run lint:fix",
       "prettier --write"
     ],
-    "../**/*.py": ["black"]
+    "../**/*.py": [
+      "black"
+    ]
   }
 }
