@@ -27,7 +27,8 @@
       "@public/*": ["public/*"],
       "@interfaces/*": ["src/interfaces/*"],
       "@graphql/*": ["src/graphql/*"],
-      "@hooks/*": ["src/hooks/*"]
+      "@hooks/*": ["src/hooks/*"],
+      "@types/*": ["src/types/*"]
     }
   },
   "exclude": ["node_modules"],
