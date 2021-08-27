@@ -1,8 +1,11 @@
 import { useQuery } from "@apollo/client";
 import Layout from "@components/Layout";
+import * as markdownComponents from "@components/markdown/components";
+import InfoCard from "@components/pages/listings/detail/InfoCard";
 import ListingBanner from "@components/pages/listings/detail/ListingBanner";
 import ListingBody from "@components/pages/listings/detail/ListingBody";
-import { LISTING_APPLICATION } from "@graphql/listings/queries";
+import TitleCard from "@components/pages/listings/detail/TitleCard";
+import { LISTING } from "@graphql/listings/queries";
 import { Listing } from "@interfaces/listings";
 import { Button, Container, Grid, Hidden, makeStyles, Paper } from "@material-ui/core";
 import ArrowForward from "@material-ui/icons/ArrowForward";
@@ -10,9 +13,6 @@ import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import ReactMarkdown from "react-markdown";
-import * as markdownComponents from "@components/markdown/components";
-import InfoCard from "@components/pages/listings/detail/InfoCard";
-import TitleCard from "@components/pages/listings/detail/TitleCard";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -43,7 +43,7 @@ const ListingPage: NextPage = () => {
   const { listingId } = useRouter().query;
 
   // fetches the listing, using the URL parameter as the argument
-  const { loading, error, data } = useQuery<{ listing: Listing }>(LISTING_APPLICATION, {
+  const { loading, error, data } = useQuery<{ listing: Listing }>(LISTING, {
     variables: { id: parseInt(listingId as string) },
   });
 
