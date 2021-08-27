@@ -65,7 +65,7 @@ class Answer(models.Model):
     class Meta:
         constraints = [
             UniqueConstraint(
-                fields=["user", "question"], name="unique_answer_to_question_per_user"
+                fields=["response", "question"], name="unique_answer_per_response"
             ),
             CheckConstraint(check=~Q(answer=""), name="answer_not_empty"),
         ]
