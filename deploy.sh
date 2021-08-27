@@ -62,8 +62,8 @@ echo $CODEBUILD_WEBHOOK_TRIGGER
 echo $CODEBUILD_WEBHOOK_EVENT
 
 
-if  [ "$CODEBUILD_WEBHOOK_TRIGGER" == "branch/master" ] && \
-    ([ "$CODEBUILD_WEBHOOK_HEAD_REF" == "refs/heads/master" ] || ["$CODEBUILD_WEBHOOK_WEBHOOK_EVENT" == "PULL_REQUEST_MERGED"])
+if  ([ "$CODEBUILD_WEBHOOK_TRIGGER" == "branch/master" ] || [ "$CODEBUILD_WEBHOOK_TRIGGER" == "branch/main" ]) && \
+    ([ "$CODEBUILD_WEBHOOK_HEAD_REF" == "refs/heads/master" ] || [ "$CODEBUILD_WEBHOOK_HEAD_REF" == "refs/heads/main" ] || ["$CODEBUILD_WEBHOOK_WEBHOOK_EVENT" == "PULL_REQUEST_MERGED"])
 then
   echo "Updating ECS."
   push_images
