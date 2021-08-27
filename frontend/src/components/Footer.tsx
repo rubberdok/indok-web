@@ -115,19 +115,15 @@ const Footer: React.FC = () => {
                     INDØK
                   </Typography>
                 </Link>
-                <Typography variant="caption">
+                <Typography variant="body2">
                   Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse, NTNU
                 </Typography>
-                <br />
-                <Typography variant="caption">Kolbjørn Hejes vei 1E, 7034 Trondheim</Typography>
-                <br />
-                <Typography variant="caption">Org.nr. 994 778 463</Typography>
-                <br />
+                <Typography variant="body2">Kolbjørn Hejes vei 1E, 7034 Trondheim</Typography>
+                <Typography variant="body2">Org.nr. 994 778 463</Typography>
                 <a href="mailto:Leder@indokhs.no">
-                  <Typography variant="caption" gutterBottom>
-                    Leder@indokhs.no
-                  </Typography>
+                  <Typography variant="body2">Leder@indokhs.no</Typography>
                 </a>
+                <Link href="/report/">Varsle</Link>
                 <Box mt={2}>
                   <a href="https://www.facebook.com/HovedstyretIndok" rel="noreferrer noopener" target="_blank">
                     <IconButton edge="start" size="small" aria-label="facebook" color="inherit">
@@ -154,13 +150,12 @@ const Footer: React.FC = () => {
                 <img className={classes.rdLogo} src="/rd-logo.svg" alt="Rubberdøk logo" />
               </a>
               <Box flexGrow="1">
-                <Typography variant="caption">
+                <Typography variant="body2">
                   Forslag til nettsiden eller oppdaget en feil? Lag en issue på{" "}
                   <a href="https://github.com/hovedstyret/indok-web/issues">GitHub</a>, eller send mail til{" "}
                   <a href="mailto:web@indokhs.no">web@indokhs.no</a>.
                 </Typography>
-                <br />
-                <Typography variant="caption">
+                <Typography variant="body2">
                   Utviklet av{" "}
                   <a href="https://github.com/hovedstyret/indok-web" rel="norefferer noopener">
                     RubberDøk

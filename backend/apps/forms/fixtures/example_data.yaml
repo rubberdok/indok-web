@@ -187,13 +187,8 @@
     description: Creepy
     question_type: PARAGRAPH
     mandatory: true
-- model: organizations.Role
-  pk: 1
-  fields:
-    name: Medlem
 - model: organizations.Membership
   pk: 1
   fields:
     user: 2
-    role: 1
     organization: 19

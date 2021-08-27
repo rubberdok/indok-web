@@ -3,7 +3,7 @@ import Template from "@components/pages/about/Template";
 import { Box, Card, CardActionArea, CardMedia, makeStyles, Tab, Tabs, Typography } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import { getSortedPosts } from "@utils/posts";
-import { NextPage } from "next";
+import { GetStaticProps, NextPage } from "next";
 import Link from "next/link";
 import Router, { useRouter } from "next/router";
 import React from "react";
@@ -19,7 +19,7 @@ type Props = {
   posts: Array<any>;
 };
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   media: {
     height: "100px",
     width: "100%",
@@ -33,6 +33,7 @@ const useStyles = makeStyles(() => ({
     flexDirection: "column",
     justifyContent: "space-between",
     textAlign: "center",
+    padding: theme.spacing(2, 3),
   },
 }));
 
@@ -90,7 +91,7 @@ const OrganizationPage: NextPage<Props> = ({ posts }) => {
       (moderorganisasjonen) for all studentfrivillighet på masterstudiet Indøk ved NTNU."
     >
       <img src="/img/orgmap.svg" alt="Organisasjonskart"></img>
-      <Typography id="orgList" variant="h5" gutterBottom>
+      <Typography id="orgList" variant="h3" gutterBottom>
         Se organisasjonene våre under
       </Typography>
       <Tabs indicatorColor="primary" value={value} onChange={pushQuery}>
@@ -134,7 +135,7 @@ const OrganizationPage: NextPage<Props> = ({ posts }) => {
                   <CardActionArea className={classes.card}>
                     <CardMedia className={classes.media} image="/img/bindeleddetlogo.png" />
                     <Box>
-                      <Typography variant="body2" color="textPrimary">
+                      <Typography variant="body1" color="textPrimary">
                         Bindeleddet
                       </Typography>
                     </Box>
@@ -148,7 +149,7 @@ const OrganizationPage: NextPage<Props> = ({ posts }) => {
                   <CardActionArea className={classes.card}>
                     <CardMedia className={classes.media} image="/img/estiemlogo.png" />
                     <Box>
-                      <Typography variant="body2" color="textPrimary">
+                      <Typography variant="body1" color="textPrimary">
                         ESTIEM
                       </Typography>
                     </Box>
@@ -162,7 +163,7 @@ const OrganizationPage: NextPage<Props> = ({ posts }) => {
                   <CardActionArea className={classes.card}>
                     <CardMedia className={classes.media} image="/img/januslogo.png" />
                     <Box>
-                      <Typography variant="body2" color="textPrimary">
+                      <Typography variant="body1" color="textPrimary">
                         Janus
                       </Typography>
                     </Box>
@@ -179,7 +180,7 @@ const OrganizationPage: NextPage<Props> = ({ posts }) => {
   );
 };
 
-export const getStaticProps = async () => {
+export const getStaticProps: GetStaticProps = async () => {
   const posts = getSortedPosts("organizations");
 
   return {

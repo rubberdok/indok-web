@@ -1,14 +1,13 @@
 import { useMutation, useQuery } from "@apollo/client";
+import Layout from "@components/Layout";
 import ListingForm from "@components/pages/listings/organization/ListingForm";
-import { ListingInput } from "@interfaces/listings";
-import { Container, Typography, Grid, makeStyles } from "@material-ui/core";
-import { useState } from "react";
-import { Listing } from "@interfaces/listings";
 import { CREATE_LISTING } from "@graphql/listings/mutations";
 import { USER_WITH_ORGANIZATIONS } from "@graphql/listings/queries";
-import { useRouter } from "next/router";
+import { Listing, ListingInput } from "@interfaces/listings";
 import { Organization } from "@interfaces/organizations";
-import Layout from "@components/Layout";
+import { Container, Grid, makeStyles, Typography } from "@material-ui/core";
+import { useRouter } from "next/router";
+import { useState } from "react";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -22,6 +21,7 @@ const emptyListing: ListingInput = {
   title: "",
   startDatetime: "",
   deadline: "",
+  url: "",
   organization: {
     name: "",
     id: "",
@@ -69,9 +69,9 @@ const NewListing: React.FC<{
     <Layout>
       <Container className={classes.root}>
         <Typography variant="h1" gutterBottom>
-          Ny vervutlysning med mye kult.
+          Ny vervutlysning
         </Typography>
-        <Grid container justify="center">
+        <Grid container justifyContent="center">
           <Grid item xs={10}>
             <ListingForm
               listing={listing}
@@ -83,12 +83,13 @@ const NewListing: React.FC<{
                     input: {
                       title: listing.title,
                       description: listing.description || undefined,
-                      startDatetime: listing.startDatetime ? `${listing.startDatetime}T00:00:00+02:00` : undefined,
-                      deadline: `${listing.deadline}T23:59:00+02:00`,
+                      startDatetime: listing.startDatetime || undefined,
+                      deadline: listing.deadline,
                       organizationId: listing.organization?.id,
                       case: listing.case || undefined,
                       interview: listing.interview || undefined,
                       application: listing.application || undefined,
+                      url: listing.url || undefined,
                     },
                   },
                 });
