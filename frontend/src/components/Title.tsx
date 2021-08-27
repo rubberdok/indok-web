@@ -10,7 +10,7 @@ const Title: React.FC<Props> = ({ children }) => {
   return (
     <Box width="100%" pt={10} pb={7} mb={4} bgcolor={theme.palette.background.paper}>
       <Grid container direction="row" justify="center" alignItems="center">
-        <Grid container item direction="column" alignItems="flex-start" justify="center" md={8}>
+        <Grid container item direction="column" alignItems="flex-start" justify="center" md={8} xs={10}>
           <Grid item>
             <Typography variant="h1" gutterBottom>
               {children}

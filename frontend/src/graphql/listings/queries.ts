@@ -73,6 +73,9 @@ export const LISTING = gql`
   query listing($id: ID!) {
     listing(id: $id) {
       ...ListingFragment
+      form {
+        id
+      }
     }
   }
 `;
