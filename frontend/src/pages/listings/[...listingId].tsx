@@ -59,6 +59,13 @@ const ListingPage: NextPage = () => {
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error</p>;
 
+  const getLink = (listing: Listing) => {
+    if (listing.form) {
+      return `/forms/${listing.form.id}`;
+    }
+    return listing.url;
+  };
+
   return (
     <>
       {data && (
@@ -113,9 +120,14 @@ const ListingPage: NextPage = () => {
                   </Grid>
                 )}
                 <Hidden smUp>
-                  {data.listing.url && (
+                  {data.listing && (
                     <Grid item>
-                      <Button variant="contained" color="primary" href={data.listing.url} endIcon={<ArrowForward />}>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        href={getLink(data.listing)}
+                        endIcon={<ArrowForward />}
+                      >
                         Søk her
                       </Button>
                     </Grid>
