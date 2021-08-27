@@ -1,7 +1,7 @@
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useQuery, useMutation } from "@apollo/client";
-import { Listing } from "@interfaces/listings";
+import { ListingWithForm } from "@interfaces/listings";
 import { Form, Response } from "@interfaces/forms";
 import { LISTING_RESPONSES } from "@graphql/listings/queries";
 import { LISTING_RESPONSES_FRAGMENT } from "@graphql/listings/fragments";
@@ -34,7 +34,7 @@ const ListingAdminPage: NextPage = () => {
   const [selectedView, selectView] = useState<Response | "listing">("listing");
 
   // fetches the listing along with all users who have applied to it, using URL parameter as argument
-  const { loading, error, data } = useQuery<{ listing: Listing }>(LISTING_RESPONSES, {
+  const { loading, error, data } = useQuery<{ listing: ListingWithForm }>(LISTING_RESPONSES, {
     variables: {
       id: listingId as string,
     },
@@ -52,7 +52,7 @@ const ListingAdminPage: NextPage = () => {
       // gets the new form from the mutation's return
       const newForm = data?.createForm.form;
       // reads the cached listing to which to add the form
-      const cachedListing = cache.readFragment<Listing>({
+      const cachedListing = cache.readFragment<ListingWithForm>({
         id: `ListingType:${listingId as string}`,
         fragment: LISTING_RESPONSES_FRAGMENT,
         fragmentName: "ListingResponsesFragment",
