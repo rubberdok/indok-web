@@ -120,7 +120,7 @@ const ListingPage: NextPage = () => {
                   </Grid>
                 )}
                 <Hidden smUp>
-                  {data.listing && (
+                  {(data.listing.form || data.listing.url) && (
                     <Grid item>
                       <Button
                         variant="contained"
