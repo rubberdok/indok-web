@@ -11,6 +11,7 @@ export interface Listing {
   endDatetime: string;
   url?: string;
   hero?: string;
+  heroImageUrl?: string;
   logo?: string;
   organization: Organization;
   form?: Pick<Form, "id">;
