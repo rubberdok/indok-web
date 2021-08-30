@@ -115,8 +115,8 @@ const ListingItem: React.FC<{
         <CardActionArea className={classes.root}>
           <CardMedia
             component="img"
-            image={listing.hero ? listing.hero : ""}
-            className={`${classes.hero} ${!listing.hero ? classes.background : ""}`}
+            image={listing.heroImageUrl ? listing.heroImageUrl : ""}
+            className={`${classes.hero} ${!listing.heroImageUrl ? classes.background : ""}`}
           />
           <CardContent className={classes.content}>
             <img
