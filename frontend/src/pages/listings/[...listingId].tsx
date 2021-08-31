@@ -72,9 +72,13 @@ const ListingPage: NextPage = () => {
       {data && (
         <Layout>
           <Head>
-            <title>{data.listing.title}</title>
+            <title>{`${data.listing.title} | Foreningen for Studenter ved Industriell Økonomi og Teknologiledelse`}</title>
             <meta name="og:image" content={data.listing.heroImageUrl} key="image" />
-            <meta name="og:title" content={data.listing.title} key="title" />
+            <meta
+              name="og:title"
+              content={`${data.listing.title} | Foreningen for Studenter ved Industriell Økonomi og Teknologiledelse`}
+              key="title"
+            />
           </Head>
           <Hidden smDown>
             <ListingBanner listing={data.listing} />
