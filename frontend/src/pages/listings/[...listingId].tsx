@@ -73,9 +73,9 @@ const ListingPage: NextPage = () => {
         <Layout>
           <Head>
             <title>{`${data.listing.title} | Foreningen for Studenter ved Industriell Økonomi og Teknologiledelse`}</title>
-            <meta name="og:image" content={data.listing.heroImageUrl} key="image" />
+            {data.listing.heroImageUrl && <meta property="og:image" content={data.listing.heroImageUrl} key="image" />}
             <meta
-              name="og:title"
+              property="og:title"
               content={`${data.listing.title} | Foreningen for Studenter ved Industriell Økonomi og Teknologiledelse`}
               key="title"
             />
