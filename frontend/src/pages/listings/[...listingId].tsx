@@ -11,6 +11,7 @@ import { Button, Container, Grid, Hidden, makeStyles, Paper } from "@material-ui
 import ArrowForward from "@material-ui/icons/ArrowForward";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import { NextPage } from "next";
+import Head from "next/head";
 import { useRouter } from "next/router";
 import ReactMarkdown from "react-markdown";
 
@@ -70,6 +71,15 @@ const ListingPage: NextPage = () => {
     <>
       {data && (
         <Layout>
+          <Head>
+            <title>{`${data.listing.title} | Foreningen for Studenter ved Industriell Økonomi og Teknologiledelse`}</title>
+            {data.listing.heroImageUrl && <meta property="og:image" content={data.listing.heroImageUrl} key="image" />}
+            <meta
+              property="og:title"
+              content={`${data.listing.title} | Foreningen for Studenter ved Industriell Økonomi og Teknologiledelse`}
+              key="title"
+            />
+          </Head>
           <Hidden smDown>
             <ListingBanner listing={data.listing} />
           </Hidden>
