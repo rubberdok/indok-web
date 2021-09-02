@@ -10,6 +10,10 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        migrations.RemoveConstraint(
+            model_name='answer',
+            name='unique_answer_to_question_per_user',
+        ),
         migrations.RemoveField(
             model_name='answer',
             name='user',

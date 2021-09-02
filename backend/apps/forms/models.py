@@ -9,6 +9,7 @@ from django.db.models.query_utils import Q
 from django.utils.translation import gettext_lazy as _
 
 from apps.organizations.models import Organization
+from apps.users.models import User
 
 
 class Form(models.Model):
@@ -58,7 +59,7 @@ class Answer(models.Model):
 
     class Meta:
         constraints = [
-            UniqueConstraint(fields=["user", "question"], name="unique_answer_to_question_per_user"),
+            UniqueConstraint(fields=["response", "question"], name="unique_answer_per_response"),
             CheckConstraint(check=~Q(answer=""), name="answer_not_empty"),
         ]
 
