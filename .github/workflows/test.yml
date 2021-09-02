@@ -2,10 +2,10 @@ name: Django Tests
 
 on:
   push:
-    branches: [master]
-  pull_request:
     branches:
-      - "**"
+      - master
+      - main
+  pull_request:
 
 env:
   DATAPORTEN_ID: ${{ secrets.DATAPORTEN_ID }}
