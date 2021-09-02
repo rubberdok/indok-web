@@ -7,8 +7,8 @@ name: Build backend image
 
 jobs:
   build:
-    - name: Build backend image
-      id: build-image
-      uses: docker/build-push-action@v2
-      with:
-        context: ./backend
+    name: Build backend image
+    id: build-image
+    uses: docker/build-push-action@v2
+    with:
+      context: ./backend
