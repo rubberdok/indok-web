@@ -76,7 +76,7 @@
     parent: null
     logo: ''
     color: null
-    group: null
+    
 - model: organizations.organization
   pk: 18
   fields:
@@ -90,7 +90,7 @@
     parent: 17
     logo: ''
     color: null
-    group: null
+    
 - model: organizations.organization
   pk: 19
   fields:
@@ -104,7 +104,7 @@
     parent: 17
     logo: ''
     color: null
-    group: null
+    
 - model: organizations.organization
   pk: 20
   fields:
@@ -118,7 +118,7 @@
     parent: 17
     logo: ''
     color: null
-    group: null
+    
 - model: organizations.organization
   pk: 21
   fields:
@@ -132,7 +132,7 @@
     parent: 20
     logo: ''
     color: null
-    group: null
+    
 - model: forms.form
   pk: 4
   fields:

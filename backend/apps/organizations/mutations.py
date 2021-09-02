@@ -93,18 +93,14 @@ class AssignMembership(graphene.Mutation):
     class Arguments:
         membership_data = MembershipInput(required=True)
 
-    @permission_required(
-        "organizations.change_organization", fn=get_organization_from_data
-    )
+    @permission_required("organizations.change_organization", fn=get_organization_from_data)
     def mutate(self, _, membership_data):
         organization = Organization.objects.prefetch_related("permission_groups").get(
             pk=membership_data["organization_id"]
         )
 
         try:
-            group = organization.permission_groups.get(
-                pk=membership_data.get("group_id")
-            )
+            group = organization.permission_groups.get(pk=membership_data.get("group_id"))
         except ResponsibleGroup.DoesNotExist:
             return AssignMembership(membership=None, ok=False)
 

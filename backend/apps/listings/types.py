@@ -15,11 +15,14 @@ class ListingType(DjangoObjectType):
             "title",
             "start_datetime",
             "end_datetime",
-            "url",
+            "application_url",
             "slug",
             "deadline",
             "organization",
             "form",
+            "hero_image_url",
+            "read_more_url",
+            "view_count",
         ]
 
     def resolve_chips(parent: Listing, info):

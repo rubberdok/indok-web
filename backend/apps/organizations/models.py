@@ -54,36 +54,19 @@ class Organization(models.Model):
             return None
 
     class Meta:
-        constraints = [
-            UniqueConstraint(
-                fields=["parent", "name"], name="unique_child_organization_name"
-            )
-        ]
+        constraints = [UniqueConstraint(fields=["parent", "name"], name="unique_child_organization_name")]
 
     def __str__(self):
         return f"{self.name}"
 
 
 class Membership(models.Model):
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="memberships"
-    )
-    organization = models.ForeignKey(
-        Organization, on_delete=models.CASCADE, related_name="members"
-    )
-    group = models.ForeignKey(
-        "permissions.ResponsibleGroup",
-        on_delete=models.CASCADE,
-        related_name="members",
-        null=True,
-    )
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="memberships")
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name="members")
+    group = models.ForeignKey(ResponsibleGroup, on_delete=models.CASCADE, related_name="members", null=True)
 
     class Meta:
-        constraints = [
-            UniqueConstraint(
-                fields=["user", "organization"], name="unique_member_in_organization"
-            )
-        ]
+        constraints = [UniqueConstraint(fields=["user", "organization"], name="unique_member_in_organization")]
 
     def __str__(self) -> str:
         return f"{self.organization.name}:{self.user.username}"

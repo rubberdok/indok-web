@@ -42,11 +42,7 @@ def assign_standard_organization_permissions(**kwargs):
 
     permissions = Permission.objects.filter(query)
     group.permissions.set(permissions)
-    group.user_set.set(
-        User.objects.exclude(username=settings.ANONYMOUS_USER_NAME).exclude(
-            organizations=None
-        )
-    )
+    group.user_set.set(User.objects.exclude(username=settings.ANONYMOUS_USER_NAME).exclude(organizations=None))
 
 
 @receiver(post_migrate)
