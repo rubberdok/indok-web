@@ -100,6 +100,7 @@ jobs:
         with:
           file: frontend/Dockerfile.prod
           context: ./frontend
+          tags: ${{ steps.image-tag.outputs.image }}
           secrets: |
             "SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}"
             NEXT_PUBLIC_GRAPHQL_BACKEND_URI=$NEXT_PUBLIC_GRAPHQL_BACKEND_URI
