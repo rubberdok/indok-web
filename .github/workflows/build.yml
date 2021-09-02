@@ -1,13 +1,38 @@
-name: Build frontend image
+name: Build backend image
 
-on:
-  pull_request:
+on: pull_request
 
 env:
   AWS_REGION: eu-north-1 # Set this to our AWS region
 
 jobs:
-  build:
+  build-backend:
+    name: Build backend image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build backend image
+        id: build-image
+        uses: docker/build-push-action@v2
+        with:
+          context: ./backend
+          file: backend/Dockerfile.prod
+
+  build-frontend:
+    name: Build frontend image
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
