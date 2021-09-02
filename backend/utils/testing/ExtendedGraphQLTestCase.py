@@ -30,10 +30,7 @@ class ExtendedGraphQLTestCase(GraphQLTestCase):
         self.assertResponseHasErrors(response)
         content = json.loads(response.content)
         self.assertTrue(
-            any(
-                PERMISSION_ERROR_MESSAGE in error["message"]
-                for error in content["errors"]
-            ),
+            any(PERMISSION_ERROR_MESSAGE in error["message"] for error in content["errors"]),
             msg=f"Permission error not found in {content.items()}",
         )
         self.assertTrue(
@@ -41,9 +38,7 @@ class ExtendedGraphQLTestCase(GraphQLTestCase):
             msg=f"Found data in {content['data'].items()}, expected {None}",
         )
 
-    def assert_null_fields(
-        self, data: Union[dict[str, Any], list], fields: list[str]
-    ) -> None:
+    def assert_null_fields(self, data: Union[dict[str, Any], list], fields: list[str]) -> None:
         if isinstance(data, dict):
             for k, v in data.items():
                 if k in fields:
@@ -57,9 +52,7 @@ class ExtendedGraphQLTestCase(GraphQLTestCase):
                 elif isinstance(value, (list, dict)):
                     self.assert_null_fields(value, fields)
 
-    def deep_assert_equal(
-        self, data: dict[str, Any], obj: Union[models.Model, factory.Factory]
-    ) -> None:
+    def deep_assert_equal(self, data: dict[str, Any], obj: Union[models.Model, factory.Factory]) -> None:
         for k, v in data.items():
             if hasattr(obj, to_snake_case(k)):
                 value = getattr(obj, to_snake_case(k))
