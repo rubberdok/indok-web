@@ -5,13 +5,14 @@ import InfoCard from "@components/pages/listings/detail/InfoCard";
 import ListingBanner from "@components/pages/listings/detail/ListingBanner";
 import ListingBody from "@components/pages/listings/detail/ListingBody";
 import TitleCard from "@components/pages/listings/detail/TitleCard";
-import { LISTING_APPLICATION } from "@graphql/listings/queries";
+import { LISTING } from "@graphql/listings/queries";
 import { Listing } from "@interfaces/listings";
 import { Button, Container, Grid, Hidden, makeStyles, Paper } from "@material-ui/core";
 import ArrowForward from "@material-ui/icons/ArrowForward";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import { NextPage } from "next";
 import Link from "next/link";
+import Head from "next/head";
 import { useRouter } from "next/router";
 import ReactMarkdown from "react-markdown";
 
@@ -44,7 +45,7 @@ const ListingPage: NextPage = () => {
   const { listingId } = useRouter().query;
 
   // fetches the listing, using the URL parameter as the argument
-  const { loading, error, data } = useQuery<{ listing: Listing }>(LISTING_APPLICATION, {
+  const { loading, error, data } = useQuery<{ listing: Listing }>(LISTING, {
     variables: { id: parseInt(listingId as string) },
   });
 
@@ -60,10 +61,26 @@ const ListingPage: NextPage = () => {
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error</p>;
 
+  const getLink = (listing: Listing) => {
+    if (listing.form) {
+      return `/forms/${listing.form.id}`;
+    }
+    return listing.url;
+  };
+
   return (
     <>
       {data && (
         <Layout>
+          <Head>
+            <title>{`${data.listing.title} | Foreningen for Studenter ved Industriell Økonomi og Teknologiledelse`}</title>
+            {data.listing.heroImageUrl && <meta property="og:image" content={data.listing.heroImageUrl} key="image" />}
+            <meta
+              property="og:title"
+              content={`${data.listing.title} | Foreningen for Studenter ved Industriell Økonomi og Teknologiledelse`}
+              key="title"
+            />
+          </Head>
           <Hidden smDown>
             <ListingBanner listing={data.listing} />
           </Hidden>
@@ -112,9 +129,14 @@ const ListingPage: NextPage = () => {
                   </Grid>
                 )}
                 <Hidden smUp>
-                  {data.listing.url && (
+                  {(data.listing.form || data.listing.url) && (
                     <Grid item>
-                      <Button variant="contained" color="primary" href={data.listing.url} endIcon={<ArrowForward />}>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        href={getLink(data.listing)}
+                        endIcon={<ArrowForward />}
+                      >
                         Søk her
                       </Button>
                     </Grid>

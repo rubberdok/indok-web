@@ -43,6 +43,4 @@ class MembershipResolvers:
         organization = Organization.objects.get(pk=organization_id)
         if organization.users.filter(user=info.context.user).exists():
             return Membership.objects.filter(organization=organization)
-        raise PermissionError(
-            f"Du må være medlem av {organization} for å gjøre dette kallet."
-        )
+        raise PermissionError(f"Du må være medlem av {organization} for å gjøre dette kallet.")

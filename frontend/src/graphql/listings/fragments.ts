@@ -13,6 +13,7 @@ export const LISTING_FRAGMENT = gql`
     url
     chips
     readMore
+    heroImageUrl
     organization {
       id
       name

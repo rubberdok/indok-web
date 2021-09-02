@@ -69,9 +69,7 @@ def permission_required(
 
                     model = apps.get_model(*split_model_str)
                 elif not isinstance(model, (Model, ModelBase)):
-                    raise TypeError(
-                        f"{model} should be of the type str, Model, or ModelBase, got {type(model)}"
-                    )
+                    raise TypeError(f"{model} should be of the type str, Model, or ModelBase, got {type(model)}")
 
                 lookup_dict = {}
 
@@ -82,9 +80,7 @@ def permission_required(
 
                 for lookup, resolver_arg in zip(lookups[::2], lookups[1::2]):
                     if resolver_arg not in kwargs:
-                        raise KeyError(
-                            f"The argument {resolver_arg} was not passed in the resolver function."
-                        )
+                        raise KeyError(f"The argument {resolver_arg} was not passed in the resolver function.")
                     lookup_dict[lookup] = kwargs[resolver_arg]
 
                 obj = model.objects.get(**lookup_dict)

@@ -27,13 +27,12 @@ class Listing(models.Model):
     # URLs
     url = models.URLField(null=True, blank=True)
     read_more = models.URLField(null=True, blank=True)
+    hero_image_url = models.URLField(null=True, blank=True)
 
     # Auto fields
     form = models.OneToOneField(Form, null=True, on_delete=models.SET_NULL)
     slug = models.SlugField(max_length=50, allow_unicode=True, blank=True, default="")
-    organization = models.ForeignKey(
-        Organization, on_delete=models.CASCADE, related_name="listings"
-    )
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name="listings")
 
     def __str__(self):
         return f"{self.title} (Open: {self.start_datetime} - {self.end_datetime}: {self.description}"

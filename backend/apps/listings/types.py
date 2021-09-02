@@ -22,6 +22,7 @@ class ListingType(DjangoObjectType):
             "form",
             "read_more",
             "view_count",
+            "hero_image_url",
         ]
 
     def resolve_chips(parent: Listing, info):

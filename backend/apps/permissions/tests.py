@@ -17,29 +17,11 @@ class StandardPermissionsTestCase(TestCase):
         return super().setUp()
 
     def test_user_default_permissions(self) -> None:
-        self.assertTrue(
-            all(
-                self.org_user.has_perm(f"{perm[0]}.{perm[1]}")
-                for perm in DEFAULT_INDOK_PERMISSIONS
-            )
-        )
-        self.assertTrue(
-            all(
-                self.user.has_perm(f"{perm[0]}.{perm[1]}")
-                for perm in DEFAULT_INDOK_PERMISSIONS
-            )
-        )
+        self.assertTrue(all(self.org_user.has_perm(f"{perm[0]}.{perm[1]}") for perm in DEFAULT_INDOK_PERMISSIONS))
+        self.assertTrue(all(self.user.has_perm(f"{perm[0]}.{perm[1]}") for perm in DEFAULT_INDOK_PERMISSIONS))
 
     def test_organization_default_permissions(self) -> None:
         self.assertTrue(
-            all(
-                self.org_user.has_perm(f"{perm[0]}.{perm[1]}")
-                for perm in DEFAULT_ORGANIZATION_PERMISSIONS
-            )
+            all(self.org_user.has_perm(f"{perm[0]}.{perm[1]}") for perm in DEFAULT_ORGANIZATION_PERMISSIONS)
         )
-        self.assertFalse(
-            any(
-                self.user.has_perm(f"{perm[0]}.{perm[1]}")
-                for perm in DEFAULT_ORGANIZATION_PERMISSIONS
-            )
-        )
+        self.assertFalse(any(self.user.has_perm(f"{perm[0]}.{perm[1]}") for perm in DEFAULT_ORGANIZATION_PERMISSIONS))

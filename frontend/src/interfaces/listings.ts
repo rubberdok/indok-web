@@ -11,11 +11,16 @@ export interface Listing {
   endDatetime: string;
   url?: string;
   hero?: string;
+  heroImageUrl?: string;
   logo?: string;
   organization: Organization;
-  form?: Form;
+  form?: Pick<Form, "id">;
   chips: string[];
   readMore?: string;
+}
+
+export interface ListingWithForm extends Listing {
+  form?: Form;
 }
 
 export interface ListingInput extends Omit<Listing, "startDatetime" | "endDatetime" | "chips" | "slug"> {
