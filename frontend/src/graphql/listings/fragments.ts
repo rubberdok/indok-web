@@ -10,8 +10,9 @@ export const LISTING_FRAGMENT = gql`
     startDatetime
     deadline
     endDatetime
-    url
+    applicationUrl
     chips
+    readMoreUrl
     heroImageUrl
     organization {
       id

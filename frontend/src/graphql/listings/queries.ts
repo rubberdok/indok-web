@@ -53,7 +53,7 @@ export const LISTING_AND_USER_WITH_ORGANIZATIONS = gql`
       startDatetime
       deadline
       endDatetime
-      url
+      applicationUrl
       organization {
         id
         name
