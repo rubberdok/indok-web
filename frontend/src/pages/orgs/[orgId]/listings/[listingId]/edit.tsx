@@ -1,16 +1,16 @@
 import { useMutation, useQuery } from "@apollo/client";
 import Layout from "@components/Layout";
 import ListingForm from "@components/pages/listings/organization/ListingForm";
-import { Container, Typography, Grid } from "@material-ui/core";
-import { NextPage } from "next";
-import { useState } from "react";
-import { Listing, ListingInput } from "@interfaces/listings";
 import { UPDATE_LISTING } from "@graphql/listings/mutations";
-import { useRouter } from "next/router";
 import { LISTING } from "@graphql/listings/queries";
+import { Listing, ListingInput } from "@interfaces/listings";
+import { Container, Grid, Typography } from "@material-ui/core";
 import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
+import { NextPage } from "next";
+import { useRouter } from "next/router";
+import { useState } from "react";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.tz.setDefault("Europe/Oslo");
@@ -67,12 +67,13 @@ const EditListingPage: NextPage = () => {
                       input: {
                         title: listing.title || undefined,
                         description: listing.description || undefined,
-                        url: listing.url || undefined,
+                        applicationUrl: listing.applicationUrl || undefined,
                         startDatetime: listing.startDatetime || undefined,
                         deadline: listing.deadline || undefined,
                         application: listing.application || undefined,
                         interview: listing.interview || undefined,
                         case: listing.case || undefined,
+                        readMoreUrl: listing.readMoreUrl || undefined,
                       },
                     },
                   });

@@ -34,8 +34,8 @@ const TitleCard: React.FC<{
   let link: string | undefined = undefined;
   if (listing.form) {
     link = `/forms/${listing.form.id}/`;
-  } else if (listing.url) {
-    link = listing.url;
+  } else if (listing.applicationUrl) {
+    link = listing.applicationUrl;
   }
 
   return (
