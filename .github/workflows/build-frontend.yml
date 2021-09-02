@@ -19,7 +19,6 @@ jobs:
           DATAPORTEN_REDIRECT_URI: "https://indokntnu.no/authCallback"
           NEXT_PUBLIC_DATAPORTEN_STATE: "RGpBPYszuqXVvsma1suHJJ4X7ZJjkfS6njRHnx4p"
         with:
-          context: frontend/
           file: frontend/Dockerfile.prod
           secrets: |
             "SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}"
