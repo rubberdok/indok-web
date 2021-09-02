@@ -13,6 +13,7 @@ RUN npm ci
 # Copying source files
 COPY . .
 
+# Secrets should not be passed as build args.
 RUN --mount=type=secret,id=SENTRY_AUTH_TOKEN --mount=type=secret,id=NEXT_PUBLIC_GRAPHQL_BACKEND_URI --mount=type=secret,id=NEXT_PUBLIC_DATAPORTEN_ID --mount=type=secret,id=NEXT_PUBLIC_DATAPORTEN_REDIRECT_URI --mount=type=secret,id=NEXT_PUBLIC_DATAPORTEN_STATE --mount=type=secret,id=NEXT_PUBLIC_FRONTEND_URI ["npm", "run", "build"]
 
 CMD ["npm", "run", "start"]
