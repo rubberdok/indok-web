@@ -25,8 +25,8 @@ class Listing(models.Model):
     deadline = models.DateTimeField()
 
     # URLs
-    url = models.URLField(null=True, blank=True)
-    read_more = models.URLField(null=True, blank=True)
+    application_url = models.URLField(null=True, blank=True)
+    read_more_url = models.URLField(null=True, blank=True)
     hero_image_url = models.URLField(null=True, blank=True)
 
     # Auto fields

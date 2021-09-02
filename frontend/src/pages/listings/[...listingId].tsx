@@ -65,7 +65,7 @@ const ListingPage: NextPage = () => {
     if (listing.form) {
       return `/forms/${listing.form.id}`;
     }
-    return listing.url;
+    return listing.applicationUrl;
   };
 
   return (
@@ -119,9 +119,9 @@ const ListingPage: NextPage = () => {
           <Hidden mdUp>
             <Paper className={classes.bottom}>
               <Grid container direction="row" justifyContent="space-between" alignItems="center">
-                {data.listing.readMore && (
+                {data.listing.readMoreUrl && (
                   <Grid item xs>
-                    <Link passHref href={data.listing.readMore}>
+                    <Link passHref href={data.listing.readMoreUrl}>
                       <Button size="small" endIcon={<OpenInNewIcon />}>
                         {data.listing.organization.name.slice(0, 20)}
                       </Button>
@@ -129,7 +129,7 @@ const ListingPage: NextPage = () => {
                   </Grid>
                 )}
                 <Hidden smUp>
-                  {(data.listing.form || data.listing.url) && (
+                  {(data.listing.form || data.listing.applicationUrl) && (
                     <Grid item>
                       <Button
                         variant="contained"

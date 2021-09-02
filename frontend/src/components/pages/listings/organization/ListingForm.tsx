@@ -153,9 +153,9 @@ const ListingForm: React.FC<{
                 <TextField
                   label="Søknadslink"
                   variant="filled"
-                  value={listing.url || ""}
+                  value={listing.applicationUrl || ""}
                   fullWidth
-                  onChange={(e) => handlePropertyChange(e, "url")}
+                  onChange={(e) => handlePropertyChange(e, "applicationUrl")}
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position="end">
@@ -181,9 +181,9 @@ const ListingForm: React.FC<{
                 <TextField
                   label="Link til les mer"
                   variant="filled"
-                  value={listing.readMore || ""}
+                  value={listing.readMoreUrl || ""}
                   fullWidth
-                  onChange={(e) => handlePropertyChange(e, "readMore")}
+                  onChange={(e) => handlePropertyChange(e, "readMoreUrl")}
                 />
               </Grid>
             </Grid>

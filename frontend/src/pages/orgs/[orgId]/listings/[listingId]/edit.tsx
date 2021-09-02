@@ -67,13 +67,13 @@ const EditListingPage: NextPage = () => {
                       input: {
                         title: listing.title || undefined,
                         description: listing.description || undefined,
-                        url: listing.url || undefined,
+                        applicationUrl: listing.applicationUrl || undefined,
                         startDatetime: listing.startDatetime || undefined,
                         deadline: listing.deadline || undefined,
                         application: listing.application || undefined,
                         interview: listing.interview || undefined,
                         case: listing.case || undefined,
-                        readMore: listing.readMore || undefined,
+                        readMoreUrl: listing.readMoreUrl || undefined,
                       },
                     },
                   });

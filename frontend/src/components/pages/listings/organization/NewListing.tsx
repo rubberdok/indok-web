@@ -21,7 +21,7 @@ const emptyListing: ListingInput = {
   title: "",
   startDatetime: "",
   deadline: "",
-  url: "",
+  applicationUrl: "",
   organization: {
     name: "",
     id: "",
@@ -89,8 +89,8 @@ const NewListing: React.FC<{
                       case: listing.case || undefined,
                       interview: listing.interview || undefined,
                       application: listing.application || undefined,
-                      url: listing.url || undefined,
-                      readMore: listing.readMore || undefined,
+                      applicationUrl: listing.applicationUrl || undefined,
+                      readMoreUrl: listing.readMoreUrl || undefined,
                     },
                   },
                 });

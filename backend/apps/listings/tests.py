@@ -83,9 +83,9 @@ class ListingResolverTestCase(ListingBaseTestCase):
                     description
                     startDatetime
                     endDatetime
-                    url
+                    applicationUrl
                     deadline
-                    readMore
+                    readMoreUrl
                     organization {{
                         id
                     }}
@@ -131,22 +131,22 @@ class ListingMutationTestCase(ListingBaseTestCase):
                     organizationId: {self.organization.pk}
                     startDatetime: "{self.now.isoformat()}"
                     deadline: "{self.one_day_ahead.isoformat()}"
-                    url: "{self.URL}"
-                    readMore: "{self.URL}"
+                    applicationUrl: "{self.URL}"
+                    readMoreUrl: "{self.URL}"
                 }}) {{
                     ok
                     listing {{
                         id
                         title
                         description
-                        url
+                        applicationUrl
                         startDatetime
                         organization {{
                             id
                             name
                         }}
                         deadline
-                        readMore
+                        readMoreUrl
                     }}
                 }}
             }}
@@ -160,8 +160,8 @@ class ListingMutationTestCase(ListingBaseTestCase):
                         description: "{self.DESCRIPTION}"
                         startDatetime: "{self.one_day_ago.isoformat()}"
                         deadline: "{self.two_days_ahead.isoformat()}"
-                        url: "{self.URL}"
-                        readMore: "{self.URL}"
+                        applicationUrl: "{self.URL}"
+                        readMoreUrl: "{self.URL}"
                     }}
                 ) {{
                     ok
@@ -169,14 +169,14 @@ class ListingMutationTestCase(ListingBaseTestCase):
                         id
                         title
                         description
-                        url
+                        applicationUrl
                         startDatetime
                         organization {{
                             id
                             name
                         }}
                         deadline
-                        readMore
+                        readMoreUrl
                     }}
                 }}
             }}
@@ -223,9 +223,7 @@ class ListingMutationTestCase(ListingBaseTestCase):
 
         data = json.loads(response.content)["data"]
         listing_data = data["updateListing"]["listing"]
-        self.deep_assert_equal(
-            listing_data, Listing.objects.get(pk=self.visible_listing.pk)
-        )
+        self.deep_assert_equal(listing_data, Listing.objects.get(pk=self.visible_listing.pk))
 
     def test_authorized_delete_listing(self):
         response = self.query(self.delete_mutation, user=self.authorized_user)

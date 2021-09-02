@@ -9,14 +9,14 @@ export interface Listing {
   startDatetime: string;
   deadline: string;
   endDatetime: string;
-  url?: string;
+  applicationUrl?: string;
   hero?: string;
   heroImageUrl?: string;
   logo?: string;
   organization: Organization;
   form?: Pick<Form, "id">;
   chips: string[];
-  readMore?: string;
+  readMoreUrl?: string;
 }
 
 export interface ListingWithForm extends Listing {
