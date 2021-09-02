@@ -179,11 +179,30 @@ const ListingForm: React.FC<{
               </Grid>
               <Grid item xs>
                 <TextField
-                  label="Link til les mer"
+                  label='Link til "Les mer"'
                   variant="filled"
                   value={listing.readMoreUrl || ""}
                   fullWidth
                   onChange={(e) => handlePropertyChange(e, "readMoreUrl")}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <Tooltip
+                          placement="left"
+                          enterTouchDelay={0}
+                          leaveTouchDelay={2500}
+                          title={
+                            <>
+                              Denne linken dukker opp under navnet til organisasjonen din, slik at søkere kan lese mer
+                              om den.
+                            </>
+                          }
+                        >
+                          <HelpOutline />
+                        </Tooltip>
+                      </InputAdornment>
+                    ),
+                  }}
                 />
               </Grid>
             </Grid>
