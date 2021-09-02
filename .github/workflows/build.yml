@@ -1,4 +1,4 @@
-name: Build backend image
+name: Build images
 
 on: pull_request
 
