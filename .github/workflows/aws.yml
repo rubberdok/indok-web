@@ -123,7 +123,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: echo image
-        runs: echo "${{ needs.build-frontend.outputs.image }}"
+        run: echo "${{ needs.build-frontend.outputs.image }}"
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -167,7 +167,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: echo image
-        runs: echo "${{ needs.build-backend.outputs.image }}"
+        run: echo "${{ needs.build-backend.outputs.image }}"
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
