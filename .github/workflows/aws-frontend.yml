@@ -59,6 +59,7 @@ jobs:
           NEXT_PUBLIC_DATAPORTEN_STATE: "RGpBPYszuqXVvsma1suHJJ4X7ZJjkfS6njRHnx4p"
         with:
           context: ./frontend
+          file: frontend/Dockerfile.prod
           tags: ${{ steps.image-tag.outputs.image }}
           push: true
           secrets: |

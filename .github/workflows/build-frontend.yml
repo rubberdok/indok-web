@@ -37,6 +37,7 @@ jobs:
           NEXT_PUBLIC_DATAPORTEN_STATE: "RGpBPYszuqXVvsma1suHJJ4X7ZJjkfS6njRHnx4p"
         with:
           file: frontend/Dockerfile.prod
+          context: ./frontend
           secrets: |
             "SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}"
             "NEXT_PUBLIC_GRAPHQL_BACKEND_URI=${{ env.NEXT_PUBLIC_GRAPHQL_BACKEND_URI }}"

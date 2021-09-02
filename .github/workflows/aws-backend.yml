@@ -52,6 +52,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: ./backend
+          file: backend/Dockerfile.prod
           tags: ${{ steps.image-tag.outputs.image }}
           push: true
 
