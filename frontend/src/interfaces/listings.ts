@@ -15,6 +15,7 @@ export interface Listing {
   organization: Organization;
   form?: Form;
   chips: string[];
+  readMore?: string;
 }
 
 export interface ListingInput extends Omit<Listing, "startDatetime" | "endDatetime" | "chips" | "slug"> {

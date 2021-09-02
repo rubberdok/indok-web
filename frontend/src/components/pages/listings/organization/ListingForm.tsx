@@ -147,6 +147,8 @@ const ListingForm: React.FC<{
                   InputLabelProps={{ shrink: true }}
                 />
               </Grid>
+            </Grid>
+            <Grid container spacing={2} className={classes.inputGroup}>
               <Grid item xs>
                 <TextField
                   label="Søknadslink"
@@ -173,6 +175,15 @@ const ListingForm: React.FC<{
                       </InputAdornment>
                     ),
                   }}
+                />
+              </Grid>
+              <Grid item xs>
+                <TextField
+                  label="Link til les mer"
+                  variant="filled"
+                  value={listing.readMore || ""}
+                  fullWidth
+                  onChange={(e) => handlePropertyChange(e, "readMore")}
                 />
               </Grid>
             </Grid>

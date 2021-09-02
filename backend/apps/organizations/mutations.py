@@ -20,7 +20,6 @@ class OrganizationInput(graphene.InputObjectType):
     name = graphene.String(required=False)
     description = graphene.String(required=False)
     parent_id = graphene.ID(required=False)
-    org_page_url = graphene.String(required=False)
 
 
 class CreateOrganization(graphene.Mutation):

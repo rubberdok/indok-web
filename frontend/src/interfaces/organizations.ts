@@ -11,5 +11,4 @@ export interface Organization {
   listings?: Listing[];
   slug: string;
   logoUrl?: string;
-  orgPageUrl?: string;
 }

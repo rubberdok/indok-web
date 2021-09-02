@@ -19,6 +19,7 @@ class BaseListingInput(graphene.InputObjectType):
     application = graphene.Boolean()
     interview = graphene.Boolean()
     case = graphene.Boolean()
+    read_more = graphene.String()
 
 
 class CreateListingInput(BaseListingInput):
