@@ -1,3 +1,5 @@
+name: Deploy frontend to AWS ECS
+
 on:
   push:
     branches:
@@ -6,6 +8,7 @@ on:
       - "ci/aws-ecs"
     paths:
       - "frontend/"
+  pull_request:
 
 env:
   AWS_REGION: eu-north-1 # Set this to our AWS region
@@ -14,8 +17,6 @@ env:
   ECS_CLUSTER: indokweb-cluster # Set this to our ECS cluster name, e.g. indokweb-cluster
   ECS_TASK_DEFINITION: .aws/task-definition.frontend.json # Set this to the path to the task definition, e.g. .aws/frontend-task-definition.json
   CONTAINER_NAME: frontend # Set this to the container name in the task definition above, e.g. frontend
-
-name: Deploy frontend to Amazon ECS
 
 jobs:
   deploy:

@@ -1,3 +1,5 @@
+name: Deploy backend to AWS ECS
+
 on:
   push:
     branches:
@@ -6,6 +8,7 @@ on:
       - "ci/aws-ecs"
     paths:
       - "backend/"
+  pull_request:
 
 env:
   AWS_REGION: eu-north-1 # Set this to our AWS region
@@ -14,8 +17,6 @@ env:
   ECS_CLUSTER: indokweb-cluster # Set this to our ECS cluster name, e.g. indokweb-cluster
   ECS_TASK_DEFINITION: .aws/task-definition.backend.json # Set this to the path to the task definition, e.g. .aws/backend-task-definition.json
   CONTAINER_NAME: backend # Set this to the container name in the task definition above, e.g. backend
-
-name: Deploy backend to Amazon ECS
 
 jobs:
   deploy:
