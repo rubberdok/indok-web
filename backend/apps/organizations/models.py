@@ -3,6 +3,7 @@ from django.db.models import UniqueConstraint
 from django.conf import settings
 from apps.permissions.models import ResponsibleGroup
 
+
 class Organization(models.Model):
     name = models.CharField(max_length=100)
     slug = models.SlugField(max_length=100)
@@ -26,7 +27,7 @@ class Organization(models.Model):
     # The HR-group has the "forms.manage_form" permission, allowing them to view and manage responses to e.g. listings.
     # The primary group is intended to act as a group for organizations who need any kind of special permission, e.g. hyttestyret
     # Or if we wish to limit the creation of events or listings to certain organizations.
-    primary_group = models.OneToOneField(to=ResponsibleGroup, on_delete=models.DO_NOTHING, related_name="organization")    
+    primary_group = models.OneToOneField(to=ResponsibleGroup, on_delete=models.DO_NOTHING, related_name="organization")
     hr_group = models.OneToOneField(to=ResponsibleGroup, on_delete=models.DO_NOTHING, related_name="hr_organization")
 
     users = models.ManyToManyField(
@@ -38,33 +39,19 @@ class Organization(models.Model):
     )
 
     class Meta:
-        constraints = [
-            UniqueConstraint(
-                fields=["parent", "name"], name="unique_child_organization_name"
-            )
-        ]
+        constraints = [UniqueConstraint(fields=["parent", "name"], name="unique_child_organization_name")]
 
     def __str__(self):
         return f"{self.name}"
 
 
 class Membership(models.Model):
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="memberships"
-    )
-    organization = models.ForeignKey(
-        Organization, on_delete=models.CASCADE, related_name="members"
-    )
-    group = models.ForeignKey(
-        ResponsibleGroup, on_delete=models.CASCADE, related_name="members", null=True
-    )
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="memberships")
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name="members")
+    group = models.ForeignKey(ResponsibleGroup, on_delete=models.CASCADE, related_name="members", null=True)
 
     class Meta:
-        constraints = [
-            UniqueConstraint(
-                fields=["user", "organization"], name="unique_member_in_organization"
-            )
-        ]
+        constraints = [UniqueConstraint(fields=["user", "organization"], name="unique_member_in_organization")]
 
     def __str__(self) -> str:
         return f"{self.organization.name}:{self.user.username}"
