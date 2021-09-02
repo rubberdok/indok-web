@@ -53,7 +53,7 @@ jobs:
           NEXT_PUBLIC_DATAPORTEN_STATE: "RGpBPYszuqXVvsma1suHJJ4X7ZJjkfS6njRHnx4p"
         with:
           context: ./frontend
-          tags: $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          tags: "${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}"
           push: true
           secrets: |
             "SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}"
@@ -62,8 +62,8 @@ jobs:
             "NEXT_PUBLIC_DATAPORTEN_ID=${{ env.NEXT_PUBLIC_DATAPORTEN_ID}}"
             "NEXT_PUBLIC_DATAPORTEN_REDIRECT_URI=${{ env.NEXT_PUBLIC_DATAPORTEN_REDIRECT_URI}}"
             "NEXT_PUBLIC_DATAPORTEN_STATE=${{ env.NEXT_PUBLIC_DATAPORTEN_STATE}}"
-          run: |
-            echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+        run: |
+          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
 
       # - name: Build, tag, and push image to AWS ECR
       #   id: build-image
