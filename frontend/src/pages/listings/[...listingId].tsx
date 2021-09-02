@@ -11,6 +11,7 @@ import { Button, Container, Grid, Hidden, makeStyles, Paper } from "@material-ui
 import ArrowForward from "@material-ui/icons/ArrowForward";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import { NextPage } from "next";
+import Link from "next/link";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import ReactMarkdown from "react-markdown";
@@ -64,7 +65,7 @@ const ListingPage: NextPage = () => {
     if (listing.form) {
       return `/forms/${listing.form.id}`;
     }
-    return listing.url;
+    return listing.applicationUrl;
   };
 
   return (
@@ -118,19 +119,17 @@ const ListingPage: NextPage = () => {
           <Hidden mdUp>
             <Paper className={classes.bottom}>
               <Grid container direction="row" justifyContent="space-between" alignItems="center">
-                {data.listing.organization && (
+                {data.listing.readMoreUrl && (
                   <Grid item xs>
-                    <Button
-                      size="small"
-                      endIcon={<OpenInNewIcon />}
-                      href={`/about/organizations/${data.listing.organization.slug}/`}
-                    >
-                      {data.listing.organization.name.slice(0, 20)}
-                    </Button>
+                    <Link passHref href={data.listing.readMoreUrl}>
+                      <Button size="small" endIcon={<OpenInNewIcon />}>
+                        {data.listing.organization.name.slice(0, 20)}
+                      </Button>
+                    </Link>
                   </Grid>
                 )}
                 <Hidden smUp>
-                  {(data.listing.form || data.listing.url) && (
+                  {(data.listing.form || data.listing.applicationUrl) && (
                     <Grid item>
                       <Button
                         variant="contained"
