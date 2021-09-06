@@ -25,8 +25,4 @@ class Migration(migrations.Migration):
             name='id',
             field=models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID'),
         ),
-        migrations.AddConstraint(
-            model_name='answer',
-            constraint=models.UniqueConstraint(fields=('response', 'question'), name='unique_answer_to_question_per_user'),
-        ),
     ]
