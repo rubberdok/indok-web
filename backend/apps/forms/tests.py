@@ -38,9 +38,7 @@ class FormBaseTestCase(ExtendedGraphQLTestCase):
         # Create some questions
         self.paragraph = QuestionFactory(form=self.form)
         self.not_mandatory = QuestionFactory(form=self.form, mandatory=False)
-        self.short_question = QuestionFactory(
-            form=self.form, question_type="SHORT_ANSWER"
-        )
+        self.short_question = QuestionFactory(form=self.form, question_type="SHORT_ANSWER")
         self.mcq = QuestionFactory(form=self.form, question_type="MULTIPLE_CHOICE")
         self.checkboxes = QuestionFactory(form=self.form, question_type="CHECKBOXES")
         self.dropdown = QuestionFactory(form=self.form, question_type="DROPDOWN")
@@ -56,9 +54,7 @@ class FormBaseTestCase(ExtendedGraphQLTestCase):
         # Populate with some preexisting answers
         self.response = ResponseFactory(respondent=self.preexisting_user)
         self.answer = AnswerFactory(question=self.paragraph, response=self.response)
-        self.answer = AnswerFactory(
-            question=self.short_question, response=self.response
-        )
+        self.answer = AnswerFactory(question=self.short_question, response=self.response)
         self.answer = AnswerFactory(question=self.mcq, response=self.response)
         self.answer = AnswerFactory(question=self.checkboxes, response=self.response)
         self.answer = AnswerFactory(question=self.dropdown, response=self.response)
@@ -220,9 +216,7 @@ class FormsMutationTestCase(FormBaseTestCase):
         response = self.query(self.CREATE_QUESTION_MUTATION, user=self.authorized_user)
         self.assertResponseNoErrors(response)
         data = json.loads(response.content)["data"]
-        question: Optional[Question] = Question.objects.get(
-            pk=data["createQuestion"]["question"]["id"]
-        )
+        question: Optional[Question] = Question.objects.get(pk=data["createQuestion"]["question"]["id"])
 
         if question is None:
             self.assertIsNotNone(question)
@@ -280,9 +274,7 @@ class FormsQueryTestCase(FormBaseTestCase):
     """
 
     def test_unauthenticated_get_forms(self):
-        unauthorized_response = self.query(
-            self.FORMS_WITH_RESPONSES, user=self.unauthorized_user
-        )
+        unauthorized_response = self.query(self.FORMS_WITH_RESPONSES, user=self.unauthorized_user)
         data = json.loads(unauthorized_response.content)["data"]
         self.assert_null_fields(data, ["responses", "responders"])
 
