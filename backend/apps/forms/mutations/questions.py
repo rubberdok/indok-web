@@ -149,19 +149,12 @@ class SubmitOrUpdateAnswers(graphene.Mutation):
                 message="Søknadsfristen har utløpt og det er ikke lenger mulig å sende inn eller endre svar på denne søknaden.",
             )
 
-        response, _ = Response.objects.prefetch_related("answers").get_or_create(
-            form_id=form_id, respondent=user
-        )
+        response, _ = Response.objects.prefetch_related("answers").get_or_create(form_id=form_id, respondent=user)
 
         # Restructure the data for easier manipulation
-        answers = {
-            int(answer_data["question_id"]): answer_data["answer"]
-            for answer_data in answers_data
-        }
+        answers = {int(answer_data["question_id"]): answer_data["answer"] for answer_data in answers_data}
         existing_answers = response.answers.distinct()
-        updated_existing_answers = list(
-            existing_answers.filter(question__pk__in=answers.keys())
-        )
+        updated_existing_answers = list(existing_answers.filter(question__pk__in=answers.keys()))
         for answer in updated_existing_answers:
             answer.answer = answers[answer.question.pk]
 
@@ -180,8 +173,7 @@ class SubmitOrUpdateAnswers(graphene.Mutation):
 
         # Iterate over the questions to prevent users from answering other forms than the current one
         questions = form.questions.filter(
-            Q(pk__in=answers.keys())
-            & ~Q(pk__in=existing_answers.values_list("question__id", flat=True))
+            Q(pk__in=answers.keys()) & ~Q(pk__in=existing_answers.values_list("question__id", flat=True))
         )
         try:
             Answer.objects.bulk_update(updated_existing_answers, ["answer"])
@@ -198,9 +190,7 @@ class SubmitOrUpdateAnswers(graphene.Mutation):
             )
         except IntegrityError as err:
             if "answers_not_empty" in err.args[0]:
-                return SubmitOrUpdateAnswers(
-                    ok=False, message="Du må svare på alle obligatoriske spørsmål."
-                )
+                return SubmitOrUpdateAnswers(ok=False, message="Du må svare på alle obligatoriske spørsmål.")
             else:
                 raise err
         return SubmitOrUpdateAnswers(ok=True)
@@ -261,15 +251,12 @@ class CreateUpdateAndDeleteOptions(graphene.Mutation):
                 updated_option.answer = data["answer"]
                 updated_options.append(updated_option)
             else:
-                new_options.append(
-                    Option(answer=data["answer"], question_id=question_id)
-                )
+                new_options.append(Option(answer=data["answer"], question_id=question_id))
 
         Option.objects.bulk_update(updated_options, fields=["answer"])
         Option.objects.bulk_create(new_options)
 
         return CreateUpdateAndDeleteOptions(
-            options=[updated_option for updated_option in updated_options]
-            + new_options,
+            options=[updated_option for updated_option in updated_options] + new_options,
             ok=True,
         )

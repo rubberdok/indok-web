@@ -31,7 +31,7 @@ class AnswerType(DjangoObjectType):
 
     class Meta:
         model = Answer
-        fields = ["answer", "question", "uuid", "user"]
+        fields = ["answer", "question", "uuid"]
         description = "A user's answer to a question."
 
 

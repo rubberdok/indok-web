@@ -93,9 +93,7 @@ class AssignMembership(graphene.Mutation):
     class Arguments:
         membership_data = MembershipInput(required=True)
 
-    @permission_required(
-        "organizations.change_organization", fn=get_organization_from_data
-    )
+    @permission_required("organizations.change_organization", fn=get_organization_from_data)
     def mutate(self, _, membership_data):
         membership = Membership(
             organization_id=membership_data["organization_id"],

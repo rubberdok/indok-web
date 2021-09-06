@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
     overflow: "hidden",
     textOverflow: "ellipsis",
     display: "-webkit-box",
-    "-webkit-line-clamp": 3 /* number of lines to show */,
+    "-webkit-line-clamp": 2 /* number of lines to show (almost) */,
     "-webkit-box-orient": "vertical",
     minHeight: "4em",
     marginTop: theme.spacing(2),
@@ -115,8 +115,8 @@ const ListingItem: React.FC<{
         <CardActionArea className={classes.root}>
           <CardMedia
             component="img"
-            image={listing.hero ? listing.hero : ""}
-            className={`${classes.hero} ${!listing.hero ? classes.background : ""}`}
+            image={listing.heroImageUrl ? listing.heroImageUrl : ""}
+            className={`${classes.hero} ${!listing.heroImageUrl ? classes.background : ""}`}
           />
           <CardContent className={classes.content}>
             <img
@@ -137,7 +137,7 @@ const ListingItem: React.FC<{
                   {timestamp(listing.deadline)}
                 </Typography>
                 <ReactMarkdown
-                  allowedElements={["text", "paragraph", "emphasis", "strong"]}
+                  allowedElements={["p", "em", "strong", "a"]}
                   className={classes.descriptionText}
                   components={markdownComponents}
                 >

@@ -1,14 +1,17 @@
 import { NextPage } from "next";
 import Layout from "@components/Layout";
-import { Container } from "@material-ui/core";
+import { CircularProgress, Container, Grid, Typography } from "@material-ui/core";
 import AnswerForm from "@components/forms/AnswerForm";
 import { useQuery } from "@apollo/client";
 import { FORM_WITH_QUESTIONS_AND_ANSWERS } from "@graphql/forms/queries";
 import { useRouter } from "next/router";
 import { Form } from "@interfaces/forms";
+import { DATAPORTEN_SCOPES } from "@utils/auth";
+import { generateQueryString } from "@utils/helpers";
 
 const FormPage: NextPage = () => {
-  const { formId } = useRouter().query;
+  const router = useRouter();
+  const { formId } = router.query;
   const { loading, error, data } = useQuery<{ form: Form }>(FORM_WITH_QUESTIONS_AND_ANSWERS, {
     variables: {
       formId: formId && (formId[0] as string),
@@ -16,7 +19,34 @@ const FormPage: NextPage = () => {
   });
 
   if (loading) return <p>Laster...</p>;
-  if (error) return <p> Noe gikk galt</p>;
+  if (error) {
+    if (error.message.includes("permissions")) {
+      const queryString = generateQueryString({
+        client_id: process.env.NEXT_PUBLIC_DATAPORTEN_ID,
+        state: process.env.NEXT_PUBLIC_DATAPORTEN_STATE,
+        redirect_uri: process.env.NEXT_PUBLIC_DATAPORTEN_REDIRECT_URI,
+        response_type: "code",
+        scope: DATAPORTEN_SCOPES.join(" "),
+      });
+      const signInURL = "https://auth.dataporten.no/oauth/authorization" + queryString;
+      router.push(signInURL);
+      return (
+        <Layout>
+          <Container>
+            <Grid container direction="row" style={{ marginTop: 16 }} justifyContent="center">
+              <Grid item>
+                <Typography variant="subtitle1">Du må være logget inn for å se dette, sender deg til login.</Typography>
+              </Grid>
+              <Grid item>
+                <CircularProgress />
+              </Grid>
+            </Grid>
+          </Container>
+        </Layout>
+      );
+    }
+    return <p>Noe gikk galt...</p>;
+  }
 
   return (
     <Layout>
