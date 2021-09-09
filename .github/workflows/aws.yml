@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - master
+  pull_request:
 
 concurrency: production
 
@@ -124,9 +125,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: echo image
-        run: echo "${{ needs.build-frontend.outputs.image }}"
-
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -169,9 +167,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: echo image
-        run: echo "${{ needs.build-backend.outputs.image }}"
-
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -207,9 +202,6 @@ jobs:
     environment: production
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
       - name: Notify Sentry of the new Deployment
         uses: getsentry/action-release@v1.1.6
         env:
