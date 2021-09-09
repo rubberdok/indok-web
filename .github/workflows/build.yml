@@ -63,10 +63,11 @@ jobs:
         with:
           file: frontend/Dockerfile.prod
           context: ./frontend
-          secrets: |
-            "SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}"
+          build-args: |
             NEXT_PUBLIC_GRAPHQL_BACKEND_URI=$NEXT_PUBLIC_GRAPHQL_BACKEND_URI
             NEXT_CONTAINER_GRAPHQL_BACKEND_URI=$NEXT_CONTAINER_GRAPHQL_BACKEND_URI
             NEXT_PUBLIC_DATAPORTEN_ID=$NEXT_PUBLIC_DATAPORTEN_ID
             NEXT_PUBLIC_DATAPORTEN_REDIRECT_URI=$NEXT_PUBLIC_DATAPORTEN_REDIRECT_URI
             NEXT_PUBLIC_DATAPORTEN_STATE=$NEXT_PUBLIC_DATAPORTEN_STATE
+          secrets: |
+            "SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}"
