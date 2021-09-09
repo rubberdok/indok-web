@@ -57,17 +57,17 @@ jobs:
           IMAGE_TAG: ${{ github.sha }}
           NEXT_PUBLIC_GRAPHQL_BACKEND_URI: "https://api.indokntnu.no/graphql"
           NEXT_PUBLIC_FRONTEND_URI: "https://indokntnu.no"
-          DATAPORTEN_ID: "f17d2ea0-a7c9-4458-83bf-35cf5b555cae"
-          DATAPORTEN_REDIRECT_URI: "https://indokntnu.no/authCallback"
+          NEXT_PUBLIC_DATAPORTEN_ID: "f17d2ea0-a7c9-4458-83bf-35cf5b555cae"
+          NEXT_PUBLIC_DATAPORTEN_REDIRECT_URI: "https://indokntnu.no/authCallback"
           NEXT_PUBLIC_DATAPORTEN_STATE: "RGpBPYszuqXVvsma1suHJJ4X7ZJjkfS6njRHnx4p"
         with:
           file: frontend/Dockerfile.prod
           context: ./frontend
           build-args: |
-            NEXT_PUBLIC_GRAPHQL_BACKEND_URI=$NEXT_PUBLIC_GRAPHQL_BACKEND_URI
-            NEXT_CONTAINER_GRAPHQL_BACKEND_URI=$NEXT_CONTAINER_GRAPHQL_BACKEND_URI
-            NEXT_PUBLIC_DATAPORTEN_ID=$NEXT_PUBLIC_DATAPORTEN_ID
-            NEXT_PUBLIC_DATAPORTEN_REDIRECT_URI=$NEXT_PUBLIC_DATAPORTEN_REDIRECT_URI
-            NEXT_PUBLIC_DATAPORTEN_STATE=$NEXT_PUBLIC_DATAPORTEN_STATE
+            "NEXT_PUBLIC_GRAPHQL_BACKEND_URI=${{ env.NEXT_PUBLIC_GRAPHQL_BACKEND_URI }}"
+            "NEXT_CONTAINER_GRAPHQL_BACKEND_URI=${{ env.NEXT_CONTAINER_GRAPHQL_BACKEND_URI }}"
+            "NEXT_PUBLIC_DATAPORTEN_ID=${{ env.NEXT_PUBLIC_DATAPORTEN_ID }}"
+            "NEXT_PUBLIC_DATAPORTEN_REDIRECT_URI=${{ env.NEXT_PUBLIC_DATAPORTEN_REDIRECT_URI }}"
+            "NEXT_PUBLIC_DATAPORTEN_STATE=${{ env.NEXT_PUBLIC_DATAPORTEN_STATE }}"
           secrets: |
             "SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}"
