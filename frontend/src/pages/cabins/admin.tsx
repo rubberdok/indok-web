@@ -101,8 +101,16 @@ const BookingAdminPage: NextPage = () => {
 
   const sendDecisionEmail = (booking: BookingFromQuery, approved: boolean) => {
     // omit unwanted fields
-    const { checkIn, checkOut, externalParticipants, firstname, internalParticipants, lastname, phone, receiverEmail } =
-      booking;
+    const {
+      checkIn,
+      checkOut,
+      externalParticipants,
+      firstname,
+      internalParticipants,
+      lastname,
+      phone,
+      receiverEmail,
+    } = booking;
 
     send_email({
       variables: {

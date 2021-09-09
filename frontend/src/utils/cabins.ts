@@ -40,26 +40,28 @@ export const allValuesFilled: (contactInfo: ContactInfo) => boolean = (contactIn
   return selectValidity && filled.length == Object.keys(nonSelectContactInfo).length;
 };
 
-export const cabinOrderStepReady: (chosenCabins: Cabin[], datePick: DatePick) => { ready: boolean; errortext: string } =
-  (chosenCabins, datePick) => {
-    // At least one cabin has to be selected
-    if (chosenCabins.length == 0) {
-      return { ready: false, errortext: "Du må velge minst en hytte å booke" };
-    }
-    // The user needs to enter a check-in date
-    if (!datePick.checkInDate) {
-      return { ready: false, errortext: "Du må velge en dato for innsjekk" };
-    }
-    // The user needs to enter a check-out date
-    if (!datePick.checkOutDate) {
-      return { ready: false, errortext: "Du må velge en dato for utsjekk" };
-    }
-    // The chosen range must be vaild
-    if (!datePick?.isValid) {
-      return { ready: false, errortext: "Den valgte perioden er ikke tilgjengelig" };
-    }
-    return { ready: true, errortext: "" };
-  };
+export const cabinOrderStepReady: (
+  chosenCabins: Cabin[],
+  datePick: DatePick
+) => { ready: boolean; errortext: string } = (chosenCabins, datePick) => {
+  // At least one cabin has to be selected
+  if (chosenCabins.length == 0) {
+    return { ready: false, errortext: "Du må velge minst en hytte å booke" };
+  }
+  // The user needs to enter a check-in date
+  if (!datePick.checkInDate) {
+    return { ready: false, errortext: "Du må velge en dato for innsjekk" };
+  }
+  // The user needs to enter a check-out date
+  if (!datePick.checkOutDate) {
+    return { ready: false, errortext: "Du må velge en dato for utsjekk" };
+  }
+  // The chosen range must be vaild
+  if (!datePick?.isValid) {
+    return { ready: false, errortext: "Den valgte perioden er ikke tilgjengelig" };
+  }
+  return { ready: true, errortext: "" };
+};
 
 export const toStringChosenCabins: (chosenCabins: Cabin[]) => string[] = (chosenCabins) =>
   chosenCabins.map((cabin, i) => (i > 0 ? " og " + cabin.name : cabin.name));
@@ -81,4 +83,4 @@ export const calculatePrice: (
   }
 };
 
-export const convertDateFormat:(date: string)=> string = date => dayjs(date).format("DD-MM-YYYY");
+export const convertDateFormat: (date: string) => string = (date) => dayjs(date).format("DD-MM-YYYY");

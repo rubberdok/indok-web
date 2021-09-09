@@ -134,12 +134,7 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
 
   const { data: timeData } = useQuery(GET_SERVER_TIME);
 
-  const {
-    data: eventData,
-    error: eventError,
-    loading: eventLoading,
-    refetch: refetchEventData,
-  } = useQuery<{
+  const { data: eventData, error: eventError, loading: eventLoading, refetch: refetchEventData } = useQuery<{
     event: Event;
   }>(GET_EVENT, { variables: { id: eventId } });
 
