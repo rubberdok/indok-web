@@ -53,7 +53,7 @@ export const LISTING_AND_USER_WITH_ORGANIZATIONS = gql`
       startDatetime
       deadline
       endDatetime
-      url
+      applicationUrl
       organization {
         id
         name
@@ -73,6 +73,9 @@ export const LISTING = gql`
   query listing($id: ID!) {
     listing(id: $id) {
       ...ListingFragment
+      form {
+        id
+      }
     }
   }
 `;

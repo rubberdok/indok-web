@@ -32,7 +32,13 @@ const InfoCard: React.FC<{
   return (
     <Card style={{ height: "100%" }}>
       <CardContent style={{ height: "100%" }}>
-        <Grid container direction="column" alignItems="center" justify="space-between" style={{ height: "100%" }}>
+        <Grid
+          container
+          direction="column"
+          alignItems="center"
+          justifyContent="space-between"
+          style={{ height: "100%" }}
+        >
           <Grid item>
             <Typography
               variant="h5"
@@ -49,9 +55,11 @@ const InfoCard: React.FC<{
             </Typography>
           </Grid>
           <Grid item>
-            <Link passHref href={`/about/organizations/${listing.organization?.slug}`}>
-              <Button endIcon={<OpenInNewIcon />}>Les mer</Button>
-            </Link>
+            {listing.readMoreUrl && (
+              <Link passHref href={listing.readMoreUrl}>
+                <Button endIcon={<OpenInNewIcon />}>Les mer</Button>
+              </Link>
+            )}
           </Grid>
         </Grid>
       </CardContent>

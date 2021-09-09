@@ -2,7 +2,7 @@ from typing import Optional
 
 from django.db.models import Q
 
-from .models import Membership, Organization, Role
+from .models import Membership, Organization
 
 
 class OrganizationResolvers:
@@ -43,9 +43,4 @@ class MembershipResolvers:
         organization = Organization.objects.get(pk=organization_id)
         if organization.users.filter(user=info.context.user).exists():
             return Membership.objects.filter(organization=organization)
-        raise PermissionError(
-            f"Du må være medlem av {organization} for å gjøre dette kallet."
-        )
-
-    def resolve_all_roles(self, info):
-        return Role.objects.all()
+        raise PermissionError(f"Du må være medlem av {organization} for å gjøre dette kallet.")
