@@ -74,7 +74,7 @@ GRAPHENE = {
     "MIDDLEWARE": [
         "graphql_jwt.middleware.JSONWebTokenMiddleware",
         "api.auth.middleware.AnonymousUserMiddleware",
-        "api.auth.middleware.SentryMiddleware",
+        "api.sentry.middleware.SentryMiddleware",
     ],
 }
 

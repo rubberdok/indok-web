@@ -48,9 +48,7 @@ class DataportenAuth:
             response.raise_for_status()
         except requests.exceptions.RequestException as err:
             print(f"Error completing Dataporten authentication: {err}")
-            raise Exception(
-                "En feil oppstod under fullføring av Dataporten-autentisering."
-            )
+            raise Exception("En feil oppstod under fullføring av Dataporten-autentisering.")
 
         print(f"Successfully obtained access token: {response.json()['access_token']}")
 
@@ -147,9 +145,7 @@ class DataportenAuth:
             "Authorization": f"Bearer {access_token}",
         }
         try:
-            response = requests.get(
-                "https://auth.dataporten.no/userinfo", headers=params
-            )
+            response = requests.get("https://auth.dataporten.no/userinfo", headers=params)
             response.raise_for_status()
         except requests.exceptions.RequestException as err:
             print(f"Error fetching user info: {err}")
