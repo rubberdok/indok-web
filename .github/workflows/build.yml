@@ -70,4 +70,4 @@ jobs:
             "NEXT_PUBLIC_DATAPORTEN_REDIRECT_URI=${{ env.NEXT_PUBLIC_DATAPORTEN_REDIRECT_URI }}"
             "NEXT_PUBLIC_DATAPORTEN_STATE=${{ env.NEXT_PUBLIC_DATAPORTEN_STATE }}"
           secrets: |
-            "auth.token=${{ secrets.SENTRY_AUTH_TOKEN }}"
+            "SENTRY_AUTH_TOKEN=auth.token=${{ secrets.SENTRY_AUTH_TOKEN }}"
