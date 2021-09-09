@@ -11,10 +11,6 @@ COPY package.json .
 COPY package-lock.json .
 RUN npm ci
 
-
-# Copying source files
-COPY . .
-
 ARG NEXT_PUBLIC_GRAPHQL_BACKEND_URI
 ENV NEXT_PUBLIC_GRAPHQL_BACKEND_URI $NEXT_PUBLIC_GRAPHQL_BACKEND_URI
 
@@ -29,6 +25,9 @@ ENV NEXT_PUBLIC_DATAPORTEN_STATE $NEXT_PUBLIC_DATAPORTEN_STATE
 
 ARG NEXT_PUBLIC_FRONTEND_URI
 ENV NEXT_PUBLIC_FRONTEND_URI $NEXT_PUBLIC_FRONTEND_URI
+
+# Copying source files
+COPY . .
 
 # Secrets should not be passed as build args.
 RUN --mount=type=secret,id=SENTRY_AUTH_TOKEN ["npm", "run", "build"]
