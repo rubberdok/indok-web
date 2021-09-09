@@ -1,0 +1,73 @@
+name: Build images
+
+on: pull_request
+
+env:
+  AWS_REGION: eu-north-1 # Set this to our AWS region
+
+jobs:
+  build-backend:
+    name: Build backend image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build backend image
+        id: build-image
+        uses: docker/build-push-action@v2
+        with:
+          context: ./backend
+          file: backend/Dockerfile.prod
+
+  build-frontend:
+    name: Build frontend image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build frontend image
+        id: build-image
+        uses: docker/build-push-action@v2
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+          NEXT_PUBLIC_GRAPHQL_BACKEND_URI: "https://api.indokntnu.no/graphql"
+          NEXT_PUBLIC_FRONTEND_URI: "https://indokntnu.no"
+          DATAPORTEN_ID: "f17d2ea0-a7c9-4458-83bf-35cf5b555cae"
+          DATAPORTEN_REDIRECT_URI: "https://indokntnu.no/authCallback"
+          NEXT_PUBLIC_DATAPORTEN_STATE: "RGpBPYszuqXVvsma1suHJJ4X7ZJjkfS6njRHnx4p"
+        with:
+          file: frontend/Dockerfile.prod
+          context: ./frontend
+          build-args: |
+            NEXT_PUBLIC_GRAPHQL_BACKEND_URI=$NEXT_PUBLIC_GRAPHQL_BACKEND_URI
+            NEXT_CONTAINER_GRAPHQL_BACKEND_URI=$NEXT_CONTAINER_GRAPHQL_BACKEND_URI
+            NEXT_PUBLIC_DATAPORTEN_ID=$NEXT_PUBLIC_DATAPORTEN_ID
+            NEXT_PUBLIC_DATAPORTEN_REDIRECT_URI=$NEXT_PUBLIC_DATAPORTEN_REDIRECT_URI
+            NEXT_PUBLIC_DATAPORTEN_STATE=$NEXT_PUBLIC_DATAPORTEN_STATE
+          secrets: |
+            "SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}"
