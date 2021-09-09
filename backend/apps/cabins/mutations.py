@@ -6,7 +6,7 @@ from .helpers import price
 from .types import AllBookingsType
 from apps.cabins.models import Booking as BookingModel
 from apps.cabins.models import Cabin as CabinModel
-from .mail import send_admin_reservation_mail, send_user_reservation_mail
+from .mail import send_mail
 from .validators import create_booking_validation
 from graphql_jwt.decorators import login_required, permission_required
 
@@ -161,11 +161,15 @@ class SendEmail(graphene.Mutation):
             "check_out": email_input.check_out.strftime("%d-%m-%Y"),
         }
 
-        # Send different mails for reservation and confirmation
-        if email_input.email_type == "reserve_booking":
-            send_admin_reservation_mail(booking_info)
-            send_user_reservation_mail(booking_info)
-        elif email_input.email_type == "confirm_booking":
-            pass
+        # Sends an email to the user
+        send_mail(
+            booking_info=booking_info, email_type=email_input.email_type, admin=False
+        )
+
+        # Don't send mail to admin when approving or disapproving.
+        if email_input.email_type not in ["approve_booking", "disapprove_booking"]:
+            send_mail(
+                booking_info=booking_info, email_type=email_input.email_type, admin=True
+            )
 
         return SendEmail(ok=True)

@@ -139,7 +139,9 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
     error: eventError,
     loading: eventLoading,
     refetch: refetchEventData,
-  } = useQuery<{ event: Event }>(GET_EVENT, { variables: { id: eventId } });
+  } = useQuery<{
+    event: Event;
+  }>(GET_EVENT, { variables: { id: eventId } });
 
   const classes = useStyles();
   const theme = useTheme();

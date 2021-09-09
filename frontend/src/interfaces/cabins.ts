@@ -13,7 +13,7 @@ export interface PublicBooking {
   cabins: Cabin[];
 }
 
-interface Participants {
+export interface Participants {
   internalParticipants: number;
   externalParticipants: number;
 }

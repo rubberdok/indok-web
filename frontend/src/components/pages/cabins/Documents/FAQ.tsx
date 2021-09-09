@@ -109,7 +109,7 @@ const faqs = [
 /*
 Renders all frequently asked questions regarding the cabins.
 */
-const FAQ = () => {
+const FAQ: React.FC = () => {
   const [expanded, setExpanded] = React.useState<string | false>(false);
 
   const handleChange = (panel: string) => (_event: React.ChangeEvent<Record<string, unknown>>, isExpanded: boolean) => {

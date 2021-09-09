@@ -18,13 +18,7 @@ import {
   useMediaQuery,
   MobileStepper,
 } from "@material-ui/core";
-import {
-  allValuesFilled,
-  cabinOrderStepReady,
-  generateEmailAndBookingInput,
-  isFormValid,
-  validateInputForm,
-} from "@utils/cabins";
+import { allValuesFilled, cabinOrderStepReady, isFormValid, validateInputForm } from "@utils/cabins";
 import { NextPage } from "next";
 import React, { useEffect, useState } from "react";
 import PaymentSite from "@components/pages/cabins/PaymentSite";
@@ -147,6 +141,23 @@ const CabinBookingPage: NextPage = () => {
       default:
         <Typography>Step not found</Typography>;
     }
+  };
+
+  const generateEmailAndBookingInput: (
+    contactInfo: ContactInfo,
+    datePick: DatePick,
+    chosenCabins: Cabin[]
+  ) => ContactInfo & { cabins: string[]; checkIn: string | undefined; checkOut: string | undefined } = (
+    contactInfo,
+    datePick,
+    chosenCabins
+  ) => {
+    return {
+      ...contactInfo,
+      cabins: chosenCabins.map((cabin) => cabin.id),
+      checkIn: datePick.checkInDate,
+      checkOut: datePick.checkOutDate,
+    };
   };
 
   const handleNextClick = () => {

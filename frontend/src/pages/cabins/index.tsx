@@ -16,6 +16,8 @@ import { cabinImages, outsideImages } from "@components/pages/cabins/ImageSlider
 import FAQ from "@components/pages/cabins/Documents/FAQ";
 import Layout from "@components/Layout";
 
+const BOOKING_DISABLED = false;
+
 const useStyles = makeStyles((theme: Theme) => ({
   hero: {
     color: "white",
@@ -122,11 +124,13 @@ const CabinsPage: NextPage = () => {
         </Box>
       </Grid>
       <Grid xs={12} sm={6} item container justify="center">
-        <Link href="/cabins/book" passHref>
-          <Button variant="contained" endIcon={<NavigateNextIcon />}>
-            Book nå
-          </Button>
-        </Link>
+        {BOOKING_DISABLED ? null : (
+          <Link href="/cabins/book" passHref>
+            <Button variant="contained" endIcon={<NavigateNextIcon />}>
+              Book nå
+            </Button>
+          </Link>
+        )}
       </Grid>
       <Grid xs={12} sm={6} item container justify="center">
         <Button

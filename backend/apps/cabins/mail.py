@@ -4,40 +4,51 @@ from django.utils.html import strip_tags
 
 
 user_templates = {
+    "reserve_subject": "Bekreftelse på mottat søknad om booking av ",
+    "decision_subject": "Hyttestyret har tatt stilling til søknaden din om booking av ",
     "reserve_booking": "user_reserve_template.html",
-    "confirm_booking": "user_confirm_template.html",
+    "approve_booking": "user_approved_template.html",
+    "disapprove_booking": "user_disapproved_template.html",
 }
 
 admin_templates = {
+    "reserve_subject": "Booking av ",
     "reserve_booking": "admin_reserve_template.html",
-    "confirm_booking": "admin_confirm_template.html",
 }
 
 
-def send_admin_reservation_mail(booking_info: dict) -> None:
-    template = admin_templates["reserve_booking"]
+def get_email_subject(booking_info: dict, email_type: str, admin: bool) -> str:
+    if admin:
+        subject = admin_templates["reserve_subject"]
+    else:
+        subject = (
+            user_templates["reserve_subject"]
+            if email_type == "reserve_booking"
+            else user_templates["decision_subject"]
+        )
+
+    return subject + booking_info["chosen_cabins_string"]
+
+
+def send_mail(booking_info: dict, email_type: str, admin: bool) -> None:
+    template = admin_templates[email_type] if admin else user_templates[email_type]
+    subject = get_email_subject(booking_info, email_type, admin)
+
+    # HTML content for mail services supporting HTML, text content if HTML isn't supported
     html_content = get_template(template).render(booking_info)
     text_content = strip_tags(html_content)
 
     email = EmailMultiAlternatives(
-        "Booking av indøkhytte", body=text_content, from_email="noreply@indokntnu.no", bcc=[booking_info["receiver_email"]]
-    )
-    email.attach_alternative(html_content, "text/html")
-    email.send()
-
-
-def send_user_reservation_mail(booking_info: dict) -> None:
-    template = user_templates["reserve_booking"]
-    html_content = get_template(template).render(booking_info)
-    text_content = strip_tags(html_content)
-
-    email = EmailMultiAlternatives(
-        "Bekreftelse på booking av indøkhytte",
+        subject,
         body=text_content,
         from_email="noreply@indokntnu.no",
         bcc=[booking_info["receiver_email"]],
     )
     email.attach_alternative(html_content, "text/html")
-    email.attach_file("static/cabins/Sjekkliste.pdf")
-    email.attach_file("static/cabins/Reglement.pdf")
+
+    # Don't send attachments to admin nor when a booking is disapproved
+    if email_type != "disapprove_booking" and not admin:
+        email.attach_file("static/cabins/Sjekkliste.pdf")
+        email.attach_file("static/cabins/Reglement.pdf")
+
     email.send()
