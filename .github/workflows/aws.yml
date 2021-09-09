@@ -11,6 +11,7 @@ concurrency: production
 env:
   AWS_REGION: eu-north-1 # Set this to our AWS region
   ECS_CLUSTER: indokweb-cluster # Set this to our ECS cluster name, e.g. indokweb-cluster
+  SENTRY_ORG: rbberdk
 
 jobs:
   # Builds images in parallel
@@ -124,6 +125,7 @@ jobs:
       ECS_SERVICE: indokweb-frontend-fg-service # Set this to our ECS service name, e.g. indokweb-backend-fg-service
       ECS_TASK_DEFINITION: .aws/task-definition.frontend.json # Set this to the path to the task definition, e.g. .aws/backend-task-definition.json
       CONTAINER_NAME: frontend # Set this to the container name in the task definition above, e.g. backend
+      SENTRY_PROJECT: indokweb-frontend
 
     steps:
       - name: Checkout
@@ -157,6 +159,15 @@ jobs:
           cluster: ${{ env.ECS_CLUSTER }}
           wait-for-service-stability: true
 
+      - name: Notify Sentry of the new Deployment
+        uses: getsentry/action-release@v1.1.6
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ env.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ env.SENTRY_PROJECT }}
+        with:
+          environment: production
+
   deploy-backend-task-definition:
     environment: production
     needs: [build-backend, build-frontend]
@@ -167,6 +178,7 @@ jobs:
       ECS_SERVICE: indokweb-backend-fg-service # Set this to our ECS service name, e.g. indokweb-backend-fg-service
       ECS_TASK_DEFINITION: .aws/task-definition.backend.json # Set this to the path to the task definition, e.g. .aws/backend-task-definition.json
       CONTAINER_NAME: backend # Set this to the container name in the task definition above, e.g. backend
+      SENTRY_PROJECT: indokweb-backend
 
     steps:
       - name: Checkout
@@ -200,18 +212,11 @@ jobs:
           cluster: ${{ env.ECS_CLUSTER }}
           wait-for-service-stability: true
 
-  deploy:
-    name: Create a new deployment
-    needs: [deploy-backend-task-definition, deploy-frontend-task-definition]
-    runs-on: ubuntu-latest
-    environment: production
-
-    steps:
       - name: Notify Sentry of the new Deployment
         uses: getsentry/action-release@v1.1.6
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
-          SENTRY_PROJECT: ${{ secrets.BACKEND_SENTRY_PROJECT }}
+          SENTRY_ORG: ${{ env.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ env.SENTRY_PROJECT }}
         with:
           environment: production
