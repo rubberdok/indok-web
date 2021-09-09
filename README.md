@@ -16,7 +16,7 @@
 ## Introduction
 
 [![MIT License](https://img.shields.io/apm/l/atomic-design-ui.svg?)](https://opensource.org/licenses/MIT)
-![](https://codebuild.eu-north-1.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoiMDVZaEw3WW5La1QvRzJJb3prL1grZ2piREtxUU5HaXhDd0h2d05uRjNFWHBQellaTnljNXpGVFY3MmFCaWpoSUE4aXJScW1IUnFQMjQrU002RFRCR1FRPSIsIml2UGFyYW1ldGVyU3BlYyI6Imw2WUFzNkxnQkl2SGgrUzkiLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=master)
+[![AWS](https://github.com/hovedstyret/indok-web/actions/workflows/aws.yml/badge.svg)](https://github.com/hovedstyret/indok-web/actions/workflows/aws.yml)
 [![Code style](https://img.shields.io/badge/code%20style-black-black?style=flat)](https://github.com/psf/black)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat)](https://github.com/prettier/prettier)
 [![Open Source](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)](https://opensource.org/)
