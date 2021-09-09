@@ -89,9 +89,11 @@ const useStyles = makeStyles((theme) => ({
 const FilterMenu: React.FC<Props> = ({ filters, onFiltersChange, showDefaultEvents, onShowDefaultChange }) => {
   const classes = useStyles();
 
-  const { loading: organizationLoading, error: organizationError, data: organizationData } = useQuery(
-    QUERY_EVENT_FILTERED_ORGANIZATIONS
-  );
+  const {
+    loading: organizationLoading,
+    error: organizationError,
+    data: organizationData,
+  } = useQuery(QUERY_EVENT_FILTERED_ORGANIZATIONS);
   if (organizationLoading) return null;
   if (organizationError) return null;
 
