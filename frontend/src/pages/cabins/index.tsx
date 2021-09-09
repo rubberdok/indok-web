@@ -145,6 +145,7 @@ const CabinsPage: NextPage = () => {
       </Grid>
     </Grid>
   );
+
   return (
     <Layout>
       <Hero />

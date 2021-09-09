@@ -14,11 +14,12 @@ class BaseListingInput(graphene.InputObjectType):
     start_datetime = graphene.DateTime()
     end_datetime = graphene.DateTime()
     deadline = graphene.DateTime()
-    url = graphene.String()
+    application_url = graphene.String()
     form_id = graphene.ID()
     application = graphene.Boolean()
     interview = graphene.Boolean()
     case = graphene.Boolean()
+    read_more_url = graphene.String()
 
 
 class CreateListingInput(BaseListingInput):
@@ -89,7 +90,7 @@ class UpdateListing(graphene.Mutation):
         listing_data = BaseListingInput(required=False)
 
     @login_required
-    @permission_required("listings.update_listing")
+    @permission_required("listings.change_listing")
     def mutate(self, info, id, listing_data=None):
         try:
             listing = Listing.objects.get(pk=id)
