@@ -267,4 +267,4 @@ devcontainer.json
 .notes.txt
 
 # Sentry
-sentry.properties
+.sentryclirc
