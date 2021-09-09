@@ -87,6 +87,15 @@ npm install
 
 The frontend runs on [`localhost:3000`](localhost:3000), and the backend on [`localhost:8000`](localhost:8000). The GraphQL API endpoint is [`localhost:8000/graphql`](localhost:8000/graphql).
 
+## Deployment
+
+The app uses Github actions to deploy to AWS Elastic Container Service, the deployment steps can be found in the `aws.yml` workflow.
+In short, the process is as follows:
+
+1.  Build, tag, and push frontend and backend images to Amazon Elastic Container Registry
+2.  Update and deploy updated task definitions for frontend and backend referencing the newly tagged images.
+3.  Notify Github and Sentry of a successful release
+
 ## Acknowledgements
 
 <p float="left">
