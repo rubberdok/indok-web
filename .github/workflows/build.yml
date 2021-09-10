@@ -55,11 +55,11 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: ${{ github.sha }}
-          NEXT_PUBLIC_GRAPHQL_BACKEND_URI: "https://api.indokntnu.no/graphql"
-          NEXT_PUBLIC_FRONTEND_URI: "https://indokntnu.no"
-          NEXT_PUBLIC_DATAPORTEN_ID: "f17d2ea0-a7c9-4458-83bf-35cf5b555cae"
-          NEXT_PUBLIC_DATAPORTEN_REDIRECT_URI: "https://indokntnu.no/authCallback"
-          NEXT_PUBLIC_DATAPORTEN_STATE: "RGpBPYszuqXVvsma1suHJJ4X7ZJjkfS6njRHnx4p"
+          NEXT_PUBLIC_GRAPHQL_BACKEND_URI: https://api.indokntnu.no/graphql
+          NEXT_PUBLIC_FRONTEND_URI: https://indokntnu.no
+          NEXT_PUBLIC_DATAPORTEN_ID: f17d2ea0-a7c9-4458-83bf-35cf5b555cae
+          NEXT_PUBLIC_DATAPORTEN_REDIRECT_URI: https://indokntnu.no/authCallback
+          NEXT_PUBLIC_DATAPORTEN_STATE: RGpBPYszuqXVvsma1suHJJ4X7ZJjkfS6njRHnx4p
         with:
           file: frontend/Dockerfile.prod
           context: ./frontend
