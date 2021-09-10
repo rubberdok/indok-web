@@ -2,4 +2,4 @@ from django.apps import AppConfig
 
 
 class CabinConfig(AppConfig):
-    name = "cabins"
+    name = "apps.cabins"
