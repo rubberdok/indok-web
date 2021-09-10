@@ -16,7 +16,7 @@ import { cabinImages, outsideImages } from "@components/pages/cabins/ImageSlider
 import FAQ from "@components/pages/cabins/Documents/FAQ";
 import Layout from "@components/Layout";
 
-const BOOKING_DISABLED = false;
+const BOOKING_DISABLED = true;
 
 const useStyles = makeStyles((theme: Theme) => ({
   hero: {
@@ -116,14 +116,14 @@ const CabinsPage: NextPage = () => {
   ];
 
   const Hero = () => (
-    <Grid container className={classes.hero} alignItems="center" justify="center">
-      <Grid xs={12} sm={6} item container justify="center">
-        <Box>
+    <Grid container className={classes.hero} alignItems="center" justifyContent="center">
+      <Grid xs={12} sm={6} item container justifyContent="center">
+        <Box m={2}>
           <Typography variant="h1">Hyttebooking</Typography>
           <Typography variant="overline">På denne siden blir det snart mulig å reservere indøkhyttene</Typography>
         </Box>
       </Grid>
-      <Grid xs={12} sm={6} item container justify="center">
+      <Grid xs={12} sm={6} item container justifyContent="center">
         {BOOKING_DISABLED ? null : (
           <Link href="/cabins/book" passHref>
             <Button variant="contained" endIcon={<NavigateNextIcon />}>
@@ -132,7 +132,7 @@ const CabinsPage: NextPage = () => {
           </Link>
         )}
       </Grid>
-      <Grid xs={12} sm={6} item container justify="center">
+      <Grid xs={12} sm={6} item container justifyContent="center">
         <Button
           className={classes.readMoreButton}
           variant="contained"
@@ -162,12 +162,12 @@ const CabinsPage: NextPage = () => {
                       </Box>
                       <Divider />
                       <Box m={3}>
-                        <Grid container spacing={10} justify="center">
+                        <Grid container spacing={4} justifyContent="center">
                           {facilitiesData.map((facility) => (
-                            <Grid item md={4} sm={6} xs={12} key={facility.text}>
+                            <Grid item md={4} sm={6} xs={6} key={facility.text}>
                               <Box textAlign="center">
                                 {facility.icon}
-                                <Typography>{facility.text}</Typography>
+                                <Typography variant={"body2"}>{facility.text}</Typography>
                               </Box>
                             </Grid>
                           ))}
@@ -209,7 +209,7 @@ const CabinsPage: NextPage = () => {
                       </Typography>
                     </Grid>
 
-                    <Grid item container xs={12} sm={6} justify="center" alignContent="center">
+                    <Grid item container xs={12} sm={6} justifyContent="center" alignContent="center">
                       <Box width="90%">
                         <ImageSlider imageData={cabinImages} displayLabelText={false} />
                       </Box>
@@ -236,7 +236,7 @@ const CabinsPage: NextPage = () => {
                   </Grid>
                 </Grid>
                 <Grid item container spacing={10} alignItems="center" direction="row">
-                  <Grid item container justify="center" alignContent="center" sm={12} md={6}>
+                  <Grid item container justifyContent="center" alignContent="center" sm={12} md={6}>
                     <Box width="90%">
                       <ImageSlider imageData={outsideImages} displayLabelText={false}></ImageSlider>
                     </Box>
@@ -258,7 +258,7 @@ const CabinsPage: NextPage = () => {
                     </Typography>
                   </Grid>
                   <Grid item container spacing={10} alignItems="center" direction="row">
-                    <Grid item container justify="center" alignContent="center" xs={12}>
+                    <Grid item container justifyContent="center" alignContent="center" xs={12}>
                       <Grid item>
                         <FAQ />
                       </Grid>

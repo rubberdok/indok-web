@@ -53,7 +53,7 @@ const DayCell: React.FC<Props> = (props) => {
   return (
     <Grid item xs component="td" onClick={onClick}>
       <Box className={classes.root}>
-        <Grid container justify="center" alignItems="center" style={{ height: "100%" }}>
+        <Grid container justifyContent="center" alignItems="center" style={{ height: "100%" }}>
           <Grid item>
             <Typography>{value}</Typography>
           </Grid>

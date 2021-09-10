@@ -24,7 +24,7 @@ const ReceiptSite: NextPage<Props> = (props) => {
         </Grid>
       </Hidden>
 
-      <Grid item container justify="space-evenly" alignItems="stretch">
+      <Grid item container justifyContent="space-evenly" alignItems="stretch">
         <Grid item>
           <CabinBookingStatus cabinText="Du har nå søkt om å booke" {...props} />
         </Grid>

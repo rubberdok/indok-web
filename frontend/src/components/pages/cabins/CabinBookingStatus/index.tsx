@@ -1,10 +1,11 @@
 import { NextPage, NextComponentType } from "next";
-import { makeStyles, Theme, Typography, Box, Divider, Tooltip } from "@material-ui/core";
+import { makeStyles, Theme, Typography, Box, Divider, Tooltip, useMediaQuery } from "@material-ui/core";
 import { Cabin, ContactInfo } from "@interfaces/cabins";
 import { DatePick } from "src/pages/cabins/book";
 import { ReactNode } from "react";
 import { TypographyProps } from "@material-ui/core/Typography";
 import { calculatePrice, convertDateFormat, toStringChosenCabins } from "@utils/cabins";
+import theme from "@styles/theme";
 
 interface Props {
   chosenCabins: Cabin[];
@@ -33,6 +34,7 @@ Renders fields based on the props given.
 */
 const CabinBookingStatus: NextPage<Props> = ({ chosenCabins, datePick, contactInfo, cabinText, mailSent }) => {
   const classes = useStyles();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const infos: { info: Cabin[] | DatePick | ContactInfo; renderComponent: ReactNode }[] = [
     {
@@ -91,7 +93,9 @@ const CabinBookingStatus: NextPage<Props> = ({ chosenCabins, datePick, contactIn
         <>
           <InfoText>
             <Box>
-              <Typography>Vi har sendt en mail til {contactInfo.receiverEmail} med informasjon om søknaden.</Typography>
+              <Typography variant={isMobile ? "body2" : "body1"}>
+                Vi har sendt en mail til {contactInfo.receiverEmail} med informasjon om søknaden.
+              </Typography>
             </Box>
           </InfoText>
         </>
@@ -99,12 +103,12 @@ const CabinBookingStatus: NextPage<Props> = ({ chosenCabins, datePick, contactIn
     },
   ];
   return (
-    <Box p={3} border={3} borderColor="primary.main">
+    <Box p={isMobile ? 0 : 3} border={3} borderColor="primary.main">
       {infos
         .filter((info, index) => (info.info !== undefined && index != 3 && !mailSent) || mailSent)
         .map((info, index) => (
           <Box key={index}>
-            <Box p={3}>{info.renderComponent}</Box>
+            <Box m={3}>{info.renderComponent}</Box>
             <Divider />
           </Box>
         ))}

@@ -17,6 +17,7 @@ import {
   useTheme,
   useMediaQuery,
   MobileStepper,
+  Container,
 } from "@material-ui/core";
 import { allValuesFilled, cabinOrderStepReady, isFormValid, validateInputForm } from "@utils/cabins";
 import { NextPage } from "next";
@@ -221,56 +222,58 @@ const CabinBookingPage: NextPage = () => {
 
   return (
     <Layout>
-      <ContractDialog
-        modalData={modalData}
-        setModalData={setModalData}
-        chosenCabins={chosenCabins}
-        datePick={datePick}
-        contactInfo={contactInfo}
-        activeStep={activeStep}
-        setActiveStep={setActiveStep}
-      />
-      <Box m={getMargin()}>
-        <Grid container direction="column" justify="center" alignItems="stretch" spacing={1}>
-          <Grid item>
-            {isMobile ? (
-              <Typography variant="h4" align="center">
-                {steps[activeStep]}
-              </Typography>
-            ) : (
-              <Stepper activeStep={activeStep}>
-                {steps.map((label) => (
-                  <Step key={label}>
-                    <StepLabel>{label}</StepLabel>
-                  </Step>
-                ))}
-              </Stepper>
-            )}
+      <Container>
+        <ContractDialog
+          modalData={modalData}
+          setModalData={setModalData}
+          chosenCabins={chosenCabins}
+          datePick={datePick}
+          contactInfo={contactInfo}
+          activeStep={activeStep}
+          setActiveStep={setActiveStep}
+        />
+        <Box m={getMargin()}>
+          <Grid container direction="column" justifyContent="center" alignItems="stretch" spacing={1}>
+            <Grid item>
+              {isMobile ? (
+                <Typography variant="h4" align="center">
+                  {steps[activeStep]}
+                </Typography>
+              ) : (
+                <Stepper activeStep={activeStep}>
+                  {steps.map((label) => (
+                    <Step key={label}>
+                      <StepLabel>{label}</StepLabel>
+                    </Step>
+                  ))}
+                </Stepper>
+              )}
+            </Grid>
+            <Grid item>
+              <Paper>
+                <Box p={getMargin()}>{getStepComponent()}</Box>
+              </Paper>
+            </Grid>
+            <Grid item>
+              {isMobile && activeStep != 3 ? (
+                <MobileStepper
+                  steps={4}
+                  position="bottom"
+                  variant="progress"
+                  activeStep={activeStep}
+                  nextButton={<NextButton />}
+                  backButton={<BackButton />}
+                />
+              ) : (
+                <Grid item container justifyContent="space-between">
+                  <BackButton />
+                  <NextButton />
+                </Grid>
+              )}
+            </Grid>
           </Grid>
-          <Grid item>
-            <Paper>
-              <Box p={getMargin()}>{getStepComponent()}</Box>
-            </Paper>
-          </Grid>
-          <Grid item>
-            {isMobile && activeStep != 3 ? (
-              <MobileStepper
-                steps={4}
-                position="bottom"
-                variant="progress"
-                activeStep={activeStep}
-                nextButton={<NextButton />}
-                backButton={<BackButton />}
-              />
-            ) : (
-              <Grid item container justify="space-between">
-                <BackButton />
-                <NextButton />
-              </Grid>
-            )}
-          </Grid>
-        </Grid>
-      </Box>
+        </Box>
+      </Container>
     </Layout>
   );
 };

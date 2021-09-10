@@ -29,7 +29,7 @@ const CalendarTable: React.FC<Props> = ({ getRows, month, onChangeMonth }) => {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   return (
     <Grid container>
-      <Grid item container alignItems="center" justify={isMobile ? "space-between" : "center"}>
+      <Grid item container alignItems="center" justifyContent={isMobile ? "space-between" : "center"}>
         <Hidden mdUp>
           <IconButton onClick={() => onChangeMonth(-1)}>
             <NavigateBeforeIcon />

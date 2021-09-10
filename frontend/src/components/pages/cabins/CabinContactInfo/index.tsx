@@ -54,7 +54,7 @@ const CabinContactInfo: NextPage<ContractInfoProps> = ({
   };
 
   return (
-    <Grid container justify="center">
+    <Grid container justifyContent="center">
       <InputFields
         onChange={handleInputChange}
         contactInfo={contactInfo}

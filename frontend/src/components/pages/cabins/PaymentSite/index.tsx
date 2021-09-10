@@ -18,12 +18,12 @@ const PaymentSite: NextPage<Props> = (props) => {
     <Grid container alignItems="center" direction="column" spacing={5}>
       <Hidden mdDown>
         <Grid item>
-          <Typography variant="h4">Se igjennom og betal</Typography>
+          <Typography variant="h4">Se igjennom og send søknad</Typography>
           <Divider />
         </Grid>
       </Hidden>
 
-      <Grid item container justify="space-evenly" alignItems="stretch">
+      <Grid item container justifyContent="space-evenly" alignItems="stretch">
         <Grid item>
           <CabinBookingStatus {...props} />
         </Grid>

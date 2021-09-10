@@ -172,7 +172,7 @@ const Calendar: React.FC<CalendarProps> = ({
   };
   return (
     <Grid container direction="column" spacing={5}>
-      <Grid item container alignItems="center" justify="space-between">
+      <Grid item container alignItems="center" justifyContent="space-between">
         <Hidden mdDown>
           <IconButton onClick={() => onChangeMonth(-1)}>
             <NavigateBeforeIcon />

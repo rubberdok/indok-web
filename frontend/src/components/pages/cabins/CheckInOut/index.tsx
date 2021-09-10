@@ -28,7 +28,7 @@ const CheckInOut: NextPage<Props> = ({ allCabins, chosenCabins, setChosenCabins,
   };
   return (
     <Grid container spacing={isMobile ? 2 : 10}>
-      <Grid item xs={12} md={2} container direction="column" justify="center" alignItems="center">
+      <Grid item xs={12} md={2} container direction="column" justifyContent="center" alignItems="center">
         <Grid item>
           <Typography variant="h5">Velg hytte</Typography>
           <Divider component="hr" />

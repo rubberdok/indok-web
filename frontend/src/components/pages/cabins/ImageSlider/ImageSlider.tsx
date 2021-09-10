@@ -93,7 +93,7 @@ const ImageSlider = ({ imageData, displayLabelText }: ImageSliderProps): JSX.Ele
         position="static"
         activeStep={activeStep}
         className={classes.mobileStepper}
-        variant="progress"
+        variant="text"
         nextButton={
           <Button size="small" onClick={handleNext} disabled={activeStep === maxSteps - 1}>
             Neste

@@ -29,7 +29,7 @@ export const InputFields: React.FC<Props> = ({ contactInfo, validations, onChang
   const totalGuestsAllowed = chosenCabins.reduce((sum, currentCabin) => sum + (currentCabin.maxGuests || 0), 0);
 
   return (
-    <Grid container item spacing={3} lg={8} md={12} justify="center">
+    <Grid container item spacing={3} lg={8} md={12} justifyContent="center">
       <Hidden mdDown>
         <Grid item>
           <Typography variant="h3">Kontaktinfo</Typography>
