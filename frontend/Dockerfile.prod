@@ -31,7 +31,7 @@ COPY . .
 
 # Secrets should not be passed as build args.
 RUN --mount=type=secret,id=SENTRY_AUTH_TOKEN \
-    && ["export", "SENTRY_AUTH_TOKEN=$(cat /run/secrets/SENTRY_AUTH_TOKEN)"] \
-    && ["npm", "run", "build"]
+    && export SENTRY_AUTH_TOKEN=$(cat /run/secrets/SENTRY_AUTH_TOKEN) \
+    && npm run build
 
 CMD ["npm", "run", "start"]
