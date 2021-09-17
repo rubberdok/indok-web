@@ -123,7 +123,7 @@ const Footer: React.FC = () => {
                 <a href="mailto:Leder@indokhs.no">
                   <Typography variant="body2">Leder@indokhs.no</Typography>
                 </a>
-                <Link href="/report/">Varsle</Link>
+                <Link href="/report/">Baksida</Link>
                 <Box mt={2}>
                   <a href="https://www.facebook.com/HovedstyretIndok" rel="noreferrer noopener" target="_blank">
                     <IconButton edge="start" size="small" aria-label="facebook" color="inherit">
