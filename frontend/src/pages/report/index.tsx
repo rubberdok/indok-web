@@ -85,8 +85,8 @@ const ReportsPage: NextPage = () => {
   return (
     <Layout>
       <Head>
-        <title>Varsling | Forening for studenter ved Industriell Økonomi og Teknologiledelse</title>
-        <meta name="og:title" content="Varsling | Indøk NTNU" key="title" />
+        <title>Baksida | Forening for studenter ved Industriell Økonomi og Teknologiledelse</title>
+        <meta name="og:title" content="Baksida | Indøk NTNU" key="title" />
       </Head>
       <Container>
         <Grid
@@ -102,7 +102,7 @@ const ReportsPage: NextPage = () => {
               <Card>
                 <CardContent style={{ padding: 32 }}>
                   <Typography variant="h3" component="h2" gutterBottom>
-                    Varsling
+                    Baksida
                   </Typography>
                   <Typography variant="body1" gutterBottom>
                     Indøk utgjør et stort og viktig sosialt fellesskap for studentene ved studieretningen.
