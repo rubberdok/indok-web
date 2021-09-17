@@ -68,7 +68,7 @@ const BoardPage: NextPage = () => {
       rank: 9,
       name: "Aslak Vengbo",
       position: "Leder ESTIEM",
-      email: "**@estiem.org",
+      email: "leder@estiem.no",
       phone: "934 55 914",
     },
   ];
