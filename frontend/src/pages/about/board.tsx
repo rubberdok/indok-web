@@ -40,7 +40,7 @@ const BoardPage: NextPage = () => {
       rank: 5,
       name: "Vilde Sætre",
       position: "Leder Bindeleddet",
-      email: "**@bindeleddet.ntnu.no",
+      email: "leder@bindeleddet.ntnu.no",
       phone: "917 75 595",
     },
     {
