@@ -23,14 +23,4 @@ class Migration(migrations.Migration):
             name='temp_organization',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='organizations.organization'),
         ),
-        migrations.AlterField(
-            model_name='responsiblegroup',
-            name='group',
-            field=models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to='auth.group'),
-        ),
-        migrations.AlterField(
-            model_name='responsiblegroup',
-            name='name',
-            field=models.CharField(max_length=150),
-        ),
     ]
