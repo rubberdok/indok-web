@@ -29,7 +29,7 @@ ENV NEXT_PUBLIC_DATAPORTEN_STATE $NEXT_PUBLIC_DATAPORTEN_STATE
 ARG NEXT_PUBLIC_FRONTEND_URI
 ENV NEXT_PUBLIC_FRONTEND_URI $NEXT_PUBLIC_FRONTEND_URI
 
-RUN --mount=type=secret,id=SENTRY_AUTH_TOKEN yarn build
+RUN --mount=type=secret,id=SENTRY_AUTH_TOKEN yarn build && yarn install --production --ignore-scripts --prefer-offline
 
 # Production image, copy all the files and run next
 FROM 777854691961.dkr.ecr.eu-north-1.amazonaws.com/node:14-alpine AS runner

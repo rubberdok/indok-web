@@ -2,8 +2,8 @@
 
 FROM 777854691961.dkr.ecr.eu-north-1.amazonaws.com/python:3.9
 ENV PYTHONUNBUFFERED 1
-RUN mkdir -p /code
-WORKDIR /code
+RUN mkdir -p /api
+WORKDIR /api
 RUN pip install --upgrade pip
 COPY requirements.txt .
 RUN pip install -r requirements.txt
@@ -12,4 +12,4 @@ COPY . .
 
 EXPOSE 8000
 
-ENTRYPOINT ["/code/entrypoint.prod.sh"]
+ENTRYPOINT ["/api/entrypoint.prod.sh"]
