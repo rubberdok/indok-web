@@ -21,6 +21,7 @@ import Head from "next/head";
 import Amund from "@public/img/Amund.jpg";
 import Benjamin from "@public/img/Benjamin.jpg";
 import Christine from "@public/img/Christine.jpeg";
+import Jesper from "@public/img/Jesper.jpg";
 import Laila from "@public/img/Laila.jpg";
 import Maria from "@public/img/Maria.jpg";
 import { useRef } from "react";
@@ -69,6 +70,7 @@ const ReportsPage: NextPage = () => {
       name: "Jesper Engvik Skovdahl",
       initials: "JS",
       color: indigo[500],
+      image: Jesper,
       email: "jesperes@stud.ntnu.no",
     },
     {
@@ -83,8 +85,8 @@ const ReportsPage: NextPage = () => {
   return (
     <Layout>
       <Head>
-        <title>Varsling | Forening for studenter ved Industriell Økonomi og Teknologiledelse</title>
-        <meta name="og:title" content="Varsling | Indøk NTNU" key="title" />
+        <title>Baksida | Forening for studenter ved Industriell Økonomi og Teknologiledelse</title>
+        <meta name="og:title" content="Baksida | Indøk NTNU" key="title" />
       </Head>
       <Container>
         <Grid
@@ -100,7 +102,7 @@ const ReportsPage: NextPage = () => {
               <Card>
                 <CardContent style={{ padding: 32 }}>
                   <Typography variant="h3" component="h2" gutterBottom>
-                    Varsling
+                    Baksida
                   </Typography>
                   <Typography variant="body1" gutterBottom>
                     Indøk utgjør et stort og viktig sosialt fellesskap for studentene ved studieretningen.
