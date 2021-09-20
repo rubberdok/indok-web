@@ -10,8 +10,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint src --ext .ts,.tsx",
-    "lint:fix": "npm run lint -- --fix",
-    "prepare": "cd .. && husky install frontend/.husky"
+    "lint:fix": "yarn run lint --fix",
+    "postinstall": "cd .. && husky install frontend/.husky"
   },
   "repository": {
     "type": "git",
@@ -68,7 +68,7 @@
   },
   "lint-staged": {
     "src/**/*.{ts,tsx}": [
-      "npm run lint:fix",
+      "yarn run lint:fix",
       "prettier --write"
     ],
     "../**/*.py": [
