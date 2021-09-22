@@ -14,7 +14,7 @@ const MemberCard: React.VFC<Props> = ({ member }) => {
           {member.position}
         </Typography>
         <Typography variant="body1" component="p">
-          Email: <a href={`mailto:${member.email}`}>{member.email}</a>
+          E-post: <a href={`mailto:${member.email}`}>{member.email}</a>
         </Typography>
         <Typography variant="body1" component="p">
           Tlf: {member.phone}
