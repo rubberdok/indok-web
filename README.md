@@ -44,6 +44,37 @@ The website includes:
 [File an issue](https://github.com/hovedstyret/indok-web/issues/new)!
 
 ## Setup
+### Installing and running
+
+1. [Set up Git](https://docs.github.com/en/get-started/quickstart/set-up-git)
+
+1. Install and start [Docker Desktop](https://www.docker.com/products/docker-desktop)
+
+2. Clone the project and build the Docker images
+
+```
+git clone https://github.com/hovedstyret/indok-web.git
+cd indok-web
+docker compose build
+```
+
+3. Run the project in Docker and set up the database
+
+```
+docker compose up
+docker compose exec backend python manage.py migrate
+docker compose exec backend python manage.py createsuperuser --username=admin
+docker compose exec backend python manage.py loaddata example_data
+```
+
+4. Install commit hooks
+
+```
+cd frontend
+npm ci
+```
+
+The frontend runs on [`localhost:3000`](localhost:3000), and the backend on [`localhost:8000`](localhost:8000). The GraphQL API endpoint is [`localhost:8000/graphql`](localhost:8000/graphql).
 
 ### Environment variables
 
@@ -58,34 +89,6 @@ In order to authenticate users through Feide, Indøk Hovedstyre Webkomité has r
    - `DATAPORTEN_ID` should be the same as above if using the Indøk Hovedstyre Webkomité client.
    - Contact the maintainers if you are a developer of the project and need access to the various secrets and API keys needed for the project.
 
-### Installing and running
-
-1. Install and start [Docker Desktop](https://www.docker.com/products/docker-desktop)
-
-2. Clone the project and build Docker image
-
-```
-git clone https://github.com/hovedstyret/indok-web.git
-cd indok-web
-docker-compose build
-```
-
-3. Run the project in Docker and set up the database
-
-```
-docker-compose up
-docker-compose exec backend python manage.py migrate
-docker-compose exec backend python manage.py createsuperuser
-```
-
-4. Install commit hooks by installing the frontend locally
-
-```
-cd frontend
-npm install
-```
-
-The frontend runs on [`localhost:3000`](localhost:3000), and the backend on [`localhost:8000`](localhost:8000). The GraphQL API endpoint is [`localhost:8000/graphql`](localhost:8000/graphql).
 
 ## Deployment
 
