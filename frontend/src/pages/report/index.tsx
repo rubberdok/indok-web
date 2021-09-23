@@ -92,12 +92,12 @@ const ReportsPage: NextPage = () => {
         <Grid
           container
           direction="row"
-          justify="center"
+          justifyContent="center"
           alignItems="stretch"
           spacing={2}
           style={{ marginTop: 32, marginBottom: 16 }}
         >
-          <Grid item container direction="column" justify="center" alignItems="stretch" spacing={4} md={10}>
+          <Grid item container direction="column" justifyContent="center" alignItems="stretch" spacing={4} md={10}>
             <Grid item>
               <Card>
                 <CardContent style={{ padding: 32 }}>
@@ -272,7 +272,7 @@ const ReportsPage: NextPage = () => {
                   <Grid
                     container
                     direction="row"
-                    justify="center"
+                    justifyContent="center"
                     spacing={8}
                     style={{ marginBottom: theme.spacing(8) }}
                   >
