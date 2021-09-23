@@ -1,5 +1,4 @@
 import { useQuery } from "@apollo/client";
-import PermissionRequired from "@components/permissions/PermissionRequired";
 import { GET_USER } from "@graphql/users/queries";
 import { User } from "@interfaces/users";
 import { Box, Button, makeStyles, Menu, MenuItem } from "@material-ui/core";
@@ -166,13 +165,11 @@ const NavbarLinks: React.FC = () => {
         </>
       ) : (
         <>
-          <PermissionRequired permission="archive.view_archivedocument">
-            <Box position="relative">
-              <Link href="/archive">
-                <a className={[router.pathname == "/archive" ? "active" : "", classes.navItem].join(" ")}>Arkiv</a>
-              </Link>
-            </Box>
-          </PermissionRequired>
+          <Box position="relative">
+            <Link href="/archive">
+              <a className={[router.pathname == "/archive" ? "active" : "", classes.navItem].join(" ")}>Arkiv</a>
+            </Link>
+          </Box>
           <Button
             className={[classes.navItem, classes.user].join(" ")}
             aria-label="account of current user"
