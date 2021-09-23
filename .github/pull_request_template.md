@@ -2,6 +2,10 @@
 
 This PR ...
 
+Proposed changes: 
+- Change 1
+- change 2
+
 ## Types of Changes
 - [ ] New feature
 - [ ] Bug fix
