@@ -47,9 +47,7 @@ class CabinsBaseTestCase(ExtendedGraphQLTestCase):
 
     def add_booking_permission(self, codename):
         content_type = ContentType.objects.get_for_model(Booking)
-        self.user.user_permissions.add(
-            Permission.objects.get(codename=codename, content_type=content_type)
-        )
+        self.user.user_permissions.add(Permission.objects.get(codename=codename, content_type=content_type))
 
 
 class CabinsResolversTestCase(CabinsBaseTestCase):
@@ -92,8 +90,8 @@ class CabinsResolversTestCase(CabinsBaseTestCase):
                         id
                         name
                     }
-                    firstname
-                    lastname
+                    firstName
+                    lastName
                 }
             }
             """
@@ -146,8 +144,8 @@ class CabinsMutationsTestCase(CabinsBaseTestCase):
                 mutation CreateBooking {{
                     createBooking(
                         bookingData: {{
-                            firstname: \"{booking.firstname}\",
-                            lastname: \"{booking.lastname}\",
+                            firstName: \"{booking.first_name}\",
+                            lastName: \"{booking.last_name}\",
                             phone: \"{booking.phone}\",
                             receiverEmail: \"{booking.receiver_email}\",
                             checkIn: \"{booking.check_in.strftime("%Y-%m-%d")}\",
@@ -169,18 +167,15 @@ class CabinsMutationsTestCase(CabinsBaseTestCase):
         self.assertEqual(3, len(Booking.objects.all()))
 
     def test_create_booking(self):
-        response = self.create_booking(
-            self.no_conflict_booking, f"{self.bjornen_cabin.id}"
-        )
+        response = self.create_booking(self.no_conflict_booking, f"{self.bjornen_cabin.id}")
         self.assertResponseNoErrors(response)
         # Check that booking is created
         self.assertTrue(
             Booking.objects.filter(
-                firstname=self.no_conflict_booking.firstname,
+                first_name=self.no_conflict_booking.first_name,
                 phone=self.no_conflict_booking.phone,
             ).exists()
         )
-
 
     def test_add_invalid_booking(self):
         # Try to add booking before current time
@@ -202,49 +197,37 @@ class CabinsMutationsTestCase(CabinsBaseTestCase):
 
     def test_invalid_email(self):
         self.no_conflict_booking.receiver_email = "oda.norwegian123.no"
-        response = self.create_booking(
-            self.no_conflict_booking, f"{self.oksen_cabin.id}"
-        )
+        response = self.create_booking(self.no_conflict_booking, f"{self.oksen_cabin.id}")
         self.check_create_with_error(response)
 
-    def test_empty_firstname(self):
+    def test_empty_first_name(self):
         # Try to add a booking with no first name variable
-        self.no_conflict_booking.firstname = ""
-        response = self.create_booking(
-            self.no_conflict_booking, f"{self.oksen_cabin.id}"
-        )
+        self.no_conflict_booking.first_name = ""
+        response = self.create_booking(self.no_conflict_booking, f"{self.oksen_cabin.id}")
         self.check_create_with_error(response)
 
-    def test_empty_lastname(self):
+    def test_empty_last_name(self):
         # Try to add a booking with no last name variable
-        self.no_conflict_booking.lastname = ""
-        response = self.create_booking(
-            self.no_conflict_booking, f"{self.oksen_cabin.id}"
-        )
+        self.no_conflict_booking.last_name = ""
+        response = self.create_booking(self.no_conflict_booking, f"{self.oksen_cabin.id}")
         self.check_create_with_error(response)
 
     def test_phone_number(self):
         # Try to make cabin with invalid phone number
         self.no_conflict_booking.phone = "26832732"
-        response = self.create_booking(
-            self.no_conflict_booking, f"{self.oksen_cabin.id}"
-        )
+        response = self.create_booking(self.no_conflict_booking, f"{self.oksen_cabin.id}")
         self.check_create_with_error(response)
 
     def test_sum_of_participants_cannot_exceed_limit(self):
         # Try to add a booking with more participants than total capacity of cabin
         self.no_conflict_booking.internal_participants = 15
         self.no_conflict_booking.external_participants = 7
-        response = self.create_booking(
-            self.no_conflict_booking, f"{self.oksen_cabin.id}"
-        )
+        response = self.create_booking(self.no_conflict_booking, f"{self.oksen_cabin.id}")
         self.check_create_with_error(response)
         # Try to add a booking with more participants than total capacity of cabins
         self.no_conflict_booking.internal_participants = 19
         self.no_conflict_booking.external_participants = 21
-        response = self.create_booking(
-            self.no_conflict_booking, f"{self.oksen_cabin.id}, {self.bjornen_cabin}"
-        )
+        response = self.create_booking(self.no_conflict_booking, f"{self.oksen_cabin.id}, {self.bjornen_cabin}")
         self.check_create_with_error(response)
 
     def test_no_checkin_and_checkout_on_same_day(self):
@@ -256,7 +239,7 @@ class CabinsMutationsTestCase(CabinsBaseTestCase):
     def test_update_booking(self):
         query = f"""
         mutation {{
-          updateBooking(bookingData: {{id: {self.first_booking.id}, firstname: \"Sverre\", lastname: \"Spetalen\"}}) {{
+          updateBooking(bookingData: {{id: {self.first_booking.id}, firstName: \"Sverre\", lastName: \"Spetalen\"}}) {{
             ok
             booking {{
               id
@@ -272,8 +255,8 @@ class CabinsMutationsTestCase(CabinsBaseTestCase):
         # Fetch updated booking
         self.first_booking = Booking.objects.get(pk=self.first_booking.id)
         self.assertResponseNoErrors(response)
-        self.assertEqual("Sverre", self.first_booking.firstname)
-        self.assertEqual("Spetalen", self.first_booking.lastname)
+        self.assertEqual("Sverre", self.first_booking.first_name)
+        self.assertEqual("Spetalen", self.first_booking.last_name)
 
     def test_delete_booking(self):
         query = f"""
@@ -290,9 +273,7 @@ class CabinsMutationsTestCase(CabinsBaseTestCase):
         try:
             booking = Booking.objects.get(pk=self.first_booking.id)
         except Booking.DoesNotExist:
-            self.assertTrue(
-                True, "The booking was deleted after unauthorized user tried to delete"
-            )
+            self.assertTrue(True, "The booking was deleted after unauthorized user tried to delete")
         self.add_booking_permission("delete_booking")
         response = self.query(query, user=self.user)
         self.assertResponseNoErrors(response)
@@ -310,8 +291,8 @@ class EmailTestCase(CabinsBaseTestCase):
             mutation {{
               sendEmail(
                 emailInput: {{
-                  firstname: \"{booking.firstname}\", 
-                  lastname: \"{booking.lastname}\", 
+                  firstName: \"{booking.first_name}\", 
+                  lastName: \"{booking.last_name}\", 
                   receiverEmail: \"{booking.receiver_email}\", 
                   phone: \"{booking.phone}\", 
                   internalParticipants: {booking.internal_participants}, 
@@ -343,10 +324,11 @@ class EmailTestCase(CabinsBaseTestCase):
 
     def test_subject_reservation(self):
         response = self.send_email(self.first_booking)
+        print("response", response)
         self.assertResponseNoErrors(resp=response)
 
         # Verify that the subject of the first message is correct.
-        self.assertEqual(mail.outbox[0].subject, 'Bekreftelse på mottat søknad om booking av Oksen')
+        self.assertEqual(mail.outbox[0].subject, "Bekreftelse på mottat søknad om booking av Oksen")
 
     def test_subject_approval(self):
         response = self.send_email(self.first_booking, "approve_booking")
@@ -364,9 +346,9 @@ class EmailTestCase(CabinsBaseTestCase):
         self.assertTrue(str(self.first_booking.price) in mail.outbox[1].body)
 
         # Verify that the admin email contains the correct contact info
-        self.assertTrue(self.first_booking.firstname in mail.outbox[1].body)
-        self.assertTrue(self.first_booking.lastname in mail.outbox[1].body)
-        self.assertTrue(self.first_booking.firstname in mail.outbox[1].body)
+        self.assertTrue(self.first_booking.first_name in mail.outbox[1].body)
+        self.assertTrue(self.first_booking.last_name in mail.outbox[1].body)
+        self.assertTrue(self.first_booking.first_name in mail.outbox[1].body)
         self.assertTrue(str(self.first_booking.phone) in mail.outbox[1].body)
         self.assertTrue(f"Antall indøkere: {self.first_booking.internal_participants}" in mail.outbox[1].body)
         self.assertTrue(f"Antall eksterne: {self.first_booking.external_participants}" in mail.outbox[1].body)
@@ -376,7 +358,3 @@ class EmailTestCase(CabinsBaseTestCase):
         self.assertTrue(self.first_booking.check_out.strftime("%d-%m-%Y") in mail.outbox[0].body)
         self.assertTrue(self.first_booking.check_in.strftime("%d-%m-%Y") in mail.outbox[1].body)
         self.assertTrue(self.first_booking.check_out.strftime("%d-%m-%Y") in mail.outbox[1].body)
-
-
-
-

@@ -1,7 +1,7 @@
 import { ChangeEvent } from "react";
 export interface BasicBooking {
-  firstname: string;
-  lastname: string;
+  firstName: string;
+  lastName: string;
   phone: string;
   receiverEmail: string;
 }

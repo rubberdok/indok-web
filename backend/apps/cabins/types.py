@@ -46,8 +46,8 @@ EmailTypes = Literal["reserve_booking", "approve_booking", "disapprove_booking"]
 
 
 class EmailInputType(TypedDict):
-    firstname: str
-    lastname: str
+    first_name: str
+    last_name: str
     receiver_email: str
     phone: str
     internal_participants: int

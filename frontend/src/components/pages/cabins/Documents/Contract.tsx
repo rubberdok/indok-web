@@ -39,7 +39,7 @@ const Contract: React.FC<ContractProps> = ({ chosenCabins, contactInfo, datePick
           På vegne av Foreningen for studenter ved Industriell Økonomi og Teknologiledelse er det i dag inngått følgende
           leiekontrakt mellom Hyttestyret og
           <Box display="inline" fontWeight="fontWeightBold">
-            {` ${contactInfo.firstname} ${contactInfo.lastname}`}.
+            {` ${contactInfo.firstName} ${contactInfo.lastName}`}.
           </Box>
           <Divider component="br" />
         </Typography>

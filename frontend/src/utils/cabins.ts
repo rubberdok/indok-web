@@ -18,8 +18,8 @@ export const validatePhone: (phone: string) => boolean = (phone) =>
 export const validateInputForm: (inputValues: ContactInfo) => ContactInfoValidations = (inputValues) => {
   const selectValidity = validateSelect(inputValues.internalParticipants, inputValues.externalParticipants);
   return {
-    firstname: validateName(inputValues.firstname),
-    lastname: validateName(inputValues.lastname),
+    firstName: validateName(inputValues.firstName),
+    lastName: validateName(inputValues.lastName),
     receiverEmail: validateEmail(inputValues.receiverEmail),
     phone: validatePhone(inputValues.phone),
     internalParticipants: selectValidity,

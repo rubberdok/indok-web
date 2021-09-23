@@ -42,8 +42,8 @@ const CabinContactInfo: NextPage<ContractInfoProps> = ({
 
       setContactInfo({
         ...contactInfo,
-        firstname: data.user.firstName,
-        lastname: data.user.lastName,
+        firstName: data.user.firstName,
+        lastName: data.user.lastName,
         receiverEmail: data.user.email,
       });
     }

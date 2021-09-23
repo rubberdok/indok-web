@@ -43,10 +43,10 @@ export const InputFields: React.FC<Props> = ({ contactInfo, validations, onChang
             type="text"
             label="Fornavn"
             required
-            name="firstname"
-            onChange={(e) => onChange("firstname", e)}
-            error={!validations?.firstname && errorTrigger}
-            value={contactInfo.firstname}
+            name="firstName"
+            onChange={(e) => onChange("firstName", e)}
+            error={!validations?.firstName && errorTrigger}
+            value={contactInfo.firstName}
             fullWidth
           />
         </Grid>
@@ -54,11 +54,11 @@ export const InputFields: React.FC<Props> = ({ contactInfo, validations, onChang
           <TextField
             type="text"
             label="Etternavn"
-            name="lastname"
+            name="lastName"
             required
-            onChange={(e) => onChange("lastname", e)}
-            error={!validations?.lastname && errorTrigger}
-            value={contactInfo.lastname}
+            onChange={(e) => onChange("lastName", e)}
+            error={!validations?.lastName && errorTrigger}
+            value={contactInfo.lastName}
             fullWidth
           />
         </Grid>

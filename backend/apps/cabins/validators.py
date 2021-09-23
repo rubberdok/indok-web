@@ -16,16 +16,12 @@ def create_booking_validation(booking_data):
         )
     if booking_data.receiver_email:
         email_validation(booking_data.receiver_email)
-    if booking_data.firstname or booking_data.lastname:
-        name_validation(booking_data.firstname, booking_data.lastname)
+    if booking_data.first_name or booking_data.last_name:
+        name_validation(booking_data.first_name, booking_data.last_name)
     if booking_data.phone:
         booking_data.phone = strip_phone_number(booking_data.phone)
         norwegian_phone_number_validation(booking_data.phone)
-    if (
-        booking_data.cabins
-        and booking_data.internal_participants
-        and booking_data.external_participants
-    ):
+    if booking_data.cabins and booking_data.internal_participants and booking_data.external_participants:
         participants_validation(
             booking_data.internal_participants,
             booking_data.external_participants,
@@ -46,9 +42,7 @@ def checkin_validation(check_in, check_out, cabin_ids):
     ).exists():
         raise GraphQLError("Input dates overlaps existing booking")
     if (check_out - check_in).days == 0:
-        raise GraphQLError(
-            "Invalid input: check-in and check-out cannot occur on the same day"
-        )
+        raise GraphQLError("Invalid input: check-in and check-out cannot occur on the same day")
 
 
 def email_validation(email):
@@ -57,8 +51,8 @@ def email_validation(email):
         raise GraphQLError("Input email is invalid")
 
 
-def name_validation(firstname, lastname):
-    if firstname == "" or lastname == "":
+def name_validation(first_name, last_name):
+    if first_name == "" or last_name == "":
         raise GraphQLError("Both first and last name must be non-empty strings")
 
 
@@ -67,9 +61,7 @@ def norwegian_phone_number_validation(stripped_phone_number):
     # https://www.nkom.no/telefoni-og-telefonnummer/telefonnummer-og-den-norske-nummerplan/alle-nummerserier-for-norske-telefonnumre#8_og_12sifrede_nummer
     if len(stripped_phone_number) != 8:
         raise GraphQLError(error_message)
-    if not (
-        stripped_phone_number.startswith("4") or stripped_phone_number.startswith("9")
-    ):
+    if not (stripped_phone_number.startswith("4") or stripped_phone_number.startswith("9")):
         raise GraphQLError(error_message)
 
 
@@ -77,23 +69,13 @@ def strip_phone_number(phone_number):
     # Remove spacing
     cleaned_phone_number = phone_number.replace(" ", "")
     # Remove country code
-    cleaned_phone_number = (
-        cleaned_phone_number[3:]
-        if cleaned_phone_number.startswith("+47")
-        else cleaned_phone_number
-    )
+    cleaned_phone_number = cleaned_phone_number[3:] if cleaned_phone_number.startswith("+47") else cleaned_phone_number
     # Remove country code
-    return (
-        cleaned_phone_number[4:]
-        if cleaned_phone_number.startswith("0047")
-        else cleaned_phone_number
-    )
+    return cleaned_phone_number[4:] if cleaned_phone_number.startswith("0047") else cleaned_phone_number
 
 
-def participants_validation(number_of_internals, number_of_externals, cabins):
-    if (number_of_internals + number_of_externals) > CabinModel.objects.filter(
-        id__in=cabins
-    ).aggregate(Sum("max_guests"))["max_guests__sum"]:
-        raise GraphQLError(
-            "There are more participants than there is capacity in the chosen cabins"
-        )
+def participants_validation(number_of_internals: int, number_of_externals: int, cabins):
+    if (number_of_internals + number_of_externals) > CabinModel.objects.filter(id__in=cabins).aggregate(
+        Sum("max_guests")
+    )["max_guests__sum"]:
+        raise GraphQLError("There are more participants than there is capacity in the chosen cabins")

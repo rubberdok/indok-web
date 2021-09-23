@@ -16,7 +16,7 @@ import { cabinImages, outsideImages } from "@components/pages/cabins/ImageSlider
 import FAQ from "@components/pages/cabins/Documents/FAQ";
 import Layout from "@components/Layout";
 
-const BOOKING_DISABLED = true;
+const BOOKING_DISABLED = false;
 
 const useStyles = makeStyles((theme: Theme) => ({
   hero: {

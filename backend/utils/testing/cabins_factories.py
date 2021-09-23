@@ -10,8 +10,8 @@ class BookingFactory(DjangoModelFactory):
     class Meta:
         model = BookingModel
 
-    firstname = Faker(["no-NO"]).first_name()
-    lastname = Faker(["no-NO"]).last_name()
+    first_name = Faker(["no-NO"]).first_name()
+    last_name = Faker(["no-NO"]).last_name()
     phone = "".join([random.choice(["4", "9"]), str(random.randint(1000000, 9999999))])
     receiver_email = Faker(["no-NO"]).ascii_company_email()
     timestamp = timezone.now()

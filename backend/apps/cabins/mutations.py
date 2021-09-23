@@ -16,8 +16,8 @@ class BookingInput(graphene.InputObjectType):
     Basic booking object type used as a base for other types and as a standalone
     """
 
-    firstname = graphene.String()
-    lastname = graphene.String()
+    first_name = graphene.String()
+    last_name = graphene.String()
     phone = graphene.String()
     receiver_email = graphene.String()
     check_in = graphene.Date()
@@ -97,7 +97,6 @@ class UpdateBooking(graphene.Mutation):
             booking.save()
             if booking_data.cabins:
                 booking.cabins.set(CabinModel.objects.filter(id__in=booking_data.cabins))
-                booking.save()
             return UpdateBooking(booking=booking, ok=ok)
         else:
             return UpdateBooking(
@@ -153,8 +152,8 @@ class SendEmail(graphene.Mutation):
         )
 
         booking_info: BookingInfoType = {
-            "firstname": email_input["firstname"],
-            "lastname": email_input["lastname"],
+            "first_name": email_input["first_name"],
+            "last_name": email_input["last_name"],
             "receiver_email": email_input["receiver_email"],
             "phone": email_input["phone"],
             "internal_participants": email_input["internal_participants"],

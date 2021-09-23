@@ -53,8 +53,8 @@ const initalStepReady: StepReady = steps.reduce((initialObject, _step, index) =>
 }, {} as StepReady);
 
 const defaultContactInfo: ContactInfo = {
-  firstname: "",
-  lastname: "",
+  firstName: "",
+  lastName: "",
   receiverEmail: "",
   phone: "",
   internalParticipants: 0,

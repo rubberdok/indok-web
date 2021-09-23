@@ -101,7 +101,7 @@ const BookingAdminPage: NextPage = () => {
 
   const sendDecisionEmail = (booking: BookingFromQuery, approved: boolean) => {
     // omit unwanted fields
-    const { checkIn, checkOut, externalParticipants, firstname, internalParticipants, lastname, phone, receiverEmail } =
+    const { checkIn, checkOut, externalParticipants, firstName, internalParticipants, lastName, phone, receiverEmail } =
       booking;
 
     send_email({
@@ -111,9 +111,9 @@ const BookingAdminPage: NextPage = () => {
             checkIn,
             checkOut,
             externalParticipants,
-            firstname,
+            firstName,
             internalParticipants,
-            lastname,
+            lastName,
             phone,
             receiverEmail,
           },
@@ -163,7 +163,7 @@ const BookingAdminPage: NextPage = () => {
                   {data?.adminAllBookings.map((booking: BookingFromQuery) => (
                     <TableRow key={booking.id}>
                       <TableCell component="th" scope="row">
-                        {booking.firstname + " " + booking.lastname}
+                        {booking.firstName + " " + booking.lastName}
                       </TableCell>
                       <TableCell align="right">{booking.receiverEmail}</TableCell>
                       <TableCell align="right">{booking.phone}</TableCell>

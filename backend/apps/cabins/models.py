@@ -15,8 +15,8 @@ class Cabin(models.Model):
 
 class Booking(models.Model):
 
-    firstname = models.CharField(max_length=100)
-    lastname = models.CharField(max_length=100)
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
     phone = models.CharField(max_length=8)
     receiver_email = models.CharField(max_length=100)
     check_in = models.DateField()
@@ -46,4 +46,4 @@ class Booking(models.Model):
         )
 
     def __str__(self):
-        return f"Booking {self.id}, {self.firstname} {self.lastname}"
+        return f"Booking {self.id}, {self.first_name} {self.last_name}"
