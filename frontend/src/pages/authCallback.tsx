@@ -13,14 +13,6 @@ import React, { useEffect } from "react";
 const AuthCallbackPage: NextPage = () => {
   const router = useRouter();
   const { code, state, enrolled } = router.query;
-
-  if (state && state !== process.env.NEXT_PUBLIC_DATAPORTEN_STATE) {
-    if (typeof window !== "undefined") {
-      router.push("/");
-      return null;
-    }
-  }
-
   const [authUser, { loading, data, error }] = useMutation<{
     authUser: { user: User; isIndokStudent: boolean; idToken: string | null };
   }>(AUTHENTICATE, {
@@ -39,7 +31,14 @@ const AuthCallbackPage: NextPage = () => {
         },
       });
     }
-  }, [code]);
+  }, [code, authUser]);
+
+  if (state && state !== process.env.NEXT_PUBLIC_DATAPORTEN_STATE) {
+    if (typeof window !== "undefined") {
+      router.push("/");
+      return null;
+    }
+  }
 
   if (!loading && data && data.authUser) {
     if (!data.authUser.isIndokStudent && data.authUser.idToken) {
@@ -67,7 +66,7 @@ const AuthCallbackPage: NextPage = () => {
             <Typography variant="body1" color="error">
               FEIL: {error.message}
             </Typography>
-            <Link href="/">
+            <Link passHref href="/">
               <Button variant="contained">Tilbake til hjemmesiden</Button>
             </Link>
           </>
@@ -76,7 +75,7 @@ const AuthCallbackPage: NextPage = () => {
             <Typography variant="body1" color="error">
               Beklager, kun studenter som studerer Industriell Økonomi og Teknologiledelse (MTIØT) kan logge inn.
             </Typography>
-            <Link href="/">
+            <Link passHref href="/">
               <Button variant="contained">Tilbake til hjemmesiden</Button>
             </Link>
           </>
