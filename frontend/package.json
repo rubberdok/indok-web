@@ -9,7 +9,7 @@
     "dev": "next",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint",
     "lint:fix": "npm run lint -- --fix",
     "prepare": "cd .. && husky install frontend/.husky"
   },
