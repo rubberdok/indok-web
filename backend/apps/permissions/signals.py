@@ -38,11 +38,13 @@ def create_default_groups(apps, **kwargs):
     Permission: "models.Permission" = apps.get_model("auth", "Permission")
     for group_name, permissions in DEFAULT_GROUPS.items():
         group, _ = Group.objects.get_or_create(name=group_name)
-        if permissions:
+        if len(permissions) > 0:
             query: Q = Q()
             for permission in permissions:
                 query |= Q(codename=permission[1], content_type__app_label=permission[0])
             group.permissions.set(Permission.objects.filter(query))
+        else:
+            group.permissions.set([])
 
 
 @receiver(post_migrate)
