@@ -29,6 +29,7 @@ DEFAULT_INDOK_PERMISSIONS: DefaultPermissionsType = [
     ("forms", "add_response"),
     ("events", "add_signup"),
     ("events", "view_signup"),
+    ("archive", "view_archivedocument"),
 ]
 
 DEFAULT_REGISTERED_USER_PERMISSIONS: DefaultPermissionsType = []
