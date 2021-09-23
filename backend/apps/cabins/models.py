@@ -28,15 +28,15 @@ class Booking(models.Model):
     is_tentative = models.BooleanField(default=True)
 
     @property
-    def number_of_nights(self):
+    def number_of_nights(self) -> int:
         return number_of_nights(self.check_out, self.check_in)
 
     @property
-    def is_internal_price(self):
+    def is_internal_price(self) -> bool:
         return is_internal_price(self.internal_participants, self.external_participants)
 
     @property
-    def price(self):
+    def price(self) -> int:
         return price(
             self.cabins,
             self.check_in,

@@ -3,7 +3,7 @@ import graphene
 from django.utils import timezone
 
 from .helpers import price
-from .types import AllBookingsType
+from .types import AllBookingsType, BookingInfoType, EmailInputType
 from apps.cabins.models import Booking as BookingModel
 from apps.cabins.models import Cabin as CabinModel
 from .mail import send_mail
@@ -63,7 +63,6 @@ class CreateBooking(graphene.Mutation):
         booking.is_tentative = True
         booking.save()
         booking.cabins.set(CabinModel.objects.filter(id__in=booking_data.cabins))
-        booking.save()
 
         return CreateBooking(booking=booking, ok=ok)
 
@@ -97,9 +96,7 @@ class UpdateBooking(graphene.Mutation):
                     setattr(booking, input_field, input_value)
             booking.save()
             if booking_data.cabins:
-                booking.cabins.set(
-                    CabinModel.objects.filter(id__in=booking_data.cabins)
-                )
+                booking.cabins.set(CabinModel.objects.filter(id__in=booking_data.cabins))
                 booking.save()
             return UpdateBooking(booking=booking, ok=ok)
         else:
@@ -138,38 +135,43 @@ class SendEmail(graphene.Mutation):
 
     ok = graphene.Boolean()
 
-    def mutate(self, info, email_input):
-        cabins = CabinModel.objects.all().filter(id__in=email_input.cabins)
+    def mutate(self, info, email_input: EmailInputType):
+        cabins = CabinModel.objects.all().filter(id__in=email_input["cabins"])
         chosen_cabins_names = [cabin.name for cabin in cabins]
-        chosen_cabins_string = (
+        chosen_cabins_string: str = (
             cabins[0].name
             if len(cabins) == 1
             else ",".join(chosen_cabins_names[:-1]) + f" og {chosen_cabins_names[-1]}"
         )
 
-        booking_info = {
-            **vars(email_input),
+        booking_price = price(
+            cabins,
+            email_input["check_in"],
+            email_input["check_out"],
+            email_input["internal_participants"],
+            email_input["external_participants"],
+        )
+
+        booking_info: BookingInfoType = {
+            "firstname": email_input["firstname"],
+            "lastname": email_input["lastname"],
+            "receiver_email": email_input["receiver_email"],
+            "phone": email_input["phone"],
+            "internal_participants": email_input["internal_participants"],
+            "external_participants": email_input["external_participants"],
+            "email_type": email_input["email_type"],
+            "check_in": email_input["check_in"],
+            "check_out": email_input["check_out"],
+            "cabins": cabins,
             "chosen_cabins_string": chosen_cabins_string,
-            "price": price(
-                cabins,
-                email_input.check_in,
-                email_input.check_out,
-                email_input.internal_participants,
-                email_input.external_participants,
-            ),
-            "check_in": email_input.check_in.strftime("%d-%m-%Y"),
-            "check_out": email_input.check_out.strftime("%d-%m-%Y"),
+            "price": booking_price,
         }
 
         # Sends an email to the user
-        send_mail(
-            booking_info=booking_info, email_type=email_input.email_type, admin=False
-        )
+        send_mail(booking_info=booking_info, email_type=email_input["email_type"], admin=False)
 
         # Don't send mail to admin when approving or disapproving.
-        if email_input.email_type not in ["approve_booking", "disapprove_booking"]:
-            send_mail(
-                booking_info=booking_info, email_type=email_input.email_type, admin=True
-            )
+        if email_input["email_type"] not in ["approve_booking", "disapprove_booking"]:
+            send_mail(booking_info=booking_info, email_type=email_input["email_type"], admin=True)
 
         return SendEmail(ok=True)

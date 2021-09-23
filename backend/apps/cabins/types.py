@@ -1,4 +1,7 @@
-import graphene
+from datetime import date
+from typing import TypedDict, Literal
+
+from django.db.models import QuerySet
 from graphene_django import DjangoObjectType
 import graphene
 
@@ -37,3 +40,37 @@ class CabinType(DjangoObjectType):
     class Meta:
         model = CabinModel
         fields = ["id", "name", "max_guests", "internal_price", "external_price"]
+
+
+EmailTypes = Literal["reserve_booking", "approve_booking", "disapprove_booking"]
+
+
+class EmailInputType(TypedDict):
+    firstname: str
+    lastname: str
+    receiver_email: str
+    phone: str
+    internal_participants: int
+    external_participants: int
+    email_type: EmailTypes
+    cabins: QuerySet
+    check_in: date
+    check_out: date
+
+
+class BookingInfoType(EmailInputType):
+    chosen_cabins_string: str
+    price: int
+
+
+class UserTemplateType(TypedDict):
+    reserve_subject: str
+    decision_subject: str
+    reserve_booking: str
+    approve_booking: str
+    disapprove_booking: str
+
+
+class AdminTemplateType(TypedDict):
+    reserve_subject: str
+    reserve_booking: str
