@@ -20,8 +20,8 @@ const AuthCallbackPage: NextPage = () => {
     }
   }
 
-  const [authUser, { loading, error }] = useMutation<{
-    authUser: { user: User; isIndokStudent: boolean; idToken: string | null };
+  const [authUser, { loading, data, error }] = useMutation<{
+    authUser: { user: User; idToken: string | null };
   }>(AUTHENTICATE, {
     errorPolicy: "all",
   });
@@ -40,6 +40,10 @@ const AuthCallbackPage: NextPage = () => {
     }
   }, [code]);
 
+  if (!loading && data && data.authUser) {
+    router.push("/profile");
+    return null;
+  }
   return (
     <Layout>
       <Container>

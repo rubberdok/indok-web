@@ -23,6 +23,7 @@ class AuthUser(graphene.Mutation):
 
         token = get_token(user)
         info.context.set_jwt_cookie = token
+        info.context.user = user
         return AuthUser(
             user=user,
             token=token,
