@@ -19,6 +19,7 @@ class User(AbstractUser):
     phone_number = PhoneNumberField(blank=True)
     first_login = models.BooleanField(default=True)
     graduation_year = models.IntegerField(null=True, blank=True)
+    indok = models.BooleanField(default=False)
 
     @property
     def events(self):

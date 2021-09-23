@@ -10,8 +10,10 @@ from apps.organizations.models import Organization
 from apps.permissions.constants import (
     DEFAULT_INDOK_PERMISSIONS,
     DEFAULT_ORGANIZATION_PERMISSIONS,
+    DEFAULT_REGISTERED_USER_PERMISSIONS,
     INDOK,
     ORGANIZATION,
+    REGISTERED_USER,
 )
 from apps.permissions.models import ResponsibleGroup
 
@@ -49,16 +51,27 @@ def assign_standard_organization_permissions(**kwargs):
 
 
 @receiver(post_migrate)
-def assign_standard_indok_permissions(**kwargs):
+def assign_standard_permissions(**kwargs):
     """
     Assigns default permissions to all authenticated users
     """
-    group, _ = Group.objects.get_or_create(name=INDOK)
-    query: Q = Q()
+    indok_group, _ = Group.objects.get_or_create(name=INDOK)
+    registered_user_group, _ = Group.objects.get_or_create(name=REGISTERED_USER)
 
+    indok_query: Q = Q()
     for perm in DEFAULT_INDOK_PERMISSIONS:
-        query |= Q(content_type__app_label=perm[0], codename=perm[1])
+        indok_query |= Q(content_type__app_label=perm[0], codename=perm[1])
 
-    permissions = Permission.objects.filter(query)
-    group.permissions.set(permissions)
-    group.user_set.set(User.objects.exclude(username=settings.ANONYMOUS_USER_NAME))
+    registered_query: Q = Q()
+    for perm in DEFAULT_REGISTERED_USER_PERMISSIONS:
+        registered_query |= Q(content_type_app_label=perm[0], codename=perm[1])
+
+    indok_permissions = Permission.objects.filter(indok_query)
+    indok_group.permissions.set(indok_permissions)
+
+    registered_permissions = Permission.objects.filter(registered_query)
+    registered_user_group.permissions.set(registered_permissions)
+
+    users = User.objects.exclude(username=settings.ANONYMOUS_USER_NAME)
+    registered_user_group.user_set.set(users)
+    indok_group.user_set.set(users.exclude(indok=False))
