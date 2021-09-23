@@ -4,7 +4,7 @@ DefaultPermissionsType = Final[list[tuple[str, str]]]
 
 ORGANIZATION: Final = "Organization member"
 INDOK: Final = "Indøk"
-REGISTERED_USER: Final = "Registered User"
+REGISTERED_USER: Final = "Registered user"
 PRIMARY_GROUP_NAME: Final = "Medlem"
 HR_GROUP_NAME: Final = "HR"
 
@@ -33,3 +33,9 @@ DEFAULT_INDOK_PERMISSIONS: DefaultPermissionsType = [
 ]
 
 DEFAULT_REGISTERED_USER_PERMISSIONS: DefaultPermissionsType = []
+
+DEFAULT_GROUPS = {
+    ORGANIZATION: DEFAULT_ORGANIZATION_PERMISSIONS,
+    INDOK: DEFAULT_INDOK_PERMISSIONS,
+    REGISTERED_USER: DEFAULT_REGISTERED_USER_PERMISSIONS,
+}
