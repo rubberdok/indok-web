@@ -26,8 +26,8 @@ const ContactInfo: React.VFC<Props> = ({ name, position, email, image }) => {
   const classes = useStyles();
   const nameAndPosition = `${name}${position ? ` - ${position}` : ""}`;
   return (
-    <Grid container direction="column" justify="center" alignItems="center">
-      <Grid item container direction="row" justify="center" className={classes.img}>
+    <Grid container direction="column" justifyContent="center" alignItems="center">
+      <Grid item container direction="row" justifyContent="center" className={classes.img}>
         {image && <Image src={image} placeholder="blur" layout="fill" objectPosition="center" objectFit="cover" />}
       </Grid>
       <Grid item md>
