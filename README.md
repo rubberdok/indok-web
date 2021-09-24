@@ -53,7 +53,7 @@ The website includes:
 
 3. Clone the project and build the Docker images
 
-```
+```zsh
 git clone https://github.com/hovedstyret/indok-web.git
 cd indok-web
 docker compose build
@@ -61,16 +61,26 @@ docker compose build
 
 4. Run the project in Docker and set up the database
 
-```
+```zsh
 docker compose up
 docker compose exec backend python manage.py migrate
 docker compose exec backend python manage.py createsuperuser --username=admin
-docker compose exec backend python manage.py loaddata example_data
+docker compose exec backend python manage.py loaddata initial_data
 ```
+
+The last command creates some initial data, two test users, and one admin user:
+
+| Username      | Password | Indøk |
+| ------------- | :------: | ----: |
+| eva_student   |   5tgb   |  true |
+| asbjorn_elevg |   1qaz   | false |
+| admin         | admin123 | super |
+
+The two test users can be accessed by going to `Log in with Feide` > `Feide Test Users` under `Other login alternatives` > Enter the respective username and password.
 
 5. Install commit hooks
 
-```
+```zsh
 cd frontend
 npm ci
 ```
