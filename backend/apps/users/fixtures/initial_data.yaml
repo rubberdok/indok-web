@@ -72,8 +72,6 @@
       - - Registered user
       - - Indøk
       - - Organization member
-      - - Bindeleddet:Medlem:4e07865c8e514f039cbdcad31bf3bf3b
-      - - Bindeleddet:HR:41ae4b2e1465460baa79503cc1c9f670
     user_permissions: []
 - model: users.user
   pk: 4
