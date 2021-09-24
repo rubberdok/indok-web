@@ -1,7 +1,7 @@
 <h1 align="center">Indøk NTNU</h1><br>
 <p align="center">
   <a href="https://www.indokntnu.no/">
-    &nbsp;&nbsp;&nbsp;&nbsp;<img alt="Logo" title="Rubberdøk" src="https://github.com/hovedstyret/indok-web/blob/docs/assets/logo_black.svg" width="300">
+    &nbsp;&nbsp;&nbsp;&nbsp;<img alt="Logo" title="Rubberdøk" src="https://github.com/hovedstyret/indok-web/blob/docs/assets/rubberdok_logo.svg" width="300">
   </a>
 </p>
 
@@ -22,7 +22,7 @@
 [![Open Source](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)](https://opensource.org/)
 ![Awesome](https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg)
 
-Website for the students at Industrial Economics and Technology Management at NTNU. Built with Django, React/Next.js, and GraphQL API. Built and maintained by Rubberdøk NTNU.
+Website for the students at Industrial Economics and Technology Management at NTNU Trondheim. Built with Django, React/Next.js, and GraphQL API. Built and maintained by Rubberdøk NTNU.
 
 <p align="center">
   <a href="https://www.indokntnu.no/">
@@ -117,7 +117,11 @@ In short, the process is as follows:
   </a>
   &nbsp;
   <a href="https://nextjs.org">
-    <img alt="NextJS" src="https://upload.wikimedia.org/wikipedia/commons/8/8e/Nextjs-logo.svg" height="50">
+    <img alt="NextJS" src="https://github.com/hovedstyret/indok-web/blob/docs/assets/nextjs_logo.svg" height="50">
+  </a>
+  &nbsp;
+  <a href="https://www.typescriptlang.org/">
+    <img alt="TypeScript" src="https://upload.wikimedia.org/wikipedia/commons/4/4c/Typescript_logo_2020.svg" height="50">
   </a>
   &nbsp;
   <a href="https://www.python.org">
@@ -125,7 +129,7 @@ In short, the process is as follows:
   </a>
   &nbsp;
   <a href="https://www.djangoproject.com">
-    <img alt="Django" src="https://upload.wikimedia.org/wikipedia/commons/7/75/Django_logo.svg" height="50">
+    <img alt="Django" src="https://github.com/hovedstyret/indok-web/blob/docs/assets/django_logo.svg" height="50">
   </a>
   &nbsp;
   <a href="https://www.docker.com">
@@ -133,6 +137,6 @@ In short, the process is as follows:
   </a>
   &nbsp;
   <a href="https://aws.amazon.com/">
-    <img src="https://d0.awsstatic.com/logos/powered-by-aws.png" alt="Powered by AWS Cloud Computing", height="50">
+    <img src="https://github.com/hovedstyret/indok-web/blob/docs/assets/aws_logo.svg" alt="Powered by AWS Cloud Computing", height="50">
   </a>
 </p>
