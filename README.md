@@ -99,6 +99,8 @@ Creating some initial data, two test users, and one admin user:
 | asbjorn_elevg |   1qaz   | false |
 | admin         | admin123 | super |
 
+The two test users can be accessed by going to `Log in with Feide` > `Feide Test Users` under `Other login alternatives` > Enter the respective username and password.
+
 The frontend runs on [`localhost:3000`](localhost:3000), and the backend on [`localhost:8000`](localhost:8000). The GraphQL API endpoint is [`localhost:8000/graphql`](localhost:8000/graphql).
 
 ## Deployment
