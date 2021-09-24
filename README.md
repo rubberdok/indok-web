@@ -22,7 +22,7 @@
 [![Open Source](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)](https://opensource.org/)
 ![Awesome](https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg)
 
-Website for the students at Industrial Economics and Technology Management at NTNU. Built with Django, React/Next.js, and GraphQL API. Built and maintained by Rubberdøk NTNU.
+Website for the students at Industrial Economics and Technology Management at NTNU Trondheim. Built with Django, React/Next.js, and GraphQL API. Built and maintained by Rubberdøk NTNU.
 
 <p align="center">
   <a href="https://www.indokntnu.no/">
@@ -118,6 +118,10 @@ In short, the process is as follows:
   &nbsp;
   <a href="https://nextjs.org">
     <img alt="NextJS" src="https://github.com/hovedstyret/indok-web/blob/docs/assets/nextjs_logo.svg" height="50">
+  </a>
+  &nbsp;
+  <a href="https://www.typescriptlang.org/">
+    <img alt="TypeScript" src="https://upload.wikimedia.org/wikipedia/commons/4/4c/Typescript_logo_2020.svg" height="50">
   </a>
   &nbsp;
   <a href="https://www.python.org">
