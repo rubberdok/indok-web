@@ -65,23 +65,10 @@ docker compose build
 docker compose up
 docker compose exec backend python manage.py migrate
 docker compose exec backend python manage.py createsuperuser --username=admin
-docker compose exec backend python manage.py loaddata example_data
-```
-
-5. Install commit hooks
-
-```zsh
-cd frontend
-npm ci
-```
-
-5. Initial data can be loaded with
-
-```zsh
 docker compose exec backend python manage.py loaddata initial_data
 ```
 
-Creating some initial data, two test users, and one admin user:
+The last command creates some initial data, two test users, and one admin user:
 
 | Username      | Password | Indøk |
 | ------------- | :------: | ----: |
@@ -90,6 +77,13 @@ Creating some initial data, two test users, and one admin user:
 | admin         | admin123 | super |
 
 The two test users can be accessed by going to `Log in with Feide` > `Feide Test Users` under `Other login alternatives` > Enter the respective username and password.
+
+5. Install commit hooks
+
+```zsh
+cd frontend
+npm ci
+```
 
 The frontend runs on [`localhost:3000`](localhost:3000), and the backend on [`localhost:8000`](localhost:8000). The GraphQL API endpoint is [`localhost:8000/graphql`](localhost:8000/graphql).
 
