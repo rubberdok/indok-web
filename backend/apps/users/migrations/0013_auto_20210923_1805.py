@@ -26,13 +26,14 @@ def assign_standard_permissions(apps, _):
 
     registered_query: Q = Q()
     for perm in DEFAULT_REGISTERED_USER_PERMISSIONS:
-        registered_query |= Q(content_type_app_label=perm[0], codename=perm[1])
+        registered_query |= Q(content_type__app_label=perm[0], codename=perm[1])
 
-    indok_permissions = Permission.objects.filter(indok_query)
-    indok_group.permissions.set(indok_permissions)
-
-    registered_permissions = Permission.objects.filter(registered_query)
-    registered_user_group.permissions.set(registered_permissions)
+    if DEFAULT_INDOK_PERMISSIONS:
+        indok_permissions = Permission.objects.filter(indok_query)
+        indok_group.permissions.set(indok_permissions)
+    if DEFAULT_REGISTERED_USER_PERMISSIONS:
+        registered_permissions = Permission.objects.filter(registered_query)
+        registered_user_group.permissions.set(registered_permissions)
 
     users = User.objects.exclude(username=settings.ANONYMOUS_USER_NAME)
     registered_user_group.user_set.set(users)

@@ -144,7 +144,7 @@ class DataportenAuth:
         return (username, feide_userid, email, name)
 
     @classmethod
-    def authenticate_and_get_user(cls, code: Optional[str] = None) -> tuple[Optional[UserModel], str]:
+    def authenticate_and_get_user(cls, code: Optional[str] = None) -> tuple[Optional[UserModel], Optional[str]]:
         if code is None:
             raise ValidationError("Ugyldig autentiseringskode i forespørselen.")
 
@@ -153,7 +153,7 @@ class DataportenAuth:
         cls.validate_response(response)
 
         access_token = response.get("access_token")
-        id_token: str = response.get("id_token")
+        id_token: Optional[str] = response.get("id_token")
 
         # Fetch user info from Dataporten
         user_info = cls.get_user_info(access_token)

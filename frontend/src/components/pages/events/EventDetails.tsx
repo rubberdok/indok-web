@@ -1,4 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
+import PermissionRequired from "@components/permissions/PermissionRequired";
 import { EVENT_SIGN_OFF, EVENT_SIGN_UP } from "@graphql/events/mutations";
 import { GET_USER } from "@graphql/users/queries";
 import { GET_SERVER_TIME } from "@graphql/utils/time/queries";
@@ -217,48 +218,50 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
             </Typography>
           ) : (
             <>
-              {!userData.user.phoneNumber &&
-                !eventData.event.userAttendance?.isSignedUp &&
-                !eventData.event.userAttendance?.isOnWaitingList && (
-                  <Typography variant="body1" color="error" className={classes.wrapIcon}>
-                    <Warning fontSize="small" />
-                    Du må oppgi et telefonnummer på brukeren din for å kunne melde deg på
-                  </Typography>
-                )}
+              <PermissionRequired permission="events.add_signup">
+                {!userData.user.phoneNumber &&
+                  !eventData.event.userAttendance?.isSignedUp &&
+                  !eventData.event.userAttendance?.isOnWaitingList && (
+                    <Typography variant="body1" color="error" className={classes.wrapIcon}>
+                      <Warning fontSize="small" />
+                      Du må oppgi et telefonnummer på brukeren din for å kunne melde deg på
+                    </Typography>
+                  )}
 
-              {eventData.event.hasExtraInformation &&
-                !eventData.event.userAttendance?.isSignedUp &&
-                !eventData.event.userAttendance?.isOnWaitingList && (
-                  <TextField
-                    className={classes.extraInformation}
-                    label="Ekstrainformasjon"
-                    multiline
-                    rows={2}
-                    required
-                    placeholder="Skriv her..."
-                    variant="outlined"
-                    onChange={(e) => setExtraInformation(e.target.value)}
-                  />
-                )}
-              <CountdownButton
-                countDownDate={(eventData.event as AttendableEvent).signupOpenDate}
-                isSignedUp={(eventData.event as AttendableEvent).userAttendance.isSignedUp}
-                isOnWaitingList={(eventData.event as AttendableEvent).userAttendance.isOnWaitingList}
-                isFull={(eventData.event as AttendableEvent).isFull}
-                loading={signOffLoading || signUpLoading || eventLoading}
-                disabled={
-                  (!userData.user.phoneNumber &&
-                    !eventData.event.userAttendance?.isSignedUp &&
-                    !eventData.event.userAttendance?.isOnWaitingList) ||
-                  (eventData.event.bindingSignup && eventData.event.userAttendance?.isSignedUp) ||
-                  (eventData.event.hasExtraInformation &&
-                    !extraInformation &&
-                    !eventData.event.userAttendance?.isSignedUp &&
-                    !eventData.event.userAttendance?.isOnWaitingList)
-                }
-                onClick={handleClick}
-                currentTime={timeData.serverTime}
-              />
+                {eventData.event.hasExtraInformation &&
+                  !eventData.event.userAttendance?.isSignedUp &&
+                  !eventData.event.userAttendance?.isOnWaitingList && (
+                    <TextField
+                      className={classes.extraInformation}
+                      label="Ekstrainformasjon"
+                      multiline
+                      rows={2}
+                      required
+                      placeholder="Skriv her..."
+                      variant="outlined"
+                      onChange={(e) => setExtraInformation(e.target.value)}
+                    />
+                  )}
+                <CountdownButton
+                  countDownDate={(eventData.event as AttendableEvent).signupOpenDate}
+                  isSignedUp={(eventData.event as AttendableEvent).userAttendance.isSignedUp}
+                  isOnWaitingList={(eventData.event as AttendableEvent).userAttendance.isOnWaitingList}
+                  isFull={(eventData.event as AttendableEvent).isFull}
+                  loading={signOffLoading || signUpLoading || eventLoading}
+                  disabled={
+                    (!userData.user.phoneNumber &&
+                      !eventData.event.userAttendance?.isSignedUp &&
+                      !eventData.event.userAttendance?.isOnWaitingList) ||
+                    (eventData.event.bindingSignup && eventData.event.userAttendance?.isSignedUp) ||
+                    (eventData.event.hasExtraInformation &&
+                      !extraInformation &&
+                      !eventData.event.userAttendance?.isSignedUp &&
+                      !eventData.event.userAttendance?.isOnWaitingList)
+                  }
+                  onClick={handleClick}
+                  currentTime={timeData.serverTime}
+                />
+              </PermissionRequired>
             </>
           )}
           {userData.user?.organizations
