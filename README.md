@@ -61,18 +61,11 @@ docker compose build
 
 4. Run the project in Docker and set up the database
 
-<<<<<<< HEAD
 ```zsh
-docker-compose up
-docker-compose exec backend python manage.py migrate
-docker-compose exec backend python manage.py createsuperuser
-=======
-```
 docker compose up
 docker compose exec backend python manage.py migrate
 docker compose exec backend python manage.py createsuperuser --username=admin
 docker compose exec backend python manage.py loaddata example_data
->>>>>>> 901d629693cc82200e9e4613e86a2025aa63f0c3
 ```
 
 5. Install commit hooks
