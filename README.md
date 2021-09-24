@@ -64,7 +64,7 @@ In order to authenticate users through Feide, Indøk Hovedstyre Webkomité has r
 
 2. Clone the project and build Docker image
 
-```
+```zsh
 git clone https://github.com/hovedstyret/indok-web.git
 cd indok-web
 docker-compose build
@@ -72,7 +72,7 @@ docker-compose build
 
 3. Run the project in Docker and set up the database
 
-```
+```zsh
 docker-compose up
 docker-compose exec backend python manage.py migrate
 docker-compose exec backend python manage.py createsuperuser
@@ -80,18 +80,18 @@ docker-compose exec backend python manage.py createsuperuser
 
 4. Install commit hooks by installing the frontend locally
 
-```
+```zsh
 cd frontend
 npm install
 ```
 
 5. Initial data can be loaded with
 
-```
-docker compse exec backend python manage.py loaddata initial_data
+```zsh
+docker compose exec backend python manage.py loaddata initial_data
 ```
 
-Creating some initial data, and two test users
+Creating some initial data, two test users, and one admin user:
 
 | Username      | Password | Indøk |
 | ------------- | :------: | ----: |
