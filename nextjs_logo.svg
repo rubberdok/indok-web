@@ -4,11 +4,11 @@
     <title>next-black</title>
     <desc>Created with Sketch.</desc>
     <style>
-        path {
+        path, g {
             fill: #000000;
         }
         @media (prefers-color-scheme: dark) {
-            path {
+            path, g {
                 fill: #ffffff;
             }
         }
