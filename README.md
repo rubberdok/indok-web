@@ -125,7 +125,7 @@ In short, the process is as follows:
   </a>
   &nbsp;
   <a href="https://www.djangoproject.com">
-    <img alt="Django" src="https://upload.wikimedia.org/wikipedia/commons/7/75/Django_logo.svg" height="50">
+    <img alt="Django" src="https://github.com/hovedstyret/indok-web/blob/docs/assets/logo_black.svg" height="50">
   </a>
   &nbsp;
   <a href="https://www.docker.com">
