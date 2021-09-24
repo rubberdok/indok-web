@@ -1,11 +1,29 @@
-#### What problem/feature does this pull request fix/add?
+## Description
 
-#### (if not a new problem) How was this problem solved earlier?
+This PR ...
 
-#### How did I fix this problem?
+Proposed changes: 
+- Change 1
+- change 2
 
-### Checklist
+## Types of Changes
+- [ ] New feature
+- [ ] Bug fix
+- [ ] Enhancement/optimization
+- [ ] Refactor
+- [ ] Style
+- [ ] Build/dependencies
+- [ ] Other
 
-- [ ] All tests have passed
-- [ ] I have created new tests for this feature (may not be applicable to all pull requests)
+## Issue(s) fixed or closed by this PR
+- 
+
+### How did I fix the issue(s)?
+
+Fixed ...
+
+## Checklist
+
+- [ ] I have added tests to cover my changes (for features/bugs)
 - [ ] I am pleased with the readability of the code (if not, state where you need input)
+- [ ] I have tested the changes and verified that they work and do not break anything (to the best of my ability)
