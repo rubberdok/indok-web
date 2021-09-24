@@ -182,7 +182,7 @@ class DataportenAuth:
                 feide_userid=feide_userid,
                 id_token=id_token,
                 last_login=timezone.now(),
-                indok=enrolled,
+                is_indok=enrolled,
             )
             user.save()
         return user, id_token
