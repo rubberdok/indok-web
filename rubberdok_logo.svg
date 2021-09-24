@@ -2,6 +2,16 @@
 <!-- Generator: Adobe Illustrator 19.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 viewBox="0 0 15.32082 6.2512" style="enable-background:new 0 0 15.32082 6.2512;" xml:space="preserve">
+<style>
+	path={
+		fill: #000000;
+	}
+	@media (prefers-color-scheme: dark) {
+		path {
+			fill: #ffffff;
+		}
+	}
+</style>
 <path id="XMLID_71_" d="M10.43169,1.23881c-0.27036-0.83866-1.10934-1.35648-1.99952-1.21586
 	c-0.69406,0.10918-1.25778,0.62617-1.44313,1.2931c-0.18453-0.66693-0.74792-1.18393-1.44226-1.2931
 	c-0.44082-0.0696-0.86497,0.02712-1.21619,0.24083C4.27604,0.29646,4.22332,0.33177,4.17251,0.3699
