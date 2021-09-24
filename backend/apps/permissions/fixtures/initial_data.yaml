@@ -1,0 +1,71 @@
+- model: permissions.responsiblegroup
+  pk: 42d31761-9b43-46d0-921f-dc5913998ccd
+  fields:
+    group:
+    - Janus Linjeforening:Medlem:78d6a6ee749649a5ac5ecbe69f566420
+    name: Medlem
+    description: Medlemmer av Janus Linjeforening.
+- model: permissions.responsiblegroup
+  pk: 52fb0fee-915a-4df3-920c-7c0c17308ef2
+  fields:
+    group:
+    - Indøk Kultur:HR:37d26253bd324be0920a8869cc9f802a
+    name: HR
+    description: HR-gruppen til Indøk Kultur. Tillatelser for å se og behandle søknader.
+- model: permissions.responsiblegroup
+  pk: 545dd59d-57ac-4026-8aaa-c8d465a6e8db
+  fields:
+    group:
+    - Indøk Kultur:Medlem:9422dce4058b4446a4014d758712305a
+    name: Medlem
+    description: Medlemmer av Indøk Kultur.
+- model: permissions.responsiblegroup
+  pk: 55e61410-54e9-498f-95bd-ac09d798a963
+  fields:
+    group:
+    - Indøl:Medlem:f8c1388d98dc42d6832cfdfe74833844
+    name: Medlem
+    description: Medlemmer av Indøl.
+- model: permissions.responsiblegroup
+  pk: 6204f6f7-bc1c-425b-9f3e-6824256a25ef
+  fields:
+    group:
+    - Bindeleddet:Medlem:4e07865c8e514f039cbdcad31bf3bf3b
+    name: Medlem
+    description: Medlemmer av Bindeleddet.
+- model: permissions.responsiblegroup
+  pk: 6ba9711f-e37c-4bc3-83ca-758012a0ec14
+  fields:
+    group:
+    - Indøl:HR:f219f8af9f64413fbe8e0d3bdae08192
+    name: HR
+    description: HR-gruppen til Indøl. Tillatelser for å se og behandle søknader.
+- model: permissions.responsiblegroup
+  pk: 72984ee7-05ed-43e8-8cc9-cf78f98395a4
+  fields:
+    group:
+    - Bindeleddet:HR:41ae4b2e1465460baa79503cc1c9f670
+    name: HR
+    description: HR-gruppen til Bindeleddet. Tillatelser for å se og behandle søknader.
+- model: permissions.responsiblegroup
+  pk: aa977f76-84b9-48bb-9df6-b9cfd8584adb
+  fields:
+    group:
+    - Janus Linjeforening:HR:43126981354f409aa555c7f0399db125
+    name: HR
+    description: HR-gruppen til Janus Linjeforening. Tillatelser for å se og behandle
+      søknader.
+- model: permissions.responsiblegroup
+  pk: b446a57d-fa23-4f4b-9ad6-a59856b84b1f
+  fields:
+    group:
+    - Hovedstyret:Medlem:16a1672c122a467a82fab37a7674e223
+    name: Medlem
+    description: Medlemmer av Hovedstyret.
+- model: permissions.responsiblegroup
+  pk: e3dd0f32-ee74-450b-b87e-7e7e5c3b5638
+  fields:
+    group:
+    - Hovedstyret:HR:dd4076d65b4a48db92e025125efaa85f
+    name: HR
+    description: HR-gruppen til Hovedstyret. Tillatelser for å se og behandle søknader.

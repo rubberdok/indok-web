@@ -1,0 +1,71 @@
+- model: listings.listing
+  pk: 9
+  fields:
+    title: Lederpar i Hovedstyret
+    description: "# Lorem\n Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+      sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+      minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+      commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit
+      esse cillum dolore eu fugiat nulla pariatur. \n ## Ipsum \n Lorem ipsum dolor
+      sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
+      et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+      laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit
+      in voluptate velit esse cillum dolore eu fugiat nulla pariatur.\n ### Code\n
+      ```\n def hello_world():\n \tprint('Hello World')\n ``` "
+    view_count: 0
+    case: false
+    application: false
+    interview: false
+    start_datetime: 2021-03-30 20:13:27+00:00
+    end_datetime: 2021-05-18 20:14:00+00:00
+    deadline: 2021-04-20 20:14:07+00:00
+    application_url: http://vg.no
+    read_more_url: null
+    hero_image_url: null
+    form: 4
+    slug: lederpar-i-hovedstyret
+    organization: 17
+- model: listings.listing
+  pk: 10
+  fields:
+    title: Medlem i Bindeleddet
+    description: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+      quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+      Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
+      eu fugiat nulla pariatur.
+    view_count: 0
+    case: false
+    application: false
+    interview: false
+    start_datetime: 2021-03-31 20:14:32+00:00
+    end_datetime: 2021-04-14 20:14:56+00:00
+    deadline: 2021-05-11 20:14:57+00:00
+    application_url: http://bindeleddet.no
+    read_more_url: null
+    hero_image_url: null
+    form: 5
+    slug: medlem-i-bindeleddet
+    organization: 19
+- model: listings.listing
+  pk: 11
+  fields:
+    title: President i Janus
+    description: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+      quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+      Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
+      eu fugiat nulla pariatur.
+    view_count: 0
+    case: false
+    application: false
+    interview: false
+    start_datetime: 2021-04-07 20:15:27+00:00
+    end_datetime: 2021-05-20 20:16:19+00:00
+    deadline: 2021-04-14 20:16:20+00:00
+    application_url: http://januslinjeforening.no
+    read_more_url: null
+    hero_image_url: null
+    form: 6
+    slug: president-i-janus
+    organization: 18

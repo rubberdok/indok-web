@@ -1,0 +1,83 @@
+- model: organizations.organization
+  pk: 17
+  fields:
+    name: Hovedstyret
+    slug: hovedstyret
+    description: Paraplyorganisasjonen på Indøk
+    parent: null
+    logo: ''
+    logo_url: null
+    color: null
+    primary_group: b446a57d-fa23-4f4b-9ad6-a59856b84b1f
+    hr_group: e3dd0f32-ee74-450b-b87e-7e7e5c3b5638
+- model: organizations.organization
+  pk: 18
+  fields:
+    name: Janus Linjeforening
+    slug: janus-linjeforening
+    description: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+      quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+      Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
+      eu fugiat nulla pariatur.
+    parent: 17
+    logo: ''
+    logo_url: null
+    color: null
+    primary_group: 42d31761-9b43-46d0-921f-dc5913998ccd
+    hr_group: aa977f76-84b9-48bb-9df6-b9cfd8584adb
+- model: organizations.organization
+  pk: 19
+  fields:
+    name: Bindeleddet
+    slug: bindeleddet
+    description: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+      quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+      Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
+      eu fugiat nulla pariatur.
+    parent: 17
+    logo: ''
+    logo_url: null
+    color: null
+    primary_group: 6204f6f7-bc1c-425b-9f3e-6824256a25ef
+    hr_group: 72984ee7-05ed-43e8-8cc9-cf78f98395a4
+- model: organizations.organization
+  pk: 20
+  fields:
+    name: Indøk Kultur
+    slug: indok-kultur
+    description: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+      quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+      Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
+      eu fugiat nulla pariatur.
+    parent: 17
+    logo: ''
+    logo_url: null
+    color: null
+    primary_group: 545dd59d-57ac-4026-8aaa-c8d465a6e8db
+    hr_group: 52fb0fee-915a-4df3-920c-7c0c17308ef2
+- model: organizations.organization
+  pk: 21
+  fields:
+    name: Indøl
+    slug: indol
+    description: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+      quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+      Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
+      eu fugiat nulla pariatur.
+    parent: 20
+    logo: ''
+    logo_url: null
+    color: null
+    primary_group: 55e61410-54e9-498f-95bd-ac09d798a963
+    hr_group: 6ba9711f-e37c-4bc3-83ca-758012a0ec14
+- model: organizations.membership
+  pk: 2
+  fields:
+    user:
+    - eva_student
+    organization: 19
+    group: 72984ee7-05ed-43e8-8cc9-cf78f98395a4
