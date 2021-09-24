@@ -11,7 +11,7 @@
   <defs
      id="defs2950" />
   <style>
-    path={
+    path {
       fill: #000000;
     }
     @media (prefers-color-scheme: dark) {

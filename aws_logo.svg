@@ -4,12 +4,12 @@
 	 viewBox="0 0 304 182" style="enable-background:new 0 0 304 182;" xml:space="preserve">
 <style type="text/css">
 	.st0 {
-		fill:#252F3E;
-		@media (prefers-color-scheme: dark) {
-      path {
-        fill: #ffffff;
-      }
-    }
+		fill: #252F3E;
+	}
+	@media (prefers-color-scheme: dark) {
+		.st0 {
+			fill: #ffffff;
+		}
 	}
 	.st1 {
 		fill-rule:evenodd;
