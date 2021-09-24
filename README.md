@@ -85,6 +85,20 @@ cd frontend
 npm install
 ```
 
+5. Initial data can be loaded with
+
+```
+docker compse exec backend python manage.py loaddata initial_data
+```
+
+Creating some initial data, and two test users
+
+| Username      | Password | Indøk |
+| ------------- | :------: | ----: |
+| eva_student   |   5tgb   |  true |
+| asbjorn_elevg |   1qaz   | false |
+| admin         | admin123 | super |
+
 The frontend runs on [`localhost:3000`](localhost:3000), and the backend on [`localhost:8000`](localhost:8000). The GraphQL API endpoint is [`localhost:8000/graphql`](localhost:8000/graphql).
 
 ## Deployment
