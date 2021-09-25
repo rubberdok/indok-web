@@ -4,6 +4,7 @@ from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from graphql_jwt.decorators import login_required, staff_member_required
+from utils.decorators import permission_required
 
 from ..organizations.models import Organization
 from ..organizations.permissions import check_user_membership
@@ -55,7 +56,7 @@ class CreateEvent(graphene.Mutation):
     class Arguments:
         event_data = CreateEventInput(required=True)
 
-    @login_required
+    @permission_required("events.add_event")
     def mutate(self, info, event_data):
         try:
             organization = Organization.objects.get(id=event_data.get("organization_id"))
@@ -85,7 +86,7 @@ class UpdateEvent(graphene.Mutation):
     ok = graphene.Boolean()
     event = graphene.Field(EventType)
 
-    @login_required
+    @permission_required("events.change_event")
     def mutate(self, info, id, event_data):
         try:
             event = Event.objects.get(pk=id)
@@ -112,7 +113,7 @@ class DeleteEvent(graphene.Mutation):
     ok = graphene.Boolean()
     event = graphene.Field(EventType)
 
-    @login_required
+    @permission_required("events.delete_event")
     def mutate(self, info, id):
         try:
             event = Event.objects.get(pk=id)
@@ -143,7 +144,7 @@ class EventSignUp(graphene.Mutation):
     is_full = graphene.Boolean()
     event = graphene.Field(EventType)
 
-    @login_required
+    @permission_required("events.add_signup")
     def mutate(self, info, event_id, data):
         try:
             event = Event.objects.get(pk=event_id)
@@ -197,7 +198,7 @@ class EventSignOff(graphene.Mutation):
     is_full = graphene.Boolean()
     event = graphene.Field(EventType)
 
-    @login_required
+    @permission_required("events.change_signup")
     def mutate(self, info, event_id):
         try:
             event = Event.objects.get(pk=event_id)
@@ -233,7 +234,7 @@ class AdminEventSignOff(graphene.Mutation):
 
     event = graphene.Field(EventType)
 
-    @login_required
+    @permission_required("events.change_signup")
     def mutate(self, info, event_id, user_id):
         try:
             event = Event.objects.get(pk=event_id)
