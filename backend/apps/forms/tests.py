@@ -1,7 +1,6 @@
 import json
-from typing import Any, Optional
+from typing import Any, Optional, cast
 
-from django.contrib.auth import get_user_model
 from guardian.shortcuts import assign_perm
 from utils.testing.ExtendedGraphQLTestCase import ExtendedGraphQLTestCase
 from utils.testing.factories.forms import (
@@ -12,7 +11,7 @@ from utils.testing.factories.forms import (
     ResponseFactory,
 )
 from utils.testing.factories.organizations import MembershipFactory, OrganizationFactory
-from utils.testing.factories.users import UserFactory
+from utils.testing.factories.users import IndokUserFactory
 
 from apps.forms.models import Form, Question
 
@@ -22,9 +21,9 @@ class FormBaseTestCase(ExtendedGraphQLTestCase):
         super().setUp()
 
         # Create users and an organization
-        self.authorized_user = UserFactory()
-        self.unauthorized_user = UserFactory()
-        self.preexisting_user = UserFactory()
+        self.authorized_user = IndokUserFactory()
+        self.unauthorized_user = IndokUserFactory()
+        self.preexisting_user = IndokUserFactory()
         self.organization = OrganizationFactory()
         MembershipFactory(
             user=self.authorized_user,
@@ -289,7 +288,8 @@ class FormsQueryTestCase(FormBaseTestCase):
         response = self.query(self.FORMS_WITH_RESPONSES, user=self.authorized_user)
         data = json.loads(response.content)["data"]
         forms = Form.objects.all()
-        forms_response: list[dict[str, Any]] = data["forms"]
+        forms_response: Optional[list[dict[str, Any]]] = data["forms"]
+        self.assertIsNotNone(forms_response)
 
         for form_response in forms_response:
             form = forms.get(pk=form_response["id"])

@@ -1,7 +1,7 @@
 <h1 align="center">Indøk NTNU</h1><br>
 <p align="center">
   <a href="https://www.indokntnu.no/">
-    &nbsp;&nbsp;&nbsp;&nbsp;<img alt="Logo" title="Rubberdøk" src="https://github.com/hovedstyret/indok-web/blob/docs/assets/logo_black.svg" width="300">
+    &nbsp;&nbsp;&nbsp;&nbsp;<img alt="Logo" title="Rubberdøk" src="https://github.com/hovedstyret/indok-web/blob/docs/assets/rubberdok_logo.svg" width="300">
   </a>
 </p>
 
@@ -22,7 +22,7 @@
 [![Open Source](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)](https://opensource.org/)
 ![Awesome](https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg)
 
-Website for the students at Industrial Economics and Technology Management at NTNU. Built with Django, React/Next.js, and GraphQL API. Built and maintained by Rubberdøk NTNU.
+Website for the students at Industrial Economics and Technology Management at NTNU Trondheim. Built with Django, React/Next.js, and GraphQL API. Built and maintained by Rubberdøk NTNU.
 
 <p align="center">
   <a href="https://www.indokntnu.no/">
@@ -45,47 +45,60 @@ The website includes:
 
 ## Setup
 
+### Installing and running
+
+1. [Set up Git](https://docs.github.com/en/get-started/quickstart/set-up-git)
+
+2. Install and start [Docker Desktop](https://www.docker.com/products/docker-desktop)
+
+3. Clone the project and build the Docker images
+
+```zsh
+git clone https://github.com/hovedstyret/indok-web.git
+cd indok-web
+docker compose build
+```
+
+4. Run the project in Docker and set up the database
+
+```zsh
+docker compose up
+docker compose exec backend python manage.py migrate
+docker compose exec backend python manage.py createsuperuser --username=admin
+docker compose exec backend python manage.py loaddata initial_data
+```
+
+The last command creates some initial data, two test users, and one admin user:
+
+| Username      | Password | Indøk |
+| ------------- | :------: | ----: |
+| eva_student   |   5tgb   |  true |
+| asbjorn_elevg |   1qaz   | false |
+| admin         | admin123 | super |
+
+The two test users can be accessed by going to `Log in with Feide` > `Feide Test Users` under `Other login alternatives` > Enter the respective username and password.
+
+5. Install commit hooks
+
+```zsh
+cd frontend
+npm ci
+```
+
+The frontend runs on [`localhost:3000`](localhost:3000), and the backend on [`localhost:8000`](localhost:8000). The GraphQL API endpoint is [`localhost:8000/graphql`](localhost:8000/graphql).
+
 ### Environment variables
 
 In order to authenticate users through Feide, Indøk Hovedstyre Webkomité has registered an application at Dataporten. This requires the addition of environment variables identifying the application. Contributors may specify a different client ID and secret to authenticate with Dataporten through their own application. See [Feide docs](https://docs.feide.no/service_providers/index.html) for more information. Additionally, several other APIs are accessed, requiring different API keys for access.
 
 1. Create a file called `.env.local` in `frontend/` and add the variables that can be found in `.env.local.template`, with appropriate values.
 
-   - `NEXT_PUBLIC_DATAPORTEN_ID` should be `fcaa9e30-a6d3-4809-8fea-cdd7b3de1c98` for the Indøk Hovedstyre Webkomité development client at Dataporten.
+   - `NEXT_PUBLIC_DATAPORTEN_ID` should be `fcaa9e30-a6d3-4809-8fea-cdd7b3de1c98` for the Rubberdøk development client at Dataporten.
 
 2. Create a file called `.env`in `backend/api/` and add the variables that can be found in `backend/api/.env.example`, with appropriate values.
 
-   - `DATAPORTEN_ID` should be the same as above if using the Indøk Hovedstyre Webkomité client.
+   - `DATAPORTEN_ID` should be the same as above if using the Rubberdøk development client.
    - Contact the maintainers if you are a developer of the project and need access to the various secrets and API keys needed for the project.
-
-### Installing and running
-
-1. Install and start [Docker Desktop](https://www.docker.com/products/docker-desktop)
-
-2. Clone the project and build Docker image
-
-```
-git clone https://github.com/hovedstyret/indok-web.git
-cd indok-web
-docker-compose build
-```
-
-3. Run the project in Docker and set up the database
-
-```
-docker-compose up
-docker-compose exec backend python manage.py migrate
-docker-compose exec backend python manage.py createsuperuser
-```
-
-4. Install commit hooks by installing the frontend locally
-
-```
-cd frontend
-npm install
-```
-
-The frontend runs on [`localhost:3000`](localhost:3000), and the backend on [`localhost:8000`](localhost:8000). The GraphQL API endpoint is [`localhost:8000/graphql`](localhost:8000/graphql).
 
 ## Deployment
 
@@ -117,7 +130,11 @@ In short, the process is as follows:
   </a>
   &nbsp;
   <a href="https://nextjs.org">
-    <img alt="NextJS" src="https://upload.wikimedia.org/wikipedia/commons/8/8e/Nextjs-logo.svg" height="50">
+    <img alt="NextJS" src="https://github.com/hovedstyret/indok-web/blob/docs/assets/nextjs_logo.svg" height="50">
+  </a>
+  &nbsp;
+  <a href="https://www.typescriptlang.org/">
+    <img alt="TypeScript" src="https://upload.wikimedia.org/wikipedia/commons/4/4c/Typescript_logo_2020.svg" height="50">
   </a>
   &nbsp;
   <a href="https://www.python.org">
@@ -125,7 +142,7 @@ In short, the process is as follows:
   </a>
   &nbsp;
   <a href="https://www.djangoproject.com">
-    <img alt="Django" src="https://upload.wikimedia.org/wikipedia/commons/7/75/Django_logo.svg" height="50">
+    <img alt="Django" src="https://github.com/hovedstyret/indok-web/blob/docs/assets/django_logo.svg" height="50">
   </a>
   &nbsp;
   <a href="https://www.docker.com">
@@ -133,6 +150,6 @@ In short, the process is as follows:
   </a>
   &nbsp;
   <a href="https://aws.amazon.com/">
-    <img src="https://d0.awsstatic.com/logos/powered-by-aws.png" alt="Powered by AWS Cloud Computing", height="50">
+    <img src="https://github.com/hovedstyret/indok-web/blob/docs/assets/aws_logo.svg" alt="Powered by AWS Cloud Computing", height="50">
   </a>
 </p>

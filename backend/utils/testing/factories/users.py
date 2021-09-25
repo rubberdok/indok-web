@@ -30,3 +30,7 @@ class UserFactory(DjangoModelFactory):
     allergies = fake.bs()
     first_login = False
     graduation_year = factory.lazy_attribute(lambda _: get_valid_graduation_year())
+
+
+class IndokUserFactory(UserFactory):
+    is_indok = True

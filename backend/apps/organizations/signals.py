@@ -10,30 +10,32 @@ from apps.permissions.models import ResponsibleGroup
 
 
 @receiver(post_save, sender=Membership)
-def handle_new_member(sender, instance: Membership, **kwargs):
+def handle_new_member(instance: Membership, **kwargs):
     optional_group: Optional[ResponsibleGroup] = instance.group
     group: Group = instance.organization.primary_group.group
     org_group: Group = Group.objects.get(name=ORGANIZATION)
+    user = instance.user
+    user.groups.add(org_group)
     if group:
-        user = instance.user
         user.groups.add(group)
-        user.groups.add(org_group)
         if optional_group:
             user.groups.add(optional_group.group)
-        user.save()
 
 
 @receiver(pre_delete, sender=Membership)
-def handle_removed_member(sender, instance: Membership, **kwargs):
+def handle_removed_member(instance: Membership, **kwargs):
     group: Group = instance.organization.primary_group.group
+    org_group: Group = Group.objects.get(name=ORGANIZATION)
+    user = instance.user
     if group:
-        user = instance.user
         user.groups.remove(group)
-        user.save()
+
+    if not user.memberships.all().exists():
+        user.groups.remove(org_group)
 
 
 @receiver(pre_save, sender=Organization)
-def create_primary_group(sender, instance: Organization, **kwargs):
+def create_primary_group(instance: Organization, **kwargs):
     """
     Creates and assigns a primary group and HR group to members of the organization.
     """
