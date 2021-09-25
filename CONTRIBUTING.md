@@ -6,17 +6,21 @@ The primary way of contributing for students attending the study program Industr
 
 Your comments and feedback are welcome, and the development team is available via a handful of channels.
 
-- **GitHub Issues**
-  <br />
-  GitHub issues should be used for bugs and feature requests.
+### Github Issues
 
-- **Slack**
-  <br />
-  Rubberdøk's project managers can be reached at the Hovedstyret Slack channel for participants of extra curricular activities at Indøk NTNU.
+GitHub issues should be used for bugs and feature requests.
 
-- **Surveys**
-  <br />
-  The development team will periodically reach out to students at Indøk NTNU for feedback on the project.
+### Slack
+
+Rubberdøk's project managers can be reached at the Hovedstyret Slack channel for participants of extra curricular activities at Indøk NTNU.
+
+### Survey Participation
+
+The development team will periodically reach out to students at Indøk NTNU for feedback on the project.
+
+### E-mail
+
+Feedback can be addressed to [feedback@rubberdok.no](mailto:feedback@rubberdok.no)
 
 ## Contributing
 
