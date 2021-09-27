@@ -13,14 +13,6 @@ const AuthCallbackPage: NextPage = () => {
   const router = useRouter();
 
   const { code, state } = router.query;
-
-  if (state && state !== process.env.NEXT_PUBLIC_DATAPORTEN_STATE) {
-    if (typeof window !== "undefined") {
-      router.push("/");
-      return null;
-    }
-  }
-
   const [authUser, { loading, data, error }] = useMutation<{
     authUser: { user: User; idToken: string | null };
   }>(AUTHENTICATE, {
@@ -40,6 +32,13 @@ const AuthCallbackPage: NextPage = () => {
       });
     }
   }, [code, authUser]);
+
+  if (state && state !== process.env.NEXT_PUBLIC_DATAPORTEN_STATE) {
+    if (typeof window !== "undefined") {
+      router.push("/");
+      return null;
+    }
+  }
 
   if (state && state !== process.env.NEXT_PUBLIC_DATAPORTEN_STATE) {
     if (typeof window !== "undefined") {
