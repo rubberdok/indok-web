@@ -3,6 +3,6 @@
     "dockerComposeFile": ["../docker-compose.yml"],
     "service": "backend",
     "shutdownAction": "none",
-    "extensions": ["dbaeumer.vscode-eslint"],
+    "extensions": ["ms-python.python", "ms-python.vscode-pylance", "batisteo.vscode-django"],
     "workspaceFolder": "/backend"
   }
