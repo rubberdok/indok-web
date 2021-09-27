@@ -64,7 +64,6 @@ docker compose build
 ```zsh
 docker compose up
 docker compose exec backend python manage.py migrate
-docker compose exec backend python manage.py createsuperuser --username=admin
 docker compose exec backend python manage.py loaddata initial_data
 ```
 
@@ -76,7 +75,11 @@ The last command creates some initial data, two test users, and one admin user:
 | asbjorn_elevg |   1qaz   | false |
 | admin         | admin123 | super |
 
-The two test users can be accessed by going to `Log in with Feide` > `Feide Test Users` under `Other login alternatives` > Enter the respective username and password.
+- Accessing the test users
+
+  - Log in with Feide > Feide Test Users (under "Other login alternatives")
+
+  - Enter the respective username and password.
 
 5. Install commit hooks
 
