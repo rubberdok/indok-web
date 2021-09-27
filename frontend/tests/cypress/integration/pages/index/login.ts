@@ -1,6 +1,6 @@
-describe("My First Test", () => {
-  it("Does not do much!", () => {
-    cy.visit("http://localhost:3000/").then(() => {
+describe("User Logins", () => {
+  it("should prompt registration when not registered", () => {
+    cy.visit("/").then(() => {
       cy.get("h1").should("contain", "Industriell");
       cy.get("[data-testid=login]")
         .click()

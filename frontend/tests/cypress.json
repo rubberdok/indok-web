@@ -1,5 +1,6 @@
 {
   "viewportHeight": 1200,
   "viewportWidth": 1920,
-  "chromeWebSecurity": false
+  "chromeWebSecurity": false,
+  "baseUrl": "http://host.docker.internal:3000"
 }
