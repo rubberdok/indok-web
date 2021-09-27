@@ -7,6 +7,39 @@ from django.utils import timezone
 
 from .models import VippsAccessToken
 
+
+class VippsApi:
+
+    def __init__(
+        self,
+        client_id: str,
+        client_secret: str,
+        vipps_subscription_key: str,
+        merchant_serial_number: str,
+        vipps_server: str,
+        callback_prefix: str,
+        fall_back: str,
+        access_token: str = None,
+        vipps_system_name: str = None,
+        vipps_system_version: str = None,
+        vipps_system_plugin_name: str = None,
+        vipps_system_plugin_version: str = None,
+    ):
+        self.client_id = client_id
+        self.client_secret = client_secret
+        self.vipps_subscription_key = vipps_subscription_key
+        self.merchant_serial_number = merchant_serial_number
+        self.vipps_server = vipps_server
+        self.callback_prefix = callback_prefix
+        self.fall_back = fall_back
+        self._access_token = access_token
+        self.vipps_system_name = vipps_system_name
+        self.vipps_system_version = vipps_system_version
+        self.vipps_system_plugin_name = vipps_system_plugin_name
+        self.vipps_system_plugin_version = vipps_system_plugin_version
+
+    def _get_access_token():
+
 VIPPS_BASE_URL = "https://apitest.vipps.no"
 
 # TODO: Clean this code up by making a class, inspiration from https://github.com/almazkun/vipps-python
