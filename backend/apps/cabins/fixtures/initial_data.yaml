@@ -1,0 +1,8 @@
+- model: cabins.cabin
+  pk: 1
+  fields:
+    name: Oksen
+- model: cabins.cabin
+  pk: 2
+  fields:
+    name: Bjørnen

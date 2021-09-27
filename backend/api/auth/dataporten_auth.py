@@ -1,4 +1,5 @@
 import json
+from typing import Optional
 
 import jwt
 import requests
@@ -26,7 +27,6 @@ class DataportenAuth:
         """
         https://docs.feide.no/service_providers/openid_connect/feide_obtaining_tokens.html
         """
-        print("1. Completing dataporten authentication")
         params = {
             "code": code,
             "grant_type": "authorization_code",
@@ -35,7 +35,6 @@ class DataportenAuth:
         }
 
         try:
-            print(CLIENT_ID, settings.DATAPORTEN_SECRET)
             response = requests.post(
                 "https://auth.dataporten.no/oauth/token",
                 params,
@@ -47,12 +46,7 @@ class DataportenAuth:
             # Raises exceptions upon HTTP errors
             response.raise_for_status()
         except requests.exceptions.RequestException as err:
-            print(f"Error completing Dataporten authentication: {err}")
-            raise Exception(
-                "En feil oppstod under fullføring av Dataporten-autentisering."
-            )
-
-        print(f"Successfully obtained access token: {response.json()['access_token']}")
+            raise Exception("En feil oppstod under fullføring av Dataporten-autentisering.")
 
         return response.json()
 
@@ -64,7 +58,6 @@ class DataportenAuth:
         if resp is None:
             return None
 
-        print("\n2. Validating id_token")
         id_token = resp["id_token"]
 
         # Collect available public keys, mapping each key's ID to its parsed representation
@@ -73,7 +66,6 @@ class DataportenAuth:
             response.raise_for_status()
             jwks = response.json()
         except requests.exceptions.RequestException as err:
-            print(f"Error fetching Dataporten public keys: {err}")
             raise Exception("En systemfeil oppstod under validering av brukeren.")
 
         public_keys = {}
@@ -94,14 +86,10 @@ class DataportenAuth:
                 audience=CLIENT_ID,
             )
         except jwt.PyJWTError as e:
-            print(f"Error validating id_token: {e}")
             raise ValidationError("Kunne ikke validere brukeren.")
-
-        print("The id_token was successfully validated")
 
     @staticmethod
     def confirm_indok_enrollment(access_token):
-        print("\n3. Confirming indøk enrollment")
         if access_token is None:
             return None
 
@@ -115,22 +103,17 @@ class DataportenAuth:
             )
             response.raise_for_status()
         except requests.exceptions.RequestException as err:
-            print(f"Error confirming indøk enrollment: {err}")
-            print("User is not enrolled at Indøk")
             return False
 
         data = response.json()
-        print(f"Indøk enrollment info: {json.dumps(data)}")
 
         enrolled = False
         if "basic" in data and "active" in data:
             enrolled = data["basic"] == "member" and data["active"] == True
 
         if not enrolled:
-            print("User is not enrolled at Indøk")
             return False
 
-        print("User is enrolled at indøk")
         return True
 
     @staticmethod
@@ -141,21 +124,14 @@ class DataportenAuth:
         if access_token is None:
             return None
 
-        print("\n4. Fetching user info from Dataporten")
-
         params = {
             "Authorization": f"Bearer {access_token}",
         }
         try:
-            response = requests.get(
-                "https://auth.dataporten.no/userinfo", headers=params
-            )
+            response = requests.get("https://auth.dataporten.no/userinfo", headers=params)
             response.raise_for_status()
         except requests.exceptions.RequestException as err:
-            print(f"Error fetching user info: {err}")
             raise Exception("Kunne ikke hente brukerinfo fra Dataporten.")
-
-        print(f"Successfully fetched user info for {response.json()['user']['name']}")
 
         data = response.json()
         user_info = data["user"]
@@ -168,8 +144,7 @@ class DataportenAuth:
         return (username, feide_userid, email, name)
 
     @classmethod
-    def authenticate_and_get_user(cls, code=None):
-        print(f"\n{'='*20}Authentication flow started{'='*20}")
+    def authenticate_and_get_user(cls, code: Optional[str] = None) -> tuple[Optional[UserModel], Optional[str]]:
         if code is None:
             raise ValidationError("Ugyldig autentiseringskode i forespørselen.")
 
@@ -178,12 +153,12 @@ class DataportenAuth:
         cls.validate_response(response)
 
         access_token = response.get("access_token")
-        id_token = response.get("id_token")
+        id_token: Optional[str] = response.get("id_token")
 
         # Fetch user info from Dataporten
         user_info = cls.get_user_info(access_token)
         if user_info is None:
-            return None
+            return None, id_token
 
         username, feide_userid, email, name = user_info
 
@@ -191,19 +166,14 @@ class DataportenAuth:
         try:
             user = UserModel.objects.get(feide_userid=feide_userid)
             # User exists, update user info
-            print(f"\nUser {username} exists, updating in the database")
             user.id_token = id_token
             user.last_login = timezone.now()
             user.save()
-            enrolled = True
 
         except UserModel.DoesNotExist:
             # Check if user is member of MTIØT group (studies indøk)
             enrolled = cls.confirm_indok_enrollment(access_token)
-            if not enrolled:
-                return None, enrolled, id_token
 
-            print(f"\nUser {username} does not exist, creating in the database")
             # User does not exist, create a new user
             user = UserModel(
                 username=username,
@@ -212,6 +182,7 @@ class DataportenAuth:
                 feide_userid=feide_userid,
                 id_token=id_token,
                 last_login=timezone.now(),
+                is_indok=enrolled,
             )
             user.save()
-        return user, enrolled, None
+        return user, id_token
