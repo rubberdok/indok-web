@@ -36,7 +36,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Build the project
-        run: docker build -f backend/Dockerfile -t backend
+        run: docker build -f backend/Dockerfile -t backend backend/
 
       - name: Run the Django API tests
-        run: docker run -e DB_HOST=localhost --entrypoint backend/entrypoint.test.sh backend
+        run: docker run -e DB_HOST=localhost --entrypoint backend/entrypoint.test.sh backend/
