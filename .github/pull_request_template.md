@@ -1,12 +1,9 @@
-## Description
+## Proposed Changes
 
-This PR ...
-
-Proposed changes: 
-- Change 1
-- change 2
+-
 
 ## Types of Changes
+
 - [ ] New feature
 - [ ] Bug fix
 - [ ] Enhancement/optimization
@@ -16,11 +13,8 @@ Proposed changes:
 - [ ] Other
 
 ## Issue(s) fixed or closed by this PR
-- 
 
-### How did I fix the issue(s)?
-
-Fixed ...
+-
 
 ## Checklist
 
