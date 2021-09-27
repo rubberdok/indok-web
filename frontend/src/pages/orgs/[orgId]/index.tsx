@@ -33,6 +33,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { default as React, useState } from "react";
 import OrganizationListings from "@components/pages/listings/organization/OrganizationListings";
+import UserAdmin from "@components/pages/orgs/UserAdmin";
 
 interface HeaderValuePair<T> {
   header: string;
@@ -112,6 +113,9 @@ const OrganizationDetailPage: NextPage = () => {
               <Typography variant="h1" align="center">
                 {data.organization.name}
               </Typography>
+            </Grid>
+            <Grid item>
+              <UserAdmin />
             </Grid>
             <Grid item container>
               <Grid item xs>
