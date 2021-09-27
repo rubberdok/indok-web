@@ -7,7 +7,7 @@ from apps.permissions.models import ResponsibleGroup
 class Organization(models.Model):
     name = models.CharField(max_length=100)
     slug = models.SlugField(max_length=100)
-    description = models.CharField(max_length=4000, blank=True)
+    description = models.TextField(blank=True)
 
     parent = models.ForeignKey(
         "Organization",
