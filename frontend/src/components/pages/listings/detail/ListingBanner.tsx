@@ -28,12 +28,12 @@ const ListingBanner: React.FC<{
   const classes = useStyles();
   return (
     <>
-      {listing.hero ? (
+      {listing.heroImageUrl ? (
         <Box
           className={`${classes.hero}`}
           style={{
-            background: `url(${listing.hero})`,
-            backgroundPosition: "center",
+            background: `url(${listing.heroImageUrl})`,
+            backgroundPosition: "top",
             backgroundSize: "cover",
             backgroundRepeat: "no-repeat",
             opacity: 0.5,

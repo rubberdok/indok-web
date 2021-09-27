@@ -1,4 +1,6 @@
-FROM node:12
+# syntax=docker/dockerfile:1
+
+FROM --platform=linux/amd64 node:12
 
 # Create app directory
 RUN mkdir -p /code

@@ -1,14 +1,19 @@
 import graphene
-from django.contrib.auth.models import Group, User
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group, User
 from django.utils.text import slugify
-from graphql_jwt.decorators import permission_required
+from utils.decorators import permission_required
 
-from ..users.types import UserType
+from apps.users.types import UserType
+from apps.permissions.models import ResponsibleGroup
+
 from . import permissions as perms
 from .models import Membership, Organization
 from .types import MembershipType, OrganizationType
-from apps.permissions.models import ResponsibleGroup
+
+
+def get_organization_from_data(*_, membership_data, **kwargs) -> Organization:
+    return Organization.objects.get(pk=membership_data["organization_id"])
 
 
 class OrganizationInput(graphene.InputObjectType):
@@ -24,7 +29,8 @@ class CreateOrganization(graphene.Mutation):
     class Arguments:
         organization_data = OrganizationInput(required=True)
 
-    def mutate(self, info, organization_data):
+    @permission_required("organizations.add_organization")
+    def mutate(self, _, organization_data):
         organization = Organization()
 
         for k, v in organization_data.items():
@@ -32,9 +38,7 @@ class CreateOrganization(graphene.Mutation):
 
         setattr(organization, "slug", slugify(organization.name))
         organization.save()
-        Group.objects.create(name=organization.name)
-        ok = True
-        return CreateOrganization(organization=organization, ok=ok)
+        return CreateOrganization(organization=organization, ok=True)
 
 
 class UpdateOrganization(graphene.Mutation):
@@ -48,7 +52,7 @@ class UpdateOrganization(graphene.Mutation):
     @permission_required("organizations.change_organization")
     def mutate(self, info, id, organization_data=None):
         organization = Organization.objects.get(pk=id)
-        user: User = info.context.user
+        user = info.context.user
 
         perms.check_user_membership(user, organization)
 
@@ -89,16 +93,14 @@ class AssignMembership(graphene.Mutation):
     class Arguments:
         membership_data = MembershipInput(required=True)
 
-    def mutate(self, info, membership_data):
-        user = get_user_model().objects.get(pk=membership_data["user_id"])
-        group = ResponsibleGroup.objects.get(pk=membership_data["group_id"])
+    @permission_required("organizations.change_organization", fn=get_organization_from_data)
+    def mutate(self, _, membership_data):
         membership = Membership(
             organization_id=membership_data["organization_id"],
-            user=user,
-            group=group,
+            user_id=membership_data["user_id"],
+            group_id=membership_data.get("group_id", None),
         )
         membership.save()
-        user.groups.add(group.group)
         return AssignMembership(membership=membership, ok=True)
 
 

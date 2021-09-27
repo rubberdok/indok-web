@@ -53,9 +53,7 @@ class OrganizationType(DjangoObjectType):
     @staticmethod
     def resolve_absolute_slug(organization: Organization, info):
         slug_list = [organization.slug]
-        while (
-            organization := organization.parent
-        ) and organization.parent != organization:
+        while (organization := organization.parent) and organization.parent != organization:
             print(slug_list)
             slug_list.insert(0, organization.slug)
         return "/".join(slug_list)
@@ -82,9 +80,7 @@ class MembershipType(DjangoObjectType):
         @staticmethod
         def is_in_organization(resolver):
             def wrapper(membership: Membership, info):
-                if membership.organization.users.filter(
-                    pk=info.context.user.id
-                ).exists():
+                if membership.organization.users.filter(pk=info.context.user.id).exists():
                     return resolver(membership, info)
                 else:
                     raise PermissionError(

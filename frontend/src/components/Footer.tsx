@@ -121,10 +121,9 @@ const Footer: React.FC = () => {
                 <Typography variant="body2">Kolbjørn Hejes vei 1E, 7034 Trondheim</Typography>
                 <Typography variant="body2">Org.nr. 994 778 463</Typography>
                 <a href="mailto:Leder@indokhs.no">
-                  <Typography variant="body2" gutterBottom>
-                    Leder@indokhs.no
-                  </Typography>
+                  <Typography variant="body2">Leder@indokhs.no</Typography>
                 </a>
+                <Link href="/report/">Baksida</Link>
                 <Box mt={2}>
                   <a href="https://www.facebook.com/HovedstyretIndok" rel="noreferrer noopener" target="_blank">
                     <IconButton edge="start" size="small" aria-label="facebook" color="inherit">

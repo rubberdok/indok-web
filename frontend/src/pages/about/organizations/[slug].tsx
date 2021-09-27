@@ -80,7 +80,7 @@ const Article: NextPage<ArticleProps> = ({ post, frontmatter }) => {
       </Box>
 
       <Container>
-        <Grid justify="center" container>
+        <Grid justifyContent="center" container>
           <Grid item xs={10}>
             <Paper className={classes.heroCard}>
               <Box mb="56px" py="40px" px="56px" display="flex" alignItems="center" justifyContent="space-between">
