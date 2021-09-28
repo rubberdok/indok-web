@@ -29,8 +29,6 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-        ports:
-          - 5432:5432
     steps:
       - name: Check out the repository
         uses: actions/checkout@v2
@@ -39,4 +37,4 @@ jobs:
         run: docker build -f backend/Dockerfile -t backend backend/
 
       - name: Run the Django API tests
-        run: docker run -e DB_HOST=postgres -e DATAPORTEN_ID=${{ env.DATAPORTEN_ID}} -e DATAPORTEN_REDIRECT_URI=${{env.DATAPORTEN_REDIRECT_URI}} -e DATAPORTEN_SECRET=${{ env.DATAPORTEN_SECRET }} -e GOOGLE_DRIVE_API_KEY=${{ env.GOOGLE_DRIVE_API_KEY }} -e AWS_ACCESS_KEY_ID=. -e AWS_SECRET_ACCESS_KEY=. --entrypoint /backend/entrypoint.test.sh backend
+        run: docker run --network="host" -e DB_HOST=postgres -e DATAPORTEN_ID=${{ env.DATAPORTEN_ID}} -e DATAPORTEN_REDIRECT_URI=${{env.DATAPORTEN_REDIRECT_URI}} -e DATAPORTEN_SECRET=${{ env.DATAPORTEN_SECRET }} -e GOOGLE_DRIVE_API_KEY=${{ env.GOOGLE_DRIVE_API_KEY }} -e AWS_ACCESS_KEY_ID=. -e AWS_SECRET_ACCESS_KEY=. --entrypoint /backend/entrypoint.test.sh backend
