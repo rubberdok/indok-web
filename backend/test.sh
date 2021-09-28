@@ -1,5 +1,5 @@
 #!/bin/bash
-set -eo pipeline
+set -eo pipefail
 [ "DEBUG" ] && set -x
 
 # set current working directory to the directory of the script
