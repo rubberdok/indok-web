@@ -12,5 +12,5 @@ if ! docker inspect "$dockerImage" &> /dev/null; then
     false
 fi
 
-docker run $dockerImage python manage.py test || (echo "Tests failed" && exit 1)
+docker run $dockerImage python manage.py test
 echo "Success   "
