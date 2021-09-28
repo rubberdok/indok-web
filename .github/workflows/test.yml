@@ -39,4 +39,4 @@ jobs:
         run: docker build -f backend/Dockerfile -t backend backend/
 
       - name: Run the Django API tests
-        run: docker run -e DB_HOST=localhost --entrypoint /backend/entrypoint.sh "python manage.py test" backend
+        run: docker run -e DB_HOST=localhost --entrypoint "python manage.py test" backend
