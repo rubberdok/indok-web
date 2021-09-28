@@ -45,47 +45,63 @@ The website includes:
 
 ## Setup
 
+### Installing and running
+
+1. [Set up Git](https://docs.github.com/en/get-started/quickstart/set-up-git)
+
+2. Install and start [Docker Desktop](https://www.docker.com/products/docker-desktop)
+
+3. Clone the project and build the Docker images
+
+```zsh
+git clone https://github.com/hovedstyret/indok-web.git
+cd indok-web
+docker compose build
+```
+
+4. Run the project in Docker and set up the database
+
+```zsh
+docker compose up
+docker compose exec backend python manage.py migrate
+docker compose exec backend python manage.py loaddata initial_data
+```
+
+The last command creates some initial data, two test users, and one admin user:
+
+| Username      | Password | Indøk |
+| ------------- | :------: | ----: |
+| eva_student   |   5tgb   |  true |
+| asbjorn_elevg |   1qaz   | false |
+| admin         | admin123 | super |
+
+- Accessing the test users
+
+  - Log in with Feide > Feide Test Users (under "Other login alternatives")
+
+  - Enter the respective username and password.
+
+5. Install commit hooks
+
+```zsh
+cd frontend
+npm ci
+```
+
+The frontend runs on [`localhost:3000`](localhost:3000), and the backend on [`localhost:8000`](localhost:8000). The GraphQL API endpoint is [`localhost:8000/graphql`](localhost:8000/graphql).
+
 ### Environment variables
 
 In order to authenticate users through Feide, Indøk Hovedstyre Webkomité has registered an application at Dataporten. This requires the addition of environment variables identifying the application. Contributors may specify a different client ID and secret to authenticate with Dataporten through their own application. See [Feide docs](https://docs.feide.no/service_providers/index.html) for more information. Additionally, several other APIs are accessed, requiring different API keys for access.
 
 1. Create a file called `.env.local` in `frontend/` and add the variables that can be found in `.env.local.template`, with appropriate values.
 
-   - `NEXT_PUBLIC_DATAPORTEN_ID` should be `fcaa9e30-a6d3-4809-8fea-cdd7b3de1c98` for the Indøk Hovedstyre Webkomité development client at Dataporten.
+   - `NEXT_PUBLIC_DATAPORTEN_ID` should be `fcaa9e30-a6d3-4809-8fea-cdd7b3de1c98` for the Rubberdøk development client at Dataporten.
 
 2. Create a file called `.env`in `backend/api/` and add the variables that can be found in `backend/api/.env.example`, with appropriate values.
 
-   - `DATAPORTEN_ID` should be the same as above if using the Indøk Hovedstyre Webkomité client.
+   - `DATAPORTEN_ID` should be the same as above if using the Rubberdøk development client.
    - Contact the maintainers if you are a developer of the project and need access to the various secrets and API keys needed for the project.
-
-### Installing and running
-
-1. Install and start [Docker Desktop](https://www.docker.com/products/docker-desktop)
-
-2. Clone the project and build Docker image
-
-```
-git clone https://github.com/hovedstyret/indok-web.git
-cd indok-web
-docker-compose build
-```
-
-3. Run the project in Docker and set up the database
-
-```
-docker-compose up
-docker-compose exec backend python manage.py migrate
-docker-compose exec backend python manage.py createsuperuser
-```
-
-4. Install commit hooks by installing the frontend locally
-
-```
-cd frontend
-npm install
-```
-
-The frontend runs on [`localhost:3000`](localhost:3000), and the backend on [`localhost:8000`](localhost:8000). The GraphQL API endpoint is [`localhost:8000/graphql`](localhost:8000/graphql).
 
 ## Deployment
 
