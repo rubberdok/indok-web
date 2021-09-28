@@ -37,6 +37,9 @@ jobs:
       - name: Build the project
         run: docker build -f backend/Dockerfile -t ${{ env.IMAGE_TAG }} backend/
 
+      - name: Docker networks
+        run: docker network ls
+
       - name: Run the Django API tests
         run: |
           chmod +x backend/test.sh
