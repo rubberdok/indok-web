@@ -14,6 +14,7 @@ env:
   GOOGLE_DRIVE_API_KEY: ${{ secrets.GOOGLE_DRIVE_API_KEY }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  IMAGE_TAG: backend-dummy-image
 
 jobs:
   test:
@@ -34,7 +35,9 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Build the project
-        run: docker build -f backend/Dockerfile -t backend backend/
+        run: docker build -f backend/Dockerfile -t ${{ env.IMAGE_TAG }} backend/
 
       - name: Run the Django API tests
-        run: docker run --network="bridge" -e DB_HOST=postgres -e DATAPORTEN_ID=${{ env.DATAPORTEN_ID}} -e DATAPORTEN_REDIRECT_URI=${{env.DATAPORTEN_REDIRECT_URI}} -e DATAPORTEN_SECRET=${{ env.DATAPORTEN_SECRET }} -e GOOGLE_DRIVE_API_KEY=${{ env.GOOGLE_DRIVE_API_KEY }} -e AWS_ACCESS_KEY_ID=. -e AWS_SECRET_ACCESS_KEY=. --entrypoint /backend/entrypoint.test.sh backend
+        run: |
+          chmod +x backend/test.sh
+          backend/test.sh ${{ env.IMAGE_TAG }}
