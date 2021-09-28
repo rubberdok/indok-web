@@ -7,11 +7,15 @@ cd "$(dirname "$0")"
 
 dockerImage=$1
 
+echo "inspecting"
 if ! docker inspect "$dockerImage" &> /dev/null; then
     echo $'\timage does not exist!'
     false
 fi
+echo "found image"
 
-docker run $dockerImage python manage.py test || (echo "Tests failed" && exit 1)
+echo "trying to run"
+docker run $dockerImage python manage.py test
+echo "ran"
 
 echo "Success"
