@@ -15,7 +15,7 @@ fi
 echo "found image"
 
 echo "trying to run"
-docker run -e DATAPORTEN_ID -e DATAPORTEN_SECRET -e DATAPORTEN_REDIRECT_URI -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e GOOGLE_DRIVE_API_KEY $dockerImage python manage.py test
+docker run -e $DATAPORTEN_ID -e $DATAPORTEN_SECRET -e $DATAPORTEN_REDIRECT_URI -e $AWS_ACCESS_KEY_ID -e $AWS_SECRET_ACCESS_KEY -e $GOOGLE_DRIVE_API_KEY $dockerImage python manage.py test
 echo "ran"
 
 echo "Success"
