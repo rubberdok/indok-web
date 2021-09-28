@@ -8,7 +8,7 @@ cd "$(dirname "$0")"
 dockerImage=$1
 
 if ! docker inspect "$dockerImage" &> /dev/null; then
-    echo $"\timage does not exist!"
+    echo $'\timage does not exist!'
     false
 fi
 
