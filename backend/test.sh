@@ -16,7 +16,7 @@ echo "found image"
 
 echo "trying to run"
 docker run \
-    --network $2 \
+    --network=$2 \
     -e DATAPORTEN_ID=$DATAPORTEN_ID \
     -e DATAPORTEN_SECRET=$DATAPORTEN_SECRET \
     -e DATAPORTEN_REDIRECT_URI=$DATAPORTEN_REDIRECT_URI \
