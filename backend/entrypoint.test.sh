@@ -1,7 +1,4 @@
 #!/bin/sh
-if python manage.py migrate; then
-    exit python manage.py test
-else
-    exit 0
-fi
+python manage.py migrate --check
+python manage.py test
 exec "$@"
