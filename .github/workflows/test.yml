@@ -42,4 +42,4 @@ jobs:
           chmod +x backend/test.sh
           backend/test.sh ${{ env.IMAGE_TAG }}
         env:
-          DB_HOST: postgres
+          DB_HOST: postgres://postgres:postgres@172.17.0.1:5432/postgres
