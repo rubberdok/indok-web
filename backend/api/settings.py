@@ -53,6 +53,9 @@ INSTALLED_APPS = [
     "apps.events",
     "apps.organizations",
     "apps.users",
+    "apps.forms",
+    "apps.listings",
+    "apps.permissions",
     "apps.ecommerce",
     # External apps
     "corsheaders",
@@ -65,7 +68,7 @@ INSTALLED_APPS = [
 AUTH_USER_MODEL = "users.User"
 
 GRAPHENE = {
-    "SCHEMA": "api.graphql.schema.schema",
+    "SCHEMA": "api.graphql_schema.schema",
     "MIDDLEWARE": [
         "graphql_jwt.middleware.JSONWebTokenMiddleware",
         "api.auth.middleware.AnonymousUserMiddleware",
@@ -144,9 +147,7 @@ DATAPORTEN_REDIRECT_URI = env("DATAPORTEN_REDIRECT_URI")
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"
-    },
+    {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
     {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
@@ -180,12 +181,12 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 
 # CONFIG
-EMAIL_HOST_USER = env("BOOKING_EMAIL")
-EMAIL_HOST_PASSWORD = env("BOOKING_EMAIL_PASSWORD")
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_USE_TLS = True
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_PORT = 587
+EMAIL_BACKEND = "django_ses.SESBackend"
+
+AWS_SES_REGION_NAME = "eu-north-1"
+AWS_SES_REGION_ENDPOINT = "email.eu-north-1.amazonaws.com"
+AWS_ACCESS_KEY_ID = env("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = env("AWS_SECRET_ACCESS_KEY")
 
 GOOGLE_DRIVE_API_KEY = env("GOOGLE_DRIVE_API_KEY")
 
@@ -193,3 +194,5 @@ VIPPS_CLIENT_ID = env("VIPPS_CLIENT_ID")
 VIPPS_SECRET = env("VIPPS_SECRET")
 VIPPS_MERCHANT_SERIAL_NUMBER = env("VIPPS_MERCHANT_SERIAL_NUMBER")
 VIPPS_SUBSCRIPTION_KEY = env("VIPPS_SUBSCRIPTION_KEY")
+
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

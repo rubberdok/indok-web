@@ -6,12 +6,12 @@ image: /img/bulldok.jpeg
 styre:
   ceo:
     navn: Bendik Edvardsen
-    mail: tlf.
+    mail:
     tittel: Leder
 tag: idrett
 ---
 
-# Hvem er vi?
+##### Hvem er vi?
 
 Bulldøk er Indøks buldre- og klatregruppe. Vi møtes til ukentlige treninger, og alle er velkomne uavhengig av tidligere erfaring. Utover treningene arrangerer vi kurs for klubbens medlemmer.
 

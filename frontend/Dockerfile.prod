@@ -1,3 +1,5 @@
+# syntax=docker/dockerfile:1
+
 FROM 777854691961.dkr.ecr.eu-north-1.amazonaws.com/node:12
 
 # Create app directory
@@ -9,8 +11,6 @@ COPY package.json .
 COPY package-lock.json .
 RUN npm ci
 
-
-# set environment variables
 ARG NEXT_PUBLIC_GRAPHQL_BACKEND_URI
 ENV NEXT_PUBLIC_GRAPHQL_BACKEND_URI $NEXT_PUBLIC_GRAPHQL_BACKEND_URI
 
@@ -29,6 +29,7 @@ ENV NEXT_PUBLIC_FRONTEND_URI $NEXT_PUBLIC_FRONTEND_URI
 # Copying source files
 COPY . .
 
-RUN ["npm", "run", "build"]
+# Secrets should not be passed as build args.
+RUN --mount=type=secret,id=SENTRY_AUTH_TOKEN ["npm", "run", "build"]
 
 CMD ["npm", "run", "start"]

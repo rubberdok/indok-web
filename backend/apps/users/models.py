@@ -6,6 +6,7 @@ from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 from guardian.conf import settings as guardian_settings
 
+
 # Create your models here.
 from apps.events.models import Event, SignUp
 
@@ -18,6 +19,7 @@ class User(AbstractUser):
     phone_number = PhoneNumberField(blank=True)
     first_login = models.BooleanField(default=True)
     graduation_year = models.IntegerField(null=True, blank=True)
+    is_indok = models.BooleanField(default=False)
 
     @property
     def events(self):
@@ -44,6 +46,9 @@ class User(AbstractUser):
     @property
     def is_anonymous(self):
         return not self.is_authenticated
+
+    class Meta:
+        permissions = [("view_sensitive_info", "Can view sensitive information about a user")]
 
     def __str__(self):
         return f"User(name='{self.first_name} {self.last_name}')"

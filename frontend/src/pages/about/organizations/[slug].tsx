@@ -1,9 +1,13 @@
 import Layout from "@components/Layout";
-import { Box, Card, Container, Grid, makeStyles, Paper, Typography } from "@material-ui/core";
+import { Box, Card, Chip, Container, Divider, Grid, makeStyles, Paper, Typography } from "@material-ui/core";
+import MailOutlineIcon from "@material-ui/icons/MailOutline";
+import PhoneIcon from "@material-ui/icons/Phone";
 import { getPostBySlug, getPostsSlugs } from "@utils/posts";
-import { NextPage } from "next";
+import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import React from "react";
 import ReactMarkdown from "react-markdown";
+import * as markdownComponents from "@components/markdown/components";
+import { Post } from "src/types/posts";
 
 type ArticleProps = {
   params: {
@@ -19,10 +23,17 @@ type ArticleProps = {
     logo?: string;
     alt?: string;
     image?: string;
-    styre: Array<any>;
+    board: BoardMember[];
   };
-  nextPost: any;
-  previousPost: any;
+  nextPost: Post | null;
+  previousPost: Post | null;
+};
+
+type BoardMember = {
+  name: string;
+  mail: string;
+  title: string;
+  phoneNumber: string;
 };
 
 const useStyles = makeStyles(() => ({
@@ -42,6 +53,9 @@ const useStyles = makeStyles(() => ({
     textAlign: "center",
   },
   logo: {
+    height: 100,
+  },
+  avatar: {
     height: 100,
   },
 }));
@@ -66,66 +80,45 @@ const Article: NextPage<ArticleProps> = ({ post, frontmatter }) => {
       </Box>
 
       <Container>
-        <Grid justify="center" container>
+        <Grid justifyContent="center" container>
           <Grid item xs={10}>
             <Paper className={classes.heroCard}>
               <Box mb="56px" py="40px" px="56px" display="flex" alignItems="center" justifyContent="space-between">
                 <Typography variant="h4">{frontmatter.title}</Typography>
                 <img className={classes.logo} alt={frontmatter.alt} src={frontmatter.logo}></img>
               </Box>
-              {/* <Box px="56px" mb="56px" pb="24px" display="flex" alignItems="center" justifyContent="space-between">
-                {previousPost ? (
-                  <Link href={"/about/organizations/[slug]"} as={`/about/organizations/${previousPost.slug}`}>
-                    <a>← {previousPost.frontmatter.title}</a>
-                  </Link>
-                ) : (
-                  <div />
-                )}
-
-                <a href="./../organizations">Oversikt</a>
-
-                {nextPost ? (
-                  <Link href={"/about/organizations/[slug]"} as={`/about/organizations/${nextPost.slug}`}>
-                    <a>{nextPost.frontmatter.title} →</a>
-                  </Link>
-                ) : (
-                  <div />
-                )}
-              </Box> */}
             </Paper>
           </Grid>
         </Grid>
 
         <Grid container spacing={4}>
           <Grid item xs={8}>
-            <ReactMarkdown
-              escapeHtml={false}
-              source={post.content}
-              renderers={{ heading: HeadingRenderer, paragraph: ParagraphRenderer }}
-            />
+            <ReactMarkdown components={markdownComponents}>{post.content}</ReactMarkdown>
           </Grid>
           <Grid item xs={4}>
-            {frontmatter.styre ? (
+            {frontmatter.board && (
               <>
                 <Typography variant="h5" gutterBottom>
                   Styret
                 </Typography>
-                {Object.keys(frontmatter.styre).map((item: any) => (
+                {frontmatter.board.map((member, index) => (
                   <>
-                    <Card key={item}>
+                    {index != 0 && <Divider />}
+                    <Card key={index}>
                       <Box p={4}>
-                        <Typography variant="body2">{frontmatter.styre[item].navn}</Typography>
-                        <Typography variant="body2">
-                          {frontmatter.styre[item].tittel} - {frontmatter.styre[item].mail}
+                        <Typography variant="body2">{member.name}</Typography>
+                        <Typography variant="caption" gutterBottom>
+                          {member.title}
                         </Typography>
+                        <br />
+                        {member.mail && <Chip size="small" label={member.mail} icon={<MailOutlineIcon />} />}
+                        {member.mail && member.phoneNumber && <br />}
+                        {member.phoneNumber && <Chip size="small" label={member.phoneNumber} icon={<PhoneIcon />} />}
                       </Box>
                     </Card>
-                    <br />
                   </>
                 ))}
               </>
-            ) : (
-              " "
             )}
           </Grid>
         </Grid>
@@ -134,7 +127,7 @@ const Article: NextPage<ArticleProps> = ({ post, frontmatter }) => {
   );
 };
 
-export const getStaticPaths = async () => {
+export const getStaticPaths: GetStaticPaths = async () => {
   const paths = getPostsSlugs("organizations");
 
   return {
@@ -143,36 +136,20 @@ export const getStaticPaths = async () => {
   };
 };
 
-export const getStaticProps = async ({ params }: ArticleProps) => {
-  const { slug } = params;
-
-  const postData = getPostBySlug(slug, "organizations");
-
-  if (!postData.previousPost) {
-    postData.previousPost = null;
+export const getStaticProps: GetStaticProps = async ({ params }) => {
+  if (params) {
+    const { slug } = params;
+    let postData = undefined;
+    if (typeof slug === "string") {
+      postData = getPostBySlug(slug, "organizations");
+    } else if (Array.isArray(slug)) {
+      postData = getPostBySlug(slug[0], "organizations");
+    } else {
+      return { notFound: true };
+    }
+    return { props: postData };
   }
-
-  if (!postData.nextPost) {
-    postData.nextPost = null;
-  }
-
-  return { props: postData };
-};
-
-const HeadingRenderer = (props: { children: React.ReactNode }) => {
-  return (
-    <Typography variant="h5" gutterBottom>
-      {props.children}
-    </Typography>
-  );
-};
-
-const ParagraphRenderer = (props: { children: React.ReactNode }) => {
-  return (
-    <Typography variant="body2" paragraph>
-      {props.children}
-    </Typography>
-  );
+  return { notFound: true };
 };
 
 export default Article;

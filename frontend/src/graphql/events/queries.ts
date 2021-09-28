@@ -164,20 +164,26 @@ export const ADMIN_GET_EVENT = gql`
       shortDescription
       signupOpenDate
       usersAttending {
-        id
-        username
-        email
-        firstName
-        lastName
-        gradeYear
+        user {
+          id
+          firstName
+          lastName
+        }
+        userEmail
+        userGradeYear
+        userAllergies
+        userPhoneNumber
       }
       usersOnWaitingList {
-        id
-        username
-        email
-        firstName
-        lastName
-        gradeYear
+        user {
+          id
+          firstName
+          lastName
+        }
+        userEmail
+        userGradeYear
+        userAllergies
+        userPhoneNumber
       }
       userAttendance {
         isSignedUp
@@ -249,8 +255,7 @@ export const QUERY_SIGNED_UP_USERS = gql`
     event(id: $id) {
       isAttendable
       usersAttending {
-        id
-        email
+        userEmail
       }
     }
   }

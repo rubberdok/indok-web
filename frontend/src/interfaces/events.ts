@@ -16,11 +16,11 @@ export interface Event {
   availableSlots?: string;
   shortDescription?: string;
   signupOpenDate?: string;
-  usersOnWaitingList?: User[];
+  usersOnWaitingList?: SignUp[];
   userAttendance?: { isSignedUp: boolean; isOnWaitingList: boolean; hasBoughtTicket: boolean };
   isFull?: boolean;
   price?: string;
-  usersAttending?: User[];
+  usersAttending?: SignUp[];
   hasExtraInformation?: boolean;
   bindingSignup?: boolean;
   contactEmail?: string;
@@ -33,11 +33,20 @@ export interface AttendableEvent extends Event {
   availableSlots: string;
   signupOpenDate: string;
   userAttendance: { isSignedUp: boolean; isOnWaitingList: boolean; hasBoughtTicket: boolean };
-  usersAttending: User[];
+  usersAttending: SignUp[];
   isFull: boolean;
 }
 
 export interface Category {
   id: string;
   name: string;
+}
+
+export interface SignUp {
+  id: string;
+  user: User;
+  userEmail: string;
+  userGradeYear: number;
+  userAllergies: string;
+  userPhoneNumber: string;
 }
