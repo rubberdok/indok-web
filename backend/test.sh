@@ -22,7 +22,7 @@ docker run \
     -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
     -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
     -e GOOGLE_DRIVE_API_KEY=$GOOGLE_DRIVE_API_KEY \
-    -e DB_HOST=$DB_HOST
+    -e DB_HOST=$DB_HOST \
     $dockerImage python manage.py test
 echo "ran"
 
