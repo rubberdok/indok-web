@@ -151,14 +151,14 @@ const Footer: React.FC = () => {
               </a>
               <Box flexGrow="1">
                 <Typography variant="body2">
-                  Forslag til nettsiden eller oppdaget en feil? Lag en issue på{" "}
+                  Forslag til nettsiden eller oppdaget en feil? Lag et issue på{" "}
                   <a href="https://github.com/hovedstyret/indok-web/issues">GitHub</a>, eller send mail til{" "}
-                  <a href="mailto:web@indokhs.no">web@indokhs.no</a>.
+                  <a href="mailto:feedback@rubberdok.no">feedback@rubberdok.no</a>.
                 </Typography>
                 <Typography variant="body2">
                   Utviklet av{" "}
                   <a href="https://github.com/hovedstyret/indok-web" rel="norefferer noopener">
-                    RubberDøk
+                    Rubberdøk
                   </a>
                   , Hovedstyrets Webkomité. Kopirett © {new Date().getFullYear()} Foreningen for Studentene ved Indøk.
                   Alle rettigheter reservert.
