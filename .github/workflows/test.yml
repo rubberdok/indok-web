@@ -30,6 +30,9 @@ jobs:
         run: |
           docker-compose exec -T backend coverage run manage.py test
           docker-compose exec -T backend coverage xml
+          ls
+          cd backend
+          ls
 
       - name: Upload coverage
         uses: codecov/codecov-action@v2
