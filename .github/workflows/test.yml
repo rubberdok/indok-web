@@ -35,7 +35,7 @@ jobs:
         uses: codecov/codecov-action@v2
         with:
           token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
-          dicrectory: ./backend/
+          directory: ./backend/
           files: ./coverage.xml
           flags: apitests # optional
           fail_ci_if_error: true # optional (default = false)
