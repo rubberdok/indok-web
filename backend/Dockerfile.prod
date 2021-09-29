@@ -31,8 +31,8 @@ FROM 777854691961.dkr.ecr.eu-north-1.amazonaws.com/python:3.9 as runner
 # create directory for the app user
 RUN mkdir -p /home/app
 
-RUN addgroup -g 1001 -S python
-RUN adduser -S django -u 1001
+RUN addgroup --gid 1001 -system python
+RUN adduser -system django -u 1001
 
 # create the appropriate directories
 ENV HOME=/home/app
