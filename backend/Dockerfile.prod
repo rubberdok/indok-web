@@ -32,7 +32,7 @@ FROM builder as final
 RUN mkdir -p /home/app
 
 # create the app user
-RUN addgroup -S app && adduser -S app -G app
+RUN adduser --system --group app
 
 # create the appropriate directories
 ENV HOME=/home/app
