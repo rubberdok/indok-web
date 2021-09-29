@@ -3,7 +3,7 @@
 ###########
 
 # pull official base image
-FROM python:3.9.6 as builder
+FROM 777854691961.dkr.ecr.eu-north-1.amazonaws.com/python:3.9 as builder
 
 # set work directory
 WORKDIR /usr/src/app
@@ -26,7 +26,7 @@ RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/app/wheels -r produc
 #########
 
 # pull official base image
-FROM python:3.9.6
+FROM builder as final
 
 # create directory for the app user
 RUN mkdir -p /home/app
@@ -43,7 +43,6 @@ RUN mkdir $APP_HOME/mediafiles
 WORKDIR $APP_HOME
 
 # install dependencies
-RUN apk update && apk add libpq
 COPY --from=builder /usr/src/app/wheels /wheels
 COPY --from=builder /usr/src/app/production.txt /usr/src/app/base.txt .
 RUN pip install --no-cache /wheels/*
