@@ -9,6 +9,7 @@ from graphene.utils.str_converters import to_snake_case
 from graphene_django.utils.testing import GraphQLTestCase
 from graphql_jwt.settings import jwt_settings
 from graphql_jwt.shortcuts import get_token
+from django.conf import settings
 
 PERMISSION_ERROR_MESSAGE: Final = "You do not have the permissions required."
 ALTERNATE_PERMISSION: Final = "You do not have permission to perform this action"
@@ -16,7 +17,7 @@ ALTERNATE_PERMISSION: Final = "You do not have permission to perform this action
 
 class ExtendedGraphQLTestCase(GraphQLTestCase):
     def setUp(self) -> None:
-        self.GRAPHQL_URL = "/graphql"
+        self.GRAPHQL_URL = settings.GRAPHQL_URL
 
     def query(self, query, user=None, **kwargs) -> HttpResponse:
         headers = {}
