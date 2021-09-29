@@ -16,6 +16,12 @@ ALTERNATE_PERMISSION: Final = "You do not have permission to perform this action
 
 
 class ExtendedGraphQLTestCase(GraphQLTestCase):
+    def setUp(self) -> None:
+        self.GRAPHQL_URL = (
+            f"/{settings.GRAPHQL_URL}" if not settings.GRAPHQL_URL.startswith("/") else settings.GRAPHQL_URL
+        )
+        return super().setUp()
+
     def query(self, query, user=None, **kwargs) -> HttpResponse:
         headers = {}
         if user is not None:
