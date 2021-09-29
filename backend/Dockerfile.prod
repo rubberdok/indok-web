@@ -26,13 +26,13 @@ RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/app/wheels -r produc
 #########
 
 # pull official base image
-FROM builder as final
+FROM 777854691961.dkr.ecr.eu-north-1.amazonaws.com/python:3.9 as runner
 
 # create directory for the app user
 RUN mkdir -p /home/app
 
-# create the app user
-RUN adduser --system --group app
+RUN addgroup -g 1001 -S python
+RUN adduser -S django -u 1001
 
 # create the appropriate directories
 ENV HOME=/home/app
@@ -56,12 +56,12 @@ RUN chmod +x  $APP_HOME/entrypoint.prod.sh
 COPY . $APP_HOME
 
 # chown all the files to the app user
-RUN chown -R app:app $APP_HOME
-
-EXPOSE 8000
+RUN chown -R django:python $APP_HOME
 
 # change to the app user
 USER app
+
+EXPOSE 8000
 
 # run entrypoint.prod.sh
 ENTRYPOINT ["/home/app/web/entrypoint.prod.sh"]
