@@ -17,7 +17,7 @@ RUN pip install --upgrade pip
 COPY . .
 
 # install dependencies
-COPY ./requirements/*.txt .
+COPY ./requirements/*.txt ./
 RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/app/wheels -r production.txt
 
 
@@ -44,7 +44,7 @@ WORKDIR $APP_HOME
 
 # install dependencies
 COPY --from=builder /usr/src/app/wheels /wheels
-COPY --from=builder /usr/src/app/production.txt /usr/src/app/base.txt .
+COPY --from=builder /usr/src/app/production.txt /usr/src/app/base.txt ./
 RUN pip install --no-cache /wheels/*
 
 # copy entrypoint.prod.sh
