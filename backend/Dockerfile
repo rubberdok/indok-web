@@ -5,7 +5,7 @@ ENV PYTHONUNBUFFERED 1
 RUN mkdir -p /backend
 WORKDIR /backend
 COPY requirements.txt .
-RUN pip install -r requirements.txt
+RUN pip install -r requirements/local.txt
 
 COPY . .
 

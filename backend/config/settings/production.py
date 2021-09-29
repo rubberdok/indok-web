@@ -5,18 +5,14 @@ import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
 from sentry_sdk.integrations.logging import LoggingIntegration
 
-from .base import *  # noqa
+from .base import *
 from .base import env
 
 # GENERAL
-# ------------------------------------------------------------------------------
-# https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
 SECRET_KEY = env("SECRET_KEY")
-# https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=["api.indokntnu.no"])
 
 # DATABASES
-# ------------------------------------------------------------------------------
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
@@ -30,9 +26,6 @@ DATABASES = {
 
 
 # SECURITY
-# ------------------------------------------------------------------------------
-# https://docs.djangoproject.com/en/dev/ref/settings/#secure-proxy-ssl-header
-SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 # https://docs.djangoproject.com/en/dev/ref/settings/#secure-ssl-redirect
 SECURE_SSL_REDIRECT = env.bool("DJANGO_SECURE_SSL_REDIRECT", default=True)
 # https://docs.djangoproject.com/en/dev/ref/settings/#session-cookie-secure
@@ -51,19 +44,14 @@ SECURE_HSTS_PRELOAD = env.bool("DJANGO_SECURE_HSTS_PRELOAD", default=True)
 SECURE_CONTENT_TYPE_NOSNIFF = env.bool("DJANGO_SECURE_CONTENT_TYPE_NOSNIFF", default=True)
 
 
-# STATIC
-# ------------------------
+# STATIC FILES
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 
 # ADMIN
-# ------------------------------------------------------------------------------
-# Django Admin URL regex.
 ADMIN_URL = env("DJANGO_ADMIN_URL")
 
 # EMAIL
-# ------------------------------------------------------------------------------
-# https://anymail.readthedocs.io/en/stable/esps/amazon_ses/
 EMAIL_BACKEND = "django_ses.SESBackend"
 
 AWS_SES_REGION_NAME = env("AWS_SES_REGION_NAME")
@@ -72,10 +60,6 @@ AWS_ACCESS_KEY_ID = env("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY = env("AWS_SECRET_ACCESS_KEY")
 
 # LOGGING
-# ------------------------------------------------------------------------------
-# https://docs.djangoproject.com/en/dev/ref/settings/#logging
-# See https://docs.djangoproject.com/en/dev/topics/logging for
-# more details on how to customize your logging configuration.
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": True,
@@ -105,7 +89,6 @@ LOGGING = {
 }
 
 # Sentry
-# ------------------------------------------------------------------------------
 SENTRY_DSN = cast(str, env("SENTRY_DSN"))
 SENTRY_LOG_LEVEL = cast(int, env.int("DJANGO_SENTRY_LOG_LEVEL", logging.INFO))
 
