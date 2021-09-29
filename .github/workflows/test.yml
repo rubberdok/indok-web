@@ -30,15 +30,13 @@ jobs:
         run: |
           docker-compose exec -T backend coverage run manage.py test
           docker-compose exec -T backend coverage xml
-          ls
-          cd backend
-          ls
 
       - name: Upload coverage
         uses: codecov/codecov-action@v2
         with:
           token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
-          files: ./backend/coverage.xml
+          directory: backend
+          files: ./coverage.xml
           flags: apitests # optional
           fail_ci_if_error: true # optional (default = false)
           verbose: true # optional (default = false)
