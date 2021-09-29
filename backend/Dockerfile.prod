@@ -2,8 +2,8 @@
 # BUILDER #
 ###########
 
-# pull ECR base image
-FROM 777854691961.dkr.ecr.eu-north-1.amazonaws.com/python:3.9 as builder
+# pull official base image
+FROM python:3.9.6 as builder
 
 # set work directory
 WORKDIR /usr/src/app
@@ -12,25 +12,21 @@ WORKDIR /usr/src/app
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-# install psycopg2 dependencies
-RUN apk update \
-    && apk add postgresql-dev gcc python3-dev musl-dev
 
-# lint
 RUN pip install --upgrade pip
 COPY . .
 
 # install dependencies
-COPY ./requirements.txt .
-RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/app/wheels -r requirements/production.txt
+COPY ./requirements/*.txt .
+RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/app/wheels -r production.txt
 
 
 #########
 # FINAL #
 #########
 
-# pull ECR base image
-FROM 777854691961.dkr.ecr.eu-north-1.amazonaws.com/python:3.9
+# pull official base image
+FROM python:3.9.6
 
 # create directory for the app user
 RUN mkdir -p /home/app
@@ -49,7 +45,7 @@ WORKDIR $APP_HOME
 # install dependencies
 RUN apk update && apk add libpq
 COPY --from=builder /usr/src/app/wheels /wheels
-COPY --from=builder /usr/src/app/requirements/production.txt .
+COPY --from=builder /usr/src/app/production.txt /usr/src/app/base.txt .
 RUN pip install --no-cache /wheels/*
 
 # copy entrypoint.prod.sh
@@ -63,9 +59,10 @@ COPY . $APP_HOME
 # chown all the files to the app user
 RUN chown -R app:app $APP_HOME
 
+EXPOSE 8000
+
 # change to the app user
 USER app
 
-EXPOSE 8000
 # run entrypoint.prod.sh
 ENTRYPOINT ["/home/app/web/entrypoint.prod.sh"]

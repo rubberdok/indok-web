@@ -10,6 +10,11 @@ ROOT_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
 APPS_DIR = ROOT_DIR / "apps"
 env = environ.Env()
 
+READ_DOT_ENV_FILE = env.bool("DJANGO_READ_DOT_ENV_FILE", default=False)
+if READ_DOT_ENV_FILE:
+    # OS environment variables take precedence over variables from .env
+    env.read_env(str(ROOT_DIR / ".env"))
+
 # GENERAL
 DEBUG = env.bool("DJANGO_DEBUG", False)
 
@@ -28,7 +33,7 @@ DATABASES = {
         "NAME": env("DB_NAME", default="postgres"),
         "USER": env("DB_USER", default="postgres"),
         "PASSWORD": env("DB_PASSWORD", default="postgres"),
-        "HOST": env("DB_HOST", default="postgres"),
+        "HOST": env("DB_HOST", default="db"),
         "PORT": env.int("DB_PORT", default=5432),
     }
 }
@@ -122,6 +127,7 @@ TEMPLATES = [
                 "django.template.context_processors.debug",
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
             ],
         },
     }
@@ -130,7 +136,7 @@ TEMPLATES = [
 
 # CORS
 CORS_ALLOW_CREDENTIALS = env.bool("CORS_ALLOW_CREDENTIALS", True)
-CORS_ORIGIN_WHITELIST = env.list("CORS_ORIGIN_WHITELIST")
+CORS_ORIGIN_WHITELIST = env.list("CORS_ORIGIN_WHITELIST", default="http://localhost:3000")
 
 
 # EMAIL
@@ -178,3 +184,6 @@ GRAPHENE = {
     ],
 }
 GRAPHQL_URL = "graphql/"
+
+# DJANGO GUARDIAN
+ANONYMOUS_USER_NAME = env("GUARDIAN_ANONYMOUS_USER_NAME", default="ANONYMOUS USER")
