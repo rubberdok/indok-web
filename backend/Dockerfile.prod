@@ -21,9 +21,9 @@ COPY ./requirements/*.txt ./
 RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/app/wheels -r production.txt
 
 
-#########
-# FINAL #
-#########
+##########
+# RUNNER #
+##########
 
 # pull official base image
 FROM 777854691961.dkr.ecr.eu-north-1.amazonaws.com/python:3.9 as runner
