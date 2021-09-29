@@ -3,7 +3,7 @@
 ###########
 
 # pull official base image
-FROM 777854691961.dkr.ecr.eu-north-1.amazonaws.com/python:3.9 as builder
+FROM python:3.9 as builder
 
 # set work directory
 WORKDIR /usr/src/app
