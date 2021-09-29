@@ -32,7 +32,7 @@ FROM 777854691961.dkr.ecr.eu-north-1.amazonaws.com/python:3.9 as runner
 RUN mkdir -p /home/app
 
 RUN addgroup --gid 1001 -system python
-RUN adduser -system django -u 1001
+RUN adduser -system django --uid 1001
 
 # create the appropriate directories
 ENV HOME=/home/app
