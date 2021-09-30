@@ -39,4 +39,4 @@ jobs:
         run: docker build -f tests/Dockerfile -t cypress .
 
       - name: Run the Integration Tests
-        run: docker run cypress
+        run: docker run cypress -v $PWD:/usr/src/app -it
