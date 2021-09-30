@@ -9,4 +9,4 @@ class ResponsibleGroupType(DjangoObjectType):
 
     class Meta:
         model = ResponsibleGroup
-        fields = ["uuid", "name", "description"]
+        fields = ["uuid", "name", "description", "organization", "group_type"]
