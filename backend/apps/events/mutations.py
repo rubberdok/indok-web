@@ -4,6 +4,7 @@ from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from graphql_jwt.decorators import login_required, staff_member_required
+from utils.decorators import permission_required
 
 from ..organizations.models import Organization
 from ..organizations.permissions import check_user_membership
@@ -55,12 +56,10 @@ class CreateEvent(graphene.Mutation):
     class Arguments:
         event_data = CreateEventInput(required=True)
 
-    @login_required
+    @permission_required("events.add_event")
     def mutate(self, info, event_data):
         try:
-            organization = Organization.objects.get(
-                id=event_data.get("organization_id")
-            )
+            organization = Organization.objects.get(id=event_data.get("organization_id"))
         except Organization.DoesNotExist:
             raise ValueError("Ugyldig organisasjon oppgitt")
 
@@ -87,7 +86,7 @@ class UpdateEvent(graphene.Mutation):
     ok = graphene.Boolean()
     event = graphene.Field(EventType)
 
-    @login_required
+    @permission_required("events.change_event")
     def mutate(self, info, id, event_data):
         try:
             event = Event.objects.get(pk=id)
@@ -114,7 +113,7 @@ class DeleteEvent(graphene.Mutation):
     ok = graphene.Boolean()
     event = graphene.Field(EventType)
 
-    @login_required
+    @permission_required("events.delete_event")
     def mutate(self, info, id):
         try:
             event = Event.objects.get(pk=id)
@@ -145,7 +144,7 @@ class EventSignUp(graphene.Mutation):
     is_full = graphene.Boolean()
     event = graphene.Field(EventType)
 
-    @login_required
+    @permission_required("events.add_signup")
     def mutate(self, info, event_id, data):
         try:
             event = Event.objects.get(pk=event_id)
@@ -165,9 +164,7 @@ class EventSignUp(graphene.Mutation):
                 event.allowed_grade_years,
             )
 
-        if SignUp.objects.filter(
-            event_id=event_id, is_attending=True, user_id=info.context.user.id
-        ).exists():
+        if SignUp.objects.filter(event_id=event_id, is_attending=True, user_id=info.context.user.id).exists():
             raise Exception("Du kan ikke melde deg på samme arrangement flere ganger")
 
         sign_up = SignUp()
@@ -184,7 +181,6 @@ class EventSignUp(graphene.Mutation):
         setattr(sign_up, "user_grade_year", user.grade_year)
 
         sign_up.save()
-
         return EventSignUp(event=event, is_full=event.is_full)
 
 
@@ -202,7 +198,7 @@ class EventSignOff(graphene.Mutation):
     is_full = graphene.Boolean()
     event = graphene.Field(EventType)
 
-    @login_required
+    @permission_required("events.change_signup")
     def mutate(self, info, event_id):
         try:
             event = Event.objects.get(pk=event_id)
@@ -212,9 +208,7 @@ class EventSignOff(graphene.Mutation):
         user = info.context.user
 
         if event.binding_signup and user in event.users_attending:
-            raise Exception(
-                "Du kan ikke melde deg av et arrangement med bindende påmelding."
-            )
+            raise Exception("Du kan ikke melde deg av et arrangement med bindende påmelding.")
 
         try:
             sign_up = SignUp.objects.get(is_attending=True, user=user, event=event)
@@ -223,7 +217,6 @@ class EventSignOff(graphene.Mutation):
 
         setattr(sign_up, "is_attending", False)
         sign_up.save()
-
         return EventSignOff(event=event, is_full=event.is_full)
 
 
@@ -241,7 +234,7 @@ class AdminEventSignOff(graphene.Mutation):
 
     event = graphene.Field(EventType)
 
-    @login_required
+    @permission_required("events.change_signup")
     def mutate(self, info, event_id, user_id):
         try:
             event = Event.objects.get(pk=event_id)

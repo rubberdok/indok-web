@@ -55,7 +55,7 @@ const ImageSlider = ({ imageData, displayLabelText }: imageSliderProps): JSX.Ele
     <Box>
       {displayLabelText ? (
         <Paper square elevation={0}>
-          <Grid container direction="column" alignItems="center" justify="center">
+          <Grid container direction="column" alignItems="center" justifyContent="center">
             <Grid item>
               <Typography variant="h4">{imageData[activeStep].label}</Typography>
             </Grid>

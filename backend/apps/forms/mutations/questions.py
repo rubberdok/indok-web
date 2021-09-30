@@ -1,19 +1,12 @@
 import graphene
+from graphql_jwt.decorators import login_required
+from utils.decorators import permission_required
 from django.db.models import Q
-from graphql_jwt.decorators import login_required, permission_required
+from django.db import IntegrityError
+from django.utils import timezone
 
-from ..models import Answer, Form, Option, Question, Response
-from ..types import OptionType, QuestionType
-
-
-class QuestionTypeEnum(graphene.Enum):
-    PARAGRAPH = "PARAGRAPH"
-    SHORT_ANSWER = "SHORT_ANSWER"
-    MULTIPLE_CHOICE = "MULTIPLE_CHOICE"
-    CHECKBOXES = "CHECKBOXES"
-    DROPDOWN = "DROPDOWN"
-    SLIDER = "SLIDER"
-    FILE_UPLOAD = "FILE_UPLOAD"
+from apps.forms.models import Answer, Option, Question, Response, Form
+from apps.forms.types import OptionType, QuestionType, QuestionTypeEnum
 
 
 class BaseQuestionInput(graphene.InputObjectType):
@@ -24,7 +17,6 @@ class BaseQuestionInput(graphene.InputObjectType):
 
 
 class CreateQuestionInput(BaseQuestionInput):
-    form_id = graphene.ID(required=True)
     question = graphene.String(required=True)
     mandatory = graphene.Boolean()
 
@@ -34,20 +26,20 @@ class CreateQuestion(graphene.Mutation):
     question = graphene.Field(QuestionType)
 
     class Arguments:
+        form_id = graphene.ID()
         question_data = CreateQuestionInput(required=True)
 
-    @login_required
-    @permission_required("forms.add_question")
-    def mutate(self, info, question_data):
+    @permission_required("forms.change_form", (Form, "pk", "form_id"))
+    def mutate(self, info, form_id, question_data):
         question = Question()
         for k, v in question_data.items():
             # Necessary as graphene-django passes None into kwargs if no value is submitted.
             # Can be removed if https://github.com/graphql-python/graphene/pull/1300 is merged
             if v is not None:
                 setattr(question, k, v)
+        question.form_id = form_id
         question.save()
-        ok = True
-        return CreateQuestion(question=question, ok=ok)
+        return CreateQuestion(question=question, ok=True)
 
 
 class UpdateQuestion(graphene.Mutation):
@@ -58,7 +50,7 @@ class UpdateQuestion(graphene.Mutation):
         id = graphene.ID(required=True)
         question_data = BaseQuestionInput(required=True)
 
-    @permission_required("forms.update_question")
+    @permission_required("forms.change_form", (Form, "questions__pk", "id"))
     def mutate(self, info, id, question_data):
         try:
             question = Question.objects.get(pk=id)
@@ -80,8 +72,7 @@ class DeleteQuestion(graphene.Mutation):
     class Arguments:
         id = graphene.ID(required=True)
 
-    @login_required
-    @permission_required("forms.delete_question")
+    @permission_required("forms.change_form", (Form, "questions__pk", "id"))
     def mutate(self, info, id):
         try:
             question = Question.objects.get(pk=id)
@@ -106,7 +97,6 @@ class DeleteAnswer(graphene.Mutation):
         uuid = graphene.ID(required=True)
 
     @login_required
-    @permission_required("forms.delete_answer")
     def mutate(self, info, uuid):
         user = info.context.user
         try:
@@ -117,19 +107,18 @@ class DeleteAnswer(graphene.Mutation):
         if answer.question.mandatory:
             return DeleteAnswer(deleted_uuid=None, ok=False)
         answer.delete()
-        ok = True
-        return DeleteAnswer(ok=ok, deleted_uuid=deleted_uuid)
+        return DeleteAnswer(ok=True, deleted_uuid=deleted_uuid)
 
 
 class SubmitOrUpdateAnswers(graphene.Mutation):
     ok = graphene.Boolean()
+    message = graphene.String(required=False)
 
     class Arguments:
         form_id = graphene.ID(required=True)
         answers_data = graphene.List(AnswerInput)
 
-    @login_required
-    @permission_required(["forms.add_answer", "forms.update_answers"])
+    @permission_required(["forms.add_answer", "forms.change_answer"])
     def mutate(self, info, form_id, answers_data):
         """Creates new answers to previously unanswered questions, updates already existings answers.
 
@@ -150,24 +139,24 @@ class SubmitOrUpdateAnswers(graphene.Mutation):
         """
         user = info.context.user
         try:
-            form = Form.objects.prefetch_related("questions").get(pk=form_id)
+            form: Form = Form.objects.prefetch_related("questions").get(pk=form_id)
         except Form.DoesNotExist:
             raise KeyError(f"The form with id {form_id} does not exist.")
+
+        if form.listing and form.listing.deadline <= timezone.now():
+            return SubmitOrUpdateAnswers(
+                ok=False,
+                message="Søknadsfristen har utløpt og det er ikke lenger mulig å sende inn eller endre svar på denne søknaden.",
+            )
 
         response, _ = Response.objects.prefetch_related("answers").get_or_create(form_id=form_id, respondent=user)
 
         # Restructure the data for easier manipulation
-        answers = {
-            int(answer_data["question_id"]): answer_data["answer"]
-            for answer_data in answers_data
-        }
-
-        # Update existing answers
-        # Find all existing answers, iterate over the ones that should be updated
+        answers = {int(answer_data["question_id"]): answer_data["answer"] for answer_data in answers_data}
         existing_answers = response.answers.distinct()
-        for answer in existing_answers.filter(question__pk__in=answers.keys()):
+        updated_existing_answers = list(existing_answers.filter(question__pk__in=answers.keys()))
+        for answer in updated_existing_answers:
             answer.answer = answers[answer.question.pk]
-            del answers[answer.question.pk]
 
         # A mandatory question is unanswered if:
         # (1) it is in the form
@@ -176,26 +165,34 @@ class SubmitOrUpdateAnswers(graphene.Mutation):
         # (4) it is not part of the new, incoming answers
         unanswered_mandatory_questions = form.questions.filter(
             Q(mandatory=True)
-            & ~Q(pk__in=existing_answers.values_list("question__id", flat=True)) 
+            & ~Q(pk__in=existing_answers.values_list("question__id", flat=True))
             & ~Q(pk__in=answers.keys())
         ).exists()
 
-        if unanswered_mandatory_questions:
-            # Not all mandatory questions have been answered
-            raise AssertionError(
-                f"Not all mandatory questions have been answered"
-            )
-        
-        # Iterate over the questions to prevent users from answering other forms than the current one
-        questions = form.questions.filter(pk__in=answers.keys())
+        assert not unanswered_mandatory_questions
 
-        Answer.objects.bulk_update(existing_answers, ["answer"])
-        Answer.objects.bulk_create(
-            [
-                Answer(response=response, question=question, answer=answers[question.pk])
-                for question in questions
-            ]
+        # Iterate over the questions to prevent users from answering other forms than the current one
+        questions = form.questions.filter(
+            Q(pk__in=answers.keys()) & ~Q(pk__in=existing_answers.values_list("question__id", flat=True))
         )
+        try:
+            Answer.objects.bulk_update(updated_existing_answers, ["answer"])
+            Answer.objects.bulk_create(
+                [
+                    Answer(
+                        response=response,
+                        question=question,
+                        answer=answers[question.pk],
+                    )
+                    for question in questions
+                    if question.mandatory or answers[question.pk] != ""
+                ]
+            )
+        except IntegrityError as err:
+            if "answers_not_empty" in err.args[0]:
+                return SubmitOrUpdateAnswers(ok=False, message="Du må svare på alle obligatoriske spørsmål.")
+            else:
+                raise err
         return SubmitOrUpdateAnswers(ok=True)
 
 
@@ -206,10 +203,9 @@ class DeleteAnswersToForm(graphene.Mutation):
         form_id = graphene.ID()
 
     @login_required
-    @permission_required("forms.delete_answer")
     def mutate(self, info, form_id):
         user = info.context.user
-        Response.objects.get(form_id=form_id, responder=user).delete()
+        user.responses.get(form_id=form_id).delete()
         return DeleteAnswersToForm(ok=True)
 
 
@@ -226,10 +222,7 @@ class CreateUpdateAndDeleteOptions(graphene.Mutation):
         question_id = graphene.ID(required=True)
         option_data = graphene.List(OptionInput)
 
-    @login_required
-    @permission_required(
-        ["forms.add_option", "forms.update_option", "forms.delete_option"]
-    )
+    @permission_required("forms.change_form", (Form, "questions__pk", "question_id"))
     def mutate(self, info, question_id, option_data):
         """Bulk operation to refresh the options to a given question. Has three main operations:
         (1): Creates new options for inputs without an option_id
@@ -258,15 +251,12 @@ class CreateUpdateAndDeleteOptions(graphene.Mutation):
                 updated_option.answer = data["answer"]
                 updated_options.append(updated_option)
             else:
-                new_options.append(
-                    Option(answer=data["answer"], question_id=question_id)
-                )
+                new_options.append(Option(answer=data["answer"], question_id=question_id))
 
         Option.objects.bulk_update(updated_options, fields=["answer"])
         Option.objects.bulk_create(new_options)
 
         return CreateUpdateAndDeleteOptions(
-            options=[updated_option for updated_option in updated_options]
-            + new_options,
+            options=[updated_option for updated_option in updated_options] + new_options,
             ok=True,
         )

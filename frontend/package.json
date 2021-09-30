@@ -9,7 +9,7 @@
     "dev": "next",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint src --ext .ts,.tsx",
+    "lint": "eslint",
     "lint:fix": "npm run lint -- --fix",
     "prepare": "cd .. && husky install frontend/.husky"
   },
@@ -38,6 +38,7 @@
     "react-parallax": "^3.3.0",
     "react-swipeable-views": "^0.14.0",
     "react-swipeable-views-utils": "^0.14.0",
+    "sharp": "^0.29.0",
     "ts-debounce": "^3.0.0",
     "validator": "^13.6.0"
   },
@@ -70,6 +71,8 @@
       "npm run lint:fix",
       "prettier --write"
     ],
-    "../**/*.py": ["black"]
+    "../**/*.py": [
+      "black"
+    ]
   }
 }

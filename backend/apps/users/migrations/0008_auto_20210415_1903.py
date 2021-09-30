@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 
 
 def populate_email_field(apps, schema_editor):
-    users_without_email = get_user_model().objects.filter(email="")
+    users_without_email = apps.get_model("users", "User").objects.filter(email="")
     for user in users_without_email:
         setattr(user, "email", user.feide_email)
         user.save()

@@ -1,13 +1,19 @@
 import { useMutation, useQuery } from "@apollo/client";
 import Layout from "@components/Layout";
 import ListingForm from "@components/pages/listings/organization/ListingForm";
-import { Container, Typography, Grid } from "@material-ui/core";
-import { NextPage } from "next";
-import { useState } from "react";
-import { Listing, ListingInput } from "@interfaces/listings";
 import { UPDATE_LISTING } from "@graphql/listings/mutations";
-import { useRouter } from "next/router";
 import { LISTING } from "@graphql/listings/queries";
+import { Listing, ListingInput } from "@interfaces/listings";
+import { Container, Grid, Typography } from "@material-ui/core";
+import dayjs from "dayjs";
+import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
+import { NextPage } from "next";
+import { useRouter } from "next/router";
+import { useState } from "react";
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault("Europe/Oslo");
 
 /**
  * Page for editing an existing listing.
@@ -24,8 +30,8 @@ const EditListingPage: NextPage = () => {
     onCompleted: (data) =>
       setListing({
         ...(data.listing as ListingInput),
-        startDatetime: data.listing.startDatetime.slice(0, 10),
-        deadline: data.listing.deadline.slice(0, 10),
+        startDatetime: dayjs(data.listing.startDatetime).utc().local().format("YYYY-MM-DDTHH:mm"),
+        deadline: dayjs(data.listing.deadline).utc().local().format("YYYY-MM-DDTHH:mm"),
         application: data.listing.chips.includes("application"),
         interview: data.listing.chips.includes("interview"),
         case: data.listing.chips.includes("case"),
@@ -46,7 +52,7 @@ const EditListingPage: NextPage = () => {
         <Typography variant="h1" gutterBottom>
           Oppdater vervutlysningen
         </Typography>
-        <Grid container justify="center">
+        <Grid container justifyContent="center">
           <Grid item xs={10}>
             {listing && (
               <ListingForm
@@ -61,12 +67,13 @@ const EditListingPage: NextPage = () => {
                       input: {
                         title: listing.title || undefined,
                         description: listing.description || undefined,
-                        url: listing.url || undefined,
-                        startDatetime: listing.startDatetime ? `${listing.startDatetime}T00:00:00+02:00` : undefined,
-                        deadline: listing.deadline ? `${listing.deadline}T23:59:00+02:00` : undefined,
+                        applicationUrl: listing.applicationUrl || undefined,
+                        startDatetime: listing.startDatetime || undefined,
+                        deadline: listing.deadline || undefined,
                         application: listing.application || undefined,
                         interview: listing.interview || undefined,
                         case: listing.case || undefined,
+                        readMoreUrl: listing.readMoreUrl || undefined,
                       },
                     },
                   });

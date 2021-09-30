@@ -3,16 +3,16 @@ from datetime import datetime
 
 from graphene.utils.str_converters import to_snake_case
 
-from ...utils.testing.ExtendedGraphQLTestCase import ExtendedGraphQLTestCase
-from ...utils.testing.factories.users import UserFactory
+from utils.testing.ExtendedGraphQLTestCase import ExtendedGraphQLTestCase
+from utils.testing.factories.users import IndokUserFactory, UserFactory
 
 
 class UsersBaseTestCase(ExtendedGraphQLTestCase):
     def setUp(self) -> None:
         super().setUp()
 
-        # Create two (logged in) users
-        self.user = UserFactory()
+        # Create three (logged in) users
+        self.indok_user = IndokUserFactory()
         self.super_user = UserFactory(is_staff=True, is_superuser=True)
 
 
@@ -59,7 +59,7 @@ class UsersResolversTestCase(UsersBaseTestCase):
         self.assertIsNone(content["data"]["allUsers"])
 
         # Regular logged in users users should not be able to retrieve all users
-        response = self.query(query, user=self.user)
+        response = self.query(query, user=self.indok_user)
         self.assertResponseHasErrors(response)
         content = json.loads(response.content)
         self.assertIsNone(content["data"]["allUsers"])
@@ -69,7 +69,7 @@ class UsersResolversTestCase(UsersBaseTestCase):
         self.assertResponseNoErrors(response)
         content = json.loads(response.content)
 
-        # There are three users in the database (AnonymousUser, self.user and self.super_user)
+        # There are three users in the database (AnonymousUser, self.indok_user and self.super_user)
         self.assertEqual(len(content["data"]["allUsers"]), 3)
 
     def test_resolve_user(self):
@@ -99,14 +99,13 @@ class UsersResolversTestCase(UsersBaseTestCase):
         self.assertIsNone(content["data"]["user"])
 
         # Logged in users should retrieve their user data
-        response = self.query(query, user=self.user)
+        response = self.query(query, user=self.indok_user)
         self.assertResponseNoErrors(response)
         content = json.loads(response.content)
-
         # Confirm content of query
         # TODO: Should look into better ways of doing this assertion
         for k, v in content["data"]["user"].items():
-            value = getattr(self.user, to_snake_case(k))
+            value = getattr(self.indok_user, to_snake_case(k))
             if type(value) == datetime:
                 self.assertEqual(v, str(value.isoformat()))
                 continue

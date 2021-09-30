@@ -1,0 +1,176 @@
+- model: users.user
+  pk: 1
+  fields:
+    password: ""
+    last_login: null
+    is_superuser: false
+    username: AnonymousUser
+    first_name: ""
+    last_name: ""
+    email: ""
+    is_staff: false
+    is_active: true
+    date_joined: 2021-09-24 10:19:25.764307+00:00
+    feide_userid: AnonymousUser
+    feide_email: ""
+    id_token: ""
+    allergies: ""
+    phone_number: ""
+    first_login: true
+    graduation_year: null
+    is_indok: false
+    groups:
+      - - Registered user
+    user_permissions: []
+- model: users.user
+  pk: 2
+  fields:
+    password: ""
+    last_login: 2021-09-24 10:44:13.125524+00:00
+    is_superuser: false
+    username: asbjorn_elevg
+    first_name: Asbjørn
+    last_name: ElevG Hansen
+    email: noreply@feide.no
+    is_staff: false
+    is_active: true
+    date_joined: 2021-09-24 10:44:13.125622+00:00
+    feide_userid: 55de7d71-4a25-4103-8e43-35df8c2d472a
+    feide_email: noreply@feide.no
+    id_token: eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IjQzNDk4MGUxYTk4ZGU2NDNlMDIyYzY3NTM3ODA3ZDRiZDU5ZTk4NTkifQ.eyJpc3MiOiJodHRwczpcL1wvYXV0aC5kYXRhcG9ydGVuLm5vIiwianRpIjoiMzEwMTI1OTgtODA3YS00YWVjLWJkMGQtNzY3ZTYzOGE1Yjg1IiwiYXVkIjoiZmNhYTllMzAtYTZkMy00ODA5LThmZWEtY2RkN2IzZGUxYzk4Iiwic3ViIjoiNTVkZTdkNzEtNGEyNS00MTAzLThlNDMtMzVkZjhjMmQ0NzJhIiwiaWF0IjoxNjMyNDgwMjQ3LCJleHAiOjE2MzI0ODM4NDcsImF1dGhfdGltZSI6MTYzMjQ4MDI0N30.jW5a65-oQrL8A-bBamNDeufiVLup8BAdrqVhaqkO_BOAhuXJDz2xsnRWiK1wFJeRLGRAjv5Egu2NLZFtNdhYWiGs-aHS6ESREWoRk2voaZvGDMqGBeSLtfu1FahOLJylaiW9KOnEPQQaktg5x9thuzaJZgUr6-UL7thFALPtLbA5-Zb310nZ52-UndbwWIVpwMQsmguPgN38zhMpbs6NrhzxTFA0GrjmMU0-_i1LIzvEkZQRNk2ywxj1ZnQUdMzoGKSdf6ICIS89qgosEX93Js4SMQ4Ol-4sVeP57pNAuJ0ji8-dV0nDKn83KLcIDm_ojCVaNPvfme0PH_oGD3JTjw
+    allergies: ""
+    phone_number: ""
+    first_login: false
+    graduation_year: 2025
+    is_indok: false
+    groups:
+      - - Registered user
+      - - Organization member
+    user_permissions: []
+- model: users.user
+  pk: 3
+  fields:
+    password: ""
+    last_login: 2021-09-24 10:44:52.010662+00:00
+    is_superuser: false
+    username: eva_student
+    first_name: Eva
+    last_name: Student Åsen
+    email: eva_student@feide.no
+    is_staff: false
+    is_active: true
+    date_joined: 2021-09-24 10:44:52.010784+00:00
+    feide_userid: 1d6dbc59-4d69-4b40-90c2-2cf9c0936720
+    feide_email: eva_student@feide.no
+    id_token: eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IjQzNDk4MGUxYTk4ZGU2NDNlMDIyYzY3NTM3ODA3ZDRiZDU5ZTk4NTkifQ.eyJpc3MiOiJodHRwczpcL1wvYXV0aC5kYXRhcG9ydGVuLm5vIiwianRpIjoiNGU4NzFmMzUtYzQ5Yy00ODE4LTkzYjUtZmNiODJkNmM5NjVjIiwiYXVkIjoiZmNhYTllMzAtYTZkMy00ODA5LThmZWEtY2RkN2IzZGUxYzk4Iiwic3ViIjoiMWQ2ZGJjNTktNGQ2OS00YjQwLTkwYzItMmNmOWMwOTM2NzIwIiwiaWF0IjoxNjMyNDgwMjg0LCJleHAiOjE2MzI0ODM4ODQsImF1dGhfdGltZSI6MTYzMjQ4MDI4NH0.DEO5Bw4LkEFJumcWXQ17WAPCTmEmNGSElODLGfVk-rygtdkN6iAgbngz3Cbsne8zIKJfTuwLSk7hbHhqunZPyeh6hrv7i7k1cCklSE52GVbuj4XdekMwOTksxlJwA3pdJ6rY4VZg7TW2TyR5pyKGbw-6jZHWvrNzvJjBJK3FIFw4x-RwTJfoaZtaHHkXyjv3Q-0vY2H1ZAApIlryPWmp5BDWZk0YmiqRcMPn-aiNmxjIoqpnHSFnipASLQommoF7Ru-6UvK5Y2lHKAkcMCFon2q2cKPuslkKG3KsTZey39UWWKuAb6eMQDJHCMcCoM8Jy8L_ILZpt3I7AubUIbh7Mg
+    allergies: ""
+    phone_number: ""
+    first_login: false
+    graduation_year: 2025
+    is_indok: true
+    groups:
+      - - Registered user
+      - - Indøk
+      - - Organization member
+    user_permissions: []
+- model: users.user
+  pk: 4
+  fields:
+    password: pbkdf2_sha256$260000$Hp8T0uj95OU7Omawu0mw64$EEKm2dHEbjAglZuy0rHsEvaluBnzxKBzRveJex9Gt10=
+    last_login: 2021-09-24 10:45:25.913433+00:00
+    is_superuser: true
+    username: admin
+    first_name: ""
+    last_name: ""
+    email: ""
+    is_staff: true
+    is_active: true
+    date_joined: 2021-09-24 10:45:22.413818+00:00
+    feide_userid: ""
+    feide_email: ""
+    id_token: ""
+    allergies: ""
+    phone_number: ""
+    first_login: true
+    graduation_year: null
+    is_indok: false
+    groups:
+      - - Registered user
+    user_permissions: []
+
+- model: organizations.organization
+  pk: 17
+  fields:
+    name: Hovedstyret
+    slug: hovedstyret
+    description: Paraplyorganisasjonen på Indøk
+    parent: null
+    logo: ""
+    logo_url: null
+    color: null
+- model: organizations.organization
+  pk: 18
+  fields:
+    name: Janus Linjeforening
+    slug: janus-linjeforening
+    description:
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+      quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+      Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
+      eu fugiat nulla pariatur.
+    parent: 17
+    logo: ""
+    logo_url: null
+    color: null
+- model: organizations.organization
+  pk: 19
+  fields:
+    name: Bindeleddet
+    slug: bindeleddet
+    description:
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+      quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+      Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
+      eu fugiat nulla pariatur.
+    parent: 17
+    logo: ""
+    logo_url: null
+    color: null
+- model: organizations.organization
+  pk: 20
+  fields:
+    name: Indøk Kultur
+    slug: indok-kultur
+    description:
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+      quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+      Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
+      eu fugiat nulla pariatur.
+    parent: 17
+    logo: ""
+    logo_url: null
+    color: null
+- model: organizations.organization
+  pk: 21
+  fields:
+    name: Indøl
+    slug: indol
+    description:
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+      quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+      Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
+      eu fugiat nulla pariatur.
+    parent: 20
+    logo: ""
+    logo_url: null
+    color: null
+- model: organizations.membership
+  pk: 2
+  fields:
+    user:
+      - eva_student
+    organization: 19
