@@ -21,10 +21,7 @@ class Event(models.Model):
     title = models.CharField(max_length=128)
     description = models.TextField()
     start_time = models.DateTimeField()
-    is_attendable = models.BooleanField()
-    organization = models.ForeignKey(
-        Organization, on_delete=models.CASCADE, related_name="events"
-    )
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name="events")
 
     # ------------------ Fully optional fields ------------------
     publisher = models.ForeignKey(
@@ -34,31 +31,50 @@ class Event(models.Model):
     )
     end_time = models.DateTimeField(blank=True, null=True)
     location = models.CharField(max_length=128, blank=True, null=True)
-    category = models.ForeignKey(
-        Category, on_delete=models.SET_NULL, blank=True, null=True
-    )
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, blank=True, null=True)
     image = models.URLField(blank=True, null=True)
-    short_description = models.CharField(max_length=100, blank=True, null=True)
-    has_extra_information = models.BooleanField(default=False)
+    short_description = models.CharField(max_length=100, default="Klikk her for å lese mer")
     contact_email = models.EmailField(blank=True, default="")
     GRADE_CHOICES = ((1, "1"), (2, "2"), (3, "3"), (4, "4"), (5, "5"))
     allowed_grade_years = MultiSelectField(choices=GRADE_CHOICES, default="1,2,3,4,5")
 
+    def __str__(self):
+        return self.title
+
+
+class AttendableEvent(Event):
+    # TODO: Change back to signup_open_date after custom migration
     # --------------- Required fields given is_attendable == True ---------------
-    signup_open_date = models.DateTimeField(
-        blank=True, null=True
-    )  # When the signup should become available
-    available_slots = models.PositiveIntegerField(  # maximal number of users that can sign up for an event
-        blank=True,
-        null=True,  # TODO: Make this field conditionally required when is_attendable is True!
-    )
+    signup_open_date = models.DateTimeField()  # When signup should become available
+    available_slots = models.PositiveIntegerField()  # maximal number of users that can sign up for an event T
+    available_slots_1st_year = models.PositiveIntegerField(blank=True, null=True)  # maximal number of 1st years
+    available_slots_2nd_year = models.PositiveIntegerField(blank=True, null=True)  # maximal number of 2nd years
+    available_slots_3rd_year = models.PositiveIntegerField(blank=True, null=True)  # maximal number of 3rd years
+    available_slots_4th_year = models.PositiveIntegerField(blank=True, null=True)  # maximal number of 4th years
+    available_slots_5th_year = models.PositiveIntegerField(blank=True, null=True)  # maximal number of 5 years
+
+    binding_signup = models.BooleanField(
+        default=False
+    )  # Disables sign-off from users_attending if true. NOTE: binding_signup is required given Price
 
     # ----------- Optional fields that should only be set given is_attendable == True -----------
     deadline = models.DateTimeField(blank=True, null=True)  # Deadline for signing up
     price = models.FloatField(blank=True, null=True)
-    binding_signup = models.BooleanField(
-        default=False
-    )  # Disables sign-off from users_attending if true. NOTE: binding_signup is required given Price
+
+    @property
+    def available_slots_distribution(self):
+        slot_dist = []
+        for slots in [
+            self.available_slots_1st_year,
+            self.available_slots_2nd_year,
+            self.available_slots_3rd_year,
+            self.available_slots_4th_year,
+            self.available_slots_5th_year,
+        ]:
+            if slots is None:
+                return None  # No distribution selected
+            slot_dist.append(slots)
+        return slot_dist
 
     @property
     def signed_up_users(self):
@@ -90,9 +106,6 @@ class Event(models.Model):
         if self.is_attendable and self.available_slots is not None:
             return self.signed_up_users.count() >= self.available_slots
         return False
-
-    def __str__(self):
-        return self.title
 
 
 class SignUp(models.Model):

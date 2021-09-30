@@ -9,5 +9,5 @@ admin.site.register(SignUp)
 @admin.register(Event)
 class EventAdmin(admin.ModelAdmin):
     search_fields = ["title"]
-    list_display = ("title", "organization", "start_time", "is_attendable")
-    list_filter = ("organization__name", "is_attendable")
+    list_display = ("title", "organization", "start_time")
+    list_filter = ("organization__name",)
