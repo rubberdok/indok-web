@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     # Local apps
     "apps.archive",
+    "apps.blogs",
     "apps.cabins",
     "apps.events",
     "apps.organizations",
