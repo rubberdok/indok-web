@@ -57,15 +57,9 @@ const HallOfFame: React.VFC<{
   const classes = useStyles();
 
   return (
-    <Dialog
-      maxWidth="xl"
-      fullWidth={false}
-      onClose={() => setOpen(!open)}
-      aria-labelledby="customized-dialog-title"
-      open={open}
-    >
+    <Dialog maxWidth="xl" fullWidth={false} onClose={() => setOpen(!open)} aria-labelledby="dialogTitle" open={open}>
       <DialogTitle disableTypography>
-        <Typography gutterBottom variant="h4">
+        <Typography gutterBottom variant="h4" id="dialogTitle">
           Hall of Fame
         </Typography>
         <Typography variant="body1">Progget med blod, svette, tårer og kjærlighet av:</Typography>
