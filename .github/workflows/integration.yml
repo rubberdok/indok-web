@@ -39,4 +39,4 @@ jobs:
         run: docker build -f tests/Dockerfile -t cypress tests/
 
       - name: Run the Integration Tests
-        run: docker run -v $PWD/tests:/usr/src/app/ -it --network indok-web_default cypress --record --key ${{ secrets.CYPRESS_RECORD_KEY }}
+        run: docker run -v $PWD/tests:/usr/src/app/ --network indok-web_default cypress --record --key ${{ secrets.CYPRESS_RECORD_KEY }}
