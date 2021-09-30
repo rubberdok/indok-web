@@ -9,7 +9,7 @@ DEBUG = False
 
 ALLOWED_HOSTS = ["api.gamma.indokntnu.no", "api.indokntnu.no"]
 
-CORS_ORIGIN_WHITELIST = ["https://gamma.indokntnu.no", "https://indokntnu.no"]
+CORS_ORIGIN_WHITELIST = ["https://gamma.indokntnu.no", "https://indokntnu.no", "https://www.indokntnu.no"]
 
 DATABASES = {
     "default": {
