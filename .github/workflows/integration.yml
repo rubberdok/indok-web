@@ -8,7 +8,7 @@ on:
   pull_request:
 
 env:
-  DATAPORTEN_ID: fcaa9e30-a6d3-4809-8fea-cdd7b3de1c98
+  DATAPORTEN_ID: ${{ secrets.DATAPORTEN_ID }}
   DATAPORTEN_REDIRECT_URI: http://frontend:3000/authCallback
   DATAPORTEN_SECRET: ${{ secrets.DATAPORTEN_DEV_SECRET }}
   GOOGLE_DRIVE_API_KEY: ${{ secrets.GOOGLE_DRIVE_API_KEY }}
