@@ -1,6 +1,8 @@
+from datetime import timedelta
 import json
 from typing import Any, Optional, Union
 
+from django.utils import timezone
 from guardian.shortcuts import assign_perm
 from utils.testing.ExtendedGraphQLTestCase import ExtendedGraphQLTestCase
 from utils.testing.factories.forms import (
@@ -10,6 +12,7 @@ from utils.testing.factories.forms import (
     QuestionFactory,
     ResponseFactory,
 )
+from utils.testing.factories.listings import ListingFactory
 from utils.testing.factories.organizations import MembershipFactory, OrganizationFactory
 from utils.testing.factories.users import IndokUserFactory
 
@@ -242,38 +245,58 @@ class FormsMutationTestCase(FormBaseTestCase):
 
 
 class FormResponseTestCase(FormBaseTestCase):
-    @staticmethod
-    def submit_response_query(form: Union[FormFactory, Form], questions: list[Union[QuestionFactory, Question]]) -> str:
-        answers_data = [
-            f"""
-                {{
-                    questionId: {question.id}
-                    answer: "Answer"
-                }}
-            """
-            for question in questions
-        ]
+    def submit_response_query(self, form: Union[FormFactory, Form]) -> str:
         return f"""
             mutation {{
-                submitOrUpdateAnswers(
+                submitAnswers(
                     formId: {form.id},
-                    answersData: {answers_data}
+                    answersData: [
+                        {{
+                            questionId: {self.paragraph.id}
+                            answer: "Answer"
+                        }},
+                        {{
+                            questionId: {self.not_mandatory.id}
+                            answer: "Answer"
+                        }},
+                        {{
+                            questionId: {self.short_question.id}
+                            answer: "Answer"
+                        }},
+                        {{
+                            questionId: {self.mcq.id}
+                            answer: "Answer"
+                        }},
+                        {{
+                            questionId: {self.checkboxes.id}
+                            answer: "Answer"
+                        }},
+                        {{
+                            questionId: {self.dropdown.id}
+                            answer: "Answer"
+                        }},
+                    ]
                 ) {{
                     ok
+                    message
                 }}
             }}
         """
 
     def setUp(self) -> None:
+        super().setUp()
         self.responding_student = IndokUserFactory()
-        return super().setUp()
+        ListingFactory(
+            form=self.form, deadline=timezone.now() + timedelta(days=7), end_datetime=timezone.now() + timedelta(days=7)
+        )
 
     def test_answer_previously_unanswered_form(self) -> None:
-        response = self.query(self.submit_response_query(self.form, self.form.questions), user=self.responding_student)
+        mutation = self.submit_response_query(self.form)
+        response = self.query(mutation, user=self.responding_student)
         self.assertResponseNoErrors(response)
         self.assertEqual(
-            Answer.objects.filter(response__user=self.responding_student, answer="Answer").count(),
-            len(self.form.questions),
+            Answer.objects.filter(response__respondent=self.responding_student, answer="Answer").count(),
+            self.form.questions.count(),
         )
 
 
