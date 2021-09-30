@@ -20,11 +20,4 @@ describe("User Logins", () => {
     });
     cy.log("Logged in");
   });
-
-  it("should fail", () => {
-    cy.log("This test should fail");
-    cy.visit("/").then(() => {
-      cy.get("h1").should("contain", "Datateknologi");
-    });
-  });
 });
