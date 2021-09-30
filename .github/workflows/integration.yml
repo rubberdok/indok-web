@@ -20,6 +20,7 @@ env:
   NEXT_PUBLIC_DATAPORTEN_STATE: erhgouvwhwiuethviu3htvuq34hvt9uh
   NEXT_PUBLIC_FRONTEND_URI: http://localhost:3000
   SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+  DOCKER_BUILDKIT: 1
 
 jobs:
   test:
