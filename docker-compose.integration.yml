@@ -1,0 +1,51 @@
+version: "3"
+
+services:
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
+    expose:
+      - 5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/:cached
+
+  backend:
+    restart: always
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      - DATAPORTEN_ID=$DATAPORTEN_ID
+      - DATAPORTEN_REDIRECT_URI=$DATAPORTEN_REDIRECT_URI
+      - DATAPORTEN_SECRET=$DATAPORTEN_SECRET
+      - GOOGLE_DRIVE_API_KEY=$GOOGLE_DRIVE_API_KEY
+      - AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
+      - AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.test
+    ports:
+      - 3000:3000
+    expose:
+      - 3000
+    environment:
+      - NEXT_PUBLIC_DATAPORTEN_ID=$DATAPORTEN_ID
+      - NEXT_PUBLIC_DATAPORTEN_REDIRECT_URI=$DATAPORTEN_REDIRECT_URI
+      - NEXT_PUBLIC_DATAPORTEN_STATE=$DATAPORTEN_STATE
+      - NEXT_PUBLIC_GRAPHQL_BACKEND_URI=http://localhost:8000/graphql
+      - SENTRY_AUTH_TOKEN=$SENTRY_AUTH_TOKEN
+
+volumes:
+  postgres_data:
+    driver: local
