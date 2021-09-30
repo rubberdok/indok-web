@@ -46,6 +46,14 @@ services:
       - NEXT_PUBLIC_GRAPHQL_BACKEND_URI=http://localhost:8000/graphql
       - SENTRY_AUTH_TOKEN=$SENTRY_AUTH_TOKEN
 
+  integration:
+    depends_on:
+      - frontend
+      - backend
+    build:
+      context: ./tests
+      dockerfile: Dockerfile
+
 volumes:
   postgres_data:
     driver: local
