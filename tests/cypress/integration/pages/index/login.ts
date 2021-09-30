@@ -1,10 +1,12 @@
 describe("User Logins", () => {
   it("should prompt registration when not registered", () => {
+    cy.log("Accessing site");
     cy.visit("/").then(() => {
       cy.get("h1").should("contain", "Industriell");
       cy.get("[data-testid=login]")
         .click()
         .then(() => {
+          cy.log("Logging in");
           cy.contains("Feide test users")
             .click()
             .then(() => {
@@ -16,5 +18,6 @@ describe("User Logins", () => {
             });
         });
     });
+    cy.log("Logged in");
   });
 });
