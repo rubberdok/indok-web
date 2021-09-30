@@ -153,7 +153,7 @@ const Footer: React.FC = () => {
           </Container>
         </Box>
       </div>
-      <HallOfFame open={open} setOpen={(open: boolean) => setOpen(open)} />
+      <HallOfFame open={open} setOpen={setOpen} />
     </>
   );
 };

@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
 
 const HallOfFame: React.VFC<{
   open: boolean;
-  setOpen: (open: boolean) => void;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }> = ({ open, setOpen }) => {
   const classes = useStyles();
 
