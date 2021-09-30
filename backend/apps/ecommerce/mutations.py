@@ -3,12 +3,13 @@ from django.core.exceptions import PermissionDenied
 from graphql_jwt.decorators import login_required
 
 from .models import Order, Product
-from .vipps_utils import capture_payment, get_payment_status, initiate_payment
+from .vipps_utils import VippsApi, capture_payment, get_payment_status, initiate_payment
 
 
 class InitiateOrder(graphene.Mutation):
 
     redirect = graphene.String()
+    vipps_api = VippsApi()
 
     class Arguments:
         product_id = graphene.ID(required=True)
@@ -63,7 +64,7 @@ class InitiateOrder(graphene.Mutation):
             order.total_price = product.price * quantity
             order.save()
 
-        redirect = initiate_payment(order)
+        redirect = InitiateOrder.vipps_api.initiate_payment(order)
 
         return InitiateOrder(redirect=redirect)
 
@@ -74,6 +75,7 @@ class AttemptCapturePayment(graphene.Mutation):
     # TODO: see if /details endpoint can reveal FAILED / REJECTED / CANCELLED state
 
     status = graphene.String()
+    vipps_api = VippsApi()
 
     class Arguments:
         order_id = graphene.ID(required=True)
@@ -90,7 +92,7 @@ class AttemptCapturePayment(graphene.Mutation):
 
         if order.payment_status == Order.PaymentStatus.INITIATED:
             # Update status according to Vipps payment details
-            status, status_success = get_payment_status(
+            status, status_success = AttemptCapturePayment.vipps_api.get_payment_status(
                 f"{order.order_id}-{order.payment_attempt}"
             )
 
@@ -100,7 +102,7 @@ class AttemptCapturePayment(graphene.Mutation):
 
         if order.payment_status == Order.PaymentStatus.RESERVED:
             try:
-                capture_payment(order, method="polling")
+                AttemptCapturePayment.vipps_api.capture_payment(order, method="polling")
                 order.payment_status = Order.PaymentStatus.CAPTURED
                 order.save()
             except Exception as err:

@@ -4,10 +4,13 @@ from rest_framework.response import Response
 
 
 from .models import Order
-from .vipps_utils import capture_payment
+from .vipps_utils import VippsApi, capture_payment
 
 
 class VippsCallback(APIView):
+
+    vipps_api = VippsApi()
+
     def post(self, request, order_id):
         # Upon callback from Vipps, update status and attempt to capture payment
 
@@ -37,7 +40,7 @@ class VippsCallback(APIView):
         # Capture payment
         if order.payment_status == Order.PaymentStatus.RESERVED:
             try:
-                capture_payment(order, method="callback")
+                VippsCallback.vipps_api.capture_payment(order, method="callback")
                 order.payment_status = Order.PaymentStatus.CAPTURED
                 order.save()
             except Exception as err:
