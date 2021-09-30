@@ -1,26 +1,10 @@
-import {
-  Box,
-  Button,
-  Container,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  Grid,
-  IconButton,
-  makeStyles,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableRow,
-  Typography,
-} from "@material-ui/core";
-import { Close, Facebook, GitHub } from "@material-ui/icons";
+import { Box, Button, Container, Grid, IconButton, makeStyles, Typography } from "@material-ui/core";
+import { Facebook, GitHub } from "@material-ui/icons";
 import Link from "next/link";
 import React from "react";
 import rubberdokLogo from "@public/img/rubberdok_logo_white.svg";
 import Image from "next/image";
+import HallOfFame from "@components/HallOfFame";
 
 const useStyles = makeStyles((theme) => ({
   footer: {
@@ -53,15 +37,6 @@ const useStyles = makeStyles((theme) => ({
     "& > *": {
       marginBottom: theme.spacing(2),
     },
-  },
-  table: {
-    minWidth: 800,
-  },
-  closeButton: {
-    position: "absolute",
-    right: theme.spacing(1),
-    top: theme.spacing(1),
-    color: theme.palette.grey[500],
   },
   title: {
     color: "#fff",
@@ -178,104 +153,7 @@ const Footer: React.FC = () => {
           </Container>
         </Box>
       </div>
-      <Dialog
-        maxWidth="xl"
-        fullWidth={false}
-        onClose={() => setOpen(!open)}
-        aria-labelledby="customized-dialog-title"
-        open={open}
-      >
-        <DialogTitle disableTypography>
-          <Typography gutterBottom variant="h4">
-            Hall of Fame 2020/2021
-          </Typography>
-          <Typography variant="body1">Progget med blod, svette, tårer og kjærlighet av</Typography>
-          <IconButton className={classes.closeButton} aria-label="close" onClick={() => setOpen(!open)}>
-            <Close />
-          </IconButton>
-        </DialogTitle>
-        <DialogContent>
-          <TableContainer component={Paper}>
-            <Table className={classes.table} aria-label="simple table">
-              <TableBody>
-                <TableRow>
-                  <TableCell>
-                    Morgan Heggland &apos;22
-                    <br />
-                    <Typography variant="caption">Big Boss Morgan</Typography>
-                  </TableCell>
-                  <TableCell>
-                    Lars Lien Ankile &apos;22
-                    <br />
-                    <Typography variant="caption">LP &amp; Chief Devops Architect</Typography>
-                  </TableCell>
-                  <TableCell>
-                    Andreas Johannesen &apos;22
-                    <br />
-                    <Typography variant="caption">LP &amp; Chief Visionary</Typography>
-                  </TableCell>
-                  <TableCell>
-                    Ingrid Aaseng &apos;22
-                    <br />
-                    <Typography variant="caption">Head of Archive Solutions</Typography>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>
-                    Fredrik Ahlborg &apos;22
-                    <br />
-                    <Typography variant="caption">Content Creator &amp; Social Chair</Typography>
-                  </TableCell>
-                  <TableCell>
-                    Herman Holmøy &apos;25
-                    <br />
-                    <Typography variant="caption">Cabin Management System</Typography>
-                  </TableCell>
-                  <TableCell>
-                    Patrik Kjærran &apos;22
-                    <br />
-                    <Typography variant="caption">Event Backend Strategist</Typography>
-                  </TableCell>
-                  <TableCell>
-                    Anna Sofie Lunde &apos;22
-                    <br />
-                    <Typography variant="caption">Head of Archive Solutions</Typography>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>
-                    Hermann Mørkrid &apos;23
-                    <br />
-                    <Typography variant="caption">Head of Extracurricular System</Typography>
-                  </TableCell>
-                  <TableCell>
-                    Mathias Raa &apos;25
-                    <br />
-                    <Typography variant="caption">Art Director &amp; UX Architect</Typography>
-                  </TableCell>
-                  <TableCell>
-                    Mathilde Marie Solberg &apos;23
-                    <br />
-                    <Typography variant="caption">Global Head of Event</Typography>
-                  </TableCell>
-                  <TableCell>
-                    Sverre Spetalen &apos;21
-                    <br />
-                    <Typography variant="caption">Cabin Management System</Typography>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>
-                    Lars Waage &apos;23
-                    <br />
-                    <Typography variant="caption">Head of Extracurricular System</Typography>
-                  </TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </DialogContent>
-      </Dialog>
+      <HallOfFame open={open} setOpen={(open: boolean) => setOpen(open)} />
     </>
   );
 };
