@@ -22,7 +22,7 @@ interface ContractProps {
 /*
 Renders the contract of a booking.
 */
-const Contract: React.FC<ContractProps> = ({ chosenCabins, contactInfo, datePick }: ContractProps) => {
+const Contract: React.FC<ContractProps> = ({ chosenCabins, contactInfo, datePick }) => {
   const currentTime = new Date().toLocaleString();
   const classes = useStyles();
   const price = calculatePrice(chosenCabins, contactInfo, datePick);

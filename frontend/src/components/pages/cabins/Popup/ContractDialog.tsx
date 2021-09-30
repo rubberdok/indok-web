@@ -40,7 +40,7 @@ const ContractDialog: NextPage<ContractDialogProps> = ({
   contactInfo,
   activeStep,
   setActiveStep,
-}: ContractDialogProps) => {
+}) => {
   const classes = useStyles();
 
   const handleClose = () => {

@@ -33,7 +33,7 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import theme from "@styles/theme";
 
-interface BookingFromQuery extends Booking {
+export interface BookingFromQuery extends Booking {
   __typename: string;
 }
 
@@ -52,7 +52,9 @@ const BookingAdminPage: NextPage = () => {
   const [bookingToBeDeleted, setBookingToBeDeleted] = useState<BookingFromQuery | undefined>();
   const router = useRouter();
 
-  const errorMessageDialog = () => (
+  const handleDeleteBookingOnClose = () => setBookingToBeDeleted(undefined);
+
+  const ErrorMessageDialog: React.VFC = () => (
     <Dialog open={error != undefined} onClose={handleErrorDialogClose}>
       <DialogTitle>{`Det har oppstått en feilmelding: ${error?.name}`}</DialogTitle>
       <DialogContent>
@@ -66,11 +68,9 @@ const BookingAdminPage: NextPage = () => {
     </Dialog>
   );
 
-  const handleDeleteBookingOnClose = () => setBookingToBeDeleted(undefined);
-
-  const deleteBookingDialog = () => (
+  const DeleteBookingDialog: React.VFC = () => (
     <Dialog open={bookingToBeDeleted != undefined} onClose={handleDeleteBookingOnClose}>
-      <DialogTitle>{`Du er nå i ferd med å gjøre en irreversibel handling`}</DialogTitle>
+      <DialogTitle>Du er nå i ferd med å gjøre en irreversibel handling</DialogTitle>
       <DialogContent>
         <DialogContentText>Er du sikker på at du vil slette denne bookingen?</DialogContentText>
       </DialogContent>
@@ -133,8 +133,8 @@ const BookingAdminPage: NextPage = () => {
         autoHideDuration={6000}
         onClose={() => setOpenSnackbar(false)}
       />
-      {errorMessageDialog()}
-      {deleteBookingDialog()}
+      <ErrorMessageDialog />
+      <DeleteBookingDialog />
       <Grid container direction="column" spacing={3}>
         <Grid item>
           <Box p={3}>

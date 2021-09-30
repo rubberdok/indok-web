@@ -3,6 +3,10 @@ import dayjs from "dayjs";
 import { DatePick } from "src/pages/cabins/book";
 import validator from "validator";
 
+/*
+File containing helper functions for cabins.
+*/
+
 export const validateName: (name: string) => boolean = (name) => name?.length > 0;
 
 export const validateEmail: (email: string) => boolean = (email) => (email ? validator.isEmail(email) : false);

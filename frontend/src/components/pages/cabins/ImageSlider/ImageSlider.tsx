@@ -35,7 +35,7 @@ interface ImageSliderProps {
 /*
 Carousel compoent for showing images
 */
-const ImageSlider = ({ imageData, displayLabelText }: ImageSliderProps): JSX.Element => {
+const ImageSlider: React.VFC<ImageSliderProps> = ({ imageData, displayLabelText }) => {
   const classes = useStyles();
   const theme = useTheme();
   const [activeStep, setActiveStep] = React.useState(0);

@@ -38,7 +38,7 @@ const CheckInOut: NextPage<Props> = ({ allCabins, chosenCabins, setChosenCabins,
                 <Checkbox
                   color="primary"
                   disableRipple
-                  checked={chosenCabins.map((chosenCabin) => chosenCabin.id).includes(cabin.id)}
+                  checked={chosenCabins.some((chosenCabin) => chosenCabin.id === cabin.id)}
                   onChange={(e) => {
                     if (e.target.checked) {
                       setChosenCabins([...chosenCabins, cabin]);
