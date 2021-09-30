@@ -154,6 +154,8 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
   if (!eventData || !eventData.event || !userData)
     return <Typography variant="body1">Kunne ikke laste arrangementet</Typography>;
 
+  const location = eventData.event.location ? eventData.event.location : "";
+  const endTime = eventData.event.endTime;
   const handleClick = () => {
     if (!userData.user) return;
     if (eventData.event.userAttendance?.isSignedUp) {
@@ -346,6 +348,31 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
                     </Typography>
                   </>
                 )}
+                <Button
+                  variant="text"
+                  href={window.URL.createObjectURL(
+                    new File(
+                      [
+                        `BEGIN:VCALENDAR\nCALSCALE:GREGORIAN\nMETHOD:PUBLISH\nPRODID:-//Test Cal//EN\nVERSION:2.0\nBEGIN:VEVENT\nUID:\nDTSTART;VALUE=DATE:${dayjs(
+                          eventData.event.startTime
+                        )
+                          .locale(nb)
+                          .format("YYYYMMDDTHHmmss")}\nDTEND;VALUE=DATE:${dayjs(endTime)
+                          .locale(nb)
+                          .format("YYYYMMDDTHHmmss")}\nSUMMARY:${
+                          eventData.event.title
+                        }\nLOCATION:${location}\nDESCRIPTION:${eventData.event.description}\nEND:VEVENT\nEND:VCALENDAR`,
+                      ],
+                      "foo.ics",
+                      {
+                        type: "text/calendar",
+                      }
+                    )
+                  )}
+                  download="event.ics"
+                >
+                  Last ned i kalender
+                </Button>
                 {eventData.event.allowedGradeYears.length < 5 && (
                   <>
                     <Typography variant="overline" gutterBottom>
