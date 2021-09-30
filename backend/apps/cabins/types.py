@@ -59,7 +59,6 @@ class EmailInputType(TypedDict):
 
 
 class BookingInfoType(EmailInputType):
-    chosen_cabins_string: str
     price: int
 
 

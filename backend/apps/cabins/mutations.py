@@ -6,9 +6,10 @@ from .helpers import price
 from .types import AllBookingsType, BookingInfoType, EmailInputType
 from apps.cabins.models import Booking as BookingModel
 from apps.cabins.models import Cabin as CabinModel
+from .constants import APPROVE_BOOKING, DISAPPROVE_BOOKING
 from .mail import send_mail
 from .validators import create_booking_validation
-from graphql_jwt.decorators import login_required, permission_required
+from graphql_jwt.decorators import permission_required
 
 
 class BookingInput(graphene.InputObjectType):
@@ -47,6 +48,7 @@ class CreateBooking(graphene.Mutation):
     ok = graphene.Boolean()
     booking = graphene.Field(AllBookingsType)
 
+    @permission_required("cabins.add_booking")
     def mutate(
         self,
         info,
@@ -78,7 +80,6 @@ class UpdateBooking(graphene.Mutation):
     ok = graphene.Boolean()
     booking = graphene.Field(AllBookingsType)
 
-    @login_required
     @permission_required("cabins.change_booking")
     def mutate(
         self,
@@ -87,7 +88,7 @@ class UpdateBooking(graphene.Mutation):
     ):
         ok = True
         # Fetch booking object if id is provided
-        if BookingModel.objects.filter(pk=booking_data.id).exists():
+        try:
             booking = BookingModel.objects.get(pk=booking_data.id)
             # Check that incoming fields are ok
             create_booking_validation(booking_data)
@@ -97,8 +98,9 @@ class UpdateBooking(graphene.Mutation):
             booking.save()
             if booking_data.cabins:
                 booking.cabins.set(CabinModel.objects.filter(id__in=booking_data.cabins))
+                booking.save()
             return UpdateBooking(booking=booking, ok=ok)
-        else:
+        except BookingModel.DoesNotExist:
             return UpdateBooking(
                 booking=None,
                 ok=False,
@@ -116,16 +118,15 @@ class DeleteBooking(graphene.Mutation):
     class Arguments:
         id = graphene.ID()
 
-    @login_required
     @permission_required("cabins.delete_booking")
-    def mutate(self, info, **kwargs):
+    def mutate(self, info, id, **kwargs):
         try:
-            booking = BookingModel.objects.get(pk=kwargs["id"])
+            booking = BookingModel.objects.get(pk=id)
         except BookingModel.DoesNotExist:
-            return DeleteBooking(ok=False, booking_id=kwargs["id"])
-        listing_id = kwargs["id"]
+            return DeleteBooking(ok=False, booking_id=id)
+        booking_id = id
         booking.delete()
-        return DeleteBooking(ok=True, booking_id=listing_id)
+        return DeleteBooking(ok=True, booking_id=booking_id)
 
 
 class SendEmail(graphene.Mutation):
@@ -134,14 +135,9 @@ class SendEmail(graphene.Mutation):
 
     ok = graphene.Boolean()
 
+    @permission_required("cabins.send_email")
     def mutate(self, info, email_input: EmailInputType):
-        cabins = CabinModel.objects.all().filter(id__in=email_input["cabins"])
-        chosen_cabins_names = [cabin.name for cabin in cabins]
-        chosen_cabins_string: str = (
-            cabins[0].name
-            if len(cabins) == 1
-            else ",".join(chosen_cabins_names[:-1]) + f" og {chosen_cabins_names[-1]}"
-        )
+        cabins = CabinModel.objects.filter(id__in=email_input["cabins"])
 
         booking_price = price(
             cabins,
@@ -162,7 +158,6 @@ class SendEmail(graphene.Mutation):
             "check_in": email_input["check_in"],
             "check_out": email_input["check_out"],
             "cabins": cabins,
-            "chosen_cabins_string": chosen_cabins_string,
             "price": booking_price,
         }
 
@@ -170,7 +165,7 @@ class SendEmail(graphene.Mutation):
         send_mail(booking_info=booking_info, email_type=email_input["email_type"], admin=False)
 
         # Don't send mail to admin when approving or disapproving.
-        if email_input["email_type"] not in ["approve_booking", "disapprove_booking"]:
+        if email_input["email_type"] not in [APPROVE_BOOKING, DISAPPROVE_BOOKING]:
             send_mail(booking_info=booking_info, email_type=email_input["email_type"], admin=True)
 
         return SendEmail(ok=True)

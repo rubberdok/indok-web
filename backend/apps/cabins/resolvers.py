@@ -9,7 +9,6 @@ class CabinResolvers:
         """
         return BookingModel.objects.all().order_by("check_in")
 
-    @login_required
     @permission_required("cabins.view_booking")
     def resolve_admin_all_bookings(self, root, **kwargs):
         """

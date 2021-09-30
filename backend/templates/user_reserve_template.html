@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="no">
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -22,7 +22,7 @@
       }
     </style>
   </head>
-  <body style="font-family: Montserrat">
+  <body style="font-family: Montserrat, serif">
     <div
       style="
         border: 5px solid #065a5a;
@@ -36,13 +36,13 @@
 
       <h2>Hei {{ first_name }}!</h2>
       <p>
-          Din søknad for booking av <b>{{ chosen_cabins_string }}</b> fra
-        <span><b>{{check_in }}</b></span> til
-        <span><b>{{ check_out }}</b> er mottatt.</span>
+          Din søknad for booking av <strong>{{ chosen_cabins_string }}</strong> fra
+        <span><strong>{{check_in }}</strong></span> til
+        <span><strong>{{ check_out }}</strong> er mottatt.</span>
       </p>
-        <p><b>Hyttestyret kommer til å ta stilling til å søknaden din snart. Når de har gjort det får du en
-            mail med beslutningen deres.</b></p>
-      Prisen kommer på <b>{{ price }} kr</b>. Betaling skjer via Tripletex, der det blir sendt ut en faktura på mail etter at hyttestyret har godkjent søknaden deres.
+        <p><strong>Hyttestyret kommer til å ta stilling til å søknaden din snart. Når de har gjort det får du en
+            mail med beslutningen deres.</strong></p>
+      Prisen kommer på <strong>{{ price }} kr</strong>. Betaling skjer via Tripletex, der det blir sendt ut en faktura på mail etter at hyttestyret har godkjent søknaden deres.
       <div class="contentDiv">
         <p>
           Hytten skal forlates i minst like god stand som den ble funnet, og

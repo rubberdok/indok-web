@@ -148,14 +148,14 @@ const CabinBookingPage: NextPage = () => {
     contactInfo: ContactInfo,
     datePick: DatePick,
     chosenCabins: Cabin[]
-  ) => ContactInfo & { cabins: string[]; checkIn: string | undefined; checkOut: string | undefined } = (
+  ) => ContactInfo & { cabins: number[]; checkIn: string | undefined; checkOut: string | undefined } = (
     contactInfo,
     datePick,
     chosenCabins
   ) => {
     return {
       ...contactInfo,
-      cabins: chosenCabins.map((cabin) => cabin.id),
+      cabins: chosenCabins.map((cabin) => parseInt(cabin.id)),
       checkIn: datePick.checkInDate,
       checkOut: datePick.checkOutDate,
     };
