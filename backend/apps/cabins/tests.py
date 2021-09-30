@@ -2,7 +2,7 @@ import json
 
 from django.core import mail
 
-from apps.cabins.models import Booking, Cabin
+from apps.cabins.models import Booking, Cabin, BookingResponsible
 from utils.testing.ExtendedGraphQLTestCase import ExtendedGraphQLTestCase
 from utils.testing.cabins_factories import BookingFactory
 import datetime
@@ -44,6 +44,12 @@ class CabinsBaseTestCase(ExtendedGraphQLTestCase):
         # Create two (logged in) users
         self.user = UserFactory()
         self.super_user = UserFactory(is_staff=True, is_superuser=True)
+
+        # Create default booking responsible
+        self.booking_responsible = BookingResponsible(
+            first_name="Ellie", last_name="Berglund", phone="94258380", email="booking@indokhyttene.no", active=True
+        )
+        self.booking_responsible.save()
 
     def add_booking_permission(self, codename):
         content_type = ContentType.objects.get_for_model(Booking)
@@ -98,7 +104,7 @@ class CabinsResolversTestCase(CabinsBaseTestCase):
         # Try to make query without permission
         response = self.query(query, user=self.user)
         # This validates the status code and if you get errors
-        self.assertResponseHasErrors(response)
+        self.assert_permission_error(response)
 
         # Try to make query with permission
         self.add_booking_permission("view_booking")
@@ -139,7 +145,7 @@ class CabinsMutationsTestCase(CabinsBaseTestCase):
     Testing all mutations for cabins
     """
 
-    def create_booking(self, booking, cabins_field):
+    def create_booking(self, booking, cabins_field, user=None):
         query = f"""
                 mutation CreateBooking {{
                     createBooking(
@@ -159,7 +165,7 @@ class CabinsMutationsTestCase(CabinsBaseTestCase):
                         }}
                     }}
                 """
-        return self.query(query)
+        return self.query(query, user=user)
 
     def check_create_with_error(self, response):
         self.assertResponseHasErrors(response)
@@ -167,7 +173,13 @@ class CabinsMutationsTestCase(CabinsBaseTestCase):
         self.assertEqual(3, len(Booking.objects.all()))
 
     def test_create_booking(self):
+        # Test booking creation without add_booking permission
         response = self.create_booking(self.no_conflict_booking, f"{self.bjornen_cabin.id}")
+        self.assert_permission_error(response)
+
+        # Test with add_booking permission
+        self.add_booking_permission("add_booking")
+        response = self.create_booking(self.no_conflict_booking, f"{self.bjornen_cabin.id}", user=self.user)
         self.assertResponseNoErrors(response)
         # Check that booking is created
         self.assertTrue(
@@ -247,8 +259,11 @@ class CabinsMutationsTestCase(CabinsBaseTestCase):
           }}
         }}
         """
+        # Change booking without permission
         response = self.query(query)
-        self.assertResponseHasErrors(response)
+        self.assert_permission_error(response)
+
+        # Change booking with change_booking permission
         self.add_booking_permission("change_booking")
         response = self.query(query, user=self.user)
 
@@ -269,16 +284,16 @@ class CabinsMutationsTestCase(CabinsBaseTestCase):
                 """
         response = self.query(query)
         # Check that unauthorized user cannot delete booking
-        self.assertResponseHasErrors(response)
+        self.assert_permission_error(response)
         try:
-            booking = Booking.objects.get(pk=self.first_booking.id)
+            Booking.objects.get(pk=self.first_booking.id)
         except Booking.DoesNotExist:
             self.assertTrue(True, "The booking was deleted after unauthorized user tried to delete")
         self.add_booking_permission("delete_booking")
         response = self.query(query, user=self.user)
         self.assertResponseNoErrors(response)
         with self.assertRaises(Booking.DoesNotExist):
-            booking = Booking.objects.get(pk=self.first_booking.id)
+            Booking.objects.get(pk=self.first_booking.id)
 
 
 class EmailTestCase(CabinsBaseTestCase):
@@ -286,7 +301,7 @@ class EmailTestCase(CabinsBaseTestCase):
         super().setUp()
         mail.outbox = []
 
-    def send_email(self, booking, email_type: str = "reserve_booking"):
+    def send_email(self, booking, email_type: str = "reserve_booking", user=None):
         query = f"""
             mutation {{
               sendEmail(
@@ -307,38 +322,41 @@ class EmailTestCase(CabinsBaseTestCase):
               }}
             }}
         """
+        return self.query(query, user=user)
 
-        return self.query(query)
+    def test_mail_permission(self):
+        # Tries to send a mail with missing permissions
+        response = self.send_email(self.first_booking, "reserve_booking", user=self.user)
+        self.assert_permission_error(response)
 
     def test_outbox_size_reservation(self):
         # Check outbox size when sending reservation mails to both admin and user
-        response = self.send_email(self.first_booking, "reserve_booking")
+        response = self.send_email(self.first_booking, "reserve_booking", user=self.super_user)
         self.assertResponseNoErrors(resp=response)
         self.assertEqual(len(mail.outbox), 2)
 
     def test_outbox_size_decision(self):
         # Check outbox size when sending the decision (approve or disapprove) mail to the user
-        response = self.send_email(self.first_booking, "approve_booking")
+        response = self.send_email(self.first_booking, "approve_booking", user=self.super_user)
         self.assertResponseNoErrors(resp=response)
         self.assertEqual(len(mail.outbox), 1)
 
     def test_subject_reservation(self):
-        response = self.send_email(self.first_booking)
-        print("response", response)
+        response = self.send_email(self.first_booking, user=self.super_user)
         self.assertResponseNoErrors(resp=response)
 
         # Verify that the subject of the first message is correct.
         self.assertEqual(mail.outbox[0].subject, "Bekreftelse på mottat søknad om booking av Oksen")
 
     def test_subject_approval(self):
-        response = self.send_email(self.first_booking, "approve_booking")
+        response = self.send_email(self.first_booking, "approve_booking", user=self.super_user)
         self.assertResponseNoErrors(resp=response)
 
         # Verify that the subject of the first message is correct.
         self.assertTrue("Hyttestyret har tatt stilling til søknaden din om booking av " in mail.outbox[0].subject)
 
     def test_reservation_mail_content(self):
-        response = self.send_email(self.first_booking, "reserve_booking")
+        response = self.send_email(self.first_booking, "reserve_booking", user=self.super_user)
         self.assertResponseNoErrors(resp=response)
 
         # Verify that the mails contain the price
@@ -354,7 +372,8 @@ class EmailTestCase(CabinsBaseTestCase):
         self.assertTrue(f"Antall eksterne: {self.first_booking.external_participants}" in mail.outbox[1].body)
 
         # Verify that the checkin and checkout for admin and user email is correct
-        self.assertTrue(self.first_booking.check_in.strftime("%d-%m-%Y") in mail.outbox[0].body)
-        self.assertTrue(self.first_booking.check_out.strftime("%d-%m-%Y") in mail.outbox[0].body)
-        self.assertTrue(self.first_booking.check_in.strftime("%d-%m-%Y") in mail.outbox[1].body)
-        self.assertTrue(self.first_booking.check_out.strftime("%d-%m-%Y") in mail.outbox[1].body)
+        date_fmt = "%d-%m-%Y"
+        self.assertTrue(self.first_booking.check_in.strftime(date_fmt) in mail.outbox[0].body)
+        self.assertTrue(self.first_booking.check_out.strftime(date_fmt) in mail.outbox[0].body)
+        self.assertTrue(self.first_booking.check_in.strftime(date_fmt) in mail.outbox[1].body)
+        self.assertTrue(self.first_booking.check_out.strftime(date_fmt) in mail.outbox[1].body)

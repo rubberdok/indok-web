@@ -14,11 +14,13 @@ class Cabin(models.Model):
 
 
 class Booking(models.Model):
+    class Meta:
+        permissions = [("send_email", "Can send email")]
 
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     phone = models.CharField(max_length=8)
-    receiver_email = models.CharField(max_length=100)
+    receiver_email = models.EmailField(max_length=100)
     check_in = models.DateField()
     check_out = models.DateField()
     cabins = models.ManyToManyField(Cabin)
@@ -47,3 +49,14 @@ class Booking(models.Model):
 
     def __str__(self):
         return f"Booking {self.id}, {self.first_name} {self.last_name}"
+
+
+class BookingResponsible(models.Model):
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    phone = models.CharField(max_length=8)
+    email = models.EmailField(max_length=100)
+    active = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.first_name} {self.last_name}, {'aktiv' if self.active else ''}"
