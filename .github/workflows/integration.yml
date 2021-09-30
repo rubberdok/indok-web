@@ -30,7 +30,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Build and run the Application
-        run: docker-compose -f docker-compose.integration.yml up
+        run: docker-compose -f docker-compose.integration.yml up -d
 
       - name: Build the Cypress Image
         run: docker build -f tests/Dockerfile -t cypress .
