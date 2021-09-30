@@ -115,7 +115,7 @@ const Footer: React.FC = () => {
                 </Box>
               </Grid>
               <Grid item xs={12} md={6}>
-                <Box className={classes.nth} position="absolute" width="600px" height="100%" top={0} zIndex={-1}></Box>
+                <Box className={classes.nth} position="absolute" width="600px" height="100%" top={0} zIndex={-1} />
               </Grid>
             </Grid>
           </Container>
