@@ -9,40 +9,46 @@ from utils.decorators import permission_required
 from ..organizations.models import Organization
 from ..organizations.permissions import check_user_membership
 from .mail import send_event_emails
-from .models import Category, Event, SignUp
+from .models import AttendableEvent, Category, Event, SignUp
 from .types import CategoryType, EventType
 
 
-class BaseEventInput:
+class BaseEventInput(graphene.InputObjectType):
     title = graphene.String(required=True)
     description = graphene.String(required=True)
     start_time = graphene.DateTime(required=True)
-    is_attendable = graphene.Boolean(required=True)
     end_time = graphene.DateTime(required=False)
     location = graphene.String(required=False)
     category_id = graphene.ID(required=False)
     image = graphene.String(required=False)
-    deadline = graphene.DateTime(required=False)
-    signup_open_date = graphene.DateTime(required=False)
-    available_slots = graphene.Int(required=False)
-    price = graphene.Float(required=False)
     short_description = graphene.String(required=False)
-    has_extra_information = graphene.Boolean(required=False)
     contact_email = graphene.String(required=False)
-    binding_signup = graphene.Boolean(required=False)
     allowed_grade_years = graphene.List(graphene.Int)
 
 
-class CreateEventInput(BaseEventInput, graphene.InputObjectType):
+class AdditionalAttendableEventInput(graphene.InputObjectType):
+    signup_open_date = graphene.DateTime(required=True)
+    available_slots = graphene.Int(required=True)
+    available_slots_1st_year = graphene.Int(required=False)
+    available_slots_2nd_year = graphene.Int(required=False)
+    available_slots_3rd_year = graphene.Int(required=False)
+    available_slots_4th_year = graphene.Int(required=False)
+    available_slots_5th_year = graphene.Int(required=False)
+    binding_signup = graphene.Boolean(required=False)
+    deadline = graphene.DateTime(required=False)
+    price = graphene.Float(required=False)
+
+
+class CreateEventInput(BaseEventInput):
     organization_id = graphene.ID(required=True)
+    # attendable_data = graphene.field(AdditionalAttendableEventInput(required=False))
 
 
-class UpdateEventInput(BaseEventInput, graphene.InputObjectType):
+class UpdateEventInput(BaseEventInput):
     title = graphene.String(required=False)
     description = graphene.String(required=False)
     start_time = graphene.DateTime(required=False)
     organization_id = graphene.ID(required=False)
-    is_attendable = graphene.Boolean(required=False)
 
 
 class CreateEvent(graphene.Mutation):
@@ -65,6 +71,7 @@ class CreateEvent(graphene.Mutation):
 
         check_user_membership(info.context.user, organization)
 
+        # event = AttendableEvent() if event_data.has_key("attendable_data") else Event()
         event = Event()
         for k, v in event_data.items():
             setattr(event, k, v)

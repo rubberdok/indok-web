@@ -16,6 +16,9 @@ class Category(models.Model):
         verbose_name_plural = "Categories"
 
 
+GRADE_CHOICES = ((1, "1"), (2, "2"), (3, "3"), (4, "4"), (5, "5"))
+
+
 class Event(models.Model):
     # ------------------ Mandatory fields ------------------
     title = models.CharField(max_length=128)
@@ -35,7 +38,6 @@ class Event(models.Model):
     image = models.URLField(blank=True, null=True)
     short_description = models.CharField(max_length=100, default="Klikk her for å lese mer")
     contact_email = models.EmailField(blank=True, default="")
-    GRADE_CHOICES = ((1, "1"), (2, "2"), (3, "3"), (4, "4"), (5, "5"))
     allowed_grade_years = MultiSelectField(choices=GRADE_CHOICES, default="1,2,3,4,5")
 
     def __str__(self):
@@ -43,9 +45,8 @@ class Event(models.Model):
 
 
 class AttendableEvent(Event):
-    # TODO: Change back to signup_open_date after custom migration
-    # --------------- Required fields given is_attendable == True ---------------
     signup_open_date = models.DateTimeField()  # When signup should become available
+
     available_slots = models.PositiveIntegerField()  # maximal number of users that can sign up for an event T
     available_slots_1st_year = models.PositiveIntegerField(blank=True, null=True)  # maximal number of 1st years
     available_slots_2nd_year = models.PositiveIntegerField(blank=True, null=True)  # maximal number of 2nd years
@@ -57,7 +58,6 @@ class AttendableEvent(Event):
         default=False
     )  # Disables sign-off from users_attending if true. NOTE: binding_signup is required given Price
 
-    # ----------- Optional fields that should only be set given is_attendable == True -----------
     deadline = models.DateTimeField(blank=True, null=True)  # Deadline for signing up
     price = models.FloatField(blank=True, null=True)
 
@@ -87,25 +87,26 @@ class AttendableEvent(Event):
     @property
     def users_on_waiting_list(self):
         result = []
-        if (
-            self.is_attendable
-            and self.available_slots is not None
-            and self.signed_up_users.count() > self.available_slots
-        ):
+        if self.signed_up_users.count() > self.available_slots:
             result = list(self.signed_up_users.all()[self.available_slots :])
         return result
 
     @property
     def users_attending(self):
-        if self.is_attendable and self.available_slots is not None:
-            return list(self.signed_up_users.all()[: self.available_slots])
-        return []
+        return list(self.signed_up_users.all()[: self.available_slots])
 
     @property
     def is_full(self):
-        if self.is_attendable and self.available_slots is not None:
-            return self.signed_up_users.count() >= self.available_slots
-        return False
+        return self.signed_up_users.count() >= self.available_slots
+
+
+class SlotDistribution(models.Model):
+    event = models.ForeignKey(AttendableEvent, on_delete=models.CASCADE)
+    available_slots = models.PositiveIntegerField()
+    grade = models.CharField(max_length=6, choices=GRADE_CHOICES)
+    parent_distribution = models.ForeignKey(
+        "self", on_delete=models.CASCADE, related_name="child_distributions", null=True, blank=True
+    )
 
 
 class SignUp(models.Model):
@@ -121,7 +122,7 @@ class SignUp(models.Model):
     is_attending = models.BooleanField()
     extra_information = models.TextField(blank=True, default="")
 
-    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    event = models.ForeignKey(AttendableEvent, on_delete=models.CASCADE)
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
