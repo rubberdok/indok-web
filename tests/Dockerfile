@@ -7,5 +7,6 @@ RUN npm install
 
 COPY cypress cypress
 COPY cypress.json .
+COPY . .
 
 CMD ["cypress", "run"]
