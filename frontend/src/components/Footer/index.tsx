@@ -4,7 +4,7 @@ import Link from "next/link";
 import React from "react";
 import rubberdokLogo from "@public/img/rubberdok_logo_white.svg";
 import Image from "next/image";
-import HallOfFame from "@components/HallOfFame";
+import HallOfFame from "@components/Footer/HallOfFame";
 
 const useStyles = makeStyles((theme) => ({
   footer: {
