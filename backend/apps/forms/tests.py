@@ -1,5 +1,5 @@
 import json
-from typing import Any, Optional, cast
+from typing import Any, Optional, Union
 
 from guardian.shortcuts import assign_perm
 from utils.testing.ExtendedGraphQLTestCase import ExtendedGraphQLTestCase
@@ -13,7 +13,7 @@ from utils.testing.factories.forms import (
 from utils.testing.factories.organizations import MembershipFactory, OrganizationFactory
 from utils.testing.factories.users import IndokUserFactory
 
-from apps.forms.models import Form, Question
+from apps.forms.models import Answer, Form, Question
 
 
 class FormBaseTestCase(ExtendedGraphQLTestCase):
@@ -239,6 +239,42 @@ class FormsMutationTestCase(FormBaseTestCase):
         self.assertFalse(Question.objects.filter(pk=self.short_question.id).exists())
 
         self.assertTrue(data["deleteQuestion"]["ok"])
+
+
+class FormResponseTestCase(FormBaseTestCase):
+    @staticmethod
+    def submit_response_query(form: Union[FormFactory, Form], questions: list[Union[QuestionFactory, Question]]) -> str:
+        answers_data = [
+            f"""
+                {{
+                    questionId: {question.id}
+                    answer: "Answer"
+                }}
+            """
+            for question in questions
+        ]
+        return f"""
+            mutation {{
+                submitOrUpdateAnswers(
+                    formId: {form.id},
+                    answersData: {answers_data}
+                ) {{
+                    ok
+                }}
+            }}
+        """
+
+    def setUp(self) -> None:
+        self.responding_student = IndokUserFactory()
+        return super().setUp()
+
+    def test_answer_previously_unanswered_form(self) -> None:
+        response = self.query(self.submit_response_query(self.form, self.form.questions), user=self.responding_student)
+        self.assertResponseNoErrors(response)
+        self.assertEqual(
+            Answer.objects.filter(response__user=self.responding_student, answer="Answer").count(),
+            len(self.form.questions),
+        )
 
 
 class FormsQueryTestCase(FormBaseTestCase):
