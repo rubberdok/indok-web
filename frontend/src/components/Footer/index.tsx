@@ -97,8 +97,8 @@ const Footer: React.FC = () => {
                 </Typography>
                 <Typography variant="body2">Kolbjørn Hejes vei 1E, 7034 Trondheim</Typography>
                 <Typography variant="body2">Org.nr. 994 778 463</Typography>
-                <a href="mailto:Leder@indokhs.no">
-                  <Typography variant="body2">Leder@indokhs.no</Typography>
+                <a href="mailto:leder@indokhs.no">
+                  <Typography variant="body2">leder@indokhs.no</Typography>
                 </a>
                 <Link href="/report/">Baksida</Link>
                 <Box mt={2}>
