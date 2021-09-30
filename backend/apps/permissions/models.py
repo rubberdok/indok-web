@@ -1,6 +1,7 @@
-from django.db import models
-from django.contrib.auth.models import Group
 import uuid
+
+from django.contrib.auth.models import Group
+from django.db import models
 
 
 def hex_uuid_group():
@@ -20,6 +21,12 @@ class ResponsibleGroup(models.Model):
     group = models.OneToOneField(to=Group, on_delete=models.CASCADE)
     name = models.CharField(max_length=150)
     description = models.CharField(max_length=200, blank=True, null=True)
+    organization = models.ForeignKey(
+        to="organizations.Organization",
+        on_delete=models.CASCADE,
+        related_name="permission_groups",
+    )
+    group_type = models.CharField(max_length=50)
 
     def __str__(self) -> str:
         return self.name
