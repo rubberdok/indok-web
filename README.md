@@ -1,7 +1,7 @@
 <h1 align="center">Indøk NTNU</h1><br>
 <p align="center">
   <a href="https://www.indokntnu.no/">
-    &nbsp;&nbsp;&nbsp;&nbsp;<img alt="Logo" title="Rubberdøk" src="https://github.com/hovedstyret/indok-web/blob/docs/assets/rubberdok_logo.svg" width="300">
+    <img alt="Logo" title="Rubberdøk" src="https://github.com/hovedstyret/indok-web/blob/docs/assets/rubberdok_logo.svg" width="300">
   </a>
 </p>
 
@@ -121,7 +121,7 @@ In short, the process is as follows:
   Logo created by Skraagen 🦆
 </p>
 
-[IndokNTNU.no](https://www.indokntnu.no) is powered by:
+[indokntnu.no](https://www.indokntnu.no) is powered by:
 
 <p float="left">
   <a href="https://graphql.org/">
