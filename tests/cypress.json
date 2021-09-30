@@ -2,5 +2,6 @@
   "viewportHeight": 1200,
   "viewportWidth": 1920,
   "chromeWebSecurity": false,
-  "baseUrl": "localhost:3000"
+  "baseUrl": "localhost:3000",
+  "projectId": "1fyogc"
 }
