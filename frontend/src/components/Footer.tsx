@@ -19,7 +19,7 @@ import {
 import { Close, Facebook, GitHub } from "@material-ui/icons";
 import Link from "next/link";
 import React from "react";
-import rubberdokLogo from "@public/rubberdok_logo.svg";
+import rubberdokLogo from "@public/img/rubberdok_logo_white.svg";
 import Image from "next/image";
 
 const useStyles = makeStyles((theme) => ({
@@ -148,8 +148,13 @@ const Footer: React.FC = () => {
         <Box className={classes.credits}>
           <Container>
             <Box height="100%" display="flex" alignItems="center" className={classes.creditsContent}>
-              <a href="https://github.com/hovedstyret/indok-web" rel="noreferrer noopener" style={{ height: "100%" }}>
-                <img className={classes.rdLogo} src="/img/rubberdok_logo_white.svg" alt="Rubberdøk logo" />
+              <a
+                className={classes.rdLogo}
+                href="https://github.com/hovedstyret/indok-web"
+                rel="noreferrer noopener"
+                style={{ height: "100%" }}
+              >
+                <Image src={rubberdokLogo} alt="Rubberdøk logo" width="67px" height="35px" layout="fixed" />
               </a>
               <Box flexGrow="1">
                 <Typography variant="body2">
