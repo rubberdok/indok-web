@@ -4,6 +4,8 @@ WORKDIR /usr/src/app
 
 COPY package.json .
 RUN npm install
+
 COPY cypress cypress
 COPY cypress.json .
+
 CMD ["cypress", "run"]
