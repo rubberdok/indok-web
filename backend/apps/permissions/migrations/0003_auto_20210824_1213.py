@@ -64,6 +64,7 @@ def reverse_legible_group_names(apps, _):
 class Migration(migrations.Migration):
 
     dependencies = [
+        ("organizations", "0030_auto_20210426_2129"),
         ("permissions", "0002_auto_20210422_2020"),
     ]
 
