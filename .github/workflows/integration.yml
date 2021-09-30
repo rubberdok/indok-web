@@ -29,7 +29,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Build and run the Application
+      - name: Build the Application
+        run: docker-compose -f docker-compose.integration.yml build --parallel
+
+      - name: Run the Application
         run: docker-compose -f docker-compose.integration.yml up -d
 
       - name: Build the Cypress Image
