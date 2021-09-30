@@ -29,9 +29,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Build the project
-        run: docker-compose -f docker-compose.integration.yml up -d
+      - name: Build and run the Application
+        run: docker-compose -f docker-compose.integration.yml up
 
-      - name: Run Cypress Tests
-        run: |
-          docker-compose exec -T frontend npx cypress run
+      - name: Build the Cypress Image
+        run: docker build -f tests/Dockerfile -t cypress .
+
+      - name: Run the Integration Tests
+        run: docker run cypress
