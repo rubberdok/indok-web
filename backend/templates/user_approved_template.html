@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="no">
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -22,7 +22,7 @@
       }
     </style>
   </head>
-  <body style="font-family: Montserrat">
+  <body style="font-family: Montserrat, serif">
     <div
       style="
         border: 5px solid #065a5a;
@@ -36,14 +36,14 @@
 
       <h2>Hei {{ first_name }}!</h2>
       <p>
-        Din søknad for booking av <b>{{ chosen_cabins_string }}</b> fra
-        <span><b>{{ check_in }}</b></span> til
+        Din søknad for booking av <strong>{{ chosen_cabins_string }}</strong> fra
+        <span><strong>{{ check_in }}</strong></span> til
         <span
-          ><b>{{ check_out }}</b> har blitt <b>godkjent</b> av
+          ><strong>{{ check_out }}</strong> har blitt <strong>godkjent</strong> av
           hyttestyret.</span
         >
       </p>
-      Prisen kommer på <b>{{ price }} kr</b>. Betaling skjer via Tripletex, der
+      Prisen kommer på <strong>{{ price }} kr</strong>. Betaling skjer via Tripletex, der
       det blir sendt ut en faktura på mail fra Hyttestyret.
       <div class="contentDiv">
         <p>
@@ -60,8 +60,7 @@
       <p>Med vennlig hilsen,</p>
       <p>
         {{ booking_responsible_name }} <br />Bookingansvarlig Hyttestyret,
-        <br />Indøkhyttene NTNU <br />{{ booking_responsible_email }} / tlf. {{
-        booking_responsible_phone }} <br /><a
+        <br />Indøkhyttene NTNU <br />{{ booking_responsible_email }} / tlf. {{ booking_responsible_phone }} <br /><a
           href="https://www.januslinjeforening.no/indokhyttene/"
           >januslinjeforening.no/indokhyttene/</a
         >

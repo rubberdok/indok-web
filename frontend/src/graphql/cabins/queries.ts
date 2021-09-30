@@ -17,8 +17,8 @@ export const QUERY_ADMIN_ALL_BOOKINGS = gql`
   query AdminAllBookings($after: String) {
     adminAllBookings(after: $after) {
       id
-      firstname
-      lastname
+      firstName
+      lastName
       phone
       receiverEmail
       checkIn
