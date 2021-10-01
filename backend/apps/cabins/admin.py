@@ -5,4 +5,3 @@ from apps.cabins.models import Cabin, Booking
 
 admin.site.register(Cabin)
 admin.site.register(Booking)
-# test
