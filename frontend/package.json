@@ -72,7 +72,8 @@
       "prettier --write"
     ],
     "../**/*.py": [
-      "black"
+      "black",
+      "flake8"
     ]
   }
 }
