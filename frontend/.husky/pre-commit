@@ -1,5 +1,12 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
+if ! pip list | grep -E 'black|flake8'; then
+    echo "Unable to find Black and Flake8 installations"
+    exit 1
+else
+    echo "Found both!"
+fi
+
 cd frontend
 npx lint-staged
