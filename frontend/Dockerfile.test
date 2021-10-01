@@ -12,7 +12,7 @@ COPY package-lock.json .
 RUN npm ci
 
 
-ENV NODE_ENV development
+ENV NODE_ENV test
 
 # Copying source files
 COPY . .
