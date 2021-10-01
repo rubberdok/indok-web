@@ -1,10 +1,8 @@
 from django.db import models
-from enum import Enum
 from datetime import datetime
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from .google_drive_api import get_url
-from datetime import datetime
 from django.core.exceptions import FieldError
 
 
@@ -20,9 +18,7 @@ class FileType(models.TextChoices):
 
 class ArchiveDocument(models.Model):
     title = models.CharField(max_length=128)
-    type_doc = models.CharField(
-        max_length=20, choices=[(tag, tag.value) for tag in FileType]
-    )
+    type_doc = models.CharField(max_length=20, choices=[(tag, tag.value) for tag in FileType])
     file_location = models.CharField(max_length=2000, default=None, null=False)
     uploaded_date = datetime.now()
     featured = models.BooleanField(default=False)
