@@ -19,6 +19,7 @@ jobs:
         uses: py-actions/flake8@v1
         with:
           path: "backend/"
+          args: "--append-config=/backend/tox.ini"
 
   black:
     name: Black
