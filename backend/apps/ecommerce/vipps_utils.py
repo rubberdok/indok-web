@@ -75,7 +75,7 @@ class VippsApi:
         headers["X-Request-Id"] = f"{order.order_id}-{order.payment_attempt}XIDC1"
         capture_data = self.build_capture_payment_request(order, method)
 
-        response = self._make_call(
+        self._make_call(
             "post",
             f"/ecomm/v2/payments/{order.order_id}-{order.payment_attempt}/capture",
             headers,

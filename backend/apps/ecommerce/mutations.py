@@ -30,7 +30,7 @@ class InitiateOrder(graphene.Mutation):
             user=user,
             payment_status=Order.PaymentStatus.CAPTURED,
         ).exists():
-            raise Exception("Du har allerede kjøpt dette produktet.")
+            raise ValueError("Du har allerede kjøpt dette produktet.")
 
         # If the user has attempted this order before, retry it
         try:
