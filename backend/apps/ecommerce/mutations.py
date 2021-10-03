@@ -3,7 +3,7 @@ from django.core.exceptions import PermissionDenied
 from graphql_jwt.decorators import login_required
 
 from .models import Order, Product
-from .vipps_utils import VippsApi, capture_payment, get_payment_status, initiate_payment
+from .vipps_utils import VippsApi
 
 
 class InitiateOrder(graphene.Mutation):

@@ -4,7 +4,7 @@ from rest_framework.response import Response
 
 
 from .models import Order
-from .vipps_utils import VippsApi, capture_payment
+from .vipps_utils import VippsApi
 
 
 class VippsCallback(APIView):

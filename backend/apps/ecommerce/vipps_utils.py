@@ -9,14 +9,20 @@ from .models import VippsAccessToken
 
 
 class VippsApi:
+    """
+    API for handling Vipps payments.
+    Class structure inspired by https://github.com/almazkun/vipps-python
+    """
+
     VIPPS_BASE_URL = "https://apitest.vipps.no"
 
     def __init__(
         self,
         client_id: str = settings.VIPPS_CLIENT_ID,
         client_secret: str = settings.VIPPS_SECRET,
-        vipps_subscription_key: str = settings.SUBSCRIPTION_KEY,
+        vipps_subscription_key: str = settings.VIPPS_SUBSCRIPTION_KEY,
         merchant_serial_number: str = settings.VIPPS_MERCHANT_SERIAL_NUMBER,
+        vipps_server: str = VIPPS_BASE_URL,
         access_token: str = None,
         vipps_system_name: str = None,
         vipps_system_version: str = None,
@@ -27,19 +33,20 @@ class VippsApi:
         self.client_secret = client_secret
         self.vipps_subscription_key = vipps_subscription_key
         self.merchant_serial_number = merchant_serial_number
+        self.vipps_server = vipps_server
         self._access_token = access_token
         self.vipps_system_name = vipps_system_name
         self.vipps_system_version = vipps_system_version
         self.vipps_system_plugin_name = vipps_system_plugin_name
         self.vipps_system_plugin_version = vipps_system_plugin_version
 
-    def _make_call(self, method: str, endpoint: str, headers: dict, json=None) -> dict:
+    def _make_call(self, method: str, endpoint: str, headers: dict, data=None) -> dict:
         """Used in main api calls
         Args:
             method (str): post, get or put
             endpoint (str): endpoint to make a call
-            headers (dict): headres for a call
-            json (dict, optional): body of the request. Defaults to None.
+            headers (dict): headers for a call
+            data (dict, optional): body of the request. Defaults to None.
         Returns:
             dict: response body as a dict
         """
@@ -55,14 +62,14 @@ class VippsApi:
 
         print(f"VippsEcomApi._make_call: making api call to the url: {url}")
 
-        r = req(url, headers=headers, json=json)
+        r = req(url, headers=headers, data=data)
 
         if r.ok:
             return r.json()
 
         r.raise_for_status()
 
-    # public methods:
+    # Public methods:
     def capture_payment(self, order, method):
         headers = self.build_headers()
         headers["X-Request-Id"] = f"{order.order_id}-{order.payment_attempt}XIDC1"
@@ -78,11 +85,13 @@ class VippsApi:
     def initiate_payment(self, order):
         headers = self.build_headers()
         order_data = self.build_initiate_payment_request(order)
+        print(json.dumps(headers, indent=4))
+        print(json.dumps(order_data, indent=4))
 
         response = self._make_call(
             "post", "/ecomm/v2/payments", headers, json.dumps(order_data)
         )
-        return response.json()["url"]
+        return response["url"]
 
     def get_payment_status(self, order_id):
         headers = self.build_headers()
@@ -121,7 +130,7 @@ class VippsApi:
             if tokens.exists():
                 tokens.all().delete()
             new_token = VippsAccessToken()
-            self._access_token, expires_on = self.get_new_access_token()
+            self._access_token, expires_on = self._get_new_access_token()
             new_token.token = self._access_token
             new_token.expires_on = expires_on
             new_token.save()
@@ -141,7 +150,7 @@ class VippsApi:
     def build_headers(self):
         # Headers for Vipps requests
         return {
-            "Authorization": f"Bearer {self._access_token}",
+            "Authorization": f"Bearer {self.access_token}",
             "Ocp-Apim-Subscription-Key": self.vipps_subscription_key,
             "Content-Type": "application/json",
             "Merchant-Serial-Number": self.merchant_serial_number,
@@ -162,7 +171,7 @@ class VippsApi:
         return {
             "merchantInfo": {
                 "merchantSerialNumber": self.merchant_serial_number,
-                "callbackPrefix": "http://api.indokntnu.no/ecommerce/vipps/callback/",
+                "callbackPrefix": "https://api.indokntnu.no/ecommerce/vipps/callback/",
                 "fallBack": f"http://127.0.0.1:3000/shop/fallback/?orderId={order.order_id}",
                 "authToken": order.auth_token,
                 "isApp": False,
