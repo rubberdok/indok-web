@@ -124,6 +124,7 @@ class UpdateEvent(graphene.Mutation):
             product.price = event.price
             product.description = event.description
             product.organization = event.organization
+            product.save()
 
         ok = True
         return UpdateEvent(event=event, ok=ok)

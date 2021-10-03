@@ -81,16 +81,15 @@ class EventType(DjangoObjectType):
         return {
             "is_signed_up": user in event.users_attending,
             "is_on_waiting_list": user in event.users_on_waiting_list,
-            "has_bought_ticket": Order.objects.filter(
+            "has_bought_ticket": event.ticket_product_id is not None
+            and Order.objects.filter(
                 product__id=event.ticket_product_id,
                 user=user,
                 payment_status__in=[
                     Order.PaymentStatus.RESERVED,
                     Order.PaymentStatus.CAPTURED,
                 ],
-            ).exists()
-            if event.ticket_product_id is not None
-            else False,
+            ).exists(),
         }
 
     @staticmethod
