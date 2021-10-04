@@ -13,6 +13,4 @@ class ListingsByOrganizationIdLoader(DataLoader):
 
         for listing in listings.iterator():
             organization_to_listings[listing.organization_id].append(listing)
-        return Promise.resolve(
-            [organization_to_listings[organization_id] for organization_id in keys]
-        )
+        return Promise.resolve([organization_to_listings[organization_id] for organization_id in keys])
