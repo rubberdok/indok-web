@@ -83,12 +83,12 @@ const EmailForm: React.FC<EmailFormProps> = ({ eventId }) => {
       />
 
       <Tooltip
-        disableHoverListener={data?.event.isAttendable}
+        disableHoverListener={data?.event?.attendable}
         title="Du kan kun sende mail hvis det er mulig å melde seg på eventet."
         placement="bottom-start"
       >
         <Box>
-          <Button disabled={!data?.event.isAttendable} onClick={() => setShowEmailForm(true)} color="primary">
+          <Button disabled={!data?.event?.attendable} onClick={() => setShowEmailForm(true)} color="primary">
             <SendIcon style={{ margin: "5px" }} />
             Send e-post til alle påmeldte
           </Button>

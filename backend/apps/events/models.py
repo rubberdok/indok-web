@@ -32,52 +32,23 @@ class Event(models.Model):
         on_delete=models.SET_NULL,
         null=True,
     )
+    has_extra_information = models.BooleanField(
+        default=False
+    )  # If the event allows e.g. for group sign ups, this would be true
     end_time = models.DateTimeField(blank=True, null=True)
     location = models.CharField(max_length=128, blank=True, null=True)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, blank=True, null=True)
     image = models.URLField(blank=True, null=True)
     short_description = models.CharField(max_length=100, default="Klikk her for å lese mer")
     contact_email = models.EmailField(blank=True, default="")
-    allowed_grade_years = MultiSelectField(choices=GRADE_CHOICES, default="1,2,3,4,5")
-
-    def __str__(self):
-        return self.title
-
-
-class AttendableEvent(Event):
-    signup_open_date = models.DateTimeField()  # When signup should become available
-
-    available_slots = models.PositiveIntegerField()  # maximal number of users that can sign up for an event T
-    available_slots_1st_year = models.PositiveIntegerField(blank=True, null=True)  # maximal number of 1st years
-    available_slots_2nd_year = models.PositiveIntegerField(blank=True, null=True)  # maximal number of 2nd years
-    available_slots_3rd_year = models.PositiveIntegerField(blank=True, null=True)  # maximal number of 3rd years
-    available_slots_4th_year = models.PositiveIntegerField(blank=True, null=True)  # maximal number of 4th years
-    available_slots_5th_year = models.PositiveIntegerField(blank=True, null=True)  # maximal number of 5 years
-
-    binding_signup = models.BooleanField(
-        default=False
-    )  # Disables sign-off from users_attending if true. NOTE: binding_signup is required given Price
-
-    deadline = models.DateTimeField(blank=True, null=True)  # Deadline for signing up
-    price = models.FloatField(blank=True, null=True)
-
-    @property
-    def available_slots_distribution(self):
-        slot_dist = []
-        for slots in [
-            self.available_slots_1st_year,
-            self.available_slots_2nd_year,
-            self.available_slots_3rd_year,
-            self.available_slots_4th_year,
-            self.available_slots_5th_year,
-        ]:
-            if slots is None:
-                return None  # No distribution selected
-            slot_dist.append(slots)
-        return slot_dist
+    allowed_grade_years = MultiSelectField(
+        choices=GRADE_CHOICES, default="1,2,3,4,5"
+    )  # Kept here as well in case a non-attenable (no sign up) event has grade restrictions
 
     @property
     def signed_up_users(self):
+        if not hasattr(self, "attendable"):
+            return []
         return (
             get_user_model()
             .objects.filter(signup__event=self.id, signup__is_attending=True)
@@ -85,28 +56,93 @@ class AttendableEvent(Event):
         )
 
     @property
-    def users_on_waiting_list(self):
-        result = []
-        if self.signed_up_users.count() > self.available_slots:
-            result = list(self.signed_up_users.all()[self.available_slots :])
-        return result
+    def allowed_grade_years(self):
+        if not hasattr(self, "attendable"):
+            return self.allowed_grade_years
+        return self.attendable.slot_distribution.available_slots
 
     @property
-    def users_attending(self):
-        return list(self.signed_up_users.all()[: self.available_slots])
+    def available_slots(self):
+        if not hasattr(self, "attendable"):
+            return None
+        return self.attendable.slot_distribution.get_available_slots()
 
-    @property
-    def is_full(self):
-        return self.signed_up_users.count() >= self.available_slots
+    def get_attendance_and_waiting_list(self):
+        attending = {}  # keys = string of grades (category), values = userlist
+        waiting_list = {}  # keys = string of grades (category), values = userlist
+        self.attendable.slot_distribution.get_attendants(self.signed_up_users, attending, waiting_list)
+        return attending, waiting_list
+
+    def get_is_full(self, grade_year):
+        attending, _ = self.get_attendance_and_waiting_list()
+        available_slots = self.attendable.slot_distribution.get_available_slots_for_grade(grade_year)
+        for grades, users in attending.items():
+            if grade_year in [int(val) for val in grades.split(",")]:
+                return len(users) > available_slots
+        return False
+
+    def __str__(self):
+        return self.title
+
+
+class Attendable(models.Model):
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="attendable")
+    signup_open_date = models.DateTimeField()  # When signup should become available
+    binding_signup = models.BooleanField(default=False)  # Disables sign-off from users_attending if true.
+    deadline = models.DateTimeField(blank=True, null=True)  # Deadline for signing up
+    price = models.FloatField(blank=True, null=True)
+
+    def __str__(self):
+        return f"Attendable-{self.event.title}"
 
 
 class SlotDistribution(models.Model):
-    event = models.ForeignKey(AttendableEvent, on_delete=models.CASCADE)
+    attendable = models.ForeignKey(Attendable, on_delete=models.CASCADE, related_name="slot_distribution")
     available_slots = models.PositiveIntegerField()
-    grade = models.CharField(max_length=6, choices=GRADE_CHOICES)
+    grade_years = MultiSelectField(choices=GRADE_CHOICES, default="1,2,3,4,5")
     parent_distribution = models.ForeignKey(
         "self", on_delete=models.CASCADE, related_name="child_distributions", null=True, blank=True
     )
+
+    def grades(self):
+        return [int(val) for val in self.grade_years.split(",")]
+
+    def get_attending(self, signed_up_users, attending, waiting_list):
+        if len(self.children) == 0:
+            filtered = list(signed_up_users.filter(grade_year__in=self.grades))
+            if len(filtered) >= self.available_slots:
+                attending[self.grade_years] = filtered[: self.available_slots]
+                waiting_list[self.grade_years] = filtered[self.available_slots :]
+            else:
+                attending[self.grade_years] = filtered
+            return
+
+        for child in self.child_distributions:
+            child.get_attending(signed_up_users, attending, waiting_list)
+
+    def get_available_slots(self):
+        if len(self.child_distributions) == 0:
+            return [{"category": self.grade_years, "available_slots": self.available_slots}]
+
+        total_available_slots = []
+        for child in self.child_distributions:
+            total_available_slots.append({"category": child.grade_years, "available_slots": child.available_slots})
+
+        return total_available_slots
+
+    def get_available_slots_for_grade(self, grade_year):
+        descendants = list(self.child_distributions)
+        while descendants:
+            descendant = descendants.pop(0)
+            if grade_year in descendant.grades:
+                return descendant.available_slots
+            if len(descendant.children) > 0:
+                descendants += list(descendant.children)
+
+        return self.available_slots
+
+    def __str__(self):
+        return f"{'Child slot distribution' if hasattr(self, 'parent_distribution') else 'Slot distribution'}-{self.attendable.event.title}"
 
 
 class SignUp(models.Model):
@@ -122,7 +158,7 @@ class SignUp(models.Model):
     is_attending = models.BooleanField()
     extra_information = models.TextField(blank=True, default="")
 
-    event = models.ForeignKey(AttendableEvent, on_delete=models.CASCADE)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 

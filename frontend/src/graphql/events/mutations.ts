@@ -19,21 +19,24 @@ export const CREATE_EVENT = gql`
           name
         }
         image
-        isAttendable
-        deadline
-        availableSlots
-        price
         shortDescription
-        signupOpenDate
-        userAttendance {
-          isSignedUp
-          isOnWaitingList
-        }
-        isFull
         hasExtraInformation
         bindingSignup
         contactEmail
         allowedGradeYears
+
+        attendable {
+          id
+          deadline
+          price
+          signupOpenDate
+        }
+
+        userAttendance {
+          isSignedUp
+          isOnWaitingList
+        }
+        available_slots
       }
       ok
     }
@@ -41,8 +44,18 @@ export const CREATE_EVENT = gql`
 `;
 
 export const UPDATE_EVENT = gql`
-  mutation UpdateEvent($id: ID!, $eventData: UpdateEventInput) {
-    updateEvent(id: $id, eventData: $eventData) {
+  mutation UpdateEvent(
+    $id: ID!
+    $isAttendable: Boolean!
+    $hasGradeDistributions: Boolean!
+    $eventData: UpdateEventInput
+  ) {
+    updateEvent(
+      id: $id
+      isAttendable: $isAttendable
+      hasGradeDistributions: $hasGradeDistributions
+      eventData: $eventData
+    ) {
       event {
         id
         title
@@ -59,21 +72,24 @@ export const UPDATE_EVENT = gql`
           name
         }
         image
-        isAttendable
-        deadline
-        availableSlots
-        price
         shortDescription
-        signupOpenDate
-        userAttendance {
-          isSignedUp
-          isOnWaitingList
-        }
-        isFull
         hasExtraInformation
         bindingSignup
         contactEmail
         allowedGradeYears
+
+        attendable {
+          id
+          deadline
+          price
+          signupOpenDate
+        }
+
+        userAttendance {
+          isSignedUp
+          isOnWaitingList
+        }
+        available_slots
       }
       ok
     }

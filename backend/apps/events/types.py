@@ -1,13 +1,11 @@
 import graphene
 from graphene_django import DjangoObjectType
 from graphql_jwt.decorators import login_required
-
-from ..users.types import UserType
-from .models import Category, Event, SignUp
+from .models import Attendable, Category, Event, SignUp
 
 
 class UserAttendingType(graphene.ObjectType):
-    is_signed_up = graphene.Boolean()
+    is_signed_up = graphene.Boolean()  # NOTE: Her mener vi kanksje is_attending?
     is_on_waiting_list = graphene.Boolean()
 
 
@@ -28,13 +26,23 @@ class SignUpType(DjangoObjectType):
         ]
 
 
+class GradeDistributionType(graphene.ObjectType):
+    cateogry = graphene.String()
+    available_slots = graphene.Int()
+
+
+class AttendableType(DjangoObjectType):
+    class Meta:
+        model = Attendable
+        fields = ["id", "signup_open_date", "deadline", "binding_signup", "price"]
+
+
 class EventType(DjangoObjectType):
     user_attendance = graphene.Field(UserAttendingType)
-    is_full = graphene.Boolean(source="is_full")
     users_on_waiting_list = graphene.List(SignUpType)
     users_attending = graphene.List(SignUpType)
-    allowed_grade_years = graphene.List(graphene.Int)
-    available_slots = graphene.Int()
+    available_slots = graphene.List(GradeDistributionType)
+    attendable = graphene.Field(AttendableType)
 
     class Meta:
         model = Event
@@ -70,9 +78,10 @@ class EventType(DjangoObjectType):
     @staticmethod
     def resolve_user_attendance(event, info):
         user = info.context.user
+        attending, waiting_list = event.get_attendance_and_waiting_list()
         return {
-            "is_signed_up": user in event.users_attending,
-            "is_on_waiting_list": user in event.users_on_waiting_list,
+            "is_signed_up": user in attending,
+            "is_on_waiting_list": user in waiting_list,
         }
 
     @staticmethod
@@ -83,13 +92,15 @@ class EventType(DjangoObjectType):
     @login_required
     @PermissionDecorators.is_in_event_organization
     def resolve_users_on_waiting_list(event, info):
-        return SignUp.objects.filter(event=event, user__in=event.users_on_waiting_list, is_attending=True)
+        _, waiting_list = event.get_attendance_and_waiting_list()
+        return SignUp.objects.filter(event=event, user__in=waiting_list, is_attending=True)
 
     @staticmethod
     @login_required
     @PermissionDecorators.is_in_event_organization
     def resolve_users_attending(event, info):
-        return SignUp.objects.filter(event=event, user__in=event.users_attending, is_attending=True)
+        attending, _ = event.get_attendance_and_waiting_list()
+        return SignUp.objects.filter(event=event, user__in=attending, is_attending=True)
 
     @staticmethod
     def resolve_available_slots(event, info):
@@ -97,6 +108,17 @@ class EventType(DjangoObjectType):
         if not user.is_authenticated or not user.memberships.filter(organization=event.organization).exists():
             return None
         return event.available_slots
+
+    @staticmethod
+    def resolve_attendable(event, info):
+        user = info.context.user
+        if (
+            not user.is_authenticated
+            or not user.memberships.filter(organization=event.organization).exists()
+            or not hasattr(event, "attendable")
+        ):
+            return None
+        return event.attendable
 
 
 class CategoryType(DjangoObjectType):

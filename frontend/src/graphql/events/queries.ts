@@ -10,33 +10,31 @@ export const GET_EVENTS = gql`
       location
       description
       organization {
+        id
         name
-        color
       }
       category {
+        id
         name
       }
       image
-      isAttendable
-      deadline
-      publisher {
-        id
-        username
-        email
-        firstName
-        lastName
-        dateJoined
-      }
-      price
       shortDescription
-      signupOpenDate
+      hasExtraInformation
+      bindingSignup
+      contactEmail
+      allowedGradeYears
+
+      attendable {
+        id
+        deadline
+        price
+        signupOpenDate
+      }
+
       userAttendance {
         isSignedUp
         isOnWaitingList
       }
-      isFull
-      hasExtraInformation
-      allowedGradeYears
     }
   }
 `;
@@ -51,33 +49,31 @@ export const GET_DEFAULT_EVENTS = gql`
       location
       description
       organization {
+        id
         name
-        color
       }
       category {
+        id
         name
       }
       image
-      isAttendable
-      deadline
-      publisher {
-        id
-        username
-        email
-        firstName
-        lastName
-        dateJoined
-      }
-      price
       shortDescription
-      signupOpenDate
+      hasExtraInformation
+      bindingSignup
+      contactEmail
+      allowedGradeYears
+
+      attendable {
+        id
+        deadline
+        price
+        signupOpenDate
+      }
+
       userAttendance {
         isSignedUp
         isOnWaitingList
       }
-      isFull
-      hasExtraInformation
-      allowedGradeYears
     }
   }
 `;
@@ -100,29 +96,23 @@ export const GET_EVENT = gql`
         name
       }
       image
-      isAttendable
-      deadline
-      publisher {
-        id
-        username
-        email
-        firstName
-        lastName
-        dateJoined
-      }
-      availableSlots
-      price
       shortDescription
-      signupOpenDate
-      userAttendance {
-        isSignedUp
-        isOnWaitingList
-      }
-      isFull
       hasExtraInformation
       bindingSignup
       contactEmail
       allowedGradeYears
+
+      attendable {
+        id
+        deadline
+        price
+        signupOpenDate
+      }
+
+      userAttendance {
+        isSignedUp
+        isOnWaitingList
+      }
     }
   }
 `;
@@ -142,9 +132,16 @@ export const ADMIN_GET_EVENT = gql`
       category {
         name
       }
+
+      attendable {
+        id
+        deadline
+        price
+        signupOpenDate
+      }
+
       image
-      isAttendable
-      deadline
+
       publisher {
         id
         username
@@ -154,9 +151,7 @@ export const ADMIN_GET_EVENT = gql`
         dateJoined
       }
       availableSlots
-      price
       shortDescription
-      signupOpenDate
       usersAttending {
         user {
           id
@@ -183,7 +178,6 @@ export const ADMIN_GET_EVENT = gql`
         isSignedUp
         isOnWaitingList
       }
-      isFull
       hasExtraInformation
       bindingSignup
       contactEmail
@@ -245,7 +239,9 @@ export const QUERY_ATTENDEE_REPORTS = gql`
 export const QUERY_SIGNED_UP_USERS = gql`
   query Event($id: ID!) {
     event(id: $id) {
-      isAttendable
+      attendable {
+        id
+      }
       usersAttending {
         userEmail
       }

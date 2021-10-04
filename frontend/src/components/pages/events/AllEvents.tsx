@@ -114,7 +114,11 @@ const AllEvents: React.FC = () => {
           ) : (
             <Grid container spacing={2}>
               {data === undefined || data.length === 0 ? (
-                <Typography variant="body1">Ingen arrangementer passer til valgte filtre.</Typography>
+                Object.keys(filters).length > 0 ? (
+                  <Typography variant="body1">Ingen arrangementer passer til valgte filtre.</Typography>
+                ) : (
+                  <Typography variant="body1">Ingen arrangementer å vise.</Typography>
+                )
               ) : (
                 data.map((event: Event) => <EventListItem key={event.id} event={event} user={userData?.user} />)
               )}
