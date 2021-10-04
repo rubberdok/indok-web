@@ -2,8 +2,6 @@ import { BasicBooking, Cabin, ContactInfo, ContactInfoValidations } from "@inter
 import dayjs from "dayjs";
 import { DatePick } from "src/pages/cabins/book";
 import validator from "validator";
-import { useMutation } from "@apollo/client";
-import { SEND_EMAIL } from "@graphql/cabins/mutations";
 import { BookingFromQuery } from "@interfaces/cabins";
 
 /*
