@@ -18,14 +18,14 @@ from apps.permissions.models import ResponsibleGroup
 
 @receiver(post_save, sender=Membership)
 def handle_new_member(instance: Membership, **kwargs):
-    optional_group: Optional[ResponsibleGroup] = instance.group
+    optional_groups: list[ResponsibleGroup] = instance.groups
     group: Group = instance.organization.primary_group.group
     org_group: Group = Group.objects.get(name=ORGANIZATION)
     user = instance.user
     user.groups.add(org_group)
     if group:
         user.groups.add(group)
-        if optional_group:
+        for optional_group in optional_groups.all():
             user.groups.add(optional_group.group)
 
 

@@ -49,7 +49,7 @@ class UpdateOrganization(graphene.Mutation):
         id = graphene.ID(required=True)
         organization_data = OrganizationInput(required=False)
 
-    @permission_required("organizations.change_organization")
+    @permission_required("organizations.change_organization", fn=perms.get_organization_for_permissions)
     def mutate(self, info, id, organization_data=None):
         organization = Organization.objects.get(pk=id)
         user = info.context.user
@@ -83,7 +83,7 @@ class DeleteOrganization(graphene.Mutation):
 class MembershipInput(graphene.InputObjectType):
     user_id = graphene.ID()
     organization_id = graphene.ID()
-    group_id = graphene.ID()
+    group_ids = graphene.List(graphene.ID)
 
 
 class AssignMembership(graphene.Mutation):
@@ -99,17 +99,19 @@ class AssignMembership(graphene.Mutation):
             pk=membership_data["organization_id"]
         )
 
-        try:
-            group = organization.permission_groups.get(pk=membership_data.get("group_id"))
-        except ResponsibleGroup.DoesNotExist:
-            return AssignMembership(membership=None, ok=False)
+        groups = []
+        for group_id in membership_data.get("group_ids"):
+            try:
+                groups.append(organization.permission_groups.get(pk=group_id))
+            except ResponsibleGroup.DoesNotExist:
+                return AssignMembership(membership=None, ok=False)
 
         membership = Membership(
             organization_id=membership_data["organization_id"],
             user_id=membership_data["user_id"],
-            group=group,
         )
         membership.save()
+        membership.groups.set(groups)
         return AssignMembership(membership=membership, ok=True)
 
 
