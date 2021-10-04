@@ -2,6 +2,9 @@ import { BasicBooking, Cabin, ContactInfo, ContactInfoValidations } from "@inter
 import dayjs from "dayjs";
 import { DatePick } from "src/pages/cabins/book";
 import validator from "validator";
+import { useMutation } from "@apollo/client";
+import { SEND_EMAIL } from "@graphql/cabins/mutations";
+import { BookingFromQuery } from "@interfaces/cabins";
 
 /*
 File containing helper functions for cabins.
@@ -86,3 +89,26 @@ export const calculatePrice: (
 };
 
 export const convertDateFormat: (date: string) => string = (date) => dayjs(date).format("DD-MM-YYYY");
+
+export const getDecisionEmailProps = (booking: BookingFromQuery, approved: boolean) => {
+  // omit unwanted fields
+  const { checkIn, checkOut, externalParticipants, firstName, internalParticipants, lastName, phone, receiverEmail } =
+    booking;
+
+  const emailInput = {
+    ...{
+      checkIn,
+      checkOut,
+      externalParticipants,
+      firstName,
+      internalParticipants,
+      lastName,
+      phone,
+      receiverEmail,
+    },
+    cabins: booking.cabins.map((cabin) => parseInt(cabin.id)),
+    emailType: approved ? "approve_booking" : "disapprove_booking",
+  };
+
+  return { variables: { emailInput: emailInput } };
+};
