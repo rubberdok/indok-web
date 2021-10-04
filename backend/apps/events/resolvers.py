@@ -23,7 +23,7 @@ DEFAULT_REPORT_FIELDS = {
     "signup_user_allergies",
 }
 
-FiletypeSpec = namedtuple("Filetype", ["content_type", "extension"])
+FiletypeSpec = namedtuple("FiletypeSpec", ["content_type", "extension"])
 filetype_specs = {
     "xlsx": FiletypeSpec(
         content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -35,9 +35,7 @@ filetype_specs = {
 
 
 class EventResolvers:
-    def resolve_all_events(
-        self, info, category=None, organization=None, start_time=None, end_time=None
-    ):
+    def resolve_all_events(self, info, category=None, organization=None, start_time=None, end_time=None):
         """
         Get all events that fit the given filters
         """
@@ -45,9 +43,7 @@ class EventResolvers:
             filteredEvents = Event.objects
 
             if start_time and end_time:
-                filteredEvents = filteredEvents.filter(
-                    start_time__range=(start_time, end_time)
-                )
+                filteredEvents = filteredEvents.filter(start_time__range=(start_time, end_time))
 
             elif start_time:
                 filteredEvents = filteredEvents.filter(start_time__gte=(start_time))
@@ -64,9 +60,7 @@ class EventResolvers:
             new_kwargs = {f"{k}__icontains": v for k, v in kwargs.items()}
             queries = [Q(**{k: v}) for k, v in new_kwargs.items()]
 
-            if (
-                organization
-            ):  # for organizations, check if the organization argument corresponds to either
+            if organization:  # for organizations, check if the organization argument corresponds to either
                 queries.append(  # the organization of the event itself and the parent organization (if it exists)
                     Q(organization__name__icontains=organization)
                     | Q(organization__parent__name__icontains=organization)
@@ -74,9 +68,7 @@ class EventResolvers:
 
             return (
                 filteredEvents.filter(*queries)
-                .filter(
-                    start_time__gte=date.today()
-                )  # Only show events that have yet to pass
+                .filter(start_time__gte=date.today())  # Only show events that have yet to pass
                 .order_by("start_time")
             )
         return Event.objects.filter(start_time__gte=date.today()).order_by("start_time")
@@ -131,9 +123,7 @@ class EventResolvers:
             check_user_membership(info.context.user, event.organization)
 
         df = create_attendee_report(event_ids, fields)
-        file_basename = (
-            f"attendee_report__eventid_{'|'.join(str(id_) for id_ in event_ids)}"
-        )
+        file_basename = f"attendee_report__eventid_{'|'.join(str(id_) for id_ in event_ids)}"
         return wrap_attendee_report_as_json(df, file_basename, filetype)
 
     def resolve_attendee_report_org(self, info, org_id, fields=None, filetype="xlsx"):
@@ -143,9 +133,7 @@ class EventResolvers:
             return None
         check_user_membership(info.context.user, org)
 
-        event_ids = Organization.objects.get(id=org_id).events.values_list(
-            "id", flat=True
-        )
+        event_ids = Organization.objects.get(id=org_id).events.values_list("id", flat=True)
         df = create_attendee_report(event_ids, fields)
         file_basename = f"attendee_report__orgid_{org_id}"
         return wrap_attendee_report_as_json(df, file_basename, filetype)
@@ -162,32 +150,16 @@ class EventResolvers:
 
 
 def create_attendee_report(event_ids, fields):
-    fields = (
-        set(fields).intersection(DEFAULT_REPORT_FIELDS)
-        if fields is not None
-        else DEFAULT_REPORT_FIELDS
-    )
-    user_ids = SignUp.objects.filter(event_id__in=event_ids).values_list(
-        "user_id", flat=True
-    )
+    fields = set(fields).intersection(DEFAULT_REPORT_FIELDS) if fields is not None else DEFAULT_REPORT_FIELDS
+    user_ids = SignUp.objects.filter(event_id__in=event_ids).values_list("user_id", flat=True)
 
     # Fetch data
-    df_events = (
-        pd.DataFrame(Event.objects.filter(id__in=event_ids).values())
-        .set_index("id")
-        .add_prefix("event_")
-    )
+    df_events = pd.DataFrame(Event.objects.filter(id__in=event_ids).values()).set_index("id").add_prefix("event_")
     df_users = (
-        pd.DataFrame(get_user_model().objects.filter(id__in=user_ids).values())
-        .set_index("id")
-        .add_prefix("user_")
+        pd.DataFrame(get_user_model().objects.filter(id__in=user_ids).values()).set_index("id").add_prefix("user_")
     )
     df_events_users = (
-        pd.DataFrame(
-            SignUp.objects.filter(is_attending=True, event_id__in=event_ids)
-            .order_by("timestamp")
-            .values()
-        )
+        pd.DataFrame(SignUp.objects.filter(is_attending=True, event_id__in=event_ids).order_by("timestamp").values())
         .add_prefix("signup_")
         .rename(columns={"signup_event_id": "event_id", "signup_user_id": "user_id"})
     )
@@ -200,24 +172,16 @@ def create_attendee_report(event_ids, fields):
     # Return empty dataframe, lookups on an empty frame will raise an exception
     if df_joined.empty:
         return pd.DataFrame()
-    return (
-        df_joined.loc[:, DEFAULT_REPORT_FIELDS]
-        .drop("password", errors="ignore", axis=1)
-        .loc[:, fields]
-    )
+    return df_joined.loc[:, DEFAULT_REPORT_FIELDS].drop("password", errors="ignore", axis=1).loc[:, fields]
 
 
 def wrap_attendee_report_as_json(df, file_basename, filetype):
     # Handle different content types
     if filetype == "xlsx":
         if "signup_timestamp" in df:
-            df["signup_timestamp"] = df["signup_timestamp"].apply(
-                lambda a: pd.to_datetime(a).tz_localize(None)
-            )
+            df["signup_timestamp"] = df["signup_timestamp"].apply(lambda a: pd.to_datetime(a).tz_localize(None))
         buffer = io.BytesIO()
-        with pd.ExcelWriter(
-            buffer, engine="xlsxwriter", options={"remove_timezone": True}
-        ) as writer:
+        with pd.ExcelWriter(buffer, engine="xlsxwriter", options={"remove_timezone": True}) as writer:
             df.to_excel(writer, index=False)
         data = base64.b64encode(buffer.getvalue()).decode("utf-8")
     elif filetype == "csv":
