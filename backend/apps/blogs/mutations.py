@@ -1,4 +1,6 @@
 import graphene
+from django.shortcuts import get_object_or_404
+
 
 from .models import BlogPost as BlogPostModel
 from .types import BlogPostType
@@ -10,14 +12,60 @@ class CreateBlogPost(graphene.Mutation):
         author_id = graphene.ID()
 
     ok = graphene.Boolean()
-    blogPost = graphene.Field(BlogPostType)
+    blog_post = graphene.Field(BlogPostType)
 
     def mutate(self, info, title, text, author_id,):
 
-        blogPost = BlogPostModel.objects.create(title=title, text=text, author_id=author_id,)
+        blog_post = BlogPostModel.objects.create(title=title, text=text, author_id=author_id,)
 
         ok = True
-        return CreateBlogPost(blogPost=blogPost, ok=ok)
+        return CreateBlogPost(blog_post=blog_post, ok=ok)
 
 
+class DeleteBlogPost(graphene.Mutation):
+    class Arguments:
+        blog_post_id = graphene.ID()
 
+    ok = graphene.Boolean()
+
+    def mutate(self, info, blog_post_id, **kwargs):
+        blog_post = get_object_or_404(BlogPostModel, pk=blog_post_id)
+        blog_post.delete()
+        ok = True
+        return DeleteBlogPost(ok=ok)
+
+
+class BlogPostInput(graphene.InputObjectType):
+    title = graphene.String()
+    text = graphene.String()
+
+
+class UpdateBlogPostInput(BlogPostInput):
+    id = graphene.ID(required=True)
+    # is_tentative = graphene.Boolean()
+
+
+class UpdateBlogPost(graphene.Mutation):
+    class Arguments:
+        blog_post_data = UpdateBlogPostInput()
+
+    ok = graphene.Boolean()
+    blog_post = graphene.Field(BlogPostType)
+
+    def mutate(self, info, blog_post_data,):
+        ok = True
+
+        try:
+            blog_post = BlogPostModel.objects.get(pk=blog_post_data.id)
+            
+            for input_field, input_value in blog_post_data.items():
+                if input_field:
+                    setattr(blog_post, input_field, input_value)
+            blog_post.save()
+            return UpdateBlogPost(blog_post=blog_post, ok=ok)
+
+        except BlogPostModel.DoesNotExist:
+            return UpdateBlogPost(blog_post=None, ok=False,)
+
+
+        
