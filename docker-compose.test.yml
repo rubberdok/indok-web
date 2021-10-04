@@ -21,6 +21,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8000:8000"
+    volumes:
+      - ./backend:/backend
     depends_on:
       - db
     environment:

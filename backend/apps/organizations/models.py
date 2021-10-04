@@ -1,6 +1,9 @@
+from typing import Optional
 from django.db import models
 from django.db.models import UniqueConstraint
 from django.conf import settings
+from apps.permissions.constants import HR_TYPE, PRIMARY_TYPE
+
 from apps.permissions.models import ResponsibleGroup
 
 
@@ -27,16 +30,28 @@ class Organization(models.Model):
     # The HR-group has the "forms.manage_form" permission, allowing them to view and manage responses to e.g. listings.
     # The primary group is intended to act as a group for organizations who need any kind of special permission, e.g. hyttestyret
     # Or if we wish to limit the creation of events or listings to certain organizations.
-    primary_group = models.OneToOneField(to=ResponsibleGroup, on_delete=models.DO_NOTHING, related_name="organization")
-    hr_group = models.OneToOneField(to=ResponsibleGroup, on_delete=models.DO_NOTHING, related_name="hr_organization")
 
     users = models.ManyToManyField(
-        "users.User",
+        settings.AUTH_USER_MODEL,
         related_name="organizations",
         blank=True,
         through="Membership",
         through_fields=("organization", "user"),
     )
+
+    @property
+    def hr_group(self) -> Optional["ResponsibleGroup"]:
+        try:
+            return self.permission_groups.get(group_type=HR_TYPE)
+        except ResponsibleGroup.DoesNotExist:
+            return None
+
+    @property
+    def primary_group(self) -> Optional["ResponsibleGroup"]:
+        try:
+            return self.permission_groups.get(group_type=PRIMARY_TYPE)
+        except ResponsibleGroup.DoesNotExist:
+            return None
 
     class Meta:
         constraints = [UniqueConstraint(fields=["parent", "name"], name="unique_child_organization_name")]

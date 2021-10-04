@@ -1,11 +1,12 @@
 from typing import TYPE_CHECKING
 from uuid import uuid4
+
 from django.conf import settings
 from django.contrib.auth.models import Group, Permission
+from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from django.db.models.signals import post_migrate, pre_save
 from django.dispatch import receiver
-from apps.organizations.models import Organization
 
 from apps.permissions.constants import (
     DEFAULT_GROUPS,
@@ -21,13 +22,9 @@ if TYPE_CHECKING:
 @receiver(pre_save, sender=ResponsibleGroup)
 def create_named_group(sender, instance: ResponsibleGroup, **kwargs):
     try:
-        group = instance.group
-    except Group.DoesNotExist:
-        try:
-            prefix: str = instance.hr_organization.name
-        except Organization.DoesNotExist:
-            prefix: str = instance.organization.name
-
+        instance.group
+    except ObjectDoesNotExist:
+        prefix: str = instance.organization.name
         group = Group.objects.create(name=f"{prefix}:{instance.name}:{uuid4().hex}")
         instance.group = group
 
