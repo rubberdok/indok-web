@@ -1,7 +1,6 @@
 import { Cabin, ContactInfo } from "@interfaces/cabins";
 import { Box, Divider, Grid, Typography } from "@material-ui/core";
-import { convertDateFormat, toStringChosenCabins } from "@utils/cabins";
-import { calculatePrice } from "@utils/cabins";
+import { convertDateFormat, toStringChosenCabins, calculatePrice } from "@utils/cabins";
 import Image from "next/image";
 import React from "react";
 import { DatePick } from "src/pages/cabins/book";
