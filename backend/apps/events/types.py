@@ -2,7 +2,6 @@ import graphene
 from graphene_django import DjangoObjectType
 from graphql_jwt.decorators import login_required
 
-from ..users.types import UserType
 from .models import Category, Event, SignUp
 
 
@@ -64,10 +63,7 @@ class EventType(DjangoObjectType):
         def is_in_event_organization(resolver):
             def wrapper(event: Event, info):
                 user = info.context.user
-                if (
-                    user.memberships.filter(organization=event.organization).exists()
-                    or user.is_superuser
-                ):
+                if user.memberships.filter(organization=event.organization).exists() or user.is_superuser:
                     return resolver(event, info)
                 else:
                     raise PermissionError(
@@ -92,25 +88,18 @@ class EventType(DjangoObjectType):
     @login_required
     @PermissionDecorators.is_in_event_organization
     def resolve_users_on_waiting_list(event, info):
-        return SignUp.objects.filter(
-            event=event, user__in=event.users_on_waiting_list, is_attending=True
-        )
+        return SignUp.objects.filter(event=event, user__in=event.users_on_waiting_list, is_attending=True)
 
     @staticmethod
     @login_required
     @PermissionDecorators.is_in_event_organization
     def resolve_users_attending(event, info):
-        return SignUp.objects.filter(
-            event=event, user__in=event.users_attending, is_attending=True
-        )
+        return SignUp.objects.filter(event=event, user__in=event.users_attending, is_attending=True)
 
     @staticmethod
     def resolve_available_slots(event, info):
         user = info.context.user
-        if (
-            not user.is_authenticated
-            or not user.memberships.filter(organization=event.organization).exists()
-        ):
+        if not user.is_authenticated or not user.memberships.filter(organization=event.organization).exists():
             return None
         return event.available_slots
 
