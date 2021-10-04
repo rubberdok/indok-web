@@ -28,11 +28,7 @@ ENV NEXT_PUBLIC_DATAPORTEN_STATE $NEXT_PUBLIC_DATAPORTEN_STATE
 ARG NEXT_PUBLIC_FRONTEND_URI
 ENV NEXT_PUBLIC_FRONTEND_URI $NEXT_PUBLIC_FRONTEND_URI
 
-RUN --mount=type=secret,id=SENTRY_AUTH_TOKEN \
-    --mount=type=secret,id=SENTRY_RELEASE \
-    export SENTRY_AUTH_TOKEN=$(cat /run/secrets/SENTRY_AUTH_TOKEN) \
-    && export SENTRY_RELEASE=$(cat /run/secrets/SENTRY_RELEASE) \
-    && yarn build \
+RUN yarn build \
     && yarn install --production --ignore-scripts --prefer-offline
 
 # Production image, copy all the files and run next
