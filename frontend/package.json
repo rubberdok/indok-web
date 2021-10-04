@@ -73,7 +73,8 @@
       "prettier --write"
     ],
     "../**/*.py": [
-      "black"
+      "black",
+      "flake8 --append-config=../backend/tox.ini"
     ]
   }
 }
