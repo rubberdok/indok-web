@@ -1,3 +1,4 @@
+from typing import Optional
 import graphene
 
 from apps.permissions.types import ResponsibleGroupType
@@ -51,12 +52,12 @@ class OrganizationType(DjangoObjectType):
             return wrapper
 
     @staticmethod
-    def resolve_absolute_slug(organization: Organization, info):
-        slug_list = [organization.slug]
-        while (organization := organization.parent) and organization.parent != organization:
-            print(slug_list)
-            slug_list.insert(0, organization.slug)
-        return "/".join(slug_list)
+    def resolve_absolute_slug(organization: Optional[Organization], _):
+        if organization:
+            slug_list = [organization.slug]
+            while (organization := organization.parent) and organization.parent != organization:
+                slug_list.insert(0, organization.slug)
+            return "/".join(slug_list)
 
     @staticmethod
     @login_required

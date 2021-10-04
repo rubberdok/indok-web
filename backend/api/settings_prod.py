@@ -2,14 +2,15 @@ import os
 
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
+from sentry_sdk.integrations.logging import ignore_logger
 
-from api.settings import *
+from api.settings import *  # noqa
 
 DEBUG = False
 
 ALLOWED_HOSTS = ["api.gamma.indokntnu.no", "api.indokntnu.no"]
 
-CORS_ORIGIN_WHITELIST = ["https://gamma.indokntnu.no", "https://indokntnu.no"]
+CORS_ORIGIN_WHITELIST = ["https://gamma.indokntnu.no", "https://indokntnu.no", "https://www.indokntnu.no"]
 
 DATABASES = {
     "default": {
@@ -30,6 +31,7 @@ DATAPORTEN_REDIRECT_URI = os.environ.get("DATAPORTEN_REDIRECT_URI")
 
 GOOGLE_DRIVE_API_KEY = os.environ.get("GOOGLE_DRIVE_API_KEY")
 
+SENTRY_ENVIRONMENT = "production"
 
 sentry_sdk.init(
     dsn="https://6bd0cd5210c0448aa90879a01db24663@o514678.ingest.sentry.io/5618268",
@@ -38,4 +40,6 @@ sentry_sdk.init(
     # If you wish to associate users to errors (assuming you are using
     # django.contrib.auth) you may enable sending PII data.
     send_default_pii=True,
+    environment=SENTRY_ENVIRONMENT,
 )
+ignore_logger("graphql.execution.utils")

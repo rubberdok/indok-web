@@ -6,6 +6,7 @@ from django.core.exceptions import ValidationError
 from graphql_jwt.decorators import login_required
 from graphql_jwt.shortcuts import get_token
 
+from guardian.shortcuts import get_anonymous_user
 from .types import UserType
 
 
@@ -19,18 +20,14 @@ class AuthUser(graphene.Mutation):
     id_token = graphene.String()
 
     def mutate(self, info, code):
-        user, enrolled, id_token = DataportenAuth.authenticate_and_get_user(code=code)
+        user, id_token = DataportenAuth.authenticate_and_get_user(code=code)
 
-        if enrolled:
-            token = get_token(user)
-            info.context.set_jwt_cookie = token
-        else:
-            token = None
-
+        token = get_token(user)
+        info.context.set_jwt_cookie = token
+        info.context.user = user or get_anonymous_user()
         return AuthUser(
             user=user,
             token=token,
-            is_indok_student=enrolled,
             id_token=id_token,
         )
 

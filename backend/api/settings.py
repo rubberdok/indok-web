@@ -10,10 +10,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
-from pathlib import Path
 import os
+from pathlib import Path
 
 import environ
+from corsheaders.defaults import default_headers
 
 env = environ.Env()
 environ.Env.read_env()
@@ -36,6 +37,7 @@ CORS_ALLOW_CREDENTIALS = True
 
 CORS_ORIGIN_WHITELIST = ["http://localhost:3000", "http://127.0.0.1:3000"]
 
+CORS_ALLOW_HEADERS = list(default_headers) + ["sentry-trace"]
 
 # Application definition
 
@@ -71,6 +73,7 @@ GRAPHENE = {
     "MIDDLEWARE": [
         "graphql_jwt.middleware.JSONWebTokenMiddleware",
         "api.auth.middleware.AnonymousUserMiddleware",
+        "api.sentry.middleware.SentryMiddleware",
     ],
 }
 
@@ -184,7 +187,9 @@ EMAIL_BACKEND = "django_ses.SESBackend"
 
 AWS_SES_REGION_NAME = "eu-north-1"
 AWS_SES_REGION_ENDPOINT = "email.eu-north-1.amazonaws.com"
-AWS_ACCESS_KEY_ID = "AKIA3KG6AVJ446S3SJ75"
+AWS_ACCESS_KEY_ID = env("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY = env("AWS_SECRET_ACCESS_KEY")
 
 GOOGLE_DRIVE_API_KEY = env("GOOGLE_DRIVE_API_KEY")
+
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

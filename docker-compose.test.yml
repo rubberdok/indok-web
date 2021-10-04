@@ -21,6 +21,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8000:8000"
+    volumes:
+      - ./backend:/backend
     depends_on:
       - db
     environment:
@@ -31,6 +33,7 @@ services:
       - BOOKING_EMAIL_PASSWORD=$BOOKING_EMAIL_PASSWORD
       - GOOGLE_DRIVE_API_KEY=$GOOGLE_DRIVE_API_KEY
       - AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
+      - AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
 volumes:
   postgres_data:
     driver: local

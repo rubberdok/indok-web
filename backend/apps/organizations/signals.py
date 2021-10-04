@@ -1,57 +1,62 @@
 from typing import Optional
-from django.db.models.signals import post_save, pre_delete, pre_save
-from django.dispatch import receiver
+
 from django.contrib.auth.models import Group
+from django.db.models.signals import post_save, pre_delete
+from django.dispatch import receiver
 from guardian.shortcuts import assign_perm
 
 from apps.organizations.models import Membership, Organization
-from apps.permissions.constants import ORGANIZATION, HR_GROUP_NAME, PRIMARY_GROUP_NAME
+from apps.permissions.constants import (
+    HR_GROUP_NAME,
+    HR_TYPE,
+    ORGANIZATION,
+    PRIMARY_GROUP_NAME,
+    PRIMARY_TYPE,
+)
 from apps.permissions.models import ResponsibleGroup
 
 
 @receiver(post_save, sender=Membership)
-def handle_new_member(sender, instance: Membership, **kwargs):
+def handle_new_member(instance: Membership, **kwargs):
     optional_group: Optional[ResponsibleGroup] = instance.group
     group: Group = instance.organization.primary_group.group
     org_group: Group = Group.objects.get(name=ORGANIZATION)
+    user = instance.user
+    user.groups.add(org_group)
     if group:
-        user = instance.user
         user.groups.add(group)
-        user.groups.add(org_group)
         if optional_group:
             user.groups.add(optional_group.group)
-        user.save()
 
 
 @receiver(pre_delete, sender=Membership)
-def handle_removed_member(sender, instance: Membership, **kwargs):
+def handle_removed_member(instance: Membership, **kwargs):
     group: Group = instance.organization.primary_group.group
+    org_group: Group = Group.objects.get(name=ORGANIZATION)
+    user = instance.user
     if group:
-        user = instance.user
         user.groups.remove(group)
-        user.save()
+
+    if not user.memberships.all().exists():
+        user.groups.remove(org_group)
 
 
-@receiver(pre_save, sender=Organization)
-def create_primary_group(sender, instance: Organization, **kwargs):
+@receiver(post_save, sender=Organization)
+def create_default_groups(instance: Organization, created, **kwargs):
     """
     Creates and assigns a primary group and HR group to members of the organization.
     """
-    try:
-        instance.primary_group
-    except ResponsibleGroup.DoesNotExist:
+    if created:
         ResponsibleGroup.objects.create(
             name=PRIMARY_GROUP_NAME,
             description=f"Medlemmer av {instance.name}.",
             organization=instance,
+            group_type=PRIMARY_TYPE,
         )
-
-    try:
-        instance.hr_group
-    except ResponsibleGroup.DoesNotExist:
         hr_group = ResponsibleGroup.objects.create(
             name=HR_GROUP_NAME,
             description=f"HR-gruppen til {instance.name}. Tillatelser for å se og behandle søknader.",
-            hr_organization=instance,
+            organization=instance,
+            group_type=HR_TYPE,
         )
         assign_perm("forms.add_form", hr_group.group)
