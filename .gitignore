@@ -258,3 +258,6 @@ web.code-workspace
 
 # Notes
 .notes.txt
+
+# Sentry
+.sentryclirc
