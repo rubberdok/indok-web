@@ -9,4 +9,4 @@ class BlogPost(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
-        return f"{self.title}"
+        return f"{self.title} (id: {self.id})"
