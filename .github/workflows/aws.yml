@@ -167,7 +167,7 @@ jobs:
         with:
           environment: production
           sourcemaps: .next
-          url-prefix: ~/_next
+          url_prefix: ~/_next
 
   deploy-backend-task-definition:
     environment: api
@@ -221,5 +221,3 @@ jobs:
           SENTRY_PROJECT: ${{ env.SENTRY_PROJECT }}
         with:
           environment: production
-          sourcemaps: .next
-          url-prefix: ~/_next
