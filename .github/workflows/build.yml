@@ -71,3 +71,4 @@ jobs:
             "NEXT_PUBLIC_DATAPORTEN_STATE=${{ env.NEXT_PUBLIC_DATAPORTEN_STATE }}"
           secrets: |
             "SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}"
+            "SENTRY_RELEASE=staging"
