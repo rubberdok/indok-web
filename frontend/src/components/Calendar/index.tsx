@@ -1,12 +1,13 @@
 import { IconButton, Grid, Typography, Divider, Hidden } from "@material-ui/core";
 import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
-import CalendarTable from "./CalendarTable";
 import { DATE_FORMAT } from "./constants";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore";
-import DayCell from "./DayCell";
 import { getDateRange } from "./helpers";
+import CalendarTable from "./CalendarTable";
+import CalendarRow from "./CalendarRow";
+import CalendarDay from "./CalendarDay";
 
 interface CalendarProps {
   disabledDates?: string[];
@@ -88,8 +89,8 @@ const Calendar: React.FC<CalendarProps> = ({
     );
   };
 
-  const previousMonthDays = (month: dayjs.Dayjs): JSX.Element[] => {
-    const previousDays: JSX.Element[] = [];
+  const previousMonthDays = (month: dayjs.Dayjs): dayjs.Dayjs[] => {
+    const previousDays: dayjs.Dayjs[] = [];
     const firstOfMonth = month.startOf("month");
     const mondayIndex = 0;
     // Check if Month starts with a Monday
@@ -99,34 +100,23 @@ const Calendar: React.FC<CalendarProps> = ({
 
       for (let i = 0; i < dayDifference; i++) {
         const date = firstOfMonth.subtract(dayDifference - i, "day");
-        previousDays.push(<DayCell key={`prev-${date.format(DATE_FORMAT)}`} isHidden />);
+        previousDays.push(date);
       }
     }
     return previousDays;
   };
 
-  const getDaysOfMonth = (month: dayjs.Dayjs) => {
-    const daysOfMonth: JSX.Element[] = [];
+  const getDaysOfMonth = (month: dayjs.Dayjs): dayjs.Dayjs[] => {
+    const daysOfMonth: dayjs.Dayjs[] = [];
     for (let i = 1; i <= month.daysInMonth(); i++) {
       const date = dayjs(month).set("date", i);
-      daysOfMonth.push(
-        <DayCell
-          value={i}
-          isFromDate={selectedFromDay ? date.isSame(selectedFromDay, "day") : false}
-          isToDate={selectedToDay ? date.isSame(selectedToDay, "day") : false}
-          onClick={() => handleDateClicked(date)}
-          isDisabled={isDisabled(date)}
-          isInRange={range.includes(date.format(DATE_FORMAT))}
-          isInvalidRange={!isRangeValid}
-          key={date.format(DATE_FORMAT)}
-        />
-      );
+      daysOfMonth.push(date);
     }
     return daysOfMonth;
   };
 
-  const nextMonthDays = (month: dayjs.Dayjs): JSX.Element[] => {
-    const nextDays: JSX.Element[] = [];
+  const nextMonthDays = (month: dayjs.Dayjs): dayjs.Dayjs[] => {
+    const nextDays: dayjs.Dayjs[] = [];
     const endOfMonth = month.endOf("month");
     const sundayIndex = 6;
 
@@ -137,43 +127,44 @@ const Calendar: React.FC<CalendarProps> = ({
 
       for (let i = 0; i < dayDifference; i++) {
         const date = dayjs(endOfMonth).add(i + 1, "day");
-        nextDays.push(<DayCell key={`next-${date.format(DATE_FORMAT)}`} isHidden />);
+        nextDays.push(date);
       }
     }
     return nextDays;
   };
 
   const getRows = (month: dayjs.Dayjs) => {
-    const slots: JSX.Element[] = [...previousMonthDays(month), ...getDaysOfMonth(month), ...nextMonthDays(month)];
-    let cells: JSX.Element[];
-    return slots.reduce(
-      (prev: JSX.Element[][], curr, index) => {
-        if (index % 7 === 0) {
-          // When we reach 7 days, push new Row
-          prev.push(cells);
-          // Clear Cells
-          cells = [];
-        }
-        // Push current cell to cells
-        cells.push(curr);
-        // We reached the end, push last row
-        if (index === slots.length - 1) {
-          prev.push(cells);
-        }
-        return prev;
-      },
-      [[]]
-    );
+    const days: dayjs.Dayjs[] = [...previousMonthDays(month), ...getDaysOfMonth(month), ...nextMonthDays(month)];
+    let cells: dayjs.Dayjs[] = [];
+    console.log(days);
+    return days.reduce((prev: dayjs.Dayjs[][], curr, index) => {
+      if (index % 7 === 0 && index != 0) {
+        // When we reach 7 days, push new Row
+        prev.push(cells);
+        // Clear Cells
+        cells = [];
+      }
+      console.log(curr);
+      // Push current cell to cells
+      cells.push(curr);
+      // We reached the end, push last row
+      if (index === days.length - 1) {
+        prev.push(cells);
+      }
+      console.log(prev);
+      return prev;
+    }, []);
   };
 
   const onChangeMonth = (months: number) => {
     const newSelectedMonth = selectedMonth.add(months, "months");
     setSelectedMonth(newSelectedMonth);
   };
+
   return (
     <Grid container direction="column" spacing={5}>
       <Grid item container alignItems="center" justifyContent="space-between">
-        <Hidden mdDown>
+        <Hidden>
           <IconButton onClick={() => onChangeMonth(-1)}>
             <NavigateBeforeIcon />
           </IconButton>
@@ -181,7 +172,7 @@ const Calendar: React.FC<CalendarProps> = ({
         <Typography variant="h5" align="center">
           {title}
         </Typography>
-        <Hidden mdDown>
+        <Hidden>
           <IconButton onClick={() => onChangeMonth(1)}>
             <NavigateNextIcon />
           </IconButton>
@@ -190,16 +181,46 @@ const Calendar: React.FC<CalendarProps> = ({
       <Divider variant="middle" />
       <Grid item container spacing={5}>
         <Grid item xs>
-          <CalendarTable getRows={getRows} month={selectedMonth.clone()} onChangeMonth={onChangeMonth} />
+          <CalendarTable month={selectedMonth.clone()} onChangeMonth={onChangeMonth}>
+            {getRows(selectedMonth.clone()).map((row, index) => (
+              <CalendarRow key={index} index={index}>
+                {row.map((date) => (
+                  <CalendarDay
+                    value={date.date()}
+                    isFromDate={selectedFromDay ? date.isSame(selectedFromDay, "day") : false}
+                    isToDate={selectedToDay ? date.isSame(selectedToDay, "day") : false}
+                    onClick={() => handleDateClicked(date)}
+                    isDisabled={isDisabled(date)}
+                    isInRange={range.includes(date.format(DATE_FORMAT))}
+                    isInvalidRange={!isRangeValid}
+                    key={date.format(DATE_FORMAT)}
+                  />
+                ))}
+              </CalendarRow>
+            ))}
+          </CalendarTable>
         </Grid>
         <Divider variant="fullWidth" orientation="vertical" />
         <Hidden mdDown>
           <Grid item xs>
-            <CalendarTable
-              getRows={getRows}
-              month={selectedMonth.clone().add(1, "month")}
-              onChangeMonth={onChangeMonth}
-            />
+            <CalendarTable month={selectedMonth.clone().add(1, "month")} onChangeMonth={onChangeMonth}>
+              {getRows(selectedMonth.clone().add(1, "month")).map((row, index) => (
+                <CalendarRow key={index} index={index}>
+                  {row.map((date) => (
+                    <CalendarDay
+                      value={date.date()}
+                      isFromDate={selectedFromDay ? date.isSame(selectedFromDay, "day") : false}
+                      isToDate={selectedToDay ? date.isSame(selectedToDay, "day") : false}
+                      onClick={() => handleDateClicked(date)}
+                      isDisabled={isDisabled(date)}
+                      isInRange={range.includes(date.format(DATE_FORMAT))}
+                      isInvalidRange={!isRangeValid}
+                      key={date.format(DATE_FORMAT)}
+                    />
+                  ))}
+                </CalendarRow>
+              ))}
+            </CalendarTable>
           </Grid>
         </Hidden>
       </Grid>

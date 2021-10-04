@@ -7,6 +7,7 @@ import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import SwipeableViews from "react-swipeable-views";
 import { Box, Grid, Theme, Typography } from "@material-ui/core";
+import Image from "next/image";
 
 const useStyles = makeStyles((theme: Theme) => ({
   img: {
@@ -79,10 +80,8 @@ const ImageSlider: React.VFC<ImageSliderProps> = ({ imageData, displayLabelText 
           disableLazyLoading
         >
           {imageData.map((step, index) => (
-            <Box key={index}>
-              {Math.abs(activeStep - index) <= 2 ? (
-                <img className={classes.img} src={step.imgPath} alt={step.label} />
-              ) : null}
+            <Box key={index} display="flex" justifyContent="center">
+              {Math.abs(activeStep - index) <= 2 ? <Image src={step.imgPath} width={400} height={300} /> : null}
             </Box>
           ))}
         </SwipeableViews>

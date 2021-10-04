@@ -17,13 +17,17 @@ const useDisabledDates = (chosenCabins: Cabin[]): Output => {
 
   useEffect(() => {
     if (allBookingsQuery.data) {
-      const selectedMonthBookings = allBookingsQuery.data.allBookings.filter((booking) => {
-        return booking.cabins.some((cabin) => chosenCabins.map((cabin) => cabin.id).includes(cabin.id));
-      });
+      // Gets the bookings which should disable dates for the chosen cabins
+      const chosenCabinsIDs = chosenCabins.map((cabin) => cabin.id);
+      const selectedMonthBookings = allBookingsQuery.data.allBookings.filter((booking) =>
+        booking.cabins.some((cabin) => chosenCabinsIDs.includes(cabin.id))
+      );
+
+      // Disable dates for the chosen cabins
       setDisabledDates(
-        selectedMonthBookings.reduce((newDisabledDates, booking) => {
+        selectedMonthBookings.reduce((newDisabledDates: string[], booking) => {
           return newDisabledDates.concat(getDateRange(booking.checkIn, booking.checkOut));
-        }, [] as string[])
+        }, [])
       );
     }
   }, [allBookingsQuery.data, chosenCabins]);

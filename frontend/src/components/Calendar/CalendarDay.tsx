@@ -28,14 +28,13 @@ const useStyles = makeStyles((theme: Theme) => ({
       if (props.isFromDate || props.isToDate) {
         if (props.isInvalidRange) {
           return theme.palette.error.dark;
-        } else {
-          return theme.palette.primary.dark;
         }
-      }
-      if (props.isInRange && props.isInvalidRange) {
-        return theme.palette.error.light;
+        return theme.palette.primary.dark;
       }
       if (props.isInRange) {
+        if (props.isInvalidRange) {
+          return theme.palette.error.light;
+        }
         return theme.palette.primary.light;
       }
       if (props.isHidden) {
@@ -47,7 +46,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const DayCell: React.FC<Props> = (props) => {
+const CalendarDay: React.VFC<Props> = (props) => {
   const classes = useStyles(props);
   const { onClick, value } = props;
   return (
@@ -63,4 +62,4 @@ const DayCell: React.FC<Props> = (props) => {
   );
 };
 
-export default DayCell;
+export default CalendarDay;

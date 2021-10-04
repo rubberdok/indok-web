@@ -1,18 +1,10 @@
 import { Cabin, ContactInfo } from "@interfaces/cabins";
-import { Box, createStyles, Divider, Grid, makeStyles, Typography } from "@material-ui/core";
+import { Box, Divider, Grid, Typography } from "@material-ui/core";
 import { convertDateFormat, toStringChosenCabins } from "@utils/cabins";
 import { calculatePrice } from "@utils/cabins";
+import Image from "next/image";
 import React from "react";
 import { DatePick } from "src/pages/cabins/book";
-
-const useStyles = makeStyles(() =>
-  createStyles({
-    logo: {
-      margin: "auto",
-      width: "30vh",
-    },
-  })
-);
 
 interface ContractProps {
   chosenCabins: Cabin[];
@@ -24,13 +16,14 @@ Renders the contract of a booking.
 */
 const Contract: React.FC<ContractProps> = ({ chosenCabins, contactInfo, datePick }) => {
   const currentTime = new Date().toLocaleString();
-  const classes = useStyles();
   const price = calculatePrice(chosenCabins, contactInfo, datePick);
 
   return (
     <Grid container>
       <Box m={2}>
-        <img alt="logo" src="/img/hyttestyret_logo.png" className={classes.logo} />
+        <Box display="flex" justifyContent="center" alignItems="center">
+          <Image alt="logo" src="/img/hyttestyret_logo.png" width={300} height={215} />
+        </Box>
         <Typography variant="h2" align="center">
           Leiekontrakt
         </Typography>

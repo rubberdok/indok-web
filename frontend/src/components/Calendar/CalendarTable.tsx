@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import React from "react";
+import React, { ReactElement } from "react";
 import { DAYS_IN_WEEK } from "./constants";
 import { Grid, Hidden, IconButton, makeStyles, Typography, useMediaQuery, useTheme } from "@material-ui/core";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
@@ -17,12 +17,12 @@ const useStyles = makeStyles(() => ({
 }));
 
 interface Props {
-  getRows: (month: dayjs.Dayjs) => React.ReactNode[];
   month: dayjs.Dayjs;
   onChangeMonth: (months: number) => void;
+  children?: ReactElement | ReactElement[];
 }
 
-const CalendarTable: React.FC<Props> = ({ getRows, month, onChangeMonth }) => {
+const CalendarTable: React.FC<Props> = ({ month, onChangeMonth, children }) => {
   const classes = useStyles();
 
   const theme = useTheme();
@@ -53,11 +53,7 @@ const CalendarTable: React.FC<Props> = ({ getRows, month, onChangeMonth }) => {
           </Grid>
         </Grid>
         <Grid container component="tbody" direction="column">
-          {getRows(month).map((row, index) => (
-            <Grid item container xs component="tr" key={`row-${index}`} wrap="nowrap">
-              {row}
-            </Grid>
-          ))}
+          {children}
         </Grid>
       </Grid>
     </Grid>
