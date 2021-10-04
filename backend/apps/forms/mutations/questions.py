@@ -101,7 +101,7 @@ class DeleteAnswer(graphene.Mutation):
         user = info.context.user
         try:
             answer = user.answers.get(pk=uuid)
-        except Answer.DoesNotExist as e:
+        except Answer.DoesNotExist:
             return DeleteAnswer(deleted_uuid=None, ok=False)
         deleted_uuid = answer.pk
         if answer.question.mandatory:
@@ -146,7 +146,10 @@ class SubmitOrUpdateAnswers(graphene.Mutation):
         if form.listing and form.listing.deadline <= timezone.now():
             return SubmitOrUpdateAnswers(
                 ok=False,
-                message="Søknadsfristen har utløpt og det er ikke lenger mulig å sende inn eller endre svar på denne søknaden.",
+                message=(
+                    "Søknadsfristen har utløpt og det er ikke"
+                    + "lenger mulig å sende inn eller endre svar på denne søknaden."
+                ),
             )
 
         response, _ = Response.objects.prefetch_related("answers").get_or_create(form_id=form_id, respondent=user)

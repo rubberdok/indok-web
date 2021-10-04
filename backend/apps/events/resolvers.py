@@ -53,7 +53,7 @@ class EventResolvers:
 
             queries = []
             kwargs = {}
-            if category != None:
+            if category is not None:
                 kwargs["category__name"] = category
 
             # For generalization, if more filters are added later
@@ -77,16 +77,7 @@ class EventResolvers:
         """
         For each organization, get the most recent (future) event
         """
-        organizations = Organization.objects.all()
-        all_events = Event.objects.filter(start_time__gte=date.today())
-        events = []
-        for organization in organizations:
-            try:
-                first_matching_event = all_events.get(organization=organization)
-                events.append(first_matching_event.id)
-            except:
-                pass
-        return Event.objects.filter(id__in=events).order_by("start_time")
+        return Event.objects.filter(start_time__gte=date.today()).distinct("organization")
 
     def resolve_event(self, info, id):
         try:
