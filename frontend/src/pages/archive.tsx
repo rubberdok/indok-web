@@ -19,9 +19,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Archive: NextPage = () => {
-  if (redirectIfNotLoggedIn()) {
-    return null;
-  }
   const classes = useStyles();
 
   const [yearFilter, setYearFilter] = useState("");
@@ -39,6 +36,10 @@ const Archive: NextPage = () => {
     Statues: { active: false, title: "Utveksling" },
     Others: { active: false, title: "Annet" },
   });
+
+  if (redirectIfNotLoggedIn()) {
+    return null;
+  }
 
   return (
     <Layout>
