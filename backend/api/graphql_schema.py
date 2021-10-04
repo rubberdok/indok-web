@@ -20,7 +20,7 @@ class Queries(
     ListingQueries,
     FormQueries,
     UtilQueries,
-    BlogPostQueries
+    BlogPostQueries,
 ):
     pass
 
@@ -33,7 +33,7 @@ class Mutations(
     OrganizationMutations,
     ListingMutations,
     FormMutations,
-    BlogPostMutations
+    BlogPostMutations,
 ):
     pass
 
