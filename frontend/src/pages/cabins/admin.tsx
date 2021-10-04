@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "@apollo/client";
 import Layout from "@components/Layout";
 import { QUERY_ADMIN_ALL_BOOKINGS } from "@graphql/cabins/queries";
-import { Booking } from "@interfaces/cabins";
+import { BookingFromQuery } from "@interfaces/cabins";
 import CheckIcon from "@material-ui/icons/Check";
 import ClearIcon from "@material-ui/icons/Clear";
 import {
@@ -28,14 +28,11 @@ import {
 import { toStringChosenCabins } from "@utils/cabins";
 import dayjs from "dayjs";
 import { NextPage } from "next";
-import { CONFIRM_BOOKING, DELETE_BOOKING, SEND_EMAIL } from "@graphql/cabins/mutations";
+import { CONFIRM_BOOKING, DELETE_BOOKING } from "@graphql/cabins/mutations";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import theme from "@styles/theme";
-
-interface BookingFromQuery extends Booking {
-  __typename: string;
-}
+import { sendDecisionEmail } from "./helpers";
 
 /*
 Page for booking admininistration showing all upcoming bookings and buttons for actions on these bookings.
@@ -46,7 +43,6 @@ const BookingAdminPage: NextPage = () => {
   }>(QUERY_ADMIN_ALL_BOOKINGS, { variables: { after: dayjs().format("YYYY-MM-DD") } });
   const [confirmBooking] = useMutation(CONFIRM_BOOKING, { refetchQueries: [{ query: QUERY_ADMIN_ALL_BOOKINGS }] });
   const [deleteBooking] = useMutation(DELETE_BOOKING, { refetchQueries: [{ query: QUERY_ADMIN_ALL_BOOKINGS }] });
-  const [send_email] = useMutation(SEND_EMAIL);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [bookingToBeDeleted, setBookingToBeDeleted] = useState<BookingFromQuery | undefined>();
@@ -98,31 +94,6 @@ const BookingAdminPage: NextPage = () => {
       </DialogActions>
     </Dialog>
   );
-
-  const sendDecisionEmail = (booking: BookingFromQuery, approved: boolean) => {
-    // omit unwanted fields
-    const { checkIn, checkOut, externalParticipants, firstName, internalParticipants, lastName, phone, receiverEmail } =
-      booking;
-
-    send_email({
-      variables: {
-        emailInput: {
-          ...{
-            checkIn,
-            checkOut,
-            externalParticipants,
-            firstName,
-            internalParticipants,
-            lastName,
-            phone,
-            receiverEmail,
-          },
-          cabins: booking.cabins.map((cabin) => parseInt(cabin.id)),
-          emailType: approved ? "approve_booking" : "disapprove_booking",
-        },
-      },
-    });
-  };
 
   const handleErrorDialogClose = () => router.push("/");
   return (

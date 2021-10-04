@@ -22,6 +22,9 @@ export interface Booking extends BasicBooking, PublicBooking, Participants {
   price: number;
   isTentative: boolean;
 }
+export interface BookingFromQuery extends Booking {
+  __typename: string;
+}
 
 export type InputFieldsEvent =
   | ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
