@@ -1,5 +1,4 @@
 # syntax=docker/dockerfile:1
-
 # Install dependencies only when needed
 FROM 777854691961.dkr.ecr.eu-north-1.amazonaws.com/node:14-alpine AS deps
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
@@ -29,7 +28,12 @@ ENV NEXT_PUBLIC_DATAPORTEN_STATE $NEXT_PUBLIC_DATAPORTEN_STATE
 ARG NEXT_PUBLIC_FRONTEND_URI
 ENV NEXT_PUBLIC_FRONTEND_URI $NEXT_PUBLIC_FRONTEND_URI
 
-RUN --mount=type=secret,id=SENTRY_AUTH_TOKEN yarn build && yarn install --production --ignore-scripts --prefer-offline
+RUN --mount=type=secret,id=SENTRY_AUTH_TOKEN \
+    --mount=type=secret,id=SENTRY_RELEASE \
+    export SENTRY_AUTH_TOKEN=$(cat /run/secrets/SENTRY_AUTH_TOKEN) \
+    && export SENTRY_RELEASE=$(cat /run/secrets/SENTRY_RELEASE) \
+    && yarn build \
+    && yarn install --production --ignore-scripts --prefer-offline
 
 # Production image, copy all the files and run next
 FROM 777854691961.dkr.ecr.eu-north-1.amazonaws.com/node:14-alpine AS runner
@@ -54,9 +58,7 @@ USER nextjs
 
 EXPOSE 3000
 
-# Next.js collects completely anonymous telemetry data about general usage.
-# Learn more here: https://nextjs.org/telemetry
-# Uncomment the following line in case you want to disable telemetry.
+# Disabled NextJS telemetry
 ENV NEXT_TELEMETRY_DISABLED 1
 
 CMD ["yarn", "start"]
