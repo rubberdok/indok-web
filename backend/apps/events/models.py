@@ -27,6 +27,7 @@ class Event(models.Model):
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name="events")
 
     # ------------------ Fully optional fields ------------------
+    product = models.OneToOneField(Product, on_delete=models.SET_NULL, blank=True, null=True)
     publisher = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True,)
     end_time = models.DateTimeField(blank=True, null=True)
     location = models.CharField(max_length=128, blank=True, null=True)
