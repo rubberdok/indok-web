@@ -26,9 +26,7 @@ class InitiateOrder(graphene.Mutation):
 
         # For now, only allow a single successfull purchase of a product
         if Order.objects.filter(
-            product__id=product_id,
-            user=user,
-            payment_status=Order.PaymentStatus.CAPTURED,
+            product__id=product_id, user=user, payment_status=Order.PaymentStatus.CAPTURED,
         ).exists():
             raise ValueError("Du har allerede kjøpt dette produktet.")
 
@@ -49,9 +47,7 @@ class InitiateOrder(graphene.Mutation):
         except Order.DoesNotExist:
             # Note: we need to ensure the order id is unique for Vipps
             # below fails if orders are deleted
-            counter = Order.objects.filter(
-                product__organization=product.organization
-            ).count()
+            counter = Order.objects.filter(product__organization=product.organization).count()
             order_id = f"indok-{product.organization.name if len(product.organization.name) < 34 else product.organization.name[:34]}-{counter + 1}".replace(
                 " ", "-"
             )
