@@ -1,5 +1,36 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
+fail=0
+pippath="" # The pip path
+missing="" # Which packages are missing
+RED='\033[0;31m'
+NC='\033[0m' # No Color
+BOLD='\033[1m'
+NB='\033[0m' # No bold
+
+if command -v pip >/dev/null; then
+    pippath="pip"
+elif command -v pip3 >/dev/null; then
+    pippath="pip3"
+else
+    printf "${RED}Unable to find ${BOLD}pip${NB}${RED} or ${BOLD}pip3${NB}${RED}, have you remembered to activate the virtual environment?\n${NC}"
+fi
+
+if ! $pippath --disable-pip-version-check list | grep -E 'black' >/dev/null; then
+    missing+="black, "
+    fail=1
+fi
+
+if ! $pippath  --disable-pip-version-check list | grep -E 'flake8' >/dev/null; then 
+    missing+="flake8"
+    fail=1
+fi
+
+if (( $fail > 0 )); then
+    printf "${RED}Unable to find ${BOLD}${missing}${NB}${RED}, please check your local installation.\n${NC}"
+    exit 1
+fi
+
 cd frontend
 yarn run lint-staged
