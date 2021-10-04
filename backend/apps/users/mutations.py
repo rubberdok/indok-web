@@ -6,6 +6,7 @@ from django.core.exceptions import ValidationError
 from graphql_jwt.decorators import login_required
 from graphql_jwt.shortcuts import get_token
 
+from guardian.shortcuts import get_anonymous_user
 from .types import UserType
 
 
@@ -23,7 +24,7 @@ class AuthUser(graphene.Mutation):
 
         token = get_token(user)
         info.context.set_jwt_cookie = token
-        info.context.user = user
+        info.context.user = user or get_anonymous_user()
         return AuthUser(
             user=user,
             token=token,
