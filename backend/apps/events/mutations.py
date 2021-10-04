@@ -79,7 +79,9 @@ class CreateEvent(graphene.Mutation):
             product.price = event.price
             product.description = event.description
             product.organization = organization
+            product.event = event
             product.save()
+
         ok = True
         return CreateEvent(event=event, ok=ok)
 
@@ -188,8 +190,7 @@ class EventSignUp(graphene.Mutation):
 
         if not str(user.grade_year) in event.allowed_grade_years:
             raise PermissionDenied(
-                "Kun studenter i følgende trinn kan melde seg på",
-                event.allowed_grade_years,
+                "Kun studenter i følgende trinn kan melde seg på", event.allowed_grade_years,
             )
 
         if SignUp.objects.filter(event_id=event_id, is_attending=True, user_id=info.context.user.id).exists():
