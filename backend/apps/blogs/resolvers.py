@@ -1,5 +1,6 @@
 from .models import BlogPost as BlogPostModel
 
+
 class BlogPostResolvers:
     def resolve_all_blog_posts(self, info):
         return BlogPostModel.objects.all()
