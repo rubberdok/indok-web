@@ -86,7 +86,7 @@ class EventType(DjangoObjectType):
 
     @staticmethod
     def resolve_allowed_grade_years(event, info):
-        return [int(grade) for grade in event.allowed_grade_years]
+        return [int(grade) for grade in event.total_allowed_grade_years]
 
     @staticmethod
     @login_required

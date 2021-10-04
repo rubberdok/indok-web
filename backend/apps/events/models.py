@@ -56,7 +56,7 @@ class Event(models.Model):
         )
 
     @property
-    def allowed_grade_years(self):
+    def total_allowed_grade_years(self):
         if not hasattr(self, "attendable"):
             return self.allowed_grade_years
         return self.attendable.slot_distribution.available_slots

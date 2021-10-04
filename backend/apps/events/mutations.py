@@ -119,7 +119,7 @@ class CreateEvent(graphene.Mutation):
 
                 slot_dist = create_slot_distributions(slot_distribution_data, attendable)
 
-                if slot_dist.grades.sort() != [int(val) for val in event.allowed_grade_years].sort():
+                if slot_dist.grades.sort() != [int(val) for val in event.total_allowed_grade_years].sort():
                     raise ValueError("Inkonsistens i plassfordeling mellom trinn")
 
         ok = True
@@ -203,7 +203,7 @@ class UpdateEvent(graphene.Mutation):
                     slot_distribution_data, attendable.slot_distribution, has_grade_distributions
                 )
 
-                if slot_dist.grades.sort() != [int(val) for val in event.allowed_grade_years].sort():
+                if slot_dist.grades.sort() != [int(val) for val in event.total_allowed_grade_years].sort():
                     raise ValueError("Inkonsistens i plassfordeling mellom trinn")
 
             # Prevuisly attendable event made non-attendable (no need for sign up)
@@ -270,10 +270,10 @@ class EventSignUp(graphene.Mutation):
 
         user = info.context.user
 
-        if not str(user.grade_year) in event.allowed_grade_years:
+        if not str(user.grade_year) in event.total_allowed_grade_years:
             raise PermissionDenied(
                 "Kun studenter i følgende trinn kan melde seg på",
-                event.allowed_grade_years,
+                event.total_allowed_grade_years,
             )
 
         if SignUp.objects.filter(event_id=event_id, is_attending=True, user_id=info.context.user.id).exists():
