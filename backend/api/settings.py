@@ -70,7 +70,6 @@ AUTH_USER_MODEL = "users.User"
 
 GRAPHENE = {
     "SCHEMA": "api.graphql_schema.schema",
-    "SCHEMA_OUTPUT": "api.schema.graphql",
     "MIDDLEWARE": [
         "graphql_jwt.middleware.JSONWebTokenMiddleware",
         "api.auth.middleware.AnonymousUserMiddleware",
