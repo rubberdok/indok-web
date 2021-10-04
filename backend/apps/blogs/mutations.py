@@ -7,7 +7,6 @@ from .types import BlogPostType
 from graphql_jwt.decorators import permission_required
 
 
-
 class CreateBlogPost(graphene.Mutation):
     class Arguments:
         title = graphene.String()
@@ -18,10 +17,19 @@ class CreateBlogPost(graphene.Mutation):
     blog_post = graphene.Field(BlogPostType)
 
     @permission_required("blogs.add_blogpost")
-    def mutate(self, info, title, text, author_id,):
+    def mutate(
+        self,
+        info,
+        title,
+        text,
+        author_id,
+    ):
 
         blog_post = BlogPostModel.objects.create(
-            title=title, text=text, author_id=author_id,)
+            title=title,
+            text=text,
+            author_id=author_id,
+        )
 
         ok = True
         return CreateBlogPost(blog_post=blog_post, ok=ok)
@@ -59,7 +67,11 @@ class UpdateBlogPost(graphene.Mutation):
     blog_post = graphene.Field(BlogPostType)
 
     @permission_required("blogs.change_blogpost")
-    def mutate(self, info, blog_post_data,):
+    def mutate(
+        self,
+        info,
+        blog_post_data,
+    ):
         ok = True
 
         try:
@@ -72,4 +84,7 @@ class UpdateBlogPost(graphene.Mutation):
             return UpdateBlogPost(blog_post=blog_post, ok=ok)
 
         except BlogPostModel.DoesNotExist:
-            return UpdateBlogPost(blog_post=None, ok=False,)
+            return UpdateBlogPost(
+                blog_post=None,
+                ok=False,
+            )

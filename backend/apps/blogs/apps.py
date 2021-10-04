@@ -2,4 +2,4 @@ from django.apps import AppConfig
 
 
 class BlogsConfig(AppConfig):
-    name = 'apps.blogs'
+    name = "apps.blogs"

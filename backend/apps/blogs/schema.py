@@ -14,5 +14,4 @@ class BlogPostMutations(graphene.ObjectType):
 
 class BlogPostQueries(graphene.ObjectType, BlogPostResolvers):
     all_blog_posts = graphene.List(BlogPostType)
-    blog_post = graphene.Field(
-        BlogPostType, blog_post_id=graphene.ID(required=True))
+    blog_post = graphene.Field(BlogPostType, blog_post_id=graphene.ID(required=True))
