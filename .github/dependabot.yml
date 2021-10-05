@@ -9,7 +9,7 @@ updates:
       time: "02:00"
 
     commit-message:
-      prefix: "⬆️ chore(deps): "
+      prefix: "chore(deps): "
 
   - package-ecosystem: "pip"
     directory: "/backend"
@@ -19,4 +19,4 @@ updates:
       time: "02:00"
 
     commit-message:
-      prefix: "⬆️ chore(deps): "
+      prefix: "chore(deps): "
