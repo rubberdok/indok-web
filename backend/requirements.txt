@@ -10,7 +10,7 @@ django-ses==2.0.0
 djangorestframework==3.12.4
 factory-boy==3.2.0
 flake8==3.9.2
-graphene==2.1.8
+graphene==2.1.9
 graphene-django==2.15.0
 gunicorn==20.0.4
 phonenumbers==8.12.19
