@@ -1,6 +1,6 @@
 coverage==6.0
 Django==3.2.5
-django-alive==1.1.0
+django-alive==1.2.1
 django-cors-headers==3.5.0
 django-environ==0.4.5
 django-graphql-jwt==0.3.1
