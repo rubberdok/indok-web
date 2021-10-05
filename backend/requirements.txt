@@ -6,7 +6,7 @@ django-environ==0.4.5
 django-graphql-jwt==0.3.1
 django-multiselectfield==0.1.12
 django-phonenumber-field==5.0.0
-django-ses==2.0.0
+django-ses==2.3.0
 djangorestframework==3.12.4
 factory-boy==3.2.0
 flake8==3.9.2
