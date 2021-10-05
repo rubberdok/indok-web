@@ -6,6 +6,10 @@ on:
       - master
       - main
   pull_request:
+  workflow_run:
+  workflows: ["Dependabot PR Check"]
+  types:
+    - completed
 
 env:
   DATAPORTEN_ID: ${{ secrets.DATAPORTEN_ID }}
