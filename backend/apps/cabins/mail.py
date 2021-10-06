@@ -1,3 +1,5 @@
+from typing import Optional
+
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import get_template
 from django.utils.html import strip_tags
@@ -39,7 +41,7 @@ def send_mail(booking_info: BookingInfoType, email_type: EmailTypes, admin: bool
     chosen_cabins_names = booking_info["cabins"].values_list("name", flat=True)
     chosen_cabins_string = " og ".join(chosen_cabins_names)
     subject = get_email_subject(chosen_cabins_string, email_type, admin)
-    booking_responsible: BookingResponsible = BookingResponsible.objects.filter(active=True).first()
+    booking_responsible: Optional[BookingResponsible] = BookingResponsible.objects.filter(active=True).first()
 
     # Display dates with given format in the mail
     content = {
