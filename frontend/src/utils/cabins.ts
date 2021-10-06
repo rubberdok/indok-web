@@ -1,8 +1,7 @@
-import { BasicBooking, Cabin, ContactInfo, ContactInfoValidations } from "@interfaces/cabins";
+import { BasicBooking, Cabin, ContactInfo, ContactInfoValidations, BookingFromQuery } from "@interfaces/cabins";
 import dayjs from "dayjs";
 import { DatePick } from "src/pages/cabins/book";
 import validator from "validator";
-import { BookingFromQuery } from "@interfaces/cabins";
 
 /*
 File containing helper functions for cabins.

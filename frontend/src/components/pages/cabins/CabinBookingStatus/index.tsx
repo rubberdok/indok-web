@@ -1,5 +1,5 @@
 import { NextPage, NextComponentType } from "next";
-import { makeStyles, Theme, Typography, Box, Divider, Tooltip, useMediaQuery } from "@material-ui/core";
+import { makeStyles, Typography, Box, Divider, Tooltip, useMediaQuery } from "@material-ui/core";
 import { Cabin, ContactInfo } from "@interfaces/cabins";
 import { DatePick } from "src/pages/cabins/book";
 import { TypographyProps } from "@material-ui/core/Typography";
@@ -14,12 +14,12 @@ interface Props {
   mailSent?: boolean;
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles({
   bold: {
     fontWeight: theme.typography.fontWeightBold,
     display: "inline",
   },
-}));
+});
 
 const InfoText: NextComponentType<TypographyProps> = (props) => (
   <Typography variant="body2" align="center" component="span" display="block" {...props}>

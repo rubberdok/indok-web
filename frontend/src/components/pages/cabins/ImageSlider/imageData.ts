@@ -3,17 +3,17 @@ Data with all paths, labels and descriptions for images used in the image slider
 */
 export const outsideImages = [
   {
-    label: "",
+    label: "Hytte",
     description: "",
     imgPath: "/static/cabins_images/ute1.jpg",
   },
   {
-    label: "",
+    label: "Hytte",
     description: "",
     imgPath: "/static/cabins_images/ute2.jpg",
   },
   {
-    label: "",
+    label: "Hytte",
     description: "",
     imgPath: "/static/cabins_images/ute6.jpg",
   },
