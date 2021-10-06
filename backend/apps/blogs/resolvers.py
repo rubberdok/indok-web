@@ -1,12 +1,12 @@
-from .models import BlogPost as BlogPostModel
+from typing import Optional
+from apps.blogs import models
 
 
 class BlogPostResolvers:
     def resolve_all_blog_posts(self, info):
-        return BlogPostModel.objects.all()
-
-    def resolve_blog_post_by_id(self, info, blog_post_id):
+        return models.BlogPost.objects.all()
+    def resolve_blog_post_by_id(self, info, blog_post_id: int) -> Optional[models.BlogPost]:
         try:
-            return BlogPostModel.objects.get(pk=blog_post_id)
-        except BlogPostModel.DoesNotExist:
+            return models.BlogPost.objects.get(pk=blog_post_id)
+        except models.BlogPost.DoesNotExist:
             return None

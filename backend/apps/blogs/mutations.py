@@ -31,8 +31,7 @@ class CreateBlogPost(graphene.Mutation):
             author_id=author_id,
         )
 
-        ok = True
-        return CreateBlogPost(blog_post=blog_post, ok=ok)
+        return CreateBlogPost(blog_post=blog_post, ok=True)
 
 
 class DeleteBlogPost(graphene.Mutation):
@@ -45,8 +44,7 @@ class DeleteBlogPost(graphene.Mutation):
     def mutate(self, info, blog_post_id, **kwargs):
         blog_post = get_object_or_404(BlogPostModel, pk=blog_post_id)
         blog_post.delete()
-        ok = True
-        return DeleteBlogPost(ok=ok)
+        return DeleteBlogPost(ok=True)
 
 
 class BlogPostInput(graphene.InputObjectType):
@@ -56,7 +54,6 @@ class BlogPostInput(graphene.InputObjectType):
 
 class UpdateBlogPostInput(BlogPostInput):
     id = graphene.ID(required=True)
-    # is_tentative = graphene.Boolean()
 
 
 class UpdateBlogPost(graphene.Mutation):
