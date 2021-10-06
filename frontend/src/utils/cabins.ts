@@ -1,6 +1,13 @@
-import { BasicBooking, Cabin, ContactInfo, ContactInfoValidations, BookingFromQuery } from "@interfaces/cabins";
+import {
+  BasicBooking,
+  Cabin,
+  ContactInfo,
+  ContactInfoValidations,
+  BookingFromQuery,
+  DatePick,
+  EmailAndBookingInput,
+} from "@interfaces/cabins";
 import dayjs from "dayjs";
-import { DatePick } from "src/pages/cabins/book";
 import validator from "validator";
 
 /*
@@ -108,4 +115,17 @@ export const getDecisionEmailProps = (booking: BookingFromQuery, approved: boole
   };
 
   return { variables: { emailInput: emailInput } };
+};
+
+export const generateEmailAndBookingInput: (
+  contactInfo: ContactInfo,
+  datePick: DatePick,
+  chosenCabins: Cabin[]
+) => EmailAndBookingInput = (contactInfo, datePick, chosenCabins) => {
+  return {
+    ...contactInfo,
+    cabins: chosenCabins.map((cabin) => parseInt(cabin.id)),
+    checkIn: datePick.checkInDate,
+    checkOut: datePick.checkOutDate,
+  };
 };

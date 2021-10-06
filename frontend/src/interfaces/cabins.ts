@@ -39,6 +39,21 @@ export interface Cabin {
 }
 
 export type ContactInfo = BasicBooking & Participants;
-export type ContactInfoValidations = {
-  [key in keyof ContactInfo]: boolean;
-};
+export type ContactInfoValidations = Record<keyof ContactInfo, boolean>;
+
+export interface DatePick {
+  checkInDate?: string;
+  checkOutDate?: string;
+  isValid?: boolean;
+}
+
+export interface ModalData {
+  contractViewed: boolean;
+  displayPopUp: boolean;
+}
+
+export interface EmailAndBookingInput extends ContactInfo {
+  cabins: number[];
+  checkIn?: string;
+  checkOut?: string;
+}

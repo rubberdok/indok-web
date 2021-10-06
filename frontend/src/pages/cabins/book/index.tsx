@@ -3,7 +3,7 @@ import CheckInOut from "@components/pages/cabins/CheckInOut";
 import CabinContactInfo from "@components/pages/cabins/CabinContactInfo";
 import ContractDialog from "@components/pages/cabins/Popup/ContractDialog";
 import { QUERY_CABINS } from "@graphql/cabins/queries";
-import { Cabin, ContactInfo, ContactInfoValidations } from "@interfaces/cabins";
+import { Cabin, ContactInfo, ContactInfoValidations, DatePick, ModalData } from "@interfaces/cabins";
 import {
   Box,
   Grid,
@@ -19,7 +19,13 @@ import {
   MobileStepper,
   Container,
 } from "@material-ui/core";
-import { allValuesFilled, cabinOrderStepReady, isFormValid, validateInputForm } from "@utils/cabins";
+import {
+  allValuesFilled,
+  cabinOrderStepReady,
+  generateEmailAndBookingInput,
+  isFormValid,
+  validateInputForm,
+} from "@utils/cabins";
 import { NextPage } from "next";
 import React, { useEffect, useState } from "react";
 import PaymentSite from "@components/pages/cabins/PaymentSite";
@@ -28,19 +34,7 @@ import { CREATE_BOOKING, SEND_EMAIL } from "@graphql/cabins/mutations";
 import { KeyboardArrowLeft, KeyboardArrowRight } from "@material-ui/icons";
 import Layout from "@components/Layout";
 
-interface StepReady {
-  [step: number]: { ready: boolean; errortext: string };
-}
-export interface DatePick {
-  checkInDate?: string;
-  checkOutDate?: string;
-  isValid?: boolean;
-}
-
-export interface ModalData {
-  contractViewed: boolean;
-  displayPopUp: boolean;
-}
+type StepReady = Record<number, { ready: boolean; errortext: string }>;
 
 const steps = ["Bestill", "Kontaktinfo", "Betaling", "Kvittering"];
 
@@ -73,12 +67,12 @@ const CabinBookingPage: NextPage = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [stepReady, setStepReady] = useState<StepReady>(initalStepReady);
 
-  // Velg Hytte
+  // Choose cabin
   const [chosenCabins, setChosenCabins] = useState<Cabin[]>([]);
   const cabinQuery = useQuery<{ cabins: Cabin[] }>(QUERY_CABINS);
   const [modalData, setModalData] = useState<ModalData>(defaultModalData);
 
-  // Innsjekk/Utsjekk
+  // Check in/Check out
   const [datePick, setDatePick] = useState<DatePick>({});
 
   // Contact info state
@@ -142,23 +136,6 @@ const CabinBookingPage: NextPage = () => {
       default:
         <Typography>Step not found</Typography>;
     }
-  };
-
-  const generateEmailAndBookingInput: (
-    contactInfo: ContactInfo,
-    datePick: DatePick,
-    chosenCabins: Cabin[]
-  ) => ContactInfo & { cabins: number[]; checkIn: string | undefined; checkOut: string | undefined } = (
-    contactInfo,
-    datePick,
-    chosenCabins
-  ) => {
-    return {
-      ...contactInfo,
-      cabins: chosenCabins.map((cabin) => parseInt(cabin.id)),
-      checkIn: datePick.checkInDate,
-      checkOut: datePick.checkOutDate,
-    };
   };
 
   const handleNextClick = () => {

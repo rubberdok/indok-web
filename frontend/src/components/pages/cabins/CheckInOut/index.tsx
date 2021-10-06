@@ -1,15 +1,14 @@
 import Calendar from "@components/Calendar";
 import useDisabledDates from "@hooks/cabins/useDisabledDates";
-import { Cabin } from "@interfaces/cabins";
+import { Cabin, DatePick } from "@interfaces/cabins";
 import { Checkbox, List, ListItem, Grid, Typography, Divider, useMediaQuery, useTheme } from "@material-ui/core";
 import { NextPage } from "next";
-import React, { Dispatch, SetStateAction } from "react";
-import { DatePick } from "src/pages/cabins/book";
+import React from "react";
 
 interface Props {
   allCabins: Cabin[];
   chosenCabins: Cabin[];
-  setChosenCabins: Dispatch<SetStateAction<Cabin[]>>;
+  setChosenCabins: React.Dispatch<React.SetStateAction<Cabin[]>>;
   setDatePick: React.Dispatch<React.SetStateAction<DatePick>>;
 }
 /*

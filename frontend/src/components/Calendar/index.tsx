@@ -136,7 +136,6 @@ const Calendar: React.FC<CalendarProps> = ({
   const getRows = (month: dayjs.Dayjs) => {
     const days: dayjs.Dayjs[] = [...previousMonthDays(month), ...getDaysOfMonth(month), ...nextMonthDays(month)];
     let cells: dayjs.Dayjs[] = [];
-    console.log(days);
     return days.reduce((prev: dayjs.Dayjs[][], curr, index) => {
       if (index % 7 === 0 && index != 0) {
         // When we reach 7 days, push new Row
@@ -144,20 +143,19 @@ const Calendar: React.FC<CalendarProps> = ({
         // Clear Cells
         cells = [];
       }
-      console.log(curr);
       // Push current cell to cells
       cells.push(curr);
       // We reached the end, push last row
       if (index === days.length - 1) {
         prev.push(cells);
       }
-      console.log(prev);
       return prev;
     }, []);
   };
 
   const onChangeMonth = (months: number) => {
     const newSelectedMonth = selectedMonth.add(months, "months");
+    console.log(newSelectedMonth);
     setSelectedMonth(newSelectedMonth);
   };
 
@@ -181,8 +179,8 @@ const Calendar: React.FC<CalendarProps> = ({
       <Divider variant="middle" />
       <Grid item container spacing={5}>
         <Grid item xs>
-          <CalendarTable month={selectedMonth.clone()} onChangeMonth={onChangeMonth}>
-            {getRows(selectedMonth.clone()).map((row, index) => (
+          <CalendarTable month={selectedMonth} onChangeMonth={onChangeMonth}>
+            {getRows(selectedMonth).map((row, index) => (
               <CalendarRow key={index} index={index}>
                 {row.map((date) => (
                   <CalendarDay
@@ -203,8 +201,8 @@ const Calendar: React.FC<CalendarProps> = ({
         <Divider variant="fullWidth" orientation="vertical" />
         <Hidden mdDown>
           <Grid item xs>
-            <CalendarTable month={selectedMonth.clone().add(1, "month")} onChangeMonth={onChangeMonth}>
-              {getRows(selectedMonth.clone().add(1, "month")).map((row, index) => (
+            <CalendarTable month={selectedMonth.add(1, "month")} onChangeMonth={onChangeMonth}>
+              {getRows(selectedMonth.add(1, "month")).map((row, index) => (
                 <CalendarRow key={index} index={index}>
                   {row.map((date) => (
                     <CalendarDay

@@ -1,7 +1,7 @@
-import { NextPage, NextComponentType } from "next";
+import { NextPage } from "next";
 import { makeStyles, Typography, Box, Divider, Tooltip, useMediaQuery } from "@material-ui/core";
-import { Cabin, ContactInfo } from "@interfaces/cabins";
-import { DatePick } from "src/pages/cabins/book";
+import { Cabin, ContactInfo, DatePick } from "@interfaces/cabins";
+
 import { TypographyProps } from "@material-ui/core/Typography";
 import { calculatePrice, convertDateFormat, toStringChosenCabins } from "@utils/cabins";
 import theme from "@styles/theme";
@@ -21,7 +21,7 @@ const useStyles = makeStyles({
   },
 });
 
-const InfoText: NextComponentType<TypographyProps> = (props) => (
+const InfoText: React.FC<TypographyProps> = (props) => (
   <Typography variant="body2" align="center" component="span" display="block" {...props}>
     {props.children}
   </Typography>

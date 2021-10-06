@@ -1,9 +1,8 @@
-import { Cabin, ContactInfo } from "@interfaces/cabins";
+import { Cabin, ContactInfo, DatePick } from "@interfaces/cabins";
 import { Box, Divider, Grid, Typography } from "@material-ui/core";
 import { convertDateFormat, toStringChosenCabins, calculatePrice } from "@utils/cabins";
 import Image from "next/image";
 import React from "react";
-import { DatePick } from "src/pages/cabins/book";
 
 interface ContractProps {
   chosenCabins: Cabin[];
