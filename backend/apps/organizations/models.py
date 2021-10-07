@@ -1,9 +1,10 @@
 from typing import Optional
+
+from django.conf import settings
 from django.db import models
 from django.db.models import UniqueConstraint
-from django.conf import settings
-from apps.permissions.constants import HR_TYPE, PRIMARY_TYPE
 
+from apps.permissions.constants import HR_TYPE, PRIMARY_TYPE
 from apps.permissions.models import ResponsibleGroup
 
 
@@ -28,7 +29,8 @@ class Organization(models.Model):
     # All members are added to the primary group
     # Members can be added to groups programatically
     # The HR-group has the "forms.manage_form" permission, allowing them to view and manage responses to e.g. listings.
-    # The primary group is intended to act as a group for organizations who need any kind of special permission, e.g. hyttestyret
+    # The primary group is intended to act as a group for organizations who need any kind of
+    # special permission, e.g. hyttestyret
     # Or if we wish to limit the creation of events or listings to certain organizations.
 
     users = models.ManyToManyField(
