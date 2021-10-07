@@ -72,7 +72,7 @@ class VippsApi:
     # Public methods:
     def capture_payment(self, order, method):
         headers = self.build_headers()
-        headers["X-Request-Id"] = f"{order.order_id}-{order.payment_attempt}XIDC1"
+        headers["X-Request-Id"] = order.order_id[:-32]
         capture_data = self.build_capture_payment_request(order, method)
 
         self._make_call(
@@ -85,20 +85,14 @@ class VippsApi:
     def initiate_payment(self, order):
         headers = self.build_headers()
         order_data = self.build_initiate_payment_request(order)
-        print(json.dumps(headers, indent=4))
-        print(json.dumps(order_data, indent=4))
 
-        response = self._make_call(
-            "post", "/ecomm/v2/payments", headers, json.dumps(order_data)
-        )
+        response = self._make_call("post", "/ecomm/v2/payments", headers, json.dumps(order_data))
         return response["url"]
 
     def get_payment_status(self, order_id):
         headers = self.build_headers()
 
-        response = self._make_call(
-            "get", f"/ecomm/v2/payments/{order_id}/details", headers
-        )
+        response = self._make_call("get", f"/ecomm/v2/payments/{order_id}/details", headers)
 
         history = response["transactionLogHistory"]
         return history[0]["operation"], history[0]["operationSuccess"]
@@ -117,9 +111,7 @@ class VippsApi:
         token_response = self._make_call("post", "/accessToken/get", headers)
 
         access_token = token_response["access_token"]
-        expires_on = timezone.make_aware(
-            datetime.datetime.fromtimestamp(int(token_response["expires_on"]))
-        )
+        expires_on = timezone.make_aware(datetime.datetime.fromtimestamp(int(token_response["expires_on"])))
         return access_token, expires_on
 
     def _get_access_token(self):
@@ -180,7 +172,7 @@ class VippsApi:
             "transaction": {
                 "orderId": f"{order.order_id}-{order.payment_attempt}",
                 "amount": int(order.total_price * 100),  # ører
-                "transactionText": f"{order.quantity}stk {order.product.name}",
+                "transactionText": f"{order.quantity} {order.product.name}",
                 "skipLandingPage": False,
             },
         }

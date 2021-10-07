@@ -1,9 +1,10 @@
+import uuid
+
 import graphene
 from django.core.exceptions import PermissionDenied
 from graphql_jwt.decorators import login_required
 
 from ..events.models import SignUp
-
 from .models import Order, Product
 from .vipps_utils import VippsApi
 
@@ -51,10 +52,10 @@ class InitiateOrder(graphene.Mutation):
         except Order.DoesNotExist:
             # Note: we need to ensure the order id is unique for Vipps
             # below fails if orders are deleted
-            counter = Order.objects.filter(product__organization=product.organization).count()
-            order_id = f"indok-{product.organization.name if len(product.organization.name) < 34 else product.organization.name[:34]}-{counter + 1}".replace(
-                " ", "-"
-            )
+
+            org_name = product.organization.slug[:13].replace(" ", "-")
+
+            order_id = f"{org_name}-{uuid.uuid4().hex}"
 
             sign_up = SignUp.objects.get(user=user, event=product.event)
             order = Order()
