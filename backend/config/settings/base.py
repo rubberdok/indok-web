@@ -181,6 +181,7 @@ GRAPHENE = {
     "MIDDLEWARE": [
         "graphql_jwt.middleware.JSONWebTokenMiddleware",
         "api.auth.middleware.AnonymousUserMiddleware",
+        "config.sentry.middleware.SentryMiddleware",
     ],
 }
 GRAPHQL_URL = "graphql/"

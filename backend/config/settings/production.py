@@ -3,14 +3,17 @@ from typing import cast
 
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
-from sentry_sdk.integrations.logging import LoggingIntegration
+from sentry_sdk.integrations.logging import LoggingIntegration, ignore_logger
+from corsheaders.defaults import default_headers
 
-from .base import *
+
+from .base import *  # noqa
 from .base import env
 
 # GENERAL
 SECRET_KEY = env("SECRET_KEY")
 ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=["api.indokntnu.no"])
+CORS_ALLOW_HEADERS = list(default_headers) + ["sentry-trace"]
 
 # DATABASES
 DATABASES = {
@@ -80,3 +83,4 @@ sentry_sdk.init(
     traces_sample_rate=cast(float, env.float("SENTRY_TRACES_SAMPLE_RATE", default=0.0)),
     send_default_pii=cast(bool, env.bool("SENTRY_SEND_DEFAULT_PII", default=True)),
 )
+ignore_logger("graphql.execution.utils")

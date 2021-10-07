@@ -12,9 +12,7 @@ class CabinResolvers:
             return None
 
     def resolve_bookings_by_month(self, info, year, month):
-        in_range_bookings = BookingModel.objects.filter(
-            start_day__year=year, start_day__month=month
-        )
+        in_range_bookings = BookingModel.objects.filter(start_day__year=year, start_day__month=month)
 
         return in_range_bookings
 
