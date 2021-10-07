@@ -32,6 +32,7 @@ import React, { useState } from "react";
 import { GET_EVENT } from "../../../graphql/events/queries";
 import CountdownButton from "./CountdownButton";
 import EditEvent from "./EventEditor";
+import { calendarFile } from "../../../utils/calendars";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -154,8 +155,6 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
   if (!eventData || !eventData.event || !userData)
     return <Typography variant="body1">Kunne ikke laste arrangementet</Typography>;
 
-  const location = eventData.event.location || "";
-  const endTime = eventData.event.endTime;
   const handleClick = () => {
     if (!userData.user) return;
     if (eventData.event.userAttendance?.isSignedUp) {
@@ -337,37 +336,24 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
                 <Typography variant="overline">Åpner</Typography>
                 <Typography variant="body1" className={classes.wrapIcon}>
                   <EventIcon fontSize="small" />
-                  {dayjs(eventData.event.startTime).locale(nb).format("DD.MMM YYYY, kl. HH:mm")}
+                  {dayjs(eventData.event.startTime).format("DD.MMM YYYY, kl. HH:mm")}
                 </Typography>
                 {eventData.event.endTime && (
                   <>
                     <Typography variant="overline">Slutter</Typography>
                     <Typography variant="body1" className={classes.wrapIcon}>
-                      <EventIcon fontSize="small" />{" "}
-                      {dayjs(eventData.event.endTime).locale(nb).format("DD.MMM YYYY, kl. HH:mm")}
+                      <EventIcon fontSize="small" /> {dayjs(eventData.event.endTime).format("DD.MMM YYYY, kl. HH:mm")}
                     </Typography>
                   </>
                 )}
                 <Button
                   variant="text"
-                  href={window.URL.createObjectURL(
-                    new File(
-                      [
-                        `BEGIN:VCALENDAR\nCALSCALE:GREGORIAN\nMETHOD:PUBLISH\nPRODID:-//Test Cal//EN\nVERSION:2.0\nBEGIN:VEVENT\nUID:\nDTSTART;VALUE=DATE:${dayjs(
-                          eventData.event.startTime
-                        )
-                          .locale(nb)
-                          .format("YYYYMMDDTHHmmss")}\nDTEND;VALUE=DATE:${dayjs(endTime)
-                          .locale(nb)
-                          .format("YYYYMMDDTHHmmss")}\nSUMMARY:${
-                          eventData.event.title
-                        }\nLOCATION:${location}\nDESCRIPTION:${eventData.event.description}\nEND:VEVENT\nEND:VCALENDAR`,
-                      ],
-                      "foo.ics",
-                      {
-                        type: "text/calendar",
-                      }
-                    )
+                  href={calendarFile(
+                    eventData.event.title,
+                    eventData.event.startTime,
+                    eventData.event.endTime,
+                    eventData.event.location,
+                    eventData.event.description
                   )}
                   download="event.ics"
                 >
