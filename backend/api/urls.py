@@ -24,7 +24,8 @@ from api.views import CustomGraphQLView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    # ok to csrf exempt the graphql endpoint: https://stackoverflow.com/questions/51764452/403-by-graphene-django-dont-use-csrf-exempt
+    # ok to csrf exempt the graphql endpoint:
+    # https://stackoverflow.com/questions/51764452/403-by-graphene-django-dont-use-csrf-exempt
     path("graphql", csrf_exempt(jwt_cookie(CustomGraphQLView.as_view(graphiql=True)))),
     path("ping", Ping.as_view()),
     path("-/", include("django_alive.urls")),

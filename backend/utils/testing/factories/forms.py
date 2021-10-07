@@ -1,7 +1,8 @@
+import factory
+import factory.django
+from apps.forms.models import Answer, Form, Option, Question, Response
 from factory.django import DjangoModelFactory
-import factory, factory.django
 from faker import Faker
-from apps.forms.models import Form, Question, Option, Answer, Response
 from utils.testing.factories.organizations import OrganizationFactory
 from utils.testing.factories.users import UserFactory
 
