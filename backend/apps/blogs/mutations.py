@@ -42,8 +42,10 @@ class DeleteBlogPost(graphene.Mutation):
 
     @permission_required("blogs.delete_blogpost")
     def mutate(self, info, blog_post_id, **kwargs):
-        blog_post = get_object_or_404(BlogPostModel, pk=blog_post_id)
-        blog_post.delete()
+        try:
+            blog_post = BlogPostModel.objects.get(pk=blog_post_id).delete()
+        except BlogPostModel.DoesNotExist:
+            return DeletePlogBost(ok=False)
         return DeleteBlogPost(ok=True)
 
 
