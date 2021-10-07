@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     "apps.forms",
     "apps.listings",
     "apps.permissions",
+    "apps.integrationserver",
     # External apps
     "corsheaders",
     "graphene_django",
