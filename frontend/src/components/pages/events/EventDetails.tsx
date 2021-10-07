@@ -154,7 +154,7 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
   if (!eventData || !eventData.event || !userData)
     return <Typography variant="body1">Kunne ikke laste arrangementet</Typography>;
 
-  const location = eventData.event.location ? eventData.event.location : "";
+  const location = eventData.event.location || "";
   const endTime = eventData.event.endTime;
   const handleClick = () => {
     if (!userData.user) return;
