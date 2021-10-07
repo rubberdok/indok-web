@@ -45,8 +45,8 @@ class DataportenAuth:
             )
             # Raises exceptions upon HTTP errors
             response.raise_for_status()
-        except requests.exceptions.RequestException as err:
-            raise Exception("En feil oppstod under fullføring av Dataporten-autentisering.")
+        except requests.exceptions.RequestException:
+            raise RuntimeError("En feil oppstod under fullføring av Dataporten-autentisering.")
 
         return response.json()
 
@@ -65,8 +65,8 @@ class DataportenAuth:
             response = requests.get("https://auth.dataporten.no/openid/jwks")
             response.raise_for_status()
             jwks = response.json()
-        except requests.exceptions.RequestException as err:
-            raise Exception("En systemfeil oppstod under validering av brukeren.")
+        except requests.exceptions.RequestException:
+            raise RuntimeError("En systemfeil oppstod under validering av brukeren.")
 
         public_keys = {}
         for jwk in jwks["keys"]:
@@ -85,7 +85,7 @@ class DataportenAuth:
                 issuer="https://auth.dataporten.no",
                 audience=CLIENT_ID,
             )
-        except jwt.PyJWTError as e:
+        except jwt.PyJWTError:
             raise ValidationError("Kunne ikke validere brukeren.")
 
     @staticmethod
@@ -102,14 +102,14 @@ class DataportenAuth:
                 headers=params,
             )
             response.raise_for_status()
-        except requests.exceptions.RequestException as err:
+        except requests.exceptions.RequestException:
             return False
 
         data = response.json()
 
         enrolled = False
         if "basic" in data and "active" in data:
-            enrolled = data["basic"] == "member" and data["active"] == True
+            enrolled = data["basic"] == "member" and data["active"]
 
         if not enrolled:
             return False
@@ -130,7 +130,7 @@ class DataportenAuth:
         try:
             response = requests.get("https://auth.dataporten.no/userinfo", headers=params)
             response.raise_for_status()
-        except requests.exceptions.RequestException as err:
+        except requests.exceptions.RequestException:
             raise Exception("Kunne ikke hente brukerinfo fra Dataporten.")
 
         data = response.json()
@@ -140,7 +140,8 @@ class DataportenAuth:
         feide_userid = user_info["userid"]
         email = user_info["email"]
         name = user_info["name"]
-        # picture = "https://api.dataporten.no/userinfo/v1/user/media/" + user_info["profilephoto"] #TODO: add profile photo
+        # picture = "https://api.dataporten.no/userinfo/v1/user/media/" + user_info["profilephoto"]
+        # #TODO: add profile photo
         return (username, feide_userid, email, name)
 
     @classmethod
