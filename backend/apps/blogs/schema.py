@@ -1,4 +1,3 @@
-from apps.blogs.mutations import CreateBlogPost
 import graphene
 
 from .mutations import CreateBlogPost, DeleteBlogPost, UpdateBlogPost
