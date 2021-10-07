@@ -1,11 +1,5 @@
 import graphene
 
-from .types import FormType, ResponseType
-from .resolvers import (
-    ResponseResolvers,
-    FormResolvers,
-)
-
 from .mutations.forms import CreateForm, DeleteForm, UpdateForm
 from .mutations.questions import (
     CreateQuestion,
@@ -16,10 +10,8 @@ from .mutations.questions import (
     SubmitOrUpdateAnswers,
     UpdateQuestion,
 )
-from .resolvers import (
-    FormResolvers,
-    ResponseResolvers,
-)
+from .resolvers import FormResolvers, ResponseResolvers
+from .types import FormType, ResponseType
 
 
 class FormQueries(
