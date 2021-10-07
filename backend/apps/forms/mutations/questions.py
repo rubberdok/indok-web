@@ -147,8 +147,7 @@ class SubmitOrUpdateAnswers(graphene.Mutation):
             return SubmitOrUpdateAnswers(
                 ok=False,
                 message=(
-                    "Søknadsfristen har utløpt og det er ikke"
-                    + "lenger mulig å sende inn eller endre svar på denne søknaden."
+                    "Søknadsfristen har utløpt og det er ikke lenger mulig å sende inn eller endre svar på denne søknaden."  # noqa
                 ),
             )
 
