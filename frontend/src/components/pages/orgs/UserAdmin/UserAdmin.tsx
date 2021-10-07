@@ -23,7 +23,7 @@ const EditUsersInOrganization: React.FC = () => {
     { variables: { id: orgNumberId } }
   );
 
-  if (error) return <p>Error!</p>;
+  if (error) return <p>Error</p>;
   if (loading) return <p>Loading...</p>;
 
   return (
