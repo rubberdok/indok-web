@@ -1,6 +1,5 @@
 import graphene
-from django.contrib.auth import get_user_model
-from django.contrib.auth.models import Group, User
+from django.contrib.auth.models import User
 from django.utils.text import slugify
 from utils.decorators import permission_required
 
