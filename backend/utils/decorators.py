@@ -21,7 +21,8 @@ def permission_required(
     perms : Union[list[str], str]
         A permission or list of permissions in the format app_label.action_modelname.
     lookup_variables : tuple[Union[Model, ModelBase, str], ...], optional
-        A tuple with: (1) the model which to look up, (2) a series of attribute name, parameter name pairs to use for the lookup, by default None
+        A tuple with: (1) the model which to look up, (2) a series of attribute name,
+        parameter name pairs to use for the lookup, by default None
     fn : Callable, optional
         A callable used to retrieve the object for which to check if the user has object permissions.
     return_none : bool, optional, default = False
@@ -75,7 +76,7 @@ def permission_required(
 
                 if len(lookups) % 2 != 0:
                     raise ValueError(
-                        f"The lookups should come in pairs of strings in the format attribute name, parameter name."
+                        "The lookups should come in pairs of strings in the format attribute name, parameter name."
                     )
 
                 for lookup, resolver_arg in zip(lookups[::2], lookups[1::2]):

@@ -16,8 +16,8 @@ class ArchiveDocumentResolvers:
         if year is not None:
             documents = documents.filter(year=year)
         if names is not None:
-            l = list(names.split(" "))
-            for element in l:
+            name_list = names.split(" ")
+            for element in name_list:
                 documents = documents.filter(title__icontains=element)
 
         return documents.reverse()
