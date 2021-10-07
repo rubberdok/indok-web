@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { User } from "@interfaces/users";
 import { Grid } from "@material-ui/core";
 
-const UserAdmin: React.FC = () => {
+const EditUsersInOrganization: React.FC = () => {
   const router = useRouter();
   const { orgId } = router.query;
   const orgNumberId = parseInt(orgId as string);
@@ -38,4 +38,4 @@ const UserAdmin: React.FC = () => {
   );
 };
 
-export default UserAdmin;
+export default EditUsersInOrganization;
