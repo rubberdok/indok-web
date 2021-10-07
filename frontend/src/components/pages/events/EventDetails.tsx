@@ -224,7 +224,7 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
             </Typography>
           ) : (
             <>
-              {eventData.event.userAttendance?.isSignedUp && eventData.event.price && eventData.event.ticketProductId && (
+              {eventData.event.userAttendance?.isSignedUp && eventData.event.price && eventData.event.product && (
                 <Box className={classes.vippsPayment}>
                   {eventData.event.userAttendance?.hasBoughtTicket ? (
                     <Card>
@@ -232,7 +232,7 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
                       <CardMedia component="img" alt="Vipps mark" image="/img/vipps_mark.svg" title="Vipps mark" />
                     </Card>
                   ) : (
-                    <PayWithVipps productId={eventData.event.ticketProductId} />
+                    <PayWithVipps productId={eventData.event.product.id} />
                   )}
                 </Box>
               )}

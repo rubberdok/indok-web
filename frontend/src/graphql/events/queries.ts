@@ -38,7 +38,12 @@ export const GET_EVENTS = gql`
       isFull
       hasExtraInformation
       allowedGradeYears
-      ticketProductId
+      product {
+        id
+        name
+        description
+        price
+      }
     }
   }
 `;
@@ -81,7 +86,12 @@ export const GET_DEFAULT_EVENTS = gql`
       isFull
       hasExtraInformation
       allowedGradeYears
-      ticketProductId
+      product {
+        id
+        name
+        description
+        price
+      }
     }
   }
 `;
@@ -128,7 +138,12 @@ export const GET_EVENT = gql`
       bindingSignup
       contactEmail
       allowedGradeYears
-      ticketProductId
+      product {
+        id
+        name
+        description
+        price
+      }
     }
   }
 `;
@@ -195,7 +210,12 @@ export const ADMIN_GET_EVENT = gql`
       bindingSignup
       contactEmail
       allowedGradeYears
-      ticketProductId
+      product {
+        id
+        name
+        description
+        price
+      }
     }
   }
 `;

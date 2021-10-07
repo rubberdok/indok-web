@@ -27,8 +27,12 @@ class Event(models.Model):
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name="events")
 
     # ------------------ Fully optional fields ------------------
-    product = models.OneToOneField(Product, on_delete=models.SET_NULL, blank=True, null=True)
-    publisher = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True,)
+    product = models.OneToOneField(Product, on_delete=models.SET_NULL, blank=True, null=True, related_name="event")
+    publisher = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+    )
     end_time = models.DateTimeField(blank=True, null=True)
     location = models.CharField(max_length=128, blank=True, null=True)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, blank=True, null=True)
@@ -42,7 +46,8 @@ class Event(models.Model):
     # --------------- Required fields given is_attendable == True ---------------
     signup_open_date = models.DateTimeField(blank=True, null=True)  # When the signup should become available
     available_slots = models.PositiveIntegerField(  # maximal number of users that can sign up for an event
-        blank=True, null=True,  # TODO: Make this field conditionally required when is_attendable is True!
+        blank=True,
+        null=True,  # TODO: Make this field conditionally required when is_attendable is True!
     )
 
     # ----------- Optional fields that should only be set given is_attendable == True -----------
@@ -86,15 +91,6 @@ class Event(models.Model):
     def __str__(self):
         return self.title
 
-    @property
-    def ticket_product_id(self):
-        if self.price is None:
-            return None
-        try:
-            return Product.objects.get(name=f"Billett til {self.title}", organization=self.organization).id
-        except Product.DoesNotExist:
-            return None
-
 
 class SignUp(models.Model):
     """
@@ -109,7 +105,7 @@ class SignUp(models.Model):
     is_attending = models.BooleanField()
     extra_information = models.TextField(blank=True, default="")
 
-    order = models.OneToOneField(Order, on_delete=models.CASCADE, primary_key=True)
+    order = models.OneToOneField(Order, on_delete=models.SET_NULL, blank=True, null=True, related_name="sign_up")
 
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
 

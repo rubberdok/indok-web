@@ -35,7 +35,12 @@ export const CREATE_EVENT = gql`
         bindingSignup
         contactEmail
         allowedGradeYears
-        ticketProductId
+        product {
+          id
+          name
+          description
+          price
+        }
       }
       ok
     }
@@ -77,7 +82,12 @@ export const UPDATE_EVENT = gql`
         bindingSignup
         contactEmail
         allowedGradeYears
-        ticketProductId
+        product {
+          id
+          name
+          description
+          price
+        }
       }
       ok
     }

@@ -79,8 +79,9 @@ class CreateEvent(graphene.Mutation):
             product.price = event.price
             product.description = event.description
             product.organization = organization
-            product.event = event
+            event.product = product
             product.save()
+            event.save()
 
         ok = True
         return CreateEvent(event=event, ok=ok)
@@ -107,11 +108,11 @@ class UpdateEvent(graphene.Mutation):
 
         check_user_membership(info.context.user, event.organization)
 
-        already_has_ticket = event.ticket_product_id is not None
+        already_has_ticket = event.product is not None
 
         # Update ticket name if title is changed
         if already_has_ticket and "title" in event_data:
-            product = Product.objects.get(id=event.ticket_product_id)
+            product = event.product
             product.name = f"Billett til {event_data.get('title')}"
             product.save()
 
@@ -190,7 +191,8 @@ class EventSignUp(graphene.Mutation):
 
         if not str(user.grade_year) in event.allowed_grade_years:
             raise PermissionDenied(
-                "Kun studenter i følgende trinn kan melde seg på", event.allowed_grade_years,
+                "Kun studenter i følgende trinn kan melde seg på",
+                event.allowed_grade_years,
             )
 
         if SignUp.objects.filter(event_id=event_id, is_attending=True, user_id=info.context.user.id).exists():

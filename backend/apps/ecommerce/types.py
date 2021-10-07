@@ -7,6 +7,7 @@ class ProductType(DjangoObjectType):
     class Meta:
         model = Product
         fields = [
+            "id",
             "name",
             "price",
             "description",

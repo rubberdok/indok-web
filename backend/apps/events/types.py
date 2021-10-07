@@ -26,6 +26,7 @@ class SignUpType(DjangoObjectType):
             "user_allergies",
             "user_phone_number",
             "user_grade_year",
+            "order",
         ]
 
 
@@ -36,7 +37,6 @@ class EventType(DjangoObjectType):
     users_attending = graphene.List(SignUpType)
     allowed_grade_years = graphene.List(graphene.Int)
     available_slots = graphene.Int()
-    ticket_product_id = graphene.ID(source="ticket_product_id")
 
     class Meta:
         model = Event
@@ -59,6 +59,7 @@ class EventType(DjangoObjectType):
             "has_extra_information",
             "binding_signup",
             "contact_email",
+            "product",
         ]
 
     class PermissionDecorators:
@@ -81,9 +82,9 @@ class EventType(DjangoObjectType):
         return {
             "is_signed_up": user in event.users_attending,
             "is_on_waiting_list": user in event.users_on_waiting_list,
-            "has_bought_ticket": event.ticket_product_id is not None
+            "has_bought_ticket": event.product is not None
             and Order.objects.filter(
-                product__id=event.ticket_product_id,
+                product=event.product,
                 user=user,
                 payment_status__in=[
                     Order.PaymentStatus.RESERVED,

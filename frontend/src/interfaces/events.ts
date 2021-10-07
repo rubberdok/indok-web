@@ -1,3 +1,4 @@
+import { Order, Product } from "./ecommerce";
 import { User } from "./users";
 
 export interface Event {
@@ -25,7 +26,7 @@ export interface Event {
   bindingSignup?: boolean;
   contactEmail?: string;
   allowedGradeYears: number[];
-  ticketProductId: string;
+  product?: Product;
 }
 
 export interface AttendableEvent extends Event {
@@ -49,4 +50,5 @@ export interface SignUp {
   userGradeYear: number;
   userAllergies: string;
   userPhoneNumber: string;
+  order?: Order;
 }
