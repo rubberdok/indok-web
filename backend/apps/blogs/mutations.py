@@ -16,7 +16,6 @@ class CreateBlogPost(graphene.Mutation):
     ok = graphene.Boolean()
     blog_post = graphene.Field(BlogPostType)
 
-    @login_required
     @permission_required("blogs.add_blogpost")
     def mutate(
         self,
@@ -41,7 +40,6 @@ class DeleteBlogPost(graphene.Mutation):
 
     ok = graphene.Boolean()
 
-    @login_required
     @permission_required("blogs.delete_blogpost")
     def mutate(self, info, blog_post_id, **kwargs):
         try:
@@ -67,7 +65,6 @@ class UpdateBlogPost(graphene.Mutation):
     ok = graphene.Boolean()
     blog_post = graphene.Field(BlogPostType)
 
-    @login_required
     @permission_required("blogs.change_blogpost")
     def mutate(
         self,
