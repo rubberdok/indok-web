@@ -64,16 +64,23 @@ const Calendar: React.FC<CalendarProps> = ({
     }
   };
 
+  /*
+  Handles what happens to the calendar date range when the user selects (or deselects) from dates and to dates.
+  */
   useEffect(() => {
     const dateToString = (date: dayjs.Dayjs | undefined): string | undefined =>
       date ? date.format(DATE_FORMAT) : undefined;
     if (selectedFromDay && selectedToDay) {
+      // Both from day and to day are selected, create new range between those two.
       const newRange = getDateRange(selectedFromDay.format(DATE_FORMAT), selectedToDay.format(DATE_FORMAT));
       setRange(newRange);
+
+      // Check validity of the given range. If it is valid, the range is marked as green, otherwise it is marked as red.
       const newIsRangeValid = disabledDates ? !disabledDates.some((date: string) => newRange.includes(date)) : true;
       setIsRangeValid(newIsRangeValid);
       onRangeChange && onRangeChange(dateToString(selectedFromDay), dateToString(selectedToDay), newIsRangeValid);
     } else {
+      // From day is either selected or not, but to day has not been selected.
       setRange([]);
       setIsRangeValid(true);
       onRangeChange && onRangeChange(dateToString(selectedFromDay), dateToString(selectedToDay), true);
@@ -155,7 +162,6 @@ const Calendar: React.FC<CalendarProps> = ({
 
   const onChangeMonth = (months: number) => {
     const newSelectedMonth = selectedMonth.add(months, "months");
-    console.log(newSelectedMonth);
     setSelectedMonth(newSelectedMonth);
   };
 

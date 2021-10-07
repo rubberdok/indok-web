@@ -1,7 +1,6 @@
 import { NextPage } from "next";
 import { makeStyles, Typography, Box, Divider, Tooltip, useMediaQuery } from "@material-ui/core";
 import { Cabin, ContactInfo, DatePick } from "@interfaces/cabins";
-
 import { TypographyProps } from "@material-ui/core/Typography";
 import { calculatePrice, convertDateFormat, toStringChosenCabins } from "@utils/cabins";
 import theme from "@styles/theme";

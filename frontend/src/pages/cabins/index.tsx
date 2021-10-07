@@ -1,4 +1,15 @@
-import { Typography, makeStyles, Box, Grid, Button, Paper, Divider, Theme, Container } from "@material-ui/core";
+import {
+  Typography,
+  makeStyles,
+  Box,
+  Grid,
+  Button,
+  Paper,
+  Divider,
+  Theme,
+  Container,
+  Tooltip,
+} from "@material-ui/core";
 import { NextPage } from "next";
 import Link from "next/link";
 import FireplaceIcon from "@material-ui/icons/Fireplace";
@@ -10,11 +21,15 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import HotTubIcon from "@material-ui/icons/HotTub";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import { DirectionsBus, DirectionsCar, DirectionsTransit, LocalTaxi } from "@material-ui/icons";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ImageSlider from "@components/pages/cabins/ImageSlider/ImageSlider";
 import { cabinImages, outsideImages } from "@components/pages/cabins/ImageSlider/imageData";
 import FAQ from "@components/pages/cabins/Documents/FAQ";
 import Layout from "@components/Layout";
+import { useQuery } from "@apollo/client";
+import { GET_USER } from "@graphql/users/queries";
+import { User } from "@interfaces/users";
+import PermissionRequired from "@components/permissions/PermissionRequired";
 
 const BOOKING_DISABLED = false;
 
@@ -42,6 +57,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: "absolute",
     bottom: 0,
   },
+  button: {
+    "&.Mui-disabled": {
+      backgroundColor: theme.palette.grey[600],
+      opacity: 0.8,
+    },
+  },
 }));
 
 /*
@@ -49,6 +70,14 @@ Front page for cabins. Includes info about the cabins and link to the booking pa
 */
 const CabinsPage: NextPage = () => {
   const classes = useStyles();
+  const { data, error } = useQuery<{ user: User }>(GET_USER);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    if (data && data.user && !error) {
+      setIsLoggedIn(true);
+    }
+  }, [data]);
 
   const facilitiesData = [
     {
@@ -126,9 +155,18 @@ const CabinsPage: NextPage = () => {
       <Grid xs={12} sm={6} item container justifyContent="center">
         {BOOKING_DISABLED ? null : (
           <Link href="/cabins/book" passHref>
-            <Button variant="contained" endIcon={<NavigateNextIcon />}>
-              Book nå
-            </Button>
+            <PermissionRequired permission="cabins.add_booking">
+              <Tooltip open={!isLoggedIn} title="Du må være logget inn for booke en hytte.">
+                <Button
+                  variant="contained"
+                  endIcon={<NavigateNextIcon />}
+                  disabled={!isLoggedIn}
+                  classes={{ root: classes.button }}
+                >
+                  Book nå
+                </Button>
+              </Tooltip>
+            </PermissionRequired>
           </Link>
         )}
       </Grid>
