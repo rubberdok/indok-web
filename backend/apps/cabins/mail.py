@@ -43,7 +43,7 @@ def send_mail(booking_info: BookingInfoType, email_type: EmailTypes, admin: bool
     subject = get_email_subject(chosen_cabins_string, email_type, admin)
     booking_responsible: Optional[BookingResponsible] = BookingResponsible.objects.filter(active=True).first()
 
-    # Display dates with given format in the mail
+    # Display dates with given format in the mail, get booking responsible contact info
     content = {
         **booking_info,
         "check_in": booking_info["check_in"].strftime("%d-%m-%Y"),
@@ -62,7 +62,7 @@ def send_mail(booking_info: BookingInfoType, email_type: EmailTypes, admin: bool
         subject,
         body=text_content,
         from_email="noreply@indokntnu.no",
-        bcc=[booking_info["receiver_email"]],
+        bcc=[booking_responsible.email if admin else booking_info["receiver_email"]],
     )
     email.attach_alternative(html_content, "text/html")
 
