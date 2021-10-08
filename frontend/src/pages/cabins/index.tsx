@@ -1,15 +1,4 @@
-import {
-  Typography,
-  makeStyles,
-  Box,
-  Grid,
-  Button,
-  Paper,
-  Divider,
-  Theme,
-  Container,
-  Tooltip,
-} from "@material-ui/core";
+import { Typography, makeStyles, Box, Grid, Button, Paper, Divider, Theme, Container } from "@material-ui/core";
 import { NextPage } from "next";
 import Link from "next/link";
 import FireplaceIcon from "@material-ui/icons/Fireplace";
@@ -30,8 +19,6 @@ import { useQuery } from "@apollo/client";
 import { GET_USER } from "@graphql/users/queries";
 import { User } from "@interfaces/users";
 import PermissionRequired from "@components/permissions/PermissionRequired";
-
-const BOOKING_DISABLED = false;
 
 const useStyles = makeStyles((theme: Theme) => ({
   hero: {
@@ -56,12 +43,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   readMoreButton: {
     position: "absolute",
     bottom: 0,
-  },
-  button: {
-    "&.Mui-disabled": {
-      backgroundColor: theme.palette.grey[600],
-      opacity: 0.8,
-    },
   },
 }));
 
@@ -149,26 +130,27 @@ const CabinsPage: NextPage = () => {
       <Grid xs={12} sm={6} item container justifyContent="center">
         <Box m={2}>
           <Typography variant="h1">Hyttebooking</Typography>
-          <Typography variant="overline">På denne siden blir det snart mulig å reservere indøkhyttene</Typography>
         </Box>
       </Grid>
       <Grid xs={12} sm={6} item container justifyContent="center">
-        {BOOKING_DISABLED ? null : (
+        <PermissionRequired
+          permission="cabins.add_booking"
+          fallback={
+            !isLoggedIn ? (
+              // User is not logged in, and therefore does not have the permission.
+              <Typography variant="h5">Du må være logget inn for å booke en hytte.</Typography>
+            ) : (
+              // User is logged in, but does not have the permission (we disabled cabin booking for a subset of the users)
+              <Typography variant="h5">Her blir det snart mulig å reservere indøkhyttene</Typography>
+            )
+          }
+        >
           <Link href="/cabins/book" passHref>
-            <PermissionRequired permission="cabins.add_booking">
-              <Tooltip open={!isLoggedIn} title="Du må være logget inn for booke en hytte.">
-                <Button
-                  variant="contained"
-                  endIcon={<NavigateNextIcon />}
-                  disabled={!isLoggedIn}
-                  classes={{ root: classes.button }}
-                >
-                  Book nå
-                </Button>
-              </Tooltip>
-            </PermissionRequired>
+            <Button variant="contained" endIcon={<NavigateNextIcon />}>
+              Book nå
+            </Button>
           </Link>
-        )}
+        </PermissionRequired>
       </Grid>
       <Grid xs={12} sm={6} item container justifyContent="center">
         <Button
