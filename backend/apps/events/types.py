@@ -5,7 +5,7 @@ from .models import Attendable, Category, Event, SignUp
 
 
 class UserAttendingType(graphene.ObjectType):
-    is_signed_up = graphene.Boolean()  # NOTE: Her mener vi kanksje is_attending?
+    is_signed_up = graphene.Boolean()  # NOTE: Her mener vi kanskje is_attending?
     is_on_waiting_list = graphene.Boolean()
 
 
@@ -27,7 +27,7 @@ class SignUpType(DjangoObjectType):
 
 
 class GradeDistributionType(graphene.ObjectType):
-    cateogry = graphene.String()
+    category = graphene.String()
     available_slots = graphene.Int()
 
 
@@ -43,6 +43,8 @@ class EventType(DjangoObjectType):
     users_attending = graphene.List(SignUpType)
     available_slots = graphene.List(GradeDistributionType)
     attendable = graphene.Field(AttendableType)
+    allowed_grade_years = graphene.List(graphene.Int)
+    is_full = graphene.Boolean()
 
     class Meta:
         model = Event
@@ -54,6 +56,7 @@ class EventType(DjangoObjectType):
             "location",
             "description",
             "organization",
+            "has_extra_information",
             "category",
             "image",
             "publisher",
@@ -79,30 +82,67 @@ class EventType(DjangoObjectType):
     def resolve_user_attendance(event, info):
         user = info.context.user
         attending, waiting_list = event.get_attendance_and_waiting_list()
+        if attending is None:
+            return {
+                "is_signed_up": False,
+                "is_on_waiting_list": False,
+            }
+
+        group = None
+        for attendant_group in attending.keys():
+            if str(user.grade_year) in attendant_group:
+                group = attendant_group
+                break
+
+        if group is None:
+            return {
+                "is_signed_up": False,
+                "is_on_waiting_list": False,
+            }
+
         return {
-            "is_signed_up": user in attending,
-            "is_on_waiting_list": user in waiting_list,
+            "is_signed_up": user in attending[group],
+            "is_on_waiting_list": user in waiting_list[group],
         }
 
     @staticmethod
+    def resolve_is_full(event, info):
+        user = info.context.user
+        return event.get_is_full(user.grade_year)
+
+    @staticmethod
     def resolve_allowed_grade_years(event, info):
-        return [int(grade) for grade in event.total_allowed_grade_years]
+        grades = [int(grade) for grade in event.total_allowed_grade_years]
+        grades.sort()
+        return grades
 
     @staticmethod
     @login_required
     @PermissionDecorators.is_in_event_organization
     def resolve_users_on_waiting_list(event, info):
         _, waiting_list = event.get_attendance_and_waiting_list()
-        return SignUp.objects.filter(event=event, user__in=waiting_list, is_attending=True)
+        if waiting_list is None:
+            return []
+        all_on_waiting_list = []
+        for waiting_list_group in waiting_list.values():
+            all_on_waiting_list += waiting_list_group
+        return SignUp.objects.filter(event=event, user__in=all_on_waiting_list, is_attending=True)
 
     @staticmethod
     @login_required
     @PermissionDecorators.is_in_event_organization
     def resolve_users_attending(event, info):
         attending, _ = event.get_attendance_and_waiting_list()
-        return SignUp.objects.filter(event=event, user__in=attending, is_attending=True)
+        if attending is None:
+            return []
+        all_attending = []
+        for attending_group in attending.values():
+            all_attending += attending_group
+        return SignUp.objects.filter(event=event, user__in=all_attending, is_attending=True)
 
     @staticmethod
+    @login_required
+    @PermissionDecorators.is_in_event_organization
     def resolve_available_slots(event, info):
         user = info.context.user
         if not user.is_authenticated or not user.memberships.filter(organization=event.organization).exists():

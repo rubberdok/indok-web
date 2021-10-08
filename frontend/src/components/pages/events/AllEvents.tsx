@@ -51,7 +51,6 @@ const AllEvents: React.FC = () => {
   const loading = showDefaultEvents ? defaultEventsLoading : eventsLoading;
   const data = showDefaultEvents ? defaultEventsData?.defaultEvents : eventsData?.allEvents;
 
-  if (loading || userLoading) return <Typography variant="body1">Laster..</Typography>;
   if (error) return <Typography variant="body1">Kunne ikke hente arrangementer.</Typography>;
 
   const onChange = (newFilters: FilterQuery) => {
@@ -109,7 +108,7 @@ const AllEvents: React.FC = () => {
               </Button>
             </Link>
           )}
-          {loading ? (
+          {loading || userLoading ? (
             <CircularProgress />
           ) : (
             <Grid container spacing={2}>

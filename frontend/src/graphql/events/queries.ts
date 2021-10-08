@@ -20,13 +20,13 @@ export const GET_EVENTS = gql`
       image
       shortDescription
       hasExtraInformation
-      bindingSignup
       contactEmail
       allowedGradeYears
 
       attendable {
         id
         deadline
+        bindingSignup
         price
         signupOpenDate
       }
@@ -35,6 +35,7 @@ export const GET_EVENTS = gql`
         isSignedUp
         isOnWaitingList
       }
+      isFull
     }
   }
 `;
@@ -59,13 +60,13 @@ export const GET_DEFAULT_EVENTS = gql`
       image
       shortDescription
       hasExtraInformation
-      bindingSignup
       contactEmail
       allowedGradeYears
 
       attendable {
         id
         deadline
+        bindingSignup
         price
         signupOpenDate
       }
@@ -74,6 +75,7 @@ export const GET_DEFAULT_EVENTS = gql`
         isSignedUp
         isOnWaitingList
       }
+      isFull
     }
   }
 `;
@@ -98,21 +100,27 @@ export const GET_EVENT = gql`
       image
       shortDescription
       hasExtraInformation
-      bindingSignup
       contactEmail
       allowedGradeYears
 
       attendable {
         id
         deadline
+        bindingSignup
         price
         signupOpenDate
+      }
+
+      availableSlots {
+        category
+        availableSlots
       }
 
       userAttendance {
         isSignedUp
         isOnWaitingList
       }
+      isFull
     }
   }
 `;
@@ -136,6 +144,7 @@ export const ADMIN_GET_EVENT = gql`
       attendable {
         id
         deadline
+        bindingSignup
         price
         signupOpenDate
       }
@@ -150,7 +159,10 @@ export const ADMIN_GET_EVENT = gql`
         lastName
         dateJoined
       }
-      availableSlots
+      availableSlots {
+        category
+        availableSlots
+      }
       shortDescription
       usersAttending {
         user {
@@ -179,9 +191,9 @@ export const ADMIN_GET_EVENT = gql`
         isOnWaitingList
       }
       hasExtraInformation
-      bindingSignup
       contactEmail
       allowedGradeYears
+      isFull
     }
   }
 `;

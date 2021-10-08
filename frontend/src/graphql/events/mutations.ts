@@ -1,8 +1,12 @@
 import { gql } from "@apollo/client";
 
 export const CREATE_EVENT = gql`
-  mutation CreateEvent($eventData: CreateEventInput!) {
-    createEvent(eventData: $eventData) {
+  mutation CreateEvent(
+    $eventData: CreateEventInput!
+    $attendableData: CreateAttendableInput
+    $slotDistributionData: CreateSlotDistributionInput
+  ) {
+    createEvent(eventData: $eventData, attendableData: $attendableData, slotDistributionData: $slotDistributionData) {
       event {
         id
         title
@@ -21,13 +25,13 @@ export const CREATE_EVENT = gql`
         image
         shortDescription
         hasExtraInformation
-        bindingSignup
         contactEmail
         allowedGradeYears
 
         attendable {
           id
           deadline
+          bindingSignup
           price
           signupOpenDate
         }
@@ -36,7 +40,10 @@ export const CREATE_EVENT = gql`
           isSignedUp
           isOnWaitingList
         }
-        available_slots
+        availableSlots {
+          category
+          availableSlots
+        }
       }
       ok
     }
@@ -49,12 +56,16 @@ export const UPDATE_EVENT = gql`
     $isAttendable: Boolean!
     $hasGradeDistributions: Boolean!
     $eventData: UpdateEventInput
+    $attendableData: UpdateAttendableInput
+    $slotDistributionData: UpdateSlotDistributionInput
   ) {
     updateEvent(
       id: $id
       isAttendable: $isAttendable
       hasGradeDistributions: $hasGradeDistributions
       eventData: $eventData
+      attendableData: $attendableData
+      slotDistributionData: $slotDistributionData
     ) {
       event {
         id
@@ -74,13 +85,13 @@ export const UPDATE_EVENT = gql`
         image
         shortDescription
         hasExtraInformation
-        bindingSignup
         contactEmail
         allowedGradeYears
 
         attendable {
           id
           deadline
+          bindingSignup
           price
           signupOpenDate
         }
@@ -89,7 +100,10 @@ export const UPDATE_EVENT = gql`
           isSignedUp
           isOnWaitingList
         }
-        available_slots
+        availableSlots {
+          category
+          availableSlots
+        }
       }
       ok
     }

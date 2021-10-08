@@ -10,30 +10,30 @@ export interface Event {
   organization: { id: string; name: string; color?: string };
   category?: { id: string; name: string };
   image?: string;
-  isAttendable: boolean;
-  deadline?: string;
   publisher: User;
-  availableSlots?: string;
-  shortDescription?: string;
-  signupOpenDate?: string;
+  availableSlots?: GradeDistribution[];
+  shortDescription: string;
   usersOnWaitingList?: SignUp[];
   userAttendance?: { isSignedUp: boolean; isOnWaitingList: boolean };
-  isFull?: boolean;
-  price?: string;
   usersAttending?: SignUp[];
   hasExtraInformation?: boolean;
-  bindingSignup?: boolean;
   contactEmail?: string;
   allowedGradeYears: number[];
+  attendable?: Attendable;
+  isFull: boolean;
 }
 
-export interface AttendableEvent extends Event {
+interface GradeDistribution {
+  category: string;
+  availableSlots: number;
+}
+
+export interface Attendable {
+  id: string;
   deadline: string;
-  availableSlots: string;
+  bindingSignup: boolean;
+  price: string;
   signupOpenDate: string;
-  userAttendance: { isSignedUp: boolean; isOnWaitingList: boolean };
-  usersAttending: SignUp[];
-  isFull: boolean;
 }
 
 export interface Category {

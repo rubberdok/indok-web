@@ -54,16 +54,12 @@ const stringEventFields: HeaderValuePair<Event>[] = [
   { header: "Kort beskrivelse", field: "shortDescription" },
   // { header: "Beskrivelse", field: "description" },
   { header: "Lokasjon", field: "location" },
-  { header: "Tilgjengelige plasser", field: "availableSlots" },
   { header: "Krever ekstrainformasjon", field: "hasExtraInformation" },
-  { header: "Bindende påmelding", field: "bindingSignup" },
 ];
 
 const dateEventFields: HeaderValuePair<Event>[] = [
   { header: "Starttid", field: "startTime" },
   { header: "Slutttid", field: "endTime" },
-  { header: "Påmeldingsfrist", field: "deadline" },
-  { header: "Påmeldingsdato", field: "signupOpenDate" },
 ];
 
 /**
@@ -144,16 +140,80 @@ const EventAdminPage: NextPage = () => {
                   <CardContent>
                     <List>
                       {stringEventFields.map((headerPair: HeaderValuePair<Event>) =>
-                        renderInfo(headerPair.header, data.event[headerPair.field] as string)
+                        renderInfo(
+                          headerPair.header,
+                          data.event[headerPair.field] ? (data.event[headerPair.field] as string) : ""
+                        )
                       )}
+                      <ListItem key={"allowedGradeYears"}>
+                        <Typography>
+                          <Box fontWeight={1000} m={1} display="inline">
+                            Åpent for:
+                          </Box>
+                          {data.event.allowedGradeYears
+                            .slice(1, data.event.allowedGradeYears.length)
+                            .reduce(
+                              (res, grade) => `${res}, ${grade}.klasse`,
+                              `${data.event.allowedGradeYears[0]}.klasse`
+                            )}
+                        </Typography>
+                      </ListItem>
+
+                      <ListItem key={"bindingSingup"}>
+                        <Typography>
+                          <Box fontWeight={1000} m={1} display="inline">
+                            Bindende påmelding:
+                          </Box>
+                          {data.event.attendable?.bindingSignup === true ? "ja" : "nei"}
+                        </Typography>
+                      </ListItem>
+
+                      {data.event?.availableSlots && (
+                        <ListItem key={"AvailableSlots"}>
+                          <Typography>
+                            <Box fontWeight={1000} m={1} display="inline">
+                              Tilgjengelige plasser:
+                            </Box>
+                            {data.event.availableSlots.length > 1
+                              ? data.event.availableSlots.map((dist) => (
+                                  <Typography key={String(dist.category)}>
+                                    {dist.category}.klasse: {dist.availableSlots} plasser
+                                  </Typography>
+                                ))
+                              : `${data.event.availableSlots[0].availableSlots}`}
+                          </Typography>
+                        </ListItem>
+                      )}
+
                       {dateEventFields.map((headerPair: HeaderValuePair<Event>) =>
                         renderInfo(
                           headerPair.header,
                           data.event[headerPair.field]
-                            ? dayjs(data.event[headerPair.field] as string).format("HH:mm DD-MM-YYYY")
+                            ? dayjs(data.event[headerPair.field] as string).format("kl.HH:mm, DD-MM-YYYY")
                             : ""
                         )
                       )}
+                      <ListItem key={"signupOpenDate"}>
+                        <Typography>
+                          <Box fontWeight={1000} m={1} display="inline">
+                            Påmelding åpner:
+                          </Box>
+                          {data.event.attendable?.signupOpenDate
+                            ? dayjs(data.event.attendable?.signupOpenDate as string).format("kl.HH:mm, DD-MM-YYYY")
+                            : ""}
+                        </Typography>
+                      </ListItem>
+
+                      <ListItem key={"deadline"}>
+                        <Typography>
+                          <Box fontWeight={1000} m={1} display="inline">
+                            Påmeldingsfrist:
+                          </Box>
+                          {data.event.attendable?.deadline
+                            ? dayjs(data.event.attendable?.deadline as string).format("kl.HH:mm, DD-MM-YYYY")
+                            : ""}
+                        </Typography>
+                      </ListItem>
                     </List>
                   </CardContent>
                 </Card>
