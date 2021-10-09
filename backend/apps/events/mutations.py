@@ -168,55 +168,60 @@ class UpdateEvent(graphene.Mutation):
 
             # Update attendable if included in input data
             attendable = event.attendable if hasattr(event, "attendable") else None
-            if attendable_data is not None:
-                # If the event was changed to be attendable, create attendable object and one or more slot distributions
-                if attendable is None:
-                    attendable = create_attendable(attendable_data, event)
-                    if slot_distribution_data is None:
-                        raise ValueError(
-                            "Du må minimum spesifisere antall plasser og når påmeldingen åpner for å kunne lage et arrangement med påmelding"
-                        )
-                    create_slot_distributions(slot_distribution_data, attendable)
-                    ok = True
-                    return UpdateEvent(event=event, ok=ok)
-
-                # If the event was already attendable
-                price = (
-                    attendable_data.price
-                    if hasattr(attendable_data, "price") and attendable_data.price is not None
-                    else event.attendable.price
-                    if hasattr(event.attendable, "price")
-                    else None
-                )
-                binding_signup = (
-                    attendable_data.binding_signup
-                    if hasattr(attendable_data, "binding_signup")
-                    else attendable.binding_signup
-                )
-                if price is not None and binding_signup == False:
-                    raise ValueError("Betalt påmelding krever bindende påmelding")
-
-                for k, v in attendable_data.items():
-                    setattr(attendable, k, v)
-                attendable.save()
-
-            # Update slot distributions if included in input data
-            if slot_distribution_data is not None:
-                if attendable is None:
-                    raise ValueError("Betalt påmelding krever bindende påmelding")
-
-                slot_dist = update_slot_distributions(
-                    slot_distribution_data,
-                    attendable.slot_distribution.get(parent_distribution=None),
-                    has_grade_distributions,
-                )
-
-                if slot_dist.grades.sort() != [int(val) for val in event.total_allowed_grade_years].sort():
-                    raise ValueError("Inkonsistens i plassfordeling mellom trinn")
 
             # Prevuisly attendable event made non-attendable (no need for sign up)
             if not is_attendable and attendable is not None:
                 attendable.delete()  # Cascaded to slot distrbution(s)
+                event = Event.objects.get(
+                    pk=event.pk
+                )  # Must refresh event for it to relaize the attendable has been deleted
+
+            else:
+                if attendable_data is not None:
+                    # If the event was changed to be attendable, create attendable object and one or more slot distributions
+                    if attendable is None:
+                        attendable = create_attendable(attendable_data, event)
+                        if slot_distribution_data is None:
+                            raise ValueError(
+                                "Du må minimum spesifisere antall plasser og når påmeldingen åpner for å kunne lage et arrangement med påmelding"
+                            )
+                        create_slot_distributions(slot_distribution_data, attendable)
+                        ok = True
+                        return UpdateEvent(event=event, ok=ok)
+
+                    # If the event was already attendable
+                    price = (
+                        attendable_data.price
+                        if hasattr(attendable_data, "price") and attendable_data.price is not None
+                        else event.attendable.price
+                        if hasattr(event.attendable, "price")
+                        else None
+                    )
+                    binding_signup = (
+                        attendable_data.binding_signup
+                        if hasattr(attendable_data, "binding_signup")
+                        else attendable.binding_signup
+                    )
+                    if price is not None and binding_signup == False:
+                        raise ValueError("Betalt påmelding krever bindende påmelding")
+
+                    for k, v in attendable_data.items():
+                        setattr(attendable, k, v)
+                    attendable.save()
+
+                # Update slot distributions if included in input data
+                if slot_distribution_data is not None:
+                    if attendable is None:
+                        raise ValueError("Betalt påmelding krever bindende påmelding")
+
+                    slot_dist = update_slot_distributions(
+                        slot_distribution_data,
+                        attendable.slot_distribution.get(parent_distribution=None),
+                        has_grade_distributions,
+                    )
+
+                    if slot_dist.grades.sort() != [int(val) for val in event.total_allowed_grade_years].sort():
+                        raise ValueError("Inkonsistens i plassfordeling mellom trinn")
 
         ok = True
         return UpdateEvent(event=event, ok=ok)
