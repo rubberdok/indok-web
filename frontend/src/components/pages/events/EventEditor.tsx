@@ -76,10 +76,12 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
   };
 
   const [eventData, setEventData] = useState(defaultInput);
-  const [isAttendable, setIsAttendable] = useState(event.attendable !== undefined);
-  const [hasSlotDistribution, setHasSlotDistribution] = useState(event.availableSlots !== undefined);
+  const [isAttendable, setIsAttendable] = useState(!!event.attendable);
+  const [hasSlotDistribution, setHasSlotDistribution] = useState(
+    event?.availableSlots && event?.availableSlots?.length > 1
+  );
   const [slotDistribution, setSlotDistribution] = useState<{ category: number[]; availableSlots: number }[]>(
-    event.availableSlots
+    event.availableSlots && event.availableSlots?.length > 1
       ? event.availableSlots.map((dist) => {
           return { category: dist.category.split(",").map((val) => Number(val)), availableSlots: dist.availableSlots };
         })
@@ -220,6 +222,7 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
 
     if (
       isAttendable &&
+      hasSlotDistribution &&
       slotDistribution.reduce((res, dist) => (res = res + dist.availableSlots), 0) !== totalAvailableSlots
     ) {
       currentErrors = [...errors, "Totalt antall plasser må stemme med antall i hver gruppe i plassfordelingen"];
@@ -230,7 +233,7 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
       return { category: stringCategory.slice(1, stringCategory.length), availableSlots: dist.availableSlots };
     });
 
-    const slotDistributionInputData = { availableSlots: eventData.availableSlots, gradeYears: stringSlotDistribution };
+    const slotDistributionInputData = { availableSlots: totalAvailableSlots, gradeYears: stringSlotDistribution };
     const slotDistributionInput = { ...slotDistributionInputData };
 
     Object.keys(slotDistributionInputData).forEach((key) => {
@@ -254,8 +257,8 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
         isAttendable,
         hasGradeDistributions: hasSlotDistribution,
         eventData: eventInput,
-        attendableData: attendableInput,
-        slotDistributionData: slotDistributionInput,
+        attendableData: isAttendable ? attendableInput : undefined,
+        slotDistributionData: isAttendable ? slotDistributionInput : undefined,
       },
     });
     onClose();

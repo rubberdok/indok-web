@@ -224,8 +224,8 @@ const CreateEvent: React.FC = () => {
     createEvent({
       variables: {
         eventData: eventInput,
-        attendableData: attendableInput,
-        slotDistributionData: slotDistributionInput,
+        attendableData: isAttendable ? attendableInput : undefined,
+        slotDistributionData: hasSlotDistribution ? slotDistributionInput : undefined,
       },
     }).then((res) => {
       if (res.data?.createEvent) {
