@@ -6,7 +6,6 @@ from django.utils import timezone
 from graphql_jwt.decorators import login_required, staff_member_required
 from utils.decorators import permission_required
 
-from ..ecommerce.models import Product
 from ..organizations.models import Organization
 from ..organizations.permissions import check_user_membership
 from .mail import send_event_emails
@@ -72,17 +71,6 @@ class CreateEvent(graphene.Mutation):
         event.publisher = info.context.user
         event.save()
 
-        # Create ticket product if attendance costs money
-        if event.price is not None:
-            product = Product()
-            product.name = f"Billett til {event.title}"
-            product.price = event.price
-            product.description = event.description
-            product.organization = organization
-            event.product = product
-            product.save()
-            event.save()
-
         ok = True
         return CreateEvent(event=event, ok=ok)
 
@@ -108,26 +96,9 @@ class UpdateEvent(graphene.Mutation):
 
         check_user_membership(info.context.user, event.organization)
 
-        already_has_ticket = event.product is not None
-
-        # Update ticket name if title is changed
-        if already_has_ticket and "title" in event_data:
-            product = event.product
-            product.name = f"Billett til {event_data.get('title')}"
-            product.save()
-
         for k, v in event_data.items():
             setattr(event, k, v)
         event.save()
-
-        # Create new ticket if price is added
-        if not already_has_ticket and event.price is not None:
-            product = Product()
-            product.name = f"Billett til {event.title}"
-            product.price = event.price
-            product.description = event.description
-            product.organization = event.organization
-            product.save()
 
         ok = True
         return UpdateEvent(event=event, ok=ok)

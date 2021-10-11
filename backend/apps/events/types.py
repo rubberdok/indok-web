@@ -2,14 +2,12 @@ import graphene
 from graphene_django import DjangoObjectType
 from graphql_jwt.decorators import login_required
 
-from ..ecommerce.models import Order
 from .models import Category, Event, SignUp
 
 
 class UserAttendingType(graphene.ObjectType):
     is_signed_up = graphene.Boolean()
     is_on_waiting_list = graphene.Boolean()
-    has_bought_ticket = graphene.Boolean()
 
 
 class SignUpType(DjangoObjectType):
@@ -26,7 +24,6 @@ class SignUpType(DjangoObjectType):
             "user_allergies",
             "user_phone_number",
             "user_grade_year",
-            "order",
         ]
 
 
@@ -59,7 +56,6 @@ class EventType(DjangoObjectType):
             "has_extra_information",
             "binding_signup",
             "contact_email",
-            "product",
         ]
 
     class PermissionDecorators:
@@ -82,15 +78,6 @@ class EventType(DjangoObjectType):
         return {
             "is_signed_up": user in event.users_attending,
             "is_on_waiting_list": user in event.users_on_waiting_list,
-            "has_bought_ticket": event.product is not None
-            and Order.objects.filter(
-                product=event.product,
-                user=user,
-                payment_status__in=[
-                    Order.PaymentStatus.RESERVED,
-                    Order.PaymentStatus.CAPTURED,
-                ],
-            ).exists(),
         }
 
     @staticmethod

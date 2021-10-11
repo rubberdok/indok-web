@@ -1,4 +1,3 @@
-import { Order, Product } from "./ecommerce";
 import { User } from "./users";
 
 export interface Event {
@@ -18,7 +17,7 @@ export interface Event {
   shortDescription?: string;
   signupOpenDate?: string;
   usersOnWaitingList?: SignUp[];
-  userAttendance?: { isSignedUp: boolean; isOnWaitingList: boolean; hasBoughtTicket: boolean };
+  userAttendance?: { isSignedUp: boolean; isOnWaitingList: boolean };
   isFull?: boolean;
   price?: string;
   usersAttending?: SignUp[];
@@ -26,14 +25,13 @@ export interface Event {
   bindingSignup?: boolean;
   contactEmail?: string;
   allowedGradeYears: number[];
-  product?: Product;
 }
 
 export interface AttendableEvent extends Event {
   deadline: string;
   availableSlots: string;
   signupOpenDate: string;
-  userAttendance: { isSignedUp: boolean; isOnWaitingList: boolean; hasBoughtTicket: boolean };
+  userAttendance: { isSignedUp: boolean; isOnWaitingList: boolean };
   usersAttending: SignUp[];
   isFull: boolean;
 }
@@ -50,5 +48,4 @@ export interface SignUp {
   userGradeYear: number;
   userAllergies: string;
   userPhoneNumber: string;
-  order?: Order;
 }

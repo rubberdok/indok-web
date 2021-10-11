@@ -4,7 +4,6 @@ from django.db import models
 from multiselectfield import MultiSelectField
 from phonenumber_field.modelfields import PhoneNumberField
 
-from apps.ecommerce.models import Product, Order
 from apps.organizations.models import Organization
 
 
@@ -27,7 +26,6 @@ class Event(models.Model):
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name="events")
 
     # ------------------ Fully optional fields ------------------
-    product = models.OneToOneField(Product, on_delete=models.SET_NULL, blank=True, null=True, related_name="event")
     publisher = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
@@ -104,8 +102,6 @@ class SignUp(models.Model):
     timestamp = models.DateTimeField()
     is_attending = models.BooleanField()
     extra_information = models.TextField(blank=True, default="")
-
-    order = models.OneToOneField(Order, on_delete=models.SET_NULL, blank=True, null=True, related_name="sign_up")
 
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
 

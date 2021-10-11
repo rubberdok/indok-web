@@ -396,16 +396,12 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
           </Grid>
           <Grid item xs={6}>
             <InputLabel>Pris</InputLabel>
-            <Tooltip
-              disableHoverListener={eventData.isAttendable}
-              disableFocusListener={eventData.isAttendable}
-              title="Kun aktuelt ved påmelding"
-            >
+            <Tooltip title="Kommer snart!">
               <TextField
                 type="number"
                 value={eventData.price}
                 onChange={(e) => setEventData({ ...eventData, price: e.currentTarget.value })}
-                disabled={!eventData.isAttendable}
+                disabled
                 margin={"dense"}
               />
             </Tooltip>

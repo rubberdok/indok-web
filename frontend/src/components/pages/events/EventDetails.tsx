@@ -17,8 +17,6 @@ import {
   TextField,
   Typography,
   useTheme,
-  Card,
-  CardMedia,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { ArrowRight, ContactMail, Edit, ErrorOutline, KeyboardBackspace, List, Warning } from "@material-ui/icons";
@@ -34,7 +32,6 @@ import React, { useState } from "react";
 import { GET_EVENT } from "../../../graphql/events/queries";
 import CountdownButton from "./CountdownButton";
 import EditEvent from "./EventEditor";
-import PayWithVipps from "@components/ecommerce/PayWithVipps";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -75,9 +72,6 @@ const useStyles = makeStyles((theme) => ({
   },
   backButton: {
     marginLeft: -20,
-  },
-  vippsPayment: {
-    float: "right",
   },
 }));
 
@@ -224,18 +218,6 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
             </Typography>
           ) : (
             <>
-              {eventData.event.userAttendance?.isSignedUp && eventData.event.price && eventData.event.product && (
-                <Box className={classes.vippsPayment}>
-                  {eventData.event.userAttendance?.hasBoughtTicket ? (
-                    <Card>
-                      <Typography>Betalt med Vipps</Typography>
-                      <CardMedia component="img" alt="Vipps mark" image="/img/vipps_mark.svg" title="Vipps mark" />
-                    </Card>
-                  ) : (
-                    <PayWithVipps productId={eventData.event.product.id} />
-                  )}
-                </Box>
-              )}
               <PermissionRequired permission="events.add_signup">
                 {!userData.user.phoneNumber &&
                   !eventData.event.userAttendance?.isSignedUp &&
