@@ -31,7 +31,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     volumes:
-      - ./frontend/:/app/
+      - ./frontend:/app
       - /app/node_modules
       - /app/.next
     ports:
