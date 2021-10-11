@@ -1,11 +1,18 @@
 from typing import Optional
-from django.db.models.signals import post_save, pre_delete, pre_save
-from django.dispatch import receiver
+
 from django.contrib.auth.models import Group
+from django.db.models.signals import post_save, pre_delete
+from django.dispatch import receiver
 from guardian.shortcuts import assign_perm
 
 from apps.organizations.models import Membership, Organization
-from apps.permissions.constants import ORGANIZATION, HR_GROUP_NAME, PRIMARY_GROUP_NAME
+from apps.permissions.constants import (
+    HR_GROUP_NAME,
+    HR_TYPE,
+    ORGANIZATION,
+    PRIMARY_GROUP_NAME,
+    PRIMARY_TYPE,
+)
 from apps.permissions.models import ResponsibleGroup
 
 
@@ -34,26 +41,22 @@ def handle_removed_member(instance: Membership, **kwargs):
         user.groups.remove(org_group)
 
 
-@receiver(pre_save, sender=Organization)
-def create_primary_group(instance: Organization, **kwargs):
+@receiver(post_save, sender=Organization)
+def create_default_groups(instance: Organization, created, **kwargs):
     """
     Creates and assigns a primary group and HR group to members of the organization.
     """
-    try:
-        instance.primary_group
-    except ResponsibleGroup.DoesNotExist:
+    if created:
         ResponsibleGroup.objects.create(
             name=PRIMARY_GROUP_NAME,
             description=f"Medlemmer av {instance.name}.",
             organization=instance,
+            group_type=PRIMARY_TYPE,
         )
-
-    try:
-        instance.hr_group
-    except ResponsibleGroup.DoesNotExist:
         hr_group = ResponsibleGroup.objects.create(
             name=HR_GROUP_NAME,
             description=f"HR-gruppen til {instance.name}. Tillatelser for å se og behandle søknader.",
-            hr_organization=instance,
+            organization=instance,
+            group_type=HR_TYPE,
         )
         assign_perm("forms.add_form", hr_group.group)

@@ -23,7 +23,7 @@ DEFAULT_REPORT_FIELDS = {
     "signup_user_allergies",
 }
 
-FiletypeSpec = namedtuple("Filetype", ["content_type", "extension"])
+FiletypeSpec = namedtuple("FiletypeSpec", ["content_type", "extension"])
 filetype_specs = {
     "xlsx": FiletypeSpec(
         content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -53,7 +53,7 @@ class EventResolvers:
 
             queries = []
             kwargs = {}
-            if category != None:
+            if category is not None:
                 kwargs["category__name"] = category
 
             # For generalization, if more filters are added later
@@ -84,7 +84,7 @@ class EventResolvers:
             try:
                 first_matching_event = all_events.get(organization=organization)
                 events.append(first_matching_event.id)
-            except:
+            except:  # noqa
                 pass
         return Event.objects.filter(id__in=events).order_by("start_time")
 

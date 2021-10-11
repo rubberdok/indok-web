@@ -2,7 +2,7 @@ def get_no_html_mail(ctx, receiver):
 
     user_content = f"""
         Hei {ctx["firstname"]}!
-      
+
         Vi har nå reservert { ctx["cabin"] } fra { ctx["fromDate"] } til { ctx["toDate"] }.
 
         Prisen kommer på { ctx["price"] } kr. Betaling skjer via faktura, se
@@ -20,12 +20,12 @@ def get_no_html_mail(ctx, receiver):
         God tur!
 
         Med vennlig hilsen,
-        Ellie Berglund 
+        Ellie Berglund
         Bookingansvarlig Hyttestyret,
         Indøkhyttene NTNU
         booking@indokhyttene.no / tlf. 94258380
         https://www.januslinjeforening.no/indokhyttene/
-    
+
     """
 
     admin_content = f"""

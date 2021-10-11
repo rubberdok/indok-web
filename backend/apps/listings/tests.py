@@ -55,12 +55,12 @@ class ListingResolverTestCase(ListingBaseTestCase):
         """
         Expect to find all listings whose start datetime is in the past and deadline is in the future.
         """
-        query = f"""
-            query {{
-                listings {{
+        query = """
+            query {
+                listings {
                     id
-                }}
-            }}
+                }
+            }
         """
         response = self.query(query)
         self.assertResponseNoErrors(response)
@@ -69,7 +69,10 @@ class ListingResolverTestCase(ListingBaseTestCase):
         self.assertEqual(
             len(listings),
             1,
-            f"Only expected the listing with id {self.visible_listing.id} to be visible, but found multiple: {[listing['id'] for listing in listings]}",
+            f"""
+                Only expected the listing with id {self.visible_listing.id} to be visible,
+                but found multiple: {[listing['id'] for listing in listings]}
+            """,
         )
         for listing in listings:
             self.deep_assert_equal(listing, self.visible_listing)
