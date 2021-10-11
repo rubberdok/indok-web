@@ -38,6 +38,7 @@ dayjs.extend(timezone);
 dayjs.locale(nb);
 dayjs.tz.setDefault("Europe/Oslo");
 const DATE_FORMAT = "YYYY-MM-DDTHH:mm:ss";
+import Alert from "../../Alert";
 
 interface EditEventProps {
   open: boolean;
@@ -78,7 +79,7 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
   const [eventData, setEventData] = useState(defaultInput);
   const [isAttendable, setIsAttendable] = useState(!!event.attendable);
   const [hasSlotDistribution, setHasSlotDistribution] = useState(
-    event?.availableSlots && event?.availableSlots?.length > 1
+    event?.availableSlots !== undefined && event?.availableSlots?.length > 1
   );
   const [slotDistribution, setSlotDistribution] = useState<{ category: number[]; availableSlots: number }[]>(
     event.availableSlots && event.availableSlots?.length > 1
@@ -91,6 +92,8 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
     event.availableSlots ? event.availableSlots.reduce((res, dist) => (res = res + dist.availableSlots), 0) : undefined
   );
   const [errors, setErrors] = useState<string[]>([]);
+  const [openEditErrorSnackbar, setOpenEditErrorSnackbar] = useState(false);
+  const [openEditSnackbar, setOpenEditSnackbar] = useState(false);
 
   const [updateEvent, { loading: updateEventLoading, error: updateEventError }] = useMutation<{
     updateEvent: { event: Event };
@@ -175,7 +178,7 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
   };
 
   const onSubmit = () => {
-    let currentErrors = [];
+    let currentErrors: string[] = [];
 
     const eventInputData = {
       title: eventData.title,
@@ -248,6 +251,7 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
 
     if (currentErrors.length > 0) {
       setErrors(currentErrors);
+      setOpenEditErrorSnackbar(true);
       return;
     }
 
@@ -260,6 +264,10 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
         attendableData: isAttendable ? attendableInput : undefined,
         slotDistributionData: isAttendable ? slotDistributionInput : undefined,
       },
+    }).then((res) => {
+      if (res.data?.updateEvent) {
+        setOpenEditSnackbar(true);
+      }
     });
     onClose();
   };
@@ -605,6 +613,24 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
           Lagre
         </Button>
       </DialogActions>
+      <Alert
+        severity="error"
+        open={openEditErrorSnackbar}
+        onClose={() => {
+          setOpenEditErrorSnackbar(false);
+          setErrors([]);
+        }}
+      >
+        {updateEventError
+          ? updateEventError.message
+          : "Opprettelse feilet: ".concat(
+              errors.slice(1, errors.length).reduce((res, error) => `${res}, ${error}`, `${errors[0]}`)
+            )}
+      </Alert>
+
+      <Alert severity="success" open={openEditSnackbar} onClose={() => setOpenEditSnackbar(false)}>
+        Arrangement oppdatert
+      </Alert>
     </Dialog>
   );
 };

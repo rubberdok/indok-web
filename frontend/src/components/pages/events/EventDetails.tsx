@@ -12,8 +12,6 @@ import {
   Grid,
   Link as MuiLink,
   Paper,
-  Snackbar as MuiSnackbar,
-  SnackbarCloseReason,
   TextField,
   Typography,
   useTheme,
@@ -24,7 +22,6 @@ import CategoryIcon from "@material-ui/icons/Category";
 import CreditCard from "@material-ui/icons/CreditCard";
 import EventIcon from "@material-ui/icons/Event";
 import LocationOnIcon from "@material-ui/icons/LocationOn";
-import { Alert as MuiAlert } from "@material-ui/lab";
 import dayjs from "dayjs";
 import nb from "dayjs/locale/nb";
 import Link from "next/link";
@@ -32,6 +29,7 @@ import React, { useState } from "react";
 import { GET_EVENT } from "../../../graphql/events/queries";
 import CountdownButton from "./CountdownButton";
 import EditEvent from "./EventEditor";
+import Alert from "../../Alert";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -79,13 +77,6 @@ interface Props {
   eventId: string;
 }
 
-interface AlertProps {
-  open: boolean;
-  onClose: ((event: React.SyntheticEvent<any, globalThis.Event>, reason: SnackbarCloseReason) => void) | undefined;
-  severity: "success" | "info" | "warning" | "error";
-  children: string | undefined;
-}
-
 function wrapInTypo(para: JSX.Element[] | string, className: string) {
   return <Typography className={className}>{para}</Typography>;
 }
@@ -98,21 +89,6 @@ function formatDescription(desc: string, innerClass: string, outerClass: string)
     )
   );
 }
-
-const Alert: React.FC<AlertProps> = ({ open, onClose, children, severity }) => {
-  return (
-    <MuiSnackbar
-      autoHideDuration={3000}
-      anchorOrigin={{ vertical: "top", horizontal: "right" }}
-      open={open}
-      onClose={onClose}
-    >
-      <MuiAlert elevation={6} variant="filled" severity={severity}>
-        {children}
-      </MuiAlert>
-    </MuiSnackbar>
-  );
-};
 
 const EventDetails: React.FC<Props> = ({ eventId }) => {
   const [openSignUpSnackbar, setOpenSignUpSnackbar] = useState(false);
