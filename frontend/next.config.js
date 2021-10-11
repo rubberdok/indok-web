@@ -15,6 +15,12 @@ const moduleExports = {
       },
     ];
   },
+  sentry: {
+    // Disable the Sentry CLI and manually manage releases and source maps
+    // To make Sentry work more nicely with CI/CD, as build != release for us.
+    disableServerWebpackPlugin: true,
+    disableClientWebpackPlugin: true,
+  },
 };
 
 const SentryWebpackPluginOptions = {
@@ -23,7 +29,6 @@ const SentryWebpackPluginOptions = {
   // recommended:
   //   release, url, org, project, authToken, configFile, stripPrefix,
   //   urlPrefix, include, ignore
-
   silent: true, // Suppresses all logs
   // For all available options, see:
   // https://github.com/getsentry/sentry-webpack-plugin#options.

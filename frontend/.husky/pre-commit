@@ -33,4 +33,4 @@ if (( $fail > 0 )); then
 fi
 
 cd frontend
-npx lint-staged
+yarn run lint-staged
