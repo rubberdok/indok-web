@@ -136,7 +136,6 @@ const Calendar: React.FC<CalendarProps> = ({
   const getRows = (month: dayjs.Dayjs) => {
     const days: dayjs.Dayjs[] = [...previousMonthDays(month), ...getDaysOfMonth(month), ...nextMonthDays(month)];
     let cells: dayjs.Dayjs[] = [];
-    console.log(days);
     return days.reduce((prev: dayjs.Dayjs[][], curr, index) => {
       if (index % 7 === 0 && index != 0) {
         // When we reach 7 days, push new Row
@@ -144,14 +143,12 @@ const Calendar: React.FC<CalendarProps> = ({
         // Clear Cells
         cells = [];
       }
-      console.log(curr);
       // Push current cell to cells
       cells.push(curr);
       // We reached the end, push last row
       if (index === days.length - 1) {
         prev.push(cells);
       }
-      console.log(prev);
       return prev;
     }, []);
   };

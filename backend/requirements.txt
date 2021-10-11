@@ -34,6 +34,7 @@ singledispatch==3.4.0.3
 six==1.15.0
 sqlparse==0.3.1
 Unidecode==1.1.1
+WeasyPrint==53.3
 google-api-python-client==1.12.5
 google_auth_oauthlib==0.4.1
 pandas==1.2.3

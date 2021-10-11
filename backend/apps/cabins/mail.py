@@ -1,9 +1,12 @@
 from django.core.mail import EmailMultiAlternatives
-from django.template.loader import get_template
+from django.template.loader import get_template, render_to_string
 from django.utils.html import strip_tags
 
 from apps.cabins.models import BookingResponsible
 from apps.cabins.types import BookingInfoType, AdminTemplateType, UserTemplateType, EmailTypes
+
+from weasyprint import HTML
+import io
 
 user_templates: UserTemplateType = {
     "reserve_subject": "Bekreftelse på mottat søknad om booking av ",
@@ -68,5 +71,15 @@ def send_mail(booking_info: BookingInfoType, email_type: EmailTypes, admin: bool
     if email_type != "disapprove_booking" and not admin:
         email.attach_file("static/cabins/Sjekkliste.pdf")
         email.attach_file("static/cabins/Reglement.pdf")
-
+        contract_pdf = html_to_pdf("contract_template.html", content)
+        email.attach("Contract.pdf", contract_pdf, "application/pdf")
     email.send()
+
+
+def html_to_pdf(template_src, context_dict={}):
+    html_string = render_to_string(template_src, context_dict)
+    html = HTML(string=html_string)
+    buffer = io.BytesIO()
+    html.write_pdf(target=buffer)
+    pdf = buffer.getvalue()
+    return pdf
