@@ -72,7 +72,7 @@ def send_mail(booking_info: BookingInfoType, email_type: EmailTypes, admin: bool
         email.attach_file("static/cabins/Sjekkliste.pdf")
         email.attach_file("static/cabins/Reglement.pdf")
         contract_pdf = html_to_pdf("contract_template.html", content)
-        email.attach("Contract.pdf", contract_pdf, "application/pdf")
+        email.attach("Kontrakt.pdf", contract_pdf, "application/pdf")
     email.send()
 
 

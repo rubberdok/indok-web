@@ -2,8 +2,9 @@
 
 <!--NB there also exist a react version of the contract frontend, in case of changes both must be updated.-->
 
-<html>
+<html lang="no">
     <head>
+    <title>Leiekontrakt</title>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="description" content="" />
@@ -17,22 +18,21 @@
     </head>
     <body style="font-family: Montserrat, serif">
         {% load static %}
-        <div align="center" >
-            <img src="./images/hyttestyret_logo.png" width="250px"/>
-            <h2 align="center" style="font-size:250%;">
+        <div>
+            <h2 style="font-size:250%;">
                 Leiekontrakt
             </h2>
         </div>
         På vegne av Foreningen for studenter ved Industriell Økonomi og Teknologiledelse er det i dag inngått følgende
         leiekontrakt mellom Hyttestyret og
-        <b>{{first_name}} {{last_name}}</b>.
+        <strong>{{first_name}} {{last_name}}</strong>.
         <br/><br/>
 
-        Gjeldende Leieobjekt(er): <b>{{chosen_cabins_string}}</b>, Landsbygrenda, 7340 Oppdal
+        Gjeldende Leieobjekt(er): <strong>{{chosen_cabins_string}}</strong>, Landsbygrenda, 7340 Oppdal
         <br/>
-        Leieperiode: <b>{{check_in}}</b> - <b>{{check_out}}</b>
+        Leieperiode: <strong>{{check_in}}</strong> - <strong>{{check_out}}</strong>
         <br/>
-        Leiesum: <b>{{price}}</b> NOK innbetalt til konto <b>9235.28.31311</b> i forkant av leieperioden.
+        Leiesum: <strong>{{price}}</strong> NOK innbetalt til konto <strong>9235.28.31311</strong> i forkant av leieperioden.
         <br/><br/>
 
         Leietager betaler ikke depositum i forkant av leieperioden, men eventuelle skader på hytte eller inventar samt
@@ -89,6 +89,6 @@
         Flytter ikke leietager når leieperioden er utløpt, kan vedkommende kastes ut uten søksmål og dom etter § 13-2
         i Tvangsfullbyrdelsesloven. <br/>
         Denne leieavtalen er utstedt i 2 – to – eksemplarer, ett til hver av partene. <br/>
-        Dato/tid: <b>{{now_time}}</b>
+        Dato/tid: <strong>{{now_time}}</strong>
     </body>
 </html>
