@@ -1,7 +1,7 @@
 import graphene
 
 from apps.archive.schema import ArchiveMutations, ArchiveQueries
-from apps.blogs.schema import BlogPostMutations, BlogPostQueries
+from apps.blogs.schema import BlogMutations, BlogQueries
 from apps.cabins.schema import CabinMutations, CabinQueries
 from apps.events.schema import EventMutations, EventQueries
 from apps.forms.schema import FormMutations, FormQueries
@@ -20,7 +20,7 @@ class Queries(
     ListingQueries,
     FormQueries,
     UtilQueries,
-    BlogPostQueries,
+    BlogQueries,
 ):
     pass
 
@@ -33,7 +33,7 @@ class Mutations(
     OrganizationMutations,
     ListingMutations,
     FormMutations,
-    BlogPostMutations,
+    BlogMutations,
 ):
     pass
 

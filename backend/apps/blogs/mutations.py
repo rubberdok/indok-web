@@ -1,10 +1,40 @@
 import graphene
 from django.shortcuts import get_object_or_404
 
-
-from .models import BlogPost as BlogPostModel
-from .types import BlogPostType
+from .models import BlogPost as BlogPostModel, Blog as BlogModel
+from apps.organizations.models import Organization as OrganizationModel
+from .types import BlogType, BlogPostType
 from graphql_jwt.decorators import login_required, permission_required
+
+
+class CreateBlog(graphene.Mutation):
+    class Arguments:
+        name = graphene.String()
+        description = graphene.String()
+        organization_id = graphene.ID()
+
+    ok = graphene.Boolean()
+    blog = graphene.Field(BlogType)
+
+    @permission_required("blogs.add_blog")
+    def mutate(self, info, name, description, organization_id):
+        
+        try:
+            organization = OrganizationModel.objects.get(pk=organization_id)
+        
+            blog = BlogModel.objects.create(
+                name=name,
+                description=description,
+                organization=organization,
+            )
+
+            return CreateBlog(blog=blog, ok=True)
+        except OrganizationModel.DoesNotExist:
+            return CreateBlog(
+                blog=None,
+                ok=False,
+            )
+
 
 
 class CreateBlogPost(graphene.Mutation):
