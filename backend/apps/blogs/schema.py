@@ -1,6 +1,6 @@
 import graphene
 
-from .mutations import CreateBlog, DeleteBlog, CreateBlogPost, DeleteBlogPost, UpdateBlogPost
+from .mutations import CreateBlog, DeleteBlog, UpdateBlog, CreateBlogPost, DeleteBlogPost, UpdateBlogPost
 from .types import BlogType, BlogPostType
 from .resolvers import BlogResolvers
 
@@ -8,6 +8,7 @@ from .resolvers import BlogResolvers
 class BlogMutations(graphene.ObjectType):
     create_blog = CreateBlog.Field()
     delete_blog = DeleteBlog.Field()
+    update_blog = UpdateBlog.Field()
     create_blog_post = CreateBlogPost.Field()
     delete_blog_post = DeleteBlogPost.Field()
     update_blog_post = UpdateBlogPost.Field()

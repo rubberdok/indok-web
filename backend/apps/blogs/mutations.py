@@ -1,10 +1,9 @@
 import graphene
-from django.shortcuts import get_object_or_404
 
 from .models import BlogPost as BlogPostModel, Blog as BlogModel
 from apps.organizations.models import Organization as OrganizationModel
 from .types import BlogType, BlogPostType
-from graphql_jwt.decorators import login_required, permission_required
+from graphql_jwt.decorators import permission_required
 
 
 class CreateBlog(graphene.Mutation):
@@ -48,6 +47,45 @@ class DeleteBlog(graphene.Mutation):
         except BlogModel.DoesNotExist:
             return DeleteBlog(ok=False)
         return DeleteBlog(ok=True)
+
+
+class BlogInput(graphene.InputObjectType):
+    name = graphene.String()
+    description = graphene.String()
+    organization_id = graphene.ID()
+
+
+class UpdateBlogInput(BlogInput):
+    id = graphene.ID(required=True)
+
+
+class UpdateBlog(graphene.Mutation):
+    class Arguments:
+        blog_data = UpdateBlogInput()
+
+    ok = graphene.Boolean()
+    blog = graphene.Field(BlogType)
+
+    @permission_required("blogs.change_blog")
+    def mutate(self, info, blog_data,):
+
+        ok = True
+
+        try:
+            blog = BlogModel.objects.get(pk=blog_data.id)
+
+            for input_field, input_value in blog_data.items():
+                if input_value is not None:
+                    setattr(blog, input_field, input_value)
+            blog.save()
+
+            return UpdateBlog(blog=blog, ok=ok)
+        
+        except BlogModel.DoesNotExist:
+            return UpdateBlog(
+                blog=None,
+                ok=False,
+            )
 
 
 class CreateBlogPost(graphene.Mutation):
