@@ -2,8 +2,9 @@ import os
 
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
+from sentry_sdk.integrations.logging import ignore_logger
 
-from api.settings import *
+from api.settings import *  # noqa
 
 DEBUG = False
 
@@ -43,6 +44,7 @@ VIPPS_SECRET = os.environ.get("VIPPS_SECRET")
 VIPPS_MERCHANT_SERIAL_NUMBER = os.environ.get("VIPPS_MERCHANT_SERIAL_NUMBER")
 VIPPS_SUBSCRIPTION_KEY = os.environ.get("VIPPS_SUBSCRIPTION_KEY")
 
+SENTRY_ENVIRONMENT = "production"
 
 sentry_sdk.init(
     dsn="https://6bd0cd5210c0448aa90879a01db24663@o514678.ingest.sentry.io/5618268",
@@ -51,4 +53,6 @@ sentry_sdk.init(
     # If you wish to associate users to errors (assuming you are using
     # django.contrib.auth) you may enable sending PII data.
     send_default_pii=True,
+    environment=SENTRY_ENVIRONMENT,
 )
+ignore_logger("graphql.execution.utils")

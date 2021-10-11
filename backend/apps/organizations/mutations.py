@@ -1,6 +1,5 @@
 import graphene
-from django.contrib.auth import get_user_model
-from django.contrib.auth.models import Group, User
+from django.contrib.auth.models import User
 from django.utils.text import slugify
 from utils.decorators import permission_required
 
@@ -95,10 +94,19 @@ class AssignMembership(graphene.Mutation):
 
     @permission_required("organizations.change_organization", fn=get_organization_from_data)
     def mutate(self, _, membership_data):
+        organization = Organization.objects.prefetch_related("permission_groups").get(
+            pk=membership_data["organization_id"]
+        )
+
+        try:
+            group = organization.permission_groups.get(pk=membership_data.get("group_id"))
+        except ResponsibleGroup.DoesNotExist:
+            return AssignMembership(membership=None, ok=False)
+
         membership = Membership(
             organization_id=membership_data["organization_id"],
             user_id=membership_data["user_id"],
-            group_id=membership_data.get("group_id", None),
+            group=group,
         )
         membership.save()
         return AssignMembership(membership=membership, ok=True)

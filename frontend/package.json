@@ -9,9 +9,9 @@
     "dev": "next",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint src --ext .ts,.tsx",
-    "lint:fix": "npm run lint -- --fix",
-    "prepare": "cd .. && husky install frontend/.husky"
+    "lint": "eslint",
+    "lint:fix": "yarn run lint --fix",
+    "postinstall": "cd .. && husky install frontend/.husky"
   },
   "repository": {
     "type": "git",
@@ -23,6 +23,7 @@
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.58",
     "@material-ui/system": "^4.11.2",
+    "@sentry/nextjs": "^6.11.0",
     "dayjs": "^1.10.5",
     "graphql": "^15.5.0",
     "gray-matter": "^4.0.3",
@@ -68,11 +69,12 @@
   },
   "lint-staged": {
     "src/**/*.{ts,tsx}": [
-      "npm run lint:fix",
+      "yarn run lint:fix",
       "prettier --write"
     ],
     "../**/*.py": [
-      "black"
+      "black",
+      "flake8 --append-config=../backend/tox.ini"
     ]
   }
 }

@@ -1,6 +1,8 @@
+from datetime import timedelta
 import json
-from typing import Any, Optional, cast
+from typing import Any, Optional, Union
 
+from django.utils import timezone
 from guardian.shortcuts import assign_perm
 from utils.testing.ExtendedGraphQLTestCase import ExtendedGraphQLTestCase
 from utils.testing.factories.forms import (
@@ -10,10 +12,11 @@ from utils.testing.factories.forms import (
     QuestionFactory,
     ResponseFactory,
 )
+from utils.testing.factories.listings import ListingFactory
 from utils.testing.factories.organizations import MembershipFactory, OrganizationFactory
 from utils.testing.factories.users import IndokUserFactory
 
-from apps.forms.models import Form, Question
+from apps.forms.models import Answer, Form, Question
 
 
 class FormBaseTestCase(ExtendedGraphQLTestCase):
@@ -190,7 +193,7 @@ class FormsMutationTestCase(FormBaseTestCase):
         response_form = data["createForm"]["form"]
         form = Form.objects.get(pk=response_form["id"])
         if form is None:
-            self.assertIsNotNone(form, msg=f"Expected form after creation, got {None}")
+            self.assertIsNotNone(form, msg="Expected form after creation, got None")
         else:
             self.assertTrue(data["createForm"]["ok"])
             self.deep_assert_equal(response_form, form)
@@ -241,35 +244,91 @@ class FormsMutationTestCase(FormBaseTestCase):
         self.assertTrue(data["deleteQuestion"]["ok"])
 
 
+class FormResponseTestCase(FormBaseTestCase):
+    def submit_response_query(self, form: Union[FormFactory, Form]) -> str:
+        return f"""
+            mutation {{
+                submitAnswers(
+                    formId: {form.id},
+                    answersData: [
+                        {{
+                            questionId: {self.paragraph.id}
+                            answer: "Answer"
+                        }},
+                        {{
+                            questionId: {self.not_mandatory.id}
+                            answer: "Answer"
+                        }},
+                        {{
+                            questionId: {self.short_question.id}
+                            answer: "Answer"
+                        }},
+                        {{
+                            questionId: {self.mcq.id}
+                            answer: "Answer"
+                        }},
+                        {{
+                            questionId: {self.checkboxes.id}
+                            answer: "Answer"
+                        }},
+                        {{
+                            questionId: {self.dropdown.id}
+                            answer: "Answer"
+                        }},
+                    ]
+                ) {{
+                    ok
+                    message
+                }}
+            }}
+        """
+
+    def setUp(self) -> None:
+        super().setUp()
+        self.responding_student = IndokUserFactory()
+        ListingFactory(
+            form=self.form, deadline=timezone.now() + timedelta(days=7), end_datetime=timezone.now() + timedelta(days=7)
+        )
+
+    def test_answer_previously_unanswered_form(self) -> None:
+        mutation = self.submit_response_query(self.form)
+        response = self.query(mutation, user=self.responding_student)
+        self.assertResponseNoErrors(response)
+        self.assertEqual(
+            Answer.objects.filter(response__respondent=self.responding_student, answer="Answer").count(),
+            self.form.questions.count(),
+        )
+
+
 class FormsQueryTestCase(FormBaseTestCase):
-    FORMS_WITH_RESPONSES = f"""
-        query {{
-            forms {{
+    FORMS_WITH_RESPONSES = """
+        query {
+            forms {
                 id
                 name
                 description
-                responses {{
+                responses {
                     id
-                }}
-                responders {{
+                }
+                responders {
                     id
-                }}
-            }}
-        }}
+                }
+            }
+        }
     """
 
-    FORMS = f"""
-        query {{
-            forms {{
+    FORMS = """
+        query {
+            forms {
                 id
                 name
                 description
-                questions {{
+                questions {
                     id
                     question
-                }}
-            }}
-        }}
+                }
+            }
+        }
     """
 
     def test_unauthenticated_get_forms(self):

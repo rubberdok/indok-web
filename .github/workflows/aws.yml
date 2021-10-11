@@ -99,6 +99,7 @@ jobs:
           NEXT_PUBLIC_DATAPORTEN_ID: f17d2ea0-a7c9-4458-83bf-35cf5b555cae
           NEXT_PUBLIC_DATAPORTEN_REDIRECT_URI: https://indokntnu.no/authCallback
           NEXT_PUBLIC_DATAPORTEN_STATE: RGpBPYszuqXVvsma1suHJJ4X7ZJjkfS6njRHnx4p
+          NEXT_PUBLIC_SENTRY_DSN: https://4a40409b5c6f4a759eff513c338a18be@o514678.ingest.sentry.io/5618306
         with:
           file: frontend/Dockerfile.prod
           context: ./frontend
@@ -112,6 +113,7 @@ jobs:
             "NEXT_PUBLIC_DATAPORTEN_STATE=${{ env.NEXT_PUBLIC_DATAPORTEN_STATE }}"
           secrets: |
             "SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}"
+            "SENTRY_RELEASE=${{ github.sha }}"
 
   deploy-frontend-task-definition:
     environment: app
@@ -165,6 +167,8 @@ jobs:
           SENTRY_PROJECT: ${{ env.SENTRY_PROJECT }}
         with:
           environment: production
+          sourcemaps: .next
+          url_prefix: ~/_next
 
   deploy-backend-task-definition:
     environment: api

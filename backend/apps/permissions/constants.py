@@ -1,6 +1,10 @@
-from typing import Final
+from typing import Final, Literal
 
 DefaultPermissionsType = Final[list[tuple[str, str]]]
+
+# Default ResponsibleGroup types
+PRIMARY_TYPE: Literal["PRIMARY"] = "PRIMARY"
+HR_TYPE: Literal["HR"] = "HR"
 
 ORGANIZATION: Final = "Organization member"
 INDOK: Final = "Indøk"

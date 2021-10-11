@@ -10,10 +10,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
-from pathlib import Path
 import os
+from pathlib import Path
 
 import environ
+from corsheaders.defaults import default_headers
 
 env = environ.Env()
 environ.Env.read_env()
@@ -36,6 +37,7 @@ CORS_ALLOW_CREDENTIALS = True
 
 CORS_ORIGIN_WHITELIST = ["http://localhost:3000", "http://127.0.0.1:3000"]
 
+CORS_ALLOW_HEADERS = list(default_headers) + ["sentry-trace"]
 
 # Application definition
 
@@ -57,6 +59,7 @@ INSTALLED_APPS = [
     "apps.listings",
     "apps.permissions",
     "apps.ecommerce",
+    "apps.integrationserver",
     # External apps
     "corsheaders",
     "graphene_django",
@@ -72,6 +75,7 @@ GRAPHENE = {
     "MIDDLEWARE": [
         "graphql_jwt.middleware.JSONWebTokenMiddleware",
         "api.auth.middleware.AnonymousUserMiddleware",
+        "api.sentry.middleware.SentryMiddleware",
     ],
 }
 

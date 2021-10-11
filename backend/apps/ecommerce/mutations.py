@@ -4,7 +4,6 @@ import graphene
 from django.core.exceptions import PermissionDenied
 from graphql_jwt.decorators import login_required
 
-from ..events.models import SignUp
 from .models import Order, Product
 from .vipps_utils import VippsApi
 
@@ -57,14 +56,12 @@ class InitiateOrder(graphene.Mutation):
 
             order_id = f"{org_name}-{uuid.uuid4().hex}"
 
-            sign_up = SignUp.objects.get(user=user, event=product.event)
             order = Order()
             order.order_id = order_id
             order.product = product
             order.user = user
             order.quantity = quantity
             order.total_price = product.price * quantity
-            order.sign_up = sign_up
 
             order.save()
 
