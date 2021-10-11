@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useQuery, gql } from "@apollo/client";
 import { useRouter } from "next/router";
 import { User } from "@interfaces/users";
@@ -21,6 +21,7 @@ import {
 } from "@material-ui/core";
 import { Organization } from "@interfaces/organizations";
 import { Delete } from "@material-ui/icons";
+import FilterUsers from "./FilterUsers";
 
 const useStyles = makeStyles(() => ({
   hover: {
@@ -60,24 +61,15 @@ const EditUsersInOrganization: React.FC<Props> = ({ organization }) => {
 
   if (error) return <p>Error</p>;
   if (loading) return <p>Loading...</p>;
-  /* Fetching user data and then mapping it to components
-  {data &&
-    data.organization.users?.map((user) => (
-      <Grid item key={user.username}>
-        {user.username}
-      </Grid>
-    ))}
-  */
 
   return (
     <Box m={10}>
       {data?.organization?.users ? (
-        <Grid container spacing={10}>
-          <Grid item>
-            <Typography variant="h1" align="center">
-              {organization.name}
-            </Typography>
+        <Grid container spacing={4}>
+          <Grid item xs={12}>
+            <Typography variant="h1">{organization.name}</Typography>
           </Grid>
+          <FilterUsers organization={organization} />
           <Grid item container>
             <Grid item xs>
               <Card variant="outlined">
