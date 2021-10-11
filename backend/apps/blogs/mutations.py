@@ -35,6 +35,19 @@ class CreateBlog(graphene.Mutation):
                 ok=False,
             )
 
+class DeleteBlog(graphene.Mutation):
+    class Arguments:
+        blog_id = graphene.ID()
+    
+    ok = graphene.ID()
+
+    @permission_required("blogs.delete_blog")
+    def mutate(self, info, blog_id, **kwargs):
+        try:
+            BlogModel.objects.get(pk=blog_id).delete()
+        except BlogModel.DoesNotExist:
+            return DeleteBlog(ok=False)
+        return DeleteBlog(ok=True)
 
 
 class CreateBlogPost(graphene.Mutation):
@@ -75,7 +88,7 @@ class DeleteBlogPost(graphene.Mutation):
         try:
             BlogPostModel.objects.get(pk=blog_post_id).delete()
         except BlogPostModel.DoesNotExist:
-            return DeletePlogBost(ok=False)
+            return DeleteBlogPost(ok=False)
         return DeleteBlogPost(ok=True)
 
 
