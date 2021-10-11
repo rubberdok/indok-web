@@ -87,7 +87,7 @@ class Event(models.Model):
         )
         for grades, users in attending.items():
             if grade_year in [int(val) for val in grades.split(",")]:
-                return len(users) > available_slots
+                return len(users) >= available_slots
         return False
 
     def __str__(self):

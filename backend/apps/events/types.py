@@ -108,6 +108,8 @@ class EventType(DjangoObjectType):
     @staticmethod
     def resolve_is_full(event, info):
         user = info.context.user
+        if user is None:
+            return False
         return event.get_is_full(user.grade_year)
 
     @staticmethod
@@ -141,8 +143,6 @@ class EventType(DjangoObjectType):
         return SignUp.objects.filter(event=event, user__in=all_attending, is_attending=True)
 
     @staticmethod
-    @login_required
-    @PermissionDecorators.is_in_event_organization
     def resolve_available_slots(event, info):
         user = info.context.user
         if not user.is_authenticated or not user.memberships.filter(organization=event.organization).exists():
