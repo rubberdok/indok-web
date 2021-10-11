@@ -1,7 +1,5 @@
 import graphene
 
-from django.utils import timezone
-
 from .helpers import price
 from .types import AllBookingsType, BookingInfoType, EmailInputType
 from apps.cabins.models import Booking as BookingModel
@@ -61,7 +59,6 @@ class CreateBooking(graphene.Mutation):
         for input_field, input_value in booking_data.items():
             if input_field and input_field != "cabins":
                 setattr(booking, input_field, input_value)
-        booking.timestamp = timezone.now()
         booking.is_tentative = True
         booking.save()
         booking.cabins.set(CabinModel.objects.filter(id__in=booking_data.cabins))

@@ -1,7 +1,6 @@
 import { useMutation, useQuery } from "@apollo/client";
 import Layout from "@components/Layout";
 import { QUERY_ADMIN_ALL_BOOKINGS } from "@graphql/cabins/queries";
-import { BookingFromQuery } from "@interfaces/cabins";
 import CheckIcon from "@material-ui/icons/Check";
 import ClearIcon from "@material-ui/icons/Clear";
 import {
@@ -25,14 +24,14 @@ import {
   Button,
   Tooltip,
 } from "@material-ui/core";
-import { toStringChosenCabins } from "@utils/cabins";
+import { getDecisionEmailProps, toStringChosenCabins } from "@utils/cabins";
 import dayjs from "dayjs";
 import { NextPage } from "next";
-import { CONFIRM_BOOKING, DELETE_BOOKING } from "@graphql/cabins/mutations";
+import { CONFIRM_BOOKING, DELETE_BOOKING, SEND_EMAIL } from "@graphql/cabins/mutations";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import theme from "@styles/theme";
-import { sendDecisionEmail } from "./helpers";
+import { BookingFromQuery } from "@interfaces/cabins";
 
 /*
 Page for booking admininistration showing all upcoming bookings and buttons for actions on these bookings.
@@ -46,9 +45,12 @@ const BookingAdminPage: NextPage = () => {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [bookingToBeDeleted, setBookingToBeDeleted] = useState<BookingFromQuery | undefined>();
+  const [send_email] = useMutation(SEND_EMAIL);
   const router = useRouter();
 
-  const errorMessageDialog = () => (
+  const handleDeleteBookingOnClose = () => setBookingToBeDeleted(undefined);
+
+  const ErrorMessageDialog: React.VFC = () => (
     <Dialog open={error != undefined} onClose={handleErrorDialogClose}>
       <DialogTitle>{`Det har oppstått en feilmelding: ${error?.name}`}</DialogTitle>
       <DialogContent>
@@ -62,11 +64,9 @@ const BookingAdminPage: NextPage = () => {
     </Dialog>
   );
 
-  const handleDeleteBookingOnClose = () => setBookingToBeDeleted(undefined);
-
-  const deleteBookingDialog = () => (
+  const DeleteBookingDialog: React.VFC = () => (
     <Dialog open={bookingToBeDeleted != undefined} onClose={handleDeleteBookingOnClose}>
-      <DialogTitle>{`Du er nå i ferd med å gjøre en irreversibel handling`}</DialogTitle>
+      <DialogTitle>Du er nå i ferd med å gjøre en irreversibel handling</DialogTitle>
       <DialogContent>
         <DialogContentText>Er du sikker på at du vil slette denne bookingen?</DialogContentText>
       </DialogContent>
@@ -82,7 +82,7 @@ const BookingAdminPage: NextPage = () => {
                 setOpenSnackbar(true);
                 refetch();
               });
-              sendDecisionEmail(bookingToBeDeleted, false);
+              send_email(getDecisionEmailProps(bookingToBeDeleted, false));
             }
             handleDeleteBookingOnClose();
           }}
@@ -104,8 +104,8 @@ const BookingAdminPage: NextPage = () => {
         autoHideDuration={6000}
         onClose={() => setOpenSnackbar(false)}
       />
-      {errorMessageDialog()}
-      {deleteBookingDialog()}
+      <ErrorMessageDialog />
+      <DeleteBookingDialog />
       <Grid container direction="column" spacing={3}>
         <Grid item>
           <Box p={3}>
@@ -153,7 +153,7 @@ const BookingAdminPage: NextPage = () => {
                                   setOpenSnackbar(true);
                                   refetch();
                                 });
-                                sendDecisionEmail(booking, true);
+                                send_email(getDecisionEmailProps(booking, true));
                               }}
                               color="secondary"
                             >

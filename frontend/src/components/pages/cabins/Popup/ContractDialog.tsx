@@ -7,8 +7,7 @@ import { createStyles, Grid, IconButton, makeStyles, Theme } from "@material-ui/
 import Contract from "../Documents/Contract";
 import ClearIcon from "@material-ui/icons/Clear";
 import CheckIcon from "@material-ui/icons/Check";
-import { Cabin, ContactInfo } from "@interfaces/cabins";
-import { ModalData, DatePick } from "src/pages/cabins/book";
+import { Cabin, ContactInfo, DatePick, ModalData } from "@interfaces/cabins";
 import { NextPage } from "next";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -40,7 +39,7 @@ const ContractDialog: NextPage<ContractDialogProps> = ({
   contactInfo,
   activeStep,
   setActiveStep,
-}: ContractDialogProps) => {
+}) => {
   const classes = useStyles();
 
   const handleClose = () => {

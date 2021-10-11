@@ -10,13 +10,15 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import HotTubIcon from "@material-ui/icons/HotTub";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import { DirectionsBus, DirectionsCar, DirectionsTransit, LocalTaxi } from "@material-ui/icons";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ImageSlider from "@components/pages/cabins/ImageSlider/ImageSlider";
 import { cabinImages, outsideImages } from "@components/pages/cabins/ImageSlider/imageData";
 import FAQ from "@components/pages/cabins/Documents/FAQ";
 import Layout from "@components/Layout";
-
-const BOOKING_DISABLED = false;
+import { useQuery } from "@apollo/client";
+import { GET_USER } from "@graphql/users/queries";
+import { User } from "@interfaces/users";
+import PermissionRequired from "@components/permissions/PermissionRequired";
 
 const useStyles = makeStyles((theme: Theme) => ({
   hero: {
@@ -49,6 +51,14 @@ Front page for cabins. Includes info about the cabins and link to the booking pa
 */
 const CabinsPage: NextPage = () => {
   const classes = useStyles();
+  const { data, error } = useQuery<{ user: User }>(GET_USER);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    if (data && data.user && !error) {
+      setIsLoggedIn(true);
+    }
+  }, [data]);
 
   const facilitiesData = [
     {
@@ -120,17 +130,27 @@ const CabinsPage: NextPage = () => {
       <Grid xs={12} sm={6} item container justifyContent="center">
         <Box m={2}>
           <Typography variant="h1">Hyttebooking</Typography>
-          <Typography variant="overline">På denne siden blir det snart mulig å reservere indøkhyttene</Typography>
         </Box>
       </Grid>
       <Grid xs={12} sm={6} item container justifyContent="center">
-        {BOOKING_DISABLED ? null : (
+        <PermissionRequired
+          permission="cabins.add_booking"
+          fallback={
+            !isLoggedIn ? (
+              // User is not logged in, and therefore does not have the permission.
+              <Typography variant="h5">Du må være logget inn for å booke en hytte.</Typography>
+            ) : (
+              // User is logged in, but does not have the permission (we disabled cabin booking for a subset of the users)
+              <Typography variant="h5">Her blir det snart mulig å reservere indøkhyttene</Typography>
+            )
+          }
+        >
           <Link href="/cabins/book" passHref>
             <Button variant="contained" endIcon={<NavigateNextIcon />}>
               Book nå
             </Button>
           </Link>
-        )}
+        </PermissionRequired>
       </Grid>
       <Grid xs={12} sm={6} item container justifyContent="center">
         <Button

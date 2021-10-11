@@ -1,7 +1,8 @@
+from datetime import timedelta
 import json
-from typing import Any, Optional
+from typing import Any, Optional, Union
 
-from django.contrib.auth import get_user_model
+from django.utils import timezone
 from guardian.shortcuts import assign_perm
 from utils.testing.ExtendedGraphQLTestCase import ExtendedGraphQLTestCase
 from utils.testing.factories.forms import (
@@ -11,10 +12,11 @@ from utils.testing.factories.forms import (
     QuestionFactory,
     ResponseFactory,
 )
+from utils.testing.factories.listings import ListingFactory
 from utils.testing.factories.organizations import MembershipFactory, OrganizationFactory
-from utils.testing.factories.users import UserFactory
+from utils.testing.factories.users import IndokUserFactory
 
-from apps.forms.models import Form, Question
+from apps.forms.models import Answer, Form, Question
 
 
 class FormBaseTestCase(ExtendedGraphQLTestCase):
@@ -22,9 +24,9 @@ class FormBaseTestCase(ExtendedGraphQLTestCase):
         super().setUp()
 
         # Create users and an organization
-        self.authorized_user = UserFactory()
-        self.unauthorized_user = UserFactory()
-        self.preexisting_user = UserFactory()
+        self.authorized_user = IndokUserFactory()
+        self.unauthorized_user = IndokUserFactory()
+        self.preexisting_user = IndokUserFactory()
         self.organization = OrganizationFactory()
         MembershipFactory(
             user=self.authorized_user,
@@ -242,6 +244,62 @@ class FormsMutationTestCase(FormBaseTestCase):
         self.assertTrue(data["deleteQuestion"]["ok"])
 
 
+class FormResponseTestCase(FormBaseTestCase):
+    def submit_response_query(self, form: Union[FormFactory, Form]) -> str:
+        return f"""
+            mutation {{
+                submitAnswers(
+                    formId: {form.id},
+                    answersData: [
+                        {{
+                            questionId: {self.paragraph.id}
+                            answer: "Answer"
+                        }},
+                        {{
+                            questionId: {self.not_mandatory.id}
+                            answer: "Answer"
+                        }},
+                        {{
+                            questionId: {self.short_question.id}
+                            answer: "Answer"
+                        }},
+                        {{
+                            questionId: {self.mcq.id}
+                            answer: "Answer"
+                        }},
+                        {{
+                            questionId: {self.checkboxes.id}
+                            answer: "Answer"
+                        }},
+                        {{
+                            questionId: {self.dropdown.id}
+                            answer: "Answer"
+                        }},
+                    ]
+                ) {{
+                    ok
+                    message
+                }}
+            }}
+        """
+
+    def setUp(self) -> None:
+        super().setUp()
+        self.responding_student = IndokUserFactory()
+        ListingFactory(
+            form=self.form, deadline=timezone.now() + timedelta(days=7), end_datetime=timezone.now() + timedelta(days=7)
+        )
+
+    def test_answer_previously_unanswered_form(self) -> None:
+        mutation = self.submit_response_query(self.form)
+        response = self.query(mutation, user=self.responding_student)
+        self.assertResponseNoErrors(response)
+        self.assertEqual(
+            Answer.objects.filter(response__respondent=self.responding_student, answer="Answer").count(),
+            self.form.questions.count(),
+        )
+
+
 class FormsQueryTestCase(FormBaseTestCase):
     FORMS_WITH_RESPONSES = f"""
         query {{
@@ -289,7 +347,8 @@ class FormsQueryTestCase(FormBaseTestCase):
         response = self.query(self.FORMS_WITH_RESPONSES, user=self.authorized_user)
         data = json.loads(response.content)["data"]
         forms = Form.objects.all()
-        forms_response: list[dict[str, Any]] = data["forms"]
+        forms_response: Optional[list[dict[str, Any]]] = data["forms"]
+        self.assertIsNotNone(forms_response)
 
         for form_response in forms_response:
             form = forms.get(pk=form_response["id"])

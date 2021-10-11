@@ -166,13 +166,13 @@ const ProfilePage: NextPage = () => {
                     <Card>
                       <CardContent>
                         <Typography gutterBottom variant="h4">
-                          Varsle
+                          Baksida
                         </Typography>
                         <Typography>{`Har du opplevd noe ugreit, ubehagelig eller ulovlig på Indøk? Da kan du varsle om det.`}</Typography>
                       </CardContent>
                       <CardActions>
                         <Link href="/report" passHref>
-                          <Button>Gå til varsling</Button>
+                          <Button>Gå til Baksida</Button>
                         </Link>
                       </CardActions>
                     </Card>

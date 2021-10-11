@@ -1,8 +1,6 @@
-import { NextPage, NextComponentType } from "next";
-import { makeStyles, Theme, Typography, Box, Divider, Tooltip, useMediaQuery } from "@material-ui/core";
-import { Cabin, ContactInfo } from "@interfaces/cabins";
-import { DatePick } from "src/pages/cabins/book";
-import { ReactNode } from "react";
+import { NextPage } from "next";
+import { makeStyles, Typography, Box, Divider, Tooltip, useMediaQuery } from "@material-ui/core";
+import { Cabin, ContactInfo, DatePick } from "@interfaces/cabins";
 import { TypographyProps } from "@material-ui/core/Typography";
 import { calculatePrice, convertDateFormat, toStringChosenCabins } from "@utils/cabins";
 import theme from "@styles/theme";
@@ -15,14 +13,14 @@ interface Props {
   mailSent?: boolean;
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles({
   bold: {
     fontWeight: theme.typography.fontWeightBold,
     display: "inline",
   },
-}));
+});
 
-const InfoText: NextComponentType<TypographyProps> = (props) => (
+const InfoText: React.FC<TypographyProps> = (props) => (
   <Typography variant="body2" align="center" component="span" display="block" {...props}>
     {props.children}
   </Typography>
@@ -36,20 +34,21 @@ const CabinBookingStatus: NextPage<Props> = ({ chosenCabins, datePick, contactIn
   const classes = useStyles();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const infos: { info: Cabin[] | DatePick | ContactInfo; renderComponent: ReactNode }[] = [
-    {
-      info: chosenCabins,
-      renderComponent: (
-        <InfoText>
-          {cabinText ?? "Du søker nå om å booke"}{" "}
-          <Box className={classes.bold}>{toStringChosenCabins(chosenCabins)}</Box>
-        </InfoText>
-      ),
-    },
-    {
-      info: datePick,
-      renderComponent: (
-        <>
+  return (
+    <Box p={isMobile ? 0 : 3} border={3} borderColor="primary.main">
+      {chosenCabins ? (
+        <Box m={3}>
+          <InfoText>
+            {cabinText ?? "Du søker nå om å booke"}{" "}
+            <Box className={classes.bold}>{toStringChosenCabins(chosenCabins)}</Box>
+          </InfoText>
+        </Box>
+      ) : null}
+
+      <Divider />
+
+      {datePick ? (
+        <Box m={3}>
           <InfoText>
             <Box className={classes.bold}>Innsjekk: </Box>
             {datePick.checkInDate !== undefined && convertDateFormat(datePick.checkInDate)}
@@ -58,13 +57,13 @@ const CabinBookingStatus: NextPage<Props> = ({ chosenCabins, datePick, contactIn
             <Box className={classes.bold}>Utsjekk: </Box>
             {datePick.checkOutDate !== undefined && convertDateFormat(datePick.checkOutDate)}
           </InfoText>
-        </>
-      ),
-    },
-    {
-      info: contactInfo,
-      renderComponent: (
-        <>
+        </Box>
+      ) : null}
+
+      <Divider />
+
+      {contactInfo ? (
+        <Box m={3}>
           <InfoText>
             <Box className={classes.bold}>Gjester: </Box>
             {contactInfo.internalParticipants > 0 ? `${contactInfo.internalParticipants} indøkere` : null}
@@ -84,34 +83,20 @@ const CabinBookingStatus: NextPage<Props> = ({ chosenCabins, datePick, contactIn
               <Box display="inline">{calculatePrice(chosenCabins, contactInfo, datePick)} kr</Box>
             </Tooltip>
           </InfoText>
-        </>
-      ),
-    },
-    {
-      info: contactInfo,
-      renderComponent: (
-        <>
-          <InfoText>
-            <Box>
-              <Typography variant={isMobile ? "body2" : "body1"}>
-                Vi har sendt en mail til {contactInfo.receiverEmail} med informasjon om søknaden.
-              </Typography>
-            </Box>
-          </InfoText>
-        </>
-      ),
-    },
-  ];
-  return (
-    <Box p={isMobile ? 0 : 3} border={3} borderColor="primary.main">
-      {infos
-        .filter((info, index) => (info.info !== undefined && index != 3 && !mailSent) || mailSent)
-        .map((info, index) => (
-          <Box key={index}>
-            <Box m={3}>{info.renderComponent}</Box>
-            <Divider />
+        </Box>
+      ) : null}
+
+      <Divider />
+
+      {mailSent ? (
+        <InfoText>
+          <Box>
+            <Typography variant={isMobile ? "body2" : "body1"}>
+              Vi har sendt en mail til {contactInfo.receiverEmail} med informasjon om søknaden.
+            </Typography>
           </Box>
-        ))}
+        </InfoText>
+      ) : null}
     </Box>
   );
 };

@@ -1,7 +1,18 @@
-import { BasicBooking, Cabin, ContactInfo, ContactInfoValidations } from "@interfaces/cabins";
+import {
+  BasicBooking,
+  Cabin,
+  ContactInfo,
+  ContactInfoValidations,
+  BookingFromQuery,
+  DatePick,
+  EmailAndBookingInput,
+} from "@interfaces/cabins";
 import dayjs from "dayjs";
-import { DatePick } from "src/pages/cabins/book";
 import validator from "validator";
+
+/*
+File containing helper functions for cabins.
+*/
 
 export const validateName: (name: string) => boolean = (name) => name?.length > 0;
 
@@ -82,3 +93,39 @@ export const calculatePrice: (
 };
 
 export const convertDateFormat: (date: string) => string = (date) => dayjs(date).format("DD-MM-YYYY");
+
+export const getDecisionEmailProps = (booking: BookingFromQuery, approved: boolean) => {
+  // omit unwanted fields
+  const { checkIn, checkOut, externalParticipants, firstName, internalParticipants, lastName, phone, receiverEmail } =
+    booking;
+
+  const emailInput = {
+    ...{
+      checkIn,
+      checkOut,
+      externalParticipants,
+      firstName,
+      internalParticipants,
+      lastName,
+      phone,
+      receiverEmail,
+    },
+    cabins: booking.cabins.map((cabin) => parseInt(cabin.id)),
+    emailType: approved ? "approve_booking" : "disapprove_booking",
+  };
+
+  return { variables: { emailInput: emailInput } };
+};
+
+export const generateEmailAndBookingInput: (
+  contactInfo: ContactInfo,
+  datePick: DatePick,
+  chosenCabins: Cabin[]
+) => EmailAndBookingInput = (contactInfo, datePick, chosenCabins) => {
+  return {
+    ...contactInfo,
+    cabins: chosenCabins.map((cabin) => parseInt(cabin.id)),
+    checkIn: datePick.checkInDate,
+    checkOut: datePick.checkOutDate,
+  };
+};

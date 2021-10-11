@@ -4,10 +4,7 @@ from graphql_jwt.decorators import staff_member_required
 
 class UserResolvers:
     def resolve_user(self, info):
-        if (
-            isinstance(info.context.user, get_user_model())
-            and not info.context.user.is_anonymous
-        ):
+        if isinstance(info.context.user, get_user_model()) and not info.context.user.is_anonymous:
             return info.context.user
         else:
             return None

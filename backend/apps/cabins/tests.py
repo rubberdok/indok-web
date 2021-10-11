@@ -239,7 +239,7 @@ class CabinsMutationsTestCase(CabinsBaseTestCase):
         # Try to add a booking with more participants than total capacity of cabins
         self.no_conflict_booking.internal_participants = 19
         self.no_conflict_booking.external_participants = 21
-        response = self.create_booking(self.no_conflict_booking, f"{self.oksen_cabin.id}, {self.bjornen_cabin}")
+        response = self.create_booking(self.no_conflict_booking, f"{self.oksen_cabin.id}, {self.bjornen_cabin.id}")
         self.check_create_with_error(response)
 
     def test_no_checkin_and_checkout_on_same_day(self):
@@ -306,15 +306,15 @@ class EmailTestCase(CabinsBaseTestCase):
             mutation {{
               sendEmail(
                 emailInput: {{
-                  firstName: \"{booking.first_name}\", 
-                  lastName: \"{booking.last_name}\", 
-                  receiverEmail: \"{booking.receiver_email}\", 
-                  phone: \"{booking.phone}\", 
-                  internalParticipants: {booking.internal_participants}, 
-                  externalParticipants: {booking.external_participants}, 
-                  cabins: [1], 
-                  checkIn: \"{booking.check_in.strftime("%Y-%m-%d")}\", 
-                  checkOut: \"{booking.check_out.strftime("%Y-%m-%d")}\", 
+                  firstName: \"{booking.first_name}\",
+                  lastName: \"{booking.last_name}\",
+                  receiverEmail: \"{booking.receiver_email}\",
+                  phone: \"{booking.phone}\",
+                  internalParticipants: {booking.internal_participants},
+                  externalParticipants: {booking.external_participants},
+                  cabins: [1],
+                  checkIn: \"{booking.check_in.strftime("%Y-%m-%d")}\",
+                  checkOut: \"{booking.check_out.strftime("%Y-%m-%d")}\",
                   emailType: \"{email_type}\"
                 }}
               ){{

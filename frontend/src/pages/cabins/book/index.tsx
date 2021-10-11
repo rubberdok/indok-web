@@ -1,9 +1,7 @@
 import { useMutation, useQuery } from "@apollo/client";
-import CheckInOut from "@components/pages/cabins/CheckInOut";
-import CabinContactInfo from "@components/pages/cabins/CabinContactInfo";
 import ContractDialog from "@components/pages/cabins/Popup/ContractDialog";
 import { QUERY_CABINS } from "@graphql/cabins/queries";
-import { Cabin, ContactInfo, ContactInfoValidations } from "@interfaces/cabins";
+import { Cabin, ContactInfo, ContactInfoValidations, DatePick, ModalData } from "@interfaces/cabins";
 import {
   Box,
   Grid,
@@ -19,28 +17,21 @@ import {
   MobileStepper,
   Container,
 } from "@material-ui/core";
-import { allValuesFilled, cabinOrderStepReady, isFormValid, validateInputForm } from "@utils/cabins";
+import {
+  allValuesFilled,
+  cabinOrderStepReady,
+  generateEmailAndBookingInput,
+  isFormValid,
+  validateInputForm,
+} from "@utils/cabins";
 import { NextPage } from "next";
 import React, { useEffect, useState } from "react";
-import PaymentSite from "@components/pages/cabins/PaymentSite";
-import ReceiptSite from "@components/pages/cabins/ReceiptSite";
 import { CREATE_BOOKING, SEND_EMAIL } from "@graphql/cabins/mutations";
 import { KeyboardArrowLeft, KeyboardArrowRight } from "@material-ui/icons";
 import Layout from "@components/Layout";
+import StepComponent from "@components/pages/cabins/StepComponent";
 
-interface StepReady {
-  [step: number]: { ready: boolean; errortext: string };
-}
-export interface DatePick {
-  checkInDate?: string;
-  checkOutDate?: string;
-  isValid?: boolean;
-}
-
-export interface ModalData {
-  contractViewed: boolean;
-  displayPopUp: boolean;
-}
+type StepReady = Record<number, { ready: boolean; errortext: string }>;
 
 const steps = ["Bestill", "Kontaktinfo", "Betaling", "Kvittering"];
 
@@ -73,12 +64,12 @@ const CabinBookingPage: NextPage = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [stepReady, setStepReady] = useState<StepReady>(initalStepReady);
 
-  // Velg Hytte
+  // Choose cabin
   const [chosenCabins, setChosenCabins] = useState<Cabin[]>([]);
   const cabinQuery = useQuery<{ cabins: Cabin[] }>(QUERY_CABINS);
   const [modalData, setModalData] = useState<ModalData>(defaultModalData);
 
-  // Innsjekk/Utsjekk
+  // Check in/Check out
   const [datePick, setDatePick] = useState<DatePick>({});
 
   // Contact info state
@@ -108,58 +99,6 @@ const CabinBookingPage: NextPage = () => {
       2: { ready: true, errortext: "" },
     });
   }, [contactInfo]);
-
-  const getStepComponent = () => {
-    switch (activeStep) {
-      case 0:
-        // Velg hytte
-        return cabinQuery.data ? (
-          <CheckInOut
-            allCabins={cabinQuery.data.cabins}
-            chosenCabins={chosenCabins}
-            setChosenCabins={setChosenCabins}
-            setDatePick={setDatePick}
-          />
-        ) : null;
-      case 1:
-        // Velg Kontaktinfo
-        return (
-          <CabinContactInfo
-            contactInfo={contactInfo}
-            setContactInfo={setContactInfo}
-            validations={validations}
-            errorTrigger={errorTrigger}
-            chosenCabins={chosenCabins}
-          />
-        );
-      case 2:
-        // Betaling
-        return <PaymentSite chosenCabins={chosenCabins} datePick={datePick} contactInfo={contactInfo} />;
-      case 3:
-        // Kvittering
-        return <ReceiptSite chosenCabins={chosenCabins} datePick={datePick} contactInfo={contactInfo} mailSent />;
-
-      default:
-        <Typography>Step not found</Typography>;
-    }
-  };
-
-  const generateEmailAndBookingInput: (
-    contactInfo: ContactInfo,
-    datePick: DatePick,
-    chosenCabins: Cabin[]
-  ) => ContactInfo & { cabins: number[]; checkIn: string | undefined; checkOut: string | undefined } = (
-    contactInfo,
-    datePick,
-    chosenCabins
-  ) => {
-    return {
-      ...contactInfo,
-      cabins: chosenCabins.map((cabin) => parseInt(cabin.id)),
-      checkIn: datePick.checkInDate,
-      checkOut: datePick.checkOutDate,
-    };
-  };
 
   const handleNextClick = () => {
     if (activeStep == 1 && !modalData.contractViewed) {
@@ -251,7 +190,20 @@ const CabinBookingPage: NextPage = () => {
             </Grid>
             <Grid item>
               <Paper>
-                <Box p={getMargin()}>{getStepComponent()}</Box>
+                <Box p={getMargin()}>
+                  <StepComponent
+                    cabinQuery={cabinQuery}
+                    activeStep={activeStep}
+                    chosenCabins={chosenCabins}
+                    contactInfo={contactInfo}
+                    datePick={datePick}
+                    errorTrigger={errorTrigger}
+                    validations={validations}
+                    setContactInfo={setContactInfo}
+                    setChosenCabins={setChosenCabins}
+                    setDatePick={setDatePick}
+                  />
+                </Box>
               </Paper>
             </Grid>
             <Grid item>

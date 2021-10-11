@@ -24,7 +24,7 @@ class Booking(models.Model):
     check_in = models.DateField()
     check_out = models.DateField()
     cabins = models.ManyToManyField(Cabin)
-    timestamp = models.DateTimeField()
+    timestamp = models.DateTimeField(auto_now_add=True)
     internal_participants = models.IntegerField()
     external_participants = models.IntegerField()
     is_tentative = models.BooleanField(default=True)
