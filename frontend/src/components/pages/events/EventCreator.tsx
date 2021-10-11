@@ -54,7 +54,7 @@ const CreateEvent: React.FC = () => {
     deadline: "",
     signupOpenDate: "",
     availableSlots: "",
-    price: "",
+    // price: undefined,
     shortDescription: "",
     hasExtraInformation: false,
     contactEmail: "",
@@ -117,7 +117,6 @@ const CreateEvent: React.FC = () => {
         signupOpenDate: "",
         deadline: "",
         allowedGradeYears: [1, 2, 3, 4, 5],
-        price: "",
       });
     }
   };
@@ -403,20 +402,15 @@ const CreateEvent: React.FC = () => {
         </Grid>
         <Grid item xs={6}>
           <InputLabel>Pris</InputLabel>
-          <Tooltip
-            disableHoverListener={eventData.isAttendable}
-            disableFocusListener={eventData.isAttendable}
-            title="Kun aktuelt ved påmelding"
-          >
+          <Tooltip title="Kommer snart!">
             <TextField
               type="number"
-              value={eventData.price}
-              onChange={(e) => setEventData({ ...eventData, price: e.currentTarget.value })}
-              disabled={!eventData.isAttendable}
+              // value={eventData.price}
+              // onChange={(e) => setEventData({ ...eventData, price: e.currentTarget.value })}
               margin={"dense"}
+              disabled
             />
           </Tooltip>
-          <FormHelperText>Åpner for salg av biletter</FormHelperText>
         </Grid>
         <Grid item xs={7}>
           {createEventLoading && <CircularProgress />}

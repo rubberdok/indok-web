@@ -1,10 +1,9 @@
-from django.conf import settings
-from django.contrib.auth import get_user_model
-from django.db import models
-from multiselectfield import MultiSelectField
-from phonenumber_field.modelfields import PhoneNumberField
-
 from apps.organizations.models import Organization
+from django.db import models
+from django.conf import settings
+from phonenumber_field.modelfields import PhoneNumberField
+from django.contrib.auth import get_user_model
+from multiselectfield import MultiSelectField
 
 
 class Category(models.Model):

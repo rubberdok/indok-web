@@ -62,7 +62,7 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
     deadline: "",
     signupOpenDate: "",
     availableSlots: "",
-    price: "",
+    price: undefined,
     shortDescription: "",
     hasExtraInformation: false,
     contactEmail: "",
@@ -130,7 +130,6 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
         signupOpenDate: "",
         deadline: "",
         allowedGradeYears: [1, 2, 3, 4, 5],
-        price: "",
       });
     }
   };
@@ -401,11 +400,10 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
                 type="number"
                 value={eventData.price}
                 onChange={(e) => setEventData({ ...eventData, price: e.currentTarget.value })}
-                disabled
                 margin={"dense"}
+                disabled
               />
             </Tooltip>
-            <FormHelperText>Åpner for salg av biletter</FormHelperText>
           </Grid>
         </Grid>
       </DialogContent>

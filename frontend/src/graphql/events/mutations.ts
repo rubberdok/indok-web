@@ -28,19 +28,12 @@ export const CREATE_EVENT = gql`
         userAttendance {
           isSignedUp
           isOnWaitingList
-          hasBoughtTicket
         }
         isFull
         hasExtraInformation
         bindingSignup
         contactEmail
         allowedGradeYears
-        product {
-          id
-          name
-          description
-          price
-        }
       }
       ok
     }
@@ -75,19 +68,12 @@ export const UPDATE_EVENT = gql`
         userAttendance {
           isSignedUp
           isOnWaitingList
-          hasBoughtTicket
         }
         isFull
         hasExtraInformation
         bindingSignup
         contactEmail
         allowedGradeYears
-        product {
-          id
-          name
-          description
-          price
-        }
       }
       ok
     }

@@ -70,7 +70,6 @@ class CreateEvent(graphene.Mutation):
             setattr(event, k, v)
         event.publisher = info.context.user
         event.save()
-
         ok = True
         return CreateEvent(event=event, ok=ok)
 
@@ -99,7 +98,6 @@ class UpdateEvent(graphene.Mutation):
         for k, v in event_data.items():
             setattr(event, k, v)
         event.save()
-
         ok = True
         return UpdateEvent(event=event, ok=ok)
 
