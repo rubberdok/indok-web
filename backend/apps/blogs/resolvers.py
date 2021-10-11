@@ -2,7 +2,16 @@ from typing import Optional
 from apps.blogs import models
 
 
-class BlogPostResolvers:
+class BlogResolvers:
+    def resolve_all_blogs(self, info):
+        return models.Blog.objects.all()
+
+    def resolve_blog(self, info, blog_id):
+        try:
+            return models.Blog.objects.get(pk=blog_id)
+        except models.Blog.DoesNotExist:
+            return None
+
     def resolve_all_blog_posts(self, info):
         return models.BlogPost.objects.all()
 
