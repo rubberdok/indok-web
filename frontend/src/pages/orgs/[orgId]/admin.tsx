@@ -4,6 +4,8 @@ import { useQuery } from "@apollo/client";
 import { Organization } from "@interfaces/organizations";
 import { GET_ORGANIZATION } from "@graphql/orgs/queries";
 import { useRouter } from "next/router";
+import Layout from "@components/Layout";
+import { Container } from "@material-ui/core";
 
 const AdminPage: NextPage = () => {
   const { orgId } = useRouter().query;
@@ -16,13 +18,15 @@ const AdminPage: NextPage = () => {
   if (error) return <p>Error</p>;
 
   return (
-    <>
-      {data && (
-        <>
-          <OrgInfo organization={data.organization} />
-        </>
-      )}
-    </>
+    <Layout>
+      <Container>
+        {data && (
+          <>
+            <OrgInfo organization={data.organization} />
+          </>
+        )}
+      </Container>
+    </Layout>
   );
 };
 
