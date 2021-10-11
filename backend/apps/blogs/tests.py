@@ -53,7 +53,9 @@ class BlogPostResolverTestCase(BlogPostBaseTestCase):
             query {{
                 blogPost(blogPostId: {self.blog_post_one.id}) {{
                     id
-                    author
+                    author {{
+                        id
+                        }}
                     publishDate
                     title
                     text
@@ -61,8 +63,21 @@ class BlogPostResolverTestCase(BlogPostBaseTestCase):
             }}
         """
 
-
-
+        response = self.query(query)
+        self.assertResponseNoErrors(response)
+        data = json.loads(response.content)["data"]
+        blog_post = data["blogPost"]
+        self.deep_assert_equal(blog_post, self.blog_post_one)
 
 class BlogPostMutationTestCase(BlogPostBaseTestCase):
-    pass
+    def setUp(self) -> None:
+        super().setUp()
+        self.title = "Title"
+        self.text = "Text"
+        self.create_mutation = f"""
+            mutation {{
+                createBlogPost(authorId: {self.indok_user}, title: {self.title}, text: {self.title}){{
+                    ok
+                }}
+            }}
+        """
