@@ -27,6 +27,8 @@ DATABASES = {
     }
 }
 
+# URLs
+ROOT_URLCONF = "config.urls.production"
 
 # EMAIL
 EMAIL_BACKEND = "django_ses.SESBackend"
