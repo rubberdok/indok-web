@@ -57,34 +57,34 @@ const CabinsPage: NextPage = () => {
 
   const facilitiesData = [
     {
-      icon: <Image src="/img/undraw_home.svg" width={100} height={100} />,
+      icon: <Image alt="" src="/img/undraw_home.svg" width={100} height={100} />,
       text: "Varmekabler",
     },
     {
-      icon: <Image src="/img/undraw_electricity.svg" width={100} height={100} />,
+      icon: <Image alt="" src="/img/undraw_electricity.svg" width={100} height={100} />,
       text: "Innlagt strøm",
     },
     {
-      icon: <Image src="/img/undraw_speaker.svg" width={100} height={100} />,
+      icon: <Image alt="" src="/img/undraw_speaker.svg" width={100} height={100} />,
       text: "Høyttaleranlegg",
     },
     {
-      icon: <Image src="/img/undraw_bed.svg" width={100} height={100} />,
+      icon: <Image alt="" src="/img/undraw_bed.svg" width={100} height={100} />,
       text: "18 soveplasser",
     },
     {
-      icon: <Image src="/img/undraw_cooking.svg" width={100} height={100} />,
+      icon: <Image alt="" src="/img/undraw_cooking.svg" width={100} height={100} />,
       text: "Kjøkken",
     },
     {
-      icon: <Image src="/img/undraw_cabin.svg" width={100} height={100} />,
+      icon: <Image alt="" src="/img/undraw_cabin.svg" width={100} height={100} />,
       text: "Badstue",
     },
   ];
 
   const transportData = [
     {
-      icon: <Image src="/img/undraw_bus_stop.svg" width={200} height={200} />,
+      icon: <Image alt="" src="/img/undraw_bus_stop.svg" width={200} height={200} />,
       text: (
         <Typography component="span">
           Kom deg til Oppdal med <Link href="https://www.atb.no/buss-regioner/">AtB Region</Link> eller{" "}
@@ -93,7 +93,7 @@ const CabinsPage: NextPage = () => {
       ),
     },
     {
-      icon: <Image src="/img/undraw_off_road.svg" width={200} height={200} />,
+      icon: <Image alt="" src="/img/undraw_off_road.svg" width={200} height={200} />,
       text: (
         <Typography component="span">
           <Link href="https://www.sixt.no/">Sixt</Link>: pris ca. 1200,- for en helg, ekskl. bensin. Kjøretiden er ca.
@@ -102,7 +102,7 @@ const CabinsPage: NextPage = () => {
       ),
     },
     {
-      icon: <Image src="/img/undraw_subway.svg" width={200} height={200} />,
+      icon: <Image alt="" src="/img/undraw_subway.svg" width={200} height={200} />,
       text: (
         <Typography component="span">
           Ta toget med <Link href="https://www.vy.no/">VY</Link> til Oppdal for en billig penge.
@@ -110,7 +110,7 @@ const CabinsPage: NextPage = () => {
       ),
     },
     {
-      icon: <Image src="/img/undraw_taxi.svg" width={200} height={200} />,
+      icon: <Image alt="" src="/img/undraw_taxi.svg" width={200} height={200} />,
       text: (
         <Typography component="span">
           Taxi fra togstasjonen til hyttene tar 5-10 min.{" "}
