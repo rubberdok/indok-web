@@ -9,7 +9,6 @@ from django.db.models.query_utils import Q
 from django.utils.translation import gettext_lazy as _
 
 from apps.organizations.models import Organization
-from apps.users.models import User
 
 
 class Form(models.Model):

@@ -69,6 +69,7 @@ LOCAL_APPS = [
     "apps.forms",
     "apps.listings",
     "apps.permissions",
+    "apps.integrationserver",
 ]
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
@@ -187,4 +188,5 @@ GRAPHENE = {
 GRAPHQL_URL = "graphql/"
 
 # DJANGO GUARDIAN
-ANONYMOUS_USER_NAME = "ANONYMOUS USER"
+ANONYMOUS_USER_NAME = "AnonymousUser"
+GUARDIAN_GET_INIT_ANONYMOUS_USER = "apps.users.models.get_anonymous_user_instance"
