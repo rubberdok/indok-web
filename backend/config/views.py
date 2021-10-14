@@ -1,5 +1,5 @@
-from sentry_sdk.api import start_transaction
 from graphene_django.views import GraphQLView
+from sentry_sdk.api import start_transaction
 
 
 class CustomGraphQLView(GraphQLView):

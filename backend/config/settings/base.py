@@ -39,7 +39,7 @@ DATABASES = {
 }
 
 # URLS
-ROOT_URLCONF = "config.urls.local"
+ROOT_URLCONF = "config.urls.base"
 WSGI_APPLICATION = "config.wsgi.application"
 
 # APPS
