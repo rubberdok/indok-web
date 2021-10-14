@@ -15,7 +15,6 @@ class BlogFactory(DjangoModelFactory):
 
     name = fake.company()
     description = fake.paragraph(nb_sentences=10)
-    organization = factory.SubFactory(OrganizationFactory)
 
 class BlogPostFactory(DjangoModelFactory):
     class Meta:
