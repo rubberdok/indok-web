@@ -1,5 +1,5 @@
 import uuid
-from .apps.organizations.models import Organization
+from apps.organizations.models import Organization
 
 import graphene
 from django.core.exceptions import PermissionDenied
@@ -30,7 +30,9 @@ class InitiateOrder(graphene.Mutation):
 
         # For now, only allow a single successfull purchase of a product
         if Order.objects.filter(
-            product__id=product_id, user=user, payment_status=Order.PaymentStatus.CAPTURED,
+            product__id=product_id,
+            user=user,
+            payment_status=Order.PaymentStatus.CAPTURED,
         ).exists():
             raise ValueError("Du har allerede kjøpt dette produktet.")
 
