@@ -65,8 +65,8 @@ const Contract: React.FC<ContractProps> = ({ chosenCabins, contactInfo, datePick
         <ul>
           <li>
             <Typography variant="body2">
-              behandle hytta og dens inventar med aktsomhet, og stilles erstatningspliktig til all skade som skyldes ham
-              selv eller medleietagere. Særskilt fører tap av hyttenøkkel til etterfakturering på NOK 1000,-
+              behandle hytta og dens inventar med aktsomhet, og stilles erstatningspliktig til all skade som skyldes
+              leietager selv eller medleietagere. Særskilt fører tap av hyttenøkkel til etterfakturering på NOK 1000,-
             </Typography>
           </li>
           <li>
@@ -90,7 +90,7 @@ const Contract: React.FC<ContractProps> = ({ chosenCabins, contactInfo, datePick
           </li>
           <li>
             <Typography variant="body2">
-              lese grundig i gjennom hyttenes reglement som ligger tilgjengelig på indokhyttene.no.
+              lese grundig i gjennom hyttenes reglement som sendes på mail etter sendt søknad.
             </Typography>
           </li>
         </ul>
