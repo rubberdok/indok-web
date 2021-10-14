@@ -60,7 +60,7 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: "1em",
   },
   wrapIcon: {
-    verticalAlign: "middle",
+    alignItems: "center",
     display: "inline-flex",
     width: "100%",
     marginBottom: theme.spacing(1),
