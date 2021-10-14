@@ -46,3 +46,15 @@ export const QUERY_CABINS = gql`
     }
   }
 `;
+
+export const QUERY_BOOKING_RESPONSIBLE = gql`
+  query ActiveBookingResponsible {
+    activeBookingResponsible {
+      id
+      active
+      firstName
+      lastName
+      email
+    }
+  }
+`;

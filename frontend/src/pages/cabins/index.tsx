@@ -1,15 +1,8 @@
 import { Typography, makeStyles, Box, Grid, Button, Paper, Divider, Theme, Container } from "@material-ui/core";
 import { NextPage } from "next";
 import Link from "next/link";
-import FireplaceIcon from "@material-ui/icons/Fireplace";
-import PowerIcon from "@material-ui/icons/Power";
-import SpeakerIcon from "@material-ui/icons/Speaker";
-import HotelIcon from "@material-ui/icons/Hotel";
-import RestaurantIcon from "@material-ui/icons/Restaurant";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import HotTubIcon from "@material-ui/icons/HotTub";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
-import { DirectionsBus, DirectionsCar, DirectionsTransit, LocalTaxi } from "@material-ui/icons";
 import React, { useEffect, useState } from "react";
 import ImageSlider from "@components/pages/cabins/ImageSlider/ImageSlider";
 import { cabinImages, outsideImages } from "@components/pages/cabins/ImageSlider/imageData";
@@ -19,6 +12,8 @@ import { useQuery } from "@apollo/client";
 import { GET_USER } from "@graphql/users/queries";
 import { User } from "@interfaces/users";
 import PermissionRequired from "@components/permissions/PermissionRequired";
+import Image from "next/image";
+import ContactCabinBoard from "@components/pages/cabins/ContactCabinBoard";
 
 const useStyles = makeStyles((theme: Theme) => ({
   hero: {
@@ -62,34 +57,34 @@ const CabinsPage: NextPage = () => {
 
   const facilitiesData = [
     {
-      icon: <FireplaceIcon className={classes.icon} />,
+      icon: <Image src="/img/undraw_home.svg" width={100} height={100} />,
       text: "Varmekabler",
     },
     {
-      icon: <PowerIcon className={classes.icon} />,
+      icon: <Image src="/img/undraw_electricity.svg" width={100} height={100} />,
       text: "Innlagt strøm",
     },
     {
-      icon: <SpeakerIcon className={classes.icon} />,
+      icon: <Image src="/img/undraw_speaker.svg" width={100} height={100} />,
       text: "Høyttaleranlegg",
     },
     {
-      icon: <HotelIcon className={classes.icon} />,
+      icon: <Image src="/img/undraw_bed.svg" width={100} height={100} />,
       text: "18 soveplasser",
     },
     {
-      icon: <RestaurantIcon className={classes.icon} />,
+      icon: <Image src="/img/undraw_cooking.svg" width={100} height={100} />,
       text: "Kjøkken",
     },
     {
-      icon: <HotTubIcon className={classes.icon} />,
+      icon: <Image src="/img/undraw_cabin.svg" width={100} height={100} />,
       text: "Badstue",
     },
   ];
 
   const transportData = [
     {
-      icon: <DirectionsBus fontSize="large" style={{ fontSize: "80px" }} />,
+      icon: <Image src="/img/undraw_bus_stop.svg" width={200} height={200} />,
       text: (
         <Typography component="span">
           Kom deg til Oppdal med <Link href="https://www.atb.no/buss-regioner/">AtB Region</Link> eller{" "}
@@ -98,7 +93,7 @@ const CabinsPage: NextPage = () => {
       ),
     },
     {
-      icon: <DirectionsCar fontSize="large" style={{ fontSize: "80px" }} />,
+      icon: <Image src="/img/undraw_off_road.svg" width={200} height={200} />,
       text: (
         <Typography component="span">
           <Link href="https://www.sixt.no/">Sixt</Link>: pris ca. 1200,- for en helg, ekskl. bensin. Kjøretiden er ca.
@@ -107,7 +102,7 @@ const CabinsPage: NextPage = () => {
       ),
     },
     {
-      icon: <DirectionsTransit fontSize="large" style={{ fontSize: "80px" }} />,
+      icon: <Image src="/img/undraw_subway.svg" width={200} height={200} />,
       text: (
         <Typography component="span">
           Ta toget med <Link href="https://www.vy.no/">VY</Link> til Oppdal for en billig penge.
@@ -115,7 +110,7 @@ const CabinsPage: NextPage = () => {
       ),
     },
     {
-      icon: <LocalTaxi fontSize="large" style={{ fontSize: "80px" }} />,
+      icon: <Image src="/img/undraw_taxi.svg" width={200} height={200} />,
       text: (
         <Typography component="span">
           Taxi fra togstasjonen til hyttene tar 5-10 min.{" "}
@@ -277,12 +272,16 @@ const CabinsPage: NextPage = () => {
                       for mer info.
                     </Typography>
                   </Grid>
-                  <Grid item container spacing={10} alignItems="center" direction="row">
-                    <Grid item container justifyContent="center" alignContent="center" xs={12}>
-                      <Grid item>
-                        <FAQ />
-                      </Grid>
+                  <Grid item container spacing={10} direction="row" justifyContent="center" alignContent="center">
+                    <Grid item>
+                      <Typography variant="h3">FAQ</Typography>
                     </Grid>
+                    <Grid item>
+                      <FAQ />
+                    </Grid>
+                  </Grid>
+                  <Grid item container spacing={10} direction="row" justifyContent="center" alignContent="center">
+                    <ContactCabinBoard />
                   </Grid>
                 </Grid>
               </Grid>

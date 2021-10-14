@@ -1,6 +1,6 @@
 import graphene
 
-from apps.cabins.types import AllBookingsType, CabinType, AdminBookingType
+from apps.cabins.types import AllBookingsType, CabinType, AdminBookingType, BookingResponsibleType
 from apps.cabins.mutations import (
     CreateBooking,
     UpdateBooking,
@@ -25,3 +25,4 @@ class CabinQueries(graphene.ObjectType, CabinResolvers):
         after=graphene.String(required=False),
     )
     cabins = graphene.List(CabinType)
+    active_booking_responsible = graphene.Field(BookingResponsibleType)

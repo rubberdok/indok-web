@@ -29,17 +29,6 @@ const CabinContactInfo: NextPage<ContractInfoProps> = ({
 
   useEffect(() => {
     if (data?.user) {
-      let fname =
-        data.user.lastName == "" ? data.user.firstName.split(" ").slice(0, -1).join(" ") : data.user.firstName;
-      let lname = data.user.lastName == "" ? data.user.lastName.split(" ").slice(-1).join(" ") : data.user.lastName;
-
-      // switch if fname is and empty string
-      if (fname == "") {
-        const temp = fname;
-        fname = lname;
-        lname = temp;
-      }
-
       setContactInfo({
         ...contactInfo,
         firstName: data.user.firstName,

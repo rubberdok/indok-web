@@ -9,7 +9,6 @@ import Link from "next/link";
 
 const faqs = [
   {
-    id: "1",
     question: "Hva er adressen til hyttene?",
     answer: (
       <Typography>
@@ -21,12 +20,18 @@ const faqs = [
     ),
   },
   {
-    id: "2",
-    question: "Hvordan kommer jeg meg til hyttene?",
-    answer: <Typography>Du kan ta tog/buss til Oppdal og taxi opp til hytta, eller kjøre bil hele veien.</Typography>,
+    question: "Hvor lang er avbestillingsfristen?",
+    answer: (
+      <Typography>
+        Avbestillingsfristen er 2 uker før ankomst. Hvis dere avbestiller etter dette, ilegges det en gebyr.
+      </Typography>
+    ),
   },
   {
-    id: "3",
+    question: "Hvordan booker jeg sengeplasser?",
+    answer: <Typography>Det gjøres ved å sende mail til hyttestyret.</Typography>,
+  },
+  {
     question: "Hva er forskjellen på de to hyttene?",
     answer: (
       <Typography>
@@ -36,7 +41,6 @@ const faqs = [
     ),
   },
   {
-    id: "4",
     question: "Hva er den totale kapasiteten på hyttene?",
     answer: (
       <Typography>
@@ -47,17 +51,6 @@ const faqs = [
     ),
   },
   {
-    id: "5",
-    question: "Hva har hyttene av dyner, puter og sengetøy?",
-    answer: (
-      <Typography>
-        Begge hyttene er utstyrt med minimum 18 puter og 18 dyner, men laken og sengetøy (evt. laken og sovepose) må
-        medbringes.
-      </Typography>
-    ),
-  },
-  {
-    id: "6",
     question: "Hva kan man finne på i Oppdal?",
     answer: (
       <Typography>
@@ -68,13 +61,16 @@ const faqs = [
     ),
   },
   {
-    id: "7",
-    question: "Kan jeg reservere en hytte for min eksterne vennegjeng eller eksterne linjeforening?",
-    answer: <Typography>Ja. Dette forutsetter leie av hel hytte, og ekstern pris gjelder, 2700,- per natt.</Typography>,
+    question: "Hva har hyttene av dyner, puter og sengetøy?",
+    answer: (
+      <Typography>
+        Begge hyttene er utstyrt med minimum 18 puter og 18 dyner, men laken og sengetøy (evt. laken og sovepose) må
+        medbringes.
+      </Typography>
+    ),
   },
 
   {
-    id: "8",
     question: "Kan jeg ha med meg eksterne venner (ikke-indøkere) til hyttene?",
     answer: (
       <Typography>
@@ -84,7 +80,6 @@ const faqs = [
     ),
   },
   {
-    id: "9",
     question: "Hvor mye må jeg betale om jeg mister nøklene?",
     answer: (
       <Typography>
@@ -95,14 +90,12 @@ const faqs = [
     ),
   },
   {
-    id: "10",
     question: "Hvordan er ordningen for utvask på hyttene?",
     answer: <Typography>De som har brukt hyttene må alltid vaske ut selv.</Typography>,
   },
   {
-    id: "11",
-    question: "Hva er kontonummeret til hyttestyret?",
-    answer: <Typography>9235.28.31311</Typography>,
+    question: "Kan jeg reservere en hytte for min eksterne vennegjeng eller eksterne linjeforening?",
+    answer: <Typography>Ja. Dette forutsetter leie av hel hytte, og ekstern pris gjelder, 2700,- per natt.</Typography>,
   },
 ];
 
@@ -110,34 +103,26 @@ const faqs = [
 Renders all frequently asked questions regarding the cabins.
 */
 const FAQ: React.FC = () => {
-  const [expanded, setExpanded] = React.useState<string | false>(false);
+  const [expanded, setExpanded] = React.useState<number | false>(false);
 
-  const handleChange = (panel: string) => (_event: React.ChangeEvent<Record<string, unknown>>, isExpanded: boolean) => {
+  const handleChange = (panel: number) => (_event: React.ChangeEvent<Record<string, unknown>>, isExpanded: boolean) => {
     setExpanded(isExpanded ? panel : false);
   };
 
   return (
-    <Grid container spacing={5}>
-      <Grid item xs={12}>
-        <Typography variant="h3" align="center">
-          FAQ
-        </Typography>
-      </Grid>
-
-      <Grid item container xs={12} spacing={5}>
-        {faqs.map((faq) => (
-          <Grid item xs={12} md={6} key={faq.id}>
-            <Box>
-              <Accordion expanded={expanded === faq.id} onChange={handleChange(faq.id)}>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                  <Typography variant="subtitle1">{faq.question}</Typography>
-                </AccordionSummary>
-                <AccordionDetails>{faq.answer}</AccordionDetails>
-              </Accordion>
-            </Box>
-          </Grid>
-        ))}
-      </Grid>
+    <Grid item container xs={12} spacing={5}>
+      {faqs.map((faq, index) => (
+        <Grid item xs={12} md={6} key={index}>
+          <Box>
+            <Accordion expanded={expanded === index} onChange={handleChange(index)}>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography variant="subtitle1">{faq.question}</Typography>
+              </AccordionSummary>
+              <AccordionDetails>{faq.answer}</AccordionDetails>
+            </Accordion>
+          </Box>
+        </Grid>
+      ))}
     </Grid>
   );
 };

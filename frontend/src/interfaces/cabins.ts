@@ -57,3 +57,11 @@ export interface EmailAndBookingInput extends ContactInfo {
   checkIn?: string;
   checkOut?: string;
 }
+
+export interface BookingResponsible {
+  firstName: string;
+  lastName: string;
+  phone: number;
+  email: string;
+  active: boolean;
+}
