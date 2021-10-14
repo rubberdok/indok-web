@@ -5,7 +5,7 @@ import { Organization } from "@interfaces/organizations";
 import { GET_ORGANIZATION } from "@graphql/orgs/queries";
 import { useRouter } from "next/router";
 import Layout from "@components/Layout";
-import { Container } from "@material-ui/core";
+import { Container, Box } from "@material-ui/core";
 
 const AdminPage: NextPage = () => {
   const { orgId } = useRouter().query;
@@ -20,11 +20,13 @@ const AdminPage: NextPage = () => {
   return (
     <Layout>
       <Container>
-        {data && (
-          <>
-            <OrgInfo organization={data.organization} />
-          </>
-        )}
+        <Box>
+          {data && (
+            <>
+              <OrgInfo organization={data.organization} />
+            </>
+          )}
+        </Box>
       </Container>
     </Layout>
   );
