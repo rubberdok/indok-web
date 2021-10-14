@@ -1,83 +1,67 @@
 import { ChangeEvent } from "react";
-
-export interface Booking {
-  id: string;
-  firstname: string;
-  surname: string;
-  phone: number;
+export interface BasicBooking {
+  firstName: string;
+  lastName: string;
+  phone: string;
   receiverEmail: string;
-  bookFrom: string;
-  bookTo: string;
-  price: number;
+}
+
+export interface PublicBooking {
+  id: string;
+  checkIn: string;
+  checkOut: string;
   cabins: Cabin[];
 }
 
-export interface Cabin {
-  id: string;
-  name: string;
+export interface Participants {
+  internalParticipants: number;
+  externalParticipants: number;
 }
 
-export interface BookingFromTo {
-  from: Date;
-  to: Date;
-}
-
-export interface QueryVariables {
-  year: string;
-  month: string;
-  start?: string;
-  end?: string;
-}
-
-export interface ContractProps {
-  contractData: {
-    firstname: string | null;
-    surname: string | null;
-    cabins: string[];
-    fromDate: string;
-    toDate: string;
-    price: number;
-  };
-}
-
-export interface SummaryProps {
-  from: string;
-  to: string;
-  cabins: string[];
+export interface Booking extends BasicBooking, PublicBooking, Participants {
   price: number;
-  nights: number;
+  isTentative: boolean;
 }
-
-export interface ImageSliderProps {
-  cabins: string[];
+export interface BookingFromQuery extends Booking {
+  __typename: string;
 }
 
 export type InputFieldsEvent =
   | ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   | React.ChangeEvent<{ name?: string | undefined; value: unknown }>;
 
-export interface InputValueTypes {
-  firstname: string;
-  surname: string;
-  receiverEmail: string;
-  phone: string;
-  numberIndok: number;
-  numberExternal: number;
+export interface Cabin {
+  id: string;
+  name: string;
+  maxGuests: number;
+  internalPrice: number;
+  externalPrice: number;
 }
 
-export interface BookingData extends InputValueTypes {
-  bookFrom: string;
-  bookTo: string;
-  cabins: string[];
-  price: number;
+export type ContactInfo = BasicBooking & Participants;
+export type ContactInfoValidations = Record<keyof ContactInfo, boolean>;
+
+export interface DatePick {
+  checkInDate?: string;
+  checkOutDate?: string;
+  isValid?: boolean;
 }
 
-export interface Validations {
-  firstname: boolean;
-  lastname: boolean;
-  email: boolean;
-  phone: boolean;
-  numberIndok: boolean;
-  numberExternal: boolean;
-  triggerError: boolean;
+export interface ModalData {
+  contractViewed: boolean;
+  displayPopUp: boolean;
+}
+
+export interface EmailAndBookingInput extends ContactInfo {
+  cabins: number[];
+  checkIn?: string;
+  checkOut?: string;
+}
+
+export interface BookingResponsible {
+  firstName: string;
+  lastName: string;
+  phone: number;
+  email: string;
+  active: boolean;
 }

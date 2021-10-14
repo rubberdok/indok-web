@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="no">
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -22,7 +22,7 @@
       }
     </style>
   </head>
-  <body style="font-family: Montserrat">
+  <body style="font-family: Montserrat, serif">
     <div
       style="
         border: 5px solid #065a5a;
@@ -30,24 +30,21 @@
         padding: 50px;
         background-color: #f5f0eb;
         width: 80%;
-        box-shadow: 11px 17px 52px -12px rgba(0, 0, 0, 0.48);
       "
     >
       {% load static %}
 
-      <img
-        src="cid:hyttestyret_logo.png"
-        alt=""
-        style="width: 270px; margin: auto"
-      />
-      <h2>Hei {{ firstname }}!</h2>
+      <h2>Hei {{ first_name }}!</h2>
       <p>
-        Vi har nå reservert {{ cabin }} fra
-        <span><b>{{fromDate }}</b></span> til
-        <span><b>{{ toDate }}</b>.</span>
+        Din søknad for booking av <strong>{{ chosen_cabins_string }}</strong> fra
+        <span><strong>{{ check_in }}</strong></span> til
+        <span
+          ><strong>{{ check_out }}</strong> har blitt <strong>godkjent</strong> av
+          hyttestyret.</span
+        >
       </p>
-      Prisen kommer på <b>{{ price }} kr</b>. Betaling skjer via faktura, se
-      vedlegg.
+      Prisen kommer på <strong>{{ price }} kr</strong>. Betaling skjer via Tripletex, der
+      det blir sendt ut en faktura på mail fra Hyttestyret.
       <div class="contentDiv">
         <p>
           Hytten skal forlates i minst like god stand som den ble funnet, og
@@ -62,25 +59,12 @@
       <h2>God tur!</h2>
       <p>Med vennlig hilsen,</p>
       <p>
-        Ellie Berglund <br />Bookingansvarlig Hyttestyret, <br />Indøkhyttene
-        NTNU <br />booking@indokhyttene.no / tlf. 94258380 <br /><a
+        {{ booking_responsible_name }} <br />Bookingansvarlig Hyttestyret,
+        <br />Indøkhyttene NTNU <br />{{ booking_responsible_email }} / tlf. {{ booking_responsible_phone }} <br /><a
           href="https://www.januslinjeforening.no/indokhyttene/"
           >januslinjeforening.no/indokhyttene/</a
         >
       </p>
-
-      <a
-        style="
-          color: white;
-          background-color: #065a5a;
-          display: inline-block;
-          margin: 10px;
-          padding: 15px;
-          text-decoration: none;
-        "
-        href="{{ link }}"
-        >Legg til i Google Calendar</a
-      >
     </div>
   </body>
 </html>
