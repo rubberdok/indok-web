@@ -1,6 +1,7 @@
 import { useMutation } from "@apollo/client";
 import Layout from "@components/Layout";
 import { ATTEMPT_CAPTURE_PAYMENT } from "@graphql/ecommerce/mutations";
+import { PaymentStatus } from "@interfaces/ecommerce";
 import { Button, CircularProgress, Container, Typography } from "@material-ui/core";
 import { KeyboardArrowLeft } from "@material-ui/icons";
 import { NextPage } from "next";
@@ -12,7 +13,7 @@ const FallbackPage: NextPage = () => {
   const { orderId } = router.query;
 
   const [attemptCapturePayment, { data, loading, error }] = useMutation(ATTEMPT_CAPTURE_PAYMENT);
-  const [paymentStatus, setPaymentStatus] = useState("RESERVED");
+  const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>("RESERVED");
   const [captureInterval, setCaptureInterval] = useState<NodeJS.Timeout>();
 
   useEffect(() => {
