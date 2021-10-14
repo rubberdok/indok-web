@@ -18,7 +18,7 @@ const ContactCabinBoard: React.FC = () => {
     return (
       <Grid item container spacing={4} direction="column" justifyContent="center" alignContent="center">
         <Grid item>
-          <Typography variant="h3">Kontakt hyttestyret</Typography>
+          <Typography variant="h3">Kontakt Hyttestyret</Typography>
         </Grid>
         <Grid item>
           <Typography>
