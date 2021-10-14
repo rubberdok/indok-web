@@ -1,8 +1,6 @@
-import { Typography, makeStyles, Box, Grid, Button, Paper, Divider, Theme, Container } from "@material-ui/core";
+import { Typography, Box, Grid, Paper, Divider, Container } from "@material-ui/core";
 import { NextPage } from "next";
 import Link from "next/link";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import React, { useEffect, useState } from "react";
 import ImageSlider from "@components/pages/cabins/ImageSlider/ImageSlider";
 import { cabinImages, outsideImages } from "@components/pages/cabins/ImageSlider/imageData";
@@ -11,41 +9,14 @@ import Layout from "@components/Layout";
 import { useQuery } from "@apollo/client";
 import { GET_USER } from "@graphql/users/queries";
 import { User } from "@interfaces/users";
-import PermissionRequired from "@components/permissions/PermissionRequired";
 import Image from "next/image";
 import ContactCabinBoard from "@components/pages/cabins/ContactCabinBoard";
-
-const useStyles = makeStyles((theme: Theme) => ({
-  hero: {
-    color: "white",
-    height: "100vh",
-    width: "100%",
-    backgroundColor: "black",
-    backgroundSize: "cover",
-    backgroundRepeat: "no-repeat",
-    backgroundPosition: "center",
-    backgroundImage: `linear-gradient(to left, rgba(0, 0, 0, 0.0), rgba(0, 0, 0, 0.8)), url('img/hytte.jpg')`,
-  },
-  icon: {
-    fontSize: "70px",
-    [theme.breakpoints.down("sm")]: {
-      fontSize: "40px",
-    },
-    [theme.breakpoints.down("xs")]: {
-      fontSize: "30px",
-    },
-  },
-  readMoreButton: {
-    position: "absolute",
-    bottom: 0,
-  },
-}));
+import Hero from "@components/pages/cabins/Hero";
 
 /*
 Front page for cabins. Includes info about the cabins and link to the booking page (cabins/book).
 */
 const CabinsPage: NextPage = () => {
-  const classes = useStyles();
   const { data, error } = useQuery<{ user: User }>(GET_USER);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -120,50 +91,9 @@ const CabinsPage: NextPage = () => {
     },
   ];
 
-  const Hero = () => (
-    <Grid container className={classes.hero} alignItems="center" justifyContent="center">
-      <Grid xs={12} sm={6} item container justifyContent="center">
-        <Box m={2}>
-          <Typography variant="h1">Hyttebooking</Typography>
-        </Box>
-      </Grid>
-      <Grid xs={12} sm={6} item container justifyContent="center">
-        <PermissionRequired
-          permission="cabins.add_booking"
-          fallback={
-            !isLoggedIn ? (
-              // User is not logged in, and therefore does not have the permission.
-              <Typography variant="h5">Du må være logget inn for å booke en hytte.</Typography>
-            ) : (
-              // User is logged in, but does not have the permission (we disabled cabin booking for a subset of the users)
-              <Typography variant="h5">Her blir det snart mulig å reservere indøkhyttene</Typography>
-            )
-          }
-        >
-          <Link href="/cabins/book" passHref>
-            <Button variant="contained" endIcon={<NavigateNextIcon />}>
-              Book nå
-            </Button>
-          </Link>
-        </PermissionRequired>
-      </Grid>
-      <Grid xs={12} sm={6} item container justifyContent="center">
-        <Button
-          className={classes.readMoreButton}
-          variant="contained"
-          color="primary"
-          startIcon={<ExpandMoreIcon fontSize="large" />}
-          onClick={() => document.querySelector("#anchorBox")?.scrollIntoView({ behavior: "smooth" })}
-        >
-          Les mer om Indøkhyttene
-        </Button>
-      </Grid>
-    </Grid>
-  );
-
   return (
     <Layout>
-      <Hero />
+      <Hero isLoggedIn={isLoggedIn} />
       <Container>
         <Box my={5} id="anchorBox">
           <Paper>

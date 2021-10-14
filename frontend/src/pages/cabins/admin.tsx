@@ -36,7 +36,7 @@ import { BookingFromQuery } from "@interfaces/cabins";
 /*
 Page for booking admininistration showing all upcoming bookings and buttons for actions on these bookings.
 */
-const BookingAdminPage: NextPage = () => {
+const AdminPage: NextPage = () => {
   const { data, error, refetch } = useQuery<{
     adminAllBookings: BookingFromQuery[];
   }>(QUERY_ADMIN_ALL_BOOKINGS, { variables: { after: dayjs().format("YYYY-MM-DD") } });
@@ -185,4 +185,4 @@ const BookingAdminPage: NextPage = () => {
   );
 };
 
-export default BookingAdminPage;
+export default AdminPage;

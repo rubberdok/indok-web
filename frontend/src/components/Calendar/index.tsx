@@ -46,8 +46,11 @@ const Calendar: React.FC<CalendarProps> = ({
 
   const handleDateClicked = (date: dayjs.Dayjs) => {
     if (!isDisabled(date)) {
-      const setDate = (date: dayjs.Dayjs, setFunc: React.Dispatch<React.SetStateAction<dayjs.Dayjs | undefined>>) => {
-        setFunc(isDisabled(date) ? undefined : date);
+      const setDate = (
+        newDate: dayjs.Dayjs,
+        setFunc: React.Dispatch<React.SetStateAction<dayjs.Dayjs | undefined>>
+      ) => {
+        setFunc(isDisabled(newDate) ? undefined : newDate);
         setSelectingFromDate((prev) => !prev);
       };
       if (range.length > 0 || (!selectingFromDate && selectedFromDay && date.isSameOrBefore(selectedFromDay))) {
