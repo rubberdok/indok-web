@@ -93,6 +93,7 @@ class CreateBlogPost(graphene.Mutation):
         title = graphene.String()
         text = graphene.String()
         author_id = graphene.ID()
+        blog_id = graphene.ID()
 
     ok = graphene.Boolean()
     blog_post = graphene.Field(BlogPostType)
@@ -104,15 +105,25 @@ class CreateBlogPost(graphene.Mutation):
         title,
         text,
         author_id,
+        blog_id,
     ):
 
-        blog_post = BlogPostModel.objects.create(
-            title=title,
-            text=text,
-            author_id=author_id,
-        )
+        try:
+            blog = BlogModel.objects.get(pk=blog_id)
 
-        return CreateBlogPost(blog_post=blog_post, ok=True)
+            blog_post = BlogPostModel.objects.create(
+                title=title,
+                text=text,
+                author_id=author_id,
+                blog=blog,
+            )
+
+            return CreateBlogPost(blog_post=blog_post, ok=True)
+        except BlogModel.DoesNotExist:
+            return CreateBlogPost(
+                blog_post=None,
+                ok=False,
+            )
 
 
 class DeleteBlogPost(graphene.Mutation):
@@ -133,6 +144,7 @@ class DeleteBlogPost(graphene.Mutation):
 class BlogPostInput(graphene.InputObjectType):
     title = graphene.String()
     text = graphene.String()
+    blog_id = graphene.ID()
 
 
 class UpdateBlogPostInput(BlogPostInput):
