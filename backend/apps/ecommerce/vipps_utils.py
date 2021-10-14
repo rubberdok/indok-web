@@ -163,7 +163,7 @@ class VippsApi:
         return {
             "merchantInfo": {
                 "merchantSerialNumber": self.merchant_serial_number,
-                "callbackPrefix": "https://api.indokntnu.no/ecommerce/vipps/callback/",
+                "callbackPrefix": "https://xoff0kv3i3.execute-api.eu-north-1.amazonaws.com/default/Vipps_callback",
                 "fallBack": f"http://127.0.0.1:3000/shop/fallback/?orderId={order.order_id}",
                 "authToken": order.auth_token,
                 "isApp": False,
