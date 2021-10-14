@@ -1,16 +1,11 @@
 import { gql } from "@apollo/client";
 
 export const QUERY_ALL_BOOKINGS = gql`
-  query {
+  query AllBookings {
     allBookings {
       id
-      firstname
-      surname
-      phone
-      receiverEmail
-      bookFrom
-      bookTo
-      price
+      checkIn
+      checkOut
       cabins {
         id
         name
@@ -18,15 +13,24 @@ export const QUERY_ALL_BOOKINGS = gql`
     }
   }
 `;
-
-export const QUERY_BOOKING_RANGE = gql`
-  query BookingRange($year: String, $month: String) {
-    bookingsByMonth(year: $year, month: $month) {
+export const QUERY_ADMIN_ALL_BOOKINGS = gql`
+  query AdminAllBookings($after: String) {
+    adminAllBookings(after: $after) {
       id
-      contactNum
-      contactPerson
-      startDay
-      endDay
+      firstName
+      lastName
+      phone
+      receiverEmail
+      checkIn
+      checkOut
+      cabins {
+        id
+        name
+      }
+      externalParticipants
+      internalParticipants
+      price
+      isTentative
     }
   }
 `;
@@ -36,6 +40,21 @@ export const QUERY_CABINS = gql`
     cabins {
       id
       name
+      maxGuests
+      internalPrice
+      externalPrice
+    }
+  }
+`;
+
+export const QUERY_BOOKING_RESPONSIBLE = gql`
+  query ActiveBookingResponsible {
+    activeBookingResponsible {
+      id
+      active
+      firstName
+      lastName
+      email
     }
   }
 `;
