@@ -7,13 +7,20 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('permissions', '0011_merge_0004_auto_20210824_2126_0010_auto_20210824_1546'),
-        ('organizations', '0035_auto_20211004_1923'),
+        ('organizations', '0036_migrate_membership_groups'),
     ]
 
     operations = [
+        migrations.RemoveField(
+            model_name='membership',
+            name='group',
+        ),
         migrations.AlterField(
             model_name='membership',
             name='groups',
-            field=models.ManyToManyField(related_name='members', to='permissions.ResponsibleGroup'),
+            field=models.ManyToManyField(
+                related_name='memberships',
+                to='permissions.ResponsibleGroup'
+            ),
         ),
     ]

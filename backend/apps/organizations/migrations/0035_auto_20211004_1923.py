@@ -11,13 +11,13 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='membership',
-            name='group',
-        ),
         migrations.AddField(
             model_name='membership',
             name='groups',
-            field=models.ManyToManyField(null=True, related_name='members', to='permissions.ResponsibleGroup'),
+            field=models.ManyToManyField(
+                null=True,
+                related_name='memberships',
+                to='permissions.ResponsibleGroup'
+            ),
         ),
     ]

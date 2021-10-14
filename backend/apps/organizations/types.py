@@ -75,7 +75,7 @@ class OrganizationType(DjangoObjectType):
 class MembershipType(DjangoObjectType):
     class Meta:
         model = Membership
-        fields = ["id", "group", "organization", "user"]
+        fields = ["id", "groups", "organization", "user"]
 
     class PermissionDecorators:
         @staticmethod
