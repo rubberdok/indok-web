@@ -15,3 +15,17 @@ export const ATTEMPT_CAPTURE_PAYMENT = gql`
     }
   }
 `;
+
+export const CREATE_PRODUCT = gql`
+  mutation {
+    createProduct {
+      product {
+        id
+        name
+        description
+        price
+      }
+      ok
+    }
+  }
+`;

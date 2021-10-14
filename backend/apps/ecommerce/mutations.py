@@ -1,10 +1,12 @@
 import uuid
+from .apps.organizations.models import Organization
 
 import graphene
 from django.core.exceptions import PermissionDenied
 from graphql_jwt.decorators import login_required
 
 from .models import Order, Product
+from .types import ProductType
 from .vipps_utils import VippsApi
 
 
@@ -28,9 +30,7 @@ class InitiateOrder(graphene.Mutation):
 
         # For now, only allow a single successfull purchase of a product
         if Order.objects.filter(
-            product__id=product_id,
-            user=user,
-            payment_status=Order.PaymentStatus.CAPTURED,
+            product__id=product_id, user=user, payment_status=Order.PaymentStatus.CAPTURED,
         ).exists():
             raise ValueError("Du har allerede kjøpt dette produktet.")
 
@@ -110,3 +110,21 @@ class AttemptCapturePayment(graphene.Mutation):
                 print(err)
 
         return AttemptCapturePayment(status=order.payment_status)
+
+
+class CreateProduct(graphene.Mutation):
+
+    ok = graphene.Boolean()
+    product = graphene.Field(ProductType)
+
+    def mutate(self, _):
+
+        product = Product()
+        product.name = "Atmos"
+        product.price = 20
+        product.description = "Best car."
+        product.organization = Organization.objects.first()
+        product.save()
+        ok = True
+
+        return CreateProduct(product=product, ok=ok)

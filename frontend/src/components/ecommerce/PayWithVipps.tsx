@@ -13,9 +13,10 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props {
   productId: string;
+  quantity: number;
 }
 
-const PayWithVipps: React.FC<Props> = ({ productId }) => {
+const PayWithVipps: React.FC<Props> = ({ productId, quantity }) => {
   const [initiateOrder, { data, loading, error }] = useMutation(INITIATE_ORDER);
 
   const classes = useStyles();
@@ -30,7 +31,7 @@ const PayWithVipps: React.FC<Props> = ({ productId }) => {
 
   return (
     <Card className={classes.root}>
-      <CardActionArea onClick={() => initiateOrder({ variables: { productId } })} disableRipple>
+      <CardActionArea onClick={() => initiateOrder({ variables: { productId, quantity } })} disableRipple>
         <CardMedia
           component="img"
           alt="Pay with vipps"
