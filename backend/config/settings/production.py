@@ -67,6 +67,9 @@ LOGGING = {
     },
 }
 
+# GRAPHENE
+GRAPHENE["MIDDLEWARE"] += ["config.sentry.middleware.SentryMiddleware"]  # noqa
+
 # Sentry
 SENTRY_DSN = cast(str, env("SENTRY_DSN"))
 SENTRY_LOG_LEVEL = cast(int, env.int("DJANGO_SENTRY_LOG_LEVEL", logging.INFO))
