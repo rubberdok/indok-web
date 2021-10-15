@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+
+<html lang="no">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title></title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="" />
+
+    <style>
+      span {
+        white-space: nowrap;
+      }
+
+      @media (min-width: 1000px) {
+        .contentDiv {
+          margin: 20px auto;
+          width: 80%;
+        }
+      }
+    </style>
+  </head>
+  <body style="font-family: Open Sans, sans-serif">
+    <div
+      style="
+        border: 5px solid #065a5a;
+        text-align: center;
+        padding: 50px;
+        background-color: #f5f0eb;
+        width: 80%;
+      "
+      class="contentDiv"
+    >
+      {% load static %}
+          <h2>Søknad om booking av {{ chosen_cabins_string }}</h2>
+               <p>
+                   Det har kommet en søknad om opprettelse av en booking av <strong>{{ chosen_cabins_string }}</strong> fra
+            <span><strong>{{ check_in }}</strong></span> til
+            <span><strong>{{ check_out }}</strong>.</span>
+          </p>
+          <p><strong>Dere må gå inn på adminsiden og ta stilling til om dere vil godkjenne bookingen eller ikke.
+              Når dere har gjort det, får vedkommende en mail om avgjørelsen deres. </strong></p>
+          <p><strong>Deretter må dere fortsette kontakten med {{ first_name }} for å fullføre bookingen. Kontaktinfo står nedenfor. </strong></p>
+            <h3>Bookinginfo</h3>
+            <p>Antall indøkere: {{ internal_participants }}</p>
+            <p>Antall eksterne: {{ external_participants }}</p>
+
+          <p>Prisen kommer på <strong>{{ price }} kr</strong>.</p>
+
+          <h3>Kontaktinfo</h3>
+          <p>Navn: {{ first_name }} {{ last_name }}</p>
+          <p>Mobilnummer: {{ phone }}</p>
+          <p>E-post: {{ receiver_email }}</p>
+      <a
+        href="https://indokntnu.no/cabins/admin"
+        style="
+          color: white;
+          background-color: #065a5a;
+          display: inline-block;
+          margin: 10px;
+          padding: 15px;
+          text-decoration: none;
+        "
+        >Link til admin-sider</a
+      >
+        <p>På admin-sidene kan dere administrere alle bookinger (dere må være logget inn med en admin-bruker). Vennligst kontakt Rubberdøk hvis det skulle oppstå spørsmål.</p>
+        <strong>
+          <p>Med vennlig hilsen,</p>
+          <p>
+            Rubberdøk
+            <br />contact@rubberdok.no <br /><a
+              href="https://www.indokntnu.no/"
+              >indokntnu.no
+            </a>
+          </p>
+        </strong>
+    </div>
+  </body>
+</html>
