@@ -27,11 +27,7 @@ class Event(models.Model):
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name="events")
 
     # ------------------ Fully optional fields ------------------
-    publisher = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.SET_NULL,
-        null=True,
-    )
+    publisher = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
     has_extra_information = models.BooleanField(
         default=False
     )  # If the event allows e.g. for group sign ups, this would be true
@@ -138,11 +134,13 @@ class SlotDistribution(models.Model):
 
     def get_available_slots(self):
         if len(self.child_distributions.all()) == 0:
-            return [{"category": self.grade_years, "available_slots": self.available_slots}]
+            return [{"category": str(self.grade_years).replace(" ", ""), "available_slots": self.available_slots}]
 
         total_available_slots = []
         for child in list(self.child_distributions.all()):
-            total_available_slots.append({"category": child.grade_years, "available_slots": child.available_slots})
+            total_available_slots.append(
+                {"category": str(child.grade_years).replace(" ", ""), "available_slots": child.available_slots}
+            )
 
         return total_available_slots
 

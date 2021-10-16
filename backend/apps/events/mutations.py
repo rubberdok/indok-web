@@ -169,12 +169,12 @@ class UpdateEvent(graphene.Mutation):
             # Update attendable if included in input data
             attendable = event.attendable if hasattr(event, "attendable") else None
 
-            # Prevuisly attendable event made non-attendable (no need for sign up)
+            # Previously attendable event made non-attendable (no need for sign up)
             if not is_attendable and attendable is not None:
                 attendable.delete()  # Cascaded to slot distrbution(s)
                 event = Event.objects.get(
                     pk=event.pk
-                )  # Must refresh event for it to relaize the attendable has been deleted
+                )  # Must refetch event for it to relaize the attendable has been deleted
 
             else:
                 if attendable_data is not None:
