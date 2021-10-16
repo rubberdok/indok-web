@@ -38,7 +38,7 @@ const links = [
   },
   {
     id: 5,
-    title: "Indøkhyttene",
+    title: "Hyttebooking",
     href: "/cabins",
   },
 ];

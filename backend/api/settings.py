@@ -142,9 +142,9 @@ GUARDIAN_GET_INIT_ANONYMOUS_USER = "apps.users.models.get_anonymous_user_instanc
 ANONYMOUS_USER_NAME = "AnonymousUser"
 
 
+DATAPORTEN_REDIRECT_URI = env("DATAPORTEN_REDIRECT_URI")
 DATAPORTEN_ID = env("DATAPORTEN_ID")
 DATAPORTEN_SECRET = env("DATAPORTEN_SECRET")
-DATAPORTEN_REDIRECT_URI = env("DATAPORTEN_REDIRECT_URI")
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
