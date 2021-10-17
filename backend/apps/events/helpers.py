@@ -2,14 +2,6 @@ from .models import Attendable, SlotDistribution
 
 
 def create_attendable(attendable_data, event):
-    if (
-        hasattr(attendable_data, "price")
-        and attendable_data.price != None
-        and hasattr(attendable_data, "binding_signup")
-        and attendable_data.binding_signup == False
-    ):
-        raise ValueError("Betalt påmelding krever bindende påmelding")
-
     attendable = Attendable()
     for k, v in attendable_data.items():
         setattr(attendable, k, v)

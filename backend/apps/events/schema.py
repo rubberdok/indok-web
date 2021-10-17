@@ -56,4 +56,3 @@ class EventQueries(graphene.ObjectType, EventResolvers):
         fields=graphene.List(graphene.String),
         filetype=graphene.String(required=False),
     )
-    sign_ups = graphene.Field(SignUpType, event_id=graphene.ID(required=True))

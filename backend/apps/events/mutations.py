@@ -1,4 +1,3 @@
-from .helpers import create_attendable, create_slot_distributions, update_slot_distributions
 from django.db import transaction
 import graphene
 from django.contrib.auth import get_user_model
@@ -11,8 +10,10 @@ from utils.decorators import permission_required
 from ..organizations.models import Organization
 from ..organizations.permissions import check_user_membership
 from .mail import send_event_emails
-from .models import Category, Event, SignUp
+from .models import Category, Event, SignUp, SlotDistribution
 from .types import CategoryType, EventType
+from .validators import create_event_validation, update_event_validation
+from .helpers import create_attendable, create_slot_distributions, update_slot_distributions
 
 
 class BaseEventInput(graphene.InputObjectType):
@@ -92,6 +93,9 @@ class CreateEvent(graphene.Mutation):
         check_user_membership(info.context.user, organization)
 
         with transaction.atomic():  # Make atomic so if the creation of one object fails, no changes will be made to the database
+            # Validate data
+            create_event_validation(event_data, attendable_data, slot_distribution_data)
+
             # Create event
             event = Event()
             for k, v in event_data.items():
@@ -102,20 +106,10 @@ class CreateEvent(graphene.Mutation):
             # Create attendable if included in input data
             attendable = None
             if attendable_data is not None:
-                if slot_distribution_data is None:
-                    raise ValueError(
-                        "Du må minimum spesifisere antall plasser og når påmeldingen åpner for å kunne lage et evearrangement med påmelding"
-                    )
-
                 attendable = create_attendable(attendable_data, event)
 
             # Create slot distribution(s) if included in input data
             if slot_distribution_data is not None:
-                if attendable is None:
-                    raise ValueError(
-                        "Du må minimum spesifisere antall plasser og når påmeldingen åpner for å kunne lage et arrangement med påmelding"
-                    )
-
                 slot_dist = create_slot_distributions(slot_distribution_data, attendable)
 
                 if slot_dist.grades.sort() != [int(val) for val in event.allowed_grade_years].sort():
@@ -160,14 +154,23 @@ class UpdateEvent(graphene.Mutation):
         check_user_membership(info.context.user, event.organization)
 
         with transaction.atomic():  # Make atomic so if the update of one object fails, no changes will be made to the database
+            attendable = event.attendable if hasattr(event, "attendable") else None
+            slot_distribution = None
+            if attendable is not None:
+                slot_distribution = attendable.slot_distribution.get(parent_distribution=None)
+
+            update_event_validation(
+                event,
+                event_data,
+                attendable,
+                attendable_data,
+                slot_distribution_data,
+            )
 
             # Update event
             for k, v in event_data.items():
                 setattr(event, k, v)
             event.save()
-
-            # Update attendable if included in input data
-            attendable = event.attendable if hasattr(event, "attendable") else None
 
             # Previously attendable event made non-attendable (no need for sign up)
             if not is_attendable and attendable is not None:
@@ -176,34 +179,26 @@ class UpdateEvent(graphene.Mutation):
                     pk=event.pk
                 )  # Must refetch event for it to relaize the attendable has been deleted
 
+            # Previously attendable event with slot distribution has removed slot distribution
+            if (
+                not has_grade_distributions
+                and slot_distribution is not None
+                and len(list(slot_distribution.child_distributions.all())) > 0
+            ):
+                for child in slot_distribution.child_distributions.all():
+                    child.delete()
+                slot_distribution = SlotDistribution.objects.get(
+                    pk=slot_distribution.pk
+                )  # Must refetch slot distribution for it to relaize the child dostributions has been deleted
+
             else:
                 if attendable_data is not None:
                     # If the event was changed to be attendable, create attendable object and one or more slot distributions
                     if attendable is None:
                         attendable = create_attendable(attendable_data, event)
-                        if slot_distribution_data is None:
-                            raise ValueError(
-                                "Du må minimum spesifisere antall plasser og når påmeldingen åpner for å kunne lage et arrangement med påmelding"
-                            )
                         create_slot_distributions(slot_distribution_data, attendable)
                         ok = True
                         return UpdateEvent(event=event, ok=ok)
-
-                    # If the event was already attendable
-                    price = (
-                        attendable_data.price
-                        if hasattr(attendable_data, "price") and attendable_data.price is not None
-                        else event.attendable.price
-                        if hasattr(event.attendable, "price")
-                        else None
-                    )
-                    binding_signup = (
-                        attendable_data.binding_signup
-                        if hasattr(attendable_data, "binding_signup")
-                        else attendable.binding_signup
-                    )
-                    if price is not None and binding_signup == False:
-                        raise ValueError("Betalt påmelding krever bindende påmelding")
 
                     for k, v in attendable_data.items():
                         setattr(attendable, k, v)
@@ -211,9 +206,6 @@ class UpdateEvent(graphene.Mutation):
 
                 # Update slot distributions if included in input data
                 if slot_distribution_data is not None:
-                    if attendable is None:
-                        raise ValueError("Betalt påmelding krever bindende påmelding")
-
                     slot_dist = update_slot_distributions(
                         slot_distribution_data,
                         attendable.slot_distribution.get(parent_distribution=None),
@@ -404,6 +396,9 @@ class CreateCategory(graphene.Mutation):
 
     @staff_member_required
     def mutate(self, info, category_data):
+        if category_data.name == "":
+            raise ValueError("Name must be non-empty string")
+
         category = Category()
         for k, v in category_data.items():
             setattr(category, k, v)
@@ -427,6 +422,9 @@ class UpdateCategory(graphene.Mutation):
     @staff_member_required
     def mutate(self, info, id, category_data):
         category = get_object_or_404(Category, pk=id)
+
+        if category_data.name == "":
+            raise ValueError("Name must be non-empty string")
 
         for k, v in category_data.items():
             setattr(category, k, v)

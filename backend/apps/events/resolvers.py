@@ -138,16 +138,6 @@ class EventResolvers:
         file_basename = f"attendee_report__orgid_{org_id}"
         return wrap_attendee_report_as_json(df, file_basename, filetype)
 
-    def resolve_sign_ups(self, info, event_id):
-        try:
-            event = Event.objects.get(id=event_id)
-        except Event.DoesNotExist:
-            return None
-
-        check_user_membership(info.context.user, event.organization)
-
-        return SignUp.objects.filter(event=event)
-
 
 def create_attendee_report(event_ids, fields):
     fields = set(fields).intersection(DEFAULT_REPORT_FIELDS) if fields is not None else DEFAULT_REPORT_FIELDS

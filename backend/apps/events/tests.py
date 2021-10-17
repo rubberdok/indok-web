@@ -1,6 +1,6 @@
 import json
 from django.core import mail
-from apps.events.models import Event
+from apps.events.models import Event, Category
 from utils.testing.factories.event_factories import (
     EventFactory,
     AttendableFactory,
@@ -186,55 +186,6 @@ class EventsResolversTestCase(EventsBaseTestCase):
         self.assertEqual(int(content["data"]["category"]["id"]), self.first_category.id)
         self.assertEqual(content["data"]["category"]["name"], self.first_category.name)
 
-    def test_resolve_sign_ups(self):
-        # signUp a user to an attendable event
-        SignUpFactory(
-            event=self.second_event,
-            user=self.user_3rd_grade,
-            user_email=self.user_3rd_grade.email,
-            user_phone_number=self.user_3rd_grade.phone_number,
-            user_grade_year=self.user_3rd_grade.grade_year,
-        )
-
-        query = f"""
-            query {{
-                signUps(eventId: {self.second_event.id}) {{
-                  id
-                }}
-              }}
-            """
-
-        # Try to make query without permission
-        response = self.query(query, user=self.user_2nd_grade)
-        # This validates the status code and if you get errors
-        content = json.loads(response.content)
-        assert "errors" in content
-
-        # Try to make query with permission
-        MembershipFactory(user=self.user_2nd_grade, organization=self.second_event.organization)
-        response = self.query(query, user=self.user_2nd_grade)
-
-        content = json.loads(response.content)
-        print("\n\n\n", content["errors"], "\n\n\n")
-        # [{'message': 'Received incompatible instance "<QuerySet [<SignUp: user27-event17>]>".'}]
-        self.assertResponseNoErrors(response)
-
-        # Fetching content of response
-        content = json.loads(response.content)
-
-        # There should be one signUp in the database
-        self.assertEqual(len(content["data"]["signUps"]), 1)
-
-
-def stringify_grade_years(slot_distribution):
-    grade_years = slot_distribution.get_available_slots()
-    grade_years_string = "["
-    for dist in grade_years:
-        grade_years_string += f"{{category: \"{dist['category']}\", availableSlots: {dist['available_slots']}}},"
-
-    grade_years_string = grade_years_string[0:-1] + "]"
-    return grade_years_string
-
 
 class EventsMutationsTestCase(EventsBaseTestCase):
     """
@@ -268,7 +219,7 @@ class EventsMutationsTestCase(EventsBaseTestCase):
         query = ""
 
         if event is not None and attendable is not None and slot_distribution is not None:
-            grade_years_string = stringify_grade_years(slot_distribution)
+            grade_years_string = self.stringify_grade_years(slot_distribution)
             query = f"""
                 mutation CreateEvent {{
                     createEvent(
@@ -302,7 +253,7 @@ class EventsMutationsTestCase(EventsBaseTestCase):
                 """
 
         elif attendable is None:
-            grade_years_string = stringify_grade_years(slot_distribution)
+            grade_years_string = self.stringify_grade_years(slot_distribution)
             query = f"""
                 mutation CreateEvent {{
                     createEvent(
@@ -359,11 +310,25 @@ class EventsMutationsTestCase(EventsBaseTestCase):
 
         return self.query(query, user=user)
 
-    def check_create_with_error(self, response):
+    def check_create_event_with_error(self, response):
         content = json.loads(response.content)
         assert "errors" in content
         # Check that event is not created
         self.assertEqual(3, len(Event.objects.all()))
+
+    def check_create_category_with_error(self, response):
+        content = json.loads(response.content)
+        assert "errors" in content
+        # Check that category is not created
+        self.assertEqual(2, len(Category.objects.all()))
+
+    def stringify_grade_years(self, slot_distribution):
+        grade_years = slot_distribution.get_available_slots()
+        grade_years_string = "["
+        for dist in grade_years:
+            grade_years_string += f"{{category: \"{dist['category']}\", availableSlots: {dist['available_slots']}}},"
+        grade_years_string = grade_years_string[0:-1] + "]"
+        return grade_years_string
 
     def test_create_event(self):
         # Test event creation fails without organization membership
@@ -416,13 +381,13 @@ class EventsMutationsTestCase(EventsBaseTestCase):
         self.first_event.start_time = timezone.now() - datetime.timedelta(days=5)
         MembershipFactory(user=self.user_1st_grade, organization=self.first_event.organization)
         response = self.create_event(self.first_event, user=self.user_1st_grade)
-        self.check_create_with_error(response)
+        self.check_create_event_with_error(response)
 
         # Try to add event with end time before start time
         self.first_event.start_time = timezone.now() + datetime.timedelta(days=10)
         self.first_event.end_time = timezone.now() + datetime.timedelta(days=5)
         response = self.create_event(self.first_event, user=self.user_1st_grade)
-        self.check_create_with_error(response)
+        self.check_create_event_with_error(response)
 
         # Try to add event with sign up open date before current time
         self.second_event.attendable.signup_open_date = timezone.now() - datetime.timedelta(days=5)
@@ -433,7 +398,7 @@ class EventsMutationsTestCase(EventsBaseTestCase):
             self.second_event.attendable.slot_distribution.get(parent_distribution=None),
             user=self.user_1st_grade,
         )
-        self.check_create_with_error(response)
+        self.check_create_event_with_error(response)
 
         # Try to add event with deadline before sign up open date
         self.second_event.attendable.signup_open_date = timezone.now() + datetime.timedelta(days=10)
@@ -444,27 +409,27 @@ class EventsMutationsTestCase(EventsBaseTestCase):
             self.second_event.attendable.slot_distribution.get(parent_distribution=None),
             user=self.user_1st_grade,
         )
-        self.check_create_with_error(response)
+        self.check_create_event_with_error(response)
 
     def test_invalid_email(self):
         self.first_event.contact_email = "oda.norwegian123.no"
         MembershipFactory(user=self.user_1st_grade, organization=self.first_event.organization)
         response = self.create_event(self.first_event, user=self.user_1st_grade)
-        self.check_create_with_error(response)
+        self.check_create_event_with_error(response)
 
     def test_empty_title(self):
         # Try to create an event with no title variable
         self.first_event.title = ""
         MembershipFactory(user=self.user_1st_grade, organization=self.first_event.organization)
         response = self.create_event(self.first_event, user=self.user_1st_grade)
-        self.check_create_with_error(response)
+        self.check_create_event_with_error(response)
 
     def test_empty_description(self):
         # Try to create an event with no description variable
         self.first_event.description = ""
         MembershipFactory(user=self.user_1st_grade, organization=self.first_event.organization)
         response = self.create_event(self.first_event, user=self.user_1st_grade)
-        self.check_create_with_error(response)
+        self.check_create_event_with_error(response)
 
     def test_create_attendable_event_without_available_slots(self):
         # Try to create an attenable event without specifying the number of available slots
@@ -475,7 +440,7 @@ class EventsMutationsTestCase(EventsBaseTestCase):
             slot_distribution=None,
             user=self.user_1st_grade,
         )
-        self.check_create_with_error(response)
+        self.check_create_event_with_error(response)
 
     def test_create_attendable_event_without_sign_up_open_date(self):
         # Try to create an attenable event without specifying the sign up open date
@@ -486,13 +451,13 @@ class EventsMutationsTestCase(EventsBaseTestCase):
             slot_distribution=self.third_event.attendable.slot_distribution.get(parent_distribution=None),
             user=self.user_1st_grade,
         )
-        self.check_create_with_error(response)
+        self.check_create_event_with_error(response)
 
     def test_create_attendable_event_with_price_wihtout_binding_singup(self):
         event = self.third_event
         attendable = self.third_event.attendable
         slot_distribution = self.third_event.attendable.slot_distribution.get(parent_distribution=None)
-        grade_years_string = stringify_grade_years(slot_distribution)
+        grade_years_string = self.stringify_grade_years(slot_distribution)
         query = f"""
                 mutation CreateEvent {{
                     createEvent(
@@ -527,7 +492,7 @@ class EventsMutationsTestCase(EventsBaseTestCase):
                 """
         MembershipFactory(user=self.user_1st_grade, organization=self.third_event.organization)
         response = self.query(query, user=self.user_1st_grade)
-        self.check_create_with_error(response)
+        self.check_create_event_with_error(response)
 
     def test_update_event(self):
         # General update
@@ -655,7 +620,7 @@ class EventsMutationsTestCase(EventsBaseTestCase):
         self.assertResponseNoErrors(response)
         self.assertEqual(len(self.second_event.available_slots), 1)
 
-        # Update slot distribution on attendable event that alreadu has a slot distribution
+        # Update slot distribution on attendable event that already has a slot distribution
         query = f"""
         mutation {{
           updateEvent(
@@ -672,11 +637,12 @@ class EventsMutationsTestCase(EventsBaseTestCase):
           }}
         }}
         """
+        MembershipFactory(user=self.user_1st_grade, organization=self.third_event.organization)
         response = self.query(query, user=self.user_1st_grade)
         # Fetch updated event and check that update was successful
-        self.second_event = Event.objects.get(pk=self.second_event.id)
+        self.third_event = Event.objects.get(pk=self.third_event.id)
         self.assertResponseNoErrors(response)
-        self.assertEqual(len(self.second_event.available_slots), 3)
+        self.assertEqual(len(self.third_event.available_slots), 3)
 
     def test_delete_event(self):
         query = f"""
@@ -703,96 +669,142 @@ class EventsMutationsTestCase(EventsBaseTestCase):
         with self.assertRaises(Event.DoesNotExist):
             Event.objects.get(pk=self.first_event.id)
 
-    # Can possibly do more "invald" functions with update and create!! (Check helpers.py)
+    def test_create_category(self):
+        # Test category creation
+        query = f"""
+                mutation CreateCategory {{
+                    createCategory(
+                        categoryData: {{
+                            name: \"Spennende kategori\",
+                            }}
+                        ) {{
+                    category {{
+                        id
+                    }}
+                      ok
+                        }}
+                    }}
+                """
+        # Try without correct permission
+        response = self.query(query)
+        self.check_create_category_with_error(response)
 
-    # Test create, update and delete category
+        # Try with permission
+        response = self.query(query, user=self.super_user)
+        self.assertResponseNoErrors(response)
+        # Check that booking is created
+        content = json.loads(response.content)
+        self.assertTrue(Category.objects.filter(id=int(content["data"]["createCategory"]["category"]["id"])).exists())
+
+    def test_empty_name(self):
+        # Try to create a category with no name variable
+        query = f"""
+                mutation CreateCategory {{
+                    createCategory(
+                        categoryData: {{
+                            title: \"\",
+                            }}
+                        ) {{
+                      ok
+                        }}
+                    }}
+                """
+        response = self.query(query, user=self.super_user)
+        self.check_create_category_with_error(response)
+
+    def test_update_category(self):
+        # Test category update
+        query = f"""
+                mutation UpdateCategory {{
+                    updateCategory(
+                        id: {self.first_category.id}
+                        categoryData: {{
+                            name: \"Kategori med nytt navn\",
+                            }}
+                        ) {{
+                      ok
+                        }}
+                    }}
+                """
+        # Try without correct permission
+        response = self.query(query)
+        content = json.loads(response.content)
+        assert "errors" in content
+
+        # Try with permission
+        response = self.query(query, user=self.super_user)
+        self.assertResponseNoErrors(response)
+        # Fetch updated category and check that update was successful
+        self.first_category = Category.objects.get(pk=self.first_category.id)
+        self.assertResponseNoErrors(response)
+        self.assertEqual("Kategori med nytt navn", self.first_category.name)
+
+    def test_delete_category(self):
+        # Test category deletion
+        query = f"""
+                mutation DeleteCategory {{
+                    deleteCategory( id: {self.first_category.id}) {{
+                      ok
+                        }}
+                    }}
+                """
+        # Try without correct permission
+        response = self.query(query)
+        content = json.loads(response.content)
+        assert "errors" in content
+
+        # Try with permission
+        response = self.query(query, user=self.super_user)
+        self.assertResponseNoErrors(response)
+        with self.assertRaises(Category.DoesNotExist):
+            Category.objects.get(pk=self.first_category.id)
 
     # Test create, update and delete sign up
 
 
-class EmailTestCase(EventsBaseTestCase):
-    # TODO: Johan
-    # Se kommentert kode for hvordan det er gjort i hyttebooking (cabins):)
+'''
+    def test_resolve_sign_ups(self):
+        # signUp a user to an attendable event
+        SignUpFactory(
+            event=self.second_event,
+            user=self.user_3rd_grade,
+            user_email=self.user_3rd_grade.email,
+            user_phone_number=self.user_3rd_grade.phone_number,
+            user_grade_year=self.user_3rd_grade.grade_year,
+        )
 
-    '''
-    def setUp(self) -> None:
-        super().setUp()
-        mail.outbox = []
-
-    def send_email(self, booking, email_type: str = "reserve_booking", user=None):
         query = f"""
-            mutation {{
-              sendEmail(
-                emailInput: {{
-                  firstName: \"{booking.first_name}\",
-                  lastName: \"{booking.last_name}\",
-                  receiverEmail: \"{booking.receiver_email}\",
-                  phone: \"{booking.phone}\",
-                  internalParticipants: {booking.internal_participants},
-                  externalParticipants: {booking.external_participants},
-                  cabins: [1],
-                  checkIn: \"{booking.check_in.strftime("%Y-%m-%d")}\",
-                  checkOut: \"{booking.check_out.strftime("%Y-%m-%d")}\",
-                  emailType: \"{email_type}\"
+            query {{
+                signUps(eventId: {self.second_event.id}) {{
+                  id
                 }}
-              ){{
-                ok
               }}
-            }}
-        """
-        return self.query(query, user=user)
+            """
 
-    def test_mail_permission(self):
-        # Tries to send a mail with missing permissions
-        response = self.send_email(self.first_booking, "reserve_booking", user=self.user)
-        self.assert_permission_error(response)
+        # Try to make query without permission
+        response = self.query(query, user=self.user_2nd_grade)
+        # This validates the status code and if you get errors
+        content = json.loads(response.content)
+        assert "errors" in content
 
-    def test_outbox_size_reservation(self):
-        # Check outbox size when sending reservation mails to both admin and user
-        response = self.send_email(self.first_booking, "reserve_booking", user=self.super_user)
-        self.assertResponseNoErrors(resp=response)
-        self.assertEqual(len(mail.outbox), 2)
+        # Try to make query with permission
+        MembershipFactory(user=self.user_2nd_grade, organization=self.second_event.organization)
+        response = self.query(query, user=self.user_2nd_grade)
 
-    def test_outbox_size_decision(self):
-        # Check outbox size when sending the decision (approve or disapprove) mail to the user
-        response = self.send_email(self.first_booking, "approve_booking", user=self.super_user)
-        self.assertResponseNoErrors(resp=response)
-        self.assertEqual(len(mail.outbox), 1)
+        content = json.loads(response.content)
+        print("\n\n\n", content["errors"], "\n\n\n")
+        # [{'message': 'Received incompatible instance "<QuerySet [<SignUp: user27-event17>]>".'}]
+        
+        self.assertResponseNoErrors(response)
 
-    def test_subject_reservation(self):
-        response = self.send_email(self.first_booking, user=self.super_user)
-        self.assertResponseNoErrors(resp=response)
+        # Fetching content of response
+        content = json.loads(response.content)
 
-        # Verify that the subject of the first message is correct.
-        self.assertEqual(mail.outbox[0].subject, "Bekreftelse på mottat søknad om booking av Oksen")
+        # There should be one signUp in the database
+        self.assertEqual(len(content["data"]["signUps"]), 1)
+'''
 
-    def test_subject_approval(self):
-        response = self.send_email(self.first_booking, "approve_booking", user=self.super_user)
-        self.assertResponseNoErrors(resp=response)
 
-        # Verify that the subject of the first message is correct.
-        self.assertTrue("Hyttestyret har tatt stilling til søknaden din om booking av " in mail.outbox[0].subject)
-
-    def test_reservation_mail_content(self):
-        response = self.send_email(self.first_booking, "reserve_booking", user=self.super_user)
-        self.assertResponseNoErrors(resp=response)
-
-        # Verify that the mails contain the price
-        self.assertTrue(str(self.first_booking.price) in mail.outbox[0].body)
-        self.assertTrue(str(self.first_booking.price) in mail.outbox[1].body)
-
-        # Verify that the admin email contains the correct contact info
-        self.assertTrue(self.first_booking.first_name in mail.outbox[1].body)
-        self.assertTrue(self.first_booking.last_name in mail.outbox[1].body)
-        self.assertTrue(self.first_booking.first_name in mail.outbox[1].body)
-        self.assertTrue(str(self.first_booking.phone) in mail.outbox[1].body)
-        self.assertTrue(f"Antall indøkere: {self.first_booking.internal_participants}" in mail.outbox[1].body)
-        self.assertTrue(f"Antall eksterne: {self.first_booking.external_participants}" in mail.outbox[1].body)
-
-        # Verify that the checkin and checkout for admin and user email is correct
-        date_fmt = "%d-%m-%Y"
-        self.assertTrue(self.first_booking.check_in.strftime(date_fmt) in mail.outbox[0].body)
-        self.assertTrue(self.first_booking.check_out.strftime(date_fmt) in mail.outbox[0].body)
-        self.assertTrue(self.first_booking.check_in.strftime(date_fmt) in mail.outbox[1].body)
-        self.assertTrue(self.first_booking.check_out.strftime(date_fmt) in mail.outbox[1].body)
-    '''
+# class EmailTestCase(EventsBaseTestCase):
+# TODO: Johan
+# Se test.py i cabins for å se hvordan det er gjort i hyttebooking
