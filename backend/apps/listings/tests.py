@@ -1,5 +1,6 @@
 import json
 from datetime import timedelta
+from typing import Any
 
 from django.utils import timezone
 from utils.testing.base import ExtendedGraphQLTestCase
@@ -65,7 +66,7 @@ class ListingResolverTestCase(ListingBaseTestCase):
         response = self.query(query)
         self.assertResponseNoErrors(response)
         data = json.loads(response.content)["data"]
-        listings = data["listings"]
+        listings: list[dict[str, Any]] = data["listings"]
         self.assertEqual(
             len(listings),
             1,
