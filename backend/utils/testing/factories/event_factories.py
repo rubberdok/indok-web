@@ -27,7 +27,7 @@ class EventFactory(DjangoModelFactory):
 
     title = factory.Sequence(lambda n: "event%d" % n)
     description = "Dette er et kult event!"
-    organization = SimplifiedOrganizationFactory()
+    organization = factory.SubFactory(SimplifiedOrganizationFactory)
     start_time = timezone.now() + timedelta(days=20)  # 20 days from now
     end_time = timezone.now() + timedelta(days=21)  # 21 days from now
     contact_email = Faker(["no-NO"]).ascii_company_email()
