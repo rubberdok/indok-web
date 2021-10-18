@@ -129,7 +129,7 @@ const CabinsPage: NextPage = () => {
                         bylivet. Indøks egne hyttestyre arrangerer flere forskjellige turer i løpet av året. Dette er en
                         flott mulighet til både å bli kjent med hyttene, området rundt hyttene, og å bli kjent med andre
                         indøkere på tvers av klassetrinnene. Hyttestyret har det daglige ansvaret for drift og utbedring
-                        av Indøkhyttene, organisering av utleie og felles hytteturer. Du kan lese mer om hyttestyret
+                        av Indøkhyttene, organisering av utleie og felles hytteturer. Du kan lese mer om Hyttestyret
                         <Link href="/about/organizations/hyttestyret"> her.</Link>
                       </Typography>
                     </Grid>
