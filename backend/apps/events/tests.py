@@ -345,7 +345,7 @@ class EventsMutationsTestCase(EventsBaseTestCase):
     def test_create_event(self):
         # Test event creation fails without organization membership
         organization = SimplifiedOrganizationFactory()
-        event = EventFactory.build()
+        event = EventFactory.build(organization=organization)
         response = self.create_event(event)
         content = json.loads(response.content)
         assert "errors" in content
