@@ -109,8 +109,16 @@ class AssignMembership(graphene.Mutation):
             organization_id=membership_data["organization_id"],
             user_id=membership_data["user_id"],
         )
+
+        # Need to save once before using 'groups' ManyToManyField
         membership.save()
-        membership.groups.set(groups)
+
+        for group in groups:
+            membership.groups.add(group)
+
+        # Saving after adding groups in order to trigger post_save signal to synchronize Groups/ResponsibleGroups
+        membership.save()
+
         return AssignMembership(membership=membership, ok=True)
 
 

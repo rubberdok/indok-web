@@ -20,6 +20,7 @@ class MembershipFactory(DjangoModelFactory):
 
     @factory.post_generation
     def groups(self, create, extracted, **kwargs):
+        """Makes it possible to pass in ResponsibleGroups as an array to the factory"""
         if not create:
             return
         if extracted:

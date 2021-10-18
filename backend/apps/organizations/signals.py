@@ -1,5 +1,3 @@
-from typing import Optional
-
 from django.contrib.auth.models import Group
 from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
@@ -18,25 +16,31 @@ from apps.permissions.models import ResponsibleGroup
 
 @receiver(post_save, sender=Membership)
 def handle_new_member(instance: Membership, **kwargs):
+    primary_group: Group = instance.organization.primary_group
     optional_groups: list[ResponsibleGroup] = instance.groups
-    group: Group = instance.organization.primary_group.group
     org_group: Group = Group.objects.get(name=ORGANIZATION)
+
     user = instance.user
     user.groups.add(org_group)
-    if group:
-        user.groups.add(group)
-        for optional_group in optional_groups.all():
-            user.groups.add(optional_group.group)
+    if primary_group:
+        user.groups.add(primary_group.group)
+        if primary_group not in instance.groups.all():
+            instance.groups.add(primary_group)
+    for optional_group in optional_groups.all():
+        user.groups.add(optional_group.group)
 
 
 @receiver(pre_delete, sender=Membership)
 def handle_removed_member(instance: Membership, **kwargs):
-    group: Group = instance.organization.primary_group.group
+    primary_group: Group = instance.organization.primary_group
+    optional_groups: list[ResponsibleGroup] = instance.groups
     org_group: Group = Group.objects.get(name=ORGANIZATION)
-    user = instance.user
-    if group:
-        user.groups.remove(group)
 
+    user = instance.user
+    if primary_group:
+        user.groups.remove(primary_group.group)
+    for optional_group in optional_groups.all():
+        user.groups.remove(optional_group.group)
     if not user.memberships.all().exists():
         user.groups.remove(org_group)
 
