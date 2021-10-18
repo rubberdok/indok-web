@@ -29,6 +29,8 @@ class VippsCallback(APIView):
         # Update payment status
         if order.payment_status == Order.PaymentStatus.CAPTURED:
             return Response()
+        elif order.payment_status == Order.PaymentStatus.INITIATED:
+            was_initiated = True
 
         status = request.data.get("transactionInfo").get("status")
         if status in Order.PaymentStatus.values:
@@ -36,6 +38,12 @@ class VippsCallback(APIView):
         elif status in ["RESERVE_FAILED", "SALE_FAILED"]:
             order.payment_status = Order.PaymentStatus.FAILED
         order.save()
+
+        # If order went from initiated to failed/cancelled, restore available quantity
+        if status != "RESERVED" and was_initiated:
+            product = order.product
+            product.current_quantity = product.current_quantity + order.quantity
+            product.save()
 
         # Capture payment
         if order.payment_status == Order.PaymentStatus.RESERVED:

@@ -12,6 +12,9 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=11, decimal_places=2)
     description = models.TextField()
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name="products")
+    total_quantity = models.IntegerField()
+    current_quantity = models.IntegerField(null=True)  # Set to total_quantity upon initialization
+    max_buyable_quantity = models.IntegerField(default=1)
 
     def __str__(self):
         return self.name
