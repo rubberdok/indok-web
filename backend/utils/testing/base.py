@@ -63,6 +63,34 @@ class ExtendedGraphQLTestCase(GraphQLTestCase):
                 elif isinstance(value, (list, dict)):
                     self.assert_null_fields(value, fields)
 
+    def _assert_list_equal(self, data: list[dict[str, Any]], obj: Union[QuerySet[models.Model], list[model]]) -> None:
+        for data_item, obj_item in zip(data, obj):
+            self.deep_assert_equal(data_item, obj_item)
+
+    def _assert_dict_equal(self, data: dict[str, Any], obj: model) -> None:
+        for k, v in data.items():
+            if hasattr(obj, to_snake_case(k)):
+                value = getattr(obj, to_snake_case(k))
+                if type(value) == datetime:
+                    # Datetimes must be formatted fo rthe comparision
+                    self.assertEqual(
+                        v,
+                        str(value.isoformat()),
+                        msg=f"{v=}, {str(value.isoformat())=} failed for key {k=}",
+                    )
+                elif isinstance(value, (models.Model, factory.Factory)):
+                    # Foreign key or a related instance, recursively check the values.
+                    self.deep_assert_equal(v, value)
+                elif hasattr(value, "all") and callable(value.all) and isinstance(v, list):
+                    # Likely a related manager, fetch the objects prior to continuing
+                    self.deep_assert_equal(v, value.all())
+                else:
+                    self.assertEqual(
+                        str(v),
+                        str(value),
+                        msg=f"{str(v)=}, {str(value)=} failed for key {k=}",
+                    )
+
     @overload
     def deep_assert_equal(self, data: dict[str, Any], obj: model) -> None:
         ...
@@ -97,36 +125,14 @@ class ExtendedGraphQLTestCase(GraphQLTestCase):
             """
             When comparing lists, we want to compare by item, assumes that the lists are sorted on the same key.
             """
+            self._assert_list_equal(data, obj)
 
-            for data_item, obj_item in zip(data, obj):
-                self.deep_assert_equal(data_item, obj_item)
-
-        elif isinstance(data, dict):
+        elif isinstance(data, dict) and isinstance(obj, (models.Model, factory.Factory)):
             """
             Comparing a dictionary to an instance of the model. Compare each attribute in the provided dictionary
             to the corresponding value for the instance.
             """
-            for k, v in data.items():
-                if hasattr(obj, to_snake_case(k)):
-                    value = getattr(obj, to_snake_case(k))
-                    if type(value) == datetime:
-                        # Datetimes must be formatted fo rthe comparision
-                        self.assertEqual(
-                            v,
-                            str(value.isoformat()),
-                            msg=f"{v=}, {str(value.isoformat())=} failed for key {k=}",
-                        )
-                    elif isinstance(value, (models.Model, factory.Factory)):
-                        # Foreign key or a related instance, recursively check the values.
-                        self.deep_assert_equal(v, value)
-                    elif hasattr(value, "all") and callable(value.all) and isinstance(v, list):
-                        # Likely a related manager, fetch the objects prior to continuing
-                        self.deep_assert_equal(v, value.all())
-                    else:
-                        self.assertEqual(
-                            str(v),
-                            str(value),
-                            msg=f"{str(v)=}, {str(value)=} failed for key {k=}",
-                        )
+            self._assert_dict_equal(data, obj)
+
         else:
             raise AssertionError(f"Unexpected types, got {type(data)=} and {type(obj)=}")
