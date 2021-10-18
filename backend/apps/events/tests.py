@@ -20,13 +20,12 @@ class EventsBaseTestCase(ExtendedGraphQLTestCase):
     def setUp(self) -> None:
         super().setUp()
         # Create three events
-        self.first_event = EventFactory(organization=SimplifiedOrganizationFactory())
+        self.first_event = EventFactory()
         self.second_event = EventFactory(
-            organization=SimplifiedOrganizationFactory(),
             start_time=timezone.now() + datetime.timedelta(seconds=1),
             allowed_grade_years="1,2,3",
         )
-        self.third_event = EventFactory(organization=SimplifiedOrganizationFactory())
+        self.third_event = EventFactory()
 
         # Make one attendable without specific slot distribution
         attendable = AttendableFactory(
@@ -346,7 +345,7 @@ class EventsMutationsTestCase(EventsBaseTestCase):
     def test_create_event(self):
         # Test event creation fails without organization membership
         organization = SimplifiedOrganizationFactory()
-        event = EventFactory.build(organization=organization)
+        event = EventFactory.build()
         response = self.create_event(event)
         content = json.loads(response.content)
         assert "errors" in content

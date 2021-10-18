@@ -39,7 +39,7 @@ class AttendableFactory(DjangoModelFactory):
 
     signup_open_date = timezone.now() + timedelta(days=1)
     deadline = timezone.now() + timedelta(days=10)
-    event = EventFactory()
+    event = factory.SubFactory(EventFactory)
 
 
 class SlotDistributionFactory(DjangoModelFactory):
@@ -47,7 +47,7 @@ class SlotDistributionFactory(DjangoModelFactory):
         model = SlotDistributionModel
 
     available_slots = 5
-    attendable = AttendableFactory()
+    attendable = factory.SubFactory(AttendableFactory)
 
 
 class CategoryFactory(DjangoModelFactory):
