@@ -72,7 +72,7 @@ class ExtendedGraphQLTestCase(GraphQLTestCase):
             if hasattr(obj, to_snake_case(k)):
                 value = getattr(obj, to_snake_case(k))
                 if type(value) == datetime:
-                    # Datetimes must be formatted fo rthe comparision
+                    # Datetimes must be formatted for the comparision
                     self.assertEqual(
                         v,
                         str(value.isoformat()),
