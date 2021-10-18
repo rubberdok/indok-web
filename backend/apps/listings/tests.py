@@ -2,7 +2,7 @@ import json
 from datetime import timedelta
 
 from django.utils import timezone
-from utils.testing.ExtendedGraphQLTestCase import ExtendedGraphQLTestCase
+from utils.testing.base import ExtendedGraphQLTestCase
 from utils.testing.factories.listings import ListingFactory
 from utils.testing.factories.organizations import MembershipFactory, OrganizationFactory
 from utils.testing.factories.users import UserFactory

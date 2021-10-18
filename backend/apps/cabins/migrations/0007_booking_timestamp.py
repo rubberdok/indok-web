@@ -15,11 +15,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="booking",
             name="timestamp",
-            field=models.DateTimeField(
-                default=timezone.make_aware(
-                    datetime.datetime(2021, 3, 22, 20, 10, 8, 577923)
-                )
-            ),
+            field=models.DateTimeField(default=timezone.make_aware(datetime.datetime(2021, 3, 22, 20, 10, 8, 577923))),
             preserve_default=False,
         ),
     ]
