@@ -1,6 +1,6 @@
 import json
 from django.core import mail
-from apps.events.models import Event, Category
+from apps.events.models import Event, Category, SignUp
 from utils.testing.factories.event_factories import (
     EventFactory,
     AttendableFactory,
@@ -21,12 +21,18 @@ class EventsBaseTestCase(ExtendedGraphQLTestCase):
         super().setUp()
         # Create three events
         self.first_event = EventFactory(organization=SimplifiedOrganizationFactory())
-        self.second_event = EventFactory(organization=SimplifiedOrganizationFactory())
+        self.second_event = EventFactory(
+            organization=SimplifiedOrganizationFactory(),
+            start_time=timezone.now() + datetime.timedelta(seconds=1),
+            allowed_grade_years="1,2,3",
+        )
         self.third_event = EventFactory(organization=SimplifiedOrganizationFactory())
 
         # Make one attendable without specific slot distribution
-        attendable = AttendableFactory(event=self.second_event)
-        SlotDistributionFactory(attendable=attendable, available_slots=1)
+        attendable = AttendableFactory(
+            event=self.second_event, signup_open_date=timezone.now() + datetime.timedelta(microseconds=100)
+        )
+        SlotDistributionFactory(attendable=attendable, available_slots=1, grade_years="1,2,3")
 
         # Make one attendable with specific slot distribution
         attendable = AttendableFactory(event=self.third_event)
@@ -47,10 +53,11 @@ class EventsBaseTestCase(ExtendedGraphQLTestCase):
         current_year = now.year
         year_val = 5 if now.month < 8 else 6
 
-        self.user_1st_grade = UserFactory(graduation_year=year_val + current_year - 1)
-        self.user_2nd_grade = UserFactory(graduation_year=year_val + current_year - 2)
-        self.user_3rd_grade = UserFactory(graduation_year=year_val + current_year - 3)
-        self.user_4th_grade = UserFactory(graduation_year=year_val + current_year - 4)
+        self.user_1st_grade = UserFactory(graduation_year=year_val + current_year - 1, is_indok=True)
+        self.user_2nd_grade = UserFactory(graduation_year=year_val + current_year - 2, is_indok=True)
+        self.user_3rd_grade = UserFactory(graduation_year=year_val + current_year - 3, is_indok=True)
+        self.user_4th_grade = UserFactory(graduation_year=year_val + current_year - 4, is_indok=True)
+        self.user_not_indok = UserFactory(graduation_year=year_val + current_year - 1)
         self.super_user = UserFactory(is_staff=True, is_superuser=True)
 
 
@@ -321,6 +328,12 @@ class EventsMutationsTestCase(EventsBaseTestCase):
         assert "errors" in content
         # Check that category is not created
         self.assertEqual(2, len(Category.objects.all()))
+
+    def check_create_signup_with_error(self, response):
+        content = json.loads(response.content)
+        assert "errors" in content
+        # Check that signup is not created
+        self.assertEqual(0, len(SignUp.objects.all()))
 
     def stringify_grade_years(self, slot_distribution):
         grade_years = slot_distribution.get_available_slots()
@@ -686,13 +699,13 @@ class EventsMutationsTestCase(EventsBaseTestCase):
                     }}
                 """
         # Try without correct permission
-        response = self.query(query)
+        response = self.query(query, user=self.user_1st_grade)
         self.check_create_category_with_error(response)
 
         # Try with permission
         response = self.query(query, user=self.super_user)
         self.assertResponseNoErrors(response)
-        # Check that booking is created
+        # Check that category is created
         content = json.loads(response.content)
         self.assertTrue(Category.objects.filter(id=int(content["data"]["createCategory"]["category"]["id"])).exists())
 
@@ -727,7 +740,7 @@ class EventsMutationsTestCase(EventsBaseTestCase):
                     }}
                 """
         # Try without correct permission
-        response = self.query(query)
+        response = self.query(query, user=self.user_1st_grade)
         content = json.loads(response.content)
         assert "errors" in content
 
@@ -749,7 +762,7 @@ class EventsMutationsTestCase(EventsBaseTestCase):
                     }}
                 """
         # Try without correct permission
-        response = self.query(query)
+        response = self.query(query, user=self.user_1st_grade)
         content = json.loads(response.content)
         assert "errors" in content
 
@@ -759,11 +772,79 @@ class EventsMutationsTestCase(EventsBaseTestCase):
         with self.assertRaises(Category.DoesNotExist):
             Category.objects.get(pk=self.first_category.id)
 
-    # Test create, update and delete sign up
+    def test_event_signup(self):
+        # Test sign up
+        query = f"""
+                mutation EventSignUp {{
+                    eventSignUp(
+                        eventId: {self.second_event.id},
+                        data: {{ extraInformation: \"\" }}
+                        ) {{
+                      isFull
+                        }}
+                    }}
+                """
+        # Try without correct permission
+        response = self.query(query, user=self.user_not_indok)
+        self.assert_permission_error(response)
 
+        # Try with correct permission
+        response = self.query(query, user=self.user_1st_grade)
+        self.assertResponseNoErrors(response)
+        # Check that sign up is created
+        content = json.loads(response.content)
+        self.assertTrue(SignUp.objects.filter(event=self.second_event, user=self.user_1st_grade).exists())
+        # There was only one available slot on the event and it should now be full
+        self.assertTrue(content["data"]["eventSignUp"]["isFull"])
 
-'''
-    def test_resolve_sign_ups(self):
+    def test_signup_before_open_date(self):
+        # Test sign up before sign up open date
+        query = f"""
+                mutation EventSignUp {{
+                    eventSignUp(
+                        eventId: {self.third_event.id},
+                        data: {{ extraInformation: \"\" }}
+                        ) {{
+                      isFull
+                        }}
+                    }}
+                """
+        response = self.query(query, user=self.user_1st_grade)
+        self.check_create_signup_with_error(response)
+
+    def test_invalid_event_signup(self):
+        # Try to sign up to non-attendable event
+        query = f"""
+                mutation EventSignUp {{
+                    eventSignUp(
+                        eventId: {self.first_event.id},
+                        data: {{ extraInformation: \"\" }}
+                        ) {{
+                      isFull
+                        }}
+                    }}
+                """
+        response = self.query(query, user=self.user_1st_grade)
+        self.check_create_signup_with_error(response)
+
+    def test_invalid_user_grade_signup(self):
+        # Try to sign up with not allowed grade year
+        query = f"""
+                mutation EventSignUp {{
+                    eventSignUp(
+                        eventId: {self.second_event.id},
+                        data: {{ extraInformation: \"\" }}
+                        ) {{
+                      isFull
+                        }}
+                    }}
+                """
+        response = self.query(query, user=self.user_4th_grade)
+        self.check_create_signup_with_error(response)
+
+    def test_event_signoff(self):
+        # Test sign off
+
         # signUp a user to an attendable event
         SignUpFactory(
             event=self.second_event,
@@ -772,39 +853,87 @@ class EventsMutationsTestCase(EventsBaseTestCase):
             user_phone_number=self.user_3rd_grade.phone_number,
             user_grade_year=self.user_3rd_grade.grade_year,
         )
-
         query = f"""
-            query {{
-                signUps(eventId: {self.second_event.id}) {{
-                  id
-                }}
-              }}
-            """
+                mutation EventSignOff {{
+                    eventSignOff(
+                        eventId: {self.second_event.id},
+                        ) {{
+                      isFull
+                        }}
+                    }}
+                """
+        # Try without correct permission
+        response = self.query(query, user=self.user_not_indok)
+        self.assert_permission_error(response)
 
-        # Try to make query without permission
-        response = self.query(query, user=self.user_2nd_grade)
-        # This validates the status code and if you get errors
+        # Try with wrong user
+        response = self.query(query, user=self.user_1st_grade)
         content = json.loads(response.content)
         assert "errors" in content
 
-        # Try to make query with permission
-        MembershipFactory(user=self.user_2nd_grade, organization=self.second_event.organization)
-        response = self.query(query, user=self.user_2nd_grade)
-
-        content = json.loads(response.content)
-        print("\n\n\n", content["errors"], "\n\n\n")
-        # [{'message': 'Received incompatible instance "<QuerySet [<SignUp: user27-event17>]>".'}]
-        
+        # Try with correct permission and correct user
+        response = self.query(query, user=self.user_3rd_grade)
         self.assertResponseNoErrors(response)
-
-        # Fetching content of response
+        # Check that sign up was updated
         content = json.loads(response.content)
+        signup = SignUp.objects.get(event=self.second_event, user=self.user_3rd_grade)
+        self.assertEqual(signup.is_attending, False)
+        # There was only one available slot on the event and it should now be full
+        self.assertFalse(content["data"]["eventSignOff"]["isFull"])
 
-        # There should be one signUp in the database
-        self.assertEqual(len(content["data"]["signUps"]), 1)
-'''
+    def test_admin_event_signoff(self):
+        # Test sign off by admin user (user that is a member of the event's organization)
+        SignUpFactory(
+            event=self.second_event,
+            user=self.user_3rd_grade,
+            user_email=self.user_3rd_grade.email,
+            user_phone_number=self.user_3rd_grade.phone_number,
+            user_grade_year=self.user_3rd_grade.grade_year,
+        )
+        query = f"""
+                mutation AdminEventSignOff {{
+                    adminEventSignOff(
+                        eventId: {self.second_event.id},
+                        userId: {self.user_3rd_grade.id}
+                        ) {{
+                      event {{
+                          id
+                      }}
+                        }} 
+                    }}
+                """
+        # Try without correct permission
+        response = self.query(query, user=self.user_2nd_grade)
+        content = json.loads(response.content)
+        assert "errors" in content
+
+        invalid_query = f"""
+                mutation AdminEventSignOff {{
+                    adminEventSignOff(
+                        eventId: {self.second_event.id},
+                        userId: {self.user_1st_grade.id}
+                        ) {{
+                      event {{
+                          id
+                      }}
+                        }} 
+                    }}
+                """
+
+        # Try with wrong user
+        MembershipFactory(user=self.user_2nd_grade, organization=self.second_event.organization)
+        response = self.query(invalid_query, user=self.user_2nd_grade)
+        content = json.loads(response.content)
+        assert "errors" in content
+
+        # Try with correct permission and correct user
+        response = self.query(query, user=self.user_2nd_grade)
+        self.assertResponseNoErrors(response)
+        # Check that sign up was updated
+        content = json.loads(response.content)
+        signup = SignUp.objects.get(event=self.second_event, user=self.user_3rd_grade)
+        self.assertEqual(signup.is_attending, False)
 
 
 # class EmailTestCase(EventsBaseTestCase):
-# TODO: Johan
-# Se test.py i cabins for å se hvordan det er gjort i hyttebooking
+# TODO: Johan :) Se test.py i cabins for å se hvordan det er gjort i hyttebooking

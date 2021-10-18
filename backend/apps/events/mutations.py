@@ -270,6 +270,9 @@ class EventSignUp(graphene.Mutation):
 
         now = timezone.now()
 
+        if not hasattr(event, "attendable"):
+            raise Exception("Arrangementet har ikke påmelding")
+
         if now < event.attendable.signup_open_date:
             raise Exception("Arrangementet er ikke åpent for påmelding enda")
 
