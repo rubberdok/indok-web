@@ -74,8 +74,7 @@ class ListingResolverTestCase(ListingBaseTestCase):
                 but found multiple: {[listing['id'] for listing in listings]}
             """,
         )
-        for listing in listings:
-            self.deep_assert_equal(listing, self.visible_listing)
+        self.deep_assert_equal(listings, [self.visible_listing])
 
     def test_resolve_listing(self):
         query = f"""
