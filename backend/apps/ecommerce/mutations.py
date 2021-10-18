@@ -1,3 +1,4 @@
+import random
 import uuid
 
 import graphene
@@ -138,9 +139,12 @@ class CreateProduct(graphene.Mutation):
 
         product = Product()
         product.name = "Atmos"
-        product.price = "20"
+        product.price = str(random.randint(1, 10_000))
         product.description = "Best car."
         product.organization = Organization.objects.first()
+        quantity = random.randint(1, 10)
+        product.total_quantity = quantity
+        product.max_buyable_quantity = random.randint(1, quantity)
         product.save()
         ok = True
 

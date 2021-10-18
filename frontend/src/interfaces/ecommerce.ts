@@ -5,20 +5,22 @@ export interface Product {
   id: string;
   name: string;
   price: number;
-  decscription: string;
+  description: string;
   organization: Organization;
+  totalQuantity: number; // Maybe remove this before merge to prod
+  maxBuyableQuantity: number;
 }
 
 export type PaymentStatus = "INITIATED" | "RESERVED" | "CAPTURED" | "CANCELLED" | "REFUNDED" | "FAILED" | "REJECTED";
 
 export interface Order {
-  order_id: string;
+  orderId: string;
   product: Product;
   user: User;
   quantity: number;
-  total_price: number;
-  payment_status: PaymentStatus;
+  totalPrice: number;
+  paymentStatus: PaymentStatus;
   date: string;
-  auth_token: string;
-  payment_attempt: number;
+  authToken: string;
+  paymentAttempt: number;
 }

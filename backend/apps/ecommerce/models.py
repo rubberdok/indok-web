@@ -19,6 +19,12 @@ class Product(models.Model):
     def __str__(self):
         return self.name
 
+    def save(self, *args, **kwargs):
+        if not self.current_quantity:
+            self.current_quantity = self.total_quantity
+        self.max_buyable_quantity = min(self.max_buyable_quantity, self.total_quantity)
+        super().save(*args, **kwargs)
+
 
 def get_auth_token():
     return uuid.uuid4().hex
