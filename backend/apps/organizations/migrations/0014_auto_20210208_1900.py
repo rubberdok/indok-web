@@ -3,6 +3,7 @@
 from django.db import migrations
 from django.utils.text import slugify
 
+
 def slugify_missing_organizations(apps, schema_editor):
     Organization = apps.get_model("organizations", "Organization")
     for organization in Organization.objects.all():
@@ -14,9 +15,7 @@ def slugify_missing_organizations(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('organizations', '0013_auto_20210208_1758'),
+        ("organizations", "0013_auto_20210208_1758"),
     ]
 
-    operations = [
-        migrations.RunPython(slugify_missing_organizations)
-    ]
+    operations = [migrations.RunPython(slugify_missing_organizations)]

@@ -6,12 +6,12 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('forms', '0006_auto_20210729_1247'),
+        ("forms", "0006_auto_20210729_1247"),
     ]
 
     operations = [
         migrations.AddConstraint(
-            model_name='answer',
-            constraint=models.UniqueConstraint(fields=('response', 'question'), name='unique_answer_per_response'),
+            model_name="answer",
+            constraint=models.UniqueConstraint(fields=("response", "question"), name="unique_answer_per_response"),
         ),
     ]
