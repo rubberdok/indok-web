@@ -16,13 +16,23 @@ class BlogBaseTestCase(ExtendedGraphQLTestCase):
         self.authorized_user = UserFactory()
 
         self.organization = OrganizationFactory()
-        # assign_perm("blogs.add_blogpost", self.organization.primary_group.group)
+        
+        # Assign permissions to authorized test-user
+        assign_perm("blogs.add_blog", self.authorized_user)
+        assign_perm("blogs.change_blog", self.authorized_user)
+        assign_perm("blogs.delete_blogpost", self.authorized_user)
+
         assign_perm("blogs.add_blogpost", self.authorized_user)
+        assign_perm("blogs.change_blogpost", self.authorized_user)
+        assign_perm("blogs.delete_blogpost", self.authorized_user)
+
         MembershipFactory(user=self.authorized_user, organization=self.organization)
 
+        # Adds two blog instances to the test cases
         self.blog_one = BlogFactory(organization=self.organization)
         self.blog_two = BlogFactory(organization=self.organization)
 
+        # Adds two blogpost instances to the test cases
         self.blog_post_one = BlogPostFactory(blog=self.blog_one)
         self.blog_post_two = BlogPostFactory(blog=self.blog_one)
 
@@ -53,7 +63,7 @@ class BlogResolverTestCase(BlogBaseTestCase):
         response = self.query(query)
         self.assertResponseNoErrors(response)
         blogs = json.loads(response.content)["data"]["allBlogs"]
-        self.assertEqual(len(blogs), 2, f"Expected 2 blos, but got {len(blogs)}",)
+        self.assertEqual(len(blogs), 2, f"Expected 2 blogposts, but got {len(blogs)}",)
 
     def test_resolve_blog(self):
         # Test the field "blogPost", which is a list of blogposts connected
@@ -102,11 +112,11 @@ class BlogPostResolverTestCase(BlogBaseTestCase):
                 """
         response = self.query(query)
         self.assertResponseNoErrors(response)
-        listings = json.loads(response.content)["data"]["allBlogPosts"]
+        blog_posts = json.loads(response.content)["data"]["allBlogPosts"]
         self.assertEqual(
-            len(listings),
+            len(blog_posts),
             2,
-            f"Expected 2 blog posts, but got {len(listings)}",
+            f"Expected 2 blog posts, but got {len(blog_posts)}",
         )
 
     def test_resolve_blog_post(self):
@@ -161,6 +171,13 @@ class BlogPostMutationTestCase(BlogBaseTestCase):
             }}
         """
 
+        self.delete_mutation = f""" 
+            mutation {{
+                deleteBlogPost(blogPostId: {self.blog_post_one.id}) {{
+                    ok
+                }}
+            }}"""
+
     def test_unauthorized_create_blog_post(self):
         response = self.query(self.create_mutation)
         self.assert_permission_error(response)
@@ -174,3 +191,21 @@ class BlogPostMutationTestCase(BlogBaseTestCase):
         blog_post_data = json.loads(response.content)["data"]["createBlogPost"]["blogPost"]
         blog_post = BlogPost.objects.get(pk=blog_post_data["id"])
         self.deep_assert_equal(blog_post_data, blog_post)
+
+    def test_unauthorized_delete_blog_post(self):
+        response = self.query(self.delete_mutation)
+        self.assert_permission_error(response)
+        response = self.query(self.delete_mutation, user=self.unauthorized_user)
+        self.assert_permission_error(response)
+
+    def test_authorized_delete_blog_post(self):
+        response = self.query(self.delete_mutation, user=self.authorized_user)
+        self.assertResponseNoErrors(response)
+
+        try:
+            BlogPost.objects.get(pk=self.blog_post_one.pk)
+            self.fail("Expected the listing to be deleted, but it was not.")
+        except BlogPost.DoesNotExist:
+            pass
+
+
