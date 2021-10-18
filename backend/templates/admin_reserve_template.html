@@ -53,6 +53,13 @@
           <p>Navn: {{ first_name }} {{ last_name }}</p>
           <p>Mobilnummer: {{ phone }}</p>
           <p>E-post: {{ receiver_email }}</p>
+
+        {% if extra_info|length > 0 %}
+            <p><strong>{{ first_name }} har sendt med følgende spørsmål:</strong></p>
+            <p>{{ extra_info }}</p>
+            <a href="mailto:{{ receiver_email }}">Dere kan sende en mail til {{ first_name }} for å besvare spørsmålene.</a>
+            <br />
+        {% endif %}
       <a
         href="https://indokntnu.no/cabins/admin"
         style="
