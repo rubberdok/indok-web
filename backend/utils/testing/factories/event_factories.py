@@ -1,5 +1,4 @@
 from faker import Faker
-from utils.testing.factories.organizations import OrganizationFactory
 from factory.django import DjangoModelFactory
 import factory
 from apps.events.models import (
