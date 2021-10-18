@@ -929,7 +929,6 @@ class EventsMutationsTestCase(EventsBaseTestCase):
         response = self.query(query, user=self.user_2nd_grade)
         self.assertResponseNoErrors(response)
         # Check that sign up was updated
-        content = json.loads(response.content)
         signup = SignUp.objects.get(event=self.second_event, user=self.user_3rd_grade)
         self.assertEqual(signup.is_attending, False)
 

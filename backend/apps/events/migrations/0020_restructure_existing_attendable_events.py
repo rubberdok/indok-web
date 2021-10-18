@@ -3,11 +3,11 @@
 from django.db import migrations
 
 def restucture_existing_attendable_events(apps, schema_editor):
-    Attendable = apps.get_model("events", "Attendable")
-    SlotDistribution = apps.get_model("events", "SlotDistribution")
-    Event = apps.get_model("events", "Event")
+    attendable_model = apps.get_model("events", "Attendable")
+    slot_distribution_model = apps.get_model("events", "SlotDistribution")
+    event_model = apps.get_model("events", "Event")
 
-    existing_attendable_events = Event.objects.filter(is_attendable=True)
+    existing_attendable_events = event_model.objects.filter(is_attendable=True)
 
     for event in existing_attendable_events:
         if event.signup_open_date is None:
@@ -15,7 +15,7 @@ def restucture_existing_attendable_events(apps, schema_editor):
         if event.available_slots is None:
             setattr(event, "available_slots", 0)
 
-        attendable = Attendable.objects.create(
+        attendable = attendable_model.objects.create(
             event=event, 
             signup_open_date=event.signup_open_date,
             deadline=event.deadline, 
@@ -23,7 +23,7 @@ def restucture_existing_attendable_events(apps, schema_editor):
             binding_signup=event.binding_signup
             )
 
-        SlotDistribution.objects.create(
+        slot_distribution_model.objects.create(
             attendable = attendable,
             available_slots=event.available_slots,
             grade_years=event.allowed_grade_years,

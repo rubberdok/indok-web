@@ -2,6 +2,9 @@ from graphql import GraphQLError
 from django.utils import timezone
 
 
+ATTENDABLE_ERROR = "At a minimum, you must specify the number of available slots and when the sign up should open to create an attenable event"
+
+
 def time_validation(start_time, end_time):
     if start_time < timezone.now() or end_time is not None and end_time < timezone.now():
         raise GraphQLError("Input datetimes are before current time")
@@ -56,9 +59,7 @@ def create_event_validation(event_data, attendable_data=None, slot_distribution_
     if (attendable_data is not None and slot_distribution_data is None) or (
         attendable_data is None and slot_distribution_data is not None
     ):
-        raise GraphQLError(
-            "At a minimum, you must specify the number of available slots and when the sign up should open to create an attenable event"
-        )
+        raise GraphQLError(ATTENDABLE_ERROR)
 
     if attendable_data is not None:
         time_validation(attendable_data.signup_open_date, event_data.start_time)
@@ -86,14 +87,10 @@ def update_event_validation(
         email_validation(event_data.contact_email)
 
     if attendable_data is not None and attendable is None and slot_distribution_data is None:
-        raise GraphQLError(
-            "At a minimum, you must specify the number of available slots and when the sign up should open to create an attenable event"
-        )
+        raise GraphQLError(ATTENDABLE_ERROR)
 
     if slot_distribution_data is not None and attendable is None and attendable_data is None:
-        raise GraphQLError(
-            "At a minimum, you must specify the number of available slots and when the sign up should open to create an attenable event"
-        )
+        raise GraphQLError(ATTENDABLE_ERROR)
 
     if attendable_data is not None:
         if attendable is not None:
