@@ -193,7 +193,7 @@ class FormsMutationTestCase(FormBaseTestCase):
         response_form = data["createForm"]["form"]
         form = Form.objects.get(pk=response_form["id"])
         if form is None:
-            self.assertIsNotNone(form, msg=f"Expected form after creation, got {None}")
+            self.assertIsNotNone(form, msg="Expected form after creation, got None")
         else:
             self.assertTrue(data["createForm"]["ok"])
             self.deep_assert_equal(response_form, form)
@@ -301,34 +301,34 @@ class FormResponseTestCase(FormBaseTestCase):
 
 
 class FormsQueryTestCase(FormBaseTestCase):
-    FORMS_WITH_RESPONSES = f"""
-        query {{
-            forms {{
+    FORMS_WITH_RESPONSES = """
+        query {
+            forms {
                 id
                 name
                 description
-                responses {{
+                responses {
                     id
-                }}
-                responders {{
+                }
+                responders {
                     id
-                }}
-            }}
-        }}
+                }
+            }
+        }
     """
 
-    FORMS = f"""
-        query {{
-            forms {{
+    FORMS = """
+        query {
+            forms {
                 id
                 name
                 description
-                questions {{
+                questions {
                     id
                     question
-                }}
-            }}
-        }}
+                }
+            }
+        }
     """
 
     def test_unauthenticated_get_forms(self):

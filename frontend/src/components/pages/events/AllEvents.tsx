@@ -40,7 +40,9 @@ const AllEvents: React.FC = () => {
     error: eventsError,
     data: eventsData,
     refetch,
-  } = useQuery(GET_EVENTS, { variables: filters });
+  } = useQuery(GET_EVENTS, {
+    variables: filters,
+  });
 
   const {
     loading: defaultEventsLoading,

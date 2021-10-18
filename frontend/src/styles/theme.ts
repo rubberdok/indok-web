@@ -1,4 +1,4 @@
-import { createTheme } from "@material-ui/core/styles";
+import { createTheme } from "@material-ui/core";
 import { Shadows } from "@material-ui/core/styles/shadows";
 import breakpoints from "./breakpoints";
 import typography from "./typography";
@@ -88,6 +88,9 @@ const theme = createTheme({
     },
     secondary: {
       main: "#11cb5f",
+    },
+    error: {
+      main: "#d21f3c",
     },
   },
   shape: {

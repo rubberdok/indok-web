@@ -22,5 +22,5 @@
       "vscode-icons-team.vscode-icons", // Better file extension icons
       "github.vscode-pull-request-github", // Github interaction
     ],
-    "workspaceFolder": "/code"
+    "workspaceFolder": "/app"
   }
