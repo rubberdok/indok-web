@@ -204,7 +204,7 @@ class BlogPostMutationTestCase(BlogBaseTestCase):
 
         try:
             BlogPost.objects.get(pk=self.blog_post_one.pk)
-            self.fail("Expected the listing to be deleted, but it was not.")
+            self.fail("Expected the blog post to be deleted, but it was not.")
         except BlogPost.DoesNotExist:
             pass
 
