@@ -67,6 +67,7 @@ class EmailInputType(TypedDict):
     cabins: QuerySet
     check_in: date
     check_out: date
+    extra_info: str
 
 
 class BookingInfoType(EmailInputType):

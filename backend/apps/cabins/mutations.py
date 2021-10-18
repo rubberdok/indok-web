@@ -28,6 +28,7 @@ class BookingInput(graphene.InputObjectType):
 
 class EmailInput(BookingInput):
     email_type = graphene.String()
+    extra_info = graphene.String()
 
 
 class UpdateBookingInput(BookingInput):
@@ -156,6 +157,7 @@ class SendEmail(graphene.Mutation):
             "check_out": email_input["check_out"],
             "cabins": cabins,
             "price": booking_price,
+            "extra_info": email_input["extra_info"],
         }
 
         # Sends an email to the user
