@@ -29,7 +29,7 @@ const faqs = [
   },
   {
     question: "Hvordan booker jeg sengeplasser?",
-    answer: <Typography>Det gjøres ved å sende mail til hyttestyret.</Typography>,
+    answer: <Typography>Det gjøres ved å sende mail til Hyttestyret.</Typography>,
   },
   {
     question: "Hva er forskjellen på de to hyttene?",
