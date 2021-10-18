@@ -1,6 +1,6 @@
 import json
 from datetime import datetime
-from typing import Any, Final, Union
+from typing import Any, Final, Union, overload
 from django.db.models.query import QuerySet
 
 import factory
@@ -62,6 +62,14 @@ class ExtendedGraphQLTestCase(GraphQLTestCase):
                     self.assertIsNone(value)
                 elif isinstance(value, (list, dict)):
                     self.assert_null_fields(value, fields)
+
+    @overload
+    def deep_assert_equal(self, data: dict[str, Any], obj: model) -> None:
+        ...
+
+    @overload
+    def deep_assert_equal(self, data: list[dict[str, Any]], obj: Union[QuerySet[models.Model], list[model]]) -> None:
+        ...
 
     def deep_assert_equal(
         self,
