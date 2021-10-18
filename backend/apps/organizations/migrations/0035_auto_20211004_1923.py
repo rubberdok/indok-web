@@ -15,9 +15,9 @@ class Migration(migrations.Migration):
             model_name='membership',
             name='groups',
             field=models.ManyToManyField(
-                null=True,
                 related_name='memberships',
-                to='permissions.ResponsibleGroup'
+                to='permissions.ResponsibleGroup',
+                blank=True,
             ),
         ),
     ]

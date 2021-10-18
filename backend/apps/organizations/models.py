@@ -65,7 +65,7 @@ class Organization(models.Model):
 class Membership(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="memberships")
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name="members")
-    groups = models.ManyToManyField(ResponsibleGroup, related_name="members")
+    groups = models.ManyToManyField(ResponsibleGroup, related_name="memberships", blank=True)
 
     class Meta:
         constraints = [UniqueConstraint(fields=["user", "organization"], name="unique_member_in_organization")]

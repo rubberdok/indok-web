@@ -7,7 +7,23 @@ def migrate_membership_groups(apps, schema_editor):
     Membership = apps.get_model('organizations', 'Membership')
 
     for membership in Membership.objects.all():
-        membership.groups.add(membership.group)
+        if (membership.group is not None):
+            membership.groups.add(membership.group)
+
+
+def reverse_membership_groups(apps, schema_editor):
+    """
+        Moves membership groups back to old 'group' field
+        Chooses the first group found if there are several
+    """
+
+    Membership = apps.get_model('organizations', 'Membership')
+
+    for membership in Membership.objects.all():
+        for group in membership.groups.all():
+            membership.group = group
+            membership.save()
+            return
 
 
 class Migration(migrations.Migration):
@@ -18,5 +34,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(migrate_membership_groups)
+        migrations.RunPython(migrate_membership_groups, reverse_membership_groups)
     ]
