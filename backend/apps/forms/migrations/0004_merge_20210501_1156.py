@@ -6,9 +6,8 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('forms', '0003_remove_answer_user'),
-        ('forms', '0003_auto_20210408_1842'),
+        ("forms", "0003_remove_answer_user"),
+        ("forms", "0003_auto_20210408_1842"),
     ]
 
-    operations = [
-    ]
+    operations = []

@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AlterModelOptions(
-            name='form',
-            options={'permissions': [('forms.manage_form', 'Has admin form privileges')]},
+            name="form",
+            options={"permissions": [("forms.manage_form", "Has admin form privileges")]},
         ),
     ]
