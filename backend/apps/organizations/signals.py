@@ -5,11 +5,8 @@ from guardian.shortcuts import assign_perm
 
 from apps.organizations.models import Membership, Organization
 from apps.permissions.constants import (
-    HR_GROUP_NAME,
-    HR_TYPE,
     ORGANIZATION,
-    PRIMARY_GROUP_NAME,
-    PRIMARY_TYPE,
+    DEFAULT_ORG_GROUPS,
 )
 from apps.permissions.models import ResponsibleGroup
 
@@ -51,16 +48,14 @@ def create_default_groups(instance: Organization, created, **kwargs):
     Creates and assigns a primary group and HR group to members of the organization.
     """
     if created:
-        ResponsibleGroup.objects.create(
-            name=PRIMARY_GROUP_NAME,
-            description=f"Medlemmer av {instance.name}.",
-            organization=instance,
-            group_type=PRIMARY_TYPE,
-        )
-        hr_group = ResponsibleGroup.objects.create(
-            name=HR_GROUP_NAME,
-            description=f"HR-gruppen til {instance.name}. Tillatelser for å se og behandle søknader.",
-            organization=instance,
-            group_type=HR_TYPE,
-        )
-        assign_perm("forms.add_form", hr_group.group)
+        for org_group in DEFAULT_ORG_GROUPS:
+            group = ResponsibleGroup.objects.create(
+                group_type=org_group.type_name,
+                name=org_group.descriptive_name,
+                description=org_group.create_description(instance.name),
+                organization=instance,
+            )
+            for permission in org_group.generic_permissions:
+                assign_perm(permission, group.group)
+            for permission in org_group.object_permissions:
+                assign_perm(permission, group.group, instance)

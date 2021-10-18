@@ -1,15 +1,52 @@
-from typing import Final, Literal
+from typing import Final, Literal, Callable
+from dataclasses import dataclass, field
 
 DefaultPermissionsType = Final[list[tuple[str, str]]]
-
-# Default ResponsibleGroup types
-PRIMARY_TYPE: Literal["PRIMARY"] = "PRIMARY"
-HR_TYPE: Literal["HR"] = "HR"
 
 ORGANIZATION: Final = "Organization member"
 INDOK: Final = "Indøk"
 REGISTERED_USER: Final = "Registered user"
+
+
+@dataclass
+class OrgGroup:
+    type_name: str
+    descriptive_name: str
+    create_description: Callable[str, str]
+    generic_permissions: list[str] = field(default_factory=list)
+    object_permissions: list[str] = field(default_factory=list)
+
+
+DEFAULT_ORG_GROUPS: Final[list[OrgGroup]] = [
+    OrgGroup(
+        type_name="PRIMARY",
+        descriptive_name="Medlem",
+        create_description=(
+            lambda org_name: f"Vervansvarlige for {org_name}."
+            + "Tillatelser til å lage og redigere verv, samt se og behandle søknader."
+        ),
+    ),
+    OrgGroup(
+        type_name="HR",
+        descriptive_name="Vervansvarlig",
+        create_description=(lambda org_name: f"Medlemmer av {org_name}."),
+        generic_permissions=["forms.add_form"],
+    ),
+    OrgGroup(
+        type_name="ORG_ADMIN",
+        descriptive_name="Administrator",
+        create_description=(
+            lambda org_name: f"Administrator av {org_name}."
+            + "Tillatelser til å endre info om organisasjonen, samt styre medlemmer og deres tillatelser."
+        ),
+    ),
+]
+
+# Default ResponsibleGroup types
+PRIMARY_TYPE: Literal["PRIMARY"] = "PRIMARY"
 PRIMARY_GROUP_NAME: Final = "Medlem"
+
+HR_TYPE: Literal["HR"] = "HR"
 HR_GROUP_NAME: Final = "HR"
 
 DEFAULT_ORGANIZATION_PERMISSIONS: DefaultPermissionsType = [
