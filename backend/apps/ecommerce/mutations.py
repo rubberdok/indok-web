@@ -3,6 +3,7 @@ import uuid
 
 import graphene
 from django.core.exceptions import PermissionDenied
+from faker import Faker
 from graphql_jwt.decorators import login_required
 
 from ..organizations.models import Organization
@@ -138,9 +139,9 @@ class CreateProduct(graphene.Mutation):
     def mutate(self, _):
 
         product = Product()
-        product.name = "Atmos"
+        product.name = " ".join(Faker().words(2)).capitalize() + " Atmos"
         product.price = str(random.randint(1, 10_000))
-        product.description = "Best car."
+        product.description = "Best car." + f"\n{Faker().sentence()}"
         product.organization = Organization.objects.first()
         quantity = random.randint(1, 10)
         product.total_quantity = quantity
