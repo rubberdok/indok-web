@@ -14,19 +14,13 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from apps.ping.views import Ping
+from django.conf import settings
 from django.contrib import admin
 from django.urls import path
 from django.urls.conf import include
-from django.views.decorators.csrf import csrf_exempt
-from graphql_jwt.decorators import jwt_cookie
-
-from api.views import CustomGraphQLView
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
-    # ok to csrf exempt the graphql endpoint:
-    # https://stackoverflow.com/questions/51764452/403-by-graphene-django-dont-use-csrf-exempt
-    path("graphql", csrf_exempt(jwt_cookie(CustomGraphQLView.as_view(graphiql=True)))),
+    path(settings.ADMIN_URL, admin.site.urls),
     path("ping", Ping.as_view()),
     path("-/", include("django_alive.urls")),
 ]

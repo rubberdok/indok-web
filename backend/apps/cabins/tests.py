@@ -3,7 +3,7 @@ import json
 from django.core import mail
 
 from apps.cabins.models import Booking, Cabin, BookingResponsible
-from utils.testing.ExtendedGraphQLTestCase import ExtendedGraphQLTestCase
+from utils.testing.base import ExtendedGraphQLTestCase
 from utils.testing.cabins_factories import BookingFactory
 import datetime
 
