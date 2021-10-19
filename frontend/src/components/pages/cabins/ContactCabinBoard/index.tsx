@@ -22,9 +22,9 @@ const ContactCabinBoard: React.FC = () => {
         </Grid>
         <Grid item>
           <Typography>
-            Send mail til bookingansvarlig i Hyttestyret, {responsible.firstName} {responsible.lastName}, her:
-            <Link href={`mailto:${responsible.email}`}> {responsible.email}</Link>. Du kan lese mer om Hyttestyret
-            <Link href="/about/organizations/hyttestyret"> her.</Link>
+            Send mail til bookingansvarlig i Hyttestyret, {responsible.firstName} {responsible.lastName}, her:{" "}
+            <Link href={`mailto:${responsible.email}`}>{responsible.email}</Link>. Du kan lese mer om Hyttestyret{" "}
+            <Link href="/about/organizations/hyttestyret">her.</Link>
           </Typography>
         </Grid>
       </Grid>

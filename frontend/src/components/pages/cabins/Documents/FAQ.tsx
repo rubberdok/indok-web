@@ -12,8 +12,8 @@ const faqs = [
     question: "Hva er adressen til hyttene?",
     answer: (
       <Typography>
-        Hyttene ligger rett ved Stølen alpintanlegg, med adresse Landsbygrenda A2 (Bjørnen) og A3 (Oksen), 7340 Oppdal.{" "}
-        <Link href="https://www.google.no/maps/place/Indøkhyttene/@62.6171078,9.7283935,17z/data=!3m1!4b1!4m2!3m1!1s0x461353ba19f36609:0xeb5dc9d44df09459">
+        Hyttene ligger rett ved Stølen alpintanlegg, med adresse Gårdavegen 88 og 90, 7340 Oppdal.{" "}
+        <Link href="https://www.google.no/maps/place/Gard%C3%A5vegen+88,+7340+Oppdal/@62.6172879,9.7285127,17z/data=!3m1!4b1!4m5!3m4!1s0x461353ba1a632365:0x6a03f6b3ad43a6a8!8m2!3d62.6172879!4d9.7307014?hl=no">
           Vis kart.
         </Link>
       </Typography>
@@ -44,7 +44,7 @@ const faqs = [
     question: "Hva er den totale kapasiteten på hyttene?",
     answer: (
       <Typography>
-        Vi har satt total kapasitet til 18 personer, fordelt på 15 sengeplasser og 3 madrasser. Det skal være flere
+        Vi har satt total kapasitet til 18 personer, fordelt på 14 sengeplasser og 4 madrasser. Det skal være flere
         madrasser enn dette tilgjengelig på hyttene, men det anbefales å ikke overstige dette antallet pga
         plassbegrensninger rundt kjøkkenbordet o.l.
       </Typography>
@@ -54,7 +54,7 @@ const faqs = [
     question: "Hva kan man finne på i Oppdal?",
     answer: (
       <Typography>
-        Mange aktiviteter tilbys av eksterne aktører, se Hytteinformasjon for videre info. Oppdal ligger på østkanten av
+        Mange aktiviteter tilbys av eksterne aktører, se Aktiviteter for videre info. Oppdal ligger på østkanten av
         Trollheimen, og det er mange flotte dagsturer å velge mellom med dette utgangspunktet. Det skal ligge kart over
         området tilgjengelig på hyttene.
       </Typography>
