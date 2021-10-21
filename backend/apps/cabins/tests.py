@@ -3,7 +3,7 @@ import json
 from django.core import mail
 
 from apps.cabins.models import Booking, Cabin, BookingResponsible
-from utils.testing.ExtendedGraphQLTestCase import ExtendedGraphQLTestCase
+from utils.testing.base import ExtendedGraphQLTestCase
 from utils.testing.cabins_factories import BookingFactory
 import datetime
 
@@ -300,6 +300,7 @@ class EmailTestCase(CabinsBaseTestCase):
     def setUp(self) -> None:
         super().setUp()
         mail.outbox = []
+        self.test_question = "This is a test question"
 
     def send_email(self, booking, email_type: str = "reserve_booking", user=None):
         query = f"""
@@ -315,7 +316,8 @@ class EmailTestCase(CabinsBaseTestCase):
                   cabins: [1],
                   checkIn: \"{booking.check_in.strftime("%Y-%m-%d")}\",
                   checkOut: \"{booking.check_out.strftime("%Y-%m-%d")}\",
-                  emailType: \"{email_type}\"
+                  emailType: \"{email_type}\",
+                  extraInfo: \"{self.test_question}\",
                 }}
               ){{
                 ok
@@ -377,3 +379,6 @@ class EmailTestCase(CabinsBaseTestCase):
         self.assertTrue(self.first_booking.check_out.strftime(date_fmt) in mail.outbox[0].body)
         self.assertTrue(self.first_booking.check_in.strftime(date_fmt) in mail.outbox[1].body)
         self.assertTrue(self.first_booking.check_out.strftime(date_fmt) in mail.outbox[1].body)
+
+        # Verify that the email contains the correct question provided by the user
+        self.assertTrue(self.test_question in mail.outbox[0].body)

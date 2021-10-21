@@ -4,7 +4,7 @@ from typing import Any, Optional, Union
 
 from django.utils import timezone
 from guardian.shortcuts import assign_perm
-from utils.testing.ExtendedGraphQLTestCase import ExtendedGraphQLTestCase
+from utils.testing.base import ExtendedGraphQLTestCase
 from utils.testing.factories.forms import (
     AnswerFactory,
     FormFactory,

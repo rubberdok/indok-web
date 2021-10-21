@@ -22,7 +22,7 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./backend:/backend
+      - ./backend:/usr/src/app
     depends_on:
       - db
     environment:

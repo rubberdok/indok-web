@@ -1,8 +1,12 @@
 {
-    "name": "Backend",
-    "dockerComposeFile": ["../docker-compose.yml"],
-    "service": "backend",
-    "shutdownAction": "none",
-    "extensions": ["ms-python.python", "ms-python.vscode-pylance", "batisteo.vscode-django"],
-    "workspaceFolder": "/backend"
-  }
+  "name": "Backend",
+  "dockerComposeFile": ["../docker-compose.yml"],
+  "service": "backend",
+  "shutdownAction": "none",
+  "extensions": [
+    "ms-python.python",
+    "ms-python.vscode-pylance",
+    "batisteo.vscode-django",
+  ],
+  "workspaceFolder": "/usr/src/app"
+}
