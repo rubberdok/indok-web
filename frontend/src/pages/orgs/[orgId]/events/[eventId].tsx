@@ -7,6 +7,9 @@ import { ADMIN_EVENT_SIGN_OFF } from "@graphql/events/mutations";
 import { ADMIN_GET_EVENT } from "@graphql/events/queries";
 import { Event, SignUp } from "@interfaces/events";
 import {
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
   Box,
   Button,
   Card,
@@ -18,6 +21,7 @@ import {
   IconButton,
   List,
   ListItem,
+  Paper,
   Snackbar,
   Table,
   TableBody,
@@ -123,14 +127,113 @@ const EventAdminPage: NextPage = () => {
             {openEditEvent && (
               <EditEvent open={openEditEvent} onClose={() => setOpenEditEvent(false)} event={data.event} />
             )}
-            <Grid container direction="column" spacing={5}>
+            <Box mb={10}>
+              {openEditEvent && (
+                <EditEvent open={openEditEvent} onClose={() => setOpenEditEvent(false)} event={data.event} />
+              )}
+              <Grid>
+                <Grid container direction="column" spacing={5}>
+                  <Grid item>
+                    <Typography variant="h1" align="center">
+                      {data.event.title}
+                    </Typography>
+                  </Grid>
+                  <Grid item container spacing={5}>
+                    <Grid item xs={12}>
+                      <Card variant="outlined">
+                        <Grid container alignItems="flex-end">
+                          <Grid item xs={12} md={9} lg={10}>
+                            <Box m={3} mb={0}>
+                              <CardHeader
+                                style={{ paddingBottom: "0" }}
+                                titleTypographyProps={{ variant: "h3" }}
+                                title="Generell informasjon"
+                              />
+                            </Box>
+                          </Grid>
+                          <Grid item xs={12} md={3} lg={2}>
+                            <Box m={0} mt={2} ml={5}>
+                              <CardActions style={{ padding: "0" }}>
+                                <Button variant="outlined" startIcon={<Edit />} onClick={() => setOpenEditEvent(true)}>
+                                  Rediger
+                                </Button>
+                              </CardActions>
+                            </Box>
+                          </Grid>
+                        </Grid>
+                        <CardContent>
+                          <List>
+                            {stringEventFields.map((headerPair: HeaderValuePair<Event>) =>
+                              renderInfo(
+                                headerPair.header,
+                                data.event[headerPair.field] ? (data.event[headerPair.field] as string) : ""
+                              )
+                            )}
+                            <ListItem key={"allowedGradeYears"}>
+                              <Typography>
+                                <Box fontWeight={1000} m={1} display="inline">
+                                  Åpent for:
+                                </Box>
+                                {data.event.allowedGradeYears
+                                  .slice(1, data.event.allowedGradeYears.length)
+                                  .reduce(
+                                    (res, grade) => `${res}, ${grade}.klasse`,
+                                    `${data.event.allowedGradeYears[0]}.klasse`
+                                  )}
+                              </Typography>
+                            </ListItem>
+
+                            {dateEventFields.map((headerPair: HeaderValuePair<Event>) =>
+                              renderInfo(
+                                headerPair.header,
+                                data.event[headerPair.field]
+                                  ? dayjs(data.event[headerPair.field] as string).format("kl.HH:mm, DD-MM-YYYY")
+                                  : ""
+                              )
+                            )}
+                          </List>
+                        </CardContent>
+                      </Card>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Box>
+            <Accordion>
+              <AccordionSummary aria-controls="panel1a-content" id="panel1a-header">
+                <Typography>Accordion 1</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Typography>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex, sit amet
+                  blandit leo lobortis eget.
+                </Typography>
+              </AccordionDetails>
+            </Accordion>
+            <Accordion>
+              <AccordionSummary aria-controls="panel2a-content" id="panel2a-header">
+                <Typography>Accordion 2</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Typography>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex, sit amet
+                  blandit leo lobortis eget.
+                </Typography>
+              </AccordionDetails>
+            </Accordion>
+            <Accordion disabled>
+              <AccordionSummary aria-controls="panel3a-content" id="panel3a-header">
+                <Typography>Disabled Accordion</Typography>
+              </AccordionSummary>
+            </Accordion>
+            <Grid container direction="column" spacing={8}>
               <Grid item>
                 <Typography variant="h1" align="center">
                   {data.event.title}
                 </Typography>
               </Grid>
-              <Grid item container spacing={5}>
-                <Grid item xs={4}>
+              <Grid item container spacing={8}>
+                <Grid item xs>
                   <Card variant="outlined">
                     <CardHeader title="Generell informasjon" />
                     <CardActions>
