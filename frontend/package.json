@@ -11,7 +11,8 @@
     "start": "next start",
     "test": "cypress open",
     "test:headless": "cypress run",
-    "e2e": "cypress run",
+    "e2e": "test-server 8000 test",
+    "e2e:headless": "test-server 8000 test:headless",
     "lint": "eslint",
     "lint:fix": "yarn run lint --fix",
     "postinstall": "cd .. && husky install frontend/.husky"
