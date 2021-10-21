@@ -16,11 +16,13 @@ services:
 
   backend:
     restart: always
+    environment:
+      - DJANGO_READ_DOT_ENV_FILE=true
     build:
       context: ./backend
       dockerfile: Dockerfile
     volumes:
-      - ./backend:/backend
+      - ./backend:/usr/src/app
     ports:
       - "8000:8000"
     depends_on:
@@ -31,7 +33,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     volumes:
-      - ./frontend/:/app/
+      - ./frontend:/app
       - /app/node_modules
       - /app/.next
     ports:
