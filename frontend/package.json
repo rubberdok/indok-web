@@ -10,6 +10,7 @@
     "build": "next build",
     "start": "next start",
     "test": "cypress open",
+    "test:headless": "cypress run",
     "e2e": "cypress run",
     "lint": "eslint",
     "lint:fix": "yarn run lint --fix",

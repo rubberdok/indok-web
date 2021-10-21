@@ -30,6 +30,6 @@
       "@hooks/*": ["src/hooks/*"]
     }
   },
-  "exclude": ["node_modules"],
+  "exclude": ["node_modules", "cypress"],
   "include": ["**/*.ts", "**/*.tsx"]
 }

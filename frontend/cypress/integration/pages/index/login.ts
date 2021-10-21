@@ -18,6 +18,7 @@ describe("User Logins", () => {
             });
         });
     });
+    cy.get("h4").contains("Eva Student Åsen").should("exist");
     cy.log("Logged in");
   });
 });
