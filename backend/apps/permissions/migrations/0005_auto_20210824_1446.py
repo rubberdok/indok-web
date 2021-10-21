@@ -11,12 +11,8 @@ if TYPE_CHECKING:
 
 
 def move_permission_groups_to_fk(apps, _):
-    ResponsibleGroup: Type["perm_models.ResponsibleGroup"] = apps.get_model(
-        "permissions", "ResponsibleGroup"
-    )
-    Organization: Type["org_models.Organization"] = apps.get_model(
-        "organizations", "Organization"
-    )
+    ResponsibleGroup: Type["perm_models.ResponsibleGroup"] = apps.get_model("permissions", "ResponsibleGroup")
+    Organization: Type["org_models.Organization"] = apps.get_model("organizations", "Organization")
 
     for organization in Organization.objects.all():
         primary_group = organization.primary_group
@@ -42,21 +38,15 @@ def move_permission_groups_to_fk(apps, _):
 
 
 def move_permission_groups_to_one_to_one_field(apps, _):
-    Organization: Type["org_models.Organization"] = apps.get_model(
-        "organizations", "Organization"
-    )
-    ResponsibleGroup: Type["perm_models.ResponsibleGroup"] = apps.get_model(
-        "permissions", "ResponsibleGroup"
-    )
+    Organization: Type["org_models.Organization"] = apps.get_model("organizations", "Organization")
+    ResponsibleGroup: Type["perm_models.ResponsibleGroup"] = apps.get_model("permissions", "ResponsibleGroup")
 
     organization: "org_models.Organization"
     for organization in Organization.objects.all():
         organization.primary_group = ResponsibleGroup.objects.get(
             temp_organization=organization, group_type=PRIMARY_TYPE
         )
-        organization.hr_group = ResponsibleGroup.objects.get(
-            temp_organization=organization, group_type=HR_TYPE
-        )
+        organization.hr_group = ResponsibleGroup.objects.get(temp_organization=organization, group_type=HR_TYPE)
         organization.save()
 
 
@@ -66,8 +56,4 @@ class Migration(migrations.Migration):
         ("permissions", "0004_auto_20210824_1446"),
     ]
 
-    operations = [
-        migrations.RunPython(
-            move_permission_groups_to_fk, move_permission_groups_to_one_to_one_field
-        )
-    ]
+    operations = [migrations.RunPython(move_permission_groups_to_fk, move_permission_groups_to_one_to_one_field)]

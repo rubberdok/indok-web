@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('archive', '0012_archivedocument_year'),
+        ("archive", "0012_archivedocument_year"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='archivedocument',
-            name='web_link',
+            model_name="archivedocument",
+            name="web_link",
             field=models.CharField(blank=True, default=None, max_length=2050, null=True),
         ),
     ]
