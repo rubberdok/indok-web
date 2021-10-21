@@ -1,9 +1,11 @@
 import json
 
+from django.http import response
+
 from utils.testing.factories.users import UserFactory
 from utils.testing.factories.blogs import BlogFactory, BlogPostFactory
 from utils.testing.factories.organizations import MembershipFactory, OrganizationFactory
-from utils.testing.ExtendedGraphQLTestCase import ExtendedGraphQLTestCase
+from utils.testing.base import ExtendedGraphQLTestCase
 from guardian.shortcuts import assign_perm
 
 from apps.blogs.models import Blog, BlogPost
@@ -66,15 +68,15 @@ class BlogResolverTestCase(BlogBaseTestCase):
         self.assertEqual(len(blogs), 2, f"Expected 2 blogposts, but got {len(blogs)}",)
 
     def test_resolve_blog(self):
-        # Test the field "blogPost", which is a list of blogposts connected
-        # to the current blog, when "deep_assert_equal" is fixed. Ref issue #297
-        # Also test that number of blogposts connected to the blog = 2 when fixed
         query = f"""
             query {{
                 blog(blogId: {self.blog_one.id}) {{
                     id
                     name
                     description
+                    blogPost {{
+                        id
+                    }}
                     organization {{
                         id
                         name
@@ -171,6 +173,35 @@ class BlogPostMutationTestCase(BlogBaseTestCase):
             }}
         """
 
+        self.update_mutation = f"""
+            mutation {{
+
+                updateBlogPost(blogPostData: {{id: {self.blog_post_one.id}, blogId: {self.blog_two.id}, title: {self.title}, text: {self.text}}})
+                {{
+                    ok
+                    blogPost {{
+                        id
+                        blog {{
+                            id
+                            name
+                            organization {{
+                                id
+                                name
+                            }}
+                        }}
+                        title
+                        text
+                        publishDate
+                        author {{
+                            id
+                            username
+                        }}
+                    }}
+                }}
+            }}
+
+        """
+
         self.delete_mutation = f""" 
             mutation {{
                 deleteBlogPost(blogPostId: {self.blog_post_one.id}) {{
@@ -191,6 +222,12 @@ class BlogPostMutationTestCase(BlogBaseTestCase):
         blog_post_data = json.loads(response.content)["data"]["createBlogPost"]["blogPost"]
         blog_post = BlogPost.objects.get(pk=blog_post_data["id"])
         self.deep_assert_equal(blog_post_data, blog_post)
+    
+    def test_unathorized_change_blog_post(self):
+        response = self.query(self.update_mutation)
+        self.assert_permission_error(response)
+        response = self.query(self.update_mutation, user=self.unauthorized_user)
+        self.assert_permission_error(response)
 
     def test_unauthorized_delete_blog_post(self):
         response = self.query(self.delete_mutation)
@@ -204,7 +241,7 @@ class BlogPostMutationTestCase(BlogBaseTestCase):
 
         try:
             BlogPost.objects.get(pk=self.blog_post_one.pk)
-            self.fail("Expected the blog post to be deleted, but it was not.")
+            self.fail("Expected the listing to be deleted, but it was not.")
         except BlogPost.DoesNotExist:
             pass
 
