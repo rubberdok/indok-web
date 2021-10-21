@@ -2,9 +2,12 @@
 
 from typing import TYPE_CHECKING
 
-from apps.permissions.constants import (DEFAULT_INDOK_PERMISSIONS,
-                                        DEFAULT_REGISTERED_USER_PERMISSIONS,
-                                        INDOK, REGISTERED_USER)
+from apps.permissions.constants import (
+    DEFAULT_INDOK_PERMISSIONS,
+    DEFAULT_REGISTERED_USER_PERMISSIONS,
+    INDOK,
+    REGISTERED_USER,
+)
 from django.conf import settings
 from django.db import migrations
 from django.db.models.query_utils import Q
@@ -12,6 +15,7 @@ from django.db.models.query_utils import Q
 if TYPE_CHECKING:
     from apps.users import models as user_models
     from django.contrib.auth import models as auth_models
+
 
 def assign_standard_permissions(apps, _):
     User: user_models.User = apps.get_model("users", "User")
@@ -43,9 +47,7 @@ def assign_standard_permissions(apps, _):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('users', '0012_user_is_indok'),
+        ("users", "0012_user_is_indok"),
     ]
 
-    operations = [
-        migrations.RunPython(assign_standard_permissions, migrations.RunPython.noop)
-    ]
+    operations = [migrations.RunPython(assign_standard_permissions, migrations.RunPython.noop)]

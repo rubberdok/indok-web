@@ -7,6 +7,7 @@ from django.contrib.auth import get_user_model
 if TYPE_CHECKING:
     from django.contrib.contenttypes import models
 
+
 def assign_default_permission_for_existing_users(apps, schema_editor):
     User = apps.get_model("users", "User")
     Permission = apps.get_model("auth", "Permission")
@@ -18,10 +19,13 @@ def assign_default_permission_for_existing_users(apps, schema_editor):
         perm = Permission.objects.create(
             codename="view_sensitive_info",
             name="Can view sensitive information about a user",
-            content_type=content_type
+            content_type=content_type,
         )
     for user in User.objects.all():
-        UserObjectPermission.objects.create(permission=perm, user=user, object_pk=user.pk, content_type=ContentType.objects.get_for_model(user))
+        UserObjectPermission.objects.create(
+            permission=perm, user=user, object_pk=user.pk, content_type=ContentType.objects.get_for_model(user)
+        )
+
 
 def remove_default_permission_for_existing_users(apps, schema_editor):
     User = apps.get_model("users", "User")
@@ -34,15 +38,16 @@ def remove_default_permission_for_existing_users(apps, schema_editor):
         perm = Permission.objects.create(
             codename="view_sensitive_info",
             name="Can view sensitive information about a user",
-            content_type=content_type
+            content_type=content_type,
         )
     UserObjectPermission.objects.filter(permission=perm).delete()
     perm.delete()
 
+
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('users', '0008_auto_20210327_1615'),
+        ("users", "0008_auto_20210327_1615"),
     ]
 
     operations = [

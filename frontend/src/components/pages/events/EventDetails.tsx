@@ -58,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: "1em",
   },
   wrapIcon: {
-    verticalAlign: "middle",
+    alignItems: "center",
     display: "inline-flex",
     width: "100%",
     marginBottom: theme.spacing(1),
@@ -116,7 +116,9 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
     error: eventError,
     loading: eventLoading,
     refetch: refetchEventData,
-  } = useQuery<{ event: Event }>(GET_EVENT, { variables: { id: eventId } });
+  } = useQuery<{
+    event: Event;
+  }>(GET_EVENT, { variables: { id: eventId } });
 
   const classes = useStyles();
   const theme = useTheme();

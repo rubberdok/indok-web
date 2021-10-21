@@ -13,9 +13,7 @@ if TYPE_CHECKING:
 
 def improve_group_legibility(apps, _):
     Group = apps.get_model("auth", "Group")
-    Organization: Type["models.Organization"] = apps.get_model(
-        "organizations", "Organization"
-    )
+    Organization: Type["models.Organization"] = apps.get_model("organizations", "Organization")
 
     for group in Group.objects.exclude(responsiblegroup=None):
         responsible_group: "ResponsibleGroup" = group.responsiblegroup
@@ -41,9 +39,7 @@ def improve_group_legibility(apps, _):
 
 def reverse_legible_group_names(apps, _):
     Group = apps.get_model("auth", "Group")
-    Organization: Type["models.Organization"] = apps.get_model(
-        "organizations", "Organization"
-    )
+    Organization: Type["models.Organization"] = apps.get_model("organizations", "Organization")
 
     for group in Group.objects.exclude(responsiblegroup=None):
         old_name: str = group.name
@@ -68,6 +64,4 @@ class Migration(migrations.Migration):
         ("permissions", "0002_auto_20210422_2020"),
     ]
 
-    operations = [
-        migrations.RunPython(improve_group_legibility, reverse_legible_group_names)
-    ]
+    operations = [migrations.RunPython(improve_group_legibility, reverse_legible_group_names)]

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+
+<html lang="no">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title></title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="" />
+
+    <style>
+      span {
+        white-space: nowrap;
+      }
+
+      @media (min-width: 1000px) {
+        .contentDiv {
+          margin: 20px auto;
+          width: 80%;
+        }
+      }
+    </style>
+  </head>
+  <body style="font-family: Open Sans, sans-serif">
+    <div
+      style="
+        border: 5px solid #065a5a;
+        text-align: center;
+        padding: 50px;
+        background-color: #f5f0eb;
+        width: 80%;
+      "
+      class="contentDiv"
+    >
+      {% load static %}
+
+      <h2>Hei {{ first_name }}!</h2>
+      <p>
+          Din søknad for booking av <strong>{{ chosen_cabins_string }}</strong> fra
+        <span><strong>{{check_in }}</strong></span> til
+        <span><strong>{{ check_out }}</strong> er mottatt.</span>
+      </p>
+
+        {% if extra_info|length > 0 %}
+            <p><strong>Du har sendt med følgende spørsmål:</strong></p>
+            <p>{{ extra_info }}</p>
+        {% endif %}
+
+        <p><strong>Hyttestyret kommer til å ta stilling til å søknaden din snart. Når de har gjort det får du en
+            mail med beslutningen deres.</strong></p>
+      <p>Prisen kommer på <strong>{{ price }} kr</strong>. Det blir sendt ut en faktura på mail fra Hyttestyret.</p>
+        <p>
+          Hytten skal forlates i minst like god stand som den ble funnet, og
+          instrukser for utvask henger ved ytterdøren, samt som vedlegg i denne
+          mailen. Dere står selv ansvarlig for eventuelle skader som måtte
+          forekomme. Avbestilling uten gebyr må forekomme minst to uker før
+          avreise. Vennligst les nøye gjennom reglementet og sjekklisten før
+          dere kommer til hytta.
+        </p>
+      <p>Ikke nøl med å ta kontakt hvis dere skulle ha spørsmål.</p>
+      <p>Med vennlig hilsen,</p>
+        <p>
+        {{ booking_responsible_name }} <br />Bookingansvarlig Hyttestyret, <br />Indøkhyttene
+        NTNU <br />{{ booking_responsible_email }} / tlf. {{ booking_responsible_phone }} <br /><a
+          href="https://www.januslinjeforening.no/indokhyttene/"
+          >januslinjeforening.no/indokhyttene/</a
+        >
+      </p>
+    </div>
+  </body>
+</html>
