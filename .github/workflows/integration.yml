@@ -22,7 +22,19 @@ jobs:
     name: Cypress Tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: "Checkout"
+        uses: actions/checkout@v2
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
 
       - name: Build and run the Application
         env:
@@ -34,7 +46,7 @@ jobs:
         run: docker-compose -f docker-compose.integration.yml up -d
 
       - name: Build the Cypress Image
-        run: docker build -f tests/Dockerfile -t cypress tests/
+        run: docker build -f e2e/integration/Dockerfile -t cypress e2e/integration/
 
       - name: Run the Integration Tests
         run: docker run --network indok-web_default cypress --record --key ${{ secrets.CYPRESS_RECORD_KEY }}
