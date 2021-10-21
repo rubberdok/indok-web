@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('organizations', '0020_organization_logo_url'),
+        ("organizations", "0020_organization_logo_url"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='organization',
-            name='logo_url',
+            model_name="organization",
+            name="logo_url",
             field=models.URLField(blank=True, null=True),
         ),
     ]

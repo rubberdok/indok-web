@@ -7,23 +7,25 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('organizations', '0001_initial'),
+        ("organizations", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='organization',
-            name='description',
+            model_name="organization",
+            name="description",
             field=models.CharField(blank=True, max_length=4000),
         ),
         migrations.AddField(
-            model_name='organization',
-            name='logo',
-            field=models.ImageField(null=True, upload_to='organizations'),
+            model_name="organization",
+            name="logo",
+            field=models.ImageField(null=True, upload_to="organizations"),
         ),
         migrations.AddField(
-            model_name='organization',
-            name='parent',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='organizations.organization'),
+            model_name="organization",
+            name="parent",
+            field=models.ForeignKey(
+                null=True, on_delete=django.db.models.deletion.CASCADE, to="organizations.organization"
+            ),
         ),
     ]

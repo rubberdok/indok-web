@@ -6,12 +6,12 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('forms', '0005_merge_20210526_1851'),
+        ("forms", "0005_merge_20210526_1851"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='form',
-            options={'permissions': [('manage_form', 'Has admin form privileges')]},
+            name="form",
+            options={"permissions": [("manage_form", "Has admin form privileges")]},
         ),
     ]
