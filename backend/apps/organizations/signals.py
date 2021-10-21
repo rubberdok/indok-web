@@ -7,37 +7,34 @@ from apps.organizations.models import Membership, Organization
 from apps.permissions.constants import (
     ORGANIZATION,
     DEFAULT_ORG_GROUPS,
+    ORG_MEMBER_GROUP_NAME,
 )
 from apps.permissions.models import ResponsibleGroup
 
 
 @receiver(post_save, sender=Membership)
 def handle_new_member(instance: Membership, **kwargs):
-    primary_group: Group = instance.organization.primary_group
-    optional_groups: list[ResponsibleGroup] = instance.groups
-    org_group: Group = Group.objects.get(name=ORGANIZATION)
-
     user = instance.user
+
+    org_group: Group = Group.objects.get(name=ORGANIZATION)
     user.groups.add(org_group)
-    if primary_group:
-        user.groups.add(primary_group.group)
-        if primary_group not in instance.groups.all():
-            instance.groups.add(primary_group)
-    for optional_group in optional_groups.all():
-        user.groups.add(optional_group.group)
+
+    groups: list[ResponsibleGroup] = instance.groups
+    if not any(group.group_type == ORG_MEMBER_GROUP_NAME for group in groups.all()):
+        primary_group = instance.organization.permission_groups.get(group_type=ORG_MEMBER_GROUP_NAME)
+        groups.add(primary_group)
+    for group in groups.all():
+        user.groups.add(group.group)
 
 
 @receiver(pre_delete, sender=Membership)
 def handle_removed_member(instance: Membership, **kwargs):
-    primary_group: Group = instance.organization.primary_group
-    optional_groups: list[ResponsibleGroup] = instance.groups
+    groups: list[ResponsibleGroup] = instance.groups
     org_group: Group = Group.objects.get(name=ORGANIZATION)
 
     user = instance.user
-    if primary_group:
-        user.groups.remove(primary_group.group)
-    for optional_group in optional_groups.all():
-        user.groups.remove(optional_group.group)
+    for group in groups.all():
+        user.groups.remove(group.group)
     if not user.memberships.all().exists():
         user.groups.remove(org_group)
 
@@ -50,13 +47,15 @@ def create_default_groups(instance: Organization, created, **kwargs):
     if created:
         for org_group in DEFAULT_ORG_GROUPS:
             group = ResponsibleGroup.objects.create(
-                group_type=org_group.type_name,
-                name=org_group.descriptive_name,
+                group_type=org_group.group_type,
+                name=org_group.name,
                 description=org_group.create_description(instance.name),
                 organization=instance,
             )
             for permission in org_group.generic_permissions:
-                assign_perm(f"{permission[0]}{permission[1]}", group.group, instance)
+                print(f"{permission[0]}.{permission[1]}")
+                assign_perm(f"{permission[0]}.{permission[1]}", group.group)
             for permission in org_group.object_permissions:
                 if permission[0] == "organizations":
-                    assign_perm(f"{permission[0]}{permission[1]}", group.group, instance)
+                    print(f"{permission[0]}.{permission[1]}")
+                    assign_perm(f"{permission[0]}.{permission[1]}", group.group, instance)

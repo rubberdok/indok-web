@@ -8,11 +8,7 @@ from django.db.models import Q
 from django.db.models.signals import post_migrate, pre_save
 from django.dispatch import receiver
 
-from apps.permissions.constants import (
-    DEFAULT_GROUPS,
-    DEFAULT_ORGANIZATION_PERMISSIONS,
-    ORGANIZATION,
-)
+from apps.permissions.constants import DEFAULT_GROUPS, DEFAULT_ORGANIZATION_PERMISSIONS, ORGANIZATION
 from apps.permissions.models import ResponsibleGroup
 
 if TYPE_CHECKING:

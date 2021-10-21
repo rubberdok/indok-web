@@ -25,12 +25,7 @@ DEFAULT_INDOK_PERMISSIONS: DefaultPermissionsType = [
     ("archive", "view_archivedocument"),
 ]
 
-DEFAULT_ORGANIZATION_PERMISSIONS: DefaultPermissionsType = [
-    ("events", "add_event"),
-    ("events", "change_event"),
-    ("events", "delete_event"),
-    ("organizations", "add_membership"),
-]
+DEFAULT_ORGANIZATION_PERMISSIONS: DefaultPermissionsType = []
 
 DEFAULT_GROUPS = {
     ORGANIZATION: DEFAULT_ORGANIZATION_PERMISSIONS,
@@ -41,12 +36,14 @@ DEFAULT_GROUPS = {
 
 @dataclass
 class OrgGroup:
-    type_name: str
-    descriptive_name: str
+    group_type: str
+    name: str
     create_description: Callable[[str], str]
     generic_permissions: DefaultPermissionsType = field(default_factory=list)
     object_permissions: DefaultPermissionsType = field(default_factory=list)
 
+
+ORG_MEMBER_GROUP_NAME: Final[str] = "ORG_MEMBER"
 
 # Default organization permission groups
 # All organizations will have ResponsibleGroups with these names and descriptions,
@@ -55,48 +52,47 @@ class OrgGroup:
 # 'object_permissions' are permissions for instances of a model tied to the organization
 DEFAULT_ORG_GROUPS: Final[list[OrgGroup]] = [
     OrgGroup(
-        type_name="PRIMARY",
-        descriptive_name="Medlem",
+        group_type=ORG_MEMBER_GROUP_NAME,
+        name="Medlem",
         create_description=(lambda org_name: f"Medlemmer av {org_name}."),
     ),
     OrgGroup(
-        type_name="ORG_ADMIN",
-        descriptive_name="Administrator",
+        group_type="ORG_ADMIN",
+        name="Administrator",
         create_description=(
-            lambda org_name: f"Administrator av {org_name}."
+            lambda org_name: f"Administrator av {org_name}. "
             + "Tillatelser til å endre info om foreningen, samt styre medlemmer og deres tillatelser."
         ),
+        object_permissions=[
+            ("organizations", "change_organization"),
+        ],
     ),
     OrgGroup(
-        type_name="LISTINGS_ADMIN",
-        descriptive_name="Vervansvarlig",
+        group_type="LISTINGS_ADMIN",
+        name="Vervansvarlig",
         create_description=(
-            lambda org_name: f"Vervansvarlige for {org_name}."
+            lambda org_name: f"Vervansvarlige for {org_name}. "
             + "Tillatelser til å lage og redigere verv, samt se og behandle søknader."
         ),
-        generic_permissions=[
-            ("forms", "add_form"),
-            ("listings", "add_listing"),
-        ],
         object_permissions=[
+            ("organizations", "add_listing"),
             ("listings", "change_listing"),
             ("listings", "delete_listing"),
+            ("organizations", "add_form"),
             ("forms", "manage_form"),
             ("forms", "change_form"),
             ("forms", "delete_form"),
         ],
     ),
     OrgGroup(
-        type_name="EVENTS_ADMIN",
-        descriptive_name="Arrangementansvarlig",
+        group_type="EVENTS_ADMIN",
+        name="Arrangementansvarlig",
         create_description=(
-            lambda org_name: f"Arrangementansvarlige for {org_name}."
+            lambda org_name: f"Arrangementansvarlige for {org_name}. "
             + "Tillatelser til å lage og redigere arrangementer."
         ),
-        generic_permissions=[
-            ("events", "add_event"),
-        ],
         object_permissions=[
+            ("organizations", "add_event"),
             ("events", "change_event"),
             ("events", "delete_event"),
         ],
