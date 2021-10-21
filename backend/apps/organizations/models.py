@@ -40,6 +40,12 @@ class Organization(models.Model):
 
     class Meta:
         constraints = [UniqueConstraint(fields=["parent", "name"], name="unique_child_organization_name")]
+        # Permissions for adding instances tied to the organization
+        permissions = (
+            ("add_listing", "Add listing to organization"),
+            ("add_form", "Add form to organization"),
+            ("add_event", "Add event by organization"),
+        )
 
     def __str__(self):
         return f"{self.name}"
