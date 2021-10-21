@@ -18,7 +18,8 @@ services:
     restart: always
     build:
       context: ./backend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.prod
+    entrypoint: entrypoint.test.sh
     ports:
       - "8000:8000"
     depends_on:
@@ -34,7 +35,7 @@ services:
   frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile.test
+      dockerfile: Dockerfile.prod
       args:
         - NEXT_PUBLIC_GRAPHQL_BACKEND_URI=$NEXT_PUBLIC_GRAPHQL_BACKEND_URI
         - NEXT_PUBLIC_DATAPORTEN_ID=$NEXT_PUBLIC_DATAPORTEN_ID
