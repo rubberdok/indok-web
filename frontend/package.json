@@ -9,6 +9,8 @@
     "dev": "next",
     "build": "next build",
     "start": "next start",
+    "test": "cypress open",
+    "e2e": "cypress run",
     "lint": "eslint",
     "lint:fix": "yarn run lint --fix",
     "postinstall": "cd .. && husky install frontend/.husky"
