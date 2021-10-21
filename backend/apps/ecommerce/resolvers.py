@@ -22,4 +22,4 @@ class EcommerceResolvers:
 
     @login_required
     def resolve_user_orders(self, info):
-        return Order.objects.get(user=info.context.user)
+        return Order.objects.filter(user=info.context.user)
