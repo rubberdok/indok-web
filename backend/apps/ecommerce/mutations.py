@@ -138,8 +138,10 @@ class CreateProduct(graphene.Mutation):
 
     def mutate(self, _):
 
+        cars = ["Luna", "Nova", "Atmos", "Eld", "Gnist", "Vilje", "Arctos", "Aquilo", "Borealis"]
+
         product = Product()
-        product.name = " ".join(Faker().words(2)).capitalize() + " Atmos"
+        product.name = " ".join(Faker().words(2)).capitalize() + " " + cars[random.randint(0, len(cars) - 1)]
         product.price = str(random.randint(1, 10_000))
         product.description = "Best car." + f"\n{Faker().sentence()}"
         product.organization = Organization.objects.first()
