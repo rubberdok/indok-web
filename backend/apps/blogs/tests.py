@@ -229,6 +229,15 @@ class BlogPostMutationTestCase(BlogBaseTestCase):
         response = self.query(self.update_mutation, user=self.unauthorized_user)
         self.assert_permission_error(response)
 
+    def test_authorized_change_blog_post(self):
+        response = self.query(self.update_mutation, user=self.authorized_user)
+        self.assertResponseNoErrors(response)
+
+        updated_blog_post = json.loads(response.content)["data"]["updateBlogPost"]["blogPost"]
+        self.assertEqual(updated_blog_post["title"], self.title)
+        self.assertEqual(updated_blog_post["text"], self.text)
+        self.assertEqual(updated_blog_post["id"], self.blog_two.id)
+
     def test_unauthorized_delete_blog_post(self):
         response = self.query(self.delete_mutation)
         self.assert_permission_error(response)
@@ -244,5 +253,11 @@ class BlogPostMutationTestCase(BlogBaseTestCase):
             self.fail("Expected the listing to be deleted, but it was not.")
         except BlogPost.DoesNotExist:
             pass
+
+
+
+
+
+
 
 
