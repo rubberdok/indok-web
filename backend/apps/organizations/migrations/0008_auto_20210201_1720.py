@@ -9,28 +9,42 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('organizations', '0007_merge_20201102_1637'),
+        ("organizations", "0007_merge_20201102_1637"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Role',
+            name="Role",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.TextField(default='Medlem', max_length=50)),
+                ("id", models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                ("name", models.TextField(default="Medlem", max_length=50)),
             ],
         ),
         migrations.CreateModel(
-            name='Member',
+            name="Member",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('member', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='memberships', to=settings.AUTH_USER_MODEL)),
-                ('organization', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='members', to='organizations.organization')),
-                ('role', models.ForeignKey(on_delete=django.db.models.deletion.DO_NOTHING, to='organizations.role')),
+                ("id", models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                (
+                    "member",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="memberships",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "organization",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="members",
+                        to="organizations.organization",
+                    ),
+                ),
+                ("role", models.ForeignKey(on_delete=django.db.models.deletion.DO_NOTHING, to="organizations.role")),
             ],
         ),
         migrations.AddConstraint(
-            model_name='member',
-            constraint=models.UniqueConstraint(fields=('member', 'organization'), name='unique_member_in_organization'),
+            model_name="member",
+            constraint=models.UniqueConstraint(fields=("member", "organization"), name="unique_member_in_organization"),
         ),
     ]

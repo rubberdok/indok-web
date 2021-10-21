@@ -1,8 +1,9 @@
 import json
 from datetime import timedelta
+from typing import Any
 
 from django.utils import timezone
-from utils.testing.ExtendedGraphQLTestCase import ExtendedGraphQLTestCase
+from utils.testing.base import ExtendedGraphQLTestCase
 from utils.testing.factories.listings import ListingFactory
 from utils.testing.factories.organizations import MembershipFactory, OrganizationFactory
 from utils.testing.factories.users import UserFactory
@@ -65,7 +66,7 @@ class ListingResolverTestCase(ListingBaseTestCase):
         response = self.query(query)
         self.assertResponseNoErrors(response)
         data = json.loads(response.content)["data"]
-        listings = data["listings"]
+        listings: list[dict[str, Any]] = data["listings"]
         self.assertEqual(
             len(listings),
             1,
@@ -74,8 +75,7 @@ class ListingResolverTestCase(ListingBaseTestCase):
                 but found multiple: {[listing['id'] for listing in listings]}
             """,
         )
-        for listing in listings:
-            self.deep_assert_equal(listing, self.visible_listing)
+        self.deep_assert_equal(listings, [self.visible_listing])
 
     def test_resolve_listing(self):
         query = f"""

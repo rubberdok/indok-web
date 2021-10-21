@@ -4,6 +4,7 @@ import { Typography } from "@material-ui/core";
 import React from "react";
 import CabinContactInfo from "./CabinContactInfo";
 import CheckInOut from "./CheckInOut";
+import ExtraInfoSite from "./ExtraInfoSite";
 import PaymentSite from "./PaymentSite";
 import ReceiptSite from "./ReceiptSite";
 
@@ -23,6 +24,7 @@ type Props = {
   setContactInfo: React.Dispatch<React.SetStateAction<ContactInfo>>;
   setChosenCabins: React.Dispatch<React.SetStateAction<Cabin[]>>;
   setDatePick: React.Dispatch<React.SetStateAction<DatePick>>;
+  setExtraInfo: React.Dispatch<React.SetStateAction<string>>;
 };
 
 const StepComponent: React.FC<Props> = (props) => {
@@ -49,11 +51,16 @@ const StepComponent: React.FC<Props> = (props) => {
         />
       );
     case 2:
+      // Extra info site
+      return (
+        <ExtraInfoSite setExtraInfo={props.setExtraInfo} chosenCabins={props.chosenCabins} datePick={props.datePick} />
+      );
+    case 3:
       // Payment
       return (
         <PaymentSite chosenCabins={props.chosenCabins} datePick={props.datePick} contactInfo={props.contactInfo} />
       );
-    case 3:
+    case 4:
       // Receipt
       return (
         <ReceiptSite

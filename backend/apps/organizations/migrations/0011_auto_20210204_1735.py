@@ -7,18 +7,18 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('auth', '0012_alter_user_first_name_max_length'),
-        ('organizations', '0010_auto_20210204_1718'),
+        ("auth", "0012_alter_user_first_name_max_length"),
+        ("organizations", "0010_auto_20210204_1718"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='organization',
-            name='group',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='auth.group'),
+            model_name="organization",
+            name="group",
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to="auth.group"),
         ),
         migrations.AddConstraint(
-            model_name='organization',
-            constraint=models.UniqueConstraint(fields=('parent', 'name'), name='unique_child_organization_name'),
+            model_name="organization",
+            constraint=models.UniqueConstraint(fields=("parent", "name"), name="unique_child_organization_name"),
         ),
     ]

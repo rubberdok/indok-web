@@ -7,14 +7,18 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('organizations', '0032_auto_20210824_1457'),
-        ('permissions', '0008_auto_20210824_1500'),
+        ("organizations", "0032_auto_20210824_1457"),
+        ("permissions", "0008_auto_20210824_1500"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='responsiblegroup',
-            name='organization',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='permission_groups', to='organizations.organization'),
+            model_name="responsiblegroup",
+            name="organization",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="permission_groups",
+                to="organizations.organization",
+            ),
         ),
     ]

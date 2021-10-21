@@ -6,23 +6,23 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cabins', '0005_booking_cabins'),
+        ("cabins", "0005_booking_cabins"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='cabin',
-            name='external_price',
+            model_name="cabin",
+            name="external_price",
             field=models.IntegerField(default=2700),
         ),
         migrations.AddField(
-            model_name='cabin',
-            name='internal_price',
+            model_name="cabin",
+            name="internal_price",
             field=models.IntegerField(default=1100),
         ),
         migrations.AddField(
-            model_name='cabin',
-            name='max_guests',
+            model_name="cabin",
+            name="max_guests",
             field=models.IntegerField(default=20),
         ),
     ]

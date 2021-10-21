@@ -7,19 +7,19 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('auth', '0012_alter_user_first_name_max_length'),
-        ('permissions', '0003_auto_20210824_1213'),
+        ("auth", "0012_alter_user_first_name_max_length"),
+        ("permissions", "0003_auto_20210824_1213"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='responsiblegroup',
-            name='group',
-            field=models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to='auth.group'),
+            model_name="responsiblegroup",
+            name="group",
+            field=models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to="auth.group"),
         ),
         migrations.AlterField(
-            model_name='responsiblegroup',
-            name='name',
+            model_name="responsiblegroup",
+            name="name",
             field=models.CharField(max_length=150),
         ),
     ]
