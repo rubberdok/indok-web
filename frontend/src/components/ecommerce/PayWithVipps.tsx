@@ -1,8 +1,8 @@
-import { Card, CardActionArea, CardMedia, CircularProgress, makeStyles, Theme, Typography } from "@material-ui/core";
-import React from "react";
-import { useRouter } from "next/router";
-import { useMutation } from "@apollo/client";
+import { ApolloError, useMutation } from "@apollo/client";
 import { INITIATE_ORDER } from "@graphql/ecommerce/mutations";
+import { Card, CardActionArea, CardMedia, CircularProgress, makeStyles, Theme } from "@material-ui/core";
+import { useRouter } from "next/router";
+import React, { useEffect } from "react";
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -14,13 +14,20 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface Props {
   productId: string;
   quantity: number;
+  onError?: (e?: ApolloError) => void;
 }
 
-const PayWithVipps: React.FC<Props> = ({ productId, quantity }) => {
-  const [initiateOrder, { data, loading, error }] = useMutation(INITIATE_ORDER);
+const PayWithVipps: React.FC<Props> = ({ productId, quantity, onError }) => {
+  const [initiateOrder, { data, loading, error }] = useMutation(INITIATE_ORDER, { errorPolicy: "all" });
 
   const classes = useStyles();
   const router = useRouter();
+
+  useEffect(() => {
+    if (error && onError) {
+      onError(error);
+    }
+  }, [error]);
 
   if (loading) return <CircularProgress />;
 
@@ -39,7 +46,6 @@ const PayWithVipps: React.FC<Props> = ({ productId, quantity }) => {
           title="Pay with vipps"
         />
       </CardActionArea>
-      {error && <Typography>{error.message}</Typography>}
     </Card>
   );
 };

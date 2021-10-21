@@ -3,17 +3,18 @@ import PayWithVipps from "@components/ecommerce/PayWithVipps";
 import Layout from "@components/Layout";
 import { CREATE_PRODUCT } from "@graphql/ecommerce/mutations";
 import { Product } from "@interfaces/ecommerce";
-import { Button, Card, Container, TextField, Typography } from "@material-ui/core";
+import { Button, Container, TextField, Typography } from "@material-ui/core";
 import { NextPage } from "next";
 import React, { useState } from "react";
 
 const ShopPage: NextPage = () => {
-  const [createProduct, { data, error }] = useMutation<{
+  const [createProduct, { data }] = useMutation<{
     createProduct: { product: Product };
   }>(CREATE_PRODUCT);
 
   const [product, setProduct] = useState<Product>();
   const [quantity, setQuantity] = useState<string>("1");
+  const [orderError, setOrderError] = useState<string>("");
 
   if (data && data.createProduct && data.createProduct.product !== product) {
     setProduct(data.createProduct.product);
@@ -23,7 +24,13 @@ const ShopPage: NextPage = () => {
     <Layout>
       <Container>
         <Typography variant="h1">Vipps test</Typography>
-        <Button variant="contained" onClick={() => createProduct().catch((e) => console.log(e))}>
+        <Button
+          variant="contained"
+          onClick={() => {
+            createProduct();
+            setOrderError("");
+          }}
+        >
           Add New Product
         </Button>
         {product ? (
@@ -37,7 +44,7 @@ const ShopPage: NextPage = () => {
         ) : (
           <Typography>No Product</Typography>
         )}
-        {error && <Typography color="error">{error.message}</Typography>}
+        {orderError && <Typography color="error">{orderError}</Typography>}
         {product && (
           <>
             <TextField
@@ -47,8 +54,11 @@ const ShopPage: NextPage = () => {
               onChange={(e) => setQuantity(e.target.value)}
               value={quantity}
             />
-            <Typography>Test å betale med vipps ved å trykke på knappen!</Typography>
-            <PayWithVipps productId={product.id} quantity={Number(quantity)} />
+            <PayWithVipps
+              productId={product.id}
+              quantity={Number(quantity)}
+              onError={(e) => e && setOrderError(e.message)}
+            />
           </>
         )}
       </Container>
