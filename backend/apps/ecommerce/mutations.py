@@ -8,7 +8,7 @@ from graphql_jwt.decorators import login_required
 
 from ..organizations.models import Organization
 from .models import Order, Product
-from .types import ProductType
+from .types import OrderType, ProductType
 from .vipps_utils import VippsApi
 
 
@@ -89,6 +89,7 @@ class AttemptCapturePayment(graphene.Mutation):
 
     status = graphene.String()
     vipps_api = VippsApi()
+    order = graphene.Field(OrderType)
 
     class Arguments:
         order_id = graphene.ID(required=True)
@@ -128,7 +129,7 @@ class AttemptCapturePayment(graphene.Mutation):
             except Exception as err:
                 print(err)
 
-        return AttemptCapturePayment(status=order.payment_status)
+        return AttemptCapturePayment(status=order.payment_status, order=order)
 
 
 class CreateProduct(graphene.Mutation):

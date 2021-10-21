@@ -12,6 +12,19 @@ export const ATTEMPT_CAPTURE_PAYMENT = gql`
   mutation AttemptCapturePayment($orderId: ID!) {
     attemptCapturePayment(orderId: $orderId) {
       status
+      order {
+        orderId
+        product {
+          id
+          name
+          description
+          price
+        }
+        quantity
+        totalPrice
+        paymentStatus
+        date
+      }
     }
   }
 `;
