@@ -19,7 +19,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile.prod
-    entrypoint: backend/entrypoint.test.sh
+    entrypoint: /usr/src/app/entrypoint.test.sh
     ports:
       - "8000:8000"
     depends_on:
