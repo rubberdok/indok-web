@@ -29,8 +29,7 @@ class OrganizationType(DjangoObjectType):
             "users",
             "events",
             "logo_url",
-            "primary_group",
-            "hr_group",
+            "permission_groups",
         ]
 
     @staticmethod
