@@ -7,7 +7,7 @@ from apps.organizations.models import Membership, Organization
 from apps.permissions.constants import (
     ORGANIZATION,
     DEFAULT_ORG_GROUPS,
-    ORG_MEMBER_GROUP_NAME,
+    ORG_MEMBER_GROUP_TYPE,
 )
 from apps.permissions.models import ResponsibleGroup
 
@@ -20,8 +20,8 @@ def handle_new_member(instance: Membership, **kwargs):
     user.groups.add(org_group)
 
     groups: list[ResponsibleGroup] = instance.groups
-    if not any(group.group_type == ORG_MEMBER_GROUP_NAME for group in groups.all()):
-        primary_group = instance.organization.permission_groups.get(group_type=ORG_MEMBER_GROUP_NAME)
+    if not any(group.group_type == ORG_MEMBER_GROUP_TYPE for group in groups.all()):
+        primary_group = instance.organization.permission_groups.get(group_type=ORG_MEMBER_GROUP_TYPE)
         groups.add(primary_group)
     for group in groups.all():
         user.groups.add(group.group)

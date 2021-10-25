@@ -42,7 +42,7 @@ class OrgGroup:
     permissions: DefaultPermissionsType = field(default_factory=list)
 
 
-ORG_MEMBER_GROUP_NAME: Final[str] = "ORG_MEMBER"
+ORG_MEMBER_GROUP_TYPE: Final[str] = "ORG_MEMBER"
 
 # Default organization permission groups
 # All organizations will have ResponsibleGroups with these names and descriptions,
@@ -50,7 +50,7 @@ ORG_MEMBER_GROUP_NAME: Final[str] = "ORG_MEMBER"
 # The given permissions apply only to objects tied to that organization
 DEFAULT_ORG_GROUPS: Final[list[OrgGroup]] = [
     OrgGroup(
-        group_type=ORG_MEMBER_GROUP_NAME,
+        group_type=ORG_MEMBER_GROUP_TYPE,
         name="Medlem",
         create_description=(lambda org_name: f"Medlemmer av {org_name}."),
     ),
