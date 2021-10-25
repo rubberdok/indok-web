@@ -5,7 +5,7 @@ from apps.organizations.models import Organization
 
 
 class Blog(models.Model):
-    organization = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True, related_name="blog")
+    organization = models.OneToOneField(Organization, on_delete=models.SET_NULL, null=True, related_name="blog")
     name = models.CharField(max_length=150)
     description = models.TextField()
 
