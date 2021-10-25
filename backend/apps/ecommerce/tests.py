@@ -6,6 +6,7 @@ from utils.testing.factories.ecommerce import OrderFactory, ProductFactory
 from utils.testing.factories.organizations import OrganizationFactory
 
 from utils.testing.factories.users import IndokUserFactory
+from apps.ecommerce.models import Product
 
 
 class EcommerceBaseTestCase(ExtendedGraphQLTestCase):
@@ -106,4 +107,40 @@ class EcommerceResolversTestCase(EcommerceBaseTestCase):
 
 
 class EcommerceMutationsTestCase(EcommerceBaseTestCase):
-    ...
+    """
+    Testing all mutations for ecommerce
+    """
+
+    def test_create_product(self):
+        """
+        THIS TEST MUST BE REWRITTEN!
+        """
+
+        query = """
+          mutation {
+            createProduct {
+                product {
+                    id
+                    name
+                    description
+                    price
+                    totalQuantity
+                    maxBuyableQuantity
+                }
+                ok
+                }
+            }
+        """
+        response = self.query(query)
+        self.assertResponseNoErrors(response)
+
+        data = json.loads(response.content)["data"]
+        response_product = data["createProduct"]["product"]
+        product = Product.objects.get(pk=response_product["id"])
+        if product is None:
+            self.assertIsNotNone(product, msg="Expected product after creation, got None")
+        else:
+            self.assertTrue(data["createProduct"]["ok"])
+            product.price = int(product.price)
+            response_product["price"] = int(response_product["price"])
+            self.deep_assert_equal(response_product, product)
