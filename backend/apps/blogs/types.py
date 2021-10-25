@@ -11,6 +11,7 @@ class BlogType(DjangoObjectType):
             "description",
             "organization",
             "name",
+            "blog_posts",
         ]
 
 

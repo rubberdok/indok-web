@@ -18,6 +18,7 @@ class BlogBaseTestCase(ExtendedGraphQLTestCase):
 
         self.organization_one = OrganizationFactory()
         self.organization_two = OrganizationFactory()
+        self.organization_three = OrganizationFactory()
 
         # Assign permissions to authorized test-user
         assign_perm("blogs.add_blog", self.authorized_user)
@@ -32,7 +33,7 @@ class BlogBaseTestCase(ExtendedGraphQLTestCase):
 
         # Adds two blog instances to the test cases
         self.blog_one = BlogFactory(organization=self.organization_one)
-        self.blog_two = BlogFactory(organization=self.organization_one)
+        self.blog_two = BlogFactory(organization=self.organization_two)
 
         # Adds two blogpost instances to the test cases
         self.blog_post_one = BlogPostFactory(blog=self.blog_one)
@@ -56,7 +57,7 @@ class BlogResolverTestCase(BlogBaseTestCase):
                             }
                         name
                         description
-                        blogPost {
+                        blogPosts {
                             id
                             }
                     }
@@ -76,7 +77,7 @@ class BlogResolverTestCase(BlogBaseTestCase):
                     id
                     name
                     description
-                    blogPost {{
+                    blogPosts {{
                         id
                     }}
                     organization {{
@@ -150,7 +151,7 @@ class BlogMutationTestCase(BlogBaseTestCase):
         self.create_mutation = f"""
         mutation {{
             createBlog(
-                organizationId: {self.organization_one.id},
+                organizationId: {self.organization_three.id},
                 name: "{self.name}",
                 description: "{self.description}"
             ) {{
@@ -175,7 +176,7 @@ class BlogMutationTestCase(BlogBaseTestCase):
                     id: {self.blog_one.id},
                     name: "{self.name}",
                     description: "{self.description}",
-                    organizationId: {self.organization_two.id}
+                    organizationId: {self.organization_three.id}
                 }}
             ) {{
                 ok

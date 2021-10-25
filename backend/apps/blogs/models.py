@@ -19,7 +19,7 @@ class BlogPost(models.Model):
     text = models.TextField()
     publish_date = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
-    blog = models.ForeignKey(Blog, on_delete=models.CASCADE, null=True, related_name="blog_post")
+    blog = models.ForeignKey(Blog, on_delete=models.CASCADE, null=True, related_name="blog_posts")
 
     def __str__(self):
         return f"{self.title} (id: {self.id})"
