@@ -1,10 +1,13 @@
 import uuid
 
 from django.conf import settings
-from django.db import models
+from django.db import models, transaction
+from django.db.models import F
 from django.db.models.fields import DateTimeField
 
 from apps.organizations.models import Organization
+
+from ..users.models import User
 
 
 class Product(models.Model):
@@ -24,6 +27,49 @@ class Product(models.Model):
             self.current_quantity = self.total_quantity
         self.max_buyable_quantity = min(self.max_buyable_quantity, self.total_quantity)
         super().save(*args, **kwargs)
+
+    @transaction.atomic
+    @classmethod
+    def check_and_reserve_quantity(cls, product_id, user: User, quantity: int):
+        # Check if the requested quantity is allowed
+        try:
+            # Acquire DB lock for the product (no other process can change it)
+            product = cls.objects.select_for_update().get(pk=product_id)
+        except cls.DoesNotExist:
+            raise ValueError("Ugyldig produkt")
+
+        captured_orders = Order.objects.filter(
+            product__id=product_id,
+            user=user,
+            payment_status=Order.PaymentStatus.CAPTURED,
+        )
+        bought_quantity = sum([order.quantity for order in captured_orders])
+
+        if bought_quantity >= product.max_buyable_quantity:
+            raise ValueError("Du kan ikke kjøpe mer av dette produktet.")
+        elif quantity + bought_quantity > product.max_buyable_quantity:
+            raise ValueError("Forespurt antall enheter overskrider tillatt antall.")
+        elif quantity > product.current_quantity:
+            raise ValueError("Forespurt antall enheter overskrider tilgjengelige antall enheter.")
+
+        # Update available quantity
+        product.current_quantity = F("current_quantity") - quantity
+        product.save()
+        product.refresh_from_db()
+        return product
+
+    @transaction.atomic
+    @classmethod
+    def restore_quantity(cls, order: "Order"):
+        assert order.payment_status in [
+            Order.PaymentStatus.CANCELLED,
+            Order.PaymentStatus.FAILED,
+            Order.PaymentStatus.REJECTED,
+        ]
+        # Acquire DB lock for the product (no other process can change it)
+        product = cls.objects.select_for_update().get(pk=order.product.id)
+        product.current_quantity = F("current_quantity") + order.quantity
+        product.save()
 
 
 def get_auth_token():

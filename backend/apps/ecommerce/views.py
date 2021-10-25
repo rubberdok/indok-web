@@ -1,9 +1,9 @@
 from django.core.exceptions import PermissionDenied
-from rest_framework.views import APIView
+from django.db import transaction
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
-
-from .models import Order
+from .models import Order, Product
 from .vipps_utils import VippsApi
 
 
@@ -11,14 +11,14 @@ class VippsCallback(APIView):
 
     vipps_api = VippsApi()
 
+    @transaction.atomic
     def post(self, request, order_id):
         # Upon callback from Vipps, update status and attempt to capture payment
 
         # Remove payment_attempt to get internal order_id
         order_id = order_id.rpartition("-")[0]
-
         try:
-            order = Order.objects.get(pk=order_id)
+            order = Order.objects.select_for_update().get(pk=order_id)
         except Order.DoesNotExist:
             raise ValueError("Ugyldig ordre")
 
@@ -41,9 +41,7 @@ class VippsCallback(APIView):
 
         # If order went from initiated to failed/cancelled, restore available quantity
         if status != "RESERVED" and was_initiated:
-            product = order.product
-            product.current_quantity = product.current_quantity + order.quantity
-            product.save()
+            order.product.restore_quantity(order)
 
         # Capture payment
         if order.payment_status == Order.PaymentStatus.RESERVED:

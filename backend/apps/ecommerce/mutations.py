@@ -3,6 +3,7 @@ import uuid
 
 import graphene
 from django.core.exceptions import PermissionDenied
+from django.db import transaction
 from faker import Faker
 from graphql_jwt.decorators import login_required
 
@@ -25,26 +26,9 @@ class InitiateOrder(graphene.Mutation):
     def mutate(self, info, product_id, quantity=1):
         user = info.context.user
 
-        try:
-            product = Product.objects.get(pk=product_id)
-        except Product.DoesNotExist:
-            raise ValueError("Ugyldig produkt")
+        product = Product.check_and_reserve_quantity(product_id, user, quantity)
 
-        # Check if the requested quantity is allowed
-        captured_orders = Order.objects.filter(
-            product__id=product_id,
-            user=user,
-            payment_status=Order.PaymentStatus.CAPTURED,
-        )
-        bought_quantity = sum([order.quantity for order in captured_orders])
-
-        if bought_quantity >= product.max_buyable_quantity:
-            raise ValueError("Du kan ikke kjøpe mer av dette produktet.")
-        elif quantity + bought_quantity > product.max_buyable_quantity:
-            raise ValueError("Forespurt antall enheter overskrider tillatt antall.")
-        elif quantity > product.current_quantity:
-            raise ValueError("Forespurt antall enheter overskrider tilgjengelige antall enheter.")
-
+        # Create or update the order
         # If the user has attempted this order before, retry it
         try:
             order = Order.objects.get(
@@ -74,10 +58,6 @@ class InitiateOrder(graphene.Mutation):
 
             order.save()
 
-        # Reserve the quantity upon successfull order initiation
-        product.current_quantity = product.current_quantity - order.quantity
-        product.save()
-
         redirect = InitiateOrder.vipps_api.initiate_payment(order)
 
         return InitiateOrder(redirect=redirect)
@@ -88,16 +68,18 @@ class AttemptCapturePayment(graphene.Mutation):
     # Also returns payment status
 
     status = graphene.String()
-    vipps_api = VippsApi()
     order = graphene.Field(OrderType)
+    vipps_api = VippsApi()
 
     class Arguments:
         order_id = graphene.ID(required=True)
 
+    @transaction.atomic
     @login_required
     def mutate(self, info, order_id):
         try:
-            order = Order.objects.get(pk=order_id)
+            # Acquire DB lock for the order (no other process can change it)
+            order = Order.objects.select_for_update().get(pk=order_id)
         except Order.DoesNotExist:
             raise ValueError("Ugyldig ordre")
 
@@ -117,9 +99,7 @@ class AttemptCapturePayment(graphene.Mutation):
                 order.payment_status = Order.PaymentStatus.CANCELLED
                 order.save()
                 # Order went from initiated to cancelled, restore quantity
-                product = order.product
-                product.current_quantity = product.current_quantity + order.quantity
-                product.save()
+                order.product.restore_quantity(order)
 
         if order.payment_status == Order.PaymentStatus.RESERVED:
             try:
