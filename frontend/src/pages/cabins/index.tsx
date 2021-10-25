@@ -126,7 +126,7 @@ const CabinsPage: NextPage = () => {
                         De to identiske nabohyttene ligger idyllisk til, kun et steinkast unna Stølen alpinsenter i
                         Oppdal. Hyttene har flere bruksområder; alt fra strategiske samlinger og egne arrangementer til
                         sosiale, spontane venneturer. Det er en gyllen mulighet til å få en liten pause fra det travle
-                        bylivet. Indøks egne hyttestyre arrangerer flere forskjellige turer i løpet av året. Dette er en
+                        bylivet. Indøks egne Hyttestyre arrangerer flere forskjellige turer i løpet av året. Dette er en
                         flott mulighet til både å bli kjent med hyttene, området rundt hyttene, og å bli kjent med andre
                         indøkere på tvers av klassetrinnene. Hyttestyret har det daglige ansvaret for drift og utbedring
                         av Indøkhyttene, organisering av utleie og felles hytteturer. Du kan lese mer om Hyttestyret
@@ -142,15 +142,15 @@ const CabinsPage: NextPage = () => {
                       <Divider component="br" />
                       <Typography variant="body2">
                         Med sine to etasjer, er Bjørnen og Oksen estimert til å romme 18 personer per hytte. Den
-                        generelle standarden er tilnærmet lik et vanlig bolighus. Hyttene har innlagt strøm og vann samt
-                        at de også har WiFi. I første etasje finner du to bad, hvorav ett med badstue, og tre soverom
-                        med tre til fire sengeplasser per rom. I andre etasje ligger stue, kjøkken og et fjerde soverom
-                        med sengeplass til tre. Dette gir totalt fjorten sengeplasser på hver hytte og ekstramadrasser
-                        til de resterende seks det er estimert med. Dyner og puter til alle tjue ligger tilgjengelig,
-                        men laken og sengetøy må medbringes. Kjøkkenet er utstyrt med det mest nødvendige av hvitevarer,
-                        i tillegg til kaffetrakter, vannkoker og vaffeljern m.m. Basiskrydder og olje til steking skal
-                        også være tilgjengelig. På hyttene ligger det et bredt utvalg brettspill, samt kortstokker. I
-                        stua står det anlegg med AUX-kabel.
+                        generelle standarden er tilnærmet lik et vanlig bolighus. Begge hyttene har innlagt strøm og
+                        vann. I første etasje finner du to bad, hvorav ett med badstue, og tre soverom med tre til fire
+                        sengeplasser per rom. I andre etasje ligger stue, kjøkken og et fjerde soverom med sengeplass
+                        til tre. Dette gir totalt fjorten sengeplasser på hver hytte og ekstramadrasser til de
+                        resterende 4 det er estimert med. Dyner og puter til 18 gjester ligger tilgjengelig, men laken
+                        og sengetøy må medbringes. Kjøkkenet er utstyrt med det mest nødvendige av hvitevarer, i tillegg
+                        til kaffetrakter, vannkoker og vaffeljern m.m. Basiskrydder og olje til steking skal også være
+                        tilgjengelig. På hyttene ligger det et bredt utvalg brettspill, samt kortstokker. I stua står
+                        det anlegg med AUX-kabel.
                       </Typography>
                     </Grid>
 
@@ -198,8 +198,8 @@ const CabinsPage: NextPage = () => {
                       <b>Vinter</b>: I løpet av vinterhalvåret er det hovedsakelig alpint og langrenn som står i
                       sentrum. Det alpine skiområdet er blant de største i Norge med 14 blå, 10 grønne, 10 røde og 5
                       svarte løyper, og normal skisesong er fra 15. november – 1. mai. Forholdene for langrenn er også
-                      gode med hele fem løyper som begynner ved Stølen, alt fra 1,5 km – 15 km løyper. Se Oppdal Booking
-                      for mer info.
+                      gode med hele fem løyper som begynner ved Stølen, alt fra 1,5 km – 15 km løyper. Se{" "}
+                      <Link href="https://oppdal.com/forside/hoved/">Visit Oppdal</Link> for mer info.
                     </Typography>
                   </Grid>
                   <Grid item container spacing={10} direction="row" justifyContent="center" alignContent="center">

@@ -41,6 +41,12 @@
         <span><strong>{{check_in }}</strong></span> til
         <span><strong>{{ check_out }}</strong> er mottatt.</span>
       </p>
+
+        {% if extra_info|length > 0 %}
+            <p><strong>Du har sendt med følgende spørsmål:</strong></p>
+            <p>{{ extra_info }}</p>
+        {% endif %}
+
         <p><strong>Hyttestyret kommer til å ta stilling til å søknaden din snart. Når de har gjort det får du en
             mail med beslutningen deres.</strong></p>
       <p>Prisen kommer på <strong>{{ price }} kr</strong>. Det blir sendt ut en faktura på mail fra Hyttestyret.</p>

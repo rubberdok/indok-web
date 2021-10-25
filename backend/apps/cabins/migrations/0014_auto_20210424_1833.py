@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cabins', '0013_merge_20210419_1820'),
+        ("cabins", "0013_merge_20210419_1820"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='booking',
-            name='is_tentative',
+            model_name="booking",
+            name="is_tentative",
             field=models.BooleanField(default=True),
         ),
     ]

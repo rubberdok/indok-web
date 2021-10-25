@@ -3,6 +3,7 @@
 from django.db import migrations, models
 import django.db.models.deletion
 
+
 def assign_default_organization(apps, schema_editor):
     Organization = apps.get_model("organizations", "Organization")
     Listing = apps.get_model("listings", "Listing")
@@ -12,18 +13,21 @@ def assign_default_organization(apps, schema_editor):
             listing.organization = default_org
             listing.save()
 
+
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('organizations', '0021_auto_20210415_1706'),
-        ('listings', '0004_auto_20210416_1534'),
+        ("organizations", "0021_auto_20210415_1706"),
+        ("listings", "0004_auto_20210416_1534"),
     ]
 
     operations = [
         migrations.RunPython(assign_default_organization, lambda apps, schema_editor: None),
         migrations.AlterField(
-            model_name='listing',
-            name='organization',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='listings', to='organizations.organization'),
+            model_name="listing",
+            name="organization",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, related_name="listings", to="organizations.organization"
+            ),
         ),
     ]
