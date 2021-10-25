@@ -16,10 +16,11 @@ class BlogFactory(DjangoModelFactory):
     name = fake.company()
     description = fake.paragraph(nb_sentences=10)
 
+
 class BlogPostFactory(DjangoModelFactory):
     class Meta:
         model = BlogPost
-    
+
     title = fake.company()
     text = fake.text()
     author = factory.SubFactory(UserFactory)

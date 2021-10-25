@@ -12,6 +12,7 @@ class Blog(models.Model):
     def __str__(self):
         return f"{self.name} (id: {self.id})"
 
+
 class BlogPost(models.Model):
 
     title = models.CharField(max_length=150)

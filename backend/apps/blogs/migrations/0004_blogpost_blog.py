@@ -7,13 +7,15 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('blogs', '0003_blog'),
+        ("blogs", "0003_blog"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='blogpost',
-            name='blog',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='blog_post', to='blogs.blog'),
+            model_name="blogpost",
+            name="blog",
+            field=models.ForeignKey(
+                null=True, on_delete=django.db.models.deletion.CASCADE, related_name="blog_post", to="blogs.blog"
+            ),
         ),
     ]
