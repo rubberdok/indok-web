@@ -1,10 +1,9 @@
-from factory.django import DjangoModelFactory
-import factory, factory.django
-from faker import Faker
+import factory
+import factory.django
 from apps.blogs.models import Blog, BlogPost
+from factory.django import DjangoModelFactory
+from faker import Faker
 from utils.testing.factories.users import UserFactory
-from utils.testing.factories.organizations import OrganizationFactory
-
 
 fake: Faker = Faker(["no-NO"])
 

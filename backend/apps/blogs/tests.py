@@ -149,7 +149,11 @@ class BlogMutationTestCase(BlogBaseTestCase):
 
         self.create_mutation = f"""
         mutation {{
-            createBlog(organizationId: {self.organization_one.id}, name: "{self.name}", description: "{self.description}") {{
+            createBlog(
+                organizationId: {self.organization_one.id},
+                name: "{self.name}",
+                description: "{self.description}"
+            ) {{
                 ok
                 blog {{
                     id
@@ -162,12 +166,19 @@ class BlogMutationTestCase(BlogBaseTestCase):
 
                 }}
             }}
-        }}        
+        }}
         """
         self.update_mutation = f"""
         mutation {{
-            updateBlog(blogData: {{id: {self.blog_one.id}, name: "{self.name}", description: "{self.description}", organizationId: {self.organization_two.id}}}) {{
-                ok 
+            updateBlog(
+                blogData: {{
+                    id: {self.blog_one.id},
+                    name: "{self.name}",
+                    description: "{self.description}",
+                    organizationId: {self.organization_two.id}
+                }}
+            ) {{
+                ok
                 blog {{
                     id
                     name
@@ -248,7 +259,12 @@ class BlogPostMutationTestCase(BlogBaseTestCase):
         self.text = "Text"
         self.create_mutation = f"""
             mutation {{
-                createBlogPost(authorId: {self.authorized_user.id}, blogId: {self.blog_two.id}, title: "{self.title}", text: "{self.text}"){{
+                createBlogPost(
+                    authorId: {self.authorized_user.id},
+                    blogId: {self.blog_two.id},
+                    title: "{self.title}",
+                    text: "{self.text}"
+                ){{
                     ok
                     blogPost{{
                         id
@@ -275,8 +291,14 @@ class BlogPostMutationTestCase(BlogBaseTestCase):
         self.update_mutation = f"""
             mutation {{
 
-                updateBlogPost(blogPostData: {{id: {self.blog_post_one.id}, blogId: {self.blog_two.id}, title: "{self.title}", text: "{self.text}"}})
-                {{
+                updateBlogPost(
+                    blogPostData: {{
+                        id: {self.blog_post_one.id},
+                        blogId: {self.blog_two.id},
+                        title: "{self.title}",
+                        text: "{self.text}"
+                    }}
+                ) {{
                     ok
                     blogPost {{
                         id
@@ -301,7 +323,7 @@ class BlogPostMutationTestCase(BlogBaseTestCase):
 
         """
 
-        self.delete_mutation = f""" 
+        self.delete_mutation = f"""
             mutation {{
                 deleteBlogPost(blogPostId: {self.blog_post_one.id}) {{
                     ok
