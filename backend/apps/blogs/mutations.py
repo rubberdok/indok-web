@@ -21,11 +21,18 @@ class CreateBlog(graphene.Mutation):
         try:
             organization = OrganizationModel.objects.get(pk=organization_id)
 
-            blog = BlogModel.objects.create(name=name, description=description, organization=organization,)
+            blog = BlogModel.objects.create(
+                name=name,
+                description=description,
+                organization=organization,
+            )
 
             return CreateBlog(blog=blog, ok=True)
         except OrganizationModel.DoesNotExist:
-            return CreateBlog(blog=None, ok=False,)
+            return CreateBlog(
+                blog=None,
+                ok=False,
+            )
 
 
 class DeleteBlog(graphene.Mutation):
@@ -62,7 +69,9 @@ class UpdateBlog(graphene.Mutation):
 
     @permission_required("blogs.change_blog")
     def mutate(
-        self, info, blog_data,
+        self,
+        info,
+        blog_data,
     ):
 
         ok = True
@@ -78,7 +87,10 @@ class UpdateBlog(graphene.Mutation):
             return UpdateBlog(blog=blog, ok=ok)
 
         except BlogModel.DoesNotExist:
-            return UpdateBlog(blog=None, ok=False,)
+            return UpdateBlog(
+                blog=None,
+                ok=False,
+            )
 
 
 class CreateBlogPost(graphene.Mutation):
@@ -93,17 +105,30 @@ class CreateBlogPost(graphene.Mutation):
 
     @permission_required("blogs.add_blogpost")
     def mutate(
-        self, info, title, text, author_id, blog_id,
+        self,
+        info,
+        title,
+        text,
+        author_id,
+        blog_id,
     ):
 
         try:
             blog = BlogModel.objects.get(pk=blog_id)
 
-            blog_post = BlogPostModel.objects.create(title=title, text=text, author_id=author_id, blog=blog,)
+            blog_post = BlogPostModel.objects.create(
+                title=title,
+                text=text,
+                author_id=author_id,
+                blog=blog,
+            )
 
             return CreateBlogPost(blog_post=blog_post, ok=True)
         except BlogModel.DoesNotExist:
-            return CreateBlogPost(blog_post=None, ok=False,)
+            return CreateBlogPost(
+                blog_post=None,
+                ok=False,
+            )
 
 
 class DeleteBlogPost(graphene.Mutation):
@@ -140,7 +165,9 @@ class UpdateBlogPost(graphene.Mutation):
 
     @permission_required("blogs.change_blogpost")
     def mutate(
-        self, info, blog_post_data,
+        self,
+        info,
+        blog_post_data,
     ):
         ok = True
 
@@ -154,4 +181,7 @@ class UpdateBlogPost(graphene.Mutation):
             return UpdateBlogPost(blog_post=blog_post, ok=ok)
 
         except BlogPostModel.DoesNotExist:
-            return UpdateBlogPost(blog_post=None, ok=False,)
+            return UpdateBlogPost(
+                blog_post=None,
+                ok=False,
+            )

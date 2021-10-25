@@ -66,7 +66,9 @@ class BlogResolverTestCase(BlogBaseTestCase):
         self.assertResponseNoErrors(response)
         blogs = json.loads(response.content)["data"]["allBlogs"]
         self.assertEqual(
-            len(blogs), 2, f"Expected 2 blogposts, but got {len(blogs)}",
+            len(blogs),
+            2,
+            f"Expected 2 blogposts, but got {len(blogs)}",
         )
 
     def test_resolve_blog(self):
@@ -117,7 +119,9 @@ class BlogPostResolverTestCase(BlogBaseTestCase):
         self.assertResponseNoErrors(response)
         blog_posts = json.loads(response.content)["data"]["allBlogPosts"]
         self.assertEqual(
-            len(blog_posts), 2, f"Expected 2 blog posts, but got {len(blog_posts)}",
+            len(blog_posts),
+            2,
+            f"Expected 2 blog posts, but got {len(blog_posts)}",
         )
 
     def test_resolve_blog_post(self):
@@ -149,7 +153,11 @@ class BlogMutationTestCase(BlogBaseTestCase):
 
         self.create_mutation = f"""
         mutation {{
-            createBlog(organizationId: {self.organization_one.id}, name: "{self.name}", description: "{self.description}") {{
+            createBlog(
+                organizationId: {self.organization_one.id},
+                name: "{self.name}",
+                description: "{self.description}"
+            ) {{
                 ok
                 blog {{
                     id
@@ -162,12 +170,19 @@ class BlogMutationTestCase(BlogBaseTestCase):
 
                 }}
             }}
-        }}        
+        }}
         """
         self.update_mutation = f"""
         mutation {{
-            updateBlog(blogData: {{id: {self.blog_one.id}, name: "{self.name}", description: "{self.description}", organizationId: {self.organization_two.id}}}) {{
-                ok 
+            updateBlog(
+                blogData: {{
+                    id: {self.blog_one.id},
+                    name: "{self.name}",
+                    description: "{self.description}",
+                    organizationId: {self.organization_two.id}
+                }}
+            ) {{
+                ok
                 blog {{
                     id
                     name
@@ -248,7 +263,12 @@ class BlogPostMutationTestCase(BlogBaseTestCase):
         self.text = "Text"
         self.create_mutation = f"""
             mutation {{
-                createBlogPost(authorId: {self.authorized_user.id}, blogId: {self.blog_two.id}, title: "{self.title}", text: "{self.text}"){{
+                createBlogPost(
+                    authorId: {self.authorized_user.id},
+                    blogId: {self.blog_two.id},
+                    title: "{self.title}",
+                    text: "{self.text}"
+                ){{
                     ok
                     blogPost{{
                         id
@@ -275,8 +295,14 @@ class BlogPostMutationTestCase(BlogBaseTestCase):
         self.update_mutation = f"""
             mutation {{
 
-                updateBlogPost(blogPostData: {{id: {self.blog_post_one.id}, blogId: {self.blog_two.id}, title: "{self.title}", text: "{self.text}"}})
-                {{
+                updateBlogPost(
+                    blogPostData: {{
+                        id: {self.blog_post_one.id},
+                        blogId: {self.blog_two.id},
+                        title: "{self.title}",
+                        text: "{self.text}"
+                    }}
+                ) {{
                     ok
                     blogPost {{
                         id
@@ -301,7 +327,7 @@ class BlogPostMutationTestCase(BlogBaseTestCase):
 
         """
 
-        self.delete_mutation = f""" 
+        self.delete_mutation = f"""
             mutation {{
                 deleteBlogPost(blogPostId: {self.blog_post_one.id}) {{
                     ok
