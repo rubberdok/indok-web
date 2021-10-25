@@ -94,7 +94,7 @@ export const calculatePrice: (
 
 export const convertDateFormat: (date: string) => string = (date) => dayjs(date).format("DD-MM-YYYY");
 
-export const getDecisionEmailProps = (booking: BookingFromQuery, approved: boolean) => {
+export const getDecisionEmailProps = (booking: BookingFromQuery, approved: boolean, declineMessage?: string) => {
   // omit unwanted fields
   const { checkIn, checkOut, externalParticipants, firstName, internalParticipants, lastName, phone, receiverEmail } =
     booking;
@@ -112,6 +112,7 @@ export const getDecisionEmailProps = (booking: BookingFromQuery, approved: boole
     },
     cabins: booking.cabins.map((cabin) => parseInt(cabin.id)),
     emailType: approved ? "approve_booking" : "disapprove_booking",
+    extraInfo: declineMessage,
   };
 
   return { variables: { emailInput: emailInput } };
