@@ -128,6 +128,10 @@ class DeleteBooking(graphene.Mutation):
 
 
 class SendEmail(graphene.Mutation):
+    """
+    Sends email to the user or an admin (or both)
+    """
+
     class Arguments:
         email_input = EmailInput()
 
