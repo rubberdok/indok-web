@@ -1,4 +1,3 @@
-# Create your tests here.
 import json
 
 from utils.testing.ExtendedGraphQLTestCase import ExtendedGraphQLTestCase
@@ -7,6 +6,10 @@ from utils.testing.factories.organizations import OrganizationFactory
 
 from utils.testing.factories.users import IndokUserFactory
 from apps.ecommerce.models import Product
+from apps.ecommerce.mutations import InitiateOrder
+
+
+import unittest.mock
 
 
 class EcommerceBaseTestCase(ExtendedGraphQLTestCase):
@@ -106,6 +109,11 @@ class EcommerceResolversTestCase(EcommerceBaseTestCase):
         self.assertEqual(len(content["data"]["userOrders"]), 1)
 
 
+class VippsApiMock:
+    def initiate_payment(order):
+        print("Order: ", order)
+
+
 class EcommerceMutationsTestCase(EcommerceBaseTestCase):
     """
     Testing all mutations for ecommerce
@@ -144,3 +152,40 @@ class EcommerceMutationsTestCase(EcommerceBaseTestCase):
             product.price = int(product.price)
             response_product["price"] = int(response_product["price"])
             self.deep_assert_equal(response_product, product)
+
+    @unittest.mock.patch(InitiateOrder, "vipps_api", VippsApiMock)
+    def test_initiate_order(self):
+        query = (
+            lambda q: f"""
+        mutation InitiateOrder {{
+            initiateOrder(productId: {self.product_1.id}, quantity: {q}) {{
+                redirect
+            }}
+        }}
+        """
+        )
+
+        # Unauthorized user should not be able to initiate order
+        response = self.query(query(1))
+        self.assert_permission_error(response)
+
+        # Requesting more than available is not allowed
+        response = self.query(query(6), user=self.indok_user)
+        self.assertResponseHasErrors(response)
+
+        # Requesting more than one user can buy is not allowed
+        response = self.query(query(3), user=self.indok_user)
+        self.assertResponseHasErrors(response)
+
+        # Max is 2 per user so should be allowed to buy this
+        response = self.query(query(2), user=self.indok_user)
+        self.assertResponseNoErrors(response)
+        print(response)
+
+        # Already bought the total quota for the user so shouldn't be allowed to buy more
+        # Need to think a bit more on this one as only captured orders are counted with this
+        # response = self.query(query(1), user=self.indok_user)
+        # self.assertResponseHasErrors(response)
+
+    def test_attempt_capture_order(self):
+        ...

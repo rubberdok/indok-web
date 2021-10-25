@@ -60,7 +60,7 @@ class VippsApi:
 
         url = f"{self.vipps_server}{endpoint}"
 
-        print(f"VippsEcomApi._make_call: making api call to the url: {url}")
+        print(f"VippsApi._make_call: making api call to the url: {url}")
 
         r = req(url, headers=headers, data=data)
 

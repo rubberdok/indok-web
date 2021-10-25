@@ -20,8 +20,8 @@ class ProductFactory(DjangoModelFactory):
     price = str(fake.random_int(1, 4000000))
     description = fake.sentence(6)
     organization = factory.SubFactory(OrganizationFactory)
-    total_quantity = fake.random_int(1, 10)
-    max_buyable_quantity = fake.random_int(1, 5)
+    total_quantity = 5
+    max_buyable_quantity = 2
 
 
 class OrderFactory(DjangoModelFactory):
