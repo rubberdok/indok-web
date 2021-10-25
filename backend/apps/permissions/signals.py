@@ -59,3 +59,20 @@ def assign_standard_organization_permissions(apps, **kwargs):
         .exclude(organizations=None)
         .values_list("id", flat=True)
     )
+
+
+@receiver(post_migrate)
+def synchronize_group_and_responsible_group_names(apps, **kwargs):
+    """
+    Synchronizes the names of organizations' responsible groups and their attached Groups
+    """
+    Organization = apps.get_model("organizations", "Organization")
+
+    for organization in Organization.objects.all():
+        for responsible_group in organization.permission_groups.all():
+            group_name_split: list[str] = responsible_group.group.name.split(":", 2)
+            if len(group_name_split) == 3:
+                if group_name_split[1] != responsible_group.name:
+                    responsible_group.group.name = (
+                        f"{group_name_split[0]}:{responsible_group.name}:{group_name_split[2]}"  # noqa
+                    )
