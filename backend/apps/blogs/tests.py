@@ -67,7 +67,9 @@ class BlogResolverTestCase(BlogBaseTestCase):
         self.assertResponseNoErrors(response)
         blogs = json.loads(response.content)["data"]["allBlogs"]
         self.assertEqual(
-            len(blogs), 2, f"Expected 2 blogposts, but got {len(blogs)}",
+            len(blogs),
+            2,
+            f"Expected 2 blogposts, but got {len(blogs)}",
         )
 
     def test_resolve_blog(self):
@@ -118,7 +120,9 @@ class BlogPostResolverTestCase(BlogBaseTestCase):
         self.assertResponseNoErrors(response)
         blog_posts = json.loads(response.content)["data"]["allBlogPosts"]
         self.assertEqual(
-            len(blog_posts), 2, f"Expected 2 blog posts, but got {len(blog_posts)}",
+            len(blog_posts),
+            2,
+            f"Expected 2 blog posts, but got {len(blog_posts)}",
         )
 
     def test_resolve_blog_post(self):
