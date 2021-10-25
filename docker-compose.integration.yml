@@ -20,6 +20,8 @@ services:
       context: ./backend
       dockerfile: Dockerfile.prod
     entrypoint: /usr/src/app/entrypoint.test.sh
+    volumes:
+      - ./backend:/usr/src/app
     ports:
       - "8000:8000"
     depends_on:
