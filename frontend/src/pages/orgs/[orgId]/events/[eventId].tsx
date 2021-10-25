@@ -31,6 +31,7 @@ import {
   TableRow,
   Tooltip,
   Typography,
+  makeStyles,
 } from "@material-ui/core";
 import { Edit } from "@material-ui/icons";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -39,6 +40,14 @@ import dayjs from "dayjs";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
+
+const useStyles = makeStyles((theme) => ({
+  accordion: {
+    "&.MuiAccordion-root:before": {
+      backgroundColor: "white",
+    },
+  },
+}));
 
 interface HeaderValuePair<T> {
   header: string;
@@ -75,6 +84,7 @@ const EventAdminPage: NextPage = () => {
   const router = useRouter();
   const { eventId } = router.query;
   const eventNumberID = parseInt(eventId as string);
+  const classes = useStyles();
 
   const { loading, data, refetch } = useQuery<{ event: Event }, { id: number }>(ADMIN_GET_EVENT, {
     variables: { id: eventNumberID },
@@ -97,14 +107,14 @@ const EventAdminPage: NextPage = () => {
     }
     const val = typeof value === "boolean" ? (value ? "ja" : "nei") : value;
     return (
-      <ListItem key={`${label}-${val}`}>
+      <Grid item xs={12} lg={6} key={`${label}-${val}`}>
         <Typography>
           <Box fontWeight={1000} m={1} display="inline">
             {`${label}: `}
           </Box>
           {val}
         </Typography>
-      </ListItem>
+      </Grid>
     );
   };
 
@@ -134,297 +144,236 @@ const EventAdminPage: NextPage = () => {
               <Grid>
                 <Grid container direction="column" spacing={5}>
                   <Grid item>
-                    <Typography variant="h1" align="center">
+                    <Typography variant="h2" align="center">
                       {data.event.title}
                     </Typography>
-                  </Grid>
-                  <Grid item container spacing={5}>
-                    <Grid item xs={12}>
-                      <Card variant="outlined">
-                        <Grid container alignItems="flex-end">
-                          <Grid item xs={12} md={9} lg={10}>
-                            <Box m={3} mb={0}>
-                              <CardHeader
-                                style={{ paddingBottom: "0" }}
-                                titleTypographyProps={{ variant: "h3" }}
-                                title="Generell informasjon"
-                              />
-                            </Box>
-                          </Grid>
-                          <Grid item xs={12} md={3} lg={2}>
-                            <Box m={0} mt={2} ml={5}>
-                              <CardActions style={{ padding: "0" }}>
-                                <Button variant="outlined" startIcon={<Edit />} onClick={() => setOpenEditEvent(true)}>
-                                  Rediger
-                                </Button>
-                              </CardActions>
-                            </Box>
-                          </Grid>
-                        </Grid>
-                        <CardContent>
-                          <List>
-                            {stringEventFields.map((headerPair: HeaderValuePair<Event>) =>
-                              renderInfo(
-                                headerPair.header,
-                                data.event[headerPair.field] ? (data.event[headerPair.field] as string) : ""
-                              )
-                            )}
-                            <ListItem key={"allowedGradeYears"}>
-                              <Typography>
-                                <Box fontWeight={1000} m={1} display="inline">
-                                  Åpent for:
-                                </Box>
-                                {data.event.allowedGradeYears
-                                  .slice(1, data.event.allowedGradeYears.length)
-                                  .reduce(
-                                    (res, grade) => `${res}, ${grade}.klasse`,
-                                    `${data.event.allowedGradeYears[0]}.klasse`
-                                  )}
-                              </Typography>
-                            </ListItem>
-
-                            {dateEventFields.map((headerPair: HeaderValuePair<Event>) =>
-                              renderInfo(
-                                headerPair.header,
-                                data.event[headerPair.field]
-                                  ? dayjs(data.event[headerPair.field] as string).format("kl.HH:mm, DD-MM-YYYY")
-                                  : ""
-                              )
-                            )}
-                          </List>
-                        </CardContent>
-                      </Card>
-                    </Grid>
                   </Grid>
                 </Grid>
               </Grid>
             </Box>
-            <Accordion>
-              <AccordionSummary aria-controls="panel1a-content" id="panel1a-header">
-                <Typography>Accordion 1</Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <Typography>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex, sit amet
-                  blandit leo lobortis eget.
-                </Typography>
+            <Accordion elevation={0} classes={{ root: classes.accordion }}>
+              <Box py={2}>
+                <AccordionSummary style={{ padding: 0 }} aria-controls="panel1a-content" id="panel1a-header">
+                  <Grid container alignItems="center" justifyContent="space-between">
+                    <Grid item xs={12} sm="auto">
+                      <Box ml={5}>
+                        <CardHeader
+                          style={{ padding: 0 }}
+                          titleTypographyProps={{ variant: "h4" }}
+                          title="Generell informasjon"
+                        />
+                      </Box>
+                    </Grid>
+                    <Grid item xs={12} sm="auto">
+                      <Box mx={5} my={2}>
+                        <CardActions style={{ padding: 0 }}>
+                          <Button variant="outlined" startIcon={<Edit />} onClick={() => setOpenEditEvent(true)}>
+                            Rediger
+                          </Button>
+                        </CardActions>
+                      </Box>
+                    </Grid>
+                  </Grid>
+                </AccordionSummary>
+              </Box>
+              <AccordionDetails style={{ padding: 0 }}>
+                <Box m={4} mt={0}>
+                  <Grid container spacing={2}>
+                    {stringEventFields.map((headerPair: HeaderValuePair<Event>) =>
+                      renderInfo(
+                        headerPair.header,
+                        data.event[headerPair.field] ? (data.event[headerPair.field] as string) : ""
+                      )
+                    )}
+                    <Grid item xs={12} lg={6} key={"allowedGradeYears"}>
+                      <Typography>
+                        <Box fontWeight={1000} m={1} display="inline">
+                          Åpent for:
+                        </Box>
+                        {data.event.allowedGradeYears
+                          .slice(1, data.event.allowedGradeYears.length)
+                          .reduce(
+                            (res, grade) => `${res}, ${grade}.klasse`,
+                            `${data.event.allowedGradeYears[0]}.klasse`
+                          )}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={12} lg={6} key={"bindingSingup"}>
+                      <Typography>
+                        <Box fontWeight={1000} m={1} display="inline">
+                          Bindende påmelding:
+                        </Box>
+                        {data.event.attendable?.bindingSignup === true ? "ja" : "nei"}
+                      </Typography>
+                    </Grid>
+                    {data.event?.availableSlots && (
+                      <Grid item xs={12} lg={6} key={"AvailableSlots"}>
+                        <Typography>
+                          <Box fontWeight={1000} m={1} display="inline">
+                            Tilgjengelige plasser:
+                          </Box>
+                          {data.event.availableSlots.length > 1
+                            ? data.event.availableSlots.map((dist) => (
+                                <Typography key={String(dist.category)}>
+                                  {dist.category}.klasse: {dist.availableSlots} plasser
+                                </Typography>
+                              ))
+                            : `${data.event.availableSlots[0].availableSlots}`}
+                        </Typography>
+                      </Grid>
+                    )}
+                    {dateEventFields.map((headerPair: HeaderValuePair<Event>) =>
+                      renderInfo(
+                        headerPair.header,
+                        data.event[headerPair.field]
+                          ? dayjs(data.event[headerPair.field] as string).format("kl.HH:mm, DD-MM-YYYY")
+                          : ""
+                      )
+                    )}
+                    <Grid item xs={12} lg={6} key={"signupOpenDate"}>
+                      <Typography>
+                        <Box fontWeight={1000} m={1} display="inline">
+                          Påmelding åpner:
+                        </Box>
+                        {data.event.attendable?.signupOpenDate
+                          ? dayjs(data.event.attendable?.signupOpenDate as string).format("kl.HH:mm, DD-MM-YYYY")
+                          : ""}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={12} lg={6} key={"deadline"}>
+                      <Typography>
+                        <Box fontWeight={1000} m={1} display="inline">
+                          Påmeldingsfrist:
+                        </Box>
+                        {data.event.attendable?.deadline
+                          ? dayjs(data.event.attendable?.deadline as string).format("kl.HH:mm, DD-MM-YYYY")
+                          : ""}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </Box>
               </AccordionDetails>
             </Accordion>
             <Accordion>
-              <AccordionSummary aria-controls="panel2a-content" id="panel2a-header">
-                <Typography>Accordion 2</Typography>
+              <AccordionSummary style={{ padding: 0 }} aria-controls="panel2a-content" id="panel2a-header">
+                <Grid container alignItems="center" justifyContent="space-between">
+                  <Grid item xs={12} md={12} lg="auto">
+                    <Box ml={5}>
+                      <CardHeader style={{ padding: 0 }} titleTypographyProps={{ variant: "h4" }} title="Påmeldte" />
+                    </Box>
+                  </Grid>
+                  <Grid item xs={12} sm="auto">
+                    <Box ml={5} my={2}>
+                      <CardActions style={{ padding: 0 }}>
+                        <AttendeeExport eventId={eventNumberID} />
+                      </CardActions>
+                    </Box>
+                  </Grid>
+                  <Grid item xs={12} sm="auto">
+                    <Box mx={5} my={2}>
+                      <CardActions style={{ padding: 0 }}>
+                        {eventId ? <EmailForm eventId={eventId} /> : <CircularProgress color="primary" />}
+                      </CardActions>
+                    </Box>
+                  </Grid>
+                </Grid>
               </AccordionSummary>
-              <AccordionDetails>
-                <Typography>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex, sit amet
-                  blandit leo lobortis eget.
-                </Typography>
+              <AccordionDetails style={{ padding: 0 }}>
+                <Box sx={{ mb: 2, mx: 5, width: "auto" }}>
+                  {data?.event?.usersAttending?.length !== 0 ? (
+                    <TableContainer style={{ maxHeight: 600, overflowX: "scroll", width: "auto" }}>
+                      <Table>
+                        <TableHead>
+                          <TableRow>
+                            {signUpFields.map((field) => (
+                              <TableCell key={`user-header-${field.header}`}>{field.header}</TableCell>
+                            ))}
+                            <TableCell key={`user-header-delete`} />
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {data?.event?.usersAttending?.map((signUp: SignUp) => (
+                            <TableRow key={`user-row-${signUp.user.id}`}>
+                              {signUpFields.map((field) => (
+                                <TableCell key={`user-${signUp.user.id}-cell--${field.field}`}>
+                                  {field.header === "Navn"
+                                    ? `${signUp.user.firstName} ${signUp.user.lastName}`
+                                    : field.header === "Mobilnummer"
+                                    ? signUp.userPhoneNumber.slice(3)
+                                    : signUp[field.field]
+                                    ? signUp[field.field]
+                                    : "━"}
+                                </TableCell>
+                              ))}
+                              <TableCell>
+                                <Tooltip title="Fjern påmelding" arrow>
+                                  {signOffLoading ? (
+                                    <CircularProgress />
+                                  ) : (
+                                    <IconButton aria-label="delete" onClick={() => handleDeleteSignUp(signUp.user.id)}>
+                                      <DeleteIcon fontSize="small" />
+                                    </IconButton>
+                                  )}
+                                </Tooltip>
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  ) : (
+                    <Typography align="center" variant="body1">
+                      Ingen påmeldte
+                    </Typography>
+                  )}
+                </Box>
               </AccordionDetails>
             </Accordion>
-            <Accordion disabled>
-              <AccordionSummary aria-controls="panel3a-content" id="panel3a-header">
-                <Typography>Disabled Accordion</Typography>
+            <Accordion>
+              <AccordionSummary style={{ padding: 0 }} aria-controls="panel3a-content" id="panel3a-header">
+                <Box ml={5} my={2}>
+                  <CardHeader style={{ padding: 0 }} titleTypographyProps={{ variant: "h4" }} title="Venteliste" />
+                </Box>
               </AccordionSummary>
+              <AccordionDetails style={{ padding: 0 }}>
+                <Box sx={{ mb: 2, mx: 5 }}>
+                  {data?.event?.usersOnWaitingList?.length !== 0 ? (
+                    <TableContainer style={{ maxHeight: 600 }}>
+                      <Table>
+                        <TableHead>
+                          <TableRow>
+                            {signUpFields.map((field) => (
+                              <TableCell key={`user-header-${field.header}`}>{field.header}</TableCell>
+                            ))}
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {data?.event?.usersOnWaitingList?.map((signUp: SignUp) => (
+                            <TableRow key={`user-row-${signUp.user.id}`}>
+                              {signUpFields.map((field) => (
+                                <TableCell key={`user-${signUp.user.id}-cell--${field.field}`}>
+                                  {field.header === "Navn"
+                                    ? `${signUp.user.firstName} ${signUp.user.lastName}`
+                                    : field.header === "Mobilnummer"
+                                    ? signUp.userPhoneNumber.slice(3)
+                                    : signUp[field.field]
+                                    ? signUp[field.field]
+                                    : "━"}
+                                </TableCell>
+                              ))}
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  ) : (
+                    <Typography align="center" variant="body1">
+                      Ingen på venteliste
+                    </Typography>
+                  )}
+                </Box>
+              </AccordionDetails>
             </Accordion>
-            <Grid container direction="column" spacing={8}>
-              <Grid item>
-                <Typography variant="h1" align="center">
-                  {data.event.title}
-                </Typography>
-              </Grid>
-              <Grid item container spacing={8}>
-                <Grid item xs>
-                  <Card variant="outlined">
-                    <CardHeader title="Generell informasjon" />
-                    <CardActions>
-                      <Button startIcon={<Edit />} onClick={() => setOpenEditEvent(true)}>
-                        Rediger
-                      </Button>
-                    </CardActions>
-                    <CardContent>
-                      <List>
-                        {stringEventFields.map((headerPair: HeaderValuePair<Event>) =>
-                          renderInfo(
-                            headerPair.header,
-                            data.event[headerPair.field] ? (data.event[headerPair.field] as string) : ""
-                          )
-                        )}
-                        <ListItem key={"allowedGradeYears"}>
-                          <Typography>
-                            <Box fontWeight={1000} m={1} display="inline">
-                              Åpent for:
-                            </Box>
-                            {data.event.allowedGradeYears
-                              .slice(1, data.event.allowedGradeYears.length)
-                              .reduce(
-                                (res, grade) => `${res}, ${grade}.klasse`,
-                                `${data.event.allowedGradeYears[0]}.klasse`
-                              )}
-                          </Typography>
-                        </ListItem>
-
-                        <ListItem key={"bindingSingup"}>
-                          <Typography>
-                            <Box fontWeight={1000} m={1} display="inline">
-                              Bindende påmelding:
-                            </Box>
-                            {data.event.attendable?.bindingSignup === true ? "ja" : "nei"}
-                          </Typography>
-                        </ListItem>
-
-                        {data.event?.availableSlots && (
-                          <ListItem key={"AvailableSlots"}>
-                            <Typography>
-                              <Box fontWeight={1000} m={1} display="inline">
-                                Tilgjengelige plasser:
-                              </Box>
-                              {data.event.availableSlots.length > 1
-                                ? data.event.availableSlots.map((dist) => (
-                                    <Typography key={String(dist.category)}>
-                                      {dist.category}.klasse: {dist.availableSlots} plasser
-                                    </Typography>
-                                  ))
-                                : `${data.event.availableSlots[0].availableSlots}`}
-                            </Typography>
-                          </ListItem>
-                        )}
-
-                        {dateEventFields.map((headerPair: HeaderValuePair<Event>) =>
-                          renderInfo(
-                            headerPair.header,
-                            data.event[headerPair.field]
-                              ? dayjs(data.event[headerPair.field] as string).format("kl.HH:mm, DD-MM-YYYY")
-                              : ""
-                          )
-                        )}
-                        <ListItem key={"signupOpenDate"}>
-                          <Typography>
-                            <Box fontWeight={1000} m={1} display="inline">
-                              Påmelding åpner:
-                            </Box>
-                            {data.event.attendable?.signupOpenDate
-                              ? dayjs(data.event.attendable?.signupOpenDate as string).format("kl.HH:mm, DD-MM-YYYY")
-                              : ""}
-                          </Typography>
-                        </ListItem>
-
-                        <ListItem key={"deadline"}>
-                          <Typography>
-                            <Box fontWeight={1000} m={1} display="inline">
-                              Påmeldingsfrist:
-                            </Box>
-                            {data.event.attendable?.deadline
-                              ? dayjs(data.event.attendable?.deadline as string).format("kl.HH:mm, DD-MM-YYYY")
-                              : ""}
-                          </Typography>
-                        </ListItem>
-                      </List>
-                    </CardContent>
-                  </Card>
-                </Grid>
-                <Grid item xs={8}>
-                  <Card variant="outlined">
-                    <CardHeader title="Påmeldte" />
-                    <CardActions>
-                      {eventId ? <EmailForm eventId={eventId} /> : <CircularProgress color="primary" />}
-                      <AttendeeExport eventId={eventNumberID} />
-                    </CardActions>
-                    <CardContent>
-                      {data?.event?.usersAttending?.length !== 0 ? (
-                        <TableContainer style={{ maxHeight: 600 }}>
-                          <Table>
-                            <TableHead>
-                              <TableRow>
-                                {signUpFields.map((field) => (
-                                  <TableCell key={`user-header-${field.header}`}>{field.header}</TableCell>
-                                ))}
-                                <TableCell key={`user-header-delete`} />
-                              </TableRow>
-                            </TableHead>
-                            <TableBody>
-                              {data?.event?.usersAttending?.map((signUp: SignUp) => (
-                                <TableRow key={`user-row-${signUp.user.id}`}>
-                                  {signUpFields.map((field) => (
-                                    <TableCell key={`user-${signUp.user.id}-cell--${field.field}`}>
-                                      {field.header === "Navn"
-                                        ? `${signUp.user.firstName} ${signUp.user.lastName}`
-                                        : field.header === "Mobilnummer"
-                                        ? signUp.userPhoneNumber.slice(3)
-                                        : signUp[field.field]
-                                        ? signUp[field.field]
-                                        : "━"}
-                                    </TableCell>
-                                  ))}
-                                  <TableCell>
-                                    <Tooltip title="Fjern påmelding" arrow>
-                                      {signOffLoading ? (
-                                        <CircularProgress />
-                                      ) : (
-                                        <IconButton
-                                          aria-label="delete"
-                                          onClick={() => handleDeleteSignUp(signUp.user.id)}
-                                        >
-                                          <DeleteIcon fontSize="small" />
-                                        </IconButton>
-                                      )}
-                                    </Tooltip>
-                                  </TableCell>
-                                </TableRow>
-                              ))}
-                            </TableBody>
-                          </Table>
-                        </TableContainer>
-                      ) : (
-                        <Typography align="center" variant="body1">
-                          Ingen påmeldte
-                        </Typography>
-                      )}
-                    </CardContent>
-                  </Card>
-                </Grid>
-                <Grid item xs>
-                  <Card variant="outlined">
-                    <CardHeader title="Venteliste" />
-                    <CardContent>
-                      {data?.event?.usersOnWaitingList?.length !== 0 ? (
-                        <TableContainer style={{ maxHeight: 600 }}>
-                          <Table>
-                            <TableHead>
-                              <TableRow>
-                                {signUpFields.map((field) => (
-                                  <TableCell key={`user-header-${field.header}`}>{field.header}</TableCell>
-                                ))}
-                              </TableRow>
-                            </TableHead>
-                            <TableBody>
-                              {data?.event?.usersOnWaitingList?.map((signUp: SignUp) => (
-                                <TableRow key={`user-row-${signUp.user.id}`}>
-                                  {signUpFields.map((field) => (
-                                    <TableCell key={`user-${signUp.user.id}-cell--${field.field}`}>
-                                      {field.header === "Navn"
-                                        ? `${signUp.user.firstName} ${signUp.user.lastName}`
-                                        : field.header === "Mobilnummer"
-                                        ? signUp.userPhoneNumber.slice(3)
-                                        : signUp[field.field]
-                                        ? signUp[field.field]
-                                        : "━"}
-                                    </TableCell>
-                                  ))}
-                                </TableRow>
-                              ))}
-                            </TableBody>
-                          </Table>
-                        </TableContainer>
-                      ) : (
-                        <Typography align="center" variant="body1">
-                          Ingen på venteliste
-                        </Typography>
-                      )}
-                    </CardContent>
-                  </Card>
-                </Grid>
-              </Grid>
-            </Grid>
           </Box>
         ) : (
           <Box m={10}>
