@@ -99,11 +99,13 @@ class AssignMembership(graphene.Mutation):
         )
 
         groups = []
-        for group_id in membership_data.get("group_ids"):
-            try:
-                groups.append(organization.permission_groups.get(pk=group_id))
-            except ResponsibleGroup.DoesNotExist:
-                return AssignMembership(membership=None, ok=False)
+        group_ids = membership_data.get("group_ids")
+        if group_ids is not None:
+            for group_id in group_ids:
+                try:
+                    groups.append(organization.permission_groups.get(pk=group_id))
+                except ResponsibleGroup.DoesNotExist:
+                    return AssignMembership(membership=None, ok=False)
 
         membership = Membership(
             organization_id=membership_data["organization_id"],
