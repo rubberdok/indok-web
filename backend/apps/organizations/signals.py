@@ -52,10 +52,6 @@ def create_default_groups(instance: Organization, created, **kwargs):
                 description=org_group.create_description(instance.name),
                 organization=instance,
             )
-            for permission in org_group.generic_permissions:
-                print(f"{permission[0]}.{permission[1]}")
-                assign_perm(f"{permission[0]}.{permission[1]}", group.group)
-            for permission in org_group.object_permissions:
+            for permission in org_group.permissions:
                 if permission[0] == "organizations":
-                    print(f"{permission[0]}.{permission[1]}")
                     assign_perm(f"{permission[0]}.{permission[1]}", group.group, instance)

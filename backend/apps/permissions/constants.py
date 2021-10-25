@@ -39,8 +39,7 @@ class OrgGroup:
     group_type: str
     name: str
     create_description: Callable[[str], str]
-    generic_permissions: DefaultPermissionsType = field(default_factory=list)
-    object_permissions: DefaultPermissionsType = field(default_factory=list)
+    permissions: DefaultPermissionsType = field(default_factory=list)
 
 
 ORG_MEMBER_GROUP_NAME: Final[str] = "ORG_MEMBER"
@@ -48,8 +47,7 @@ ORG_MEMBER_GROUP_NAME: Final[str] = "ORG_MEMBER"
 # Default organization permission groups
 # All organizations will have ResponsibleGroups with these names and descriptions,
 # though they may customize their given permissions
-# 'generic_permissions' are permissions for a whole model
-# 'object_permissions' are permissions for instances of a model tied to the organization
+# The given permissions apply only to objects tied to that organization
 DEFAULT_ORG_GROUPS: Final[list[OrgGroup]] = [
     OrgGroup(
         group_type=ORG_MEMBER_GROUP_NAME,
@@ -63,8 +61,16 @@ DEFAULT_ORG_GROUPS: Final[list[OrgGroup]] = [
             lambda org_name: f"Administrator av {org_name}. "
             + "Tillatelser til å endre info om foreningen, samt styre medlemmer og deres tillatelser."
         ),
-        object_permissions=[
+        permissions=[
             ("organizations", "change_organization"),
+            ("organizations", "add_membership"),
+            ("organizations", "change_membership"),
+            ("organizations", "delete_membership"),
+            ("organizations", "view_membership"),
+            ("organizations", "add_responsible_group"),
+            ("permissions", "change_responsible_group"),
+            ("permissions", "delete_responsible_group"),
+            ("permissions", "view_responsible_group"),
         ],
     ),
     OrgGroup(
@@ -74,7 +80,7 @@ DEFAULT_ORG_GROUPS: Final[list[OrgGroup]] = [
             lambda org_name: f"Vervansvarlige for {org_name}. "
             + "Tillatelser til å lage og redigere verv, samt se og behandle søknader."
         ),
-        object_permissions=[
+        permissions=[
             ("organizations", "add_listing"),
             ("listings", "change_listing"),
             ("listings", "delete_listing"),
@@ -91,7 +97,7 @@ DEFAULT_ORG_GROUPS: Final[list[OrgGroup]] = [
             lambda org_name: f"Arrangementansvarlige for {org_name}. "
             + "Tillatelser til å lage og redigere arrangementer."
         ),
-        object_permissions=[
+        permissions=[
             ("organizations", "add_event"),
             ("events", "change_event"),
             ("events", "delete_event"),
