@@ -74,8 +74,8 @@ class AttemptCapturePayment(graphene.Mutation):
     class Arguments:
         order_id = graphene.ID(required=True)
 
-    @transaction.atomic
     @login_required
+    @transaction.atomic
     def mutate(self, info, order_id):
         try:
             # Acquire DB lock for the order (no other process can change it)

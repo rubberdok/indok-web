@@ -28,8 +28,8 @@ class Product(models.Model):
         self.max_buyable_quantity = min(self.max_buyable_quantity, self.total_quantity)
         super().save(*args, **kwargs)
 
-    @transaction.atomic
     @classmethod
+    @transaction.atomic
     def check_and_reserve_quantity(cls, product_id, user: User, quantity: int):
         # Check if the requested quantity is allowed
         try:
@@ -58,8 +58,8 @@ class Product(models.Model):
         product.refresh_from_db()
         return product
 
-    @transaction.atomic
     @classmethod
+    @transaction.atomic
     def restore_quantity(cls, order: "Order"):
         assert order.payment_status in [
             Order.PaymentStatus.CANCELLED,
