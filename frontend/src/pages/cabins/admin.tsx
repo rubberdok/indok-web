@@ -36,6 +36,7 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import theme from "@styles/theme";
 import { BookingFromQuery } from "@interfaces/cabins";
+import ErrorDialog from "@components/dialogs/ErrorDialog";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -61,20 +62,6 @@ const AdminPage: NextPage = () => {
   const router = useRouter();
 
   const handleDeleteBookingOnClose = () => setBookingToBeDeleted(undefined);
-
-  const ErrorMessageDialog: React.VFC = () => (
-    <Dialog open={error != undefined} onClose={handleErrorDialogClose}>
-      <DialogTitle>{`Det har oppstått en feilmelding: ${error?.name}`}</DialogTitle>
-      <DialogContent>
-        <DialogContentText>{error?.message}</DialogContentText>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={handleErrorDialogClose} color="primary" variant="contained">
-          OK
-        </Button>
-      </DialogActions>
-    </Dialog>
-  );
 
   const DeleteBookingDialog: React.VFC = () => {
     const [declineMessage, setDeclineMessage] = useState("");
@@ -136,7 +123,7 @@ const AdminPage: NextPage = () => {
           autoHideDuration={6000}
           onClose={() => setOpenSnackbar(false)}
         />
-        <ErrorMessageDialog />
+        <ErrorDialog error={error} handleErrorDialogClose={handleErrorDialogClose} />
         <DeleteBookingDialog />
         <Grid container direction="column" spacing={3}>
           <Grid item>
@@ -165,7 +152,7 @@ const AdminPage: NextPage = () => {
               <TableBody>
                 {data?.adminAllBookings.map((booking: BookingFromQuery) => (
                   <TableRow key={booking.id}>
-                    <TableCell>{booking.firstName + " " + booking.lastName}</TableCell>
+                    <TableCell>{`${booking.firstName} ${booking.lastName}`}</TableCell>
                     <TableCell align="right">{booking.receiverEmail}</TableCell>
                     <TableCell align="right">{booking.phone}</TableCell>
                     <TableCell align="right">{booking.checkIn}</TableCell>
@@ -179,11 +166,13 @@ const AdminPage: NextPage = () => {
                             disabled={!booking.isTentative}
                             onClick={() => {
                               confirmBooking({ variables: { id: booking.id } }).then(() => {
-                                setSnackbarMessage("Booking bekreftet. Bekreftelsesmail sendt.");
+                                setSnackbarMessage(
+                                  `Booking bekreftet. Bekreftelsesmail sendt er sendt til ${booking.receiverEmail}.`
+                                );
                                 setOpenSnackbar(true);
                                 refetch();
                               });
-                              send_email(getDecisionEmailProps(booking, true, ""));
+                              send_email(getDecisionEmailProps(booking, true));
                             }}
                             color="secondary"
                           >
