@@ -28,7 +28,7 @@ class BookingInput(graphene.InputObjectType):
 
 class EmailInput(BookingInput):
     email_type = graphene.String()
-    extra_info = graphene.String()
+    extra_info = graphene.String(required=False, default_value="")
 
 
 class UpdateBookingInput(BookingInput):
