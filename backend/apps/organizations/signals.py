@@ -62,7 +62,7 @@ def create_default_groups(instance: Organization, created, **kwargs):
 
 
 @receiver(post_migrate)
-def ensure_default_groups(apps, *kwargs):
+def ensure_default_groups(apps, **kwargs):
     """
     Ensures that all organizations have correct default groups after migrating
     """
