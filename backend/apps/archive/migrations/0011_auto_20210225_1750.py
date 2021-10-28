@@ -6,17 +6,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('archive', '0010_auto_20210209_1257'),
+        ("archive", "0010_auto_20210209_1257"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='archivedocument',
-            name='year',
+            model_name="archivedocument",
+            name="year",
         ),
         migrations.AddField(
-            model_name='archivedocument',
-            name='web_link',
+            model_name="archivedocument",
+            name="web_link",
             field=models.CharField(default=None, max_length=2050, null=True),
         ),
     ]

@@ -7,6 +7,7 @@ import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import SwipeableViews from "react-swipeable-views";
 import { Box, Grid, Theme, Typography } from "@material-ui/core";
+import Image from "next/image";
 
 const useStyles = makeStyles((theme: Theme) => ({
   img: {
@@ -27,12 +28,15 @@ interface ImageData {
   imgPath: string;
 }
 
-interface imageSliderProps {
+interface ImageSliderProps {
   imageData: ImageData[];
   displayLabelText: boolean;
 }
 
-const ImageSlider = ({ imageData, displayLabelText }: imageSliderProps): JSX.Element => {
+/*
+Carousel compoent for showing images
+*/
+const ImageSlider: React.VFC<ImageSliderProps> = ({ imageData, displayLabelText }) => {
   const classes = useStyles();
   const theme = useTheme();
   const [activeStep, setActiveStep] = React.useState(0);
@@ -76,9 +80,9 @@ const ImageSlider = ({ imageData, displayLabelText }: imageSliderProps): JSX.Ele
           disableLazyLoading
         >
           {imageData.map((step, index) => (
-            <Box key={index}>
+            <Box key={index} display="flex" justifyContent="center">
               {Math.abs(activeStep - index) <= 2 ? (
-                <img className={classes.img} src={step.imgPath} alt={step.label} />
+                <Image alt={step.label} src={step.imgPath} width={400} height={300} />
               ) : null}
             </Box>
           ))}
@@ -90,7 +94,7 @@ const ImageSlider = ({ imageData, displayLabelText }: imageSliderProps): JSX.Ele
         position="static"
         activeStep={activeStep}
         className={classes.mobileStepper}
-        variant="progress"
+        variant="text"
         nextButton={
           <Button size="small" onClick={handleNext} disabled={activeStep === maxSteps - 1}>
             Neste

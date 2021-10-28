@@ -1,14 +1,67 @@
-# syntax=docker/dockerfile:1
+###########
+# BUILDER #
+###########
 
-FROM 777854691961.dkr.ecr.eu-north-1.amazonaws.com/python:3.9
+# pull official base image
+FROM 777854691961.dkr.ecr.eu-north-1.amazonaws.com/python:3.9 as builder
+
+# set work directory
+WORKDIR /usr/src/app
+
+# set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
-RUN mkdir -p /code
-WORKDIR /code
-COPY requirements.txt .
-RUN pip install -r requirements.txt
 
+
+RUN pip install --upgrade pip
 COPY . .
+
+# install dependencies
+COPY ./requirements/*.txt ./
+RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/app/wheels -r production.txt
+
+
+##########
+# RUNNER #
+##########
+
+# pull official base image
+FROM 777854691961.dkr.ecr.eu-north-1.amazonaws.com/python:3.9 as runner
+
+# create directory for the app user
+RUN mkdir -p /home/app
+
+RUN addgroup --gid 1001 -system python
+RUN adduser -system django --uid 1001
+
+# create the appropriate directories
+ENV HOME=/home/app
+ENV APP_HOME=/home/app/web
+RUN mkdir $APP_HOME
+RUN mkdir $APP_HOME/staticfiles
+RUN mkdir $APP_HOME/mediafiles
+WORKDIR $APP_HOME
+
+# install dependencies
+COPY --from=builder /usr/src/app/wheels /wheels
+COPY --from=builder /usr/src/app/production.txt /usr/src/app/base.txt ./
+RUN pip install --no-cache /wheels/*
+
+# copy entrypoint.prod.sh
+COPY ./entrypoint.prod.sh .
+RUN sed -i 's/\r$//g'  $APP_HOME/entrypoint.prod.sh
+RUN chmod +x  $APP_HOME/entrypoint.prod.sh
+
+# copy project
+COPY . $APP_HOME
+
+# chown all the files to the app user
+RUN chown -R django:python $APP_HOME
+
+# change to the django user
+USER django
 
 EXPOSE 8000
 
-ENTRYPOINT ["/code/entrypoint.prod.sh"]
+# run entrypoint.prod.sh
+ENTRYPOINT ["/home/app/web/entrypoint.prod.sh"]

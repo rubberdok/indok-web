@@ -7,19 +7,31 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('permissions', '0003_auto_20210824_1213'),
-        ('organizations', '0030_auto_20210426_2129'),
+        ("permissions", "0003_auto_20210824_1213"),
+        ("organizations", "0030_auto_20210426_2129"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='organization',
-            name='hr_group',
-            field=models.OneToOneField(blank=True, null=True, on_delete=django.db.models.deletion.DO_NOTHING, related_name='hr_organization', to='permissions.responsiblegroup'),
+            model_name="organization",
+            name="hr_group",
+            field=models.OneToOneField(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.DO_NOTHING,
+                related_name="hr_organization",
+                to="permissions.responsiblegroup",
+            ),
         ),
         migrations.AlterField(
-            model_name='organization',
-            name='primary_group',
-            field=models.OneToOneField(blank=True, null=True, on_delete=django.db.models.deletion.DO_NOTHING, related_name='organization', to='permissions.responsiblegroup'),
+            model_name="organization",
+            name="primary_group",
+            field=models.OneToOneField(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.DO_NOTHING,
+                related_name="organization",
+                to="permissions.responsiblegroup",
+            ),
         ),
     ]
