@@ -109,15 +109,17 @@ class EcommerceResolversTestCase(EcommerceBaseTestCase):
         self.assertEqual(len(content["data"]["userOrders"]), 1)
 
 
-class VippsApiMock:
-    def initiate_payment(order):
-        print("Order: ", order)
-
-
 class EcommerceMutationsTestCase(EcommerceBaseTestCase):
     """
     Testing all mutations for ecommerce
     """
+
+    class VippsApiMock:
+        def initiate_payment(order):
+            return "https://www.youtube.com/watch?v=dQw4w9WgXcQ"  # Just a random URL
+
+        def capture_payment(order, method):
+            print("Order: ", order, "\nMethod: ", method)
 
     def test_create_product(self):
         """
@@ -153,7 +155,7 @@ class EcommerceMutationsTestCase(EcommerceBaseTestCase):
             response_product["price"] = int(response_product["price"])
             self.deep_assert_equal(response_product, product)
 
-    @unittest.mock.patch(InitiateOrder, "vipps_api", VippsApiMock)
+    @unittest.mock.patch.object(InitiateOrder, "vipps_api", VippsApiMock)
     def test_initiate_order(self):
         query = (
             lambda q: f"""
@@ -180,14 +182,16 @@ class EcommerceMutationsTestCase(EcommerceBaseTestCase):
         # Max is 2 per user so should be allowed to buy this
         response = self.query(query(2), user=self.indok_user)
         self.assertResponseNoErrors(response)
-        print(response)
+        data = json.loads(response.content)["data"]
+        redirect_url = data["initiateOrder"]["redirect"]
+        self.assertEqual(redirect_url, "https://www.youtube.com/watch?v=dQw4w9WgXcQ")
 
         # Already bought the total quota for the user so shouldn't be allowed to buy more
         # Need to think a bit more on this one as only captured orders are counted with this
         # response = self.query(query(1), user=self.indok_user)
         # self.assertResponseHasErrors(response)
 
-    @unittest.mock.patch(AttemptCapturePayment, "vipps_api", VippsApiMock)
+    @unittest.mock.patch.object(AttemptCapturePayment, "vipps_api", VippsApiMock)
     def test_attempt_capture_order(self):
         query = (
             lambda id: f"""

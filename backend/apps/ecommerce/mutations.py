@@ -59,6 +59,7 @@ class InitiateOrder(graphene.Mutation):
             order.save()
 
         redirect = InitiateOrder.vipps_api.initiate_payment(order)
+        print(redirect)
 
         return InitiateOrder(redirect=redirect)
 
