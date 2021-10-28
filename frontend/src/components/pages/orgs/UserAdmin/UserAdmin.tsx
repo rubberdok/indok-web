@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useQuery, gql } from "@apollo/client";
 import { useRouter } from "next/router";
 import { User } from "@interfaces/users";

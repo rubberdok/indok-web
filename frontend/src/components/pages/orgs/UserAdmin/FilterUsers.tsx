@@ -5,6 +5,7 @@ import SearchBar from "@components/pages/archive/SearchBar";
 import { useRouter } from "next/router";
 import { Grid } from "@material-ui/core";
 import { gql, useQuery } from "@apollo/client";
+import { RemoveFiltersButton } from "@components/pages/archive/RemoveFiltersButton";
 
 type Props = {
   organization: Organization;
@@ -78,6 +79,28 @@ const FilterUsers: React.FC<Props> = ({ organization }) => {
           handleSearchFilterCanceled={() => setSearchFilter("")}
           placeholder="Søk på medlemmer"
         />
+      </Grid>
+      <Grid>
+        {!viewFeatured && (
+          <RemoveFiltersButton
+            handleRemoveFilterChanged={() => {
+              [
+                setSearchFilter(""),
+                setTypeFilters((typeFilters) => {
+                  const newTypeFilters = typeFilters;
+                  for (const key of Object.keys(newTypeFilters)) {
+                    newTypeFilters[key] = {
+                      ...typeFilters[key],
+                      active: false,
+                    };
+                  }
+                  return newTypeFilters;
+                }),
+                setViewFeatured(true),
+              ];
+            }}
+          />
+        )}
       </Grid>
     </>
   );
