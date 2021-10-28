@@ -247,7 +247,7 @@ class EcommerceMutationsTransactionTestCase(ExtendedGraphQLTransactionTestCase):
         """
         )
 
-    def capture_order(order):
+    def capture_order(self, order):
         order.payment_status = Order.PaymentStatus.CAPTURED
         order.save()
 
