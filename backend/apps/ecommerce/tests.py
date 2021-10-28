@@ -2,11 +2,11 @@ import json
 import unittest.mock
 
 from django.db import transaction
+from utils.testing.transaction_tests import ExtendedGraphQLTransactionTestCase
 from utils.testing.base import ExtendedGraphQLTestCase
 from utils.testing.factories.ecommerce import OrderFactory, ProductFactory
 from utils.testing.factories.organizations import OrganizationFactory
 from utils.testing.factories.users import IndokUserFactory
-from utils.testing.transaction_tests import GraphQLTransactionTestCase
 
 from apps.ecommerce.models import Product, Order
 from apps.ecommerce.mutations import AttemptCapturePayment, InitiateOrder
@@ -109,17 +109,18 @@ class EcommerceResolversTestCase(EcommerceBaseTestCase):
         self.assertEqual(len(content["data"]["userOrders"]), 1)
 
 
+class VippsApiMock:
+    def initiate_payment(order):
+        return "https://www.youtube.com/watch?v=dQw4w9WgXcQ"  # Just a random URL
+
+    def capture_payment(order, method):
+        print("Order: ", order, "\nMethod: ", method)
+
+
 class EcommerceMutationsTestCase(EcommerceBaseTestCase):
     """
     Testing all mutations for ecommerce
     """
-
-    class VippsApiMock:
-        def initiate_payment(order):
-            return "https://www.youtube.com/watch?v=dQw4w9WgXcQ"  # Just a random URL
-
-        def capture_payment(order, method):
-            print("Order: ", order, "\nMethod: ", method)
 
     def test_create_product(self):
         """
@@ -225,7 +226,7 @@ DB1 = "default"
 DB2 = "alternate"
 
 
-class EcommerceMutationsTransactionTestCase(GraphQLTransactionTestCase):
+class EcommerceMutationsTransactionTestCase(ExtendedGraphQLTransactionTestCase):
     """
     Testing DB concurrency related functionality of ecommerce (DB locks).
     """
@@ -236,7 +237,6 @@ class EcommerceMutationsTransactionTestCase(GraphQLTransactionTestCase):
 
         self.organization = OrganizationFactory()
         self.product_1 = ProductFactory(total_quantity=2, max_buyable_quantity=2)
-        self.product_2 = ProductFactory()
         self.initiate_order_query = (
             lambda q, db: f"""
         mutation InitiateOrder {{
@@ -247,36 +247,53 @@ class EcommerceMutationsTransactionTestCase(GraphQLTransactionTestCase):
         """
         )
 
-    @unittest.mock.patch(InitiateOrder, "vipps_api", VippsApiMock)
+    def capture_order(order):
+        order.payment_status = Order.PaymentStatus.CAPTURED
+        order.save()
+
+    @unittest.mock.patch.object(InitiateOrder, "vipps_api", VippsApiMock)
     def test_initiate_order_no_lock(self):
 
         order_quantity = 1
         with transaction.atomic(using=DB1):
-            response = self.query(self.initiate_order_query(order_quantity, DB1))
-            self.assertEquals(self.product_1.current_quantity, self.product_1.current_quantity - order_quantity)
+            response = self.query(self.initiate_order_query(order_quantity, DB1), user=self.indok_user)
             self.assertEquals(Order.objects.all().count(), 1)
+            self.capture_order(Order.objects.get(product=self.product_1, user=self.indok_user))
+            self.assertEquals(self.product_1.current_quantity, self.product_1.current_quantity - order_quantity)
 
         # The first transaction has been committed
         # before we begin the second, so the lock has been released.
         with transaction.atomic(using=DB2):
-            response = self.query(self.initiate_order_query(order_quantity, DB2))
-            self.assertEquals(self.product_1.current_quantity, self.product_1.current_quantity - 2 * order_quantity)
+            response = self.query(self.initiate_order_query(order_quantity, DB2), user=self.indok_user)
             self.assertEquals(Order.objects.all().count(), 2)
+            self.capture_order(
+                Order.objects.get(
+                    product=self.product_1, user=self.indok_user, payment_status=Order.PaymentStatus.INITIATED
+                )
+            )
+            self.assertEquals(self.product_1.current_quantity, self.product_1.current_quantity - 2 * order_quantity)
 
+    @unittest.mock.patch.object(InitiateOrder, "vipps_api", VippsApiMock)
     def test_initiate_order_with_lock(self):
         order_quantity = 1
         with transaction.atomic(using=DB1):
-            response = self.query(self.initiate_order_query(order_quantity, DB1))
-            self.assertEquals(self.product_1.current_quantity, self.product_1.current_quantity - order_quantity)
+            response = self.query(self.initiate_order_query(order_quantity, DB1), user=self.indok_user)
             self.assertEquals(Order.objects.all().count(), 1)
+            self.capture_order(Order.objects.get(product=self.product_1, user=self.indok_user))
+            self.assertEquals(self.product_1.current_quantity, self.product_1.current_quantity - order_quantity)
 
             # The first transaction has NOT been committed
             # before we begin the second, so the lock is still in effect.
             with transaction.atomic(using=DB2):
-                response = self.query(self.initiate_order_query(order_quantity, DB2))
-                self.assertEquals(self.product_1.current_quantity, self.product_1.current_quantity - order_quantity)
+                response = self.query(self.initiate_order_query(order_quantity, DB2), user=self.indok_user)
                 self.assertEquals(Order.objects.all().count(), 1)
+                self.assertEquals(self.product_1.current_quantity, self.product_1.current_quantity - order_quantity)
 
         # At this point the lock has been released
+        self.capture_order(
+            Order.objects.get(
+                product=self.product_1, user=self.indok_user, payment_status=Order.PaymentStatus.INITIATED
+            )
+        )
         self.assertEquals(self.product_1.current_quantity, self.product_1.current_quantity - 2 * order_quantity)
         self.assertEquals(Order.objects.all().count(), 2)

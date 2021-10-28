@@ -21,7 +21,7 @@ class InitiateOrder(graphene.Mutation):
     class Arguments:
         product_id = graphene.ID(required=True)
         quantity = graphene.Int()
-        db = graphene.String(required=False, default="default")
+        db = graphene.String(required=False, default_value="default")
 
     @login_required
     def mutate(self, info, product_id, db, quantity=1):
