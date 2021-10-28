@@ -6,7 +6,7 @@ from utils.testing.factories.organizations import OrganizationFactory
 
 from utils.testing.factories.users import IndokUserFactory
 from apps.ecommerce.models import Product
-from apps.ecommerce.mutations import InitiateOrder
+from apps.ecommerce.mutations import InitiateOrder, AttemptCapturePayment
 
 
 import unittest.mock
@@ -187,5 +187,31 @@ class EcommerceMutationsTestCase(EcommerceBaseTestCase):
         # response = self.query(query(1), user=self.indok_user)
         # self.assertResponseHasErrors(response)
 
+    @unittest.mock.patch(AttemptCapturePayment, "vipps_api", VippsApiMock)
     def test_attempt_capture_order(self):
-        ...
+        query = (
+            lambda id: f"""
+        mutation AttemptCapturePayment {{
+            attemptCapturePayment(orderId: {id}) {{
+                status
+                order {{
+                    orderId
+                    product {{
+                        id
+                        name
+                        description
+                        price
+                    }}
+                    quantity
+                    totalPrice
+                    paymentStatus
+                    date
+                }}
+            }}
+        }}
+        """
+        )
+
+        # Unauthorized user should not be able to initiate order
+        response = self.query(query(self.product_1.id))
+        self.assert_permission_error(response)
