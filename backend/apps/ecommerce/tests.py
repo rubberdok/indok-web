@@ -1,15 +1,15 @@
 import json
+import unittest.mock
 
-from utils.testing.ExtendedGraphQLTestCase import ExtendedGraphQLTestCase
+from django.db import transaction
+from utils.testing.base import ExtendedGraphQLTestCase
 from utils.testing.factories.ecommerce import OrderFactory, ProductFactory
 from utils.testing.factories.organizations import OrganizationFactory
-
 from utils.testing.factories.users import IndokUserFactory
-from apps.ecommerce.models import Product
-from apps.ecommerce.mutations import InitiateOrder, AttemptCapturePayment
+from utils.testing.transaction_tests import GraphQLTransactionTestCase
 
-
-import unittest.mock
+from apps.ecommerce.models import Product, Order
+from apps.ecommerce.mutations import AttemptCapturePayment, InitiateOrder
 
 
 class EcommerceBaseTestCase(ExtendedGraphQLTestCase):
@@ -215,3 +215,64 @@ class EcommerceMutationsTestCase(EcommerceBaseTestCase):
         # Unauthorized user should not be able to initiate order
         response = self.query(query(self.product_1.id))
         self.assert_permission_error(response)
+
+
+DB1 = "default"
+DB2 = "alternate"
+
+
+class EcommerceMutationsTransactionTestCase(GraphQLTransactionTestCase):
+    """
+    Testing DB concurrency related functionality of ecommerce (DB locks).
+    """
+
+    def setUp(self) -> None:
+        super().setUp()
+        self.indok_user = IndokUserFactory()
+
+        self.organization = OrganizationFactory()
+        self.product_1 = ProductFactory(total_quantity=2, max_buyable_quantity=2)
+        self.product_2 = ProductFactory()
+        self.initiate_order_query = (
+            lambda q, db: f"""
+        mutation InitiateOrder {{
+            initiateOrder(productId: {self.product_1.id}, quantity: {q}, db: {db}) {{
+                redirect
+            }}
+        }}
+        """
+        )
+
+    @unittest.mock.patch(InitiateOrder, "vipps_api", VippsApiMock)
+    def test_initiate_order_no_lock(self):
+
+        order_quantity = 1
+        with transaction.atomic(using=DB1):
+            response = self.query(self.initiate_order_query(order_quantity, DB1))
+            self.assertEquals(self.product_1.current_quantity, self.product_1.current_quantity - order_quantity)
+            self.assertEquals(Order.objects.all().count(), 1)
+
+        # The first transaction has been committed
+        # before we begin the second, so the lock has been released.
+        with transaction.atomic(using=DB2):
+            response = self.query(self.initiate_order_query(order_quantity, DB2))
+            self.assertEquals(self.product_1.current_quantity, self.product_1.current_quantity - 2 * order_quantity)
+            self.assertEquals(Order.objects.all().count(), 2)
+
+    def test_initiate_order_with_lock(self):
+        order_quantity = 1
+        with transaction.atomic(using=DB1):
+            response = self.query(self.initiate_order_query(order_quantity, DB1))
+            self.assertEquals(self.product_1.current_quantity, self.product_1.current_quantity - order_quantity)
+            self.assertEquals(Order.objects.all().count(), 1)
+
+            # The first transaction has NOT been committed
+            # before we begin the second, so the lock is still in effect.
+            with transaction.atomic(using=DB2):
+                response = self.query(self.initiate_order_query(order_quantity, DB2))
+                self.assertEquals(self.product_1.current_quantity, self.product_1.current_quantity - order_quantity)
+                self.assertEquals(Order.objects.all().count(), 1)
+
+        # At this point the lock has been released
+        self.assertEquals(self.product_1.current_quantity, self.product_1.current_quantity - 2 * order_quantity)
+        self.assertEquals(Order.objects.all().count(), 2)

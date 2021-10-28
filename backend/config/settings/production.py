@@ -15,6 +15,19 @@ SECRET_KEY = env("SECRET_KEY")
 ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=["api.indokntnu.no"])
 CORS_ALLOW_HEADERS = list(default_headers) + ["sentry-trace"]
 
+CORS_ORIGIN_WHITELIST = env.list(
+    "CORS_ORIGIN_WHITELIST",
+    default=[
+        "https://indokntnu.no",
+        "https://www.indokntnu.no",
+        "callback-1.vipps.no",
+        "callback-2.vipps.no",
+        "callback-3.vipps.no",
+        "callback-4.vipps.no",
+    ],
+)
+
+
 # DATABASES
 DATABASES = {
     "default": {

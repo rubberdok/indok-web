@@ -21,12 +21,13 @@ class InitiateOrder(graphene.Mutation):
     class Arguments:
         product_id = graphene.ID(required=True)
         quantity = graphene.Int()
+        db = graphene.String(required=False, default="default")
 
     @login_required
-    def mutate(self, info, product_id, quantity=1):
+    def mutate(self, info, product_id, db, quantity=1):
         user = info.context.user
 
-        product = Product.check_and_reserve_quantity(product_id, user, quantity)
+        product = Product.check_and_reserve_quantity(product_id, user, quantity, db)
 
         # Create or update the order
         # If the user has attempted this order before, retry it
@@ -73,41 +74,42 @@ class AttemptCapturePayment(graphene.Mutation):
 
     class Arguments:
         order_id = graphene.ID(required=True)
+        db = graphene.String(required=False, default_value="default")
 
     @login_required
-    @transaction.atomic
-    def mutate(self, info, order_id):
-        try:
-            # Acquire DB lock for the order (no other process can change it)
-            order = Order.objects.select_for_update().get(pk=order_id)
-        except Order.DoesNotExist:
-            raise ValueError("Ugyldig ordre")
-
-        if order.user != info.context.user:
-            raise PermissionDenied("Du har ikke tilgang til denne ordren")
-
-        if order.payment_status == Order.PaymentStatus.INITIATED:
-            # Update status according to Vipps payment details
-            status, status_success = AttemptCapturePayment.vipps_api.get_payment_status(
-                f"{order.order_id}-{order.payment_attempt}"
-            )
-
-            if status_success and status == "RESERVE":
-                order.payment_status = Order.PaymentStatus.RESERVED
-                order.save()
-            elif status_success and status == "CANCEL":
-                order.payment_status = Order.PaymentStatus.CANCELLED
-                order.save()
-                # Order went from initiated to cancelled, restore quantity
-                order.product.restore_quantity(order)
-
-        if order.payment_status == Order.PaymentStatus.RESERVED:
+    def mutate(self, info, order_id, db):
+        with transaction.atomic(using=db):
             try:
-                AttemptCapturePayment.vipps_api.capture_payment(order, method="polling")
-                order.payment_status = Order.PaymentStatus.CAPTURED
-                order.save()
-            except Exception as err:
-                print(err)
+                # Acquire DB lock for the order (no other process can change it)
+                order = Order.objects.using(db).select_for_update().get(pk=order_id)
+            except Order.DoesNotExist:
+                raise ValueError("Ugyldig ordre")
+
+            if order.user != info.context.user:
+                raise PermissionDenied("Du har ikke tilgang til denne ordren")
+
+            if order.payment_status == Order.PaymentStatus.INITIATED:
+                # Update status according to Vipps payment details
+                status, status_success = AttemptCapturePayment.vipps_api.get_payment_status(
+                    f"{order.order_id}-{order.payment_attempt}"
+                )
+
+                if status_success and status == "RESERVE":
+                    order.payment_status = Order.PaymentStatus.RESERVED
+                    order.save()
+                elif status_success and status == "CANCEL":
+                    order.payment_status = Order.PaymentStatus.CANCELLED
+                    order.save()
+                    # Order went from initiated to cancelled, restore quantity
+                    order.product.restore_quantity(order, db)
+
+            if order.payment_status == Order.PaymentStatus.RESERVED:
+                try:
+                    AttemptCapturePayment.vipps_api.capture_payment(order, method="polling")
+                    order.payment_status = Order.PaymentStatus.CAPTURED
+                    order.save()
+                except Exception as err:
+                    print(err)
 
         return AttemptCapturePayment(status=order.payment_status, order=order)
 
