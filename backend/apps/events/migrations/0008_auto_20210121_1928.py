@@ -9,13 +9,13 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('events', '0007_auto_20201026_1701'),
+        ("events", "0007_auto_20201026_1701"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='event',
-            name='publisher',
+            model_name="event",
+            name="publisher",
             field=models.ForeignKey(on_delete=django.db.models.deletion.DO_NOTHING, to=settings.AUTH_USER_MODEL),
         ),
     ]

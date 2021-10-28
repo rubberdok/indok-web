@@ -2,6 +2,7 @@
 
 from django.db import migrations
 
+
 def add_existing_members_to_primary_group(apps, schema_editor):
     Membership = apps.get_model("organizations", "Membership")
 
@@ -10,12 +11,11 @@ def add_existing_members_to_primary_group(apps, schema_editor):
         user = membership.user
         user.groups.add(group)
 
+
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('organizations', '0027_auto_20210426_1843'),
+        ("organizations", "0027_auto_20210426_1843"),
     ]
 
-    operations = [
-        migrations.RunPython(add_existing_members_to_primary_group, lambda apps, schema_editor: None)
-    ]
+    operations = [migrations.RunPython(add_existing_members_to_primary_group, lambda apps, schema_editor: None)]

@@ -2,13 +2,16 @@
 
 from django.db import migrations
 
+
 def set_primary_groups(apps, schema_editor):
     Organization = apps.get_model("organizations", "Organization")
     ResponsibleGroup = apps.get_model("permissions", "ResponsibleGroup")
 
     for organization in Organization.objects.all():
         if organization.primary_group is None:
-            rg = ResponsibleGroup.objects.create(name=organization.name, description=f"Medlemmer av {organization.name}")
+            rg = ResponsibleGroup.objects.create(
+                name=organization.name, description=f"Medlemmer av {organization.name}"
+            )
             organization.primary_group = rg
             organization.save()
 
@@ -16,9 +19,7 @@ def set_primary_groups(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('organizations', '0024_auto_20210422_2020'),
+        ("organizations", "0024_auto_20210422_2020"),
     ]
 
-    operations = [
-        migrations.RunPython(set_primary_groups, lambda apps, schema_editor: None)
-    ]
+    operations = [migrations.RunPython(set_primary_groups, lambda apps, schema_editor: None)]

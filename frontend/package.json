@@ -74,7 +74,7 @@
     ],
     "../**/*.py": [
       "black",
-      "flake8 --append-config=../backend/tox.ini"
+      "flake8 --config=../backend/tox.ini"
     ]
   }
 }
