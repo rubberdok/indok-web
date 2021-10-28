@@ -161,7 +161,7 @@ class SendEmail(graphene.Mutation):
             "check_out": email_input["check_out"],
             "cabins": cabins,
             "price": booking_price,
-            "extra_info": email_input["extra_info"],
+            "extra_info": email_input.get("extra_info", ""),
         }
 
         # Sends an email to the user

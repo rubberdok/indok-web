@@ -22,9 +22,24 @@ const faqs = [
   {
     question: "Hvor lang er avbestillingsfristen?",
     answer: (
-      <Typography>
-        Avbestillingsfristen er 2 uker før ankomst. Hvis dere avbestiller etter dette, ilegges det en gebyr.
-      </Typography>
+      <Box>
+        <Typography>Følgende regler gjelder for avbestilling av en booking:</Typography>
+        <ul>
+          <li>
+            <Typography>Avbestilling innen to uker før avreise er gebyrfritt.</Typography>
+          </li>
+          <li>
+            <Typography>
+              Avbestilling innen en uke i forkant av av avreise medfører et gebyr på 30% av leien.
+            </Typography>
+          </li>
+          <li>
+            <Typography>
+              Avbestilling innen en uke i forkant av av avreise medfører et gebyr på 50% av leien.
+            </Typography>
+          </li>
+        </ul>
+      </Box>
     ),
   },
   {
