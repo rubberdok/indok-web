@@ -28,7 +28,7 @@ class BookingInput(graphene.InputObjectType):
 
 class EmailInput(BookingInput):
     email_type = graphene.String()
-    extra_info = graphene.String()
+    extra_info = graphene.String(required=False, default_value="")
 
 
 class UpdateBookingInput(BookingInput):
@@ -128,6 +128,10 @@ class DeleteBooking(graphene.Mutation):
 
 
 class SendEmail(graphene.Mutation):
+    """
+    Sends email to the user or an admin (or both)
+    """
+
     class Arguments:
         email_input = EmailInput()
 
