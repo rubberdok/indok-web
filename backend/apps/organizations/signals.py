@@ -1,5 +1,5 @@
 from django.contrib.auth.models import Group
-from django.db.models.signals import post_save, pre_delete, post_migrate
+from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
 from guardian.shortcuts import assign_perm
 
@@ -39,63 +39,45 @@ def handle_removed_member(instance: Membership, **kwargs):
         user.groups.remove(org_group)
 
 
-def create_default_group(default_group, organization: Organization):
-    group = ResponsibleGroup.objects.create(
-        group_type=default_group.group_type,
-        name=default_group.name,
-        description=default_group.create_description(organization.name),
-        organization=organization,
-    )
-    for permission in default_group.permissions:
-        if permission[0] == "organizations":
-            assign_perm(f"{permission[0]}.{permission[1]}", group.group, organization)
-
-
 @receiver(post_save, sender=Organization)
-def create_default_groups(instance: Organization, created, **kwargs):
+def ensure_default_groups(instance: Organization, **kwargs):
     """
-    Creates and assigns a primary group and HR group to members of the organization.
+    Ensures that organizations have correct default organization permission groups.
     """
-    if created:
-        for default_group in DEFAULT_ORG_GROUPS:
-            create_default_group(default_group, instance)
+    for default_group in DEFAULT_ORG_GROUPS:
+        default_group_included = False
 
+        existing_group: ResponsibleGroup
+        for existing_group in instance.permission_groups.all():
+            if existing_group.group_type == default_group.group_type:
+                default_group_included = True
 
-@receiver(post_migrate)
-def ensure_default_groups(apps, **kwargs):
-    """
-    Ensures that all organizations have correct default groups after migrating
-    """
-    organization_model = apps.get_model("organizations", "Organization")
+                existing_group_changed = False
 
-    organization: Organization
-    for organization in organization_model.objects.all():
-        for default_group in DEFAULT_ORG_GROUPS:
-            default_group_included = False
+                if existing_group.name != default_group.name:
+                    existing_group.name = default_group.name
+                    existing_group_changed = True
 
-            existing_group: ResponsibleGroup
-            for existing_group in organization.permission_groups.all():
-                if existing_group.group_type == default_group.group_type:
-                    default_group_included = True
+                updated_description = default_group.create_description(instance.name)
+                if existing_group.description != updated_description:
+                    existing_group.description = updated_description
+                    existing_group_changed = True
 
-                    existing_group_changed = False
+                if set(existing_group.group.permissions.all()) != set(default_group.permissions):
+                    existing_group.group.permissions.set(default_group.permissions)
 
-                    if existing_group.name != default_group.name:
-                        existing_group.name = default_group.name
-                        existing_group_changed = True
+                if existing_group_changed:
+                    existing_group.save()
 
-                    updated_description = default_group.create_description(organization.name)
-                    if existing_group.description != updated_description:
-                        existing_group.description = updated_description
-                        existing_group_changed = True
+                break
 
-                    if set(existing_group.group.permissions.all()) != set(default_group.permissions):
-                        existing_group.group.permissions.set(default_group.permissions)
-
-                    if existing_group_changed:
-                        existing_group.save()
-
-                    break
-
-            if not default_group_included:
-                create_default_group(default_group, organization)
+        if not default_group_included:
+            group = ResponsibleGroup.objects.create(
+                group_type=default_group.group_type,
+                name=default_group.name,
+                description=default_group.create_description(instance.name),
+                organization=instance,
+            )
+            for permission in default_group.permissions:
+                if permission[0] == "organizations":
+                    assign_perm(f"{permission[0]}.{permission[1]}", group.group, instance)
