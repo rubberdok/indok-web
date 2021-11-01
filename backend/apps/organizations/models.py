@@ -45,7 +45,6 @@ class Organization(models.Model):
             ("add_listing", "Add listing to organization"),
             ("add_form", "Add form to organization"),
             ("add_event", "Add event by organization"),
-            ("add_responsible_group", "Add permission group to organization"),
         )
 
     def __str__(self):

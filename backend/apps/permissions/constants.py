@@ -67,10 +67,6 @@ DEFAULT_ORG_GROUPS: Final[list[OrgGroup]] = [
             ("organizations", "change_membership"),
             ("organizations", "delete_membership"),
             ("organizations", "view_membership"),
-            ("organizations", "add_responsible_group"),
-            ("permissions", "change_responsible_group"),
-            ("permissions", "delete_responsible_group"),
-            ("permissions", "view_responsible_group"),
         ],
     ),
     OrgGroup(
