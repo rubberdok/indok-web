@@ -13,4 +13,4 @@ def assign_object_permissions(app: str, instance: Model, organization: Organizat
             if permission_group.group_type == default_group.group_type:
                 for permission in default_group.permissions:
                     if permission[0] == app:
-                        assign_perm(f"{permission[0]}.{permission[1]}", permission_group, instance)
+                        assign_perm(f"{permission[0]}.{permission[1]}", permission_group.group, instance)
