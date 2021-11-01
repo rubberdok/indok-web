@@ -10,12 +10,5 @@ declare namespace Cypress {
 
 Cypress.Commands.add("login", () => {
   const query = `{authToken}`;
-  cy.request({
-    method: "POST",
-    url: Cypress.env("graphql_endpoint"),
-    body: { query },
-  }).then((response) => {
-    console.log(response);
-    window.document.cookie = `JWT=${response.body.data.authToken}`;
-  });
+  cy.request("POST", "/graphql/", { query });
 });
