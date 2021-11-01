@@ -1,5 +1,6 @@
 import graphene
 import graphql_jwt
+from django.conf import settings
 
 from .mutations import AuthUser, GetIDToken, UpdateUser
 from .resolvers import UserResolvers
@@ -18,3 +19,4 @@ class UserMutations(graphene.ObjectType):
 class UserQueries(graphene.ObjectType, UserResolvers):
     all_users = graphene.List(UserType)
     user = graphene.Field(UserType)
+    auth_token = graphene.String() if settings.CYPRESS else None

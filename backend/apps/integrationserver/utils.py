@@ -11,7 +11,7 @@ class UserFactories:
             last_name="Student Åsen",
             email="eva_student@feide.no",
             is_active=True,
-            feide_userid="1d6dbc59-4d69-4b40-90c2-2cf9c0936720",
+            feide_userid="cypress_user",
             feide_email="eva_student@feide.no",
             graduation_year=2025,
             is_indok=True,

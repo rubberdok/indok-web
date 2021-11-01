@@ -34,24 +34,13 @@ const options = {
   },
 };
 
-Cypress.Commands.add("ssoUserLogin", () => {
-  return new Cypress.Promise((resolve, reject) => {
-    const ssoUserLogin = async () => {
-      const params = new URLSearchParams();
-      params.append("username", `${username}`);
-      params.append("password", `${password}`);
-
-      const response = await fetch(`${ssoUserLoginUrl}`, {
-        method: "POST",
-        body: params,
-      }).then((res) => {
-        if (!res.ok) {
-          reject(res.statusText);
-        }
-        return res;
-      });
-      return response;
-    };
-    ssoUserLogin().then(resolve);
+Cypress.Commands.add("login", () => {
+  const query = `{authToken}`;
+  cy.request({
+    method: "POST",
+    url: Cypress.env("graphql_endpoint"),
+    body: { query },
+  }).then((response) => {
+    window.document.cookie = `JWT=${response.body.authToken}`;
   });
 });

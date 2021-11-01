@@ -17,6 +17,7 @@ if READ_DOT_ENV_FILE:
 
 # GENERAL
 DEBUG = env.bool("DJANGO_DEBUG", False)
+CYPRESS = env.bool("DJANGO_CYPRESS", False)
 
 TIME_ZONE = "Europe/Oslo"
 LANGUAGE_CODE = "en-us"
