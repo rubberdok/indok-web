@@ -17,6 +17,7 @@ env:
   AWS_REGION: eu-north-1
   SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
   DOCKER_BUILDKIT: 1
+  DJANGO_CYPRESS: true
 
 jobs:
   test:
