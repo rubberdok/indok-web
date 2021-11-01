@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     paper: {
       padding: theme.spacing(2),
-      marginLeft: "70px", 
+      marginLeft: "70px",
     },
     image: {
       width: "90px",
@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     article: {
       width: "100%",
-      height: "160px"
+      height: "160px",
     },
     header: {
       width: "100%",
@@ -66,7 +66,7 @@ const ListDocuments: React.FC<ListDocumentsProps> = ({ document_types, year, nam
       <Typography variant="body1" style={{ marginBottom: "8px" }}>
         Alle dokumenter
       </Typography>
-      <GridList cellHeight={'auto'} className={classes.img} cols={4} spacing={8}>
+      <GridList cellHeight={"auto"} className={classes.img} cols={4} spacing={8}>
         {data.archiveByTypes.length ? (
           data.archiveByTypes.map((doc: Document) => (
             <GridListTile key={doc.id}>
