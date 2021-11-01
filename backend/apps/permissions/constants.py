@@ -39,7 +39,7 @@ class OrgGroup:
     group_type: str
     name: str
     create_description: Callable[[str], str]
-    permissions: DefaultPermissionsType = field(default_factory=list)
+    permissions: dict[str, DefaultPermissionsType] = field(default_factory=dict)
 
 
 ORG_MEMBER_GROUP_TYPE: Final[str] = "ORG_MEMBER"
@@ -61,13 +61,17 @@ DEFAULT_ORG_GROUPS: Final[list[OrgGroup]] = [
             lambda org_name: f"Administrator av {org_name}. "
             + "Tillatelser til å endre info om foreningen, samt styre medlemmer og deres tillatelser."
         ),
-        permissions=[
-            ("organizations", "change_organization"),
-            ("organizations", "add_membership"),
-            ("organizations", "change_membership"),
-            ("organizations", "delete_membership"),
-            ("organizations", "view_membership"),
-        ],
+        permissions={
+            "Organization": [
+                ("organizations", "change_organization"),
+                ("organizations", "add_membership"),
+            ],
+            "Membership": [
+                ("organizations", "change_membership"),
+                ("organizations", "delete_membership"),
+                ("organizations", "view_membership"),
+            ],
+        },
     ),
     OrgGroup(
         group_type="LISTINGS_ADMIN",
@@ -76,15 +80,21 @@ DEFAULT_ORG_GROUPS: Final[list[OrgGroup]] = [
             lambda org_name: f"Vervansvarlige for {org_name}. "
             + "Tillatelser til å lage og redigere verv, samt se og behandle søknader."
         ),
-        permissions=[
-            ("organizations", "add_listing"),
-            ("listings", "change_listing"),
-            ("listings", "delete_listing"),
-            ("organizations", "add_form"),
-            ("forms", "manage_form"),
-            ("forms", "change_form"),
-            ("forms", "delete_form"),
-        ],
+        permissions={
+            "Organization": [
+                ("organizations", "add_listing"),
+                ("organizations", "add_form"),
+            ],
+            "Listing": [
+                ("listings", "change_listing"),
+                ("listings", "delete_listing"),
+            ],
+            "Form": [
+                ("forms", "manage_form"),
+                ("forms", "change_form"),
+                ("forms", "delete_form"),
+            ],
+        },
     ),
     OrgGroup(
         group_type="EVENTS_ADMIN",
@@ -93,10 +103,14 @@ DEFAULT_ORG_GROUPS: Final[list[OrgGroup]] = [
             lambda org_name: f"Arrangementansvarlige for {org_name}. "
             + "Tillatelser til å lage og redigere arrangementer."
         ),
-        permissions=[
-            ("organizations", "add_event"),
-            ("events", "change_event"),
-            ("events", "delete_event"),
-        ],
+        permissions={
+            "Organization": [
+                ("organizations", "add_event"),
+            ],
+            "Event": [
+                ("events", "change_event"),
+                ("events", "delete_event"),
+            ],
+        },
     ),
 ]
