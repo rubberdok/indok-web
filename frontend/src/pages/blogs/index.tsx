@@ -1,7 +1,7 @@
 import { NextPage } from "next";
 import Layout from "@components/Layout";
 
-const OrgPage: NextPage = () => {
+const BlogsPage: NextPage = () => {
   return (
     <Layout>
       <h1>Org</h1>;
@@ -9,4 +9,4 @@ const OrgPage: NextPage = () => {
   );
 };
 
-export default OrgPage;
+export default BlogsPage;
