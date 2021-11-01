@@ -23,17 +23,6 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
-const options = {
-  method: "POST",
-  url: Cypress.env("auth_url"),
-  body: {
-    username: Cypress.env("auth_username"),
-    password: Cypress.env("auth_password"),
-    client_id: Cypress.env("auth_client_id"),
-    client_secret: Cypress.env("auth_client_secret"),
-  },
-};
-
 Cypress.Commands.add("login", () => {
   const query = `{authToken}`;
   cy.request({

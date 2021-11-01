@@ -20,8 +20,7 @@ class UserResolvers:
         if settings.CYPRESS:
             try:
                 token = get_token(get_user_model().objects.get(username="eva_student"))
-                print(token)
+                info.context.set_jwt_cookie = token
+                return token
             except get_user_model().DoesNotExist:
                 return None
-            info.context.set_jwt_token = token
-            return token
