@@ -58,3 +58,14 @@ export const QUERY_BOOKING_RESPONSIBLE = gql`
     }
   }
 `;
+
+export const QUERY_BOOKING_SEMESTERS = gql`
+  query BookingSemesters {
+    bookingSemester {
+      fallStartDate
+      fallEndDate
+      springStartDate
+      springEndDate
+    }
+  }
+`;

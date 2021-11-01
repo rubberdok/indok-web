@@ -3,6 +3,7 @@ import Layout from "@components/Layout";
 import { QUERY_ADMIN_ALL_BOOKINGS } from "@graphql/cabins/queries";
 import CheckIcon from "@material-ui/icons/Check";
 import ClearIcon from "@material-ui/icons/Clear";
+import SettingsIcon from "@material-ui/icons/Settings";
 import {
   Typography,
   Grid,
@@ -131,6 +132,9 @@ const AdminPage: NextPage = () => {
               <Typography variant={isMobile ? "h3" : "h1"} align="center">
                 Booking adminside
               </Typography>
+              <Button startIcon={<SettingsIcon />} onClick={() => router.push("admin/settings")}>
+                Innstillinger
+              </Button>
             </Box>
           </Grid>
         </Grid>

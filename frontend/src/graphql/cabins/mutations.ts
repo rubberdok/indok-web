@@ -31,3 +31,13 @@ export const DELETE_BOOKING = gql`
     }
   }
 `;
+
+export const UPDATE_BOOKING_SEMESTER = gql`
+  mutation UpdateBookingSemester($semesterData: UpdateBookingSemesterInput) {
+    updateBookingSemester(semesterData: $semesterData) {
+      bookingSemester {
+        id
+      }
+    }
+  }
+`;

@@ -1,8 +1,8 @@
 import graphene
 
 from .helpers import price
-from .types import AllBookingsType, BookingInfoType, EmailInputType
-from apps.cabins.models import Booking as BookingModel
+from .types import AllBookingsType, BookingInfoType, EmailInputType, UpdateBookingSemesterType
+from apps.cabins.models import Booking as BookingModel, BookingSemester
 from apps.cabins.models import Cabin as CabinModel
 from .constants import APPROVE_BOOKING, DISAPPROVE_BOOKING
 from .mail import send_mail
@@ -34,6 +34,13 @@ class EmailInput(BookingInput):
 class UpdateBookingInput(BookingInput):
     id = graphene.ID(required=True)
     is_tentative = graphene.Boolean()
+
+
+class UpdateBookingSemesterInput(graphene.InputObjectType):
+    fall_start_date = graphene.Date()
+    fall_end_date = graphene.Date()
+    spring_start_date = graphene.Date()
+    spring_end_date = graphene.Date()
 
 
 class CreateBooking(graphene.Mutation):
@@ -172,3 +179,36 @@ class SendEmail(graphene.Mutation):
             send_mail(booking_info=booking_info, email_type=email_input["email_type"], admin=True)
 
         return SendEmail(ok=True)
+
+
+class UpdateBookingSemester(graphene.Mutation):
+    """
+    Update the booking semester
+    """
+
+    class Arguments:
+        semester_data = UpdateBookingSemesterInput()
+
+    ok = graphene.Boolean()
+    booking_semester = graphene.Field(UpdateBookingSemesterType)
+
+    def mutate(
+        self,
+        info,
+        semester_data,
+    ):
+        ok = True
+
+        # Fetch first and only BookingSemester
+        try:
+            semester = BookingSemester.objects.first()
+            for field, value in semester_data.items():
+                setattr(semester, field, value)
+            semester.save()
+            return UpdateBookingSemester(ok=ok, booking_semester=semester)
+
+        except BookingSemester.DoesNotExist:
+            return UpdateBookingSemester(
+                booking_semester=None,
+                ok=False,
+            )
