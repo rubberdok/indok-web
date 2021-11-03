@@ -13,7 +13,7 @@ SECRET_KEY = env(
 ROOT_URLCONF = "config.urls.local"
 
 # ACCESS
-ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1"]
+ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1", "backend"]
 CORS_ORIGIN_WHITELIST = ["http://localhost:3000", "http://0.0.0.0:3000", "http://127.0.0.1:3000"]
 CORS_ALLOW_CREDENTIALS = True
 

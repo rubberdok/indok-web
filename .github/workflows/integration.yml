@@ -18,6 +18,7 @@ env:
   SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
   DOCKER_BUILDKIT: 1
   DJANGO_CYPRESS: true
+  DJANGO_ALLOWED_HOSTS: backend
 
 jobs:
   test:
@@ -45,7 +46,7 @@ jobs:
           NEXT_PUBLIC_DATAPORTEN_REDIRECT_URI: http://localhost:3000/authCallback
           NEXT_PUBLIC_DATAPORTEN_STATE: erhgouvwhwiuethviu3htvuq34hvt9uh
           NEXT_PUBLIC_FRONTEND_URI: http://localhost:3000
-        run: docker-compose -f docker-compose.integration.yml up
+        run: docker-compose -f docker-compose.integration.yml up -d
 
       - name: Build the Cypress Image
         run: docker build -f e2e/integration/Dockerfile -t cypress e2e/integration/

@@ -24,6 +24,6 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 Cypress.Commands.add("login", () => {
-  const query = `{authToken}`;
+  const query = `{ authToken }`;
   cy.request("POST", "/graphql/", { query });
 });
