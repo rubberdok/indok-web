@@ -21,7 +21,6 @@ import {
   IconButton,
   List,
   ListItem,
-  Paper,
   Snackbar,
   Table,
   TableBody,
@@ -41,7 +40,7 @@ import { NextPage } from "next";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   accordion: {
     "&.MuiAccordion-root:before": {
       backgroundColor: "white",
@@ -132,156 +131,153 @@ const EventAdminPage: NextPage = () => {
   return (
     <Layout>
       {data?.event ? (
-        data?.event?.attendable ? (
-          <Box m={10}>
+        <Box m={10}>
+          {openEditEvent && (
+            <EditEvent open={openEditEvent} onClose={() => setOpenEditEvent(false)} event={data.event} />
+          )}
+          <Box mb={10}>
             {openEditEvent && (
               <EditEvent open={openEditEvent} onClose={() => setOpenEditEvent(false)} event={data.event} />
             )}
-            <Box mb={10}>
-              {openEditEvent && (
-                <EditEvent open={openEditEvent} onClose={() => setOpenEditEvent(false)} event={data.event} />
-              )}
-              <Grid>
-                <Grid container direction="column" spacing={5}>
-                  <Grid item>
-                    <Typography variant="h2" align="center">
-                      {data.event.title}
-                    </Typography>
-                  </Grid>
+            <Grid>
+              <Grid container direction="column" spacing={5}>
+                <Grid item>
+                  <Typography variant="h2" align="center">
+                    {data.event.title}
+                  </Typography>
                 </Grid>
               </Grid>
-            </Box>
-            <Accordion elevation={0} classes={{ root: classes.accordion }}>
-              <Box py={2}>
-                <AccordionSummary style={{ padding: 0 }} aria-controls="panel1a-content" id="panel1a-header">
-                  <Grid container alignItems="center" justifyContent="space-between">
-                    <Grid item xs={12} sm="auto">
-                      <Box ml={5}>
-                        <CardHeader
-                          style={{ padding: 0 }}
-                          titleTypographyProps={{ variant: "h4" }}
-                          title="Generell informasjon"
-                        />
-                      </Box>
-                    </Grid>
-                    <Grid item xs={12} sm="auto">
-                      <Box mx={5} my={2}>
-                        <CardActions style={{ padding: 0 }}>
-                          <Button variant="outlined" startIcon={<Edit />} onClick={() => setOpenEditEvent(true)}>
-                            Rediger
-                          </Button>
-                        </CardActions>
-                      </Box>
-                    </Grid>
+            </Grid>
+          </Box>
+          <Accordion elevation={0} defaultExpanded={true} classes={{ root: classes.accordion }}>
+            <Box py={2}>
+              <AccordionSummary aria-controls="panel1a-content" id="panel1a-header">
+                <Grid container alignItems="center" justifyContent="space-between">
+                  <Grid item xs={12} sm="auto">
+                    <Box ml={5}>
+                      <CardHeader titleTypographyProps={{ variant: "h4" }} title="Generell informasjon" />
+                    </Box>
                   </Grid>
-                </AccordionSummary>
-              </Box>
-              <AccordionDetails style={{ padding: 0 }}>
-                <Box m={4} mt={0}>
-                  <Grid container spacing={2}>
-                    {stringEventFields.map((headerPair: HeaderValuePair<Event>) =>
-                      renderInfo(
-                        headerPair.header,
-                        data.event[headerPair.field] ? (data.event[headerPair.field] as string) : ""
-                      )
-                    )}
-                    <Grid item xs={12} lg={6} key={"allowedGradeYears"}>
-                      <Typography>
-                        <Box fontWeight={1000} m={1} display="inline">
-                          Åpent for:
-                        </Box>
-                        {data.event.allowedGradeYears
-                          .slice(1, data.event.allowedGradeYears.length)
-                          .reduce(
-                            (res, grade) => `${res}, ${grade}.klasse`,
-                            `${data.event.allowedGradeYears[0]}.klasse`
-                          )}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={12} lg={6} key={"bindingSingup"}>
-                      <Typography>
-                        <Box fontWeight={1000} m={1} display="inline">
-                          Bindende påmelding:
-                        </Box>
-                        {data.event.attendable?.bindingSignup === true ? "ja" : "nei"}
-                      </Typography>
-                    </Grid>
-                    {data.event?.availableSlots && (
-                      <Grid item xs={12} lg={6} key={"AvailableSlots"}>
+                  <Grid item xs={12} sm="auto">
+                    <Box mx={5} my={2}>
+                      <CardActions>
+                        <Button variant="outlined" startIcon={<Edit />} onClick={() => setOpenEditEvent(true)}>
+                          Rediger
+                        </Button>
+                      </CardActions>
+                    </Box>
+                  </Grid>
+                </Grid>
+              </AccordionSummary>
+            </Box>
+            <AccordionDetails>
+              <Box m={4} mt={0}>
+                <Grid container spacing={2}>
+                  {stringEventFields.map((headerPair: HeaderValuePair<Event>) =>
+                    renderInfo(
+                      headerPair.header,
+                      data.event[headerPair.field] ? (data.event[headerPair.field] as string) : ""
+                    )
+                  )}
+                  <Grid item xs={12} lg={6} key={"allowedGradeYears"}>
+                    <Typography>
+                      <Box fontWeight={1000} m={1} display="inline">
+                        Åpent for:
+                      </Box>
+                      {data.event.allowedGradeYears
+                        .slice(1, data.event.allowedGradeYears.length)
+                        .reduce((res, grade) => `${res}, ${grade}.klasse`, `${data.event.allowedGradeYears[0]}.klasse`)}
+                    </Typography>
+                  </Grid>
+                  {dateEventFields.map((headerPair: HeaderValuePair<Event>) =>
+                    renderInfo(
+                      headerPair.header,
+                      data.event[headerPair.field]
+                        ? dayjs(data.event[headerPair.field] as string).format("kl.HH:mm, DD-MM-YYYY")
+                        : ""
+                    )
+                  )}
+                  {data?.event?.attendable ? (
+                    <React.Fragment>
+                      <Grid item xs={12} lg={6} key={"signupOpenDate"}>
                         <Typography>
                           <Box fontWeight={1000} m={1} display="inline">
-                            Tilgjengelige plasser:
+                            Påmelding åpner:
                           </Box>
-                          {data.event.availableSlots.length > 1
-                            ? data.event.availableSlots.map((dist) => (
-                                <Typography key={String(dist.category)}>
-                                  {dist.category}.klasse: {dist.availableSlots} plasser
-                                </Typography>
-                              ))
-                            : `${data.event.availableSlots[0].availableSlots}`}
+                          {data.event.attendable?.signupOpenDate
+                            ? dayjs(data.event.attendable?.signupOpenDate as string).format("kl.HH:mm, DD-MM-YYYY")
+                            : ""}
                         </Typography>
                       </Grid>
-                    )}
-                    {dateEventFields.map((headerPair: HeaderValuePair<Event>) =>
-                      renderInfo(
-                        headerPair.header,
-                        data.event[headerPair.field]
-                          ? dayjs(data.event[headerPair.field] as string).format("kl.HH:mm, DD-MM-YYYY")
-                          : ""
-                      )
-                    )}
-                    <Grid item xs={12} lg={6} key={"signupOpenDate"}>
-                      <Typography>
-                        <Box fontWeight={1000} m={1} display="inline">
-                          Påmelding åpner:
-                        </Box>
-                        {data.event.attendable?.signupOpenDate
-                          ? dayjs(data.event.attendable?.signupOpenDate as string).format("kl.HH:mm, DD-MM-YYYY")
-                          : ""}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={12} lg={6} key={"deadline"}>
-                      <Typography>
-                        <Box fontWeight={1000} m={1} display="inline">
-                          Påmeldingsfrist:
-                        </Box>
-                        {data.event.attendable?.deadline
-                          ? dayjs(data.event.attendable?.deadline as string).format("kl.HH:mm, DD-MM-YYYY")
-                          : ""}
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                </Box>
-              </AccordionDetails>
-            </Accordion>
+                      <Grid item xs={12} lg={6} key={"deadline"}>
+                        <Typography>
+                          <Box fontWeight={1000} m={1} display="inline">
+                            Påmeldingsfrist:
+                          </Box>
+                          {data.event.attendable?.deadline
+                            ? dayjs(data.event.attendable?.deadline as string).format("kl.HH:mm, DD-MM-YYYY")
+                            : ""}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12} lg={6} key={"bindingSingup"}>
+                        <Typography>
+                          <Box fontWeight={1000} m={1} display="inline">
+                            Bindende påmelding:
+                          </Box>
+                          {data.event.attendable?.bindingSignup === true ? "Ja" : "Nei"}
+                        </Typography>
+                      </Grid>
+                      {data.event?.availableSlots && (
+                        <Grid item xs={12} lg={6} key={"AvailableSlots"}>
+                          <Typography>
+                            <Box fontWeight={1000} m={1} display="inline">
+                              Tilgjengelige plasser:
+                            </Box>
+                            {data.event.availableSlots.length > 1
+                              ? data.event.availableSlots.map((dist) => (
+                                  <Typography key={String(dist.category)}>
+                                    {dist.category}.klasse: {dist.availableSlots} plasser
+                                  </Typography>
+                                ))
+                              : `${data.event.availableSlots[0].availableSlots}`}
+                          </Typography>
+                        </Grid>
+                      )}
+                    </React.Fragment>
+                  ) : null}
+                </Grid>
+              </Box>
+            </AccordionDetails>
+          </Accordion>
+          {data?.event?.attendable ? (
             <Accordion>
-              <AccordionSummary style={{ padding: 0 }} aria-controls="panel2a-content" id="panel2a-header">
+              <AccordionSummary aria-controls="panel2a-content" id="panel2a-header">
                 <Grid container alignItems="center" justifyContent="space-between">
                   <Grid item xs={12} md={12} lg="auto">
                     <Box ml={5}>
-                      <CardHeader style={{ padding: 0 }} titleTypographyProps={{ variant: "h4" }} title="Påmeldte" />
+                      <CardHeader titleTypographyProps={{ variant: "h4" }} title="Påmeldte" />
                     </Box>
                   </Grid>
                   <Grid item xs={12} sm="auto">
                     <Box ml={5} my={2}>
-                      <CardActions style={{ padding: 0 }}>
+                      <CardActions>
                         <AttendeeExport eventId={eventNumberID} />
                       </CardActions>
                     </Box>
                   </Grid>
                   <Grid item xs={12} sm="auto">
                     <Box mx={5} my={2}>
-                      <CardActions style={{ padding: 0 }}>
+                      <CardActions>
                         {eventId ? <EmailForm eventId={eventId} /> : <CircularProgress color="primary" />}
                       </CardActions>
                     </Box>
                   </Grid>
                 </Grid>
               </AccordionSummary>
-              <AccordionDetails style={{ padding: 0 }}>
-                <Box sx={{ mb: 2, mx: 5, width: "auto" }}>
+              <AccordionDetails>
+                <Box sx={{ mb: 2, mx: 5, width: "-webkit-fill-available" }}>
                   {data?.event?.usersAttending?.length !== 0 ? (
-                    <TableContainer style={{ maxHeight: 600, overflowX: "scroll", width: "auto" }}>
+                    <TableContainer style={{ maxHeight: 600, overflowX: "scroll" }}>
                       <Table>
                         <TableHead>
                           <TableRow>
@@ -329,14 +325,16 @@ const EventAdminPage: NextPage = () => {
                 </Box>
               </AccordionDetails>
             </Accordion>
+          ) : null}
+          {data?.event?.attendable ? (
             <Accordion>
-              <AccordionSummary style={{ padding: 0 }} aria-controls="panel3a-content" id="panel3a-header">
+              <AccordionSummary aria-controls="panel3a-content" id="panel3a-header">
                 <Box ml={5} my={2}>
-                  <CardHeader style={{ padding: 0 }} titleTypographyProps={{ variant: "h4" }} title="Venteliste" />
+                  <CardHeader titleTypographyProps={{ variant: "h4" }} title="Venteliste" />
                 </Box>
               </AccordionSummary>
-              <AccordionDetails style={{ padding: 0 }}>
-                <Box sx={{ mb: 2, mx: 5 }}>
+              <AccordionDetails>
+                <Box sx={{ mb: 2, mx: 5, width: "-webkit-fill-available" }}>
                   {data?.event?.usersOnWaitingList?.length !== 0 ? (
                     <TableContainer style={{ maxHeight: 600 }}>
                       <Table>
@@ -374,65 +372,8 @@ const EventAdminPage: NextPage = () => {
                 </Box>
               </AccordionDetails>
             </Accordion>
-          </Box>
-        ) : (
-          <Box m={10}>
-            {openEditEvent && (
-              <EditEvent open={openEditEvent} onClose={() => setOpenEditEvent(false)} event={data.event} />
-            )}
-            <Grid container direction="column" spacing={5}>
-              <Grid item>
-                <Typography variant="h1" align="center">
-                  {data.event.title}
-                </Typography>
-              </Grid>
-              <Grid item container spacing={5}>
-                <Grid item xs={12}>
-                  <Card variant="outlined">
-                    <CardHeader title="Generell informasjon" />
-                    <CardActions>
-                      <Button startIcon={<Edit />} onClick={() => setOpenEditEvent(true)}>
-                        Rediger
-                      </Button>
-                    </CardActions>
-                    <CardContent>
-                      <List>
-                        {stringEventFields.map((headerPair: HeaderValuePair<Event>) =>
-                          renderInfo(
-                            headerPair.header,
-                            data.event[headerPair.field] ? (data.event[headerPair.field] as string) : ""
-                          )
-                        )}
-                        <ListItem key={"allowedGradeYears"}>
-                          <Typography>
-                            <Box fontWeight={1000} m={1} display="inline">
-                              Åpent for:
-                            </Box>
-                            {data.event.allowedGradeYears
-                              .slice(1, data.event.allowedGradeYears.length)
-                              .reduce(
-                                (res, grade) => `${res}, ${grade}.klasse`,
-                                `${data.event.allowedGradeYears[0]}.klasse`
-                              )}
-                          </Typography>
-                        </ListItem>
-
-                        {dateEventFields.map((headerPair: HeaderValuePair<Event>) =>
-                          renderInfo(
-                            headerPair.header,
-                            data.event[headerPair.field]
-                              ? dayjs(data.event[headerPair.field] as string).format("kl.HH:mm, DD-MM-YYYY")
-                              : ""
-                          )
-                        )}
-                      </List>
-                    </CardContent>
-                  </Card>
-                </Grid>
-              </Grid>
-            </Grid>
-          </Box>
-        )
+          ) : null}
+        </Box>
       ) : null}
       <Snackbar
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
