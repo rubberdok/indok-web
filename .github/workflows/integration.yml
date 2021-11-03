@@ -14,7 +14,6 @@ env:
   AWS_REGION: eu-north-1
   SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
   DOCKER_BUILDKIT: 1
-  ENV_FILE: integration.env
 
 jobs:
   test:
@@ -37,11 +36,11 @@ jobs:
 
       - name: Download environment variables
         id: env-download
-        run: aws s3 cp s3://indok-web-environments/${{ env.ENV_FILE }} ${{ env.ENV_FILE }}
+        run: aws s3 cp s3://indok-web-environments . --recursive --exclude "*" --include "*integration.env"
 
       - name: Load environment variables
         id: env-load
-        run: cat ${{ env.ENV_FILE }} >> $GITHUB_ENV
+        run: cat *integration.env >> $GITHUB_ENV
 
       - name: Build and run the Application
         run: docker-compose -f docker-compose.integration.yml up -d
