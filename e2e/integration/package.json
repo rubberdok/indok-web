@@ -8,8 +8,8 @@
   "scripts": {
     "test": "cypress open",
     "test:headless": "cypress run",
-    "e2e": "test-server frontend:3000 test",
-    "e2e:headless": "test-server frontend:3000 test:headless"
+    "e2e": "test-server 'http://frontend:3000|http://backend:8000' 'yarn test'",
+    "e2e:headless": "test-server 'http://frontend:3000|http://backend:8000' 'yarn test:headless'"
   },
   "repository": {
     "type": "git",
