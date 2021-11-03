@@ -23,17 +23,19 @@ services:
     volumes:
       - ./backend:/usr/src/app
     ports:
-      - "8000:8000"
+      - 8000:8000
     depends_on:
       - db
     environment:
-      - DJANGO_CYPRESS=true
+      - DJANGO_CYPRESS=$DJANGO_CYPRESS
       - DATAPORTEN_ID=$DATAPORTEN_ID
       - DATAPORTEN_REDIRECT_URI=$DATAPORTEN_REDIRECT_URI
       - DATAPORTEN_SECRET=$DATAPORTEN_SECRET
       - GOOGLE_DRIVE_API_KEY=$GOOGLE_DRIVE_API_KEY
       - AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
       - AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
+    expose:
+      - 8000
 
   frontend:
     build:

@@ -42,9 +42,9 @@ jobs:
         env:
           NEXT_PUBLIC_GRAPHQL_BACKEND_URI: http://localhost:8000/graphql/
           NEXT_PUBLIC_DATAPORTEN_ID: fcaa9e30-a6d3-4809-8fea-cdd7b3de1c98
-          NEXT_PUBLIC_DATAPORTEN_REDIRECT_URI: http://frontend:3000/authCallback
+          NEXT_PUBLIC_DATAPORTEN_REDIRECT_URI: http://localhost:3000/authCallback
           NEXT_PUBLIC_DATAPORTEN_STATE: erhgouvwhwiuethviu3htvuq34hvt9uh
-          NEXT_PUBLIC_FRONTEND_URI: http://frontend:3000
+          NEXT_PUBLIC_FRONTEND_URI: http://localhost:3000
         run: docker-compose -f docker-compose.integration.yml up -d
 
       - name: Build the Cypress Image
