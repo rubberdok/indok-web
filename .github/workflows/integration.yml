@@ -3,13 +3,12 @@ name: Integration Testing
 on:
   push:
     branches:
-      - master
       - main
   pull_request:
 
 env:
   DATAPORTEN_ID: ${{ secrets.DATAPORTEN_ID }}
-  DATAPORTEN_REDIRECT_URI: http://frontend:3000/authCallback
+  DATAPORTEN_REDIRECT_URI: http://localhost:3000/authCallback
   DATAPORTEN_SECRET: ${{ secrets.DATAPORTEN_DEV_SECRET }}
   GOOGLE_DRIVE_API_KEY: ${{ secrets.GOOGLE_DRIVE_API_KEY }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -18,7 +17,6 @@ env:
   SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
   DOCKER_BUILDKIT: 1
   DJANGO_CYPRESS: true
-  DJANGO_ALLOWED_HOSTS: backend
 
 jobs:
   test:
@@ -52,4 +50,4 @@ jobs:
         run: docker build -f e2e/integration/Dockerfile -t cypress e2e/integration/
 
       - name: Run the Integration Tests
-        run: docker run --network indok-web_default cypress --record --key ${{ secrets.CYPRESS_RECORD_KEY }}
+        run: docker run --network host cypress --record --key ${{ secrets.CYPRESS_RECORD_KEY }}
