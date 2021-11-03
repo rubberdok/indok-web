@@ -32,23 +32,6 @@ class Command(BaseCommand):
         interactive = options["interactive"]
 
         # Create a test database.
-        db_name = connection.creation.create_test_db(verbosity=verbosity, autoclobber=not interactive, serialize=False)
+        connection.creation.create_test_db(verbosity=verbosity, autoclobber=not interactive, serialize=False)
 
         call_command("loadfactories", **{"verbosity": verbosity})
-
-        # Run the development server. Turn off auto-reloading because it causes
-        # a strange error -- it causes this handle() method to be called
-        # multiple times.
-        shutdown_message = (
-            "\nServer stopped.\nNote that the test database, %r, has not been "
-            "deleted. You can explore it on your own." % db_name
-        )
-        use_threading = connection.features.test_db_allows_multiple_connections
-        call_command(
-            "runserver",
-            addrport=options["addrport"],
-            shutdown_message=shutdown_message,
-            use_reloader=False,
-            use_ipv6=options["use_ipv6"],
-            use_threading=use_threading,
-        )

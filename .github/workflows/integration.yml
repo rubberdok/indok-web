@@ -7,8 +7,6 @@ on:
   pull_request:
 
 env:
-  DATAPORTEN_ID: ${{ secrets.DATAPORTEN_ID }}
-  DATAPORTEN_REDIRECT_URI: http://localhost:3000/authCallback
   DATAPORTEN_SECRET: ${{ secrets.DATAPORTEN_DEV_SECRET }}
   GOOGLE_DRIVE_API_KEY: ${{ secrets.GOOGLE_DRIVE_API_KEY }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -16,7 +14,7 @@ env:
   AWS_REGION: eu-north-1
   SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
   DOCKER_BUILDKIT: 1
-  DJANGO_CYPRESS: true
+  ENV_FILE: integration.env
 
 jobs:
   test:
@@ -36,6 +34,14 @@ jobs:
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Download environment variables
+        id: env-download
+        run: aws s3 cp s3://indok-web-environments/${{ env.ENV_FILE }} ${{ env.ENV_FILE }}
+
+      - name: Load environment variables
+        id: env-load
+        run: cat ${{ env.ENV_FILE }} >> $GITHUB_ENV
 
       - name: Build and run the Application
         env:
