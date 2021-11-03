@@ -14,18 +14,6 @@ class Command(BaseCommand):
             dest="interactive",
             help="Tells Django to NOT prompt the user for input of any kind.",
         )
-        parser.add_argument(
-            "--addrport",
-            default="",
-            help="Port number or ipaddr:port to run the server on.",
-        )
-        parser.add_argument(
-            "--ipv6",
-            "-6",
-            action="store_true",
-            dest="use_ipv6",
-            help="Tells Django to use an IPv6 address.",
-        )
 
     def handle(self, **options):
         verbosity = options["verbosity"]

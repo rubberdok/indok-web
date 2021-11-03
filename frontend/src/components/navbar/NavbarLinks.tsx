@@ -162,7 +162,7 @@ const NavbarLinks: React.FC = () => {
             <Button
               className={[classes.navItem, classes.user].join(" ")}
               startIcon={<LockOpen fontSize="small" />}
-              data-testid="login"
+              data-test-id="login"
             >
               Logg inn med Feide
             </Button>
