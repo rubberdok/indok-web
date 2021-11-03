@@ -44,7 +44,7 @@ jobs:
         run: cat *integration.env >> $GITHUB_ENV
 
       - name: Build and run the Application
-        run: docker-compose -f docker-compose.integration.yml up -d
+        run: docker-compose -f docker-compose.integration.yml up
 
       - name: Build the Cypress Image
         run: docker build -f e2e/integration/Dockerfile -t cypress e2e/integration/
