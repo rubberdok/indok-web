@@ -1,6 +1,11 @@
 describe("User Logins", () => {
   before(() => {
+    Cypress.Cookies.debug(true);
     cy.login();
+  });
+
+  beforeEach(() => {
+    Cypress.Cookies.preserveOnce("JWT");
   });
 
   it("should prompt registration when not registered", () => {
