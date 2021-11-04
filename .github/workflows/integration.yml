@@ -26,8 +26,8 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Login to Amazon ECR
@@ -43,7 +43,7 @@ jobs:
         run: cat *integration.env >> $GITHUB_ENV
 
       - name: Build and run the Application
-        run: docker-compose -f docker-compose.integration.yml up -d
+        run: docker compose -f docker-compose.integration.yml up -d
 
       - name: Build the Cypress Image
         run: docker build -f e2e/integration/Dockerfile -t cypress e2e/integration/
