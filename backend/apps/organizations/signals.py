@@ -87,11 +87,11 @@ def ensure_default_org_permission_groups(instance: Organization, **kwargs):
                 organization=instance,
             )
             if "organizations" not in default_group.permissions:
-                break
+                continue
             organization_app_permissions = default_group.permissions["organizations"]
 
-            if "Organization" in organization_app_permissions:
-                break
+            if "Organization" not in organization_app_permissions:
+                continue
             organization_model_permissions = organization_app_permissions["Organization"]
 
             for permission in organization_model_permissions:
