@@ -25,5 +25,7 @@
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 Cypress.Commands.add("login", () => {
   const query = `{ authToken }`;
-  cy.request("POST", "/graphql/", { query });
+  cy.request("POST", "/graphql/", { query }).then((response) => {
+    cy.log(response.body);
+  });
 });
