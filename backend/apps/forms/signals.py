@@ -8,6 +8,7 @@ from utils.permissions import assign_object_permissions
 
 @receiver(post_save, sender=Form)
 def assign_form_permissions(instance: Form, created: bool, **kwargs) -> None:
+    """Assigns appropriate object permissions to newly created forms."""
     if created:
         assign_object_permissions(
             app_name="forms", model_name="Form", instance=instance, organization=instance.organization

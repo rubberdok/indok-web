@@ -1,6 +1,7 @@
 from django.contrib.auth.models import Group
 from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
+from backend.utils.permissions import assign_object_permissions
 from guardian.shortcuts import assign_perm
 
 from apps.organizations.models import Membership, Organization
@@ -10,6 +11,15 @@ from apps.permissions.constants import (
     ORG_MEMBER_GROUP_TYPE,
 )
 from apps.permissions.models import ResponsibleGroup
+
+
+@receiver(post_save, sender=Membership)
+def assign_membership_permissions(instance: Membership, created: bool, **kwargs) -> None:
+    """Assigns appropriate object permissions to newly created memberships."""
+    if created:
+        assign_object_permissions(
+            app_name="organizations", model_name="Membership", instance=instance, organization=instance.organization
+        )
 
 
 @receiver(post_save, sender=Membership)
@@ -40,10 +50,8 @@ def handle_removed_member(instance: Membership, **kwargs):
 
 
 @receiver(post_save, sender=Organization)
-def ensure_default_groups(instance: Organization, **kwargs):
-    """
-    Ensures that organizations have correct default organization permission groups.
-    """
+def ensure_default_org_permission_groups(instance: Organization, **kwargs):
+    """Ensures that organizations have correct default organization permission groups."""
     for (group_type, default_group) in DEFAULT_ORG_PERMISSION_GROUPS.items():
         default_group_included = False
 

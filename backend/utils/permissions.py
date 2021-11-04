@@ -8,6 +8,10 @@ if TYPE_CHECKING:
 
 
 def assign_object_permissions(app_name: str, model_name: str, instance: Model, organization: Organization) -> None:
+    """
+    Takes in a newly created instance of a model, and the organization tied to it.
+    Assigns permissions on the instance to the organization's appropriate permission groups.
+    """
     for permission_group in organization.permission_groups.all():
         if permission_group.group_type in DEFAULT_ORG_PERMISSION_GROUPS:
             default_group = DEFAULT_ORG_PERMISSION_GROUPS[permission_group.group_type]
