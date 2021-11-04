@@ -1,7 +1,7 @@
 from django.contrib.auth.models import Group
 from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
-from backend.utils.permissions import assign_object_permissions
+from utils.permissions import assign_object_permissions
 from guardian.shortcuts import assign_perm
 
 from apps.organizations.models import Membership, Organization
@@ -86,5 +86,13 @@ def ensure_default_org_permission_groups(instance: Organization, **kwargs):
                 description=default_group.create_description(instance.name),
                 organization=instance,
             )
-            for permission in default_group.permissions["organizations"]["Organization"]:
+            if "organizations" not in default_group.permissions:
+                break
+            organization_app_permissions = default_group.permissions["organizations"]
+
+            if "Organization" in organization_app_permissions:
+                break
+            organization_model_permissions = organization_app_permissions["Organization"]
+
+            for permission in organization_model_permissions:
                 assign_perm(f"organizations.{permission}", group.group, instance)
