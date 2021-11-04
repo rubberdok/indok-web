@@ -47,7 +47,7 @@ ORG_MEMBER_GROUP_TYPE: Final[str] = "ORG_MEMBER"
 # All organizations will have ResponsibleGroups with these names and descriptions,
 # though they may customize their given permissions
 # The given permissions apply only to objects tied to that organization
-DEFAULT_ORG_GROUPS: Final[dict[str, OrgPermissionGroup]] = {
+DEFAULT_ORG_PERMISSION_GROUPS: Final[dict[str, OrgPermissionGroup]] = {
     ORG_MEMBER_GROUP_TYPE: OrgPermissionGroup(
         name="Medlem",
         create_description=(lambda org_name: f"Medlemmer av {org_name}."),

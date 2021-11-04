@@ -6,7 +6,7 @@ from guardian.shortcuts import assign_perm
 from apps.organizations.models import Membership, Organization
 from apps.permissions.constants import (
     ORGANIZATION,
-    DEFAULT_ORG_GROUPS,
+    DEFAULT_ORG_PERMISSION_GROUPS,
     ORG_MEMBER_GROUP_TYPE,
 )
 from apps.permissions.models import ResponsibleGroup
@@ -44,7 +44,7 @@ def ensure_default_groups(instance: Organization, **kwargs):
     """
     Ensures that organizations have correct default organization permission groups.
     """
-    for (group_type, default_group) in DEFAULT_ORG_GROUPS.items():
+    for (group_type, default_group) in DEFAULT_ORG_PERMISSION_GROUPS.items():
         default_group_included = False
 
         existing_group: ResponsibleGroup
