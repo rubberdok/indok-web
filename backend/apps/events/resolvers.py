@@ -2,7 +2,7 @@ import base64
 import io
 import json
 from collections import namedtuple
-from datetime import date, timedelta
+from datetime import date
 
 import pandas as pd
 from django.contrib.auth import get_user_model
@@ -68,7 +68,7 @@ class EventResolvers:
 
             return (
                 filteredEvents.filter(*queries)
-                .filter(start_time__gte=(date.today() - timedelta(days=1)))  # Only show events that have yet to pass
+                .filter(start_time__gte=date.today())  # Only show events that have yet to pass
                 .order_by("start_time")
             )
         return Event.objects.filter(start_time__gte=date.today()).order_by("start_time")
@@ -77,16 +77,7 @@ class EventResolvers:
         """
         For each organization, get the most recent (future) event
         """
-        organizations = Organization.objects.all()
-        all_events = Event.objects.filter(start_time__gte=(date.today() - timedelta(days=1)))
-        events = []
-        for organization in organizations:
-            try:
-                first_matching_event = all_events.get(organization=organization)
-                events.append(first_matching_event.id)
-            except:  # noqa
-                pass
-        return Event.objects.filter(id__in=events).order_by("start_time")
+        return Event.objects.filter(start_time__gte=date.today()).distinct("organization")
 
     def resolve_event(self, info, id):
         try:

@@ -3,10 +3,6 @@ import { UPDATE_EVENT } from "@graphql/events/mutations";
 import { ADMIN_GET_EVENT, GET_CATEGORIES, GET_EVENT } from "@graphql/events/queries";
 import { Category, Event } from "@interfaces/events";
 import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Box,
   Button,
   Checkbox,
   CircularProgress,
@@ -32,13 +28,11 @@ import dayjs from "dayjs";
 import nb from "dayjs/locale/nb";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
-import SlotDistribution from "./SlotDistribution";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.locale(nb);
 dayjs.tz.setDefault("Europe/Oslo");
 const DATE_FORMAT = "YYYY-MM-DDTHH:mm:ss";
-import Alert from "../../Alert";
 
 interface EditEventProps {
   open: boolean;
@@ -62,9 +56,9 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
     startTime: "",
     endTime: "",
     location: "",
-    organizationId: "",
     categoryId: "",
     image: "",
+    isAttendable: false,
     deadline: "",
     signupOpenDate: "",
     availableSlots: "",
@@ -77,23 +71,6 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
   };
 
   const [eventData, setEventData] = useState(defaultInput);
-  const [isAttendable, setIsAttendable] = useState(!!event.attendable);
-  const [hasSlotDistribution, setHasSlotDistribution] = useState(
-    event?.availableSlots !== undefined && event?.availableSlots?.length > 1
-  );
-  const [slotDistribution, setSlotDistribution] = useState<{ category: number[]; availableSlots: number }[]>(
-    event.availableSlots && event.availableSlots?.length > 1
-      ? event.availableSlots.map((dist) => {
-          return { category: dist.category.split(",").map((val) => Number(val)), availableSlots: dist.availableSlots };
-        })
-      : []
-  );
-  const [totalAvailableSlots, setTotalAvailableSlots] = useState(
-    event.availableSlots ? event.availableSlots.reduce((res, dist) => (res = res + dist.availableSlots), 0) : undefined
-  );
-  const [errors, setErrors] = useState<string[]>([]);
-  const [openEditErrorSnackbar, setOpenEditErrorSnackbar] = useState(false);
-  const [openEditSnackbar, setOpenEditSnackbar] = useState(false);
 
   const [updateEvent, { loading: updateEventLoading, error: updateEventError }] = useMutation<{
     updateEvent: { event: Event };
@@ -124,16 +101,11 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
 
     initialEventData.startTime = dayjs(event.startTime).format(DATE_FORMAT);
 
-    initialEventData.availableSlots =
-      slotDistribution.length > 0
-        ? slotDistribution.reduce((res, dist) => (res = res + dist.availableSlots), 0)
-        : undefined;
-
-    if (event?.attendable?.signupOpenDate) {
-      initialEventData.signupOpenDate = dayjs(event?.attendable?.signupOpenDate).format(DATE_FORMAT);
+    if (event.signupOpenDate) {
+      initialEventData.signupOpenDate = dayjs(event.signupOpenDate).format(DATE_FORMAT);
     }
-    if (event?.attendable?.deadline) {
-      initialEventData.deadline = dayjs(event?.attendable?.deadline).format(DATE_FORMAT);
+    if (event.deadline) {
+      initialEventData.deadline = dayjs(event.deadline).format(DATE_FORMAT);
     }
     if (event.endTime) {
       initialEventData.endTime = dayjs(event.endTime).format(DATE_FORMAT);
@@ -144,27 +116,14 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
   if (categoryLoading) return <CircularProgress />;
   if (categoryError) return <Typography>Det oppstod en feil.</Typography>;
 
-  const updateSlotDistribution = (newSlotDistribution: { category: number[]; availableSlots: number }[]) => {
-    setSlotDistribution(newSlotDistribution);
-    // eslint-disable-next-line prefer-spread
-    const usedGrades = [].concat.apply(
-      [],
-      newSlotDistribution.map((dist) => dist.category)
-    );
-    setEventData({
-      ...eventData,
-      allowedGradeYears: usedGrades,
-    });
-  };
-
   const onIsAttendableChange = (attendable: boolean) => {
     // Reset all fields depending on isAttendable if isAttendable is disabled
     if (attendable) {
-      setIsAttendable(true);
-      setHasSlotDistribution(false);
+      setEventData({ ...eventData, isAttendable: true });
     } else {
       setEventData({
         ...eventData,
+        isAttendable: false,
         availableSlots: "",
         bindingSignup: false,
         hasExtraInformation: false,
@@ -172,125 +131,29 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
         deadline: "",
         allowedGradeYears: [1, 2, 3, 4, 5],
       });
-      setIsAttendable(false);
-      setHasSlotDistribution(false);
     }
   };
 
   const onSubmit = () => {
-    let currentErrors: string[] = [];
-
-    const eventInputData = {
-      title: eventData.title,
-      description: eventData.description,
-      startTime: eventData.startTime,
-      organizationId: eventData.organizationId,
-      endTime: eventData.endTime,
-      location: eventData.location,
-      categoryId: eventData.categoryId,
-      image: eventData.image,
-      shortDescription: eventData.shortDescription,
-      contactEmail: eventData.contactEmail,
-      allowedGradeYears: eventData.allowedGradeYears,
-      hasExtraInformation: eventData.hasExtraInformation,
-    };
-    const eventInput = { ...eventInputData };
-
-    Object.keys(eventInputData).forEach((key) => {
-      if (eventInputData[key] === "") {
-        eventInput[key] = undefined;
+    const input = { ...eventData };
+    Object.keys(eventData).forEach((key) => {
+      if (eventData[key] === "") {
+        input[key] = undefined;
       }
     });
-
-    if (!eventInput.title || !eventInput.description || !eventInput.startTime) {
-      currentErrors = [...errors, "Tittel, beskrivelse og starttid er påkrevd"];
-    }
-
-    const attendableInputData = {
-      signupOpenDate: eventData.signupOpenDate,
-      bindingSignup: eventData.bindingSignup,
-      deadline: eventData.deadline,
-    }; // add price: eventData.price here
-    const attendableInput = { ...attendableInputData };
-
-    Object.keys(attendableInputData).forEach((key) => {
-      if (attendableInputData[key] === "") {
-        attendableInput[key] = undefined;
-      }
-    });
-
-    if (isAttendable && !attendableInput.signupOpenDate) {
-      currentErrors = [...errors, "Når påmeldingen åpner er påkrevd for arrangementer med påmelding"];
-    }
-
-    if (
-      isAttendable &&
-      hasSlotDistribution &&
-      slotDistribution.reduce((res, dist) => (res = res + dist.availableSlots), 0) !== totalAvailableSlots
-    ) {
-      currentErrors = [...errors, "Totalt antall plasser må stemme med antall i hver gruppe i plassfordelingen"];
-    }
-
-    const stringSlotDistribution = slotDistribution.map((dist) => {
-      const stringCategory = dist.category.reduce((res, grade) => `${res},${grade}`, "");
-      return { category: stringCategory.slice(1, stringCategory.length), availableSlots: dist.availableSlots };
-    });
-
-    const slotDistributionInputData = { availableSlots: totalAvailableSlots, gradeYears: stringSlotDistribution };
-    const slotDistributionInput = { ...slotDistributionInputData };
-
-    Object.keys(slotDistributionInputData).forEach((key) => {
-      if (slotDistributionInputData[key] === "") {
-        slotDistributionInput[key] = undefined;
-      }
-    });
-
-    if (isAttendable && !slotDistributionInput.availableSlots) {
-      currentErrors = [...errors, "Antall plasser er påkrevd for arrangementer med påmelding"];
-    }
-
-    if (currentErrors.length > 0) {
-      setErrors(currentErrors);
-      setOpenEditErrorSnackbar(true);
-      return;
-    }
-
-    updateEvent({
-      variables: {
-        id: event.id,
-        isAttendable,
-        hasGradeDistributions: hasSlotDistribution,
-        eventData: eventInput,
-        attendableData: isAttendable ? attendableInput : undefined,
-        slotDistributionData: isAttendable ? slotDistributionInput : undefined,
-      },
-    }).then((res) => {
-      if (res.data?.updateEvent) {
-        setOpenEditSnackbar(true);
-      }
-    });
+    updateEvent({ variables: { id: event.id, eventData: input } });
     onClose();
   };
 
   return (
     <Dialog open={open} onClose={() => onClose()}>
-      <DialogTitle>
-        <Typography variant="h4">Rediger arrangement</Typography>
-      </DialogTitle>
+      <DialogTitle>Rediger arrangement</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          <Grid container spacing={3}>
-            <Grid item xs={1} style={{ marginTop: "auto", marginBottom: "auto" }}>
-              <Warning />
-            </Grid>
-            <Grid item xs={11}>
-              Vær varsom ved endring av arrangementer etter påmelding har åpnet.
-            </Grid>
-          </Grid>
+          <Warning />
+          Vær varsom ved endring av arrangementer etter påmelding har åpnet.
         </DialogContentText>
-        <Box paddingBottom={1} paddingTop={1}>
-          <Typography variant="h4">Påkrevde felt</Typography>
-        </Box>
+        <Typography variant="h4">Påkrevde felt</Typography>
         <Grid container spacing={3}>
           <Grid item xs={6}>
             <TextField
@@ -321,205 +184,22 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
               fullWidth
             />
           </Grid>
-
-          <Grid item xs={12} style={{ paddingBottom: 0, marginBottom: -10 }}>
+          <Grid item xs={6}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={eventData.isAttendable}
+                  onChange={(e) => onIsAttendableChange(e.currentTarget.checked)}
+                  name="isAttendable"
+                  color="primary"
+                  disableRipple
+                />
+              }
+              label="Krever påmelding"
+            />
+          </Grid>
+          <Grid item xs={12}>
             <Typography variant="h4">Frivillige felt</Typography>
-          </Grid>
-
-          <Grid item xs={12}>
-            <Accordion expanded={isAttendable} onChange={() => onIsAttendableChange(!isAttendable)}>
-              <AccordionSummary style={{ paddingLeft: 0, marginLeft: 0 }}>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={isAttendable}
-                      onChange={(e) => onIsAttendableChange(e.currentTarget.checked)}
-                      name="isAttendable"
-                      color="primary"
-                      disableRipple
-                    />
-                  }
-                  label="Krever påmelding"
-                />
-              </AccordionSummary>
-              <AccordionDetails style={{ paddingLeft: 0 }}>
-                <Grid container spacing={3}>
-                  <Grid item xs={6}>
-                    <InputLabel>Påmelding åpner</InputLabel>
-                    <Tooltip
-                      disableHoverListener={isAttendable}
-                      disableFocusListener={isAttendable}
-                      title="Kun aktuelt ved påmelding"
-                    >
-                      <TextField
-                        type="datetime-local"
-                        value={eventData.signupOpenDate}
-                        onChange={(e) => setEventData({ ...eventData, signupOpenDate: e.currentTarget.value })}
-                        disabled={!isAttendable}
-                      />
-                    </Tooltip>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <InputLabel>Påmeldingsfrist</InputLabel>
-                    <Tooltip
-                      disableHoverListener={isAttendable}
-                      disableFocusListener={isAttendable}
-                      title="Kun aktuelt ved påmelding"
-                    >
-                      <TextField
-                        type="datetime-local"
-                        value={eventData.deadline}
-                        onChange={(e) => setEventData({ ...eventData, deadline: e.currentTarget.value })}
-                        disabled={!isAttendable}
-                      />
-                    </Tooltip>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <InputLabel>Pris</InputLabel>
-                    <Tooltip title="Kommer snart!">
-                      <TextField
-                        type="number"
-                        // value={eventData.price}
-                        // onChange={(e) => setEventData({ ...eventData, price: e.currentTarget.value })}
-                        margin={"dense"}
-                        disabled
-                      />
-                    </Tooltip>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <InputLabel>Antall plasser</InputLabel>
-                    <Tooltip
-                      disableHoverListener={isAttendable}
-                      disableFocusListener={isAttendable}
-                      title="Kun aktuelt ved påmelding"
-                    >
-                      <TextField
-                        type="number"
-                        value={totalAvailableSlots}
-                        onChange={(e) => setTotalAvailableSlots(Number(e.currentTarget.value))}
-                        disabled={!isAttendable}
-                      />
-                    </Tooltip>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Tooltip
-                      disableHoverListener={isAttendable}
-                      disableFocusListener={isAttendable}
-                      title="Kun aktuelt ved påmelding"
-                    >
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            checked={eventData.bindingSignup}
-                            onChange={(e) => setEventData({ ...eventData, bindingSignup: e.currentTarget.checked })}
-                            name="bindingSignup"
-                            color="primary"
-                            disableRipple
-                          />
-                        }
-                        disabled={!isAttendable}
-                        label="Bindende påmelding"
-                      />
-                    </Tooltip>
-                    <FormHelperText>Gjør det umulig å melde seg av (kan fortsatt melde av venteliste)</FormHelperText>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Tooltip
-                      disableHoverListener={isAttendable}
-                      disableFocusListener={isAttendable}
-                      title="Kun aktuelt ved påmelding"
-                    >
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            checked={eventData.hasExtraInformation}
-                            onChange={(e) =>
-                              setEventData({ ...eventData, hasExtraInformation: e.currentTarget.checked })
-                            }
-                            name="hasExtraInformation"
-                            color="primary"
-                            disableRipple
-                          />
-                        }
-                        disabled={!isAttendable}
-                        label="Utfylling av ekstrainformasjon"
-                      />
-                    </Tooltip>
-                    <FormHelperText>Krev utfylling av en boks med ekstrainformasjon for påmelding</FormHelperText>
-                  </Grid>
-                </Grid>
-              </AccordionDetails>
-            </Accordion>
-          </Grid>
-
-          <Grid item xs={12}>
-            <Accordion
-              expanded={hasSlotDistribution}
-              onClick={() => setHasSlotDistribution(hasSlotDistribution)}
-              onChange={() => {
-                setHasSlotDistribution(!hasSlotDistribution);
-                if (hasSlotDistribution) {
-                  setSlotDistribution([]);
-                }
-              }}
-            >
-              <AccordionSummary style={{ padding: 0, margin: 0 }}>
-                <Grid container spacing={3}>
-                  <Grid item xs={6}>
-                    <FormControl fullWidth>
-                      <InputLabel id="select-grade-years-label" shrink>
-                        Åpent for
-                      </InputLabel>
-                      <Select
-                        labelId="select-grade-years-label"
-                        id="select-grade-years"
-                        name="grade-years"
-                        value={eventData.allowedGradeYears}
-                        multiple
-                        onChange={(e) => {
-                          setEventData({ ...eventData, allowedGradeYears: e.target.value });
-                        }}
-                        displayEmpty
-                      >
-                        {[1, 2, 3, 4, 5].map((year: number) => (
-                          <MenuItem key={year} value={year}>
-                            {`${year}. klasse`}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Tooltip
-                      disableHoverListener={isAttendable}
-                      disableFocusListener={isAttendable}
-                      title="Kun aktuelt ved påmelding"
-                    >
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            checked={hasSlotDistribution}
-                            onChange={(e) => setHasSlotDistribution(e.currentTarget.checked)}
-                            name="slotDistribution"
-                            color="primary"
-                            disableRipple
-                          />
-                        }
-                        disabled={!isAttendable}
-                        label="Bestemt plassfordeling"
-                      />
-                    </Tooltip>
-                    <FormHelperText>Sett av et bestemt antall plasser for ulike klassetrinn</FormHelperText>
-                  </Grid>
-                </Grid>
-              </AccordionSummary>
-              <AccordionDetails>
-                <SlotDistribution
-                  slotDistribution={slotDistribution}
-                  onUpdateSlotDistribution={updateSlotDistribution}
-                />
-              </AccordionDetails>
-            </Accordion>
           </Grid>
 
           <Grid item xs={6}>
@@ -531,17 +211,52 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
             />
             <FormHelperText>E-postadresse for kontakt angående arrangementet</FormHelperText>
           </Grid>
-
           <Grid item xs={6}>
-            <InputLabel>Sluttid for arrangement</InputLabel>
-            <TextField
-              type="datetime-local"
-              value={eventData.endTime}
-              onChange={(e) => setEventData({ ...eventData, endTime: e.currentTarget.value })}
-              margin={"dense"}
-            />
+            <InputLabel>Antall plasser</InputLabel>
+            <Tooltip
+              disableHoverListener={eventData.isAttendable}
+              disableFocusListener={eventData.isAttendable}
+              title="Kun aktuelt ved påmelding"
+            >
+              <TextField
+                type="number"
+                value={eventData.availableSlots}
+                onChange={(e) => setEventData({ ...eventData, availableSlots: e.currentTarget.value })}
+                disabled={!eventData.isAttendable}
+              />
+            </Tooltip>
           </Grid>
-
+          <Grid item xs={6}>
+            <Tooltip
+              disableHoverListener={eventData.isAttendable}
+              disableFocusListener={eventData.isAttendable}
+              title="Kun aktuelt ved påmelding"
+            >
+              <FormControl fullWidth>
+                <InputLabel id="select-grade-years-label" shrink>
+                  Åpent for
+                </InputLabel>
+                <Select
+                  labelId="select-grade-years-label"
+                  id="select-grade-years"
+                  name="grade-years"
+                  value={eventData.allowedGradeYears}
+                  multiple
+                  onChange={(e) => {
+                    setEventData({ ...eventData, allowedGradeYears: e.target.value });
+                  }}
+                  displayEmpty
+                  disabled={!eventData.isAttendable}
+                >
+                  {[1, 2, 3, 4, 5].map((year: number) => (
+                    <MenuItem key={year} value={year}>
+                      {`${year}. klasse`}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Tooltip>
+          </Grid>
           <Grid item xs={6}>
             <TextField
               label="Kort beskrivelse"
@@ -562,7 +277,7 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
                 name="category"
                 value={eventData.categoryId}
                 onChange={(e) => {
-                  setEventData({ ...eventData, categoryId: e.target.value as string });
+                  setEventData({ ...eventData, categoryId: e.target.value });
                 }}
                 displayEmpty
               >
@@ -595,17 +310,106 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
             </Tooltip>
             <FormHelperText>Bildet vil bli vist på infosiden til eventet</FormHelperText>
           </Grid>
+          <Grid item xs={12}>
+            <Tooltip
+              disableHoverListener={eventData.isAttendable}
+              disableFocusListener={eventData.isAttendable}
+              title="Kun aktuelt ved påmelding"
+            >
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={eventData.bindingSignup}
+                    onChange={(e) => setEventData({ ...eventData, bindingSignup: e.currentTarget.checked })}
+                    name="bindingSignup"
+                    color="primary"
+                    disableRipple
+                  />
+                }
+                disabled={!eventData.isAttendable}
+                label="Bindende påmelding"
+              />
+            </Tooltip>
+            <FormHelperText>Gjør det umulig å melde seg av (kan fortsatt melde av venteliste)</FormHelperText>
+          </Grid>
+          <Grid item xs={12}>
+            <Tooltip
+              disableHoverListener={eventData.isAttendable}
+              disableFocusListener={eventData.isAttendable}
+              title="Kun aktuelt ved påmelding"
+            >
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={eventData.hasExtraInformation}
+                    onChange={(e) => setEventData({ ...eventData, hasExtraInformation: e.currentTarget.checked })}
+                    name="hasExtraInformation"
+                    color="primary"
+                    disableRipple
+                  />
+                }
+                disabled={!eventData.isAttendable}
+                label="Utfylling av ekstrainformasjon"
+              />
+            </Tooltip>
+            <FormHelperText>Krev utfylling av en boks med ekstrainformasjon for påmelding</FormHelperText>
+          </Grid>
+          <Grid item xs={6}>
+            <InputLabel>Påmelding åpner</InputLabel>
+            <Tooltip
+              disableHoverListener={eventData.isAttendable}
+              disableFocusListener={eventData.isAttendable}
+              title="Kun aktuelt ved påmelding"
+            >
+              <TextField
+                type="datetime-local"
+                value={eventData.signupOpenDate}
+                onChange={(e) => setEventData({ ...eventData, signupOpenDate: e.currentTarget.value })}
+                disabled={!eventData.isAttendable}
+              />
+            </Tooltip>
+          </Grid>
+          <Grid item xs={6}>
+            <InputLabel>Deadline for påmelding</InputLabel>
+            <Tooltip
+              disableHoverListener={eventData.isAttendable}
+              disableFocusListener={eventData.isAttendable}
+              title="Kun aktuelt ved påmelding"
+            >
+              <TextField
+                type="datetime-local"
+                value={eventData.deadline}
+                onChange={(e) => setEventData({ ...eventData, deadline: e.currentTarget.value })}
+                disabled={!eventData.isAttendable}
+              />
+            </Tooltip>
+          </Grid>
+          <Grid item xs={6}>
+            <InputLabel>Sluttid for arrangement</InputLabel>
+            <TextField
+              type="datetime-local"
+              value={eventData.endTime}
+              onChange={(e) => setEventData({ ...eventData, endTime: e.currentTarget.value })}
+              margin={"dense"}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <InputLabel>Pris</InputLabel>
+            <Tooltip title="Kommer snart!">
+              <TextField
+                type="number"
+                value={eventData.price}
+                onChange={(e) => setEventData({ ...eventData, price: e.currentTarget.value })}
+                margin={"dense"}
+                disabled
+              />
+            </Tooltip>
+          </Grid>
         </Grid>
       </DialogContent>
       <DialogActions>
         {updateEventError && <Typography color="error">Feil: {updateEventError.message}</Typography>}
         {updateEventLoading && <CircularProgress />}
-        {errors.length > 0 &&
-          errors.map((error) => (
-            <Typography key={error} color="error">
-              {error}
-            </Typography>
-          ))}
         <Button onClick={() => onClose()} color="primary" startIcon={<Close />}>
           Avbryt
         </Button>
@@ -613,24 +417,6 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
           Lagre
         </Button>
       </DialogActions>
-      <Alert
-        severity="error"
-        open={openEditErrorSnackbar}
-        onClose={() => {
-          setOpenEditErrorSnackbar(false);
-          setErrors([]);
-        }}
-      >
-        {updateEventError
-          ? updateEventError.message
-          : "Opprettelse feilet: ".concat(
-              errors.slice(1, errors.length).reduce((res, error) => `${res}, ${error}`, `${errors[0]}`)
-            )}
-      </Alert>
-
-      <Alert severity="success" open={openEditSnackbar} onClose={() => setOpenEditSnackbar(false)}>
-        Arrangement oppdatert
-      </Alert>
     </Dialog>
   );
 };

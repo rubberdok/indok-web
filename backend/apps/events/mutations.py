@@ -1,5 +1,3 @@
-from .helpers import create_attendable, create_slot_distributions, update_slot_distributions
-from django.db import transaction
 import graphene
 from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
@@ -15,63 +13,41 @@ from .models import Category, Event, SignUp
 from .types import CategoryType, EventType
 
 
-class BaseEventInput(graphene.InputObjectType):
+class BaseEventInput:
     title = graphene.String(required=True)
     description = graphene.String(required=True)
     start_time = graphene.DateTime(required=True)
+    is_attendable = graphene.Boolean(required=True)
     end_time = graphene.DateTime(required=False)
     location = graphene.String(required=False)
     category_id = graphene.ID(required=False)
     image = graphene.String(required=False)
-    short_description = graphene.String(required=False)
-    contact_email = graphene.String(required=False)
-    allowed_grade_years = graphene.List(graphene.Int)
-    has_extra_information = graphene.Boolean(required=False)
-
-
-class CreateAttendableInput(graphene.InputObjectType):
-    signup_open_date = graphene.DateTime(required=True)
-    binding_signup = graphene.Boolean(required=False)
     deadline = graphene.DateTime(required=False)
+    signup_open_date = graphene.DateTime(required=False)
+    available_slots = graphene.Int(required=False)
     price = graphene.Float(required=False)
+    short_description = graphene.String(required=False)
+    has_extra_information = graphene.Boolean(required=False)
+    contact_email = graphene.String(required=False)
+    binding_signup = graphene.Boolean(required=False)
+    allowed_grade_years = graphene.List(graphene.Int)
 
 
-class GradeDistributionInputType(graphene.InputObjectType):
-    category = graphene.String()
-    available_slots = graphene.Int()
-
-
-class CreateSlotDistributionInput(graphene.InputObjectType):
-    available_slots = graphene.Int(required=True)
-    grade_years = graphene.List(GradeDistributionInputType)
-
-
-class CreateEventInput(BaseEventInput):
+class CreateEventInput(BaseEventInput, graphene.InputObjectType):
     organization_id = graphene.ID(required=True)
 
 
-class UpdateAttendableInput(graphene.InputObjectType):
-    signup_open_date = graphene.DateTime(required=False)
-    binding_signup = graphene.Boolean(required=False)
-    deadline = graphene.DateTime(required=False)
-    price = graphene.Float(required=False)
-
-
-class UpdateSlotDistributionInput(graphene.InputObjectType):
-    available_slots = graphene.Int(required=False)
-    grade_years = graphene.List(GradeDistributionInputType)
-
-
-class UpdateEventInput(BaseEventInput):
+class UpdateEventInput(BaseEventInput, graphene.InputObjectType):
     title = graphene.String(required=False)
     description = graphene.String(required=False)
     start_time = graphene.DateTime(required=False)
     organization_id = graphene.ID(required=False)
+    is_attendable = graphene.Boolean(required=False)
 
 
 class CreateEvent(graphene.Mutation):
     """
-    Create a new event, optionally also an attendable object and one or more slot distribution objects
+    Create a new event
     """
 
     ok = graphene.Boolean()
@@ -79,11 +55,9 @@ class CreateEvent(graphene.Mutation):
 
     class Arguments:
         event_data = CreateEventInput(required=True)
-        attendable_data = CreateAttendableInput(required=False)
-        slot_distribution_data = CreateSlotDistributionInput(required=False)
 
     @permission_required("events.add_event")
-    def mutate(self, info, event_data, attendable_data=None, slot_distribution_data=None):
+    def mutate(self, info, event_data):
         try:
             organization = Organization.objects.get(id=event_data.get("organization_id"))
         except Organization.DoesNotExist:
@@ -91,36 +65,11 @@ class CreateEvent(graphene.Mutation):
 
         check_user_membership(info.context.user, organization)
 
-        with transaction.atomic():  # Make atomic so if the creation of one object fails, no changes will be made to the database
-            # Create event
-            event = Event()
-            for k, v in event_data.items():
-                setattr(event, k, v)
-            event.publisher = info.context.user
-            event.save()
-
-            # Create attendable if included in input data
-            attendable = None
-            if attendable_data is not None:
-                if slot_distribution_data is None:
-                    raise ValueError(
-                        "Du må minimum spesifisere antall plasser og når påmeldingen åpner for å kunne lage et evearrangement med påmelding"
-                    )
-
-                attendable = create_attendable(attendable_data, event)
-
-            # Create slot distribution(s) if included in input data
-            if slot_distribution_data is not None:
-                if attendable is None:
-                    raise ValueError(
-                        "Du må minimum spesifisere antall plasser og når påmeldingen åpner for å kunne lage et arrangement med påmelding"
-                    )
-
-                slot_dist = create_slot_distributions(slot_distribution_data, attendable)
-
-                if slot_dist.grades.sort() != [int(val) for val in event.allowed_grade_years].sort():
-                    raise ValueError("Inkonsistens i plassfordeling mellom trinn")
-
+        event = Event()
+        for k, v in event_data.items():
+            setattr(event, k, v)
+        event.publisher = info.context.user
+        event.save()
         ok = True
         return CreateEvent(event=event, ok=ok)
 
@@ -132,26 +81,13 @@ class UpdateEvent(graphene.Mutation):
 
     class Arguments:
         id = graphene.ID(required=True)
-        is_attendable = graphene.Boolean(required=True)
-        has_grade_distributions = graphene.Boolean(required=True)
         event_data = UpdateEventInput(required=False)
-        attendable_data = UpdateAttendableInput(required=False)
-        slot_distribution_data = UpdateSlotDistributionInput(required=False)
 
     ok = graphene.Boolean()
     event = graphene.Field(EventType)
 
     @permission_required("events.change_event")
-    def mutate(
-        self,
-        info,
-        id,
-        is_attendable,
-        has_grade_distributions,
-        event_data,
-        attendable_data=None,
-        slot_distribution_data=None,
-    ):
+    def mutate(self, info, id, event_data):
         try:
             event = Event.objects.get(pk=id)
         except Event.DoesNotExist:
@@ -159,77 +95,16 @@ class UpdateEvent(graphene.Mutation):
 
         check_user_membership(info.context.user, event.organization)
 
-        with transaction.atomic():  # Make atomic so if the update of one object fails, no changes will be made to the database
-
-            # Update event
-            for k, v in event_data.items():
-                setattr(event, k, v)
-            event.save()
-
-            # Update attendable if included in input data
-            attendable = event.attendable if hasattr(event, "attendable") else None
-
-            # Prevuisly attendable event made non-attendable (no need for sign up)
-            if not is_attendable and attendable is not None:
-                attendable.delete()  # Cascaded to slot distrbution(s)
-                event = Event.objects.get(
-                    pk=event.pk
-                )  # Must refresh event for it to relaize the attendable has been deleted
-
-            else:
-                if attendable_data is not None:
-                    # If the event was changed to be attendable, create attendable object and one or more slot distributions
-                    if attendable is None:
-                        attendable = create_attendable(attendable_data, event)
-                        if slot_distribution_data is None:
-                            raise ValueError(
-                                "Du må minimum spesifisere antall plasser og når påmeldingen åpner for å kunne lage et arrangement med påmelding"
-                            )
-                        create_slot_distributions(slot_distribution_data, attendable)
-                        ok = True
-                        return UpdateEvent(event=event, ok=ok)
-
-                    # If the event was already attendable
-                    price = (
-                        attendable_data.price
-                        if hasattr(attendable_data, "price") and attendable_data.price is not None
-                        else event.attendable.price
-                        if hasattr(event.attendable, "price")
-                        else None
-                    )
-                    binding_signup = (
-                        attendable_data.binding_signup
-                        if hasattr(attendable_data, "binding_signup")
-                        else attendable.binding_signup
-                    )
-                    if price is not None and binding_signup == False:
-                        raise ValueError("Betalt påmelding krever bindende påmelding")
-
-                    for k, v in attendable_data.items():
-                        setattr(attendable, k, v)
-                    attendable.save()
-
-                # Update slot distributions if included in input data
-                if slot_distribution_data is not None:
-                    if attendable is None:
-                        raise ValueError("Betalt påmelding krever bindende påmelding")
-
-                    slot_dist = update_slot_distributions(
-                        slot_distribution_data,
-                        attendable.slot_distribution.get(parent_distribution=None),
-                        has_grade_distributions,
-                    )
-
-                    if slot_dist.grades.sort() != [int(val) for val in event.total_allowed_grade_years].sort():
-                        raise ValueError("Inkonsistens i plassfordeling mellom trinn")
-
+        for k, v in event_data.items():
+            setattr(event, k, v)
+        event.save()
         ok = True
         return UpdateEvent(event=event, ok=ok)
 
 
 class DeleteEvent(graphene.Mutation):
     """
-    Deletes the event with the given ID, deletion will also cascade to any related attendable and slot distribution objects
+    Deletes the event with the given ID
     """
 
     class Arguments:
@@ -278,15 +153,15 @@ class EventSignUp(graphene.Mutation):
 
         now = timezone.now()
 
-        if now < event.attendable.signup_open_date:
+        if now < event.signup_open_date:
             raise Exception("Arrangementet er ikke åpent for påmelding enda")
 
         user = info.context.user
 
-        if not str(user.grade_year) in event.total_allowed_grade_years:
+        if not str(user.grade_year) in event.allowed_grade_years:
             raise PermissionDenied(
                 "Kun studenter i følgende trinn kan melde seg på",
-                event.total_allowed_grade_years,
+                event.allowed_grade_years,
             )
 
         if SignUp.objects.filter(event_id=event_id, is_attending=True, user_id=info.context.user.id).exists():
@@ -306,8 +181,7 @@ class EventSignUp(graphene.Mutation):
         setattr(sign_up, "user_grade_year", user.grade_year)
 
         sign_up.save()
-        is_full = event.get_is_full(user.grade_year)
-        return EventSignUp(event=event, is_full=is_full)
+        return EventSignUp(event=event, is_full=event.is_full)
 
 
 class EventSignOff(graphene.Mutation):
@@ -333,8 +207,7 @@ class EventSignOff(graphene.Mutation):
 
         user = info.context.user
 
-        users_attending, _ = event.get_attendance_and_waiting_list()
-        if event.attendable.binding_signup and user in users_attending:
+        if event.binding_signup and user in event.users_attending:
             raise Exception("Du kan ikke melde deg av et arrangement med bindende påmelding.")
 
         try:
@@ -344,8 +217,7 @@ class EventSignOff(graphene.Mutation):
 
         setattr(sign_up, "is_attending", False)
         sign_up.save()
-        is_full = event.get_is_full(user.grade_year)
-        return EventSignOff(event=event, is_full=is_full)
+        return EventSignOff(event=event, is_full=event.is_full)
 
 
 class AdminEventSignOff(graphene.Mutation):

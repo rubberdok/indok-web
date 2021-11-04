@@ -1,12 +1,8 @@
 import { gql } from "@apollo/client";
 
 export const CREATE_EVENT = gql`
-  mutation CreateEvent(
-    $eventData: CreateEventInput!
-    $attendableData: CreateAttendableInput
-    $slotDistributionData: CreateSlotDistributionInput
-  ) {
-    createEvent(eventData: $eventData, attendableData: $attendableData, slotDistributionData: $slotDistributionData) {
+  mutation CreateEvent($eventData: CreateEventInput!) {
+    createEvent(eventData: $eventData) {
       event {
         id
         title
@@ -23,27 +19,21 @@ export const CREATE_EVENT = gql`
           name
         }
         image
+        isAttendable
+        deadline
+        availableSlots
+        price
         shortDescription
-        hasExtraInformation
-        contactEmail
-        allowedGradeYears
-
-        attendable {
-          id
-          deadline
-          bindingSignup
-          price
-          signupOpenDate
-        }
-
+        signupOpenDate
         userAttendance {
           isSignedUp
           isOnWaitingList
         }
-        availableSlots {
-          category
-          availableSlots
-        }
+        isFull
+        hasExtraInformation
+        bindingSignup
+        contactEmail
+        allowedGradeYears
       }
       ok
     }
@@ -51,22 +41,8 @@ export const CREATE_EVENT = gql`
 `;
 
 export const UPDATE_EVENT = gql`
-  mutation UpdateEvent(
-    $id: ID!
-    $isAttendable: Boolean!
-    $hasGradeDistributions: Boolean!
-    $eventData: UpdateEventInput
-    $attendableData: UpdateAttendableInput
-    $slotDistributionData: UpdateSlotDistributionInput
-  ) {
-    updateEvent(
-      id: $id
-      isAttendable: $isAttendable
-      hasGradeDistributions: $hasGradeDistributions
-      eventData: $eventData
-      attendableData: $attendableData
-      slotDistributionData: $slotDistributionData
-    ) {
+  mutation UpdateEvent($id: ID!, $eventData: UpdateEventInput) {
+    updateEvent(id: $id, eventData: $eventData) {
       event {
         id
         title
@@ -83,27 +59,21 @@ export const UPDATE_EVENT = gql`
           name
         }
         image
+        isAttendable
+        deadline
+        availableSlots
+        price
         shortDescription
-        hasExtraInformation
-        contactEmail
-        allowedGradeYears
-
-        attendable {
-          id
-          deadline
-          bindingSignup
-          price
-          signupOpenDate
-        }
-
+        signupOpenDate
         userAttendance {
           isSignedUp
           isOnWaitingList
         }
-        availableSlots {
-          category
-          availableSlots
-        }
+        isFull
+        hasExtraInformation
+        bindingSignup
+        contactEmail
+        allowedGradeYears
       }
       ok
     }

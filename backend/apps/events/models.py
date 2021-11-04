@@ -16,14 +16,12 @@ class Category(models.Model):
         verbose_name_plural = "Categories"
 
 
-GRADE_CHOICES = ((1, "1"), (2, "2"), (3, "3"), (4, "4"), (5, "5"))
-
-
 class Event(models.Model):
     # ------------------ Mandatory fields ------------------
     title = models.CharField(max_length=128)
     description = models.TextField()
     start_time = models.DateTimeField()
+    is_attendable = models.BooleanField()
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name="events")
 
     # ------------------ Fully optional fields ------------------
@@ -32,23 +30,32 @@ class Event(models.Model):
         on_delete=models.SET_NULL,
         null=True,
     )
-    has_extra_information = models.BooleanField(
-        default=False
-    )  # If the event allows e.g. for group sign ups, this would be true
     end_time = models.DateTimeField(blank=True, null=True)
     location = models.CharField(max_length=128, blank=True, null=True)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, blank=True, null=True)
     image = models.URLField(blank=True, null=True)
-    short_description = models.CharField(max_length=100, default="Klikk her for å lese mer")
+    short_description = models.CharField(max_length=100, blank=True, null=True)
+    has_extra_information = models.BooleanField(default=False)
     contact_email = models.EmailField(blank=True, default="")
-    allowed_grade_years = MultiSelectField(
-        choices=GRADE_CHOICES, default="1,2,3,4,5"
-    )  # Kept here as well in case a non-attenable (no sign up) event has grade restrictions
+    GRADE_CHOICES = ((1, "1"), (2, "2"), (3, "3"), (4, "4"), (5, "5"))
+    allowed_grade_years = MultiSelectField(choices=GRADE_CHOICES, default="1,2,3,4,5")
+
+    # --------------- Required fields given is_attendable == True ---------------
+    signup_open_date = models.DateTimeField(blank=True, null=True)  # When the signup should become available
+    available_slots = models.PositiveIntegerField(  # maximal number of users that can sign up for an event
+        blank=True,
+        null=True,  # TODO: Make this field conditionally required when is_attendable is True!
+    )
+
+    # ----------- Optional fields that should only be set given is_attendable == True -----------
+    deadline = models.DateTimeField(blank=True, null=True)  # Deadline for signing up
+    price = models.FloatField(blank=True, null=True)
+    binding_signup = models.BooleanField(
+        default=False
+    )  # Disables sign-off from users_attending if true. NOTE: binding_signup is required given Price
 
     @property
     def signed_up_users(self):
-        if not hasattr(self, "attendable"):
-            return []
         return (
             get_user_model()
             .objects.filter(signup__event=self.id, signup__is_attending=True)
@@ -56,109 +63,30 @@ class Event(models.Model):
         )
 
     @property
-    def total_allowed_grade_years(self):
-        if not hasattr(self, "attendable") or self.attendable is None:
-            return self.allowed_grade_years
-        return self.attendable.slot_distribution.get(parent_distribution=None).grade_years
+    def users_on_waiting_list(self):
+        result = []
+        if (
+            self.is_attendable
+            and self.available_slots is not None
+            and self.signed_up_users.count() > self.available_slots
+        ):
+            result = list(self.signed_up_users.all()[self.available_slots :])
+        return result
 
     @property
-    def available_slots(self):
-        if not hasattr(self, "attendable") or self.attendable is None:
-            return None
-        return self.attendable.slot_distribution.get(parent_distribution=None).get_available_slots()
+    def users_attending(self):
+        if self.is_attendable and self.available_slots is not None:
+            return list(self.signed_up_users.all()[: self.available_slots])
+        return []
 
-    def get_attendance_and_waiting_list(self):
-        if not hasattr(self, "attendable") or self.attendable is None:
-            return None, None
-        attending = {}  # keys = string of grades (category), values = userlist
-        waiting_list = {}  # keys = string of grades (category), values = userlist
-        self.attendable.slot_distribution.get(parent_distribution=None).get_attending(
-            self.signed_up_users, attending, waiting_list
-        )
-        return attending, waiting_list
-
-    def get_is_full(self, grade_year):
-        if not hasattr(self, "attendable") or self.attendable is None:
-            return False
-
-        attending, _ = self.get_attendance_and_waiting_list()
-        available_slots = self.attendable.slot_distribution.get(parent_distribution=None).get_available_slots_for_grade(
-            grade_year
-        )
-        for grades, users in attending.items():
-            if grade_year in [int(val) for val in grades.split(",")]:
-                return len(users) >= available_slots
+    @property
+    def is_full(self):
+        if self.is_attendable and self.available_slots is not None:
+            return self.signed_up_users.count() >= self.available_slots
         return False
 
     def __str__(self):
         return self.title
-
-
-class Attendable(models.Model):
-    event = models.OneToOneField(Event, on_delete=models.CASCADE, related_name="attendable")
-    signup_open_date = models.DateTimeField()  # When signup should become available
-    binding_signup = models.BooleanField(default=False)  # Disables sign-off from users_attending if true.
-    deadline = models.DateTimeField(blank=True, null=True)  # Deadline for signing up
-    price = models.FloatField(blank=True, null=True)
-
-    def __str__(self):
-        return f"Attendable-{self.event.title}"
-
-
-class SlotDistribution(models.Model):
-    attendable = models.ForeignKey(Attendable, on_delete=models.CASCADE, related_name="slot_distribution")
-    available_slots = models.PositiveIntegerField()
-    grade_years = MultiSelectField(choices=GRADE_CHOICES, default="1,2,3,4,5")
-    parent_distribution = models.ForeignKey(
-        "self", on_delete=models.CASCADE, related_name="child_distributions", null=True, blank=True
-    )
-
-    @property
-    def grades(self):
-        return [int(val) for val in str(self.grade_years).split(",")]
-
-    def get_attending(self, signed_up_users, attending, waiting_list):
-        if len(self.child_distributions.all()) == 0:
-
-            filtered = []
-            for user in list(signed_up_users.all()):
-                if user.grade_year in self.grades:
-                    filtered.append(user)
-
-            if len(filtered) >= self.available_slots:
-                attending[str(self.grade_years).replace(" ", "")] = filtered[: self.available_slots]
-                waiting_list[str(self.grade_years).replace(" ", "")] = filtered[self.available_slots :]
-            else:
-                attending[str(self.grade_years).replace(" ", "")] = filtered
-                waiting_list[str(self.grade_years).replace(" ", "")] = []
-            return
-
-        for child in list(self.child_distributions.all()):
-            child.get_attending(signed_up_users, attending, waiting_list)
-
-    def get_available_slots(self):
-        if len(self.child_distributions.all()) == 0:
-            return [{"category": self.grade_years, "available_slots": self.available_slots}]
-
-        total_available_slots = []
-        for child in list(self.child_distributions.all()):
-            total_available_slots.append({"category": child.grade_years, "available_slots": child.available_slots})
-
-        return total_available_slots
-
-    def get_available_slots_for_grade(self, grade_year):
-        descendants = list(self.child_distributions.all())
-        while descendants:
-            descendant = descendants.pop(0)
-            if grade_year in descendant.grades:
-                return descendant.available_slots
-            if len(descendant.child_distributions.all()) > 0:
-                descendants += list(descendant.distributions.all())
-
-        return self.available_slots
-
-    def __str__(self):
-        return f"{'Child slot distribution' if hasattr(self, 'parent_distribution') and self.parent_distribution is not None else 'Slot distribution'}-{self.attendable.event.title}"
 
 
 class SignUp(models.Model):
