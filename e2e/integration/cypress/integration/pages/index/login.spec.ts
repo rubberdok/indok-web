@@ -1,7 +1,6 @@
 describe("User Logins", () => {
   before(() => {
     Cypress.Cookies.debug(true);
-    cy.login();
   });
 
   beforeEach(() => {
@@ -9,6 +8,7 @@ describe("User Logins", () => {
   });
 
   it("should prompt registration when not registered", () => {
+    cy.login();
     cy.log("Accessing site");
     cy.getCookies();
     cy.visit("/profile").then(() => {
