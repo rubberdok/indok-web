@@ -5,34 +5,34 @@ from dataclasses import dataclass, field
 
 
 @dataclass
-class OrgGroup:
+class OrgPermissionGroup:
     group_type: str
     name: str
     create_description: Callable[[str], str]
     permissions: Final[list[tuple[str, str]]] = field(default_factory=list)
 
 
-old_org_member_group = OrgGroup(
+old_org_member_group = OrgPermissionGroup(
     group_type="PRIMARY",
     name="Medlem",
     create_description=(lambda org_name: f"Medlemmer av {org_name}."),
 )
 
 new_org_member_group = (
-    OrgGroup(
+    OrgPermissionGroup(
         group_type="ORG_MEMBER",
         name="Medlem",
         create_description=(lambda org_name: f"Medlemmer av {org_name}."),
     ),
 )
 
-old_listings_admin_group = OrgGroup(
+old_listings_admin_group = OrgPermissionGroup(
     group_type="HR",
     name="HR",
     create_description=(lambda org_name: f"HR-gruppen til {org_name}. " + "Tillatelser for å se og behandle søknader."),
 )
 
-new_listings_admin_group = OrgGroup(
+new_listings_admin_group = OrgPermissionGroup(
     group_type="LISTINGS_ADMIN",
     name="Vervansvarlig",
     create_description=(
@@ -50,8 +50,8 @@ new_listings_admin_group = OrgGroup(
     ],
 )
 
-NEW_DEFAULT_GROUPS: Final[list[OrgGroup]] = [
-    OrgGroup(
+NEW_DEFAULT_GROUPS: Final[list[OrgPermissionGroup]] = [
+    OrgPermissionGroup(
         group_type="ORG_ADMIN",
         name="Administrator",
         create_description=(
@@ -66,7 +66,7 @@ NEW_DEFAULT_GROUPS: Final[list[OrgGroup]] = [
             ("organizations", "view_membership"),
         ],
     ),
-    OrgGroup(
+    OrgPermissionGroup(
         group_type="EVENTS_ADMIN",
         name="Arrangementansvarlig",
         create_description=(
@@ -86,8 +86,8 @@ NEW_DEFAULT_GROUPS: Final[list[OrgGroup]] = [
 # (generalized to allow for forwards and reverse migration)
 def update_default_groups(
     apps,
-    groups_to_update: list[tuple[OrgGroup, OrgGroup]],
-    groups_to_remove: list[OrgGroup],
+    groups_to_update: list[tuple[OrgPermissionGroup, OrgPermissionGroup]],
+    groups_to_remove: list[OrgPermissionGroup],
 ):
     Organization = apps.get_model("organizations", "Organization")
 
@@ -95,7 +95,7 @@ def update_default_groups(
         existing_groups_to_remove = []
 
         for existing_group in organization.permission_groups.all():
-            updated_group: OrgGroup = None
+            updated_group: OrgPermissionGroup = None
 
             for group_tuple in groups_to_update:
                 if existing_group.group_type == group_tuple[0]:

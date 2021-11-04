@@ -35,7 +35,7 @@ DEFAULT_GROUPS = {
 
 
 @dataclass
-class OrgGroup:
+class OrgPermissionGroup:
     group_type: str
     name: str
     create_description: Callable[[str], str]
@@ -48,13 +48,13 @@ ORG_MEMBER_GROUP_TYPE: Final[str] = "ORG_MEMBER"
 # All organizations will have ResponsibleGroups with these names and descriptions,
 # though they may customize their given permissions
 # The given permissions apply only to objects tied to that organization
-DEFAULT_ORG_GROUPS: Final[list[OrgGroup]] = [
-    OrgGroup(
+DEFAULT_ORG_GROUPS: Final[list[OrgPermissionGroup]] = [
+    OrgPermissionGroup(
         group_type=ORG_MEMBER_GROUP_TYPE,
         name="Medlem",
         create_description=(lambda org_name: f"Medlemmer av {org_name}."),
     ),
-    OrgGroup(
+    OrgPermissionGroup(
         group_type="ORG_ADMIN",
         name="Administrator",
         create_description=(
@@ -73,7 +73,7 @@ DEFAULT_ORG_GROUPS: Final[list[OrgGroup]] = [
             ],
         },
     ),
-    OrgGroup(
+    OrgPermissionGroup(
         group_type="LISTINGS_ADMIN",
         name="Vervansvarlig",
         create_description=(
@@ -96,7 +96,7 @@ DEFAULT_ORG_GROUPS: Final[list[OrgGroup]] = [
             ],
         },
     ),
-    OrgGroup(
+    OrgPermissionGroup(
         group_type="EVENTS_ADMIN",
         name="Arrangementansvarlig",
         create_description=(
