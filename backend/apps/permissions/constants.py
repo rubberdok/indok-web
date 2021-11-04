@@ -36,10 +36,9 @@ DEFAULT_GROUPS = {
 
 @dataclass
 class OrgPermissionGroup:
-    group_type: str
     name: str
     create_description: Callable[[str], str]
-    permissions: dict[str, DefaultPermissionsType] = field(default_factory=dict)
+    permissions: dict[str, dict[str, list[str]]] = field(default_factory=dict)
 
 
 ORG_MEMBER_GROUP_TYPE: Final[str] = "ORG_MEMBER"
@@ -48,69 +47,77 @@ ORG_MEMBER_GROUP_TYPE: Final[str] = "ORG_MEMBER"
 # All organizations will have ResponsibleGroups with these names and descriptions,
 # though they may customize their given permissions
 # The given permissions apply only to objects tied to that organization
-DEFAULT_ORG_GROUPS: Final[list[OrgPermissionGroup]] = [
-    OrgPermissionGroup(
-        group_type=ORG_MEMBER_GROUP_TYPE,
+DEFAULT_ORG_GROUPS: Final[dict[str, OrgPermissionGroup]] = {
+    ORG_MEMBER_GROUP_TYPE: OrgPermissionGroup(
         name="Medlem",
         create_description=(lambda org_name: f"Medlemmer av {org_name}."),
     ),
-    OrgPermissionGroup(
-        group_type="ORG_ADMIN",
+    "ORG_ADMIN": OrgPermissionGroup(
         name="Administrator",
         create_description=(
             lambda org_name: f"Administrator av {org_name}. "
             + "Tillatelser til å endre info om foreningen, samt styre medlemmer og deres tillatelser."
         ),
         permissions={
-            "Organization": [
-                ("organizations", "change_organization"),
-                ("organizations", "add_membership"),
-            ],
-            "Membership": [
-                ("organizations", "change_membership"),
-                ("organizations", "delete_membership"),
-                ("organizations", "view_membership"),
-            ],
+            "organizations": {
+                "Organization": [
+                    "change_organization",
+                    "add_membership",
+                ],
+                "Membership": [
+                    "change_membership",
+                    "delete_membership",
+                    "view_membership",
+                ],
+            },
         },
     ),
-    OrgPermissionGroup(
-        group_type="LISTINGS_ADMIN",
+    "LISTINGS_ADMIN": OrgPermissionGroup(
         name="Vervansvarlig",
         create_description=(
             lambda org_name: f"Vervansvarlige for {org_name}. "
             + "Tillatelser til å lage og redigere verv, samt se og behandle søknader."
         ),
         permissions={
-            "Organization": [
-                ("organizations", "add_listing"),
-                ("organizations", "add_form"),
-            ],
-            "Listing": [
-                ("listings", "change_listing"),
-                ("listings", "delete_listing"),
-            ],
-            "Form": [
-                ("forms", "manage_form"),
-                ("forms", "change_form"),
-                ("forms", "delete_form"),
-            ],
+            "organizations": {
+                "Organization": [
+                    "add_listing",
+                    "add_form",
+                ],
+            },
+            "listings": {
+                "Listing": [
+                    "change_listing",
+                    "delete_listing",
+                ],
+            },
+            "forms": {
+                "Form": [
+                    "manage_form",
+                    "change_form",
+                    "delete_form",
+                ],
+            },
         },
     ),
-    OrgPermissionGroup(
-        group_type="EVENTS_ADMIN",
+    "EVENTS_ADMIN": OrgPermissionGroup(
         name="Arrangementansvarlig",
         create_description=(
             lambda org_name: f"Arrangementansvarlige for {org_name}. "
             + "Tillatelser til å lage og redigere arrangementer."
         ),
         permissions={
-            "Organization": [
-                ("organizations", "add_event"),
-            ],
-            "Event": [
-                ("events", "change_event"),
-                ("events", "delete_event"),
-            ],
+            "organizations": {
+                "Organization": [
+                    "add_event",
+                ],
+            },
+            "events": {
+                "Event": [
+                    "change_event",
+                    "delete_event",
+                ],
+            },
         },
     ),
-]
+}

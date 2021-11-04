@@ -7,10 +7,16 @@ if TYPE_CHECKING:
     from django.db.models import Model
 
 
-def assign_object_permissions(app: str, instance: Model, organization: Organization) -> None:
-    for default_group in DEFAULT_ORG_GROUPS:
-        for permission_group in organization.permission_groups.all():
-            if permission_group.group_type == default_group.group_type:
-                for permission in default_group.permissions:
-                    if permission[0] == app:
-                        assign_perm(f"{permission[0]}.{permission[1]}", permission_group.group, instance)
+def assign_object_permissions(app_name: str, model_name: str, instance: Model, organization: Organization) -> None:
+    for permission_group in organization.permission_groups.all():
+        if permission_group.group_type in DEFAULT_ORG_GROUPS:
+            default_group = DEFAULT_ORG_GROUPS[permission_group.group_type]
+
+            if app_name in default_group.permissions:
+                app_permissions = default_group.permissions[app_name]
+
+                if model_name in app_permissions:
+                    model_permissions = app_permissions[model_name]
+
+                    for permission in model_permissions:
+                        assign_perm(f"{app_name}.{permission}", permission_group.group, instance)

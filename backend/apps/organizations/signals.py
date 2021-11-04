@@ -44,12 +44,12 @@ def ensure_default_groups(instance: Organization, **kwargs):
     """
     Ensures that organizations have correct default organization permission groups.
     """
-    for default_group in DEFAULT_ORG_GROUPS:
+    for (group_type, default_group) in DEFAULT_ORG_GROUPS.items():
         default_group_included = False
 
         existing_group: ResponsibleGroup
         for existing_group in instance.permission_groups.all():
-            if existing_group.group_type == default_group.group_type:
+            if existing_group.group_type == group_type:
                 default_group_included = True
 
                 existing_group_changed = False
@@ -73,11 +73,10 @@ def ensure_default_groups(instance: Organization, **kwargs):
 
         if not default_group_included:
             group = ResponsibleGroup.objects.create(
-                group_type=default_group.group_type,
+                group_type=group_type,
                 name=default_group.name,
                 description=default_group.create_description(instance.name),
                 organization=instance,
             )
-            for permission in default_group.permissions:
-                if permission[0] == "organizations":
-                    assign_perm(f"{permission[0]}.{permission[1]}", group.group, instance)
+            for permission in default_group.permissions["organizations"]["Organization"]:
+                assign_perm(f"organizations.{permission}", group.group, instance)
