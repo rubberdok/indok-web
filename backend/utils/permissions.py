@@ -13,17 +13,11 @@ def assign_object_permissions(app_name: str, model_name: str, instance: Model, o
     Assigns permissions on the instance to the organization's appropriate permission groups.
     """
     for permission_group in organization.permission_groups.all():
-        if permission_group.group_type not in DEFAULT_ORG_PERMISSION_GROUPS:
-            return
-        default_group = DEFAULT_ORG_PERMISSION_GROUPS[permission_group.group_type]
+        try:
+            permissions = DEFAULT_ORG_PERMISSION_GROUPS[permission_group.group_type][app_name][model_name]
 
-        if app_name not in default_group.permissions:
-            return
-        app_permissions = default_group.permissions[app_name]
+            for permission in permissions:
+                assign_perm(f"{app_name}.{permission}", permission_group.group, instance)
 
-        if model_name not in app_permissions:
-            return
-        model_permissions = app_permissions[model_name]
-
-        for permission in model_permissions:
-            assign_perm(f"{app_name}.{permission}", permission_group.group, instance)
+        except (KeyError):
+            continue

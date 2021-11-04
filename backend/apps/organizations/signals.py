@@ -86,13 +86,12 @@ def ensure_default_org_permission_groups(instance: Organization, **kwargs):
                 description=default_group.create_description(instance.name),
                 organization=instance,
             )
-            if "organizations" not in default_group.permissions:
-                continue
-            organization_app_permissions = default_group.permissions["organizations"]
 
-            if "Organization" not in organization_app_permissions:
-                continue
-            organization_model_permissions = organization_app_permissions["Organization"]
+            try:
+                permissions = default_group.permissions["organizations"]["Organization"]
 
-            for permission in organization_model_permissions:
-                assign_perm(f"organizations.{permission}", group.group, instance)
+                for permission in permissions:
+                    assign_perm(f"organizations.{permission}", group.group, instance)
+
+            except (KeyError):
+                continue
