@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "test": "cypress open",
-    "test:headless": "cypress run",
+    "test:headless": "DEBUG=cypress:* cypress run",
     "e2e": "test-server 'http://localhost:3000|http://localhost:8000' 'yarn test'",
     "e2e:headless": "test-server 'http://localhost:3000|http://localhost:8000' 'yarn test:headless'"
   },
