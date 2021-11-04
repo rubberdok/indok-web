@@ -9,7 +9,7 @@ describe("SSO login", () => {
     cy.log("Accessing site");
     cy.visit("/").then(() => {
       cy.get("h1").should("contain", "Industriell");
-      cy.getByTestId("[data-testid=login]")
+      cy.getByTestId("login")
         .click()
         .then(() => {
           cy.log("Logging in");
