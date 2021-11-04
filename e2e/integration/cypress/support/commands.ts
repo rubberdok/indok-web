@@ -23,9 +23,22 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+
+declare namespace Cypress {
+  interface Chainable {
+    login(): Chainable<Response<{ body: { data: { authToken: string } } }>>;
+    getByTestId(testId: string): Chainable<Element>;
+  }
+}
+
 Cypress.Commands.add("login", () => {
-  const query = `{ authToken }`;
-  cy.request("POST", "/graphql/", { query }).then((response) => {
-    cy.log(response.body);
-  });
+  const query = `{authToken}`;
+  cy.log("Logging in...");
+  cy.request("POST", `${Cypress.env("API_URL")}/graphql/`, { query }).then(
+    (res) => cy.log(`Logged in with token ${res.body.data.authToken}`)
+  );
+});
+
+Cypress.Commands.add("getByTestId", (testId: string) => {
+  return cy.get(`[data-test-id=${testId}]`);
 });
