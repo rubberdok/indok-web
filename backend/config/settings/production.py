@@ -71,8 +71,8 @@ LOGGING = {
 GRAPHENE["MIDDLEWARE"] += ["config.sentry.middleware.SentryMiddleware"]  # noqa
 
 # Sentry
-SENTRY_DSN = cast(str, env("SENTRY_DSN"))
-SENTRY_LOG_LEVEL = cast(int, env.int("DJANGO_SENTRY_LOG_LEVEL", logging.INFO))
+SENTRY_DSN: str = env("SENTRY_DSN")
+SENTRY_LOG_LEVEL: int = cast(int, env.int("DJANGO_SENTRY_LOG_LEVEL", logging.INFO))
 
 sentry_logging = LoggingIntegration(
     level=SENTRY_LOG_LEVEL,  # Capture info and above as breadcrumbs
@@ -84,7 +84,7 @@ integrations = [sentry_logging, DjangoIntegration()]
 sentry_sdk.init(
     dsn=SENTRY_DSN,
     integrations=integrations,
-    environment=cast(str, env("SENTRY_ENVIRONMENT", default="production")),
+    environment=ENVIRONMENT,  # noqa
     traces_sample_rate=cast(float, env.float("SENTRY_TRACES_SAMPLE_RATE", default=0.0)),
     send_default_pii=cast(bool, env.bool("SENTRY_SEND_DEFAULT_PII", default=True)),
 )

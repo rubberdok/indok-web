@@ -2,6 +2,7 @@
 Base settings to build other settings files upon.
 """
 from pathlib import Path
+from typing import Literal
 
 import environ
 
@@ -16,8 +17,9 @@ if READ_DOT_ENV_FILE:
     env.read_env(str(ROOT_DIR / ".env"))
 
 # GENERAL
-DEBUG = env.bool("DJANGO_DEBUG", False)
-CYPRESS = env.bool("DJANGO_CYPRESS", False)
+ENVIRONMENT: Literal["test", "development", "production"] = env("DJANGO_ENVIRONMENT")
+DEBUG = ENVIRONMENT == "development"
+CYPRESS = ENVIRONMENT == "test"
 
 TIME_ZONE = "Europe/Oslo"
 LANGUAGE_CODE = "en-us"
