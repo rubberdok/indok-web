@@ -1,3 +1,5 @@
+import { useQuery } from "@apollo/client";
+import { GET_SERVER_TIME } from "@graphql/utils/time/queries";
 import { Event } from "@interfaces/events";
 import { User } from "@interfaces/users";
 import {
@@ -45,6 +47,7 @@ const EventListItem: React.FC<Props> = ({ event, user }) => {
   const theme = useTheme();
   const classes = useStyles();
   const smallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const { data: timeData } = useQuery(GET_SERVER_TIME);
 
   return (
     <Grid item xs={12}>
@@ -65,13 +68,15 @@ const EventListItem: React.FC<Props> = ({ event, user }) => {
                 {event.shortDescription ?? "Trykk for å lese mer"}
               </Typography>
             </Box>
-            {user && event.isAttendable && event.allowedGradeYears.includes(user.gradeYear) ? (
+            {user && event.attendable && event.allowedGradeYears.includes(user.gradeYear) ? (
               event.isFull && event.userAttendance?.isOnWaitingList ? (
                 <Chip label="På venteliste" />
               ) : event.isFull && !event.userAttendance?.isSignedUp ? (
                 <Chip color="primary" label="Venteliste tilgjengelig" />
               ) : event.userAttendance?.isSignedUp ? (
                 <Chip color="primary" label="Påmeldt" />
+              ) : timeData && dayjs(event.attendable.signupOpenDate).diff(dayjs(timeData.currentTime)) > 0 ? (
+                <Chip label="Påmelding åpner snart" />
               ) : (
                 <Chip label="Påmelding tilgjengelig" />
               )

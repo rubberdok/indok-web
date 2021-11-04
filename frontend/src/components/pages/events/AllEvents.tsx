@@ -53,7 +53,6 @@ const AllEvents: React.FC = () => {
   const loading = showDefaultEvents ? defaultEventsLoading : eventsLoading;
   const data = showDefaultEvents ? defaultEventsData?.defaultEvents : eventsData?.allEvents;
 
-  if (loading || userLoading) return <Typography variant="body1">Laster..</Typography>;
   if (error) return <Typography variant="body1">Kunne ikke hente arrangementer.</Typography>;
 
   const onChange = (newFilters: FilterQuery) => {
@@ -111,12 +110,16 @@ const AllEvents: React.FC = () => {
               </Button>
             </Link>
           )}
-          {loading ? (
+          {loading || userLoading ? (
             <CircularProgress />
           ) : (
             <Grid container spacing={2}>
               {data === undefined || data.length === 0 ? (
-                <Typography variant="body1">Ingen arrangementer passer til valgte filtre.</Typography>
+                Object.keys(filters).length > 0 ? (
+                  <Typography variant="body1">Ingen arrangementer passer til valgte filtre.</Typography>
+                ) : (
+                  <Typography variant="body1">Ingen arrangementer å vise.</Typography>
+                )
               ) : (
                 data.map((event: Event) => <EventListItem key={event.id} event={event} user={userData?.user} />)
               )}

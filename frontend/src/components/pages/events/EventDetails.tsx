@@ -4,7 +4,7 @@ import { EVENT_SIGN_OFF, EVENT_SIGN_UP } from "@graphql/events/mutations";
 import { GET_EVENT } from "@graphql/events/queries";
 import { GET_USER } from "@graphql/users/queries";
 import { GET_SERVER_TIME } from "@graphql/utils/time/queries";
-import { AttendableEvent, Event } from "@interfaces/events";
+import { Event } from "@interfaces/events";
 import { User } from "@interfaces/users";
 import {
   Box,
@@ -13,8 +13,6 @@ import {
   Grid,
   Link as MuiLink,
   Paper,
-  Snackbar as MuiSnackbar,
-  SnackbarCloseReason,
   TextField,
   Typography,
   useTheme,
@@ -25,13 +23,12 @@ import CategoryIcon from "@material-ui/icons/Category";
 import CreditCard from "@material-ui/icons/CreditCard";
 import EventIcon from "@material-ui/icons/Event";
 import LocationOnIcon from "@material-ui/icons/LocationOn";
-import { Alert as MuiAlert } from "@material-ui/lab";
-import { calendarFile } from "@utils/calendars";
 import dayjs from "dayjs";
 import Link from "next/link";
 import React, { useState } from "react";
 import CountdownButton from "./CountdownButton";
 import EditEvent from "./EventEditor";
+import Alert from "../../Alert";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -79,13 +76,6 @@ interface Props {
   eventId: string;
 }
 
-interface AlertProps {
-  open: boolean;
-  onClose: ((event: React.SyntheticEvent<any, globalThis.Event>, reason: SnackbarCloseReason) => void) | undefined;
-  severity: "success" | "info" | "warning" | "error";
-  children: string | undefined;
-}
-
 function wrapInTypo(para: JSX.Element[] | string, className: string) {
   return <Typography className={className}>{para}</Typography>;
 }
@@ -98,21 +88,6 @@ function formatDescription(desc: string, innerClass: string, outerClass: string)
     )
   );
 }
-
-const Alert: React.FC<AlertProps> = ({ open, onClose, children, severity }) => {
-  return (
-    <MuiSnackbar
-      autoHideDuration={3000}
-      anchorOrigin={{ vertical: "top", horizontal: "right" }}
-      open={open}
-      onClose={onClose}
-    >
-      <MuiAlert elevation={6} variant="filled" severity={severity}>
-        {children}
-      </MuiAlert>
-    </MuiSnackbar>
-  );
-};
 
 const EventDetails: React.FC<Props> = ({ eventId }) => {
   const [openSignUpSnackbar, setOpenSignUpSnackbar] = useState(false);
@@ -149,9 +124,7 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
 
   const [openEditEvent, setOpenEditEvent] = useState(false);
 
-  if (eventLoading) return <p>Loading...</p>;
-
-  if (eventError) return <p>Error :(</p>;
+  if (eventError) return <Typography variant="body1">Kunne ikke laste arrangementet</Typography>;
 
   if (!eventData || !eventData.event || !userData)
     return <Typography variant="body1">Kunne ikke laste arrangementet</Typography>;
@@ -210,7 +183,7 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
             Arrangert av {eventData.event.organization?.name}
           </Typography>
 
-          {!eventData.event.isAttendable ? null : !userData.user ? (
+          {!eventData.event.attendable ? null : !userData.user ? (
             <Typography variant="h5" gutterBottom>
               Logg inn for å melde deg på
             </Typography>
@@ -244,25 +217,27 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
                       onChange={(e) => setExtraInformation(e.target.value)}
                     />
                   )}
-                <CountdownButton
-                  countDownDate={(eventData.event as AttendableEvent).signupOpenDate}
-                  isSignedUp={(eventData.event as AttendableEvent).userAttendance.isSignedUp}
-                  isOnWaitingList={(eventData.event as AttendableEvent).userAttendance.isOnWaitingList}
-                  isFull={(eventData.event as AttendableEvent).isFull}
-                  loading={signOffLoading || signUpLoading || eventLoading}
-                  disabled={
-                    (!userData.user.phoneNumber &&
-                      !eventData.event.userAttendance?.isSignedUp &&
-                      !eventData.event.userAttendance?.isOnWaitingList) ||
-                    (eventData.event.bindingSignup && eventData.event.userAttendance?.isSignedUp) ||
-                    (eventData.event.hasExtraInformation &&
-                      !extraInformation &&
-                      !eventData.event.userAttendance?.isSignedUp &&
-                      !eventData.event.userAttendance?.isOnWaitingList)
-                  }
-                  onClick={handleClick}
-                  currentTime={timeData.serverTime}
-                />
+                {eventData.event.attendable && (
+                  <CountdownButton
+                    countDownDate={eventData.event.attendable?.signupOpenDate}
+                    isSignedUp={eventData.event.userAttendance?.isSignedUp ?? false}
+                    isOnWaitingList={eventData.event.userAttendance?.isOnWaitingList ?? false}
+                    isFull={eventData.event.isFull}
+                    loading={signOffLoading || signUpLoading || eventLoading}
+                    disabled={
+                      (!userData.user.phoneNumber &&
+                        !eventData.event.userAttendance?.isSignedUp &&
+                        !eventData.event.userAttendance?.isOnWaitingList) ||
+                      (eventData.event.attendable.bindingSignup && eventData.event.userAttendance?.isSignedUp) ||
+                      (eventData.event.hasExtraInformation &&
+                        !extraInformation &&
+                        !eventData.event.userAttendance?.isSignedUp &&
+                        !eventData.event.userAttendance?.isOnWaitingList)
+                    }
+                    onClick={handleClick}
+                    currentTime={timeData.serverTime}
+                  />
+                )}
               </PermissionRequired>
             </>
           )}
@@ -308,9 +283,9 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
                 <Typography variant="h4" gutterBottom>
                   Info
                 </Typography>
-                {eventData.event.price && (
+                {eventData.event?.attendable?.price && (
                   <Typography variant="body1" className={classes.wrapIcon}>
-                    <CreditCard fontSize="small" /> {eventData.event.price} kr
+                    <CreditCard fontSize="small" /> {eventData.event.attendable?.price} kr
                   </Typography>
                 )}
                 {eventData.event.location && (
@@ -329,12 +304,12 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
                     <MuiLink href={`mailto:${eventData.event.contactEmail}`}>{eventData.event.contactEmail}</MuiLink>
                   </Typography>
                 )}
-                {eventData.event.bindingSignup && (
+                {eventData.event?.attendable?.bindingSignup && (
                   <Typography variant="body1" className={classes.wrapIcon} color="error">
                     <ErrorOutline fontSize="small" /> Bindende påmelding
                   </Typography>
                 )}
-                <Typography variant="overline">Åpner</Typography>
+                <Typography variant="overline">Starter</Typography>
                 <Typography variant="body1" className={classes.wrapIcon}>
                   <EventIcon fontSize="small" />
                   {dayjs(eventData.event.startTime).format("DD.MMM YYYY, kl. HH:mm")}
