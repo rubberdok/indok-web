@@ -90,6 +90,8 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+    env:
+      env-file: django.staging.env
     steps:
       - name: Download artifact
         uses: actions/download-artifact@v2
@@ -101,5 +103,11 @@ jobs:
         run: |
           docker load --input /tmp/backend-production.tar
 
+      - name: Load environment variables from S3
+        id: env-download
+        run: |
+          aws s3 cp s3://indok-web-environments/${{ env.env-file }} ${{ env.env-file }}
+          cat ${{ env.env-file }} >> $GITHUB_ENV
+
       - name: Run API tests
-        run: docker run -v $(PWD):/usr/src/app backend:production
+        run: docker run -v $(PWD):/usr/src/app --env-file ${{ env.env-file }} --network host backend:production 'python manage.py test'
