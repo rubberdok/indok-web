@@ -22,6 +22,7 @@ jobs:
             env-prefix: django
             context: ./backend
             dockerfile: Dockerfile.prod
+      fail-fast: false
 
     env:
       env-file: ${{ matrix.env-prefix }}.${{ matrix.stage }}.env
@@ -59,7 +60,7 @@ jobs:
           context: ${{ matrix.context }}
           file: ${{ matrix.context }}/${{ matrix.dockerfile }}
           outputs: type=docker,dest=/tmp/myimage.tar
-          tags: user/${{ matrix.container }}:${{ matrix.stage }}
+          tags: ${{ matrix.image }}:${{ matrix.stage }}
           secret-files: |
             ENVIRONMENT=./${{ env.env-file }}
 
