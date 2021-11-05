@@ -59,7 +59,7 @@ jobs:
           context: ${{ matrix.context }}
           file: ${{ matrix.context }}/${{ matrix.dockerfile }}
           outputs: type=docker,dest=/tmp/myimage.tar
-          tags: ${{ matrix.container }}:${{ matrix.stage }}
+          tags: user/${{ matrix.container }}:${{ matrix.stage }}
           secret-files: |
             ENVIRONMENT=./${{ env.env-file }}
 
