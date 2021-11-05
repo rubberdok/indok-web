@@ -11,21 +11,21 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
+        image: [frontend, backend]
+        stage: [dummy, staging, production]
         include:
-          - container: frontend
-            stage: [dummy, staging, production]
+          - image: frontend
             env-prefix: next
             context: ./frontend
             dockerfile: Dockerfile.prod
-
-          - container: backend
+          - image: backend
             env-prefix: django
-            stage: [production]
             context: ./backend
             dockerfile: Dockerfile.prod
+
     env:
       env-file: ${{ matrix.env-prefix }}.${{ matrix.stage }}.env
-      dockerfile: ${{ matrix.container }}-${{ matrix.stage }}
+      dockerfile: ${{ matrix.image }}-${{ matrix.stage }}
 
     steps:
       - name: Checkout
@@ -52,12 +52,12 @@ jobs:
         id: env-load
         run: cat ${{ env.env-file }} >> $GITHUB_ENV
 
-      - name: Build ${{ matrix.container }} image
+      - name: Build ${{ matrix.image }} image
         id: build-image
         uses: docker/build-push-action@v2
         with:
           context: ${{ matrix.context }}
-          file: ${{ matrix.container }}/${{ matrix.dockerfile }}
+          file: ${{ matrix.context }}/${{ matrix.dockerfile }}
           outputs: type=docker,dest=/tmp/myimage.tar
           tags: ${{ matrix.container }}:${{ matrix.stage }}
           secret-files: |
