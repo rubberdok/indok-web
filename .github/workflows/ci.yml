@@ -12,6 +12,11 @@ jobs:
     strategy:
       matrix:
         linter: [black, flake8]
+        include:
+          - linter: black
+            command: --check
+          - linter: flake8
+            command: --append-config=backend/tox.ini
       fail-fast: false
     steps:
       - name: Checkout
@@ -22,11 +27,11 @@ jobs:
         with:
           python-version: "3.9.7"
 
-      - name: Install linters
+      - name: Install ${{ matrix.linter }}
         run: pip install ${{ matrix.linter }}
 
       - name: ${{ matrix.linter }}
-        run: ${{ matrix.linter }} backend
+        run: ${{ matrix.linter }} backend ${{ matrix.command }}
 
   build:
     name: Build image
