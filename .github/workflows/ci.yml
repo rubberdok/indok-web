@@ -53,6 +53,10 @@ jobs:
         id: env-load
         run: cat ${{ env.env-file }} >> $GITHUB_ENV
 
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+
       - name: Build ${{ matrix.image }} image
         id: build-image
         uses: docker/build-push-action@v2
