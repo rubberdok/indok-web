@@ -97,5 +97,9 @@ jobs:
           name: backend-production
           path: /tmp
 
+      - name: Load Docker images
+        run: |
+          docker load --input /tmp/backend-production.tar
+
       - name: Run API tests
         run: docker run -v $(PWD):/usr/src/app backend:production
