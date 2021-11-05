@@ -1,0 +1,93 @@
+name: Build images
+
+on: pull_request
+
+env:
+  AWS_REGION: eu-north-1 # Set this to our AWS region
+
+jobs:
+  build:
+    name: Build image
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - container: frontend
+            stage: [dummy, staging, production]
+            env-prefix: next
+            context: ./frontend
+            dockerfile: Dockerfile.prod
+
+          - container: backend
+            env-prefix: django
+            stage: [production]
+            context: ./backend
+            dockerfile: Dockerfile.prod
+    env:
+      env-file: ${{ matrix.env-prefix }}.${{ matrix.stage }}.env
+      dockerfile: ${{ matrix.container }}-${{ matrix.stage }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Download environment variables
+        if: ${{ env.env-file }}
+        id: env-download
+        run: aws s3 cp s3://indok-web-environments/${{ env.env-file }} ${{ env.env-file }}
+
+      - name: Load environment variables
+        if: ${{ env.env-file }}
+        id: env-load
+        run: cat ${{ env.env-file }} >> $GITHUB_ENV
+
+      - name: Build ${{ matrix.container }} image
+        id: build-image
+        uses: docker/build-push-action@v2
+        with:
+          context: ${{ matrix.context }}
+          file: ${{ matrix.container }}/${{ matrix.dockerfile }}
+          outputs: type=docker,dest=/tmp/myimage.tar
+          tags: ${{ matrix.container }}:${{ matrix.stage }}
+          secret-files: |
+            ENVIRONMENT=./${{ env.env-file }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.dockerfile }}
+          path: /tmp/${{ env.dockerfile }}.tar
+
+  api:
+    runs-on: ubuntu-latest
+    needs: build
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: backend-production
+          path: /tmp
+
+      - name: Run API tests
+        run: docker run -v $(PWD):/usr/src/app backend:production
