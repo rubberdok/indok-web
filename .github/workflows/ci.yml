@@ -15,6 +15,7 @@ jobs:
         stage: [staging, production]
         include:
           - image: frontend
+            build-env: true
             env-prefix: next
             context: ./frontend
             dockerfile: Dockerfile.prod
@@ -46,15 +47,12 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Download environment variables
-        if: ${{ env.env-file }}
+      - name: Load environment variables from S3
+        if: ${{ matrix.build-env }}
         id: env-download
-        run: aws s3 cp s3://indok-web-environments/${{ env.env-file }} ${{ env.env-file }}
-
-      - name: Load environment variables
-        if: ${{ env.env-file }}
-        id: env-load
-        run: cat ${{ env.env-file }} >> $GITHUB_ENV
+        run: |
+          aws s3 cp s3://indok-web-environments/${{ env.env-file }} ${{ env.env-file }}
+          cat ${{ env.env-file }} >> $GITHUB_ENV
 
       - name: Set up Docker Buildx
         id: buildx
