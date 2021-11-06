@@ -158,7 +158,7 @@ jobs:
       - name: Run API tests
         run: |
           docker run \
-            -v $(PWD):/usr/src/app \
+            -v $GITHUB_WORKSPACE:/usr/src/app \
             --env-file ${{ env.env-file }} \
             --network ${{ job.container.network }} \
             --entrypoint /bin/sh \
