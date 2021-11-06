@@ -147,7 +147,14 @@ jobs:
           echo "GOOGLE_DRIVE_API_KEY=${{ secrets.GOOGLE_DRIVE_API_KEY }}" >> ${{ env.env-file }}
 
       - name: Run API tests
-        run: docker run -v $(PWD):/usr/src/app --env-file ${{ env.env-file }} --network ${{ job.container.network }} backend:production 'coverage run manage.py test && coverage xml'
+        run: |
+          docker run \
+            -v $(PWD):/usr/src/app \
+            --env-file ${{ env.env-file }} \
+            --network ${{ job.container.network }} \
+            --entrypoint /bin/sh \
+            backend:production \
+            'python manage.py migrate && coverage run manage.py test && coverage xml'
 
       - name: Upload coverage
         uses: codecov/codecov-action@v2
