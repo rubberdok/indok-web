@@ -50,7 +50,7 @@ RUN chmod +x  ./entrypoint.prod.sh
 COPY . .
 
 # chown all the files to the app user
-RUN chown -R django:python /usr/src/app
+RUN chown -R django:python ./
 
 # change to the django user
 USER django
