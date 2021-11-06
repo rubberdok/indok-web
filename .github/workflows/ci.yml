@@ -108,6 +108,7 @@ jobs:
     name: API tests
     runs-on: ubuntu-latest
     needs: build
+    if: ${{ always() }} # We want to run API-tests even if the frontend builds fail.
     services:
       postgres:
         image: postgres
