@@ -80,7 +80,7 @@ jobs:
         run: |
           aws s3 cp s3://indok-web-environments/${{ env.env-file }} ${{ env.env-file }}
           cat ${{ env.env-file }} >> $GITHUB_ENV
-          echo ::set-output name=build-args::$(cat ${{ env.env-file }})
+          echo ""::set-output name=build-args::$(cat ${{ env.env-file }})"
 
       - name: Set up Docker Buildx
         id: buildx
