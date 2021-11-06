@@ -144,7 +144,7 @@ jobs:
         run: |
           aws s3 cp s3://indok-web-environments/${{ env.env-file }} ${{ env.env-file }}
           echo "DATAPORTEN_SECRET=${{ secrets.DATAPORTEN_SECRET }}" >> ${{ env.env-file }}
-          echo "GOOGLE_DRIVE_API_KEY=${{ secrets.GOOGLE_DRIVE_APIKEY }}" >> ${{ env.env-file }}
+          echo "GOOGLE_DRIVE_API_KEY=${{ secrets.GOOGLE_DRIVE_API_KEY }}" >> ${{ env.env-file }}
 
       - name: Run API tests
         run: docker run -v $(PWD):/usr/src/app --env-file ${{ env.env-file }} --network host backend:production 'coverage run manage.py test && coverage xml'
