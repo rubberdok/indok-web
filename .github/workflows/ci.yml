@@ -163,7 +163,7 @@ jobs:
             --network ${{ job.container.network }} \
             --entrypoint /bin/sh \
             backend:production \
-            backend/entrypoint.test.sh
+            /usr/src/app/entrypoint.test.sh
 
       - name: Upload coverage
         uses: codecov/codecov-action@v2
