@@ -105,6 +105,7 @@ jobs:
           retention-days: 1
 
   api:
+    name: API tests
     runs-on: ubuntu-latest
     needs: build
     services:
@@ -141,7 +142,7 @@ jobs:
         id: env-download
         run: |
           aws s3 cp s3://indok-web-environments/${{ env.env-file }} ${{ env.env-file }}
-          cat ${{ env.env-file }} >> $GITHUB_ENV
+          echo "DATAPORTEN_SECRET=${{ secrets.DATAPORTEN_SECRET }}" >> ${{ env.env-file }}
 
       - name: Run API tests
         run: docker run -v $(PWD):/usr/src/app --env-file ${{ env.env-file }} --network host backend:production 'python manage.py test'
