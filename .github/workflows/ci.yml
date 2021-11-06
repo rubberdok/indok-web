@@ -161,9 +161,8 @@ jobs:
             -v $GITHUB_WORKSPACE:/usr/src/app \
             --env-file ${{ env.env-file }} \
             --network ${{ job.container.network }} \
-            --entrypoint /bin/sh \
-            backend:production \
-            /usr/src/app/entrypoint.test.sh
+            --entrypoint /usr/src/app/entrypoint.test.sh \
+            backend:production
 
       - name: Upload coverage
         uses: codecov/codecov-action@v2
