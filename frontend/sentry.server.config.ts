@@ -3,8 +3,9 @@
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 
 import * as Sentry from "@sentry/nextjs";
+import { config } from "@utils/config";
 
-const SENTRY_DSN = process.env.NODE_ENV === "production" ? process.env.NEXT_PUBLIC_SENTRY_DSN : undefined;
+const SENTRY_DSN = process.env.NODE_ENV === "production" ? config.sentryDsn : undefined;
 
 Sentry.init({
   dsn: SENTRY_DSN,
