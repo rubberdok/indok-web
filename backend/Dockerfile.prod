@@ -27,6 +27,7 @@ RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/app/wheels -r produc
 
 # pull official base image
 FROM 777854691961.dkr.ecr.eu-north-1.amazonaws.com/python:3.9 as runner
+WORKDIR /usr/src/app
 
 # create directory for the app user
 RUN addgroup --gid 1001 -system python
@@ -50,7 +51,7 @@ RUN chmod +x  ./entrypoint.prod.sh
 COPY . .
 
 # chown all the files to the app user
-RUN chown -R django:python ./
+RUN chown -R django:python /usr/src/app
 
 # change to the django user
 USER django
