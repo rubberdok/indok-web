@@ -16,7 +16,8 @@ if READ_DOT_ENV_FILE:
     env.read_env(str(ROOT_DIR / ".env"))
 
 # GENERAL
-DEBUG = env.bool("DJANGO_DEBUG", False)
+ENVIRONMENT = env("DJANGO_ENVIRONMENT")
+DEBUG = ENVIRONMENT == "development"
 
 TIME_ZONE = "Europe/Oslo"
 LANGUAGE_CODE = "en-us"

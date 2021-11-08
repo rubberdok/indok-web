@@ -84,7 +84,7 @@ integrations = [sentry_logging, DjangoIntegration()]
 sentry_sdk.init(
     dsn=SENTRY_DSN,
     integrations=integrations,
-    environment=cast(str, env("SENTRY_ENVIRONMENT", default="production")),
+    environment=ENVIRONMENT,  # noqa
     traces_sample_rate=cast(float, env.float("SENTRY_TRACES_SAMPLE_RATE", default=0.0)),
     send_default_pii=cast(bool, env.bool("SENTRY_SEND_DEFAULT_PII", default=True)),
 )
