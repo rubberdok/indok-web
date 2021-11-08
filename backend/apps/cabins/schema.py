@@ -1,21 +1,28 @@
 import graphene
 
-from .mutations import CreateBooking, DeleteBooking, SendEmail, UpdateBooking
-from .resolvers import CabinResolvers
-from .types import BookingType, CabinType
+from apps.cabins.types import AllBookingsType, CabinType, AdminBookingType, BookingResponsibleType
+from apps.cabins.mutations import (
+    CreateBooking,
+    UpdateBooking,
+    DeleteBooking,
+    SendEmail,
+)
+from apps.cabins.resolvers import CabinResolvers
 
 
 class CabinMutations(graphene.ObjectType):
-    create_Cabin = CreateBooking.Field()
+    create_booking = CreateBooking.Field()
     update_booking = UpdateBooking.Field()
     delete_booking = DeleteBooking.Field()
     send_email = SendEmail.Field()
 
 
 class CabinQueries(graphene.ObjectType, CabinResolvers):
-    all_bookings = graphene.List(BookingType)
-    bookings_by_month = graphene.List(
-        BookingType, year=graphene.String(), month=graphene.String()
+    all_bookings = graphene.List(AllBookingsType)
+    admin_all_bookings = graphene.List(
+        AdminBookingType,
+        before=graphene.String(required=False),
+        after=graphene.String(required=False),
     )
-    booking = graphene.Field(BookingType, booking_id=graphene.ID(required=True))
     cabins = graphene.List(CabinType)
+    active_booking_responsible = graphene.Field(BookingResponsibleType)

@@ -8,23 +8,23 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('events', '0008_auto_20210121_1928'),
+        ("events", "0008_auto_20210121_1928"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='event',
-            name='available_slots',
+            model_name="event",
+            name="available_slots",
             field=models.PositiveIntegerField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='event',
-            name='price',
+            model_name="event",
+            name="price",
             field=models.FloatField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='event',
-            name='signed_up_users',
-            field=models.ManyToManyField(blank=True, related_name='events', to=settings.AUTH_USER_MODEL),
+            model_name="event",
+            name="signed_up_users",
+            field=models.ManyToManyField(blank=True, related_name="events", to=settings.AUTH_USER_MODEL),
         ),
     ]

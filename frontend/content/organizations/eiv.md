@@ -24,7 +24,7 @@ styre:
 tag: kultur
 ---
 
-# Hvem er vi?
+##### Hvem er vi?
 
 I Eksperter i vin (EiV) utvikler studentene kompetanse ved å reflektere over og lære å sette ord på det vi ser, lukter, smaker og spytter ved gjennomføring av vinsmaking. Studentene utvikler kompetanse ved å assosiere og reflektere over de ulike aromagruppene, stilene, kvaliteten, druetype og ikke minst å treffe på årgang.
 

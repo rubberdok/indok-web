@@ -1,48 +1,32 @@
 import { gql } from "@apollo/client";
 
-export const CREATE_CABIN = gql`
-  mutation CreateCabin(
-    $firstname: String
-    $surname: String
-    $phone: Int
-    $receiverEmail: String
-    $bookFrom: String
-    $bookTo: String
-    $price: Int
-    $cabins: [Int]
-  ) {
-    createCabin(
-      firstname: $firstname
-      surname: $surname
-      phone: $phone
-      receiverEmail: $receiverEmail
-      bookFrom: $bookFrom
-      bookTo: $bookTo
-      price: $price
-      cabins: $cabins
-    ) {
+export const CREATE_BOOKING = gql`
+  mutation CreateBooking($bookingData: BookingInput) {
+    createBooking(bookingData: $bookingData) {
       ok
     }
   }
 `;
 
 export const SEND_EMAIL = gql`
-  mutation SendEmail(
-    $firstname: String
-    $surname: String
-    $receiverEmail: String
-    $bookFrom: String
-    $bookTo: String
-    $price: Int
-  ) {
-    sendEmail(
-      firstname: $firstname
-      surname: $surname
-      receiverEmail: $receiverEmail
-      bookFrom: $bookFrom
-      bookTo: $bookTo
-      price: $price
-    ) {
+  mutation SendEmail($emailInput: EmailInput) {
+    sendEmail(emailInput: $emailInput) {
+      ok
+    }
+  }
+`;
+
+export const CONFIRM_BOOKING = gql`
+  mutation ConfirmBooking($id: ID!) {
+    updateBooking(bookingData: { id: $id, isTentative: false }) {
+      ok
+    }
+  }
+`;
+
+export const DELETE_BOOKING = gql`
+  mutation DeleteBooking($id: ID!) {
+    deleteBooking(id: $id) {
       ok
     }
   }

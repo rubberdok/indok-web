@@ -1,5 +1,5 @@
 import Layout from "@components/Layout";
-import CreateEvent from "@components/pages/events/createEvent";
+import EventCreator from "@components/pages/events/EventCreator";
 import { Button, Container, makeStyles } from "@material-ui/core";
 import { NextPage } from "next";
 import Link from "next/link";
@@ -12,6 +12,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+/**
+ * Component for showing the create event page
+ */
+
 const CreateEventsPage: NextPage = () => {
   const classes = useStyles();
   return (
@@ -20,7 +24,7 @@ const CreateEventsPage: NextPage = () => {
         <Link href="/events">
           <Button color="primary">Tilbake til arrangementer</Button>
         </Link>
-        <CreateEvent />
+        <EventCreator />
       </Container>
     </Layout>
   );

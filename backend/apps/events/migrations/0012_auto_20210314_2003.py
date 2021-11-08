@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('events', '0011_auto_20210313_1419'),
+        ("events", "0011_auto_20210313_1419"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='event',
-            name='binding_signup',
+            model_name="event",
+            name="binding_signup",
             field=models.BooleanField(default=False),
         ),
         migrations.AddField(
-            model_name='event',
-            name='contact_email',
-            field=models.EmailField(blank=True, default='', max_length=254),
+            model_name="event",
+            name="contact_email",
+            field=models.EmailField(blank=True, default="", max_length=254),
         ),
     ]

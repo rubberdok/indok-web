@@ -9,3 +9,27 @@ export const FORM_RESPONSES = gql`
     }
   }
 `;
+
+export const FORM_WITH_QUESTIONS_AND_ANSWERS = gql`
+  query Form($formId: ID!) {
+    form(formId: $formId) {
+      id
+      name
+      description
+      questions {
+        id
+        question
+        options {
+          answer
+          id
+        }
+        questionType
+        mandatory
+        answer {
+          id
+          answer
+        }
+      }
+    }
+  }
+`;

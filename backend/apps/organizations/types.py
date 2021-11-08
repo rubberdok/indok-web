@@ -1,5 +1,8 @@
+from typing import Optional
 import graphene
-from .models import Organization, Membership, Role
+
+from apps.permissions.types import ResponsibleGroupType
+from .models import Organization, Membership
 from graphene_django import DjangoObjectType
 from graphql_jwt.decorators import login_required
 
@@ -10,6 +13,8 @@ from .dataloader import ListingsByOrganizationIdLoader
 class OrganizationType(DjangoObjectType):
     absolute_slug = graphene.String()
     listings = graphene.List(ListingType)
+    primary_group = graphene.Field(source="primary_group", type=ResponsibleGroupType)
+    hr_group = graphene.Field(source="hr_group", type=ResponsibleGroupType)
 
     class Meta:
         model = Organization
@@ -24,6 +29,8 @@ class OrganizationType(DjangoObjectType):
             "users",
             "events",
             "logo_url",
+            "primary_group",
+            "hr_group",
         ]
 
     @staticmethod
@@ -45,14 +52,12 @@ class OrganizationType(DjangoObjectType):
             return wrapper
 
     @staticmethod
-    def resolve_absolute_slug(organization: Organization, info):
-        slug_list = [organization.slug]
-        while (
-            organization := organization.parent
-        ) and organization.parent != organization:
-            print(slug_list)
-            slug_list.insert(0, organization.slug)
-        return "/".join(slug_list)
+    def resolve_absolute_slug(organization: Optional[Organization], _):
+        if organization:
+            slug_list = [organization.slug]
+            while (organization := organization.parent) and organization.parent != organization:
+                slug_list.insert(0, organization.slug)
+            return "/".join(slug_list)
 
     @staticmethod
     @login_required
@@ -70,15 +75,13 @@ class OrganizationType(DjangoObjectType):
 class MembershipType(DjangoObjectType):
     class Meta:
         model = Membership
-        fields = ["id", "role", "organization", "user"]
+        fields = ["id", "group", "organization", "user"]
 
     class PermissionDecorators:
         @staticmethod
         def is_in_organization(resolver):
             def wrapper(membership: Membership, info):
-                if membership.organization.users.filter(
-                    pk=info.context.user.id
-                ).exists():
+                if membership.organization.users.filter(pk=info.context.user.id).exists():
                     return resolver(membership, info)
                 else:
                     raise PermissionError(
@@ -90,9 +93,3 @@ class MembershipType(DjangoObjectType):
     @PermissionDecorators.is_in_organization
     def resolve_user(membership, info):
         return membership.user
-
-
-class RoleType(DjangoObjectType):
-    class Meta:
-        model = Role
-        fields = ["id", "name"]

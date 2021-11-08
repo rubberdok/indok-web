@@ -1,7 +1,7 @@
 ---
 title: Rubberdøk Webkomité
 description: Webkomitéen til Hovedstyret på Indøk
-logo: /img/rubberdok_black.svg
+logo: /img/rubberdok_logo_black.svg
 image: /img/rubberdoklogo1.png
 alt: Logoen til rubberdøk
 styre:
@@ -18,7 +18,7 @@ styre:
 tag: annet
 ---
 
-# Hvem er vi?
+##### Hvem er vi?
 
 Rubberdøk er Hovedstyrets webkomité, og består av 11 ildsjeler (pluss lederparet i Hovedstyret) som har tatt på seg ansvaret for å bygge nettsiden du er inne på akkurat nå - en custom made hyttebooking, arrangementsmodul og generell landingsside for alle nåværende og fremtidige Indøkere!
 

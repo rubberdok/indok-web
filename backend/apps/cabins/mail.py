@@ -1,77 +1,74 @@
-from datetime import datetime
-from email.mime.image import MIMEImage
-from email.mime.text import MIMEText
-from pathlib import Path
+from typing import Optional
 
-from django.core.mail import EmailMultiAlternatives, send_mail
-from django.template.loader import get_template, render_to_string
-from static.cabins.mailcontent import get_no_html_mail
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import get_template
+from django.utils.html import strip_tags
 
+from apps.cabins.models import BookingResponsible
+from apps.cabins.types import BookingInfoType, AdminTemplateType, UserTemplateType, EmailTypes
 
-def sendmail(ctx, subject, receiver, mailtype):
-    content = (
-        get_template("usermail.html").render(ctx)
-        if mailtype == "user"
-        else get_template("adminmail.html").render(ctx)
-    )
-    no_html_content = (
-        get_no_html_mail(ctx, "user")
-        if mailtype == "user"
-        else get_no_html_mail(ctx, "admin")
-    )
-    image_path = "static/cabins/hyttestyret_logo.png"
-    image_name = Path(image_path).name
+user_templates: UserTemplateType = {
+    "reserve_subject": "Bekreftelse på mottat søknad om booking av ",
+    "decision_subject": "Hyttestyret har tatt stilling til søknaden din om booking av ",
+    "reserve_booking": "user_reserve_template.html",
+    "approve_booking": "user_approved_template.html",
+    "disapprove_booking": "user_disapproved_template.html",
+}
 
-    msg = EmailMultiAlternatives(subject, no_html_content, "", [receiver])
-    msg.attach_alternative(content, "text/html")
-    msg.content_subtype = "html"
-    msg.mixed_subtype = "related"
-
-    with open(image_path, mode="rb") as f:
-        image = MIMEImage(f.read())
-        image.add_header("Content-ID", f"<{image_name}>")
-        msg.attach(image)
-
-    msg.attach_file("static/cabins/Sjekkliste.docx")
-    msg.attach_file("static/cabins/Reglement.docx")
-
-    msg.send()
+admin_templates: AdminTemplateType = {
+    "reserve_subject": "Booking av ",
+    "reserve_booking": "admin_reserve_template.html",
+}
 
 
-def send_mails(info, firstname, surname, receiverEmail, bookFrom, bookTo, price):
+def get_email_subject(chosen_cabins_string: str, email_type: str, admin: bool) -> str:
+    if admin:
+        subject = admin_templates["reserve_subject"]
+    else:
+        subject = (
+            user_templates["reserve_subject"] if email_type == "reserve_booking" else user_templates["decision_subject"]
+        )
 
-    start_date = (
-        datetime.strptime(bookFrom, "%Y-%m-%d")
-        .isoformat()
-        .replace("-", "")
-        .replace(":", "")
-    )  # Google Calendar wants YYYYMMDDThhmmss
-    end_date = (
-        datetime.strptime(bookTo, "%Y-%m-%d")
-        .isoformat()
-        .replace("-", "")
-        .replace(":", "")
-    )
-    text = "Hyttetur til Indøkhyttene"
-    location = "Oppdal+Skisenter+-+Stølen"
-    link = f"https://calendar.google.com/calendar/u/0/r/eventedit?text={text}&dates={start_date}/{end_date}&location={location}"
+    return subject + chosen_cabins_string
 
-    ctx = {
-        "firstname": firstname,
-        "surname": surname,
-        "email": receiverEmail,
-        "cabin": "Bjørnen",
-        "fromDate": bookFrom,
-        "toDate": bookTo,
-        "price": price,
-        "link": link,
+
+def send_mail(booking_info: BookingInfoType, email_type: EmailTypes, admin: bool) -> None:
+    if admin:
+        template = admin_templates["reserve_booking"]
+    else:
+        template = user_templates[email_type]
+
+    chosen_cabins_names = booking_info["cabins"].values_list("name", flat=True)
+    chosen_cabins_string = " og ".join(chosen_cabins_names)
+    subject = get_email_subject(chosen_cabins_string, email_type, admin)
+    booking_responsible: Optional[BookingResponsible] = BookingResponsible.objects.filter(active=True).first()
+
+    # Display dates with given format in the mail, get booking responsible contact info
+    content = {
+        **booking_info,
+        "check_in": booking_info["check_in"].strftime("%d-%m-%Y"),
+        "check_out": booking_info["check_out"].strftime("%d-%m-%Y"),
+        "chosen_cabins_string": chosen_cabins_string,
+        "booking_responsible_name": f"{booking_responsible.first_name} {booking_responsible.last_name}",
+        "booking_responsible_phone": booking_responsible.phone,
+        "booking_responsible_email": booking_responsible.email,
     }
 
-    user_subject = "Bekreftelsesmail for booking av Indøkhytte"
-    admin_subject = "Booking av Indøkhytte"
+    # HTML content for mail services supporting HTML, text content if HTML isn't supported
+    html_content = get_template(template).render(content)
+    text_content = strip_tags(html_content)
 
-    # send_mail(user_subject, get_no_html_mail(ctx, "user"), "", [receiverEmail], html_message=render_to_string("usermail.html", ctx))
-    # send_mail(admin_subject, get_no_html_mail(ctx, "admin"), "", ["herman.holmoy12@gmail.com"], html_message=render_to_string("adminmail.html", ctx))
+    email = EmailMultiAlternatives(
+        subject,
+        body=text_content,
+        from_email="noreply@indokntnu.no",
+        bcc=[booking_responsible.email if admin else booking_info["receiver_email"]],
+    )
+    email.attach_alternative(html_content, "text/html")
 
-    sendmail(ctx, user_subject, receiverEmail, "user")
-    sendmail(ctx, admin_subject, "herman.holmoy12@gmail.com", "admin")
+    # Don't send attachments to admin nor when a booking is disapproved
+    if email_type != "disapprove_booking" and not admin:
+        email.attach_file("static/cabins/Sjekkliste.pdf")
+        email.attach_file("static/cabins/Reglement.pdf")
+
+    email.send()

@@ -1,15 +1,19 @@
-FROM node:12
+# Larger base image for development
+FROM --platform=linux/amd64 node:14
 
-# Create app directory
-RUN mkdir -p /code
-WORKDIR /code
+WORKDIR /app
 
-# Installing dependencies
-COPY package.json .
-COPY package-lock.json .
-RUN npm install
+# Install dependencies
+COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile
 
-# Copying source files
 COPY . .
 
-CMD ["npm", "run", "dev"]
+ENV NODE_ENV development
+
+EXPOSE 3000
+
+# Disable NextJS telemetry
+ENV NEXT_TELEMETRY_DISABLED 1
+
+CMD ["yarn", "dev"]

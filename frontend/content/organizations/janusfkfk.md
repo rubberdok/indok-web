@@ -15,7 +15,7 @@ styre:
 tag: idrett
 ---
 
-# Hvem er vi?
+##### Hvem er vi?
 
 Janus FKFK er fotballklubben for kvinnelige studenter ved Indøk.
 
@@ -23,7 +23,7 @@ Janus FKFK er fotballklubben for kvinnelige studenter ved Indøk.
 
 NEI! FKFK er et lavterskeltilbud for alle som har lyst til å spille fotball. Vi har spillere på alle nivåer (vi har faktisk alt fra tidligere landslagsspillere til de som ikke kan offsideregelen).
 
-# Er det gøy?
+##### Er det gøy?
 
 JA! Selv om dette er et lavterskeltilbud, er det ikke et kaffeslaberas. På trening har vi et høyt tempo, og på kamper gjør vi alt for å vinne. I serien knives det om å være Trondheims beste studentlag, og det ligger mye prestisje i hvert eneste oppgjør. 2018-sesongen endte med gull, og i 2019 er målet å gjøre det like bra.
 

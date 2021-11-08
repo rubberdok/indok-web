@@ -6,12 +6,16 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('forms', '0002_auto_20210408_1735'),
+        ("forms", "0002_auto_20210408_1735"),
     ]
 
     operations = [
+        migrations.RemoveConstraint(
+            model_name="answer",
+            name="unique_answer_to_question_per_user",
+        ),
         migrations.RemoveField(
-            model_name='answer',
-            name='user',
+            model_name="answer",
+            name="user",
         ),
     ]

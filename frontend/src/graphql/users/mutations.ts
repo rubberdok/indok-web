@@ -18,7 +18,6 @@ export const AUTHENTICATE = gql`
         phoneNumber
         firstLogin
       }
-      isIndokStudent
       idToken
     }
   }

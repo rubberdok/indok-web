@@ -1,9 +1,10 @@
 import graphene
-from graphql_jwt.decorators import login_required, permission_required
 
-from ...listings.models import Listing
-from ..models import Form
-from ..types import FormType
+from apps.listings.models import Listing
+from apps.forms.models import Form
+from apps.forms.types import FormType
+
+from utils.decorators import permission_required
 
 
 class FormInput(graphene.InputObjectType):
@@ -20,6 +21,7 @@ class BaseFormInput(graphene.InputObjectType):
 
 class CreateFormInput(BaseFormInput):
     name = graphene.String(required=True)
+    organization_id = graphene.ID(required=True)
 
 
 class CreateForm(graphene.Mutation):
@@ -30,7 +32,6 @@ class CreateForm(graphene.Mutation):
         listing_id = graphene.ID()
         form_data = CreateFormInput(required=True)
 
-    @login_required
     @permission_required("forms.add_form")
     def mutate(self, info, form_data, listing_id=None):
         form = Form()
@@ -52,8 +53,7 @@ class UpdateForm(graphene.Mutation):
         id = graphene.ID()
         form_data = BaseFormInput(required=True)
 
-    @login_required
-    @permission_required("forms.update_form")
+    @permission_required("forms.change_form", (Form, "pk", "id"))
     def mutate(self, info, id, form_data):
         form = Form.objects.get(pk=id)
         for key, value in form_data.items():
@@ -69,8 +69,7 @@ class DeleteForm(graphene.Mutation):
     class Arguments:
         id = graphene.ID(required=True)
 
-    @login_required
-    @permission_required("forms.delete_form")
+    @permission_required("forms.delete_form", (Form, "pk", "id"))
     def mutate(self, info, id):
         form = Form.objects.get(pk=id)
         deleted_id = form.id

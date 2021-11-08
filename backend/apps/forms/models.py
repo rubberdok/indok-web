@@ -14,7 +14,7 @@ from apps.organizations.models import Organization
 class Form(models.Model):
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE, null=True)
     name = models.CharField(max_length=100)
-    description = models.CharField(max_length=3000, blank=True, default="")
+    description = models.TextField(blank=True, default="")
 
     def __str__(self) -> str:
         return f"{self.name}"
@@ -23,13 +23,14 @@ class Form(models.Model):
     def mandatory_questions(self: "Form"):
         return self.questions.filter(mandatory=True)
 
+    class Meta:
+        permissions = [("manage_form", "Has admin form privileges")]
+
 
 class Question(models.Model):
-    form = models.ForeignKey(
-        Form, on_delete=models.CASCADE, related_name="questions"
-    )
-    question = models.CharField(max_length=300)
-    description = models.CharField(max_length=1000, blank=True, default="")
+    form = models.ForeignKey(Form, on_delete=models.CASCADE, related_name="questions")
+    question = models.CharField(max_length=100)
+    description = models.CharField(max_length=100, blank=True, default="")
     question_type = models.CharField(max_length=32, default="PARAGRAPH")
     mandatory = models.BooleanField(default=True)
 
@@ -41,10 +42,8 @@ class Question(models.Model):
 
 
 class Option(models.Model):
-    answer = models.CharField(max_length=500)
-    question = models.ForeignKey(
-        Question, on_delete=models.CASCADE, related_name="options"
-    )
+    answer = models.CharField(max_length=100)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name="options")
 
     def __str__(self) -> str:
         return f"{self.answer}"
@@ -52,20 +51,14 @@ class Option(models.Model):
 
 class Answer(models.Model):
     uuid = UUIDField(primary_key=True, default=uuid.uuid4)
-    question = models.ForeignKey(
-        Question, on_delete=models.CASCADE, related_name="answers"
-    )
-    response = models.ForeignKey(
-        "Response", on_delete=models.CASCADE, related_name="answers"
-    )
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name="answers")
+    response = models.ForeignKey("Response", on_delete=models.CASCADE, related_name="answers")
 
-    answer = models.CharField(max_length=10000)
+    answer = models.TextField()
 
     class Meta:
         constraints = [
-            UniqueConstraint(
-                fields=["user", "question"], name="unique_answer_to_question_per_user"
-            ),
+            UniqueConstraint(fields=["response", "question"], name="unique_answer_per_response"),
             CheckConstraint(check=~Q(answer=""), name="answer_not_empty"),
         ]
 
@@ -75,12 +68,8 @@ class Answer(models.Model):
 
 class Response(models.Model):
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    respondent = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="responses"
-    )
-    form = models.ForeignKey(
-        Form, on_delete=models.CASCADE, related_name="responses"
-    )
+    respondent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="responses")
+    form = models.ForeignKey(Form, on_delete=models.CASCADE, related_name="responses")
 
     class Status(models.IntegerChoices):
         RED = 0, _("Red")
@@ -90,21 +79,13 @@ class Response(models.Model):
         __empty__ = _("Unknown")
 
     class Meta:
-        constraints = [
-            UniqueConstraint(
-                fields=["respondent", "form"], name="only_one_response_per_form"
-            )
-        ]
+        constraints = [UniqueConstraint(fields=["respondent", "form"], name="only_one_response_per_form")]
 
     status = models.IntegerField(choices=Status.choices, blank=True, null=True)
 
 
 class Comment(models.Model):
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    owner = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="comments"
-    )
-    response = models.ForeignKey(
-        Response, on_delete=models.CASCADE, related_name="comments"
-    )
-    comment = models.CharField(max_length=2048)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="comments")
+    response = models.ForeignKey(Response, on_delete=models.CASCADE, related_name="comments")
+    comment = models.TextField()

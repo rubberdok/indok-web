@@ -1,4 +1,4 @@
-import MarkdownForm from "@components/pages/listings/markdown/MarkdownForm";
+import MarkdownForm from "@components/markdown/MarkdownForm";
 import { ListingInput } from "@interfaces/listings";
 import { Organization } from "@interfaces/organizations";
 import {
@@ -6,18 +6,18 @@ import {
   Card,
   CardActions,
   CardContent,
+  Checkbox,
   FormControl,
+  FormControlLabel,
   Grid,
+  InputAdornment,
+  InputLabel,
   makeStyles,
   MenuItem,
   Select,
   TextField,
-  Typography,
-  Checkbox,
-  FormControlLabel,
   Tooltip,
-  InputAdornment,
-  InputLabel,
+  Typography,
 } from "@material-ui/core";
 import { Close, HelpOutline, Save } from "@material-ui/icons";
 import React, { ChangeEvent } from "react";
@@ -130,7 +130,7 @@ const ListingForm: React.FC<{
                   label="Publiseringsdato"
                   value={listing.startDatetime || ""}
                   fullWidth
-                  type="date"
+                  type="datetime-local"
                   onChange={(e) => handlePropertyChange(e, "startDatetime")}
                   InputLabelProps={{ shrink: true }}
                 />
@@ -141,19 +141,21 @@ const ListingForm: React.FC<{
                   label="Søknadsfrist"
                   value={listing.deadline || ""}
                   fullWidth
-                  type="date"
+                  type="datetime-local"
                   required
                   onChange={(e) => handlePropertyChange(e, "deadline")}
                   InputLabelProps={{ shrink: true }}
                 />
               </Grid>
+            </Grid>
+            <Grid container spacing={2} className={classes.inputGroup}>
               <Grid item xs>
                 <TextField
                   label="Søknadslink"
                   variant="filled"
-                  value={listing.url || ""}
+                  value={listing.applicationUrl || ""}
                   fullWidth
-                  onChange={(e) => handlePropertyChange(e, "url")}
+                  onChange={(e) => handlePropertyChange(e, "applicationUrl")}
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position="end">
@@ -165,6 +167,34 @@ const ListingForm: React.FC<{
                             <>
                               <Typography>Søknad på indokntnu.no</Typography>
                               Du kan også lage søknad og håndtere alt av søknadsbehandling på denne nettsida.
+                            </>
+                          }
+                        >
+                          <HelpOutline />
+                        </Tooltip>
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </Grid>
+              <Grid item xs>
+                <TextField
+                  label='Link til "Les mer"'
+                  variant="filled"
+                  value={listing.readMoreUrl || ""}
+                  fullWidth
+                  onChange={(e) => handlePropertyChange(e, "readMoreUrl")}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <Tooltip
+                          placement="left"
+                          enterTouchDelay={0}
+                          leaveTouchDelay={2500}
+                          title={
+                            <>
+                              Denne linken dukker opp under navnet til organisasjonen din, slik at søkere kan lese mer
+                              om den.
                             </>
                           }
                         >
@@ -253,7 +283,7 @@ const ListingForm: React.FC<{
         </Grid>
       </CardContent>
       <CardActions>
-        <Grid container justify="flex-end" spacing={1}>
+        <Grid container justifyContent="flex-end" spacing={1}>
           <Grid item>
             <Button variant="contained" onClick={onCancel} startIcon={<Close />}>
               Avbryt

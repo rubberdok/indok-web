@@ -1,29 +1,24 @@
-import { createMuiTheme } from "@material-ui/core/styles";
+import { createTheme } from "@material-ui/core";
 import { Shadows } from "@material-ui/core/styles/shadows";
 import breakpoints from "./breakpoints";
 import typography from "./typography";
 
-const theme = createMuiTheme({
+const theme = createTheme({
   typography: {
     ...typography,
   },
   overrides: {
-    MuiInputBase: {
-      root: {
-        ...typography.body2,
-      },
-    },
-    MuiFormLabel: {
-      root: {
-        ...typography.body2,
-      },
-    },
     MuiTypography: {
       gutterBottom: {
         marginBottom: 32,
       },
       paragraph: {
         marginBottom: 32,
+      },
+    },
+    MuiBreadcrumbs: {
+      root: {
+        ...typography.overline,
       },
     },
     MuiToolbar: {
@@ -40,36 +35,48 @@ const theme = createMuiTheme({
     MuiButtonBase: {
       root: {
         justifyContent: "none",
-        padding: "16px 24px",
-        fontWeight: 600,
-        textTransform: "none",
       },
     },
     MuiButton: {
-      root: {
-        padding: "16px 32px",
-        fontWeight: 600,
-        fontSize: 14,
-        textTransform: "none",
+      root: {},
+      text: {
+        padding: "8px 24px",
+      },
+      contained: {
+        padding: "8px 24px",
       },
       outlined: {
-        padding: "16px 32px",
-        border: "2px solid rgb(0 0 0 / 10%)",
+        padding: "8px 24px",
+        border: "0",
+        borderLeft: "2px solid rgb(0 0 0 / 10%)",
+        fontSize: "0.8rem",
+        color: "#000",
       },
       outlinedPrimary: {
         borderWidth: 2,
-        color: "black",
+        color: "#000",
         background: "rgba(6, 90, 90, 0.07)",
+        borderTop: "0",
+        borderRight: "0",
+        borderBottom: "0",
 
         ["&:hover"]: {
+          borderTop: "0",
+          borderRight: "0",
+          borderBottom: "0",
           borderWidth: 2,
         },
       },
+      sizeSmall: {
+        fontSize: "0.8rem",
+      },
+      sizeLarge: {
+        padding: "16px 24px",
+        fontSize: "0.8rem",
+      },
     },
     MuiTab: {
-      root: {
-        textTransform: "none",
-      },
+      root: {},
     },
   },
   palette: {
@@ -82,13 +89,8 @@ const theme = createMuiTheme({
     secondary: {
       main: "#11cb5f",
     },
-  },
-  props: {
-    MuiTypography: {
-      variant: "body2",
-    },
-    MuiList: {
-      dense: true,
+    error: {
+      main: "#d21f3c",
     },
   },
   shape: {

@@ -15,7 +15,7 @@ styre:
 tag: idrett
 ---
 
-# Hvem er vi?
+##### Hvem er vi?
 
 Vi er et veletablert, historisk (anno 2015) håndballag for både jenter og gutter på Indøk. Om du aldri har tatt på en ball i hele ditt liv eller er en erfaren spiller, er du hjertelig velkommen til å spille med Indøks beste håndballag, det er bare å møte opp på trening!
 
