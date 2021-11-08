@@ -61,7 +61,7 @@ jobs:
       fail-fast: false
 
     env:
-      env-file: ${{ matrix.env-prefix }}.${{ matrix.stage }}.env
+      ENV_FILE: ${{ matrix.env-prefix }}.${{ matrix.stage }}.env
       dockerfile: ${{ matrix.image }}-${{ matrix.stage }}
 
     steps:
@@ -83,8 +83,8 @@ jobs:
         if: ${{ matrix.build-env }}
         id: env-download
         run: |
-          aws s3 cp s3://indok-web-environments/${{ env.env-file }} ${{ env.env-file }}
-          args=$(cat ${{ env.env-file }})
+          aws s3 cp s3://indok-web-environments/${{ env.ENV_FILE }} ${{ env.ENV_FILE }}
+          args=$(cat ${{ env.ENV_FILE }})
           args="${args//'%'/'%25'}"
           args="${args//$'\n'/'%0A'}"
           args="${args//$'\r'/'%0D'}"
@@ -129,7 +129,7 @@ jobs:
           --health-timeout 5s
           --health-retries 5
     env:
-      env-file: django.staging.env
+      ENV_FILE: django.staging.env
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -154,15 +154,15 @@ jobs:
       - name: Load environment variables from S3
         id: env-download
         run: |
-          aws s3 cp s3://indok-web-environments/${{ env.env-file }} ${{ env.env-file }}
-          echo "DATAPORTEN_SECRET=${{ secrets.DATAPORTEN_SECRET }}" >> ${{ env.env-file }}
-          echo "GOOGLE_DRIVE_API_KEY=${{ secrets.GOOGLE_DRIVE_API_KEY }}" >> ${{ env.env-file }}
+          aws s3 cp s3://indok-web-environments/${{ env.ENV_FILE }} ${{ env.ENV_FILE }}
+          echo "DATAPORTEN_SECRET=${{ secrets.DATAPORTEN_SECRET }}" >> ${{ env.ENV_FILE }}
+          echo "GOOGLE_DRIVE_API_KEY=${{ secrets.GOOGLE_DRIVE_API_KEY }}" >> ${{ env.ENV_FILE }}
 
       - name: Run API tests
         run: |
           docker run \
             -v $GITHUB_WORKSPACE/backend:/usr/src/app \
-            --env-file ${{ env.env-file }} \
+            --env-file ${{ env.ENV_FILE }} \
             --network ${{ job.container.network }} \
             --entrypoint /usr/src/app/entrypoints/test.sh \
             backend:production
@@ -209,6 +209,8 @@ jobs:
         id: env-download
         run: |
           aws s3 cp s3://indok-web-environments/${{ env.ENV_FILE }} ${{ env.ENV_FILE }}
+          echo "DATAPORTEN_SECRET=${{ secrets.DATAPORTEN_SECRET }}" >> ${{ env.ENV_FILE }}
+          echo "GOOGLE_DRIVE_API_KEY=${{ secrets.GOOGLE_DRIVE_API_KEY }}" >> ${{ env.ENV_FILE }}
 
       - name: Build and run the Application
         run: docker compose -f docker-compose.integration.yml up
