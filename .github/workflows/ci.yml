@@ -52,6 +52,7 @@ jobs:
             dockerfile: Dockerfile.prod
           - image: cypress
             context: ./e2e/integration
+            dockerfile: Dockerfile
         exclude:
           - image: backend
             stage: staging
