@@ -18,7 +18,7 @@ COPY . .
 
 # install dependencies
 COPY requirements ./requirements
-RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/app/wheels -r /requirements/production.txt
+RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/app/wheels -r ./requirements/production.txt
 
 
 ##########
@@ -39,7 +39,7 @@ RUN mkdir mediafiles
 
 # install dependencies
 COPY --from=builder /usr/src/app/wheels /wheels
-COPY --from=builder /usr/src/app/requirements/production.txt ./requirements/base.txt ./
+COPY --from=builder /usr/src/app/requirements ./requirements
 RUN pip install --no-cache /wheels/*
 
 # copy entrypoint.prod.sh
