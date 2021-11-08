@@ -208,7 +208,7 @@ jobs:
       - name: Load environment variables from S3
         id: env-download
         run: |
-          aws s3 cp s3://indok-web-environments/${{ env.env-file }} backend/${{ env.env-file }}
+          aws s3 cp s3://indok-web-environments/${{ env.env-file }} backend/.env
 
       - name: Build and run the Application
         run: docker compose -f docker-compose.integration.yml up
