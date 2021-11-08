@@ -192,6 +192,10 @@ jobs:
         with:
           path: /tmp
 
+      - name: Display structure of downloaded files
+        run: ls -R
+        working-directory: /tmp
+
       - name: Load Docker images
         run: |
           ls
