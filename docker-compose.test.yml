@@ -34,6 +34,7 @@ services:
       - GOOGLE_DRIVE_API_KEY=$GOOGLE_DRIVE_API_KEY
       - AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
       - AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
+      - DJANGO_ENVIRONMENT=test
 volumes:
   postgres_data:
     driver: local
