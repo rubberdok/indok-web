@@ -164,7 +164,7 @@ jobs:
             -v $GITHUB_WORKSPACE/backend:/usr/src/app \
             --env-file ${{ env.env-file }} \
             --network ${{ job.container.network }} \
-            --entrypoint /usr/src/app/entrypoint.test.sh \
+            --entrypoint /usr/src/app/entrypoints/test.sh \
             backend:production
 
       - name: Upload coverage
