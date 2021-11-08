@@ -2,24 +2,28 @@ import Layout from "@components/Layout";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useQuery } from "@apollo/client";
-import { BlogPost } from "../../../types/blogs";
+import { Blog, BlogPost } from "../../../types/blogs";
 import { QUERY_ALL_BLOG_POSTS_THUMBNAIL } from "@graphql/blogs/queries";
 import { BlogPostThumbnail } from "@components/pages/blogs/BlogPostThumbnail";
 import { Grid, Container, Box } from "@material-ui/core";
 
 const MainBlogPage: NextPage = () => {
   const router = useRouter();
-  const { id } = router.query;
-  const { data, error } = useQuery<{ blogPost: BlogPost[] }>(QUERY_ALL_BLOG_POSTS_THUMBNAIL, {
-    variables: { blogId: id },
+  const { orgId } = router.query;
+  const { data } = useQuery<{ blog: Blog }>(QUERY_ALL_BLOG_POSTS_THUMBNAIL, {
+    variables: { blogId: parseInt(orgId as string) },
   });
+
+  console.log(data);
 
   const BlogPostThumbnails: React.VFC = () => {
     return (
-      <Grid container>
-        <BlogPostThumbnail title={"innlegg"} />
-        <BlogPostThumbnail title={"innlegg"} />
-        <BlogPostThumbnail title={"innlegg"} />
+      <Grid container spacing={2}>
+        {data?.blog?.blogPosts
+          ? data.blog.blogPosts.map((item: BlogPost) => (
+              <BlogPostThumbnail title={item.title} blogId={item.id} key={`blogpost-${item.id}`} />
+            ))
+          : null}
       </Grid>
     );
   };
@@ -27,7 +31,7 @@ const MainBlogPage: NextPage = () => {
   return (
     <Layout>
       <Container>
-        <Box>
+        <Box mt={10} mb={10}>
           <BlogPostThumbnails />
         </Box>
       </Container>
