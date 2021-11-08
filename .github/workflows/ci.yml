@@ -195,9 +195,9 @@ jobs:
       - name: Load Docker images
         run: |
           ls
-          docker load --input /tmp/backend-production.tar
-          docker load --input /tmp/frontend-staging.tar
-          docker load --input /tmp/cypress-staging
+          docker load --input /tmp/backend-production/backend-production.tar
+          docker load --input /tmp/frontend-staging/frontend-staging.tar
+          docker load --input /tmp/cypress-staging/cypress-staging
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
