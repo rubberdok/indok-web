@@ -192,16 +192,12 @@ jobs:
         with:
           path: /tmp
 
-      - name: Display structure of downloaded files
-        run: ls -R
-        working-directory: /tmp
-
       - name: Load Docker images
         run: |
           ls
           docker load --input /tmp/backend-production/backend-production.tar
           docker load --input /tmp/frontend-staging/frontend-staging.tar
-          docker load --input /tmp/cypress-staging/cypress-staging
+          docker load --input /tmp/cypress-staging/cypress-staging.tar
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
