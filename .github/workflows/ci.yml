@@ -181,7 +181,7 @@ jobs:
     needs: build
     timeout-minutes: 10
     env:
-      env-file: django.staging.env
+      ENV_FILE: django.staging.env
 
     steps:
       - name: Checkout
@@ -208,10 +208,10 @@ jobs:
       - name: Load environment variables from S3
         id: env-download
         run: |
-          aws s3 cp s3://indok-web-environments/${{ env.env-file }} ${{ env.env-file }}
+          aws s3 cp s3://indok-web-environments/${{ env.ENV_FILE }} ${{ env.ENV_FILE }}
 
       - name: Build and run the Application
-        run: docker compose -f docker-compose.integration.yml --env-file ${{ env.env-file }} up
+        run: docker compose -f docker-compose.integration.yml up
 
       - name: Run the Integration Tests
         run: docker run --network host cypress:staging --record --key ${{ secrets.CYPRESS_RECORD_KEY }}
