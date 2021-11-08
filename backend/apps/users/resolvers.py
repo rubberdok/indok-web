@@ -16,10 +16,10 @@ class UserResolvers:
     def resolve_all_users(self, info):
         return get_user_model().objects.all()
 
-    if settings.CYPRESS:
+    if settings.ENVIRONMENT == "test":
 
         def resolve_auth_token(self, info):
-            if settings.CYPRESS:
+            if settings.ENVIRONMENT == "test":
                 try:
                     token = get_token(get_user_model().objects.get(username="eva_student"))
                     info.context.set_jwt_cookie = token
