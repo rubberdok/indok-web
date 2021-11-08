@@ -194,7 +194,6 @@ jobs:
 
       - name: Load Docker images
         run: |
-          ls
           docker load --input /tmp/backend-production/backend-production.tar
           docker load --input /tmp/frontend-staging/frontend-staging.tar
           docker load --input /tmp/cypress-staging/cypress-staging.tar
