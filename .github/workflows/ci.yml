@@ -174,8 +174,25 @@ jobs:
     name: Integration Tests
     runs-on: ubuntu-latest
     needs: build
+    strategy:
+      matrix:
+        image: [frontend, backend]
+        include:
+          - image: frontend
+            environment: app
+            sourcemaps: .next
+            mount: true
+            url_prefix: ~/_next/
+          - image: backend
+            environment: api
+            mount: false
+      fail-fast: false
     env:
       env-file: django.staging.env
+      SENTRY_PROJECT: indokweb-${{ matrix.image }}
+      SENTRY_ORG: rbberdk
+      tag: ${{ matrix.image }}:production
+
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -221,4 +238,26 @@ jobs:
           aws s3 cp s3://indok-web-environments/${{ env.env-file }} ${{ env.env-file }}
           cat ${{ env.env-file }} >> $GITHUB_ENV
 
-      # - name:
+      - name: Start container
+        id: container
+        if: ${{ matrix.mount }}
+        run: echo "::set-output name=container::$(docker run -d ${{ env.tag }} sleep 3600)"
+
+      - name: Copy files
+        if: ${{ matrix.mount }}
+        run: |
+          docker cp ${{ steps.container.outputs.container }}:/usr/src/app/${{ matrix.sourcemaps }} ${{ matrix.sourcemaps }}
+          docker stop ${{ steps.container.outputs.container }}
+
+      - name: Sentry release
+        uses: getsentry/action-release@v1.1.6
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ env.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ env.SENTRY_PROJECT }}
+        with:
+          environment: test
+          finalize: true
+          sourcemaps: ${{ matrix.sourcemaps }}
+          url_prefix: ${{ matrix.url_prefix }}
+          version: ${{ github.sha }}
