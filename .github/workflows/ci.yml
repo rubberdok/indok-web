@@ -163,6 +163,7 @@ jobs:
           docker run \
             -v $GITHUB_WORKSPACE/backend:/usr/src/app \
             --env-file ${{ env.ENV_FILE }} \
+            --env DB_HOST=postgres \
             --network ${{ job.container.network }} \
             --entrypoint /usr/src/app/entrypoints/test.sh \
             backend:production
