@@ -27,13 +27,13 @@ class IntegrationServerTestCase(ExtendedGraphQLTestCase):
         """
 
     def test_cypress_allowed(self):
-        with self.settings(CYPRESS=True):
+        with self.settings(ENVIRONMENT="test"):
             response = self.query(self.auth_token)
             self.assertResponseNoErrors(response)
             token = json.loads(response.content)["data"]["authToken"]
             self.assertEqual(get_user_by_token(token), self.indok_user)
 
     def test_cypress_disallowed(self):
-        with self.settings(CYPRESS=False):
+        with self.settings(ENVIRONMENT="production"):
             response = self.query(self.auth_token)
             self.assert_permission_error(response)

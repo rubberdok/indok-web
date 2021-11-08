@@ -20,5 +20,5 @@ class UserQueries(graphene.ObjectType, UserResolvers):
     all_users = graphene.List(UserType)
     user = graphene.Field(UserType)
 
-    if settings.CYPRESS:
+    if settings.ENVIRONMENT == "test":
         auth_token = graphene.String()
