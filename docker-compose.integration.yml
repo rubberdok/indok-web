@@ -17,6 +17,7 @@ services:
   backend:
     image: backend:production
     entrypoint: /usr/src/app/entrypoints/integration.sh
+    env_file: $ENV_FILE
     volumes:
       - ./backend:/usr/src/app
     ports:
