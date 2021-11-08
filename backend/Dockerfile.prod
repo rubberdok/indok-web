@@ -17,8 +17,8 @@ RUN pip install --upgrade pip
 COPY . .
 
 # install dependencies
-COPY ./requirements/*.txt ./
-RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/app/wheels -r production.txt
+COPY requirements ./requirements
+RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/app/wheels -r /requirements/production.txt
 
 
 ##########
@@ -39,13 +39,12 @@ RUN mkdir mediafiles
 
 # install dependencies
 COPY --from=builder /usr/src/app/wheels /wheels
-COPY --from=builder /usr/src/app/production.txt /usr/src/app/base.txt ./
+COPY --from=builder /usr/src/app/requirements/production.txt ./requirements/base.txt ./
 RUN pip install --no-cache /wheels/*
 
 # copy entrypoint.prod.sh
-COPY ./entrypoint.prod.sh .
-RUN sed -i 's/\r$//g'  ./entrypoint.prod.sh
-RUN chmod +x  ./entrypoint.prod.sh
+COPY entrypoints ./entrypoints
+RUN chmod +x  ./entrypoints/*.sh
 
 # copy project
 COPY . .
@@ -59,4 +58,4 @@ USER django
 EXPOSE 8000
 
 # run entrypoint.prod.sh
-ENTRYPOINT ["/usr/src/app/entrypoint.prod.sh"]
+ENTRYPOINT ["/usr/src/app/entrypoints/production.sh"]
