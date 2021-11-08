@@ -1,16 +1,15 @@
 import { User } from "../interfaces/users";
 import { Organization } from "../interfaces/organizations";
+import internal from "stream";
 
 export type Blog = {
-  name: string;
-  description: string;
-  organization: Organization;
+  blogPosts: BlogPost[];
 };
 
 export type BlogPost = {
+  id: string;
   title: string;
+  publishDate: string;
   text: string;
-  publish_date: string;
   author: User;
-  blog: Blog;
 };
