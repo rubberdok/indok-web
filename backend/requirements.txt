@@ -12,6 +12,7 @@ django-graphql-jwt==0.3.1
 django-multiselectfield==0.1.12
 django-phonenumber-field==5.0.0
 django-ses==2.0.0
+django-storages==1.12.3
 djangorestframework==3.11.2
 graphene==2.1.8
 graphene-django==2.13.0
