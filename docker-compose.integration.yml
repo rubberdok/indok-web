@@ -15,9 +15,7 @@ services:
       - postgres_data:/var/lib/postgresql/data/:cached
 
   backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile.prod
+    image: backend:production
     entrypoint: /usr/src/app/entrypoints/integration.sh
     volumes:
       - ./backend:/usr/src/app
@@ -31,9 +29,7 @@ services:
       - 8000
 
   frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile.prod
+    image: frontend:staging
     ports:
       - 3000:3000
     expose:
