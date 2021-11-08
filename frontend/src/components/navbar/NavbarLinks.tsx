@@ -160,7 +160,11 @@ const NavbarLinks: React.FC = () => {
             </a>
           </Box>
           <Link href={signInURL} passHref>
-            <Button className={[classes.navItem, classes.user].join(" ")} startIcon={<LockOpen fontSize="small" />}>
+            <Button
+              className={[classes.navItem, classes.user].join(" ")}
+              startIcon={<LockOpen fontSize="small" />}
+              data-test-id="login"
+            >
               Logg inn med Feide
             </Button>
           </Link>

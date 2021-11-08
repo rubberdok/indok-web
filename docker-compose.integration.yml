@@ -1,0 +1,72 @@
+version: "3"
+
+services:
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
+    expose:
+      - 5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/:cached
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.prod
+    entrypoint: /usr/src/app/entrypoint.test.sh
+    volumes:
+      - ./backend:/usr/src/app
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+    environment:
+      - DJANGO_ENVIRONMENT=$DJANGO_ENVIRONMENT
+      - DATAPORTEN_ID=$DATAPORTEN_ID
+      - DATAPORTEN_REDIRECT_URI=$DATAPORTEN_REDIRECT_URI
+      - DATAPORTEN_SECRET=$DATAPORTEN_SECRET
+      - GOOGLE_DRIVE_API_KEY=$GOOGLE_DRIVE_API_KEY
+      - AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
+      - AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
+      - DJANGO_SETTINGS_MODULE=$DJANGO_SETTINGS_MODULE
+      - DJANGO_ALLOWED_HOSTS=$DJANGO_ALLOWED_HOSTS
+      - CORS_ALLOW_CREDENTIALS=$CORS_ALLOW_CREDENTIALS
+      - CORS_ORIGIN_WHITELIST=$CORS_ORIGIN_WHITELIST
+      - AWS_SES_REGION_NAME=$AWS_SES_REGION_NAME
+      - AWS_SES_REGION_ENDPOINT=$AWS_SES_REGION_ENDPOINT
+      - SENTRY_DSN=$SENTRY_DSN
+      - SENTRY_ENVIRONMENT=$SENTRY_ENVIRONMENT
+      - SENTRY_TRACES_SAMPLE_RATE=$SENTRY_TRACES_SAMPLE_RATE
+      - SENTRY_SEND_DEFAULT_PII=$SENTRY_SEND_DEFAULT_PII
+      - SECRET_KEY=$DJANGO_SECRET_KEY
+      - DB_NAME=$DB_NAME
+      - DB_USER=$DB_USER
+      - DB_PASSWORD=$DB_PASSWORD
+      - DB_HOST=$DB_HOST
+      - DB_PORT=$DB_PORT
+    expose:
+      - 8000
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod
+      args:
+        - NEXT_PUBLIC_GRAPHQL_BACKEND_URI=$NEXT_PUBLIC_GRAPHQL_BACKEND_URI
+        - NEXT_PUBLIC_DATAPORTEN_ID=$NEXT_PUBLIC_DATAPORTEN_ID
+        - NEXT_PUBLIC_DATAPORTEN_REDIRECT_URI=$NEXT_PUBLIC_DATAPORTEN_REDIRECT_URI
+        - NEXT_PUBLIC_DATAPORTEN_STATE=$NEXT_PUBLIC_DATAPORTEN_STATE
+        - NEXT_PUBLIC_FRONTEND_URI=$NEXT_PUBLIC_FRONTEND_URI
+    ports:
+      - 3000:3000
+    expose:
+      - 3000
+
+volumes:
+  postgres_data:
+    driver: local

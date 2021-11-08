@@ -1,0 +1,52 @@
+name: Integration Testing
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+env:
+  DATAPORTEN_SECRET: ${{ secrets.DATAPORTEN_DEV_SECRET }}
+  GOOGLE_DRIVE_API_KEY: ${{ secrets.GOOGLE_DRIVE_API_KEY }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_REGION: eu-north-1
+  SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+  DOCKER_BUILDKIT: 1
+
+jobs:
+  test:
+    name: Cypress Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v2
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Download environment variables
+        id: env-download
+        run: aws s3 cp s3://indok-web-environments . --recursive --exclude "*" --include "*integration.env"
+
+      - name: Load environment variables
+        id: env-load
+        run: cat *integration.env >> $GITHUB_ENV
+
+      - name: Build and run the Application
+        run: docker compose -f docker-compose.integration.yml up -d
+
+      - name: Build the Cypress Image
+        run: docker build -f e2e/integration/Dockerfile -t cypress e2e/integration/
+
+      - name: Run the Integration Tests
+        run: docker run --network host cypress --record --key ${{ secrets.CYPRESS_RECORD_KEY }}
