@@ -73,15 +73,13 @@ jobs:
         image: [frontend, backend]
         include:
           - image: frontend
-            environment: app
             sourcemaps: .next
             mount: true
             url_prefix: ~/_next/
           - image: backend
-            environment: api
             mount: false
       fail-fast: false
-    environment: ${{ matrix.environment }}
+    environment: production
     env:
       ECS_TASK_DEFINITION: .aws/task-definition.${{ matrix.image }}.json
       ECS_SERVICE: indokweb-${{ matrix.image }}-fg-service
