@@ -213,7 +213,7 @@ jobs:
           echo "GOOGLE_DRIVE_API_KEY=${{ secrets.GOOGLE_DRIVE_API_KEY }}" >> ${{ env.ENV_FILE }}
 
       - name: Build and run the Application
-        run: docker compose -f docker-compose.integration.yml up
+        run: docker compose -f docker-compose.integration.yml up -d
 
       - name: Run the Integration Tests
         run: docker run --network host cypress:staging --record --key ${{ secrets.CYPRESS_RECORD_KEY }}
