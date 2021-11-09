@@ -7,7 +7,10 @@ const validateEnvironmentVariable = (environmentVariable: string | undefined, na
 
 export const config = {
   dataportenId: validateEnvironmentVariable(process.env.NEXT_PUBLIC_DATAPORTEN_ID, "NEXT_PUBLIC_DATAPORTEN_ID"),
-  dataportenRedirectUri: validateEnvironmentVariable(process.env.NEXT_PUBLIC_REDIRECT_URI, "NEXT_PUBLIC_REDIRECT_URI"),
+  dataportenRedirectUri: validateEnvironmentVariable(
+    process.env.NEXT_PUBLIC_DATAPORTEN_REDIRECT_URI,
+    "NEXT_PUBLIC_DATAPORTEN_REDIRECT_URI"
+  ),
   dataportenState: validateEnvironmentVariable(
     process.env.NEXT_PUBLIC_DATAPORTEN_STATE,
     "NEXT_PUBLIC_DATAPORTEN_STATE"
