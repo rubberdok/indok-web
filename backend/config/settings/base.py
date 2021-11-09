@@ -35,7 +35,7 @@ DATABASES = {
         "NAME": env("DB_NAME", default="postgres"),
         "USER": env("DB_USER", default="postgres"),
         "PASSWORD": env("DB_PASSWORD", default="postgres"),
-        "HOST": env("DB_HOST", default="db"),
+        "HOST": env("DB_HOST", default="postgres"),
         "PORT": env.int("DB_PORT", default=5432),
     }
 }
