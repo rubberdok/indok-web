@@ -106,6 +106,8 @@ jobs:
           file: ${{ matrix.context }}/${{ matrix.dockerfile }}
           outputs: type=docker,dest=/tmp/${{ env.dockerfile }}.tar
           tags: ${{ matrix.image }}:${{ matrix.stage }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
           build-args: |
             ${{ steps.env-download.outputs.build-args }}
 
