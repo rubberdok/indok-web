@@ -10,7 +10,7 @@ import React, { useEffect } from "react";
 
 const App = ({ Component, pageProps }: AppProps): JSX.Element => {
   const link = createHttpLink({
-    uri: config.graphqlEndpoint,
+    uri: config.GRAPHQL_ENDPOINT,
     credentials: "include",
   });
   const client = new ApolloClient({
