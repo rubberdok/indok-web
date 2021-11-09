@@ -181,7 +181,6 @@ jobs:
 
   cypress-install:
     runs-on: ubuntu-latest
-    container: cypress/browsers:node12.18.3-chrome87-ff82
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -194,7 +193,6 @@ jobs:
   integration:
     name: Integration Tests
     runs-on: ubuntu-latest
-    container: cypress/browsers:node12.18.3-chrome87-ff82
     needs: [build, cypress-install]
     strategy:
       fail-fast: false
