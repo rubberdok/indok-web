@@ -9,7 +9,7 @@ RUN yarn install --frozen-lockfile
 
 COPY . .
 
-ENV APP_ENV development
+ENV NEXT_PUBLIC_APP_ENV development
 
 EXPOSE 3000
 

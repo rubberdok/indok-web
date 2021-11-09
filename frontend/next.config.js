@@ -22,7 +22,7 @@ const moduleExports = {
     disableServerWebpackPlugin: true,
     disableClientWebpackPlugin: true,
   },
-  productionBrowserSourceMaps: process.env.APP_ENV === "production",
+  productionBrowserSourceMaps: process.env.NEXT_PUBLIC_APP_ENV === "production",
 };
 
 // Make sure adding Sentry options is the last code to run before exporting, to
