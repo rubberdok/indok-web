@@ -8,6 +8,7 @@ import { useRouter } from "next/router";
 import { Form } from "@interfaces/forms";
 import { DATAPORTEN_SCOPES } from "@utils/auth";
 import { generateQueryString } from "@utils/helpers";
+import { config } from "@utils/config";
 
 const FormPage: NextPage = () => {
   const router = useRouter();
@@ -22,9 +23,9 @@ const FormPage: NextPage = () => {
   if (error) {
     if (error.message.includes("permissions")) {
       const queryString = generateQueryString({
-        client_id: process.env.NEXT_PUBLIC_DATAPORTEN_ID,
-        state: process.env.NEXT_PUBLIC_DATAPORTEN_STATE,
-        redirect_uri: process.env.NEXT_PUBLIC_DATAPORTEN_REDIRECT_URI,
+        client_id: config.dataportenId,
+        state: config.dataportenState,
+        redirect_uri: config.dataportenRedirectUri,
         response_type: "code",
         scope: DATAPORTEN_SCOPES.join(" "),
       });
