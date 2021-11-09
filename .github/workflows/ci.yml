@@ -179,10 +179,27 @@ jobs:
           flags: apitests
           fail_ci_if_error: true
 
+  cypress-install:
+    runs-on: ubuntu-latest
+    container: cypress/browsers:node12.18.3-chrome87-ff82
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - uses: cypress-io/github-action@v2
+        with:
+          working-directory: e2e/integration
+          runTests: false
+
   integration:
     name: Integration Tests
     runs-on: ubuntu-latest
-    needs: build
+    container: cypress/browsers:node12.18.3-chrome87-ff82
+    needs: [build, cypress-install]
+    strategy:
+      fail-fast: false
+      matrix:
+        container: [1, 2, 3]
     env:
       ENV_FILE: django.test.env
 
@@ -218,5 +235,23 @@ jobs:
       - name: Build and run the Application
         run: docker compose -f docker-compose.integration.yml up -d
 
-      - name: Run the Integration Tests
-        run: docker run --network host cypress:test --record --key ${{ secrets.CYPRESS_RECORD_KEY }}
+      - name: "UI Tests - Chrome"
+        uses: cypress-io/github-action@v2
+        with:
+          # we have already installed all dependencies above
+          install: false
+          start: docker compose -f docker-compose.integration.yml up -d
+          wait-on: "http://localhost:3000"
+          wait-on-timeout: 60
+          browser: chrome
+          record: true
+          parallel: true
+          group: "UI - Chrome"
+        env:
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          # Recommended: pass the GitHub token lets this action correctly
+          # determine the unique run id necessary to re-run the checks
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # - name: Run the Integration Tests
+      #   run: docker run --network host cypress:test --record --key ${{ secrets.CYPRESS_RECORD_KEY }}
