@@ -12,4 +12,5 @@ export const config = {
   dataportenState: getEnvironmentVariable("NEXT_PUBLIC_DATAPORTEN_STATE"),
   graphqlEndpoint: getEnvironmentVariable("NEXT_PUBLIC_GRAPHQL_BACKEND_URI"),
   sentryDsn: getEnvironmentVariable("NEXT_PUBLIC_SENTRY_DSN"),
+  frontendUri: getEnvironmentVariable("NEXT_PUBLIC_FRONTEND_URI"),
 };

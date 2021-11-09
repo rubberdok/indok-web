@@ -5,6 +5,7 @@ import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { generateQueryString } from "@utils/helpers";
+import { config } from "@utils/config";
 
 const LogoutPage: NextPage = () => {
   const [getIdToken, { data, loading, error }] = useMutation<{ getIdToken: { idToken: string } }>(GET_ID_TOKEN, {
@@ -25,7 +26,7 @@ const LogoutPage: NextPage = () => {
   // reset the apollo store and redirect. See // https://www.apollographql.com/docs/react/networking/authentication/#reset-store-on-logout
   if (deleteCookieData && data) {
     const queryString = generateQueryString({
-      post_logout_redirect_uri: process.env.NEXT_PUBLIC_FRONTEND_URI,
+      post_logout_redirect_uri: config.frontendUri,
       id_token_hint: data.getIdToken.idToken,
     });
     const logOutUrl = "https://auth.dataporten.no/openid/endsession" + queryString;

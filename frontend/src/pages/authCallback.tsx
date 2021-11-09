@@ -4,6 +4,7 @@ import { AUTHENTICATE } from "@graphql/users/mutations";
 import { GET_USER } from "@graphql/users/queries";
 import { User } from "@interfaces/users";
 import { Button, Container, Typography } from "@material-ui/core";
+import { config } from "@utils/config";
 import { NextPage } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -33,14 +34,14 @@ const AuthCallbackPage: NextPage = () => {
     }
   }, [code, authUser]);
 
-  if (state && state !== process.env.NEXT_PUBLIC_DATAPORTEN_STATE) {
+  if (state && state !== config.dataportenState) {
     if (typeof window !== "undefined") {
       router.push("/");
       return null;
     }
   }
 
-  if (state && state !== process.env.NEXT_PUBLIC_DATAPORTEN_STATE) {
+  if (state && state !== config.dataportenState) {
     if (typeof window !== "undefined") {
       router.push("/");
       return null;
