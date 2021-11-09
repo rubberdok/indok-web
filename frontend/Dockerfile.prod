@@ -31,6 +31,10 @@ ENV NEXT_PUBLIC_FRONTEND_URI $NEXT_PUBLIC_FRONTEND_URI
 ARG NEXT_PUBLIC_SENTRY_DSN
 ENV NEXT_PUBLIC_SENTRY_DSN $NEXT_PUBLIC_SENTRY_DSN
 
+ARG APP_ENV=production
+ENV NEXT_PUBLIC_APP_ENV $APP_ENV
+ENV BABEL_ENV $APP_ENV
+
 RUN yarn build \
     && yarn install --production --ignore-scripts --prefer-offline
 
@@ -38,9 +42,6 @@ RUN yarn build \
 FROM 777854691961.dkr.ecr.eu-north-1.amazonaws.com/node:14-alpine AS runner
 WORKDIR /usr/src/app
 
-ARG APP_ENV=production
-ENV NEXT_PUBLIC_APP_ENV $APP_ENV
-ENV BABEL_ENV $APP_ENV
 
 RUN addgroup -g 1001 -S nodejs
 RUN adduser -S nextjs -u 1001
