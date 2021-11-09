@@ -3,7 +3,7 @@ name: AWS
 on:
   workflow_run:
     workflows: ["CI"]
-    branches: [main]
+    branches: [main, tests/integration]
     types: [completed]
 
 concurrency: production
@@ -64,89 +64,89 @@ jobs:
           docker tag ${{ matrix.image }}-production ${{ steps.image-tag.outputs.image}}
           docker push ${{ steps.image-tag.outputs.image }}
 
-  deploy:
-    name: Deploy to ECS
-    runs-on: ubuntu-latest
-    needs: push
-    strategy:
-      matrix:
-        image: [frontend, backend]
-        include:
-          - image: frontend
-            sourcemaps: .next
-            mount: true
-            url_prefix: ~/_next/
-          - image: backend
-            mount: false
-      fail-fast: false
-    environment: production
-    env:
-      ECS_TASK_DEFINITION: .aws/task-definition.${{ matrix.image }}.json
-      ECS_SERVICE: indokweb-${{ matrix.image }}-fg-service
-      ECS_REPOSITORY: indokweb-${{ matrix.image }}
-      SENTRY_PROJECT: indokweb-${{ matrix.image }}
-      CONTAINER_NAME: ${{ matrix.image }}
+  # deploy:
+  #   name: Deploy to ECS
+  #   runs-on: ubuntu-latest
+  #   needs: push
+  #   strategy:
+  #     matrix:
+  #       image: [frontend, backend]
+  #       include:
+  #         - image: frontend
+  #           sourcemaps: .next
+  #           mount: true
+  #           url_prefix: ~/_next/
+  #         - image: backend
+  #           mount: false
+  #     fail-fast: false
+  #   environment: production
+  #   env:
+  #     ECS_TASK_DEFINITION: .aws/task-definition.${{ matrix.image }}.json
+  #     ECS_SERVICE: indokweb-${{ matrix.image }}-fg-service
+  #     ECS_REPOSITORY: indokweb-${{ matrix.image }}
+  #     SENTRY_PROJECT: indokweb-${{ matrix.image }}
+  #     CONTAINER_NAME: ${{ matrix.image }}
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_DEPLOY_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_DEPLOY_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
-          mask-aws-account-id: false
+  #     - name: Configure AWS credentials
+  #       uses: aws-actions/configure-aws-credentials@v1
+  #       with:
+  #         aws-access-key-id: ${{ secrets.AWS_DEPLOY_ACCESS_KEY_ID }}
+  #         aws-secret-access-key: ${{ secrets.AWS_DEPLOY_SECRET_ACCESS_KEY }}
+  #         aws-region: ${{ env.AWS_REGION }}
+  #         mask-aws-account-id: false
 
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
+  #     - name: Login to Amazon ECR
+  #       id: login-ecr
+  #       uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Set image tag
-        id: image-tag
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: indokweb-${{ matrix.image }}
-          IMAGE_TAG: ${{ github.sha }}
-        run: echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+  #     - name: Set image tag
+  #       id: image-tag
+  #       env:
+  #         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+  #         ECR_REPOSITORY: indokweb-${{ matrix.image }}
+  #         IMAGE_TAG: ${{ github.sha }}
+  #       run: echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
 
-      - name: Update task definition
-        id: task-def
-        uses: aws-actions/amazon-ecs-render-task-definition@v1
-        with:
-          task-definition: ${{ env.ECS_TASK_DEFINITION }}
-          container-name: ${{ env.CONTAINER_NAME }}
-          image: ${{ steps.image-tag.outputs.image }}
+  #     - name: Update task definition
+  #       id: task-def
+  #       uses: aws-actions/amazon-ecs-render-task-definition@v1
+  #       with:
+  #         task-definition: ${{ env.ECS_TASK_DEFINITION }}
+  #         container-name: ${{ env.CONTAINER_NAME }}
+  #         image: ${{ steps.image-tag.outputs.image }}
 
-      - name: Deploy Amazon ECS task definition
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-        with:
-          task-definition: ${{ steps.task-def.outputs.task-definition }}
-          service: ${{ env.ECS_SERVICE }}
-          cluster: ${{ env.ECS_CLUSTER }}
-          wait-for-service-stability: true
+  #     - name: Deploy Amazon ECS task definition
+  #       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+  #       with:
+  #         task-definition: ${{ steps.task-def.outputs.task-definition }}
+  #         service: ${{ env.ECS_SERVICE }}
+  #         cluster: ${{ env.ECS_CLUSTER }}
+  #         wait-for-service-stability: true
 
-      - name: Start container
-        id: container
-        if: ${{ matrix.mount }}
-        run: echo "::set-output name=container::$(docker run -d ${{ steps.image-tag.outputs.image }} sleep 3600)"
+  #     - name: Start container
+  #       id: container
+  #       if: ${{ matrix.mount }}
+  #       run: echo "::set-output name=container::$(docker run -d ${{ steps.image-tag.outputs.image }} sleep 3600)"
 
-      - name: Copy files
-        if: ${{ matrix.mount }}
-        run: |
-          docker cp ${{ steps.container.outputs.container }}:/usr/src/app/${{ matrix.sourcemaps }} ${{ matrix.sourcemaps }}
-          docker stop ${{ steps.container.outputs.container }}
+  #     - name: Copy files
+  #       if: ${{ matrix.mount }}
+  #       run: |
+  #         docker cp ${{ steps.container.outputs.container }}:/usr/src/app/${{ matrix.sourcemaps }} ${{ matrix.sourcemaps }}
+  #         docker stop ${{ steps.container.outputs.container }}
 
-      - name: Sentry release
-        uses: getsentry/action-release@v1.1.6
-        env:
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_ORG: ${{ env.SENTRY_ORG }}
-          SENTRY_PROJECT: ${{ env.SENTRY_PROJECT }}
-        with:
-          environment: production
-          finalize: true
-          sourcemaps: ${{ matrix.sourcemaps }}
-          url_prefix: ${{ matrix.url_prefix }}
-          version: ${{ github.sha }}
+  #     - name: Sentry release
+  #       uses: getsentry/action-release@v1.1.6
+  #       env:
+  #         SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+  #         SENTRY_ORG: ${{ env.SENTRY_ORG }}
+  #         SENTRY_PROJECT: ${{ env.SENTRY_PROJECT }}
+  #       with:
+  #         environment: production
+  #         finalize: true
+  #         sourcemaps: ${{ matrix.sourcemaps }}
+  #         url_prefix: ${{ matrix.url_prefix }}
+  #         version: ${{ github.sha }}
