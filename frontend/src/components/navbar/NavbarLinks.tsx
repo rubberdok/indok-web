@@ -105,9 +105,9 @@ const NavbarLinks: React.FC = () => {
   };
 
   const queryString = generateQueryString({
-    client_id: config.dataportenId,
-    state: config.dataportenState,
-    redirect_uri: config.dataportenRedirectUri,
+    client_id: config.DATAPORTEN_ID,
+    state: config.DATAPORTEN_STATE,
+    redirect_uri: config.DATAPORTEN_REDIRECT_URI,
     response_type: "code",
     scope: DATAPORTEN_SCOPES.join(" "),
   });

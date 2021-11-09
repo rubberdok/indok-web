@@ -38,8 +38,9 @@ RUN yarn build \
 FROM 777854691961.dkr.ecr.eu-north-1.amazonaws.com/node:14-alpine AS runner
 WORKDIR /usr/src/app
 
-ARG NODE_ENV=production
-ENV NODE_ENV $NODE_ENV
+ARG APP_ENV=production
+ENV NEXT_PUBLIC_APP_ENV $APP_ENV
+ENV BABEL_ENV $APP_ENV
 
 RUN addgroup -g 1001 -S nodejs
 RUN adduser -S nextjs -u 1001

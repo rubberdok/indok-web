@@ -6,19 +6,20 @@ const validateEnvironmentVariable = (environmentVariable: string | undefined, na
 };
 
 export const config = {
-  dataportenId: validateEnvironmentVariable(process.env.NEXT_PUBLIC_DATAPORTEN_ID, "NEXT_PUBLIC_DATAPORTEN_ID"),
-  dataportenRedirectUri: validateEnvironmentVariable(
+  DATAPORTEN_ID: validateEnvironmentVariable(process.env.NEXT_PUBLIC_DATAPORTEN_ID, "NEXT_PUBLIC_DATAPORTEN_ID"),
+  DATAPORTEN_REDIRECT_URI: validateEnvironmentVariable(
     process.env.NEXT_PUBLIC_DATAPORTEN_REDIRECT_URI,
     "NEXT_PUBLIC_DATAPORTEN_REDIRECT_URI"
   ),
-  dataportenState: validateEnvironmentVariable(
+  DATAPORTEN_STATE: validateEnvironmentVariable(
     process.env.NEXT_PUBLIC_DATAPORTEN_STATE,
     "NEXT_PUBLIC_DATAPORTEN_STATE"
   ),
-  graphqlEndpoint: validateEnvironmentVariable(
+  GRAPHQL_ENDPOINT: validateEnvironmentVariable(
     process.env.NEXT_PUBLIC_GRAPHQL_BACKEND_URI,
     "NEXT_PUBLIC_GRAPHQL_BACKEND_URI"
   ),
-  sentryDsn: validateEnvironmentVariable(process.env.NEXT_PUBLIC_SENTRY_DSN, "NEXT_PUBLIC_SENTRY_DSN"),
-  frontendUri: validateEnvironmentVariable(process.env.NEXT_PUBLIC_FRONTEND_URI, "NEXT_PUBLIC_FRONTEND_URI"),
+  SENTRY_DSN: validateEnvironmentVariable(process.env.NEXT_PUBLIC_SENTRY_DSN, "NEXT_PUBLIC_SENTRY_DSN"),
+  FRONTEND_URI: validateEnvironmentVariable(process.env.NEXT_PUBLIC_FRONTEND_URI, "NEXT_PUBLIC_FRONTEND_URI"),
+  APP_ENV: validateEnvironmentVariable(process.env.NEXT_PUBLIC_APP_ENV, "NEXT_PUBLIC_APP_ENV"),
 };

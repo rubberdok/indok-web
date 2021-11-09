@@ -34,14 +34,14 @@ const AuthCallbackPage: NextPage = () => {
     }
   }, [code, authUser]);
 
-  if (state && state !== config.dataportenState) {
+  if (state && state !== config.DATAPORTEN_STATE) {
     if (typeof window !== "undefined") {
       router.push("/");
       return null;
     }
   }
 
-  if (state && state !== config.dataportenState) {
+  if (state && state !== config.DATAPORTEN_STATE) {
     if (typeof window !== "undefined") {
       router.push("/");
       return null;
