@@ -39,7 +39,7 @@ jobs:
     strategy:
       matrix:
         image: [frontend, backend, cypress]
-        stage: [staging, production]
+        stage: [test, production]
         include:
           - image: frontend
             build-env: true
@@ -55,7 +55,7 @@ jobs:
             dockerfile: Dockerfile
         exclude:
           - image: backend
-            stage: staging
+            stage: test
           - image: cypress
             stage: production
       fail-fast: false
@@ -129,7 +129,7 @@ jobs:
           --health-timeout 5s
           --health-retries 5
     env:
-      ENV_FILE: django.staging.env
+      ENV_FILE: django.test.env
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -180,7 +180,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     env:
-      ENV_FILE: django.staging.env
+      ENV_FILE: django.test.env
 
     steps:
       - name: Checkout
@@ -194,8 +194,8 @@ jobs:
       - name: Load Docker images
         run: |
           docker load --input /tmp/backend-production/backend-production.tar
-          docker load --input /tmp/frontend-staging/frontend-staging.tar
-          docker load --input /tmp/cypress-staging/cypress-staging.tar
+          docker load --input /tmp/frontend-test/frontend-test.tar
+          docker load --input /tmp/cypress-test/cypress-test.tar
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -215,4 +215,4 @@ jobs:
         run: docker compose -f docker-compose.integration.yml up -d
 
       - name: Run the Integration Tests
-        run: docker run --network host cypress:staging --record --key ${{ secrets.CYPRESS_RECORD_KEY }}
+        run: docker run --network host cypress:test --record --key ${{ secrets.CYPRESS_RECORD_KEY }}

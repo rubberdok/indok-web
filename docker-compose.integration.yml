@@ -28,7 +28,7 @@ services:
       - 8000
 
   frontend:
-    image: frontend:staging
+    image: frontend:test
     ports:
       - 3000:3000
     expose:
