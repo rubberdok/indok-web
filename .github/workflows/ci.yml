@@ -179,7 +179,6 @@ jobs:
     name: Integration Tests
     runs-on: ubuntu-latest
     needs: build
-    environment: test
     env:
       ENV_FILE: django.test.env
 
