@@ -67,7 +67,7 @@ jobs:
   deploy:
     name: Deploy to ECS
     runs-on: ubuntu-latest
-    needs: build
+    needs: push
     strategy:
       matrix:
         image: [frontend, backend]
