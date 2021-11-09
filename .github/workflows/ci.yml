@@ -179,7 +179,6 @@ jobs:
     name: Integration Tests
     runs-on: ubuntu-latest
     needs: build
-    timeout-minutes: 10
     env:
       ENV_FILE: django.staging.env
 
