@@ -1,16 +1,15 @@
-const getEnvironmentVariable = (environmentVariable: string): string => {
-  const unvalidatedEnvironmentVariable = process.env[environmentVariable];
-  if (!unvalidatedEnvironmentVariable) {
+const validateEnvironmentVariable = (environmentVariable: string | undefined): string => {
+  if (!environmentVariable) {
     throw new Error(`Couldn't find environment variable: ${environmentVariable}`);
   }
-  return unvalidatedEnvironmentVariable;
+  return environmentVariable;
 };
 
 export const config = {
-  dataportenId: getEnvironmentVariable("NEXT_PUBLIC_DATAPORTEN_ID"),
-  dataportenRedirectUri: getEnvironmentVariable("NEXT_PUBLIC_DATAPORTEN_REDIRECT_URI"),
-  dataportenState: getEnvironmentVariable("NEXT_PUBLIC_DATAPORTEN_STATE"),
-  graphqlEndpoint: getEnvironmentVariable("NEXT_PUBLIC_GRAPHQL_BACKEND_URI"),
-  sentryDsn: getEnvironmentVariable("NEXT_PUBLIC_SENTRY_DSN"),
-  frontendUri: getEnvironmentVariable("NEXT_PUBLIC_FRONTEND_URI"),
+  dataportenId: validateEnvironmentVariable(process.env.NEXT_PUBLIC_DATAPORTEN_ID),
+  dataportenRedirectUri: validateEnvironmentVariable(process.env.NEXT_PUBLIC_REDIRECT_URI),
+  dataportenState: validateEnvironmentVariable(process.env.NEXT_PUBLIC_DATAPORTEN_STATE),
+  graphqlEndpoint: validateEnvironmentVariable(process.env.NEXT_PUBLIC_GRAPHQL_BACKEND_URI),
+  sentryDsn: validateEnvironmentVariable(process.env.NEXT_PUBLIC_SENTRY_DSN),
+  frontendUri: validateEnvironmentVariable(process.env.NEXT_PUBLIC_FRONTEND_URI),
 };
