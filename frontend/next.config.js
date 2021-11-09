@@ -5,7 +5,6 @@
 
 // eslint-disable-next-line
 const { withSentryConfig } = require("@sentry/nextjs");
-const { config } = require("process");
 
 const moduleExports = {
   /** @todo internationalized routing */
@@ -23,7 +22,7 @@ const moduleExports = {
     disableServerWebpackPlugin: true,
     disableClientWebpackPlugin: true,
   },
-  productionBrowserSourceMaps: config.APP_ENV === "production",
+  productionBrowserSourceMaps: process.env.APP_ENV === "production",
 };
 
 // Make sure adding Sentry options is the last code to run before exporting, to
