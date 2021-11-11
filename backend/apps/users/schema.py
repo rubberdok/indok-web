@@ -18,3 +18,4 @@ class UserMutations(graphene.ObjectType):
 class UserQueries(graphene.ObjectType, UserResolvers):
     all_users = graphene.List(UserType)
     user = graphene.Field(UserType)
+    auth_token = graphene.String()

@@ -29,12 +29,12 @@ class Product(models.Model):
         super().save(*args, **kwargs)
 
     @classmethod
-    def check_and_reserve_quantity(cls, product_id, user: User, quantity: int, db: str = "default"):
-        with transaction.atomic(using=db):
+    def check_and_reserve_quantity(cls, product_id, user: User, quantity: int):
+        with transaction.atomic():
             # Check if the requested quantity is allowed
             try:
                 # Acquire DB lock for the product (no other process can change it)
-                product = cls.objects.using(db).select_for_update().get(pk=product_id)
+                product = cls.objects.select_for_update().get(pk=product_id)
             except cls.DoesNotExist:
                 raise ValueError("Ugyldig produkt")
 
@@ -59,15 +59,15 @@ class Product(models.Model):
         return product
 
     @classmethod
-    def restore_quantity(cls, order: "Order", db: str = "default"):
+    def restore_quantity(cls, order: "Order"):
         assert order.payment_status in [
             Order.PaymentStatus.CANCELLED,
             Order.PaymentStatus.FAILED,
             Order.PaymentStatus.REJECTED,
         ]
-        with transaction.atomic(using=db):
+        with transaction.atomic():
             # Acquire DB lock for the product (no other process can change it)
-            product = cls.objects.using(db).select_for_update().get(pk=order.product.id)
+            product = cls.objects.select_for_update().get(pk=order.product.id)
             product.current_quantity = F("current_quantity") + order.quantity
             product.save()
 

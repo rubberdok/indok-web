@@ -21,13 +21,12 @@ class InitiateOrder(graphene.Mutation):
     class Arguments:
         product_id = graphene.ID(required=True)
         quantity = graphene.Int()
-        db = graphene.String(required=False, default_value="default")
 
     @login_required
-    def mutate(self, info, product_id, db, quantity=1):
+    def mutate(self, info, product_id, quantity=1):
         user = info.context.user
 
-        product = Product.check_and_reserve_quantity(product_id, user, quantity, db)
+        product = Product.check_and_reserve_quantity(product_id, user, quantity)
 
         # Create or update the order
         # If the user has attempted this order before, retry it
@@ -60,7 +59,6 @@ class InitiateOrder(graphene.Mutation):
             order.save()
 
         redirect = InitiateOrder.vipps_api.initiate_payment(order)
-        print(redirect)
 
         return InitiateOrder(redirect=redirect)
 
@@ -75,14 +73,13 @@ class AttemptCapturePayment(graphene.Mutation):
 
     class Arguments:
         order_id = graphene.ID(required=True)
-        db = graphene.String(required=False, default_value="default")
 
     @login_required
-    def mutate(self, info, order_id, db):
-        with transaction.atomic(using=db):
+    def mutate(self, info, order_id):
+        with transaction.atomic():
             try:
                 # Acquire DB lock for the order (no other process can change it)
-                order = Order.objects.using(db).select_for_update().get(pk=order_id)
+                order = Order.objects.select_for_update().get(pk=order_id)
             except Order.DoesNotExist:
                 raise ValueError("Ugyldig ordre")
 
@@ -102,7 +99,7 @@ class AttemptCapturePayment(graphene.Mutation):
                     order.payment_status = Order.PaymentStatus.CANCELLED
                     order.save()
                     # Order went from initiated to cancelled, restore quantity
-                    order.product.restore_quantity(order, db)
+                    order.product.restore_quantity(order)
 
             if order.payment_status == Order.PaymentStatus.RESERVED:
                 try:
