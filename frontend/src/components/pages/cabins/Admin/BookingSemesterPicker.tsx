@@ -1,48 +1,52 @@
-import { useMutation, useQuery } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import ErrorDialog from "@components/dialogs/ErrorDialog";
 import { UPDATE_BOOKING_SEMESTER } from "@graphql/cabins/mutations";
-import { QUERY_BOOKING_SEMESTERS } from "@graphql/cabins/queries";
-import { Box, Button, CircularProgress, Grid, Snackbar, TextField, Typography } from "@material-ui/core";
+
+import useBookingSemester from "@hooks/cabins/useBookingSemester";
+import {
+  Box,
+  Button,
+  Checkbox,
+  CircularProgress,
+  FormControlLabel,
+  Grid,
+  Snackbar,
+  TextField,
+  Tooltip,
+  Typography,
+} from "@material-ui/core";
+
 import { Alert } from "@material-ui/lab";
 import dayjs from "dayjs";
 import router from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
-type BookingSemester = {
-  fallStartDate?: string;
-  fallEndDate?: string;
-  springStartDate?: string;
-  springEndDate?: string;
+export type BookingSemester = {
+  fallStartDate: string;
+  fallEndDate: string;
+  springStartDate: string;
+  springEndDate: string;
+  fallSemesterActive: boolean;
+  springSemesterActive: boolean;
 };
 
-const defaultBookingSemester: BookingSemester = {
+export const defaultBookingSemester: BookingSemester = {
   fallStartDate: "",
   fallEndDate: "",
   springStartDate: "",
   springEndDate: "",
+  fallSemesterActive: false,
+  springSemesterActive: false,
 };
 
 const BookingSemesterPicker = () => {
-  const [bookingSemester, setBookingSemester] = useState<BookingSemester>(defaultBookingSemester);
   const [updateBookingSemester] = useMutation<{ semesterData: BookingSemester }>(UPDATE_BOOKING_SEMESTER);
   const handleErrorDialogClose = () => router.push("/");
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [alertSeverity, setAlertSeverity] = useState<"success" | "error">("success");
 
-  const { data, loading, error } = useQuery<{ bookingSemester: BookingSemester }>(QUERY_BOOKING_SEMESTERS);
-
-  useEffect(() => {
-    if (data?.bookingSemester) {
-      const { fallStartDate, fallEndDate, springStartDate, springEndDate } = data.bookingSemester;
-      setBookingSemester({
-        fallStartDate: fallStartDate,
-        fallEndDate: fallEndDate,
-        springStartDate: springStartDate,
-        springEndDate: springEndDate,
-      });
-    }
-  }, [data]);
+  const { bookingSemester, setBookingSemester, loading, error } = useBookingSemester();
 
   const validateBookingSemesters = (): boolean => {
     const fallStart = dayjs(bookingSemester.fallStartDate);
@@ -81,7 +85,7 @@ const BookingSemesterPicker = () => {
           <Grid container spacing={6} direction="row">
             <Grid item container direction="column" md={6} alignItems="center" spacing={3}>
               <Grid item>
-                <Typography>Høst-semesteret</Typography>
+                <Typography>Høst-semester</Typography>
               </Grid>
               <Grid item>
                 <TextField
@@ -105,11 +109,27 @@ const BookingSemesterPicker = () => {
                   onChange={(e) => setBookingSemester({ ...bookingSemester, fallEndDate: e.target.value })}
                 />
               </Grid>
+              <Grid item>
+                <Tooltip title="Her kan du velge om booking på høst-semesteret skal være åpen eller ikke.">
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        color="primary"
+                        checked={bookingSemester.fallSemesterActive}
+                        onChange={(e) =>
+                          setBookingSemester({ ...bookingSemester, fallSemesterActive: e.target.checked })
+                        }
+                      />
+                    }
+                    label="Aktiv"
+                  />
+                </Tooltip>
+              </Grid>
             </Grid>
 
             <Grid item container direction="column" md={6} alignItems="center" spacing={3}>
               <Grid item>
-                <Typography>Vår-semesteret</Typography>
+                <Typography>Vår-semester</Typography>
               </Grid>
               <Grid item>
                 <TextField
@@ -132,6 +152,22 @@ const BookingSemesterPicker = () => {
                   value={bookingSemester?.springEndDate}
                   onChange={(e) => setBookingSemester({ ...bookingSemester, springEndDate: e.target.value })}
                 />
+              </Grid>
+              <Grid item>
+                <Tooltip title="Her kan du velge om booking på vår-semesteret skal være åpen eller ikke.">
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        color="primary"
+                        checked={bookingSemester.springSemesterActive}
+                        onChange={(e) =>
+                          setBookingSemester({ ...bookingSemester, springSemesterActive: e.target.checked })
+                        }
+                      />
+                    }
+                    label="Aktiv"
+                  />
+                </Tooltip>
               </Grid>
             </Grid>
             <Grid item>

@@ -67,6 +67,8 @@ class BookingSemester(models.Model):
     fall_end_date = models.DateField()
     spring_start_date = models.DateField()
     spring_end_date = models.DateField()
+    fall_semester_active = models.BooleanField()
+    spring_semester_active = models.BooleanField()
 
     def __str__(self):
         return (

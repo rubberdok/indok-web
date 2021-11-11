@@ -41,6 +41,8 @@ class UpdateBookingSemesterInput(graphene.InputObjectType):
     fall_end_date = graphene.Date()
     spring_start_date = graphene.Date()
     spring_end_date = graphene.Date()
+    fall_semester_active = graphene.Boolean()
+    spring_semester_active = graphene.Boolean()
 
 
 class CreateBooking(graphene.Mutation):

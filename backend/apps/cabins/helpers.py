@@ -24,3 +24,8 @@ def price(
     else:
         price_pr_night = cabins.aggregate(models.Sum("external_price"))["external_price__sum"]
     return price_pr_night * number_of_nights(check_out, check_in)
+
+
+def snake_case_to_camel_case(snake: str) -> str:
+    first, *others = snake.split("_")
+    return "".join([first.lower(), *map(str.title, others)])

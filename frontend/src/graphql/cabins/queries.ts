@@ -66,6 +66,8 @@ export const QUERY_BOOKING_SEMESTERS = gql`
       fallEndDate
       springStartDate
       springEndDate
+      fallSemesterActive
+      springSemesterActive
     }
   }
 `;

@@ -1,3 +1,4 @@
+import { BookingSemester } from "@components/pages/cabins/Admin/BookingSemesterPicker";
 import {
   BasicBooking,
   Cabin,
@@ -129,4 +130,21 @@ export const generateEmailAndBookingInput: (
     checkIn: datePick.checkInDate,
     checkOut: datePick.checkOutDate,
   };
+};
+
+/* 
+  Checks if a date is within the fall or spring booking semester.
+*/
+export const dateInBookingSemester = (date: dayjs.Dayjs, bookingSemester: BookingSemester): boolean => {
+  const inFallSemester =
+    (date.isAfter(bookingSemester.fallStartDate) || date.isSame(bookingSemester.fallStartDate), "day") &&
+    (date.isBefore(bookingSemester.fallEndDate) || date.isSame(bookingSemester.fallEndDate, "day"));
+
+  const inSpringSemester =
+    (date.isAfter(bookingSemester.springStartDate) || date.isSame(bookingSemester.springStartDate)) &&
+    (date.isBefore(bookingSemester.springEndDate) || date.isSame(bookingSemester.springEndDate));
+
+  return (
+    (inFallSemester && bookingSemester.fallSemesterActive) || (inSpringSemester && bookingSemester.springSemesterActive)
+  );
 };

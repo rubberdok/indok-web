@@ -3,6 +3,8 @@ import json
 from django.core import mail
 
 from apps.cabins.models import Booking, Cabin, BookingResponsible
+from apps.cabins.models import BookingSemester
+from apps.cabins.helpers import snake_case_to_camel_case
 from utils.testing.base import ExtendedGraphQLTestCase
 from utils.testing.cabins_factories import BookingFactory
 import datetime
@@ -382,3 +384,69 @@ class EmailTestCase(CabinsBaseTestCase):
 
         # Verify that the email contains the correct question provided by the user
         self.assertTrue(self.test_question in mail.outbox[0].body)
+
+
+class BookingSemesterTestCase(CabinsBaseTestCase):
+    def setUp(self) -> None:
+        super().setUp()
+
+        self.booking_semester_dict = {
+            "fall_start_date": "2021-08-01",
+            "fall_end_date": "2021-12-01",
+            "spring_start_date": "2022-01-01",
+            "spring_end_date": "2021-05-01",
+            "fall_semester_active": True,
+            "spring_semester_active": False,
+        }
+
+        # Create default booking semester
+        self.booking_semester = BookingSemester(**self.booking_semester_dict)
+        self.booking_semester.save()
+
+    def test_resolve_booking_semester(self):
+        query = """
+        query BookingSemesters {
+            bookingSemester {
+            fallStartDate
+            fallEndDate
+            springStartDate
+            springEndDate
+            fallSemesterActive
+            springSemesterActive
+            }
+        }
+        """
+
+        response = self.query(query)
+        self.assertResponseNoErrors(response)
+
+        # Fetching content of response
+        content = json.loads(response.content)
+        booking_semester = content["data"]["bookingSemester"]
+
+        for key, value in self.booking_semester_dict.items():
+            self.assertEquals(value, booking_semester[snake_case_to_camel_case(key)])
+
+    def test_update_booking_semester(self):
+        query = """
+        mutation UpdateBookingSemester{
+            updateBookingSemester(semesterData: {
+                fallStartDate: "2021-09-01",
+                fallSemesterActive: false,
+            }) {
+                bookingSemester {
+                    fallStartDate
+                    fallSemesterActive
+                }
+            }
+        }"""
+
+        response = self.query(query)
+        self.assertResponseNoErrors(response)
+
+        # Fetching content of response
+        content = json.loads(response.content)
+        booking_semester = content["data"]["updateBookingSemester"]["bookingSemester"]
+
+        self.assertEquals(booking_semester["fallStartDate"], "2021-09-01")
+        self.assertEquals(booking_semester["fallSemesterActive"], False)

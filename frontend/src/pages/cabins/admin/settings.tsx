@@ -31,7 +31,7 @@ const SettingsPage = () => {
               <Paper>
                 <Box p={4}>
                   <Typography variant="h5">Velg start og slutt-dato for booking for høst og vår-semestrene</Typography>
-                  <Typography>Det vil kun være mulig for brukere å søke om bookinger i denne perioden.</Typography>
+                  <Typography>Det vil kun være mulig for brukere å søke om bookinger i disse periodene.</Typography>
                 </Box>
                 <Box p={4}>
                   <BookingSemesterPicker />
