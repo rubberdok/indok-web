@@ -25,6 +25,7 @@ class OrganizationType(DjangoObjectType):
             "children",
             "users",
             "events",
+            "permission_groups",
             "logo_url",
         ]
 
