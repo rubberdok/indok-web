@@ -1,7 +1,6 @@
 from typing import Optional
 import graphene
 
-from apps.permissions.types import ResponsibleGroupType
 from .models import Organization, Membership
 from graphene_django import DjangoObjectType
 from graphql_jwt.decorators import login_required
@@ -13,8 +12,6 @@ from .dataloader import ListingsByOrganizationIdLoader
 class OrganizationType(DjangoObjectType):
     absolute_slug = graphene.String()
     listings = graphene.List(ListingType)
-    primary_group = graphene.Field(source="primary_group", type=ResponsibleGroupType)
-    hr_group = graphene.Field(source="hr_group", type=ResponsibleGroupType)
 
     class Meta:
         model = Organization
@@ -29,7 +26,6 @@ class OrganizationType(DjangoObjectType):
             "users",
             "events",
             "logo_url",
-            "permission_groups",
         ]
 
     @staticmethod
@@ -69,6 +65,12 @@ class OrganizationType(DjangoObjectType):
     @PermissionDecorators.is_in_organization
     def resolve_events(organization: Organization, info):
         return organization.events
+
+    @staticmethod
+    @login_required
+    @PermissionDecorators.is_in_organization
+    def resolve_permission_groups(organization: Organization, info):
+        return organization.permission_groups
 
 
 class MembershipType(DjangoObjectType):
