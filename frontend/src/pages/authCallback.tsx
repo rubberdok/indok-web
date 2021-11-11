@@ -41,13 +41,6 @@ const AuthCallbackPage: NextPage = () => {
     }
   }
 
-  if (state && state !== config.DATAPORTEN_STATE) {
-    if (typeof window !== "undefined") {
-      router.push("/");
-      return null;
-    }
-  }
-
   if (!loading && data && data.authUser) {
     router.push("/profile");
     return null;
