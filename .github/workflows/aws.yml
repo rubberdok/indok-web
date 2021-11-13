@@ -136,9 +136,7 @@ jobs:
 
       - name: Copy files
         if: ${{ matrix.mount }}
-        run: |
-          docker cp ${{ steps.container.outputs.container }}:/usr/src/app/${{ matrix.sourcemaps }} ${{ matrix.sourcemaps }}
-          docker stop ${{ steps.container.outputs.container }}
+        run: docker cp ${{ steps.container.outputs.container }}:/usr/src/app/${{ matrix.sourcemaps }} ${{ matrix.sourcemaps }}
 
       - name: Sentry release
         uses: getsentry/action-release@v1.1.6
