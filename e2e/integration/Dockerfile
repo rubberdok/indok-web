@@ -10,8 +10,8 @@ WORKDIR /usr/src/app
 
 COPY --from=builder /usr/src/app/node_modules ./node_modules
 COPY --from=builder /usr/src/app/package.json ./package.json
-COPY --from=builer /usr/src/app/cypress.json ./cypress.json
-COPY --from=builer /usr/src/app/cypress.env.json ./cypress.env.json
+COPY --from=builder /usr/src/app/cypress.json ./cypress.json
+COPY --from=builder /usr/src/app/cypress.env.json ./cypress.env.json
 COPY --from=builder /usr/src/app/cypress ./cypress
 
 ENTRYPOINT [ "yarn", "e2e:headless" ]
