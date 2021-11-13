@@ -8,16 +8,16 @@
   "scripts": {
     "test": "cypress open",
     "test:headless": "cypress run",
-    "e2e": "test-server 'http://localhost:3000|http://localhost:8000' 'yarn test'",
-    "e2e:headless": "test-server 'http://localhost:3000|http://localhost:8000' 'yarn test:headless'"
+    "e2e": "wait-on --httpTimeout 60000 http://localhost:3000 && yarn test",
+    "e2e:headless": "wait-on --httpTimeout 60000 http://localhost:3000 && yarn test:headless"
   },
   "repository": {
     "type": "git",
     "url": "github.com/hovedstyret/indok-web"
   },
-  "devDependencies": {
+  "dependencies": {
     "cypress": "^9.0.0",
-    "start-server-and-test": "^1.14.0",
-    "typescript": "^4.3.4"
+    "typescript": "^4.3.4",
+    "wait-on": "^6.0.0"
   }
 }
