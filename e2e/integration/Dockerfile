@@ -1,4 +1,4 @@
-FROM cypress/included:8.6.0
+FROM cypress/browsers:node14.17.0-chrome91-ff89
 
 WORKDIR /usr/src/app
 
