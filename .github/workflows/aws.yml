@@ -63,7 +63,7 @@ jobs:
       - name: Tag image for ECR
         id: tag-image
         run: |
-          docker tag ${{ matrix.image }}-production ${{ steps.image-tag.outputs.image}}
+          docker tag ${{ matrix.image }}:production ${{ steps.image-tag.outputs.image}}
           docker push ${{ steps.image-tag.outputs.image }}
 
   deploy:
