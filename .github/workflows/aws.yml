@@ -29,7 +29,9 @@ jobs:
         with:
           workflow: ${{ github.event.workflow_run.workflow_id }}
           workflow_conclusion: success
-          artifact_name: ${{ matrix.image }}-production
+          name: ${{ matrix.image }}-production
+          path: /tmp/
+          run_id: ${{ github.event.workflow_run.id}}
 
       - name: Load Docker images
         run: docker load --input /tmp/${{ matrix.image }}-production.tar
