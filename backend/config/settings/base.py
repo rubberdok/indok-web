@@ -2,6 +2,7 @@
 Base settings to build other settings files upon.
 """
 from pathlib import Path
+from typing import Literal
 
 import environ
 
@@ -16,7 +17,8 @@ if READ_DOT_ENV_FILE:
     env.read_env(str(ROOT_DIR / ".env"))
 
 # GENERAL
-DEBUG = env.bool("DJANGO_DEBUG", False)
+ENVIRONMENT: Literal["development", "production", "test"] = env("DJANGO_ENVIRONMENT")
+DEBUG: bool = ENVIRONMENT == "development"
 
 TIME_ZONE = "Europe/Oslo"
 LANGUAGE_CODE = "en-us"
@@ -33,7 +35,7 @@ DATABASES = {
         "NAME": env("DB_NAME", default="postgres"),
         "USER": env("DB_USER", default="postgres"),
         "PASSWORD": env("DB_PASSWORD", default="postgres"),
-        "HOST": env("DB_HOST", default="db"),
+        "HOST": env("DB_HOST", default="postgres"),
         "PORT": env.int("DB_PORT", default=5432),
     }
 }
@@ -139,6 +141,7 @@ TEMPLATES = [
 # CORS
 CORS_ALLOW_CREDENTIALS = env.bool("CORS_ALLOW_CREDENTIALS", True)
 CORS_ORIGIN_WHITELIST = env.list("CORS_ORIGIN_WHITELIST", default="http://localhost:3000")
+ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=["localhost"])
 
 
 # EMAIL

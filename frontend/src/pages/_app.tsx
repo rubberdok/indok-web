@@ -3,13 +3,14 @@ import { CssBaseline, responsiveFontSizes } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/styles";
 import "@styles/global.css";
 import theme from "@styles/theme";
+import { config } from "@utils/config";
 import { AppProps } from "next/app";
 import Head from "next/head";
 import React, { useEffect } from "react";
 
 const App = ({ Component, pageProps }: AppProps): JSX.Element => {
   const link = createHttpLink({
-    uri: process.env.NEXT_PUBLIC_GRAPHQL_BACKEND_URI,
+    uri: config.GRAPHQL_ENDPOINT,
     credentials: "include",
   });
   const client = new ApolloClient({

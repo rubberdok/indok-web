@@ -131,6 +131,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const ID_PREFIX = "hero";
+
 const Hero: React.FC = () => {
   const classes = useStyles();
   const [isShown, setIsShown] = useState("");
@@ -182,7 +184,7 @@ const Hero: React.FC = () => {
             >
               <Typography variant="overline">Foreningen for studentene ved</Typography>
               <Fade duration={700} cascade triggerOnce direction="up">
-                <Typography style={{ color: "white" }} variant="h1" gutterBottom>
+                <Typography style={{ color: "white" }} variant="h1" gutterBottom data-test-id={`${ID_PREFIX}-title`}>
                   Industriell Økonomi og Teknologiledelse
                 </Typography>
                 <br />
