@@ -28,17 +28,18 @@ const parseDate = (date: string): string => {
 const useStyles = makeStyles((theme) => ({
   image: {
     position: "relative",
+    objectFit: "cover",
+    width: "100%",
+    height: "100%",
   },
   imageContainer: {
     width: "auto",
-    height: "500px",
+    height: "min(50vw, 450px)",
     position: "relative",
     display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
   },
   paper: {
-    margin: "0 5vw",
+    margin: "0 min(0vw, 60px)",
   },
 }));
 
@@ -51,28 +52,34 @@ interface Props {
 }
 
 export const BlogPostDetail: React.VFC<Props> = ({ title, text, publishDate, firstName, lastName }) => {
-  const style = useStyles();
+  const classes = useStyles();
 
   return (
     <>
       <Container>
         <Box my={5}>
-          <Paper className={style.paper}>
-            <Box p={5}>
-              <Grid container alignItems="center" justifyContent="center">
-                <Grid item xs={12}>
-                  <Box>
+          <Box>
+            <Grid container alignItems="center" justifyContent="center">
+              <Grid item md={10} sm={11} xs={12}>
+                <Box>
+                  <Box mb={2}>
                     <Typography variant="h2">{title}</Typography>
-                    <Box className={style.imageContainer}>
-                      <Image alt="blog-image" src="/img/eivbilde.jpg" layout="fill" objectFit="contain" />
-                    </Box>
-                    <Typography>{`${firstName} ${lastName} ${parseDate(publishDate)}`}</Typography>
-                    <Typography>{text}</Typography>
                   </Box>
-                </Grid>
+                  <Box className={classes.imageContainer}>
+                    <Image alt="blog-image" src="/img/eivbilde.jpg" layout="fill" objectFit="cover" />
+                  </Box>
+                  <Box mt={2}>
+                    <Typography variant="caption">{`Av ${firstName} ${lastName}, ${parseDate(
+                      publishDate
+                    )}`}</Typography>
+                  </Box>
+                  <Box mt={2}>
+                    <Typography gutterBottom>{text}</Typography>
+                  </Box>
+                </Box>
               </Grid>
-            </Box>
-          </Paper>
+            </Grid>
+          </Box>
         </Box>
       </Container>
     </>
