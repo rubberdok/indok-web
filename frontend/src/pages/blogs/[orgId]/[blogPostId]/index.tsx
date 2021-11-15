@@ -13,8 +13,6 @@ const DetailBlogPost: NextPage = () => {
     variables: { blogPostId: parseInt(blogPostId as string) },
   });
 
-  console.log(data);
-
   return (
     <>
       <Layout>
