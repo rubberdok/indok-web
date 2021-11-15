@@ -15,7 +15,7 @@ def assign_object_permissions(app_name: str, model_name: str, instance: "Model",
     for permission_group in organization.permission_groups.all():
         # Using try-except due to Python's "Easier to Ask for Forgiveness than Permission" principle
         try:
-            permissions = DEFAULT_ORG_PERMISSION_GROUPS[permission_group.group_type][app_name][model_name]
+            permissions = DEFAULT_ORG_PERMISSION_GROUPS[permission_group.group_type].permissions[app_name][model_name]
 
             for permission in permissions:
                 assign_perm(f"{app_name}.{permission}", permission_group.group, instance)
