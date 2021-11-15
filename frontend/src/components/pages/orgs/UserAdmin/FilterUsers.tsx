@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import { Grid } from "@material-ui/core";
 import { gql, useQuery } from "@apollo/client";
 import { RemoveFiltersButton } from "@components/pages/archive/RemoveFiltersButton";
+import { User } from "@sentry/types";
 
 type Props = {
   organization: Organization;
@@ -53,7 +54,7 @@ const FilterUsers: React.FC<Props> = ({ organization }) => {
 
   if (error) return <p>Error</p>;
   if (loading) return <p>Loading...</p>;
-  //      <p>{data?.organization.permissionGroups[1].name}</p>
+
   return (
     <>
       <Grid item xs={12} md={6}>
