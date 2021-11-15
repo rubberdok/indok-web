@@ -8,6 +8,7 @@ from apps.cabins.models import BookingResponsible
 from apps.cabins.types import BookingInfoType, AdminTemplateType, UserTemplateType, EmailTypes
 
 from weasyprint import HTML
+from datetime import datetime
 import io
 
 user_templates: UserTemplateType = {
@@ -55,6 +56,7 @@ def send_mail(booking_info: BookingInfoType, email_type: EmailTypes, admin: bool
         "booking_responsible_name": f"{booking_responsible.first_name} {booking_responsible.last_name}",
         "booking_responsible_phone": booking_responsible.phone,
         "booking_responsible_email": booking_responsible.email,
+        "now_time": datetime.now().strftime("%d.%m.%Y, %H:%M:%S"),
     }
 
     # HTML content for mail services supporting HTML, text content if HTML isn't supported
@@ -78,7 +80,7 @@ def send_mail(booking_info: BookingInfoType, email_type: EmailTypes, admin: bool
     email.send()
 
 
-def html_to_pdf(template_src, context_dict={}):
+def html_to_pdf(template_src: str, context_dict={}):
     html_string = render_to_string(template_src, context_dict)
     html = HTML(string=html_string)
     buffer = io.BytesIO()
