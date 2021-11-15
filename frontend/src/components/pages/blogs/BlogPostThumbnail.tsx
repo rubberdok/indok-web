@@ -6,6 +6,9 @@ const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
   },
+  card: {
+    transition: "none !important",
+  },
 }));
 
 interface Props {
@@ -23,7 +26,7 @@ export const BlogPostThumbnail: React.VFC<Props> = ({ title, blogId }) => {
   return (
     <>
       <Grid item md={4} sm={6} xs={12}>
-        <Card>
+        <Card className={classes.card}>
           <Link href={`${orgId}/${blogId}/`}>
             <CardActionArea>
               <CardMedia
@@ -34,7 +37,9 @@ export const BlogPostThumbnail: React.VFC<Props> = ({ title, blogId }) => {
                 // Change to actual image when it's implemented
               />
               <CardContent>
-                <Typography align="center">{title}</Typography>
+                <Typography align="center" variant="subtitle2">
+                  {title}
+                </Typography>
               </CardContent>
             </CardActionArea>
           </Link>
