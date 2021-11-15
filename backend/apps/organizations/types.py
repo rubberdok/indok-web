@@ -62,7 +62,6 @@ class OrganizationType(DjangoObjectType):
         return organization.users
 
     @staticmethod
-    @login_required
     def resolve_permission_groups(organization: Organization, info):
         return organization.permission_groups
 
