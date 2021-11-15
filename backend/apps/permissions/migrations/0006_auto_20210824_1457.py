@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('permissions', '0005_auto_20210824_1446'),
+        ("permissions", "0005_auto_20210824_1446"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='responsiblegroup',
-            name='group_type',
+            model_name="responsiblegroup",
+            name="group_type",
             field=models.CharField(max_length=50),
         ),
     ]

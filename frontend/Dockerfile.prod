@@ -1,15 +1,19 @@
 # syntax=docker/dockerfile:1
+ARG APP_ENV=production
 
-FROM 777854691961.dkr.ecr.eu-north-1.amazonaws.com/node:12
+# Install dependencies only when needed
+FROM 777854691961.dkr.ecr.eu-north-1.amazonaws.com/node:14-alpine AS deps
+# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
+RUN apk add --no-cache libc6-compat
+WORKDIR /usr/src/app
+COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile
 
-# Create app directory
-RUN mkdir -p /code
-WORKDIR /code
-
-# Installing dependencies
-COPY package.json .
-COPY package-lock.json .
-RUN npm ci
+# Rebuild the source code only when needed
+FROM 777854691961.dkr.ecr.eu-north-1.amazonaws.com/node:14-alpine AS builder
+WORKDIR /usr/src/app
+COPY . .
+COPY --from=deps /usr/src/app/node_modules ./node_modules
 
 ARG NEXT_PUBLIC_GRAPHQL_BACKEND_URI
 ENV NEXT_PUBLIC_GRAPHQL_BACKEND_URI $NEXT_PUBLIC_GRAPHQL_BACKEND_URI
@@ -26,14 +30,41 @@ ENV NEXT_PUBLIC_DATAPORTEN_STATE $NEXT_PUBLIC_DATAPORTEN_STATE
 ARG NEXT_PUBLIC_FRONTEND_URI
 ENV NEXT_PUBLIC_FRONTEND_URI $NEXT_PUBLIC_FRONTEND_URI
 
-# Copying source files
-COPY . .
+ARG NEXT_PUBLIC_SENTRY_DSN
+ENV NEXT_PUBLIC_SENTRY_DSN $NEXT_PUBLIC_SENTRY_DSN
 
-# Secrets should not be passed as build args.
-RUN --mount=type=secret,id=SENTRY_AUTH_TOKEN \
-    --mount=type=secret,id=SENTRY_RELEASE \
-    export SENTRY_AUTH_TOKEN=$(cat /run/secrets/SENTRY_AUTH_TOKEN) \
-    && export SENTRY_RELEASE=$(cat /run/secrets/SENTRY_RELEASE) \
-    && npm run build
+ARG APP_ENV
+ENV NEXT_PUBLIC_APP_ENV $APP_ENV
+ENV BABEL_ENV $APP_ENV
 
-CMD ["npm", "run", "start"]
+RUN yarn build \
+    && yarn install --production --ignore-scripts --prefer-offline
+
+# Production image, copy all the files and run next
+FROM 777854691961.dkr.ecr.eu-north-1.amazonaws.com/node:14-alpine AS runner
+WORKDIR /usr/src/app
+
+ARG APP_ENV
+ENV NEXT_PUBLIC_APP_ENV $APP_ENV
+
+RUN addgroup -g 1001 -S nodejs
+RUN adduser -S nextjs -u 1001
+
+RUN mkdir -p /usr/src/app/.next/cache/images && chown nextjs:nodejs /usr/src/app/.next/cache/images
+VOLUME /usr/src/app/.next/cache/images
+
+# You only need to copy next.config.js if you are NOT using the default configuration
+COPY --from=builder /usr/src/app/next.config.js ./
+COPY --from=builder /usr/src/app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /usr/src/app/.next ./.next
+COPY --from=builder /usr/src/app/node_modules ./node_modules
+COPY --from=builder /usr/src/app/package.json ./package.json
+
+USER nextjs
+
+EXPOSE 3000
+
+# Disabled NextJS telemetry
+ENV NEXT_TELEMETRY_DISABLED 1
+
+CMD ["yarn", "start"]

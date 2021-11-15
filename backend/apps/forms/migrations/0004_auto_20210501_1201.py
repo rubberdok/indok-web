@@ -6,38 +6,38 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('forms', '0003_remove_answer_user'),
+        ("forms", "0003_remove_answer_user"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='answer',
-            name='answer',
+            model_name="answer",
+            name="answer",
             field=models.TextField(),
         ),
         migrations.AlterField(
-            model_name='comment',
-            name='comment',
+            model_name="comment",
+            name="comment",
             field=models.TextField(),
         ),
         migrations.AlterField(
-            model_name='form',
-            name='description',
-            field=models.TextField(blank=True, default=''),
+            model_name="form",
+            name="description",
+            field=models.TextField(blank=True, default=""),
         ),
         migrations.AlterField(
-            model_name='option',
-            name='answer',
+            model_name="option",
+            name="answer",
             field=models.CharField(max_length=100),
         ),
         migrations.AlterField(
-            model_name='question',
-            name='description',
-            field=models.CharField(blank=True, default='', max_length=100),
+            model_name="question",
+            name="description",
+            field=models.CharField(blank=True, default="", max_length=100),
         ),
         migrations.AlterField(
-            model_name='question',
-            name='question',
+            model_name="question",
+            name="question",
             field=models.CharField(max_length=100),
         ),
     ]

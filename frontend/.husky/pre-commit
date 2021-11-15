@@ -1,7 +1,7 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-fail=0
+fail=false
 pippath="" # The pip path
 missing="" # Which packages are missing
 RED='\033[0;31m'
@@ -18,19 +18,19 @@ else
 fi
 
 if ! $pippath --disable-pip-version-check list | grep -E 'black' >/dev/null; then
-    missing+="black, "
-    fail=1
+    missing="$missing black,"
+    fail=true
 fi
 
 if ! $pippath  --disable-pip-version-check list | grep -E 'flake8' >/dev/null; then 
-    missing+="flake8"
-    fail=1
+    missing="$missing flake8,"
+    fail=true
 fi
 
-if (( $fail > 0 )); then
-    printf "${RED}Unable to find ${BOLD}${missing}${NB}${RED}, please check your local installation.\n${NC}"
+if [ $fail = true ]; then
+    printf "${RED}Unable to find${BOLD}${missing}${NB}${RED} please check your local installation.\n${NC}"
     exit 1
 fi
 
 cd frontend
-npx lint-staged
+yarn run lint-staged

@@ -12,79 +12,140 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('organizations', '0019_merge_20210315_1439'),
+        ("organizations", "0019_merge_20210315_1439"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Form',
+            name="Form",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=100)),
-                ('description', models.CharField(blank=True, default='', max_length=3000)),
-                ('organization', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='organizations.organization')),
+                ("id", models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                ("name", models.CharField(max_length=100)),
+                ("description", models.CharField(blank=True, default="", max_length=3000)),
+                (
+                    "organization",
+                    models.ForeignKey(
+                        null=True, on_delete=django.db.models.deletion.CASCADE, to="organizations.organization"
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Response',
+            name="Response",
             fields=[
-                ('uuid', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('status', models.IntegerField(blank=True, choices=[(None, 'Unknown'), (0, 'Red'), (1, 'Yellow'), (2, 'Green')], null=True)),
-                ('form', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='responses', to='forms.form')),
-                ('respondent', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='responses', to=settings.AUTH_USER_MODEL)),
+                ("uuid", models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
+                (
+                    "status",
+                    models.IntegerField(
+                        blank=True, choices=[(None, "Unknown"), (0, "Red"), (1, "Yellow"), (2, "Green")], null=True
+                    ),
+                ),
+                (
+                    "form",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, related_name="responses", to="forms.form"
+                    ),
+                ),
+                (
+                    "respondent",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="responses",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Question',
+            name="Question",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('question', models.CharField(max_length=300)),
-                ('description', models.CharField(blank=True, default='', max_length=1000)),
-                ('question_type', models.CharField(default='PARAGRAPH', max_length=32)),
-                ('mandatory', models.BooleanField(default=True)),
-                ('form', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='questions', to='forms.form')),
+                ("id", models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                ("question", models.CharField(max_length=300)),
+                ("description", models.CharField(blank=True, default="", max_length=1000)),
+                ("question_type", models.CharField(default="PARAGRAPH", max_length=32)),
+                ("mandatory", models.BooleanField(default=True)),
+                (
+                    "form",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, related_name="questions", to="forms.form"
+                    ),
+                ),
             ],
             options={
-                'ordering': ['question'],
+                "ordering": ["question"],
             },
         ),
         migrations.CreateModel(
-            name='Option',
+            name="Option",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('answer', models.CharField(max_length=500)),
-                ('question', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='options', to='forms.question')),
+                ("id", models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                ("answer", models.CharField(max_length=500)),
+                (
+                    "question",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, related_name="options", to="forms.question"
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Comment',
+            name="Comment",
             fields=[
-                ('uuid', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('comment', models.CharField(max_length=2048)),
-                ('owner', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='comments', to=settings.AUTH_USER_MODEL)),
-                ('response', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='comments', to='forms.response')),
+                ("uuid", models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
+                ("comment", models.CharField(max_length=2048)),
+                (
+                    "owner",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="comments",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "response",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, related_name="comments", to="forms.response"
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Answer',
+            name="Answer",
             fields=[
-                ('uuid', models.UUIDField(default=uuid.uuid4, primary_key=True, serialize=False)),
-                ('answer', models.CharField(max_length=10000)),
-                ('question', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='answers', to='forms.question')),
-                ('response', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='answers', to='forms.response')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='answers', to=settings.AUTH_USER_MODEL)),
+                ("uuid", models.UUIDField(default=uuid.uuid4, primary_key=True, serialize=False)),
+                ("answer", models.CharField(max_length=10000)),
+                (
+                    "question",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, related_name="answers", to="forms.question"
+                    ),
+                ),
+                (
+                    "response",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, related_name="answers", to="forms.response"
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, related_name="answers", to=settings.AUTH_USER_MODEL
+                    ),
+                ),
             ],
         ),
         migrations.AddConstraint(
-            model_name='response',
-            constraint=models.UniqueConstraint(fields=('respondent', 'form'), name='forms.only_one_response_per_form'),
+            model_name="response",
+            constraint=models.UniqueConstraint(fields=("respondent", "form"), name="forms.only_one_response_per_form"),
         ),
         migrations.AddConstraint(
-            model_name='answer',
-            constraint=models.UniqueConstraint(fields=('user', 'question'), name='forms.unique_answer_to_question_per_user'),
+            model_name="answer",
+            constraint=models.UniqueConstraint(
+                fields=("user", "question"), name="forms.unique_answer_to_question_per_user"
+            ),
         ),
         migrations.AddConstraint(
-            model_name='answer',
-            constraint=models.CheckConstraint(check=models.Q(_negated=True, answer=''), name='forms.answer_not_empty'),
+            model_name="answer",
+            constraint=models.CheckConstraint(check=models.Q(_negated=True, answer=""), name="forms.answer_not_empty"),
         ),
     ]

@@ -7,19 +7,31 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='ArchiveDocument',
+            name="ArchiveDocument",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(max_length=128)),
-                ('date', models.DateField(default=None)),
-                ('type_doc', models.CharField(choices=[('Budgetacc', 'Budgetacc'), ('Summary', 'Summary'), ('Yearbook', 'Yearbook'), ('Guidelines', 'Guidelines'), ('Regulation', 'Regulation'), ('Others', 'Others')], max_length=12)),
-                ('description', models.TextField(blank=True, default=None, null=True)),
-                ('file_location', models.CharField(default=None, max_length=100)),
+                ("id", models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                ("title", models.CharField(max_length=128)),
+                ("date", models.DateField(default=None)),
+                (
+                    "type_doc",
+                    models.CharField(
+                        choices=[
+                            ("Budgetacc", "Budgetacc"),
+                            ("Summary", "Summary"),
+                            ("Yearbook", "Yearbook"),
+                            ("Guidelines", "Guidelines"),
+                            ("Regulation", "Regulation"),
+                            ("Others", "Others"),
+                        ],
+                        max_length=12,
+                    ),
+                ),
+                ("description", models.TextField(blank=True, default=None, null=True)),
+                ("file_location", models.CharField(default=None, max_length=100)),
             ],
         ),
     ]

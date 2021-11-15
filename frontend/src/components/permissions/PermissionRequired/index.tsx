@@ -3,16 +3,17 @@ import { HAS_PERMISSION } from "@graphql/utils/time/queries";
 
 type Props = {
   permission: string;
+  fallback?: React.ReactElement;
 };
 
-const PermissionRequired: React.FC<Props> = ({ permission, children }) => {
+const PermissionRequired: React.FC<Props> = ({ permission, fallback, children }) => {
   const { data } = useQuery<{ hasPermission: boolean }>(HAS_PERMISSION, {
     variables: {
       permission,
     },
   });
   if (data && data.hasPermission) return <>{children}</>;
-  return null;
+  return <>{fallback}</>;
 };
 
 export default PermissionRequired;
