@@ -17,6 +17,7 @@ class Migration(migrations.Migration):
                     ("add_listing", "Add listing to organization"),
                     ("add_form", "Add form to organization"),
                     ("add_event", "Add event by organization"),
+                    ("add_membership", "Add membership to organization"),
                 )
             },
         ),
