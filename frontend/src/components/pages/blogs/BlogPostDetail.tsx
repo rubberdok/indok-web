@@ -27,14 +27,15 @@ const parseDate = (date: string): string => {
 
 const useStyles = makeStyles((theme) => ({
   image: {
-    objectFit: "contain",
-    width: "100% !important",
-    height: "unset !important",
     position: "relative",
   },
   imageContainer: {
-    width: "100%",
-    position: "unset",
+    width: "auto",
+    height: "500px",
+    position: "relative",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
   },
   paper: {
     margin: "0 5vw",
@@ -63,8 +64,7 @@ export const BlogPostDetail: React.VFC<Props> = ({ title, text, publishDate, fir
                   <Box>
                     <Typography variant="h2">{title}</Typography>
                     <Box className={style.imageContainer}>
-                      {/* Fix image when functionality is added */}
-                      <Image alt="blog-image" src="/img/eivbilde.jpg" layout="fill" className={style.image} />
+                      <Image alt="blog-image" src="/img/eivbilde.jpg" layout="fill" objectFit="contain" />
                     </Box>
                     <Typography>{`${firstName} ${lastName} ${parseDate(publishDate)}`}</Typography>
                     <Typography>{text}</Typography>
