@@ -6,6 +6,7 @@ import { GET_ORGANIZATION } from "@graphql/orgs/queries";
 import { useRouter } from "next/router";
 import Layout from "@components/Layout";
 import { Container, Box } from "@material-ui/core";
+import EditUsersInOrganization from "@components/pages/orgs/UserAdmin/UserAdmin";
 
 const AdminPage: NextPage = () => {
   const { orgId } = useRouter().query;

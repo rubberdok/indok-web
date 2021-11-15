@@ -70,6 +70,7 @@ const Archive: NextPage = () => {
                 [setSearchFilter(newValue), setViewFeatured(false)];
               }}
               handleSearchFilterCanceled={() => setSearchFilter("")}
+              placeholder="Søk på dokumenter"
             />
           </Grid>
         </Grid>

@@ -6,6 +6,7 @@ interface SearchBarProps {
   searchFilter: string;
   handleSearchFilterChanged: (name: string) => void;
   handleSearchFilterCanceled: () => void;
+  placeholder: string;
 }
 
 const useStyles = makeStyles(() => ({
@@ -18,6 +19,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   searchFilter,
   handleSearchFilterChanged,
   handleSearchFilterCanceled,
+  placeholder,
 }) => {
   const styles = useStyles();
 
@@ -26,7 +28,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
       value={searchFilter}
       classes={styles}
       onChange={debounce(handleSearchFilterChanged, 200)}
-      placeholder={"Søk på dokumenter"}
+      placeholder={placeholder}
       onCancelSearch={handleSearchFilterCanceled}
     />
   );
