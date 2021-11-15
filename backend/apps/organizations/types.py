@@ -5,7 +5,7 @@ from .models import Organization, Membership
 from graphene_django import DjangoObjectType
 from graphql_jwt.decorators import login_required
 
-from ..listings.types import ListingType
+from apps.listings.types import ListingType
 from .dataloader import ListingsByOrganizationIdLoader
 
 
@@ -25,8 +25,8 @@ class OrganizationType(DjangoObjectType):
             "children",
             "users",
             "events",
-            "permission_groups",
             "logo_url",
+            "permission_groups",
         ]
 
     @staticmethod
@@ -63,15 +63,14 @@ class OrganizationType(DjangoObjectType):
 
     @staticmethod
     @login_required
-    @PermissionDecorators.is_in_organization
-    def resolve_events(organization: Organization, info):
-        return organization.events
+    def resolve_permission_groups(organization: Organization, info):
+        return organization.permission_groups
 
     @staticmethod
     @login_required
     @PermissionDecorators.is_in_organization
-    def resolve_permission_groups(organization: Organization, info):
-        return organization.permission_groups
+    def resolve_events(organization: Organization, info):
+        return organization.events
 
 
 class MembershipType(DjangoObjectType):
