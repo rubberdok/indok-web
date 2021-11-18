@@ -31,15 +31,12 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-/**
- * Component to show a list of listings connected to an organization for its administrators.
- *
- * Props:
- * - the organization for which to show listings
- */
-const OrganizationListings: React.FC<{
-  organization: Organization;
-}> = ({ organization }) => {
+type Props = {
+  organization: Organization
+}
+
+/** Component to show a list of listings connected to an organization for its administrators. */
+const OrganizationListings: React.FC<Props> = ({ organization }) => {
   // state for whether to show the DeleteListing confirmation dialog
   // if not undefined, contains the listing to be deleted for use by the dialog
   const [listingToDelete, setListingToDelete] = useState<Listing | undefined>();
