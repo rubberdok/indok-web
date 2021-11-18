@@ -21,7 +21,6 @@ import {
   Checkbox,
 } from "@material-ui/core";
 import { Organization } from "@interfaces/organizations";
-import { Delete } from "@material-ui/icons";
 import FilterUsers from "./FilterUsers";
 
 const useStyles = makeStyles(() => ({

@@ -2,7 +2,6 @@ import { Organization } from "@interfaces/organizations";
 import React, { useEffect, useState } from "react";
 import FilterButtons from "@components/pages/archive/FilterButtons";
 import SearchBar from "@components/pages/archive/SearchBar";
-import { useRouter } from "next/router";
 import { Grid } from "@material-ui/core";
 import { gql, useQuery } from "@apollo/client";
 import { RemoveFiltersButton } from "@components/pages/archive/RemoveFiltersButton";
