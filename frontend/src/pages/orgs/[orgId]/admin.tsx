@@ -1,12 +1,11 @@
 import { NextPage } from "next";
-import OrgInfo from "@components/pages/orgs/OrgInfo";
 import { useQuery } from "@apollo/client";
 import { Organization } from "@interfaces/organizations";
 import { GET_ORGANIZATION } from "@graphql/orgs/queries";
 import { useRouter } from "next/router";
 import Layout from "@components/Layout";
 import { Container, Box } from "@material-ui/core";
-import EditUsersInOrganization from "@components/pages/orgs/UserAdmin/UserAdmin";
+import EditUsersInOrganization from "@components/pages/orgs/UserAdmin";
 
 const AdminPage: NextPage = () => {
   const { orgId } = useRouter().query;
@@ -24,7 +23,7 @@ const AdminPage: NextPage = () => {
         <Box>
           {data && (
             <>
-              <OrgInfo organization={data.organization} />
+              <EditUsersInOrganization organization={data.organization} />
             </>
           )}
         </Box>

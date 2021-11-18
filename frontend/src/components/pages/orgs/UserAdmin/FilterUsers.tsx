@@ -6,7 +6,6 @@ import { useRouter } from "next/router";
 import { Grid } from "@material-ui/core";
 import { gql, useQuery } from "@apollo/client";
 import { RemoveFiltersButton } from "@components/pages/archive/RemoveFiltersButton";
-import { User } from "@sentry/types";
 
 type Props = {
   organization: Organization;
@@ -14,10 +13,6 @@ type Props = {
 
 //TODO: filter when clicking on a group or writing in searchbar
 const FilterUsers: React.FC<Props> = ({ organization }) => {
-  const router = useRouter();
-  const { orgId } = router.query;
-  const orgNumberId = parseInt(orgId as string);
-
   const [searchFilter, setSearchFilter] = useState("");
 
   const [viewFeatured, setViewFeatured] = useState(true);
@@ -37,7 +32,7 @@ const FilterUsers: React.FC<Props> = ({ organization }) => {
         }
       }
     `,
-    { variables: { id: orgNumberId } }
+    { variables: { id: organization.id } }
   );
 
   // Fetching correct buttons dynamically

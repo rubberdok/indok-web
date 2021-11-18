@@ -2,16 +2,19 @@ import { useQuery } from "@apollo/client";
 import Layout from "@components/Layout";
 import { GET_ORGANIZATION } from "@graphql/orgs/queries";
 import { Organization } from "@interfaces/organizations";
+import Link from "next/link";
 import {
   Box,
   CircularProgress,
   Grid,
   Typography,
+  Button,
 } from "@material-ui/core";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import OrganizationListings from "@components/pages/listings/organization/OrganizationListings";
 import OrgEvents from "@components/pages/events/org/OrgEvents";
+import { Person } from "@material-ui/icons";
 
 const OrganizationDetailPage: NextPage = () => {
   const router = useRouter();
@@ -30,11 +33,20 @@ const OrganizationDetailPage: NextPage = () => {
     <Layout>
       <Box m={10}>
         {data?.organization && <>
-          <Grid container spacing={10}>
-            <Grid item>
-              <Typography variant="h1" align="center">
-                {data.organization.name}
-              </Typography>
+          <Grid container spacing={5} direction="column" justifyContent="flex-start">
+            <Grid item container justifyContent="space-between" alignItems="center">
+              <Grid item>
+                <Typography variant="h1">
+                  {data.organization.name}
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Link passHref href={`${orgNumberId}/admin`}>
+                  <Button variant="contained" color="primary" startIcon={<Person />}>
+                    Administrer medlemmer
+                  </Button>
+                </Link>
+              </Grid>
             </Grid>
             {data.organization.events && <OrgEvents organization={data.organization} />}
             {data.organization.listings && <OrganizationListings organization={data.organization} />}
