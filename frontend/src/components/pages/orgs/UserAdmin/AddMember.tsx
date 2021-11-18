@@ -1,5 +1,6 @@
 import { useMutation, gql, useQuery } from "@apollo/client";
 import { Organization } from "@interfaces/organizations";
+import { User } from "@interfaces/users";
 import { Dialog, DialogTitle, Typography, IconButton, DialogContent, FormControl, makeStyles, Button, TextField, FormGroup, FormControlLabel, FormLabel, Checkbox } from "@material-ui/core";
 import { Close } from "@material-ui/icons";
 import { useState } from "react";
@@ -28,14 +29,6 @@ const AddMember: React.VFC<Props> = ({ open, setOpen, organizationId }) => {
   const [memberId, setMemberId] = useState<string | undefined>();
   const [selectedGroupIds, selectGroupIds] = useState<string[]>([]);
 
-  const [addMember] = useMutation<{ assignMembership: { ok: boolean } }>(gql`
-    mutation assignMembership($input: MembershipInput!) {
-      assignMembership(membershipData: $input) {
-        ok
-      }
-    }
-  `);
-
   const { data, loading, error } = useQuery<{
     organization: {
       permissionGroups: {
@@ -58,6 +51,22 @@ const AddMember: React.VFC<Props> = ({ open, setOpen, organizationId }) => {
     `,
     { variables: { id: organizationId } }
   );
+
+  const [addMember] = useMutation<{ assignMembership: { ok: boolean } }>(gql`
+    mutation assignMembership($input: MembershipInput!) {
+      assignMembership(membershipData: $input) {
+        membership {
+          user {
+            username
+            firstName
+            lastName
+            email
+          }
+        }
+        ok
+      }
+    }
+  `, { refetchQueries: ["organization"] });
 
   if (error) return <p>Error</p>;
   if (loading) return <p>Loading...</p>;
@@ -87,11 +96,14 @@ const AddMember: React.VFC<Props> = ({ open, setOpen, organizationId }) => {
                     <Checkbox
                       checked={selectedGroupIds.includes(permissionGroup.uuid)}
                       name={permissionGroup.uuid}
+                      color="primary"
                       onChange={() => {
                         if (selectedGroupIds.includes(permissionGroup.uuid)) {
                           selectGroupIds(selectedGroupIds.filter((id) => id !== permissionGroup.uuid))
                         } else {
                           selectGroupIds([...selectedGroupIds, permissionGroup.uuid])
+                          console.log(selectedGroupIds);
+                          console.log(memberId);
                         }
                       }}
                     />
@@ -104,15 +116,19 @@ const AddMember: React.VFC<Props> = ({ open, setOpen, organizationId }) => {
         <br />
         <br />
         <Button
-          onClick={() => addMember({
-            variables: {
-              input: {
-                id: memberId,
-                groupIds: selectedGroupIds,
-                organizationId: organization.id,
-              }
+          onClick={() => {
+              addMember({
+                variables: {
+                  input: {
+                    userId: memberId,
+                    groupIds: selectedGroupIds,
+                    organizationId: organizationId,
+                  }
+                }
+              })
+              setOpen(false);
             }
-          })}
+          }
           disabled={!Boolean(memberId)}
           variant="contained"
           color="primary"
