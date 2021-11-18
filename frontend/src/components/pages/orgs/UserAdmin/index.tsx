@@ -22,6 +22,8 @@ import {
 } from "@material-ui/core";
 import { Organization } from "@interfaces/organizations";
 import FilterUsers from "./FilterUsers";
+import { PersonAdd } from "@material-ui/icons";
+import AddMember from "@components/pages/orgs/UserAdmin/AddMember";
 
 const useStyles = makeStyles(() => ({
   hover: {
@@ -42,6 +44,7 @@ const EditUsersInOrganization: React.FC<Props> = ({ organization }) => {
   const classes = useStyles();
   const [checkedPeople, setCheckedPeople] = useState<User[]>([]);
   const [enabledFilters, setEnabledFilter] = useState<string[]>([]);
+  const [addMemberOpen, openAddMember] = useState<boolean>(false);
 
   const handleEnabledFilter = (name: string, checked: boolean) => {
     if (checked) {
@@ -91,10 +94,18 @@ const EditUsersInOrganization: React.FC<Props> = ({ organization }) => {
 
   return (
     <Box m={10}>
-      {data?.organization?.users ? (
+      {data?.organization?.users && <>
+        {addMemberOpen && <AddMember open={addMemberOpen} setOpen={openAddMember} organizationId={orgNumberId} />}
         <Grid container spacing={4}>
-          <Grid item xs={12}>
-            <Typography variant="h1">{organization.name}</Typography>
+          <Grid item xs={12} container justifyContent="space-between" alignItems="center">
+            <Grid item>
+              <Typography variant="h1">{organization.name}</Typography>
+            </Grid>
+            <Grid item>
+              <Button variant="contained" color="primary" startIcon={<PersonAdd />} onClick={() => openAddMember(true)}>
+                Legg til medlem
+              </Button>
+            </Grid>
           </Grid>
           <FilterUsers organization={organization}/>
           <Grid item container>
@@ -102,7 +113,7 @@ const EditUsersInOrganization: React.FC<Props> = ({ organization }) => {
               <Card variant="outlined">
                 <CardHeader title="Rediger medlemmer" />
                 <Divider variant="middle" />
-                {data.organization.users ? (
+                {data.organization.users && (
                   <CardContent>
                     <TableContainer>
                       <Table>
@@ -138,12 +149,12 @@ const EditUsersInOrganization: React.FC<Props> = ({ organization }) => {
                       </Table>
                     </TableContainer>
                   </CardContent>
-                ) : null}
+                )}
               </Card>
             </Grid>
           </Grid>
         </Grid>
-      ) : null}
+      </>}
     </Box>
   );
 };
