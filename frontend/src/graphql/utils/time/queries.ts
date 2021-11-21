@@ -5,9 +5,3 @@ export const GET_SERVER_TIME = gql`
     serverTime
   }
 `;
-
-export const HAS_PERMISSION = gql`
-  query hasPermission($permission: String!) {
-    hasPermission(permission: $permission)
-  }
-`;
