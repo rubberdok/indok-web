@@ -3,15 +3,15 @@ title: Janus FK
 description: Indøks fotballag for herrer
 logo: /img/FK_logo.jpg
 image: /img/fkbilde.jpg
-styre:
+board:
   ceo:
-    navn: Henrik Planke Berg
+    name: Henrik Planke Berg
     mail: tlf. 975 18 033
-    tittel: Leder
+    title: Leder
   cto:
-    navn: Christian Bakke Vennerød
+    name: Christian Bakke Vennerød
     mail: tlf. 906 71 650
-    tittel: Trener
+    title: Trener
 tag: idrett
 ---
 

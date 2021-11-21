@@ -3,11 +3,11 @@ title: Mannskoret Klingende Mynt
 description: Musical management consulting
 logo: /img/mkmlogo.png
 image: /img/mkm.jpg
-styre:
+board:
   ceo:
-    navn: Kristoffer Winther
+    name: Kristoffer Winther
     mail: ceo@klingendemynt.no
-    tittel: CEO
+    title: CEO
 
 tag: kultur
 ---

@@ -3,15 +3,15 @@ title: Janus FKFK
 description: Indøks fotballag for kvinner
 logo: /img/fkfklogo.png
 image: /img/fkfkbilde.png
-styre:
+board:
   ceo:
-    navn: Sunniva Økland
+    name: Sunniva Økland
     mail: tlf.
-    tittel: Chief Executive Officer
+    title: Chief Executive Officer
   cto:
-    navn: Elin Ulsaker
+    name: Elin Ulsaker
     mail: tlf.
-    tittel: Chief Financial Officer
+    title: Chief Financial Officer
 tag: idrett
 ---
 

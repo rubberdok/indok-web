@@ -3,23 +3,23 @@ title: Eksperter i Vin
 description: Hever indøks vinkompetanse
 logo: /img/eivlogo.jpg
 image: /img/eivbilde.jpg
-styre:
+board:
   ceo:
-    navn: Phillip Kolkmeier
+    name: Phillip Kolkmeier
     mail: tlf.
-    tittel: Sommelier
+    title: Sommelier
   cto:
-    navn: Erlend Heir
+    name: Erlend Heir
     mail: tlf.
-    tittel: Sommelier
+    title: Sommelier
   cfo:
-    navn: Haakon Døssland
+    name: Haakon Døssland
     mail: tlf.
-    tittel: Sommelier
+    title: Sommelier
   cmo:
-    navn: Ane Sandvik Rognskaug
+    name: Ane Sandvik Rognskaug
     mail: tlf.
-    tittel: Sommelier
+    title: Sommelier
 
 tag: kultur
 ---
