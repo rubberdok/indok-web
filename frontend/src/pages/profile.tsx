@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const ID_PREFIX = "profile";
 
 const ProfilePage: NextPage = () => {
-  const { loading, error, data, refetch: refetchUser } = useQuery<{ user: User }>(GET_USER);
+  const { loading, error, data } = useQuery<{ user: User }>(GET_USER);
 
   const [firstLoginOpen, setFirstLoginOpen] = useState(false);
   const [editUserOpen, setEditUserOpen] = useState(false);
@@ -60,9 +60,10 @@ const ProfilePage: NextPage = () => {
   if (data?.user?.firstLogin && !firstLoginOpen) {
     setFirstLoginOpen(true);
   }
+  console.log(firstLoginOpen);
+  console.log(data?.user);
 
   const onSubmit = async () => {
-    await refetchUser();
     firstLoginOpen && setFirstLoginOpen(false);
     editUserOpen && setEditUserOpen(false);
   };

@@ -1,4 +1,5 @@
-import { ApolloClient, ApolloProvider, createHttpLink, InMemoryCache } from "@apollo/client";
+import { ApolloClient, ApolloProvider, createHttpLink } from "@apollo/client";
+import cache from "@graphql/cache";
 import { CssBaseline, responsiveFontSizes } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/styles";
 import "@styles/global.css";
@@ -16,7 +17,7 @@ const App = ({ Component, pageProps, err }: AppPropsWithError): JSX.Element => {
     credentials: "include",
   });
   const client = new ApolloClient({
-    cache: new InMemoryCache(),
+    cache: cache,
     link,
   });
 
