@@ -3,19 +3,19 @@ title: Janus Ski- og Løpeklubb
 description: Den raskeste gjengen
 logo: /img/jslklogo.png
 image: /img/jslk.jpg
-styre:
+board:
   ceo:
-    navn: Kristoffer Jonsson
+    name: Kristoffer Jonsson
     mail:
-    tittel: Leder
+    title: Leder
   cto:
-    navn: Jostein Hjortland Tysse
+    name: Jostein Hjortland Tysse
     mail:
-    tittel: Nestleder
+    title: Nestleder
   cfo:
-    navn: Asbjørn Nisi
+    name: Asbjørn Nisi
     mail:
-    tittel: Økonomiansvarlig
+    title: Økonomiansvarlig
 
 tag: idrett
 ---

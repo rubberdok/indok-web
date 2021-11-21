@@ -3,15 +3,15 @@ title: Typisk Indøk
 description: Podcasten som umenneskeliggjør Indøkere
 logo: /img/typisk.jpg
 image: /img/hero.jpg
-styre:
+board:
   ceo:
-    navn: Jakob Fougner Engebretsen
+    name: Jakob Fougner Engebretsen
     mail:
-    tittel: Podcasthost
+    title: Podcasthost
   cto:
-    navn: Håkon Melgård Sveen
+    name: Håkon Melgård Sveen
     mail:
-    tittel: Podcasthost
+    title: Podcasthost
 tag: kultur
 ---
 
