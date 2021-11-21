@@ -60,8 +60,6 @@ const ProfilePage: NextPage = () => {
   if (data?.user?.firstLogin && !firstLoginOpen) {
     setFirstLoginOpen(true);
   }
-  console.log(firstLoginOpen);
-  console.log(data?.user);
 
   const onSubmit = async () => {
     firstLoginOpen && setFirstLoginOpen(false);
