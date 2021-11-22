@@ -21,8 +21,8 @@ import {
   TextField,
   Tooltip,
   Typography,
-} from "@material-ui/core";
-import { Check, Close, Warning } from "@material-ui/icons";
+} from "@mui/material";
+import { Check, Close, Warning } from "@mui/icons-material";
 import React, { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import nb from "dayjs/locale/nb";

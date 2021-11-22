@@ -4,7 +4,7 @@ import ListingForm from "@components/pages/listings/organization/ListingForm";
 import { UPDATE_LISTING } from "@graphql/listings/mutations";
 import { LISTING } from "@graphql/listings/queries";
 import { Listing, ListingInput } from "@interfaces/listings";
-import { Container, Grid, Typography } from "@material-ui/core";
+import { Container, Grid, Typography } from "@mui/material";
 import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";

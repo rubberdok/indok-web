@@ -1,16 +1,7 @@
 import { Event } from "@interfaces/events";
 import { User } from "@interfaces/users";
-import {
-  Box,
-  Card,
-  CardActionArea,
-  Chip,
-  Grid,
-  makeStyles,
-  Typography,
-  useMediaQuery,
-  useTheme,
-} from "@material-ui/core";
+import { Box, Card, CardActionArea, Chip, Grid, Typography, useMediaQuery, useTheme } from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
 import dayjs from "dayjs";
 import nb from "dayjs/locale/nb";
 import Link from "next/link";
@@ -33,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "flex-end",
     justifyContent: "space-between",
 
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down('md')]: {
       alignItems: "stretch",
       flexDirection: "column",
     },
@@ -44,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
 const EventListItem: React.FC<Props> = ({ event, user }) => {
   const theme = useTheme();
   const classes = useStyles();
-  const smallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const smallScreen = useMediaQuery(theme.breakpoints.down('md'));
 
   return (
     <Grid item xs={12}>

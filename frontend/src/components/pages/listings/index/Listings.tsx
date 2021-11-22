@@ -2,7 +2,9 @@ import ListingItem from "@components/pages/listings/index/ListingItem";
 import { LISTINGS } from "@graphql/listings/queries";
 import { Listing } from "@interfaces/listings";
 import { useQuery } from "@apollo/client";
-import { Grid, Typography, makeStyles, CircularProgress, Button } from "@material-ui/core";
+import { Grid, Typography, CircularProgress, Button } from "@mui/material";
+
+import makeStyles from '@mui/styles/makeStyles';
 
 const useStyles = makeStyles((theme) => ({
   root: {

@@ -1,5 +1,5 @@
 import { Question } from "@interfaces/forms";
-import { Checkbox, FormControlLabel, FormGroup, Radio, RadioGroup, TextField, Box } from "@material-ui/core";
+import { Checkbox, FormControlLabel, FormGroup, Radio, RadioGroup, TextField, Box } from "@mui/material";
 import questionTypeLabels from "@components/forms/formAdmin/questionTypeLabels";
 
 /**

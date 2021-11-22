@@ -1,8 +1,9 @@
 import { useQuery } from "@apollo/client";
 import { FilterQuery } from "@components/pages/events/AllEvents";
 import { QUERY_EVENT_FILTERED_ORGANIZATIONS } from "@graphql/events/queries";
-import { IconButton, List, ListItem, ListItemText, makeStyles, Tooltip, Typography } from "@material-ui/core";
-import { Refresh, StarBorderRounded, StarRounded } from "@material-ui/icons";
+import { IconButton, List, ListItem, ListItemText, Tooltip, Typography } from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
+import { Refresh, StarBorderRounded, StarRounded } from "@mui/icons-material";
 import React from "react";
 import CategoryFilter from "./CategoryFilter";
 import DateTimeFilter from "./DateTimeFilter";
@@ -97,42 +98,45 @@ const FilterMenu: React.FC<Props> = ({ filters, onFiltersChange, showDefaultEven
   if (organizationLoading) return null;
   if (organizationError) return null;
 
-  return (
-    <>
-      <List>
-        <ListItem>
-          <ListItemText primary={<Typography variant="h4">Filtre</Typography>} />
-          <Tooltip className={classes.tooltip} title="Nullstill filtre" arrow>
-            <IconButton disableFocusRipple disableRipple onClick={() => onFiltersChange({})} aria-label="delete">
-              <Refresh />
-            </IconButton>
-          </Tooltip>
-        </ListItem>
+  return <>
+    <List>
+      <ListItem>
+        <ListItemText primary={<Typography variant="h4">Filtre</Typography>} />
+        <Tooltip className={classes.tooltip} title="Nullstill filtre" arrow>
+          <IconButton
+            disableFocusRipple
+            disableRipple
+            onClick={() => onFiltersChange({})}
+            aria-label="delete"
+            size="large">
+            <Refresh />
+          </IconButton>
+        </Tooltip>
+      </ListItem>
 
-        <ListItem
-          button
-          onClick={() => {
-            onShowDefaultChange(!showDefaultEvents);
-            onFiltersChange({});
-          }}
-        >
-          <ListItemText primary={"Fremhevet"} />
-          {showDefaultEvents ? <StarRounded /> : <StarBorderRounded />}
-        </ListItem>
+      <ListItem
+        button
+        onClick={() => {
+          onShowDefaultChange(!showDefaultEvents);
+          onFiltersChange({});
+        }}
+      >
+        <ListItemText primary={"Fremhevet"} />
+        {showDefaultEvents ? <StarRounded /> : <StarBorderRounded />}
+      </ListItem>
 
-        <OrganizationFilter
-          filters={filters}
-          onFiltersChange={onFiltersChange}
-          organizations={organizationData.eventFilteredOrganizations}
-          classes={classes}
-        />
+      <OrganizationFilter
+        filters={filters}
+        onFiltersChange={onFiltersChange}
+        organizations={organizationData.eventFilteredOrganizations}
+        classes={classes}
+      />
 
-        <CategoryFilter filters={filters} onFiltersChange={onFiltersChange} classes={classes} />
+      <CategoryFilter filters={filters} onFiltersChange={onFiltersChange} classes={classes} />
 
-        <DateTimeFilter filters={filters} onFiltersChange={onFiltersChange} />
-      </List>
-    </>
-  );
+      <DateTimeFilter filters={filters} onFiltersChange={onFiltersChange} />
+    </List>
+  </>;
 };
 
 export default FilterMenu;

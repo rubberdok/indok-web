@@ -1,6 +1,6 @@
 import { NextPage } from "next";
 import Layout from "@components/Layout";
-import { CircularProgress, Container, Grid, Typography } from "@material-ui/core";
+import { CircularProgress, Container, Grid, Typography } from "@mui/material";
 import AnswerForm from "@components/forms/AnswerForm";
 import { useQuery } from "@apollo/client";
 import { FORM_WITH_QUESTIONS_AND_ANSWERS } from "@graphql/forms/queries";

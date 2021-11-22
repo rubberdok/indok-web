@@ -1,6 +1,6 @@
-import { Button } from "@material-ui/core";
-import Box from "@material-ui/core/Box";
-import { makeStyles } from "@material-ui/core/styles";
+import { Button } from "@mui/material";
+import Box from "@mui/material/Box";
+import makeStyles from '@mui/styles/makeStyles';
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";

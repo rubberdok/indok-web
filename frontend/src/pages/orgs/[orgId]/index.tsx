@@ -15,7 +15,6 @@ import {
   CircularProgress,
   Divider,
   Grid,
-  makeStyles,
   Table,
   TableBody,
   TableCell,
@@ -24,8 +23,9 @@ import {
   TableRow,
   TextField,
   Typography,
-} from "@material-ui/core";
-import GetAppIcon from "@material-ui/icons/GetApp";
+} from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
+import GetAppIcon from "@mui/icons-material/GetApp";
 import { promptDownloadFromPayload } from "@utils/exports";
 import dayjs from "dayjs";
 import { NextPage } from "next";

@@ -1,7 +1,8 @@
 import Layout from "@components/Layout";
-import { Box, Card, Chip, Container, Divider, Grid, makeStyles, Paper, Typography } from "@material-ui/core";
-import MailOutlineIcon from "@material-ui/icons/MailOutline";
-import PhoneIcon from "@material-ui/icons/Phone";
+import { Box, Card, Chip, Container, Divider, Grid, Paper, Typography } from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
+import MailOutlineIcon from "@mui/icons-material/MailOutline";
+import PhoneIcon from "@mui/icons-material/Phone";
 import { getPostBySlug, getPostsSlugs } from "@utils/posts";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import React from "react";

@@ -6,7 +6,7 @@ import {
   DialogContentText,
   Button,
   FormHelperText,
-} from "@material-ui/core";
+} from "@mui/material";
 
 // utility function to return text for the dialog based on its type
 const dialogText = (type: "create" | "update" | "delete") => {

@@ -3,13 +3,13 @@ import {
   Container,
   Drawer,
   IconButton,
-  makeStyles,
   Slide,
   Toolbar,
   Typography,
   useScrollTrigger,
-} from "@material-ui/core";
-import MenuIcon from "@material-ui/icons/Menu";
+} from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
+import MenuIcon from "@mui/icons-material/Menu";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { ReactElement } from "react";
@@ -94,7 +94,12 @@ const Navbar: React.FC = () => {
                 <NavbarLinks></NavbarLinks>
               </div>
               <div className={classes.sectionMobile}>
-                <IconButton onClick={() => setOpenDrawer(true)} edge="start" color="inherit" aria-label="menu">
+                <IconButton
+                  onClick={() => setOpenDrawer(true)}
+                  edge="start"
+                  color="inherit"
+                  aria-label="menu"
+                  size="large">
                   <MenuIcon />
                 </IconButton>
               </div>

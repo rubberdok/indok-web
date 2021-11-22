@@ -1,9 +1,9 @@
-import { IconButton, Grid, Typography, Divider, Hidden } from "@material-ui/core";
+import { IconButton, Grid, Typography, Divider, Hidden } from "@mui/material";
 import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
 import { DATE_FORMAT } from "./constants";
-import NavigateNextIcon from "@material-ui/icons/NavigateNext";
-import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import { getDateRange } from "./helpers";
 import CalendarTable from "./CalendarTable";
 import CalendarRow from "./CalendarRow";
@@ -172,7 +172,7 @@ const Calendar: React.FC<CalendarProps> = ({
     <Grid container direction="column" spacing={5}>
       <Grid item container alignItems="center" justifyContent="space-between">
         <Hidden>
-          <IconButton onClick={() => onChangeMonth(-1)}>
+          <IconButton onClick={() => onChangeMonth(-1)} size="large">
             <NavigateBeforeIcon />
           </IconButton>
         </Hidden>
@@ -180,7 +180,7 @@ const Calendar: React.FC<CalendarProps> = ({
           {title}
         </Typography>
         <Hidden>
-          <IconButton onClick={() => onChangeMonth(1)}>
+          <IconButton onClick={() => onChangeMonth(1)} size="large">
             <NavigateNextIcon />
           </IconButton>
         </Hidden>
@@ -208,7 +208,7 @@ const Calendar: React.FC<CalendarProps> = ({
           </CalendarTable>
         </Grid>
         <Divider variant="fullWidth" orientation="vertical" />
-        <Hidden mdDown>
+        <Hidden lgDown>
           <Grid item xs>
             <CalendarTable month={selectedMonth.add(1, "month")} onChangeMonth={onChangeMonth}>
               {getRows(selectedMonth.add(1, "month")).map((row, index) => (

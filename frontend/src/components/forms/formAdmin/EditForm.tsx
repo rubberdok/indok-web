@@ -4,9 +4,9 @@ import QuestionPreview from "@components/forms/formAdmin/QuestionPreview";
 import { CREATE_QUESTION, UPDATE_QUESTION, DELETE_QUESTION } from "@graphql/forms/mutations";
 import { FORM_RESPONSES_FRAGMENT } from "@graphql/forms/fragments";
 import { Question, QuestionVariables, Form } from "@interfaces/forms";
-import { Button, Grid, Typography, Card, CardContent, FormHelperText } from "@material-ui/core";
+import { Button, Grid, Typography, Card, CardContent, FormHelperText } from "@mui/material";
 import { useState } from "react";
-import { Add } from "@material-ui/icons";
+import { Add } from "@mui/icons-material";
 import ConfirmFormChange from "@components/forms/formAdmin/ConfirmFormChange";
 
 /**

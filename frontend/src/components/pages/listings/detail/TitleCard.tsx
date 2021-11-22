@@ -1,6 +1,7 @@
 import { Listing } from "@interfaces/listings";
-import { Button, Grid, Hidden, makeStyles, Typography, CardContent, Card } from "@material-ui/core";
-import ArrowForward from "@material-ui/icons/ArrowForward";
+import { Button, Grid, Hidden, Typography, CardContent, Card } from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
+import ArrowForward from "@mui/icons-material/ArrowForward";
 import dayjs from "dayjs";
 import nb from "dayjs/locale/nb";
 import timezone from "dayjs/plugin/timezone";
@@ -52,7 +53,7 @@ const TitleCard: React.FC<{
               {dayjs(listing.deadline).format("DD. MMMM YYYY [kl.] HH:mm")}
             </Typography>
           </Grid>
-          <Hidden xsDown>
+          <Hidden smDown>
             <Grid item>
               {link && (
                 <Link href={link} passHref>

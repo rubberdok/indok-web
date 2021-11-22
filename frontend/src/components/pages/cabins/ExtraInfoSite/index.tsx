@@ -1,5 +1,5 @@
 import { Cabin, DatePick } from "@interfaces/cabins";
-import { Box, Divider, Grid, Hidden, TextField, Typography } from "@material-ui/core";
+import { Box, Divider, Grid, Hidden, TextField, Typography } from "@mui/material";
 import { toStringChosenCabins, convertDateFormat } from "@utils/cabins";
 
 type Props = {
@@ -14,7 +14,7 @@ const ExtraInfoSite: React.VFC<Props> = ({ setExtraInfo, datePick, chosenCabins 
 
   return (
     <Grid container alignItems="center" direction="column" spacing={5}>
-      <Hidden mdDown>
+      <Hidden lgDown>
         <Grid item>
           <Typography variant="h4">Ekstra informasjon</Typography>
           <Divider />

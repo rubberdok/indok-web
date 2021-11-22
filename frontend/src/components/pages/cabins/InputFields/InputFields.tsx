@@ -9,7 +9,7 @@ import {
   Select,
   TextField,
   Typography,
-} from "@material-ui/core";
+} from "@mui/material";
 import { range } from "@utils/helpers";
 import React from "react";
 
@@ -30,7 +30,7 @@ export const InputFields: React.FC<Props> = ({ contactInfo, validations, onChang
 
   return (
     <Grid container item spacing={3} lg={8} md={12} justifyContent="center">
-      <Hidden mdDown>
+      <Hidden lgDown>
         <Grid item>
           <Typography variant="h3">Kontaktinfo</Typography>
           <Divider component="hr" />

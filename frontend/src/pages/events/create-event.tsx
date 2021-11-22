@@ -1,6 +1,7 @@
 import Layout from "@components/Layout";
 import EventCreator from "@components/pages/events/EventCreator";
-import { Button, Container, makeStyles } from "@material-ui/core";
+import { Button, Container } from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
 import { NextPage } from "next";
 import Link from "next/link";
 import React from "react";

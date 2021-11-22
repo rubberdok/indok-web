@@ -1,7 +1,7 @@
 import Calendar from "@components/Calendar";
 import useDisabledDates from "@hooks/cabins/useDisabledDates";
 import { Cabin, DatePick } from "@interfaces/cabins";
-import { Checkbox, List, ListItem, Grid, Typography, Divider, useMediaQuery, useTheme } from "@material-ui/core";
+import { Checkbox, List, ListItem, Grid, Typography, Divider, useMediaQuery, useTheme } from "@mui/material";
 import { NextPage } from "next";
 import React from "react";
 
@@ -16,7 +16,7 @@ One of the steps in the cabins/book page. In this step the user chooses a cabin 
 */
 const CheckInOut: NextPage<Props> = ({ allCabins, chosenCabins, setChosenCabins, setDatePick }) => {
   const { disabledDates } = useDisabledDates(chosenCabins);
-  const isMobile = useMediaQuery(useTheme().breakpoints.down("sm"));
+  const isMobile = useMediaQuery(useTheme().breakpoints.down('md'));
 
   const handleRangeChange = (fromDate: string | undefined, toDate: string | undefined, validRange: boolean) => {
     setDatePick({

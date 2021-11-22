@@ -4,7 +4,6 @@ import { GET_USER } from "@graphql/users/queries";
 import { User, UserInput, UserInputValidations } from "@interfaces/users";
 import {
   Button,
-  createStyles,
   Dialog,
   DialogActions,
   DialogContent,
@@ -12,12 +11,13 @@ import {
   FormHelperText,
   Grid,
   InputLabel,
-  makeStyles,
   TextField,
   Theme,
   Typography,
-} from "@material-ui/core";
-import { Check } from "@material-ui/icons";
+} from "@mui/material";
+import createStyles from '@mui/styles/createStyles';
+import makeStyles from '@mui/styles/makeStyles';
+import { Check } from "@mui/icons-material";
 import React, { useEffect, useState } from "react";
 import { suggestNames, validateInput } from "./utils";
 

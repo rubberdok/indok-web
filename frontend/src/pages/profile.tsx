@@ -12,13 +12,13 @@ import {
   CardActions,
   CardContent,
   Container,
-  createStyles,
   Grid,
-  makeStyles,
   Theme,
   Typography,
-} from "@material-ui/core";
-import EditIcon from "@material-ui/icons/Edit";
+} from "@mui/material";
+import createStyles from '@mui/styles/createStyles';
+import makeStyles from '@mui/styles/makeStyles';
+import EditIcon from "@mui/icons-material/Edit";
 import { NextPage } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";

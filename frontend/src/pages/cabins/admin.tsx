@@ -1,8 +1,8 @@
 import { useMutation, useQuery } from "@apollo/client";
 import Layout from "@components/Layout";
 import { QUERY_ADMIN_ALL_BOOKINGS } from "@graphql/cabins/queries";
-import CheckIcon from "@material-ui/icons/Check";
-import ClearIcon from "@material-ui/icons/Clear";
+import CheckIcon from "@mui/icons-material/Check";
+import ClearIcon from "@mui/icons-material/Clear";
 import {
   Typography,
   Grid,
@@ -24,10 +24,10 @@ import {
   Tooltip,
   Container,
   useMediaQuery,
-  makeStyles,
   TableContainer,
   TextField,
-} from "@material-ui/core";
+} from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
 import { getDecisionEmailProps, toStringChosenCabins } from "@utils/cabins";
 import dayjs from "dayjs";
 import { NextPage } from "next";
@@ -111,7 +111,7 @@ const AdminPage: NextPage = () => {
   };
 
   const handleErrorDialogClose = () => router.push("/");
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const classes = useStyles();
 
   return (
@@ -175,7 +175,7 @@ const AdminPage: NextPage = () => {
                               send_email(getDecisionEmailProps(booking, true));
                             }}
                             color="secondary"
-                          >
+                            size="large">
                             <CheckIcon />
                           </IconButton>
                         </Box>
@@ -186,7 +186,7 @@ const AdminPage: NextPage = () => {
                             disabled={!booking.isTentative}
                             onClick={() => setBookingToBeDeleted(booking)}
                             color="inherit"
-                          >
+                            size="large">
                             <ClearIcon />
                           </IconButton>
                         </Box>

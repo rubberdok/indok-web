@@ -1,9 +1,9 @@
-import { createTheme } from "@material-ui/core";
-import { Shadows } from "@material-ui/core/styles/shadows";
+import { createTheme, adaptV4Theme } from "@mui/material";
+import { Shadows } from '@mui/material/styles';
 import breakpoints from "./breakpoints";
 import typography from "./typography";
 
-const theme = createTheme({
+const theme = createTheme(adaptV4Theme({
   typography: {
     ...typography,
   },
@@ -100,6 +100,6 @@ const theme = createTheme({
     ...breakpoints,
   },
   shadows: Array(25).fill("none") as Shadows,
-});
+}));
 
 export default theme;

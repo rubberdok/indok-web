@@ -1,7 +1,7 @@
 import Layout from "@components/Layout";
 import Listings from "@components/pages/listings/index/Listings";
 import Title from "@components/Title";
-import { Container } from "@material-ui/core";
+import { Container } from "@mui/material";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 

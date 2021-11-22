@@ -27,10 +27,10 @@ import {
   TableRow,
   Tooltip,
   Typography,
-} from "@material-ui/core";
-import { Edit } from "@material-ui/icons";
-import DeleteIcon from "@material-ui/icons/Delete";
-import { Alert } from "@material-ui/lab";
+} from "@mui/material";
+import { Edit } from "@mui/icons-material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { Alert } from '@mui/material';
 import dayjs from "dayjs";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
@@ -199,7 +199,7 @@ const EventAdminPage: NextPage = () => {
                                       <IconButton
                                         aria-label="delete"
                                         onClick={() => handleDeleteSignUp(signUp.user.id)}
-                                      >
+                                        size="large">
                                         <DeleteIcon fontSize="small" />
                                       </IconButton>
                                     )}

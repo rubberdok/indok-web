@@ -1,5 +1,6 @@
-import { makeStyles, Theme } from "@material-ui/core/styles";
-import { Grid, Box, Typography } from "@material-ui/core";
+import { Theme } from "@mui/material/styles";
+import makeStyles from '@mui/styles/makeStyles';
+import { Grid, Box, Typography } from "@mui/material";
 interface Props {
   isDisabled?: boolean;
   isFromDate?: boolean;

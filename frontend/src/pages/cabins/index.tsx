@@ -1,4 +1,4 @@
-import { Typography, Box, Grid, Paper, Divider, Container } from "@material-ui/core";
+import { Typography, Box, Grid, Paper, Divider, Container } from "@mui/material";
 import { NextPage } from "next";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";

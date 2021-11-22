@@ -1,6 +1,7 @@
 import Layout from "@components/Layout";
-import { Box, Breadcrumbs, Container, makeStyles, Paper, Typography } from "@material-ui/core";
-import Grid from "@material-ui/core/Grid";
+import { Box, Breadcrumbs, Container, Paper, Typography } from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
+import Grid from "@mui/material/Grid";
 import React from "react";
 import Sidebar from "./Sidebar";
 

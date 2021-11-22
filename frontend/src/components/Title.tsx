@@ -1,4 +1,4 @@
-import { Box, Grid, Typography, useTheme } from "@material-ui/core";
+import { Box, Grid, Typography, useTheme } from "@mui/material";
 
 type Props = {
   children: string;

@@ -3,7 +3,7 @@ import Layout from "@components/Layout";
 import { AUTHENTICATE } from "@graphql/users/mutations";
 import { GET_USER } from "@graphql/users/queries";
 import { User } from "@interfaces/users";
-import { Button, Container, Typography } from "@material-ui/core";
+import { Button, Container, Typography } from "@mui/material";
 import { config } from "@utils/config";
 import { NextPage } from "next";
 import Link from "next/link";

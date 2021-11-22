@@ -1,5 +1,5 @@
-import { Typography } from "@material-ui/core";
-import { Variant } from "@material-ui/core/styles/createTypography";
+import { Typography } from "@mui/material";
+import { Variant } from '@mui/material/styles';
 import { HeadingComponent, NormalComponents } from "react-markdown/src/ast-to-react";
 
 const Heading: HeadingComponent = ({ children, id, level }) => {

@@ -1,8 +1,9 @@
 import PermissionRequired from "@components/permissions/PermissionRequired";
-import { Box, Button, Grid, makeStyles, Theme, Typography } from "@material-ui/core";
+import { Box, Button, Grid, Theme, Typography } from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
 import React from "react";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import NavigateNextIcon from "@material-ui/icons/NavigateNext";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import Link from "next/link";
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -18,10 +19,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   icon: {
     fontSize: "70px",
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down('md')]: {
       fontSize: "40px",
     },
-    [theme.breakpoints.down("xs")]: {
+    [theme.breakpoints.down('sm')]: {
       fontSize: "30px",
     },
   },

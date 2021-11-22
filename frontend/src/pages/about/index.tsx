@@ -1,5 +1,5 @@
 import Template from "@components/pages/about/Template";
-import { Box, Paper, Typography } from "@material-ui/core";
+import { Box, Paper, Typography } from "@mui/material";
 import { NextPage } from "next";
 import React from "react";
 

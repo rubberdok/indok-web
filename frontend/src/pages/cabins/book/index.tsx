@@ -16,7 +16,7 @@ import {
   useMediaQuery,
   MobileStepper,
   Container,
-} from "@material-ui/core";
+} from "@mui/material";
 import {
   allValuesFilled,
   cabinOrderStepReady,
@@ -27,7 +27,7 @@ import {
 import { NextPage } from "next";
 import React, { useEffect, useState } from "react";
 import { CREATE_BOOKING, SEND_EMAIL } from "@graphql/cabins/mutations";
-import { KeyboardArrowLeft, KeyboardArrowRight } from "@material-ui/icons";
+import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
 import Layout from "@components/Layout";
 import StepComponent from "@components/pages/cabins/StepComponent";
 
@@ -129,7 +129,7 @@ const CabinBookingPage: NextPage = () => {
   };
 
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const getMargin = () => (isMobile ? 2 : 10);
 
   const NextButton = () => (

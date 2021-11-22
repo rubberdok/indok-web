@@ -1,4 +1,4 @@
-import { ServerStyleSheets } from "@material-ui/core/styles";
+import ServerStyleSheets from '@mui/styles/ServerStyleSheets';
 import theme from "@styles/theme";
 import Document, { Head, Html, Main, NextScript } from "next/document";
 import React, { ReactElement } from "react";

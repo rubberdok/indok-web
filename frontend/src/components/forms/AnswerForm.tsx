@@ -2,9 +2,9 @@ import { useMutation } from "@apollo/client";
 import AnswerQuestion from "@components/forms/AnswerQuestion";
 import { SUBMIT_ANSWERS } from "@graphql/forms/mutations";
 import { Form, Question } from "@interfaces/forms";
-import { Button, Card, CardContent, Grid, Typography, FormHelperText } from "@material-ui/core";
+import { Button, Card, CardContent, Grid, Typography, FormHelperText } from "@mui/material";
 import { useState } from "react";
-import { Send } from "@material-ui/icons";
+import { Send } from "@mui/icons-material";
 import { useRouter } from "next/router";
 
 // interface for the state of answers before pushing to the database

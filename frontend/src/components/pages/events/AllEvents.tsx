@@ -3,8 +3,9 @@ import { GET_DEFAULT_EVENTS, GET_EVENTS } from "@graphql/events/queries";
 import { GET_USER } from "@graphql/users/queries";
 import { Event } from "@interfaces/events";
 import { User } from "@interfaces/users";
-import { Button, CircularProgress, Drawer, Grid, Hidden, makeStyles, Typography } from "@material-ui/core";
-import { Add, List, Tune } from "@material-ui/icons";
+import { Button, CircularProgress, Drawer, Grid, Hidden, Typography } from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
+import { Add, List, Tune } from "@mui/icons-material";
 import Link from "next/link";
 import React, { useState } from "react";
 import EventListItem from "./EventListItem";
@@ -62,70 +63,68 @@ const AllEvents: React.FC = () => {
     refetch(newFilters);
   };
 
-  return (
-    <>
-      <Hidden mdUp>
-        <Button onClick={() => setOpenFilterDrawer(true)} variant="contained" startIcon={<Tune />}>
-          Filtre
-        </Button>
-        <Drawer
-          PaperProps={{ className: classes.drawer }}
-          anchor="left"
-          open={openFilterDrawer}
-          onClose={() => setOpenFilterDrawer(false)}
-        >
+  return <>
+    <Hidden mdUp>
+      <Button onClick={() => setOpenFilterDrawer(true)} variant="contained" startIcon={<Tune />}>
+        Filtre
+      </Button>
+      <Drawer
+        PaperProps={{ className: classes.drawer }}
+        anchor="left"
+        open={openFilterDrawer}
+        onClose={() => setOpenFilterDrawer(false)}
+      >
+        <FilterMenu
+          filters={filters}
+          onFiltersChange={onChange}
+          showDefaultEvents={showDefaultEvents}
+          onShowDefaultChange={setShowDefaultEvents}
+        />
+      </Drawer>
+    </Hidden>
+    <Grid container className={classes.grid} spacing={3}>
+      <Hidden mdDown>
+        <Grid item md={3}>
           <FilterMenu
             filters={filters}
             onFiltersChange={onChange}
             showDefaultEvents={showDefaultEvents}
             onShowDefaultChange={setShowDefaultEvents}
           />
-        </Drawer>
-      </Hidden>
-      <Grid container className={classes.grid} spacing={3}>
-        <Hidden smDown>
-          <Grid item md={3}>
-            <FilterMenu
-              filters={filters}
-              onFiltersChange={onChange}
-              showDefaultEvents={showDefaultEvents}
-              onShowDefaultChange={setShowDefaultEvents}
-            />
-          </Grid>
-        </Hidden>
-        <Grid item xs>
-          {userData && !userLoading && userData.user && !!userData.user.organizations.length && (
-            <Link href="/events/create-event" passHref>
-              <Button color="primary" disableRipple startIcon={<Add />}>
-                Opprett
-              </Button>
-            </Link>
-          )}
-          {userData && !userLoading && userData.user && !!userData.user.organizations.length && (
-            <Link
-              href={userData.user.organizations.length > 1 ? "/orgs" : `/orgs/${userData.user.organizations[0].id}`}
-              passHref
-            >
-              <Button color="primary" disableRipple startIcon={<List />}>
-                Mine arrangementer
-              </Button>
-            </Link>
-          )}
-          {loading ? (
-            <CircularProgress />
-          ) : (
-            <Grid container spacing={2}>
-              {data === undefined || data.length === 0 ? (
-                <Typography variant="body1">Ingen arrangementer passer til valgte filtre.</Typography>
-              ) : (
-                data.map((event: Event) => <EventListItem key={event.id} event={event} user={userData?.user} />)
-              )}
-            </Grid>
-          )}
         </Grid>
+      </Hidden>
+      <Grid item xs>
+        {userData && !userLoading && userData.user && !!userData.user.organizations.length && (
+          <Link href="/events/create-event" passHref>
+            <Button color="primary" disableRipple startIcon={<Add />}>
+              Opprett
+            </Button>
+          </Link>
+        )}
+        {userData && !userLoading && userData.user && !!userData.user.organizations.length && (
+          <Link
+            href={userData.user.organizations.length > 1 ? "/orgs" : `/orgs/${userData.user.organizations[0].id}`}
+            passHref
+          >
+            <Button color="primary" disableRipple startIcon={<List />}>
+              Mine arrangementer
+            </Button>
+          </Link>
+        )}
+        {loading ? (
+          <CircularProgress />
+        ) : (
+          <Grid container spacing={2}>
+            {data === undefined || data.length === 0 ? (
+              <Typography variant="body1">Ingen arrangementer passer til valgte filtre.</Typography>
+            ) : (
+              data.map((event: Event) => <EventListItem key={event.id} event={event} user={userData?.user} />)
+            )}
+          </Grid>
+        )}
       </Grid>
-    </>
-  );
+    </Grid>
+  </>;
 };
 
 export default AllEvents;

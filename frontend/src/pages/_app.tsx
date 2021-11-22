@@ -1,12 +1,19 @@
 import { ApolloClient, ApolloProvider, createHttpLink, InMemoryCache } from "@apollo/client";
-import { CssBaseline, responsiveFontSizes } from "@material-ui/core";
-import { ThemeProvider } from "@material-ui/styles";
+import { CssBaseline, responsiveFontSizes } from "@mui/material";
+import { ThemeProvider, Theme, StyledEngineProvider } from "@mui/styles";
 import "@styles/global.css";
 import theme from "@styles/theme";
 import { config } from "@utils/config";
 import { AppProps } from "next/app";
 import Head from "next/head";
 import React, { useEffect } from "react";
+
+
+declare module '@mui/styles/defaultTheme' {
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  interface DefaultTheme extends Theme {}
+}
+
 
 const App = ({ Component, pageProps }: AppProps): JSX.Element => {
   const link = createHttpLink({
@@ -33,13 +40,15 @@ const App = ({ Component, pageProps }: AppProps): JSX.Element => {
         <title>Indøk NTNU - Foreningen for Industriell Økonomi og teknologiledelse</title>
         <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
       </Head>
-      <ThemeProvider theme={responsiveTheme}>
-        <CssBaseline />
-        <Component {...pageProps} />
-        {/* <div id="mobile-warning">
-          Denne siden fungerer ikke optimalt på mobil enda. Prøv nettsiden på en større skjerm.
-        </div> */}
-      </ThemeProvider>
+      <StyledEngineProvider injectFirst>
+        <ThemeProvider theme={responsiveTheme}>
+          <CssBaseline />
+          <Component {...pageProps} />
+          {/* <div id="mobile-warning">
+            Denne siden fungerer ikke optimalt på mobil enda. Prøv nettsiden på en større skjerm.
+          </div> */}
+        </ThemeProvider>
+      </StyledEngineProvider>
     </ApolloProvider>
   );
 };

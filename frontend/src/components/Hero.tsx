@@ -1,6 +1,6 @@
-import { Box, Button, Container, Grid, Hidden, Typography } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
-import NavigateNextIcon from "@material-ui/icons/NavigateNext";
+import { Box, Button, Container, Grid, Hidden, Typography } from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import Link from "next/link";
 import React, { useState } from "react";
 import { Fade } from "react-awesome-reveal";
@@ -141,7 +141,7 @@ const Hero: React.FC = () => {
     <Box id="back-to-top-anchor" height="100vh" position="relative">
       <Grid container style={{ height: "100%", position: "absolute", zIndex: -1, background: "black" }}>
         <Grid item xs={12} md={8} className={classes.relative}>
-          <Hidden smDown>
+          <Hidden mdDown>
             {organizations.map((item) => (
               <Box
                 key={item.id}
@@ -163,7 +163,7 @@ const Hero: React.FC = () => {
             style={{ backgroundImage: "url(img/hero.jpg)" }}
           ></Box>
         </Grid>
-        <Hidden smDown>
+        <Hidden mdDown>
           <Grid item xs={4} className={classes.relative}>
             <Box position="absolute" width="100%" height="100%" style={{ background: "white" }} zIndex="-3"></Box>
 
@@ -196,7 +196,7 @@ const Hero: React.FC = () => {
               </Fade>
             </Box>
           </Grid>
-          <Hidden smDown>
+          <Hidden mdDown>
             <Grid item xs={7}>
               <Box height="100%" width="100%" display="flex" flexDirection="column" alignItems="flex-end">
                 <Typography variant="overline">Linjeforeningene våre</Typography>

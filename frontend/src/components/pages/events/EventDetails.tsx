@@ -18,14 +18,14 @@ import {
   TextField,
   Typography,
   useTheme,
-} from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
-import { ArrowRight, ContactMail, Edit, ErrorOutline, KeyboardBackspace, List, Warning } from "@material-ui/icons";
-import CategoryIcon from "@material-ui/icons/Category";
-import CreditCard from "@material-ui/icons/CreditCard";
-import EventIcon from "@material-ui/icons/Event";
-import LocationOnIcon from "@material-ui/icons/LocationOn";
-import { Alert as MuiAlert } from "@material-ui/lab";
+} from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
+import { ArrowRight, ContactMail, Edit, ErrorOutline, KeyboardBackspace, List, Warning } from "@mui/icons-material";
+import CategoryIcon from "@mui/icons-material/Category";
+import CreditCard from "@mui/icons-material/CreditCard";
+import EventIcon from "@mui/icons-material/Event";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import { Alert as MuiAlert } from '@mui/material';
 import { calendarFile } from "@utils/calendars";
 import dayjs from "dayjs";
 import Link from "next/link";

@@ -1,6 +1,7 @@
 import Hero from "@components/Hero";
 import Layout from "@components/Layout";
-import { Box, Button, Container, makeStyles, Typography } from "@material-ui/core";
+import { Box, Button, Container, Typography } from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
 import { NextPage } from "next";
 import Link from "next/link";
 import React from "react";

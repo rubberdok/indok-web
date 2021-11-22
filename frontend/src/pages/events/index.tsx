@@ -1,6 +1,7 @@
 import Layout from "@components/Layout";
 import AllEvents from "@components/pages/events/AllEvents";
-import { Box, Container, makeStyles, Tab, Tabs, Typography, useTheme } from "@material-ui/core";
+import { Box, Container, Tab, Tabs, Typography, useTheme } from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
 import { NextPage } from "next";
 import React, { useState } from "react";
 

@@ -14,13 +14,13 @@ import {
   TableHead,
   TableRow,
   CardActions,
-  makeStyles,
-} from "@material-ui/core";
+} from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
 import { useState } from "react";
 import dayjs from "dayjs";
 import Link from "next/link";
 import { Listing } from "@interfaces/listings";
-import { Delete, Add, Create } from "@material-ui/icons";
+import { Delete, Add, Create } from "@mui/icons-material";
 
 // cursor style on hovering over a listing
 const useStyles = makeStyles(() => ({

@@ -7,11 +7,12 @@ import { LISTING_RESPONSES } from "@graphql/listings/queries";
 import { LISTING_RESPONSES_FRAGMENT } from "@graphql/listings/fragments";
 import Link from "next/link";
 import Layout from "@components/Layout";
-import { makeStyles, Grid, Tabs, Tab, Container, Card, CardContent, Button, Typography, Box } from "@material-ui/core";
+import { Grid, Tabs, Tab, Container, Card, CardContent, Button, Typography, Box } from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
 import { useState } from "react";
 import FormResponse from "@components/forms/formAdmin/FormResponse";
 import OrganizationListing from "@components/pages/listings/organization/OrganizationListing";
-import { ArrowBack } from "@material-ui/icons";
+import { ArrowBack } from "@mui/icons-material";
 import { CREATE_FORM } from "@graphql/forms/mutations";
 import EditForm from "@components/forms/formAdmin/EditForm";
 

@@ -2,8 +2,8 @@ import { useQuery } from "@apollo/client";
 import { FilterQuery } from "@components/pages/events/AllEvents";
 import { GET_CATEGORIES } from "@graphql/events/queries";
 import { Category } from "@interfaces/events";
-import { Badge, Collapse, List, ListItem, ListItemText } from "@material-ui/core";
-import { ExpandLess, ExpandMore } from "@material-ui/icons";
+import { Badge, Collapse, List, ListItem, ListItemText } from "@mui/material";
+import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import React, { useState } from "react";
 
 interface Props {

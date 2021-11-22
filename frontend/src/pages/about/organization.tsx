@@ -1,7 +1,8 @@
 import TabPanel from "@components/pages/about/TabPanel";
 import Template from "@components/pages/about/Template";
-import { Box, Card, CardActionArea, CardMedia, makeStyles, Tab, Tabs, Typography } from "@material-ui/core";
-import Grid from "@material-ui/core/Grid";
+import { Box, Card, CardActionArea, CardMedia, Tab, Tabs, Typography } from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
+import Grid from "@mui/material/Grid";
 import { getSortedPosts } from "@utils/posts";
 import { GetStaticProps, NextPage } from "next";
 import Link from "next/link";

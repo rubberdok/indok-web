@@ -1,8 +1,8 @@
 import MemberCard from "@components/pages/about/MemberCard";
 import { BoardMember } from "@components/pages/about/MemberCard/types";
 import Template from "@components/pages/about/Template";
-import { Typography } from "@material-ui/core";
-import Grid from "@material-ui/core/Grid";
+import { Typography } from "@mui/material";
+import Grid from "@mui/material/Grid";
 import { NextPage } from "next";
 import React from "react";
 

@@ -1,7 +1,7 @@
 import { FilterQuery } from "@components/pages/events/AllEvents";
 import { Organization } from "@interfaces/organizations";
-import { Collapse, List, ListItem, ListItemText } from "@material-ui/core";
-import { ExpandLess, ExpandMore } from "@material-ui/icons";
+import { Collapse, List, ListItem, ListItemText } from "@mui/material";
+import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import React, { useState } from "react";
 
 interface Props {

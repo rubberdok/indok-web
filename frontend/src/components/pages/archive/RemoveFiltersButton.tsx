@@ -1,5 +1,5 @@
-import { Box, Button } from "@material-ui/core";
-import { Close } from "@material-ui/icons";
+import { Box, Button } from "@mui/material";
+import { Close } from "@mui/icons-material";
 import React from "react";
 
 interface RemoveFiltersButtonProps {
