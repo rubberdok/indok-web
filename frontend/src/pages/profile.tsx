@@ -81,8 +81,15 @@ const ProfilePage: NextPage = () => {
         <Typography variant="h1">Brukerprofil</Typography>
         {data?.user && (
           <>
-            <FirstLogin open={firstLoginOpen} onSubmit={onSubmit} fullName={data.user.firstName} />
-            <EditUser open={editUserOpen} onSubmit={onSubmit} user={data.user} onClose={() => setEditUserOpen(false)} />
+            {firstLoginOpen && <FirstLogin open={firstLoginOpen} onSubmit={onSubmit} fullName={data.user.firstName} />}
+            {editUserOpen && (
+              <EditUser
+                open={editUserOpen}
+                onSubmit={onSubmit}
+                user={data.user}
+                onClose={() => setEditUserOpen(false)}
+              />
+            )}
             <Grid container className={classes.cardPadding}>
               <Grid item xs={6}>
                 <Card variant="outlined" className={classes.card}>
