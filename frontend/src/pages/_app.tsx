@@ -1,21 +1,23 @@
 import { ApolloClient, ApolloProvider, createHttpLink, InMemoryCache } from "@apollo/client";
+import { CacheProvider, EmotionCache } from "@emotion/react";
 import { CssBaseline, responsiveFontSizes } from "@mui/material";
-import { ThemeProvider, Theme, StyledEngineProvider } from "@mui/styles";
+import { ThemeProvider } from "@mui/styles";
 import "@styles/global.css";
 import theme from "@styles/theme";
 import { config } from "@utils/config";
+import createEmotionCache from "@utils/createEmotionCache";
 import { AppProps } from "next/app";
 import Head from "next/head";
 import React, { useEffect } from "react";
 
+// Client-side cache, shared for the whole session of the user in the browser.
+const clientSideEmotionCache = createEmotionCache();
 
-declare module '@mui/styles/defaultTheme' {
-  // eslint-disable-next-line @typescript-eslint/no-empty-interface
-  interface DefaultTheme extends Theme {}
-}
+type AppPropsWithCache = AppProps & {
+  emotionCache?: EmotionCache;
+};
 
-
-const App = ({ Component, pageProps }: AppProps): JSX.Element => {
+const App = ({ Component, pageProps, emotionCache = clientSideEmotionCache }: AppPropsWithCache): JSX.Element => {
   const link = createHttpLink({
     uri: config.GRAPHQL_ENDPOINT,
     credentials: "include",
@@ -35,21 +37,18 @@ const App = ({ Component, pageProps }: AppProps): JSX.Element => {
   const responsiveTheme = responsiveFontSizes(theme, { breakpoints: ["sm", "md", "lg", "xl"], factor: 2 });
 
   return (
-    <ApolloProvider client={client}>
-      <Head>
-        <title>Indøk NTNU - Foreningen for Industriell Økonomi og teknologiledelse</title>
-        <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
-      </Head>
-      <StyledEngineProvider injectFirst>
+    <CacheProvider value={emotionCache}>
+      <ApolloProvider client={client}>
+        <Head>
+          <title>Indøk NTNU - Foreningen for Industriell Økonomi og teknologiledelse</title>
+          <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
+        </Head>
         <ThemeProvider theme={responsiveTheme}>
           <CssBaseline />
           <Component {...pageProps} />
-          {/* <div id="mobile-warning">
-            Denne siden fungerer ikke optimalt på mobil enda. Prøv nettsiden på en større skjerm.
-          </div> */}
         </ThemeProvider>
-      </StyledEngineProvider>
-    </ApolloProvider>
+      </ApolloProvider>
+    </CacheProvider>
   );
 };
 
