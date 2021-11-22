@@ -1,82 +1,87 @@
-import { createTheme, adaptV4Theme } from "@mui/material";
-import { Shadows } from '@mui/material/styles';
-import breakpoints from "./breakpoints";
+import { createTheme } from "@mui/material";
 import typography from "./typography";
 
-const theme = createTheme(adaptV4Theme({
-  typography: {
-    ...typography,
-  },
-  overrides: {
+const theme = createTheme({
+  typography,
+  components: {
     MuiTypography: {
-      gutterBottom: {
-        marginBottom: 32,
-      },
-      paragraph: {
-        marginBottom: 32,
+      styleOverrides: {
+        gutterBottom: {
+          marginBottom: 32,
+        },
+        paragraph: {
+          marginBottom: 32,
+        },
       },
     },
     MuiBreadcrumbs: {
-      root: {
-        ...typography.overline,
+      styleOverrides: {
+        root: {
+          ...typography.overline,
+        },
       },
     },
     MuiToolbar: {
-      regular: {
-        minHeight: "75px!important",
-        padding: 0,
+      styleOverrides: {
+        regular: {
+          minHeight: "75px!important",
+          padding: 0,
+        },
       },
     },
     MuiFab: {
-      root: {
-        justifyContent: "center",
+      styleOverrides: {
+        root: {
+          justifyContent: "center",
+        },
       },
     },
     MuiButtonBase: {
-      root: {
-        justifyContent: "none",
+      styleOverrides: {
+        root: {
+          justifyContent: "none",
+        },
       },
     },
     MuiButton: {
-      root: {},
-      text: {
-        padding: "8px 24px",
-      },
-      contained: {
-        padding: "8px 24px",
-      },
-      outlined: {
-        padding: "8px 24px",
-        border: "0",
-        borderLeft: "2px solid rgb(0 0 0 / 10%)",
-        fontSize: "0.8rem",
-        color: "#000",
-      },
-      outlinedPrimary: {
-        borderWidth: 2,
-        color: "#000",
-        background: "rgba(6, 90, 90, 0.07)",
-        borderTop: "0",
-        borderRight: "0",
-        borderBottom: "0",
-
-        ["&:hover"]: {
+      styleOverrides: {
+        root: {},
+        text: {
+          padding: "8px 24px",
+        },
+        contained: {
+          padding: "8px 24px",
+        },
+        outlined: {
+          padding: "8px 24px",
+          border: "0",
+          borderLeft: "2px solid rgb(0 0 0 / 10%)",
+          fontSize: "0.8rem",
+          color: "#000",
+        },
+        outlinedPrimary: {
+          borderWidth: 2,
+          color: "#000",
+          background: "rgba(6, 90, 90, 0.07)",
           borderTop: "0",
           borderRight: "0",
           borderBottom: "0",
-          borderWidth: 2,
+
+          ["&:hover"]: {
+            borderTop: "0",
+            borderRight: "0",
+            borderBottom: "0",
+            borderWidth: 2,
+          },
+        },
+        sizeSmall: {
+          fontSize: "0.8rem",
+        },
+        sizeLarge: {
+          padding: "16px 24px",
+          fontSize: "0.8rem",
         },
       },
-      sizeSmall: {
-        fontSize: "0.8rem",
-      },
-      sizeLarge: {
-        padding: "16px 24px",
-        fontSize: "0.8rem",
-      },
-    },
-    MuiTab: {
-      root: {},
     },
   },
   palette: {
@@ -96,10 +101,6 @@ const theme = createTheme(adaptV4Theme({
   shape: {
     borderRadius: 0,
   },
-  breakpoints: {
-    ...breakpoints,
-  },
-  shadows: Array(25).fill("none") as Shadows,
-}));
+});
 
 export default theme;

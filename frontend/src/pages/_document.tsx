@@ -1,11 +1,11 @@
 import createEmotionServer from "@emotion/server/create-instance";
-import createEmotionCache from "@utils/createEmotionCache";
 import theme from "@styles/theme";
+import createEmotionCache from "@utils/createEmotionCache";
 import Document, { Head, Html, Main, NextScript } from "next/document";
-import React, { ReactElement } from "react";
+import React from "react";
 
 export default class MyDocument extends Document {
-  render(): ReactElement {
+  render() {
     return (
       <Html lang="en">
         <Head>
@@ -16,13 +16,9 @@ export default class MyDocument extends Document {
             rel="stylesheet"
           />
           <link
-            href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap"
-            rel="stylesheet"
-          />
-          <link
             href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&display=swap"
             rel="stylesheet"
-          ></link>
+          />
         </Head>
         <body>
           <Main />
