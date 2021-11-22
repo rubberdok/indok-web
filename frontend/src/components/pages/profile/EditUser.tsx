@@ -21,12 +21,12 @@ import { Check, Close } from "@material-ui/icons";
 import React, { useEffect, useState } from "react";
 import { validateInput } from "./utils";
 
-interface EditUserProps {
+export type EditUserProps = {
   open: boolean;
   user: User;
   onSubmit: () => void;
   onClose: () => void;
-}
+};
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

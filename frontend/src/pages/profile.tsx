@@ -1,7 +1,5 @@
 import { useQuery } from "@apollo/client";
 import Layout from "@components/Layout";
-import { EditUser } from "@components/pages/profile/EditUser";
-import { FirstLogin } from "@components/pages/profile/FirstLogin";
 import { GET_USER } from "@graphql/users/queries";
 import { User } from "@interfaces/users";
 import {
@@ -20,9 +18,12 @@ import {
 } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
 import { NextPage } from "next";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import { useState } from "react";
+import { EditUserProps } from "../components/pages/profile/EditUser";
+import { FirstLoginProps } from "../components/pages/profile/FirstLogin";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -66,13 +67,21 @@ const ProfilePage: NextPage = () => {
     editUserOpen && setEditUserOpen(false);
   };
 
+  const FirstLogin = dynamic<FirstLoginProps>(() =>
+    import("@components/pages/profile/FirstLogin").then((module) => module.FirstLogin)
+  );
+
+  const EditUser = dynamic<EditUserProps>(() =>
+    import("@components/pages/profile/EditUser").then((module) => module.EditUser)
+  );
+
   return (
     <Layout>
       <Container className={classes.padding}>
         <Typography variant="h1">Brukerprofil</Typography>
         {data?.user && (
           <>
-            <FirstLogin open={firstLoginOpen} onSubmit={onSubmit} fullName={data?.user?.firstName} />
+            <FirstLogin open={firstLoginOpen} onSubmit={onSubmit} fullName={data.user.firstName} />
             <EditUser open={editUserOpen} onSubmit={onSubmit} user={data.user} onClose={() => setEditUserOpen(false)} />
             <Grid container className={classes.cardPadding}>
               <Grid item xs={6}>

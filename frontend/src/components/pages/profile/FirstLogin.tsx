@@ -20,11 +20,11 @@ import { Check } from "@material-ui/icons";
 import React, { useEffect, useState } from "react";
 import { suggestNames, validateInput } from "./utils";
 
-interface FirstLoginProps {
+export type FirstLoginProps = {
   open: boolean;
   onSubmit: () => void;
   fullName: string;
-}
+};
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
