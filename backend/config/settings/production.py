@@ -97,7 +97,8 @@ sentry_sdk.init(
     dsn=SENTRY_DSN,
     integrations=integrations,
     environment=ENVIRONMENT,  # noqa
-    traces_sample_rate=env.float("SENTRY_TRACES_SAMPLE_RATE", default=0.0),
-    send_default_pii=env.bool("SENTRY_SEND_DEFAULT_PII", default=True),
+    traces_sample_rate=cast(bool, env.float("SENTRY_TRACES_SAMPLE_RATE", default=0.0)),
+    send_default_pii=cast(bool, env.bool("SENTRY_SEND_DEFAULT_PII", default=True)),
+    release=env("GIT_COMMIT_SHA", None),
 )
 ignore_logger("graphql.execution.utils")
