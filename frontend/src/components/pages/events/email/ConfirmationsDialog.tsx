@@ -41,7 +41,8 @@ const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
         ))}
 
         <DialogContentText variant="body2">
-          Kontakt <Link href="mailto:web@indokhs.no">web@indokhs.no</Link> dersom det skulle oppstå spørsmål.
+          Send en mail til <Link href="mailto:contact@rubberdok.no">contact@rubberdok.no</Link> dersom det skulle oppstå
+          spørsmål.
         </DialogContentText>
       </DialogContent>
       <DialogActions>

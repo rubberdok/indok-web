@@ -6,15 +6,15 @@ image: /img/rubberdoklogo1.png
 alt: Logoen til rubberdøk
 styre:
   ceo:
-    navn: Morgan Heggland
-    tittel: Leder
-    mail: web@indokhs.no
+    navn: Lars Waage
+    tittel: Prosjektleder
+    mail: lars.waage@rubberdok.no
     telefon: 69420420
   cto:
-    navn: Fredrik Ahlborg
-    mail: fredrik.sha@gmail.com
-    tittel: Content
-    telefon: 99374307
+    navn: Hermann Mørkrid
+    tittel: Prosjektleder
+    mail: hermann.morkrid@rubberdok.no
+    telefon: 40160014
 tag: annet
 ---
 
