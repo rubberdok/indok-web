@@ -9,12 +9,10 @@ styre:
     navn: Lars Waage
     tittel: Prosjektleder
     mail: lars.waage@rubberdok.no
-    telefon: 69420420
   cto:
     navn: Hermann Mørkrid
     tittel: Prosjektleder
     mail: hermann.morkrid@rubberdok.no
-    telefon: 40160014
 tag: annet
 ---
 
