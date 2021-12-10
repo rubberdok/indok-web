@@ -1,15 +1,13 @@
-import React from "react";
 import { Button, FormControl, Grid, InputLabel, MenuItem, Select, TextField, Typography } from "@material-ui/core";
+
+type Props = {
+  slotDistribution: { category: number[]; availableSlots: number }[];
+  onUpdateSlotDistribution: (slotDist: { category: number[]; availableSlots: number }[]) => void;
+};
 
 /**
  * Component for the creating a slot distribution, aka a distribution of the available slots between grade years
  */
-
-interface Props {
-  slotDistribution: { category: number[]; availableSlots: number }[];
-  onUpdateSlotDistribution: (slotDist: { category: number[]; availableSlots: number }[]) => void;
-}
-
 const SlotDistribution: React.FC<Props> = ({ slotDistribution, onUpdateSlotDistribution }) => {
   const onCategoryUpdate = (newCategory: number[], oldCategory: number[]) => {
     const slotDistributionWithIndices = slotDistribution.map((dist, i: number) => {

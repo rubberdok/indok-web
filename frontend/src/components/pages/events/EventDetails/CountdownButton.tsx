@@ -39,7 +39,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-interface Props {
+type Props = {
   countDownDate: string;
   currentTime: string;
   isSignedUp: boolean;
@@ -48,7 +48,7 @@ interface Props {
   loading: boolean;
   disabled?: boolean;
   onClick: () => void;
-}
+};
 
 /**
  * Component for the count down button on the detail page of an attendable event

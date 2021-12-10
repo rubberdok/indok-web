@@ -8,15 +8,15 @@ import SendIcon from "@material-ui/icons/Send";
 import EmailFormDialog from "./EmailFormDialog";
 import ConfirmationDialog from "./ConfirmationsDialog";
 
-export interface EmailFormProps {
+export type EmailFormProps = {
   eventId: string | string[] | undefined;
-}
+};
 
-export interface SendEmailProps {
+export type SendEmailProps = {
   receiverEmails: string[];
   content: string;
   subject: string;
-}
+};
 
 const defaultMailProps: SendEmailProps = {
   receiverEmails: [],

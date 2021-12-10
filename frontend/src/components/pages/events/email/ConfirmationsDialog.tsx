@@ -3,12 +3,12 @@ import ClearIcon from "@material-ui/icons/Clear";
 import React, { Dispatch, SetStateAction } from "react";
 import { SendEmailProps } from "./EmailForm";
 
-interface ConfirmationDialogProps {
+type ConfirmationDialogProps = {
   showConfirmation: boolean;
   setShowConfirmation: Dispatch<SetStateAction<boolean>>;
   emailProps: SendEmailProps;
   handleConfirmationClose: () => void;
-}
+};
 
 const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
   showConfirmation,

@@ -6,11 +6,11 @@ import { Badge, Collapse, List, ListItem, ListItemText } from "@material-ui/core
 import { ExpandLess, ExpandMore } from "@material-ui/icons";
 import React, { useState } from "react";
 
-interface Props {
+type Props = {
   filters: FilterQuery;
   onFiltersChange: (query: FilterQuery) => void;
   classes: { badge: string; nested: string };
-}
+};
 
 /**
  * Component for the category filter in the filter menu

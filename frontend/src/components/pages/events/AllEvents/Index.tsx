@@ -39,6 +39,7 @@ const AllEvents: React.FC = () => {
     refetch,
   } = useQuery<{ allEvents: Event[]; defaultEvents: Event[]; user: User }>(GET_EVENTS_DEFAULT_EVENTS_AND_USERS, {
     variables: filters,
+    errorPolicy: "all",
   });
 
   if (loading)
@@ -50,10 +51,6 @@ const AllEvents: React.FC = () => {
 
   const data = showDefaultEvents ? allData?.defaultEvents : allData?.allEvents;
   const userData = { user: allData?.user };
-  console.log("data", data);
-  console.log("userData", userData);
-  console.log("allData", allData);
-  console.log(!data && !userData.user && error !== undefined);
 
   if (!data && !userData.user && error) return <Typography variant="body1">Kunne ikke hente arrangementer.</Typography>;
 

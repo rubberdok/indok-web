@@ -5,7 +5,7 @@ import { ExpandLess, ExpandMore } from "@material-ui/icons";
 import React, { useState } from "react";
 import SuborganizationFilter from "./SubOrganizationFilter";
 
-interface Props {
+type Props = {
   filters: FilterQuery;
   onFiltersChange: (query: FilterQuery) => void;
   organizations: Organization[];
@@ -16,7 +16,7 @@ interface Props {
     doubleNestedHeader: string;
     doubleNestedList: string;
   };
-}
+};
 
 /**
  * Component for the organization filter in the filter menu
