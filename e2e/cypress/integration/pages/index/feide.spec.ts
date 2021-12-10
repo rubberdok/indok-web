@@ -41,8 +41,8 @@ describe("SSO login", () => {
         });
     });
     cy.getByTestId("registerUser-title").should("contain.text", "Registrering");
-    cy.getByTestId("registerUser-firstNameTextField").get("input").clear().type("Abba");
-    cy.getByTestId("registerUser-lastNameTextField").get("input").clear().type("Baab");
+    cy.getByTestId("registerUser-firstNameTextField").within(() => cy.get("input").clear().type("Abba"));
+    cy.getByTestId("registerUser-lastNameTextField").within(() => cy.get("input").clear().type("Baab"));
     cy.getByTestId("registerUser-saveButton").click();
     cy.getByTestId("profile-personal-name").should("contain.text", "Abba Baab");
   });
