@@ -1,10 +1,10 @@
 import { Grid, Typography } from "@material-ui/core";
 import Event from "@public/illustrations/Event.svg";
-import ProfileCard from "../base";
+import ProfileCardBase from "./ProfileCardBase";
 
 const EventCard: React.VFC = ({ ...props }) => {
   return (
-    <ProfileCard
+    <ProfileCardBase
       title="Arrangementer"
       actionText="Se arrangementer"
       actionLink="/events"
@@ -19,7 +19,7 @@ const EventCard: React.VFC = ({ ...props }) => {
           </Typography>
         </Grid>
       </Grid>
-    </ProfileCard>
+    </ProfileCardBase>
   );
 };
 

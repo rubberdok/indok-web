@@ -10,7 +10,7 @@ import {
 } from "@material-ui/core";
 import Image from "next/image";
 import Link from "next/link";
-import useStyles from "./styles";
+import useStyles from "../styles";
 
 type Props = {
   title: string;
@@ -21,7 +21,7 @@ type Props = {
   "data-test-id"?: string;
 };
 
-const ProfileCard: React.FC<Props> = ({
+const ProfileCardBase: React.FC<Props> = ({
   title,
   children,
   actionText,
@@ -61,4 +61,4 @@ const ProfileCard: React.FC<Props> = ({
   );
 };
 
-export default ProfileCard;
+export default ProfileCardBase;
