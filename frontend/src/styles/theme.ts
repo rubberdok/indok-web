@@ -22,6 +22,21 @@ const theme = createTheme({
         ...typography.overline,
       },
     },
+    MuiCardHeader: {
+      root: {
+        padding: "32px 32px 16px",
+      },
+    },
+    MuiCardContent: {
+      root: {
+        padding: "16px 32px",
+      },
+    },
+    MuiCardActions: {
+      root: {
+        padding: "16px 32px",
+      },
+    },
     MuiToolbar: {
       regular: {
         minHeight: "75px!important",
