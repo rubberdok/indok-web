@@ -35,11 +35,7 @@ jobs:
         run: pip install ${{ matrix.linter }}
 
       - name: ${{ matrix.linter }}
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: |
-          ${{ matrix.linter }} backend ${{ matrix.command }}
-          echo "$GITHUB_CONTEXT"
+        run: ${{ matrix.linter }} backend ${{ matrix.command }}
 
   build:
     name: Build
