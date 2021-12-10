@@ -4,6 +4,10 @@ from django.conf import settings
 from phonenumber_field.modelfields import PhoneNumberField
 from django.contrib.auth import get_user_model
 from multiselectfield import MultiSelectField
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from apps.users.models import User
 
 
 class Category(models.Model):
@@ -20,6 +24,11 @@ GRADE_CHOICES = ((1, "1"), (2, "2"), (3, "3"), (4, "4"), (5, "5"))
 
 
 class Event(models.Model):
+    """
+    Main model for events. Has the general information about all events (regardless of
+    whether they are attendable or not)
+    """
+
     # ------------------ Mandatory fields ------------------
     title = models.CharField(max_length=128)
     description = models.TextField()
@@ -30,7 +39,7 @@ class Event(models.Model):
     publisher = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
     has_extra_information = models.BooleanField(
         default=False
-    )  # If the event allows e.g. for group sign ups, this would be true
+    )  # If the event allows e.g. for group sign ups, this would be true (shows a text field frontend)
     end_time = models.DateTimeField(blank=True, null=True)
     location = models.CharField(max_length=128, blank=True, null=True)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, blank=True, null=True)
@@ -42,7 +51,7 @@ class Event(models.Model):
     )  # Kept here as well in case a non-attenable (no sign up) event has grade restrictions
 
     @property
-    def signed_up_users(self):
+    def signed_up_users(self) -> list["User"]:
         if not hasattr(self, "attendable"):
             return []
         return (
@@ -52,18 +61,18 @@ class Event(models.Model):
         )
 
     @property
-    def total_allowed_grade_years(self):
+    def total_allowed_grade_years(self) -> str:
         if not hasattr(self, "attendable") or self.attendable is None:
             return self.allowed_grade_years
         return self.attendable.slot_distribution.get(parent_distribution=None).grade_years
 
     @property
-    def available_slots(self):
+    def available_slots(self) -> int:
         if not hasattr(self, "attendable") or self.attendable is None:
             return None
         return self.attendable.slot_distribution.get(parent_distribution=None).get_available_slots()
 
-    def get_attendance_and_waiting_list(self):
+    def get_attendance_and_waiting_list(self) -> tuple[list["User"], list["User"]]:
         if not hasattr(self, "attendable") or self.attendable is None:
             return None, None
         attending = {}  # keys = string of grades (category), values = userlist
@@ -73,10 +82,9 @@ class Event(models.Model):
         )
         return attending, waiting_list
 
-    def get_is_full(self, grade_year):
+    def get_is_full(self, grade_year: int) -> bool:
         if not hasattr(self, "attendable") or self.attendable is None:
             return False
-
         attending, _ = self.get_attendance_and_waiting_list()
         available_slots = self.attendable.slot_distribution.get(parent_distribution=None).get_available_slots_for_grade(
             grade_year
@@ -91,6 +99,11 @@ class Event(models.Model):
 
 
 class Attendable(models.Model):
+    """
+    Additional model used for attendable events. All attendable events have exactly one Attendable.
+    Contains general information related to an attendable event.
+    """
+
     event = models.OneToOneField(Event, on_delete=models.CASCADE, related_name="attendable")
     signup_open_date = models.DateTimeField()  # When signup should become available
     binding_signup = models.BooleanField(default=False)  # Disables sign-off from users_attending if true.
@@ -102,6 +115,17 @@ class Attendable(models.Model):
 
 
 class SlotDistribution(models.Model):
+    """
+    Additional model used for attendable events used to keep track of the distribution of slots
+    between different grade years. Each Attendable will have at least one SlotDistrbution. This is the
+    parent (total) slot distribution with total available slots and total grade years that are allowed.
+    The parent distribution is recognised as being the only SlotDistribution connected to the given
+    Attendable that does not have a parent_distribution (parent_distribution = None). The parent distribution
+    can again have a set of children, where each of these will have available slots and allowed grade years
+    equal to a subset of that of the parent distribution (and they will have the parent_distirbution field set).
+
+    """
+
     attendable = models.ForeignKey(Attendable, on_delete=models.CASCADE, related_name="slot_distribution")
     available_slots = models.PositiveIntegerField()
     grade_years = MultiSelectField(choices=GRADE_CHOICES, default="1,2,3,4,5")
@@ -110,14 +134,13 @@ class SlotDistribution(models.Model):
     )
 
     @property
-    def grades(self):
-        return [int(val) for val in str(self.grade_years).split(",")]
+    def grades(self) -> list[int]:
+        return [int(val) for val in str(self.grade_years).replace("[", "").replace("]", "").split(",")]
 
-    def get_attending(self, signed_up_users, attending, waiting_list):
-        if len(self.child_distributions.all()) == 0:
-
+    def get_attending(self, signed_up_users: list["User"], attending: dict, waiting_list: dict):
+        if not self.child_distributions.exists():
             filtered = []
-            for user in list(signed_up_users.all()):
+            for user in signed_up_users.all():
                 if user.grade_year in self.grades:
                     filtered.append(user)
 
@@ -133,7 +156,7 @@ class SlotDistribution(models.Model):
             child.get_attending(signed_up_users, attending, waiting_list)
 
     def get_available_slots(self):
-        if len(self.child_distributions.all()) == 0:
+        if not self.child_distributions.exists():
             return [{"category": str(self.grade_years).replace(" ", ""), "available_slots": self.available_slots}]
 
         total_available_slots = []
@@ -144,13 +167,13 @@ class SlotDistribution(models.Model):
 
         return total_available_slots
 
-    def get_available_slots_for_grade(self, grade_year):
+    def get_available_slots_for_grade(self, grade_year: int) -> int:
         descendants = list(self.child_distributions.all())
         while descendants:
             descendant = descendants.pop(0)
             if grade_year in descendant.grades:
                 return descendant.available_slots
-            if len(descendant.child_distributions.all()) > 0:
+            if descendant.child_distributions.exists():
                 descendants += list(descendant.distributions.all())
 
         return self.available_slots

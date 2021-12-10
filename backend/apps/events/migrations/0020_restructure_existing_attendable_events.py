@@ -2,7 +2,7 @@
 
 from django.db import migrations
 
-def restucture_existing_attendable_events(apps, schema_editor):
+def restructure_existing_attendable_events(apps, schema_editor):
     attendable_model = apps.get_model("events", "Attendable")
     slot_distribution_model = apps.get_model("events", "SlotDistribution")
     event_model = apps.get_model("events", "Event")
@@ -36,5 +36,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(restucture_existing_attendable_events, migrations.RunPython.noop)
+        migrations.RunPython(restructure_existing_attendable_events, migrations.RunPython.noop)
     ]

@@ -620,17 +620,21 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
           setOpenEditErrorSnackbar(false);
           setErrors([]);
         }}
-      >
-        {updateEventError
-          ? updateEventError.message
-          : "Opprettelse feilet: ".concat(
-              errors.slice(1, errors.length).reduce((res, error) => `${res}, ${error}`, `${errors[0]}`)
-            )}
-      </Alert>
+        description={
+          updateEventError
+            ? updateEventError.message
+            : "Opprettelse feilet: ".concat(
+                errors.slice(1, errors.length).reduce((res, error) => `${res}, ${error}`, `${errors[0]}`)
+              )
+        }
+      />
 
-      <Alert severity="success" open={openEditSnackbar} onClose={() => setOpenEditSnackbar(false)}>
-        Arrangement oppdatert
-      </Alert>
+      <Alert
+        severity="success"
+        open={openEditSnackbar}
+        onClose={() => setOpenEditSnackbar(false)}
+        description={"Arrangement oppdatert"}
+      />
     </Dialog>
   );
 };

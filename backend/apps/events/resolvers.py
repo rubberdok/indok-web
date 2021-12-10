@@ -77,16 +77,7 @@ class EventResolvers:
         """
         For each organization, get the most recent (future) event
         """
-        organizations = Organization.objects.all()
-        all_events = Event.objects.filter(start_time__gte=(date.today() - timedelta(days=1)))
-        events = []
-        for organization in organizations:
-            try:
-                first_matching_event = all_events.get(organization=organization)
-                events.append(first_matching_event.id)
-            except:  # noqa
-                pass
-        return Event.objects.filter(id__in=events).order_by("start_time")
+        return Event.objects.filter(start_time__gte=(date.today() - timedelta(days=1))).distinct("organization")
 
     def resolve_event(self, info, id):
         try:

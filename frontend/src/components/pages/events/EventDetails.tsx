@@ -354,29 +354,47 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
         </Grid>
       </Container>
       {/* Alerts */}
-      <Alert severity="error" open={openSignUpErrorSnackbar} onClose={() => setOpenSignUpErrorSnackbar(false)}>
-        {signUpError ? signUpError.message : "Påmelding feilet"}
-      </Alert>
+      <Alert
+        severity="error"
+        open={openSignUpErrorSnackbar}
+        onClose={() => setOpenSignUpErrorSnackbar(false)}
+        description={signUpError ? signUpError.message : "Påmelding feilet"}
+      />
 
-      <Alert open={openSignOffErrorSnackbar} severity="error" onClose={() => setOpenSignUpErrorSnackbar(false)}>
-        Avmelding feilet
-      </Alert>
+      <Alert
+        open={openSignOffErrorSnackbar}
+        severity="error"
+        onClose={() => setOpenSignUpErrorSnackbar(false)}
+        description={"Avmelding feilet"}
+      />
 
-      <Alert severity="info" open={openSignOffSnackbar} onClose={() => setOpenSignOffSnackbar(false)}>
-        Du er nå avmeldt
-      </Alert>
+      <Alert
+        severity="info"
+        open={openSignOffSnackbar}
+        onClose={() => setOpenSignOffSnackbar(false)}
+        description={"Du er nå avmeldt"}
+      />
 
-      <Alert severity="success" open={openSignUpSnackbar} onClose={() => setOpenSignUpSnackbar(false)}>
-        Du er nå påmeldt
-      </Alert>
+      <Alert
+        severity="success"
+        open={openSignUpSnackbar}
+        onClose={() => setOpenSignUpSnackbar(false)}
+        description={"Du er nå påmeldt"}
+      />
 
-      <Alert severity="info" open={openOnWaitingListSnackbar} onClose={() => setOpenOnWaitingListSnackbar(false)}>
-        Du er på ventelisten
-      </Alert>
+      <Alert
+        severity="info"
+        open={openOnWaitingListSnackbar}
+        onClose={() => setOpenOnWaitingListSnackbar(false)}
+        description={"Du er på ventelisten"}
+      />
 
-      <Alert severity="info" open={openOffWaitingListSnackbar} onClose={() => setOpenOffWaitingListSnackbar(false)}>
-        Du er ikke lenger på ventelisten
-      </Alert>
+      <Alert
+        severity="info"
+        open={openOffWaitingListSnackbar}
+        onClose={() => setOpenOffWaitingListSnackbar(false)}
+        description={"Du er ikke lenger på ventelisten"}
+      />
     </>
   );
 };

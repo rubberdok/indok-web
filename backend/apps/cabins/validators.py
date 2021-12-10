@@ -1,3 +1,4 @@
+from utils.helpers.validators import email_validation
 from graphql import GraphQLError
 from django.utils import timezone
 from apps.cabins.models import Booking as BookingModel
@@ -42,10 +43,6 @@ def checkin_validation(check_in, check_out, cabin_ids):
     if (check_out - check_in).days == 0:
         raise GraphQLError("Invalid input: check-in and check-out cannot occur on the same day")
 
-
-def email_validation(email: str):
-    if not email.count("@") == 1 and "." not in email.split("@")[-1]:
-        raise GraphQLError(f"Input email {email} is invalid")
 
 
 def name_validation(first_name, last_name):

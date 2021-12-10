@@ -28,8 +28,10 @@ import {
 } from "@material-ui/core";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
-import SlotDistribution from "./SlotDistribution";
-import Alert from "../../Alert";
+import Alert from "@components/Alert";
+import SlotDistribution from "../SlotDistribution";
+import { DEFAULTINPUT } from "./constants";
+import { getFormattedData } from "./helpers";
 
 const useStyles = makeStyles((theme) => ({
   content: {
@@ -45,28 +47,7 @@ const useStyles = makeStyles((theme) => ({
 
 const CreateEvent: React.FC = () => {
   const classes = useStyles();
-
-  const defaultInput: Record<string, any> = {
-    title: "",
-    description: "",
-    startTime: "",
-    endTime: "",
-    location: "",
-    organizationId: "",
-    categoryId: "",
-    image: "",
-    deadline: "",
-    signupOpenDate: "",
-    availableSlots: "",
-    // price: undefined,
-    shortDescription: "",
-    hasExtraInformation: false,
-    contactEmail: "",
-    bindingSignup: false,
-    allowedGradeYears: [1, 2, 3, 4, 5],
-  };
-
-  const [eventData, setEventData] = useState(defaultInput);
+  const [eventData, setEventData] = useState(DEFAULTINPUT);
   const [isAttendable, setIsAttendable] = useState(false);
   const [hasSlotDistribution, setHasSlotDistribution] = useState(false);
   const [slotDistribution, setSlotDistribution] = useState<{ category: number[]; availableSlots: number }[]>([]);
@@ -148,92 +129,23 @@ const CreateEvent: React.FC = () => {
   };
 
   const onSubmit = () => {
-    let currentErrors: string[] = [];
+    const formattedInputData = getFormattedData(eventData, isAttendable, hasSlotDistribution, slotDistribution);
 
-    const eventInputData = {
-      title: eventData.title,
-      description: eventData.description,
-      startTime: eventData.startTime,
-      organizationId: eventData.organizationId,
-      endTime: eventData.endTime,
-      location: eventData.location,
-      categoryId: eventData.categoryId,
-      image: eventData.image,
-      shortDescription: eventData.shortDescription,
-      contactEmail: eventData.contactEmail,
-      allowedGradeYears: eventData.allowedGradeYears,
-      hasExtraInformation: eventData.hasExtraInformation,
-    };
-    const eventInput = { ...eventInputData };
-
-    Object.keys(eventInputData).forEach((key) => {
-      if (eventInputData[key] === "") {
-        eventInput[key] = undefined;
-      }
-    });
-
-    if (!eventInput.title || !eventInput.description || !eventInput.startTime) {
-      currentErrors = [...errors, "Tittel, beskrivelse og starttid er påkrevd"];
-    }
-
-    const attendableInputData = {
-      signupOpenDate: eventData.signupOpenDate,
-      bindingSignup: eventData.bindingSignup,
-      deadline: eventData.deadline,
-    }; // add price: eventData.price here
-    const attendableInput = { ...attendableInputData };
-
-    Object.keys(attendableInputData).forEach((key) => {
-      if (attendableInputData[key] === "") {
-        attendableInput[key] = undefined;
-      }
-    });
-
-    if (isAttendable && !attendableInput.signupOpenDate) {
-      currentErrors = [...errors, "Når påmeldingen åpner er påkrevd for arrangementer med påmelding"];
-    }
-
-    if (
-      isAttendable &&
-      hasSlotDistribution &&
-      slotDistribution.reduce((res, dist) => (res = res + dist.availableSlots), 0) !== Number(eventData.availableSlots)
-    ) {
-      currentErrors = [...errors, "Totalt antall plasser må stemme med antall i hver gruppe i plassfordelingen"];
-    }
-
-    const stringSlotDistribution = slotDistribution.map((dist) => {
-      const stringCategory = dist.category.sort((a, b) => a - b).reduce((res, grade) => `${res},${grade}`, "");
-      return { category: stringCategory.slice(1, stringCategory.length), availableSlots: dist.availableSlots };
-    });
-
-    const slotDistributionInputData = { availableSlots: eventData.availableSlots, gradeYears: stringSlotDistribution };
-    const slotDistributionInput = { ...slotDistributionInputData };
-
-    Object.keys(slotDistributionInputData).forEach((key) => {
-      if (slotDistributionInputData[key] === "") {
-        slotDistributionInput[key] = undefined;
-      }
-    });
-
-    if (isAttendable && !slotDistributionInput.availableSlots) {
-      currentErrors = [...errors, "Antall plasser er påkrevd for arrangementer med påmelding"];
-    }
-
-    if (currentErrors.length > 0) {
-      setErrors(currentErrors);
+    if (formattedInputData.currentErrors.length > 0) {
+      setErrors(formattedData.currentErrors);
       setOpenCreateErrorSnackbar(true);
       return;
     }
 
     createEvent({
       variables: {
-        eventData: eventInput,
-        attendableData: isAttendable ? attendableInput : undefined,
-        slotDistributionData: hasSlotDistribution ? slotDistributionInput : undefined,
+        eventData: formattedInputData.eventInput,
+        attendableData: isAttendable ? formattedInputData.attendableInput : undefined,
+        slotDistributionData: isAttendable ? formattedInputData.slotDistributionInput : undefined,
       },
     }).then((res) => {
       if (res.data?.createEvent) {
-        setEventData(defaultInput);
+        setEventData(DEFAULTINPUT);
         setOpenCreateSnackbar(true);
         router.push("/events");
       }
@@ -578,6 +490,7 @@ const CreateEvent: React.FC = () => {
           </Button>
         </CardActions>
       </Card>
+
       <Alert
         severity="error"
         open={openCreateErrorSnackbar}
@@ -585,17 +498,21 @@ const CreateEvent: React.FC = () => {
           setOpenCreateErrorSnackbar(false);
           setErrors([]);
         }}
-      >
-        {createEventError
-          ? createEventError.message
-          : "Opprettelse feilet: ".concat(
-              errors.slice(1, errors.length).reduce((res, error) => `${res}, ${error}`, `${errors[0]}`)
-            )}
-      </Alert>
+        description={
+          createEventError
+            ? createEventError.message
+            : "Opprettelse feilet: ".concat(
+                errors.slice(1, errors.length).reduce((res, error) => `${res}, ${error}`, `${errors[0]}`)
+              )
+        }
+      />
 
-      <Alert severity="success" open={openCreateSnackbar} onClose={() => setOpenCreateSnackbar(false)}>
-        Arrangement opprettet
-      </Alert>
+      <Alert
+        severity="success"
+        open={openCreateSnackbar}
+        onClose={() => setOpenCreateSnackbar(false)}
+        description={"Arrangement opprettet"}
+      />
     </>
   );
 };

@@ -143,20 +143,18 @@ class EventType(DjangoObjectType):
         return SignUp.objects.filter(event=event, user__in=all_attending, is_attending=True)
 
     @staticmethod
+    @login_required
     def resolve_available_slots(event, info):
         user = info.context.user
-        if not user.is_authenticated or not user.memberships.filter(organization=event.organization).exists():
+        if not user.memberships.filter(organization=event.organization).exists():
             return None
         return event.available_slots
 
     @staticmethod
+    @login_required
     def resolve_attendable(event, info):
         user = info.context.user
-        if (
-            not user.is_authenticated
-            or not user.memberships.filter(organization=event.organization).exists()
-            or not hasattr(event, "attendable")
-        ):
+        if not user.memberships.filter(organization=event.organization).exists() or not hasattr(event, "attendable"):
             return None
         return event.attendable
 

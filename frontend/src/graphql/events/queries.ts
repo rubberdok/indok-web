@@ -1,5 +1,106 @@
 import { gql } from "@apollo/client";
 
+export const GET_EVENTS_DEFAULT_EVENTS_AND_USERS = gql`
+  query AllEventsDefaultEventsAndUsers(
+    $organization: String
+    $category: String
+    $startTime: DateTime
+    $endTime: DateTime
+  ) {
+    allEvents(organization: $organization, category: $category, startTime: $startTime, endTime: $endTime) {
+      id
+      title
+      startTime
+      endTime
+      location
+      description
+      organization {
+        id
+        name
+      }
+      category {
+        id
+        name
+      }
+      image
+      shortDescription
+      hasExtraInformation
+      contactEmail
+      allowedGradeYears
+
+      attendable {
+        id
+        deadline
+        bindingSignup
+        price
+        signupOpenDate
+      }
+
+      userAttendance {
+        isSignedUp
+        isOnWaitingList
+      }
+      isFull
+    }
+    defaultEvents {
+      id
+      title
+      startTime
+      endTime
+      location
+      description
+      organization {
+        id
+        name
+      }
+      category {
+        id
+        name
+      }
+      image
+      shortDescription
+      hasExtraInformation
+      contactEmail
+      allowedGradeYears
+
+      attendable {
+        id
+        deadline
+        bindingSignup
+        price
+        signupOpenDate
+      }
+
+      userAttendance {
+        isSignedUp
+        isOnWaitingList
+      }
+      isFull
+    }
+    user {
+      id
+      feideEmail
+      email
+      username
+      firstName
+      lastName
+      dateJoined
+      graduationYear
+      gradeYear
+      allergies
+      phoneNumber
+      firstLogin
+      events {
+        id
+      }
+      organizations {
+        id
+        name
+      }
+    }
+  }
+`;
+
 export const GET_EVENTS = gql`
   query AllEvents($organization: String, $category: String, $startTime: DateTime, $endTime: DateTime) {
     allEvents(organization: $organization, category: $category, startTime: $startTime, endTime: $endTime) {

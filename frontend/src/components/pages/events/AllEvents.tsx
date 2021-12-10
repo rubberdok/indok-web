@@ -1,21 +1,20 @@
 import { useQuery } from "@apollo/client";
-import { GET_DEFAULT_EVENTS, GET_EVENTS } from "@graphql/events/queries";
-import { GET_USER } from "@graphql/users/queries";
+import { GET_EVENTS_DEFAULT_EVENTS_AND_USERS } from "@graphql/events/queries";
 import { Event } from "@interfaces/events";
 import { User } from "@interfaces/users";
-import { Button, CircularProgress, Drawer, Grid, Hidden, makeStyles, Typography } from "@material-ui/core";
+import { Box, Button, CircularProgress, Drawer, Grid, Hidden, makeStyles, Typography } from "@material-ui/core";
 import { Add, List, Tune } from "@material-ui/icons";
 import Link from "next/link";
 import React, { useState } from "react";
 import EventListItem from "./EventListItem";
 import FilterMenu from "./filterMenu/FilterMenu";
 
-export interface FilterQuery {
+export type FilterQuery = {
   organization?: string;
   category?: string;
   startTime?: string;
   endTime?: string;
-}
+};
 
 const useStyles = makeStyles((theme) => ({
   grid: {
@@ -33,27 +32,30 @@ const AllEvents: React.FC = () => {
   const [showDefaultEvents, setShowDefaultEvents] = useState(false);
   const [openFilterDrawer, setOpenFilterDrawer] = React.useState(false);
 
-  const { loading: userLoading, data: userData } = useQuery<{ user: User }>(GET_USER);
-
   const {
-    loading: eventsLoading,
-    error: eventsError,
-    data: eventsData,
+    loading,
+    data: allData,
+    error,
     refetch,
-  } = useQuery(GET_EVENTS, {
+  } = useQuery<{ allEvents: Event[]; defaultEvents: Event[]; user: User }>(GET_EVENTS_DEFAULT_EVENTS_AND_USERS, {
     variables: filters,
   });
 
-  const {
-    loading: defaultEventsLoading,
-    error: defaultEventsError,
-    data: defaultEventsData,
-  } = useQuery(GET_DEFAULT_EVENTS);
-  const error = showDefaultEvents ? defaultEventsError : eventsError;
-  const loading = showDefaultEvents ? defaultEventsLoading : eventsLoading;
-  const data = showDefaultEvents ? defaultEventsData?.defaultEvents : eventsData?.allEvents;
+  if (loading)
+    return (
+      <Box component="span">
+        <CircularProgress />
+      </Box>
+    );
 
-  if (error) return <Typography variant="body1">Kunne ikke hente arrangementer.</Typography>;
+  const data = showDefaultEvents ? allData?.defaultEvents : allData?.allEvents;
+  const userData = { user: allData?.user };
+  console.log("data", data);
+  console.log("userData", userData);
+  console.log("allData", allData);
+  console.log(!data && !userData.user && error !== undefined);
+
+  if (!data && !userData.user && error) return <Typography variant="body1">Kunne ikke hente arrangementer.</Typography>;
 
   const onChange = (newFilters: FilterQuery) => {
     if (Object.keys(newFilters).length > 0 && showDefaultEvents) setShowDefaultEvents(false);
@@ -93,14 +95,14 @@ const AllEvents: React.FC = () => {
           </Grid>
         </Hidden>
         <Grid item xs>
-          {userData && !userLoading && userData.user && !!userData.user.organizations.length && (
+          {userData && !loading && userData.user && !!userData.user.organizations.length && (
             <Link href="/events/create-event" passHref>
               <Button color="primary" disableRipple startIcon={<Add />}>
                 Opprett
               </Button>
             </Link>
           )}
-          {userData && !userLoading && userData.user && !!userData.user.organizations.length && (
+          {userData && !loading && userData.user && !!userData.user.organizations.length && (
             <Link
               href={userData.user.organizations.length > 1 ? "/orgs" : `/orgs/${userData.user.organizations[0].id}`}
               passHref
@@ -110,7 +112,7 @@ const AllEvents: React.FC = () => {
               </Button>
             </Link>
           )}
-          {loading || userLoading ? (
+          {loading ? (
             <CircularProgress />
           ) : (
             <Grid container spacing={2}>

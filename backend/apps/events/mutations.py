@@ -1,8 +1,7 @@
 from django.db import transaction
 import graphene
 from django.contrib.auth import get_user_model
-from django.core.exceptions import PermissionDenied
-from django.shortcuts import get_object_or_404
+from django.core.exceptions import PermissionDenied, ValidationError
 from django.utils import timezone
 from graphql_jwt.decorators import login_required, staff_member_required
 from utils.decorators import permission_required
@@ -113,7 +112,7 @@ class CreateEvent(graphene.Mutation):
                 slot_dist = create_slot_distributions(slot_distribution_data, attendable)
 
                 if slot_dist.grades.sort() != [int(val) for val in event.allowed_grade_years].sort():
-                    raise ValueError("Inkonsistens i plassfordeling mellom trinn")
+                    raise ValueError("Inkonsistens i plassfordeling mellom trinn på SlotDistribution og Event")
 
         ok = True
         return CreateEvent(event=event, ok=ok)
@@ -154,7 +153,7 @@ class UpdateEvent(graphene.Mutation):
         check_user_membership(info.context.user, event.organization)
 
         with transaction.atomic():  # Make atomic so if the update of one object fails, no changes will be made to the database
-            attendable = event.attendable if hasattr(event, "attendable") else None
+            attendable = getattr(event, "attendable", None)
             slot_distribution = None
             if attendable is not None:
                 slot_distribution = attendable.slot_distribution.get(parent_distribution=None)
@@ -183,7 +182,7 @@ class UpdateEvent(graphene.Mutation):
             if (
                 not has_grade_distributions
                 and slot_distribution is not None
-                and len(list(slot_distribution.child_distributions.all())) > 0
+                and slot_distribution.child_distributions.exists()
             ):
                 for child in slot_distribution.child_distributions.all():
                     child.delete()
@@ -209,7 +208,6 @@ class UpdateEvent(graphene.Mutation):
                     slot_dist = update_slot_distributions(
                         slot_distribution_data,
                         attendable.slot_distribution.get(parent_distribution=None),
-                        has_grade_distributions,
                     )
 
                     if slot_dist.grades.sort() != [int(val) for val in event.total_allowed_grade_years].sort():
@@ -271,10 +269,10 @@ class EventSignUp(graphene.Mutation):
         now = timezone.now()
 
         if not hasattr(event, "attendable"):
-            raise Exception("Arrangementet har ikke påmelding")
+            raise ValidationError("Arrangementet har ikke påmelding")
 
         if now < event.attendable.signup_open_date:
-            raise Exception("Arrangementet er ikke åpent for påmelding enda")
+            raise ValidationError("Arrangementet er ikke åpent for påmelding enda")
 
         user = info.context.user
 
@@ -285,7 +283,7 @@ class EventSignUp(graphene.Mutation):
             )
 
         if SignUp.objects.filter(event_id=event_id, is_attending=True, user_id=info.context.user.id).exists():
-            raise Exception("Du kan ikke melde deg på samme arrangement flere ganger")
+            raise ValidationError("Du kan ikke melde deg på samme arrangement flere ganger")
 
         sign_up = SignUp()
         if data.extra_information:
@@ -330,12 +328,12 @@ class EventSignOff(graphene.Mutation):
 
         users_attending, _ = event.get_attendance_and_waiting_list()
         if event.attendable.binding_signup and user in users_attending:
-            raise Exception("Du kan ikke melde deg av et arrangement med bindende påmelding.")
+            raise ValidationError("Du kan ikke melde deg av et arrangement med bindende påmelding.")
 
         try:
             sign_up = SignUp.objects.get(is_attending=True, user=user, event=event)
         except SignUp.DoesNotExist:
-            raise Exception("Du er ikke påmeldt")
+            raise ValidationError("Du er ikke påmeldt")
 
         setattr(sign_up, "is_attending", False)
         sign_up.save()
@@ -369,12 +367,12 @@ class AdminEventSignOff(graphene.Mutation):
         try:
             user = get_user_model().objects.get(pk=user_id)
         except Event.DoesNotExist:
-            raise ValueError("Kunne ikke finne brukeren")
+            raise ValidationError("Kunne ikke finne brukeren")
 
         try:
             sign_up = SignUp.objects.get(is_attending=True, user=user, event=event)
         except SignUp.DoesNotExist:
-            raise Exception("Kunne ikke finne påmeldingen")
+            raise ValidationError("Kunne ikke finne påmeldingen")
 
         setattr(sign_up, "is_attending", False)
         sign_up.save()
@@ -397,7 +395,7 @@ class CreateCategory(graphene.Mutation):
     class Arguments:
         category_data = CategoryInput(required=True)
 
-    @staff_member_required
+    @permission_required("events.add_category")
     def mutate(self, info, category_data):
         if category_data.name == "":
             raise ValueError("Name must be non-empty string")
@@ -422,12 +420,15 @@ class UpdateCategory(graphene.Mutation):
     ok = graphene.Boolean()
     category = graphene.Field(CategoryType)
 
-    @staff_member_required
+    @permission_required("events.change_category")
     def mutate(self, info, id, category_data):
-        category = get_object_or_404(Category, pk=id)
+        try:
+            category = Category.objects.get(pk=id)
+        except Event.DoesNotExist:
+            raise ValueError("Ugyldig kategori")
 
         if category_data.name == "":
-            raise ValueError("Name must be non-empty string")
+            raise ValueError("Kategorier må ha et navn")
 
         for k, v in category_data.items():
             setattr(category, k, v)
@@ -447,9 +448,12 @@ class DeleteCategory(graphene.Mutation):
     ok = graphene.Boolean()
     category = graphene.Field(CategoryType)
 
-    @staff_member_required
+    @permission_required("events.delete_category")
     def mutate(self, info, id):
-        category = get_object_or_404(Category, pk=id)
+        try:
+            category = Category.objects.get(pk=id)
+        except Event.DoesNotExist:
+            raise ValueError("Ugyldig kategori")
         category.delete()
         ok = True
         return DeleteCategory(category=category, ok=ok)
