@@ -1,4 +1,9 @@
 describe("SSO login", () => {
+  beforeEach(() => {
+    cy.clearCookies();
+    cy.clearLocalStorage();
+  });
+
   it("should not prompt registration registered", () => {
     cy.log("Accessing site");
     cy.visit("/").then(() => {
