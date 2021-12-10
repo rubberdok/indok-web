@@ -1,7 +1,7 @@
 import { Grid, Typography } from "@material-ui/core";
 import Profile from "@public/illustrations/Profile.svg";
 import { User } from "src/types/users";
-import ProfileCard from "../base";
+import ProfileCardBase from "./ProfileCardBase";
 
 type Props = {
   user?: User;
@@ -10,7 +10,7 @@ type Props = {
 
 const PersonalCard: React.VFC<Props> = ({ user, "data-test-id": dataTestId, ...props }) => {
   return (
-    <ProfileCard
+    <ProfileCardBase
       title="Personlig informasjon"
       actionText="Rediger"
       actionLink="/profile/edit/"
@@ -32,7 +32,7 @@ const PersonalCard: React.VFC<Props> = ({ user, "data-test-id": dataTestId, ...p
           {user && user.gradeYear && <Typography variant="body2">{`${user.gradeYear}. klasse`}</Typography>}
         </Grid>
       </Grid>
-    </ProfileCard>
+    </ProfileCardBase>
   );
 };
 

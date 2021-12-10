@@ -1,10 +1,10 @@
 import { Grid, Typography } from "@material-ui/core";
 import Organization from "@public/illustrations/Organization.svg";
-import ProfileCard from "../base";
+import ProfileCardBase from "./ProfileCardBase";
 
 const OrganizationCard: React.VFC = ({ ...props }) => {
   return (
-    <ProfileCard
+    <ProfileCardBase
       title="Organisasjoner"
       actionText="Se organisasjoner"
       actionLink="/orgs"
@@ -17,7 +17,7 @@ const OrganizationCard: React.VFC = ({ ...props }) => {
           <Typography variant="body2">Her kan du se en oversikt over alle organisasjoner der du er medlem.</Typography>
         </Grid>
       </Grid>
-    </ProfileCard>
+    </ProfileCardBase>
   );
 };
 
