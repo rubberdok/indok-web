@@ -10,10 +10,7 @@ describe("User Logins", () => {
   it("should prompt registration when not registered", () => {
     cy.log("Accessing site");
     cy.visit("/profile").then(() => {
-      cy.getByTestId("profile-fullName").should(
-        "contain.text",
-        "Eva Student Åsen"
-      );
+      cy.getByTestId("profile-personal-name").should("contain.text", "Eva Student Åsen");
     });
   });
 });
