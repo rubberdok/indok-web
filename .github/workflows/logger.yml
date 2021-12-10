@@ -1,0 +1,12 @@
+# .github/workflows/logger.yaml
+name: Event Loggger
+on: push
+
+jobs:
+  log-github-event-goodies:
+    name: "LOG Everything on GitHub Event"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Logging
+        run: |
+          echo "${{toJSON(github.event)}}"
