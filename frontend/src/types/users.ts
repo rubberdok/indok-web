@@ -5,9 +5,10 @@ export type User = {
   gradeYear: string;
   allergies: string;
   phoneNumber: string;
+  firstLogin: boolean;
 };
 
 export type EditUser = {
   id: string;
   graduationYear: number;
-} & Pick<User, "firstName" | "lastName" | "email" | "allergies" | "phoneNumber">;
+} & Pick<User, "firstName" | "lastName" | "email" | "allergies" | "phoneNumber" | "firstLogin">;

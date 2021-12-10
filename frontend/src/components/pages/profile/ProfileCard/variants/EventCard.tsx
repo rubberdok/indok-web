@@ -1,6 +1,6 @@
 import { Grid, Typography } from "@material-ui/core";
 import Event from "@public/illustrations/Event.svg";
-import ProfileCard from "..";
+import ProfileCard from "../base";
 
 const EventCard: React.VFC = () => {
   return (

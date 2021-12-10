@@ -36,9 +36,10 @@ const AuthCallbackPage: NextPage = () => {
   }
 
   if (!loading && data && data.authUser) {
-    router.push("/profile");
+    data.authUser.user.firstLogin ? router.push("/register") : router.push("/profile");
     return null;
   }
+
   return (
     <Layout>
       <Container>
