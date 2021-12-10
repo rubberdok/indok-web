@@ -1,3 +1,2 @@
 *.yml @larwaa
-Dockerfile @larwaa
-Dockerfile.* @larwaa
+Dockerfile* @larwaa

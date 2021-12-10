@@ -91,8 +91,8 @@ export const EditUser: React.FC<EditUserProps> = ({ open, user, onSubmit, onClos
     <Dialog open={open} aria-labelledby="form-dialog-title" maxWidth="sm" fullWidth onClose={() => onClose()}>
       <DialogContent>
         <DialogContentText variant="body2" className={classes.graduationYearInfo}>
-          OBS: Dersom du er registrert i feil årstrinn, kontakt <Link href="mailto:web@indokhs.no">web@indokhs.no</Link>
-          .
+          OBS: Registrert i feil årstrinn? Send en mail til{" "}
+          <Link href="mailto:contact@rubberdok.no">contact@rubberdok.no</Link>.
         </DialogContentText>
         <Grid container spacing={5}>
           <Grid item xs={6}>

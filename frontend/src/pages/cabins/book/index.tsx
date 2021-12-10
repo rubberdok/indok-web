@@ -33,7 +33,7 @@ import StepComponent from "@components/pages/cabins/StepComponent";
 
 type StepReady = Record<number, { ready: boolean; errortext: string }>;
 
-const steps = ["Bestill", "Kontaktinfo", "Betaling", "Kvittering"];
+const steps = ["Bestill", "Kontaktinfo", "Ekstra info", "Send søknad", "Kvittering"];
 
 const initalStepReady: StepReady = steps.reduce((initialObject, _step, index) => {
   initialObject[index] = {
@@ -81,6 +81,9 @@ const CabinBookingPage: NextPage = () => {
   const [create_booking] = useMutation(CREATE_BOOKING);
   const [send_email] = useMutation(SEND_EMAIL);
 
+  // Extra info from the user, sent to Hyttestyret
+  const [extraInfo, setExtraInfo] = useState("");
+
   useEffect(() => {
     setStepReady({
       ...stepReady,
@@ -97,19 +100,21 @@ const CabinBookingPage: NextPage = () => {
       ...stepReady,
       1: { ready: isFormValid(contactInfo), errortext: "Du må fylle ut alle felt for å gå videre" },
       2: { ready: true, errortext: "" },
+      3: { ready: true, errortext: "" },
     });
   }, [contactInfo]);
 
   const handleNextClick = () => {
-    if (activeStep == 1 && !modalData.contractViewed) {
+    if (activeStep == 2 && !modalData.contractViewed) {
       setModalData({ ...modalData, displayPopUp: true });
     } else {
-      if (activeStep == 2) {
+      if (activeStep == 3) {
         send_email({
           variables: {
             emailInput: {
               ...generateEmailAndBookingInput(contactInfo, datePick, chosenCabins),
               emailType: "reserve_booking",
+              extraInfo: extraInfo,
             },
           },
         });
@@ -133,13 +138,13 @@ const CabinBookingPage: NextPage = () => {
       placement="left"
       disableHoverListener={stepReady[activeStep].ready}
     >
-      <Box display={activeStep == 3 ? "none" : "block"}>
+      <Box display={activeStep == 4 ? "none" : "block"}>
         <Button
           onClick={handleNextClick}
           disabled={!stepReady[activeStep].ready}
           variant={isMobile ? "text" : "contained"}
         >
-          {activeStep == 2 ? "Send søknad" : "Neste"}
+          {activeStep == 3 ? "Send søknad" : "Neste"}
           <KeyboardArrowRight />
         </Button>
       </Box>
@@ -147,7 +152,7 @@ const CabinBookingPage: NextPage = () => {
   );
 
   const BackButton = () => (
-    <Box display={activeStep == 3 ? "none" : "block"}>
+    <Box display={activeStep == 4 ? "none" : "block"}>
       <Button
         onClick={() => setActiveStep((prev) => prev - 1)}
         disabled={activeStep === 0}
@@ -202,6 +207,7 @@ const CabinBookingPage: NextPage = () => {
                     setContactInfo={setContactInfo}
                     setChosenCabins={setChosenCabins}
                     setDatePick={setDatePick}
+                    setExtraInfo={setExtraInfo}
                   />
                 </Box>
               </Paper>

@@ -3,8 +3,9 @@
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 
 import * as Sentry from "@sentry/nextjs";
+import { config } from "@utils/config";
 
-const SENTRY_DSN = process.env.NODE_ENV === "production" ? process.env.NEXT_PUBLIC_SENTRY_DSN : undefined;
+const SENTRY_DSN = config.APP_ENV !== "development" ? config.SENTRY_DSN : undefined;
 
 Sentry.init({
   dsn: SENTRY_DSN,
@@ -14,5 +15,5 @@ Sentry.init({
   // Note: if you want to override the automatic release value, do not set a
   // `release` value here - use the environment variable `SENTRY_RELEASE`, so
   // that it will also get attached to your source maps
-  environment: process.env.NODE_ENV,
+  environment: config.APP_ENV,
 });

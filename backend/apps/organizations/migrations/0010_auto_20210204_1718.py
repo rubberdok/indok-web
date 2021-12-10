@@ -3,6 +3,7 @@ from collections import defaultdict
 from django.db import migrations
 from uuid import uuid4
 
+
 def non_destructively_uniquify_organizations_and_parents(apps, schema_editor):
     Organization = apps.get_model("organizations", "Organization")
     for organization in Organization.objects.all():
@@ -12,14 +13,12 @@ def non_destructively_uniquify_organizations_and_parents(apps, schema_editor):
             if occupied_names[child.name] > 1:
                 child.name = child.name + str(uuid4())[:8]
                 child.save()
-    
-
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('organizations', '0008_auto_20210201_1720'),
+        ("organizations", "0008_auto_20210201_1720"),
     ]
 
     operations = [
