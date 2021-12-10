@@ -7,7 +7,7 @@ import { useState } from "react";
 
 const ID_PREFIX = "editUser-";
 
-const EditProfilePage: NextPage = () => {
+const EditPage: NextPage = () => {
   const [open, setOpen] = useState<boolean>(false);
   return (
     <Layout>
@@ -37,4 +37,4 @@ const EditProfilePage: NextPage = () => {
   );
 };
 
-export default EditProfilePage;
+export default EditPage;
