@@ -13,7 +13,7 @@ describe("User Logins", () => {
       cy.getByTestId("profile-personal-name").should("contain.text", "Eva Student Åsen");
     });
     cy.getByTestId("profile-personal-link").click();
-    cy.getByTestId("editUser-firstNameTextField").focus().clear().type("Newname");
+    cy.getByTestId("editUser-firstNameTextField").get("input").clear().type("Newname");
     cy.getByTestId("editUser-saveButton").click();
     cy.getByTestId("editUser-successSnackbar").should("exist");
     cy.visit("/profile");
