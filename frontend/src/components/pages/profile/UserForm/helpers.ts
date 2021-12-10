@@ -16,7 +16,7 @@ export const suggestNames = (name: string | undefined): { firstName: string; las
 };
 
 export const isVegetarian = (allergies: string): boolean => {
-  const options = ["vegetarianer", "veggis", "vegetar", "plantebasert", "vegan", "vegansk"];
+  const options = ["veggis", "vegetar", "plantebasert", "vegan"];
   return options.some((option) => allergies.toLowerCase().includes(option));
 };
 
