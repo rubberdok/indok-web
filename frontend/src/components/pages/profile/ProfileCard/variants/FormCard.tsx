@@ -1,6 +1,6 @@
 import { Grid, Typography } from "@material-ui/core";
 import Form from "@public/illustrations/Form.svg";
-import ProfileCard from "..";
+import ProfileCard from "../base";
 
 const FormCard: React.VFC = () => {
   return (

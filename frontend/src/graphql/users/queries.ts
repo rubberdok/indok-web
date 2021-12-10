@@ -26,6 +26,7 @@ export const EDIT_USER_QUERY = gql`
       allergies
       email
       graduationYear
+      firstLogin
     }
   }
 `;

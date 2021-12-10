@@ -1,16 +1,12 @@
 import { useQuery } from "@apollo/client";
 import Layout from "@components/Layout";
-import EventCard from "@components/pages/profile/ProfileCard/variants/EventCard";
-import FormCard from "@components/pages/profile/ProfileCard/variants/FormCard";
-import OrganizationCard from "@components/pages/profile/ProfileCard/variants/OrganizationCard";
-import PersonalCard from "@components/pages/profile/ProfileCard/variants/PersonalCard";
+import { Personal, Organization, Report, Form, Event } from "@components/pages/profile/ProfileCard";
 import { GET_USER_PROFILE } from "@graphql/users/queries";
 import { Avatar, Container, Grid, Typography, useTheme } from "@material-ui/core";
 import { NextPage } from "next";
 import Head from "next/head";
 import { User } from "src/types/users";
 import useStyles from "@components/pages/profile/styles";
-import { indigo } from "@material-ui/core/colors";
 
 const ProfilePage: NextPage = () => {
   const { data, error } = useQuery<{ user: User }>(GET_USER_PROFILE);
@@ -39,7 +35,7 @@ const ProfilePage: NextPage = () => {
         >
           <>
             <Grid item>
-              <Avatar className={classes.large} style={{ backgroundColor: indigo[500] }}>
+              <Avatar className={classes.large} style={{ backgroundColor: "#526fa0" }}>
                 {data && (
                   <Typography variant="h3" component="p">{`${data.user.firstName[0]}${
                     data.user.lastName && data.user.lastName[0]
@@ -76,16 +72,19 @@ const ProfilePage: NextPage = () => {
               alignItems="stretch"
             >
               <Grid item md={6}>
-                <PersonalCard user={data?.user} />
+                <Personal user={data?.user} />
               </Grid>
               <Grid item md={6}>
-                <EventCard />
+                <Event />
               </Grid>
               <Grid item md={6}>
-                <OrganizationCard />
+                <Organization />
               </Grid>
               <Grid item md={6}>
-                <FormCard />
+                <Form />
+              </Grid>
+              <Grid item md={6}>
+                <Report />
               </Grid>
             </Grid>
           </>

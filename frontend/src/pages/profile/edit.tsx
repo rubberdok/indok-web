@@ -1,221 +1,23 @@
-import { useMutation, useQuery } from "@apollo/client";
 import Layout from "@components/Layout";
-import { isVegetarian, validationSchema } from "@components/pages/profile/edit/helpers";
-import { UPDATE_USER } from "@graphql/users/mutations";
-import { EDIT_USER_QUERY } from "@graphql/users/queries";
-import {
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  CardHeader,
-  Container,
-  Divider,
-  FormControl,
-  Grid,
-  InputLabel,
-  NativeSelect,
-  TextField,
-  Typography,
-  useTheme,
-} from "@material-ui/core";
-import dayjs from "dayjs";
-import { useFormik } from "formik";
+import UserForm from "@components/pages/profile/UserForm";
+import { Container, Grid, Snackbar } from "@material-ui/core";
+import { Alert } from "@material-ui/lab";
 import { NextPage } from "next";
-import { useRouter } from "next/router";
-import { EditUser } from "src/types/users";
+import { useState } from "react";
 
 const EditProfilePage: NextPage = () => {
-  const { data } = useQuery<{ user: EditUser }>(EDIT_USER_QUERY);
-  const [updateUser] = useMutation<{ updateUser: { user: EditUser } }>(UPDATE_USER, {
-    onCompleted: () => router.push("/profile"),
-  });
-  const theme = useTheme();
-  const router = useRouter();
-  const currentYear = dayjs().year();
-
-  const formik = useFormik({
-    initialValues: {
-      firstName: data?.user.firstName || "",
-      lastName: data?.user.lastName || "",
-      email: data?.user.email || "",
-      phoneNumber: data?.user.phoneNumber || "",
-      graduationYear: data?.user.graduationYear || currentYear,
-      allergies: data?.user.allergies || "",
-    },
-    onSubmit: (values) =>
-      updateUser({
-        variables: { id: data?.user.id, userData: values },
-      }),
-    validationSchema,
-    enableReinitialize: true,
-  });
-
-  const range = (start: number, stop: number, step: number) =>
-    Array.from({ length: (stop - start) / step + 1 }, (_, i) => start + i * step);
-
+  const [open, setOpen] = useState<boolean>(false);
   return (
     <Layout>
       <Container>
+        <Snackbar autoHideDuration={6000} open={open} onClose={() => setOpen(false)}>
+          <Alert elevation={6} variant="standard" severity="success">
+            Endringene er lagret.
+          </Alert>
+        </Snackbar>
         <Grid container direction="row" justifyContent="center">
           <Grid item md={8}>
-            <form onSubmit={formik.handleSubmit}>
-              <Card style={{ marginTop: theme.spacing(8), marginBottom: theme.spacing(8) }}>
-                <CardHeader title="Oppdater profil" />
-                <CardContent>
-                  <Grid container direction="column" spacing={2}>
-                    <Grid item>
-                      <Typography variant="subtitle2">Personalia</Typography>
-                    </Grid>
-                    <Grid container item direction="row" spacing={2}>
-                      <Grid item>
-                        <TextField
-                          label="Fornavn"
-                          name="firstName"
-                          variant="outlined"
-                          required
-                          value={formik.values.firstName}
-                          onChange={formik.handleChange}
-                          onBlur={() => formik.setFieldTouched("firstName")}
-                          error={formik.touched.firstName && Boolean(formik.errors.firstName)}
-                          helperText={formik.touched.firstName && formik.errors.firstName}
-                          InputLabelProps={{
-                            shrink: formik.values.firstName !== undefined,
-                          }}
-                        />
-                      </Grid>
-                      <Grid item>
-                        <TextField
-                          label="Etternavn"
-                          name="lastName"
-                          variant="outlined"
-                          required
-                          value={formik.values.lastName}
-                          onChange={formik.handleChange}
-                          onBlur={() => formik.setFieldTouched("lastName")}
-                          error={formik.touched.lastName && Boolean(formik.errors.lastName)}
-                          helperText={formik.touched.lastName && formik.errors.lastName}
-                          InputLabelProps={{
-                            shrink: true,
-                          }}
-                        />
-                      </Grid>
-                    </Grid>
-                    <Grid item>
-                      <Typography variant="subtitle2">Kontaktinformasjon</Typography>
-                    </Grid>
-                    <Grid container item direction="row" spacing={2}>
-                      <Grid item>
-                        <TextField
-                          label="E-post"
-                          name="email"
-                          id="email"
-                          variant="outlined"
-                          onBlur={() => formik.setFieldTouched("email")}
-                          value={formik.values.email}
-                          onChange={formik.handleChange}
-                          error={formik.touched.email && Boolean(formik.errors.email)}
-                          helperText={formik.touched.email && formik.errors.email}
-                          InputLabelProps={{
-                            shrink: true,
-                          }}
-                        />
-                      </Grid>
-                      <Grid item>
-                        <TextField
-                          label="Telefonnummer"
-                          name="phoneNumber"
-                          variant="outlined"
-                          onBlur={() => formik.setFieldTouched("phoneNumber")}
-                          value={formik.values.phoneNumber}
-                          onChange={formik.handleChange}
-                          error={formik.touched.phoneNumber && Boolean(formik.errors.phoneNumber)}
-                          helperText={formik.touched.phoneNumber && formik.errors.phoneNumber}
-                          InputLabelProps={{
-                            shrink: true,
-                          }}
-                        />
-                      </Grid>
-                    </Grid>
-                    <Grid item>
-                      <Typography variant="subtitle2">Studieinformasjon</Typography>
-                    </Grid>
-                    <Grid item>
-                      <FormControl>
-                        <InputLabel htmlFor="graduationYear" shrink>
-                          Uteksamineringsår
-                        </InputLabel>
-                        <NativeSelect
-                          name="graduationYear"
-                          variant="outlined"
-                          required
-                          value={formik.values.graduationYear}
-                          onChange={formik.handleChange}
-                          onBlur={() => formik.setFieldTouched("graduationYear")}
-                          error={formik.touched.graduationYear && Boolean(formik.errors.graduationYear)}
-                        >
-                          {range(currentYear, currentYear + 7, 1).map((year) => (
-                            <option key={year} value={year}>
-                              {year}
-                            </option>
-                          ))}
-                        </NativeSelect>
-                      </FormControl>
-                    </Grid>
-                    <Grid item>
-                      <Typography variant="subtitle2">Annet</Typography>
-                    </Grid>
-                    <Grid container item direction="row" alignItems="center" spacing={2}>
-                      <Grid item>
-                        <TextField
-                          label="Allergier"
-                          name="allergies"
-                          variant="outlined"
-                          value={formik.values.allergies}
-                          onChange={formik.handleChange}
-                          onBlur={() => formik.setFieldTouched("allergies")}
-                          error={formik.touched.allergies && Boolean(formik.errors.allergies)}
-                          helperText={formik.touched.allergies && formik.errors.allergies}
-                          InputLabelProps={{
-                            shrink: true,
-                          }}
-                        />
-                      </Grid>
-                      <Grid item>
-                        <Typography variant="body1">{isVegetarian(formik.values.allergies) && "💚"}</Typography>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </CardContent>
-                <CardActions>
-                  <Grid container direction="column" spacing={2}>
-                    <Grid container item md direction="row" justifyContent="flex-end">
-                      <Grid item>
-                        <Button onClick={router.back}>Avbryt</Button>
-                      </Grid>
-                      <Grid item>
-                        <Button variant="contained" color="primary" type="submit">
-                          Lagre
-                        </Button>
-                      </Grid>
-                    </Grid>
-                    <Grid item>
-                      <Divider />
-                    </Grid>
-                    <Grid item>
-                      <Typography variant="subtitle2">Irreversible operasjoner</Typography>
-                    </Grid>
-                    <Grid item>
-                      <Grid item md>
-                        <Button disabled variant="contained">
-                          Slett bruker (kommer snart)
-                        </Button>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </CardActions>
-              </Card>
-            </form>
+            <UserForm kind="update" title="Oppdater profil" onCompleted={() => setOpen(true)} />
           </Grid>
         </Grid>
       </Container>
