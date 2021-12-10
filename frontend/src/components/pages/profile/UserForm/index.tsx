@@ -29,9 +29,10 @@ type Props = {
   kind: "register" | "update";
   title: string;
   onCompleted?: () => void;
+  "data-test-id"?: string;
 };
 
-const UserForm: React.VFC<Props> = ({ kind, title, onCompleted }) => {
+const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": dataTestId }) => {
   const { data } = useQuery<{ user: EditUser }>(EDIT_USER_QUERY);
   const [updateUser] = useMutation<{ updateUser: { user: EditUser } }>(UPDATE_USER, {
     onCompleted: onCompleted,
@@ -39,6 +40,7 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted }) => {
   const theme = useTheme();
   const router = useRouter();
   const currentYear = dayjs().year();
+  const ID_PREFIX = `${dataTestId}`;
 
   const { firstName, lastName } = suggestNames(data?.user.firstName);
 
@@ -71,7 +73,7 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted }) => {
                 </Link>
               </Grid>
             )}
-            <Grid item>
+            <Grid item data-test-id={`${ID_PREFIX}title`}>
               <Typography variant="h4">{title}</Typography>
             </Grid>
           </Grid>
@@ -96,6 +98,7 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted }) => {
                   InputLabelProps={{
                     shrink: formik.values.firstName !== undefined,
                   }}
+                  data-test-id={`${ID_PREFIX}firstNameTextField`}
                 />
               </Grid>
               <Grid item>
@@ -112,6 +115,7 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted }) => {
                   InputLabelProps={{
                     shrink: true,
                   }}
+                  data-test-id={`${ID_PREFIX}lastNameTextField`}
                 />
               </Grid>
             </Grid>
@@ -133,6 +137,7 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted }) => {
                   InputLabelProps={{
                     shrink: true,
                   }}
+                  data-test-id={`${ID_PREFIX}emailTextField`}
                 />
               </Grid>
               <Grid item>
@@ -148,6 +153,7 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted }) => {
                   InputLabelProps={{
                     shrink: true,
                   }}
+                  data-test-id={`${ID_PREFIX}phoneNumberTextField`}
                 />
               </Grid>
             </Grid>
@@ -167,6 +173,7 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted }) => {
                   onChange={formik.handleChange}
                   onBlur={() => formik.setFieldTouched("graduationYear")}
                   error={formik.touched.graduationYear && Boolean(formik.errors.graduationYear)}
+                  data-test-id={`${ID_PREFIX}graduationYearSelect`}
                 >
                   {range(currentYear, currentYear + 7, 1).map((year) => (
                     <option key={year} value={year}>
@@ -193,6 +200,7 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted }) => {
                   InputLabelProps={{
                     shrink: true,
                   }}
+                  data-test-id={`${ID_PREFIX}allergiesTextField`}
                 />
               </Grid>
               <Grid item>
@@ -210,7 +218,7 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted }) => {
                 </Grid>
               )}
               <Grid item>
-                <Button variant="contained" color="primary" type="submit">
+                <Button variant="contained" color="primary" type="submit" data-test-id={`${ID_PREFIX}saveButton`}>
                   {kind === "register" ? "Fullfør registrering" : "Lagre"}
                 </Button>
               </Grid>

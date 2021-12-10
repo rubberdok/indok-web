@@ -18,9 +18,18 @@ type Props = {
   actionLink?: string;
   image?: StaticImageData;
   alt: string;
+  "data-test-id"?: string;
 };
 
-const ProfileCard: React.FC<Props> = ({ title, children, actionText, actionLink, image, alt }) => {
+const ProfileCard: React.FC<Props> = ({
+  title,
+  children,
+  actionText,
+  actionLink,
+  image,
+  alt,
+  "data-test-id": dataTestId,
+}) => {
   const theme = useTheme();
   const classes = useStyles();
 
@@ -33,7 +42,7 @@ const ProfileCard: React.FC<Props> = ({ title, children, actionText, actionLink,
           {actionText && actionLink && (
             <CardActionArea>
               <Link passHref href={actionLink}>
-                <CardActions>
+                <CardActions data-test-id={`${dataTestId}link`}>
                   <Typography variant="overline" color="textPrimary">
                     {actionText}
                   </Typography>

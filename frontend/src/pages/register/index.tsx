@@ -4,6 +4,8 @@ import { Container, Grid } from "@material-ui/core";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 
+const ID_PREFIX = "registerUser-";
+
 const EditProfilePage: NextPage = () => {
   const router = useRouter();
   return (
@@ -11,7 +13,12 @@ const EditProfilePage: NextPage = () => {
       <Container>
         <Grid container direction="row" justifyContent="center">
           <Grid item md={8}>
-            <UserForm kind="register" title="Registrering" onCompleted={() => router.push("/profile")} />
+            <UserForm
+              kind="register"
+              title="Registrering"
+              onCompleted={() => router.push("/profile")}
+              data-test-id={ID_PREFIX}
+            />
           </Grid>
         </Grid>
       </Container>
