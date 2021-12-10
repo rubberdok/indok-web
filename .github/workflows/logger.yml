@@ -12,4 +12,4 @@ jobs:
           echo "${{toJSON(github.event.commits)}}"
           echo "${{toJSON(github.event.commits[0])}}"
           echo "${{toJSON(github.event.commits[0].author)}}"
-          echo "${{toJSON(github.event.commits[0].author.name)}}"
+          echo "${{github.event.commits[0].author.name}}"
