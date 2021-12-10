@@ -8,6 +8,8 @@ import Head from "next/head";
 import { User } from "src/types/users";
 import useStyles from "@components/pages/profile/styles";
 
+const ID_PREFIX = "profile-";
+
 const ProfilePage: NextPage = () => {
   const { data, error } = useQuery<{ user: User }>(GET_USER_PROFILE);
   const theme = useTheme();
@@ -72,19 +74,19 @@ const ProfilePage: NextPage = () => {
               alignItems="stretch"
             >
               <Grid item md={6}>
-                <Personal user={data?.user} />
+                <Personal user={data?.user} data-test-id={`${ID_PREFIX}personal-`} />
               </Grid>
               <Grid item md={6}>
-                <Event />
+                <Event data-test-id={`${ID_PREFIX}event-`} />
               </Grid>
               <Grid item md={6}>
-                <Organization />
+                <Organization data-test-id={`${ID_PREFIX}organization-`} />
               </Grid>
               <Grid item md={6}>
-                <Form />
+                <Form data-test-id={`${ID_PREFIX}form-`} />
               </Grid>
               <Grid item md={6}>
-                <Report />
+                <Report data-test-id={`${ID_PREFIX}report-`} />
               </Grid>
             </Grid>
           </>

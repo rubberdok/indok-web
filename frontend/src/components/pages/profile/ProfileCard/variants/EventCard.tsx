@@ -2,9 +2,16 @@ import { Grid, Typography } from "@material-ui/core";
 import Event from "@public/illustrations/Event.svg";
 import ProfileCard from "../base";
 
-const EventCard: React.VFC = () => {
+const EventCard: React.VFC = ({ ...props }) => {
   return (
-    <ProfileCard title="Arrangementer" actionText="Se arrangementer" actionLink="/events" image={Event} alt="">
+    <ProfileCard
+      title="Arrangementer"
+      actionText="Se arrangementer"
+      actionLink="/events"
+      image={Event}
+      alt=""
+      {...props}
+    >
       <Grid container direction="column">
         <Grid item>
           <Typography variant="body2">

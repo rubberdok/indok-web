@@ -2,9 +2,9 @@ import { Grid, Typography } from "@material-ui/core";
 import Report from "@public/illustrations/Report.svg";
 import ProfileCard from "../base";
 
-const ReportCard: React.VFC = () => {
+const ReportCard: React.VFC = ({ ...props }) => {
   return (
-    <ProfileCard title="Baksida" actionText="Gå til Baksida" actionLink="/report" image={Report} alt="">
+    <ProfileCard title="Baksida" actionText="Gå til Baksida" actionLink="/report" image={Report} alt="" {...props}>
       <Grid container direction="column">
         <Grid item>
           <Typography variant="body2">
