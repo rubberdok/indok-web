@@ -3,5 +3,6 @@
   "viewportWidth": 1920,
   "chromeWebSecurity": false,
   "baseUrl": "http://localhost:3000",
-  "projectId": "1fyogc"
+  "projectId": "1fyogc",
+  "experimentalSessionSupport": true
 }
