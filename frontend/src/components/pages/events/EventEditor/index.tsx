@@ -138,7 +138,7 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
   };
 
   return (
-    <Dialog open={open} onClose={() => onClose()}>
+    <Dialog open={open} onClose={() => onClose()} maxWidth="md">
       <DialogTitle>
         <Typography variant="h4">Rediger arrangement</Typography>
       </DialogTitle>

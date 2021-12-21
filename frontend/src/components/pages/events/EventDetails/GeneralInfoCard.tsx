@@ -92,13 +92,6 @@ const GeneralInfoCard: React.FC<Props> = ({ event }) => {
               </Typography>
             </>
           )}
-          <Button
-            variant="text"
-            href={calendarFile(event.title, event.startTime, event.endTime, event.location, event.description)}
-            download="event.ics"
-          >
-            Last ned i kalender
-          </Button>
           {event.allowedGradeYears.length < 5 && (
             <>
               <Typography variant="overline" gutterBottom>
@@ -111,6 +104,14 @@ const GeneralInfoCard: React.FC<Props> = ({ event }) => {
               ))}
             </>
           )}
+
+          <Button
+            variant="text"
+            href={calendarFile(event.title, event.startTime, event.endTime, event.location, event.description)}
+            download={`${event.title.replace(" ", "_")}.ics`}
+          >
+            Last ned i kalender
+          </Button>
         </Box>
       </Paper>
     </Grid>

@@ -52,7 +52,7 @@ const SignUpVariants: React.FC<Props> = ({
 }) => {
   const classes = useStyles();
 
-  const { data: timeData } = useQuery(GET_SERVER_TIME);
+  const { data: timeData, error: timeError } = useQuery(GET_SERVER_TIME);
 
   const noPhoneNumberNorAlreadySignedUp =
     !user?.phoneNumber && !event.userAttendance?.isSignedUp && !event.userAttendance?.isOnWaitingList;
@@ -69,6 +69,13 @@ const SignUpVariants: React.FC<Props> = ({
     !event.userAttendance?.isOnWaitingList;
 
   if (!event.attendable) return null;
+
+  if (timeError || !timeData)
+    return (
+      <Typography variant="h5" gutterBottom>
+        Kunne ikke hente tidspunkt.
+      </Typography>
+    );
 
   if (!user)
     return (

@@ -13,6 +13,7 @@ import SignUpVariants from "./SignUpVariants";
 import GeneralInfoCard from "./GeneralInfoCard";
 import Alert from "@components/Alert";
 import EditEvent from "../EventEditor";
+import { formatDescription } from "./helpers";
 
 const useStyles = makeStyles((theme) => ({
   container: {
