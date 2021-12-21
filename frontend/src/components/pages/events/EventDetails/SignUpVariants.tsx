@@ -117,6 +117,7 @@ const SignUpVariants: React.FC<Props> = ({
         {event.attendable && (
           <CountdownButton
             countDownDate={event.attendable?.signupOpenDate}
+            deadline={event.attendable?.deadline}
             isSignedUp={event.userAttendance?.isSignedUp ?? false}
             isOnWaitingList={event.userAttendance?.isOnWaitingList ?? false}
             isFull={event.isFull}

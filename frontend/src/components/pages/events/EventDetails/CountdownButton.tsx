@@ -1,4 +1,4 @@
-import { Button, CircularProgress, makeStyles } from "@material-ui/core";
+import { Box, Button, CircularProgress, makeStyles } from "@material-ui/core";
 import dayjs, { Dayjs } from "dayjs";
 import nb from "dayjs/locale/nb";
 import timezone from "dayjs/plugin/timezone";
@@ -42,6 +42,7 @@ const useStyles = makeStyles(() => ({
 type Props = {
   countDownDate: string;
   currentTime: string;
+  deadline: string;
   isSignedUp: boolean;
   isOnWaitingList: boolean;
   isFull: boolean;
@@ -67,6 +68,7 @@ type Props = {
 
 const CountdownButton: React.FC<Props> = ({
   countDownDate,
+  deadline,
   currentTime,
   isSignedUp,
   isOnWaitingList,
@@ -78,6 +80,7 @@ const CountdownButton: React.FC<Props> = ({
   const [now, setNow] = useState(dayjs(currentTime));
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft(countDownDate, now));
   const classes = useStyles();
+  const pastDeadline = dayjs(deadline) < now;
 
   useEffect(() => {
     // Update timeLeft and now (current time) each second
@@ -128,27 +131,28 @@ const CountdownButton: React.FC<Props> = ({
     } ${translate(timeparts[1], timeLeft[timeparts[1]])}`;
   };
 
+  const getCorrectLabel = () => {
+    if (currentTimeParts.length !== 0) return getCurrentTimeLeft(currentTimeParts);
+    if (isSignedUp && pastDeadline) return "Påmeldt";
+    if (isSignedUp) return "Meld av";
+    if (isOnWaitingList) return "Meld av venteliste";
+    if (isFull) return "Meld på venteliste";
+    return "Meld på";
+  };
+
   return (
-    <div className={classes.positionLeft}>
+    <Box className={classes.positionLeft}>
       <Button
         size="large"
         variant="contained"
         color={isSignedUp || isOnWaitingList ? "inherit" : "primary"}
         onClick={onClick}
-        disabled={currentTimeParts.length !== 0 || disabled}
+        disabled={currentTimeParts.length !== 0 || disabled || dayjs(deadline) < now}
       >
-        {currentTimeParts.length !== 0
-          ? getCurrentTimeLeft(currentTimeParts)
-          : isSignedUp
-          ? "Meld av"
-          : isOnWaitingList
-          ? "Meld av venteliste"
-          : isFull
-          ? "Meld på venteliste"
-          : "Meld på"}
+        {getCorrectLabel()}
       </Button>
       {loading && <CircularProgress size={24} className={classes.buttonLoading} />}
-    </div>
+    </Box>
   );
 };
 
