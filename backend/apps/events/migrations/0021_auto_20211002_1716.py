@@ -6,37 +6,19 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('events', '0020_restructure_existing_attendable_events'),
+        ("events", "0020_restructure_existing_attendable_events"),
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='event',
-            name='available_slots',
-        ),
-        migrations.RemoveField(
-            model_name='event',
-            name='binding_signup',
-        ),
-        migrations.RemoveField(
-            model_name='event',
-            name='deadline',
-        ),
-        migrations.RemoveField(
-            model_name='event',
-            name='is_attendable',
-        ),
-        migrations.RemoveField(
-            model_name='event',
-            name='price',
-        ),
-        migrations.RemoveField(
-            model_name='event',
-            name='signup_open_date',
-        ),
+        migrations.RemoveField(model_name="event", name="available_slots",),
+        migrations.RemoveField(model_name="event", name="binding_signup",),
+        migrations.RemoveField(model_name="event", name="deadline",),
+        migrations.RemoveField(model_name="event", name="is_attendable",),
+        migrations.RemoveField(model_name="event", name="price",),
+        migrations.RemoveField(model_name="event", name="signup_open_date",),
         migrations.AlterField(
-            model_name='event',
-            name='short_description',
-            field=models.CharField(default='Klikk her for å lese mer', max_length=100),
+            model_name="event",
+            name="short_description",
+            field=models.CharField(default="Klikk her for å lese mer", max_length=100),
         ),
     ]

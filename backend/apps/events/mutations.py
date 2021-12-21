@@ -3,7 +3,7 @@ import graphene
 from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.utils import timezone
-from graphql_jwt.decorators import login_required, staff_member_required
+from graphql_jwt.decorators import login_required
 from utils.decorators import permission_required
 
 from ..organizations.models import Organization

@@ -10,18 +10,9 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AlterModelOptions(
-            name="category",
-            options={"verbose_name_plural": "Categories"},
-        ),
+        migrations.AlterModelOptions(name="category", options={"verbose_name_plural": "Categories"},),
         migrations.AlterField(
-            model_name="event",
-            name="location",
-            field=models.CharField(blank=True, default="", max_length=128),
+            model_name="event", name="location", field=models.CharField(blank=True, default="", max_length=128),
         ),
-        migrations.AlterField(
-            model_name="event",
-            name="publisher",
-            field=models.CharField(max_length=128),
-        ),
+        migrations.AlterField(model_name="event", name="publisher", field=models.CharField(max_length=128),),
     ]

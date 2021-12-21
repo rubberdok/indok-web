@@ -14,14 +14,9 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name="event",
-            name="signed_up_users",
-        ),
+        migrations.RemoveField(model_name="event", name="signed_up_users",),
         migrations.AddField(
-            model_name="event",
-            name="has_extra_information",
-            field=models.BooleanField(default=False),
+            model_name="event", name="has_extra_information", field=models.BooleanField(default=False),
         ),
         migrations.CreateModel(
             name="SignUp",

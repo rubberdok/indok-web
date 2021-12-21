@@ -10,9 +10,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AlterField(
-            model_name="category",
-            name="name",
-            field=models.CharField(max_length=64, unique=True),
-        ),
+        migrations.AlterField(model_name="category", name="name", field=models.CharField(max_length=64, unique=True),),
     ]

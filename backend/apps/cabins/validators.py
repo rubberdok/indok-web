@@ -9,9 +9,7 @@ from django.db.models import Sum
 def create_booking_validation(booking_data):
     if booking_data.check_out and booking_data.check_in and booking_data.cabins:
         checkin_validation(
-            booking_data.check_in,
-            booking_data.check_out,
-            booking_data.cabins,
+            booking_data.check_in, booking_data.check_out, booking_data.cabins,
         )
     if booking_data.receiver_email:
         email_validation(booking_data.receiver_email)
@@ -22,9 +20,7 @@ def create_booking_validation(booking_data):
         norwegian_phone_number_validation(booking_data.phone)
     if booking_data.cabins and booking_data.internal_participants and booking_data.external_participants:
         participants_validation(
-            booking_data.internal_participants,
-            booking_data.external_participants,
-            booking_data.cabins,
+            booking_data.internal_participants, booking_data.external_participants, booking_data.cabins,
         )
 
 
@@ -34,15 +30,10 @@ def checkin_validation(check_in, check_out, cabin_ids):
     if check_in > check_out:
         raise GraphQLError("invalid input: Checkin is after checkout")
     # https://stackoverflow.com/questions/325933/determine-whether-two-date-ranges-overlap
-    if BookingModel.objects.filter(
-        check_in__lte=check_out,
-        check_out__gt=check_in,
-        cabins__id__in=cabin_ids,
-    ).exists():
+    if BookingModel.objects.filter(check_in__lte=check_out, check_out__gt=check_in, cabins__id__in=cabin_ids,).exists():
         raise GraphQLError("Input dates overlaps existing booking")
     if (check_out - check_in).days == 0:
         raise GraphQLError("Invalid input: check-in and check-out cannot occur on the same day")
-
 
 
 def name_validation(first_name, last_name):

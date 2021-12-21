@@ -79,11 +79,7 @@ def create_event_validation(event_data, attendable_data=None, slot_distribution_
 
 
 def update_event_validation(
-    event,
-    event_data,
-    attendable=None,
-    attendable_data=None,
-    slot_distribution_data=None,
+    event, event_data, attendable=None, attendable_data=None, slot_distribution_data=None,
 ):
     start_time = event.start_time
     if event_data.start_time:

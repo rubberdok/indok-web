@@ -10,14 +10,8 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        migrations.AddField(model_name="event", name="binding_signup", field=models.BooleanField(default=False),),
         migrations.AddField(
-            model_name="event",
-            name="binding_signup",
-            field=models.BooleanField(default=False),
-        ),
-        migrations.AddField(
-            model_name="event",
-            name="contact_email",
-            field=models.EmailField(blank=True, default="", max_length=254),
+            model_name="event", name="contact_email", field=models.EmailField(blank=True, default="", max_length=254),
         ),
     ]

@@ -11,13 +11,9 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AddField(
-            model_name="event",
-            name="short_description",
-            field=models.CharField(blank=True, max_length=100, null=True),
+            model_name="event", name="short_description", field=models.CharField(blank=True, max_length=100, null=True),
         ),
         migrations.AddField(
-            model_name="event",
-            name="signup_open_date",
-            field=models.DateTimeField(blank=True, null=True),
+            model_name="event", name="signup_open_date", field=models.DateTimeField(blank=True, null=True),
         ),
     ]

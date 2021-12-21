@@ -1,5 +1,4 @@
 import json
-from django.core import mail
 from apps.events.models import Event, Category, SignUp
 from utils.testing.factories.users import IndokUserFactory, UserFactory
 from utils.testing.factories.event_factories import (
@@ -75,7 +74,7 @@ class EventsBaseTestCase(ExtendedGraphQLTestCase):
         self.non_attendable_event_update_query = f"""
             mutation {{
                 updateEvent(
-                    id: {self.non_attendable_event.id} 
+                    id: {self.non_attendable_event.id}
                     isAttendable: false
                     hasGradeDistributions: false
                     eventData: {{title: \"Event med ny tittel\" }}
@@ -162,7 +161,7 @@ class EventsBaseTestCase(ExtendedGraphQLTestCase):
                       event {{
                           id
                       }}
-                        }} 
+                        }}
                     }}
                 """
 
@@ -315,7 +314,7 @@ class EventsMutationsTestCase(EventsBaseTestCase):
                             title: \"{event.title}\",
                             description: \"{event.description}\",
                             startTime: \"{event.start_time.strftime("%Y-%m-%dT%H:%M:%S+00:00")}\",
-                            endTime:  \"{event.end_time.strftime("%Y-%m-%dT%H:%M:%S+00:00")}\",     
+                            endTime:  \"{event.end_time.strftime("%Y-%m-%dT%H:%M:%S+00:00")}\",
                             organizationId: {event.organization.id},
                             allowedGradeYears: {self.format_grade_years(event.allowed_grade_years)},
                             contactEmail: \"{event.contact_email}\"
@@ -342,7 +341,7 @@ class EventsMutationsTestCase(EventsBaseTestCase):
                             title: \"{event.title}\",
                             description: \"{event.description}\",
                             startTime: \"{event.start_time.strftime("%Y-%m-%dT%H:%M:%S+00:00")}\",
-                            endTime:  \"{event.end_time.strftime("%Y-%m-%dT%H:%M:%S+00:00")}\",     
+                            endTime:  \"{event.end_time.strftime("%Y-%m-%dT%H:%M:%S+00:00")}\",  
                             organizationId: {event.organization.id},
                             allowedGradeYears: {self.format_grade_years(event.allowed_grade_years)}
                             }},
@@ -350,12 +349,12 @@ class EventsMutationsTestCase(EventsBaseTestCase):
                         attendableData: {{
                             signupOpenDate: \"{attendable.signup_open_date.strftime("%Y-%m-%dT%H:%M:%S+00:00")}\",
                             bindingSignup: {"true" if attendable.binding_signup else "false"},
-                            deadline: \"{attendable.deadline.strftime("%Y-%m-%dT%H:%M:%S+00:00")}\",    
+                            deadline: \"{attendable.deadline.strftime("%Y-%m-%dT%H:%M:%S+00:00")}\",
                             }},
-                            
+
                         slotDistributionData: {{
                             availableSlots: {slot_distribution.available_slots},
-                            gradeYears: {grade_years_string},                        
+                            gradeYears: {grade_years_string},                
                             }}
 
                         ) {{
@@ -376,14 +375,14 @@ class EventsMutationsTestCase(EventsBaseTestCase):
                             title: \"{event.title}\",
                             description: \"{event.description}\",
                             startTime: \"{event.start_time.strftime("%Y-%m-%dT%H:%M:%S+00:00")}\",
-                            endTime:  \"{event.end_time.strftime("%Y-%m-%dT%H:%M:%S+00:00")}\",    
+                            endTime:  \"{event.end_time.strftime("%Y-%m-%dT%H:%M:%S+00:00")}\",
                             organizationId: {event.organization.id},
                             allowedGradeYears: {self.format_grade_years(event.allowed_grade_years)},
                             }},
 
                         slotDistributionData: {{
                             availableSlots: {slot_distribution.available_slots},
-                            gradeYears: {grade_years_string},                        
+                            gradeYears: {grade_years_string},
                             }}
 
                         ) {{
@@ -403,7 +402,7 @@ class EventsMutationsTestCase(EventsBaseTestCase):
                             title: \"{event.title}\",
                             description: \"{event.description}\",
                             startTime: \"{event.start_time.strftime("%Y-%m-%dT%H:%M:%S+00:00")}\",
-                            endTime:  \"{event.end_time.strftime("%Y-%m-%dT%H:%M:%S+00:00")}\", 
+                            endTime:  \"{event.end_time.strftime("%Y-%m-%dT%H:%M:%S+00:00")}\",
                             organizationId: {event.organization.id},
                             allowedGradeYears: {self.format_grade_years(event.allowed_grade_years)},
                             }},
@@ -411,7 +410,7 @@ class EventsMutationsTestCase(EventsBaseTestCase):
                         attendableData: {{
                             signupOpenDate: \"{attendable.signup_open_date.strftime("%Y-%m-%dT%H:%M:%S+00:00")}\",
                             bindingSignup: {"true" if attendable.binding_signup else "false"},
-                            deadline: \"{attendable.deadline.strftime("%Y-%m-%dT%H:%M:%S+00:00")}\",    
+                            deadline: \"{attendable.deadline.strftime("%Y-%m-%dT%H:%M:%S+00:00")}\",
                             }},
 
                         ) {{
@@ -590,7 +589,7 @@ class EventsMutationsTestCase(EventsBaseTestCase):
                             title: \"{event.title}\",
                             description: \"{event.description}\",
                             startTime: \"{event.start_time.strftime("%Y-%m-%dT%H:%M:%S+00:00")}\",
-                            endTime:  \"{event.end_time.strftime("%Y-%m-%dT%H:%M:%S+00:00")}\",     
+                            endTime:  \"{event.end_time.strftime("%Y-%m-%dT%H:%M:%S+00:00")}\",
                             organizationId: {event.organization.id},
                             allowedGradeYears: {self.format_grade_years(event.allowed_grade_years)},
                             }},
@@ -598,13 +597,13 @@ class EventsMutationsTestCase(EventsBaseTestCase):
                         attendableData: {{
                             signupOpenDate: \"{attendable.signup_open_date.strftime("%Y-%m-%dT%H:%M:%S+00:00")}\",
                             bindingSignup: false,
-                            deadline: \"{attendable.deadline.strftime("%Y-%m-%dT%H:%M:%S+00:00")}\",    
+                            deadline: \"{attendable.deadline.strftime("%Y-%m-%dT%H:%M:%S+00:00")}\",
                             price: 100.0
                             }},
                             
                         slotDistributionData: {{
                             availableSlots: {slot_distribution.available_slots},
-                            gradeYears: {grade_years_string},                        
+                            gradeYears: {grade_years_string},
                             }}
 
                         ) {{
@@ -639,7 +638,7 @@ class EventsMutationsTestCase(EventsBaseTestCase):
         query = f"""
         mutation {{
           updateEvent(
-              id: {self.non_attendable_event.id} 
+              id: {self.non_attendable_event.id}
               isAttendable: true
               hasGradeDistributions: false
               eventData: {{ title: \"{self.non_attendable_event.title}\"}}
@@ -666,7 +665,7 @@ class EventsMutationsTestCase(EventsBaseTestCase):
         query = f"""
         mutation {{
           updateEvent(
-              id: {self.attendable_and_open_event.id} 
+              id: {self.attendable_and_open_event.id}
               isAttendable: false
               hasGradeDistributions: false
               eventData: {{ title: \"{self.attendable_and_open_event.title}\"}}
@@ -691,7 +690,7 @@ class EventsMutationsTestCase(EventsBaseTestCase):
         query = f"""
         mutation {{
           updateEvent(
-              id: {self.attendable_and_open_event.id} 
+              id: {self.attendable_and_open_event.id}
               isAttendable: true
               hasGradeDistributions: true
               eventData: {{ title: \"{self.attendable_and_open_event.title}\"}}
@@ -716,7 +715,7 @@ class EventsMutationsTestCase(EventsBaseTestCase):
         query = f"""
         mutation {{
           updateEvent(
-              id: {self.attendable_event_with_slot_dist.id} 
+              id: {self.attendable_event_with_slot_dist.id}
               isAttendable: true
               hasGradeDistributions: false
               eventData: {{ title: \"{self.attendable_event_with_slot_dist.title}\"}}
@@ -740,7 +739,7 @@ class EventsMutationsTestCase(EventsBaseTestCase):
         query = f"""
         mutation {{
           updateEvent(
-              id: {self.attendable_event_with_slot_dist.id} 
+              id: {self.attendable_event_with_slot_dist.id}
               isAttendable: true
               hasGradeDistributions: true
               eventData: {{ title: \"{self.attendable_event_with_slot_dist.title}\"}}
@@ -978,7 +977,7 @@ class EventsMutationsTestCase(EventsBaseTestCase):
                       event {{
                           id
                       }}
-                        }} 
+                        }}
                     }}
                 """
         MembershipFactory(user=self.user_2nd_grade, organization=self.attendable_and_open_event.organization)
