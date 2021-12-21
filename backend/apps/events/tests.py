@@ -10,7 +10,7 @@ from utils.testing.factories.event_factories import (
     SimplifiedOrganizationFactory,
 )
 from utils.testing.factories.organizations import MembershipFactory
-from utils.testing.ExtendedGraphQLTestCase import ExtendedGraphQLTestCase
+from utils.testing.base import ExtendedGraphQLTestCase
 import datetime
 from django.utils import timezone
 
