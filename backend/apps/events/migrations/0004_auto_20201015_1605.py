@@ -10,8 +10,14 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AlterField(model_name="event", name="image", field=models.URLField(blank=True, null=True),),
         migrations.AlterField(
-            model_name="event", name="location", field=models.CharField(blank=True, max_length=128, null=True),
+            model_name="event",
+            name="image",
+            field=models.URLField(blank=True, null=True),
+        ),
+        migrations.AlterField(
+            model_name="event",
+            name="location",
+            field=models.CharField(blank=True, max_length=128, null=True),
         ),
     ]

@@ -25,7 +25,9 @@ def restructure_existing_attendable_events(apps, schema_editor):
         )
 
         slot_distribution_model.objects.create(
-            attendable=attendable, available_slots=event.available_slots, grade_years=event.allowed_grade_years,
+            attendable=attendable,
+            available_slots=event.available_slots,
+            grade_years=event.allowed_grade_years,
         )
 
 

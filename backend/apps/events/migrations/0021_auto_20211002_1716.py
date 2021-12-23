@@ -10,12 +10,30 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(model_name="event", name="available_slots",),
-        migrations.RemoveField(model_name="event", name="binding_signup",),
-        migrations.RemoveField(model_name="event", name="deadline",),
-        migrations.RemoveField(model_name="event", name="is_attendable",),
-        migrations.RemoveField(model_name="event", name="price",),
-        migrations.RemoveField(model_name="event", name="signup_open_date",),
+        migrations.RemoveField(
+            model_name="event",
+            name="available_slots",
+        ),
+        migrations.RemoveField(
+            model_name="event",
+            name="binding_signup",
+        ),
+        migrations.RemoveField(
+            model_name="event",
+            name="deadline",
+        ),
+        migrations.RemoveField(
+            model_name="event",
+            name="is_attendable",
+        ),
+        migrations.RemoveField(
+            model_name="event",
+            name="price",
+        ),
+        migrations.RemoveField(
+            model_name="event",
+            name="signup_open_date",
+        ),
         migrations.AlterField(
             model_name="event",
             name="short_description",

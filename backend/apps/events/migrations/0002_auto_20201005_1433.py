@@ -19,13 +19,32 @@ class Migration(migrations.Migration):
                 ("name", models.CharField(max_length=64)),
             ],
         ),
-        migrations.AddField(model_name="event", name="deadline", field=models.DateTimeField(blank=True, null=True),),
-        migrations.AddField(model_name="event", name="endtime", field=models.DateTimeField(blank=True, null=True),),
-        migrations.AddField(model_name="event", name="image", field=models.URLField(blank=True, default=""),),
         migrations.AddField(
-            model_name="event", name="is_attendable", field=models.BooleanField(default=False), preserve_default=False,
+            model_name="event",
+            name="deadline",
+            field=models.DateTimeField(blank=True, null=True),
         ),
-        migrations.AddField(model_name="event", name="location", field=models.TextField(blank=True, default=""),),
+        migrations.AddField(
+            model_name="event",
+            name="endtime",
+            field=models.DateTimeField(blank=True, null=True),
+        ),
+        migrations.AddField(
+            model_name="event",
+            name="image",
+            field=models.URLField(blank=True, default=""),
+        ),
+        migrations.AddField(
+            model_name="event",
+            name="is_attendable",
+            field=models.BooleanField(default=False),
+            preserve_default=False,
+        ),
+        migrations.AddField(
+            model_name="event",
+            name="location",
+            field=models.TextField(blank=True, default=""),
+        ),
         migrations.AddField(
             model_name="event",
             name="organization",

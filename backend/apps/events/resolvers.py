@@ -26,7 +26,8 @@ DEFAULT_REPORT_FIELDS = {
 FiletypeSpec = namedtuple("FiletypeSpec", ["content_type", "extension"])
 filetype_specs = {
     "xlsx": FiletypeSpec(
-        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", extension="xlsx",
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        extension="xlsx",
     ),
     "csv": FiletypeSpec(content_type="text/csv", extension="csv"),
     "html": FiletypeSpec(content_type="text/html", extension="html"),

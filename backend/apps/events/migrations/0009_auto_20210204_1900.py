@@ -13,9 +13,15 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AddField(
-            model_name="event", name="available_slots", field=models.PositiveIntegerField(blank=True, null=True),
+            model_name="event",
+            name="available_slots",
+            field=models.PositiveIntegerField(blank=True, null=True),
         ),
-        migrations.AddField(model_name="event", name="price", field=models.FloatField(blank=True, null=True),),
+        migrations.AddField(
+            model_name="event",
+            name="price",
+            field=models.FloatField(blank=True, null=True),
+        ),
         migrations.AddField(
             model_name="event",
             name="signed_up_users",
