@@ -8,13 +8,7 @@ import Link from "next/link";
 import React, { useState } from "react";
 import EventListItem from "./EventListItem";
 import FilterMenu from "./filterMenu/FilterMenu";
-
-export type FilterQuery = {
-  organization?: string;
-  category?: string;
-  startTime?: string;
-  endTime?: string;
-};
+import { FilterQuery } from "./types";
 
 const useStyles = makeStyles((theme) => ({
   grid: {
