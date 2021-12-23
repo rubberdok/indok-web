@@ -79,7 +79,7 @@ const CreateEvent: React.FC = () => {
 
   const updateSlotDistribution = (newSlotDistribution: { category: number[]; availableSlots: number }[]) => {
     setSlotDistribution(newSlotDistribution);
-    const usedGrades = [].concat(...newSlotDistribution.map((dist) => dist.category)).sort();
+    const usedGrades = ([] as number[]).concat(...newSlotDistribution.map((dist) => dist.category)).sort();
     setEventData({
       ...eventData,
       allowedGradeYears: usedGrades,
