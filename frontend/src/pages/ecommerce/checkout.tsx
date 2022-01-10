@@ -11,14 +11,14 @@ import {
   CardHeader,
   CircularProgress,
   Container,
-  Grid,
-  makeStyles,
   Divider,
-  Theme,
-  Typography,
+  Grid,
   List,
   ListItem,
   ListItemText,
+  makeStyles,
+  Theme,
+  Typography,
 } from "@material-ui/core";
 import { KeyboardArrowLeft } from "@material-ui/icons";
 import { NextPage } from "next";
@@ -39,16 +39,16 @@ const useStyles = makeStyles((theme: Theme) => ({
 const CheckoutPage: NextPage = () => {
   const classes = useStyles();
   const router = useRouter();
-  const { productId, quantity } = router.query;
+  const { productId, quantityStr } = router.query;
+  const quantity = typeof quantityStr == "string" ? parseInt(quantityStr) : 1;
 
   const [product, setProduct] = useState<Product>();
   const [orderError, setOrderError] = useState<string>("");
 
-  const { loading, error, data } = useQuery<{ product: Product }>(GET_PRODUCT, { variables: { productId: productId } });
-
-  if (data && data.product !== product) {
-    setProduct(data.product);
-  }
+  const { loading, error } = useQuery<{ product: Product }>(GET_PRODUCT, {
+    variables: { productId: productId },
+    onCompleted: (data) => setProduct(data.product),
+  });
 
   return (
     <Layout>
@@ -68,13 +68,13 @@ const CheckoutPage: NextPage = () => {
                 <Grid container alignItems="center" direction="column">
                   <Typography variant="h3">Bekreft ordredetaljer</Typography>
                   <Grid item xs={12}>
-                    {product ? (
+                    {product && quantity ? (
                       <List className={classes.list}>
                         <ListItem className={classes.listitem}>
                           <ListItemText primary={product.name} secondary={product.description} />
                         </ListItem>
                         <ListItem className={classes.listitem}>
-                          <ListItemText primary={`${parseInt(product.price)} kr`} secondary="Pris per enhet" />
+                          <ListItemText primary={`${product.price} kr`} secondary="Pris per enhet" />
                         </ListItem>
                         <ListItem className={classes.listitem}>
                           <ListItemText
@@ -91,13 +91,13 @@ const CheckoutPage: NextPage = () => {
                       <Typography>Ingen produkt funnet</Typography>
                     )}
                   </Grid>
-                  {product && quantity && (
+                  {product && quantity && typeof productId == "string" && (
                     <Box mt={2}>
                       <PayWithVipps
                         productId={productId}
                         quantity={Number(quantity)}
                         onError={(e) => e && setOrderError(e.message)}
-                      />{" "}
+                      />
                     </Box>
                   )}
                 </Grid>
