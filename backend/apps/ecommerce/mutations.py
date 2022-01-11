@@ -5,7 +5,8 @@ import graphene
 from django.core.exceptions import PermissionDenied
 from django.db import transaction
 from faker import Faker
-from graphql_jwt.decorators import login_required
+from graphql_jwt.decorators import login_required, staff_member_required
+
 
 from ..organizations.models import Organization
 from .models import Order, Product
@@ -134,6 +135,7 @@ class CreateProduct(graphene.Mutation):
     ok = graphene.Boolean()
     product = graphene.Field(ProductType)
 
+    @staff_member_required
     def mutate(self, _):
 
         cars = ["Luna", "Nova", "Atmos", "Eld", "Gnist", "Vilje", "Arctos", "Aquilo", "Borealis"]
