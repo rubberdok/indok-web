@@ -5,8 +5,6 @@ import EmailForm from "@components/pages/events/email/EmailForm";
 import EditEvent from "@components/pages/events/EventEditor";
 import { ADMIN_EVENT_SIGN_OFF } from "@graphql/events/mutations";
 import { ADMIN_GET_EVENT } from "@graphql/events/queries";
-import { Check, Close, Error, Warning } from "@material-ui/icons";
-
 import { Event, SignUp } from "@interfaces/events";
 import {
   Box,
@@ -30,7 +28,7 @@ import {
   Tooltip,
   Typography,
 } from "@material-ui/core";
-import { Edit } from "@material-ui/icons";
+import { Check, Close, Edit } from "@material-ui/icons";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { Alert } from "@material-ui/lab";
 import dayjs from "dayjs";

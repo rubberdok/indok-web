@@ -4,7 +4,7 @@ import { Card, CardActionArea, CardMedia, CircularProgress, makeStyles, Theme } 
 import { useRouter } from "next/router";
 import React from "react";
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles((_: Theme) => ({
   root: {
     maxWidth: 300,
     background: "inherit",

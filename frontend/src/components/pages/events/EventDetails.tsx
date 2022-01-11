@@ -20,16 +20,7 @@ import {
   useTheme,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import {
-  ArrowRight,
-  ContactMail,
-  Edit,
-  ErrorOutline,
-  KeyboardBackspace,
-  List,
-  Warning,
-  Info,
-} from "@material-ui/icons";
+import { ArrowRight, ContactMail, Edit, ErrorOutline, KeyboardBackspace, List, Warning } from "@material-ui/icons";
 import CategoryIcon from "@material-ui/icons/Category";
 import CreditCard from "@material-ui/icons/CreditCard";
 import EventIcon from "@material-ui/icons/Event";
