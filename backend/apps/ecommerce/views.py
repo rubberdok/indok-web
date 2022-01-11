@@ -3,7 +3,7 @@ from django.db import transaction
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import Order, Product
+from .models import Order
 from .vipps_utils import VippsApi
 
 

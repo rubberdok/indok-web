@@ -6,7 +6,7 @@ from utils.testing.factories.ecommerce import OrderFactory, ProductFactory
 from utils.testing.factories.organizations import OrganizationFactory
 from utils.testing.factories.users import IndokUserFactory
 
-from apps.ecommerce.models import Product, Order
+from apps.ecommerce.models import Product
 from apps.ecommerce.mutations import AttemptCapturePayment, InitiateOrder
 
 
@@ -18,6 +18,7 @@ class EcommerceBaseTestCase(ExtendedGraphQLTestCase):
         self.product_1 = ProductFactory()
         self.product_2 = ProductFactory()
         self.order = OrderFactory(product=self.product_1, user=self.indok_user)
+
 
 class EcommerceResolversTestCase(EcommerceBaseTestCase):
     """
