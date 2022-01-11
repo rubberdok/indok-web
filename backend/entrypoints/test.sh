@@ -2,5 +2,6 @@
 set -e
 
 python manage.py migrate
-python manage.py runserver 0.0.0.0:8000
+coverage run manage.py test
+coverage xml
 exec "$@"
