@@ -12,6 +12,7 @@ class EcommerceMutations(graphene.ObjectType):
 
 
 class EcommerceQueries(graphene.ObjectType, EcommerceResolvers):
+    product = graphene.Field(ProductType, product_id=graphene.ID(required=True))
     products = graphene.List(ProductType)
     order = graphene.Field(OrderType, order_id=graphene.ID(required=True))
     user_orders = graphene.List(OrderType)

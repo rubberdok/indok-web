@@ -2,15 +2,21 @@ import graphene
 from graphene_django import DjangoObjectType
 from graphql_jwt.decorators import login_required
 
+from apps.ecommerce.models import Order
+from apps.ecommerce.types import ProductType
+
 from .models import Category, Event, SignUp
 
 
 class UserAttendingType(graphene.ObjectType):
     is_signed_up = graphene.Boolean()
     is_on_waiting_list = graphene.Boolean()
+    has_bought_ticket = graphene.Boolean()
 
 
 class SignUpType(DjangoObjectType):
+    has_bought_ticket = graphene.Boolean()
+
     class Meta:
         model = SignUp
         fields = [
@@ -26,6 +32,20 @@ class SignUpType(DjangoObjectType):
             "user_grade_year",
         ]
 
+    @staticmethod
+    def resolve_has_bought_ticket(sign_up, info):
+        return (
+            len(sign_up.event.products.all()) == 1
+            and Order.objects.filter(
+                product=sign_up.event.products.all()[0],
+                user=sign_up.user,
+                payment_status__in=[
+                    Order.PaymentStatus.RESERVED,
+                    Order.PaymentStatus.CAPTURED,
+                ],
+            ).exists()
+        )
+
 
 class EventType(DjangoObjectType):
     user_attendance = graphene.Field(UserAttendingType)
@@ -34,6 +54,7 @@ class EventType(DjangoObjectType):
     users_attending = graphene.List(SignUpType)
     allowed_grade_years = graphene.List(graphene.Int)
     available_slots = graphene.Int()
+    products = graphene.List(ProductType)
 
     class Meta:
         model = Event
@@ -78,6 +99,15 @@ class EventType(DjangoObjectType):
         return {
             "is_signed_up": user in event.users_attending,
             "is_on_waiting_list": user in event.users_on_waiting_list,
+            "has_bought_ticket": len(event.products.all()) == 1
+            and Order.objects.filter(
+                product=event.products.all()[0],
+                user=user,
+                payment_status__in=[
+                    Order.PaymentStatus.RESERVED,
+                    Order.PaymentStatus.CAPTURED,
+                ],
+            ).exists(),
         }
 
     @staticmethod
@@ -102,6 +132,10 @@ class EventType(DjangoObjectType):
         if not user.is_authenticated or not user.memberships.filter(organization=event.organization).exists():
             return None
         return event.available_slots
+
+    @staticmethod
+    def resolve_products(event, info):
+        return event.products.all()
 
 
 class CategoryType(DjangoObjectType):

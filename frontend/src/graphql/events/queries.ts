@@ -33,6 +33,7 @@ export const GET_EVENTS = gql`
       userAttendance {
         isSignedUp
         isOnWaitingList
+        hasBoughtTicket
       }
       isFull
       hasExtraInformation
@@ -117,12 +118,16 @@ export const GET_EVENT = gql`
       userAttendance {
         isSignedUp
         isOnWaitingList
+        hasBoughtTicket
       }
       isFull
       hasExtraInformation
       bindingSignup
       contactEmail
       allowedGradeYears
+      products {
+        id
+      }
     }
   }
 `;
@@ -167,6 +172,7 @@ export const ADMIN_GET_EVENT = gql`
         userGradeYear
         userAllergies
         userPhoneNumber
+        hasBoughtTicket
       }
       usersOnWaitingList {
         user {
@@ -188,6 +194,9 @@ export const ADMIN_GET_EVENT = gql`
       bindingSignup
       contactEmail
       allowedGradeYears
+      products {
+        id
+      }
     }
   }
 `;

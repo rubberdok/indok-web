@@ -5,6 +5,8 @@ import EmailForm from "@components/pages/events/email/EmailForm";
 import EditEvent from "@components/pages/events/EventEditor";
 import { ADMIN_EVENT_SIGN_OFF } from "@graphql/events/mutations";
 import { ADMIN_GET_EVENT } from "@graphql/events/queries";
+import { Check, Close, Error, Warning } from "@material-ui/icons";
+
 import { Event, SignUp } from "@interfaces/events";
 import {
   Box,
@@ -91,6 +93,8 @@ const EventAdminPage: NextPage = () => {
     return <CircularProgress />;
   }
 
+  data && data.event.products.length && signUpFields.push({ header: "Betalt?", field: "hasBoughtTicket" });
+
   const renderInfo = (label: string, value: string | boolean) => {
     if (value === "") {
       return;
@@ -119,6 +123,19 @@ const EventAdminPage: NextPage = () => {
       });
   };
 
+  const renderCellContent = (signUp: SignUp, field: HeaderValuePair<SignUp>) => {
+    if (field.header === "Navn") {
+      return `${signUp.user.firstName} ${signUp.user.lastName}`;
+    }
+    if (field.header === "Mobilnummer") {
+      return signUp.userPhoneNumber.slice(3);
+    }
+    if (typeof signUp[field.field] == "boolean") {
+      return signUp[field.field] ? <Check color="primary" /> : <Close color="error" />;
+    }
+    return signUp[field.field] || "━";
+  };
+
   return (
     <Layout>
       {data?.event ? (
@@ -126,7 +143,7 @@ const EventAdminPage: NextPage = () => {
           {openEditEvent && (
             <EditEvent open={openEditEvent} onClose={() => setOpenEditEvent(false)} event={data.event} />
           )}
-          <Grid container direction="column" spacing={5}>
+          <Grid container direction="column" spacing={4}>
             <Grid item>
               <Typography variant="h1" align="center">
                 {data.event.title}
@@ -182,13 +199,7 @@ const EventAdminPage: NextPage = () => {
                               <TableRow key={`user-row-${signUp.user.id}`}>
                                 {signUpFields.map((field) => (
                                   <TableCell key={`user-${signUp.user.id}-cell--${field.field}`}>
-                                    {field.header === "Navn"
-                                      ? `${signUp.user.firstName} ${signUp.user.lastName}`
-                                      : field.header === "Mobilnummer"
-                                      ? signUp.userPhoneNumber.slice(3)
-                                      : signUp[field.field]
-                                      ? signUp[field.field]
-                                      : "━"}
+                                    {renderCellContent(signUp, field)}
                                   </TableCell>
                                 ))}
                                 <TableCell>
@@ -237,13 +248,7 @@ const EventAdminPage: NextPage = () => {
                               <TableRow key={`user-row-${signUp.user.id}`}>
                                 {signUpFields.map((field) => (
                                   <TableCell key={`user-${signUp.user.id}-cell--${field.field}`}>
-                                    {field.header === "Navn"
-                                      ? `${signUp.user.firstName} ${signUp.user.lastName}`
-                                      : field.header === "Mobilnummer"
-                                      ? signUp.userPhoneNumber.slice(3)
-                                      : signUp[field.field]
-                                      ? signUp[field.field]
-                                      : "━"}
+                                    {renderCellContent(signUp, field)}
                                   </TableCell>
                                 ))}
                               </TableRow>

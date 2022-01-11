@@ -16,6 +16,7 @@ from .vipps_utils import VippsApi
 class InitiateOrder(graphene.Mutation):
 
     redirect = graphene.String()
+    order_id = graphene.String()
     vipps_api = VippsApi()
 
     class Arguments:
@@ -31,19 +32,35 @@ class InitiateOrder(graphene.Mutation):
         # Create or update the order
         # If the user has attempted this order before, retry it
         try:
-            order = Order.objects.get(
-                product__id=product_id,
-                user=user,
-                quantity=quantity,
-                payment_status__in=[
-                    Order.PaymentStatus.CANCELLED,
-                    Order.PaymentStatus.REJECTED,
-                    Order.PaymentStatus.FAILED,
-                ],
-            )
-            order.payment_attempt = order.payment_attempt + 1
-            order.payment_status = Order.PaymentStatus.INITIATED
-            order.save()
+            with transaction.atomic():
+                # TODO: handle multiple hits
+                order = Order.objects.select_for_update().get(
+                    product__id=product_id,
+                    user=user,
+                    quantity=quantity,
+                    payment_status__in=[
+                        Order.PaymentStatus.CANCELLED,
+                        Order.PaymentStatus.REJECTED,
+                        Order.PaymentStatus.FAILED,
+                        Order.PaymentStatus.INITIATED,  # Temp
+                    ],
+                )
+                # Check order status at Vipps.
+                status, status_success = InitiateOrder.vipps_api.get_payment_status(
+                    f"{order.order_id}-{order.payment_attempt}"
+                )
+                # If order canceled: retry, if reserved: stop attempt and restore quantity
+                if status_success and status == "RESERVE":
+                    order.payment_status = Order.PaymentStatus.RESERVED
+                    order.save()
+                    order.product.restore_quantity(order)
+                    return InitiateOrder(order_id=order.order_id)
+
+                # Retry
+                order.payment_attempt = order.payment_attempt + 1
+                order.payment_status = Order.PaymentStatus.INITIATED
+                order.save()
+
         except Order.DoesNotExist:
             org_name = product.organization.slug[:13].replace(" ", "-")
 

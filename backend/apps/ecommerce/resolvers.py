@@ -5,6 +5,12 @@ from .models import Order, Product
 
 
 class EcommerceResolvers:
+    def resolve_product(self, info, product_id):
+        try:
+            return Product.objects.get(id=product_id)
+        except Product.DoesNotExist:
+            return None
+
     def resolve_products(self, info):
         return Product.objects.all()
 

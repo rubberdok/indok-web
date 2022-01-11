@@ -63,7 +63,6 @@ class VippsApi:
         print(f"VippsApi._make_call: making api call to the url: {url}")
 
         r = req(url, headers=headers, data=data)
-
         if r.ok:
             return r.json()
 
@@ -164,7 +163,7 @@ class VippsApi:
             "merchantInfo": {
                 "merchantSerialNumber": self.merchant_serial_number,
                 "callbackPrefix": "https://xoff0kv3i3.execute-api.eu-north-1.amazonaws.com/default/Vipps_callback",
-                "fallBack": f"http://127.0.0.1:3000/shop/fallback/?orderId={order.order_id}",
+                "fallBack": f"http://127.0.0.1:3000/ecommerce/fallback/?orderId={order.order_id}",
                 "authToken": order.auth_token,
                 "isApp": False,
             },

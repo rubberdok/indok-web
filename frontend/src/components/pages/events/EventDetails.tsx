@@ -20,7 +20,16 @@ import {
   useTheme,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { ArrowRight, ContactMail, Edit, ErrorOutline, KeyboardBackspace, List, Warning } from "@material-ui/icons";
+import {
+  ArrowRight,
+  ContactMail,
+  Edit,
+  ErrorOutline,
+  KeyboardBackspace,
+  List,
+  Warning,
+  Info,
+} from "@material-ui/icons";
 import CategoryIcon from "@material-ui/icons/Category";
 import CreditCard from "@material-ui/icons/CreditCard";
 import EventIcon from "@material-ui/icons/Event";
@@ -72,6 +81,13 @@ const useStyles = makeStyles((theme) => ({
   },
   backButton: {
     marginLeft: -20,
+  },
+  boughtTicket: {
+    width: "fit-content",
+    marginLeft: "10%",
+  },
+  payButton: {
+    marginLeft: "20px",
   },
 }));
 
@@ -263,6 +279,19 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
                   onClick={handleClick}
                   currentTime={timeData.serverTime}
                 />
+                {eventData.event.products.length &&
+                  eventData.event.userAttendance?.isSignedUp &&
+                  (eventData.event.userAttendance.hasBoughtTicket ? (
+                    <MuiAlert severity="success" className={classes.boughtTicket}>
+                      Du har betalt for billett
+                    </MuiAlert>
+                  ) : (
+                    <Link href={`/ecommerce/checkout?productId=${eventData.event.products[0].id}&quantity=1`} passHref>
+                      <Button size="large" variant="contained" color={"primary"} className={classes.payButton}>
+                        Gå til betaling
+                      </Button>
+                    </Link>
+                  ))}
               </PermissionRequired>
             </>
           )}

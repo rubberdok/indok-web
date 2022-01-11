@@ -21,6 +21,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import { KeyboardArrowLeft } from "@material-ui/icons";
+import { Alert } from "@material-ui/lab";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
@@ -33,6 +34,18 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   listitem: {
     textAlign: "center",
+  },
+  wrapIcon: {
+    alignItems: "center",
+    justifyContent: "center",
+    display: "inline-flex",
+    width: "100%",
+    marginBottom: theme.spacing(1),
+
+    "& > svg": {
+      height: "unset",
+      marginRight: theme.spacing(2),
+    },
   },
 }));
 
@@ -66,6 +79,14 @@ const CheckoutPage: NextPage = () => {
               <CardHeader title="Betaling"></CardHeader>
               <CardContent>
                 <Grid container alignItems="center" direction="column">
+                  <Box marginBottom={"20px"}>
+                    <Alert variant="filled" severity="info">
+                      Betalingsløsningen er under utvikling. Dersom du opplever problemer, kontakt{" "}
+                      <a style={{ color: "blue" }} href="mailto:feedback@rubberdok.no">
+                        feedback@rubberdok.no
+                      </a>
+                    </Alert>
+                  </Box>
                   <Typography variant="h3">Bekreft ordredetaljer</Typography>
                   <Grid item xs={12}>
                     {product && quantity ? (

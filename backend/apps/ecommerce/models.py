@@ -1,6 +1,8 @@
 import uuid
 
 from django.conf import settings
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 from django.db import models, transaction
 from django.db.models import F
 from django.db.models.fields import DateTimeField
@@ -18,6 +20,11 @@ class Product(models.Model):
     total_quantity = models.IntegerField()
     current_quantity = models.IntegerField(null=True)  # Set to total_quantity upon initialization
     max_buyable_quantity = models.IntegerField(default=1)
+
+    # Generic foreign key to related product model instance (e.g event model)
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True)
+    object_id = models.PositiveIntegerField(null=True)
+    related_object = GenericForeignKey("content_type", "object_id")
 
     def __str__(self):
         return self.name
@@ -37,6 +44,9 @@ class Product(models.Model):
                 product = cls.objects.select_for_update().get(pk=product_id)
             except cls.DoesNotExist:
                 raise ValueError("Ugyldig produkt")
+
+            if product.related_object and not product.related_object.is_user_allowed_to_buy_product(user):
+                raise Exception("Du kan ikke kjøpe dette produktet.")
 
             captured_orders = Order.objects.filter(
                 product__id=product_id,
@@ -60,11 +70,6 @@ class Product(models.Model):
 
     @classmethod
     def restore_quantity(cls, order: "Order"):
-        assert order.payment_status in [
-            Order.PaymentStatus.CANCELLED,
-            Order.PaymentStatus.FAILED,
-            Order.PaymentStatus.REJECTED,
-        ]
         with transaction.atomic():
             # Acquire DB lock for the product (no other process can change it)
             product = cls.objects.select_for_update().get(pk=order.product.id)

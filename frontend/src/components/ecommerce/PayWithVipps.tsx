@@ -2,7 +2,7 @@ import { ApolloError, useMutation } from "@apollo/client";
 import { INITIATE_ORDER } from "@graphql/ecommerce/mutations";
 import { Card, CardActionArea, CardMedia, CircularProgress, makeStyles, Theme } from "@material-ui/core";
 import { useRouter } from "next/router";
-import React, { useEffect } from "react";
+import React from "react";
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -18,23 +18,16 @@ interface Props {
 }
 
 const PayWithVipps: React.FC<Props> = ({ productId, quantity, onError }) => {
-  const [initiateOrder, { data, loading, error }] = useMutation(INITIATE_ORDER, { errorPolicy: "all" });
+  const [initiateOrder, { loading }] = useMutation(INITIATE_ORDER, {
+    onCompleted: (data) =>
+      router.push(data.initiateOrder.redirect || `/ecommerce/fallback?orderId=${data.initiateOrder.orderId}`),
+    onError: onError,
+  });
 
   const classes = useStyles();
   const router = useRouter();
 
-  useEffect(() => {
-    if (error && onError) {
-      onError(error);
-    }
-  }, [error]);
-
   if (loading) return <CircularProgress />;
-
-  if (data && data.initiateOrder) {
-    router.push(data.initiateOrder.redirect);
-    return null;
-  }
 
   return (
     <Card className={classes.root}>
