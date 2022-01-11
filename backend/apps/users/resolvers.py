@@ -1,3 +1,5 @@
+from django.conf import settings
+
 from django.contrib.auth import get_user_model
 from graphql_jwt.decorators import staff_member_required
 from graphql_jwt.shortcuts import get_token
@@ -14,10 +16,15 @@ class UserResolvers:
     def resolve_all_users(self, info):
         return get_user_model().objects.all()
 
-    def resolve_auth_token(self, info):
-            try:
-                token = get_token(get_user_model().objects.get(username="eva_student"))
-                info.context.set_jwt_cookie = token
-                return token
-            except get_user_model().DoesNotExist:
-                return None
+    if settings.ENVIRONMENT == "test":
+
+        def resolve_auth_token(self, info):
+            if settings.ENVIRONMENT == "test":
+                try:
+                    token = get_token(get_user_model().objects.get(username="eva_student"))
+                    info.context.set_jwt_cookie = token
+                    return token
+                except get_user_model().DoesNotExist:
+                    return None
+            else:
+                raise PermissionError("You do not have the permissions required.")

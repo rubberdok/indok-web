@@ -15,27 +15,20 @@ services:
       - postgres_data:/var/lib/postgresql/data/:cached
 
   backend:
-    restart: always
-    environment:
-      - DJANGO_READ_DOT_ENV_FILE=true
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
+    image: backend:production
+    entrypoint: /usr/src/app/entrypoints/integration.sh
+    env_file: $ENV_FILE
     volumes:
       - ./backend:/usr/src/app
     ports:
-      - "8000:8000"
+      - 8000:8000
     depends_on:
       - postgres
+    expose:
+      - 8000
 
   frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
-      - /app/.next
+    image: frontend:test
     ports:
       - 3000:3000
     expose:

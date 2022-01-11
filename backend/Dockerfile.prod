@@ -17,8 +17,8 @@ RUN pip install --upgrade pip
 COPY . .
 
 # install dependencies
-COPY ./requirements/*.txt ./
-RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/app/wheels -r production.txt
+COPY requirements ./requirements
+RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/app/wheels -r ./requirements/production.txt
 
 
 ##########
@@ -27,36 +27,30 @@ RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/app/wheels -r produc
 
 # pull official base image
 FROM 777854691961.dkr.ecr.eu-north-1.amazonaws.com/python:3.9 as runner
+WORKDIR /usr/src/app
 
 # create directory for the app user
-RUN mkdir -p /home/app
-
 RUN addgroup --gid 1001 -system python
 RUN adduser -system django --uid 1001
 
 # create the appropriate directories
-ENV HOME=/home/app
-ENV APP_HOME=/home/app/web
-RUN mkdir $APP_HOME
-RUN mkdir $APP_HOME/staticfiles
-RUN mkdir $APP_HOME/mediafiles
-WORKDIR $APP_HOME
+RUN mkdir staticfiles
+RUN mkdir mediafiles
 
 # install dependencies
 COPY --from=builder /usr/src/app/wheels /wheels
-COPY --from=builder /usr/src/app/production.txt /usr/src/app/base.txt ./
+COPY --from=builder /usr/src/app/requirements ./requirements
 RUN pip install --no-cache /wheels/*
 
 # copy entrypoint.prod.sh
-COPY ./entrypoint.prod.sh .
-RUN sed -i 's/\r$//g'  $APP_HOME/entrypoint.prod.sh
-RUN chmod +x  $APP_HOME/entrypoint.prod.sh
+COPY entrypoints ./entrypoints
+RUN chmod +x  ./entrypoints/*.sh
 
 # copy project
-COPY . $APP_HOME
+COPY . .
 
 # chown all the files to the app user
-RUN chown -R django:python $APP_HOME
+RUN chown -R django:python /usr/src/app
 
 # change to the django user
 USER django
@@ -64,4 +58,4 @@ USER django
 EXPOSE 8000
 
 # run entrypoint.prod.sh
-ENTRYPOINT ["/home/app/web/entrypoint.prod.sh"]
+ENTRYPOINT ["/usr/src/app/entrypoints/production.sh"]

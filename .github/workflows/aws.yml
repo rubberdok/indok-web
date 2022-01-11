@@ -1,9 +1,10 @@
 name: AWS
 
 on:
-  push:
-    branches:
-      - main
+  workflow_run:
+    workflows: ["CI"]
+    branches: [main]
+    types: [completed]
 
 concurrency: production
 
@@ -13,18 +14,27 @@ env:
   SENTRY_ORG: rbberdk
 
 jobs:
-  # Builds images in parallel
-  # Followed by deploying new task definitions
-  # Before finally notifying Github and Sentry of new releases
-  build-backend:
-    name: Build, tag, and push backend image to Amazon ECR
+  push:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    strategy:
+      matrix:
+        image: [frontend, backend]
+      fail-fast: true
+    name: Push to ECR
     runs-on: ubuntu-latest
-    outputs:
-      image: ${{ steps.image-tag.outputs.image }}
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+      - name: Download artifact
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: ${{ github.event.workflow_run.workflow_id }}
+          workflow_conclusion: success
+          name: ${{ matrix.image }}-production
+          path: /tmp/
+          run_id: ${{ github.event.workflow_run.id}}
+
+      - name: Load Docker images
+        run: docker load --input /tmp/${{ matrix.image }}-production.tar
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -38,93 +48,46 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Set image tag
-        id: image-tag
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: indokweb-backend
-          IMAGE_TAG: ${{ github.sha }}
-
-        run: echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
-
-      - name: Build, tag, and backend push image to AWS ECR
-        id: build-backend-image
-        uses: docker/build-push-action@v2
-        with:
-          context: ./backend
-          file: backend/Dockerfile.prod
-          tags: ${{ steps.image-tag.outputs.image }}
-          push: true
-
-  build-frontend:
-    name: Build, tag, and push frontend image to Amazon ECR
-    runs-on: ubuntu-latest
-    outputs:
-      image: ${{ steps.image-tag.outputs.image }}
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_PUSH_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_PUSH_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
-          mask-aws-account-id: false
-
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
 
       - name: Set image tag
         id: image-tag
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: indokweb-frontend
+          ECR_REPOSITORY: indokweb-${{ matrix.image }}
           IMAGE_TAG: ${{ github.sha }}
-
         run: echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
 
-      - name: Build, tag, and push image to AWS ECR
-        id: build-image
-        uses: docker/build-push-action@v2
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          IMAGE_TAG: ${{ github.sha }}
-          NEXT_PUBLIC_GRAPHQL_BACKEND_URI: https://api.indokntnu.no/graphql/
-          NEXT_PUBLIC_FRONTEND_URI: https://indokntnu.no
-          NEXT_PUBLIC_DATAPORTEN_ID: f17d2ea0-a7c9-4458-83bf-35cf5b555cae
-          NEXT_PUBLIC_DATAPORTEN_REDIRECT_URI: https://indokntnu.no/authCallback
-          NEXT_PUBLIC_DATAPORTEN_STATE: RGpBPYszuqXVvsma1suHJJ4X7ZJjkfS6njRHnx4p
-          NEXT_PUBLIC_SENTRY_DSN: https://4a40409b5c6f4a759eff513c338a18be@o514678.ingest.sentry.io/5618306
-        with:
-          file: frontend/Dockerfile.prod
-          context: ./frontend
-          tags: ${{ steps.image-tag.outputs.image }}
-          push: true
-          build-args: |
-            "NEXT_PUBLIC_GRAPHQL_BACKEND_URI=${{ env.NEXT_PUBLIC_GRAPHQL_BACKEND_URI }}"
-            "NEXT_CONTAINER_GRAPHQL_BACKEND_URI=${{ env.NEXT_CONTAINER_GRAPHQL_BACKEND_URI }}"
-            "NEXT_PUBLIC_DATAPORTEN_ID=${{ env.NEXT_PUBLIC_DATAPORTEN_ID }}"
-            "NEXT_PUBLIC_DATAPORTEN_REDIRECT_URI=${{ env.NEXT_PUBLIC_DATAPORTEN_REDIRECT_URI }}"
-            "NEXT_PUBLIC_DATAPORTEN_STATE=${{ env.NEXT_PUBLIC_DATAPORTEN_STATE }}"
-          secrets: |
-            "SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}"
-            "SENTRY_RELEASE=${{ github.sha }}"
+      - name: Tag image for ECR
+        id: tag-image
+        run: |
+          docker tag ${{ matrix.image }}:production ${{ steps.image-tag.outputs.image}}
+          docker push ${{ steps.image-tag.outputs.image }}
 
-  deploy-frontend-task-definition:
-    environment: app
-    needs: [build-frontend, build-backend]
-    name: Deploy frontend task definition
+  deploy:
+    name: Deploy to ECS
     runs-on: ubuntu-latest
+    needs: push
+    strategy:
+      matrix:
+        image: [frontend, backend]
+        include:
+          - image: frontend
+            sourcemaps: .next
+            mount: true
+            url_prefix: ~/_next/
+          - image: backend
+            mount: false
+      fail-fast: false
+    environment: production
     env:
-      ECR_REPOSITORY: indokweb-frontend # Set this to our ECR repository name, e.g. indokweb-backend
-      ECS_SERVICE: indokweb-frontend-fg-service # Set this to our ECS service name, e.g. indokweb-backend-fg-service
-      ECS_TASK_DEFINITION: .aws/task-definition.frontend.json # Set this to the path to the task definition, e.g. .aws/backend-task-definition.json
-      CONTAINER_NAME: frontend # Set this to the container name in the task definition above, e.g. backend
-      SENTRY_PROJECT: indokweb-frontend
+      ECS_TASK_DEFINITION: .aws/task-definition.${{ matrix.image }}.json
+      ECS_SERVICE: indokweb-${{ matrix.image }}-fg-service
+      ECS_REPOSITORY: indokweb-${{ matrix.image }}
+      SENTRY_PROJECT: indokweb-${{ matrix.image }}
+      CONTAINER_NAME: ${{ matrix.image }}
 
     steps:
       - name: Checkout
@@ -142,13 +105,21 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Fill in the new image ID in the Amazon ECS task definition
+      - name: Set image tag
+        id: image-tag
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: indokweb-${{ matrix.image }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+
+      - name: Update task definition
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
           task-definition: ${{ env.ECS_TASK_DEFINITION }}
           container-name: ${{ env.CONTAINER_NAME }}
-          image: ${{ needs.build-frontend.outputs.image }}
+          image: ${{ steps.image-tag.outputs.image }}
 
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
@@ -158,7 +129,16 @@ jobs:
           cluster: ${{ env.ECS_CLUSTER }}
           wait-for-service-stability: true
 
-      - name: Notify Sentry of the new Deployment
+      - name: Start container
+        id: container
+        if: ${{ matrix.mount }}
+        run: echo "::set-output name=container::$(docker run -d ${{ steps.image-tag.outputs.image }} sleep 3600)"
+
+      - name: Copy files
+        if: ${{ matrix.mount }}
+        run: docker cp ${{ steps.container.outputs.container }}:/usr/src/app/${{ matrix.sourcemaps }} ${{ matrix.sourcemaps }}
+
+      - name: Sentry release
         uses: getsentry/action-release@v1.1.6
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
@@ -166,58 +146,7 @@ jobs:
           SENTRY_PROJECT: ${{ env.SENTRY_PROJECT }}
         with:
           environment: production
-          sourcemaps: .next
-          url_prefix: ~/_next
-
-  deploy-backend-task-definition:
-    environment: api
-    needs: [build-backend, build-frontend]
-    name: Deploy backend task definition
-    runs-on: ubuntu-latest
-    env:
-      ECR_REPOSITORY: indokweb-backend # Set this to our ECR repository name, e.g. indokweb-backend
-      ECS_SERVICE: indokweb-backend-fg-service # Set this to our ECS service name, e.g. indokweb-backend-fg-service
-      ECS_TASK_DEFINITION: .aws/task-definition.backend.json # Set this to the path to the task definition, e.g. .aws/backend-task-definition.json
-      CONTAINER_NAME: backend # Set this to the container name in the task definition above, e.g. backend
-      SENTRY_PROJECT: indokweb-backend
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_DEPLOY_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_DEPLOY_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
-          mask-aws-account-id: false
-
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
-
-      - name: Fill in the new image ID in the Amazon ECS task definition
-        id: task-def
-        uses: aws-actions/amazon-ecs-render-task-definition@v1
-        with:
-          task-definition: ${{ env.ECS_TASK_DEFINITION }}
-          container-name: ${{ env.CONTAINER_NAME }}
-          image: ${{ needs.build-backend.outputs.image }}
-
-      - name: Deploy Amazon ECS task definition
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-        with:
-          task-definition: ${{ steps.task-def.outputs.task-definition }}
-          service: ${{ env.ECS_SERVICE }}
-          cluster: ${{ env.ECS_CLUSTER }}
-          wait-for-service-stability: true
-
-      - name: Notify Sentry of the new Deployment
-        uses: getsentry/action-release@v1.1.6
-        env:
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_ORG: ${{ env.SENTRY_ORG }}
-          SENTRY_PROJECT: ${{ env.SENTRY_PROJECT }}
-        with:
-          environment: production
+          finalize: true
+          sourcemaps: ${{ matrix.sourcemaps }}
+          url_prefix: ${{ matrix.url_prefix }}
+          version: ${{ github.sha }}
