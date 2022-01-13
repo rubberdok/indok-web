@@ -31,8 +31,3 @@ db = {
     "HOST": env("DB_HOST", default="db"),
     "PORT": env.int("DB_PORT", default=5432),
 }
-
-DATABASES = {
-    "default": db,
-    "alternate": db,  # For transaction testing
-}

@@ -26,12 +26,13 @@ class VippsCallback(APIView):
         if request.headers.get("Authorization", "") != order.auth_token:
             raise PermissionDenied("Unauthorized request")
 
-        # Update payment status
+        # Do nothing if transaction is already captured
         if order.payment_status == Order.PaymentStatus.CAPTURED:
             return Response()
         elif order.payment_status == Order.PaymentStatus.INITIATED:
             was_initiated = True
 
+        # Update payment status
         status = request.data.get("transactionInfo").get("status")
         if status in Order.PaymentStatus.values:
             order.payment_status = status
@@ -40,8 +41,13 @@ class VippsCallback(APIView):
         order.save()
 
         # If order went from initiated to failed/cancelled, restore available quantity
-        if status != "RESERVED" and was_initiated:
+        if (
+            order.payment_status
+            in [Order.PaymentStatus.FAILED, Order.PaymentStatus.CANCELLED, Order.PaymentStatus.REJECTED]
+            and was_initiated
+        ):
             order.product.restore_quantity(order)
+            return Response()
 
         # Capture payment
         if order.payment_status == Order.PaymentStatus.RESERVED:

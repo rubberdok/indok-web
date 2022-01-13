@@ -34,7 +34,7 @@ class InitiateOrder(graphene.Mutation):
         # If the user has attempted this order before, retry it
         try:
             with transaction.atomic():
-                # TODO: handle multiple hits
+                # TODO: handle multiple hits (shouldn't happen as we retry)
                 order = Order.objects.select_for_update().get(
                     product__id=product_id,
                     user=user,
@@ -43,7 +43,7 @@ class InitiateOrder(graphene.Mutation):
                         Order.PaymentStatus.CANCELLED,
                         Order.PaymentStatus.REJECTED,
                         Order.PaymentStatus.FAILED,
-                        Order.PaymentStatus.INITIATED,  # Temp
+                        Order.PaymentStatus.INITIATED,
                     ],
                 )
                 # Check order status at Vipps.

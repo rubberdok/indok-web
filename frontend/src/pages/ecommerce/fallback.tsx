@@ -21,9 +21,11 @@ import {
   Typography,
 } from "@material-ui/core";
 import { KeyboardArrowLeft } from "@material-ui/icons";
+import { Alert } from "@material-ui/lab";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { redirectIfNotLoggedIn } from "src/utils/redirect";
 
 const useStyles = makeStyles((theme: Theme) => ({
   list: {
@@ -42,30 +44,41 @@ const FallbackPage: NextPage = () => {
   const router = useRouter();
   const { orderId } = router.query;
 
-  const [attemptCapturePayment, { data, loading, error }] = useMutation(ATTEMPT_CAPTURE_PAYMENT);
+  const [attemptCapturePayment, { data, loading, error }] = useMutation(ATTEMPT_CAPTURE_PAYMENT, {
+    onError: () => intervalRef.current && clearInterval(intervalRef.current),
+  });
   const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>("RESERVED");
-  const [captureInterval, setCaptureInterval] = useState<NodeJS.Timeout>();
   const [order, setOrder] = useState<Order>();
+  const intervalRef: { current: NodeJS.Timer | null } = useRef(null);
 
   useEffect(() => {
     if (orderId && paymentStatus == "RESERVED") {
-      const interval = setInterval(() => {
+      intervalRef.current = setInterval(() => {
         attemptCapturePayment({ variables: { orderId } });
       }, 2000);
-      setCaptureInterval(interval);
     }
+    return () => {
+      intervalRef.current && clearInterval(intervalRef.current);
+    };
   }, [orderId]);
 
   useEffect(() => {
     if (data) {
       setPaymentStatus(data.attemptCapturePayment.status);
       setOrder(data.attemptCapturePayment.order);
-      if (["CAPTURED", "CANCELLED"].includes(data.attemptCapturePayment.status) && captureInterval) {
+      if (["CAPTURED", "CANCELLED"].includes(data.attemptCapturePayment.status) && intervalRef.current) {
         // We either sucessfully captured payment or the payment was somehow cancelled
-        clearInterval(captureInterval);
+        clearInterval(intervalRef.current);
       }
     }
+    return () => {
+      intervalRef.current && clearInterval(intervalRef.current);
+    };
   }, [data]);
+
+  if (redirectIfNotLoggedIn()) {
+    return null;
+  }
 
   return (
     <Layout>
@@ -80,7 +93,14 @@ const FallbackPage: NextPage = () => {
             <CardHeader title="Betaling"></CardHeader>
             <CardContent>
               <Grid container alignItems="center" direction="column">
-                {paymentStatus === "RESERVED" || loading ? (
+                {error ? (
+                  <>
+                    <Typography variant="h4">Feil</Typography>
+                    <Alert severity="error" variant="filled">
+                      {error.message}
+                    </Alert>
+                  </>
+                ) : paymentStatus === "RESERVED" || loading ? (
                   <>
                     <Typography variant="h3">Behandler...</Typography> <CircularProgress />
                   </>
@@ -116,8 +136,6 @@ const FallbackPage: NextPage = () => {
             </CardContent>
           </Card>
         </Box>
-
-        {error && <Typography>{error.message}</Typography>}
       </Container>
     </Layout>
   );
