@@ -6,15 +6,15 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('ecommerce', '0003_auto_20210402_1928'),
+        ("ecommerce", "0003_auto_20210402_1928"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='VippsAccessToken',
+            name="VippsAccessToken",
             fields=[
-                ('token', models.CharField(max_length=2048, primary_key=True, serialize=False)),
-                ('expires_on', models.DateTimeField()),
+                ("token", models.CharField(max_length=2048, primary_key=True, serialize=False)),
+                ("expires_on", models.DateTimeField()),
             ],
         ),
     ]

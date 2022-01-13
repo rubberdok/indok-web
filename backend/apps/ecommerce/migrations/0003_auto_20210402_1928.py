@@ -7,13 +7,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('ecommerce', '0002_order_auth_token'),
+        ("ecommerce", "0002_order_auth_token"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='order',
-            name='auth_token',
+            model_name="order",
+            name="auth_token",
             field=models.CharField(default=apps.ecommerce.models.get_auth_token, max_length=32),
         ),
     ]

@@ -6,13 +6,25 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('ecommerce', '0005_auto_20210405_1828'),
+        ("ecommerce", "0005_auto_20210405_1828"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='order',
-            name='payment_status',
-            field=models.CharField(choices=[('INITIATED', 'initiated'), ('RESERVED', 'reserved'), ('CAPTURED', 'captured'), ('CANCELLED', 'cancelled'), ('REFUNDED', 'refunded'), ('FAILED', 'failed'), ('REJECTED', 'rejected')], default='INITIATED', max_length=255),
+            model_name="order",
+            name="payment_status",
+            field=models.CharField(
+                choices=[
+                    ("INITIATED", "initiated"),
+                    ("RESERVED", "reserved"),
+                    ("CAPTURED", "captured"),
+                    ("CANCELLED", "cancelled"),
+                    ("REFUNDED", "refunded"),
+                    ("FAILED", "failed"),
+                    ("REJECTED", "rejected"),
+                ],
+                default="INITIATED",
+                max_length=255,
+            ),
         ),
     ]

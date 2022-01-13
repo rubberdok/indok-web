@@ -10,31 +10,61 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('organizations', '0019_merge_20210315_1439'),
+        ("organizations", "0019_merge_20210315_1439"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Product',
+            name="Product",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=200)),
-                ('price', models.DecimalField(decimal_places=2, max_digits=11)),
-                ('description', models.TextField()),
-                ('organization', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='products', to='organizations.organization')),
+                ("id", models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                ("name", models.CharField(max_length=200)),
+                ("price", models.DecimalField(decimal_places=2, max_digits=11)),
+                ("description", models.TextField()),
+                (
+                    "organization",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="products",
+                        to="organizations.organization",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Order',
+            name="Order",
             fields=[
-                ('order_id', models.CharField(max_length=50, primary_key=True, serialize=False)),
-                ('quantity', models.IntegerField(default=1)),
-                ('total_price', models.DecimalField(decimal_places=2, max_digits=11)),
-                ('payment_status', models.CharField(choices=[('initiated', 'INITIATED'), ('reserved', 'RESERVED'), ('captured', 'CAPTURED'), ('cancelled', 'CANCELLED'), ('refunded', 'REFUNDED')], default='initiated', max_length=255)),
-                ('date', models.DateTimeField(auto_now_add=True)),
-                ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='orders', to='ecommerce.product')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='orders', to=settings.AUTH_USER_MODEL)),
+                ("order_id", models.CharField(max_length=50, primary_key=True, serialize=False)),
+                ("quantity", models.IntegerField(default=1)),
+                ("total_price", models.DecimalField(decimal_places=2, max_digits=11)),
+                (
+                    "payment_status",
+                    models.CharField(
+                        choices=[
+                            ("initiated", "INITIATED"),
+                            ("reserved", "RESERVED"),
+                            ("captured", "CAPTURED"),
+                            ("cancelled", "CANCELLED"),
+                            ("refunded", "REFUNDED"),
+                        ],
+                        default="initiated",
+                        max_length=255,
+                    ),
+                ),
+                ("date", models.DateTimeField(auto_now_add=True)),
+                (
+                    "product",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, related_name="orders", to="ecommerce.product"
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, related_name="orders", to=settings.AUTH_USER_MODEL
+                    ),
+                ),
             ],
         ),
     ]

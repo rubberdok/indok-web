@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('ecommerce', '0001_initial'),
+        ("ecommerce", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='order',
-            name='auth_token',
-            field=models.CharField(default='1e8c58f45c3940dc98e9ac01aebf2e66', max_length=32),
+            model_name="order",
+            name="auth_token",
+            field=models.CharField(default="1e8c58f45c3940dc98e9ac01aebf2e66", max_length=32),
         ),
     ]

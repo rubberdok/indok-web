@@ -6,23 +6,23 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('ecommerce', '0008_alter_product_id'),
+        ("ecommerce", "0008_alter_product_id"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='product',
-            name='current_quantity',
+            model_name="product",
+            name="current_quantity",
             field=models.IntegerField(null=True),
         ),
         migrations.AddField(
-            model_name='product',
-            name='max_buyable_quantity',
+            model_name="product",
+            name="max_buyable_quantity",
             field=models.IntegerField(default=1),
         ),
         migrations.AddField(
-            model_name='product',
-            name='total_quantity',
+            model_name="product",
+            name="total_quantity",
             field=models.IntegerField(default=1),
             preserve_default=False,
         ),
