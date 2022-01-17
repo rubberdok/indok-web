@@ -2,13 +2,11 @@ import { useQuery } from "@apollo/client";
 import Layout from "@components/Layout";
 import { GET_ORGANIZATION } from "@graphql/orgs/queries";
 import { Organization } from "@interfaces/organizations";
-import Link from "next/link";
-import { Box, CircularProgress, Grid, Typography, Button } from "@material-ui/core";
+import { Box, CircularProgress, Grid, Typography } from "@material-ui/core";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import OrganizationListings from "@components/pages/listings/organization/OrganizationListings";
 import OrgEvents from "@components/pages/events/org/OrgEvents";
-import { Person } from "@material-ui/icons";
 
 const OrganizationDetailPage: NextPage = () => {
   const router = useRouter();
