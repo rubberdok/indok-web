@@ -6,11 +6,9 @@ image: /img/tindok3.jpg
 board:
   ceo:
     name: Fredrik Sollerud
-    mail:
     title: Turleder
   cto:
     name: Trym Wian
-    mail:
     title: Turleder
 tag: idrett
 ---

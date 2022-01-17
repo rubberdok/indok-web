@@ -6,11 +6,9 @@ image: /img/fkfkbilde.png
 board:
   ceo:
     name: Sunniva Økland
-    mail: tlf.
     title: Chief Executive Officer
   cto:
     name: Elin Ulsaker
-    mail: tlf.
     title: Chief Financial Officer
 tag: idrett
 ---

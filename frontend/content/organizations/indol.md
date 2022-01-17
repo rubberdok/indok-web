@@ -6,19 +6,19 @@ image: /img/indolbilde.jpg
 board:
   ceo:
     name: Hans Magnus Utne
-    mail: tlf. 975 18 033
+    phoneNumber: 975 18 033
     title: Leder
   cto:
     name: Phillip Kolkmeier
-    mail: tlf. 906 71 650
+    phoneNumber: 906 71 650
     title: Nestleder
   brygg:
     name: Olav Førland
-    mail: tlf. 902 25 335
+    phoneNumber: 902 25 335
     title: Bryggeansvarlig
   pr:
     name: Marte Vingsnes
-    mail: tlf. 482 60 767
+    phoneNumber: 482 60 767
     title: PR-ansvarlig
 tag: kultur
 ---

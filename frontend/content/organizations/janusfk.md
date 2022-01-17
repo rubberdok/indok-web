@@ -6,11 +6,11 @@ image: /img/fkbilde.jpg
 board:
   ceo:
     name: Henrik Planke Berg
-    mail: tlf. 975 18 033
+    phoneNumber: 975 18 033
     title: Leder
   cto:
     name: Christian Bakke Vennerød
-    mail: tlf. 906 71 650
+    phoneNumber: 906 71 650
     title: Trener
 tag: idrett
 ---

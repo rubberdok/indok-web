@@ -6,7 +6,7 @@ logo: /img/indoktennis.jpg
 board:
   ceo:
     name: Richard Rogstad
-    mail: tlf. 924 34 994
+    phoneNumber: 924 34 994
     title: Leder
 tag: idrett
 ---

@@ -6,11 +6,9 @@ image: /img/hero.jpg
 board:
   ceo:
     name: Jakob Fougner Engebretsen
-    mail:
     title: Podcasthost
   cto:
     name: Håkon Melgård Sveen
-    mail:
     title: Podcasthost
 tag: kultur
 ---

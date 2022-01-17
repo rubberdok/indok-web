@@ -6,15 +6,12 @@ image: /img/jslk.jpg
 board:
   ceo:
     name: Kristoffer Jonsson
-    mail:
     title: Leder
   cto:
     name: Jostein Hjortland Tysse
-    mail:
     title: Nestleder
   cfo:
     name: Asbjørn Nisi
-    mail:
     title: Økonomiansvarlig
 
 tag: idrett
