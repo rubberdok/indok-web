@@ -8,7 +8,7 @@ from faker import Faker
 from graphql_jwt.decorators import login_required, staff_member_required
 
 
-from ..organizations.models import Organization
+from apps.organizations.models import Organization
 from .models import Order, Product
 from .types import OrderType, ProductType
 from .vipps_utils import VippsApi
@@ -67,12 +67,13 @@ class InitiateOrder(graphene.Mutation):
 
             order_id = f"{org_name}-{uuid.uuid4().hex}"
 
-            order = Order()
-            order.order_id = order_id
-            order.product = product
-            order.user = user
-            order.quantity = quantity
-            order.total_price = product.price * quantity
+            order = Order(
+                order_id=order_id,
+                product=product,
+                user=user,
+                quantity=quantity,
+                total_price=product.price * quantity
+            )
 
             order.save()
 

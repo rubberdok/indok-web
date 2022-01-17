@@ -4,14 +4,14 @@ import { Card, CardActionArea, CardMedia, CircularProgress, makeStyles, Theme } 
 import { useRouter } from "next/router";
 import React from "react";
 
-const useStyles = makeStyles((_: Theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     maxWidth: 300,
     background: "inherit",
   },
 }));
 
-interface Props {
+type Props = {
   productId: string;
   quantity: number;
   onError?: (e?: ApolloError) => void;

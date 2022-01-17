@@ -1,7 +1,7 @@
 import { User } from "./users";
 import { Organization } from "./organizations";
 
-export interface Product {
+export type Product = {
   id: string;
   name: string;
   price: number;
@@ -13,7 +13,7 @@ export interface Product {
 
 export type PaymentStatus = "INITIATED" | "RESERVED" | "CAPTURED" | "CANCELLED" | "REFUNDED" | "FAILED" | "REJECTED";
 
-export interface Order {
+export type Order = {
   orderId: string;
   product: Product;
   user: User;

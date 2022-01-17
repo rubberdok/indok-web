@@ -92,7 +92,7 @@ class Event(models.Model, Sellable):
     def __str__(self):
         return self.title
 
-    def is_user_allowed_to_buy_product(self, user):
+    def is_user_allowed_to_buy_product(self, user) -> bool:
         return user in self.signed_up_users
 
 

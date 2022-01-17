@@ -189,8 +189,6 @@ GRAPHENE = {
 }
 GRAPHQL_URL = "graphql/"
 
-
-DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # DJANGO GUARDIAN
 ANONYMOUS_USER_NAME = "AnonymousUser"
 GUARDIAN_GET_INIT_ANONYMOUS_USER = "apps.users.models.get_anonymous_user_instance"

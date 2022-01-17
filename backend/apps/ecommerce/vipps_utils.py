@@ -23,11 +23,11 @@ class VippsApi:
         vipps_subscription_key: str = settings.VIPPS_SUBSCRIPTION_KEY,
         merchant_serial_number: str = settings.VIPPS_MERCHANT_SERIAL_NUMBER,
         vipps_server: str = VIPPS_BASE_URL,
-        access_token: str = None,
-        vipps_system_name: str = None,
-        vipps_system_version: str = None,
-        vipps_system_plugin_name: str = None,
-        vipps_system_plugin_version: str = None,
+        access_token: Optional[str] = None,
+        vipps_system_name: Optional[str] = None,
+        vipps_system_version: Optional[str] = None,
+        vipps_system_plugin_name: Optional[str] = None,
+        vipps_system_plugin_version: Optional[str] = None,
     ):
         self.client_id = client_id
         self.client_secret = client_secret
@@ -40,7 +40,7 @@ class VippsApi:
         self.vipps_system_plugin_name = vipps_system_plugin_name
         self.vipps_system_plugin_version = vipps_system_plugin_version
 
-    def _make_call(self, method: str, endpoint: str, headers: dict, data=None) -> dict:
+    def _make_call(self, method: Literal["POST", "GET", "PUT"], endpoint: str, headers: dict[str, str], data: Optional[dict] = None) -> dict:
         """Used in main api calls
         Args:
             method (str): post, get or put
@@ -51,16 +51,15 @@ class VippsApi:
             dict: response body as a dict
         """
 
-        if method == "get":
+        if method == "GET":
             req = requests.get
-        elif method == "post":
+        elif method == "POST":
             req = requests.post
-        elif method == "put":
+        elif method == "PUT":
             req = requests.put
 
         url = f"{self.vipps_server}{endpoint}"
 
-        print(f"VippsApi._make_call: making api call to the url: {url}")
 
         r = req(url, headers=headers, data=data)
         if r.ok:
@@ -75,7 +74,7 @@ class VippsApi:
         capture_data = self.build_capture_payment_request(order, method)
 
         self._make_call(
-            "post",
+            "POST",
             f"/ecomm/v2/payments/{order.order_id}-{order.payment_attempt}/capture",
             headers,
             json.dumps(capture_data),
@@ -85,13 +84,13 @@ class VippsApi:
         headers = self.build_headers()
         order_data = self.build_initiate_payment_request(order)
 
-        response = self._make_call("post", "/ecomm/v2/payments", headers, json.dumps(order_data))
+        response = self._make_call("POST", "/ecomm/v2/payments", headers, json.dumps(order_data))
         return response["url"]
 
     def get_payment_status(self, order_id):
         headers = self.build_headers()
 
-        response = self._make_call("get", f"/ecomm/v2/payments/{order_id}/details", headers)
+        response = self._make_call("GET", f"/ecomm/v2/payments/{order_id}/details", headers)
 
         history = response["transactionLogHistory"]
         return history[0]["operation"], history[0]["operationSuccess"]
@@ -107,7 +106,7 @@ class VippsApi:
             "Ocp-Apim-Subscription-Key": self.vipps_subscription_key,
         }
 
-        token_response = self._make_call("post", "/accessToken/get", headers)
+        token_response = self._make_call("POST", "/accessToken/get", headers)
 
         access_token = token_response["access_token"]
         expires_on = timezone.make_aware(datetime.datetime.fromtimestamp(int(token_response["expires_on"])))

@@ -6,7 +6,7 @@ import { CREATE_PRODUCT } from "@graphql/ecommerce/mutations";
 import { Product } from "@interfaces/ecommerce";
 import { Button, Container, TextField, Typography } from "@material-ui/core";
 import { NextPage } from "next";
-import React, { useState } from "react";
+import { useState } from "react";
 
 const ShopPage: NextPage = () => {
   const [createProduct] = useMutation<{

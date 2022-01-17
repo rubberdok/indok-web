@@ -29,8 +29,7 @@ class VippsCallback(APIView):
         # Do nothing if transaction is already captured
         if order.payment_status == Order.PaymentStatus.CAPTURED:
             return Response()
-        elif order.payment_status == Order.PaymentStatus.INITIATED:
-            was_initiated = True
+        was_initiated = order.payment_status == Order.PaymentStatus.INITIATED
 
         # Update payment status
         status = request.data.get("transactionInfo").get("status")

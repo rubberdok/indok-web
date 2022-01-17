@@ -9,7 +9,7 @@ from django.db.models.fields import DateTimeField
 
 from apps.organizations.models import Organization
 
-from ..users.models import User
+from apps.users.models import User
 
 
 class Product(models.Model):
@@ -77,7 +77,7 @@ class Product(models.Model):
             product.save()
 
 
-def get_auth_token():
+def get_auth_token() -> str:
     return uuid.uuid4().hex
 
 

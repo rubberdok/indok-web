@@ -24,7 +24,7 @@ import { KeyboardArrowLeft } from "@material-ui/icons";
 import { Alert } from "@material-ui/lab";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import { useState } from "react";
 import { redirectIfNotLoggedIn } from "src/utils/redirect";
 
 const useStyles = makeStyles((theme: Theme) => ({
