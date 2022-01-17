@@ -44,7 +44,7 @@ const OrgEventsTable: React.FC<Props> = ({ organization }) => {
   const classes = useStyles();
 
   return (
-    <Grid item container>
+    <Grid container>
       <Grid item xs>
         <Card variant="outlined">
           <CardHeader title="Arrangementer" />
