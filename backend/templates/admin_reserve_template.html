@@ -22,7 +22,7 @@
       }
     </style>
   </head>
-  <body style="font-family: Montserrat, serif">
+  <body style="font-family: Open Sans, sans-serif">
     <div
       style="
         border: 5px solid #065a5a;
@@ -31,10 +31,9 @@
         background-color: #f5f0eb;
         width: 80%;
       "
+      class="contentDiv"
     >
       {% load static %}
-      <div class="contentDiv">
-
           <h2>Søknad om booking av {{ chosen_cabins_string }}</h2>
                <p>
                    Det har kommet en søknad om opprettelse av en booking av <strong>{{ chosen_cabins_string }}</strong> fra
@@ -55,8 +54,12 @@
           <p>Mobilnummer: {{ phone }}</p>
           <p>E-post: {{ receiver_email }}</p>
 
-
-      </div>
+        {% if extra_info|length > 0 %}
+            <p><strong>{{ first_name }} har sendt med følgende spørsmål:</strong></p>
+            <p>{{ extra_info }}</p>
+            <a href="mailto:{{ receiver_email }}">Dere kan sende en mail til {{ first_name }} for å besvare spørsmålene.</a>
+            <br />
+        {% endif %}
       <a
         href="https://indokntnu.no/cabins/admin"
         style="

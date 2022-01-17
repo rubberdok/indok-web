@@ -1,15 +1,6 @@
-import { Typography, makeStyles, Box, Grid, Button, Paper, Divider, Theme, Container } from "@material-ui/core";
+import { Typography, Box, Grid, Paper, Divider, Container } from "@material-ui/core";
 import { NextPage } from "next";
 import Link from "next/link";
-import FireplaceIcon from "@material-ui/icons/Fireplace";
-import PowerIcon from "@material-ui/icons/Power";
-import SpeakerIcon from "@material-ui/icons/Speaker";
-import HotelIcon from "@material-ui/icons/Hotel";
-import RestaurantIcon from "@material-ui/icons/Restaurant";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import HotTubIcon from "@material-ui/icons/HotTub";
-import NavigateNextIcon from "@material-ui/icons/NavigateNext";
-import { DirectionsBus, DirectionsCar, DirectionsTransit, LocalTaxi } from "@material-ui/icons";
 import React, { useEffect, useState } from "react";
 import ImageSlider from "@components/pages/cabins/ImageSlider/ImageSlider";
 import { cabinImages, outsideImages } from "@components/pages/cabins/ImageSlider/imageData";
@@ -18,39 +9,14 @@ import Layout from "@components/Layout";
 import { useQuery } from "@apollo/client";
 import { GET_USER } from "@graphql/users/queries";
 import { User } from "@interfaces/users";
-import PermissionRequired from "@components/permissions/PermissionRequired";
-
-const useStyles = makeStyles((theme: Theme) => ({
-  hero: {
-    color: "white",
-    height: "100vh",
-    width: "100%",
-    backgroundColor: "black",
-    backgroundSize: "cover",
-    backgroundRepeat: "no-repeat",
-    backgroundPosition: "center",
-    backgroundImage: `linear-gradient(to left, rgba(0, 0, 0, 0.0), rgba(0, 0, 0, 0.8)), url('img/hytte.jpg')`,
-  },
-  icon: {
-    fontSize: "70px",
-    [theme.breakpoints.down("sm")]: {
-      fontSize: "40px",
-    },
-    [theme.breakpoints.down("xs")]: {
-      fontSize: "30px",
-    },
-  },
-  readMoreButton: {
-    position: "absolute",
-    bottom: 0,
-  },
-}));
+import Image from "next/image";
+import ContactCabinBoard from "@components/pages/cabins/ContactCabinBoard";
+import Hero from "@components/pages/cabins/Hero";
 
 /*
 Front page for cabins. Includes info about the cabins and link to the booking page (cabins/book).
 */
 const CabinsPage: NextPage = () => {
-  const classes = useStyles();
   const { data, error } = useQuery<{ user: User }>(GET_USER);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -62,34 +28,34 @@ const CabinsPage: NextPage = () => {
 
   const facilitiesData = [
     {
-      icon: <FireplaceIcon className={classes.icon} />,
+      icon: <Image alt="" src="/img/undraw_home.svg" width={100} height={100} />,
       text: "Varmekabler",
     },
     {
-      icon: <PowerIcon className={classes.icon} />,
+      icon: <Image alt="" src="/img/undraw_electricity.svg" width={100} height={100} />,
       text: "Innlagt strøm",
     },
     {
-      icon: <SpeakerIcon className={classes.icon} />,
+      icon: <Image alt="" src="/img/undraw_speaker.svg" width={100} height={100} />,
       text: "Høyttaleranlegg",
     },
     {
-      icon: <HotelIcon className={classes.icon} />,
+      icon: <Image alt="" src="/img/undraw_bed.svg" width={100} height={100} />,
       text: "18 soveplasser",
     },
     {
-      icon: <RestaurantIcon className={classes.icon} />,
+      icon: <Image alt="" src="/img/undraw_cooking.svg" width={100} height={100} />,
       text: "Kjøkken",
     },
     {
-      icon: <HotTubIcon className={classes.icon} />,
+      icon: <Image alt="" src="/img/undraw_cabin.svg" width={100} height={100} />,
       text: "Badstue",
     },
   ];
 
   const transportData = [
     {
-      icon: <DirectionsBus fontSize="large" style={{ fontSize: "80px" }} />,
+      icon: <Image alt="" src="/img/undraw_bus_stop.svg" width={200} height={200} />,
       text: (
         <Typography component="span">
           Kom deg til Oppdal med <Link href="https://www.atb.no/buss-regioner/">AtB Region</Link> eller{" "}
@@ -98,7 +64,7 @@ const CabinsPage: NextPage = () => {
       ),
     },
     {
-      icon: <DirectionsCar fontSize="large" style={{ fontSize: "80px" }} />,
+      icon: <Image alt="" src="/img/undraw_off_road.svg" width={200} height={200} />,
       text: (
         <Typography component="span">
           <Link href="https://www.sixt.no/">Sixt</Link>: pris ca. 1200,- for en helg, ekskl. bensin. Kjøretiden er ca.
@@ -107,7 +73,7 @@ const CabinsPage: NextPage = () => {
       ),
     },
     {
-      icon: <DirectionsTransit fontSize="large" style={{ fontSize: "80px" }} />,
+      icon: <Image alt="" src="/img/undraw_subway.svg" width={200} height={200} />,
       text: (
         <Typography component="span">
           Ta toget med <Link href="https://www.vy.no/">VY</Link> til Oppdal for en billig penge.
@@ -115,7 +81,7 @@ const CabinsPage: NextPage = () => {
       ),
     },
     {
-      icon: <LocalTaxi fontSize="large" style={{ fontSize: "80px" }} />,
+      icon: <Image alt="" src="/img/undraw_taxi.svg" width={200} height={200} />,
       text: (
         <Typography component="span">
           Taxi fra togstasjonen til hyttene tar 5-10 min.{" "}
@@ -125,50 +91,9 @@ const CabinsPage: NextPage = () => {
     },
   ];
 
-  const Hero = () => (
-    <Grid container className={classes.hero} alignItems="center" justifyContent="center">
-      <Grid xs={12} sm={6} item container justifyContent="center">
-        <Box m={2}>
-          <Typography variant="h1">Hyttebooking</Typography>
-        </Box>
-      </Grid>
-      <Grid xs={12} sm={6} item container justifyContent="center">
-        <PermissionRequired
-          permission="cabins.add_booking"
-          fallback={
-            !isLoggedIn ? (
-              // User is not logged in, and therefore does not have the permission.
-              <Typography variant="h5">Du må være logget inn for å booke en hytte.</Typography>
-            ) : (
-              // User is logged in, but does not have the permission (we disabled cabin booking for a subset of the users)
-              <Typography variant="h5">Her blir det snart mulig å reservere indøkhyttene</Typography>
-            )
-          }
-        >
-          <Link href="/cabins/book" passHref>
-            <Button variant="contained" endIcon={<NavigateNextIcon />}>
-              Book nå
-            </Button>
-          </Link>
-        </PermissionRequired>
-      </Grid>
-      <Grid xs={12} sm={6} item container justifyContent="center">
-        <Button
-          className={classes.readMoreButton}
-          variant="contained"
-          color="primary"
-          startIcon={<ExpandMoreIcon fontSize="large" />}
-          onClick={() => document.querySelector("#anchorBox")?.scrollIntoView({ behavior: "smooth" })}
-        >
-          Les mer om Indøkhyttene
-        </Button>
-      </Grid>
-    </Grid>
-  );
-
   return (
     <Layout>
-      <Hero />
+      <Hero isLoggedIn={isLoggedIn} />
       <Container>
         <Box my={5} id="anchorBox">
           <Paper>
@@ -201,10 +126,10 @@ const CabinsPage: NextPage = () => {
                         De to identiske nabohyttene ligger idyllisk til, kun et steinkast unna Stølen alpinsenter i
                         Oppdal. Hyttene har flere bruksområder; alt fra strategiske samlinger og egne arrangementer til
                         sosiale, spontane venneturer. Det er en gyllen mulighet til å få en liten pause fra det travle
-                        bylivet. Indøks egne hyttestyre arrangerer flere forskjellige turer i løpet av året. Dette er en
+                        bylivet. Indøks egne Hyttestyre arrangerer flere forskjellige turer i løpet av året. Dette er en
                         flott mulighet til både å bli kjent med hyttene, området rundt hyttene, og å bli kjent med andre
                         indøkere på tvers av klassetrinnene. Hyttestyret har det daglige ansvaret for drift og utbedring
-                        av Indøkhyttene, organisering av utleie og felles hytteturer. Du kan lese mer om hyttestyret
+                        av Indøkhyttene, organisering av utleie og felles hytteturer. Du kan lese mer om Hyttestyret
                         <Link href="/about/organizations/hyttestyret"> her.</Link>
                       </Typography>
                     </Grid>
@@ -217,15 +142,15 @@ const CabinsPage: NextPage = () => {
                       <Divider component="br" />
                       <Typography variant="body2">
                         Med sine to etasjer, er Bjørnen og Oksen estimert til å romme 18 personer per hytte. Den
-                        generelle standarden er tilnærmet lik et vanlig bolighus. Hyttene har innlagt strøm og vann samt
-                        at de også har WiFi. I første etasje finner du to bad, hvorav ett med badstue, og tre soverom
-                        med tre til fire sengeplasser per rom. I andre etasje ligger stue, kjøkken og et fjerde soverom
-                        med sengeplass til tre. Dette gir totalt fjorten sengeplasser på hver hytte og ekstramadrasser
-                        til de resterende seks det er estimert med. Dyner og puter til alle tjue ligger tilgjengelig,
-                        men laken og sengetøy må medbringes. Kjøkkenet er utstyrt med det mest nødvendige av hvitevarer,
-                        i tillegg til kaffetrakter, vannkoker og vaffeljern m.m. Basiskrydder og olje til steking skal
-                        også være tilgjengelig. På hyttene ligger det et bredt utvalg brettspill, samt kortstokker. I
-                        stua står det anlegg med AUX-kabel.
+                        generelle standarden er tilnærmet lik et vanlig bolighus. Begge hyttene har innlagt strøm og
+                        vann. I første etasje finner du to bad, hvorav ett med badstue, og tre soverom med tre til fire
+                        sengeplasser per rom. I andre etasje ligger stue, kjøkken og et fjerde soverom med sengeplass
+                        til tre. Dette gir totalt fjorten sengeplasser på hver hytte og ekstramadrasser til de
+                        resterende 4 det er estimert med. Dyner og puter til 18 gjester ligger tilgjengelig, men laken
+                        og sengetøy må medbringes. Kjøkkenet er utstyrt med det mest nødvendige av hvitevarer, i tillegg
+                        til kaffetrakter, vannkoker og vaffeljern m.m. Basiskrydder og olje til steking skal også være
+                        tilgjengelig. På hyttene ligger det et bredt utvalg brettspill, samt kortstokker. I stua står
+                        det anlegg med AUX-kabel.
                       </Typography>
                     </Grid>
 
@@ -273,16 +198,20 @@ const CabinsPage: NextPage = () => {
                       <b>Vinter</b>: I løpet av vinterhalvåret er det hovedsakelig alpint og langrenn som står i
                       sentrum. Det alpine skiområdet er blant de største i Norge med 14 blå, 10 grønne, 10 røde og 5
                       svarte løyper, og normal skisesong er fra 15. november – 1. mai. Forholdene for langrenn er også
-                      gode med hele fem løyper som begynner ved Stølen, alt fra 1,5 km – 15 km løyper. Se Oppdal Booking
-                      for mer info.
+                      gode med hele fem løyper som begynner ved Stølen, alt fra 1,5 km – 15 km løyper. Se{" "}
+                      <Link href="https://oppdal.com/forside/hoved/">Visit Oppdal</Link> for mer info.
                     </Typography>
                   </Grid>
-                  <Grid item container spacing={10} alignItems="center" direction="row">
-                    <Grid item container justifyContent="center" alignContent="center" xs={12}>
-                      <Grid item>
-                        <FAQ />
-                      </Grid>
+                  <Grid item container spacing={10} direction="row" justifyContent="center" alignContent="center">
+                    <Grid item>
+                      <Typography variant="h3">FAQ</Typography>
                     </Grid>
+                    <Grid item>
+                      <FAQ />
+                    </Grid>
+                  </Grid>
+                  <Grid item container spacing={10} direction="row" justifyContent="center" alignContent="center">
+                    <ContactCabinBoard />
                   </Grid>
                 </Grid>
               </Grid>

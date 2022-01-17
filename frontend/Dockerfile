@@ -1,17 +1,19 @@
-# syntax=docker/dockerfile:1
+# Larger base image for development
+FROM --platform=linux/amd64 node:14
 
-FROM --platform=linux/amd64 node:12
+WORKDIR /app
 
-# Create app directory
-RUN mkdir -p /code
-WORKDIR /code
+# Install dependencies
+COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile
 
-# Installing dependencies
-COPY package.json .
-COPY package-lock.json .
-RUN npm install
-
-# Copying source files
 COPY . .
 
-CMD ["npm", "run", "dev"]
+ENV NEXT_PUBLIC_APP_ENV development
+
+EXPOSE 3000
+
+# Disable NextJS telemetry
+ENV NEXT_TELEMETRY_DISABLED 1
+
+CMD ["yarn", "dev"]

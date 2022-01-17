@@ -7,21 +7,26 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('permissions', '0002_auto_20210422_2020'),
-        ('organizations', '0026_auto_20210426_1802'),
+        ("permissions", "0002_auto_20210422_2020"),
+        ("organizations", "0026_auto_20210426_1802"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='membership',
-            name='role',
+            model_name="membership",
+            name="role",
         ),
         migrations.AddField(
-            model_name='membership',
-            name='group',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='members', to='permissions.responsiblegroup'),
+            model_name="membership",
+            name="group",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="members",
+                to="permissions.responsiblegroup",
+            ),
         ),
         migrations.DeleteModel(
-            name='Role',
+            name="Role",
         ),
     ]

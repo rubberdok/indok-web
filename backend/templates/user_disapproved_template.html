@@ -22,7 +22,7 @@
       }
     </style>
   </head>
-  <body style="font-family: Montserrat, serif">
+  <body style="font-family: Open Sans, sans-serif">
     <div
       style="
         border: 5px solid #065a5a;
@@ -39,15 +39,16 @@
       <p>
           Din søknad for booking av <strong>{{ chosen_cabins_string }}</strong> fra
         <span><strong>{{check_in }}</strong></span> til
-          <span><strong>{{ check_out }}</strong> har dessverre blitt <strong>underkjent</strong> av hyttestyret. </span>
+          <span><strong>{{ check_out }}</strong> har dessverre blitt <strong>underkjent</strong> av Hyttestyret. </span>
       </p>
+        <p>Bookingen din ble underkjent av følgende grunn: <strong>{{ extra_info }}</strong></p>
       <p>Ikke nøl med å ta kontakt hvis dere skulle ha spørsmål.</p>
       <p>Med vennlig hilsen,</p>
         <p>
         {{ booking_responsible_name }} <br />Bookingansvarlig Hyttestyret, <br />Indøkhyttene
         NTNU <br />{{ booking_responsible_email }} / tlf. {{ booking_responsible_phone }} <br /><a
-          href="https://www.januslinjeforening.no/indokhyttene/"
-          >januslinjeforening.no/indokhyttene/</a
+          href="https://indokntnu.no/cabins"
+          >https://indokntnu.no/cabins</a
         >
       </p>
     </div>

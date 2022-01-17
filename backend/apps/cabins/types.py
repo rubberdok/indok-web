@@ -5,7 +5,7 @@ from django.db.models import QuerySet
 from graphene_django import DjangoObjectType
 import graphene
 
-from .models import Booking as BookingModel, Cabin as CabinModel
+from .models import Booking as BookingModel, Cabin as CabinModel, BookingResponsible
 
 
 class AllBookingsType(DjangoObjectType):
@@ -42,6 +42,17 @@ class CabinType(DjangoObjectType):
         fields = ["id", "name", "max_guests", "internal_price", "external_price"]
 
 
+class BookingResponsibleType(DjangoObjectType):
+    first_name = graphene.String()
+    last_name = graphene.String()
+    phone = graphene.Int()
+    email = graphene.String()
+    active = graphene.Boolean()
+
+    class Meta:
+        model = BookingResponsible
+
+
 EmailTypes = Literal["reserve_booking", "approve_booking", "disapprove_booking"]
 
 
@@ -56,6 +67,7 @@ class EmailInputType(TypedDict):
     cabins: QuerySet
     check_in: date
     check_out: date
+    extra_info: str
 
 
 class BookingInfoType(EmailInputType):

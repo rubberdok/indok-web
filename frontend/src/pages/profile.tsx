@@ -35,6 +35,8 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
+const ID_PREFIX = "profile";
+
 const ProfilePage: NextPage = () => {
   const { loading, error, data, refetch: refetchUser } = useQuery<{ user: User }>(GET_USER);
 
@@ -80,7 +82,10 @@ const ProfilePage: NextPage = () => {
                     <Box className={classes.content}>
                       <Box className={classes.avatarBox}>
                         <Avatar>{data.user.firstName[0]}</Avatar>
-                        <Typography variant="h4">{`${data.user.firstName} ${data.user.lastName}`}</Typography>
+                        <Typography
+                          variant="h4"
+                          data-test-id={`${ID_PREFIX}-fullName`}
+                        >{`${data.user.firstName} ${data.user.lastName}`}</Typography>
                       </Box>
                       <Box className={classes.userInfoBox}>
                         <Typography variant="body1">

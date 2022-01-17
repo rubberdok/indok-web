@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from "@apollo/client";
 import PermissionRequired from "@components/permissions/PermissionRequired";
 import { EVENT_SIGN_OFF, EVENT_SIGN_UP } from "@graphql/events/mutations";
+import { GET_EVENT } from "@graphql/events/queries";
 import { GET_USER } from "@graphql/users/queries";
 import { GET_SERVER_TIME } from "@graphql/utils/time/queries";
 import { AttendableEvent, Event } from "@interfaces/events";
@@ -25,11 +26,10 @@ import CreditCard from "@material-ui/icons/CreditCard";
 import EventIcon from "@material-ui/icons/Event";
 import LocationOnIcon from "@material-ui/icons/LocationOn";
 import { Alert as MuiAlert } from "@material-ui/lab";
+import { calendarFile } from "@utils/calendars";
 import dayjs from "dayjs";
-import nb from "dayjs/locale/nb";
 import Link from "next/link";
 import React, { useState } from "react";
-import { GET_EVENT } from "../../../graphql/events/queries";
 import CountdownButton from "./CountdownButton";
 import EditEvent from "./EventEditor";
 
@@ -60,7 +60,7 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: "1em",
   },
   wrapIcon: {
-    verticalAlign: "middle",
+    alignItems: "center",
     display: "inline-flex",
     width: "100%",
     marginBottom: theme.spacing(1),
@@ -337,17 +337,29 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
                 <Typography variant="overline">Åpner</Typography>
                 <Typography variant="body1" className={classes.wrapIcon}>
                   <EventIcon fontSize="small" />
-                  {dayjs(eventData.event.startTime).locale(nb).format("DD.MMM YYYY, kl. HH:mm")}
+                  {dayjs(eventData.event.startTime).format("DD.MMM YYYY, kl. HH:mm")}
                 </Typography>
                 {eventData.event.endTime && (
                   <>
                     <Typography variant="overline">Slutter</Typography>
                     <Typography variant="body1" className={classes.wrapIcon}>
-                      <EventIcon fontSize="small" />{" "}
-                      {dayjs(eventData.event.endTime).locale(nb).format("DD.MMM YYYY, kl. HH:mm")}
+                      <EventIcon fontSize="small" /> {dayjs(eventData.event.endTime).format("DD.MMM YYYY, kl. HH:mm")}
                     </Typography>
                   </>
                 )}
+                <Button
+                  variant="text"
+                  href={calendarFile(
+                    eventData.event.title,
+                    eventData.event.startTime,
+                    eventData.event.endTime,
+                    eventData.event.location,
+                    eventData.event.description
+                  )}
+                  download="event.ics"
+                >
+                  Last ned i kalender
+                </Button>
                 {eventData.event.allowedGradeYears.length < 5 && (
                   <>
                     <Typography variant="overline" gutterBottom>
