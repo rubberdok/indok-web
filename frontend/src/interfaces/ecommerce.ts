@@ -13,7 +13,7 @@ export type Product = {
 export type PaymentStatus = "INITIATED" | "RESERVED" | "CAPTURED" | "CANCELLED" | "REFUNDED" | "FAILED" | "REJECTED";
 
 export type Order = {
-  orderId: string;
+  id: string;
   product: Product;
   user: User;
   quantity: number;

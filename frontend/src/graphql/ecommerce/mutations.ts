@@ -14,7 +14,7 @@ export const ATTEMPT_CAPTURE_PAYMENT = gql`
     attemptCapturePayment(orderId: $orderId) {
       status
       order {
-        orderId
+        id
         product {
           id
           name
