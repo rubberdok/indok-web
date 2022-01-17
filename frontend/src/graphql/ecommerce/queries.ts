@@ -7,7 +7,6 @@ export const GET_PRODUCT = gql`
       name
       description
       price
-      totalQuantity
       maxBuyableQuantity
     }
   }

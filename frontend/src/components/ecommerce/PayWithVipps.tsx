@@ -1,6 +1,6 @@
 import { ApolloError, useMutation } from "@apollo/client";
 import { INITIATE_ORDER } from "@graphql/ecommerce/mutations";
-import { Card, CardActionArea, CardMedia, CircularProgress, makeStyles, Theme } from "@material-ui/core";
+import { Card, CardActionArea, CardMedia, makeStyles } from "@material-ui/core";
 import { useRouter } from "next/router";
 import React from "react";
 

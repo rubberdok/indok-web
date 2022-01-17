@@ -26,6 +26,7 @@ import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { redirectIfNotLoggedIn } from "src/utils/redirect";
+import dayjs from "dayjs";
 
 const useStyles = makeStyles((theme: Theme) => ({
   list: {
@@ -119,7 +120,10 @@ const FallbackPage: NextPage = () => {
                         <ListItemText primary={`${order.quantity} stk`} secondary={"Antall"} />
                       </ListItem>
                       <ListItem className={classes.listitem}>
-                        <ListItemText primary={`${new Date(order.date).toLocaleString()}`} secondary={"Dato"} />
+                        <ListItemText
+                          primary={dayjs(order.date).format("DD. MMM YYYY, kl. HH:mm:ss")}
+                          secondary={"Dato"}
+                        />
                       </ListItem>
                       <Divider variant="middle" component="li" />
                       <ListItem className={classes.listitem}>

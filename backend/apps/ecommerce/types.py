@@ -11,7 +11,6 @@ class ProductType(DjangoObjectType):
             "name",
             "price",
             "description",
-            "total_quantity",  # Maybe remove this before merge to prod
             "max_buyable_quantity",
         ]
 

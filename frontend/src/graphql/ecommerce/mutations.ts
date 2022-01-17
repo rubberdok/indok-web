@@ -38,7 +38,6 @@ export const CREATE_PRODUCT = gql`
         name
         description
         price
-        totalQuantity
         maxBuyableQuantity
       }
       ok

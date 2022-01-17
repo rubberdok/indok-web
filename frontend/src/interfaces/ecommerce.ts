@@ -7,7 +7,6 @@ export type Product = {
   price: number;
   description: string;
   organization: Organization;
-  totalQuantity: number; // Maybe remove this before merge to prod
   maxBuyableQuantity: number;
 }
 

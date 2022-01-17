@@ -133,7 +133,6 @@ class EcommerceMutationsTestCase(EcommerceBaseTestCase):
                     name
                     description
                     price
-                    totalQuantity
                     maxBuyableQuantity
                 }
                 ok
