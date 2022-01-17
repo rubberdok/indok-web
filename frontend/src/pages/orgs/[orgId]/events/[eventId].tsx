@@ -121,17 +121,21 @@ const EventAdminPage: NextPage = () => {
       });
   };
 
-  const renderCellContent = (signUp: SignUp, field: HeaderValuePair<SignUp>) => {
+  const CellContent = ({ signUp, field }: { signUp: SignUp; field: HeaderValuePair<SignUp> }) => {
     if (field.header === "Navn") {
-      return `${signUp.user.firstName} ${signUp.user.lastName}`;
+      return (
+        <Typography variant="body2">
+          {signUp.user.firstName} {signUp.user.lastName}
+        </Typography>
+      );
     }
     if (field.header === "Mobilnummer") {
-      return signUp.userPhoneNumber.slice(3);
+      return <Typography variant="body2">{signUp.userPhoneNumber.slice(3)}</Typography>;
     }
     if (typeof signUp[field.field] == "boolean") {
       return signUp[field.field] ? <Check color="primary" /> : <Close color="error" />;
     }
-    return signUp[field.field] || "━";
+    return <Typography variant="body2">{signUp[field.field] || "━"}</Typography>;
   };
 
   return (
@@ -197,7 +201,7 @@ const EventAdminPage: NextPage = () => {
                               <TableRow key={`user-row-${signUp.user.id}`}>
                                 {signUpFields.map((field) => (
                                   <TableCell key={`user-${signUp.user.id}-cell--${field.field}`}>
-                                    {renderCellContent(signUp, field)}
+                                    <CellContent signUp={signUp} field={field} />
                                   </TableCell>
                                 ))}
                                 <TableCell>
@@ -246,7 +250,7 @@ const EventAdminPage: NextPage = () => {
                               <TableRow key={`user-row-${signUp.user.id}`}>
                                 {signUpFields.map((field) => (
                                   <TableCell key={`user-${signUp.user.id}-cell--${field.field}`}>
-                                    {renderCellContent(signUp, field)}
+                                    <CellContent signUp={signUp} field={field} />
                                   </TableCell>
                                 ))}
                               </TableRow>

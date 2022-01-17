@@ -15,10 +15,10 @@ type Props = {
   productId: string;
   quantity: number;
   onError?: (e?: ApolloError) => void;
-}
+};
 
 const PayWithVipps: React.FC<Props> = ({ productId, quantity, onError }) => {
-  const [initiateOrder, { loading, error }] = useMutation(INITIATE_ORDER, {
+  const [initiateOrder, { error }] = useMutation(INITIATE_ORDER, {
     onCompleted: (data) =>
       router.push(data.initiateOrder.redirect || `/ecommerce/fallback?orderId=${data.initiateOrder.orderId}`),
     onError: onError,
@@ -26,8 +26,6 @@ const PayWithVipps: React.FC<Props> = ({ productId, quantity, onError }) => {
 
   const classes = useStyles();
   const router = useRouter();
-
-  if (loading) return <CircularProgress />;
 
   return (
     <Card className={classes.root}>

@@ -163,9 +163,12 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
   if (!eventData || !eventData.event || !userData)
     return <Typography variant="body1">Kunne ikke laste arrangementet</Typography>;
 
+  const event = eventData.event;
+  const user = userData.user;
+
   const handleClick = () => {
-    if (!userData.user) return;
-    if (eventData.event.userAttendance?.isSignedUp) {
+    if (!user) return;
+    if (event.userAttendance?.isSignedUp) {
       eventSignOff({ variables: { eventId: eventId.toString() } })
         .then(() => {
           refetchEventData({ eventId: eventId.toString() });
@@ -176,7 +179,7 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
         });
       return;
     }
-    if (eventData.event.userAttendance?.isOnWaitingList) {
+    if (event.userAttendance?.isOnWaitingList) {
       eventSignOff({ variables: { eventId: eventId.toString() } })
         .then(() => {
           refetchEventData({ eventId: eventId.toString() });
@@ -200,9 +203,7 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
 
   return (
     <>
-      {openEditEvent && (
-        <EditEvent open={openEditEvent} onClose={() => setOpenEditEvent(false)} event={eventData.event} />
-      )}
+      {openEditEvent && <EditEvent open={openEditEvent} onClose={() => setOpenEditEvent(false)} event={event} />}
       <Box width="100%" py={6} bgcolor={theme.palette.background.paper} pb={10}>
         <Container>
           <Link href="/events" passHref>
@@ -211,35 +212,33 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
             </Button>
           </Link>
           <Typography variant="h2" gutterBottom>
-            {eventData.event.title}
+            {event.title}
           </Typography>
           <Typography variant="subtitle2" display="block" gutterBottom>
-            Arrangert av {eventData.event.organization?.name}
+            Arrangert av {event.organization?.name}
           </Typography>
 
-          {!eventData.event.isAttendable ? null : !userData.user ? (
+          {!event.isAttendable ? null : !user ? (
             <Typography variant="h5" gutterBottom>
               Logg inn for å melde deg på
             </Typography>
-          ) : !eventData.event.allowedGradeYears.includes(userData.user.gradeYear) ? (
+          ) : !event.allowedGradeYears.includes(user.gradeYear) ? (
             <Typography variant="h5" gutterBottom>
               Ikke aktuell
             </Typography>
           ) : (
             <>
               <PermissionRequired permission="events.add_signup">
-                {!userData.user.phoneNumber &&
-                  !eventData.event.userAttendance?.isSignedUp &&
-                  !eventData.event.userAttendance?.isOnWaitingList && (
-                    <Typography variant="body1" color="error" className={classes.wrapIcon}>
-                      <Warning fontSize="small" />
-                      Du må oppgi et telefonnummer på brukeren din for å kunne melde deg på
-                    </Typography>
-                  )}
+                {!user.phoneNumber && !event.userAttendance?.isSignedUp && !event.userAttendance?.isOnWaitingList && (
+                  <Typography variant="body1" color="error" className={classes.wrapIcon}>
+                    <Warning fontSize="small" />
+                    Du må oppgi et telefonnummer på brukeren din for å kunne melde deg på
+                  </Typography>
+                )}
 
-                {eventData.event.hasExtraInformation &&
-                  !eventData.event.userAttendance?.isSignedUp &&
-                  !eventData.event.userAttendance?.isOnWaitingList && (
+                {event.hasExtraInformation &&
+                  !event.userAttendance?.isSignedUp &&
+                  !event.userAttendance?.isOnWaitingList && (
                     <TextField
                       className={classes.extraInformation}
                       label="Ekstrainformasjon"
@@ -252,32 +251,32 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
                     />
                   )}
                 <CountdownButton
-                  countDownDate={(eventData.event as AttendableEvent).signupOpenDate}
-                  isSignedUp={(eventData.event as AttendableEvent).userAttendance.isSignedUp}
-                  isOnWaitingList={(eventData.event as AttendableEvent).userAttendance.isOnWaitingList}
-                  isFull={(eventData.event as AttendableEvent).isFull}
+                  countDownDate={(event as AttendableEvent).signupOpenDate}
+                  isSignedUp={(event as AttendableEvent).userAttendance.isSignedUp}
+                  isOnWaitingList={(event as AttendableEvent).userAttendance.isOnWaitingList}
+                  isFull={(event as AttendableEvent).isFull}
                   loading={signOffLoading || signUpLoading || eventLoading}
                   disabled={
-                    (!userData.user.phoneNumber &&
-                      !eventData.event.userAttendance?.isSignedUp &&
-                      !eventData.event.userAttendance?.isOnWaitingList) ||
-                    (eventData.event.bindingSignup && eventData.event.userAttendance?.isSignedUp) ||
-                    (eventData.event.hasExtraInformation &&
+                    (!user.phoneNumber &&
+                      !event.userAttendance?.isSignedUp &&
+                      !event.userAttendance?.isOnWaitingList) ||
+                    (event.bindingSignup && event.userAttendance?.isSignedUp) ||
+                    (event.hasExtraInformation &&
                       !extraInformation &&
-                      !eventData.event.userAttendance?.isSignedUp &&
-                      !eventData.event.userAttendance?.isOnWaitingList)
+                      !event.userAttendance?.isSignedUp &&
+                      !event.userAttendance?.isOnWaitingList)
                   }
                   onClick={handleClick}
                   currentTime={timeData.serverTime}
                 />
-                {eventData.event.products.length &&
-                  eventData.event.userAttendance?.isSignedUp &&
-                  (eventData.event.userAttendance.hasBoughtTicket ? (
+                {event.products.length &&
+                  event.userAttendance?.isSignedUp &&
+                  (event.userAttendance.hasBoughtTicket ? (
                     <MuiAlert severity="success" className={classes.boughtTicket}>
                       Du har betalt for billett
                     </MuiAlert>
                   ) : (
-                    <Link href={`/ecommerce/checkout?productId=${eventData.event.products[0].id}&quantity=1`} passHref>
+                    <Link href={`/ecommerce/checkout?productId=${event.products[0].id}&quantity=1`} passHref>
                       <Button size="large" variant="contained" color={"primary"} className={classes.payButton}>
                         Gå til betaling
                       </Button>
@@ -286,9 +285,7 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
               </PermissionRequired>
             </>
           )}
-          {userData.user?.organizations
-            .map((organization) => organization.id)
-            .includes(eventData.event.organization.id) && (
+          {user?.organizations.map((organization) => organization.id).includes(event.organization.id) && (
             <div>
               <Button
                 variant="contained"
@@ -300,7 +297,7 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
               >
                 Rediger
               </Button>
-              <Link href={`/orgs/${eventData.event.organization.id}/events/${eventId}`} passHref>
+              <Link href={`/orgs/${event.organization.id}/events/${eventId}`} passHref>
                 <Button size="large" variant="contained" startIcon={<List />}>
                   Administrer
                 </Button>
@@ -317,7 +314,7 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
               Beskrivelse
             </Typography>
             <Typography variant="body1" display="block" gutterBottom>
-              {formatDescription(eventData.event.description, classes.innerParagraph, classes.paragraph)}
+              {formatDescription(event.description, classes.innerParagraph, classes.paragraph)}
             </Typography>
           </Grid>
 
@@ -328,28 +325,28 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
                 <Typography variant="h4" gutterBottom>
                   Info
                 </Typography>
-                {eventData.event.price && (
+                {event.price && (
                   <Typography variant="body1" className={classes.wrapIcon}>
-                    <CreditCard fontSize="small" /> {eventData.event.price} kr
+                    <CreditCard fontSize="small" /> {event.price} kr
                   </Typography>
                 )}
-                {eventData.event.location && (
+                {event.location && (
                   <Typography variant="body1" className={classes.wrapIcon}>
-                    <LocationOnIcon fontSize="small" /> {eventData.event.location}
+                    <LocationOnIcon fontSize="small" /> {event.location}
                   </Typography>
                 )}
-                {eventData.event.category && (
+                {event.category && (
                   <Typography variant="body1" className={classes.wrapIcon}>
-                    <CategoryIcon fontSize="small" /> {eventData.event.category?.name}
+                    <CategoryIcon fontSize="small" /> {event.category?.name}
                   </Typography>
                 )}
-                {eventData.event.contactEmail && (
+                {event.contactEmail && (
                   <Typography variant="body1" className={classes.wrapIcon}>
                     <ContactMail fontSize="small" />
-                    <MuiLink href={`mailto:${eventData.event.contactEmail}`}>{eventData.event.contactEmail}</MuiLink>
+                    <MuiLink href={`mailto:${event.contactEmail}`}>{event.contactEmail}</MuiLink>
                   </Typography>
                 )}
-                {eventData.event.bindingSignup && (
+                {event.bindingSignup && (
                   <Typography variant="body1" className={classes.wrapIcon} color="error">
                     <ErrorOutline fontSize="small" /> Bindende påmelding
                   </Typography>
@@ -357,35 +354,29 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
                 <Typography variant="overline">Åpner</Typography>
                 <Typography variant="body1" className={classes.wrapIcon}>
                   <EventIcon fontSize="small" />
-                  {dayjs(eventData.event.startTime).format("DD.MMM YYYY, kl. HH:mm")}
+                  {dayjs(event.startTime).format("DD.MMM YYYY, kl. HH:mm")}
                 </Typography>
-                {eventData.event.endTime && (
+                {event.endTime && (
                   <>
                     <Typography variant="overline">Slutter</Typography>
                     <Typography variant="body1" className={classes.wrapIcon}>
-                      <EventIcon fontSize="small" /> {dayjs(eventData.event.endTime).format("DD.MMM YYYY, kl. HH:mm")}
+                      <EventIcon fontSize="small" /> {dayjs(event.endTime).format("DD.MMM YYYY, kl. HH:mm")}
                     </Typography>
                   </>
                 )}
                 <Button
                   variant="text"
-                  href={calendarFile(
-                    eventData.event.title,
-                    eventData.event.startTime,
-                    eventData.event.endTime,
-                    eventData.event.location,
-                    eventData.event.description
-                  )}
+                  href={calendarFile(event.title, event.startTime, event.endTime, event.location, event.description)}
                   download="event.ics"
                 >
                   Last ned i kalender
                 </Button>
-                {eventData.event.allowedGradeYears.length < 5 && (
+                {event.allowedGradeYears.length < 5 && (
                   <>
                     <Typography variant="overline" gutterBottom>
                       Åpent for
                     </Typography>
-                    {eventData.event.allowedGradeYears.map((grade) => (
+                    {event.allowedGradeYears.map((grade) => (
                       <Typography variant="body1" className={classes.wrapIcon} key={grade}>
                         <ArrowRight fontSize="small" /> {`${grade}. klasse`}
                       </Typography>

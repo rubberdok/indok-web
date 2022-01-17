@@ -1,5 +1,6 @@
 import datetime
 import json
+from typing import Literal, Optional
 
 import requests
 from django.conf import settings
@@ -40,7 +41,9 @@ class VippsApi:
         self.vipps_system_plugin_name = vipps_system_plugin_name
         self.vipps_system_plugin_version = vipps_system_plugin_version
 
-    def _make_call(self, method: Literal["POST", "GET", "PUT"], endpoint: str, headers: dict[str, str], data: Optional[dict] = None) -> dict:
+    def _make_call(
+        self, method: Literal["POST", "GET", "PUT"], endpoint: str, headers: dict[str, str], data: Optional[dict] = None
+    ) -> dict:
         """Used in main api calls
         Args:
             method (str): post, get or put
@@ -59,7 +62,6 @@ class VippsApi:
             req = requests.put
 
         url = f"{self.vipps_server}{endpoint}"
-
 
         r = req(url, headers=headers, data=data)
         if r.ok:
