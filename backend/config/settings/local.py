@@ -11,7 +11,7 @@ SECRET_KEY = env(
 
 # URLs
 ROOT_URLCONF = "config.urls.local"
-# ENVIRONMENT = "development"
+ENVIRONMENT = "development"
 
 # ACCESS
 ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1"]
