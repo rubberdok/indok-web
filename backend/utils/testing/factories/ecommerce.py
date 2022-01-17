@@ -28,6 +28,6 @@ class OrderFactory(DjangoModelFactory):
     class Meta:
         model = Order
 
-    order_id = uuid.uuid4().hex
+    id = uuid.uuid4().hex
     quantity = fake.random_int(1, 10)
     total_price = fake.random_int(100, 1000)
