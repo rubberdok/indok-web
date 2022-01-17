@@ -10,6 +10,24 @@ import useStyles from "@components/pages/profile/styles";
 
 const ID_PREFIX = "profile-";
 
+// Returns a string with the first letter of the given first name,
+// and the first letter of the last space-separated part of lastName.
+const userInitials = (firstName: string, lastName: string): string => {
+  let initials = "";
+
+  // Since "" is falsey, ensures that we have a string to index
+  if (firstName) {
+    initials += firstName[0];
+  }
+
+  if (lastName) {
+    const lastNames = lastName.split(" ");
+    initials += lastNames[lastNames.length - 1][0];
+  }
+
+  return initials;
+};
+
 const ProfilePage: NextPage = () => {
   const { data, error } = useQuery<{ user: User }>(GET_USER_PROFILE);
   const theme = useTheme();
@@ -38,10 +56,10 @@ const ProfilePage: NextPage = () => {
           <>
             <Grid item>
               <Avatar className={classes.large} style={{ backgroundColor: "#526fa0" }}>
-                {data && (
-                  <Typography variant="h3" component="p">{`${data.user.firstName[0]}${
-                    data.user.lastName && data.user.lastName[0]
-                  }`}</Typography>
+                {data?.user && (
+                  <Typography variant="h3" component="p">
+                    {userInitials(data.user.firstName, data.user.lastName)}
+                  </Typography>
                 )}
               </Avatar>
             </Grid>
