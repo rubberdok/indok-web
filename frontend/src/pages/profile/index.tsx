@@ -7,6 +7,7 @@ import { NextPage } from "next";
 import Head from "next/head";
 import { User } from "src/types/users";
 import useStyles from "@components/pages/profile/styles";
+import { useMemo } from "react";
 
 const ID_PREFIX = "profile-";
 
@@ -32,6 +33,7 @@ const ProfilePage: NextPage = () => {
   const { data, error } = useQuery<{ user: User }>(GET_USER_PROFILE);
   const theme = useTheme();
   const classes = useStyles();
+  const initials = useMemo(() => (data?.user ? userInitials(data.user.firstName, data.user.lastName) : ""), [data]);
 
   if (error)
     return (
@@ -58,7 +60,7 @@ const ProfilePage: NextPage = () => {
               <Avatar className={classes.large} style={{ backgroundColor: "#526fa0" }}>
                 {data?.user && (
                   <Typography variant="h3" component="p">
-                    {userInitials(data.user.firstName, data.user.lastName)}
+                    {initials}
                   </Typography>
                 )}
               </Avatar>
