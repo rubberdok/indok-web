@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useQuery, gql } from "@apollo/client";
 import { useRouter } from "next/router";
 import { User } from "@interfaces/users";
@@ -21,7 +21,6 @@ import {
   Checkbox,
 } from "@material-ui/core";
 import { Organization } from "@interfaces/organizations";
-import { Delete } from "@material-ui/icons";
 import FilterUsers from "./FilterUsers";
 
 const useStyles = makeStyles(() => ({
@@ -42,33 +41,43 @@ const EditUsersInOrganization: React.FC<Props> = ({ organization }) => {
   const orgNumberId = parseInt(orgId as string);
   const classes = useStyles();
   const [checkedPeople, setCheckedPeople] = useState<User[]>([]);
-  const [enabledFilters, setEnabledFilter] = useState<string[]>([]);
+  const [groupFilter, setGroupFilter] = useState<string[]>([]);
+  const [searchFilter, setSearchFilter] = useState("");
+  const [choosenPeople, setChoosenPeople] = useState<undefined | User[]>([]);
 
-  const handleEnabledFilter = (name: string, checked: boolean) => {
+  const handleSearch = (text: string) => {
+    setSearchFilter(text);
+  }
+
+  //Handling the sorting with people inside groups
+  const handleGroupFilter = (name: string, checked: boolean) => {
     if (checked) {
-      if (!enabledFilters.includes(name)) {
-        setEnabledFilter([...enabledFilters, name]);
+      if (!groupFilter.includes(name)) {
+        setGroupFilter([...groupFilter, name]);
       }
     } else {
-      if (enabledFilters.includes(name)) {
-        setEnabledFilter(enabledFilters.filter((filter) => filter == name));
+      if (groupFilter.includes(name)) {
+        setGroupFilter(groupFilter.filter((filter) => filter == name));
       }
     }
   };
 
+  //Handling logic when checkmarking the people
   const handleCheckedPeople = (user: User, checked: boolean) => {
     if (checked) {
       if (!checkedPeople.includes(user)) {
         setCheckedPeople([...checkedPeople, user]);
-        console.log(checkedPeople);
+
       }
     } else {
       if (checkedPeople.includes(user)) {
         setCheckedPeople(checkedPeople.filter((checkedUser) => checkedUser.id !== user.id));
-        console.log(checkedPeople);
+
       }
     }
   };
+
+  //Fetching users in the organization
   const { error, loading, data } = useQuery<{
     organization: { users: User[] };
   }>(
@@ -87,6 +96,20 @@ const EditUsersInOrganization: React.FC<Props> = ({ organization }) => {
     { variables: { id: orgNumberId } }
   );
 
+  //When people are fetched all people are choosen
+  useEffect(() => {
+    setChoosenPeople(data?.organization.users);
+  }, [data]);
+
+  //Filter out users that does not fufuill the searchbar query
+  useEffect(() => {
+    setChoosenPeople(data?.organization.users.filter((user) => {
+      let fullName = user.firstName + " " + user.lastName;
+      return fullName.toLocaleLowerCase().includes(searchFilter.toLocaleLowerCase());
+    }));
+    console.log(choosenPeople);
+  }, [searchFilter]);
+
   if (error) return <p>Error</p>;
   if (loading) return <p>Loading...</p>;
 
@@ -97,7 +120,7 @@ const EditUsersInOrganization: React.FC<Props> = ({ organization }) => {
           <Grid item xs={12}>
             <Typography variant="h1">{organization.name}</Typography>
           </Grid>
-          <FilterUsers organization={organization}/>
+          <FilterUsers handleGroupFilter={handleGroupFilter} handleSearch={handleSearch} />
           <Grid item container>
             <Grid item xs>
               <Card variant="outlined">
@@ -116,7 +139,7 @@ const EditUsersInOrganization: React.FC<Props> = ({ organization }) => {
                           </TableRow>
                         </TableHead>
                         <TableBody>
-                          {data?.organization?.users.map((user: User, index) => (
+                          {choosenPeople?.map((user: User, index) => (
                             <TableRow className={classes.hover} key={index} hover>
                               <TableCell>{user.firstName + " " + user.lastName}</TableCell>
                               <TableCell>{user.email}</TableCell>
@@ -126,7 +149,7 @@ const EditUsersInOrganization: React.FC<Props> = ({ organization }) => {
                                 </Button>
                               </TableCell>
                               <TableCell size="small" align="right">
-                              <Checkbox
+                                <Checkbox
                                   color="primary"
                                   onChange={(event) => {
                                     handleCheckedPeople(user, event.target.checked);

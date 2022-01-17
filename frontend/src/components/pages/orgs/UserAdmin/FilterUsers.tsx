@@ -1,19 +1,18 @@
-import { Organization } from "@interfaces/organizations";
 import React, { useEffect, useState } from "react";
 import FilterButtons from "@components/pages/archive/FilterButtons";
 import SearchBar from "@components/pages/archive/SearchBar";
 import { useRouter } from "next/router";
-import { Grid } from "@material-ui/core";
+import { Checkbox, FormControl, FormControlLabel, Grid } from "@material-ui/core";
 import { gql, useQuery } from "@apollo/client";
 import { RemoveFiltersButton } from "@components/pages/archive/RemoveFiltersButton";
-import { User } from "@sentry/types";
 
 type Props = {
-  organization: Organization;
+  handleGroupFilter: (name: string, active: boolean) => void;
+  handleSearch: (text: string) => void;
 };
 
 //TODO: filter when clicking on a group or writing in searchbar
-const FilterUsers: React.FC<Props> = ({ organization }) => {
+const FilterUsers: React.FC<Props> = ({ handleSearch, handleGroupFilter }) => {
   const router = useRouter();
   const { orgId } = router.query;
   const orgNumberId = parseInt(orgId as string);
@@ -39,6 +38,10 @@ const FilterUsers: React.FC<Props> = ({ organization }) => {
     `,
     { variables: { id: orgNumberId } }
   );
+
+  useEffect(() => {
+    handleSearch(searchFilter);
+  }, [searchFilter])
 
   // Fetching correct buttons dynamically
   useEffect(() => {
