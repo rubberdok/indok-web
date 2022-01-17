@@ -729,11 +729,6 @@
   resolved "https://registry.yarnpkg.com/@tootallnate/once/-/once-1.1.2.tgz#ccb91445360179a04e7fe6aff78c00ffc1eeaf82"
   integrity sha512-RbzJvlNzmRq5c3O09UipeuXno4tA1FE6ikOjxZK0tuxVv3412l64l5t1W5pj4+rJq9vpkm/kwiR07aZXnsKPxw==
 
-"@types/feather-icons@^4.7.0":
-  version "4.7.0"
-  resolved "https://registry.yarnpkg.com/@types/feather-icons/-/feather-icons-4.7.0.tgz#ec66bc046bcd1513835f87541ecef54b50c57ec9"
-  integrity sha512-vflOrmlHMGIGVN4AEl6ErPCNKBLcP1ehEpLqnJkTgf69r5QmJzy7BF1WzbBc8Hqs9KffROPT/JqlSKH4o5vB/w==
-
 "@types/hast@^2.0.0":
   version "2.3.4"
   resolved "https://registry.yarnpkg.com/@types/hast/-/hast-2.3.4.tgz#8aa5ef92c117d20d974a82bdfb6a648b08c0bafc"
@@ -5118,18 +5113,6 @@ react-event-listener@^0.6.0:
     "@babel/runtime" "^7.2.0"
     prop-types "^15.6.0"
     warning "^4.0.1"
-
-react-feather@^2.0.8:
-  version "2.0.9"
-  resolved "https://registry.yarnpkg.com/react-feather/-/react-feather-2.0.9.tgz#6e42072130d2fa9a09d4476b0e61b0ed17814480"
-  integrity sha512-yMfCGRkZdXwIs23Zw/zIWCJO3m3tlaUvtHiXlW+3FH7cIT6fiK1iJ7RJWugXq7Fso8ZaQyUm92/GOOHXvkiVUw==
-  dependencies:
-    prop-types "^15.7.2"
-
-react-icons@^4.2.0:
-  version "4.3.1"
-  resolved "https://registry.yarnpkg.com/react-icons/-/react-icons-4.3.1.tgz#2fa92aebbbc71f43d2db2ed1aed07361124e91ca"
-  integrity sha512-cB10MXLTs3gVuXimblAdI71jrJx8njrJZmNMEMC+sQu5B/BIOmlsAjskdqpn81y8UBVEGuHODd7/ci5DvoSzTQ==
 
 react-intersection-observer@^8.32.0:
   version "8.32.1"
