@@ -51,7 +51,7 @@ const EventsExport: React.FC<Props> = ({ organization }) => {
   };
 
   return (
-    <>
+    <Grid container>
       <Grid item xs={6}>
         <Grid item xs={12}>
           <Typography variant="overline" display="block">
@@ -86,7 +86,7 @@ const EventsExport: React.FC<Props> = ({ organization }) => {
           </ButtonGroup>
         </Grid>
       </Grid>
-    </>
+    </Grid>
   );
 };
 
