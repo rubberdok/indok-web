@@ -6,7 +6,7 @@ image: /img/pandemics.jpg
 board:
   ceo:
     name: Simen Vadseth
-    mail: tlf. 41634151
+    phoneNumber: 41634151
     title: Leder
 tag: idrett
 ---

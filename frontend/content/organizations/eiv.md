@@ -6,19 +6,15 @@ image: /img/eivbilde.jpg
 board:
   ceo:
     name: Phillip Kolkmeier
-    mail: tlf.
     title: Sommelier
   cto:
     name: Erlend Heir
-    mail: tlf.
     title: Sommelier
   cfo:
     name: Haakon Døssland
-    mail: tlf.
     title: Sommelier
   cmo:
     name: Ane Sandvik Rognskaug
-    mail: tlf.
     title: Sommelier
 
 tag: kultur

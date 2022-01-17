@@ -6,11 +6,9 @@ image: /img/janusstrikk.jpg
 board:
   ceo:
     name: Maren Barth
-    mail:
     title: Leder
   cto:
     name: Amanda Krutnes
-    mail:
     title: Leder
 tag: annet
 ---
