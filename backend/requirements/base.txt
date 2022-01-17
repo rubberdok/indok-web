@@ -1,5 +1,5 @@
 coverage==6.0
-Django==3.2.10
+Django==3.2.11
 django-alive==1.1.0
 django-cors-headers==3.5.0
 django-environ==0.4.5
