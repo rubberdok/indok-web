@@ -5,10 +5,9 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.db import models, transaction
 from django.db.models import F
-from django.db.models.fields import DateTimeField
+from django.db.models.fields import DateTimeField, UUIDField
 
 from apps.organizations.models import Organization
-
 from apps.users.models import User
 
 
@@ -91,7 +90,7 @@ class Order(models.Model):
         FAILED = "FAILED", "failed"
         REJECTED = "REJECTED", "rejected"
 
-    order_id = models.CharField(primary_key=True, max_length=50)  # Used with Vipps
+    id = UUIDField(primary_key=True, default=uuid.uuid4)
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="orders")
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="orders")
     quantity = models.IntegerField(default=1)

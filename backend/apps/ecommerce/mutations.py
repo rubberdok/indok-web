@@ -1,14 +1,11 @@
-import random
-import uuid
-
 import graphene
 from django.core.exceptions import PermissionDenied
 from django.db import transaction
-from faker import Faker
 from graphql_jwt.decorators import login_required, staff_member_required
 
-
 from apps.organizations.models import Organization
+from apps.organizations.permissions import check_user_membership
+
 from .models import Order, Product
 from .types import OrderType, ProductType
 from .vipps_utils import VippsApi
@@ -17,7 +14,7 @@ from .vipps_utils import VippsApi
 class InitiateOrder(graphene.Mutation):
 
     redirect = graphene.String()
-    order_id = graphene.String()
+    order_id = graphene.UUID()
     vipps_api = VippsApi()
 
     class Arguments:
@@ -48,14 +45,14 @@ class InitiateOrder(graphene.Mutation):
                 )
                 # Check order status at Vipps.
                 status, status_success = InitiateOrder.vipps_api.get_payment_status(
-                    f"{order.order_id}-{order.payment_attempt}"
+                    f"{order.id}-{order.payment_attempt}"
                 )
                 # If order canceled: retry, if reserved: stop attempt and restore quantity
                 if status_success and status == "RESERVE":
                     order.payment_status = Order.PaymentStatus.RESERVED
                     order.save()
                     order.product.restore_quantity(order)
-                    return InitiateOrder(order_id=order.order_id)
+                    return InitiateOrder(order_id=order.id)
 
                 # Retry
                 order.payment_attempt = order.payment_attempt + 1
@@ -63,17 +60,7 @@ class InitiateOrder(graphene.Mutation):
                 order.save()
 
         except Order.DoesNotExist:
-            org_name = product.organization.slug[:13].replace(" ", "-")
-
-            order_id = f"{org_name}-{uuid.uuid4().hex}"
-
-            order = Order(
-                order_id=order_id,
-                product=product,
-                user=user,
-                quantity=quantity,
-                total_price=product.price * quantity
-            )
+            order = Order(product=product, user=user, quantity=quantity, total_price=product.price * quantity)
 
             order.save()
 
@@ -108,7 +95,7 @@ class AttemptCapturePayment(graphene.Mutation):
             if order.payment_status == Order.PaymentStatus.INITIATED:
                 # Update status according to Vipps payment details
                 status, status_success = AttemptCapturePayment.vipps_api.get_payment_status(
-                    f"{order.order_id}-{order.payment_attempt}"
+                    f"{order.id}-{order.payment_attempt}"
                 )
 
                 if status_success and status == "RESERVE":
@@ -131,24 +118,36 @@ class AttemptCapturePayment(graphene.Mutation):
         return AttemptCapturePayment(status=order.payment_status, order=order)
 
 
+class CreateProductInput(graphene.InputObjectType):
+    name = graphene.String(required=True)
+    description = graphene.String(required=True)
+    price = graphene.Float(required=False)
+    organization_id = graphene.ID(required=True)
+    total_quantity = graphene.Int(required=False)
+    max_buyable_quantity = graphene.Int(required=False)
+
+
 class CreateProduct(graphene.Mutation):
 
     ok = graphene.Boolean()
     product = graphene.Field(ProductType)
 
-    @staff_member_required
-    def mutate(self, _):
+    class Arguments:
+        product_data = CreateProductInput(required=True)
 
-        cars = ["Luna", "Nova", "Atmos", "Eld", "Gnist", "Vilje", "Arctos", "Aquilo", "Borealis"]
+    @staff_member_required
+    def mutate(self, info, product_data):
+
+        try:
+            organization = Organization.objects.get(id=product_data.get("organization_id"))
+        except Organization.DoesNotExist:
+            raise ValueError("Ugyldig organisasjon oppgitt")
+
+        check_user_membership(info.context.user, organization)
 
         product = Product()
-        product.name = " ".join(Faker().words(2)).capitalize() + " " + cars[random.randint(0, len(cars) - 1)]
-        product.price = str(random.randint(1, 10_000))
-        product.description = "Best car." + f"\n{Faker().sentence()}"
-        product.organization = Organization.objects.first()
-        quantity = random.randint(1, 10)
-        product.total_quantity = quantity
-        product.max_buyable_quantity = random.randint(1, quantity)
+        for k, v in product_data.items():
+            setattr(product, k, v)
         product.save()
         ok = True
 

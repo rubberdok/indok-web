@@ -2,10 +2,9 @@ import logging
 from typing import cast
 
 import sentry_sdk
+from corsheaders.defaults import default_headers
 from sentry_sdk.integrations.django import DjangoIntegration
 from sentry_sdk.integrations.logging import LoggingIntegration, ignore_logger
-from corsheaders.defaults import default_headers
-
 
 from .base import *  # noqa
 from .base import env

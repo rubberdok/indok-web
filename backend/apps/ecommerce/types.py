@@ -19,7 +19,7 @@ class OrderType(DjangoObjectType):
     class Meta:
         model = Order
         fields = [
-            "order_id",
+            "id",
             "product",
             "user",
             "quantity",

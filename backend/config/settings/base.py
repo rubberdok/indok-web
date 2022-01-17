@@ -198,3 +198,7 @@ VIPPS_CLIENT_ID = env("VIPPS_CLIENT_ID")
 VIPPS_SECRET = env("VIPPS_SECRET")
 VIPPS_MERCHANT_SERIAL_NUMBER = env("VIPPS_MERCHANT_SERIAL_NUMBER")
 VIPPS_SUBSCRIPTION_KEY = env("VIPPS_SUBSCRIPTION_KEY")
+VIPPS_CALLBACK_PREFIX = env(
+    "VIPPS_CALLBACK_PREFIX", default="https://xoff0kv3i3.execute-api.eu-north-1.amazonaws.com/default/Vipps_callback"
+)
+VIPPS_FALLBACK_PREFIX = env("VIPPS_FALLBACK_PREFIX", default="http://127.0.0.1:3000/ecommerce/fallback")

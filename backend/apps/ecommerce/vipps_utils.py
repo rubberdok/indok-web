@@ -72,12 +72,12 @@ class VippsApi:
     # Public methods:
     def capture_payment(self, order, method):
         headers = self.build_headers()
-        headers["X-Request-Id"] = order.order_id[:-32]
+        headers["X-Request-Id"] = str(order.id)
         capture_data = self.build_capture_payment_request(order, method)
 
         self._make_call(
             "POST",
-            f"/ecomm/v2/payments/{order.order_id}-{order.payment_attempt}/capture",
+            f"/ecomm/v2/payments/{order.id}-{order.payment_attempt}/capture",
             headers,
             json.dumps(capture_data),
         )
@@ -163,14 +163,14 @@ class VippsApi:
         return {
             "merchantInfo": {
                 "merchantSerialNumber": self.merchant_serial_number,
-                "callbackPrefix": "https://xoff0kv3i3.execute-api.eu-north-1.amazonaws.com/default/Vipps_callback",
-                "fallBack": f"http://127.0.0.1:3000/ecommerce/fallback/?orderId={order.order_id}",
+                "callbackPrefix": settings.VIPPS_CALLBACK_PREFIX,
+                "fallBack": f"{settings.VIPPS_FALLBACK_PREFIX}?orderId={order.id}",
                 "authToken": order.auth_token,
                 "isApp": False,
             },
             "customerInfo": {"mobileNumber": str(order.user.phone_number)},
             "transaction": {
-                "orderId": f"{order.order_id}-{order.payment_attempt}",
+                "orderId": f"{order.id}-{order.payment_attempt}",
                 "amount": int(order.total_price * 100),  # ører
                 "transactionText": f"{order.quantity} {order.product.name}",
                 "skipLandingPage": False,
