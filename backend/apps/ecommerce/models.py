@@ -4,12 +4,11 @@ from django.conf import settings
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.db import models, transaction
-from django.db.models import F
+from django.db.models import F, Sum
 from django.db.models.fields import DateTimeField, UUIDField
 
 from apps.organizations.models import Organization
 from apps.users.models import User
-from django.db.models import Sum
 
 
 class Product(models.Model):
@@ -39,7 +38,14 @@ class Product(models.Model):
         super().save(*args, **kwargs)
 
     @classmethod
-    def check_and_reserve_quantity(cls, product_id, user: User, quantity: int):
+    def check_and_reserve_quantity(cls, product_id, user: User, quantity: int) -> "Product":
+        """
+        Check whether a requested quantity may be ordered and if so, reserve that quantity for this request.
+
+        Raises:
+            ValueError: If the requested quantity for the given product is not allowed.
+
+        """
         with transaction.atomic():
             # Check if the requested quantity is allowed
             try:
@@ -47,9 +53,6 @@ class Product(models.Model):
                 product = cls.objects.select_for_update().get(pk=product_id)
             except cls.DoesNotExist:
                 raise ValueError("Ugyldig produkt")
-
-            if product.related_object and not product.related_object.is_user_allowed_to_buy_product(user):
-                raise Exception("Du kan ikke kjøpe dette produktet.")
 
             bought_quantity = Order.objects.filter(
                 product__id=product_id,
@@ -65,7 +68,7 @@ class Product(models.Model):
             elif quantity > product.current_quantity:
                 raise ValueError("Forespurt antall enheter overskrider tilgjengelige antall enheter.")
 
-            # Update available quantity
+            # Reserve quantity by updating available quantity
             product.current_quantity = F("current_quantity") - quantity
             product.save()
             product.refresh_from_db()
@@ -73,6 +76,9 @@ class Product(models.Model):
 
     @classmethod
     def restore_quantity(cls, order: "Order"):
+        """
+        Restore quantity that was reserved by an order that is either cancelled or unintentionally reserved twice.
+        """
         with transaction.atomic():
             # Acquire DB lock for the product (no other process can change it)
             product = cls.objects.select_for_update().get(pk=order.product.id)

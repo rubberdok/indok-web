@@ -1,3 +1,5 @@
+from urllib.error import HTTPError
+
 from django.core.exceptions import PermissionDenied
 from django.db import transaction
 from rest_framework.response import Response
@@ -51,7 +53,7 @@ class VippsCallback(APIView):
                 VippsCallback.vipps_api.capture_payment(order, method="callback")
                 order.payment_status = Order.PaymentStatus.CAPTURED
                 order.save()
-            except Exception as err:
-                print(err)
+            except HTTPError:
+                pass
 
         return Response()

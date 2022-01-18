@@ -1,11 +1,10 @@
 from typing import List, TypedDict, Union
 
 import graphene
-from backend.apps.ecommerce.models import Product
 from graphene_django import DjangoObjectType
 from graphql_jwt.decorators import login_required
 
-from apps.ecommerce.models import Order
+from apps.ecommerce.models import Order, Product
 from apps.ecommerce.types import ProductType
 from apps.users.models import User
 

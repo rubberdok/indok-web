@@ -1,7 +1,10 @@
+from urllib.error import HTTPError
+
 import graphene
 from django.db import transaction
 from graphql_jwt.decorators import login_required, staff_member_required
 
+from apps.ecommerce.exceptions import PurchaseNotAllowedError
 from apps.organizations.models import Organization
 from apps.organizations.permissions import check_user_membership
 
@@ -23,6 +26,11 @@ class InitiateOrder(graphene.Mutation):
     @login_required
     def mutate(self, info, product_id, quantity=1):
         user = info.context.user
+
+        # Check if user is allowed to buy product
+        product = Product.objects.get(pk=product_id)
+        if product.related_object and not product.related_object.is_user_allowed_to_buy_product(user):
+            raise PurchaseNotAllowedError("Du kan ikke kjøpe dette produktet.")
 
         product = Product.check_and_reserve_quantity(product_id, user, quantity)
 
@@ -51,6 +59,7 @@ class InitiateOrder(graphene.Mutation):
                     order.payment_status = Order.PaymentStatus.RESERVED
                     order.save()
                     order.product.restore_quantity(order)
+                    # Return order_id so frontend can redirect to fallback page
                     return InitiateOrder(order_id=order.id)
 
                 # Retry
@@ -103,13 +112,14 @@ class AttemptCapturePayment(graphene.Mutation):
                     # Order went from initiated to cancelled, restore quantity
                     order.product.restore_quantity(order)
 
+            # Capture payent if it is reserved
             if order.payment_status == Order.PaymentStatus.RESERVED:
                 try:
                     AttemptCapturePayment.vipps_api.capture_payment(order, method="polling")
                     order.payment_status = Order.PaymentStatus.CAPTURED
                     order.save()
-                except Exception as err:
-                    print(err)
+                except HTTPError:
+                    pass
 
         return AttemptCapturePayment(status=order.payment_status, order=order)
 
