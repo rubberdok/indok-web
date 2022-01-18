@@ -1,12 +1,50 @@
 import datetime
 import json
-from typing import Literal, Optional
+from typing import Literal, Optional, Tuple, TypedDict
 
 import requests
 from django.conf import settings
 from django.utils import timezone
 
-from .models import VippsAccessToken
+from .models import Order, VippsAccessToken
+
+# Types
+BaseHeaders = TypedDict(
+    "BaseHeaders",
+    {
+        "Authorization": str,
+        "Ocp-Apim-Subscription-Key": str,
+        "Content-Type": str,
+        "Merchant-Serial-Number": str,
+        "Vipps-System-Name": str,
+        "Vipps-System-Version": str,
+    },
+)
+
+MerchantInfo = TypedDict(
+    "MerchantInfo",
+    {"merchantSerialNumber": str, "callbackPrefix": str, "fallBack": str, "authToken": str, "isApp": bool},
+)
+CustomerInfo = TypedDict("CustomerInfo", {"mobileNumber": str})
+TransactionInfo = TypedDict(
+    "TransactionData", {"orderId": str, "amount": int, "transactionText": str, "skipLandingPage": bool}
+)
+
+InitiatePaymentBody = TypedDict(
+    "InitiatePaymentBody",
+    {
+        "merchantInfo": MerchantInfo,
+        "customerInfo": CustomerInfo,
+        "transaction": TransactionInfo,
+    },
+)
+CapturePaymentBody = TypedDict(
+    "CapturePaymentBody",
+    {
+        "merchantInfo": MerchantInfo,
+        "transaction": TransactionInfo,
+    },
+)
 
 
 class VippsApi:
@@ -70,10 +108,10 @@ class VippsApi:
         r.raise_for_status()
 
     # Public methods:
-    def capture_payment(self, order, method):
-        headers = self.build_headers()
+    def capture_payment(self, order: Order, method: str):
+        headers = self._build_headers()
         headers["X-Request-Id"] = str(order.id)
-        capture_data = self.build_capture_payment_request(order, method)
+        capture_data = self._build_capture_payment_request(order, method)
 
         self._make_call(
             "POST",
@@ -82,15 +120,15 @@ class VippsApi:
             json.dumps(capture_data),
         )
 
-    def initiate_payment(self, order):
-        headers = self.build_headers()
-        order_data = self.build_initiate_payment_request(order)
+    def initiate_payment(self, order: Order) -> str:
+        headers = self._build_headers()
+        order_data = self._build_initiate_payment_request(order)
 
         response = self._make_call("POST", "/ecomm/v2/payments", headers, json.dumps(order_data))
         return response["url"]
 
-    def get_payment_status(self, order_id):
-        headers = self.build_headers()
+    def get_payment_status(self, order_id: str) -> Tuple[str, str]:
+        headers = self._build_headers()
 
         response = self._make_call("GET", f"/ecomm/v2/payments/{order_id}/details", headers)
 
@@ -99,8 +137,8 @@ class VippsApi:
 
     # private methods
 
-    def _get_new_access_token(self):
-        # Get access token (expires after 1h/24h test/prod)
+    def _refresh_access_token(self) -> Tuple[str, str]:
+        # Get new access token from Vipps (expires after 1h/24h test/prod)
 
         headers = {
             "client_id": self.client_id,
@@ -114,7 +152,7 @@ class VippsApi:
         expires_on = timezone.make_aware(datetime.datetime.fromtimestamp(int(token_response["expires_on"])))
         return access_token, expires_on
 
-    def _get_access_token(self):
+    def _fetch_access_token(self):
         # Get Vipps access token from db or fetch new if necessary
         tokens = VippsAccessToken.objects
         if not tokens.filter(expires_on__gte=timezone.now()).exists():
@@ -122,7 +160,7 @@ class VippsApi:
             if tokens.exists():
                 tokens.all().delete()
             new_token = VippsAccessToken()
-            self._access_token, expires_on = self._get_new_access_token()
+            self._access_token, expires_on = self._refresh_access_token()
             new_token.token = self._access_token
             new_token.expires_on = expires_on
             new_token.save()
@@ -136,10 +174,10 @@ class VippsApi:
             str: Access Token
         """
         if self._access_token is None:
-            self._get_access_token()
+            self._fetch_access_token()
         return self._access_token
 
-    def build_headers(self):
+    def _build_headers(self) -> BaseHeaders:
         # Headers for Vipps requests
         return {
             "Authorization": f"Bearer {self.access_token}",
@@ -150,7 +188,7 @@ class VippsApi:
             "Vipps-System-Version": "1.0",
         }
 
-    def build_capture_payment_request(self, order, method):
+    def _build_capture_payment_request(self, order: Order, method: str) -> CapturePaymentBody:
         return {
             "merchantInfo": {"merchantSerialNumber": self.merchant_serial_number},
             "transaction": {
@@ -159,7 +197,7 @@ class VippsApi:
             },
         }
 
-    def build_initiate_payment_request(self, order):
+    def _build_initiate_payment_request(self, order: Order) -> InitiatePaymentBody:
         return {
             "merchantInfo": {
                 "merchantSerialNumber": self.merchant_serial_number,
