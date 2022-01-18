@@ -19,7 +19,7 @@ export type Order = {
   quantity: number;
   totalPrice: number;
   paymentStatus: PaymentStatus;
-  date: string;
+  timestamp: string;
   authToken: string;
   paymentAttempt: number;
 }

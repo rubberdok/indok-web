@@ -24,7 +24,7 @@ export const ATTEMPT_CAPTURE_PAYMENT = gql`
         quantity
         totalPrice
         paymentStatus
-        date
+        timestamp
       }
     }
   }

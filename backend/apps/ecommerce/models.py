@@ -16,9 +16,9 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=11, decimal_places=2)
     description = models.TextField()
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name="products")
-    total_quantity = models.IntegerField()
-    current_quantity = models.IntegerField(null=True)  # Set to total_quantity upon initialization
-    max_buyable_quantity = models.IntegerField(default=1)
+    total_quantity = models.PositiveIntegerField()
+    current_quantity = models.PositiveIntegerField(null=True)  # Set to total_quantity upon initialization
+    max_buyable_quantity = models.PositiveIntegerField(default=1)
 
     # Generic foreign key to related product model instance (e.g event model)
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True)
@@ -93,12 +93,12 @@ class Order(models.Model):
     id = UUIDField(primary_key=True, default=uuid.uuid4)
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="orders")
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="orders")
-    quantity = models.IntegerField(default=1)
+    quantity = models.PositiveIntegerField(default=1)
     total_price = models.DecimalField(max_digits=11, decimal_places=2)
     payment_status = models.CharField(max_length=255, choices=PaymentStatus.choices, default=PaymentStatus.INITIATED)
-    date = DateTimeField(auto_now_add=True)
+    timestamp = DateTimeField(auto_now_add=True)
     auth_token = models.CharField(max_length=32, default=get_auth_token)  # For authenticating Vipps callback
-    payment_attempt = models.IntegerField(default=1)
+    payment_attempt = models.PositiveIntegerField(default=1)
 
     def __str__(self):
         return f"Order(product={self.product}, user={self.user})"

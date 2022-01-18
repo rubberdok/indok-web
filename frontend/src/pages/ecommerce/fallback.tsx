@@ -121,7 +121,7 @@ const FallbackPage: NextPage = () => {
                       </ListItem>
                       <ListItem className={classes.listitem}>
                         <ListItemText
-                          primary={dayjs(order.date).format("DD. MMM YYYY, kl. HH:mm:ss")}
+                          primary={dayjs(order.timestamp).format("DD. MMM YYYY, kl. HH:mm:ss")}
                           secondary={"Dato"}
                         />
                       </ListItem>

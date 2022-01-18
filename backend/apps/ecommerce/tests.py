@@ -47,7 +47,7 @@ class EcommerceBaseTestCase(ExtendedGraphQLTestCase):
                             quantity
                             totalPrice
                             paymentStatus
-                            date
+                            timestamp
                         }}
                     }}
                 """
@@ -65,7 +65,7 @@ class EcommerceBaseTestCase(ExtendedGraphQLTestCase):
                             quantity
                             totalPrice
                             paymentStatus
-                            date
+                            timestamp
                     }
                 }
                 """
@@ -95,7 +95,7 @@ class EcommerceBaseTestCase(ExtendedGraphQLTestCase):
                     quantity
                     totalPrice
                     paymentStatus
-                    date
+                    timestamp
                 }}
             }}
         }}

@@ -25,5 +25,5 @@ class OrderType(DjangoObjectType):
             "quantity",
             "total_price",
             "payment_status",
-            "date",
+            "timestamp",
         ]
