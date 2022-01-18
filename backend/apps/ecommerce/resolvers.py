@@ -1,4 +1,3 @@
-from django.core.exceptions import PermissionDenied
 from graphql_jwt.decorators import login_required, staff_member_required
 
 from .models import Order, Product
@@ -19,12 +18,9 @@ class EcommerceResolvers:
     @login_required
     def resolve_order(self, info, order_id):
         try:
-            order = Order.objects.get(pk=order_id)
+            order = Order.objects.get(pk=order_id, user=info.context.user)
         except Order.DoesNotExist:
             raise ValueError("Ugyldig ordre")
-
-        if order.user != info.context.user:
-            raise PermissionDenied("Du har ikke tilgang til denne ordren")
 
         return order
 

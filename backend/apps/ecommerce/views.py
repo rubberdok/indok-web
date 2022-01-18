@@ -40,11 +40,8 @@ class VippsCallback(APIView):
         order.save()
 
         # If order went from initiated to failed/cancelled, restore available quantity
-        if (
-            order.payment_status
-            in [Order.PaymentStatus.FAILED, Order.PaymentStatus.CANCELLED, Order.PaymentStatus.REJECTED]
-            and was_initiated
-        ):
+        failed_statuses = [Order.PaymentStatus.FAILED, Order.PaymentStatus.CANCELLED, Order.PaymentStatus.REJECTED]
+        if order.payment_status in failed_statuses and was_initiated:
             order.product.restore_quantity(order)
             return Response()
 

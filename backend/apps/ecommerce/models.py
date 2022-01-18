@@ -9,6 +9,7 @@ from django.db.models.fields import DateTimeField, UUIDField
 
 from apps.organizations.models import Organization
 from apps.users.models import User
+from django.db.models import Sum
 
 
 class Product(models.Model):
@@ -47,12 +48,12 @@ class Product(models.Model):
             if product.related_object and not product.related_object.is_user_allowed_to_buy_product(user):
                 raise Exception("Du kan ikke kjøpe dette produktet.")
 
-            captured_orders = Order.objects.filter(
+            bought_quantity = Order.objects.filter(
                 product__id=product_id,
                 user=user,
                 payment_status=Order.PaymentStatus.CAPTURED,
-            )
-            bought_quantity = sum([order.quantity for order in captured_orders])
+            ).aggregate(bought_quantity=Sum("quantity"))["bought_quantity"]
+            bought_quantity = bought_quantity or 0
 
             if bought_quantity >= product.max_buyable_quantity:
                 raise ValueError("Du kan ikke kjøpe mer av dette produktet.")

@@ -1,5 +1,4 @@
 import graphene
-from django.core.exceptions import PermissionDenied
 from django.db import transaction
 from graphql_jwt.decorators import login_required, staff_member_required
 
@@ -85,12 +84,9 @@ class AttemptCapturePayment(graphene.Mutation):
         with transaction.atomic():
             try:
                 # Acquire DB lock for the order (no other process can change it)
-                order = Order.objects.select_for_update().get(pk=order_id)
+                order = Order.objects.select_for_update().get(pk=order_id, user=info.context.user)
             except Order.DoesNotExist:
                 raise ValueError("Ugyldig ordre")
-
-            if order.user != info.context.user:
-                raise PermissionDenied("Du har ikke tilgang til denne ordren")
 
             if order.payment_status == Order.PaymentStatus.INITIATED:
                 # Update status according to Vipps payment details
