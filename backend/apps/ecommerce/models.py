@@ -77,8 +77,10 @@ class Product(models.Model):
     @classmethod
     def restore_quantity(cls, order: "Order"):
         """
-        Restore quantity that was reserved by an order that is either cancelled or unintentionally reserved twice.
+        Restore quantity that was reserved by an order that was cancelled or failed.
+        Also restore quantity if an order that was already reserved (not captured) was re-attempted.
         """
+        assert order.payment_status in order.failed_statuses or order.payment_status == Order.PaymentStatus.RESERVED
         with transaction.atomic():
             # Acquire DB lock for the product (no other process can change it)
             product = cls.objects.select_for_update().get(pk=order.product.id)
@@ -112,6 +114,10 @@ class Order(models.Model):
 
     def __str__(self):
         return f"Order(product={self.product}, user={self.user})"
+
+    @property
+    def failed_statuses(self):
+        return [self.PaymentStatus.CANCELLED, self.PaymentStatus.FAILED, self.PaymentStatus.REJECTED]
 
 
 class VippsAccessToken(models.Model):

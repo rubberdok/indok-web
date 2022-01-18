@@ -20,7 +20,7 @@ class VippsCallback(APIView):
         # Remove payment_attempt to get internal order_id
         order_id = order_id.rpartition("-")[0]
         try:
-            order = Order.objects.select_for_update().get(pk=order_id)
+            order: Order = Order.objects.select_for_update().get(pk=order_id)
         except Order.DoesNotExist:
             raise ValueError("Ugyldig ordre")
 
@@ -42,8 +42,7 @@ class VippsCallback(APIView):
         order.save()
 
         # If order went from initiated to failed/cancelled, restore available quantity
-        failed_statuses = [Order.PaymentStatus.FAILED, Order.PaymentStatus.CANCELLED, Order.PaymentStatus.REJECTED]
-        if order.payment_status in failed_statuses and was_initiated:
+        if order.payment_status in order.failed_statuses and was_initiated:
             order.product.restore_quantity(order)
             return Response()
 
