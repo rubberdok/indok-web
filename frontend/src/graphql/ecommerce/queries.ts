@@ -23,3 +23,22 @@ export const GET_ALL_PRODUCTS = gql`
     }
   }
 `;
+
+
+export const GET_USER_ORDERS = gql`
+  query {
+    userOrders {
+      id
+      quantity
+      totalPrice
+      paymentStatus
+      timestamp
+      product {
+        id
+        name
+        description
+        price
+      }
+    }
+  }
+`;

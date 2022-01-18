@@ -6,6 +6,7 @@ import {
   Box,
   Button,
   Card,
+  CardActions,
   CardContent,
   CardHeader,
   CircularProgress,
@@ -27,6 +28,7 @@ import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { redirectIfNotLoggedIn } from "src/utils/redirect";
 import dayjs from "dayjs";
+import Link from "next/link";
 
 const useStyles = makeStyles((theme: Theme) => ({
   list: {
@@ -121,7 +123,7 @@ const FallbackPage: NextPage = () => {
                       </ListItem>
                       <ListItem className={classes.listitem}>
                         <ListItemText
-                          primary={dayjs(order.timestamp).format("DD. MMM YYYY, kl. HH:mm:ss")}
+                          primary={dayjs(order.timestamp).format("DD. MMM YYYY, kl. HH:mm")}
                           secondary={"Dato"}
                         />
                       </ListItem>
@@ -138,6 +140,11 @@ const FallbackPage: NextPage = () => {
                 )}
               </Grid>
             </CardContent>
+            <CardActions>
+              <Link href="/ecommerce">
+                <Button>Gå til mine betalinger</Button>
+              </Link>
+            </CardActions>
           </Card>
         </Box>
       </Container>
