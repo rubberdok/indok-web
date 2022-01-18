@@ -125,7 +125,7 @@ export const GET_EVENT = gql`
       bindingSignup
       contactEmail
       allowedGradeYears
-      products {
+      product {
         id
       }
     }
@@ -194,7 +194,7 @@ export const ADMIN_GET_EVENT = gql`
       bindingSignup
       contactEmail
       allowedGradeYears
-      products {
+      product {
         id
       }
     }

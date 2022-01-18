@@ -91,7 +91,7 @@ const EventAdminPage: NextPage = () => {
     return <CircularProgress />;
   }
 
-  data && data.event.products.length && signUpFields.push({ header: "Betalt?", field: "hasBoughtTicket" });
+  data && data.event.product && signUpFields.push({ header: "Betalt?", field: "hasBoughtTicket" });
 
   const renderInfo = (label: string, value: string | boolean) => {
     if (value === "") {

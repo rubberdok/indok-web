@@ -26,7 +26,7 @@ export interface Event {
   bindingSignup?: boolean;
   contactEmail?: string;
   allowedGradeYears: number[];
-  products: Product[];
+  product: Product;
 }
 
 export interface AttendableEvent extends Event {

@@ -108,7 +108,7 @@ class VippsApi:
         r.raise_for_status()
 
     # Public methods:
-    def capture_payment(self, order: Order, method: str):
+    def capture_payment(self, order: Order, method: str) -> None:
         headers = self._build_headers()
         headers["X-Request-Id"] = str(order.id)
         capture_data = self._build_capture_payment_request(order, method)
@@ -152,7 +152,7 @@ class VippsApi:
         expires_on = timezone.make_aware(datetime.datetime.fromtimestamp(int(token_response["expires_on"])))
         return access_token, expires_on
 
-    def _fetch_access_token(self):
+    def _fetch_access_token(self) -> None:
         # Get Vipps access token from db or fetch new if necessary
         tokens = VippsAccessToken.objects
         if not tokens.filter(expires_on__gte=timezone.now()).exists():

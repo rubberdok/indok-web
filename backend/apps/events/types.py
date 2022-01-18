@@ -1,11 +1,33 @@
+from typing import List, TypedDict, Union
+
 import graphene
+from backend.apps.ecommerce.models import Product
 from graphene_django import DjangoObjectType
 from graphql_jwt.decorators import login_required
 
 from apps.ecommerce.models import Order
 from apps.ecommerce.types import ProductType
+from apps.users.models import User
 
 from .models import Category, Event, SignUp
+
+UserAttendance = TypedDict(
+    "UserAttendance", {"is_signed_up": bool, "is_on_waiting_list": bool, "has_bought_ticket": bool}
+)
+
+
+def has_bought_ticket(event: Event, user: User) -> bool:
+    return (
+        event.products.exists()
+        and Order.objects.filter(
+            product=event.products.get(),
+            user=user,
+            payment_status__in=[
+                Order.PaymentStatus.RESERVED,
+                Order.PaymentStatus.CAPTURED,
+            ],
+        ).exists()
+    )
 
 
 class UserAttendingType(graphene.ObjectType):
@@ -33,18 +55,8 @@ class SignUpType(DjangoObjectType):
         ]
 
     @staticmethod
-    def resolve_has_bought_ticket(sign_up, info):
-        return (
-            len(sign_up.event.products.all()) == 1
-            and Order.objects.filter(
-                product=sign_up.event.products.all()[0],
-                user=sign_up.user,
-                payment_status__in=[
-                    Order.PaymentStatus.RESERVED,
-                    Order.PaymentStatus.CAPTURED,
-                ],
-            ).exists()
-        )
+    def resolve_has_bought_ticket(sign_up: SignUp, info) -> bool:
+        return has_bought_ticket(sign_up.event, sign_up.user)
 
 
 class EventType(DjangoObjectType):
@@ -54,7 +66,7 @@ class EventType(DjangoObjectType):
     users_attending = graphene.List(SignUpType)
     allowed_grade_years = graphene.List(graphene.Int)
     available_slots = graphene.Int()
-    products = graphene.List(ProductType)
+    product = graphene.Field(ProductType)
 
     class Meta:
         model = Event
@@ -94,48 +106,40 @@ class EventType(DjangoObjectType):
             return wrapper
 
     @staticmethod
-    def resolve_user_attendance(event, info):
+    def resolve_user_attendance(event: Event, info) -> UserAttendance:
         user = info.context.user
         return {
             "is_signed_up": user in event.users_attending,
             "is_on_waiting_list": user in event.users_on_waiting_list,
-            "has_bought_ticket": len(event.products.all()) == 1
-            and Order.objects.filter(
-                product=event.products.all()[0],
-                user=user,
-                payment_status__in=[
-                    Order.PaymentStatus.RESERVED,
-                    Order.PaymentStatus.CAPTURED,
-                ],
-            ).exists(),
+            "has_bought_ticket": has_bought_ticket(event, user),
         }
 
     @staticmethod
-    def resolve_allowed_grade_years(event, info):
+    def resolve_allowed_grade_years(event: Event, info) -> List[int]:
         return [int(grade) for grade in event.allowed_grade_years]
 
     @staticmethod
     @login_required
     @PermissionDecorators.is_in_event_organization
-    def resolve_users_on_waiting_list(event, info):
+    def resolve_users_on_waiting_list(event: Event, info):
         return SignUp.objects.filter(event=event, user__in=event.users_on_waiting_list, is_attending=True)
 
     @staticmethod
     @login_required
     @PermissionDecorators.is_in_event_organization
-    def resolve_users_attending(event, info):
+    def resolve_users_attending(event: Event, info):
         return SignUp.objects.filter(event=event, user__in=event.users_attending, is_attending=True)
 
     @staticmethod
-    def resolve_available_slots(event, info):
+    def resolve_available_slots(event: Event, info) -> Union[int, None]:
         user = info.context.user
         if not user.is_authenticated or not user.memberships.filter(organization=event.organization).exists():
             return None
         return event.available_slots
 
     @staticmethod
-    def resolve_products(event, info):
-        return event.products.all()
+    def resolve_product(event: Event, info) -> Product:
+        return event.products.get()
 
 
 class CategoryType(DjangoObjectType):

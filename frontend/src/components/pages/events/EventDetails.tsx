@@ -269,14 +269,14 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
                   onClick={handleClick}
                   currentTime={timeData.serverTime}
                 />
-                {event.products.length &&
+                {event.product &&
                   event.userAttendance?.isSignedUp &&
                   (event.userAttendance.hasBoughtTicket ? (
                     <MuiAlert severity="success" className={classes.boughtTicket}>
                       Du har betalt for billett
                     </MuiAlert>
                   ) : (
-                    <Link href={`/ecommerce/checkout?productId=${event.products[0].id}&quantity=1`} passHref>
+                    <Link href={`/ecommerce/checkout?productId=${event.product.id}&quantity=1`} passHref>
                       <Button size="large" variant="contained" color={"primary"} className={classes.payButton}>
                         Gå til betaling
                       </Button>

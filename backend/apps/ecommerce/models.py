@@ -26,6 +26,9 @@ class Product(models.Model):
     object_id = models.PositiveIntegerField(null=True)
     related_object = GenericForeignKey("content_type", "object_id")
 
+    class Meta:
+        unique_together = ("content_type", "object_id")
+
     def __str__(self):
         return self.name
 
