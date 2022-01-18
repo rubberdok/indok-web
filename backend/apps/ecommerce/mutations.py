@@ -121,10 +121,10 @@ class AttemptCapturePayment(graphene.Mutation):
 class CreateProductInput(graphene.InputObjectType):
     name = graphene.String(required=True)
     description = graphene.String(required=True)
-    price = graphene.Float(required=False)
+    price = graphene.Decimal(required=True)
     organization_id = graphene.ID(required=True)
-    total_quantity = graphene.Int(required=False)
-    max_buyable_quantity = graphene.Int(required=False)
+    total_quantity = graphene.Int(required=True)
+    max_buyable_quantity = graphene.Int(required=True)
 
 
 class CreateProduct(graphene.Mutation):
