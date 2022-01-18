@@ -3,23 +3,23 @@ title: Indøks Ølbryggerlaug
 description: Et helt lovlig bryggeri
 logo: /img/indollogo.png
 image: /img/indolbilde.jpg
-styre:
+board:
   ceo:
-    navn: Hans Magnus Utne
-    mail: tlf. 975 18 033
-    tittel: Leder
+    name: Hans Magnus Utne
+    phoneNumber: 975 18 033
+    title: Leder
   cto:
-    navn: Phillip Kolkmeier
-    mail: tlf. 906 71 650
-    tittel: Nestleder
+    name: Phillip Kolkmeier
+    phoneNumber: 906 71 650
+    title: Nestleder
   brygg:
-    navn: Olav Førland
-    mail: tlf. 902 25 335
-    tittel: Bryggeansvarlig
+    name: Olav Førland
+    phoneNumber: 902 25 335
+    title: Bryggeansvarlig
   pr:
-    navn: Marte Vingsnes
-    mail: tlf. 482 60 767
-    tittel: PR-ansvarlig
+    name: Marte Vingsnes
+    phoneNumber: 482 60 767
+    title: PR-ansvarlig
 tag: kultur
 ---
 

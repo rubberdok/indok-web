@@ -1,12 +1,12 @@
 import Layout from "@components/Layout";
+import * as markdownComponents from "@components/markdown/components";
 import { Box, Card, Chip, Container, Divider, Grid, makeStyles, Paper, Typography } from "@material-ui/core";
 import MailOutlineIcon from "@material-ui/icons/MailOutline";
 import PhoneIcon from "@material-ui/icons/Phone";
 import { getPostBySlug, getPostsSlugs } from "@utils/posts";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
-import React from "react";
+import Link from "next/link";
 import ReactMarkdown from "react-markdown";
-import * as markdownComponents from "@components/markdown/components";
 import { Post } from "src/types/posts";
 
 type ArticleProps = {
@@ -23,7 +23,7 @@ type ArticleProps = {
     logo?: string;
     alt?: string;
     image?: string;
-    board: BoardMember[];
+    board: Record<string, BoardMember>;
   };
   nextPost: Post | null;
   previousPost: Post | null;
@@ -101,17 +101,21 @@ const Article: NextPage<ArticleProps> = ({ post, frontmatter }) => {
                 <Typography variant="h5" gutterBottom>
                   Styret
                 </Typography>
-                {frontmatter.board.map((member, index) => (
+                {Object.entries(frontmatter.board).map(([key, member], index) => (
                   <>
                     {index != 0 && <Divider />}
-                    <Card key={index}>
+                    <Card key={key}>
                       <Box p={4}>
                         <Typography variant="body2">{member.name}</Typography>
                         <Typography variant="caption" gutterBottom>
                           {member.title}
                         </Typography>
                         <br />
-                        {member.mail && <Chip size="small" label={member.mail} icon={<MailOutlineIcon />} />}
+                        {member.mail && (
+                          <Link href={`mailto:${member.mail}`}>
+                            <Chip size="small" label={member.mail} icon={<MailOutlineIcon />} />
+                          </Link>
+                        )}
                         {member.mail && member.phoneNumber && <br />}
                         {member.phoneNumber && <Chip size="small" label={member.phoneNumber} icon={<PhoneIcon />} />}
                       </Box>
