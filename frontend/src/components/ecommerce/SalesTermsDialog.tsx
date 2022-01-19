@@ -31,7 +31,11 @@ function SalesTermsDialog({ onClose, open }: { onClose: () => void; open: boolea
                 </p>
                 <p>
                   Salgsbetingelsene er utarbeidet og anbefalt av Forbrukertilsynet.{" "}
-                  <a href="https://www.forbrukertilsynet.no/lov-og-rett/veiledninger-og-retningslinjer/veiledning-standard-salgsbetingelser-forbrukerkjop-varer-internett">
+                  <a
+                    target="_blank"
+                    rel="noreferrer"
+                    href="https://www.forbrukertilsynet.no/lov-og-rett/veiledninger-og-retningslinjer/veiledning-standard-salgsbetingelser-forbrukerkjop-varer-internett"
+                  >
                     For en bedre forståelse av disse salgsbetingelsene, se Forbrukertilsynets veileder her.{" "}
                   </a>
                 </p>
@@ -350,7 +354,10 @@ function SalesTermsDialog({ onClose, open }: { onClose: () => void; open: boolea
                 <p>
                   Europa-Kommisjonens klageportal kan også brukes hvis du ønsker å inngi en klage. Det er særlig
                   relevant, hvis du er forbruker bosatt i et annet EU-land. Klagen inngis her:&nbsp;
-                  <a href="http://ec.europa.eu/odr">http://ec.europa.eu/odr</a>.
+                  <a target="_blank" rel="noreferrer" href="http://ec.europa.eu/odr">
+                    http://ec.europa.eu/odr
+                  </a>
+                  .
                 </p>
                 <p>&nbsp;</p>
               </div>
