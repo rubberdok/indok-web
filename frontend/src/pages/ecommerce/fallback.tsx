@@ -1,4 +1,5 @@
 import { useMutation } from "@apollo/client";
+import SalesTermsDialog from "@components/ecommerce/SalesTermsDialog";
 import Layout from "@components/Layout";
 import { ATTEMPT_CAPTURE_PAYMENT } from "@graphql/ecommerce/mutations";
 import { Order, PaymentStatus } from "@interfaces/ecommerce";
@@ -23,12 +24,12 @@ import {
 } from "@material-ui/core";
 import { KeyboardArrowLeft } from "@material-ui/icons";
 import { Alert } from "@material-ui/lab";
+import dayjs from "dayjs";
 import { NextPage } from "next";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { redirectIfNotLoggedIn } from "src/utils/redirect";
-import dayjs from "dayjs";
-import Link from "next/link";
 
 const useStyles = makeStyles((theme: Theme) => ({
   list: {
@@ -52,6 +53,7 @@ const FallbackPage: NextPage = () => {
   });
   const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>("RESERVED");
   const [order, setOrder] = useState<Order>();
+  const [openSalesTerms, setOpenSalesTerms] = useState(false);
   const intervalRef: { current: NodeJS.Timer | null } = useRef(null);
 
   useEffect(() => {
@@ -132,6 +134,15 @@ const FallbackPage: NextPage = () => {
                         <ListItemText primary={`${order.totalPrice} kr`} secondary="Totalbeløp" />
                       </ListItem>
                     </List>
+                    <Button
+                      variant="contained"
+                      onClick={() => {
+                        setOpenSalesTerms(true);
+                      }}
+                    >
+                      Salgsbetingelser for kjøp
+                    </Button>
+                    <SalesTermsDialog open={openSalesTerms} onClose={() => setOpenSalesTerms(false)} />
                   </>
                 ) : paymentStatus === "CANCELLED" ? (
                   <Typography>Betalingen ble avbrutt</Typography>

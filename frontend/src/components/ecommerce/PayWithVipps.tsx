@@ -15,9 +15,10 @@ type Props = {
   productId: string;
   quantity: number;
   onError?: (e?: ApolloError) => void;
+  disabled: boolean;
 };
 
-const PayWithVipps: React.FC<Props> = ({ productId, quantity, onError }) => {
+const PayWithVipps: React.FC<Props> = ({ productId, quantity, onError, disabled }) => {
   const [initiateOrder, { error }] = useMutation(INITIATE_ORDER, {
     onCompleted: (data) =>
       router.push(data.initiateOrder.redirect || `/ecommerce/fallback?orderId=${data.initiateOrder.orderId}`),
@@ -27,19 +28,21 @@ const PayWithVipps: React.FC<Props> = ({ productId, quantity, onError }) => {
   const classes = useStyles();
   const router = useRouter();
 
+  const disable = disabled || !!error;
+
   return (
     <Card className={classes.root}>
       <CardActionArea
         onClick={() => initiateOrder({ variables: { productId, quantity } })}
         disableRipple
-        disabled={!!error}
+        disabled={disable}
       >
         <CardMedia
           component="img"
           alt="Pay with vipps"
           image="/img/pay_with_vipps_rect_250_NO.svg"
           title="Pay with vipps"
-          style={error ? { opacity: 0.2 } : {}}
+          style={disable ? { opacity: 0.2 } : {}}
         />
       </CardActionArea>
     </Card>

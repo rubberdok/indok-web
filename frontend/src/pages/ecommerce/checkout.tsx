@@ -1,5 +1,6 @@
 import { useQuery } from "@apollo/client";
 import PayWithVipps from "@components/ecommerce/PayWithVipps";
+import SalesTermsDialog from "@components/ecommerce/SalesTermsDialog";
 import Layout from "@components/Layout";
 import { GET_PRODUCT } from "@graphql/ecommerce/queries";
 import { Product } from "@interfaces/ecommerce";
@@ -9,10 +10,13 @@ import {
   Card,
   CardContent,
   CardHeader,
+  Checkbox,
   CircularProgress,
   Container,
   Divider,
+  FormControlLabel,
   Grid,
+  Link,
   List,
   ListItem,
   ListItemText,
@@ -61,6 +65,8 @@ const CheckoutPage: NextPage = () => {
 
   const [product, setProduct] = useState<Product>();
   const [orderError, setOrderError] = useState<string>("");
+  const [isConsentingTerms, setIsConsentingTerms] = useState(false);
+  const [openSalesTerms, setOpenSalesTerms] = useState(false);
 
   const { loading, error } = useQuery<{ product: Product }>(GET_PRODUCT, {
     variables: { productId: productId },
@@ -138,11 +144,37 @@ const CheckoutPage: NextPage = () => {
 
                     {product && quantity && typeof productId == "string" && (
                       <Grid item xs={12}>
+                        <Box alignItems={"center"} display={"inline-flex"}>
+                          <FormControlLabel
+                            style={{ marginRight: "5px" }}
+                            control={
+                              <Checkbox
+                                checked={isConsentingTerms}
+                                onChange={(event) => setIsConsentingTerms(event.target.checked)}
+                                name="checkedB"
+                                color="primary"
+                              />
+                            }
+                            label={<Typography variant="body2">Jeg godtar </Typography>}
+                          />
+                          <Link
+                            component="button"
+                            variant="body2"
+                            color="secondary"
+                            onClick={() => {
+                              setOpenSalesTerms(true);
+                            }}
+                          >
+                            salgsbetingelsene for kjøp
+                          </Link>
+                        </Box>
                         <PayWithVipps
                           productId={productId}
                           quantity={Number(quantity)}
                           onError={(e) => e && setOrderError(e.message)}
+                          disabled={!isConsentingTerms}
                         />
+                        <SalesTermsDialog open={openSalesTerms} onClose={() => setOpenSalesTerms(false)} />
                       </Grid>
                     )}
                     {orderError && (
