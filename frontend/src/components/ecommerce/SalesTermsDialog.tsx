@@ -23,7 +23,7 @@ function SalesTermsDialog({ onClose, open }: { onClose: () => void; open: boolea
                   Internett. Forbrukerkjøp over internett reguleres hovedsakelig av avtaleloven, forbrukerkjøpsloven,
                   markedsføringsloven, angrerettloven og ehandelsloven, og disse lovene gir forbrukeren ufravikelige
                   rettigheter. Lovene er tilgjengelig på{" "}
-                  <a target="_blank" href="http://www.lovdata.no/" rel="noreferrer">
+                  <a target="_blank" href="https://www.lovdata.no/" rel="noreferrer">
                     www.lovdata.no.
                   </a>{" "}
                   Vilkårene i denne avtalen skal ikke forstås som noen begrensning i de lovbestemte rettighetene, men
@@ -347,15 +347,15 @@ function SalesTermsDialog({ onClose, open }: { onClose: () => void; open: boolea
                   Klager rettes til selger innen rimelig tid, jf. punkt 9 og 10. Partene skal forsøke å løse eventuelle
                   tvister i minnelighet. Dersom dette ikke lykkes, kan kjøperen ta kontakt med Forbrukerrådet for
                   mekling. Forbrukerrådet er tilgjengelig &nbsp;på &nbsp;telefon 23&nbsp; 400&nbsp; 500&nbsp; eller{" "}
-                  <a target="_blank" href="http://www.forbrukerradet.no/" rel="noreferrer">
+                  <a target="_blank" href="https://www.forbrukerradet.no/" rel="noreferrer">
                     www.forbrukerradet.no.
                   </a>
                 </p>
                 <p>
                   Europa-Kommisjonens klageportal kan også brukes hvis du ønsker å inngi en klage. Det er særlig
                   relevant, hvis du er forbruker bosatt i et annet EU-land. Klagen inngis her:&nbsp;
-                  <a target="_blank" rel="noreferrer" href="http://ec.europa.eu/odr">
-                    http://ec.europa.eu/odr
+                  <a target="_blank" rel="noreferrer" href="https://ec.europa.eu/odr">
+                    https://ec.europa.eu/odr
                   </a>
                   .
                 </p>
