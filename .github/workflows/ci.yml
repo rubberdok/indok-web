@@ -103,6 +103,7 @@ jobs:
 
       - name: Build ${{ matrix.image }} image
         id: build-image
+        uses: docker/build-push-action@v2
         with:
           context: ${{ matrix.context }}
           file: ${{ matrix.context }}/${{ matrix.dockerfile }}
@@ -110,7 +111,7 @@ jobs:
           tags: |
             ${{ matrix.image }}:${{ matrix.stage }}
             ${{ steps.image-tag.outputs.image }}
-          push: ${{ github.ref == 'refs/heads/main' }}
+          push: ${{ github.ref == 'refs/heads/main' && matrix.stage == 'production' }}
           build-args: |
             ${{ steps.env-download.outputs.build-args }}
 
