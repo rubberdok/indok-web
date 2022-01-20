@@ -111,6 +111,7 @@ jobs:
           tags: |
             ${{ matrix.image }}:${{ matrix.stage }}
             ${{ steps.image-tag.outputs.image }}
+          # If this is run on the main branch, and is a production image, it should be pushed to ECR
           push: ${{ github.ref == 'refs/heads/main' && matrix.stage == 'production' }}
           build-args: |
             ${{ steps.env-download.outputs.build-args }}
@@ -194,6 +195,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        # Containers for parallelization, increase if necessary
         containers: [1, 2, 3]
     env:
       ENV_FILE: django.test.env
