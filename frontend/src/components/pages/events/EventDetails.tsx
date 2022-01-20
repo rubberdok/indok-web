@@ -140,7 +140,7 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
 
   const { data: userData } = useQuery<{ user: User }>(GET_USER);
 
-  const { data: timeData } = useQuery(GET_SERVER_TIME);
+  const { data: timeData } = useQuery<{ serverTime: string }>(GET_SERVER_TIME);
 
   const {
     data: eventData,
@@ -250,25 +250,27 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
                       onChange={(e) => setExtraInformation(e.target.value)}
                     />
                   )}
-                <CountdownButton
-                  countDownDate={(event as AttendableEvent).signupOpenDate}
-                  isSignedUp={(event as AttendableEvent).userAttendance.isSignedUp}
-                  isOnWaitingList={(event as AttendableEvent).userAttendance.isOnWaitingList}
-                  isFull={(event as AttendableEvent).isFull}
-                  loading={signOffLoading || signUpLoading || eventLoading}
-                  disabled={
-                    (!user.phoneNumber &&
-                      !event.userAttendance?.isSignedUp &&
-                      !event.userAttendance?.isOnWaitingList) ||
-                    (event.bindingSignup && event.userAttendance?.isSignedUp) ||
-                    (event.hasExtraInformation &&
-                      !extraInformation &&
-                      !event.userAttendance?.isSignedUp &&
-                      !event.userAttendance?.isOnWaitingList)
-                  }
-                  onClick={handleClick}
-                  currentTime={timeData.serverTime}
-                />
+                {timeData && (
+                  <CountdownButton
+                    countDownDate={(event as AttendableEvent).signupOpenDate}
+                    isSignedUp={(event as AttendableEvent).userAttendance.isSignedUp}
+                    isOnWaitingList={(event as AttendableEvent).userAttendance.isOnWaitingList}
+                    isFull={(event as AttendableEvent).isFull}
+                    loading={signOffLoading || signUpLoading || eventLoading}
+                    disabled={
+                      (!user.phoneNumber &&
+                        !event.userAttendance?.isSignedUp &&
+                        !event.userAttendance?.isOnWaitingList) ||
+                      (event.bindingSignup && event.userAttendance?.isSignedUp) ||
+                      (event.hasExtraInformation &&
+                        !extraInformation &&
+                        !event.userAttendance?.isSignedUp &&
+                        !event.userAttendance?.isOnWaitingList)
+                    }
+                    onClick={handleClick}
+                    currentTime={timeData.serverTime}
+                  />
+                )}
                 {event.product &&
                   event.userAttendance?.isSignedUp &&
                   (event.userAttendance.hasBoughtTicket ? (
