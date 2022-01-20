@@ -6,22 +6,17 @@ import React, { ReactElement } from "react";
 export default class MyDocument extends Document {
   render(): ReactElement {
     return (
-      <Html lang="en">
+      <Html lang="no">
         <Head>
+          <meta charSet="utf-8" />
           <meta name="theme-color" content={theme.palette.primary.dark} key="theme-color" />
-          <link rel="preconnect" href="https://fonts.gstatic.com" />
+
+          {/* Fonts */}
+          <link rel="preconnect" href="https://fonts.googleapis.com" />
           <link
-            href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400..800&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400..800&family=Open+Sans:wght@300;600;700&display=swap"
             rel="stylesheet"
           />
-          <link
-            href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap"
-            rel="stylesheet"
-          />
-          <link
-            href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&display=swap"
-            rel="stylesheet"
-          ></link>
         </Head>
         <body>
           <Main />
