@@ -6,6 +6,20 @@
 // eslint-disable-next-line
 const { withSentryConfig } = require("@sentry/nextjs");
 
+const getPresets = () => {
+  if (process.env.NEXT_PUBLIC_APP_ENV == "production") {
+    return {
+      // The regexes defined here are processed in Rust so the syntax is different from
+      // JavaScript `RegExp`s. See https://docs.rs/regex.
+      reactRemoveProperties: { properties: ["^data-test-id$"] },
+      removeConsole: {
+        exclude: ["error"],
+      },
+    };
+  }
+  return {};
+};
+
 const moduleExports = {
   /** @todo internationalized routing */
   async rewrites() {
@@ -15,6 +29,10 @@ const moduleExports = {
         destination: "/report",
       },
     ];
+  },
+  experimental: {
+    styledComponents: true,
+    ...getPresets(),
   },
   webpack: (config, { isServer }) => {
     // In `pages/_app.js`, Sentry is imported from @sentry/browser. While
