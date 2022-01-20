@@ -37,13 +37,13 @@
     "react-dom": "^17.0.2",
     "react-feather": "^2.0.8",
     "react-icons": "^4.2.0",
-    "react-markdown": "^6.0.2",
+    "react-markdown": "^8.0.0",
     "react-parallax": "^3.3.0",
     "react-swipeable-views": "^0.14.0",
     "react-swipeable-views-utils": "^0.14.0",
     "sharp": "^0.29.0",
     "ts-debounce": "^3.0.0",
-    "validator": "^13.6.0"
+    "validator": "^13.7.0"
   },
   "devDependencies": {
     "@types/feather-icons": "^4.7.0",
