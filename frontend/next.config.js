@@ -22,6 +22,8 @@ const moduleExports = {
     disableServerWebpackPlugin: true,
     disableClientWebpackPlugin: true,
   },
+  experimental: { esmExternals: true },
+  reactStrictMode: true,
   productionBrowserSourceMaps: process.env.NEXT_PUBLIC_APP_ENV === "production",
 };
 
