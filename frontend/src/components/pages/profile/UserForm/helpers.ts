@@ -31,3 +31,11 @@ export const validationSchema = Yup.object().shape({
     .max(12, "Telefonnummeret kan ikke være mer enn 12 tegn.")
     .matches(/(0047|\+47|47)?[49]\d{7}/, "Må være et gyldig telefonnummer."),
 });
+
+export const suggestGraduationYear = () => {
+  const currentMonth = dayjs().month();
+  if (currentMonth > 8) {
+    return dayjs().year() + 5;
+  }
+  return dayjs().year() + 4;
+};
