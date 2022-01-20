@@ -28,7 +28,7 @@ def create_named_group(sender, instance: ResponsibleGroup, **kwargs):
 @receiver(post_save, sender=ResponsibleGroup)
 def synchronize_group_and_responsible_group_names(instance: ResponsibleGroup, **kwargs):
     """
-    Synchronizes the names of organizations' responsible groups and their attached Groups
+    Synchronizes the names of organizations' responsible groups and their attached Groups.
     """
     group_name_split: list[str] = instance.group.name.split(":", 2)
     if len(group_name_split) == 3:
@@ -54,7 +54,7 @@ def create_default_groups(apps, **kwargs):
 @receiver(post_migrate)
 def assign_standard_organization_permissions(apps, **kwargs):
     """
-    Assigns default organization permissions to all users in an organization
+    Assigns default organization permissions to all users in an organization.
     """
     User = apps.get_model("users", "User")
     group, _ = Group.objects.get_or_create(name=ORGANIZATION)

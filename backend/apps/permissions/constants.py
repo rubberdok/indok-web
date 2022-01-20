@@ -36,6 +36,19 @@ DEFAULT_GROUPS = {
 
 @dataclass
 class OrgPermissionGroup:
+    """
+    Class for configuring default permission groups for organizations.
+
+    - `name` is the name of the permission group as displayed to organization members.
+    - `create_description` is a lambda function that takes the organization's name, and optionally
+    uses it in the description of the instance of this permission group on that organization.
+    - `permissions` is a two-dimensional dictionary that sets the group's permissions. The first
+    level specifices the app, the second specifices the model, and the third specifices the set of
+    permissions on that app and model which the permission group should have.
+        - The set of permissions must correspond to default model permissions (`add_`, `change_`,
+        `delete_`, `view_`), or ones defined in the model's `Meta.permissions`.
+    """
+
     name: str
     create_description: Callable[[str], str]
     permissions: dict[str, dict[str, list[str]]] = field(default_factory=dict)
@@ -43,10 +56,10 @@ class OrgPermissionGroup:
 
 ORG_MEMBER_GROUP_TYPE: Final[str] = "ORG_MEMBER"
 
-# Default organization permission groups
+# Default organization permission groups.
 # All organizations will have ResponsibleGroups with these names and descriptions,
-# though they may customize their given permissions
-# The given permissions apply only to objects tied to that organization
+# though they may customize their given permissions.
+# The given permissions apply only to objects tied to that organization.
 DEFAULT_ORG_PERMISSION_GROUPS: Final[dict[str, OrgPermissionGroup]] = {
     ORG_MEMBER_GROUP_TYPE: OrgPermissionGroup(
         name="Medlem",
