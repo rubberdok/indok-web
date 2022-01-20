@@ -138,7 +138,10 @@ class EventType(DjangoObjectType):
 
     @staticmethod
     def resolve_product(event: Event, info) -> Product:
-        return event.products.get()
+        try:
+            return event.products.get()
+        except Product.DoesNotExist:
+            return None
 
 
 class CategoryType(DjangoObjectType):
