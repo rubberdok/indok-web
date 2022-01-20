@@ -189,6 +189,7 @@ jobs:
           fail_ci_if_error: true
 
   prepare:
+    runs-on: ubuntu-latest
     outputs:
       uuid: ${{ steps.uuid.outputs.value }}
     steps:
