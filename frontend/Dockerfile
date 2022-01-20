@@ -1,11 +1,13 @@
 # Larger base image for development
-FROM --platform=linux/amd64 node:14
+FROM --platform=linux/amd64 node:16.13.2
+
+RUN mkdir -p /app
 
 WORKDIR /app
 
 # Install dependencies
 COPY package.json yarn.lock ./
-RUN yarn install --frozen-lockfile
+RUN yarn install --frozen-lockfile --network-timeout 1000000000
 
 COPY . .
 
