@@ -42,7 +42,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        image: [frontend, backend, cypress]
+        image: [frontend, backend]
         stage: [test, production]
         include:
           - image: frontend
@@ -54,14 +54,9 @@ jobs:
             env-prefix: django
             context: ./backend
             dockerfile: Dockerfile.prod
-          - image: cypress
-            context: ./e2e/integration
-            dockerfile: Dockerfile
         exclude:
           - image: backend
             stage: test
-          - image: cypress
-            stage: production
       fail-fast: false
 
     env:
@@ -106,8 +101,6 @@ jobs:
           file: ${{ matrix.context }}/${{ matrix.dockerfile }}
           outputs: type=docker,dest=/tmp/${{ env.dockerfile }}.tar
           tags: ${{ matrix.image }}:${{ matrix.stage }}
-          cache-from: type=gha,scope=${{ github.workflow }}-${{ env.dockerfile }}
-          cache-to: type=gha,mode=max,scope=${{ github.workflow }}-${{ env.dockerfile }}
           build-args: |
             ${{ steps.env-download.outputs.build-args }}
 
