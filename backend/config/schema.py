@@ -9,6 +9,7 @@ from apps.listings.schema import ListingMutations, ListingQueries
 from apps.organizations.schema import OrganizationMutations, OrganizationQueries
 from apps.users.schema import UserMutations, UserQueries
 from utils.graphql.schema import UtilQueries
+from apps.ecommerce.schema import EcommerceMutations, EcommerceQueries
 
 
 class Queries(
@@ -20,6 +21,7 @@ class Queries(
     ListingQueries,
     FormQueries,
     UtilQueries,
+    EcommerceQueries,
     BlogQueries,
 ):
     pass
@@ -33,6 +35,7 @@ class Mutations(
     OrganizationMutations,
     ListingMutations,
     FormMutations,
+    EcommerceMutations,
     BlogMutations,
 ):
     pass

@@ -163,6 +163,8 @@ jobs:
           aws s3 cp s3://indok-web-environments/${{ env.ENV_FILE }} ${{ env.ENV_FILE }}
           echo "DATAPORTEN_SECRET=${{ secrets.DATAPORTEN_SECRET }}" >> ${{ env.ENV_FILE }}
           echo "GOOGLE_DRIVE_API_KEY=${{ secrets.GOOGLE_DRIVE_API_KEY }}" >> ${{ env.ENV_FILE }}
+          echo "VIPPS_SECRET=${{ secrets.VIPPS_SECRET }}" >> ${{ env.ENV_FILE }}
+          echo "VIPPS_SUBSCRIPTION_KEY=${{ secrets.VIPPS_SUBSCRIPTION_KEY }}" >> ${{ env.ENV_FILE }}
 
       - name: Run API tests
         run: |
@@ -216,6 +218,8 @@ jobs:
           aws s3 cp s3://indok-web-environments/${{ env.ENV_FILE }} ${{ env.ENV_FILE }}
           echo "DATAPORTEN_SECRET=${{ secrets.DATAPORTEN_SECRET }}" >> ${{ env.ENV_FILE }}
           echo "GOOGLE_DRIVE_API_KEY=${{ secrets.GOOGLE_DRIVE_API_KEY }}" >> ${{ env.ENV_FILE }}
+          echo "VIPPS_SECRET=${{ secrets.VIPPS_SECRET }}" >> ${{ env.ENV_FILE }}
+          echo "VIPPS_SUBSCRIPTION_KEY=${{ secrets.VIPPS_SUBSCRIPTION_KEY }}" >> ${{ env.ENV_FILE }}
 
       - name: Build and run the Application
         run: docker compose -f docker-compose.integration.yml up -d

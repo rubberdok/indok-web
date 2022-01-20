@@ -182,6 +182,21 @@ const ProfilePage: NextPage = () => {
                       </CardActions>
                     </Card>
                   </Grid>
+                  <Grid item xs={12}>
+                    <Card>
+                      <CardContent>
+                        <Typography gutterBottom variant="h4">
+                          Mine ordre
+                        </Typography>
+                        <Typography>{`Se en oversikt over alle betalinger du har gjort`}</Typography>
+                      </CardContent>
+                      <CardActions>
+                        <Link href="/ecommerce">
+                          <Button>Gå til betalinger</Button>
+                        </Link>
+                      </CardActions>
+                    </Card>
+                  </Grid>
                 </Grid>
               </Grid>
             </Grid>
