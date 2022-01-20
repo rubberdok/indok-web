@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { isVegetarian, validationSchema } from "@components/pages/profile/UserForm/helpers";
+import { isVegetarian, suggestGraduationYear, validationSchema } from "@components/pages/profile/UserForm/helpers";
 import { UPDATE_USER } from "@graphql/users/mutations";
 import { EDIT_USER_QUERY } from "@graphql/users/queries";
 import {
@@ -50,7 +50,7 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": 
       lastName: (kind === "register" ? lastName : data?.user.lastName) || "",
       email: data?.user.email || "",
       phoneNumber: data?.user.phoneNumber || "",
-      graduationYear: data?.user.graduationYear || currentYear + 5,
+      graduationYear: data?.user.graduationYear || suggestGraduationYear(),
       allergies: data?.user.allergies || "",
     },
     onSubmit: (values) =>
