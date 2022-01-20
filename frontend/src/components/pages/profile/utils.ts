@@ -1,13 +1,14 @@
 import { UserInput, UserInputValidations } from "@interfaces/users";
-import validator from "validator";
+import isEmail from "validator/es/lib/isEmail";
+import isMobilePhone from "validator/es/lib/isMobilePhone";
 
 export const validateInput = (input: Partial<UserInput>): UserInputValidations => {
   const { email, phoneNumber, graduationYear } = input;
   const currentMonth = new Date().getMonth() + 1;
   const currentYear = new Date().getFullYear();
   const validationResult: UserInputValidations = {
-    email: email ? validator.isEmail(email) : true,
-    phoneNumber: phoneNumber ? validator.isMobilePhone(phoneNumber, "nn-NO") : true,
+    email: email ? isEmail(email) : true,
+    phoneNumber: phoneNumber ? isMobilePhone(phoneNumber, "nn-NO") : true,
   };
 
   if (graduationYear && Number.isInteger(parseInt(graduationYear))) {
