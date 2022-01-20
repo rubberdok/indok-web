@@ -202,3 +202,4 @@ VIPPS_CALLBACK_PREFIX = env(
     "VIPPS_CALLBACK_PREFIX", default="https://xoff0kv3i3.execute-api.eu-north-1.amazonaws.com/default/Vipps_callback"
 )
 VIPPS_FALLBACK_PREFIX = env("VIPPS_FALLBACK_PREFIX", default="http://127.0.0.1:3000/ecommerce/fallback")
+VIPPS_BASE_URL = env("VIPPS_BASE_URL", default="https://apitest.vipps.no")

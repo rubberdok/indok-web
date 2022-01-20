@@ -21,8 +21,8 @@ class Product(models.Model):
     max_buyable_quantity = models.PositiveIntegerField(default=1)
 
     # Generic foreign key to related product model instance (e.g event model)
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True)
-    object_id = models.PositiveIntegerField(null=True)
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True, blank=True)
+    object_id = models.PositiveIntegerField(null=True, blank=True)
     related_object = GenericForeignKey("content_type", "object_id")
 
     class Meta:
