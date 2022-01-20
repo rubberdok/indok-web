@@ -1,5 +1,6 @@
 import { ApolloClient, ApolloProvider, createHttpLink, InMemoryCache } from "@apollo/client";
-import { CssBaseline, responsiveFontSizes } from "@material-ui/core";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import { responsiveFontSizes } from "@material-ui/core/styles";
 import { ThemeProvider } from "@material-ui/styles";
 import "@styles/global.css";
 import theme from "@styles/theme";

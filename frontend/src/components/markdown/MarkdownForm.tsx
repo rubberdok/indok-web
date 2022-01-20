@@ -1,7 +1,7 @@
-import { Tab, Tabs, TextField } from "@material-ui/core";
-import ReactMarkdown from "react-markdown";
 import * as markdownComponents from "@components/markdown/components";
+import { Tab, Tabs, TextField } from "@material-ui/core";
 import { ChangeEventHandler, useState } from "react";
+import ReactMarkdown from "react-markdown";
 
 /**
  * Component for a simple markdown form with a live preview.
