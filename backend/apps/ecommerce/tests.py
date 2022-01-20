@@ -18,7 +18,9 @@ class EcommerceBaseTestCase(ExtendedGraphQLTestCase):
         self.staff_user = StaffUserFactory()
         self.organization = OrganizationFactory()
         MembershipFactory(
-            user=self.staff_user, organization=self.organization, group=self.organization.primary_group,
+            user=self.staff_user,
+            organization=self.organization,
+            group=self.organization.primary_group,
         )
         self.total_quantity = 5
         self.max_buyable_quantity = 2
@@ -28,10 +30,14 @@ class EcommerceBaseTestCase(ExtendedGraphQLTestCase):
         self.product_2 = ProductFactory()
         self.order_1 = OrderFactory(product=self.product_1, user=self.indok_user)
         self.initiated_order = OrderFactory(
-            product=self.product_2, user=self.indok_user, payment_status=Order.PaymentStatus.INITIATED,
+            product=self.product_2,
+            user=self.indok_user,
+            payment_status=Order.PaymentStatus.INITIATED,
         )
         self.reserved_order = OrderFactory(
-            product=self.product_2, user=self.indok_user, payment_status=Order.PaymentStatus.RESERVED,
+            product=self.product_2,
+            user=self.indok_user,
+            payment_status=Order.PaymentStatus.RESERVED,
         )
 
         # Queries used several times:
