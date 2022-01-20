@@ -53,15 +53,13 @@ class VippsApi:
     Class structure inspired by https://github.com/almazkun/vipps-python
     """
 
-    VIPPS_BASE_URL = "https://apitest.vipps.no"
-
     def __init__(
         self,
         client_id: str = settings.VIPPS_CLIENT_ID,
         client_secret: str = settings.VIPPS_SECRET,
         vipps_subscription_key: str = settings.VIPPS_SUBSCRIPTION_KEY,
         merchant_serial_number: str = settings.VIPPS_MERCHANT_SERIAL_NUMBER,
-        vipps_server: str = VIPPS_BASE_URL,
+        vipps_server: str = settings.VIPPS_BASE_URL,
         access_token: Optional[str] = None,
         vipps_system_name: Optional[str] = None,
         vipps_system_version: Optional[str] = None,
