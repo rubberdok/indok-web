@@ -4,7 +4,7 @@ describe("SSO login", () => {
       cy.log("Accessing site");
       cy.visit("/").then(() => {
         cy.getByTestId("hero-title").should("contain.text", "Industriell Økonomi og Teknologiledelse");
-        cy.getByTestId("login")
+        cy.getByTestId("lo¨gin")
           .click()
           .then(() => {
             cy.log("Logging in");
@@ -16,14 +16,16 @@ describe("SSO login", () => {
               .then(() => {
                 cy.get("[id=username]").type("asbjorn_elevg");
                 cy.get("[id=password]").type("1qaz");
-              })
-              .then(() => {
-                cy.get("button").get("[type=submit]").click();
               });
           });
+        cy.get("button")
+          .get("[type=submit]")
+          .click()
+          .then(() => {
+            cy.getByTestId("profile-personal-name").should("contain.text", "Asbjørn ElevG Hansen");
+            cy.log("Logged in");
+          });
       });
-      cy.getByTestId("profile-personal-name").should("contain.text", "Asbjørn ElevG Hansen");
-      cy.log("Logged in");
     });
   });
 
@@ -44,8 +46,11 @@ describe("SSO login", () => {
       cy.getByTestId("registerUser-title").should("contain.text", "Registrering");
       cy.getByTestId("registerUser-firstNameTextField").within(() => cy.get("input").clear().type("Abba"));
       cy.getByTestId("registerUser-lastNameTextField").within(() => cy.get("input").clear().type("Baab"));
-      cy.getByTestId("registerUser-saveButton").click();
-      cy.getByTestId("profile-personal-name").should("contain.text", "Abba Baab");
+      cy.getByTestId("registerUser-saveButton")
+        .click()
+        .then(() => {
+          cy.getByTestId("profile-personal-name").should("contain.text", "Abba Baab");
+        });
     });
   });
 });
