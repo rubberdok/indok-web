@@ -1,5 +1,7 @@
 import { useQuery } from "@apollo/client";
 import Layout from "@components/Layout";
+import { EditUserProps } from "@components/pages/profile/EditUser";
+import { FirstLoginProps } from "@components/pages/profile/FirstLogin";
 import { GET_USER } from "@graphql/users/queries";
 import { User } from "@interfaces/users";
 import {
@@ -22,8 +24,6 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { EditUserProps } from "../components/pages/profile/EditUser";
-import { FirstLoginProps } from "../components/pages/profile/FirstLogin";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
