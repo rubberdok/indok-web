@@ -98,7 +98,7 @@ sentry_sdk.init(
     dsn=SENTRY_DSN,
     integrations=integrations,
     environment=ENVIRONMENT,  # noqa
-    traces_sample_rate=cast(bool, env.float("SENTRY_TRACES_SAMPLE_RATE", default=0.0)),
+    traces_sample_rate=cast(float, env.float("SENTRY_TRACES_SAMPLE_RATE", default=0.0)),
     send_default_pii=cast(bool, env.bool("SENTRY_SEND_DEFAULT_PII", default=True)),
     release=SENTRY_RELEASE,
 )
