@@ -50,7 +50,7 @@ const ProfilePage: NextPage = () => {
     return <Typography variant="h1">Laster ...</Typography>;
   }
 
-  if (!data || !data.user || error) {
+  if (!loading && (!data || !data.user || error)) {
     if (typeof window !== "undefined") {
       // redirect user to homepage if no user data and client side
       router.push("/");
