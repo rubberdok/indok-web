@@ -18,9 +18,7 @@ class EcommerceBaseTestCase(ExtendedGraphQLTestCase):
         self.staff_user = StaffUserFactory()
         self.organization = OrganizationFactory()
         MembershipFactory(
-            user=self.staff_user,
-            organization=self.organization,
-            group=self.organization.primary_group,
+            user=self.staff_user, organization=self.organization, group=self.organization.primary_group,
         )
         self.total_quantity = 5
         self.max_buyable_quantity = 2
@@ -30,15 +28,13 @@ class EcommerceBaseTestCase(ExtendedGraphQLTestCase):
         self.product_2 = ProductFactory()
         self.order_1 = OrderFactory(product=self.product_1, user=self.indok_user)
         self.initiated_order = OrderFactory(
-            product=self.product_2,
-            user=self.indok_user,
-            payment_status=Order.PaymentStatus.INITIATED,
+            product=self.product_2, user=self.indok_user, payment_status=Order.PaymentStatus.INITIATED,
         )
         self.reserved_order = OrderFactory(
-            product=self.product_2,
-            user=self.indok_user,
-            payment_status=Order.PaymentStatus.RESERVED,
+            product=self.product_2, user=self.indok_user, payment_status=Order.PaymentStatus.RESERVED,
         )
+
+        # Queries used several times:
 
         self.RETRIEVE_ORDER_QUERY = f"""
                 query Order{{
@@ -77,9 +73,9 @@ class EcommerceBaseTestCase(ExtendedGraphQLTestCase):
                 }
                 """
         self.INITIATE_ORDER_MUTATION = (
-            lambda q: f"""
+            lambda quantity: f"""
         mutation InitiateOrder {{
-            initiateOrder(productId: {self.product_1.id}, quantity: {q}) {{
+            initiateOrder(productId: {self.product_1.id}, quantity: {quantity}) {{
                 redirect
             }}
         }}
@@ -112,10 +108,10 @@ class EcommerceBaseTestCase(ExtendedGraphQLTestCase):
 
 class EcommerceResolversTestCase(EcommerceBaseTestCase):
     """
-    Testing all resolvers for ecommerce
+    Testing all resolvers for ecommerce-app.
     """
 
-    def test_resolve_products(self):
+    def test_resolve_products(self) -> None:
         query = """
                 query products {
                     products {
@@ -135,22 +131,22 @@ class EcommerceResolversTestCase(EcommerceBaseTestCase):
         # There are two products in the database
         self.assertEqual(len(content["data"]["products"]), 2)
 
-    def test_resolve_retrieve_order_unauthorized(self):
+    def test_resolve_retrieve_order_unauthorized(self) -> None:
         # Unauthorized user should not be able to retrieve order
         response = self.query(self.RETRIEVE_ORDER_QUERY)
         self.assert_permission_error(response)
 
-    def test_resolve_retrieve_order_authorized(self):
+    def test_resolve_retrieve_order_authorized(self) -> None:
         # Authorized user should be able to retrieve order
         response = self.query(self.RETRIEVE_ORDER_QUERY, user=self.indok_user)
         self.assertResponseNoErrors(response)
 
-    def test_resolve_retrieve_user_orders_unauthorized(self):
+    def test_resolve_retrieve_user_orders_unauthorized(self) -> None:
         # Unauthorized user should not be able to retrieve orders
         response = self.query(self.RETRIEVE_USER_ORDERS_QUERY)
         self.assert_permission_error(response)
 
-    def test_resolve_retrieve_user_orders_authorized(self):
+    def test_resolve_retrieve_user_orders_authorized(self) -> None:
         # Authorized user should be able to retrieve orders
         response = self.query(self.RETRIEVE_USER_ORDERS_QUERY, user=self.indok_user)
         self.assertResponseNoErrors(response)
@@ -164,10 +160,10 @@ class EcommerceResolversTestCase(EcommerceBaseTestCase):
 
 class EcommerceMutationsTestCase(EcommerceBaseTestCase):
     """
-    Testing all mutations for ecommerce
+    Testing all mutations for ecommerce-app.
     """
 
-    def test_create_product(self):
+    def test_create_product(self) -> None:
         product = ProductFactory.build()
         query = f"""
             mutation CreateProduct {{
@@ -212,16 +208,18 @@ class EcommerceMutationsTestCase(EcommerceBaseTestCase):
 
     @unittest.mock.patch("apps.ecommerce.mutations.InitiateOrder.vipps_api.get_payment_status")
     @unittest.mock.patch("apps.ecommerce.mutations.InitiateOrder.vipps_api.initiate_payment")
-    def test_authorized_user_initiate_order(self, initiate_payment_mock, get_payment_status_mock):
+    def test_authorized_user_initiate_order(
+        self, initiate_payment_mock: unittest.mock.MagicMock, get_payment_status_mock: unittest.mock.MagicMock
+    ) -> None:
         url = "https://www.youtube.com/watch?v=AWM5ZNdWlqw"
         initiate_payment_mock.return_value = url
         get_payment_status_mock.return_value = ("BlaBla", True)
 
-        # Requesting more than available is not allowed
+        # Scenario 1: Requesting more than available is not allowed
         response = self.query(self.INITIATE_ORDER_MUTATION(self.total_quantity + 1), user=self.indok_user)
         self.assertResponseHasErrors(response)
 
-        # Requesting more than one user can buy is not allowed
+        # Scenario 2: Requesting more than one user can buy is not allowed
         response = self.query(self.INITIATE_ORDER_MUTATION(self.max_buyable_quantity + 1), user=self.indok_user)
         self.assertResponseHasErrors(response)
 
@@ -233,19 +231,21 @@ class EcommerceMutationsTestCase(EcommerceBaseTestCase):
         redirect_url = data["initiateOrder"]["redirect"]
         self.assertEqual(redirect_url, url)
 
-    def test_unauthenticated_user_attempt_capture_order(self):
+    def test_unauthenticated_user_attempt_capture_order(self) -> None:
         # Unauthenticated user should not be able to capture orders
         response = self.query(self.ATTEMPT_CAPTURE_PAYMENT_MUTATION(self.order_1.id))
         self.assert_permission_error(response)
 
-    def test_unauthorized_user_attempt_capture_order(self):
+    def test_unauthorized_user_attempt_capture_order(self) -> None:
         # Unauthorized users should not have access to the order
         response = self.query(self.ATTEMPT_CAPTURE_PAYMENT_MUTATION(self.initiated_order.id), user=self.indok_user_2)
         self.assertResponseHasErrors(response)
 
     @unittest.mock.patch("apps.ecommerce.mutations.AttemptCapturePayment.vipps_api.capture_payment")
     @unittest.mock.patch("apps.ecommerce.mutations.AttemptCapturePayment.vipps_api.get_payment_status")
-    def test_authorized_user_reserve_initiated_order(self, get_payment_status_mock, capture_payment_mock):
+    def test_authorized_user_reserve_initiated_order(
+        self, get_payment_status_mock: unittest.mock.MagicMock, capture_payment_mock: unittest.mock.MagicMock
+    ) -> None:
         get_payment_status_mock.return_value = ("RESERVE", True)
         response = self.query(self.ATTEMPT_CAPTURE_PAYMENT_MUTATION(self.initiated_order.id), user=self.indok_user)
         data = json.loads(response.content)["data"]
@@ -256,18 +256,9 @@ class EcommerceMutationsTestCase(EcommerceBaseTestCase):
         self.assertEqual(capture_payment_mock.call_args.args[0].product, self.initiated_order.product)
 
     @unittest.mock.patch("apps.ecommerce.mutations.AttemptCapturePayment.vipps_api.get_payment_status")
-    def test_authorized_user_cancel_initiated_order(self, get_payment_status_mock):
+    def test_authorized_user_cancel_initiated_order(self, get_payment_status_mock: unittest.mock.MagicMock) -> None:
         get_payment_status_mock.return_value = ("CANCEL", True)
         response = self.query(self.ATTEMPT_CAPTURE_PAYMENT_MUTATION(self.initiated_order.id), user=self.indok_user)
         data = json.loads(response.content)["data"]
         self.assertResponseNoErrors(response)
         self.assertEqual(data["attemptCapturePayment"]["status"], "CANCELLED")
-
-    """ @unittest.mock.patch("apps.ecommerce.mutations.AttemptCapturePayment.vipps_api.capture_payment")
-    def test_authorized_user_capture_reserved_order(self, capture_payment_mock):
-        capture_payment_mock.return_value = ("CANCEL", True)
-        response = self.query(self.ATTEMPT_CAPTURE_PAYMENT_MUTATION(self.reserved_order.id), user=self.indok_user)
-        data = json.loads(response.content)["data"]
-        self.assertResponseNoErrors(response)
-        self.assertEqual(data["attemptCapturePayment"]["status"], "CAPTURED")
-        print("ARGS: ", capture_payment_mock.call_args.args) """
