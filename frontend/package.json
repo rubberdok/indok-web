@@ -33,8 +33,6 @@
     "react": "^17.0.2",
     "react-awesome-reveal": "^3.8.1",
     "react-dom": "^17.0.2",
-    "react-feather": "^2.0.8",
-    "react-icons": "^4.2.0",
     "react-markdown": "^6.0.2",
     "react-parallax": "^3.3.0",
     "react-swipeable-views": "^0.14.0",
@@ -44,7 +42,6 @@
     "validator": "^13.6.0"
   },
   "devDependencies": {
-    "@types/feather-icons": "^4.7.0",
     "@types/node": "^14.17.3",
     "@types/react": "^17.0.11",
     "@types/react-dom": "^17.0.8",
@@ -55,7 +52,7 @@
     "@typescript-eslint/eslint-plugin": "^4.27.0",
     "@typescript-eslint/parser": "^4.27.0",
     "babel-plugin-react-remove-properties": "^0.3.0",
-    "babel-plugin-styled-components": "^1.11.1",
+    "babel-plugin-styled-components": "^2.0.2",
     "babel-plugin-transform-remove-console": "^6.9.4",
     "eslint": "^7.29.0",
     "eslint-config-next": "^11.0.1",
