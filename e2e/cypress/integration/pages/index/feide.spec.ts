@@ -4,7 +4,7 @@ describe("SSO login", () => {
       cy.log("Accessing site");
       cy.visit("/").then(() => {
         cy.getByTestId("hero-title").should("contain.text", "Industriell Økonomi og Teknologiledelse");
-        cy.getByTestId("lo¨gin")
+        cy.getByTestId("login")
           .click()
           .then(() => {
             cy.log("Logging in");
