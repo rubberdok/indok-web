@@ -138,10 +138,6 @@ jobs:
         if: ${{ matrix.mount }}
         run: docker cp ${{ steps.container.outputs.container }}:/usr/src/app/${{ matrix.sourcemaps }} ${{ matrix.sourcemaps }}
 
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-
       - name: Sentry release
         uses: getsentry/action-release@v1.1.6
         env:
