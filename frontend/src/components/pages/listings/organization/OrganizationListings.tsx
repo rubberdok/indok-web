@@ -55,7 +55,7 @@ const OrganizationListings: React.FC<{
           setListingToDelete(undefined);
         }}
       />
-      <Grid item container>
+      <Grid container>
         <Grid item xs>
           <Card variant="outlined">
             <CardHeader title="Verv" />
