@@ -21,7 +21,7 @@ import { NextPage } from "next";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { EditUserProps } from "../components/pages/profile/EditUser";
 import { FirstLoginProps } from "../components/pages/profile/FirstLogin";
 
@@ -46,16 +46,18 @@ const ProfilePage: NextPage = () => {
   const classes = useStyles();
   const router = useRouter();
 
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      if (!loading) {
+        if (data?.user === undefined || error) {
+          router.push("/");
+        }
+      }
+    }
+  }, [data, loading, error]);
+
   if (loading) {
     return <Typography variant="h1">Laster ...</Typography>;
-  }
-
-  if (!loading && (!data || !data.user || error)) {
-    if (typeof window !== "undefined") {
-      // redirect user to homepage if no user data and client side
-      router.push("/");
-      return null;
-    }
   }
 
   if (data?.user?.firstLogin && !firstLoginOpen) {
