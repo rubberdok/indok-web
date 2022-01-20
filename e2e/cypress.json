@@ -4,5 +4,7 @@
   "chromeWebSecurity": false,
   "baseUrl": "http://localhost:3000",
   "projectId": "1fyogc",
-  "experimentalSessionSupport": true
+  "experimentalSessionSupport": true,
+  "defaultCommandTimeout": 10000,
+  "video": false
 }
