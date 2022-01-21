@@ -19,7 +19,7 @@
 [![AWS](https://github.com/hovedstyret/indok-web/actions/workflows/aws.yml/badge.svg)](https://github.com/hovedstyret/indok-web/actions/workflows/aws.yml)
 [![Code style](https://img.shields.io/badge/code%20style-black-black?style=flat)](https://github.com/psf/black)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat)](https://github.com/prettier/prettier)
-[![codecov](https://codecov.io/gh/hovedstyret/indok-web/branch/main/graph/badge.svg?token=UO2NENP9Z8)](https://codecov.io/gh/hovedstyret/indok-web)
+[![codecov](https://codecov.io/gh/rubberdok/indok-web/branch/main/graph/badge.svg?token=UO2NENP9Z8)](https://codecov.io/gh/rubberdok/indok-web)
 
 Website for the students at Industrial Economics and Technology Management at NTNU Trondheim. Built with Django, React/Next.js, and GraphQL API. Built and maintained by Rubberdøk NTNU.
 
