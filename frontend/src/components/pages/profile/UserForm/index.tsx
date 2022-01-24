@@ -55,7 +55,7 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": 
     },
     onSubmit: (values) =>
       updateUser({
-        variables: { id: data?.user.id, userData: values },
+        variables: { id: data?.user?.id, userData: values },
       }),
     validationSchema,
     enableReinitialize: true,
