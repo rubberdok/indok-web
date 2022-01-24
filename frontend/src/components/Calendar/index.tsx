@@ -100,7 +100,6 @@ const Calendar: React.FC<CalendarProps> = ({
   };
 
   const isHidden = (date: dayjs.Dayjs, month: dayjs.Dayjs) => {
-    console.log(date.month() != month.month());
     return date.month() != month.month();
   };
 
