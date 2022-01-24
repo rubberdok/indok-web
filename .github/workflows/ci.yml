@@ -123,7 +123,7 @@ jobs:
         with:
           context: ${{ matrix.context }}
           push: true
-          tags: ${{ steps.image-tag.outsputs.image }}
+          tags: ${{ steps.image-tag.outputs.image }}
 
       - name: Upload artifact
         uses: actions/upload-artifact@v2
