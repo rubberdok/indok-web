@@ -31,7 +31,7 @@ const userInitials = (firstName: string, lastName: string): string => {
 };
 
 const ProfilePage: NextPage = () => {
-  const { data, loading, error } = useQuery<{ user: User }>(GET_USER_PROFILE);
+  const { data, loading, error } = useQuery<{ user?: User }>(GET_USER_PROFILE);
   const router = useRouter();
   const theme = useTheme();
   const classes = useStyles();
