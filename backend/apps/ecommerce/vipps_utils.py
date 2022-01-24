@@ -5,7 +5,14 @@ from typing import Literal, Optional, Tuple, TypedDict
 import requests
 from django.conf import settings
 from django.utils import timezone
-from sentry_sdk import set_context
+
+try:
+    from sentry_sdk import set_context
+except ModuleNotFoundError:
+
+    def set_context(*_):
+        pass
+
 
 from .models import Order, VippsAccessToken
 
