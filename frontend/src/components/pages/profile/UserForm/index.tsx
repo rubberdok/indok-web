@@ -33,7 +33,7 @@ type Props = {
 };
 
 const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": dataTestId }) => {
-  const { data } = useQuery<{ user: EditUser }>(EDIT_USER_QUERY);
+  const { data } = useQuery<{ user?: EditUser }>(EDIT_USER_QUERY);
   const [updateUser] = useMutation<{ updateUser: { user: EditUser } }>(UPDATE_USER, {
     onCompleted: onCompleted,
   });
@@ -42,16 +42,16 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": 
   const currentYear = dayjs().year();
   const ID_PREFIX = `${dataTestId}`;
 
-  const { firstName, lastName } = suggestNames(data?.user.firstName);
+  const { firstName, lastName } = suggestNames(data?.user?.firstName);
 
   const formik = useFormik({
     initialValues: {
-      firstName: (kind === "register" ? firstName : data?.user.firstName) || "",
-      lastName: (kind === "register" ? lastName : data?.user.lastName) || "",
-      email: data?.user.email || "",
-      phoneNumber: data?.user.phoneNumber || "",
-      graduationYear: data?.user.graduationYear || suggestGraduationYear(),
-      allergies: data?.user.allergies || "",
+      firstName: (kind === "register" ? firstName : data?.user?.firstName) || "",
+      lastName: (kind === "register" ? lastName : data?.user?.lastName) || "",
+      email: data?.user?.email || "",
+      phoneNumber: data?.user?.phoneNumber || "",
+      graduationYear: data?.user?.graduationYear || suggestGraduationYear(),
+      allergies: data?.user?.allergies || "",
     },
     onSubmit: (values) =>
       updateUser({
