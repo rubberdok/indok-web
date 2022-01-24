@@ -12,7 +12,7 @@ describe("On the profile page", () => {
     cy.visit("/profile");
     cy.getByTestId("profile-personal-name").should("contain.text", "Eva Student Åsen");
     cy.getByTestId("profile-personal-link").click();
-    cy.getByTestId("editUser-firstNameTextField").within(() => cy.get("input").should("contain", "Eva"));
+    cy.getByTestId("editUser-firstNameTextField").should("contain.text", "Eva");
     cy.getByTestId("editUser-firstNameTextField").within(() => cy.get("input").clear().type("Newname"));
     cy.getByTestId("editUser-saveButton").click();
     cy.getByTestId("editUser-successSnackbar").should("exist");
