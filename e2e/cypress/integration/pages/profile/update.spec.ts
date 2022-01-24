@@ -9,9 +9,8 @@ describe("User Logins", () => {
 
   it("should prompt registration when not registered", () => {
     cy.log("Accessing site");
-    cy.visit("/profile").then(() => {
-      cy.getByTestId("profile-personal-name").should("contain.text", "Eva Student Åsen");
-    });
+    cy.visit("/profile");
+    cy.getByTestId("profile-personal-name").should("contain.text", "Eva Student Åsen");
     cy.getByTestId("profile-personal-link").click();
     cy.getByTestId("editUser-firstNameTextField").within(() => cy.get("input").clear().type("Newname"));
     cy.getByTestId("editUser-saveButton").click();
