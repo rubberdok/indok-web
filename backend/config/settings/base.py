@@ -161,13 +161,7 @@ LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
     "formatters": {"verbose": {"format": "%(levelname)s %(asctime)s %(module)s " "%(process)d %(thread)d %(message)s"}},
-    "handlers": {
-        "console": {
-            "level": "DEBUG",
-            "class": "logging.StreamHandler",
-            "formatter": "verbose",
-        }
-    },
+    "handlers": {"console": {"level": "DEBUG", "class": "logging.StreamHandler", "formatter": "verbose"}},
     "root": {"level": "INFO", "handlers": ["console"]},
 }
 
@@ -184,10 +178,7 @@ GOOGLE_DRIVE_API_KEY = env("GOOGLE_DRIVE_API_KEY")
 # GRAPHENE
 GRAPHENE = {
     "SCHEMA": "config.schema.schema",
-    "MIDDLEWARE": [
-        "graphql_jwt.middleware.JSONWebTokenMiddleware",
-        "api.auth.middleware.AnonymousUserMiddleware",
-    ],
+    "MIDDLEWARE": ["graphql_jwt.middleware.JSONWebTokenMiddleware", "api.auth.middleware.AnonymousUserMiddleware"],
 }
 GRAPHQL_JWT = {"JWT_COOKIE_DOMAIN": env("JWT_COOKIE_DOMAIN", default="localhost")}
 GRAPHQL_URL = "graphql/"
@@ -206,3 +197,6 @@ VIPPS_CALLBACK_PREFIX = env(
 )
 VIPPS_FALLBACK_PREFIX = env("VIPPS_FALLBACK_PREFIX", default="http://127.0.0.1:3000/ecommerce/fallback")
 VIPPS_BASE_URL = env("VIPPS_BASE_URL", default="https://apitest.vipps.no")
+
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60

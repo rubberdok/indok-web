@@ -41,6 +41,29 @@ services:
     expose:
       - 3000
 
+
+  rabbitmq:
+    image: rabbitmq:latest
+    hostname: rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=user
+      - RABBITMQ_DEFAULT_PASS=password
+    ports:
+        - "5672:5672"
+
+  celery_worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.celery
+    volumes:
+      - ./backend:/usr/src/app
+    depends_on:
+      - postgres
+      - rabbitmq
+      - backend
+
+
+
 volumes:
   postgres_data:
     driver: local
