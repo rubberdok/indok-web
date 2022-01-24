@@ -5,6 +5,7 @@ from typing import Literal, Optional, Tuple, TypedDict
 import requests
 from django.conf import settings
 from django.utils import timezone
+from sentry_sdk import set_context
 
 from .models import Order, VippsAccessToken
 
@@ -27,7 +28,7 @@ MerchantInfo = TypedDict(
 )
 CustomerInfo = TypedDict("CustomerInfo", {"mobileNumber": str})
 TransactionInfo = TypedDict(
-    "TransactionData", {"orderId": str, "amount": int, "transactionText": str, "skipLandingPage": bool}
+    "TransactionData", {"orderId": str, "amount": int, "transactionText": str, "skipLandingPage": bool, "scope": str}
 )
 
 InitiatePaymentBody = TypedDict(
@@ -102,8 +103,11 @@ class VippsApi:
         r = req(url, headers=headers, data=data)
         if r.ok:
             return r.json()
-
-        r.raise_for_status()
+        try:
+            r.raise_for_status()
+        except requests.exceptions.HTTPError as e:
+            set_context("vipps_error", r.json()[0])
+            raise e
 
     # Public methods:
     def capture_payment(self, order: Order, method: str) -> None:
@@ -210,5 +214,6 @@ class VippsApi:
                 "amount": int(order.total_price * 100),  # ører
                 "transactionText": f"{order.quantity} {order.product.name}",
                 "skipLandingPage": False,
+                "scope": "name phoneNumber",
             },
         }
