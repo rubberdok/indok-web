@@ -1,20 +1,11 @@
 import { gql } from "@apollo/client";
+import { USER_FRAMGENT } from "./fragments";
 
 export const GET_USER = gql`
-  query {
+  ${USER_FRAMGENT}
+  query user {
     user {
-      id
-      feideEmail
-      email
-      username
-      firstName
-      lastName
-      dateJoined
-      graduationYear
-      gradeYear
-      allergies
-      phoneNumber
-      firstLogin
+      ...UserFields
       events {
         id
       }

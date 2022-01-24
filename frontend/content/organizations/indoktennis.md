@@ -3,11 +3,11 @@ title: Indøk Tennisklubb
 description: Obligatorisk å klaske tennisball på Indøk
 image: /img/indoktennis.jpg
 logo: /img/indoktennis.jpg
-styre:
+board:
   ceo:
-    navn: Richard Rogstad
-    mail: tlf. 924 34 994
-    tittel: Leder
+    name: Richard Rogstad
+    phoneNumber: 924 34 994
+    title: Leder
 tag: idrett
 ---
 

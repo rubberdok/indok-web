@@ -1,12 +1,12 @@
-coverage==6.0
-Django==3.2.10
+coverage==6.2
+Django==3.2.11
 django-alive==1.1.0
 django-cors-headers==3.5.0
-django-environ==0.4.5
+django-environ==0.8.1
 django-graphql-jwt==0.3.1
 django-multiselectfield==0.1.12
 django-phonenumber-field==5.0.0
-django-ses==2.0.0
+django-ses==2.3.1
 djangorestframework==3.12.4
 factory-boy==3.2.0
 flake8==3.9.2
@@ -15,7 +15,7 @@ graphene-django==2.15.0
 gunicorn==20.0.4
 phonenumbers==8.12.19
 promise==2.3
-psycopg2-binary==2.9.1
+psycopg2-binary==2.9.3
 PyJWT==1.7.1
 cryptography==35.0.0
 google-api-python-client==2.23.0

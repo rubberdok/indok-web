@@ -3,7 +3,7 @@ title: Indøkrevyen
 description: Norges beste studentrevy?
 logo: /img/indokrevylogo.jpg
 image: /img/indokrevyenbilde.jpg
-styre:
+board:
 tag: kultur
 ---
 

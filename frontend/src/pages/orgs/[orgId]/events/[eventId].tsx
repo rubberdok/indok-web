@@ -28,7 +28,7 @@ import {
   Tooltip,
   Typography,
 } from "@material-ui/core";
-import { Edit } from "@material-ui/icons";
+import { Check, Close, Edit } from "@material-ui/icons";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { Alert } from "@material-ui/lab";
 import dayjs from "dayjs";
@@ -91,6 +91,8 @@ const EventAdminPage: NextPage = () => {
     return <CircularProgress />;
   }
 
+  data && data.event.product && signUpFields.push({ header: "Betalt?", field: "hasBoughtTicket" });
+
   const renderInfo = (label: string, value: string | boolean) => {
     if (value === "") {
       return;
@@ -119,6 +121,23 @@ const EventAdminPage: NextPage = () => {
       });
   };
 
+  const CellContent = ({ signUp, field }: { signUp: SignUp; field: HeaderValuePair<SignUp> }) => {
+    if (field.header === "Navn") {
+      return (
+        <Typography variant="body2">
+          {signUp.user.firstName} {signUp.user.lastName}
+        </Typography>
+      );
+    }
+    if (field.header === "Mobilnummer") {
+      return <Typography variant="body2">{signUp.userPhoneNumber.slice(3)}</Typography>;
+    }
+    if (typeof signUp[field.field] == "boolean") {
+      return signUp[field.field] ? <Check color="primary" /> : <Close color="error" />;
+    }
+    return <Typography variant="body2">{signUp[field.field] || "━"}</Typography>;
+  };
+
   return (
     <Layout>
       {data?.event ? (
@@ -126,7 +145,7 @@ const EventAdminPage: NextPage = () => {
           {openEditEvent && (
             <EditEvent open={openEditEvent} onClose={() => setOpenEditEvent(false)} event={data.event} />
           )}
-          <Grid container direction="column" spacing={5}>
+          <Grid container direction="column" spacing={4}>
             <Grid item>
               <Typography variant="h1" align="center">
                 {data.event.title}
@@ -182,13 +201,7 @@ const EventAdminPage: NextPage = () => {
                               <TableRow key={`user-row-${signUp.user.id}`}>
                                 {signUpFields.map((field) => (
                                   <TableCell key={`user-${signUp.user.id}-cell--${field.field}`}>
-                                    {field.header === "Navn"
-                                      ? `${signUp.user.firstName} ${signUp.user.lastName}`
-                                      : field.header === "Mobilnummer"
-                                      ? signUp.userPhoneNumber.slice(3)
-                                      : signUp[field.field]
-                                      ? signUp[field.field]
-                                      : "━"}
+                                    <CellContent signUp={signUp} field={field} />
                                   </TableCell>
                                 ))}
                                 <TableCell>
@@ -237,13 +250,7 @@ const EventAdminPage: NextPage = () => {
                               <TableRow key={`user-row-${signUp.user.id}`}>
                                 {signUpFields.map((field) => (
                                   <TableCell key={`user-${signUp.user.id}-cell--${field.field}`}>
-                                    {field.header === "Navn"
-                                      ? `${signUp.user.firstName} ${signUp.user.lastName}`
-                                      : field.header === "Mobilnummer"
-                                      ? signUp.userPhoneNumber.slice(3)
-                                      : signUp[field.field]
-                                      ? signUp[field.field]
-                                      : "━"}
+                                    <CellContent signUp={signUp} field={field} />
                                   </TableCell>
                                 ))}
                               </TableRow>
