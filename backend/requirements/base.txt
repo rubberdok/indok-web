@@ -16,7 +16,7 @@ gunicorn==20.0.4
 phonenumbers==8.12.19
 promise==2.3
 psycopg2-binary==2.9.1
-WeasyPrint==53.3
+WeasyPrint==54.0
 PyJWT==1.7.1
 cryptography==35.0.0
 google-api-python-client==2.23.0
