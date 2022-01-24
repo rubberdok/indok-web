@@ -302,6 +302,8 @@ jobs:
       ECS_REPOSITORY: indokweb-${{ matrix.image }}
       SENTRY_PROJECT: indokweb-${{ matrix.image }}
       CONTAINER_NAME: ${{ matrix.image }}
+      ECS_CLUSTER: indokweb-cluster # Set this to our ECS cluster name, e.g. indokweb-cluster
+      SENTRY_ORG: rbberdk
 
     steps:
       - name: Checkout
