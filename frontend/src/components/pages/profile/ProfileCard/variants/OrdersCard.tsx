@@ -2,7 +2,7 @@ import { Grid, Typography } from "@material-ui/core";
 import CreditCard from "@public/illustrations/CreditCard.svg";
 import ProfileCardBase from "./ProfileCardBase";
 
-const EventCard: React.VFC = ({ ...props }) => {
+const OrdersCard: React.VFC = ({ ...props }) => {
   return (
     <ProfileCardBase
       title="Ordrehistorikk"
@@ -23,4 +23,4 @@ const EventCard: React.VFC = ({ ...props }) => {
   );
 };
 
-export default EventCard;
+export default OrdersCard;
