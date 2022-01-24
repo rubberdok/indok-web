@@ -114,13 +114,14 @@ jobs:
           push: false
           build-args: |
             ${{ steps.env-download.outputs.build-args }}
-      
+
       - name: Push ${{ matrix.image }} image
         id: push-image
         # If this is run on the main branch, and is a production image, it should be pushed to ECR
         if: ${{ github.ref == 'refs/heads/main' && matrix.stage == 'production' }}
         uses: docker/build-push-action@v2
-          context: ${{ matrix.context }} 
+        with:
+          context: ${{ matrix.context }}
           push: true
           tags: ${{ steps.image-tag.outsputs.image }}
 
