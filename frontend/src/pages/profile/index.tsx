@@ -86,7 +86,9 @@ const ProfilePage: NextPage = () => {
               style={{ marginBottom: theme.spacing(4) }}
             >
               <Grid item>
-                {data && <Typography variant="subtitle1" component="h1">{`Hei, ${data.user.firstName}`}</Typography>}
+                {data?.user && (
+                  <Typography variant="subtitle1" component="h1">{`Hei, ${data.user.firstName}`}</Typography>
+                )}
               </Grid>
               <Grid item>
                 <Typography variant="body2" align="center">
