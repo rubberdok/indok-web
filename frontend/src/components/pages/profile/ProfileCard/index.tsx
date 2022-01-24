@@ -3,9 +3,11 @@ import FormCard from "./variants/FormCard";
 import OrganizationCard from "./variants/OrganizationCard";
 import PersonalCard from "./variants/PersonalCard";
 import ReportCard from "./variants/ReportCard";
+import OrdersCard from "./variants/OrdersCard";
 
 export const Event = EventCard;
 export const Form = FormCard;
 export const Organization = OrganizationCard;
 export const Personal = PersonalCard;
 export const Report = ReportCard;
+export const Orders = OrdersCard;
