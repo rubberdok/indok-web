@@ -25,6 +25,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       }
     },
     backgroundColor: (props: Props) => {
+      if (props.isHidden) {
+        return "transparent";
+      }
       if (props.isFromDate || props.isToDate) {
         if (props.isInvalidRange) {
           return theme.palette.error.dark;
@@ -37,9 +40,6 @@ const useStyles = makeStyles((theme: Theme) => ({
         }
         return theme.palette.primary.light;
       }
-      if (props.isHidden) {
-        return "transparent";
-      }
       return theme.palette.background.paper;
     },
     cursor: (props: Props) => (props.isDisabled || props.isHidden ? "default" : "pointer"),
@@ -48,13 +48,13 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const CalendarDay: React.VFC<Props> = (props) => {
   const classes = useStyles(props);
-  const { onClick, value } = props;
+  const { onClick, value, isHidden } = props;
   return (
     <Grid item xs component="td" onClick={onClick}>
       <Box className={classes.root}>
         <Grid container justifyContent="center" alignItems="center" style={{ height: "100%" }}>
           <Grid item>
-            <Typography>{value}</Typography>
+            <Typography>{!isHidden ? value : ""}</Typography>
           </Grid>
         </Grid>
       </Box>

@@ -44,8 +44,8 @@ const Calendar: React.FC<CalendarProps> = ({
     setSelectedToDay(undefined);
   }, [disableAll]);
 
-  const handleDateClicked = (date: dayjs.Dayjs) => {
-    if (!isDisabled(date)) {
+  const handleDateClicked = (date: dayjs.Dayjs, month: dayjs.Dayjs) => {
+    if (!isDisabled(date) && !isHidden(date, month)) {
       const setDate = (
         newDate: dayjs.Dayjs,
         setFunc: React.Dispatch<React.SetStateAction<dayjs.Dayjs | undefined>>
@@ -97,6 +97,11 @@ const Calendar: React.FC<CalendarProps> = ({
       (disableAfterDate ? date.isAfter(disableAfterDate) : false) ||
       disabledDates?.includes(date.format(DATE_FORMAT))
     );
+  };
+
+  const isHidden = (date: dayjs.Dayjs, month: dayjs.Dayjs) => {
+    console.log(date.month() != month.month());
+    return date.month() != month.month();
   };
 
   const previousMonthDays = (month: dayjs.Dayjs): dayjs.Dayjs[] => {
@@ -196,8 +201,9 @@ const Calendar: React.FC<CalendarProps> = ({
                     value={date.date()}
                     isFromDate={selectedFromDay ? date.isSame(selectedFromDay, "day") : false}
                     isToDate={selectedToDay ? date.isSame(selectedToDay, "day") : false}
-                    onClick={() => handleDateClicked(date)}
+                    onClick={() => handleDateClicked(date, selectedMonth)}
                     isDisabled={isDisabled(date)}
+                    isHidden={isHidden(date, selectedMonth)}
                     isInRange={range.includes(date.format(DATE_FORMAT))}
                     isInvalidRange={!isRangeValid}
                     key={date.format(DATE_FORMAT)}
@@ -218,8 +224,9 @@ const Calendar: React.FC<CalendarProps> = ({
                       value={date.date()}
                       isFromDate={selectedFromDay ? date.isSame(selectedFromDay, "day") : false}
                       isToDate={selectedToDay ? date.isSame(selectedToDay, "day") : false}
-                      onClick={() => handleDateClicked(date)}
+                      onClick={() => handleDateClicked(date, selectedMonth.add(1, "month"))}
                       isDisabled={isDisabled(date)}
+                      isHidden={isHidden(date, selectedMonth.add(1, "month"))}
                       isInRange={range.includes(date.format(DATE_FORMAT))}
                       isInvalidRange={!isRangeValid}
                       key={date.format(DATE_FORMAT)}
