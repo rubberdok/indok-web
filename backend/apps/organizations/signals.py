@@ -72,7 +72,7 @@ def ensure_default_org_permission_groups(instance: Organization, **kwargs):
                     existing_group_changed = True
 
                 if set(existing_group.group.permissions.all()) != set(default_group.permissions):
-                    existing_group.group.permissions.set(default_group.permissions)
+                    existing_group.group.permissions.set(default_group.formattedPermissions())
 
                 if existing_group_changed:
                     existing_group.save()
