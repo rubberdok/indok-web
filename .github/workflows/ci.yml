@@ -281,8 +281,8 @@ jobs:
     needs: [e2e, api]
     if: github.ref == 'refs/heads/main'
 
-    concurrency: deployment
     environment: production
+    concurrency: ${{ matrix.image }}
 
     strategy:
       matrix:
