@@ -3,15 +3,13 @@ title: Janustrikk
 description: Indøks strikkelag for alle kjønn
 logo: /img/janusstrikk.jpg
 image: /img/janusstrikk.jpg
-styre:
+board:
   ceo:
-    navn: Maren Barth
-    mail:
-    tittel: Leder
+    name: Maren Barth
+    title: Leder
   cto:
-    navn: Amanda Krutnes
-    mail:
-    tittel: Leder
+    name: Amanda Krutnes
+    title: Leder
 tag: annet
 ---
 

@@ -1,9 +1,12 @@
-from apps.organizations.models import Organization
-from django.db import models
 from django.conf import settings
-from phonenumber_field.modelfields import PhoneNumberField
 from django.contrib.auth import get_user_model
+from django.contrib.contenttypes.fields import GenericRelation
+from django.db import models
 from multiselectfield import MultiSelectField
+from phonenumber_field.modelfields import PhoneNumberField
+
+from apps.ecommerce.mixins import Sellable
+from apps.organizations.models import Organization
 
 
 class Category(models.Model):
@@ -16,7 +19,7 @@ class Category(models.Model):
         verbose_name_plural = "Categories"
 
 
-class Event(models.Model):
+class Event(models.Model, Sellable):
     # ------------------ Mandatory fields ------------------
     title = models.CharField(max_length=128)
     description = models.TextField()
@@ -53,6 +56,7 @@ class Event(models.Model):
     binding_signup = models.BooleanField(
         default=False
     )  # Disables sign-off from users_attending if true. NOTE: binding_signup is required given Price
+    products = GenericRelation("ecommerce.Product")
 
     @property
     def signed_up_users(self):
@@ -87,6 +91,9 @@ class Event(models.Model):
 
     def __str__(self):
         return self.title
+
+    def is_user_allowed_to_buy_product(self, user) -> bool:
+        return user in self.signed_up_users
 
 
 class SignUp(models.Model):

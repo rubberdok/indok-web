@@ -10,28 +10,22 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 
+type AuthUser = {
+  user: User;
+  idToken: string | null;
+};
+
 const AuthCallbackPage: NextPage = () => {
   const router = useRouter();
 
   const { code, state } = router.query;
-  const [authUser, { loading, data, error }] = useMutation<{
-    authUser: { user: User; idToken: string | null };
-  }>(AUTHENTICATE, {
+  const [authUser, { loading, data, error }] = useMutation<{ authUser: AuthUser }>(AUTHENTICATE, {
     errorPolicy: "all",
+    refetchQueries: [GET_USER],
   });
 
   useEffect(() => {
-    if (code) {
-      authUser({
-        variables: { code },
-        update: (cache, { data }) => {
-          if (!data || !data.authUser || !data.authUser.user) {
-            return;
-          }
-          cache.writeQuery<User>({ query: GET_USER, data: data.authUser.user });
-        },
-      });
-    }
+    if (code) authUser({ variables: { code } });
   }, [code, authUser]);
 
   if (state && state !== config.DATAPORTEN_STATE) {

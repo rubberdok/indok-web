@@ -3,15 +3,15 @@ title: Indøks Veldedige Initiativ
 description: Gjør verden til et bedre sted
 image: /img/ivibilde.jpg
 logo: /img/ivilogo.png
-styre:
+board:
   ceo:
-    navn: Torjus Hagen
+    name: Torjus Hagen
     mail: andreomd@stud.ntnu.no
-    tittel: Leder
+    title: Leder
   cto:
-    navn: Andrea Omdahl
+    name: Andrea Omdahl
     mail: andreomd@stud.ntnu.no
-    tittel: Leder
+    title: Leder
 
 tag: kultur
 ---

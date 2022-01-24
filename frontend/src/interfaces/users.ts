@@ -1,6 +1,7 @@
 import { Organization } from "./organizations";
 
-export interface User {
+export type User = {
+  __typename: string;
   id: string;
   feideEmail: string;
   email: string;

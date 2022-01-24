@@ -4,7 +4,7 @@ description: Webkomitéen til Hovedstyret på Indøk
 logo: /img/rubberdok_logo_black.svg
 image: /img/rubberdoklogo1.png
 alt: Logoen til rubberdøk
-styre:
+board:
   ceo:
     navn: Lars Waage
     tittel: Prosjektleder

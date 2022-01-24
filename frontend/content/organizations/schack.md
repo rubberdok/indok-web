@@ -3,11 +3,11 @@ title: Janus Schack Klub
 description: Sjakk matt
 logo: /img/schacklogo.jpg
 image: /img/hero.jpg
-styre:
+board:
   ceo:
-    navn:
+    name:
     mail:
-    tittel:
+    title:
 tag: idrett
 ---
 

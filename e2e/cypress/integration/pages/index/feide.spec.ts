@@ -20,11 +20,11 @@ describe("SSO login", () => {
               cy.get("button").get("[type=submit]").click();
             });
         });
+      cy.getByTestId("profile-fullName").should(
+        "contain.text",
+        "Eva Student Åsen"
+      );
+      cy.log("Logged in");
     });
-    cy.getByTestId("profile-fullName").should(
-      "contain.text",
-      "Eva Student Åsen"
-    );
-    cy.log("Logged in");
   });
 });

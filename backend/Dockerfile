@@ -1,5 +1,5 @@
 # pull official base image
-FROM python:3.9.6
+FROM --platform=linux/amd64 python:3.9.6
 
 # set work directory
 WORKDIR /usr/src/app

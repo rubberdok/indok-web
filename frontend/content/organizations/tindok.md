@@ -3,15 +3,13 @@ title: Tindøk
 description: Bestiger Norges fjelltopper
 logo: /img/tindoklogo.png
 image: /img/tindok3.jpg
-styre:
+board:
   ceo:
-    navn: Fredrik Sollerud
-    mail:
-    tittel: Turleder
+    name: Fredrik Sollerud
+    title: Turleder
   cto:
-    navn: Trym Wian
-    mail:
-    tittel: Turleder
+    name: Trym Wian
+    title: Turleder
 tag: idrett
 ---
 

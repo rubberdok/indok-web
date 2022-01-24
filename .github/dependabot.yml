@@ -1,0 +1,34 @@
+version: 2
+updates:
+  # Keep npm dependencies up to date
+  - package-ecosystem: "npm"
+    directory: "/frontend"
+    # Check the npm registry for updates at 2am UTC
+    schedule:
+      interval: "daily"
+      time: "02:00"
+
+    commit-message:
+      prefix: "build(node): "
+
+    labels:
+      - "dependencies"
+      - "javascript"
+
+    open-pull-requests-limit: 2
+
+  - package-ecosystem: "pip"
+    directory: "/backend/requirements/"
+    # Check the npm registry for updates at 2am UTC
+    schedule:
+      interval: "daily"
+      time: "02:00"
+
+    commit-message:
+      prefix: "build(python): "
+
+    labels:
+      - "dependencies"
+      - "python"
+
+    open-pull-requests-limit: 2
