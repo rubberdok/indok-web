@@ -1,4 +1,4 @@
-describe("User Logins", () => {
+describe("On the profile page", () => {
   before(() => {
     cy.login();
   });
@@ -7,7 +7,7 @@ describe("User Logins", () => {
     Cypress.Cookies.preserveOnce("JWT");
   });
 
-  it("should prompt registration when not registered", () => {
+  it("should be able to update personal information", () => {
     cy.log("Accessing site");
     cy.visit("/profile");
     cy.getByTestId("profile-personal-name").should("contain.text", "Eva Student Åsen");
