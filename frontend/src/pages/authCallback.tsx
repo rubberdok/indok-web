@@ -25,7 +25,6 @@ const AuthCallbackPage: NextPage = () => {
   const [authUser, { loading, data, error, called }] = useMutation<{ authUser: AuthUser }>(AUTHENTICATE, {
     errorPolicy: "all",
     refetchQueries: ["user"],
-    awaitRefetchQueries: true,
   });
 
   useEffect(() => {
