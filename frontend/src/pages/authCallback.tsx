@@ -10,8 +10,8 @@ import { NextPage } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useEffect } from "react";
 import Bug from "public/illustrations/Bug.svg";
+import React, { useEffect } from "react";
 
 type AuthUser = {
   user: User;
@@ -25,7 +25,7 @@ const AuthCallbackPage: NextPage = () => {
   const { code, state } = router.query;
   const [authUser, { loading, data, error }] = useMutation<{ authUser: AuthUser }>(AUTHENTICATE, {
     errorPolicy: "all",
-    refetchQueries: [GET_USER],
+    refetchQueries: [GET_USER, "user"],
   });
 
   useEffect(() => {
