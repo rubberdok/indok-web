@@ -31,28 +31,22 @@ const userInitials = (firstName: string, lastName: string): string => {
 };
 
 const ProfilePage: NextPage = () => {
-  const { data, loading, error } = useQuery<{ user?: User }>(GET_USER_PROFILE);
+  const { data, loading } = useQuery<{ user?: User }>(GET_USER_PROFILE);
   const router = useRouter();
   const theme = useTheme();
   const classes = useStyles();
   const initials = useMemo(() => (data?.user ? userInitials(data.user.firstName, data.user.lastName) : ""), [data]);
 
   useEffect(() => {
-    if (typeof window === "undefined") {
-      if (!loading) {
-        if (data?.user === undefined) {
+    if (typeof window !== "undefined") {
+      if (!loading && data) {
+        if (!data.user) {
           router.push("/");
         }
       }
     }
-  }, [data, loading]);
+  }, [data, loading, router]);
 
-  if (error)
-    return (
-      <Layout>
-        <p>Errror</p>
-      </Layout>
-    );
   return (
     <Layout>
       <Head>
