@@ -4,6 +4,7 @@ const useStyles = makeStyles((theme) => ({
   large: {
     width: theme.spacing(16),
     height: theme.spacing(16),
+    backgroundColor: "#526fa0",
   },
   cards: {
     flexDirection: "row",
