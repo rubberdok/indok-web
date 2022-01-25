@@ -107,22 +107,22 @@ const ProfilePage: NextPage = () => {
               xs={12}
               alignItems="stretch"
             >
-              <Grid item md={6}>
+              <Grid item md={6} className={classes.card}>
                 <Personal user={data?.user} data-test-id={`${ID_PREFIX}personal-`} />
               </Grid>
-              <Grid item md={6}>
+              <Grid item md={6} className={classes.card}>
                 <Event data-test-id={`${ID_PREFIX}event-`} />
               </Grid>
-              <Grid item md={6}>
+              <Grid item md={6} className={classes.card}>
                 <Organization data-test-id={`${ID_PREFIX}organization-`} />
               </Grid>
-              <Grid item md={6}>
+              <Grid item md={6} className={classes.card}>
                 <Form data-test-id={`${ID_PREFIX}form-`} />
               </Grid>
-              <Grid item md={6}>
+              <Grid item md={6} className={classes.card}>
                 <Report data-test-id={`${ID_PREFIX}report-`} />
               </Grid>
-              <Grid item md={6}>
+              <Grid item md={6} className={classes.card}>
                 <Orders data-test-id={`${ID_PREFIX}orders-`} />
               </Grid>
             </Grid>

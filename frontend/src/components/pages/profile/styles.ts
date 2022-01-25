@@ -11,6 +11,9 @@ const useStyles = makeStyles((theme) => ({
       flexDirection: "column",
     },
   },
+  card: {
+    width: "100%",
+  },
 }));
 
 export default useStyles;
