@@ -28,7 +28,7 @@ describe("SSO login", () => {
       cy.getByTestId("registerUser-firstNameTextField").within(() => cy.get("input").clear().type("Abba"));
       cy.getByTestId("registerUser-lastNameTextField").within(() => cy.get("input").clear().type("Baab"));
       cy.getByTestId("registerUser-saveButton").click();
-      cy.reload();
+      cy.wait(10000);
       cy.getByTestId("profile-personal-name").should("contain.text", "Abba Baab");
     });
   });
