@@ -46,7 +46,7 @@ const AuthCallbackPage: NextPage = () => {
   return (
     <Layout>
       <Container>
-        <ProfileSkeleton />
+        {!error && <ProfileSkeleton />}
         {error && (
           <Grid
             container
