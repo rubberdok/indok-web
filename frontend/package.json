@@ -73,6 +73,10 @@
       "yarn run lint:fix",
       "prettier --write"
     ],
+    "**/*.{ts,tsx}": [
+      "yarn run lint:fix",
+      "prettier --write"
+    ],
     "../**/*.py": [
       "black",
       "flake8 --config=../backend/tox.ini"
