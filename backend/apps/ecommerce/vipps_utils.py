@@ -10,7 +10,7 @@ try:
     from sentry_sdk import set_context
 except ModuleNotFoundError:
 
-    def set_context(*_):
+    def set_context(*args, **kwargs):
         pass
 
 
