@@ -48,7 +48,7 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": 
     initialValues: {
       firstName: (kind === "register" ? firstName : data?.user?.firstName) || "",
       lastName: (kind === "register" ? lastName : data?.user?.lastName) || "",
-      email: data?.user?.email || "",
+      email: data?.user?.email || data?.user?.feideEmail || "",
       phoneNumber: data?.user?.phoneNumber || "",
       graduationYear: data?.user?.graduationYear || suggestGraduationYear(),
       allergies: data?.user?.allergies || "",
