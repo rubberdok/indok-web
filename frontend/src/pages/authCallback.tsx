@@ -30,8 +30,7 @@ const AuthCallbackPage: NextPage = () => {
 
   useEffect(() => {
     if (code) authUser({ variables: { code } });
-    else router.push("/profile");
-  }, [code, authUser, router]);
+  }, [code, authUser]);
 
   if (state && state !== config.DATAPORTEN_STATE) {
     if (typeof window !== "undefined") {
