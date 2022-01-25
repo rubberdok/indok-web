@@ -9,7 +9,6 @@ describe("SSO login", () => {
       cy.get("[id=username]").type("asbjorn_elevg");
       cy.get("[id=password]").type("1qaz");
       cy.get("button").get("[type=submit]").click();
-      cy.wait(5000);
       cy.getByTestId("profile-personal-name").should("contain.text", "Asbjørn ElevG Hansen");
       cy.log("Logged in");
     });
