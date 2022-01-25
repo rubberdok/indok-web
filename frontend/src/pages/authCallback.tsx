@@ -22,7 +22,7 @@ const AuthCallbackPage: NextPage = () => {
   const theme = useTheme();
 
   const { code, state } = router.query;
-  const [authUser, { loading, data, error }] = useMutation<{ authUser: AuthUser }>(AUTHENTICATE, {
+  const [authUser, { loading, data, error, called }] = useMutation<{ authUser: AuthUser }>(AUTHENTICATE, {
     errorPolicy: "all",
     refetchQueries: ["user"],
     awaitRefetchQueries: true,
@@ -39,7 +39,7 @@ const AuthCallbackPage: NextPage = () => {
     }
   }
 
-  if (!loading && data && data.authUser) {
+  if (called && !loading && data && data.authUser) {
     data.authUser.user.firstLogin ? router.push("/register") : router.push("/profile");
   }
 
