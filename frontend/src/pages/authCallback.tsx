@@ -2,7 +2,6 @@ import { useMutation } from "@apollo/client";
 import Layout from "@components/Layout";
 import ProfileSkeleton from "@components/pages/profile/skeleton";
 import { AUTHENTICATE } from "@graphql/users/mutations";
-import { GET_USER } from "@graphql/users/queries";
 import { User } from "@interfaces/users";
 import { Button, Container, Grid, Typography, useTheme } from "@material-ui/core";
 import { config } from "@utils/config";
