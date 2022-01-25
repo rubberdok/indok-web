@@ -26,4 +26,4 @@ pillow>=8.1.1
 whitenoise==5.3.0
 PyYAML==5.4.1
 django-guardian==2.4.0
-XlsxWriter==3.0.1
+XlsxWriter==3.0.2
