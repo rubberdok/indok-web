@@ -51,11 +51,7 @@ const ProfilePage: NextPage = () => {
         >
           <>
             <Grid item>
-              <Avatar
-                className={classes.large}
-                classes={{ root: classes.large }}
-                style={{ backgroundColor: "#526fa0" }}
-              >
+              <Avatar style={{ backgroundColor: "#526fa0", width: theme.spacing(16), height: theme.spacing(16) }}>
                 {data?.user && (
                   <Typography variant="h3" component="p">
                     {initials}
