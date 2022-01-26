@@ -18,7 +18,11 @@ const ProfileSkeleton: React.VFC = () => {
       <>
         <Grid item>
           <Skeleton variant="circle">
-            <Avatar classes={{ root: classes.large }} />
+            <Avatar
+              className={classes.large}
+              classes={{ root: classes.large }}
+              style={{ backgroundColor: "#526fa0" }}
+            />
           </Skeleton>
         </Grid>
         <Grid container item direction="column" alignItems="center" xs={10} style={{ marginBottom: theme.spacing(4) }}>
