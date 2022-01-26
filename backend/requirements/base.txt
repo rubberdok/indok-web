@@ -1,7 +1,7 @@
 coverage==6.2
 Django==3.2.11
 django-alive==1.1.0
-django-cors-headers==3.5.0
+django-cors-headers==3.11.0
 django-environ==0.8.1
 django-graphql-jwt==0.3.1
 django-multiselectfield==0.1.12
