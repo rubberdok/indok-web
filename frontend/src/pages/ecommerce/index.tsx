@@ -18,11 +18,13 @@ import {
   TableHead,
   TableRow,
   Typography,
+  Link as MuiLink,
 } from "@material-ui/core";
 import { KeyboardArrowLeft } from "@material-ui/icons";
 import { Alert } from "@material-ui/lab";
 import dayjs from "dayjs";
 import { NextPage } from "next";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { redirectIfNotLoggedIn } from "src/utils/redirect";
@@ -33,7 +35,7 @@ type HeaderValuePair<T> = {
 };
 
 const orderFields: HeaderValuePair<Order>[] = [
-  { header: "Ordre ID", field: "id" },
+  { header: "Ordre-ID", field: "id" },
   { header: "Produkt", field: "product" },
   { header: "Totalpris", field: "totalPrice" },
   { header: "Antall", field: "quantity" },
@@ -57,6 +59,14 @@ const OrdersPage: NextPage = () => {
   const CellContent = ({ order, field }: { order: Order; field: HeaderValuePair<Order> }) => {
     let content: string;
     switch (field.header) {
+      case "Ordre-ID":
+        return (
+          <Link href={`/ecommerce/fallback?orderId=${order.id}&redirect=${router.asPath}`} passHref>
+            <MuiLink variant="caption" component="button" color="secondary">
+              {order.id}
+            </MuiLink>
+          </Link>
+        );
       case "Produkt":
         content = order.product.name;
         break;
@@ -81,7 +91,7 @@ const OrdersPage: NextPage = () => {
       default:
         content = `${order[field.field]}`;
     }
-    return <Typography variant={field.header == "Ordre ID" ? "caption" : "body2"}>{content}</Typography>;
+    return <Typography variant="body2">{content}</Typography>;
   };
 
   return (

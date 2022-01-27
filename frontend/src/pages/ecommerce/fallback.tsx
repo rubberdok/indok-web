@@ -96,7 +96,7 @@ const FallbackPage: NextPage = () => {
         )}
         <Box mb={2}>
           <Card>
-            <CardHeader title="Betaling"></CardHeader>
+            <CardHeader title="Ordrebekreftelse"></CardHeader>
             <CardContent>
               <Grid container alignItems="center" direction="column">
                 {error ? (
