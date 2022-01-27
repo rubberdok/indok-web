@@ -211,7 +211,7 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
           </Typography>
 
           {!event.isAttendable ? null : !user ? (
-            <LoginRequired redirect={`/events/${eventId}`} />
+            <LoginRequired redirect />
           ) : !event.allowedGradeYears.includes(user.gradeYear) ? (
             <Typography variant="h5" gutterBottom>
               Ikke aktuell
