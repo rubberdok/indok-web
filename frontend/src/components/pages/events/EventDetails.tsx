@@ -342,7 +342,7 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
                     <ErrorOutline fontSize="small" /> Bindende påmelding
                   </Typography>
                 )}
-                <Typography variant="overline">Åpner</Typography>
+                <Typography variant="overline">Starter</Typography>
                 <Typography variant="body1" className={classes.wrapIcon}>
                   <EventIcon fontSize="small" />
                   {dayjs(event.startTime).format("DD.MMM YYYY, kl. HH:mm")}
