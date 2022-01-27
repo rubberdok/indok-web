@@ -13,4 +13,5 @@ export type EditUser = {
   id: string;
   graduationYear: number;
   canUpdateYear: boolean;
+  yearUpdatedAt: string;
 } & Pick<User, "firstName" | "lastName" | "email" | "allergies" | "phoneNumber" | "firstLogin" | "feideEmail">;

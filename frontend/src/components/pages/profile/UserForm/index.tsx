@@ -14,6 +14,7 @@ import {
   CardContent,
   Divider,
   FormControl,
+  FormHelperText,
   Grid,
   InputLabel,
   NativeSelect,
@@ -187,6 +188,12 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": 
                     </option>
                   ))}
                 </NativeSelect>
+                {data?.user?.canUpdateYear && <FormHelperText>Kan bare endres én gang i året.</FormHelperText>}
+                {!data?.user?.canUpdateYear && (
+                  <FormHelperText>
+                    Kan ikke endres før: {dayjs(data?.user?.yearUpdatedAt).add(1, "year").format("DD. MM. YYYY")}
+                  </FormHelperText>
+                )}
               </FormControl>
             </Grid>
             <Grid item>
