@@ -6,15 +6,22 @@ import { generateFeideLoginUrl } from "@utils/auth";
 import Link from "next/link";
 import { useMemo } from "react";
 import { Skeleton } from "@material-ui/lab";
+import { useRouter } from "next/router";
 
 type Props = {
-  redirect?: string;
+  redirect?: boolean;
+  redirectPath?: string;
   children?: React.ReactNode;
   fallback?: React.ReactNode;
 };
 
-export const LoginRequired = ({ redirect, children, fallback }: Props) => {
-  const url = useMemo<string>(() => generateFeideLoginUrl(redirect), [redirect]);
+export const LoginRequired = ({ redirect, redirectPath, children, fallback }: Props) => {
+  const router = useRouter();
+  var path: string | undefined = undefined;
+  if (redirect) {
+    path = redirectPath || router.asPath;
+  }
+  const url = useMemo<string>(() => generateFeideLoginUrl(path), [path]);
   const { data, loading } = useQuery<{ user?: User }>(GET_USER);
 
   if (loading) {
