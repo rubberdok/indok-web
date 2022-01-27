@@ -1,4 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
+import * as components from "@components/markdown/components";
 import PermissionRequired from "@components/permissions/PermissionRequired";
 import { EVENT_SIGN_OFF, EVENT_SIGN_UP } from "@graphql/events/mutations";
 import { GET_EVENT } from "@graphql/events/queries";
@@ -30,6 +31,7 @@ import { calendarFile } from "@utils/calendars";
 import dayjs from "dayjs";
 import Link from "next/link";
 import React, { useState } from "react";
+import ReactMarkdown from "react-markdown";
 import CountdownButton from "./CountdownButton";
 import EditEvent from "./EventEditor";
 
@@ -93,19 +95,6 @@ interface AlertProps {
   children: string | undefined;
 }
 
-function wrapInTypo(para: JSX.Element[] | string, className: string) {
-  return <Typography className={className}>{para}</Typography>;
-}
-
-function formatDescription(desc: string, innerClass: string, outerClass: string) {
-  return desc.split("\r\n\r\n").map((p) =>
-    wrapInTypo(
-      p.split("\r\n").map((t) => wrapInTypo(t, innerClass)),
-      outerClass
-    )
-  );
-}
-
 const Alert: React.FC<AlertProps> = ({ open, onClose, children, severity }) => {
   return (
     <MuiSnackbar
@@ -140,7 +129,9 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
 
   const { data: userData } = useQuery<{ user: User }>(GET_USER);
 
-  const { data: timeData } = useQuery<{ serverTime: string }>(GET_SERVER_TIME);
+  const { data: timeData } = useQuery<{ serverTime: string }>(GET_SERVER_TIME, {
+    fetchPolicy: "network-only",
+  });
 
   const {
     data: eventData,
@@ -315,9 +306,7 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
             <Typography variant="h3" gutterBottom>
               Beskrivelse
             </Typography>
-            <Typography variant="body1" display="block" gutterBottom>
-              {formatDescription(event.description, classes.innerParagraph, classes.paragraph)}
-            </Typography>
+            <ReactMarkdown components={components}>{event.description}</ReactMarkdown>
           </Grid>
 
           {/* Information card */}
