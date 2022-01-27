@@ -3,7 +3,6 @@ from django.contrib.auth import get_user_model
 from graphene_django import DjangoObjectType
 from graphql_jwt.decorators import login_required
 from utils.decorators import get_resolver_parent, permission_required_or_none
-from django.utils import timezone
 
 
 class UserType(DjangoObjectType):
