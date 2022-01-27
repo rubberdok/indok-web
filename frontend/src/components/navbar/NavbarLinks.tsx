@@ -5,8 +5,6 @@ import { User } from "@interfaces/users";
 import { Box, Button, makeStyles, Menu, MenuItem } from "@material-ui/core";
 import { AccountCircleOutlined, LockOpen } from "@material-ui/icons";
 import { generateFeideLoginUrl } from "@utils/auth";
-import { config } from "@utils/config";
-import { generateQueryString } from "@utils/helpers";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
