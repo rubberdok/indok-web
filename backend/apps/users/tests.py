@@ -1,8 +1,9 @@
 import json
 from datetime import datetime
 
+from django.contrib.auth import get_user_model
+from django.utils import timezone
 from graphene.utils.str_converters import to_snake_case
-
 from utils.testing.base import ExtendedGraphQLTestCase
 from utils.testing.factories.users import IndokUserFactory, UserFactory
 
@@ -12,7 +13,7 @@ class UsersBaseTestCase(ExtendedGraphQLTestCase):
         super().setUp()
 
         # Create three (logged in) users
-        self.indok_user = IndokUserFactory()
+        self.indok_user = IndokUserFactory(graduation_year=timezone.now().year + 3)
         self.super_user = UserFactory(is_staff=True, is_superuser=True)
 
 
@@ -117,8 +118,61 @@ class UsersMutationsTestCase(UsersBaseTestCase):
     Testing all mutations for users
     """
 
+    def setUp(self) -> None:
+        return super().setUp()
+
     def test_auth_user(self):
         pass
+
+    def test_update_graduation_year(self):
+
+        today = timezone.now().year
+        query = f"""
+            mutation {{
+                updateUser(userData: {{
+                    graduationYear: {today + 1}
+                }}) {{
+                    user {{
+                        graduationYear
+                    }}
+                }}
+            }}
+        """
+        res = self.query(query, user=self.indok_user)
+        self.assertResponseNoErrors(res)
+        self.assertEqual(today + 1, get_user_model().objects.get(pk=self.indok_user.id).graduation_year)
+
+    def test_prevent_graduation_year_update(self):
+        today = timezone.now().year
+        query = f"""
+            mutation {{
+                updateUser(userData: {{
+                    graduationYear: {today + 1}
+                }}) {{
+                    user {{
+                        graduationYear
+                    }}
+                }}
+            }}
+        """
+        res = self.query(query, user=self.indok_user)
+        self.assertResponseNoErrors(res)
+        self.assertEqual(today + 1, get_user_model().objects.get(pk=self.indok_user.id).graduation_year)
+
+        query = f"""
+            mutation {{
+                updateUser(userData: {{
+                    graduationYear: {today + 2}
+                }}) {{
+                    user {{
+                        graduationYear
+                    }}
+                }}
+            }}
+        """
+        res = self.query(query, user=self.indok_user)
+        self.assertResponseNoErrors(res)
+        self.assertEqual(today + 1, get_user_model().objects.get(pk=self.indok_user.id).graduation_year)
 
     def test_update_user(self):
         pass
