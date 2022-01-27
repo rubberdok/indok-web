@@ -119,6 +119,19 @@ class UsersMutationsTestCase(UsersBaseTestCase):
     """
 
     def setUp(self) -> None:
+        self.mutation = (
+            lambda year: f"""
+            mutation {{
+                updateUser(userData: {{
+                    graduationYear: {year}
+                }}) {{
+                    user {{
+                        graduationYear
+                    }}
+                }}
+            }}
+        """
+        )
         return super().setUp()
 
     def test_auth_user(self):
@@ -127,49 +140,19 @@ class UsersMutationsTestCase(UsersBaseTestCase):
     def test_update_graduation_year(self):
 
         today = timezone.now().year
-        query = f"""
-            mutation {{
-                updateUser(userData: {{
-                    graduationYear: {today + 1}
-                }}) {{
-                    user {{
-                        graduationYear
-                    }}
-                }}
-            }}
-        """
+        query = self.mutation(today + 1)
         res = self.query(query, user=self.indok_user)
         self.assertResponseNoErrors(res)
         self.assertEqual(today + 1, get_user_model().objects.get(pk=self.indok_user.id).graduation_year)
 
     def test_prevent_graduation_year_update(self):
         today = timezone.now().year
-        query = f"""
-            mutation {{
-                updateUser(userData: {{
-                    graduationYear: {today + 1}
-                }}) {{
-                    user {{
-                        graduationYear
-                    }}
-                }}
-            }}
-        """
+        query = self.mutation(today + 1)
         res = self.query(query, user=self.indok_user)
         self.assertResponseNoErrors(res)
         self.assertEqual(today + 1, get_user_model().objects.get(pk=self.indok_user.id).graduation_year)
 
-        query = f"""
-            mutation {{
-                updateUser(userData: {{
-                    graduationYear: {today + 2}
-                }}) {{
-                    user {{
-                        graduationYear
-                    }}
-                }}
-            }}
-        """
+        query = self.mutation(today + 2)
         res = self.query(query, user=self.indok_user)
         self.assertResponseNoErrors(res)
         self.assertEqual(today + 1, get_user_model().objects.get(pk=self.indok_user.id).graduation_year)
