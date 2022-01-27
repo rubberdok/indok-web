@@ -1,8 +1,8 @@
 import { Grid, Typography } from "@material-ui/core";
 import CreditCard from "@public/illustrations/CreditCard.svg";
-import ProfileCardBase from "./ProfileCardBase";
+import ProfileCardBase, { IntegrationTestProps } from "./ProfileCardBase";
 
-const OrdersCard: React.VFC = ({ ...props }) => {
+const OrdersCard: React.VFC<IntegrationTestProps> = (props) => {
   return (
     <ProfileCardBase
       title="Ordrehistorikk"

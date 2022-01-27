@@ -1,8 +1,8 @@
 import { Grid, Typography } from "@material-ui/core";
 import Form from "@public/illustrations/Form.svg";
-import ProfileCardBase from "./ProfileCardBase";
+import ProfileCardBase, { IntegrationTestProps } from "./ProfileCardBase";
 
-const FormCard: React.VFC = ({ ...props }) => {
+const FormCard: React.VFC<IntegrationTestProps> = (props) => {
   return (
     <ProfileCardBase title="Verv" actionText="Se verv" actionLink="/listings" image={Form} alt="" {...props}>
       <Grid container direction="column">

@@ -1,8 +1,8 @@
 import { Grid, Typography } from "@material-ui/core";
 import Report from "@public/illustrations/Report.svg";
-import ProfileCardBase from "./ProfileCardBase";
+import ProfileCardBase, { IntegrationTestProps } from "./ProfileCardBase";
 
-const ReportCard: React.VFC = ({ ...props }) => {
+const ReportCard: React.VFC<IntegrationTestProps> = (props) => {
   return (
     <ProfileCardBase title="Baksida" actionText="Gå til Baksida" actionLink="/report" image={Report} alt="" {...props}>
       <Grid container direction="column">

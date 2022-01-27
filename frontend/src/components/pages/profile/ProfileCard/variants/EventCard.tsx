@@ -1,8 +1,8 @@
 import { Grid, Typography } from "@material-ui/core";
 import Event from "@public/illustrations/Event.svg";
-import ProfileCardBase from "./ProfileCardBase";
+import ProfileCardBase, { IntegrationTestProps } from "./ProfileCardBase";
 
-const EventCard: React.VFC = ({ ...props }) => {
+const EventCard: React.VFC<IntegrationTestProps> = (props) => {
   return (
     <ProfileCardBase
       title="Arrangementer"

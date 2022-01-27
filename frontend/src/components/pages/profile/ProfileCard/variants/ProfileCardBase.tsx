@@ -12,16 +12,19 @@ import Image from "next/image";
 import Link from "next/link";
 import useStyles from "../styles";
 
+export type IntegrationTestProps = {
+  "data-test-id"?: string;
+};
+
 type Props = {
   title: string;
   actionText?: string;
   actionLink?: string;
   image?: StaticImageData;
   alt?: string;
-  "data-test-id"?: string;
 };
 
-const ProfileCardBase: React.FC<Props> = ({
+const ProfileCardBase: React.FC<Props & IntegrationTestProps> = ({
   title,
   children,
   actionText,
