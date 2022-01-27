@@ -4,7 +4,7 @@ import ProfileCardBase from "../ProfileCardBase";
 import { IntegrationTestProps } from "@components/pages/profile/ProfileCard/variants/ProfileCardBase";
 import OrgAction, { Props as OrgListProps } from "./OrgAction";
 
-const OrganizationCard: React.VFC<OrgListProps & IntegrationTestProps> = ({ orgs, ...props }) => {
+const OrgCard: React.VFC<OrgListProps & IntegrationTestProps> = ({ orgs, ...props }) => {
   return (
     <ProfileCardBase
       title="Organisasjoner"
@@ -23,4 +23,4 @@ const OrganizationCard: React.VFC<OrgListProps & IntegrationTestProps> = ({ orgs
   );
 };
 
-export default OrganizationCard;
+export default OrgCard;
