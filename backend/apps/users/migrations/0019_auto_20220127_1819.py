@@ -4,10 +4,10 @@ from django.utils import timezone
 from django.db import migrations
 
 
-def set_last_updated_year(apps, schema_editor):
+def set_year_updated_at(apps, schema_editor):
     User = apps.get_model("users", "User")
     for user in User.objects.all():
-        user.last_updated_year = timezone.now() - timezone.timedelta(days=365)
+        user.year_updated_at = timezone.now() - timezone.timedelta(days=365)
         user.save()
 
 
@@ -17,4 +17,4 @@ class Migration(migrations.Migration):
         ("users", "0018_user_year_updated_at"),
     ]
 
-    operations = [migrations.RunPython(set_last_updated_year)]
+    operations = [migrations.RunPython(set_year_updated_at)]
