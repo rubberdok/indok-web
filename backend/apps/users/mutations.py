@@ -3,10 +3,11 @@ import datetime
 import graphene
 from api.auth.dataporten_auth import DataportenAuth
 from django.core.exceptions import ValidationError
+from django.utils import timezone
 from graphql_jwt.decorators import login_required
 from graphql_jwt.shortcuts import get_token
-
 from guardian.shortcuts import get_anonymous_user
+
 from .types import UserType
 
 
@@ -62,6 +63,9 @@ class UpdateUser(graphene.Mutation):
             user.first_login = False
 
         graduation_year = user_data.get("graduation_year")
+        updated_graduation_year = graduation_year != user.graduation_year
+        can_update_graduation_year = user.year_updated_at + timezone.timedelta(days=365) >= timezone.now()
+
         if graduation_year:
             # Check that graduation year is within the next five years
             # After August, current year should not be allowed, and a new year is allowed
@@ -78,7 +82,11 @@ class UpdateUser(graphene.Mutation):
                 )
 
         for k, v in user_data.items():
-            setattr(user, k, v)
+            if k == "graduation_year" and updated_graduation_year and can_update_graduation_year:
+                user.graduation_year = graduation_year
+                user.year_updated_at(timezone.now())
+            else:
+                setattr(user, k, v)
 
         if not user.email and not user_data.get("email"):
             user.email = user.feide_email
