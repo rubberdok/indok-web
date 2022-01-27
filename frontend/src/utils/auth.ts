@@ -1,7 +1,7 @@
 import { config } from "./config";
 import { generateQueryString } from "./helpers";
 
-export const DATAPORTEN_SCOPES = [
+const DATAPORTEN_SCOPES = [
   "openid",
   "userid",
   "userid-feide",
