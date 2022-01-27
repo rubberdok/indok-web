@@ -75,7 +75,7 @@
     "*.{json,md,html,js,jsx,ts,tsx}": [
       "prettier --write"
     ],
-    "*.py": [
+    "*.{py}": [
       "black",
       "flake8 --config=../backend/tox.ini"
     ]
