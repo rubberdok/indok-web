@@ -64,7 +64,8 @@ class CreateBooking(graphene.Mutation):
     ):
         ok = True
         # Check that incoming fields are ok
-        create_booking_validation(booking_data)
+        semester = BookingSemester.objects.first()
+        create_booking_validation(booking_data, booking_semester=semester)
         booking = BookingModel()
         for input_field, input_value in booking_data.items():
             if input_field and input_field != "cabins":
@@ -98,7 +99,8 @@ class UpdateBooking(graphene.Mutation):
         try:
             booking = BookingModel.objects.get(pk=booking_data.id)
             # Check that incoming fields are ok
-            create_booking_validation(booking_data)
+            semester = BookingSemester.objects.first()
+            create_booking_validation(booking_data, booking_semester=semester)
             for input_field, input_value in booking_data.items():
                 if input_field and input_field != "cabins":
                     setattr(booking, input_field, input_value)
@@ -194,6 +196,7 @@ class UpdateBookingSemester(graphene.Mutation):
     ok = graphene.Boolean()
     booking_semester = graphene.Field(UpdateBookingSemesterType)
 
+    @permission_required("cabins.change_booking_semester")
     def mutate(
         self,
         info,

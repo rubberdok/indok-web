@@ -53,9 +53,45 @@ class CabinsBaseTestCase(ExtendedGraphQLTestCase):
         )
         self.booking_responsible.save()
 
+        self.date_fmt = "%Y-%m-%d"
+        self.booking_semester_dict = {
+            "fall_start_date": f"{self.now.strftime(self.date_fmt)}",
+            "fall_end_date": f"{(self.now + datetime.timedelta(weeks=12)).strftime(self.date_fmt)}",
+            "spring_start_date": f"{(self.now + datetime.timedelta(weeks=16)).strftime(self.date_fmt)}",
+            "spring_end_date": f"{(self.now + datetime.timedelta(weeks=28)).strftime(self.date_fmt)}",
+            "fall_semester_active": True,
+            "spring_semester_active": False,
+        }
+
+        self.booking_semester = BookingSemester(**self.booking_semester_dict)
+        self.booking_semester.save()
+
     def add_booking_permission(self, codename):
         content_type = ContentType.objects.get_for_model(Booking)
         self.user.user_permissions.add(Permission.objects.get(codename=codename, content_type=content_type))
+
+    def create_booking(self, booking, cabins_field, user=None):
+
+        query = f"""
+                mutation CreateBooking {{
+                    createBooking(
+                        bookingData: {{
+                            firstName: \"{booking.first_name}\",
+                            lastName: \"{booking.last_name}\",
+                            phone: \"{booking.phone}\",
+                            receiverEmail: \"{booking.receiver_email}\",
+                            checkIn: \"{booking.check_in.strftime(self.date_fmt)}\",
+                            checkOut: \"{booking.check_out.strftime(self.date_fmt)}\",
+                            internalParticipants: {booking.internal_participants},
+                            externalParticipants: {booking.external_participants},
+                            cabins: [{cabins_field}],
+                            }}
+                        ) {{
+                      ok
+                        }}
+                    }}
+                """
+        return self.query(query, user=user)
 
 
 class CabinsResolversTestCase(CabinsBaseTestCase):
@@ -146,28 +182,6 @@ class CabinsMutationsTestCase(CabinsBaseTestCase):
     """
     Testing all mutations for cabins
     """
-
-    def create_booking(self, booking, cabins_field, user=None):
-        query = f"""
-                mutation CreateBooking {{
-                    createBooking(
-                        bookingData: {{
-                            firstName: \"{booking.first_name}\",
-                            lastName: \"{booking.last_name}\",
-                            phone: \"{booking.phone}\",
-                            receiverEmail: \"{booking.receiver_email}\",
-                            checkIn: \"{booking.check_in.strftime("%Y-%m-%d")}\",
-                            checkOut: \"{booking.check_out.strftime("%Y-%m-%d")}\",
-                            internalParticipants: {booking.internal_participants},
-                            externalParticipants: {booking.external_participants},
-                            cabins: [{cabins_field}],
-                            }}
-                        ) {{
-                      ok
-                        }}
-                    }}
-                """
-        return self.query(query, user=user)
 
     def check_create_with_error(self, response):
         self.assertResponseHasErrors(response)
@@ -316,8 +330,8 @@ class EmailTestCase(CabinsBaseTestCase):
                   internalParticipants: {booking.internal_participants},
                   externalParticipants: {booking.external_participants},
                   cabins: [1],
-                  checkIn: \"{booking.check_in.strftime("%Y-%m-%d")}\",
-                  checkOut: \"{booking.check_out.strftime("%Y-%m-%d")}\",
+                  checkIn: \"{booking.check_in.strftime(self.date_fmt)}\",
+                  checkOut: \"{booking.check_out.strftime(self.date_fmt)}\",
                   emailType: \"{email_type}\",
                   extraInfo: \"{self.test_question}\",
                 }}
@@ -390,29 +404,16 @@ class BookingSemesterTestCase(CabinsBaseTestCase):
     def setUp(self) -> None:
         super().setUp()
 
-        self.booking_semester_dict = {
-            "fall_start_date": "2021-08-01",
-            "fall_end_date": "2021-12-01",
-            "spring_start_date": "2022-01-01",
-            "spring_end_date": "2021-05-01",
-            "fall_semester_active": True,
-            "spring_semester_active": False,
-        }
-
-        # Create default booking semester
-        self.booking_semester = BookingSemester(**self.booking_semester_dict)
-        self.booking_semester.save()
-
     def test_resolve_booking_semester(self):
         query = """
         query BookingSemesters {
             bookingSemester {
-            fallStartDate
-            fallEndDate
-            springStartDate
-            springEndDate
-            fallSemesterActive
-            springSemesterActive
+                fallStartDate
+                fallEndDate
+                springStartDate
+                springEndDate
+                fallSemesterActive
+                springSemesterActive
             }
         }
         """
@@ -426,6 +427,46 @@ class BookingSemesterTestCase(CabinsBaseTestCase):
 
         for key, value in self.booking_semester_dict.items():
             self.assertEquals(value, booking_semester[snake_case_to_camel_case(key)])
+
+    # Verify that the booking is inside a booking semester
+    def test_booking_inside_booking_semester(self):
+        self.first_booking.check_in = datetime.datetime.strptime(
+            self.booking_semester_dict["fall_start_date"], self.date_fmt
+        ) + datetime.timedelta(days=1)
+        self.first_booking.check_out = datetime.datetime.strptime(
+            self.booking_semester_dict["fall_start_date"], self.date_fmt
+        ) + datetime.timedelta(days=3)
+
+        response = self.create_booking(self.first_booking, cabins_field=f"{self.oksen_cabin.id}", user=self.super_user)
+        self.assertResponseNoErrors(response)
+
+    # Verify that a booking outside of booking semester is invalid
+    def test_booking_outside_booking_semester(self):
+        self.first_booking.check_in = datetime.datetime.strptime(
+            self.booking_semester_dict["spring_end_date"], self.date_fmt
+        ) + datetime.timedelta(days=1)
+        self.first_booking.check_out = datetime.datetime.strptime(
+            self.booking_semester_dict["spring_end_date"], self.date_fmt
+        ) + datetime.timedelta(days=3)
+
+        response = self.create_booking(
+            self.first_booking, cabins_field=f"{self.bjornen_cabin.id}", user=self.super_user
+        )
+        self.assertResponseHasErrors(response)
+
+    # Verify that a booking inside an inactive booking semester is invalid
+    def test_booking_in_inactive_booking_semester(self):
+        self.first_booking.check_in = datetime.datetime.strptime(
+            self.booking_semester_dict["spring_start_date"], self.date_fmt
+        ) + datetime.timedelta(days=1)
+        self.first_booking.check_out = datetime.datetime.strptime(
+            self.booking_semester_dict["spring_start_date"], self.date_fmt
+        ) + datetime.timedelta(days=3)
+
+        response = self.create_booking(
+            self.first_booking, cabins_field=f"{self.bjornen_cabin.id}", user=self.super_user
+        )
+        self.assertResponseHasErrors(response)
 
     def test_update_booking_semester(self):
         query = """
@@ -441,7 +482,7 @@ class BookingSemesterTestCase(CabinsBaseTestCase):
             }
         }"""
 
-        response = self.query(query)
+        response = self.query(query, user=self.super_user)
         self.assertResponseNoErrors(response)
 
         # Fetching content of response
