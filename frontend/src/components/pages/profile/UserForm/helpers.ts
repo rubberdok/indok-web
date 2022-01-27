@@ -1,7 +1,8 @@
 import dayjs from "dayjs";
 import * as Yup from "yup";
 
-const currentYear = dayjs().year();
+const today = dayjs();
+export const maxGraduationYear = today.month() > 7 ? today.year() + 5 : today.year() + 4;
 
 export const suggestNames = (name: string | undefined): { firstName: string; lastName: string } => {
   if (!name) {
@@ -25,7 +26,7 @@ export const validationSchema = Yup.object().shape({
   lastName: Yup.string().required("Etternavn kan ikke være tomt.").min(2, "Kan ikke være kortere enn to tegn."),
   email: Yup.string().email("Oppgi en gyldig e-postadresse.").notRequired(),
   allergies: Yup.string().notRequired(),
-  graduationYear: Yup.number().required().min(currentYear),
+  graduationYear: Yup.number().required().min(today.year()).max(maxGraduationYear),
   phoneNumber: Yup.string()
     .min(8, "Telefonnummeret må være 8 tegn eller lenger.")
     .max(12, "Telefonnummeret kan ikke være mer enn 12 tegn.")

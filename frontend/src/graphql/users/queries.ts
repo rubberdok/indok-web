@@ -28,6 +28,7 @@ export const EDIT_USER_QUERY = gql`
       graduationYear
       firstLogin
       feideEmail
+      canUpdateYear
     }
   }
 `;

@@ -1,5 +1,10 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { isVegetarian, suggestGraduationYear, validationSchema } from "@components/pages/profile/UserForm/helpers";
+import {
+  isVegetarian,
+  maxGraduationYear,
+  suggestGraduationYear,
+  validationSchema,
+} from "@components/pages/profile/UserForm/helpers";
 import { UPDATE_USER } from "@graphql/users/mutations";
 import { EDIT_USER_QUERY } from "@graphql/users/queries";
 import {
@@ -174,8 +179,9 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": 
                   onBlur={() => formik.setFieldTouched("graduationYear")}
                   error={formik.touched.graduationYear && Boolean(formik.errors.graduationYear)}
                   data-test-id={`${ID_PREFIX}graduationYearSelect`}
+                  disabled={!data?.user?.canUpdateYear}
                 >
-                  {range(currentYear, currentYear + 7, 1).map((year) => (
+                  {range(currentYear, maxGraduationYear, 1).map((year) => (
                     <option key={year} value={year}>
                       {year}
                     </option>
