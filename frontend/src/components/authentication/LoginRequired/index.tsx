@@ -28,7 +28,7 @@ export const LoginRequired = ({ redirect, redirectPath, children, fallback }: Pr
     return (
       <Skeleton variant="rect">
         <Link href={url} passHref>
-          <Button variant="contained" color="primary">
+          <Button size="medium" variant="contained" color="primary">
             Log inn
           </Button>
         </Link>
