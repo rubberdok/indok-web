@@ -1,8 +1,10 @@
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import SalesTermsDialog from "@components/ecommerce/SalesTermsDialog";
 import Layout from "@components/Layout";
 import { ATTEMPT_CAPTURE_PAYMENT } from "@graphql/ecommerce/mutations";
+import { GET_USER } from "@graphql/users/queries";
 import { Order, PaymentStatus } from "@interfaces/ecommerce";
+import { User } from "@interfaces/users";
 import {
   Box,
   Button,
@@ -50,6 +52,8 @@ const FallbackPage: NextPage = () => {
   const [attemptCapturePayment, { data, loading, error }] = useMutation(ATTEMPT_CAPTURE_PAYMENT, {
     onError: () => intervalRef.current && clearInterval(intervalRef.current),
   });
+  const { data: userData } = useQuery<{ user: User }>(GET_USER);
+
   const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>("RESERVED");
   const [order, setOrder] = useState<Order>();
   const [openSalesTerms, setOpenSalesTerms] = useState(false);
@@ -148,11 +152,13 @@ const FallbackPage: NextPage = () => {
                 )}
               </Grid>
             </CardContent>
-            <CardActions>
-              <Link href="/ecommerce">
-                <Button>Gå til mine betalinger</Button>
-              </Link>
-            </CardActions>
+            {userData?.user && (
+              <CardActions>
+                <Link href="/ecommerce">
+                  <Button>Gå til mine betalinger</Button>
+                </Link>
+              </CardActions>
+            )}
           </Card>
         </Box>
       </Container>
