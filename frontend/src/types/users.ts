@@ -1,3 +1,5 @@
+import { Organization } from "@interfaces/organizations";
+
 export type User = {
   firstName: string;
   lastName: string;
@@ -7,6 +9,7 @@ export type User = {
   phoneNumber: string;
   firstLogin: boolean;
   feideEmail: string;
+  organizations: Pick<Organization, "id" | "name">[];
 };
 
 export type EditUser = {

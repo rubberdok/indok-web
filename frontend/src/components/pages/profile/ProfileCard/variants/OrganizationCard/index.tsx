@@ -1,14 +1,16 @@
 import { Grid, Typography } from "@material-ui/core";
-import Organization from "@public/illustrations/Organization.svg";
+import OrganizationImg from "@public/illustrations/Organization.svg";
 import ProfileCardBase from "../ProfileCardBase";
+import { IntegrationTestProps } from "@components/pages/profile/ProfileCard/variants/ProfileCardBase";
+import OrgAction, { Props as OrgListProps } from "./OrgAction";
 
-const OrganizationCard: React.VFC = ({ ...props }) => {
+const OrganizationCard: React.VFC<OrgListProps & IntegrationTestProps> = ({ orgs, ...props }) => {
   return (
     <ProfileCardBase
       title="Organisasjoner"
       actionText="Se organisasjoner"
       actionLink="/orgs"
-      image={Organization}
+      image={OrganizationImg}
       alt=""
       {...props}
     >

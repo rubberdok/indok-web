@@ -95,9 +95,11 @@ const ProfilePage: NextPage = () => {
               <Grid item md={6} className={classes.card}>
                 <Event data-test-id={`${ID_PREFIX}event-`} />
               </Grid>
-              <Grid item md={6} className={classes.card}>
-                <Organization data-test-id={`${ID_PREFIX}organization-`} />
-              </Grid>
+              {data?.user && (
+                <Grid item md={6} className={classes.card}>
+                  <Organization orgs={data.user.organizations} data-test-id={`${ID_PREFIX}organization-`} />
+                </Grid>
+              )}
               <Grid item md={6} className={classes.card}>
                 <Form data-test-id={`${ID_PREFIX}form-`} />
               </Grid>

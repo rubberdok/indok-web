@@ -11,6 +11,11 @@ export const GET_USER_PROFILE = gql`
       allergies
       email
       gradeYear
+      organizations {
+        id
+        name
+        logoUrl
+      }
     }
   }
 `;
