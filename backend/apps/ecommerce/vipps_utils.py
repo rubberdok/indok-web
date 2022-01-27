@@ -129,9 +129,9 @@ class VippsApi:
             json.dumps(capture_data),
         )
 
-    def initiate_payment(self, order: Order) -> str:
+    def initiate_payment(self, order: Order, fallback_redirect: str = None) -> str:
         headers = self._build_headers()
-        order_data = self._build_initiate_payment_request(order)
+        order_data = self._build_initiate_payment_request(order, fallback_redirect)
 
         response = self._make_call("POST", "/ecomm/v2/payments", headers, json.dumps(order_data))
         return response["url"]
@@ -206,12 +206,12 @@ class VippsApi:
             },
         }
 
-    def _build_initiate_payment_request(self, order: Order) -> InitiatePaymentBody:
+    def _build_initiate_payment_request(self, order: Order, redirect: str = None) -> InitiatePaymentBody:
         return {
             "merchantInfo": {
                 "merchantSerialNumber": self.merchant_serial_number,
                 "callbackPrefix": settings.VIPPS_CALLBACK_PREFIX,
-                "fallBack": f"{settings.VIPPS_FALLBACK_PREFIX}?orderId={order.id}",
+                "fallBack": f"{settings.VIPPS_FALLBACK_PREFIX}?orderId={order.id}{f'&redirect={redirect}' if redirect else ''}",  # noqa
                 "authToken": order.auth_token,
                 "isApp": False,
             },

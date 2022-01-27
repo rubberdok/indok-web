@@ -21,10 +21,11 @@ class InitiateOrder(graphene.Mutation):
 
     class Arguments:
         product_id = graphene.ID(required=True)
+        fallback_redirect = graphene.String(required=False)
         quantity = graphene.Int()
 
     @login_required
-    def mutate(self, info, product_id, quantity=1):
+    def mutate(self, info, product_id, fallback_redirect: str = None, quantity: int = 1):
         user = info.context.user
         # Check if user is allowed to buy the product
         product = Product.objects.get(pk=product_id)
@@ -77,7 +78,7 @@ class InitiateOrder(graphene.Mutation):
 
             order.save()
 
-        redirect = InitiateOrder.vipps_api.initiate_payment(order)
+        redirect = InitiateOrder.vipps_api.initiate_payment(order, fallback_redirect)
 
         return InitiateOrder(redirect=redirect)
 

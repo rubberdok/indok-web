@@ -16,9 +16,10 @@ type Props = {
   quantity: number;
   onError?: (e?: ApolloError) => void;
   disabled: boolean;
+  fallbackRedirect: string | undefined;
 };
 
-const PayWithVipps: React.FC<Props> = ({ productId, quantity, onError, disabled }) => {
+const PayWithVipps: React.FC<Props> = ({ productId, quantity, onError, disabled, fallbackRedirect }) => {
   const [initiateOrder, { error }] = useMutation(INITIATE_ORDER, {
     onCompleted: (data) =>
       router.push(data.initiateOrder.redirect || `/ecommerce/fallback?orderId=${data.initiateOrder.orderId}`),
@@ -33,7 +34,15 @@ const PayWithVipps: React.FC<Props> = ({ productId, quantity, onError, disabled 
   return (
     <Card className={classes.root}>
       <CardActionArea
-        onClick={() => initiateOrder({ variables: { productId, quantity } })}
+        onClick={() =>
+          initiateOrder({
+            variables: {
+              productId,
+              quantity,
+              ...(fallbackRedirect && { fallbackRedirect: fallbackRedirect }),
+            },
+          })
+        }
         disableRipple
         disabled={disable}
       >

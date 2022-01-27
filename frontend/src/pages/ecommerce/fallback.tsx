@@ -29,7 +29,6 @@ import { NextPage } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
-import { redirectIfNotLoggedIn } from "src/utils/redirect";
 
 const useStyles = makeStyles((theme: Theme) => ({
   list: {
@@ -46,7 +45,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 const FallbackPage: NextPage = () => {
   const classes = useStyles();
   const router = useRouter();
-  const { orderId } = router.query;
+  const { orderId, redirect } = router.query;
 
   const [attemptCapturePayment, { data, loading, error }] = useMutation(ATTEMPT_CAPTURE_PAYMENT, {
     onError: () => intervalRef.current && clearInterval(intervalRef.current),
@@ -84,11 +83,13 @@ const FallbackPage: NextPage = () => {
   return (
     <Layout>
       <Container>
-        <Box mt={2}>
-          <Button startIcon={<KeyboardArrowLeft />} onClick={() => router.back()}>
-            Tilbake
-          </Button>
-        </Box>
+        {redirect && typeof redirect == "string" && (
+          <Box mt={2}>
+            <Button startIcon={<KeyboardArrowLeft />} onClick={() => router.push(redirect)}>
+              Tilbake
+            </Button>
+          </Box>
+        )}
         <Box mb={2}>
           <Card>
             <CardHeader title="Betaling"></CardHeader>
