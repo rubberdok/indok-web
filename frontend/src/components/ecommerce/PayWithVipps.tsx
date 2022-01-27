@@ -39,7 +39,7 @@ const PayWithVipps: React.FC<Props> = ({ productId, quantity, onError, disabled,
             variables: {
               productId,
               quantity,
-              ...(fallbackRedirect && { fallbackRedirect: fallbackRedirect }),
+              ...(fallbackRedirect && { fallbackRedirect }),
             },
           })
         }
