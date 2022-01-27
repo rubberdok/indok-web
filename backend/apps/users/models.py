@@ -20,6 +20,7 @@ class User(AbstractUser):
     first_login = models.BooleanField(default=True)
     graduation_year = models.IntegerField(null=True, blank=True)
     is_indok = models.BooleanField(default=False)
+    year_updated_at = models.DateTimeField()
 
     @property
     def events(self):
