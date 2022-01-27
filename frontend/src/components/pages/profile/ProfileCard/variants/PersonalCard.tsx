@@ -1,6 +1,7 @@
 import { Grid, Typography } from "@material-ui/core";
 import Profile from "@public/illustrations/Profile.svg";
 import { User } from "src/types/users";
+import ProfileActionBase from "./ProfileActionBase";
 import ProfileCardBase, { IntegrationTestProps } from "./ProfileCardBase";
 
 type Props = {

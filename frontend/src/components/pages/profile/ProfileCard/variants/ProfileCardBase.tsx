@@ -1,15 +1,6 @@
-import {
-  Card,
-  CardActionArea,
-  CardActions,
-  CardContent,
-  CardHeader,
-  Grid,
-  Typography,
-  useTheme,
-} from "@material-ui/core";
+import { Card, CardContent, CardHeader, Grid, useTheme } from "@material-ui/core";
 import Image from "next/image";
-import Link from "next/link";
+import { ComponentType } from "react";
 import useStyles from "../styles";
 
 export type IntegrationTestProps = {
@@ -18,8 +9,7 @@ export type IntegrationTestProps = {
 
 type Props = {
   title: string;
-  actionText?: string;
-  actionLink?: string;
+  Action?: React.VFC<IntegrationTestProps>;
   image?: StaticImageData;
   alt?: string;
 };
@@ -27,8 +17,7 @@ type Props = {
 const ProfileCardBase: React.FC<Props & IntegrationTestProps> = ({
   title,
   children,
-  actionText,
-  actionLink,
+  Action,
   image,
   alt,
   "data-test-id": dataTestId,
@@ -42,17 +31,7 @@ const ProfileCardBase: React.FC<Props & IntegrationTestProps> = ({
         <Grid container item xs style={{ height: "100%" }} direction="column" justifyContent="space-between">
           <CardHeader title={title} />
           <CardContent>{children}</CardContent>
-          {actionText && actionLink && (
-            <CardActionArea>
-              <Link passHref href={actionLink}>
-                <CardActions data-test-id={`${dataTestId}link`}>
-                  <Typography variant="overline" color="textPrimary">
-                    {actionText}
-                  </Typography>
-                </CardActions>
-              </Link>
-            </CardActionArea>
-          )}
+          {Action && <Action data-test-id={dataTestId} />}
         </Grid>
         {image && (
           <Grid item xs={3} style={{ marginRight: theme.spacing(4) }}>
