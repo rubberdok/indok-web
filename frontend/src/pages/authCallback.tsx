@@ -31,6 +31,8 @@ const AuthCallbackPage: NextPage = () => {
     if (code) authUser({ variables: { code } });
   }, [code, authUser]);
 
+  const loadingProfile = !error && !data?.authUser?.user?.firstLogin && !state;
+
   if (called && !loading && data && data.authUser) {
     if (data.authUser.user.firstLogin) {
       router.push("/register");
@@ -48,7 +50,7 @@ const AuthCallbackPage: NextPage = () => {
   return (
     <Layout>
       <Container>
-        {!error && <ProfileSkeleton />}
+        {loadingProfile && <ProfileSkeleton />}
         {error && (
           <Grid
             container

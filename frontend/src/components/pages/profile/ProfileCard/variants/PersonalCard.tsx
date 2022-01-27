@@ -1,4 +1,5 @@
 import { Grid, Typography } from "@material-ui/core";
+import { Skeleton } from "@material-ui/lab";
 import Profile from "@public/illustrations/Profile.svg";
 import { User } from "src/types/users";
 import ProfileCardBase from "./ProfileCardBase";
@@ -21,15 +22,25 @@ const PersonalCard: React.VFC<Props> = ({ user, "data-test-id": dataTestId, ...p
     >
       <Grid container direction="column">
         <Grid item>
-          {user && (
+          {user ? (
             <Typography
               variant="body2"
               data-test-id={`${dataTestId}name`}
             >{`${user.firstName} ${user.lastName}`}</Typography>
+          ) : (
+            <Skeleton>
+              <Typography variant="body2">Placeholder Placeholder</Typography>
+            </Skeleton>
           )}
         </Grid>
         <Grid item>
-          {user && user.gradeYear && <Typography variant="body2">{`${user.gradeYear}. klasse`}</Typography>}
+          {user && user.gradeYear ? (
+            <Typography variant="body2">{`${user.gradeYear}. klasse`}</Typography>
+          ) : (
+            <Skeleton variant="rect">
+              <Typography variant="body2">0. klasse</Typography>
+            </Skeleton>
+          )}
         </Grid>
       </Grid>
     </ProfileCardBase>
