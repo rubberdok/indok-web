@@ -17,9 +17,9 @@ type Props = {
 
 export const LoginRequired = ({ redirect, redirectPath, children, fallback }: Props) => {
   const router = useRouter();
-  var path: string | undefined = undefined;
+  var path: string | undefined = redirectPath;
   if (redirect) {
-    path = redirectPath || router.asPath;
+    path ||= router.asPath;
   }
   const url = useMemo<string>(() => generateFeideLoginUrl(path), [path]);
   const { data, loading } = useQuery<{ user?: User }>(GET_USER);
