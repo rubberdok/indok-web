@@ -81,10 +81,6 @@ const FallbackPage: NextPage = () => {
     };
   }, [data]);
 
-  if (redirectIfNotLoggedIn()) {
-    return null;
-  }
-
   return (
     <Layout>
       <Container>
