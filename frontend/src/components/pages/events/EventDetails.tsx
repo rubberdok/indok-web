@@ -1,4 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
+import LoginRequired from "@components/authentication/LoginRequired";
 import * as components from "@components/markdown/components";
 import PermissionRequired from "@components/permissions/PermissionRequired";
 import { EVENT_SIGN_OFF, EVENT_SIGN_UP } from "@graphql/events/mutations";
@@ -210,9 +211,7 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
           </Typography>
 
           {!event.isAttendable ? null : !user ? (
-            <Typography variant="h5" gutterBottom>
-              Logg inn for å melde deg på
-            </Typography>
+            <LoginRequired redirect={`/events/${eventId}`} />
           ) : !event.allowedGradeYears.includes(user.gradeYear) ? (
             <Typography variant="h5" gutterBottom>
               Ikke aktuell
