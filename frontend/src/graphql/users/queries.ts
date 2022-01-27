@@ -29,6 +29,7 @@ export const EDIT_USER_QUERY = gql`
       firstLogin
       feideEmail
       canUpdateYear
+      yearUpdatedAt
     }
   }
 `;

@@ -81,11 +81,11 @@ class UpdateUser(graphene.Mutation):
                 )
 
         for k, v in user_data.items():
-            if k == "graduation_year" and updated_graduation_year and user.can_update_year:
-                user.graduation_year = graduation_year
-                user.year_updated_at(timezone.now())
-            else:
+            if k != "graduation_year":
                 setattr(user, k, v)
+            elif k == "graduation_year" and updated_graduation_year and user.can_update_year:
+                user.graduation_year = graduation_year
+                user.year_updated_at = timezone.now()
 
         if not user.email and not user_data.get("email"):
             user.email = user.feide_email

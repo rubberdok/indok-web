@@ -33,6 +33,7 @@ class UserType(DjangoObjectType):
             "events",
             "organizations",
             "responses",
+            "year_updated_at",
         ]
 
     @staticmethod
