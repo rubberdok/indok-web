@@ -2,11 +2,11 @@ import { useQuery } from "@apollo/client";
 import { GET_USER } from "@graphql/users/queries";
 import { User } from "@interfaces/users";
 import { Button } from "@material-ui/core";
+import { Skeleton } from "@material-ui/lab";
 import { generateFeideLoginUrl } from "@utils/auth";
 import Link from "next/link";
-import { useMemo } from "react";
-import { Skeleton } from "@material-ui/lab";
 import { useRouter } from "next/router";
+import React, { useMemo } from "react";
 
 type Props = {
   redirect?: boolean;
