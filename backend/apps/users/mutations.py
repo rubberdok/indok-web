@@ -64,9 +64,6 @@ class UpdateUser(graphene.Mutation):
 
         graduation_year = user_data.get("graduation_year")
         updated_graduation_year = graduation_year != user.graduation_year
-        can_update_graduation_year = (
-            user.year_updated_at is not None and user.year_updated_at + timezone.timedelta(days=365) >= timezone.now()
-        )
 
         if graduation_year:
             # Check that graduation year is within the next five years
@@ -84,7 +81,7 @@ class UpdateUser(graphene.Mutation):
                 )
 
         for k, v in user_data.items():
-            if k == "graduation_year" and updated_graduation_year and can_update_graduation_year:
+            if k == "graduation_year" and updated_graduation_year and user.can_update_year:
                 user.graduation_year = graduation_year
                 user.year_updated_at(timezone.now())
             else:
