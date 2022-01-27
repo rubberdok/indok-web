@@ -17,7 +17,7 @@ type Props = {
 
 export const LoginRequired = ({ redirect, redirectPath, children, fallback }: Props) => {
   const router = useRouter();
-  var path: string | undefined = redirectPath;
+  let path: string | undefined = redirectPath;
   if (redirect) {
     path ||= router.asPath;
   }
