@@ -43,6 +43,7 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": 
   const { data } = useQuery<{ user?: EditUser }>(EDIT_USER_QUERY);
   const [updateUser] = useMutation<{ updateUser: { user: EditUser } }>(UPDATE_USER, {
     onCompleted: onCompleted,
+    refetchQueries: ["editUserInfo"],
   });
   const theme = useTheme();
   const router = useRouter();

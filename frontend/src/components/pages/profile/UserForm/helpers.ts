@@ -44,7 +44,7 @@ export const suggestGraduationYear = () => {
 export const currentGradeYear = (graduationYear: number) => {
   const currentMonth = today.month();
   if (currentMonth < 7) {
-    return 5 - (today.year() - graduationYear);
+    return 5 - (graduationYear - today.year());
   }
-  return 6 - (today.year() - graduationYear);
+  return 6 - (graduationYear - today.year());
 };

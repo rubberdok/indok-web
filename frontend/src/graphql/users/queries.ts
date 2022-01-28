@@ -16,7 +16,7 @@ export const GET_USER_PROFILE = gql`
 `;
 
 export const EDIT_USER_QUERY = gql`
-  query {
+  query editUserInfo {
     user {
       id
       username
