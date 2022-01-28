@@ -1,5 +1,6 @@
 import { useMutation, useQuery } from "@apollo/client";
 import {
+  currentGradeYear,
   isVegetarian,
   maxGraduationYear,
   suggestGraduationYear,
@@ -184,7 +185,7 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": 
                 >
                   {range(currentYear, maxGraduationYear, 1).map((year) => (
                     <option key={year} value={year}>
-                      {year}
+                      {`${year}, (${currentGradeYear(year)}. klasse)`}
                     </option>
                   ))}
                 </NativeSelect>
