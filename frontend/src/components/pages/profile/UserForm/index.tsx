@@ -28,6 +28,7 @@ import dayjs from "dayjs";
 import { useFormik } from "formik";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useMemo } from "react";
 import { EditUser } from "src/types/users";
 import { suggestNames } from "./helpers";
 
@@ -49,6 +50,14 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": 
   const ID_PREFIX = `${dataTestId}`;
 
   const { firstName, lastName } = suggestNames(data?.user?.firstName);
+  const minimumGraduationYear = useMemo<number>(
+    () => Math.min(currentYear, data?.user?.graduationYear || currentYear),
+    [data?.user?.graduationYear]
+  );
+  const graduationYears = useMemo<number[]>(
+    () => range(minimumGraduationYear, maxGraduationYear, 1),
+    [minimumGraduationYear]
+  );
 
   const formik = useFormik({
     initialValues: {
@@ -182,12 +191,17 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": 
                   data-test-id={`${ID_PREFIX}graduationYearSelect`}
                   disabled={!data?.user?.canUpdateYear}
                 >
-                  {range(currentYear, maxGraduationYear, 1).map((year) => (
+                  {graduationYears.map((year) => (
                     <option key={year} value={year}>
                       {year}
                     </option>
                   ))}
                 </NativeSelect>
+                {formik.touched.graduationYear && Boolean(formik.errors.graduationYear) && (
+                  <FormHelperText style={{ color: theme.palette.error.main }}>
+                    {formik.touched.graduationYear && formik.errors.graduationYear}
+                  </FormHelperText>
+                )}
                 {data?.user?.canUpdateYear && <FormHelperText>Kan bare endres én gang i året.</FormHelperText>}
                 {!data?.user?.canUpdateYear && (
                   <FormHelperText>
