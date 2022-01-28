@@ -157,7 +157,7 @@ class UsersMutationsTestCase(UsersBaseTestCase):
         self.assertEqual(today + 1, get_user_model().objects.get(pk=self.indok_user.id).graduation_year)
 
     def test_update_graduation_year_after_registering(self):
-        newly_registered_user = IndokUserFactory(first_login=True)
+        newly_registered_user = IndokUserFactory(first_login=True, graduation_year=timezone.now().year + 3)
         today = timezone.now().year
         query = self.mutation(today + 1)
         res = self.query(query, user=newly_registered_user)
@@ -167,7 +167,7 @@ class UsersMutationsTestCase(UsersBaseTestCase):
         query = self.mutation(today + 2)
         res = self.query(query, user=newly_registered_user)
         self.assertResponseNoErrors(res)
-        self.assertEqual(today + 1, get_user_model().objects.get(pk=newly_registered_user.id).graduation_year)
+        self.assertEqual(today + 2, get_user_model().objects.get(pk=newly_registered_user.id).graduation_year)
 
     def test_update_user(self):
         pass

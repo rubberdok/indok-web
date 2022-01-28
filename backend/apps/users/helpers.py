@@ -25,7 +25,7 @@ def update_graduation_year(user: "User", new_graduation_year: int) -> Literal[Tr
                 params={"graduation_year": new_graduation_year},
             )
 
-    elif updated_graduation_year and user.can_update_year:
+    if updated_graduation_year and user.can_update_year:
         user.graduation_year = new_graduation_year
         if not user.first_login:
             user.year_updated_at = timezone.now()
