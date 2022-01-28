@@ -16,28 +16,23 @@ import {
   TableBody,
   IconButton,
   Snackbar,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  DialogActions,
   Button,
   Tooltip,
   Container,
   useMediaQuery,
   makeStyles,
   TableContainer,
-  TextField,
 } from "@material-ui/core";
 import { getDecisionEmailProps, toStringChosenCabins } from "@utils/cabins";
 import dayjs from "dayjs";
 import { NextPage } from "next";
-import { CONFIRM_BOOKING, DELETE_BOOKING, SEND_EMAIL } from "@graphql/cabins/mutations";
+import { CONFIRM_BOOKING, SEND_EMAIL } from "@graphql/cabins/mutations";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import theme from "@styles/theme";
 import { BookingFromQuery } from "@interfaces/cabins";
 import ErrorDialog from "@components/dialogs/ErrorDialog";
+import DeleteBookingDialog from "@components/pages/cabins/Admin/DeleteBookingDialog";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -55,61 +50,11 @@ const AdminPage: NextPage = () => {
     adminAllBookings: BookingFromQuery[];
   }>(QUERY_ADMIN_ALL_BOOKINGS, { variables: { after: dayjs().subtract(1, "day").format("YYYY-MM-DD") } });
   const [confirmBooking] = useMutation(CONFIRM_BOOKING, { refetchQueries: [{ query: QUERY_ADMIN_ALL_BOOKINGS }] });
-  const [deleteBooking] = useMutation(DELETE_BOOKING, { refetchQueries: [{ query: QUERY_ADMIN_ALL_BOOKINGS }] });
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [bookingToBeDeleted, setBookingToBeDeleted] = useState<BookingFromQuery | undefined>();
   const [send_email] = useMutation(SEND_EMAIL);
   const router = useRouter();
-
-  const handleDeleteBookingOnClose = () => setBookingToBeDeleted(undefined);
-
-  const DeleteBookingDialog: React.VFC = () => {
-    const [declineMessage, setDeclineMessage] = useState("");
-
-    return (
-      <Dialog open={bookingToBeDeleted != undefined} onClose={handleDeleteBookingOnClose}>
-        <DialogTitle>Du er nå i ferd med å gjøre en irreversibel handling</DialogTitle>
-        <DialogContent>
-          <DialogContentText>Er du sikker på at du vil slette denne bookingen?</DialogContentText>
-          <DialogContentText>
-            Det kan være nyttig for brukeren å få vite hvorfor dere avslår søknaden om booking. Hvis dere vil oppgi
-            grunnen til avslag, kan dere gjøre det nedenfor.
-          </DialogContentText>
-          <TextField
-            placeholder="Grunn til avslag..."
-            variant="outlined"
-            multiline
-            rows={6}
-            fullWidth
-            onChange={(e) => setDeclineMessage(e.target.value)}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleDeleteBookingOnClose} variant="contained">
-            Avbryt
-          </Button>
-          <Button
-            onClick={() => {
-              if (bookingToBeDeleted) {
-                deleteBooking({ variables: { id: bookingToBeDeleted.id } }).then(() => {
-                  setSnackbarMessage("Bookingen ble slettet");
-                  setOpenSnackbar(true);
-                  refetch();
-                });
-                send_email(getDecisionEmailProps(bookingToBeDeleted, false, declineMessage));
-              }
-              handleDeleteBookingOnClose();
-            }}
-            color="primary"
-            variant="contained"
-          >
-            Slett booking
-          </Button>
-        </DialogActions>
-      </Dialog>
-    );
-  };
 
   const handleErrorDialogClose = () => router.push("/");
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -125,7 +70,13 @@ const AdminPage: NextPage = () => {
           onClose={() => setOpenSnackbar(false)}
         />
         <ErrorDialog error={error} handleErrorDialogClose={handleErrorDialogClose} />
-        <DeleteBookingDialog />
+        <DeleteBookingDialog
+          bookingToBeDeleted={bookingToBeDeleted}
+          setBookingToBeDeleted={setBookingToBeDeleted}
+          setSnackbarMessage={setSnackbarMessage}
+          setOpenSnackbar={setOpenSnackbar}
+          refetch={refetch}
+        />
         <Grid container direction="column" spacing={3}>
           <Grid item>
             <Box p={3}>

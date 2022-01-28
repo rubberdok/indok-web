@@ -4,7 +4,7 @@ import { BookingResponsible, Cabin, ContactInfo, DatePick } from "@interfaces/ca
 import { Box, Divider, Grid, Typography } from "@material-ui/core";
 import { convertDateFormat, toStringChosenCabins, calculatePrice } from "@utils/cabins";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 interface ContractProps {
   chosenCabins: Cabin[];

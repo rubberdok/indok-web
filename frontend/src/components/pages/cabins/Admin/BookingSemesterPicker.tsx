@@ -19,7 +19,7 @@ import {
 import { Alert } from "@material-ui/lab";
 import dayjs from "dayjs";
 import router from "next/router";
-import React, { useState } from "react";
+import { useState } from "react";
 
 export type BookingSemester = {
   fallStartDate: string;
