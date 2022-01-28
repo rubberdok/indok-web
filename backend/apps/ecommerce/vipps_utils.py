@@ -129,7 +129,7 @@ class VippsApi:
             json.dumps(capture_data),
         )
 
-    def initiate_payment(self, order: Order, fallback_redirect: str = None) -> str:
+    def initiate_payment(self, order: Order, fallback_redirect: Optional[str] = None) -> str:
         headers = self._build_headers()
         order_data = self._build_initiate_payment_request(order, fallback_redirect)
 
@@ -206,7 +206,7 @@ class VippsApi:
             },
         }
 
-    def _build_initiate_payment_request(self, order: Order, redirect: str = None) -> InitiatePaymentBody:
+    def _build_initiate_payment_request(self, order: Order, redirect: Optional[str] = None) -> InitiatePaymentBody:
         return {
             "merchantInfo": {
                 "merchantSerialNumber": self.merchant_serial_number,

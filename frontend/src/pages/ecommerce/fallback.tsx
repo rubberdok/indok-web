@@ -52,7 +52,7 @@ const FallbackPage: NextPage = () => {
   const [attemptCapturePayment, { data, loading, error }] = useMutation(ATTEMPT_CAPTURE_PAYMENT, {
     onError: () => intervalRef.current && clearInterval(intervalRef.current),
   });
-  const { data: userData } = useQuery<{ user: User }>(GET_USER);
+  const { data: userData } = useQuery<{ user?: User }>(GET_USER);
 
   const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>("RESERVED");
   const [order, setOrder] = useState<Order>();
@@ -87,7 +87,7 @@ const FallbackPage: NextPage = () => {
   return (
     <Layout>
       <Container>
-        {redirect && typeof redirect == "string" && (
+        {redirect && typeof redirect === "string" && (
           <Box mt={2}>
             <Button startIcon={<KeyboardArrowLeft />} onClick={() => router.push(redirect)}>
               Tilbake
@@ -154,7 +154,7 @@ const FallbackPage: NextPage = () => {
             </CardContent>
             {userData?.user && (
               <CardActions>
-                <Link href="/ecommerce">
+                <Link href="/ecommerce" passHref>
                   <Button>Gå til mine betalinger</Button>
                 </Link>
               </CardActions>

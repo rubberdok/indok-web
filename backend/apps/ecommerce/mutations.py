@@ -25,7 +25,7 @@ class InitiateOrder(graphene.Mutation):
         quantity = graphene.Int()
 
     @login_required
-    def mutate(self, info, product_id, fallback_redirect: str = None, quantity: int = 1):
+    def mutate(self, info, product_id, fallback_redirect: Optional[str] = None, quantity: int = 1):
         user = info.context.user
         # Check if user is allowed to buy the product
         product = Product.objects.get(pk=product_id)

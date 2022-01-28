@@ -173,7 +173,7 @@ const CheckoutPage: NextPage = () => {
                           quantity={Number(quantity)}
                           onError={(e) => e && setOrderError(e.message)}
                           disabled={!isConsentingTerms}
-                          fallbackRedirect={typeof redirect == "string" ? redirect : undefined}
+                          fallbackRedirect={typeof redirect === "string" ? redirect : undefined}
                         />
                         <SalesTermsDialog open={openSalesTerms} onClose={() => setOpenSalesTerms(false)} />
                       </Grid>
