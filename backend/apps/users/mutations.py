@@ -59,9 +59,6 @@ class UpdateUser(graphene.Mutation):
 
         user = info.context.user
 
-        if user.first_login:
-            user.first_login = False
-
         graduation_year = user_data.get("graduation_year")
         updated_graduation_year = graduation_year != user.graduation_year
 
@@ -85,11 +82,14 @@ class UpdateUser(graphene.Mutation):
                 setattr(user, k, v)
             elif k == "graduation_year" and updated_graduation_year and user.can_update_year:
                 user.graduation_year = graduation_year
-                user.year_updated_at = timezone.now()
+                if not user.first_login:
+                    user.year_updated_at = timezone.now()
 
         if not user.email and not user_data.get("email"):
             user.email = user.feide_email
 
+        if user.first_login:
+            user.first_login = False
         # Validate fields
         user.full_clean(exclude=["password"])
         user.save()
