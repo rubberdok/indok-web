@@ -1,3 +1,4 @@
+from typing import Optional
 from urllib.error import HTTPError
 
 import graphene

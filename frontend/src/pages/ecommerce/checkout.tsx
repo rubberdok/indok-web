@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
-import PayWithVipps from "@components/ecommerce/PayWithVipps";
-import SalesTermsDialog from "@components/ecommerce/SalesTermsDialog";
+import PayWithVipps from "@components/pages/ecommerce/PayWithVipps";
+import SalesTermsDialog from "@components/pages/ecommerce/SalesTermsDialog";
 import Layout from "@components/Layout";
 import { GET_PRODUCT } from "@graphql/ecommerce/queries";
 import { Product } from "@interfaces/ecommerce";

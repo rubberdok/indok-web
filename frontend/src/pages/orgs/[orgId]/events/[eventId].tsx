@@ -6,6 +6,7 @@ import EditEvent from "@components/pages/events/EventEditor";
 import { ADMIN_EVENT_SIGN_OFF } from "@graphql/events/mutations";
 import { ADMIN_GET_EVENT } from "@graphql/events/queries";
 import { Event, SignUp } from "@interfaces/events";
+import { HeaderValuePair } from "@interfaces/utils";
 import {
   Box,
   Button,
@@ -35,11 +36,6 @@ import dayjs from "dayjs";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
-
-interface HeaderValuePair<T> {
-  header: string;
-  field: keyof T;
-}
 
 const signUpFields: HeaderValuePair<SignUp>[] = [
   { header: "Navn", field: "user" },
