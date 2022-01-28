@@ -16,7 +16,7 @@ phonenumbers==8.12.19
 promise==2.3
 psycopg2-binary==2.9.3
 WeasyPrint==52.5
-PyJWT==1.7.1
+PyJWT==2.3.0
 cryptography==36.0.1
 google-api-python-client==2.23.0
 oauth2client==4.1.3
