@@ -26,13 +26,17 @@ const faqs = [
         <Typography>Følgende regler gjelder for avbestilling av en booking:</Typography>
         <ul>
           <li>
-            <Typography>Avbestilling innen to uker før avreise er gebyrfritt.</Typography>
+            <Typography>Avbestilling innen to uker før bestilt ankomstdato er gebyrfritt.</Typography>
           </li>
           <li>
-            <Typography>Avbestilling innen en uke i forkant av avreise medfører et gebyr på 30% av leien.</Typography>
+            <Typography>
+              Avbestilling innen en uke i forkant av bestilt ankomstdato medfører et gebyr på 30% av leien.
+            </Typography>
           </li>
           <li>
-            <Typography>Avbestilling innen en uke i forkant av avreise medfører et gebyr på 50% av leien.</Typography>
+            <Typography>
+              Avbestilling innen en uke i forkant av bestilt ankomstdato medfører et gebyr på 50% av leien.
+            </Typography>
           </li>
         </ul>
       </Box>

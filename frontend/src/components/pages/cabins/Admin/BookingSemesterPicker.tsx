@@ -39,7 +39,7 @@ export const defaultBookingSemester: BookingSemester = {
   springSemesterActive: false,
 };
 
-const BookingSemesterPicker = () => {
+const BookingSemesterPicker: React.VFC = () => {
   const [updateBookingSemester] = useMutation<{ semesterData: BookingSemester }>(UPDATE_BOOKING_SEMESTER);
   const handleErrorDialogClose = () => router.push("/");
   const [openSnackbar, setOpenSnackbar] = useState(false);
