@@ -185,7 +185,7 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": 
                 >
                   {range(currentYear, maxGraduationYear, 1).map((year) => (
                     <option key={year} value={year}>
-                      {`${year}, (${currentGradeYear(year)}. klasse)`}
+                      {`${year} (${currentGradeYear(year)}. klasse)`}
                     </option>
                   ))}
                 </NativeSelect>
