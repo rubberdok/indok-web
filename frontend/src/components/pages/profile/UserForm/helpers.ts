@@ -35,8 +35,16 @@ export const validationSchema = Yup.object().shape({
 
 export const suggestGraduationYear = () => {
   const currentMonth = dayjs().month();
-  if (currentMonth > 8) {
+  if (currentMonth > 7) {
     return dayjs().year() + 5;
   }
   return dayjs().year() + 4;
+};
+
+export const currentGradeYear = (graduationYear: number) => {
+  const currentMonth = dayjs().month();
+  if (currentMonth > 7) {
+    return 5 - (dayjs().year() - graduationYear);
+  }
+  return 6 - (dayjs().year() - graduationYear);
 };
