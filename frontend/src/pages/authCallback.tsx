@@ -24,8 +24,6 @@ const AuthCallbackPage: NextPage = () => {
   const { code, state } = router.query;
   const [authUser, { loading, data, error, called }] = useMutation<{ authUser: AuthUser }>(AUTHENTICATE, {
     errorPolicy: "all",
-    refetchQueries: [GET_USER_INFO],
-    awaitRefetchQueries: true,
   });
 
   useEffect(() => {
