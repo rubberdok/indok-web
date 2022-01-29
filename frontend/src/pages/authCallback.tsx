@@ -21,22 +21,10 @@ const AuthCallbackPage: NextPage = () => {
   const theme = useTheme();
 
   const { code, state } = router.query;
-  const [authUser, { loading, data, error, called }] = useMutation<{ authUser: AuthUser }>(AUTHENTICATE, {
+  const [authUser, { loading, data, error, called, client }] = useMutation<{ authUser: AuthUser }>(AUTHENTICATE, {
     errorPolicy: "all",
-    update(cache, { data }) {
-      if (data?.authUser) {
-        const { authUser: userData } = data;
-        cache.modify({
-          fields: {
-            user() {
-              return cache.writeFragment({
-                data: userData.user,
-                fragment: USER_FRAMGENT,
-              });
-            },
-          },
-        });
-      }
+    onCompleted: () => {
+      client.resetStore();
     },
   });
 
