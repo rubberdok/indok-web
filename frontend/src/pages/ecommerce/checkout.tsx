@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
-import PayWithVipps from "@components/ecommerce/PayWithVipps";
-import SalesTermsDialog from "@components/ecommerce/SalesTermsDialog";
+import PayWithVipps from "@components/pages/ecommerce/PayWithVipps";
+import SalesTermsDialog from "@components/pages/ecommerce/SalesTermsDialog";
 import Layout from "@components/Layout";
 import { GET_PRODUCT } from "@graphql/ecommerce/queries";
 import { Product } from "@interfaces/ecommerce";
@@ -60,7 +60,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 const CheckoutPage: NextPage = () => {
   const classes = useStyles();
   const router = useRouter();
-  const { productId, quantityStr } = router.query;
+  const { productId, quantityStr, redirect } = router.query;
   const quantity = typeof quantityStr == "string" ? parseInt(quantityStr) : 1;
 
   const [product, setProduct] = useState<Product>();
@@ -173,6 +173,7 @@ const CheckoutPage: NextPage = () => {
                           quantity={Number(quantity)}
                           onError={(e) => e && setOrderError(e.message)}
                           disabled={!isConsentingTerms}
+                          fallbackRedirect={typeof redirect === "string" ? redirect : undefined}
                         />
                         <SalesTermsDialog open={openSalesTerms} onClose={() => setOpenSalesTerms(false)} />
                       </Grid>

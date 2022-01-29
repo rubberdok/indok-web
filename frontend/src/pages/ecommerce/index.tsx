@@ -1,7 +1,9 @@
 import { useQuery } from "@apollo/client";
 import Layout from "@components/Layout";
+import OrderCellContent from "@components/pages/ecommerce/OrderCellContent";
 import { GET_USER_ORDERS } from "@graphql/ecommerce/queries";
 import { Order } from "@interfaces/ecommerce";
+import { HeaderValuePair } from "@interfaces/utils";
 import {
   Box,
   Button,
@@ -21,19 +23,13 @@ import {
 } from "@material-ui/core";
 import { KeyboardArrowLeft } from "@material-ui/icons";
 import { Alert } from "@material-ui/lab";
-import dayjs from "dayjs";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { redirectIfNotLoggedIn } from "src/utils/redirect";
 
-type HeaderValuePair<T> = {
-  header: string;
-  field: keyof T;
-};
-
 const orderFields: HeaderValuePair<Order>[] = [
-  { header: "Ordre ID", field: "id" },
+  { header: "Ordre-ID", field: "id" },
   { header: "Produkt", field: "product" },
   { header: "Totalpris", field: "totalPrice" },
   { header: "Antall", field: "quantity" },
@@ -53,36 +49,6 @@ const OrdersPage: NextPage = () => {
   if (redirectIfNotLoggedIn()) {
     return null;
   }
-
-  const CellContent = ({ order, field }: { order: Order; field: HeaderValuePair<Order> }) => {
-    let content: string;
-    switch (field.header) {
-      case "Produkt":
-        content = order.product.name;
-        break;
-      case "Totalpris":
-        content = `${order.totalPrice} kr`;
-        break;
-      case "Tidspunkt":
-        content = dayjs(order.timestamp).format("DD/MM/YYYY, HH:mm");
-        break;
-      case "Status":
-        content =
-          order.paymentStatus == "CAPTURED"
-            ? "Fullført"
-            : order.paymentStatus == "RESERVED"
-            ? "Betalt"
-            : order.paymentStatus == "INITIATED"
-            ? "Påbegynt"
-            : ["FAILED", "CANCELLED", "REJECTED"].includes(order.paymentStatus)
-            ? "Avbrutt"
-            : order.paymentStatus;
-        break;
-      default:
-        content = `${order[field.field]}`;
-    }
-    return <Typography variant={field.header == "Ordre ID" ? "caption" : "body2"}>{content}</Typography>;
-  };
 
   return (
     <Layout>
@@ -133,7 +99,7 @@ const OrdersPage: NextPage = () => {
                                 <TableRow key={`user-row-${order.id}`}>
                                   {orderFields.map((field) => (
                                     <TableCell key={`user-${order.id}-cell--${field.field}`}>
-                                      <CellContent order={order} field={field} />
+                                      <OrderCellContent order={order} field={field} />
                                     </TableCell>
                                   ))}
                                 </TableRow>
