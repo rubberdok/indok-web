@@ -1,6 +1,7 @@
 import { useMutation } from "@apollo/client";
 import Layout from "@components/Layout";
 import ProfileSkeleton from "@components/pages/profile/ProfileSkeleton";
+import { USER_FRAMGENT } from "@graphql/users/fragments";
 import { AUTHENTICATE } from "@graphql/users/mutations";
 import { User } from "@interfaces/users";
 import { Button, Container, Grid, Typography, useTheme } from "@material-ui/core";
@@ -23,8 +24,22 @@ const AuthCallbackPage: NextPage = () => {
   const { code, state } = router.query;
   const [authUser, { loading, data, error, called }] = useMutation<{ authUser: AuthUser }>(AUTHENTICATE, {
     errorPolicy: "all",
-    refetchQueries: ["user"],
-    awaitRefetchQueries: true,
+    update(cache, { data }) {
+      if (data?.authUser) {
+        const { authUser } = data;
+        cache.modify({
+          fields: {
+            user() {
+              const userRef = cache.writeFragment({
+                data: authUser.user,
+                fragment: USER_FRAMGENT,
+              });
+              return userRef;
+            },
+          },
+        });
+      }
+    },
   });
 
   useEffect(() => {
