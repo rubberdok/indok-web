@@ -1,3 +1,6 @@
+import { useQuery } from "@apollo/client";
+import { GET_USER_INFO } from "@graphql/users/queries";
+import { UserInfo } from "@interfaces/users";
 import {
   AppBar,
   Box,
@@ -18,9 +21,6 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { ReactElement, useState } from "react";
 import NavbarLinks from "./NavbarLinks";
-import { useQuery } from "@apollo/client";
-import { GET_USER } from "@graphql/users/queries";
-import { User } from "@interfaces/users";
 import NavbarUser from "./NavbarLinks/NavbarUser";
 
 //set navbar style breakpoint, should be adjusted according to width of NavbarLinks
@@ -89,7 +89,7 @@ const Navbar: React.FC = () => {
 
   const [openDrawer, setOpenDrawer] = useState(false);
 
-  const { error, loading, data } = useQuery<{ user: User | null }>(GET_USER);
+  const { error, loading, data } = useQuery<{ user: UserInfo | null }>(GET_USER_INFO);
   const loggedIn = !error && !loading && data?.user?.firstName !== undefined;
 
   return (

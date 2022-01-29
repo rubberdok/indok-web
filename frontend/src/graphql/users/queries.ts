@@ -1,16 +1,11 @@
 import { gql } from "@apollo/client";
 import { USER_FRAMGENT } from "./fragments";
 
-export const GET_USER_PROFILE = gql`
-  query {
+export const GET_USER_INFO = gql`
+  ${USER_FRAMGENT}
+  query userInfo {
     user {
-      username
-      firstName
-      lastName
-      phoneNumber
-      allergies
-      email
-      gradeYear
+      ...UserFields
     }
   }
 `;

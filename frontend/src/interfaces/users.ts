@@ -1,7 +1,6 @@
 import { Organization } from "./organizations";
 
-export type User = {
-  __typename: string;
+export type UserInfo = {
   id: string;
   feideEmail: string;
   email: string;
@@ -9,11 +8,14 @@ export type User = {
   firstName: string;
   lastName: string;
   dateJoined: string;
-  organizations: Organization[];
   graduationYear: number;
   gradeYear: number;
   allergies: string;
   phoneNumber: string;
   firstLogin: boolean;
+};
+
+export type User = {
+  organizations: Organization[];
   events: Partial<Event>[];
-}
+} & UserInfo;

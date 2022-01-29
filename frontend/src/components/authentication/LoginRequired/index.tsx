@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
-import { GET_USER } from "@graphql/users/queries";
-import { User } from "@interfaces/users";
+import { GET_USER_INFO } from "@graphql/users/queries";
+import { UserInfo } from "@interfaces/users";
 import { Button } from "@material-ui/core";
 import { Skeleton } from "@material-ui/lab";
 import { generateFeideLoginUrl } from "@utils/auth";
@@ -22,7 +22,7 @@ export const LoginRequired = ({ redirect, redirectPath, children, fallback }: Pr
     path ||= router.asPath;
   }
   const url = useMemo<string>(() => generateFeideLoginUrl(path), [path]);
-  const { data, loading } = useQuery<{ user?: User }>(GET_USER);
+  const { data, loading } = useQuery<{ user?: UserInfo }>(GET_USER_INFO);
 
   if (loading) {
     return (

@@ -2,6 +2,7 @@ import { useMutation } from "@apollo/client";
 import Layout from "@components/Layout";
 import ProfileSkeleton from "@components/pages/profile/ProfileSkeleton";
 import { AUTHENTICATE } from "@graphql/users/mutations";
+import { GET_USER_INFO } from "@graphql/users/queries";
 import { User } from "@interfaces/users";
 import { Button, Container, Grid, Typography, useTheme } from "@material-ui/core";
 import { NextPage } from "next";
@@ -21,11 +22,10 @@ const AuthCallbackPage: NextPage = () => {
   const theme = useTheme();
 
   const { code, state } = router.query;
-  const [authUser, { loading, data, error, called, client }] = useMutation<{ authUser: AuthUser }>(AUTHENTICATE, {
+  const [authUser, { loading, data, error, called }] = useMutation<{ authUser: AuthUser }>(AUTHENTICATE, {
     errorPolicy: "all",
-    onCompleted: () => {
-      client.resetStore();
-    },
+    refetchQueries: [GET_USER_INFO],
+    awaitRefetchQueries: true,
   });
 
   useEffect(() => {
