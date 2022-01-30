@@ -51,7 +51,6 @@ def send_order_confirmation_mail(order: Order) -> None:
         from_email="noreply@indokntnu.no",
         to=[order.user.email],
     )
-    email.mixed_subtype = "related"
     email.attach_alternative(html_content, "text/html")
 
     email.send()
