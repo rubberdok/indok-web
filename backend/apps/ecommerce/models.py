@@ -80,7 +80,6 @@ class Product(models.Model):
         Restore quantity that was reserved by an order that was cancelled or failed.
         Also restore quantity if an order that was already reserved (not captured) was re-attempted.
         """
-        assert order.payment_status in order.failed_statuses or order.payment_status == Order.PaymentStatus.RESERVED
         with transaction.atomic():
             # Acquire DB lock for the product (no other process can change it)
             product = cls.objects.select_for_update().get(pk=order.product.id)
