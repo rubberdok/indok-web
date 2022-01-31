@@ -31,6 +31,7 @@ import { Alert as MuiAlert } from "@material-ui/lab";
 import { calendarFile } from "@utils/calendars";
 import dayjs from "dayjs";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React, { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import CountdownButton from "./CountdownButton";
@@ -119,6 +120,7 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
   const [openSignUpErrorSnackbar, setOpenSignUpErrorSnackbar] = useState(false);
   const [openSignOffErrorSnackbar, setOpenSignOffErrorSnackbar] = useState(false);
   const [extraInformation, setExtraInformation] = useState<string>();
+  const router = useRouter();
 
   const [eventSignUp, { loading: signUpLoading, error: signUpError }] = useMutation<{
     eventSignUp: { isFull: boolean };
@@ -268,7 +270,10 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
                       Du har betalt for billett
                     </MuiAlert>
                   ) : (
-                    <Link href={`/ecommerce/checkout?productId=${event.product.id}&quantity=1`} passHref>
+                    <Link
+                      href={`/ecommerce/checkout?productId=${event.product.id}&quantity=1&redirect=${router.asPath}`}
+                      passHref
+                    >
                       <Button size="large" variant="contained" color={"primary"} className={classes.payButton}>
                         Gå til betaling
                       </Button>
