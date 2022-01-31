@@ -64,6 +64,7 @@ services:
       - rabbitmq
       - backend
     command: celery -A celery_worker worker --concurrency=20 --loglevel=INFO
+
   celery_beat:
     environment:
     - DJANGO_READ_DOT_ENV_FILE=true
@@ -76,7 +77,7 @@ services:
       - postgres
       - rabbitmq
       - backend
-    command: celery -A celery_worker beat -l INFO
+    command: celery -A celery_worker beat -l DEBUG
 
  # celery_flower:
  #   image: mher/flower
