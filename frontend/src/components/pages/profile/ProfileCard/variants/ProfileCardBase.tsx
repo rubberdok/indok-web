@@ -1,6 +1,5 @@
 import { Card, CardContent, CardHeader, Grid, useTheme } from "@material-ui/core";
 import Image from "next/image";
-import { ComponentType } from "react";
 import useStyles from "../styles";
 
 export type IntegrationTestProps = {

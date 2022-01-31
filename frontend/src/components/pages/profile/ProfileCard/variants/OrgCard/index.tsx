@@ -8,8 +8,7 @@ const OrgCard: React.VFC<OrgListProps & IntegrationTestProps> = ({ orgs, ...prop
   return (
     <ProfileCardBase
       title="Organisasjoner"
-      actionText="Se organisasjoner"
-      actionLink="/orgs"
+      Action={(rest) => <OrgAction orgs={orgs} {...rest} />}
       image={OrganizationImg}
       alt=""
       {...props}
