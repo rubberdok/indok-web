@@ -32,7 +32,7 @@ class Product(models.Model):
         return self.name
 
     def save(self, *args, **kwargs):
-        if not self.current_quantity:
+        if self.current_quantity is None:
             self.current_quantity = self.total_quantity
         self.max_buyable_quantity = min(self.max_buyable_quantity, self.total_quantity)
         super().save(*args, **kwargs)
