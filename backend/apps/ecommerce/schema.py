@@ -2,7 +2,7 @@ import graphene
 
 from .mutations import AttemptCapturePayment, CreateProduct, InitiateOrder
 from .resolvers import EcommerceResolvers
-from .types import OrderType, ProductType
+from .types import OrdersByStatusType, OrderType, ProductType
 
 
 class EcommerceMutations(graphene.ObjectType):
@@ -16,3 +16,7 @@ class EcommerceQueries(graphene.ObjectType, EcommerceResolvers):
     products = graphene.List(ProductType)
     order = graphene.Field(OrderType, order_id=graphene.ID(required=True))
     user_orders = graphene.List(OrderType)
+
+    orders_by_status = graphene.Field(
+        OrdersByStatusType, product_id=graphene.ID(required=True), status=graphene.String(required=True)
+    )
