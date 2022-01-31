@@ -57,7 +57,7 @@ class Product(models.Model):
             bought_quantity = Order.objects.filter(
                 product__id=product_id,
                 user=user,
-                payment_status=Order.PaymentStatus.CAPTURED,
+                payment_status__in=[Order.PaymentStatus.CAPTURED, Order.PaymentStatus.RESERVED],
             ).aggregate(bought_quantity=Sum("quantity"))["bought_quantity"]
             bought_quantity = bought_quantity or 0
 
