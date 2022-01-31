@@ -4,6 +4,7 @@ import OrgListItem from "./OrgListItem";
 import { useState } from "react";
 import Link from "next/link";
 import { ProfileActionProps } from "@components/pages/profile/ProfileCard/variants/ProfileCardBase";
+import { useRouter } from "next/router";
 
 const orgLink = (orgId: string) => `/orgs/${orgId}`;
 
@@ -52,23 +53,33 @@ export const createOrgProfileAction =
   };
 
 const OrgList: React.VFC<Props & ProfileActionProps> = ({ orgs, "data-test-id": dataTestId }) => {
-  const [open, setOpen] = useState<boolean>(false);
+  const [menu, setMenu] = useState<{ open: boolean; anchor: Element | undefined }>({ open: false, anchor: undefined });
+  const router = useRouter();
 
   return (
     <>
       <CardActionArea>
-        <CardActions onClick={() => setOpen(true)} data-test-id={`${dataTestId}link`}>
-          Dine organisasjoner
+        <CardActions
+          onClick={(event) => setMenu({ open: true, anchor: event.currentTarget })}
+          data-test-id={`${dataTestId}link`}
+        >
+          <Typography variant="overline" color="textPrimary">
+            Se organisasjoner
+          </Typography>
         </CardActions>
       </CardActionArea>
-      <Menu open={open} onClose={() => setOpen(false)}>
-        {orgs.map((org) => {
-          <Link href={orgLink(org.id)} passHref>
-            <MenuItem>
-              <OrgListItem org={org} />
-            </MenuItem>
-          </Link>;
-        })}
+      <Menu
+        open={menu.open}
+        onClose={() => setMenu({ open: false, anchor: undefined })}
+        anchorEl={menu.anchor}
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+        transformOrigin={{ vertical: "bottom", horizontal: "left" }}
+      >
+        {orgs.map((org) => (
+          <MenuItem onClick={() => router.push(orgLink(org.id))}>
+            <OrgListItem org={org} />
+          </MenuItem>
+        ))}
       </Menu>
     </>
   );
