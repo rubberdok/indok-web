@@ -54,13 +54,7 @@ DJANGO_APPS = [
     "django.contrib.staticfiles",
 ]
 
-THIRD_PARTY_APPS = [
-    "corsheaders",
-    "graphene_django",
-    "rest_framework",
-    "phonenumber_field",
-    "guardian",
-]
+THIRD_PARTY_APPS = ["corsheaders", "graphene_django", "rest_framework", "phonenumber_field", "guardian", "celery"]
 
 LOCAL_APPS = [
     "apps.archive",

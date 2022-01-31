@@ -52,6 +52,8 @@ services:
         - "5672:5672"
 
   celery_worker:
+    environment:
+      - DJANGO_READ_DOT_ENV_FILE=true
     build:
       context: ./backend
       dockerfile: Dockerfile.celery
