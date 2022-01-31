@@ -28,18 +28,18 @@ services:
     depends_on:
       - postgres
 
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
-      - /app/.next
-    ports:
-      - 3000:3000
-    expose:
-      - 3000
+  # frontend:
+  #   build:
+  #     context: ./frontend
+  #     dockerfile: Dockerfile
+  #   volumes:
+  #     - ./frontend:/app
+  #     - /app/node_modules
+  #     - /app/.next
+  #   ports:
+  #     - 3000:3000
+  #   expose:
+  #     - 3000
 
 
   rabbitmq:
@@ -63,8 +63,27 @@ services:
       - postgres
       - rabbitmq
       - backend
+    command: celery -A celery_worker worker --concurrency=20 --loglevel=INFO
+  celery_beat:
+    environment:
+    - DJANGO_READ_DOT_ENV_FILE=true
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.celery
+    volumes:
+      - ./backend:/usr/src/app
+    depends_on:
+      - postgres
+      - rabbitmq
+      - backend
+    command: celery -A celery_worker beat -l INFO
 
-
+ # celery_flower:
+ #   image: mher/flower
+ #   depends_on:
+ #     - celery_worker
+ #     - celery_beat
+ #   command: -A celery --broker="${CELERY_BROKER}" flower
 
 volumes:
   postgres_data:

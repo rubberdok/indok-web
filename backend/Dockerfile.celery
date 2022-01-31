@@ -17,4 +17,4 @@ RUN pip install -r ./requirements/local.txt
 COPY . .
 
 # run entrypoint.sh
-ENTRYPOINT celery -A celery_worker worker --concurrency=20 --loglevel=INFO
+# ENTRYPOINT celery -A celery_worker worker --concurrency=20 --loglevel=INFO

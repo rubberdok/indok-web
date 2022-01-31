@@ -192,5 +192,16 @@ VIPPS_CALLBACK_PREFIX = env(
 VIPPS_FALLBACK_PREFIX = env("VIPPS_FALLBACK_PREFIX", default="http://127.0.0.1:3000/ecommerce/fallback")
 VIPPS_BASE_URL = env("VIPPS_BASE_URL", default="https://apitest.vipps.no")
 
+
+# Celery
+CELERY_BROKER = env("CELERY_BROKER")
+CELERY_BACKEND = env("CELERY_BACKEND")
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
+
+""" CELERY_BEAT_SCHEDULE = {
+    "sample_task": {
+        "task": "celery_worker.add",
+        "schedule": crontab(minute="*/1"),
+    },
+} """
