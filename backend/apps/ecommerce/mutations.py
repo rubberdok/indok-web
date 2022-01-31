@@ -68,6 +68,14 @@ class InitiateOrder(graphene.Mutation):
                     order.product.restore_quantity(order)
                     # Return order_id so frontend can redirect to fallback page
                     return InitiateOrder(order_id=order.id)
+                # Cancel previous attempt to avoid simultaneous payments
+                elif status_success and status == "INITIATE":
+                    try:
+                        InitiateOrder.vipps_api.cancel_transaction(f"{order.id}-{order.payment_attempt}")
+                    except HTTPError:
+                        raise ValueError("Fullfør den pågående betalingen først.")
+                    finally:
+                        order.product.restore_quantity(order)
 
                 # Retry
                 order.payment_attempt = order.payment_attempt + 1

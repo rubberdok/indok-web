@@ -1,6 +1,6 @@
 import datetime
 import json
-from typing import Literal, Optional, Tuple, TypedDict
+from typing import Any, Literal, Optional, Tuple, TypedDict
 
 import requests
 from django.conf import settings
@@ -29,14 +29,25 @@ BaseHeaders = TypedDict(
     },
 )
 
-MerchantInfo = TypedDict(
-    "MerchantInfo",
-    {"merchantSerialNumber": str, "callbackPrefix": str, "fallBack": str, "authToken": str, "isApp": bool},
-)
+
+class MerchantInfo(TypedDict, total=False):
+    merchantSerialNumber: str
+    callbackPrefix: str
+    fallBack: str
+    authToken: str
+    isApp: bool
+
+
 CustomerInfo = TypedDict("CustomerInfo", {"mobileNumber": str})
-TransactionInfo = TypedDict(
-    "TransactionData", {"orderId": str, "amount": int, "transactionText": str, "skipLandingPage": bool, "scope": str}
-)
+
+
+class TransactionInfo(TypedDict, total=False):
+    orderId: str
+    amount: int
+    transactionText: str
+    skipLandingPage: bool
+    scope: str
+
 
 InitiatePaymentBody = TypedDict(
     "InitiatePaymentBody",
@@ -53,6 +64,11 @@ CapturePaymentBody = TypedDict(
         "transaction": TransactionInfo,
     },
 )
+
+
+class CancelPaymentBody(TypedDict):
+    merchantInfo: MerchantInfo
+    transaction: TransactionInfo
 
 
 class VippsApi:
@@ -86,7 +102,7 @@ class VippsApi:
         self.vipps_system_plugin_version = vipps_system_plugin_version
 
     def _make_call(
-        self, method: Literal["POST", "GET", "PUT"], endpoint: str, headers: dict[str, str], data: Optional[dict] = None
+        self, method: Literal["POST", "GET", "PUT"], endpoint: str, headers: dict[str, Any], data: Optional[dict] = None
     ) -> dict:
         """Used in main api calls
         Args:
@@ -143,6 +159,15 @@ class VippsApi:
 
         history = response["transactionLogHistory"]
         return history[0]["operation"], history[0]["operationSuccess"]
+
+    def cancel_transaction(self, order_id: str) -> dict:
+        headers = self._build_headers()
+        body: CancelPaymentBody = {
+            "merchantInfo": {"merchantSerialNumber": self.merchant_serial_number},
+            "transaction": {"transactionText": "Order cancelled by reattempt."},
+        }
+        data = self._make_call("PUT", f"/ecomm/v2/payments/{order_id}/cancel", headers, json.dumps(body))
+        return data
 
     # private methods
 

@@ -11,6 +11,7 @@ from utils.testing.factories.users import IndokUserFactory, StaffUserFactory
 from apps.ecommerce.models import Order, Product
 
 PAYMENT_STATUS_PATH = lambda mutation: f"apps.ecommerce.mutations.{mutation}.vipps_api.get_payment_status"  # noqa
+CANCEL_TRANSACTION_PATH = "apps.ecommerce.mutations.InitiateOrder.vipps_api.cancel_transaction"
 INITIATE_PAYMENT_PATH = "apps.ecommerce.mutations.InitiateOrder.vipps_api.initiate_payment"
 CAPTURE_PAYMENT_PATH = "apps.ecommerce.mutations.AttemptCapturePayment.vipps_api.capture_payment"
 
@@ -235,6 +236,32 @@ class EcommerceMutationsTestCase(EcommerceBaseTestCase):
         data = json.loads(response.content)["data"]
         redirect_url = data["initiateOrder"]["redirect"]
         self.assertEqual(redirect_url, url)
+
+    @patch(INITIATE_PAYMENT_PATH)
+    def test_initate_after_reserved_callback(self, initiate_payment_mock: MagicMock):
+        unique_user = IndokUserFactory()
+        initiate_payment_mock.return_value = "mock"
+        response = self.query(self.INITIATE_ORDER_MUTATION(self.max_buyable_quantity), user=unique_user)
+        self.assertResponseNoErrors(response)
+        order: Order = Order.objects.get(user=unique_user)
+        # callback from Vipps sets the order to RESERVED
+        order.payment_status = order.PaymentStatus.RESERVED
+        order.save()
+
+        response = self.query(self.INITIATE_ORDER_MUTATION(self.max_buyable_quantity), user=unique_user)
+        self.assertResponseHasErrors(response)
+
+    @patch(PAYMENT_STATUS_PATH("InitiateOrder"))
+    @patch(CANCEL_TRANSACTION_PATH)
+    def test_cancel_initiated_orders_on_reattempt(
+        self, cancel_transaction_mock: MagicMock, get_payment_status_mock: MagicMock
+    ):
+        unique_user = IndokUserFactory()
+        self.query(self.INITIATE_ORDER_MUTATION(self.max_buyable_quantity), user=unique_user)
+        get_payment_status_mock.return_value = ("INITIATE", True)
+        self.query(self.INITIATE_ORDER_MUTATION(self.max_buyable_quantity), user=unique_user)
+        order: Order = Order.objects.get(user=unique_user, product=self.product_1)
+        self.assertEqual(cancel_transaction_mock.call_args.args[0], f"{order.id}-1")
 
     @patch(CAPTURE_PAYMENT_PATH)
     @patch(PAYMENT_STATUS_PATH("AttemptCapturePayment"))
