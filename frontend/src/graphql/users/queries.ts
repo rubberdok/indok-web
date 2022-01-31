@@ -2,7 +2,7 @@ import { gql } from "@apollo/client";
 import { USER_FRAMGENT } from "./fragments";
 
 export const GET_USER_PROFILE = gql`
-  query userProfile {
+  query {
     user {
       username
       firstName
