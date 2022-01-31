@@ -25,14 +25,19 @@ const AuthCallbackPage: NextPage = () => {
   const [authUser, { loading, data, error, called }] = useMutation<{ authUser: AuthUser }>(AUTHENTICATE, {
     errorPolicy: "all",
     update(cache, { data }) {
-      if (data?.authUser) {
-        const { user } = data.authUser;
-        return cache.writeFragment({
-          id: cache.identify(user),
-          data: user,
-          fragment: USER_FRAMGENT,
-        });
-      }
+      cache.modify({
+        fields: {
+          user() {
+            if (data?.authUser) {
+              const { user } = data.authUser;
+              return cache.writeFragment({
+                data: user,
+                fragment: USER_FRAMGENT,
+              });
+            }
+          },
+        },
+      });
     },
   });
 
