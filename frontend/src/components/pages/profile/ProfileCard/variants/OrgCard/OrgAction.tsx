@@ -1,5 +1,5 @@
 import { Organization } from "@interfaces/organizations";
-import { Typography, Box, Menu, CardActions, MenuItem } from "@material-ui/core";
+import { Typography, Box, Menu, CardActions, MenuItem, CardActionArea } from "@material-ui/core";
 import OrgListItem from "./OrgListItem";
 import { useState } from "react";
 import Link from "next/link";
@@ -24,26 +24,31 @@ export type Props = {
 export const createOrgProfileAction =
   ({ orgs }: Props): React.VFC<ProfileActionProps> =>
   (actionProps) => {
-    if (!orgs) {
-      return (
-        <Box fontStyle="italic">
-          <Typography>Ingen organisasjoner</Typography>
-        </Box>
-      );
+    switch (orgs.length) {
+      case 0:
+        return (
+          <Box fontStyle="italic">
+            <CardActions>
+              <Typography variant="overline" color="textSecondary">
+                Ingen organisasjoner
+              </Typography>
+            </CardActions>
+          </Box>
+        );
+      case 1:
+        const org = orgs[0];
+        return (
+          <CardActionArea>
+            <Link href={orgLink(org.id)} passHref>
+              <CardActions data-test-id={actionProps["data-test-id"]}>
+                <OrgListItem org={org} />
+              </CardActions>
+            </Link>
+          </CardActionArea>
+        );
+      default:
+        return <OrgList orgs={orgs} {...actionProps} />;
     }
-
-    if (orgs.length === 1) {
-      const org = orgs[0];
-      return (
-        <Link href={orgLink(org.id)} passHref>
-          <CardActions data-test-id={actionProps["data-test-id"]}>
-            <OrgListItem org={org} />
-          </CardActions>
-        </Link>
-      );
-    }
-
-    return <OrgList orgs={orgs} {...actionProps} />;
   };
 
 const OrgList: React.VFC<Props & ProfileActionProps> = ({ orgs, "data-test-id": dataTestId }) => {
@@ -51,9 +56,11 @@ const OrgList: React.VFC<Props & ProfileActionProps> = ({ orgs, "data-test-id": 
 
   return (
     <>
-      <CardActions onClick={() => setOpen(true)} data-test-id={`${dataTestId}link`}>
-        Dine organisasjoner
-      </CardActions>
+      <CardActionArea>
+        <CardActions onClick={() => setOpen(true)} data-test-id={`${dataTestId}link`}>
+          Dine organisasjoner
+        </CardActions>
+      </CardActionArea>
       <Menu open={open} onClose={() => setOpen(false)}>
         {orgs.map((org) => {
           <Link href={orgLink(org.id)} passHref>

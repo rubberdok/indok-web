@@ -1,4 +1,4 @@
-import { Card, CardContent, CardActionArea, CardHeader, Grid, useTheme } from "@material-ui/core";
+import { Card, CardContent, CardHeader, Grid, useTheme } from "@material-ui/core";
 import Image from "next/image";
 import useStyles from "../styles";
 
@@ -36,7 +36,7 @@ const ProfileCardBase: React.FC<Props & ProfileActionProps> = ({
         <Grid container item xs style={{ height: "100%" }} direction="column" justifyContent="space-between">
           <CardHeader title={title} />
           <CardContent>{children}</CardContent>
-          <CardActionArea>{Action && <Action {...actionProps} />}</CardActionArea>
+          {Action && <Action {...actionProps} />}
         </Grid>
         {image && (
           <Grid item xs={3} style={{ marginRight: theme.spacing(4) }}>

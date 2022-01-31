@@ -1,6 +1,6 @@
 import { ProfileActionProps } from "./ProfileCardBase";
 import Link from "next/link";
-import { CardActions, Typography } from "@material-ui/core";
+import { CardActions, Typography, CardActionArea } from "@material-ui/core";
 
 type Props = {
   text: string;
@@ -19,12 +19,14 @@ const createLinkProfileAction =
   ({ text, link }: Props): React.VFC<ProfileActionProps> =>
   ({ "data-test-id": dataTestId }) =>
     (
-      <Link passHref href={link}>
-        <CardActions data-test-id={`${dataTestId}link`}>
-          <Typography variant="overline" color="textPrimary">
-            {text}
-          </Typography>
-        </CardActions>
-      </Link>
+      <CardActionArea>
+        <Link passHref href={link}>
+          <CardActions data-test-id={`${dataTestId}link`}>
+            <Typography variant="overline" color="textPrimary">
+              {text}
+            </Typography>
+          </CardActions>
+        </Link>
+      </CardActionArea>
     );
 export default createLinkProfileAction;
