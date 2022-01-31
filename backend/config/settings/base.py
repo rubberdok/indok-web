@@ -2,6 +2,7 @@
 Base settings to build other settings files upon.
 """
 from pathlib import Path
+from typing import Literal
 
 import environ
 
@@ -16,7 +17,8 @@ if READ_DOT_ENV_FILE:
     env.read_env(str(ROOT_DIR / ".env"))
 
 # GENERAL
-DEBUG = env.bool("DJANGO_DEBUG", False)
+ENVIRONMENT: Literal["development", "production", "test"] = env("DJANGO_ENVIRONMENT")
+DEBUG: bool = ENVIRONMENT == "development"
 
 TIME_ZONE = "Europe/Oslo"
 LANGUAGE_CODE = "en-us"
@@ -33,7 +35,7 @@ DATABASES = {
         "NAME": env("DB_NAME", default="postgres"),
         "USER": env("DB_USER", default="postgres"),
         "PASSWORD": env("DB_PASSWORD", default="postgres"),
-        "HOST": env("DB_HOST", default="db"),
+        "HOST": env("DB_HOST", default="postgres"),
         "PORT": env.int("DB_PORT", default=5432),
     }
 }
@@ -70,6 +72,7 @@ LOCAL_APPS = [
     "apps.forms",
     "apps.listings",
     "apps.permissions",
+    "apps.ecommerce",
     "apps.integrationserver",
 ]
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -139,6 +142,7 @@ TEMPLATES = [
 # CORS
 CORS_ALLOW_CREDENTIALS = env.bool("CORS_ALLOW_CREDENTIALS", True)
 CORS_ORIGIN_WHITELIST = env.list("CORS_ORIGIN_WHITELIST", default="http://localhost:3000")
+ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=["localhost"])
 
 
 # EMAIL
@@ -188,3 +192,14 @@ GRAPHQL_URL = "graphql/"
 # DJANGO GUARDIAN
 ANONYMOUS_USER_NAME = "AnonymousUser"
 GUARDIAN_GET_INIT_ANONYMOUS_USER = "apps.users.models.get_anonymous_user_instance"
+
+# Vipps
+VIPPS_CLIENT_ID = env("VIPPS_CLIENT_ID")
+VIPPS_SECRET = env("VIPPS_SECRET")
+VIPPS_MERCHANT_SERIAL_NUMBER = env("VIPPS_MERCHANT_SERIAL_NUMBER")
+VIPPS_SUBSCRIPTION_KEY = env("VIPPS_SUBSCRIPTION_KEY")
+VIPPS_CALLBACK_PREFIX = env(
+    "VIPPS_CALLBACK_PREFIX", default="https://xoff0kv3i3.execute-api.eu-north-1.amazonaws.com/default/Vipps_callback"
+)
+VIPPS_FALLBACK_PREFIX = env("VIPPS_FALLBACK_PREFIX", default="http://127.0.0.1:3000/ecommerce/fallback")
+VIPPS_BASE_URL = env("VIPPS_BASE_URL", default="https://apitest.vipps.no")

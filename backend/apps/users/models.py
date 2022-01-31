@@ -5,6 +5,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 from guardian.conf import settings as guardian_settings
+from django.utils import timezone
 
 
 # Create your models here.
@@ -14,12 +15,17 @@ from apps.events.models import Event, SignUp
 class User(AbstractUser):
     feide_userid = models.CharField(max_length=255, db_index=True)
     feide_email = models.EmailField(blank=True, default="")
-    id_token = models.CharField(max_length=1000, blank=True, default="")
+    id_token = models.CharField(max_length=8000, blank=True, default="")
     allergies = models.CharField(max_length=1000, blank=True, default="")
     phone_number = PhoneNumberField(blank=True)
     first_login = models.BooleanField(default=True)
     graduation_year = models.IntegerField(null=True, blank=True)
     is_indok = models.BooleanField(default=False)
+    year_updated_at = models.DateTimeField(null=True, blank=True)
+
+    @property
+    def can_update_year(self):
+        return self.year_updated_at is None or (self.year_updated_at + timezone.timedelta(days=365) <= timezone.now())
 
     @property
     def events(self):

@@ -182,6 +182,9 @@ typings/
 # Optional npm cache directory
 .npm
 
+# Node version manager
+.nvmrc
+
 # Optional eslint cache
 .eslintcache
 

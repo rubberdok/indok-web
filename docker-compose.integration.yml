@@ -1,0 +1,39 @@
+version: "3"
+
+services:
+  postgres:
+    image: postgres
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
+    expose:
+      - 5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/:cached
+
+  backend:
+    image: backend:production
+    entrypoint: /usr/src/app/entrypoints/integration.sh
+    env_file: $ENV_FILE
+    volumes:
+      - ./backend:/usr/src/app
+    ports:
+      - 8000:8000
+    depends_on:
+      - postgres
+    expose:
+      - 8000
+
+  frontend:
+    image: frontend:test
+    ports:
+      - 3000:3000
+    expose:
+      - 3000
+
+volumes:
+  postgres_data:
+    driver: local

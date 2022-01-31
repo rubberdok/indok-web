@@ -1,11 +1,10 @@
 import logging
-from typing import cast
+from typing import Optional, cast
 
 import sentry_sdk
+from corsheaders.defaults import default_headers
 from sentry_sdk.integrations.django import DjangoIntegration
 from sentry_sdk.integrations.logging import LoggingIntegration, ignore_logger
-from corsheaders.defaults import default_headers
-
 
 from .base import *  # noqa
 from .base import env
@@ -14,6 +13,19 @@ from .base import env
 SECRET_KEY = env("SECRET_KEY")
 ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=["api.indokntnu.no"])
 CORS_ALLOW_HEADERS = list(default_headers) + ["sentry-trace"]
+
+CORS_ORIGIN_WHITELIST = env.list(
+    "CORS_ORIGIN_WHITELIST",
+    default=[
+        "https://indokntnu.no",
+        "https://www.indokntnu.no",
+        "callback-1.vipps.no",
+        "callback-2.vipps.no",
+        "callback-3.vipps.no",
+        "callback-4.vipps.no",
+    ],
+)
+
 
 # DATABASES
 DATABASES = {
@@ -71,8 +83,9 @@ LOGGING = {
 GRAPHENE["MIDDLEWARE"] += ["config.sentry.middleware.SentryMiddleware"]  # noqa
 
 # Sentry
-SENTRY_DSN = cast(str, env("SENTRY_DSN"))
-SENTRY_LOG_LEVEL = cast(int, env.int("DJANGO_SENTRY_LOG_LEVEL", logging.INFO))
+SENTRY_DSN: str = env("SENTRY_DSN")
+SENTRY_LOG_LEVEL: int = cast(int, env.int("DJANGO_SENTRY_LOG_LEVEL", default=logging.INFO))
+SENTRY_RELEASE: Optional[str] = env.str("GIT_COMMIT_SHA", "") or None
 
 sentry_logging = LoggingIntegration(
     level=SENTRY_LOG_LEVEL,  # Capture info and above as breadcrumbs
@@ -84,8 +97,9 @@ integrations = [sentry_logging, DjangoIntegration()]
 sentry_sdk.init(
     dsn=SENTRY_DSN,
     integrations=integrations,
-    environment=cast(str, env("SENTRY_ENVIRONMENT", default="production")),
+    environment=ENVIRONMENT,  # noqa
     traces_sample_rate=cast(float, env.float("SENTRY_TRACES_SAMPLE_RATE", default=0.0)),
     send_default_pii=cast(bool, env.bool("SENTRY_SEND_DEFAULT_PII", default=True)),
+    release=SENTRY_RELEASE,
 )
 ignore_logger("graphql.execution.utils")

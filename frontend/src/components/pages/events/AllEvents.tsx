@@ -40,7 +40,7 @@ const AllEvents: React.FC = () => {
     error: eventsError,
     data: eventsData,
     refetch,
-  } = useQuery(GET_EVENTS, {
+  } = useQuery<{ allEvents: Event[] }>(GET_EVENTS, {
     variables: filters,
   });
 
@@ -48,10 +48,12 @@ const AllEvents: React.FC = () => {
     loading: defaultEventsLoading,
     error: defaultEventsError,
     data: defaultEventsData,
-  } = useQuery(GET_DEFAULT_EVENTS);
+  } = useQuery<{ defaultEvents: Event[] }>(GET_DEFAULT_EVENTS);
   const error = showDefaultEvents ? defaultEventsError : eventsError;
   const loading = showDefaultEvents ? defaultEventsLoading : eventsLoading;
-  const data = showDefaultEvents ? defaultEventsData?.defaultEvents : eventsData?.allEvents;
+  const data = (showDefaultEvents ? defaultEventsData?.defaultEvents : eventsData?.allEvents)?.filter((event) =>
+    userData?.user ? event.allowedGradeYears.includes(userData.user.gradeYear) : true
+  );
 
   if (loading || userLoading) return <Typography variant="body1">Laster..</Typography>;
   if (error) return <Typography variant="body1">Kunne ikke hente arrangementer.</Typography>;
@@ -118,7 +120,7 @@ const AllEvents: React.FC = () => {
               {data === undefined || data.length === 0 ? (
                 <Typography variant="body1">Ingen arrangementer passer til valgte filtre.</Typography>
               ) : (
-                data.map((event: Event) => <EventListItem key={event.id} event={event} user={userData?.user} />)
+                data.map((event) => <EventListItem key={event.id} event={event} user={userData?.user} />)
               )}
             </Grid>
           )}

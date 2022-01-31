@@ -2,6 +2,7 @@ import { createTheme } from "@material-ui/core";
 import { Shadows } from "@material-ui/core/styles/shadows";
 import breakpoints from "./breakpoints";
 import typography from "./typography";
+import { red } from "@material-ui/core/colors";
 
 const theme = createTheme({
   typography: {
@@ -19,6 +20,21 @@ const theme = createTheme({
     MuiBreadcrumbs: {
       root: {
         ...typography.overline,
+      },
+    },
+    MuiCardHeader: {
+      root: {
+        padding: "32px 32px 16px",
+      },
+    },
+    MuiCardContent: {
+      root: {
+        padding: "16px 32px",
+      },
+    },
+    MuiCardActions: {
+      root: {
+        padding: "16px 32px",
       },
     },
     MuiToolbar: {
@@ -90,7 +106,7 @@ const theme = createTheme({
       main: "#11cb5f",
     },
     error: {
-      main: "#d21f3c",
+      main: red[800],
     },
   },
   shape: {

@@ -1,0 +1,370 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+env:
+  AWS_REGION: eu-north-1 # Set this to our AWS region
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        linter: [black, flake8]
+        include:
+          - linter: black
+            command: --check
+          - linter: flake8
+            command: --append-config=backend/tox.ini
+      fail-fast: false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.9.7"
+
+      - name: Install ${{ matrix.linter }}
+        run: pip install ${{ matrix.linter }}
+
+      - name: ${{ matrix.linter }}
+        run: ${{ matrix.linter }} backend ${{ matrix.command }}
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        image: [frontend, backend]
+        stage: [test, production]
+        include:
+          - image: frontend
+            build-env: true
+            env-prefix: next
+            context: ./frontend
+            dockerfile: Dockerfile.prod
+          - image: backend
+            env-prefix: django
+            context: ./backend
+            dockerfile: Dockerfile.prod
+        exclude:
+          - image: backend
+            stage: test
+      fail-fast: false
+
+    env:
+      ENV_FILE: ${{ matrix.env-prefix }}.${{ matrix.stage }}.env
+      dockerfile: ${{ matrix.image }}-${{ matrix.stage }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+          mask-aws-account-id: false
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Set image tag
+        id: image-tag
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: indokweb-${{ matrix.image }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+
+      - name: Load environment variables from S3
+        if: ${{ matrix.build-env }}
+        id: env-download
+        run: |
+          aws s3 cp s3://indok-web-environments/${{ env.ENV_FILE }} ${{ env.ENV_FILE }}
+          args=$(cat ${{ env.ENV_FILE }})
+          args="${args//'%'/'%25'}"
+          args="${args//$'\n'/'%0A'}"
+          args="${args//$'\r'/'%0D'}"
+          echo "::set-output name=build-args::$args"
+
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Build ${{ matrix.image }} image
+        id: build-image
+        uses: docker/build-push-action@v2
+        with:
+          context: ${{ matrix.context }}
+          file: ${{ matrix.context }}/${{ matrix.dockerfile }}
+          outputs: type=docker,dest=/tmp/${{ env.dockerfile }}.tar
+          tags: |
+            ${{ matrix.image }}:${{ matrix.stage }}
+            ${{ steps.image-tag.outputs.image }}
+          push: false
+          build-args: |
+            ${{ steps.env-download.outputs.build-args }}
+
+      - name: Push ${{ matrix.image }} image
+        id: push-image
+        # If this is run on the main branch, and is a production image, it should be pushed to ECR
+        if: ${{ github.ref == 'refs/heads/main' && matrix.stage == 'production' }}
+        uses: docker/build-push-action@v2
+        with:
+          context: ${{ matrix.context }}
+          file: ${{ matrix.context }}/${{ matrix.dockerfile }}
+          tags: ${{ steps.image-tag.outputs.image }}
+          push: true
+          build-args: |
+            ${{ steps.env-download.outputs.build-args }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.dockerfile }}
+          path: /tmp/${{ env.dockerfile }}.tar
+          if-no-files-found: error
+          retention-days: 1
+
+  api:
+    name: API tests
+    runs-on: ubuntu-latest
+    needs: build
+    if: ${{ always() }} # We want to run API-tests even if the frontend builds fail.
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      ENV_FILE: django.test.env
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Download image from previous job
+        uses: actions/download-artifact@v2
+        with:
+          name: backend-production
+          path: /tmp
+
+      - name: Load Docker images
+        run: |
+          docker load --input /tmp/backend-production.tar
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Load environment variables from S3
+        id: env-download
+        run: |
+          aws s3 cp s3://indok-web-environments/${{ env.ENV_FILE }} ${{ env.ENV_FILE }}
+          echo "DATAPORTEN_SECRET=${{ secrets.DATAPORTEN_SECRET }}" >> ${{ env.ENV_FILE }}
+          echo "GOOGLE_DRIVE_API_KEY=${{ secrets.GOOGLE_DRIVE_API_KEY }}" >> ${{ env.ENV_FILE }}
+          echo "VIPPS_SECRET=${{ secrets.VIPPS_SECRET }}" >> ${{ env.ENV_FILE }}
+          echo "VIPPS_SUBSCRIPTION_KEY=${{ secrets.VIPPS_SUBSCRIPTION_KEY }}" >> ${{ env.ENV_FILE }}
+
+      - name: Run API tests
+        run: |
+          docker run \
+            -v $GITHUB_WORKSPACE/backend:/usr/src/app \
+            --env-file ${{ env.ENV_FILE }} \
+            --network ${{ job.container.network }} \
+            --entrypoint /usr/src/app/entrypoints/test.sh \
+            backend:production
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
+          files: coverage.xml
+          flags: apitests
+          fail_ci_if_error: true
+
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      uuid: ${{ steps.uuid.outputs.value }}
+    steps:
+      - name: Generate unique ID 💎
+        id: uuid
+        # take the current commit + timestamp together
+        # the typical value would be something like
+        # "sha-5d3fe...35d3-time-1620841214"
+        run: echo "::set-output name=value::sha-$GITHUB_SHA-time-$(date +"%s")"
+
+  e2e:
+    needs: [prepare, build]
+    name: E2E Tests
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # Containers for parallelization, increase if necessary
+        containers: [1, 2, 3]
+    env:
+      ENV_FILE: django.test.env
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Download image from previous job
+        uses: actions/download-artifact@v2
+        with:
+          path: /tmp
+
+      - name: Load Docker images
+        run: |
+          docker load --input /tmp/backend-production/backend-production.tar
+          docker load --input /tmp/frontend-test/frontend-test.tar
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Load environment variables from S3
+        id: env-download
+        run: |
+          aws s3 cp s3://indok-web-environments/${{ env.ENV_FILE }} ${{ env.ENV_FILE }}
+          echo "DATAPORTEN_SECRET=${{ secrets.DATAPORTEN_SECRET }}" >> ${{ env.ENV_FILE }}
+          echo "GOOGLE_DRIVE_API_KEY=${{ secrets.GOOGLE_DRIVE_API_KEY }}" >> ${{ env.ENV_FILE }}
+          echo "VIPPS_SECRET=${{ secrets.VIPPS_SECRET }}" >> ${{ env.ENV_FILE }}
+          echo "VIPPS_SUBSCRIPTION_KEY=${{ secrets.VIPPS_SUBSCRIPTION_KEY }}" >> ${{ env.ENV_FILE }}
+
+      - name: Build and run the Application
+        run: docker compose -f docker-compose.integration.yml up -d
+
+      - name: Run Cypress
+        uses: cypress-io/github-action@v2
+        with:
+          record: true
+          parallel: true
+          group: "E2E"
+          working-directory: e2e
+          headless: true
+          ci-build-id: ${{ needs.prepare.outputs.uuid }}
+        env:
+          # pass the Dashboard record key as an environment variable
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          # Recommended: pass the GitHub token lets this action correctly
+          # determine the unique run id necessary to re-run the checks
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  deploy:
+    name: Deploy to ECS
+    runs-on: ubuntu-latest
+
+    needs: [api]
+    if: github.ref == 'refs/heads/main'
+
+    environment: production
+    concurrency: ${{ matrix.image }}
+
+    strategy:
+      matrix:
+        image: [frontend, backend]
+        include:
+          - image: frontend
+            sourcemaps: .next
+            mount: true
+            url_prefix: ~/_next/
+          - image: backend
+            mount: false
+      fail-fast: false
+
+    env:
+      ECS_TASK_DEFINITION: .aws/task-definition.${{ matrix.image }}.json
+      ECS_SERVICE: indokweb-${{ matrix.image }}-fg-service
+      ECS_REPOSITORY: indokweb-${{ matrix.image }}
+      SENTRY_PROJECT: indokweb-${{ matrix.image }}
+      CONTAINER_NAME: ${{ matrix.image }}
+      ECS_CLUSTER: indokweb-cluster # Set this to our ECS cluster name, e.g. indokweb-cluster
+      SENTRY_ORG: rbberdk
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_DEPLOY_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_DEPLOY_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+          mask-aws-account-id: false
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Set image tag
+        id: image-tag
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: indokweb-${{ matrix.image }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+
+      - name: Update task definition
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@master
+        with:
+          task-definition: ${{ env.ECS_TASK_DEFINITION }}
+          container-name: ${{ env.CONTAINER_NAME }}
+          image: ${{ steps.image-tag.outputs.image }}
+          environment-variables: |
+            GIT_COMMIT_SHA=${{ github.sha }}
+
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: ${{ env.ECS_SERVICE }}
+          cluster: ${{ env.ECS_CLUSTER }}
+          wait-for-service-stability: true
+
+      - name: Start container
+        id: container
+        if: ${{ matrix.mount }}
+        run: echo "::set-output name=container::$(docker run -d ${{ steps.image-tag.outputs.image }} sleep 3600)"
+
+      - name: Copy files
+        if: ${{ matrix.mount }}
+        run: docker cp ${{ steps.container.outputs.container }}:/usr/src/app/${{ matrix.sourcemaps }} ${{ matrix.sourcemaps }}
+
+      - name: Sentry release
+        uses: getsentry/action-release@v1.1.6
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ env.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ env.SENTRY_PROJECT }}
+        with:
+          environment: production
+          finalize: true
+          sourcemaps: ${{ matrix.sourcemaps }}
+          url_prefix: ${{ matrix.url_prefix }}
+          version: ${{ github.sha }}

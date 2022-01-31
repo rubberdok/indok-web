@@ -11,6 +11,7 @@ SECRET_KEY = env(
 
 # URLs
 ROOT_URLCONF = "config.urls.local"
+ENVIRONMENT = env("DJANGO_ENVIRONMENT", default="development")
 
 # ACCESS
 ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1"]
