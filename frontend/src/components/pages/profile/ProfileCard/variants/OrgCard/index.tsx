@@ -1,14 +1,18 @@
 import { Grid, Typography } from "@material-ui/core";
 import OrganizationImg from "@public/illustrations/Organization.svg";
 import ProfileCardBase from "../ProfileCardBase";
-import { IntegrationTestProps } from "@components/pages/profile/ProfileCard/variants/ProfileCardBase";
-import OrgAction, { Props as OrgListProps } from "./OrgAction";
+import { ProfileActionProps } from "@components/pages/profile/ProfileCard/variants/ProfileCardBase";
+import { createOrgProfileAction, Props as OrgListProps } from "./OrgAction";
 
-const OrgCard: React.VFC<OrgListProps & IntegrationTestProps> = ({ orgs, ...props }) => {
+/**
+ * Displays a card on the profile page that shows an overview of the organizations
+ * of which the user is a member.
+ */
+const OrgCard: React.VFC<OrgListProps & ProfileActionProps> = ({ orgs, ...props }) => {
   return (
     <ProfileCardBase
       title="Organisasjoner"
-      Action={(rest) => <OrgAction orgs={orgs} {...rest} />}
+      Action={createOrgProfileAction({ orgs })}
       image={OrganizationImg}
       alt=""
       {...props}

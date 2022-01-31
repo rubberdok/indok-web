@@ -1,10 +1,18 @@
 import { Grid, Typography } from "@material-ui/core";
 import Report from "@public/illustrations/Report.svg";
-import ProfileCardBase, { IntegrationTestProps } from "./ProfileCardBase";
+import createLinkProfileAction from "./linkProfileAction";
+import ProfileCardBase, { ProfileActionProps } from "./ProfileCardBase";
 
-const ReportCard: React.VFC<IntegrationTestProps> = (props) => {
+/** Displays a card on the profile page that links to the Reports page. */
+const ReportCard: React.VFC<ProfileActionProps> = (props) => {
   return (
-    <ProfileCardBase title="Baksida" actionText="Gå til Baksida" actionLink="/report" image={Report} alt="" {...props}>
+    <ProfileCardBase
+      title="Baksida"
+      Action={createLinkProfileAction({ text: "Gå til Baksida", link: "/report" })}
+      image={Report}
+      alt=""
+      {...props}
+    >
       <Grid container direction="column">
         <Grid item>
           <Typography variant="body2">
