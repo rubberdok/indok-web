@@ -129,7 +129,10 @@ class VippsApi:
         try:
             r.raise_for_status()
         except requests.exceptions.HTTPError as e:
-            set_context("vipps_error", r.json()[0])
+            if isinstance(r.json(), list):
+                set_context("vipps_error", r.json()[0])
+            elif isinstance(r.json(), dict):
+                set_context("vipps_error", r.json())
             raise e
 
     # Public methods:
