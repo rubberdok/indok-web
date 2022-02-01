@@ -271,7 +271,8 @@ class EcommerceMutationsTestCase(EcommerceBaseTestCase):
         unique_user = IndokUserFactory()
         prev_quantity = self.product_1.current_quantity
         self.query(self.INITIATE_ORDER_MUTATION(self.max_buyable_quantity), user=unique_user)
-        self.assertEquals(prev_quantity, self.product_1.current_quantity)
+        product: Product = Product.objects.get(pk=self.product_1.id)
+        self.assertEqual(prev_quantity, product.current_quantity)
         self.assertFalse(Order.objects.filter(user=unique_user).exists())
 
     @patch(CAPTURE_PAYMENT_PATH)
