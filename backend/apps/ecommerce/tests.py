@@ -2,6 +2,7 @@ import decimal
 import json
 from typing import Optional
 from unittest.mock import MagicMock, patch
+import requests
 
 from utils.testing.base import ExtendedGraphQLTestCase
 from utils.testing.factories.ecommerce import OrderFactory, ProductFactory
@@ -262,6 +263,16 @@ class EcommerceMutationsTestCase(EcommerceBaseTestCase):
         self.query(self.INITIATE_ORDER_MUTATION(self.max_buyable_quantity), user=unique_user)
         order: Order = Order.objects.get(user=unique_user, product=self.product_1)
         self.assertEqual(cancel_transaction_mock.call_args.args[0], f"{order.id}-1")
+
+    @patch(INITIATE_PAYMENT_PATH)
+    def test_handle_vipps_errors_on_initiate(self, initiate_payment_mock: MagicMock):
+        initiate_payment_mock.side_effect = requests.exceptions.HTTPError()
+        unique_user = IndokUserFactory()
+        prev_quantity = self.product_1.current_quantity
+        self.query(self.INITIATE_ORDER_MUTATION(self.max_buyable_quantity), user=unique_user)
+        product: Product = Product.objects.get(pk=self.product_1.id)
+        self.assertEqual(prev_quantity, product.current_quantity)
+        self.assertFalse(Order.objects.filter(user=unique_user).exists())
 
     @patch(CAPTURE_PAYMENT_PATH)
     @patch(PAYMENT_STATUS_PATH("AttemptCapturePayment"))
