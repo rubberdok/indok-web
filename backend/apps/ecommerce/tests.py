@@ -266,7 +266,6 @@ class EcommerceMutationsTestCase(EcommerceBaseTestCase):
 
     @patch(INITIATE_PAYMENT_PATH)
     def test_handle_vipps_errors_on_initiate(self, initiate_payment_mock: MagicMock):
-        print(initiate_payment_mock)
         initiate_payment_mock.side_effect = requests.exceptions.HTTPError()
         unique_user = IndokUserFactory()
         prev_quantity = self.product_1.current_quantity
