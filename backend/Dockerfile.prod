@@ -5,7 +5,10 @@
 # pull official base image
 FROM 777854691961.dkr.ecr.eu-north-1.amazonaws.com/python:3.10.2-slim-buster as builder
 
-RUN apt-get update && apt-get install libpango-1.0-0 libpangoft2-1.0-0
+RUN apt-get update && \
+    apt-get install -y \
+        libpango-1.0-0 \
+        libpangoft2-1.0-0
 
 # set work directory
 WORKDIR /usr/src/app
