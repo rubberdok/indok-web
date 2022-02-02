@@ -3,7 +3,7 @@
 ###########
 
 # pull official base image
-FROM 777854691961.dkr.ecr.eu-north-1.amazonaws.com/python:3.10.2-slim-buster as builder
+FROM 777854691961.dkr.ecr.eu-north-1.amazonaws.com/python:3.10.2-slim as builder
 
 RUN apt-get update && \
     apt-get install -y \
@@ -33,7 +33,7 @@ RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/app/wheels -r ./requ
 ##########
 
 # pull official base image
-FROM 777854691961.dkr.ecr.eu-north-1.amazonaws.com/python:3.10.2-slim-buster as runner
+FROM 777854691961.dkr.ecr.eu-north-1.amazonaws.com/python:3.10.2-slim as runner
 WORKDIR /usr/src/app
 
 # create directory for the app user
