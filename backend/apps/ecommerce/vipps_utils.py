@@ -199,7 +199,7 @@ class VippsApi:
             str: Access Token
         """
         valid_token: Optional[VippsAccessToken] = VippsAccessToken.objects.filter(
-            expired_on__gte=timezone.now() + timezone.timedelta(minutes=5)
+            expires_on__gte=timezone.now() + timezone.timedelta(minutes=5)
         ).first()
         if valid_token is None:
             # No valid token in database, delete all stale tokens and get new token
