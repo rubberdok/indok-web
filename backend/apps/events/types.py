@@ -37,6 +37,7 @@ class UserAttendingType(graphene.ObjectType):
 
 class SignUpType(DjangoObjectType):
     has_bought_ticket = graphene.Boolean()
+    user_allergies = graphene.String()
 
     class Meta:
         model = SignUp
@@ -48,10 +49,13 @@ class SignUpType(DjangoObjectType):
             "is_attending",
             "extra_information",
             "user_email",
-            "user_allergies",
             "user_phone_number",
             "user_grade_year",
         ]
+
+    @staticmethod
+    def resolve_user_allergies(parent: SignUp, info) -> str:
+        return parent.user.allergies
 
     @staticmethod
     def resolve_has_bought_ticket(sign_up: SignUp, info) -> bool:
