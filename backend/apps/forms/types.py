@@ -87,7 +87,7 @@ class ResponseType(DjangoObjectType):
 
 
 class FormType(DjangoObjectType):
-    responders = graphene.List(UserType, user_id=graphene.ID())
+    responders = graphene.List(UserType)
     responder = graphene.Field(UserType, user_id=graphene.ID(required=True))
     responses = graphene.List(ResponseType)
     response = graphene.Field(ResponseType, response_pk=graphene.UUID(required=False))
