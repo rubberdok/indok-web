@@ -1,5 +1,6 @@
 from graphene_django.views import GraphQLView
 from sentry_sdk.api import start_transaction
+from graphql import get_operation_ast, parse
 
 
 class CustomGraphQLView(GraphQLView):
@@ -7,9 +8,10 @@ class CustomGraphQLView(GraphQLView):
         """
         Enables performance tracing for GraphQL calls
         """
-        backend = self.get_backend(request)
-        if backend and query:
-            operation_type = backend.document_from_string(self.schema, query).get_operation_type(operation_name)
+        document = parse(query)
+        operation_ast = get_operation_ast(document, operation_name)
+        if operation_ast and query:
+            operation_type = operation_ast.operation
         else:
             operation_type = "http.server"
         with start_transaction(op=operation_type, name=operation_name):
