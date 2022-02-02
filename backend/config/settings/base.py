@@ -6,6 +6,8 @@ from typing import Literal
 
 import environ
 
+from config.jwt.middleware import allow_any
+
 ROOT_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
 
 APPS_DIR = ROOT_DIR / "apps"
@@ -203,3 +205,6 @@ VIPPS_CALLBACK_PREFIX = env(
 )
 VIPPS_FALLBACK_PREFIX = env("VIPPS_FALLBACK_PREFIX", default="http://127.0.0.1:3000/ecommerce/fallback")
 VIPPS_BASE_URL = env("VIPPS_BASE_URL", default="https://apitest.vipps.no")
+
+
+GRAPHQL_JWT = {"JWT_ALLOW_ANY_HANDLER": allow_any}
