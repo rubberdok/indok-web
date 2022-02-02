@@ -1,5 +1,5 @@
 from typing import NoReturn
-from graphql.execution.base import ResolveInfo
+from graphql import GraphQLResolveInfo
 from sentry_sdk.api import capture_exception
 
 
@@ -24,5 +24,5 @@ class SentryMiddleware:
         capture_exception(error)
         raise error
 
-    def resolve(self, next, root, info: ResolveInfo, **args):
+    def resolve(self, next, root, info: GraphQLResolveInfo, **args):
         return next(root, info, **args).catch(self.on_error)
