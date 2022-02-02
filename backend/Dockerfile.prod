@@ -8,7 +8,9 @@ FROM 777854691961.dkr.ecr.eu-north-1.amazonaws.com/python:3.10.2-slim-buster as 
 RUN apt-get update && \
     apt-get install -y \
         libpango-1.0-0 \
-        libpangoft2-1.0-0
+        libpangoft2-1.0-0 \
+        python3-cffi \
+        python3-brotli
 
 # set work directory
 WORKDIR /usr/src/app
