@@ -359,13 +359,15 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
                     </Typography>
                   </>
                 )}
-                <Button
-                  variant="text"
-                  href={calendarFile(event.title, event.startTime, event.endTime, event.location, event.description)}
-                  download="event.ics"
-                >
-                  Last ned i kalender
-                </Button>
+                <Box>
+                  <Button
+                    variant="text"
+                    href={calendarFile(event.title, event.startTime, event.endTime, event.location, event.description)}
+                    download="event.ics"
+                  >
+                    Last ned i kalender
+                  </Button>
+                </Box>
                 {event.allowedGradeYears.length < 5 && (
                   <>
                     <Typography variant="overline" gutterBottom>
