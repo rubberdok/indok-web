@@ -2,27 +2,43 @@ import React, { useEffect, useState } from "react";
 import FilterButtons from "@components/pages/archive/FilterButtons";
 import SearchBar from "@components/pages/archive/SearchBar";
 import { useRouter } from "next/router";
-import { Checkbox, FormControl, FormControlLabel, Grid } from "@material-ui/core";
+import { Grid } from "@material-ui/core";
 import { gql, useQuery } from "@apollo/client";
 import { RemoveFiltersButton } from "@components/pages/archive/RemoveFiltersButton";
 
 type Props = {
   handleGroupFilter: (name: string, active: boolean) => void;
   handleSearch: (text: string) => void;
+  setResetCheckedPeople: (reset: boolean) => void,
 };
 
 //TODO: filter when clicking on a group or writing in searchbar
-const FilterUsers: React.FC<Props> = ({ handleSearch, handleGroupFilter }) => {
+const FilterUsers: React.FC<Props> = ({ handleSearch, handleGroupFilter, setResetCheckedPeople }) => {
   const router = useRouter();
   const { orgId } = router.query;
   const orgNumberId = parseInt(orgId as string);
-
   const [searchFilter, setSearchFilter] = useState("");
-
   const [viewFeatured, setViewFeatured] = useState(true);
-
   const [typeFilters, setTypeFilters] = useState<{ [Key: string]: { active: boolean; title: string } }>({});
 
+  //Removing all filters, including checkmarks 
+  const handleRemoveFilterChanged = () => {
+    setSearchFilter("");
+    setTypeFilters((typeFilters) => {
+      const newTypeFilters = typeFilters;
+      for (const key of Object.keys(newTypeFilters)) {
+        newTypeFilters[key] = {
+          ...typeFilters[key],
+          active: false,
+        };
+      }
+      setResetCheckedPeople(true);;
+      return newTypeFilters;
+    });
+    setViewFeatured(true);
+  }
+
+  //Fetching permissionsgroups 
   const { error, loading, data } = useQuery<{
     organization: { permissionGroups: { name: string; uuid: string }[] };
   }>(
@@ -39,11 +55,12 @@ const FilterUsers: React.FC<Props> = ({ handleSearch, handleGroupFilter }) => {
     { variables: { id: orgNumberId } }
   );
 
+  //When writing in the searchbar it sends to the parent element
   useEffect(() => {
     handleSearch(searchFilter);
   }, [searchFilter])
 
-  // Fetching correct buttons dynamically
+  // Fetching and updating typeFilters dynamically, depending on permissiongroups
   useEffect(() => {
     const buttons: { [key: string]: { active: boolean; title: string } } = {};
     data?.organization.permissionGroups.forEach((group) => {
@@ -87,22 +104,7 @@ const FilterUsers: React.FC<Props> = ({ handleSearch, handleGroupFilter }) => {
       <Grid>
         {!viewFeatured && (
           <RemoveFiltersButton
-            handleRemoveFilterChanged={() => {
-              [
-                setSearchFilter(""),
-                setTypeFilters((typeFilters) => {
-                  const newTypeFilters = typeFilters;
-                  for (const key of Object.keys(newTypeFilters)) {
-                    newTypeFilters[key] = {
-                      ...typeFilters[key],
-                      active: false,
-                    };
-                  }
-                  return newTypeFilters;
-                }),
-                setViewFeatured(true),
-              ];
-            }}
+            handleRemoveFilterChanged={handleRemoveFilterChanged}
           />
         )}
       </Grid>
