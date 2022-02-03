@@ -31,6 +31,7 @@ const AuthCallbackPage: NextPage = () => {
             if (data?.authUser) {
               const { user } = data.authUser;
               return cache.writeFragment({
+                id: cache.identify(user),
                 data: user,
                 fragment: USER_FRAMGENT,
               });
