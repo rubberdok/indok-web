@@ -31,6 +31,7 @@ const moduleExports = {
     ];
   },
   experimental: {
+    outputStandalone: true,
     styledComponents: true,
     ...getPresets(),
   },
