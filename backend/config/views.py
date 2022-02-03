@@ -11,7 +11,7 @@ class CustomGraphQLView(GraphQLView):
         document = parse(query)
         operation_ast = get_operation_ast(document, operation_name)
         if operation_ast and query:
-            operation_type = operation_ast.operation
+            operation_type = operation_ast.operation.value
         else:
             operation_type = "http.server"
         with start_transaction(op=operation_type, name=operation_name):
