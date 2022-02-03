@@ -29,9 +29,6 @@ RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/app/wheels -r ./requ
 FROM 777854691961.dkr.ecr.eu-north-1.amazonaws.com/python:3.10.2-slim as runner
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-        python3-pip \
-        python3-cffi \
-        python3-brotli \
         libpango-1.0-0 \
         libpangoft2-1.0
         
