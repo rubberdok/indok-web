@@ -67,12 +67,9 @@ const EditUsersInOrganization: React.FC<Props> = ({ organization }) => {
     }
   };
 
-  //Handling logic when checkmarking people
+  //Gucci - Handling logic when checkmarking people
   const handleCheckedPeople = (user: UserWithCheck) => {
     const newList = checkedPeople.map((checkedUser) => {
-      console.log('id:');
-      console.log(checkedUser.id);
-      console.log(user.id);
       if (checkedUser.id == user.id) {
         const updateUser = {
           ...checkedUser,
@@ -121,7 +118,6 @@ const EditUsersInOrganization: React.FC<Props> = ({ organization }) => {
   //Gucci - When people are fetched all people are choosen
   useEffect(() => {
     const allUsers: UserWithCheck[] = [];
-    console.log(data);
     data?.organization.users.forEach((user) => {
       const userWithCheck = {
         ...user,
@@ -132,11 +128,6 @@ const EditUsersInOrganization: React.FC<Props> = ({ organization }) => {
     });
     setCheckedPeople(allUsers);
   }, [data]);
-
-  useEffect(() => {
-    console.log('checkedPeople have changed');
-    console.log(checkedPeople);
-  }, [checkedPeople])
 
   //Gucci - Filter out users that does not fufuill the searchbar query
   useEffect(() => {
