@@ -318,7 +318,7 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
             <Paper className={classes.paper}>
               <Box my={2} mx={2}>
                 <Grid container spacing={1}>
-                  <Grid item>
+                  <Grid item xs={12}>
                     <Typography variant="h4" gutterBottom>
                       Info
                     </Typography>
