@@ -51,16 +51,12 @@ ENV NEXT_PUBLIC_APP_ENV $APP_ENV
 RUN addgroup -g 1001 -S nodejs
 RUN adduser -S nextjs -u 1001
 
-RUN mkdir -p /usr/src/app/.next/cache/images && chown nextjs:nodejs /usr/src/app/.next/cache/images
-VOLUME /usr/src/app/.next/cache/images
-
 COPY --from=builder /usr/src/app/next.config.js ./
 COPY --from=builder /usr/src/app/public ./public
 COPY --from=builder /usr/src/app/package.json ./package.json
 
-# You only need to copy next.config.js if you are NOT using the default configuration
 COPY --from=builder --chown=nextjs:nodejs /usr/src/app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /usr/src/app/.next/static ./.next/standalone/static
+COPY --from=builder --chown=nextjs:nodejs /usr/src/app/.next/static ./.next/static
 
 USER nextjs
 
