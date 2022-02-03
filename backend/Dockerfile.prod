@@ -5,12 +5,7 @@
 # pull official base image
 FROM 777854691961.dkr.ecr.eu-north-1.amazonaws.com/python:3.10.2-slim as builder
 
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-        libpango-1.0-0 \
-        libpangoft2-1.0-0 \
-        python3-cffi \
-        python3-brotli
+RUN apt update && apt install weasyprint
 
 # set work directory
 WORKDIR /usr/src/app
