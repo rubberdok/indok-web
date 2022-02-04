@@ -3,7 +3,7 @@ Django==3.2.11
 django-alive==1.1.0
 django-cors-headers==3.11.0
 django-environ==0.8.1
-django-graphql-jwt==0.3.1
+django-graphql-jwt==0.3.4
 django-multiselectfield==0.1.12
 django-phonenumber-field==6.0.0
 django-ses==2.3.1
