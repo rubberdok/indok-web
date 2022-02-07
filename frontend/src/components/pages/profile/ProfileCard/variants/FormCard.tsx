@@ -1,14 +1,14 @@
 import { Grid, Typography } from "@material-ui/core";
 import Form from "@public/illustrations/Form.svg";
-import createLinkProfileAction from "./linkProfileAction";
-import ProfileCardBase, { ProfileActionProps } from "./ProfileCardBase";
+import LinkAction from "./actions/LinkAction";
+import ProfileCardBase from "./ProfileCardBase";
 
 /** Displays a card on the profile page that links to the user's submitted listing applications. */
-const FormCard: React.VFC<ProfileActionProps> = (props) => {
+const FormCard: React.VFC = (props) => {
   return (
     <ProfileCardBase
-      title="Vervsøknader"
-      Action={createLinkProfileAction({ text: "Se verv", link: "/listings" })}
+      title="Verv"
+      Action={<LinkAction text="Se verv" link="/listings" />}
       image={Form}
       alt=""
       {...props}

@@ -1,14 +1,14 @@
 import { Grid, Typography } from "@material-ui/core";
 import Event from "@public/illustrations/Event.svg";
-import ProfileCardBase, { ProfileActionProps } from "./ProfileCardBase";
-import createLinkProfileAction from "./linkProfileAction";
+import LinkAction from "./actions/LinkAction";
+import ProfileCardBase from "./ProfileCardBase";
 
 /** Displays a card on the profile page that links to events to which the user has signed up. */
-const EventCard: React.VFC<ProfileActionProps> = (props) => {
+const EventCard: React.VFC = (props) => {
   return (
     <ProfileCardBase
       title="Arrangementer"
-      Action={createLinkProfileAction({ text: "Se arrangementer", link: "/events" })}
+      Action={<LinkAction text="Se arrangementer" link="/events" />}
       image={Event}
       alt=""
       {...props}

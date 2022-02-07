@@ -1,14 +1,14 @@
 import { Grid, Typography } from "@material-ui/core";
 import CreditCard from "@public/illustrations/CreditCard.svg";
-import createLinkProfileAction from "./linkProfileAction";
-import ProfileCardBase, { ProfileActionProps } from "./ProfileCardBase";
+import LinkAction from "./actions/LinkAction";
+import ProfileCardBase from "./ProfileCardBase";
 
 /** Displays a card on the profile page that links to the user's orders. */
-const OrdersCard: React.VFC<ProfileActionProps> = (props) => {
+const OrdersCard: React.VFC = (props) => {
   return (
     <ProfileCardBase
       title="Ordrehistorikk"
-      Action={createLinkProfileAction({ text: "Se ordrehistorikk", link: "/ecommerce" })}
+      Action={<LinkAction text="Se ordrehistorikk" link="/ecommerce" {...props} />}
       image={CreditCard}
       alt=""
       {...props}
