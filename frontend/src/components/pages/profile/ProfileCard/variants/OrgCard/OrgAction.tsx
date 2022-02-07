@@ -1,7 +1,7 @@
 import { Organization } from "@interfaces/organizations";
 import { Box, CardActionArea, CardActions, Typography } from "@material-ui/core";
 import Link from "next/link";
-import OrgList from "./OrgList";
+import OrgListAction from "./OrgListAction";
 import OrgListItem from "./OrgListItem";
 
 export type Props = {
@@ -10,14 +10,12 @@ export type Props = {
 };
 
 /**
- * Function that returns a functional component for use as a profile card action.
- * The outer function takes the props not required by the card action.
- * The inner function takes the remaining props as required for the card.
+ * Card action for the organization card on the profile page.
  *
- * This function takes a list of orgs, and returns different components depending on its length:
- * - No orgs: Text
- * - 1 org: List to its org admin page
- * - Multiple orgs: Menu with links to their admin pages
+ * Takes a list of orgs, and displays different components depending on its length:
+ * - 0 orgs: Grayed-out text
+ * - 1 org: Link to its org admin page
+ * - 2+ orgs: Menu with links to their admin pages
  */
 const OrgAction: React.VFC<Props> = ({ orgs, "data-test-id": dataTestId, ...props }) => {
   switch (orgs.length) {
@@ -42,7 +40,7 @@ const OrgAction: React.VFC<Props> = ({ orgs, "data-test-id": dataTestId, ...prop
         </CardActionArea>
       );
     default:
-      return <OrgList orgs={orgs} {...props} />;
+      return <OrgListAction orgs={orgs} {...props} />;
   }
 };
 

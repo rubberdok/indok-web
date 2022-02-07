@@ -7,6 +7,7 @@ type Props = {
   "data-test-id"?: string;
 };
 
+/** Card action that displays the given text linking to the given link. */
 const LinkAction: React.VFC<Props> = ({ text, link, "data-test-id": dataTestId }) => {
   return (
     <CardActionArea>

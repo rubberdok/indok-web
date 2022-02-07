@@ -5,7 +5,7 @@ import BaseCard from "../../BaseCard";
 
 /**
  * Displays a card on the profile page that shows an overview of the organizations
- * of which the user is a member.
+ * that the user is a member of.
  */
 const OrgCard: React.VFC<OrgListProps> = ({ orgs, ...props }) => {
   return (
