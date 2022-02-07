@@ -15,7 +15,7 @@ import { GET_USER_PROFILE } from "@graphql/users/queries";
 import { Avatar, Container, Grid, Typography, useTheme } from "@material-ui/core";
 import { NextPage } from "next";
 import Head from "next/head";
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import { User } from "src/types/users";
 
 const ID_PREFIX = "profile-";
