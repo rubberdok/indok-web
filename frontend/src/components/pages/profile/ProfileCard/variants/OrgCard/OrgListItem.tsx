@@ -8,7 +8,7 @@ type Props = {
 };
 
 /**
- * Displays the name of the given organization next to its logo,
+ * Renders the name of the given organization next to its logo,
  * or a default icon in the case of no logo.
  */
 const OrgListItem: React.VFC<Props> = ({ org }) => {
@@ -18,7 +18,7 @@ const OrgListItem: React.VFC<Props> = ({ org }) => {
     <Grid container alignItems="center" spacing={1}>
       <Grid item>
         <Avatar style={{ backgroundColor: theme.palette.primary.main }}>
-          {org.logoUrl ? <Image src={org.logoUrl} /> : <People />}
+          {org.logoUrl ? <Image alt="org logo" src={org.logoUrl} /> : <People />}
         </Avatar>
       </Grid>
       <Grid item>

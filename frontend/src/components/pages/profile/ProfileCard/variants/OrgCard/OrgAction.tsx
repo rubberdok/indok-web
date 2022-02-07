@@ -22,9 +22,8 @@ export type Props = {
  * - 1 org: List to its org admin page
  * - Multiple orgs: Menu with links to their admin pages
  */
-export const createOrgProfileAction =
-  ({ orgs }: Props): React.VFC<ProfileActionProps> =>
-  (actionProps) => {
+export const createOrgProfileAction = ({ orgs }: Props): React.VFC<ProfileActionProps> => {
+  const OrgProfileAction: React.VFC<ProfileActionProps> = (actionProps) => {
     switch (orgs.length) {
       case 0:
         return (
@@ -37,12 +36,11 @@ export const createOrgProfileAction =
           </Box>
         );
       case 1:
-        const org = orgs[0];
         return (
           <CardActionArea>
-            <Link href={orgLink(org.id)} passHref>
+            <Link href={orgLink(orgs[0].id)} passHref>
               <CardActions data-test-id={actionProps["data-test-id"]}>
-                <OrgListItem org={org} />
+                <OrgListItem org={orgs[0]} />
               </CardActions>
             </Link>
           </CardActionArea>
@@ -51,6 +49,9 @@ export const createOrgProfileAction =
         return <OrgList orgs={orgs} {...actionProps} />;
     }
   };
+
+  return OrgProfileAction;
+};
 
 const OrgList: React.VFC<Props & ProfileActionProps> = ({ orgs, "data-test-id": dataTestId }) => {
   const [menu, setMenu] = useState<{ open: boolean; anchor: Element | undefined }>({ open: false, anchor: undefined });
@@ -76,7 +77,7 @@ const OrgList: React.VFC<Props & ProfileActionProps> = ({ orgs, "data-test-id": 
         transformOrigin={{ vertical: "bottom", horizontal: "left" }}
       >
         {orgs.map((org) => (
-          <MenuItem onClick={() => router.push(orgLink(org.id))}>
+          <MenuItem key={org.id} onClick={() => router.push(orgLink(org.id))}>
             <OrgListItem org={org} />
           </MenuItem>
         ))}

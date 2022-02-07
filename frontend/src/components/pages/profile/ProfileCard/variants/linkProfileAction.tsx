@@ -15,18 +15,19 @@ type Props = {
  * This function takes a text and a link, and returns a card action
  * with the text leading to the link.
  */
-const createLinkProfileAction =
-  ({ text, link }: Props): React.VFC<ProfileActionProps> =>
-  ({ "data-test-id": dataTestId }) =>
-    (
-      <CardActionArea>
-        <Link passHref href={link}>
-          <CardActions data-test-id={`${dataTestId}link`}>
-            <Typography variant="overline" color="textPrimary">
-              {text}
-            </Typography>
-          </CardActions>
-        </Link>
-      </CardActionArea>
-    );
+const createLinkProfileAction = ({ text, link }: Props): React.VFC<ProfileActionProps> => {
+  const LinkProfileAction: React.VFC<ProfileActionProps> = ({ "data-test-id": dataTestId }) => (
+    <CardActionArea>
+      <Link passHref href={link}>
+        <CardActions data-test-id={`${dataTestId}link`}>
+          <Typography variant="overline" color="textPrimary">
+            {text}
+          </Typography>
+        </CardActions>
+      </Link>
+    </CardActionArea>
+  );
+
+  return LinkProfileAction;
+};
 export default createLinkProfileAction;
