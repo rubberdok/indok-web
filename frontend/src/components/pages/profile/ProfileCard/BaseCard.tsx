@@ -9,6 +9,10 @@ type Props = {
   alt?: string;
 };
 
+/**
+ * Base card for cards on the profile page.
+ * Takes an Action component that is displayed as a card action on the bottom of the card.
+ */
 const BaseCard: React.FC<Props> = ({ title, children, Action, image, alt }) => {
   const theme = useTheme();
   const classes = useStyles();

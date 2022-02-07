@@ -9,7 +9,8 @@ type Props = {
   "data-test-id"?: string;
 };
 
-const OrgList: React.VFC<Props> = ({ orgs, "data-test-id": dataTestId }) => {
+/** Card action which, when clicked, shows a menu with links to the given orgs' admin pages. */
+const OrgListAction: React.VFC<Props> = ({ orgs, "data-test-id": dataTestId }) => {
   const [menu, setMenu] = useState<{ open: boolean; anchor: Element | undefined }>({ open: false, anchor: undefined });
   const router = useRouter();
 
@@ -42,4 +43,4 @@ const OrgList: React.VFC<Props> = ({ orgs, "data-test-id": dataTestId }) => {
   );
 };
 
-export default OrgList;
+export default OrgListAction;
