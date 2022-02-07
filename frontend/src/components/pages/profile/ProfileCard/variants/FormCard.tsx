@@ -7,7 +7,7 @@ import ProfileCardBase from "./ProfileCardBase";
 const FormCard: React.VFC = (props) => {
   return (
     <ProfileCardBase
-      title="Verv"
+      title="Vervsøknader"
       Action={<LinkAction text="Se verv" link="/listings" />}
       image={Form}
       alt=""
