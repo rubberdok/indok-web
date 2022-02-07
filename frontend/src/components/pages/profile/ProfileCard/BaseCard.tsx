@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, Grid, useTheme } from "@material-ui/core";
 import Image from "next/image";
-import useStyles from "../styles";
+import useStyles from "./styles";
 
 type Props = {
   title: string;
@@ -9,7 +9,7 @@ type Props = {
   alt?: string;
 };
 
-const ProfileCardBase: React.FC<Props> = ({ title, children, Action, image, alt }) => {
+const BaseCard: React.FC<Props> = ({ title, children, Action, image, alt }) => {
   const theme = useTheme();
   const classes = useStyles();
 
@@ -31,4 +31,4 @@ const ProfileCardBase: React.FC<Props> = ({ title, children, Action, image, alt 
   );
 };
 
-export default ProfileCardBase;
+export default BaseCard;
