@@ -21,7 +21,7 @@ export const GET_USER_PROFILE = gql`
 `;
 
 export const EDIT_USER_QUERY = gql`
-  query {
+  query editUserInfo {
     user {
       id
       username
@@ -33,6 +33,8 @@ export const EDIT_USER_QUERY = gql`
       graduationYear
       firstLogin
       feideEmail
+      canUpdateYear
+      yearUpdatedAt
     }
   }
 `;

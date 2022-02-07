@@ -1,4 +1,6 @@
 import { useMutation, useQuery } from "@apollo/client";
+import LoginRequired from "@components/authentication/LoginRequired";
+import * as components from "@components/markdown/components";
 import PermissionRequired from "@components/permissions/PermissionRequired";
 import { EVENT_SIGN_OFF, EVENT_SIGN_UP } from "@graphql/events/mutations";
 import { GET_EVENT } from "@graphql/events/queries";
@@ -29,7 +31,9 @@ import { Alert as MuiAlert } from "@material-ui/lab";
 import { calendarFile } from "@utils/calendars";
 import dayjs from "dayjs";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React, { useState } from "react";
+import ReactMarkdown from "react-markdown";
 import CountdownButton from "./CountdownButton";
 import EditEvent from "./EventEditor";
 
@@ -93,19 +97,6 @@ interface AlertProps {
   children: string | undefined;
 }
 
-function wrapInTypo(para: JSX.Element[] | string, className: string) {
-  return <Typography className={className}>{para}</Typography>;
-}
-
-function formatDescription(desc: string, innerClass: string, outerClass: string) {
-  return desc.split("\r\n\r\n").map((p) =>
-    wrapInTypo(
-      p.split("\r\n").map((t) => wrapInTypo(t, innerClass)),
-      outerClass
-    )
-  );
-}
-
 const Alert: React.FC<AlertProps> = ({ open, onClose, children, severity }) => {
   return (
     <MuiSnackbar
@@ -129,6 +120,7 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
   const [openSignUpErrorSnackbar, setOpenSignUpErrorSnackbar] = useState(false);
   const [openSignOffErrorSnackbar, setOpenSignOffErrorSnackbar] = useState(false);
   const [extraInformation, setExtraInformation] = useState<string>();
+  const router = useRouter();
 
   const [eventSignUp, { loading: signUpLoading, error: signUpError }] = useMutation<{
     eventSignUp: { isFull: boolean };
@@ -140,7 +132,9 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
 
   const { data: userData } = useQuery<{ user: User }>(GET_USER);
 
-  const { data: timeData } = useQuery<{ serverTime: string }>(GET_SERVER_TIME);
+  const { data: timeData } = useQuery<{ serverTime: string }>(GET_SERVER_TIME, {
+    fetchPolicy: "network-only",
+  });
 
   const {
     data: eventData,
@@ -219,9 +213,7 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
           </Typography>
 
           {!event.isAttendable ? null : !user ? (
-            <Typography variant="h5" gutterBottom>
-              Logg inn for å melde deg på
-            </Typography>
+            <LoginRequired redirect />
           ) : !event.allowedGradeYears.includes(user.gradeYear) ? (
             <Typography variant="h5" gutterBottom>
               Ikke aktuell
@@ -278,7 +270,10 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
                       Du har betalt for billett
                     </MuiAlert>
                   ) : (
-                    <Link href={`/ecommerce/checkout?productId=${event.product.id}&quantity=1`} passHref>
+                    <Link
+                      href={`/ecommerce/checkout?productId=${event.product.id}&quantity=1&redirect=${router.asPath}`}
+                      passHref
+                    >
                       <Button size="large" variant="contained" color={"primary"} className={classes.payButton}>
                         Gå til betaling
                       </Button>
@@ -315,76 +310,99 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
             <Typography variant="h3" gutterBottom>
               Beskrivelse
             </Typography>
-            <Typography variant="body1" display="block" gutterBottom>
-              {formatDescription(event.description, classes.innerParagraph, classes.paragraph)}
-            </Typography>
+            <ReactMarkdown components={components}>{event.description}</ReactMarkdown>
           </Grid>
 
           {/* Information card */}
           <Grid item xs={12} md={4}>
             <Paper className={classes.paper}>
               <Box my={2} mx={2}>
-                <Typography variant="h4" gutterBottom>
-                  Info
-                </Typography>
-                {event.price && (
-                  <Typography variant="body1" className={classes.wrapIcon}>
-                    <CreditCard fontSize="small" /> {event.price} kr
-                  </Typography>
-                )}
-                {event.location && (
-                  <Typography variant="body1" className={classes.wrapIcon}>
-                    <LocationOnIcon fontSize="small" /> {event.location}
-                  </Typography>
-                )}
-                {event.category && (
-                  <Typography variant="body1" className={classes.wrapIcon}>
-                    <CategoryIcon fontSize="small" /> {event.category?.name}
-                  </Typography>
-                )}
-                {event.contactEmail && (
-                  <Typography variant="body1" className={classes.wrapIcon}>
-                    <ContactMail fontSize="small" />
-                    <MuiLink href={`mailto:${event.contactEmail}`}>{event.contactEmail}</MuiLink>
-                  </Typography>
-                )}
-                {event.bindingSignup && (
-                  <Typography variant="body1" className={classes.wrapIcon} color="error">
-                    <ErrorOutline fontSize="small" /> Bindende påmelding
-                  </Typography>
-                )}
-                <Typography variant="overline">Åpner</Typography>
-                <Typography variant="body1" className={classes.wrapIcon}>
-                  <EventIcon fontSize="small" />
-                  {dayjs(event.startTime).format("DD.MMM YYYY, kl. HH:mm")}
-                </Typography>
-                {event.endTime && (
-                  <>
-                    <Typography variant="overline">Slutter</Typography>
-                    <Typography variant="body1" className={classes.wrapIcon}>
-                      <EventIcon fontSize="small" /> {dayjs(event.endTime).format("DD.MMM YYYY, kl. HH:mm")}
+                <Grid container spacing={1}>
+                  <Grid item xs={12}>
+                    <Typography variant="h4" gutterBottom>
+                      Info
                     </Typography>
-                  </>
-                )}
-                <Button
-                  variant="text"
-                  href={calendarFile(event.title, event.startTime, event.endTime, event.location, event.description)}
-                  download="event.ics"
-                >
-                  Last ned i kalender
-                </Button>
-                {event.allowedGradeYears.length < 5 && (
-                  <>
-                    <Typography variant="overline" gutterBottom>
-                      Åpent for
-                    </Typography>
-                    {event.allowedGradeYears.map((grade) => (
-                      <Typography variant="body1" className={classes.wrapIcon} key={grade}>
-                        <ArrowRight fontSize="small" /> {`${grade}. klasse`}
+                  </Grid>
+                  {event.price && (
+                    <Grid item xs={12}>
+                      <Typography variant="body1" className={classes.wrapIcon}>
+                        <CreditCard fontSize="small" /> {event.price} kr
                       </Typography>
-                    ))}
-                  </>
-                )}
+                    </Grid>
+                  )}
+                  {event.location && (
+                    <Grid item xs={12}>
+                      <Typography variant="body1" className={classes.wrapIcon}>
+                        <LocationOnIcon fontSize="small" /> {event.location}
+                      </Typography>
+                    </Grid>
+                  )}
+                  {event.category && (
+                    <Grid item xs={12}>
+                      <Typography variant="body1" className={classes.wrapIcon}>
+                        <CategoryIcon fontSize="small" /> {event.category?.name}
+                      </Typography>
+                    </Grid>
+                  )}
+                  {event.contactEmail && (
+                    <Grid item xs={12}>
+                      <Typography variant="body1" className={classes.wrapIcon}>
+                        <ContactMail fontSize="small" />
+                        <MuiLink href={`mailto:${event.contactEmail}`}>{event.contactEmail}</MuiLink>
+                      </Typography>
+                    </Grid>
+                  )}
+                  {event.bindingSignup && (
+                    <Grid item xs={12}>
+                      <Typography variant="body1" className={classes.wrapIcon} color="error">
+                        <ErrorOutline fontSize="small" /> Bindende påmelding
+                      </Typography>
+                    </Grid>
+                  )}
+                  <Grid item xs={12}>
+                    <Typography variant="overline">Starter</Typography>
+                    <Typography variant="body1" className={classes.wrapIcon}>
+                      <EventIcon fontSize="small" />
+                      {dayjs(event.startTime).format("DD.MMM YYYY, kl. HH:mm")}
+                    </Typography>
+                  </Grid>
+
+                  {event.endTime && (
+                    <Grid item xs={12}>
+                      <Typography variant="overline">Slutter</Typography>
+                      <Typography variant="body1" className={classes.wrapIcon}>
+                        <EventIcon fontSize="small" /> {dayjs(event.endTime).format("DD.MMM YYYY, kl. HH:mm")}
+                      </Typography>
+                    </Grid>
+                  )}
+                  <Grid item xs={12}>
+                    <Button
+                      variant="text"
+                      href={calendarFile(
+                        event.title,
+                        event.startTime,
+                        event.endTime,
+                        event.location,
+                        event.description
+                      )}
+                      download="event.ics"
+                    >
+                      Last ned i kalender
+                    </Button>
+                  </Grid>
+                  {event.allowedGradeYears.length < 5 && (
+                    <Grid item xs={12}>
+                      <Typography variant="overline" gutterBottom>
+                        Åpent for
+                      </Typography>
+                      {event.allowedGradeYears.map((grade) => (
+                        <Typography variant="body1" className={classes.wrapIcon} key={grade}>
+                          <ArrowRight fontSize="small" /> {`${grade}. klasse`}
+                        </Typography>
+                      ))}
+                    </Grid>
+                  )}
+                </Grid>
               </Box>
             </Paper>
           </Grid>

@@ -1,5 +1,11 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { isVegetarian, suggestGraduationYear, validationSchema } from "@components/pages/profile/UserForm/helpers";
+import {
+  currentGradeYear,
+  isVegetarian,
+  maxGraduationYear,
+  suggestGraduationYear,
+  validationSchema,
+} from "@components/pages/profile/UserForm/helpers";
 import { UPDATE_USER } from "@graphql/users/mutations";
 import { EDIT_USER_QUERY } from "@graphql/users/queries";
 import {
@@ -9,6 +15,7 @@ import {
   CardContent,
   Divider,
   FormControl,
+  FormHelperText,
   Grid,
   InputLabel,
   NativeSelect,
@@ -22,6 +29,7 @@ import dayjs from "dayjs";
 import { useFormik } from "formik";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useMemo } from "react";
 import { EditUser } from "src/types/users";
 import { suggestNames } from "./helpers";
 
@@ -36,6 +44,7 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": 
   const { data } = useQuery<{ user?: EditUser }>(EDIT_USER_QUERY);
   const [updateUser] = useMutation<{ updateUser: { user: EditUser } }>(UPDATE_USER, {
     onCompleted: onCompleted,
+    refetchQueries: ["editUserInfo"],
   });
   const theme = useTheme();
   const router = useRouter();
@@ -43,6 +52,14 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": 
   const ID_PREFIX = `${dataTestId}`;
 
   const { firstName, lastName } = suggestNames(data?.user?.firstName);
+  const minimumGraduationYear = useMemo<number>(
+    () => Math.min(currentYear, data?.user?.graduationYear || currentYear),
+    [data?.user?.graduationYear]
+  );
+  const graduationYears = useMemo<number[]>(
+    () => range(minimumGraduationYear, maxGraduationYear, 1),
+    [minimumGraduationYear]
+  );
 
   const formik = useFormik({
     initialValues: {
@@ -174,13 +191,25 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": 
                   onBlur={() => formik.setFieldTouched("graduationYear")}
                   error={formik.touched.graduationYear && Boolean(formik.errors.graduationYear)}
                   data-test-id={`${ID_PREFIX}graduationYearSelect`}
+                  disabled={!data?.user?.canUpdateYear}
                 >
-                  {range(currentYear, currentYear + 7, 1).map((year) => (
+                  {graduationYears.map((year) => (
                     <option key={year} value={year}>
-                      {year}
+                      {`${year} (${currentGradeYear(year)}. klasse)`}
                     </option>
                   ))}
                 </NativeSelect>
+                {formik.touched.graduationYear && Boolean(formik.errors.graduationYear) && (
+                  <FormHelperText style={{ color: theme.palette.error.main }}>
+                    {formik.touched.graduationYear && formik.errors.graduationYear}
+                  </FormHelperText>
+                )}
+                {data?.user?.canUpdateYear && <FormHelperText>Kan bare endres én gang i året.</FormHelperText>}
+                {!data?.user?.canUpdateYear && (
+                  <FormHelperText>
+                    Kan ikke endres før: {dayjs(data?.user?.yearUpdatedAt).add(1, "year").format("DD.MM.YYYY")}
+                  </FormHelperText>
+                )}
               </FormControl>
             </Grid>
             <Grid item>

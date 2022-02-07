@@ -4,7 +4,6 @@ import ProfileSkeleton from "@components/pages/profile/ProfileSkeleton";
 import { AUTHENTICATE } from "@graphql/users/mutations";
 import { User } from "@interfaces/users";
 import { Button, Container, Grid, Typography, useTheme } from "@material-ui/core";
-import { config } from "@utils/config";
 import { NextPage } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -25,27 +24,33 @@ const AuthCallbackPage: NextPage = () => {
   const [authUser, { loading, data, error, called }] = useMutation<{ authUser: AuthUser }>(AUTHENTICATE, {
     errorPolicy: "all",
     refetchQueries: ["user"],
+    awaitRefetchQueries: true,
   });
 
   useEffect(() => {
     if (code) authUser({ variables: { code } });
   }, [code, authUser]);
 
-  if (state && state !== config.DATAPORTEN_STATE) {
-    if (typeof window !== "undefined") {
-      router.push("/");
-      return null;
-    }
-  }
+  const loadingProfile = !error && !data?.authUser?.user?.firstLogin && !state;
 
   if (called && !loading && data && data.authUser) {
-    data.authUser.user.firstLogin ? router.push("/register") : router.push("/profile");
+    if (data.authUser.user.firstLogin) {
+      router.push("/register");
+    } else if (state) {
+      if (Array.isArray(state)) {
+        router.push(state.join(""));
+      } else {
+        router.push(state);
+      }
+    } else {
+      router.push("/profile");
+    }
   }
 
   return (
     <Layout>
       <Container>
-        {!error && <ProfileSkeleton />}
+        {loadingProfile && <ProfileSkeleton />}
         {error && (
           <Grid
             container

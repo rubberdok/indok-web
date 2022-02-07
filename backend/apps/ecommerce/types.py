@@ -1,4 +1,5 @@
 from graphene_django import DjangoObjectType
+import graphene
 
 from .models import Order, Product
 
@@ -27,3 +28,8 @@ class OrderType(DjangoObjectType):
             "payment_status",
             "timestamp",
         ]
+
+
+class OrdersByStatusType(graphene.ObjectType):
+    orders = graphene.List(OrderType)
+    length = graphene.Int()

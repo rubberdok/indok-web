@@ -93,6 +93,7 @@ const AboutPage: NextPage = () => {
           <li>2018-2019: Daniel Kittilsen Henriksen og Amanda Borge Byrkjeland</li>
           <li>2019-2020: Peder Gjerstad og Mette Liset</li>
           <li>2020-2021: Andreas Johannesen og Lars Lien Ankile</li>
+          <li>2021-2022: Christian August Brask Rustad og Olaf Alexander Styrmoe</li>
         </ul>
       </Typography>
     </Template>
