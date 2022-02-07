@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
 import Layout from "@components/Layout";
-import { Event, Form, Orders, Organization, Personal, Report } from "@components/pages/profile/ProfileCard";
+import { Event, Form, Orders, Org, Personal, Report } from "@components/pages/profile/ProfileCard";
 import useStyles from "@components/pages/profile/styles";
 import { GET_USER_PROFILE } from "@graphql/users/queries";
 import { Avatar, Container, Grid, Typography, useTheme } from "@material-ui/core";
@@ -97,7 +97,7 @@ const ProfilePage: NextPage = () => {
               </Grid>
               {data?.user && (
                 <Grid item md={6} className={classes.card}>
-                  <Organization orgs={data.user.organizations} data-test-id={`${ID_PREFIX}organization-`} />
+                  <Org orgs={data.user.organizations} data-test-id={`${ID_PREFIX}organization-`} />
                 </Grid>
               )}
               <Grid item md={6} className={classes.card}>

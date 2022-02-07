@@ -7,7 +7,7 @@ import OrdersCard from "./variants/OrdersCard";
 
 export const Event = EventCard;
 export const Form = FormCard;
-export const Organization = OrgCard;
+export const Org = OrgCard;
 export const Personal = PersonalCard;
 export const Report = ReportCard;
 export const Orders = OrdersCard;
