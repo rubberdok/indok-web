@@ -1,12 +1,21 @@
 import { useQuery } from "@apollo/client";
 import Layout from "@components/Layout";
-import { Event, Form, Orders, Organization, Personal, Report } from "@components/pages/profile/ProfileCard";
+import {
+  CabinsAdmin,
+  Event,
+  Form,
+  Orders,
+  Organization,
+  Personal,
+  Report,
+} from "@components/pages/profile/ProfileCard";
+import PermissionRequired from "@components/permissions/PermissionRequired";
 import useStyles from "@components/pages/profile/styles";
 import { GET_USER_PROFILE } from "@graphql/users/queries";
 import { Avatar, Container, Grid, Typography, useTheme } from "@material-ui/core";
 import { NextPage } from "next";
 import Head from "next/head";
-import { useMemo } from "react";
+import React, { useMemo } from "react";
 import { User } from "src/types/users";
 
 const ID_PREFIX = "profile-";
@@ -106,6 +115,11 @@ const ProfilePage: NextPage = () => {
               </Grid>
               <Grid item md={6} className={classes.card}>
                 <Orders data-test-id={`${ID_PREFIX}orders-`} />
+              </Grid>
+              <Grid item md={6} className={classes.card}>
+                <PermissionRequired permission="cabins.add_booking">
+                  <CabinsAdmin data-test-id={`${ID_PREFIX}cabins-`} />
+                </PermissionRequired>
               </Grid>
             </Grid>
           </>
