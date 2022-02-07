@@ -139,27 +139,27 @@ const AdminPage: NextPage = () => {
             <Table size="small">
               <TableHead>
                 <TableRow>
-                  <TableCell>Navn</TableCell>
-                  <TableCell align="right">Epost</TableCell>
-                  <TableCell align="right">Telefonnummer</TableCell>
-                  <TableCell align="right">Innsjekk</TableCell>
-                  <TableCell align="right">Utsjekk</TableCell>
-                  <TableCell align="right">Hytte</TableCell>
-                  <TableCell align="right">Status</TableCell>
-                  <TableCell align="right">Handlinger</TableCell>
+                  <TableCell align="left">Navn</TableCell>
+                  <TableCell align="left">Epost</TableCell>
+                  <TableCell align="left">Telefonnummer</TableCell>
+                  <TableCell align="left">Innsjekk</TableCell>
+                  <TableCell align="left">Utsjekk</TableCell>
+                  <TableCell align="left">Hytte</TableCell>
+                  <TableCell align="left">Status</TableCell>
+                  <TableCell align="left">Handlinger</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {data?.adminAllBookings.map((booking: BookingFromQuery) => (
                   <TableRow key={booking.id}>
                     <TableCell>{`${booking.firstName} ${booking.lastName}`}</TableCell>
-                    <TableCell align="right">{booking.receiverEmail}</TableCell>
-                    <TableCell align="right">{booking.phone}</TableCell>
-                    <TableCell align="right">{booking.checkIn}</TableCell>
-                    <TableCell align="right">{booking.checkOut}</TableCell>
-                    <TableCell align="right">{toStringChosenCabins(booking.cabins)}</TableCell>
-                    <TableCell align="right">{booking.isTentative ? "Ikke godkjent" : "Godkjent"}</TableCell>
-                    <TableCell align="right">
+                    <TableCell align="left">{booking.receiverEmail}</TableCell>
+                    <TableCell align="left">{booking.phone}</TableCell>
+                    <TableCell align="left">{booking.checkIn}</TableCell>
+                    <TableCell align="left">{booking.checkOut}</TableCell>
+                    <TableCell align="left">{toStringChosenCabins(booking.cabins)}</TableCell>
+                    <TableCell align="left">{booking.isTentative ? "Ikke godkjent" : "Godkjent"}</TableCell>
+                    <TableCell align="left">
                       <Tooltip title="Godkjenn">
                         <Box display="inline" component="span">
                           <IconButton
