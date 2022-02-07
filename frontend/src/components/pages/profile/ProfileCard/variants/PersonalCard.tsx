@@ -2,19 +2,20 @@ import { Grid, Typography } from "@material-ui/core";
 import { Skeleton } from "@material-ui/lab";
 import Profile from "@public/illustrations/Profile.svg";
 import { User } from "src/types/users";
-import createLinkProfileAction from "./linkProfileAction";
-import ProfileCardBase, { ProfileActionProps } from "./ProfileCardBase";
+import LinkAction from "./actions/LinkAction";
+import ProfileCardBase from "./ProfileCardBase";
 
 type Props = {
   user?: User;
+  "data-test-id"?: string;
 };
 
 /** Displays user info and a link to the user edit page. */
-const PersonalCard: React.VFC<Props & ProfileActionProps> = ({ user, "data-test-id": dataTestId }) => {
+const PersonalCard: React.VFC<Props> = ({ user, "data-test-id": dataTestId }) => {
   return (
     <ProfileCardBase
       title="Personlig informasjon"
-      Action={createLinkProfileAction({ text: "Rediger", link: "/profile/edit" })}
+      Action={<LinkAction text="Rediger" link="/profile/edit" data-test-id={dataTestId} />}
       image={Profile}
       alt=""
       data-test-id={dataTestId}

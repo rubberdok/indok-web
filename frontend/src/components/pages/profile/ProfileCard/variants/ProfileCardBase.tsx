@@ -2,31 +2,14 @@ import { Card, CardContent, CardHeader, Grid, useTheme } from "@material-ui/core
 import Image from "next/image";
 import useStyles from "../styles";
 
-export type ProfileActionProps = {
-  "data-test-id"?: string;
-};
-
 type Props = {
   title: string;
-  Action?: React.VFC<ProfileActionProps>;
+  Action?: React.ReactNode;
   image?: StaticImageData;
   alt?: string;
 };
 
-/**
- * Base component for cards on the profile page.
- * Displays the given title, children and image (with alt text).
- * Also takes an Action component for the card action,
- * that must accept ProfileActionProps.
- */
-const ProfileCardBase: React.FC<Props & ProfileActionProps> = ({
-  title,
-  children,
-  Action,
-  image,
-  alt,
-  ...actionProps
-}) => {
+const ProfileCardBase: React.FC<Props> = ({ title, children, Action, image, alt }) => {
   const theme = useTheme();
   const classes = useStyles();
 
@@ -36,7 +19,7 @@ const ProfileCardBase: React.FC<Props & ProfileActionProps> = ({
         <Grid container item xs style={{ height: "100%" }} direction="column" justifyContent="space-between">
           <CardHeader title={title} />
           <CardContent>{children}</CardContent>
-          {Action && <Action {...actionProps} />}
+          {Action}
         </Grid>
         {image && (
           <Grid item xs={3} style={{ marginRight: theme.spacing(4) }}>
