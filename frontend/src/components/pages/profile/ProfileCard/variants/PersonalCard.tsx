@@ -2,8 +2,8 @@ import { Grid, Typography } from "@material-ui/core";
 import { Skeleton } from "@material-ui/lab";
 import Profile from "@public/illustrations/Profile.svg";
 import { User } from "src/types/users";
-import LinkAction from "./actions/LinkAction";
-import ProfileCardBase from "./ProfileCardBase";
+import LinkAction from "../LinkAction";
+import BaseCard from "../BaseCard";
 
 type Props = {
   user?: User;
@@ -13,7 +13,7 @@ type Props = {
 /** Displays user info and a link to the user edit page. */
 const PersonalCard: React.VFC<Props> = ({ user, "data-test-id": dataTestId }) => {
   return (
-    <ProfileCardBase
+    <BaseCard
       title="Personlig informasjon"
       Action={<LinkAction text="Rediger" link="/profile/edit" data-test-id={dataTestId} />}
       image={Profile}
@@ -43,7 +43,7 @@ const PersonalCard: React.VFC<Props> = ({ user, "data-test-id": dataTestId }) =>
           )}
         </Grid>
       </Grid>
-    </ProfileCardBase>
+    </BaseCard>
   );
 };
 

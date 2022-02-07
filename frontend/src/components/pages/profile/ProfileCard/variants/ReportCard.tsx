@@ -1,12 +1,12 @@
 import { Grid, Typography } from "@material-ui/core";
 import Report from "@public/illustrations/Report.svg";
-import LinkAction from "./actions/LinkAction";
-import ProfileCardBase from "./ProfileCardBase";
+import LinkAction from "../LinkAction";
+import BaseCard from "../BaseCard";
 
 /** Displays a card on the profile page that links to the Reports page. */
 const ReportCard: React.VFC = (props) => {
   return (
-    <ProfileCardBase
+    <BaseCard
       title="Baksida"
       Action={<LinkAction text="Gå til Baksida" link="/report" {...props} />}
       image={Report}
@@ -20,7 +20,7 @@ const ReportCard: React.VFC = (props) => {
           </Typography>
         </Grid>
       </Grid>
-    </ProfileCardBase>
+    </BaseCard>
   );
 };
 

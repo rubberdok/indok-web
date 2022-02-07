@@ -1,7 +1,7 @@
 import { Grid, Typography } from "@material-ui/core";
 import OrganizationImg from "@public/illustrations/Organization.svg";
-import OrganizationAction, { Props as OrgListProps } from "../actions/OrganizationAction";
-import ProfileCardBase from "../ProfileCardBase";
+import OrgAction, { Props as OrgListProps } from "./OrgAction";
+import BaseCard from "../../BaseCard";
 
 /**
  * Displays a card on the profile page that shows an overview of the organizations
@@ -9,9 +9,9 @@ import ProfileCardBase from "../ProfileCardBase";
  */
 const OrgCard: React.VFC<OrgListProps> = ({ orgs, ...props }) => {
   return (
-    <ProfileCardBase
+    <BaseCard
       title="Organisasjoner"
-      Action={<OrganizationAction orgs={orgs} {...props} />}
+      Action={<OrgAction orgs={orgs} {...props} />}
       image={OrganizationImg}
       alt=""
       {...props}
@@ -21,7 +21,7 @@ const OrgCard: React.VFC<OrgListProps> = ({ orgs, ...props }) => {
           <Typography variant="body2">Her kan du se en oversikt over alle organisasjoner der du er medlem.</Typography>
         </Grid>
       </Grid>
-    </ProfileCardBase>
+    </BaseCard>
   );
 };
 

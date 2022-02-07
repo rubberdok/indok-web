@@ -1,7 +1,7 @@
 import { People } from "@material-ui/icons";
 import { Typography, Grid, Avatar, useTheme } from "@material-ui/core";
 import Image from "next/image";
-import { BaseOrg } from "../types";
+import { BaseOrg } from "./types";
 
 type Props = {
   org: BaseOrg;
