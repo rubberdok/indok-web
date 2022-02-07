@@ -2,7 +2,7 @@ import base64
 import io
 import json
 from collections import namedtuple
-from datetime import date, timedelta
+from django.utils import timezone
 
 import pandas as pd
 from django.contrib.auth import get_user_model
@@ -68,16 +68,16 @@ class EventResolvers:
 
             return (
                 filteredEvents.filter(*queries)
-                .filter(start_time__gte=(date.today() - timedelta(days=1)))  # Only show events that have yet to pass
+                .filter(start_time__gte=timezone.now())  # Only show events that have yet to pass
                 .order_by("start_time")
             )
-        return Event.objects.filter(start_time__gte=date.today()).order_by("start_time")
+        return Event.objects.filter(start_time__gte=timezone.now()).order_by("start_time")
 
     def resolve_default_events(self, info):
         """
         For each organization, get the most recent (future) event
         """
-        return Event.objects.filter(start_time__gte=(date.today() - timedelta(days=1))).distinct("organization")
+        return Event.objects.filter(start_time__gte=timezone.now()).distinct("organization").order_by("start_time")
 
     def resolve_event(self, info, id):
         try:
