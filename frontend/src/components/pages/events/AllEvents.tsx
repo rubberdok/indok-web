@@ -103,11 +103,8 @@ const AllEvents: React.FC = () => {
               </Button>
             </Link>
           )}
-          {userData && !userLoading && userData.user && !!userData.user.organizations.length && (
-            <Link
-              href={userData.user.organizations.length > 1 ? "/orgs" : `/orgs/${userData.user.organizations[0].id}`}
-              passHref
-            >
+          {!userLoading && userData?.user?.organizations?.length === 1 && (
+            <Link href={`/orgs/${userData.user.organizations[0].id}`} passHref>
               <Button color="primary" disableRipple startIcon={<List />}>
                 Mine arrangementer
               </Button>
