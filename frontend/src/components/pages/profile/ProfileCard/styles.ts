@@ -1,7 +1,7 @@
 import { makeStyles } from "@material-ui/core";
 
 const useStyles = makeStyles(() => ({
-  fullHeightCard: {
+  fullHeight: {
     height: "100%",
   },
 }));

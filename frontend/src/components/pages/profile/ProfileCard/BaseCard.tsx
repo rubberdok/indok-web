@@ -18,9 +18,9 @@ const BaseCard: React.FC<Props> = ({ title, children, Action, image, alt }) => {
   const classes = useStyles();
 
   return (
-    <Card className={classes.fullHeightCard}>
-      <Grid container direction="row" alignItems="center" style={{ height: "100%" }}>
-        <Grid container item xs style={{ height: "100%" }} direction="column" justifyContent="space-between">
+    <Card className={classes.fullHeight}>
+      <Grid container direction="row" alignItems="center" className={classes.fullHeight}>
+        <Grid container item xs className={classes.fullHeight} direction="column" justifyContent="space-between">
           <CardHeader title={title} />
           <CardContent>{children}</CardContent>
           {Action}
