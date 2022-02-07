@@ -1,5 +1,5 @@
 # Larger base image for development
-FROM --platform=linux/amd64 node:14
+FROM --platform=linux/amd64 node:16.13.2
 
 WORKDIR /app
 

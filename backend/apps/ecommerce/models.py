@@ -32,7 +32,7 @@ class Product(models.Model):
         return self.name
 
     def save(self, *args, **kwargs):
-        if not self.current_quantity:
+        if self.current_quantity is None:
             self.current_quantity = self.total_quantity
         self.max_buyable_quantity = min(self.max_buyable_quantity, self.total_quantity)
         super().save(*args, **kwargs)
@@ -57,7 +57,7 @@ class Product(models.Model):
             bought_quantity = Order.objects.filter(
                 product__id=product_id,
                 user=user,
-                payment_status=Order.PaymentStatus.CAPTURED,
+                payment_status__in=[Order.PaymentStatus.CAPTURED, Order.PaymentStatus.RESERVED],
             ).aggregate(bought_quantity=Sum("quantity"))["bought_quantity"]
             bought_quantity = bought_quantity or 0
 
@@ -80,7 +80,6 @@ class Product(models.Model):
         Restore quantity that was reserved by an order that was cancelled or failed.
         Also restore quantity if an order that was already reserved (not captured) was re-attempted.
         """
-        assert order.payment_status in order.failed_statuses or order.payment_status == Order.PaymentStatus.RESERVED
         with transaction.atomic():
             # Acquire DB lock for the product (no other process can change it)
             product = cls.objects.select_for_update().get(pk=order.product.id)
