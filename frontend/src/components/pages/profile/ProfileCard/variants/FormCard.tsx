@@ -7,7 +7,7 @@ import ProfileCardBase, { ProfileActionProps } from "./ProfileCardBase";
 const FormCard: React.VFC<ProfileActionProps> = (props) => {
   return (
     <ProfileCardBase
-      title="Verv"
+      title="Vervsøknader"
       Action={createLinkProfileAction({ text: "Se verv", link: "/listings" })}
       image={Form}
       alt=""
@@ -15,7 +15,7 @@ const FormCard: React.VFC<ProfileActionProps> = (props) => {
     >
       <Grid container direction="column">
         <Grid item>
-          <Typography variant="body2">Her kan du se en oversikt over alle innsendte søknader på verv.</Typography>
+          <Typography variant="body2">Her kan du se en oversikt over alle dine innsendte søknader på verv.</Typography>
         </Grid>
       </Grid>
     </ProfileCardBase>
