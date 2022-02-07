@@ -1,15 +1,12 @@
-import { Organization } from "@interfaces/organizations";
-import { Typography, Box, Menu, CardActions, MenuItem, CardActionArea } from "@material-ui/core";
+import { Typography, Box, CardActions, CardActionArea } from "@material-ui/core";
 import OrgListItem from "./OrgListItem";
-import { useState } from "react";
 import Link from "next/link";
 import { ProfileActionProps } from "@components/pages/profile/ProfileCard/variants/ProfileCardBase";
-import { useRouter } from "next/router";
-
-const orgLink = (orgId: string) => `/orgs/${orgId}`;
+import { BaseOrg } from "./types";
+import OrgList from "./OrgList";
 
 export type Props = {
-  orgs: Pick<Organization, "id" | "name" | "logoUrl">[];
+  orgs: BaseOrg[];
 };
 
 /**
@@ -38,7 +35,7 @@ export const createOrgProfileAction = ({ orgs }: Props): React.VFC<ProfileAction
       case 1:
         return (
           <CardActionArea>
-            <Link href={orgLink(orgs[0].id)} passHref>
+            <Link href={`/orgs/${orgs[0].id}`} passHref>
               <CardActions data-test-id={actionProps["data-test-id"]}>
                 <OrgListItem org={orgs[0]} />
               </CardActions>
@@ -51,37 +48,4 @@ export const createOrgProfileAction = ({ orgs }: Props): React.VFC<ProfileAction
   };
 
   return OrgProfileAction;
-};
-
-const OrgList: React.VFC<Props & ProfileActionProps> = ({ orgs, "data-test-id": dataTestId }) => {
-  const [menu, setMenu] = useState<{ open: boolean; anchor: Element | undefined }>({ open: false, anchor: undefined });
-  const router = useRouter();
-
-  return (
-    <>
-      <CardActionArea>
-        <CardActions
-          onClick={(event) => setMenu({ open: true, anchor: event.currentTarget })}
-          data-test-id={`${dataTestId}link`}
-        >
-          <Typography variant="overline" color="textPrimary">
-            Se organisasjoner
-          </Typography>
-        </CardActions>
-      </CardActionArea>
-      <Menu
-        open={menu.open}
-        onClose={() => setMenu({ open: false, anchor: undefined })}
-        anchorEl={menu.anchor}
-        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-        transformOrigin={{ vertical: "bottom", horizontal: "left" }}
-      >
-        {orgs.map((org) => (
-          <MenuItem key={org.id} onClick={() => router.push(orgLink(org.id))}>
-            <OrgListItem org={org} />
-          </MenuItem>
-        ))}
-      </Menu>
-    </>
-  );
 };

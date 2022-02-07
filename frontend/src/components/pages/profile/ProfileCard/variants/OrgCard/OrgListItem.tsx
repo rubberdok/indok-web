@@ -1,10 +1,10 @@
-import { Organization } from "@interfaces/organizations";
 import { People } from "@material-ui/icons";
 import { Typography, Grid, Avatar, useTheme } from "@material-ui/core";
 import Image from "next/image";
+import { BaseOrg } from "./types";
 
 type Props = {
-  org: Pick<Organization, "id" | "name" | "logoUrl">;
+  org: BaseOrg;
 };
 
 /**
