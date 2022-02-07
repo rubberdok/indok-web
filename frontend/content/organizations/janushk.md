@@ -3,15 +3,15 @@ title: Janus HK
 description: Indøks håndballag
 logo: /img/FK_logo.jpg
 image: /img/janushklogo.jpg
-styre:
+board:
   ceo:
-    navn: Maren Larsen
-    telefon: 916 49 220
-    tittel: Leder
+    name: Maren Larsen
+    phoneNumber: 916 49 220
+    title: Leder
   cto:
-    navn: Emilie Bakke-Jakobsen
-    telefon: 414 99 925
-    tittel: Økonomiansvarlig
+    name: Emilie Bakke-Jakobsen
+    phoneNumber: 414 99 925
+    title: Økonomiansvarlig
 tag: idrett
 ---
 

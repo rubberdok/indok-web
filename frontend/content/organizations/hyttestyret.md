@@ -3,27 +3,27 @@ title: Hyttestyret
 description: Gjengen som passer på hyttene våre
 logo: /img/hylogo.jpg
 image: /img/hy1.jpg
-styre:
+board:
   leder:
-    navn: Phillip Kolkmeier
-    telefon: 906 71 650
-    tittel: Leder
+    name: Phillip Kolkmeier
+    phoneNumber: 906 71 650
+    title: Leder
   log:
-    navn: Sjur Filip Vik Haakestad
-    telefon: 919 97 470
-    tittel: Logistikkansvarlig
+    name: Sjur Filip Vik Haakestad
+    phoneNumber: 919 97 470
+    title: Logistikkansvarlig
   book:
-    navn: Ellie Berglund
-    telefon: 942 58 380
-    tittel: Bookingansvarlig
+    name: Ellie Berglund
+    phoneNumber: 942 58 380
+    title: Bookingansvarlig
   drift:
-    navn: Marte Vingsnes
-    telefon: 482 60 767
-    tittel: Driftsansvarlig
+    name: Marte Vingsnes
+    phoneNumber: 482 60 767
+    title: Driftsansvarlig
   øko:
-    navn: Haakon Døssland
-    telefon: 976 30 582
-    tittel: Økonomiansvarlig
+    name: Haakon Døssland
+    phoneNumber: 976 30 582
+    title: Økonomiansvarlig
 tag: annet
 ---
 

@@ -3,11 +3,11 @@ title: Pandemics
 description: Indøks amerikanske fotballag
 logo: /img/pandemicslogo.jpg
 image: /img/pandemics.jpg
-styre:
+board:
   ceo:
-    navn: Simen Vadseth
-    mail: tlf. 41634151
-    tittel: Leder
+    name: Simen Vadseth
+    phoneNumber: 41634151
+    title: Leder
 tag: idrett
 ---
 

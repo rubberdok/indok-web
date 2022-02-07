@@ -3,15 +3,15 @@ title: Bandøk
 description: Indøks helt egne band
 logo: /img/bandoklogo.png
 image: /img/bandoklogo.png
-styre:
+board:
   ceo:
-    navn: Johannes Log Indbjo
-    mail: tlf.
-    tittel: Administrerende ansvarlig
+    name: Johannes Log Indbjo
+    mail:
+    title: Administrerende ansvarlig
   cto:
-    navn: Sigurd Elias Halse
-    mail: tlf.
-    tittel: Økonomiansvarlig/utstyrsansvarlig
+    name: Sigurd Elias Halse
+    mail:
+    title: Økonomiansvarlig/utstyrsansvarlig
 tag: kultur
 ---
 

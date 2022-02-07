@@ -107,7 +107,7 @@ const Footer: React.FC = () => {
                       <Facebook />
                     </IconButton>
                   </a>
-                  <a href="https://github.com/hovedstyret/indok-web" rel="noreferrer noopener" target="_blank">
+                  <a href="https://github.com/rubberdok/indok-web" rel="noreferrer noopener" target="_blank">
                     <IconButton size="small" aria-label="github" color="inherit">
                       <GitHub />
                     </IconButton>
@@ -125,7 +125,7 @@ const Footer: React.FC = () => {
             <Box height="100%" display="flex" alignItems="center" className={classes.creditsContent}>
               <a
                 className={classes.rdLogo}
-                href="https://github.com/hovedstyret/indok-web"
+                href="https://github.com/rubberdok/indok-web"
                 rel="noreferrer noopener"
                 style={{ height: "100%" }}
               >
@@ -134,12 +134,12 @@ const Footer: React.FC = () => {
               <Box flexGrow="1">
                 <Typography variant="body2">
                   Forslag til nettsiden eller oppdaget en feil? Lag et issue på{" "}
-                  <a href="https://github.com/hovedstyret/indok-web/issues">GitHub</a>, eller send mail til{" "}
+                  <a href="https://github.com/rubberdok/indok-web/issues">GitHub</a>, eller send mail til{" "}
                   <a href="mailto:feedback@rubberdok.no">feedback@rubberdok.no</a>.
                 </Typography>
                 <Typography variant="body2">
                   Utviklet av{" "}
-                  <a href="https://github.com/hovedstyret/indok-web" rel="norefferer noopener">
+                  <a href="https://github.com/rubberdok/indok-web" rel="norefferer noopener">
                     Rubberdøk
                   </a>
                   , Hovedstyrets Webkomité. Kopirett © {new Date().getFullYear()} Foreningen for Studentene ved Indøk.

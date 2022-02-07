@@ -3,11 +3,11 @@ title: Bulldøk
 description: Indøks buldre- og klatregruppe
 logo: /img/bulldok.jpeg
 image: /img/bulldok.jpeg
-styre:
+board:
   ceo:
-    navn: Bendik Edvardsen
+    name: Bendik Edvardsen
     mail:
-    tittel: Leder
+    title: Leder
 tag: idrett
 ---
 
