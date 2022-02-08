@@ -1,10 +1,14 @@
-from apps.organizations.models import Organization
-from django.db import models
-from django.conf import settings
-from phonenumber_field.modelfields import PhoneNumberField
-from django.contrib.auth import get_user_model
-from multiselectfield import MultiSelectField
 from typing import TYPE_CHECKING
+
+from django.conf import settings
+from django.contrib.auth import get_user_model
+from django.contrib.contenttypes.fields import GenericRelation
+from django.db import models
+from multiselectfield import MultiSelectField
+from phonenumber_field.modelfields import PhoneNumberField
+
+from apps.ecommerce.mixins import Sellable
+from apps.organizations.models import Organization
 
 if TYPE_CHECKING:
     from apps.users.models import User
@@ -49,6 +53,7 @@ class Event(models.Model):
     allowed_grade_years = MultiSelectField(
         choices=GRADE_CHOICES, default="1,2,3,4,5"
     )  # Kept here as well in case a non-attenable (no sign up) event has grade restrictions
+    products = GenericRelation("ecommerce.Product")
 
     @property
     def signed_up_users(self) -> list["User"]:
@@ -72,7 +77,27 @@ class Event(models.Model):
             return None
         return self.attendable.slot_distribution.get(parent_distribution=None).get_available_slots()
 
-    def get_attendance_and_waiting_list(self) -> tuple[list["User"], list["User"]]:
+    @property
+    def users_attending(self) -> list["User"]:
+        attending, _ = self.get_attendance_and_waiting_list()
+        if attending is None:
+            return []
+        all_attending = []
+        for attending_group in attending.values():
+            all_attending += attending_group
+        return all_attending
+
+    @property
+    def users_on_waiting_list(self) -> list["User"]:
+        _, waiting_list = self.get_attendance_and_waiting_list()
+        if waiting_list is None:
+            return []
+        all_on_waiting_list: list["User"] = []
+        for waiting_list_group in waiting_list.values():
+            all_on_waiting_list += waiting_list_group
+        return all_on_waiting_list
+
+    def get_attendance_and_waiting_list(self) -> tuple[dict[str, list["User"]], dict[str, list["User"]]]:
         if not hasattr(self, "attendable") or self.attendable is None:
             return None, None
         attending = {}  # keys = string of grades (category), values = userlist
@@ -94,11 +119,23 @@ class Event(models.Model):
                 return len(users) >= available_slots
         return False
 
+    def is_user_allowed_to_buy_product(self, user: "User") -> bool:
+        """
+        Check if user is attending to determine if they are allowed to buy a ticket
+        """
+        from apps.events.helpers import get_attendant_group
+
+        if self.products is None:
+            return False
+        attending, _ = self.get_attendance_and_waiting_list()
+        attendant_group = get_attendant_group(attending, user.grade_year)
+        return attendant_group is not None and user in attending[attendant_group]
+
     def __str__(self):
         return self.title
 
 
-class Attendable(models.Model):
+class Attendable(models.Model, Sellable):
     """
     Additional model used for attendable events. All attendable events have exactly one Attendable.
     Contains general information related to an attendable event.
@@ -179,7 +216,9 @@ class SlotDistribution(models.Model):
         return self.available_slots
 
     def __str__(self):
-        return f"{'Child slot distribution' if hasattr(self, 'parent_distribution') and self.parent_distribution is not None else 'Slot distribution'}-{self.attendable.event.title}"
+        if hasattr(self, "parent_distribution") and self.parent_distribution is not None:
+            return f"Child slot distribution-{self.attendable.event.title}"
+        return f"Slot distribution-{self.attendable.event.title}"
 
 
 class SignUp(models.Model):

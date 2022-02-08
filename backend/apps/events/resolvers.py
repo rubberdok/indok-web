@@ -12,6 +12,7 @@ from ..organizations.models import Organization
 from ..organizations.permissions import check_user_membership
 from .models import Category, Event, SignUp
 
+
 DEFAULT_REPORT_FIELDS = {
     "signup_timestamp",
     "event_title",
@@ -20,7 +21,7 @@ DEFAULT_REPORT_FIELDS = {
     "signup_user_grade_year",
     "signup_user_email",
     "signup_user_phone_number",
-    "signup_user_allergies",
+    "user_allergies",
 }
 
 FiletypeSpec = namedtuple("FiletypeSpec", ["content_type", "extension"])
@@ -77,7 +78,13 @@ class EventResolvers:
         """
         For each organization, get the most recent (future) event
         """
-        return Event.objects.filter(start_time__gte=timezone.now()).distinct("organization").order_by("start_time")
+        # This must be done in 2 queries due to using "distinct"
+        event_ids = (
+            Event.objects.filter(start_time__gte=timezone.now())
+            .order_by("organization", "start_time")
+            .distinct("organization")
+        )
+        return Event.objects.filter(id__in=event_ids).order_by("start_time")
 
     def resolve_event(self, info, id):
         try:

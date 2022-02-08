@@ -39,6 +39,7 @@ export const CREATE_EVENT = gql`
         userAttendance {
           isSignedUp
           isOnWaitingList
+          hasBoughtTicket
         }
         availableSlots {
           category
@@ -99,6 +100,7 @@ export const UPDATE_EVENT = gql`
         userAttendance {
           isSignedUp
           isOnWaitingList
+          hasBoughtTicket
         }
         availableSlots {
           category

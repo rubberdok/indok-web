@@ -4,9 +4,7 @@ import { GET_USER } from "@graphql/users/queries";
 import { User } from "@interfaces/users";
 import { Box, Button, makeStyles, Menu, MenuItem } from "@material-ui/core";
 import { AccountCircleOutlined, LockOpen } from "@material-ui/icons";
-import { DATAPORTEN_SCOPES } from "@utils/auth";
-import { config } from "@utils/config";
-import { generateQueryString } from "@utils/helpers";
+import { generateFeideLoginUrl } from "@utils/auth";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
@@ -104,14 +102,7 @@ const NavbarLinks: React.FC = () => {
     setAnchorEl(event.currentTarget);
   };
 
-  const queryString = generateQueryString({
-    client_id: config.DATAPORTEN_ID,
-    state: config.DATAPORTEN_STATE,
-    redirect_uri: config.DATAPORTEN_REDIRECT_URI,
-    response_type: "code",
-    scope: DATAPORTEN_SCOPES.join(" "),
-  });
-  const signInURL = "https://auth.dataporten.no/oauth/authorization" + queryString;
+  const signInURL = generateFeideLoginUrl();
 
   const { error, data: userData } = useQuery<{ user: User }>(GET_USER);
 

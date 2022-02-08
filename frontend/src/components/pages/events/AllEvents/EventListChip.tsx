@@ -12,7 +12,7 @@ type Props = {
 };
 
 const EventListChip: React.FC<Props> = ({ event, user }) => {
-  const { data: timeData } = useQuery(GET_SERVER_TIME);
+  const { data: timeData } = useQuery(GET_SERVER_TIME, { fetchPolicy: "network-only" });
 
   if (!user || !event.attendable || !event.allowedGradeYears.includes(user.gradeYear)) return null;
 

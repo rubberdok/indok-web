@@ -188,7 +188,7 @@ const Hero: React.FC = () => {
                   Industriell Økonomi og Teknologiledelse
                 </Typography>
                 <br />
-                <Link href="./about" passHref>
+                <Link href="/about" passHref>
                   <Button color="inherit" variant="outlined">
                     Les om foreningen
                   </Button>

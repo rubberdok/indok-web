@@ -20,10 +20,5 @@ export const allValuesDefined = (obj: Record<string, any>): boolean => {
   return empty;
 };
 
-export const range = (start: number, end: number): number[] => {
-  const res: number[] = [];
-  for (let i = start; i <= end; i++) {
-    res.push(i);
-  }
-  return res;
-};
+export const range = (start: number, stop: number, step = 1) =>
+  Array.from({ length: (stop - start) / step + 1 }, (_, i) => start + i * step);

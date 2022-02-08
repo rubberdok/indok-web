@@ -16,6 +16,7 @@ const Contract: React.FC<ContractProps> = ({ chosenCabins, contactInfo, datePick
   const currentTime = new Date().toLocaleString();
   const price = calculatePrice(chosenCabins, contactInfo, datePick);
 
+  //NB! there also exist a HTML template version of the contract backend, in case of changes both must be updated
   return (
     <Grid container>
       <Box m={2}>

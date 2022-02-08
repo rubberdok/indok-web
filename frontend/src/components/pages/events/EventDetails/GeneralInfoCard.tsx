@@ -50,68 +50,85 @@ const GeneralInfoCard: React.FC<Props> = ({ event }) => {
     <Grid item xs={12} md={4}>
       <Paper className={classes.paper}>
         <Box my={2} mx={2}>
-          <Typography variant="h4" gutterBottom>
-            Info
-          </Typography>
-          {event?.attendable?.price && (
-            <Typography variant="body1" className={classes.wrapIcon}>
-              <CreditCard fontSize="small" /> {event.attendable?.price} kr
-            </Typography>
-          )}
-          {event.location && (
-            <Typography variant="body1" className={classes.wrapIcon}>
-              <LocationOnIcon fontSize="small" /> {event.location}
-            </Typography>
-          )}
-          {event.category && (
-            <Typography variant="body1" className={classes.wrapIcon}>
-              <CategoryIcon fontSize="small" /> {event.category?.name}
-            </Typography>
-          )}
-          {event.contactEmail && (
-            <Typography variant="body1" className={classes.wrapIcon}>
-              <ContactMail fontSize="small" />
-              <MuiLink href={`mailto:${event.contactEmail}`}>{event.contactEmail}</MuiLink>
-            </Typography>
-          )}
-          {event?.attendable?.bindingSignup && (
-            <Typography variant="body1" className={classes.wrapIcon} color="error">
-              <ErrorOutline fontSize="small" /> Bindende påmelding
-            </Typography>
-          )}
-          <Typography variant="overline">Starter</Typography>
-          <Typography variant="body1" className={classes.wrapIcon}>
-            <EventIcon fontSize="small" />
-            {dayjs(event.startTime).format("DD.MMM YYYY, kl. HH:mm")}
-          </Typography>
-          {event.endTime && (
-            <>
-              <Typography variant="overline">Slutter</Typography>
-              <Typography variant="body1" className={classes.wrapIcon}>
-                <EventIcon fontSize="small" /> {dayjs(event.endTime).format("DD.MMM YYYY, kl. HH:mm")}
+          <Grid container spacing={1}>
+            <Grid item xs={12}>
+              <Typography variant="h4" gutterBottom>
+                Info
               </Typography>
-            </>
-          )}
-          {event.allowedGradeYears.length < 5 && (
-            <>
-              <Typography variant="overline" gutterBottom>
-                Åpent for
-              </Typography>
-              {event.allowedGradeYears.map((grade) => (
-                <Typography variant="body1" className={classes.wrapIcon} key={grade}>
-                  <ArrowRight fontSize="small" /> {`${grade}. klasse`}
+            </Grid>
+            {event?.attendable?.price && (
+              <Grid item xs={12}>
+                <Typography variant="body1" className={classes.wrapIcon}>
+                  <CreditCard fontSize="small" /> {event.attendable?.price} kr
                 </Typography>
-              ))}
-            </>
-          )}
-
-          <Button
-            variant="text"
-            href={calendarFile(event.title, event.startTime, event.endTime, event.location, event.description)}
-            download={`${event.title.replace(" ", "_")}.ics`}
-          >
-            Last ned i kalender
-          </Button>
+              </Grid>
+            )}
+            {event.location && (
+              <Grid item xs={12}>
+                <Typography variant="body1" className={classes.wrapIcon}>
+                  <LocationOnIcon fontSize="small" /> {event.location}
+                </Typography>
+              </Grid>
+            )}
+            {event.category && (
+              <Grid item xs={12}>
+                <Typography variant="body1" className={classes.wrapIcon}>
+                  <CategoryIcon fontSize="small" /> {event.category?.name}
+                </Typography>
+              </Grid>
+            )}
+            {event.contactEmail && (
+              <Grid item xs={12}>
+                <Typography variant="body1" className={classes.wrapIcon}>
+                  <ContactMail fontSize="small" />
+                  <MuiLink href={`mailto:${event.contactEmail}`}>{event.contactEmail}</MuiLink>
+                </Typography>
+              </Grid>
+            )}
+            {event?.attendable?.bindingSignup && (
+              <Grid item xs={12}>
+                <Typography variant="body1" className={classes.wrapIcon} color="error">
+                  <ErrorOutline fontSize="small" /> Bindende påmelding
+                </Typography>
+              </Grid>
+            )}
+            <Grid item xs={12}>
+              <Typography variant="overline">Starter</Typography>
+              <Typography variant="body1" className={classes.wrapIcon}>
+                <EventIcon fontSize="small" />
+                {dayjs(event.startTime).format("DD.MMM YYYY, kl. HH:mm")}
+              </Typography>
+            </Grid>
+            {event.endTime && (
+              <Grid item xs={12}>
+                <Typography variant="overline">Slutter</Typography>
+                <Typography variant="body1" className={classes.wrapIcon}>
+                  <EventIcon fontSize="small" /> {dayjs(event.endTime).format("DD.MMM YYYY, kl. HH:mm")}
+                </Typography>
+              </Grid>
+            )}
+            <Grid item xs={12}>
+              <Button
+                variant="text"
+                href={calendarFile(event.title, event.startTime, event.endTime, event.location, event.description)}
+                download={`${event.title.replace(" ", "_")}.ics`}
+              >
+                Last ned i kalender
+              </Button>
+            </Grid>
+            {event.allowedGradeYears.length < 5 && (
+              <Grid item xs={12}>
+                <Typography variant="overline" gutterBottom>
+                  Åpent for
+                </Typography>
+                {event.allowedGradeYears.map((grade) => (
+                  <Typography variant="body1" className={classes.wrapIcon} key={grade}>
+                    <ArrowRight fontSize="small" /> {`${grade}. klasse`}
+                  </Typography>
+                ))}
+              </Grid>
+            )}
+          </Grid>
         </Box>
       </Paper>
     </Grid>

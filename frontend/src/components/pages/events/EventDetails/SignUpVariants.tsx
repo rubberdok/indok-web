@@ -1,13 +1,17 @@
 import { useQuery } from "@apollo/client";
+import LoginRequired from "@components/authentication/LoginRequired";
 import PermissionRequired from "@components/permissions/PermissionRequired";
 import { GET_SERVER_TIME } from "@graphql/utils/time/queries";
 import { Event } from "@interfaces/events";
 import { User } from "@interfaces/users";
-import { TextField, Typography } from "@material-ui/core";
+import { Button, TextField, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { Warning } from "@material-ui/icons";
 import React from "react";
 import CountdownButton from "./CountdownButton";
+import { Alert as MuiAlert } from "@material-ui/lab";
+import Link from "next/link";
+import { useRouter } from "next/router";
 
 const useStyles = makeStyles((theme) => ({
   wrapIcon: {
@@ -26,6 +30,13 @@ const useStyles = makeStyles((theme) => ({
     float: "right",
     paddingRight: "1em",
     paddingBottom: "1em",
+  },
+  boughtTicket: {
+    width: "fit-content",
+    marginLeft: "10%",
+  },
+  payButton: {
+    marginLeft: "20px",
   },
 }));
 
@@ -52,7 +63,9 @@ const SignUpVariants: React.FC<Props> = ({
 }) => {
   const classes = useStyles();
 
-  const { data: timeData, error: timeError } = useQuery(GET_SERVER_TIME);
+  const router = useRouter();
+
+  const { data: timeData, error: timeError } = useQuery(GET_SERVER_TIME, { fetchPolicy: "network-only" });
 
   const noPhoneNumberNorAlreadySignedUp =
     !user?.phoneNumber && !event.userAttendance?.isSignedUp && !event.userAttendance?.isOnWaitingList;
@@ -77,12 +90,7 @@ const SignUpVariants: React.FC<Props> = ({
       </Typography>
     );
 
-  if (!user)
-    return (
-      <Typography variant="h5" gutterBottom>
-        Logg inn for å melde deg på
-      </Typography>
-    );
+  if (!user) return <LoginRequired redirect />;
 
   if (!event.allowedGradeYears.includes(user.gradeYear))
     return (
@@ -131,6 +139,22 @@ const SignUpVariants: React.FC<Props> = ({
             currentTime={timeData.serverTime}
           />
         )}
+        {event.product &&
+          event.userAttendance?.isSignedUp &&
+          (event.userAttendance.hasBoughtTicket ? (
+            <MuiAlert severity="success" className={classes.boughtTicket}>
+              Du har betalt for billett
+            </MuiAlert>
+          ) : (
+            <Link
+              href={`/ecommerce/checkout?productId=${event.product.id}&quantity=1&redirect=${router.asPath}`}
+              passHref
+            >
+              <Button size="large" variant="contained" color={"primary"} className={classes.payButton}>
+                Gå til betaling
+              </Button>
+            </Link>
+          ))}
       </PermissionRequired>
     </>
   );

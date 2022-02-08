@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+
+<!--NB there also exist a react version of the contract frontend, in case of changes both must be updated.-->
+
+<html lang="no">
+    <head>
+    <title>Leiekontrakt</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="" />
+    <style>
+      span {
+        white-space: nowrap;
+      }
+    </style>
+    </head>
+    <body style="font-family: Open Sans, sans-serif">
+        {% load static %}
+        <div>
+            <h2 style="font-size:250%;">
+                Leiekontrakt
+            </h2>
+        </div>
+        På vegne av Foreningen for studenter ved Industriell Økonomi og Teknologiledelse er det i dag inngått følgende
+        leiekontrakt mellom Hyttestyret og
+        <strong>{{first_name}} {{last_name}}</strong>.
+        <br/><br/>
+
+        Gjeldende Leieobjekt(er): <strong>{{chosen_cabins_string}}</strong>, Landsbygrenda, 7340 Oppdal
+        <br/>
+        Leieperiode: <strong>{{check_in}}</strong> - <strong>{{check_out}}</strong>
+        <br/>
+        Leiesum: <strong>{{price}}</strong> NOK innbetalt til konto <strong>9235.28.31311</strong> i forkant av leieperioden.
+        <br/><br/>
+
+        Leietager betaler ikke depositum i forkant av leieperioden, men eventuelle skader på hytte eller inventar samt
+        mangelfull vask før avreise faktureres leietager i etterkant av leieperioden. Fratrekkets størrelsesorden vil
+        være gitt av rimeligste alternativ for reparasjon, nyinnkjøp eller vask.
+        <br/>
+        Leieobjektet skal kun benyttes av leietagers forening, og fremleie av leieobjektet er således ikke tillatt.
+        Som fremleie likestilles at enhver som ikke er i forbindelse med den eller de som har signert leieavtalen
+        benytter leieobjektet. Under leieperioden skal kontraktsignatør til enhver tid ha kontroll på de besøkende, og
+        sørge for at leieobjektet aldri blir forlatt ulåst. Bookingansvarlig forebeholder retten til å kreve
+        klokkeslett for avgang på leieperiodens siste dag, men ikke tidligere enn 14:00.
+        <br/><br/>
+
+        Leietager plikter å
+        <ul>
+            <li>
+                behandle hytta og dens inventar med aktsomhet, og stilles erstatningspliktig til all skade som skyldes leietageren
+                selv eller medleietagere. Særskilt fører tap av hyttenøkkel til etterfakturering på NOK 1000,-
+
+            </li>
+            <li>
+
+                følge sjekkliste for utvask ut av hytta etter bruk. Utvask som ikke oppfyller kravene fører til
+                etterfakturering på NOK 1600,-
+            </li>
+            <li>
+                følge de bruksregler som gjelder for hytta, og ved leieforholdets opphør se til at de øvrige forpliktelser
+                i henhold til kontrakten er blitt holdt, se vedlagte sjekkliste.
+            </li>
+            <li>
+                straks melde fra om skader eller mangler som må utbedres uten opphold, til utleier ved bookingansvarlig
+                {{booking_responsible_name}} på telefon {{booking_responsible_phone}}. Annen skade eller mangler meldes fra til utleier i sammenheng med
+                tilbakelevering av nøkler ved endt leieperiode.
+            </li>
+            <li>
+                lese grundig i gjennom hyttenes reglement som ligger tilgjengelig på indokhyttene.no.
+            </li>
+        </ul>
+
+        Utleier plikter å
+        <ul>
+            <li>
+                sørge for at hytta er i forsvarlig stand ved leieforholdets start.
+            </li>
+            <li>
+                sørge for at alle forsikringer er i orden.
+            </li>
+            <li>
+                utbedre mangler og skader som ikke er utbedret av leietager, om berettiget, på leietakers regning.
+            </li>
+        </ul>
+        Partene vedtar eiendommens verneting i alle tvister som måtte oppstå i forbindelse med avtalen. <br/>
+        Hyttestyret forbeholder seg retten til å kunne gjøre om på bookingen hvis det skulle oppstå uforutsette hendelser. <br/>
+        Flytter ikke leietager når leieperioden er utløpt, kan vedkommende kastes ut uten søksmål og dom etter § 13-2
+        i Tvangsfullbyrdelsesloven. <br/>
+        Denne leieavtalen er utstedt i 2 – to – eksemplarer, ett til hver av partene. <br/>
+        Dato/tid: <strong>{{now_time}}</strong>
+    </body>
+</html>

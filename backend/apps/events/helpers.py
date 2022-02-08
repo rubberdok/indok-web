@@ -1,6 +1,7 @@
+from __future__ import annotations
 from django.core.exceptions import ValidationError
 from .models import Attendable, SlotDistribution, Event
-from typing import TypedDict, Optional
+from typing import TypedDict, Optional, Union
 from datetime import datetime
 
 
@@ -132,3 +133,20 @@ def update_slot_distributions(
     slot_distribution.save()
 
     return slot_distribution
+
+
+def get_attendant_group(attending_dict, grade_year: int) -> Union[str, None]:
+    """
+    Get key of attending_dict that user is included in
+
+    Args:
+        attending_dict ([type]): dict of grades -> users
+        grade_year (int): user's grade year
+
+    Returns:
+        Union[str, None]: key of user attendance group or None
+    """
+    for attendant_group in attending_dict.keys():
+        if str(grade_year) in attendant_group:
+            return attendant_group
+    return None

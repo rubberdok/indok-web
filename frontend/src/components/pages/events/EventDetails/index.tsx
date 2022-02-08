@@ -13,19 +13,14 @@ import SignUpVariants from "./SignUpVariants";
 import GeneralInfoCard from "./GeneralInfoCard";
 import Alert from "@components/Alert";
 import EditEvent from "../EventEditor";
-import { formatDescription } from "./helpers";
+import * as components from "@components/markdown/components";
+import ReactMarkdown from "react-markdown";
 
 const useStyles = makeStyles((theme) => ({
   container: {
     paddingTop: theme.spacing(9),
     paddingBottom: theme.spacing(9),
   },
-  paragraph: {
-    paddingTop: theme.spacing(1),
-    paddingBottom: theme.spacing(1),
-    display: "inline-block",
-  },
-  innerParagraph: {},
   backButton: {
     marginLeft: -20,
   },
@@ -163,9 +158,7 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
             <Typography variant="h3" gutterBottom>
               Beskrivelse
             </Typography>
-            <Typography variant="body1" display="block" gutterBottom>
-              {formatDescription(eventData.event.description, classes.innerParagraph, classes.paragraph)}
-            </Typography>
+            <ReactMarkdown components={components}>{eventData.event.description}</ReactMarkdown>
           </Grid>
           <GeneralInfoCard event={eventData.event} />
         </Grid>

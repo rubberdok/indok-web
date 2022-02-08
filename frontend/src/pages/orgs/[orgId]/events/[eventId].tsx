@@ -5,7 +5,9 @@ import EmailForm from "@components/pages/events/email/EmailForm";
 import EditEvent from "@components/pages/events/EventEditor";
 import { ADMIN_EVENT_SIGN_OFF } from "@graphql/events/mutations";
 import { ADMIN_GET_EVENT } from "@graphql/events/queries";
-import { Event, SignUp } from "@interfaces/events";
+import { Event } from "@interfaces/events";
+import { User } from "@interfaces/users";
+import { HeaderValuePair } from "@interfaces/utils";
 import {
   Box,
   Button,
@@ -28,7 +30,7 @@ import {
   Tooltip,
   Typography,
 } from "@material-ui/core";
-import { Edit } from "@material-ui/icons";
+import { Check, Close, Edit } from "@material-ui/icons";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { Alert } from "@material-ui/lab";
 import dayjs from "dayjs";
@@ -36,17 +38,12 @@ import { NextPage } from "next";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 
-interface HeaderValuePair<T> {
-  header: string;
-  field: keyof T;
-}
-
-const signUpFields: HeaderValuePair<SignUp>[] = [
-  { header: "Navn", field: "user" },
-  { header: "Mobilnummer", field: "userPhoneNumber" },
-  { header: "Klassetrinn", field: "userGradeYear" },
-  { header: "Matpreferanser", field: "userAllergies" },
-  { header: "E-post", field: "userEmail" },
+const userFields: HeaderValuePair<User>[] = [
+  { header: "Navn", field: "firstName" },
+  { header: "Mobilnummer", field: "phoneNumber" },
+  { header: "Klassetrinn", field: "gradeYear" },
+  { header: "Matpreferanser", field: "allergies" },
+  { header: "E-post", field: "email" },
 ];
 
 const stringEventFields: HeaderValuePair<Event>[] = [
@@ -115,6 +112,23 @@ const EventAdminPage: NextPage = () => {
       });
   };
 
+  const CellContent = ({ user, field }: { user: User; field: HeaderValuePair<User> }) => {
+    if (field.header === "Navn") {
+      return (
+        <Typography variant="body2">
+          {user.firstName} {user.lastName}
+        </Typography>
+      );
+    }
+    if (field.header === "Mobilnummer") {
+      return <Typography variant="body2">{user.phoneNumber.slice(3)}</Typography>;
+    }
+    if (typeof user[field.field] == "boolean") {
+      return user[field.field] ? <Check color="primary" /> : <Close color="error" />;
+    }
+    return <Typography variant="body2">{user[field.field] || "━"}</Typography>;
+  };
+
   return (
     <Layout>
       {data?.event ? (
@@ -168,24 +182,24 @@ const EventAdminPage: NextPage = () => {
                             {data.event.attendable?.bindingSignup === true ? "ja" : "nei"}
                           </Typography>
                         </ListItem>
-
-                        {data.event?.availableSlots && (
+                        {!!data.event?.availableSlots && (
                           <ListItem key={"AvailableSlots"}>
                             <Typography>
                               <Box fontWeight={1000} m={1} display="inline">
                                 Tilgjengelige plasser:
                               </Box>
-                              {data.event.availableSlots.length > 1
-                                ? data.event.availableSlots.map((dist) => (
-                                    <Typography key={String(dist.category)}>
-                                      {dist.category}.klasse: {dist.availableSlots} plasser
-                                    </Typography>
-                                  ))
-                                : `${data.event.availableSlots[0].availableSlots}`}
+                              {data.event.availableSlots.length > 1 ? (
+                                data.event.availableSlots.map((dist) => (
+                                  <Typography key={String(dist.category)}>
+                                    {dist.category}.klasse: {dist.availableSlots} plasser
+                                  </Typography>
+                                ))
+                              ) : (
+                                <Typography>{data.event.availableSlots[0].availableSlots}</Typography>
+                              )}
                             </Typography>
                           </ListItem>
                         )}
-
                         {dateEventFields.map((headerPair: HeaderValuePair<Event>) =>
                           renderInfo(
                             headerPair.header,
@@ -232,35 +246,36 @@ const EventAdminPage: NextPage = () => {
                           <Table>
                             <TableHead>
                               <TableRow>
-                                {signUpFields.map((field) => (
+                                {userFields.map((field) => (
                                   <TableCell key={`user-header-${field.header}`}>{field.header}</TableCell>
                                 ))}
+                                {data.event.product && <TableCell>Betalt?</TableCell>}
                                 <TableCell key={`user-header-delete`} />
                               </TableRow>
                             </TableHead>
                             <TableBody>
-                              {data?.event?.usersAttending?.map((signUp: SignUp) => (
-                                <TableRow key={`user-row-${signUp.user.id}`}>
-                                  {signUpFields.map((field) => (
-                                    <TableCell key={`user-${signUp.user.id}-cell--${field.field}`}>
-                                      {field.header === "Navn"
-                                        ? `${signUp.user.firstName} ${signUp.user.lastName}`
-                                        : field.header === "Mobilnummer"
-                                        ? signUp.userPhoneNumber.slice(3)
-                                        : signUp[field.field]
-                                        ? signUp[field.field]
-                                        : "━"}
+                              {data?.event?.usersAttending?.map((user: User) => (
+                                <TableRow key={`user-row-${user.id}`}>
+                                  {userFields.map((field) => (
+                                    <TableCell key={`user-${user.id}-cell--${field.field}`}>
+                                      <CellContent user={user} field={field} />
                                     </TableCell>
                                   ))}
+                                  {data.event.product && (
+                                    <TableCell>
+                                      {data.event.userAttendance?.hasBoughtTicket ? (
+                                        <Check color="primary" />
+                                      ) : (
+                                        <Close color="error" />
+                                      )}
+                                    </TableCell>
+                                  )}
                                   <TableCell>
                                     <Tooltip title="Fjern påmelding" arrow>
                                       {signOffLoading ? (
                                         <CircularProgress />
                                       ) : (
-                                        <IconButton
-                                          aria-label="delete"
-                                          onClick={() => handleDeleteSignUp(signUp.user.id)}
-                                        >
+                                        <IconButton aria-label="delete" onClick={() => handleDeleteSignUp(user.id)}>
                                           <DeleteIcon fontSize="small" />
                                         </IconButton>
                                       )}
@@ -288,23 +303,17 @@ const EventAdminPage: NextPage = () => {
                           <Table>
                             <TableHead>
                               <TableRow>
-                                {signUpFields.map((field) => (
+                                {userFields.map((field) => (
                                   <TableCell key={`user-header-${field.header}`}>{field.header}</TableCell>
                                 ))}
                               </TableRow>
                             </TableHead>
                             <TableBody>
-                              {data?.event?.usersOnWaitingList?.map((signUp: SignUp) => (
-                                <TableRow key={`user-row-${signUp.user.id}`}>
-                                  {signUpFields.map((field) => (
-                                    <TableCell key={`user-${signUp.user.id}-cell--${field.field}`}>
-                                      {field.header === "Navn"
-                                        ? `${signUp.user.firstName} ${signUp.user.lastName}`
-                                        : field.header === "Mobilnummer"
-                                        ? signUp.userPhoneNumber.slice(3)
-                                        : signUp[field.field]
-                                        ? signUp[field.field]
-                                        : "━"}
+                              {data?.event?.usersOnWaitingList?.map((user: User) => (
+                                <TableRow key={`user-row-${user.id}`}>
+                                  {userFields.map((field) => (
+                                    <TableCell key={`user-${user.id}-cell--${field.field}`}>
+                                      <CellContent user={user} field={field} />
                                     </TableCell>
                                   ))}
                                 </TableRow>

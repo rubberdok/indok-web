@@ -43,7 +43,9 @@ const AllEvents: React.FC = () => {
       </Box>
     );
 
-  const data = showDefaultEvents ? allData?.defaultEvents : allData?.allEvents;
+  const data = (showDefaultEvents ? allData?.defaultEvents : allData?.allEvents)?.filter((event) =>
+    userData?.user ? event.allowedGradeYears.includes(userData.user.gradeYear) : true
+  );
   const userData = { user: allData?.user };
 
   if (!data && !userData.user && error) return <Typography variant="body1">Kunne ikke hente arrangementer.</Typography>;
@@ -114,7 +116,7 @@ const AllEvents: React.FC = () => {
                   <Typography variant="body1">Ingen arrangementer å vise.</Typography>
                 )
               ) : (
-                data.map((event: Event) => <EventListItem key={event.id} event={event} user={userData?.user} />)
+                data.map((event) => <EventListItem key={event.id} event={event} user={userData?.user} />)
               )}
             </Grid>
           )}

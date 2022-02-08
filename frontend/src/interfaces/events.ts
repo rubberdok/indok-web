@@ -1,6 +1,7 @@
+import { Product } from "./ecommerce";
 import { User } from "./users";
 
-export interface Event {
+export type Event = {
   id: string;
   title: string;
   startTime: string;
@@ -13,39 +14,41 @@ export interface Event {
   publisher: User;
   availableSlots?: GradeDistribution[];
   shortDescription: string;
-  usersOnWaitingList?: SignUp[];
-  userAttendance?: { isSignedUp: boolean; isOnWaitingList: boolean };
-  usersAttending?: SignUp[];
+  usersOnWaitingList?: User[];
+  userAttendance?: { isSignedUp: boolean; isOnWaitingList: boolean; hasBoughtTicket: boolean };
+  usersAttending?: User[];
   hasExtraInformation?: boolean;
   contactEmail?: string;
   allowedGradeYears: number[];
   attendable?: Attendable;
   isFull: boolean;
-}
+  product: Product;
+};
 
-interface GradeDistribution {
+export type GradeDistribution = {
   category: string;
   availableSlots: number;
-}
+};
 
-export interface Attendable {
+export type Attendable = {
   id: string;
   deadline: string;
   bindingSignup: boolean;
   price: string;
   signupOpenDate: string;
-}
+};
 
-export interface Category {
+export type Category = {
   id: string;
   name: string;
-}
+};
 
-export interface SignUp {
+export type SignUp = {
   id: string;
   user: User;
   userEmail: string;
   userGradeYear: number;
   userAllergies: string;
   userPhoneNumber: string;
-}
+  hasBoughtTicket: boolean;
+};

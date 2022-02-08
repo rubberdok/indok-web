@@ -1,4 +1,6 @@
+import { Event } from "@interfaces/events";
 import { Organization } from "@interfaces/organizations";
+import { HeaderValuePair } from "@interfaces/utils";
 import {
   Card,
   CardContent,
@@ -6,22 +8,16 @@ import {
   Chip,
   Divider,
   Grid,
+  makeStyles,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  makeStyles,
 } from "@material-ui/core";
 import dayjs from "dayjs";
 import Link from "next/link";
-import { Event } from "@interfaces/events";
-
-interface HeaderValuePair<T> {
-  header: string;
-  field: keyof T;
-}
 
 const eventFields: HeaderValuePair<Event>[] = [
   { header: "Navn", field: "title" },
@@ -67,9 +63,9 @@ const OrgEventsTable: React.FC<Props> = ({ organization }) => {
                     <Link href={`${organization.id}/events/${event.id}`} passHref key={event.id}>
                       <TableRow className={classes.hover} hover>
                         <TableCell>{dayjs(event.startTime).format("HH:mm DD-MM-YYYY")}</TableCell>
-                        {eventFields.map((field: HeaderValuePair<Event>) => (
-                          <TableCell key={`event-${event.id}-cell-${field.field}`}>{event[field.field]}</TableCell>
-                        ))}
+                        <TableCell>{event.title}</TableCell>
+                        {/* TODO: fix this*/}
+                        {event.availableSlots && <TableCell>{event.availableSlots[0].availableSlots}</TableCell>}
                         <TableCell>{event.usersAttending?.length}</TableCell>
                         <TableCell>
                           <Chip

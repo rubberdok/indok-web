@@ -95,19 +95,19 @@ class EventsBaseTestCase(ExtendedGraphQLTestCase):
                 }}
                 """
 
-        self.create_category_query = f"""
-                mutation CreateCategory {{
+        self.create_category_query = """
+                mutation CreateCategory {
                     createCategory(
-                        categoryData: {{
+                        categoryData: {
                             name: \"Spennende kategori\",
-                            }}
-                        ) {{
-                    category {{
+                            }
+                        ) {
+                    category {
                         id
-                    }}
+                    }
                       ok
-                        }}
-                    }}
+                        }
+                    }
                 """
 
         self.update_category_query = f"""
@@ -214,7 +214,7 @@ class EventsResolversTestCase(EventsBaseTestCase):
                 title
                 }
             }
-            """,
+            """
         )
         # This validates the status code and if you get errors
         self.assertResponseNoErrors(response)
@@ -341,7 +341,7 @@ class EventsMutationsTestCase(EventsBaseTestCase):
                             title: \"{event.title}\",
                             description: \"{event.description}\",
                             startTime: \"{event.start_time.strftime("%Y-%m-%dT%H:%M:%S+00:00")}\",
-                            endTime:  \"{event.end_time.strftime("%Y-%m-%dT%H:%M:%S+00:00")}\",  
+                            endTime:  \"{event.end_time.strftime("%Y-%m-%dT%H:%M:%S+00:00")}\",
                             organizationId: {event.organization.id},
                             allowedGradeYears: {self.format_grade_years(event.allowed_grade_years)}
                             }},
@@ -354,7 +354,7 @@ class EventsMutationsTestCase(EventsBaseTestCase):
 
                         slotDistributionData: {{
                             availableSlots: {slot_distribution.available_slots},
-                            gradeYears: {grade_years_string},                
+                            gradeYears: {grade_years_string},
                             }}
 
                         ) {{
@@ -406,7 +406,7 @@ class EventsMutationsTestCase(EventsBaseTestCase):
                             organizationId: {event.organization.id},
                             allowedGradeYears: {self.format_grade_years(event.allowed_grade_years)},
                             }},
-                            
+
                         attendableData: {{
                             signupOpenDate: \"{attendable.signup_open_date.strftime("%Y-%m-%dT%H:%M:%S+00:00")}\",
                             bindingSignup: {"true" if attendable.binding_signup else "false"},
@@ -600,7 +600,7 @@ class EventsMutationsTestCase(EventsBaseTestCase):
                             deadline: \"{attendable.deadline.strftime("%Y-%m-%dT%H:%M:%S+00:00")}\",
                             price: 100.0
                             }},
-                            
+
                         slotDistributionData: {{
                             availableSlots: {slot_distribution.available_slots},
                             gradeYears: {grade_years_string},
@@ -635,6 +635,7 @@ class EventsMutationsTestCase(EventsBaseTestCase):
 
     def test_update_event_make_attendable(self):
         # Make non-attendable event attendable
+        signup_open_date = (timezone.now() + datetime.timedelta(days=1)).strftime("%Y-%m-%dT%H:%M:%S+00:00")
         query = f"""
         mutation {{
           updateEvent(
@@ -642,7 +643,9 @@ class EventsMutationsTestCase(EventsBaseTestCase):
               isAttendable: true
               hasGradeDistributions: false
               eventData: {{ title: \"{self.non_attendable_event.title}\"}}
-              attendableData: {{signupOpenDate: \"{(timezone.now() + datetime.timedelta(days=1)).strftime("%Y-%m-%dT%H:%M:%S+00:00")}\"}}
+              attendableData: {{
+                  signupOpenDate: \"{signup_open_date}\"
+                  }}
               slotDistributionData: {{availableSlots: {2}, gradeYears: {{category: \"1,2,3,4,5\", availableSlots: 2}} }}
               ) {{
             ok
@@ -694,7 +697,13 @@ class EventsMutationsTestCase(EventsBaseTestCase):
               isAttendable: true
               hasGradeDistributions: true
               eventData: {{ title: \"{self.attendable_and_open_event.title}\"}}
-              slotDistributionData: {{ availableSlots: 2, gradeYears: [{{category: "1,2", availableSlots: 1}}, {{category: "3,4,5", availableSlots: 1}}] }}
+              slotDistributionData: {{
+                   availableSlots: 2,
+                   gradeYears: [
+                       {{category: "1,2", availableSlots: 1}},
+                       {{category: "3,4,5", availableSlots: 1}}
+                       ]
+                    }}
               ) {{
             ok
             event {{
@@ -743,7 +752,14 @@ class EventsMutationsTestCase(EventsBaseTestCase):
               isAttendable: true
               hasGradeDistributions: true
               eventData: {{ title: \"{self.attendable_event_with_slot_dist.title}\"}}
-              slotDistributionData: {{ availableSlots: {3}, gradeYears: [{{category: "1,2", availableSlots: 1}}, {{category: "3,4", availableSlots: 1}}, {{category: "5", availableSlots: 1}}] }}
+              slotDistributionData: {{
+                  availableSlots: {3},
+                  gradeYears: [
+                      {{category: "1,2", availableSlots: 1}},
+                       {{category: "3,4", availableSlots: 1}},
+                        {{category: "5", availableSlots: 1}}
+                        ]
+                    }}
               ) {{
             ok
             event {{
@@ -792,7 +808,7 @@ class EventsMutationsTestCase(EventsBaseTestCase):
 
     def test_empty_name(self):
         # Try to create a category with no name variable
-        query = f"""
+        query = """
                 mutation CreateCategory {{
                     createCategory(
                         categoryData: {{

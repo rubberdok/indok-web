@@ -42,7 +42,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        image: [frontend, backend, cypress]
+        image: [frontend, backend]
         stage: [test, production]
         include:
           - image: frontend
@@ -54,14 +54,9 @@ jobs:
             env-prefix: django
             context: ./backend
             dockerfile: Dockerfile.prod
-          - image: cypress
-            context: ./e2e/integration
-            dockerfile: Dockerfile
         exclude:
           - image: backend
             stage: test
-          - image: cypress
-            stage: production
       fail-fast: false
 
     env:
@@ -78,10 +73,19 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
+          mask-aws-account-id: false
 
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Set image tag
+        id: image-tag
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: indokweb-${{ matrix.image }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
 
       - name: Load environment variables from S3
         if: ${{ matrix.build-env }}
@@ -105,9 +109,23 @@ jobs:
           context: ${{ matrix.context }}
           file: ${{ matrix.context }}/${{ matrix.dockerfile }}
           outputs: type=docker,dest=/tmp/${{ env.dockerfile }}.tar
-          tags: ${{ matrix.image }}:${{ matrix.stage }}
-          cache-from: type=gha,scope=${{ github.workflow }}-${{ env.dockerfile }}
-          cache-to: type=gha,mode=max,scope=${{ github.workflow }}-${{ env.dockerfile }}
+          tags: |
+            ${{ matrix.image }}:${{ matrix.stage }}
+            ${{ steps.image-tag.outputs.image }}
+          push: false
+          build-args: |
+            ${{ steps.env-download.outputs.build-args }}
+
+      - name: Push ${{ matrix.image }} image
+        id: push-image
+        # If this is run on the main branch, and is a production image, it should be pushed to ECR
+        if: ${{ github.ref == 'refs/heads/main' && matrix.stage == 'production' }}
+        uses: docker/build-push-action@v2
+        with:
+          context: ${{ matrix.context }}
+          file: ${{ matrix.context }}/${{ matrix.dockerfile }}
+          tags: ${{ steps.image-tag.outputs.image }}
+          push: true
           build-args: |
             ${{ steps.env-download.outputs.build-args }}
 
@@ -163,6 +181,8 @@ jobs:
           aws s3 cp s3://indok-web-environments/${{ env.ENV_FILE }} ${{ env.ENV_FILE }}
           echo "DATAPORTEN_SECRET=${{ secrets.DATAPORTEN_SECRET }}" >> ${{ env.ENV_FILE }}
           echo "GOOGLE_DRIVE_API_KEY=${{ secrets.GOOGLE_DRIVE_API_KEY }}" >> ${{ env.ENV_FILE }}
+          echo "VIPPS_SECRET=${{ secrets.VIPPS_SECRET }}" >> ${{ env.ENV_FILE }}
+          echo "VIPPS_SUBSCRIPTION_KEY=${{ secrets.VIPPS_SUBSCRIPTION_KEY }}" >> ${{ env.ENV_FILE }}
 
       - name: Run API tests
         run: |
@@ -181,10 +201,27 @@ jobs:
           flags: apitests
           fail_ci_if_error: true
 
-  integration:
-    name: Integration Tests
+  prepare:
     runs-on: ubuntu-latest
-    needs: build
+    outputs:
+      uuid: ${{ steps.uuid.outputs.value }}
+    steps:
+      - name: Generate unique ID 💎
+        id: uuid
+        # take the current commit + timestamp together
+        # the typical value would be something like
+        # "sha-5d3fe...35d3-time-1620841214"
+        run: echo "::set-output name=value::sha-$GITHUB_SHA-time-$(date +"%s")"
+
+  e2e:
+    needs: [prepare, build]
+    name: E2E Tests
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # Containers for parallelization, increase if necessary
+        containers: [1, 2, 3]
     env:
       ENV_FILE: django.test.env
 
@@ -201,7 +238,6 @@ jobs:
         run: |
           docker load --input /tmp/backend-production/backend-production.tar
           docker load --input /tmp/frontend-test/frontend-test.tar
-          docker load --input /tmp/cypress-test/cypress-test.tar
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -216,9 +252,119 @@ jobs:
           aws s3 cp s3://indok-web-environments/${{ env.ENV_FILE }} ${{ env.ENV_FILE }}
           echo "DATAPORTEN_SECRET=${{ secrets.DATAPORTEN_SECRET }}" >> ${{ env.ENV_FILE }}
           echo "GOOGLE_DRIVE_API_KEY=${{ secrets.GOOGLE_DRIVE_API_KEY }}" >> ${{ env.ENV_FILE }}
+          echo "VIPPS_SECRET=${{ secrets.VIPPS_SECRET }}" >> ${{ env.ENV_FILE }}
+          echo "VIPPS_SUBSCRIPTION_KEY=${{ secrets.VIPPS_SUBSCRIPTION_KEY }}" >> ${{ env.ENV_FILE }}
 
       - name: Build and run the Application
         run: docker compose -f docker-compose.integration.yml up -d
 
-      - name: Run the Integration Tests
-        run: docker run --network host cypress:test --record --key ${{ secrets.CYPRESS_RECORD_KEY }}
+      - name: Run Cypress
+        uses: cypress-io/github-action@v2
+        with:
+          record: true
+          parallel: true
+          group: "E2E"
+          working-directory: e2e
+          headless: true
+          ci-build-id: ${{ needs.prepare.outputs.uuid }}
+        env:
+          # pass the Dashboard record key as an environment variable
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          # Recommended: pass the GitHub token lets this action correctly
+          # determine the unique run id necessary to re-run the checks
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  deploy:
+    name: Deploy to ECS
+    runs-on: ubuntu-latest
+
+    needs: [api]
+    if: github.ref == 'refs/heads/main'
+
+    environment: production
+    concurrency: ${{ matrix.image }}
+
+    strategy:
+      matrix:
+        image: [frontend, backend]
+        include:
+          - image: frontend
+            sourcemaps: .next
+            mount: true
+            url_prefix: ~/_next/
+          - image: backend
+            mount: false
+      fail-fast: false
+
+    env:
+      ECS_TASK_DEFINITION: .aws/task-definition.${{ matrix.image }}.json
+      ECS_SERVICE: indokweb-${{ matrix.image }}-fg-service
+      ECS_REPOSITORY: indokweb-${{ matrix.image }}
+      SENTRY_PROJECT: indokweb-${{ matrix.image }}
+      CONTAINER_NAME: ${{ matrix.image }}
+      ECS_CLUSTER: indokweb-cluster # Set this to our ECS cluster name, e.g. indokweb-cluster
+      SENTRY_ORG: rbberdk
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_DEPLOY_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_DEPLOY_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+          mask-aws-account-id: false
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Set image tag
+        id: image-tag
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: indokweb-${{ matrix.image }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+
+      - name: Update task definition
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@master
+        with:
+          task-definition: ${{ env.ECS_TASK_DEFINITION }}
+          container-name: ${{ env.CONTAINER_NAME }}
+          image: ${{ steps.image-tag.outputs.image }}
+          environment-variables: |
+            GIT_COMMIT_SHA=${{ github.sha }}
+
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: ${{ env.ECS_SERVICE }}
+          cluster: ${{ env.ECS_CLUSTER }}
+          wait-for-service-stability: true
+
+      - name: Start container
+        id: container
+        if: ${{ matrix.mount }}
+        run: echo "::set-output name=container::$(docker run -d ${{ steps.image-tag.outputs.image }} sleep 3600)"
+
+      - name: Copy files
+        if: ${{ matrix.mount }}
+        run: docker cp ${{ steps.container.outputs.container }}:/usr/src/app/${{ matrix.sourcemaps }} ${{ matrix.sourcemaps }}
+
+      - name: Sentry release
+        uses: getsentry/action-release@v1.1.6
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ env.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ env.SENTRY_PROJECT }}
+        with:
+          environment: production
+          finalize: true
+          sourcemaps: ${{ matrix.sourcemaps }}
+          url_prefix: ${{ matrix.url_prefix }}
+          version: ${{ github.sha }}

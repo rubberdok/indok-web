@@ -91,7 +91,8 @@ class CreateEvent(graphene.Mutation):
 
         check_user_membership(info.context.user, organization)
 
-        with transaction.atomic():  # Make atomic so if the creation of one object fails, no changes will be made to the database
+        # Make atomic so if the creation of one object fails, no changes will be made to the database
+        with transaction.atomic():
             # Validate data
             create_event_validation(event_data, attendable_data, slot_distribution_data)
 
@@ -152,7 +153,8 @@ class UpdateEvent(graphene.Mutation):
 
         check_user_membership(info.context.user, event.organization)
 
-        with transaction.atomic():  # Make atomic so if the update of one object fails, no changes will be made to the database
+        # Make atomic so if the update of one object fails, no changes will be made to the database
+        with transaction.atomic():
             attendable = getattr(event, "attendable", None)
             slot_distribution = None
             if attendable is not None:
@@ -192,7 +194,8 @@ class UpdateEvent(graphene.Mutation):
 
             else:
                 if attendable_data is not None:
-                    # If the event was changed to be attendable, create attendable object and one or more slot distributions
+                    # If the event was changed to be attendable,
+                    # create attendable object and one or more slot distributions
                     if attendable is None:
                         attendable = create_attendable(attendable_data, event)
                         create_slot_distributions(slot_distribution_data, attendable)
@@ -219,7 +222,8 @@ class UpdateEvent(graphene.Mutation):
 
 class DeleteEvent(graphene.Mutation):
     """
-    Deletes the event with the given ID, deletion will also cascade to any related attendable and slot distribution objects
+    Deletes the event with the given ID, deletion will also cascade to any
+    related attendable and slot distribution objects
     """
 
     class Arguments:

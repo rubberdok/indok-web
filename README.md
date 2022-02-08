@@ -1,7 +1,7 @@
 <h1 align="center">Indøk NTNU</h1><br>
 <p align="center">
   <a href="https://www.indokntnu.no/">
-    <img alt="Logo" title="Rubberdøk" src="https://github.com/hovedstyret/indok-web/blob/docs/assets/rubberdok_logo.svg" width="300">
+    <img alt="Logo" title="Rubberdøk" src="https://github.com/rubberdok/indok-web/blob/docs/assets/rubberdok_logo.svg" width="300">
   </a>
 </p>
 
@@ -16,16 +16,16 @@
 ## Introduction
 
 [![MIT License](https://img.shields.io/apm/l/atomic-design-ui.svg?)](https://opensource.org/licenses/MIT)
-[![AWS](https://github.com/hovedstyret/indok-web/actions/workflows/aws.yml/badge.svg)](https://github.com/hovedstyret/indok-web/actions/workflows/aws.yml)
+[![CI](https://github.com/rubberdok/indok-web/actions/workflows/ci.yml/badge.svg)](https://github.com/rubberdok/indok-web/actions/workflows/ci.yml)
 [![Code style](https://img.shields.io/badge/code%20style-black-black?style=flat)](https://github.com/psf/black)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat)](https://github.com/prettier/prettier)
-[![codecov](https://codecov.io/gh/hovedstyret/indok-web/branch/main/graph/badge.svg?token=UO2NENP9Z8)](https://codecov.io/gh/hovedstyret/indok-web)
+[![codecov](https://codecov.io/gh/rubberdok/indok-web/branch/main/graph/badge.svg?token=UO2NENP9Z8)](https://codecov.io/gh/rubberdok/indok-web)
 
 Website for the students at Industrial Economics and Technology Management at NTNU Trondheim. Built with Django, React/Next.js, and GraphQL API. Built and maintained by Rubberdøk NTNU.
 
 <p align="center">
   <a href="https://www.indokntnu.no/">
-    <img alt="Landing Page" title="Indøk NTNU" src="https://github.com/hovedstyret/indok-web/blob/docs/assets/Index.png" width="600">
+    <img alt="Landing Page" title="Indøk NTNU" src="https://github.com/rubberdok/indok-web/blob/docs/assets/Index.png" width="600">
   </a>
 </p>
 
@@ -40,7 +40,7 @@ The website includes:
 
 ## Feedback
 
-[File an issue](https://github.com/hovedstyret/indok-web/issues/new)!
+[File an issue](https://github.com/rubberdok/indok-web/issues/new)!
 
 ## Setup
 
@@ -53,7 +53,7 @@ The website includes:
 3. Clone the project and build the Docker images
 
 ```zsh
-git clone https://github.com/hovedstyret/indok-web.git
+git clone https://github.com/rubberdok/indok-web.git
 cd indok-web
 docker compose build
 ```
@@ -132,7 +132,7 @@ In short, the process is as follows:
   </a>
   &nbsp;
   <a href="https://nextjs.org">
-    <img alt="NextJS" src="https://github.com/hovedstyret/indok-web/blob/docs/assets/nextjs_logo.svg" height="50">
+    <img alt="NextJS" src="https://github.com/rubberdok/indok-web/blob/docs/assets/nextjs_logo.svg" height="50">
   </a>
   &nbsp;
   <a href="https://www.typescriptlang.org/">
@@ -144,7 +144,7 @@ In short, the process is as follows:
   </a>
   &nbsp;
   <a href="https://www.djangoproject.com">
-    <img alt="Django" src="https://github.com/hovedstyret/indok-web/blob/docs/assets/django_logo.svg" height="50">
+    <img alt="Django" src="https://github.com/rubberdok/indok-web/blob/docs/assets/django_logo.svg" height="50">
   </a>
   &nbsp;
   <a href="https://www.docker.com">
@@ -152,6 +152,6 @@ In short, the process is as follows:
   </a>
   &nbsp;
   <a href="https://aws.amazon.com/">
-    <img src="https://github.com/hovedstyret/indok-web/blob/docs/assets/aws_logo.svg" alt="Powered by AWS Cloud Computing", height="50">
+    <img src="https://github.com/rubberdok/indok-web/blob/docs/assets/aws_logo.svg" alt="Powered by AWS Cloud Computing", height="50">
   </a>
 </p>

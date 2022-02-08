@@ -1,15 +1,46 @@
+from typing import TypedDict, Union
+
 import graphene
 from graphene_django import DjangoObjectType
 from graphql_jwt.decorators import login_required
+
+from apps.ecommerce.models import Order, Product
+from apps.ecommerce.types import ProductType
+from apps.events.helpers import get_attendant_group
+from apps.users.models import User
+from apps.users.types import UserType
+
 from .models import Attendable, Category, Event, SignUp
+
+UserAttendance = TypedDict(
+    "UserAttendance", {"is_signed_up": bool, "is_on_waiting_list": bool, "has_bought_ticket": bool}
+)
+
+
+def has_bought_ticket(event: Event, user: User) -> bool:
+    return (
+        event.products.exists()
+        and Order.objects.filter(
+            product=event.products.get(),
+            user=user,
+            payment_status__in=[
+                Order.PaymentStatus.RESERVED,
+                Order.PaymentStatus.CAPTURED,
+            ],
+        ).exists()
+    )
 
 
 class UserAttendingType(graphene.ObjectType):
     is_signed_up = graphene.Boolean()  # NOTE: Her mener vi kanskje is_attending?
     is_on_waiting_list = graphene.Boolean()
+    has_bought_ticket = graphene.Boolean()
 
 
 class SignUpType(DjangoObjectType):
+    has_bought_ticket = graphene.Boolean()
+    user_allergies = graphene.String()
+
     class Meta:
         model = SignUp
         fields = [
@@ -20,10 +51,17 @@ class SignUpType(DjangoObjectType):
             "is_attending",
             "extra_information",
             "user_email",
-            "user_allergies",
             "user_phone_number",
             "user_grade_year",
         ]
+
+    @staticmethod
+    def resolve_user_allergies(parent: SignUp, info) -> str:
+        return parent.user.allergies
+
+    @staticmethod
+    def resolve_has_bought_ticket(sign_up: SignUp, info) -> bool:
+        return has_bought_ticket(sign_up.event, sign_up.user)
 
 
 class GradeDistributionType(graphene.ObjectType):
@@ -39,12 +77,13 @@ class AttendableType(DjangoObjectType):
 
 class EventType(DjangoObjectType):
     user_attendance = graphene.Field(UserAttendingType)
-    users_on_waiting_list = graphene.List(SignUpType)
-    users_attending = graphene.List(SignUpType)
+    users_on_waiting_list = graphene.List(UserType)
+    users_attending = graphene.List(UserType)
     available_slots = graphene.List(GradeDistributionType)
     attendable = graphene.Field(AttendableType)
     allowed_grade_years = graphene.List(graphene.Int)
     is_full = graphene.Boolean()
+    product = graphene.Field(ProductType)
 
     class Meta:
         model = Event
@@ -79,30 +118,29 @@ class EventType(DjangoObjectType):
             return wrapper
 
     @staticmethod
-    def resolve_user_attendance(event, info):
+    def resolve_user_attendance(event: Event, info) -> UserAttendance:
         user = info.context.user
         attending, waiting_list = event.get_attendance_and_waiting_list()
         if attending is None:
             return {
                 "is_signed_up": False,
                 "is_on_waiting_list": False,
+                "has_bought_ticket": False,
             }
 
-        group = None
-        for attendant_group in attending.keys():
-            if str(user.grade_year) in attendant_group:
-                group = attendant_group
-                break
+        group = get_attendant_group(attending, user.grade_year)
 
         if group is None:
             return {
                 "is_signed_up": False,
                 "is_on_waiting_list": False,
+                "has_bought_ticket": False,
             }
 
         return {
             "is_signed_up": user in attending[group],
             "is_on_waiting_list": user in waiting_list[group],
+            "has_bought_ticket": has_bought_ticket(event, user),
         }
 
     @staticmethod
@@ -121,42 +159,36 @@ class EventType(DjangoObjectType):
     @staticmethod
     @login_required
     @PermissionDecorators.is_in_event_organization
-    def resolve_users_on_waiting_list(event, info):
-        _, waiting_list = event.get_attendance_and_waiting_list()
-        if waiting_list is None:
-            return []
-        all_on_waiting_list = []
-        for waiting_list_group in waiting_list.values():
-            all_on_waiting_list += waiting_list_group
-        return SignUp.objects.filter(event=event, user__in=all_on_waiting_list, is_attending=True)
+    def resolve_users_on_waiting_list(event: Event, info):
+        return event.users_on_waiting_list
+        # return SignUp.objects.filter(event=event, user__in=event.users_on_waiting_list, is_attending=True)
 
     @staticmethod
     @login_required
     @PermissionDecorators.is_in_event_organization
-    def resolve_users_attending(event, info):
-        attending, _ = event.get_attendance_and_waiting_list()
-        if attending is None:
-            return []
-        all_attending = []
-        for attending_group in attending.values():
-            all_attending += attending_group
-        return SignUp.objects.filter(event=event, user__in=all_attending, is_attending=True)
+    def resolve_users_attending(event: Event, info):
+        return event.users_attending
+        # return SignUp.objects.filter(event=event, user__in=event.users_attending, is_attending=True)
 
     @staticmethod
     @login_required
-    def resolve_available_slots(event, info):
-        user = info.context.user
-        if not user.memberships.filter(organization=event.organization).exists():
-            return None
+    @PermissionDecorators.is_in_event_organization
+    def resolve_available_slots(event: Event, info) -> Union[int, None]:
         return event.available_slots
 
     @staticmethod
     @login_required
     def resolve_attendable(event, info):
-        user = info.context.user
-        if not user.memberships.filter(organization=event.organization).exists() or not hasattr(event, "attendable"):
+        if not hasattr(event, "attendable"):
             return None
         return event.attendable
+
+    @staticmethod
+    def resolve_product(event: Event, info) -> Product:
+        try:
+            return event.products.get()
+        except Product.DoesNotExist:
+            return None
 
 
 class CategoryType(DjangoObjectType):

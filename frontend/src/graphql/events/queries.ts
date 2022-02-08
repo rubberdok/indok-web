@@ -39,6 +39,7 @@ export const GET_EVENTS_DEFAULT_EVENTS_AND_USERS = gql`
       userAttendance {
         isSignedUp
         isOnWaitingList
+        hasBoughtTicket
       }
       isFull
     }
@@ -74,6 +75,7 @@ export const GET_EVENTS_DEFAULT_EVENTS_AND_USERS = gql`
       userAttendance {
         isSignedUp
         isOnWaitingList
+        hasBoughtTicket
       }
       isFull
     }
@@ -135,6 +137,7 @@ export const GET_EVENTS = gql`
       userAttendance {
         isSignedUp
         isOnWaitingList
+        hasBoughtTicket
       }
       isFull
     }
@@ -220,8 +223,12 @@ export const GET_EVENT = gql`
       userAttendance {
         isSignedUp
         isOnWaitingList
+        hasBoughtTicket
       }
       isFull
+      product {
+        id
+      }
     }
   }
 `;
@@ -266,35 +273,33 @@ export const ADMIN_GET_EVENT = gql`
       }
       shortDescription
       usersAttending {
-        user {
-          id
-          firstName
-          lastName
-        }
-        userEmail
-        userGradeYear
-        userAllergies
-        userPhoneNumber
+        firstName
+        lastName
+        email
+        gradeYear
+        allergies
+        phoneNumber
       }
       usersOnWaitingList {
-        user {
-          id
-          firstName
-          lastName
-        }
-        userEmail
-        userGradeYear
-        userAllergies
-        userPhoneNumber
+        firstName
+        lastName
+        email
+        gradeYear
+        allergies
+        phoneNumber
       }
       userAttendance {
         isSignedUp
         isOnWaitingList
+        hasBoughtTicket
       }
       hasExtraInformation
       contactEmail
       allowedGradeYears
       isFull
+      product {
+        id
+      }
     }
   }
 `;
@@ -356,7 +361,7 @@ export const QUERY_SIGNED_UP_USERS = gql`
         id
       }
       usersAttending {
-        userEmail
+        email
       }
     }
   }

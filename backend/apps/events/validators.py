@@ -4,14 +4,14 @@ from django.utils.timezone import make_aware
 from utils.helpers.validators import email_validation
 
 
-ATTENDABLE_ERROR = "At a minimum, you must specify the number of available slots and when the sign up should open to create an attenable event"
+ATTENDABLE_ERROR = "At a minimum, you must specify the number of available slots and when the sign up should open to create an attenable event"  # noqa
 
 
 def time_validation(start_time, end_time):
-    if start_time.tzinfo == None:
+    if start_time.tzinfo is None:
         start_time = make_aware(start_time, is_dst=True)
 
-    if end_time is not None and end_time.tzinfo == None:
+    if end_time is not None and end_time.tzinfo is None:
         end_time = make_aware(end_time, is_dst=True)
 
     if start_time < timezone.now() or (end_time is not None and end_time < timezone.now()):
@@ -41,14 +41,14 @@ def price_binding_sign_up_validation(attendable_data, attendable=None):
         if hasattr(attendable_data, "binding_signup"):
             binding_signup = attendable_data.binding_signup
 
-        if price is not None and binding_signup == False:
+        if price is not None and not binding_signup:
             raise ValidationError("Betalt påmelding krever bindende påmelding")
     else:
         if (
             hasattr(attendable_data, "price")
             and attendable_data.price is not None
             and hasattr(attendable_data, "binding_signup")
-            and attendable_data.binding_signup == False
+            and not attendable_data.binding_signup
         ):
             raise ValidationError("Betalt påmelding krever bindende påmelding")
 

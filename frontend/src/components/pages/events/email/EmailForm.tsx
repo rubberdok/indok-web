@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { SEND_EVENT_EMAILS } from "@graphql/events/mutations";
 import { QUERY_SIGNED_UP_USERS } from "@graphql/events/queries";
-import { AttendableEvent } from "@interfaces/events";
+import { Event } from "@interfaces/events";
 import { Box, Button, Tooltip } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import SendIcon from "@material-ui/icons/Send";
@@ -35,17 +35,17 @@ const EmailForm: React.FC<EmailFormProps> = ({ eventId }) => {
   const [emailProps, setEmailProps] = useState<SendEmailProps>(defaultMailProps);
   const [validations, setValidations] = useState(defaultValidations);
 
-  const { data } = useQuery<{ event: AttendableEvent }>(QUERY_SIGNED_UP_USERS, {
+  const { data } = useQuery<{ event: Event }>(QUERY_SIGNED_UP_USERS, {
     variables: { id: eventId },
   });
 
   const [sendEventMail] = useMutation(SEND_EVENT_EMAILS);
 
   useEffect(() => {
-    const signUps = data?.event.usersAttending;
+    const users = data?.event.usersAttending;
 
-    if (data?.event && signUps) {
-      setEmailProps({ ...emailProps, receiverEmails: signUps.map((signUp) => signUp.userEmail) });
+    if (data?.event && users) {
+      setEmailProps({ ...emailProps, receiverEmails: users.map((user) => user.email) });
     }
   }, [data]);
 
@@ -83,7 +83,7 @@ const EmailForm: React.FC<EmailFormProps> = ({ eventId }) => {
       />
 
       <Tooltip
-        disableHoverListener={data?.event?.attendable}
+        disableHoverListener={!!data?.event?.attendable}
         title="Du kan kun sende mail hvis det er mulig å melde seg på eventet."
         placement="bottom-start"
       >

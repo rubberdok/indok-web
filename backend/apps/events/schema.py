@@ -13,7 +13,7 @@ from .mutations import (
     SendEventEmails,
 )
 from .resolvers import EventResolvers
-from .types import CategoryType, EventType, SignUpType
+from .types import CategoryType, EventType
 
 
 class EventMutations(graphene.ObjectType):
