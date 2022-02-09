@@ -1,4 +1,4 @@
-import { Box, Button, Container, Grid, makeStyles, Paper, Typography } from "@material-ui/core";
+import { Box, Button, Container, Grid, makeStyles, Paper, Typography, useMediaQuery } from "@material-ui/core";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -8,24 +8,34 @@ const useStyles = makeStyles((theme) => ({
       maxWidth: "90vw",
     },
   },
-  heroCard: {
+  card: {
     marginTop: -80,
     marginBottom: -80,
     padding: "56px 64px",
+    [theme.breakpoints.down("sm")]: {
+      padding: "64px 24px",
+      textAlign: "center",
+    },
     width: "100%",
     zIndex: 1000,
     backgroundColor: "#0b2c1e",
+  },
+  cardGrid: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
   },
 }));
 
 const LandingAnnouncement: React.FC = () => {
   const classes = useStyles();
+  const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down("sm"));
 
   return (
-    <Container style={{ position: "relative" }}>
-      <Paper className={classes.heroCard}>
-        <Grid container spacing={10} style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-          <Grid item xs={2}>
+    <Container style={{ position: "relative", ...(isMobile && { padding: 0 }) }}>
+      <Paper className={classes.card}>
+        <Grid container spacing={isMobile ? 4 : 10} className={classes.cardGrid}>
+          <Grid item md={2}>
             <Box width={150} height={150} position="relative">
               <Image alt="jubileum logo" layout="fill" src="/static/anniversary/anniversary_logo.svg" />
             </Box>
@@ -43,7 +53,7 @@ const LandingAnnouncement: React.FC = () => {
           <Grid item>
             <div>
               <Link href="/events" passHref>
-                <Button variant="contained" size="large" style={{ backgroundColor: "#a3bbac" }}>
+                <Button variant="contained" size="large" fullWidth={isMobile} style={{ backgroundColor: "#a3bbac" }}>
                   Se arrangementer
                 </Button>
               </Link>

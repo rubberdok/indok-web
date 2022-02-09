@@ -26,6 +26,8 @@ const useStyles = makeStyles((theme) => ({
 
     [theme.breakpoints.down(breakpoint)]: {
       marginBottom: theme.spacing(3),
+      lineHeight: 2,
+      fontSize: "0.9rem",
     },
 
     "&:hover": {

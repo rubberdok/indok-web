@@ -32,6 +32,7 @@ const useStyles = makeStyles((theme) => ({
       flexDirection: "column-reverse",
       justifyContent: "flex-end",
     },
+    width: 250,
   },
   title: {
     flexGrow: 1,
