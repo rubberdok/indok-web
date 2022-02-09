@@ -26,6 +26,8 @@ const useStyles = makeStyles((theme) => ({
   },
   appBar: {
     background: "#0b2c1e", //Original color: #022A2A
+    backgroundImage: "url('/static/anniversary/sparkles.gif')",
+    backgroundPosition: "bottom",
   },
   drawer: {
     [theme.breakpoints.down(breakpoint)]: {
