@@ -133,7 +133,7 @@ const useStyles = makeStyles((theme) => ({
 
 const ID_PREFIX = "hero";
 
-const Hero: React.FC = () => {
+const LandingHero: React.FC = () => {
   const classes = useStyles();
   const [isShown, setIsShown] = useState("");
 
@@ -228,4 +228,4 @@ const Hero: React.FC = () => {
   );
 };
 
-export default Hero;
+export default LandingHero;
