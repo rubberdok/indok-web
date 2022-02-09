@@ -1,4 +1,4 @@
-import Hero from "@components/Hero";
+import { LandingHero } from "@components/landing";
 import Layout from "@components/Layout";
 import { Box, Button, Container, makeStyles, Typography } from "@material-ui/core";
 import { NextPage } from "next";
@@ -49,7 +49,7 @@ const IndexPage: NextPage = () => {
 
   return (
     <Layout>
-      <Hero />
+      <LandingHero />
       <Parallax
         bgImageStyle={{ zIndex: -1, objectFit: "cover", objectPosition: "50% -19vh" }}
         className={classes.title}
