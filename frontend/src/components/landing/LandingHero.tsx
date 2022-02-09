@@ -117,14 +117,14 @@ const useStyles = makeStyles((theme) => ({
   },
   nth: {
     transition: "0.7s all ease",
-    background: "url('nth.svg')",
+    background: "url('/static/anniversary/anniversary_logo_black.svg')",
     backgroundSize: "contain",
     backgroundPosition: "left bottom!important",
     backgroundRepeat: "no-repeat",
     opacity: 0.04,
     height: "70vh",
-    marginLeft: "-28vh",
-    top: "-4vh",
+    marginLeft: "-20vh",
+    top: "5vh",
   },
 }));
 
@@ -140,7 +140,7 @@ const LandingHero: React.FC = () => {
       <Grid
         container
         style={{
-          height: "100%" ,
+          height: "100%",
           position: "absolute",
           zIndex: -1,
           background: "black",
@@ -171,13 +171,7 @@ const LandingHero: React.FC = () => {
         </Grid>
         <Hidden smDown>
           <Grid item xs={4} className={classes.relative}>
-            <Box
-              position="absolute"
-              width="100%"
-              height="100%"
-              style={{ background: "white" }}
-              zIndex="-3"
-            ></Box>
+            <Box position="absolute" width="100%" height="100%" style={{ background: "white" }} zIndex="-3"></Box>
 
             <Box className={classes.nth} position="absolute" width="100%" height="100%" zIndex="-2"></Box>
           </Grid>

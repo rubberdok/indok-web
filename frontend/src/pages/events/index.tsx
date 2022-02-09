@@ -9,6 +9,22 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: theme.spacing(4),
     paddingBottom: theme.spacing(8),
   },
+  anniversary: {
+    transition: "0.7s all ease",
+    background: "url('/static/anniversary/anniversary_logo_black.svg')",
+    backgroundSize: "contain",
+    backgroundPosition: "center center!important",
+    backgroundRepeat: "no-repeat",
+    opacity: 0.05,
+    height: "120%",
+    marginLeft: "-20vh",
+    right: 0,
+    top: 0,
+
+    [theme.breakpoints.down("sm")]: {
+      backgroundPosition: "right center!important",
+    },
+  },
 }));
 
 /**
@@ -22,7 +38,7 @@ const Events: NextPage = () => {
 
   return (
     <Layout>
-      <Box width="100%" pt={10} bgcolor={theme.palette.background.paper}>
+      <Box width="100%" pt={10} position="relative" overflow="hidden" bgcolor={theme.palette.background.paper}>
         <Container>
           <Typography variant="h1" gutterBottom>
             Arrangementer
@@ -37,6 +53,7 @@ const Events: NextPage = () => {
             <Tab label="Kalender" />
           </Tabs>
         </Container>
+        <Box className={classes.anniversary} position="absolute" width="100vw" height="100vh"></Box>
       </Box>
       <Container className={classes.container}>
         {showCalendarView ? (
