@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down("sm")]: {
       flexDirection: "column",
     },
-  }
+  },
 }));
 
 const LandingListings: React.FC = () => {
@@ -23,7 +23,7 @@ const LandingListings: React.FC = () => {
   return (
     <Box className={classes.root}>
       <Container>
-        <Box py={isMobile ? 10 : 20} display="flex"  className={classes.container}>
+        <Box py={isMobile ? 10 : 20} display="flex" className={classes.container}>
           <Box maxWidth={650}>
             <Typography variant="h2">Delta i et fantastisk studentmiljø.</Typography>
             <br />

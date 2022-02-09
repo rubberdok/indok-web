@@ -140,7 +140,7 @@ const LandingHero: React.FC = () => {
       <Grid
         container
         style={{
-          height: "100%" ,
+          height: "100%",
           position: "absolute",
           zIndex: -1,
           background: "black",
@@ -171,13 +171,7 @@ const LandingHero: React.FC = () => {
         </Grid>
         <Hidden smDown>
           <Grid item xs={4} className={classes.relative}>
-            <Box
-              position="absolute"
-              width="100%"
-              height="100%"
-              style={{ background: "white" }}
-              zIndex="-3"
-            ></Box>
+            <Box position="absolute" width="100%" height="100%" style={{ background: "white" }} zIndex="-3"></Box>
 
             <Box className={classes.nth} position="absolute" width="100%" height="100%" zIndex="-2"></Box>
           </Grid>

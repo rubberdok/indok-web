@@ -8,7 +8,7 @@ import {
   Slide,
   Toolbar,
   Typography,
-  useScrollTrigger
+  useScrollTrigger,
 } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 import Image from "next/image";
