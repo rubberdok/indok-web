@@ -55,10 +55,6 @@ const useStyles = makeStyles((theme) => ({
     backgroundRepeat: "no-repeat",
     backgroundPosition: "center",
   },
-  heroCard: {
-    marginTop: -70,
-    padding: "32px 48px",
-  },
   relative: {
     position: "relative",
     height: "100%",
@@ -68,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
       maxWidth: "90vw",
     },
     height: "70vh",
-    paddingTop: "25vh",
+    paddingTop: "23vh",
   },
   height: {
     height: "inherit",
