@@ -1,5 +1,6 @@
 import {
   AppBar,
+  Box,
   Container,
   Drawer,
   IconButton,
@@ -7,10 +8,11 @@ import {
   Slide,
   Toolbar,
   Typography,
-  useScrollTrigger,
+  useScrollTrigger
 } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
-import Link from "next/link";
+import Image from "next/image";
+import { default as Link } from "next/link";
 import { useRouter } from "next/router";
 import React, { ReactElement } from "react";
 import NavbarLinks from "./NavbarLinks";
@@ -23,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
   appBar: {
-    background: "#022A2A",
+    background: "#0b2c1e", //Original color: #022A2A
   },
   drawer: {
     [theme.breakpoints.down(breakpoint)]: {
@@ -34,11 +36,14 @@ const useStyles = makeStyles((theme) => ({
   title: {
     flexGrow: 1,
     margin: 0,
-    color: "#b0aca5",
+    display: "flex",
+    flexDirection: "row",
+  },
+  titleLink: {
+    color: "#eec643", //b0aca5
 
     "&:hover": {
-      cursor: "pointer",
-      color: "#fff",
+      color: "#ffd754",
     },
   },
   sectionDesktop: {
@@ -85,11 +90,19 @@ const Navbar: React.FC = () => {
         <AppBar color="primary" className={classes.appBar}>
           <Container className={classes.container}>
             <Toolbar>
-              <Link href="/">
-                <Typography variant="h5" className={classes.title}>
-                  INDØK
-                </Typography>
-              </Link>
+              <Box className={classes.title}>
+                <Box height="auto" width={38} position="relative">
+                  <Image src="/static/anniversary/left_fern.svg" layout="fill" alt="left fern" />
+                </Box>
+                <Link href="/" passHref>
+                  <Typography component="a" className={classes.titleLink} variant="h5">
+                    INDØK
+                  </Typography>
+                </Link>
+                <Box height="auto" width={38} position="relative">
+                  <Image src="/static/anniversary/right_fern.svg" layout="fill" alt="right fern" />
+                </Box>
+              </Box>
               <div className={classes.sectionDesktop}>
                 <NavbarLinks></NavbarLinks>
               </div>
