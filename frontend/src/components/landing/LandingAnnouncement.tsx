@@ -46,7 +46,7 @@ const LandingAnnouncement: React.FC = () => {
                 Indøk har bursdag!
               </Typography>
               <Typography variant="subtitle1" style={{ color: "#a3bbac" }}>
-                Hold av <b>2. - 10. mars</b> for en tidenes jubileumsuke.
+                Hold av <b>2. - 10. mars</b> for tidenes jubileumsuke!
               </Typography>
             </Box>
           </Grid>
