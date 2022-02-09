@@ -1,4 +1,4 @@
-import { Box, Button, Container, Grid, Hidden, Typography } from "@material-ui/core";
+import { Box, Button, Container, Grid, Hidden, Typography, useMediaQuery } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import Link from "next/link";
@@ -64,6 +64,7 @@ const useStyles = makeStyles((theme) => ({
       maxWidth: "90vw",
     },
     height: "70vh",
+
     paddingTop: "23vh",
   },
   height: {
@@ -132,10 +133,19 @@ const ID_PREFIX = "hero";
 const LandingHero: React.FC = () => {
   const classes = useStyles();
   const [isShown, setIsShown] = useState("");
+  const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down("sm"));
 
   return (
-    <Box id="back-to-top-anchor" height="100vh" position="relative">
-      <Grid container style={{ height: "100%", position: "absolute", zIndex: -1, background: "black" }}>
+    <Box id="back-to-top-anchor" height={isMobile ? "80vh" : "100vh"} position="relative">
+      <Grid
+        container
+        style={{
+          height: "100%" ,
+          position: "absolute",
+          zIndex: -1,
+          background: "black",
+        }}
+      >
         <Grid item xs={12} md={8} className={classes.relative}>
           <Hidden smDown>
             {organizations.map((item) => (
@@ -161,7 +171,13 @@ const LandingHero: React.FC = () => {
         </Grid>
         <Hidden smDown>
           <Grid item xs={4} className={classes.relative}>
-            <Box position="absolute" width="100%" height="100%" style={{ background: "white" }} zIndex="-3"></Box>
+            <Box
+              position="absolute"
+              width="100%"
+              height="100%"
+              style={{ background: "white" }}
+              zIndex="-3"
+            ></Box>
 
             <Box className={classes.nth} position="absolute" width="100%" height="100%" zIndex="-2"></Box>
           </Grid>
