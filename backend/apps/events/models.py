@@ -31,6 +31,8 @@ class Event(models.Model):
     """
     Main model for events. Has the general information about all events (regardless of
     whether they are attendable or not)
+
+    THIS IS THE OVERENGINEERED VERSION WHERE SLOT DISTRIBUTIONS IS A SEPERATE MODEL
     """
 
     # ------------------ Mandatory fields ------------------
