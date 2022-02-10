@@ -6,12 +6,17 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cabins', '0018_auto_20211007_1740'),
+        ("cabins", "0018_auto_20211007_1740"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='booking',
-            options={'permissions': [('send_email', 'Can send email'), ('manage_booking', 'Can manage bookings, used for admins')]},
+            name="booking",
+            options={
+                "permissions": [
+                    ("send_email", "Can send email"),
+                    ("manage_booking", "Can manage bookings, used for admins"),
+                ]
+            },
         ),
     ]
