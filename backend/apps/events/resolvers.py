@@ -3,6 +3,7 @@ import io
 import json
 from collections import namedtuple
 from datetime import date
+from typing import Collection, Iterable, Optional
 
 import pandas as pd
 from django.contrib.auth import get_user_model
@@ -11,16 +12,18 @@ from django.db.models import Q
 from ..organizations.models import Organization
 from ..organizations.permissions import check_user_membership
 from .models import Category, Event, SignUp
+from apps.ecommerce.models import Order, Product
 
 DEFAULT_REPORT_FIELDS = {
-    "signup_timestamp",
     "event_title",
     "user_first_name",
     "user_last_name",
+    "user_allergies",
+    "signup_timestamp",
     "signup_user_grade_year",
     "signup_user_email",
     "signup_user_phone_number",
-    "user_allergies",
+    "signup_is_attending",
 }
 
 FiletypeSpec = namedtuple("FiletypeSpec", ["content_type", "extension"])
@@ -140,25 +143,47 @@ class EventResolvers:
         return SignUp.objects.filter(event=event)
 
 
-def create_attendee_report(event_ids, fields):
+def create_attendee_report(event_ids: Iterable[int], fields: Optional[Iterable[str]]):
     fields = set(fields).intersection(DEFAULT_REPORT_FIELDS) if fields is not None else DEFAULT_REPORT_FIELDS
-    user_ids = SignUp.objects.filter(event_id__in=event_ids).values_list("user_id", flat=True)
-
+    sign_ups = (
+        SignUp.objects.filter(event_id__in=event_ids, is_attending=True)
+        .order_by("timestamp")
+        .prefetch_related("event", "user")
+    )
     # Fetch data
-    df_events = pd.DataFrame(Event.objects.filter(id__in=event_ids).values()).set_index("id").add_prefix("event_")
+    df_events = (
+        pd.DataFrame(sign_ups.values_list("event__id", "event__title"), columns=["id", "title"])
+        .set_index("id")
+        .add_prefix("event_")
+    )
     df_users = (
-        pd.DataFrame(get_user_model().objects.filter(id__in=user_ids).values()).set_index("id").add_prefix("user_")
+        pd.DataFrame(
+            sign_ups.values_list("user__id", "user__first_name", "user__last_name", "user__allergies"),
+            columns=["id", "first_name", "last_name", "allergies"],
+        )
+        .set_index("id")
+        .add_prefix("user_")
     )
     df_events_users = (
-        pd.DataFrame(SignUp.objects.filter(is_attending=True, event_id__in=event_ids).order_by("timestamp").values())
+        pd.DataFrame(
+            sign_ups.values(
+                "timestamp",
+                "user_grade_year",
+                "user_email",
+                "user_phone_number",
+                "is_attending",
+            )
+        )
         .add_prefix("signup_")
         .rename(columns={"signup_event_id": "event_id", "signup_user_id": "user_id"})
     )
+
     df_joined = (
         df_events_users.join(df_events, on="event_id", how="inner")
         .join(df_users, on="user_id", how="inner")
-        .sort_values(["event_id", "user_id"])
+        .sort_values(["event_id", "signup_timestamp", "user_id"])
     )
+    query = Q("user_id__in", df_joined.loc[:, "user_id"])
 
     # Return empty dataframe, lookups on an empty frame will raise an exception
     if df_joined.empty:
