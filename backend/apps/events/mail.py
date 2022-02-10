@@ -1,5 +1,4 @@
-from optparse import Option
-from typing import Iterable, Optional, Sequence
+from typing import Optional, Sequence
 from django.core.mail import EmailMessage
 
 
