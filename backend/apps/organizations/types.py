@@ -1,20 +1,19 @@
 from typing import Optional
 import graphene
 
-from apps.permissions.types import ResponsibleGroupType
 from .models import Organization, Membership
 from graphene_django import DjangoObjectType
 from graphql_jwt.decorators import login_required
 
-from ..listings.types import ListingType
+from apps.permissions.types import ResponsibleGroupType
+from apps.listings.types import ListingType
 from .dataloader import ListingsByOrganizationIdLoader
 
 
 class OrganizationType(DjangoObjectType):
     absolute_slug = graphene.String()
     listings = graphene.List(ListingType)
-    primary_group = graphene.Field(source="primary_group", type=ResponsibleGroupType)
-    hr_group = graphene.Field(source="hr_group", type=ResponsibleGroupType)
+    permission_groups = graphene.List(ResponsibleGroupType)
 
     class Meta:
         model = Organization
@@ -33,6 +32,10 @@ class OrganizationType(DjangoObjectType):
             "hr_group",
             "permission_groups",
         ]
+
+    @staticmethod
+    def resolve_permission_groups(organization: Organization, info):
+        return organization.permission_groups.all()
 
     @staticmethod
     def resolve_listings(root: Organization, info):
@@ -76,7 +79,7 @@ class OrganizationType(DjangoObjectType):
 class MembershipType(DjangoObjectType):
     class Meta:
         model = Membership
-        fields = ["id", "group", "organization", "user"]
+        fields = ["id", "groups", "organization", "user"]
 
     class PermissionDecorators:
         @staticmethod

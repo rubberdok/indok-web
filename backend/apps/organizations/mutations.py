@@ -48,7 +48,7 @@ class UpdateOrganization(graphene.Mutation):
         id = graphene.ID(required=True)
         organization_data = OrganizationInput(required=False)
 
-    @permission_required("organizations.change_organization")
+    @permission_required("organizations.change_organization", fn=perms.get_organization_for_permissions)
     def mutate(self, info, id, organization_data=None):
         organization = Organization.objects.get(pk=id)
         user = info.context.user
@@ -82,7 +82,7 @@ class DeleteOrganization(graphene.Mutation):
 class MembershipInput(graphene.InputObjectType):
     user_id = graphene.ID()
     organization_id = graphene.ID()
-    group_id = graphene.ID()
+    group_ids = graphene.List(graphene.ID)
 
 
 class AssignMembership(graphene.Mutation):
@@ -98,17 +98,29 @@ class AssignMembership(graphene.Mutation):
             pk=membership_data["organization_id"]
         )
 
-        try:
-            group = organization.permission_groups.get(pk=membership_data.get("group_id"))
-        except ResponsibleGroup.DoesNotExist:
-            return AssignMembership(membership=None, ok=False)
+        groups = []
+        group_ids = membership_data.get("group_ids")
+        if group_ids is not None:
+            for group_id in group_ids:
+                try:
+                    groups.append(organization.permission_groups.get(pk=group_id))
+                except ResponsibleGroup.DoesNotExist:
+                    return AssignMembership(membership=None, ok=False)
 
         membership = Membership(
             organization_id=membership_data["organization_id"],
             user_id=membership_data["user_id"],
-            group=group,
         )
+
+        # Need to save once before using 'groups' ManyToManyField
         membership.save()
+
+        for group in groups:
+            membership.groups.add(group)
+
+        # Saving after adding groups in order to trigger post_save signal to synchronize Groups/ResponsibleGroups
+        membership.save()
+
         return AssignMembership(membership=membership, ok=True)
 
 

@@ -1,4 +1,5 @@
-import { ApolloClient, ApolloProvider, createHttpLink, InMemoryCache } from "@apollo/client";
+import { ApolloClient, ApolloProvider, createHttpLink } from "@apollo/client";
+import cache from "@graphql/cache";
 import { CssBaseline, responsiveFontSizes } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/styles";
 import "@styles/global.css";
@@ -8,13 +9,15 @@ import { AppProps } from "next/app";
 import Head from "next/head";
 import React, { useEffect } from "react";
 
-const App = ({ Component, pageProps }: AppProps): JSX.Element => {
+type AppPropsWithError = AppProps & { err: Error };
+
+const App = ({ Component, pageProps, err }: AppPropsWithError): JSX.Element => {
   const link = createHttpLink({
     uri: config.GRAPHQL_ENDPOINT,
     credentials: "include",
   });
   const client = new ApolloClient({
-    cache: new InMemoryCache(),
+    cache: cache,
     link,
   });
 
@@ -35,10 +38,7 @@ const App = ({ Component, pageProps }: AppProps): JSX.Element => {
       </Head>
       <ThemeProvider theme={responsiveTheme}>
         <CssBaseline />
-        <Component {...pageProps} />
-        {/* <div id="mobile-warning">
-          Denne siden fungerer ikke optimalt på mobil enda. Prøv nettsiden på en større skjerm.
-        </div> */}
+        <Component {...pageProps} err={err} />
       </ThemeProvider>
     </ApolloProvider>
   );

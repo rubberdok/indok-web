@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/client";
 import Layout from "@components/Layout";
-import { EditUser } from "@components/pages/profile/EditUser";
-import { FirstLogin } from "@components/pages/profile/FirstLogin";
+import { EditUserProps } from "@components/pages/profile/EditUser";
+import { FirstLoginProps } from "@components/pages/profile/FirstLogin";
 import { GET_USER } from "@graphql/users/queries";
 import { User } from "@interfaces/users";
 import {
@@ -20,9 +20,10 @@ import {
 } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
 import { NextPage } from "next";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -38,23 +39,25 @@ const useStyles = makeStyles((theme: Theme) =>
 const ID_PREFIX = "profile";
 
 const ProfilePage: NextPage = () => {
-  const { loading, error, data, refetch: refetchUser } = useQuery<{ user: User }>(GET_USER);
+  const { loading, error, data } = useQuery<{ user: User }>(GET_USER);
 
   const [firstLoginOpen, setFirstLoginOpen] = useState(false);
   const [editUserOpen, setEditUserOpen] = useState(false);
   const classes = useStyles();
   const router = useRouter();
 
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      if (!loading) {
+        if (data?.user === undefined || error) {
+          router.push("/");
+        }
+      }
+    }
+  }, [data, loading, error]);
+
   if (loading) {
     return <Typography variant="h1">Laster ...</Typography>;
-  }
-
-  if (!data || !data.user || error) {
-    if (typeof window !== "undefined") {
-      // redirect user to homepage if no user data and client side
-      router.push("/");
-      return null;
-    }
   }
 
   if (data?.user?.firstLogin && !firstLoginOpen) {
@@ -62,10 +65,17 @@ const ProfilePage: NextPage = () => {
   }
 
   const onSubmit = async () => {
-    await refetchUser();
     firstLoginOpen && setFirstLoginOpen(false);
     editUserOpen && setEditUserOpen(false);
   };
+
+  const FirstLogin = dynamic<FirstLoginProps>(() =>
+    import("@components/pages/profile/FirstLogin").then((module) => module.FirstLogin)
+  );
+
+  const EditUser = dynamic<EditUserProps>(() =>
+    import("@components/pages/profile/EditUser").then((module) => module.EditUser)
+  );
 
   return (
     <Layout>
@@ -73,8 +83,15 @@ const ProfilePage: NextPage = () => {
         <Typography variant="h1">Brukerprofil</Typography>
         {data?.user && (
           <>
-            <FirstLogin open={firstLoginOpen} onSubmit={onSubmit} fullName={data?.user?.firstName} />
-            <EditUser open={editUserOpen} onSubmit={onSubmit} user={data.user} onClose={() => setEditUserOpen(false)} />
+            {firstLoginOpen && <FirstLogin open={firstLoginOpen} onSubmit={onSubmit} fullName={data.user.firstName} />}
+            {editUserOpen && (
+              <EditUser
+                open={editUserOpen}
+                onSubmit={onSubmit}
+                user={data.user}
+                onClose={() => setEditUserOpen(false)}
+              />
+            )}
             <Grid container className={classes.cardPadding}>
               <Grid item xs={6}>
                 <Card variant="outlined" className={classes.card}>
@@ -178,6 +195,21 @@ const ProfilePage: NextPage = () => {
                       <CardActions>
                         <Link href="/report" passHref>
                           <Button>Gå til Baksida</Button>
+                        </Link>
+                      </CardActions>
+                    </Card>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Card>
+                      <CardContent>
+                        <Typography gutterBottom variant="h4">
+                          Mine ordre
+                        </Typography>
+                        <Typography>{`Se en oversikt over alle betalinger du har gjort`}</Typography>
+                      </CardContent>
+                      <CardActions>
+                        <Link href="/ecommerce">
+                          <Button>Gå til betalinger</Button>
                         </Link>
                       </CardActions>
                     </Card>

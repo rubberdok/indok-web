@@ -4,17 +4,15 @@ description: Webkomitéen til Hovedstyret på Indøk
 logo: /img/rubberdok_logo_black.svg
 image: /img/rubberdoklogo1.png
 alt: Logoen til rubberdøk
-styre:
+board:
   ceo:
-    navn: Morgan Heggland
-    tittel: Leder
-    mail: web@indokhs.no
-    telefon: 69420420
+    navn: Lars Waage
+    tittel: Prosjektleder
+    mail: lars.waage@rubberdok.no
   cto:
-    navn: Fredrik Ahlborg
-    mail: fredrik.sha@gmail.com
-    tittel: Content
-    telefon: 99374307
+    navn: Hermann Mørkrid
+    tittel: Prosjektleder
+    mail: hermann.morkrid@rubberdok.no
 tag: annet
 ---
 

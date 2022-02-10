@@ -1,24 +1,13 @@
 import { gql } from "@apollo/client";
+import { USER_FRAMGENT } from "./fragments";
 
 export const AUTHENTICATE = gql`
+  ${USER_FRAMGENT}
   mutation AuthUser($code: String!) {
     authUser(code: $code) {
-      token
       user {
-        id
-        feideEmail
-        email
-        username
-        firstName
-        lastName
-        dateJoined
-        graduationYear
-        gradeYear
-        allergies
-        phoneNumber
-        firstLogin
+        ...UserFields
       }
-      idToken
     }
   }
 `;
@@ -40,21 +29,11 @@ export const GET_ID_TOKEN = gql`
 `;
 
 export const UPDATE_USER = gql`
+  ${USER_FRAMGENT}
   mutation UpdateUser($userData: UserInput) {
     updateUser(userData: $userData) {
       user {
-        id
-        feideEmail
-        email
-        username
-        firstName
-        lastName
-        dateJoined
-        graduationYear
-        gradeYear
-        allergies
-        phoneNumber
-        firstLogin
+        ...UserFields
       }
     }
   }

@@ -1,6 +1,5 @@
 import { useMutation } from "@apollo/client";
 import { UPDATE_USER } from "@graphql/users/mutations";
-import { GET_USER } from "@graphql/users/queries";
 import { User, UserInput, UserInputValidations } from "@interfaces/users";
 import {
   Button,
@@ -21,11 +20,11 @@ import { Check } from "@material-ui/icons";
 import React, { useEffect, useState } from "react";
 import { suggestNames, validateInput } from "./utils";
 
-interface FirstLoginProps {
+export type FirstLoginProps = {
   open: boolean;
   onSubmit: () => void;
   fullName: string;
-}
+};
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -79,14 +78,7 @@ export const FirstLogin: React.FC<FirstLoginProps> = ({ open, onSubmit, fullName
   const handleSubmit = () => {
     updateUser({
       variables: { userData: updateUserInput },
-      update: (cache, { data }) => {
-        if (!data || !data.updateUser || !data.updateUser.user) {
-          return;
-        }
-        cache.writeQuery<User>({ query: GET_USER, data: data.updateUser.user });
-        onSubmit();
-      },
-    });
+    }).then(() => onSubmit());
   };
 
   return (

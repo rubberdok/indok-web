@@ -1,17 +1,14 @@
-from typing import Optional
-
 from django.conf import settings
 from django.db import models
 from django.db.models import UniqueConstraint
 
-from apps.permissions.constants import HR_TYPE, PRIMARY_TYPE
 from apps.permissions.models import ResponsibleGroup
 
 
 class Organization(models.Model):
     name = models.CharField(max_length=100)
     slug = models.SlugField(max_length=100)
-    description = models.CharField(max_length=4000, blank=True)
+    description = models.TextField(blank=True)
 
     parent = models.ForeignKey(
         "Organization",
@@ -41,22 +38,15 @@ class Organization(models.Model):
         through_fields=("organization", "user"),
     )
 
-    @property
-    def hr_group(self) -> Optional["ResponsibleGroup"]:
-        try:
-            return self.permission_groups.get(group_type=HR_TYPE)
-        except ResponsibleGroup.DoesNotExist:
-            return None
-
-    @property
-    def primary_group(self) -> Optional["ResponsibleGroup"]:
-        try:
-            return self.permission_groups.get(group_type=PRIMARY_TYPE)
-        except ResponsibleGroup.DoesNotExist:
-            return None
-
     class Meta:
         constraints = [UniqueConstraint(fields=["parent", "name"], name="unique_child_organization_name")]
+        # Permissions for adding objects tied to the organization
+        permissions = (
+            ("add_listing", "Add listing to organization"),
+            ("add_form", "Add form to organization"),
+            ("add_event", "Add event by organization"),
+            ("add_membership", "Add membership to organization"),
+        )
 
     def __str__(self):
         return f"{self.name}"
@@ -65,7 +55,7 @@ class Organization(models.Model):
 class Membership(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="memberships")
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name="members")
-    group = models.ForeignKey(ResponsibleGroup, on_delete=models.CASCADE, related_name="members", null=True)
+    groups = models.ManyToManyField(ResponsibleGroup, related_name="memberships", blank=True)
 
     class Meta:
         constraints = [UniqueConstraint(fields=["user", "organization"], name="unique_member_in_organization")]

@@ -34,3 +34,7 @@ class UserFactory(DjangoModelFactory):
 
 class IndokUserFactory(UserFactory):
     is_indok = True
+
+
+class StaffUserFactory(UserFactory):
+    is_staff = True

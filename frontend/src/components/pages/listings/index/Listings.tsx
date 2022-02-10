@@ -3,6 +3,7 @@ import { LISTINGS } from "@graphql/listings/queries";
 import { Listing } from "@interfaces/listings";
 import { useQuery } from "@apollo/client";
 import { Grid, Typography, makeStyles, CircularProgress, Button } from "@material-ui/core";
+import Link from "next/link";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -42,7 +43,7 @@ const Listings: React.FC<{
           </Grid>
           <Grid item>
             <Typography variant="caption" align="center">
-              Skjer dette ofte? Ta kontakt på med <a href="mailto:web@indokhs.no">Indøks Webkomité</a>
+              Skjer dette ofte? Send en mail til <Link href="mailto:contact@rubberdok.no">contact@rubberdok.no</Link>.
             </Typography>
           </Grid>
           <Grid item>
