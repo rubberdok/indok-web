@@ -809,15 +809,15 @@ class EventsMutationsTestCase(EventsBaseTestCase):
     def test_empty_name(self):
         # Try to create a category with no name variable
         query = """
-                mutation CreateCategory {{
+                mutation CreateCategory {
                     createCategory(
-                        categoryData: {{
-                            title: \"\",
-                            }}
-                        ) {{
+                        categoryData: {
+                            title: "",
+                            }
+                        ) {
                       ok
-                        }}
-                    }}
+                        }
+                    }
                 """
         response = self.query(query, user=self.super_user)
         self.check_create_category_with_error(response)
