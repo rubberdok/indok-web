@@ -78,7 +78,7 @@ class UpdateBooking(graphene.Mutation):
     ok = graphene.Boolean()
     booking = graphene.Field(AllBookingsType)
 
-    @permission_required("cabins.change_booking")
+    @permission_required("cabins.manage_booking")
     def mutate(
         self,
         info,
@@ -116,7 +116,7 @@ class DeleteBooking(graphene.Mutation):
     class Arguments:
         id = graphene.ID()
 
-    @permission_required("cabins.delete_booking")
+    @permission_required("cabins.manage_booking")
     def mutate(self, info, id, **kwargs):
         try:
             booking = BookingModel.objects.get(pk=id)
