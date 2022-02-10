@@ -50,6 +50,8 @@ services:
       - RABBITMQ_DEFAULT_PASS=password
     ports:
         - "5672:5672"
+    logging:
+     driver: none
 
   celery_worker:
     environment:
@@ -82,6 +84,8 @@ services:
   celery_flower:
    environment:
     - DJANGO_READ_DOT_ENV_FILE=true
+   env_file:
+    - ./backend/.env
    build:
       context: ./backend
       dockerfile: Dockerfile.celery
@@ -92,7 +96,7 @@ services:
      - celery_beat
    ports:
      - "5555:5555"
-   command: celery -A celery_worker flower
+   command: /bin/sh -c "/usr/src/app/entrypoints/celery_flower.sh"
 
 volumes:
   postgres_data:

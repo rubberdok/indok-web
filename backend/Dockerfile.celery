@@ -13,6 +13,10 @@ RUN pip install --upgrade pip
 COPY requirements ./requirements
 RUN pip install -r ./requirements/local.txt
 
+# copy entrypoint.sh
+COPY entrypoints ./entrypoints
+RUN chmod +x ./entrypoints/*.sh
+
 # copy project
 COPY . .
 
