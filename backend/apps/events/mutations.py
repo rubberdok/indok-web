@@ -1,4 +1,5 @@
 import graphene
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404
@@ -6,8 +7,9 @@ from django.utils import timezone
 from graphql_jwt.decorators import login_required, staff_member_required
 from utils.decorators import permission_required
 
-from ..organizations.models import Organization
-from ..organizations.permissions import check_user_membership
+from apps.organizations.models import Organization
+from apps.organizations.permissions import check_user_membership
+
 from .mail import send_event_emails
 from .models import Category, Event, SignUp
 from .types import CategoryType, EventType
@@ -333,14 +335,14 @@ class SendEventEmails(graphene.Mutation):
 
     class Arguments:
         event_id = graphene.ID(required=True)
-        receiverEmails = graphene.List(graphene.String)
+        receiver_emails = graphene.List(graphene.String)
         content = graphene.String()
-        subject = graphene.String()
+        subject = graphene.String(required=True)
 
     ok = graphene.Boolean()
 
     @login_required
-    def mutate(self, info, event_id, receiverEmails, content, subject):
+    def mutate(self, info, event_id, receiver_emails: list[str], content: str, subject: str):
         try:
             event = Event.objects.get(pk=event_id)
         except Event.DoesNotExist:
@@ -348,7 +350,8 @@ class SendEventEmails(graphene.Mutation):
 
         check_user_membership(info.context.user, event.organization)
 
-        send_event_emails(receiverEmails, content, subject)
+        for i in range(0, len(receiver_emails), settings.EMAIL_MAX_RECIPIENTS):
+            send_event_emails(receiver_emails[i : i + settings.EMAIL_MAX_RECIPIENTS], content, subject)
 
         ok = True
         return SendEventEmails(ok=ok)
