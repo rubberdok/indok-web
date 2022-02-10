@@ -79,7 +79,7 @@ services:
       - postgres
       - rabbitmq
       - backend
-    command: celery -A celery_worker beat -l DEBUG
+    command: celery -A celery_worker beat -l DEBUG --pidfile=
 
   celery_flower:
    environment:

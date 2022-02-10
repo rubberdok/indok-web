@@ -28,3 +28,4 @@ django-guardian==2.4.0
 XlsxWriter==3.0.1
 celery==4.4.7
 flower
+django-celery-beat

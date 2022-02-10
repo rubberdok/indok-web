@@ -54,7 +54,15 @@ DJANGO_APPS = [
     "django.contrib.staticfiles",
 ]
 
-THIRD_PARTY_APPS = ["corsheaders", "graphene_django", "rest_framework", "phonenumber_field", "guardian", "celery"]
+THIRD_PARTY_APPS = [
+    "corsheaders",
+    "graphene_django",
+    "rest_framework",
+    "phonenumber_field",
+    "guardian",
+    "celery",
+    "django_celery_beat",
+]
 
 LOCAL_APPS = [
     "apps.archive",
@@ -199,9 +207,4 @@ CELERY_BACKEND = env("CELERY_BACKEND")
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
 
-""" CELERY_BEAT_SCHEDULE = {
-    "sample_task": {
-        "task": "celery_worker.add",
-        "schedule": crontab(minute="*/1"),
-    },
-} """
+CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers.DatabaseScheduler"
