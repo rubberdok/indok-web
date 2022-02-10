@@ -1,4 +1,4 @@
-export const getFormattedData = (
+export const getFormattedDataAndErrors = (
   eventData: Record<string, any>,
   isAttendable: boolean,
   hasSlotDistribution: boolean,
@@ -19,9 +19,12 @@ export const getFormattedData = (
   if (
     isAttendable &&
     hasSlotDistribution &&
-    slotDistribution.reduce((res, dist) => (res = res + dist.availableSlots), 0) !== Number(eventData.availableSlots)
+    slotDistribution.reduce((res, dist) => (res = res + dist.availableSlots), 0) < Number(eventData.availableSlots)
   ) {
-    currentErrors = [...currentErrors, "Totalt antall plasser må stemme med antall i hver gruppe i plassfordelingen"];
+    currentErrors = [
+      ...currentErrors,
+      "Totalt antall plasser kan ikke være større enn summen av antall i hver gruppe i plassfordelingen",
+    ];
   }
   if (isAttendable && !slotDistributionInput.availableSlots) {
     currentErrors = [...currentErrors, "Antall plasser er påkrevd for arrangementer med påmelding"];
@@ -32,44 +35,31 @@ export const getFormattedData = (
 
 const formatEventData = (eventData: Record<string, any>) => {
   const eventInputData = {
-    title: eventData.title,
-    description: eventData.description,
-    startTime: eventData.startTime,
-    organizationId: eventData.organizationId,
-    endTime: eventData.endTime,
-    location: eventData.location,
-    categoryId: eventData.categoryId,
-    image: eventData.image,
-    shortDescription: eventData.shortDescription,
-    contactEmail: eventData.contactEmail,
-    allowedGradeYears: eventData.allowedGradeYears,
-    hasExtraInformation: eventData.hasExtraInformation,
+    title: eventData.title === "" ? undefined : eventData.title,
+    description: eventData.description === "" ? undefined : eventData.description,
+    startTime: eventData.startTime === "" ? undefined : eventData.startTime,
+    organizationId: eventData.organizationId === "" ? undefined : eventData.organizationId,
+    endTime: eventData.endTime === "" ? undefined : eventData.endTime,
+    location: eventData.location === "" ? undefined : eventData.location,
+    categoryId: eventData.categoryId === "" ? undefined : eventData.categoryId,
+    image: eventData.image === "" ? undefined : eventData.image,
+    shortDescription: eventData.shortDescription === "" ? undefined : eventData.shortDescription,
+    contactEmail: eventData.contactEmail === "" ? undefined : eventData.contactEmail,
+    allowedGradeYears: eventData.allowedGradeYears === "" ? undefined : eventData.allowedGradeYears,
+    hasExtraInformation: eventData.hasExtraInformation === "" ? undefined : eventData.hasExtraInformation,
   };
-  const eventInput = { ...eventInputData };
 
-  Object.keys(eventInputData).forEach((key) => {
-    if (eventInputData[key] === "") {
-      eventInput[key] = undefined;
-    }
-  });
-
-  return eventInput;
+  return eventInputData;
 };
 
 const formatAttendableData = (eventData: Record<string, any>) => {
   const attendableInputData = {
-    signupOpenDate: eventData.signupOpenDate,
-    bindingSignup: eventData.bindingSignup,
-    deadline: eventData.deadline,
+    signupOpenDate: eventData.signupOpenDate === "" ? undefined : eventData.signupOpenDate,
+    bindingSignup: eventData.bindingSignup === "" ? undefined : eventData.bindingSignup,
+    deadline: eventData.deadline === "" ? undefined : eventData.deadline,
   }; // add price: eventData.price here
-  const attendableInput = { ...attendableInputData };
 
-  Object.keys(attendableInputData).forEach((key) => {
-    if (attendableInputData[key] === "") {
-      attendableInput[key] = undefined;
-    }
-  });
-  return attendableInput;
+  return attendableInputData;
 };
 
 const formatSlotDistributionData = (
@@ -81,13 +71,7 @@ const formatSlotDistributionData = (
     return { category: stringCategory.slice(1, stringCategory.length), availableSlots: dist.availableSlots };
   });
 
-  const slotDistributionInputData = { availableSlots: eventData.availableSlots, gradeYears: stringSlotDistribution };
-  const slotDistributionInput = { ...slotDistributionInputData };
+  const slotDistributionInputData = { availableSlots: eventData.availableSlots, gradeYears: stringSlotDistribution }; // TODO: endre litt navn her?????
 
-  Object.keys(slotDistributionInputData).forEach((key) => {
-    if (slotDistributionInputData[key] === "") {
-      slotDistributionInput[key] = undefined;
-    }
-  });
-  return slotDistributionInput;
+  return slotDistributionInputData;
 };

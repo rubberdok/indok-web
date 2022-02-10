@@ -9,7 +9,7 @@ import { useRouter } from "next/router";
 import React, { useState } from "react";
 import Alert from "@components/Alert";
 import { DEFAULTINPUT } from "../constants";
-import { getFormattedData } from "../helpers";
+import { getFormattedDataAndErrors } from "../helpers";
 import RequiredFields from "../EventFields/RequiredFields";
 import AttendableFields from "../EventFields/AttendableFields";
 import SlotDistributionFields from "../EventFields/SlotDistributionFields";
@@ -107,7 +107,12 @@ const CreateEvent: React.FC = () => {
   };
 
   const onSubmit = () => {
-    const formattedInputData = getFormattedData(eventData, isAttendable, hasSlotDistribution, slotDistribution);
+    const formattedInputData = getFormattedDataAndErrors(
+      eventData,
+      isAttendable,
+      hasSlotDistribution,
+      slotDistribution
+    );
 
     if (formattedInputData.currentErrors.length > 0) {
       setErrors(formattedInputData.currentErrors);

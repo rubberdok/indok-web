@@ -64,8 +64,8 @@ def create_child_slot_distributions(
 
     # Make sure thatthe distributions of slots equal the total available slots found
     # in the parent distribution
-    if total_child_slots != slot_distribution.available_slots:
-        raise ValidationError("Totalt antall plasser stemmer ikke overens med fordelingen av plasser")
+    if total_child_slots < slot_distribution.available_slots:
+        raise ValidationError("Totalt antall plasser kan ikke være større enn summen av fordelingen av plasser")
 
     # Set grade_years on the parent distribution (all grades allowed at the event) equal to the
     # string of categories we collected when creating child distributions

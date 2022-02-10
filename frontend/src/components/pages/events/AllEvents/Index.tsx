@@ -2,7 +2,7 @@ import { useQuery } from "@apollo/client";
 import { GET_EVENTS_DEFAULT_EVENTS_AND_USERS } from "@graphql/events/queries";
 import { Event } from "@interfaces/events";
 import { User } from "@interfaces/users";
-import { Box, Button, CircularProgress, Drawer, Grid, Hidden, makeStyles, Typography } from "@material-ui/core";
+import { Button, CircularProgress, Drawer, Grid, Hidden, makeStyles, Typography } from "@material-ui/core";
 import { Add, List, Tune } from "@material-ui/icons";
 import Link from "next/link";
 import React, { useState } from "react";
@@ -17,6 +17,9 @@ const useStyles = makeStyles((theme) => ({
   drawer: {
     width: 500,
     maxWidth: "80%",
+  },
+  loading: {
+    padding: theme.spacing(5, 0),
   },
 }));
 
@@ -38,9 +41,9 @@ const AllEvents: React.FC = () => {
 
   if (loading)
     return (
-      <Box component="span">
+      <Grid container justifyContent="center" className={classes.loading}>
         <CircularProgress />
-      </Box>
+      </Grid>
     );
 
   const data = (showDefaultEvents ? allData?.defaultEvents : allData?.allEvents)?.filter((event) =>

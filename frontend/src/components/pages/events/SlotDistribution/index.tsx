@@ -63,8 +63,8 @@ const SlotDistribution: React.FC<Props> = ({ slotDistribution, onUpdateSlotDistr
         <Button
           style={{ margin: 0 }}
           onClick={() => {
-            onUpdateSlotDistribution([...slotDistribution, { category: [], availableSlots: undefined }]);
-            setSlotDistWithId(addId([...slotDistribution, { category: [], availableSlots: undefined }]));
+            onUpdateSlotDistribution([...slotDistribution, { category: [], availableSlots: 0 }]);
+            setSlotDistWithId(addId([...slotDistribution, { category: [], availableSlots: 0 }]));
           }}
           color="primary"
           variant="outlined"
