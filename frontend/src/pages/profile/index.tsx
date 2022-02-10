@@ -117,7 +117,7 @@ const ProfilePage: NextPage = () => {
                 <Orders data-test-id={`${ID_PREFIX}orders-`} />
               </Grid>
               <Grid item md={6} className={classes.card}>
-                <PermissionRequired permission="cabins.add_booking">
+                <PermissionRequired permission="cabins.change_booking">
                   <CabinsAdmin data-test-id={`${ID_PREFIX}cabins-`} />
                 </PermissionRequired>
               </Grid>
