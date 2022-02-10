@@ -10,12 +10,12 @@ const AboutPage: NextPage = () => {
       title="Om oss"
       page=""
       description="Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse er den øverste instansen
-      (moderorganisasjonen) for all studentfrivillighet på masterstudiet Indøk ved NTNU."
+      (moderforeningen) for all studentfrivillighet på masterstudiet Indøk ved NTNU."
     >
       <Typography variant="body1" paragraph>
         Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse er den øverste instansen
-        («mororganisasjonen») for all studentfrivillighet på masterstudiet Indøk ved NTNU. Foreningen drives av over 200
-        ivrige sjeler og over 20 ulike organisasjoner, hvor alt fra veldedighet og ølbrygging til fadderuker og
+        («moderforeningen») for all studentfrivillighet på masterstudiet Indøk ved NTNU. Foreningen drives av over 200
+        ivrige sjeler og over 20 ulike underforeninger, hvor alt fra veldedighet og ølbrygging til fadderuker og
         case-trening står på agendaen.
       </Typography>
       <Typography variant="body1" paragraph>

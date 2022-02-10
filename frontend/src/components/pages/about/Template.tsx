@@ -71,7 +71,7 @@ const Template: React.FC<Props> = ({ children, img, title, description, page }) 
               <Box display="flex" flexDirection="column" alignItems="center">
                 <Box>
                   <Breadcrumbs className={classes.breadcrumb} aria-label="breadcrumb">
-                    <p>Om foreningen</p>
+                    <p>Om oss</p>
                     <p>{page}</p>
                   </Breadcrumbs>
                 </Box>

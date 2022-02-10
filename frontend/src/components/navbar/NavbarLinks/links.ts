@@ -6,7 +6,7 @@ const links = [
     dropdown: [
       {
         id: 1_1,
-        title: "Organisasjoner",
+        title: "Våre foreninger",
         href: "/about/organization",
       },
       {

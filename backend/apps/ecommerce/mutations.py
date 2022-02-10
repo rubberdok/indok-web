@@ -162,7 +162,7 @@ class CreateProduct(graphene.Mutation):
         try:
             organization = Organization.objects.get(id=product_data.get("organization_id"))
         except Organization.DoesNotExist:
-            raise ValueError("Ugyldig organisasjon oppgitt")
+            raise ValueError("Ugyldig forening oppgitt")
 
         check_user_membership(info.context.user, organization)
 

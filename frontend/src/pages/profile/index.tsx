@@ -74,7 +74,7 @@ const ProfilePage: NextPage = () => {
               </Grid>
               <Grid item>
                 <Typography variant="body2" align="center">
-                  Her kan du endre din informasjon, se tidligere arrangementer og organisasjonene der du er medlem.
+                  Her kan du endre din informasjon, se tidligere arrangementer og foreningene der du er medlem.
                 </Typography>
               </Grid>
             </Grid>

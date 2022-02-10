@@ -28,7 +28,7 @@ const OrganizationPage: NextPage = () => {
         <Grid container direction="column" spacing={10}>
           <Grid item>
             <Typography variant="h1" align="center">
-              Dine Organisasjoner
+              Dine foreninger
             </Typography>
           </Grid>
           <Grid item container spacing={10} justifyContent="center">
