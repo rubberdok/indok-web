@@ -661,7 +661,7 @@ class EventsMutationsTestCase(EventsBaseTestCase):
         self.non_attendable_event = Event.objects.get(pk=self.non_attendable_event.id)
         self.assertResponseNoErrors(response)
         self.assertTrue(self.non_attendable_event.attendable is not None)
-        self.assertEqual(len(self.non_attendable_event.available_slots), 1)
+        self.assertEqual(len(self.non_attendable_event.attendable.total_available_slots), 1)
 
     def test_update_event_make_non_attendable(self):
         # Make attendable event non-attendable
@@ -686,7 +686,7 @@ class EventsMutationsTestCase(EventsBaseTestCase):
         self.attendable_and_open_event = Event.objects.get(pk=self.attendable_and_open_event.id)
         self.assertResponseNoErrors(response)
         self.assertFalse(hasattr(self.attendable_and_open_event, "attendable"))
-        self.assertTrue(self.attendable_and_open_event.available_slots is None)
+        self.assertTrue(self.attendable_and_open_event.attendable.total_available_slots is None)
 
     def test_update_event_add_slot_distribution(self):
         # Add slot distribution to attendable event
@@ -717,7 +717,7 @@ class EventsMutationsTestCase(EventsBaseTestCase):
         # Fetch updated event and check that update was successful
         self.attendable_and_open_event = Event.objects.get(pk=self.attendable_and_open_event.id)
         self.assertResponseNoErrors(response)
-        self.assertEqual(len(self.attendable_and_open_event.available_slots), 2)
+        self.assertEqual(len(self.attendable_and_open_event.attendable.total_available_slots), 2)
 
     def test_update_event_remove_slot_distribution(self):
         # Remove slot distribution from attendable event

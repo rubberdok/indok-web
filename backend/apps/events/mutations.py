@@ -9,10 +9,9 @@ from utils.decorators import permission_required
 from ..organizations.models import Organization
 from ..organizations.permissions import check_user_membership
 from .mail import send_event_emails
-from .models import Category, Event, SignUp, SlotDistribution
+from .models import Category, Event, SignUp, Attendable
 from .types import CategoryType, EventType
 from .validators import create_event_validation, update_event_validation
-from .helpers import create_attendable, create_slot_distributions, update_slot_distributions
 
 
 class BaseEventInput(graphene.InputObjectType):
@@ -26,7 +25,6 @@ class BaseEventInput(graphene.InputObjectType):
     short_description = graphene.String(required=False)
     contact_email = graphene.String(required=False)
     allowed_grade_years = graphene.List(graphene.Int)
-    has_extra_information = graphene.Boolean(required=False)
 
 
 class CreateAttendableInput(graphene.InputObjectType):
@@ -34,16 +32,9 @@ class CreateAttendableInput(graphene.InputObjectType):
     binding_signup = graphene.Boolean(required=False)
     deadline = graphene.DateTime(required=False)
     price = graphene.Float(required=False)
-
-
-class GradeDistributionInputType(graphene.InputObjectType):
-    category = graphene.String()
-    available_slots = graphene.Int()
-
-
-class CreateSlotDistributionInput(graphene.InputObjectType):
-    available_slots = graphene.Int(required=True)
-    grade_years = graphene.List(GradeDistributionInputType)
+    has_extra_information = graphene.Boolean(required=False)
+    total_available_slots = graphene.Int(required=True)
+    slot_distribution = graphene.types.generic.GenericScalar(required=True)
 
 
 class CreateEventInput(BaseEventInput):
@@ -55,11 +46,9 @@ class UpdateAttendableInput(graphene.InputObjectType):
     binding_signup = graphene.Boolean(required=False)
     deadline = graphene.DateTime(required=False)
     price = graphene.Float(required=False)
-
-
-class UpdateSlotDistributionInput(graphene.InputObjectType):
-    available_slots = graphene.Int(required=False)
-    grade_years = graphene.List(GradeDistributionInputType)
+    has_extra_information = graphene.Boolean(required=False)
+    total_available_slots = graphene.Int(required=False)
+    slot_distribution = graphene.types.generic.GenericScalar(required=False)
 
 
 class UpdateEventInput(BaseEventInput):
@@ -71,7 +60,7 @@ class UpdateEventInput(BaseEventInput):
 
 class CreateEvent(graphene.Mutation):
     """
-    Create a new event, optionally also an attendable object and one or more slot distribution objects
+    Create a new event, optionally also an attendable object (if the event is attendable)
     """
 
     ok = graphene.Boolean()
@@ -80,7 +69,6 @@ class CreateEvent(graphene.Mutation):
     class Arguments:
         event_data = CreateEventInput(required=True)
         attendable_data = CreateAttendableInput(required=False)
-        slot_distribution_data = CreateSlotDistributionInput(required=False)
 
     @permission_required("events.add_event")
     def mutate(self, info, event_data, attendable_data=None, slot_distribution_data=None):
@@ -94,7 +82,7 @@ class CreateEvent(graphene.Mutation):
         # Make atomic so if the creation of one object fails, no changes will be made to the database
         with transaction.atomic():
             # Validate data
-            create_event_validation(event_data, attendable_data, slot_distribution_data)
+            create_event_validation(event_data, attendable_data)
 
             # Create event
             event = Event()
@@ -104,16 +92,12 @@ class CreateEvent(graphene.Mutation):
             event.save()
 
             # Create attendable if included in input data
-            attendable = None
             if attendable_data is not None:
-                attendable = create_attendable(attendable_data, event)
-
-            # Create slot distribution(s) if included in input data
-            if slot_distribution_data is not None:
-                slot_dist = create_slot_distributions(slot_distribution_data, attendable)
-
-                if slot_dist.grades.sort() != [int(val) for val in event.allowed_grade_years].sort():
-                    raise ValueError("Inkonsistens i plassfordeling mellom trinn på SlotDistribution og Event")
+                attendable = Attendable()
+                for k, v in attendable_data.items():
+                    setattr(attendable, k, v)
+                setattr(attendable, "event", event)
+                attendable.save()
 
         ok = True
         return CreateEvent(event=event, ok=ok)
@@ -130,7 +114,6 @@ class UpdateEvent(graphene.Mutation):
         has_grade_distributions = graphene.Boolean(required=True)
         event_data = UpdateEventInput(required=False)
         attendable_data = UpdateAttendableInput(required=False)
-        slot_distribution_data = UpdateSlotDistributionInput(required=False)
 
     ok = graphene.Boolean()
     event = graphene.Field(EventType)
@@ -144,7 +127,6 @@ class UpdateEvent(graphene.Mutation):
         has_grade_distributions,
         event_data,
         attendable_data=None,
-        slot_distribution_data=None,
     ):
         try:
             event = Event.objects.get(pk=id)
@@ -156,16 +138,12 @@ class UpdateEvent(graphene.Mutation):
         # Make atomic so if the update of one object fails, no changes will be made to the database
         with transaction.atomic():
             attendable = getattr(event, "attendable", None)
-            slot_distribution = None
-            if attendable is not None:
-                slot_distribution = attendable.slot_distribution.get(parent_distribution=None)
 
             update_event_validation(
                 event,
                 event_data,
                 attendable,
                 attendable_data,
-                slot_distribution_data,
             )
 
             # Update event
@@ -175,44 +153,26 @@ class UpdateEvent(graphene.Mutation):
 
             # Previously attendable event made non-attendable (no need for sign up)
             if not is_attendable and attendable is not None:
-                attendable.delete()  # Cascaded to slot distrbution(s)
-                event.refresh_from_db()  # Must refetch event for it to relaize the attendable has been deleted
+                attendable.delete()
+                event.refresh_from_db()  # Must refresh database for it to realize that the attendable has been deleted
 
-            # Previously attendable event with slot distribution has removed slot distribution
-            if (
-                not has_grade_distributions
-                and slot_distribution is not None
-                and slot_distribution.child_distributions.exists()
-            ):
-                for child in slot_distribution.child_distributions.all():
-                    child.delete()
-                slot_distribution = SlotDistribution.objects.get(
-                    pk=slot_distribution.pk
-                )  # Must refetch slot distribution for it to relaize the child dostributions has been deleted
+            # Want to update attendable
+            if attendable_data is not None:
 
-            else:
-                if attendable_data is not None:
-                    # If the event was changed to be attendable,
-                    # create attendable object and one or more slot distributions
-                    if attendable is None:
-                        attendable = create_attendable(attendable_data, event)
-                        create_slot_distributions(slot_distribution_data, attendable)
-                        ok = True
-                        return UpdateEvent(event=event, ok=ok)
-
+                if attendable is None:
+                    # The event was changed to be attendable, create attendable object
+                    attendable = Attendable()
                     for k, v in attendable_data.items():
                         setattr(attendable, k, v)
+                    setattr(attendable, "event", event)
                     attendable.save()
+                    ok = True
+                    return UpdateEvent(event=event, ok=ok)
 
-                # Update slot distributions if included in input data
-                if slot_distribution_data is not None:
-                    slot_dist = update_slot_distributions(
-                        slot_distribution_data,
-                        attendable.slot_distribution.get(parent_distribution=None),
-                    )
-
-                    if slot_dist.grades.sort() != [int(val) for val in event.total_allowed_grade_years].sort():
-                        raise ValueError("Inkonsistens i plassfordeling mellom trinn")
+                # The event was already attendable, just update attendable object
+                for k, v in attendable_data.items():
+                    setattr(attendable, k, v)
+                    attendable.save()
 
         ok = True
         return UpdateEvent(event=event, ok=ok)
@@ -278,10 +238,10 @@ class EventSignUp(graphene.Mutation):
 
         user = info.context.user
 
-        if not str(user.grade_year) in event.total_allowed_grade_years:
+        if not str(user.grade_year) in event.allowed_grade_years:
             raise PermissionDenied(
                 "Kun studenter i følgende trinn kan melde seg på",
-                event.total_allowed_grade_years,
+                event.allowed_grade_years,
             )
 
         if SignUp.objects.filter(event_id=event_id, is_attending=True, user_id=info.context.user.id).exists():
@@ -301,7 +261,7 @@ class EventSignUp(graphene.Mutation):
         setattr(sign_up, "user_grade_year", user.grade_year)
 
         sign_up.save()
-        is_full = event.get_is_full(user.grade_year)
+        is_full = event.attendable.get_is_full(user.grade_year)
         return EventSignUp(event=event, is_full=is_full)
 
 
@@ -326,10 +286,12 @@ class EventSignOff(graphene.Mutation):
         except Event.DoesNotExist:
             raise ValueError("Ugyldig arrangement")
 
+        if not hasattr(event, "attendable") or event.attendable is None:
+            raise ValueError("Dette arrangementet har ikke påmelding")
+
         user = info.context.user
 
-        users_attending, _ = event.get_attendance_and_waiting_list()
-        if event.attendable.binding_signup and user in users_attending:
+        if event.attendable.binding_signup and user in event.attendable.users_attending:
             raise ValidationError("Du kan ikke melde deg av et arrangement med bindende påmelding.")
 
         try:
@@ -339,7 +301,7 @@ class EventSignOff(graphene.Mutation):
 
         setattr(sign_up, "is_attending", False)
         sign_up.save()
-        is_full = event.get_is_full(user.grade_year)
+        is_full = event.attendable.get_is_full(user.grade_year)
         return EventSignOff(event=event, is_full=is_full)
 
 

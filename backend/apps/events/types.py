@@ -6,14 +6,13 @@ from graphql_jwt.decorators import login_required
 
 from apps.ecommerce.models import Order, Product
 from apps.ecommerce.types import ProductType
-from apps.events.helpers import get_attendant_group
 from apps.users.models import User
 from apps.users.types import UserType
 
 from .models import Attendable, Category, Event, SignUp
 
 UserAttendance = TypedDict(
-    "UserAttendance", {"is_signed_up": bool, "is_on_waiting_list": bool, "has_bought_ticket": bool}
+    "UserAttendance", {"is_attending": bool, "is_on_waiting_list": bool, "has_bought_ticket": bool}
 )
 
 
@@ -32,7 +31,7 @@ def has_bought_ticket(event: Event, user: User) -> bool:
 
 
 class UserAttendingType(graphene.ObjectType):
-    is_signed_up = graphene.Boolean()  # NOTE: Her mener vi kanskje is_attending?
+    is_attending = graphene.Boolean()
     is_on_waiting_list = graphene.Boolean()
     has_bought_ticket = graphene.Boolean()
 
@@ -120,39 +119,29 @@ class EventType(DjangoObjectType):
     @staticmethod
     def resolve_user_attendance(event: Event, info) -> UserAttendance:
         user = info.context.user
-        attending, waiting_list = event.get_attendance_and_waiting_list()
-        if attending is None:
+        if not hasattr(event, "attendable") or event.attendable is None:
             return {
-                "is_signed_up": False,
-                "is_on_waiting_list": False,
-                "has_bought_ticket": False,
-            }
-
-        group = get_attendant_group(attending, user.grade_year)
-
-        if group is None:
-            return {
-                "is_signed_up": False,
+                "is_attending": False,
                 "is_on_waiting_list": False,
                 "has_bought_ticket": False,
             }
 
         return {
-            "is_signed_up": user in attending[group],
-            "is_on_waiting_list": user in waiting_list[group],
+            "is_attending": user in event.attendable.users_attending,
+            "is_on_waiting_list": user in event.attendable.users_on_waiting_list,
             "has_bought_ticket": has_bought_ticket(event, user),
         }
 
     @staticmethod
     def resolve_is_full(event, info):
         user = info.context.user
-        if user is None:
+        if user is None or not hasattr(event, "attendable") or event.attendable is None:
             return False
-        return event.get_is_full(user.grade_year)
+        return event.attendable.get_is_full(user.grade_year)
 
     @staticmethod
     def resolve_allowed_grade_years(event, info):
-        grades = [int(grade) for grade in event.total_allowed_grade_years]
+        grades = [int(grade) for grade in event.allowed_grade_years]
         grades.sort()
         return grades
 
@@ -160,21 +149,27 @@ class EventType(DjangoObjectType):
     @login_required
     @PermissionDecorators.is_in_event_organization
     def resolve_users_on_waiting_list(event: Event, info):
-        return event.users_on_waiting_list
+        if not hasattr(event, "attendable") or event.attendable is None:
+            return []
+        return event.attendable.users_on_waiting_list
         # return SignUp.objects.filter(event=event, user__in=event.users_on_waiting_list, is_attending=True)
 
     @staticmethod
     @login_required
     @PermissionDecorators.is_in_event_organization
     def resolve_users_attending(event: Event, info):
-        return event.users_attending
+        if not hasattr(event, "attendable") or event.attendable is None:
+            return []
+        return event.attendable.users_attending
         # return SignUp.objects.filter(event=event, user__in=event.users_attending, is_attending=True)
 
     @staticmethod
     @login_required
     @PermissionDecorators.is_in_event_organization
     def resolve_available_slots(event: Event, info) -> Union[int, None]:
-        return event.available_slots
+        if not hasattr(event, "attendable") or event.attendable is None:
+            return None
+        return event.attendable.total_available_slots
 
     @staticmethod
     @login_required

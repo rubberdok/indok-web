@@ -9,6 +9,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 from apps.ecommerce.mixins import Sellable
 from apps.organizations.models import Organization
+from helpers import get_attendant_group
 
 if TYPE_CHECKING:
     from apps.users.models import User
@@ -41,9 +42,6 @@ class Event(models.Model):
 
     # ------------------ Fully optional fields ------------------
     publisher = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
-    has_extra_information = models.BooleanField(
-        default=False
-    )  # If the event allows e.g. for group sign ups, this would be true (shows a text field frontend)
     end_time = models.DateTimeField(blank=True, null=True)
     location = models.CharField(max_length=128, blank=True, null=True)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, blank=True, null=True)
@@ -57,7 +55,7 @@ class Event(models.Model):
 
     @property
     def signed_up_users(self) -> list["User"]:
-        if not hasattr(self, "attendable"):
+        if not hasattr(self, "attendable") or self.attendable is None:
             return []
         return (
             get_user_model()
@@ -65,71 +63,13 @@ class Event(models.Model):
             .order_by("signup__timestamp")
         )
 
-    @property
-    def total_allowed_grade_years(self) -> str:
-        if not hasattr(self, "attendable") or self.attendable is None:
-            return self.allowed_grade_years
-        return self.attendable.slot_distribution.get(parent_distribution=None).grade_years
-
-    @property
-    def available_slots(self) -> int:
-        if not hasattr(self, "attendable") or self.attendable is None:
-            return None
-        return self.attendable.slot_distribution.get(parent_distribution=None).get_available_slots()
-
-    @property
-    def users_attending(self) -> list["User"]:
-        attending, _ = self.get_attendance_and_waiting_list()
-        if attending is None:
-            return []
-        all_attending = []
-        for attending_group in attending.values():
-            all_attending += attending_group
-        return all_attending
-
-    @property
-    def users_on_waiting_list(self) -> list["User"]:
-        _, waiting_list = self.get_attendance_and_waiting_list()
-        if waiting_list is None:
-            return []
-        all_on_waiting_list: list["User"] = []
-        for waiting_list_group in waiting_list.values():
-            all_on_waiting_list += waiting_list_group
-        return all_on_waiting_list
-
-    def get_attendance_and_waiting_list(self) -> tuple[dict[str, list["User"]], dict[str, list["User"]]]:
-        if not hasattr(self, "attendable") or self.attendable is None:
-            return None, None
-        attending = {}  # keys = string of grades (category), values = userlist
-        waiting_list = {}  # keys = string of grades (category), values = userlist
-        self.attendable.slot_distribution.get(parent_distribution=None).get_attending(
-            self.signed_up_users, attending, waiting_list
-        )
-        return attending, waiting_list
-
-    def get_is_full(self, grade_year: int) -> bool:
-        if not hasattr(self, "attendable") or self.attendable is None:
-            return False
-        attending, _ = self.get_attendance_and_waiting_list()
-        available_slots = self.attendable.slot_distribution.get(parent_distribution=None).get_available_slots_for_grade(
-            grade_year
-        )
-        for grades, users in attending.items():
-            if grade_year in [int(val) for val in grades.split(",")]:
-                return len(users) >= available_slots
-        return False
-
     def is_user_allowed_to_buy_product(self, user: "User") -> bool:
         """
         Check if user is attending to determine if they are allowed to buy a ticket
         """
-        from apps.events.helpers import get_attendant_group
-
         if self.products is None:
             return False
-        attending, _ = self.get_attendance_and_waiting_list()
-        attendant_group = get_attendant_group(attending, user.grade_year)
-        return attendant_group is not None and user in attending[attendant_group]
+        return user in self.attendable.users_attending
 
     def __str__(self):
         return self.title
@@ -143,82 +83,108 @@ class Attendable(models.Model, Sellable):
 
     event = models.OneToOneField(Event, on_delete=models.CASCADE, related_name="attendable")
     signup_open_date = models.DateTimeField()  # When signup should become available
+    total_available_slots = models.PositiveIntegerField()  # Total number of available slots on the event
+    slot_distribution = models.JSONField(
+        default=dict
+    )  # Dict with grade groups as keys and number of slots as values, e.g. {"1,2": 100, "3": 50}. If there
+    # is no distribution, there will only be one element: {"1,2,3": 150}
     binding_signup = models.BooleanField(default=False)  # Disables sign-off from users_attending if true.
     deadline = models.DateTimeField(blank=True, null=True)  # Deadline for signing up
-    price = models.FloatField(blank=True, null=True)
+    price = models.FloatField(blank=True, null=True)  # Price if you need to pay to attend an event
+    has_extra_information = models.BooleanField(
+        default=False
+    )  # If the event need users to give extra information when signing up, e.g. for group sign ups (email
+    # of everyone in the group), this would be true (shows a text field frontend)
+
+    def get_attendance_and_waiting_list(self):  # TODO: Typedict this
+        """
+        Method for creating two dicts with grades as keys and a list of users as values. One for attending
+        users and one for users on waiting list.
+        """
+        if len(self.slot_distribution) == 1:
+            # There is no distribution for different grades
+            attending = {self.allowed_grade_years: self.event.users_signed_up[0 : self.total_available_slots]}
+            waiting_list = {self.allowed_grade_years: self.event.users_signed_up[self.total_available_slots :]}
+            return attending, waiting_list
+
+        attending = {}
+        waiting_list = {}
+        for grades in self.slot_distribution.keys():
+            attending[grades] = []
+            waiting_list[grades] = []
+
+        total = 0
+
+        # Go through the users in the order they signed up
+        for user in self.event.signed_up_users:
+            for grades in self.slot_distribution.keys():
+                if str(user.grade_year) not in grades:
+                    continue
+
+                # If the slots for the grade is full or the event in total is full, put user in waiting list
+                elif (
+                    len(attending[grades]) >= len(self.slot_distribution[grades]) or total >= self.total_available_slots
+                ):
+                    waiting_list[grades].append(user)
+
+                # Else put user in attending list
+                else:
+                    attending[grades].append(user)
+                    total += 1
+
+        return attending, waiting_list
+
+    @property
+    def users_attending(self) -> list["User"]:
+        """
+        Method for getting a list of all users that are attending (have a slot)
+        """
+        attending, _ = self.get_attendance_and_waiting_list()
+        if attending is None:
+            return []
+        all_attending = []
+        for attending_group in attending.values():
+            all_attending += attending_group
+        return all_attending
+
+    @property
+    def users_on_waiting_list(self) -> list["User"]:
+        """
+        Method for getting a list of all users on waiting list
+        """
+        _, waiting_list = self.get_attendance_and_waiting_list()
+        if waiting_list is None:
+            return []
+        all_on_waiting_list: list["User"] = []
+        for waiting_list_group in waiting_list.values():
+            all_on_waiting_list += waiting_list_group
+        return all_on_waiting_list
+
+    def get_is_full(self, grade_year: int) -> bool:
+        """
+        Method for checking if the event is full for a specific grade year. This can happen in two ways,
+        since we allow the sum of available slots for each grade group in self.slot_distribution to be
+        greater than the total number of available slots on the event:
+            - The total number of users attending is equal to the total number of available slots
+            - The number of users in the specific grade group is equal to the number of available slots
+        """
+
+        if len(self.users_attending) == self.total_available_slots:
+            return True
+
+        attending, _ = self.get_attendance_and_waiting_list()
+        grade_group = get_attendant_group(list(self.slot_distribution.keys()), grade_year)
+
+        if grade_group is None:
+            return False
+
+        if len(attending[grade_group]) == self.slot_distribution[grade_group]:
+            return True
+
+        return False
 
     def __str__(self):
         return f"Attendable-{self.event.title}"
-
-
-class SlotDistribution(models.Model):
-    """
-    Additional model used for attendable events used to keep track of the distribution of slots
-    between different grade years. Each Attendable will have at least one SlotDistrbution. This is the
-    parent (total) slot distribution with total available slots and total grade years that are allowed.
-    The parent distribution is recognised as being the only SlotDistribution connected to the given
-    Attendable that does not have a parent_distribution (parent_distribution = None). The parent distribution
-    can again have a set of children, where each of these will have available slots and allowed grade years
-    equal to a subset of that of the parent distribution (and they will have the parent_distirbution field set).
-
-    """
-
-    attendable = models.ForeignKey(Attendable, on_delete=models.CASCADE, related_name="slot_distribution")
-    available_slots = models.PositiveIntegerField()
-    grade_years = MultiSelectField(choices=GRADE_CHOICES, default="1,2,3,4,5")
-    parent_distribution = models.ForeignKey(
-        "self", on_delete=models.CASCADE, related_name="child_distributions", null=True, blank=True
-    )
-
-    @property
-    def grades(self) -> list[int]:
-        return [int(val) for val in str(self.grade_years).replace("[", "").replace("]", "").split(",")]
-
-    def get_attending(self, signed_up_users: list["User"], attending: dict, waiting_list: dict):
-        if not self.child_distributions.exists():
-            filtered = []
-            for user in signed_up_users.all():
-                if user.grade_year in self.grades:
-                    filtered.append(user)
-
-            if len(filtered) >= self.available_slots:
-                attending[str(self.grade_years).replace(" ", "")] = filtered[: self.available_slots]
-                waiting_list[str(self.grade_years).replace(" ", "")] = filtered[self.available_slots :]
-            else:
-                attending[str(self.grade_years).replace(" ", "")] = filtered
-                waiting_list[str(self.grade_years).replace(" ", "")] = []
-            return
-
-        for child in list(self.child_distributions.all()):
-            child.get_attending(signed_up_users, attending, waiting_list)
-
-    def get_available_slots(self):
-        if not self.child_distributions.exists():
-            return [{"category": str(self.grade_years).replace(" ", ""), "available_slots": self.available_slots}]
-
-        total_available_slots = []
-        for child in list(self.child_distributions.all()):
-            total_available_slots.append(
-                {"category": str(child.grade_years).replace(" ", ""), "available_slots": child.available_slots}
-            )
-
-        return total_available_slots
-
-    def get_available_slots_for_grade(self, grade_year: int) -> int:
-        descendants = list(self.child_distributions.all())
-        while descendants:
-            descendant = descendants.pop(0)
-            if grade_year in descendant.grades:
-                return descendant.available_slots
-            if descendant.child_distributions.exists():
-                descendants += list(descendant.distributions.all())
-
-        return self.available_slots
-
-    def __str__(self):
-        if hasattr(self, "parent_distribution") and self.parent_distribution is not None:
-            return f"Child slot distribution-{self.attendable.event.title}"
-        return f"Slot distribution-{self.attendable.event.title}"
 
 
 class SignUp(models.Model):
