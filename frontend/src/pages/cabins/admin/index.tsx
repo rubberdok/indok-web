@@ -13,11 +13,10 @@ import {
   makeStyles,
   Tab,
   Tabs,
-  Divider,
 } from "@material-ui/core";
 import dayjs from "dayjs";
 import { NextPage } from "next";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import theme from "@styles/theme";
 import { BookingFromQuery } from "@interfaces/cabins";
@@ -51,7 +50,7 @@ const AdminPage: NextPage = () => {
   const router = useRouter();
 
   const handleErrorDialogClose = () => router.push("/");
-  const handleTabChange = (event: any, newTabValue: number) => setTabValue(newTabValue);
+  const handleTabChange = (newTabValue: number) => setTabValue(newTabValue);
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const classes = useStyles();
 
@@ -92,16 +91,20 @@ const AdminPage: NextPage = () => {
             </Box>
           </Grid>
         </Grid>
-        <Box className={classes.root} marginBottom={5}>
+        <Box className={classes.root} marginBottom={5} component="div">
           <Box sx={{ width: "100%" }}>
             <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-              <Tabs onChange={handleTabChange} value={tabValue} indicatorColor="primary" variant="fullWidth">
-                <Tab label="Nye søknader" color="primary" />
+              <Tabs
+                onChange={(e, newValue) => handleTabChange(newValue)}
+                value={tabValue}
+                indicatorColor="primary"
+                variant="fullWidth"
+              >
+                <Tab label="Nye søknader" />
                 <Tab label="Godkjente søknader" />
                 <Tab label="Underkjente søknader" />
               </Tabs>
             </Box>
-            {/* <Divider variant="fullWidth" orientation="horizontal" style={{ height: 5 }} /> */}
             <TabPanel value={tabValue} index={0}>
               <AdminCabinTable
                 bookings={tentative}

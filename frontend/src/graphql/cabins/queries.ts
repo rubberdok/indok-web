@@ -31,6 +31,7 @@ export const QUERY_ADMIN_ALL_BOOKINGS = gql`
       internalParticipants
       price
       isTentative
+      isDeclined
     }
   }
 `;

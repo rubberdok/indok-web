@@ -100,14 +100,20 @@ const OrganizationPage: NextPage<Props> = ({ posts }) => {
         ))}
       </Tabs>
       <br />
+
       <TabPanel value={value} index={1}>
-        Indøk Kultur er paraplyorganisasjonen for alle kulturaktiviteter på Indøk, og innbefatter Indøkrevyen,
-        Mannskoret Klingende Mynt, et Indøk-band (Bandøk), et ølbryggerlag (Indøl) samt en veldedig organisasjon (IVI).
+        <Typography>
+          Indøk Kultur er paraplyorganisasjonen for alle kulturaktiviteter på Indøk, og innbefatter Indøkrevyen,
+          Mannskoret Klingende Mynt, et Indøk-band (Bandøk), et ølbryggerlag (Indøl) samt en veldedig organisasjon
+          (IVI).
+        </Typography>
       </TabPanel>
       <TabPanel value={value} index={2}>
-        Fra en sped start som Janus FK i 2006, har foreningen vokst til å forene godt over hundre sporty og engasjerte
-        studenter under én felles paraply, med et bredt spekter av idretter. Tilbudet blir stadig bredere, og ønsker og
-        idéer til nye lag og idretter tas alltid imot med åpne armer!
+        <Typography>
+          Fra en sped start som Janus FK i 2006, har foreningen vokst til å forene godt over hundre sporty og engasjerte
+          studenter under én felles paraply, med et bredt spekter av idretter. Tilbudet blir stadig bredere, og ønsker
+          og idéer til nye lag og idretter tas alltid imot med åpne armer!
+        </Typography>
       </TabPanel>
 
       <Grid container spacing={2}>

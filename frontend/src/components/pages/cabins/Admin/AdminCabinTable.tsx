@@ -13,7 +13,6 @@ import {
 } from "@material-ui/core";
 import theme from "@styles/theme";
 import { toStringChosenCabins, getDecisionEmailProps } from "@utils/cabins";
-import React from "react";
 import ClearIcon from "@material-ui/icons/Clear";
 import CheckIcon from "@material-ui/icons/Check";
 import { ApolloQueryResult, OperationVariables, useMutation } from "@apollo/client";
