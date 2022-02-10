@@ -1,3 +1,4 @@
+from typing import Optional
 from urllib.error import HTTPError
 
 import graphene
@@ -21,22 +22,24 @@ class InitiateOrder(graphene.Mutation):
 
     class Arguments:
         product_id = graphene.ID(required=True)
+        fallback_redirect = graphene.String(required=False)
         quantity = graphene.Int()
 
     @login_required
-    def mutate(self, info, product_id, quantity=1):
+    def mutate(self, info, product_id, fallback_redirect: Optional[str] = None, quantity: int = 1):
         user = info.context.user
         # Check if user is allowed to buy the product
         product = Product.objects.get(pk=product_id)
         if product.related_object and not product.related_object.is_user_allowed_to_buy_product(user):
             raise PurchaseNotAllowedError("Du kan ikke kjøpe dette produktet.")
 
-        # Reserve quantity for the user if available
-        product = Product.check_and_reserve_quantity(product_id, user, quantity)
+        # If any of the below fails, do not commit any DB transactions
+        with transaction.atomic():
+            # Reserve quantity for the user if available
+            product = Product.check_and_reserve_quantity(product_id, user, quantity)
 
-        # If the user has attempted this order before, retry it
-        try:
-            with transaction.atomic():
+            # If the user has attempted this order before, retry it
+            try:
                 # TODO: handle multiple hits (shouldn't happen as we retry)
                 order = Order.objects.select_for_update().get(
                     product__id=product_id,
@@ -66,18 +69,26 @@ class InitiateOrder(graphene.Mutation):
                     order.product.restore_quantity(order)
                     # Return order_id so frontend can redirect to fallback page
                     return InitiateOrder(order_id=order.id)
+                # Cancel previous attempt to avoid simultaneous payments
+                elif status_success and status == "INITIATE":
+                    try:
+                        InitiateOrder.vipps_api.cancel_transaction(f"{order.id}-{order.payment_attempt}")
+                    except HTTPError:
+                        raise ValueError("Fullfør den pågående betalingen først.")
+                    finally:
+                        order.product.restore_quantity(order)
 
                 # Retry
                 order.payment_attempt = order.payment_attempt + 1
                 order.payment_status = Order.PaymentStatus.INITIATED
                 order.save()
 
-        except Order.DoesNotExist:
-            order = Order(product=product, user=user, quantity=quantity, total_price=product.price * quantity)
+            except Order.DoesNotExist:
+                order = Order(product=product, user=user, quantity=quantity, total_price=product.price * quantity)
 
-            order.save()
+                order.save()
 
-        redirect = InitiateOrder.vipps_api.initiate_payment(order)
+            redirect = InitiateOrder.vipps_api.initiate_payment(order, fallback_redirect)
 
         return InitiateOrder(redirect=redirect)
 
@@ -93,12 +104,11 @@ class AttemptCapturePayment(graphene.Mutation):
     class Arguments:
         order_id = graphene.ID(required=True)
 
-    @login_required
     def mutate(self, info, order_id):
         with transaction.atomic():
             try:
                 # Acquire DB lock for the order (no other process can change it)
-                order = Order.objects.select_for_update().get(pk=order_id, user=info.context.user)
+                order = Order.objects.select_for_update().get(pk=order_id)
             except Order.DoesNotExist:
                 raise ValueError("Ugyldig ordre")
 
@@ -117,7 +127,7 @@ class AttemptCapturePayment(graphene.Mutation):
                     # Order went from initiated to cancelled, restore quantity
                     order.product.restore_quantity(order)
 
-            # Capture payent if it is reserved
+            # Capture payment if it is reserved
             if order.payment_status == Order.PaymentStatus.RESERVED:
                 try:
                     AttemptCapturePayment.vipps_api.capture_payment(order, method="polling")

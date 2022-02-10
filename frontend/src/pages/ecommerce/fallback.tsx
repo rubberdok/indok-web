@@ -1,8 +1,10 @@
-import { useMutation } from "@apollo/client";
-import SalesTermsDialog from "@components/ecommerce/SalesTermsDialog";
+import { useMutation, useQuery } from "@apollo/client";
 import Layout from "@components/Layout";
+import SalesTermsDialog from "@components/pages/ecommerce/SalesTermsDialog";
 import { ATTEMPT_CAPTURE_PAYMENT } from "@graphql/ecommerce/mutations";
+import { GET_USER } from "@graphql/users/queries";
 import { Order, PaymentStatus } from "@interfaces/ecommerce";
+import { User } from "@interfaces/users";
 import {
   Box,
   Button,
@@ -24,12 +26,13 @@ import {
 } from "@material-ui/core";
 import { KeyboardArrowLeft } from "@material-ui/icons";
 import { Alert } from "@material-ui/lab";
+import savings from "@public/illustrations/Savings.svg";
 import dayjs from "dayjs";
 import { NextPage } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
-import { redirectIfNotLoggedIn } from "src/utils/redirect";
 
 const useStyles = makeStyles((theme: Theme) => ({
   list: {
@@ -46,11 +49,13 @@ const useStyles = makeStyles((theme: Theme) => ({
 const FallbackPage: NextPage = () => {
   const classes = useStyles();
   const router = useRouter();
-  const { orderId } = router.query;
+  const { orderId, redirect } = router.query;
 
   const [attemptCapturePayment, { data, loading, error }] = useMutation(ATTEMPT_CAPTURE_PAYMENT, {
     onError: () => intervalRef.current && clearInterval(intervalRef.current),
   });
+  const { data: userData } = useQuery<{ user?: User }>(GET_USER);
+
   const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>("RESERVED");
   const [order, setOrder] = useState<Order>();
   const [openSalesTerms, setOpenSalesTerms] = useState(false);
@@ -81,21 +86,19 @@ const FallbackPage: NextPage = () => {
     };
   }, [data]);
 
-  if (redirectIfNotLoggedIn()) {
-    return null;
-  }
-
   return (
     <Layout>
       <Container>
-        <Box mt={2}>
-          <Button startIcon={<KeyboardArrowLeft />} onClick={() => router.back()}>
-            Tilbake
-          </Button>
-        </Box>
+        {redirect && typeof redirect === "string" && (
+          <Box mt={2}>
+            <Button startIcon={<KeyboardArrowLeft />} onClick={() => router.push(redirect)}>
+              Tilbake
+            </Button>
+          </Box>
+        )}
         <Box mb={2}>
           <Card>
-            <CardHeader title="Betaling"></CardHeader>
+            <CardHeader title="Ordrebekreftelse"></CardHeader>
             <CardContent>
               <Grid container alignItems="center" direction="column">
                 {error ? (
@@ -107,7 +110,17 @@ const FallbackPage: NextPage = () => {
                   </>
                 ) : paymentStatus === "RESERVED" || loading ? (
                   <>
-                    <Typography variant="h3">Behandler...</Typography> <CircularProgress />
+                    <Grid container item direction="column" spacing={4} alignItems="center">
+                      <Grid item>
+                        <Typography variant="h3">Behandler... Vennligst ikke forlat siden</Typography>
+                      </Grid>
+                      <Grid item>
+                        <CircularProgress />
+                      </Grid>
+                      <Grid item xs={6}>
+                        <Image src={savings} />
+                      </Grid>
+                    </Grid>
                   </>
                 ) : paymentStatus === "CAPTURED" && order ? (
                   <>
@@ -151,11 +164,13 @@ const FallbackPage: NextPage = () => {
                 )}
               </Grid>
             </CardContent>
-            <CardActions>
-              <Link href="/ecommerce">
-                <Button>Gå til mine betalinger</Button>
-              </Link>
-            </CardActions>
+            {userData?.user && (
+              <CardActions>
+                <Link href="/ecommerce" passHref>
+                  <Button>Gå til mine betalinger</Button>
+                </Link>
+              </CardActions>
+            )}
           </Card>
         </Box>
       </Container>

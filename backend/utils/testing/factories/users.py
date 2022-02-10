@@ -23,7 +23,7 @@ class UserFactory(DjangoModelFactory):
     first_name = fake.first_name()
     last_name = fake.last_name()
     email = fake.email()
-    phone_number = fake.phone_number()
+    phone_number = "40000000"
     feide_userid = fake.uuid4()
     feide_email = factory.lazy_attribute(lambda obj: f"{obj.username}@stud.ntnu.no")
     id_token = fake.uuid4()

@@ -31,9 +31,11 @@ const moduleExports = {
     ];
   },
   experimental: {
+    outputStandalone: true,
     styledComponents: true,
     ...getPresets(),
   },
+  swcMinify: true,
   webpack: (config, { isServer }) => {
     // In `pages/_app.js`, Sentry is imported from @sentry/browser. While
     // @sentry/node will run in a Node.js environment. @sentry/node will use

@@ -1,10 +1,18 @@
 import datetime
 import json
-from typing import Literal, Optional, Tuple, TypedDict
+from typing import Literal, Optional, Tuple, TypedDict, Union
 
 import requests
 from django.conf import settings
 from django.utils import timezone
+
+try:
+    from sentry_sdk import set_context
+except ModuleNotFoundError:
+
+    def set_context(*args, **kwargs):
+        pass
+
 
 from .models import Order, VippsAccessToken
 
@@ -18,17 +26,30 @@ BaseHeaders = TypedDict(
         "Merchant-Serial-Number": str,
         "Vipps-System-Name": str,
         "Vipps-System-Version": str,
+        "X-Request-Id": str,
     },
+    total=False,
 )
 
-MerchantInfo = TypedDict(
-    "MerchantInfo",
-    {"merchantSerialNumber": str, "callbackPrefix": str, "fallBack": str, "authToken": str, "isApp": bool},
-)
+
+class MerchantInfo(TypedDict, total=False):
+    merchantSerialNumber: str
+    callbackPrefix: str
+    fallBack: str
+    authToken: str
+    isApp: bool
+
+
 CustomerInfo = TypedDict("CustomerInfo", {"mobileNumber": str})
-TransactionInfo = TypedDict(
-    "TransactionData", {"orderId": str, "amount": int, "transactionText": str, "skipLandingPage": bool}
-)
+
+
+class TransactionInfo(TypedDict, total=False):
+    orderId: str
+    amount: int
+    transactionText: str
+    skipLandingPage: bool
+    scope: str
+
 
 InitiatePaymentBody = TypedDict(
     "InitiatePaymentBody",
@@ -47,6 +68,11 @@ CapturePaymentBody = TypedDict(
 )
 
 
+class CancelPaymentBody(TypedDict):
+    merchantInfo: MerchantInfo
+    transaction: TransactionInfo
+
+
 class VippsApi:
     """
     API for handling Vipps payments.
@@ -60,7 +86,6 @@ class VippsApi:
         vipps_subscription_key: str = settings.VIPPS_SUBSCRIPTION_KEY,
         merchant_serial_number: str = settings.VIPPS_MERCHANT_SERIAL_NUMBER,
         vipps_server: str = settings.VIPPS_BASE_URL,
-        access_token: Optional[str] = None,
         vipps_system_name: Optional[str] = None,
         vipps_system_version: Optional[str] = None,
         vipps_system_plugin_name: Optional[str] = None,
@@ -71,14 +96,17 @@ class VippsApi:
         self.vipps_subscription_key = vipps_subscription_key
         self.merchant_serial_number = merchant_serial_number
         self.vipps_server = vipps_server
-        self._access_token = access_token
         self.vipps_system_name = vipps_system_name
         self.vipps_system_version = vipps_system_version
         self.vipps_system_plugin_name = vipps_system_plugin_name
         self.vipps_system_plugin_version = vipps_system_plugin_version
 
     def _make_call(
-        self, method: Literal["POST", "GET", "PUT"], endpoint: str, headers: dict[str, str], data: Optional[dict] = None
+        self,
+        method: Literal["POST", "GET", "PUT"],
+        endpoint: str,
+        headers: Union[BaseHeaders, dict[str, str]],
+        data: Optional[str] = None,
     ) -> dict:
         """Used in main api calls
         Args:
@@ -89,7 +117,6 @@ class VippsApi:
         Returns:
             dict: response body as a dict
         """
-
         if method == "GET":
             req = requests.get
         elif method == "POST":
@@ -100,10 +127,16 @@ class VippsApi:
         url = f"{self.vipps_server}{endpoint}"
 
         r = req(url, headers=headers, data=data)
-        if r.ok:
-            return r.json()
 
-        r.raise_for_status()
+        try:
+            r.raise_for_status()
+            return r.json()
+        except requests.exceptions.HTTPError as e:
+            if isinstance(r.json(), list):
+                set_context("vipps_error", r.json()[0])
+            elif isinstance(r.json(), dict):
+                set_context("vipps_error", r.json())
+            raise e
 
     # Public methods:
     def capture_payment(self, order: Order, method: str) -> None:
@@ -118,9 +151,9 @@ class VippsApi:
             json.dumps(capture_data),
         )
 
-    def initiate_payment(self, order: Order) -> str:
+    def initiate_payment(self, order: Order, fallback_redirect: Optional[str] = None) -> str:
         headers = self._build_headers()
-        order_data = self._build_initiate_payment_request(order)
+        order_data = self._build_initiate_payment_request(order, fallback_redirect)
 
         response = self._make_call("POST", "/ecomm/v2/payments", headers, json.dumps(order_data))
         return response["url"]
@@ -133,9 +166,18 @@ class VippsApi:
         history = response["transactionLogHistory"]
         return history[0]["operation"], history[0]["operationSuccess"]
 
+    def cancel_transaction(self, order_id: str) -> dict:
+        headers = self._build_headers()
+        body: CancelPaymentBody = {
+            "merchantInfo": {"merchantSerialNumber": self.merchant_serial_number},
+            "transaction": {"transactionText": "Order cancelled by reattempt."},
+        }
+        data = self._make_call("PUT", f"/ecomm/v2/payments/{order_id}/cancel", headers, json.dumps(body))
+        return data
+
     # private methods
 
-    def _refresh_access_token(self) -> Tuple[str, str]:
+    def _refresh_access_token(self) -> Tuple[str, datetime.datetime]:
         # Get new access token from Vipps (expires after 1h/24h test/prod)
 
         headers = {
@@ -150,30 +192,23 @@ class VippsApi:
         expires_on = timezone.make_aware(datetime.datetime.fromtimestamp(int(token_response["expires_on"])))
         return access_token, expires_on
 
-    def _fetch_access_token(self) -> None:
-        # Get Vipps access token from db or fetch new if necessary
-        tokens = VippsAccessToken.objects
-        if not tokens.filter(expires_on__gte=timezone.now()).exists():
-            # No valid token in database, delete all stale tokens and get new token
-            if tokens.exists():
-                tokens.all().delete()
-            new_token = VippsAccessToken()
-            self._access_token, expires_on = self._refresh_access_token()
-            new_token.token = self._access_token
-            new_token.expires_on = expires_on
-            new_token.save()
-
-        self._access_token = tokens.filter(expires_on__gte=timezone.now()).first().token
-
     @property
     def access_token(self) -> str:
         """Checks if access token already obtained
         Returns:
             str: Access Token
         """
-        if self._access_token is None:
-            self._fetch_access_token()
-        return self._access_token
+        valid_token: Optional[VippsAccessToken] = VippsAccessToken.objects.filter(
+            expires_on__gte=timezone.now() + timezone.timedelta(minutes=5)
+        ).first()
+        if valid_token is None:
+            # No valid token in database, delete all stale tokens and get new token
+            VippsAccessToken.objects.all().delete()
+            token, expires_on = self._refresh_access_token()
+            valid_token = VippsAccessToken(token=token, expires_on=expires_on)
+            valid_token.save()
+
+        return valid_token.token
 
     def _build_headers(self) -> BaseHeaders:
         # Headers for Vipps requests
@@ -195,12 +230,12 @@ class VippsApi:
             },
         }
 
-    def _build_initiate_payment_request(self, order: Order) -> InitiatePaymentBody:
+    def _build_initiate_payment_request(self, order: Order, redirect: Optional[str] = None) -> InitiatePaymentBody:
         return {
             "merchantInfo": {
                 "merchantSerialNumber": self.merchant_serial_number,
                 "callbackPrefix": settings.VIPPS_CALLBACK_PREFIX,
-                "fallBack": f"{settings.VIPPS_FALLBACK_PREFIX}?orderId={order.id}",
+                "fallBack": f"{settings.VIPPS_FALLBACK_PREFIX}?orderId={order.id}{f'&redirect={redirect}' if redirect else ''}",  # noqa
                 "authToken": order.auth_token,
                 "isApp": False,
             },
@@ -210,5 +245,6 @@ class VippsApi:
                 "amount": int(order.total_price * 100),  # ører
                 "transactionText": f"{order.quantity} {order.product.name}",
                 "skipLandingPage": False,
+                "scope": "name phoneNumber",
             },
         }

@@ -1,14 +1,12 @@
-import { NextPage } from "next";
-import Layout from "@components/Layout";
-import { CircularProgress, Container, Grid, Typography } from "@material-ui/core";
-import AnswerForm from "@components/forms/AnswerForm";
 import { useQuery } from "@apollo/client";
+import AnswerForm from "@components/forms/AnswerForm";
+import Layout from "@components/Layout";
 import { FORM_WITH_QUESTIONS_AND_ANSWERS } from "@graphql/forms/queries";
-import { useRouter } from "next/router";
 import { Form } from "@interfaces/forms";
-import { DATAPORTEN_SCOPES } from "@utils/auth";
-import { generateQueryString } from "@utils/helpers";
-import { config } from "@utils/config";
+import { CircularProgress, Container, Grid, Typography } from "@material-ui/core";
+import { generateFeideLoginUrl } from "@utils/auth";
+import { NextPage } from "next";
+import { useRouter } from "next/router";
 
 const FormPage: NextPage = () => {
   const router = useRouter();
@@ -22,14 +20,7 @@ const FormPage: NextPage = () => {
   if (loading) return <p>Laster...</p>;
   if (error) {
     if (error.message.includes("permissions")) {
-      const queryString = generateQueryString({
-        client_id: config.DATAPORTEN_ID,
-        state: config.DATAPORTEN_STATE,
-        redirect_uri: config.DATAPORTEN_REDIRECT_URI,
-        response_type: "code",
-        scope: DATAPORTEN_SCOPES.join(" "),
-      });
-      const signInURL = "https://auth.dataporten.no/oauth/authorization" + queryString;
+      const signInURL = generateFeideLoginUrl(router.asPath);
       router.push(signInURL);
       return (
         <Layout>

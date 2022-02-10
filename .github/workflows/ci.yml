@@ -278,11 +278,11 @@ jobs:
     name: Deploy to ECS
     runs-on: ubuntu-latest
 
-    needs: [e2e, api]
+    needs: [api]
     if: github.ref == 'refs/heads/main'
 
-    concurrency: deployment
     environment: production
+    concurrency: ${{ matrix.image }}
 
     strategy:
       matrix:
@@ -302,6 +302,8 @@ jobs:
       ECS_REPOSITORY: indokweb-${{ matrix.image }}
       SENTRY_PROJECT: indokweb-${{ matrix.image }}
       CONTAINER_NAME: ${{ matrix.image }}
+      ECS_CLUSTER: indokweb-cluster # Set this to our ECS cluster name, e.g. indokweb-cluster
+      SENTRY_ORG: rbberdk
 
     steps:
       - name: Checkout
@@ -329,11 +331,13 @@ jobs:
 
       - name: Update task definition
         id: task-def
-        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        uses: aws-actions/amazon-ecs-render-task-definition@master
         with:
           task-definition: ${{ env.ECS_TASK_DEFINITION }}
           container-name: ${{ env.CONTAINER_NAME }}
           image: ${{ steps.image-tag.outputs.image }}
+          environment-variables: |
+            GIT_COMMIT_SHA=${{ github.sha }}
 
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1

@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
 export const INITIATE_ORDER = gql`
-  mutation InitiateOrder($productId: ID!, $quantity: Int) {
-    initiateOrder(productId: $productId, quantity: $quantity) {
+  mutation InitiateOrder($productId: ID!, $quantity: Int, $fallbackRedirect: String) {
+    initiateOrder(productId: $productId, quantity: $quantity, fallbackRedirect: $fallbackRedirect) {
       redirect
       orderId
     }

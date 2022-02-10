@@ -16,6 +16,7 @@ class UserFactories:
             graduation_year=2025,
             is_indok=True,
             first_login=False,
+            phone_number="40000000",
         )
         UserFactory(
             username="asbjorn_elevg",

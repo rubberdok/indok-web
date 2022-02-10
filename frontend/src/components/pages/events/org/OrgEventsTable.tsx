@@ -1,4 +1,6 @@
+import { Event } from "@interfaces/events";
 import { Organization } from "@interfaces/organizations";
+import { HeaderValuePair } from "@interfaces/utils";
 import {
   Card,
   CardContent,
@@ -6,22 +8,16 @@ import {
   Chip,
   Divider,
   Grid,
+  makeStyles,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  makeStyles,
 } from "@material-ui/core";
 import dayjs from "dayjs";
 import Link from "next/link";
-import { Event } from "@interfaces/events";
-
-interface HeaderValuePair<T> {
-  header: string;
-  field: keyof T;
-}
 
 const eventFields: HeaderValuePair<Event>[] = [
   { header: "Navn", field: "title" },
