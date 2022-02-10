@@ -41,3 +41,11 @@ export const UPDATE_BOOKING_SEMESTER = gql`
     }
   }
 `;
+
+export const DECLINE_BOOKING = gql`
+  mutation UpdateBooking($id: ID!) {
+    updateBooking(bookingData: { id: $id, isTentative: false, isDeclined: true }) {
+      ok
+    }
+  }
+`;

@@ -28,6 +28,7 @@ class Booking(models.Model):
     internal_participants = models.IntegerField()
     external_participants = models.IntegerField()
     is_tentative = models.BooleanField(default=True)
+    is_declined = models.BooleanField(default=False)
 
     @property
     def number_of_nights(self) -> int:

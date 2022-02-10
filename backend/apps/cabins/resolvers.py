@@ -7,7 +7,7 @@ class CabinResolvers:
         """
         Fetch all bookings sorted by the their check-in date
         """
-        return BookingModel.objects.all().order_by("check_in")
+        return BookingModel.objects.filter(is_declined=False).all().order_by("check_in")
 
     @permission_required("cabins.view_booking")
     def resolve_admin_all_bookings(self, root, **kwargs):

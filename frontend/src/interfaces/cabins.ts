@@ -21,6 +21,7 @@ export interface Participants {
 export interface Booking extends BasicBooking, PublicBooking, Participants {
   price: number;
   isTentative: boolean;
+  isDeclined: boolean;
 }
 export interface BookingFromQuery extends Booking {
   __typename: string;

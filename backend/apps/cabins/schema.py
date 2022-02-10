@@ -15,6 +15,7 @@ from apps.cabins.mutations import (
     UpdateBookingSemester,
 )
 from apps.cabins.resolvers import CabinResolvers
+from apps.cabins.mutations import DeclineBooking
 
 
 class CabinMutations(graphene.ObjectType):
