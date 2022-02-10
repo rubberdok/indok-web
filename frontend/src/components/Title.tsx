@@ -1,21 +1,17 @@
-import { Box, Grid, makeStyles, Typography, useTheme } from "@material-ui/core";
+import { Box, Grid, Hidden, makeStyles, Typography, useTheme } from "@material-ui/core";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   anniversary: {
     transition: "0.7s all ease",
     background: "url('/static/anniversary/anniversary_logo_black.svg')",
     backgroundSize: "contain",
-    backgroundPosition: "center center!important",
+    backgroundPosition: "right",
     backgroundRepeat: "no-repeat",
     opacity: 0.05,
     height: "120%",
-    marginLeft: "-20vh",
+    marginRight: "10%",
     right: 0,
     top: 0,
-
-    [theme.breakpoints.down("sm")]: {
-      backgroundPosition: "right center!important",
-    },
   },
 }));
 
@@ -46,7 +42,9 @@ const Title: React.FC<Props> = ({ children }) => {
           </Grid>
         </Grid>
       </Grid>
-      <Box className={classes.anniversary} position="absolute" width="100vw" height="100vh"></Box>
+      <Hidden smDown>
+        <Box className={classes.anniversary} position="absolute" width="100vw" height="100vh" />
+      </Hidden>
     </Box>
   );
 };

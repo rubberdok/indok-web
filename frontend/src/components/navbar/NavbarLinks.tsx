@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   user: {
-    background: "#193c27", //065A5A
+    background: "#065A5A",
     color: "white",
     paddingTop: 23,
     paddingBottom: 22,
@@ -64,9 +64,9 @@ const useStyles = makeStyles((theme) => ({
       marginRight: "calc(-15px - 5vw)",
     },
 
-    // ["&:hover"]: {
-    //   background: "#0b6666",
-    // },
+    ["&:hover"]: {
+      background: "#0b6666",
+    },
   },
   menu: {
     width: 400,
@@ -79,7 +79,7 @@ const useStyles = makeStyles((theme) => ({
   dropdown: {
     display: "none",
     width: "100%",
-    background: "#0b2c1e", //022a2a
+    background: theme.palette.primary.dark,
     position: "absolute",
     paddingTop: 16,
     ["& $navItem"]: {
