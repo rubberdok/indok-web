@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 /**
- * Component for showing the list page for event (for showing all events)
+ * Component for showing all events, either in list form or in a calendar view
  */
 
 const Events: NextPage = () => {
