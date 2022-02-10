@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "author": "Hovedstyrets webkomitè",
+  "author": "rubberdok",
   "license": "MIT",
   "scripts": {
     "test": "cypress open",
@@ -13,11 +13,22 @@
   },
   "repository": {
     "type": "git",
-    "url": "github.com/hovedstyret/indok-web"
+    "url": "github.com/rubberdok/indok-web"
   },
   "dependencies": {
     "cypress": "^9.0.0",
     "typescript": "^4.3.4",
     "wait-on": "^6.0.0"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.27.0",
+    "@typescript-eslint/parser": "^4.27.0",
+    "eslint": "^7.29.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-jsx-a11y": "^6.3.1",
+    "eslint-plugin-prettier": "^3.4.0",
+    "eslint-plugin-react": "^7.24.0",
+    "eslint-plugin-react-hooks": "^4.0.8",
+    "prettier": "^2.3.1"
   }
 }

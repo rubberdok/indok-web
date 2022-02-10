@@ -5,6 +5,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 from guardian.conf import settings as guardian_settings
+from django.utils import timezone
 
 
 # Create your models here.
@@ -20,6 +21,11 @@ class User(AbstractUser):
     first_login = models.BooleanField(default=True)
     graduation_year = models.IntegerField(null=True, blank=True)
     is_indok = models.BooleanField(default=False)
+    year_updated_at = models.DateTimeField(null=True, blank=True)
+
+    @property
+    def can_update_year(self):
+        return self.year_updated_at is None or (self.year_updated_at + timezone.timedelta(days=365) <= timezone.now())
 
     @property
     def events(self):

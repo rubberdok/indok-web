@@ -28,7 +28,8 @@
       "@interfaces/*": ["src/interfaces/*"],
       "@graphql/*": ["src/graphql/*"],
       "@hooks/*": ["src/hooks/*"]
-    }
+    },
+    "incremental": false
   },
   "exclude": ["node_modules"],
   "include": ["**/*.ts", "**/*.tsx"]

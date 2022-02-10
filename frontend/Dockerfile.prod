@@ -2,7 +2,7 @@
 ARG APP_ENV=production
 
 # Install dependencies only when needed
-FROM 777854691961.dkr.ecr.eu-north-1.amazonaws.com/node:14-alpine AS deps
+FROM 777854691961.dkr.ecr.eu-north-1.amazonaws.com/node:16.13.2-alpine AS deps
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
 RUN apk add --no-cache libc6-compat
 WORKDIR /usr/src/app
@@ -10,10 +10,10 @@ COPY package.json yarn.lock ./
 RUN yarn install --frozen-lockfile
 
 # Rebuild the source code only when needed
-FROM 777854691961.dkr.ecr.eu-north-1.amazonaws.com/node:14-alpine AS builder
+FROM 777854691961.dkr.ecr.eu-north-1.amazonaws.com/node:16.13.2-alpine AS builder
 WORKDIR /usr/src/app
-COPY . .
 COPY --from=deps /usr/src/app/node_modules ./node_modules
+COPY . .
 
 ARG NEXT_PUBLIC_GRAPHQL_BACKEND_URI
 ENV NEXT_PUBLIC_GRAPHQL_BACKEND_URI $NEXT_PUBLIC_GRAPHQL_BACKEND_URI
@@ -37,12 +37,13 @@ ARG APP_ENV
 ENV NEXT_PUBLIC_APP_ENV $APP_ENV
 ENV BABEL_ENV $APP_ENV
 
-RUN yarn build \
-    && yarn install --production --ignore-scripts --prefer-offline
+RUN yarn build 
 
 # Production image, copy all the files and run next
-FROM 777854691961.dkr.ecr.eu-north-1.amazonaws.com/node:14-alpine AS runner
+FROM 777854691961.dkr.ecr.eu-north-1.amazonaws.com/node:16.13.2-alpine AS runner
 WORKDIR /usr/src/app
+
+ENV NODE_ENV production
 
 ARG APP_ENV
 ENV NEXT_PUBLIC_APP_ENV $APP_ENV
@@ -50,15 +51,12 @@ ENV NEXT_PUBLIC_APP_ENV $APP_ENV
 RUN addgroup -g 1001 -S nodejs
 RUN adduser -S nextjs -u 1001
 
-RUN mkdir -p /usr/src/app/.next/cache/images && chown nextjs:nodejs /usr/src/app/.next/cache/images
-VOLUME /usr/src/app/.next/cache/images
-
-# You only need to copy next.config.js if you are NOT using the default configuration
 COPY --from=builder /usr/src/app/next.config.js ./
 COPY --from=builder /usr/src/app/public ./public
-COPY --from=builder --chown=nextjs:nodejs /usr/src/app/.next ./.next
-COPY --from=builder /usr/src/app/node_modules ./node_modules
 COPY --from=builder /usr/src/app/package.json ./package.json
+
+COPY --from=builder --chown=nextjs:nodejs /usr/src/app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /usr/src/app/.next/static ./.next/static
 
 USER nextjs
 
@@ -67,4 +65,4 @@ EXPOSE 3000
 # Disabled NextJS telemetry
 ENV NEXT_TELEMETRY_DISABLED 1
 
-CMD ["yarn", "start"]
+CMD ["node", "server.js"]

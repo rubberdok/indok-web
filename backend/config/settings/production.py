@@ -1,5 +1,5 @@
 import logging
-from typing import cast
+from typing import Optional, cast
 
 import sentry_sdk
 from corsheaders.defaults import default_headers
@@ -85,6 +85,7 @@ GRAPHENE["MIDDLEWARE"] += ["config.sentry.middleware.SentryMiddleware"]  # noqa
 # Sentry
 SENTRY_DSN: str = env("SENTRY_DSN")
 SENTRY_LOG_LEVEL: int = cast(int, env.int("DJANGO_SENTRY_LOG_LEVEL", default=logging.INFO))
+SENTRY_RELEASE: Optional[str] = env.str("GIT_COMMIT_SHA", "") or None
 
 sentry_logging = LoggingIntegration(
     level=SENTRY_LOG_LEVEL,  # Capture info and above as breadcrumbs
@@ -97,7 +98,8 @@ sentry_sdk.init(
     dsn=SENTRY_DSN,
     integrations=integrations,
     environment=ENVIRONMENT,  # noqa
-    traces_sample_rate=env.float("SENTRY_TRACES_SAMPLE_RATE", default=0.0),
-    send_default_pii=env.bool("SENTRY_SEND_DEFAULT_PII", default=True),
+    traces_sample_rate=cast(float, env.float("SENTRY_TRACES_SAMPLE_RATE", default=0.0)),
+    send_default_pii=cast(bool, env.bool("SENTRY_SEND_DEFAULT_PII", default=True)),
+    release=SENTRY_RELEASE,
 )
 ignore_logger("graphql.execution.utils")
