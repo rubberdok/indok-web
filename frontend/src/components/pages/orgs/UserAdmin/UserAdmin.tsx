@@ -35,19 +35,28 @@ type Props = {
   organization: Organization;
 };
 
-type UserWithCheck = User & { checked: boolean, ableToSee: boolean };
+type permissionGroups = {
+  name: string,
+  uuid: string,
+}
 
+type UserWithCheck = User & { checked: boolean, ableToSee: boolean };
+type GroupFilter = { name: string, checked: boolean }
+type permissionGroupsWithCheck = permissionGroups & { checked: boolean }
+
+//TODO: Need to restructure and just use on big fat component instead of FilterUsers also
 const EditUsersInOrganization: React.FC<Props> = ({ organization }) => {
   const router = useRouter();
   const { orgId } = router.query;
   const orgNumberId = parseInt(orgId as string);
   const classes = useStyles();
-  //All people fetched that are inside the group
+  //All people fetched that are inside the organization
   const [checkedPeople, setCheckedPeople] = useState<UserWithCheck[]>([]);
   //Group filters that are choosen
   const [groupFilter, setGroupFilter] = useState<string[]>([]);
   //The current searchfilter 
   const [searchFilter, setSearchFilter] = useState("");
+  const [fetchedPermissionGroups, setFetchedPermissionGroups] = useState<permissionGroupsWithCheck[]>()
 
   //Function that is sent to filter component
   const handleSearch = (text: string) => {
@@ -55,16 +64,9 @@ const EditUsersInOrganization: React.FC<Props> = ({ organization }) => {
   }
 
   //Handling the sorting with people inside groups
-  const handleGroupFilter = (name: string, checked: boolean) => {
-    if (checked) {
-      if (!groupFilter.includes(name)) {
-        setGroupFilter([...groupFilter, name]);
-      }
-    } else {
-      if (groupFilter.includes(name)) {
-        setGroupFilter(groupFilter.filter((filter) => filter == name));
-      }
-    }
+  const handleGroupFilter = (groupFilter: GroupFilter) => {
+
+    return;
   };
 
   //Gucci - Handling logic when checkmarking people
@@ -81,6 +83,7 @@ const EditUsersInOrganization: React.FC<Props> = ({ organization }) => {
 
     });
     setCheckedPeople(newList);
+    //
   };
 
   //Gucci - Reseting the checkedFilter
@@ -97,7 +100,7 @@ const EditUsersInOrganization: React.FC<Props> = ({ organization }) => {
 
   //Gucci - Fetching users in the organization
   const { error, loading, data } = useQuery<{
-    organization: { users: User[] };
+    organization: { users: User[], permissionGroups: permissionGroups[] },
   }>(
     gql`
       query organization($id: ID) {
@@ -109,11 +112,20 @@ const EditUsersInOrganization: React.FC<Props> = ({ organization }) => {
             lastName
             email
           }
+          permissionGroups {
+            name
+            uuid
+          }
         }
       }
     `,
     { variables: { id: orgNumberId } }
   );
+
+  //TODO: When adding a new filter one need to disable view of people not in that group
+  useEffect(() => {
+
+  }, [fetchedPermissionGroups])
 
   //Gucci - When people are fetched all people are choosen
   useEffect(() => {
@@ -127,6 +139,16 @@ const EditUsersInOrganization: React.FC<Props> = ({ organization }) => {
       allUsers.push(userWithCheck);
     });
     setCheckedPeople(allUsers);
+
+    const allPermissionGroups: permissionGroupsWithCheck[] = [];
+    data?.organization.permissionGroups.forEach((permission) => {
+      const permissionWithCheck = {
+        ...permission,
+        checked: false,
+      }
+      allPermissionGroups.push(permissionWithCheck);
+    });
+    setFetchedPermissionGroups(allPermissionGroups);
   }, [data]);
 
   //Gucci - Filter out users that does not fufuill the searchbar query
@@ -160,7 +182,10 @@ const EditUsersInOrganization: React.FC<Props> = ({ organization }) => {
           <Grid item xs={12}>
             <Typography variant="h1">{organization.name}</Typography>
           </Grid>
-          <FilterUsers handleGroupFilter={handleGroupFilter} handleSearch={handleSearch} setResetCheckedPeople={resetCheckedFilter} />
+          {fetchedPermissionGroups ?
+            <FilterUsers handleGroupFilter={handleGroupFilter} permissionGroups={fetchedPermissionGroups} handleSearch={handleSearch} setResetCheckedPeople={resetCheckedFilter} />
+            : <></>
+          }
           <Grid item container>
             <Grid item xs>
               <Card variant="outlined">
