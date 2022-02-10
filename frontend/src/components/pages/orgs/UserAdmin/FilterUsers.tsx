@@ -1,85 +1,86 @@
 import React, { useEffect, useState } from "react";
-import FilterButtons from "@components/pages/archive/FilterButtons";
 import SearchBar from "@components/pages/archive/SearchBar";
-import { useRouter } from "next/router";
-import { Grid } from "@material-ui/core";
-import { gql, useQuery } from "@apollo/client";
+import { Checkbox, FormControlLabel, Grid, Typography } from "@material-ui/core";
+import { CheckBox as CheckBoxIcon, CheckBoxOutlineBlank as CheckBoxOutlineBlankIcon } from "@material-ui/icons";
 import { RemoveFiltersButton } from "@components/pages/archive/RemoveFiltersButton";
 
-type GroupFilter = { name: string, checked: boolean }
-
 type permissionGroupsWithCheck = {
-  checked: boolean,
-  name: string,
-  uuid: string,
-}
+  checked: boolean;
+  name: string;
+  uuid: string;
+};
 
 type Props = {
-
-  handleGroupFilter: (groupFilter: GroupFilter) => void;
-  handleSearch: (text: string) => void;
-  setResetCheckedPeople: () => void,
-  permissionGroups: permissionGroupsWithCheck[],
+  setSearch: React.Dispatch<React.SetStateAction<string>>;
+  setResetCheckedPeople: () => void;
+  permissionGroups: permissionGroupsWithCheck[];
+  setPermissionGroups: React.Dispatch<React.SetStateAction<permissionGroupsWithCheck[]>>;
 };
 
 //TODO: filter when clicking on a group or writing in searchbar
-const FilterUsers: React.FC<Props> = ({ handleSearch, permissionGroups, handleGroupFilter, setResetCheckedPeople }) => {
-  const router = useRouter();
-  const { orgId } = router.query;
-  const orgNumberId = parseInt(orgId as string);
+const FilterUsers: React.FC<Props> = ({ setSearch, permissionGroups, setPermissionGroups, setResetCheckedPeople }) => {
   const [searchFilter, setSearchFilter] = useState("");
   const [viewFeatured, setViewFeatured] = useState(true);
-  const [typeFilters, setTypeFilters] = useState<{ [Key: string]: { active: boolean; title: string } }>({});
 
-  //Gucci - Removing all filters, including checkmarks 
+  //Gucci - Removing all filters, including checkmarks
   const handleRemoveFilterChanged = () => {
     setSearchFilter("");
-    setTypeFilters((typeFilters) => {
-      const newTypeFilters = typeFilters;
-      for (const key of Object.keys(newTypeFilters)) {
-        newTypeFilters[key] = {
-          ...typeFilters[key],
-          active: false,
-        };
-      }
-      setResetCheckedPeople();;
-      return newTypeFilters;
+    const newPermissionGroup: permissionGroupsWithCheck[] = [];
+    permissionGroups.forEach((group) => {
+      const newGroup = {
+        ...group,
+        checked: false,
+      };
+      newPermissionGroup.push(newGroup);
     });
+    setPermissionGroups(newPermissionGroup);
     setViewFeatured(true);
-  }
+  };
+
+  // Gucci - Handling group filter change
+  const handleGroupFilterChange = (group: permissionGroupsWithCheck) => {
+    setViewFeatured(false);
+    const newGroups: permissionGroupsWithCheck[] = [];
+    permissionGroups.forEach((oldGroup) => {
+      if (oldGroup.uuid == group.uuid) {
+        const newGroup = {
+          ...oldGroup,
+          checked: !oldGroup.checked,
+        };
+        newGroups.push(newGroup);
+      } else {
+        newGroups.push(oldGroup);
+      }
+    });
+    setPermissionGroups(newGroups);
+  };
 
   //Gucci - When writing in the searchbar it sends to the parent element
   useEffect(() => {
-    handleSearch(searchFilter);
-  }, [searchFilter])
-
-  // Gucci - Displaying buttons to checkmark
-  useEffect(() => {
-    const buttons: { [key: string]: { active: boolean; title: string } } = {};
-    permissionGroups.forEach((group) => {
-      buttons[group.uuid] = {
-        title: group.name,
-        active: group.checked,
-      }
-    });
-    setTypeFilters(buttons);
-  }, [permissionGroups]);
+    setSearch(searchFilter);
+  }, [searchFilter]);
 
   return (
     <>
       <Grid item xs={12} md={6}>
-        <FilterButtons
-          typeFilters={typeFilters}
-          updateTypeFilters={(key) => {
-            [
-              setTypeFilters({
-                ...typeFilters,
-                [key]: { active: !typeFilters[key].active, title: typeFilters[key].title },
-              }),
-              setViewFeatured(false),
-            ];
-          }}
-        />
+        {permissionGroups.map((group) => {
+          return (
+            <FormControlLabel
+              label={<Typography variant="body2">{group.name}</Typography>}
+              key={group.uuid}
+              control={
+                <Checkbox
+                  color="primary"
+                  icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                  checkedIcon={<CheckBoxIcon fontSize="small" />}
+                  checked={group.checked}
+                  name={group.name}
+                  onChange={() => handleGroupFilterChange(group)}
+                />
+              }
+            />
+          );
+        })}
       </Grid>
       <Grid item xs={8} md={6}>
         <SearchBar
@@ -91,13 +92,7 @@ const FilterUsers: React.FC<Props> = ({ handleSearch, permissionGroups, handleGr
           placeholder="Søk på medlemmer"
         />
       </Grid>
-      <Grid>
-        {!viewFeatured && (
-          <RemoveFiltersButton
-            handleRemoveFilterChanged={handleRemoveFilterChanged}
-          />
-        )}
-      </Grid>
+      <Grid>{!viewFeatured && <RemoveFiltersButton handleRemoveFilterChanged={handleRemoveFilterChanged} />}</Grid>
     </>
   );
 };

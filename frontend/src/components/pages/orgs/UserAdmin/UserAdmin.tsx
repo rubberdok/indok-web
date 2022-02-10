@@ -36,15 +36,13 @@ type Props = {
 };
 
 type permissionGroups = {
-  name: string,
-  uuid: string,
-}
+  name: string;
+  uuid: string;
+};
 
-type UserWithCheck = User & { checked: boolean, ableToSee: boolean };
-type GroupFilter = { name: string, checked: boolean }
-type permissionGroupsWithCheck = permissionGroups & { checked: boolean }
+type UserWithCheck = User & { checked: boolean; ableToSee: boolean };
+type permissionGroupsWithCheck = permissionGroups & { checked: boolean };
 
-//TODO: Need to restructure and just use on big fat component instead of FilterUsers also
 const EditUsersInOrganization: React.FC<Props> = ({ organization }) => {
   const router = useRouter();
   const { orgId } = router.query;
@@ -52,22 +50,10 @@ const EditUsersInOrganization: React.FC<Props> = ({ organization }) => {
   const classes = useStyles();
   //All people fetched that are inside the organization
   const [checkedPeople, setCheckedPeople] = useState<UserWithCheck[]>([]);
-  //Group filters that are choosen
-  const [groupFilter, setGroupFilter] = useState<string[]>([]);
-  //The current searchfilter 
+  //The current searchfilter
   const [searchFilter, setSearchFilter] = useState("");
-  const [fetchedPermissionGroups, setFetchedPermissionGroups] = useState<permissionGroupsWithCheck[]>()
-
-  //Function that is sent to filter component
-  const handleSearch = (text: string) => {
-    setSearchFilter(text);
-  }
-
-  //Handling the sorting with people inside groups
-  const handleGroupFilter = (groupFilter: GroupFilter) => {
-
-    return;
-  };
+  //Fetched permissiongroups and whether they are checked
+  const [fetchedPermissionGroups, setFetchedPermissionGroups] = useState<permissionGroupsWithCheck[]>([]);
 
   //Gucci - Handling logic when checkmarking people
   const handleCheckedPeople = (user: UserWithCheck) => {
@@ -76,11 +62,10 @@ const EditUsersInOrganization: React.FC<Props> = ({ organization }) => {
         const updateUser = {
           ...checkedUser,
           checked: !checkedUser.checked,
-        }
+        };
         return updateUser;
       }
       return checkedUser;
-
     });
     setCheckedPeople(newList);
     //
@@ -92,15 +77,15 @@ const EditUsersInOrganization: React.FC<Props> = ({ organization }) => {
       const updatedUser = {
         ...checkedUser,
         checked: false,
-      }
+      };
       return updatedUser;
     });
     setCheckedPeople(newCheckedPeople);
-  }
+  };
 
   //Gucci - Fetching users in the organization
   const { error, loading, data } = useQuery<{
-    organization: { users: User[], permissionGroups: permissionGroups[] },
+    organization: { users: User[]; permissionGroups: permissionGroups[] };
   }>(
     gql`
       query organization($id: ID) {
@@ -122,10 +107,9 @@ const EditUsersInOrganization: React.FC<Props> = ({ organization }) => {
     { variables: { id: orgNumberId } }
   );
 
-  //TODO: When adding a new filter one need to disable view of people not in that group
   useEffect(() => {
-
-  }, [fetchedPermissionGroups])
+    console.log(data);
+  }, [data]);
 
   //Gucci - When people are fetched all people are choosen
   useEffect(() => {
@@ -135,7 +119,7 @@ const EditUsersInOrganization: React.FC<Props> = ({ organization }) => {
         ...user,
         checked: false,
         ableToSee: true,
-      }
+      };
       allUsers.push(userWithCheck);
     });
     setCheckedPeople(allUsers);
@@ -145,7 +129,7 @@ const EditUsersInOrganization: React.FC<Props> = ({ organization }) => {
       const permissionWithCheck = {
         ...permission,
         checked: false,
-      }
+      };
       allPermissionGroups.push(permissionWithCheck);
     });
     setFetchedPermissionGroups(allPermissionGroups);
@@ -154,18 +138,18 @@ const EditUsersInOrganization: React.FC<Props> = ({ organization }) => {
   //Gucci - Filter out users that does not fufuill the searchbar query
   useEffect(() => {
     const updatedUsers = checkedPeople.map((checkedUser) => {
-      let fullName = checkedUser.firstName + " " + checkedUser.lastName;
+      const fullName = checkedUser.firstName + " " + checkedUser.lastName;
       if (!fullName.toLocaleLowerCase().includes(searchFilter.toLocaleLowerCase())) {
         const updatedUser = {
           ...checkedUser,
           ableToSee: false,
-        }
+        };
         return updatedUser;
       } else {
         const updatedUser = {
           ...checkedUser,
           ableToSee: true,
-        }
+        };
         return updatedUser;
       }
     });
@@ -182,10 +166,16 @@ const EditUsersInOrganization: React.FC<Props> = ({ organization }) => {
           <Grid item xs={12}>
             <Typography variant="h1">{organization.name}</Typography>
           </Grid>
-          {fetchedPermissionGroups ?
-            <FilterUsers handleGroupFilter={handleGroupFilter} permissionGroups={fetchedPermissionGroups} handleSearch={handleSearch} setResetCheckedPeople={resetCheckedFilter} />
-            : <></>
-          }
+          {fetchedPermissionGroups ? (
+            <FilterUsers
+              setPermissionGroups={setFetchedPermissionGroups}
+              permissionGroups={fetchedPermissionGroups}
+              setSearch={setSearchFilter}
+              setResetCheckedPeople={resetCheckedFilter}
+            />
+          ) : (
+            <></>
+          )}
           <Grid item container>
             <Grid item xs>
               <Card variant="outlined">
@@ -225,7 +215,7 @@ const EditUsersInOrganization: React.FC<Props> = ({ organization }) => {
                                     />
                                   </TableCell>
                                 </TableRow>
-                              )
+                              );
                             }
                             return;
                           })}
