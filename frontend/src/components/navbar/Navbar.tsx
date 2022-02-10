@@ -11,6 +11,8 @@ import {
   useScrollTrigger,
 } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
+import leftFern from "@public/static/anniversary/left_fern.svg";
+import rightFern from "@public/static/anniversary/right_fern.svg";
 import Image from "next/image";
 import { default as Link } from "next/link";
 import { useRouter } from "next/router";
@@ -18,14 +20,14 @@ import React, { ReactElement } from "react";
 import NavbarLinks from "./NavbarLinks";
 
 //set navbar style breakpoint, should be adjusted according to width of NavbarLinks
-export const breakpoint = 1216;
+export const breakpoint = 1315;
 
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
   },
   appBar: {
-    background: "#0b2c1e", //Original color: #022A2A
+    background: theme.palette.primary.dark,
     backgroundImage: "url('/static/anniversary/sparkles.gif')",
     backgroundPosition: "bottom",
   },
@@ -95,7 +97,7 @@ const Navbar: React.FC = () => {
             <Toolbar>
               <Box className={classes.title}>
                 <Box height="auto" width={38} position="relative">
-                  <Image src="/static/anniversary/left_fern.svg" layout="fill" alt="left fern" />
+                  <Image src={leftFern} layout="fill" alt="" />
                 </Box>
                 <Link href="/" passHref>
                   <Typography component="a" className={classes.titleLink} variant="h5">
@@ -103,7 +105,7 @@ const Navbar: React.FC = () => {
                   </Typography>
                 </Link>
                 <Box height="auto" width={38} position="relative">
-                  <Image src="/static/anniversary/right_fern.svg" layout="fill" alt="right fern" />
+                  <Image src={rightFern} layout="fill" alt="" />
                 </Box>
               </Box>
               <div className={classes.sectionDesktop}>
@@ -125,7 +127,7 @@ const Navbar: React.FC = () => {
         open={openDrawer}
         onClose={() => setOpenDrawer(false)}
       >
-        <NavbarLinks></NavbarLinks>
+        <NavbarLinks />
       </Drawer>
     </div>
   );

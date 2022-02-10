@@ -1,4 +1,14 @@
-import { Box, Button, Container, Grid, makeStyles, Paper, Typography, useMediaQuery } from "@material-ui/core";
+import {
+  Box,
+  Button,
+  Container,
+  Grid,
+  makeStyles,
+  Paper,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@material-ui/core";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -18,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
     },
     width: "100%",
     zIndex: 1000,
-    backgroundColor: "#0b2c1e",
+    backgroundColor: theme.palette.primary.dark,
   },
   cardGrid: {
     display: "flex",
@@ -29,7 +39,8 @@ const useStyles = makeStyles((theme) => ({
 
 const LandingAnnouncement: React.FC = () => {
   const classes = useStyles();
-  const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down("sm"));
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
     <Container style={{ position: "relative", ...(isMobile && { padding: 0 }) }}>
