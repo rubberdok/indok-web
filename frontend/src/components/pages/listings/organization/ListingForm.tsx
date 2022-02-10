@@ -75,7 +75,7 @@ const ListingForm: React.FC<{
         <Grid container direction="column" spacing={4}>
           <Grid item>
             <Typography variant="h5" component="h2">
-              Organisasjon
+              Forening
             </Typography>
             {organizations && listing.organization && (
               <>
@@ -83,7 +83,7 @@ const ListingForm: React.FC<{
                   <Typography>{listing.organization.name}</Typography>
                 ) : (
                   <FormControl fullWidth variant="filled">
-                    <InputLabel id="select-organization-label">Velg organisasjon</InputLabel>
+                    <InputLabel id="select-organization-label">Velg forening</InputLabel>
                     <Select
                       labelId="select-organization-label"
                       id="select-organization"
@@ -193,8 +193,8 @@ const ListingForm: React.FC<{
                           leaveTouchDelay={2500}
                           title={
                             <>
-                              Denne linken dukker opp under navnet til organisasjonen din, slik at søkere kan lese mer
-                              om den.
+                              Denne linken dukker opp under navnet til foreningen din, slik at søkere kan lese mer om
+                              den.
                             </>
                           }
                         >

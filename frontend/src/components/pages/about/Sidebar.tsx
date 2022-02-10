@@ -53,7 +53,7 @@ const Sidebar: React.FC = () => {
             className={router.pathname == "/about/organization" ? "MuiButton-outlinedPrimary" : ""}
             fullWidth
           >
-            Organisasjonskart
+            Våre foreninger
           </Button>
         </Link>
       </li>

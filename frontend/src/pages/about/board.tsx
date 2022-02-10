@@ -77,7 +77,7 @@ const BoardPage: NextPage = () => {
     <Template
       img="/img/hero.jpg"
       title="Hovedstyret"
-      page=""
+      page="Hovedstyret"
       description="Hovedstyret (HS) er styret i Foreningen for studentene ved Industriell økonomi og teknologiledelse, NTNU. 
       "
     >
