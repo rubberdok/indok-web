@@ -79,12 +79,20 @@ services:
       - backend
     command: celery -A celery_worker beat -l DEBUG
 
- # celery_flower:
- #   image: mher/flower
- #   depends_on:
- #     - celery_worker
- #     - celery_beat
- #   command: -A celery --broker="${CELERY_BROKER}" flower
+  celery_flower:
+   environment:
+    - DJANGO_READ_DOT_ENV_FILE=true
+   build:
+      context: ./backend
+      dockerfile: Dockerfile.celery
+   volumes:
+    - ./backend:/usr/src/app
+   depends_on:
+     - celery_worker
+     - celery_beat
+   ports:
+     - "5555:5555"
+   command: celery -A celery_worker flower
 
 volumes:
   postgres_data:

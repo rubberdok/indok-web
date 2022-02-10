@@ -26,4 +26,5 @@ whitenoise==5.3.0
 PyYAML==6.0
 django-guardian==2.4.0
 XlsxWriter==3.0.1
-celery
+celery==4.4.7
+flower
