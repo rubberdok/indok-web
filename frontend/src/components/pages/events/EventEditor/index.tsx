@@ -83,7 +83,9 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
 
   const updateSlotDistribution = (newSlotDistribution: { category: number[]; availableSlots: number }[]) => {
     setSlotDistribution(newSlotDistribution);
-    const usedGrades = ([] as number[]).concat(...newSlotDistribution.map((dist) => dist.category)).sort();
+    const usedGrades = ([] as number[])
+      .concat(...newSlotDistribution.map((dist) => dist.category))
+      .sort((a, b) => a - b);
 
     setEventData({
       ...eventData,

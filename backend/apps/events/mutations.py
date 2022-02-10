@@ -176,9 +176,7 @@ class UpdateEvent(graphene.Mutation):
             # Previously attendable event made non-attendable (no need for sign up)
             if not is_attendable and attendable is not None:
                 attendable.delete()  # Cascaded to slot distrbution(s)
-                event = Event.objects.get(
-                    pk=event.pk
-                )  # Must refetch event for it to relaize the attendable has been deleted
+                event.refresh_from_db()  # Must refetch event for it to relaize the attendable has been deleted
 
             # Previously attendable event with slot distribution has removed slot distribution
             if (

@@ -16,7 +16,9 @@ const SlotDistribution: React.FC<Props> = ({ slotDistribution, onUpdateSlotDistr
     addId(slotDistribution)
   );
 
-  const usedGrades: number[] = ([] as number[]).concat(...slotDistWithId.map((dist) => dist.category)).sort();
+  const usedGrades: number[] = ([] as number[])
+    .concat(...slotDistWithId.map((dist) => dist.category))
+    .sort((a, b) => a - b);
 
   const handleCategoryUpdate = (id: number, newCategory: number[]) => {
     const distToUpdate = slotDistWithId.find((dist) => dist.id === id);
