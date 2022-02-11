@@ -3,8 +3,8 @@ from celery import Celery
 import os
 from django.conf import settings
 
-print("Hello world")
 
+# django.setup()
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.local")
 
 app = Celery(
@@ -15,15 +15,12 @@ app.config_from_object("django.conf:settings", namespace="CELERY")
 
 # Load task modules from all registered Django apps.
 app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)
+app.conf.timezone = "UTC"
 
 
 """ app.conf.beat_schedule = {
     "add-every-30-seconds": {"task": "celery_worker.tasks.add", "schedule": 30.0, "args": (16, 16)},
 } """
-
-app.conf.timezone = "UTC"
-
-
 """ @app.task(bind=True)
 def debug_task(self):
     print(f"Request: {self.request!r}")  # noqa# noqa# noqa

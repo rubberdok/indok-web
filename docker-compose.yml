@@ -21,6 +21,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
+    image: backend-image
     volumes:
       - ./backend:/usr/src/app
     ports:
@@ -56,39 +57,33 @@ services:
   celery_worker:
     environment:
       - DJANGO_READ_DOT_ENV_FILE=true
-    build:
-      context: ./backend
-      dockerfile: Dockerfile.celery
+    image: backend-image
     volumes:
       - ./backend:/usr/src/app
     depends_on:
       - postgres
       - rabbitmq
       - backend
-    command: celery -A celery_worker worker --concurrency=20 --loglevel=INFO
+    entrypoint: ["celery","-A","celery_worker","worker","--concurrency=20","--loglevel=INFO"]
 
   celery_beat:
     environment:
     - DJANGO_READ_DOT_ENV_FILE=true
-    build:
-      context: ./backend
-      dockerfile: Dockerfile.celery
+    image: backend-image
     volumes:
       - ./backend:/usr/src/app
     depends_on:
       - postgres
       - rabbitmq
       - backend
-    command: celery -A celery_worker beat -l DEBUG --pidfile=
+    entrypoint: ["celery","-A","celery_worker","beat","-l","DEBUG","--pidfile="]
 
   celery_flower:
    environment:
     - DJANGO_READ_DOT_ENV_FILE=true
    env_file:
     - ./backend/.env
-   build:
-      context: ./backend
-      dockerfile: Dockerfile.celery
+   image: backend-image
    volumes:
     - ./backend:/usr/src/app
    depends_on:
@@ -96,7 +91,7 @@ services:
      - celery_beat
    ports:
      - "5555:5555"
-   command: /bin/sh -c "/usr/src/app/entrypoints/celery_flower.sh"
+   entrypoint: ["/bin/sh", "-c", "/usr/src/app/entrypoints/celery_flower.sh"]
 
 volumes:
   postgres_data:
