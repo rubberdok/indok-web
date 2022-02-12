@@ -5,9 +5,7 @@ from django.conf import settings
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.local")
 
-app = Celery(
-    "celery_worker", broker=settings.CELERY_BROKER, backend=settings.CELERY_BACKEND, include=["celery_worker.tasks"],
-)
+app = Celery("celery_worker", broker=settings.CELERY_BROKER, backend=settings.CELERY_BACKEND)
 
 app.config_from_object("django.conf:settings", namespace="CELERY")
 
