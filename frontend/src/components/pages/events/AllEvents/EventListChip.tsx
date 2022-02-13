@@ -16,12 +16,13 @@ const EventListChip: React.FC<Props> = ({ event, user }) => {
 
   if (!user || !event.attendable || !event.allowedGradeYears.includes(user.gradeYear)) return null;
 
-  if (event.isFull && event.userAttendance?.isOnWaitingList) return <Chip label="På venteliste" />;
+  if (event.attendable?.isFull && event.attendable?.userAttendance?.isOnWaitingList)
+    return <Chip label="På venteliste" />;
 
-  if (event.isFull && !event.userAttendance?.isSignedUp)
+  if (event.attendable?.isFull && !event.attendable?.userAttendance?.isAttending)
     return <Chip color="primary" label="Venteliste tilgjengelig" />;
 
-  if (event.userAttendance?.isSignedUp) return <Chip color="primary" label="Påmeldt" />;
+  if (event.attendable?.userAttendance?.isAttending) return <Chip color="primary" label="Påmeldt" />;
 
   if (timeData && dayjs(event.attendable.signupOpenDate).diff(dayjs(timeData.currentTime)) > 0)
     return <Chip label="Påmelding åpner snart" />;

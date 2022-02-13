@@ -42,7 +42,7 @@ const EmailForm: React.FC<EmailFormProps> = ({ eventId }) => {
   const [sendEventMail] = useMutation(SEND_EVENT_EMAILS);
 
   useEffect(() => {
-    const users = data?.event.usersAttending;
+    const users = data?.event.attendable?.usersAttending;
 
     if (data?.event && users) {
       setEmailProps({ ...emailProps, receiverEmails: users.map((user) => user.email) });

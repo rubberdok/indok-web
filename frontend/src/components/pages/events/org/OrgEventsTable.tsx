@@ -1,6 +1,5 @@
 import { Event } from "@interfaces/events";
 import { Organization } from "@interfaces/organizations";
-import { HeaderValuePair } from "@interfaces/utils";
 import {
   Card,
   CardContent,
