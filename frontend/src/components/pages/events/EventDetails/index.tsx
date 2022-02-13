@@ -7,6 +7,7 @@ import { User } from "@interfaces/users";
 import { Box, Button, Container, Grid, Typography, useTheme } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { Edit, KeyboardBackspace, List } from "@material-ui/icons";
+import DeleteIcon from "@material-ui/icons/Delete";
 import Link from "next/link";
 import React, { useState } from "react";
 import SignUpVariants from "./SignUpVariants";
@@ -15,6 +16,7 @@ import Alert from "@components/Alert";
 import EditEvent from "../EventEditor";
 import * as components from "@components/markdown/components";
 import ReactMarkdown from "react-markdown";
+import DeleteEventModal from "./DeleteEventModal";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -59,12 +61,13 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
   const theme = useTheme();
 
   const [openEditEvent, setOpenEditEvent] = useState(false);
+  const [openDeleteEvent, setOpenDeleteEvent] = useState(false);
 
   if (!eventData || !eventData.event) return <Typography variant="body1">Kunne ikke laste arrangementet</Typography>;
 
   const handleClick = () => {
     if (!userData?.user) return;
-    if (eventData.event.userAttendance?.isSignedUp) {
+    if (eventData.event.attendable?.userAttendance?.isAttending) {
       eventSignOff({ variables: { eventId: eventId.toString() } })
         .then(() => {
           refetchEventData({ eventId: eventId.toString() });
@@ -75,7 +78,7 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
         });
       return;
     }
-    if (eventData.event.userAttendance?.isOnWaitingList) {
+    if (eventData.event.attendable?.userAttendance?.isOnWaitingList) {
       eventSignOff({ variables: { eventId: eventId.toString() } })
         .then(() => {
           refetchEventData({ eventId: eventId.toString() });
@@ -89,7 +92,9 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
     eventSignUp({ variables: { eventId: eventId.toString(), data: extraInformation } })
       .then(() => {
         refetchEventData({ eventId: eventId.toString() }).then((res) => {
-          res.data.event.userAttendance?.isSignedUp ? setOpenSignUpSnackbar(true) : setOpenOnWaitingListSnackbar(true);
+          res.data.event.attendable?.userAttendance?.isAttending
+            ? setOpenSignUpSnackbar(true)
+            : setOpenOnWaitingListSnackbar(true);
         });
       })
       .catch(() => {
@@ -102,6 +107,15 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
       {openEditEvent && (
         <EditEvent open={openEditEvent} onClose={() => setOpenEditEvent(false)} event={eventData.event} />
       )}
+
+      {openDeleteEvent && (
+        <DeleteEventModal
+          open={openDeleteEvent}
+          onClose={() => setOpenDeleteEvent(false)}
+          eventId={eventData.event.id}
+        />
+      )}
+
       <Box width="100%" py={6} bgcolor={theme.palette.background.paper} pb={10}>
         <Container>
           <Link href="/events" passHref>
@@ -146,6 +160,16 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
                   Administrer
                 </Button>
               </Link>
+              <Button
+                variant="contained"
+                size="large"
+                startIcon={<DeleteIcon />}
+                onClick={() => {
+                  setOpenDeleteEvent(true);
+                }}
+              >
+                Slett
+              </Button>
             </div>
           )}
         </Container>

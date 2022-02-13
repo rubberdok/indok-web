@@ -26,9 +26,7 @@ export const getInitialEventData = (event: Event, eventData: Record<string, any>
 
   initialEventData.startTime = dayjs(event.startTime).format(DATE_FORMAT);
 
-  initialEventData.availableSlots = event.availableSlots
-    ? event.availableSlots.reduce((res, dist) => (res = res + dist.availableSlots), 0)
-    : undefined;
+  initialEventData.availableSlots = event.attendable ? event.attendable.totalAvailableSlots : undefined;
 
   if (event?.attendable?.signupOpenDate) {
     initialEventData.signupOpenDate = dayjs(event?.attendable?.signupOpenDate).format(DATE_FORMAT);

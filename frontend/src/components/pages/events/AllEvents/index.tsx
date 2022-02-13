@@ -7,7 +7,7 @@ import { Add, List, Tune } from "@material-ui/icons";
 import Link from "next/link";
 import React, { useState } from "react";
 import EventListItem from "./EventListItem";
-import FilterMenu from "./filterMenu/FilterMenu";
+import FilterMenu from "./filterMenu";
 import { FilterQuery } from "./types";
 
 const useStyles = makeStyles((theme) => ({
@@ -63,7 +63,7 @@ const AllEvents: React.FC = () => {
     <>
       <Hidden mdUp>
         <Button onClick={() => setOpenFilterDrawer(true)} variant="contained" startIcon={<Tune />}>
-          Filtre
+          Filter
         </Button>
         <Drawer
           PaperProps={{ className: classes.drawer }}

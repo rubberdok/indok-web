@@ -1,4 +1,4 @@
-from typing import TypedDict, Union
+from typing import TypedDict
 
 import graphene
 from graphene_django import DjangoObjectType
@@ -30,7 +30,7 @@ def has_bought_ticket(event: Event, user: User) -> bool:
     )
 
 
-class UserAttendingType(graphene.ObjectType):
+class UserAttendanceType(graphene.ObjectType):
     is_attending = graphene.Boolean()
     is_on_waiting_list = graphene.Boolean()
     has_bought_ticket = graphene.Boolean()
@@ -63,25 +63,84 @@ class SignUpType(DjangoObjectType):
         return has_bought_ticket(sign_up.event, sign_up.user)
 
 
-class GradeDistributionType(graphene.ObjectType):
-    category = graphene.String()
-    available_slots = graphene.Int()
-
-
 class AttendableType(DjangoObjectType):
+    user_attendance = graphene.Field(UserAttendanceType)
+    users_on_waiting_list = graphene.List(UserType)
+    users_attending = graphene.List(UserType)
+    is_full = graphene.Boolean()
+    slot_distribution = graphene.types.generic.GenericScalar()
+
     class Meta:
         model = Attendable
-        fields = ["id", "signup_open_date", "deadline", "binding_signup", "price"]
+        fields = [
+            "id",
+            "signup_open_date",
+            "deadline",
+            "binding_signup",
+            "price",
+            "has_extra_information",
+            "total_available_slots",
+        ]
+
+    class PermissionDecorators:
+        @staticmethod
+        def is_in_event_organization(resolver):
+            def wrapper(attendable: Attendable, info):
+                user = info.context.user
+                if user.memberships.filter(organization=attendable.event.organization).exists() or user.is_superuser:
+                    return resolver(attendable, info)
+                else:
+                    raise PermissionError(
+                        f"Du må være medlem av organisasjonen {attendable.organization.name} for å gjøre dette kallet"
+                    )
+
+            return wrapper
+
+    @staticmethod
+    @login_required
+    def resolve_user_attendance(attendable: Attendable, info) -> UserAttendance:
+        user = info.context.user
+        if user is None:
+            return {
+                "is_attending": False,
+                "is_on_waiting_list": False,
+                "has_bought_ticket": False,
+            }
+
+        return {
+            "is_attending": user in attendable.users_attending,
+            "is_on_waiting_list": user in attendable.users_on_waiting_list,
+            "has_bought_ticket": has_bought_ticket(attendable.event, user),
+        }
+
+    @staticmethod
+    @login_required
+    def resolve_slot_distribution(attendable: Attendable, info) -> UserAttendance:
+        return attendable.slot_distribution
+
+    @staticmethod
+    def resolve_is_full(attendable: Attendable, info):
+        user = info.context.user
+        if user is None:
+            return False
+        return attendable.get_is_full(user.grade_year)
+
+    @staticmethod
+    @login_required
+    @PermissionDecorators.is_in_event_organization
+    def resolve_users_on_waiting_list(attendable: Attendable, info):
+        return attendable.users_on_waiting_list
+
+    @staticmethod
+    @login_required
+    @PermissionDecorators.is_in_event_organization
+    def resolve_users_attending(attendable: Attendable, info):
+        return attendable.users_attending
 
 
 class EventType(DjangoObjectType):
-    user_attendance = graphene.Field(UserAttendingType)
-    users_on_waiting_list = graphene.List(UserType)
-    users_attending = graphene.List(UserType)
-    available_slots = graphene.List(GradeDistributionType)
     attendable = graphene.Field(AttendableType)
     allowed_grade_years = graphene.List(graphene.Int)
-    is_full = graphene.Boolean()
     product = graphene.Field(ProductType)
 
     class Meta:
@@ -94,7 +153,6 @@ class EventType(DjangoObjectType):
             "location",
             "description",
             "organization",
-            "has_extra_information",
             "category",
             "image",
             "publisher",
@@ -102,81 +160,18 @@ class EventType(DjangoObjectType):
             "contact_email",
         ]
 
-    class PermissionDecorators:
-        @staticmethod
-        def is_in_event_organization(resolver):
-            def wrapper(event: Event, info):
-                user = info.context.user
-                if user.memberships.filter(organization=event.organization).exists() or user.is_superuser:
-                    return resolver(event, info)
-                else:
-                    raise PermissionError(
-                        f"Du må være medlem av organisasjonen {event.organization.name} for å gjøre dette kallet"
-                    )
-
-            return wrapper
-
     @staticmethod
-    def resolve_user_attendance(event: Event, info) -> UserAttendance:
-        user = info.context.user
+    @login_required
+    def resolve_attendable(event, info):
         if not hasattr(event, "attendable") or event.attendable is None:
-            return {
-                "is_attending": False,
-                "is_on_waiting_list": False,
-                "has_bought_ticket": False,
-            }
-
-        return {
-            "is_attending": user in event.attendable.users_attending,
-            "is_on_waiting_list": user in event.attendable.users_on_waiting_list,
-            "has_bought_ticket": has_bought_ticket(event, user),
-        }
-
-    @staticmethod
-    def resolve_is_full(event, info):
-        user = info.context.user
-        if user is None or not hasattr(event, "attendable") or event.attendable is None:
-            return False
-        return event.attendable.get_is_full(user.grade_year)
+            return None
+        return event.attendable
 
     @staticmethod
     def resolve_allowed_grade_years(event, info):
         grades = [int(grade) for grade in event.allowed_grade_years]
         grades.sort()
         return grades
-
-    @staticmethod
-    @login_required
-    @PermissionDecorators.is_in_event_organization
-    def resolve_users_on_waiting_list(event: Event, info):
-        if not hasattr(event, "attendable") or event.attendable is None:
-            return []
-        return event.attendable.users_on_waiting_list
-        # return SignUp.objects.filter(event=event, user__in=event.users_on_waiting_list, is_attending=True)
-
-    @staticmethod
-    @login_required
-    @PermissionDecorators.is_in_event_organization
-    def resolve_users_attending(event: Event, info):
-        if not hasattr(event, "attendable") or event.attendable is None:
-            return []
-        return event.attendable.users_attending
-        # return SignUp.objects.filter(event=event, user__in=event.users_attending, is_attending=True)
-
-    @staticmethod
-    @login_required
-    @PermissionDecorators.is_in_event_organization
-    def resolve_available_slots(event: Event, info) -> Union[int, None]:
-        if not hasattr(event, "attendable") or event.attendable is None:
-            return None
-        return event.attendable.total_available_slots
-
-    @staticmethod
-    @login_required
-    def resolve_attendable(event, info):
-        if not hasattr(event, "attendable"):
-            return None
-        return event.attendable
 
     @staticmethod
     def resolve_product(event: Event, info) -> Product:

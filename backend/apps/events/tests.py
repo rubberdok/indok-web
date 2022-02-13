@@ -1,11 +1,10 @@
 import json
 from apps.events.models import Event, Category, SignUp
 from utils.testing.factories.users import IndokUserFactory, UserFactory
-from utils.testing.factories.event_factories import (
+from utils.testing.factories.events import (
     EventFactory,
     AttendableFactory,
     CategoryFactory,
-    SlotDistributionFactory,
     SignUpFactory,
     SimplifiedOrganizationFactory,
 )
@@ -28,18 +27,16 @@ class EventsBaseTestCase(ExtendedGraphQLTestCase):
 
         # Make one attendable without specific slot distribution
         attendable = AttendableFactory(
-            event=self.attendable_and_open_event, signup_open_date=timezone.now() + datetime.timedelta(microseconds=100)
+            event=self.attendable_and_open_event,
+            signup_open_date=timezone.now() + datetime.timedelta(microseconds=100),
+            slot_distribution={"1,2,3": 1},
+            total_available_slots=1,
         )
-        SlotDistributionFactory(attendable=attendable, available_slots=1, grade_years="1,2,3")
-
         # Make one attendable with specific slot distribution
-        attendable = AttendableFactory(event=self.attendable_event_with_slot_dist)
-        parent_slot_dist = SlotDistributionFactory(attendable=attendable, available_slots=2)
-        SlotDistributionFactory(
-            attendable=attendable, available_slots=1, parent_distribution=parent_slot_dist, grade_years="1, 2"
-        )
-        SlotDistributionFactory(
-            attendable=attendable, available_slots=1, parent_distribution=parent_slot_dist, grade_years="4"
+        attendable = AttendableFactory(
+            event=self.attendable_event_with_slot_dist,
+            slot_distribution={"1,2": 1, "4": 1},
+            total_available_slots=2,
         )
 
         # Create some categories
@@ -57,6 +54,8 @@ class EventsBaseTestCase(ExtendedGraphQLTestCase):
         self.user_4th_grade = IndokUserFactory(graduation_year=year_val + current_year - 4)
         self.user_not_indok = UserFactory(graduation_year=year_val + current_year - 1)
         self.super_user = UserFactory(is_staff=True, is_superuser=True)
+
+        # HAR KOMMET HIT PÅ Å FIKSE TESTER!!! (Stoppet for å fikse frontend queries først)
 
         self.admin_event_query = f"""
             query Event {{
@@ -316,7 +315,7 @@ class EventsMutationsTestCase(EventsBaseTestCase):
                             startTime: \"{event.start_time.strftime("%Y-%m-%dT%H:%M:%S+00:00")}\",
                             endTime:  \"{event.end_time.strftime("%Y-%m-%dT%H:%M:%S+00:00")}\",
                             organizationId: {event.organization.id},
-                            allowedGradeYears: {self.format_grade_years(event.allowed_grade_years)},
+                            allowedGradeYears: {self.format_grade_years(event.allowed_grade_years_string)},
                             contactEmail: \"{event.contact_email}\"
                             }}
                         ) {{
@@ -343,7 +342,7 @@ class EventsMutationsTestCase(EventsBaseTestCase):
                             startTime: \"{event.start_time.strftime("%Y-%m-%dT%H:%M:%S+00:00")}\",
                             endTime:  \"{event.end_time.strftime("%Y-%m-%dT%H:%M:%S+00:00")}\",
                             organizationId: {event.organization.id},
-                            allowedGradeYears: {self.format_grade_years(event.allowed_grade_years)}
+                            allowedGradeYears: {self.format_grade_years(event.allowed_grade_years_string)}
                             }},
 
                         attendableData: {{
@@ -377,7 +376,7 @@ class EventsMutationsTestCase(EventsBaseTestCase):
                             startTime: \"{event.start_time.strftime("%Y-%m-%dT%H:%M:%S+00:00")}\",
                             endTime:  \"{event.end_time.strftime("%Y-%m-%dT%H:%M:%S+00:00")}\",
                             organizationId: {event.organization.id},
-                            allowedGradeYears: {self.format_grade_years(event.allowed_grade_years)},
+                            allowedGradeYears: {self.format_grade_years(event.allowed_grade_years_string)},
                             }},
 
                         slotDistributionData: {{
@@ -404,7 +403,7 @@ class EventsMutationsTestCase(EventsBaseTestCase):
                             startTime: \"{event.start_time.strftime("%Y-%m-%dT%H:%M:%S+00:00")}\",
                             endTime:  \"{event.end_time.strftime("%Y-%m-%dT%H:%M:%S+00:00")}\",
                             organizationId: {event.organization.id},
-                            allowedGradeYears: {self.format_grade_years(event.allowed_grade_years)},
+                            allowedGradeYears: {self.format_grade_years(event.allowed_grade_years_string)},
                             }},
 
                         attendableData: {{
@@ -591,7 +590,7 @@ class EventsMutationsTestCase(EventsBaseTestCase):
                             startTime: \"{event.start_time.strftime("%Y-%m-%dT%H:%M:%S+00:00")}\",
                             endTime:  \"{event.end_time.strftime("%Y-%m-%dT%H:%M:%S+00:00")}\",
                             organizationId: {event.organization.id},
-                            allowedGradeYears: {self.format_grade_years(event.allowed_grade_years)},
+                            allowedGradeYears: {self.format_grade_years(event.allowed_grade_years_string)},
                             }},
 
                         attendableData: {{

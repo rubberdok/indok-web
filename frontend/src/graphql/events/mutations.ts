@@ -1,12 +1,8 @@
 import { gql } from "@apollo/client";
 
 export const CREATE_EVENT = gql`
-  mutation CreateEvent(
-    $eventData: CreateEventInput!
-    $attendableData: CreateAttendableInput
-    $slotDistributionData: CreateSlotDistributionInput
-  ) {
-    createEvent(eventData: $eventData, attendableData: $attendableData, slotDistributionData: $slotDistributionData) {
+  mutation CreateEvent($eventData: CreateEventInput!, $attendableData: CreateAttendableInput) {
+    createEvent(eventData: $eventData, attendableData: $attendableData) {
       event {
         id
         title
@@ -24,7 +20,6 @@ export const CREATE_EVENT = gql`
         }
         image
         shortDescription
-        hasExtraInformation
         contactEmail
         allowedGradeYears
 
@@ -34,16 +29,10 @@ export const CREATE_EVENT = gql`
           bindingSignup
           price
           signupOpenDate
-        }
-
-        userAttendance {
-          isSignedUp
-          isOnWaitingList
-          hasBoughtTicket
-        }
-        availableSlots {
-          category
-          availableSlots
+          slotDistribution
+          hasExtraInformation
+          totalAvailableSlots
+          isFull
         }
       }
       ok
@@ -58,7 +47,6 @@ export const UPDATE_EVENT = gql`
     $hasGradeDistributions: Boolean!
     $eventData: UpdateEventInput
     $attendableData: UpdateAttendableInput
-    $slotDistributionData: UpdateSlotDistributionInput
   ) {
     updateEvent(
       id: $id
@@ -66,7 +54,6 @@ export const UPDATE_EVENT = gql`
       hasGradeDistributions: $hasGradeDistributions
       eventData: $eventData
       attendableData: $attendableData
-      slotDistributionData: $slotDistributionData
     ) {
       event {
         id
@@ -85,7 +72,6 @@ export const UPDATE_EVENT = gql`
         }
         image
         shortDescription
-        hasExtraInformation
         contactEmail
         allowedGradeYears
 
@@ -95,16 +81,10 @@ export const UPDATE_EVENT = gql`
           bindingSignup
           price
           signupOpenDate
-        }
-
-        userAttendance {
-          isSignedUp
-          isOnWaitingList
-          hasBoughtTicket
-        }
-        availableSlots {
-          category
-          availableSlots
+          slotDistribution
+          hasExtraInformation
+          totalAvailableSlots
+          isFull
         }
       }
       ok
@@ -153,6 +133,14 @@ export const CREATE_CATEGORY = gql`
 export const SEND_EVENT_EMAILS = gql`
   mutation SendEventMails($eventId: ID!, $receiverEmails: [String], $content: String, $subject: String) {
     sendEventMails(eventId: $eventId, receiverEmails: $receiverEmails, content: $content, subject: $subject) {
+      ok
+    }
+  }
+`;
+
+export const DELETE_EVENT = gql`
+  mutation DeleteEvent($id: ID!) {
+    deleteEvent(id: $id) {
       ok
     }
   }

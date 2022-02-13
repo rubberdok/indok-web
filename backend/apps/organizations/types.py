@@ -69,7 +69,7 @@ class OrganizationType(DjangoObjectType):
     @login_required
     @PermissionDecorators.is_in_organization
     def resolve_events(organization: Organization, info):
-        return organization.events
+        return organization.events.order_by("start_time")
 
 
 class MembershipType(DjangoObjectType):

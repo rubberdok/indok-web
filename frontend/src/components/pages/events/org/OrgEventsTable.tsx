@@ -19,11 +19,6 @@ import {
 import dayjs from "dayjs";
 import Link from "next/link";
 
-const eventFields: HeaderValuePair<Event>[] = [
-  { header: "Navn", field: "title" },
-  { header: "Antall Plasser", field: "availableSlots" },
-];
-
 const useStyles = makeStyles(() => ({
   hover: {
     "&:hover": {
@@ -51,9 +46,8 @@ const OrgEventsTable: React.FC<Props> = ({ organization }) => {
                 <TableHead>
                   <TableRow>
                     <TableCell>Dato</TableCell>
-                    {eventFields.map((field: HeaderValuePair<Event>) => (
-                      <TableCell key={`header-${field.header}`}>{field.header}</TableCell>
-                    ))}
+                    <TableCell>Navn</TableCell>
+                    <TableCell>Antall plasser</TableCell>
                     <TableCell>Antall påmeldte</TableCell>
                     <TableCell>Status</TableCell>
                   </TableRow>
@@ -64,14 +58,17 @@ const OrgEventsTable: React.FC<Props> = ({ organization }) => {
                       <TableRow className={classes.hover} hover>
                         <TableCell>{dayjs(event.startTime).format("HH:mm DD-MM-YYYY")}</TableCell>
                         <TableCell>{event.title}</TableCell>
-                        {/* TODO: fix this*/}
-                        {event.availableSlots && <TableCell>{event.availableSlots[0].availableSlots}</TableCell>}
-                        <TableCell>{event.usersAttending?.length}</TableCell>
+                        <TableCell>{event.attendable ? event.attendable?.totalAvailableSlots : "-"}</TableCell>
+                        <TableCell>{event.attendable ? event.attendable?.usersAttending?.length : "-"}</TableCell>
                         <TableCell>
-                          <Chip
-                            label={event.isFull ? "Fullt" : "Ledige Plasser"}
-                            color={event.isFull ? "default" : "secondary"}
-                          />
+                          {event.attendable ? (
+                            <Chip
+                              label={event.attendable?.isFull ? "Fullt" : "Ledige Plasser"}
+                              color={event.attendable?.isFull ? "default" : "secondary"}
+                            />
+                          ) : (
+                            "-"
+                          )}
                         </TableCell>
                       </TableRow>
                     </Link>

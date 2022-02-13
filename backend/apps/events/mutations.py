@@ -238,10 +238,10 @@ class EventSignUp(graphene.Mutation):
 
         user = info.context.user
 
-        if not str(user.grade_year) in event.allowed_grade_years:
+        if not str(user.grade_year) in event.allowed_grade_years_string:
             raise PermissionDenied(
                 "Kun studenter i følgende trinn kan melde seg på",
-                event.allowed_grade_years,
+                event.allowed_grade_years_string,
             )
 
         if SignUp.objects.filter(event_id=event_id, is_attending=True, user_id=info.context.user.id).exists():

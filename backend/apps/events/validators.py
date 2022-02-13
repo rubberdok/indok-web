@@ -66,7 +66,7 @@ def slot_distribution_validation(total_allowed_grade_years, slot_distribution, t
     sorted_grades = sorted(allowed_grades)
     string_sorted_grades = "".join(sorted_grades).replace(",", "")
 
-    if string_sorted_grades != total_allowed_grade_years.replace(",", ""):
+    if string_sorted_grades != "".join(str(grade) for grade in total_allowed_grade_years):
         raise ValidationError(
             "Trinnene arrangementet er åpent for stemmer ikke overens med plass fordelingen for trinn"
         )
@@ -132,7 +132,7 @@ def update_event_validation(
     # Attendable validation
     if attendable_data is not None:  # There is new attendable data
 
-        allowed_grade_years = event.allowed_grade_years
+        allowed_grade_years = event.allowed_grade_years_string
         if event_data.allowed_grade_years:
             allowed_grade_years = event_data.allowed_grade_years
 
@@ -162,15 +162,15 @@ def update_event_validation(
             time_validation(signup_open_date, deadline)
 
             # Validate slot distribution fields
-            slot_distribtuion = attendable.slot_distribution
+            slot_distribution = attendable.slot_distribution
             if attendable_data.slot_distribution:
-                slot_distribtuion = attendable_data.slot_distribtuion
+                slot_distribution = attendable_data.slot_distribution
 
             total_available_slots = attendable.total_available_slots
             if attendable_data.slot_distribution:
                 total_available_slots = attendable_data.total_available_slots
 
-            slot_distribution_validation(allowed_grade_years, slot_distribtuion, total_available_slots)
+            slot_distribution_validation(allowed_grade_years, slot_distribution, total_available_slots)
 
             # Validate price and binding sign up
             if attendable_data.price or attendable_data.binding_signup is not None:

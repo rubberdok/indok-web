@@ -68,18 +68,23 @@ const SignUpVariants: React.FC<Props> = ({
   const { data: timeData, error: timeError } = useQuery(GET_SERVER_TIME, { fetchPolicy: "network-only" });
 
   const noPhoneNumberNorAlreadySignedUp =
-    !user?.phoneNumber && !event.userAttendance?.isSignedUp && !event.userAttendance?.isOnWaitingList;
+    !user?.phoneNumber &&
+    !event.attendable?.userAttendance?.isAttending &&
+    !event.attendable?.userAttendance?.isOnWaitingList;
 
   const requiresExtraInfoAndNotAlreadySignedUp =
-    event.hasExtraInformation && !event.userAttendance?.isSignedUp && !event.userAttendance?.isOnWaitingList;
+    event.attendable?.hasExtraInformation &&
+    !event.attendable?.userAttendance?.isAttending &&
+    !event.attendable?.userAttendance?.isOnWaitingList;
 
-  const bindingSignupAndAlreadySignpedUp = event.attendable?.bindingSignup && event.userAttendance?.isSignedUp;
+  const bindingSignupAndAlreadySignpedUp =
+    event.attendable?.bindingSignup && event.attendable?.userAttendance?.isAttending;
 
   const requiresExtraInfoAndExtraInfroNotFilledIn =
-    event.hasExtraInformation &&
+    event.attendable?.hasExtraInformation &&
     !extraInformation &&
-    !event.userAttendance?.isSignedUp &&
-    !event.userAttendance?.isOnWaitingList;
+    !event.attendable?.userAttendance?.isAttending &&
+    !event.attendable?.userAttendance?.isOnWaitingList;
 
   if (!event.attendable) return null;
 
@@ -125,10 +130,10 @@ const SignUpVariants: React.FC<Props> = ({
         {event.attendable && (
           <CountdownButton
             countDownDate={event.attendable?.signupOpenDate}
-            deadline={event.attendable?.deadline}
-            isSignedUp={event.userAttendance?.isSignedUp ?? false}
-            isOnWaitingList={event.userAttendance?.isOnWaitingList ?? false}
-            isFull={event.isFull}
+            deadline={event.attendable?.deadline ? event.attendable?.deadline : ""}
+            isAttending={event.attendable?.userAttendance?.isAttending ?? false}
+            isOnWaitingList={event.attendable?.userAttendance?.isOnWaitingList ?? false}
+            isFull={event.attendable?.isFull}
             loading={loading}
             disabled={
               noPhoneNumberNorAlreadySignedUp ||
@@ -140,8 +145,8 @@ const SignUpVariants: React.FC<Props> = ({
           />
         )}
         {event.product &&
-          event.userAttendance?.isSignedUp &&
-          (event.userAttendance.hasBoughtTicket ? (
+          event.attendable?.userAttendance?.isAttending &&
+          (event.attendable?.userAttendance.hasBoughtTicket ? (
             <MuiAlert severity="success" className={classes.boughtTicket}>
               Du har betalt for billett
             </MuiAlert>

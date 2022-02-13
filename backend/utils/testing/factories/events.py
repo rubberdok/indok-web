@@ -4,7 +4,6 @@ import factory
 from apps.events.models import (
     Event as EventModel,
     Attendable as AttendableModel,
-    SlotDistribution as SlotDistributionModel,
     Category as CategoryModel,
     SignUp as SignUpModel,
 )
@@ -39,15 +38,9 @@ class AttendableFactory(DjangoModelFactory):
 
     signup_open_date = timezone.now() + timedelta(days=1)
     deadline = timezone.now() + timedelta(days=10)
+    total_available_slots = 5
     event = factory.SubFactory(EventFactory)
-
-
-class SlotDistributionFactory(DjangoModelFactory):
-    class Meta:
-        model = SlotDistributionModel
-
-    available_slots = 5
-    attendable = factory.SubFactory(AttendableFactory)
+    slot_distribution = {"1,2,3,4,5": 5}
 
 
 class CategoryFactory(DjangoModelFactory):

@@ -10,18 +10,17 @@ export const GET_ORGANIZATION = gql`
         title
         startTime
         shortDescription
-        availableSlots {
-          category
-          availableSlots
-        }
-        isFull
-        usersAttending {
-          username
-          firstName
-        }
-        usersOnWaitingList {
-          username
-          firstName
+        attendable {
+          totalAvailableSlots
+          isFull
+          usersAttending {
+            username
+            firstName
+          }
+          usersOnWaitingList {
+            username
+            firstName
+          }
         }
       }
       listings {

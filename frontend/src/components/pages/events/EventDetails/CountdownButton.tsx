@@ -43,7 +43,7 @@ type Props = {
   countDownDate: string;
   currentTime: string;
   deadline: string;
-  isSignedUp: boolean;
+  isAttending: boolean;
   isOnWaitingList: boolean;
   isFull: boolean;
   loading: boolean;
@@ -70,7 +70,7 @@ const CountdownButton: React.FC<Props> = ({
   countDownDate,
   deadline,
   currentTime,
-  isSignedUp,
+  isAttending,
   isOnWaitingList,
   isFull,
   loading,
@@ -133,8 +133,8 @@ const CountdownButton: React.FC<Props> = ({
 
   const getCorrectLabel = () => {
     if (currentTimeParts.length !== 0) return getCurrentTimeLeft(currentTimeParts);
-    if (isSignedUp && pastDeadline) return "Påmeldt";
-    if (isSignedUp) return "Meld av";
+    if (isAttending && pastDeadline) return "Påmeldt";
+    if (isAttending) return "Meld av";
     if (isOnWaitingList) return "Meld av venteliste";
     if (isFull) return "Meld på venteliste";
     return "Meld på";
@@ -145,7 +145,7 @@ const CountdownButton: React.FC<Props> = ({
       <Button
         size="large"
         variant="contained"
-        color={isSignedUp || isOnWaitingList ? "inherit" : "primary"}
+        color={isAttending || isOnWaitingList ? "inherit" : "primary"}
         onClick={onClick}
         disabled={currentTimeParts.length !== 0 || disabled || dayjs(deadline) < now}
       >

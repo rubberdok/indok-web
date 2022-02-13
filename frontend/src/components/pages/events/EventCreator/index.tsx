@@ -121,12 +121,10 @@ const CreateEvent: React.FC = () => {
       setOpenCreateErrorSnackbar(true);
       return;
     }
-
     createEvent({
       variables: {
         eventData: formattedInputData.eventInput,
         attendableData: isAttendable ? formattedInputData.attendableInput : undefined,
-        slotDistributionData: isAttendable ? formattedInputData.slotDistributionInput : undefined,
       },
     }).then((res) => {
       if (res.data?.createEvent) {

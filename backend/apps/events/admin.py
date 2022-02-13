@@ -1,11 +1,10 @@
 from django.contrib import admin
-from apps.events.models import Category, Event, SignUp, Attendable, SlotDistribution
+from apps.events.models import Category, Event, SignUp, Attendable
 
 
 admin.site.register(Category)
 admin.site.register(SignUp)
 admin.site.register(Attendable)
-admin.site.register(SlotDistribution)
 
 
 @admin.register(Event)

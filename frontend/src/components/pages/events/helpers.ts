@@ -5,8 +5,7 @@ export const getFormattedDataAndErrors = (
   slotDistribution: { category: number[]; availableSlots: number }[]
 ): Record<string, any> => {
   const eventInput = formatEventData(eventData);
-  const attendableInput = formatAttendableData(eventData);
-  const slotDistributionInput = formatSlotDistributionData(eventData, slotDistribution);
+  const attendableInput = formatAttendableData(eventData, slotDistribution, hasSlotDistribution);
 
   let currentErrors: string[] = [];
 
@@ -26,11 +25,11 @@ export const getFormattedDataAndErrors = (
       "Totalt antall plasser kan ikke være større enn summen av antall i hver gruppe i plassfordelingen",
     ];
   }
-  if (isAttendable && !slotDistributionInput.availableSlots) {
+  if (isAttendable && !attendableInput.totalAvailableSlots) {
     currentErrors = [...currentErrors, "Antall plasser er påkrevd for arrangementer med påmelding"];
   }
 
-  return { eventInput, attendableInput, slotDistributionInput, currentErrors };
+  return { eventInput, attendableInput, currentErrors };
 };
 
 const formatEventData = (eventData: Record<string, any>) => {
@@ -46,32 +45,53 @@ const formatEventData = (eventData: Record<string, any>) => {
     shortDescription: eventData.shortDescription === "" ? undefined : eventData.shortDescription,
     contactEmail: eventData.contactEmail === "" ? undefined : eventData.contactEmail,
     allowedGradeYears: eventData.allowedGradeYears === "" ? undefined : eventData.allowedGradeYears,
-    hasExtraInformation: eventData.hasExtraInformation === "" ? undefined : eventData.hasExtraInformation,
   };
 
   return eventInputData;
 };
 
-const formatAttendableData = (eventData: Record<string, any>) => {
+const formatAttendableData = (
+  eventData: Record<string, any>,
+  slotDistributionInput: { category: number[]; availableSlots: number }[],
+  hasSlotDistribution: boolean
+) => {
+  const slotDistribution: Record<string, number> = {};
+
+  if (hasSlotDistribution) {
+    const slotDistributionWithStringCategories = slotDistributionInput.map((dist) => {
+      const stringCategory = dist.category.sort((a, b) => a - b).reduce((res, grade) => `${res},${grade}`, "");
+      return { category: stringCategory.slice(1, stringCategory.length), availableSlots: dist.availableSlots };
+    });
+
+    slotDistributionWithStringCategories.forEach((slot) => {
+      slotDistribution[slot.category] = slot.availableSlots;
+    });
+
+    const attendableInputData = {
+      signupOpenDate: eventData.signupOpenDate === "" ? undefined : eventData.signupOpenDate,
+      bindingSignup: eventData.bindingSignup === "" ? undefined : eventData.bindingSignup,
+      deadline: eventData.deadline === "" ? undefined : eventData.deadline,
+      hasExtraInformation: eventData.hasExtraInformation === "" ? undefined : eventData.hasExtraInformation,
+      totalAvailableSlots: eventData.availableSlots === "" ? undefined : Number(eventData.availableSlots),
+      slotDistribution,
+    }; // add price: eventData.price here
+
+    return attendableInputData;
+  }
+
+  let allowedGradesString = eventData.allowedGradeYears.reduce((res: string, grade: number) => `${res},${grade}`, "");
+  allowedGradesString = allowedGradesString.slice(1, allowedGradesString.length);
+
+  slotDistribution[allowedGradesString] = Number(eventData.availableSlots);
+
   const attendableInputData = {
     signupOpenDate: eventData.signupOpenDate === "" ? undefined : eventData.signupOpenDate,
     bindingSignup: eventData.bindingSignup === "" ? undefined : eventData.bindingSignup,
     deadline: eventData.deadline === "" ? undefined : eventData.deadline,
-  }; // add price: eventData.price here
+    hasExtraInformation: eventData.hasExtraInformation === "" ? undefined : eventData.hasExtraInformation,
+    totalAvailableSlots: eventData.availableSlots === "" ? undefined : Number(eventData.availableSlots),
+    slotDistribution,
+  };
 
   return attendableInputData;
-};
-
-const formatSlotDistributionData = (
-  eventData: Record<string, any>,
-  slotDistribution: { category: number[]; availableSlots: number }[]
-) => {
-  const stringSlotDistribution = slotDistribution.map((dist) => {
-    const stringCategory = dist.category.sort((a, b) => a - b).reduce((res, grade) => `${res},${grade}`, "");
-    return { category: stringCategory.slice(1, stringCategory.length), availableSlots: dist.availableSlots };
-  });
-
-  const slotDistributionInputData = { availableSlots: eventData.availableSlots, gradeYears: stringSlotDistribution }; // TODO: endre litt navn her?????
-
-  return slotDistributionInputData;
 };

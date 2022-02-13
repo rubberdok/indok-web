@@ -12,30 +12,26 @@ export type Event = {
   category?: { id: string; name: string };
   image?: string;
   publisher: User;
-  availableSlots?: GradeDistribution[];
   shortDescription: string;
-  usersOnWaitingList?: User[];
-  userAttendance?: { isSignedUp: boolean; isOnWaitingList: boolean; hasBoughtTicket: boolean };
-  usersAttending?: User[];
-  hasExtraInformation?: boolean;
   contactEmail?: string;
   allowedGradeYears: number[];
   attendable?: Attendable;
-  isFull: boolean;
   product: Product;
-};
-
-export type GradeDistribution = {
-  category: string;
-  availableSlots: number;
 };
 
 export type Attendable = {
   id: string;
-  deadline: string;
+  deadline?: string;
   bindingSignup: boolean;
-  price: string;
+  price?: string;
   signupOpenDate: string;
+  slotDistribution: Record<string, number>;
+  hasExtraInformation: boolean;
+  totalAvailableSlots: number;
+  isFull: boolean;
+  usersOnWaitingList?: User[];
+  usersAttending?: User[];
+  userAttendance?: { isAttending: boolean; isOnWaitingList: boolean; hasBoughtTicket: boolean };
 };
 
 export type Category = {

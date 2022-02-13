@@ -4,12 +4,12 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
+from apps.events.helpers import get_attendant_group
 from multiselectfield import MultiSelectField
 from phonenumber_field.modelfields import PhoneNumberField
 
 from apps.ecommerce.mixins import Sellable
 from apps.organizations.models import Organization
-from helpers import get_attendant_group
 
 if TYPE_CHECKING:
     from apps.users.models import User
@@ -40,8 +40,8 @@ class Event(models.Model):
     start_time = models.DateTimeField()
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name="events")
 
-    # ------------------ Fully optional fields ------------------
-    publisher = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
+    # ------------------ Optional fields ------------------
+    publisher = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
     end_time = models.DateTimeField(blank=True, null=True)
     location = models.CharField(max_length=128, blank=True, null=True)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, blank=True, null=True)
@@ -62,6 +62,13 @@ class Event(models.Model):
             .objects.filter(signup__event=self.id, signup__is_attending=True)
             .order_by("signup__timestamp")
         )
+
+    @property
+    def allowed_grade_years_string(self) -> str:
+        string = ""
+        for grade_year in self.allowed_grade_years:
+            string += str(grade_year) + ","
+        return string[:-1]
 
     def is_user_allowed_to_buy_product(self, user: "User") -> bool:
         """
@@ -103,8 +110,12 @@ class Attendable(models.Model, Sellable):
         """
         if len(self.slot_distribution) == 1:
             # There is no distribution for different grades
-            attending = {self.allowed_grade_years: self.event.users_signed_up[0 : self.total_available_slots]}
-            waiting_list = {self.allowed_grade_years: self.event.users_signed_up[self.total_available_slots :]}
+            attending = {
+                self.event.allowed_grade_years_string: self.event.signed_up_users[0 : self.total_available_slots]
+            }
+            waiting_list = {
+                self.event.allowed_grade_years_string: self.event.signed_up_users[self.total_available_slots :]
+            }
             return attending, waiting_list
 
         attending = {}

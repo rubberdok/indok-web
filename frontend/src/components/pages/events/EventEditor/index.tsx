@@ -43,12 +43,12 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
   const [eventData, setEventData] = useState(DEFAULTINPUT);
   const [isAttendable, setIsAttendable] = useState(!!event.attendable);
   const [hasSlotDistribution, setHasSlotDistribution] = useState(
-    event?.availableSlots !== undefined && event?.availableSlots?.length > 1
+    !!event?.attendable && Object.keys(event.attendable.slotDistribution).length > 1
   );
   const [slotDistribution, setSlotDistribution] = useState<{ category: number[]; availableSlots: number }[]>(
-    event.availableSlots && event.availableSlots?.length > 1
-      ? event.availableSlots.map((dist) => {
-          return { category: dist.category.split(",").map((val) => Number(val)), availableSlots: dist.availableSlots };
+    event?.attendable && Object.keys(event.attendable.slotDistribution).length > 1
+      ? Object.entries(event.attendable?.slotDistribution).map(([category, availableSlots]) => {
+          return { category: category.split(",").map((val) => Number(val)), availableSlots };
         })
       : []
   );
@@ -72,9 +72,7 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
   useEffect(() => {
     // Used to get an initial event data object, keeping all fields except for the date related ones
     // equal to the event we get from the event prop (the date fields are changed to make TS happy)
-
     const initialEventData = getInitialEventData(event, eventData);
-
     setEventData(initialEventData);
   }, []);
 

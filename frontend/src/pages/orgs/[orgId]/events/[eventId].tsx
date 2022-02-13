@@ -51,7 +51,6 @@ const stringEventFields: HeaderValuePair<Event>[] = [
   { header: "Kort beskrivelse", field: "shortDescription" },
   // { header: "Beskrivelse", field: "description" },
   { header: "Lokasjon", field: "location" },
-  { header: "Krever ekstrainformasjon", field: "hasExtraInformation" },
 ];
 
 const dateEventFields: HeaderValuePair<Event>[] = [
@@ -160,6 +159,9 @@ const EventAdminPage: NextPage = () => {
                             data.event[headerPair.field] ? (data.event[headerPair.field] as string) : ""
                           )
                         )}
+                        {data.event.attendable &&
+                          renderInfo("Har ekstrainformasjon", data.event.attendable.hasExtraInformation)}
+
                         <ListItem key={"allowedGradeYears"}>
                           <Typography>
                             <Box fontWeight={1000} m={1} display="inline">
@@ -174,29 +176,22 @@ const EventAdminPage: NextPage = () => {
                           </Typography>
                         </ListItem>
 
-                        <ListItem key={"bindingSingup"}>
-                          <Typography>
-                            <Box fontWeight={1000} m={1} display="inline">
-                              Bindende påmelding:
-                            </Box>
-                            {data.event.attendable?.bindingSignup === true ? "ja" : "nei"}
-                          </Typography>
-                        </ListItem>
-                        {!!data.event?.availableSlots && (
+                        {data.event.attendable?.bindingSignup &&
+                          renderInfo("Bindende påmeldingr", data.event.attendable?.bindingSignup)}
+
+                        {!!data.event?.attendable && (
                           <ListItem key={"AvailableSlots"}>
                             <Typography>
                               <Box fontWeight={1000} m={1} display="inline">
                                 Tilgjengelige plasser:
                               </Box>
-                              {data.event.availableSlots.length > 1 ? (
-                                data.event.availableSlots.map((dist) => (
-                                  <Typography key={String(dist.category)}>
-                                    {dist.category}.klasse: {dist.availableSlots} plasser
+                              {data.event.attendable.slotDistribution.length > 1 &&
+                                Object.entries(data.event.attendable.slotDistribution).map(([key, value]) => (
+                                  <Typography key={String(key)}>
+                                    {key}.klasse: {value} plasser
                                   </Typography>
-                                ))
-                              ) : (
-                                <Typography>{data.event.availableSlots[0].availableSlots}</Typography>
-                              )}
+                                ))}
+                              <Typography>Totalt {data.event.attendable.totalAvailableSlots} plasser</Typography>
                             </Typography>
                           </ListItem>
                         )}
@@ -208,27 +203,18 @@ const EventAdminPage: NextPage = () => {
                               : ""
                           )
                         )}
-                        <ListItem key={"signupOpenDate"}>
-                          <Typography>
-                            <Box fontWeight={1000} m={1} display="inline">
-                              Påmelding åpner:
-                            </Box>
-                            {data.event.attendable?.signupOpenDate
-                              ? dayjs(data.event.attendable?.signupOpenDate as string).format("kl.HH:mm, DD-MM-YYYY")
-                              : ""}
-                          </Typography>
-                        </ListItem>
 
-                        <ListItem key={"deadline"}>
-                          <Typography>
-                            <Box fontWeight={1000} m={1} display="inline">
-                              Påmeldingsfrist:
-                            </Box>
-                            {data.event.attendable?.deadline
-                              ? dayjs(data.event.attendable?.deadline as string).format("kl.HH:mm, DD-MM-YYYY")
-                              : ""}
-                          </Typography>
-                        </ListItem>
+                        {data.event.attendable?.signupOpenDate &&
+                          renderInfo(
+                            "Påmelding åpner",
+                            dayjs(data.event.attendable?.deadline as string).format("kl.HH:mm, DD-MM-YYYY")
+                          )}
+
+                        {data.event.attendable?.deadline &&
+                          renderInfo(
+                            "Påmeldingsfrist",
+                            dayjs(data.event.attendable?.deadline as string).format("kl.HH:mm, DD-MM-YYYY")
+                          )}
                       </List>
                     </CardContent>
                   </Card>
@@ -241,7 +227,7 @@ const EventAdminPage: NextPage = () => {
                       <AttendeeExport eventId={eventNumberID} />
                     </CardActions>
                     <CardContent>
-                      {data?.event?.usersAttending?.length !== 0 ? (
+                      {data?.event?.attendable?.usersAttending?.length !== 0 ? (
                         <TableContainer style={{ maxHeight: 600 }}>
                           <Table>
                             <TableHead>
@@ -254,7 +240,7 @@ const EventAdminPage: NextPage = () => {
                               </TableRow>
                             </TableHead>
                             <TableBody>
-                              {data?.event?.usersAttending?.map((user: User) => (
+                              {data?.event?.attendable?.usersAttending?.map((user: User) => (
                                 <TableRow key={`user-row-${user.id}`}>
                                   {userFields.map((field) => (
                                     <TableCell key={`user-${user.id}-cell--${field.field}`}>
@@ -263,7 +249,7 @@ const EventAdminPage: NextPage = () => {
                                   ))}
                                   {data.event.product && (
                                     <TableCell>
-                                      {data.event.userAttendance?.hasBoughtTicket ? (
+                                      {data.event.attendable?.userAttendance?.hasBoughtTicket ? (
                                         <Check color="primary" />
                                       ) : (
                                         <Close color="error" />
@@ -298,7 +284,7 @@ const EventAdminPage: NextPage = () => {
                   <Card variant="outlined">
                     <CardHeader title="Venteliste" />
                     <CardContent>
-                      {data?.event?.usersOnWaitingList?.length !== 0 ? (
+                      {data?.event?.attendable?.usersOnWaitingList?.length !== 0 ? (
                         <TableContainer style={{ maxHeight: 600 }}>
                           <Table>
                             <TableHead>
@@ -309,7 +295,7 @@ const EventAdminPage: NextPage = () => {
                               </TableRow>
                             </TableHead>
                             <TableBody>
-                              {data?.event?.usersOnWaitingList?.map((user: User) => (
+                              {data?.event?.attendable?.usersOnWaitingList?.map((user: User) => (
                                 <TableRow key={`user-row-${user.id}`}>
                                   {userFields.map((field) => (
                                     <TableCell key={`user-${user.id}-cell--${field.field}`}>
