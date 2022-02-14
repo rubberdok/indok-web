@@ -51,7 +51,7 @@ services:
     ports:
         - "5672:5672"
     logging:
-     driver: none
+     driver: none # Disables logging from the container
 
   celery_worker:
     environment:
