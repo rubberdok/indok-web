@@ -29,19 +29,18 @@ services:
     depends_on:
       - postgres
 
-  # frontend:
-  #   build:
-  #     context: ./frontend
-  #     dockerfile: Dockerfile
-  #   volumes:
-  #     - ./frontend:/app
-  #     - /app/node_modules
-  #     - /app/.next
-  #   ports:
-  #     - 3000:3000
-  #   expose:
-  #     - 3000
-
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
+    ports:
+      - 3000:3000
+    expose:
+      - 3000
 
   rabbitmq:
     image: rabbitmq:latest
