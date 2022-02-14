@@ -47,7 +47,7 @@ const Hero: React.VFC<Props> = ({ isLoggedIn }) => {
       </Grid>
       <Grid xs={12} sm={6} item container justifyContent="center" zeroMinWidth>
         <PermissionRequired
-          permission="cabins.change_booking"
+          permission="cabins.add_booking"
           fallback={
             !isLoggedIn ? (
               // User is not logged in, and therefore does not have the permission.
