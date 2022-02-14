@@ -63,7 +63,7 @@ services:
       - postgres
       - rabbitmq
       - backend
-    entrypoint: ["celery","-A","celery_worker","worker","--concurrency=20","--loglevel=INFO"]
+    entrypoint: ["celery","-A","celery_worker","worker","--concurrency=20","--loglevel=INFO", "-Q", "default,low_priority,high_priority"]
 
   celery_beat:
     environment:
@@ -90,7 +90,8 @@ services:
      - celery_beat
    ports:
      - "5555:5555"
-   entrypoint: ["/bin/sh", "-c", "/usr/src/app/entrypoints/celery_flower.sh"]
+   entrypoint: ["celery", "-A", "celery_worker", "flower"]
+
 
 volumes:
   postgres_data:
