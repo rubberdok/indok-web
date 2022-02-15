@@ -19,13 +19,18 @@ export type Event = {
   product: Product;
 };
 
+export type SlotDistribution = {
+  gradeGroup: string;
+  availableSlots: number;
+};
+
 export type Attendable = {
   id: string;
   deadline?: string;
   bindingSignup: boolean;
   price?: string;
   signupOpenDate: string;
-  slotDistribution: Record<string, number>;
+  slotDistribution: SlotDistribution[];
   hasExtraInformation: boolean;
   totalAvailableSlots: number;
   isFull: boolean;

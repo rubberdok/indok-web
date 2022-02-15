@@ -29,7 +29,10 @@ export const CREATE_EVENT = gql`
           bindingSignup
           price
           signupOpenDate
-          slotDistribution
+          slotDistribution {
+            gradeGroup
+            availableSlots
+          }
           hasExtraInformation
           totalAvailableSlots
           isFull
@@ -44,17 +47,10 @@ export const UPDATE_EVENT = gql`
   mutation UpdateEvent(
     $id: ID!
     $isAttendable: Boolean!
-    $hasGradeDistributions: Boolean!
     $eventData: UpdateEventInput
     $attendableData: UpdateAttendableInput
   ) {
-    updateEvent(
-      id: $id
-      isAttendable: $isAttendable
-      hasGradeDistributions: $hasGradeDistributions
-      eventData: $eventData
-      attendableData: $attendableData
-    ) {
+    updateEvent(id: $id, isAttendable: $isAttendable, eventData: $eventData, attendableData: $attendableData) {
       event {
         id
         title
@@ -81,7 +77,10 @@ export const UPDATE_EVENT = gql`
           bindingSignup
           price
           signupOpenDate
-          slotDistribution
+          slotDistribution {
+            gradeGroup
+            availableSlots
+          }
           hasExtraInformation
           totalAvailableSlots
           isFull

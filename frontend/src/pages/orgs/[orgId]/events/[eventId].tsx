@@ -5,7 +5,7 @@ import EmailForm from "@components/pages/events/email/EmailForm";
 import EditEvent from "@components/pages/events/EventEditor";
 import { ADMIN_EVENT_SIGN_OFF } from "@graphql/events/mutations";
 import { ADMIN_GET_EVENT } from "@graphql/events/queries";
-import { Event } from "@interfaces/events";
+import { Event, SlotDistribution } from "@interfaces/events";
 import { User } from "@interfaces/users";
 import { HeaderValuePair } from "@interfaces/utils";
 import {
@@ -186,9 +186,9 @@ const EventAdminPage: NextPage = () => {
                                 Tilgjengelige plasser:
                               </Box>
                               {data.event.attendable.slotDistribution.length > 1 &&
-                                Object.entries(data.event.attendable.slotDistribution).map(([key, value]) => (
-                                  <Typography key={String(key)}>
-                                    {key}.klasse: {value} plasser
+                                data.event.attendable.slotDistribution.map((slotDist: SlotDistribution) => (
+                                  <Typography key={String(slotDist.gradeGroup)}>
+                                    {slotDist.gradeGroup}.klasse: {slotDist.availableSlots} plasser
                                   </Typography>
                                 ))}
                               <Typography>Totalt {data.event.attendable.totalAvailableSlots} plasser</Typography>

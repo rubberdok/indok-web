@@ -43,12 +43,15 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
   const [eventData, setEventData] = useState(DEFAULTINPUT);
   const [isAttendable, setIsAttendable] = useState(!!event.attendable);
   const [hasSlotDistribution, setHasSlotDistribution] = useState(
-    !!event?.attendable && Object.keys(event.attendable.slotDistribution).length > 1
+    !!event?.attendable && event.attendable.slotDistribution.length > 1
   );
   const [slotDistribution, setSlotDistribution] = useState<{ category: number[]; availableSlots: number }[]>(
-    event?.attendable && Object.keys(event.attendable.slotDistribution).length > 1
-      ? Object.entries(event.attendable?.slotDistribution).map(([category, availableSlots]) => {
-          return { category: category.split(",").map((val) => Number(val)), availableSlots };
+    event?.attendable && event.attendable.slotDistribution.length > 1
+      ? event.attendable?.slotDistribution.map((slotDist) => {
+          return {
+            category: slotDist.gradeGroup.split(",").map((val) => Number(val)),
+            availableSlots: slotDist.availableSlots,
+          };
         })
       : []
   );
@@ -129,7 +132,6 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
       variables: {
         id: event.id,
         isAttendable,
-        hasGradeDistributions: hasSlotDistribution,
         eventData: formattedInputData.eventInput,
         attendableData: isAttendable ? formattedInputData.attendableInput : undefined,
         slotDistributionData: isAttendable ? formattedInputData.slotDistributionInput : undefined,

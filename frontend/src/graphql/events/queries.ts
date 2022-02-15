@@ -32,7 +32,10 @@ export const GET_EVENTS_DEFAULT_EVENTS_AND_USERS = gql`
         bindingSignup
         price
         signupOpenDate
-        slotDistribution
+        slotDistribution {
+          gradeGroup
+          availableSlots
+        }
         hasExtraInformation
         totalAvailableSlots
         isFull
@@ -68,7 +71,10 @@ export const GET_EVENTS_DEFAULT_EVENTS_AND_USERS = gql`
         bindingSignup
         price
         signupOpenDate
-        slotDistribution
+        slotDistribution {
+          gradeGroup
+          availableSlots
+        }
         hasExtraInformation
         totalAvailableSlots
         isFull
@@ -130,7 +136,10 @@ export const GET_EVENTS = gql`
         bindingSignup
         price
         signupOpenDate
-        slotDistribution
+        slotDistribution {
+          gradeGroup
+          availableSlots
+        }
         hasExtraInformation
         totalAvailableSlots
         isFull
@@ -171,7 +180,10 @@ export const GET_DEFAULT_EVENTS = gql`
         bindingSignup
         price
         signupOpenDate
-        slotDistribution
+        slotDistribution {
+          gradeGroup
+          availableSlots
+        }
         hasExtraInformation
         totalAvailableSlots
         isFull
@@ -212,7 +224,10 @@ export const GET_EVENT = gql`
         bindingSignup
         price
         signupOpenDate
-        slotDistribution
+        slotDistribution {
+          gradeGroup
+          availableSlots
+        }
         hasExtraInformation
         totalAvailableSlots
         isFull
@@ -265,7 +280,10 @@ export const ADMIN_GET_EVENT = gql`
         bindingSignup
         price
         signupOpenDate
-        slotDistribution
+        slotDistribution {
+          gradeGroup
+          availableSlots
+        }
         hasExtraInformation
         totalAvailableSlots
         isFull

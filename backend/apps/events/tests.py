@@ -1,5 +1,6 @@
 import json
 from apps.events.models import Event, Category, SignUp
+from apps.events.helpers import get_slot_distribution_as_list_in_camel_case
 from utils.testing.factories.users import IndokUserFactory, UserFactory
 from utils.testing.factories.events import (
     EventFactory,
@@ -23,17 +24,17 @@ class EventsBaseTestCase(ExtendedGraphQLTestCase):
             start_time=timezone.now() + datetime.timedelta(seconds=1),
             allowed_grade_years="1,2,3",
         )
-        self.attendable_event_with_slot_dist = EventFactory()
+        self.attendable_event_with_slot_dist = EventFactory(allowed_grade_years="1,2,4")
 
         # Make one attendable without specific slot distribution
-        attendable = AttendableFactory(
+        AttendableFactory(
             event=self.attendable_and_open_event,
             signup_open_date=timezone.now() + datetime.timedelta(microseconds=100),
             slot_distribution={"1,2,3": 1},
             total_available_slots=1,
         )
         # Make one attendable with specific slot distribution
-        attendable = AttendableFactory(
+        AttendableFactory(
             event=self.attendable_event_with_slot_dist,
             slot_distribution={"1,2": 1, "4": 1},
             total_available_slots=2,
@@ -55,16 +56,18 @@ class EventsBaseTestCase(ExtendedGraphQLTestCase):
         self.user_not_indok = UserFactory(graduation_year=year_val + current_year - 1)
         self.super_user = UserFactory(is_staff=True, is_superuser=True)
 
-        # HAR KOMMET HIT PÅ Å FIKSE TESTER!!! (Stoppet for å fikse frontend queries først)
-
         self.admin_event_query = f"""
             query Event {{
                 event(id: {self.attendable_event_with_slot_dist.id}) {{
                     id
                     title
-                    availableSlots {{
-                        category
-                        availableSlots
+                    attendable {{
+                        usersAttending {{
+                            id
+                        }}
+                        usersOnWaitingList {{
+                            id
+                        }}
                     }}
                 }}
             }}
@@ -75,7 +78,6 @@ class EventsBaseTestCase(ExtendedGraphQLTestCase):
                 updateEvent(
                     id: {self.non_attendable_event.id}
                     isAttendable: false
-                    hasGradeDistributions: false
                     eventData: {{title: \"Event med ny tittel\" }}
                     ) {{
                         ok
@@ -164,21 +166,6 @@ class EventsBaseTestCase(ExtendedGraphQLTestCase):
                     }}
                 """
 
-    def format_grade_years(self, string_grade_years):
-        return [int(val) for val in str(string_grade_years).replace("[", "").replace("]", "").split(",")]
-
-    def stringify_grade_years(self, slot_distribution):
-        grade_years = slot_distribution.get_available_slots()
-        if len(grade_years) == 0:
-            return "[]"
-
-        grade_years_string = "["
-        for dist in grade_years:
-            grade_years_string += f"{{category: \"{dist['category']}\", availableSlots: {dist['available_slots']}}},"
-        grade_years_string = grade_years_string[0:-1] + "]"
-
-        return grade_years_string
-
 
 class EventsResolversTestCase(EventsBaseTestCase):
     """
@@ -246,12 +233,13 @@ class EventsResolversTestCase(EventsBaseTestCase):
         self.deep_assert_equal(content["data"]["event"], self.non_attendable_event)
 
     def test_invalid_admin_resolve_event_without_organization(self):
-        # Test admin user can get see the availableSlots
+        # Test admin user can see the slotDistribution
         # Try to make query without organization membership
         response = self.query(self.admin_event_query, user=self.user_1st_grade)
         content = json.loads(response.content)
         # Check that availableSlots was not included
-        self.assertTrue(content["data"]["event"]["availableSlots"] is None)
+        self.assertTrue(content["data"]["event"]["attendable"]["usersAttending"] is None)
+        self.assertTrue(content["data"]["event"]["attendable"]["usersOnWaitingList"] is None)
 
     def test_admin_resolve_event_with_organization(self):
         # Test admin user can get see the availableSlots
@@ -259,7 +247,8 @@ class EventsResolversTestCase(EventsBaseTestCase):
         MembershipFactory(user=self.user_1st_grade, organization=self.attendable_event_with_slot_dist.organization)
         response = self.query(self.admin_event_query, user=self.user_1st_grade)
         content = json.loads(response.content)
-        self.assertTrue(content["data"]["event"]["availableSlots"] is not None)
+        self.assertTrue(content["data"]["event"]["attendable"]["usersAttending"] is not None)
+        self.assertTrue(content["data"]["event"]["attendable"]["usersOnWaitingList"] is not None)
 
     def test_resolve_categories(self):
         response = self.query(
@@ -306,6 +295,7 @@ class EventsMutationsTestCase(EventsBaseTestCase):
     """
 
     def create_event(self, event, user=None):
+        # Query for creating a non-attendable event
         query = f"""
                 mutation CreateEvent {{
                     createEvent(
@@ -315,7 +305,7 @@ class EventsMutationsTestCase(EventsBaseTestCase):
                             startTime: \"{event.start_time.strftime("%Y-%m-%dT%H:%M:%S+00:00")}\",
                             endTime:  \"{event.end_time.strftime("%Y-%m-%dT%H:%M:%S+00:00")}\",
                             organizationId: {event.organization.id},
-                            allowedGradeYears: {self.format_grade_years(event.allowed_grade_years_string)},
+                            allowedGradeYears: [{event.allowed_grade_years_string}],
                             contactEmail: \"{event.contact_email}\"
                             }}
                         ) {{
@@ -329,97 +319,39 @@ class EventsMutationsTestCase(EventsBaseTestCase):
         return self.query(query, user=user)
 
     def create_attendable_event(self, event, attendable, slot_distribution, user=None):
-        query = ""
+        # Query for creating an attendable event
 
-        if event is not None and attendable is not None and slot_distribution is not None:
-            grade_years_string = self.stringify_grade_years(slot_distribution)
-            query = f"""
-                mutation CreateEvent {{
-                    createEvent(
-                        eventData: {{
-                            title: \"{event.title}\",
-                            description: \"{event.description}\",
-                            startTime: \"{event.start_time.strftime("%Y-%m-%dT%H:%M:%S+00:00")}\",
-                            endTime:  \"{event.end_time.strftime("%Y-%m-%dT%H:%M:%S+00:00")}\",
-                            organizationId: {event.organization.id},
-                            allowedGradeYears: {self.format_grade_years(event.allowed_grade_years_string)}
-                            }},
+        signup_open_date = None
+        if attendable.signup_open_date:
+            signup_open_date = attendable.signup_open_date.strftime("%Y-%m-%dT%H:%M:%S+00:00")
 
-                        attendableData: {{
-                            signupOpenDate: \"{attendable.signup_open_date.strftime("%Y-%m-%dT%H:%M:%S+00:00")}\",
-                            bindingSignup: {"true" if attendable.binding_signup else "false"},
-                            deadline: \"{attendable.deadline.strftime("%Y-%m-%dT%H:%M:%S+00:00")}\",
-                            }},
+        query = f"""
+            mutation CreateEvent {{
+                createEvent(
+                    eventData: {{
+                        title: \"{event.title}\",
+                        description: \"{event.description}\",
+                        startTime: \"{event.start_time.strftime("%Y-%m-%dT%H:%M:%S+00:00")}\",
+                        endTime:  \"{event.end_time.strftime("%Y-%m-%dT%H:%M:%S+00:00")}\",
+                        organizationId: {event.organization.id},
+                        allowedGradeYears: [{event.allowed_grade_years_string}]
+                        }},
 
-                        slotDistributionData: {{
-                            availableSlots: {slot_distribution.available_slots},
-                            gradeYears: {grade_years_string},
-                            }}
-
-                        ) {{
-                    event {{
-                        id
+                    attendableData: {{
+                        signupOpenDate: \"{signup_open_date}\",
+                        bindingSignup: {"true" if attendable.binding_signup else "false"},
+                        deadline: \"{attendable.deadline.strftime("%Y-%m-%dT%H:%M:%S+00:00")}\",
+                        totalAvailableSlots: {attendable.total_available_slots},
+                        slotDistribution: {slot_distribution}
+                        }},
+                    ) {{
+                event {{
+                    id
+                }}
+                  ok
                     }}
-                      ok
-                        }}
-                    }}
-                """
-
-        elif attendable is None:
-            grade_years_string = self.stringify_grade_years(slot_distribution)
-            query = f"""
-                mutation CreateEvent {{
-                    createEvent(
-                         eventData: {{
-                            title: \"{event.title}\",
-                            description: \"{event.description}\",
-                            startTime: \"{event.start_time.strftime("%Y-%m-%dT%H:%M:%S+00:00")}\",
-                            endTime:  \"{event.end_time.strftime("%Y-%m-%dT%H:%M:%S+00:00")}\",
-                            organizationId: {event.organization.id},
-                            allowedGradeYears: {self.format_grade_years(event.allowed_grade_years_string)},
-                            }},
-
-                        slotDistributionData: {{
-                            availableSlots: {slot_distribution.available_slots},
-                            gradeYears: {grade_years_string},
-                            }}
-
-                        ) {{
-                    event {{
-                        id
-                    }}
-                      ok
-                        }}
-                    }}
-                """
-
-        elif slot_distribution is None:
-            query = f"""
-                mutation CreateEvent {{
-                    createEvent(
-                         eventData: {{
-                            title: \"{event.title}\",
-                            description: \"{event.description}\",
-                            startTime: \"{event.start_time.strftime("%Y-%m-%dT%H:%M:%S+00:00")}\",
-                            endTime:  \"{event.end_time.strftime("%Y-%m-%dT%H:%M:%S+00:00")}\",
-                            organizationId: {event.organization.id},
-                            allowedGradeYears: {self.format_grade_years(event.allowed_grade_years_string)},
-                            }},
-
-                        attendableData: {{
-                            signupOpenDate: \"{attendable.signup_open_date.strftime("%Y-%m-%dT%H:%M:%S+00:00")}\",
-                            bindingSignup: {"true" if attendable.binding_signup else "false"},
-                            deadline: \"{attendable.deadline.strftime("%Y-%m-%dT%H:%M:%S+00:00")}\",
-                            }},
-
-                        ) {{
-                    event {{
-                        id
-                    }}
-                      ok
-                        }}
-                    }}
-                """
+                }}
+            """
 
         return self.query(query, user=user)
 
@@ -462,7 +394,7 @@ class EventsMutationsTestCase(EventsBaseTestCase):
         event = EventFactory.build(organization=organization)
         MembershipFactory(user=self.user_1st_grade, organization=organization)
         attendable = AttendableFactory.build(event=event)
-        slot_distribution = SlotDistributionFactory.build(attendable=attendable, available_slots=1)
+        slot_distribution = '[{gradeGroup: "1,2,3,4,5", availableSlots: 5}]'
         response = self.create_attendable_event(
             event=event, attendable=attendable, slot_distribution=slot_distribution, user=self.user_1st_grade
         )
@@ -474,16 +406,10 @@ class EventsMutationsTestCase(EventsBaseTestCase):
     def test_create_attendable_event_with_slot_distribution(self):
         # Test attendable event with slot distribution creation
         organization = SimplifiedOrganizationFactory()
-        event = EventFactory.build(organization=organization)
-        attendable = AttendableFactory.build(event=event)
-        slot_distribution = SlotDistributionFactory.build(attendable=attendable, available_slots=2)
-        SlotDistributionFactory.build(
-            attendable=attendable, available_slots=1, parent_distribution=slot_distribution, grade_years="1"
-        )
-        SlotDistributionFactory.build(
-            attendable=attendable, available_slots=1, parent_distribution=slot_distribution, grade_years="2"
-        )
+        event = EventFactory.build(organization=organization, allowed_grade_years="1,2")
+        attendable = AttendableFactory.build(event=event, total_available_slots=2, slot_distribution={"1": 1, "2": 1})
         MembershipFactory(user=self.user_1st_grade, organization=organization)
+        slot_distribution = '[{gradeGroup: "1", availableSlots: 1}, {gradeGroup: "2", availableSlots: 1}]'
         response = self.create_attendable_event(
             event=event, attendable=attendable, slot_distribution=slot_distribution, user=self.user_1st_grade
         )
@@ -510,10 +436,11 @@ class EventsMutationsTestCase(EventsBaseTestCase):
         # Try to add event with sign up open date before current time
         self.attendable_and_open_event.attendable.signup_open_date = timezone.now() - datetime.timedelta(days=5)
         MembershipFactory(user=self.user_1st_grade, organization=self.attendable_and_open_event.organization)
+        slot_distribution = '[{gradeGroup: "1,2,3", availableSlots: 1}]'
         response = self.create_attendable_event(
-            self.attendable_and_open_event,
-            self.attendable_and_open_event.attendable,
-            self.attendable_and_open_event.attendable.slot_distribution.get(parent_distribution=None),
+            event=self.attendable_and_open_event,
+            attendable=self.attendable_and_open_event.attendable,
+            slot_distribution=slot_distribution,
             user=self.user_1st_grade,
         )
         self.check_create_event_with_error(response)
@@ -522,10 +449,11 @@ class EventsMutationsTestCase(EventsBaseTestCase):
         # Try to add event with deadline before sign up open date
         self.attendable_and_open_event.attendable.signup_open_date = timezone.now() + datetime.timedelta(days=10)
         self.attendable_and_open_event.attendable.deadline = timezone.now() + datetime.timedelta(days=5)
+        slot_distribution = '[{gradeGroup: "1,2,3", availableSlots: 1}]'
         response = self.create_attendable_event(
-            self.attendable_and_open_event,
-            self.attendable_and_open_event.attendable,
-            self.attendable_and_open_event.attendable.slot_distribution.get(parent_distribution=None),
+            event=self.attendable_and_open_event,
+            attendable=self.attendable_and_open_event.attendable,
+            slot_distribution=slot_distribution,
             user=self.user_1st_grade,
         )
         self.check_create_event_with_error(response)
@@ -553,10 +481,12 @@ class EventsMutationsTestCase(EventsBaseTestCase):
     def test_create_attendable_event_without_available_slots(self):
         # Try to create an attenable event without specifying the number of available slots
         MembershipFactory(user=self.user_1st_grade, organization=self.attendable_and_open_event.organization)
+        self.attendable_and_open_event.attendable.total_available_slots = None
+        slot_distribution = '[{gradeGroup: "1,2,3", availableSlots: 1}]'
         response = self.create_attendable_event(
             event=self.attendable_and_open_event,
             attendable=self.attendable_and_open_event.attendable,
-            slot_distribution=None,
+            slot_distribution=slot_distribution,
             user=self.user_1st_grade,
         )
         self.check_create_event_with_error(response)
@@ -564,23 +494,20 @@ class EventsMutationsTestCase(EventsBaseTestCase):
     def test_create_attendable_event_without_sign_up_open_date(self):
         # Try to create an attenable event without specifying the sign up open date
         MembershipFactory(user=self.user_1st_grade, organization=self.attendable_event_with_slot_dist.organization)
+        self.attendable_event_with_slot_dist.attendable.signup_open_date = None
+        slot_distribution = '[{gradeGroup: "1,2,3", availableSlots: 1}]'
         response = self.create_attendable_event(
             event=self.attendable_event_with_slot_dist,
-            attendable=None,
-            slot_distribution=self.attendable_event_with_slot_dist.attendable.slot_distribution.get(
-                parent_distribution=None
-            ),
+            attendable=self.attendable_event_with_slot_dist.attendable,
+            slot_distribution=slot_distribution,
             user=self.user_1st_grade,
         )
         self.check_create_event_with_error(response)
 
-    def test_create_attendable_event_with_price_wihtout_binding_singup(self):
+    def test_create_attendable_event_with_price_without_binding_singup(self):
         event = self.attendable_event_with_slot_dist
         attendable = self.attendable_event_with_slot_dist.attendable
-        slot_distribution = self.attendable_event_with_slot_dist.attendable.slot_distribution.get(
-            parent_distribution=None
-        )
-        grade_years_string = self.stringify_grade_years(slot_distribution)
+        slot_distribution = get_slot_distribution_as_list_in_camel_case(attendable.slot_distribution)
         query = f"""
                 mutation CreateEvent {{
                     createEvent(
@@ -590,21 +517,17 @@ class EventsMutationsTestCase(EventsBaseTestCase):
                             startTime: \"{event.start_time.strftime("%Y-%m-%dT%H:%M:%S+00:00")}\",
                             endTime:  \"{event.end_time.strftime("%Y-%m-%dT%H:%M:%S+00:00")}\",
                             organizationId: {event.organization.id},
-                            allowedGradeYears: {self.format_grade_years(event.allowed_grade_years_string)},
+                            allowedGradeYears: [{event.allowed_grade_years_string}],
                             }},
 
                         attendableData: {{
                             signupOpenDate: \"{attendable.signup_open_date.strftime("%Y-%m-%dT%H:%M:%S+00:00")}\",
                             bindingSignup: false,
                             deadline: \"{attendable.deadline.strftime("%Y-%m-%dT%H:%M:%S+00:00")}\",
-                            price: 100.0
+                            price: 100.0,
+                            totalAvailableSlots: {attendable.total_available_slots}
+                            slotDistribution: {slot_distribution}
                             }},
-
-                        slotDistributionData: {{
-                            availableSlots: {slot_distribution.available_slots},
-                            gradeYears: {grade_years_string},
-                            }}
-
                         ) {{
                     event {{
                         id
@@ -640,12 +563,12 @@ class EventsMutationsTestCase(EventsBaseTestCase):
           updateEvent(
               id: {self.non_attendable_event.id}
               isAttendable: true
-              hasGradeDistributions: false
-              eventData: {{ title: \"{self.non_attendable_event.title}\"}}
+              eventData: {{ title: \"{self.non_attendable_event.title}\", allowedGradeYears: [1,2,3,4,5]}}
               attendableData: {{
                   signupOpenDate: \"{signup_open_date}\"
+                  totalAvailableSlots: 2
+                  slotDistribution: [{{gradeGroup: "1,2,3,4,5", availableSlots: 2}}]
                   }}
-              slotDistributionData: {{availableSlots: {2}, gradeYears: {{category: \"1,2,3,4,5\", availableSlots: 2}} }}
               ) {{
             ok
             event {{
@@ -660,7 +583,7 @@ class EventsMutationsTestCase(EventsBaseTestCase):
         self.non_attendable_event = Event.objects.get(pk=self.non_attendable_event.id)
         self.assertResponseNoErrors(response)
         self.assertTrue(self.non_attendable_event.attendable is not None)
-        self.assertEqual(len(self.non_attendable_event.attendable.total_available_slots), 1)
+        self.assertEqual(len(self.non_attendable_event.attendable.slot_distribution), 1)
 
     def test_update_event_make_non_attendable(self):
         # Make attendable event non-attendable
@@ -669,7 +592,6 @@ class EventsMutationsTestCase(EventsBaseTestCase):
           updateEvent(
               id: {self.attendable_and_open_event.id}
               isAttendable: false
-              hasGradeDistributions: false
               eventData: {{ title: \"{self.attendable_and_open_event.title}\"}}
               ) {{
             ok
@@ -685,7 +607,6 @@ class EventsMutationsTestCase(EventsBaseTestCase):
         self.attendable_and_open_event = Event.objects.get(pk=self.attendable_and_open_event.id)
         self.assertResponseNoErrors(response)
         self.assertFalse(hasattr(self.attendable_and_open_event, "attendable"))
-        self.assertTrue(self.attendable_and_open_event.attendable.total_available_slots is None)
 
     def test_update_event_add_slot_distribution(self):
         # Add slot distribution to attendable event
@@ -694,15 +615,14 @@ class EventsMutationsTestCase(EventsBaseTestCase):
           updateEvent(
               id: {self.attendable_and_open_event.id}
               isAttendable: true
-              hasGradeDistributions: true
-              eventData: {{ title: \"{self.attendable_and_open_event.title}\"}}
-              slotDistributionData: {{
-                   availableSlots: 2,
-                   gradeYears: [
-                       {{category: "1,2", availableSlots: 1}},
-                       {{category: "3,4,5", availableSlots: 1}}
-                       ]
-                    }}
+              eventData: {{ title: \"{self.non_attendable_event.title}\", allowedGradeYears: [1,2,3,4,5]}}
+              attendableData: {{
+                  totalAvailableSlots: {self.attendable_and_open_event.attendable.total_available_slots},
+                  slotDistribution: [
+                      {{ gradeGroup: "1,2", availableSlots: 1}},
+                      {{ gradeGroup: "3,4,5", availableSlots: 1}}
+                      ]
+              }}
               ) {{
             ok
             event {{
@@ -716,7 +636,7 @@ class EventsMutationsTestCase(EventsBaseTestCase):
         # Fetch updated event and check that update was successful
         self.attendable_and_open_event = Event.objects.get(pk=self.attendable_and_open_event.id)
         self.assertResponseNoErrors(response)
-        self.assertEqual(len(self.attendable_and_open_event.attendable.total_available_slots), 2)
+        self.assertEqual(len(self.attendable_and_open_event.attendable.slot_distribution), 2)
 
     def test_update_event_remove_slot_distribution(self):
         # Remove slot distribution from attendable event
@@ -725,8 +645,11 @@ class EventsMutationsTestCase(EventsBaseTestCase):
           updateEvent(
               id: {self.attendable_event_with_slot_dist.id}
               isAttendable: true
-              hasGradeDistributions: false
               eventData: {{ title: \"{self.attendable_event_with_slot_dist.title}\"}}
+              attendableData: {{
+                  slotDistribution: [{{gradeGroup: "1,2,4", availableSlots: 2}}],
+                  totalAvailableSlots: 2
+                  }}
               ) {{
             ok
             event {{
@@ -740,7 +663,7 @@ class EventsMutationsTestCase(EventsBaseTestCase):
         # Fetch updated event and check that update was successful
         self.attendable_event_with_slot_dist = Event.objects.get(pk=self.attendable_event_with_slot_dist.id)
         self.assertResponseNoErrors(response)
-        self.assertEqual(len(self.attendable_event_with_slot_dist.available_slots), 1)
+        self.assertEqual(len(self.attendable_event_with_slot_dist.attendable.slot_distribution), 1)
 
     def test_update_event_change_slot_distribution(self):
         # Update slot distribution on attendable event that already has a slot distribution
@@ -749,16 +672,15 @@ class EventsMutationsTestCase(EventsBaseTestCase):
           updateEvent(
               id: {self.attendable_event_with_slot_dist.id}
               isAttendable: true
-              hasGradeDistributions: true
-              eventData: {{ title: \"{self.attendable_event_with_slot_dist.title}\"}}
-              slotDistributionData: {{
-                  availableSlots: {3},
-                  gradeYears: [
-                      {{category: "1,2", availableSlots: 1}},
-                       {{category: "3,4", availableSlots: 1}},
-                        {{category: "5", availableSlots: 1}}
-                        ]
-                    }}
+              eventData: {{ title: \"{self.attendable_event_with_slot_dist.title}\", allowedGradeYears: [1,2,3,4,5]}}
+              attendableData: {{
+                  totalAvailableSlots: 3,
+                  slotDistribution: [
+                      {{ gradeGroup: "1,2", availableSlots: 1}},
+                      {{ gradeGroup: "3,4", availableSlots: 1}},
+                      {{ gradeGroup: "5", availableSlots: 1}}
+                      ]
+              }}
               ) {{
             ok
             event {{
@@ -772,7 +694,7 @@ class EventsMutationsTestCase(EventsBaseTestCase):
         # Fetch updated event and check that update was successful
         self.attendable_event_with_slot_dist = Event.objects.get(pk=self.attendable_event_with_slot_dist.id)
         self.assertResponseNoErrors(response)
-        self.assertEqual(len(self.attendable_event_with_slot_dist.available_slots), 3)
+        self.assertEqual(len(self.attendable_event_with_slot_dist.attendable.slot_distribution), 3)
 
     def test_invalid_delete_event_without_organization(self):
         response = self.query(self.delete_event_query)
@@ -805,8 +727,8 @@ class EventsMutationsTestCase(EventsBaseTestCase):
         content = json.loads(response.content)
         self.assertTrue(Category.objects.filter(id=int(content["data"]["createCategory"]["category"]["id"])).exists())
 
-    def test_empty_name(self):
-        # Try to create a category with no name variable
+    def test_empty_title(self):
+        # Try to create a category with no title variable
         query = """
                 mutation CreateCategory {
                     createCategory(

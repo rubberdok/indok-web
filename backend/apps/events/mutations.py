@@ -1,4 +1,5 @@
 from django.db import transaction
+from apps.events.helpers import get_slot_distribution_as_dict
 import graphene
 from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied, ValidationError
@@ -27,6 +28,11 @@ class BaseEventInput(graphene.InputObjectType):
     allowed_grade_years = graphene.List(graphene.Int)
 
 
+class SlotDistributionInput(graphene.InputObjectType):
+    grade_group = graphene.String(required=True)
+    available_slots = graphene.Int(required=True)
+
+
 class CreateAttendableInput(graphene.InputObjectType):
     signup_open_date = graphene.DateTime(required=True)
     binding_signup = graphene.Boolean(required=False)
@@ -34,7 +40,7 @@ class CreateAttendableInput(graphene.InputObjectType):
     price = graphene.Float(required=False)
     has_extra_information = graphene.Boolean(required=False)
     total_available_slots = graphene.Int(required=True)
-    slot_distribution = graphene.types.generic.GenericScalar(required=True)
+    slot_distribution = graphene.List(SlotDistributionInput)
 
 
 class CreateEventInput(BaseEventInput):
@@ -48,7 +54,7 @@ class UpdateAttendableInput(graphene.InputObjectType):
     price = graphene.Float(required=False)
     has_extra_information = graphene.Boolean(required=False)
     total_available_slots = graphene.Int(required=False)
-    slot_distribution = graphene.types.generic.GenericScalar(required=False)
+    slot_distribution = graphene.List(SlotDistributionInput)
 
 
 class UpdateEventInput(BaseEventInput):
@@ -91,9 +97,16 @@ class CreateEvent(graphene.Mutation):
             event.publisher = info.context.user
             event.save()
 
-            # Create attendable if included in input data
             if attendable_data is not None:
+                # Create attendable if included in input data
                 attendable = Attendable()
+
+                # Change slot distribution from a list of objects to a dictionary
+                if hasattr(attendable_data, "slot_distribution"):
+                    slot_distribution_list = attendable_data.pop("slot_distribution")
+                    slot_distribution = get_slot_distribution_as_dict(slot_distribution_list)
+                    setattr(attendable, "slot_distribution", slot_distribution)
+
                 for k, v in attendable_data.items():
                     setattr(attendable, k, v)
                 setattr(attendable, "event", event)
@@ -111,7 +124,6 @@ class UpdateEvent(graphene.Mutation):
     class Arguments:
         id = graphene.ID(required=True)
         is_attendable = graphene.Boolean(required=True)
-        has_grade_distributions = graphene.Boolean(required=True)
         event_data = UpdateEventInput(required=False)
         attendable_data = UpdateAttendableInput(required=False)
 
@@ -124,7 +136,6 @@ class UpdateEvent(graphene.Mutation):
         info,
         id,
         is_attendable,
-        has_grade_distributions,
         event_data,
         attendable_data=None,
     ):
@@ -162,6 +173,13 @@ class UpdateEvent(graphene.Mutation):
                 if attendable is None:
                     # The event was changed to be attendable, create attendable object
                     attendable = Attendable()
+
+                    # Change slot distribution from a list of objects to a dictionary
+                    if hasattr(attendable_data, "slot_distribution"):
+                        slot_distribution_list = attendable_data.pop("slot_distribution")
+                        slot_distribution = get_slot_distribution_as_dict(slot_distribution_list)
+                        setattr(attendable, "slot_distribution", slot_distribution)
+
                     for k, v in attendable_data.items():
                         setattr(attendable, k, v)
                     setattr(attendable, "event", event)
@@ -170,6 +188,12 @@ class UpdateEvent(graphene.Mutation):
                     return UpdateEvent(event=event, ok=ok)
 
                 # The event was already attendable, just update attendable object
+                # Change slot distribution from a list of objects to a dictionary
+                if hasattr(attendable_data, "slot_distribution"):
+                    slot_distribution_list = attendable_data.pop("slot_distribution")
+                    slot_distribution = get_slot_distribution_as_dict(slot_distribution_list)
+                    setattr(attendable, "slot_distribution", slot_distribution)
+
                 for k, v in attendable_data.items():
                     setattr(attendable, k, v)
                     attendable.save()

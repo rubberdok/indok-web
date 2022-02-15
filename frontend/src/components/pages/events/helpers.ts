@@ -15,18 +15,43 @@ export const getFormattedDataAndErrors = (
   if (isAttendable && !attendableInput.signupOpenDate) {
     currentErrors = [...currentErrors, "Når påmeldingen åpner er påkrevd for arrangementer med påmelding"];
   }
-  if (
-    isAttendable &&
-    hasSlotDistribution &&
-    slotDistribution.reduce((res, dist) => (res = res + dist.availableSlots), 0) < Number(eventData.availableSlots)
-  ) {
-    currentErrors = [
-      ...currentErrors,
-      "Totalt antall plasser kan ikke være større enn summen av antall i hver gruppe i plassfordelingen",
-    ];
-  }
+
   if (isAttendable && !attendableInput.totalAvailableSlots) {
     currentErrors = [...currentErrors, "Antall plasser er påkrevd for arrangementer med påmelding"];
+  }
+
+  if (isAttendable) {
+    if (!attendableInput.totalAvailableSlots) {
+      currentErrors = [...currentErrors, "Antall plasser er påkrevd for arrangementer med påmelding"];
+    }
+
+    if (
+      !!attendableInput.totalAvailableSlots &&
+      hasSlotDistribution &&
+      slotDistribution.reduce((res, dist) => (res = res + dist.availableSlots), 0) < attendableInput.totalAvailableSlots
+    ) {
+      currentErrors = [
+        ...currentErrors,
+        "Totalt antall plasser kan ikke være større enn summen av antall i hver gruppe i plassfordelingen",
+      ];
+    }
+
+    const slotDistGradesString = slotDistribution
+      .flatMap((slotDist) => slotDist.category)
+      .sort((a, b) => a - b)
+      .reduce((res, grade) => `${res},${grade}`, "");
+    const allowedGradesString = eventInput.allowedGradeYears.reduce(
+      (res: string, grade: number) => `${res},${grade}`,
+      ""
+    );
+
+    if (
+      hasSlotDistribution &&
+      slotDistGradesString.slice(1, slotDistGradesString.length) !==
+        allowedGradesString.slice(1, allowedGradesString.length)
+    ) {
+      currentErrors = [...currentErrors, "Hvem det er åpent for må tilsvare plassfordelingen for klassetrinn"];
+    }
   }
 
   return { eventInput, attendableInput, currentErrors };
@@ -55,16 +80,10 @@ const formatAttendableData = (
   slotDistributionInput: { category: number[]; availableSlots: number }[],
   hasSlotDistribution: boolean
 ) => {
-  const slotDistribution: Record<string, number> = {};
-
   if (hasSlotDistribution) {
-    const slotDistributionWithStringCategories = slotDistributionInput.map((dist) => {
+    const slotDistribution = slotDistributionInput.map((dist) => {
       const stringCategory = dist.category.sort((a, b) => a - b).reduce((res, grade) => `${res},${grade}`, "");
-      return { category: stringCategory.slice(1, stringCategory.length), availableSlots: dist.availableSlots };
-    });
-
-    slotDistributionWithStringCategories.forEach((slot) => {
-      slotDistribution[slot.category] = slot.availableSlots;
+      return { gradeGroup: stringCategory.slice(1, stringCategory.length), availableSlots: dist.availableSlots };
     });
 
     const attendableInputData = {
@@ -82,7 +101,7 @@ const formatAttendableData = (
   let allowedGradesString = eventData.allowedGradeYears.reduce((res: string, grade: number) => `${res},${grade}`, "");
   allowedGradesString = allowedGradesString.slice(1, allowedGradesString.length);
 
-  slotDistribution[allowedGradesString] = Number(eventData.availableSlots);
+  const slotDistribution = [{ gradeGroup: allowedGradesString, availableSlots: Number(eventData.availableSlots) }];
 
   const attendableInputData = {
     signupOpenDate: eventData.signupOpenDate === "" ? undefined : eventData.signupOpenDate,

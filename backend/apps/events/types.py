@@ -8,6 +8,7 @@ from apps.ecommerce.models import Order, Product
 from apps.ecommerce.types import ProductType
 from apps.users.models import User
 from apps.users.types import UserType
+from apps.events.helpers import get_slot_distribution_as_list
 
 from .models import Attendable, Category, Event, SignUp
 
@@ -28,6 +29,11 @@ def has_bought_ticket(event: Event, user: User) -> bool:
             ],
         ).exists()
     )
+
+
+class SlotDistributionType(graphene.ObjectType):
+    grade_group = graphene.String()
+    available_slots = graphene.Int()
 
 
 class UserAttendanceType(graphene.ObjectType):
@@ -68,7 +74,7 @@ class AttendableType(DjangoObjectType):
     users_on_waiting_list = graphene.List(UserType)
     users_attending = graphene.List(UserType)
     is_full = graphene.Boolean()
-    slot_distribution = graphene.types.generic.GenericScalar()
+    slot_distribution = graphene.List(SlotDistributionType)
 
     class Meta:
         model = Attendable
@@ -115,8 +121,8 @@ class AttendableType(DjangoObjectType):
 
     @staticmethod
     @login_required
-    def resolve_slot_distribution(attendable: Attendable, info) -> UserAttendance:
-        return attendable.slot_distribution
+    def resolve_slot_distribution(attendable: Attendable, info):
+        return get_slot_distribution_as_list(attendable.slot_distribution)
 
     @staticmethod
     def resolve_is_full(attendable: Attendable, info):

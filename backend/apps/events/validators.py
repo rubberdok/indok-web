@@ -4,17 +4,35 @@ from django.utils.timezone import make_aware
 from utils.helpers.validators import email_validation
 
 
-def time_validation(start_time, end_time):
-    if start_time.tzinfo is None:
+def time_validation(start_time_input, end_time_input, start_time=None, end_time=None):
+    # Make all date times aware (instead of naive)
+    if start_time_input is not None and start_time_input.tzinfo is None:
+        start_time_input = make_aware(start_time_input, is_dst=True)
+
+    if start_time is not None and start_time.tzinfo is None:
         start_time = make_aware(start_time, is_dst=True)
+
+    if end_time_input is not None and end_time_input.tzinfo is None:
+        end_time_input = make_aware(end_time_input, is_dst=True)
 
     if end_time is not None and end_time.tzinfo is None:
         end_time = make_aware(end_time, is_dst=True)
 
-    if start_time < timezone.now() or (end_time is not None and end_time < timezone.now()):
+    # Check that input date times are valid
+    if (start_time_input is not None and start_time_input < timezone.now()) or (
+        end_time_input is not None and end_time_input < timezone.now()
+    ):
         raise ValidationError("Input datetimes are before current time")
 
-    if end_time is not None and start_time > end_time:
+    start_time_value = start_time
+    if start_time_input is not None:
+        start_time_value = start_time_input
+
+    end_time_value = end_time
+    if end_time_input is not None:
+        end_time_value = end_time_input
+
+    if start_time_value > end_time_value:
         raise ValidationError(
             "Invalid input: Start time must be before end time, and sign up open date must be before deadline"
         )
@@ -58,9 +76,9 @@ def slot_distribution_validation(total_allowed_grade_years, slot_distribution, t
 
     allowed_grades = ""
     total_slots = 0
-    for grade_group, slots in slot_distribution.items():
-        allowed_grades += grade_group + ","
-        total_slots += slots
+    for slot_dist_element in slot_distribution:
+        allowed_grades += slot_dist_element.grade_group + ","
+        total_slots += slot_dist_element.available_slots
 
     allowed_grades = allowed_grades[:-1]
     sorted_grades = sorted(allowed_grades)
@@ -84,17 +102,17 @@ def create_event_validation(event_data, attendable_data=None):
     if event_data.end_time:
         end_time = event_data.end_time
 
-    time_validation(event_data.start_time, end_time)
+    time_validation(start_time_input=event_data.start_time, end_time_input=end_time)
     title_and_desc_validation(event_data.title, event_data.description)
 
     if event_data.contact_email:
         email_validation(event_data.contact_email)
 
     if attendable_data is not None:
-        time_validation(attendable_data.signup_open_date, event_data.start_time)
+        time_validation(start_time_input=attendable_data.signup_open_date, end_time_input=event_data.start_time)
         if attendable_data.deadline:
-            time_validation(attendable_data.signup_open_date, attendable_data.deadline)
-            time_validation(attendable_data.deadline, event_data.start_time)
+            time_validation(start_time_input=attendable_data.signup_open_date, end_time_input=attendable_data.deadline)
+            time_validation(start_time_input=attendable_data.deadline, end_time_input=event_data.start_time)
 
         price_binding_sign_up_validation(attendable_data)
 
@@ -110,17 +128,23 @@ def update_event_validation(
     attendable_data=None,
 ):
     # Time validation, must check either input data or current values
-    start_time = event.start_time
+    start_time_input = None
     if event_data.start_time:
-        start_time = event_data.start_time
+        start_time_input = event_data.start_time
 
-    end_time = None
+    end_time_input = None
     if event_data.end_time:
-        end_time = event_data.end_time
-    elif event.end_time:
-        end_time = event.end_time
+        end_time_input = event_data.end_time
 
-    time_validation(start_time, end_time)
+    if start_time_input or end_time_input:
+        start_time = event.start_time
+        end_time = None
+        if event.end_time:
+            end_time = event.end_time
+
+        time_validation(
+            start_time_input=start_time_input, end_time_input=end_time_input, start_time=start_time, end_time=end_time
+        )
 
     # Title, description and email validation
     if event_data.title or event_data.description:
@@ -132,15 +156,25 @@ def update_event_validation(
     # Attendable validation
     if attendable_data is not None:  # There is new attendable data
 
-        allowed_grade_years = event.allowed_grade_years_string
+        allowed_grade_years = [int(grade) for grade in event.allowed_grade_years_string.split(",")]
         if event_data.allowed_grade_years:
             allowed_grade_years = event_data.allowed_grade_years
 
         if attendable is None:  # There does not already exist an attendable object
-            time_validation(attendable_data.signup_open_date, event_data.start_time)
+            time_validation(
+                start_time_input=attendable_data.signup_open_date,
+                end_time_input=event_data.start_time,
+                end_time=event.start_time,
+            )
             if attendable_data.deadline:
-                time_validation(attendable_data.signup_open_date, attendable_data.deadline)
-                time_validation(attendable_data.deadline, event_data.start_time)
+                time_validation(
+                    start_time_input=attendable_data.signup_open_date, end_time_input=attendable_data.deadline
+                )
+                time_validation(
+                    start_time_input=attendable_data.deadline,
+                    end_time_input=event_data.start_time,
+                    end_time=event.start_time,
+                )
 
             price_binding_sign_up_validation(attendable_data)
 
@@ -150,16 +184,24 @@ def update_event_validation(
 
         else:  # There already exists an attendable object
 
-            # Time validation
-            signup_open_date = attendable.signup_open_date
-            if attendable_data.signup_open_date:
-                signup_open_date = attendable_data.signup_open_date
+            if attendable_data.signup_open_date is not None or attendable_data.deadline is not None:
+                signup_open_date = attendable.signup_open_date
+                if attendable_data.signup_open_date:
+                    signup_open_date_input = attendable_data.signup_open_date
 
-            deadline = attendable.deadline
-            if attendable_data.deadline:
-                deadline = attendable_data.deadline
+                deadline = None
+                if attendable.deadline:
+                    deadline = attendable.deadline
 
-            time_validation(signup_open_date, deadline)
+                if attendable_data.deadline:
+                    deadline_input = attendable_data.deadline
+
+                time_validation(
+                    start_time_input=signup_open_date_input,
+                    end_time_input=deadline_input,
+                    start_time=signup_open_date,
+                    end_time=deadline,
+                )
 
             # Validate slot distribution fields
             slot_distribution = attendable.slot_distribution
@@ -173,5 +215,5 @@ def update_event_validation(
             slot_distribution_validation(allowed_grade_years, slot_distribution, total_available_slots)
 
             # Validate price and binding sign up
-            if attendable_data.price or attendable_data.binding_signup is not None:
+            if attendable_data.price is not None or attendable_data.binding_signup is not None:
                 price_binding_sign_up_validation(attendable_data, attendable)
