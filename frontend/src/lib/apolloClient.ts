@@ -19,7 +19,7 @@ const COOKIES_TOKEN_NAME = "JWT";
 let apolloClient: ApolloClient<NormalizedCacheObject> | undefined;
 
 const getToken = (req?: IncomingMessage) => {
-  const parsedCookie = cookie.parse(req ? req.headers.cookie ?? "" : document.cookie);
+  const parsedCookie = cookie.parse(req?.headers.cookie ?? "");
 
   return parsedCookie[COOKIES_TOKEN_NAME];
 };
