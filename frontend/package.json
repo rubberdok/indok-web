@@ -24,6 +24,8 @@
     "@material-ui/lab": "^4.0.0-alpha.58",
     "@material-ui/system": "^4.11.2",
     "@sentry/nextjs": "^6.17.3",
+    "@types/cookie": "^0.4.1",
+    "cookie": "^0.4.2",
     "dayjs": "^1.10.5",
     "formik": "^2.2.9",
     "graphql": "^15.5.0",
