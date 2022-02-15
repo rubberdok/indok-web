@@ -32,7 +32,7 @@ def time_validation(start_time_input, end_time_input, start_time=None, end_time=
     if end_time_input is not None:
         end_time_value = end_time_input
 
-    if start_time_value > end_time_value:
+    if start_time_value is not None and end_time_value is not None and start_time_value > end_time_value:
         raise ValidationError(
             "Invalid input: Start time must be before end time, and sign up open date must be before deadline"
         )
