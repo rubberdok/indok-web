@@ -1,6 +1,4 @@
 import { useQuery } from "@apollo/client";
-import { GET_FEATURED } from "@graphql/archive/queries";
-import { Document } from "@interfaces/archive";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
@@ -9,6 +7,7 @@ import GridList from "@material-ui/core/GridList";
 import GridListTile from "@material-ui/core/GridListTile";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
+import { FeaturedArchiveDocument } from "src/generated/graphql";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -50,7 +49,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const FeaturedDocumentsList: React.FC = () => {
-  const { loading, data, error } = useQuery(GET_FEATURED);
+  const { loading, data, error } = useQuery(FeaturedArchiveDocument);
 
   const classes = useStyles();
   if (loading) return <p style={{ textAlign: "center" }}></p>;
@@ -63,15 +62,15 @@ const FeaturedDocumentsList: React.FC = () => {
         Fremhevede dokumenter
       </Typography>
       <GridList cellHeight={"auto"} className={classes.img} cols={4} spacing={8}>
-        {data.featuredArchive.length ? (
-          data.featuredArchive.map((doc: Document) => (
+        {data?.featuredArchive.length ? (
+          data.featuredArchive.map((doc) => (
             <GridListTile key={0}>
               <Card className={classes.root} elevation={1}>
                 <Button
                   key={doc.id}
                   className={classes.article}
                   onClick={() => {
-                    window.open(doc.webLink, "_blank");
+                    window.open(doc.webLink ?? undefined, "_blank");
                   }}
                 >
                   <CardMedia
@@ -79,7 +78,7 @@ const FeaturedDocumentsList: React.FC = () => {
                     className={classes.image}
                     component="img"
                     height="128"
-                    image={doc.thumbnail}
+                    image={doc.thumbnail ?? undefined}
                   />
                   <CardHeader
                     className={classes.header}

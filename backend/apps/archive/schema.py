@@ -16,9 +16,7 @@ class ArchiveMutations(graphene.ObjectType):
 
 
 class ArchiveQueries(graphene.ObjectType, ArchiveDocumentResolvers):
-    featured_archive = graphene.List(
-        ArchiveDocumentType,
-    )
+    featured_archive = graphene.List(graphene.NonNull(ArchiveDocumentType), required=True)
     archive_by_types = graphene.List(
         ArchiveDocumentType,
         type_doc=graphene.List(graphene.String, required=True),
