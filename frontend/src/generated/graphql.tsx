@@ -976,12 +976,12 @@ export type Queries = {
   allEvents?: Maybe<Array<Maybe<EventType>>>;
   allOrganizations?: Maybe<Array<Maybe<OrganizationType>>>;
   allUsers?: Maybe<Array<Maybe<UserType>>>;
-  archiveByTypes?: Maybe<Array<Maybe<ArchiveDocumentType>>>;
+  archiveByTypes: Array<ArchiveDocumentType>;
   attendeeReport?: Maybe<Scalars["String"]>;
   attendeeReportOrg?: Maybe<Scalars["String"]>;
   attendeeReports?: Maybe<Scalars["String"]>;
   authToken?: Maybe<Scalars["String"]>;
-  availableYears?: Maybe<Array<Maybe<Scalars["String"]>>>;
+  availableYears: Array<Scalars["String"]>;
   blog?: Maybe<BlogType>;
   blogPost?: Maybe<BlogPostType>;
   cabins?: Maybe<Array<Maybe<CabinType>>>;
@@ -1390,7 +1390,7 @@ export type ArchiveByTypesQueryVariables = Exact<{
 
 export type ArchiveByTypesQuery = {
   __typename?: "Queries";
-  archiveByTypes?: Array<{
+  archiveByTypes: Array<{
     __typename?: "ArchiveDocumentType";
     id: string;
     title: string;
@@ -1398,7 +1398,7 @@ export type ArchiveByTypesQuery = {
     typeDoc: ArchiveDocumentTypeDoc;
     year?: number | null;
     webLink?: string | null;
-  } | null> | null;
+  }>;
 };
 
 export type FeaturedArchiveQueryVariables = Exact<{ [key: string]: never }>;
@@ -1419,7 +1419,107 @@ export type FeaturedArchiveQuery = {
 
 export type AvailableYearsQueryVariables = Exact<{ [key: string]: never }>;
 
-export type AvailableYearsQuery = { __typename?: "Queries"; availableYears?: Array<string | null> | null };
+export type AvailableYearsQuery = { __typename?: "Queries"; availableYears: Array<string> };
+
+export type CreateBookingMutationVariables = Exact<{
+  bookingData?: InputMaybe<BookingInput>;
+}>;
+
+export type CreateBookingMutation = {
+  __typename?: "Mutations";
+  createBooking?: { __typename?: "CreateBooking"; ok?: boolean | null } | null;
+};
+
+export type SendEmailMutationVariables = Exact<{
+  emailInput?: InputMaybe<EmailInput>;
+}>;
+
+export type SendEmailMutation = {
+  __typename?: "Mutations";
+  sendEmail?: { __typename?: "SendEmail"; ok?: boolean | null } | null;
+};
+
+export type ConfirmBookingMutationVariables = Exact<{
+  id: Scalars["ID"];
+}>;
+
+export type ConfirmBookingMutation = {
+  __typename?: "Mutations";
+  updateBooking?: { __typename?: "UpdateBooking"; ok?: boolean | null } | null;
+};
+
+export type DeleteBookingMutationVariables = Exact<{
+  id: Scalars["ID"];
+}>;
+
+export type DeleteBookingMutation = {
+  __typename?: "Mutations";
+  deleteBooking?: { __typename?: "DeleteBooking"; ok?: boolean | null } | null;
+};
+
+export type AllBookingsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type AllBookingsQuery = {
+  __typename?: "Queries";
+  allBookings?: Array<{
+    __typename?: "AllBookingsType";
+    id: string;
+    checkIn: any;
+    checkOut: any;
+    cabins: Array<{ __typename?: "CabinType"; id: string; name: string }>;
+  } | null> | null;
+};
+
+export type AdminAllBookingsQueryVariables = Exact<{
+  after?: InputMaybe<Scalars["String"]>;
+}>;
+
+export type AdminAllBookingsQuery = {
+  __typename?: "Queries";
+  adminAllBookings?: Array<{
+    __typename?: "AdminBookingType";
+    id: string;
+    firstName: string;
+    lastName: string;
+    phone: string;
+    receiverEmail: string;
+    checkIn: any;
+    checkOut: any;
+    externalParticipants: number;
+    internalParticipants: number;
+    price?: number | null;
+    isTentative: boolean;
+    cabins: Array<{ __typename?: "CabinType"; id: string; name: string }>;
+  } | null> | null;
+};
+
+export type AllCabinsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type AllCabinsQuery = {
+  __typename?: "Queries";
+  cabins?: Array<{
+    __typename?: "CabinType";
+    id: string;
+    name: string;
+    maxGuests: number;
+    internalPrice: number;
+    externalPrice: number;
+  } | null> | null;
+};
+
+export type ActiveBookingResponsibleQueryVariables = Exact<{ [key: string]: never }>;
+
+export type ActiveBookingResponsibleQuery = {
+  __typename?: "Queries";
+  activeBookingResponsible?: {
+    __typename?: "BookingResponsibleType";
+    id: string;
+    active?: boolean | null;
+    firstName?: string | null;
+    lastName?: string | null;
+    email?: string | null;
+  } | null;
+};
 
 export const ArchiveByTypesDocument = {
   kind: "Document",
@@ -1533,3 +1633,321 @@ export const AvailableYearsDocument = {
     },
   ],
 } as unknown as DocumentNode<AvailableYearsQuery, AvailableYearsQueryVariables>;
+export const CreateBookingDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "CreateBooking" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "bookingData" } },
+          type: { kind: "NamedType", name: { kind: "Name", value: "BookingInput" } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "createBooking" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "bookingData" },
+                value: { kind: "Variable", name: { kind: "Name", value: "bookingData" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "Field", name: { kind: "Name", value: "ok" } }],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<CreateBookingMutation, CreateBookingMutationVariables>;
+export const SendEmailDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "SendEmail" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "emailInput" } },
+          type: { kind: "NamedType", name: { kind: "Name", value: "EmailInput" } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "sendEmail" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "emailInput" },
+                value: { kind: "Variable", name: { kind: "Name", value: "emailInput" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "Field", name: { kind: "Name", value: "ok" } }],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<SendEmailMutation, SendEmailMutationVariables>;
+export const ConfirmBookingDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "ConfirmBooking" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "id" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "updateBooking" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "bookingData" },
+                value: {
+                  kind: "ObjectValue",
+                  fields: [
+                    {
+                      kind: "ObjectField",
+                      name: { kind: "Name", value: "id" },
+                      value: { kind: "Variable", name: { kind: "Name", value: "id" } },
+                    },
+                    {
+                      kind: "ObjectField",
+                      name: { kind: "Name", value: "isTentative" },
+                      value: { kind: "BooleanValue", value: false },
+                    },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "Field", name: { kind: "Name", value: "ok" } }],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<ConfirmBookingMutation, ConfirmBookingMutationVariables>;
+export const DeleteBookingDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "DeleteBooking" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "id" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "deleteBooking" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "id" },
+                value: { kind: "Variable", name: { kind: "Name", value: "id" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "Field", name: { kind: "Name", value: "ok" } }],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<DeleteBookingMutation, DeleteBookingMutationVariables>;
+export const AllBookingsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "AllBookings" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "allBookings" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "checkIn" } },
+                { kind: "Field", name: { kind: "Name", value: "checkOut" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "cabins" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "name" } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<AllBookingsQuery, AllBookingsQueryVariables>;
+export const AdminAllBookingsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "AdminAllBookings" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "after" } },
+          type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "adminAllBookings" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "after" },
+                value: { kind: "Variable", name: { kind: "Name", value: "after" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "firstName" } },
+                { kind: "Field", name: { kind: "Name", value: "lastName" } },
+                { kind: "Field", name: { kind: "Name", value: "phone" } },
+                { kind: "Field", name: { kind: "Name", value: "receiverEmail" } },
+                { kind: "Field", name: { kind: "Name", value: "checkIn" } },
+                { kind: "Field", name: { kind: "Name", value: "checkOut" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "cabins" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "name" } },
+                    ],
+                  },
+                },
+                { kind: "Field", name: { kind: "Name", value: "externalParticipants" } },
+                { kind: "Field", name: { kind: "Name", value: "internalParticipants" } },
+                { kind: "Field", name: { kind: "Name", value: "price" } },
+                { kind: "Field", name: { kind: "Name", value: "isTentative" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<AdminAllBookingsQuery, AdminAllBookingsQueryVariables>;
+export const AllCabinsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "AllCabins" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "cabins" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "name" } },
+                { kind: "Field", name: { kind: "Name", value: "maxGuests" } },
+                { kind: "Field", name: { kind: "Name", value: "internalPrice" } },
+                { kind: "Field", name: { kind: "Name", value: "externalPrice" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<AllCabinsQuery, AllCabinsQueryVariables>;
+export const ActiveBookingResponsibleDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "ActiveBookingResponsible" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "activeBookingResponsible" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "active" } },
+                { kind: "Field", name: { kind: "Name", value: "firstName" } },
+                { kind: "Field", name: { kind: "Name", value: "lastName" } },
+                { kind: "Field", name: { kind: "Name", value: "email" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<ActiveBookingResponsibleQuery, ActiveBookingResponsibleQueryVariables>;

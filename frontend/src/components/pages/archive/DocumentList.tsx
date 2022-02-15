@@ -1,6 +1,4 @@
 import { useQuery } from "@apollo/client";
-import { GET_DOCSBYFILTERS } from "@graphql/archive/queries";
-import { Document } from "@interfaces/archive";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
@@ -10,6 +8,7 @@ import GridListTile from "@material-ui/core/GridListTile";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import React, { useEffect } from "react";
+import { ArchiveByTypesDocument } from "src/generated/graphql";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -49,7 +48,9 @@ interface DocumentListProps {
 }
 
 const DocumentList: React.FC<DocumentListProps> = ({ document_types, year, names }) => {
-  const { refetch, loading, data, error } = useQuery(GET_DOCSBYFILTERS, { variables: { document_types, year, names } });
+  const { refetch, loading, data, error } = useQuery(ArchiveByTypesDocument, {
+    variables: { document_types, year, names },
+  });
 
   useEffect(() => {
     refetch({ document_types, year });
@@ -66,15 +67,15 @@ const DocumentList: React.FC<DocumentListProps> = ({ document_types, year, names
         Alle dokumenter
       </Typography>
       <GridList cellHeight={"auto"} className={classes.img} cols={4} spacing={8}>
-        {data.archiveByTypes.length ? (
-          data.archiveByTypes.map((doc: Document) => (
+        {data?.archiveByTypes.length ? (
+          data?.archiveByTypes.map((doc) => (
             <GridListTile key={doc.id}>
               <Card className={classes.root} elevation={1}>
                 <Button
                   key={doc.id}
                   className={classes.article}
                   onClick={() => {
-                    window.open(doc.webLink, "_blank");
+                    window.open(doc.webLink ?? undefined, "_blank");
                   }}
                 >
                   <CardMedia
@@ -82,7 +83,7 @@ const DocumentList: React.FC<DocumentListProps> = ({ document_types, year, names
                     className={classes.image}
                     component="img"
                     height="128"
-                    image={doc.thumbnail}
+                    image={doc.thumbnail ?? undefined}
                   />
                   <CardHeader
                     className={classes.header}
