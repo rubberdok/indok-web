@@ -14,7 +14,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 import leftFern from "@public/static/anniversary/left_fern.svg";
 import rightFern from "@public/static/anniversary/right_fern.svg";
 import Image from "next/image";
-import { default as Link } from "next/link";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { ReactElement } from "react";
 import NavbarLinks from "./NavbarLinks";
