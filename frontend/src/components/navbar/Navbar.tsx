@@ -135,7 +135,6 @@ const Navbar: React.FC = () => {
         onClose={() => setOpenDrawer(false)}
       >
         <NavbarUser loggedIn={loggedIn} username={data?.user?.firstName} />
-        <div className={classes.verticalSpacing} />
         <NavbarLinks loggedIn={loggedIn} />
       </Drawer>
     </div>
