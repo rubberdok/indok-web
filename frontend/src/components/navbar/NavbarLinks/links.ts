@@ -32,7 +32,7 @@ const links: NavbarLink[] = [
   {
     id: 4,
     title: "Arkiv",
-    href: "/archives",
+    href: "/archive",
     loginRequired: true,
     permissionRequired: "archive.view_archivedocument",
   },
