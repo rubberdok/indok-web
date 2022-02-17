@@ -262,7 +262,6 @@ const EventAdminPage: NextPage = () => {
                       {renderInfo("Påmeldingsfrist", data.event.deadline
                             ? dateFormat(data.event.deadline)
                             : "")}
-                            {console.log(data.event.availableSlots)}
                      {renderInfo("Bindende påmelding", data.event?.bindingSignup)}
                       { data.event?.availableSlots && (
                         renderInfo("Tilgjengelige plasser", data.event.slotDistribution.length > 1
