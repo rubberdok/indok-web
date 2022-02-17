@@ -32,8 +32,8 @@ const AuthCallbackPage: NextPage = () => {
               const { user } = data.authUser;
               return cache.writeFragment({
                 id: cache.identify(user),
-                data: user,
                 fragment: USER_FRAMGENT,
+                data: user,
               });
             }
           },
@@ -41,7 +41,6 @@ const AuthCallbackPage: NextPage = () => {
       });
     },
   });
-
   useEffect(() => {
     if (code) authUser({ variables: { code } });
   }, [code, authUser]);
