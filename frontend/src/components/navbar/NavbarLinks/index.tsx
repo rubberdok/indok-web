@@ -67,7 +67,7 @@ const NavbarLinks: React.VFC<Props> = ({ loggedIn }) => {
       ) : (
         <Box position="relative">
           <a
-            className={classes.navItem}
+            className={[classes.navItem, classes.nonUserNavItem].join(" ")}
             href="https://www.ntnu.no/studier/mtiot"
             target="_blank"
             rel="noreferrer noopener"
