@@ -113,7 +113,7 @@ const Navbar: React.FC = () => {
               </Box>
               <div className={classes.sectionDesktop}>
                 <NavbarLinks loggedIn={loggedIn} />
-                <NavbarUser loggedIn={loggedIn} username={loggedIn ? data?.user?.firstName ?? "" : undefined} />
+                <NavbarUser loggedIn={loggedIn} username={loggedIn ? data?.user?.firstName : undefined} />
               </div>
               <div className={classes.sectionMobile}>
                 <IconButton onClick={() => setOpenDrawer(true)} edge="start" color="inherit" aria-label="menu">
@@ -131,7 +131,7 @@ const Navbar: React.FC = () => {
         open={openDrawer}
         onClose={() => setOpenDrawer(false)}
       >
-        <NavbarUser loggedIn={loggedIn} username={loggedIn ? data?.user?.firstName ?? "" : undefined} />
+        <NavbarUser loggedIn={loggedIn} username={loggedIn ? data?.user?.firstName : undefined} />
         <NavbarLinks loggedIn={loggedIn} />
       </Drawer>
     </div>
