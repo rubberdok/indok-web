@@ -10,17 +10,17 @@ type Props = {
 const NavbarLinks: React.VFC<Props> = ({ loggedIn }) => {
   return (
     <>
-      {links.map(
-        (link) =>
-          (!link.loginRequired || loggedIn) &&
-          (link.permissionRequired ? (
+      {links
+        .filter((link) => !link.loginRequired || loggedIn)
+        .map((link) =>
+          link.permissionRequired ? (
             <PermissionRequired permission={link.permissionRequired}>
               <NavbarItem link={link} />
             </PermissionRequired>
           ) : (
             <NavbarItem link={link} />
-          ))
-      )}
+          )
+        )}
     </>
   );
 };
