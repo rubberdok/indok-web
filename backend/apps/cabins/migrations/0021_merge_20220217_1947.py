@@ -6,9 +6,8 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cabins', '0019_alter_booking_options'),
-        ('cabins', '0020_auto_20211111_1825'),
+        ("cabins", "0019_alter_booking_options"),
+        ("cabins", "0020_auto_20211111_1825"),
     ]
 
-    operations = [
-    ]
+    operations = []
