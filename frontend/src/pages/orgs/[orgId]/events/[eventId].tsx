@@ -42,7 +42,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-interface HeaderValuePair<T> {
+type HeaderValuePair<T> {
   header: string;
   field: keyof T;
 }
