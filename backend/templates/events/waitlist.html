@@ -36,14 +36,15 @@
       {% load static %}
 
       <h2>Hei {{ first_name }} {{last_name}}!</h2>
-      <p>
-        Du har blitt flyttet opp fra ventelisten, og har nå plass på
-        arrangementet:
+      <strong
+        ><p>
+          Du har nå fått plass på arrangementet
 
-        <a href="www.indøkntnu.no/events/{{ event_id }}"
-          ><strong>{{ event_title }}</strong></a
-        >
-      </p>
+          <a href="www.indøkntnu.no/events/{{ event_id }}"
+            ><strong>{{ event_title }}</strong></a
+          >
+        </p></strong
+      >
       <h2>Informasjon</h2>
       <p>
         <strong>Tid:</strong> {{ start_time }} <br />
