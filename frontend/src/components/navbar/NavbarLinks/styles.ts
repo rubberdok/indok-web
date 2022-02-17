@@ -32,8 +32,10 @@ export const useStyles = makeStyles((theme) => ({
     },
   },
   nonUserNavItem: {
-    paddingTop: theme.spacing(1.5),
-    paddingBottom: theme.spacing(1.5),
+    [theme.breakpoints.down(breakpoint)]: {
+      paddingTop: theme.spacing(1.5),
+      paddingBottom: theme.spacing(1.5),
+    },
 
     "&:hover, &.active": {
       color: "#fff",
