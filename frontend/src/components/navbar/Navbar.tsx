@@ -90,12 +90,7 @@ const Navbar: React.FC = () => {
   const [openDrawer, setOpenDrawer] = useState(false);
 
   const { error, loading, data: userData } = useQuery<{ user: User }>(GET_USER);
-
-  const [loggedIn, setLoggedIn] = useState<boolean>(false);
-
-  useEffect(() => {
-    setLoggedIn(!error && !loading && userData?.user?.firstName !== undefined);
-  }, [error, loading, userData]);
+  const loggedIn = !error && !loading && userData?.user?.firstName !== undefined;
 
   return (
     <div className={classes.root}>
