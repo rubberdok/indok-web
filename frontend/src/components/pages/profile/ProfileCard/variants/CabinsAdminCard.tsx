@@ -5,7 +5,7 @@ import ProfileCardBase from "./ProfileCardBase";
 const CabinsAdminCard: React.VFC = ({ ...props }) => {
   return (
     <ProfileCardBase
-      title="Admin-sider"
+      title="Hytte-admin"
       actionText="Administrer indøkhyttene"
       actionLink="/cabins/admin"
       image={Cabin}
