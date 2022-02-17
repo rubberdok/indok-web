@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
 Page for booking admininistration showing all upcoming bookings and buttons for actions on these bookings.
 */
 const AdminPage: NextPage = () => {
-  const { data } = useQuery<{
+  const { data, refetch } = useQuery<{
     adminAllBookings: BookingFromQuery[];
   }>(QUERY_ADMIN_ALL_BOOKINGS, { variables: { after: dayjs().subtract(1, "day").format("YYYY-MM-DD") } });
   const [confirmBooking] = useMutation(CONFIRM_BOOKING, {
@@ -64,28 +64,8 @@ const AdminPage: NextPage = () => {
 
   const handleDeleteBookingOnClose = () => setBookingToBeDeleted(undefined);
 
-  const confirmBookingCompleted = (booking: BookingFromQuery) => {
-    setSnackbarMessage(`Booking bekreftet. Bekreftelsesmail sendt er sendt til ${booking?.receiverEmail}.`);
-    setOpenSnackbar(true);
-    sendEmail(getDecisionEmailProps(booking, true));
-  };
-
-  const deleteBookingCompleted = (declineMessage: string) => {
-    handleDeleteBookingOnClose();
-    setSnackbarMessage("Bookingen ble slettet.");
-    setOpenSnackbar(true);
-
-    if (bookingToBeDeleted) {
-      sendEmail(getDecisionEmailProps(bookingToBeDeleted, false, declineMessage));
-    }
-  };
-
   const DeleteBookingDialog: React.VFC = () => {
-    const [deleteBooking] = useMutation(DELETE_BOOKING, {
-      awaitRefetchQueries: true,
-      refetchQueries: [{ query: QUERY_ADMIN_ALL_BOOKINGS }],
-      onCompleted: () => deleteBookingCompleted(declineMessage),
-    });
+    const [deleteBooking] = useMutation(DELETE_BOOKING, { refetchQueries: [{ query: QUERY_ADMIN_ALL_BOOKINGS }] });
     const [declineMessage, setDeclineMessage] = useState("");
 
     return (
@@ -113,10 +93,14 @@ const AdminPage: NextPage = () => {
           <Button
             onClick={() => {
               if (bookingToBeDeleted) {
-                deleteBooking({
-                  variables: { id: bookingToBeDeleted.id },
+                deleteBooking({ variables: { id: bookingToBeDeleted.id } }).then(() => {
+                  setSnackbarMessage("Bookingen ble slettet.");
+                  setOpenSnackbar(true);
+                  refetch();
                 });
+                sendEmail(getDecisionEmailProps(bookingToBeDeleted, false, declineMessage));
               }
+              handleDeleteBookingOnClose();
             }}
             color="primary"
             variant="contained"
@@ -150,7 +134,7 @@ const AdminPage: NextPage = () => {
           </Grid>
           <Box className={classes.root} marginBottom={5}>
             <TableContainer component={Paper}>
-              <Table size="small">
+              <Table size="medium">
                 <TableHead>
                   <TableRow>
                     <TableCell>Navn</TableCell>
@@ -175,14 +159,18 @@ const AdminPage: NextPage = () => {
                       <TableCell>{booking.isTentative ? "Ikke godkjent" : "Godkjent"}</TableCell>
                       <TableCell>
                         <Tooltip title="Godkjenn">
-                          <Box display="inline" component="span">
+                          <Box display="inline">
                             <IconButton
                               disabled={!booking.isTentative}
                               onClick={() => {
-                                confirmBooking({
-                                  variables: { id: booking.id },
-                                  onCompleted: () => confirmBookingCompleted(booking),
+                                confirmBooking({ variables: { id: booking.id } }).then(() => {
+                                  setSnackbarMessage(
+                                    `Booking bekreftet. Bekreftelsesmail sendt er sendt til ${booking.receiverEmail}.`
+                                  );
+                                  setOpenSnackbar(true);
+                                  refetch();
                                 });
+                                sendEmail(getDecisionEmailProps(booking, true));
                               }}
                               color="secondary"
                             >
@@ -191,7 +179,7 @@ const AdminPage: NextPage = () => {
                           </Box>
                         </Tooltip>
                         <Tooltip title="Avkreft">
-                          <Box color={theme.palette.error.main} display="inline" component="span">
+                          <Box color={theme.palette.error.main} display="inline">
                             <IconButton
                               disabled={!booking.isTentative}
                               onClick={() => setBookingToBeDeleted(booking)}
