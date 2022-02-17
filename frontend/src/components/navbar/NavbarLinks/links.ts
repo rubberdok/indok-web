@@ -3,7 +3,7 @@ export type NavbarLink = {
   id: number;
   title: string;
   href: string;
-  dropdown?: NavbarLink[];
+  dropdown?: Omit<NavbarLink, "dropdown">[];
   loginRequired?: boolean;
 
   /** Backend permission that the user must have to see this link in the navbar. */
