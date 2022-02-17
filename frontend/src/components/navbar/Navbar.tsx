@@ -89,8 +89,8 @@ const Navbar: React.FC = () => {
 
   const [openDrawer, setOpenDrawer] = useState(false);
 
-  const { error, loading, data: userData } = useQuery<{ user: User }>(GET_USER);
-  const loggedIn = !error && !loading && userData?.user?.firstName !== undefined;
+  const { error, loading, data } = useQuery<{ user: User | null }>(GET_USER);
+  const loggedIn = !error && !loading && data?.user?.firstName !== undefined;
 
   return (
     <div className={classes.root}>
@@ -113,7 +113,7 @@ const Navbar: React.FC = () => {
               </Box>
               <div className={classes.sectionDesktop}>
                 <NavbarLinks loggedIn={loggedIn} />
-                <NavbarUser loggedIn={loggedIn} username={loggedIn ? userData?.user?.firstName ?? "" : undefined} />
+                <NavbarUser loggedIn={loggedIn} username={loggedIn ? data?.user?.firstName ?? "" : undefined} />
               </div>
               <div className={classes.sectionMobile}>
                 <IconButton onClick={() => setOpenDrawer(true)} edge="start" color="inherit" aria-label="menu">
@@ -131,7 +131,7 @@ const Navbar: React.FC = () => {
         open={openDrawer}
         onClose={() => setOpenDrawer(false)}
       >
-        <NavbarUser loggedIn={loggedIn} username={loggedIn ? userData?.user?.firstName ?? "" : undefined} />
+        <NavbarUser loggedIn={loggedIn} username={loggedIn ? data?.user?.firstName ?? "" : undefined} />
         <NavbarLinks loggedIn={loggedIn} />
       </Drawer>
     </div>
