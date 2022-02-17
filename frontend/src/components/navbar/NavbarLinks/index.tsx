@@ -25,7 +25,7 @@ const NavbarLinks: React.VFC<Props> = ({ loggedIn }) => {
               {item.title}
             </a>
           </Link>
-          {item.dropdown ? (
+          {item.dropdown && (
             <div className={classes.dropdown}>
               {item.dropdown.map((dropItem) => (
                 <Link key={dropItem.title} href={dropItem.href}>
@@ -35,8 +35,6 @@ const NavbarLinks: React.VFC<Props> = ({ loggedIn }) => {
                 </Link>
               ))}
             </div>
-          ) : (
-            ""
           )}
         </div>
       ))}
