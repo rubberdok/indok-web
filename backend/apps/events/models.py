@@ -63,7 +63,7 @@ class Event(models.Model, Sellable):
     products = GenericRelation("ecommerce.Product")
 
     @property
-    def signed_up_users(self) -> models.QuerySet[User]:
+    def signed_up_users(self) -> models.QuerySet["User"]:
         return (
             get_user_model()
             .objects.filter(signup__event=self.id, signup__is_attending=True)
