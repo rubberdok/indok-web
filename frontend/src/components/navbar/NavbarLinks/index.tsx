@@ -39,6 +39,14 @@ const NavbarLinks: React.VFC<Props> = ({ loggedIn }) => {
         </div>
       ))}
       {loggedIn ? (
+        <PermissionRequired permission="archive.view_archivedocument">
+          <Box position="relative">
+            <Link href="/archive">
+              <a className={[router.pathname == "/archive" ? "active" : "", classes.navItem].join(" ")}>Arkiv</a>
+            </Link>
+          </Box>
+        </PermissionRequired>
+      ) : (
         <Box position="relative">
           <a
             className={classes.navItem}
@@ -49,14 +57,6 @@ const NavbarLinks: React.VFC<Props> = ({ loggedIn }) => {
             Om studiet
           </a>
         </Box>
-      ) : (
-        <PermissionRequired permission="archive.view_archivedocument">
-          <Box position="relative">
-            <Link href="/archive">
-              <a className={[router.pathname == "/archive" ? "active" : "", classes.navItem].join(" ")}>Arkiv</a>
-            </Link>
-          </Box>
-        </PermissionRequired>
       )}
     </>
   );
