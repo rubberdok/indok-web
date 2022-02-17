@@ -24,7 +24,7 @@ import { User } from "@interfaces/users";
 import NavbarUser from "./NavbarLinks/NavbarUser";
 
 //set navbar style breakpoint, should be adjusted according to width of NavbarLinks
-export const breakpoint = 1315;
+export const breakpoint = 1150;
 
 const useStyles = makeStyles((theme) => ({
   root: {
