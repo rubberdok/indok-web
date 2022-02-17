@@ -32,10 +32,11 @@ import { getDecisionEmailProps, toStringChosenCabins } from "@utils/cabins";
 import dayjs from "dayjs";
 import { NextPage } from "next";
 import { CONFIRM_BOOKING, DELETE_BOOKING, SEND_EMAIL } from "@graphql/cabins/mutations";
-import { useState } from "react";
+import React, { useState } from "react";
 import theme from "@styles/theme";
-import { Booking, BookingFromQuery } from "@interfaces/cabins";
+import { BookingFromQuery } from "@interfaces/cabins";
 import PermissionRequired from "@components/permissions/PermissionRequired";
+import Alert from "@material-ui/lab/Alert";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -49,11 +50,13 @@ const useStyles = makeStyles((theme) => ({
 Page for booking admininistration showing all upcoming bookings and buttons for actions on these bookings.
 */
 const AdminPage: NextPage = () => {
-  const { data, refetch } = useQuery<{
+  const { data } = useQuery<{
     adminAllBookings: BookingFromQuery[];
   }>(QUERY_ADMIN_ALL_BOOKINGS, { variables: { after: dayjs().subtract(1, "day").format("YYYY-MM-DD") } });
-  const [confirmBooking] = useMutation(CONFIRM_BOOKING, { refetchQueries: [{ query: QUERY_ADMIN_ALL_BOOKINGS }] });
-  const [deleteBooking] = useMutation(DELETE_BOOKING, { refetchQueries: [{ query: QUERY_ADMIN_ALL_BOOKINGS }] });
+  const [confirmBooking] = useMutation(CONFIRM_BOOKING, {
+    refetchQueries: [{ query: QUERY_ADMIN_ALL_BOOKINGS }],
+    awaitRefetchQueries: true,
+  });
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [bookingToBeDeleted, setBookingToBeDeleted] = useState<BookingFromQuery | undefined>();
@@ -68,9 +71,9 @@ const AdminPage: NextPage = () => {
   };
 
   const deleteBookingCompleted = (declineMessage: string) => {
-    setSnackbarMessage("Bookingen ble slettet");
-    setOpenSnackbar(true);
     handleDeleteBookingOnClose();
+    setSnackbarMessage("Bookingen ble slettet.");
+    setOpenSnackbar(true);
 
     if (bookingToBeDeleted) {
       sendEmail(getDecisionEmailProps(bookingToBeDeleted, false, declineMessage));
@@ -78,6 +81,11 @@ const AdminPage: NextPage = () => {
   };
 
   const DeleteBookingDialog: React.VFC = () => {
+    const [deleteBooking] = useMutation(DELETE_BOOKING, {
+      awaitRefetchQueries: true,
+      refetchQueries: [{ query: QUERY_ADMIN_ALL_BOOKINGS }],
+      onCompleted: () => deleteBookingCompleted(declineMessage),
+    });
     const [declineMessage, setDeclineMessage] = useState("");
 
     return (
@@ -107,7 +115,6 @@ const AdminPage: NextPage = () => {
               if (bookingToBeDeleted) {
                 deleteBooking({
                   variables: { id: bookingToBeDeleted.id },
-                  onCompleted: () => deleteBookingCompleted(declineMessage),
                 });
               }
             }}
@@ -128,12 +135,9 @@ const AdminPage: NextPage = () => {
     <Layout>
       <Container>
         <PermissionRequired permission="cabins.manage_booking">
-          <Snackbar
-            open={openSnackbar}
-            message={snackbarMessage}
-            autoHideDuration={6000}
-            onClose={() => setOpenSnackbar(false)}
-          />
+          <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={() => setOpenSnackbar(false)}>
+            <Alert severity="success">{snackbarMessage}</Alert>
+          </Snackbar>
           <DeleteBookingDialog />
           <Grid container direction="column" spacing={3}>
             <Grid item>
