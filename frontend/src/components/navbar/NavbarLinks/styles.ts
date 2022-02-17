@@ -26,7 +26,9 @@ export const useStyles = makeStyles((theme) => ({
       textDecoration: "none",
 
       [theme.breakpoints.down(breakpoint)]: {
-        color: theme.palette.primary.main,
+        "&:not($user)": {
+          color: theme.palette.primary.main,
+        },
       },
     },
 
