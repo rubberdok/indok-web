@@ -20,7 +20,11 @@ const NavbarLinks: React.VFC<Props> = ({ loggedIn }) => {
         <div key={item.id} className={classes.nav}>
           <Link href={item.href}>
             <a
-              className={[item.href == "/" + router.pathname.split("/")[1] ? "active" : "", classes.navItem].join(" ")}
+              className={[
+                item.href == "/" + router.pathname.split("/")[1] ? "active" : "",
+                classes.navItem,
+                classes.nonUserNavItem,
+              ].join(" ")}
             >
               {item.title}
             </a>
@@ -29,7 +33,13 @@ const NavbarLinks: React.VFC<Props> = ({ loggedIn }) => {
             <div className={classes.dropdown}>
               {item.dropdown.map((dropItem) => (
                 <Link key={dropItem.title} href={dropItem.href}>
-                  <a className={[router.pathname == dropItem.href ? "active" : "", classes.navItem].join(" ")}>
+                  <a
+                    className={[
+                      router.pathname == dropItem.href ? "active" : "",
+                      classes.navItem,
+                      classes.nonUserNavItem,
+                    ].join(" ")}
+                  >
                     {dropItem.title}
                   </a>
                 </Link>
@@ -42,7 +52,15 @@ const NavbarLinks: React.VFC<Props> = ({ loggedIn }) => {
         <PermissionRequired permission="archive.view_archivedocument">
           <Box position="relative">
             <Link href="/archive">
-              <a className={[router.pathname == "/archive" ? "active" : "", classes.navItem].join(" ")}>Arkiv</a>
+              <a
+                className={[
+                  router.pathname == "/archive" ? "active" : "",
+                  classes.navItem,
+                  classes.nonUserNavItem,
+                ].join(" ")}
+              >
+                Arkiv
+              </a>
             </Link>
           </Box>
         </PermissionRequired>
