@@ -34,7 +34,7 @@ import { NextPage } from "next";
 import { CONFIRM_BOOKING, DELETE_BOOKING, SEND_EMAIL } from "@graphql/cabins/mutations";
 import { useState } from "react";
 import theme from "@styles/theme";
-import { BookingFromQuery } from "@interfaces/cabins";
+import { Booking, BookingFromQuery } from "@interfaces/cabins";
 import PermissionRequired from "@components/permissions/PermissionRequired";
 
 const useStyles = makeStyles((theme) => ({
@@ -57,9 +57,25 @@ const AdminPage: NextPage = () => {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [bookingToBeDeleted, setBookingToBeDeleted] = useState<BookingFromQuery | undefined>();
-  const [send_email] = useMutation(SEND_EMAIL);
+  const [sendEmail] = useMutation(SEND_EMAIL);
 
   const handleDeleteBookingOnClose = () => setBookingToBeDeleted(undefined);
+
+  const confirmBookingCompleted = (booking: BookingFromQuery) => {
+    setSnackbarMessage(`Booking bekreftet. Bekreftelsesmail sendt er sendt til ${booking?.receiverEmail}.`);
+    setOpenSnackbar(true);
+    sendEmail(getDecisionEmailProps(booking, true));
+  };
+
+  const deleteBookingCompleted = (declineMessage: string) => {
+    setSnackbarMessage("Bookingen ble slettet");
+    setOpenSnackbar(true);
+    handleDeleteBookingOnClose();
+
+    if (bookingToBeDeleted) {
+      sendEmail(getDecisionEmailProps(bookingToBeDeleted, false, declineMessage));
+    }
+  };
 
   const DeleteBookingDialog: React.VFC = () => {
     const [declineMessage, setDeclineMessage] = useState("");
@@ -89,14 +105,11 @@ const AdminPage: NextPage = () => {
           <Button
             onClick={() => {
               if (bookingToBeDeleted) {
-                deleteBooking({ variables: { id: bookingToBeDeleted.id } }).then(() => {
-                  setSnackbarMessage("Bookingen ble slettet");
-                  setOpenSnackbar(true);
-                  refetch();
+                deleteBooking({
+                  variables: { id: bookingToBeDeleted.id },
+                  onCompleted: () => deleteBookingCompleted(declineMessage),
                 });
-                send_email(getDecisionEmailProps(bookingToBeDeleted, false, declineMessage));
               }
-              handleDeleteBookingOnClose();
             }}
             color="primary"
             variant="contained"
@@ -162,14 +175,10 @@ const AdminPage: NextPage = () => {
                             <IconButton
                               disabled={!booking.isTentative}
                               onClick={() => {
-                                confirmBooking({ variables: { id: booking.id } }).then(() => {
-                                  setSnackbarMessage(
-                                    `Booking bekreftet. Bekreftelsesmail sendt er sendt til ${booking.receiverEmail}.`
-                                  );
-                                  setOpenSnackbar(true);
-                                  refetch();
+                                confirmBooking({
+                                  variables: { id: booking.id },
+                                  onCompleted: () => confirmBookingCompleted(booking),
                                 });
-                                send_email(getDecisionEmailProps(booking, true));
                               }}
                               color="secondary"
                             >
