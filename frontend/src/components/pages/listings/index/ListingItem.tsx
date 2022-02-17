@@ -122,7 +122,7 @@ const ListingItem: React.FC<{
             <img
               src={listing.organization?.logoUrl || "/nth.svg"}
               className={classes.logo}
-              alt="Organisasjonslogo"
+              alt="Foreningslogo"
               onError={(e) => (
                 ((e.target as HTMLImageElement).onerror = null), ((e.target as HTMLImageElement).src = "/nth.svg")
               )}

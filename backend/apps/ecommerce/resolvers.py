@@ -27,3 +27,8 @@ class EcommerceResolvers:
     @login_required
     def resolve_user_orders(self, info):
         return Order.objects.filter(user=info.context.user)
+
+    @staff_member_required
+    def resolve_orders_by_status(self, info, product_id, status):
+        orders = Order.objects.filter(product_id=product_id, payment_status=status)
+        return {"length": len(orders), "orders": orders}

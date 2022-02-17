@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@apollo/client";
-import SalesTermsDialog from "@components/pages/ecommerce/SalesTermsDialog";
 import Layout from "@components/Layout";
+import SalesTermsDialog from "@components/pages/ecommerce/SalesTermsDialog";
 import { ATTEMPT_CAPTURE_PAYMENT } from "@graphql/ecommerce/mutations";
 import { GET_USER } from "@graphql/users/queries";
 import { Order, PaymentStatus } from "@interfaces/ecommerce";
@@ -26,8 +26,10 @@ import {
 } from "@material-ui/core";
 import { KeyboardArrowLeft } from "@material-ui/icons";
 import { Alert } from "@material-ui/lab";
+import savings from "@public/illustrations/Savings.svg";
 import dayjs from "dayjs";
 import { NextPage } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
@@ -108,7 +110,17 @@ const FallbackPage: NextPage = () => {
                   </>
                 ) : paymentStatus === "RESERVED" || loading ? (
                   <>
-                    <Typography variant="h3">Behandler...</Typography> <CircularProgress />
+                    <Grid container item direction="column" spacing={4} alignItems="center">
+                      <Grid item>
+                        <Typography variant="h3">Behandler... Vennligst ikke forlat siden</Typography>
+                      </Grid>
+                      <Grid item>
+                        <CircularProgress />
+                      </Grid>
+                      <Grid item xs={6}>
+                        <Image src={savings} />
+                      </Grid>
+                    </Grid>
                   </>
                 ) : paymentStatus === "CAPTURED" && order ? (
                   <>

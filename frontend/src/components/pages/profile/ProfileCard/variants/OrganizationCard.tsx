@@ -5,8 +5,8 @@ import ProfileCardBase from "./ProfileCardBase";
 const OrganizationCard: React.VFC = ({ ...props }) => {
   return (
     <ProfileCardBase
-      title="Organisasjoner"
-      actionText="Se organisasjoner"
+      title="Foreninger"
+      actionText="Se foreninger"
       actionLink="/orgs"
       image={Organization}
       alt=""
@@ -14,7 +14,7 @@ const OrganizationCard: React.VFC = ({ ...props }) => {
     >
       <Grid container direction="column">
         <Grid item>
-          <Typography variant="body2">Her kan du se en oversikt over alle organisasjoner der du er medlem.</Typography>
+          <Typography variant="body2">Her kan du se en oversikt over alle foreninger der du er medlem.</Typography>
         </Grid>
       </Grid>
     </ProfileCardBase>

@@ -87,8 +87,6 @@ const EventAdminPage: NextPage = () => {
     return <CircularProgress />;
   }
 
-  data && data.event.product && signUpFields.push({ header: "Betalt?", field: "hasBoughtTicket" });
-
   const renderInfo = (label: string, value: string | boolean) => {
     if (value === "") {
       return;
@@ -181,7 +179,7 @@ const EventAdminPage: NextPage = () => {
                     <AttendeeExport eventId={eventNumberID} />
                   </CardActions>
                   <CardContent>
-                    {data?.event?.usersAttending?.length !== 0 ? (
+                    {data.event?.usersAttending?.length !== 0 ? (
                       <TableContainer style={{ maxHeight: 600 }}>
                         <Table>
                           <TableHead>
@@ -189,17 +187,23 @@ const EventAdminPage: NextPage = () => {
                               {signUpFields.map((field) => (
                                 <TableCell key={`user-header-${field.header}`}>{field.header}</TableCell>
                               ))}
+                              {data.event.product && <TableCell>Betalt?</TableCell>}
                               <TableCell key={`user-header-delete`} />
                             </TableRow>
                           </TableHead>
                           <TableBody>
-                            {data?.event?.usersAttending?.map((signUp: SignUp) => (
+                            {data.event?.usersAttending?.map((signUp: SignUp) => (
                               <TableRow key={`user-row-${signUp.user.id}`}>
                                 {signUpFields.map((field) => (
                                   <TableCell key={`user-${signUp.user.id}-cell--${field.field}`}>
                                     <CellContent signUp={signUp} field={field} />
                                   </TableCell>
                                 ))}
+                                {data.event.product && (
+                                  <TableCell>
+                                    {signUp.hasBoughtTicket ? <Check color="primary" /> : <Close color="error" />}
+                                  </TableCell>
+                                )}
                                 <TableCell>
                                   <Tooltip title="Fjern påmelding" arrow>
                                     {signOffLoading ? (
@@ -231,7 +235,7 @@ const EventAdminPage: NextPage = () => {
                 <Card variant="outlined">
                   <CardHeader title="Venteliste" />
                   <CardContent>
-                    {data?.event?.usersOnWaitingList?.length !== 0 ? (
+                    {data.event?.usersOnWaitingList?.length !== 0 ? (
                       <TableContainer style={{ maxHeight: 600 }}>
                         <Table>
                           <TableHead>
@@ -242,7 +246,7 @@ const EventAdminPage: NextPage = () => {
                             </TableRow>
                           </TableHead>
                           <TableBody>
-                            {data?.event?.usersOnWaitingList?.map((signUp: SignUp) => (
+                            {data.event?.usersOnWaitingList?.map((signUp: SignUp) => (
                               <TableRow key={`user-row-${signUp.user.id}`}>
                                 {signUpFields.map((field) => (
                                   <TableCell key={`user-${signUp.user.id}-cell--${field.field}`}>

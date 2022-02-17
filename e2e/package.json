@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "author": "Hovedstyrets webkomitè",
+  "author": "rubberdok",
   "license": "MIT",
   "scripts": {
     "test": "cypress open",
@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "github.com/hovedstyret/indok-web"
+    "url": "github.com/rubberdok/indok-web"
   },
   "dependencies": {
     "cypress": "^9.0.0",

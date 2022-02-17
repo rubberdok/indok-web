@@ -53,7 +53,8 @@ const BookingSemesterPicker: React.VFC = () => {
     const fallEnd = dayjs(bookingSemester.fallEndDate);
     const springStart = dayjs(bookingSemester.springStartDate);
     const springEnd = dayjs(bookingSemester.springEndDate);
-    if (fallStart.isAfter(fallEnd) || springStart.isAfter(springEnd) || fallEnd.isAfter(springStart)) {
+
+    if (fallStart.isAfter(fallEnd) || springStart.isAfter(springEnd)) {
       setSnackbarMessage("Start-datoer kan ikke vært før slutt-datoer.");
       setOpenSnackbar(true);
       setAlertSeverity("error");

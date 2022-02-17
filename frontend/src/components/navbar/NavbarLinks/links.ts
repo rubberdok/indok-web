@@ -1,43 +1,33 @@
 const links = [
   {
     id: 1,
-    title: "Hjem",
-    href: "/",
-  },
-  {
-    id: 2,
-    title: "Om Foreningen",
+    title: "Om oss",
     href: "/about",
     dropdown: [
       {
-        id: 2_1,
-        title: "Om oss",
-        href: "/about",
-      },
-      {
-        id: 2_2,
-        title: "Organisasjoner",
+        id: 1_1,
+        title: "Våre foreninger",
         href: "/about/organization",
       },
       {
-        id: 2_3,
+        id: 1_2,
         title: "Hovedstyret",
         href: "/about/board",
       },
     ],
   },
   {
-    id: 3,
+    id: 2,
     title: "Arrangementer",
     href: "/events",
   },
   {
-    id: 4,
+    id: 3,
     title: "Verv",
     href: "/listings",
   },
   {
-    id: 5,
+    id: 4,
     title: "Hyttebooking",
     href: "/cabins",
   },

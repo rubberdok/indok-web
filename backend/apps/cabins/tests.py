@@ -145,7 +145,7 @@ class CabinsResolversTestCase(CabinsBaseTestCase):
         self.assert_permission_error(response)
 
         # Try to make query with permission
-        self.add_booking_permission("view_booking")
+        self.add_booking_permission("manage_booking")
         response = self.query(query, user=self.user)
         self.assertResponseNoErrors(response)
         # Fetching content of response
@@ -280,7 +280,7 @@ class CabinsMutationsTestCase(CabinsBaseTestCase):
         self.assert_permission_error(response)
 
         # Change booking with change_booking permission
-        self.add_booking_permission("change_booking")
+        self.add_booking_permission("manage_booking")
         response = self.query(query, user=self.user)
 
         # Fetch updated booking
@@ -305,7 +305,7 @@ class CabinsMutationsTestCase(CabinsBaseTestCase):
             Booking.objects.get(pk=self.first_booking.id)
         except Booking.DoesNotExist:
             self.assertTrue(True, "The booking was deleted after unauthorized user tried to delete")
-        self.add_booking_permission("delete_booking")
+        self.add_booking_permission("manage_booking")
         response = self.query(query, user=self.user)
         self.assertResponseNoErrors(response)
         with self.assertRaises(Booking.DoesNotExist):
