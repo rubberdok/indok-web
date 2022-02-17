@@ -1,39 +1,39 @@
 import { useMutation, useQuery } from "@apollo/client";
 import Layout from "@components/Layout";
+import DeleteBookingDialog from "@components/pages/cabins/Admin/DeleteBookingDialog";
+import PermissionRequired from "@components/permissions/PermissionRequired";
+import { CONFIRM_BOOKING, SEND_EMAIL } from "@graphql/cabins/mutations";
 import { QUERY_ADMIN_ALL_BOOKINGS } from "@graphql/cabins/queries";
+import { BookingFromQuery } from "@interfaces/cabins";
+import {
+  Box,
+  Button,
+  Container,
+  Grid,
+  IconButton,
+  makeStyles,
+  Paper,
+  Snackbar,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Tooltip,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@material-ui/core";
 import CheckIcon from "@material-ui/icons/Check";
 import ClearIcon from "@material-ui/icons/Clear";
 import SettingsIcon from "@material-ui/icons/Settings";
-import {
-  Typography,
-  Grid,
-  Box,
-  Paper,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
-  IconButton,
-  Snackbar,
-  Button,
-  Tooltip,
-  Container,
-  useMediaQuery,
-  makeStyles,
-  TableContainer,
-} from "@material-ui/core";
+import Alert from "@material-ui/lab/Alert";
 import { getDecisionEmailProps, toStringChosenCabins } from "@utils/cabins";
 import dayjs from "dayjs";
 import { NextPage } from "next";
-import PermissionRequired from "@components/permissions/PermissionRequired";
-import Alert from "@material-ui/lab/Alert";
-import { BookingFromQuery } from "@interfaces/cabins";
-import { CONFIRM_BOOKING, SEND_EMAIL } from "@graphql/cabins/mutations";
-import theme from "@styles/theme";
 import router from "next/router";
 import React, { useState } from "react";
-import DeleteBookingDialog from "@components/pages/cabins/Admin/DeleteBookingDialog";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -47,6 +47,7 @@ const useStyles = makeStyles((theme) => ({
 Page for booking admininistration showing all upcoming bookings and buttons for actions on these bookings.
 */
 const AdminPage: NextPage = () => {
+  const theme = useTheme();
   const { data, refetch } = useQuery<{
     adminAllBookings: BookingFromQuery[];
   }>(QUERY_ADMIN_ALL_BOOKINGS, { variables: { after: dayjs().subtract(1, "day").format("YYYY-MM-DD") } });

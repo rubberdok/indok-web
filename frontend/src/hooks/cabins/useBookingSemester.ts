@@ -26,8 +26,8 @@ const useBookingSemester = (): Output => {
         fallEndDate: fallEndDate,
         springStartDate: springStartDate,
         springEndDate: springEndDate,
-        fallSemesterActive: fallSemesterActive!,
-        springSemesterActive: springSemesterActive!,
+        fallSemesterActive: fallSemesterActive,
+        springSemesterActive: springSemesterActive,
       });
     }
   }, [data]);
