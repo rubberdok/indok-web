@@ -12,7 +12,7 @@ const NavbarLinks: React.VFC<Props> = ({ loggedIn }) => {
     <>
       {links.map(
         (link) =>
-          (!link.loginRequired || (link.loginRequired && loggedIn)) &&
+          (!link.loginRequired || loggedIn) &&
           (link.permissionRequired ? (
             <PermissionRequired permission={link.permissionRequired}>
               <NavbarItem link={link} />
