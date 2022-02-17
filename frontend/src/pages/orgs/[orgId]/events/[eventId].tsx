@@ -274,7 +274,7 @@ const EventAdminPage: NextPage = () => {
                         : `${data.event.slotDistribution[0].amount}`)
                       )}
                     </>
-                  ) : null}
+                  )}
                 </Grid>
               </Box>
             </AccordionDetails>
