@@ -254,7 +254,7 @@ const EventAdminPage: NextPage = () => {
                         : ""
                     )
                   )}
-                  {data?.event?.isAttendable ? (
+                  {data?.event?.isAttendable && (
                     <>
                       {renderInfo("Påmelding åpner", data.event.signupOpenDate
                             ? dateFormat(data.event.signupOpenDate)
