@@ -16,8 +16,12 @@ import rightFern from "@public/static/anniversary/right_fern.svg";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { ReactElement } from "react";
+import React, { ReactElement, useState } from "react";
 import NavbarLinks from "./NavbarLinks";
+import { useQuery } from "@apollo/client";
+import { GET_USER } from "@graphql/users/queries";
+import { User } from "@interfaces/users";
+import NavbarUser from "./NavbarLinks/NavbarUser";
 
 //set navbar style breakpoint, should be adjusted according to width of NavbarLinks
 export const breakpoint = 1315;
@@ -32,10 +36,6 @@ const useStyles = makeStyles((theme) => ({
     backgroundPosition: "bottom",
   },
   drawer: {
-    [theme.breakpoints.down(breakpoint)]: {
-      flexDirection: "column-reverse",
-      justifyContent: "flex-end",
-    },
     width: 250,
   },
   title: {
@@ -87,7 +87,10 @@ const Navbar: React.FC = () => {
   const classes = useStyles();
   const router = useRouter();
 
-  const [openDrawer, setOpenDrawer] = React.useState(false);
+  const [openDrawer, setOpenDrawer] = useState(false);
+
+  const { error, loading, data } = useQuery<{ user: User | null }>(GET_USER);
+  const loggedIn = !error && !loading && data?.user?.firstName !== undefined;
 
   return (
     <div className={classes.root}>
@@ -109,7 +112,8 @@ const Navbar: React.FC = () => {
                 </Box>
               </Box>
               <div className={classes.sectionDesktop}>
-                <NavbarLinks></NavbarLinks>
+                <NavbarLinks loggedIn={loggedIn} />
+                <NavbarUser loggedIn={loggedIn} username={data?.user?.firstName} />
               </div>
               <div className={classes.sectionMobile}>
                 <IconButton onClick={() => setOpenDrawer(true)} edge="start" color="inherit" aria-label="menu">
@@ -127,7 +131,8 @@ const Navbar: React.FC = () => {
         open={openDrawer}
         onClose={() => setOpenDrawer(false)}
       >
-        <NavbarLinks />
+        <NavbarUser loggedIn={loggedIn} username={data?.user?.firstName} />
+        <NavbarLinks loggedIn={loggedIn} />
       </Drawer>
     </div>
   );
