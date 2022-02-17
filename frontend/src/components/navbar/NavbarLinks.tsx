@@ -1,15 +1,10 @@
-import { useQuery } from "@apollo/client";
-import PermissionRequired from "@components/permissions/PermissionRequired";
-import { GET_USER } from "@graphql/users/queries";
-import { User } from "@interfaces/users";
-import { Box, Button, makeStyles, Menu, MenuItem } from "@material-ui/core";
-import { AccountCircleOutlined, LockOpen } from "@material-ui/icons";
-import { generateFeideLoginUrl } from "@utils/auth";
+import { makeStyles, Box } from "@material-ui/core";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 import links from "./links";
 import { breakpoint } from "./Navbar";
+import PermissionRequired from "@components/permissions/PermissionRequired";
 
 const useStyles = makeStyles((theme) => ({
   nav: {
@@ -76,7 +71,7 @@ const useStyles = makeStyles((theme) => ({
 
   dropdown: {
     display: "none",
-    width: "100%",
+    whiteSpace: "nowrap",
     background: "#022a2a",
     position: "absolute",
     paddingTop: 16,
@@ -90,27 +85,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-let username: string | null = null;
+type Props = {
+  loggedIn: boolean;
+};
 
-const NavbarLinks: React.FC = () => {
+const NavbarLinks: React.VFC<Props> = ({ loggedIn }) => {
   const classes = useStyles();
   const router = useRouter();
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
-
-  const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const signInURL = generateFeideLoginUrl();
-
-  const { error, data: userData } = useQuery<{ user: User }>(GET_USER);
-
-  username = userData?.user ? userData.user.firstName : username;
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
 
   return (
     <>
@@ -138,75 +119,25 @@ const NavbarLinks: React.FC = () => {
           )}
         </div>
       ))}
-      {!username || error ? (
-        <>
-          <Box position="relative">
-            <a
-              className={classes.navItem}
-              href="https://www.ntnu.no/studier/mtiot"
-              target="_blank"
-              rel="noreferrer noopener"
-            >
-              Om studiet
-            </a>
-          </Box>
-          <Link href={signInURL} passHref>
-            <Button
-              className={[classes.navItem, classes.user].join(" ")}
-              startIcon={<LockOpen fontSize="small" />}
-              data-test-id="login"
-            >
-              Logg inn med Feide
-            </Button>
-          </Link>
-        </>
+      {loggedIn ? (
+        <Box position="relative">
+          <a
+            className={classes.navItem}
+            href="https://www.ntnu.no/studier/mtiot"
+            target="_blank"
+            rel="noreferrer noopener"
+          >
+            Om studiet
+          </a>
+        </Box>
       ) : (
-        <>
-          <PermissionRequired permission="archive.view_archivedocument">
-            <Box position="relative">
-              <Link href="/archive">
-                <a className={[router.pathname == "/archive" ? "active" : "", classes.navItem].join(" ")}>Arkiv</a>
-              </Link>
-            </Box>
-          </PermissionRequired>
-          <Button
-            className={[classes.navItem, classes.user].join(" ")}
-            aria-label="account of current user"
-            aria-controls="menu-appbar"
-            aria-haspopup="true"
-            onClick={handleMenu}
-            startIcon={<AccountCircleOutlined fontSize="small" />}
-          >
-            {username}
-          </Button>
-          <Menu
-            id="menu-appbar"
-            anchorEl={anchorEl}
-            anchorOrigin={{
-              vertical: "top",
-              horizontal: "center",
-            }}
-            keepMounted
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "center",
-            }}
-            open={open}
-            onClose={handleClose}
-            className={classes.menu}
-          >
-            <MenuItem onClick={handleClose}>
-              <Link href="/profile">
-                <a>Profil</a>
-              </Link>
-            </MenuItem>
-            <MenuItem onClick={handleClose}>
-              <Link href="/logout">
-                <a>Logg ut</a>
-              </Link>
-            </MenuItem>
-          </Menu>
-        </>
+        <PermissionRequired permission="archive.view_archivedocument">
+          <Box position="relative">
+            <Link href="/archive">
+              <a className={[router.pathname == "/archive" ? "active" : "", classes.navItem].join(" ")}>Arkiv</a>
+            </Link>
+          </Box>
+        </PermissionRequired>
       )}
     </>
   );

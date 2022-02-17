@@ -12,8 +12,12 @@ import {
 import MenuIcon from "@material-ui/icons/Menu";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { ReactElement } from "react";
+import React, { ReactElement, useState, useEffect } from "react";
 import NavbarLinks from "./NavbarLinks";
+import { useQuery } from "@apollo/client";
+import { GET_USER } from "@graphql/users/queries";
+import { User } from "@interfaces/users";
+import NavbarUser from "./NavbarUser";
 
 //set navbar style breakpoint, should be adjusted according to width of NavbarLinks
 export const breakpoint = 1216;
@@ -26,10 +30,7 @@ const useStyles = makeStyles((theme) => ({
     background: "#022A2A",
   },
   drawer: {
-    [theme.breakpoints.down(breakpoint)]: {
-      flexDirection: "column-reverse",
-      justifyContent: "flex-end",
-    },
+    width: 250,
   },
   title: {
     flexGrow: 1,
@@ -77,7 +78,15 @@ const Navbar: React.FC = () => {
   const classes = useStyles();
   const router = useRouter();
 
-  const [openDrawer, setOpenDrawer] = React.useState(false);
+  const [openDrawer, setOpenDrawer] = useState(false);
+
+  const { error, loading, data: userData } = useQuery<{ user: User }>(GET_USER);
+
+  const [loggedIn, setLoggedIn] = useState<boolean>(false);
+
+  useEffect(() => {
+    setLoggedIn(!error && !loading && userData?.user?.firstName !== undefined);
+  }, [error, loading, userData]);
 
   return (
     <div className={classes.root}>
@@ -91,7 +100,8 @@ const Navbar: React.FC = () => {
                 </Typography>
               </Link>
               <div className={classes.sectionDesktop}>
-                <NavbarLinks></NavbarLinks>
+                <NavbarLinks loggedIn={loggedIn} />
+                <NavbarUser loggedIn={loggedIn} username={loggedIn ? userData?.user?.firstName ?? "" : undefined} />
               </div>
               <div className={classes.sectionMobile}>
                 <IconButton onClick={() => setOpenDrawer(true)} edge="start" color="inherit" aria-label="menu">
@@ -109,7 +119,8 @@ const Navbar: React.FC = () => {
         open={openDrawer}
         onClose={() => setOpenDrawer(false)}
       >
-        <NavbarLinks></NavbarLinks>
+        <NavbarUser loggedIn={loggedIn} username={loggedIn ? userData?.user?.firstName ?? "" : undefined} />
+        <NavbarLinks loggedIn={loggedIn} />
       </Drawer>
     </div>
   );
