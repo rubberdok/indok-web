@@ -68,7 +68,7 @@ export const useStyles = makeStyles((theme) => ({
 
   dropdown: {
     display: "none",
-    width: "100%",
+    whiteSpace: "nowrap",
     background: theme.palette.primary.dark,
     position: "absolute",
     paddingTop: 16,
