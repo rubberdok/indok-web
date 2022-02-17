@@ -158,7 +158,7 @@ const EventAdminPage: NextPage = () => {
             : "━"}
         </TableCell>
       ))}
-      {remove ? (<TableCell>
+      {remove && (<TableCell>
         <Tooltip title="Fjern påmelding" arrow>
           {signOffLoading ? (
             <CircularProgress />
@@ -168,7 +168,7 @@ const EventAdminPage: NextPage = () => {
             </IconButton>
           )}
         </Tooltip>
-      </TableCell>) : null}
+      </TableCell>)}
     </TableRow>
   }
 
@@ -223,7 +223,7 @@ const EventAdminPage: NextPage = () => {
 
   return (
     <Layout>
-      {data?.event ? (
+      {data?.event && (
         <Box m={10}>
           {openEditEvent && (
             <EditEvent open={openEditEvent} onClose={() => setOpenEditEvent(false)} event={data.event} />
@@ -295,7 +295,7 @@ const EventAdminPage: NextPage = () => {
             </>
           )}
         </Box>
-      ) : null}
+      )}
       {feedback(false)}
       {feedback(true)}
     </Layout>
