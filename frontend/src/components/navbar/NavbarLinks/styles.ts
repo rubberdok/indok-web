@@ -22,19 +22,18 @@ export const useStyles = makeStyles((theme) => ({
 
     "&:hover": {
       cursor: "pointer",
-      color: "#fff",
       textDecoration: "none",
-
+    },
+  },
+  nonUserNavItem: {
+    "&:hover": {
+      color: "#fff",
       [theme.breakpoints.down(breakpoint)]: {
-        "&:not($user)": {
-          color: theme.palette.primary.main,
-        },
+        color: theme.palette.primary.main,
       },
     },
-
     "&.active": {
       color: "#fff",
-
       [theme.breakpoints.down(breakpoint)]: {
         color: theme.palette.primary.main,
       },
