@@ -13,6 +13,7 @@ export const useStyles = makeStyles((theme) => ({
     ...theme.typography.overline,
     display: "flex",
     padding: "0 24px",
+    whiteSpace: "nowrap",
 
     [theme.breakpoints.down(breakpoint)]: {
       marginBottom: theme.spacing(3),
@@ -69,7 +70,6 @@ export const useStyles = makeStyles((theme) => ({
 
   dropdown: {
     display: "none",
-    whiteSpace: "nowrap",
     background: theme.palette.primary.dark,
     position: "absolute",
     paddingTop: 16,
