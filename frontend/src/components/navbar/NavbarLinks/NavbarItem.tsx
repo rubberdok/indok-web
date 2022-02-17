@@ -16,9 +16,9 @@ const NavbarItem: React.VFC<ItemProps> = ({ link }) => {
       <Link href={link.href}>
         <a
           className={[
-            link.href === "/" + router.pathname.split("/")[1] ? "active" : "",
             classes.navItem,
             classes.nonUserNavItem,
+            ...(link.href === "/" + router.pathname.split("/")[1] ? ["active"] : []),
           ].join(" ")}
         >
           {link.title}
@@ -30,9 +30,9 @@ const NavbarItem: React.VFC<ItemProps> = ({ link }) => {
             <Link key={dropItem.title} href={dropItem.href}>
               <a
                 className={[
-                  router.pathname === dropItem.href ? "active" : "",
                   classes.navItem,
                   classes.nonUserNavItem,
+                  ...(router.pathname === dropItem.href ? ["active"] : []),
                 ].join(" ")}
               >
                 {dropItem.title}
