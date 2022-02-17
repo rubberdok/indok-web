@@ -21,7 +21,7 @@ import NavbarLinks from "./NavbarLinks";
 import { useQuery } from "@apollo/client";
 import { GET_USER } from "@graphql/users/queries";
 import { User } from "@interfaces/users";
-import NavbarUser from "./NavbarUser";
+import NavbarUser from "./NavbarLinks/NavbarUser";
 
 //set navbar style breakpoint, should be adjusted according to width of NavbarLinks
 export const breakpoint = 1315;
