@@ -48,7 +48,7 @@ const NavbarUser: React.VFC<Props> = ({ loggedIn, username }) => {
             onClick={handleMenu}
             startIcon={<AccountCircleOutlined fontSize="small" />}
           >
-            {loggedIn ? username : ""}
+            {username}
           </Button>
           <Menu
             id="menu-appbar"
