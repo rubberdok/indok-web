@@ -294,7 +294,7 @@ const EventAdminPage: NextPage = () => {
                 </AccordionDetails>
               </Accordion>
             </>
-          ) : null}
+          )}
         </Box>
       ) : null}
       {feedback(false)}
