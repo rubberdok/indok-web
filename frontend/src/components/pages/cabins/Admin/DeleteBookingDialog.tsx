@@ -16,7 +16,7 @@ import { useState } from "react";
 
 type DialogProps = {
   bookingToBeDeleted?: BookingFromQuery;
-  setBookingToBeDeleted: any;
+  setBookingToBeDeleted: React.Dispatch<React.SetStateAction<BookingFromQuery | undefined>>;
   setOpenSnackbar: React.Dispatch<React.SetStateAction<boolean>>;
   setSnackbarMessage: React.Dispatch<React.SetStateAction<string>>;
   refetch: (
