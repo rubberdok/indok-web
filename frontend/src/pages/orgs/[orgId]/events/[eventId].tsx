@@ -279,7 +279,7 @@ const EventAdminPage: NextPage = () => {
               </Box>
             </AccordionDetails>
           </Accordion>
-          {data?.event?.isAttendable ? (
+          {data?.event?.isAttendable && (
             <>
               <Accordion>
                 {accordionHeader(["Påmeldte",<AttendeeExport eventId={eventNumberID} />, eventId ? <EmailForm eventId={eventId} /> : <CircularProgress color="primary" />])}
