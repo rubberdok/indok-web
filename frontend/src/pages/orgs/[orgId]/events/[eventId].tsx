@@ -223,8 +223,11 @@ const EventAdminPage: NextPage = () => {
 
   return (
     <Layout>
+      <Container>
       {data?.event ? (
         <Box m={10}>
+        ...
+      </Container>
           {openEditEvent && (
             <EditEvent open={openEditEvent} onClose={() => setOpenEditEvent(false)} event={data.event} />
           )}
