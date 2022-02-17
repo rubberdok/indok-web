@@ -21,6 +21,8 @@ const useStyles = makeStyles((theme) => ({
 
     [theme.breakpoints.down(breakpoint)]: {
       marginBottom: theme.spacing(3),
+      lineHeight: 2,
+      fontSize: "0.9rem",
     },
 
     "&:hover": {
@@ -71,8 +73,8 @@ const useStyles = makeStyles((theme) => ({
 
   dropdown: {
     display: "none",
-    whiteSpace: "nowrap",
-    background: "#022a2a",
+    width: "100%",
+    background: theme.palette.primary.dark,
     position: "absolute",
     paddingTop: 16,
     ["& $navItem"]: {

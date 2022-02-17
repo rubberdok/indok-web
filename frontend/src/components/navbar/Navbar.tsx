@@ -1,5 +1,6 @@
 import {
   AppBar,
+  Box,
   Container,
   Drawer,
   IconButton,
@@ -10,6 +11,9 @@ import {
   useScrollTrigger,
 } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
+import leftFern from "@public/static/anniversary/left_fern.svg";
+import rightFern from "@public/static/anniversary/right_fern.svg";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { ReactElement, useState, useEffect } from "react";
@@ -20,14 +24,16 @@ import { User } from "@interfaces/users";
 import NavbarUser from "./NavbarUser";
 
 //set navbar style breakpoint, should be adjusted according to width of NavbarLinks
-export const breakpoint = 1216;
+export const breakpoint = 1315;
 
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
   },
   appBar: {
-    background: "#022A2A",
+    background: theme.palette.primary.dark,
+    backgroundImage: "url('/static/anniversary/sparkles.gif')",
+    backgroundPosition: "bottom",
   },
   drawer: {
     width: 250,
@@ -35,11 +41,14 @@ const useStyles = makeStyles((theme) => ({
   title: {
     flexGrow: 1,
     margin: 0,
-    color: "#b0aca5",
+    display: "flex",
+    flexDirection: "row",
+  },
+  titleLink: {
+    color: "#eec643", //b0aca5
 
     "&:hover": {
-      cursor: "pointer",
-      color: "#fff",
+      color: "#ffd754",
     },
   },
   sectionDesktop: {
@@ -94,11 +103,19 @@ const Navbar: React.FC = () => {
         <AppBar color="primary" className={classes.appBar}>
           <Container className={classes.container}>
             <Toolbar>
-              <Link href="/">
-                <Typography variant="h5" className={classes.title}>
-                  INDØK
-                </Typography>
-              </Link>
+              <Box className={classes.title}>
+                <Box height="auto" width={38} position="relative">
+                  <Image src={leftFern} layout="fill" alt="" />
+                </Box>
+                <Link href="/" passHref>
+                  <Typography component="a" className={classes.titleLink} variant="h5">
+                    INDØK
+                  </Typography>
+                </Link>
+                <Box height="auto" width={38} position="relative">
+                  <Image src={rightFern} layout="fill" alt="" />
+                </Box>
+              </Box>
               <div className={classes.sectionDesktop}>
                 <NavbarLinks loggedIn={loggedIn} />
                 <NavbarUser loggedIn={loggedIn} username={loggedIn ? userData?.user?.firstName ?? "" : undefined} />
