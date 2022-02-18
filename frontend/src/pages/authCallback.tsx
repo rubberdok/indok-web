@@ -22,8 +22,21 @@ const AuthCallbackPage: NextPage = () => {
   const theme = useTheme();
 
   const { code, state } = router.query;
-  const [authUser, { loading, data, error, called }] = useMutation<{ authUser: AuthUser }>(AUTHENTICATE, {
+  const [authUser, { data, error }] = useMutation<{ authUser: AuthUser }>(AUTHENTICATE, {
     errorPolicy: "all",
+    onCompleted: (data) => {
+      if (data.authUser.user.firstLogin) {
+        router.push("/register");
+      } else if (state) {
+        if (Array.isArray(state)) {
+          router.push(state.join(""));
+        } else {
+          router.push(state);
+        }
+      } else {
+        router.push("/profile");
+      }
+    },
     update(cache, { data }) {
       cache.modify({
         fields: {
@@ -46,20 +59,6 @@ const AuthCallbackPage: NextPage = () => {
   }, [code, authUser]);
 
   const loadingProfile = !error && !data?.authUser?.user?.firstLogin && !state;
-
-  if (called && !loading && data && data.authUser) {
-    if (data.authUser.user.firstLogin) {
-      router.push("/register");
-    } else if (state) {
-      if (Array.isArray(state)) {
-        router.push(state.join(""));
-      } else {
-        router.push(state);
-      }
-    } else {
-      router.push("/profile");
-    }
-  }
 
   return (
     <Layout>
