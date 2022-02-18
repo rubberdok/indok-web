@@ -1,9 +1,40 @@
-import { Button, Menu, MenuItem } from "@material-ui/core";
+import { Button, Menu, MenuItem, makeStyles } from "@material-ui/core";
 import { AccountCircleOutlined, LockOpen } from "@material-ui/icons";
 import { generateFeideLoginUrl } from "@utils/auth";
 import Link from "next/link";
 import { useState } from "react";
-import { useStyles } from "./styles";
+import { breakpoint } from "../Navbar";
+import { useSharedStyles } from "./styles";
+
+const useStyles = makeStyles((theme) => ({
+  user: {
+    background: "#065A5A",
+    color: "white",
+
+    [theme.breakpoints.up(breakpoint)]: {
+      marginLeft: 16,
+      paddingLeft: 35,
+      paddingRight: "calc(5vw + 15px)",
+      marginRight: "calc(-15px - 5vw)",
+    },
+
+    [theme.breakpoints.down(breakpoint)]: {
+      height: theme.spacing(10),
+      marginBottom: theme.spacing(1.5),
+    },
+
+    ["&:hover"]: {
+      background: "#0b6666",
+    },
+  },
+  menu: {
+    width: 400,
+
+    "& li": {
+      margin: 0,
+    },
+  },
+}));
 
 type Props = {
   loggedIn: boolean;
@@ -11,7 +42,7 @@ type Props = {
 };
 
 const NavbarUser: React.VFC<Props> = ({ loggedIn, username }) => {
-  const classes = useStyles();
+  const classes = { ...useSharedStyles(), ...useStyles() };
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
