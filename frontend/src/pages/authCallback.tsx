@@ -1,8 +1,8 @@
 import { useMutation } from "@apollo/client";
 import Layout from "@components/Layout";
 import ProfileSkeleton from "@components/pages/profile/ProfileSkeleton";
-import { USER_FRAMGENT } from "@graphql/users/fragments";
 import { AUTHENTICATE } from "@graphql/users/mutations";
+import { GET_USER_INFO } from "@graphql/users/queries";
 import { User } from "@interfaces/users";
 import { Button, Container, Grid, Typography, useTheme } from "@material-ui/core";
 import { NextPage } from "next";
@@ -43,9 +43,9 @@ const AuthCallbackPage: NextPage = () => {
           user() {
             if (data?.authUser) {
               const { user } = data.authUser;
-              return cache.writeFragment({
+              return cache.writeQuery({
                 id: cache.identify(user),
-                fragment: USER_FRAMGENT,
+                query: GET_USER_INFO,
                 data: user,
               });
             }
