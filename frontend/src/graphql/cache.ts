@@ -1,5 +1,4 @@
 import { InMemoryCache } from "@apollo/client";
-import { User } from "@interfaces/users";
 
 /* https://www.apollographql.com/docs/react/api/cache/InMemoryCache/ */
 const cache = new InMemoryCache({
@@ -14,22 +13,6 @@ const cache = new InMemoryCache({
             will be cached as hasPermission:events.add_event
           */
           keyArgs: (args) => `${args?.permission}`,
-        },
-        user: {
-          merge(existing: User | null | undefined, incoming: User | null) {
-            if (!existing && incoming) {
-              return incoming;
-            }
-
-            if (existing && !incoming) {
-              return existing;
-            }
-
-            if (!existing && !incoming) {
-              return null;
-            }
-            return { ...existing, ...incoming };
-          },
         },
       },
     },
