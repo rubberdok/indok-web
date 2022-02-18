@@ -1,14 +1,7 @@
 import { makeStyles } from "@material-ui/core";
 import { breakpoint } from "../Navbar";
 
-export const useStyles = makeStyles((theme) => ({
-  nav: {
-    position: "relative",
-
-    "&:hover $dropdown": {
-      display: "block",
-    },
-  },
+export const useSharedStyles = makeStyles((theme) => ({
   navItem: {
     ...theme.typography.overline,
     display: "flex",
@@ -29,60 +22,6 @@ export const useStyles = makeStyles((theme) => ({
     "&:hover": {
       cursor: "pointer",
       textDecoration: "none",
-    },
-  },
-  nonUserNavItem: {
-    [theme.breakpoints.down(breakpoint)]: {
-      paddingTop: theme.spacing(1.5),
-      paddingBottom: theme.spacing(1.5),
-    },
-
-    "&:hover, &.active": {
-      color: "#fff",
-      [theme.breakpoints.down(breakpoint)]: {
-        color: theme.palette.primary.main,
-      },
-    },
-  },
-  user: {
-    background: "#065A5A",
-    color: "white",
-
-    [theme.breakpoints.up(breakpoint)]: {
-      marginLeft: 16,
-      paddingLeft: 35,
-      paddingRight: "calc(5vw + 15px)",
-      marginRight: "calc(-15px - 5vw)",
-    },
-
-    [theme.breakpoints.down(breakpoint)]: {
-      height: theme.spacing(10),
-      marginBottom: theme.spacing(1.5),
-    },
-
-    ["&:hover"]: {
-      background: "#0b6666",
-    },
-  },
-  menu: {
-    width: 400,
-
-    "& li": {
-      margin: 0,
-    },
-  },
-
-  dropdown: {
-    display: "none",
-    background: theme.palette.primary.dark,
-    position: "absolute",
-    paddingTop: 16,
-    ["& $navItem"]: {
-      marginTop: 10,
-      marginBottom: 10,
-    },
-    [theme.breakpoints.down(breakpoint)]: {
-      display: "none!important",
     },
   },
 }));
