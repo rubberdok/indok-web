@@ -12,6 +12,8 @@ describe("SSO login", () => {
       cy.screenshot();
       cy.contains("[data-test-id=profile-personal-name]", "Asbjørn ElevG Hansen");
       cy.log("Logged in");
+      cy.wait(5);
+      cy.screenshot();
     });
   });
 
@@ -31,6 +33,7 @@ describe("SSO login", () => {
       cy.screenshot();
       cy.getByTestId("registerUser-saveButton").click();
       cy.contains("[data-test-id=profile-personal-name]", "Abba Baab");
+      cy.screenshot();
     });
   });
 });
