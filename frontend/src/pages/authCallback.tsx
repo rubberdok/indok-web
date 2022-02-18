@@ -42,7 +42,7 @@ const AuthCallbackPage: NextPage = () => {
         const { user } = data.authUser;
         cache.writeQuery({
           query: GET_USER_INFO,
-          data: user,
+          data: { user },
         });
       }
     },
