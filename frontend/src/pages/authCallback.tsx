@@ -3,6 +3,7 @@ import Layout from "@components/Layout";
 import ProfileSkeleton from "@components/pages/profile/ProfileSkeleton";
 import { USER_FRAMGENT } from "@graphql/users/fragments";
 import { AUTHENTICATE } from "@graphql/users/mutations";
+import { GET_USER_INFO } from "@graphql/users/queries";
 import { User } from "@interfaces/users";
 import { Button, Container, Grid, Typography, useTheme } from "@material-ui/core";
 import { NextPage } from "next";
@@ -38,20 +39,13 @@ const AuthCallbackPage: NextPage = () => {
       }
     },
     update(cache, { data }) {
-      cache.modify({
-        fields: {
-          user() {
-            if (data?.authUser) {
-              const { user } = data.authUser;
-              return cache.writeFragment({
-                id: cache.identify(user),
-                fragment: USER_FRAMGENT,
-                data: user,
-              });
-            }
-          },
-        },
-      });
+      if (data?.authUser) {
+        const { user } = data.authUser;
+        cache.writeQuery({
+          query: GET_USER_INFO,
+          data: user,
+        });
+      }
     },
   });
   useEffect(() => {
