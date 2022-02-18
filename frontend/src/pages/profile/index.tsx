@@ -39,7 +39,10 @@ const userInitials = (firstName: string, lastName: string): string => {
 };
 
 const ProfilePage: NextPage = () => {
-  const { data } = useQuery<{ user?: User }>(GET_USER_INFO);
+  const { data } = useQuery<{ user?: User }>(GET_USER_INFO, {
+    fetchPolicy: "cache-and-network",
+    nextFetchPolicy: "cache-first",
+  });
   const theme = useTheme();
   const classes = useStyles();
   const initials = useMemo(() => (data?.user ? userInitials(data.user.firstName, data.user.lastName) : ""), [data]);
