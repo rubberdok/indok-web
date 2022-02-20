@@ -97,7 +97,7 @@ class AttendableType(DjangoObjectType):
                     return resolver(attendable, info)
                 else:
                     raise PermissionError(
-                        f"Du må være medlem av organisasjonen {attendable.organization.name} for å gjøre dette kallet"
+                        f"Du må være medlem av foreningen {attendable.event.organization.name} for å gjøre dette kallet"
                     )
 
             return wrapper

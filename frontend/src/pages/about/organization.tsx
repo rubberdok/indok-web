@@ -85,14 +85,14 @@ const OrganizationPage: NextPage<Props> = ({ posts }) => {
   return (
     <Template
       img="/img/hero.jpg"
-      title="Organisasjonene under Hovedstyret"
-      page="organisasjoner"
+      title="Foreningene under Hovedstyret"
+      page="Våre foreninger"
       description="Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse er den øverste instansen
-      (moderorganisasjonen) for all studentfrivillighet på masterstudiet Indøk ved NTNU."
+      (moderforeningen) for all studentfrivillighet på masterstudiet Indøk ved NTNU."
     >
-      <img src="/img/orgmap.svg" alt="Organisasjonskart"></img>
+      <img src="/img/orgmap.svg" alt="Foreningskart"></img>
       <Typography id="orgList" variant="h3" gutterBottom>
-        Se organisasjonene våre under
+        Se foreningene våre under
       </Typography>
       <Tabs indicatorColor="primary" value={value} onChange={pushQuery}>
         {Object.keys(routes).map((keyName, i) => (
@@ -101,8 +101,8 @@ const OrganizationPage: NextPage<Props> = ({ posts }) => {
       </Tabs>
       <br />
       <TabPanel value={value} index={1}>
-        Indøk Kultur er paraplyorganisasjonen for alle kulturaktiviteter på Indøk, og innbefatter Indøkrevyen,
-        Mannskoret Klingende Mynt, et Indøk-band (Bandøk), et ølbryggerlag (Indøl) samt en veldedig organisasjon (IVI).
+        Indøk Kultur er paraplyforeningen for alle kulturaktiviteter på Indøk, og innbefatter Indøkrevyen, Mannskoret
+        Klingende Mynt, et Indøk-band (Bandøk), et ølbryggerlag (Indøl) samt en veldedig organisasjon (IVI).
       </TabPanel>
       <TabPanel value={value} index={2}>
         Fra en sped start som Janus FK i 2006, har foreningen vokst til å forene godt over hundre sporty og engasjerte

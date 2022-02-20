@@ -1,6 +1,15 @@
 import { useQuery } from "@apollo/client";
 import Layout from "@components/Layout";
-import { Event, Form, Orders, Organization, Personal, Report } from "@components/pages/profile/ProfileCard";
+import {
+  CabinsAdmin,
+  Event,
+  Form,
+  Orders,
+  Organization,
+  Personal,
+  Report,
+} from "@components/pages/profile/ProfileCard";
+import PermissionRequired from "@components/permissions/PermissionRequired";
 import useStyles from "@components/pages/profile/styles";
 import { GET_USER_PROFILE } from "@graphql/users/queries";
 import { Avatar, Container, Grid, Typography, useTheme } from "@material-ui/core";
@@ -74,7 +83,7 @@ const ProfilePage: NextPage = () => {
               </Grid>
               <Grid item>
                 <Typography variant="body2" align="center">
-                  Her kan du endre din informasjon, se tidligere arrangementer og organisasjonene der du er medlem.
+                  Her kan du endre din informasjon, se tidligere arrangementer og foreningene der du er medlem.
                 </Typography>
               </Grid>
             </Grid>
@@ -106,6 +115,11 @@ const ProfilePage: NextPage = () => {
               </Grid>
               <Grid item md={6} className={classes.card}>
                 <Orders data-test-id={`${ID_PREFIX}orders-`} />
+              </Grid>
+              <Grid item md={6} className={classes.card}>
+                <PermissionRequired permission="cabins.manage_booking">
+                  <CabinsAdmin data-test-id={`${ID_PREFIX}cabins-`} />
+                </PermissionRequired>
               </Grid>
             </Grid>
           </>

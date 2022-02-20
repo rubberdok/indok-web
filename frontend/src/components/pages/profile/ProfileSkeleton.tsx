@@ -32,7 +32,7 @@ const ProfileSkeleton: React.VFC = () => {
           <Grid item>
             <Skeleton variant="text" width="100%" height="100%">
               <Typography variant="body2" align="center">
-                Her kan du endre din informasjon, se tidligere arrangementer og organisasjonene der du er medlem.
+                Her kan du endre din informasjon, se tidligere arrangementer og foreningene der du er medlem.
               </Typography>
             </Skeleton>
           </Grid>

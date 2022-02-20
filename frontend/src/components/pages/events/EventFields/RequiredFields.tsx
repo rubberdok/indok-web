@@ -52,7 +52,7 @@ const RequiredFields: React.FC<Props> = ({ eventData, onEventDataChange, user })
         {user && (
           <Grid item xs={12}>
             <FormControl>
-              <InputLabel id="select-org-label">Organisasjon</InputLabel>
+              <InputLabel id="select-org-label">Forening</InputLabel>
               <Select
                 labelId="select-org-label"
                 id="select-org"

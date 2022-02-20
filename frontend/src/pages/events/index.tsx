@@ -1,6 +1,6 @@
 import Layout from "@components/Layout";
 import AllEvents from "@components/pages/events/AllEvents";
-import { Box, Container, makeStyles, Tab, Tabs, Typography, useTheme } from "@material-ui/core";
+import { Box, Container, Hidden, makeStyles, Tab, Tabs, Typography, useTheme } from "@material-ui/core";
 import { NextPage } from "next";
 import React, { useState } from "react";
 
@@ -8,6 +8,18 @@ const useStyles = makeStyles((theme) => ({
   container: {
     paddingTop: theme.spacing(4),
     paddingBottom: theme.spacing(8),
+  },
+  anniversary: {
+    transition: "0.7s all ease",
+    background: "url('/static/anniversary/anniversary_logo_black.svg')",
+    backgroundSize: "contain",
+    backgroundPosition: "right",
+    backgroundRepeat: "no-repeat",
+    opacity: 0.05,
+    height: "120%",
+    marginRight: "10%",
+    right: 0,
+    top: 0,
   },
 }));
 
@@ -22,7 +34,7 @@ const Events: NextPage = () => {
 
   return (
     <Layout>
-      <Box width="100%" pt={10} bgcolor={theme.palette.background.paper}>
+      <Box width="100%" pt={10} position="relative" overflow="hidden" bgcolor={theme.palette.background.paper}>
         <Container>
           <Typography variant="h1" gutterBottom>
             Arrangementer
@@ -37,6 +49,9 @@ const Events: NextPage = () => {
             <Tab label="Kalender" />
           </Tabs>
         </Container>
+        <Hidden xsDown>
+          <Box className={classes.anniversary} position="absolute" width="100vw" height="100vh" />
+        </Hidden>
       </Box>
       <Container className={classes.container}>
         {showCalendarView ? (

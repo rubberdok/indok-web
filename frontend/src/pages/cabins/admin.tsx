@@ -32,11 +32,11 @@ import { getDecisionEmailProps, toStringChosenCabins } from "@utils/cabins";
 import dayjs from "dayjs";
 import { NextPage } from "next";
 import { CONFIRM_BOOKING, DELETE_BOOKING, SEND_EMAIL } from "@graphql/cabins/mutations";
-import { useState } from "react";
-import { useRouter } from "next/router";
+import React, { useState } from "react";
 import theme from "@styles/theme";
 import { BookingFromQuery } from "@interfaces/cabins";
-import ErrorDialog from "@components/dialogs/ErrorDialog";
+import PermissionRequired from "@components/permissions/PermissionRequired";
+import Alert from "@material-ui/lab/Alert";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -50,20 +50,22 @@ const useStyles = makeStyles((theme) => ({
 Page for booking admininistration showing all upcoming bookings and buttons for actions on these bookings.
 */
 const AdminPage: NextPage = () => {
-  const { data, error, refetch } = useQuery<{
+  const { data, refetch } = useQuery<{
     adminAllBookings: BookingFromQuery[];
   }>(QUERY_ADMIN_ALL_BOOKINGS, { variables: { after: dayjs().subtract(1, "day").format("YYYY-MM-DD") } });
-  const [confirmBooking] = useMutation(CONFIRM_BOOKING, { refetchQueries: [{ query: QUERY_ADMIN_ALL_BOOKINGS }] });
-  const [deleteBooking] = useMutation(DELETE_BOOKING, { refetchQueries: [{ query: QUERY_ADMIN_ALL_BOOKINGS }] });
+  const [confirmBooking] = useMutation(CONFIRM_BOOKING, {
+    refetchQueries: [{ query: QUERY_ADMIN_ALL_BOOKINGS }],
+    awaitRefetchQueries: true,
+  });
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [bookingToBeDeleted, setBookingToBeDeleted] = useState<BookingFromQuery | undefined>();
-  const [send_email] = useMutation(SEND_EMAIL);
-  const router = useRouter();
+  const [sendEmail] = useMutation(SEND_EMAIL);
 
   const handleDeleteBookingOnClose = () => setBookingToBeDeleted(undefined);
 
   const DeleteBookingDialog: React.VFC = () => {
+    const [deleteBooking] = useMutation(DELETE_BOOKING, { refetchQueries: [{ query: QUERY_ADMIN_ALL_BOOKINGS }] });
     const [declineMessage, setDeclineMessage] = useState("");
 
     return (
@@ -92,11 +94,11 @@ const AdminPage: NextPage = () => {
             onClick={() => {
               if (bookingToBeDeleted) {
                 deleteBooking({ variables: { id: bookingToBeDeleted.id } }).then(() => {
-                  setSnackbarMessage("Bookingen ble slettet");
+                  setSnackbarMessage("Bookingen ble slettet.");
                   setOpenSnackbar(true);
                   refetch();
                 });
-                send_email(getDecisionEmailProps(bookingToBeDeleted, false, declineMessage));
+                sendEmail(getDecisionEmailProps(bookingToBeDeleted, false, declineMessage));
               }
               handleDeleteBookingOnClose();
             }}
@@ -110,94 +112,91 @@ const AdminPage: NextPage = () => {
     );
   };
 
-  const handleErrorDialogClose = () => router.push("/");
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const classes = useStyles();
 
   return (
     <Layout>
       <Container>
-        <Snackbar
-          open={openSnackbar}
-          message={snackbarMessage}
-          autoHideDuration={6000}
-          onClose={() => setOpenSnackbar(false)}
-        />
-        <ErrorDialog error={error} handleErrorDialogClose={handleErrorDialogClose} />
-        <DeleteBookingDialog />
-        <Grid container direction="column" spacing={3}>
-          <Grid item>
-            <Box p={3}>
-              <Typography variant={isMobile ? "h3" : "h1"} align="center">
-                Booking adminside
-              </Typography>
-            </Box>
+        <PermissionRequired permission="cabins.manage_booking">
+          <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={() => setOpenSnackbar(false)}>
+            <Alert severity="success">{snackbarMessage}</Alert>
+          </Snackbar>
+          <DeleteBookingDialog />
+          <Grid container direction="column" spacing={3}>
+            <Grid item>
+              <Box p={3}>
+                <Typography variant={isMobile ? "h3" : "h1"} align="center">
+                  Booking adminside
+                </Typography>
+              </Box>
+            </Grid>
           </Grid>
-        </Grid>
-        <Box className={classes.root} marginBottom={5}>
-          <TableContainer component={Paper}>
-            <Table size="small">
-              <TableHead>
-                <TableRow>
-                  <TableCell>Navn</TableCell>
-                  <TableCell align="right">Epost</TableCell>
-                  <TableCell align="right">Telefonnummer</TableCell>
-                  <TableCell align="right">Innsjekk</TableCell>
-                  <TableCell align="right">Utsjekk</TableCell>
-                  <TableCell align="right">Hytte</TableCell>
-                  <TableCell align="right">Status</TableCell>
-                  <TableCell align="right">Handlinger</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {data?.adminAllBookings.map((booking: BookingFromQuery) => (
-                  <TableRow key={booking.id}>
-                    <TableCell>{`${booking.firstName} ${booking.lastName}`}</TableCell>
-                    <TableCell align="right">{booking.receiverEmail}</TableCell>
-                    <TableCell align="right">{booking.phone}</TableCell>
-                    <TableCell align="right">{booking.checkIn}</TableCell>
-                    <TableCell align="right">{booking.checkOut}</TableCell>
-                    <TableCell align="right">{toStringChosenCabins(booking.cabins)}</TableCell>
-                    <TableCell align="right">{booking.isTentative ? "Ikke godkjent" : "Godkjent"}</TableCell>
-                    <TableCell align="right">
-                      <Tooltip title="Godkjenn">
-                        <Box display="inline" component="span">
-                          <IconButton
-                            disabled={!booking.isTentative}
-                            onClick={() => {
-                              confirmBooking({ variables: { id: booking.id } }).then(() => {
-                                setSnackbarMessage(
-                                  `Booking bekreftet. Bekreftelsesmail sendt er sendt til ${booking.receiverEmail}.`
-                                );
-                                setOpenSnackbar(true);
-                                refetch();
-                              });
-                              send_email(getDecisionEmailProps(booking, true));
-                            }}
-                            color="secondary"
-                          >
-                            <CheckIcon />
-                          </IconButton>
-                        </Box>
-                      </Tooltip>
-                      <Tooltip title="Avkreft">
-                        <Box color={theme.palette.error.main} display="inline" component="span">
-                          <IconButton
-                            disabled={!booking.isTentative}
-                            onClick={() => setBookingToBeDeleted(booking)}
-                            color="inherit"
-                          >
-                            <ClearIcon />
-                          </IconButton>
-                        </Box>
-                      </Tooltip>
-                    </TableCell>
+          <Box className={classes.root} marginBottom={5}>
+            <TableContainer component={Paper}>
+              <Table size="medium">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Navn</TableCell>
+                    <TableCell>Epost</TableCell>
+                    <TableCell>Telefonnummer</TableCell>
+                    <TableCell>Innsjekk</TableCell>
+                    <TableCell>Utsjekk</TableCell>
+                    <TableCell>Hytte</TableCell>
+                    <TableCell>Status</TableCell>
+                    <TableCell>Handlinger</TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Box>
+                </TableHead>
+                <TableBody>
+                  {data?.adminAllBookings.map((booking: BookingFromQuery) => (
+                    <TableRow key={booking.id}>
+                      <TableCell>{`${booking.firstName} ${booking.lastName}`}</TableCell>
+                      <TableCell>{booking.receiverEmail}</TableCell>
+                      <TableCell>{booking.phone}</TableCell>
+                      <TableCell>{booking.checkIn}</TableCell>
+                      <TableCell>{booking.checkOut}</TableCell>
+                      <TableCell>{toStringChosenCabins(booking.cabins)}</TableCell>
+                      <TableCell>{booking.isTentative ? "Ikke godkjent" : "Godkjent"}</TableCell>
+                      <TableCell>
+                        <Tooltip title="Godkjenn">
+                          <Box display="inline">
+                            <IconButton
+                              disabled={!booking.isTentative}
+                              onClick={() => {
+                                confirmBooking({ variables: { id: booking.id } }).then(() => {
+                                  setSnackbarMessage(
+                                    `Booking bekreftet. Bekreftelsesmail sendt er sendt til ${booking.receiverEmail}.`
+                                  );
+                                  setOpenSnackbar(true);
+                                  refetch();
+                                });
+                                sendEmail(getDecisionEmailProps(booking, true));
+                              }}
+                              color="secondary"
+                            >
+                              <CheckIcon />
+                            </IconButton>
+                          </Box>
+                        </Tooltip>
+                        <Tooltip title="Avkreft">
+                          <Box color={theme.palette.error.main} display="inline">
+                            <IconButton
+                              disabled={!booking.isTentative}
+                              onClick={() => setBookingToBeDeleted(booking)}
+                              color="inherit"
+                            >
+                              <ClearIcon />
+                            </IconButton>
+                          </Box>
+                        </Tooltip>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Box>
+        </PermissionRequired>
       </Container>
     </Layout>
   );

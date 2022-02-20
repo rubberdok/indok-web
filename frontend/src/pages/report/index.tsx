@@ -109,7 +109,7 @@ const ReportsPage: NextPage = () => {
                     Baksideløsningen er rettet både mot foreningene tilknyttet studiet og studenter ved studiet
                     generelt. Indøk skal være et trygt fellesskap for alle deltakere på aktiviteter og arrangementer, og
                     for alle som er tillitsvalgte eller bidrar frivillig til en forening tilknyttet Indøk. Det
-                    overordnede målet er at grenseoverskridende atferd aldri finner sted i organisasjonen eller i
+                    overordnede målet er at grenseoverskridende atferd aldri finner sted i foreningen eller i
                     tilknytning til studieretningens arrangement eller aktiviteter.
                   </Typography>
                   <Typography variant="body1" gutterBottom>
