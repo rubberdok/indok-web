@@ -127,7 +127,9 @@ const CreateEvent: React.FC = () => {
         attendableData: isAttendable ? formattedInputData.attendableInput : undefined,
       },
     }).then((res) => {
-      if (res.data?.createEvent) {
+      if (res.errors) {
+        setOpenCreateErrorSnackbar(true);
+      } else {
         setEventData(DEFAULTINPUT);
         setOpenCreateSnackbar(true);
         router.push("/events");

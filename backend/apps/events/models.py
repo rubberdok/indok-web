@@ -133,15 +133,15 @@ class Attendable(models.Model, Sellable):
                     continue
 
                 # If the slots for the grade is full or the event in total is full, put user in waiting list
-                elif (
-                    len(attending[grades]) >= len(self.slot_distribution[grades]) or total >= self.total_available_slots
-                ):
+                elif len(attending[grades]) >= self.slot_distribution[grades] or total >= self.total_available_slots:
                     waiting_list[grades].append(user)
+                    break
 
                 # Else put user in attending list
                 else:
                     attending[grades].append(user)
                     total += 1
+                    break
 
         return attending, waiting_list
 

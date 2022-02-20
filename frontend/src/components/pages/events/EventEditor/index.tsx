@@ -137,11 +137,13 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
         slotDistributionData: isAttendable ? formattedInputData.slotDistributionInput : undefined,
       },
     }).then((res) => {
-      if (res.data?.updateEvent) {
+      if (res.errors) {
+        setOpenEditErrorSnackbar(true);
+      } else {
         setOpenEditSnackbar(true);
+        onClose();
       }
     });
-    onClose();
   };
 
   return (

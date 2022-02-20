@@ -186,14 +186,19 @@ def update_event_validation(
 
             if attendable_data.signup_open_date is not None or attendable_data.deadline is not None:
                 signup_open_date = attendable.signup_open_date
-                if attendable_data.signup_open_date:
+                signup_open_date_input = None
+                if (
+                    attendable_data.signup_open_date
+                    and make_aware(attendable_data.signup_open_date, is_dst=True) != signup_open_date
+                ):
                     signup_open_date_input = attendable_data.signup_open_date
 
                 deadline = None
                 if attendable.deadline:
                     deadline = attendable.deadline
 
-                if attendable_data.deadline:
+                deadline_input = None
+                if attendable_data.deadline and make_aware(attendable_data.deadline, is_dst=True) != deadline:
                     deadline_input = attendable_data.deadline
 
                 time_validation(
