@@ -69,7 +69,7 @@ const Listings: React.FC<{
             </Typography>
           </Grid>
           <Grid item md={6} xs={10}>
-            <Image src={_EmptyStreet} alt="Empty street" />
+            <Image src={EmptyStreet} alt="" />
           </Grid>
         </>
       )}
