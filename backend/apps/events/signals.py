@@ -16,9 +16,9 @@ def send_order_confirmation(sender, instance: SignUp, **kwargs):
         previous: SignUp = sender.objects.get(pk=instance.pk)
         if previous.is_attending and not instance.is_attending:
             event: Event = previous.event
-            signed_up = event.signed_up_users
-            attending = signed_up[: event.available_slots].filter(user=previous.user).exists()
-            if attending and len(signed_up) > event.available_slots:
-                new_attending_user = signed_up[: event.available_slots + 1].last()
-                if new_attending_user is not None:
-                    send_waitlist_notification_email(new_attending_user, event)
+            attending_users = event.users_attending
+            attending = previous.user in attending_users
+            if attending and event.is_full:
+                users_on_wait_list = event.users_on_waiting_list
+                if len(users_on_wait_list) > 0:
+                    send_waitlist_notification_email(users_on_wait_list[0], event)
