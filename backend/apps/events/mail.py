@@ -32,7 +32,7 @@ def send_waitlist_notification_email(user: User, event: Event) -> None:
     }
 
     # HTML content for mail services supporting HTML, text content if HTML isn't supported
-    html_content = get_template("events/order_confirmation.html").render(content)
+    html_content = get_template("events/wait_list.html").render(content)
     text_content = strip_tags(html_content)
 
     subject = f"[{event.title}] Du har fått plass på arrangementet"
@@ -41,7 +41,7 @@ def send_waitlist_notification_email(user: User, event: Event) -> None:
         subject,
         body=text_content,
         from_email="noreply@indokntnu.no",
-        to=user.email,
+        to=[user.email],
     )
     email.attach_alternative(html_content, "text/html")
     email.send()
