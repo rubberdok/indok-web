@@ -61,7 +61,7 @@ const Listings: React.FC<{
             <ListingItem listing={listing} />
           </Grid>
         ))}
-      {data && data.listings.length == 0 && (
+      {data?.listings.length == 0 && (
         <>
           <Grid item>
             <Typography variant="body1" align="center">
