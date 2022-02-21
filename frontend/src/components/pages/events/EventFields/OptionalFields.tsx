@@ -59,7 +59,7 @@ const OptionalFields: React.FC<Props> = ({ eventData, onEventDataChange, allCate
             }}
             displayEmpty
           >
-            <MenuItem value="">{"Ingen Kategori"}</MenuItem>
+            <MenuItem value="">{"Ingen kategori"}</MenuItem>
             {allCategories.map((category: Category) => (
               <MenuItem key={category.id} value={category.id}>
                 {category.name}

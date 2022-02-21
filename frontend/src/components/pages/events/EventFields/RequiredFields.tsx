@@ -21,6 +21,7 @@ const RequiredFields: React.FC<Props> = ({ eventData, onEventDataChange, user })
       <Grid container spacing={3}>
         <Grid item xs={6}>
           <TextField
+            required
             label="Tittel"
             placeholder="Tittel"
             value={eventData.title}
@@ -30,6 +31,7 @@ const RequiredFields: React.FC<Props> = ({ eventData, onEventDataChange, user })
         <Grid item xs={6}>
           <InputLabel>Starttid</InputLabel>
           <TextField
+            required
             type="datetime-local"
             value={eventData.startTime}
             onChange={(e) => onEventDataChange({ ...eventData, startTime: e.currentTarget.value })}
@@ -38,9 +40,9 @@ const RequiredFields: React.FC<Props> = ({ eventData, onEventDataChange, user })
         <Grid item xs={12}>
           <TextField
             label="Beskrivelse"
+            required
             multiline
             rows={3}
-            required
             placeholder="Beskrivelse ..."
             variant="outlined"
             value={eventData.description}

@@ -20,7 +20,7 @@ def get_attendant_group(grade_groups, grade_year: int) -> Union[str, None]:
     Get the grade group that a grade_year is included in
 
     Args:
-        attending_dict ([type]): list of grades (string) e.g. ["1,2", "3", "4,5"]
+        grade_groups (List[str]): list of grades (string) e.g. ["1,2", "3", "4,5"]
         grade_year (int): user's grade year
 
     Returns:

@@ -5,6 +5,10 @@ from utils.helpers.validators import email_validation
 
 
 def time_validation(start_time_input, end_time_input, start_time=None, end_time=None):
+    """
+    Method for ensuring that any updates of time values are valid.
+    Takes in the new time inputs and potentially current values (if there are any)
+    """
     # Make all date times aware (instead of naive)
     if start_time_input is not None and start_time_input.tzinfo is None:
         start_time_input = make_aware(start_time_input, is_dst=True)
@@ -18,12 +22,13 @@ def time_validation(start_time_input, end_time_input, start_time=None, end_time=
     if end_time is not None and end_time.tzinfo is None:
         end_time = make_aware(end_time, is_dst=True)
 
-    # Check that input date times are valid
+    # Check that input date times are after current time
     if (start_time_input is not None and start_time_input < timezone.now()) or (
         end_time_input is not None and end_time_input < timezone.now()
     ):
         raise ValidationError("Input datetimes are before current time")
 
+    # Check that the start time (either input or current value) is before the end time (either input or current value)
     start_time_value = start_time
     if start_time_input is not None:
         start_time_value = start_time_input
@@ -44,7 +49,11 @@ def title_and_desc_validation(title, description):
 
 
 def price_binding_sign_up_validation(attendable_data, attendable=None):
+    """
+    Checks that binding signup is True if a price has been set on the event
+    """
     if attendable is not None:
+        # Attendable already exists, may exist values for price and/or binding_signup already as well
         price = None
         if hasattr(attendable_data, "price") and attendable_data.price is not None:
             price = attendable_data.price
@@ -71,9 +80,10 @@ def price_binding_sign_up_validation(attendable_data, attendable=None):
 def slot_distribution_validation(total_allowed_grade_years, slot_distribution, total_available_slots):
     """
     Checks whether the grade groups in the slot distribution dict are the same as the
-    allowed grade years in event.
+    allowed grade years on the event.
     """
 
+    # Make allowed grades a sorted string without commas, e.g. "124"
     allowed_grades = ""
     total_slots = 0
     for slot_dist_element in slot_distribution:
@@ -84,20 +94,26 @@ def slot_distribution_validation(total_allowed_grade_years, slot_distribution, t
     sorted_grades = sorted(allowed_grades)
     string_sorted_grades = "".join(sorted_grades).replace(",", "")
 
+    # Do the same for total_allowed_grade_years and check that the two string are equal
     if string_sorted_grades != "".join(str(grade) for grade in total_allowed_grade_years):
         raise ValidationError(
             "Trinnene arrangementet er åpent for stemmer ikke overens med plass fordelingen for trinn"
         )
 
+    # Make sure that the sum of available slots in the slot distribution is not fewer than total available slots field
     if total_slots < total_available_slots:
         raise ValidationError("Kan ikke ha færre plasser i plassfordelingen enn det er plasser på arrangementet")
 
+    # Make sure each grade year is in at most one grade group
     listed_total_grades_allowed: list[int] = [int(val) for val in allowed_grades.split(",")]
     if len(set(listed_total_grades_allowed)) != len(listed_total_grades_allowed):
         raise ValidationError("Samme trinn kan ikke være i flere 'Antall plasser'-kategorier")
 
 
 def create_event_validation(event_data, attendable_data=None):
+    """
+    Validates input data for create event mutation
+    """
     end_time = None
     if event_data.end_time:
         end_time = event_data.end_time
@@ -127,6 +143,10 @@ def update_event_validation(
     attendable=None,
     attendable_data=None,
 ):
+    """
+    Validates input data for update event mutation, making sure updates are also compatible
+    with current attributes on the event
+    """
     # Time validation, must check either input data or current values
     start_time_input = None
     if event_data.start_time:
