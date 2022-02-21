@@ -222,3 +222,6 @@ class SignUp(models.Model):
 
     def __str__(self):
         return f"{self.user.username}-{self.event.title}"
+
+    class Meta:
+        unique_together = ("user_id", "event_id")
