@@ -103,7 +103,7 @@ class EventType(DjangoObjectType):
                     return resolver(event, info)
                 else:
                     raise PermissionError(
-                        f"Du må være medlem av organisasjonen {event.organization.name} for å gjøre dette kallet"
+                        f"Du må være medlem av foreningen {event.organization.name} for å gjøre dette kallet"
                     )
 
             return wrapper
