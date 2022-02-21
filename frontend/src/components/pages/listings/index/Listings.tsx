@@ -5,7 +5,7 @@ import { useQuery } from "@apollo/client";
 import { Grid, Typography, makeStyles, CircularProgress, Button } from "@material-ui/core";
 import Link from "next/link";
 import Image from "next/image";
-import _EmptyStreet from "public/illustrations/EmptyStreet.svg";
+import EmptyStreet from "public/illustrations/EmptyStreet.svg";
 
 const useStyles = makeStyles((theme) => ({
   root: {
