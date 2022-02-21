@@ -1,14 +1,25 @@
 import { ApolloError, useQuery } from "@apollo/client";
-import { BookingSemester, defaultBookingSemester } from "@components/pages/cabins/Admin/BookingSemesterPicker";
+import { DATE_FORMAT } from "@components/Calendar/constants";
+import { BookingSemester } from "@components/pages/cabins/Admin/BookingSemesterPicker";
 import { QUERY_BOOKING_SEMESTERS } from "@graphql/cabins/queries";
+import dayjs from "dayjs";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
-interface Output {
+type Output = {
   bookingSemester: BookingSemester;
   setBookingSemester: Dispatch<SetStateAction<BookingSemester>>;
   loading: boolean;
   error?: ApolloError;
-}
+};
+
+const defaultBookingSemester: BookingSemester = {
+  fallStartDate: dayjs().format(DATE_FORMAT),
+  fallEndDate: dayjs().format(DATE_FORMAT),
+  springStartDate: dayjs().format(DATE_FORMAT),
+  springEndDate: dayjs().format(DATE_FORMAT),
+  fallSemesterActive: false,
+  springSemesterActive: false,
+};
 
 /*
     Fetches the booking semesters from backend.

@@ -404,6 +404,26 @@ class BookingSemesterTestCase(CabinsBaseTestCase):
     def setUp(self) -> None:
         super().setUp()
 
+    def update_booking_semester(self):
+        query = """
+        mutation UpdateBookingSemester{
+            updateBookingSemester(semesterData: {
+                fallStartDate: "2021-09-01",
+                fallEndDate: "2021-11-29",
+                springStartDate: "2022-01-01",
+                springEndDate: "2022-01-05",
+                fallSemesterActive: false,
+                springSemesterActive: true
+            }) {
+                bookingSemester {
+                    fallStartDate
+                    fallSemesterActive
+                }
+            }
+        }"""
+
+        return self.query(query, user=self.super_user)
+
     def test_resolve_booking_semester(self):
         query = """
         query BookingSemesters {
@@ -469,20 +489,7 @@ class BookingSemesterTestCase(CabinsBaseTestCase):
         self.assertResponseHasErrors(response)
 
     def test_update_booking_semester(self):
-        query = """
-        mutation UpdateBookingSemester{
-            updateBookingSemester(semesterData: {
-                fallStartDate: "2021-09-01",
-                fallSemesterActive: false,
-            }) {
-                bookingSemester {
-                    fallStartDate
-                    fallSemesterActive
-                }
-            }
-        }"""
-
-        response = self.query(query, user=self.super_user)
+        response = self.update_booking_semester()
         self.assertResponseNoErrors(response)
 
         # Fetching content of response
@@ -491,3 +498,15 @@ class BookingSemesterTestCase(CabinsBaseTestCase):
 
         self.assertEquals(booking_semester["fallStartDate"], "2021-09-01")
         self.assertEquals(booking_semester["fallSemesterActive"], False)
+
+    # Verify that updating the booking semester creates a new booking semester if there are no booking semesters in the database.
+    def test_update_booking_semester_when_not_exists(self):
+        # Delete booking semester in db
+        BookingSemester.objects.all().delete()
+
+        # Update non-existing booking semester
+        response = self.update_booking_semester()
+        self.assertResponseNoErrors(response)
+
+        # Assert that a new booking semester has been created
+        self.assertEquals(len(BookingSemester.objects.all()), 1)
