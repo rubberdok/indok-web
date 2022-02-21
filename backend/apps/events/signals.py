@@ -7,7 +7,7 @@ from .models import Event, SignUp
 
 
 @receiver(pre_save, sender=SignUp)
-def send_order_confirmation(sender, instance: SignUp, **kwargs):
+def send_wait_list_notification(sender, instance: SignUp, **kwargs):
     """
     Send an email to the user who is bumped from the wait list when another user is no longer attending, if any.
     Prone to race conditions in the case where two users sign off simultaneously and should be resolved.
