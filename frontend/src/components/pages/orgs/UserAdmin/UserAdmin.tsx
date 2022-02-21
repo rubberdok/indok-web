@@ -107,10 +107,6 @@ const EditUsersInOrganization: React.FC<Props> = ({ organization }) => {
     { variables: { id: orgNumberId } }
   );
 
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
-
   //Gucci - When people are fetched all people are choosen
   useEffect(() => {
     const allUsers: UserWithCheck[] = [];
@@ -172,6 +168,7 @@ const EditUsersInOrganization: React.FC<Props> = ({ organization }) => {
               permissionGroups={fetchedPermissionGroups}
               setSearch={setSearchFilter}
               setResetCheckedPeople={resetCheckedFilter}
+              checkedPeople={checkedPeople}
             />
           ) : (
             <></>
@@ -202,7 +199,7 @@ const EditUsersInOrganization: React.FC<Props> = ({ organization }) => {
                                   <TableCell>{user.email}</TableCell>
                                   <TableCell size="small" align="right">
                                     <Button variant="contained" color="primary">
-                                      Rediger rolle
+                                      Rediger tilgang
                                     </Button>
                                   </TableCell>
                                   <TableCell size="small" align="right">

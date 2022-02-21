@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import SearchBar from "@components/pages/archive/SearchBar";
 import { Checkbox, FormControlLabel, Grid, Typography } from "@material-ui/core";
 import { CheckBox as CheckBoxIcon, CheckBoxOutlineBlank as CheckBoxOutlineBlankIcon } from "@material-ui/icons";
-import { RemoveFiltersButton } from "@components/pages/archive/RemoveFiltersButton";
+import RemoveFilterButton from "@components/pages/orgs/UserAdmin/RemoveFilterButton";
+import { User } from "@interfaces/users";
 
 type permissionGroupsWithCheck = {
   checked: boolean;
@@ -10,17 +11,26 @@ type permissionGroupsWithCheck = {
   uuid: string;
 };
 
+type UserWithCheck = User & { checked: boolean; ableToSee: boolean };
+
 type Props = {
   setSearch: React.Dispatch<React.SetStateAction<string>>;
-  setResetCheckedPeople: () => void;
   permissionGroups: permissionGroupsWithCheck[];
   setPermissionGroups: React.Dispatch<React.SetStateAction<permissionGroupsWithCheck[]>>;
+  setResetCheckedPeople: () => void;
+  checkedPeople: UserWithCheck[];
 };
 
-//TODO: filter when clicking on a group or writing in searchbar
-const FilterUsers: React.FC<Props> = ({ setSearch, permissionGroups, setPermissionGroups, setResetCheckedPeople }) => {
+const FilterUsers: React.FC<Props> = ({
+  setSearch,
+  permissionGroups,
+  setPermissionGroups,
+  setResetCheckedPeople,
+  checkedPeople,
+}) => {
   const [searchFilter, setSearchFilter] = useState("");
   const [viewFeatured, setViewFeatured] = useState(true);
+  const [viewChecked, setViewChecked] = useState(true);
 
   //Gucci - Removing all filters, including checkmarks
   const handleRemoveFilterChanged = () => {
@@ -35,6 +45,12 @@ const FilterUsers: React.FC<Props> = ({ setSearch, permissionGroups, setPermissi
     });
     setPermissionGroups(newPermissionGroup);
     setViewFeatured(true);
+  };
+
+  //Gucci -
+  const handleRemoveSelectedPeople = () => {
+    setViewChecked(true);
+    setResetCheckedPeople();
   };
 
   // Gucci - Handling group filter change
@@ -54,6 +70,14 @@ const FilterUsers: React.FC<Props> = ({ setSearch, permissionGroups, setPermissi
     });
     setPermissionGroups(newGroups);
   };
+
+  useEffect(() => {
+    checkedPeople.forEach((user) => {
+      if (user.checked) {
+        setViewChecked(true);
+      }
+    });
+  }, [checkedPeople]);
 
   //Gucci - When writing in the searchbar it sends to the parent element
   useEffect(() => {
@@ -92,7 +116,18 @@ const FilterUsers: React.FC<Props> = ({ setSearch, permissionGroups, setPermissi
           placeholder="Søk på medlemmer"
         />
       </Grid>
-      <Grid>{!viewFeatured && <RemoveFiltersButton handleRemoveFilterChanged={handleRemoveFilterChanged} />}</Grid>
+      <Grid container spacing={1}>
+        {!viewFeatured && (
+          <Grid item xs={3}>
+            <RemoveFilterButton text={"Fjern filterering"} handleAction={handleRemoveFilterChanged} />
+          </Grid>
+        )}
+        {!viewChecked && (
+          <Grid item xs={3}>
+            <RemoveFilterButton text={"Fjern personmarkering"} handleAction={handleRemoveSelectedPeople} />
+          </Grid>
+        )}
+      </Grid>
     </>
   );
 };
