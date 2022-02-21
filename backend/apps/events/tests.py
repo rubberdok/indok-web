@@ -464,7 +464,7 @@ class EventsMutationsTestCase(EventsBaseTestCase):
         response = self.create_event(self.non_attendable_event, user=self.user_1st_grade)
         self.check_create_event_with_error(response)
 
-    def test_empty_title(self):
+    def test_empty_event_title(self):
         # Try to create an event with no title variable
         self.non_attendable_event.title = ""
         MembershipFactory(user=self.user_1st_grade, organization=self.non_attendable_event.organization)
@@ -727,7 +727,7 @@ class EventsMutationsTestCase(EventsBaseTestCase):
         content = json.loads(response.content)
         self.assertTrue(Category.objects.filter(id=int(content["data"]["createCategory"]["category"]["id"])).exists())
 
-    def test_empty_title(self):
+    def test_empty_category_title(self):
         # Try to create a category with no title variable
         query = """
                 mutation CreateCategory {
