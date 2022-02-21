@@ -349,6 +349,7 @@ class SendEventEmails(graphene.Mutation):
             raise ValueError("Ugyldig arrangement")
 
         check_user_membership(info.context.user, event.organization)
+        receiver_emails.append(info.context.user.email)
 
         for i in range(0, len(receiver_emails), settings.EMAIL_MAX_RECIPIENTS):
             EventEmail.send_event_emails(receiver_emails[i : i + settings.EMAIL_MAX_RECIPIENTS], content, subject)
