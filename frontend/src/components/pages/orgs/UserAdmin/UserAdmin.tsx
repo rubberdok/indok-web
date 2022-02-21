@@ -38,6 +38,9 @@ type Props = {
 type permissionGroups = {
   name: string;
   uuid: string;
+  userids: {
+    id: string;
+  }[];
 };
 
 type UserWithCheck = User & { checked: boolean; ableToSee: boolean };
@@ -100,6 +103,9 @@ const EditUsersInOrganization: React.FC<Props> = ({ organization }) => {
           permissionGroups {
             name
             uuid
+            users {
+              id
+            }
           }
         }
       }
@@ -129,6 +135,7 @@ const EditUsersInOrganization: React.FC<Props> = ({ organization }) => {
       allPermissionGroups.push(permissionWithCheck);
     });
     setFetchedPermissionGroups(allPermissionGroups);
+    console.log(allPermissionGroups);
   }, [data]);
 
   //Gucci - Filter out users that does not fufuill the searchbar query

@@ -9,6 +9,9 @@ type permissionGroupsWithCheck = {
   checked: boolean;
   name: string;
   uuid: string;
+  userids: {
+    id: string;
+  }[];
 };
 
 type UserWithCheck = User & { checked: boolean; ableToSee: boolean };
