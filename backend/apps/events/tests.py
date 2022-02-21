@@ -1,6 +1,5 @@
 import json
 from apps.events.models import Event, Category, SignUp
-from apps.events.helpers import get_slot_distribution_as_list_in_camel_case
 from utils.testing.factories.users import IndokUserFactory, UserFactory
 from utils.testing.factories.events import (
     EventFactory,
@@ -507,7 +506,7 @@ class EventsMutationsTestCase(EventsBaseTestCase):
     def test_create_attendable_event_with_price_without_binding_singup(self):
         event = self.attendable_event_with_slot_dist
         attendable = self.attendable_event_with_slot_dist.attendable
-        slot_distribution = get_slot_distribution_as_list_in_camel_case(attendable.slot_distribution)
+        slot_distribution = '[{gradeGroup: "1,2,3", availableSlots: 1}]'
         query = f"""
                 mutation CreateEvent {{
                     createEvent(
@@ -862,7 +861,7 @@ class EventsMutationsTestCase(EventsBaseTestCase):
         response = self.query(self.event_signoff_query, user=self.user_1st_grade)
         self.assertResponseHasErrors(response)
 
-    def test__event_signoff_with_permission(self):
+    def test_event_signoff_with_permission(self):
         # sign up a user to an event
         SignUpFactory(
             event=self.attendable_and_open_event,

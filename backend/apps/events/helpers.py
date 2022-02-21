@@ -53,12 +53,3 @@ def get_slot_distribution_as_list(slot_dist_dict):
     [{grade_group: "x,x,x", available_slots: 150}, {grade_group: "x,x", available_slots: 50}, ...]
     """
     return [{"grade_group": grades, "available_slots": slots} for grades, slots in slot_dist_dict.items()]
-
-
-def get_slot_distribution_as_list_in_camel_case(slot_dist_dict):
-    """
-    Make a slot distribution that is a dictionary with grade_group as key and available slots as value
-    into a list of objects on the form:
-    [{gradeGroup: "x,x,x", availableSlots: 150}, {gradeGroup: "x,x", availableSlots: 50}, ...]
-    """
-    return [{"gradeGroup": grades, "availableSlots": slots} for grades, slots in slot_dist_dict.items()]
