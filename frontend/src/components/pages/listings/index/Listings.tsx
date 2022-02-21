@@ -55,7 +55,8 @@ const Listings: React.FC<{
           </Grid>
         </Grid>
       )}
-      {data?.listings.length > 0 &&
+      {data &&
+        data.listings.length > 0 &&
         data.listings.map((listing) => (
           <Grid container item key={listing.id} md={5} sm={7} xs={10}>
             <ListingItem listing={listing} />
