@@ -1,9 +1,9 @@
 from typing import Type
+
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 
-from apps.events.mail import send_waitlist_notification_email
-
+from .mail import EventEmail
 from .models import Event, SignUp
 
 
@@ -22,7 +22,7 @@ def send_wait_list_notification(sender: Type[SignUp], instance: SignUp, **kwargs
             if attending and event.is_full:
                 users_on_wait_list = event.users_on_waiting_list
                 if len(users_on_wait_list) > 0:
-                    send_waitlist_notification_email(users_on_wait_list[0], event)
+                    EventEmail.send_waitlist_notification_email(users_on_wait_list[0], event)
 
 
 @receiver(pre_save, sender=Event)
@@ -32,4 +32,4 @@ def send_wait_list_notification_when_events_expand(sender: Type[Event], instance
         if previous.available_slots < instance.available_slots:
             users_on_wait_list = previous.users_on_waiting_list[: instance.available_slots - previous.available_slots]
             for user in users_on_wait_list:
-                send_waitlist_notification_email(user, instance)
+                EventEmail.send_waitlist_notification_email(user, instance)
