@@ -95,11 +95,7 @@ class EventsMailTestCase(EventsBaseTestCase):
     def test_send_mail_on_user_on_available_slots_expanded(self, send_mail_mock: MagicMock):
         expand_slots_mutation = f"""
             mutation {{
-            updateEvent(eventData: {{
-                id: {self.event.id}
-                availableSlots: 3
-            }}
-                ) {{
+            updateEvent(id: {self.event.id}, eventData: {{availableSlots: 3}}) {{
                 ok
             }}
             }}
