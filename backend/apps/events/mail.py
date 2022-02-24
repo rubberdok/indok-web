@@ -17,6 +17,7 @@ class EmailInput(TypedDict):
     event_title: str
     start_time: datetime
 
+
 class EventEmail:
     @staticmethod
     def send_event_emails(receiver_emails: Sequence[str], content: Optional[str], subject: str) -> None:

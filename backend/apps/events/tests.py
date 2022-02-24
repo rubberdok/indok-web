@@ -90,9 +90,8 @@ class EventsMailTestCase(EventsBaseTestCase):
         self.assertEqual(send_mail_mock.call_args.args[0], self.user2)
         self.assertEqual(send_mail_mock.call_args.args[1], self.event)
 
-
     @patch("apps.events.mail.EventEmail.send_waitlist_notification_email")
-    def test_send_mail_on_user_on_available_slots_expanded(self, send_mail_mock: MagicMock):
+    def test_send_mail_on_available_slots_expanded(self, send_mail_mock: MagicMock):
         expand_slots_mutation = f"""
             mutation {{
             updateEvent(id: {self.event.id}, eventData: {{availableSlots: 3}}) {{

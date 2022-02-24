@@ -30,9 +30,8 @@ class EventFactory(DjangoModelFactory):
     end_time = timezone.now() + timedelta(days=21)  # 21 days from now
     contact_email = Faker(["no-NO"]).ascii_company_email()
     # Below should be moved to AttendableFactory
-    signup_open_date = timezone.now() + timedelta(days=1) 
+    signup_open_date = timezone.now() + timedelta(days=1)
     deadline = timezone.now() + timedelta(days=10)
-
 
 
 class CategoryFactory(DjangoModelFactory):
