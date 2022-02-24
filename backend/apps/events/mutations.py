@@ -10,7 +10,7 @@ from utils.decorators import permission_required
 from apps.organizations.models import Organization
 from apps.organizations.permissions import check_user_membership
 
-from .mail import send_event_emails
+from .mail import EventEmail
 from .models import Category, Event, SignUp
 from .types import CategoryType, EventType
 
@@ -351,7 +351,7 @@ class SendEventEmails(graphene.Mutation):
         check_user_membership(info.context.user, event.organization)
 
         for i in range(0, len(receiver_emails), settings.EMAIL_MAX_RECIPIENTS):
-            send_event_emails(receiver_emails[i : i + settings.EMAIL_MAX_RECIPIENTS], content, subject)
+            EventEmail.send_event_emails(receiver_emails[i : i + settings.EMAIL_MAX_RECIPIENTS], content, subject)
 
         ok = True
         return SendEventEmails(ok=ok)
