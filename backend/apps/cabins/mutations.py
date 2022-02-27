@@ -205,20 +205,14 @@ class UpdateBookingSemester(graphene.Mutation):
         ok = True
 
         # Fetch first and only BookingSemester
-        try:
-            semester = BookingSemester.objects.first()
+        semester = BookingSemester.objects.first()
 
-            if not semester:
-                # Create new booking semester if it doesn't exist
-                semester = BookingSemester()
+        if not semester:
+            # Create new booking semester if it doesn't exist
+            semester = BookingSemester()
 
-            for field, value in semester_data.items():
-                setattr(semester, field, value)
-            semester.save()
-            return UpdateBookingSemester(ok=ok, booking_semester=semester)
+        for field, value in semester_data.items():
+            setattr(semester, field, value)
 
-        except BookingSemester.DoesNotExist:
-            return UpdateBookingSemester(
-                booking_semester=None,
-                ok=False,
-            )
+        semester.save()
+        return UpdateBookingSemester(ok=ok, booking_semester=semester)
