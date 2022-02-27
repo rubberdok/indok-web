@@ -196,7 +196,7 @@ class UpdateBookingSemester(graphene.Mutation):
     ok = graphene.Boolean()
     booking_semester = graphene.Field(UpdateBookingSemesterType)
 
-    @permission_required("cabins.change_booking_semester")
+    @permission_required("cabins.change_bookingsemester")
     def mutate(
         self,
         info,

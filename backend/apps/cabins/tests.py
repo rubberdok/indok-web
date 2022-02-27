@@ -404,7 +404,7 @@ class BookingSemesterTestCase(CabinsBaseTestCase):
     def setUp(self) -> None:
         super().setUp()
 
-    def update_booking_semester(self):
+    def update_booking_semester(self, user=None):
         query = """
         mutation UpdateBookingSemester{
             updateBookingSemester(semesterData: {
@@ -421,8 +421,11 @@ class BookingSemesterTestCase(CabinsBaseTestCase):
                 }
             }
         }"""
+        # Default to super user
+        if user is None:
+            user = self.super_user
 
-        return self.query(query, user=self.super_user)
+        return self.query(query, user=user)
 
     def test_resolve_booking_semester(self):
         query = """
@@ -510,3 +513,18 @@ class BookingSemesterTestCase(CabinsBaseTestCase):
 
         # Assert that a new booking semester has been created
         self.assertEquals(len(BookingSemester.objects.all()), 1)
+
+    # Verify that a normal user cannot update a booking semester
+    def test_update_booking_semester_without_permission(self):
+        # Assert error when no permission
+        response = self.update_booking_semester(user=self.user)
+        self.assert_permission_error(response)
+
+        # Add permission
+        content_type = ContentType.objects.get_for_model(BookingSemester)
+        permission = Permission.objects.get(codename="change_bookingsemester", content_type=content_type)
+        self.user.user_permissions.add(permission)
+
+        # Assert no error when updating booking semester with permission
+        response = self.update_booking_semester(user=self.user)
+        self.assertResponseNoErrors(response)
