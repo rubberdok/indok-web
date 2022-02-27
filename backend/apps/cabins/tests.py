@@ -502,7 +502,7 @@ class BookingSemesterTestCase(CabinsBaseTestCase):
         self.assertEquals(booking_semester["fallStartDate"], "2021-09-01")
         self.assertEquals(booking_semester["fallSemesterActive"], False)
 
-    # Verify that updating the booking semester creates a new booking semester if there are no booking 
+    # Verify that updating the booking semester creates a new booking semester if there are no booking
     # semesters in the database.
     def test_update_booking_semester_when_not_exists(self):
         # Delete booking semester in db
