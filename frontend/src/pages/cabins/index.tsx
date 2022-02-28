@@ -24,7 +24,7 @@ const CabinsPage: NextPage = () => {
     if (data && data.user && !error) {
       setIsLoggedIn(true);
     }
-  }, [data]);
+  }, [data, error]);
 
   const facilitiesData = [
     {

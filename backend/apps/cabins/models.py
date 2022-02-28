@@ -60,3 +60,18 @@ class BookingResponsible(models.Model):
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}, {'aktiv' if self.active else ''}"
+
+
+class BookingSemester(models.Model):
+    fall_start_date = models.DateField()
+    fall_end_date = models.DateField()
+    spring_start_date = models.DateField()
+    spring_end_date = models.DateField()
+    fall_semester_active = models.BooleanField()
+    spring_semester_active = models.BooleanField()
+
+    def __str__(self):
+        return (
+            f"Booking semester with fall semester from {self.fall_start_date} to {self.fall_end_date} and spring "
+            f"semester from {self.spring_start_date} to {self.spring_end_date}"
+        )

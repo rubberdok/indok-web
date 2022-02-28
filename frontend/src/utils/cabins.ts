@@ -1,3 +1,4 @@
+import { BookingSemester } from "@components/pages/cabins/Admin/BookingSemesterPicker";
 import {
   BasicBooking,
   Cabin,
@@ -9,6 +10,8 @@ import {
 } from "@interfaces/cabins";
 import dayjs from "dayjs";
 import validator from "validator";
+import isBetween from "dayjs/plugin/isBetween";
+dayjs.extend(isBetween);
 
 /*
 File containing helper functions for cabins.
@@ -129,4 +132,16 @@ export const generateEmailAndBookingInput: (
     checkIn: datePick.checkInDate,
     checkOut: datePick.checkOutDate,
   };
+};
+
+/* 
+  Checks if a date is within the fall or spring booking semester.
+*/
+export const dateInBookingSemester = (date: dayjs.Dayjs, bookingSemester: BookingSemester): boolean => {
+  const inFallSemester = date.isBetween(bookingSemester.fallStartDate, bookingSemester.fallEndDate, null, "[]");
+  const inSpringSemester = date.isBetween(bookingSemester.springStartDate, bookingSemester.springEndDate, null, "[]");
+
+  return (
+    (inFallSemester && bookingSemester.fallSemesterActive) || (inSpringSemester && bookingSemester.springSemesterActive)
+  );
 };

@@ -5,7 +5,7 @@ from django.db.models import QuerySet
 from graphene_django import DjangoObjectType
 import graphene
 
-from .models import Booking as BookingModel, Cabin as CabinModel, BookingResponsible
+from .models import Booking as BookingModel, Cabin as CabinModel, BookingResponsible, BookingSemester
 
 
 class AllBookingsType(DjangoObjectType):
@@ -51,6 +51,11 @@ class BookingResponsibleType(DjangoObjectType):
 
     class Meta:
         model = BookingResponsible
+
+
+class UpdateBookingSemesterType(DjangoObjectType):
+    class Meta:
+        model = BookingSemester
 
 
 EmailTypes = Literal["reserve_booking", "approve_booking", "disapprove_booking"]

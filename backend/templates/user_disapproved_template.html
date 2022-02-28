@@ -41,7 +41,10 @@
         <span><strong>{{check_in }}</strong></span> til
           <span><strong>{{ check_out }}</strong> har dessverre blitt <strong>underkjent</strong> av Hyttestyret. </span>
       </p>
-        <p>Bookingen din ble underkjent av følgende grunn: <strong>{{ extra_info }}</strong></p>
+        {% if extra_info|length > 0 %}
+            <p><strong>Bookingen din ble underkjent av følgende grunn:</strong></p>
+            <p>{{ extra_info }}</p>
+        {% endif %}
       <p>Ikke nøl med å ta kontakt hvis dere skulle ha spørsmål.</p>
       <p>Med vennlig hilsen,</p>
         <p>

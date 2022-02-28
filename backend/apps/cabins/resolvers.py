@@ -1,4 +1,4 @@
-from apps.cabins.models import Booking as BookingModel, Cabin, BookingResponsible
+from apps.cabins.models import Booking as BookingModel, Cabin, BookingResponsible, BookingSemester
 from graphql_jwt.decorators import permission_required
 
 
@@ -33,3 +33,6 @@ class CabinResolvers:
         Returns the first found active booking responsible.
         """
         return BookingResponsible.objects.filter(active=True).first()
+
+    def resolve_booking_semester(self, info):
+        return BookingSemester.objects.first()

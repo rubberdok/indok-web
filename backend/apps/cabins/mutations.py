@@ -1,8 +1,8 @@
 import graphene
 
 from .helpers import price
-from .types import AllBookingsType, BookingInfoType, EmailInputType
-from apps.cabins.models import Booking as BookingModel
+from .types import AllBookingsType, BookingInfoType, EmailInputType, UpdateBookingSemesterType
+from apps.cabins.models import Booking as BookingModel, BookingSemester
 from apps.cabins.models import Cabin as CabinModel
 from .constants import APPROVE_BOOKING, DISAPPROVE_BOOKING
 from .mail import send_mail
@@ -36,6 +36,15 @@ class UpdateBookingInput(BookingInput):
     is_tentative = graphene.Boolean()
 
 
+class UpdateBookingSemesterInput(graphene.InputObjectType):
+    fall_start_date = graphene.Date()
+    fall_end_date = graphene.Date()
+    spring_start_date = graphene.Date()
+    spring_end_date = graphene.Date()
+    fall_semester_active = graphene.Boolean()
+    spring_semester_active = graphene.Boolean()
+
+
 class CreateBooking(graphene.Mutation):
     """
     Add a new booking to the database
@@ -55,7 +64,8 @@ class CreateBooking(graphene.Mutation):
     ):
         ok = True
         # Check that incoming fields are ok
-        create_booking_validation(booking_data)
+        semester = BookingSemester.objects.first()
+        create_booking_validation(booking_data, booking_semester=semester)
         booking = BookingModel()
         for input_field, input_value in booking_data.items():
             if input_field and input_field != "cabins":
@@ -89,7 +99,8 @@ class UpdateBooking(graphene.Mutation):
         try:
             booking = BookingModel.objects.get(pk=booking_data.id)
             # Check that incoming fields are ok
-            create_booking_validation(booking_data)
+            semester = BookingSemester.objects.first()
+            create_booking_validation(booking_data, booking_semester=semester)
             for input_field, input_value in booking_data.items():
                 if input_field and input_field != "cabins":
                     setattr(booking, input_field, input_value)
@@ -161,7 +172,7 @@ class SendEmail(graphene.Mutation):
             "check_out": email_input["check_out"],
             "cabins": cabins,
             "price": booking_price,
-            "extra_info": email_input["extra_info"],
+            "extra_info": email_input.get("extra_info", ""),
         }
 
         # Sends an email to the user
@@ -172,3 +183,36 @@ class SendEmail(graphene.Mutation):
             send_mail(booking_info=booking_info, email_type=email_input["email_type"], admin=True)
 
         return SendEmail(ok=True)
+
+
+class UpdateBookingSemester(graphene.Mutation):
+    """
+    Update the booking semester
+    """
+
+    class Arguments:
+        semester_data = UpdateBookingSemesterInput()
+
+    ok = graphene.Boolean()
+    booking_semester = graphene.Field(UpdateBookingSemesterType)
+
+    @permission_required("cabins.change_bookingsemester")
+    def mutate(
+        self,
+        info,
+        semester_data,
+    ):
+        ok = True
+
+        # Fetch first and only BookingSemester
+        semester = BookingSemester.objects.first()
+
+        if not semester:
+            # Create new booking semester if it doesn't exist
+            semester = BookingSemester()
+
+        for field, value in semester_data.items():
+            setattr(semester, field, value)
+
+        semester.save()
+        return UpdateBookingSemester(ok=ok, booking_semester=semester)
