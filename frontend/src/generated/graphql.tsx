@@ -653,6 +653,8 @@ export type Mutations = {
   updateBlogPost?: Maybe<UpdateBlogPost>;
   /** Change the given booking */
   updateBooking?: Maybe<UpdateBooking>;
+  /** Update the booking semester */
+  updateBookingSemester?: Maybe<UpdateBookingSemester>;
   /** Updates the category with a given ID with the data in category_data */
   updateCategory?: Maybe<UpdateCategory>;
   /** Updates the event with a given ID with the data in event_data */
@@ -817,7 +819,7 @@ export type MutationsSendEventMailsArgs = {
   content?: InputMaybe<Scalars["String"]>;
   eventId: Scalars["ID"];
   receiverEmails?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
-  subject?: InputMaybe<Scalars["String"]>;
+  subject: Scalars["String"];
 };
 
 export type MutationsSubmitAnswersArgs = {
@@ -844,6 +846,10 @@ export type MutationsUpdateBlogPostArgs = {
 
 export type MutationsUpdateBookingArgs = {
   bookingData?: InputMaybe<UpdateBookingInput>;
+};
+
+export type MutationsUpdateBookingSemesterArgs = {
+  semesterData?: InputMaybe<UpdateBookingSemesterInput>;
 };
 
 export type MutationsUpdateCategoryArgs = {
@@ -984,6 +990,7 @@ export type Queries = {
   availableYears: Array<Scalars["String"]>;
   blog?: Maybe<BlogType>;
   blogPost?: Maybe<BlogPostType>;
+  bookingSemester?: Maybe<UpdateBookingSemesterType>;
   cabins?: Maybe<Array<Maybe<CabinType>>>;
   category?: Maybe<CategoryType>;
   defaultEvents?: Maybe<Array<Maybe<EventType>>>;
@@ -1269,6 +1276,33 @@ export type UpdateBookingInput = {
   lastName?: InputMaybe<Scalars["String"]>;
   phone?: InputMaybe<Scalars["String"]>;
   receiverEmail?: InputMaybe<Scalars["String"]>;
+};
+
+/** Update the booking semester */
+export type UpdateBookingSemester = {
+  __typename?: "UpdateBookingSemester";
+  bookingSemester?: Maybe<UpdateBookingSemesterType>;
+  ok?: Maybe<Scalars["Boolean"]>;
+};
+
+export type UpdateBookingSemesterInput = {
+  fallEndDate?: InputMaybe<Scalars["Date"]>;
+  fallSemesterActive?: InputMaybe<Scalars["Boolean"]>;
+  fallStartDate?: InputMaybe<Scalars["Date"]>;
+  springEndDate?: InputMaybe<Scalars["Date"]>;
+  springSemesterActive?: InputMaybe<Scalars["Boolean"]>;
+  springStartDate?: InputMaybe<Scalars["Date"]>;
+};
+
+export type UpdateBookingSemesterType = {
+  __typename?: "UpdateBookingSemesterType";
+  fallEndDate: Scalars["Date"];
+  fallSemesterActive: Scalars["Boolean"];
+  fallStartDate: Scalars["Date"];
+  id: Scalars["ID"];
+  springEndDate: Scalars["Date"];
+  springSemesterActive: Scalars["Boolean"];
+  springStartDate: Scalars["Date"];
 };
 
 /** Updates the category with a given ID with the data in category_data */
