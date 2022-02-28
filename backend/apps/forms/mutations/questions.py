@@ -191,7 +191,7 @@ class SubmitOrUpdateAnswers(graphene.Mutation):
                 ]
             )
         except IntegrityError as err:
-            if "answers_not_empty" in err.args[0]:
+            if "answer_not_empty" in err.args[0]:
                 return SubmitOrUpdateAnswers(ok=False, message="Du må svare på alle obligatoriske spørsmål.")
             else:
                 raise err
