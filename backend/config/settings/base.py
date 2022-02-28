@@ -186,7 +186,10 @@ GOOGLE_DRIVE_API_KEY = env("GOOGLE_DRIVE_API_KEY")
 # GRAPHENE
 GRAPHENE = {
     "SCHEMA": "config.schema.schema",
-    "MIDDLEWARE": ["graphql_jwt.middleware.JSONWebTokenMiddleware", "api.auth.middleware.AnonymousUserMiddleware"],
+    "MIDDLEWARE": [
+        "graphql_jwt.middleware.JSONWebTokenMiddleware",
+        "api.auth.middleware.AnonymousUserMiddleware",
+    ],
 }
 GRAPHQL_JWT = {"JWT_COOKIE_DOMAIN": env("JWT_COOKIE_DOMAIN", default="localhost")}
 GRAPHQL_URL = "graphql/"
