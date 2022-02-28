@@ -1,7 +1,7 @@
 import graphene
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, ValidationError
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from graphql_jwt.decorators import login_required, staff_member_required
@@ -158,7 +158,7 @@ class EventSignUp(graphene.Mutation):
         if now < event.signup_open_date:
             raise Exception("Arrangementet er ikke åpent for påmelding enda")
         if event.deadline is not None and now > event.deadline:
-            raise Exception("Påmelding for arrangementet er stengt")
+            raise ValidationError("Påmelding for arrangementet er stengt")
 
         user = info.context.user
 
