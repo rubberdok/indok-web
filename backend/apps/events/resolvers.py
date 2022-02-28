@@ -23,7 +23,7 @@ DEFAULT_REPORT_FIELDS = {
     "signup_user_email",
     "signup_user_phone_number",
     "user_allergies",
-    "attending",
+    "attendance_status",
     "order_timestamp",
     "has_paid",
     "order_id",
@@ -164,12 +164,12 @@ def export_single_event(event_id: int, fields: Union[list[str], set[str]]) -> pd
 
     if attending_users.exists():
         df_users_attending = pd.DataFrame(attending_users.values()).set_index("id").add_prefix("user_")
-        df_users_attending["attending"] = True
+        df_users_attending["attendance_status"] = "ATTENDING"
         df_users = pd.concat([df_users, df_users_attending])
 
     if wait_list.exists():
         df_users_wait_list = pd.DataFrame(wait_list.values()).set_index("id").add_prefix("user_")
-        df_users_wait_list["attending"] = False
+        df_users_wait_list["attendance_status"] = "WAIT LIST"
 
         df_users = pd.concat([df_users, df_users_wait_list])
 
@@ -180,8 +180,7 @@ def export_single_event(event_id: int, fields: Union[list[str], set[str]]) -> pd
         df_orders = pd.DataFrame(orders.values()).set_index("user_id").add_prefix("order_")
         df_users = df_users.join(df_orders)
         payment_successful = df_users["order_payment_status"] == Order.PaymentStatus.CAPTURED
-        df_users.loc[payment_successful, "has_paid"] = True
-        df_users.loc[~payment_successful, "has_paid"] = False
+        df_users["has_paid"] = payment_successful
 
     df_sign_ups = (
         pd.DataFrame(sign_ups.order_by("timestamp").values())
@@ -189,7 +188,7 @@ def export_single_event(event_id: int, fields: Union[list[str], set[str]]) -> pd
         .rename(columns={"signup_event_id": "event_id", "signup_user_id": "user_id"})
     )
 
-    df_joined = df_sign_ups.join(df_users, on="user_id", how="left").sort_values(["event_id", "user_id"])
+    df_joined = df_sign_ups.join(df_users, on="user_id").sort_values(["event_id", "user_id"])
     df_joined["event_title"] = event.title
 
     if df_joined.empty:
