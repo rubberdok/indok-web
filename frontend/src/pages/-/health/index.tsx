@@ -1,16 +1,20 @@
-import { useLazyQuery } from "@apollo/client";
+import { useLazyQuery, useQuery } from "@apollo/client";
 import { GET_USER_PROFILE } from "@graphql/users/queries";
 import { addApolloState, initializeApollo } from "@lib/apolloClient";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { User } from "src/types/users";
 
 const HealthPage = ({ user }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const [loadServerTime] = useLazyQuery(GET_USER_PROFILE);
+  const { data } = useQuery<{ user: User }>(GET_USER_PROFILE, {
+    fetchPolicy: "cache-only",
+  });
+  const [loadUser] = useLazyQuery<{ user: User | null }>(GET_USER_PROFILE, { fetchPolicy: "network-only" });
   return (
     <>
       <h1>Hi, I am healthy</h1>
-      {user ? <h4>The request was made by {user.firstName}</h4> : <h4>The request was made without being logged in</h4>}
-      <button onClick={() => loadServerTime()}>Click me</button>
+      {user && <h4>The server request was made by {user.firstName}</h4>}
+      {data?.user && <h4>The live query belongs to {data?.user.firstName}</h4>}
+      <button onClick={() => loadUser()}>Update live query</button>
     </>
   );
 };
