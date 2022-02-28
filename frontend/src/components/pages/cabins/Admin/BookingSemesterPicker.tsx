@@ -30,15 +30,6 @@ export type BookingSemester = {
   springSemesterActive: boolean;
 };
 
-export const defaultBookingSemester: BookingSemester = {
-  fallStartDate: "",
-  fallEndDate: "",
-  springStartDate: "",
-  springEndDate: "",
-  fallSemesterActive: false,
-  springSemesterActive: false,
-};
-
 const BookingSemesterPicker: React.VFC = () => {
   const [updateBookingSemester] = useMutation<{ semesterData: BookingSemester }>(UPDATE_BOOKING_SEMESTER);
   const handleErrorDialogClose = () => router.push("/");
@@ -53,7 +44,8 @@ const BookingSemesterPicker: React.VFC = () => {
     const fallEnd = dayjs(bookingSemester.fallEndDate);
     const springStart = dayjs(bookingSemester.springStartDate);
     const springEnd = dayjs(bookingSemester.springEndDate);
-    if (fallStart.isAfter(fallEnd) || springStart.isAfter(springEnd) || fallEnd.isAfter(springStart)) {
+
+    if (fallStart.isAfter(fallEnd) || springStart.isAfter(springEnd)) {
       setSnackbarMessage("Start-datoer kan ikke vært før slutt-datoer.");
       setOpenSnackbar(true);
       setAlertSeverity("error");

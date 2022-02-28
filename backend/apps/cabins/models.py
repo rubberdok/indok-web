@@ -15,7 +15,7 @@ class Cabin(models.Model):
 
 class Booking(models.Model):
     class Meta:
-        permissions = [("send_email", "Can send email")]
+        permissions = [("send_email", "Can send email"), ("manage_booking", "Can manage bookings, used for admins")]
 
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)

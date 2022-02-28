@@ -16,7 +16,7 @@ import { useState } from "react";
 
 type DialogProps = {
   bookingToBeDeleted?: BookingFromQuery;
-  setBookingToBeDeleted: any;
+  setBookingToBeDeleted: React.Dispatch<React.SetStateAction<BookingFromQuery | undefined>>;
   setOpenSnackbar: React.Dispatch<React.SetStateAction<boolean>>;
   setSnackbarMessage: React.Dispatch<React.SetStateAction<string>>;
   refetch: (
@@ -24,14 +24,20 @@ type DialogProps = {
   ) => Promise<ApolloQueryResult<{ adminAllBookings: BookingFromQuery[] }>>;
 };
 
-const DeleteBookingDialog: React.VFC<DialogProps> = (props) => {
+const DeleteBookingDialog: React.VFC<DialogProps> = ({
+  bookingToBeDeleted,
+  setBookingToBeDeleted,
+  setOpenSnackbar,
+  setSnackbarMessage,
+  refetch,
+}) => {
   const [declineMessage, setDeclineMessage] = useState("");
   const [declineBooking] = useMutation(DECLINE_BOOKING, { refetchQueries: [{ query: QUERY_ADMIN_ALL_BOOKINGS }] });
-  const handleDeleteBookingOnClose = () => props.setBookingToBeDeleted(undefined);
+  const handleDeleteBookingOnClose = () => setBookingToBeDeleted(undefined);
   const [send_email] = useMutation(SEND_EMAIL);
 
   return (
-    <Dialog open={props.bookingToBeDeleted != undefined} onClose={handleDeleteBookingOnClose}>
+    <Dialog open={bookingToBeDeleted != undefined} onClose={handleDeleteBookingOnClose}>
       <DialogTitle>Du er nå i ferd med å gjøre en irreversibel handling</DialogTitle>
       <DialogContent>
         <DialogContentText>Er du sikker på at du vil slette denne bookingen?</DialogContentText>
@@ -54,13 +60,13 @@ const DeleteBookingDialog: React.VFC<DialogProps> = (props) => {
         </Button>
         <Button
           onClick={() => {
-            if (props.bookingToBeDeleted) {
-              declineBooking({ variables: { id: props.bookingToBeDeleted.id } }).then(() => {
-                props.setSnackbarMessage("Bookingen ble slettet");
-                props.setOpenSnackbar(true);
-                props.refetch();
+            if (bookingToBeDeleted) {
+              declineBooking({ variables: { id: bookingToBeDeleted.id } }).then(() => {
+                setSnackbarMessage("Bookingen ble slettet");
+                setOpenSnackbar(true);
+                refetch();
               });
-              send_email(getDecisionEmailProps(props.bookingToBeDeleted, false, declineMessage));
+              send_email(getDecisionEmailProps(bookingToBeDeleted, false, declineMessage));
             }
             handleDeleteBookingOnClose();
           }}

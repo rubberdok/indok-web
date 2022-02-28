@@ -20,7 +20,7 @@ DEFAULT_REPORT_FIELDS = {
     "signup_user_grade_year",
     "signup_user_email",
     "signup_user_phone_number",
-    "signup_user_allergies",
+    "user_allergies",
 }
 
 FiletypeSpec = namedtuple("FiletypeSpec", ["content_type", "extension"])

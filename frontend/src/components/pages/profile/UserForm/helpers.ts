@@ -34,7 +34,7 @@ export const validationSchema = Yup.object().shape({
   phoneNumber: Yup.string()
     .min(8, "Telefonnummeret må være 8 tegn eller lenger.")
     .max(12, "Telefonnummeret kan ikke være mer enn 12 tegn.")
-    .matches(/(0047|\+47|47)?[49]\d{7}/, "Må være et gyldig telefonnummer."),
+    .matches(/^(0047|\+47|47)?[49]\d{7}$/, "Må være et gyldig telefonnummer."),
 });
 
 export const suggestGraduationYear = () => {

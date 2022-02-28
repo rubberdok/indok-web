@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "author": "Hovedstyrets webkomitè",
+  "author": "rubberdok",
   "license": "MIT",
   "scripts": {
     "dev": "next",
@@ -39,12 +39,12 @@
     "react-swipeable-views": "^0.14.0",
     "react-swipeable-views-utils": "^0.14.0",
     "sharp": "^0.29.0",
-    "ts-debounce": "^3.0.0",
+    "ts-debounce": "^4.0.0",
     "validator": "^13.6.0",
     "yup": "^0.32.9"
   },
   "devDependencies": {
-    "@types/node": "^14.17.3",
+    "@types/node": "^16.11.22",
     "@types/react": "^17.0.11",
     "@types/react-dom": "^17.0.8",
     "@types/react-swipeable-views": "^0.13.0",

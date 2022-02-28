@@ -57,11 +57,7 @@ def booking_semester_validation(
 
 
 def check_dates_in_range(dates: List[datetime.date], range_start: datetime.date, range_end: datetime.date) -> bool:
-    for date in dates:
-        if not (range_start <= date <= range_end):
-            return False
-
-    return True
+    return range_start <= dates[0] and dates[-1] <= range_end
 
 
 def checkin_validation(check_in, check_out, cabin_ids):

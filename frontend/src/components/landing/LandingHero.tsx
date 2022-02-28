@@ -1,4 +1,4 @@
-import { Box, Button, Container, Grid, Hidden, Typography } from "@material-ui/core";
+import { Box, Button, Container, Grid, Hidden, Typography, useMediaQuery } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import Link from "next/link";
@@ -55,10 +55,6 @@ const useStyles = makeStyles((theme) => ({
     backgroundRepeat: "no-repeat",
     backgroundPosition: "center",
   },
-  heroCard: {
-    marginTop: -70,
-    padding: "32px 48px",
-  },
   relative: {
     position: "relative",
     height: "100%",
@@ -68,7 +64,8 @@ const useStyles = makeStyles((theme) => ({
       maxWidth: "90vw",
     },
     height: "70vh",
-    paddingTop: "25vh",
+
+    paddingTop: "23vh",
   },
   height: {
     height: "inherit",
@@ -120,26 +117,35 @@ const useStyles = makeStyles((theme) => ({
   },
   nth: {
     transition: "0.7s all ease",
-    background: "url('nth.svg')",
+    background: "url('/static/anniversary/anniversary_logo_black.svg')",
     backgroundSize: "contain",
     backgroundPosition: "left bottom!important",
     backgroundRepeat: "no-repeat",
     opacity: 0.04,
     height: "70vh",
-    marginLeft: "-28vh",
-    top: "-4vh",
+    marginLeft: "-20vh",
+    top: "5vh",
   },
 }));
 
 const ID_PREFIX = "hero";
 
-const Hero: React.FC = () => {
+const LandingHero: React.FC = () => {
   const classes = useStyles();
   const [isShown, setIsShown] = useState("");
+  const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down("sm"));
 
   return (
-    <Box id="back-to-top-anchor" height="100vh" position="relative">
-      <Grid container style={{ height: "100%", position: "absolute", zIndex: -1, background: "black" }}>
+    <Box id="back-to-top-anchor" height={isMobile ? "80vh" : "100vh"} position="relative">
+      <Grid
+        container
+        style={{
+          height: "100%",
+          position: "absolute",
+          zIndex: -1,
+          background: "black",
+        }}
+      >
         <Grid item xs={12} md={8} className={classes.relative}>
           <Hidden smDown>
             {organizations.map((item) => (
@@ -188,7 +194,7 @@ const Hero: React.FC = () => {
                   Industriell Økonomi og Teknologiledelse
                 </Typography>
                 <br />
-                <Link href="./about" passHref>
+                <Link href="/about" passHref>
                   <Button color="inherit" variant="outlined">
                     Les om foreningen
                   </Button>
@@ -228,4 +234,4 @@ const Hero: React.FC = () => {
   );
 };
 
-export default Hero;
+export default LandingHero;

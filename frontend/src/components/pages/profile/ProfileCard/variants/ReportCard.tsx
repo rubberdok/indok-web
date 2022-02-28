@@ -8,7 +8,7 @@ const ReportCard: React.VFC = ({ ...props }) => {
       <Grid container direction="column">
         <Grid item>
           <Typography variant="body2">
-            Har du opplevd noe ugreit, ubehagelig eller ulovlig på Indøk? Da kan du varsle om det.
+            Har du opplevd noe ugreit eller ubehagelig på Indøk? Da kan du melde fra om det til Baksida.
           </Typography>
         </Grid>
       </Grid>

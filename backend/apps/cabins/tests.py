@@ -145,7 +145,7 @@ class CabinsResolversTestCase(CabinsBaseTestCase):
         self.assert_permission_error(response)
 
         # Try to make query with permission
-        self.add_booking_permission("view_booking")
+        self.add_booking_permission("manage_booking")
         response = self.query(query, user=self.user)
         self.assertResponseNoErrors(response)
         # Fetching content of response
@@ -280,7 +280,7 @@ class CabinsMutationsTestCase(CabinsBaseTestCase):
         self.assert_permission_error(response)
 
         # Change booking with change_booking permission
-        self.add_booking_permission("change_booking")
+        self.add_booking_permission("manage_booking")
         response = self.query(query, user=self.user)
 
         # Fetch updated booking
@@ -305,7 +305,7 @@ class CabinsMutationsTestCase(CabinsBaseTestCase):
             Booking.objects.get(pk=self.first_booking.id)
         except Booking.DoesNotExist:
             self.assertTrue(True, "The booking was deleted after unauthorized user tried to delete")
-        self.add_booking_permission("delete_booking")
+        self.add_booking_permission("manage_booking")
         response = self.query(query, user=self.user)
         self.assertResponseNoErrors(response)
         with self.assertRaises(Booking.DoesNotExist):
@@ -404,6 +404,29 @@ class BookingSemesterTestCase(CabinsBaseTestCase):
     def setUp(self) -> None:
         super().setUp()
 
+    def update_booking_semester(self, user=None):
+        query = """
+        mutation UpdateBookingSemester{
+            updateBookingSemester(semesterData: {
+                fallStartDate: "2021-09-01",
+                fallEndDate: "2021-11-29",
+                springStartDate: "2022-01-01",
+                springEndDate: "2022-01-05",
+                fallSemesterActive: false,
+                springSemesterActive: true
+            }) {
+                bookingSemester {
+                    fallStartDate
+                    fallSemesterActive
+                }
+            }
+        }"""
+        # Default to super user
+        if user is None:
+            user = self.super_user
+
+        return self.query(query, user=user)
+
     def test_resolve_booking_semester(self):
         query = """
         query BookingSemesters {
@@ -469,20 +492,7 @@ class BookingSemesterTestCase(CabinsBaseTestCase):
         self.assertResponseHasErrors(response)
 
     def test_update_booking_semester(self):
-        query = """
-        mutation UpdateBookingSemester{
-            updateBookingSemester(semesterData: {
-                fallStartDate: "2021-09-01",
-                fallSemesterActive: false,
-            }) {
-                bookingSemester {
-                    fallStartDate
-                    fallSemesterActive
-                }
-            }
-        }"""
-
-        response = self.query(query, user=self.super_user)
+        response = self.update_booking_semester()
         self.assertResponseNoErrors(response)
 
         # Fetching content of response
@@ -491,3 +501,31 @@ class BookingSemesterTestCase(CabinsBaseTestCase):
 
         self.assertEquals(booking_semester["fallStartDate"], "2021-09-01")
         self.assertEquals(booking_semester["fallSemesterActive"], False)
+
+    # Verify that updating the booking semester creates a new booking semester if there are no booking
+    # semesters in the database.
+    def test_update_booking_semester_when_not_exists(self):
+        # Delete booking semester in db
+        BookingSemester.objects.all().delete()
+
+        # Update non-existing booking semester
+        response = self.update_booking_semester()
+        self.assertResponseNoErrors(response)
+
+        # Assert that a new booking semester has been created
+        self.assertEquals(len(BookingSemester.objects.all()), 1)
+
+    # Verify that a normal user cannot update a booking semester
+    def test_update_booking_semester_without_permission(self):
+        # Assert error when no permission
+        response = self.update_booking_semester(user=self.user)
+        self.assert_permission_error(response)
+
+        # Add permission
+        content_type = ContentType.objects.get_for_model(BookingSemester)
+        permission = Permission.objects.get(codename="change_bookingsemester", content_type=content_type)
+        self.user.user_permissions.add(permission)
+
+        # Assert no error when updating booking semester with permission
+        response = self.update_booking_semester(user=self.user)
+        self.assertResponseNoErrors(response)

@@ -89,7 +89,7 @@ class UpdateBooking(graphene.Mutation):
     ok = graphene.Boolean()
     booking = graphene.Field(AllBookingsType)
 
-    @permission_required("cabins.change_booking")
+    @permission_required("cabins.manage_booking")
     def mutate(
         self,
         info,
@@ -128,7 +128,7 @@ class DeleteBooking(graphene.Mutation):
     class Arguments:
         id = graphene.ID()
 
-    @permission_required("cabins.delete_booking")
+    @permission_required("cabins.manage_booking")
     def mutate(self, info, id, **kwargs):
         try:
             booking = BookingModel.objects.get(pk=id)
@@ -222,7 +222,7 @@ class UpdateBookingSemester(graphene.Mutation):
     ok = graphene.Boolean()
     booking_semester = graphene.Field(UpdateBookingSemesterType)
 
-    @permission_required("cabins.change_booking_semester")
+    @permission_required("cabins.change_bookingsemester")
     def mutate(
         self,
         info,
@@ -231,15 +231,14 @@ class UpdateBookingSemester(graphene.Mutation):
         ok = True
 
         # Fetch first and only BookingSemester
-        try:
-            semester = BookingSemester.objects.first()
-            for field, value in semester_data.items():
-                setattr(semester, field, value)
-            semester.save()
-            return UpdateBookingSemester(ok=ok, booking_semester=semester)
+        semester = BookingSemester.objects.first()
 
-        except BookingSemester.DoesNotExist:
-            return UpdateBookingSemester(
-                booking_semester=None,
-                ok=False,
-            )
+        if not semester:
+            # Create new booking semester if it doesn't exist
+            semester = BookingSemester()
+
+        for field, value in semester_data.items():
+            setattr(semester, field, value)
+
+        semester.save()
+        return UpdateBookingSemester(ok=ok, booking_semester=semester)
