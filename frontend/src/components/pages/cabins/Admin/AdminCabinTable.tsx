@@ -25,7 +25,7 @@ type CabinTableProps = {
   bookings?: BookingFromQuery[];
   setOpenSnackbar?: React.Dispatch<React.SetStateAction<boolean>>;
   setSnackbarMessage?: React.Dispatch<React.SetStateAction<string>>;
-  setBookingToBeDeleted?: any;
+  setBookingToBeDeleted?: React.Dispatch<React.SetStateAction<BookingFromQuery | undefined>>;
   refetch?: (
     variables?: Partial<OperationVariables> | undefined
   ) => Promise<ApolloQueryResult<{ adminAllBookings: BookingFromQuery[] }>>;
@@ -98,7 +98,7 @@ const AdminCabinTable = ({
                   <Box color={theme.palette.error.main} display="inline" component="span">
                     <IconButton
                       disabled={!booking.isTentative}
-                      onClick={() => setBookingToBeDeleted(booking)}
+                      onClick={() => setBookingToBeDeleted && setBookingToBeDeleted(booking)}
                       color="inherit"
                     >
                       <ClearIcon />

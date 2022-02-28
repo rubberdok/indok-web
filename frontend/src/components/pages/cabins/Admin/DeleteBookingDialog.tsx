@@ -61,12 +61,12 @@ const DeleteBookingDialog: React.VFC<DialogProps> = ({
         <Button
           onClick={() => {
             if (bookingToBeDeleted) {
+              send_email(getDecisionEmailProps(bookingToBeDeleted, false, declineMessage));
               declineBooking({ variables: { id: bookingToBeDeleted.id } }).then(() => {
-                setSnackbarMessage("Bookingen ble slettet");
+                setSnackbarMessage(`Bookingen er underkjent. Mail er sendt til ${bookingToBeDeleted.receiverEmail}.`);
                 setOpenSnackbar(true);
                 refetch();
               });
-              send_email(getDecisionEmailProps(bookingToBeDeleted, false, declineMessage));
             }
             handleDeleteBookingOnClose();
           }}
