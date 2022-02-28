@@ -7,3 +7,7 @@ generates:
       - "typescript"
       - "typescript-operations"
       - "typed-document-node"
+hooks:
+  afterAllFileWrite:
+    - eslint --fix
+    - prettier --write
