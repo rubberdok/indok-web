@@ -242,7 +242,7 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
                       onChange={(e) => setExtraInformation(e.target.value)}
                     />
                   )}
-                {timeData && (
+                {timeData && event.deadline && dayjs(event.deadline).isAfter(dayjs()) && (
                   <CountdownButton
                     countDownDate={(event as AttendableEvent).signupOpenDate}
                     isSignedUp={(event as AttendableEvent).userAttendance.isSignedUp}
