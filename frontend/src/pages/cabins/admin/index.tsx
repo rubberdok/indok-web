@@ -95,7 +95,7 @@ const AdminPage: NextPage = () => {
             <Box sx={{ width: "100%" }}>
               <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
                 <Tabs
-                  onChange={(e, newValue) => handleTabChange(newValue)}
+                  onChange={(_e, newValue) => handleTabChange(newValue)}
                   value={tabValue}
                   indicatorColor="primary"
                   variant="fullWidth"

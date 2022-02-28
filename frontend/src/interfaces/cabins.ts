@@ -24,6 +24,7 @@ export interface Booking extends BasicBooking, PublicBooking, Participants {
   isDeclined: boolean;
 }
 export interface BookingFromQuery extends Booking {
+  timestamp: Date;
   __typename: string;
 }
 

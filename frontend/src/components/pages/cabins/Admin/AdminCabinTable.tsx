@@ -18,6 +18,8 @@ import CheckIcon from "@material-ui/icons/Check";
 import { ApolloQueryResult, OperationVariables, useMutation } from "@apollo/client";
 import { CONFIRM_BOOKING, SEND_EMAIL } from "@graphql/cabins/mutations";
 import { QUERY_ADMIN_ALL_BOOKINGS } from "@graphql/cabins/queries";
+import dayjs from "dayjs";
+import InlineTableCell from "./InlineTableCell";
 
 type CabinTableProps = {
   bookings?: BookingFromQuery[];
@@ -41,10 +43,10 @@ const AdminCabinTable = ({
 
   return (
     <TableContainer component={Paper}>
-      <Table size="small">
+      <Table size="small" style={{ display: "table" }}>
         <TableHead>
           <TableRow>
-            <TableCell>Navn</TableCell>
+            <TableCell align="right">Navn</TableCell>
             <TableCell align="right">Epost</TableCell>
             <TableCell align="right">Telefonnummer</TableCell>
             <TableCell align="right">Innsjekk</TableCell>
@@ -52,19 +54,24 @@ const AdminCabinTable = ({
             <TableCell align="right">Hytte</TableCell>
             <TableCell align="right">Status</TableCell>
             <TableCell align="right">Handlinger</TableCell>
+            <TableCell align="right">Tidspunkt</TableCell>
+            <TableCell align="right">Antall indøkere</TableCell>
+            <TableCell align="right">Antall eksterne</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {bookings?.map((booking: BookingFromQuery) => (
             <TableRow key={booking.id}>
-              <TableCell>{`${booking.firstName} ${booking.lastName}`}</TableCell>
-              <TableCell align="right">{booking.receiverEmail}</TableCell>
-              <TableCell align="right">{booking.phone}</TableCell>
-              <TableCell align="right">{booking.checkIn}</TableCell>
-              <TableCell align="right">{booking.checkOut}</TableCell>
-              <TableCell align="right">{toStringChosenCabins(booking.cabins)}</TableCell>
-              <TableCell align="right">{booking.isTentative ? "Ikke godkjent" : "Godkjent"}</TableCell>
-              <TableCell align="right">
+              <InlineTableCell>{`${booking.firstName} ${booking.lastName}`}</InlineTableCell>
+              <InlineTableCell>{booking.receiverEmail}</InlineTableCell>
+              <InlineTableCell>{booking.phone}</InlineTableCell>
+              <InlineTableCell>{booking.checkIn}</InlineTableCell>
+              <InlineTableCell>{booking.checkOut}</InlineTableCell>
+              <InlineTableCell>{toStringChosenCabins(booking.cabins)}</InlineTableCell>
+              <InlineTableCell>
+                {booking.isDeclined || booking.isTentative ? "Ikke godkjent" : "Godkjent"}
+              </InlineTableCell>
+              <InlineTableCell>
                 <Tooltip title="Godkjenn">
                   <Box display="inline" component="span">
                     <IconButton
@@ -73,7 +80,7 @@ const AdminCabinTable = ({
                         confirmBooking({ variables: { id: booking.id } }).then(() => {
                           if (setSnackbarMessage && setOpenSnackbar && refetch) {
                             setSnackbarMessage(
-                              `Booking bekreftet. Bekreftelsesmail sendt er sendt til ${booking.receiverEmail}.`
+                              `Booking bekreftet. Bekreftelsesmail er sendt til ${booking.receiverEmail}.`
                             );
                             setOpenSnackbar(true);
                             refetch();
@@ -98,7 +105,10 @@ const AdminCabinTable = ({
                     </IconButton>
                   </Box>
                 </Tooltip>
-              </TableCell>
+              </InlineTableCell>
+              <InlineTableCell>{dayjs(booking.timestamp).format("HH:mm DD-MM-YYYY")}</InlineTableCell>
+              <InlineTableCell>{booking.internalParticipants}</InlineTableCell>
+              <InlineTableCell>{booking.externalParticipants}</InlineTableCell>
             </TableRow>
           ))}
         </TableBody>
