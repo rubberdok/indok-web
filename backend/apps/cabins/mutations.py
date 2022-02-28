@@ -139,31 +139,6 @@ class DeleteBooking(graphene.Mutation):
         return DeleteBooking(ok=True, booking_id=booking_id)
 
 
-class DeclineBooking(graphene.Mutation):
-    """
-    Declines the booking with the given ID by setting the is_declined field to True
-    """
-
-    ok = graphene.Boolean()
-    booking_id = graphene.ID()
-
-    class Arguments:
-        id = graphene.ID()
-
-    @permission_required("cabins.update_booking")
-    def mutate(self, info, id, **kwargs):
-        try:
-            booking = BookingModel.objects.get(pk=id)
-        except BookingModel.DoesNotExist:
-            return DeclineBooking(ok=False, booking_id=id)
-
-        booking_id = id
-        booking.is_declined = True
-        booking.is_tentative = False
-        booking.save()
-        return DeclineBooking(ok=True, booking_id=booking_id)
-
-
 class SendEmail(graphene.Mutation):
     """
     Sends email to the user or an admin (or both)
