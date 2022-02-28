@@ -1,4 +1,5 @@
 import { useQuery } from "@apollo/client";
+import { FeaturedArchiveDocument } from "@generated/graphql";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
@@ -7,7 +8,6 @@ import GridList from "@material-ui/core/GridList";
 import GridListTile from "@material-ui/core/GridListTile";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import { FeaturedArchiveDocument } from "src/generated/graphql";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
