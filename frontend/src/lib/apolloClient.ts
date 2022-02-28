@@ -7,14 +7,15 @@ import { IncomingMessage } from "http";
 import isEqual from "lodash/isEqual";
 import { GetServerSidePropsContext } from "next";
 import { useMemo } from "react";
+import { AppProps } from "next/app";
 
 type PageProps = {
-  props: any;
+  props: AppProps["pageProps"];
   __APOLLO_STATE__?: NormalizedCacheObject;
 };
 
 export const APOLLO_STATE_PROP_NAME = "__APOLLO_STATE__";
-const COOKIES_TOKEN_NAME = "JWT";
+export const COOKIES_TOKEN_NAME = "JWT";
 
 let apolloClient: ApolloClient<NormalizedCacheObject> | undefined;
 

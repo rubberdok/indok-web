@@ -1,23 +1,27 @@
-import { GET_SERVER_TIME } from "@graphql/utils/time/queries";
+import { useLazyQuery } from "@apollo/client";
+import { GET_USER_PROFILE } from "@graphql/users/queries";
 import { addApolloState, initializeApollo } from "@lib/apolloClient";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import { User } from "src/types/users";
 
-const HealthPage = ({ serverTime }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const HealthPage = ({ user }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+  const [loadServerTime] = useLazyQuery(GET_USER_PROFILE);
   return (
     <>
       <h1>Hi, I am healthy</h1>
-      <h4>The request was made at {serverTime}</h4>
+      {user ? <h4>The request was made by {user.firstName}</h4> : <h4>The request was made without being logged in</h4>}
+      <button onClick={() => loadServerTime()}>Click me</button>
     </>
   );
 };
 
-export const getServerSideProps: GetServerSideProps<{ serverTime: string }> = async () => {
-  const client = initializeApollo();
+export const getServerSideProps: GetServerSideProps<{ user: User | null }> = async (ctx) => {
+  const client = initializeApollo({}, ctx);
   const {
-    data: { serverTime },
+    data: { user },
     error,
-  } = await client.query<{ serverTime: string }>({
-    query: GET_SERVER_TIME,
+  } = await client.query<{ user: User | null }>({
+    query: GET_USER_PROFILE,
   });
 
   if (error) {
@@ -27,7 +31,7 @@ export const getServerSideProps: GetServerSideProps<{ serverTime: string }> = as
   }
 
   return addApolloState(client, {
-    props: { serverTime },
+    props: { user },
   });
 };
 
