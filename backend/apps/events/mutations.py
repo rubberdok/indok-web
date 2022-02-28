@@ -157,7 +157,7 @@ class EventSignUp(graphene.Mutation):
 
         if now < event.signup_open_date:
             raise Exception("Arrangementet er ikke åpent for påmelding enda")
-        if now > event.deadline:
+        if event.deadline is not None and now > event.deadline:
             raise Exception("Påmelding for arrangementet er stengt")
 
         user = info.context.user
