@@ -212,6 +212,8 @@ def wrap_attendee_report_as_json(df, file_basename, filetype):
     if filetype == "xlsx":
         if "signup_timestamp" in df:
             df["signup_timestamp"] = df["signup_timestamp"].apply(lambda a: pd.to_datetime(a).tz_localize(None))
+        if "order_timestamp" in df:
+            df["order_timestamp"] = df["order_timestamp"].apply(lambda a: pd.to_datetime(a).tz_localize(None))
         buffer = io.BytesIO()
         with pd.ExcelWriter(buffer, engine="xlsxwriter", options={"remove_timezone": True}) as writer:
             df.to_excel(writer, index=False)
