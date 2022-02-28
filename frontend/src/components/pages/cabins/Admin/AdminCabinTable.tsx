@@ -21,7 +21,7 @@ import { QUERY_ADMIN_ALL_BOOKINGS } from "@graphql/cabins/queries";
 import dayjs from "dayjs";
 import InlineTableCell from "./InlineTableCell";
 
-type CabinTableProps = {
+type Props = {
   bookings?: BookingFromQuery[];
   setOpenSnackbar?: React.Dispatch<React.SetStateAction<boolean>>;
   setSnackbarMessage?: React.Dispatch<React.SetStateAction<string>>;
@@ -31,13 +31,7 @@ type CabinTableProps = {
   ) => Promise<ApolloQueryResult<{ adminAllBookings: BookingFromQuery[] }>>;
 };
 
-const AdminCabinTable = ({
-  bookings,
-  setSnackbarMessage,
-  setOpenSnackbar,
-  setBookingToBeDeleted,
-  refetch,
-}: CabinTableProps) => {
+const AdminCabinTable = ({ bookings, setSnackbarMessage, setOpenSnackbar, setBookingToBeDeleted, refetch }: Props) => {
   const [confirmBooking] = useMutation(CONFIRM_BOOKING, { refetchQueries: [{ query: QUERY_ADMIN_ALL_BOOKINGS }] });
   const [send_email] = useMutation(SEND_EMAIL);
 

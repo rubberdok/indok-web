@@ -23,7 +23,7 @@ import { Alert } from "@material-ui/lab";
 import dayjs from "dayjs";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Settings from "@material-ui/icons/Settings";
 
 const useStyles = makeStyles((theme) => ({
