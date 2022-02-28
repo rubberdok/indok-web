@@ -29,7 +29,11 @@ def send_wait_list_notification(sender: Type[SignUp], instance: SignUp, **kwargs
 def send_wait_list_notification_when_events_expand(sender: Type[Event], instance: Event, **kwargs):
     if not instance._state.adding:
         previous: Event = sender.objects.get(pk=instance.pk)
-        if previous.available_slots < instance.available_slots:
+        if (
+            previous.available_slots is not None
+            and instance.available_slots is not None
+            and (previous.available_slots < instance.available_slots)
+        ):
             users_on_wait_list = previous.users_on_waiting_list[: instance.available_slots - previous.available_slots]
             for user in users_on_wait_list:
                 EventEmail.send_waitlist_notification_email(user, instance)
