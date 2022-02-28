@@ -4,7 +4,7 @@ type TableCellProps = {
   children: React.ReactNode;
 };
 
-const InlineTableCell: React.VFC<TableCellProps> = ({ children }) => {
+const InlineTableCell: React.FC<TableCellProps> = ({ children }) => {
   return (
     <TableCell style={{ whiteSpace: "nowrap" }} align="right">
       {children}

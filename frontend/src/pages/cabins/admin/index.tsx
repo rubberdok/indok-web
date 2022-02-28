@@ -45,9 +45,6 @@ const AdminPage: NextPage = () => {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [bookingToBeDeleted, setBookingToBeDeleted] = useState<BookingFromQuery | undefined>();
-  const [accepted, setAccepted] = useState<BookingFromQuery[]>();
-  const [declined, setDeclined] = useState<BookingFromQuery[]>();
-  const [tentative, setTentative] = useState<BookingFromQuery[]>();
   const [tabValue, setTabValue] = useState<number>(0);
   const router = useRouter();
 
@@ -55,14 +52,9 @@ const AdminPage: NextPage = () => {
 
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const classes = useStyles();
-
-  useEffect(() => {
-    if (data?.adminAllBookings) {
-      setAccepted(data.adminAllBookings.filter((booking) => !booking.isTentative && !booking.isDeclined));
-      setDeclined(data.adminAllBookings.filter((booking) => !booking.isTentative && booking.isDeclined));
-      setTentative(data.adminAllBookings.filter((booking) => booking.isTentative));
-    }
-  }, [data]);
+  const accepted = data?.adminAllBookings.filter((booking) => !booking.isTentative && !booking.isDeclined);
+  const declined = data?.adminAllBookings.filter((booking) => !booking.isTentative && booking.isDeclined);
+  const tentative = data?.adminAllBookings.filter((booking) => booking.isTentative);
 
   return (
     <Layout>
