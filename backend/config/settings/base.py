@@ -82,7 +82,6 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 # AUTHENTICATION
 AUTHENTICATION_BACKENDS = [
-    "graphql_jwt.backends.JSONWebTokenBackend",
     "django.contrib.auth.backends.ModelBackend",
     "guardian.backends.ObjectPermissionBackend",
 ]
@@ -104,7 +103,6 @@ AUTH_PASSWORD_VALIDATORS = [
 # MIDDLEWARE
 MIDDLEWARE = [
     "django_alive.middleware.healthcheck_bypass_host_check",
-    "api.auth.middleware.IndokWebJWTMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -196,7 +194,6 @@ GRAPHENE = {
     "SCHEMA": "config.schema.schema",
     "SCHEMA_OUTPUT": "schema.json",
     "MIDDLEWARE": [
-        "graphql_jwt.middleware.JSONWebTokenMiddleware",
         "api.auth.middleware.AnonymousUserMiddleware",
     ],
 }
