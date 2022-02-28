@@ -173,7 +173,6 @@ def export_single_event(event_id: int, fields: Union[list[str], set[str]]) -> pd
 
         df_users = pd.concat([df_users, df_users_wait_list])
 
-    orders = Order.objects.none()
     if event.products.exists():
         product = event.products.first()
         orders = Order.objects.filter(product=product)
