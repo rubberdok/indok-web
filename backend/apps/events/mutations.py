@@ -149,7 +149,7 @@ class EventSignUp(graphene.Mutation):
     @permission_required("events.add_signup")
     def mutate(self, info, event_id, data):
         try:
-            event = Event.objects.get(pk=event_id)
+            event: Event = Event.objects.get(pk=event_id)
         except Event.DoesNotExist:
             raise ValueError("Ugyldig arrangement")
 
@@ -157,6 +157,8 @@ class EventSignUp(graphene.Mutation):
 
         if now < event.signup_open_date:
             raise Exception("Arrangementet er ikke åpent for påmelding enda")
+        if now > event.deadline:
+            raise Exception("Påmelding for arrangementet er stengt")
 
         user = info.context.user
 
