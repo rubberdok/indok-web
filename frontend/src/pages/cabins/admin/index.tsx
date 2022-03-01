@@ -1,8 +1,9 @@
-import { useMutation, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import Layout from "@components/Layout";
+import TabPanel from "@components/pages/about/TabPanel";
+import AdminCabinTable from "@components/pages/cabins/Admin/AdminCabinTable";
 import DeleteBookingDialog from "@components/pages/cabins/Admin/DeleteBookingDialog";
 import PermissionRequired from "@components/permissions/PermissionRequired";
-import { CONFIRM_BOOKING, SEND_EMAIL } from "@graphql/cabins/mutations";
 import { QUERY_ADMIN_ALL_BOOKINGS } from "@graphql/cabins/queries";
 import { BookingFromQuery } from "@interfaces/cabins";
 import {
@@ -10,30 +11,20 @@ import {
   Button,
   Container,
   Grid,
-  IconButton,
   makeStyles,
-  Paper,
   Snackbar,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Tooltip,
+  Tab,
+  Tabs,
   Typography,
   useMediaQuery,
   useTheme,
 } from "@material-ui/core";
-import CheckIcon from "@material-ui/icons/Check";
-import ClearIcon from "@material-ui/icons/Clear";
-import SettingsIcon from "@material-ui/icons/Settings";
-import Alert from "@material-ui/lab/Alert";
-import { getDecisionEmailProps, toStringChosenCabins } from "@utils/cabins";
+import { Alert } from "@material-ui/lab";
 import dayjs from "dayjs";
 import { NextPage } from "next";
-import router from "next/router";
+import { useRouter } from "next/router";
 import React, { useState } from "react";
+import Settings from "@material-ui/icons/Settings";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -51,14 +42,19 @@ const AdminPage: NextPage = () => {
   const { data, refetch } = useQuery<{
     adminAllBookings: BookingFromQuery[];
   }>(QUERY_ADMIN_ALL_BOOKINGS, { variables: { after: dayjs().subtract(1, "day").format("YYYY-MM-DD") } });
-  const [confirmBooking] = useMutation(CONFIRM_BOOKING, { refetchQueries: [{ query: QUERY_ADMIN_ALL_BOOKINGS }] });
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [bookingToBeDeleted, setBookingToBeDeleted] = useState<BookingFromQuery | undefined>();
-  const [sendEmail] = useMutation(SEND_EMAIL);
+  const [tabValue, setTabValue] = useState<number>(0);
+  const router = useRouter();
+
+  const handleTabChange = (newTabValue: number) => setTabValue(newTabValue);
 
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const classes = useStyles();
+  const accepted = data?.adminAllBookings.filter((booking) => !booking.isTentative && !booking.isDeclined);
+  const declined = data?.adminAllBookings.filter((booking) => !booking.isTentative && booking.isDeclined);
+  const tentative = data?.adminAllBookings.filter((booking) => booking.isTentative);
 
   return (
     <Layout>
@@ -80,75 +76,43 @@ const AdminPage: NextPage = () => {
                 <Typography variant={isMobile ? "h3" : "h1"} align="center">
                   Booking adminside
                 </Typography>
-                <Button startIcon={<SettingsIcon />} onClick={() => router.push("admin/settings")}>
+                <Button startIcon={<Settings />} onClick={() => router.push("admin/settings")}>
                   Innstillinger
                 </Button>
               </Box>
             </Grid>
           </Grid>
-          <Box className={classes.root} marginBottom={5}>
-            <TableContainer component={Paper}>
-              <Table size="medium">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Navn</TableCell>
-                    <TableCell>Epost</TableCell>
-                    <TableCell>Telefonnummer</TableCell>
-                    <TableCell>Innsjekk</TableCell>
-                    <TableCell>Utsjekk</TableCell>
-                    <TableCell>Hytte</TableCell>
-                    <TableCell>Status</TableCell>
-                    <TableCell>Handlinger</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {data?.adminAllBookings.map((booking: BookingFromQuery) => (
-                    <TableRow key={booking.id}>
-                      <TableCell>{`${booking.firstName} ${booking.lastName}`}</TableCell>
-                      <TableCell>{booking.receiverEmail}</TableCell>
-                      <TableCell>{booking.phone}</TableCell>
-                      <TableCell>{booking.checkIn}</TableCell>
-                      <TableCell>{booking.checkOut}</TableCell>
-                      <TableCell>{toStringChosenCabins(booking.cabins)}</TableCell>
-                      <TableCell>{booking.isTentative ? "Ikke godkjent" : "Godkjent"}</TableCell>
-                      <TableCell>
-                        <Tooltip title="Godkjenn">
-                          <Box display="inline">
-                            <IconButton
-                              disabled={!booking.isTentative}
-                              onClick={() => {
-                                confirmBooking({ variables: { id: booking.id } }).then(() => {
-                                  setSnackbarMessage(
-                                    `Booking bekreftet. Bekreftelsesmail er sendt til ${booking.receiverEmail}.`
-                                  );
-                                  setOpenSnackbar(true);
-                                  refetch();
-                                });
-                                sendEmail(getDecisionEmailProps(booking, true));
-                              }}
-                              color="secondary"
-                            >
-                              <CheckIcon />
-                            </IconButton>
-                          </Box>
-                        </Tooltip>
-                        <Tooltip title="Avkreft">
-                          <Box color={theme.palette.error.main} display="inline">
-                            <IconButton
-                              disabled={!booking.isTentative}
-                              onClick={() => setBookingToBeDeleted(booking)}
-                              color="inherit"
-                            >
-                              <ClearIcon />
-                            </IconButton>
-                          </Box>
-                        </Tooltip>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
+
+          <Box className={classes.root} marginBottom={5} component="div">
+            <Box sx={{ width: "100%" }}>
+              <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                <Tabs
+                  onChange={(_e, newValue) => handleTabChange(newValue)}
+                  value={tabValue}
+                  indicatorColor="primary"
+                  variant="fullWidth"
+                >
+                  <Tab label="Nye søknader" />
+                  <Tab label="Godkjente søknader" />
+                  <Tab label="Underkjente søknader" />
+                </Tabs>
+              </Box>
+              <TabPanel value={tabValue} index={0}>
+                <AdminCabinTable
+                  bookings={tentative}
+                  setBookingToBeDeleted={setBookingToBeDeleted}
+                  setOpenSnackbar={setOpenSnackbar}
+                  setSnackbarMessage={setSnackbarMessage}
+                  refetch={refetch}
+                />
+              </TabPanel>
+              <TabPanel value={tabValue} index={1}>
+                <AdminCabinTable bookings={accepted} />
+              </TabPanel>
+              <TabPanel value={tabValue} index={2}>
+                <AdminCabinTable bookings={declined} />
+              </TabPanel>
+            </Box>
           </Box>
         </PermissionRequired>
       </Container>

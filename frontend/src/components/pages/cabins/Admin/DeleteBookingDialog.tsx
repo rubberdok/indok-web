@@ -1,5 +1,5 @@
 import { ApolloQueryResult, OperationVariables, useMutation } from "@apollo/client";
-import { DELETE_BOOKING, SEND_EMAIL } from "@graphql/cabins/mutations";
+import { DECLINE_BOOKING, SEND_EMAIL } from "@graphql/cabins/mutations";
 import { QUERY_ADMIN_ALL_BOOKINGS } from "@graphql/cabins/queries";
 import { BookingFromQuery } from "@interfaces/cabins";
 import {
@@ -32,7 +32,7 @@ const DeleteBookingDialog: React.VFC<DialogProps> = ({
   refetch,
 }) => {
   const [declineMessage, setDeclineMessage] = useState("");
-  const [deleteBooking] = useMutation(DELETE_BOOKING, { refetchQueries: [{ query: QUERY_ADMIN_ALL_BOOKINGS }] });
+  const [declineBooking] = useMutation(DECLINE_BOOKING, { refetchQueries: [{ query: QUERY_ADMIN_ALL_BOOKINGS }] });
   const handleDeleteBookingOnClose = () => setBookingToBeDeleted(undefined);
   const [send_email] = useMutation(SEND_EMAIL);
 
@@ -61,12 +61,12 @@ const DeleteBookingDialog: React.VFC<DialogProps> = ({
         <Button
           onClick={() => {
             if (bookingToBeDeleted) {
-              deleteBooking({ variables: { id: bookingToBeDeleted.id } }).then(() => {
-                setSnackbarMessage("Bookingen ble slettet");
+              send_email(getDecisionEmailProps(bookingToBeDeleted, false, declineMessage));
+              declineBooking({ variables: { id: bookingToBeDeleted.id } }).then(() => {
+                setSnackbarMessage(`Bookingen er underkjent. Mail er sendt til ${bookingToBeDeleted.receiverEmail}.`);
                 setOpenSnackbar(true);
                 refetch();
               });
-              send_email(getDecisionEmailProps(bookingToBeDeleted, false, declineMessage));
             }
             handleDeleteBookingOnClose();
           }}
