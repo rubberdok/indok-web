@@ -18,10 +18,12 @@ from django.conf import settings
 from django.contrib import admin
 from django.urls import path
 from django.urls.conf import include
+from config import csrf
 
 urlpatterns = [
     path(settings.ADMIN_URL, admin.site.urls),
     path("ping", Ping.as_view()),
     path("-/", include("django_alive.urls")),
     path("ecommerce/", include("apps.ecommerce.urls")),
+    path("csrf/", csrf.csrf),
 ]
