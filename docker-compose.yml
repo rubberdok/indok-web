@@ -45,9 +45,8 @@ services:
   rabbitmq:
     image: rabbitmq:latest
     hostname: rabbitmq
-    environment:
-      - RABBITMQ_DEFAULT_USER=user
-      - RABBITMQ_DEFAULT_PASS=password
+    env_file:
+      - ./backend/.env
     ports:
         - "5672:5672"
     logging:

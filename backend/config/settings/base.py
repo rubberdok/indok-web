@@ -211,9 +211,13 @@ VIPPS_BASE_URL = env("VIPPS_BASE_URL", default="https://apitest.vipps.no")
 
 
 # Celery
-CELERY_BROKER = env("CELERY_BROKER")
-CELERY_BACKEND = env("CELERY_BACKEND")
+CELERY_BROKER = env("CELERY_BROKER", default="amqp://user:password@rabbitmq:5672/")
+CELERY_BACKEND = env("CELERY_BACKEND", default="rpc://")
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
-CELERY_TASK_RESULT_EXPIRES = env("CELERY_TASK_RESULT_EXPIRES")
+CELERY_TASK_RESULT_EXPIRES = env("CELERY_TASK_RESULT_EXPIRES", default=86400)  # 24 hours
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers.DatabaseScheduler"
+
+# Rabbitmq
+RABBITMQ_DEFAULT_USER = env("RABBITMQ_DEFAULT_USER", default="user")
+RABBITMQ_DEFAULT_PASS = env("RABBITMQ_DEFAULT_PASS", default="password")
