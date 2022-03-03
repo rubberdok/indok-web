@@ -67,10 +67,7 @@ class OrgPermissionGroup:
         Returns the group's permissions for the given model on the given app in Django's 'app.permission' format.
         May throw if the given app and model names are not in this permission group.
         """
-        perms = []
-        for perm in self.permissions[app][model]:
-            perms.append(f"{app}.{perm}")
-        return perms
+        return [f"{app}.{perm}" for perm in self.permissions[app][model]]
 
 
 # Base permission group that all members of an organization should be a part of.
