@@ -9,13 +9,13 @@ import { GetServerSidePropsContext } from "next";
 import { useMemo } from "react";
 import { AppProps } from "next/app";
 
-type PageProps = {
-  props: AppProps["pageProps"];
-  __APOLLO_STATE__?: NormalizedCacheObject;
-};
-
 export const APOLLO_STATE_PROP_NAME = "__APOLLO_STATE__";
 export const COOKIES_TOKEN_NAME = "JWT";
+
+type PageProps = {
+  props: AppProps["pageProps"];
+  [APOLLO_STATE_PROP_NAME]?: NormalizedCacheObject;
+};
 
 let apolloClient: ApolloClient<NormalizedCacheObject> | undefined;
 
