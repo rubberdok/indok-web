@@ -63,7 +63,10 @@ class OrgPermissionGroup:
         return perms
 
     def formatted_model_permissions(self, app: str, model: str) -> list[str]:
-        """Returns the group's permissions for the given model on the given app in Django's 'app.permission' format."""
+        """
+        Returns the group's permissions for the given model on the given app in Django's 'app.permission' format.
+        May throw if the given app and model names are not in this permission group.
+        """
         perms = []
         for perm in self.permissions[app][model]:
             perms.append(f"{app}.{perm}")
