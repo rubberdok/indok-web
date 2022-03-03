@@ -18,7 +18,7 @@ def assign_membership_permissions(instance: Membership, created: bool, **kwargs)
     """Assigns appropriate object permissions to newly created memberships."""
     if created:
         assign_object_permissions(
-            app_name="organizations", model_name="Membership", instance=instance, organization=instance.organization
+            app="organizations", model="Membership", instance=instance, organization=instance.organization
         )
 
 

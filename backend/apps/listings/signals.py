@@ -11,5 +11,5 @@ def assign_listing_permissions(instance: Listing, created: bool, **kwargs) -> No
     """Assigns appropriate object permissions to newly created listings."""
     if created:
         assign_object_permissions(
-            app_name="listings", model_name="Listing", instance=instance, organization=instance.organization
+            app="listings", model="Listing", instance=instance, organization=instance.organization
         )
