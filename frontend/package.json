@@ -24,10 +24,13 @@
     "@material-ui/lab": "^4.0.0-alpha.58",
     "@material-ui/system": "^4.11.2",
     "@sentry/nextjs": "^6.17.3",
+    "cookie": "^0.4.2",
     "dayjs": "^1.10.5",
+    "deepmerge": "^4.2.2",
     "formik": "^2.2.9",
     "graphql": "^15.5.0",
     "gray-matter": "^4.0.3",
+    "lodash": "^4.17.21",
     "material-ui-search-bar": "^1.0.0",
     "next": "^12.0.8",
     "npm": "^7.18.1",
@@ -44,6 +47,7 @@
     "yup": "^0.32.9"
   },
   "devDependencies": {
+    "@types/cookie": "^0.4.1",
     "@types/node": "^16.11.22",
     "@types/react": "^17.0.11",
     "@types/react-dom": "^17.0.8",
