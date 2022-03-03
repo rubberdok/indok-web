@@ -12,6 +12,7 @@ import { User } from "@interfaces/users";
 import Image from "next/image";
 import ContactCabinBoard from "@components/pages/cabins/ContactCabinBoard";
 import Hero from "@components/pages/cabins/Hero";
+import CabinPrices from "@components/pages/cabins/CabinPrices";
 
 /*
 Front page for cabins. Includes info about the cabins and link to the booking page (cabins/book).
@@ -201,6 +202,9 @@ const CabinsPage: NextPage = () => {
                       gode med hele fem løyper som begynner ved Stølen, alt fra 1,5 km – 15 km løyper. Se{" "}
                       <Link href="https://oppdal.com/forside/hoved/">Visit Oppdal</Link> for mer info.
                     </Typography>
+                  </Grid>
+                  <Grid item container sm={12}>
+                    <CabinPrices />
                   </Grid>
                   <Grid item container spacing={10} direction="row" justifyContent="center" alignContent="center">
                     <Grid item>
