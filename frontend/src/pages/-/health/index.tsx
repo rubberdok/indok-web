@@ -4,7 +4,7 @@ import { addApolloState, initializeApollo } from "@lib/apolloClient";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { User } from "src/types/users";
 
-const HealthPage = ({ user }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const HealthPage = ({ user }: InferGetServerSidePropsType<typeof getServerSideProps>): JSX.Element => {
   const { data } = useQuery<{ user: User }>(GET_USER_PROFILE, {
     fetchPolicy: "cache-only",
   });

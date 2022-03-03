@@ -25,7 +25,7 @@ const getToken = (req?: IncomingMessage) => {
   return parsedCookie[COOKIES_TOKEN_NAME];
 };
 
-function createApolloClient(ctx?: GetServerSidePropsContext) {
+function createApolloClient(ctx?: GetServerSidePropsContext): ApolloClient<NormalizedCacheObject> {
   const uri = typeof window === "undefined" ? config.INTERNAL_GRAPHQL_ENDPOINT : config.GRAPHQL_ENDPOINT;
   const httpLink = new HttpLink({
     uri: uri, // Server URL (must be absolute)
@@ -51,7 +51,10 @@ function createApolloClient(ctx?: GetServerSidePropsContext) {
   });
 }
 
-export function initializeApollo(initialState: NormalizedCacheObject = {}, ctx?: GetServerSidePropsContext) {
+export function initializeApollo(
+  initialState: NormalizedCacheObject = {},
+  ctx?: GetServerSidePropsContext
+): ApolloClient<NormalizedCacheObject> {
   const _apolloClient = apolloClient ?? createApolloClient(ctx);
 
   // If your page has Next.js data fetching methods that use Apollo Client, the initial state
@@ -80,7 +83,7 @@ export function initializeApollo(initialState: NormalizedCacheObject = {}, ctx?:
   return _apolloClient;
 }
 
-export function addApolloState(client: ApolloClient<NormalizedCacheObject>, pageProps: PageProps) {
+export function addApolloState(client: ApolloClient<NormalizedCacheObject>, pageProps: PageProps): PageProps {
   if (pageProps?.props) {
     pageProps.props[APOLLO_STATE_PROP_NAME] = client.cache.extract();
   }
@@ -88,7 +91,7 @@ export function addApolloState(client: ApolloClient<NormalizedCacheObject>, page
   return pageProps;
 }
 
-export function useApollo(pageProps: PageProps) {
+export function useApollo(pageProps: PageProps): ApolloClient<NormalizedCacheObject> {
   const state = pageProps[APOLLO_STATE_PROP_NAME];
   const store = useMemo(() => initializeApollo(state), [state]);
   return store;
