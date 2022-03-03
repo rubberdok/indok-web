@@ -1,8 +1,8 @@
 import { Typography } from "@material-ui/core";
-import { HeadingComponent, NormalComponents } from "react-markdown/src/ast-to-react";
+import { Components } from "react-markdown";
 
-const Heading: HeadingComponent = ({ children, id, level }) => {
-  const variant = `h${level}` as "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+const Heading: Components["h1"] = ({ children, id, level }) => {
+  const variant = `h${Math.min(level, 3)}` as "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
   return (
     <Typography id={id} variant={variant} component={variant} gutterBottom>
       {children}
@@ -16,7 +16,7 @@ export const h3 = Heading;
 export const h4 = Heading;
 export const h5 = Heading;
 export const h6 = Heading;
-export const p: NormalComponents["p"] = ({ children }) => (
+export const p: Components["p"] = ({ children }) => (
   <Typography variant="body2" paragraph>
     {children}
   </Typography>

@@ -16,4 +16,4 @@ export type User = {
   phoneNumber: string;
   firstLogin: boolean;
   events: Partial<Event>[];
-}
+};

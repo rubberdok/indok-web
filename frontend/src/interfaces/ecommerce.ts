@@ -8,7 +8,7 @@ export type Product = {
   description: string;
   organization: Organization;
   maxBuyableQuantity: number;
-}
+};
 
 export type PaymentStatus = "INITIATED" | "RESERVED" | "CAPTURED" | "CANCELLED" | "REFUNDED" | "FAILED" | "REJECTED";
 
@@ -20,4 +20,4 @@ export type Order = {
   totalPrice: number;
   paymentStatus: PaymentStatus;
   timestamp: string;
-}
+};

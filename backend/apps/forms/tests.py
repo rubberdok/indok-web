@@ -46,8 +46,6 @@ class FormBaseTestCase(ExtendedGraphQLTestCase):
         self.dropdown = QuestionFactory(form=self.form, question_type="DROPDOWN")
 
         # Create some options for MCQs
-        self.op1 = OptionFactory(question=self.mcq)
-        self.op2 = OptionFactory(question=self.mcq)
         self.op3 = OptionFactory(question=self.checkboxes)
         self.op4 = OptionFactory(question=self.checkboxes)
         self.op5 = OptionFactory(question=self.dropdown)
@@ -243,9 +241,68 @@ class FormsMutationTestCase(FormBaseTestCase):
 
         self.assertTrue(data["deleteQuestion"]["ok"])
 
+    def test_authorized_create_options(self):
+        query = f"""
+            mutation {{
+                createUpdateAndDeleteOptions(
+                    questionId: {self.mcq.id},
+                    optionData: [
+                        {{
+                            answer: "Opt 1"
+                        }},
+                        {{
+                            answer: "Opt 2"
+                        }}
+                    ]
+                ) {{
+                    ok
+                    options {{
+                        id
+                        answer
+                    }}
+                }}
+            }}
+        """
+
+        response = self.query(query=query, user=self.authorized_user)
+        self.assertResponseNoErrors(response)
+        options: list[dict[str, str]] = json.loads(response.content)["data"]["createUpdateAndDeleteOptions"]["options"]
+        self.deep_assert_equal(options, self.mcq.options.all())
+
+    def test_authorized_update_options(self):
+        query = f"""
+            mutation {{
+                createUpdateAndDeleteOptions(
+                    questionId: {self.checkboxes.id},
+                    optionData: [
+                        {{
+                            answer: "Opt 1"
+                        }},
+                        {{
+                            answer: "Opt 2"
+                        }},
+                        {{
+                            answer: "Opt 3"
+                            id: {self.op3.id}
+                        }}
+                    ]
+                ) {{
+                    ok
+                    options {{
+                        id
+                        answer
+                    }}
+                }}
+            }}
+        """
+        response = self.query(query=query, user=self.authorized_user)
+        self.assertResponseNoErrors(response)
+        options: list[dict[str, str]] = json.loads(response.content)["data"]["createUpdateAndDeleteOptions"]["options"]
+        self.deep_assert_equal(options, self.mcq.options.all())
+
 
 class FormResponseTestCase(FormBaseTestCase):
-    def submit_response_query(self, form: Union[FormFactory, Form]) -> str:
+    def submit_response_query(self, form: Union[FormFactory, Form], response: str = "Answer") -> str:
         return f"""
             mutation {{
                 submitAnswers(
@@ -253,27 +310,27 @@ class FormResponseTestCase(FormBaseTestCase):
                     answersData: [
                         {{
                             questionId: {self.paragraph.id}
-                            answer: "Answer"
+                            answer: "{response}"
                         }},
                         {{
                             questionId: {self.not_mandatory.id}
-                            answer: "Answer"
+                            answer: "{response}"
                         }},
                         {{
                             questionId: {self.short_question.id}
-                            answer: "Answer"
+                            answer: "{response}"
                         }},
                         {{
                             questionId: {self.mcq.id}
-                            answer: "Answer"
+                            answer: "{response}"
                         }},
                         {{
                             questionId: {self.checkboxes.id}
-                            answer: "Answer"
+                            answer: "{response}"
                         }},
                         {{
                             questionId: {self.dropdown.id}
-                            answer: "Answer"
+                            answer: "{response}"
                         }},
                     ]
                 ) {{
@@ -294,10 +351,40 @@ class FormResponseTestCase(FormBaseTestCase):
         mutation = self.submit_response_query(self.form)
         response = self.query(mutation, user=self.responding_student)
         self.assertResponseNoErrors(response)
-        self.assertEqual(
-            Answer.objects.filter(response__respondent=self.responding_student, answer="Answer").count(),
-            self.form.questions.count(),
-        )
+        answers = Answer.objects.filter(response__respondent=self.responding_student)
+        self.assertTrue(all(answer.answer == "Answer" for answer in answers))
+
+    def test_update_previously_answered_form(self) -> None:
+        mutation = self.submit_response_query(self.form, response="Second answer")
+        response = self.query(mutation, user=self.responding_student)
+        self.assertResponseNoErrors(response)
+        answers = Answer.objects.filter(response__respondent=self.responding_student)
+        self.assertTrue(all(answer.answer == "Second answer" for answer in answers))
+
+    def test_blank_mandatory_questions(self) -> None:
+        mutation = self.submit_response_query(self.form, response="")
+        response = self.query(query=mutation, user=self.responding_student)
+        self.assertResponseNoErrors(response)
+        self.assertFalse(json.loads(response.content)["data"]["submitAnswers"]["ok"])
+
+    def test_unanswered_mandatory_questions(self) -> None:
+        mutation = f"""mutation {{
+                submitAnswers(
+                    formId: {self.form.id},
+                    answersData: [
+                        {{
+                            questionId: {self.paragraph.id}
+                            answer: "Answered"
+                        }}
+                    ]
+                ) {{
+                    ok
+                    message
+                }}
+            }}
+        """
+        response = self.query(query=mutation, user=self.responding_student)
+        self.assertResponseHasErrors(response)
 
 
 class FormsQueryTestCase(FormBaseTestCase):

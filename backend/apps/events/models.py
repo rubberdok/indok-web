@@ -1,3 +1,4 @@
+from typing import TYPE_CHECKING
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.fields import GenericRelation
@@ -7,6 +8,9 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 from apps.ecommerce.mixins import Sellable
 from apps.organizations.models import Organization
+
+if TYPE_CHECKING:
+    from apps.users.models import User
 
 
 class Category(models.Model):
@@ -59,7 +63,7 @@ class Event(models.Model, Sellable):
     products = GenericRelation("ecommerce.Product")
 
     @property
-    def signed_up_users(self):
+    def signed_up_users(self) -> models.QuerySet["User"]:
         return (
             get_user_model()
             .objects.filter(signup__event=self.id, signup__is_attending=True)

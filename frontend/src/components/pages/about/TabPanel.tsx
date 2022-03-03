@@ -1,5 +1,3 @@
-import { Typography } from "@material-ui/core";
-
 type TabPanelProps = {
   children?: React.ReactNode;
   index: string | number;
@@ -17,11 +15,7 @@ const TabPanel: React.FC<TabPanelProps> = (props) => {
       aria-labelledby={`scrollable-auto-tab-${index}`}
       {...other}
     >
-      {value === index && (
-        <Typography variant="body1" paragraph>
-          {children}
-        </Typography>
-      )}
+      {value === index && <>{children}</>}
     </div>
   );
 };

@@ -12,7 +12,6 @@ export const GET_PRODUCT = gql`
   }
 `;
 
-
 export const GET_ALL_PRODUCTS = gql`
   query products {
     products {
@@ -23,7 +22,6 @@ export const GET_ALL_PRODUCTS = gql`
     }
   }
 `;
-
 
 export const GET_USER_ORDERS = gql`
   query {
