@@ -13,12 +13,10 @@ def assign_object_permissions(app: str, model: str, instance: "Model", organizat
     Assigns permissions on the instance to the organization's appropriate permission groups.
     """
     for permission_group in organization.permission_groups.all():
-        # Using try-except due to Python's "Easier to Ask for Forgiveness than Permission" principle
         try:
             perms = DEFAULT_ORG_PERMISSION_GROUPS[permission_group.group_type].formatted_model_permissions(app, model)
 
             for perm in perms:
                 assign_perm(perm, permission_group.group, instance)
-
         except KeyError:
             continue
