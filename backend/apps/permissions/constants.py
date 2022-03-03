@@ -53,7 +53,7 @@ class OrgPermissionGroup:
     create_description: Callable[[str], str]
     permissions: dict[str, dict[str, list[str]]] = field(default_factory=dict)
 
-    def formattedPermissions(self) -> list[str]:
+    def formatted_permissions(self) -> list[str]:
         """Returns the group's permissions in Django's 'app.permission' format."""
         perms = []
         for app in self.permissions:
