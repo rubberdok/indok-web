@@ -47,7 +47,7 @@ class OrganizationType(DjangoObjectType):
                     return resolver(organization, info)
                 else:
                     raise PermissionError(
-                        f"Du må være medlem av organisasjonen {organization.name} for å gjøre dette kallet"
+                        f"Du må være medlem av foreningen {organization.name} for å gjøre dette kallet"
                     )
 
             return wrapper
@@ -86,7 +86,7 @@ class MembershipType(DjangoObjectType):
                     return resolver(membership, info)
                 else:
                     raise PermissionError(
-                        f"Du må være medlem av organisasjonen {membership.organization.name} for å gjøre dette kallet"
+                        f"Du må være medlem av foreningen {membership.organization.name} for å gjøre dette kallet"
                     )
 
             return wrapper

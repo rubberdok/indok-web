@@ -3,10 +3,12 @@ import io
 import json
 from collections import namedtuple
 from datetime import date
+from typing import Union
 
 import pandas as pd
-from django.contrib.auth import get_user_model
 from django.db.models import Q
+
+from apps.ecommerce.models import Order
 
 from ..organizations.models import Organization
 from ..organizations.permissions import check_user_membership
@@ -21,6 +23,12 @@ DEFAULT_REPORT_FIELDS = {
     "signup_user_email",
     "signup_user_phone_number",
     "user_allergies",
+    "attendance_status",
+    "order_timestamp",
+    "has_paid",
+    "order_id",
+    "order_quantity",
+    "order_total_price",
 }
 
 FiletypeSpec = namedtuple("FiletypeSpec", ["content_type", "extension"])
@@ -140,30 +148,63 @@ class EventResolvers:
         return SignUp.objects.filter(event=event)
 
 
-def create_attendee_report(event_ids, fields):
-    fields = set(fields).intersection(DEFAULT_REPORT_FIELDS) if fields is not None else DEFAULT_REPORT_FIELDS
-    user_ids = SignUp.objects.filter(event_id__in=event_ids).values_list("user_id", flat=True)
+def export_single_event(event_id: int, fields: Union[list[str], set[str]]) -> pd.DataFrame:
+    event: Event = Event.objects.get(pk=event_id)
+    attending_users = event.signed_up_users[: event.available_slots]
+    wait_list = event.signed_up_users[event.available_slots :]
+    sign_ups = SignUp.objects.filter(event_id=event_id, is_attending=True)
 
-    # Fetch data
-    df_events = pd.DataFrame(Event.objects.filter(id__in=event_ids).values()).set_index("id").add_prefix("event_")
-    df_users = (
-        pd.DataFrame(get_user_model().objects.filter(id__in=user_ids).values()).set_index("id").add_prefix("user_")
+    df_users = pd.DataFrame(
+        columns=[
+            "user_first_name",
+            "user_last_name",
+            "user_allergies",
+        ]
     )
-    df_events_users = (
-        pd.DataFrame(SignUp.objects.filter(is_attending=True, event_id__in=event_ids).order_by("timestamp").values())
+
+    if attending_users.exists():
+        df_users_attending = pd.DataFrame(attending_users.values()).set_index("id").add_prefix("user_")
+        df_users_attending["attendance_status"] = "ATTENDING"
+        df_users = pd.concat([df_users, df_users_attending])
+
+    if wait_list.exists():
+        df_users_wait_list = pd.DataFrame(wait_list.values()).set_index("id").add_prefix("user_")
+        df_users_wait_list["attendance_status"] = "WAIT LIST"
+
+        df_users = pd.concat([df_users, df_users_wait_list])
+
+    if event.products.exists():
+        product = event.products.first()
+        orders = Order.objects.filter(product=product)
+        df_orders = pd.DataFrame(orders.values()).set_index("user_id").add_prefix("order_")
+        df_users = df_users.join(df_orders)
+        payment_successful = df_users["order_payment_status"] == Order.PaymentStatus.CAPTURED
+        df_users["has_paid"] = payment_successful
+
+    df_sign_ups = (
+        pd.DataFrame(sign_ups.order_by("timestamp").values())
         .add_prefix("signup_")
         .rename(columns={"signup_event_id": "event_id", "signup_user_id": "user_id"})
     )
-    df_joined = (
-        df_events_users.join(df_events, on="event_id", how="inner")
-        .join(df_users, on="user_id", how="inner")
-        .sort_values(["event_id", "user_id"])
-    )
 
-    # Return empty dataframe, lookups on an empty frame will raise an exception
+    df_joined = df_sign_ups.join(df_users, on="user_id").sort_values(["event_id", "user_id"])
+    df_joined["event_title"] = event.title
+
     if df_joined.empty:
         return pd.DataFrame()
-    return df_joined.loc[:, DEFAULT_REPORT_FIELDS].drop("password", errors="ignore", axis=1).loc[:, fields]
+
+    report_fields = list(DEFAULT_REPORT_FIELDS.intersection(df_joined.columns))
+    fields = set(fields).intersection(report_fields) if fields is not None else report_fields
+
+    return df_joined.loc[:, report_fields].drop("password", errors="ignore", axis=1).loc[:, fields]
+
+
+def create_attendee_report(event_ids, fields):
+    df = pd.DataFrame()
+    for event_id in event_ids:
+        df = pd.concat([df, export_single_event(event_id, fields)])
+
+    return df
 
 
 def wrap_attendee_report_as_json(df, file_basename, filetype):
@@ -171,6 +212,8 @@ def wrap_attendee_report_as_json(df, file_basename, filetype):
     if filetype == "xlsx":
         if "signup_timestamp" in df:
             df["signup_timestamp"] = df["signup_timestamp"].apply(lambda a: pd.to_datetime(a).tz_localize(None))
+        if "order_timestamp" in df:
+            df["order_timestamp"] = df["order_timestamp"].apply(lambda a: pd.to_datetime(a).tz_localize(None))
         buffer = io.BytesIO()
         with pd.ExcelWriter(buffer, engine="xlsxwriter", options={"remove_timezone": True}) as writer:
             df.to_excel(writer, index=False)

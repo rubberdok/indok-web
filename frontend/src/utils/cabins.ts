@@ -1,3 +1,4 @@
+import { BookingSemester } from "@components/pages/cabins/Admin/BookingSemesterPicker";
 import {
   BasicBooking,
   Cabin,
@@ -9,6 +10,8 @@ import {
 } from "@interfaces/cabins";
 import dayjs from "dayjs";
 import validator from "validator";
+import isBetween from "dayjs/plugin/isBetween";
+dayjs.extend(isBetween);
 
 /*
 File containing helper functions for cabins.
@@ -51,26 +54,28 @@ export const allValuesFilled: (contactInfo: ContactInfo) => boolean = (contactIn
   return selectValidity && filled.length == Object.keys(nonSelectContactInfo).length;
 };
 
-export const cabinOrderStepReady: (chosenCabins: Cabin[], datePick: DatePick) => { ready: boolean; errortext: string } =
-  (chosenCabins, datePick) => {
-    // At least one cabin has to be selected
-    if (chosenCabins.length == 0) {
-      return { ready: false, errortext: "Du må velge minst en hytte å booke" };
-    }
-    // The user needs to enter a check-in date
-    if (!datePick.checkInDate) {
-      return { ready: false, errortext: "Du må velge en dato for innsjekk" };
-    }
-    // The user needs to enter a check-out date
-    if (!datePick.checkOutDate) {
-      return { ready: false, errortext: "Du må velge en dato for utsjekk" };
-    }
-    // The chosen range must be vaild
-    if (!datePick?.isValid) {
-      return { ready: false, errortext: "Den valgte perioden er ikke tilgjengelig" };
-    }
-    return { ready: true, errortext: "" };
-  };
+export const cabinOrderStepReady: (
+  chosenCabins: Cabin[],
+  datePick: DatePick
+) => { ready: boolean; errortext: string } = (chosenCabins, datePick) => {
+  // At least one cabin has to be selected
+  if (chosenCabins.length == 0) {
+    return { ready: false, errortext: "Du må velge minst en hytte å booke" };
+  }
+  // The user needs to enter a check-in date
+  if (!datePick.checkInDate) {
+    return { ready: false, errortext: "Du må velge en dato for innsjekk" };
+  }
+  // The user needs to enter a check-out date
+  if (!datePick.checkOutDate) {
+    return { ready: false, errortext: "Du må velge en dato for utsjekk" };
+  }
+  // The chosen range must be vaild
+  if (!datePick?.isValid) {
+    return { ready: false, errortext: "Den valgte perioden er ikke tilgjengelig" };
+  }
+  return { ready: true, errortext: "" };
+};
 
 export const toStringChosenCabins: (chosenCabins: Cabin[]) => string[] = (chosenCabins) =>
   chosenCabins.map((cabin, i) => (i > 0 ? " og " + cabin.name : cabin.name));
@@ -129,4 +134,16 @@ export const generateEmailAndBookingInput: (
     checkIn: datePick.checkInDate,
     checkOut: datePick.checkOutDate,
   };
+};
+
+/* 
+  Checks if a date is within the fall or spring booking semester.
+*/
+export const dateInBookingSemester = (date: dayjs.Dayjs, bookingSemester: BookingSemester): boolean => {
+  const inFallSemester = date.isBetween(bookingSemester.fallStartDate, bookingSemester.fallEndDate, null, "[]");
+  const inSpringSemester = date.isBetween(bookingSemester.springStartDate, bookingSemester.springEndDate, null, "[]");
+
+  return (
+    (inFallSemester && bookingSemester.fallSemesterActive) || (inSpringSemester && bookingSemester.springSemesterActive)
+  );
 };

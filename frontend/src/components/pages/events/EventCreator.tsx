@@ -188,7 +188,7 @@ const CreateEvent: React.FC = () => {
         </Grid>
         <Grid item xs={6}>
           <FormControl>
-            <InputLabel id="select-org-label">Organisasjon</InputLabel>
+            <InputLabel id="select-org-label">Forening</InputLabel>
             <Select
               labelId="select-org-label"
               id="select-org"

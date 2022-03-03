@@ -1,10 +1,10 @@
+import HallOfFame from "@components/Footer/HallOfFame";
 import { Box, Button, Container, Grid, IconButton, makeStyles, Typography } from "@material-ui/core";
 import { Facebook, GitHub } from "@material-ui/icons";
-import Link from "next/link";
-import React from "react";
 import rubberdokLogo from "@public/img/rubberdok_logo_white.svg";
 import Image from "next/image";
-import HallOfFame from "@components/Footer/HallOfFame";
+import Link from "next/link";
+import React from "react";
 
 const useStyles = makeStyles((theme) => ({
   footer: {
@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   nth: {
-    background: "url('/nth.svg')",
+    background: "url('/static/anniversary/anniversary_logo_black.svg')",
     backgroundSize: 500,
     backgroundPosition: "right center",
     backgroundRepeat: "no-repeat",

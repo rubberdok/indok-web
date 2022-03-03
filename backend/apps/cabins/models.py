@@ -15,7 +15,7 @@ class Cabin(models.Model):
 
 class Booking(models.Model):
     class Meta:
-        permissions = [("send_email", "Can send email")]
+        permissions = [("send_email", "Can send email"), ("manage_booking", "Can manage bookings, used for admins")]
 
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
@@ -28,6 +28,7 @@ class Booking(models.Model):
     internal_participants = models.IntegerField()
     external_participants = models.IntegerField()
     is_tentative = models.BooleanField(default=True)
+    is_declined = models.BooleanField(default=False)
 
     @property
     def number_of_nights(self) -> int:
@@ -60,3 +61,18 @@ class BookingResponsible(models.Model):
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}, {'aktiv' if self.active else ''}"
+
+
+class BookingSemester(models.Model):
+    fall_start_date = models.DateField()
+    fall_end_date = models.DateField()
+    spring_start_date = models.DateField()
+    spring_end_date = models.DateField()
+    fall_semester_active = models.BooleanField()
+    spring_semester_active = models.BooleanField()
+
+    def __str__(self):
+        return (
+            f"Booking semester with fall semester from {self.fall_start_date} to {self.fall_end_date} and spring "
+            f"semester from {self.spring_start_date} to {self.spring_end_date}"
+        )
