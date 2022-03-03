@@ -53,34 +53,18 @@ def handle_removed_member(instance: Membership, **kwargs):
 def ensure_default_org_permission_groups(instance: Organization, **kwargs):
     """Ensures that organizations have correct default organization permission groups."""
     for (group_type, default_group) in DEFAULT_ORG_PERMISSION_GROUPS.items():
-        default_group_included = False
+        existing_group: ResponsibleGroup = None
 
-        existing_group: ResponsibleGroup
-        for existing_group in instance.permission_groups.all():
-            if existing_group.group_type == group_type:
-                default_group_included = True
-
-                existing_group_changed = False
-
-                if existing_group.name != default_group.name:
-                    existing_group.name = default_group.name
-                    existing_group_changed = True
-
-                updated_description = default_group.create_description(instance.name)
-                if existing_group.description != updated_description:
-                    existing_group.description = updated_description
-                    existing_group_changed = True
-
-                if set(existing_group.group.permissions.all()) != set(default_group.permissions):
-                    existing_group.group.permissions.set(default_group.formatted_permissions())
-
-                if existing_group_changed:
-                    existing_group.save()
-
+        # Checks if the default group already exists on the org.
+        responsible_group: ResponsibleGroup
+        for responsible_group in instance.permission_groups.all():
+            if responsible_group.group_type == group_type:
+                existing_group = responsible_group
                 break
 
-        if not default_group_included:
-            group = ResponsibleGroup.objects.create(
+        # Creates the ResponsibleGroup for the default group on the org.
+        if existing_group is None:
+            responsible_group = ResponsibleGroup.objects.create(
                 group_type=group_type,
                 name=default_group.name,
                 description=default_group.create_description(instance.name),
@@ -88,10 +72,28 @@ def ensure_default_org_permission_groups(instance: Organization, **kwargs):
             )
 
             try:
-                permissions = default_group.permissions["organizations"]["Organization"]
-
-                for permission in permissions:
-                    assign_perm(f"organizations.{permission}", group.group, instance)
-
+                perms = default_group.formatted_model_permissions(app="organizations", model="Organization")
+                for perm in perms:
+                    assign_perm(perm, responsible_group.group, instance)
             except (KeyError):
+                # If assigning permissions failed,
                 continue
+
+        # Updates
+        else:
+            existing_group_changed = False
+
+            if existing_group.name != default_group.name:
+                existing_group.name = default_group.name
+                existing_group_changed = True
+
+            updated_description = default_group.create_description(instance.name)
+            if existing_group.description != updated_description:
+                existing_group.description = updated_description
+                existing_group_changed = True
+
+            if set(existing_group.group.permissions.all()) != set(default_group.permissions):
+                existing_group.group.permissions.set(default_group.formatted_permissions())
+
+            if existing_group_changed:
+                existing_group.save()
