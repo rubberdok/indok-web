@@ -43,10 +43,28 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
 
   const [eventSignUp, { loading: signUpLoading, error: signUpError }] = useMutation<{
     eventSignUp: { isFull: boolean };
-  }>(EVENT_SIGN_UP);
+  }>(EVENT_SIGN_UP, {
+    onCompleted: () =>
+      refetchEventData({ eventId: eventId.toString() }).then((res) => {
+        res.data.event.attendable?.userAttendance?.isAttending
+          ? setOpenSignUpSnackbar(true)
+          : setOpenOnWaitingListSnackbar(true);
+      }),
+    onError: () => setOpenSignUpErrorSnackbar(true),
+  });
+
   const [eventSignOff, { loading: signOffLoading }] = useMutation<{
     eventSignOff: { isFull: boolean };
-  }>(EVENT_SIGN_OFF);
+  }>(EVENT_SIGN_OFF, {
+    onCompleted: () => {
+      refetchEventData({ eventId: eventId.toString() });
+      if (!eventData) return;
+      if (eventData.event.attendable?.userAttendance?.isAttending) setOpenSignOffSnackbar(true);
+      if (eventData.event.attendable?.userAttendance?.isOnWaitingList) setOpenOffWaitingListSnackbar(true);
+    },
+    onError: () => setOpenSignOffErrorSnackbar(true),
+  });
+
   const { data: userData } = useQuery<{ user: User }>(GET_USER);
 
   const {
@@ -67,39 +85,16 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
 
   const handleClick = () => {
     if (!userData?.user) return;
-    if (eventData.event.attendable?.userAttendance?.isAttending) {
-      eventSignOff({ variables: { eventId: eventId.toString() } })
-        .then(() => {
-          refetchEventData({ eventId: eventId.toString() });
-          setOpenSignOffSnackbar(true);
-        })
-        .catch(() => {
-          setOpenSignOffErrorSnackbar(true);
-        });
-      return;
-    }
-    if (eventData.event.attendable?.userAttendance?.isOnWaitingList) {
-      eventSignOff({ variables: { eventId: eventId.toString() } })
-        .then(() => {
-          refetchEventData({ eventId: eventId.toString() });
-          setOpenOffWaitingListSnackbar(true);
-        })
-        .catch(() => {
-          setOpenSignOffErrorSnackbar(true);
-        });
-      return;
-    }
-    eventSignUp({ variables: { eventId: eventId.toString(), data: extraInformation } })
-      .then(() => {
-        refetchEventData({ eventId: eventId.toString() }).then((res) => {
-          res.data.event.attendable?.userAttendance?.isAttending
-            ? setOpenSignUpSnackbar(true)
-            : setOpenOnWaitingListSnackbar(true);
-        });
-      })
-      .catch(() => {
-        setOpenSignUpErrorSnackbar(true);
+    const userAttendance = eventData.event.attendable?.userAttendance;
+    if (userAttendance?.isAttending || userAttendance?.isOnWaitingList) {
+      eventSignOff({
+        variables: { eventId: eventId.toString() },
       });
+      return;
+    }
+    eventSignUp({
+      variables: { eventId: eventId.toString(), data: extraInformation },
+    });
   };
 
   return (

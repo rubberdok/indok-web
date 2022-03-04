@@ -8,7 +8,7 @@ import { Box, Button, Card, CardActions, CircularProgress, Grid, makeStyles, Typ
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import Alert from "@components/Alert";
-import { DEFAULTINPUT } from "../constants";
+import { DEFAULTINPUT, EventDataType } from "../constants";
 import { getFormattedDataAndErrors } from "../helpers";
 import RequiredFields from "../EventFields/RequiredFields";
 import AttendableFields from "../EventFields/AttendableFields";
@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
 
 const CreateEvent: React.FC = () => {
   const classes = useStyles();
-  const [eventData, setEventData] = useState(DEFAULTINPUT);
+  const [eventData, setEventData] = useState<EventDataType>(DEFAULTINPUT);
   const [isAttendable, setIsAttendable] = useState(false);
   const [hasSlotDistribution, setHasSlotDistribution] = useState(false);
   const [slotDistribution, setSlotDistribution] = useState<{ category: number[]; availableSlots: number }[]>([]);
@@ -42,6 +42,12 @@ const CreateEvent: React.FC = () => {
   const [createEvent, { loading: createEventLoading, error: createEventError }] = useMutation<{
     createEvent: { event: Event };
   }>(CREATE_EVENT, {
+    onCompleted: () => {
+      setEventData(DEFAULTINPUT);
+      setOpenCreateSnackbar(true);
+      router.push("/events");
+    },
+    onError: () => setOpenCreateErrorSnackbar(true),
     update: (cache, { data }) => {
       data &&
         cache.modify({
@@ -126,14 +132,6 @@ const CreateEvent: React.FC = () => {
         eventData: formattedInputData.eventInput,
         attendableData: isAttendable ? formattedInputData.attendableInput : undefined,
       },
-    }).then((res) => {
-      if (res.errors) {
-        setOpenCreateErrorSnackbar(true);
-      } else {
-        setEventData(DEFAULTINPUT);
-        setOpenCreateSnackbar(true);
-        router.push("/events");
-      }
     });
   };
 

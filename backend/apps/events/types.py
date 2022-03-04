@@ -70,7 +70,7 @@ class SignUpType(DjangoObjectType):
 
 
 class AttendableType(DjangoObjectType):
-    user_attendance = graphene.Field(UserAttendanceType)
+    user_attendance = graphene.Field(UserAttendanceType, required=True)
     users_on_waiting_list = graphene.List(UserType)
     users_attending = graphene.List(UserType)
     is_full = graphene.Boolean()

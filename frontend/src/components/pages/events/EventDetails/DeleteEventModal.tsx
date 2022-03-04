@@ -39,7 +39,7 @@ const DeleteEventModal: React.FC<DeleteEventProps> = ({ open, onClose, eventId }
   }>(DELETE_EVENT, {
     variables: { id: eventId },
     update: (cache) => {
-      const normalizedId = cache.identify({ id: eventId, __typename: "Event" });
+      const normalizedId = cache.identify({ id: eventId, __typename: "EventType" });
       cache.evict({ id: normalizedId });
       cache.gc();
     },

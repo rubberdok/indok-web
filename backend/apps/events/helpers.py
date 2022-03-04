@@ -1,26 +1,26 @@
 from __future__ import annotations
-from typing import TypedDict, Optional, Union
+from typing import TypedDict, Union
 from datetime import datetime
 
 
 class GradeDistributionData(TypedDict):
-    category: str
-    grades: int
+    grade_group: str
+    available_slots: int
 
 
-class AttendableData(TypedDict):
+class AttendableData(TypedDict, total=False):
     signup_open_date: datetime
-    binding_signup: Optional[bool]
-    deadline: Optional[datetime]
-    price: Optional[float]
+    binding_signup: bool
+    deadline: datetime
+    price: float
 
 
-def get_attendant_group(grade_groups, grade_year: int) -> Union[str, None]:
+def get_attendant_group(grade_groups: list[str], grade_year: int) -> Union[str, None]:
     """
     Get the grade group that a grade_year is included in
 
     Args:
-        grade_groups (List[str]): list of grades (string) e.g. ["1,2", "3", "4,5"]
+        grade_groups (list[str]): list of grades (string) e.g. ["1,2", "3", "4,5"]
         grade_year (int): user's grade year
 
     Returns:
@@ -32,13 +32,12 @@ def get_attendant_group(grade_groups, grade_year: int) -> Union[str, None]:
     return None
 
 
-def get_slot_distribution_as_dict(slot_dist_list):
+def get_slot_distribution_as_dict(slot_dist_list: list["GradeDistributionData"]) -> dict:
     """
     Make a slot distribution on the form
     [{grade_group: "x,x,x", available_slots: 150}, {grade_group: "x,x", available_slots: 50}, ...]
     into a dictionary with grade_group as key and available slots as value
     """
-
     slot_distribution = {}
     for slot_dist_element in slot_dist_list:
         slot_distribution[slot_dist_element.grade_group] = slot_dist_element.available_slots
@@ -46,7 +45,7 @@ def get_slot_distribution_as_dict(slot_dist_list):
     return slot_distribution
 
 
-def get_slot_distribution_as_list(slot_dist_dict):
+def get_slot_distribution_as_list(slot_dist_dict: dict) -> list["GradeDistributionData"]:
     """
     Make a slot distribution that is a dictionary with grade_group as key and available slots as value
     into a list of objects on the form:

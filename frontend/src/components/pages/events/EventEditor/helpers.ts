@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import nb from "dayjs/locale/nb";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
-import { DEFAULTINPUT } from "../constants";
+import { DEFAULTINPUT, EventDataType } from "../constants";
 import { Event } from "@interfaces/events";
 
 dayjs.extend(utc);
@@ -10,7 +10,7 @@ dayjs.extend(timezone);
 dayjs.locale(nb);
 dayjs.tz.setDefault("Europe/Oslo");
 
-export const getInitialEventData = (event: Event, eventData: Record<string, any>): Record<string, any> => {
+export const getInitialEventData = (event: Event, eventData: EventDataType): EventDataType => {
   const DATE_FORMAT = "YYYY-MM-DDTHH:mm:ss";
 
   const initialEventData = {
@@ -26,7 +26,7 @@ export const getInitialEventData = (event: Event, eventData: Record<string, any>
 
   initialEventData.startTime = dayjs(event.startTime).format(DATE_FORMAT);
 
-  initialEventData.availableSlots = event.attendable ? event.attendable.totalAvailableSlots : undefined;
+  initialEventData.availableSlots = event.attendable ? event.attendable.totalAvailableSlots.toString() : "";
 
   if (event?.attendable?.signupOpenDate) {
     initialEventData.signupOpenDate = dayjs(event?.attendable?.signupOpenDate).format(DATE_FORMAT);

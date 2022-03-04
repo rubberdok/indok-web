@@ -12,14 +12,15 @@ import {
   Typography,
 } from "@material-ui/core";
 import React from "react";
+import { EventDataType } from "../constants";
 
 /**
  * Component for filling in attendable fields on an event (optional fields in general, but required given isAttenable true)
  */
 
 type Props = {
-  eventData: Record<string, any>;
-  onEventDataChange: (data: Record<string, any>) => void;
+  eventData: EventDataType;
+  onEventDataChange: (data: EventDataType) => void;
   isAttendable: boolean;
   onIsAttendableChange: (isAttendable: boolean) => void;
 };

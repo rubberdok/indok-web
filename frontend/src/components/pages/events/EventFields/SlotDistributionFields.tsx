@@ -14,14 +14,15 @@ import {
 } from "@material-ui/core";
 import React from "react";
 import SlotDistribution from "../SlotDistribution";
+import { EventDataType } from "../constants";
 
 /**
  * Component for the creating a new event
  */
 
 type Props = {
-  eventData: Record<string, any>;
-  onEventDataChange: (data: Record<string, any>) => void;
+  eventData: EventDataType;
+  onEventDataChange: (data: EventDataType) => void;
   isAttendable: boolean;
   hasSlotDistribution: boolean;
   onHasSlotDistributionChange: (hasSlotDist: boolean) => void;

@@ -1,14 +1,15 @@
 import React from "react";
 import { Box, FormControl, Grid, InputLabel, MenuItem, Select, TextField, Typography } from "@material-ui/core";
 import { User } from "@interfaces/users";
+import { EventDataType } from "../constants";
 
 /**
  * Component for filling in required fields on an event
  */
 
 type Props = {
-  eventData: Record<string, any>;
-  onEventDataChange: (data: Record<string, any>) => void;
+  eventData: EventDataType;
+  onEventDataChange: (data: EventDataType) => void;
   user?: User;
 };
 

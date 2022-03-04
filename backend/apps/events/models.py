@@ -4,11 +4,12 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
-from apps.events.helpers import get_attendant_group
 from multiselectfield import MultiSelectField
 from phonenumber_field.modelfields import PhoneNumberField
+from typing import Union
 
 from apps.ecommerce.mixins import Sellable
+from apps.events.helpers import get_attendant_group
 from apps.organizations.models import Organization
 
 if TYPE_CHECKING:
@@ -28,7 +29,7 @@ class Category(models.Model):
 GRADE_CHOICES = ((1, "1"), (2, "2"), (3, "3"), (4, "4"), (5, "5"))
 
 
-class Event(models.Model):
+class Event(models.Model, Sellable):
     """
     Main model for events. Has the general information about all events (regardless of
     whether they are attendable or not)
@@ -54,9 +55,9 @@ class Event(models.Model):
     products = GenericRelation("ecommerce.Product")
 
     @property
-    def signed_up_users(self) -> list["User"]:
+    def signed_up_users(self) -> Union[models.QuerySet, list["User"]]:
         if not hasattr(self, "attendable") or self.attendable is None:
-            return []
+            return get_user_model().objects.none
         return (
             get_user_model()
             .objects.filter(signup__event=self.id, signup__is_attending=True)
@@ -65,10 +66,7 @@ class Event(models.Model):
 
     @property
     def allowed_grade_years_string(self) -> str:
-        string = ""
-        for grade_year in self.allowed_grade_years:
-            string += str(grade_year) + ","
-        return string[:-1]
+        return ",".join([str(grade) for grade in self.allowed_grade_years])
 
     def is_user_allowed_to_buy_product(self, user: "User") -> bool:
         """
@@ -82,7 +80,7 @@ class Event(models.Model):
         return self.title
 
 
-class Attendable(models.Model, Sellable):
+class Attendable(models.Model):
     """
     Additional model used for attendable events. All attendable events have exactly one Attendable.
     Contains general information related to an attendable event.
@@ -103,7 +101,9 @@ class Attendable(models.Model, Sellable):
     )  # If the event need users to give extra information when signing up, e.g. for group sign ups (email
     # of everyone in the group), this would be true (shows a text field frontend)
 
-    def get_attendance_and_waiting_list(self):  # TODO: Typedict this
+    products = GenericRelation("ecommerce.Product")
+
+    def get_attendance_and_waiting_list(self) -> tuple([dict, dict]):
         """
         Method for creating two dicts with grades as keys and a list of users as values. One for attending
         users and one for users on waiting list.
@@ -111,7 +111,7 @@ class Attendable(models.Model, Sellable):
         if len(self.slot_distribution) == 1:
             # There is no distribution for different grades
             attending = {
-                self.event.allowed_grade_years_string: self.event.signed_up_users[0 : self.total_available_slots]
+                self.event.allowed_grade_years_string: self.event.signed_up_users[: self.total_available_slots]
             }
             waiting_list = {
                 self.event.allowed_grade_years_string: self.event.signed_up_users[self.total_available_slots :]
@@ -151,8 +151,6 @@ class Attendable(models.Model, Sellable):
         Method for getting a list of all users that are attending (have a slot)
         """
         attending, _ = self.get_attendance_and_waiting_list()
-        if attending is None:
-            return []
         all_attending = []
         for attending_group in attending.values():
             all_attending += attending_group
@@ -164,8 +162,6 @@ class Attendable(models.Model, Sellable):
         Method for getting a list of all users on waiting list
         """
         _, waiting_list = self.get_attendance_and_waiting_list()
-        if waiting_list is None:
-            return []
         all_on_waiting_list: list["User"] = []
         for waiting_list_group in waiting_list.values():
             all_on_waiting_list += waiting_list_group

@@ -1,14 +1,15 @@
 import { Category } from "@interfaces/events";
 import { FormControl, FormHelperText, Grid, InputLabel, MenuItem, Select, TextField, Tooltip } from "@material-ui/core";
 import React from "react";
+import { EventDataType } from "../constants";
 
 /**
  * Component for filling in the fully optional fields
  */
 
 type Props = {
-  eventData: Record<string, any>;
-  onEventDataChange: (data: Record<string, any>) => void;
+  eventData: EventDataType;
+  onEventDataChange: (data: EventDataType) => void;
   allCategories: Category[];
 };
 

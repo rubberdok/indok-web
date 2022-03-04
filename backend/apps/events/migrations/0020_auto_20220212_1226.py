@@ -15,11 +15,8 @@ def restructure_existing_attendable_events(apps, schema_editor):
         if event.available_slots is None:
             setattr(event, "available_slots", 0)
 
-        allowed_grade_years_string = ""
-        for grade_year in event.allowed_grade_years:
-            allowed_grade_years_string += grade_year + ","
-
-        slot_distribution = {allowed_grade_years_string[:-1]: event.available_slots}
+        grade_group = ",".join([str(grade) for grade in event.allowed_grade_years])
+        slot_distribution = {grade_group: event.available_slots}
 
         attendable_model.objects.create(
             event=event,

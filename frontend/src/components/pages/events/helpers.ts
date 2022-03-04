@@ -1,5 +1,7 @@
+import { EventDataType } from "./constants";
+
 export const getFormattedDataAndErrors = (
-  eventData: Record<string, any>,
+  eventData: EventDataType,
   isAttendable: boolean,
   hasSlotDistribution: boolean,
   slotDistribution: { category: number[]; availableSlots: number }[]
@@ -57,7 +59,7 @@ export const getFormattedDataAndErrors = (
   return { eventInput, attendableInput, currentErrors };
 };
 
-const formatEventData = (eventData: Record<string, any>) => {
+const formatEventData = (eventData: EventDataType) => {
   const eventInputData = {
     title: eventData.title === "" ? undefined : eventData.title,
     description: eventData.description === "" ? undefined : eventData.description,
@@ -69,28 +71,30 @@ const formatEventData = (eventData: Record<string, any>) => {
     image: eventData.image === "" ? undefined : eventData.image,
     shortDescription: eventData.shortDescription === "" ? undefined : eventData.shortDescription,
     contactEmail: eventData.contactEmail === "" ? undefined : eventData.contactEmail,
-    allowedGradeYears: eventData.allowedGradeYears === "" ? undefined : eventData.allowedGradeYears,
+    allowedGradeYears: eventData.allowedGradeYears,
   };
 
   return eventInputData;
 };
 
 const formatAttendableData = (
-  eventData: Record<string, any>,
+  eventData: EventDataType,
   slotDistributionInput: { category: number[]; availableSlots: number }[],
   hasSlotDistribution: boolean
 ) => {
   if (hasSlotDistribution) {
-    const slotDistribution = slotDistributionInput.map((dist) => {
-      const stringCategory = dist.category.sort((a, b) => a - b).reduce((res, grade) => `${res},${grade}`, "");
-      return { gradeGroup: stringCategory.slice(1, stringCategory.length), availableSlots: dist.availableSlots };
-    });
+    const slotDistribution = slotDistributionInput
+      .filter((dist) => dist.availableSlots !== 0 && dist.category !== [])
+      .map((dist) => {
+        const stringCategory = dist.category.sort((a, b) => a - b).reduce((res, grade) => `${res},${grade}`, "");
+        return { gradeGroup: stringCategory.slice(1, stringCategory.length), availableSlots: dist.availableSlots };
+      });
 
     const attendableInputData = {
       signupOpenDate: eventData.signupOpenDate === "" ? undefined : eventData.signupOpenDate,
-      bindingSignup: eventData.bindingSignup === "" ? undefined : eventData.bindingSignup,
+      bindingSignup: eventData.bindingSignup,
       deadline: eventData.deadline === "" ? undefined : eventData.deadline,
-      hasExtraInformation: eventData.hasExtraInformation === "" ? undefined : eventData.hasExtraInformation,
+      hasExtraInformation: eventData.hasExtraInformation,
       totalAvailableSlots: eventData.availableSlots === "" ? undefined : Number(eventData.availableSlots),
       slotDistribution,
     }; // add price: eventData.price here
@@ -105,9 +109,9 @@ const formatAttendableData = (
 
   const attendableInputData = {
     signupOpenDate: eventData.signupOpenDate === "" ? undefined : eventData.signupOpenDate,
-    bindingSignup: eventData.bindingSignup === "" ? undefined : eventData.bindingSignup,
+    bindingSignup: eventData.bindingSignup,
     deadline: eventData.deadline === "" ? undefined : eventData.deadline,
-    hasExtraInformation: eventData.hasExtraInformation === "" ? undefined : eventData.hasExtraInformation,
+    hasExtraInformation: eventData.hasExtraInformation,
     totalAvailableSlots: eventData.availableSlots === "" ? undefined : Number(eventData.availableSlots),
     slotDistribution,
   };

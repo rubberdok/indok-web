@@ -63,6 +63,11 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
   const [updateEvent, { loading: updateEventLoading, error: updateEventError }] = useMutation<{
     updateEvent: { event: Event };
   }>(UPDATE_EVENT, {
+    onCompleted: () => {
+      setOpenEditSnackbar(true);
+      onClose();
+    },
+    onError: () => setOpenEditErrorSnackbar(true),
     update: (cache, { data }) => {
       data &&
         cache.writeQuery<Event>({ query: GET_EVENT, data: data.updateEvent.event }) &&
@@ -136,13 +141,6 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
         attendableData: isAttendable ? formattedInputData.attendableInput : undefined,
         slotDistributionData: isAttendable ? formattedInputData.slotDistributionInput : undefined,
       },
-    }).then((res) => {
-      if (res.errors) {
-        setOpenEditErrorSnackbar(true);
-      } else {
-        setOpenEditSnackbar(true);
-        onClose();
-      }
     });
   };
 
