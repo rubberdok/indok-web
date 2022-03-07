@@ -1,6 +1,7 @@
 from django.db import transaction
 from apps.events.helpers import get_slot_distribution_as_dict
 import graphene
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.utils import timezone
@@ -9,7 +10,8 @@ from utils.decorators import permission_required
 
 from ..organizations.models import Organization
 from ..organizations.permissions import check_user_membership
-from .mail import send_event_emails
+
+from .mail import EventEmail
 from .models import Category, Event, SignUp, Attendable
 from .types import CategoryType, EventType
 from .validators import create_event_validation, update_event_validation
@@ -248,7 +250,7 @@ class EventSignUp(graphene.Mutation):
     @permission_required("events.add_signup")
     def mutate(self, info, event_id, data):
         try:
-            event = Event.objects.get(pk=event_id)
+            event: Event = Event.objects.get(pk=event_id)
         except Event.DoesNotExist:
             raise ValueError("Ugyldig arrangement")
 
@@ -259,6 +261,9 @@ class EventSignUp(graphene.Mutation):
 
         if now < event.attendable.signup_open_date:
             raise ValidationError("Arrangementet er ikke åpent for påmelding enda")
+
+        if event.attendable.deadline is not None and now > event.attendable.deadline:
+            raise ValidationError("Påmelding for arrangementet er stengt")
 
         user = info.context.user
 
@@ -454,22 +459,24 @@ class SendEventEmails(graphene.Mutation):
 
     class Arguments:
         event_id = graphene.ID(required=True)
-        receiverEmails = graphene.List(graphene.String)
+        receiver_emails = graphene.List(graphene.String)
         content = graphene.String()
-        subject = graphene.String()
+        subject = graphene.String(required=True)
 
     ok = graphene.Boolean()
 
     @login_required
-    def mutate(self, info, event_id, receiverEmails, content, subject):
+    def mutate(self, info, event_id, receiver_emails: list[str], content: str, subject: str):
         try:
             event = Event.objects.get(pk=event_id)
         except Event.DoesNotExist:
             raise ValueError("Ugyldig arrangement")
 
         check_user_membership(info.context.user, event.organization)
+        receiver_emails.append(info.context.user.email)
 
-        send_event_emails(receiverEmails, content, subject)
+        for i in range(0, len(receiver_emails), settings.EMAIL_MAX_RECIPIENTS):
+            EventEmail.send_event_emails(receiver_emails[i : i + settings.EMAIL_MAX_RECIPIENTS], content, subject)
 
         ok = True
         return SendEventEmails(ok=ok)

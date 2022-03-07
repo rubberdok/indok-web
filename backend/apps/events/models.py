@@ -1,12 +1,10 @@
 from typing import TYPE_CHECKING
-
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 from multiselectfield import MultiSelectField
 from phonenumber_field.modelfields import PhoneNumberField
-from typing import Union
 
 from apps.ecommerce.mixins import Sellable
 from apps.events.helpers import get_attendant_group
@@ -55,9 +53,7 @@ class Event(models.Model, Sellable):
     products = GenericRelation("ecommerce.Product")
 
     @property
-    def signed_up_users(self) -> Union[models.QuerySet, list["User"]]:
-        if not hasattr(self, "attendable") or self.attendable is None:
-            return get_user_model().objects.none
+    def signed_up_users(self) -> models.QuerySet["User"]:
         return (
             get_user_model()
             .objects.filter(signup__event=self.id, signup__is_attending=True)

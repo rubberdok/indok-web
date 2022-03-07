@@ -11,6 +11,7 @@ import React from "react";
 import CountdownButton from "./CountdownButton";
 import { Alert as MuiAlert } from "@material-ui/lab";
 import Link from "next/link";
+import dayjs from "dayjs";
 import { useRouter } from "next/router";
 
 const useStyles = makeStyles((theme) => ({
@@ -127,7 +128,8 @@ const SignUpVariants: React.FC<Props> = ({
           />
         )}
 
-        {event.attendable && (
+        {/* Why ensure that there is a deadline? Having a deadline requirement as of now? */}
+        {event.attendable.deadline && dayjs(event.attendable.deadline).isAfter(dayjs()) && (
           <CountdownButton
             countDownDate={event.attendable?.signupOpenDate}
             deadline={event.attendable?.deadline ? event.attendable?.deadline : ""}

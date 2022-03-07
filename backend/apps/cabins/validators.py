@@ -1,18 +1,23 @@
 from utils.helpers.validators import email_validation
+import datetime
+from typing import List
 from graphql import GraphQLError
 from django.utils import timezone
 from apps.cabins.models import Booking as BookingModel
 from apps.cabins.models import Cabin as CabinModel
 from django.db.models import Sum
 
+from apps.cabins.models import BookingSemester
 
-def create_booking_validation(booking_data):
+
+def create_booking_validation(booking_data: BookingModel, booking_semester: BookingSemester):
     if booking_data.check_out and booking_data.check_in and booking_data.cabins:
         checkin_validation(
             booking_data.check_in,
             booking_data.check_out,
             booking_data.cabins,
         )
+        booking_semester_validation(booking_data.check_in, booking_data.check_out, booking_semester)
     if booking_data.receiver_email:
         email_validation(booking_data.receiver_email)
     if booking_data.first_name or booking_data.last_name:
@@ -28,6 +33,34 @@ def create_booking_validation(booking_data):
         )
 
 
+def booking_semester_validation(
+    check_in: datetime.date, check_out: datetime.date, booking_semester: BookingSemester
+) -> None:
+    dates_in_fall_semester = check_dates_in_range(
+        [check_in, check_out], booking_semester.fall_start_date, booking_semester.fall_end_date
+    )
+    dates_in_spring_semester = check_dates_in_range(
+        [check_in, check_out], booking_semester.spring_start_date, booking_semester.spring_end_date
+    )
+    not_in_any_booking_semester = not dates_in_spring_semester and not dates_in_fall_semester
+
+    if not booking_semester.fall_semester_active and not booking_semester.spring_end_date:
+        raise GraphQLError("None of the booking semesters are active.")
+
+    elif (
+        not_in_any_booking_semester
+        or dates_in_fall_semester
+        and not booking_semester.fall_semester_active
+        or dates_in_spring_semester
+        and not booking_semester.spring_semester_active
+    ):
+        raise GraphQLError("Dates are outside of the booking semesters.")
+
+
+def check_dates_in_range(dates: List[datetime.date], range_start: datetime.date, range_end: datetime.date) -> bool:
+    return range_start <= dates[0] and dates[-1] <= range_end
+
+
 def checkin_validation(check_in, check_out, cabin_ids):
     if check_in < timezone.now().date() or check_out < timezone.now().date():
         raise GraphQLError("Input dates are before current time")
@@ -35,9 +68,7 @@ def checkin_validation(check_in, check_out, cabin_ids):
         raise GraphQLError("invalid input: Checkin is after checkout")
     # https://stackoverflow.com/questions/325933/determine-whether-two-date-ranges-overlap
     if BookingModel.objects.filter(
-        check_in__lte=check_out,
-        check_out__gt=check_in,
-        cabins__id__in=cabin_ids,
+        check_in__lte=check_out, check_out__gt=check_in, cabins__id__in=cabin_ids, is_declined=False
     ).exists():
         raise GraphQLError("Input dates overlaps existing booking")
     if (check_out - check_in).days == 0:
