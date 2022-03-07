@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
-import { USER_FRAMGENT } from "./fragments";
+import { USER_FRAGMENT } from "./fragments";
 
 export const AUTHENTICATE = gql`
-  ${USER_FRAMGENT}
+  ${USER_FRAGMENT}
   mutation AuthUser($code: String!) {
     authUser(code: $code) {
       user {
@@ -29,7 +29,7 @@ export const GET_ID_TOKEN = gql`
 `;
 
 export const UPDATE_USER = gql`
-  ${USER_FRAMGENT}
+  ${USER_FRAGMENT}
   mutation UpdateUser($userData: UserInput) {
     updateUser(userData: $userData) {
       user {
