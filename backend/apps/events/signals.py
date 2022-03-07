@@ -17,12 +17,13 @@ def send_wait_list_notification(sender: Type[SignUp], instance: SignUp, **kwargs
         previous: SignUp = sender.objects.get(pk=instance.pk)
         if previous.is_attending and not instance.is_attending:
             event: Event = previous.event
-            attending_users = event.users_attending
-            attending = previous.user in attending_users
-            if attending and event.is_full:
-                users_on_wait_list = event.users_on_waiting_list
-                if len(users_on_wait_list) > 0:
-                    EventEmail.send_waitlist_notification_email(users_on_wait_list[0], event)
+            if hasattr(event, "attendable") and event.attendable is not None:
+                attending_users = event.attendable.users_attending
+                attending = previous.user in attending_users
+                if attending and event.attendable.get_is_full(instance.user.grade_year):
+                    users_on_wait_list = event.attendable.users_on_waiting_list
+                    if len(users_on_wait_list) > 0:
+                        EventEmail.send_waitlist_notification_email(users_on_wait_list[0], event)
 
 
 @receiver(pre_save, sender=Event)
@@ -30,10 +31,14 @@ def send_wait_list_notification_when_events_expand(sender: Type[Event], instance
     if not instance._state.adding:
         previous: Event = sender.objects.get(pk=instance.pk)
         if (
-            previous.available_slots is not None
-            and instance.available_slots is not None
-            and (previous.available_slots < instance.available_slots)
+            hasattr(previous, "attendable")
+            and previous.attendable is not None
+            and hasattr(instance, "attendable")
+            and instance.attendable is not None
+            and (previous.attendable.total_available_slots < instance.attendable.total_available_slots)
         ):
-            users_on_wait_list = previous.users_on_waiting_list[: instance.available_slots - previous.available_slots]
+            users_on_wait_list = previous.attendable.users_on_waiting_list[
+                : instance.attendable.total_available_slots - previous.attendable.total_available_slots
+            ]
             for user in users_on_wait_list:
                 EventEmail.send_waitlist_notification_email(user, instance)

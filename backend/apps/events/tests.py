@@ -8,12 +8,11 @@ from utils.testing.factories.events import (
     SignUpFactory,
     SimplifiedOrganizationFactory,
 )
+from unittest.mock import MagicMock, patch
 from utils.testing.factories.organizations import MembershipFactory
 from utils.testing.base import ExtendedGraphQLTestCase
 import datetime
 from django.utils import timezone
-from datetime import timedelta
-from unittest.mock import MagicMock, patch
 
 
 class EventsBaseTestCase(ExtendedGraphQLTestCase):
@@ -133,7 +132,7 @@ class EventsBaseTestCase(ExtendedGraphQLTestCase):
                     }}
                 """
 
-        self.event_singup_query = f"""
+        self.event_signup_query = f"""
                 mutation EventSignUp {{
                     eventSignUp(
                         eventId: {self.attendable_and_open_event.id},
@@ -777,13 +776,13 @@ class EventsMutationsTestCase(EventsBaseTestCase):
     def test_invalid_event_signup_without_permission(self):
         # Test sign up
         # Try without correct permission
-        response = self.query(self.event_singup_query, user=self.user_not_indok)
+        response = self.query(self.event_signup_query, user=self.user_not_indok)
         self.assert_permission_error(response)
 
     def test_event_signup_with_permission(self):
         # Test sign up
         # Try with correct permission
-        response = self.query(self.event_singup_query, user=self.user_1st_grade)
+        response = self.query(self.event_signup_query, user=self.user_1st_grade)
         self.assertResponseNoErrors(response)
         # Check that sign up is created
         content = json.loads(response.content)
@@ -948,30 +947,16 @@ class EventsMailTestCase(EventsBaseTestCase):
         self.user2 = IndokUserFactory()
         self.user3 = IndokUserFactory()
         self.user4 = IndokUserFactory()
-        self.event = EventFactory(
-            is_attendable=True,
-            available_slots=1,
-            binding_signup=False,
-            signup_open_date=timezone.now() - timedelta(days=1),
-        )
+        self.event = self.attendable_and_open_event
+
         self.org_user = IndokUserFactory()
         MembershipFactory(user=self.org_user, organization=self.event.organization)
-        event_signup_query = f"""
-                mutation EventSignUp {{
-                    eventSignUp(
-                        eventId: {self.event.id},
-                        data: {{ extraInformation: \"\" }}
-                        ) {{
-                      isFull
-                        }}
-                    }}
-                """
 
         # Sign up four users for an event with 1 available slot
-        self.query(event_signup_query, user=self.user1)
-        self.query(event_signup_query, user=self.user2)
-        self.query(event_signup_query, user=self.user3)
-        self.query(event_signup_query, user=self.user4)
+        self.query(self.event_signup_query, user=self.user1)
+        self.query(self.event_signup_query, user=self.user2)
+        self.query(self.event_signup_query, user=self.user3)
+        self.query(self.event_signup_query, user=self.user4)
 
     @patch("apps.events.mail.EventEmail.send_waitlist_notification_email")
     def test_send_mail_on_user_bumped_from_waiting_list_by_admin(self, send_mail_mock: MagicMock):
@@ -1022,9 +1007,9 @@ class EventsMailTestCase(EventsBaseTestCase):
     def test_send_mail_on_available_slots_expanded(self, send_mail_mock: MagicMock):
         expand_slots_mutation = f"""
             mutation {{
-            updateEvent(id: {self.event.id}, eventData: {{availableSlots: 3}}) {{
+            updateEvent(id: {self.event.id}, attendableData: {{ totalAvailableSlots: 3}}) {{
                 ok
-            }}
+                }}
             }}
             """
         # Increase available slots to 3
