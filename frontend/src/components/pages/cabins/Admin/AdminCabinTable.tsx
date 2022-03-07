@@ -65,7 +65,6 @@ const AdminCabinTable = ({ bookings, refetch }: Props) => {
             <TableCell align="right">Innsjekk</TableCell>
             <TableCell align="right">Utsjekk</TableCell>
             <TableCell align="right">Hytte</TableCell>
-            <TableCell align="right">Status</TableCell>
             <TableCell align="right">Handlinger</TableCell>
             <TableCell align="right">Tidspunkt</TableCell>
             <TableCell align="right">Antall indøkere</TableCell>
@@ -81,9 +80,6 @@ const AdminCabinTable = ({ bookings, refetch }: Props) => {
               <InlineTableCell>{booking.checkIn}</InlineTableCell>
               <InlineTableCell>{booking.checkOut}</InlineTableCell>
               <InlineTableCell>{toStringChosenCabins(booking.cabins)}</InlineTableCell>
-              <InlineTableCell>
-                {booking.isDeclined || booking.isTentative ? "Ikke godkjent" : "Godkjent"}
-              </InlineTableCell>
               <InlineTableCell>
                 <Tooltip title="Godkjenn">
                   <Box display="inline" component="span">
