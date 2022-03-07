@@ -55,6 +55,8 @@ services:
   celery_worker:
     environment:
       - DJANGO_READ_DOT_ENV_FILE=true
+    env_file:
+      - ./backend/.env
     image: backend-image
     volumes:
       - ./backend:/usr/src/app
@@ -62,7 +64,8 @@ services:
       - postgres
       - rabbitmq
       - backend
-    entrypoint: ["celery","-A","celery_worker","worker","--concurrency=20","--loglevel=INFO", "-Q", "default,low_priority,high_priority"]
+    entrypoint:
+      - /usr/src/app/entrypoints/celery_worker.sh
 
   celery_beat:
     environment:
@@ -87,9 +90,11 @@ services:
    depends_on:
      - celery_worker
      - celery_beat
+     - rabbitmq
    ports:
      - "5555:5555"
-   entrypoint: ["celery", "-A", "celery_worker", "flower"]
+   entrypoint:
+     - /usr/src/app/entrypoints/celery_flower.sh
 
 
 volumes:
