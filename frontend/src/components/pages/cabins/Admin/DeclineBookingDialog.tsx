@@ -33,11 +33,11 @@ const DeclineBookingDialog: React.VFC<DialogProps> = ({
 }) => {
   const [declineMessage, setDeclineMessage] = useState("");
   const [declineBooking] = useMutation(DECLINE_BOOKING, { refetchQueries: [{ query: QUERY_ADMIN_ALL_BOOKINGS }] });
-  const handleDeleteBookingOnClose = () => setBookingToBeDeclined(undefined);
+  const handleDeclineBookingOnClose = () => setBookingToBeDeclined(undefined);
   const [send_email] = useMutation(SEND_EMAIL);
 
   return (
-    <Dialog open={bookingToBeDeclined != undefined} onClose={handleDeleteBookingOnClose}>
+    <Dialog open={bookingToBeDeclined != undefined} onClose={handleDeclineBookingOnClose}>
       <DialogTitle>Du er nå i ferd med å gjøre en irreversibel handling</DialogTitle>
       <DialogContent>
         <DialogContentText>Er du sikker på at du vil slette denne bookingen?</DialogContentText>
@@ -55,7 +55,7 @@ const DeclineBookingDialog: React.VFC<DialogProps> = ({
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleDeleteBookingOnClose} variant="contained">
+        <Button onClick={handleDeclineBookingOnClose} variant="contained">
           Avbryt
         </Button>
         <Button
@@ -68,7 +68,7 @@ const DeclineBookingDialog: React.VFC<DialogProps> = ({
                 refetch();
               });
             }
-            handleDeleteBookingOnClose();
+            handleDeclineBookingOnClose();
           }}
           color="primary"
           variant="contained"

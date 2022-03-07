@@ -23,7 +23,7 @@ import dayjs from "dayjs";
 import InlineTableCell from "./InlineTableCell";
 import React, { useState } from "react";
 import { Alert } from "@material-ui/lab";
-import DeclineBookingDialog from "./DeleteBookingDialog";
+import DeclineBookingDialog from "./DeclineBookingDialog";
 
 type Props = {
   bookings?: BookingFromQuery[];
