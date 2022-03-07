@@ -52,6 +52,9 @@ const EmailFormDialog: React.FC<EmailFormDialogProps> = ({
         >
           <Grid item>
             <Typography variant="h5">Send en e-post til alle påmeldte</Typography>
+            <Typography variant="body2">
+              E-postadressen registrert på brukeren din vil bli lagt til på blindkopi
+            </Typography>
           </Grid>
           <Grid item>
             <TextField

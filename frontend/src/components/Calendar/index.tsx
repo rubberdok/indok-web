@@ -8,6 +8,8 @@ import { getDateRange } from "./helpers";
 import CalendarTable from "./CalendarTable";
 import CalendarRow from "./CalendarRow";
 import CalendarDay from "./CalendarDay";
+import { dateInBookingSemester } from "@utils/cabins";
+import useBookingSemester from "@hooks/cabins/useBookingSemester";
 
 interface CalendarProps {
   disabledDates?: string[];
@@ -37,6 +39,8 @@ const Calendar: React.FC<CalendarProps> = ({
 
   const [range, setRange] = useState<string[]>([]);
   const [isRangeValid, setIsRangeValid] = useState(false);
+
+  const { bookingSemester } = useBookingSemester();
 
   useEffect(() => {
     setRange([]);
@@ -95,7 +99,8 @@ const Calendar: React.FC<CalendarProps> = ({
       disableAll ||
       date.isBefore(disableBeforeDate, "day") ||
       (disableAfterDate ? date.isAfter(disableAfterDate) : false) ||
-      disabledDates?.includes(date.format(DATE_FORMAT))
+      disabledDates?.includes(date.format(DATE_FORMAT)) ||
+      !dateInBookingSemester(date, bookingSemester)
     );
   };
 

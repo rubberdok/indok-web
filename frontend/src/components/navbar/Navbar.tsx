@@ -24,7 +24,7 @@ import NavbarLinks from "./NavbarLinks";
 import NavbarUser from "./NavbarLinks/NavbarUser";
 
 //set navbar style breakpoint, should be adjusted according to width of NavbarLinks
-export const breakpoint = 1315;
+export const breakpoint = 1150;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -35,8 +35,11 @@ const useStyles = makeStyles((theme) => ({
     backgroundImage: "url('/static/anniversary/sparkles.gif')",
     backgroundPosition: "bottom",
   },
+  toolbar: {
+    height: theme.spacing(10),
+  },
   drawer: {
-    width: 250,
+    width: theme.spacing(30),
   },
   title: {
     flexGrow: 1,
@@ -97,7 +100,7 @@ const Navbar: React.FC = () => {
       <HideOnScroll>
         <AppBar color="primary" className={classes.appBar}>
           <Container className={classes.container}>
-            <Toolbar>
+            <Toolbar className={classes.toolbar}>
               <Box className={classes.title}>
                 <Box height="auto" width={38} position="relative">
                   <Image src={leftFern} layout="fill" alt="" />

@@ -1,8 +1,10 @@
-import { Cabin, ContactInfo, DatePick } from "@interfaces/cabins";
+import { useQuery } from "@apollo/client";
+import { QUERY_BOOKING_RESPONSIBLE } from "@graphql/cabins/queries";
+import { BookingResponsible, Cabin, ContactInfo, DatePick } from "@interfaces/cabins";
 import { Box, Divider, Grid, Typography } from "@material-ui/core";
 import { convertDateFormat, toStringChosenCabins, calculatePrice } from "@utils/cabins";
 import Image from "next/image";
-import React from "react";
+import { useEffect, useState } from "react";
 
 interface ContractProps {
   chosenCabins: Cabin[];
@@ -15,6 +17,15 @@ Renders the contract of a booking.
 const Contract: React.FC<ContractProps> = ({ chosenCabins, contactInfo, datePick }) => {
   const currentTime = new Date().toLocaleString();
   const price = calculatePrice(chosenCabins, contactInfo, datePick);
+
+  const { data } = useQuery<{ activeBookingResponsible: BookingResponsible }>(QUERY_BOOKING_RESPONSIBLE);
+  const [responsible, setResponsible] = useState<BookingResponsible>();
+
+  useEffect(() => {
+    if (data?.activeBookingResponsible) {
+      setResponsible(data.activeBookingResponsible);
+    }
+  }, [data]);
 
   //NB! there also exist a HTML template version of the contract backend, in case of changes both must be updated
   return (
@@ -84,9 +95,10 @@ const Contract: React.FC<ContractProps> = ({ chosenCabins, contactInfo, datePick
           </li>
           <li>
             <Typography variant="body2">
-              straks melde fra om skader eller mangler som må utbedres uten opphold, til utleier ved bookingansvarlig
-              Ellie Berglund på telefon 942 58 380. Annen skade eller mangler meldes fra til utleier i sammenheng med
-              tilbakelevering av nøkler ved endt leieperiode.
+              straks melde fra om skader eller mangler som må utbedres uten opphold, til utleier ved bookingansvarlig{" "}
+              {responsible?.firstName} {responsible?.lastName} på telefon {responsible?.phone} eller e-post{" "}
+              {responsible?.email}. Annen skade eller mangler meldes fra til utleier i sammenheng med tilbakelevering av
+              nøkler ved endt leieperiode.
             </Typography>
           </li>
           <li>

@@ -31,6 +31,8 @@ export const QUERY_ADMIN_ALL_BOOKINGS = gql`
       internalParticipants
       price
       isTentative
+      isDeclined
+      timestamp
     }
   }
 `;
@@ -55,6 +57,19 @@ export const QUERY_BOOKING_RESPONSIBLE = gql`
       firstName
       lastName
       email
+    }
+  }
+`;
+
+export const QUERY_BOOKING_SEMESTERS = gql`
+  query BookingSemesters {
+    bookingSemester {
+      fallStartDate
+      fallEndDate
+      springStartDate
+      springEndDate
+      fallSemesterActive
+      springSemesterActive
     }
   }
 `;

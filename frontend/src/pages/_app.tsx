@@ -1,25 +1,17 @@
-import { ApolloClient, ApolloProvider, createHttpLink } from "@apollo/client";
-import cache from "@graphql/cache";
+import { ApolloProvider } from "@apollo/client";
 import { CssBaseline, responsiveFontSizes } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/styles";
 import "@styles/global.css";
 import theme from "@styles/theme";
-import { config } from "@utils/config";
 import { AppProps } from "next/app";
 import Head from "next/head";
 import React, { useEffect } from "react";
+import { useApollo } from "src/lib/apolloClient";
 
 type AppPropsWithError = AppProps & { err: Error };
 
 const App = ({ Component, pageProps, err }: AppPropsWithError): JSX.Element => {
-  const link = createHttpLink({
-    uri: config.GRAPHQL_ENDPOINT,
-    credentials: "include",
-  });
-  const client = new ApolloClient({
-    cache: cache,
-    link,
-  });
+  const apolloClient = useApollo(pageProps);
 
   useEffect(() => {
     const jssStyles = document.querySelector("#jss-server-side");
@@ -31,7 +23,7 @@ const App = ({ Component, pageProps, err }: AppPropsWithError): JSX.Element => {
   const responsiveTheme = responsiveFontSizes(theme, { breakpoints: ["sm", "md", "lg", "xl"], factor: 2 });
 
   return (
-    <ApolloProvider client={client}>
+    <ApolloProvider client={apolloClient}>
       <Head>
         <title>Indøk NTNU - Foreningen for Industriell Økonomi og teknologiledelse</title>
         <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />

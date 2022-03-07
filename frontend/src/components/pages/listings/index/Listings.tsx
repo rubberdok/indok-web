@@ -4,6 +4,8 @@ import { Listing } from "@interfaces/listings";
 import { useQuery } from "@apollo/client";
 import { Grid, Typography, makeStyles, CircularProgress, Button } from "@material-ui/core";
 import Link from "next/link";
+import Image from "next/image";
+import EmptyStreet from "public/illustrations/EmptyStreet.svg";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -54,11 +56,24 @@ const Listings: React.FC<{
         </Grid>
       )}
       {data &&
+        data.listings.length > 0 &&
         data.listings.map((listing) => (
           <Grid container item key={listing.id} md={5} sm={7} xs={10}>
             <ListingItem listing={listing} />
           </Grid>
         ))}
+      {data?.listings.length == 0 && (
+        <>
+          <Grid item>
+            <Typography variant="body1" align="center">
+              Det er for øyeblikket ingen verv tilgjengelige.
+            </Typography>
+          </Grid>
+          <Grid item md={6} xs={10}>
+            <Image src={EmptyStreet} alt="" />
+          </Grid>
+        </>
+      )}
     </Grid>
   );
 };
