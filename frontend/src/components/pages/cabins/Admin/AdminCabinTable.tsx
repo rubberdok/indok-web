@@ -3,6 +3,7 @@ import {
   Box,
   IconButton,
   Paper,
+  Snackbar,
   Table,
   TableBody,
   TableCell,
@@ -20,23 +21,41 @@ import { CONFIRM_BOOKING, SEND_EMAIL } from "@graphql/cabins/mutations";
 import { QUERY_ADMIN_ALL_BOOKINGS } from "@graphql/cabins/queries";
 import dayjs from "dayjs";
 import InlineTableCell from "./InlineTableCell";
+import React, { useState } from "react";
+import { Alert } from "@material-ui/lab";
+import DeleteBookingDialog from "./DeleteBookingDialog";
 
 type Props = {
   bookings?: BookingFromQuery[];
   setOpenSnackbar?: React.Dispatch<React.SetStateAction<boolean>>;
   setSnackbarMessage?: React.Dispatch<React.SetStateAction<string>>;
   setBookingToBeDeleted?: React.Dispatch<React.SetStateAction<BookingFromQuery | undefined>>;
-  refetch?: (
+  refetch: (
     variables?: Partial<OperationVariables> | undefined
   ) => Promise<ApolloQueryResult<{ adminAllBookings: BookingFromQuery[] }>>;
 };
 
-const AdminCabinTable = ({ bookings, setSnackbarMessage, setOpenSnackbar, setBookingToBeDeleted, refetch }: Props) => {
+const AdminCabinTable = ({ bookings, refetch }: Props) => {
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [bookingToBeDeleted, setBookingToBeDeleted] = useState<BookingFromQuery | undefined>();
   const [confirmBooking] = useMutation(CONFIRM_BOOKING, { refetchQueries: [{ query: QUERY_ADMIN_ALL_BOOKINGS }] });
   const [send_email] = useMutation(SEND_EMAIL);
 
+  const isExpired = (booking: BookingFromQuery) => dayjs().isAfter(booking.checkIn);
+
   return (
     <TableContainer component={Paper}>
+      <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={() => setOpenSnackbar(false)}>
+        <Alert severity="success">{snackbarMessage}</Alert>
+      </Snackbar>
+      <DeleteBookingDialog
+        bookingToBeDeleted={bookingToBeDeleted}
+        setBookingToBeDeleted={setBookingToBeDeleted}
+        setSnackbarMessage={setSnackbarMessage}
+        setOpenSnackbar={setOpenSnackbar}
+        refetch={refetch}
+      />
       <Table size="small" style={{ display: "table" }}>
         <TableHead>
           <TableRow>
@@ -69,16 +88,14 @@ const AdminCabinTable = ({ bookings, setSnackbarMessage, setOpenSnackbar, setBoo
                 <Tooltip title="Godkjenn">
                   <Box display="inline" component="span">
                     <IconButton
-                      disabled={!booking.isTentative}
+                      disabled={(!booking.isTentative && !booking.isDeclined) || isExpired(booking)}
                       onClick={() => {
                         confirmBooking({ variables: { id: booking.id } }).then(() => {
-                          if (setSnackbarMessage && setOpenSnackbar && refetch) {
-                            setSnackbarMessage(
-                              `Booking bekreftet. Bekreftelsesmail er sendt til ${booking.receiverEmail}.`
-                            );
-                            setOpenSnackbar(true);
-                            refetch();
-                          }
+                          setSnackbarMessage(
+                            `Booking bekreftet. Bekreftelsesmail er sendt til ${booking.receiverEmail}.`
+                          );
+                          setOpenSnackbar(true);
+                          refetch();
                         });
                         send_email(getDecisionEmailProps(booking, true));
                       }}
@@ -91,7 +108,7 @@ const AdminCabinTable = ({ bookings, setSnackbarMessage, setOpenSnackbar, setBoo
                 <Tooltip title="Avkreft">
                   <Box color={theme.palette.error.main} display="inline" component="span">
                     <IconButton
-                      disabled={!booking.isTentative}
+                      disabled={(!booking.isTentative && booking.isDeclined) || isExpired(booking)}
                       onClick={() => setBookingToBeDeleted && setBookingToBeDeleted(booking)}
                       color="inherit"
                     >
