@@ -23,13 +23,13 @@ import dayjs from "dayjs";
 import InlineTableCell from "./InlineTableCell";
 import React, { useState } from "react";
 import { Alert } from "@material-ui/lab";
-import DeleteBookingDialog from "./DeleteBookingDialog";
+import DeclineBookingDialog from "./DeleteBookingDialog";
 
 type Props = {
   bookings?: BookingFromQuery[];
   setOpenSnackbar?: React.Dispatch<React.SetStateAction<boolean>>;
   setSnackbarMessage?: React.Dispatch<React.SetStateAction<string>>;
-  setBookingToBeDeleted?: React.Dispatch<React.SetStateAction<BookingFromQuery | undefined>>;
+  setBookingToBeDeclined?: React.Dispatch<React.SetStateAction<BookingFromQuery | undefined>>;
   refetch: (
     variables?: Partial<OperationVariables> | undefined
   ) => Promise<ApolloQueryResult<{ adminAllBookings: BookingFromQuery[] }>>;
@@ -38,7 +38,7 @@ type Props = {
 const AdminCabinTable = ({ bookings, refetch }: Props) => {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [bookingToBeDeleted, setBookingToBeDeleted] = useState<BookingFromQuery | undefined>();
+  const [bookingToBeDeclined, setBookingToBeDeclined] = useState<BookingFromQuery | undefined>();
   const [confirmBooking] = useMutation(CONFIRM_BOOKING, { refetchQueries: [{ query: QUERY_ADMIN_ALL_BOOKINGS }] });
   const [send_email] = useMutation(SEND_EMAIL);
 
@@ -49,9 +49,9 @@ const AdminCabinTable = ({ bookings, refetch }: Props) => {
       <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={() => setOpenSnackbar(false)}>
         <Alert severity="success">{snackbarMessage}</Alert>
       </Snackbar>
-      <DeleteBookingDialog
-        bookingToBeDeleted={bookingToBeDeleted}
-        setBookingToBeDeleted={setBookingToBeDeleted}
+      <DeclineBookingDialog
+        bookingToBeDeclined={bookingToBeDeclined}
+        setBookingToBeDeclined={setBookingToBeDeclined}
         setSnackbarMessage={setSnackbarMessage}
         setOpenSnackbar={setOpenSnackbar}
         refetch={refetch}
@@ -105,7 +105,7 @@ const AdminCabinTable = ({ bookings, refetch }: Props) => {
                   <Box color={theme.palette.error.main} display="inline" component="span">
                     <IconButton
                       disabled={(!booking.isTentative && booking.isDeclined) || isExpired(booking)}
-                      onClick={() => setBookingToBeDeleted && setBookingToBeDeleted(booking)}
+                      onClick={() => setBookingToBeDeclined && setBookingToBeDeclined(booking)}
                       color="inherit"
                     >
                       <ClearIcon />

@@ -15,8 +15,8 @@ import { getDecisionEmailProps } from "@utils/cabins";
 import { useState } from "react";
 
 type DialogProps = {
-  bookingToBeDeleted?: BookingFromQuery;
-  setBookingToBeDeleted: React.Dispatch<React.SetStateAction<BookingFromQuery | undefined>>;
+  bookingToBeDeclined?: BookingFromQuery;
+  setBookingToBeDeclined: React.Dispatch<React.SetStateAction<BookingFromQuery | undefined>>;
   setOpenSnackbar: React.Dispatch<React.SetStateAction<boolean>>;
   setSnackbarMessage: React.Dispatch<React.SetStateAction<string>>;
   refetch: (
@@ -24,20 +24,20 @@ type DialogProps = {
   ) => Promise<ApolloQueryResult<{ adminAllBookings: BookingFromQuery[] }>>;
 };
 
-const DeleteBookingDialog: React.VFC<DialogProps> = ({
-  bookingToBeDeleted,
-  setBookingToBeDeleted,
+const DeclineBookingDialog: React.VFC<DialogProps> = ({
+  bookingToBeDeclined: bookingToBeDeclined,
+  setBookingToBeDeclined,
   setOpenSnackbar,
   setSnackbarMessage,
   refetch,
 }) => {
   const [declineMessage, setDeclineMessage] = useState("");
   const [declineBooking] = useMutation(DECLINE_BOOKING, { refetchQueries: [{ query: QUERY_ADMIN_ALL_BOOKINGS }] });
-  const handleDeleteBookingOnClose = () => setBookingToBeDeleted(undefined);
+  const handleDeleteBookingOnClose = () => setBookingToBeDeclined(undefined);
   const [send_email] = useMutation(SEND_EMAIL);
 
   return (
-    <Dialog open={bookingToBeDeleted != undefined} onClose={handleDeleteBookingOnClose}>
+    <Dialog open={bookingToBeDeclined != undefined} onClose={handleDeleteBookingOnClose}>
       <DialogTitle>Du er nå i ferd med å gjøre en irreversibel handling</DialogTitle>
       <DialogContent>
         <DialogContentText>Er du sikker på at du vil slette denne bookingen?</DialogContentText>
@@ -60,10 +60,10 @@ const DeleteBookingDialog: React.VFC<DialogProps> = ({
         </Button>
         <Button
           onClick={() => {
-            if (bookingToBeDeleted) {
-              send_email(getDecisionEmailProps(bookingToBeDeleted, false, declineMessage));
-              declineBooking({ variables: { id: bookingToBeDeleted.id } }).then(() => {
-                setSnackbarMessage(`Bookingen er underkjent. Mail er sendt til ${bookingToBeDeleted.receiverEmail}.`);
+            if (bookingToBeDeclined) {
+              send_email(getDecisionEmailProps(bookingToBeDeclined, false, declineMessage));
+              declineBooking({ variables: { id: bookingToBeDeclined.id } }).then(() => {
+                setSnackbarMessage(`Bookingen er underkjent. Mail er sendt til ${bookingToBeDeclined.receiverEmail}.`);
                 setOpenSnackbar(true);
                 refetch();
               });
@@ -80,4 +80,4 @@ const DeleteBookingDialog: React.VFC<DialogProps> = ({
   );
 };
 
-export default DeleteBookingDialog;
+export default DeclineBookingDialog;
