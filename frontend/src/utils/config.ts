@@ -22,4 +22,9 @@ export const config = {
   SENTRY_DSN: validateEnvironmentVariable(process.env.NEXT_PUBLIC_SENTRY_DSN, "NEXT_PUBLIC_SENTRY_DSN"),
   FRONTEND_URI: validateEnvironmentVariable(process.env.NEXT_PUBLIC_FRONTEND_URI, "NEXT_PUBLIC_FRONTEND_URI"),
   APP_ENV: validateEnvironmentVariable(process.env.NEXT_PUBLIC_APP_ENV, "NEXT_PUBLIC_APP_ENV"),
+  API_URI: validateEnvironmentVariable(process.env.NEXT_PUBLIC_API_URI, "NEXT_PUBLIC_API_URI"),
+  INTERNAL_API_URI: validateEnvironmentVariable(
+    process.env.NEXT_PUBLIC_INTERNAL_API_URI,
+    "NEXT_PUBLIC_INTERNAL_API_URI"
+  ),
 };

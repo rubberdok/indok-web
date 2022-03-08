@@ -89,7 +89,7 @@ AUTH_USER_MODEL = "users.User"
 
 # CORS
 CORS_ALLOW_CREDENTIALS = True
-CSRF_TRUSTED_ORIGINS = ["http://localhost:3000"]
+CSRF_TRUSTED_ORIGINS = ["http://localhost:3000", "http://frontend:3000"]
 
 # DATAPORTEN
 DATAPORTEN_ID = env("DATAPORTEN_ID")
