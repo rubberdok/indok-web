@@ -48,7 +48,7 @@
   },
   "devDependencies": {
     "@types/cookie": "^0.4.1",
-    "@graphql-codegen/cli": "2.6.1",
+    "@graphql-codegen/cli": "2.6.2",
     "@graphql-codegen/typed-document-node": "^2.2.3",
     "@graphql-codegen/introspection": "2.1.1",
     "@graphql-codegen/typescript": "2.4.3",
