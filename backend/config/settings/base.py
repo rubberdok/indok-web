@@ -156,7 +156,7 @@ DEFAULT_FROM_EMAIL = env("DJANGO_DEFAULT_FROM_EMAIL", default="Indøk <no-reply@
 EMAIL_MAX_RECIPIENTS = env.int("EMAIL_MAX_RECIPIENTS", 50)
 
 # ANYMAIL
-ANYMAIL = {"POSTMARK_SERVER_TOKEN": env("POSTMARK_SERVER_TOKEN")}
+ANYMAIL = {"POSTMARK_SERVER_TOKEN": env("POSTMARK_SERVER_TOKEN", default="")}
 
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-timeout
