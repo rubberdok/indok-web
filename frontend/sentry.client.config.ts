@@ -5,7 +5,7 @@
 import * as Sentry from "@sentry/nextjs";
 import { config } from "@utils/config";
 
-const SENTRY_DSN = config.APP_ENV !== "development" ? config.SENTRY_DSN : undefined;
+const SENTRY_DSN = config.APP_ENV === "production" ? config.SENTRY_DSN : undefined;
 
 Sentry.init({
   dsn: SENTRY_DSN,
