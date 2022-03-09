@@ -46,12 +46,9 @@ jobs:
         stage: [test, production]
         include:
           - image: frontend
-            build-env: true
-            env-prefix: next
             context: ./frontend
             dockerfile: Dockerfile.prod
           - image: backend
-            env-prefix: django
             context: ./backend
             dockerfile: Dockerfile.prod
         exclude:
@@ -60,7 +57,6 @@ jobs:
       fail-fast: false
 
     env:
-      ENV_FILE: ${{ matrix.env-prefix }}.${{ matrix.stage }}.env
       dockerfile: ${{ matrix.image }}-${{ matrix.stage }}
 
     steps:
@@ -87,17 +83,6 @@ jobs:
           IMAGE_TAG: ${{ github.sha }}
         run: echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
 
-      - name: Load environment variables from S3
-        if: ${{ matrix.build-env }}
-        id: env-download
-        run: |
-          aws s3 cp s3://indok-web-environments/${{ env.ENV_FILE }} ${{ env.ENV_FILE }}
-          args=$(cat ${{ env.ENV_FILE }})
-          args="${args//'%'/'%25'}"
-          args="${args//$'\n'/'%0A'}"
-          args="${args//$'\r'/'%0D'}"
-          echo "::set-output name=build-args::$args"
-
       - name: Set up Docker Buildx
         id: buildx
         uses: docker/setup-buildx-action@v1
@@ -114,9 +99,10 @@ jobs:
             ${{ steps.image-tag.outputs.image }}
           push: false
           build-args: |
-            ${{ steps.env-download.outputs.build-args }}
+            APP_ENV=${{ matrix.stage }}
+            NODE_ENV=${{ matrix.stage }}
 
-      - name: Push ${{ matrix.image }} image
+      - name: Push ${{ matrix.image }} image
         id: push-image
         # If this is run on the main branch, and is a production image, it should be pushed to ECR
         if: ${{ github.ref == 'refs/heads/main' && matrix.stage == 'production' }}
@@ -126,8 +112,9 @@ jobs:
           file: ${{ matrix.context }}/${{ matrix.dockerfile }}
           tags: ${{ steps.image-tag.outputs.image }}
           push: true
-          build-args: |
-            ${{ steps.env-download.outputs.build-args }}
+        build-args: |
+          APP_ENV=${{ matrix.stage }}
+          NODE_ENV=${{ matrix.stage }}
 
       - name: Upload artifact
         uses: actions/upload-artifact@v2
@@ -152,8 +139,6 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-    env:
-      ENV_FILE: django.test.env
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -175,20 +160,16 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Load environment variables from S3
-        id: env-download
-        run: |
-          aws s3 cp s3://indok-web-environments/${{ env.ENV_FILE }} ${{ env.ENV_FILE }}
-          echo "DATAPORTEN_SECRET=${{ secrets.DATAPORTEN_SECRET }}" >> ${{ env.ENV_FILE }}
-          echo "GOOGLE_DRIVE_API_KEY=${{ secrets.GOOGLE_DRIVE_API_KEY }}" >> ${{ env.ENV_FILE }}
-          echo "VIPPS_SECRET=${{ secrets.VIPPS_SECRET }}" >> ${{ env.ENV_FILE }}
-          echo "VIPPS_SUBSCRIPTION_KEY=${{ secrets.VIPPS_SUBSCRIPTION_KEY }}" >> ${{ env.ENV_FILE }}
-
       - name: Run API tests
         run: |
           docker run \
             -v $GITHUB_WORKSPACE/backend:/usr/src/app \
-            --env-file ${{ env.ENV_FILE }} \
+            --env DJANGO_READ_DOT_ENV_FILE=true \
+            --env DJANGO_DOT_ENV_FILE=.env.test \
+            --env DATAPORTEN_SECRET=${{ secrets.DATAPORTEN_SECRET }} \
+            --env GOOGLE_DRIVE_API_KEY=${{ secrets.GOOGLE_DRIVE_API_KEY }} \
+            --env VIPPS_SECRET=${{ secrets.VIPPS_SECRET }} \
+            --env VIPPS_SUBSCRIPTION_KEY=${{ secrets.VIPPS_SUBSCRIPTION_KEY }} \
             --network ${{ job.container.network }} \
             --entrypoint /usr/src/app/entrypoints/test.sh \
             backend:production
@@ -222,8 +203,6 @@ jobs:
       matrix:
         # Containers for parallelization, increase if necessary
         containers: [1, 2, 3]
-    env:
-      ENV_FILE: django.test.env
 
     steps:
       - name: Checkout
@@ -239,23 +218,12 @@ jobs:
           docker load --input /tmp/backend-production/backend-production.tar
           docker load --input /tmp/frontend-test/frontend-test.tar
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
-
-      - name: Load environment variables from S3
-        id: env-download
-        run: |
-          aws s3 cp s3://indok-web-environments/${{ env.ENV_FILE }} ${{ env.ENV_FILE }}
-          echo "DATAPORTEN_SECRET=${{ secrets.DATAPORTEN_SECRET }}" >> ${{ env.ENV_FILE }}
-          echo "GOOGLE_DRIVE_API_KEY=${{ secrets.GOOGLE_DRIVE_API_KEY }}" >> ${{ env.ENV_FILE }}
-          echo "VIPPS_SECRET=${{ secrets.VIPPS_SECRET }}" >> ${{ env.ENV_FILE }}
-          echo "VIPPS_SUBSCRIPTION_KEY=${{ secrets.VIPPS_SUBSCRIPTION_KEY }}" >> ${{ env.ENV_FILE }}
-
       - name: Build and run the Application
+        env: |
+          DATAPORTEN_SECRET=${{ secrets.DATAPORTEN_SECRET }}
+          GOOGLE_DRIVE_API_KEY=${{ secrets.GOOGLE_DRIVE_API_KEY }}
+          VIPPS_SECRET=${{ secrets.VIPPS_SECRET }}
+          VIPPS_SUBSCRIPTION_KEY=${{ secrets.VIPPS_SUBSCRIPTION_KEY }}
         run: docker compose -f docker-compose.integration.yml up -d
 
       - name: Run Cypress
