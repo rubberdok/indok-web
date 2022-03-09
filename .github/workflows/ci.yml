@@ -219,11 +219,11 @@ jobs:
           docker load --input /tmp/frontend-test/frontend-test.tar
 
       - name: Build and run the Application
-        env: |
-          DATAPORTEN_SECRET=${{ secrets.DATAPORTEN_SECRET }}
-          GOOGLE_DRIVE_API_KEY=${{ secrets.GOOGLE_DRIVE_API_KEY }}
-          VIPPS_SECRET=${{ secrets.VIPPS_SECRET }}
-          VIPPS_SUBSCRIPTION_KEY=${{ secrets.VIPPS_SUBSCRIPTION_KEY }}
+        env:
+          DATAPORTEN_SECRET: ${{ secrets.DATAPORTEN_SECRET }}
+          GOOGLE_DRIVE_API_KEY: ${{ secrets.GOOGLE_DRIVE_API_KEY }}
+          VIPPS_SECRET: ${{ secrets.VIPPS_SECRET }}
+          VIPPS_SUBSCRIPTION_KEY: ${{ secrets.VIPPS_SUBSCRIPTION_KEY }}
         run: docker compose -f docker-compose.integration.yml up -d
 
       - name: Run Cypress
