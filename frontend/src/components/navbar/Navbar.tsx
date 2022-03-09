@@ -1,3 +1,6 @@
+import { useQuery } from "@apollo/client";
+import { GET_USER } from "@graphql/users/queries";
+import { User } from "@interfaces/users";
 import {
   AppBar,
   Box,
@@ -11,16 +14,10 @@ import {
   useScrollTrigger,
 } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
-import leftFern from "@public/static/anniversary/left_fern.svg";
-import rightFern from "@public/static/anniversary/right_fern.svg";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { ReactElement, useState } from "react";
 import NavbarLinks from "./NavbarLinks";
-import { useQuery } from "@apollo/client";
-import { GET_USER } from "@graphql/users/queries";
-import { User } from "@interfaces/users";
 import NavbarUser from "./NavbarLinks/NavbarUser";
 
 //set navbar style breakpoint, should be adjusted according to width of NavbarLinks
@@ -32,7 +29,6 @@ const useStyles = makeStyles((theme) => ({
   },
   appBar: {
     background: theme.palette.primary.dark,
-    backgroundImage: "url('/static/anniversary/sparkles.gif')",
     backgroundPosition: "bottom",
   },
   toolbar: {
@@ -48,10 +44,10 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "row",
   },
   titleLink: {
-    color: "#eec643", //b0aca5
+    color: "#b0aca5",
 
     "&:hover": {
-      color: "#ffd754",
+      color: "#fff",
     },
   },
   sectionDesktop: {
@@ -102,17 +98,11 @@ const Navbar: React.FC = () => {
           <Container className={classes.container}>
             <Toolbar className={classes.toolbar}>
               <Box className={classes.title}>
-                <Box height="auto" width={38} position="relative">
-                  <Image src={leftFern} layout="fill" alt="" />
-                </Box>
                 <Link href="/" passHref>
                   <Typography component="a" className={classes.titleLink} variant="h5">
                     INDØK
                   </Typography>
                 </Link>
-                <Box height="auto" width={38} position="relative">
-                  <Image src={rightFern} layout="fill" alt="" />
-                </Box>
               </Box>
               <div className={classes.sectionDesktop}>
                 <NavbarLinks loggedIn={loggedIn} />
