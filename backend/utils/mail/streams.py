@@ -104,7 +104,7 @@ class PostmarkEmail(EmailMultiAlternatives):
             if to is not None and template_id is not None and len(to) > 1:
                 warnings.warn(
                     """
-                    As template_variables is None, 
+                    As template_variables is None,
                     the mail will be sent with several recipients in the to-field,
                     potentially leaking emails.
                     """
