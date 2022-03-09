@@ -1,5 +1,4 @@
-from datetime import datetime
-from typing import Optional, Sequence, TypedDict
+from typing import Optional, Sequence
 
 from django.conf import settings
 from utils.mail.streams import TransactionalEmail

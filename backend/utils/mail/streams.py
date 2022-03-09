@@ -68,8 +68,10 @@ class PostmarkEmail(EmailMultiAlternatives):
         template_id : Optional[Union[str, int]], optional
             Either the numeric id, or the string identifier (not the same as the name) of the temlate, by default None
         template_variables : Optional[TemplateVariables], optional
-            User-specific variables for the Postmark template, a dictionary of emails and their corresponding variables, by default None
-            Importantly, if the e-mail has multiple recipients, this should always be included, even as an empty dictionary if there are no
+            User-specific variables for the Postmark template,
+            a dictionary of emails and their corresponding variables, by default None
+            Importantly, if the e-mail has multiple recipients,
+            this should always be included, even as an empty dictionary if there are no
             user specific variables. Otherwise, `to`-receivers will be visible to all receivers.
         global_template_variables : Optional[TemplateVariables], optional
             Template variables shared across all receivers, by default None
@@ -101,10 +103,14 @@ class PostmarkEmail(EmailMultiAlternatives):
         if template_variables is None:
             if to is not None and template_id is not None and len(to) > 1:
                 warnings.warn(
-                    "As template_variables is None, the mail will be sent with several recipients in the to-field, potentially leaking emails."
+                    """
+                    As template_variables is None, 
+                    the mail will be sent with several recipients in the to-field,
+                    potentially leaking emails.
+                    """
                 )
         elif emails := list(template_variables.keys()):
-            if not "@" in emails[0]:
+            if "@" not in emails[0]:
                 warnings.warn(
                     """template_variables should have the following structure:
                     {
@@ -186,10 +192,13 @@ class TransactionalEmail(PostmarkEmail):
         stream : TransactionalStream
             The Postmark message stream
         template_id : Optional[Union[str, int]], optional
-            Either the numeric id, or the string identifier (not the same as the name) of the temlate, by default None
+            Either the numeric id, or the string identifier
+            (not the same as the name) of the temlate, by default None
         template_variables : Optional[TemplateVariables], optional
-            User-specific variables for the Postmark template, a dictionary of emails and their corresponding variables, by default None
-            Importantly, if the e-mail has multiple recipients, this should always be included, even as an empty dictionary if there are no
+            User-specific variables for the Postmark template, a dictionary
+            of emails and their corresponding variables, by default None
+            Importantly, if the e-mail has multiple recipients,
+            this should always be included, even as an empty dictionary if there are no
             user specific variables. Otherwise, `to`-receivers will be visible to all receivers.
         global_template_variables : Optional[TemplateVariables], optional
             Template variables shared across all receivers, by default None
@@ -247,8 +256,10 @@ class BroadcastEmail(PostmarkEmail):
     template_id : Optional[Union[str, int]], optional
         Either the numeric id, or the string identifier (not the same as the name) of the temlate, by default None
     template_variables : Optional[TemplateVariables], optional
-        User-specific variables for the Postmark template, a dictionary of emails and their corresponding variables, by default None
-        Importantly, if the e-mail has multiple recipients, this should always be included, even as an empty dictionary if there are no
+        User-specific variables for the Postmark template,
+        a dictionary of emails and their corresponding variables, by default None
+        Importantly, if the e-mail has multiple recipients, this should always be included,
+        even as an empty dictionary if there are no
         user specific variables. Otherwise, `to`-receivers will be visible to all receivers.
     global_template_variables : Optional[TemplateVariables], optional
         Template variables shared across all receivers, by default None
