@@ -86,6 +86,9 @@
     "../backend/**/*.py": [
       "black",
       "flake8 --config=../backend/tox.ini"
+    ],
+    "../backend/**/*.graphql": [
+      "yarn generate"
     ]
   }
 }
