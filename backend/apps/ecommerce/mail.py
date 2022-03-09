@@ -1,20 +1,9 @@
-from typing import TypedDict
+from django.conf import settings
+from utils.mail.streams import TemplateVariables, TransactionalEmail
 
-from django.core.mail import EmailMultiAlternatives
-from django.template.loader import get_template
-from django.utils.html import strip_tags
+from apps.users.models import User
 
 from .models import Order
-
-
-class EmailInput(TypedDict):
-    first_name: str
-    last_name: str
-    order_id: str
-    timestamp: str
-    product: str
-    quantity: int
-    price: float
 
 
 def send_order_confirmation_mail(order: Order) -> None:
@@ -27,30 +16,30 @@ def send_order_confirmation_mail(order: Order) -> None:
     """
 
     assert order.payment_status == Order.PaymentStatus.CAPTURED
-    user = order.user
+    user: User = order.user
 
-    content: EmailInput = {
-        "first_name": user.first_name,
-        "last_name": user.last_name,
-        "order_id": order.id,
-        "timestamp": order.timestamp.strftime("%d.%m.%Y, %H:%M:%S"),
-        "product": order.product.name,
-        "quantity": order.quantity,
-        "price": order.total_price,
+    receipt_details: list[TemplateVariables] = [
+        {"description": order.product.description, "amount": f"{order.product.price} NOK"}
+        for _ in range(order.quantity)
+    ]
+    template_variables: TemplateVariables = {
+        user.email: {
+            "product_url": f"{settings.BASE_URL}/ecommerce/fallback?orderId={order.id}",
+            "product_name": order.product.name,
+            "name": user.first_name,
+            "receipt_id": str(order.id),
+            "date": order.timestamp.strftime("%d.%m.%Y, %X"),
+            "receipt_details": receipt_details,
+            "total": f"{order.total_price} NOK",
+            "support_mail": "kontakt@rubberdok.no",
+            "action_url": f"{settings.BASE_URL}/ecommerce",
+        }
     }
 
-    # HTML content for mail services supporting HTML, text content if HTML isn't supported
-    html_content = get_template("ecommerce/order_confirmation.html").render(content)
-    text_content = strip_tags(html_content)
-
-    subject = f"Ordrebekreftelse - {order.product.name} - indokntnu.no"
-
-    email = EmailMultiAlternatives(
-        subject,
-        body=text_content,
-        from_email="noreply@indokntnu.no",
+    email = TransactionalEmail(
+        stream="order-confirmations",
+        template_id="receipt",
+        template_variables=template_variables,
         to=[order.user.email],
     )
-    email.attach_alternative(html_content, "text/html")
-
     email.send()
