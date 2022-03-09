@@ -11,10 +11,6 @@ export const config = {
     process.env.NEXT_PUBLIC_DATAPORTEN_REDIRECT_URI,
     "NEXT_PUBLIC_DATAPORTEN_REDIRECT_URI"
   ),
-  DATAPORTEN_STATE: validateEnvironmentVariable(
-    process.env.NEXT_PUBLIC_DATAPORTEN_STATE,
-    "NEXT_PUBLIC_DATAPORTEN_STATE"
-  ),
   GRAPHQL_ENDPOINT: validateEnvironmentVariable(
     process.env.NEXT_PUBLIC_GRAPHQL_BACKEND_URI,
     "NEXT_PUBLIC_GRAPHQL_BACKEND_URI"
