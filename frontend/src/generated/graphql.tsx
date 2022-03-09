@@ -1166,7 +1166,7 @@ export enum ResponseStatus {
   A_1 = "A_1",
   /** Green */
   A_2 = "A_2",
-  /** Unknown */
+  /** Ukjent */
   None = "NONE",
 }
 
@@ -1407,7 +1407,7 @@ export type UserType = {
   organizations: Array<OrganizationType>;
   phoneNumber: Scalars["String"];
   responses: Array<ResponseType>;
-  /** Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. */
+  /** Påkrevet. 150 tegn eller færre. Kun bokstaver, tall og @/./+/-/_. */
   username: Scalars["String"];
   yearUpdatedAt?: Maybe<Scalars["DateTime"]>;
 };
