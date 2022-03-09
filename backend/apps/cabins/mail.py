@@ -1,6 +1,6 @@
 from typing import Optional
 
-from django.core.mail import EmailMultiAlternatives
+from utils.mail.streams import TransactionalEmail
 from django.template.loader import get_template, render_to_string
 from django.utils.html import strip_tags
 
