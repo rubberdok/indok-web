@@ -85,7 +85,7 @@ GRAPHENE["MIDDLEWARE"] += ["config.sentry.middleware.SentryMiddleware"]  # noqa
 GRAPHQL_JWT = {"JWT_COOKIE_DOMAIN": env("JWT_COOKIE_DOMAIN", default=".indokntnu.no")}
 
 # Sentry
-SENTRY_DSN: str = env("SENTRY_DSN")
+SENTRY_DSN: str = env("SENTRY_DSN", default=None)
 SENTRY_LOG_LEVEL: int = cast(int, env.int("DJANGO_SENTRY_LOG_LEVEL", default=logging.INFO))
 SENTRY_RELEASE: Optional[str] = env.str("GIT_COMMIT_SHA", "") or None
 

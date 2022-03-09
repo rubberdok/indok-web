@@ -16,8 +16,17 @@ services:
 
   backend:
     image: backend:production
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.prod
     entrypoint: /usr/src/app/entrypoints/integration.sh
-    env_file: $ENV_FILE
+    environment:
+      - DATAPORTEN_SECRET=${DATAPORTEN_SECRET}
+      - GOOGLE_DRIVE_API_KEY=${GOOGLE_DRIVE_API_KEY}
+      - VIPPS_SECRET=${VIPPS_SECRET}
+      - VIPPS_SUBSCRIPTION_KEY=${VIPPS_SUBSCRIPTION_KEY}
+      - DJANGO_READ_DOT_ENV_FILE=true
+      - DJANGO_DOT_ENV_FILE=.env.test
     volumes:
       - ./backend:/usr/src/app
     ports:
@@ -29,6 +38,12 @@ services:
 
   frontend:
     image: frontend:test
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod
+      args:
+        - APP_ENV=test
+        - NODE_ENV=test
     ports:
       - 3000:3000
     expose:
