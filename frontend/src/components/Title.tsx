@@ -1,19 +1,4 @@
-import { Box, Grid, Hidden, makeStyles, Typography, useTheme } from "@material-ui/core";
-
-const useStyles = makeStyles(() => ({
-  anniversary: {
-    transition: "0.7s all ease",
-    background: "url('/static/anniversary/anniversary_logo_black.svg')",
-    backgroundSize: "contain",
-    backgroundPosition: "right",
-    backgroundRepeat: "no-repeat",
-    opacity: 0.05,
-    height: "120%",
-    marginRight: "10%",
-    right: 0,
-    top: 0,
-  },
-}));
+import { Box, Grid, Typography, useTheme } from "@material-ui/core";
 
 type Props = {
   children: string;
@@ -21,7 +6,6 @@ type Props = {
 
 const Title: React.FC<Props> = ({ children }) => {
   const theme = useTheme();
-  const classes = useStyles();
 
   return (
     <Box
@@ -42,9 +26,6 @@ const Title: React.FC<Props> = ({ children }) => {
           </Grid>
         </Grid>
       </Grid>
-      <Hidden smDown>
-        <Box className={classes.anniversary} position="absolute" width="100vw" height="100vh" />
-      </Hidden>
     </Box>
   );
 };

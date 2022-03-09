@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   nth: {
-    background: "url('/static/anniversary/anniversary_logo_black.svg')",
+    background: "url('/nth.svg')",
     backgroundSize: 500,
     backgroundPosition: "right center",
     backgroundRepeat: "no-repeat",

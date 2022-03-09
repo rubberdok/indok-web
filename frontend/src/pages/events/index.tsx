@@ -9,18 +9,6 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: theme.spacing(4),
     paddingBottom: theme.spacing(8),
   },
-  anniversary: {
-    transition: "0.7s all ease",
-    background: "url('/static/anniversary/anniversary_logo_black.svg')",
-    backgroundSize: "contain",
-    backgroundPosition: "right",
-    backgroundRepeat: "no-repeat",
-    opacity: 0.05,
-    height: "120%",
-    marginRight: "10%",
-    right: 0,
-    top: 0,
-  },
 }));
 
 /**
@@ -49,9 +37,6 @@ const Events: NextPage = () => {
             <Tab label="Kalender" />
           </Tabs>
         </Container>
-        <Hidden xsDown>
-          <Box className={classes.anniversary} position="absolute" width="100vw" height="100vh" />
-        </Hidden>
       </Box>
       <Container className={classes.container}>
         {showCalendarView ? (
