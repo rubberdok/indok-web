@@ -1,50 +1,58 @@
 from datetime import datetime
 from typing import Optional, Sequence, TypedDict
 
-from django.core.mail import EmailMessage, EmailMultiAlternatives
-from django.template.loader import get_template
-from django.utils.html import strip_tags
+from django.conf import settings
+from utils.mail.streams import TransactionalEmail
 
+from apps.ecommerce.models import Product
 from apps.users.models import User
 
 from .models import Event
 
 
-class EmailInput(TypedDict):
-    first_name: str
-    last_name: str
-    event_id: int
-    event_title: str
-    start_time: datetime
-
-
 class EventEmail:
     @staticmethod
-    def send_event_emails(receiver_emails: Sequence[str], content: Optional[str], subject: str) -> None:
-        mail = EmailMessage(subject=subject, from_email="noreply@indokntnu.no", body=content, bcc=receiver_emails)
+    def send_event_emails(receiver_emails: Sequence[str], content: str, subject: str, event: Event) -> None:
+        mail = TransactionalEmail(
+            template_id="event-notifications",
+            template_variables={},
+            global_template_variables={
+                "product_url": f"{settings.BASE_URL}/events/{event.pk}",
+                "product_name": event.title,
+                "body": f"Arrangøren av {event.title} har sendt følgende beskjed",
+                "notification_body": content,
+                "sender_name": event.organization.name,
+                "sender_email": event.contact_email,
+                "subject": subject,
+            },
+            stream="event-updates",
+            to=receiver_emails,
+        )
         mail.send()
 
     @staticmethod
     def send_waitlist_notification_email(user: User, event: Event) -> None:
-        content: EmailInput = {
-            "first_name": user.first_name,
-            "last_name": user.last_name,
-            "event_id": event.pk,
-            "event_title": event.title,
-            "start_time": event.start_time,
-        }
+        product: Optional[Product]
+        try:
+            product = event.products.get()
+        except Product.DoesNotExist:
+            product = None
 
-        # HTML content for mail services supporting HTML, text content if HTML isn't supported
-        html_content = get_template("events/wait_list.html").render(content)
-        text_content = strip_tags(html_content)
-
-        subject = f"[{event.title}] Du har fått plass på arrangementet"
-
-        email = EmailMultiAlternatives(
-            subject,
-            body=text_content,
-            from_email="noreply@indokntnu.no",
+        email = TransactionalEmail(
+            stream="event-updates",
+            template_id="event-notifications",
+            template_variables={
+                user.email: {
+                    "product_url": f"{settings.BASE_URL}/events/{event.pk}",
+                    "product_name": event.title,
+                    "body": "Du har fått plass på følgende arrangement",
+                    "start_time": event.start_time.strftime("%a %d. %b %X"),
+                    "location": event.location,
+                    "price": product.price if product is not None else "",
+                    "reason": "Du har fått plass fra ventelisten.",
+                    "subject": "Du har fått plass på arrangementet",
+                }
+            },
             to=[user.email],
         )
-        email.attach_alternative(html_content, "text/html")
         email.send()
