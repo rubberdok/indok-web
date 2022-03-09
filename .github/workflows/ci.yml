@@ -112,9 +112,9 @@ jobs:
           file: ${{ matrix.context }}/${{ matrix.dockerfile }}
           tags: ${{ steps.image-tag.outputs.image }}
           push: true
-        build-args: |
-          APP_ENV=${{ matrix.stage }}
-          NODE_ENV=${{ matrix.stage }}
+          build-args: |
+            APP_ENV=${{ matrix.stage }}
+            NODE_ENV=${{ matrix.stage }}
 
       - name: Upload artifact
         uses: actions/upload-artifact@v2
