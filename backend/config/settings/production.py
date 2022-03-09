@@ -43,7 +43,7 @@ DATABASES = {
 ROOT_URLCONF = "config.urls.production"
 
 # EMAIL
-EMAIL_BACKEND = env("DJANGO_EMAIL_BACKEND", "django_ses.SESBackend")
+EMAIL_BACKEND = env("DJANGO_EMAIL_BACKEND", "anymail.backends.postmark.EmailBackend")
 
 
 AWS_SES_REGION_NAME = env("AWS_SES_REGION_NAME")
