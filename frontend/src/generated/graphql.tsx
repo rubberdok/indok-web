@@ -48,6 +48,7 @@ export type AdminBookingType = {
   firstName: Scalars["String"];
   id: Scalars["ID"];
   internalParticipants: Scalars["Int"];
+  isDeclined: Scalars["Boolean"];
   isInternalPrice?: Maybe<Scalars["Int"]>;
   isTentative: Scalars["Boolean"];
   lastName: Scalars["String"];
@@ -986,7 +987,6 @@ export type Queries = {
   attendeeReport?: Maybe<Scalars["String"]>;
   attendeeReportOrg?: Maybe<Scalars["String"]>;
   attendeeReports?: Maybe<Scalars["String"]>;
-  authToken?: Maybe<Scalars["String"]>;
   availableYears: Array<Scalars["String"]>;
   blog?: Maybe<BlogType>;
   blogPost?: Maybe<BlogPostType>;
@@ -1166,7 +1166,7 @@ export enum ResponseStatus {
   A_1 = "A_1",
   /** Green */
   A_2 = "A_2",
-  /** Unknown */
+  /** Ukjent */
   None = "NONE",
 }
 
@@ -1272,6 +1272,7 @@ export type UpdateBookingInput = {
   firstName?: InputMaybe<Scalars["String"]>;
   id: Scalars["ID"];
   internalParticipants?: InputMaybe<Scalars["Int"]>;
+  isDeclined?: InputMaybe<Scalars["Boolean"]>;
   isTentative?: InputMaybe<Scalars["Boolean"]>;
   lastName?: InputMaybe<Scalars["String"]>;
   phone?: InputMaybe<Scalars["String"]>;
@@ -1406,7 +1407,7 @@ export type UserType = {
   organizations: Array<OrganizationType>;
   phoneNumber: Scalars["String"];
   responses: Array<ResponseType>;
-  /** Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. */
+  /** Påkrevet. 150 tegn eller færre. Kun bokstaver, tall og @/./+/-/_. */
   username: Scalars["String"];
   yearUpdatedAt?: Maybe<Scalars["DateTime"]>;
 };

@@ -13,8 +13,10 @@ env = environ.Env()
 
 READ_DOT_ENV_FILE = env.bool("DJANGO_READ_DOT_ENV_FILE", default=False)
 if READ_DOT_ENV_FILE:
+    DOT_ENV_FILES = env.list("DJANGO_DOT_ENV_FILES", default=[".env", ".env.development"])
     # OS environment variables take precedence over variables from .env
-    env.read_env(str(ROOT_DIR / ".env"))
+    for file in DOT_ENV_FILES:
+        env.read_env(str(ROOT_DIR / file))
 
 # GENERAL
 ENVIRONMENT: Literal["development", "production", "test"] = env("DJANGO_ENVIRONMENT")
@@ -184,6 +186,7 @@ GOOGLE_DRIVE_API_KEY = env("GOOGLE_DRIVE_API_KEY")
 # GRAPHENE
 GRAPHENE = {
     "SCHEMA": "config.schema.schema",
+    "SCHEMA_OUTPUT": "schema.json",
     "MIDDLEWARE": [
         "graphql_jwt.middleware.JSONWebTokenMiddleware",
         "api.auth.middleware.AnonymousUserMiddleware",
