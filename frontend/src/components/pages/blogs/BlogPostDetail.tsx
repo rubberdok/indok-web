@@ -1,28 +1,16 @@
-import { Container, Paper, Box, Grid, Typography, Divider } from "@material-ui/core";
+import { Container, Paper, Box, Grid, Typography, Divider, Card, CardContent } from "@material-ui/core";
 import dayjs from "dayjs";
 import { makeStyles } from "@material-ui/core/styles";
 import Image from "next/image";
+import nb from "dayjs/locale/nb";
+import ReactMarkdown from "react-markdown";
+import * as components from "@components/markdown/components";
+dayjs.locale(nb);
 
 // Function to parse date to format: "dd. month yyyy"
-const parseDate = (date: string): string => {
-  const months = [
-    "januar",
-    "februar",
-    "mars",
-    "april",
-    "mai",
-    "juni",
-    "juli",
-    "august",
-    "september",
-    "oktober",
-    "november",
-    "desember",
-  ];
-  const day = dayjs(date).date();
-  const month = months[dayjs(date).month()];
-  const year = dayjs(date).year();
-  return `${day}. ${month} ${year}`;
+const parseDate = (dateString: string): string => {
+  const date = dayjs(dateString);
+  return date.format("D. MMMM YYYY");
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -58,28 +46,32 @@ export const BlogPostDetail: React.VFC<Props> = ({ title, text, publishDate, fir
     <>
       <Container>
         <Box my={5}>
-          <Box>
-            <Grid container alignItems="center" justifyContent="center">
-              <Grid item md={10} sm={11} xs={12}>
-                <Box>
-                  <Box mb={2}>
-                    <Typography variant="h2">{title}</Typography>
-                  </Box>
-                  <Box className={classes.imageContainer}>
-                    <Image alt="blog-image" src="/img/eivbilde.jpg" layout="fill" objectFit="cover" />
-                  </Box>
-                  <Box mt={2}>
-                    <Typography variant="caption">{`Av ${firstName} ${lastName}, ${parseDate(
-                      publishDate
-                    )}`}</Typography>
-                  </Box>
-                  <Box mt={2}>
-                    <Typography gutterBottom>{text}</Typography>
-                  </Box>
-                </Box>
-              </Grid>
+          <Grid container alignItems="center" justifyContent="center">
+            <Grid item md={6}>
+              <Card>
+                <CardContent>
+                  <Grid container direction="column" spacing={8}>
+                    <Grid item>
+                      <Typography align="center" variant="h1">
+                        {title}
+                      </Typography>
+                    </Grid>
+                    <Grid className={classes.imageContainer}>
+                      <Image alt="blog-image" src="/img/eivbilde.jpg" layout="fill" objectFit="cover" />
+                    </Grid>
+                    <Grid item>
+                      <Typography variant="caption">
+                        Av {firstName} {lastName}, {parseDate(publishDate)}
+                      </Typography>
+                    </Grid>
+                    <Grid item>
+                      <ReactMarkdown components={components}>{text}</ReactMarkdown>
+                    </Grid>
+                  </Grid>
+                </CardContent>
+              </Card>
             </Grid>
-          </Box>
+          </Grid>
         </Box>
       </Container>
     </>
