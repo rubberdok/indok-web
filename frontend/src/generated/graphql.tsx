@@ -11,13 +11,34 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  /**
+   * The `Date` scalar type represents a Date
+   * value as specified by
+   * [iso8601](https://en.wikipedia.org/wiki/ISO_8601).
+   */
   Date: any;
+  /**
+   * The `DateTime` scalar type represents a DateTime
+   * value as specified by
+   * [iso8601](https://en.wikipedia.org/wiki/ISO_8601).
+   */
   DateTime: any;
+  /** The `Decimal` scalar type represents a python Decimal. */
   Decimal: any;
+  /**
+   * The `GenericScalar` scalar type represents a generic
+   * GraphQL scalar value that could be:
+   * String, Boolean, Int, Float, List or Object.
+   */
   GenericScalar: any;
+  /**
+   * Leverages the internal Python implmeentation of UUID (uuid.UUID) to provide native UUID objects
+   * in fields, resolvers and input.
+   */
   UUID: any;
 };
 
+/** Booking type for admin users */
 export type AdminBookingType = {
   __typename?: "AdminBookingType";
   cabins: Array<CabinType>;
@@ -38,11 +59,18 @@ export type AdminBookingType = {
   timestamp: Scalars["DateTime"];
 };
 
+/**
+ * Sets the field is_attending to False in the Sign Up for the user with the
+ * given ID, for the event with the given ID
+ * NOTE: The sign up still exists, it is not deleted from the database
+ *       when a user signs off an event
+ */
 export type AdminEventSignOff = {
   __typename?: "AdminEventSignOff";
   event?: Maybe<EventType>;
 };
 
+/** Booking type for fields available for not logged in users */
 export type AllBookingsType = {
   __typename?: "AllBookingsType";
   cabins: Array<CabinType>;
@@ -56,6 +84,7 @@ export type AnswerInput = {
   questionId: Scalars["ID"];
 };
 
+/** A user's answer to a question. */
 export type AnswerType = {
   __typename?: "AnswerType";
   answer: Scalars["String"];
@@ -76,13 +105,21 @@ export type ArchiveDocumentType = {
   year?: Maybe<Scalars["Int"]>;
 };
 
+/** An enumeration. */
 export enum ArchiveDocumentTypeDoc {
+  /** Annet */
   Annet = "ANNET",
+  /** Årbøker */
   Arboker = "ARBOKER",
+  /** Budsjett og Regnskap */
   BudsjettOgRegnskap = "BUDSJETT_OG_REGNSKAP",
+  /** Foreningens lover */
   ForeningensLover = "FORENINGENS_LOVER",
+  /** Generalforsamling */
   Generalforsamling = "GENERALFORSAMLING",
+  /** Støtte fra HS */
   StotteFraHs = "STOTTE_FRA_HS",
+  /** Utveksling */
   Utveksling = "UTVEKSLING",
 }
 
@@ -152,6 +189,7 @@ export type BlogType = {
   organization?: Maybe<OrganizationType>;
 };
 
+/** Basic booking object type used as a base for other types and as a standalone */
 export type BookingInput = {
   cabins?: InputMaybe<Array<InputMaybe<Scalars["Int"]>>>;
   checkIn?: InputMaybe<Scalars["Date"]>;
@@ -211,18 +249,21 @@ export type CreateBlogPost = {
   ok?: Maybe<Scalars["Boolean"]>;
 };
 
+/** Add a new booking to the database */
 export type CreateBooking = {
   __typename?: "CreateBooking";
   booking?: Maybe<AllBookingsType>;
   ok?: Maybe<Scalars["Boolean"]>;
 };
 
+/** Create a new event category */
 export type CreateCategory = {
   __typename?: "CreateCategory";
   category?: Maybe<CategoryType>;
   ok?: Maybe<Scalars["Boolean"]>;
 };
 
+/** Create a new event */
 export type CreateEvent = {
   __typename?: "CreateEvent";
   event?: Maybe<EventType>;
@@ -262,6 +303,7 @@ export type CreateFormInput = {
   organizationId: Scalars["ID"];
 };
 
+/** Creates a new listing */
 export type CreateListing = {
   __typename?: "CreateListing";
   listing?: Maybe<ListingType>;
@@ -350,18 +392,21 @@ export type DeleteBlogPost = {
   ok?: Maybe<Scalars["Boolean"]>;
 };
 
+/** Deletes the booking with the given ID */
 export type DeleteBooking = {
   __typename?: "DeleteBooking";
   bookingId?: Maybe<Scalars["ID"]>;
   ok?: Maybe<Scalars["Boolean"]>;
 };
 
+/** Deletes the category with a given ID */
 export type DeleteCategory = {
   __typename?: "DeleteCategory";
   category?: Maybe<CategoryType>;
   ok?: Maybe<Scalars["Boolean"]>;
 };
 
+/** Deletes the event with the given ID */
 export type DeleteEvent = {
   __typename?: "DeleteEvent";
   event?: Maybe<EventType>;
@@ -379,6 +424,7 @@ export type DeleteJsonWebTokenCookie = {
   deleted: Scalars["Boolean"];
 };
 
+/** Deletes the listing with the given ID */
 export type DeleteListing = {
   __typename?: "DeleteListing";
   listingId?: Maybe<Scalars["ID"]>;
@@ -411,12 +457,22 @@ export type EmailInput = {
   receiverEmail?: InputMaybe<Scalars["String"]>;
 };
 
+/**
+ * Sets the field is_attending to False in the Sign Up for the user that
+ * sent the request, for the event with the given ID
+ * NOTE: The sign up still exists, it is not deleted from the database
+ *       when a user signs off an event
+ */
 export type EventSignOff = {
   __typename?: "EventSignOff";
   event?: Maybe<EventType>;
   isFull?: Maybe<Scalars["Boolean"]>;
 };
 
+/**
+ * Creates a new Sign Up for the user that sent the request, for the event
+ * with the given ID
+ */
 export type EventSignUp = {
   __typename?: "EventSignUp";
   event?: Maybe<EventType>;
@@ -456,6 +512,7 @@ export type EventType = {
   usersOnWaitingList?: Maybe<Array<Maybe<SignUpType>>>;
 };
 
+/** A form containing questions, optionally linked to a listing. */
 export type FormType = {
   __typename?: "FormType";
   description: Scalars["String"];
@@ -469,14 +526,17 @@ export type FormType = {
   responses?: Maybe<Array<Maybe<ResponseType>>>;
 };
 
+/** A form containing questions, optionally linked to a listing. */
 export type FormTypeResponderArgs = {
   userId: Scalars["ID"];
 };
 
+/** A form containing questions, optionally linked to a listing. */
 export type FormTypeRespondersArgs = {
   userId?: InputMaybe<Scalars["ID"]>;
 };
 
+/** A form containing questions, optionally linked to a listing. */
 export type FormTypeResponseArgs = {
   responsePk?: InputMaybe<Scalars["UUID"]>;
 };
@@ -526,6 +586,12 @@ export type MembershipType = {
 
 export type Mutations = {
   __typename?: "Mutations";
+  /**
+   * Sets the field is_attending to False in the Sign Up for the user with the
+   * given ID, for the event with the given ID
+   * NOTE: The sign up still exists, it is not deleted from the database
+   *       when a user signs off an event
+   */
   adminEventSignOff?: Maybe<AdminEventSignOff>;
   assignMembership?: Maybe<AssignMembership>;
   attemptCapturePayment?: Maybe<AttemptCapturePayment>;
@@ -533,10 +599,14 @@ export type Mutations = {
   createArchivedocument?: Maybe<CreateArchiveDocument>;
   createBlog?: Maybe<CreateBlog>;
   createBlogPost?: Maybe<CreateBlogPost>;
+  /** Add a new booking to the database */
   createBooking?: Maybe<CreateBooking>;
+  /** Create a new event category */
   createCategory?: Maybe<CreateCategory>;
+  /** Create a new event */
   createEvent?: Maybe<CreateEvent>;
   createForm?: Maybe<CreateForm>;
+  /** Creates a new listing */
   createListing?: Maybe<CreateListing>;
   createOrganization?: Maybe<CreateOrganization>;
   createProduct?: Maybe<CreateProduct>;
@@ -547,28 +617,48 @@ export type Mutations = {
   deleteArchivedocument?: Maybe<DeleteArchiveDocument>;
   deleteBlog?: Maybe<DeleteBlog>;
   deleteBlogPost?: Maybe<DeleteBlogPost>;
+  /** Deletes the booking with the given ID */
   deleteBooking?: Maybe<DeleteBooking>;
+  /** Deletes the category with a given ID */
   deleteCategory?: Maybe<DeleteCategory>;
+  /** Deletes the event with the given ID */
   deleteEvent?: Maybe<DeleteEvent>;
   deleteForm?: Maybe<DeleteForm>;
+  /** Deletes the listing with the given ID */
   deleteListing?: Maybe<DeleteListing>;
   deleteOrganization?: Maybe<DeleteOrganization>;
   deleteQuestion?: Maybe<DeleteQuestion>;
   deleteTokenCookie?: Maybe<DeleteJsonWebTokenCookie>;
+  /**
+   * Sets the field is_attending to False in the Sign Up for the user that
+   * sent the request, for the event with the given ID
+   * NOTE: The sign up still exists, it is not deleted from the database
+   *       when a user signs off an event
+   */
   eventSignOff?: Maybe<EventSignOff>;
+  /**
+   * Creates a new Sign Up for the user that sent the request, for the event
+   * with the given ID
+   */
   eventSignUp?: Maybe<EventSignUp>;
   getIdToken?: Maybe<GetIdToken>;
   initiateOrder?: Maybe<InitiateOrder>;
   refreshToken?: Maybe<Refresh>;
+  /** Sends email to the user or an admin (or both) */
   sendEmail?: Maybe<SendEmail>;
+  /** Send an email to all users signed up to an event */
   sendEventMails?: Maybe<SendEventEmails>;
   submitAnswers?: Maybe<SubmitOrUpdateAnswers>;
   updateArchivedocument?: Maybe<UpdateArchiveDocument>;
   updateBlog?: Maybe<UpdateBlog>;
   updateBlogPost?: Maybe<UpdateBlogPost>;
+  /** Change the given booking */
   updateBooking?: Maybe<UpdateBooking>;
+  /** Update the booking semester */
   updateBookingSemester?: Maybe<UpdateBookingSemester>;
+  /** Updates the category with a given ID with the data in category_data */
   updateCategory?: Maybe<UpdateCategory>;
+  /** Updates the event with a given ID with the data in event_data */
   updateEvent?: Maybe<UpdateEvent>;
   updateForm?: Maybe<UpdateForm>;
   updateListing?: Maybe<UpdateListing>;
@@ -806,6 +896,7 @@ export type OptionInput = {
   id?: InputMaybe<Scalars["ID"]>;
 };
 
+/** Option for multiple choice questions */
 export type OptionType = {
   __typename?: "OptionType";
   answer: Scalars["String"];
@@ -813,13 +904,21 @@ export type OptionType = {
   question: QuestionType;
 };
 
+/** An enumeration. */
 export enum OrderPaymentStatus {
+  /** cancelled */
   Cancelled = "CANCELLED",
+  /** captured */
   Captured = "CAPTURED",
+  /** failed */
   Failed = "FAILED",
+  /** initiated */
   Initiated = "INITIATED",
+  /** refunded */
   Refunded = "REFUNDED",
+  /** rejected */
   Rejected = "REJECTED",
+  /** reserved */
   Reserved = "RESERVED",
 }
 
@@ -1024,6 +1123,7 @@ export type QueriesSignUpsArgs = {
   eventId: Scalars["ID"];
 };
 
+/** A question on a form. */
 export type QuestionType = {
   __typename?: "QuestionType";
   answer?: Maybe<AnswerType>;
@@ -1036,6 +1136,7 @@ export type QuestionType = {
   questionType?: Maybe<QuestionTypeEnum>;
 };
 
+/** A question on a form. */
 export type QuestionTypeAnswersArgs = {
   userId?: InputMaybe<Scalars["ID"]>;
 };
@@ -1057,13 +1158,19 @@ export type Refresh = {
   token: Scalars["String"];
 };
 
+/** An enumeration. */
 export enum ResponseStatus {
+  /** Red */
   A_0 = "A_0",
+  /** Yellow */
   A_1 = "A_1",
+  /** Green */
   A_2 = "A_2",
+  /** Unknown */
   None = "NONE",
 }
 
+/** A response instance that contains information about a user's response to a form. */
 export type ResponseType = {
   __typename?: "ResponseType";
   answers: Array<AnswerType>;
@@ -1085,11 +1192,13 @@ export type ResponsibleGroupType = {
   uuid: Scalars["UUID"];
 };
 
+/** Sends email to the user or an admin (or both) */
 export type SendEmail = {
   __typename?: "SendEmail";
   ok?: Maybe<Scalars["Boolean"]>;
 };
 
+/** Send an email to all users signed up to an event */
 export type SendEventEmails = {
   __typename?: "SendEventEmails";
   ok?: Maybe<Scalars["Boolean"]>;
@@ -1148,6 +1257,7 @@ export type UpdateBlogPostInput = {
   title?: InputMaybe<Scalars["String"]>;
 };
 
+/** Change the given booking */
 export type UpdateBooking = {
   __typename?: "UpdateBooking";
   booking?: Maybe<AllBookingsType>;
@@ -1169,6 +1279,7 @@ export type UpdateBookingInput = {
   receiverEmail?: InputMaybe<Scalars["String"]>;
 };
 
+/** Update the booking semester */
 export type UpdateBookingSemester = {
   __typename?: "UpdateBookingSemester";
   bookingSemester?: Maybe<UpdateBookingSemesterType>;
@@ -1195,12 +1306,14 @@ export type UpdateBookingSemesterType = {
   springStartDate: Scalars["Date"];
 };
 
+/** Updates the category with a given ID with the data in category_data */
 export type UpdateCategory = {
   __typename?: "UpdateCategory";
   category?: Maybe<CategoryType>;
   ok?: Maybe<Scalars["Boolean"]>;
 };
 
+/** Updates the event with a given ID with the data in event_data */
 export type UpdateEvent = {
   __typename?: "UpdateEvent";
   event?: Maybe<EventType>;
@@ -1294,6 +1407,7 @@ export type UserType = {
   organizations: Array<OrganizationType>;
   phoneNumber: Scalars["String"];
   responses: Array<ResponseType>;
+  /** Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. */
   username: Scalars["String"];
   yearUpdatedAt?: Maybe<Scalars["DateTime"]>;
 };
