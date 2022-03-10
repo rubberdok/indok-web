@@ -4408,6 +4408,38 @@
             {
               "args": [],
               "deprecationReason": null,
+              "description": "",
+              "isDeprecated": false,
+              "name": "declineReason",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "args": [],
+              "deprecationReason": null,
+              "description": "",
+              "isDeprecated": false,
+              "name": "extraInfo",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "args": [],
+              "deprecationReason": null,
               "description": null,
               "isDeprecated": false,
               "name": "price",
@@ -8247,6 +8279,16 @@
                   "ofType": null
                 }
               }
+            },
+            {
+              "defaultValue": "\"\"",
+              "description": null,
+              "name": "extraInfo",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
             }
           ],
           "interfaces": null,
@@ -8389,6 +8431,16 @@
               }
             },
             {
+              "defaultValue": "\"\"",
+              "description": null,
+              "name": "extraInfo",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            {
               "defaultValue": null,
               "description": null,
               "name": "id",
@@ -8419,6 +8471,16 @@
               "type": {
                 "kind": "SCALAR",
                 "name": "Boolean",
+                "ofType": null
+              }
+            },
+            {
+              "defaultValue": "\"\"",
+              "description": null,
+              "name": "declineReason",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
                 "ofType": null
               }
             }
@@ -8586,9 +8648,9 @@
               }
             },
             {
-              "defaultValue": null,
+              "defaultValue": "\"\"",
               "description": null,
-              "name": "emailType",
+              "name": "extraInfo",
               "type": {
                 "kind": "SCALAR",
                 "name": "String",
@@ -8596,9 +8658,9 @@
               }
             },
             {
-              "defaultValue": "\"\"",
+              "defaultValue": null,
               "description": null,
-              "name": "extraInfo",
+              "name": "emailType",
               "type": {
                 "kind": "SCALAR",
                 "name": "String",

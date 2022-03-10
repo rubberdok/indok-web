@@ -24,7 +24,7 @@ class BookingInput(graphene.InputObjectType):
     internal_participants = graphene.Int()
     external_participants = graphene.Int()
     cabins = graphene.List(graphene.Int)
-    extra_info = graphene.String(required=False, default_value="")
+    extra_info = graphene.String(required=False)
 
 
 class EmailInput(BookingInput):
@@ -35,7 +35,7 @@ class UpdateBookingInput(BookingInput):
     id = graphene.ID(required=True)
     is_tentative = graphene.Boolean()
     is_declined = graphene.Boolean()
-    decline_reason = graphene.String(required=False, default_value="")
+    decline_reason = graphene.String(required=False)
 
 
 class UpdateBookingSemesterInput(graphene.InputObjectType):
@@ -103,7 +103,10 @@ class UpdateBooking(graphene.Mutation):
             # Check that incoming fields are ok
             semester = BookingSemester.objects.first()
             create_booking_validation(booking_data, booking_semester=semester)
+            print(booking_data)
             for input_field, input_value in booking_data.items():
+                print("updating field", input_field, input_value)
+
                 if input_field and input_field != "cabins":
                     setattr(booking, input_field, input_value)
             booking.save()

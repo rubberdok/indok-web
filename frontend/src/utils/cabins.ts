@@ -97,7 +97,7 @@ export const calculatePrice: (
   }
 };
 
-export const convertDateFormat: (date: string) => string = (date) => dayjs(date).format("DD-MM-YYYY");
+export const convertDateFormat: (date?: string) => string = (date) => dayjs(date).format("DD-MM-YYYY");
 
 export const getDecisionEmailProps = (booking: BookingFromQuery, approved: boolean, declineMessage?: string) => {
   // omit unwanted fields
