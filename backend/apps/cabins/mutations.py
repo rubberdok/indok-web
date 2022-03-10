@@ -24,11 +24,11 @@ class BookingInput(graphene.InputObjectType):
     internal_participants = graphene.Int()
     external_participants = graphene.Int()
     cabins = graphene.List(graphene.Int)
+    extra_info = graphene.String(required=False, default_value="")
 
 
 class EmailInput(BookingInput):
     email_type = graphene.String()
-    extra_info = graphene.String(required=False, default_value="")
 
 
 class UpdateBookingInput(BookingInput):

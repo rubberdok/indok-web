@@ -27,15 +27,13 @@ import DeclineBookingDialog from "./DeclineBookingDialog";
 
 type Props = {
   bookings?: BookingFromQuery[];
-  setOpenSnackbar?: React.Dispatch<React.SetStateAction<boolean>>;
-  setSnackbarMessage?: React.Dispatch<React.SetStateAction<string>>;
-  setBookingToBeDeclined?: React.Dispatch<React.SetStateAction<BookingFromQuery | undefined>>;
   refetch: (
     variables?: Partial<OperationVariables> | undefined
   ) => Promise<ApolloQueryResult<{ adminAllBookings: BookingFromQuery[] }>>;
+  currentTab: string;
 };
 
-const AdminCabinTable = ({ bookings, refetch }: Props) => {
+const AdminCabinTable = ({ bookings, refetch, currentTab }: Props) => {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [bookingToBeDeclined, setBookingToBeDeclined] = useState<BookingFromQuery | undefined>();
@@ -43,6 +41,7 @@ const AdminCabinTable = ({ bookings, refetch }: Props) => {
   const [send_email] = useMutation(SEND_EMAIL);
 
   const isExpired = (booking: BookingFromQuery) => dayjs().isAfter(booking.checkIn);
+  const isDeclinedTab = currentTab == "declined";
 
   return (
     <TableContainer component={Paper}>
@@ -69,6 +68,8 @@ const AdminCabinTable = ({ bookings, refetch }: Props) => {
             <TableCell align="right">Tidspunkt</TableCell>
             <TableCell align="right">Antall indøkere</TableCell>
             <TableCell align="right">Antall eksterne</TableCell>
+            <TableCell align="right">Info fra bruker</TableCell>
+            {isDeclinedTab ? <TableCell align="right">Grunn til avslag</TableCell> : <></>}
           </TableRow>
         </TableHead>
         <TableBody>
@@ -116,6 +117,8 @@ const AdminCabinTable = ({ bookings, refetch }: Props) => {
               <InlineTableCell>{dayjs(booking.timestamp).format("HH:mm DD-MM-YYYY")}</InlineTableCell>
               <InlineTableCell>{booking.internalParticipants}</InlineTableCell>
               <InlineTableCell>{booking.externalParticipants}</InlineTableCell>
+              <InlineTableCell>{booking.extraInfo}</InlineTableCell>
+              {isDeclinedTab ? <InlineTableCell>{booking.declineReason}</InlineTableCell> : <></>}
             </TableRow>
           ))}
         </TableBody>

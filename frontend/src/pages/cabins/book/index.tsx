@@ -112,15 +112,14 @@ const CabinBookingPage: NextPage = () => {
         send_email({
           variables: {
             emailInput: {
-              ...generateEmailAndBookingInput(contactInfo, datePick, chosenCabins),
+              ...generateEmailAndBookingInput(contactInfo, datePick, chosenCabins, extraInfo),
               emailType: "reserve_booking",
-              extraInfo: extraInfo,
             },
           },
         });
         create_booking({
           variables: {
-            bookingData: generateEmailAndBookingInput(contactInfo, datePick, chosenCabins),
+            bookingData: generateEmailAndBookingInput(contactInfo, datePick, chosenCabins, extraInfo),
           },
         });
       }

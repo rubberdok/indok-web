@@ -62,7 +62,7 @@ const DeclineBookingDialog: React.VFC<DialogProps> = ({
           onClick={() => {
             if (bookingToBeDeclined) {
               send_email(getDecisionEmailProps(bookingToBeDeclined, false, declineMessage));
-              declineBooking({ variables: { id: bookingToBeDeclined.id } }).then(() => {
+              declineBooking({ variables: { id: bookingToBeDeclined.id, extraInfo: declineMessage } }).then(() => {
                 setSnackbarMessage(`Bookingen er underkjent. Mail er sendt til ${bookingToBeDeclined.receiverEmail}.`);
                 setOpenSnackbar(true);
                 refetch();

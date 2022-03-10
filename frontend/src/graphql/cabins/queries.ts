@@ -33,6 +33,8 @@ export const QUERY_ADMIN_ALL_BOOKINGS = gql`
       isTentative
       isDeclined
       timestamp
+      extraInfo
+      declineReason
     }
   }
 `;
