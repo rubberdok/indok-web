@@ -32,7 +32,7 @@ const LandingListings: React.FC = () => {
               engasjere seg!
             </Typography>
             <br />
-            <Link href="./listings" passHref>
+            <Link href="/listings" passHref>
               <Button color="inherit" variant="outlined">
                 Søk verv
               </Button>

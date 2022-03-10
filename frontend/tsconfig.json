@@ -28,7 +28,8 @@
       "@interfaces/*": ["src/interfaces/*"],
       "@graphql/*": ["src/graphql/*"],
       "@hooks/*": ["src/hooks/*"],
-      "@lib/*": ["src/lib/*"]
+      "@lib/*": ["src/lib/*"],
+      "@generated/*": ["src/generated/*"]
     },
     "incremental": false
   },

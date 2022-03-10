@@ -75,6 +75,7 @@ def send_mail(booking_info: BookingInfoType, email_type: EmailTypes, admin: bool
     if email_type != "disapprove_booking" and not admin:
         email.attach_file("static/cabins/Sjekkliste.pdf")
         email.attach_file("static/cabins/Reglement.pdf")
+        email.attach_file("static/cabins/Stamp_brukerveiledning.pdf")
         contract_pdf = html_to_pdf("contract_template.html", content)
         email.attach("Kontrakt.pdf", contract_pdf, "application/pdf")
     email.send()
