@@ -87,7 +87,7 @@
       "black",
       "flake8 --config=../backend/tox.ini"
     ],
-    "../backend/**/schema.json": [
+    "../backend/schema.json": [
       "yarn generate"
     ]
   }
