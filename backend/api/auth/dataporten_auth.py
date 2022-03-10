@@ -1,13 +1,13 @@
 import json
-from typing import TYPE_CHECKING, Optional, Type, cast
+from typing import TYPE_CHECKING, Type, TypedDict, cast
 
 import jwt
 import requests
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
-from requests.auth import HTTPBasicAuth
-from django.conf import settings
 from django.utils import timezone
+from requests.auth import HTTPBasicAuth
 
 if TYPE_CHECKING:
     from apps.users import models
@@ -17,6 +17,23 @@ User = cast(Type["models.User"], get_user_model())
 
 
 CLIENT_ID = settings.DATAPORTEN_ID
+
+UserInfo = TypedDict(
+    "UserInfo",
+    {
+        "sub": str,
+        "name": str,
+        "email": str,
+        "email_verified": bool,
+        "dataporten-userid_sec": list[str],
+        "connect-userid_sec": list[str],
+    },
+)
+
+
+class TokenResponse(TypedDict):
+    access_token: str
+    id_token: str
 
 
 class DataportenAuth:
@@ -28,7 +45,7 @@ class DataportenAuth:
     """
 
     @staticmethod
-    def complete_dataporten_auth(code):
+    def complete_dataporten_auth(code: str) -> TokenResponse:
         """
         https://docs.feide.no/service_providers/openid_connect/feide_obtaining_tokens.html
         """
@@ -56,14 +73,11 @@ class DataportenAuth:
         return response.json()
 
     @staticmethod
-    def validate_response(resp):
+    def validate_response(token_response: TokenResponse):
         """
         https://docs.feide.no/reference/oauth_oidc/openid_connect_details.html
         """
-        if resp is None:
-            return None
-
-        id_token = resp["id_token"]
+        id_token = token_response["id_token"]
 
         # Collect available public keys, mapping each key's ID to its parsed representation
         try:
@@ -94,10 +108,7 @@ class DataportenAuth:
             raise ValidationError("Kunne ikke validere brukeren.")
 
     @staticmethod
-    def confirm_indok_enrollment(access_token):
-        if access_token is None:
-            return None
-
+    def confirm_indok_enrollment(access_token: str) -> bool:
         params = {
             "Authorization": f"Bearer {access_token}",
         }
@@ -115,80 +126,54 @@ class DataportenAuth:
         enrolled = False
         if "basic" in data and "active" in data:
             enrolled = data["basic"] == "member" and data["active"]
-
-        if not enrolled:
-            return False
-
-        return True
+        return enrolled
 
     @staticmethod
-    def get_user_info(access_token):
+    def get_user(access_token: str) -> "models.User":
         """
         https://docs.feide.no/service_providers/openid_connect/oidc_authentication.html
         """
-        if access_token is None:
-            return None
-
         params = {
             "Authorization": f"Bearer {access_token}",
         }
         try:
-            response = requests.get("https://auth.dataporten.no/userinfo", headers=params)
+            response = requests.get("https://auth.dataporten.no/openid/userinfo", headers=params)
             response.raise_for_status()
         except requests.exceptions.RequestException:
             raise Exception("Kunne ikke hente brukerinfo fra Dataporten.")
 
-        data = response.json()
-        user_info = data["user"]
-
-        username = user_info["userid_sec"][0].split(":")[1].split("@")[0]
-        feide_userid = user_info["userid"]
-        email = user_info["email"]
-        name = user_info["name"]
-        # picture = "https://api.dataporten.no/userinfo/v1/user/media/" + user_info["profilephoto"]
-        # #TODO: add profile photo
-        return (username, feide_userid, email, name)
+        data: UserInfo = response.json()
+        feide_userid = data["sub"]
+        first_name, last_name = data["name"].rsplit(" ", 1)
+        username = next(id for id in data["dataporten-userid_sec"] if id.endswith("@ntnu.no"))
+        username = username[username.index(":") + 1 : username.index("@")]
+        email = data["email"]
+        try:
+            return User.objects.get(feide_userid=feide_userid)
+        except User.DoesNotExist:
+            return User(
+                first_name=first_name,
+                last_name=last_name,
+                feide_userid=feide_userid,
+                email=email,
+                username=username,
+                feide_email=email,
+            )
 
     @classmethod
-    def authenticate_and_get_user(cls, code: Optional[str] = None) -> Optional["models.User"]:
-        if code is None:
-            raise ValidationError("Ugyldig autentiseringskode i forespørselen.")
-
+    def authenticate_and_get_user(cls, code: str) -> "models.User":
         # Complete authentication of user
         response = cls.complete_dataporten_auth(code)
         cls.validate_response(response)
 
-        access_token = response.get("access_token")
-        id_token: Optional[str] = response.get("id_token")
+        access_token = response["access_token"]
 
         # Fetch user info from Dataporten
-        user_info = cls.get_user_info(access_token)
-        if user_info is None:
-            return None
+        user = cls.get_user(access_token)
 
-        username, feide_userid, email, name = user_info
+        if not user.pk:
+            user.is_indok = cls.confirm_indok_enrollment(access_token)
 
-        # Create or update user
-        try:
-            user: "models.User" = User.objects.get(feide_userid=feide_userid)
-            # User exists, update user info
-            user.id_token = id_token
-            user.last_login = timezone.now()
-            user.save()
-
-        except User.DoesNotExist:
-            # Check if user is member of MTIØT group (studies indøk)
-            enrolled = cls.confirm_indok_enrollment(access_token)
-
-            # User does not exist, create a new user
-            user = User(
-                username=username,
-                feide_email=email,
-                first_name=name,
-                feide_userid=feide_userid,
-                id_token=id_token,
-                last_login=timezone.now(),
-                is_indok=enrolled,
-            )
-            user.save()
+        user.last_login = timezone.now()
+        user.save()
         return user
