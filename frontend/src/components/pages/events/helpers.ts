@@ -4,7 +4,7 @@ export const getFormattedDataAndErrors = (
   eventData: EventDataType,
   isAttendable: boolean,
   hasSlotDistribution: boolean,
-  slotDistribution: { category: number[]; availableSlots: number }[]
+  slotDistribution: { grades: number[]; availableSlots: number }[]
 ): Record<string, any> => {
   const eventInput = formatEventData(eventData);
   const attendableInput = formatAttendableData(eventData, slotDistribution, hasSlotDistribution);
@@ -39,7 +39,7 @@ export const getFormattedDataAndErrors = (
     }
 
     const slotDistGradesString = slotDistribution
-      .flatMap((slotDist) => slotDist.category)
+      .flatMap((slotDist) => slotDist.grades)
       .sort((a, b) => a - b)
       .reduce((res, grade) => `${res},${grade}`, "");
     const allowedGradesString = eventInput.allowedGradeYears.reduce(
@@ -79,15 +79,15 @@ const formatEventData = (eventData: EventDataType) => {
 
 const formatAttendableData = (
   eventData: EventDataType,
-  slotDistributionInput: { category: number[]; availableSlots: number }[],
+  slotDistributionInput: { grades: number[]; availableSlots: number }[],
   hasSlotDistribution: boolean
 ) => {
   if (hasSlotDistribution) {
     const slotDistribution = slotDistributionInput
-      .filter((dist) => dist.availableSlots !== 0 && dist.category !== [])
+      .filter((dist) => dist.availableSlots !== 0 && dist.grades !== [])
       .map((dist) => {
-        const stringCategory = dist.category.sort((a, b) => a - b).reduce((res, grade) => `${res},${grade}`, "");
-        return { gradeGroup: stringCategory.slice(1, stringCategory.length), availableSlots: dist.availableSlots };
+        const stringGrades = dist.grades.sort((a, b) => a - b).reduce((res, grade) => `${res},${grade}`, "");
+        return { gradeGroup: stringGrades.slice(1, stringGrades.length), availableSlots: dist.availableSlots };
       });
 
     const attendableInputData = {

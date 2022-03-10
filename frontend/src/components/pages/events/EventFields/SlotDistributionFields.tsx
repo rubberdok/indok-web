@@ -26,8 +26,8 @@ type Props = {
   isAttendable: boolean;
   hasSlotDistribution: boolean;
   onHasSlotDistributionChange: (hasSlotDist: boolean) => void;
-  slotDistribution: { category: number[]; availableSlots: number }[];
-  onUpdateSlotDistribution: (slotDist: { category: number[]; availableSlots: number }[]) => void;
+  slotDistribution: { grades: number[]; availableSlots: number }[];
+  onUpdateSlotDistribution: (slotDist: { grades: number[]; availableSlots: number }[]) => void;
 };
 
 const SlotDistributionFields: React.FC<Props> = ({

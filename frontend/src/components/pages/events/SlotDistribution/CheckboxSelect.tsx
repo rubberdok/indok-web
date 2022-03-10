@@ -14,34 +14,34 @@ import DeleteIcon from "@material-ui/icons/Delete";
 type Props = {
   id: number;
   usedGrades: number[];
-  category: number[];
+  grades: number[];
   availableSlots: number;
-  onAvailableSlotsUpdate: (id: number, newAvailableSlots: number, category: number[]) => void;
-  onCategoryUpdate: (id: number, newCategory: number[]) => void;
+  onAvailableSlotsUpdate: (id: number, newAvailableSlots: number, grades: number[]) => void;
+  onGradesUpdate: (id: number, newGrades: number[]) => void;
   onRemove: (id: number) => void;
 };
 
 /**
- * Component for a single distribution category
+ * Component for a single distribution (allowed grades and available slots)
  */
 const CheckboxSelect: React.FC<Props> = ({
   id,
   usedGrades,
-  category,
+  grades,
   availableSlots,
   onAvailableSlotsUpdate,
-  onCategoryUpdate,
+  onGradesUpdate,
   onRemove,
 }) => {
   const handleChange = (year: number) => {
-    if (category.includes(year)) {
-      onCategoryUpdate(
+    if (grades.includes(year)) {
+      onGradesUpdate(
         id,
-        category.filter((cat) => cat !== year)
+        grades.filter((grade) => grade !== year)
       );
       return;
     }
-    onCategoryUpdate(id, [...category, year]);
+    onGradesUpdate(id, [...grades, year]);
   };
 
   return (
@@ -55,17 +55,17 @@ const CheckboxSelect: React.FC<Props> = ({
             {[1, 2, 3, 4, 5].map((year: number) => (
               <Grid item xs={2} key={year}>
                 <Tooltip
-                  disableHoverListener={category.includes(year) || !usedGrades.includes(year)}
-                  disableFocusListener={category.includes(year) || !usedGrades.includes(year)}
+                  disableHoverListener={grades.includes(year) || !usedGrades.includes(year)}
+                  disableFocusListener={grades.includes(year) || !usedGrades.includes(year)}
                   title="Hvert trinn kan kun være i en fordeling"
                 >
                   <FormControlLabel
-                    checked={category.includes(year)}
+                    checked={grades.includes(year)}
                     value={year}
                     control={<Checkbox color="primary" disableRipple />}
                     label={`${year}.`}
                     onChange={(e) => handleChange(Number((e.target as unknown as { value: string }).value))}
-                    disabled={!category.includes(year) && usedGrades.includes(year)}
+                    disabled={!grades.includes(year) && usedGrades.includes(year)}
                   />
                 </Tooltip>
               </Grid>
@@ -80,7 +80,7 @@ const CheckboxSelect: React.FC<Props> = ({
             <TextField
               type="number"
               value={availableSlots === 0 ? "" : availableSlots.toString()}
-              onChange={(e) => onAvailableSlotsUpdate(id, Number(e.target.value), category)}
+              onChange={(e) => onAvailableSlotsUpdate(id, Number(e.target.value), grades)}
             />
           </Grid>
           <Grid item xs={3}>

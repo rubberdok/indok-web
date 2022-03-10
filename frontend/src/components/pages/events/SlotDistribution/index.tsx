@@ -4,45 +4,45 @@ import CheckboxSelect from "./CheckboxSelect";
 import { addId } from "./helpers";
 
 type Props = {
-  slotDistribution: { category: number[]; availableSlots: number }[];
-  onUpdateSlotDistribution: (slotDist: { category: number[]; availableSlots: number }[]) => void;
+  slotDistribution: { grades: number[]; availableSlots: number }[];
+  onUpdateSlotDistribution: (slotDist: { grades: number[]; availableSlots: number }[]) => void;
 };
 
 /**
  * Component for the creating a slot distribution, aka a distribution of the available slots between grade years
  */
 const SlotDistribution: React.FC<Props> = ({ slotDistribution, onUpdateSlotDistribution }) => {
-  const [slotDistWithId, setSlotDistWithId] = useState<{ category: number[]; availableSlots: number; id: number }[]>(
+  const [slotDistWithId, setSlotDistWithId] = useState<{ grades: number[]; availableSlots: number; id: number }[]>(
     addId(slotDistribution)
   );
 
   const usedGrades: number[] = ([] as number[])
-    .concat(...slotDistWithId.map((dist) => dist.category))
+    .concat(...slotDistWithId.map((dist) => dist.grades))
     .sort((a, b) => a - b);
 
-  const handleCategoryUpdate = (id: number, newCategory: number[]) => {
+  const handleGradesUpdate = (id: number, newGrades: number[]) => {
     const distToUpdate = slotDistWithId.find((dist) => dist.id === id);
 
     const updatedDists = slotDistWithId
       .filter((dist) => dist.id !== id)
       .map((dist) => {
-        return { ...dist, category: dist.category.filter((grade: number) => !newCategory.includes(grade)) };
+        return { ...dist, grades: dist.grades.filter((grade: number) => !newGrades.includes(grade)) };
       });
 
-    const newDist = [...updatedDists, { ...distToUpdate, category: newCategory }]
+    const newDist = [...updatedDists, { ...distToUpdate, grades: newGrades }]
       .sort((a, b) => (a.id ?? 0) - (b.id ?? 0))
       .map((dist) => {
-        return { category: dist.category, availableSlots: dist.availableSlots ?? 0 };
+        return { grades: dist.grades, availableSlots: dist.availableSlots ?? 0 };
       });
     onUpdateSlotDistribution(newDist);
     setSlotDistWithId(addId(newDist));
   };
 
-  const onAvailableSlotsUpdate = (id: number, newAvailableSlots: number, category: number[]) => {
+  const onAvailableSlotsUpdate = (id: number, newAvailableSlots: number, grades: number[]) => {
     const index = slotDistWithId.findIndex((dist) => dist.id === id);
     const newDist = [
       ...slotDistribution.slice(0, index),
-      { category: category, availableSlots: newAvailableSlots },
+      { grades: grades, availableSlots: newAvailableSlots },
       ...slotDistribution.slice(index + 1, slotDistribution.length),
     ];
     onUpdateSlotDistribution(newDist);
@@ -53,7 +53,7 @@ const SlotDistribution: React.FC<Props> = ({ slotDistribution, onUpdateSlotDistr
     const newDist = slotDistWithId
       .filter((dist) => dist.id !== id)
       .map((dist) => {
-        return { category: dist.category, availableSlots: dist.availableSlots };
+        return { grades: dist.grades, availableSlots: dist.availableSlots };
       });
     onUpdateSlotDistribution(newDist);
     setSlotDistWithId(addId(newDist));
@@ -65,8 +65,8 @@ const SlotDistribution: React.FC<Props> = ({ slotDistribution, onUpdateSlotDistr
         <Button
           style={{ margin: 0 }}
           onClick={() => {
-            onUpdateSlotDistribution([...slotDistribution, { category: [], availableSlots: 0 }]);
-            setSlotDistWithId(addId([...slotDistribution, { category: [], availableSlots: 0 }]));
+            onUpdateSlotDistribution([...slotDistribution, { grades: [], availableSlots: 0 }]);
+            setSlotDistWithId(addId([...slotDistribution, { grades: [], availableSlots: 0 }]));
           }}
           color="primary"
           variant="outlined"
@@ -76,15 +76,15 @@ const SlotDistribution: React.FC<Props> = ({ slotDistribution, onUpdateSlotDistr
         </Button>
       </Grid>
 
-      {slotDistWithId.map(({ category, availableSlots, id }) => (
+      {slotDistWithId.map(({ grades, availableSlots, id }) => (
         <CheckboxSelect
           key={id}
           id={id}
           usedGrades={usedGrades}
-          category={category}
+          grades={grades}
           availableSlots={availableSlots}
           onAvailableSlotsUpdate={onAvailableSlotsUpdate}
-          onCategoryUpdate={handleCategoryUpdate}
+          onGradesUpdate={handleGradesUpdate}
           onRemove={handleRemove}
         />
       ))}

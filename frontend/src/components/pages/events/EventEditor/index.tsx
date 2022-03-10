@@ -45,11 +45,11 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
   const [hasSlotDistribution, setHasSlotDistribution] = useState(
     !!event.attendable && event.attendable.slotDistribution.length > 1
   );
-  const [slotDistribution, setSlotDistribution] = useState<{ category: number[]; availableSlots: number }[]>(
+  const [slotDistribution, setSlotDistribution] = useState<{ grades: number[]; availableSlots: number }[]>(
     event.attendable && event.attendable.slotDistribution.length > 1
       ? event.attendable?.slotDistribution.map((slotDist) => {
           return {
-            category: slotDist.gradeGroup.split(",").map((val) => Number(val)),
+            grades: slotDist.gradeGroup.split(",").map((val) => Number(val)),
             availableSlots: slotDist.availableSlots,
           };
         })
@@ -69,9 +69,7 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
     },
     onError: () => setOpenEditErrorSnackbar(true),
     update: (cache, { data }) => {
-      data &&
-        cache.writeQuery<Event>({ query: GET_EVENT, data: data.updateEvent.event }) &&
-        cache.writeQuery<Event>({ query: ADMIN_GET_EVENT, data: { ...event, ...data.updateEvent.event } });
+      data && cache.writeQuery<Event>({ query: GET_EVENT, data: data.updateEvent.event });
     },
   });
 
@@ -87,10 +85,10 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
   if (categoryLoading) return <CircularProgress />;
   if (categoryError) return <Typography>Det oppstod en feil.</Typography>;
 
-  const updateSlotDistribution = (newSlotDistribution: { category: number[]; availableSlots: number }[]) => {
+  const updateSlotDistribution = (newSlotDistribution: { grades: number[]; availableSlots: number }[]) => {
     setSlotDistribution(newSlotDistribution);
     const usedGrades = newSlotDistribution
-      .reduce((prev: number[], curr) => prev.concat(curr.category), [])
+      .reduce((prev: number[], curr) => prev.concat(curr.grades), [])
       .sort((a, b) => a - b);
 
     setEventData({

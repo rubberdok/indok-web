@@ -1,4 +1,4 @@
-import { gql, useMutation, useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { CREATE_EVENT } from "@graphql/events/mutations";
 import { GET_CATEGORIES } from "@graphql/events/queries";
 import { GET_USER } from "@graphql/users/queries";
@@ -14,6 +14,7 @@ import RequiredFields from "../EventFields/RequiredFields";
 import AttendableFields from "../EventFields/AttendableFields";
 import SlotDistributionFields from "../EventFields/SlotDistributionFields";
 import OptionalFields from "../EventFields/OptionalFields";
+import { CACHE_FRAGMENT } from "./constants";
 
 const useStyles = makeStyles((theme) => ({
   content: {
@@ -32,7 +33,7 @@ const CreateEvent: React.FC = () => {
   const [eventData, setEventData] = useState<EventDataType>(DEFAULT_INPUT);
   const [isAttendable, setIsAttendable] = useState(false);
   const [hasSlotDistribution, setHasSlotDistribution] = useState(false);
-  const [slotDistribution, setSlotDistribution] = useState<{ category: number[]; availableSlots: number }[]>([]);
+  const [slotDistribution, setSlotDistribution] = useState<{ grades: number[]; availableSlots: number }[]>([]);
   const [errors, setErrors] = useState<string[]>([]);
   const [snackbar, setSnackbar] = useState<"Error" | "Create" | undefined>(undefined);
 
@@ -54,11 +55,7 @@ const CreateEvent: React.FC = () => {
             allEvents: (existingEvents) => {
               const newEventRef = cache.writeFragment<Event>({
                 data: data.createEvent.event,
-                fragment: gql`
-                  fragment NewEvent on Event {
-                    id
-                  }
-                `,
+                fragment: CACHE_FRAGMENT,
               });
               return [...existingEvents, newEventRef];
             },
@@ -82,10 +79,10 @@ const CreateEvent: React.FC = () => {
     setEventData({ ...eventData, organizationId: userData?.user.organizations[0].id });
   }
 
-  const updateSlotDistribution = (newSlotDistribution: { category: number[]; availableSlots: number }[]) => {
+  const updateSlotDistribution = (newSlotDistribution: { grades: number[]; availableSlots: number }[]) => {
     setSlotDistribution(newSlotDistribution);
     const usedGrades = newSlotDistribution
-      .reduce((prev: number[], curr) => prev.concat(curr.category), [])
+      .reduce((prev: number[], curr) => prev.concat(curr.grades), [])
       .sort((a, b) => a - b);
     setEventData({
       ...eventData,
