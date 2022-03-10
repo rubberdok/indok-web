@@ -22,7 +22,7 @@ ENVIRONMENT: Literal["development", "production", "test"] = env("DJANGO_ENVIRONM
 DEBUG: bool = ENVIRONMENT == "development"
 
 TIME_ZONE = "Europe/Oslo"
-LANGUAGE_CODE = "nb"
+LANGUAGE_CODE = "en-us"
 USE_TZ = True
 
 # INTERNATIONALIZATION
