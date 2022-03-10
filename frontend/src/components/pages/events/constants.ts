@@ -1,4 +1,4 @@
-export const DEFAULTINPUT: EventDataType = {
+export const DEFAULT_INPUT: EventDataType = {
   title: "",
   description: "",
   startTime: "",

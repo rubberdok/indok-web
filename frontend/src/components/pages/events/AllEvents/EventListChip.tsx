@@ -8,26 +8,25 @@ import React from "react";
 
 type Props = {
   event: Event;
-  user?: User;
+  user?: User | null;
 };
 
-const EventListChip: React.FC<Props> = ({ event, user }) => {
-  const { data: timeData } = useQuery(GET_SERVER_TIME, { fetchPolicy: "network-only" });
+const EventListChip: React.VFC<Props> = ({ event, user }) => {
+  const { data } = useQuery(GET_SERVER_TIME, { fetchPolicy: "network-only" });
 
   if (!user || !event.attendable || !event.allowedGradeYears.includes(user.gradeYear)) return null;
 
-  if (event.attendable?.isFull && event.attendable?.userAttendance?.isOnWaitingList)
-    return <Chip label="På venteliste" />;
+  if (event.attendable.userAttendance?.isOnWaitingList) return <Chip label="På venteliste" />;
 
-  if (event.attendable?.isFull && !event.attendable?.userAttendance?.isAttending)
-    return <Chip color="primary" label="Venteliste tilgjengelig" />;
+  if (event.attendable.isFull && !event.attendable?.userAttendance?.isAttending)
+    return <Chip label="Venteliste tilgjengelig" />;
 
-  if (event.attendable?.userAttendance?.isAttending) return <Chip color="primary" label="Påmeldt" />;
+  if (event.attendable.userAttendance?.isAttending) return <Chip color="primary" label="Påmeldt" />;
 
-  if (timeData && dayjs(event.attendable.signupOpenDate).diff(dayjs(timeData.currentTime)) > 0)
+  if (data && dayjs(event.attendable.signupOpenDate).isAfter(dayjs(data.currentTime)))
     return <Chip label="Påmelding åpner snart" />;
 
-  return <Chip label="Påmelding tilgjengelig" />;
+  return <Chip color="primary" label="Påmelding tilgjengelig" />;
 };
 
 export default EventListChip;

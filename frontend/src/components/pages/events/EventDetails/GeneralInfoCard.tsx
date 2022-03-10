@@ -56,7 +56,7 @@ const GeneralInfoCard: React.FC<Props> = ({ event }) => {
                 Info
               </Typography>
             </Grid>
-            {event?.attendable?.price && (
+            {event.attendable?.price && (
               <Grid item xs={12}>
                 <Typography variant="body1" className={classes.wrapIcon}>
                   <CreditCard fontSize="small" /> {event.attendable?.price} kr
@@ -85,7 +85,7 @@ const GeneralInfoCard: React.FC<Props> = ({ event }) => {
                 </Typography>
               </Grid>
             )}
-            {event?.attendable?.bindingSignup && (
+            {event.attendable?.bindingSignup && (
               <Grid item xs={12}>
                 <Typography variant="body1" className={classes.wrapIcon} color="error">
                   <ErrorOutline fontSize="small" /> Bindende påmelding

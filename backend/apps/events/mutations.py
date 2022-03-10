@@ -273,9 +273,23 @@ class EventSignUp(graphene.Mutation):
                 event.allowed_grade_years_string,
             )
 
-        if SignUp.objects.filter(event_id=event_id, is_attending=True, user_id=info.context.user.id).exists():
-            raise ValidationError("Du kan ikke melde deg på samme arrangement flere ganger")
+        try:
+            sign_up: SignUp = SignUp.objects.get(event_id=event_id, user_id=info.context.user.id)
+        except SignUp.DoesNotExist:
+            sign_up = None
 
+        # If sign up already exists, update is_attending if it is currently False (signed up, off and then up again)
+        if sign_up is not None:
+            if sign_up.is_attending:
+                raise ValidationError("Du kan ikke melde deg på samme arrangement flere ganger")
+
+            else:
+                setattr(sign_up, "is_attending", True)
+                sign_up.save()
+                is_full = event.attendable.get_is_full(user.grade_year)
+                return EventSignUp(event=event, is_full=is_full)
+
+        # No singup exists, create a new one
         sign_up = SignUp()
         if data.extra_information:
             setattr(sign_up, "extra_information", data.extra_information)

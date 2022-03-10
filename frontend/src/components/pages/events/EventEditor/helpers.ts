@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import nb from "dayjs/locale/nb";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
-import { DEFAULTINPUT, EventDataType } from "../constants";
+import { DEFAULT_INPUT, EventDataType } from "../constants";
 import { Event } from "@interfaces/events";
 
 dayjs.extend(utc);
@@ -17,7 +17,7 @@ export const getInitialEventData = (event: Event, eventData: EventDataType): Eve
     ...eventData,
   };
 
-  Object.keys(DEFAULTINPUT).forEach((key) => {
+  Object.keys(DEFAULT_INPUT).forEach((key) => {
     if (key in eventData && !!(event as Record<string, any>)[key]) {
       initialEventData[key] = (event as Record<string, any>)[key];
     }

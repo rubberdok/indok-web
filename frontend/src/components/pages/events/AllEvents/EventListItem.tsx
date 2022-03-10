@@ -13,7 +13,7 @@ const formatDate = (dateAndTime: string) => {
 
 type Props = {
   event: Event;
-  user?: User;
+  user?: User | null;
 };
 
 const useStyles = makeStyles((theme) => ({

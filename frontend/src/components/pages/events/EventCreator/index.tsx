@@ -8,7 +8,7 @@ import { Box, Button, Card, CardActions, CircularProgress, Grid, makeStyles, Typ
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import Alert from "@components/Alert";
-import { DEFAULTINPUT, EventDataType } from "../constants";
+import { DEFAULT_INPUT, EventDataType } from "../constants";
 import { getFormattedDataAndErrors } from "../helpers";
 import RequiredFields from "../EventFields/RequiredFields";
 import AttendableFields from "../EventFields/AttendableFields";
@@ -29,13 +29,12 @@ const useStyles = makeStyles((theme) => ({
 
 const CreateEvent: React.FC = () => {
   const classes = useStyles();
-  const [eventData, setEventData] = useState<EventDataType>(DEFAULTINPUT);
+  const [eventData, setEventData] = useState<EventDataType>(DEFAULT_INPUT);
   const [isAttendable, setIsAttendable] = useState(false);
   const [hasSlotDistribution, setHasSlotDistribution] = useState(false);
   const [slotDistribution, setSlotDistribution] = useState<{ category: number[]; availableSlots: number }[]>([]);
   const [errors, setErrors] = useState<string[]>([]);
-  const [openCreateErrorSnackbar, setOpenCreateErrorSnackbar] = useState(false);
-  const [openCreateSnackbar, setOpenCreateSnackbar] = useState(false);
+  const [snackbar, setSnackbar] = useState<"Error" | "Create" | undefined>(undefined);
 
   const router = useRouter();
 
@@ -43,11 +42,11 @@ const CreateEvent: React.FC = () => {
     createEvent: { event: Event };
   }>(CREATE_EVENT, {
     onCompleted: () => {
-      setEventData(DEFAULTINPUT);
-      setOpenCreateSnackbar(true);
+      setEventData(DEFAULT_INPUT);
+      setSnackbar("Create");
       router.push("/events");
     },
-    onError: () => setOpenCreateErrorSnackbar(true),
+    onError: () => setSnackbar("Error"),
     update: (cache, { data }) => {
       data &&
         cache.modify({
@@ -85,8 +84,8 @@ const CreateEvent: React.FC = () => {
 
   const updateSlotDistribution = (newSlotDistribution: { category: number[]; availableSlots: number }[]) => {
     setSlotDistribution(newSlotDistribution);
-    const usedGrades = ([] as number[])
-      .concat(...newSlotDistribution.map((dist) => dist.category))
+    const usedGrades = newSlotDistribution
+      .reduce((prev: number[], curr) => prev.concat(curr.category), [])
       .sort((a, b) => a - b);
     setEventData({
       ...eventData,
@@ -124,7 +123,7 @@ const CreateEvent: React.FC = () => {
 
     if (formattedInputData.currentErrors.length > 0) {
       setErrors(formattedInputData.currentErrors);
-      setOpenCreateErrorSnackbar(true);
+      setSnackbar("Error");
       return;
     }
     createEvent({
@@ -181,9 +180,9 @@ const CreateEvent: React.FC = () => {
 
       <Alert
         severity="error"
-        open={openCreateErrorSnackbar}
+        open={snackbar === "Error"}
         onClose={() => {
-          setOpenCreateErrorSnackbar(false);
+          setSnackbar(undefined);
           setErrors([]);
         }}
         description={createEventError ? createEventError.message : "Opprettelse feilet: ".concat(`${errors[0]}`)}
@@ -191,8 +190,8 @@ const CreateEvent: React.FC = () => {
 
       <Alert
         severity="success"
-        open={openCreateSnackbar}
-        onClose={() => setOpenCreateSnackbar(false)}
+        open={snackbar === "Create"}
+        onClose={() => setSnackbar(undefined)}
         description={"Arrangement opprettet"}
       />
     </>

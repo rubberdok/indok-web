@@ -16,7 +16,7 @@ import {
 import { Check, Close, Warning } from "@material-ui/icons";
 import React, { useEffect, useState } from "react";
 import Alert from "@components/Alert";
-import { DEFAULTINPUT } from "../constants";
+import { DEFAULT_INPUT } from "../constants";
 import { getInitialEventData } from "./helpers";
 import { getFormattedDataAndErrors } from "../helpers";
 import RequiredFields from "../EventFields/RequiredFields";
@@ -40,13 +40,13 @@ type EditEventProps = {
  */
 
 const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
-  const [eventData, setEventData] = useState(DEFAULTINPUT);
+  const [eventData, setEventData] = useState(DEFAULT_INPUT);
   const [isAttendable, setIsAttendable] = useState(!!event.attendable);
   const [hasSlotDistribution, setHasSlotDistribution] = useState(
-    !!event?.attendable && event.attendable.slotDistribution.length > 1
+    !!event.attendable && event.attendable.slotDistribution.length > 1
   );
   const [slotDistribution, setSlotDistribution] = useState<{ category: number[]; availableSlots: number }[]>(
-    event?.attendable && event.attendable.slotDistribution.length > 1
+    event.attendable && event.attendable.slotDistribution.length > 1
       ? event.attendable?.slotDistribution.map((slotDist) => {
           return {
             category: slotDist.gradeGroup.split(",").map((val) => Number(val)),
@@ -89,8 +89,8 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
 
   const updateSlotDistribution = (newSlotDistribution: { category: number[]; availableSlots: number }[]) => {
     setSlotDistribution(newSlotDistribution);
-    const usedGrades = ([] as number[])
-      .concat(...newSlotDistribution.map((dist) => dist.category))
+    const usedGrades = newSlotDistribution
+      .reduce((prev: number[], curr) => prev.concat(curr.category), [])
       .sort((a, b) => a - b);
 
     setEventData({

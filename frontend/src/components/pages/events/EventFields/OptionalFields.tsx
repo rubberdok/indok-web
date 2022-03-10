@@ -19,7 +19,7 @@ const OptionalFields: React.FC<Props> = ({ eventData, onEventDataChange, allCate
       <Grid item xs={6}>
         <TextField
           label="Kontakt-epost"
-          placeholder="ola.nordmann@gmail.com"
+          placeholder="example@example.com"
           value={eventData.contactEmail}
           onChange={(e) => onEventDataChange({ ...eventData, contactEmail: e.currentTarget.value })}
         />
@@ -60,7 +60,7 @@ const OptionalFields: React.FC<Props> = ({ eventData, onEventDataChange, allCate
             }}
             displayEmpty
           >
-            <MenuItem value="">{"Ingen kategori"}</MenuItem>
+            <MenuItem value="">Ingen kategori</MenuItem>
             {allCategories.map((category: Category) => (
               <MenuItem key={category.id} value={category.id}>
                 {category.name}

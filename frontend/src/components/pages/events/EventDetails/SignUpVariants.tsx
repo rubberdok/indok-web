@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
 
 type Props = {
   event: Event;
-  user?: User;
+  user?: User | null;
   loading: boolean;
   extraInformation?: string;
   onClick: () => void;
@@ -106,64 +106,62 @@ const SignUpVariants: React.FC<Props> = ({
     );
 
   return (
-    <>
-      <PermissionRequired permission="events.add_signup">
-        {noPhoneNumberNorAlreadySignedUp && (
-          <Typography variant="body1" color="error" className={classes.wrapIcon}>
-            <Warning fontSize="small" />
-            Du må oppgi et telefonnummer på brukeren din for å kunne melde deg på
-          </Typography>
-        )}
+    <PermissionRequired permission="events.add_signup" fallback={<Typography variant="body1">Ikke aktuell</Typography>}>
+      {noPhoneNumberNorAlreadySignedUp && (
+        <Typography variant="body1" color="error" className={classes.wrapIcon}>
+          <Warning fontSize="small" />
+          Du må oppgi et telefonnummer på brukeren din for å kunne melde deg på
+        </Typography>
+      )}
 
-        {requiresExtraInfoAndNotAlreadySignedUp && (
-          <TextField
-            className={classes.extraInformation}
-            label="Ekstrainformasjon"
-            multiline
-            rows={2}
-            required
-            placeholder="Skriv her..."
-            variant="outlined"
-            onChange={(e) => onExtraInformationChange(e.target.value)}
-          />
-        )}
+      {requiresExtraInfoAndNotAlreadySignedUp && (
+        <TextField
+          className={classes.extraInformation}
+          label="Ekstrainformasjon"
+          multiline
+          rows={2}
+          required
+          placeholder="Skriv her..."
+          variant="outlined"
+          onChange={(e) => onExtraInformationChange(e.target.value)}
+        />
+      )}
 
-        {/* Why ensure that there is a deadline? Having a deadline requirement as of now? */}
-        {event.attendable.deadline && dayjs(event.attendable.deadline).isAfter(dayjs()) && (
-          <CountdownButton
-            countDownDate={event.attendable?.signupOpenDate}
-            deadline={event.attendable?.deadline ? event.attendable?.deadline : ""}
-            isAttending={event.attendable?.userAttendance?.isAttending ?? false}
-            isOnWaitingList={event.attendable?.userAttendance?.isOnWaitingList ?? false}
-            isFull={event.attendable?.isFull}
-            loading={loading}
-            disabled={
-              noPhoneNumberNorAlreadySignedUp ||
-              bindingSignupAndAlreadySignpedUp ||
-              requiresExtraInfoAndExtraInfroNotFilledIn
-            }
-            onClick={onClick}
-            currentTime={timeData.serverTime}
-          />
-        )}
-        {event.product &&
-          event.attendable?.userAttendance?.isAttending &&
-          (event.attendable?.userAttendance.hasBoughtTicket ? (
-            <MuiAlert severity="success" className={classes.boughtTicket}>
-              Du har betalt for billett
-            </MuiAlert>
-          ) : (
-            <Link
-              href={`/ecommerce/checkout?productId=${event.product.id}&quantity=1&redirect=${router.asPath}`}
-              passHref
-            >
-              <Button size="large" variant="contained" color={"primary"} className={classes.payButton}>
-                Gå til betaling
-              </Button>
-            </Link>
-          ))}
-      </PermissionRequired>
-    </>
+      {/* Why ensure that there is a deadline? Having a deadline is not a requirement as of now? */}
+      {event.attendable.deadline && dayjs(event.attendable.deadline).isAfter(dayjs()) && (
+        <CountdownButton
+          countDownDate={event.attendable?.signupOpenDate}
+          deadline={event.attendable?.deadline ? event.attendable?.deadline : ""}
+          isAttending={event.attendable?.userAttendance?.isAttending ?? false}
+          isOnWaitingList={event.attendable?.userAttendance?.isOnWaitingList ?? false}
+          isFull={event.attendable?.isFull}
+          loading={loading}
+          disabled={
+            noPhoneNumberNorAlreadySignedUp ||
+            bindingSignupAndAlreadySignpedUp ||
+            requiresExtraInfoAndExtraInfroNotFilledIn
+          }
+          onClick={onClick}
+          currentTime={timeData.serverTime}
+        />
+      )}
+      {event.product &&
+        event.attendable?.userAttendance?.isAttending &&
+        (event.attendable?.userAttendance.hasBoughtTicket ? (
+          <MuiAlert severity="success" className={classes.boughtTicket}>
+            Du har betalt for billett
+          </MuiAlert>
+        ) : (
+          <Link
+            href={`/ecommerce/checkout?productId=${event.product.id}&quantity=1&redirect=${router.asPath}`}
+            passHref
+          >
+            <Button size="large" variant="contained" color={"primary"} className={classes.payButton}>
+              Gå til betaling
+            </Button>
+          </Link>
+        ))}
+    </PermissionRequired>
   );
 };
 

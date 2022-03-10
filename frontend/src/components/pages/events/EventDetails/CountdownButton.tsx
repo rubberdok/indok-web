@@ -147,7 +147,7 @@ const CountdownButton: React.FC<Props> = ({
         variant="contained"
         color={isAttending || isOnWaitingList ? "inherit" : "primary"}
         onClick={onClick}
-        disabled={currentTimeParts.length !== 0 || disabled || dayjs(deadline) < now}
+        disabled={currentTimeParts.length !== 0 || disabled || pastDeadline}
       >
         {getCorrectLabel()}
       </Button>

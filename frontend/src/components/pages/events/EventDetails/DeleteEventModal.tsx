@@ -15,7 +15,7 @@ import { Close, Delete } from "@material-ui/icons";
 import React, { useState } from "react";
 import Alert from "@components/Alert";
 
-type DeleteEventProps = {
+type Props = {
   open: boolean;
   onClose: () => void;
   eventId: string;
@@ -30,7 +30,7 @@ type DeleteEventProps = {
  * - event: The event to be edited
  */
 
-const DeleteEventModal: React.FC<DeleteEventProps> = ({ open, onClose, eventId }) => {
+const DeleteEventModal: React.FC<Props> = ({ open, onClose, eventId }) => {
   const [openDeleteSuccessSnackbar, setOpenDeleteSuccessSnackbar] = useState(false);
   const router = useRouter();
 
@@ -38,19 +38,16 @@ const DeleteEventModal: React.FC<DeleteEventProps> = ({ open, onClose, eventId }
     deleteEvent: { id: string };
   }>(DELETE_EVENT, {
     variables: { id: eventId },
+    onCompleted: () => {
+      setOpenDeleteSuccessSnackbar(true);
+      router.push("/events");
+    },
     update: (cache) => {
       const normalizedId = cache.identify({ id: eventId, __typename: "EventType" });
       cache.evict({ id: normalizedId });
       cache.gc();
     },
   });
-
-  const handleDelete = () => {
-    deleteEvent({ variables: { id: eventId } }).then(() => {
-      setOpenDeleteSuccessSnackbar(true);
-      router.push("/events");
-    });
-  };
 
   return (
     <Dialog open={open} onClose={() => onClose()} maxWidth="md">
@@ -69,7 +66,7 @@ const DeleteEventModal: React.FC<DeleteEventProps> = ({ open, onClose, eventId }
         <Button onClick={() => onClose()} color="primary" startIcon={<Close />}>
           Avbryt
         </Button>
-        <Button onClick={() => handleDelete()} color="primary" startIcon={<Delete />}>
+        <Button onClick={() => deleteEvent({ variables: { id: eventId } })} color="primary" startIcon={<Delete />}>
           Slett
         </Button>
       </DialogActions>
