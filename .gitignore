@@ -205,8 +205,7 @@ typings/
 
 # environment variables files
 .env
-.env.test
-.env.local
+.env.*local
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache
