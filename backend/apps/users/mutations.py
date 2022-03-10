@@ -10,11 +10,11 @@ from .types import UserType
 
 class AuthUser(graphene.Mutation):
     class Arguments:
-        code = graphene.String()
+        code = graphene.String(required=True)
 
     user = graphene.Field(UserType)
 
-    def mutate(self, info, code):
+    def mutate(self, info, code: str):
         user = DataportenAuth.authenticate_and_get_user(code=code)
         login(info.context, user, backend="django.contrib.auth.backends.ModelBackend")
         return AuthUser(
