@@ -113,16 +113,13 @@ The last command creates some initial data, two test users, and one admin user:
 
 The frontend runs on [http://localhost:3000](http://localhost:3000), and the backend on [http://localhost:8000](http://localhost:8000). The GraphQL API endpoint is [http://localhost:8000/graphql](http://localhost:8000/graphql). The admin panel is available at [http://localhost:8000/admin](http://localhost:8000/admin).
 
-### Environment variables
+### Secrets
 
-1. Create a file called `.env.local` in `frontend/` and add the variables that can be found in `.env.local.template`, with appropriate values.
+Environment variables are automatically loaded, but secrets are not stored in the repository.
 
-   - `NEXT_PUBLIC_DATAPORTEN_ID` should be `fcaa9e30-a6d3-4809-8fea-cdd7b3de1c98` for the Rubberdøk development client at Dataporten.
-
-2. Create a file called `.env`in `backend/` and add the variables that can be found in `backend/.env.example`, with appropriate values.
-
-   - `DATAPORTEN_ID` should be the same as above if using the Rubberdøk development client.
-   - Contact the maintainers if you are a developer of the project and need access to the various secrets and API keys needed for the project.
+1. Create `.env` and `.env.local` in `backend/` and `frontend/`, respectively.
+2. Contact maintainers in order to get the necessary secrets, alternatively, if you're a member of Rubberdøk, check the #dev channel on Slack.
+3. Make sure to restart either container after making changes to `.env*`
 
 ## Error logging
 
