@@ -184,6 +184,7 @@ GOOGLE_DRIVE_API_KEY = env("GOOGLE_DRIVE_API_KEY")
 # GRAPHENE
 GRAPHENE = {
     "SCHEMA": "config.schema.schema",
+    "SCHEMA_OUTPUT": "schema.json",
     "MIDDLEWARE": [
         "graphql_jwt.middleware.JSONWebTokenMiddleware",
         "api.auth.middleware.AnonymousUserMiddleware",
