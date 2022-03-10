@@ -69,7 +69,9 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
     },
     onError: () => setOpenEditErrorSnackbar(true),
     update: (cache, { data }) => {
-      data && cache.writeQuery<Event>({ query: GET_EVENT, data: data.updateEvent.event });
+      data &&
+        cache.writeQuery<Event>({ query: GET_EVENT, data: data.updateEvent.event }) &&
+        cache.writeQuery<Event>({ query: ADMIN_GET_EVENT, data: { ...event, ...data.updateEvent.event } });
     },
   });
 
