@@ -38,7 +38,7 @@ const AdminCabinTable = ({ bookings, refetch, currentTab }: Props) => {
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [bookingToBeDeclined, setBookingToBeDeclined] = useState<BookingFromQuery | undefined>();
   const [confirmBooking] = useMutation(CONFIRM_BOOKING, { refetchQueries: [{ query: QUERY_ADMIN_ALL_BOOKINGS }] });
-  const [send_email] = useMutation(SEND_EMAIL);
+  const [sendEmail] = useMutation(SEND_EMAIL);
 
   const isExpired = (booking: BookingFromQuery) => dayjs().isAfter(booking.checkIn);
   const isDeclinedTab = currentTab == "declined";
@@ -94,7 +94,7 @@ const AdminCabinTable = ({ bookings, refetch, currentTab }: Props) => {
                           setOpenSnackbar(true);
                           refetch();
                         });
-                        send_email(getDecisionEmailProps(booking, true));
+                        sendEmail(getDecisionEmailProps(booking, true));
                       }}
                       color="secondary"
                     >

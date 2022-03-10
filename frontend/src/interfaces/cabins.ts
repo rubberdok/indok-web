@@ -60,7 +60,7 @@ export interface EmailAndBookingInput extends ContactInfo {
   cabins: number[];
   checkIn?: string;
   checkOut?: string;
-  extra_info: string;
+  extraInfo: string;
 }
 
 export interface BookingResponsible {

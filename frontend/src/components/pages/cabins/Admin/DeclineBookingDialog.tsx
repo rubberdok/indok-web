@@ -34,7 +34,7 @@ const DeclineBookingDialog: React.VFC<DialogProps> = ({
   const [declineMessage, setDeclineMessage] = useState("");
   const [declineBooking] = useMutation(DECLINE_BOOKING, { refetchQueries: [{ query: QUERY_ADMIN_ALL_BOOKINGS }] });
   const handleDeclineBookingOnClose = () => setBookingToBeDeclined(undefined);
-  const [send_email] = useMutation(SEND_EMAIL);
+  const [sendEmail] = useMutation(SEND_EMAIL);
 
   return (
     <Dialog open={bookingToBeDeclined != undefined} onClose={handleDeclineBookingOnClose}>
@@ -61,8 +61,8 @@ const DeclineBookingDialog: React.VFC<DialogProps> = ({
         <Button
           onClick={() => {
             if (bookingToBeDeclined) {
-              send_email(getDecisionEmailProps(bookingToBeDeclined, false, declineMessage));
-              declineBooking({ variables: { id: bookingToBeDeclined.id, extraInfo: declineMessage } }).then(() => {
+              sendEmail(getDecisionEmailProps(bookingToBeDeclined, false, declineMessage));
+              declineBooking({ variables: { id: bookingToBeDeclined.id, declineReason: declineMessage } }).then(() => {
                 setSnackbarMessage(`Bookingen er underkjent. Mail er sendt til ${bookingToBeDeclined.receiverEmail}.`);
                 setOpenSnackbar(true);
                 refetch();

@@ -35,6 +35,7 @@ class UpdateBookingInput(BookingInput):
     id = graphene.ID(required=True)
     is_tentative = graphene.Boolean()
     is_declined = graphene.Boolean()
+    decline_reason = graphene.String(required=False, default_value="")
 
 
 class UpdateBookingSemesterInput(graphene.InputObjectType):
