@@ -2,7 +2,7 @@ import { Typography } from "@material-ui/core";
 import { Components } from "react-markdown";
 
 const Heading: Components["h1"] = ({ children, id, level }) => {
-  const variant = `h${Math.min(level, 3)}` as "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+  const variant = `h${Math.max(level, 3)}` as "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
   return (
     <Typography id={id} variant={variant} component={variant} gutterBottom>
       {children}
