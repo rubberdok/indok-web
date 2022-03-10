@@ -13,9 +13,10 @@ env = environ.Env()
 
 READ_DOT_ENV_FILE = env.bool("DJANGO_READ_DOT_ENV_FILE", default=False)
 if READ_DOT_ENV_FILE:
-    DOT_ENV_FILE = env("DJANGO_DOT_ENV_FILE", default=".env")
+    DOT_ENV_FILES = env.list("DJANGO_DOT_ENV_FILES", default=[".env", ".env.development"])
     # OS environment variables take precedence over variables from .env
-    env.read_env(str(ROOT_DIR / DOT_ENV_FILE))
+    for file in DOT_ENV_FILES:
+        env.read_env(str(ROOT_DIR / file))
 
 # GENERAL
 ENVIRONMENT: Literal["development", "production", "test"] = env("DJANGO_ENVIRONMENT")

@@ -26,7 +26,7 @@ services:
       - VIPPS_SECRET=${VIPPS_SECRET}
       - VIPPS_SUBSCRIPTION_KEY=${VIPPS_SUBSCRIPTION_KEY}
       - DJANGO_READ_DOT_ENV_FILE=true
-      - DJANGO_DOT_ENV_FILE=.env.test
+      - DJANGO_DOT_ENV_FILES=.env.test
     volumes:
       - ./backend:/usr/src/app
     ports:

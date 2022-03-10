@@ -165,7 +165,7 @@ jobs:
           docker run \
             -v $GITHUB_WORKSPACE/backend:/usr/src/app \
             --env DJANGO_READ_DOT_ENV_FILE=true \
-            --env DJANGO_DOT_ENV_FILE=.env.test \
+            --env DJANGO_DOT_ENV_FILES=.env.test \
             --env DATAPORTEN_SECRET=${{ secrets.DATAPORTEN_SECRET }} \
             --env GOOGLE_DRIVE_API_KEY=${{ secrets.GOOGLE_DRIVE_API_KEY }} \
             --env VIPPS_SECRET=${{ secrets.VIPPS_SECRET }} \
