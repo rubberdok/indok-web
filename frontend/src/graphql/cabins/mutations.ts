@@ -18,7 +18,7 @@ export const SEND_EMAIL = gql`
 
 export const CONFIRM_BOOKING = gql`
   mutation ConfirmBooking($id: ID!) {
-    updateBooking(bookingData: { id: $id, isTentative: false }) {
+    updateBooking(bookingData: { id: $id, isTentative: false, isDeclined: false }) {
       ok
     }
   }

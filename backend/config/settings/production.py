@@ -82,6 +82,7 @@ LOGGING = {
 
 # GRAPHENE
 GRAPHENE["MIDDLEWARE"] += ["config.sentry.middleware.SentryMiddleware"]  # noqa
+GRAPHQL_JWT = {"JWT_COOKIE_DOMAIN": env("JWT_COOKIE_DOMAIN", default=".indokntnu.no")}
 
 # Sentry
 SENTRY_DSN: str = env("SENTRY_DSN")

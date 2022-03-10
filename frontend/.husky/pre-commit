@@ -33,4 +33,5 @@ if [ $fail = true ]; then
 fi
 
 cd frontend
-yarn run lint-staged
+yarn generate
+yarn lint-staged
