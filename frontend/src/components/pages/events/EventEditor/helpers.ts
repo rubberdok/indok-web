@@ -19,6 +19,8 @@ export const getInitialEventData = (event: Event, eventData: EventDataType): Eve
 
   Object.keys(DEFAULT_INPUT).forEach((key) => {
     if (key in eventData && !!(event as Record<string, any>)[key]) {
+      // eslint-disable-next-line
+      // @ts-ignore
       initialEventData[key] = (event as Record<string, any>)[key];
     }
   });
