@@ -29,8 +29,8 @@ class Booking(models.Model):
     external_participants = models.IntegerField()
     is_tentative = models.BooleanField(default=True)
     is_declined = models.BooleanField(default=False)
-    decline_reason = models.CharField(max_length=100, default="")
-    extra_info = models.CharField(max_length=100, default="")
+    decline_reason = models.CharField(max_length=100, default="", blank=True, null=True)
+    extra_info = models.CharField(max_length=100, default="", blank=True, null=True)
 
     @property
     def number_of_nights(self) -> int:

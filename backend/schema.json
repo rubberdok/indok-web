@@ -4412,13 +4412,9 @@
               "isDeprecated": false,
               "name": "declineReason",
               "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
               }
             },
             {
@@ -4428,13 +4424,9 @@
               "isDeprecated": false,
               "name": "extraInfo",
               "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
               }
             },
             {
@@ -8281,7 +8273,7 @@
               }
             },
             {
-              "defaultValue": "\"\"",
+              "defaultValue": null,
               "description": null,
               "name": "extraInfo",
               "type": {
@@ -8431,7 +8423,7 @@
               }
             },
             {
-              "defaultValue": "\"\"",
+              "defaultValue": null,
               "description": null,
               "name": "extraInfo",
               "type": {
@@ -8475,7 +8467,7 @@
               }
             },
             {
-              "defaultValue": "\"\"",
+              "defaultValue": null,
               "description": null,
               "name": "declineReason",
               "type": {
@@ -8648,7 +8640,7 @@
               }
             },
             {
-              "defaultValue": "\"\"",
+              "defaultValue": null,
               "description": null,
               "name": "extraInfo",
               "type": {
