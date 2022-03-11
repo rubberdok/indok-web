@@ -1,11 +1,17 @@
+from typing import TYPE_CHECKING, Optional
+
 import graphene
 from api.auth.dataporten_auth import DataportenAuth
-from graphql_jwt.decorators import login_required
 from django.contrib.auth import login
+from graphene import ResolveInfo
+from decorators import login_required
 
 from apps.users.helpers import update_graduation_year
 
 from .types import UserType
+
+if TYPE_CHECKING:
+    from apps.users import models
 
 
 class AuthUser(graphene.Mutation):
@@ -40,13 +46,13 @@ class UpdateUser(graphene.Mutation):
     @login_required
     def mutate(
         self,
-        info,
-        user_data=None,
-    ):
+        info: ResolveInfo,
+        user_data: Optional[dict] = None,
+    ) -> Optional["UpdateUser"]:
         if user_data is None:
             return None
 
-        user = info.context.user
+        user: "models.User" = info.context.user
 
         new_graduation_year = user_data.get("graduation_year")
 
