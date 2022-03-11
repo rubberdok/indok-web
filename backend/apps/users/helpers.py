@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Literal
+from typing import TYPE_CHECKING, Optional
 from django.utils import timezone
 from django.core.exceptions import ValidationError
 
@@ -7,7 +7,7 @@ if TYPE_CHECKING:
     from apps.users.models import User
 
 
-def update_graduation_year(user: "User", new_graduation_year: int) -> Literal[True]:
+def update_graduation_year(user: "User", new_graduation_year: Optional[int]) -> None:
     updated_graduation_year = new_graduation_year != user.graduation_year
 
     if updated_graduation_year:
@@ -29,5 +29,3 @@ def update_graduation_year(user: "User", new_graduation_year: int) -> Literal[Tr
         user.graduation_year = new_graduation_year
         if not user.first_login:
             user.year_updated_at = timezone.now()
-
-    return True
