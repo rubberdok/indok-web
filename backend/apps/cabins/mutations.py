@@ -103,10 +103,7 @@ class UpdateBooking(graphene.Mutation):
             # Check that incoming fields are ok
             semester = BookingSemester.objects.first()
             create_booking_validation(booking_data, booking_semester=semester)
-            print(booking_data)
             for input_field, input_value in booking_data.items():
-                print("updating field", input_field, input_value)
-
                 if input_field and input_field != "cabins":
                     setattr(booking, input_field, input_value)
             booking.save()

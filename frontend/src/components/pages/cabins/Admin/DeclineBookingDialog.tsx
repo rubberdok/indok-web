@@ -11,7 +11,7 @@ import {
   DialogActions,
   Button,
 } from "@material-ui/core";
-import { convertDateFormat, getDecisionEmailProps } from "@utils/cabins";
+import { convertDateFormat, getDecisionEmailProps, toStringChosenCabins } from "@utils/cabins";
 import { useState } from "react";
 
 type DialogProps = {
@@ -40,7 +40,8 @@ const DeclineBookingDialog: React.VFC<DialogProps> = ({
     <Dialog open={bookingToBeDeclined != undefined} onClose={handleDeclineBookingOnClose}>
       <DialogTitle>
         Underkjenning av booking fra {bookingToBeDeclined?.firstName} {bookingToBeDeclined?.lastName} fra{" "}
-        {convertDateFormat(bookingToBeDeclined?.checkIn)} til {convertDateFormat(bookingToBeDeclined?.checkOut)}
+        {convertDateFormat(bookingToBeDeclined?.checkIn)} til {convertDateFormat(bookingToBeDeclined?.checkOut)} av{" "}
+        {toStringChosenCabins(bookingToBeDeclined ? bookingToBeDeclined.cabins : [])}
       </DialogTitle>
       <DialogContent>
         <DialogContentText>Er du sikker på at du vil underkjenne denne bookingen?</DialogContentText>

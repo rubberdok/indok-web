@@ -41,7 +41,7 @@ const AdminCabinTable = ({ bookings, refetch, currentTab }: Props) => {
   const [sendEmail] = useMutation(SEND_EMAIL);
 
   const isExpired = (booking: BookingFromQuery) => dayjs().isAfter(booking.checkIn);
-  const isDeclinedTab = currentTab == "declined";
+  const isDeclinedTab = currentTab === "declined";
 
   return (
     <TableContainer component={Paper}>
