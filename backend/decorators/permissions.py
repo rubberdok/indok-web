@@ -1,26 +1,65 @@
 from functools import wraps
-from typing import Callable, Union
+from typing import TYPE_CHECKING, Callable, Literal, Optional, Type, TypeVar, Union, cast, overload
 
 from django.apps import apps
+from django.db import models
 from django.db.models import Model
-from django.db.models.base import ModelBase
-from graphql_jwt.decorators import context
+from graphene import ResolveInfo
+from typing_extensions import Concatenate, ParamSpec
+
+from decorators.constants import PERMISSION_REQUIRED_ERROR, ResolverSignature
+
+from .helpers import context
+
+if TYPE_CHECKING:
+    from apps.users.models import User
+
+R = TypeVar("R")
+P = ParamSpec("P")
+
+P_lookup = ParamSpec("P_lookup")
+M = TypeVar("M", bound="models.Model")
+
+LookupFn = Callable[Concatenate[ResolveInfo, P_lookup], M]
+LookupVariables = tuple[Union[Type[Model], str], tuple[str, ...]]
+
+
+@overload
+def permission_required(
+    perms: Union[list[str], str],
+    lookup_variables: Optional[LookupVariables] = ...,
+    fn: Optional[LookupFn[P_lookup, M]] = ...,
+    return_none: Literal[False] = ...,
+    **kwargs,
+) -> Callable[[ResolverSignature[P, R]], Callable[P, R]]:
+    ...
+
+
+@overload
+def permission_required(
+    perms: Union[list[str], str],
+    lookup_variables: Optional[LookupVariables] = ...,
+    fn: Optional[LookupFn] = ...,
+    return_none: Literal[True] = ...,
+    **kwargs,
+) -> Callable[[ResolverSignature[P, R]], Callable[P, Optional[R]]]:
+    ...
 
 
 def permission_required(
     perms: Union[list[str], str],
-    lookup_variables: tuple[Union[Model, ModelBase, str], ...] = None,
-    fn: Callable = None,
+    lookup_variables: Optional[LookupVariables] = None,
+    fn: Optional[LookupFn] = None,
     return_none: bool = False,
     **kwargs,
-):
+) -> Callable[[ResolverSignature[P, R]], Callable[P, Union[Optional[R], R]]]:
     """Decorator to check for row level permissions
 
     Parameters
     ----------
     perms : Union[list[str], str]
         A permission or list of permissions in the format app_label.action_modelname.
-    lookup_variables : tuple[Union[Model, ModelBase, str], ...], optional
+    lookup_variables : LookupVariables, optional
         A tuple with: (1) the model which to look up, (2) a series of attribute name,
         parameter name pairs to use for the lookup, by default None
     fn : Callable, optional
@@ -49,28 +88,22 @@ def permission_required(
     if isinstance(perms, str):
         perms = [perms]
 
-    def decorator(resolver):
+    def decorator(resolver: ResolverSignature[P, R]) -> Callable[P, Union[Optional[R], R]]:
         @wraps(resolver)
         @context(resolver)
-        def wrapper(context, *args, **kwargs):
+        def wrapper(context, *args: P.args, **kwargs: P.kwargs) -> Optional[R]:
             obj = None
             if callable(fn):
                 obj = fn(context, *args, **kwargs)
 
             elif lookup_variables:
-                model, lookups = lookup_variables[0], lookup_variables[1:]
+                model, lookups = lookup_variables
 
                 if isinstance(model, str):
-                    split_model_str = model.split(".")
+                    model = cast(Type[models.Model], apps.get_model(model, require_ready=True))
 
-                    if len(split_model_str) != 2:
-                        raise SyntaxError(
-                            f"The model string should be of the format app_label.ModelClass, got {model}."
-                        )
-
-                    model = apps.get_model(*split_model_str)
-                elif not isinstance(model, (Model, ModelBase)):
-                    raise TypeError(f"{model} should be of the type str, Model, or ModelBase, got {type(model)}")
+                elif not isinstance(model, Model):
+                    raise TypeError(f"{model} should be of the type str or Model, got {type(model)}")
 
                 lookup_dict = {}
 
@@ -97,7 +130,7 @@ def permission_required(
             elif return_none:
                 return None
 
-            raise PermissionError("You do not have the permissions required.")
+            raise PermissionError(PERMISSION_REQUIRED_ERROR)
 
         return wrapper
 
@@ -105,9 +138,9 @@ def permission_required(
 
 
 def has_permissions(
-    user,
+    user: "User",
     perms: list[str],
-    obj=None,
+    obj: Optional[models.Model] = None,
     accept_global_perms: bool = False,
     any_perm: bool = False,
 ) -> bool:
@@ -140,8 +173,8 @@ def has_permissions(
 
 def permission_required_or_none(
     perms: Union[list[str], str],
-    lookup_variables: tuple[Union[Model, ModelBase, str], ...] = None,
-    fn: Callable = None,
+    lookup_variables: Optional[LookupVariables] = None,
+    fn: Optional[LookupFn] = None,
     **kwargs,
 ):
     """Wrapper for permission required with return_none = True
@@ -151,9 +184,9 @@ def permission_required_or_none(
     ----------
     perms : Union[list[str], str]
         [description]
-    lookup_variables : tuple[Union[Model, ModelBase, str], ...], optional
+    lookup_variables : Optional[LookupVariables], optional
         [description], by default None
-    fn : Callable, optional
+    fn : Optional[LookupFn], optional
         [description], by default None
 
     Returns

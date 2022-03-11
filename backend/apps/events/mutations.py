@@ -5,7 +5,7 @@ from django.core.exceptions import PermissionDenied, ValidationError
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from graphql_jwt.decorators import login_required, staff_member_required
-from utils.decorators import permission_required
+from decorators import permission_required
 
 from apps.organizations.models import Organization
 from apps.organizations.permissions import check_user_membership
