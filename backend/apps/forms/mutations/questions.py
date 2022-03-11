@@ -1,5 +1,5 @@
 import graphene
-from graphql_jwt.decorators import login_required
+from decorators import login_required
 from decorators import permission_required
 from django.db.models import Q
 from django.db import IntegrityError
