@@ -11,7 +11,7 @@ import {
   DialogActions,
   Button,
 } from "@material-ui/core";
-import { getDecisionEmailProps } from "@utils/cabins";
+import { convertDateFormat, getDecisionEmailProps, toStringChosenCabins } from "@utils/cabins";
 import { useState } from "react";
 
 type DialogProps = {
@@ -34,16 +34,20 @@ const DeclineBookingDialog: React.VFC<DialogProps> = ({
   const [declineMessage, setDeclineMessage] = useState("");
   const [declineBooking] = useMutation(DECLINE_BOOKING, { refetchQueries: [{ query: QUERY_ADMIN_ALL_BOOKINGS }] });
   const handleDeclineBookingOnClose = () => setBookingToBeDeclined(undefined);
-  const [send_email] = useMutation(SEND_EMAIL);
+  const [sendEmail] = useMutation(SEND_EMAIL);
 
   return (
     <Dialog open={bookingToBeDeclined != undefined} onClose={handleDeclineBookingOnClose}>
-      <DialogTitle>Du er nå i ferd med å gjøre en irreversibel handling</DialogTitle>
+      <DialogTitle>
+        Underkjenning av booking fra {bookingToBeDeclined?.firstName} {bookingToBeDeclined?.lastName} fra{" "}
+        {convertDateFormat(bookingToBeDeclined?.checkIn)} til {convertDateFormat(bookingToBeDeclined?.checkOut)} av{" "}
+        {toStringChosenCabins(bookingToBeDeclined ? bookingToBeDeclined.cabins : [])}
+      </DialogTitle>
       <DialogContent>
-        <DialogContentText>Er du sikker på at du vil slette denne bookingen?</DialogContentText>
+        <DialogContentText>Er du sikker på at du vil underkjenne denne bookingen?</DialogContentText>
         <DialogContentText>
-          Det kan være nyttig for brukeren å få vite hvorfor dere avslår søknaden om booking. Hvis dere vil oppgi
-          grunnen til avslag, kan dere gjøre det nedenfor.
+          Det kan være nyttig for {bookingToBeDeclined?.firstName} å få vite hvorfor dere avslår søknaden om booking.
+          Hvis dere vil oppgi grunnen til avslag, kan dere gjøre det nedenfor.
         </DialogContentText>
         <TextField
           placeholder="Grunn til avslag..."
@@ -61,8 +65,8 @@ const DeclineBookingDialog: React.VFC<DialogProps> = ({
         <Button
           onClick={() => {
             if (bookingToBeDeclined) {
-              send_email(getDecisionEmailProps(bookingToBeDeclined, false, declineMessage));
-              declineBooking({ variables: { id: bookingToBeDeclined.id } }).then(() => {
+              sendEmail(getDecisionEmailProps(bookingToBeDeclined, false, declineMessage));
+              declineBooking({ variables: { id: bookingToBeDeclined.id, declineReason: declineMessage } }).then(() => {
                 setSnackbarMessage(`Bookingen er underkjent. Mail er sendt til ${bookingToBeDeclined.receiverEmail}.`);
                 setOpenSnackbar(true);
                 refetch();
@@ -73,7 +77,7 @@ const DeclineBookingDialog: React.VFC<DialogProps> = ({
           color="primary"
           variant="contained"
         >
-          Slett booking
+          Underkjenn booking
         </Button>
       </DialogActions>
     </Dialog>
