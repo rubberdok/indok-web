@@ -4,6 +4,8 @@ from django.db.models import Q
 
 from .models import Membership, Organization
 
+from decorators import PermissionDenied
+
 
 class OrganizationResolvers:
     def resolve_all_organizations(self, info, search=None):
@@ -43,4 +45,4 @@ class MembershipResolvers:
         organization = Organization.objects.get(pk=organization_id)
         if organization.users.filter(user=info.context.user).exists():
             return Membership.objects.filter(organization=organization)
-        raise PermissionError(f"Du må være medlem av {organization} for å gjøre dette kallet.")
+        raise PermissionDenied(f"Du må være medlem av {organization} for å gjøre dette kallet.")

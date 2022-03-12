@@ -9,6 +9,8 @@ from decorators import login_required
 from ..listings.types import ListingType
 from .dataloader import ListingsByOrganizationIdLoader
 
+from decorators import PermissionDenied
+
 
 class OrganizationType(DjangoObjectType):
     absolute_slug = graphene.String()
@@ -45,7 +47,7 @@ class OrganizationType(DjangoObjectType):
                 if organization.users.filter(pk=info.context.user.id).exists():
                     return resolver(organization, info)
                 else:
-                    raise PermissionError(
+                    raise PermissionDenied(
                         f"Du må være medlem av foreningen {organization.name} for å gjøre dette kallet"
                     )
 
@@ -84,7 +86,7 @@ class MembershipType(DjangoObjectType):
                 if membership.organization.users.filter(pk=info.context.user.id).exists():
                     return resolver(membership, info)
                 else:
-                    raise PermissionError(
+                    raise PermissionDenied(
                         f"Du må være medlem av foreningen {membership.organization.name} for å gjøre dette kallet"
                     )
 
