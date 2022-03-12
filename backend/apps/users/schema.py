@@ -1,5 +1,4 @@
 import graphene
-import graphql_jwt
 from django.conf import settings
 
 from .mutations import AuthUser, UpdateUser
@@ -10,9 +9,6 @@ from .types import UserType
 class UserMutations(graphene.ObjectType):
     auth_user = AuthUser.Field()
     update_user = UpdateUser.Field()
-    verify_token = graphql_jwt.Verify.Field()
-    refresh_token = graphql_jwt.Refresh.Field()
-    delete_token_cookie = graphql_jwt.DeleteJSONWebTokenCookie.Field()
 
 
 class UserQueries(graphene.ObjectType, UserResolvers):
@@ -21,4 +17,4 @@ class UserQueries(graphene.ObjectType, UserResolvers):
     logout = graphene.String(required=True)
 
     if settings.ENVIRONMENT == "test":
-        auth_token = graphene.String()
+        auth_token = graphene.Field(UserType)

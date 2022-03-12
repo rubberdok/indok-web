@@ -1,6 +1,6 @@
 import json
 from datetime import datetime
-from typing import Any, Final, Union, overload
+from typing import TYPE_CHECKING, Any, Final, Optional, Union, cast, overload
 from django.db.models.query import QuerySet
 
 import factory
@@ -8,9 +8,12 @@ from django.db import models
 from django.http.response import HttpResponse
 from graphene.utils.str_converters import to_snake_case
 from graphene_django.utils.testing import GraphQLTestCase
-from graphql_jwt.settings import jwt_settings
-from graphql_jwt.shortcuts import get_token
 from django.conf import settings
+
+from utils.testing.factories.users import UserFactory
+
+if TYPE_CHECKING:
+    from apps.users.models import User
 
 PERMISSION_ERROR_MESSAGE: Final = "You do not have the permissions required."
 ALTERNATE_PERMISSION: Final = "You do not have permission to perform this action"
@@ -25,13 +28,11 @@ class ExtendedGraphQLTestCase(GraphQLTestCase):
         )
         return super().setUp()
 
-    def query(self, query, user=None, **kwargs) -> HttpResponse:
+    def query(self, query: str, user: Optional[Union[UserFactory, "User"]] = None, **kwargs) -> HttpResponse:
         headers = {}
         if user is not None:
-            token = get_token(user)
-            headers = {
-                jwt_settings.JWT_AUTH_HEADER_NAME: f"{jwt_settings.JWT_AUTH_HEADER_PREFIX} {token}",
-            }
+            user = cast("User", user)
+            self.client.force_login(user, backend="django.contrib.auth.backends.ModelBackend")
         return super().query(query, headers=headers, **kwargs)
 
     def assert_permission_error(self, response: HttpResponse) -> None:
