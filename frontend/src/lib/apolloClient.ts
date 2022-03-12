@@ -25,7 +25,7 @@ const getCsrfToken = async (req?: GetServerSidePropsContext["req"]) => {
 
   const ssr = typeof window === "undefined";
 
-  const csrfToken: string = await fetch(`${ssr ? config.INTERNAL_API_URI : config.API_URI}/csrf/`)
+  const csrfToken: string = await fetch(`${ssr ? config.INTERNAL_API_URL : config.API_URL}/csrf/`)
     .then((response) => response.json())
     .then((data) => data.csrfToken);
 
