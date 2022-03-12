@@ -34,8 +34,8 @@ class IntegrationServerTestCase(ExtendedGraphQLTestCase):
         with self.settings(ENVIRONMENT="test"):
             response = self.query(self.test_auth)
             self.assertResponseNoErrors(response)
-            user = json.loads(response.content)["data"]["user"]
-            self.assertEqual(user, self.indok_user)
+            user = json.loads(response.content)["data"]["testAuth"]
+            self.deep_assert_equal(user, self.indok_user)
 
     def test_cypress_disallowed(self):
         with self.settings(ENVIRONMENT="production"):
