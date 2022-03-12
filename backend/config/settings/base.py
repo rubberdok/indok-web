@@ -88,9 +88,6 @@ AUTHENTICATION_BACKENDS = [
 AUTH_USER_MODEL = "users.User"
 SESSION_COOKIE_DOMAIN = env("SESSION_COOKIE_DOMAIN", default="localhost")
 
-# CORS
-CORS_ALLOW_CREDENTIALS = True
-
 # CSRF
 CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS", default=["http://localhost:3000", "http://frontend:3000"])
 CSRF_COOKIE_DOMAIN = env("CSRF_COOKIE_DOMAIN", default="localhost")
@@ -150,7 +147,7 @@ TEMPLATES = [
 
 # CORS
 CORS_ALLOW_CREDENTIALS = env.bool("CORS_ALLOW_CREDENTIALS", True)
-CORS_ORIGIN_WHITELIST = env.list("CORS_ORIGIN_WHITELIST", default="http://localhost:3000")
+CORS_ALLOWED_ORIGINS = env.list("CORS_ALLOWED_ORIGINS", default="http://localhost:3000")
 ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=["localhost"])
 
 # URLS

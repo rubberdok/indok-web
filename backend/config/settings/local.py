@@ -16,12 +16,6 @@ FRONTEND_BASE_URL = env("FRONTEND_BASE_URL", default="http://localhost:3000")
 
 # ACCESS
 ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1", "backend"]
-CORS_ORIGIN_WHITELIST = [
-    "http://localhost:3000",
-    "http://0.0.0.0:3000",
-    "http://127.0.0.1:3000",
-    "http://frontend:3000",
-]
 CORS_ALLOW_CREDENTIALS = True
 
 EMAIL_BACKEND = env("DJANGO_EMAIL_BACKEND", default="django.core.mail.backends.console.EmailBackend")
