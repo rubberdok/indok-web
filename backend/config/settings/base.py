@@ -86,6 +86,7 @@ AUTHENTICATION_BACKENDS = [
     "guardian.backends.ObjectPermissionBackend",
 ]
 AUTH_USER_MODEL = "users.User"
+SESSION_COOKIE_DOMAIN = env("SESSION_COOKIE_DOMAIN", default="localhost")
 
 # CORS
 CORS_ALLOW_CREDENTIALS = True
