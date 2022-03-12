@@ -82,7 +82,6 @@ LOGGING = {
 
 # GRAPHENE
 GRAPHENE["MIDDLEWARE"] += ["config.sentry.middleware.SentryMiddleware"]  # noqa
-GRAPHQL_JWT = {"JWT_COOKIE_DOMAIN": env("JWT_COOKIE_DOMAIN", default=".indokntnu.no")}
 
 # SECURITY
 SESSION_COOKIE_SECURE = env.bool("SESSION_COOKIE_SECURE", default=True)

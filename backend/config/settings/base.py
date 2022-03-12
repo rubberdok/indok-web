@@ -205,7 +205,6 @@ GRAPHENE = {
         "api.auth.middleware.AnonymousUserMiddleware",
     ],
 }
-GRAPHQL_JWT = {"JWT_COOKIE_DOMAIN": env("JWT_COOKIE_DOMAIN", default="localhost")}
 GRAPHQL_URL = "graphql/"
 
 # DJANGO GUARDIAN
