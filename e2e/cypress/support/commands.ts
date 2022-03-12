@@ -34,12 +34,10 @@ declare namespace Cypress {
 Cypress.Commands.add("login", () => {
   const query = `{
     testAuth {
-      user {
-        id
-        username
-        first_name
-        last_name
-      }
+      id
+      username
+      first_name
+      last_name
     }
   }`;
   cy.log("Logging in...");

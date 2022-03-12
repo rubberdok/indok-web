@@ -4,7 +4,8 @@ describe("On the profile page", () => {
   });
 
   beforeEach(() => {
-    Cypress.Cookies.preserveOnce("JWT");
+    Cypress.Cookies.preserveOnce("sessionid");
+    Cypress.Cookies.preserveOnce("csrftoken");
   });
 
   it("should be able to update personal information", () => {
