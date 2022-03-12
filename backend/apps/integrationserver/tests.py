@@ -21,7 +21,12 @@ class IntegrationServerTestCase(ExtendedGraphQLTestCase):
         )
         self.test_auth = """
             query {
-                testAuth
+                testAuth {
+                    id
+                    username
+                    firstName
+                    lastName
+                }
             }
         """
 

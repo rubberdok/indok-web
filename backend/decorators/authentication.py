@@ -4,8 +4,7 @@ from typing import TYPE_CHECKING, Callable, TypeVar
 from django.core.exceptions import PermissionDenied
 from typing_extensions import ParamSpec
 
-from .constants import LOGIN_REQUIRED_ERROR, PERMISSION_REQUIRED_ERROR, ResolverSignature
-from .errors import LoginRequiredError
+from .constants import PERMISSION_REQUIRED_ERROR, ResolverSignature
 from .helpers import context
 
 if TYPE_CHECKING:
@@ -35,7 +34,7 @@ def user_passes_test(
 
 
 login_required = user_passes_test(
-    test_fn=lambda user: user.is_authenticated, exception=LoginRequiredError(LOGIN_REQUIRED_ERROR)
+    test_fn=lambda user: user.is_authenticated, exception=PermissionDenied(PERMISSION_REQUIRED_ERROR)
 )
 superuser_required = user_passes_test(lambda user: user.is_superuser)
 staff_member_required = user_passes_test(lambda user: user.is_staff)
