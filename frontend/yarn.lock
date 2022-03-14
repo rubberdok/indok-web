@@ -714,12 +714,12 @@
     tslib "~2.3.0"
 
 "@graphql-codegen/typed-document-node@^2.2.3":
-  version "2.2.3"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/typed-document-node/-/typed-document-node-2.2.3.tgz#ec783f1e47fa6646d8cf18ac59d5d1cf6d854167"
-  integrity sha512-GhmdYzHTK5Wr+5RkAIjX2fQzLVlsstwBrmdb/JKbN32F1malM5z4rp24wGfP34V3kOnh6h6jtbXsg+EgpDJJMw==
+  version "2.2.7"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/typed-document-node/-/typed-document-node-2.2.7.tgz#4c8a4b3bef32adf54518dd647a02232ec3ee0478"
+  integrity sha512-l/+fWv7gNzQHKdk+ahuJzsUkZrVkUuBtbkXf65S/y76oL9U3AHJjCX5OfScisjA3ahqj3EALcxNjPq3IPQJpOQ==
   dependencies:
     "@graphql-codegen/plugin-helpers" "^2.4.0"
-    "@graphql-codegen/visitor-plugin-common" "2.6.0"
+    "@graphql-codegen/visitor-plugin-common" "2.7.3"
     auto-bind "~4.0.0"
     change-case-all "1.0.14"
     tslib "~2.3.0"
