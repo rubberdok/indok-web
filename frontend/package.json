@@ -52,7 +52,7 @@
     "@graphql-codegen/typed-document-node": "^2.2.3",
     "@graphql-codegen/introspection": "2.1.1",
     "@graphql-codegen/typescript": "2.4.5",
-    "@graphql-codegen/typescript-operations": "2.3.0",
+    "@graphql-codegen/typescript-operations": "2.3.4",
     "@graphql-codegen/typescript-react-apollo": "3.2.6",
     "@graphql-codegen/typescript-resolvers": "2.5.4",
     "@types/node": "^16.11.22",
