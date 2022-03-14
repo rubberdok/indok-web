@@ -35,16 +35,16 @@ type Props = {
   organization: Organization;
 };
 
-type permissionGroups = {
+type PermissionGroups = {
   name: string;
   uuid: string;
-  userids: {
+  users: {
     id: string;
   }[];
 };
 
-type UserWithCheck = User & { checked: boolean; ableToSee: boolean };
-type permissionGroupsWithCheck = permissionGroups & { checked: boolean };
+type UserWithCheck = User & { checked: boolean; ableToSeeSearchFilter: boolean; abletoSeeResponsibleGroup: boolean };
+type PermissionGroupsWithCheck = PermissionGroups & { checked: boolean };
 
 const EditUsersInOrganization: React.FC<Props> = ({ organization }) => {
   const router = useRouter();
@@ -56,7 +56,7 @@ const EditUsersInOrganization: React.FC<Props> = ({ organization }) => {
   //The current searchfilter
   const [searchFilter, setSearchFilter] = useState("");
   //Fetched permissiongroups and whether they are checked
-  const [fetchedPermissionGroups, setFetchedPermissionGroups] = useState<permissionGroupsWithCheck[]>([]);
+  const [fetchedPermissionGroups, setFetchedPermissionGroups] = useState<PermissionGroupsWithCheck[]>([]);
 
   //Gucci - Handling logic when checkmarking people
   const handleCheckedPeople = (user: UserWithCheck) => {
@@ -74,7 +74,7 @@ const EditUsersInOrganization: React.FC<Props> = ({ organization }) => {
     //
   };
 
-  //Gucci - Reseting the checkedFilter
+  //TODO - Reseting the checkedFilter
   const resetCheckedFilter = () => {
     const newCheckedPeople = checkedPeople.map((checkedUser) => {
       const updatedUser = {
@@ -88,7 +88,7 @@ const EditUsersInOrganization: React.FC<Props> = ({ organization }) => {
 
   //Gucci - Fetching users in the organization
   const { error, loading, data } = useQuery<{
-    organization: { users: User[]; permissionGroups: permissionGroups[] };
+    organization: { users: User[]; permissionGroups: PermissionGroups[] };
   }>(
     gql`
       query organization($id: ID) {
@@ -113,6 +113,67 @@ const EditUsersInOrganization: React.FC<Props> = ({ organization }) => {
     { variables: { id: orgNumberId } }
   );
 
+  //TODO: Test this with actual data - Should switch ableToSee based on if the person is in the specified group or not
+  useEffect(() => {
+    let somethingChecked = false;
+
+    // Reseting all of the users
+    const removingAllUser: UserWithCheck[] = [];
+    checkedPeople.map((user) => {
+      const newUser = {
+        ...user,
+        abletoSeeResponsibleGroup: false,
+      };
+      removingAllUser.push(newUser);
+    });
+
+    let updateUsers: UserWithCheck[] = removingAllUser;
+    const secondPermission = false;
+    fetchedPermissionGroups.forEach((permission) => {
+      if (permission.checked) {
+        somethingChecked = true;
+
+        const temp: UserWithCheck[] = [];
+
+        updateUsers.forEach((user) => {
+          let isInGroup = false;
+          permission.users.forEach((id) => {
+            // Checking if we want to update the user
+            if (user.id == id.id) {
+              isInGroup = true;
+              const updateUser = {
+                ...user,
+                abletoSeeResponsibleGroup: true,
+              };
+              temp.push(updateUser);
+            }
+          });
+
+          if (!isInGroup) {
+            temp.push(user);
+          }
+        });
+
+        updateUsers = temp;
+      }
+    });
+
+    //If no group has been selected, show everyone.
+    if (!somethingChecked) {
+      const resetingUsers: UserWithCheck[] = [];
+      checkedPeople.map((user) => {
+        const newUser = {
+          ...user,
+          abletoSeeResponsibleGroup: true,
+        };
+        resetingUsers.push(newUser);
+      });
+      setCheckedPeople(resetingUsers);
+    } else {
+      setCheckedPeople(updateUsers);
+    }
+  }, [fetchedPermissionGroups]);
+
   //Gucci - When people are fetched all people are choosen
   useEffect(() => {
     const allUsers: UserWithCheck[] = [];
@@ -120,13 +181,14 @@ const EditUsersInOrganization: React.FC<Props> = ({ organization }) => {
       const userWithCheck = {
         ...user,
         checked: false,
-        ableToSee: true,
+        ableToSeeSearchFilter: true,
+        abletoSeeResponsibleGroup: true,
       };
       allUsers.push(userWithCheck);
     });
     setCheckedPeople(allUsers);
 
-    const allPermissionGroups: permissionGroupsWithCheck[] = [];
+    const allPermissionGroups: PermissionGroupsWithCheck[] = [];
     data?.organization.permissionGroups.forEach((permission) => {
       const permissionWithCheck = {
         ...permission,
@@ -135,23 +197,22 @@ const EditUsersInOrganization: React.FC<Props> = ({ organization }) => {
       allPermissionGroups.push(permissionWithCheck);
     });
     setFetchedPermissionGroups(allPermissionGroups);
-    console.log(allPermissionGroups);
   }, [data]);
 
-  //Gucci - Filter out users that does not fufuill the searchbar query
+  //Gucci - Filter out users that does not fufill the searchbar query
   useEffect(() => {
     const updatedUsers = checkedPeople.map((checkedUser) => {
       const fullName = checkedUser.firstName + " " + checkedUser.lastName;
       if (!fullName.toLocaleLowerCase().includes(searchFilter.toLocaleLowerCase())) {
         const updatedUser = {
           ...checkedUser,
-          ableToSee: false,
+          ableToSeeSearchFilter: false,
         };
         return updatedUser;
       } else {
         const updatedUser = {
           ...checkedUser,
-          ableToSee: true,
+          ableToSeeSearchFilter: true,
         };
         return updatedUser;
       }
@@ -199,7 +260,7 @@ const EditUsersInOrganization: React.FC<Props> = ({ organization }) => {
                         </TableHead>
                         <TableBody>
                           {checkedPeople?.map((user: UserWithCheck, index) => {
-                            if (user.ableToSee) {
+                            if (user.ableToSeeSearchFilter && user.abletoSeeResponsibleGroup) {
                               return (
                                 <TableRow className={classes.hover} key={index} hover>
                                   <TableCell>{user.firstName + " " + user.lastName}</TableCell>

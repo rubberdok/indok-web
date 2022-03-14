@@ -9,12 +9,12 @@ type permissionGroupsWithCheck = {
   checked: boolean;
   name: string;
   uuid: string;
-  userids: {
+  users: {
     id: string;
   }[];
 };
 
-type UserWithCheck = User & { checked: boolean; ableToSee: boolean };
+type UserWithCheck = User & { checked: boolean; ableToSeeSearchFilter: boolean; abletoSeeResponsibleGroup: boolean };
 
 type Props = {
   setSearch: React.Dispatch<React.SetStateAction<string>>;
