@@ -11,7 +11,8 @@
     "start": "next start",
     "lint": "eslint",
     "lint:fix": "yarn run lint --fix",
-    "postinstall": "cd .. && husky install frontend/.husky"
+    "postinstall": "cd .. && husky install frontend/.husky",
+    "generate": "graphql-codegen --config codegen.yml"
   },
   "repository": {
     "type": "git",
@@ -24,13 +25,15 @@
     "@material-ui/lab": "^4.0.0-alpha.58",
     "@material-ui/system": "^4.11.2",
     "@sentry/nextjs": "^6.17.3",
+    "cookie": "^0.4.2",
     "dayjs": "^1.10.5",
+    "deepmerge": "^4.2.2",
     "formik": "^2.2.9",
-    "graphql": "^15.5.0",
+    "graphql": "^16.3.0",
     "gray-matter": "^4.0.3",
+    "lodash": "^4.17.21",
     "material-ui-search-bar": "^1.0.0",
     "next": "^12.0.8",
-    "npm": "^7.18.1",
     "react": "^17.0.2",
     "react-awesome-reveal": "^3.8.1",
     "react-dom": "^17.0.2",
@@ -38,12 +41,20 @@
     "react-parallax": "^3.3.0",
     "react-swipeable-views": "^0.14.0",
     "react-swipeable-views-utils": "^0.14.0",
-    "sharp": "^0.29.0",
+    "sharp": "^0.30.2",
     "ts-debounce": "^4.0.0",
     "validator": "^13.6.0",
     "yup": "^0.32.9"
   },
   "devDependencies": {
+    "@types/cookie": "^0.4.1",
+    "@graphql-codegen/cli": "2.6.2",
+    "@graphql-codegen/typed-document-node": "^2.2.3",
+    "@graphql-codegen/introspection": "2.1.1",
+    "@graphql-codegen/typescript": "2.4.5",
+    "@graphql-codegen/typescript-operations": "2.3.4",
+    "@graphql-codegen/typescript-react-apollo": "3.2.6",
+    "@graphql-codegen/typescript-resolvers": "2.5.4",
     "@types/node": "^16.11.22",
     "@types/react": "^17.0.11",
     "@types/react-dom": "^17.0.8",
@@ -61,7 +72,7 @@
     "eslint-plugin-react": "^7.24.0",
     "eslint-plugin-react-hooks": "^4.0.8",
     "husky": "^7.0.1",
-    "lint-staged": "^12.3.1",
+    "lint-staged": "<12.0.0",
     "prettier": "^2.3.1",
     "typescript": "^4.3.4"
   },
@@ -72,9 +83,12 @@
     "*.{json,md,html,js,jsx,ts,tsx}": [
       "prettier --write"
     ],
-    "../**/*.py": [
+    "../backend/**/*.py": [
       "black",
       "flake8 --config=../backend/tox.ini"
+    ],
+    "../backend/schema.json": [
+      "yarn generate"
     ]
   }
 }
