@@ -44,7 +44,9 @@ export type AdminBookingType = {
   cabins: Array<CabinType>;
   checkIn: Scalars["Date"];
   checkOut: Scalars["Date"];
+  declineReason: Scalars["String"];
   externalParticipants: Scalars["Int"];
+  extraInfo: Scalars["String"];
   firstName: Scalars["String"];
   id: Scalars["ID"];
   internalParticipants: Scalars["Int"];
@@ -195,6 +197,7 @@ export type BookingInput = {
   checkIn?: InputMaybe<Scalars["Date"]>;
   checkOut?: InputMaybe<Scalars["Date"]>;
   externalParticipants?: InputMaybe<Scalars["Int"]>;
+  extraInfo?: InputMaybe<Scalars["String"]>;
   firstName?: InputMaybe<Scalars["String"]>;
   internalParticipants?: InputMaybe<Scalars["Int"]>;
   lastName?: InputMaybe<Scalars["String"]>;
@@ -571,14 +574,14 @@ export type ListingType = {
 };
 
 export type MembershipInput = {
-  groupId?: InputMaybe<Scalars["ID"]>;
+  groupIds?: InputMaybe<Array<InputMaybe<Scalars["ID"]>>>;
   organizationId?: InputMaybe<Scalars["ID"]>;
   userId?: InputMaybe<Scalars["ID"]>;
 };
 
 export type MembershipType = {
   __typename?: "MembershipType";
-  group?: Maybe<ResponsibleGroupType>;
+  groups: Array<ResponsibleGroupType>;
   id: Scalars["ID"];
   organization: OrganizationType;
   user: UserType;
@@ -952,13 +955,12 @@ export type OrganizationType = {
   color?: Maybe<Scalars["String"]>;
   description: Scalars["String"];
   events: Array<EventType>;
-  hrGroup?: Maybe<ResponsibleGroupType>;
   id: Scalars["ID"];
   listings?: Maybe<Array<Maybe<ListingType>>>;
   logoUrl?: Maybe<Scalars["String"]>;
   name: Scalars["String"];
   parent?: Maybe<OrganizationType>;
-  primaryGroup?: Maybe<ResponsibleGroupType>;
+  permissionGroups?: Maybe<Array<Maybe<ResponsibleGroupType>>>;
   slug: Scalars["String"];
   users: Array<UserType>;
 };
@@ -1166,7 +1168,7 @@ export enum ResponseStatus {
   A_1 = "A_1",
   /** Green */
   A_2 = "A_2",
-  /** Ukjent */
+  /** Unknown */
   None = "NONE",
 }
 
@@ -1189,6 +1191,7 @@ export type ResponsibleGroupType = {
   id: Scalars["ID"];
   name: Scalars["String"];
   organization: OrganizationType;
+  users: Array<UserType>;
   uuid: Scalars["UUID"];
 };
 
@@ -1268,7 +1271,9 @@ export type UpdateBookingInput = {
   cabins?: InputMaybe<Array<InputMaybe<Scalars["Int"]>>>;
   checkIn?: InputMaybe<Scalars["Date"]>;
   checkOut?: InputMaybe<Scalars["Date"]>;
+  declineReason?: InputMaybe<Scalars["String"]>;
   externalParticipants?: InputMaybe<Scalars["Int"]>;
+  extraInfo?: InputMaybe<Scalars["String"]>;
   firstName?: InputMaybe<Scalars["String"]>;
   id: Scalars["ID"];
   internalParticipants?: InputMaybe<Scalars["Int"]>;
@@ -1407,7 +1412,7 @@ export type UserType = {
   organizations: Array<OrganizationType>;
   phoneNumber: Scalars["String"];
   responses: Array<ResponseType>;
-  /** Påkrevet. 150 tegn eller færre. Kun bokstaver, tall og @/./+/-/_. */
+  /** Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. */
   username: Scalars["String"];
   yearUpdatedAt?: Maybe<Scalars["DateTime"]>;
 };
