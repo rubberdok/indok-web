@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import SearchBar from "@components/pages/archive/SearchBar";
-import { Checkbox, FormControlLabel, Grid, Typography } from "@material-ui/core";
+import { Checkbox, FormControlLabel, Grid, Typography, Button, Box } from "@material-ui/core";
 import { CheckBox as CheckBoxIcon, CheckBoxOutlineBlank as CheckBoxOutlineBlankIcon } from "@material-ui/icons";
 import RemoveFilterButton from "@components/pages/orgs/UserAdmin/RemoveFilterButton";
 import { User } from "@interfaces/users";
@@ -22,6 +22,8 @@ type Props = {
   setPermissionGroups: React.Dispatch<React.SetStateAction<permissionGroupsWithCheck[]>>;
   setResetCheckedPeople: () => void;
   checkedPeople: UserWithCheck[];
+  hasNotMarkedPeople: boolean;
+  setHasNotMarkedPeople: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const FilterUsers: React.FC<Props> = ({
@@ -30,10 +32,11 @@ const FilterUsers: React.FC<Props> = ({
   setPermissionGroups,
   setResetCheckedPeople,
   checkedPeople,
+  hasNotMarkedPeople,
+  setHasNotMarkedPeople,
 }) => {
   const [searchFilter, setSearchFilter] = useState("");
   const [viewFeatured, setViewFeatured] = useState(true);
-  const [viewChecked, setViewChecked] = useState(true);
 
   //Gucci - Removing all filters, including checkmarks
   const handleRemoveFilterChanged = () => {
@@ -50,10 +53,10 @@ const FilterUsers: React.FC<Props> = ({
     setViewFeatured(true);
   };
 
-  //Gucci -
+  //Gucci - removing
   const handleRemoveSelectedPeople = () => {
-    setViewChecked(true);
     setResetCheckedPeople();
+    setHasNotMarkedPeople(true);
   };
 
   // Gucci - Handling group filter change
@@ -73,14 +76,6 @@ const FilterUsers: React.FC<Props> = ({
     });
     setPermissionGroups(newGroups);
   };
-
-  useEffect(() => {
-    checkedPeople.forEach((user) => {
-      if (user.checked) {
-        setViewChecked(true);
-      }
-    });
-  }, [checkedPeople]);
 
   //Gucci - When writing in the searchbar it sends to the parent element
   useEffect(() => {
@@ -120,16 +115,35 @@ const FilterUsers: React.FC<Props> = ({
         />
       </Grid>
       <Grid container spacing={1}>
-        {!viewFeatured && (
-          <Grid item xs={3}>
-            <RemoveFilterButton text={"Fjern filterering"} handleAction={handleRemoveFilterChanged} />
-          </Grid>
-        )}
-        {!viewChecked && (
-          <Grid item xs={3}>
-            <RemoveFilterButton text={"Fjern personmarkering"} handleAction={handleRemoveSelectedPeople} />
-          </Grid>
-        )}
+        <Grid item xs={3}>
+          <RemoveFilterButton
+            isDisabled={viewFeatured}
+            text={"Fjern filterering"}
+            handleAction={handleRemoveFilterChanged}
+          />
+        </Grid>
+      </Grid>
+      <Grid container justifyContent="flex-end" spacing={1}>
+        <Grid item xs={5} md={2}>
+          <Button variant="contained" disabled={hasNotMarkedPeople}>
+            Send email
+          </Button>
+        </Grid>
+        <Grid item xs={5} md={2}>
+          <Button variant="contained" disabled={hasNotMarkedPeople}>
+            Endre grupper
+          </Button>
+        </Grid>
+        <Grid item xs={5} md={2}>
+          <Button variant="contained" disabled={hasNotMarkedPeople}>
+            Fjern brukere
+          </Button>
+        </Grid>
+        <Grid item xs={5} md={2}>
+          <Button variant="contained" disabled={hasNotMarkedPeople} onClick={handleRemoveSelectedPeople}>
+            Fjern markeringer
+          </Button>
+        </Grid>
       </Grid>
     </>
   );

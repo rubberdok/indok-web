@@ -1399,6 +1399,22 @@
             {
               "args": [],
               "deprecationReason": null,
+              "description": null,
+              "isDeprecated": false,
+              "name": "permissionGroups",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "ResponsibleGroupType",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "args": [],
+              "deprecationReason": null,
               "description": "",
               "isDeprecated": false,
               "name": "children",
@@ -1470,30 +1486,6 @@
                   "name": "ListingType",
                   "ofType": null
                 }
-              }
-            },
-            {
-              "args": [],
-              "deprecationReason": null,
-              "description": null,
-              "isDeprecated": false,
-              "name": "primaryGroup",
-              "type": {
-                "kind": "OBJECT",
-                "name": "ResponsibleGroupType",
-                "ofType": null
-              }
-            },
-            {
-              "args": [],
-              "deprecationReason": null,
-              "description": null,
-              "isDeprecated": false,
-              "name": "hrGroup",
-              "type": {
-                "kind": "OBJECT",
-                "name": "ResponsibleGroupType",
-                "ofType": null
               }
             }
           ],
@@ -1927,11 +1919,23 @@
               "deprecationReason": null,
               "description": "",
               "isDeprecated": false,
-              "name": "group",
+              "name": "groups",
               "type": {
-                "kind": "OBJECT",
-                "name": "ResponsibleGroupType",
-                "ofType": null
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "OBJECT",
+                      "name": "ResponsibleGroupType",
+                      "ofType": null
+                    }
+                  }
+                }
               }
             }
           ],
@@ -2034,6 +2038,30 @@
                   "kind": "SCALAR",
                   "name": "ID",
                   "ofType": null
+                }
+              }
+            },
+            {
+              "args": [],
+              "deprecationReason": null,
+              "description": null,
+              "isDeprecated": false,
+              "name": "users",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "OBJECT",
+                      "name": "UserType",
+                      "ofType": null
+                    }
+                  }
                 }
               }
             }
@@ -8133,11 +8161,15 @@
             {
               "defaultValue": null,
               "description": null,
-              "name": "groupId",
+              "name": "groupIds",
               "type": {
-                "kind": "SCALAR",
-                "name": "ID",
-                "ofType": null
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ID",
+                  "ofType": null
+                }
               }
             }
           ],

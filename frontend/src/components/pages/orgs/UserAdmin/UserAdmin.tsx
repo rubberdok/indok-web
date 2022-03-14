@@ -57,6 +57,8 @@ const EditUsersInOrganization: React.FC<Props> = ({ organization }) => {
   const [searchFilter, setSearchFilter] = useState("");
   //Fetched permissiongroups and whether they are checked
   const [fetchedPermissionGroups, setFetchedPermissionGroups] = useState<PermissionGroupsWithCheck[]>([]);
+  //Disabling the send email button
+  const [isDisabled, setIsDisables] = useState(true);
 
   //Gucci - Handling logic when checkmarking people
   const handleCheckedPeople = (user: UserWithCheck) => {
@@ -70,8 +72,21 @@ const EditUsersInOrganization: React.FC<Props> = ({ organization }) => {
       }
       return checkedUser;
     });
+
+    let isSomeoneChecked = false;
+    newList.forEach((user) => {
+      if (user.checked) {
+        isSomeoneChecked = true;
+      }
+    });
+
+    if (isSomeoneChecked) {
+      setIsDisables(false);
+    } else {
+      setIsDisables(true);
+    }
+
     setCheckedPeople(newList);
-    //
   };
 
   //TODO - Reseting the checkedFilter
@@ -113,7 +128,7 @@ const EditUsersInOrganization: React.FC<Props> = ({ organization }) => {
     { variables: { id: orgNumberId } }
   );
 
-  //TODO: Test this with actual data - Should switch ableToSee based on if the person is in the specified group or not
+  //Gucci - Test this with actual data - Should switch ableToSee based on if the person is in the specified group or not
   useEffect(() => {
     let somethingChecked = false;
 
@@ -128,7 +143,6 @@ const EditUsersInOrganization: React.FC<Props> = ({ organization }) => {
     });
 
     let updateUsers: UserWithCheck[] = removingAllUser;
-    const secondPermission = false;
     fetchedPermissionGroups.forEach((permission) => {
       if (permission.checked) {
         somethingChecked = true;
@@ -237,6 +251,8 @@ const EditUsersInOrganization: React.FC<Props> = ({ organization }) => {
               setSearch={setSearchFilter}
               setResetCheckedPeople={resetCheckedFilter}
               checkedPeople={checkedPeople}
+              hasNotMarkedPeople={isDisabled}
+              setHasNotMarkedPeople={setIsDisables}
             />
           ) : (
             <></>
