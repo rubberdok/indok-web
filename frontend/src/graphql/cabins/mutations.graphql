@@ -1,0 +1,23 @@
+mutation CreateBooking($bookingData: BookingInput) {
+  createBooking(bookingData: $bookingData) {
+    ok
+  }
+}
+
+mutation SendEmail($emailInput: EmailInput) {
+  sendEmail(emailInput: $emailInput) {
+    ok
+  }
+}
+
+mutation ConfirmBooking($id: ID!) {
+  updateBooking(bookingData: { id: $id, isTentative: false }) {
+    ok
+  }
+}
+
+mutation DeleteBooking($id: ID!) {
+  deleteBooking(id: $id) {
+    ok
+  }
+}

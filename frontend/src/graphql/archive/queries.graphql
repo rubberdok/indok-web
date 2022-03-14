@@ -1,0 +1,26 @@
+query archiveByTypes($document_types: [String]!, $year: Int, $names: String) {
+  archiveByTypes(typeDoc: $document_types, year: $year, names: $names) {
+    id
+    title
+    thumbnail
+    typeDoc
+    year
+    webLink
+  }
+}
+
+query featuredArchive {
+  featuredArchive {
+    id
+    title
+    thumbnail
+    featured
+    typeDoc
+    year
+    webLink
+  }
+}
+
+query availableYears {
+  availableYears
+}
