@@ -61,7 +61,10 @@ const SlotDistributionFields: React.FC<Props> = ({
                     value={eventData.allowedGradeYears}
                     multiple
                     onChange={(e) => {
-                      onEventDataChange({ ...eventData, allowedGradeYears: e.target.value });
+                      onEventDataChange({
+                        ...eventData,
+                        allowedGradeYears: (e.target as unknown as { value: number[] }).value,
+                      });
                     }}
                     displayEmpty
                   >

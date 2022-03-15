@@ -2,6 +2,7 @@ import React from "react";
 import { Box, FormControl, Grid, InputLabel, MenuItem, Select, TextField, Typography } from "@material-ui/core";
 import { User } from "@interfaces/users";
 import { EventDataType } from "../constants";
+import { Organization } from "@interfaces/organizations";
 
 /**
  * Component for filling in required fields on an event
@@ -61,10 +62,12 @@ const RequiredFields: React.FC<Props> = ({ eventData, onEventDataChange, user })
                 id="select-org"
                 name="organization"
                 value={eventData.organizationId}
-                onChange={(e) => onEventDataChange({ ...eventData, organizationId: e.target.value })}
+                onChange={(e) =>
+                  onEventDataChange({ ...eventData, organizationId: (e.target as unknown as { value: string }).value })
+                }
                 disabled={user.organizations.length < 2}
               >
-                {user.organizations.map((organization) => (
+                {user.organizations.map((organization: Organization) => (
                   <MenuItem key={organization.id} value={organization.id}>
                     {organization.name}
                   </MenuItem>
