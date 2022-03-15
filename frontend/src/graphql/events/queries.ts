@@ -236,9 +236,9 @@ export const GET_EVENT = gql`
           isOnWaitingList
           hasBoughtTicket
         }
-      }
-      product {
-        id
+        product {
+          id
+        }
       }
     }
   }
@@ -271,9 +271,6 @@ export const ADMIN_GET_EVENT = gql`
       shortDescription
       contactEmail
       allowedGradeYears
-      product {
-        id
-      }
       attendable {
         id
         deadline
@@ -283,6 +280,9 @@ export const ADMIN_GET_EVENT = gql`
         slotDistribution {
           gradeGroup
           availableSlots
+        }
+        product {
+          id
         }
         hasExtraInformation
         totalAvailableSlots

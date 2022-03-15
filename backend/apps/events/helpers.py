@@ -32,7 +32,7 @@ def get_attendant_group(grade_groups: list[str], grade_year: int) -> Union[str, 
     return None
 
 
-def get_slot_distribution_as_dict(slot_dist_list: list["GradeDistributionData"]) -> dict:
+def get_slot_distribution_as_dict(slot_dist_list: list[GradeDistributionData]) -> dict:
     """
     Make a slot distribution on the form
     [{grade_group: "x,x,x", available_slots: 150}, {grade_group: "x,x", available_slots: 50}, ...]
@@ -45,7 +45,7 @@ def get_slot_distribution_as_dict(slot_dist_list: list["GradeDistributionData"])
     return slot_distribution
 
 
-def get_slot_distribution_as_list(slot_dist_dict: dict) -> list["GradeDistributionData"]:
+def get_slot_distribution_as_list(slot_dist_dict: dict) -> list[GradeDistributionData]:
     """
     Make a slot distribution that is a dictionary with grade_group as key and available slots as value
     into a list of objects on the form:

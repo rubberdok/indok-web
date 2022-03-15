@@ -37,3 +37,8 @@ export type EventDataType = {
   bindingSignup: boolean;
   allowedGradeYears: number[];
 };
+
+export type SlotDistributionDataType = {
+  grades: number[];
+  availableSlots: number;
+};

@@ -1,5 +1,4 @@
-import { useMutation, useQuery } from "@apollo/client";
-import { EVENT_SIGN_OFF, EVENT_SIGN_UP } from "@graphql/events/mutations";
+import { useQuery } from "@apollo/client";
 import { GET_EVENT } from "@graphql/events/queries";
 import { GET_USER } from "@graphql/users/queries";
 import { Event } from "@interfaces/events";
@@ -14,7 +13,6 @@ import Image from "next/image";
 import EmptyStreet from "public/illustrations/EmptyStreet.svg";
 import SignUpVariants from "./SignUpVariants";
 import GeneralInfoCard from "./GeneralInfoCard";
-import Alert from "@components/Alert";
 import EditEvent from "../EventEditor";
 import * as components from "@components/markdown/components";
 import ReactMarkdown from "react-markdown";
@@ -38,41 +36,11 @@ type Props = {
 };
 
 const EventDetails: React.FC<Props> = ({ eventId }) => {
-  const [snackbar, setSnackbar] = useState<
-    "SignUp" | "SignOff" | "OnWaitList" | "OffWaitList" | "SignUpError" | "SignOffError" | undefined
-  >(undefined);
-
   const [extraInformation, setExtraInformation] = useState<string>();
-
-  const [eventSignUp, { loading: signUpLoading, error: signUpError }] = useMutation<{
-    eventSignUp: { isFull: boolean };
-  }>(EVENT_SIGN_UP, {
-    onCompleted: () =>
-      refetchEventData({ eventId }).then((res) => {
-        res.data.event.attendable?.userAttendance?.isAttending ? setSnackbar("SignUp") : setSnackbar("OnWaitList");
-      }),
-    onError: () => setSnackbar("SignUpError"),
-  });
-
-  const [eventSignOff, { loading: signOffLoading }] = useMutation<{
-    eventSignOff: { isFull: boolean };
-  }>(EVENT_SIGN_OFF, {
-    onCompleted: () => {
-      refetchEventData({ eventId });
-      if (!eventData) return;
-      if (eventData.event.attendable?.userAttendance?.isAttending) setSnackbar("SignOff");
-      if (eventData.event.attendable?.userAttendance?.isOnWaitingList) setSnackbar("OffWaitList");
-    },
-    onError: () => setSnackbar("SignOffError"),
-  });
 
   const { data: userData } = useQuery<{ user: User | null }>(GET_USER);
 
-  const {
-    data: eventData,
-    loading: eventLoading,
-    refetch: refetchEventData,
-  } = useQuery<{
+  const { data: eventData, loading: eventLoading } = useQuery<{
     event: Event;
   }>(GET_EVENT, { variables: { id: eventId }, errorPolicy: "all" });
 
@@ -103,20 +71,6 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
         </Grid>
       </Grid>
     );
-
-  const handleClick = () => {
-    if (!userData?.user) return;
-    const userAttendance = eventData.event.attendable?.userAttendance;
-    if (userAttendance?.isAttending || userAttendance?.isOnWaitingList) {
-      eventSignOff({
-        variables: { eventId },
-      });
-      return;
-    }
-    eventSignUp({
-      variables: { eventId, data: extraInformation },
-    });
-  };
 
   return (
     <>
@@ -151,10 +105,10 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
           <SignUpVariants
             event={eventData.event}
             user={userData?.user}
-            loading={signOffLoading || signUpLoading || eventLoading}
+            loading={eventLoading}
             extraInformation={extraInformation}
-            onClick={handleClick}
             onExtraInformationChange={setExtraInformation}
+            eventId={eventId}
           />
 
           {userData?.user?.organizations.some(
@@ -203,49 +157,6 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
           <GeneralInfoCard event={eventData.event} />
         </Grid>
       </Container>
-
-      {/* Alerts */}
-      <Alert
-        severity="error"
-        open={snackbar === "SignUpError"}
-        onClose={() => setSnackbar(undefined)}
-        description={signUpError ? signUpError.message : "Påmelding feilet"}
-      />
-
-      <Alert
-        open={snackbar === "SignOffError"}
-        severity="error"
-        onClose={() => setSnackbar(undefined)}
-        description={"Avmelding feilet"}
-      />
-
-      <Alert
-        severity="info"
-        open={snackbar === "SignOff"}
-        onClose={() => setSnackbar(undefined)}
-        description={"Du er nå avmeldt"}
-      />
-
-      <Alert
-        severity="success"
-        open={snackbar === "SignUp"}
-        onClose={() => setSnackbar(undefined)}
-        description={"Du er nå påmeldt"}
-      />
-
-      <Alert
-        severity="info"
-        open={snackbar === "OnWaitList"}
-        onClose={() => setSnackbar(undefined)}
-        description={"Du er på ventelisten"}
-      />
-
-      <Alert
-        severity="info"
-        open={snackbar === "OffWaitList"}
-        onClose={() => setSnackbar(undefined)}
-        description={"Du er ikke lenger på ventelisten"}
-      />
     </>
   );
 };

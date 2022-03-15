@@ -235,7 +235,7 @@ const EventAdminPage: NextPage = () => {
                                 {userFields.map((field) => (
                                   <TableCell key={`user-header-${field.header}`}>{field.header}</TableCell>
                                 ))}
-                                {data.event.product && <TableCell>Betalt?</TableCell>}
+                                {data.event.attendable.product && <TableCell>Betalt?</TableCell>}
                                 <TableCell key={`user-header-delete`} />
                               </TableRow>
                             </TableHead>
@@ -247,7 +247,7 @@ const EventAdminPage: NextPage = () => {
                                       <CellContent user={user} field={field} />
                                     </TableCell>
                                   ))}
-                                  {data.event.product && (
+                                  {data.event?.attendable?.product && (
                                     <TableCell>
                                       {data.event.attendable?.userAttendance?.hasBoughtTicket ? (
                                         <Check color="primary" />

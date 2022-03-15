@@ -62,9 +62,10 @@ const CheckboxSelect: React.FC<Props> = ({
                   <FormControlLabel
                     checked={grades.includes(year)}
                     value={year}
-                    control={<Checkbox color="primary" disableRipple />}
+                    control={
+                      <Checkbox color="primary" disableRipple onChange={(e) => handleChange(Number(e.target.value))} />
+                    }
                     label={`${year}.`}
-                    onChange={(e) => handleChange(Number((e.target as unknown as { value: string }).value))}
                     disabled={!grades.includes(year) && usedGrades.includes(year)}
                   />
                 </Tooltip>

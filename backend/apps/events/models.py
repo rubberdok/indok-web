@@ -27,7 +27,7 @@ class Category(models.Model):
 GRADE_CHOICES = ((1, "1"), (2, "2"), (3, "3"), (4, "4"), (5, "5"))
 
 
-class Event(models.Model, Sellable):
+class Event(models.Model):
     """
     Main model for events. Has the general information about all events (regardless of
     whether they are attendable or not)
@@ -50,7 +50,6 @@ class Event(models.Model, Sellable):
     allowed_grade_years = MultiSelectField(
         choices=GRADE_CHOICES, default="1,2,3,4,5"
     )  # Kept here as well in case a non-attenable (no sign up) event has grade restrictions
-    products = GenericRelation("ecommerce.Product")
 
     @property
     def signed_up_users(self) -> models.QuerySet["User"]:
@@ -64,19 +63,11 @@ class Event(models.Model, Sellable):
     def allowed_grade_years_string(self) -> str:
         return ",".join([str(grade) for grade in self.allowed_grade_years])
 
-    def is_user_allowed_to_buy_product(self, user: "User") -> bool:
-        """
-        Check if user is attending to determine if they are allowed to buy a ticket
-        """
-        if self.products is None:
-            return False
-        return user in self.attendable.users_attending
-
     def __str__(self):
         return self.title
 
 
-class Attendable(models.Model):
+class Attendable(models.Model, Sellable):
     """
     Additional model used for attendable events. All attendable events have exactly one Attendable.
     Contains general information related to an attendable event.
@@ -96,7 +87,6 @@ class Attendable(models.Model):
         default=False
     )  # If the event need users to give extra information when signing up, e.g. for group sign ups (email
     # of everyone in the group), this would be true (shows a text field frontend)
-
     products = GenericRelation("ecommerce.Product")
 
     def get_attendance_and_waiting_list(self) -> tuple([dict, dict]):
@@ -185,6 +175,14 @@ class Attendable(models.Model):
             return True
 
         return False
+
+    def is_user_allowed_to_buy_product(self, user: "User") -> bool:
+        """
+        Check if user is attending to determine if they are allowed to buy a ticket
+        """
+        if self.products is None:
+            return False
+        return user in self.users_attending
 
     def __str__(self):
         return f"Attendable-{self.event.title}"

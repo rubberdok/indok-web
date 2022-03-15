@@ -17,7 +17,7 @@ def send_wait_list_notification(sender: Type[SignUp], instance: SignUp, **kwargs
         previous: SignUp = sender.objects.get(pk=instance.pk)
         if previous.is_attending and not instance.is_attending:
             event: Event = previous.event
-            if hasattr(event, "attendable") and event.attendable is not None:
+            if hasattr(event, "attendable"):
                 attending_users = event.attendable.users_attending
                 attending = previous.user in attending_users
                 if attending and event.attendable.get_is_full(instance.user.grade_year):
@@ -32,9 +32,7 @@ def send_wait_list_notification_when_events_expand(sender: Type[Event], instance
         previous: Event = sender.objects.get(pk=instance.pk)
         if (
             hasattr(previous, "attendable")
-            and previous.attendable is not None
             and hasattr(instance, "attendable")
-            and instance.attendable is not None
             and (previous.attendable.total_available_slots < instance.attendable.total_available_slots)
         ):
             users_on_wait_list = previous.attendable.users_on_waiting_list[

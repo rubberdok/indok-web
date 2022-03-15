@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { UPDATE_EVENT } from "@graphql/events/mutations";
-import { ADMIN_GET_EVENT, GET_CATEGORIES, GET_EVENT } from "@graphql/events/queries";
+import { GET_CATEGORIES } from "@graphql/events/queries";
 import { Event } from "@interfaces/events";
 import {
   Button,
@@ -16,7 +16,7 @@ import {
 import { Check, Close, Warning } from "@material-ui/icons";
 import React, { useEffect, useState } from "react";
 import Alert from "@components/Alert";
-import { DEFAULT_INPUT } from "../constants";
+import { DEFAULT_INPUT, SlotDistributionDataType } from "../constants";
 import { getInitialEventData } from "./helpers";
 import { getFormattedDataAndErrors } from "../helpers";
 import RequiredFields from "../EventFields/RequiredFields";
@@ -45,7 +45,7 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
   const [hasSlotDistribution, setHasSlotDistribution] = useState(
     !!event.attendable && event.attendable.slotDistribution.length > 1
   );
-  const [slotDistribution, setSlotDistribution] = useState<{ grades: number[]; availableSlots: number }[]>(
+  const [slotDistribution, setSlotDistribution] = useState<SlotDistributionDataType[]>(
     event.attendable && event.attendable.slotDistribution.length > 1
       ? event.attendable?.slotDistribution.map((slotDist) => {
           return {
@@ -68,18 +68,13 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
       onClose();
     },
     onError: () => setOpenEditErrorSnackbar(true),
-    update: (cache, { data }) => {
-      data &&
-        cache.writeQuery<Event>({ query: GET_EVENT, data: data.updateEvent.event }) &&
-        cache.writeQuery<Event>({ query: ADMIN_GET_EVENT, data: { ...event, ...data.updateEvent.event } });
-    },
   });
 
   const { loading: categoryLoading, error: categoryError, data: categoryData } = useQuery(GET_CATEGORIES);
 
   useEffect(() => {
-    // Used to get an initial event data object, keeping all fields except for the date related ones
-    // equal to the event we get from the event prop (the date fields are changed to make TS happy)
+    // For simplicity we operate with a flat object here (combine attendable fields and event
+    // fields into a single eventData object)
     const initialEventData = getInitialEventData(event, eventData);
     setEventData(initialEventData);
   }, []);
@@ -87,7 +82,7 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
   if (categoryLoading) return <CircularProgress />;
   if (categoryError) return <Typography>Det oppstod en feil.</Typography>;
 
-  const updateSlotDistribution = (newSlotDistribution: { grades: number[]; availableSlots: number }[]) => {
+  const updateSlotDistribution = (newSlotDistribution: SlotDistributionDataType[]) => {
     setSlotDistribution(newSlotDistribution);
     const usedGrades = newSlotDistribution
       .reduce((prev: number[], curr) => prev.concat(curr.grades), [])

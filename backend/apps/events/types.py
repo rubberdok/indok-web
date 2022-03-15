@@ -17,11 +17,11 @@ UserAttendance = TypedDict(
 )
 
 
-def has_bought_ticket(event: Event, user: User) -> bool:
+def has_bought_ticket(attendable: Attendable, user: User) -> bool:
     return (
-        event.products.exists()
+        attendable.products.exists()
         and Order.objects.filter(
-            product=event.products.get(),
+            product=attendable.products.get(),
             user=user,
             payment_status__in=[
                 Order.PaymentStatus.RESERVED,
@@ -66,7 +66,7 @@ class SignUpType(DjangoObjectType):
 
     @staticmethod
     def resolve_has_bought_ticket(sign_up: SignUp, info) -> bool:
-        return has_bought_ticket(sign_up.event, sign_up.user)
+        return has_bought_ticket(sign_up.event.attendable, sign_up.user)
 
 
 class AttendableType(DjangoObjectType):
@@ -75,6 +75,7 @@ class AttendableType(DjangoObjectType):
     users_attending = graphene.List(UserType)
     is_full = graphene.Boolean()
     slot_distribution = graphene.List(SlotDistributionType)
+    product = graphene.Field(ProductType)
 
     class Meta:
         model = Attendable
@@ -116,7 +117,7 @@ class AttendableType(DjangoObjectType):
         return {
             "is_attending": user in attendable.users_attending,
             "is_on_waiting_list": user in attendable.users_on_waiting_list,
-            "has_bought_ticket": has_bought_ticket(attendable.event, user),
+            "has_bought_ticket": has_bought_ticket(attendable, user),
         }
 
     @staticmethod
@@ -143,11 +144,17 @@ class AttendableType(DjangoObjectType):
     def resolve_users_attending(attendable: Attendable, info):
         return attendable.users_attending
 
+    @staticmethod
+    def resolve_product(attendable: Attendable, info) -> Product:
+        try:
+            return attendable.products.get()
+        except Product.DoesNotExist:
+            return None
+
 
 class EventType(DjangoObjectType):
     attendable = graphene.Field(AttendableType)
     allowed_grade_years = graphene.List(graphene.Int)
-    product = graphene.Field(ProductType)
 
     class Meta:
         model = Event
@@ -169,7 +176,7 @@ class EventType(DjangoObjectType):
     @staticmethod
     @login_required
     def resolve_attendable(event, info):
-        if not hasattr(event, "attendable") or event.attendable is None:
+        if not hasattr(event, "attendable"):
             return None
         return event.attendable
 
@@ -178,13 +185,6 @@ class EventType(DjangoObjectType):
         grades = [int(grade) for grade in event.allowed_grade_years]
         grades.sort()
         return grades
-
-    @staticmethod
-    def resolve_product(event: Event, info) -> Product:
-        try:
-            return event.products.get()
-        except Product.DoesNotExist:
-            return None
 
 
 class CategoryType(DjangoObjectType):

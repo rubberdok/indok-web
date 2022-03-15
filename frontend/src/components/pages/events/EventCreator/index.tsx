@@ -8,7 +8,7 @@ import { Box, Button, Card, CardActions, CircularProgress, Grid, makeStyles, Typ
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import Alert from "@components/Alert";
-import { DEFAULT_INPUT, EventDataType } from "../constants";
+import { DEFAULT_INPUT, EventDataType, SlotDistributionDataType } from "../constants";
 import { getFormattedDataAndErrors } from "../helpers";
 import RequiredFields from "../EventFields/RequiredFields";
 import AttendableFields from "../EventFields/AttendableFields";
@@ -33,7 +33,7 @@ const CreateEvent: React.FC = () => {
   const [eventData, setEventData] = useState<EventDataType>(DEFAULT_INPUT);
   const [isAttendable, setIsAttendable] = useState(false);
   const [hasSlotDistribution, setHasSlotDistribution] = useState(false);
-  const [slotDistribution, setSlotDistribution] = useState<{ grades: number[]; availableSlots: number }[]>([]);
+  const [slotDistribution, setSlotDistribution] = useState<SlotDistributionDataType[]>([]);
   const [errors, setErrors] = useState<string[]>([]);
   const [snackbar, setSnackbar] = useState<"Error" | "Create" | undefined>(undefined);
 
@@ -79,7 +79,7 @@ const CreateEvent: React.FC = () => {
     setEventData({ ...eventData, organizationId: userData?.user.organizations[0].id });
   }
 
-  const updateSlotDistribution = (newSlotDistribution: { grades: number[]; availableSlots: number }[]) => {
+  const updateSlotDistribution = (newSlotDistribution: SlotDistributionDataType[]) => {
     setSlotDistribution(newSlotDistribution);
     const usedGrades = newSlotDistribution
       .reduce((prev: number[], curr) => prev.concat(curr.grades), [])

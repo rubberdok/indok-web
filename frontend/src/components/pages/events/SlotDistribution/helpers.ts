@@ -1,7 +1,9 @@
-export const addId = (
-  slotDistribution: { grades: number[]; availableSlots: number }[]
-): { grades: number[]; availableSlots: number; id: number }[] => {
-  return slotDistribution.map((dist: { grades: number[]; availableSlots: number }, index: number) => {
-    return { ...dist, id: index };
+import { SlotDistributionDataType } from "../constants";
+
+export const addId = (slotDistribution: SlotDistributionDataType[]): Record<number, SlotDistributionDataType> => {
+  const slotDistributionRecord: Record<number, SlotDistributionDataType> = {};
+  slotDistribution.map((dist: SlotDistributionDataType, index: number) => {
+    slotDistributionRecord[index] = dist;
   });
+  return slotDistributionRecord;
 };

@@ -2,58 +2,66 @@ import { Button, Grid, Typography } from "@material-ui/core";
 import { useState } from "react";
 import CheckboxSelect from "./CheckboxSelect";
 import { addId } from "./helpers";
+import { SlotDistributionDataType } from "../constants";
 
 type Props = {
-  slotDistribution: { grades: number[]; availableSlots: number }[];
-  onUpdateSlotDistribution: (slotDist: { grades: number[]; availableSlots: number }[]) => void;
+  slotDistribution: SlotDistributionDataType[];
+  onUpdateSlotDistribution: (slotDist: SlotDistributionDataType[]) => void;
 };
 
 /**
  * Component for the creating a slot distribution, aka a distribution of the available slots between grade years
  */
 const SlotDistribution: React.FC<Props> = ({ slotDistribution, onUpdateSlotDistribution }) => {
-  const [slotDistWithId, setSlotDistWithId] = useState<{ grades: number[]; availableSlots: number; id: number }[]>(
+  const [slotDistWithId, setSlotDistWithId] = useState<Record<number, SlotDistributionDataType>>(
     addId(slotDistribution)
   );
 
   const usedGrades: number[] = ([] as number[])
-    .concat(...slotDistWithId.map((dist) => dist.grades))
+    .concat(...Object.values(slotDistWithId).map((dist) => dist.grades))
     .sort((a, b) => a - b);
 
   const handleGradesUpdate = (id: number, newGrades: number[]) => {
-    const distToUpdate = slotDistWithId.find((dist) => dist.id === id);
+    const updatedDists: Record<number, SlotDistributionDataType> = {};
+    const distToUpdate = slotDistWithId[id];
+    updatedDists[id] = { ...distToUpdate, grades: newGrades };
 
-    const updatedDists = slotDistWithId
-      .filter((dist) => dist.id !== id)
+    Object.entries(slotDistWithId)
+      .filter((dist) => Number(dist[0]) !== id)
       .map((dist) => {
-        return { ...dist, grades: dist.grades.filter((grade: number) => !newGrades.includes(grade)) };
+        updatedDists[Number(dist[0])] = {
+          ...dist[1],
+          grades: dist[1].grades.filter((grade: number) => !newGrades.includes(grade)),
+        };
       });
 
-    const newDist = [...updatedDists, { ...distToUpdate, grades: newGrades }]
-      .sort((a, b) => (a.id ?? 0) - (b.id ?? 0))
+    const newDist = Object.entries(updatedDists)
+      .sort((a, b) => Number(a[0]) - Number(b[0]))
       .map((dist) => {
-        return { grades: dist.grades, availableSlots: dist.availableSlots ?? 0 };
+        return { grades: dist[1].grades, availableSlots: dist[1].availableSlots };
       });
     onUpdateSlotDistribution(newDist);
     setSlotDistWithId(addId(newDist));
   };
 
   const onAvailableSlotsUpdate = (id: number, newAvailableSlots: number, grades: number[]) => {
-    const index = slotDistWithId.findIndex((dist) => dist.id === id);
-    const newDist = [
-      ...slotDistribution.slice(0, index),
-      { grades: grades, availableSlots: newAvailableSlots },
-      ...slotDistribution.slice(index + 1, slotDistribution.length),
-    ];
+    slotDistWithId[id] = { grades, availableSlots: newAvailableSlots };
+
+    const newDist = Object.entries(slotDistWithId)
+      .sort((a, b) => Number(a[0]) - Number(b[0]))
+      .map((dist) => {
+        return { grades: dist[1].grades, availableSlots: dist[1].availableSlots };
+      });
+
     onUpdateSlotDistribution(newDist);
     setSlotDistWithId(addId(newDist));
   };
 
   const handleRemove = (id: number) => {
-    const newDist = slotDistWithId
-      .filter((dist) => dist.id !== id)
+    const newDist = Object.entries(slotDistWithId)
+      .filter((dist) => Number(dist[0]) !== id)
       .map((dist) => {
-        return { grades: dist.grades, availableSlots: dist.availableSlots };
+        return dist[1];
       });
     onUpdateSlotDistribution(newDist);
     setSlotDistWithId(addId(newDist));
@@ -76,13 +84,13 @@ const SlotDistribution: React.FC<Props> = ({ slotDistribution, onUpdateSlotDistr
         </Button>
       </Grid>
 
-      {slotDistWithId.map(({ grades, availableSlots, id }) => (
+      {Object.entries(slotDistWithId).map((dist) => (
         <CheckboxSelect
-          key={id}
-          id={id}
+          key={Number(dist[0])}
+          id={Number(dist[0])}
           usedGrades={usedGrades}
-          grades={grades}
-          availableSlots={availableSlots}
+          grades={dist[1].grades}
+          availableSlots={dist[1].availableSlots}
           onAvailableSlotsUpdate={onAvailableSlotsUpdate}
           onGradesUpdate={handleGradesUpdate}
           onRemove={handleRemove}

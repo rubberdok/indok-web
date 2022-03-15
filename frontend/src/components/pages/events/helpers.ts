@@ -1,10 +1,10 @@
-import { EventDataType } from "./constants";
+import { EventDataType, SlotDistributionDataType } from "./constants";
 
 export const getFormattedDataAndErrors = (
   eventData: EventDataType,
   isAttendable: boolean,
   hasSlotDistribution: boolean,
-  slotDistribution: { grades: number[]; availableSlots: number }[]
+  slotDistribution: SlotDistributionDataType[]
 ): Record<string, any> => {
   const eventInput = formatEventData(eventData);
   const attendableInput = formatAttendableData(eventData, slotDistribution, hasSlotDistribution);
@@ -71,7 +71,7 @@ const formatEventData = (eventData: EventDataType) => {
     image: eventData.image === "" ? undefined : eventData.image,
     shortDescription: eventData.shortDescription === "" ? undefined : eventData.shortDescription,
     contactEmail: eventData.contactEmail === "" ? undefined : eventData.contactEmail,
-    allowedGradeYears: eventData.allowedGradeYears,
+    allowedGradeYears: [...eventData.allowedGradeYears].sort((a, b) => a - b),
   };
 
   return eventInputData;
@@ -79,7 +79,7 @@ const formatEventData = (eventData: EventDataType) => {
 
 const formatAttendableData = (
   eventData: EventDataType,
-  slotDistributionInput: { grades: number[]; availableSlots: number }[],
+  slotDistributionInput: SlotDistributionDataType[],
   hasSlotDistribution: boolean
 ) => {
   if (hasSlotDistribution) {
@@ -102,7 +102,9 @@ const formatAttendableData = (
     return attendableInputData;
   }
 
-  let allowedGradesString = eventData.allowedGradeYears.reduce((res: string, grade: number) => `${res},${grade}`, "");
+  let allowedGradesString = eventData.allowedGradeYears
+    .sort((a, b) => a - b)
+    .reduce((res: string, grade: number) => `${res},${grade}`, "");
   allowedGradesString = allowedGradesString.slice(1, allowedGradesString.length);
 
   const slotDistribution = [{ gradeGroup: allowedGradesString, availableSlots: Number(eventData.availableSlots) }];

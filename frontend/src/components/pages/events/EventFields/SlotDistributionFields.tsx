@@ -14,7 +14,7 @@ import {
 } from "@material-ui/core";
 import React from "react";
 import SlotDistribution from "../SlotDistribution";
-import { EventDataType } from "../constants";
+import { EventDataType, SlotDistributionDataType } from "../constants";
 
 /**
  * Component for the creating a new event
@@ -26,8 +26,8 @@ type Props = {
   isAttendable: boolean;
   hasSlotDistribution: boolean;
   onHasSlotDistributionChange: (hasSlotDist: boolean) => void;
-  slotDistribution: { grades: number[]; availableSlots: number }[];
-  onUpdateSlotDistribution: (slotDist: { grades: number[]; availableSlots: number }[]) => void;
+  slotDistribution: SlotDistributionDataType[];
+  onUpdateSlotDistribution: (slotDist: SlotDistributionDataType[]) => void;
 };
 
 const SlotDistributionFields: React.FC<Props> = ({

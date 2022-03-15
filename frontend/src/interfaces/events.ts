@@ -16,7 +16,6 @@ export type Event = {
   contactEmail?: string;
   allowedGradeYears: number[];
   attendable?: Attendable;
-  product: Product;
 };
 
 export type SlotDistribution = {
@@ -37,6 +36,7 @@ export type Attendable = {
   usersOnWaitingList?: User[];
   usersAttending?: User[];
   userAttendance?: { isAttending: boolean; isOnWaitingList: boolean; hasBoughtTicket: boolean };
+  product: Product;
 };
 
 export type Category = {
