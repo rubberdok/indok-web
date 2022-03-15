@@ -78,8 +78,8 @@ const CabinBookingPage: NextPage = () => {
   const [errorTrigger, setErrorTrigger] = useState(false);
 
   // Booking creation and email mutations
-  const [create_booking] = useMutation(CREATE_BOOKING);
-  const [send_email] = useMutation(SEND_EMAIL);
+  const [createBooking] = useMutation(CREATE_BOOKING);
+  const [sendEmail] = useMutation(SEND_EMAIL);
 
   // Extra info from the user, sent to Hyttestyret
   const [extraInfo, setExtraInfo] = useState("");
@@ -109,18 +109,17 @@ const CabinBookingPage: NextPage = () => {
       setModalData({ ...modalData, displayPopUp: true });
     } else {
       if (activeStep == 3) {
-        send_email({
+        sendEmail({
           variables: {
             emailInput: {
-              ...generateEmailAndBookingInput(contactInfo, datePick, chosenCabins),
+              ...generateEmailAndBookingInput(contactInfo, datePick, chosenCabins, extraInfo),
               emailType: "reserve_booking",
-              extraInfo: extraInfo,
             },
           },
         });
-        create_booking({
+        createBooking({
           variables: {
-            bookingData: generateEmailAndBookingInput(contactInfo, datePick, chosenCabins),
+            bookingData: generateEmailAndBookingInput(contactInfo, datePick, chosenCabins, extraInfo),
           },
         });
       }
