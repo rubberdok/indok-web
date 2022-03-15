@@ -135,6 +135,23 @@ export type AttemptCapturePayment = {
   status?: Maybe<Scalars["String"]>;
 };
 
+export type AttendableType = {
+  __typename?: "AttendableType";
+  bindingSignup: Scalars["Boolean"];
+  deadline?: Maybe<Scalars["DateTime"]>;
+  hasExtraInformation: Scalars["Boolean"];
+  id: Scalars["ID"];
+  isFull?: Maybe<Scalars["Boolean"]>;
+  price?: Maybe<Scalars["Float"]>;
+  product?: Maybe<ProductType>;
+  signupOpenDate: Scalars["DateTime"];
+  slotDistribution?: Maybe<Array<Maybe<SlotDistributionType>>>;
+  totalAvailableSlots: Scalars["Int"];
+  userAttendance: UserAttendanceType;
+  usersAttending?: Maybe<Array<Maybe<UserType>>>;
+  usersOnWaitingList?: Maybe<Array<Maybe<UserType>>>;
+};
+
 export type AuthUser = {
   __typename?: "AuthUser";
   idToken?: Maybe<Scalars["String"]>;
@@ -237,6 +254,16 @@ export type CreateArchiveDocument = {
   ok?: Maybe<Scalars["Boolean"]>;
 };
 
+export type CreateAttendableInput = {
+  bindingSignup?: InputMaybe<Scalars["Boolean"]>;
+  deadline?: InputMaybe<Scalars["DateTime"]>;
+  hasExtraInformation?: InputMaybe<Scalars["Boolean"]>;
+  price?: InputMaybe<Scalars["Float"]>;
+  signupOpenDate: Scalars["DateTime"];
+  slotDistribution?: InputMaybe<Array<InputMaybe<SlotDistributionInput>>>;
+  totalAvailableSlots: Scalars["Int"];
+};
+
 export type CreateBlog = {
   __typename?: "CreateBlog";
   blog?: Maybe<BlogType>;
@@ -263,7 +290,7 @@ export type CreateCategory = {
   ok?: Maybe<Scalars["Boolean"]>;
 };
 
-/** Create a new event */
+/** Create a new event, optionally also an attendable object (if the event is attendable) */
 export type CreateEvent = {
   __typename?: "CreateEvent";
   event?: Maybe<EventType>;
@@ -272,21 +299,14 @@ export type CreateEvent = {
 
 export type CreateEventInput = {
   allowedGradeYears?: InputMaybe<Array<InputMaybe<Scalars["Int"]>>>;
-  availableSlots?: InputMaybe<Scalars["Int"]>;
-  bindingSignup?: InputMaybe<Scalars["Boolean"]>;
   categoryId?: InputMaybe<Scalars["ID"]>;
   contactEmail?: InputMaybe<Scalars["String"]>;
-  deadline?: InputMaybe<Scalars["DateTime"]>;
   description: Scalars["String"];
   endTime?: InputMaybe<Scalars["DateTime"]>;
-  hasExtraInformation?: InputMaybe<Scalars["Boolean"]>;
   image?: InputMaybe<Scalars["String"]>;
-  isAttendable: Scalars["Boolean"];
   location?: InputMaybe<Scalars["String"]>;
   organizationId: Scalars["ID"];
-  price?: InputMaybe<Scalars["Float"]>;
   shortDescription?: InputMaybe<Scalars["String"]>;
-  signupOpenDate?: InputMaybe<Scalars["DateTime"]>;
   startTime: Scalars["DateTime"];
   title: Scalars["String"];
 };
@@ -406,7 +426,10 @@ export type DeleteCategory = {
   ok?: Maybe<Scalars["Boolean"]>;
 };
 
-/** Deletes the event with the given ID */
+/**
+ * Deletes the event with the given ID, deletion will also cascade to any
+ * related attendable and slot distribution objects
+ */
 export type DeleteEvent = {
   __typename?: "DeleteEvent";
   event?: Maybe<EventType>;
@@ -486,30 +509,19 @@ export type EventSignUpInput = {
 export type EventType = {
   __typename?: "EventType";
   allowedGradeYears?: Maybe<Array<Maybe<Scalars["Int"]>>>;
-  availableSlots?: Maybe<Scalars["Int"]>;
-  bindingSignup: Scalars["Boolean"];
+  attendable?: Maybe<AttendableType>;
   category?: Maybe<CategoryType>;
   contactEmail: Scalars["String"];
-  deadline?: Maybe<Scalars["DateTime"]>;
   description: Scalars["String"];
   endTime?: Maybe<Scalars["DateTime"]>;
-  hasExtraInformation: Scalars["Boolean"];
   id: Scalars["ID"];
   image?: Maybe<Scalars["String"]>;
-  isAttendable: Scalars["Boolean"];
-  isFull?: Maybe<Scalars["Boolean"]>;
   location?: Maybe<Scalars["String"]>;
   organization: OrganizationType;
-  price?: Maybe<Scalars["Float"]>;
-  product?: Maybe<ProductType>;
   publisher?: Maybe<UserType>;
-  shortDescription?: Maybe<Scalars["String"]>;
-  signupOpenDate?: Maybe<Scalars["DateTime"]>;
+  shortDescription: Scalars["String"];
   startTime: Scalars["DateTime"];
   title: Scalars["String"];
-  userAttendance?: Maybe<UserAttendingType>;
-  usersAttending?: Maybe<Array<Maybe<SignUpType>>>;
-  usersOnWaitingList?: Maybe<Array<Maybe<SignUpType>>>;
 };
 
 /** A form containing questions, optionally linked to a listing. */
@@ -603,7 +615,7 @@ export type Mutations = {
   createBooking?: Maybe<CreateBooking>;
   /** Create a new event category */
   createCategory?: Maybe<CreateCategory>;
-  /** Create a new event */
+  /** Create a new event, optionally also an attendable object (if the event is attendable) */
   createEvent?: Maybe<CreateEvent>;
   createForm?: Maybe<CreateForm>;
   /** Creates a new listing */
@@ -621,7 +633,10 @@ export type Mutations = {
   deleteBooking?: Maybe<DeleteBooking>;
   /** Deletes the category with a given ID */
   deleteCategory?: Maybe<DeleteCategory>;
-  /** Deletes the event with the given ID */
+  /**
+   * Deletes the event with the given ID, deletion will also cascade to any
+   * related attendable and slot distribution objects
+   */
   deleteEvent?: Maybe<DeleteEvent>;
   deleteForm?: Maybe<DeleteForm>;
   /** Deletes the listing with the given ID */
@@ -715,6 +730,7 @@ export type MutationsCreateCategoryArgs = {
 };
 
 export type MutationsCreateEventArgs = {
+  attendableData?: InputMaybe<CreateAttendableInput>;
   eventData: CreateEventInput;
 };
 
@@ -859,8 +875,10 @@ export type MutationsUpdateCategoryArgs = {
 };
 
 export type MutationsUpdateEventArgs = {
+  attendableData?: InputMaybe<UpdateAttendableInput>;
   eventData?: InputMaybe<UpdateEventInput>;
   id: Scalars["ID"];
+  isAttendable: Scalars["Boolean"];
 };
 
 export type MutationsUpdateFormArgs = {
@@ -1011,7 +1029,6 @@ export type Queries = {
   response?: Maybe<ResponseType>;
   responses?: Maybe<Array<Maybe<ResponseType>>>;
   serverTime?: Maybe<Scalars["DateTime"]>;
-  signUps?: Maybe<SignUpType>;
   user?: Maybe<UserType>;
   userOrders?: Maybe<Array<Maybe<OrderType>>>;
 };
@@ -1119,10 +1136,6 @@ export type QueriesResponsesArgs = {
   formId: Scalars["ID"];
 };
 
-export type QueriesSignUpsArgs = {
-  eventId: Scalars["ID"];
-};
-
 /** A question on a form. */
 export type QuestionType = {
   __typename?: "QuestionType";
@@ -1166,7 +1179,7 @@ export enum ResponseStatus {
   A_1 = "A_1",
   /** Green */
   A_2 = "A_2",
-  /** Ukjent */
+  /** Unknown */
   None = "NONE",
 }
 
@@ -1204,19 +1217,15 @@ export type SendEventEmails = {
   ok?: Maybe<Scalars["Boolean"]>;
 };
 
-export type SignUpType = {
-  __typename?: "SignUpType";
-  event: EventType;
-  extraInformation: Scalars["String"];
-  hasBoughtTicket?: Maybe<Scalars["Boolean"]>;
-  id: Scalars["ID"];
-  isAttending: Scalars["Boolean"];
-  timestamp: Scalars["DateTime"];
-  user: UserType;
-  userAllergies?: Maybe<Scalars["String"]>;
-  userEmail: Scalars["String"];
-  userGradeYear: Scalars["Int"];
-  userPhoneNumber: Scalars["String"];
+export type SlotDistributionInput = {
+  availableSlots: Scalars["Int"];
+  gradeGroup: Scalars["String"];
+};
+
+export type SlotDistributionType = {
+  __typename?: "SlotDistributionType";
+  availableSlots?: Maybe<Scalars["Int"]>;
+  gradeGroup?: Maybe<Scalars["String"]>;
 };
 
 export type SubmitOrUpdateAnswers = {
@@ -1229,6 +1238,16 @@ export type UpdateArchiveDocument = {
   __typename?: "UpdateArchiveDocument";
   event?: Maybe<ArchiveDocumentType>;
   ok?: Maybe<Scalars["Boolean"]>;
+};
+
+export type UpdateAttendableInput = {
+  bindingSignup?: InputMaybe<Scalars["Boolean"]>;
+  deadline?: InputMaybe<Scalars["DateTime"]>;
+  hasExtraInformation?: InputMaybe<Scalars["Boolean"]>;
+  price?: InputMaybe<Scalars["Float"]>;
+  signupOpenDate?: InputMaybe<Scalars["DateTime"]>;
+  slotDistribution?: InputMaybe<Array<InputMaybe<SlotDistributionInput>>>;
+  totalAvailableSlots?: InputMaybe<Scalars["Int"]>;
 };
 
 export type UpdateBlog = {
@@ -1322,21 +1341,14 @@ export type UpdateEvent = {
 
 export type UpdateEventInput = {
   allowedGradeYears?: InputMaybe<Array<InputMaybe<Scalars["Int"]>>>;
-  availableSlots?: InputMaybe<Scalars["Int"]>;
-  bindingSignup?: InputMaybe<Scalars["Boolean"]>;
   categoryId?: InputMaybe<Scalars["ID"]>;
   contactEmail?: InputMaybe<Scalars["String"]>;
-  deadline?: InputMaybe<Scalars["DateTime"]>;
   description?: InputMaybe<Scalars["String"]>;
   endTime?: InputMaybe<Scalars["DateTime"]>;
-  hasExtraInformation?: InputMaybe<Scalars["Boolean"]>;
   image?: InputMaybe<Scalars["String"]>;
-  isAttendable?: InputMaybe<Scalars["Boolean"]>;
   location?: InputMaybe<Scalars["String"]>;
   organizationId?: InputMaybe<Scalars["ID"]>;
-  price?: InputMaybe<Scalars["Float"]>;
   shortDescription?: InputMaybe<Scalars["String"]>;
-  signupOpenDate?: InputMaybe<Scalars["DateTime"]>;
   startTime?: InputMaybe<Scalars["DateTime"]>;
   title?: InputMaybe<Scalars["String"]>;
 };
@@ -1370,11 +1382,11 @@ export type UpdateUser = {
   user?: Maybe<UserType>;
 };
 
-export type UserAttendingType = {
-  __typename?: "UserAttendingType";
+export type UserAttendanceType = {
+  __typename?: "UserAttendanceType";
   hasBoughtTicket?: Maybe<Scalars["Boolean"]>;
+  isAttending?: Maybe<Scalars["Boolean"]>;
   isOnWaitingList?: Maybe<Scalars["Boolean"]>;
-  isSignedUp?: Maybe<Scalars["Boolean"]>;
 };
 
 export type UserInput = {
@@ -1407,7 +1419,7 @@ export type UserType = {
   organizations: Array<OrganizationType>;
   phoneNumber: Scalars["String"];
   responses: Array<ResponseType>;
-  /** Påkrevet. 150 tegn eller færre. Kun bokstaver, tall og @/./+/-/_. */
+  /** Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. */
   username: Scalars["String"];
   yearUpdatedAt?: Maybe<Scalars["DateTime"]>;
 };
