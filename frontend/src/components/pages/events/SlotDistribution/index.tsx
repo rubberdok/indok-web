@@ -28,7 +28,7 @@ const SlotDistribution: React.FC<Props> = ({ slotDistribution, onUpdateSlotDistr
 
     Object.entries(slotDistWithId)
       .filter((dist) => Number(dist[0]) !== id)
-      .map((dist) => {
+      .forEach((dist) => {
         updatedDists[Number(dist[0])] = {
           ...dist[1],
           grades: dist[1].grades.filter((grade: number) => !newGrades.includes(grade)),
