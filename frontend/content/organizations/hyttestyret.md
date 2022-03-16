@@ -12,6 +12,10 @@ board:
     name: Ellie Berglund
     phoneNumber: 942 58 380
     title: Nestleder og økonomiansvarlig
+  book:
+    name: Ingvild Vartdal Sund
+    phoneNumber: 960 46 506
+    title: Bookingansvarlig
   log:
     name: Einar Midthun
     phoneNumber: 909 72 957
