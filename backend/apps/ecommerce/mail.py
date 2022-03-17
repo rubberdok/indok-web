@@ -24,15 +24,14 @@ def send_order_confirmation_mail(order: Order) -> None:
     ]
     template_variables: TemplateVariables = {
         user.email: {
-            "product_url": f"{settings.BASE_URL}/ecommerce/fallback?orderId={order.id}",
+            "product_url": f"{settings.FRONTEND_BASE_URL}/ecommerce/fallback?orderId={order.id}",
             "product_name": order.product.name,
             "name": user.first_name,
             "receipt_id": str(order.id),
             "date": order.timestamp.strftime("%d.%m.%Y, %X"),
             "receipt_details": receipt_details,
             "total": f"{order.total_price} NOK",
-            "support_mail": "kontakt@rubberdok.no",
-            "action_url": f"{settings.BASE_URL}/ecommerce",
+            "action_url": f"{settings.FRONTEND_BASE_URL}/ecommerce",
         }
     }
 
