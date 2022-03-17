@@ -39,13 +39,13 @@ class EventEmail:
 
         email = TransactionalEmail(
             stream="event-updates",
-            template_id="event-notifications",
+            template_id="event-wait-list",
             template_variables={
                 user.email: {
                     "product_url": f"{settings.FRONTEND_BASE_URL}/events/{event.pk}",
                     "product_name": event.title,
                     "body": "Du har fått plass på følgende arrangement",
-                    "start_time": event.start_time.strftime("%a %d. %b %X"),
+                    "start_time": event.start_time.strftime("%d.%m.%y kl. %H:%M"),
                     "location": event.location,
                     "price": product.price if product is not None else "",
                     "reason": "Du har fått plass fra ventelisten.",
