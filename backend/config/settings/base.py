@@ -147,12 +147,13 @@ CORS_ORIGIN_WHITELIST = env.list("CORS_ORIGIN_WHITELIST", default="http://localh
 ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=["localhost"])
 
 # URLS
-BASE_URL = env("DJANGO_BASE_URL", default="https://www.indokntnu.no")
+FRONTEND_BASE_URL = env("FRONTEND_BASE_URL", default="https://www.indokntnu.no")
 
 
 # EMAIL
 EMAIL_BACKEND = env("DJANGO_EMAIL_BACKEND", default="django.core.mail.backends.console.EmailBackend")
 DEFAULT_FROM_EMAIL = env("DJANGO_DEFAULT_FROM_EMAIL", default="Indøk <no-reply@indokntnu.no>")
+CONTACT_EMAIL = env("CONTACT_EMAIL", default="kontakt@rubberdok.no")
 EMAIL_MAX_RECIPIENTS = env.int("EMAIL_MAX_RECIPIENTS", 50)
 
 # ANYMAIL

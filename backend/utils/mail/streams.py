@@ -127,7 +127,8 @@ class PostmarkEmail(EmailMultiAlternatives):
         default_template_variables: TemplateVariables = {
             "company_name": "Rubberdøk",
             "parent_company": "Foreningen for Studenter ved Indøk",
-            "website_url": settings.BASE_URL,
+            "website_url": settings.FRONTEND_BASE_URL,
+            "contact_mail": settings.CONTACT_EMAIL,
         }
         self.esp_extra: EspExtra = {"MessageStream": stream}
         self.template_id = template_id

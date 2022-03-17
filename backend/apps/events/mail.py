@@ -16,7 +16,7 @@ class EventEmail:
             template_id="event-notifications",
             template_variables={},
             global_template_variables={
-                "product_url": f"{settings.BASE_URL}/events/{event.pk}",
+                "product_url": f"{settings.FRONTEND_BASE_URL}/events/{event.pk}",
                 "product_name": event.title,
                 "body": f"Arrangøren av {event.title} har sendt følgende beskjed",
                 "notification_body": content,
@@ -42,7 +42,7 @@ class EventEmail:
             template_id="event-notifications",
             template_variables={
                 user.email: {
-                    "product_url": f"{settings.BASE_URL}/events/{event.pk}",
+                    "product_url": f"{settings.FRONTEND_BASE_URL}/events/{event.pk}",
                     "product_name": event.title,
                     "body": "Du har fått plass på følgende arrangement",
                     "start_time": event.start_time.strftime("%a %d. %b %X"),
