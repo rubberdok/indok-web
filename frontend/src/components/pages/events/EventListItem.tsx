@@ -69,11 +69,11 @@ const EventListItem: React.FC<Props> = ({ event, user }) => {
               event.isFull && event.userAttendance?.isOnWaitingList ? (
                 <Chip label="På venteliste" />
               ) : event.isFull && !event.userAttendance?.isSignedUp ? (
-                <Chip color="primary" label="Venteliste tilgjengelig" />
+                <Chip label="Venteliste tilgjengelig" />
               ) : event.userAttendance?.isSignedUp ? (
                 <Chip color="primary" label="Påmeldt" />
               ) : (
-                <Chip label="Påmelding tilgjengelig" />
+                <Chip color="primary" label="Påmelding tilgjengelig" />
               )
             ) : null}
           </CardActionArea>
