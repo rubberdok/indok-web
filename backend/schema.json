@@ -116,7 +116,7 @@
                             }],
                             "deprecationReason": null,
                             "description": null,
-                            "isDeprecated": false,
+                            "isDeprecated": true,
                             "name": "blog",
                             "type": {
                                 "kind": "OBJECT",
