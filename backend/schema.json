@@ -4,7 +4,7 @@
             "directives": [{
                     "args": [{
                         "defaultValue": null,
-                        "description": "Included when true.",
+                        "description": "Included when False.",
                         "name": "if",
                         "type": {
                             "kind": "NON_NULL",
