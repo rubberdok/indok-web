@@ -11,3 +11,4 @@ hooks:
   afterAllFileWrite:
     - eslint --fix
     - prettier --write
+    - git add src/generated/graphql.tsx
