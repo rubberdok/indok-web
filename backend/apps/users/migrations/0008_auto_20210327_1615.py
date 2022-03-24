@@ -12,6 +12,10 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AlterModelOptions(
             name="user",
-            options={"permissions": [("view_sensitive_info", "Can view sensitive information about a user")]},
+            options={
+                "permissions": [
+                    ("view_sensitive_info", "Can view sensitive information about a user")
+                ]
+            },
         ),
     ]

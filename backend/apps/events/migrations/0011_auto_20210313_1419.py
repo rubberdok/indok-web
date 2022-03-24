@@ -26,16 +26,34 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="SignUp",
             fields=[
-                ("id", models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
                 ("timestamp", models.DateTimeField()),
                 ("is_attending", models.BooleanField()),
                 ("extra_information", models.TextField(blank=True, default="")),
                 ("user_email", models.EmailField(max_length=254)),
                 ("user_allergies", models.CharField(blank=True, default="", max_length=1000)),
-                ("user_phone_number", phonenumber_field.modelfields.PhoneNumberField(max_length=128, region=None)),
+                (
+                    "user_phone_number",
+                    phonenumber_field.modelfields.PhoneNumberField(max_length=128, region=None),
+                ),
                 ("user_grade_year", models.IntegerField()),
-                ("event", models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="events.event")),
-                ("user", models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "event",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="events.event"
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL
+                    ),
+                ),
             ],
         ),
     ]

@@ -15,7 +15,10 @@ class Cabin(models.Model):
 
 class Booking(models.Model):
     class Meta:
-        permissions = [("send_email", "Can send email"), ("manage_booking", "Can manage bookings, used for admins")]
+        permissions = [
+            ("send_email", "Can send email"),
+            ("manage_booking", "Can manage bookings, used for admins"),
+        ]
 
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
@@ -75,6 +78,7 @@ class BookingSemester(models.Model):
 
     def __str__(self):
         return (
-            f"Booking semester with fall semester from {self.fall_start_date} to {self.fall_end_date} and spring "
-            f"semester from {self.spring_start_date} to {self.spring_end_date}"
+            f"Booking semester with fall semester from {self.fall_start_date} to "
+            f"{self.fall_end_date} and spring semester from {self.spring_start_date} "
+            f"to {self.spring_end_date}"
         )

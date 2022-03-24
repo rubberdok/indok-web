@@ -41,7 +41,7 @@
   fields:
     form: 4
     question: Hva er navnet ditt?
-    description: ''
+    description: ""
     question_type: SHORT_ANSWER
     mandatory: true
 - model: forms.question

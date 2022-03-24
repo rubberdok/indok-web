@@ -1,6 +1,13 @@
 import graphene
 
-from .mutations import CreateBlog, DeleteBlog, UpdateBlog, CreateBlogPost, DeleteBlogPost, UpdateBlogPost
+from .mutations import (
+    CreateBlog,
+    DeleteBlog,
+    UpdateBlog,
+    CreateBlogPost,
+    DeleteBlogPost,
+    UpdateBlogPost,
+)
 from .types import BlogType, BlogPostType
 from .resolvers import BlogResolvers
 

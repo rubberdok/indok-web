@@ -15,7 +15,9 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="responsiblegroup",
             name="group",
-            field=models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to="auth.group"),
+            field=models.OneToOneField(
+                on_delete=django.db.models.deletion.CASCADE, to="auth.group"
+            ),
         ),
         migrations.AlterField(
             model_name="responsiblegroup",

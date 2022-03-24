@@ -22,7 +22,10 @@ class Migration(migrations.Migration):
             model_name="responsiblegroup",
             name="temp_organization",
             field=models.ForeignKey(
-                blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to="organizations.organization"
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="organizations.organization",
             ),
         ),
     ]

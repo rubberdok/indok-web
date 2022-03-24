@@ -29,7 +29,9 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="user",
             name="phone_number",
-            field=phonenumber_field.modelfields.PhoneNumberField(blank=True, max_length=128, region=None),
+            field=phonenumber_field.modelfields.PhoneNumberField(
+                blank=True, max_length=128, region=None
+            ),
         ),
         migrations.AlterField(
             model_name="user",

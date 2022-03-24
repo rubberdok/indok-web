@@ -68,7 +68,9 @@ class Answer(models.Model):
 
 class Response(models.Model):
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    respondent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="responses")
+    respondent = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="responses"
+    )
     form = models.ForeignKey(Form, on_delete=models.CASCADE, related_name="responses")
 
     class Status(models.IntegerChoices):
@@ -79,13 +81,17 @@ class Response(models.Model):
         __empty__ = _("Unknown")
 
     class Meta:
-        constraints = [UniqueConstraint(fields=["respondent", "form"], name="only_one_response_per_form")]
+        constraints = [
+            UniqueConstraint(fields=["respondent", "form"], name="only_one_response_per_form")
+        ]
 
     status = models.IntegerField(choices=Status.choices, blank=True, null=True)
 
 
 class Comment(models.Model):
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="comments")
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="comments"
+    )
     response = models.ForeignKey(Response, on_delete=models.CASCADE, related_name="comments")
     comment = models.TextField()

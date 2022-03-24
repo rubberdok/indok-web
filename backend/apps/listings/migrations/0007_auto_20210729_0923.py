@@ -15,6 +15,8 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="listing",
             name="form",
-            field=models.OneToOneField(null=True, on_delete=django.db.models.deletion.SET_NULL, to="forms.form"),
+            field=models.OneToOneField(
+                null=True, on_delete=django.db.models.deletion.SET_NULL, to="forms.form"
+            ),
         ),
     ]

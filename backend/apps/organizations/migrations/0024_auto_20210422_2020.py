@@ -19,13 +19,17 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="organization",
             name="groups",
-            field=models.ManyToManyField(related_name="organizations", to="permissions.ResponsibleGroup"),
+            field=models.ManyToManyField(
+                related_name="organizations", to="permissions.ResponsibleGroup"
+            ),
         ),
         migrations.AddField(
             model_name="organization",
             name="primary_group",
             field=models.OneToOneField(
-                on_delete=django.db.models.deletion.CASCADE, to="permissions.responsiblegroup", null=True
+                on_delete=django.db.models.deletion.CASCADE,
+                to="permissions.responsiblegroup",
+                null=True,
             ),
         ),
     ]

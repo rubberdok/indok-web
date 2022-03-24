@@ -49,7 +49,11 @@ class CabinsBaseTestCase(ExtendedGraphQLTestCase):
 
         # Create default booking responsible
         self.booking_responsible = BookingResponsible(
-            first_name="Ellie", last_name="Berglund", phone="94258380", email="booking@indokhyttene.no", active=True
+            first_name="Ellie",
+            last_name="Berglund",
+            phone="94258380",
+            email="booking@indokhyttene.no",
+            active=True,
         )
         self.booking_responsible.save()
 
@@ -57,8 +61,8 @@ class CabinsBaseTestCase(ExtendedGraphQLTestCase):
         self.booking_semester_dict = {
             "fall_start_date": f"{self.now.strftime(self.date_fmt)}",
             "fall_end_date": f"{(self.now + datetime.timedelta(weeks=12)).strftime(self.date_fmt)}",
-            "spring_start_date": f"{(self.now + datetime.timedelta(weeks=16)).strftime(self.date_fmt)}",
-            "spring_end_date": f"{(self.now + datetime.timedelta(weeks=28)).strftime(self.date_fmt)}",
+            "spring_start_date": f"{(self.now + datetime.timedelta(weeks=16)).strftime(self.date_fmt)}",  # noqa: E501
+            "spring_end_date": f"{(self.now + datetime.timedelta(weeks=28)).strftime(self.date_fmt)}",  # noqa: E501
             "fall_semester_active": True,
             "spring_semester_active": False,
         }
@@ -68,7 +72,9 @@ class CabinsBaseTestCase(ExtendedGraphQLTestCase):
 
     def add_booking_permission(self, codename):
         content_type = ContentType.objects.get_for_model(Booking)
-        self.user.user_permissions.add(Permission.objects.get(codename=codename, content_type=content_type))
+        self.user.user_permissions.add(
+            Permission.objects.get(codename=codename, content_type=content_type)
+        )
 
     def create_booking(self, booking, cabins_field, user=None):
 
@@ -195,7 +201,9 @@ class CabinsMutationsTestCase(CabinsBaseTestCase):
 
         # Test with add_booking permission
         self.add_booking_permission("add_booking")
-        response = self.create_booking(self.no_conflict_booking, f"{self.bjornen_cabin.id}", user=self.user)
+        response = self.create_booking(
+            self.no_conflict_booking, f"{self.bjornen_cabin.id}", user=self.user
+        )
         self.assertResponseNoErrors(response)
         # Check that booking is created
         self.assertTrue(
@@ -255,7 +263,9 @@ class CabinsMutationsTestCase(CabinsBaseTestCase):
         # Try to add a booking with more participants than total capacity of cabins
         self.no_conflict_booking.internal_participants = 19
         self.no_conflict_booking.external_participants = 21
-        response = self.create_booking(self.no_conflict_booking, f"{self.oksen_cabin.id}, {self.bjornen_cabin.id}")
+        response = self.create_booking(
+            self.no_conflict_booking, f"{self.oksen_cabin.id}, {self.bjornen_cabin.id}"
+        )
         self.check_create_with_error(response)
 
     def test_no_checkin_and_checkout_on_same_day(self):
@@ -274,7 +284,7 @@ class CabinsMutationsTestCase(CabinsBaseTestCase):
             }}
           }}
         }}
-        """
+        """  # noqa: E501
         # Change booking without permission
         response = self.query(query)
         self.assert_permission_error(response)
@@ -371,7 +381,10 @@ class EmailTestCase(CabinsBaseTestCase):
         self.assertResponseNoErrors(resp=response)
 
         # Verify that the subject of the first message is correct.
-        self.assertTrue("Hyttestyret har tatt stilling til søknaden din om booking av " in mail.outbox[0].subject)
+        self.assertTrue(
+            "Hyttestyret har tatt stilling til søknaden din om booking av "
+            in mail.outbox[0].subject
+        )
 
     def test_reservation_mail_content(self):
         response = self.send_email(self.first_booking, "reserve_booking", user=self.super_user)
@@ -386,8 +399,12 @@ class EmailTestCase(CabinsBaseTestCase):
         self.assertTrue(self.first_booking.last_name in mail.outbox[1].body)
         self.assertTrue(self.first_booking.first_name in mail.outbox[1].body)
         self.assertTrue(str(self.first_booking.phone) in mail.outbox[1].body)
-        self.assertTrue(f"Antall indøkere: {self.first_booking.internal_participants}" in mail.outbox[1].body)
-        self.assertTrue(f"Antall eksterne: {self.first_booking.external_participants}" in mail.outbox[1].body)
+        self.assertTrue(
+            f"Antall indøkere: {self.first_booking.internal_participants}" in mail.outbox[1].body
+        )
+        self.assertTrue(
+            f"Antall eksterne: {self.first_booking.external_participants}" in mail.outbox[1].body
+        )
 
         # Verify that the checkin and checkout for admin and user email is correct
         date_fmt = "%d-%m-%Y"
@@ -460,7 +477,9 @@ class BookingSemesterTestCase(CabinsBaseTestCase):
             self.booking_semester_dict["fall_start_date"], self.date_fmt
         ) + datetime.timedelta(days=3)
 
-        response = self.create_booking(self.first_booking, cabins_field=f"{self.oksen_cabin.id}", user=self.super_user)
+        response = self.create_booking(
+            self.first_booking, cabins_field=f"{self.oksen_cabin.id}", user=self.super_user
+        )
         self.assertResponseNoErrors(response)
 
     # Verify that a booking outside of booking semester is invalid
@@ -502,8 +521,8 @@ class BookingSemesterTestCase(CabinsBaseTestCase):
         self.assertEquals(booking_semester["fallStartDate"], "2021-09-01")
         self.assertEquals(booking_semester["fallSemesterActive"], False)
 
-    # Verify that updating the booking semester creates a new booking semester if there are no booking
-    # semesters in the database.
+    # Verify that updating the booking semester creates a new booking semester if there are no
+    # booking semesters in the database.
     def test_update_booking_semester_when_not_exists(self):
         # Delete booking semester in db
         BookingSemester.objects.all().delete()
@@ -523,7 +542,9 @@ class BookingSemesterTestCase(CabinsBaseTestCase):
 
         # Add permission
         content_type = ContentType.objects.get_for_model(BookingSemester)
-        permission = Permission.objects.get(codename="change_bookingsemester", content_type=content_type)
+        permission = Permission.objects.get(
+            codename="change_bookingsemester", content_type=content_type
+        )
         self.user.user_permissions.add(permission)
 
         # Assert no error when updating booking semester with permission

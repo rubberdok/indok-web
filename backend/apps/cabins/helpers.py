@@ -17,7 +17,11 @@ def is_internal_price(internal_participants: int, external_participants: int) ->
 
 
 def price(
-    cabins: QuerySet, check_in: date, check_out: date, internal_participants: int, external_participants: int
+    cabins: QuerySet,
+    check_in: date,
+    check_out: date,
+    internal_participants: int,
+    external_participants: int,
 ) -> int:
     if is_internal_price(internal_participants, external_participants):
         price_pr_night = cabins.aggregate(models.Sum("internal_price"))["internal_price__sum"]

@@ -9,7 +9,9 @@ from faker import Faker
 
 def get_valid_graduation_year():
     now = timezone.now()
-    return random.choice(range(now.year, now.year + 5) if now.month < 8 else range(now.year + 1, now.year + 6))
+    return random.choice(
+        range(now.year, now.year + 5) if now.month < 8 else range(now.year + 1, now.year + 6)
+    )
 
 
 fake = Faker(["no-NO"])

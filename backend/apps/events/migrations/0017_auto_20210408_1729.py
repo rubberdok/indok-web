@@ -16,7 +16,9 @@ class Migration(migrations.Migration):
             model_name="event",
             name="organization",
             field=models.ForeignKey(
-                on_delete=django.db.models.deletion.CASCADE, related_name="events", to="organizations.organization"
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="events",
+                to="organizations.organization",
             ),
         ),
     ]

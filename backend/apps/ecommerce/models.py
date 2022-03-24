@@ -15,9 +15,13 @@ class Product(models.Model):
     name = models.CharField(max_length=200)
     price = models.DecimalField(max_digits=11, decimal_places=2)
     description = models.TextField()
-    organization = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name="products")
+    organization = models.ForeignKey(
+        Organization, on_delete=models.CASCADE, related_name="products"
+    )
     total_quantity = models.PositiveIntegerField()
-    current_quantity = models.PositiveIntegerField(null=True)  # Set to total_quantity upon initialization
+    current_quantity = models.PositiveIntegerField(
+        null=True
+    )  # Set to total_quantity upon initialization
     max_buyable_quantity = models.PositiveIntegerField(default=1)
 
     # Generic foreign key to related product model instance (e.g event model)
@@ -40,7 +44,8 @@ class Product(models.Model):
     @classmethod
     def check_and_reserve_quantity(cls, product_id, user: User, quantity: int) -> "Product":
         """
-        Check whether a requested quantity may be ordered and if so, reserve that quantity for this request.
+        Check whether a requested quantity may be ordered and if so,
+        reserve that quantity for this request.
 
         Raises:
             ValueError: If the requested quantity for the given product is not allowed.
@@ -66,7 +71,9 @@ class Product(models.Model):
             elif quantity + bought_quantity > product.max_buyable_quantity:
                 raise ValueError("Forespurt antall enheter overskrider tillatt antall.")
             elif quantity > product.current_quantity:
-                raise ValueError("Forespurt antall enheter overskrider tilgjengelige antall enheter.")
+                raise ValueError(
+                    "Forespurt antall enheter overskrider tilgjengelige antall enheter."
+                )
 
             # Reserve quantity by updating available quantity
             product.current_quantity = F("current_quantity") - quantity
@@ -103,12 +110,18 @@ class Order(models.Model):
 
     id = UUIDField(primary_key=True, default=uuid.uuid4)
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="orders")
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="orders")
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="orders"
+    )
     quantity = models.PositiveIntegerField(default=1)
     total_price = models.DecimalField(max_digits=11, decimal_places=2)
-    payment_status = models.CharField(max_length=255, choices=PaymentStatus.choices, default=PaymentStatus.INITIATED)
+    payment_status = models.CharField(
+        max_length=255, choices=PaymentStatus.choices, default=PaymentStatus.INITIATED
+    )
     timestamp = DateTimeField(auto_now_add=True)
-    auth_token = models.CharField(max_length=32, default=get_auth_token)  # For authenticating Vipps callback
+    auth_token = models.CharField(
+        max_length=32, default=get_auth_token
+    )  # For authenticating Vipps callback
     payment_attempt = models.PositiveIntegerField(default=1)
 
     def __str__(self):
@@ -116,7 +129,11 @@ class Order(models.Model):
 
     @property
     def failed_statuses(self):
-        return [self.PaymentStatus.CANCELLED, self.PaymentStatus.FAILED, self.PaymentStatus.REJECTED]
+        return [
+            self.PaymentStatus.CANCELLED,
+            self.PaymentStatus.FAILED,
+            self.PaymentStatus.REJECTED,
+        ]
 
 
 class VippsAccessToken(models.Model):

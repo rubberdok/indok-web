@@ -216,7 +216,9 @@ class FormsMutationTestCase(FormBaseTestCase):
         response = self.query(self.CREATE_QUESTION_MUTATION, user=self.authorized_user)
         self.assertResponseNoErrors(response)
         data = json.loads(response.content)["data"]
-        question: Optional[Question] = Question.objects.get(pk=data["createQuestion"]["question"]["id"])
+        question: Optional[Question] = Question.objects.get(
+            pk=data["createQuestion"]["question"]["id"]
+        )
 
         if question is None:
             self.assertIsNotNone(question)
@@ -266,7 +268,9 @@ class FormsMutationTestCase(FormBaseTestCase):
 
         response = self.query(query=query, user=self.authorized_user)
         self.assertResponseNoErrors(response)
-        options: list[dict[str, str]] = json.loads(response.content)["data"]["createUpdateAndDeleteOptions"]["options"]
+        options: list[dict[str, str]] = json.loads(response.content)["data"][
+            "createUpdateAndDeleteOptions"
+        ]["options"]
         self.deep_assert_equal(options, self.mcq.options.all())
 
     def test_authorized_update_options(self):
@@ -297,12 +301,16 @@ class FormsMutationTestCase(FormBaseTestCase):
         """
         response = self.query(query=query, user=self.authorized_user)
         self.assertResponseNoErrors(response)
-        options: list[dict[str, str]] = json.loads(response.content)["data"]["createUpdateAndDeleteOptions"]["options"]
+        options: list[dict[str, str]] = json.loads(response.content)["data"][
+            "createUpdateAndDeleteOptions"
+        ]["options"]
         self.deep_assert_equal(options, self.mcq.options.all())
 
 
 class FormResponseTestCase(FormBaseTestCase):
-    def submit_response_query(self, form: Union[FormFactory, Form], response: str = "Answer") -> str:
+    def submit_response_query(
+        self, form: Union[FormFactory, Form], response: str = "Answer"
+    ) -> str:
         return f"""
             mutation {{
                 submitAnswers(
@@ -344,7 +352,9 @@ class FormResponseTestCase(FormBaseTestCase):
         super().setUp()
         self.responding_student = IndokUserFactory()
         ListingFactory(
-            form=self.form, deadline=timezone.now() + timedelta(days=7), end_datetime=timezone.now() + timedelta(days=7)
+            form=self.form,
+            deadline=timezone.now() + timedelta(days=7),
+            end_datetime=timezone.now() + timedelta(days=7),
         )
 
     def test_answer_previously_unanswered_form(self) -> None:

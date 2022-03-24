@@ -20,7 +20,9 @@ class Migration(migrations.Migration):
             model_name="organization",
             name="responsible_group",
             field=models.OneToOneField(
-                null=True, on_delete=django.db.models.deletion.CASCADE, to="permissions.responsiblegroup"
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="permissions.responsiblegroup",
             ),
         ),
     ]

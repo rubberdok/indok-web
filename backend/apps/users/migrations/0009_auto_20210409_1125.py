@@ -23,7 +23,10 @@ def assign_default_permission_for_existing_users(apps, schema_editor):
         )
     for user in User.objects.all():
         UserObjectPermission.objects.create(
-            permission=perm, user=user, object_pk=user.pk, content_type=ContentType.objects.get_for_model(user)
+            permission=perm,
+            user=user,
+            object_pk=user.pk,
+            content_type=ContentType.objects.get_for_model(user),
         )
 
 
@@ -51,5 +54,8 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(assign_default_permission_for_existing_users, remove_default_permission_for_existing_users)
+        migrations.RunPython(
+            assign_default_permission_for_existing_users,
+            remove_default_permission_for_existing_users,
+        )
     ]

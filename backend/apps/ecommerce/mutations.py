@@ -30,7 +30,9 @@ class InitiateOrder(graphene.Mutation):
         user = info.context.user
         # Check if user is allowed to buy the product
         product = Product.objects.get(pk=product_id)
-        if product.related_object and not product.related_object.is_user_allowed_to_buy_product(user):
+        if product.related_object and not product.related_object.is_user_allowed_to_buy_product(
+            user
+        ):
             raise PurchaseNotAllowedError("Du kan ikke kjøpe dette produktet.")
 
         # If any of the below fails, do not commit any DB transactions
@@ -59,10 +61,11 @@ class InitiateOrder(graphene.Mutation):
                 # If order canceled: retry, if reserved: stop attempt and restore quantity
                 if status_success and status == "RESERVE":
                     """
-                    NOTE: This logic enforces that if we have a order with status "reserved" in the DB,
-                    we redirect the user in order to capture the order.
-                    If the user wants to perform multiple orders, they currently have to sucessfully complete
-                    one order before starting another. Should be changed when async worker is implemented.
+                    NOTE: This logic enforces that if we have a order with status "reserved"
+                    in the DB, we redirect the user in order to capture the order.
+                    If the user wants to perform multiple orders, they currently have to
+                    sucessfully complete one order before starting another. Should be changed
+                    when async worker is implemented.
                     """
                     order.payment_status = Order.PaymentStatus.RESERVED
                     order.save()
@@ -72,7 +75,9 @@ class InitiateOrder(graphene.Mutation):
                 # Cancel previous attempt to avoid simultaneous payments
                 elif status_success and status == "INITIATE":
                     try:
-                        InitiateOrder.vipps_api.cancel_transaction(f"{order.id}-{order.payment_attempt}")
+                        InitiateOrder.vipps_api.cancel_transaction(
+                            f"{order.id}-{order.payment_attempt}"
+                        )
                     except HTTPError:
                         raise ValueError("Fullfør den pågående betalingen først.")
                     finally:
@@ -84,7 +89,12 @@ class InitiateOrder(graphene.Mutation):
                 order.save()
 
             except Order.DoesNotExist:
-                order = Order(product=product, user=user, quantity=quantity, total_price=product.price * quantity)
+                order = Order(
+                    product=product,
+                    user=user,
+                    quantity=quantity,
+                    total_price=product.price * quantity,
+                )
 
                 order.save()
 

@@ -43,7 +43,9 @@ filetype_specs = {
 
 
 class EventResolvers:
-    def resolve_all_events(self, info, category=None, organization=None, start_time=None, end_time=None):
+    def resolve_all_events(
+        self, info, category=None, organization=None, start_time=None, end_time=None
+    ):
         """
         Get all events that fit the given filters
         """
@@ -68,8 +70,11 @@ class EventResolvers:
             new_kwargs = {f"{k}__icontains": v for k, v in kwargs.items()}
             queries = [Q(**{k: v}) for k, v in new_kwargs.items()]
 
-            if organization:  # for organizations, check if the organization argument corresponds to either
-                queries.append(  # the organization of the event itself and the parent organization (if it exists)
+            if (
+                organization
+            ):  # for organizations, check if the organization argument corresponds to either
+                queries.append(
+                    # the organization of the event itself and the parent organization, if it exists
                     Q(organization__name__icontains=organization)
                     | Q(organization__parent__name__icontains=organization)
                 )
@@ -163,7 +168,9 @@ def export_single_event(event_id: int, fields: Union[list[str], set[str]]) -> pd
     )
 
     if attending_users.exists():
-        df_users_attending = pd.DataFrame(attending_users.values()).set_index("id").add_prefix("user_")
+        df_users_attending = (
+            pd.DataFrame(attending_users.values()).set_index("id").add_prefix("user_")
+        )
         df_users_attending["attendance_status"] = "ATTENDING"
         df_users = pd.concat([df_users, df_users_attending])
 
@@ -211,11 +218,17 @@ def wrap_attendee_report_as_json(df, file_basename, filetype):
     # Handle different content types
     if filetype == "xlsx":
         if "signup_timestamp" in df:
-            df["signup_timestamp"] = df["signup_timestamp"].apply(lambda a: pd.to_datetime(a).tz_localize(None))
+            df["signup_timestamp"] = df["signup_timestamp"].apply(
+                lambda a: pd.to_datetime(a).tz_localize(None)
+            )
         if "order_timestamp" in df:
-            df["order_timestamp"] = df["order_timestamp"].apply(lambda a: pd.to_datetime(a).tz_localize(None))
+            df["order_timestamp"] = df["order_timestamp"].apply(
+                lambda a: pd.to_datetime(a).tz_localize(None)
+            )
         buffer = io.BytesIO()
-        with pd.ExcelWriter(buffer, engine="xlsxwriter", options={"remove_timezone": True}) as writer:
+        with pd.ExcelWriter(
+            buffer, engine="xlsxwriter", options={"remove_timezone": True}
+        ) as writer:
             df.to_excel(writer, index=False)
         data = base64.b64encode(buffer.getvalue()).decode("utf-8")
     elif filetype == "csv":

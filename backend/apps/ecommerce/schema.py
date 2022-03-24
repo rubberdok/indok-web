@@ -18,5 +18,7 @@ class EcommerceQueries(graphene.ObjectType, EcommerceResolvers):
     user_orders = graphene.List(OrderType)
 
     orders_by_status = graphene.Field(
-        OrdersByStatusType, product_id=graphene.ID(required=True), status=graphene.String(required=True)
+        OrdersByStatusType,
+        product_id=graphene.ID(required=True),
+        status=graphene.String(required=True),
     )

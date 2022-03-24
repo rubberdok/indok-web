@@ -151,7 +151,9 @@ FRONTEND_BASE_URL = env("FRONTEND_BASE_URL", default="https://www.indokntnu.no")
 
 
 # EMAIL
-EMAIL_BACKEND = env("DJANGO_EMAIL_BACKEND", default="django.core.mail.backends.console.EmailBackend")
+EMAIL_BACKEND = env(
+    "DJANGO_EMAIL_BACKEND", default="django.core.mail.backends.console.EmailBackend"
+)
 DEFAULT_FROM_EMAIL = env("DJANGO_DEFAULT_FROM_EMAIL", default="Indøk <no-reply@indokntnu.no>")
 CONTACT_EMAIL = env("CONTACT_EMAIL", default="kontakt@rubberdok.no")
 EMAIL_MAX_RECIPIENTS = env.int("EMAIL_MAX_RECIPIENTS", 50)
@@ -170,7 +172,11 @@ ADMIN_URL = "admin/"
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
-    "formatters": {"verbose": {"format": "%(levelname)s %(asctime)s %(module)s " "%(process)d %(thread)d %(message)s"}},
+    "formatters": {
+        "verbose": {
+            "format": "%(levelname)s %(asctime)s %(module)s " "%(process)d %(thread)d %(message)s"
+        }
+    },
     "handlers": {
         "console": {
             "level": "DEBUG",
@@ -213,7 +219,10 @@ VIPPS_SECRET = env("VIPPS_SECRET")
 VIPPS_MERCHANT_SERIAL_NUMBER = env("VIPPS_MERCHANT_SERIAL_NUMBER")
 VIPPS_SUBSCRIPTION_KEY = env("VIPPS_SUBSCRIPTION_KEY")
 VIPPS_CALLBACK_PREFIX = env(
-    "VIPPS_CALLBACK_PREFIX", default="https://xoff0kv3i3.execute-api.eu-north-1.amazonaws.com/default/Vipps_callback"
+    "VIPPS_CALLBACK_PREFIX",
+    default="https://xoff0kv3i3.execute-api.eu-north-1.amazonaws.com/default/Vipps_callback",
 )
-VIPPS_FALLBACK_PREFIX = env("VIPPS_FALLBACK_PREFIX", default="http://127.0.0.1:3000/ecommerce/fallback")
+VIPPS_FALLBACK_PREFIX = env(
+    "VIPPS_FALLBACK_PREFIX", default="http://127.0.0.1:3000/ecommerce/fallback"
+)
 VIPPS_BASE_URL = env("VIPPS_BASE_URL", default="https://apitest.vipps.no")

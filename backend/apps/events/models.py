@@ -48,10 +48,14 @@ class Event(models.Model, Sellable):
     allowed_grade_years = MultiSelectField(choices=GRADE_CHOICES, default="1,2,3,4,5")
 
     # --------------- Required fields given is_attendable == True ---------------
-    signup_open_date = models.DateTimeField(blank=True, null=True)  # When the signup should become available
-    available_slots = models.PositiveIntegerField(  # maximal number of users that can sign up for an event
-        blank=True,
-        null=True,  # TODO: Make this field conditionally required when is_attendable is True!
+    signup_open_date = models.DateTimeField(
+        blank=True, null=True
+    )  # When the signup should become available
+    available_slots = (
+        models.PositiveIntegerField(  # maximal number of users that can sign up for an event
+            blank=True,
+            null=True,  # TODO: Make this field conditionally required when is_attendable is True!
+        )
     )
 
     # ----------- Optional fields that should only be set given is_attendable == True -----------
@@ -59,7 +63,7 @@ class Event(models.Model, Sellable):
     price = models.FloatField(blank=True, null=True)
     binding_signup = models.BooleanField(
         default=False
-    )  # Disables sign-off from users_attending if true. NOTE: binding_signup is required given Price
+    )  # Disables sign-off from users_attending if true. NOTE: required if event has price
     products = GenericRelation("ecommerce.Product")
 
     @property

@@ -15,10 +15,14 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="organization",
             name="group",
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to="auth.group"),
+            field=models.ForeignKey(
+                null=True, on_delete=django.db.models.deletion.CASCADE, to="auth.group"
+            ),
         ),
         migrations.AddConstraint(
             model_name="organization",
-            constraint=models.UniqueConstraint(fields=("parent", "name"), name="unique_child_organization_name"),
+            constraint=models.UniqueConstraint(
+                fields=("parent", "name"), name="unique_child_organization_name"
+            ),
         ),
     ]

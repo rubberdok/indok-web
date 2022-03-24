@@ -30,7 +30,9 @@ def get_email_subject(chosen_cabins_string: str, email_type: str, admin: bool) -
         subject = admin_templates["reserve_subject"]
     else:
         subject = (
-            user_templates["reserve_subject"] if email_type == "reserve_booking" else user_templates["decision_subject"]
+            user_templates["reserve_subject"]
+            if email_type == "reserve_booking"
+            else user_templates["decision_subject"]
         )
 
     return subject + chosen_cabins_string
@@ -45,7 +47,9 @@ def send_mail(booking_info: BookingInfoType, email_type: EmailTypes, admin: bool
     chosen_cabins_names = booking_info["cabins"].values_list("name", flat=True)
     chosen_cabins_string = " og ".join(chosen_cabins_names)
     subject = get_email_subject(chosen_cabins_string, email_type, admin)
-    booking_responsible: Optional[BookingResponsible] = BookingResponsible.objects.filter(active=True).first()
+    booking_responsible: Optional[BookingResponsible] = BookingResponsible.objects.filter(
+        active=True
+    ).first()
 
     # Display dates with given format in the mail, get booking responsible contact info
     content = {
@@ -53,7 +57,7 @@ def send_mail(booking_info: BookingInfoType, email_type: EmailTypes, admin: bool
         "check_in": booking_info["check_in"].strftime("%d-%m-%Y"),
         "check_out": booking_info["check_out"].strftime("%d-%m-%Y"),
         "chosen_cabins_string": chosen_cabins_string,
-        "booking_responsible_name": f"{booking_responsible.first_name} {booking_responsible.last_name}",
+        "booking_responsible_name": f"{booking_responsible.first_name} {booking_responsible.last_name}",  # noqa: E501
         "booking_responsible_phone": booking_responsible.phone,
         "booking_responsible_email": booking_responsible.email,
         "now_time": datetime.now().strftime("%d.%m.%Y, %H:%M:%S"),

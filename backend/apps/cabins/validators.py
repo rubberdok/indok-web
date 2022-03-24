@@ -24,7 +24,11 @@ def create_booking_validation(booking_data: BookingModel, booking_semester: Book
     if booking_data.phone:
         booking_data.phone = strip_phone_number(booking_data.phone)
         norwegian_phone_number_validation(booking_data.phone)
-    if booking_data.cabins and booking_data.internal_participants and booking_data.external_participants:
+    if (
+        booking_data.cabins
+        and booking_data.internal_participants
+        and booking_data.external_participants
+    ):
         participants_validation(
             booking_data.internal_participants,
             booking_data.external_participants,
@@ -56,7 +60,9 @@ def booking_semester_validation(
         raise GraphQLError("Dates are outside of the booking semesters.")
 
 
-def check_dates_in_range(dates: List[datetime.date], range_start: datetime.date, range_end: datetime.date) -> bool:
+def check_dates_in_range(
+    dates: List[datetime.date], range_start: datetime.date, range_end: datetime.date
+) -> bool:
     return range_start <= dates[0] and dates[-1] <= range_end
 
 
@@ -97,13 +103,21 @@ def strip_phone_number(phone_number):
     # Remove spacing
     cleaned_phone_number = phone_number.replace(" ", "")
     # Remove country code
-    cleaned_phone_number = cleaned_phone_number[3:] if cleaned_phone_number.startswith("+47") else cleaned_phone_number
+    cleaned_phone_number = (
+        cleaned_phone_number[3:] if cleaned_phone_number.startswith("+47") else cleaned_phone_number
+    )
     # Remove country code
-    return cleaned_phone_number[4:] if cleaned_phone_number.startswith("0047") else cleaned_phone_number
+    return (
+        cleaned_phone_number[4:]
+        if cleaned_phone_number.startswith("0047")
+        else cleaned_phone_number
+    )
 
 
 def participants_validation(number_of_internals: int, number_of_externals: int, cabins):
-    if (number_of_internals + number_of_externals) > CabinModel.objects.filter(id__in=cabins).aggregate(
-        Sum("max_guests")
-    )["max_guests__sum"]:
-        raise GraphQLError("There are more participants than there is capacity in the chosen cabins")
+    if (number_of_internals + number_of_externals) > CabinModel.objects.filter(
+        id__in=cabins
+    ).aggregate(Sum("max_guests"))["max_guests__sum"]:
+        raise GraphQLError(
+            "There are more participants than there is capacity in the chosen cabins"
+        )

@@ -55,7 +55,9 @@ def create_default_groups(instance: Organization, created, **kwargs):
         )
         hr_group = ResponsibleGroup.objects.create(
             name=HR_GROUP_NAME,
-            description=f"HR-gruppen til {instance.name}. Tillatelser for å se og behandle søknader.",
+            description=(
+                f"HR-gruppen til {instance.name}. Tillatelser for å se og behandle søknader."
+            ),
             organization=instance,
             group_type=HR_TYPE,
         )

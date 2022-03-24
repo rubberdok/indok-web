@@ -25,7 +25,9 @@ class User(AbstractUser):
 
     @property
     def can_update_year(self):
-        return self.year_updated_at is None or (self.year_updated_at + timezone.timedelta(days=365) <= timezone.now())
+        return self.year_updated_at is None or (
+            self.year_updated_at + timezone.timedelta(days=365) <= timezone.now()
+        )
 
     @property
     def events(self):

@@ -16,7 +16,10 @@ class Migration(migrations.Migration):
             model_name="product",
             name="content_type",
             field=models.ForeignKey(
-                blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to="contenttypes.contenttype"
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="contenttypes.contenttype",
             ),
         ),
         migrations.AlterField(

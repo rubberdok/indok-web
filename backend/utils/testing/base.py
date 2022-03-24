@@ -21,7 +21,9 @@ model = Union[models.Model, factory.Factory]
 class ExtendedGraphQLTestCase(GraphQLTestCase):
     def setUp(self) -> None:
         self.GRAPHQL_URL = (
-            f"/{settings.GRAPHQL_URL}" if not settings.GRAPHQL_URL.startswith("/") else settings.GRAPHQL_URL
+            f"/{settings.GRAPHQL_URL}"
+            if not settings.GRAPHQL_URL.startswith("/")
+            else settings.GRAPHQL_URL
         )
         return super().setUp()
 
@@ -39,7 +41,8 @@ class ExtendedGraphQLTestCase(GraphQLTestCase):
         content = json.loads(response.content)
         self.assertTrue(
             any(
-                PERMISSION_ERROR_MESSAGE in error["message"] or ALTERNATE_PERMISSION in error["message"]
+                PERMISSION_ERROR_MESSAGE in error["message"]
+                or ALTERNATE_PERMISSION in error["message"]
                 for error in content["errors"]
             ),
             msg=f"Permission error not found in {content.items()}",
@@ -63,7 +66,9 @@ class ExtendedGraphQLTestCase(GraphQLTestCase):
                 elif isinstance(value, (list, dict)):
                     self.assert_null_fields(value, fields)
 
-    def _assert_list_equal(self, data: list[dict[str, Any]], obj: Union[QuerySet[models.Model], list[model]]) -> None:
+    def _assert_list_equal(
+        self, data: list[dict[str, Any]], obj: Union[QuerySet[models.Model], list[model]]
+    ) -> None:
         for data_item, obj_item in zip(data, obj):
             self.deep_assert_equal(data_item, obj_item)
 
@@ -96,7 +101,9 @@ class ExtendedGraphQLTestCase(GraphQLTestCase):
         ...
 
     @overload
-    def deep_assert_equal(self, data: list[dict[str, Any]], obj: Union[QuerySet[models.Model], list[model]]) -> None:
+    def deep_assert_equal(
+        self, data: list[dict[str, Any]], obj: Union[QuerySet[models.Model], list[model]]
+    ) -> None:
         ...
 
     def deep_assert_equal(
@@ -105,9 +112,10 @@ class ExtendedGraphQLTestCase(GraphQLTestCase):
         obj: Union[Union[QuerySet[models.Model], list[model]], model],
     ) -> None:
         """
-        Compares the structure of a dictionary from a GraphQL query response to a corresponding object in the database
-        Note: When comparing lists, the assertion assumes that the lists are sorted on the same key, otherwise,
-        the assertion will fail.
+        Compares the structure of a dictionary from a GraphQL query response
+        to a corresponding object in the database
+        Note: When comparing lists, the assertion assumes that the lists are sorted on the same key,
+        otherwise, the assertion will fail.
 
         Parameters
         ----------
@@ -123,14 +131,15 @@ class ExtendedGraphQLTestCase(GraphQLTestCase):
         """
         if isinstance(data, list) and isinstance(obj, (QuerySet, list)):
             """
-            When comparing lists, we want to compare by item, assumes that the lists are sorted on the same key.
+            When comparing lists, we want to compare by item, assumes that the lists are sorted on
+            the same key.
             """
             self._assert_list_equal(data, obj)
 
         elif isinstance(data, dict) and isinstance(obj, (models.Model, factory.Factory)):
             """
-            Comparing a dictionary to an instance of the model. Compare each attribute in the provided dictionary
-            to the corresponding value for the instance.
+            Comparing a dictionary to an instance of the model. Compare each attribute in the
+            provided dictionary to the corresponding value for the instance.
             """
             self._assert_dict_equal(data, obj)
 

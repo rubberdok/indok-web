@@ -28,7 +28,8 @@ class Organization(models.Model):
     # Permission groups
     # All members are added to the primary group
     # Members can be added to groups programatically
-    # The HR-group has the "forms.manage_form" permission, allowing them to view and manage responses to e.g. listings.
+    # The HR-group has the "forms.manage_form" permission,
+    # allowing them to view and manage responses to e.g. listings.
     # The primary group is intended to act as a group for organizations who need any kind of
     # special permission, e.g. hyttestyret
     # Or if we wish to limit the creation of events or listings to certain organizations.
@@ -56,19 +57,27 @@ class Organization(models.Model):
             return None
 
     class Meta:
-        constraints = [UniqueConstraint(fields=["parent", "name"], name="unique_child_organization_name")]
+        constraints = [
+            UniqueConstraint(fields=["parent", "name"], name="unique_child_organization_name")
+        ]
 
     def __str__(self):
         return f"{self.name}"
 
 
 class Membership(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="memberships")
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="memberships"
+    )
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name="members")
-    group = models.ForeignKey(ResponsibleGroup, on_delete=models.CASCADE, related_name="members", null=True)
+    group = models.ForeignKey(
+        ResponsibleGroup, on_delete=models.CASCADE, related_name="members", null=True
+    )
 
     class Meta:
-        constraints = [UniqueConstraint(fields=["user", "organization"], name="unique_member_in_organization")]
+        constraints = [
+            UniqueConstraint(fields=["user", "organization"], name="unique_member_in_organization")
+        ]
 
     def __str__(self) -> str:
         return f"{self.organization.name}:{self.user.username}"

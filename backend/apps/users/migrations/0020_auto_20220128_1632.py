@@ -16,4 +16,8 @@ class Migration(migrations.Migration):
         ("users", "0019_auto_20220128_1404"),
     ]
 
-    operations = [migrations.RunPython(set_updated_year_for_recent_registraions_to_none, migrations.RunPython.noop)]
+    operations = [
+        migrations.RunPython(
+            set_updated_year_for_recent_registraions_to_none, migrations.RunPython.noop
+        )
+    ]

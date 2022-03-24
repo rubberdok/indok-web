@@ -24,20 +24,24 @@ def permission_required(
         A tuple with: (1) the model which to look up, (2) a series of attribute name,
         parameter name pairs to use for the lookup, by default None
     fn : Callable, optional
-        A callable used to retrieve the object for which to check if the user has object permissions.
+        A callable used to retrieve the object for which to check
+        if the user has object permissions.
     return_none : bool, optional, default = False
         If the user does not have the required permissions, return None instead of raising an error.
     accept_global_perms : bool
-        Whether global permissions are permitted, i.e. does not require object-level permission, by default False
+        Whether global permissions are permitted, i.e. does not require object-level permission,
+        by default False
 
     Raises
     ------
     SyntaxError
-        If the first element of the lookup tuple is a str, but not of the format app_label.ModelClass
+        If the first element of the lookup tuple is a str,
+        but not of the format app_label.ModelClass
     TypeError
         If the first element of the lookup tuple is not of the type str, Model, or ModelClass
     ValueError
-        If the lookup variables are not in a attribute name, parameter name format, i.e. of even length
+        If the lookup variables are not in a attribute name, parameter name format,
+        i.e. of even length
     KeyError
         If the attributes to look up are not part of the wrapped function.
     PermissionError
@@ -65,23 +69,27 @@ def permission_required(
 
                     if len(split_model_str) != 2:
                         raise SyntaxError(
-                            f"The model string should be of the format app_label.ModelClass, got {model}."
+                            f"The model string should be of the format app_label.ModelClass, got {model}."  # noqa: E501
                         )
 
                     model = apps.get_model(*split_model_str)
                 elif not isinstance(model, (Model, ModelBase)):
-                    raise TypeError(f"{model} should be of the type str, Model, or ModelBase, got {type(model)}")
+                    raise TypeError(
+                        f"{model} should be of the type str, Model, or ModelBase, got {type(model)}"
+                    )
 
                 lookup_dict = {}
 
                 if len(lookups) % 2 != 0:
                     raise ValueError(
-                        "The lookups should come in pairs of strings in the format attribute name, parameter name."
+                        "The lookups should come in pairs of strings in the format attribute name, parameter name."  # noqa: E501
                     )
 
                 for lookup, resolver_arg in zip(lookups[::2], lookups[1::2]):
                     if resolver_arg not in kwargs:
-                        raise KeyError(f"The argument {resolver_arg} was not passed in the resolver function.")
+                        raise KeyError(
+                            f"The argument {resolver_arg} was not passed in the resolver function."
+                        )
                     lookup_dict[lookup] = kwargs[resolver_arg]
 
                 obj = model.objects.get(**lookup_dict)
@@ -122,9 +130,11 @@ def has_permissions(
     obj : optional
         The requested object, by default None
     accept_global_perms : bool, optional
-        Whether global permissions are permitted, i.e. does not require object-level permission, by default False
+        Whether global permissions are permitted, i.e. does not require object-level permission,
+        by default False
     any_perm : bool, optional
-        If permission should be granted if any of the required permissions are valid, by default False
+        If permission should be granted if any of the required permissions are valid,
+        by default False
 
     Returns
     -------

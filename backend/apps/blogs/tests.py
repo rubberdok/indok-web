@@ -252,7 +252,9 @@ class BlogMutationTestCase(BlogBaseTestCase):
         try:
             BlogPost.objects.get(pk=self.blog_post_one.id)
             BlogPost.objects.get(pk=self.blog_post_two.id)
-            self.fail("Expected the blog posts in the deleted blog to also be deleted, but they were not.")
+            self.fail(
+                "Expected the blog posts in the deleted blog to also be deleted, but they were not."
+            )
         except BlogPost.DoesNotExist:
             pass
 

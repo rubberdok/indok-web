@@ -1,7 +1,17 @@
 from __future__ import annotations
 
 import warnings
-from typing import TYPE_CHECKING, Any, Literal, Optional, Sequence, Tuple, TypedDict, Union, get_args
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Literal,
+    Optional,
+    Sequence,
+    Tuple,
+    TypedDict,
+    Union,
+    get_args,
+)
 
 from django.conf import settings
 
@@ -15,7 +25,12 @@ TransactionalStream = Literal[
 ]
 BroadcastStream = Literal["event-notifications"]
 TemplateVariables = dict[
-    str, Union[dict[str, Union["TemplateVariables", str, list["TemplateVariables"]]], str, list["TemplateVariables"]]
+    str,
+    Union[
+        dict[str, Union["TemplateVariables", str, list["TemplateVariables"]]],
+        str,
+        list["TemplateVariables"],
+    ],
 ]
 
 TRANSACTIONAL_STREAMS: tuple[TransactionalStream, ...] = get_args(TransactionalStream)
@@ -66,7 +81,8 @@ class PostmarkEmail(EmailMultiAlternatives):
         stream : TransactionalStream
             The Postmark message stream
         template_id : Optional[Union[str, int]], optional
-            Either the numeric id, or the string identifier (not the same as the name) of the temlate, by default None
+            Either the numeric id, or the string identifier (not the same as the name)
+            of the template, by default None
         template_variables : Optional[TemplateVariables], optional
             User-specific variables for the Postmark template,
             a dictionary of emails and their corresponding variables, by default None
@@ -98,7 +114,9 @@ class PostmarkEmail(EmailMultiAlternatives):
             If an appropriate stream is not set
         """
         if stream not in TRANSACTIONAL_STREAMS + BROADCAST_STREAMS:
-            raise ValueError(f"Stream must be one of {TRANSACTIONAL_STREAMS}, or {BROADCAST_STREAMS}")
+            raise ValueError(
+                f"Stream must be one of {TRANSACTIONAL_STREAMS}, or {BROADCAST_STREAMS}"
+            )
 
         if template_variables is None:
             if to is not None and template_id is not None and len(to) > 1:
@@ -140,7 +158,17 @@ class PostmarkEmail(EmailMultiAlternatives):
         )
 
         super().__init__(
-            subject, body, from_email, to, bcc, connection, attachments, headers, alternatives, cc, reply_to
+            subject,
+            body,
+            from_email,
+            to,
+            bcc,
+            connection,
+            attachments,
+            headers,
+            alternatives,
+            cc,
+            reply_to,
         )
 
 
@@ -255,7 +283,8 @@ class BroadcastEmail(PostmarkEmail):
     stream : TransactionalStream
         The Postmark message stream
     template_id : Optional[Union[str, int]], optional
-        Either the numeric id, or the string identifier (not the same as the name) of the temlate, by default None
+        Either the numeric id, or the string identifier (not the same as the name) of the template,
+        by default None
     template_variables : Optional[TemplateVariables], optional
         User-specific variables for the Postmark template,
         a dictionary of emails and their corresponding variables, by default None

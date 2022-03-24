@@ -7,7 +7,9 @@ class WebsiteUser(HttpUser):
 
     def on_start(self):
         self.client.post(
-            "/graphql/", data=json.dumps({"query": "query {authToken}"}), headers={"content-type": "application/json"}
+            "/graphql/",
+            data=json.dumps({"query": "query {authToken}"}),
+            headers={"content-type": "application/json"},
         )
 
     @task
@@ -23,5 +25,7 @@ class WebsiteUser(HttpUser):
         )
 
         self.client.post(
-            "/graphql/", data=json.dumps({"query": query(1, 1)}), headers={"content-type": "application/json"}
+            "/graphql/",
+            data=json.dumps({"query": query(1, 1)}),
+            headers={"content-type": "application/json"},
         )

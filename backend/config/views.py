@@ -3,13 +3,17 @@ from sentry_sdk.api import start_transaction
 
 
 class CustomGraphQLView(GraphQLView):
-    def execute_graphql_request(self, request, data, query, variables, operation_name, show_graphiql=False):
+    def execute_graphql_request(
+        self, request, data, query, variables, operation_name, show_graphiql=False
+    ):
         """
         Enables performance tracing for GraphQL calls
         """
         backend = self.get_backend(request)
         if backend and query:
-            operation_type = backend.document_from_string(self.schema, query).get_operation_type(operation_name)
+            operation_type = backend.document_from_string(self.schema, query).get_operation_type(
+                operation_name
+            )
         else:
             operation_type = "http.server"
         with start_transaction(op=operation_type, name=operation_name):

@@ -15,7 +15,10 @@ class Migration(migrations.Migration):
             model_name="blogpost",
             name="blog",
             field=models.ForeignKey(
-                null=True, on_delete=django.db.models.deletion.CASCADE, related_name="blog_post", to="blogs.blog"
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="blog_post",
+                to="blogs.blog",
             ),
         ),
     ]

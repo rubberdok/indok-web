@@ -172,7 +172,9 @@ class VippsApi:
             "merchantInfo": {"merchantSerialNumber": self.merchant_serial_number},
             "transaction": {"transactionText": "Order cancelled by reattempt."},
         }
-        data = self._make_call("PUT", f"/ecomm/v2/payments/{order_id}/cancel", headers, json.dumps(body))
+        data = self._make_call(
+            "PUT", f"/ecomm/v2/payments/{order_id}/cancel", headers, json.dumps(body)
+        )
         return data
 
     # private methods
@@ -189,7 +191,9 @@ class VippsApi:
         token_response = self._make_call("POST", "/accessToken/get", headers)
 
         access_token = token_response["access_token"]
-        expires_on = timezone.make_aware(datetime.datetime.fromtimestamp(int(token_response["expires_on"])))
+        expires_on = timezone.make_aware(
+            datetime.datetime.fromtimestamp(int(token_response["expires_on"]))
+        )
         return access_token, expires_on
 
     @property
@@ -230,7 +234,9 @@ class VippsApi:
             },
         }
 
-    def _build_initiate_payment_request(self, order: Order, redirect: Optional[str] = None) -> InitiatePaymentBody:
+    def _build_initiate_payment_request(
+        self, order: Order, redirect: Optional[str] = None
+    ) -> InitiatePaymentBody:
         return {
             "merchantInfo": {
                 "merchantSerialNumber": self.merchant_serial_number,

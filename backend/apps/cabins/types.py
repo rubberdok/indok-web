@@ -5,7 +5,12 @@ from django.db.models import QuerySet
 from graphene_django import DjangoObjectType
 import graphene
 
-from .models import Booking as BookingModel, Cabin as CabinModel, BookingResponsible, BookingSemester
+from .models import (
+    Booking as BookingModel,
+    Cabin as CabinModel,
+    BookingResponsible,
+    BookingSemester,
+)
 
 
 class AllBookingsType(DjangoObjectType):

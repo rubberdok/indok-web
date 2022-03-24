@@ -19,15 +19,28 @@ class StandardPermissionsTestCase(TestCase):
         return super().setUp()
 
     def test_user_default_permissions(self) -> None:
-        self.assertTrue(all(self.user.has_perm(".".join(perm)) for perm in DEFAULT_INDOK_PERMISSIONS))
-        self.assertTrue(all(self.org_user.has_perm(".".join(perm)) for perm in DEFAULT_INDOK_PERMISSIONS))
+        self.assertTrue(
+            all(self.user.has_perm(".".join(perm)) for perm in DEFAULT_INDOK_PERMISSIONS)
+        )
+        self.assertTrue(
+            all(self.org_user.has_perm(".".join(perm)) for perm in DEFAULT_INDOK_PERMISSIONS)
+        )
 
     def test_organization_default_permissions(self) -> None:
-        self.assertTrue(all(self.org_user.has_perm(".".join(perm)) for perm in DEFAULT_ORGANIZATION_PERMISSIONS))
-        self.assertFalse(any(self.user.has_perm(".".join(perm)) for perm in DEFAULT_ORGANIZATION_PERMISSIONS))
+        self.assertTrue(
+            all(self.org_user.has_perm(".".join(perm)) for perm in DEFAULT_ORGANIZATION_PERMISSIONS)
+        )
+        self.assertFalse(
+            any(self.user.has_perm(".".join(perm)) for perm in DEFAULT_ORGANIZATION_PERMISSIONS)
+        )
 
     def test_non_indok_permissions(self):
-        self.assertFalse(any(self.non_indok_user.has_perm(".".join(perm)) for perm in DEFAULT_INDOK_PERMISSIONS))
+        self.assertFalse(
+            any(self.non_indok_user.has_perm(".".join(perm)) for perm in DEFAULT_INDOK_PERMISSIONS)
+        )
         self.assertTrue(
-            all(self.non_indok_user.has_perm(".".join(perm)) for perm in DEFAULT_REGISTERED_USER_PERMISSIONS)
+            all(
+                self.non_indok_user.has_perm(".".join(perm))
+                for perm in DEFAULT_REGISTERED_USER_PERMISSIONS
+            )
         )

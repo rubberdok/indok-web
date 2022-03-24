@@ -24,14 +24,20 @@ class Migration(migrations.Migration):
         ),
         migrations.AddConstraint(
             model_name="answer",
-            constraint=models.UniqueConstraint(fields=("user", "question"), name="unique_answer_to_question_per_user"),
+            constraint=models.UniqueConstraint(
+                fields=("user", "question"), name="unique_answer_to_question_per_user"
+            ),
         ),
         migrations.AddConstraint(
             model_name="answer",
-            constraint=models.CheckConstraint(check=models.Q(_negated=True, answer=""), name="answer_not_empty"),
+            constraint=models.CheckConstraint(
+                check=models.Q(_negated=True, answer=""), name="answer_not_empty"
+            ),
         ),
         migrations.AddConstraint(
             model_name="response",
-            constraint=models.UniqueConstraint(fields=("respondent", "form"), name="only_one_response_per_form"),
+            constraint=models.UniqueConstraint(
+                fields=("respondent", "form"), name="only_one_response_per_form"
+            ),
         ),
     ]

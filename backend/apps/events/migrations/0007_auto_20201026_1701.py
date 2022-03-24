@@ -15,7 +15,10 @@ class Migration(migrations.Migration):
             model_name="event",
             name="category",
             field=models.ForeignKey(
-                blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to="events.category"
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to="events.category",
             ),
         ),
     ]

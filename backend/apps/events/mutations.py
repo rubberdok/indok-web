@@ -168,7 +168,9 @@ class EventSignUp(graphene.Mutation):
                 event.allowed_grade_years,
             )
 
-        if SignUp.objects.filter(event_id=event_id, is_attending=True, user_id=info.context.user.id).exists():
+        if SignUp.objects.filter(
+            event_id=event_id, is_attending=True, user_id=info.context.user.id
+        ).exists():
             raise Exception("Du kan ikke melde deg på samme arrangement flere ganger")
 
         sign_up = SignUp()

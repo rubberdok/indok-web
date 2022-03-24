@@ -19,13 +19,20 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="Form",
             fields=[
-                ("id", models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
                 ("name", models.CharField(max_length=100)),
                 ("description", models.CharField(blank=True, default="", max_length=3000)),
                 (
                     "organization",
                     models.ForeignKey(
-                        null=True, on_delete=django.db.models.deletion.CASCADE, to="organizations.organization"
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="organizations.organization",
                     ),
                 ),
             ],
@@ -33,17 +40,26 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="Response",
             fields=[
-                ("uuid", models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
+                (
+                    "uuid",
+                    models.UUIDField(
+                        default=uuid.uuid4, editable=False, primary_key=True, serialize=False
+                    ),
+                ),
                 (
                     "status",
                     models.IntegerField(
-                        blank=True, choices=[(None, "Unknown"), (0, "Red"), (1, "Yellow"), (2, "Green")], null=True
+                        blank=True,
+                        choices=[(None, "Unknown"), (0, "Red"), (1, "Yellow"), (2, "Green")],
+                        null=True,
                     ),
                 ),
                 (
                     "form",
                     models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE, related_name="responses", to="forms.form"
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="responses",
+                        to="forms.form",
                     ),
                 ),
                 (
@@ -59,7 +75,12 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="Question",
             fields=[
-                ("id", models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
                 ("question", models.CharField(max_length=300)),
                 ("description", models.CharField(blank=True, default="", max_length=1000)),
                 ("question_type", models.CharField(default="PARAGRAPH", max_length=32)),
@@ -67,7 +88,9 @@ class Migration(migrations.Migration):
                 (
                     "form",
                     models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE, related_name="questions", to="forms.form"
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="questions",
+                        to="forms.form",
                     ),
                 ),
             ],
@@ -78,12 +101,19 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="Option",
             fields=[
-                ("id", models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
                 ("answer", models.CharField(max_length=500)),
                 (
                     "question",
                     models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE, related_name="options", to="forms.question"
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="options",
+                        to="forms.question",
                     ),
                 ),
             ],
@@ -91,7 +121,12 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="Comment",
             fields=[
-                ("uuid", models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
+                (
+                    "uuid",
+                    models.UUIDField(
+                        default=uuid.uuid4, editable=False, primary_key=True, serialize=False
+                    ),
+                ),
                 ("comment", models.CharField(max_length=2048)),
                 (
                     "owner",
@@ -104,7 +139,9 @@ class Migration(migrations.Migration):
                 (
                     "response",
                     models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE, related_name="comments", to="forms.response"
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="comments",
+                        to="forms.response",
                     ),
                 ),
             ],
@@ -117,26 +154,34 @@ class Migration(migrations.Migration):
                 (
                     "question",
                     models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE, related_name="answers", to="forms.question"
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="answers",
+                        to="forms.question",
                     ),
                 ),
                 (
                     "response",
                     models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE, related_name="answers", to="forms.response"
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="answers",
+                        to="forms.response",
                     ),
                 ),
                 (
                     "user",
                     models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE, related_name="answers", to=settings.AUTH_USER_MODEL
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="answers",
+                        to=settings.AUTH_USER_MODEL,
                     ),
                 ),
             ],
         ),
         migrations.AddConstraint(
             model_name="response",
-            constraint=models.UniqueConstraint(fields=("respondent", "form"), name="forms.only_one_response_per_form"),
+            constraint=models.UniqueConstraint(
+                fields=("respondent", "form"), name="forms.only_one_response_per_form"
+            ),
         ),
         migrations.AddConstraint(
             model_name="answer",
@@ -146,6 +191,8 @@ class Migration(migrations.Migration):
         ),
         migrations.AddConstraint(
             model_name="answer",
-            constraint=models.CheckConstraint(check=models.Q(_negated=True, answer=""), name="forms.answer_not_empty"),
+            constraint=models.CheckConstraint(
+                check=models.Q(_negated=True, answer=""), name="forms.answer_not_empty"
+            ),
         ),
     ]

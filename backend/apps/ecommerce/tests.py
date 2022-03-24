@@ -11,7 +11,9 @@ from utils.testing.factories.users import IndokUserFactory, StaffUserFactory
 
 from apps.ecommerce.models import Order, Product
 
-PAYMENT_STATUS_PATH = lambda mutation: f"apps.ecommerce.mutations.{mutation}.vipps_api.get_payment_status"  # noqa
+PAYMENT_STATUS_PATH = (
+    lambda mutation: f"apps.ecommerce.mutations.{mutation}.vipps_api.get_payment_status"
+)  # noqa
 CANCEL_TRANSACTION_PATH = "apps.ecommerce.mutations.InitiateOrder.vipps_api.cancel_transaction"
 INITIATE_PAYMENT_PATH = "apps.ecommerce.mutations.InitiateOrder.vipps_api.initiate_payment"
 CAPTURE_PAYMENT_PATH = "apps.ecommerce.mutations.AttemptCapturePayment.vipps_api.capture_payment"
@@ -223,15 +225,21 @@ class EcommerceMutationsTestCase(EcommerceBaseTestCase):
         get_payment_status_mock.return_value = ("BlaBla", True)
 
         # Scenario 1: Requesting more than available is not allowed
-        response = self.query(self.INITIATE_ORDER_MUTATION(self.total_quantity + 1), user=self.indok_user)
+        response = self.query(
+            self.INITIATE_ORDER_MUTATION(self.total_quantity + 1), user=self.indok_user
+        )
         self.assertResponseHasErrors(response)
 
         # Scenario 2: Requesting more than one user can buy is not allowed
-        response = self.query(self.INITIATE_ORDER_MUTATION(self.max_buyable_quantity + 1), user=self.indok_user)
+        response = self.query(
+            self.INITIATE_ORDER_MUTATION(self.max_buyable_quantity + 1), user=self.indok_user
+        )
         self.assertResponseHasErrors(response)
 
         # Max is 2 per user so should be allowed to buy this
-        response = self.query(self.INITIATE_ORDER_MUTATION(self.max_buyable_quantity), user=self.indok_user)
+        response = self.query(
+            self.INITIATE_ORDER_MUTATION(self.max_buyable_quantity), user=self.indok_user
+        )
         self.assertResponseNoErrors(response)
 
         data = json.loads(response.content)["data"]
@@ -242,14 +250,18 @@ class EcommerceMutationsTestCase(EcommerceBaseTestCase):
     def test_initate_after_reserved_callback(self, initiate_payment_mock: MagicMock):
         unique_user = IndokUserFactory()
         initiate_payment_mock.return_value = "mock"
-        response = self.query(self.INITIATE_ORDER_MUTATION(self.max_buyable_quantity), user=unique_user)
+        response = self.query(
+            self.INITIATE_ORDER_MUTATION(self.max_buyable_quantity), user=unique_user
+        )
         self.assertResponseNoErrors(response)
         order: Order = Order.objects.get(user=unique_user)
         # callback from Vipps sets the order to RESERVED
         order.payment_status = order.PaymentStatus.RESERVED
         order.save()
 
-        response = self.query(self.INITIATE_ORDER_MUTATION(self.max_buyable_quantity), user=unique_user)
+        response = self.query(
+            self.INITIATE_ORDER_MUTATION(self.max_buyable_quantity), user=unique_user
+        )
         self.assertResponseHasErrors(response)
 
     @patch(PAYMENT_STATUS_PATH("InitiateOrder"))
@@ -283,16 +295,21 @@ class EcommerceMutationsTestCase(EcommerceBaseTestCase):
         user: Optional[IndokUserFactory] = None,
     ):
         """
-        If an order is INITIATED in the DB and Vipps status returns RESERVE, it should be captured and set to CAPTURED.
+        If an order is INITIATED in the DB and Vipps status returns RESERVE,
+        it should be captured and set to CAPTURED.
         """
         get_payment_status_mock.return_value = ("RESERVE", True)
-        response = self.query(self.ATTEMPT_CAPTURE_PAYMENT_MUTATION(self.initiated_order.id), user=user)
+        response = self.query(
+            self.ATTEMPT_CAPTURE_PAYMENT_MUTATION(self.initiated_order.id), user=user
+        )
         data = json.loads(response.content)["data"]
         self.assertResponseNoErrors(response)
         # Reserved orders are immediately tried to captured:
         self.assertEqual(data["attemptCapturePayment"]["status"], "CAPTURED")
         self.assertEqual(capture_payment_mock.call_args.kwargs["method"], "polling")
-        self.assertEqual(capture_payment_mock.call_args.args[0].product, self.initiated_order.product)
+        self.assertEqual(
+            capture_payment_mock.call_args.args[0].product, self.initiated_order.product
+        )
 
     def test_unauthenticated_user_attempt_capture_order(self) -> None:
         # Unauthenticated users should be able to capture orders
@@ -310,15 +327,19 @@ class EcommerceMutationsTestCase(EcommerceBaseTestCase):
     def do_attempt_capture_cancelled_order_test(
         self, get_payment_status_mock: MagicMock, user: Optional[IndokUserFactory] = None
     ):
-        # If an order is INITIATED in the DB and Vipps status returns CANCEL, it should be set to CANCELLED in the DB
+        # If an order is INITIATED in the DB and Vipps status returns CANCEL,
+        # it should be set to CANCELLED in the DB
         get_payment_status_mock.return_value = ("CANCEL", True)
-        response = self.query(self.ATTEMPT_CAPTURE_PAYMENT_MUTATION(self.initiated_order.id), user=user)
+        response = self.query(
+            self.ATTEMPT_CAPTURE_PAYMENT_MUTATION(self.initiated_order.id), user=user
+        )
         data = json.loads(response.content)["data"]
         self.assertResponseNoErrors(response)
         self.assertEqual(data["attemptCapturePayment"]["status"], "CANCELLED")
 
     def test_unauthenticated_user_attempt_capture_cancelled_order(self) -> None:
-        # Unauthenticated users should be able to update cancelled orders from INITIATED -> CANCELLED
+        # Unauthenticated users should be able to update cancelled orders
+        # from INITIATED -> CANCELLED
         self.do_attempt_capture_cancelled_order_test(user=None)
 
     def test_unauthorized_user_attempt_capture_cancelled_order(self) -> None:
