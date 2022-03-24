@@ -12,13 +12,13 @@ factory-boy==3.2.1
 graphene==2.1.8
 graphene-django==2.15.0
 gunicorn==20.0.4
-phonenumbers==8.12.19
+phonenumbers==8.12.45
 promise==2.3
 psycopg2-binary==2.9.3
 WeasyPrint==54.2
 PyJWT==1.7.1
 cryptography==36.0.1
-google-api-python-client==2.23.0
+google-api-python-client==2.42.0
 oauth2client==4.1.3
 pandas==1.4.0
 pillow>=8.1.1
