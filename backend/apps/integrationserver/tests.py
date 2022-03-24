@@ -1,8 +1,18 @@
-from utils.testing.base import ExtendedGraphQLTestCase
+from django.test import TestCase
+from django.test.utils import override_settings
+
 from utils.testing.factories.users import IndokUserFactory
 
 
-class IntegrationServerTestCase(ExtendedGraphQLTestCase):
+@override_settings(ROOT_URLCONF="config.urls.production")
+class ProductionServerTestCase(TestCase):
+    def test_cypress_disallowed(self):
+        response = self.client.get("/test-session/")
+        self.assertEqual(response.status_code, 404)
+
+
+@override_settings(ROOT_URLCONF="config.urls.test")
+class IntegrationServerTestCase(TestCase):
     def setUp(self) -> None:
         super().setUp()
         self.indok_user = IndokUserFactory(
@@ -19,11 +29,5 @@ class IntegrationServerTestCase(ExtendedGraphQLTestCase):
         )
 
     def test_cypress_allowed(self):
-        with self.settings(URL_ROOTCONF="config.urls.test"):
-            response = self.client.get("/test-session/")
-            self.assertEqual(response.status_code, 200)
-
-    def test_cypress_disallowed(self):
-        with self.settings(URL_ROOTCONF="config.urls.production"):
-            response = self.client.get("/test-session/")
-            self.assertEqual(response.status_code, 404)
+        response = self.client.get("/test-session/")
+        self.assertEqual(response.status_code, 200)
