@@ -1,8 +1,13 @@
 import datetime
+from typing import Callable
+
+from django.db.models.base import Model
+from apps.organizations.models import Organization
 
 import graphene
 from django.utils.text import slugify
-from graphql_jwt.decorators import login_required, permission_required
+from graphql_jwt.decorators import login_required
+from utils.decorators import permission_required
 
 from .models import Listing
 from .types import ListingType
@@ -28,6 +33,10 @@ class CreateListingInput(BaseListingInput):
     deadline = graphene.DateTime(required=True)
 
 
+def create_object_getter(model: Model, input_data_arg: str, id_arg: str) -> Callable:
+    return lambda *_, **kwargs: model.objects.get(pk=kwargs[input_data_arg][id_arg])
+
+
 class CreateListing(graphene.Mutation):
     """
     Creates a new listing
@@ -40,7 +49,9 @@ class CreateListing(graphene.Mutation):
         listing_data = CreateListingInput(required=True)
 
     @login_required
-    @permission_required("listings.add_listing")
+    @permission_required(
+        "organizations.add_listing", fn=create_object_getter(Organization, "listing_data", "organization_id")
+    )
     def mutate(self, info, listing_data):
         listing = Listing()
 
