@@ -22,6 +22,7 @@ promise==2.3
 psycopg2-binary==2.9.3
 PyJWT==1.7.1
 PyYAML==6.0
+typing-extensions==4.1.1
 WeasyPrint==54.2
 whitenoise==6.0.0
 XlsxWriter==3.0.3
