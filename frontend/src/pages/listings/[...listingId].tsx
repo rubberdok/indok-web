@@ -74,7 +74,9 @@ const ListingPage: NextPage = () => {
         <Layout>
           <Head>
             <title>{`${data.listing.title} | Foreningen for Studenter ved Industriell Økonomi og Teknologiledelse`}</title>
-            {data.listing.heroImageUrl && <meta property="og:image" content={data.listing.heroImageUrl} key="image" />}
+            {data.listing.heroImageUrl && (
+              <meta property="og:image" content={data.listing.heroImageUrl} key="image" />
+            )}
             <meta
               property="og:title"
               content={`${data.listing.title} | Foreningen for Studenter ved Industriell Økonomi og Teknologiledelse`}
@@ -96,7 +98,14 @@ const ListingPage: NextPage = () => {
                 spacing={4}
                 className={classes.root}
               >
-                <Grid container item direction="row" alignItems="stretch" justifyContent="center" spacing={4}>
+                <Grid
+                  container
+                  item
+                  direction="row"
+                  alignItems="stretch"
+                  justifyContent="center"
+                  spacing={4}
+                >
                   <Hidden smDown>
                     <Grid item xs={4}>
                       <InfoCard listing={data.listing} />

@@ -38,7 +38,9 @@ const AdminPage: NextPage = () => {
   const theme = useTheme();
   const { data, refetch } = useQuery<{
     adminAllBookings: BookingFromQuery[];
-  }>(QUERY_ADMIN_ALL_BOOKINGS, { variables: { after: dayjs().subtract(1, "day").format("YYYY-MM-DD") } });
+  }>(QUERY_ADMIN_ALL_BOOKINGS, {
+    variables: { after: dayjs().subtract(1, "day").format("YYYY-MM-DD") },
+  });
 
   const [tabValue, setTabValue] = useState<number>(0);
   const router = useRouter();
@@ -47,8 +49,12 @@ const AdminPage: NextPage = () => {
 
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const classes = useStyles();
-  const accepted = data?.adminAllBookings.filter((booking) => !booking.isTentative && !booking.isDeclined);
-  const declined = data?.adminAllBookings.filter((booking) => !booking.isTentative && booking.isDeclined);
+  const accepted = data?.adminAllBookings.filter(
+    (booking) => !booking.isTentative && !booking.isDeclined
+  );
+  const declined = data?.adminAllBookings.filter(
+    (booking) => !booking.isTentative && booking.isDeclined
+  );
   const tentative = data?.adminAllBookings.filter((booking) => booking.isTentative);
 
   return (

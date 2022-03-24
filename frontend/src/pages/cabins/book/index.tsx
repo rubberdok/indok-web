@@ -1,7 +1,13 @@
 import { useMutation, useQuery } from "@apollo/client";
 import ContractDialog from "@components/pages/cabins/Popup/ContractDialog";
 import { QUERY_CABINS } from "@graphql/cabins/queries";
-import { Cabin, ContactInfo, ContactInfoValidations, DatePick, ModalData } from "@interfaces/cabins";
+import {
+  Cabin,
+  ContactInfo,
+  ContactInfoValidations,
+  DatePick,
+  ModalData,
+} from "@interfaces/cabins";
 import {
   Box,
   Grid,
@@ -119,7 +125,12 @@ const CabinBookingPage: NextPage = () => {
         });
         createBooking({
           variables: {
-            bookingData: generateEmailAndBookingInput(contactInfo, datePick, chosenCabins, extraInfo),
+            bookingData: generateEmailAndBookingInput(
+              contactInfo,
+              datePick,
+              chosenCabins,
+              extraInfo
+            ),
           },
         });
       }
@@ -176,7 +187,13 @@ const CabinBookingPage: NextPage = () => {
           setActiveStep={setActiveStep}
         />
         <Box m={getMargin()}>
-          <Grid container direction="column" justifyContent="center" alignItems="stretch" spacing={1}>
+          <Grid
+            container
+            direction="column"
+            justifyContent="center"
+            alignItems="stretch"
+            spacing={1}
+          >
             <Grid item>
               {isMobile ? (
                 <Typography variant="h4" align="center">

@@ -27,7 +27,9 @@ const FormPage: NextPage = () => {
           <Container>
             <Grid container direction="row" style={{ marginTop: 16 }} justifyContent="center">
               <Grid item>
-                <Typography variant="subtitle1">Du må være logget inn for å se dette, sender deg til login.</Typography>
+                <Typography variant="subtitle1">
+                  Du må være logget inn for å se dette, sender deg til login.
+                </Typography>
               </Grid>
               <Grid item>
                 <CircularProgress />

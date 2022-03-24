@@ -22,7 +22,15 @@ import {
   useTheme,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { ArrowRight, ContactMail, Edit, ErrorOutline, KeyboardBackspace, List, Warning } from "@material-ui/icons";
+import {
+  ArrowRight,
+  ContactMail,
+  Edit,
+  ErrorOutline,
+  KeyboardBackspace,
+  List,
+  Warning,
+} from "@material-ui/icons";
 import CategoryIcon from "@material-ui/icons/Category";
 import CreditCard from "@material-ui/icons/CreditCard";
 import EventIcon from "@material-ui/icons/Event";
@@ -92,7 +100,9 @@ interface Props {
 
 interface AlertProps {
   open: boolean;
-  onClose: ((event: React.SyntheticEvent<any, globalThis.Event>, reason: SnackbarCloseReason) => void) | undefined;
+  onClose:
+    | ((event: React.SyntheticEvent<any, globalThis.Event>, reason: SnackbarCloseReason) => void)
+    | undefined;
   severity: "success" | "info" | "warning" | "error";
   children: string | undefined;
 }
@@ -187,7 +197,9 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
     eventSignUp({ variables: { eventId: eventId.toString(), data: extraInformation } })
       .then(() => {
         refetchEventData({ eventId: eventId.toString() }).then((res) => {
-          res.data.event.userAttendance?.isSignedUp ? setOpenSignUpSnackbar(true) : setOpenOnWaitingListSnackbar(true);
+          res.data.event.userAttendance?.isSignedUp
+            ? setOpenSignUpSnackbar(true)
+            : setOpenOnWaitingListSnackbar(true);
         });
       })
       .catch(() => {
@@ -197,7 +209,9 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
 
   return (
     <>
-      {openEditEvent && <EditEvent open={openEditEvent} onClose={() => setOpenEditEvent(false)} event={event} />}
+      {openEditEvent && (
+        <EditEvent open={openEditEvent} onClose={() => setOpenEditEvent(false)} event={event} />
+      )}
       <Box width="100%" py={6} bgcolor={theme.palette.background.paper} pb={10}>
         <Container>
           <Link href="/events" passHref>
@@ -221,12 +235,14 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
           ) : (
             <>
               <PermissionRequired permission="events.add_signup">
-                {!user.phoneNumber && !event.userAttendance?.isSignedUp && !event.userAttendance?.isOnWaitingList && (
-                  <Typography variant="body1" color="error" className={classes.wrapIcon}>
-                    <Warning fontSize="small" />
-                    Du må oppgi et telefonnummer på brukeren din for å kunne melde deg på
-                  </Typography>
-                )}
+                {!user.phoneNumber &&
+                  !event.userAttendance?.isSignedUp &&
+                  !event.userAttendance?.isOnWaitingList && (
+                    <Typography variant="body1" color="error" className={classes.wrapIcon}>
+                      <Warning fontSize="small" />
+                      Du må oppgi et telefonnummer på brukeren din for å kunne melde deg på
+                    </Typography>
+                  )}
 
                 {event.hasExtraInformation &&
                   !event.userAttendance?.isSignedUp &&
@@ -274,7 +290,12 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
                       href={`/ecommerce/checkout?productId=${event.product.id}&quantity=1&redirect=${router.asPath}`}
                       passHref
                     >
-                      <Button size="large" variant="contained" color={"primary"} className={classes.payButton}>
+                      <Button
+                        size="large"
+                        variant="contained"
+                        color={"primary"}
+                        className={classes.payButton}
+                      >
                         Gå til betaling
                       </Button>
                     </Link>
@@ -282,7 +303,9 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
               </PermissionRequired>
             </>
           )}
-          {user?.organizations.map((organization) => organization.id).includes(event.organization.id) && (
+          {user?.organizations
+            .map((organization) => organization.id)
+            .includes(event.organization.id) && (
             <div>
               <Button
                 variant="contained"
@@ -348,7 +371,9 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
                     <Grid item xs={12}>
                       <Typography variant="body1" className={classes.wrapIcon}>
                         <ContactMail fontSize="small" />
-                        <MuiLink href={`mailto:${event.contactEmail}`}>{event.contactEmail}</MuiLink>
+                        <MuiLink href={`mailto:${event.contactEmail}`}>
+                          {event.contactEmail}
+                        </MuiLink>
                       </Typography>
                     </Grid>
                   )}
@@ -371,7 +396,8 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
                     <Grid item xs={12}>
                       <Typography variant="overline">Slutter</Typography>
                       <Typography variant="body1" className={classes.wrapIcon}>
-                        <EventIcon fontSize="small" /> {dayjs(event.endTime).format("DD.MMM YYYY, kl. HH:mm")}
+                        <EventIcon fontSize="small" />{" "}
+                        {dayjs(event.endTime).format("DD.MMM YYYY, kl. HH:mm")}
                       </Typography>
                     </Grid>
                   )}
@@ -409,27 +435,51 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
         </Grid>
       </Container>
       {/* Alerts */}
-      <Alert severity="error" open={openSignUpErrorSnackbar} onClose={() => setOpenSignUpErrorSnackbar(false)}>
+      <Alert
+        severity="error"
+        open={openSignUpErrorSnackbar}
+        onClose={() => setOpenSignUpErrorSnackbar(false)}
+      >
         {signUpError ? signUpError.message : "Påmelding feilet"}
       </Alert>
 
-      <Alert open={openSignOffErrorSnackbar} severity="error" onClose={() => setOpenSignUpErrorSnackbar(false)}>
+      <Alert
+        open={openSignOffErrorSnackbar}
+        severity="error"
+        onClose={() => setOpenSignUpErrorSnackbar(false)}
+      >
         Avmelding feilet
       </Alert>
 
-      <Alert severity="info" open={openSignOffSnackbar} onClose={() => setOpenSignOffSnackbar(false)}>
+      <Alert
+        severity="info"
+        open={openSignOffSnackbar}
+        onClose={() => setOpenSignOffSnackbar(false)}
+      >
         Du er nå avmeldt
       </Alert>
 
-      <Alert severity="success" open={openSignUpSnackbar} onClose={() => setOpenSignUpSnackbar(false)}>
+      <Alert
+        severity="success"
+        open={openSignUpSnackbar}
+        onClose={() => setOpenSignUpSnackbar(false)}
+      >
         Du er nå påmeldt
       </Alert>
 
-      <Alert severity="info" open={openOnWaitingListSnackbar} onClose={() => setOpenOnWaitingListSnackbar(false)}>
+      <Alert
+        severity="info"
+        open={openOnWaitingListSnackbar}
+        onClose={() => setOpenOnWaitingListSnackbar(false)}
+      >
         Du er på ventelisten
       </Alert>
 
-      <Alert severity="info" open={openOffWaitingListSnackbar} onClose={() => setOpenOffWaitingListSnackbar(false)}>
+      <Alert
+        severity="info"
+        open={openOffWaitingListSnackbar}
+        onClose={() => setOpenOffWaitingListSnackbar(false)}
+      >
         Du er ikke lenger på ventelisten
       </Alert>
     </>

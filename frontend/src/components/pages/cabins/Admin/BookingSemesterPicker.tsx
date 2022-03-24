@@ -31,7 +31,8 @@ export type BookingSemester = {
 };
 
 const BookingSemesterPicker: React.VFC = () => {
-  const [updateBookingSemester] = useMutation<{ semesterData: BookingSemester }>(UPDATE_BOOKING_SEMESTER);
+  const [updateBookingSemester] =
+    useMutation<{ semesterData: BookingSemester }>(UPDATE_BOOKING_SEMESTER);
   const handleErrorDialogClose = () => router.push("/");
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
@@ -71,7 +72,11 @@ const BookingSemesterPicker: React.VFC = () => {
       ) : (
         <>
           <ErrorDialog error={error} handleErrorDialogClose={handleErrorDialogClose} />
-          <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={() => setOpenSnackbar(false)}>
+          <Snackbar
+            open={openSnackbar}
+            autoHideDuration={6000}
+            onClose={() => setOpenSnackbar(false)}
+          >
             <Alert severity={alertSeverity}>{snackbarMessage}</Alert>
           </Snackbar>
           <Grid container spacing={6} direction="row">
@@ -87,7 +92,9 @@ const BookingSemesterPicker: React.VFC = () => {
                     shrink: true,
                   }}
                   value={bookingSemester?.fallStartDate}
-                  onChange={(e) => setBookingSemester({ ...bookingSemester, fallStartDate: e.target.value })}
+                  onChange={(e) =>
+                    setBookingSemester({ ...bookingSemester, fallStartDate: e.target.value })
+                  }
                 />
               </Grid>
               <Grid item>
@@ -98,7 +105,9 @@ const BookingSemesterPicker: React.VFC = () => {
                     shrink: true,
                   }}
                   value={bookingSemester?.fallEndDate}
-                  onChange={(e) => setBookingSemester({ ...bookingSemester, fallEndDate: e.target.value })}
+                  onChange={(e) =>
+                    setBookingSemester({ ...bookingSemester, fallEndDate: e.target.value })
+                  }
                 />
               </Grid>
               <Grid item>
@@ -109,7 +118,10 @@ const BookingSemesterPicker: React.VFC = () => {
                         color="primary"
                         checked={bookingSemester.fallSemesterActive}
                         onChange={(e) =>
-                          setBookingSemester({ ...bookingSemester, fallSemesterActive: e.target.checked })
+                          setBookingSemester({
+                            ...bookingSemester,
+                            fallSemesterActive: e.target.checked,
+                          })
                         }
                       />
                     }
@@ -131,7 +143,9 @@ const BookingSemesterPicker: React.VFC = () => {
                     shrink: true,
                   }}
                   value={bookingSemester?.springStartDate}
-                  onChange={(e) => setBookingSemester({ ...bookingSemester, springStartDate: e.target.value })}
+                  onChange={(e) =>
+                    setBookingSemester({ ...bookingSemester, springStartDate: e.target.value })
+                  }
                 />
               </Grid>
               <Grid item>
@@ -142,7 +156,9 @@ const BookingSemesterPicker: React.VFC = () => {
                     shrink: true,
                   }}
                   value={bookingSemester?.springEndDate}
-                  onChange={(e) => setBookingSemester({ ...bookingSemester, springEndDate: e.target.value })}
+                  onChange={(e) =>
+                    setBookingSemester({ ...bookingSemester, springEndDate: e.target.value })
+                  }
                 />
               </Grid>
               <Grid item>
@@ -153,7 +169,10 @@ const BookingSemesterPicker: React.VFC = () => {
                         color="primary"
                         checked={bookingSemester.springSemesterActive}
                         onChange={(e) =>
-                          setBookingSemester({ ...bookingSemester, springSemesterActive: e.target.checked })
+                          setBookingSemester({
+                            ...bookingSemester,
+                            springSemesterActive: e.target.checked,
+                          })
                         }
                       />
                     }

@@ -89,8 +89,16 @@ const CreateEvent: React.FC = () => {
     },
   });
 
-  const { loading: categoryLoading, error: categoryError, data: categoryData } = useQuery(GET_CATEGORIES);
-  const { loading: userLoading, error: userError, data: userData } = useQuery<{ user: User }>(GET_USER);
+  const {
+    loading: categoryLoading,
+    error: categoryError,
+    data: categoryData,
+  } = useQuery(GET_CATEGORIES);
+  const {
+    loading: userLoading,
+    error: userError,
+    data: userData,
+  } = useQuery<{ user: User }>(GET_USER);
 
   if (categoryLoading || userLoading) return <CircularProgress />;
   if (categoryError || userError) return <Typography>Det oppstod en feil.</Typography>;
@@ -228,7 +236,9 @@ const CreateEvent: React.FC = () => {
             <TextField
               type="number"
               value={eventData.availableSlots}
-              onChange={(e) => setEventData({ ...eventData, availableSlots: e.currentTarget.value })}
+              onChange={(e) =>
+                setEventData({ ...eventData, availableSlots: e.currentTarget.value })
+              }
               disabled={!eventData.isAttendable}
             />
           </Tooltip>
@@ -269,7 +279,9 @@ const CreateEvent: React.FC = () => {
             label="Kort beskrivelse"
             placeholder="Beskrivelse"
             value={eventData.shortDescription}
-            onChange={(e) => setEventData({ ...eventData, shortDescription: e.currentTarget.value })}
+            onChange={(e) =>
+              setEventData({ ...eventData, shortDescription: e.currentTarget.value })
+            }
           />
           <FormHelperText>Beskrivelsen blir vist i listen av arrangementer</FormHelperText>
         </Grid>
@@ -327,7 +339,9 @@ const CreateEvent: React.FC = () => {
               control={
                 <Checkbox
                   checked={eventData.bindingSignup}
-                  onChange={(e) => setEventData({ ...eventData, bindingSignup: e.currentTarget.checked })}
+                  onChange={(e) =>
+                    setEventData({ ...eventData, bindingSignup: e.currentTarget.checked })
+                  }
                   name="bindingSignup"
                   color="primary"
                   disableRipple
@@ -337,7 +351,9 @@ const CreateEvent: React.FC = () => {
               label="Bindende påmelding"
             />
           </Tooltip>
-          <FormHelperText>Gjør det umulig å melde seg av (kan fortsatt melde av venteliste)</FormHelperText>
+          <FormHelperText>
+            Gjør det umulig å melde seg av (kan fortsatt melde av venteliste)
+          </FormHelperText>
         </Grid>
         <Grid item xs={12}>
           <Tooltip
@@ -349,7 +365,9 @@ const CreateEvent: React.FC = () => {
               control={
                 <Checkbox
                   checked={eventData.hasExtraInformation}
-                  onChange={(e) => setEventData({ ...eventData, hasExtraInformation: e.currentTarget.checked })}
+                  onChange={(e) =>
+                    setEventData({ ...eventData, hasExtraInformation: e.currentTarget.checked })
+                  }
                   name="hasExtraInformation"
                   color="primary"
                   disableRipple
@@ -359,7 +377,9 @@ const CreateEvent: React.FC = () => {
               label="Utfylling av ekstrainformasjon"
             />
           </Tooltip>
-          <FormHelperText>Krev utfylling av en boks med ekstrainformasjon for påmelding</FormHelperText>
+          <FormHelperText>
+            Krev utfylling av en boks med ekstrainformasjon for påmelding
+          </FormHelperText>
         </Grid>
         <Grid item xs={6}>
           <InputLabel>Påmelding åpner</InputLabel>
@@ -371,7 +391,9 @@ const CreateEvent: React.FC = () => {
             <TextField
               type="datetime-local"
               value={eventData.signupOpenDate}
-              onChange={(e) => setEventData({ ...eventData, signupOpenDate: e.currentTarget.value })}
+              onChange={(e) =>
+                setEventData({ ...eventData, signupOpenDate: e.currentTarget.value })
+              }
               disabled={!eventData.isAttendable}
             />
           </Tooltip>
@@ -414,7 +436,9 @@ const CreateEvent: React.FC = () => {
         </Grid>
         <Grid item xs={7}>
           {createEventLoading && <CircularProgress />}
-          {createEventError && <Typography color="error">Feil: {createEventError.message}</Typography>}
+          {createEventError && (
+            <Typography color="error">Feil: {createEventError.message}</Typography>
+          )}
         </Grid>
       </Grid>
       <CardActions>

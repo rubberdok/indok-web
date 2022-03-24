@@ -1,6 +1,15 @@
 import TabPanel from "@components/pages/about/TabPanel";
 import Template from "@components/pages/about/Template";
-import { Box, Card, CardActionArea, CardMedia, makeStyles, Tab, Tabs, Typography } from "@material-ui/core";
+import {
+  Box,
+  Card,
+  CardActionArea,
+  CardMedia,
+  makeStyles,
+  Tab,
+  Tabs,
+  Typography,
+} from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import { getSortedPosts } from "@utils/posts";
 import { GetStaticProps, NextPage } from "next";
@@ -102,24 +111,34 @@ const OrganizationPage: NextPage<Props> = ({ posts }) => {
       <br />
 
       <TabPanel value={value} index={1}>
-        Indøk Kultur er paraplyforeningen for alle kulturaktiviteter på Indøk, og innbefatter Indøkrevyen, Mannskoret
-        Klingende Mynt, et Indøk-band (Bandøk), et ølbryggerlag (Indøl) samt en veldedig organisasjon (IVI).
+        Indøk Kultur er paraplyforeningen for alle kulturaktiviteter på Indøk, og innbefatter
+        Indøkrevyen, Mannskoret Klingende Mynt, et Indøk-band (Bandøk), et ølbryggerlag (Indøl) samt
+        en veldedig organisasjon (IVI).
       </TabPanel>
       <TabPanel value={value} index={2}>
         <Typography>
-          Fra en sped start som Janus FK i 2006, har foreningen vokst til å forene godt over hundre sporty og engasjerte
-          studenter under én felles paraply, med et bredt spekter av idretter. Tilbudet blir stadig bredere, og ønsker
-          og idéer til nye lag og idretter tas alltid imot med åpne armer!
+          Fra en sped start som Janus FK i 2006, har foreningen vokst til å forene godt over hundre
+          sporty og engasjerte studenter under én felles paraply, med et bredt spekter av idretter.
+          Tilbudet blir stadig bredere, og ønsker og idéer til nye lag og idretter tas alltid imot
+          med åpne armer!
         </Typography>
       </TabPanel>
 
       <Grid container spacing={2}>
         {posts
-          .filter((post) => (router.query.category != undefined ? post.frontmatter.tag == router.query.category : post))
+          .filter((post) =>
+            router.query.category != undefined
+              ? post.frontmatter.tag == router.query.category
+              : post
+          )
           .map(({ frontmatter: { title, logo }, slug }: Props) => (
             <Grid key={slug} item xs={12} sm={6} md={4}>
               <Card>
-                <Link href={"/about/organizations/[slug]"} as={`/about/organizations/${slug}`} passHref>
+                <Link
+                  href={"/about/organizations/[slug]"}
+                  as={`/about/organizations/${slug}`}
+                  passHref
+                >
                   <CardActionArea className={classes.card}>
                     {logo ? <CardMedia className={classes.media} image={logo} /> : ""}
                     <Box>

@@ -1,4 +1,6 @@
-export const suggestNames = (name: string): { suggestedFirstName: string; suggestedLastName: string } => {
+export const suggestNames = (
+  name: string
+): { suggestedFirstName: string; suggestedLastName: string } => {
   const names = name.split(" ");
   if (names.length === 1) return { suggestedFirstName: name, suggestedLastName: "" };
   return {

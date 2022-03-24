@@ -1,6 +1,16 @@
 import Layout from "@components/Layout";
 import * as markdownComponents from "@components/markdown/components";
-import { Box, Card, Chip, Container, Divider, Grid, makeStyles, Paper, Typography } from "@material-ui/core";
+import {
+  Box,
+  Card,
+  Chip,
+  Container,
+  Divider,
+  Grid,
+  makeStyles,
+  Paper,
+  Typography,
+} from "@material-ui/core";
 import MailOutlineIcon from "@material-ui/icons/MailOutline";
 import PhoneIcon from "@material-ui/icons/Phone";
 import { getPostBySlug, getPostsSlugs } from "@utils/posts";
@@ -83,7 +93,14 @@ const Article: NextPage<ArticleProps> = ({ post, frontmatter }) => {
         <Grid justifyContent="center" container>
           <Grid item xs={10}>
             <Paper className={classes.heroCard}>
-              <Box mb="56px" py="40px" px="56px" display="flex" alignItems="center" justifyContent="space-between">
+              <Box
+                mb="56px"
+                py="40px"
+                px="56px"
+                display="flex"
+                alignItems="center"
+                justifyContent="space-between"
+              >
                 <Typography variant="h4">{frontmatter.title}</Typography>
                 <img className={classes.logo} alt={frontmatter.alt} src={frontmatter.logo}></img>
               </Box>
@@ -117,7 +134,9 @@ const Article: NextPage<ArticleProps> = ({ post, frontmatter }) => {
                           </Link>
                         )}
                         {member.mail && member.phoneNumber && <br />}
-                        {member.phoneNumber && <Chip size="small" label={member.phoneNumber} icon={<PhoneIcon />} />}
+                        {member.phoneNumber && (
+                          <Chip size="small" label={member.phoneNumber} icon={<PhoneIcon />} />
+                        )}
                       </Box>
                     </Card>
                   </>

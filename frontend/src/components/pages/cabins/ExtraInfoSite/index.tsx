@@ -24,13 +24,16 @@ const ExtraInfoSite: React.VFC<Props> = ({ setExtraInfo, datePick, chosenCabins 
       <Grid item container justifyContent="space-evenly" alignItems="stretch">
         <Grid item>
           <Typography variant="body1">
-            På neste side sender du søknad om å booke {toStringChosenCabins(chosenCabins)} fra {fromDate} til {toDate}.
+            På neste side sender du søknad om å booke {toStringChosenCabins(chosenCabins)} fra{" "}
+            {fromDate} til {toDate}.
           </Typography>
           <Typography variant="body1">
-            Hyttestyret får en e-post med søknaden din, og hvis de godkjenner bookingen sender de en faktura.
+            Hyttestyret får en e-post med søknaden din, og hvis de godkjenner bookingen sender de en
+            faktura.
           </Typography>
           <Typography variant="body1">
-            Har du noen spørsmål? Da kan du skrive de inn nedenfor, så sendes de sammen med søknaden din.
+            Har du noen spørsmål? Da kan du skrive de inn nedenfor, så sendes de sammen med søknaden
+            din.
           </Typography>
         </Grid>
         <Grid container>

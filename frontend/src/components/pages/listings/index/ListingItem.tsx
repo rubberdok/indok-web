@@ -124,7 +124,8 @@ const ListingItem: React.FC<{
               className={classes.logo}
               alt="Foreningslogo"
               onError={(e) => (
-                ((e.target as HTMLImageElement).onerror = null), ((e.target as HTMLImageElement).src = "/nth.svg")
+                ((e.target as HTMLImageElement).onerror = null),
+                ((e.target as HTMLImageElement).src = "/nth.svg")
               )}
             />
             <Box px={3} display="flex" flexDirection="column" justifyContent="space-between">
@@ -144,7 +145,13 @@ const ListingItem: React.FC<{
                   {listing.description}
                 </ReactMarkdown>
               </Box>
-              <Grid container direction="row" justifyContent="center" alignItems="center" spacing={2}>
+              <Grid
+                container
+                direction="row"
+                justifyContent="center"
+                alignItems="center"
+                spacing={2}
+              >
                 {listing.chips.map((chip) => (
                   <Grid item key={chip}>
                     <Chip

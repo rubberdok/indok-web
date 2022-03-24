@@ -24,7 +24,10 @@ const AnswerForm: React.FC<{
   // state to manage the user's answers before submitting
   const [questions, setQuestions] = useState<Questions>(
     Object.fromEntries(
-      form.questions.map((question) => [question.id, { question: question, answer: question.answer?.answer || "" }])
+      form.questions.map((question) => [
+        question.id,
+        { question: question, answer: question.answer?.answer || "" },
+      ])
     )
   );
 
@@ -77,7 +80,10 @@ const AnswerForm: React.FC<{
                     question={question}
                     answer={answer}
                     onValueChanged={(value) =>
-                      setQuestions((prevState) => ({ ...prevState, [id]: { ...prevState[id], answer: value } }))
+                      setQuestions((prevState) => ({
+                        ...prevState,
+                        [id]: { ...prevState[id], answer: value },
+                      }))
                     }
                   />
                 </Grid>

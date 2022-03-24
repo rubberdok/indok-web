@@ -28,7 +28,15 @@ const ContactInfo: React.VFC<Props> = ({ name, position, email, image }) => {
   return (
     <Grid container direction="column" justifyContent="center" alignItems="center">
       <Grid item container direction="row" justifyContent="center" className={classes.img}>
-        {image && <Image src={image} placeholder="blur" layout="fill" objectPosition="center" objectFit="cover" />}
+        {image && (
+          <Image
+            src={image}
+            placeholder="blur"
+            layout="fill"
+            objectPosition="center"
+            objectFit="cover"
+          />
+        )}
       </Grid>
       <Grid item md>
         <Typography variant="subtitle2">{nameAndPosition}</Typography>

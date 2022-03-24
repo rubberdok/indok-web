@@ -7,7 +7,18 @@ import { LISTING_RESPONSES } from "@graphql/listings/queries";
 import { LISTING_RESPONSES_FRAGMENT } from "@graphql/listings/fragments";
 import Link from "next/link";
 import Layout from "@components/Layout";
-import { makeStyles, Grid, Tabs, Tab, Container, Card, CardContent, Button, Typography, Box } from "@material-ui/core";
+import {
+  makeStyles,
+  Grid,
+  Tabs,
+  Tab,
+  Container,
+  Card,
+  CardContent,
+  Button,
+  Typography,
+  Box,
+} from "@material-ui/core";
 import { useState } from "react";
 import FormResponse from "@components/forms/formAdmin/FormResponse";
 import OrganizationListing from "@components/pages/listings/organization/OrganizationListing";
@@ -168,7 +179,11 @@ const ListingAdminPage: NextPage = () => {
                   </Grid>
                 </Grid>
               ) : (
-                <>{data.listing.form && <FormResponse response={selectedView} form={data.listing.form} />}</>
+                <>
+                  {data.listing.form && (
+                    <FormResponse response={selectedView} form={data.listing.form} />
+                  )}
+                </>
               )}
             </Grid>
           )}

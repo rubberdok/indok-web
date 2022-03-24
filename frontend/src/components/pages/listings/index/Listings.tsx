@@ -30,7 +30,14 @@ const Listings: React.FC<{
 
   // if the data is fetched, renders a ListingItem for each listing
   return (
-    <Grid container direction="row" spacing={2} className={classes.root} justifyContent="center" alignItems="stretch">
+    <Grid
+      container
+      direction="row"
+      spacing={2}
+      className={classes.root}
+      justifyContent="center"
+      alignItems="stretch"
+    >
       {loading && (
         <Grid item>
           <CircularProgress color="primary" />
@@ -45,7 +52,8 @@ const Listings: React.FC<{
           </Grid>
           <Grid item>
             <Typography variant="caption" align="center">
-              Skjer dette ofte? Send en mail til <Link href="mailto:contact@rubberdok.no">contact@rubberdok.no</Link>.
+              Skjer dette ofte? Send en mail til{" "}
+              <Link href="mailto:contact@rubberdok.no">contact@rubberdok.no</Link>.
             </Typography>
           </Grid>
           <Grid item>

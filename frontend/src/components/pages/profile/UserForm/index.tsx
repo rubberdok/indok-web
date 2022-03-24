@@ -204,10 +204,13 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": 
                     {formik.touched.graduationYear && formik.errors.graduationYear}
                   </FormHelperText>
                 )}
-                {data?.user?.canUpdateYear && <FormHelperText>Kan bare endres én gang i året.</FormHelperText>}
+                {data?.user?.canUpdateYear && (
+                  <FormHelperText>Kan bare endres én gang i året.</FormHelperText>
+                )}
                 {!data?.user?.canUpdateYear && (
                   <FormHelperText>
-                    Kan ikke endres før: {dayjs(data?.user?.yearUpdatedAt).add(1, "year").format("DD.MM.YYYY")}
+                    Kan ikke endres før:{" "}
+                    {dayjs(data?.user?.yearUpdatedAt).add(1, "year").format("DD.MM.YYYY")}
                   </FormHelperText>
                 )}
               </FormControl>
@@ -233,7 +236,9 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": 
                 />
               </Grid>
               <Grid item>
-                <Typography variant="body1">{isVegetarian(formik.values.allergies) && "💚"}</Typography>
+                <Typography variant="body1">
+                  {isVegetarian(formik.values.allergies) && "💚"}
+                </Typography>
               </Grid>
             </Grid>
           </Grid>
@@ -247,7 +252,12 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": 
                 </Grid>
               )}
               <Grid item>
-                <Button variant="contained" color="primary" type="submit" data-test-id={`${ID_PREFIX}saveButton`}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  type="submit"
+                  data-test-id={`${ID_PREFIX}saveButton`}
+                >
                   {kind === "register" ? "Fullfør registrering" : "Lagre"}
                 </Button>
               </Grid>

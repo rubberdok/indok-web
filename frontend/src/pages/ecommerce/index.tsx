@@ -90,7 +90,9 @@ const OrdersPage: NextPage = () => {
                             <TableHead>
                               <TableRow>
                                 {orderFields.map((field) => (
-                                  <TableCell key={`user-header-${field.header}`}>{field.header}</TableCell>
+                                  <TableCell key={`user-header-${field.header}`}>
+                                    {field.header}
+                                  </TableCell>
                                 ))}
                               </TableRow>
                             </TableHead>

@@ -53,12 +53,20 @@ const StepComponent: React.FC<Props> = (props) => {
     case 2:
       // Extra info site
       return (
-        <ExtraInfoSite setExtraInfo={props.setExtraInfo} chosenCabins={props.chosenCabins} datePick={props.datePick} />
+        <ExtraInfoSite
+          setExtraInfo={props.setExtraInfo}
+          chosenCabins={props.chosenCabins}
+          datePick={props.datePick}
+        />
       );
     case 3:
       // Payment
       return (
-        <PaymentSite chosenCabins={props.chosenCabins} datePick={props.datePick} contactInfo={props.contactInfo} />
+        <PaymentSite
+          chosenCabins={props.chosenCabins}
+          datePick={props.datePick}
+          contactInfo={props.contactInfo}
+        />
       );
     case 4:
       // Receipt

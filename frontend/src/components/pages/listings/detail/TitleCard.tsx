@@ -48,7 +48,13 @@ const TitleCard: React.FC<{
             </Typography>
           </Grid>
           <Grid item>
-            <Typography variant="caption" component="h3" align="center" className={classes.deadline} gutterBottom>
+            <Typography
+              variant="caption"
+              component="h3"
+              align="center"
+              className={classes.deadline}
+              gutterBottom
+            >
               {dayjs(listing.deadline).format("DD. MMMM YYYY [kl.] HH:mm")}
             </Typography>
           </Grid>

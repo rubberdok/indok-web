@@ -82,14 +82,15 @@ const BoardPage: NextPage = () => {
       "
     >
       <Typography variant="body1" paragraph>
-        Hovedstyret består av et valgt lederpar, instituttilittsvalgt ved IØT, samt leder for hver av linjeforeningene
-        Janus, Bindeleddet, ESTIEM, Hyttestyret, Janus IF og Indøk Kultur.
+        Hovedstyret består av et valgt lederpar, instituttilittsvalgt ved IØT, samt leder for hver
+        av linjeforeningene Janus, Bindeleddet, ESTIEM, Hyttestyret, Janus IF og Indøk Kultur.
       </Typography>
       <Typography variant="body1" paragraph>
-        Hovedstyrets fremste oppgave er å sørge for god kommunikasjon og samarbeid mellom de ulike studentinitiativene,
-        og forvalte og disponere Indøks midler på en forsvarlig måte. Hovedstyret er ansvarlig for å forberede og
-        avholde generalforsamling for studentene ved Indøk. Generalforsamlingen er Foreningens øverste organ og er
-        studentenes mulighet til å direkte påvirke budsjetter og avgjørelser som blir fattet på linjen.
+        Hovedstyrets fremste oppgave er å sørge for god kommunikasjon og samarbeid mellom de ulike
+        studentinitiativene, og forvalte og disponere Indøks midler på en forsvarlig måte.
+        Hovedstyret er ansvarlig for å forberede og avholde generalforsamling for studentene ved
+        Indøk. Generalforsamlingen er Foreningens øverste organ og er studentenes mulighet til å
+        direkte påvirke budsjetter og avgjørelser som blir fattet på linjen.
       </Typography>
       <Typography variant="h3" gutterBottom>
         Medlemmer

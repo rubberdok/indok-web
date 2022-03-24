@@ -28,8 +28,8 @@ const LandingListings: React.FC = () => {
             <Typography variant="h2">Delta i et fantastisk studentmiljø.</Typography>
             <br />
             <Typography variant="body1">
-              Vi har foreninger som tar seg av det meste, og man finner en forening for enhver som har lyst til å
-              engasjere seg!
+              Vi har foreninger som tar seg av det meste, og man finner en forening for enhver som
+              har lyst til å engasjere seg!
             </Typography>
             <br />
             <Link href="/listings" passHref>
@@ -38,8 +38,19 @@ const LandingListings: React.FC = () => {
               </Button>
             </Link>
           </Box>
-          <Box ml={isMobile ? 0 : 20} mt={isMobile ? 10 : 0} width="100%" height={350} position="relative">
-            <Image layout="fill" src="/img/gang.jpg" alt="indøkstudenter" objectFit={isMobile ? "cover" : "none"} />
+          <Box
+            ml={isMobile ? 0 : 20}
+            mt={isMobile ? 10 : 0}
+            width="100%"
+            height={350}
+            position="relative"
+          >
+            <Image
+              layout="fill"
+              src="/img/gang.jpg"
+              alt="indøkstudenter"
+              objectFit={isMobile ? "cover" : "none"}
+            />
           </Box>
         </Box>
       </Container>

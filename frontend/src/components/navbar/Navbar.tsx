@@ -119,7 +119,12 @@ const Navbar: React.FC = () => {
                 <NavbarUser loggedIn={loggedIn} username={data?.user?.firstName} />
               </div>
               <div className={classes.sectionMobile}>
-                <IconButton onClick={() => setOpenDrawer(true)} edge="start" color="inherit" aria-label="menu">
+                <IconButton
+                  onClick={() => setOpenDrawer(true)}
+                  edge="start"
+                  color="inherit"
+                  aria-label="menu"
+                >
                   <MenuIcon />
                 </IconButton>
               </div>

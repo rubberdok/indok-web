@@ -20,7 +20,10 @@ const App = ({ Component, pageProps, err }: AppPropsWithError): JSX.Element => {
     }
   }, []);
 
-  const responsiveTheme = responsiveFontSizes(theme, { breakpoints: ["sm", "md", "lg", "xl"], factor: 2 });
+  const responsiveTheme = responsiveFontSizes(theme, {
+    breakpoints: ["sm", "md", "lg", "xl"],
+    factor: 2,
+  });
 
   return (
     <ApolloProvider client={apolloClient}>

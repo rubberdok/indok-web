@@ -48,7 +48,11 @@ const LandingAnnouncement: React.FC = () => {
         <Grid container spacing={isMobile ? 4 : 10} className={classes.cardGrid}>
           <Grid item md={2}>
             <Box width={150} height={150} position="relative">
-              <Image alt="jubileum logo" layout="fill" src="/static/anniversary/anniversary_logo.svg" />
+              <Image
+                alt="jubileum logo"
+                layout="fill"
+                src="/static/anniversary/anniversary_logo.svg"
+              />
             </Box>
           </Grid>
           <Grid item>
@@ -64,7 +68,12 @@ const LandingAnnouncement: React.FC = () => {
           <Grid item>
             <div>
               <Link href="/events" passHref>
-                <Button variant="contained" size="large" fullWidth={isMobile} style={{ backgroundColor: "#a3bbac" }}>
+                <Button
+                  variant="contained"
+                  size="large"
+                  fullWidth={isMobile}
+                  style={{ backgroundColor: "#a3bbac" }}
+                >
                   Se arrangementer
                 </Button>
               </Link>

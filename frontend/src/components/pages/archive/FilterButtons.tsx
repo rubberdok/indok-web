@@ -1,5 +1,8 @@
 import { Checkbox, FormControlLabel, Typography } from "@material-ui/core";
-import { CheckBox as CheckBoxIcon, CheckBoxOutlineBlank as CheckBoxOutlineBlankIcon } from "@material-ui/icons";
+import {
+  CheckBox as CheckBoxIcon,
+  CheckBoxOutlineBlank as CheckBoxOutlineBlankIcon,
+} from "@material-ui/icons";
 import React from "react";
 
 interface FilterButtonProps {

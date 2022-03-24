@@ -27,7 +27,9 @@ const DateTimeFilter: React.FC<Props> = ({ filters, onFiltersChange }) => {
           margin="normal"
           value={filters?.startTime?.split("T")[0] ?? ""}
           InputLabelProps={{ shrink: true }}
-          onChange={(e) => onFiltersChange({ ...filters, startTime: `${e.currentTarget.value}T00:00` })}
+          onChange={(e) =>
+            onFiltersChange({ ...filters, startTime: `${e.currentTarget.value}T00:00` })
+          }
         />
       </ListItem>
       <ListItem>
@@ -38,7 +40,9 @@ const DateTimeFilter: React.FC<Props> = ({ filters, onFiltersChange }) => {
           fullWidth
           value={filters?.endTime?.split("T")[0] ?? ""}
           InputLabelProps={{ shrink: true }}
-          onChange={(e) => onFiltersChange({ ...filters, endTime: `${e.currentTarget.value}T00:00` })}
+          onChange={(e) =>
+            onFiltersChange({ ...filters, endTime: `${e.currentTarget.value}T00:00` })
+          }
         />
       </ListItem>
     </>

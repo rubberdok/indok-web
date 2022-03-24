@@ -48,20 +48,28 @@ const NewListing: React.FC<{
    * Load the organizations to which the user belongs.
    * @todo Currently assumes the user belongs to an organization, which must be the case, yet this should allow for dynamically setting the default organization.
    */
-  const { loading, error, data } = useQuery<{ user: { organizations: Organization[] } }>(USER_WITH_ORGANIZATIONS, {
-    onCompleted: (data) =>
-      setListing({
-        ...listing,
-        organization:
-          data.user.organizations.find((organization) => organization.id === defaultOrganizationId) ||
-          data.user.organizations[0],
-      }),
-  });
+  const { loading, error, data } = useQuery<{ user: { organizations: Organization[] } }>(
+    USER_WITH_ORGANIZATIONS,
+    {
+      onCompleted: (data) =>
+        setListing({
+          ...listing,
+          organization:
+            data.user.organizations.find(
+              (organization) => organization.id === defaultOrganizationId
+            ) || data.user.organizations[0],
+        }),
+    }
+  );
 
   // Create the listing, navigate to the newly created listing upon completion.
-  const [createListing] = useMutation<{ createListing: { ok: boolean; listing: Listing } }>(CREATE_LISTING, {
-    onCompleted: (data) => router.push(`/orgs/${listing.organization.id}/listings/${data.createListing.listing.id}`),
-  });
+  const [createListing] = useMutation<{ createListing: { ok: boolean; listing: Listing } }>(
+    CREATE_LISTING,
+    {
+      onCompleted: (data) =>
+        router.push(`/orgs/${listing.organization.id}/listings/${data.createListing.listing.id}`),
+    }
+  );
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error...</p>;

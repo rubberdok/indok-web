@@ -19,10 +19,18 @@ type Props = {
   fallbackRedirect: string | undefined;
 };
 
-const PayWithVipps: React.FC<Props> = ({ productId, quantity, onError, disabled, fallbackRedirect }) => {
+const PayWithVipps: React.FC<Props> = ({
+  productId,
+  quantity,
+  onError,
+  disabled,
+  fallbackRedirect,
+}) => {
   const [initiateOrder, { error }] = useMutation(INITIATE_ORDER, {
     onCompleted: (data) =>
-      router.push(data.initiateOrder.redirect || `/ecommerce/fallback?orderId=${data.initiateOrder.orderId}`),
+      router.push(
+        data.initiateOrder.redirect || `/ecommerce/fallback?orderId=${data.initiateOrder.orderId}`
+      ),
     onError: onError,
   });
 

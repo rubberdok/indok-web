@@ -50,7 +50,12 @@ const InfoCard: React.FC<{
             </Typography>
           </Grid>
           <Grid item>
-            <Typography variant="caption" align="center" component="span" className={classes.descriptionText}>
+            <Typography
+              variant="caption"
+              align="center"
+              component="span"
+              className={classes.descriptionText}
+            >
               {listing.organization?.description}
             </Typography>
           </Grid>

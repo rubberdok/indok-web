@@ -13,10 +13,13 @@ const OrganizationDetailPage: NextPage = () => {
   const { orgId } = router.query;
   const orgNumberId = parseInt(orgId as string);
 
-  const { data, loading, error } = useQuery<{ organization: Organization }, { orgId: number }>(GET_ORGANIZATION, {
-    variables: { orgId: orgNumberId },
-    skip: Number.isNaN(orgNumberId),
-  });
+  const { data, loading, error } = useQuery<{ organization: Organization }, { orgId: number }>(
+    GET_ORGANIZATION,
+    {
+      variables: { orgId: orgNumberId },
+      skip: Number.isNaN(orgNumberId),
+    }
+  );
 
   if (error) return <p>Error</p>;
   if (loading) return <CircularProgress />;
@@ -30,9 +33,13 @@ const OrganizationDetailPage: NextPage = () => {
               <Grid item>
                 <Typography variant="h1">{data.organization.name}</Typography>
               </Grid>
-              <Grid item>{data.organization.events && <OrgEvents organization={data.organization} />}</Grid>
               <Grid item>
-                {data.organization.listings && <OrganizationListings organization={data.organization} />}
+                {data.organization.events && <OrgEvents organization={data.organization} />}
+              </Grid>
+              <Grid item>
+                {data.organization.listings && (
+                  <OrganizationListings organization={data.organization} />
+                )}
               </Grid>
             </Grid>
           </>

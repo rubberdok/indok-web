@@ -10,7 +10,11 @@ function s2ab(s: string) {
   return buf;
 }
 
-export const promptDownloadFromPayload = (payload: { filename: string; data: string; contentType: string }): void => {
+export const promptDownloadFromPayload = (payload: {
+  filename: string;
+  data: string;
+  contentType: string;
+}): void => {
   let blob;
   if (payload.contentType == XLSX_CONTENT_TYPE) {
     blob = new Blob([s2ab(atob(payload.data))], { type: payload.contentType });

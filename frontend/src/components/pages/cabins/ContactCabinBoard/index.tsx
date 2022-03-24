@@ -5,7 +5,8 @@ import { Grid, Link, Typography } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 
 const ContactCabinBoard: React.FC = () => {
-  const { data } = useQuery<{ activeBookingResponsible: BookingResponsible }>(QUERY_BOOKING_RESPONSIBLE);
+  const { data } =
+    useQuery<{ activeBookingResponsible: BookingResponsible }>(QUERY_BOOKING_RESPONSIBLE);
   const [responsible, setResponsible] = useState<BookingResponsible>();
 
   useEffect(() => {
@@ -16,15 +17,23 @@ const ContactCabinBoard: React.FC = () => {
 
   if (responsible) {
     return (
-      <Grid item container spacing={4} direction="column" justifyContent="center" alignContent="center">
+      <Grid
+        item
+        container
+        spacing={4}
+        direction="column"
+        justifyContent="center"
+        alignContent="center"
+      >
         <Grid item>
           <Typography variant="h3">Kontakt Hyttestyret</Typography>
         </Grid>
         <Grid item>
           <Typography>
-            Send mail til bookingansvarlig i Hyttestyret, {responsible.firstName} {responsible.lastName}, her:{" "}
-            <Link href={`mailto:${responsible.email}`}>{responsible.email}</Link>. Du kan lese mer om Hyttestyret{" "}
-            <Link href="/about/organizations/hyttestyret">her.</Link>
+            Send mail til bookingansvarlig i Hyttestyret, {responsible.firstName}{" "}
+            {responsible.lastName}, her:{" "}
+            <Link href={`mailto:${responsible.email}`}>{responsible.email}</Link>. Du kan lese mer
+            om Hyttestyret <Link href="/about/organizations/hyttestyret">her.</Link>
           </Typography>
         </Grid>
       </Grid>

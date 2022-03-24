@@ -34,7 +34,15 @@ const Title: React.FC<Props> = ({ children }) => {
       style={{ overflow: "hidden" }}
     >
       <Grid container direction="row" justifyContent="center" alignItems="center">
-        <Grid container item direction="column" alignItems="flex-start" justifyContent="center" md={8} xs={10}>
+        <Grid
+          container
+          item
+          direction="column"
+          alignItems="flex-start"
+          justifyContent="center"
+          md={8}
+          xs={10}
+        >
           <Grid item>
             <Typography variant="h1" gutterBottom>
               {children}

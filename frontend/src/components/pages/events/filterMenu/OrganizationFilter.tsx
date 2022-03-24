@@ -28,14 +28,24 @@ interface Props {
  * - classes: styled classes
  */
 
-const OrganizationFilter: React.FC<Props> = ({ filters, onFiltersChange, organizations, classes }) => {
+const OrganizationFilter: React.FC<Props> = ({
+  filters,
+  onFiltersChange,
+  organizations,
+  classes,
+}) => {
   const [open, setOpen] = useState(false);
 
   return (
     <>
       <ListItem button onClick={() => setOpen(!open)} selected={open}>
         <ListItemText primary={"Arrangert av"} />
-        <Badge className={classes.badge} badgeContent={1} color="primary" invisible={!filters.organization} />
+        <Badge
+          className={classes.badge}
+          badgeContent={1}
+          color="primary"
+          invisible={!filters.organization}
+        />
         {open ? <ExpandLess /> : <ExpandMore />}
       </ListItem>
 

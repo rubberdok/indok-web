@@ -77,7 +77,8 @@ const EventAdminPage: NextPage = () => {
     skip: Number.isNaN(eventNumberID),
   });
 
-  const [adminEventSignOff, { loading: signOffLoading, error: signOffError }] = useMutation(ADMIN_EVENT_SIGN_OFF);
+  const [adminEventSignOff, { loading: signOffLoading, error: signOffError }] =
+    useMutation(ADMIN_EVENT_SIGN_OFF);
 
   const [openEditEvent, setOpenEditEvent] = useState(false);
   const [openSignOffErrorSnackbar, setOpenSignOffErrorSnackbar] = useState(false);
@@ -137,7 +138,11 @@ const EventAdminPage: NextPage = () => {
       {data?.event ? (
         <Box m={10}>
           {openEditEvent && (
-            <EditEvent open={openEditEvent} onClose={() => setOpenEditEvent(false)} event={data.event} />
+            <EditEvent
+              open={openEditEvent}
+              onClose={() => setOpenEditEvent(false)}
+              event={data.event}
+            />
           )}
           <Grid container direction="column" spacing={4}>
             <Grid item>
@@ -163,7 +168,9 @@ const EventAdminPage: NextPage = () => {
                         renderInfo(
                           headerPair.header,
                           data.event[headerPair.field]
-                            ? dayjs(data.event[headerPair.field] as string).format("HH:mm DD-MM-YYYY")
+                            ? dayjs(data.event[headerPair.field] as string).format(
+                                "HH:mm DD-MM-YYYY"
+                              )
                             : ""
                         )
                       )}
@@ -175,7 +182,11 @@ const EventAdminPage: NextPage = () => {
                 <Card variant="outlined">
                   <CardHeader title="Påmeldte" />
                   <CardActions>
-                    {eventId ? <EmailForm eventId={eventId} /> : <CircularProgress color="primary" />}
+                    {eventId ? (
+                      <EmailForm eventId={eventId} />
+                    ) : (
+                      <CircularProgress color="primary" />
+                    )}
                     <AttendeeExport eventId={eventNumberID} />
                   </CardActions>
                   <CardContent>
@@ -185,7 +196,9 @@ const EventAdminPage: NextPage = () => {
                           <TableHead>
                             <TableRow>
                               {signUpFields.map((field) => (
-                                <TableCell key={`user-header-${field.header}`}>{field.header}</TableCell>
+                                <TableCell key={`user-header-${field.header}`}>
+                                  {field.header}
+                                </TableCell>
                               ))}
                               {data.event.product && <TableCell>Betalt?</TableCell>}
                               <TableCell key={`user-header-delete`} />
@@ -201,7 +214,11 @@ const EventAdminPage: NextPage = () => {
                                 ))}
                                 {data.event.product && (
                                   <TableCell>
-                                    {signUp.hasBoughtTicket ? <Check color="primary" /> : <Close color="error" />}
+                                    {signUp.hasBoughtTicket ? (
+                                      <Check color="primary" />
+                                    ) : (
+                                      <Close color="error" />
+                                    )}
                                   </TableCell>
                                 )}
                                 <TableCell>
@@ -241,7 +258,9 @@ const EventAdminPage: NextPage = () => {
                           <TableHead>
                             <TableRow>
                               {signUpFields.map((field) => (
-                                <TableCell key={`user-header-${field.header}`}>{field.header}</TableCell>
+                                <TableCell key={`user-header-${field.header}`}>
+                                  {field.header}
+                                </TableCell>
                               ))}
                             </TableRow>
                           </TableHead>

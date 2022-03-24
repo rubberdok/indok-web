@@ -21,11 +21,14 @@ const AuthCallbackPage: NextPage = () => {
   const theme = useTheme();
 
   const { code, state } = router.query;
-  const [authUser, { loading, data, error, called }] = useMutation<{ authUser: AuthUser }>(AUTHENTICATE, {
-    errorPolicy: "all",
-    refetchQueries: ["user"],
-    awaitRefetchQueries: true,
-  });
+  const [authUser, { loading, data, error, called }] = useMutation<{ authUser: AuthUser }>(
+    AUTHENTICATE,
+    {
+      errorPolicy: "all",
+      refetchQueries: ["user"],
+      awaitRefetchQueries: true,
+    }
+  );
 
   useEffect(() => {
     if (code) authUser({ variables: { code } });

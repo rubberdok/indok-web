@@ -10,7 +10,14 @@ export type Product = {
   maxBuyableQuantity: number;
 };
 
-export type PaymentStatus = "INITIATED" | "RESERVED" | "CAPTURED" | "CANCELLED" | "REFUNDED" | "FAILED" | "REJECTED";
+export type PaymentStatus =
+  | "INITIATED"
+  | "RESERVED"
+  | "CAPTURED"
+  | "CANCELLED"
+  | "REFUNDED"
+  | "FAILED"
+  | "REJECTED";
 
 export type Order = {
   id: string;

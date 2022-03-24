@@ -58,8 +58,8 @@ const CabinsPage: NextPage = () => {
       icon: <Image alt="" src="/img/undraw_bus_stop.svg" width={200} height={200} />,
       text: (
         <Typography component="span">
-          Kom deg til Oppdal med <Link href="https://www.atb.no/buss-regioner/">AtB Region</Link> eller{" "}
-          <Link href="https://www.lavprisekspressen.no/">Lavprisekspressen</Link>.
+          Kom deg til Oppdal med <Link href="https://www.atb.no/buss-regioner/">AtB Region</Link>{" "}
+          eller <Link href="https://www.lavprisekspressen.no/">Lavprisekspressen</Link>.
         </Typography>
       ),
     },
@@ -67,8 +67,8 @@ const CabinsPage: NextPage = () => {
       icon: <Image alt="" src="/img/undraw_off_road.svg" width={200} height={200} />,
       text: (
         <Typography component="span">
-          <Link href="https://www.sixt.no/">Sixt</Link>: pris ca. 1200,- for en helg, ekskl. bensin. Kjøretiden er ca.
-          to timer.
+          <Link href="https://www.sixt.no/">Sixt</Link>: pris ca. 1200,- for en helg, ekskl. bensin.
+          Kjøretiden er ca. to timer.
         </Typography>
       ),
     },
@@ -85,7 +85,8 @@ const CabinsPage: NextPage = () => {
       text: (
         <Typography component="span">
           Taxi fra togstasjonen til hyttene tar 5-10 min.{" "}
-          <Link href="https://www.visitnorway.no/listings/oppdal-taxi/203941/">Taxi Oppdal</Link>, tlf: 72 42 12 05.
+          <Link href="https://www.visitnorway.no/listings/oppdal-taxi/203941/">Taxi Oppdal</Link>,
+          tlf: 72 42 12 05.
         </Typography>
       ),
     },
@@ -123,13 +124,16 @@ const CabinsPage: NextPage = () => {
                       <Typography variant="h3">Indøkhyttene - Oksen og Bjørnen</Typography>
                       <Divider component="br" />
                       <Typography variant="body2">
-                        De to identiske nabohyttene ligger idyllisk til, kun et steinkast unna Stølen alpinsenter i
-                        Oppdal. Hyttene har flere bruksområder; alt fra strategiske samlinger og egne arrangementer til
-                        sosiale, spontane venneturer. Det er en gyllen mulighet til å få en liten pause fra det travle
-                        bylivet. Indøks egne Hyttestyre arrangerer flere forskjellige turer i løpet av året. Dette er en
-                        flott mulighet til både å bli kjent med hyttene, området rundt hyttene, og å bli kjent med andre
-                        indøkere på tvers av klassetrinnene. Hyttestyret har det daglige ansvaret for drift og utbedring
-                        av Indøkhyttene, organisering av utleie og felles hytteturer. Du kan lese mer om Hyttestyret
+                        De to identiske nabohyttene ligger idyllisk til, kun et steinkast unna
+                        Stølen alpinsenter i Oppdal. Hyttene har flere bruksområder; alt fra
+                        strategiske samlinger og egne arrangementer til sosiale, spontane
+                        venneturer. Det er en gyllen mulighet til å få en liten pause fra det travle
+                        bylivet. Indøks egne Hyttestyre arrangerer flere forskjellige turer i løpet
+                        av året. Dette er en flott mulighet til både å bli kjent med hyttene,
+                        området rundt hyttene, og å bli kjent med andre indøkere på tvers av
+                        klassetrinnene. Hyttestyret har det daglige ansvaret for drift og utbedring
+                        av Indøkhyttene, organisering av utleie og felles hytteturer. Du kan lese
+                        mer om Hyttestyret
                         <Link href="/about/organizations/hyttestyret"> her.</Link>
                       </Typography>
                     </Grid>
@@ -141,20 +145,29 @@ const CabinsPage: NextPage = () => {
                       <Typography variant="h3">Hyttenes standard</Typography>
                       <Divider component="br" />
                       <Typography variant="body2">
-                        Med sine to etasjer, er Bjørnen og Oksen estimert til å romme 18 personer per hytte. Den
-                        generelle standarden er tilnærmet lik et vanlig bolighus. Begge hyttene har innlagt strøm og
-                        vann. I første etasje finner du to bad, hvorav ett med badstue, og tre soverom med tre til fire
-                        sengeplasser per rom. I andre etasje ligger stue, kjøkken og et fjerde soverom med sengeplass
-                        til tre. Dette gir totalt fjorten sengeplasser på hver hytte og ekstramadrasser til de
-                        resterende 4 det er estimert med. Dyner og puter til 18 gjester ligger tilgjengelig, men laken
-                        og sengetøy må medbringes. Kjøkkenet er utstyrt med det mest nødvendige av hvitevarer, i tillegg
-                        til kaffetrakter, vannkoker og vaffeljern m.m. Basiskrydder og olje til steking skal også være
-                        tilgjengelig. På hyttene ligger det et bredt utvalg brettspill, samt kortstokker. I stua står
-                        det anlegg med AUX-kabel.
+                        Med sine to etasjer, er Bjørnen og Oksen estimert til å romme 18 personer
+                        per hytte. Den generelle standarden er tilnærmet lik et vanlig bolighus.
+                        Begge hyttene har innlagt strøm og vann. I første etasje finner du to bad,
+                        hvorav ett med badstue, og tre soverom med tre til fire sengeplasser per
+                        rom. I andre etasje ligger stue, kjøkken og et fjerde soverom med sengeplass
+                        til tre. Dette gir totalt fjorten sengeplasser på hver hytte og
+                        ekstramadrasser til de resterende 4 det er estimert med. Dyner og puter til
+                        18 gjester ligger tilgjengelig, men laken og sengetøy må medbringes.
+                        Kjøkkenet er utstyrt med det mest nødvendige av hvitevarer, i tillegg til
+                        kaffetrakter, vannkoker og vaffeljern m.m. Basiskrydder og olje til steking
+                        skal også være tilgjengelig. På hyttene ligger det et bredt utvalg
+                        brettspill, samt kortstokker. I stua står det anlegg med AUX-kabel.
                       </Typography>
                     </Grid>
 
-                    <Grid item container xs={12} sm={6} justifyContent="center" alignContent="center">
+                    <Grid
+                      item
+                      container
+                      xs={12}
+                      sm={6}
+                      justifyContent="center"
+                      alignContent="center"
+                    >
                       <Box width="90%">
                         <ImageSlider imageData={cabinImages} displayLabelText={false} />
                       </Box>
@@ -190,19 +203,29 @@ const CabinsPage: NextPage = () => {
                     <Typography variant="h3">Aktiviteter</Typography>
                     <Divider component="br" />
                     <Typography variant="body2">
-                      <b>Sommer</b>: I løpet av sommerhalvåret kan man delta på moskusturer, sykkelturer, fjellturer,
-                      rafting, golf, fallskjermhopping, jakt og fiske, rideturer, paintball og mye annet.
+                      <b>Sommer</b>: I løpet av sommerhalvåret kan man delta på moskusturer,
+                      sykkelturer, fjellturer, rafting, golf, fallskjermhopping, jakt og fiske,
+                      rideturer, paintball og mye annet.
                     </Typography>
                     <Divider component="br" />
                     <Typography variant="body2">
-                      <b>Vinter</b>: I løpet av vinterhalvåret er det hovedsakelig alpint og langrenn som står i
-                      sentrum. Det alpine skiområdet er blant de største i Norge med 14 blå, 10 grønne, 10 røde og 5
-                      svarte løyper, og normal skisesong er fra 15. november – 1. mai. Forholdene for langrenn er også
-                      gode med hele fem løyper som begynner ved Stølen, alt fra 1,5 km – 15 km løyper. Se{" "}
-                      <Link href="https://oppdal.com/forside/hoved/">Visit Oppdal</Link> for mer info.
+                      <b>Vinter</b>: I løpet av vinterhalvåret er det hovedsakelig alpint og
+                      langrenn som står i sentrum. Det alpine skiområdet er blant de største i Norge
+                      med 14 blå, 10 grønne, 10 røde og 5 svarte løyper, og normal skisesong er fra
+                      15. november – 1. mai. Forholdene for langrenn er også gode med hele fem
+                      løyper som begynner ved Stølen, alt fra 1,5 km – 15 km løyper. Se{" "}
+                      <Link href="https://oppdal.com/forside/hoved/">Visit Oppdal</Link> for mer
+                      info.
                     </Typography>
                   </Grid>
-                  <Grid item container spacing={10} direction="row" justifyContent="center" alignContent="center">
+                  <Grid
+                    item
+                    container
+                    spacing={10}
+                    direction="row"
+                    justifyContent="center"
+                    alignContent="center"
+                  >
                     <Grid item>
                       <Typography variant="h3">FAQ</Typography>
                     </Grid>
@@ -210,7 +233,14 @@ const CabinsPage: NextPage = () => {
                       <FAQ />
                     </Grid>
                   </Grid>
-                  <Grid item container spacing={10} direction="row" justifyContent="center" alignContent="center">
+                  <Grid
+                    item
+                    container
+                    spacing={10}
+                    direction="row"
+                    justifyContent="center"
+                    alignContent="center"
+                  >
                     <ContactCabinBoard />
                   </Grid>
                 </Grid>

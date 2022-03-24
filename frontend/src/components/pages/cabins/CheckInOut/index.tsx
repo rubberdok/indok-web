@@ -1,7 +1,16 @@
 import Calendar from "@components/Calendar";
 import useDisabledDates from "@hooks/cabins/useDisabledDates";
 import { Cabin, DatePick } from "@interfaces/cabins";
-import { Checkbox, List, ListItem, Grid, Typography, Divider, useMediaQuery, useTheme } from "@material-ui/core";
+import {
+  Checkbox,
+  List,
+  ListItem,
+  Grid,
+  Typography,
+  Divider,
+  useMediaQuery,
+  useTheme,
+} from "@material-ui/core";
 import { NextPage } from "next";
 import React from "react";
 
@@ -18,7 +27,11 @@ const CheckInOut: NextPage<Props> = ({ allCabins, chosenCabins, setChosenCabins,
   const { disabledDates } = useDisabledDates(chosenCabins);
   const isMobile = useMediaQuery(useTheme().breakpoints.down("sm"));
 
-  const handleRangeChange = (fromDate: string | undefined, toDate: string | undefined, validRange: boolean) => {
+  const handleRangeChange = (
+    fromDate: string | undefined,
+    toDate: string | undefined,
+    validRange: boolean
+  ) => {
     setDatePick({
       checkInDate: fromDate,
       checkOutDate: toDate,
@@ -27,7 +40,15 @@ const CheckInOut: NextPage<Props> = ({ allCabins, chosenCabins, setChosenCabins,
   };
   return (
     <Grid container spacing={isMobile ? 2 : 10}>
-      <Grid item xs={12} md={2} container direction="column" justifyContent="center" alignItems="center">
+      <Grid
+        item
+        xs={12}
+        md={2}
+        container
+        direction="column"
+        justifyContent="center"
+        alignItems="center"
+      >
         <Grid item>
           <Typography variant="h5">Velg hytte</Typography>
           <Divider component="hr" />
@@ -42,7 +63,9 @@ const CheckInOut: NextPage<Props> = ({ allCabins, chosenCabins, setChosenCabins,
                     if (e.target.checked) {
                       setChosenCabins([...chosenCabins, cabin]);
                     } else {
-                      setChosenCabins(chosenCabins.filter((chosenCabin) => cabin.id !== chosenCabin.id));
+                      setChosenCabins(
+                        chosenCabins.filter((chosenCabin) => cabin.id !== chosenCabin.id)
+                      );
                     }
                   }}
                 />

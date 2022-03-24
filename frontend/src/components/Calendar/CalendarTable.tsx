@@ -1,7 +1,15 @@
 import dayjs from "dayjs";
 import React, { ReactElement } from "react";
 import { DAYS_IN_WEEK } from "./constants";
-import { Grid, Hidden, IconButton, makeStyles, Typography, useMediaQuery, useTheme } from "@material-ui/core";
+import {
+  Grid,
+  Hidden,
+  IconButton,
+  makeStyles,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@material-ui/core";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore";
 
@@ -29,13 +37,20 @@ const CalendarTable: React.FC<Props> = ({ month, onChangeMonth, children }) => {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   return (
     <Grid container>
-      <Grid item container alignItems="center" justifyContent={isMobile ? "space-between" : "center"}>
+      <Grid
+        item
+        container
+        alignItems="center"
+        justifyContent={isMobile ? "space-between" : "center"}
+      >
         <Hidden mdUp>
           <IconButton onClick={() => onChangeMonth(-1)}>
             <NavigateBeforeIcon />
           </IconButton>
         </Hidden>
-        <Typography variant="body1" align="center">{`${month.format("MMMM")} - ${month.format("YYYY")}`}</Typography>
+        <Typography variant="body1" align="center">{`${month.format("MMMM")} - ${month.format(
+          "YYYY"
+        )}`}</Typography>
         <Hidden mdUp>
           <IconButton onClick={() => onChangeMonth(1)}>
             <NavigateNextIcon />

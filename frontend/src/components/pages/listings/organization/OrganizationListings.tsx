@@ -74,12 +74,21 @@ const OrganizationListings: React.FC<{
                     </TableHead>
                     <TableBody>
                       {organization.listings.map((listing: Listing) => (
-                        <Link href={`${organization.id}/listings/${listing.id}`} passHref key={listing.id}>
+                        <Link
+                          href={`${organization.id}/listings/${listing.id}`}
+                          passHref
+                          key={listing.id}
+                        >
                           <TableRow className={classes.hover} hover>
                             <TableCell>{listing.title}</TableCell>
-                            <TableCell>{dayjs(listing.deadline).format("HH:mm DD-MM-YYYY")}</TableCell>
+                            <TableCell>
+                              {dayjs(listing.deadline).format("HH:mm DD-MM-YYYY")}
+                            </TableCell>
                             <TableCell size="small" align="right">
-                              <Link passHref href={`${organization.id}/listings/${listing.id}/edit/`}>
+                              <Link
+                                passHref
+                                href={`${organization.id}/listings/${listing.id}/edit/`}
+                              >
                                 <Button variant="contained" color="primary" startIcon={<Create />}>
                                   Rediger
                                 </Button>

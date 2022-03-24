@@ -78,11 +78,18 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
     update: (cache, { data }) => {
       data &&
         cache.writeQuery<Event>({ query: GET_EVENT, data: data.updateEvent.event }) &&
-        cache.writeQuery<Event>({ query: ADMIN_GET_EVENT, data: { ...event, ...data.updateEvent.event } });
+        cache.writeQuery<Event>({
+          query: ADMIN_GET_EVENT,
+          data: { ...event, ...data.updateEvent.event },
+        });
     },
   });
 
-  const { loading: categoryLoading, error: categoryError, data: categoryData } = useQuery(GET_CATEGORIES);
+  const {
+    loading: categoryLoading,
+    error: categoryError,
+    data: categoryData,
+  } = useQuery(GET_CATEGORIES);
 
   useEffect(() => {
     // Used to get an initial event data object, keeping all fields except for the date related ones
@@ -221,7 +228,9 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
               <TextField
                 type="number"
                 value={eventData.availableSlots}
-                onChange={(e) => setEventData({ ...eventData, availableSlots: e.currentTarget.value })}
+                onChange={(e) =>
+                  setEventData({ ...eventData, availableSlots: e.currentTarget.value })
+                }
                 disabled={!eventData.isAttendable}
               />
             </Tooltip>
@@ -262,7 +271,9 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
               label="Kort beskrivelse"
               placeholder="Beskrivelse"
               value={eventData.shortDescription}
-              onChange={(e) => setEventData({ ...eventData, shortDescription: e.currentTarget.value })}
+              onChange={(e) =>
+                setEventData({ ...eventData, shortDescription: e.currentTarget.value })
+              }
             />
             <FormHelperText>Beskrivelsen blir vist i listen av arrangementer</FormHelperText>
           </Grid>
@@ -320,7 +331,9 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
                 control={
                   <Checkbox
                     checked={eventData.bindingSignup}
-                    onChange={(e) => setEventData({ ...eventData, bindingSignup: e.currentTarget.checked })}
+                    onChange={(e) =>
+                      setEventData({ ...eventData, bindingSignup: e.currentTarget.checked })
+                    }
                     name="bindingSignup"
                     color="primary"
                     disableRipple
@@ -330,7 +343,9 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
                 label="Bindende påmelding"
               />
             </Tooltip>
-            <FormHelperText>Gjør det umulig å melde seg av (kan fortsatt melde av venteliste)</FormHelperText>
+            <FormHelperText>
+              Gjør det umulig å melde seg av (kan fortsatt melde av venteliste)
+            </FormHelperText>
           </Grid>
           <Grid item xs={12}>
             <Tooltip
@@ -342,7 +357,9 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
                 control={
                   <Checkbox
                     checked={eventData.hasExtraInformation}
-                    onChange={(e) => setEventData({ ...eventData, hasExtraInformation: e.currentTarget.checked })}
+                    onChange={(e) =>
+                      setEventData({ ...eventData, hasExtraInformation: e.currentTarget.checked })
+                    }
                     name="hasExtraInformation"
                     color="primary"
                     disableRipple
@@ -352,7 +369,9 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
                 label="Utfylling av ekstrainformasjon"
               />
             </Tooltip>
-            <FormHelperText>Krev utfylling av en boks med ekstrainformasjon for påmelding</FormHelperText>
+            <FormHelperText>
+              Krev utfylling av en boks med ekstrainformasjon for påmelding
+            </FormHelperText>
           </Grid>
           <Grid item xs={6}>
             <InputLabel>Påmelding åpner</InputLabel>
@@ -364,7 +383,9 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
               <TextField
                 type="datetime-local"
                 value={eventData.signupOpenDate}
-                onChange={(e) => setEventData({ ...eventData, signupOpenDate: e.currentTarget.value })}
+                onChange={(e) =>
+                  setEventData({ ...eventData, signupOpenDate: e.currentTarget.value })
+                }
                 disabled={!eventData.isAttendable}
               />
             </Tooltip>
@@ -408,7 +429,9 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
         </Grid>
       </DialogContent>
       <DialogActions>
-        {updateEventError && <Typography color="error">Feil: {updateEventError.message}</Typography>}
+        {updateEventError && (
+          <Typography color="error">Feil: {updateEventError.message}</Typography>
+        )}
         {updateEventLoading && <CircularProgress />}
         <Button onClick={() => onClose()} color="primary" startIcon={<Close />}>
           Avbryt

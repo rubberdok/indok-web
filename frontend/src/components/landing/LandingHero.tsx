@@ -171,9 +171,21 @@ const LandingHero: React.FC = () => {
         </Grid>
         <Hidden smDown>
           <Grid item xs={4} className={classes.relative}>
-            <Box position="absolute" width="100%" height="100%" style={{ background: "white" }} zIndex="-3"></Box>
+            <Box
+              position="absolute"
+              width="100%"
+              height="100%"
+              style={{ background: "white" }}
+              zIndex="-3"
+            ></Box>
 
-            <Box className={classes.nth} position="absolute" width="100%" height="100%" zIndex="-2"></Box>
+            <Box
+              className={classes.nth}
+              position="absolute"
+              width="100%"
+              height="100%"
+              zIndex="-2"
+            ></Box>
           </Grid>
         </Hidden>
       </Grid>
@@ -190,7 +202,12 @@ const LandingHero: React.FC = () => {
             >
               <Typography variant="overline">Foreningen for studentene ved</Typography>
               <Fade duration={700} cascade triggerOnce direction="up">
-                <Typography style={{ color: "white" }} variant="h1" gutterBottom data-test-id={`${ID_PREFIX}-title`}>
+                <Typography
+                  style={{ color: "white" }}
+                  variant="h1"
+                  gutterBottom
+                  data-test-id={`${ID_PREFIX}-title`}
+                >
                   Industriell Økonomi og Teknologiledelse
                 </Typography>
                 <br />
@@ -204,7 +221,13 @@ const LandingHero: React.FC = () => {
           </Grid>
           <Hidden smDown>
             <Grid item xs={7}>
-              <Box height="100%" width="100%" display="flex" flexDirection="column" alignItems="flex-end">
+              <Box
+                height="100%"
+                width="100%"
+                display="flex"
+                flexDirection="column"
+                alignItems="flex-end"
+              >
                 <Typography variant="overline">Linjeforeningene våre</Typography>
                 <Fade damping={0.1} cascade triggerOnce direction="up">
                   {organizations.map((item) => (

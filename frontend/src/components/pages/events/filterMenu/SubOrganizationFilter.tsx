@@ -23,7 +23,13 @@ interface Props {
  * - name: name of the parent organization
  */
 
-const SuborganizationFilter: React.FC<Props> = ({ filters, onFiltersChange, organizations, classes, name }) => {
+const SuborganizationFilter: React.FC<Props> = ({
+  filters,
+  onFiltersChange,
+  organizations,
+  classes,
+  name,
+}) => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -33,7 +39,10 @@ const SuborganizationFilter: React.FC<Props> = ({ filters, onFiltersChange, orga
         button
         onClick={() => {
           setOpen(filters.organization === name ? false : !open);
-          onFiltersChange({ ...filters, organization: filters.organization === name ? undefined : name });
+          onFiltersChange({
+            ...filters,
+            organization: filters.organization === name ? undefined : name,
+          });
         }}
         selected={filters.organization === name}
       >
@@ -48,7 +57,10 @@ const SuborganizationFilter: React.FC<Props> = ({ filters, onFiltersChange, orga
               className={classes.doubleNestedList}
               selected={filters.organization === org.name}
               onClick={() =>
-                onFiltersChange({ ...filters, organization: filters.organization === org.name ? undefined : org.name })
+                onFiltersChange({
+                  ...filters,
+                  organization: filters.organization === org.name ? undefined : org.name,
+                })
               }
             >
               <ListItemText primary={org.name} />

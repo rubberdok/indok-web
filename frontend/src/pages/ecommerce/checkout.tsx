@@ -124,7 +124,10 @@ const CheckoutPage: NextPage = () => {
                             <ListItemText primary={product.name} secondary={product.description} />
                           </ListItem>
                           <ListItem className={classes.listitem}>
-                            <ListItemText primary={`${product.price} kr`} secondary="Pris per enhet" />
+                            <ListItemText
+                              primary={`${product.price} kr`}
+                              secondary="Pris per enhet"
+                            />
                           </ListItem>
                           <ListItem className={classes.listitem}>
                             <ListItemText
@@ -134,7 +137,10 @@ const CheckoutPage: NextPage = () => {
                           </ListItem>
                           <Divider variant="middle" component="li" />
                           <ListItem className={classes.listitem}>
-                            <ListItemText primary={`${product.price * quantity} kr`} secondary="Totalbeløp" />
+                            <ListItemText
+                              primary={`${product.price * quantity} kr`}
+                              secondary="Totalbeløp"
+                            />
                           </ListItem>
                         </List>
                       ) : (
@@ -175,7 +181,10 @@ const CheckoutPage: NextPage = () => {
                           disabled={!isConsentingTerms}
                           fallbackRedirect={typeof redirect === "string" ? redirect : undefined}
                         />
-                        <SalesTermsDialog open={openSalesTerms} onClose={() => setOpenSalesTerms(false)} />
+                        <SalesTermsDialog
+                          open={openSalesTerms}
+                          onClose={() => setOpenSalesTerms(false)}
+                        />
                       </Grid>
                     )}
                     {orderError && (

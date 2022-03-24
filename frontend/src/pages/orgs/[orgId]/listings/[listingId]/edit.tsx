@@ -39,9 +39,12 @@ const EditListingPage: NextPage = () => {
   });
 
   // Return to the previous page after updating.
-  const [updateListing] = useMutation<{ updateListing: { ok: boolean; listing: Listing } }>(UPDATE_LISTING, {
-    onCompleted: () => router.back(),
-  });
+  const [updateListing] = useMutation<{ updateListing: { ok: boolean; listing: Listing } }>(
+    UPDATE_LISTING,
+    {
+      onCompleted: () => router.back(),
+    }
+  );
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error</p>;

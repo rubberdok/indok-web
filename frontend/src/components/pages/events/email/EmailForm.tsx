@@ -61,7 +61,10 @@ const EmailForm: React.FC<EmailFormProps> = ({ eventId }) => {
   };
 
   useEffect(() => {
-    setValidations({ content: emailProps.content.length > 0, subject: emailProps.subject.length > 0 });
+    setValidations({
+      content: emailProps.content.length > 0,
+      subject: emailProps.subject.length > 0,
+    });
   }, [emailProps]);
 
   return (
@@ -88,7 +91,11 @@ const EmailForm: React.FC<EmailFormProps> = ({ eventId }) => {
         placement="bottom-start"
       >
         <Box>
-          <Button disabled={!data?.event.isAttendable} onClick={() => setShowEmailForm(true)} color="primary">
+          <Button
+            disabled={!data?.event.isAttendable}
+            onClick={() => setShowEmailForm(true)}
+            color="primary"
+          >
             <SendIcon style={{ margin: "5px" }} />
             Send e-post til alle påmeldte
           </Button>

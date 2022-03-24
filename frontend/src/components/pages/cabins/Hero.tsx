@@ -54,7 +54,9 @@ const Hero: React.VFC<Props> = ({ isLoggedIn }) => {
               <Typography variant="h5">Du må være logget inn for å booke en hytte.</Typography>
             ) : (
               // User is logged in, but does not have the permission (we disabled cabin booking for a subset of the users)
-              <Typography variant="h5">Her blir det snart mulig å reservere indøkhyttene</Typography>
+              <Typography variant="h5">
+                Her blir det snart mulig å reservere indøkhyttene
+              </Typography>
             )
           }
         >
@@ -71,7 +73,9 @@ const Hero: React.VFC<Props> = ({ isLoggedIn }) => {
           variant="contained"
           color="primary"
           startIcon={<ExpandMoreIcon fontSize="large" />}
-          onClick={() => document.querySelector("#anchorBox")?.scrollIntoView({ behavior: "smooth" })}
+          onClick={() =>
+            document.querySelector("#anchorBox")?.scrollIntoView({ behavior: "smooth" })
+          }
         >
           Les mer om Indøkhyttene
         </Button>

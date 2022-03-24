@@ -27,7 +27,9 @@ const Archive: NextPage = () => {
 
   const [viewFeatured, setViewFeatured] = useState(true);
 
-  const [typeFilters, setTypeFilters] = useState<{ [key: string]: { active: boolean; title: string } }>({
+  const [typeFilters, setTypeFilters] = useState<{
+    [key: string]: { active: boolean; title: string };
+  }>({
     Budget: { active: false, title: "Budsjett og Regnskap" },
     Summary: { active: false, title: "Generalforsamling" },
     Yearbook: { active: false, title: "Årbøker" },

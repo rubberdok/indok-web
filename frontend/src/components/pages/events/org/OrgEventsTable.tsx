@@ -64,7 +64,9 @@ const OrgEventsTable: React.FC<Props> = ({ organization }) => {
                       <TableRow className={classes.hover} hover>
                         <TableCell>{dayjs(event.startTime).format("HH:mm DD-MM-YYYY")}</TableCell>
                         {eventFields.map((field: HeaderValuePair<Event>) => (
-                          <TableCell key={`event-${event.id}-cell-${field.field}`}>{event[field.field]}</TableCell>
+                          <TableCell key={`event-${event.id}-cell-${field.field}`}>
+                            {event[field.field]}
+                          </TableCell>
                         ))}
                         <TableCell>{event.usersAttending?.length}</TableCell>
                         <TableCell>

@@ -1,4 +1,13 @@
-import { Dialog, DialogTitle, Typography, IconButton, DialogContent, makeStyles, Grid, Box } from "@material-ui/core";
+import {
+  Dialog,
+  DialogTitle,
+  Typography,
+  IconButton,
+  DialogContent,
+  makeStyles,
+  Grid,
+  Box,
+} from "@material-ui/core";
 import { Close } from "@material-ui/icons";
 import { rubberdokMembers } from "@components/Footer/HallOfFame/constants";
 
@@ -23,13 +32,23 @@ const HallOfFame: React.VFC<Props> = ({ open, setOpen }) => {
   const classes = useStyles();
 
   return (
-    <Dialog maxWidth="xl" fullWidth={false} onClose={() => setOpen(!open)} aria-labelledby="dialogTitle" open={open}>
+    <Dialog
+      maxWidth="xl"
+      fullWidth={false}
+      onClose={() => setOpen(!open)}
+      aria-labelledby="dialogTitle"
+      open={open}
+    >
       <DialogTitle disableTypography>
         <Typography gutterBottom variant="h4" id="dialogTitle">
           Hall of Fame
         </Typography>
         <Typography variant="body1">Progget med blod, svette, tårer og kjærlighet av:</Typography>
-        <IconButton className={classes.closeButton} aria-label="close" onClick={() => setOpen(!open)}>
+        <IconButton
+          className={classes.closeButton}
+          aria-label="close"
+          onClick={() => setOpen(!open)}
+        >
           <Close />
         </IconButton>
       </DialogTitle>

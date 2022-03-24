@@ -33,8 +33,10 @@ const useBookingRange = (initFromDate?: string, initToDate?: string): Output => 
           (booking) =>
             range.includes(booking.checkIn) ||
             range.includes(booking.checkOut) ||
-            (dayjs(booking.checkIn).isBefore(dayjs(fromDate)) && dayjs(booking.checkOut).isAfter(dayjs(toDate))) ||
-            (dayjs(booking.checkIn).isAfter(dayjs(fromDate)) && dayjs(booking.checkOut).isBefore(dayjs(toDate)))
+            (dayjs(booking.checkIn).isBefore(dayjs(fromDate)) &&
+              dayjs(booking.checkOut).isAfter(dayjs(toDate))) ||
+            (dayjs(booking.checkIn).isAfter(dayjs(fromDate)) &&
+              dayjs(booking.checkOut).isBefore(dayjs(toDate)))
         ).length === 0
       );
     } else {

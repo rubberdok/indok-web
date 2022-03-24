@@ -18,10 +18,23 @@ const ProfileSkeleton: React.VFC = () => {
       <>
         <Grid item>
           <Skeleton variant="circle">
-            <Avatar style={{ backgroundColor: "#526fa0", width: theme.spacing(16), height: theme.spacing(16) }} />
+            <Avatar
+              style={{
+                backgroundColor: "#526fa0",
+                width: theme.spacing(16),
+                height: theme.spacing(16),
+              }}
+            />
           </Skeleton>
         </Grid>
-        <Grid container item direction="column" alignItems="center" xs={10} style={{ marginBottom: theme.spacing(4) }}>
+        <Grid
+          container
+          item
+          direction="column"
+          alignItems="center"
+          xs={10}
+          style={{ marginBottom: theme.spacing(4) }}
+        >
           <Grid item>
             <Skeleton variant="text">
               <Typography variant="subtitle1" component="h1">
@@ -32,7 +45,8 @@ const ProfileSkeleton: React.VFC = () => {
           <Grid item>
             <Skeleton variant="text" width="100%" height="100%">
               <Typography variant="body2" align="center">
-                Her kan du endre din informasjon, se tidligere arrangementer og foreningene der du er medlem.
+                Her kan du endre din informasjon, se tidligere arrangementer og foreningene der du
+                er medlem.
               </Typography>
             </Skeleton>
           </Grid>

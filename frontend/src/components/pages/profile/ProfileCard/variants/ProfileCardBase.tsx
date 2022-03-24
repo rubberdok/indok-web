@@ -36,7 +36,14 @@ const ProfileCardBase: React.FC<Props> = ({
   return (
     <Card className={classes.fullHeightCard}>
       <Grid container direction="row" alignItems="center" style={{ height: "100%" }}>
-        <Grid container item xs style={{ height: "100%" }} direction="column" justifyContent="space-between">
+        <Grid
+          container
+          item
+          xs
+          style={{ height: "100%" }}
+          direction="column"
+          justifyContent="space-between"
+        >
           <CardHeader title={title} />
           <CardContent>{children}</CardContent>
           {actionText && actionLink && (

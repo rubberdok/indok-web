@@ -113,19 +113,27 @@ const CountdownButton: React.FC<Props> = ({
      * */
 
     if (timeparts.length === 1) {
-      return `Åpner om ${timeLeft[timeparts[0]]} ${translate(timeparts[0], timeLeft[timeparts[0]])}`;
+      return `Åpner om ${timeLeft[timeparts[0]]} ${translate(
+        timeparts[0],
+        timeLeft[timeparts[0]]
+      )}`;
     }
     if (timeparts[0] === "minutes") {
       if (timeLeft[timeparts[0]] < 10) {
-        return `Åpner om ${timeLeft[timeparts[0]]} ${translate(timeparts[0], timeLeft[timeparts[0]])} og ${
-          timeLeft[timeparts[1]]
-        } ${translate(timeparts[1], timeLeft[timeparts[1]])}`;
+        return `Åpner om ${timeLeft[timeparts[0]]} ${translate(
+          timeparts[0],
+          timeLeft[timeparts[0]]
+        )} og ${timeLeft[timeparts[1]]} ${translate(timeparts[1], timeLeft[timeparts[1]])}`;
       }
-      return `Åpner om ${timeLeft[timeparts[0]]} ${translate(timeparts[0], timeLeft[timeparts[0]])}`;
+      return `Åpner om ${timeLeft[timeparts[0]]} ${translate(
+        timeparts[0],
+        timeLeft[timeparts[0]]
+      )}`;
     }
-    return `Åpner om ${timeLeft[timeparts[0]]} ${translate(timeparts[0], timeLeft[timeparts[0]])} og ${
-      timeLeft[timeparts[1]]
-    } ${translate(timeparts[1], timeLeft[timeparts[1]])}`;
+    return `Åpner om ${timeLeft[timeparts[0]]} ${translate(
+      timeparts[0],
+      timeLeft[timeparts[0]]
+    )} og ${timeLeft[timeparts[1]]} ${translate(timeparts[1], timeLeft[timeparts[1]])}`;
   };
 
   return (

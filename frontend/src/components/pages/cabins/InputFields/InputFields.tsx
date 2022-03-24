@@ -25,8 +25,17 @@ interface Props {
 /*
 Component for rendering all input fields for the contact info of a booking
 */
-export const InputFields: React.FC<Props> = ({ contactInfo, validations, onChange, errorTrigger, chosenCabins }) => {
-  const totalGuestsAllowed = chosenCabins.reduce((sum, currentCabin) => sum + (currentCabin.maxGuests || 0), 0);
+export const InputFields: React.FC<Props> = ({
+  contactInfo,
+  validations,
+  onChange,
+  errorTrigger,
+  chosenCabins,
+}) => {
+  const totalGuestsAllowed = chosenCabins.reduce(
+    (sum, currentCabin) => sum + (currentCabin.maxGuests || 0),
+    0
+  );
 
   return (
     <Grid container item spacing={3} lg={8} md={12} justifyContent="center">
@@ -96,11 +105,13 @@ export const InputFields: React.FC<Props> = ({ contactInfo, validations, onChang
               error={!validations?.internalParticipants && errorTrigger}
               value={contactInfo.internalParticipants}
             >
-              {range(0, totalGuestsAllowed - contactInfo.externalParticipants).map((val: number) => (
-                <MenuItem key={val} value={val}>
-                  {val}
-                </MenuItem>
-              ))}
+              {range(0, totalGuestsAllowed - contactInfo.externalParticipants).map(
+                (val: number) => (
+                  <MenuItem key={val} value={val}>
+                    {val}
+                  </MenuItem>
+                )
+              )}
             </Select>
           </FormControl>
         </Grid>
@@ -115,11 +126,13 @@ export const InputFields: React.FC<Props> = ({ contactInfo, validations, onChang
               error={!validations?.externalParticipants && errorTrigger}
               value={contactInfo.externalParticipants}
             >
-              {range(0, totalGuestsAllowed - contactInfo.internalParticipants).map((val: number) => (
-                <MenuItem key={val} value={val}>
-                  {val}
-                </MenuItem>
-              ))}
+              {range(0, totalGuestsAllowed - contactInfo.internalParticipants).map(
+                (val: number) => (
+                  <MenuItem key={val} value={val}>
+                    {val}
+                  </MenuItem>
+                )
+              )}
             </Select>
           </FormControl>
         </Grid>

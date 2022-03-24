@@ -32,9 +32,18 @@ const MarkdownForm: React.FC<{
         <Tab label="Forhåndsvisning" value="preview" />
       </Tabs>
       {view === "edit" && (
-        <TextField fullWidth multiline rows={20} variant="outlined" value={markdown} onChange={onTextChange} />
+        <TextField
+          fullWidth
+          multiline
+          rows={20}
+          variant="outlined"
+          value={markdown}
+          onChange={onTextChange}
+        />
       )}
-      {view === "preview" && <ReactMarkdown components={markdownComponents}>{markdown}</ReactMarkdown>}
+      {view === "preview" && (
+        <ReactMarkdown components={markdownComponents}>{markdown}</ReactMarkdown>
+      )}
     </>
   );
 };

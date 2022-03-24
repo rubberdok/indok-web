@@ -77,8 +77,8 @@ const EmailFormDialog: React.FC<EmailFormDialogProps> = ({
           </Grid>
           <Grid item>
             <Typography variant="caption">
-              Denne tjenesten er kun ment for informasjon om arrangementet. Promotering, nyhetsbrev, og lignende er ikke
-              tillatt. Misbruk vil føre til utestengelse fra denne funksjonen.
+              Denne tjenesten er kun ment for informasjon om arrangementet. Promotering, nyhetsbrev,
+              og lignende er ikke tillatt. Misbruk vil føre til utestengelse fra denne funksjonen.
             </Typography>
           </Grid>
         </Grid>
@@ -88,7 +88,10 @@ const EmailFormDialog: React.FC<EmailFormDialogProps> = ({
           Lukk
         </Button>
 
-        <Tooltip disableHoverListener={Object.values(validations).every(Boolean)} title="Du må fylle inn alle feltene.">
+        <Tooltip
+          disableHoverListener={Object.values(validations).every(Boolean)}
+          title="Du må fylle inn alle feltene."
+        >
           <Box>
             <Button
               startIcon={<SendIcon />}

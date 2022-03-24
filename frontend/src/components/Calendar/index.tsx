@@ -17,7 +17,11 @@ interface CalendarProps {
   disableBefore?: string;
   disableAfter?: string;
   title?: string;
-  onRangeChange?: (fromDate: string | undefined, toDate: string | undefined, validRange: boolean) => void;
+  onRangeChange?: (
+    fromDate: string | undefined,
+    toDate: string | undefined,
+    validRange: boolean
+  ) => void;
 }
 
 const Calendar: React.FC<CalendarProps> = ({
@@ -57,7 +61,10 @@ const Calendar: React.FC<CalendarProps> = ({
         setFunc(isDisabled(newDate) ? undefined : newDate);
         setSelectingFromDate((prev) => !prev);
       };
-      if (range.length > 0 || (!selectingFromDate && selectedFromDay && date.isSameOrBefore(selectedFromDay))) {
+      if (
+        range.length > 0 ||
+        (!selectingFromDate && selectedFromDay && date.isSameOrBefore(selectedFromDay))
+      ) {
         setSelectedFromDay(date);
         setSelectedToDay(undefined);
         setSelectingFromDate(false);
@@ -79,18 +86,25 @@ const Calendar: React.FC<CalendarProps> = ({
       date ? date.format(DATE_FORMAT) : undefined;
     if (selectedFromDay && selectedToDay) {
       // Both from day and to day are selected, create new range between those two.
-      const newRange = getDateRange(selectedFromDay.format(DATE_FORMAT), selectedToDay.format(DATE_FORMAT));
+      const newRange = getDateRange(
+        selectedFromDay.format(DATE_FORMAT),
+        selectedToDay.format(DATE_FORMAT)
+      );
       setRange(newRange);
 
       // Check validity of the given range. If it is valid, the range is marked as green, otherwise it is marked as red.
-      const newIsRangeValid = disabledDates ? !disabledDates.some((date: string) => newRange.includes(date)) : true;
+      const newIsRangeValid = disabledDates
+        ? !disabledDates.some((date: string) => newRange.includes(date))
+        : true;
       setIsRangeValid(newIsRangeValid);
-      onRangeChange && onRangeChange(dateToString(selectedFromDay), dateToString(selectedToDay), newIsRangeValid);
+      onRangeChange &&
+        onRangeChange(dateToString(selectedFromDay), dateToString(selectedToDay), newIsRangeValid);
     } else {
       // From day is either selected or not, but to day has not been selected.
       setRange([]);
       setIsRangeValid(true);
-      onRangeChange && onRangeChange(dateToString(selectedFromDay), dateToString(selectedToDay), true);
+      onRangeChange &&
+        onRangeChange(dateToString(selectedFromDay), dateToString(selectedToDay), true);
     }
   }, [selectedFromDay, selectedToDay]);
 
@@ -153,7 +167,11 @@ const Calendar: React.FC<CalendarProps> = ({
   };
 
   const getRows = (month: dayjs.Dayjs) => {
-    const days: dayjs.Dayjs[] = [...previousMonthDays(month), ...getDaysOfMonth(month), ...nextMonthDays(month)];
+    const days: dayjs.Dayjs[] = [
+      ...previousMonthDays(month),
+      ...getDaysOfMonth(month),
+      ...nextMonthDays(month),
+    ];
     let cells: dayjs.Dayjs[] = [];
     return days.reduce((prev: dayjs.Dayjs[][], curr, index) => {
       if (index % 7 === 0 && index != 0) {

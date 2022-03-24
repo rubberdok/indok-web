@@ -42,7 +42,10 @@ const ProfilePage: NextPage = () => {
   const { data } = useQuery<{ user?: User }>(GET_USER_PROFILE);
   const theme = useTheme();
   const classes = useStyles();
-  const initials = useMemo(() => (data?.user ? userInitials(data.user.firstName, data.user.lastName) : ""), [data]);
+  const initials = useMemo(
+    () => (data?.user ? userInitials(data.user.firstName, data.user.lastName) : ""),
+    [data]
+  );
 
   return (
     <Layout>
@@ -60,7 +63,13 @@ const ProfilePage: NextPage = () => {
         >
           <>
             <Grid item>
-              <Avatar style={{ backgroundColor: "#526fa0", width: theme.spacing(16), height: theme.spacing(16) }}>
+              <Avatar
+                style={{
+                  backgroundColor: "#526fa0",
+                  width: theme.spacing(16),
+                  height: theme.spacing(16),
+                }}
+              >
                 {data?.user && (
                   <Typography variant="h3" component="p">
                     {initials}
@@ -78,12 +87,16 @@ const ProfilePage: NextPage = () => {
             >
               <Grid item>
                 {data?.user && (
-                  <Typography variant="subtitle1" component="h1">{`Hei, ${data.user.firstName}`}</Typography>
+                  <Typography
+                    variant="subtitle1"
+                    component="h1"
+                  >{`Hei, ${data.user.firstName}`}</Typography>
                 )}
               </Grid>
               <Grid item>
                 <Typography variant="body2" align="center">
-                  Her kan du endre din informasjon, se tidligere arrangementer og foreningene der du er medlem.
+                  Her kan du endre din informasjon, se tidligere arrangementer og foreningene der du
+                  er medlem.
                 </Typography>
               </Grid>
             </Grid>

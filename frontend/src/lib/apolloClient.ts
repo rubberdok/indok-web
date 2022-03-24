@@ -26,7 +26,8 @@ const getToken = (req?: IncomingMessage) => {
 };
 
 function createApolloClient(ctx?: GetServerSidePropsContext): ApolloClient<NormalizedCacheObject> {
-  const uri = typeof window === "undefined" ? config.INTERNAL_GRAPHQL_ENDPOINT : config.GRAPHQL_ENDPOINT;
+  const uri =
+    typeof window === "undefined" ? config.INTERNAL_GRAPHQL_ENDPOINT : config.GRAPHQL_ENDPOINT;
   const httpLink = new HttpLink({
     uri: uri, // Server URL (must be absolute)
     credentials: "include",
@@ -83,7 +84,10 @@ export function initializeApollo(
   return _apolloClient;
 }
 
-export function addApolloState(client: ApolloClient<NormalizedCacheObject>, pageProps: PageProps): PageProps {
+export function addApolloState(
+  client: ApolloClient<NormalizedCacheObject>,
+  pageProps: PageProps
+): PageProps {
   if (pageProps?.props) {
     pageProps.props[APOLLO_STATE_PROP_NAME] = client.cache.extract();
   }

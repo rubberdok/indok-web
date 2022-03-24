@@ -1,6 +1,15 @@
 import Layout from "@components/Layout";
 import AllEvents from "@components/pages/events/AllEvents";
-import { Box, Container, Hidden, makeStyles, Tab, Tabs, Typography, useTheme } from "@material-ui/core";
+import {
+  Box,
+  Container,
+  Hidden,
+  makeStyles,
+  Tab,
+  Tabs,
+  Typography,
+  useTheme,
+} from "@material-ui/core";
 import { NextPage } from "next";
 import React, { useState } from "react";
 
@@ -34,7 +43,13 @@ const Events: NextPage = () => {
 
   return (
     <Layout>
-      <Box width="100%" pt={10} position="relative" overflow="hidden" bgcolor={theme.palette.background.paper}>
+      <Box
+        width="100%"
+        pt={10}
+        position="relative"
+        overflow="hidden"
+        bgcolor={theme.palette.background.paper}
+      >
         <Container>
           <Typography variant="h1" gutterBottom>
             Arrangementer

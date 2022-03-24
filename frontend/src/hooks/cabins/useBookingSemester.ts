@@ -26,12 +26,19 @@ const defaultBookingSemester: BookingSemester = {
  */
 const useBookingSemester = (): Output => {
   const [bookingSemester, setBookingSemester] = useState<BookingSemester>(defaultBookingSemester);
-  const { data, loading, error } = useQuery<{ bookingSemester: BookingSemester }>(QUERY_BOOKING_SEMESTERS);
+  const { data, loading, error } =
+    useQuery<{ bookingSemester: BookingSemester }>(QUERY_BOOKING_SEMESTERS);
 
   useEffect(() => {
     if (data?.bookingSemester) {
-      const { fallStartDate, fallEndDate, springStartDate, springEndDate, fallSemesterActive, springSemesterActive } =
-        data.bookingSemester;
+      const {
+        fallStartDate,
+        fallEndDate,
+        springStartDate,
+        springEndDate,
+        fallSemesterActive,
+        springSemesterActive,
+      } = data.bookingSemester;
       setBookingSemester({
         fallStartDate: fallStartDate,
         fallEndDate: fallEndDate,

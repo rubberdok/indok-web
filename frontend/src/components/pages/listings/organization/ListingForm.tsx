@@ -65,7 +65,10 @@ const ListingForm: React.FC<{
   /**
    * Helper method to handle changes to boolean fields using checkboxes.
    */
-  const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>, property: keyof ListingInput) => {
+  const handleCheckboxChange = (
+    event: ChangeEvent<HTMLInputElement>,
+    property: keyof ListingInput
+  ) => {
     setListing({ ...listing, [property]: event.target.checked });
   };
 
@@ -92,8 +95,9 @@ const ListingForm: React.FC<{
                         setListing({
                           ...listing,
                           organization:
-                            organizations.find((organization) => organization.id === e.target.value) ||
-                            listing.organization,
+                            organizations.find(
+                              (organization) => organization.id === e.target.value
+                            ) || listing.organization,
                         })
                       }
                       fullWidth
@@ -166,7 +170,8 @@ const ListingForm: React.FC<{
                           title={
                             <>
                               <Typography>Søknad på indokntnu.no</Typography>
-                              Du kan også lage søknad og håndtere alt av søknadsbehandling på denne nettsida.
+                              Du kan også lage søknad og håndtere alt av søknadsbehandling på denne
+                              nettsida.
                             </>
                           }
                         >
@@ -193,8 +198,8 @@ const ListingForm: React.FC<{
                           leaveTouchDelay={2500}
                           title={
                             <>
-                              Denne linken dukker opp under navnet til foreningen din, slik at søkere kan lese mer om
-                              den.
+                              Denne linken dukker opp under navnet til foreningen din, slik at
+                              søkere kan lese mer om den.
                             </>
                           }
                         >
@@ -278,7 +283,10 @@ const ListingForm: React.FC<{
                 </Tooltip>
               </Grid>
             </Grid>
-            <MarkdownForm markdown={listing.description} onTextChange={(e) => handlePropertyChange(e, "description")} />
+            <MarkdownForm
+              markdown={listing.description}
+              onTextChange={(e) => handlePropertyChange(e, "description")}
+            />
           </Grid>
         </Grid>
       </CardContent>

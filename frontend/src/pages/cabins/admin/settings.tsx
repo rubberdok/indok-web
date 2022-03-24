@@ -1,7 +1,16 @@
 import Layout from "@components/Layout";
 import BookingSemesterPicker from "@components/pages/cabins/Admin/BookingSemesterPicker";
 import PermissionRequired from "@components/permissions/PermissionRequired";
-import { Box, Button, Container, Divider, Grid, Paper, Typography, useMediaQuery } from "@material-ui/core";
+import {
+  Box,
+  Button,
+  Container,
+  Divider,
+  Grid,
+  Paper,
+  Typography,
+  useMediaQuery,
+} from "@material-ui/core";
 import { ArrowBackIos } from "@material-ui/icons";
 import theme from "@styles/theme";
 import router from "next/router";
@@ -33,8 +42,12 @@ const SettingsPage: React.VFC = () => {
               </Box>
               <Divider />
               <Box p={4}>
-                <Typography variant="h5">Velg start og slutt-dato for booking for høst- og vårsemestrene</Typography>
-                <Typography>Det vil kun være mulig for brukere å søke om bookinger i disse periodene.</Typography>
+                <Typography variant="h5">
+                  Velg start og slutt-dato for booking for høst- og vårsemestrene
+                </Typography>
+                <Typography>
+                  Det vil kun være mulig for brukere å søke om bookinger i disse periodene.
+                </Typography>
               </Box>
               <Box p={4}>
                 <BookingSemesterPicker />

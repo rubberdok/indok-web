@@ -1,7 +1,15 @@
 import { useQuery } from "@apollo/client";
 import { FilterQuery } from "@components/pages/events/AllEvents";
 import { QUERY_EVENT_FILTERED_ORGANIZATIONS } from "@graphql/events/queries";
-import { IconButton, List, ListItem, ListItemText, makeStyles, Tooltip, Typography } from "@material-ui/core";
+import {
+  IconButton,
+  List,
+  ListItem,
+  ListItemText,
+  makeStyles,
+  Tooltip,
+  Typography,
+} from "@material-ui/core";
 import { Refresh, StarBorderRounded, StarRounded } from "@material-ui/icons";
 import React from "react";
 import CategoryFilter from "./CategoryFilter";
@@ -86,7 +94,12 @@ const useStyles = makeStyles((theme) => ({
  * - onShowDefaultChange: method called when whether to show default events or not changes
  */
 
-const FilterMenu: React.FC<Props> = ({ filters, onFiltersChange, showDefaultEvents, onShowDefaultChange }) => {
+const FilterMenu: React.FC<Props> = ({
+  filters,
+  onFiltersChange,
+  showDefaultEvents,
+  onShowDefaultChange,
+}) => {
   const classes = useStyles();
 
   const {
@@ -103,7 +116,12 @@ const FilterMenu: React.FC<Props> = ({ filters, onFiltersChange, showDefaultEven
         <ListItem>
           <ListItemText primary={<Typography variant="h4">Filtre</Typography>} />
           <Tooltip className={classes.tooltip} title="Nullstill filtre" arrow>
-            <IconButton disableFocusRipple disableRipple onClick={() => onFiltersChange({})} aria-label="delete">
+            <IconButton
+              disableFocusRipple
+              disableRipple
+              onClick={() => onFiltersChange({})}
+              aria-label="delete"
+            >
               <Refresh />
             </IconButton>
           </Tooltip>

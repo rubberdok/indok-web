@@ -1,5 +1,13 @@
 import { Question } from "@interfaces/forms";
-import { Checkbox, FormControlLabel, FormGroup, Radio, RadioGroup, TextField, Box } from "@material-ui/core";
+import {
+  Checkbox,
+  FormControlLabel,
+  FormGroup,
+  Radio,
+  RadioGroup,
+  TextField,
+  Box,
+} from "@material-ui/core";
 import questionTypeLabels from "@components/forms/formAdmin/questionTypeLabels";
 
 /**
@@ -28,14 +36,25 @@ const QuestionTypePreview: React.FC<{
         />
       );
     case "SHORT_ANSWER":
-      return <TextField fullWidth disabled label={questionTypeLabels[question.questionType]} variant="outlined" />;
+      return (
+        <TextField
+          fullWidth
+          disabled
+          label={questionTypeLabels[question.questionType]}
+          variant="outlined"
+        />
+      );
     case "MULTIPLE_CHOICE":
       return (
         <RadioGroup>
           {(question.options ?? []).map((option, index) => (
             <FormControlLabel
               key={index}
-              label={<Box fontWeight={answer === option.answer ? "bold" : undefined}>{option.answer}</Box>}
+              label={
+                <Box fontWeight={answer === option.answer ? "bold" : undefined}>
+                  {option.answer}
+                </Box>
+              }
               control={<Radio color="primary" checked={answer === option.answer} disabled />}
             />
           ))}
@@ -48,9 +67,17 @@ const QuestionTypePreview: React.FC<{
             <FormControlLabel
               key={index}
               label={
-                <Box fontWeight={answers && answers.includes(option.answer) ? "bold" : undefined}>{option.answer}</Box>
+                <Box fontWeight={answers && answers.includes(option.answer) ? "bold" : undefined}>
+                  {option.answer}
+                </Box>
               }
-              control={<Checkbox color="primary" checked={answers && answers.includes(option.answer)} disabled />}
+              control={
+                <Checkbox
+                  color="primary"
+                  checked={answers && answers.includes(option.answer)}
+                  disabled
+                />
+              }
             />
           ))}
         </FormGroup>

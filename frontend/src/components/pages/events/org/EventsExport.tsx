@@ -1,5 +1,12 @@
 import { Organization } from "@interfaces/organizations";
-import { Button, ButtonGroup, Grid, TextField, Typography, CircularProgress } from "@material-ui/core";
+import {
+  Button,
+  ButtonGroup,
+  Grid,
+  TextField,
+  Typography,
+  CircularProgress,
+} from "@material-ui/core";
 import { useState } from "react";
 import { useLazyQuery } from "@apollo/client";
 import GetAppIcon from "@material-ui/icons/GetApp";
@@ -13,9 +20,12 @@ type Props = {
 const EventsExport: React.FC<Props> = ({ organization }) => {
   const [selectedEvents, setSelectedEvents] = useState(["1", "2", "3"]);
 
-  const [getAttendeeReportOrg, { loading: loadingReport }] = useLazyQuery(QUERY_ATTENDEE_REPORT_ORG, {
-    onCompleted: (data) => promptDownloadFromPayload(JSON.parse(data.attendeeReportOrg)),
-  });
+  const [getAttendeeReportOrg, { loading: loadingReport }] = useLazyQuery(
+    QUERY_ATTENDEE_REPORT_ORG,
+    {
+      onCompleted: (data) => promptDownloadFromPayload(JSON.parse(data.attendeeReportOrg)),
+    }
+  );
 
   const [getAttendeeReports, { loading: loadingReports }] = useLazyQuery(QUERY_ATTENDEE_REPORTS, {
     onCompleted: (data) => promptDownloadFromPayload(JSON.parse(data.attendeeReports)),
@@ -42,7 +52,9 @@ const EventsExport: React.FC<Props> = ({ organization }) => {
         startIcon={<GetAppIcon fontSize="small" />}
         disabled
         onClick={() => {
-          return getAttendeeReports({ variables: { eventIds: selectedEvents, filetype: filetype } });
+          return getAttendeeReports({
+            variables: { eventIds: selectedEvents, filetype: filetype },
+          });
         }}
       >
         {filetype}

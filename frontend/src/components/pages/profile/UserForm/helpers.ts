@@ -23,8 +23,12 @@ export const isVegetarian = (allergies: string): boolean => {
 };
 
 export const validationSchema = Yup.object().shape({
-  firstName: Yup.string().required("Fornavn kan ikke være tomt.").min(2, "Kan ikke være kortere enn 2 tegn."),
-  lastName: Yup.string().required("Etternavn kan ikke være tomt.").min(2, "Kan ikke være kortere enn to tegn."),
+  firstName: Yup.string()
+    .required("Fornavn kan ikke være tomt.")
+    .min(2, "Kan ikke være kortere enn 2 tegn."),
+  lastName: Yup.string()
+    .required("Etternavn kan ikke være tomt.")
+    .min(2, "Kan ikke være kortere enn to tegn."),
   email: Yup.string().email("Oppgi en gyldig e-postadresse.").notRequired(),
   allergies: Yup.string().notRequired(),
   graduationYear: Yup.number()

@@ -3,7 +3,15 @@ import { GET_DEFAULT_EVENTS, GET_EVENTS } from "@graphql/events/queries";
 import { GET_USER } from "@graphql/users/queries";
 import { Event } from "@interfaces/events";
 import { User } from "@interfaces/users";
-import { Button, CircularProgress, Drawer, Grid, Hidden, makeStyles, Typography } from "@material-ui/core";
+import {
+  Button,
+  CircularProgress,
+  Drawer,
+  Grid,
+  Hidden,
+  makeStyles,
+  Typography,
+} from "@material-ui/core";
 import { Add, List, Tune } from "@material-ui/icons";
 import Link from "next/link";
 import React, { useState } from "react";
@@ -51,7 +59,9 @@ const AllEvents: React.FC = () => {
   } = useQuery<{ defaultEvents: Event[] }>(GET_DEFAULT_EVENTS);
   const error = showDefaultEvents ? defaultEventsError : eventsError;
   const loading = showDefaultEvents ? defaultEventsLoading : eventsLoading;
-  const data = (showDefaultEvents ? defaultEventsData?.defaultEvents : eventsData?.allEvents)?.filter((event) =>
+  const data = (
+    showDefaultEvents ? defaultEventsData?.defaultEvents : eventsData?.allEvents
+  )?.filter((event) =>
     userData?.user ? event.allowedGradeYears.includes(userData.user.gradeYear) : true
   );
 
@@ -105,7 +115,11 @@ const AllEvents: React.FC = () => {
           )}
           {userData && !userLoading && userData.user && !!userData.user.organizations.length && (
             <Link
-              href={userData.user.organizations.length > 1 ? "/orgs" : `/orgs/${userData.user.organizations[0].id}`}
+              href={
+                userData.user.organizations.length > 1
+                  ? "/orgs"
+                  : `/orgs/${userData.user.organizations[0].id}`
+              }
               passHref
             >
               <Button color="primary" disableRipple startIcon={<List />}>
@@ -118,9 +132,13 @@ const AllEvents: React.FC = () => {
           ) : (
             <Grid container spacing={2}>
               {data === undefined || data.length === 0 ? (
-                <Typography variant="body1">Ingen arrangementer passer til valgte filtre.</Typography>
+                <Typography variant="body1">
+                  Ingen arrangementer passer til valgte filtre.
+                </Typography>
               ) : (
-                data.map((event) => <EventListItem key={event.id} event={event} user={userData?.user} />)
+                data.map((event) => (
+                  <EventListItem key={event.id} event={event} user={userData?.user} />
+                ))
               )}
             </Grid>
           )}

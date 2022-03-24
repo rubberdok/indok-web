@@ -37,7 +37,9 @@ const AdminCabinTable = ({ bookings, refetch, currentTab }: Props) => {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [bookingToBeDeclined, setBookingToBeDeclined] = useState<BookingFromQuery | undefined>();
-  const [confirmBooking] = useMutation(CONFIRM_BOOKING, { refetchQueries: [{ query: QUERY_ADMIN_ALL_BOOKINGS }] });
+  const [confirmBooking] = useMutation(CONFIRM_BOOKING, {
+    refetchQueries: [{ query: QUERY_ADMIN_ALL_BOOKINGS }],
+  });
   const [sendEmail] = useMutation(SEND_EMAIL);
 
   const isExpired = (booking: BookingFromQuery) => dayjs().isAfter(booking.checkIn);
@@ -114,7 +116,9 @@ const AdminCabinTable = ({ bookings, refetch, currentTab }: Props) => {
                   </Box>
                 </Tooltip>
               </InlineTableCell>
-              <InlineTableCell>{dayjs(booking.timestamp).format("HH:mm DD-MM-YYYY")}</InlineTableCell>
+              <InlineTableCell>
+                {dayjs(booking.timestamp).format("HH:mm DD-MM-YYYY")}
+              </InlineTableCell>
               <InlineTableCell>{booking.internalParticipants}</InlineTableCell>
               <InlineTableCell>{booking.externalParticipants}</InlineTableCell>
               <InlineTableCell>{booking.extraInfo}</InlineTableCell>

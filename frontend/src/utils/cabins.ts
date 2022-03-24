@@ -19,18 +19,25 @@ File containing helper functions for cabins.
 
 export const validateName: (name: string) => boolean = (name) => name?.length > 0;
 
-export const validateEmail: (email: string) => boolean = (email) => (email ? validator.isEmail(email) : false);
+export const validateEmail: (email: string) => boolean = (email) =>
+  email ? validator.isEmail(email) : false;
 
-export const validateSelect: (internalParticipants: number, externalParticipants: number) => boolean = (
-  internalParticipants,
-  externalParticipants
-) => internalParticipants > 0 || externalParticipants > 0;
+export const validateSelect: (
+  internalParticipants: number,
+  externalParticipants: number
+) => boolean = (internalParticipants, externalParticipants) =>
+  internalParticipants > 0 || externalParticipants > 0;
 
 export const validatePhone: (phone: string) => boolean = (phone) =>
   phone ? validator.isMobilePhone(phone, "nb-NO") : false;
 
-export const validateInputForm: (inputValues: ContactInfo) => ContactInfoValidations = (inputValues) => {
-  const selectValidity = validateSelect(inputValues.internalParticipants, inputValues.externalParticipants);
+export const validateInputForm: (inputValues: ContactInfo) => ContactInfoValidations = (
+  inputValues
+) => {
+  const selectValidity = validateSelect(
+    inputValues.internalParticipants,
+    inputValues.externalParticipants
+  );
   return {
     firstName: validateName(inputValues.firstName),
     lastName: validateName(inputValues.lastName),
@@ -47,7 +54,10 @@ export const isFormValid: (inputValues: ContactInfo) => boolean = (inputValues) 
 };
 
 export const allValuesFilled: (contactInfo: ContactInfo) => boolean = (contactInfo) => {
-  const selectValidity = validateSelect(contactInfo.internalParticipants, contactInfo.externalParticipants);
+  const selectValidity = validateSelect(
+    contactInfo.internalParticipants,
+    contactInfo.externalParticipants
+  );
   const nonSelectContactInfo: BasicBooking = contactInfo;
   const filled = Object.values(nonSelectContactInfo).filter((info) => info != "");
 
@@ -97,12 +107,25 @@ export const calculatePrice: (
   }
 };
 
-export const convertDateFormat: (date?: string) => string = (date) => dayjs(date).format("DD-MM-YYYY");
+export const convertDateFormat: (date?: string) => string = (date) =>
+  dayjs(date).format("DD-MM-YYYY");
 
-export const getDecisionEmailProps = (booking: BookingFromQuery, approved: boolean, declineMessage?: string) => {
+export const getDecisionEmailProps = (
+  booking: BookingFromQuery,
+  approved: boolean,
+  declineMessage?: string
+) => {
   // omit unwanted fields
-  const { checkIn, checkOut, externalParticipants, firstName, internalParticipants, lastName, phone, receiverEmail } =
-    booking;
+  const {
+    checkIn,
+    checkOut,
+    externalParticipants,
+    firstName,
+    internalParticipants,
+    lastName,
+    phone,
+    receiverEmail,
+  } = booking;
 
   const emailInput = {
     ...{
@@ -141,11 +164,25 @@ export const generateEmailAndBookingInput: (
 /* 
   Checks if a date is within the fall or spring booking semester.
 */
-export const dateInBookingSemester = (date: dayjs.Dayjs, bookingSemester: BookingSemester): boolean => {
-  const inFallSemester = date.isBetween(bookingSemester.fallStartDate, bookingSemester.fallEndDate, null, "[]");
-  const inSpringSemester = date.isBetween(bookingSemester.springStartDate, bookingSemester.springEndDate, null, "[]");
+export const dateInBookingSemester = (
+  date: dayjs.Dayjs,
+  bookingSemester: BookingSemester
+): boolean => {
+  const inFallSemester = date.isBetween(
+    bookingSemester.fallStartDate,
+    bookingSemester.fallEndDate,
+    null,
+    "[]"
+  );
+  const inSpringSemester = date.isBetween(
+    bookingSemester.springStartDate,
+    bookingSemester.springEndDate,
+    null,
+    "[]"
+  );
 
   return (
-    (inFallSemester && bookingSemester.fallSemesterActive) || (inSpringSemester && bookingSemester.springSemesterActive)
+    (inFallSemester && bookingSemester.fallSemesterActive) ||
+    (inSpringSemester && bookingSemester.springSemesterActive)
   );
 };

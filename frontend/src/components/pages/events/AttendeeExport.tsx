@@ -6,9 +6,12 @@ import React from "react";
 import GetAppIcon from "@material-ui/icons/GetApp";
 
 const AttendeeExport: React.FC<{ eventId: number }> = ({ eventId }) => {
-  const [getAttendeeReport, { loading: attendeeReportLoading }] = useLazyQuery(QUERY_ATTENDEE_REPORT, {
-    onCompleted: (data) => promptDownloadFromPayload(JSON.parse(data.attendeeReport)),
-  });
+  const [getAttendeeReport, { loading: attendeeReportLoading }] = useLazyQuery(
+    QUERY_ATTENDEE_REPORT,
+    {
+      onCompleted: (data) => promptDownloadFromPayload(JSON.parse(data.attendeeReport)),
+    }
+  );
 
   const wrapDownloadButtonReport = (eventId: number, filetype: string) => {
     return (

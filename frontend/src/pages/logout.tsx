@@ -8,11 +8,18 @@ import { generateQueryString } from "@utils/helpers";
 import { config } from "@utils/config";
 
 const LogoutPage: NextPage = () => {
-  const [getIdToken, { data, loading, error }] = useMutation<{ getIdToken: { idToken: string } }>(GET_ID_TOKEN, {
+  const [getIdToken, { data, loading, error }] = useMutation<{ getIdToken: { idToken: string } }>(
+    GET_ID_TOKEN,
+    {
+      errorPolicy: "all",
+    }
+  );
+  const [
+    deleteCookie,
+    { data: deleteCookieData, loading: deleteCookieLoading, error: deleteCookieError, client },
+  ] = useMutation<{ deleteTokenCookie: { deleted: boolean } }>(DELETE_TOKEN_COOKIE, {
     errorPolicy: "all",
   });
-  const [deleteCookie, { data: deleteCookieData, loading: deleteCookieLoading, error: deleteCookieError, client }] =
-    useMutation<{ deleteTokenCookie: { deleted: boolean } }>(DELETE_TOKEN_COOKIE, { errorPolicy: "all" });
   const router = useRouter();
 
   useEffect(() => {

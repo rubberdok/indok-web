@@ -30,7 +30,13 @@ const InfoText: React.FC<TypographyProps> = (props) => (
 Statusbox with information about the current cabin booking.
 Renders fields based on the props given.
 */
-const CabinBookingStatus: NextPage<Props> = ({ chosenCabins, datePick, contactInfo, cabinText, mailSent }) => {
+const CabinBookingStatus: NextPage<Props> = ({
+  chosenCabins,
+  datePick,
+  contactInfo,
+  cabinText,
+  mailSent,
+}) => {
   const classes = useStyles();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -66,9 +72,15 @@ const CabinBookingStatus: NextPage<Props> = ({ chosenCabins, datePick, contactIn
         <Box m={3}>
           <InfoText>
             <Box className={classes.bold}>Gjester: </Box>
-            {contactInfo.internalParticipants > 0 ? `${contactInfo.internalParticipants} indøkere` : null}
-            {contactInfo.internalParticipants > 0 && contactInfo.externalParticipants > 0 ? ", " : null}
-            {contactInfo.externalParticipants > 0 ? `${contactInfo.externalParticipants} eksterne` : null}
+            {contactInfo.internalParticipants > 0
+              ? `${contactInfo.internalParticipants} indøkere`
+              : null}
+            {contactInfo.internalParticipants > 0 && contactInfo.externalParticipants > 0
+              ? ", "
+              : null}
+            {contactInfo.externalParticipants > 0
+              ? `${contactInfo.externalParticipants} eksterne`
+              : null}
           </InfoText>
           <InfoText>
             <Box className={classes.bold}>Pris: </Box>

@@ -14,7 +14,9 @@ const OrganizationCard: React.VFC = ({ ...props }) => {
     >
       <Grid container direction="column">
         <Grid item>
-          <Typography variant="body2">Her kan du se en oversikt over alle foreninger der du er medlem.</Typography>
+          <Typography variant="body2">
+            Her kan du se en oversikt over alle foreninger der du er medlem.
+          </Typography>
         </Grid>
       </Grid>
     </ProfileCardBase>

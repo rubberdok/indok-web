@@ -17,7 +17,9 @@ const AnswerCheckboxes: React.FC<{
 }> = ({ answer, question, onValueChanged }) => {
   // state to manage which options are selected
   const [selectedOptions, selectOptions] = useState<Option[]>(
-    question.options ? question.options?.filter((option) => answer.split("|||").includes(option.answer)) : []
+    question.options
+      ? question.options?.filter((option) => answer.split("|||").includes(option.answer))
+      : []
   );
 
   // every time options changes, set answer to the concatenation of selected options
@@ -48,7 +50,9 @@ const AnswerCheckboxes: React.FC<{
                   }
                 } else {
                   if (selectedOptions.includes(option)) {
-                    selectOptions(selectedOptions.filter((selectedOption) => selectedOption !== option));
+                    selectOptions(
+                      selectedOptions.filter((selectedOption) => selectedOption !== option)
+                    );
                   }
                 }
               }}

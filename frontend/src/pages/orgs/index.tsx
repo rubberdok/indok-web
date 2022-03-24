@@ -3,7 +3,15 @@ import Layout from "@components/Layout";
 import { GET_USER } from "@graphql/users/queries";
 import { Organization } from "@interfaces/organizations";
 import { User } from "@interfaces/users";
-import { Box, CircularProgress, Container, Grid, makeStyles, Paper, Typography } from "@material-ui/core";
+import {
+  Box,
+  CircularProgress,
+  Container,
+  Grid,
+  makeStyles,
+  Paper,
+  Typography,
+} from "@material-ui/core";
 import { NextPage } from "next";
 import Link from "next/link";
 

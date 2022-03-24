@@ -76,7 +76,10 @@ const FallbackPage: NextPage = () => {
     if (data) {
       setPaymentStatus(data.attemptCapturePayment.status);
       setOrder(data.attemptCapturePayment.order);
-      if (["CAPTURED", "CANCELLED"].includes(data.attemptCapturePayment.status) && intervalRef.current) {
+      if (
+        ["CAPTURED", "CANCELLED"].includes(data.attemptCapturePayment.status) &&
+        intervalRef.current
+      ) {
         // We either sucessfully captured payment or the payment was somehow cancelled
         clearInterval(intervalRef.current);
       }
@@ -112,7 +115,9 @@ const FallbackPage: NextPage = () => {
                   <>
                     <Grid container item direction="column" spacing={4} alignItems="center">
                       <Grid item>
-                        <Typography variant="h3">Behandler... Vennligst ikke forlat siden</Typography>
+                        <Typography variant="h3">
+                          Behandler... Vennligst ikke forlat siden
+                        </Typography>
                       </Grid>
                       <Grid item>
                         <CircularProgress />
@@ -125,7 +130,9 @@ const FallbackPage: NextPage = () => {
                 ) : paymentStatus === "CAPTURED" && order ? (
                   <>
                     <Typography variant="h3">Betaling fullført!</Typography>
-                    <Typography variant="body1">Betalingen var vellykket og du har nå kjøpt produktet. </Typography>
+                    <Typography variant="body1">
+                      Betalingen var vellykket og du har nå kjøpt produktet.{" "}
+                    </Typography>
                     <List className={classes.list}>
                       <ListSubheader>
                         <Typography>Ordredetaljer</Typography>
@@ -155,7 +162,10 @@ const FallbackPage: NextPage = () => {
                     >
                       Salgsbetingelser for kjøp
                     </Button>
-                    <SalesTermsDialog open={openSalesTerms} onClose={() => setOpenSalesTerms(false)} />
+                    <SalesTermsDialog
+                      open={openSalesTerms}
+                      onClose={() => setOpenSalesTerms(false)}
+                    />
                   </>
                 ) : paymentStatus === "CANCELLED" ? (
                   <Typography>Betalingen ble avbrutt</Typography>

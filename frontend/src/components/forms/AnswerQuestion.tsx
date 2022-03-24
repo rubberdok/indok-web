@@ -1,4 +1,11 @@
-import { FormControlLabel, MenuItem, Radio, RadioGroup, Select, TextField } from "@material-ui/core";
+import {
+  FormControlLabel,
+  MenuItem,
+  Radio,
+  RadioGroup,
+  Select,
+  TextField,
+} from "@material-ui/core";
 import AnswerCheckboxes from "@components/forms/AnswerCheckboxes";
 import { Question } from "@interfaces/forms";
 
@@ -30,7 +37,14 @@ const AnswerQuestion: React.FC<Props> = ({ answer, question, onValueChanged }) =
         />
       );
     case "SHORT_ANSWER":
-      return <TextField variant="outlined" fullWidth value={answer} onChange={(e) => onValueChanged(e.target.value)} />;
+      return (
+        <TextField
+          variant="outlined"
+          fullWidth
+          value={answer}
+          onChange={(e) => onValueChanged(e.target.value)}
+        />
+      );
     case "MULTIPLE_CHOICE":
       return (
         <RadioGroup value={answer} onChange={(e) => onValueChanged(e.target.value)}>
@@ -45,7 +59,9 @@ const AnswerQuestion: React.FC<Props> = ({ answer, question, onValueChanged }) =
         </RadioGroup>
       );
     case "CHECKBOXES":
-      return <AnswerCheckboxes answer={answer} question={question} onValueChanged={onValueChanged} />;
+      return (
+        <AnswerCheckboxes answer={answer} question={question} onValueChanged={onValueChanged} />
+      );
     case "DROPDOWN":
       return (
         <Select fullWidth value={answer} onChange={(e) => onValueChanged(e.target.value as string)}>

@@ -6,7 +6,9 @@ interface RemoveFiltersButtonProps {
   handleRemoveFilterChanged: () => void;
 }
 
-export const RemoveFiltersButton: React.FC<RemoveFiltersButtonProps> = ({ handleRemoveFilterChanged }) => {
+export const RemoveFiltersButton: React.FC<RemoveFiltersButtonProps> = ({
+  handleRemoveFilterChanged,
+}) => {
   return (
     <Box pb={3}>
       <Button variant="contained" startIcon={<Close />} onClick={handleRemoveFilterChanged}>

@@ -61,7 +61,9 @@ const EditQuestion: React.FC<{
               if (
                 question.options &&
                 question.options.length === 0 &&
-                (questionType === "CHECKBOXES" || questionType === "MULTIPLE_CHOICE" || questionType === "DROPDOWN")
+                (questionType === "CHECKBOXES" ||
+                  questionType === "MULTIPLE_CHOICE" ||
+                  questionType === "DROPDOWN")
               ) {
                 firstOption = { id: "", answer: "" };
               }
@@ -75,7 +77,9 @@ const EditQuestion: React.FC<{
           >
             {Object.entries(questionTypeLabels)
               // TODO: remove below line once Slider and File Upload question types are implemented
-              .filter(([questionType]) => !(questionType === "SLIDER" || questionType === "FILE_UPLOAD"))
+              .filter(
+                ([questionType]) => !(questionType === "SLIDER" || questionType === "FILE_UPLOAD")
+              )
               .map(([questionType, label]) => (
                 <MenuItem key={questionType} value={questionType}>
                   {label}

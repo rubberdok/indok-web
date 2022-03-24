@@ -1,4 +1,12 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Link } from "@material-ui/core";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Link,
+} from "@material-ui/core";
 import ClearIcon from "@material-ui/icons/Clear";
 import React, { Dispatch, SetStateAction } from "react";
 import { SendEmailProps } from "./EmailForm";
@@ -41,8 +49,8 @@ const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
         ))}
 
         <DialogContentText variant="body2">
-          Send en mail til <Link href="mailto:contact@rubberdok.no">contact@rubberdok.no</Link> dersom det skulle oppstå
-          spørsmål.
+          Send en mail til <Link href="mailto:contact@rubberdok.no">contact@rubberdok.no</Link>{" "}
+          dersom det skulle oppstå spørsmål.
         </DialogContentText>
       </DialogContent>
       <DialogActions>

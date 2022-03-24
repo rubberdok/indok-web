@@ -4,11 +4,15 @@ import { addApolloState, initializeApollo } from "@lib/apolloClient";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { User } from "src/types/users";
 
-const HealthPage = ({ user }: InferGetServerSidePropsType<typeof getServerSideProps>): JSX.Element => {
+const HealthPage = ({
+  user,
+}: InferGetServerSidePropsType<typeof getServerSideProps>): JSX.Element => {
   const { data } = useQuery<{ user: User }>(GET_USER_PROFILE, {
     fetchPolicy: "cache-only",
   });
-  const [loadUser] = useLazyQuery<{ user: User | null }>(GET_USER_PROFILE, { fetchPolicy: "network-only" });
+  const [loadUser] = useLazyQuery<{ user: User | null }>(GET_USER_PROFILE, {
+    fetchPolicy: "network-only",
+  });
   return (
     <>
       <h1>Hi, I am healthy</h1>

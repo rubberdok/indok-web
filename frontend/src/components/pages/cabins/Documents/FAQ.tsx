@@ -26,16 +26,20 @@ const faqs = [
         <Typography>Følgende regler gjelder for avbestilling av en booking:</Typography>
         <ul>
           <li>
-            <Typography>Avbestilling innen to uker før bestilt ankomstdato er gebyrfritt.</Typography>
-          </li>
-          <li>
             <Typography>
-              Avbestilling innen en uke i forkant av bestilt ankomstdato medfører et gebyr på 30% av leien.
+              Avbestilling innen to uker før bestilt ankomstdato er gebyrfritt.
             </Typography>
           </li>
           <li>
             <Typography>
-              Avbestilling innen en uke i forkant av bestilt ankomstdato medfører et gebyr på 50% av leien.
+              Avbestilling innen en uke i forkant av bestilt ankomstdato medfører et gebyr på 30% av
+              leien.
+            </Typography>
+          </li>
+          <li>
+            <Typography>
+              Avbestilling innen en uke i forkant av bestilt ankomstdato medfører et gebyr på 50% av
+              leien.
             </Typography>
           </li>
         </ul>
@@ -50,8 +54,9 @@ const faqs = [
     question: "Hva er forskjellen på de to hyttene?",
     answer: (
       <Typography>
-        Hyttene er tilnærmet identiske, men Bjørnen blir gjerne kalt kosehytta og Oksen festhytta, siden Bjørnen er den
-        av de to som først blir oppgradert gjennom pågående oppussingsprosjekter.
+        Hyttene er tilnærmet identiske, men Bjørnen blir gjerne kalt kosehytta og Oksen festhytta,
+        siden Bjørnen er den av de to som først blir oppgradert gjennom pågående
+        oppussingsprosjekter.
       </Typography>
     ),
   },
@@ -59,9 +64,9 @@ const faqs = [
     question: "Hva er den totale kapasiteten på hyttene?",
     answer: (
       <Typography>
-        Vi har satt total kapasitet til 18 personer, fordelt på 14 sengeplasser og 4 madrasser. Det skal være flere
-        madrasser enn dette tilgjengelig på hyttene, men det anbefales å ikke overstige dette antallet pga
-        plassbegrensninger rundt kjøkkenbordet o.l.
+        Vi har satt total kapasitet til 18 personer, fordelt på 14 sengeplasser og 4 madrasser. Det
+        skal være flere madrasser enn dette tilgjengelig på hyttene, men det anbefales å ikke
+        overstige dette antallet pga plassbegrensninger rundt kjøkkenbordet o.l.
       </Typography>
     ),
   },
@@ -69,9 +74,9 @@ const faqs = [
     question: "Hva kan man finne på i Oppdal?",
     answer: (
       <Typography>
-        Mange aktiviteter tilbys av eksterne aktører, se Aktiviteter for videre info. Oppdal ligger på østkanten av
-        Trollheimen, og det er mange flotte dagsturer å velge mellom med dette utgangspunktet. Det skal ligge kart over
-        området tilgjengelig på hyttene.
+        Mange aktiviteter tilbys av eksterne aktører, se Aktiviteter for videre info. Oppdal ligger
+        på østkanten av Trollheimen, og det er mange flotte dagsturer å velge mellom med dette
+        utgangspunktet. Det skal ligge kart over området tilgjengelig på hyttene.
       </Typography>
     ),
   },
@@ -79,8 +84,8 @@ const faqs = [
     question: "Hva har hyttene av dyner, puter og sengetøy?",
     answer: (
       <Typography>
-        Begge hyttene er utstyrt med minimum 18 puter og 18 dyner, men laken og sengetøy (evt. laken og sovepose) må
-        medbringes.
+        Begge hyttene er utstyrt med minimum 18 puter og 18 dyner, men laken og sengetøy (evt. laken
+        og sovepose) må medbringes.
       </Typography>
     ),
   },
@@ -89,8 +94,8 @@ const faqs = [
     question: "Kan jeg ha med meg eksterne venner (ikke-indøkere) til hyttene?",
     answer: (
       <Typography>
-        Ja. Såfremt over 50% av deltakerne på turen er indøkere gjelder 50,- for indøkere /100,- for eksterne per natt.
-        Hvis det er under 50 % indøkere må man leie hele hytta.
+        Ja. Såfremt over 50% av deltakerne på turen er indøkere gjelder 50,- for indøkere /100,- for
+        eksterne per natt. Hvis det er under 50 % indøkere må man leie hele hytta.
       </Typography>
     ),
   },
@@ -98,9 +103,9 @@ const faqs = [
     question: "Hvor mye må jeg betale om jeg mister nøklene?",
     answer: (
       <Typography>
-        Den som er nøkkelansvarlig er ansvarlig for nøklene. Dersom disse går tapt vil Hyttestyret fakturere den
-        nøkkelansvarlige et gebyr på 1000,-. Hyttestyret tar ikke stilling til hvorvidt de andre gjestene bidrar til å
-        dekke gebyret.
+        Den som er nøkkelansvarlig er ansvarlig for nøklene. Dersom disse går tapt vil Hyttestyret
+        fakturere den nøkkelansvarlige et gebyr på 1000,-. Hyttestyret tar ikke stilling til
+        hvorvidt de andre gjestene bidrar til å dekke gebyret.
       </Typography>
     ),
   },
@@ -109,8 +114,13 @@ const faqs = [
     answer: <Typography>De som har brukt hyttene må alltid vaske ut selv.</Typography>,
   },
   {
-    question: "Kan jeg reservere en hytte for min eksterne vennegjeng eller eksterne linjeforening?",
-    answer: <Typography>Ja. Dette forutsetter leie av hel hytte, og ekstern pris gjelder, 2700,- per natt.</Typography>,
+    question:
+      "Kan jeg reservere en hytte for min eksterne vennegjeng eller eksterne linjeforening?",
+    answer: (
+      <Typography>
+        Ja. Dette forutsetter leie av hel hytte, og ekstern pris gjelder, 2700,- per natt.
+      </Typography>
+    ),
   },
 ];
 
@@ -120,9 +130,11 @@ Renders all frequently asked questions regarding the cabins.
 const FAQ: React.FC = () => {
   const [expanded, setExpanded] = React.useState<number | false>(false);
 
-  const handleChange = (panel: number) => (_event: React.ChangeEvent<Record<string, unknown>>, isExpanded: boolean) => {
-    setExpanded(isExpanded ? panel : false);
-  };
+  const handleChange =
+    (panel: number) =>
+    (_event: React.ChangeEvent<Record<string, unknown>>, isExpanded: boolean) => {
+      setExpanded(isExpanded ? panel : false);
+    };
 
   return (
     <Grid item container xs={12} spacing={5}>

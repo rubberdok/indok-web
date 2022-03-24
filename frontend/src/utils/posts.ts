@@ -54,8 +54,10 @@ export const getPostBySlug = (slug: string, page: string) => {
 
   const { frontmatter, content, excerpt } = posts[postIndex];
 
-  const previousPost: Post | null = postIndex >= 0 && postIndex < posts.length - 1 ? posts[postIndex + 1] : null;
-  const nextPost: Post | null = postIndex > 1 && postIndex <= posts.length ? posts[postIndex - 1] : null;
+  const previousPost: Post | null =
+    postIndex >= 0 && postIndex < posts.length - 1 ? posts[postIndex + 1] : null;
+  const nextPost: Post | null =
+    postIndex > 1 && postIndex <= posts.length ? posts[postIndex - 1] : null;
 
   return { frontmatter, post: { content, excerpt }, previousPost, nextPost, slug };
 };

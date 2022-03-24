@@ -1574,7 +1574,10 @@ export const ArchiveByTypesDocument = {
           variable: { kind: "Variable", name: { kind: "Name", value: "document_types" } },
           type: {
             kind: "NonNullType",
-            type: { kind: "ListType", type: { kind: "NamedType", name: { kind: "Name", value: "String" } } },
+            type: {
+              kind: "ListType",
+              type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
+            },
           },
         },
         {
@@ -1758,7 +1761,10 @@ export const ConfirmBookingDocument = {
         {
           kind: "VariableDefinition",
           variable: { kind: "Variable", name: { kind: "Name", value: "id" } },
-          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "ID" } },
+          },
         },
       ],
       selectionSet: {
@@ -1809,7 +1815,10 @@ export const DeleteBookingDocument = {
         {
           kind: "VariableDefinition",
           variable: { kind: "Variable", name: { kind: "Name", value: "id" } },
-          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "ID" } },
+          },
         },
       ],
       selectionSet: {

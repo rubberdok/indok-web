@@ -23,42 +23,51 @@ const EditForm: React.FC<{ form: Form }> = ({ form }) => {
   // state for whether to show a confirmation dialog after changing the form
   // "update" type also includes toSwitch for question to switch to after confirming
   const [confirmationDialog, setConfirmationDialog] = useState<
-    { type: "create" } | { type: "update"; toSwitch: Question | undefined } | { type: "delete" } | undefined
+    | { type: "create" }
+    | { type: "update"; toSwitch: Question | undefined }
+    | { type: "delete" }
+    | undefined
   >(undefined);
 
   // mutation to create a new question
-  const [createQuestion] = useMutation<{ createQuestion: { question: Question } }>(CREATE_QUESTION, {
-    // updates the cache upon creating the question, keeping the client consistent with the database
-    update: (cache, { data }) => {
-      // gets the new question from the mutation's return
-      const newQuestion = data?.createQuestion.question;
-      // reads the cached form on which to update the question
-      const cachedForm = cache.readFragment<Form>({
-        id: `FormType:${form.id}`,
-        fragment: FORM_RESPONSES_FRAGMENT,
-        fragmentName: "FormResponsesFragment",
-      });
-      if (cachedForm && newQuestion) {
-        // adds the new question to the questions field of the cached form
-        cache.writeFragment({
+  const [createQuestion] = useMutation<{ createQuestion: { question: Question } }>(
+    CREATE_QUESTION,
+    {
+      // updates the cache upon creating the question, keeping the client consistent with the database
+      update: (cache, { data }) => {
+        // gets the new question from the mutation's return
+        const newQuestion = data?.createQuestion.question;
+        // reads the cached form on which to update the question
+        const cachedForm = cache.readFragment<Form>({
           id: `FormType:${form.id}`,
           fragment: FORM_RESPONSES_FRAGMENT,
           fragmentName: "FormResponsesFragment",
-          data: {
-            questions: [...cachedForm.questions, newQuestion],
-          },
         });
-      }
-    },
-    onCompleted: ({ createQuestion }) => {
-      if (createQuestion) {
-        switchActiveQuestion(createQuestion.question);
-      }
-    },
-  });
+        if (cachedForm && newQuestion) {
+          // adds the new question to the questions field of the cached form
+          cache.writeFragment({
+            id: `FormType:${form.id}`,
+            fragment: FORM_RESPONSES_FRAGMENT,
+            fragmentName: "FormResponsesFragment",
+            data: {
+              questions: [...cachedForm.questions, newQuestion],
+            },
+          });
+        }
+      },
+      onCompleted: ({ createQuestion }) => {
+        if (createQuestion) {
+          switchActiveQuestion(createQuestion.question);
+        }
+      },
+    }
+  );
 
   // mutation to update a question (and its options)
-  const [updateQuestion] = useMutation<{ updateQuestion: { question: Question } }, QuestionVariables>(UPDATE_QUESTION, {
+  const [updateQuestion] = useMutation<
+    { updateQuestion: { question: Question } },
+    QuestionVariables
+  >(UPDATE_QUESTION, {
     // updates the cache upon updating the question
     update: (cache, { data }) => {
       const newQuestion = data?.updateQuestion.question;
@@ -108,7 +117,11 @@ const EditForm: React.FC<{ form: Form }> = ({ form }) => {
   // function to update the current active question to the database and then set a new one
   const switchActiveQuestion = (question: Question | undefined) => {
     if (activeQuestion) {
-      if (activeQuestion.answers && activeQuestion.answers.length > 0 && confirmationDialog?.type !== "update") {
+      if (
+        activeQuestion.answers &&
+        activeQuestion.answers.length > 0 &&
+        confirmationDialog?.type !== "update"
+      ) {
         setConfirmationDialog({ type: "update", toSwitch: question });
         return;
       } else {
@@ -156,7 +169,11 @@ const EditForm: React.FC<{ form: Form }> = ({ form }) => {
   // shows confirmation dialog if question has answers
   const deleteActiveQuestion = () => {
     if (activeQuestion) {
-      if (activeQuestion.answers && activeQuestion.answers.length > 0 && confirmationDialog?.type !== "delete") {
+      if (
+        activeQuestion.answers &&
+        activeQuestion.answers.length > 0 &&
+        confirmationDialog?.type !== "delete"
+      ) {
         setConfirmationDialog({ type: "delete" });
       } else {
         deleteQuestion({ variables: { id: activeQuestion.id } });
@@ -210,7 +227,10 @@ const EditForm: React.FC<{ form: Form }> = ({ form }) => {
                     deleteQuestion={deleteActiveQuestion}
                   />
                 ) : (
-                  <QuestionPreview question={question} setActive={() => switchActiveQuestion(question)} />
+                  <QuestionPreview
+                    question={question}
+                    setActive={() => switchActiveQuestion(question)}
+                  />
                 )}
               </CardContent>
             </Card>

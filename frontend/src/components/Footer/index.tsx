@@ -1,5 +1,13 @@
 import HallOfFame from "@components/Footer/HallOfFame";
-import { Box, Button, Container, Grid, IconButton, makeStyles, Typography } from "@material-ui/core";
+import {
+  Box,
+  Button,
+  Container,
+  Grid,
+  IconButton,
+  makeStyles,
+  Typography,
+} from "@material-ui/core";
 import { Facebook, GitHub } from "@material-ui/icons";
 import rubberdokLogo from "@public/img/rubberdok_logo_white.svg";
 import Image from "next/image";
@@ -102,12 +110,20 @@ const Footer: React.FC = () => {
                 </a>
                 <Link href="/report/">Baksida</Link>
                 <Box mt={2}>
-                  <a href="https://www.facebook.com/HovedstyretIndok" rel="noreferrer noopener" target="_blank">
+                  <a
+                    href="https://www.facebook.com/HovedstyretIndok"
+                    rel="noreferrer noopener"
+                    target="_blank"
+                  >
                     <IconButton edge="start" size="small" aria-label="facebook" color="inherit">
                       <Facebook />
                     </IconButton>
                   </a>
-                  <a href="https://github.com/rubberdok/indok-web" rel="noreferrer noopener" target="_blank">
+                  <a
+                    href="https://github.com/rubberdok/indok-web"
+                    rel="noreferrer noopener"
+                    target="_blank"
+                  >
                     <IconButton size="small" aria-label="github" color="inherit">
                       <GitHub />
                     </IconButton>
@@ -115,35 +131,53 @@ const Footer: React.FC = () => {
                 </Box>
               </Grid>
               <Grid item xs={12} md={6}>
-                <Box className={classes.nth} position="absolute" width="600px" height="100%" top={0} zIndex={-1} />
+                <Box
+                  className={classes.nth}
+                  position="absolute"
+                  width="600px"
+                  height="100%"
+                  top={0}
+                  zIndex={-1}
+                />
               </Grid>
             </Grid>
           </Container>
         </Box>
         <Box className={classes.credits}>
           <Container>
-            <Box height="100%" display="flex" alignItems="center" className={classes.creditsContent}>
+            <Box
+              height="100%"
+              display="flex"
+              alignItems="center"
+              className={classes.creditsContent}
+            >
               <a
                 className={classes.rdLogo}
                 href="https://github.com/rubberdok/indok-web"
                 rel="noreferrer noopener"
                 style={{ height: "100%" }}
               >
-                <Image src={rubberdokLogo} alt="Rubberdøk logo" width="67px" height="35px" layout="fixed" />
+                <Image
+                  src={rubberdokLogo}
+                  alt="Rubberdøk logo"
+                  width="67px"
+                  height="35px"
+                  layout="fixed"
+                />
               </a>
               <Box flexGrow="1">
                 <Typography variant="body2">
                   Forslag til nettsiden eller oppdaget en feil? Lag et issue på{" "}
-                  <a href="https://github.com/rubberdok/indok-web/issues">GitHub</a>, eller send mail til{" "}
-                  <a href="mailto:feedback@rubberdok.no">feedback@rubberdok.no</a>.
+                  <a href="https://github.com/rubberdok/indok-web/issues">GitHub</a>, eller send
+                  mail til <a href="mailto:feedback@rubberdok.no">feedback@rubberdok.no</a>.
                 </Typography>
                 <Typography variant="body2">
                   Utviklet av{" "}
                   <a href="https://github.com/rubberdok/indok-web" rel="norefferer noopener">
                     Rubberdøk
                   </a>
-                  , Hovedstyrets Webkomité. Kopirett © {new Date().getFullYear()} Foreningen for Studentene ved Indøk.
-                  Alle rettigheter reservert.
+                  , Hovedstyrets Webkomité. Kopirett © {new Date().getFullYear()} Foreningen for
+                  Studentene ved Indøk. Alle rettigheter reservert.
                 </Typography>
               </Box>
               <Button color="inherit" disableRipple onClick={() => setOpen(!open)}>
