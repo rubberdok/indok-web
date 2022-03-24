@@ -40,7 +40,7 @@ DATABASES = {
 }
 
 # URLs
-ROOT_URLCONF = "config.urls.production"
+ROOT_URLCONF = env("ROOT_URLCONF", default="config.urls.production")
 
 # EMAIL
 EMAIL_BACKEND = env("DJANGO_EMAIL_BACKEND", default="anymail.backends.postmark.EmailBackend")
