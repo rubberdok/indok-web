@@ -12,7 +12,8 @@ class CabinResolvers:
     @permission_required("cabins.manage_booking")
     def resolve_admin_all_bookings(self, root, **kwargs):
         """
-        This admin view lets the user see more fields in the booking object through the AdminBookingType in the schema.
+        This admin view lets the user see more fields in the booking object
+        through the AdminBookingType in the schema.
         However, the user needs view access to bookings.
         """
         query = BookingModel.objects.all().order_by("check_in")

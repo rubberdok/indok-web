@@ -54,7 +54,8 @@ class ListingResolverTestCase(ListingBaseTestCase):
 
     def test_resolve_listings(self):
         """
-        Expect to find all listings whose start datetime is in the past and deadline is in the future.
+        Expect to find all listings whose start datetime is in the past
+        and deadline is in the future.
         """
         query = """
             query {

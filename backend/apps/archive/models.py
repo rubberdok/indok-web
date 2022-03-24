@@ -44,6 +44,7 @@ def notify_doc(sender, instance, created, **kwargs):
         if instance.web_link is None:
             instance.delete()
             raise FieldError(
-                "This document does not seem to exist in Drive. Are you sure you gave the right file location?"
+                "This document does not seem to exist in Drive. "
+                "Are you sure you gave the right file location?"
             )
         instance.save()
