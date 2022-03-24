@@ -15,7 +15,7 @@ def send_order_confirmation(sender, instance: Order, **kwargs):
     if not instance._state.adding:
         previous: Order = sender.objects.get(id=instance.id)
         if (
-            previous.payment_status == Order.PaymentStatus.RESERVED
+            previous.payment_status != Order.PaymentStatus.CAPTURED
             and instance.payment_status == Order.PaymentStatus.CAPTURED
         ):
             send_order_confirmation_mail(instance)

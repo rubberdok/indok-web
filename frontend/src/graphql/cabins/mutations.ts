@@ -43,8 +43,8 @@ export const UPDATE_BOOKING_SEMESTER = gql`
 `;
 
 export const DECLINE_BOOKING = gql`
-  mutation UpdateBooking($id: ID!) {
-    updateBooking(bookingData: { id: $id, isTentative: false, isDeclined: true }) {
+  mutation UpdateBooking($id: ID!, $declineReason: String) {
+    updateBooking(bookingData: { id: $id, isTentative: false, isDeclined: true, declineReason: $declineReason }) {
       ok
     }
   }

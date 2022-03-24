@@ -83,13 +83,13 @@ const AdminPage: NextPage = () => {
                 </Tabs>
               </Box>
               <TabPanel value={tabValue} index={0}>
-                <AdminCabinTable bookings={tentative} refetch={refetch} />
+                <AdminCabinTable bookings={tentative} refetch={refetch} currentTab="tentative" />
               </TabPanel>
               <TabPanel value={tabValue} index={1}>
-                <AdminCabinTable bookings={accepted} refetch={refetch} />
+                <AdminCabinTable bookings={accepted} refetch={refetch} currentTab="accepted" />
               </TabPanel>
               <TabPanel value={tabValue} index={2}>
-                <AdminCabinTable bookings={declined} refetch={refetch} />
+                <AdminCabinTable bookings={declined} refetch={refetch} currentTab="declined" />
               </TabPanel>
             </Box>
           </Box>

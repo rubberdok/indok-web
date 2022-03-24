@@ -53,7 +53,7 @@ const EmailFormDialog: React.FC<EmailFormDialogProps> = ({
           <Grid item>
             <Typography variant="h5">Send en e-post til alle påmeldte</Typography>
             <Typography variant="body2">
-              E-postadressen registrert på brukeren din vil bli lagt til på blindkopi
+              En kopi av e-posten vil bli sendt til kontaktpersonen for arrangementet.
             </Typography>
           </Grid>
           <Grid item>
@@ -74,6 +74,12 @@ const EmailFormDialog: React.FC<EmailFormDialogProps> = ({
               rows={4}
               variant="outlined"
             />
+          </Grid>
+          <Grid item>
+            <Typography variant="caption">
+              Denne tjenesten er kun ment for informasjon om arrangementet. Promotering, nyhetsbrev, og lignende er ikke
+              tillatt. Misbruk vil føre til utestengelse fra denne funksjonen.
+            </Typography>
           </Grid>
         </Grid>
       </DialogContent>
