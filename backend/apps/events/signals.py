@@ -1,10 +1,11 @@
 from typing import Type
 
-from django.db.models.signals import pre_save
+from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 
 from .mail import EventEmail
 from .models import Event, SignUp
+from utils.permissions import assign_object_permissions
 
 
 @receiver(pre_save, sender=SignUp)
@@ -37,3 +38,15 @@ def send_wait_list_notification_when_events_expand(sender: Type[Event], instance
             users_on_wait_list = previous.users_on_waiting_list[: instance.available_slots - previous.available_slots]
             for user in users_on_wait_list:
                 EventEmail.send_waitlist_notification_email(user, instance)
+
+
+@receiver(post_save, sender=Event)
+def assign_event_permissions(instance: Event, created: bool, **kwargs) -> None:
+    """Assigns appropriate object permissions to newly created events."""
+    if created:
+        assign_object_permissions(
+            app="events",
+            model="Event",
+            instance=instance,
+            organization=instance.organization,
+        )
