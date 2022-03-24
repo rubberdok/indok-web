@@ -20,7 +20,7 @@ if READ_DOT_ENV_FILE:
 
 # GENERAL
 ENVIRONMENT: Literal["development", "production", "test"] = env("DJANGO_ENVIRONMENT")
-DEBUG: bool = ENVIRONMENT == "development"
+DEBUG: bool = ENVIRONMENT != "production"
 
 TIME_ZONE = "Europe/Oslo"
 LANGUAGE_CODE = "en-us"
@@ -43,7 +43,7 @@ DATABASES = {
 }
 
 # URLS
-ROOT_URLCONF = "config.urls.base"
+ROOT_URLCONF = env("ROOT_URLCONF", default="config.urls.base")
 WSGI_APPLICATION = "config.wsgi.application"
 
 # APPS
