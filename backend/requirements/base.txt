@@ -12,7 +12,7 @@ factory-boy==3.2.1
 graphene==2.1.8
 graphene-django==2.15.0
 gunicorn==20.0.4
-phonenumbers==8.12.19
+phonenumbers==8.12.45
 promise==2.3
 psycopg2-binary==2.9.3
 WeasyPrint==54.2
@@ -25,4 +25,4 @@ pillow>=8.1.1
 whitenoise==5.3.0
 PyYAML==6.0
 django-guardian==2.4.0
-XlsxWriter==3.0.2
+XlsxWriter==3.0.3
