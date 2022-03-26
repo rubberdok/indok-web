@@ -56,7 +56,6 @@ const EventListItem: React.FC<Props> = ({ event, user }) => {
                 {event.shortDescription ?? "Trykk for å lese mer"}
               </Typography>
             </Box>
-
             <EventListChip event={event} user={user} />
           </CardActionArea>
         </Link>
