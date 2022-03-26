@@ -165,23 +165,23 @@ const SignUpVariants: React.FC<Props> = ({
         />
       )}
 
-      {event.attendable.signupOpenDate && (
-        <CountdownButton
-          countDownDate={event.attendable?.signupOpenDate}
-          deadline={event.attendable?.deadline ? event.attendable?.deadline : ""}
-          isAttending={event.attendable?.userAttendance?.isAttending ?? false}
-          isOnWaitingList={event.attendable?.userAttendance?.isOnWaitingList ?? false}
-          isFull={event.attendable?.isFull}
-          loading={loading || signUpLoading || signOffLoading}
-          disabled={
-            noPhoneNumberNorAlreadySignedUp ||
-            bindingSignupAndAlreadySignpedUp ||
-            requiresExtraInfoAndExtraInfoNotFilledIn
-          }
-          onClick={handleClick}
-          currentTime={timeData.serverTime}
-        />
-      )}
+      <CountdownButton
+        countDownDate={event.attendable?.signupOpenDate}
+        deadline={event.attendable?.deadline}
+        startTime={event.startTime}
+        isAttending={event.attendable?.userAttendance?.isAttending ?? false}
+        isOnWaitingList={event.attendable?.userAttendance?.isOnWaitingList ?? false}
+        isFull={event.attendable?.isFull}
+        loading={loading || signUpLoading || signOffLoading}
+        disabled={
+          noPhoneNumberNorAlreadySignedUp ||
+          bindingSignupAndAlreadySignpedUp ||
+          requiresExtraInfoAndExtraInfoNotFilledIn
+        }
+        onClick={handleClick}
+        currentTime={timeData.serverTime}
+      />
+
       {event.attendable.product &&
         event.attendable?.userAttendance?.isAttending &&
         (event.attendable?.userAttendance.hasBoughtTicket ? (

@@ -42,7 +42,8 @@ const useStyles = makeStyles(() => ({
 type Props = {
   countDownDate: string;
   currentTime: string;
-  deadline: string;
+  deadline?: string;
+  startTime: string;
   isAttending: boolean;
   isOnWaitingList: boolean;
   isFull: boolean;
@@ -69,6 +70,7 @@ type Props = {
 const CountdownButton: React.FC<Props> = ({
   countDownDate,
   deadline,
+  startTime,
   currentTime,
   isAttending,
   isOnWaitingList,
@@ -80,7 +82,7 @@ const CountdownButton: React.FC<Props> = ({
   const [now, setNow] = useState(dayjs(currentTime));
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft(countDownDate, now));
   const classes = useStyles();
-  const pastDeadline = dayjs(deadline) < now;
+  const pastDeadline = (deadline && dayjs().isAfter(deadline)) || dayjs().isAfter(startTime);
 
   useEffect(() => {
     // Update timeLeft and now (current time) each second
@@ -134,6 +136,7 @@ const CountdownButton: React.FC<Props> = ({
   const getCorrectLabel = () => {
     if (currentTimeParts.length !== 0) return getCurrentTimeLeft(currentTimeParts);
     if (isAttending && pastDeadline) return "Påmeldt";
+    if (!isAttending && !isOnWaitingList && pastDeadline) return "Påmelding stengt";
     if (isAttending) return "Meld av";
     if (isOnWaitingList) return "Meld av venteliste";
     if (isFull) return "Meld på venteliste";
