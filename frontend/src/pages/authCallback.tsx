@@ -1,5 +1,4 @@
 import { useMutation } from "@apollo/client";
-import Layout from "@components/Layout";
 import ProfileSkeleton from "@components/pages/profile/ProfileSkeleton";
 import { AUTHENTICATE } from "@graphql/users/mutations";
 import { User } from "@interfaces/users";
