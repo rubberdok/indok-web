@@ -48,38 +48,36 @@ const AuthCallbackPage: NextPage = () => {
   }
 
   return (
-    <Layout>
-      <Container>
-        {loadingProfile && <ProfileSkeleton />}
-        {error && (
-          <Grid
-            container
-            direction="column"
-            spacing={2}
-            justifyContent="center"
-            alignItems="center"
-            style={{ marginTop: theme.spacing(4) }}
-          >
-            <Grid item md={6}>
-              <Typography variant="h2" component="h1">
-                Uff da
-              </Typography>
-            </Grid>
-            <Grid item md={6}>
-              <Typography>Her var det noe som gikk galt...</Typography>
-            </Grid>
-            <Grid>
-              <Link passHref href="/">
-                <Button variant="text">Tilbake til hjemmesiden</Button>
-              </Link>
-            </Grid>
-            <Grid item md={6}>
-              <Image src={Bug} />
-            </Grid>
+    <Container>
+      {loadingProfile && <ProfileSkeleton />}
+      {error && (
+        <Grid
+          container
+          direction="column"
+          spacing={2}
+          justifyContent="center"
+          alignItems="center"
+          style={{ marginTop: theme.spacing(4) }}
+        >
+          <Grid item md={6}>
+            <Typography variant="h2" component="h1">
+              Uff da
+            </Typography>
           </Grid>
-        )}
-      </Container>
-    </Layout>
+          <Grid item md={6}>
+            <Typography>Her var det noe som gikk galt...</Typography>
+          </Grid>
+          <Grid>
+            <Link passHref href="/">
+              <Button variant="text">Tilbake til hjemmesiden</Button>
+            </Link>
+          </Grid>
+          <Grid item md={6}>
+            <Image src={Bug} />
+          </Grid>
+        </Grid>
+      )}
+    </Container>
   );
 };
 
