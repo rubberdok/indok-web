@@ -8,8 +8,6 @@ interface Props {
   isDisabled: boolean;
 }
 
-//TODO: Make a small space
-
 const RemoveFilterButton: React.FC<Props> = ({ handleAction, text, isDisabled }) => {
   return (
     <Box pb={3}>
