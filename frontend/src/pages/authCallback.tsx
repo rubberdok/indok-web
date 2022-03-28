@@ -20,31 +20,24 @@ const AuthCallbackPage: NextPage = () => {
   const theme = useTheme();
 
   const { code, state } = router.query;
-  const [authUser, { loading, data, error, called }] = useMutation<{ authUser: AuthUser }>(AUTHENTICATE, {
+  const [authUser, { loading, error }] = useMutation<{ authUser: AuthUser }>(AUTHENTICATE, {
     errorPolicy: "all",
-    refetchQueries: ["user"],
-    awaitRefetchQueries: true,
+    onCompleted: ({ authUser: { user } }) => {
+      if (user.firstLogin) {
+        router.push("/register");
+      } else if (state) {
+        router.push(Array.isArray(state) ? state.join("") : state);
+      } else {
+        router.push("/profile");
+      }
+    },
   });
 
   useEffect(() => {
     if (code) authUser({ variables: { code } });
   }, [code, authUser]);
 
-  const loadingProfile = !error && !data?.authUser?.user?.firstLogin && !state;
-
-  if (called && !loading && data && data.authUser) {
-    if (data.authUser.user.firstLogin) {
-      router.push("/register");
-    } else if (state) {
-      if (Array.isArray(state)) {
-        router.push(state.join(""));
-      } else {
-        router.push(state);
-      }
-    } else {
-      router.push("/profile");
-    }
-  }
+  const loadingProfile = !error && loading && !state;
 
   return (
     <Container>
