@@ -354,7 +354,9 @@ class SendEventEmails(graphene.Mutation):
         receiver_emails.append(info.context.user.email)
 
         for i in range(0, len(receiver_emails), settings.EMAIL_MAX_RECIPIENTS):
-            EventEmail.send_event_emails(receiver_emails[i : i + settings.EMAIL_MAX_RECIPIENTS], content, subject)
+            EventEmail.send_event_emails(
+                receiver_emails[i : i + settings.EMAIL_MAX_RECIPIENTS], content, subject, event
+            )
 
         ok = True
         return SendEventEmails(ok=ok)
