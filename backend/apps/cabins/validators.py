@@ -75,7 +75,7 @@ def checkin_validation(check_in, check_out, cabin_ids):
 
 
 def email_validation(email: str):
-    if not email.count("@") == 1 and "." not in email.split("@")[-1]:
+    if email.count("@") != 1 or "." not in email.split("@")[-1]:
         raise GraphQLError(f"Input email {email} is invalid")
 
 
