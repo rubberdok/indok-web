@@ -1,31 +1,19 @@
-import { Typography, Box, Grid, Paper, Divider, Container } from "@material-ui/core";
-import { NextPage } from "next";
-import Link from "next/link";
-import React, { useEffect, useState } from "react";
-import ImageSlider from "@components/pages/cabins/ImageSlider/ImageSlider";
-import { cabinImages, outsideImages } from "@components/pages/cabins/ImageSlider/imageData";
-import FAQ from "@components/pages/cabins/Documents/FAQ";
 import Layout from "@components/Layout";
-import { useQuery } from "@apollo/client";
-import { GET_USER } from "@graphql/users/queries";
-import { User } from "@interfaces/users";
-import Image from "next/image";
 import ContactCabinBoard from "@components/pages/cabins/ContactCabinBoard";
+import FAQ from "@components/pages/cabins/Documents/FAQ";
 import Hero from "@components/pages/cabins/Hero";
+import { cabinImages, outsideImages } from "@components/pages/cabins/ImageSlider/imageData";
+import ImageSlider from "@components/pages/cabins/ImageSlider/ImageSlider";
+import { Box, Container, Divider, Grid, Paper, Typography } from "@material-ui/core";
+import { NextPage } from "next";
+import Image from "next/image";
+import Link from "next/link";
+import React from "react";
 
 /*
 Front page for cabins. Includes info about the cabins and link to the booking page (cabins/book).
 */
 const CabinsPage: NextPage = () => {
-  const { data, error } = useQuery<{ user: User }>(GET_USER);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    if (data && data.user && !error) {
-      setIsLoggedIn(true);
-    }
-  }, [data, error]);
-
   const facilitiesData = [
     {
       icon: <Image alt="" src="/img/undraw_home.svg" width={100} height={100} />,
@@ -93,7 +81,7 @@ const CabinsPage: NextPage = () => {
 
   return (
     <Layout>
-      <Hero isLoggedIn={isLoggedIn} />
+      <Hero />
       <Container>
         <Box my={5} id="anchorBox">
           <Paper>
