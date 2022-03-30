@@ -189,12 +189,6 @@ class CabinsMutationsTestCase(CabinsBaseTestCase):
         self.assertEqual(3, len(Booking.objects.all()))
 
     def test_create_booking(self):
-        # Test booking creation without add_booking permission
-        response = self.create_booking(self.no_conflict_booking, f"{self.bjornen_cabin.id}")
-        self.assert_permission_error(response)
-
-        # Test with add_booking permission
-        self.add_booking_permission("add_booking")
         response = self.create_booking(self.no_conflict_booking, f"{self.bjornen_cabin.id}", user=self.user)
         self.assertResponseNoErrors(response)
         # Check that booking is created
@@ -341,11 +335,6 @@ class EmailTestCase(CabinsBaseTestCase):
             }}
         """
         return self.query(query, user=user)
-
-    def test_mail_permission(self):
-        # Tries to send a mail with missing permissions
-        response = self.send_email(self.first_booking, "reserve_booking", user=self.user)
-        self.assert_permission_error(response)
 
     def test_outbox_size_reservation(self):
         # Check outbox size when sending reservation mails to both admin and user
