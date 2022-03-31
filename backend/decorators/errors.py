@@ -1,2 +1,0 @@
-class LoginRequiredError(PermissionError):
-    pass
