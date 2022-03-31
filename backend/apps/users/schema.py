@@ -17,4 +17,4 @@ class UserQueries(graphene.ObjectType, UserResolvers):
     logout = graphene.String(required=True)
 
     if settings.ENVIRONMENT == "test":
-        test_auth = graphene.Field(UserType)
+        auth_token = graphene.Field(UserType)

@@ -9,14 +9,13 @@ from django.http.response import HttpResponse
 from graphene.utils.str_converters import to_snake_case
 from graphene_django.utils.testing import GraphQLTestCase
 from django.conf import settings
-from decorators.constants import PERMISSION_REQUIRED_ERROR
 
 from utils.testing.factories.users import UserFactory
 
 if TYPE_CHECKING:
     from apps.users.models import User
 
-PERMISSION_ERROR_MESSAGE: Final = PERMISSION_REQUIRED_ERROR
+PERMISSION_ERROR_MESSAGE: Final = "You do not have the permissions required."
 ALTERNATE_PERMISSION: Final = "You do not have permission to perform this action"
 
 model = Union[models.Model, factory.Factory]
