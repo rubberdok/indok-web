@@ -3,7 +3,6 @@ from typing import Optional
 from django.db.models import Q
 
 from .models import Membership, Organization
-
 from decorators import PermissionDenied
 
 

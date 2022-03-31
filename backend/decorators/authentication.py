@@ -33,8 +33,6 @@ def user_passes_test(
     return decorator
 
 
-login_required = user_passes_test(
-    test_fn=lambda user: user.is_authenticated, exception=PermissionDenied(PERMISSION_REQUIRED_ERROR)
-)
+login_required = user_passes_test(lambda user: user.is_authenticated)
 superuser_required = user_passes_test(lambda user: user.is_superuser)
 staff_member_required = user_passes_test(lambda user: user.is_staff)
