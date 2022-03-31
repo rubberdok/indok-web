@@ -4,10 +4,12 @@ import graphene
 from apps.permissions.types import ResponsibleGroupType
 from .models import Organization, Membership
 from graphene_django import DjangoObjectType
-from decorators import login_required, PermissionDenied
+from decorators import login_required
 
 from ..listings.types import ListingType
 from .dataloader import ListingsByOrganizationIdLoader
+
+from decorators import PermissionDenied
 
 
 class OrganizationType(DjangoObjectType):
