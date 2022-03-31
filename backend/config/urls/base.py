@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from apps.ping.views import Ping
-from config import views
+from config import csrf
 from django.conf import settings
 from django.contrib import admin
 from django.urls import path
@@ -26,5 +26,5 @@ urlpatterns = [
     path("ping", Ping.as_view()),
     path("-/", include("django_alive.urls")),
     path("ecommerce/", include("apps.ecommerce.urls")),
-    path("csrf/", csrf_exempt(views.csrf)),
+    path("csrf/", csrf_exempt(csrf.csrf)),
 ]
