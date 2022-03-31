@@ -1,8 +1,7 @@
 import graphene
 from django.contrib.auth import get_user_model
 from graphene_django import DjangoObjectType
-from decorators import login_required
-from decorators import get_resolver_parent, permission_required_or_none
+from decorators import login_required, get_resolver_parent, permission_required_or_none
 
 
 class UserType(DjangoObjectType):

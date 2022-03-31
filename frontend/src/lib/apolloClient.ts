@@ -32,6 +32,7 @@ const getCsrfToken = async (req?: GetServerSidePropsContext["req"]) => {
   Cookies.set(CSRF_COOKIE, csrfToken, {
     domain: config.COOKIE_DOMAIN,
   });
+
   return csrfToken;
 };
 

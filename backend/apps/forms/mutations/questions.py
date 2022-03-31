@@ -1,6 +1,5 @@
 import graphene
-from decorators import login_required
-from decorators import permission_required
+from decorators import login_required, permission_required
 from django.db.models import Q
 from django.db import IntegrityError
 from django.utils import timezone
