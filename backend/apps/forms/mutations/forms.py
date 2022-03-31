@@ -4,7 +4,7 @@ from apps.listings.models import Listing
 from apps.forms.models import Form
 from apps.forms.types import FormType
 
-from decorators import permission_required
+from utils.decorators import permission_required
 
 
 class FormInput(graphene.InputObjectType):
@@ -53,7 +53,7 @@ class UpdateForm(graphene.Mutation):
         id = graphene.ID()
         form_data = BaseFormInput(required=True)
 
-    @permission_required("forms.change_form", (Form, ("pk", "id")))
+    @permission_required("forms.change_form", (Form, "pk", "id"))
     def mutate(self, info, id, form_data):
         form = Form.objects.get(pk=id)
         for key, value in form_data.items():
@@ -69,7 +69,7 @@ class DeleteForm(graphene.Mutation):
     class Arguments:
         id = graphene.ID(required=True)
 
-    @permission_required("forms.delete_form", (Form, ("pk", "id")))
+    @permission_required("forms.delete_form", (Form, "pk", "id"))
     def mutate(self, info, id):
         form = Form.objects.get(pk=id)
         deleted_id = form.id
