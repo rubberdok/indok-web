@@ -985,7 +985,6 @@ export type Queries = {
   responses?: Maybe<Array<Maybe<ResponseType>>>;
   serverTime?: Maybe<Scalars["DateTime"]>;
   signUps?: Maybe<SignUpType>;
-  testAuth?: Maybe<UserType>;
   user?: Maybe<UserType>;
   userOrders?: Maybe<Array<Maybe<OrderType>>>;
 };
