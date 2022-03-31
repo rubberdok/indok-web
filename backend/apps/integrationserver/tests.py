@@ -1,3 +1,5 @@
+import json
+
 from utils.testing.base import ExtendedGraphQLTestCase
 from utils.testing.factories.users import IndokUserFactory
 
@@ -17,13 +19,25 @@ class IntegrationServerTestCase(ExtendedGraphQLTestCase):
             is_indok=True,
             first_login=False,
         )
+        self.test_auth = """
+            query {
+                testAuth {
+                    id
+                    username
+                    firstName
+                    lastName
+                }
+            }
+        """
 
     def test_cypress_allowed(self):
         with self.settings(ENVIRONMENT="test"):
-            response = self.client.get("/test-session/")
-            self.assertEqual(response.status_code, 200)
+            response = self.query(self.test_auth)
+            self.assertResponseNoErrors(response)
+            user = json.loads(response.content)["data"]["testAuth"]
+            self.deep_assert_equal(user, self.indok_user)
 
     def test_cypress_disallowed(self):
         with self.settings(ENVIRONMENT="production"):
-            response = self.client.get("/test-session/")
-            self.assertEqual(response.status_code, 404)
+            response = self.query(self.test_auth)
+            self.assert_permission_error(response)

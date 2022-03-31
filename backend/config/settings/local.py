@@ -10,6 +10,7 @@ SECRET_KEY = env(
 )
 
 # URLs
+ROOT_URLCONF = "config.urls.local"
 ENVIRONMENT = env("DJANGO_ENVIRONMENT", default="development")
 FRONTEND_BASE_URL = env("FRONTEND_BASE_URL", default="http://localhost:3000")
 
