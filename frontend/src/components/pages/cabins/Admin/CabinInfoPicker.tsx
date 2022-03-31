@@ -32,8 +32,7 @@ const getCabinData = (cabin?: Partial<Cabin>) => {
 const CabinInfoPicker = () => {
   const cabinQuery = useQuery<{ cabins: Cabin[] }>(QUERY_CABINS);
   const [updateCabin] = useMutation<{ cabinData: Cabin }>(UPDATE_CABIN, {
-    onError: ({ extraInfo, message }) => {
-      console.log(extraInfo, message);
+    onError: () => {
       setAlertSeverity("error");
       setSnackbarMessage("En feilmelding oppstod.");
       setOpenSnackbar(true);
