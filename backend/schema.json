@@ -719,6 +719,18 @@
               "deprecationReason": null,
               "description": null,
               "isDeprecated": false,
+              "name": "testAuth",
+              "type": {
+                "kind": "OBJECT",
+                "name": "UserType",
+                "ofType": null
+              }
+            },
+            {
+              "args": [],
+              "deprecationReason": null,
+              "description": null,
+              "isDeprecated": false,
               "name": "featuredArchive",
               "type": {
                 "kind": "NON_NULL",
