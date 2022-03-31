@@ -18,17 +18,6 @@ type PageProps = {
 };
 
 let apolloClient: ApolloClient<NormalizedCacheObject> | undefined;
-let csrftoken: string | undefined;
-
-const getCsrfToken = async () => {
-  if (csrftoken) return csrftoken;
-  console.log("fetching");
-  csrftoken = await fetch("http://localhost:8000/csrf")
-    .then((res) => res.json())
-    .then((data) => data.csrfToken);
-  console.log(csrftoken);
-  return csrftoken;
-};
 
 const getToken = (req?: IncomingMessage) => {
   const parsedCookie = cookie.parse(req?.headers.cookie ?? "");
@@ -43,16 +32,14 @@ function createApolloClient(ctx?: GetServerSidePropsContext): ApolloClient<Norma
     credentials: "include",
   });
 
-  const authLink = setContext(async (_, { headers }) => {
+  const authLink = setContext((_, { headers }) => {
     // Get the authentication token from cookies
     const token = getToken(ctx?.req);
-    csrftoken = await getCsrfToken();
 
     return {
       headers: {
         ...headers,
         authorization: token ? `JWT ${token}` : "",
-        "X-CSRFTOKEN": csrftoken,
       },
     };
   });
