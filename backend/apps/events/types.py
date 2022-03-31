@@ -2,7 +2,7 @@ from typing import List, TypedDict, Union
 
 import graphene
 from graphene_django import DjangoObjectType
-from decorators import login_required
+from graphql_jwt.decorators import login_required
 
 from apps.ecommerce.models import Order, Product
 from apps.ecommerce.types import ProductType

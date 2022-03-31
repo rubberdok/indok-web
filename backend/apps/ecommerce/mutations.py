@@ -3,7 +3,7 @@ from urllib.error import HTTPError
 
 import graphene
 from django.db import transaction
-from decorators import login_required, staff_member_required
+from graphql_jwt.decorators import login_required, staff_member_required
 
 from apps.ecommerce.exceptions import PurchaseNotAllowedError
 from apps.organizations.models import Organization
