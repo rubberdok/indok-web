@@ -32,8 +32,17 @@ declare namespace Cypress {
 }
 
 Cypress.Commands.add("login", () => {
-  cy.request("GET", `${Cypress.env("API_URL")}/test-session/`).then((res) =>
-    cy.log(`Logged in as ${res.body.username}`)
+  const query = `{
+    testAuth {
+      id
+      username
+      first_name
+      last_name
+    }
+  }`;
+  cy.log("Logging in...");
+  cy.request("POST", `${Cypress.env("API_URL")}/graphql/`, { query }).then((res) =>
+    cy.log(`Logged in with token ${res.body.data.testAuth.username}`)
   );
 });
 
