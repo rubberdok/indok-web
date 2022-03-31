@@ -230,7 +230,7 @@ class UpdateBookingSemester(graphene.Mutation):
 
 class UpdateCabin(graphene.Mutation):
     """
-    Change the given booking
+    Change the given cabin
     """
 
     class Arguments:
