@@ -19,11 +19,11 @@ class IntegrationServerTestCase(ExtendedGraphQLTestCase):
         )
 
     def test_cypress_allowed(self):
-        with self.settings(URL_ROOTCONF="config.urls.test"):
+        with self.settings(ENVIRONMENT="test"):
             response = self.client.get("/test-session/")
             self.assertEqual(response.status_code, 200)
 
     def test_cypress_disallowed(self):
-        with self.settings(URL_ROOTCONF="config.urls.production"):
+        with self.settings(ENVIRONMENT="production"):
             response = self.client.get("/test-session/")
             self.assertEqual(response.status_code, 404)
