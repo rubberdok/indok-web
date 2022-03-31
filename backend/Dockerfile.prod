@@ -46,6 +46,10 @@ RUN pip install --no-cache /wheels/*
 COPY entrypoints ./entrypoints
 RUN chmod +x  ./entrypoints/*.sh
 
+# copy env files
+COPY .env.production ./.env.production
+COPY .env.test ./.env.test
+
 # copy project
 COPY . .
 

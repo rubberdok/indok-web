@@ -14,11 +14,11 @@ const NavbarLinks: React.VFC<Props> = ({ loggedIn }) => {
         .filter((link) => !link.loginRequired || loggedIn)
         .map((link) =>
           link.permissionRequired ? (
-            <PermissionRequired permission={link.permissionRequired}>
+            <PermissionRequired key={link.id} permission={link.permissionRequired}>
               <NavbarItem link={link} />
             </PermissionRequired>
           ) : (
-            <NavbarItem link={link} />
+            <NavbarItem key={link.id} link={link} />
           )
         )}
     </>

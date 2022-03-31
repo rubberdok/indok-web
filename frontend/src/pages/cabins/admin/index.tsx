@@ -2,7 +2,6 @@ import { useQuery } from "@apollo/client";
 import Layout from "@components/Layout";
 import TabPanel from "@components/pages/about/TabPanel";
 import AdminCabinTable from "@components/pages/cabins/Admin/AdminCabinTable";
-import DeleteBookingDialog from "@components/pages/cabins/Admin/DeleteBookingDialog";
 import PermissionRequired from "@components/permissions/PermissionRequired";
 import { QUERY_ADMIN_ALL_BOOKINGS } from "@graphql/cabins/queries";
 import { BookingFromQuery } from "@interfaces/cabins";
@@ -12,14 +11,12 @@ import {
   Container,
   Grid,
   makeStyles,
-  Snackbar,
   Tab,
   Tabs,
   Typography,
   useMediaQuery,
   useTheme,
 } from "@material-ui/core";
-import { Alert } from "@material-ui/lab";
 import dayjs from "dayjs";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
@@ -42,9 +39,7 @@ const AdminPage: NextPage = () => {
   const { data, refetch } = useQuery<{
     adminAllBookings: BookingFromQuery[];
   }>(QUERY_ADMIN_ALL_BOOKINGS, { variables: { after: dayjs().subtract(1, "day").format("YYYY-MM-DD") } });
-  const [openSnackbar, setOpenSnackbar] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [bookingToBeDeleted, setBookingToBeDeleted] = useState<BookingFromQuery | undefined>();
+
   const [tabValue, setTabValue] = useState<number>(0);
   const router = useRouter();
 
@@ -60,16 +55,6 @@ const AdminPage: NextPage = () => {
     <Layout>
       <Container>
         <PermissionRequired permission="cabins.manage_booking">
-          <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={() => setOpenSnackbar(false)}>
-            <Alert severity="success">{snackbarMessage}</Alert>
-          </Snackbar>
-          <DeleteBookingDialog
-            bookingToBeDeleted={bookingToBeDeleted}
-            setBookingToBeDeleted={setBookingToBeDeleted}
-            setSnackbarMessage={setSnackbarMessage}
-            setOpenSnackbar={setOpenSnackbar}
-            refetch={refetch}
-          />
           <Grid container direction="column" spacing={3}>
             <Grid item>
               <Box p={3}>
@@ -98,19 +83,13 @@ const AdminPage: NextPage = () => {
                 </Tabs>
               </Box>
               <TabPanel value={tabValue} index={0}>
-                <AdminCabinTable
-                  bookings={tentative}
-                  setBookingToBeDeleted={setBookingToBeDeleted}
-                  setOpenSnackbar={setOpenSnackbar}
-                  setSnackbarMessage={setSnackbarMessage}
-                  refetch={refetch}
-                />
+                <AdminCabinTable bookings={tentative} refetch={refetch} currentTab="tentative" />
               </TabPanel>
               <TabPanel value={tabValue} index={1}>
-                <AdminCabinTable bookings={accepted} />
+                <AdminCabinTable bookings={accepted} refetch={refetch} currentTab="accepted" />
               </TabPanel>
               <TabPanel value={tabValue} index={2}>
-                <AdminCabinTable bookings={declined} />
+                <AdminCabinTable bookings={declined} refetch={refetch} currentTab="declined" />
               </TabPanel>
             </Box>
           </Box>

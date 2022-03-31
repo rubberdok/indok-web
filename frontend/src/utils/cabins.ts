@@ -98,7 +98,7 @@ export const calculatePrice: (
   }
 };
 
-export const convertDateFormat: (date: string) => string = (date) => dayjs(date).format("DD-MM-YYYY");
+export const convertDateFormat: (date?: string) => string = (date) => dayjs(date).format("DD-MM-YYYY");
 
 export const getDecisionEmailProps = (booking: BookingFromQuery, approved: boolean, declineMessage?: string) => {
   // omit unwanted fields
@@ -127,13 +127,15 @@ export const getDecisionEmailProps = (booking: BookingFromQuery, approved: boole
 export const generateEmailAndBookingInput: (
   contactInfo: ContactInfo,
   datePick: DatePick,
-  chosenCabins: Cabin[]
-) => EmailAndBookingInput = (contactInfo, datePick, chosenCabins) => {
+  chosenCabins: Cabin[],
+  extraInfo: string
+) => EmailAndBookingInput = (contactInfo, datePick, chosenCabins, extraInfo) => {
   return {
     ...contactInfo,
     cabins: chosenCabins.map((cabin) => parseInt(cabin.id)),
     checkIn: datePick.checkInDate,
     checkOut: datePick.checkOutDate,
+    extraInfo: extraInfo,
   };
 };
 

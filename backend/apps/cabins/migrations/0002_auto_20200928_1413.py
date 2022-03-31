@@ -15,4 +15,4 @@ class Migration(migrations.Migration):
         ("cabins", "0001_initial"),
     ]
 
-    operations = [migrations.RunPython(create_cabins)]
+    operations = []

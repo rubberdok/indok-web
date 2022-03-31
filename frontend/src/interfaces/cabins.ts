@@ -25,6 +25,8 @@ export interface Booking extends BasicBooking, PublicBooking, Participants {
 }
 export interface BookingFromQuery extends Booking {
   timestamp: Date;
+  extraInfo: string;
+  declineReason: string;
   __typename: string;
 }
 
@@ -58,6 +60,7 @@ export interface EmailAndBookingInput extends ContactInfo {
   cabins: number[];
   checkIn?: string;
   checkOut?: string;
+  extraInfo: string;
 }
 
 export interface BookingResponsible {

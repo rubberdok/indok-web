@@ -43,13 +43,13 @@ DATABASES = {
 ROOT_URLCONF = "config.urls.production"
 
 # EMAIL
-EMAIL_BACKEND = "django_ses.SESBackend"
+EMAIL_BACKEND = env("DJANGO_EMAIL_BACKEND", default="anymail.backends.postmark.EmailBackend")
+
 
 AWS_SES_REGION_NAME = env("AWS_SES_REGION_NAME")
 AWS_SES_REGION_ENDPOINT = env("AWS_SES_REGION_ENDPOINT")
 AWS_ACCESS_KEY_ID = env("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY = env("AWS_SECRET_ACCESS_KEY")
-AWS_SES_AUTO_THROTTLE = env.float("AWS_SES_AUTO_THROTTLE")
 
 # LOGGING
 LOGGING = {
@@ -82,9 +82,10 @@ LOGGING = {
 
 # GRAPHENE
 GRAPHENE["MIDDLEWARE"] += ["config.sentry.middleware.SentryMiddleware"]  # noqa
+GRAPHQL_JWT = {"JWT_COOKIE_DOMAIN": env("JWT_COOKIE_DOMAIN", default=".indokntnu.no")}
 
 # Sentry
-SENTRY_DSN: str = env("SENTRY_DSN")
+SENTRY_DSN: str = env("SENTRY_DSN", default=None)
 SENTRY_LOG_LEVEL: int = cast(int, env.int("DJANGO_SENTRY_LOG_LEVEL", default=logging.INFO))
 SENTRY_RELEASE: Optional[str] = env.str("GIT_COMMIT_SHA", "") or None
 

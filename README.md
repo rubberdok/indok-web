@@ -11,6 +11,9 @@
 - [Features](#features)
 - [Feedback](#feedback)
 - [Setup](#setup)
+- [Error Logging](#error-logging)
+- [Deployment](#deployment)
+- [Other Services](#other-services)
 - [Acknowledgements](#acknowledgements)
 
 ## Introduction
@@ -21,7 +24,7 @@
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat)](https://github.com/prettier/prettier)
 [![codecov](https://codecov.io/gh/rubberdok/indok-web/branch/main/graph/badge.svg?token=UO2NENP9Z8)](https://codecov.io/gh/rubberdok/indok-web)
 
-Website for the students at Industrial Economics and Technology Management at NTNU Trondheim. Built with Django, React/Next.js, and GraphQL API. Built and maintained by Rubberdøk NTNU.
+Website for the students at Industrial Economics and Technology Management at NTNU Trondheim. Built with Django, Next.js, and a GraphQL API. Maintained by Rubberdøk NTNU.
 
 <p align="center">
   <a href="https://www.indokntnu.no/">
@@ -31,20 +34,20 @@ Website for the students at Industrial Economics and Technology Management at NT
 
 ## Features
 
-The website includes:
-
-- Fully automated booking of cabins including payment
-- View and register for upcoming events
-- Apply for Indøk's student organizations
-- OAuth login with Feide
+- 🏔 Book the luxurious cabins Oksen and Bjørnen
+- 💸 Register for upcoming events and purchase tickets through Vipps
+- 🎉 Find and apply for the ideal student organization at Indøk
+- 🔒 Simple login through Feide
+- 📝 Easily navigate through the archive of Indøk documents
 
 ## Feedback
 
-[File an issue](https://github.com/rubberdok/indok-web/issues/new)!
+Found a bug, got a suggestion, or something we should know about? Take a look at the [roadmap](https://github.com/orgs/rubberdok/projects/2) and
+[file an issue](https://github.com/rubberdok/indok-web/issues/new) if it's not on the roadmap!
 
 ## Setup
 
-### Installing and running
+### Installation
 
 1. [Set up Git](https://docs.github.com/en/get-started/quickstart/set-up-git)
 
@@ -62,7 +65,6 @@ docker compose build
 
 ```zsh
 docker compose up
-docker compose exec backend python manage.py migrate
 docker compose exec backend python manage.py loaddata initial_data
 ```
 
@@ -80,36 +82,68 @@ The last command creates some initial data, two test users, and one admin user:
 
   - Enter the respective username and password.
 
-5. Install commit hooks
+5. Install pre-commit hooks and Node dependencies locally for linting
+   - If you already have `yarn` installed, skip to step 4.
+   1. Install `nvm` by following the [instructions](https://github.com/nvm-sh/nvm#installing-and-updating)
+   2. Install Node 16
+   ```zsh
+   nvm install 16
+   nvm use 16
+   ```
+   3. Install `yarn`
+   ```zsh
+   npm i -g yarn
+   ```
+   4. Install pre-commit hooks and dependencies locally
+   ```zsh
+   cd frontend
+   yarn
+   ```
+6. Install Python dependencies locally for linting
+   1. Install [Python 3.9](https://www.python.org/downloads/release/python-397/)
+   2. (Optional, but recommended) Create a virtual environment in the root folder `indok-web`
+   ```zsh
+   python -m venv .venv
+   source .venv/bin/activate
+   ```
+   3. Install Python dependencies locally
+   ```zsh
+   pip install -r backend/requirements/local.txt
+   ```
 
-```zsh
-cd frontend
-npm ci
-```
+The frontend runs on [http://localhost:3000](http://localhost:3000), and the backend on [http://localhost:8000](http://localhost:8000). The GraphQL API endpoint is [http://localhost:8000/graphql](http://localhost:8000/graphql). The admin panel is available at [http://localhost:8000/admin](http://localhost:8000/admin).
 
-The frontend runs on [`localhost:3000`](localhost:3000), and the backend on [`localhost:8000`](localhost:8000). The GraphQL API endpoint is [`localhost:8000/graphql`](localhost:8000/graphql).
+### Secrets
 
-### Environment variables
+Environment variables are automatically loaded, but secrets are not stored in the repository.
 
-In order to authenticate users through Feide, Indøk Hovedstyre Webkomité has registered an application at Dataporten. This requires the addition of environment variables identifying the application. Contributors may specify a different client ID and secret to authenticate with Dataporten through their own application. See [Feide docs](https://docs.feide.no/service_providers/index.html) for more information. Additionally, several other APIs are accessed, requiring different API keys for access.
+1. Create `.env` and `.env.local` in `backend/` and `frontend/`, respectively.
+2. Contact maintainers in order to get the necessary secrets, alternatively, if you're a member of Rubberdøk, check the #dev channel on Slack.
+3. Make sure to restart either container after making changes to `.env*`
 
-1. Create a file called `.env.local` in `frontend/` and add the variables that can be found in `.env.local.template`, with appropriate values.
+## Error logging
 
-   - `NEXT_PUBLIC_DATAPORTEN_ID` should be `fcaa9e30-a6d3-4809-8fea-cdd7b3de1c98` for the Rubberdøk development client at Dataporten.
+The project has error logging through [Sentry](sentry.io), and can be accessed by authenticating with Github SSO.
 
-2. Create a file called `.env`in `backend/api/` and add the variables that can be found in `backend/api/.env.example`, with appropriate values.
+## Contributing
 
-   - `DATAPORTEN_ID` should be the same as above if using the Rubberdøk development client.
-   - Contact the maintainers if you are a developer of the project and need access to the various secrets and API keys needed for the project.
+See [CONTRIBUTING](CONTRIBUDING.md).
 
 ## Deployment
 
-The app uses Github actions to deploy to AWS Elastic Container Service, the deployment steps can be found in the `aws.yml` workflow.
-In short, the process is as follows:
+The app is deployed through AWS ECS.
 
-1.  Build, tag, and push frontend and backend images to Amazon Elastic Container Registry
-2.  Update and deploy updated task definitions for frontend and backend referencing the newly tagged images.
-3.  Notify Github and Sentry of a successful release
+## Other Services
+
+- E2E testing through [Cypress](cypress.io), publicly accessible.
+- Code coverage through [Codecov](codecov.io), accessible with Github SSO.
+- Domains managed through [domene.shop](domene.shop).
+- [Postmark](postmarkapp.com) as e-mail service, contact an administrator for access.
+- [Vipps](portal.vipps.no), contact an administrator for access.
+- [Feide](kunde.feide.no), contact an administrator for access.
+- [AWS](https://rubberdok.signin.aws.amazon.com/console/) for various services, contact an administrator for access.
+- [Google Workspace](admin.google.com) for account management, contact an administrator for access.
+- [Slack](slack.com) for communication, available with a [rubberdok.no](rubberdok.no) domain.
 
 ## Acknowledgements
 

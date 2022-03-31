@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { GET_AVAILABLE_YEARS } from "@graphql/archive/queries";
+import { AvailableYearsDocument } from "@generated/graphql";
 import { CircularProgress } from "@material-ui/core";
 import FormControl from "@material-ui/core/FormControl";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -12,7 +12,7 @@ interface YearSelectorProps {
 }
 
 const YearSelector: React.FC<YearSelectorProps> = ({ yearFilter, handleYearFilterChanged }) => {
-  const { loading, data, error } = useQuery<{ availableYears: string[] }>(GET_AVAILABLE_YEARS);
+  const { loading, data, error } = useQuery(AvailableYearsDocument);
 
   if (loading) return <CircularProgress />;
 

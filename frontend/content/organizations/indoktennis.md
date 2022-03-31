@@ -5,8 +5,8 @@ image: /img/indoktennis.jpg
 logo: /img/indoktennis.jpg
 board:
   ceo:
-    name: Richard Rogstad
-    phoneNumber: 924 34 994
+    name: Ivar Borge Nore
+    phoneNumber: 971 99 992
     title: Leder
 tag: idrett
 ---

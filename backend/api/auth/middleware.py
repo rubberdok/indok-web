@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.auth import get_user_model
+from django.conf import settings
 
 
 class IndokWebJWTMiddleware:
@@ -10,7 +11,13 @@ class IndokWebJWTMiddleware:
         response = self.get_response(request)
         jwt_token = getattr(request, "set_jwt_cookie", None)
         if jwt_token:
-            response.set_cookie("JWT", jwt_token, max_age=24 * 60 * 60, httponly=True)
+            response.set_cookie(
+                "JWT",
+                jwt_token,
+                max_age=24 * 60 * 60,
+                httponly=True,
+                domain=settings.GRAPHQL_JWT.get("JWT_COOKIE_DOMAIN", None),
+            )
 
         return response
 

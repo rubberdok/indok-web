@@ -1,13 +1,15 @@
 import graphene
-
-from .helpers import price
-from .types import AllBookingsType, BookingInfoType, CabinType, EmailInputType, UpdateBookingSemesterType
-from apps.cabins.models import Booking as BookingModel, BookingSemester
-from apps.cabins.models import Cabin as CabinModel
-from .constants import APPROVE_BOOKING, DISAPPROVE_BOOKING
-from .mail import send_mail
-from .validators import create_booking_validation
 from graphql_jwt.decorators import permission_required
+
+from apps.cabins.models import Booking as BookingModel
+from apps.cabins.models import BookingSemester
+from apps.cabins.models import Cabin as CabinModel
+
+from .constants import APPROVE_BOOKING, DISAPPROVE_BOOKING
+from .helpers import price
+from .mail import send_mail
+from .types import AllBookingsType, BookingInfoType, CabinType, EmailInputType, UpdateBookingSemesterType
+from .validators import create_booking_validation
 
 
 class BookingInput(graphene.InputObjectType):
@@ -24,17 +26,18 @@ class BookingInput(graphene.InputObjectType):
     internal_participants = graphene.Int()
     external_participants = graphene.Int()
     cabins = graphene.List(graphene.Int)
+    extra_info = graphene.String(required=False)
 
 
 class EmailInput(BookingInput):
     email_type = graphene.String()
-    extra_info = graphene.String(required=False, default_value="")
 
 
 class UpdateBookingInput(BookingInput):
     id = graphene.ID(required=True)
     is_tentative = graphene.Boolean()
     is_declined = graphene.Boolean()
+    decline_reason = graphene.String(required=False)
 
 
 class UpdateBookingSemesterInput(graphene.InputObjectType):
@@ -65,7 +68,6 @@ class CreateBooking(graphene.Mutation):
     ok = graphene.Boolean()
     booking = graphene.Field(AllBookingsType)
 
-    @permission_required("cabins.add_booking")
     def mutate(
         self,
         info,
@@ -157,7 +159,6 @@ class SendEmail(graphene.Mutation):
 
     ok = graphene.Boolean()
 
-    @permission_required("cabins.send_email")
     def mutate(self, info, email_input: EmailInputType):
         cabins = CabinModel.objects.filter(id__in=email_input["cabins"])
 

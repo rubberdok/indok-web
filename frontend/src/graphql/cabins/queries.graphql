@@ -1,0 +1,51 @@
+query AllBookings {
+  allBookings {
+    id
+    checkIn
+    checkOut
+    cabins {
+      id
+      name
+    }
+  }
+}
+
+query AdminAllBookings($after: String) {
+  adminAllBookings(after: $after) {
+    id
+    firstName
+    lastName
+    phone
+    receiverEmail
+    checkIn
+    checkOut
+    cabins {
+      id
+      name
+    }
+    externalParticipants
+    internalParticipants
+    price
+    isTentative
+  }
+}
+
+query AllCabins {
+  cabins {
+    id
+    name
+    maxGuests
+    internalPrice
+    externalPrice
+  }
+}
+
+query ActiveBookingResponsible {
+  activeBookingResponsible {
+    id
+    active
+    firstName
+    lastName
+    email
+  }
+}
