@@ -1,7 +1,8 @@
 import graphene
 from api.auth.dataporten_auth import DataportenAuth
 from graphql_jwt.decorators import login_required
-from django.contrib.auth import login
+from graphql_jwt.shortcuts import get_token
+from guardian.shortcuts import get_anonymous_user
 
 from apps.users.helpers import update_graduation_year
 
@@ -12,13 +13,21 @@ class AuthUser(graphene.Mutation):
     class Arguments:
         code = graphene.String()
 
+    token = graphene.String()
     user = graphene.Field(UserType)
+    is_indok_student = graphene.Boolean()
+    id_token = graphene.String()
 
     def mutate(self, info, code):
-        user = DataportenAuth.authenticate_and_get_user(code=code)
-        login(info.context, user, backend="django.contrib.auth.backends.ModelBackend")
+        user, id_token = DataportenAuth.authenticate_and_get_user(code=code)
+
+        token = get_token(user)
+        info.context.set_jwt_cookie = token
+        info.context.user = user or get_anonymous_user()
         return AuthUser(
             user=user,
+            token=token,
+            id_token=id_token,
         )
 
 
@@ -66,3 +75,16 @@ class UpdateUser(graphene.Mutation):
         user.save()
 
         return UpdateUser(user=user)
+
+
+class GetIDToken(graphene.Mutation):
+    id_token = graphene.String(required=True)
+
+    @login_required
+    def mutate(self, info):
+        user = info.context.user
+        id_token = user.id_token
+
+        return GetIDToken(
+            id_token=id_token,
+        )

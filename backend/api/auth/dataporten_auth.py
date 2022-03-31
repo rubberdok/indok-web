@@ -1,5 +1,5 @@
 import json
-from typing import TYPE_CHECKING, Optional, Type, cast
+from typing import Optional
 
 import jwt
 import requests
@@ -9,12 +9,7 @@ from requests.auth import HTTPBasicAuth
 from django.conf import settings
 from django.utils import timezone
 
-if TYPE_CHECKING:
-    from apps.users import models
-
-
-User = cast(Type["models.User"], get_user_model())
-
+UserModel = get_user_model()
 
 CLIENT_ID = settings.DATAPORTEN_ID
 
@@ -150,7 +145,7 @@ class DataportenAuth:
         return (username, feide_userid, email, name)
 
     @classmethod
-    def authenticate_and_get_user(cls, code: Optional[str] = None) -> Optional["models.User"]:
+    def authenticate_and_get_user(cls, code: Optional[str] = None) -> tuple[Optional[UserModel], Optional[str]]:
         if code is None:
             raise ValidationError("Ugyldig autentiseringskode i forespørselen.")
 
@@ -164,24 +159,24 @@ class DataportenAuth:
         # Fetch user info from Dataporten
         user_info = cls.get_user_info(access_token)
         if user_info is None:
-            return None
+            return None, id_token
 
         username, feide_userid, email, name = user_info
 
         # Create or update user
         try:
-            user: "models.User" = User.objects.get(feide_userid=feide_userid)
+            user = UserModel.objects.get(feide_userid=feide_userid)
             # User exists, update user info
             user.id_token = id_token
             user.last_login = timezone.now()
             user.save()
 
-        except User.DoesNotExist:
+        except UserModel.DoesNotExist:
             # Check if user is member of MTIØT group (studies indøk)
             enrolled = cls.confirm_indok_enrollment(access_token)
 
             # User does not exist, create a new user
-            user = User(
+            user = UserModel(
                 username=username,
                 feide_email=email,
                 first_name=name,
@@ -191,4 +186,4 @@ class DataportenAuth:
                 is_indok=enrolled,
             )
             user.save()
-        return user
+        return user, id_token
