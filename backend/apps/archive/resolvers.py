@@ -1,4 +1,4 @@
-from decorators import permission_required
+from graphql_jwt.decorators import permission_required
 
 from .models import ArchiveDocument
 

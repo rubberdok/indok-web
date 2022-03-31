@@ -3,7 +3,7 @@ import graphene
 from .models import BlogPost as BlogPostModel, Blog as BlogModel
 from apps.organizations.models import Organization as OrganizationModel
 from .types import BlogType, BlogPostType
-from decorators import permission_required
+from graphql_jwt.decorators import permission_required
 
 
 class CreateBlog(graphene.Mutation):

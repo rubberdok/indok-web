@@ -1,15 +1,11 @@
-from decorators import staff_member_required
-
-from decorators import login_required
+from graphql_jwt.decorators import login_required, staff_member_required
 
 from .models import Order, Product
-
-from graphene import ResolveInfo
 
 
 class EcommerceResolvers:
     @login_required
-    def resolve_product(self, info: ResolveInfo, product_id: int):
+    def resolve_product(self, info, product_id):
         try:
             return Product.objects.get(id=product_id)
         except Product.DoesNotExist:
@@ -20,7 +16,7 @@ class EcommerceResolvers:
         return Product.objects.all()
 
     @login_required
-    def resolve_order(self, info: ResolveInfo, order_id):
+    def resolve_order(self, info, order_id):
         try:
             order = Order.objects.get(pk=order_id, user=info.context.user)
         except Order.DoesNotExist:
@@ -33,6 +29,6 @@ class EcommerceResolvers:
         return Order.objects.filter(user=info.context.user)
 
     @staff_member_required
-    def resolve_orders_by_status(self, info: ResolveInfo, product_id, status):
+    def resolve_orders_by_status(self, info, product_id, status):
         orders = Order.objects.filter(product_id=product_id, payment_status=status)
         return {"length": len(orders), "orders": orders}

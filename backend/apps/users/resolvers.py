@@ -1,7 +1,7 @@
 from django.conf import settings
 
 from django.contrib.auth import get_user_model
-from decorators import staff_member_required
+from graphql_jwt.decorators import staff_member_required
 from graphql_jwt.shortcuts import get_token
 from django.contrib.auth import logout
 
