@@ -42,7 +42,7 @@ Cypress.Commands.add("login", () => {
   }`;
   cy.log("Logging in...");
   cy.request("POST", `${Cypress.env("API_URL")}/graphql/`, { query }).then((res) =>
-    cy.log(`Logged in with token ${res.body.data.testAuth.username}`)
+    cy.log(`Logged in with token ${res.body.data.user.username}`)
   );
 });
 
