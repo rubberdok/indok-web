@@ -89,7 +89,7 @@ CSRF_COOKIE_SECURE = env.bool("CSRF_COOKIE_SECURE", True)
 
 
 # SENTRY
-SENTRY_DSN: Optional[str] = env("SENTRY_DSN", default=None)
+SENTRY_DSN: str = env("SENTRY_DSN")
 SENTRY_LOG_LEVEL: int = cast(int, env.int("DJANGO_SENTRY_LOG_LEVEL", default=logging.INFO))
 SENTRY_RELEASE: Optional[str] = env.str("GIT_COMMIT_SHA", "") or None
 
