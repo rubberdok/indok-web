@@ -1,10 +1,12 @@
 import Layout from "@components/Layout";
 import BookingSemesterPicker from "@components/pages/cabins/Admin/BookingSemesterPicker";
+import CabinInfoPicker from "@components/pages/cabins/Admin/CabinInfoPicker";
 import PermissionRequired from "@components/permissions/PermissionRequired";
 import { Box, Button, Container, Divider, Grid, Paper, Typography, useMediaQuery } from "@material-ui/core";
 import { ArrowBackIos } from "@material-ui/icons";
 import theme from "@styles/theme";
 import router from "next/router";
+import React from "react";
 
 const SettingsPage: React.VFC = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -38,6 +40,12 @@ const SettingsPage: React.VFC = () => {
               </Box>
               <Box p={4}>
                 <BookingSemesterPicker />
+              </Box>
+              <Divider />
+              <Box p={4}>
+                <Typography variant="h5">Administrer hyttene</Typography>
+                <Typography>Her kan dere oppdatere informasjonen som skal vises om Oksen og Bjørnen.</Typography>
+                <CabinInfoPicker />
               </Box>
             </Paper>
           </Box>
