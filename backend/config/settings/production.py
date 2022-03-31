@@ -14,8 +14,8 @@ SECRET_KEY = env("SECRET_KEY")
 ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=["api.indokntnu.no"])
 CORS_ALLOW_HEADERS = list(default_headers) + ["sentry-trace"]
 
-CORS_ALLOWED_ORIGINS = env.list(
-    "CORS_ALLOWED_ORIGINS",
+CORS_ORIGIN_WHITELIST = env.list(
+    "CORS_ORIGIN_WHITELIST",
     default=[
         "https://indokntnu.no",
         "https://www.indokntnu.no",
