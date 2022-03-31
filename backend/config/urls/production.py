@@ -1,4 +1,4 @@
-from config.views.graphql import CustomGraphQLView
+from config.views import CustomGraphQLView
 from django.conf import settings
 from django.urls import path
 
