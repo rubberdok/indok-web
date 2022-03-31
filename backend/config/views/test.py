@@ -3,6 +3,7 @@ from django.http import HttpRequest, JsonResponse
 
 
 def test_session(request: HttpRequest):
+    print(request)
     try:
         login(
             request,
