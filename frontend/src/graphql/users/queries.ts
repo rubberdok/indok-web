@@ -50,9 +50,3 @@ export const GET_USER = gql`
     }
   }
 `;
-
-export const GET_ID_TOKEN = gql`
-  query getIdToken {
-    getIdToken
-  }
-`;

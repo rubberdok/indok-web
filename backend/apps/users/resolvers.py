@@ -3,7 +3,6 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from graphql_jwt.decorators import staff_member_required
 from graphql_jwt.shortcuts import get_token
-from django.contrib.auth import logout
 
 
 class UserResolvers:
@@ -16,11 +15,6 @@ class UserResolvers:
     @staff_member_required
     def resolve_all_users(self, info):
         return get_user_model().objects.all()
-
-    def resolve_logout(self, info):
-        user = info.context.user
-        logout(info.context)
-        return user.id_token
 
     if settings.ENVIRONMENT == "test":
 
