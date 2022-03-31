@@ -46,11 +46,11 @@ class User(AbstractUser):
             return 6 - (self.graduation_year - current_year)
 
     @property
-    def is_authenticated(self) -> bool:
+    def is_authenticated(self):
         return self.username != settings.ANONYMOUS_USER_NAME
 
     @property
-    def is_anonymous(self) -> bool:
+    def is_anonymous(self):
         return not self.is_authenticated
 
     class Meta:

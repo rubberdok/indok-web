@@ -1,7 +1,7 @@
 import graphene
 from django.contrib.auth.models import User
 from django.utils.text import slugify
-from decorators import permission_required
+from utils.decorators import permission_required
 
 from apps.users.types import UserType
 from apps.permissions.models import ResponsibleGroup
