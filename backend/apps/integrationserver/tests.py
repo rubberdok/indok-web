@@ -1,5 +1,6 @@
 import json
 
+from graphql_jwt.shortcuts import get_user_by_token
 from utils.testing.base import ExtendedGraphQLTestCase
 from utils.testing.factories.users import IndokUserFactory
 
@@ -19,20 +20,20 @@ class IntegrationServerTestCase(ExtendedGraphQLTestCase):
             is_indok=True,
             first_login=False,
         )
-        self.test_auth = """
+        self.auth_token = """
             query {
-                testAuth
+                authToken
             }
         """
 
     def test_cypress_allowed(self):
         with self.settings(ENVIRONMENT="test"):
-            response = self.query(self.test_auth)
+            response = self.query(self.auth_token)
             self.assertResponseNoErrors(response)
-            user = json.loads(response.content)["data"]["testAuth"]["user"]
-            self.assertEqual(user, self.indok_user)
+            token = json.loads(response.content)["data"]["authToken"]
+            self.assertEqual(get_user_by_token(token), self.indok_user)
 
     def test_cypress_disallowed(self):
         with self.settings(ENVIRONMENT="production"):
-            response = self.query(self.test_auth)
+            response = self.query(self.auth_token)
             self.assert_permission_error(response)
