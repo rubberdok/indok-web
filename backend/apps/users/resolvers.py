@@ -2,7 +2,8 @@ from django.conf import settings
 
 from django.contrib.auth import get_user_model
 from decorators import staff_member_required
-from django.contrib.auth import logout, login
+from graphql_jwt.shortcuts import get_token
+from django.contrib.auth import logout
 
 
 class UserResolvers:
@@ -23,11 +24,12 @@ class UserResolvers:
 
     if settings.ENVIRONMENT == "test":
 
-        def resolve_test_auth(self, info):
+        def resolve_auth_token(self, info):
             if settings.ENVIRONMENT == "test":
                 try:
-                    login(info.context, get_user_model().objects.get(username="eva_student"))
-                    return info.context.user
+                    token = get_token(get_user_model().objects.get(username="eva_student"))
+                    info.context.set_jwt_cookie = token
+                    return token
                 except get_user_model().DoesNotExist:
                     return None
             else:
