@@ -2,7 +2,7 @@ from datetime import datetime
 
 import graphene
 from django.shortcuts import get_object_or_404
-from decorators import login_required
+from graphql_jwt.decorators import login_required
 
 from .models import ArchiveDocument as ArchiveDocumentModel
 from .types import ArchiveDocumentType

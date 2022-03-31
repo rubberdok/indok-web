@@ -31,6 +31,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
 import { EditUser } from "src/types/users";
+import { suggestNames } from "./helpers";
 
 type Props = {
   kind: "register" | "update";
@@ -50,6 +51,7 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": 
   const currentYear = dayjs().year();
   const ID_PREFIX = `${dataTestId}`;
 
+  const { firstName, lastName } = suggestNames(data?.user?.firstName);
   const minimumGraduationYear = useMemo<number>(
     () => Math.min(currentYear, data?.user?.graduationYear || currentYear),
     [data?.user?.graduationYear]
@@ -61,8 +63,8 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": 
 
   const formik = useFormik({
     initialValues: {
-      firstName: data?.user?.firstName || "",
-      lastName: data?.user?.lastName || "",
+      firstName: (kind === "register" ? firstName : data?.user?.firstName) || "",
+      lastName: (kind === "register" ? lastName : data?.user?.lastName) || "",
       email: data?.user?.email || data?.user?.feideEmail || "",
       phoneNumber: data?.user?.phoneNumber || "",
       graduationYear: data?.user?.graduationYear || suggestGraduationYear(),

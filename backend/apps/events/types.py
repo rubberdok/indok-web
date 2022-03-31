@@ -2,7 +2,7 @@ from typing import List, TypedDict, Union
 
 import graphene
 from graphene_django import DjangoObjectType
-from decorators import login_required, PermissionDenied
+from graphql_jwt.decorators import login_required
 
 from apps.ecommerce.models import Order, Product
 from apps.ecommerce.types import ProductType
@@ -102,7 +102,7 @@ class EventType(DjangoObjectType):
                 if user.memberships.filter(organization=event.organization).exists() or user.is_superuser:
                     return resolver(event, info)
                 else:
-                    raise PermissionDenied(
+                    raise PermissionError(
                         f"Du må være medlem av foreningen {event.organization.name} for å gjøre dette kallet"
                     )
 

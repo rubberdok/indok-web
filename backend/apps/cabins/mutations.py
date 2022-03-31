@@ -1,5 +1,5 @@
 import graphene
-from decorators import permission_required
+from graphql_jwt.decorators import permission_required
 
 from apps.cabins.models import Booking as BookingModel
 from apps.cabins.models import BookingSemester

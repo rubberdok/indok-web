@@ -4,7 +4,7 @@ import graphene
 from apps.permissions.types import ResponsibleGroupType
 from .models import Organization, Membership
 from graphene_django import DjangoObjectType
-from decorators import login_required, PermissionDenied
+from graphql_jwt.decorators import login_required
 
 from ..listings.types import ListingType
 from .dataloader import ListingsByOrganizationIdLoader
@@ -45,7 +45,7 @@ class OrganizationType(DjangoObjectType):
                 if organization.users.filter(pk=info.context.user.id).exists():
                     return resolver(organization, info)
                 else:
-                    raise PermissionDenied(
+                    raise PermissionError(
                         f"Du må være medlem av foreningen {organization.name} for å gjøre dette kallet"
                     )
 
@@ -84,7 +84,7 @@ class MembershipType(DjangoObjectType):
                 if membership.organization.users.filter(pk=info.context.user.id).exists():
                     return resolver(membership, info)
                 else:
-                    raise PermissionDenied(
+                    raise PermissionError(
                         f"Du må være medlem av foreningen {membership.organization.name} for å gjøre dette kallet"
                     )
 

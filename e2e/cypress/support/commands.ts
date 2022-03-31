@@ -26,14 +26,16 @@
 
 declare namespace Cypress {
   interface Chainable {
-    login(): Chainable<Response<{ body: { data: { username: string } } }>>;
+    login(): Chainable<Response<{ body: { data: { authToken: string } } }>>;
     getByTestId(testId: string): Chainable<Element>;
   }
 }
 
 Cypress.Commands.add("login", () => {
-  cy.request("GET", `${Cypress.env("API_URL")}/test-session/`).then((res) =>
-    cy.log(`Logged in as ${res.body.username}`)
+  const query = `{authToken}`;
+  cy.log("Logging in...");
+  cy.request("POST", `${Cypress.env("API_URL")}/graphql/`, { query }).then(
+    (res) => cy.log(`Logged in with token ${res.body.data.authToken}`)
   );
 });
 
