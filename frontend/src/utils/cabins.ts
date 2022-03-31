@@ -10,6 +10,7 @@ import {
 } from "@interfaces/cabins";
 import dayjs from "dayjs";
 import validator from "validator";
+import * as Yup from "yup";
 import isBetween from "dayjs/plugin/isBetween";
 dayjs.extend(isBetween);
 
@@ -54,26 +55,28 @@ export const allValuesFilled: (contactInfo: ContactInfo) => boolean = (contactIn
   return selectValidity && filled.length == Object.keys(nonSelectContactInfo).length;
 };
 
-export const cabinOrderStepReady: (chosenCabins: Cabin[], datePick: DatePick) => { ready: boolean; errortext: string } =
-  (chosenCabins, datePick) => {
-    // At least one cabin has to be selected
-    if (chosenCabins.length == 0) {
-      return { ready: false, errortext: "Du må velge minst en hytte å booke" };
-    }
-    // The user needs to enter a check-in date
-    if (!datePick.checkInDate) {
-      return { ready: false, errortext: "Du må velge en dato for innsjekk" };
-    }
-    // The user needs to enter a check-out date
-    if (!datePick.checkOutDate) {
-      return { ready: false, errortext: "Du må velge en dato for utsjekk" };
-    }
-    // The chosen range must be vaild
-    if (!datePick?.isValid) {
-      return { ready: false, errortext: "Den valgte perioden er ikke tilgjengelig" };
-    }
-    return { ready: true, errortext: "" };
-  };
+export const cabinOrderStepReady: (
+  chosenCabins: Cabin[],
+  datePick: DatePick
+) => { ready: boolean; errortext: string } = (chosenCabins, datePick) => {
+  // At least one cabin has to be selected
+  if (chosenCabins.length == 0) {
+    return { ready: false, errortext: "Du må velge minst en hytte å booke" };
+  }
+  // The user needs to enter a check-in date
+  if (!datePick.checkInDate) {
+    return { ready: false, errortext: "Du må velge en dato for innsjekk" };
+  }
+  // The user needs to enter a check-out date
+  if (!datePick.checkOutDate) {
+    return { ready: false, errortext: "Du må velge en dato for utsjekk" };
+  }
+  // The chosen range must be vaild
+  if (!datePick?.isValid) {
+    return { ready: false, errortext: "Den valgte perioden er ikke tilgjengelig" };
+  }
+  return { ready: true, errortext: "" };
+};
 
 export const toStringChosenCabins: (chosenCabins: Cabin[]) => string[] = (chosenCabins) =>
   chosenCabins.map((cabin, i) => (i > 0 ? " og " + cabin.name : cabin.name));
@@ -145,3 +148,18 @@ export const dateInBookingSemester = (date: dayjs.Dayjs, bookingSemester: Bookin
     (inFallSemester && bookingSemester.fallSemesterActive) || (inSpringSemester && bookingSemester.springSemesterActive)
   );
 };
+
+export const cabinInfoValidationSchema = Yup.object().shape({
+  oksenInternalPrice: Yup.number().typeError("Må være et tall.").min(0, "Prisen må være større enn 0."),
+  bjornenInternalPrice: Yup.number().typeError("Må være et tall.").min(0, "Prisen må være større enn 0."),
+  oksenExternalPrice: Yup.number().notRequired().typeError("Må være et tall.").min(0, "Prisen må være større enn 0."),
+  bjornenExternalPrice: Yup.number().notRequired().typeError("Må være et tall.").min(0, "Prisen må være større enn 0."),
+  oksenMaxGuests: Yup.number()
+    .notRequired()
+    .typeError("Må være et tall.")
+    .min(0, "Antall gjester må være større enn 0."),
+  bjornenMaxGuests: Yup.number()
+    .notRequired()
+    .typeError("Må være et tall.")
+    .min(0, "Antall gjester må være større enn 0."),
+});

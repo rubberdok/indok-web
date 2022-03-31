@@ -43,7 +43,7 @@ const SettingsPage: React.VFC = () => {
               </Box>
               <Divider />
               <Box p={4}>
-                <Typography variant="h5">Administrer hyttene</Typography>
+                <Typography variant="h5">Administrer hytteinformasjon</Typography>
                 <Typography>Her kan dere oppdatere informasjonen som skal vises om Oksen og Bjørnen.</Typography>
                 <CabinInfoPicker />
               </Box>

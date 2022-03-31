@@ -2,12 +2,22 @@ import { useMutation, useQuery } from "@apollo/client";
 import { UPDATE_CABIN } from "@graphql/cabins/mutations";
 import { QUERY_CABINS } from "@graphql/cabins/queries";
 import { Cabin } from "@interfaces/cabins";
-import { Button, Grid, Snackbar, Typography } from "@material-ui/core";
+import { Button, Grid, Snackbar, TextField, Typography } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
+import { cabinInfoValidationSchema } from "@utils/cabins";
+import { useFormik } from "formik";
 import React, { useEffect, useState } from "react";
-import CabinInfoInput from "./CabinInfoInput";
 
-const getCabinData = (cabin?: Cabin) => {
+type FormikCabinValues = {
+  oksenInternalPrice: number | undefined;
+  bjornenInternalPrice: number | undefined;
+  oksenExternalPrice: number | undefined;
+  bjornenExternalPrice: number | undefined;
+  oksenMaxGuests: number | undefined;
+  bjornenMaxGuests: number | undefined;
+};
+
+const getCabinData = (cabin?: Partial<Cabin>) => {
   return {
     name: cabin?.name,
     maxGuests: cabin?.maxGuests,
@@ -16,6 +26,9 @@ const getCabinData = (cabin?: Cabin) => {
   };
 };
 
+/**
+ * Component for editing cabin information. Only used on the admin page.
+ */
 const CabinInfoPicker = () => {
   const cabinQuery = useQuery<{ cabins: Cabin[] }>(QUERY_CABINS);
   const [updateCabin] = useMutation<{ cabinData: Cabin }>(UPDATE_CABIN, {
@@ -27,7 +40,7 @@ const CabinInfoPicker = () => {
     },
     onCompleted: () => {
       setAlertSeverity("success");
-      setSnackbarMessage("Oppdaterte info om hyttene.eferfer");
+      setSnackbarMessage("Oppdaterte info om hyttene.");
       setOpenSnackbar(true);
     },
     errorPolicy: "none",
@@ -47,80 +60,152 @@ const CabinInfoPicker = () => {
     }
   }, [cabins]);
 
-  const handleCabinOnChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>, cabin?: Cabin) => {
-    if (cabin) {
-      const field = e.currentTarget.name;
-      if (cabin.name == "Oksen") {
-        setOksen({ ...cabin, [field]: e.currentTarget.value });
-      } else if (cabin.name == "Bjørnen") {
-        setBjornen({ ...cabin, [field]: e.currentTarget.value });
-      }
-    }
+  const handleUpdate = (values: FormikCabinValues) => {
+    const oksenData: Partial<Cabin> = {
+      name: "Oksen",
+      internalPrice: values.oksenInternalPrice,
+      externalPrice: values.oksenExternalPrice,
+      maxGuests: values.oksenMaxGuests,
+    };
+    const bjornenData: Partial<Cabin> = {
+      name: "Bjørnen",
+      internalPrice: values.bjornenInternalPrice,
+      externalPrice: values.bjornenExternalPrice,
+      maxGuests: values.bjornenMaxGuests,
+    };
+
+    updateCabin({ variables: { cabinData: getCabinData(oksenData) } });
+    updateCabin({ variables: { cabinData: getCabinData(bjornenData) } });
   };
 
-  const handleUpdate = () => {
-    updateCabin({ variables: { cabinData: getCabinData(oksen) } });
-    updateCabin({ variables: { cabinData: getCabinData(bjornen) } });
-  };
+  const formik = useFormik({
+    initialValues: {
+      oksenInternalPrice: oksen ? oksen.internalPrice : 0,
+      oksenExternalPrice: oksen ? oksen.externalPrice : 0,
+      oksenMaxGuests: oksen ? oksen.maxGuests : 0,
+      bjornenInternalPrice: bjornen ? bjornen.internalPrice : 0,
+      bjornenExternalPrice: bjornen ? bjornen.externalPrice : 0,
+      bjornenMaxGuests: bjornen ? bjornen.maxGuests : 0,
+    },
+    onSubmit: (values) => handleUpdate(values),
+    validationSchema: cabinInfoValidationSchema,
+    enableReinitialize: true,
+  });
 
   return (
     <>
-      <Grid container direction="row" spacing={10}>
-        <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={() => setOpenSnackbar(false)}>
-          <Alert severity={alertSeverity}>{snackbarMessage}</Alert>
-        </Snackbar>
-        <Grid item container direction="column" xs={6}>
-          <Grid item xs={12} md={8}>
-            <Typography variant="h5">Bjørnen</Typography>
-            <CabinInfoInput
-              name="internalPrice"
-              value={bjornen?.internalPrice}
-              handleOnChange={(e) => handleCabinOnChange(e, bjornen)}
-              cabin={bjornen}
-            />
-            <CabinInfoInput
-              name="externalPrice"
-              value={bjornen?.externalPrice}
-              handleOnChange={(e) => handleCabinOnChange(e, bjornen)}
-              cabin={bjornen}
-            />
-            <CabinInfoInput
-              name="maxGuests"
-              value={bjornen?.maxGuests}
-              handleOnChange={(e) => handleCabinOnChange(e, bjornen)}
-              cabin={bjornen}
-            />
+      <form onSubmit={formik.handleSubmit}>
+        <Grid container direction="row" spacing={10}>
+          <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={() => setOpenSnackbar(false)}>
+            <Alert severity={alertSeverity}>{snackbarMessage}</Alert>
+          </Snackbar>
+          <Grid item container direction="column" xs={6}>
+            <Grid item xs={12} md={8}>
+              <Typography variant="h5">Bjørnen</Typography>
+              <TextField
+                label="Internpris"
+                name="bjornenInternalPrice"
+                variant="outlined"
+                margin="normal"
+                required
+                value={formik.values.bjornenInternalPrice}
+                onChange={formik.handleChange}
+                onBlur={() => formik.setFieldTouched("bjornenInternalPrice")}
+                error={formik.touched.bjornenInternalPrice && Boolean(formik.errors.bjornenInternalPrice)}
+                helperText={formik.touched.bjornenInternalPrice && formik.errors.bjornenInternalPrice}
+                InputLabelProps={{
+                  shrink: formik.values.bjornenInternalPrice !== undefined,
+                }}
+              />
+              <TextField
+                label="Eksternpris"
+                name="bjornenExternalPrice"
+                variant="outlined"
+                margin="normal"
+                required
+                value={formik.values.bjornenExternalPrice}
+                onChange={formik.handleChange}
+                onBlur={() => formik.setFieldTouched("bjornenExternalPrice")}
+                error={formik.touched.bjornenExternalPrice && Boolean(formik.errors.bjornenExternalPrice)}
+                helperText={formik.touched.bjornenExternalPrice && formik.errors.bjornenExternalPrice}
+                InputLabelProps={{
+                  shrink: formik.values.bjornenExternalPrice !== undefined,
+                }}
+              />
+              <TextField
+                label="Kapasitet (antall gjester)"
+                name="bjornenMaxGuests"
+                variant="outlined"
+                margin="normal"
+                required
+                value={formik.values.bjornenMaxGuests}
+                onChange={formik.handleChange}
+                onBlur={() => formik.setFieldTouched("bjornenMaxGuests")}
+                error={formik.touched.bjornenMaxGuests && Boolean(formik.errors.bjornenMaxGuests)}
+                helperText={formik.touched.bjornenMaxGuests && formik.errors.bjornenMaxGuests}
+                InputLabelProps={{
+                  shrink: formik.values.bjornenMaxGuests !== undefined,
+                }}
+              />
+            </Grid>
+          </Grid>
+          <Grid item container direction="column" xs={6}>
+            <Grid item xs={12} md={8}>
+              <Typography variant="h5">Oksen</Typography>
+              <TextField
+                label="Internpris"
+                name="oksenInternalPrice"
+                variant="outlined"
+                margin="normal"
+                required
+                value={formik.values.oksenInternalPrice}
+                onChange={formik.handleChange}
+                onBlur={() => formik.setFieldTouched("oksenInternalPrice")}
+                error={formik.touched.oksenInternalPrice && Boolean(formik.errors.oksenInternalPrice)}
+                helperText={formik.touched.oksenInternalPrice && formik.errors.oksenInternalPrice}
+                InputLabelProps={{
+                  shrink: formik.values.oksenInternalPrice !== undefined,
+                }}
+              />
+              <TextField
+                label="Eksternpris"
+                name="oksenExternalPrice"
+                variant="outlined"
+                margin="normal"
+                required
+                value={formik.values.oksenExternalPrice}
+                onChange={formik.handleChange}
+                onBlur={() => formik.setFieldTouched("oksenExternalPrice")}
+                error={formik.touched.oksenExternalPrice && Boolean(formik.errors.oksenExternalPrice)}
+                helperText={formik.touched.oksenExternalPrice && formik.errors.oksenExternalPrice}
+                InputLabelProps={{
+                  shrink: formik.values.oksenExternalPrice !== undefined,
+                }}
+              />
+              <TextField
+                label="Kapasitet (antall gjester)"
+                name="oksenMaxGuests"
+                variant="outlined"
+                margin="normal"
+                required
+                value={formik.values.oksenMaxGuests}
+                onChange={formik.handleChange}
+                onBlur={() => formik.setFieldTouched("oksenMaxGuests")}
+                error={formik.touched.oksenMaxGuests && Boolean(formik.errors.oksenMaxGuests)}
+                helperText={formik.touched.oksenMaxGuests && formik.errors.oksenMaxGuests}
+                InputLabelProps={{
+                  shrink: formik.values.oksenMaxGuests !== undefined,
+                }}
+              />
+            </Grid>
+          </Grid>
+          <Grid item>
+            <Button type="submit" variant="contained">
+              Lagre
+            </Button>
           </Grid>
         </Grid>
-        <Grid item container direction="column" xs={6}>
-          <Grid item xs={12} md={8}>
-            <Typography variant="h5">Oksen</Typography>
-            <CabinInfoInput
-              name="internalPrice"
-              value={oksen?.internalPrice}
-              handleOnChange={(e) => handleCabinOnChange(e, oksen)}
-              cabin={oksen}
-            />
-            <CabinInfoInput
-              name="externalPrice"
-              value={oksen?.externalPrice}
-              handleOnChange={(e) => handleCabinOnChange(e, oksen)}
-              cabin={oksen}
-            />
-            <CabinInfoInput
-              name="maxGuests"
-              value={oksen?.maxGuests}
-              handleOnChange={(e) => handleCabinOnChange(e, oksen)}
-              cabin={oksen}
-            />
-          </Grid>
-        </Grid>
-        <Grid item>
-          <Button onClick={handleUpdate} variant="contained">
-            Lagre
-          </Button>
-        </Grid>
-      </Grid>
+      </form>
     </>
   );
 };
