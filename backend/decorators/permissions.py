@@ -4,7 +4,6 @@ from typing import TYPE_CHECKING, Callable, Literal, Optional, Type, TypeVar, Un
 from django.apps import apps
 from django.db import models
 from django.db.models import Model
-from django.db.models.base import ModelBase
 from graphene import ResolveInfo
 from typing_extensions import Concatenate, ParamSpec
 
@@ -103,8 +102,8 @@ def permission_required(
                 if isinstance(model, str):
                     model = cast(Type[models.Model], apps.get_model(model, require_ready=True))
 
-                elif not isinstance(model, (Model, ModelBase)):
-                    raise TypeError(f"{model} should be of the type str, Model, or ModelBase, got {type(model)}")
+                elif not isinstance(model, Model):
+                    raise TypeError(f"{model} should be of the type str or Model, got {type(model)}")
 
                 lookup_dict = {}
 
