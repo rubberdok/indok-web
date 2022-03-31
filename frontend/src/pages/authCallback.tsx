@@ -25,8 +25,10 @@ const AuthCallbackPage: NextPage = () => {
     onCompleted: ({ authUser: { user } }) => {
       if (user.firstLogin) {
         router.push("/register");
-      } else if (state) {
-        router.push(Array.isArray(state) ? state.join("") : state);
+      } else if (typeof state === "string") {
+        router.push(state);
+      } else if (Array.isArray(state) && state.length > 0) {
+        router.push(state[0]);
       } else {
         router.push("/profile");
       }
