@@ -145,9 +145,7 @@ class DataportenAuth:
         data: UserInfo = response.json()
         feide_userid = data["sub"]
         first_name, last_name = data["name"].rsplit(" ", 1)
-        username = next(
-            (id for id in data["dataporten-userid_sec"] if id.endswith("@ntnu.no")), data["dataporten-userid_sec"][0]
-        )
+        username = next(id for id in data["dataporten-userid_sec"] if id.endswith("@ntnu.no"))
         username = username[username.index(":") + 1 : username.index("@")]
         email = data["email"]
         try:
