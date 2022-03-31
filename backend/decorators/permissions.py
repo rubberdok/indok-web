@@ -91,7 +91,7 @@ def permission_required(
 
     def decorator(resolver: ResolverSignature[P, R]) -> Callable[P, Union[Optional[R], R]]:
         @wraps(resolver)
-        @context(resolver)
+        @context
         def wrapper(context, *args: P.args, **kwargs: P.kwargs) -> Optional[R]:
             obj = None
             if callable(fn):
