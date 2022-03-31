@@ -4,11 +4,10 @@ import { config } from "@utils/config";
 import cookie from "cookie";
 import merge from "deepmerge";
 import { IncomingMessage } from "http";
-import Cookies from "js-cookie";
 import isEqual from "lodash/isEqual";
 import { GetServerSidePropsContext } from "next";
-import { AppProps } from "next/app";
 import { useMemo } from "react";
+import { AppProps } from "next/app";
 
 export const APOLLO_STATE_PROP_NAME = "__APOLLO_STATE__";
 export const COOKIES_TOKEN_NAME = "JWT";
@@ -19,16 +18,16 @@ type PageProps = {
 };
 
 let apolloClient: ApolloClient<NormalizedCacheObject> | undefined;
-
-let csrfToken: string | undefined;
+let csrftoken: string | undefined;
 
 const getCsrfToken = async () => {
-  if (csrfToken) return csrfToken;
-  csrfToken = await fetch("http://localhost:8000/csrf/")
-    .then((response) => response.json())
+  if (csrftoken) return csrftoken;
+  console.log("fetching");
+  csrftoken = await fetch("http://localhost:8000/csrf")
+    .then((res) => res.json())
     .then((data) => data.csrfToken);
-  console.log(csrfToken);
-  return csrfToken;
+  console.log(csrftoken);
+  return csrftoken;
 };
 
 const getToken = (req?: IncomingMessage) => {
@@ -47,19 +46,18 @@ function createApolloClient(ctx?: GetServerSidePropsContext): ApolloClient<Norma
   const authLink = setContext(async (_, { headers }) => {
     // Get the authentication token from cookies
     const token = getToken(ctx?.req);
-    const csrfToken = await getCsrfToken();
-    csrfToken && Cookies.set("csrftoken", csrfToken);
+    csrftoken = await getCsrfToken();
+
     return {
       headers: {
         ...headers,
         authorization: token ? `JWT ${token}` : "",
-        "X-CSRFToken": csrfToken,
+        "X-CSRFTOKEN": csrftoken,
       },
     };
   });
 
   return new ApolloClient({
-    credentials: "include",
     ssrMode: typeof window === "undefined",
     link: authLink.concat(httpLink),
     cache: new InMemoryCache(),
