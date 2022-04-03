@@ -14,7 +14,7 @@ User = get_user_model()
 
 
 def setup_mock_requests(
-    firstName: str = "Test", lastName: str = "Testesen", indok: bool = True, id: str = "123123"
+    first_name: str = "Test", last_name: str = "Testesen", indok: bool = True, id: str = "123123"
 ) -> Callable:
     def mocked_feide_requests(*args, **kwargs):
         class MockResponse:
@@ -43,9 +43,9 @@ def setup_mock_requests(
             return MockResponse(
                 {
                     "sub": id,
-                    "name": f"{firstName} {lastName}",
-                    "email": f"{firstName.lower()}@stud.ntnu.no",
-                    "dataporten-userid_sec": [f"feide:{firstName.lower()}@ntnu.no"],
+                    "name": f"{first_name} {last_name}",
+                    "email": f"{first_name.lower()}@stud.ntnu.no",
+                    "dataporten-userid_sec": [f"feide:{first_name.lower()}@ntnu.no"],
                 },
                 200,
             )
