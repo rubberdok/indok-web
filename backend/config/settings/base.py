@@ -92,6 +92,7 @@ SESSION_COOKIE_DOMAIN = env("SESSION_COOKIE_DOMAIN", default="localhost")
 CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS", default=["http://localhost:3000", "http://frontend:3000"])
 CSRF_COOKIE_DOMAIN = env("CSRF_COOKIE_DOMAIN", default="localhost")
 CSRF_COOKIE_NAME = env("CSRF_COOKIE_NAME", default="csrf")
+CSRF_FAILURE_VIEW = env("CSRF_FAILURE_VIEW", default="config.views.csrf.csrf_failure")
 
 
 # DATAPORTEN
