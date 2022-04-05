@@ -190,21 +190,21 @@ class UsersMutationsTestCase(UsersBaseTestCase):
         )
 
         self.auth_user_mutation = """
-        mutation {{
-            authUser(code: "mocked") {{
-                user {{
-                    id
-                    username
-                    firstName
-                    lastName
-                    email
-                    feideEmail
-                    firstLogin
-                    yearUpdatedAt
-                    feideUserid
-                }}
-            }}
-        }}
+            mutation auth {
+                authUser(code: "mocked") {
+                    user {
+                        id
+                        username
+                        firstName
+                        lastName
+                        email
+                        feideEmail
+                        firstLogin
+                        yearUpdatedAt
+                        feideUserid
+                    }
+                }
+            }
         """
         self.registered_indok_user = IndokUserFactory(feide_userid="a random ID", first_login=False)
         return super().setUp()
