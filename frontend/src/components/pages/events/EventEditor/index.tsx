@@ -128,6 +128,18 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
       return;
     }
 
+    const currentlyAttending = event?.attendable?.usersAttending?.length;
+
+    if (
+      isAttendable &&
+      currentlyAttending &&
+      formattedInputData.attendableInput.totalAvailableSlots < currentlyAttending
+    ) {
+      setErrors([`Du kan ikke redusere antall plasser til færre enn antall påmeldte (${currentlyAttending})`]);
+      setOpenEditErrorSnackbar(true);
+      return;
+    }
+
     updateEvent({
       variables: {
         id: event.id,

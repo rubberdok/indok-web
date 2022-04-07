@@ -127,7 +127,7 @@ const ListingAdminPage: NextPage = () => {
                           <Typography variant="h5">Søkere</Typography>
                         </Box>
                         <CardContent>
-                          <Typography>Ingen søkere enda.</Typography>
+                          <Typography>Ingen søkere ennå.</Typography>
                         </CardContent>
                       </Tabs>
                     )}

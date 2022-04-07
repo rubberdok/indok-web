@@ -21,7 +21,6 @@ class EventsBaseTestCase(ExtendedGraphQLTestCase):
         # Create three events
         self.non_attendable_event = EventFactory()
         self.attendable_and_open_event = EventFactory(
-            start_time=timezone.now() + datetime.timedelta(seconds=1),
             allowed_grade_years="1,2,3",
         )
         self.attendable_event_with_slot_dist = EventFactory(allowed_grade_years="1,2,4")
@@ -54,6 +53,7 @@ class EventsBaseTestCase(ExtendedGraphQLTestCase):
         self.user_3rd_grade = IndokUserFactory(graduation_year=year_val + current_year - 3)
         self.another_user_3rd_grade = IndokUserFactory(graduation_year=year_val + current_year - 3)
         self.user_4th_grade = IndokUserFactory(graduation_year=year_val + current_year - 4)
+        self.another_user_4th_grade = IndokUserFactory(graduation_year=year_val + current_year - 4)
         self.user_not_indok = UserFactory(graduation_year=year_val + current_year - 1)
         self.super_user = UserFactory(is_staff=True, is_superuser=True)
 
@@ -954,6 +954,36 @@ class EventsMailTestCase(EventsBaseTestCase):
         self.query(self.event_signup_query, user=self.user_3rd_grade)
         self.query(self.event_signup_query, user=self.another_user_3rd_grade)
 
+        # Create open event with slot distribution
+        self.open_event_with_slot_dist = EventFactory(
+            allowed_grade_years="1,2,4",
+        )
+
+        MembershipFactory(user=self.org_user, organization=self.open_event_with_slot_dist.organization)
+
+        AttendableFactory(
+            event=self.open_event_with_slot_dist,
+            slot_distribution={"1,2": 1, "4": 1},
+            total_available_slots=2,
+            signup_open_date=timezone.now() + datetime.timedelta(microseconds=100),
+        )
+
+        self.signup_query = f"""
+                mutation EventSignUp {{
+                    eventSignUp(
+                        eventId: {self.open_event_with_slot_dist.id},
+                        data: {{ extraInformation: \"\" }}
+                        ) {{
+                      isFull
+                        }}
+                    }}
+                """
+
+        self.query(self.signup_query, user=self.user_1st_grade)
+        self.query(self.signup_query, user=self.user_2nd_grade)
+        self.query(self.signup_query, user=self.user_4th_grade)
+        self.query(self.signup_query, user=self.another_user_4th_grade)
+
     @patch("apps.events.mail.EventEmail.send_waitlist_notification_email")
     def test_send_mail_on_user_bumped_from_waiting_list_by_admin(self, send_mail_mock: MagicMock):
         admin_event_signoff_query = f"""
@@ -1000,7 +1030,7 @@ class EventsMailTestCase(EventsBaseTestCase):
         self.assertEqual(send_mail_mock.call_args.args[1], self.event)
 
     @patch("apps.events.mail.EventEmail.send_waitlist_notification_email")
-    def test_send_mail_on_available_slots_expanded(self, send_mail_mock: MagicMock):
+    def test_send_mail_on_available_slots_expanded_no_slot_dist(self, send_mail_mock: MagicMock):
         expand_slots_mutation = f"""
             mutation {{
             updateEvent(
@@ -1023,3 +1053,29 @@ class EventsMailTestCase(EventsBaseTestCase):
         self.assertEqual(send_mail_mock.call_args_list[0].args[1], self.event)
         self.assertEqual(send_mail_mock.call_args_list[1].args[0], self.user_3rd_grade)
         self.assertEqual(send_mail_mock.call_args_list[1].args[1], self.event)
+
+    @patch("apps.events.mail.EventEmail.send_waitlist_notification_email")
+    def test_send_mail_on_available_slots_expanded_with_slot_dist(self, send_mail_mock: MagicMock):
+        # Sign up four users for the event with 2 available slots
+        expand_slots_mutation = f"""
+            mutation {{
+            updateEvent(
+                id: {self.open_event_with_slot_dist.id},
+                eventData: {{description: "Increased number of slots!"}},
+                attendableData: {{
+                    totalAvailableSlots: 3,
+                    slotDistribution: [{{gradeGroup: "1,2", availableSlots: 1}},
+                                       {{gradeGroup: "4", availableSlots: 2}}] }},
+                isAttendable: true) {{
+                    ok
+                }}
+            }}
+            """
+        # Increase available slots to 3
+        self.query(expand_slots_mutation, self.org_user)
+        # Check that we attempt to send an email to one user
+        self.assertEqual(len(send_mail_mock.call_args_list), 1)
+        # Check that we sent emails to the correct user
+        self.assertEqual(send_mail_mock.call_args_list[0].args[1], self.open_event_with_slot_dist)
+        self.assertEqual(send_mail_mock.call_args_list[0].args[0], self.another_user_4th_grade)
+        self.assertNotEqual(send_mail_mock.call_args_list[0].args[0], self.user_2nd_grade)

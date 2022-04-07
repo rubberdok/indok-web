@@ -260,7 +260,7 @@ class EventSignUp(graphene.Mutation):
             raise ValidationError("Arrangementet har ikke påmelding")
 
         if now < event.attendable.signup_open_date:
-            raise ValidationError("Arrangementet er ikke åpent for påmelding enda")
+            raise ValidationError("Arrangementet er ikke åpent for påmelding ennå")
 
         if event.attendable.deadline is not None and now > event.attendable.deadline:
             raise ValidationError("Påmelding for arrangementet er stengt")
@@ -285,6 +285,7 @@ class EventSignUp(graphene.Mutation):
 
             else:
                 setattr(sign_up, "is_attending", True)
+                setattr(sign_up, "timestamp", now)
                 sign_up.save()
                 is_full = event.attendable.get_is_full(user.grade_year)
                 return EventSignUp(event=event, is_full=is_full)

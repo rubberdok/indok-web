@@ -52,3 +52,26 @@ def get_slot_distribution_as_list(slot_dist_dict: dict) -> list[GradeDistributio
     [{grade_group: "x,x,x", available_slots: 150}, {grade_group: "x,x", available_slots: 50}, ...]
     """
     return [{"grade_group": grades, "available_slots": slots} for grades, slots in slot_dist_dict.items()]
+
+
+def slot_distribution_is_updated(prev_slot_dist, new_slot_dist):
+    """
+    Check if slot distribution has been updated
+
+    Args:
+        prev_slot_dist (dict[grade_group:str, available_slots: int]): previous slot distribution
+        new_slot_dist (dict[grade_group:str, available_slots: int]): new slot distribution
+
+    Returns:
+        bool: whether the slot distirbution has been updated (True) or not (False)
+    """
+    common_groups = list(set(prev_slot_dist.keys()).intersection(new_slot_dist.keys()))
+
+    if len(prev_slot_dist) != len(common_groups):
+        return True  # There has been an update in groups
+
+    for group in prev_slot_dist.keys():
+        if prev_slot_dist[group] != new_slot_dist[group]:
+            return True  # There has been a change in the number of available slots for a grade group
+
+    return False
