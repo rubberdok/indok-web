@@ -11,7 +11,7 @@ import {
 } from "@components/pages/profile/ProfileCard";
 import PermissionRequired from "@components/permissions/PermissionRequired";
 import useStyles from "@components/pages/profile/styles";
-import { GET_USER_PROFILE } from "@graphql/users/queries";
+import { GET_USER_INFO } from "@graphql/users/queries";
 import { Avatar, Container, Grid, Typography, useTheme } from "@material-ui/core";
 import { NextPage } from "next";
 import Head from "next/head";
@@ -39,7 +39,7 @@ const userInitials = (firstName: string, lastName: string): string => {
 };
 
 const ProfilePage: NextPage = () => {
-  const { data } = useQuery<{ user?: User }>(GET_USER_PROFILE);
+  const { data } = useQuery<{ user?: User }>(GET_USER_INFO);
   const theme = useTheme();
   const classes = useStyles();
   const initials = useMemo(() => (data?.user ? userInitials(data.user.firstName, data.user.lastName) : ""), [data]);
