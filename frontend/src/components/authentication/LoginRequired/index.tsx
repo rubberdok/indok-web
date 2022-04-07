@@ -15,7 +15,7 @@ type Props = {
   fallback?: React.ReactNode;
 };
 
-export const LoginRequired = ({ redirect, redirectPath, children, fallback }: Props) => {
+export const LoginRequired: React.FC<Props> = ({ redirect, redirectPath, children, fallback }) => {
   const router = useRouter();
   let path: string | undefined = redirectPath;
   if (redirect) {
