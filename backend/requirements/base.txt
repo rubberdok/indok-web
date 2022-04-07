@@ -12,7 +12,7 @@ factory-boy==3.2.1
 graphene==2.1.8
 graphene-django==2.15.0
 gunicorn==20.1.0
-phonenumbers==8.12.45
+phonenumbers==8.12.46
 promise==2.3
 psycopg2-binary==2.9.3
 WeasyPrint==54.3
