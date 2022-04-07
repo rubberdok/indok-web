@@ -8,7 +8,7 @@ import {
   Typography,
   useTheme,
 } from "@material-ui/core";
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 import Link from "next/link";
 import useStyles from "../styles";
 

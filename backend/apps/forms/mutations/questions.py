@@ -1,6 +1,5 @@
 import graphene
-from graphql_jwt.decorators import login_required
-from utils.decorators import permission_required
+from decorators import login_required, permission_required
 from django.db.models import Q
 from django.db import IntegrityError
 from django.utils import timezone
@@ -29,7 +28,7 @@ class CreateQuestion(graphene.Mutation):
         form_id = graphene.ID()
         question_data = CreateQuestionInput(required=True)
 
-    @permission_required("forms.change_form", (Form, "pk", "form_id"))
+    @permission_required("forms.change_form", (Form, ("pk", "form_id")))
     def mutate(self, info, form_id, question_data):
         question = Question()
         for k, v in question_data.items():
@@ -50,7 +49,7 @@ class UpdateQuestion(graphene.Mutation):
         id = graphene.ID(required=True)
         question_data = BaseQuestionInput(required=True)
 
-    @permission_required("forms.change_form", (Form, "questions__pk", "id"))
+    @permission_required("forms.change_form", (Form, ("questions__pk", "id")))
     def mutate(self, info, id, question_data):
         try:
             question = Question.objects.get(pk=id)
@@ -72,7 +71,7 @@ class DeleteQuestion(graphene.Mutation):
     class Arguments:
         id = graphene.ID(required=True)
 
-    @permission_required("forms.change_form", (Form, "questions__pk", "id"))
+    @permission_required("forms.change_form", (Form, ("questions__pk", "id")))
     def mutate(self, info, id):
         try:
             question = Question.objects.get(pk=id)
@@ -231,7 +230,7 @@ class CreateUpdateAndDeleteOptions(graphene.Mutation):
         question_id = graphene.ID(required=True)
         option_data = graphene.List(OptionInput)
 
-    @permission_required("forms.change_form", (Form, "questions__pk", "question_id"))
+    @permission_required("forms.change_form", (Form, ("questions__pk", "question_id")))
     def mutate(self, info, question_id, option_data):
         """Bulk operation to refresh the options to a given question. Has three main operations:
         (1): Creates new options for inputs without an option_id

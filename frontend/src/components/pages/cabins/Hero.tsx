@@ -1,9 +1,8 @@
-import PermissionRequired from "@components/permissions/PermissionRequired";
 import { Box, Button, Grid, makeStyles, Theme, Typography } from "@material-ui/core";
-import React from "react";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import Link from "next/link";
+import React from "react";
 
 const useStyles = makeStyles((theme: Theme) => ({
   hero: {
@@ -31,11 +30,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface Props {
-  isLoggedIn: boolean;
-}
-
-const Hero: React.VFC<Props> = ({ isLoggedIn }) => {
+const Hero: React.VFC = () => {
   const classes = useStyles();
 
   return (
@@ -46,26 +41,11 @@ const Hero: React.VFC<Props> = ({ isLoggedIn }) => {
         </Box>
       </Grid>
       <Grid xs={12} sm={6} item container justifyContent="center" zeroMinWidth>
-        <PermissionRequired
-          permission="cabins.add_booking"
-          fallback={
-            !isLoggedIn ? (
-              // User is not logged in, and therefore does not have the permission.
-              <Typography variant="h5">Du må være logget inn for å booke en hytte.</Typography>
-            ) : (
-              // User is logged in, but does not have the permission (we disabled cabin booking for a subset of the users)
-              <Typography variant="h5">
-                Her blir det snart mulig å reservere indøkhyttene
-              </Typography>
-            )
-          }
-        >
-          <Link href="/cabins/book" passHref>
-            <Button variant="contained" endIcon={<NavigateNextIcon />}>
-              Book nå
-            </Button>
-          </Link>
-        </PermissionRequired>
+        <Link href="/cabins/book" passHref>
+          <Button variant="contained" endIcon={<NavigateNextIcon />}>
+            Book nå
+          </Button>
+        </Link>
       </Grid>
       <Grid xs={12} sm={6} item container justifyContent="center">
         <Button

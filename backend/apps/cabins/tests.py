@@ -2,7 +2,7 @@ import json
 
 from django.core import mail
 
-from apps.cabins.models import Booking, Cabin, BookingResponsible
+from apps.cabins.models import Booking, BookingResponsible
 from apps.cabins.models import BookingSemester
 from apps.cabins.helpers import snake_case_to_camel_case
 from utils.testing.base import ExtendedGraphQLTestCase
@@ -10,6 +10,7 @@ from utils.testing.cabins_factories import BookingFactory
 import datetime
 
 from django.utils import timezone
+from utils.testing.factories.cabins import CabinFactory
 
 from utils.testing.factories.users import UserFactory
 from django.contrib.auth.models import Permission
@@ -21,8 +22,8 @@ class CabinsBaseTestCase(ExtendedGraphQLTestCase):
         super().setUp()
         # Create three bookings
         self.now = timezone.now()
-        self.bjornen_cabin = Cabin.objects.get(name="Bjørnen")
-        self.oksen_cabin = Cabin.objects.get(name="Oksen")
+        self.bjornen_cabin = CabinFactory(name="Bjørnen")
+        self.oksen_cabin = CabinFactory(name="Oksen")
         self.first_booking = BookingFactory(
             check_in=self.now,
             check_out=self.now + datetime.timedelta(days=4),
@@ -195,12 +196,6 @@ class CabinsMutationsTestCase(CabinsBaseTestCase):
         self.assertEqual(3, len(Booking.objects.all()))
 
     def test_create_booking(self):
-        # Test booking creation without add_booking permission
-        response = self.create_booking(self.no_conflict_booking, f"{self.bjornen_cabin.id}")
-        self.assert_permission_error(response)
-
-        # Test with add_booking permission
-        self.add_booking_permission("add_booking")
         response = self.create_booking(
             self.no_conflict_booking, f"{self.bjornen_cabin.id}", user=self.user
         )
@@ -339,7 +334,7 @@ class EmailTestCase(CabinsBaseTestCase):
                   phone: \"{booking.phone}\",
                   internalParticipants: {booking.internal_participants},
                   externalParticipants: {booking.external_participants},
-                  cabins: [1],
+                  cabins: [{self.oksen_cabin.id}],
                   checkIn: \"{booking.check_in.strftime(self.date_fmt)}\",
                   checkOut: \"{booking.check_out.strftime(self.date_fmt)}\",
                   emailType: \"{email_type}\",
@@ -351,11 +346,6 @@ class EmailTestCase(CabinsBaseTestCase):
             }}
         """
         return self.query(query, user=user)
-
-    def test_mail_permission(self):
-        # Tries to send a mail with missing permissions
-        response = self.send_email(self.first_booking, "reserve_booking", user=self.user)
-        self.assert_permission_error(response)
 
     def test_outbox_size_reservation(self):
         # Check outbox size when sending reservation mails to both admin and user

@@ -1,17 +1,11 @@
 import { gql } from "@apollo/client";
-import { USER_FRAMGENT } from "./fragments";
+import { USER_FRAGMENT } from "./fragments";
 
-export const GET_USER_PROFILE = gql`
-  query userProfile {
+export const GET_USER_INFO = gql`
+  ${USER_FRAGMENT}
+  query userInfo {
     user {
-      id
-      username
-      firstName
-      lastName
-      phoneNumber
-      allergies
-      email
-      gradeYear
+      ...UserFields
     }
   }
 `;
@@ -36,7 +30,7 @@ export const EDIT_USER_QUERY = gql`
 `;
 
 export const GET_USER = gql`
-  ${USER_FRAMGENT}
+  ${USER_FRAGMENT}
   query user {
     user {
       ...UserFields
@@ -48,5 +42,11 @@ export const GET_USER = gql`
         name
       }
     }
+  }
+`;
+
+export const GET_ID_TOKEN = gql`
+  query getIdToken {
+    getIdToken
   }
 `;

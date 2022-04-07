@@ -1,13 +1,15 @@
 import graphene
+from decorators import permission_required
 
-from .helpers import price
-from .types import AllBookingsType, BookingInfoType, EmailInputType, UpdateBookingSemesterType
-from apps.cabins.models import Booking as BookingModel, BookingSemester
+from apps.cabins.models import Booking as BookingModel
+from apps.cabins.models import BookingSemester
 from apps.cabins.models import Cabin as CabinModel
+
 from .constants import APPROVE_BOOKING, DISAPPROVE_BOOKING
+from .helpers import price
 from .mail import send_mail
+from .types import AllBookingsType, BookingInfoType, EmailInputType, UpdateBookingSemesterType
 from .validators import create_booking_validation
-from graphql_jwt.decorators import permission_required
 
 
 class BookingInput(graphene.InputObjectType):
@@ -58,7 +60,6 @@ class CreateBooking(graphene.Mutation):
     ok = graphene.Boolean()
     booking = graphene.Field(AllBookingsType)
 
-    @permission_required("cabins.add_booking")
     def mutate(
         self,
         info,
@@ -150,7 +151,6 @@ class SendEmail(graphene.Mutation):
 
     ok = graphene.Boolean()
 
-    @permission_required("cabins.send_email")
     def mutate(self, info, email_input: EmailInputType):
         cabins = CabinModel.objects.filter(id__in=email_input["cabins"])
 

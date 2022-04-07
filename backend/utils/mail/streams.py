@@ -149,13 +149,16 @@ class PostmarkEmail(EmailMultiAlternatives):
             "contact_mail": settings.CONTACT_EMAIL,
         }
         self.esp_extra: EspExtra = {"MessageStream": stream}
-        self.template_id = template_id
+        if template_id is not None:
+            # If these variables are set, anymail will attempt to utilize Postmark's template system
+            # raising a 422 error as the template ID is not found.
+            self.template_id = template_id
+            self.merge_global_data = (
+                default_template_variables | global_template_variables
+                if global_template_variables is not None
+                else default_template_variables
+            )
         self.merge_data = template_variables
-        self.merge_global_data = (
-            default_template_variables | global_template_variables
-            if global_template_variables is not None
-            else default_template_variables
-        )
 
         super().__init__(
             subject,

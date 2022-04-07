@@ -1,7 +1,11 @@
 from datetime import date
+from typing import TYPE_CHECKING
 
 from django.db import models
 from django.db.models import QuerySet
+
+if TYPE_CHECKING:
+    from apps.cabins.models import Cabin
 
 """
 Helper method used in the app
@@ -17,7 +21,7 @@ def is_internal_price(internal_participants: int, external_participants: int) ->
 
 
 def price(
-    cabins: QuerySet,
+    cabins: QuerySet["Cabin"],
     check_in: date,
     check_out: date,
     internal_participants: int,

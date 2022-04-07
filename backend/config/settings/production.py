@@ -14,8 +14,8 @@ SECRET_KEY = env("SECRET_KEY")
 ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=["api.indokntnu.no"])
 CORS_ALLOW_HEADERS = list(default_headers) + ["sentry-trace"]
 
-CORS_ORIGIN_WHITELIST = env.list(
-    "CORS_ORIGIN_WHITELIST",
+CORS_ALLOWED_ORIGINS = env.list(
+    "CORS_ALLOWED_ORIGINS",
     default=[
         "https://indokntnu.no",
         "https://www.indokntnu.no",
@@ -40,7 +40,7 @@ DATABASES = {
 }
 
 # URLs
-ROOT_URLCONF = "config.urls.production"
+ROOT_URLCONF = env("ROOT_URLCONF", default="config.urls.production")
 
 # EMAIL
 EMAIL_BACKEND = env("DJANGO_EMAIL_BACKEND", default="anymail.backends.postmark.EmailBackend")
@@ -86,10 +86,14 @@ LOGGING = {
 
 # GRAPHENE
 GRAPHENE["MIDDLEWARE"] += ["config.sentry.middleware.SentryMiddleware"]  # noqa
-GRAPHQL_JWT = {"JWT_COOKIE_DOMAIN": env("JWT_COOKIE_DOMAIN", default=".indokntnu.no")}
 
-# Sentry
-SENTRY_DSN: str = env("SENTRY_DSN", default=None)
+# SECURITY
+SESSION_COOKIE_SECURE = env.bool("SESSION_COOKIE_SECURE", default=True)
+CSRF_COOKIE_SECURE = env.bool("CSRF_COOKIE_SECURE", True)
+
+
+# SENTRY
+SENTRY_DSN: Optional[str] = env("SENTRY_DSN", default=None)
 SENTRY_LOG_LEVEL: int = cast(int, env.int("DJANGO_SENTRY_LOG_LEVEL", default=logging.INFO))
 SENTRY_RELEASE: Optional[str] = env.str("GIT_COMMIT_SHA", "") or None
 
