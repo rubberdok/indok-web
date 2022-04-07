@@ -10,7 +10,7 @@ import { AppProps } from "next/app";
 import { useMemo } from "react";
 
 export const APOLLO_STATE_PROP_NAME = "__APOLLO_STATE__";
-const CSRF_COOKIE = "csrf";
+const CSRF_COOKIE = config.CSRF_COOKIE;
 
 type PageProps = {
   props: AppProps["pageProps"];

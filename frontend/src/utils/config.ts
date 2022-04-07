@@ -28,4 +28,5 @@ export const config = {
     "NEXT_PUBLIC_INTERNAL_API_URL"
   ),
   COOKIE_DOMAIN: validateEnvironmentVariable(process.env.NEXT_PUBLIC_COOKIE_DOMAIN, "NEXT_PUBLIC_COOKIE_DOMAIN"),
+  CSRF_COOKIE: validateEnvironmentVariable(process.env.NEXT_PUBLIC_CSRF_COOKIE, "NEXT_PUBLIC_CSRF_COOKIE"),
 };
