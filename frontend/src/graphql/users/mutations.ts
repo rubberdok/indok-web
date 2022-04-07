@@ -12,6 +12,12 @@ export const AUTHENTICATE = gql`
   }
 `;
 
+export const LOGOUT = gql`
+  query logout {
+    logout
+  }
+`;
+
 export const DELETE_TOKEN_COOKIE = gql`
   mutation {
     deleteTokenCookie {
