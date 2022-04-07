@@ -39,6 +39,7 @@ def setup_mock_requests(
                 },
                 200,
             )
+
         if args[0] == "https://auth.dataporten.no/openid/userinfo":
             return MockResponse(
                 {
@@ -188,7 +189,6 @@ class UsersMutationsTestCase(UsersBaseTestCase):
             }}
         """
         )
-
         self.auth_user_mutation = """
             mutation auth {
                 authUser(code: "mocked") {
