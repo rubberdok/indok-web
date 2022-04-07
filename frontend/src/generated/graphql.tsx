@@ -26,12 +26,6 @@ export type Scalars = {
   /** The `Decimal` scalar type represents a python Decimal. */
   Decimal: any;
   /**
-   * The `GenericScalar` scalar type represents a generic
-   * GraphQL scalar value that could be:
-   * String, Boolean, Int, Float, List or Object.
-   */
-  GenericScalar: any;
-  /**
    * Leverages the internal Python implmeentation of UUID (uuid.UUID) to provide native UUID objects
    * in fields, resolvers and input.
    */
@@ -156,9 +150,6 @@ export type AttendableType = {
 
 export type AuthUser = {
   __typename?: "AuthUser";
-  idToken?: Maybe<Scalars["String"]>;
-  isIndokStudent?: Maybe<Scalars["Boolean"]>;
-  token?: Maybe<Scalars["String"]>;
   user?: Maybe<UserType>;
 };
 
@@ -445,11 +436,6 @@ export type DeleteForm = {
   ok?: Maybe<Scalars["Boolean"]>;
 };
 
-export type DeleteJsonWebTokenCookie = {
-  __typename?: "DeleteJSONWebTokenCookie";
-  deleted: Scalars["Boolean"];
-};
-
 /** Deletes the listing with the given ID */
 export type DeleteListing = {
   __typename?: "DeleteListing";
@@ -556,11 +542,6 @@ export type FormTypeResponseArgs = {
   responsePk?: InputMaybe<Scalars["UUID"]>;
 };
 
-export type GetIdToken = {
-  __typename?: "GetIDToken";
-  idToken: Scalars["String"];
-};
-
 export type InitiateOrder = {
   __typename?: "InitiateOrder";
   orderId?: Maybe<Scalars["UUID"]>;
@@ -646,7 +627,6 @@ export type Mutations = {
   deleteListing?: Maybe<DeleteListing>;
   deleteOrganization?: Maybe<DeleteOrganization>;
   deleteQuestion?: Maybe<DeleteQuestion>;
-  deleteTokenCookie?: Maybe<DeleteJsonWebTokenCookie>;
   /**
    * Sets the field is_attending to False in the Sign Up for the user that
    * sent the request, for the event with the given ID
@@ -659,9 +639,7 @@ export type Mutations = {
    * with the given ID
    */
   eventSignUp?: Maybe<EventSignUp>;
-  getIdToken?: Maybe<GetIdToken>;
   initiateOrder?: Maybe<InitiateOrder>;
-  refreshToken?: Maybe<Refresh>;
   /** Sends email to the user or an admin (or both) */
   sendEmail?: Maybe<SendEmail>;
   /** Send an email to all users signed up to an event */
@@ -683,7 +661,6 @@ export type Mutations = {
   updateOrganization?: Maybe<UpdateOrganization>;
   updateQuestion?: Maybe<UpdateQuestion>;
   updateUser?: Maybe<UpdateUser>;
-  verifyToken?: Maybe<Verify>;
 };
 
 export type MutationsAdminEventSignOffArgs = {
@@ -700,7 +677,7 @@ export type MutationsAttemptCapturePaymentArgs = {
 };
 
 export type MutationsAuthUserArgs = {
-  code?: InputMaybe<Scalars["String"]>;
+  code: Scalars["String"];
 };
 
 export type MutationsCreateArchivedocumentArgs = {
@@ -827,10 +804,6 @@ export type MutationsInitiateOrderArgs = {
   quantity?: InputMaybe<Scalars["Int"]>;
 };
 
-export type MutationsRefreshTokenArgs = {
-  token?: InputMaybe<Scalars["String"]>;
-};
-
 export type MutationsSendEmailArgs = {
   emailInput?: InputMaybe<EmailInput>;
 };
@@ -906,10 +879,6 @@ export type MutationsUpdateQuestionArgs = {
 
 export type MutationsUpdateUserArgs = {
   userData?: InputMaybe<UserInput>;
-};
-
-export type MutationsVerifyTokenArgs = {
-  token?: InputMaybe<Scalars["String"]>;
 };
 
 export type OptionInput = {
@@ -1023,6 +992,7 @@ export type Queries = {
   hasPermission?: Maybe<Scalars["Boolean"]>;
   listing?: Maybe<ListingType>;
   listings?: Maybe<Array<Maybe<ListingType>>>;
+  logout: Scalars["String"];
   memberships?: Maybe<Array<Maybe<MembershipType>>>;
   order?: Maybe<OrderType>;
   ordersByStatus?: Maybe<OrdersByStatusType>;
@@ -1166,13 +1136,6 @@ export enum QuestionTypeEnum {
   ShortAnswer = "SHORT_ANSWER",
   Slider = "SLIDER",
 }
-
-export type Refresh = {
-  __typename?: "Refresh";
-  payload: Scalars["GenericScalar"];
-  refreshExpiresIn: Scalars["Int"];
-  token: Scalars["String"];
-};
 
 /** An enumeration. */
 export enum ResponseStatus {
@@ -1427,11 +1390,6 @@ export type UserType = {
   /** Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. */
   username: Scalars["String"];
   yearUpdatedAt?: Maybe<Scalars["DateTime"]>;
-};
-
-export type Verify = {
-  __typename?: "Verify";
-  payload: Scalars["GenericScalar"];
 };
 
 export type ArchiveByTypesQueryVariables = Exact<{

@@ -30,10 +30,12 @@ const moduleExports = {
       },
     ];
   },
-  experimental: {
-    outputStandalone: true,
+  compiler: {
     styledComponents: true,
     ...getPresets(),
+  },
+  experimental: {
+    outputStandalone: true,
   },
   swcMinify: true,
   webpack: (config, { isServer }) => {
