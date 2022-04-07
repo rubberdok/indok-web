@@ -1,11 +1,12 @@
+from __future__ import annotations
+
 from functools import wraps
-from typing import TYPE_CHECKING, Callable, Literal, Optional, Type, TypeVar, Union, cast, overload
+from typing import TYPE_CHECKING, Callable, Literal, Optional, Protocol, Type, TypeVar, Union, cast, overload
 
 from django.apps import apps
 from django.db import models
 from django.db.models import Model
 from django.db.models.base import ModelBase
-from graphene import ResolveInfo
 from typing_extensions import Concatenate, ParamSpec
 
 from decorators.constants import PERMISSION_REQUIRED_ERROR, ResolverSignature
@@ -15,13 +16,18 @@ from .helpers import context
 if TYPE_CHECKING:
     from apps.users.models import User
 
+
+class Context(Protocol):
+    user: User
+
+
 R = TypeVar("R")
 P = ParamSpec("P")
 
 P_lookup = ParamSpec("P_lookup")
 M = TypeVar("M", bound="models.Model")
 
-LookupFn = Callable[Concatenate[ResolveInfo, P_lookup], M]
+LookupFn = Callable[Concatenate[Context, P_lookup], M]
 LookupVariables = tuple[Union[Type[Model], str], tuple[str, ...]]
 
 
@@ -40,7 +46,7 @@ def permission_required(
 def permission_required(
     perms: Union[list[str], str],
     lookup_variables: Optional[LookupVariables] = ...,
-    fn: Optional[LookupFn] = ...,
+    fn: Optional[LookupFn[P_lookup, M]] = ...,
     return_none: Literal[True] = ...,
     **kwargs,
 ) -> Callable[[ResolverSignature[P, R]], Callable[P, Optional[R]]]:
@@ -50,7 +56,7 @@ def permission_required(
 def permission_required(
     perms: Union[list[str], str],
     lookup_variables: Optional[LookupVariables] = None,
-    fn: Optional[LookupFn] = None,
+    fn: Optional[LookupFn[P_lookup, M]] = None,
     return_none: bool = False,
     **kwargs,
 ) -> Callable[[ResolverSignature[P, R]], Callable[P, Union[Optional[R], R]]]:
@@ -204,7 +210,7 @@ def permission_required_or_none(
     )
 
 
-def get_resolver_parent(context, parent, *args):
+def get_resolver_parent(context: Context, parent, *args):
     """Default objectgetter for field resolvers
 
     Parameters
