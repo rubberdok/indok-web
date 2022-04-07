@@ -67,7 +67,7 @@ const AuthCallbackPage: NextPage = () => {
             </Link>
           </Grid>
           <Grid item md={6}>
-            <Image src={Bug} />
+            <Image src={Bug} alt="" />
           </Grid>
         </Grid>
       )}
