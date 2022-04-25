@@ -240,11 +240,7 @@ class UpdateCabin(graphene.Mutation):
     cabin = graphene.Field(CabinType)
 
     @permission_required("cabins.change_cabin")
-    def mutate(
-        self,
-        info,
-        cabin_data,
-    ):
+    def mutate(self, info, cabin_data):
         ok = True
 
         try:
