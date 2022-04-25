@@ -49,3 +49,13 @@ export const DECLINE_BOOKING = gql`
     }
   }
 `;
+
+export const UPDATE_CABIN = gql`
+  mutation UpdateCabin($cabinData: UpdateCabinInput) {
+    updateCabin(cabinData: $cabinData) {
+      cabin {
+        id
+      }
+    }
+  }
+`;

@@ -10,6 +10,7 @@ import {
 } from "@interfaces/cabins";
 import dayjs from "dayjs";
 import validator from "validator";
+import * as Yup from "yup";
 import isBetween from "dayjs/plugin/isBetween";
 dayjs.extend(isBetween);
 
@@ -149,3 +150,18 @@ export const dateInBookingSemester = (date: dayjs.Dayjs, bookingSemester: Bookin
     (inFallSemester && bookingSemester.fallSemesterActive) || (inSpringSemester && bookingSemester.springSemesterActive)
   );
 };
+
+export const cabinInfoValidationSchema = Yup.object().shape({
+  oksenInternalPrice: Yup.number().typeError("Må være et tall.").min(1, "Prisen må være større enn 0."),
+  bjornenInternalPrice: Yup.number().typeError("Må være et tall.").min(1, "Prisen må være større enn 0."),
+  oksenExternalPrice: Yup.number().notRequired().typeError("Må være et tall.").min(1, "Prisen må være større enn 0."),
+  bjornenExternalPrice: Yup.number().notRequired().typeError("Må være et tall.").min(1, "Prisen må være større enn 0."),
+  oksenMaxGuests: Yup.number()
+    .notRequired()
+    .typeError("Må være et tall.")
+    .min(1, "Antall gjester må være større enn 0."),
+  bjornenMaxGuests: Yup.number()
+    .notRequired()
+    .typeError("Må være et tall.")
+    .min(1, "Antall gjester må være større enn 0."),
+});
