@@ -7,7 +7,7 @@ import React from "react";
 /*
 Shows an overview of cabin prices. Fetches the prices from the Cabin model.
 */
-const CabinPrices = () => {
+const CabinPrices: React.VFC = () => {
   const cabinQuery = useQuery<{ cabins: Cabin[] }>(QUERY_CABINS);
   const cabins = cabinQuery?.data?.cabins;
 

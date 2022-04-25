@@ -9,12 +9,12 @@ import { useFormik } from "formik";
 import React, { useEffect, useState } from "react";
 
 type FormikCabinValues = {
-  oksenInternalPrice: number | undefined;
-  bjornenInternalPrice: number | undefined;
-  oksenExternalPrice: number | undefined;
-  bjornenExternalPrice: number | undefined;
-  oksenMaxGuests: number | undefined;
-  bjornenMaxGuests: number | undefined;
+  oksenInternalPrice?: number;
+  bjornenInternalPrice?: number;
+  oksenExternalPrice?: number;
+  bjornenExternalPrice?: number;
+  oksenMaxGuests?: number;
+  bjornenMaxGuests?: number;
 };
 
 const getCabinData = (cabin?: Partial<Cabin>) => {
@@ -26,10 +26,8 @@ const getCabinData = (cabin?: Partial<Cabin>) => {
   };
 };
 
-/**
- * Component for editing cabin information. Only used on the admin page.
- */
-const CabinInfoPicker = () => {
+/** Component for editing cabin information. Only used on the admin page. */
+const CabinInfoPicker: React.VFC = () => {
   const cabinQuery = useQuery<{ cabins: Cabin[] }>(QUERY_CABINS);
   const [updateCabin] = useMutation<{ cabinData: Cabin }>(UPDATE_CABIN, {
     onError: () => {
