@@ -6,7 +6,6 @@ import { Box, Button, Container, Divider, Grid, Paper, Typography, useMediaQuery
 import { ArrowBackIos } from "@material-ui/icons";
 import theme from "@styles/theme";
 import router from "next/router";
-import React from "react";
 
 const SettingsPage: React.VFC = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));

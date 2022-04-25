@@ -6,7 +6,7 @@ import { Button, Grid, Snackbar, TextField, Typography } from "@material-ui/core
 import { Alert } from "@material-ui/lab";
 import { cabinInfoValidationSchema } from "@utils/cabins";
 import { useFormik } from "formik";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 type FormikCabinValues = {
   oksenInternalPrice?: number;
