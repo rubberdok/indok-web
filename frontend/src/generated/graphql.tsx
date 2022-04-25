@@ -637,6 +637,8 @@ export type Mutations = {
   updateBooking?: Maybe<UpdateBooking>;
   /** Update the booking semester */
   updateBookingSemester?: Maybe<UpdateBookingSemester>;
+  /** Change the given cabin */
+  updateCabin?: Maybe<UpdateCabin>;
   /** Updates the category with a given ID with the data in category_data */
   updateCategory?: Maybe<UpdateCategory>;
   /** Updates the event with a given ID with the data in event_data */
@@ -827,6 +829,10 @@ export type MutationsUpdateBookingArgs = {
 
 export type MutationsUpdateBookingSemesterArgs = {
   semesterData?: InputMaybe<UpdateBookingSemesterInput>;
+};
+
+export type MutationsUpdateCabinArgs = {
+  cabinData?: InputMaybe<UpdateCabinInput>;
 };
 
 export type MutationsUpdateCategoryArgs = {
@@ -1272,6 +1278,21 @@ export type UpdateBookingSemesterType = {
   springEndDate: Scalars["Date"];
   springSemesterActive: Scalars["Boolean"];
   springStartDate: Scalars["Date"];
+};
+
+/** Change the given cabin */
+export type UpdateCabin = {
+  __typename?: "UpdateCabin";
+  cabin?: Maybe<CabinType>;
+  ok?: Maybe<Scalars["Boolean"]>;
+};
+
+export type UpdateCabinInput = {
+  externalPrice?: InputMaybe<Scalars["Int"]>;
+  id?: InputMaybe<Scalars["ID"]>;
+  internalPrice?: InputMaybe<Scalars["Int"]>;
+  maxGuests?: InputMaybe<Scalars["Int"]>;
+  name?: InputMaybe<Scalars["String"]>;
 };
 
 /** Updates the category with a given ID with the data in category_data */
