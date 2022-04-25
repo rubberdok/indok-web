@@ -123,7 +123,7 @@ Environment variables are automatically loaded, but secrets are not stored in th
 
 ## Error logging
 
-The project has error logging through [Sentry](sentry.io), and can be accessed by authenticating with Github SSO.
+The project has error logging through [Sentry](https://sentry.io), and can be accessed by authenticating with Github SSO.
 
 ## Contributing
 
@@ -135,15 +135,15 @@ The app is deployed through AWS ECS.
 
 ## Other Services
 
-- E2E testing through [Cypress](cypress.io), publicly accessible.
-- Code coverage through [Codecov](codecov.io), accessible with Github SSO.
-- Domains managed through [domene.shop](domene.shop).
-- [Postmark](postmarkapp.com) as e-mail service, contact an administrator for access.
-- [Vipps](portal.vipps.no), contact an administrator for access.
-- [Feide](kunde.feide.no), contact an administrator for access.
+- E2E testing through [Cypress](https://cypress.io), publicly accessible.
+- Code coverage through [Codecov](https://codecov.io), accessible with Github SSO.
+- Domains managed through [domene.shop](https://domene.shop).
+- [Postmark](https://postmarkapp.com) as e-mail service, contact an administrator for access.
+- [Vipps](https://portal.vipps.no), contact an administrator for access.
+- [Feide](https://kunde.feide.no), contact an administrator for access.
 - [AWS](https://rubberdok.signin.aws.amazon.com/console/) for various services, contact an administrator for access.
-- [Google Workspace](admin.google.com) for account management, contact an administrator for access.
-- [Slack](slack.com) for communication, available with a [rubberdok.no](rubberdok.no) domain.
+- [Google Workspace](https://admin.google.com) for account management, contact an administrator for access.
+- [Slack](https://slack.com) for communication, available with a [rubberdok.no](rubberdok.no) domain.
 
 ## Acknowledgements
 

@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 
 import graphene
 from graphene_django import DjangoObjectType
-from graphql_jwt.decorators import login_required
+from decorators import login_required
 
 from apps.users.types import UserType
 from apps.forms.models import Answer, Option, Question, Response, Form
