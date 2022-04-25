@@ -307,10 +307,14 @@ class CabinsMutationsTestCase(CabinsBaseTestCase):
             Booking.objects.get(pk=self.first_booking.id)
 
     def test_update_cabin(self):
+        max_guests = 10
+
         query = f"""
               mutation UpdateCabin {{
                 updateCabin(cabinData: {{
-                    id: \"{self.oksen_cabin.id}\", name: \"{self.oksen_cabin.name}\", maxGuests: 10
+                    id: \"{self.oksen_cabin.id}\",
+                    name: \"{self.oksen_cabin.name}\",
+                    maxGuests: {max_guests},
                 }}) {{
                     cabin {{
                         id
@@ -331,7 +335,7 @@ class CabinsMutationsTestCase(CabinsBaseTestCase):
         # Check that updated data is correct
         content = json.loads(response.content)
         updated_cabin = content["data"]["updateCabin"]["cabin"]
-        self.assertEquals(updated_cabin["maxGuests"], 10)
+        self.assertEquals(updated_cabin["maxGuests"], max_guests)
 
 
 class EmailTestCase(CabinsBaseTestCase):
