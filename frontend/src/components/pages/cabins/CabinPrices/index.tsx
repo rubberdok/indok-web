@@ -16,7 +16,7 @@ const CabinPrices: React.VFC = () => {
         <Typography variant="h3">Priser</Typography>
         <Divider component="br" />
         <Typography variant="body2">
-          Dersom dere er flere enn 50% eksterne (ikke indøk), må dere betale eksternpris. Indøkere betaler interpris.
+          Dersom dere er flere enn 50% eksterne (ikke indøk), må dere betale eksternpris. Indøkere betaler internpris.
           Merk at prisene kan variere med sesongene.
         </Typography>
       </Grid>
