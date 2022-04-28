@@ -1,6 +1,5 @@
 import { ListingFragment } from "@generated/graphql";
-import { Listing } from "@interfaces/listings";
-import { Button, Grid, Hidden, makeStyles, Typography, CardContent, Card } from "@material-ui/core";
+import { Button, Card, CardContent, Grid, Hidden, makeStyles, Typography } from "@material-ui/core";
 import ArrowForward from "@material-ui/icons/ArrowForward";
 import dayjs from "dayjs";
 import nb from "dayjs/locale/nb";

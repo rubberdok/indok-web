@@ -1,4 +1,3 @@
-import { Listing } from "@interfaces/listings";
 import { Box, makeStyles } from "@material-ui/core";
 
 const useStyles = makeStyles(() => ({
