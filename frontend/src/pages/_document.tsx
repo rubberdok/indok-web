@@ -1,28 +1,39 @@
-import { ServerStyleSheets } from "@material-ui/core/styles";
-import theme from "@styles/theme";
+import createCache from "@emotion/cache";
+// emotion
+import { CacheProvider } from "@emotion/react";
+import createEmotionServer from "@emotion/server/create-instance";
+// next
 import Document, { Head, Html, Main, NextScript } from "next/document";
-import React, { ReactElement } from "react";
+import * as React from "react";
+
+// ----------------------------------------------------------------------
+
+function createEmotionCache() {
+  return createCache({ key: "css" });
+}
 
 export default class MyDocument extends Document {
-  render(): ReactElement {
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+  render() {
     return (
       <Html lang="en">
         <Head>
-          <meta name="theme-color" content={theme.palette.primary.dark} key="theme-color" />
-          <link rel="preconnect" href="https://fonts.gstatic.com" />
+          <meta charSet="utf-8" />
+
+          {/* Fonts */}
+          <link rel="preconnect" href="https://fonts.googleapis.com" />
+          <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
+
           <link
-            href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400..800&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap"
             rel="stylesheet"
           />
           <link
-            href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700;900&display=swap"
             rel="stylesheet"
           />
-          <link
-            href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&display=swap"
-            rel="stylesheet"
-          ></link>
         </Head>
+
         <body>
           <Main />
           <NextScript />
@@ -32,19 +43,39 @@ export default class MyDocument extends Document {
   }
 }
 
+// ----------------------------------------------------------------------
+
 MyDocument.getInitialProps = async (ctx) => {
-  const sheets = new ServerStyleSheets();
   const originalRenderPage = ctx.renderPage;
+
+  const cache = createEmotionCache();
+  const { extractCriticalToChunks } = createEmotionServer(cache);
 
   ctx.renderPage = () =>
     originalRenderPage({
-      enhanceApp: (App) => (props) => sheets.collect(<App {...props} />),
+      // eslint-disable-next-line react/display-name
+      enhanceApp: (App) => (props) =>
+        (
+          <CacheProvider value={cache}>
+            <App {...props} />
+          </CacheProvider>
+        ),
     });
 
   const initialProps = await Document.getInitialProps(ctx);
 
+  const emotionStyles = extractCriticalToChunks(initialProps.html);
+  const emotionStyleTags = emotionStyles.styles.map((style) => (
+    <style
+      data-emotion={`${style.key} ${style.ids.join(" ")}`}
+      key={style.key}
+      // eslint-disable-next-line react/no-danger
+      dangerouslySetInnerHTML={{ __html: style.css }}
+    />
+  ));
+
   return {
     ...initialProps,
-    styles: [...React.Children.toArray(initialProps.styles), sheets.getStyleElement()],
+    styles: [...React.Children.toArray(initialProps.styles), ...emotionStyleTags],
   };
 };
