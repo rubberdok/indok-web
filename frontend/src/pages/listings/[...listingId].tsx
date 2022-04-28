@@ -5,14 +5,15 @@ import InfoCard from "@components/pages/listings/detail/InfoCard";
 import ListingBanner from "@components/pages/listings/detail/ListingBanner";
 import ListingBody from "@components/pages/listings/detail/ListingBody";
 import TitleCard from "@components/pages/listings/detail/TitleCard";
-import { LISTING } from "@graphql/listings/queries";
+import { ListingDocument, ListingQuery } from "@generated/graphql";
 import { Listing } from "@interfaces/listings";
+import { addApolloState, initializeApollo } from "@lib/apolloClient";
 import { Button, Container, Grid, Hidden, makeStyles, Paper } from "@material-ui/core";
 import ArrowForward from "@material-ui/icons/ArrowForward";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
-import { NextPage } from "next";
-import Link from "next/link";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Head from "next/head";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import ReactMarkdown from "react-markdown";
 
@@ -41,12 +42,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 // page to show details about a listing and its organization
-const ListingPage: NextPage = () => {
+const ListingPage = ({ listing }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const { listingId } = useRouter().query;
 
   // fetches the listing, using the URL parameter as the argument
-  const { loading, error, data } = useQuery<{ listing: Listing }>(LISTING, {
-    variables: { id: parseInt(listingId as string) },
+  const { loading, error, data } = useQuery(ListingDocument, {
+    variables: {
+      id: Array.isArray(listingId) ? listingId[0] : listingId,
+    },
   });
 
   const classes = useStyles();
@@ -61,28 +64,28 @@ const ListingPage: NextPage = () => {
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error</p>;
 
-  const getLink = (listing: Listing) => {
-    if (listing.form) {
+  const getLink = (listing: ListingQuery["listing"]): string => {
+    if (listing?.form) {
       return `/forms/${listing.form.id}`;
     }
-    return listing.applicationUrl;
+    return listing?.applicationUrl ?? "";
   };
 
   return (
-    <>
-      {data && (
-        <Layout>
-          <Head>
-            <title>{`${data.listing.title} | Foreningen for Studenter ved Industriell Økonomi og Teknologiledelse`}</title>
-            {data.listing.heroImageUrl && <meta property="og:image" content={data.listing.heroImageUrl} key="image" />}
-            <meta
-              property="og:title"
-              content={`${data.listing.title} | Foreningen for Studenter ved Industriell Økonomi og Teknologiledelse`}
-              key="title"
-            />
-          </Head>
+    <Layout>
+      <Head>
+        <title>{`${listing.title} | Foreningen for Studenter ved Industriell Økonomi og Teknologiledelse`}</title>
+        {listing.heroImageUrl && <meta property="og:image" content={listing.heroImageUrl} key="image" />}
+        <meta
+          property="og:title"
+          content={`${listing.title} | Foreningen for Studenter ved Industriell Økonomi og Teknologiledelse`}
+          key="title"
+        />
+      </Head>
+      {data?.listing && (
+        <>
           <Hidden smDown>
-            <ListingBanner listing={data.listing} />
+            <ListingBanner imageUrl={data.listing.heroImageUrl} />
           </Hidden>
           <Container className={classes.container}>
             <Grid container justifyContent="center">
@@ -145,10 +148,28 @@ const ListingPage: NextPage = () => {
               </Grid>
             </Paper>
           </Hidden>
-        </Layout>
+        </>
       )}
-    </>
+    </Layout>
   );
+};
+
+export const getServerSideProps: GetServerSideProps<{ listing: Listing }> = async (ctx) => {
+  const client = initializeApollo({}, ctx);
+  const id = Array.isArray(ctx.params?.listingId) ? ctx.params?.listingId[0] : ctx.params?.listingId;
+  const { data, error } = await client.query({
+    query: ListingDocument,
+    variables: {
+      id,
+    },
+  });
+
+  if (error) return { notFound: true };
+
+  const { listing } = data;
+  if (typeof listing === "undefined") return { notFound: true };
+
+  return addApolloState(client, { props: { listing } });
 };
 
 export default ListingPage;
