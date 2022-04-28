@@ -16,23 +16,25 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
+type Props = {
+  imageUrl?: string | null;
+};
+
 /**
  * Component for banner image on listing detail page.
  *
  * Props:
  * - the listing from the detail page
  */
-const ListingBanner: React.FC<{
-  listing: Listing;
-}> = ({ listing }) => {
+const ListingBanner: React.FC<Props> = ({ imageUrl }) => {
   const classes = useStyles();
   return (
     <>
-      {listing.heroImageUrl ? (
+      {imageUrl ? (
         <Box
           className={`${classes.hero}`}
           style={{
-            background: `url(${listing.heroImageUrl})`,
+            background: `url(${imageUrl})`,
             backgroundPosition: "top",
             backgroundSize: "cover",
             backgroundRepeat: "no-repeat",

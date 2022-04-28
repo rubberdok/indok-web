@@ -1540,6 +1540,103 @@ export type ActiveBookingResponsibleQuery = {
   } | null;
 };
 
+export type ListingFragment = {
+  __typename?: "ListingType";
+  id: string;
+  title: string;
+  slug: string;
+  description: string;
+  startDatetime: any;
+  deadline: any;
+  endDatetime: any;
+  applicationUrl?: string | null;
+  chips: Array<string | null>;
+  readMoreUrl?: string | null;
+  heroImageUrl?: string | null;
+  organization: {
+    __typename?: "OrganizationType";
+    id: string;
+    name: string;
+    slug: string;
+    logoUrl?: string | null;
+    color?: string | null;
+    description: string;
+  };
+};
+
+export type ListingQueryVariables = Exact<{
+  id: Scalars["ID"];
+}>;
+
+export type ListingQuery = {
+  __typename?: "Queries";
+  listing?: {
+    __typename?: "ListingType";
+    id: string;
+    title: string;
+    slug: string;
+    description: string;
+    startDatetime: any;
+    deadline: any;
+    endDatetime: any;
+    applicationUrl?: string | null;
+    chips: Array<string | null>;
+    readMoreUrl?: string | null;
+    heroImageUrl?: string | null;
+    form?: { __typename?: "FormType"; id: string } | null;
+    organization: {
+      __typename?: "OrganizationType";
+      id: string;
+      name: string;
+      slug: string;
+      logoUrl?: string | null;
+      color?: string | null;
+      description: string;
+    };
+  } | null;
+};
+
+export const ListingFragmentDoc = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Listing" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "ListingType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "title" } },
+          { kind: "Field", name: { kind: "Name", value: "slug" } },
+          { kind: "Field", name: { kind: "Name", value: "description" } },
+          { kind: "Field", name: { kind: "Name", value: "startDatetime" } },
+          { kind: "Field", name: { kind: "Name", value: "deadline" } },
+          { kind: "Field", name: { kind: "Name", value: "endDatetime" } },
+          { kind: "Field", name: { kind: "Name", value: "applicationUrl" } },
+          { kind: "Field", name: { kind: "Name", value: "chips" } },
+          { kind: "Field", name: { kind: "Name", value: "readMoreUrl" } },
+          { kind: "Field", name: { kind: "Name", value: "heroImageUrl" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "organization" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "name" } },
+                { kind: "Field", name: { kind: "Name", value: "slug" } },
+                { kind: "Field", name: { kind: "Name", value: "logoUrl" } },
+                { kind: "Field", name: { kind: "Name", value: "color" } },
+                { kind: "Field", name: { kind: "Name", value: "description" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<ListingFragment, unknown>;
 export const ArchiveByTypesDocument = {
   kind: "Document",
   definitions: [
@@ -1970,3 +2067,51 @@ export const ActiveBookingResponsibleDocument = {
     },
   ],
 } as unknown as DocumentNode<ActiveBookingResponsibleQuery, ActiveBookingResponsibleQueryVariables>;
+export const ListingDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "listing" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "id" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "listing" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "id" },
+                value: { kind: "Variable", name: { kind: "Name", value: "id" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "FragmentSpread", name: { kind: "Name", value: "Listing" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "form" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [{ kind: "Field", name: { kind: "Name", value: "id" } }],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...ListingFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<ListingQuery, ListingQueryVariables>;

@@ -1,5 +1,5 @@
-import { Listing } from "@interfaces/listings";
-import { Button, Grid, makeStyles, Typography, CardContent, Card } from "@material-ui/core";
+import { ListingFragment } from "@generated/graphql";
+import { Button, Card, CardContent, Grid, makeStyles, Typography } from "@material-ui/core";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import Link from "next/link";
 
@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
  * - the listing to render
  */
 const InfoCard: React.FC<{
-  listing: Listing;
+  listing: ListingFragment;
 }> = ({ listing }) => {
   const classes = useStyles();
   return (

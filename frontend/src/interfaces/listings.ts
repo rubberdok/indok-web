@@ -9,9 +9,9 @@ export interface Listing {
   startDatetime: string;
   deadline: string;
   endDatetime: string;
-  applicationUrl?: string;
+  applicationUrl?: string | null;
   hero?: string;
-  heroImageUrl?: string;
+  heroImageUrl?: string | null;
   logo?: string;
   organization: Organization;
   form?: Pick<Form, "id">;
