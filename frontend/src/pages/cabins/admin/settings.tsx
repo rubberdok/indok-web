@@ -1,5 +1,6 @@
 import Layout from "@components/Layout";
 import BookingSemesterPicker from "@components/pages/cabins/Admin/BookingSemesterPicker";
+import CabinInfoPicker from "@components/pages/cabins/Admin/CabinInfoPicker";
 import PermissionRequired from "@components/permissions/PermissionRequired";
 import {
   Box,
@@ -51,6 +52,14 @@ const SettingsPage: React.VFC = () => {
               </Box>
               <Box p={4}>
                 <BookingSemesterPicker />
+              </Box>
+              <Divider />
+              <Box p={4}>
+                <Typography variant="h5">Administrer hytteinformasjon</Typography>
+                <Typography>
+                  Her kan dere oppdatere informasjonen som skal vises om Oksen og Bjørnen.
+                </Typography>
+                <CabinInfoPicker />
               </Box>
             </Paper>
           </Box>

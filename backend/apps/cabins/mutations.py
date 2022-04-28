@@ -8,7 +8,13 @@ from apps.cabins.models import Cabin as CabinModel
 from .constants import APPROVE_BOOKING, DISAPPROVE_BOOKING
 from .helpers import price
 from .mail import send_mail
-from .types import AllBookingsType, BookingInfoType, EmailInputType, UpdateBookingSemesterType
+from .types import (
+    AllBookingsType,
+    BookingInfoType,
+    CabinType,
+    EmailInputType,
+    UpdateBookingSemesterType,
+)
 from .validators import create_booking_validation
 
 
@@ -47,6 +53,14 @@ class UpdateBookingSemesterInput(graphene.InputObjectType):
     spring_end_date = graphene.Date()
     fall_semester_active = graphene.Boolean()
     spring_semester_active = graphene.Boolean()
+
+
+class UpdateCabinInput(graphene.InputObjectType):
+    id = graphene.ID()
+    name = graphene.String()
+    max_guests = graphene.Int()
+    internal_price = graphene.Int()
+    external_price = graphene.Int()
 
 
 class CreateBooking(graphene.Mutation):
@@ -218,3 +232,34 @@ class UpdateBookingSemester(graphene.Mutation):
 
         semester.save()
         return UpdateBookingSemester(ok=ok, booking_semester=semester)
+
+
+class UpdateCabin(graphene.Mutation):
+    """
+    Change the given cabin
+    """
+
+    class Arguments:
+        cabin_data = UpdateCabinInput()
+
+    ok = graphene.Boolean()
+    cabin = graphene.Field(CabinType)
+
+    @permission_required("cabins.change_cabin")
+    def mutate(self, info, cabin_data):
+        ok = True
+
+        try:
+            # Fetch cabin object by id
+            cabin = CabinModel.objects.get(name=cabin_data.name)
+
+            for input_field, input_value in cabin_data.items():
+                setattr(cabin, input_field, input_value)
+            cabin.save()
+
+            return UpdateCabin(cabin=cabin, ok=ok)
+        except CabinModel.DoesNotExist:
+            return UpdateCabin(
+                cabin=None,
+                ok=False,
+            )

@@ -2,6 +2,7 @@ import Layout from "@components/Layout";
 import ContactCabinBoard from "@components/pages/cabins/ContactCabinBoard";
 import FAQ from "@components/pages/cabins/Documents/FAQ";
 import Hero from "@components/pages/cabins/Hero";
+import CabinPrices from "@components/pages/cabins/CabinPrices";
 import { cabinImages, outsideImages } from "@components/pages/cabins/ImageSlider/imageData";
 import ImageSlider from "@components/pages/cabins/ImageSlider/ImageSlider";
 import { Box, Container, Divider, Grid, Paper, Typography } from "@material-ui/core";
@@ -205,6 +206,9 @@ const CabinsPage: NextPage = () => {
                       <Link href="https://oppdal.com/forside/hoved/">Visit Oppdal</Link> for mer
                       info.
                     </Typography>
+                  </Grid>
+                  <Grid item container sm={12}>
+                    <CabinPrices />
                   </Grid>
                   <Grid
                     item

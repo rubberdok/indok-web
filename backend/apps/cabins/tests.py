@@ -316,6 +316,37 @@ class CabinsMutationsTestCase(CabinsBaseTestCase):
         with self.assertRaises(Booking.DoesNotExist):
             Booking.objects.get(pk=self.first_booking.id)
 
+    def test_update_cabin(self):
+        max_guests = 10
+
+        query = f"""
+              mutation UpdateCabin {{
+                updateCabin(cabinData: {{
+                    id: \"{self.oksen_cabin.id}\",
+                    name: \"{self.oksen_cabin.name}\",
+                    maxGuests: {max_guests},
+                }}) {{
+                    cabin {{
+                        id
+                        maxGuests
+                    }}
+                }}
+            }}
+        """
+
+        # Check that unauthorized user cannot update cabin
+        response = self.query(query)
+        self.assert_permission_error(response)
+
+        # Check that an authorized user can update cabins
+        response = self.query(query, user=self.super_user)
+        self.assertResponseNoErrors(response)
+
+        # Check that updated data is correct
+        content = json.loads(response.content)
+        updated_cabin = content["data"]["updateCabin"]["cabin"]
+        self.assertEquals(updated_cabin["maxGuests"], max_guests)
+
 
 class EmailTestCase(CabinsBaseTestCase):
     def setUp(self) -> None:
