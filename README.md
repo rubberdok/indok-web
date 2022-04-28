@@ -159,7 +159,7 @@ The app is deployed through AWS ECS.
 <p float="left">
   <a href="https://graphql.org/">
     <img
-      alt="GraphQL Logo"
+      alt="GraphQL"
       title="GraphQL"
       src="https://upload.wikimedia.org/wikipedia/commons/1/17/GraphQL_Logo.svg"
       height="50"
@@ -168,7 +168,7 @@ The app is deployed through AWS ECS.
   &nbsp;
   <a href="https://reactjs.org">
     <img
-      alt="ReactJS Logo"
+      alt="ReactJS"
       title="ReactJS"
       src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg"
       height="50"
@@ -177,7 +177,7 @@ The app is deployed through AWS ECS.
   &nbsp;
   <a href="https://nextjs.org">
     <img
-      alt="NextJS Logo"
+      alt="NextJS"
       title="NextJS"
       src="https://github.com/rubberdok/indok-web/blob/docs/assets/nextjs_logo.svg"
       height="50"
@@ -186,7 +186,7 @@ The app is deployed through AWS ECS.
   &nbsp;
   <a href="https://www.typescriptlang.org/">
     <img
-      alt="TypeScript Logo"
+      alt="TypeScript"
       title="TypeScript"
       src="https://upload.wikimedia.org/wikipedia/commons/4/4c/Typescript_logo_2020.svg"
       height="50"
@@ -195,7 +195,7 @@ The app is deployed through AWS ECS.
   &nbsp;
   <a href="https://www.python.org">
     <img
-      alt="Python Logo"
+      alt="Python"
       title="Python"
       src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg"
       height="50"
@@ -204,7 +204,7 @@ The app is deployed through AWS ECS.
   &nbsp;
   <a href="https://www.djangoproject.com">
     <img
-      alt="Django Logo"
+      alt="Django"
       title="Django"
       src="https://github.com/rubberdok/indok-web/blob/docs/assets/django_logo.svg"
       height="50"
@@ -213,7 +213,7 @@ The app is deployed through AWS ECS.
   &nbsp;
   <a href="https://www.docker.com">
     <img
-      alt="Docker Logo"
+      alt="Docker"
       title="Docker"
       src="https://github.com/rubberdok/indok-web/blob/docs/assets/docker_logo.svg"
       height="50"
@@ -222,7 +222,7 @@ The app is deployed through AWS ECS.
   &nbsp;
   <a href="https://aws.amazon.com/">
     <img
-      alt="AWS Logo"
+      alt="AWS"
       title="AWS"
       src="https://github.com/rubberdok/indok-web/blob/docs/assets/aws_logo.svg"
       height="50"
