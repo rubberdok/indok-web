@@ -158,34 +158,74 @@ The app is deployed through AWS ECS.
 
 <p float="left">
   <a href="https://graphql.org/">
-     <img alt="GraphQL" src="https://upload.wikimedia.org/wikipedia/commons/1/17/GraphQL_Logo.svg" height="50">
+    <img
+      alt="GraphQL Logo"
+      title="GraphQL"
+      src="https://upload.wikimedia.org/wikipedia/commons/1/17/GraphQL_Logo.svg"
+      height="50"
+    >
   </a>
   &nbsp;
   <a href="https://reactjs.org">
-    <img alt="ReactJS" src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg" height="50">
+    <img
+      alt="ReactJS Logo"
+      title="ReactJS"
+      src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg"
+      height="50"
+    >
   </a>
   &nbsp;
   <a href="https://nextjs.org">
-    <img alt="NextJS" src="https://github.com/rubberdok/indok-web/blob/docs/assets/nextjs_logo.svg" height="50">
+    <img
+      alt="NextJS Logo"
+      title="NextJS"
+      src="https://github.com/rubberdok/indok-web/blob/docs/assets/nextjs_logo.svg"
+      height="50"
+    >
   </a>
   &nbsp;
   <a href="https://www.typescriptlang.org/">
-    <img alt="TypeScript" src="https://upload.wikimedia.org/wikipedia/commons/4/4c/Typescript_logo_2020.svg" height="50">
+    <img
+      alt="TypeScript Logo"
+      title="TypeScript"
+      src="https://upload.wikimedia.org/wikipedia/commons/4/4c/Typescript_logo_2020.svg"
+      height="50"
+    >
   </a>
   &nbsp;
   <a href="https://www.python.org">
-    <img alt="Python" src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" height="50">
+    <img
+      alt="Python Logo"
+      title="Python"
+      src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg"
+      height="50"
+    >
   </a>
   &nbsp;
   <a href="https://www.djangoproject.com">
-    <img alt="Django" src="https://github.com/rubberdok/indok-web/blob/docs/assets/django_logo.svg" height="50">
+    <img
+      alt="Django Logo"
+      title="Django"
+      src="https://github.com/rubberdok/indok-web/blob/docs/assets/django_logo.svg"
+      height="50"
+    >
   </a>
   &nbsp;
   <a href="https://www.docker.com">
-    <img alt="Docker" src="https://www.docker.com/sites/default/files/d8/styles/role_icon/public/2019-07/vertical-logo-monochromatic.png?itok=erja9lKc" height="50">
+    <img
+      alt="Docker Logo"
+      title="Docker"
+      src="https://github.com/rubberdok/indok-web/blob/docs/assets/docker_logo.svg"
+      height="50"
+    >
   </a>
   &nbsp;
   <a href="https://aws.amazon.com/">
-    <img src="https://github.com/rubberdok/indok-web/blob/docs/assets/aws_logo.svg" alt="Powered by AWS Cloud Computing", height="50">
+    <img
+      alt="AWS Logo"
+      title="AWS"
+      src="https://github.com/rubberdok/indok-web/blob/docs/assets/aws_logo.svg"
+      height="50"
+    >
   </a>
 </p>
