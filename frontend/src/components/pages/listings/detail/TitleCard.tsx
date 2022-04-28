@@ -1,4 +1,4 @@
-import { ListingFragment } from "@generated/graphql";
+import { ListingQuery } from "@generated/graphql";
 import { Button, Card, CardContent, Grid, Hidden, makeStyles, Typography } from "@material-ui/core";
 import ArrowForward from "@material-ui/icons/ArrowForward";
 import dayjs from "dayjs";
@@ -28,14 +28,16 @@ const useStyles = makeStyles((theme) => ({
  * - the listing to render
  */
 const TitleCard: React.FC<{
-  listing: ListingFragment;
+  listing: NonNullable<ListingQuery["listing"]>;
 }> = ({ listing }) => {
   const classes = useStyles();
   let link: string | undefined = undefined;
   if (listing.form) {
     link = `/forms/${listing.form.id}/`;
-  } else if (listing.applicationUrl) {
+  } else if (listing?.applicationUrl) {
     link = listing.applicationUrl;
+  } else {
+    link = "";
   }
 
   return (
