@@ -11,7 +11,7 @@ import { addApolloState, initializeApollo } from "@lib/apolloClient";
 import { Button, Container, Grid, Hidden, makeStyles, Paper } from "@material-ui/core";
 import ArrowForward from "@material-ui/icons/ArrowForward";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
-import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 // page to show details about a listing and its organization
-const ListingPage = ({ listing }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const ListingPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ listing }) => {
   const { listingId } = useRouter().query;
 
   // fetches the listing, using the URL parameter as the argument
