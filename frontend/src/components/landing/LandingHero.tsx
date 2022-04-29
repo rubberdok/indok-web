@@ -4,6 +4,7 @@ import { ArrowRight, Link as LinkIcon } from "phosphor-react";
 
 const RootStyle = styled("div")(({ theme }) => ({
   padding: theme.spacing(15, 0, 8, 0),
+  overflow: "hidden",
   [theme.breakpoints.up("md")]: {
     padding: theme.spacing(15, 0),
     height: "80vh",
@@ -60,8 +61,11 @@ const LandingHero: React.FC = () => {
                   objectFit: "cover",
                   height: "100vh",
                   float: "right",
+                  right: 0,
+                  width: 1 / 2,
                   zIndex: -1,
                   position: "absolute",
+                  pl: 10,
                   top: 0,
                 }}
                 alt="marketing-market"
