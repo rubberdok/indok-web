@@ -1,30 +1,18 @@
-import { Box, Button, Container, makeStyles, Typography, useMediaQuery } from "@material-ui/core";
-import Image from "next/image";
+import { Box, Button, Container, Stack, Typography, useMediaQuery } from "@mui/material";
 import Link from "next/link";
 import React from "react";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    paddingTop: 80,
-  },
-  container: {
-    alignItems: "center",
-
-    [theme.breakpoints.down("sm")]: {
-      flexDirection: "column",
-    },
-  },
-}));
-
 const LandingListings: React.FC = () => {
-  const classes = useStyles();
-  const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down("sm"));
+  const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down("md"));
 
   return (
-    <Box className={classes.root}>
+    <Box pt={{ xs: 3, md: 10 }}>
       <Container>
-        <Box py={isMobile ? 10 : 20} display="flex" className={classes.container}>
+        <Stack py={isMobile ? 6 : 20} display="flex" alignItems="center" direction={{ xs: "column", md: "row" }}>
           <Box maxWidth={650}>
+            <Typography variant="overline" sx={{ color: "primary.main", mb: 2, display: "block" }}>
+              Sosialt
+            </Typography>
             <Typography variant="h2">Delta i et fantastisk studentmiljø.</Typography>
             <br />
             <Typography variant="body1">
@@ -33,15 +21,20 @@ const LandingListings: React.FC = () => {
             </Typography>
             <br />
             <Link href="/listings" passHref>
-              <Button color="inherit" variant="outlined">
+              <Button color="primary" variant="contained" size="large">
                 Søk verv
               </Button>
             </Link>
           </Box>
           <Box ml={isMobile ? 0 : 20} mt={isMobile ? 10 : 0} width="100%" height={350} position="relative">
-            <Image layout="fill" src="/img/gang.jpg" alt="indøkstudenter" objectFit={isMobile ? "cover" : "none"} />
+            <Box
+              component="img"
+              src="/img/gang.jpg"
+              alt="indøkstudenter"
+              sx={{ objectFit: isMobile ? "cover" : "contain", width: 1 }}
+            />
           </Box>
-        </Box>
+        </Stack>
       </Container>
     </Box>
   );

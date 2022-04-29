@@ -1,16 +1,21 @@
-import { LandingAnnouncement, LandingHero, LandingListings } from "@components/landing";
-import Layout from "@components/Layout";
-import { NextPage } from "next";
+import { LandingHero, LandingListings } from "@components/landing";
+import LandingSection from "@components/landing/LandingSection";
 import React from "react";
+import Layout from "src/layouts";
+import { NextPageWithLayout } from "./_app";
 
-const IndexPage: NextPage = () => {
+const IndexPage: NextPageWithLayout = () => {
   return (
-    <Layout>
+    <>
       <LandingHero />
-      <LandingAnnouncement />
+      <LandingSection />
       <LandingListings />
-    </Layout>
+    </>
   );
+};
+
+IndexPage.getLayout = function getLayout(page: React.ReactElement) {
+  return <Layout>{page}</Layout>;
 };
 
 export default IndexPage;

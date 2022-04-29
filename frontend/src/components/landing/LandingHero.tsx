@@ -1,236 +1,204 @@
-import { Box, Button, Container, Grid, Hidden, Typography, useMediaQuery } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
-import NavigateNextIcon from "@material-ui/icons/NavigateNext";
-import Link from "next/link";
-import React, { useState } from "react";
-import { Fade } from "react-awesome-reveal";
+// icons
+import { Box, Button, Card, CardActionArea, Container, Grid, Stack, Typography } from "@mui/material";
+// @mui
+import { styled } from "@mui/material/styles";
+import { ArrowRight, Link as LinkIcon } from "phosphor-react";
 
-const organizations = [
-  {
-    id: 1,
-    title: "Janus",
-    link: "https://www.januslinjeforening.no/",
-    img: "img/gang.jpg",
-  },
-  {
-    id: 2,
-    title: "Bindeleddet",
-    link: "https://bindeleddet.no/",
-    img: "img/bindeleddet.jpg",
-  },
-  {
-    id: 3,
-    title: "ESTIEM",
-    link: "https://sites.google.com/view/estiem-ntnu",
-    img: "img/estiem.jpg",
-  },
-  {
-    id: 4,
-    title: "Hyttestyret",
-    link: "/about/organizations/hyttestyret",
-    img: "img/hytte.jpg",
-  },
-  {
-    id: 5,
-    title: "Indøk Kultur",
-    link: "/about/organization?category=kultur#orgList",
-    img: "img/indok-kultur.jpg",
-  },
-  {
-    id: 6,
-    title: "Janus IF",
-    link: "/about/organization?category=idrett#orgList",
-    img: "img/janus-if.jpg",
-  },
-];
-
-const useStyles = makeStyles((theme) => ({
-  hero: {
-    color: "black",
-  },
-  heroImage: {
-    width: "100%",
-    height: "100%",
-    backgroundSize: "cover",
-    backgroundRepeat: "no-repeat",
-    backgroundPosition: "center",
-  },
-  relative: {
-    position: "relative",
-    height: "100%",
-  },
-  container: {
-    [theme.breakpoints.up("md")]: {
-      maxWidth: "90vw",
-    },
-    height: "70vh",
-
-    paddingTop: "23vh",
-  },
-  height: {
-    height: "inherit",
-  },
-  orgLink: {
-    color: "black",
-    position: "relative",
-    left: 12,
-    transition: "0.3s all ease",
-
-    ["& h3"]: {
-      fontWeight: 500,
-    },
-
-    ["&:hover"]: {
-      textDecoration: "none",
-      left: 0,
-    },
-
-    ["&:hover h3"]: {
-      fontWeight: 800,
-    },
-
-    ["& h3, & svg"]: {
-      transition: "0.3s all ease",
-    },
-  },
-  orgBg: {
-    transition: "0.4s all linear",
-    backgroundPosition: "center!important",
-    backgroundSize: "cover!important",
-
-    ["&::before"]: {
-      background: "rgb(0 11 11 / 77%)",
-      content: "''",
-      display: "block",
-      height: "100%",
-      position: "absolute",
-      width: "100%",
-    },
-  },
-  orgIcon: {
-    marginBottom: 21,
-    color: "rgb(0 0 0 / 55%)",
-  },
-  hide: {
-    opacity: "0!important",
-    backgroundPosition: "calc(50% + 20px) center!important",
-  },
-  nth: {
-    transition: "0.7s all ease",
-    background: "url('/static/anniversary/anniversary_logo_black.svg')",
-    backgroundSize: "contain",
-    backgroundPosition: "left bottom!important",
-    backgroundRepeat: "no-repeat",
-    opacity: 0.04,
-    height: "70vh",
-    marginLeft: "-20vh",
-    top: "5vh",
+const RootStyle = styled("div")(({ theme }) => ({
+  padding: theme.spacing(15, 0, 8, 0),
+  // height: "vh",
+  [theme.breakpoints.up("md")]: {
+    padding: theme.spacing(15, 0),
+    height: "80vh",
+    display: "flex",
+    alignItems: "center",
   },
 }));
 
-const ID_PREFIX = "hero";
-
 const LandingHero: React.FC = () => {
-  const classes = useStyles();
-  const [isShown, setIsShown] = useState("");
-  const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down("sm"));
-
   return (
-    <Box id="back-to-top-anchor" height={isMobile ? "80vh" : "100vh"} position="relative">
-      <Grid
-        container
-        style={{
-          height: "100%",
-          position: "absolute",
-          zIndex: -1,
-          background: "black",
-        }}
-      >
-        <Grid item xs={12} md={8} className={classes.relative}>
-          <Hidden smDown>
-            {organizations.map((item) => (
-              <Box
-                key={item.id}
-                className={[classes.orgBg, isShown == item.img ? "" : classes.hide].join(" ")}
-                position="absolute"
-                width="100%"
-                height="100%"
-                style={{ backgroundImage: "url(" + item.img + ")" }}
-                zIndex="-1"
-              ></Box>
-            ))}
-          </Hidden>
-          <Box
-            className={[classes.orgBg, isShown == "" ? "" : classes.hide].join(" ")}
-            position="absolute"
-            width="100%"
-            height="100%"
-            zIndex="-1"
-            style={{ backgroundImage: "url(img/hero.jpg)" }}
-          ></Box>
-        </Grid>
-        <Hidden smDown>
-          <Grid item xs={4} className={classes.relative}>
-            <Box position="absolute" width="100%" height="100%" style={{ background: "white" }} zIndex="-3"></Box>
-
-            <Box className={classes.nth} position="absolute" width="100%" height="100%" zIndex="-2"></Box>
-          </Grid>
-        </Hidden>
-      </Grid>
-      <Container className={classes.container}>
-        <Grid container className={classes.height}>
-          <Grid item xs={12} md={5}>
-            <Box
-              style={{ color: "white" }}
-              height="100%"
-              width="100%"
-              display="flex"
-              flexDirection="column"
-              alignItems="flex-start"
-            >
-              <Typography variant="overline">Foreningen for studentene ved</Typography>
-              <Fade duration={700} cascade triggerOnce direction="up">
-                <Typography style={{ color: "white" }} variant="h1" gutterBottom data-test-id={`${ID_PREFIX}-title`}>
-                  Industriell Økonomi og Teknologiledelse
+    <>
+      <RootStyle>
+        <Container>
+          <Grid container columnSpacing={14} justifyContent="space-between" alignItems="center">
+            <Grid item xs={12} md={6} lg={6} sx={{ textAlign: { xs: "center", md: "left", zIndex: 10 } }}>
+              <Stack spacing={4} sx={{ mt: { xs: 0, md: 8 } }}>
+                <Typography variant="overline" sx={{ color: "primary.main" }}>
+                  Foreningen for studentene ved
                 </Typography>
-                <br />
-                <Link href="/about" passHref>
-                  <Button color="inherit" variant="outlined">
+
+                <Typography variant="h1">Industriell Økonomi & Teknologiledelse</Typography>
+
+                {/* <Typography sx={{ color: 'text.secondary' }}>
+                Den øverste instansen for all studentfrivillighet på masterstudiet Indøk ved NTNU.
+              </Typography> */}
+
+                <Stack
+                  direction={{ xs: "column", sm: "row" }}
+                  justifyContent={{ xs: "center", md: "unset" }}
+                  spacing={2}
+                >
+                  <Button variant="contained" size="large">
                     Les om foreningen
                   </Button>
-                </Link>
-              </Fade>
-            </Box>
-          </Grid>
-          <Hidden smDown>
-            <Grid item xs={7}>
-              <Box height="100%" width="100%" display="flex" flexDirection="column" alignItems="flex-end">
-                <Typography variant="overline">Linjeforeningene våre</Typography>
-                <Fade damping={0.1} cascade triggerOnce direction="up">
-                  {organizations.map((item) => (
-                    <a
-                      rel="noreferrer"
-                      onMouseEnter={() => setIsShown(item.img)}
-                      onMouseLeave={() => setIsShown("")}
-                      href={item.link}
-                      className={classes.orgLink}
-                      key={item.id}
-                    >
-                      <Box display="flex" alignItems="center">
-                        <Typography variant="h3" gutterBottom>
-                          {item.title}
-                        </Typography>
-                        <NavigateNextIcon fontSize="large" className={classes.orgIcon} />
-                      </Box>
-                    </a>
-                  ))}
-                </Fade>
-              </Box>
+                  <Button variant="contained" color="inherit" size="large">
+                    Se arrangementer
+                  </Button>
+                </Stack>
+              </Stack>
             </Grid>
-          </Hidden>
-        </Grid>
-      </Container>
-    </Box>
+
+            <Grid
+              item
+              xs={12}
+              md={6}
+              lg={6}
+              sx={{
+                display: { xs: "none", md: "block" },
+              }}
+            >
+              <Box
+                component="img"
+                sx={{
+                  objectFit: "cover",
+                  height: "100vh",
+                  float: "right",
+                  zIndex: -1,
+                  position: "absolute",
+                  top: 0,
+                }}
+                alt="marketing-market"
+                src="/hero.jpg"
+              />
+            </Grid>
+          </Grid>
+        </Container>
+      </RootStyle>
+      <Box
+        sx={{
+          width: "100vw",
+          py: { xs: 4, md: 6 },
+          px: 1,
+          bgcolor: "background.neutral",
+          borderTop: "1px solid",
+          borderColor: "divider",
+          overflow: "auto",
+          position: "relative",
+        }}
+      >
+        <Container>
+          <Stack direction="row" spacing={3} minWidth="max-content" pr={3} alignItems="center">
+            <Box mr={{ xs: 2, md: 6 }}>
+              <Typography variant="h4">
+                Våre <br />
+                Foreninger
+              </Typography>
+            </Box>
+            <Card sx={{ boxShadow: (theme) => theme.customShadows.z24 }}>
+              <CardActionArea sx={{ px: 4, py: 3 }}>
+                <Stack direction="row" spacing={2} alignItems="center">
+                  <Box
+                    sx={{
+                      width: 12,
+                      height: 12,
+                      borderRadius: "50%",
+                      bgcolor: "primary.main",
+                    }}
+                  />
+                  <Typography variant="h6">Bindeleddet</Typography>
+                  <LinkIcon width={20} height={20} />
+                </Stack>
+              </CardActionArea>
+            </Card>
+            <Card sx={{ boxShadow: (theme) => theme.customShadows.z24 }}>
+              <CardActionArea sx={{ p: 3 }}>
+                <Stack direction="row" spacing={2} alignItems="center">
+                  <Box
+                    sx={{
+                      width: 12,
+                      height: 12,
+                      borderRadius: "50%",
+                      bgcolor: "primary.main",
+                    }}
+                  />
+                  <Typography variant="h6">ESTIEM</Typography>
+                  <LinkIcon width={20} height={20} />
+                </Stack>
+              </CardActionArea>
+            </Card>
+            <Card sx={{ boxShadow: (theme) => theme.customShadows.z24 }}>
+              <CardActionArea sx={{ p: 3 }}>
+                <Typography variant="h6">
+                  <Stack direction="row" spacing={2} alignItems="center">
+                    <Box
+                      sx={{
+                        width: 12,
+                        height: 12,
+                        borderRadius: "50%",
+                        bgcolor: "primary.main",
+                      }}
+                    />
+                    <Typography variant="h6">Janus</Typography>
+                    <LinkIcon width={20} height={20} />
+                  </Stack>
+                </Typography>
+              </CardActionArea>
+            </Card>
+            <Card sx={{ boxShadow: (theme) => theme.customShadows.z24 }}>
+              <CardActionArea sx={{ p: 3 }}>
+                <Stack direction="row" spacing={2} alignItems="center">
+                  <Box
+                    sx={{
+                      width: 12,
+                      height: 12,
+                      opacity: 0.44,
+                      borderRadius: "50%",
+                      bgcolor: "primary.main",
+                    }}
+                  />
+                  <Typography variant="h6">Indøk Kultur</Typography>
+                </Stack>
+              </CardActionArea>
+            </Card>
+            <Card sx={{ boxShadow: (theme) => theme.customShadows.z24 }}>
+              <CardActionArea sx={{ p: 3 }}>
+                <Stack direction="row" spacing={2} alignItems="center">
+                  <Box
+                    sx={{
+                      width: 12,
+                      height: 12,
+                      opacity: 0.44,
+                      borderRadius: "50%",
+                      bgcolor: "primary.main",
+                    }}
+                  />
+                  <Typography variant="h6">Janus IF</Typography>
+                </Stack>
+              </CardActionArea>
+            </Card>
+            <Card sx={{ boxShadow: (theme) => theme.customShadows.z24 }}>
+              <CardActionArea sx={{ p: 3 }}>
+                <Stack direction="row" spacing={2} alignItems="center">
+                  <Box
+                    sx={{
+                      width: 12,
+                      height: 12,
+                      opacity: 0.44,
+                      borderRadius: "50%",
+                      bgcolor: "primary.main",
+                    }}
+                  />
+                  <Typography variant="h6">Hyttestyret</Typography>
+                </Stack>
+              </CardActionArea>
+            </Card>
+            <Button color="inherit" size="large" endIcon={<ArrowRight />}>
+              Se mer
+            </Button>
+          </Stack>
+        </Container>
+      </Box>
+    </>
   );
 };
 
