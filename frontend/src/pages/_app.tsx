@@ -9,7 +9,8 @@ import ThemeWrapper from "src/theme";
 
 // Remove when MUIv4 is gone
 declare module "@mui/styles/defaultTheme" {
-  type DefaultTheme = Theme;
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  interface DefaultTheme extends Theme {}
 }
 
 // eslint-disable-next-line @typescript-eslint/ban-types

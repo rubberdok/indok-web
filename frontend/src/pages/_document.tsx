@@ -1,12 +1,8 @@
 import createCache from "@emotion/cache";
-// emotion
 import { CacheProvider } from "@emotion/react";
 import createEmotionServer from "@emotion/server/create-instance";
-// next
 import Document, { Head, Html, Main, NextScript } from "next/document";
 import * as React from "react";
-
-// ----------------------------------------------------------------------
 
 function createEmotionCache() {
   return createCache({ key: "css" });
@@ -41,8 +37,6 @@ export default class MyDocument extends Document {
     );
   }
 }
-
-// ----------------------------------------------------------------------
 
 MyDocument.getInitialProps = async (ctx) => {
   const originalRenderPage = ctx.renderPage;
