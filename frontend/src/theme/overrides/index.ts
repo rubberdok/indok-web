@@ -44,7 +44,7 @@ const ComponentsOverrides: Props = (theme) => {
     Paper(),
     SvgIcon(),
     Container(),
-    CssBaseline(),
+    CssBaseline(theme),
     LoadingButton(),
     Fab(theme),
     Tabs(theme),

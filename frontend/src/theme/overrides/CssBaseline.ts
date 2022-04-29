@@ -1,4 +1,8 @@
-const CssBaseline: any = () => {
+import { Theme } from "@mui/material";
+
+type Props = (theme: Theme) => any;
+
+const CssBaseline: Props = (theme) => {
   return {
     MuiCssBaseline: {
       styleOverrides: {
@@ -25,6 +29,9 @@ const CssBaseline: any = () => {
           "& li": {
             lineHeight: 2,
           },
+        },
+        a: {
+          color: theme.palette.primary.main,
         },
       },
     },
