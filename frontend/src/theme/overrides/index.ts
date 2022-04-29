@@ -21,14 +21,10 @@ import Link from "./Link";
 import Lists from "./Lists";
 import LoadingButton from "./LoadingButton";
 import Menu from "./Menu";
-import Pagination from "./Pagination";
 import Paper from "./Paper";
 import Popover from "./Popover";
 import Progress from "./Progress";
 import Radio from "./Radio";
-import Rating from "./Rating";
-import Select from "./Select";
-import Skeleton from "./Skeleton";
 import Slider from "./Slider";
 import Stepper from "./Stepper";
 import SvgIcon from "./SvgIcon";
@@ -46,7 +42,6 @@ const ComponentsOverrides: Props = (theme) => {
     Link(),
     Badge(),
     Paper(),
-    Select(),
     SvgIcon(),
     Container(),
     CssBaseline(),
@@ -63,7 +58,6 @@ const ComponentsOverrides: Props = (theme) => {
     Alert(theme),
     Switch(theme),
     Button(theme),
-    Rating(theme),
     Dialog(theme),
     Avatar(theme),
     Slider(theme),
@@ -73,11 +67,9 @@ const ComponentsOverrides: Props = (theme) => {
     Popover(theme),
     Checkbox(theme),
     DataGrid(theme),
-    Skeleton(theme),
     Progress(theme),
     Accordion(theme),
     Typography(theme),
-    Pagination(theme),
     ButtonGroup(theme),
     Autocomplete(theme),
     ControlLabel(theme),
