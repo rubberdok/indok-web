@@ -1,9 +1,10 @@
+import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import { Grid, Hidden, IconButton, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import dayjs from "dayjs";
 import React, { ReactElement } from "react";
 import { DAYS_IN_WEEK } from "./constants";
-import { Grid, Hidden, IconButton, makeStyles, Typography, useMediaQuery, useTheme } from "@material-ui/core";
-import NavigateNextIcon from "@material-ui/icons/NavigateNext";
-import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore";
 
 const useStyles = makeStyles(() => ({
   table: {
@@ -26,23 +27,25 @@ const CalendarTable: React.FC<Props> = ({ month, onChangeMonth, children }) => {
   const classes = useStyles();
 
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   return (
-    <Grid container>
-      <Grid item container alignItems="center" justifyContent={isMobile ? "space-between" : "center"}>
+    <Stack spacing={2} width={1}>
+      <Grid container alignItems="center" justifyContent={isMobile ? "space-between" : "center"}>
         <Hidden mdUp>
-          <IconButton onClick={() => onChangeMonth(-1)}>
+          <IconButton onClick={() => onChangeMonth(-1)} size="large">
             <NavigateBeforeIcon />
           </IconButton>
         </Hidden>
-        <Typography variant="body1" align="center">{`${month.format("MMMM")} - ${month.format("YYYY")}`}</Typography>
+        <Typography variant="h6" textTransform="capitalize" align="center">{`${month.format("MMMM")} ${month.format(
+          "YYYY"
+        )}`}</Typography>
         <Hidden mdUp>
-          <IconButton onClick={() => onChangeMonth(1)}>
+          <IconButton onClick={() => onChangeMonth(1)} size="large">
             <NavigateNextIcon />
           </IconButton>
         </Hidden>
       </Grid>
-      <Grid item component="table" className={classes.table}>
+      <Grid component="table" className={classes.table}>
         <Grid container component="thead">
           <Grid item container xs component="tr">
             {DAYS_IN_WEEK.map((dow: string) => (
@@ -56,7 +59,7 @@ const CalendarTable: React.FC<Props> = ({ month, onChangeMonth, children }) => {
           {children}
         </Grid>
       </Grid>
-    </Grid>
+    </Stack>
   );
 };
 export default CalendarTable;

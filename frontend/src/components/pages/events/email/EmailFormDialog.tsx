@@ -1,16 +1,6 @@
-import {
-  Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  Grid,
-  TextField,
-  Tooltip,
-  Typography,
-} from "@material-ui/core";
-import ClearIcon from "@material-ui/icons/Clear";
-import SendIcon from "@material-ui/icons/Send";
+import { Box, Button, Dialog, DialogActions, DialogContent, Grid, TextField, Tooltip, Typography } from "@mui/material";
+import ClearIcon from "@mui/icons-material/Clear";
+import SendIcon from "@mui/icons-material/Send";
 import React, { Dispatch, SetStateAction } from "react";
 import { SendEmailProps } from "./EmailForm";
 

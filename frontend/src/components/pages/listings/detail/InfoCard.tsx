@@ -1,6 +1,7 @@
 import { ListingFragment } from "@generated/graphql";
-import { Button, Card, CardContent, Grid, makeStyles, Typography } from "@material-ui/core";
-import OpenInNewIcon from "@material-ui/icons/OpenInNew";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import { Button, Card, CardContent, Grid, Typography } from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import Link from "next/link";
 
 const useStyles = makeStyles((theme) => ({
@@ -13,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
     "-webkit-box-orient": "vertical",
   },
   organizationName: {
-    [theme.breakpoints.down("md")]: {
+    [theme.breakpoints.down("lg")]: {
       fontSize: theme.typography.h6.fontSize,
     },
   },

@@ -1,5 +1,6 @@
-import { makeStyles, Theme } from "@material-ui/core/styles";
-import { Grid, Box, Typography } from "@material-ui/core";
+import { Box, Grid, Typography } from "@mui/material";
+import { Theme } from "@mui/material/styles";
+import makeStyles from "@mui/styles/makeStyles";
 interface Props {
   isDisabled?: boolean;
   isFromDate?: boolean;
@@ -14,7 +15,7 @@ interface Props {
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     width: "100%",
-    height: 60,
+    aspectRatio: "1",
     color: (props: Props) => {
       if (props.isDisabled) {
         return "#cecece";
@@ -32,7 +33,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         if (props.isInvalidRange) {
           return theme.palette.error.dark;
         }
-        return theme.palette.primary.dark;
+        return theme.palette.primary.main;
       }
       if (props.isInRange) {
         if (props.isInvalidRange) {
@@ -54,7 +55,7 @@ const CalendarDay: React.VFC<Props> = (props) => {
       <Box className={classes.root}>
         <Grid container justifyContent="center" alignItems="center" style={{ height: "100%" }}>
           <Grid item>
-            <Typography>{!isHidden ? value : ""}</Typography>
+            <Typography variant="subtitle2">{!isHidden ? value : ""}</Typography>
           </Grid>
         </Grid>
       </Box>

@@ -13,8 +13,8 @@ import {
   FormControl,
   InputLabel,
   Box,
-} from "@material-ui/core";
-import { Save, Delete, Add, Close } from "@material-ui/icons";
+} from "@mui/material";
+import { Save, Delete, Add, Close } from "@mui/icons-material";
 
 /**
  * Component to edit a question on a form.

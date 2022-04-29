@@ -1,12 +1,9 @@
-// icons
 import { Box, Button, Card, CardActionArea, Container, Grid, Stack, Typography } from "@mui/material";
-// @mui
 import { styled } from "@mui/material/styles";
 import { ArrowRight, Link as LinkIcon } from "phosphor-react";
 
 const RootStyle = styled("div")(({ theme }) => ({
   padding: theme.spacing(15, 0, 8, 0),
-  // height: "vh",
   [theme.breakpoints.up("md")]: {
     padding: theme.spacing(15, 0),
     height: "80vh",

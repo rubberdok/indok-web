@@ -30,7 +30,6 @@ const LinkStyle = styled(ListItemButton, {
 })<LinkStyleProps>(({ active, theme }) => ({
   ...theme.typography.body2,
   height: 48,
-  textTransform: "capitalize",
   paddingLeft: theme.spacing(2.5),
   paddingRight: theme.spacing(2.5),
   color: theme.palette.text.secondary,

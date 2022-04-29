@@ -7,13 +7,13 @@ import {
   Container,
   Drawer,
   IconButton,
-  makeStyles,
   Slide,
   Toolbar,
   Typography,
   useScrollTrigger,
-} from "@material-ui/core";
-import MenuIcon from "@material-ui/icons/Menu";
+} from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
+import MenuIcon from "@mui/icons-material/Menu";
 import leftFern from "@public/static/anniversary/left_fern.svg";
 import rightFern from "@public/static/anniversary/right_fern.svg";
 import Image from "next/image";
@@ -119,7 +119,13 @@ const Navbar: React.FC = () => {
                 <NavbarUser loggedIn={loggedIn} username={data?.user?.firstName} />
               </div>
               <div className={classes.sectionMobile}>
-                <IconButton onClick={() => setOpenDrawer(true)} edge="start" color="inherit" aria-label="menu">
+                <IconButton
+                  onClick={() => setOpenDrawer(true)}
+                  edge="start"
+                  color="inherit"
+                  aria-label="menu"
+                  size="large"
+                >
                   <MenuIcon />
                 </IconButton>
               </div>

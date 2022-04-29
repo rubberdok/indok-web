@@ -1,6 +1,7 @@
 import { ListingQuery } from "@generated/graphql";
-import { Button, Card, CardContent, Grid, Hidden, makeStyles, Typography } from "@material-ui/core";
-import ArrowForward from "@material-ui/icons/ArrowForward";
+import ArrowForward from "@mui/icons-material/ArrowForward";
+import { Button, Card, CardContent, Grid, Hidden, Typography } from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import dayjs from "dayjs";
 import nb from "dayjs/locale/nb";
 import timezone from "dayjs/plugin/timezone";
@@ -54,7 +55,7 @@ const TitleCard: React.FC<{
               {dayjs(listing.deadline).format("DD. MMMM YYYY [kl.] HH:mm")}
             </Typography>
           </Grid>
-          <Hidden xsDown>
+          <Hidden smDown>
             <Grid item>
               {link && (
                 <Link href={link} passHref>

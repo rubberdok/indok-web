@@ -5,23 +5,13 @@ import AdminCabinTable from "@components/pages/cabins/Admin/AdminCabinTable";
 import PermissionRequired from "@components/permissions/PermissionRequired";
 import { QUERY_ADMIN_ALL_BOOKINGS } from "@graphql/cabins/queries";
 import { BookingFromQuery } from "@interfaces/cabins";
-import {
-  Box,
-  Button,
-  Container,
-  Grid,
-  makeStyles,
-  Tab,
-  Tabs,
-  Typography,
-  useMediaQuery,
-  useTheme,
-} from "@material-ui/core";
+import { Box, Button, Container, Grid, Tab, Tabs, Typography, useMediaQuery, useTheme } from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import dayjs from "dayjs";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
-import Settings from "@material-ui/icons/Settings";
+import Settings from "@mui/icons-material/Settings";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -45,7 +35,7 @@ const AdminPage: NextPage = () => {
 
   const handleTabChange = (newTabValue: number) => setTabValue(newTabValue);
 
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const classes = useStyles();
   const accepted = data?.adminAllBookings.filter((booking) => !booking.isTentative && !booking.isDeclined);
   const declined = data?.adminAllBookings.filter((booking) => !booking.isTentative && booking.isDeclined);

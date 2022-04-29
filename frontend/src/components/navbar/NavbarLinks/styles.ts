@@ -1,4 +1,4 @@
-import { makeStyles } from "@material-ui/core";
+import makeStyles from "@mui/styles/makeStyles";
 import { breakpoint } from "../Navbar";
 
 export const useSharedStyles = makeStyles((theme) => ({

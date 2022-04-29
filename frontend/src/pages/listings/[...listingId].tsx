@@ -1,5 +1,4 @@
 import { useQuery } from "@apollo/client";
-import Layout from "@components/Layout";
 import * as markdownComponents from "@components/markdown/components";
 import InfoCard from "@components/pages/listings/detail/InfoCard";
 import ListingBanner from "@components/pages/listings/detail/ListingBanner";
@@ -8,19 +7,23 @@ import TitleCard from "@components/pages/listings/detail/TitleCard";
 import { ListingDocument, ListingQuery } from "@generated/graphql";
 import { Listing } from "@interfaces/listings";
 import { addApolloState, initializeApollo } from "@lib/apolloClient";
-import { Button, Container, Grid, Hidden, makeStyles, Paper } from "@material-ui/core";
-import ArrowForward from "@material-ui/icons/ArrowForward";
-import OpenInNewIcon from "@material-ui/icons/OpenInNew";
-import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from "next";
+import ArrowForward from "@mui/icons-material/ArrowForward";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import { Button, Container, Grid, Hidden, Paper, styled } from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import ReactMarkdown from "react-markdown";
+import Layout from "src/layouts";
+import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "src/theme/constants";
+import { NextPageWithLayout } from "../_app";
 
 const useStyles = makeStyles((theme) => ({
   container: {
     paddingBottom: theme.spacing(2),
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down("md")]: {
       marginTop: theme.spacing(4),
     },
   },
@@ -41,8 +44,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const RootStyle = styled("div")(({ theme }) => ({
+  paddingTop: HEADER_MOBILE_HEIGHT,
+  [theme.breakpoints.up("md")]: {
+    paddingTop: HEADER_DESKTOP_HEIGHT,
+  },
+}));
+
 // page to show details about a listing and its organization
-const ListingPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ listing }) => {
+const ListingPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ listing }) => {
   const { listingId } = useRouter().query;
 
   // fetches the listing, using the URL parameter as the argument
@@ -83,7 +93,7 @@ const ListingPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProp
         />
       </Head>
       {data?.listing && (
-        <>
+        <RootStyle>
           <Hidden smDown>
             <ListingBanner imageUrl={data.listing.heroImageUrl} />
           </Hidden>
@@ -100,7 +110,7 @@ const ListingPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProp
                 className={classes.root}
               >
                 <Grid container item direction="row" alignItems="stretch" justifyContent="center" spacing={4}>
-                  <Hidden smDown>
+                  <Hidden mdDown>
                     <Grid item xs={4}>
                       <InfoCard listing={data.listing} />
                     </Grid>
@@ -148,7 +158,7 @@ const ListingPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProp
               </Grid>
             </Paper>
           </Hidden>
-        </>
+        </RootStyle>
       )}
     </Layout>
   );
@@ -170,6 +180,11 @@ export const getServerSideProps: GetServerSideProps<{ listing: Listing }> = asyn
   if (typeof listing === "undefined") return { notFound: true };
 
   return addApolloState(client, { props: { listing } });
+};
+
+
+ListingPage.getLayout = function getLayout(page: React.ReactElement) {
+return <Layout>{page}</Layout>;
 };
 
 export default ListingPage;

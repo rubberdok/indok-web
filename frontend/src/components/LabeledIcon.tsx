@@ -1,8 +1,5 @@
-// @mui
 import { Stack, StackProps, SxProps } from "@mui/material";
 import { ReactElement } from "react";
-
-// ----------------------------------------------------------------------
 
 interface Props extends StackProps {
   icon: ReactElement;

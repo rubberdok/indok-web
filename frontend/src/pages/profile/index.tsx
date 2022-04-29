@@ -1,5 +1,4 @@
 import { useQuery } from "@apollo/client";
-import Layout from "@components/Layout";
 import {
   CabinsAdmin,
   Event,
@@ -10,13 +9,15 @@ import {
   Report,
 } from "@components/pages/profile/ProfileCard";
 import PermissionRequired from "@components/permissions/PermissionRequired";
-import useStyles from "@components/pages/profile/styles";
 import { GET_USER_INFO } from "@graphql/users/queries";
-import { Avatar, Container, Grid, Typography, useTheme } from "@material-ui/core";
-import { NextPage } from "next";
+import { Avatar, Button, Container, Grid, Stack, styled, Typography } from "@mui/material";
 import Head from "next/head";
+import NextLink from "next/link";
 import { useMemo } from "react";
+import Layout from "src/layouts";
+import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "src/theme/constants";
 import { User } from "src/types/users";
+import { NextPageWithLayout } from "../_app";
 
 const ID_PREFIX = "profile-";
 
@@ -38,95 +39,90 @@ const userInitials = (firstName: string, lastName: string): string => {
   return initials;
 };
 
-const ProfilePage: NextPage = () => {
+const RootStyle = styled("div")(({ theme }) => ({
+  paddingTop: HEADER_MOBILE_HEIGHT,
+  margin: theme.spacing(4, 0),
+  [theme.breakpoints.up("md")]: {
+    paddingTop: HEADER_DESKTOP_HEIGHT,
+  },
+}));
+
+const ProfilePage: NextPageWithLayout = () => {
   const { data } = useQuery<{ user?: User }>(GET_USER_INFO);
-  const theme = useTheme();
-  const classes = useStyles();
   const initials = useMemo(() => (data?.user ? userInitials(data.user.firstName, data.user.lastName) : ""), [data]);
 
   return (
-    <Layout>
+    <RootStyle>
       <Head>
         <title>Profil | Forening for studentene ved Industriell Økonomi og Teknologiledelse</title>
         <meta name="description" content="Profilside" />
       </Head>
       <Container>
-        <Grid
-          container
-          direction="column"
-          alignItems="center"
-          style={{ marginTop: theme.spacing(8), marginBottom: theme.spacing(8) }}
-          spacing={2}
-        >
-          <>
-            <Grid item>
-              <Avatar style={{ backgroundColor: "#526fa0", width: theme.spacing(16), height: theme.spacing(16) }}>
-                {data?.user && (
-                  <Typography variant="h3" component="p">
-                    {initials}
-                  </Typography>
-                )}
-              </Avatar>
-            </Grid>
-            <Grid
-              container
-              item
-              direction="column"
-              alignItems="center"
-              xs={10}
-              style={{ marginBottom: theme.spacing(4) }}
-            >
-              <Grid item>
-                {data?.user && (
-                  <Typography variant="subtitle1" component="h1">{`Hei, ${data.user.firstName}`}</Typography>
-                )}
-              </Grid>
-              <Grid item>
-                <Typography variant="body2" align="center">
-                  Her kan du endre din informasjon, se tidligere arrangementer og foreningene der du er medlem.
-                </Typography>
-              </Grid>
-            </Grid>
+        <Stack alignItems="center" sx={{ mb: 4 }} spacing={2}>
+          <Avatar
+            sx={{
+              bgcolor: "primary.main",
+              width: (theme) => theme.spacing(16),
+              height: (theme) => theme.spacing(16),
+            }}
+          >
+            {data?.user && (
+              <Typography variant="h3" component="p" color="common.white">
+                {initials}
+              </Typography>
+            )}
+          </Avatar>
+          {data?.user && <Typography variant="h4" component="h1">{`Hei, ${data.user.firstName}`}</Typography>}
+          <Typography variant="body1" align="center">
+            Her kan du endre din informasjon, se tidligere arrangementer og foreningene der du er medlem.
+          </Typography>
 
-            <Grid
-              container
-              item
-              className={classes.cards}
-              spacing={4}
-              justifyContent="center"
-              sm={10}
-              xs={12}
-              alignItems="stretch"
-            >
-              <Grid item md={6} className={classes.card}>
-                <Personal user={data?.user} data-test-id={`${ID_PREFIX}personal-`} />
-              </Grid>
-              <Grid item md={6} className={classes.card}>
-                <Event data-test-id={`${ID_PREFIX}event-`} />
-              </Grid>
-              <Grid item md={6} className={classes.card}>
-                <Organization data-test-id={`${ID_PREFIX}organization-`} />
-              </Grid>
-              <Grid item md={6} className={classes.card}>
-                <Form data-test-id={`${ID_PREFIX}form-`} />
-              </Grid>
-              <Grid item md={6} className={classes.card}>
-                <Report data-test-id={`${ID_PREFIX}report-`} />
-              </Grid>
-              <Grid item md={6} className={classes.card}>
-                <Orders data-test-id={`${ID_PREFIX}orders-`} />
-              </Grid>
-              <Grid item md={6} className={classes.card}>
-                <PermissionRequired permission="cabins.manage_booking">
-                  <CabinsAdmin data-test-id={`${ID_PREFIX}cabins-`} />
-                </PermissionRequired>
-              </Grid>
+          <Grid
+            container
+            columnSpacing={{ xs: 0, md: 4 }}
+            rowSpacing={4}
+            justifyContent="center"
+            sm={10}
+            xs={12}
+            alignItems="stretch"
+          >
+            <Grid item xs={12} md={6}>
+              <Personal user={data?.user} data-test-id={`${ID_PREFIX}personal-`} />
             </Grid>
-          </>
-        </Grid>
+            <Grid item xs={12} md={6}>
+              <Event data-test-id={`${ID_PREFIX}event-`} />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Organization data-test-id={`${ID_PREFIX}organization-`} />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Form data-test-id={`${ID_PREFIX}form-`} />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Report data-test-id={`${ID_PREFIX}report-`} />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Orders data-test-id={`${ID_PREFIX}orders-`} />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <PermissionRequired permission="cabins.manage_booking">
+                <CabinsAdmin data-test-id={`${ID_PREFIX}cabins-`} />
+              </PermissionRequired>
+            </Grid>
+          </Grid>
+          <NextLink href="/logout" passHref>
+            <Button variant="contained" color="error">
+              Logg ut
+            </Button>
+          </NextLink>
+        </Stack>
       </Container>
-    </Layout>
+    </RootStyle>
   );
+};
+
+ProfilePage.getLayout = function getLayout(page: React.ReactElement) {
+  return <Layout>{page}</Layout>;
 };
 
 export default ProfilePage;

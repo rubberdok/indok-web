@@ -1,8 +1,8 @@
 import { useQuery } from "@apollo/client";
 import { GET_USER_INFO } from "@graphql/users/queries";
 import { UserInfo } from "@interfaces/users";
-import { Button } from "@material-ui/core";
-import { Skeleton } from "@material-ui/lab";
+import { Button } from "@mui/material";
+import { Skeleton } from "@mui/material";
 import { generateFeideLoginUrl } from "@utils/auth";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -26,7 +26,7 @@ export const LoginRequired: React.FC<Props> = ({ redirect, redirectPath, childre
 
   if (loading) {
     return (
-      <Skeleton variant="rect">
+      <Skeleton variant="rectangular">
         <Link href={url} passHref>
           <Button size="medium" variant="contained" color="primary">
             Log inn

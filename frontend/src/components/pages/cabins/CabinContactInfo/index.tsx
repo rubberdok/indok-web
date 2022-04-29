@@ -2,7 +2,7 @@ import { useQuery } from "@apollo/client/react";
 import { GET_USER } from "@graphql/users/queries";
 import { ContactInfo, InputFieldsEvent, ContactInfoValidations, Cabin } from "@interfaces/cabins";
 import { User } from "@interfaces/users";
-import { Grid } from "@material-ui/core";
+import { Grid } from "@mui/material";
 import { NextPage } from "next";
 import React, { Dispatch, SetStateAction, useEffect } from "react";
 import { InputFields } from "../InputFields/InputFields";

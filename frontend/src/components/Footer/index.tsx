@@ -1,10 +1,11 @@
-import HallOfFame from "@components/Footer/HallOfFame";
-import { Box, Button, Container, Grid, IconButton, makeStyles, Typography } from "@material-ui/core";
-import { Facebook, GitHub } from "@material-ui/icons";
+import { Facebook, GitHub } from "@mui/icons-material";
+import { Box, Button, Container, Grid, IconButton, Typography } from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import rubberdokLogo from "@public/img/rubberdok_logo_white.svg";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import HallOfFame from "src/layouts/footer/HallOfFame";
 
 const useStyles = makeStyles((theme) => ({
   footer: {
@@ -23,13 +24,13 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: theme.spacing(5),
     paddingBottom: theme.spacing(5),
     color: "#b0aca5",
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down("md")]: {
       height: "unset",
       flexDirection: "column",
     },
   },
   creditsContent: {
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down("md")]: {
       flexDirection: "column",
       alignItems: "center",
     },
@@ -52,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundRepeat: "no-repeat",
     opacity: 0.25,
 
-    [theme.breakpoints.down("md")]: {
+    [theme.breakpoints.down("lg")]: {
       width: "100%",
       left: 0,
     },

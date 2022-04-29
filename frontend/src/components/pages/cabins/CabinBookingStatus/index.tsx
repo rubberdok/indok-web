@@ -1,9 +1,9 @@
-import { NextPage } from "next";
-import { makeStyles, Typography, Box, Divider, Tooltip, useMediaQuery } from "@material-ui/core";
 import { Cabin, ContactInfo, DatePick } from "@interfaces/cabins";
-import { TypographyProps } from "@material-ui/core/Typography";
+import { Box, Divider, Tooltip, Typography, useMediaQuery } from "@mui/material";
+import { TypographyProps } from "@mui/material/Typography";
+import makeStyles from "@mui/styles/makeStyles";
 import { calculatePrice, convertDateFormat, toStringChosenCabins } from "@utils/cabins";
-import theme from "@styles/theme";
+import { NextPage } from "next";
 
 interface Props {
   chosenCabins: Cabin[];
@@ -15,7 +15,7 @@ interface Props {
 
 const useStyles = makeStyles({
   bold: {
-    fontWeight: theme.typography.fontWeightBold,
+    fontWeight: 800,
     display: "inline",
   },
 });
@@ -32,7 +32,7 @@ Renders fields based on the props given.
 */
 const CabinBookingStatus: NextPage<Props> = ({ chosenCabins, datePick, contactInfo, cabinText, mailSent }) => {
   const classes = useStyles();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   return (
     <Box p={isMobile ? 0 : 3} border={3} borderColor="primary.main">

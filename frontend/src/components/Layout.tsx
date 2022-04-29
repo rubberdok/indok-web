@@ -1,6 +1,6 @@
 import Navbar from "@components/navbar/Navbar";
 import ScrollTop from "@components/ui/ScrollTop";
-import { makeStyles } from "@material-ui/core";
+import makeStyles from "@mui/styles/makeStyles";
 import Head from "next/head";
 import Footer from "./Footer";
 

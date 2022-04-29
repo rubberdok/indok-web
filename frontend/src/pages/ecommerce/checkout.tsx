@@ -20,12 +20,12 @@ import {
   List,
   ListItem,
   ListItemText,
-  makeStyles,
   Theme,
   Typography,
-} from "@material-ui/core";
-import { KeyboardArrowLeft } from "@material-ui/icons";
-import { Alert } from "@material-ui/lab";
+} from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
+import { KeyboardArrowLeft } from "@mui/icons-material";
+import { Alert } from "@mui/material";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useState } from "react";

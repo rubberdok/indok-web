@@ -1,7 +1,9 @@
 import Calendar from "@components/Calendar";
+import LabeledIcon from "@components/LabeledIcon";
 import useDisabledDates from "@hooks/cabins/useDisabledDates";
+import useResponsive from "@hooks/useResponsive";
 import { Cabin, DatePick } from "@interfaces/cabins";
-import { Checkbox, List, ListItem, Grid, Typography, Divider, useMediaQuery, useTheme } from "@material-ui/core";
+import { Checkbox, Divider, Stack, Typography } from "@mui/material";
 import { NextPage } from "next";
 import React from "react";
 
@@ -16,7 +18,7 @@ One of the steps in the cabins/book page. In this step the user chooses a cabin 
 */
 const CheckInOut: NextPage<Props> = ({ allCabins, chosenCabins, setChosenCabins, setDatePick }) => {
   const { disabledDates } = useDisabledDates(chosenCabins);
-  const isMobile = useMediaQuery(useTheme().breakpoints.down("sm"));
+  const isMobile = useResponsive("down", "md");
 
   const handleRangeChange = (fromDate: string | undefined, toDate: string | undefined, validRange: boolean) => {
     setDatePick({
@@ -26,41 +28,44 @@ const CheckInOut: NextPage<Props> = ({ allCabins, chosenCabins, setChosenCabins,
     });
   };
   return (
-    <Grid container spacing={isMobile ? 2 : 10}>
-      <Grid item xs={12} md={2} container direction="column" justifyContent="center" alignItems="center">
-        <Grid item>
-          <Typography variant="h5">Velg hytte</Typography>
-          <Divider component="hr" />
-          <List>
-            {allCabins.map((cabin) => (
-              <ListItem key={cabin.id}>
-                <Checkbox
-                  color="primary"
-                  disableRipple
-                  checked={chosenCabins.some((chosenCabin) => chosenCabin.id === cabin.id)}
-                  onChange={(e) => {
-                    if (e.target.checked) {
-                      setChosenCabins([...chosenCabins, cabin]);
-                    } else {
-                      setChosenCabins(chosenCabins.filter((chosenCabin) => cabin.id !== chosenCabin.id));
-                    }
-                  }}
-                />
-                {cabin.name}
-              </ListItem>
-            ))}
-          </List>
-        </Grid>
-      </Grid>
-      <Grid item xs={12} md={10}>
-        <Calendar
-          title="Velg innsjekk og utsjekk"
-          disabledDates={disabledDates}
-          disableAll={chosenCabins.length === 0}
-          onRangeChange={handleRangeChange}
-        />
-      </Grid>
-    </Grid>
+    <Stack direction={{ xs: "column", md: "row" }} alignItems={{ xs: "stretch", md: "center" }} spacing={2}>
+      <Stack
+        direction={{ xs: "row", md: "column" }}
+        alignItems={{ xs: "center", md: "flex-start" }}
+        spacing={1}
+        minWidth={200}
+      >
+        <Typography variant="h5">Velg hytte</Typography>
+
+        {allCabins.map((cabin) => (
+          <LabeledIcon
+            icon={
+              <Checkbox
+                color="primary"
+                disableRipple
+                checked={chosenCabins.some((chosenCabin) => chosenCabin.id === cabin.id)}
+                onChange={(e) => {
+                  if (e.target.checked) {
+                    setChosenCabins([...chosenCabins, cabin]);
+                  } else {
+                    setChosenCabins(chosenCabins.filter((chosenCabin) => cabin.id !== chosenCabin.id));
+                  }
+                }}
+              />
+            }
+            value={<Typography variant="subtitle2">{cabin.name}</Typography>}
+            key={cabin.id}
+          />
+        ))}
+      </Stack>
+      {isMobile && <Divider sx={{ my: 2 }} />}
+      <Calendar
+        title="Velg innsjekk og utsjekk"
+        disabledDates={disabledDates}
+        disableAll={chosenCabins.length === 0}
+        onRangeChange={handleRangeChange}
+      />
+    </Stack>
   );
 };
 

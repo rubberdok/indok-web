@@ -3,7 +3,7 @@ import AnswerForm from "@components/forms/AnswerForm";
 import Layout from "@components/Layout";
 import { FORM_WITH_QUESTIONS_AND_ANSWERS } from "@graphql/forms/queries";
 import { Form } from "@interfaces/forms";
-import { CircularProgress, Container, Grid, Typography } from "@material-ui/core";
+import { CircularProgress, Container, Grid, Typography } from "@mui/material";
 import { generateFeideLoginUrl } from "@utils/auth";
 import { NextPage } from "next";
 import { useRouter } from "next/router";

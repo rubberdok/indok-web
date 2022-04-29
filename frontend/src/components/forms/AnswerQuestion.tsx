@@ -1,4 +1,4 @@
-import { FormControlLabel, MenuItem, Radio, RadioGroup, Select, TextField } from "@material-ui/core";
+import { FormControlLabel, MenuItem, Radio, RadioGroup, Select, TextField } from "@mui/material";
 import AnswerCheckboxes from "@components/forms/AnswerCheckboxes";
 import { Question } from "@interfaces/forms";
 

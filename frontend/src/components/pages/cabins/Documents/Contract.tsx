@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/client";
 import { QUERY_BOOKING_RESPONSIBLE } from "@graphql/cabins/queries";
 import { BookingResponsible, Cabin, ContactInfo, DatePick } from "@interfaces/cabins";
-import { Box, Divider, Grid, Typography } from "@material-ui/core";
+import { Box, Divider, Grid, Typography } from "@mui/material";
 import { convertDateFormat, toStringChosenCabins, calculatePrice } from "@utils/cabins";
 import Image from "next/image";
 import { useEffect, useState } from "react";

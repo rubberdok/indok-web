@@ -1,4 +1,5 @@
-import { Grid, makeStyles, Typography } from "@material-ui/core";
+import { Grid, Typography } from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import Image, { StaticImageData } from "next/image";
 
 const useStyles = makeStyles((theme) => ({
