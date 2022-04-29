@@ -1,7 +1,7 @@
 import { FilterQuery } from "@components/pages/events/AllEvents";
 import { Organization } from "@interfaces/organizations";
-import { Collapse, List, ListItem, ListItemText } from "@material-ui/core";
-import { ExpandLess, ExpandMore } from "@material-ui/icons";
+import { Collapse, List, ListItem, ListItemText } from "@mui/material";
+import { CaretDown, CaretUp } from "phosphor-react";
 import React, { useState } from "react";
 
 interface Props {
@@ -38,7 +38,7 @@ const SuborganizationFilter: React.FC<Props> = ({ filters, onFiltersChange, orga
         selected={filters.organization === name}
       >
         <ListItemText primary={name} />
-        {open ? <ExpandLess /> : <ExpandMore />}
+        {open ? <CaretUp size={20} /> : <CaretDown size={20} />}
       </ListItem>
       <Collapse in={open} timeout="auto" unmountOnExit>
         {organizations.map((org: Organization) => (

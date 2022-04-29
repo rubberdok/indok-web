@@ -1,4 +1,6 @@
-import { withStyles, Button } from "@material-ui/core";
+import { Button } from "@mui/material";
+
+import withStyles from "@mui/styles/withStyles";
 
 const WarningButton = withStyles((theme) => ({
   root: {

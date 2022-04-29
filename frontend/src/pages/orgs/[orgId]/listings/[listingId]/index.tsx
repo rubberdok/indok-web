@@ -1,34 +1,35 @@
-import { NextPage } from "next";
-import { useRouter } from "next/router";
-import { useQuery, useMutation } from "@apollo/client";
-import { ListingWithForm } from "@interfaces/listings";
-import { Form, Response } from "@interfaces/forms";
-import { LISTING_RESPONSES } from "@graphql/listings/queries";
-import { LISTING_RESPONSES_FRAGMENT } from "@graphql/listings/fragments";
-import Link from "next/link";
-import Layout from "@components/Layout";
-import { makeStyles, Grid, Tabs, Tab, Container, Card, CardContent, Button, Typography, Box } from "@material-ui/core";
-import { useState } from "react";
+import { useMutation, useQuery } from "@apollo/client";
+import EditForm from "@components/forms/formAdmin/EditForm";
 import FormResponse from "@components/forms/formAdmin/FormResponse";
 import OrganizationListing from "@components/pages/listings/organization/OrganizationListing";
-import { ArrowBack } from "@material-ui/icons";
 import { CREATE_FORM } from "@graphql/forms/mutations";
-import EditForm from "@components/forms/formAdmin/EditForm";
-
-const useStyles = makeStyles((theme) => ({
-  container: {
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1),
-  },
-}));
+import { LISTING_RESPONSES_FRAGMENT } from "@graphql/listings/fragments";
+import { LISTING_RESPONSES } from "@graphql/listings/queries";
+import { Form, Response } from "@interfaces/forms";
+import { ListingWithForm } from "@interfaces/listings";
+import { ArrowBack } from "@mui/icons-material";
+import { Box, Button, Card, CardContent, Container, Grid, styled, Tab, Tabs, Typography } from "@mui/material";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import React, { useState } from "react";
+import Layout from "src/layouts";
+import { NextPageWithLayout } from "src/pages/_app";
+import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "src/theme/constants";
 
 /**
  * Page for organization admins to administer a listing, edit its application form, and review applicants.
  */
-const ListingAdminPage: NextPage = () => {
-  const { orgId, listingId } = useRouter().query;
 
-  const classes = useStyles();
+const RootStyle = styled("div")(({ theme }) => ({
+  paddingTop: HEADER_MOBILE_HEIGHT,
+  margin: theme.spacing(4, 0),
+  [theme.breakpoints.up("md")]: {
+    paddingTop: HEADER_DESKTOP_HEIGHT,
+  },
+}));
+
+const ListingAdminPage: NextPageWithLayout = () => {
+  const { orgId, listingId } = useRouter().query;
 
   // state to determine whether to show the response or the listing/form view
   const [selectedView, selectView] = useState<Response | "listing">("listing");
@@ -76,8 +77,8 @@ const ListingAdminPage: NextPage = () => {
 
   // renders an overview of applicants, and either an applicant's application or the listing itself (along with its form, or a button to create one)
   return (
-    <Layout>
-      <Container className={classes.container}>
+    <RootStyle>
+      <Container>
         <Grid container direction="row" justifyContent="center" spacing={1}>
           <Grid item>
             <Grid container direction="column" spacing={1}>
@@ -174,8 +175,10 @@ const ListingAdminPage: NextPage = () => {
           )}
         </Grid>
       </Container>
-    </Layout>
+    </RootStyle>
   );
 };
+
+ListingAdminPage.getLayout = (page: React.ReactElement) => <Layout>{page}</Layout>;
 
 export default ListingAdminPage;

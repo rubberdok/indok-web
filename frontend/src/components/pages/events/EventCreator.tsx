@@ -16,13 +16,13 @@ import {
   FormHelperText,
   Grid,
   InputLabel,
-  makeStyles,
   MenuItem,
   Select,
   TextField,
   Tooltip,
   Typography,
-} from "@material-ui/core";
+} from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 

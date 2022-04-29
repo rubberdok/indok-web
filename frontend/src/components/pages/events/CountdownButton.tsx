@@ -1,4 +1,5 @@
-import { Button, CircularProgress, makeStyles } from "@material-ui/core";
+import { Button, CircularProgress } from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import dayjs, { Dayjs } from "dayjs";
 import nb from "dayjs/locale/nb";
 import timezone from "dayjs/plugin/timezone";
@@ -131,8 +132,10 @@ const CountdownButton: React.FC<Props> = ({
   return (
     <div className={classes.positionLeft}>
       <Button
+        fullWidth
+        sx={{ minWidth: (theme) => theme.spacing(30) }}
         size="large"
-        variant="contained"
+        variant={currentTimeParts.length !== 0 ? "text" : "contained"}
         color={isSignedUp || isOnWaitingList ? "inherit" : "primary"}
         onClick={onClick}
         disabled={currentTimeParts.length !== 0 || disabled}

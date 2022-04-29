@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/client";
 import { QUERY_BOOKING_RESPONSIBLE } from "@graphql/cabins/queries";
 import { BookingResponsible } from "@interfaces/cabins";
-import { Grid, Link, Typography } from "@material-ui/core";
+import { Grid, Link, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
 const ContactCabinBoard: React.FC = () => {

@@ -1,5 +1,6 @@
 import { Answer, Question } from "@interfaces/forms";
-import { Typography, Grid, makeStyles } from "@material-ui/core";
+import { Typography, Grid } from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import QuestionTypePreview from "./QuestionTypePreview";
 
 const useStyles = makeStyles(() => ({

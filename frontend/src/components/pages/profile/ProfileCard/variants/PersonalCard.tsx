@@ -1,5 +1,5 @@
-import { Grid, Typography } from "@material-ui/core";
-import { Skeleton } from "@material-ui/lab";
+import { Grid, Typography } from "@mui/material";
+import { Skeleton } from "@mui/material";
 import Profile from "@public/illustrations/Profile.svg";
 import { User } from "src/types/users";
 import ProfileCardBase from "./ProfileCardBase";
@@ -37,7 +37,7 @@ const PersonalCard: React.VFC<Props> = ({ user, "data-test-id": dataTestId, ...p
           {user && user.gradeYear ? (
             <Typography variant="body2">{`${user.gradeYear}. klasse`}</Typography>
           ) : (
-            <Skeleton variant="rect">
+            <Skeleton variant="rectangular">
               <Typography variant="body2">0. klasse</Typography>
             </Skeleton>
           )}

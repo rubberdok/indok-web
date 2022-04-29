@@ -1,15 +1,6 @@
 import { Listing } from "@interfaces/listings";
-import {
-  Box,
-  Card,
-  CardActionArea,
-  CardContent,
-  CardMedia,
-  makeStyles,
-  Typography,
-  Chip,
-  Grid,
-} from "@material-ui/core";
+import { Box, Card, CardActionArea, CardContent, CardMedia, Typography, Chip, Grid } from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import dayjs from "dayjs";
 import nb from "dayjs/locale/nb";
 import relativeTime from "dayjs/plugin/isSameOrAfter";
@@ -41,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
       width: 112,
       height: 112,
     },
-    [theme.breakpoints.down("xs")]: {
+    [theme.breakpoints.down("sm")]: {
       margin: "-44px auto 0",
       width: 100,
       height: 100,

@@ -1,4 +1,4 @@
-import { Typography } from "@material-ui/core";
+import { Typography } from "@mui/material";
 import { Components } from "react-markdown";
 
 const Heading: Components["h1"] = ({ children, id, level }) => {
@@ -17,7 +17,7 @@ export const h4 = Heading;
 export const h5 = Heading;
 export const h6 = Heading;
 export const p: Components["p"] = ({ children }) => (
-  <Typography variant="body2" paragraph>
+  <Typography variant="body1" paragraph>
     {children}
   </Typography>
 );

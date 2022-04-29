@@ -2,7 +2,7 @@ import Link from "next/link";
 import { useSharedStyles } from "./styles";
 import { useRouter } from "next/router";
 import { NavbarLink } from "./links";
-import { makeStyles } from "@material-ui/core";
+import makeStyles from "@mui/styles/makeStyles";
 import { breakpoint } from "../Navbar";
 
 const useStyles = makeStyles((theme) => ({

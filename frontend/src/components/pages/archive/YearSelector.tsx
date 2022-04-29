@@ -1,9 +1,9 @@
 import { useQuery } from "@apollo/client";
 import { AvailableYearsDocument } from "@generated/graphql";
-import { CircularProgress } from "@material-ui/core";
-import FormControl from "@material-ui/core/FormControl";
-import MenuItem from "@material-ui/core/MenuItem";
-import Select from "@material-ui/core/Select";
+import { CircularProgress } from "@mui/material";
+import FormControl from "@mui/material/FormControl";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
 import React from "react";
 
 interface YearSelectorProps {

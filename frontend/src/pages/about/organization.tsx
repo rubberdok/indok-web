@@ -1,12 +1,15 @@
+import Image from "@components/Image";
 import TabPanel from "@components/pages/about/TabPanel";
 import Template from "@components/pages/about/Template";
-import { Box, Card, CardActionArea, CardMedia, makeStyles, Tab, Tabs, Typography } from "@material-ui/core";
-import Grid from "@material-ui/core/Grid";
+import { Card, CardActionArea, CardMedia, styled, Tab, Tabs, Typography } from "@mui/material";
+import Grid from "@mui/material/Grid";
 import { getSortedPosts } from "@utils/posts";
-import { GetStaticProps, NextPage } from "next";
+import { GetStaticProps } from "next";
 import Link from "next/link";
 import Router, { useRouter } from "next/router";
 import React from "react";
+import Layout from "src/layouts";
+import { NextPageWithLayout } from "../_app";
 
 type Props = {
   slug: string;
@@ -19,22 +22,21 @@ type Props = {
   posts: Array<any>;
 };
 
-const useStyles = makeStyles((theme) => ({
-  media: {
-    height: "100px",
-    width: "100%",
-    backgroundSize: "contain",
-    backgroundPosition: "center",
-    alignContent: "center",
-  },
-  card: {
-    display: "flex",
-    height: "180px",
-    flexDirection: "column",
-    justifyContent: "space-between",
-    textAlign: "center",
-    padding: theme.spacing(2, 3),
-  },
+const StyledCardActionArea = styled(CardActionArea)(({ theme }) => ({
+  display: "flex",
+  height: "180px",
+  flexDirection: "column",
+  justifyContent: "space-between",
+  textAlign: "center",
+  padding: theme.spacing(2, 3),
+}));
+
+const StyledCardMedia = styled(CardMedia)(() => ({
+  height: "100px",
+  width: "100%",
+  backgroundSize: "contain",
+  backgroundPosition: "center",
+  alignContent: "center",
 }));
 
 const routes: { [key: string]: { id: number; title: string } } = {
@@ -56,8 +58,7 @@ const routes: { [key: string]: { id: number; title: string } } = {
   },
 };
 
-const OrganizationPage: NextPage<Props> = ({ posts }) => {
-  const classes = useStyles();
+const OrganizationPage: NextPageWithLayout<Props> = ({ posts }: Props) => {
   const router = useRouter();
   const value = typeof router.query.category == "string" ? routes[router.query.category].id : 0;
 
@@ -89,8 +90,10 @@ const OrganizationPage: NextPage<Props> = ({ posts }) => {
       page="Våre foreninger"
       description="Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse er den øverste instansen
       (moderforeningen) for all studentfrivillighet på masterstudiet Indøk ved NTNU."
+      prevPost={{ title: "Om oss", slug: "/about", cover: "/img/hero.jpg" }}
+      nextPost={{ title: "Les om Hovedstyret", slug: "/about/board", cover: "/img/hero.jpg" }}
     >
-      <img src="/img/orgmap.svg" alt="Foreningskart"></img>
+      <Image src="/img/orgmap.svg" alt="Foreningskart" />
       <Typography id="orgList" variant="h3" gutterBottom>
         Se foreningene våre under
       </Typography>
@@ -120,12 +123,12 @@ const OrganizationPage: NextPage<Props> = ({ posts }) => {
             <Grid key={slug} item xs={12} sm={6} md={4}>
               <Card>
                 <Link href={"/about/organizations/[slug]"} as={`/about/organizations/${slug}`} passHref>
-                  <CardActionArea className={classes.card}>
-                    {logo ? <CardMedia className={classes.media} image={logo} /> : ""}
-                    <Box>
+                  <StyledCardActionArea>
+                    {logo ? <StyledCardMedia image={logo} /> : ""}
+                    <div>
                       <Typography variant="body2">{title}</Typography>
-                    </Box>
-                  </CardActionArea>
+                    </div>
+                  </StyledCardActionArea>
                 </Link>
               </Card>
             </Grid>
@@ -135,42 +138,42 @@ const OrganizationPage: NextPage<Props> = ({ posts }) => {
             <Grid item xs={12} sm={6} md={4}>
               <Card>
                 <a href="https://bindeleddet.no/" rel="norefferer noopener">
-                  <CardActionArea className={classes.card}>
-                    <CardMedia className={classes.media} image="/img/bindeleddetlogo.png" />
-                    <Box>
+                  <StyledCardActionArea>
+                    <StyledCardMedia image="/img/bindeleddetlogo.png" />
+                    <div>
                       <Typography variant="body1" color="textPrimary">
                         Bindeleddet
                       </Typography>
-                    </Box>
-                  </CardActionArea>
+                    </div>
+                  </StyledCardActionArea>
                 </a>
               </Card>
             </Grid>
             <Grid item xs={12} sm={6} md={4}>
               <Card>
                 <a href="https://sites.google.com/view/estiem-ntnu" rel="norefferer noopener">
-                  <CardActionArea className={classes.card}>
-                    <CardMedia className={classes.media} image="/img/estiemlogo.png" />
-                    <Box>
+                  <StyledCardActionArea>
+                    <StyledCardMedia image="/img/estiemlogo.png" />
+                    <div>
                       <Typography variant="body1" color="textPrimary">
                         ESTIEM
                       </Typography>
-                    </Box>
-                  </CardActionArea>
+                    </div>
+                  </StyledCardActionArea>
                 </a>
               </Card>
             </Grid>
             <Grid item xs={12} sm={6} md={4}>
               <Card>
                 <a href="https://januslinjeforening.no/" rel="norefferer noopener">
-                  <CardActionArea className={classes.card}>
-                    <CardMedia className={classes.media} image="/img/januslogo.png" />
-                    <Box>
+                  <StyledCardActionArea>
+                    <StyledCardMedia image="/img/januslogo.png" />
+                    <div>
                       <Typography variant="body1" color="textPrimary">
                         Janus
                       </Typography>
-                    </Box>
-                  </CardActionArea>
+                    </div>
+                  </StyledCardActionArea>
                 </a>
               </Card>
             </Grid>
@@ -181,6 +184,10 @@ const OrganizationPage: NextPage<Props> = ({ posts }) => {
       </Grid>
     </Template>
   );
+};
+
+OrganizationPage.getLayout = function getLayout(page: React.ReactElement) {
+  return <Layout>{page}</Layout>;
 };
 
 export const getStaticProps: GetStaticProps = async () => {

@@ -1,7 +1,7 @@
 import QuestionTypePreview from "@components/forms/formAdmin/QuestionTypePreview";
 import { Question } from "@interfaces/forms";
-import { Button, Grid, Typography } from "@material-ui/core";
-import { Edit } from "@material-ui/icons";
+import { Button, Grid, Typography } from "@mui/material";
+import { Edit } from "@mui/icons-material";
 
 /**
  * Component to preview a question in a form when not in editing mode.

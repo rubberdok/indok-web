@@ -1,15 +1,5 @@
-import { ContactInfo, InputFieldsEvent, ContactInfoValidations, Cabin } from "@interfaces/cabins";
-import {
-  Divider,
-  FormControl,
-  Grid,
-  Hidden,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField,
-  Typography,
-} from "@material-ui/core";
+import { Cabin, ContactInfo, ContactInfoValidations, InputFieldsEvent } from "@interfaces/cabins";
+import { FormControl, Grid, Hidden, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
 import { range } from "@utils/helpers";
 import React from "react";
 
@@ -30,10 +20,9 @@ export const InputFields: React.FC<Props> = ({ contactInfo, validations, onChang
 
   return (
     <Grid container item spacing={3} lg={8} md={12} justifyContent="center">
-      <Hidden mdDown>
+      <Hidden lgDown>
         <Grid item>
           <Typography variant="h3">Kontaktinfo</Typography>
-          <Divider component="hr" />
         </Grid>
       </Hidden>
 

@@ -22,8 +22,8 @@ import {
   TextField,
   Typography,
   useTheme,
-} from "@material-ui/core";
-import { ArrowBack } from "@material-ui/icons";
+} from "@mui/material";
+import { ArrowBack } from "@mui/icons-material";
 import { range } from "@utils/helpers";
 import dayjs from "dayjs";
 import { useFormik } from "formik";

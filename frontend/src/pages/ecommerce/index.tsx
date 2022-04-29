@@ -20,9 +20,9 @@ import {
   TableHead,
   TableRow,
   Typography,
-} from "@material-ui/core";
-import { KeyboardArrowLeft } from "@material-ui/icons";
-import { Alert } from "@material-ui/lab";
+} from "@mui/material";
+import { KeyboardArrowLeft } from "@mui/icons-material";
+import { Alert } from "@mui/material";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useState } from "react";

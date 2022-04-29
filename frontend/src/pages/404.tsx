@@ -1,5 +1,5 @@
 import Layout from "@components/Layout";
-import { Button, Container, Grid, Typography, useTheme } from "@material-ui/core";
+import { Button, Container, Grid, Typography, useTheme } from "@mui/material";
 import { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";

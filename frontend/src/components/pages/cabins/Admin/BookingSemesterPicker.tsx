@@ -14,9 +14,9 @@ import {
   TextField,
   Tooltip,
   Typography,
-} from "@material-ui/core";
+} from "@mui/material";
 
-import { Alert } from "@material-ui/lab";
+import { Alert } from "@mui/material";
 import dayjs from "dayjs";
 import router from "next/router";
 import { useState } from "react";

@@ -1,6 +1,6 @@
 import Layout from "@components/Layout";
 import UserForm from "@components/pages/profile/UserForm";
-import { Container, Grid } from "@material-ui/core";
+import { Container, Grid } from "@mui/material";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 

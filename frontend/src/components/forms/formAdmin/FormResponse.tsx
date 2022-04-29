@@ -1,5 +1,6 @@
 import { Form, Response } from "@interfaces/forms";
-import { Typography, Grid, Card, CardContent, FormHelperText, makeStyles } from "@material-ui/core";
+import { Typography, Grid, Card, CardContent, FormHelperText } from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import FormAnswer from "@components/forms/formAdmin/FormAnswer";
 
 const useStyles = makeStyles(() => ({

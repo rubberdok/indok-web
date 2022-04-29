@@ -13,9 +13,9 @@ import {
   ListItemText,
   Typography,
   useTheme,
-} from "@material-ui/core";
-import { amber, deepOrange, deepPurple, green, indigo, red } from "@material-ui/core/colors";
-import { ArrowRight } from "@material-ui/icons";
+} from "@mui/material";
+import { amber, deepOrange, deepPurple, green, indigo, red } from "@mui/material/colors";
+import { ArrowRight } from "@mui/icons-material";
 import { NextPage } from "next";
 import Head from "next/head";
 import Amund from "@public/img/Amund.jpg";

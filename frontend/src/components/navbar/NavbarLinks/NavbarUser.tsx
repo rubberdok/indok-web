@@ -1,5 +1,6 @@
-import { Button, Menu, MenuItem, makeStyles } from "@material-ui/core";
-import { AccountCircleOutlined, LockOpen } from "@material-ui/icons";
+import { Button, Menu, MenuItem } from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
+import { AccountCircleOutlined, LockOpen } from "@mui/icons-material";
 import { generateFeideLoginUrl } from "@utils/auth";
 import Link from "next/link";
 import { useState } from "react";

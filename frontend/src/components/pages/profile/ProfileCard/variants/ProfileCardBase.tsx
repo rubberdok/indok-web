@@ -1,16 +1,6 @@
-import {
-  Card,
-  CardActionArea,
-  CardActions,
-  CardContent,
-  CardHeader,
-  Grid,
-  Typography,
-  useTheme,
-} from "@material-ui/core";
+import { Button, Card, CardActions, CardContent, CardHeader, Grid } from "@mui/material";
 import Image, { StaticImageData } from "next/image";
 import Link from "next/link";
-import useStyles from "../styles";
 
 type Props = {
   title: string;
@@ -30,29 +20,24 @@ const ProfileCardBase: React.FC<Props> = ({
   alt,
   "data-test-id": dataTestId,
 }) => {
-  const theme = useTheme();
-  const classes = useStyles();
-
   return (
-    <Card className={classes.fullHeightCard}>
-      <Grid container direction="row" alignItems="center" style={{ height: "100%" }}>
-        <Grid container item xs style={{ height: "100%" }} direction="column" justifyContent="space-between">
+    <Card sx={{ height: 1 }}>
+      <Grid container direction="row" alignItems="center" sx={{ height: 1 }}>
+        <Grid container item xs sx={{ height: 1 }} direction="column" justifyContent="space-between">
           <CardHeader title={title} />
           <CardContent>{children}</CardContent>
           {actionText && actionLink && (
-            <CardActionArea>
+            <CardActions data-test-id={`${dataTestId}link`} sx={{ ml: 2, mb: 2 }}>
               <Link passHref href={actionLink}>
-                <CardActions data-test-id={`${dataTestId}link`}>
-                  <Typography variant="overline" color="textPrimary">
-                    {actionText}
-                  </Typography>
-                </CardActions>
+                <Button color="inherit" variant="outlined">
+                  {actionText}
+                </Button>
               </Link>
-            </CardActionArea>
+            </CardActions>
           )}
         </Grid>
         {image && (
-          <Grid item xs={3} style={{ marginRight: theme.spacing(4) }}>
+          <Grid item xs={3} sx={{ mr: 4 }}>
             <Image src={image} layout="responsive" objectFit="contain" alt={alt} />
           </Grid>
         )}

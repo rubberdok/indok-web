@@ -1,8 +1,9 @@
 import { useQuery } from "@apollo/client";
 import { FilterQuery } from "@components/pages/events/AllEvents";
 import { QUERY_EVENT_FILTERED_ORGANIZATIONS } from "@graphql/events/queries";
-import { IconButton, List, ListItem, ListItemText, makeStyles, Tooltip, Typography } from "@material-ui/core";
-import { Refresh, StarBorderRounded, StarRounded } from "@material-ui/icons";
+import { IconButton, List, ListItem, ListItemText, Tooltip, Typography } from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
+import { ArrowCounterClockwise, Star } from "phosphor-react";
 import React from "react";
 import CategoryFilter from "./CategoryFilter";
 import DateTimeFilter from "./DateTimeFilter";
@@ -52,6 +53,7 @@ const useStyles = makeStyles((theme) => ({
   doubleNestedHeader: {
     padding: 0,
     paddingLeft: theme.spacing(4),
+    paddingRight: theme.spacing(2),
     ["&.Mui-selected"]: {
       backgroundColor: theme.palette.primary.main,
       color: "#fff",
@@ -104,7 +106,7 @@ const FilterMenu: React.FC<Props> = ({ filters, onFiltersChange, showDefaultEven
           <ListItemText primary={<Typography variant="h4">Filtre</Typography>} />
           <Tooltip className={classes.tooltip} title="Nullstill filtre" arrow>
             <IconButton disableFocusRipple disableRipple onClick={() => onFiltersChange({})} aria-label="delete">
-              <Refresh />
+              <ArrowCounterClockwise />
             </IconButton>
           </Tooltip>
         </ListItem>
@@ -117,7 +119,7 @@ const FilterMenu: React.FC<Props> = ({ filters, onFiltersChange, showDefaultEven
           }}
         >
           <ListItemText primary={"Fremhevet"} />
-          {showDefaultEvents ? <StarRounded /> : <StarBorderRounded />}
+          {showDefaultEvents ? <Star size={20} weight="fill" /> : <Star size={20} />}
         </ListItem>
 
         <OrganizationFilter

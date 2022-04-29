@@ -1,98 +1,73 @@
-import Layout from "@components/Layout";
-import { Box, Breadcrumbs, Container, makeStyles, Paper, Typography } from "@material-ui/core";
-import Grid from "@material-ui/core/Grid";
+import { Container, Divider, Hidden, Stack, styled, Typography } from "@mui/material";
+import Grid from "@mui/material/Grid";
 import React from "react";
-import Sidebar from "./Sidebar";
+import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "src/theme/constants";
+import AboutPageArrow from "./AboutPageArrow";
+import AboutSidebar from "./AboutSidebar";
 
-const useStyles = makeStyles(() => ({
-  title: {
-    color: "white",
-    zIndex: -1,
-  },
-  titleImage: {
-    width: "100%",
-    height: "100%",
-    backgroundSize: "cover",
-    backgroundRepeat: "no-repeat",
-    backgroundPosition: "center",
-  },
-  navItem: {
-    fontWeight: 600,
-    fontSize: 12,
-    textTransform: "uppercase",
-    color: "black",
-    "&:hover": {
-      cursor: "pointer",
-    },
-  },
-  breadcrumb: {
-    textTransform: "uppercase",
-    marginTop: -24,
-  },
-  heroCard: {
-    marginTop: -112,
-    padding: "56px 64px",
-    textAlign: "center",
-  },
-}));
+type AboutPostProps = {
+  slug: string;
+  title: string;
+  cover?: string;
+};
 
-interface Props {
+type Props = {
   children: React.ReactNode;
   img?: string;
   title: string;
   description: string;
   page: string;
-}
+  prevPost?: AboutPostProps;
+  nextPost?: AboutPostProps;
+};
 
-const Template: React.FC<Props> = ({ children, img, title, description, page }) => {
-  const classes = useStyles();
+const RootStyle = styled("div")(({ theme }) => ({
+  paddingTop: HEADER_MOBILE_HEIGHT,
+  [theme.breakpoints.up("md")]: {
+    paddingTop: HEADER_DESKTOP_HEIGHT,
+  },
+}));
+
+const Template: React.FC<Props> = (props) => {
+  const { children, title, description, prevPost, nextPost } = props;
 
   return (
-    <Layout>
-      <Box mt="-60px" position="relative" className={classes.title} height={500}>
-        <Box
-          display="flex"
-          alignItems="center"
-          flexDirection="column"
-          justifyContent="center"
-          className={classes.titleImage}
-          style={{
-            backgroundImage: `linear-gradient(to top, rgb(2 28 28 / 60%), rgb(1 12 12 / 93%)),
-                  url(${img})`,
-          }}
-        >
-          <Typography variant="h1">{title}</Typography>
-        </Box>
-      </Box>
+    <RootStyle>
       <Container>
-        <Grid justifyContent="center" container>
-          <Grid item xs={12} sm={10}>
-            <Paper className={classes.heroCard}>
-              <Box display="flex" flexDirection="column" alignItems="center">
-                <Box>
-                  <Breadcrumbs className={classes.breadcrumb} aria-label="breadcrumb">
-                    <p>Om oss</p>
-                    <p>{page}</p>
-                  </Breadcrumbs>
-                </Box>
-                <Typography variant="subtitle1">{description}</Typography>
-              </Box>
-            </Paper>
+        <Grid container spacing={8}>
+          <Hidden smDown>
+            <Grid item md={3}>
+              <AboutSidebar />
+            </Grid>
+          </Hidden>
+
+          <Grid item xs={12} md={8}>
+            <Stack
+              spacing={3}
+              sx={{
+                pb: 6,
+                textAlign: "center",
+                pt: { xs: 3, md: 5 },
+              }}
+            >
+              <Typography variant="body2" sx={{ color: "text.disabled" }}>
+                Om foreningen
+              </Typography>
+              <Typography variant="h2" component="h1">
+                {title}
+              </Typography>
+              <Typography variant="h5">{description}</Typography>
+            </Stack>
+
+            <Divider sx={{ mb: 6 }} />
+            <>{children}</>
+            <Divider sx={{ mt: 8 }} />
+
+            {(prevPost || nextPost) && <AboutPageArrow prevPost={prevPost} nextPost={nextPost} />}
           </Grid>
         </Grid>
-
-        <Box pt={8} pb={16}>
-          <Grid container direction="row" justifyContent="center" spacing={5}>
-            <Grid item xs={8}>
-              {children}
-            </Grid>
-            <Grid item xs={4}>
-              <Sidebar />
-            </Grid>
-          </Grid>
-        </Box>
       </Container>
-    </Layout>
+    </RootStyle>
   );
 };
 

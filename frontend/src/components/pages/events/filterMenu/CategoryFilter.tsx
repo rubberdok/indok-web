@@ -2,8 +2,8 @@ import { useQuery } from "@apollo/client";
 import { FilterQuery } from "@components/pages/events/AllEvents";
 import { GET_CATEGORIES } from "@graphql/events/queries";
 import { Category } from "@interfaces/events";
-import { Badge, Collapse, List, ListItem, ListItemText } from "@material-ui/core";
-import { ExpandLess, ExpandMore } from "@material-ui/icons";
+import { Badge, Collapse, List, ListItem, ListItemText } from "@mui/material";
+import { CaretDown, CaretUp } from "phosphor-react";
 import React, { useState } from "react";
 
 interface Props {
@@ -34,7 +34,7 @@ const CategoryFilter: React.FC<Props> = ({ filters, onFiltersChange, classes }) 
         <ListItemText primary={"Type arrangement"} />
         <Badge className={classes.badge} badgeContent={1} color="primary" invisible={!filters.category} />
 
-        {open ? <ExpandLess /> : <ExpandMore />}
+        {open ? <CaretUp size={20} /> : <CaretDown size={20} />}
       </ListItem>
       <Collapse in={open} timeout="auto" unmountOnExit>
         <List disablePadding>

@@ -5,7 +5,8 @@ import { CREATE_LISTING } from "@graphql/listings/mutations";
 import { USER_WITH_ORGANIZATIONS } from "@graphql/listings/queries";
 import { Listing, ListingInput } from "@interfaces/listings";
 import { Organization } from "@interfaces/organizations";
-import { Container, Grid, makeStyles, Typography } from "@material-ui/core";
+import { Container, Grid, Typography } from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import { useRouter } from "next/router";
 import { useState } from "react";
 

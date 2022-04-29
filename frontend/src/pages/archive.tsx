@@ -6,7 +6,8 @@ import { RemoveFiltersButton } from "@components/pages/archive/RemoveFiltersButt
 import SearchBar from "@components/pages/archive/SearchBar";
 import YearSelector from "@components/pages/archive/YearSelector";
 import Title from "@components/Title";
-import { Box, Container, FormGroup, Grid, makeStyles } from "@material-ui/core";
+import { Box, Container, FormGroup, Grid } from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import { NextPage } from "next";
 import React, { useState } from "react";
 import { redirectIfNotLoggedIn } from "src/utils/redirect";

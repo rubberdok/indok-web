@@ -57,6 +57,7 @@ const Breadcrumbs: React.FC<Props> = ({ links, sx, activeLast = false, onDark = 
               opacity: 0.48,
               color: "common.white",
             }),
+            lineHeight: 0,
           }}
         >
           <CaretRight width={16} height={16} />

@@ -1,20 +1,29 @@
-import Layout from "@components/Layout";
+import CabinPrices from "@components/pages/cabins/CabinPrices";
 import ContactCabinBoard from "@components/pages/cabins/ContactCabinBoard";
 import FAQ from "@components/pages/cabins/Documents/FAQ";
 import Hero from "@components/pages/cabins/Hero";
-import CabinPrices from "@components/pages/cabins/CabinPrices";
 import { cabinImages, outsideImages } from "@components/pages/cabins/ImageSlider/imageData";
 import ImageSlider from "@components/pages/cabins/ImageSlider/ImageSlider";
-import { Box, Container, Divider, Grid, Paper, Typography } from "@material-ui/core";
-import { NextPage } from "next";
+import { Box, Container, Divider, Grid, styled, Typography } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import Layout from "src/layouts";
+import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "src/theme/constants";
+import { NextPageWithLayout } from "../_app";
 
 /*
 Front page for cabins. Includes info about the cabins and link to the booking page (cabins/book).
 */
-const CabinsPage: NextPage = () => {
+
+const RootStyle = styled("div")(({ theme }) => ({
+  paddingTop: HEADER_MOBILE_HEIGHT,
+  [theme.breakpoints.up("md")]: {
+    paddingTop: HEADER_DESKTOP_HEIGHT,
+  },
+}));
+
+const CabinsPage: NextPageWithLayout = () => {
   const facilitiesData = [
     {
       icon: <Image alt="" src="/img/undraw_home.svg" width={100} height={100} />,
@@ -75,38 +84,36 @@ const CabinsPage: NextPage = () => {
   ];
 
   return (
-    <Layout>
+    <RootStyle>
       <Hero />
       <Container>
         <Box my={5} id="anchorBox">
-          <Paper>
-            <Box p={5}>
-              <Grid container alignItems="center" spacing={10} direction="column">
-                <Grid item>
-                  <Grid container alignItems="center" spacing={10}>
-                    <Grid xs={12} sm={6} item>
-                      <Box textAlign="center">
-                        <Typography variant="h3">Fasiliteter</Typography>
-                      </Box>
-                      <Divider />
-                      <Box m={3}>
-                        <Grid container spacing={4} justifyContent="center">
-                          {facilitiesData.map((facility) => (
-                            <Grid item md={4} sm={6} xs={6} key={facility.text}>
-                              <Box textAlign="center">
-                                {facility.icon}
-                                <Typography variant={"body2"}>{facility.text}</Typography>
-                              </Box>
-                            </Grid>
-                          ))}
+          <Grid container alignItems="center" spacing={10} direction="column">
+            <Grid item>
+              <Grid container alignItems="center" spacing={10}>
+                <Grid xs={12} sm={6} item>
+                  <Box textAlign="center">
+                    <Typography variant="h3">Fasiliteter</Typography>
+                  </Box>
+                  <Divider />
+                  <Box m={3}>
+                    <Grid container spacing={4} justifyContent="center">
+                      {facilitiesData.map((facility) => (
+                        <Grid item md={4} sm={6} xs={6} key={facility.text}>
+                          <Box textAlign="center">
+                            {facility.icon}
+                            <Typography variant={"body2"}>{facility.text}</Typography>
+                          </Box>
                         </Grid>
-                      </Box>
+                      ))}
                     </Grid>
-                    <Grid xs={12} sm={6} item>
-                      <Typography variant="h3">Indøkhyttene - Oksen og Bjørnen</Typography>
-                      <Divider component="br" />
-                      <Typography variant="body2">
-                        De to identiske nabohyttene ligger idyllisk til, kun et steinkast unna Stølen alpinsenter i
+                  </Box>
+                </Grid>
+                <Grid xs={12} sm={6} item>
+                  <Typography variant="h3">Indøkhyttene - Oksen og Bjørnen</Typography>
+                  <Divider component="br" />
+                  <Typography variant="body2">
+                  De to identiske nabohyttene ligger idyllisk til, kun et steinkast unna Stølen alpinsenter i
                         Oppdal. Hyttene har flere bruksområder; alt fra strategiske samlinger og egne arrangementer til
                         sosiale, spontane venneturer. Det er en gyllen mulighet til å få en liten pause fra det travle
                         bylivet. Indøks egne Hytteturstyre arrangerer flere forskjellige turer i løpet av året. Dette er
@@ -114,17 +121,17 @@ const CabinsPage: NextPage = () => {
                         andre indøkere på tvers av klassetrinnene.{" "}
                         <Link href="/about/organizations/hyttestyret"> Hytteforeningen</Link>
                         har det daglige ansvaret for drift og vedlikehold av Indøkhyttene og organisering av utleie.
-                      </Typography>
-                    </Grid>
-                  </Grid>
+                  </Typography>
                 </Grid>
-                <Grid item>
-                  <Grid container alignItems="center" spacing={10} direction="row">
-                    <Grid item xs={12} sm={6}>
-                      <Typography variant="h3">Hyttenes standard</Typography>
-                      <Divider component="br" />
-                      <Typography variant="body2">
-                        Med sine to etasjer, rommer Bjørnen og Oksen 18 personer per hytte. Den generelle standarden er
+              </Grid>
+            </Grid>
+            <Grid item>
+              <Grid container alignItems="center" spacing={10} direction="row">
+                <Grid item xs={12} sm={6}>
+                  <Typography variant="h3">Hyttenes standard</Typography>
+                  <Divider component="br" />
+                  <Typography variant="body2">
+                  Med sine to etasjer, rommer Bjørnen og Oksen 18 personer per hytte. Den generelle standarden er
                         tilnærmet lik et vanlig bolighus. Begge hyttene har innlagt strøm og vann. I første etasje
                         finner du to bad, hvorav ett med badstue, og tre soverom med tre til fire sengeplasser per rom.
                         I andre etasje ligger stue, kjøkken og et fjerde soverom med sengeplass til tre. Dette gir
@@ -133,79 +140,79 @@ const CabinsPage: NextPage = () => {
                         utstyrt med det mest nødvendige av hvitevarer, i tillegg til kaffetrakter, vannkoker og
                         vaffeljern m.m. Basiskrydder og olje til steking skal også være tilgjengelig. På hyttene ligger
                         det et bredt utvalg brettspill, samt kortstokker. I stua står det en høyttaler med AUX-kabel.
-                      </Typography>
-                    </Grid>
+                  </Typography>
+                </Grid>
 
-                    <Grid item container xs={12} sm={6} justifyContent="center" alignContent="center">
-                      <Box width="90%">
-                        <ImageSlider imageData={cabinImages} displayLabelText={false} />
+                <Grid item container xs={12} sm={6} justifyContent="center" alignContent="center">
+                  <Box width="90%">
+                    <ImageSlider imageData={cabinImages} displayLabelText={false} />
+                  </Box>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item>
+              <Grid container spacing={5} direction="column">
+                <Grid item>
+                  <Typography align="center" variant="h3">
+                    Hvordan komme seg til Indøkhyttene
+                  </Typography>
+                </Grid>
+                <Grid item container spacing={10} direction="row">
+                  {transportData.map((transport, index) => (
+                    <Grid item sm={12} md={3} key={index}>
+                      <Box textAlign="center">
+                        {transport.icon}
+                        <Typography variant="body2">{transport.text}</Typography>
                       </Box>
                     </Grid>
-                  </Grid>
+                  ))}
                 </Grid>
-                <Grid item>
-                  <Grid container spacing={5} direction="column">
-                    <Grid item>
-                      <Typography align="center" variant="h3">
-                        Hvordan komme seg til Indøkhyttene
-                      </Typography>
-                    </Grid>
-                    <Grid item container spacing={10} direction="row">
-                      {transportData.map((transport, index) => (
-                        <Grid item sm={12} md={3} key={index}>
-                          <Box textAlign="center">
-                            {transport.icon}
-                            <Typography variant="body2">{transport.text}</Typography>
-                          </Box>
-                        </Grid>
-                      ))}
-                    </Grid>
-                  </Grid>
-                </Grid>
-                <Grid item container spacing={10} alignItems="center" direction="row">
-                  <Grid item container justifyContent="center" alignContent="center" sm={12} md={6}>
-                    <Box width="90%">
-                      <ImageSlider imageData={outsideImages} displayLabelText={false}></ImageSlider>
-                    </Box>
-                  </Grid>
-                  <Grid item sm={12} md={6}>
-                    <Typography variant="h3">Aktiviteter</Typography>
-                    <Divider component="br" />
-                    <Typography variant="body2">
-                      <b>Sommer</b>: I løpet av sommerhalvåret kan man delta på moskusturer, sykkelturer, fjellturer,
+              </Grid>
+            </Grid>
+            <Grid item container spacing={10} alignItems="center" direction="row">
+              <Grid item container justifyContent="center" alignContent="center" sm={12} md={6}>
+                <Box width="90%">
+                  <ImageSlider imageData={outsideImages} displayLabelText={false}></ImageSlider>
+                </Box>
+              </Grid>
+              <Grid item sm={12} md={6}>
+                <Typography variant="h3">Aktiviteter</Typography>
+                <Divider component="br" />
+                <Typography variant="body2">
+                <b>Sommer</b>: I løpet av sommerhalvåret kan man delta på moskusturer, sykkelturer, fjellturer,
                       rafting, golf, fallskjermhopping, jakt og fiske, rideturer, paintball og mye annet.
-                    </Typography>
-                    <Divider component="br" />
-                    <Typography variant="body2">
-                      <b>Vinter</b>: I løpet av vinterhalvåret er det hovedsakelig alpint og langrenn som står i
+                </Typography>
+                <Divider component="br" />
+                <Typography variant="body2">
+                <b>Vinter</b>: I løpet av vinterhalvåret er det hovedsakelig alpint og langrenn som står i
                       sentrum. Det alpine skiområdet er blant de største i Norge med 14 blå, 10 grønne, 10 røde og 5
                       svarte løyper, og normal skisesong er fra 15. november - 1. mai. Forholdene for langrenn er også
                       gode med hele fem løyper som begynner ved Stølen, alt fra 1,5 km - 15 km løyper. Se{" "}
                       <Link href="https://oppdal.com/forside/hoved/">Visit Oppdal</Link> for mer info.
-                    </Typography>
-                  </Grid>
-                  <Grid item container sm={12}>
-                    <CabinPrices />
-                  </Grid>
-                  <Grid item container spacing={10} direction="row" justifyContent="center" alignContent="center">
-                    <Grid item>
-                      <Typography variant="h3">FAQ</Typography>
-                    </Grid>
-                    <Grid item>
-                      <FAQ />
-                    </Grid>
-                  </Grid>
-                  <Grid item container spacing={10} direction="row" justifyContent="center" alignContent="center">
-                    <ContactCabinBoard />
-                  </Grid>
+                </Typography>
+              </Grid>
+              <Grid item container sm={12}>
+                <CabinPrices />
+              </Grid>
+              <Grid item container spacing={10} direction="row" justifyContent="center" alignContent="center">
+                <Grid item>
+                  <Typography variant="h3">FAQ</Typography>
+                </Grid>
+                <Grid item>
+                  <FAQ />
                 </Grid>
               </Grid>
-            </Box>
-          </Paper>
+              <Grid item container spacing={10} direction="row" justifyContent="center" alignContent="center">
+                <ContactCabinBoard />
+              </Grid>
+            </Grid>
+          </Grid>
         </Box>
       </Container>
-    </Layout>
+    </RootStyle>
   );
 };
+
+CabinsPage.getLayout = (page: React.ReactElement) => <Layout>{page}</Layout>;
 
 export default CabinsPage;

@@ -1,8 +1,8 @@
 import { Organization } from "@interfaces/organizations";
-import { Button, ButtonGroup, Grid, TextField, Typography, CircularProgress } from "@material-ui/core";
+import { Button, ButtonGroup, Grid, TextField, Typography, CircularProgress } from "@mui/material";
 import { useState } from "react";
 import { useLazyQuery } from "@apollo/client";
-import GetAppIcon from "@material-ui/icons/GetApp";
+import GetAppIcon from "@mui/icons-material/GetApp";
 import { QUERY_ATTENDEE_REPORTS, QUERY_ATTENDEE_REPORT_ORG } from "@graphql/events/queries";
 import { promptDownloadFromPayload } from "@utils/exports";
 

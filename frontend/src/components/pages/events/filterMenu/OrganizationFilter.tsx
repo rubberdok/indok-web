@@ -1,7 +1,7 @@
 import { FilterQuery } from "@components/pages/events/AllEvents";
 import { Organization } from "@interfaces/organizations";
-import { Badge, Collapse, List, ListItem, ListItemText } from "@material-ui/core";
-import { ExpandLess, ExpandMore } from "@material-ui/icons";
+import { Badge, Collapse, List, ListItem, ListItemText } from "@mui/material";
+import { CaretDown, CaretUp } from "phosphor-react";
 import React, { useState } from "react";
 import SuborganizationFilter from "./SubOrganizationFilter";
 
@@ -36,7 +36,7 @@ const OrganizationFilter: React.FC<Props> = ({ filters, onFiltersChange, organiz
       <ListItem button onClick={() => setOpen(!open)} selected={open}>
         <ListItemText primary={"Arrangert av"} />
         <Badge className={classes.badge} badgeContent={1} color="primary" invisible={!filters.organization} />
-        {open ? <ExpandLess /> : <ExpandMore />}
+        {open ? <CaretUp size={20} /> : <CaretDown size={20} />}
       </ListItem>
 
       <Collapse in={open} timeout="auto" unmountOnExit>

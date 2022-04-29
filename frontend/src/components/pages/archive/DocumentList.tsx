@@ -1,13 +1,15 @@
 import { useQuery } from "@apollo/client";
 import { ArchiveByTypesDocument } from "@generated/graphql";
-import Button from "@material-ui/core/Button";
-import Card from "@material-ui/core/Card";
-import CardHeader from "@material-ui/core/CardHeader";
-import CardMedia from "@material-ui/core/CardMedia";
-import GridList from "@material-ui/core/GridList";
-import GridListTile from "@material-ui/core/GridListTile";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
+import Button from "@mui/material/Button";
+import Card from "@mui/material/Card";
+import CardHeader from "@mui/material/CardHeader";
+import CardMedia from "@mui/material/CardMedia";
+import ImageList from "@mui/material/ImageList";
+import ImageListItem from "@mui/material/ImageListItem";
+import { Theme } from "@mui/material/styles";
+import createStyles from "@mui/styles/createStyles";
+import makeStyles from "@mui/styles/makeStyles";
+import Typography from "@mui/material/Typography";
 import React, { useEffect } from "react";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -66,10 +68,10 @@ const DocumentList: React.FC<DocumentListProps> = ({ document_types, year, names
       <Typography variant="h4" gutterBottom>
         Alle dokumenter
       </Typography>
-      <GridList cellHeight={"auto"} className={classes.img} cols={4} spacing={8}>
+      <ImageList cellHeight={"auto"} className={classes.img} cols={4} spacing={8}>
         {data?.archiveByTypes.length ? (
           data?.archiveByTypes.map((doc) => (
-            <GridListTile key={doc.id}>
+            <ImageListItem key={doc.id}>
               <Card className={classes.root} elevation={1}>
                 <Button
                   key={doc.id}
@@ -113,12 +115,12 @@ const DocumentList: React.FC<DocumentListProps> = ({ document_types, year, names
                   />
                 </Button>
               </Card>
-            </GridListTile>
+            </ImageListItem>
           ))
         ) : (
           <Typography> Fant ingen dokumenter som samsvarer med søket ditt </Typography>
         )}
-      </GridList>
+      </ImageList>
     </>
   );
 };

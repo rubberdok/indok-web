@@ -1,4 +1,6 @@
-import { Card, CardContent, makeStyles } from "@material-ui/core";
+import { Card, CardContent } from "@mui/material";
+
+import makeStyles from "@mui/styles/makeStyles";
 
 const useStyles = makeStyles((theme) => ({
   root: {

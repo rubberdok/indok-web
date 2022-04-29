@@ -1,42 +1,31 @@
-import Layout from "@components/Layout";
+import Breadcrumbs from "@components/Breadcrumbs";
 import AllEvents from "@components/pages/events/AllEvents";
-import { Box, Container, Hidden, makeStyles, Tab, Tabs, Typography, useTheme } from "@material-ui/core";
-import { NextPage } from "next";
+import { Box, Container, styled, Tab, Tabs, Typography } from "@mui/material";
 import React, { useState } from "react";
-
-const useStyles = makeStyles((theme) => ({
-  container: {
-    paddingTop: theme.spacing(4),
-    paddingBottom: theme.spacing(8),
-  },
-  anniversary: {
-    transition: "0.7s all ease",
-    background: "url('/static/anniversary/anniversary_logo_black.svg')",
-    backgroundSize: "contain",
-    backgroundPosition: "right",
-    backgroundRepeat: "no-repeat",
-    opacity: 0.05,
-    height: "120%",
-    marginRight: "10%",
-    right: 0,
-    top: 0,
-  },
-}));
+import Layout from "src/layouts";
+import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "src/theme/constants";
+import { NextPageWithLayout } from "../_app";
 
 /**
  * Component for showing the list page for event (for showing all events)
  */
 
-const Events: NextPage = () => {
-  const classes = useStyles();
-  const theme = useTheme();
+const RootStyle = styled("div")(({ theme }) => ({
+  paddingTop: HEADER_MOBILE_HEIGHT,
+  [theme.breakpoints.up("md")]: {
+    paddingTop: HEADER_DESKTOP_HEIGHT,
+  },
+}));
+
+const Events: NextPageWithLayout = () => {
   const [showCalendarView, setShowCalenderView] = useState(false);
 
   return (
-    <Layout>
-      <Box width="100%" pt={10} position="relative" overflow="hidden" bgcolor={theme.palette.background.paper}>
+    <RootStyle>
+      <Box width={1} pt={5} position="relative" bgcolor="background.neutral">
         <Container>
-          <Typography variant="h1" gutterBottom>
+          <Breadcrumbs sx={{ mb: { xs: 5, md: 8 } }} links={[{ name: "Hjem", href: "/" }, { name: "Arrangementer" }]} />
+          <Typography variant="h1" mb={4}>
             Arrangementer
           </Typography>
           <Tabs
@@ -49,11 +38,8 @@ const Events: NextPage = () => {
             <Tab label="Kalender" />
           </Tabs>
         </Container>
-        <Hidden xsDown>
-          <Box className={classes.anniversary} position="absolute" width="100vw" height="100vh" />
-        </Hidden>
       </Box>
-      <Container className={classes.container}>
+      <Container sx={{ mb: 10, mt: 6 }}>
         {showCalendarView ? (
           <iframe
             src="https://calendar.google.com/calendar/embed?src=sp3rre4hhjfofj8124jp5k093o%40group.calendar.google.com&ctz=Europe%2FOslo"
@@ -68,8 +54,12 @@ const Events: NextPage = () => {
           <AllEvents />
         )}
       </Container>
-    </Layout>
+    </RootStyle>
   );
+};
+
+Events.getLayout = function getLayout(page: React.ReactElement) {
+  return <Layout>{page}</Layout>;
 };
 
 export default Events;

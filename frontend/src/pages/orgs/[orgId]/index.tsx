@@ -1,14 +1,20 @@
 import { useQuery } from "@apollo/client";
-import Layout from "@components/Layout";
+import OrganizationHero from "@components/organization/OrganizationHero";
+import OrgEvents from "@components/pages/events/org/OrgEvents";
+import OrganizationListings from "@components/pages/listings/organization/OrganizationListings";
 import { GET_ORGANIZATION } from "@graphql/orgs/queries";
 import { Organization } from "@interfaces/organizations";
-import { Box, CircularProgress, Grid, Typography } from "@material-ui/core";
-import { NextPage } from "next";
+import { CircularProgress, Container, Stack, styled } from "@mui/material";
 import { useRouter } from "next/router";
-import OrganizationListings from "@components/pages/listings/organization/OrganizationListings";
-import OrgEvents from "@components/pages/events/org/OrgEvents";
+import { useState } from "react";
+import Layout from "src/layouts";
+import { NextPageWithLayout } from "src/pages/_app";
 
-const OrganizationDetailPage: NextPage = () => {
+const RootStyle = styled("div")(({ theme }) => ({
+  margin: theme.spacing(4, 0),
+}));
+
+const OrganizationDetailPage: NextPageWithLayout = () => {
   const router = useRouter();
   const { orgId } = router.query;
   const orgNumberId = parseInt(orgId as string);
@@ -18,28 +24,35 @@ const OrganizationDetailPage: NextPage = () => {
     skip: Number.isNaN(orgNumberId),
   });
 
+  const [activeTab, setActiveTab] = useState<number>(0);
+
+  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+    setActiveTab(newValue);
+  };
+
   if (error) return <p>Error</p>;
-  if (loading) return <CircularProgress />;
+  if (!data || loading) return <CircularProgress />;
 
   return (
-    <Layout>
-      <Box m={10}>
-        {data?.organization && (
-          <>
-            <Grid container spacing={5} direction="column" justifyContent="flex-start">
-              <Grid item>
-                <Typography variant="h1">{data.organization.name}</Typography>
-              </Grid>
-              <Grid item>{data.organization.events && <OrgEvents organization={data.organization} />}</Grid>
-              <Grid item>
-                {data.organization.listings && <OrganizationListings organization={data.organization} />}
-              </Grid>
-            </Grid>
-          </>
-        )}
-      </Box>
-    </Layout>
+    <>
+      <OrganizationHero handleTabChange={handleTabChange} activeTab={activeTab} organization={data.organization} />
+
+      <RootStyle>
+        <Container>
+          {data?.organization && (
+            <Stack spacing={4}>
+              {activeTab == 0 && data.organization.events && <OrgEvents organization={data.organization} />}
+              {activeTab == 1 && data.organization.listings && (
+                <OrganizationListings organization={data.organization} />
+              )}
+            </Stack>
+          )}
+        </Container>
+      </RootStyle>
+    </>
   );
 };
+
+OrganizationDetailPage.getLayout = (page: React.ReactElement) => <Layout>{page}</Layout>;
 
 export default OrganizationDetailPage;

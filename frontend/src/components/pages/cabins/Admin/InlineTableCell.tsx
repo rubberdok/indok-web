@@ -1,4 +1,4 @@
-import { TableCell } from "@material-ui/core";
+import { TableCell } from "@mui/material";
 
 const InlineTableCell: React.FC = ({ children }) => {
   return (
