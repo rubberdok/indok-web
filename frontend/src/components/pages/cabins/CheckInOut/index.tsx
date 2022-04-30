@@ -3,7 +3,7 @@ import LabeledIcon from "@components/LabeledIcon";
 import useDisabledDates from "@hooks/cabins/useDisabledDates";
 import useResponsive from "@hooks/useResponsive";
 import { Cabin, DatePick } from "@interfaces/cabins";
-import { Checkbox, Divider, Stack, Typography } from "@mui/material";
+import { Checkbox, Divider, Paper, Stack, Typography } from "@mui/material";
 import { NextPage } from "next";
 import React from "react";
 
@@ -28,12 +28,18 @@ const CheckInOut: NextPage<Props> = ({ allCabins, chosenCabins, setChosenCabins,
     });
   };
   return (
-    <Stack direction={{ xs: "column", md: "row" }} alignItems={{ xs: "stretch", md: "center" }} spacing={2}>
+    <Stack
+      direction={{ xs: "column", md: "row" }}
+      alignItems={{ xs: "stretch", md: "flex-start" }}
+      spacing={{ xs: 2, md: 4 }}
+    >
       <Stack
         direction={{ xs: "row", md: "column" }}
         alignItems={{ xs: "center", md: "flex-start" }}
         spacing={1}
         minWidth={200}
+        bgcolor="grey.200"
+        p={3}
       >
         <Typography variant="h5">Velg hytte</Typography>
 
@@ -59,12 +65,14 @@ const CheckInOut: NextPage<Props> = ({ allCabins, chosenCabins, setChosenCabins,
         ))}
       </Stack>
       {isMobile && <Divider sx={{ my: 2 }} />}
-      <Calendar
-        title="Velg innsjekk og utsjekk"
-        disabledDates={disabledDates}
-        disableAll={chosenCabins.length === 0}
-        onRangeChange={handleRangeChange}
-      />
+      <Paper sx={{ p: 3, bgcolor: "grey.200", width: 1 }}>
+        <Calendar
+          title="Velg innsjekk og utsjekk"
+          disabledDates={disabledDates}
+          disableAll={chosenCabins.length === 0}
+          onRangeChange={handleRangeChange}
+        />
+      </Paper>
     </Stack>
   );
 };

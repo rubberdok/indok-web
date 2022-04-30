@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client/react";
 import { GET_USER } from "@graphql/users/queries";
-import { ContactInfo, InputFieldsEvent, ContactInfoValidations, Cabin } from "@interfaces/cabins";
+import { Cabin, ContactInfo, ContactInfoValidations, InputFieldsEvent } from "@interfaces/cabins";
 import { User } from "@interfaces/users";
 import { Grid } from "@mui/material";
 import { NextPage } from "next";
@@ -36,6 +36,7 @@ const CabinContactInfo: NextPage<ContractInfoProps> = ({
         receiverEmail: data.user.email,
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   const handleInputChange = (name: string, event: InputFieldsEvent) => {
