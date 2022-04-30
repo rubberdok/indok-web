@@ -87,9 +87,7 @@ const NavigationMobile: React.FC<NavigationMobileProps> = ({ navigationConfig, s
         </Box>
 
         <List sx={{ px: 0 }}>
-          {navigationConfig.map((link) => (
-            <NavItemMobile key={link.title} item={link} />
-          ))}
+          {navigationConfig.map((link) => !(link.title === "Arkiv") && <NavItemMobile key={link.title} item={link} />)}
         </List>
 
         <Stack spacing={2} sx={{ p: 2.5, pb: 5 }}>
