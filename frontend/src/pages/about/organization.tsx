@@ -1,10 +1,10 @@
-import Image from "@components/Image";
 import TabPanel from "@components/pages/about/TabPanel";
 import Template from "@components/pages/about/Template";
-import { Card, CardActionArea, CardMedia, styled, Tab, Tabs, Typography } from "@mui/material";
+import { Box, Card, CardActionArea, CardMedia, styled, Tab, Tabs, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { getSortedPosts } from "@utils/posts";
 import { GetStaticProps } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import Router, { useRouter } from "next/router";
 import React from "react";
@@ -93,7 +93,9 @@ const OrganizationPage: NextPageWithLayout<Props> = ({ posts }: Props) => {
       prevPost={{ title: "Om oss", slug: "/about", cover: "/img/hero.jpg" }}
       nextPost={{ title: "Les om Hovedstyret", slug: "/about/board", cover: "/img/hero.jpg" }}
     >
-      <Image src="/img/orgmap.svg" alt="Foreningskart" />
+      <Box width={1} position="relative" height={{ xs: 400, md: 460 }}>
+        <Image src="/img/orgmap.svg" alt="Foreningskart" layout="fill" />
+      </Box>
       <Typography id="orgList" variant="h3" gutterBottom>
         Se foreningene våre under
       </Typography>
