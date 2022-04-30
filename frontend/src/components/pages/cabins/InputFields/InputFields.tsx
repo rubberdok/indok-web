@@ -79,6 +79,7 @@ export const InputFields: React.FC<Props> = ({ contactInfo, validations, onChang
           <FormControl fullWidth>
             <InputLabel>Antall indøkere</InputLabel>
             <Select
+              label="Antall indøkere"
               defaultValue={0}
               onChange={(e) => onChange("internalParticipants", e)}
               name="internalParticipants"
@@ -99,6 +100,7 @@ export const InputFields: React.FC<Props> = ({ contactInfo, validations, onChang
             <InputLabel>Antall eksterne</InputLabel>
             <Select
               defaultValue={0}
+              label="Antall eksterne"
               onChange={(e) => onChange("externalParticipants", e)}
               name="externalParticipants"
               error={!validations?.externalParticipants && errorTrigger}

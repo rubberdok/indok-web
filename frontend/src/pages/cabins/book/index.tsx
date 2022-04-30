@@ -10,7 +10,6 @@ import {
   Button,
   Card,
   Container,
-  Grid,
   MobileStepper,
   Stack,
   Step,
@@ -149,11 +148,7 @@ const CabinBookingPage: NextPageWithLayout = () => {
       disableHoverListener={stepReady[activeStep].ready}
     >
       <Box display={activeStep == 4 ? "none" : "block"}>
-        <Button
-          onClick={handleNextClick}
-          disabled={!stepReady[activeStep].ready}
-          variant={isMobile ? "text" : "contained"}
-        >
+        <Button onClick={handleNextClick} disabled={!stepReady[activeStep].ready} size="large" variant="contained">
           {activeStep == 3 ? "Send søknad" : "Neste"}
           <KeyboardArrowRight />
         </Button>
@@ -162,11 +157,12 @@ const CabinBookingPage: NextPageWithLayout = () => {
   );
 
   const BackButton = () => (
-    <Box display={activeStep == 4 ? "none" : "block"}>
+    <Box display={activeStep == 4 ? "none" : "block"} sx={{ opacity: activeStep === 0 ? 0 : 1 }}>
       <Button
+        size="large"
         onClick={() => setActiveStep((prev) => prev - 1)}
         disabled={activeStep === 0}
-        variant={isMobile ? "text" : "contained"}
+        variant="contained"
       >
         <KeyboardArrowLeft />
         Tilbake
@@ -217,20 +213,32 @@ const CabinBookingPage: NextPageWithLayout = () => {
               setExtraInfo={setExtraInfo}
             />
           ) : (
-            <Card sx={{ px: 4, py: 6 }}>
-              <StepComponent
-                cabinQuery={cabinQuery}
-                activeStep={activeStep}
-                chosenCabins={chosenCabins}
-                contactInfo={contactInfo}
-                datePick={datePick}
-                errorTrigger={errorTrigger}
-                validations={validations}
-                setContactInfo={setContactInfo}
-                setChosenCabins={setChosenCabins}
-                setDatePick={setDatePick}
-                setExtraInfo={setExtraInfo}
-              />
+            <Card>
+              <Box sx={{ px: 4, py: 4 }}>
+                <StepComponent
+                  cabinQuery={cabinQuery}
+                  activeStep={activeStep}
+                  chosenCabins={chosenCabins}
+                  contactInfo={contactInfo}
+                  datePick={datePick}
+                  errorTrigger={errorTrigger}
+                  validations={validations}
+                  setContactInfo={setContactInfo}
+                  setChosenCabins={setChosenCabins}
+                  setDatePick={setDatePick}
+                  setExtraInfo={setExtraInfo}
+                />
+              </Box>
+              <Stack
+                width={1}
+                direction="row"
+                justifyContent="space-between"
+                borderTop="1px solid"
+                borderColor="divider"
+              >
+                <BackButton />
+                <NextButton />
+              </Stack>
             </Card>
           )}
         </Stack>
@@ -245,20 +253,13 @@ const CabinBookingPage: NextPageWithLayout = () => {
             sx={{ boxShadow: theme.shadows[24] }}
           />
         ) : (
-          <Grid item container justifyContent="space-between">
-            <BackButton />
-            <NextButton />
-          </Grid>
+          <></>
         )}
       </Container>
     </RootStyle>
   );
 };
 
-CabinBookingPage.getLayout = (page: React.ReactElement) => (
-  <Layout simpleFooter simpleHeader>
-    {page}
-  </Layout>
-);
+CabinBookingPage.getLayout = (page: React.ReactElement) => <Layout simpleHeader>{page}</Layout>;
 
 export default CabinBookingPage;
