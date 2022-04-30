@@ -3,7 +3,7 @@ import LabeledIcon from "@components/LabeledIcon";
 import useDisabledDates from "@hooks/cabins/useDisabledDates";
 import useResponsive from "@hooks/useResponsive";
 import { Cabin, DatePick } from "@interfaces/cabins";
-import { Checkbox, Divider, Paper, Stack, Typography } from "@mui/material";
+import { Checkbox, Divider, Paper, Stack, Typography, useTheme } from "@mui/material";
 import { NextPage } from "next";
 import React from "react";
 
@@ -19,6 +19,8 @@ One of the steps in the cabins/book page. In this step the user chooses a cabin 
 const CheckInOut: NextPage<Props> = ({ allCabins, chosenCabins, setChosenCabins, setDatePick }) => {
   const { disabledDates } = useDisabledDates(chosenCabins);
   const isMobile = useResponsive("down", "md");
+  const theme = useTheme();
+  const isLight = theme.palette.mode === "light";
 
   const handleRangeChange = (fromDate: string | undefined, toDate: string | undefined, validRange: boolean) => {
     setDatePick({
@@ -34,12 +36,15 @@ const CheckInOut: NextPage<Props> = ({ allCabins, chosenCabins, setChosenCabins,
       spacing={{ xs: 2, md: 4 }}
     >
       <Stack
+        component={Paper}
         direction={{ xs: "row", md: "column" }}
         alignItems={{ xs: "center", md: "flex-start" }}
         spacing={1}
         minWidth={200}
         bgcolor="grey.200"
         p={3}
+        sx={{ bgcolor: (theme) => (theme.palette.mode === "dark" ? "grey.800" : "grey.200") }}
+        variant={isLight ? undefined : "outlined"}
       >
         <Typography variant="h5">Velg hytte</Typography>
 
@@ -65,7 +70,10 @@ const CheckInOut: NextPage<Props> = ({ allCabins, chosenCabins, setChosenCabins,
         ))}
       </Stack>
       {isMobile && <Divider sx={{ my: 2 }} />}
-      <Paper sx={{ p: 3, bgcolor: "grey.200", width: 1 }}>
+      <Paper
+        variant={isLight ? undefined : "outlined"}
+        sx={{ p: 3, bgcolor: (theme) => (theme.palette.mode === "dark" ? "grey.800" : "grey.200"), width: 1 }}
+      >
         <Calendar
           title="Velg innsjekk og utsjekk"
           disabledDates={disabledDates}
