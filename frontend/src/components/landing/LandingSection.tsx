@@ -1,6 +1,4 @@
-// icons
 import { Box, Button, Container, Grid, Typography } from "@mui/material";
-// @mui
 import { styled } from "@mui/material/styles";
 
 const RootStyle = styled("div")(({ theme }) => ({
