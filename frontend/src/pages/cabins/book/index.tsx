@@ -64,6 +64,7 @@ const RootStyle = styled("div")(({ theme }) => ({
   [theme.breakpoints.down("md")]: {
     backgroundColor: theme.palette.background.default,
     padding: 0,
+    paddingBottom: theme.spacing(4),
   },
 }));
 
@@ -148,7 +149,12 @@ const CabinBookingPage: NextPageWithLayout = () => {
       disableHoverListener={stepReady[activeStep].ready}
     >
       <Box display={activeStep == 4 ? "none" : "block"}>
-        <Button onClick={handleNextClick} disabled={!stepReady[activeStep].ready} size="large" variant="contained">
+        <Button
+          onClick={handleNextClick}
+          disabled={!stepReady[activeStep].ready}
+          size={isMobile ? "small" : "large"}
+          variant="contained"
+        >
           {activeStep == 3 ? "Send søknad" : "Neste"}
           <KeyboardArrowRight />
         </Button>
@@ -159,7 +165,7 @@ const CabinBookingPage: NextPageWithLayout = () => {
   const BackButton = () => (
     <Box display={activeStep == 4 ? "none" : "block"} sx={{ opacity: activeStep === 0 ? 0 : 1 }}>
       <Button
-        size="large"
+        size={isMobile ? "small" : "large"}
         onClick={() => setActiveStep((prev) => prev - 1)}
         disabled={activeStep === 0}
         variant="contained"
