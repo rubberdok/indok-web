@@ -1,4 +1,3 @@
-import Layout from "@components/Layout";
 import DocumentList from "@components/pages/archive/DocumentList";
 import FeaturedDocumentsList from "@components/pages/archive/FeaturedDocumentsList";
 import FilterButtons from "@components/pages/archive/FilterButtons";
@@ -6,22 +5,21 @@ import { RemoveFiltersButton } from "@components/pages/archive/RemoveFiltersButt
 import SearchBar from "@components/pages/archive/SearchBar";
 import YearSelector from "@components/pages/archive/YearSelector";
 import Title from "@components/Title";
-import { Box, Container, FormGroup, Grid } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
-import { NextPage } from "next";
+import { Box, Container, FormGroup, Grid, styled } from "@mui/material";
 import React, { useState } from "react";
+import Layout from "src/layouts";
+import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "src/theme/constants";
 import { redirectIfNotLoggedIn } from "src/utils/redirect";
+import { NextPageWithLayout } from "./_app";
 
-const useStyles = makeStyles((theme) => ({
-  container: {
-    paddingTop: theme.spacing(4),
-    paddingBottom: theme.spacing(4),
+const RootStyle = styled("div")(({ theme }) => ({
+  paddingTop: HEADER_MOBILE_HEIGHT,
+  [theme.breakpoints.up("md")]: {
+    paddingTop: HEADER_DESKTOP_HEIGHT,
   },
 }));
 
-const Archive: NextPage = () => {
-  const classes = useStyles();
-
+const Archive: NextPageWithLayout = () => {
   const [yearFilter, setYearFilter] = useState("");
 
   const [searchFilter, setSearchFilter] = useState("");
@@ -43,10 +41,10 @@ const Archive: NextPage = () => {
   }
 
   return (
-    <Layout>
+    <RootStyle>
       <Title>Arkiv</Title>
 
-      <Container className={classes.container}>
+      <Container>
         <Grid container spacing={4}>
           <Grid item xs={12} md={6}>
             <FormGroup row>
@@ -67,8 +65,8 @@ const Archive: NextPage = () => {
           <Grid item xs={12} md={6}>
             <SearchBar
               searchFilter={searchFilter}
-              handleSearchFilterChanged={(newValue: string) => {
-                [setSearchFilter(newValue), setViewFeatured(false)];
+              handleSearchFilterChanged={(event: React.ChangeEvent<HTMLInputElement>) => {
+                [setSearchFilter(event.target.value), setViewFeatured(false)];
               }}
               handleSearchFilterCanceled={() => setSearchFilter("")}
             />
@@ -114,8 +112,10 @@ const Archive: NextPage = () => {
           names={searchFilter}
         />
       </Container>
-    </Layout>
+    </RootStyle>
   );
 };
+
+Archive.getLayout = (page: React.ReactElement) => <Layout>{page}</Layout>;
 
 export default Archive;

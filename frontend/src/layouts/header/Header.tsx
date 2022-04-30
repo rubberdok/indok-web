@@ -39,6 +39,7 @@ const Header: React.FC<Props> = ({ transparent }) => {
 
           {isDesktop && (
             <NavigationDesktop
+              loggedIn={loggedIn}
               isScrolling={isScrolling}
               isTransparent={transparent}
               navigationConfig={navigationConfig}

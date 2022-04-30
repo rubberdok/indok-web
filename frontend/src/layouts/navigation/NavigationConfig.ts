@@ -12,4 +12,5 @@ export const navigationConfig: NavigationItemType[] = [
   },
   { title: "Verv", path: "/listings" },
   { title: "Hyttebooking", path: "/cabins" },
+  { title: "Arkiv", path: "/archive" },
 ];

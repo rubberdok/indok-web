@@ -62,9 +62,15 @@ type NavigationDesktopProps = {
   isScrolling?: boolean;
   isTransparent?: boolean;
   navigationConfig: NavigationItemType[];
+  loggedIn: boolean;
 };
 
-const NavigationDesktop: React.FC<NavigationDesktopProps> = ({ isScrolling, isTransparent, navigationConfig }) => {
+const NavigationDesktop: React.FC<NavigationDesktopProps> = ({
+  isScrolling,
+  isTransparent,
+  navigationConfig,
+  loggedIn,
+}) => {
   return (
     <Stack
       direction="row"
@@ -80,9 +86,17 @@ const NavigationDesktop: React.FC<NavigationDesktopProps> = ({ isScrolling, isTr
         }),
       }}
     >
-      {navigationConfig.map((link) => (
-        <NavigationItemDesktop key={link.title} item={link} isScrolling={isScrolling} isTransparent={isTransparent} />
-      ))}
+      {navigationConfig.map(
+        (link) =>
+          !(!loggedIn && link.title === "Arkiv") && (
+            <NavigationItemDesktop
+              key={link.title}
+              item={link}
+              isScrolling={isScrolling}
+              isTransparent={isTransparent}
+            />
+          )
+      )}
     </Stack>
   );
 };
