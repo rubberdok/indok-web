@@ -1,21 +1,9 @@
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import { Grid, Hidden, IconButton, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
 import dayjs from "dayjs";
 import React, { ReactElement } from "react";
 import { DAYS_IN_WEEK } from "./constants";
-
-const useStyles = makeStyles(() => ({
-  table: {
-    width: "100%",
-  },
-  weekday: {
-    color: "#121414",
-    textTransform: "uppercase",
-    fontSize: 12,
-  },
-}));
 
 interface Props {
   month: dayjs.Dayjs;
@@ -24,8 +12,6 @@ interface Props {
 }
 
 const CalendarTable: React.FC<Props> = ({ month, onChangeMonth, children }) => {
-  const classes = useStyles();
-
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   return (
@@ -45,11 +31,21 @@ const CalendarTable: React.FC<Props> = ({ month, onChangeMonth, children }) => {
           </IconButton>
         </Hidden>
       </Grid>
-      <Grid component="table" className={classes.table}>
+      <Grid component="table" sx={{ width: 1 }}>
         <Grid container component="thead">
           <Grid item container xs component="tr">
             {DAYS_IN_WEEK.map((dow: string) => (
-              <Grid item xs component="th" key={dow} className={classes.weekday}>
+              <Grid
+                item
+                xs
+                component="th"
+                key={dow}
+                sx={{
+                  textTransform: "uppercase",
+                  fontSize: 12,
+                  color: (theme) => (theme.palette.mode === "dark" ? "grey.200" : "grey.800"),
+                }}
+              >
                 {dow}
               </Grid>
             ))}
