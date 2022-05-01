@@ -1,3 +1,4 @@
+import { useMediaQuery } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import { createTheme, ThemeOptions, ThemeProvider as MUIThemeProvider } from "@mui/material/styles";
 import { ReactNode, useMemo } from "react";
@@ -11,17 +12,17 @@ type Props = {
 };
 
 const ThemeWrapper: React.FC<Props> = ({ children }) => {
-  const lightMode = true;
+  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
 
   const themeOptions: ThemeOptions = useMemo(
     () => ({
-      palette: lightMode ? palette.light : palette.dark,
+      palette: prefersDarkMode ? palette.dark : palette.light,
       shape: { borderRadius: 0 },
-      shadows: lightMode ? shadows.light : shadows.dark,
-      customShadows: lightMode ? customShadows.light : customShadows.dark,
+      shadows: prefersDarkMode ? shadows.dark : shadows.light,
+      customShadows: prefersDarkMode ? customShadows.dark : customShadows.light,
       typography,
     }),
-    [lightMode]
+    [prefersDarkMode]
   );
 
   const theme = createTheme(themeOptions);
