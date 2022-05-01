@@ -191,9 +191,7 @@ const OrganizationPage: NextPageWithLayout<Props> = ({ posts }) => {
   );
 };
 
-OrganizationPage.getLayout = function getLayout(page: React.ReactElement) {
-  return <Layout>{page}</Layout>;
-};
+OrganizationPage.getLayout = (page: React.ReactElement) => <Layout>{page}</Layout>;
 
 export const getStaticProps: GetStaticProps = async () => {
   const posts = getSortedPosts("organizations");
