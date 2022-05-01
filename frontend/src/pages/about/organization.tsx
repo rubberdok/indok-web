@@ -11,16 +11,19 @@ import React from "react";
 import Layout from "src/layouts";
 import { NextPageWithLayout } from "../_app";
 
-type Props = {
-  slug: string;
+type Post = {
   frontmatter: {
     title: string;
     image?: string;
     tag?: string;
     logo: string;
   };
-  posts: Array<any>;
+  slug: string;
 };
+
+type Props = {
+  posts: Post[];
+} & Post;
 
 const StyledCardActionArea = styled(CardActionArea)(({ theme }) => ({
   display: "flex",
@@ -58,7 +61,7 @@ const routes: { [key: string]: { id: number; title: string } } = {
   },
 };
 
-const OrganizationPage: NextPageWithLayout<Props> = ({ posts }: Props) => {
+const OrganizationPage: NextPageWithLayout<Props> = ({ posts }) => {
   const router = useRouter();
   const value = typeof router.query.category == "string" ? routes[router.query.category].id : 0;
 
@@ -121,7 +124,7 @@ const OrganizationPage: NextPageWithLayout<Props> = ({ posts }: Props) => {
       <Grid container spacing={2}>
         {posts
           .filter((post) => (router.query.category != undefined ? post.frontmatter.tag == router.query.category : post))
-          .map(({ frontmatter: { title, logo }, slug }: Props) => (
+          .map(({ frontmatter: { title, logo }, slug }) => (
             <Grid key={slug} item xs={12} sm={6} md={4}>
               <Card>
                 <Link href={"/about/organizations/[slug]"} as={`/about/organizations/${slug}`} passHref>

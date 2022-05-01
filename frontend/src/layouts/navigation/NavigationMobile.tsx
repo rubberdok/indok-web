@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Collapse,
   Drawer,
   IconButton,
@@ -11,13 +10,13 @@ import {
   Stack,
 } from "@mui/material";
 import { alpha, styled, SxProps } from "@mui/material/styles";
-import { generateFeideLoginUrl } from "@utils/auth";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
-import { CaretDown, CaretUp, List as MenuIcon, User } from "phosphor-react";
+import { CaretDown, CaretUp, List as MenuIcon } from "phosphor-react";
 import { useEffect, useState } from "react";
 import { Logo } from "../../components";
 import { DRAWER_WIDTH } from "../../theme/constants";
+import LoginButton from "../components/LoginButton";
 import { NavigationItemType } from "./NavigationConfig";
 
 interface LinkStyleProps extends ListItemButtonProps {
@@ -42,11 +41,10 @@ const LinkStyle = styled(ListItemButton, {
 
 type NavigationMobileProps = {
   navigationConfig: NavigationItemType[];
-  loggedIn: boolean;
   sx: SxProps;
 };
 
-const NavigationMobile: React.FC<NavigationMobileProps> = ({ navigationConfig, sx, loggedIn }) => {
+const NavigationMobile: React.FC<NavigationMobileProps> = ({ navigationConfig, sx }) => {
   const { pathname } = useRouter();
   const [drawerOpen, setDrawerOpen] = useState(false);
 
@@ -64,8 +62,6 @@ const NavigationMobile: React.FC<NavigationMobileProps> = ({ navigationConfig, s
   const handleDrawerClose = () => {
     setDrawerOpen(false);
   };
-
-  const signInURL = generateFeideLoginUrl();
 
   return (
     <>
@@ -91,17 +87,7 @@ const NavigationMobile: React.FC<NavigationMobileProps> = ({ navigationConfig, s
         </List>
 
         <Stack spacing={2} sx={{ p: 2.5, pb: 5 }}>
-          {loggedIn ? (
-            <NextLink href="/profile" passHref>
-              <Button endIcon={<User />} variant="contained" color="inherit">
-                Min side
-              </Button>
-            </NextLink>
-          ) : (
-            <Button variant="contained" href={signInURL} target="_blank" rel="noopener">
-              Logg inn
-            </Button>
-          )}
+          <LoginButton />
         </Stack>
       </Drawer>
     </>
