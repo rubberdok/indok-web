@@ -16,7 +16,7 @@ const CabinPrices: React.VFC = () => {
         <Typography variant="h3">Priser</Typography>
         <Divider component="br" />
         <Typography variant="body2">
-          Sengeplasser kan kun bookes hvis det er med minst en indøker. Hvis ikke må hele hytta leies for eksternpris.
+          Sengeplasser kan bookes for grupper under 10 personer, med minst en indøker. Hele hytta kan bookes for både interne og eksterne, se pris.
         </Typography>
       </Grid>
       <Grid item container xs={12} sm={6} spacing={2}>
