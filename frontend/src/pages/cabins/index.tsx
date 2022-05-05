@@ -26,7 +26,7 @@ const CabinsPage: NextPage = () => {
     },
     {
       icon: <Image alt="" src="/img/undraw_speaker.svg" width={100} height={100} />,
-      text: "Høyttaleranlegg",
+      text: "Høyttaler",
     },
     {
       icon: <Image alt="" src="/img/undraw_bed.svg" width={100} height={100} />,
@@ -47,8 +47,7 @@ const CabinsPage: NextPage = () => {
       icon: <Image alt="" src="/img/undraw_bus_stop.svg" width={200} height={200} />,
       text: (
         <Typography component="span">
-          Kom deg til Oppdal med <Link href="https://www.atb.no/buss-regioner/">AtB Region</Link> eller{" "}
-          <Link href="https://www.lavprisekspressen.no/">Lavprisekspressen</Link>.
+          Kom deg til Oppdal med <Link href="https://www.atb.no/">AtB</Link>.
         </Typography>
       ),
     },
@@ -56,8 +55,7 @@ const CabinsPage: NextPage = () => {
       icon: <Image alt="" src="/img/undraw_off_road.svg" width={200} height={200} />,
       text: (
         <Typography component="span">
-          <Link href="https://www.sixt.no/">Sixt</Link>: pris ca. 1200,- for en helg, ekskl. bensin. Kjøretiden er ca.
-          to timer.
+          Kjøretid med bil er ca. to timer.
         </Typography>
       ),
     },
@@ -65,7 +63,7 @@ const CabinsPage: NextPage = () => {
       icon: <Image alt="" src="/img/undraw_subway.svg" width={200} height={200} />,
       text: (
         <Typography component="span">
-          Ta toget med <Link href="https://www.vy.no/">VY</Link> til Oppdal for en billig penge.
+          Ta toget med <Link href="https://www.sj.no/">SJ Nord</Link> til Oppdal for en billig penge.
         </Typography>
       ),
     },
@@ -74,7 +72,7 @@ const CabinsPage: NextPage = () => {
       text: (
         <Typography component="span">
           Taxi fra togstasjonen til hyttene tar 5-10 min.{" "}
-          <Link href="https://www.visitnorway.no/listings/oppdal-taxi/203941/">Taxi Oppdal</Link>, tlf: 72 42 12 05.
+          <Link href="https://www.07373.no/Booking/?=Oppdal/">Taxi Oppdal</Link>, tlf: 72 42 12 05.
         </Typography>
       ),
     },
@@ -115,11 +113,10 @@ const CabinsPage: NextPage = () => {
                         De to identiske nabohyttene ligger idyllisk til, kun et steinkast unna Stølen alpinsenter i
                         Oppdal. Hyttene har flere bruksområder; alt fra strategiske samlinger og egne arrangementer til
                         sosiale, spontane venneturer. Det er en gyllen mulighet til å få en liten pause fra det travle
-                        bylivet. Indøks egne Hyttestyre arrangerer flere forskjellige turer i løpet av året. Dette er en
+                        bylivet. Indøks egne Hytteturstyre arrangerer flere forskjellige turer i løpet av året. Dette er en
                         flott mulighet til både å bli kjent med hyttene, området rundt hyttene, og å bli kjent med andre
-                        indøkere på tvers av klassetrinnene. Hyttestyret har det daglige ansvaret for drift og utbedring
-                        av Indøkhyttene, organisering av utleie og felles hytteturer. Du kan lese mer om Hyttestyret
-                        <Link href="/about/organizations/hyttestyret"> her.</Link>
+                        indøkere på tvers av klassetrinnene. <Link href="/about/organizations/hyttestyret"> Hytteforeningen</Link> 
+                        har det daglige ansvaret for drift og vedlikehold av Indøkhyttene og organisering av utleie.
                       </Typography>
                     </Grid>
                   </Grid>
@@ -130,16 +127,16 @@ const CabinsPage: NextPage = () => {
                       <Typography variant="h3">Hyttenes standard</Typography>
                       <Divider component="br" />
                       <Typography variant="body2">
-                        Med sine to etasjer, er Bjørnen og Oksen estimert til å romme 18 personer per hytte. Den
+                        Med sine to etasjer, rommer Bjørnen og Oksen 18 personer per hytte. Den
                         generelle standarden er tilnærmet lik et vanlig bolighus. Begge hyttene har innlagt strøm og
                         vann. I første etasje finner du to bad, hvorav ett med badstue, og tre soverom med tre til fire
                         sengeplasser per rom. I andre etasje ligger stue, kjøkken og et fjerde soverom med sengeplass
                         til tre. Dette gir totalt fjorten sengeplasser på hver hytte og ekstramadrasser til de
-                        resterende 4 det er estimert med. Dyner og puter til 18 gjester ligger tilgjengelig, men laken
+                        resterende fire. Dyner og puter til 18 gjester ligger tilgjengelig, men laken
                         og sengetøy må medbringes. Kjøkkenet er utstyrt med det mest nødvendige av hvitevarer, i tillegg
                         til kaffetrakter, vannkoker og vaffeljern m.m. Basiskrydder og olje til steking skal også være
                         tilgjengelig. På hyttene ligger det et bredt utvalg brettspill, samt kortstokker. I stua står
-                        det anlegg med AUX-kabel.
+                        det en høyttaler med AUX-kabel.
                       </Typography>
                     </Grid>
 
