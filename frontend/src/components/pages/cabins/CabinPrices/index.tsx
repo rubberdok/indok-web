@@ -16,8 +16,7 @@ const CabinPrices: React.VFC = () => {
         <Typography variant="h3">Priser</Typography>
         <Divider component="br" />
         <Typography variant="body2">
-          Dersom dere er flere enn 50% eksterne (ikke indøk), må dere betale eksternpris. Indøkere betaler internpris.
-          Merk at prisene kan variere med sesongene.
+          Sengeplasser kan bookes for grupper under 10 personer, med minst en indøker. Hele hytta kan bookes for både interne og eksterne, se pris.
         </Typography>
       </Grid>
       <Grid item container xs={12} sm={6} spacing={2}>
