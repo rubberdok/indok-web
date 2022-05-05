@@ -24,9 +24,9 @@ const CabinPrices: React.VFC = () => {
           <Typography variant="body2" align="center">
             <b>Enkeltperson</b>
             <br />
-            Indøker: 50 kr per sengeplass.
+            Indøker: 110 kr per sengeplass.
             <br />
-            Ikke-indøkere: 100 kr per sengeplass.
+            Ikke-indøkere: 270 kr per sengeplass.
           </Typography>
         </Grid>
         <Grid item container alignContent="center" justifyContent="center" md={6}>
