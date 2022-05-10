@@ -17,7 +17,7 @@ const ThemeWrapper: React.FC<Props> = ({ children }) => {
   const themeOptions: ThemeOptions = useMemo(
     () => ({
       palette: prefersDarkMode ? palette.dark : palette.light,
-      shape: { borderRadius: 0 },
+      shape: { borderRadius: 2 },
       shadows: prefersDarkMode ? shadows.dark : shadows.light,
       customShadows: prefersDarkMode ? customShadows.dark : customShadows.light,
       typography,
