@@ -18,7 +18,7 @@ One of the steps in the cabins/book page. In this step the user chooses a cabin 
 */
 const CheckInOut: NextPage<Props> = ({ allCabins, chosenCabins, setChosenCabins, setDatePick }) => {
   const { disabledDates } = useDisabledDates(chosenCabins);
-  const isMobile = useResponsive("down", "md");
+  const isMobile = useResponsive({ query: "down", key: "md" });
   const theme = useTheme();
   const isLight = theme.palette.mode === "light";
 

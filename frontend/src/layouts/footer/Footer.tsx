@@ -26,7 +26,7 @@ const Watermark = styled("div")(({ theme }) => ({
 }));
 
 const Footer: React.FC = () => {
-  const isDesktop = useResponsive("up", "md");
+  const isDesktop = useResponsive({ query: "up", key: "md" });
   const [open, setOpen] = useState(false);
 
   return (

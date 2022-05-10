@@ -30,7 +30,7 @@ const EventActionCardStyle = styled((props) => <CardActionArea {...props} />)(({
 }));
 
 const EventListItem: React.FC<Props> = ({ event, user }) => {
-  const isMobile = useResponsive("down", "md");
+  const isMobile = useResponsive({ query: "down", key: "md" });
 
   return (
     <Card>

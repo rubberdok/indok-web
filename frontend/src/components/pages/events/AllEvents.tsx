@@ -22,7 +22,7 @@ const AllEvents: React.FC = () => {
   const [filters, setFilters] = useState({});
   const [showDefaultEvents, setShowDefaultEvents] = useState(false);
   const [openFilterDrawer, setOpenFilterDrawer] = React.useState(false);
-  const isMobile = useResponsive("down", "sm");
+  const isMobile = useResponsive({ query: "down", key: "sm" });
 
   const { loading: userLoading, data: userData } = useQuery<{ user: User }>(GET_USER);
 

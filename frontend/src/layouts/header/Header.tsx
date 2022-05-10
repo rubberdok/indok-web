@@ -16,7 +16,7 @@ type Props = {
 };
 
 const Header: React.FC<Props> = ({ transparent }) => {
-  const isDesktop = useResponsive("up", "md");
+  const isDesktop = useResponsive({ query: "up", key: "md" });
   const isScrolling = useOffSetTop(HEADER_DESKTOP_HEIGHT);
 
   const { error, loading, data } = useQuery<{ user: UserInfo | null }>(GET_USER_INFO);

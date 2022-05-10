@@ -8,7 +8,7 @@ import { Box, Button, Container, Divider, Grid, Paper, Typography } from "@mui/m
 import router from "next/router";
 
 const SettingsPage: React.VFC = () => {
-  const isMobile = useResponsive("down", "md");
+  const isMobile = useResponsive({ query: "down", key: "md" });
 
   return (
     <Layout>
