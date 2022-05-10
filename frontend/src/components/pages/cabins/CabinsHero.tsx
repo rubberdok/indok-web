@@ -16,7 +16,7 @@ const RootStyle = styled("div")(({ theme }) => ({
 }));
 
 const CabinsHero: React.VFC = () => {
-  const isMobile = useResponsive("down", "md");
+  const isMobile = useResponsive({ query: "down", key: "md" });
 
   return (
     <>

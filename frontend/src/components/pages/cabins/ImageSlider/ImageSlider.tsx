@@ -27,7 +27,7 @@ Carousel compoent for showing images
 const ImageSlider: React.VFC<ImageSliderProps> = ({ imageData, displayLabelText }) => {
   const theme = useTheme();
   const [activeStep, setActiveStep] = React.useState(0);
-  const isMobile = useResponsive("down", "md");
+  const isMobile = useResponsive({ query: "down", key: "md" });
 
   const maxSteps = imageData.length;
 
