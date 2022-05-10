@@ -39,15 +39,16 @@ const faqs = [
   },
   {
     question: "Hvordan booker jeg sengeplasser?",
-    answer: <Typography>Det gjøres ved å sende mail til <a href="mailto:booking.indokhyttene@gmail.com">booking.indokhyttene@gmail.com</a>.</Typography>,
+    answer: (
+      <Typography>
+        Det gjøres ved å sende mail til{" "}
+        <a href="mailto:booking.indokhyttene@gmail.com">booking.indokhyttene@gmail.com</a>.
+      </Typography>
+    ),
   },
   {
     question: "Hva er forskjellen på de to hyttene?",
-    answer: (
-      <Typography>
-        Hyttene er tilnærmet identiske. Bjørnen har TV med HDMI-kabel.
-      </Typography>
-    ),
+    answer: <Typography>Hyttene er tilnærmet identiske. Bjørnen har TV med HDMI-kabel.</Typography>,
   },
   {
     question: "Hva er den totale kapasiteten på hyttene?",
@@ -70,8 +71,7 @@ const faqs = [
     question: "Hva har hyttene av dyner, puter og sengetøy?",
     answer: (
       <Typography>
-        Begge hyttene er utstyrt med minimum 18 puter og 18 dyner, men laken og sengetøy (evt. sovepose) må
-        medbringes.
+        Begge hyttene er utstyrt med minimum 18 puter og 18 dyner, men laken og sengetøy (evt. sovepose) må medbringes.
       </Typography>
     ),
   },
@@ -80,8 +80,8 @@ const faqs = [
     question: "Kan jeg ha med meg eksterne venner (ikke-indøkere) til hyttene?",
     answer: (
       <Typography>
-        Ja. Det er egne priser for eksterne gjester. Hvis det skal bookes sengeplasser må det være med en indøker på turen.
-        Hvis over 50 % av gjestene er eksterne, og hele hytta skal bookes, må det betales ekstern-pris.
+        Ja. Det er egne priser for eksterne gjester. Hvis det skal bookes sengeplasser må det være med en indøker på
+        turen. Hvis over 50 % av gjestene er eksterne, og hele hytta skal bookes, må det betales ekstern-pris.
       </Typography>
     ),
   },
@@ -90,8 +90,8 @@ const faqs = [
     answer: (
       <Typography>
         Den som er nøkkelansvarlig er ansvarlig for nøklene. Dersom disse går tapt vil Hytteforeningen fakturere den
-        nøkkelansvarlige et gebyr på 1000,-. Hytteforeningen tar ikke stilling til hvorvidt de andre gjestene bidrar til å
-        dekke gebyret.
+        nøkkelansvarlige et gebyr på 1000,-. Hytteforeningen tar ikke stilling til hvorvidt de andre gjestene bidrar til
+        å dekke gebyret.
       </Typography>
     ),
   },
@@ -101,7 +101,7 @@ const faqs = [
       <Typography>
         De som har brukt hyttene må alltid vaske ut selv. Det er veldig viktig at alle vinduer lukkes og dører låses.
       </Typography>
-     ),
+    ),
   },
   {
     question: "Kan jeg reservere en hytte for min eksterne vennegjeng eller eksterne linjeforening?",
