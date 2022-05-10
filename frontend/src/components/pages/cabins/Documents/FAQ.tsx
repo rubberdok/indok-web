@@ -39,7 +39,7 @@ const faqs = [
   },
   {
     question: "Hvordan booker jeg sengeplasser?",
-    answer: <Typography>Det gjøres ved å sende mail til booking.indokhyttene@gmail.com.</Typography>,
+    answer: <Typography>Det gjøres ved å sende mail til <a href="mailto:booking.indokhyttene@gmail.com">booking.indokhyttene@gmail.com</a>.</Typography>,
   },
   {
     question: "Hva er forskjellen på de to hyttene?",
