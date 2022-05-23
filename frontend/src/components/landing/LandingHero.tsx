@@ -26,7 +26,7 @@ const organizations = [
   },
   {
     id: 4,
-    title: "Hyttestyret",
+    title: "Hytteforeningen",
     link: "/about/organizations/hyttestyret",
     img: "img/hytte.jpg",
   },
