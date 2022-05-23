@@ -112,7 +112,7 @@ const CabinsPage: NextPage = () => {
                         bylivet. Indøks egne Hytteturstyre arrangerer flere forskjellige turer i løpet av året. Dette er
                         en flott mulighet til både å bli kjent med hyttene, området rundt hyttene, og å bli kjent med
                         andre indøkere på tvers av klassetrinnene.{" "}
-                        <Link href="/about/organizations/hyttestyret"> Hytteforeningen</Link>
+                        <Link href="/about/organizations/hyttestyret"> Hytteforeningen</Link> 
                         har det daglige ansvaret for drift og vedlikehold av Indøkhyttene og organisering av utleie.
                       </Typography>
                     </Grid>
