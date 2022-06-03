@@ -1,0 +1,69 @@
+import { Box, Collapse, List, ListItemText } from "@mui/material";
+import NextLink from "next/link";
+import { useRouter } from "next/router";
+import { CaretDown, CaretRight } from "phosphor-react";
+import { useState } from "react";
+import { NavigationItem } from ".";
+import { ListItemIconStyle, ListItemStyle, ListSubItemIconStyle } from "./styles";
+
+type Props = {
+  item: NavigationItem;
+};
+
+const NavigationSidebarItem: React.FC<Props> = ({ item }) => {
+  const { pathname, asPath } = useRouter();
+
+  const { title, path, icon, info, children } = item;
+  const isActiveRoot = pathname === path || asPath === path;
+
+  const [open, setOpen] = useState(isActiveRoot);
+
+  const handleOpen = () => {
+    setOpen(!open);
+  };
+
+  if (children) {
+    return (
+      <>
+        <ListItemStyle onClick={handleOpen} activeRoot={isActiveRoot}>
+          {icon && <ListItemIconStyle>{icon}</ListItemIconStyle>}
+          <ListItemText disableTypography primary={title} />
+          {info && info}
+          <Box ml={1}>{open ? <CaretDown width={16} height={16} /> : <CaretRight width={16} height={16} />}</Box>
+        </ListItemStyle>
+
+        <Collapse in={open} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding>
+            {children.map((item) => {
+              const { title, path } = item;
+              const isActiveSub = pathname === path || asPath === path;
+
+              return (
+                <NextLink key={title} href={path} passHref>
+                  <ListItemStyle activeSub={isActiveSub}>
+                    <ListItemIconStyle>
+                      <ListSubItemIconStyle component="span" active={isActiveSub} />
+                    </ListItemIconStyle>
+                    <ListItemText disableTypography primary={title} />
+                  </ListItemStyle>
+                </NextLink>
+              );
+            })}
+          </List>
+        </Collapse>
+      </>
+    );
+  }
+
+  return (
+    <NextLink href={path} passHref>
+      <ListItemStyle activeRoot={isActiveRoot}>
+        {icon && <ListItemIconStyle>{icon}</ListItemIconStyle>}
+        <ListItemText disableTypography primary={title} />
+        {info && info}
+      </ListItemStyle>
+    </NextLink>
+  );
+};
+
+export default NavigationSidebarItem;
