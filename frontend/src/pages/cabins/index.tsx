@@ -100,10 +100,10 @@ const CabinsPage: NextPageWithLayout = () => {
                 </Typography>
                 <Divider component="br" />
                 <Typography variant="body2">
-                  <b>Vinter</b>: I løpet av vinterhalvåret er det hovedsakelig alpint og langrenn som står i
-                  sentrum. Det alpine skiområdet er blant de største i Norge med 14 blå, 10 grønne, 10 røde og 5
-                  svarte løyper, og normal skisesong er fra 15. november - 1. mai. Forholdene for langrenn er også
-                  gode med hele fem løyper som begynner ved Stølen, alt fra 1,5 km - 15 km løyper. Se{" "}
+                  <b>Vinter</b>: I løpet av vinterhalvåret er det hovedsakelig alpint og langrenn som står i sentrum.
+                  Det alpine skiområdet er blant de største i Norge med 14 blå, 10 grønne, 10 røde og 5 svarte løyper,
+                  og normal skisesong er fra 15. november - 1. mai. Forholdene for langrenn er også gode med hele fem
+                  løyper som begynner ved Stølen, alt fra 1,5 km - 15 km løyper. Se{" "}
                   <Link href="https://oppdal.com/forside/hoved/">Visit Oppdal</Link> for mer info.
                 </Typography>
               </Grid>

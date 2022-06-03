@@ -71,13 +71,12 @@ const CabinsInfoSection: React.FC = () => {
             </Typography>
             <Typography variant="h2">Indøkhyttene - Oksen og Bjørnen</Typography>
             <Typography sx={{ mt: 3, mb: 5, opacity: 0.72 }}>
-              De to identiske nabohyttene ligger idyllisk til, kun et steinkast unna Stølen alpinsenter i
-              Oppdal. Hyttene har flere bruksområder; alt fra strategiske samlinger og egne arrangementer til
-              sosiale, spontane venneturer. Det er en gyllen mulighet til å få en liten pause fra det travle
-              bylivet. Indøks egne Hytteturstyre arrangerer flere forskjellige turer i løpet av året. Dette er
-              en flott mulighet til både å bli kjent med hyttene, området rundt hyttene, og å bli kjent med
-              andre indøkere på tvers av klassetrinnene.{" "}
-              <NextLink href="/about/organizations/hyttestyret"> Hytteforeningen</NextLink>
+              De to identiske nabohyttene ligger idyllisk til, kun et steinkast unna Stølen alpinsenter i Oppdal.
+              Hyttene har flere bruksområder; alt fra strategiske samlinger og egne arrangementer til sosiale, spontane
+              venneturer. Det er en gyllen mulighet til å få en liten pause fra det travle bylivet. Indøks egne
+              Hytteturstyre arrangerer flere forskjellige turer i løpet av året. Dette er en flott mulighet til både å
+              bli kjent med hyttene, området rundt hyttene, og å bli kjent med andre indøkere på tvers av
+              klassetrinnene. <NextLink href="/about/organizations/hyttestyret"> Hytteforeningen</NextLink>
               har det daglige ansvaret for drift og vedlikehold av Indøkhyttene og organisering av utleie.
             </Typography>
             <NextLink href="/about/organizations/hyttestyret" passHref>
