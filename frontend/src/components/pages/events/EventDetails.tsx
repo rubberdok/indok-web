@@ -188,7 +188,6 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
                         rows={2}
                         required
                         placeholder="Skriv her..."
-                        variant="outlined"
                         onChange={(e) => setExtraInformation(e.target.value)}
                       />
                     )}

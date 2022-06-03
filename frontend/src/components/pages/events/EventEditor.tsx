@@ -178,7 +178,6 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
               rows={3}
               required
               placeholder="Beskrivelse ..."
-              variant="outlined"
               value={eventData.description}
               onChange={(e) => setEventData({ ...eventData, description: e.currentTarget.value })}
               fullWidth

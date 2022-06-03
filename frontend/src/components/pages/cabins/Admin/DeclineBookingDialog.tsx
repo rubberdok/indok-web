@@ -43,7 +43,6 @@ const DeclineBookingDialog: React.VFC<DialogProps> = ({
         </DialogContentText>
         <TextField
           placeholder="Grunn til avslag..."
-          variant="outlined"
           multiline
           rows={6}
           fullWidth

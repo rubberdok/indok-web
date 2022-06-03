@@ -62,7 +62,6 @@ const EmailFormDialog: React.FC<EmailFormDialogProps> = ({
               onChange={(e) => setEmailProps({ ...emailProps, content: e.currentTarget.value })}
               label="E-post-innhold"
               rows={4}
-              variant="outlined"
             />
           </Grid>
           <Grid item>
