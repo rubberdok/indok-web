@@ -4,12 +4,14 @@ from typing import Callable, TypeVar
 from graphene import ResolveInfo
 from typing_extensions import Concatenate, ParamSpec
 
+from decorators.types import Context
+
 R_f = TypeVar("R_f")
 R_fn = TypeVar("R_fn")
 P = ParamSpec("P")
 
 
-def context(fn: Callable[Concatenate[ResolveInfo, P], R_fn]) -> Callable[P, R_fn]:
+def context(fn: Callable[Concatenate[Context, P], R_fn]) -> Callable[P, R_fn]:
     """
     Injects the context parameter into the wrapped function fn.
 
