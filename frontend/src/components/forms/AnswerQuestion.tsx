@@ -19,18 +19,9 @@ const AnswerQuestion: React.FC<Props> = ({ answer, question, onValueChanged }) =
   // each input calls on onValueChanged to change the state of AnswerForm
   switch (question.questionType) {
     case "PARAGRAPH":
-      return (
-        <TextField
-          variant="outlined"
-          fullWidth
-          multiline
-          rows={4}
-          value={answer}
-          onChange={(e) => onValueChanged(e.target.value)}
-        />
-      );
+      return <TextField fullWidth multiline rows={4} value={answer} onChange={(e) => onValueChanged(e.target.value)} />;
     case "SHORT_ANSWER":
-      return <TextField variant="outlined" fullWidth value={answer} onChange={(e) => onValueChanged(e.target.value)} />;
+      return <TextField fullWidth value={answer} onChange={(e) => onValueChanged(e.target.value)} />;
     case "MULTIPLE_CHOICE":
       return (
         <RadioGroup value={answer} onChange={(e) => onValueChanged(e.target.value)}>

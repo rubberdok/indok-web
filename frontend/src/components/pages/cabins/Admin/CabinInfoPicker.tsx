@@ -102,7 +102,6 @@ const CabinInfoPicker: React.VFC = () => {
               <TextField
                 label="Internpris"
                 name="bjornenInternalPrice"
-                variant="outlined"
                 margin="normal"
                 required
                 value={formik.values.bjornenInternalPrice}
@@ -117,7 +116,6 @@ const CabinInfoPicker: React.VFC = () => {
               <TextField
                 label="Eksternpris"
                 name="bjornenExternalPrice"
-                variant="outlined"
                 margin="normal"
                 required
                 value={formik.values.bjornenExternalPrice}
@@ -132,7 +130,6 @@ const CabinInfoPicker: React.VFC = () => {
               <TextField
                 label="Kapasitet (antall gjester)"
                 name="bjornenMaxGuests"
-                variant="outlined"
                 margin="normal"
                 required
                 value={formik.values.bjornenMaxGuests}
@@ -152,7 +149,6 @@ const CabinInfoPicker: React.VFC = () => {
               <TextField
                 label="Internpris"
                 name="oksenInternalPrice"
-                variant="outlined"
                 margin="normal"
                 required
                 value={formik.values.oksenInternalPrice}
@@ -167,7 +163,6 @@ const CabinInfoPicker: React.VFC = () => {
               <TextField
                 label="Eksternpris"
                 name="oksenExternalPrice"
-                variant="outlined"
                 margin="normal"
                 required
                 value={formik.values.oksenExternalPrice}
@@ -182,7 +177,6 @@ const CabinInfoPicker: React.VFC = () => {
               <TextField
                 label="Kapasitet (antall gjester)"
                 name="oksenMaxGuests"
-                variant="outlined"
                 margin="normal"
                 required
                 value={formik.values.oksenMaxGuests}
