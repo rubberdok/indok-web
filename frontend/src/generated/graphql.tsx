@@ -1596,6 +1596,12 @@ export type ListingQuery = {
   } | null;
 };
 
+export type HasPermissionQueryVariables = Exact<{
+  permission: Scalars["String"];
+}>;
+
+export type HasPermissionQuery = { __typename?: "Queries"; hasPermission?: boolean | null };
+
 export const ListingFragmentDoc = {
   kind: "Document",
   definitions: [
@@ -2115,3 +2121,36 @@ export const ListingDocument = {
     ...ListingFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<ListingQuery, ListingQueryVariables>;
+export const HasPermissionDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "hasPermission" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "permission" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "String" } } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "hasPermission" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "permission" },
+                value: { kind: "Variable", name: { kind: "Name", value: "permission" } },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<HasPermissionQuery, HasPermissionQueryVariables>;

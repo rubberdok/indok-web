@@ -5,11 +5,13 @@ import { RemoveFiltersButton } from "@components/pages/archive/RemoveFiltersButt
 import SearchBar from "@components/pages/archive/SearchBar";
 import YearSelector from "@components/pages/archive/YearSelector";
 import Title from "@components/Title";
+import { HasPermissionDocument } from "@generated/graphql";
+import { addApolloState, initializeApollo } from "@lib/apolloClient";
 import { Box, Container, FormGroup, Grid, styled } from "@mui/material";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import React, { useState } from "react";
 import Layout from "src/layouts";
 import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "src/theme/constants";
-import { redirectIfNotLoggedIn } from "src/utils/redirect";
 import { NextPageWithLayout } from "./_app";
 
 const RootStyle = styled("div")(({ theme }) => ({
@@ -19,14 +21,14 @@ const RootStyle = styled("div")(({ theme }) => ({
   },
 }));
 
-const Archive: NextPageWithLayout = () => {
+const Archive: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSideProps>> = () => {
   const [yearFilter, setYearFilter] = useState("");
 
   const [searchFilter, setSearchFilter] = useState("");
 
   const [viewFeatured, setViewFeatured] = useState(true);
 
-  const [typeFilters, setTypeFilters] = useState<{ [key: string]: { active: boolean; title: string } }>({
+  const [typeFilters, setTypeFilters] = useState<Record<string, { active: boolean; title: string }>>({
     Budget: { active: false, title: "Budsjett og Regnskap" },
     Summary: { active: false, title: "Generalforsamling" },
     Yearbook: { active: false, title: "Årbøker" },
@@ -35,10 +37,6 @@ const Archive: NextPageWithLayout = () => {
     Statues: { active: false, title: "Utveksling" },
     Others: { active: false, title: "Annet" },
   });
-
-  if (redirectIfNotLoggedIn()) {
-    return null;
-  }
 
   return (
     <RootStyle>
@@ -51,13 +49,11 @@ const Archive: NextPageWithLayout = () => {
               <FilterButtons
                 typeFilters={typeFilters}
                 updateTypeFilters={(key) => {
-                  [
-                    setTypeFilters({
-                      ...typeFilters,
-                      [key]: { active: !typeFilters[key].active, title: typeFilters[key].title },
-                    }),
-                    setViewFeatured(false),
-                  ];
+                  setTypeFilters((prevState) => ({
+                    ...prevState,
+                    [key]: { active: !typeFilters[key].active, title: typeFilters[key].title },
+                  }));
+                  setViewFeatured(false);
                 }}
               />
             </FormGroup>
@@ -66,7 +62,8 @@ const Archive: NextPageWithLayout = () => {
             <SearchBar
               searchFilter={searchFilter}
               handleSearchFilterChanged={(event: React.ChangeEvent<HTMLInputElement>) => {
-                [setSearchFilter(event.target.value), setViewFeatured(false)];
+                setSearchFilter(event.target.value);
+                setViewFeatured(false);
               }}
               handleSearchFilterCanceled={() => setSearchFilter("")}
             />
@@ -77,7 +74,8 @@ const Archive: NextPageWithLayout = () => {
           <YearSelector
             yearFilter={yearFilter}
             handleYearFilterChanged={(year: string) => {
-              [setYearFilter(year), setViewFeatured(false)];
+              setYearFilter(year);
+              setViewFeatured(false);
             }}
           />
         </Box>
@@ -85,20 +83,18 @@ const Archive: NextPageWithLayout = () => {
         {!viewFeatured && (
           <RemoveFiltersButton
             handleRemoveFilterChanged={() => {
-              [
-                setYearFilter(""),
-                setSearchFilter(""),
-                setTypeFilters({
-                  Budget: { active: false, title: "Budsjett og Regnskap" },
-                  Summary: { active: false, title: "Generalforsamling" },
-                  Yearbook: { active: false, title: "Årbøker" },
-                  Guidelines: { active: false, title: "Støtte fra HS" },
-                  Regulation: { active: false, title: "Foreningens lover" },
-                  Statues: { active: false, title: "Utveksling" },
-                  Others: { active: false, title: "Annet" },
-                }),
-                setViewFeatured(true),
-              ];
+              setYearFilter("");
+              setSearchFilter("");
+              setTypeFilters({
+                Budget: { active: false, title: "Budsjett og Regnskap" },
+                Summary: { active: false, title: "Generalforsamling" },
+                Yearbook: { active: false, title: "Årbøker" },
+                Guidelines: { active: false, title: "Støtte fra HS" },
+                Regulation: { active: false, title: "Foreningens lover" },
+                Statues: { active: false, title: "Utveksling" },
+                Others: { active: false, title: "Annet" },
+              });
+              setViewFeatured(true);
             }}
           />
         )}
@@ -114,6 +110,22 @@ const Archive: NextPageWithLayout = () => {
       </Container>
     </RootStyle>
   );
+};
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const client = initializeApollo({}, ctx);
+  const { data, error } = await client.query({
+    query: HasPermissionDocument,
+    variables: {
+      permission: "archive.view_archivedocument",
+    },
+  });
+
+  if (error) return { notFound: true };
+  if (!data.hasPermission) {
+    return { notFound: true };
+  }
+  return addApolloState(client, { props: { data } });
 };
 
 Archive.getLayout = (page: React.ReactElement) => <Layout>{page}</Layout>;

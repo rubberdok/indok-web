@@ -1,11 +1,9 @@
-import useStyles from "@components/pages/profile/styles";
 import { Avatar, Grid, Typography, useTheme } from "@mui/material";
 import { Skeleton } from "@mui/material";
 import SkeletonCard from "./ProfileCard/variants/SkeletonCard";
 
 const ProfileSkeleton: React.VFC = () => {
   const theme = useTheme();
-  const classes = useStyles();
 
   return (
     <Grid
@@ -38,16 +36,7 @@ const ProfileSkeleton: React.VFC = () => {
           </Grid>
         </Grid>
 
-        <Grid
-          container
-          item
-          className={classes.cards}
-          spacing={4}
-          justifyContent="center"
-          sm={10}
-          xs={12}
-          alignItems="stretch"
-        >
+        <Grid container item spacing={4} justifyContent="center" sm={10} xs={12} alignItems="stretch">
           <Grid item md={6}>
             <SkeletonCard />
           </Grid>
