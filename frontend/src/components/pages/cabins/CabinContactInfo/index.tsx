@@ -4,7 +4,7 @@ import { Cabin, ContactInfo, ContactInfoValidations, InputFieldsEvent } from "@i
 import { User } from "@interfaces/users";
 import { Grid } from "@mui/material";
 import { NextPage } from "next";
-import React, { Dispatch, SetStateAction, useEffect } from "react";
+import { Dispatch, SetStateAction } from "react";
 import { InputFields } from "../InputFields/InputFields";
 
 interface ContractInfoProps {
@@ -25,19 +25,18 @@ const CabinContactInfo: NextPage<ContractInfoProps> = ({
   chosenCabins,
   errorTrigger,
 }) => {
-  const { data } = useQuery<{ user: User }>(GET_USER);
-
-  useEffect(() => {
-    if (data?.user) {
-      setContactInfo({
-        ...contactInfo,
-        firstName: data.user.firstName,
-        lastName: data.user.lastName,
-        receiverEmail: data.user.email,
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data]);
+  useQuery<{ user: User | null }>(GET_USER, {
+    onCompleted: (data) => {
+      if (data.user) {
+        setContactInfo({
+          ...contactInfo,
+          firstName: data.user.firstName,
+          lastName: data.user.lastName,
+          receiverEmail: data.user.feideEmail,
+        });
+      }
+    },
+  });
 
   const handleInputChange = (name: string, event: InputFieldsEvent) => {
     setContactInfo({ ...contactInfo, [name]: event.target.value });
