@@ -33,7 +33,6 @@ const ExtraInfoSite: React.VFC<Props> = ({ setExtraInfo, datePick, chosenCabins 
         </div>
         <TextField
           placeholder="Fyll inn spørsmål..."
-          variant="outlined"
           multiline
           rows={6}
           fullWidth

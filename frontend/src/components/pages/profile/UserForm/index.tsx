@@ -109,9 +109,6 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": 
                   onBlur={() => formik.setFieldTouched("firstName")}
                   error={formik.touched.firstName && Boolean(formik.errors.firstName)}
                   helperText={formik.touched.firstName && formik.errors.firstName}
-                  InputLabelProps={{
-                    shrink: formik.values.firstName !== undefined,
-                  }}
                   data-test-id={`${ID_PREFIX}firstNameTextField`}
                 />
               </Grid>
