@@ -1,6 +1,6 @@
 import { Box, Button, Grid, Typography } from "@mui/material";
 
-interface Props {
+type Props = {
   isDisabled?: boolean;
   isFromDate?: boolean;
   isToDate?: boolean;
@@ -9,23 +9,34 @@ interface Props {
   onClick?: () => void;
   isInRange?: boolean;
   isInvalidRange?: boolean;
-}
+};
 
-const CalendarDay: React.VFC<Props> = (props) => {
-  const { onClick, value, isHidden } = props;
+const bgcolor = (
+  isFromDate: boolean | undefined,
+  isToDate: boolean | undefined,
+  isInRange: boolean | undefined,
+  isHidden: boolean | undefined
+) => {
+  if (isHidden) {
+    return "transparent";
+  }
+  if (isFromDate || isToDate) {
+    return "primary.darker";
+  }
+  if (isInRange) {
+    return "primary.dark";
+  }
+  return "transparent";
+};
+
+const CalendarDay: React.VFC<Props> = ({ onClick, value, isHidden, isDisabled, isToDate, isInRange, isFromDate }) => {
   return (
     <Grid item xs component="td" position="relative">
       <Box
         component={Button}
-        disabled={props.isDisabled || isHidden}
-        variant={(props.isFromDate || props.isToDate || props.isInRange) && !isHidden ? "contained" : "text"}
-        bgcolor={
-          !(props.isFromDate || props.isToDate || props.isInRange) || isHidden
-            ? "transparent"
-            : props.isFromDate || props.isToDate
-            ? "primary.darker"
-            : "primary.dark"
-        }
+        disabled={isDisabled || isHidden}
+        variant={(isFromDate || isToDate || isInRange) && !isHidden ? "contained" : "text"}
+        bgcolor={bgcolor(isFromDate, isToDate, isInRange, isHidden)}
         onClick={onClick}
         sx={{ width: 1, p: 0, minWidth: 0, aspectRatio: "1" }}
       >
