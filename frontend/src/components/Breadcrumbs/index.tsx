@@ -1,20 +1,20 @@
-import { Box, Breadcrumbs as MUIBreadcrumbs, BreadcrumbsProps, Link, SxProps, Typography } from "@mui/material";
-import NextLink from "next/link";
+import { Box, Breadcrumbs as MUIBreadcrumbs, BreadcrumbsProps, SxProps, Typography } from "@mui/material";
 import { CaretRight } from "phosphor-react";
 import { ReactElement } from "react";
+import LinkItem from ".";
 
-type TLink = {
+export type TLink = {
   href?: string;
-  name: string | undefined;
+  name?: string;
   icon?: ReactElement;
 };
 
-interface Props extends BreadcrumbsProps {
+type Props = {
   links: TLink[];
   activeLast?: boolean;
   onDark?: boolean;
   sx?: SxProps;
-}
+} & BreadcrumbsProps;
 
 const Breadcrumbs: React.FC<Props> = ({ links, sx, activeLast = false, onDark = false, ...other }) => {
   const currentLink = links[links.length - 1].name;
@@ -69,42 +69,5 @@ const Breadcrumbs: React.FC<Props> = ({ links, sx, activeLast = false, onDark = 
     </MUIBreadcrumbs>
   );
 };
-
-type LinkItemProps = {
-  link: TLink;
-  onDark?: boolean;
-};
-
-function LinkItem({ link, onDark }: LinkItemProps) {
-  const { href = "", name, icon } = link;
-  return (
-    <NextLink key={name} href={href} passHref>
-      <Link
-        variant="body3"
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          color: "text.primary",
-          "& > div": { display: "inherit" },
-          ...(onDark && {
-            color: "common.white",
-          }),
-        }}
-      >
-        {icon && (
-          <Box
-            sx={{
-              mr: 1,
-              "& svg": { width: 20, height: 20 },
-            }}
-          >
-            {icon}
-          </Box>
-        )}
-        {name}
-      </Link>
-    </NextLink>
-  );
-}
 
 export default Breadcrumbs;
