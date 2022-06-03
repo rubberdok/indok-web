@@ -1,6 +1,7 @@
 import { alpha, Theme } from "@mui/material/styles";
+type Props = (theme: Theme) => Theme["components"];
 
-const Popover: any = (theme: Theme) => {
+const Popover: Props = (theme: Theme) => {
   return {
     MuiPopover: {
       styleOverrides: {

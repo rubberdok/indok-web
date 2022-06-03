@@ -1,6 +1,8 @@
 import { Theme } from "@mui/material/styles";
 
-const Tabs: any = (theme: Theme) => {
+type Props = (theme: Theme) => Theme["components"];
+
+const Tabs: Props = (theme: Theme) => {
   return {
     MuiTab: {
       defaultProps: {

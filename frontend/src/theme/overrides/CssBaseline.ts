@@ -1,6 +1,6 @@
 import { Theme } from "@mui/material";
 
-type Props = (theme: Theme) => any;
+type Props = (theme: Theme) => Theme["components"];
 
 const CssBaseline: Props = (theme) => {
   return {

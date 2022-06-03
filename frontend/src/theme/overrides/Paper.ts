@@ -1,4 +1,8 @@
-const Paper: any = () => {
+import { Theme } from "@mui/material";
+
+type Props = () => Theme["components"];
+
+const Paper: Props = () => {
   return {
     MuiPaper: {
       defaultProps: {

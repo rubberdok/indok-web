@@ -1,6 +1,6 @@
 import { Theme } from "@mui/material/styles";
 
-const Typography: any = (theme: Theme) => {
+const Typography = (theme: Theme): Theme["components"] => {
   return {
     MuiTypography: {
       defaultProps: {

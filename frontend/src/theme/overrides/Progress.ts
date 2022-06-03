@@ -1,6 +1,8 @@
 import { Theme } from "@mui/material/styles";
 
-const Progress: any = (theme: Theme) => {
+type Props = (theme: Theme) => Theme["components"];
+
+const Progress: Props = (theme: Theme) => {
   const lightMode = theme.palette.mode === "light";
 
   return {

@@ -1,6 +1,8 @@
 import { Theme } from "@mui/material/styles";
 
-const Table: any = (theme: Theme) => {
+type Props = (theme: Theme) => Theme["components"];
+
+const Table: Props = (theme: Theme) => {
   return {
     MuiTableRow: {
       styleOverrides: {

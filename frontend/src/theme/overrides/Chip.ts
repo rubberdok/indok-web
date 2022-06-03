@@ -1,12 +1,12 @@
 import { Theme } from "@mui/material/styles";
-type Props = (theme: Theme) => any;
+type Props = (theme: Theme) => Theme["components"];
+import typography from "../typography";
 
 const Chip: Props = (theme) => {
   return {
     MuiChip: {
       styleOverrides: {
         root: {
-          ...theme.typography.body3,
           borderRadius: theme.shape.borderRadius,
         },
         colorDefault: {
@@ -26,8 +26,8 @@ const Chip: Props = (theme) => {
         },
         //
         avatar: {
-          fontSize: theme.typography.subtitle2.fontSize,
-          fontWeight: theme.typography.subtitle2.fontWeight,
+          fontSize: typography.subtitle2.fontSize,
+          fontWeight: typography.subtitle2.fontWeight,
         },
         avatarColorInfo: {
           color: theme.palette.info.contrastText,
