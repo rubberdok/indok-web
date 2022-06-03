@@ -60,7 +60,7 @@ const NavigationSidebarItem: React.FC<Props> = ({ item }) => {
       <ListItemStyle activeRoot={isActiveRoot}>
         {icon && <ListItemIconStyle>{icon}</ListItemIconStyle>}
         <ListItemText disableTypography primary={title} />
-        {info && info}
+        {info}
       </ListItemStyle>
     </NextLink>
   );
