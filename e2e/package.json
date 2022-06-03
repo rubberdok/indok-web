@@ -8,8 +8,8 @@
   "scripts": {
     "test": "cypress open",
     "test:headless": "cypress run",
-    "e2e": "wait-on --httpTimeout 60000 http://localhost:3000 && yarn test",
-    "e2e:headless": "wait-on --httpTimeout 60000 http://localhost:3000 && yarn test:headless"
+    "e2e": "wait-on --httpTimeout 60000 http://localhost:3000 && wait-on --httpTimeout 60000 http://localhost:8000 && yarn test",
+    "e2e:headless": "wait-on --httpTimeout 60000 http://localhost:3000 && wait-on --httpTimeout 60000 http://localhost:8000 && yarn test:headless"
   },
   "repository": {
     "type": "git",
