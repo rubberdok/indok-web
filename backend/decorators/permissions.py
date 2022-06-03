@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from functools import wraps
-from typing import TYPE_CHECKING, Callable, Literal, Optional, Protocol, Type, TypeVar, Union, cast, overload
+from typing import TYPE_CHECKING, Callable, Literal, Optional, Type, TypeVar, Union, cast, overload
 
 from django.apps import apps
 from django.db import models
@@ -9,16 +9,13 @@ from django.db.models import Model
 from django.db.models.base import ModelBase
 from typing_extensions import Concatenate, ParamSpec
 
-from decorators.constants import PERMISSION_REQUIRED_ERROR, ResolverSignature
+from decorators.constants import PERMISSION_REQUIRED_ERROR
+from decorators.types import Context, ResolverSignature
 
 from .helpers import context
 
 if TYPE_CHECKING:
     from apps.users.models import User
-
-
-class Context(Protocol):
-    user: User
 
 
 R = TypeVar("R")
@@ -98,7 +95,7 @@ def permission_required(
     def decorator(resolver: ResolverSignature[P, R]) -> Callable[P, Union[Optional[R], R]]:
         @wraps(resolver)
         @context
-        def wrapper(context, *args: P.args, **kwargs: P.kwargs) -> Optional[R]:
+        def wrapper(context: Context, *args: P.args, **kwargs: P.kwargs) -> Optional[R]:
             obj = None
             if callable(fn):
                 obj = fn(context, *args, **kwargs)

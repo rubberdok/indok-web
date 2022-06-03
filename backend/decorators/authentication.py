@@ -4,8 +4,9 @@ from typing import TYPE_CHECKING, Callable, TypeVar
 from django.core.exceptions import PermissionDenied
 from typing_extensions import ParamSpec
 
-from .constants import PERMISSION_REQUIRED_ERROR, ResolverSignature
+from .constants import PERMISSION_REQUIRED_ERROR
 from .helpers import context
+from .types import Context, ResolverSignature
 
 if TYPE_CHECKING:
     from apps.users import models
@@ -33,7 +34,7 @@ def user_passes_test(
     def decorator(fn: ResolverSignature[P, R]) -> Callable[P, R]:
         @wraps(fn)
         @context
-        def wrapper(context, *args: P.args, **kwargs: P.kwargs) -> R:
+        def wrapper(context: Context, *args: P.args, **kwargs: P.kwargs) -> R:
             user: "models.User" = context.user
             if test_fn(user):
                 return fn(*args, **kwargs)
