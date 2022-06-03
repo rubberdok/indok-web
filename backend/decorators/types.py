@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import Callable, Protocol, TypeVar, TYPE_CHECKING
 
 from typing_extensions import ParamSpec
