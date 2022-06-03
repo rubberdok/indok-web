@@ -1,4 +1,8 @@
-const LoadingButton: any = () => {
+import { Theme } from "@mui/system";
+
+type Props = () => Theme["components"];
+
+const LoadingButton: Props = () => {
   return {
     MuiLoadingButton: {
       styleOverrides: {

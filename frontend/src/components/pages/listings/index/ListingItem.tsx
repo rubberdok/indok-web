@@ -138,13 +138,7 @@ const ListingItem: React.FC<{
               <Grid container direction="row" justifyContent="center" alignItems="center" spacing={2}>
                 {listing.chips.map((chip) => (
                   <Grid item key={chip}>
-                    <Chip
-                      label={translateChip(chip)}
-                      size="small"
-                      style={{
-                        fontSize: 12,
-                      }}
-                    />
+                    <Chip label={translateChip(chip)} size="small" />
                   </Grid>
                 ))}
               </Grid>

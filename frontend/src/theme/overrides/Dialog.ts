@@ -1,5 +1,5 @@
 import { Theme } from "@mui/material/styles";
-type Props = (theme: Theme) => any;
+type Props = (theme: Theme) => Theme["components"];
 
 const Dialog: Props = (theme) => {
   return {

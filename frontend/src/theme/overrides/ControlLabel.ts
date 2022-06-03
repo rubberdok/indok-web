@@ -1,13 +1,14 @@
 import { Theme } from "@mui/material/styles";
+import typography from "../typography";
 
-type Props = (theme: Theme) => any;
+type Props = (theme: Theme) => Theme["components"];
 
 const ControlLabel: Props = (theme) => {
   return {
     MuiFormControlLabel: {
       styleOverrides: {
         label: {
-          ...theme.typography.body2,
+          ...typography.body2,
         },
       },
     },

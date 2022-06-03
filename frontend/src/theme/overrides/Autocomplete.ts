@@ -1,6 +1,7 @@
 import { Theme } from "@mui/material/styles";
+import typography from "../typography";
 
-type Props = (theme: Theme) => any;
+type Props = (theme: Theme) => Theme["components"];
 
 const Autocomplete: Props = (theme) => {
   return {
@@ -13,7 +14,7 @@ const Autocomplete: Props = (theme) => {
           borderRadius: Number(theme.shape.borderRadius) * 2,
         },
         option: {
-          ...theme.typography.body2,
+          ...typography.body2,
           borderRadius: theme.shape.borderRadius,
         },
       },

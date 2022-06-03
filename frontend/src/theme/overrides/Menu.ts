@@ -1,11 +1,14 @@
 import { Theme } from "@mui/material/styles";
+import typography from "../typography";
 
-const Menu: any = (theme: Theme) => {
+type Props = (theme: Theme) => Theme["components"];
+
+const Menu: Props = (theme: Theme) => {
   return {
     MuiMenuItem: {
       styleOverrides: {
         root: {
-          ...theme.typography.body2,
+          ...typography.body2,
           padding: theme.spacing(1),
           borderRadius: theme.shape.borderRadius,
           "&.Mui-selected": {

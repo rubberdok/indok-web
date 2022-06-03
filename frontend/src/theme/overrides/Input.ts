@@ -1,6 +1,8 @@
 import { alpha, Theme } from "@mui/material/styles";
+type Props = (theme: Theme) => Theme["components"];
+import typography from "../typography";
 
-const Input: any = (theme: Theme) => {
+const Input: Props = (theme) => {
   return {
     MuiTextField: {
       defaultProps: {
@@ -34,7 +36,7 @@ const Input: any = (theme: Theme) => {
     MuiInputLabel: {
       styleOverrides: {
         root: {
-          ...theme.typography.body2,
+          ...typography.body2,
         },
       },
     },
@@ -59,9 +61,7 @@ const Input: any = (theme: Theme) => {
             backgroundColor: theme.palette.action.disabledBackground,
           },
         },
-        input: {
-          ...theme.typography.body2,
-        },
+        input: {},
         underline: {
           "&:before": {
             borderBottomColor: theme.palette.grey[500_56],

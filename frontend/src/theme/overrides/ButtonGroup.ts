@@ -1,13 +1,14 @@
 import { Theme } from "@mui/material/styles";
 import { ColorSchema } from "../palette";
 
-type Props = (theme: Theme) => any;
+type Props = (theme: Theme) => Theme["components"];
 
 const ButtonGroup: Props = (theme) => {
-  const styleContained = (color: ColorSchema) => ({
-    props: { variant: "contained", color },
-    style: { boxShadow: theme.customShadows[color] },
-  });
+  const styleContained = (color: ColorSchema) =>
+    ({
+      props: { variant: "contained", color },
+      style: { boxShadow: theme.customShadows[color] },
+    } as const);
 
   return {
     MuiButtonGroup: {

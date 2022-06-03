@@ -1,6 +1,8 @@
 import { Theme } from "@mui/material/styles";
 
-const Slider: any = (theme: Theme) => {
+type Props = (theme: Theme) => Theme["components"];
+
+const Slider: Props = (theme: Theme) => {
   const lightMode = theme.palette.mode === "light";
 
   return {

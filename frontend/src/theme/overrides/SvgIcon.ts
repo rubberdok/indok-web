@@ -1,4 +1,8 @@
-const SvgIcon: any = () => {
+import { Theme } from "@mui/material";
+
+type Props = () => Theme["components"];
+
+const SvgIcon: Props = () => {
   return {
     MuiSvgIcon: {
       styleOverrides: {
