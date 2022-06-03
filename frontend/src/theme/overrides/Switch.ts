@@ -1,6 +1,8 @@
 import { alpha, Theme } from "@mui/material/styles";
 
-const Switch: any = (theme: Theme) => {
+type Props = (theme: Theme) => Theme["components"];
+
+const Switch: Props = (theme: Theme) => {
   return {
     MuiSwitch: {
       styleOverrides: {

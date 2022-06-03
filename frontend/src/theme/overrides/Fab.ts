@@ -1,5 +1,5 @@
 import { Theme } from "@mui/material/styles";
-type Props = (theme: Theme) => any;
+type Props = (theme: Theme) => Theme["components"];
 
 const Fab: Props = (theme) => {
   const lightMode = theme.palette.mode === "light";
@@ -24,7 +24,7 @@ const Fab: Props = (theme) => {
         {
           props: { color: "inherit" },
           style: {
-            backgroundColor: !lightMode && theme.palette.grey[700],
+            backgroundColor: !lightMode ? theme.palette.grey[700] : undefined,
             "&:hover": {
               backgroundColor: lightMode ? theme.palette.grey[400] : theme.palette.grey[600],
             },

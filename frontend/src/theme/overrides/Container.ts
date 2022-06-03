@@ -1,8 +1,6 @@
 import { Theme } from "@mui/system";
 
-type Props = () => Theme["components"];
-
-const Container: Props = () => {
+const Container = () => {
   return {
     MuiContainer: {
       styleOverrides: {
@@ -12,7 +10,7 @@ const Container: Props = () => {
         },
       },
     },
-  };
+  } as const;
 };
 
 export default Container;

@@ -1,7 +1,9 @@
 import { alpha, Theme } from "@mui/material/styles";
 import { ColorSchema } from "../../theme/palette";
 
-const ToggleButton: any = (theme: Theme) => {
+type Props = (theme: Theme) => Theme["components"];
+
+const ToggleButton: Props = (theme: Theme) => {
   const styleSelected = (color: ColorSchema) => ({
     props: { color },
     style: {

@@ -1,6 +1,8 @@
 import { Theme } from "@mui/material/styles";
 
-const Radio: any = (theme: Theme) => {
+type Props = (theme: Theme) => Theme["components"];
+
+const Radio: Props = (theme: Theme) => {
   return {
     MuiRadio: {
       styleOverrides: {

@@ -1,5 +1,5 @@
 import { alpha, Theme } from "@mui/material/styles";
-type Props = (theme: Theme) => any;
+type Props = (theme: Theme) => Theme["components"];
 
 const Drawer: Props = (theme) => {
   const lightMode = theme.palette.mode === "light";

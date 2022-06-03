@@ -7,7 +7,6 @@ const Accordion: Props = (theme) => {
     MuiAccordion: {
       styleOverrides: {
         root: {
-          borderRadius: "0 !important",
           backgroundColor: "transparent",
           "&:last-of-type": {
             borderBottom: `solid 1px ${theme.palette.divider}`,
