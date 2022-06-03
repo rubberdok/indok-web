@@ -3,7 +3,7 @@ import { StyledEngineProvider, Theme } from "@mui/material/styles";
 import { NextPage } from "next";
 import { AppProps } from "next/app";
 import Head from "next/head";
-import React, { ReactElement, ReactNode, useEffect } from "react";
+import { ReactElement, ReactNode, useEffect } from "react";
 import { useApollo } from "src/lib/apolloClient";
 import ThemeWrapper from "src/theme";
 
