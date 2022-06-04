@@ -1,8 +1,6 @@
-import { Theme } from "@mui/system";
+import { ComponentOverride } from "./types";
 
-type Props = () => Theme["components"];
-
-const Badge: Props = () => {
+const Badge: ComponentOverride = () => {
   return {
     MuiBadge: {
       styleOverrides: {

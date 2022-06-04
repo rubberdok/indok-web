@@ -1,9 +1,7 @@
-import { Theme } from "@mui/material/styles";
+import { ComponentOverride } from "./types";
 import { ColorSchema } from "../../theme/palette";
 
-type Props = (theme: Theme) => Theme["components"];
-
-const Alert: Props = (theme) => {
+const Alert: ComponentOverride = (theme) => {
   const lightMode = theme.palette.mode === "light";
 
   const standardStyle = (color: ColorSchema) => ({

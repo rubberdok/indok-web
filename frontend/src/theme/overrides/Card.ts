@@ -1,8 +1,6 @@
-import { Theme } from "@mui/material/styles";
+import { ComponentOverride } from "./types";
 
-type Props = (theme: Theme) => Theme["components"];
-
-const Card: Props = (theme) => {
+const Card: ComponentOverride = (theme) => {
   return {
     MuiCard: {
       styleOverrides: {

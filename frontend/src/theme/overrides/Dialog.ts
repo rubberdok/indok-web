@@ -1,7 +1,6 @@
-import { Theme } from "@mui/material/styles";
-type Props = (theme: Theme) => Theme["components"];
+import { ComponentOverride } from "./types";
 
-const Dialog: Props = (theme) => {
+const Dialog: ComponentOverride = (theme) => {
   return {
     MuiDialog: {
       styleOverrides: {

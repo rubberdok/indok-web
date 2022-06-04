@@ -1,7 +1,6 @@
-import { Theme } from "@mui/material/styles";
-type Props = (theme: Theme) => Theme["components"];
+import { ComponentOverride } from "./types";
 
-const Checkbox: Props = (theme) => {
+const Checkbox: ComponentOverride = (theme) => {
   return {
     MuiCheckbox: {
       styleOverrides: {

@@ -1,9 +1,7 @@
-import { Theme } from "@mui/material/styles";
+import { ComponentOverride } from "./types";
 import { ColorSchema } from "../palette";
 
-type Props = (theme: Theme) => Theme["components"];
-
-const ButtonGroup: Props = (theme) => {
+const ButtonGroup: ComponentOverride = (theme) => {
   const styleContained = (color: ColorSchema) =>
     ({
       props: { variant: "contained", color },

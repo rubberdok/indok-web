@@ -1,8 +1,6 @@
-import { Theme } from "@mui/material/styles";
+import { ComponentOverride } from "./types";
 
-type Props = (theme: Theme) => Theme["components"];
-
-const Tabs: Props = (theme: Theme) => {
+const Tabs: ComponentOverride = (theme) => {
   return {
     MuiTab: {
       defaultProps: {
