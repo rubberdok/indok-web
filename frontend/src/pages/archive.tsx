@@ -1,4 +1,4 @@
-import DocumentList from "@components/pages/archive/DocumentList";
+import Documents from "@components/pages/archive/Documents";
 import FeaturedDocumentsList from "@components/pages/archive/FeaturedDocumentsList";
 import FilterButtons from "@components/pages/archive/FilterButtons";
 import { RemoveFiltersButton } from "@components/pages/archive/RemoveFiltersButton";
@@ -100,8 +100,8 @@ const Archive: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSi
         )}
 
         {viewFeatured && <FeaturedDocumentsList />}
-        <DocumentList
-          document_types={Object.entries(typeFilters)
+        <Documents
+          documentTypes={Object.entries(typeFilters)
             .filter((key) => key[1].active)
             .map(([, val]) => val.title)}
           year={parseInt(yearFilter)}

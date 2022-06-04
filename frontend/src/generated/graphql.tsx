@@ -1402,7 +1402,7 @@ export type UserType = {
 };
 
 export type ArchiveByTypesQueryVariables = Exact<{
-  document_types: Array<InputMaybe<Scalars["String"]>> | InputMaybe<Scalars["String"]>;
+  documentTypes: Array<InputMaybe<Scalars["String"]>> | InputMaybe<Scalars["String"]>;
   year?: InputMaybe<Scalars["Int"]>;
   names?: InputMaybe<Scalars["String"]>;
 }>;
@@ -1653,7 +1653,7 @@ export const ArchiveByTypesDocument = {
       variableDefinitions: [
         {
           kind: "VariableDefinition",
-          variable: { kind: "Variable", name: { kind: "Name", value: "document_types" } },
+          variable: { kind: "Variable", name: { kind: "Name", value: "documentTypes" } },
           type: {
             kind: "NonNullType",
             type: { kind: "ListType", type: { kind: "NamedType", name: { kind: "Name", value: "String" } } },
@@ -1680,7 +1680,7 @@ export const ArchiveByTypesDocument = {
               {
                 kind: "Argument",
                 name: { kind: "Name", value: "typeDoc" },
-                value: { kind: "Variable", name: { kind: "Name", value: "document_types" } },
+                value: { kind: "Variable", name: { kind: "Name", value: "documentTypes" } },
               },
               {
                 kind: "Argument",
