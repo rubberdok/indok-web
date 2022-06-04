@@ -1,12 +1,12 @@
 import Logo from "@components/Logo";
 import { Container, Divider, Grid, Link, Paper, Stack, styled, SxProps, Typography } from "@mui/material";
 import rubberdokLogo from "@public/img/rubberdok_logo_black.svg";
-import NextImage from "next/image";
+import dayjs from "dayjs";
+import Image from "next/image";
 import NextLink, { LinkProps } from "next/link";
 import { ReactNode, useState } from "react";
 import HallOfFame from "src/layouts/footer/HallOfFame";
 import { useResponsive } from "../../hooks";
-import dayjs from "dayjs";
 
 const Watermark = styled("div")(({ theme }) => ({
   background: "url('/nth.svg')",
@@ -70,7 +70,7 @@ const Footer: React.FC = () => {
           sx={{ py: 3, textAlign: "center" }}
         >
           <Typography variant="body3" sx={{ color: "text.secondary" }}>
-            Kopirett © {dayjs().year} Foreningen for Studentene ved Indøk. Alle rettigheter reservert
+            {`Kopirett © ${dayjs().format("YYYY")} Foreningen for Studentene ved Indøk. Alle rettigheter reservert.`}
           </Typography>
           <Stack direction="row" spacing={3} justifyContent="center" alignItems="center">
             <Link href="mailto:feedback@rubberdok.no" variant="body3" sx={{ color: "text.secondary" }}>
@@ -79,9 +79,9 @@ const Footer: React.FC = () => {
             <Link onClick={() => setOpen(!open)} variant="body3" sx={{ color: "text.secondary" }}>
               Hall of Fame
             </Link>
-            <a href="https://github.com/rubberdok/indok-web" rel="noreferrer noopener" style={{ height: "100%" }}>
-              <NextImage src={rubberdokLogo} alt="Rubberdøk logo" width="64px" height="32px" layout="fixed" />
-            </a>
+            <Link href="https://github.com/rubberdok/indok-web" rel="noreferrer noopener" style={{ height: "100%" }}>
+              <Image src={rubberdokLogo} alt="Rubberdøk" width="64px" height="32px" layout="fixed" />
+            </Link>
           </Stack>
         </Stack>
       </Container>
@@ -90,10 +90,10 @@ const Footer: React.FC = () => {
   );
 };
 
-interface NextLinkItemProps extends LinkProps {
+type NextLinkItemProps = LinkProps & {
   children: ReactNode;
   sx?: SxProps;
-}
+};
 
 const NextLinkItem: React.FC<NextLinkItemProps> = ({ children, sx, ...other }) => {
   return (

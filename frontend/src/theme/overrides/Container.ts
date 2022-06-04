@@ -1,6 +1,6 @@
-import { Theme } from "@mui/system";
+import { ComponentOverride } from "./types";
 
-const Container = () => {
+const Container: ComponentOverride = () => {
   return {
     MuiContainer: {
       styleOverrides: {

@@ -1,4 +1,4 @@
-import { Theme } from "@mui/material/styles";
+import { ComponentOverride } from "./types";
 import Accordion from "./Accordion";
 import Alert from "./Alert";
 import Autocomplete from "./Autocomplete";
@@ -34,17 +34,15 @@ import ToggleButton from "./ToggleButton";
 import Tooltip from "./Tooltip";
 import Typography from "./Typography";
 
-type Props = (theme: Theme) => Theme["components"];
-
-const ComponentsOverrides: Props = (theme) => {
+const ComponentsOverrides: ComponentOverride = (theme) => {
   return {
-    ...Link(),
-    ...Badge(),
-    ...Paper(),
-    ...SvgIcon(),
-    ...Container(),
+    ...Link(theme),
+    ...Badge(theme),
+    ...Paper(theme),
+    ...SvgIcon(theme),
+    ...Container(theme),
     ...CssBaseline(theme),
-    ...LoadingButton(),
+    ...LoadingButton(theme),
     ...Fab(theme),
     ...Tabs(theme),
     ...Chip(theme),

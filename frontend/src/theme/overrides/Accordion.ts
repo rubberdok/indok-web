@@ -1,8 +1,6 @@
-import { Theme } from "@mui/material/styles";
+import { ComponentOverride } from "./types";
 
-type Props = (theme: Theme) => Theme["components"];
-
-const Accordion: Props = (theme) => {
+const Accordion: ComponentOverride = (theme) => {
   return {
     MuiAccordion: {
       styleOverrides: {

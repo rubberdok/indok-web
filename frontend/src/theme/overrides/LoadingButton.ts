@@ -1,17 +1,15 @@
-import { Theme } from "@mui/system";
+import { ComponentOverride } from "./types";
 
-type Props = () => Theme["components"];
-
-const LoadingButton: Props = () => {
+const LoadingButton: ComponentOverride = () => {
   return {
-    MuiLoadingButton: {
+    MuiButton: {
       styleOverrides: {
         root: {
-          "&.MuiButton-text": {
-            "& .MuiLoadingButton-startIconPendingStart": {
+          "& .MuiLoadingButton-text": {
+            "& .MuiLoadingButton-startIcon": {
               marginLeft: 0,
             },
-            "& .MuiLoadingButton-endIconPendingEnd": {
+            "& .MuiLoadingButton-endIcon": {
               marginRight: 0,
             },
           },

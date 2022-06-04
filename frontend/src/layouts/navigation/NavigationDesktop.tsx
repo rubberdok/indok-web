@@ -84,13 +84,8 @@ const NavigationDesktop: React.FC<NavigationDesktopProps> = ({ isScrolling, isTr
       {navigationConfig.map((link) => {
         if (link.title === "Arkiv") {
           return (
-            <PermissionRequired permission="archive.view_archivedocument">
-              <NavigationItemDesktop
-                key={link.title}
-                item={link}
-                isScrolling={isScrolling}
-                isTransparent={isTransparent}
-              />
+            <PermissionRequired permission="archive.view_archivedocument" key={link.title}>
+              <NavigationItemDesktop item={link} isScrolling={isScrolling} isTransparent={isTransparent} />
             </PermissionRequired>
           );
         }

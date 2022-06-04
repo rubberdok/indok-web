@@ -1,7 +1,6 @@
-import { Theme } from "@mui/material/styles";
-type Props = (theme: Theme) => Theme["components"];
+import { ComponentOverride } from "./types";
 
-const Lists: Props = (theme: Theme) => {
+const Lists: ComponentOverride = (theme) => {
   return {
     MuiListItemIcon: {
       styleOverrides: {

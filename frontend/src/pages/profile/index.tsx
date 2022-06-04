@@ -77,34 +77,26 @@ const ProfilePage: NextPageWithLayout = () => {
             Her kan du endre din informasjon, se tidligere arrangementer og foreningene der du er medlem.
           </Typography>
 
-          <Grid
-            container
-            columnSpacing={{ xs: 0, md: 4 }}
-            rowSpacing={4}
-            justifyContent="center"
-            sm={10}
-            xs={12}
-            alignItems="stretch"
-          >
-            <Grid item xs={12} md={6}>
+          <Grid container columnSpacing={{ xs: 0, md: 4 }} rowSpacing={4} justifyContent="center" alignItems="stretch">
+            <Grid item xs={12} md={5}>
               <Personal user={data?.user} data-test-id={`${ID_PREFIX}personal-`} />
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={5}>
               <Event data-test-id={`${ID_PREFIX}event-`} />
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={5}>
               <Organization data-test-id={`${ID_PREFIX}organization-`} />
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={5}>
               <Form data-test-id={`${ID_PREFIX}form-`} />
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={5}>
               <Report data-test-id={`${ID_PREFIX}report-`} />
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={5}>
               <Orders data-test-id={`${ID_PREFIX}orders-`} />
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={5}>
               <PermissionRequired permission="cabins.manage_booking">
                 <CabinsAdmin data-test-id={`${ID_PREFIX}cabins-`} />
               </PermissionRequired>

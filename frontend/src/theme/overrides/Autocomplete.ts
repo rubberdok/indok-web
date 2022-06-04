@@ -1,9 +1,7 @@
-import { Theme } from "@mui/material/styles";
-import typography from "../typography";
+import { experimental_sx as sx } from "@mui/material";
+import { ComponentOverride } from "./types";
 
-type Props = (theme: Theme) => Theme["components"];
-
-const Autocomplete: Props = (theme) => {
+const Autocomplete: ComponentOverride = (theme) => {
   return {
     MuiAutocomplete: {
       styleOverrides: {
@@ -13,10 +11,10 @@ const Autocomplete: Props = (theme) => {
           boxShadow: theme.customShadows.z24,
           borderRadius: Number(theme.shape.borderRadius) * 2,
         },
-        option: {
-          ...typography.body2,
+        option: sx({
           borderRadius: theme.shape.borderRadius,
-        },
+          typography: theme.typography.body2,
+        }),
       },
     },
   };

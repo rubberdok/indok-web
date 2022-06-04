@@ -1,8 +1,7 @@
-import { alpha, Theme } from "@mui/material/styles";
-type Props = (theme: Theme) => Theme["components"];
-import typography from "../typography";
+import { alpha, experimental_sx as sx } from "@mui/material/styles";
+import { ComponentOverride } from "./types";
 
-const Input: Props = (theme) => {
+const Input: ComponentOverride = (theme) => {
   return {
     MuiTextField: {
       defaultProps: {
@@ -35,9 +34,9 @@ const Input: Props = (theme) => {
     },
     MuiInputLabel: {
       styleOverrides: {
-        root: {
-          ...typography.body2,
-        },
+        root: sx({
+          typography: theme.typography.body2,
+        }),
       },
     },
     MuiFilledInput: {
@@ -61,7 +60,9 @@ const Input: Props = (theme) => {
             backgroundColor: theme.palette.action.disabledBackground,
           },
         },
-        input: {},
+        input: sx({
+          typography: theme.typography.body2,
+        }),
         underline: {
           "&:before": {
             borderBottomColor: theme.palette.grey[500_56],

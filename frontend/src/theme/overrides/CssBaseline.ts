@@ -1,8 +1,6 @@
-import { Theme } from "@mui/material";
+import { ComponentOverride } from "./types";
 
-type Props = (theme: Theme) => Theme["components"];
-
-const CssBaseline: Props = (theme) => {
+const CssBaseline: ComponentOverride = (theme) => {
   return {
     MuiCssBaseline: {
       styleOverrides: {

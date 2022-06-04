@@ -1,16 +1,16 @@
-import { Theme } from "@mui/material/styles";
-import typography from "../typography";
+import { experimental_sx as sx } from "@mui/material";
+import { ComponentOverride } from "./types";
 
-type Props = (theme: Theme) => Theme["components"];
-
-const Menu: Props = (theme: Theme) => {
+const Menu: ComponentOverride = (theme) => {
   return {
     MuiMenuItem: {
       styleOverrides: {
         root: {
-          ...typography.body2,
-          padding: theme.spacing(1),
-          borderRadius: theme.shape.borderRadius,
+          ...sx({
+            typography: theme.typography.body2,
+            padding: theme.spacing(1),
+            borderRadius: theme.shape.borderRadius,
+          }),
           "&.Mui-selected": {
             backgroundColor: theme.palette.action.selected,
             "&:hover": {

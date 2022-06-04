@@ -1,8 +1,6 @@
-import { Theme } from "@mui/material/styles";
+import { ComponentOverride } from "./types";
 
-type Props = (theme: Theme) => Theme["components"];
-
-const Tooltip: Props = (theme: Theme) => {
+const Tooltip: ComponentOverride = (theme) => {
   const lightMode = theme.palette.mode === "light";
 
   return {

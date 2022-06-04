@@ -17,6 +17,8 @@ const RootStyle = styled("div")(({ theme }) => ({
   },
 }));
 
+const links = [{ name: "Hjem", href: "/" }, { name: "Arrangementer" }];
+
 const Events: NextPageWithLayout = () => {
   const [showCalendarView, setShowCalenderView] = useState(false);
 
@@ -24,7 +26,7 @@ const Events: NextPageWithLayout = () => {
     <RootStyle>
       <Box width={1} pt={5} position="relative" bgcolor="background.neutral">
         <Container>
-          <Breadcrumbs sx={{ mb: { xs: 5, md: 8 } }} links={[{ name: "Hjem", href: "/" }, { name: "Arrangementer" }]} />
+          <Breadcrumbs sx={{ mb: { xs: 5, md: 8 } }} links={links} />
           <Typography variant="h1" mb={4}>
             Arrangementer
           </Typography>

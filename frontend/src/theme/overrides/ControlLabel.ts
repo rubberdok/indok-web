@@ -1,15 +1,13 @@
-import { Theme } from "@mui/material/styles";
-import typography from "../typography";
+import { experimental_sx as sx } from "@mui/material";
+import { ComponentOverride } from "./types";
 
-type Props = (theme: Theme) => Theme["components"];
-
-const ControlLabel: Props = (theme) => {
+const ControlLabel: ComponentOverride = (theme) => {
   return {
     MuiFormControlLabel: {
       styleOverrides: {
-        label: {
-          ...typography.body2,
-        },
+        label: sx({
+          typography: theme.typography.body2,
+        }),
       },
     },
     MuiFormHelperText: {
