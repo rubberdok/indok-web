@@ -4,9 +4,10 @@ import TabPanel from "@components/pages/about/TabPanel";
 import AdminCabinTable from "@components/pages/cabins/Admin/AdminCabinTable";
 import PermissionRequired from "@components/permissions/PermissionRequired";
 import { QUERY_ADMIN_ALL_BOOKINGS } from "@graphql/cabins/queries";
+import useResponsive from "@hooks/useResponsive";
 import { BookingFromQuery } from "@interfaces/cabins";
 import Settings from "@mui/icons-material/Settings";
-import { Box, Button, Container, Grid, Tab, Tabs, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { Box, Button, Container, Grid, Tab, Tabs, Typography } from "@mui/material";
 import dayjs from "dayjs";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
@@ -16,7 +17,6 @@ import { useState } from "react";
 Page for booking admininistration showing all upcoming bookings and buttons for actions on these bookings.
 */
 const AdminPage: NextPage = () => {
-  const theme = useTheme();
   const { data, refetch } = useQuery<{
     adminAllBookings: BookingFromQuery[];
   }>(QUERY_ADMIN_ALL_BOOKINGS, { variables: { after: dayjs().subtract(1, "day").format("YYYY-MM-DD") } });
@@ -26,7 +26,7 @@ const AdminPage: NextPage = () => {
 
   const handleTabChange = (newTabValue: number) => setTabValue(newTabValue);
 
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const isMobile = useResponsive({ query: "down", key: "md" });
   const accepted = data?.adminAllBookings.filter((booking) => !booking.isTentative && !booking.isDeclined);
   const declined = data?.adminAllBookings.filter((booking) => !booking.isTentative && booking.isDeclined);
   const tentative = data?.adminAllBookings.filter((booking) => booking.isTentative);
