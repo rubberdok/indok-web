@@ -1,5 +1,5 @@
-query archiveByTypes($document_types: [String]!, $year: Int, $names: String) {
-  archiveByTypes(typeDoc: $document_types, year: $year, names: $names) {
+query archiveByTypes($documentTypes: [String]!, $year: Int, $names: String) {
+  archiveByTypes(typeDoc: $documentTypes, year: $year, names: $names) {
     id
     title
     thumbnail
