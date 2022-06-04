@@ -6,6 +6,7 @@ import NextLink, { LinkProps } from "next/link";
 import { ReactNode, useState } from "react";
 import HallOfFame from "src/layouts/footer/HallOfFame";
 import { useResponsive } from "../../hooks";
+import dayjs from "dayjs";
 
 const Watermark = styled("div")(({ theme }) => ({
   background: "url('/nth.svg')",
@@ -69,7 +70,7 @@ const Footer: React.FC = () => {
           sx={{ py: 3, textAlign: "center" }}
         >
           <Typography variant="body3" sx={{ color: "text.secondary" }}>
-            Kopirett © 2022 Foreningen for Studentene ved Indøk. Alle rettigheter reservert
+            Kopirett © {dayjs().year} Foreningen for Studentene ved Indøk. Alle rettigheter reservert
           </Typography>
           <Stack direction="row" spacing={3} justifyContent="center" alignItems="center">
             <Link href="mailto:feedback@rubberdok.no" variant="body3" sx={{ color: "text.secondary" }}>

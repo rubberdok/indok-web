@@ -30,7 +30,11 @@ const moduleExports = {
       },
     ];
   },
-
+  compiler: {
+    ...getPresets(),
+    emotion: true,
+  },
+  swcMinify: true,
   experimental: {
     outputStandalone: true,
   },

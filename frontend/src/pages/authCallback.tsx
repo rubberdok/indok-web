@@ -3,19 +3,20 @@ import ProfileSkeleton from "@components/pages/profile/ProfileSkeleton";
 import { AUTHENTICATE } from "@graphql/users/mutations";
 import { User } from "@interfaces/users";
 import { Button, Container, Grid, Typography, useTheme } from "@mui/material";
-import { NextPage } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import Bug from "public/illustrations/Bug.svg";
 import React, { useEffect } from "react";
+import Layout from "src/layouts";
+import { NextPageWithLayout } from "./_app";
 
 type AuthUser = {
   user: User;
   idToken: string | null;
 };
 
-const AuthCallbackPage: NextPage = () => {
+const AuthCallbackPage: NextPageWithLayout = () => {
   const router = useRouter();
   const theme = useTheme();
 
@@ -74,5 +75,11 @@ const AuthCallbackPage: NextPage = () => {
     </Container>
   );
 };
+
+AuthCallbackPage.getLayout = (page: React.ReactElement) => (
+  <Layout simpleHeader simpleFooter>
+    {page}
+  </Layout>
+);
 
 export default AuthCallbackPage;

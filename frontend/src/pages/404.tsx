@@ -1,15 +1,15 @@
-import Layout from "@components/Layout";
-import { Button, Container, Grid, Typography, useTheme } from "@mui/material";
-import { NextPage } from "next";
+import { Button, Container, Grid, Stack, Typography, useTheme } from "@mui/material";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import _404 from "public/illustrations/404.svg";
+import Layout from "src/layouts";
+import { NextPageWithLayout } from "./_app";
 
-const Custom404: NextPage = () => {
+const Custom404: NextPageWithLayout = () => {
   const theme = useTheme();
   return (
-    <Layout>
+    <>
       <Head>
         <title>404, fant ikke siden | Forening for Industriell Økonomi og Teknologiledelse</title>
       </Head>
@@ -37,8 +37,14 @@ const Custom404: NextPage = () => {
           </Grid>
         </Grid>
       </Container>
-    </Layout>
+    </>
   );
 };
+
+Custom404.getLayout = (page) => (
+  <Layout simpleHeader simpleFooter>
+    {page}
+  </Layout>
+);
 
 export default Custom404;
