@@ -26,33 +26,20 @@ const SearchStyle = styled(OutlinedInput)(({ theme }) => ({
   },
 }));
 
-const SearchBar: React.FC<SearchBarProps> = ({
-  searchFilter,
-  handleSearchFilterChanged,
-  handleSearchFilterCanceled,
-}) => {
+const SearchBar: React.FC<SearchBarProps> = ({ searchFilter, handleSearchFilterChanged }) => {
   return (
-    <>
-      {/* <MuiSearchBar
+    <RootStyle>
+      <SearchStyle
         value={searchFilter}
-        classes={styles}
-        onChange={debounce(handleSearchFilterChanged, 200)}
-        placeholder={"Søk på dokumenter"}
-        onCancelSearch={handleSearchFilterCanceled}
-      /> */}
-      <RootStyle>
-        <SearchStyle
-          value={searchFilter}
-          onChange={handleSearchFilterChanged}
-          placeholder="Søk etter dokumenter..."
-          startAdornment={
-            <InputAdornment position="start">
-              <MagnifyingGlass />
-            </InputAdornment>
-          }
-        />
-      </RootStyle>
-    </>
+        onChange={handleSearchFilterChanged}
+        placeholder="Søk etter dokumenter..."
+        startAdornment={
+          <InputAdornment position="start">
+            <MagnifyingGlass />
+          </InputAdornment>
+        }
+      />
+    </RootStyle>
   );
 };
 
