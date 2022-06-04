@@ -4,8 +4,6 @@ export type NavigationItemType = {
 };
 
 export const navigationConfig: NavigationItemType[] = [
-  { title: "Hjem", path: "/" },
-  { title: "Om oss", path: "/about" },
   {
     title: "Arrangementer",
     path: "/events",
@@ -13,4 +11,5 @@ export const navigationConfig: NavigationItemType[] = [
   { title: "Verv", path: "/listings" },
   { title: "Hyttebooking", path: "/cabins" },
   { title: "Arkiv", path: "/archive" },
+  { title: "Om oss", path: "/about" },
 ];

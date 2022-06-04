@@ -1,10 +1,10 @@
 import dynamic from "next/dynamic";
 import { ReactNode } from "react";
 
-const Header = dynamic(() => import("./header/Header"), { ssr: false });
-const HeaderSimple = dynamic(() => import("./header/HeaderSimple"), { ssr: false });
-const Footer = dynamic(() => import("./footer/Footer"), { ssr: false });
-const FooterSimple = dynamic(() => import("./footer/FooterSimple"), { ssr: false });
+const Header = dynamic(() => import("./header/variants/Basic"));
+const HeaderSimple = dynamic(() => import("./header/variants/Simple"));
+const Footer = dynamic(() => import("./footer/Footer"));
+const FooterSimple = dynamic(() => import("./footer/FooterSimple"));
 
 type Props = {
   children: ReactNode;
@@ -25,11 +25,9 @@ const Layout: React.FC<Props> = ({
 }) => {
   return (
     <>
-      {disabledHeader ? null : simpleHeader ? <HeaderSimple /> : <Header transparent={transparentHeader} />}
-
+      {!disabledHeader && simpleHeader ? <HeaderSimple /> : <Header transparent={transparentHeader} />}
       {children}
-
-      {disabledFooter ? null : simpleFooter ? <FooterSimple /> : <Footer />}
+      {!disabledFooter && simpleFooter ? <FooterSimple /> : <Footer />}
     </>
   );
 };

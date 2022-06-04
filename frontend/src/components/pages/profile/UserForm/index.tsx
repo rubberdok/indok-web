@@ -103,7 +103,6 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": 
                 <TextField
                   label="Fornavn"
                   name="firstName"
-                  variant="outlined"
                   required
                   value={formik.values.firstName}
                   onChange={formik.handleChange}
@@ -120,16 +119,12 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": 
                 <TextField
                   label="Etternavn"
                   name="lastName"
-                  variant="outlined"
                   required
                   value={formik.values.lastName}
                   onChange={formik.handleChange}
                   onBlur={() => formik.setFieldTouched("lastName")}
                   error={formik.touched.lastName && Boolean(formik.errors.lastName)}
                   helperText={formik.touched.lastName && formik.errors.lastName}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
                   data-test-id={`${ID_PREFIX}lastNameTextField`}
                 />
               </Grid>
@@ -143,15 +138,11 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": 
                   label="E-post"
                   name="email"
                   id="email"
-                  variant="outlined"
                   onBlur={() => formik.setFieldTouched("email")}
                   value={formik.values.email}
                   onChange={formik.handleChange}
                   error={formik.touched.email && Boolean(formik.errors.email)}
                   helperText={formik.touched.email && formik.errors.email}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
                   data-test-id={`${ID_PREFIX}emailTextField`}
                 />
               </Grid>
@@ -159,15 +150,11 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": 
                 <TextField
                   label="Telefonnummer"
                   name="phoneNumber"
-                  variant="outlined"
                   onBlur={() => formik.setFieldTouched("phoneNumber")}
                   value={formik.values.phoneNumber}
                   onChange={formik.handleChange}
                   error={formik.touched.phoneNumber && Boolean(formik.errors.phoneNumber)}
                   helperText={formik.touched.phoneNumber && formik.errors.phoneNumber}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
                   data-test-id={`${ID_PREFIX}phoneNumberTextField`}
                 />
               </Grid>
@@ -176,14 +163,12 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": 
               <Typography variant="subtitle2">Studieinformasjon</Typography>
             </Grid>
             <Grid item>
-              <FormControl>
-                <InputLabel htmlFor="graduationYear" shrink>
-                  Uteksamineringsår
-                </InputLabel>
+              <FormControl variant="standard">
+                <InputLabel htmlFor="graduationYear">Uteksamineringsår</InputLabel>
                 <NativeSelect
                   name="graduationYear"
-                  variant="outlined"
                   required
+                  variant="filled"
                   value={formik.values.graduationYear}
                   onChange={formik.handleChange}
                   onBlur={() => formik.setFieldTouched("graduationYear")}
@@ -218,15 +203,11 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": 
                 <TextField
                   label="Allergier"
                   name="allergies"
-                  variant="outlined"
                   value={formik.values.allergies}
                   onChange={formik.handleChange}
                   onBlur={() => formik.setFieldTouched("allergies")}
                   error={formik.touched.allergies && Boolean(formik.errors.allergies)}
                   helperText={formik.touched.allergies && formik.errors.allergies}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
                   data-test-id={`${ID_PREFIX}allergiesTextField`}
                 />
               </Grid>

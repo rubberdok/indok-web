@@ -1,3 +1,4 @@
+import PermissionRequired from "@components/permissions/PermissionRequired";
 import { Box, Link, LinkProps, Stack } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import NextLink from "next/link";
@@ -62,15 +63,9 @@ type NavigationDesktopProps = {
   isScrolling?: boolean;
   isTransparent?: boolean;
   navigationConfig: NavigationItemType[];
-  loggedIn: boolean;
 };
 
-const NavigationDesktop: React.FC<NavigationDesktopProps> = ({
-  isScrolling,
-  isTransparent,
-  navigationConfig,
-  loggedIn,
-}) => {
+const NavigationDesktop: React.FC<NavigationDesktopProps> = ({ isScrolling, isTransparent, navigationConfig }) => {
   return (
     <Stack
       direction="row"
@@ -86,17 +81,23 @@ const NavigationDesktop: React.FC<NavigationDesktopProps> = ({
         }),
       }}
     >
-      {navigationConfig.map(
-        (link) =>
-          !(!loggedIn && link.title === "Arkiv") && (
-            <NavigationItemDesktop
-              key={link.title}
-              item={link}
-              isScrolling={isScrolling}
-              isTransparent={isTransparent}
-            />
-          )
-      )}
+      {navigationConfig.map((link) => {
+        if (link.title === "Arkiv") {
+          return (
+            <PermissionRequired permission="archive.view_archivedocument">
+              <NavigationItemDesktop
+                key={link.title}
+                item={link}
+                isScrolling={isScrolling}
+                isTransparent={isTransparent}
+              />
+            </PermissionRequired>
+          );
+        }
+        return (
+          <NavigationItemDesktop key={link.title} item={link} isScrolling={isScrolling} isTransparent={isTransparent} />
+        );
+      })}
     </Stack>
   );
 };

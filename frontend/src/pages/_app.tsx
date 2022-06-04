@@ -3,7 +3,7 @@ import { StyledEngineProvider, Theme } from "@mui/material/styles";
 import { NextPage } from "next";
 import { AppProps } from "next/app";
 import Head from "next/head";
-import React, { ReactElement, ReactNode, useEffect } from "react";
+import { ReactElement, ReactNode, useEffect } from "react";
 import { useApollo } from "src/lib/apolloClient";
 import ThemeWrapper from "src/theme";
 
@@ -40,6 +40,7 @@ const App = ({ Component, pageProps, err }: MyAppProps): JSX.Element => {
       <Head>
         <title>Indøk NTNU - Foreningen for Industriell Økonomi og teknologiledelse</title>
         <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
+        <meta name="theme-color" content="#ffffff" />
       </Head>
       <StyledEngineProvider injectFirst>
         <ThemeWrapper>{getLayout(<Component {...pageProps} err={err} />)}</ThemeWrapper>
