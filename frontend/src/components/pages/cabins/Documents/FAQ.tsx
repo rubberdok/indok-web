@@ -1,11 +1,11 @@
-import React from "react";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { Box, Grid } from "@mui/material";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import Typography from "@mui/material/Typography";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { Box, Grid } from "@mui/material";
 import Link from "next/link";
+import React from "react";
 
 const faqs = [
   {
@@ -124,7 +124,7 @@ const FAQ: React.FC = () => {
       {faqs.map((faq, index) => (
         <Grid item xs={12} md={6} key={index}>
           <Box>
-            <Accordion expanded={expanded === index} onChange={handleChange(index)}>
+            <Accordion expanded={expanded === index} onChange={() => handleChange(index)}>
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <Typography variant="subtitle1">{faq.question}</Typography>
               </AccordionSummary>

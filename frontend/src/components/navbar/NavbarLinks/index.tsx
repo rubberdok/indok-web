@@ -1,6 +1,6 @@
+import PermissionRequired from "@components/permissions/PermissionRequired";
 import React from "react";
 import links from "./links";
-import PermissionRequired from "@components/permissions/PermissionRequired";
 import NavbarItem from "./NavbarItem";
 
 type Props = {

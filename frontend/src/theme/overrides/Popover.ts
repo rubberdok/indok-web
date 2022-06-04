@@ -1,6 +1,7 @@
-import { alpha, Theme } from "@mui/material/styles";
+import { alpha } from "@mui/material/styles";
+import { ComponentOverride } from "./types";
 
-const Popover: ComponentOverride = (theme: Theme) => {
+const Popover: ComponentOverride = (theme) => {
   return {
     MuiPopover: {
       styleOverrides: {

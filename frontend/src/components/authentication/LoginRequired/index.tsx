@@ -1,8 +1,7 @@
 import { useQuery } from "@apollo/client";
 import { GET_USER_INFO } from "@graphql/users/queries";
 import { UserInfo } from "@interfaces/users";
-import { Button } from "@mui/material";
-import { Skeleton } from "@mui/material";
+import { Button, Skeleton } from "@mui/material";
 import { generateFeideLoginUrl } from "@utils/auth";
 import Link from "next/link";
 import { useRouter } from "next/router";

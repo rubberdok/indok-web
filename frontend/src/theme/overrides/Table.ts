@@ -1,6 +1,6 @@
 import { ComponentOverride } from "./types";
 
-const Table: ComponentOverride = (theme: Theme) => {
+const Table: ComponentOverride = (theme) => {
   return {
     MuiTableRow: {
       styleOverrides: {

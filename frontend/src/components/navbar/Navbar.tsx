@@ -1,6 +1,7 @@
 import { useQuery } from "@apollo/client";
 import { GET_USER_INFO } from "@graphql/users/queries";
 import { UserInfo } from "@interfaces/users";
+import MenuIcon from "@mui/icons-material/Menu";
 import {
   AppBar,
   Box,
@@ -13,7 +14,6 @@ import {
   useScrollTrigger,
 } from "@mui/material";
 import makeStyles from "@mui/styles/makeStyles";
-import MenuIcon from "@mui/icons-material/Menu";
 import leftFern from "@public/static/anniversary/left_fern.svg";
 import rightFern from "@public/static/anniversary/right_fern.svg";
 import Image from "next/image";
