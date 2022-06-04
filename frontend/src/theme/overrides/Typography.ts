@@ -1,4 +1,5 @@
 import { ComponentOverride } from "./types";
+
 const Typography: ComponentOverride = (theme) => {
   return {
     MuiTypography: {

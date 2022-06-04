@@ -5,21 +5,12 @@ import AdminCabinTable from "@components/pages/cabins/Admin/AdminCabinTable";
 import PermissionRequired from "@components/permissions/PermissionRequired";
 import { QUERY_ADMIN_ALL_BOOKINGS } from "@graphql/cabins/queries";
 import { BookingFromQuery } from "@interfaces/cabins";
+import Settings from "@mui/icons-material/Settings";
 import { Box, Button, Container, Grid, Tab, Tabs, Typography, useMediaQuery, useTheme } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
 import dayjs from "dayjs";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
-import Settings from "@mui/icons-material/Settings";
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    width: "100%",
-    overflowX: "auto",
-    marginBottom: theme.spacing(4),
-  },
-}));
+import { useState } from "react";
 
 /*
 Page for booking admininistration showing all upcoming bookings and buttons for actions on these bookings.
@@ -36,7 +27,6 @@ const AdminPage: NextPage = () => {
   const handleTabChange = (newTabValue: number) => setTabValue(newTabValue);
 
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-  const classes = useStyles();
   const accepted = data?.adminAllBookings.filter((booking) => !booking.isTentative && !booking.isDeclined);
   const declined = data?.adminAllBookings.filter((booking) => !booking.isTentative && booking.isDeclined);
   const tentative = data?.adminAllBookings.filter((booking) => booking.isTentative);
@@ -58,7 +48,7 @@ const AdminPage: NextPage = () => {
             </Grid>
           </Grid>
 
-          <Box className={classes.root} marginBottom={5} component="div">
+          <Box sx={(theme) => ({ width: "100%", overflowX: "auto", mb: theme.spacing(4) })} component="div">
             <Box sx={{ width: "100%" }}>
               <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
                 <Tabs

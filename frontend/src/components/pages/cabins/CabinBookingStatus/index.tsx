@@ -1,5 +1,6 @@
+import useResponsive from "@hooks/useResponsive";
 import { Cabin, ContactInfo, DatePick } from "@interfaces/cabins";
-import { Box, Divider, Tooltip, Typography, useMediaQuery } from "@mui/material";
+import { Box, Divider, Tooltip, Typography } from "@mui/material";
 import { TypographyProps } from "@mui/material/Typography";
 import makeStyles from "@mui/styles/makeStyles";
 import { calculatePrice, convertDateFormat, toStringChosenCabins } from "@utils/cabins";
@@ -32,7 +33,7 @@ Renders fields based on the props given.
 */
 const CabinBookingStatus: NextPage<Props> = ({ chosenCabins, datePick, contactInfo, cabinText, mailSent }) => {
   const classes = useStyles();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const isMobile = useResponsive({ query: "down", key: "md" });
 
   return (
     <Box p={isMobile ? 0 : 3} border={3} borderColor="primary.main">

@@ -1,7 +1,8 @@
-import { alpha, Theme } from "@mui/material/styles";
+import { alpha } from "@mui/material/styles";
 import { ColorSchema } from "../../theme/palette";
+import { ComponentOverride } from "./types";
 
-const ToggleButton: ComponentOverride = (theme: Theme) => {
+const ToggleButton: ComponentOverride = (theme) => {
   const styleSelected = (color: ColorSchema) => ({
     props: { color },
     style: {

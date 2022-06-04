@@ -1,16 +1,16 @@
-import React, { Dispatch, SetStateAction } from "react";
+import { Cabin, ContactInfo, DatePick, ModalData } from "@interfaces/cabins";
+import CheckIcon from "@mui/icons-material/Check";
+import ClearIcon from "@mui/icons-material/Clear";
+import { Grid, IconButton, Theme } from "@mui/material";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import { Grid, IconButton, Theme } from "@mui/material";
 import createStyles from "@mui/styles/createStyles";
 import makeStyles from "@mui/styles/makeStyles";
-import Contract from "../Documents/Contract";
-import ClearIcon from "@mui/icons-material/Clear";
-import CheckIcon from "@mui/icons-material/Check";
-import { Cabin, ContactInfo, DatePick, ModalData } from "@interfaces/cabins";
 import { NextPage } from "next";
+import { Dispatch, SetStateAction } from "react";
+import Contract from "../Documents/Contract";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

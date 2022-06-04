@@ -20,7 +20,7 @@ import {
 } from "@mui/material";
 import { getDecisionEmailProps, toStringChosenCabins } from "@utils/cabins";
 import dayjs from "dayjs";
-import React, { useState } from "react";
+import { useState } from "react";
 import DeclineBookingDialog from "./DeclineBookingDialog";
 import InlineTableCell from "./InlineTableCell";
 

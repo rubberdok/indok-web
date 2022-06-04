@@ -1,4 +1,4 @@
-import { alpha, Theme } from "@mui/material/styles";
+import { alpha } from "@mui/material/styles";
 import { ComponentOverride } from "./types";
 
 const Switch: ComponentOverride = (theme) => {

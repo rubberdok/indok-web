@@ -1,6 +1,6 @@
 import { ComponentOverride } from "./types";
 
-const Stepper: ComponentOverride = (theme: Theme) => {
+const Stepper: ComponentOverride = (theme) => {
   return {
     MuiStepConnector: {
       styleOverrides: {
