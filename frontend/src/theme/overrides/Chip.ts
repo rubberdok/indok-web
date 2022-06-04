@@ -1,8 +1,7 @@
-import { Theme } from "@mui/material/styles";
-type Props = (theme: Theme) => Theme["components"];
-import typography from "../typography";
+import { experimental_sx as sx } from "@mui/material";
+import { ComponentOverride } from "./types";
 
-const Chip: Props = (theme) => {
+const Chip: ComponentOverride = (theme) => {
   return {
     MuiChip: {
       styleOverrides: {
@@ -25,10 +24,10 @@ const Chip: Props = (theme) => {
           },
         },
         //
-        avatar: {
-          fontSize: typography.subtitle2.fontSize,
-          fontWeight: typography.subtitle2.fontWeight,
-        },
+        avatar: sx({
+          fontSize: theme.typography.subtitle2.fontSize,
+          fontWeight: theme.typography.subtitle2.fontWeight,
+        }),
         avatarColorInfo: {
           color: theme.palette.info.contrastText,
           backgroundColor: theme.palette.info.dark,

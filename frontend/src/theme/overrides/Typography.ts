@@ -1,6 +1,5 @@
-import { Theme } from "@mui/material/styles";
-
-const Typography = (theme: Theme): Theme["components"] => {
+import { ComponentOverride } from "./types";
+const Typography: ComponentOverride = (theme) => {
   return {
     MuiTypography: {
       defaultProps: {

@@ -1,47 +1,36 @@
 import { Box, Breadcrumbs as MUIBreadcrumbs, BreadcrumbsProps, SxProps, Typography } from "@mui/material";
 import { CaretRight } from "phosphor-react";
-import { ReactElement } from "react";
-import LinkItem from ".";
+import Link from "./Link";
+import { TLink } from "./types";
 
-export type TLink = {
-  href?: string;
-  name?: string;
-  icon?: ReactElement;
-};
-
-type Props = {
+interface Props extends BreadcrumbsProps {
   links: TLink[];
   activeLast?: boolean;
   onDark?: boolean;
   sx?: SxProps;
-} & BreadcrumbsProps;
+}
 
 const Breadcrumbs: React.FC<Props> = ({ links, sx, activeLast = false, onDark = false, ...other }) => {
-  const currentLink = links[links.length - 1].name;
+  const currentLink = links[links.length - 1];
 
-  const listDefault = links.map((link) => <LinkItem key={link.name} link={link} onDark={onDark} />);
-
-  const listActiveLast = links.map((link) => (
-    <div key={link.name}>
-      {link.name !== currentLink ? (
-        <LinkItem link={link} onDark={onDark} />
-      ) : (
-        <Typography
-          noWrap
-          variant="body3"
-          sx={{
-            color: "text.disabled",
-            ...(onDark && {
-              opacity: 0.48,
-              color: "common.white",
-            }),
-          }}
-        >
-          {currentLink || ""}
-        </Typography>
-      )}
-    </div>
-  ));
+  const currentPath = activeLast ? (
+    <Link key={currentLink.name} link={currentLink} onDark={onDark} />
+  ) : (
+    <Typography
+      noWrap
+      variant="body3"
+      sx={(theme) => ({
+        color: theme.palette.text.primary,
+        ...(onDark && {
+          opacity: 0.48,
+          color: "common.white",
+        }),
+      })}
+    >
+      {currentLink.name || ""}
+    </Typography>
+  );
+  const path = links.slice(0, -1).map((link) => <Link key={link.name} link={link} onDark={onDark} />);
 
   return (
     <MUIBreadcrumbs
@@ -60,12 +49,13 @@ const Breadcrumbs: React.FC<Props> = ({ links, sx, activeLast = false, onDark = 
             lineHeight: 0,
           }}
         >
-          <CaretRight width={16} height={16} />
+          <CaretRight width={8} height={8} />
         </Box>
       }
       {...other}
     >
-      {activeLast ? listDefault : listActiveLast}
+      {path}
+      {currentPath}
     </MUIBreadcrumbs>
   );
 };

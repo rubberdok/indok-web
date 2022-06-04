@@ -1,8 +1,6 @@
-import { Theme } from "@mui/material/styles";
+import { ComponentOverride } from "./types";
 
-type Props = (theme: Theme) => Theme["components"];
-
-const Stepper: Props = (theme: Theme) => {
+const Stepper: ComponentOverride = (theme: Theme) => {
   return {
     MuiStepConnector: {
       styleOverrides: {

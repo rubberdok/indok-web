@@ -1,7 +1,6 @@
-import { Theme } from "@mui/material/styles";
-type Props = (theme: Theme) => Theme["components"];
+import { ComponentOverride } from "./types";
 
-const Fab: Props = (theme) => {
+const Fab: ComponentOverride = (theme) => {
   const lightMode = theme.palette.mode === "light";
 
   return {

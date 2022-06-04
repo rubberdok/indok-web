@@ -1,6 +1,6 @@
 import { Box, Link } from "@mui/material";
 import NextLink from "next/link";
-import { TLink } from ".";
+import { TLink } from "../types";
 
 type Props = {
   link: TLink;

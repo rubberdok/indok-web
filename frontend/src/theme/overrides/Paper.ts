@@ -1,8 +1,6 @@
-import { Theme } from "@mui/material";
+import { ComponentOverride } from "./types";
 
-type Props = () => Theme["components"];
-
-const Paper: Props = () => {
+const Paper: ComponentOverride = () => {
   return {
     MuiPaper: {
       defaultProps: {
