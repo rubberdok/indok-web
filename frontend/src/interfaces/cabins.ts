@@ -34,7 +34,7 @@ export interface BookingFromQuery extends Booking {
 
 export type InputFieldsEvent =
   | ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  | React.ChangeEvent<{ name?: string | undefined; value: unknown }>
+  | React.ChangeEvent<{ name?: string; value: unknown }>
   | SelectChangeEvent<number>
   | SelectChangeEvent<string>;
 
