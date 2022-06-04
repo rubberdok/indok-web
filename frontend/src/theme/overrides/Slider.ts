@@ -1,6 +1,6 @@
 import { ComponentOverride } from "./types";
 
-const Slider: ComponentOverride = (theme: Theme) => {
+const Slider: ComponentOverride = (theme) => {
   const lightMode = theme.palette.mode === "light";
 
   return {

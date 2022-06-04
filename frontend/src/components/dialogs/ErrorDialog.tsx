@@ -1,5 +1,5 @@
 import { ApolloError } from "@apollo/client";
-import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
 import React from "react";
 
 type Props = {

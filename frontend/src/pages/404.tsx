@@ -1,4 +1,4 @@
-import { Button, Container, Grid, Stack, Typography, useTheme } from "@mui/material";
+import { Button, Container, Grid, Typography, useTheme } from "@mui/material";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
@@ -33,7 +33,7 @@ const Custom404: NextPageWithLayout = () => {
             </Link>
           </Grid>
           <Grid item md={6} xs={10}>
-            <Image src={_404} />
+            <Image src={_404} alt="404, fant ikke siden." />
           </Grid>
         </Grid>
       </Container>
