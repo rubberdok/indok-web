@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import Layout from "@components/Layout";
+import DeprecatedLayout from "@components/DeprecatedLayout";
 import OrderCellContent from "@components/pages/ecommerce/OrderCellContent";
 import { UserInfoDocument } from "@generated/graphql";
 import { GET_USER_ORDERS } from "@graphql/ecommerce/queries";
@@ -48,7 +48,7 @@ const OrdersPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProps
   });
 
   return (
-    <Layout>
+    <DeprecatedLayout>
       <Container>
         <Box mt={2}>
           <Button startIcon={<KeyboardArrowLeft />} onClick={() => router.back()}>
@@ -117,7 +117,7 @@ const OrdersPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProps
           </Card>
         </Box>
       </Container>
-    </Layout>
+    </DeprecatedLayout>
   );
 };
 

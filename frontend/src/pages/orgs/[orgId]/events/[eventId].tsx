@@ -1,4 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
+import Layout from "@components/layouts";
 import OrganizationEventHero from "@components/organization/OrganizationEventHero";
 import AttendeeExport from "@components/pages/events/AttendeeExport";
 import EmailForm from "@components/pages/events/email/EmailForm";
@@ -36,7 +37,6 @@ import {
 import dayjs from "dayjs";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
-import Layout from "src/layouts";
 import { NextPageWithLayout } from "src/pages/_app";
 
 const signUpFields: HeaderValuePair<SignUp>[] = [

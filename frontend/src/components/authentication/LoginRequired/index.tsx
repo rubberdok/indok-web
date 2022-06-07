@@ -12,6 +12,7 @@ type Props = {
   redirectPath?: string;
   children?: React.ReactNode;
   fallback?: React.ReactNode;
+  "data-test-id"?: string;
 };
 
 /**
@@ -25,6 +26,7 @@ export const LoginRequired: React.FC<Props & ButtonProps> = ({
   redirectPath,
   children,
   fallback,
+  "data-test-id": dataTestId,
   ...buttonProps
 }) => {
   const router = useRouter();
@@ -57,7 +59,7 @@ export const LoginRequired: React.FC<Props & ButtonProps> = ({
 
   return (
     <Link href={url} passHref>
-      <Button size="medium" variant="contained" color="primary" {...buttonProps}>
+      <Button size="medium" variant="contained" color="primary" data-test-id={dataTestId} {...buttonProps}>
         Logg inn
       </Button>
     </Link>

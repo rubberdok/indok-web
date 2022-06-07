@@ -1,3 +1,4 @@
+import HallOfFame from "@components/layouts/footer/HallOfFame";
 import Logo from "@components/Logo";
 import { Container, Divider, Grid, Link, Paper, Stack, styled, SxProps, Typography } from "@mui/material";
 import rubberdokLogo from "@public/img/rubberdok_logo_black.svg";
@@ -5,8 +6,7 @@ import dayjs from "dayjs";
 import Image from "next/image";
 import NextLink, { LinkProps } from "next/link";
 import { ReactNode, useState } from "react";
-import HallOfFame from "src/layouts/footer/HallOfFame";
-import { useResponsive } from "../../hooks";
+import { useResponsive } from "../../../hooks";
 
 const Watermark = styled("div")(({ theme }) => ({
   background: "url('/nth.svg')",

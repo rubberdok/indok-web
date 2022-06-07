@@ -1,11 +1,11 @@
 import { useQuery } from "@apollo/client";
+import Layout from "@components/layouts";
 import { GET_USER } from "@graphql/users/queries";
 import { Organization } from "@interfaces/organizations";
 import { User } from "@interfaces/users";
 import { Card, CardActionArea, CircularProgress, Container, Grid, styled, Typography } from "@mui/material";
 import Link from "next/link";
 import React from "react";
-import Layout from "src/layouts";
 import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "src/theme/constants";
 import { NextPageWithLayout } from "../_app";
 

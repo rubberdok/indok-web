@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
-import Layout from "@components/Layout";
+import DeprecatedLayout from "@components/DeprecatedLayout";
 import ListingForm from "@components/pages/listings/organization/ListingForm";
 import { CREATE_LISTING } from "@graphql/listings/mutations";
 import { USER_WITH_ORGANIZATIONS } from "@graphql/listings/queries";
@@ -67,7 +67,7 @@ const NewListing: React.FC<{
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error...</p>;
   return (
-    <Layout>
+    <DeprecatedLayout>
       <Container className={classes.root}>
         <Typography variant="h1" gutterBottom>
           Ny vervutlysning
@@ -101,7 +101,7 @@ const NewListing: React.FC<{
           </Grid>
         </Grid>
       </Container>
-    </Layout>
+    </DeprecatedLayout>
   );
 };
 export default NewListing;

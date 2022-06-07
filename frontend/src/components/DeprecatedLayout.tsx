@@ -13,7 +13,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const DeprecatedLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const classes = useStyles();
 
   return (
@@ -31,4 +31,4 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   );
 };
 
-export default Layout;
+export default DeprecatedLayout;

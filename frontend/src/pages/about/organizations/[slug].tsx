@@ -1,15 +1,14 @@
+import Layout, { RootStyle } from "@components/layouts";
 import * as markdownComponents from "@components/markdown/components";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import PhoneIcon from "@mui/icons-material/Phone";
-import { Box, Card, Chip, Container, Divider, Grid, Paper, styled, Typography } from "@mui/material";
+import { Box, Card, Chip, Container, Divider, Grid, Paper, Typography } from "@mui/material";
 import makeStyles from "@mui/styles/makeStyles";
 import { getPostBySlug, getPostsSlugs } from "@utils/posts";
 import { GetStaticPaths, GetStaticProps } from "next";
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
-import Layout from "src/layouts";
 import { NextPageWithLayout } from "src/pages/_app";
-import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "src/theme/constants";
 import { Post } from "src/types/posts";
 
 type ArticleProps = {
@@ -63,18 +62,11 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const RootStyle = styled("div")(({ theme }) => ({
-  paddingTop: HEADER_MOBILE_HEIGHT,
-  [theme.breakpoints.up("md")]: {
-    paddingTop: HEADER_DESKTOP_HEIGHT,
-  },
-}));
-
 const Article: NextPageWithLayout<ArticleProps> = ({ post, frontmatter }) => {
   const classes = useStyles();
 
   return (
-    <RootStyle>
+    <>
       <Box mt="-60px" position="relative" className={classes.title} height={350}>
         <Box
           display="flex"
@@ -137,12 +129,16 @@ const Article: NextPageWithLayout<ArticleProps> = ({ post, frontmatter }) => {
           </Grid>
         </Grid>
       </Container>
-    </RootStyle>
+    </>
   );
 };
 
 Article.getLayout = function getLayout(page: React.ReactElement) {
-  return <Layout>{page}</Layout>;
+  return (
+    <Layout>
+      <RootStyle>{page}</RootStyle>
+    </Layout>
+  );
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {

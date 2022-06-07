@@ -1,7 +1,7 @@
+import Layout from "@components/layouts";
 import Template from "@components/pages/about/Template";
 import { Box, Paper, Typography } from "@mui/material";
 import React from "react";
-import Layout from "src/layouts";
 import { NextPageWithLayout } from "../_app";
 
 const AboutPage: NextPageWithLayout = () => {

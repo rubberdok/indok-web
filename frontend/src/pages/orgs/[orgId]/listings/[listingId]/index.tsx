@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from "@apollo/client";
 import EditForm from "@components/forms/formAdmin/EditForm";
 import FormResponse from "@components/forms/formAdmin/FormResponse";
+import Layout from "@components/layouts";
 import OrganizationListing from "@components/pages/listings/organization/OrganizationListing";
 import { CREATE_FORM } from "@graphql/forms/mutations";
 import { LISTING_RESPONSES_FRAGMENT } from "@graphql/listings/fragments";
@@ -12,7 +13,6 @@ import { Box, Button, Card, CardContent, Container, Grid, styled, Tab, Tabs, Typ
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
-import Layout from "src/layouts";
 import { NextPageWithLayout } from "src/pages/_app";
 import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "src/theme/constants";
 

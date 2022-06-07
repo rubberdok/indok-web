@@ -1,5 +1,5 @@
 import { Box, Divider, Stack } from "@mui/material";
-import { Logo } from "../../../components";
+import { Logo } from "../../..";
 
 const HeaderSimple: React.FC = () => {
   return (
