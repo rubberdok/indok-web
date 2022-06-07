@@ -22,6 +22,11 @@ ENV NEXT_PUBLIC_APP_ENV $APP_ENV
 ARG NODE_ENV
 ENV NODE_ENV $NODE_ENV
 
+# Use the corresponding env file for each environment.
+# See https://nextjs.org/docs/basic-features/environment-variables for
+# more details on loading environment variables.
+COPY .env.${APP_ENV} .env.production
+
 RUN yarn build 
 
 # Production image, copy all the files and run next
