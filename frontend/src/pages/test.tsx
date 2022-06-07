@@ -1,6 +1,6 @@
+import Layout from "@components/layouts";
 import { Box } from "@mui/material";
 import React from "react";
-import Layout from "src/layouts";
 import { NextPageWithLayout } from "./_app";
 
 const TestPage: NextPageWithLayout = () => {

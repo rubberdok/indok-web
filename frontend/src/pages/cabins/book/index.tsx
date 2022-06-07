@@ -1,4 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
+import Layout from "@components/layouts";
 import ContractDialog from "@components/pages/cabins/Popup/ContractDialog";
 import StepComponent from "@components/pages/cabins/StepComponent";
 import { CREATE_BOOKING, SEND_EMAIL } from "@graphql/cabins/mutations";
@@ -29,7 +30,6 @@ import {
   validateInputForm,
 } from "@utils/cabins";
 import React, { useEffect, useState } from "react";
-import Layout from "src/layouts";
 import { NextPageWithLayout } from "src/pages/_app";
 
 type StepReady = Record<number, { ready: boolean; errortext: string }>;

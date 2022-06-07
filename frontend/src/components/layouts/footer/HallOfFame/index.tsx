@@ -1,6 +1,6 @@
+import { rubberdokMembers } from "@components/layouts/footer/HallOfFame/constants";
 import { Close } from "@mui/icons-material";
 import { Box, Dialog, DialogContent, DialogTitle, Grid, IconButton, styled, Typography } from "@mui/material";
-import { rubberdokMembers } from "src/layouts/footer/HallOfFame/constants";
 
 const CloseButton = styled(IconButton)(({ theme }) => ({
   position: "absolute",

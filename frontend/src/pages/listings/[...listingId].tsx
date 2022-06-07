@@ -1,4 +1,5 @@
 import { useQuery } from "@apollo/client";
+import Layout, { RootStyle } from "@components/layouts";
 import * as markdownComponents from "@components/markdown/components";
 import InfoCard from "@components/pages/listings/detail/InfoCard";
 import ListingBanner from "@components/pages/listings/detail/ListingBanner";
@@ -9,15 +10,13 @@ import { Listing } from "@interfaces/listings";
 import { addApolloState, initializeApollo } from "@lib/apolloClient";
 import ArrowForward from "@mui/icons-material/ArrowForward";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
-import { Button, Container, Grid, Hidden, Paper, styled } from "@mui/material";
+import { Button, Container, Grid, Hidden, Paper } from "@mui/material";
 import makeStyles from "@mui/styles/makeStyles";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import ReactMarkdown from "react-markdown";
-import Layout from "src/layouts";
-import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "src/theme/constants";
 import { NextPageWithLayout } from "../_app";
 
 const useStyles = makeStyles((theme) => ({
@@ -41,13 +40,6 @@ const useStyles = makeStyles((theme) => ({
   },
   description: {
     wordBreak: "break-word",
-  },
-}));
-
-const RootStyle = styled("div")(({ theme }) => ({
-  paddingTop: HEADER_MOBILE_HEIGHT,
-  [theme.breakpoints.up("md")]: {
-    paddingTop: HEADER_DESKTOP_HEIGHT,
   },
 }));
 
@@ -82,7 +74,7 @@ const ListingPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServ
   };
 
   return (
-    <Layout>
+    <>
       <Head>
         <title>{`${listing.title} | Foreningen for Studenter ved Industriell Økonomi og Teknologiledelse`}</title>
         {listing.heroImageUrl && <meta property="og:image" content={listing.heroImageUrl} key="image" />}
@@ -93,7 +85,7 @@ const ListingPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServ
         />
       </Head>
       {data?.listing && (
-        <RootStyle>
+        <>
           <Hidden smDown>
             <ListingBanner imageUrl={data.listing.heroImageUrl} />
           </Hidden>
@@ -158,11 +150,17 @@ const ListingPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServ
               </Grid>
             </Paper>
           </Hidden>
-        </RootStyle>
+        </>
       )}
-    </Layout>
+    </>
   );
 };
+
+ListingPage.getLayout = (page) => (
+  <Layout>
+    <RootStyle>{page}</RootStyle>
+  </Layout>
+);
 
 export const getServerSideProps: GetServerSideProps<{ listing: Listing }> = async (ctx) => {
   const client = initializeApollo({}, ctx);

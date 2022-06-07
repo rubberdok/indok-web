@@ -64,7 +64,7 @@ const Listings: React.FC<{
           </Grid>
         ))}
       {data?.listings.length == 0 && (
-        <>
+        <Grid container item direction="column">
           <Grid item>
             <Typography variant="body1" align="center">
               Det er for øyeblikket ingen verv tilgjengelige.
@@ -73,7 +73,7 @@ const Listings: React.FC<{
           <Grid item md={6} xs={10}>
             <Image src={EmptyStreet} alt="" />
           </Grid>
-        </>
+        </Grid>
       )}
     </Grid>
   );

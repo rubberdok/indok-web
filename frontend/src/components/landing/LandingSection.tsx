@@ -1,5 +1,6 @@
 import { Box, Button, Container, Grid, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import Link from "next/link";
 
 const RootStyle = styled("div")(({ theme }) => ({
   background: theme.palette.grey[900],
@@ -48,9 +49,11 @@ const LandingSection: React.FC = () => {
               studentinitiativene, og forvalte og disponere Indøks midler på en forsvarlig måte.
             </Typography>
 
-            <Button variant="contained" size="large">
-              Les mer
-            </Button>
+            <Link href="/about/board" passHref>
+              <Button variant="contained" size="large">
+                Les mer
+              </Button>
+            </Link>
           </Grid>
         </Grid>
       </Container>

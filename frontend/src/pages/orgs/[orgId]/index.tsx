@@ -1,4 +1,5 @@
 import { useQuery } from "@apollo/client";
+import Layout from "@components/layouts";
 import OrganizationHero from "@components/organization/OrganizationHero";
 import OrgEvents from "@components/pages/events/org/OrgEvents";
 import OrganizationListings from "@components/pages/listings/organization/OrganizationListings";
@@ -7,7 +8,6 @@ import { Organization } from "@interfaces/organizations";
 import { CircularProgress, Container, Stack, styled } from "@mui/material";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import Layout from "src/layouts";
 import { NextPageWithLayout } from "src/pages/_app";
 
 const RootStyle = styled("div")(({ theme }) => ({

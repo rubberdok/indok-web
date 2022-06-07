@@ -1,10 +1,10 @@
+import Layout from "@components/layouts";
 import MemberCard from "@components/pages/about/MemberCard";
 import { BoardMember } from "@components/pages/about/MemberCard/types";
 import Template from "@components/pages/about/Template";
 import { Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import React from "react";
-import Layout from "src/layouts";
 import { NextPageWithLayout } from "../_app";
 
 const BoardPage: NextPageWithLayout = () => {

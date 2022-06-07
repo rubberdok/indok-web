@@ -1,3 +1,4 @@
+import HallOfFame from "@components/layouts/footer/HallOfFame";
 import { Facebook, GitHub } from "@mui/icons-material";
 import { Box, Button, Container, Grid, IconButton, Typography } from "@mui/material";
 import makeStyles from "@mui/styles/makeStyles";
@@ -5,7 +6,6 @@ import rubberdokLogo from "@public/img/rubberdok_logo_white.svg";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import HallOfFame from "src/layouts/footer/HallOfFame";
 
 const useStyles = makeStyles((theme) => ({
   footer: {

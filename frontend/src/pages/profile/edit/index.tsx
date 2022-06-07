@@ -1,7 +1,7 @@
+import Layout from "@components/layouts";
 import UserForm from "@components/pages/profile/UserForm";
 import { Alert, Container, Grid, Snackbar, styled } from "@mui/material";
 import React, { useState } from "react";
-import Layout from "src/layouts";
 import { NextPageWithLayout } from "src/pages/_app";
 import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "src/theme/constants";
 

@@ -1,4 +1,5 @@
 import { useQuery } from "@apollo/client";
+import Layout from "@components/layouts";
 import {
   CabinsAdmin,
   Event,
@@ -14,7 +15,6 @@ import { Avatar, Button, Container, Grid, Stack, styled, Typography } from "@mui
 import Head from "next/head";
 import NextLink from "next/link";
 import { useMemo } from "react";
-import Layout from "src/layouts";
 import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "src/theme/constants";
 import { User } from "src/types/users";
 import { NextPageWithLayout } from "../_app";

@@ -1,3 +1,4 @@
+import Layout from "@components/layouts";
 import TabPanel from "@components/pages/about/TabPanel";
 import Template from "@components/pages/about/Template";
 import { Box, Card, CardActionArea, CardMedia, styled, Tab, Tabs, Typography } from "@mui/material";
@@ -8,7 +9,6 @@ import Image from "next/image";
 import Link from "next/link";
 import Router, { useRouter } from "next/router";
 import React from "react";
-import Layout from "src/layouts";
 import { NextPageWithLayout } from "../_app";
 
 type Post = {

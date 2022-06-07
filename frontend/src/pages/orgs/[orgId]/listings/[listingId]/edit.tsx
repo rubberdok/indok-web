@@ -1,4 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
+import Layout from "@components/layouts";
 import ListingForm from "@components/pages/listings/organization/ListingForm";
 import { UPDATE_LISTING } from "@graphql/listings/mutations";
 import { LISTING } from "@graphql/listings/queries";
@@ -9,7 +10,6 @@ import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
-import Layout from "src/layouts";
 import { NextPageWithLayout } from "src/pages/_app";
 import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "src/theme/constants";
 dayjs.extend(utc);

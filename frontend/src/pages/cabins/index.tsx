@@ -1,3 +1,4 @@
+import Layout from "@components/layouts";
 import CabinPrices from "@components/pages/cabins/CabinPrices";
 import CabinsDetailsSection from "@components/pages/cabins/CabinsDetailsSection";
 import CabinsHero from "@components/pages/cabins/CabinsHero";
@@ -10,7 +11,6 @@ import { Box, Container, Divider, Grid, styled, Typography } from "@mui/material
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import Layout from "src/layouts";
 import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "src/theme/constants";
 import { NextPageWithLayout } from "../_app";
 

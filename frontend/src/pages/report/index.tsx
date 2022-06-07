@@ -1,4 +1,4 @@
-import Layout from "@components/Layout";
+import DeprecatedLayout from "@components/DeprecatedLayout";
 import ContactInfo from "@components/pages/reports/ContactInfo";
 import {
   Button,
@@ -83,7 +83,7 @@ const ReportsPage: NextPage = () => {
   ];
 
   return (
-    <Layout>
+    <DeprecatedLayout>
       <Head>
         <title>Baksida | Forening for studenter ved Industriell Økonomi og Teknologiledelse</title>
         <meta name="og:title" content="Baksida | Indøk NTNU" key="title" />
@@ -360,7 +360,7 @@ const ReportsPage: NextPage = () => {
           </Grid>
         </Grid>
       </Container>
-    </Layout>
+    </DeprecatedLayout>
   );
 };
 

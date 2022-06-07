@@ -1,7 +1,7 @@
 import { AppBar, Box, Container, useScrollTrigger } from "@mui/material";
 import React from "react";
-import { Logo } from "../../../components";
-import { HEADER_DESKTOP_HEIGHT } from "../../../theme/constants";
+import { Logo } from "../../..";
+import { HEADER_DESKTOP_HEIGHT } from "../../../../theme/constants";
 import Navigation from "../../navigation";
 import { ToolbarStyle } from "../styles";
 

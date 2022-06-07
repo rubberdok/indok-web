@@ -1,6 +1,6 @@
 import { Container, Typography } from "@mui/material";
-import { Logo } from "../../components";
 import dayjs from "dayjs";
+import { Logo } from "../..";
 
 const FooterSimple: React.FC = () => {
   return (

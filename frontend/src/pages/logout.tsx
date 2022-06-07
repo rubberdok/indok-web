@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import Layout from "@components/Layout";
+import DeprecatedLayout from "@components/DeprecatedLayout";
 import { LOGOUT } from "@graphql/users/mutations";
 import { config } from "@utils/config";
 import { generateQueryString } from "@utils/helpers";
@@ -26,7 +26,7 @@ const LogoutPage: NextPage = () => {
     return <p>Logger deg ut ... </p>;
   }
 
-  return <Layout>{error && <div> ERROR: {error.message}</div>}</Layout>;
+  return <DeprecatedLayout>{error && <div> ERROR: {error.message}</div>}</DeprecatedLayout>;
 };
 
 export default LogoutPage;

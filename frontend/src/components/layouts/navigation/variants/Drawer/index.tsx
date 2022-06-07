@@ -1,12 +1,12 @@
+import LoginButton from "@components/layouts/components/LoginButton";
+import Logo from "@components/Logo";
+import PermissionRequired from "@components/permissions/PermissionRequired";
 import { Box, Divider, Drawer as MuiDrawer, Grid, IconButton, Stack, useTheme } from "@mui/material";
+import { useRouter } from "next/router";
 import { List } from "phosphor-react";
 import { useState } from "react";
 import { NavigationProps } from "../../types";
-import PermissionRequired from "@components/permissions/PermissionRequired";
 import NavigationLink from "./NavigationLink";
-import { useRouter } from "next/router";
-import Logo from "@components/Logo";
-import LoginButton from "src/layouts/components/LoginButton";
 
 const Drawer: React.FC<NavigationProps> = ({ routes }) => {
   const theme = useTheme();

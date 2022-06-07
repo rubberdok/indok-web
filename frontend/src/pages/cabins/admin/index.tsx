@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import Layout from "@components/Layout";
+import DeprecatedLayout from "@components/DeprecatedLayout";
 import TabPanel from "@components/pages/about/TabPanel";
 import AdminCabinTable from "@components/pages/cabins/Admin/AdminCabinTable";
 import PermissionRequired from "@components/permissions/PermissionRequired";
@@ -32,7 +32,7 @@ const AdminPage: NextPage = () => {
   const tentative = data?.adminAllBookings.filter((booking) => booking.isTentative);
 
   return (
-    <Layout>
+    <DeprecatedLayout>
       <Container>
         <PermissionRequired permission="cabins.manage_booking">
           <Grid container direction="column" spacing={3}>
@@ -75,7 +75,7 @@ const AdminPage: NextPage = () => {
           </Box>
         </PermissionRequired>
       </Container>
-    </Layout>
+    </DeprecatedLayout>
   );
 };
 
