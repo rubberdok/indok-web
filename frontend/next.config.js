@@ -7,7 +7,7 @@
 const { withSentryConfig } = require("@sentry/nextjs");
 
 const getPresets = () => {
-  if (process.env.NEXT_PUBLIC_APP_ENV == "production") {
+  if (process.env.NEXT_PUBLIC_APP_ENV === "production") {
     return {
       // The regexes defined here are processed in Rust so the syntax is different from
       // JavaScript `RegExp`s. See https://docs.rs/regex.
@@ -64,7 +64,7 @@ const moduleExports = {
     disableServerWebpackPlugin: true,
     disableClientWebpackPlugin: true,
   },
-  productionBrowserSourceMaps: process.env.NEXT_PUBLIC_APP_ENV === "production",
+  productionBrowserSourceMaps: process.env.NEXT_PUBLIC_APP_ENV !== "production",
 };
 
 // Make sure adding Sentry options is the last code to run before exporting, to
