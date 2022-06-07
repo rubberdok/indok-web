@@ -1602,6 +1602,43 @@ export type HasPermissionQueryVariables = Exact<{
 
 export type HasPermissionQuery = { __typename?: "Queries"; hasPermission?: boolean | null };
 
+export type UserFieldsFragment = {
+  __typename?: "UserType";
+  id: string;
+  feideEmail: string;
+  email: string;
+  username: string;
+  firstName: string;
+  lastName: string;
+  dateJoined: any;
+  graduationYear?: number | null;
+  gradeYear?: number | null;
+  allergies?: string | null;
+  phoneNumber: string;
+  firstLogin: boolean;
+};
+
+export type UserInfoQueryVariables = Exact<{ [key: string]: never }>;
+
+export type UserInfoQuery = {
+  __typename?: "Queries";
+  user?: {
+    __typename?: "UserType";
+    id: string;
+    feideEmail: string;
+    email: string;
+    username: string;
+    firstName: string;
+    lastName: string;
+    dateJoined: any;
+    graduationYear?: number | null;
+    gradeYear?: number | null;
+    allergies?: string | null;
+    phoneNumber: string;
+    firstLogin: boolean;
+  } | null;
+};
+
 export const ListingFragmentDoc = {
   kind: "Document",
   definitions: [
@@ -1643,6 +1680,33 @@ export const ListingFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<ListingFragment, unknown>;
+export const UserFieldsFragmentDoc = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "UserFields" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "UserType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "feideEmail" } },
+          { kind: "Field", name: { kind: "Name", value: "email" } },
+          { kind: "Field", name: { kind: "Name", value: "username" } },
+          { kind: "Field", name: { kind: "Name", value: "firstName" } },
+          { kind: "Field", name: { kind: "Name", value: "lastName" } },
+          { kind: "Field", name: { kind: "Name", value: "dateJoined" } },
+          { kind: "Field", name: { kind: "Name", value: "graduationYear" } },
+          { kind: "Field", name: { kind: "Name", value: "gradeYear" } },
+          { kind: "Field", name: { kind: "Name", value: "allergies" } },
+          { kind: "Field", name: { kind: "Name", value: "phoneNumber" } },
+          { kind: "Field", name: { kind: "Name", value: "firstLogin" } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<UserFieldsFragment, unknown>;
 export const ArchiveByTypesDocument = {
   kind: "Document",
   definitions: [
@@ -2154,3 +2218,27 @@ export const HasPermissionDocument = {
     },
   ],
 } as unknown as DocumentNode<HasPermissionQuery, HasPermissionQueryVariables>;
+export const UserInfoDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "userInfo" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "user" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "UserFields" } }],
+            },
+          },
+        ],
+      },
+    },
+    ...UserFieldsFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<UserInfoQuery, UserInfoQueryVariables>;

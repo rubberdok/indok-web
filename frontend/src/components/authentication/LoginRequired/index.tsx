@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/client";
 import { GET_USER_INFO } from "@graphql/users/queries";
 import { UserInfo } from "@interfaces/users";
-import { Button, Skeleton } from "@mui/material";
+import { Button, ButtonProps, Skeleton } from "@mui/material";
 import { generateFeideLoginUrl } from "@utils/auth";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -14,21 +14,33 @@ type Props = {
   fallback?: React.ReactNode;
 };
 
-export const LoginRequired: React.FC<Props> = ({ redirect, redirectPath, children, fallback }) => {
+/**
+ * Wrapper for stuff that requires a user to be logged in to view.
+ * If the user is not logged in, it renders the fallback component, defaulting to a log in button.
+ * If a user is logged in, it renders the children.
+ * While loading, will render as a rectangular skeleton.
+ */
+export const LoginRequired: React.FC<Props & ButtonProps> = ({
+  redirect,
+  redirectPath,
+  children,
+  fallback,
+  ...buttonProps
+}) => {
   const router = useRouter();
   let path: string | undefined = redirectPath;
   if (redirect) {
     path ||= router.asPath;
   }
   const url = useMemo<string>(() => generateFeideLoginUrl(path), [path]);
-  const { data, loading } = useQuery<{ user?: UserInfo }>(GET_USER_INFO);
+  const { data, loading } = useQuery<{ user?: UserInfo | null }>(GET_USER_INFO);
 
   if (loading) {
     return (
       <Skeleton variant="rectangular">
         <Link href={url} passHref>
-          <Button size="medium" variant="contained" color="primary">
-            Log inn
+          <Button size="medium" variant="contained" color="primary" {...buttonProps}>
+            Logg inn
           </Button>
         </Link>
       </Skeleton>
@@ -45,7 +57,7 @@ export const LoginRequired: React.FC<Props> = ({ redirect, redirectPath, childre
 
   return (
     <Link href={url} passHref>
-      <Button size="medium" variant="contained" color="primary">
+      <Button size="medium" variant="contained" color="primary" {...buttonProps}>
         Logg inn
       </Button>
     </Link>
