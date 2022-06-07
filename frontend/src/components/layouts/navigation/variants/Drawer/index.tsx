@@ -23,15 +23,15 @@ const Drawer: React.FC<NavigationProps> = ({ routes }) => {
         onClose={() => setOpen(false)}
         anchor="right"
         PaperProps={{
-          sx: (theme) => ({
-            width: theme.spacing(35),
-          }),
+          sx: {
+            width: (thm) => thm.spacing(35),
+          },
         }}
       >
         <Box
-          sx={(theme) => ({
-            padding: theme.spacing(4),
-          })}
+          sx={{
+            padding: (thm) => thm.spacing(4),
+          }}
         >
           <Stack direction="column" gap={2}>
             <Logo />
