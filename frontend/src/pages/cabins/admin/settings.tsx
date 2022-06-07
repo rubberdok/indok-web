@@ -1,7 +1,7 @@
 import DeprecatedLayout from "@components/DeprecatedLayout";
 import BookingSemesterPicker from "@components/pages/cabins/Admin/BookingSemesterPicker";
 import CabinInfoPicker from "@components/pages/cabins/Admin/CabinInfoPicker";
-import PermissionRequired from "@components/permissions/PermissionRequired";
+import PermissionRequired from "@components/authz/PermissionRequired";
 import useResponsive from "@hooks/useResponsive";
 import { ArrowBackIos } from "@mui/icons-material";
 import { Box, Button, Container, Divider, Grid, Paper, Typography } from "@mui/material";
