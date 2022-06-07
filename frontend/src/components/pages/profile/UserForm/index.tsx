@@ -52,11 +52,11 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": 
 
   const minimumGraduationYear = useMemo<number>(
     () => Math.min(currentYear, data?.user?.graduationYear || currentYear),
-    [data?.user?.graduationYear]
+    [data?.user?.graduationYear, currentYear]
   );
   const graduationYears = useMemo<number[]>(
     () => range(minimumGraduationYear, maxGraduationYear, 1),
-    [minimumGraduationYear]
+    [minimumGraduationYear, currentYear]
   );
 
   const formik = useFormik({
