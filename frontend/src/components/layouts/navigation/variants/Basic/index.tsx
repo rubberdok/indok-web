@@ -1,5 +1,5 @@
 import LoginButton from "@components/layouts/components/LoginButton";
-import PermissionRequired from "@components/authz/PermissionRequired";
+import { PermissionRequired } from "@components/authz";
 import { Stack } from "@mui/material";
 import { useRouter } from "next/router";
 import { NavigationProps } from "../../types";
