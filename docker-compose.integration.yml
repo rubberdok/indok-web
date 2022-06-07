@@ -43,7 +43,6 @@ services:
       dockerfile: Dockerfile.prod
       args:
         - APP_ENV=test
-        - NODE_ENV=test
     ports:
       - 3000:3000
     expose:
