@@ -1,4 +1,5 @@
 import { useQuery } from "@apollo/client";
+import { PermissionRequired } from "@components/authz";
 import Layout from "@components/layouts";
 import {
   CabinsAdmin,
@@ -9,7 +10,6 @@ import {
   Personal,
   Report,
 } from "@components/pages/profile/ProfileCard";
-import PermissionRequired from "@components/permissions/PermissionRequired";
 import { GET_USER_INFO } from "@graphql/users/queries";
 import { Avatar, Button, Container, Grid, Stack, styled, Typography } from "@mui/material";
 import Head from "next/head";
