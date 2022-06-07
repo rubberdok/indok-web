@@ -2,7 +2,7 @@ import { useQuery } from "@apollo/client";
 import DeprecatedLayout from "@components/DeprecatedLayout";
 import TabPanel from "@components/pages/about/TabPanel";
 import AdminCabinTable from "@components/pages/cabins/Admin/AdminCabinTable";
-import PermissionRequired from "@components/permissions/PermissionRequired";
+import PermissionRequired from "@components/authz/PermissionRequired";
 import { QUERY_ADMIN_ALL_BOOKINGS } from "@graphql/cabins/queries";
 import useResponsive from "@hooks/useResponsive";
 import { BookingFromQuery } from "@interfaces/cabins";

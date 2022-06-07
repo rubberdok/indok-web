@@ -1,4 +1,4 @@
-import PermissionRequired from "@components/permissions/PermissionRequired";
+import { PermissionRequired } from "@components/authz";
 import React from "react";
 import links from "./links";
 import NavbarItem from "./NavbarItem";

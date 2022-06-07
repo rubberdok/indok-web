@@ -1,9 +1,9 @@
 import { useMutation, useQuery } from "@apollo/client";
-import LoginRequired from "@components/authentication/LoginRequired";
+import LoginRequired from "@components/authz/LoginRequired";
 import Breadcrumbs from "@components/Breadcrumbs";
 import LabeledIcon from "@components/LabeledIcon";
 import * as components from "@components/markdown/components";
-import PermissionRequired from "@components/permissions/PermissionRequired";
+import PermissionRequired from "@components/authz/PermissionRequired";
 import { EVENT_SIGN_OFF, EVENT_SIGN_UP } from "@graphql/events/mutations";
 import { GET_EVENT } from "@graphql/events/queries";
 import { GET_USER } from "@graphql/users/queries";

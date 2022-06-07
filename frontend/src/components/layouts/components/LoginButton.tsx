@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import LoginRequired from "@components/authentication/LoginRequired";
+import LoginRequired from "@components/authz/LoginRequired";
 import { GET_USER_INFO } from "@graphql/users/queries";
 import { UserInfo } from "@interfaces/users";
 import { Button } from "@mui/material";
