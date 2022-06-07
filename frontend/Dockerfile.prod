@@ -1,6 +1,5 @@
 # syntax=docker/dockerfile:1
 ARG APP_ENV=production
-ARG NODE_ENV=production
 
 # Install dependencies only when needed
 FROM 777854691961.dkr.ecr.eu-north-1.amazonaws.com/node:16.13.2-alpine AS deps
@@ -19,8 +18,7 @@ COPY . .
 ARG APP_ENV
 ENV NEXT_PUBLIC_APP_ENV $APP_ENV
 
-ARG NODE_ENV
-ENV NODE_ENV $NODE_ENV
+ENV NODE_ENV=production
 
 # Use the corresponding env file for each environment.
 # See https://nextjs.org/docs/basic-features/environment-variables for
