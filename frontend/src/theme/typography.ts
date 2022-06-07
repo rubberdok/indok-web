@@ -7,7 +7,7 @@ export const pxToRem: (value: number) => string = (value) => {
   return value / 16 + "rem";
 };
 
-export const responsiveFontSizes: any = ({ sm, md, lg }: { sm: number; md: number; lg: number }) => {
+export const responsiveFontSizes = ({ sm, md, lg }: { sm: number; md: number; lg: number }) => {
   return {
     "@media (min-width:600px)": {
       fontSize: pxToRem(sm),

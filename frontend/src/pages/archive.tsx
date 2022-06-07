@@ -1,3 +1,4 @@
+import Layout, { RootStyle } from "@components/layouts";
 import Documents from "@components/pages/archive/Documents";
 import FeaturedDocumentsList from "@components/pages/archive/FeaturedDocumentsList";
 import FilterButtons from "@components/pages/archive/FilterButtons";
@@ -7,19 +8,10 @@ import YearSelector from "@components/pages/archive/YearSelector";
 import Title from "@components/Title";
 import { HasPermissionDocument } from "@generated/graphql";
 import { addApolloState, initializeApollo } from "@lib/apolloClient";
-import { Box, Container, FormGroup, Grid, styled } from "@mui/material";
+import { Box, Container, FormGroup, Grid } from "@mui/material";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import React, { useState } from "react";
-import Layout from "src/layouts";
-import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "src/theme/constants";
 import { NextPageWithLayout } from "./_app";
-
-const RootStyle = styled("div")(({ theme }) => ({
-  paddingTop: HEADER_MOBILE_HEIGHT,
-  [theme.breakpoints.up("md")]: {
-    paddingTop: HEADER_DESKTOP_HEIGHT,
-  },
-}));
 
 const Archive: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSideProps>> = () => {
   const [yearFilter, setYearFilter] = useState("");
@@ -39,7 +31,7 @@ const Archive: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSi
   });
 
   return (
-    <RootStyle>
+    <>
       <Title>Arkiv</Title>
 
       <Container>
@@ -108,7 +100,7 @@ const Archive: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSi
           names={searchFilter}
         />
       </Container>
-    </RootStyle>
+    </>
   );
 };
 
@@ -128,6 +120,10 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   return addApolloState(client, { props: { data } });
 };
 
-Archive.getLayout = (page: React.ReactElement) => <Layout>{page}</Layout>;
+Archive.getLayout = (page: React.ReactElement) => (
+  <Layout>
+    <RootStyle>{page}</RootStyle>
+  </Layout>
+);
 
 export default Archive;

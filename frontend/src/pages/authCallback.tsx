@@ -1,4 +1,5 @@
 import { useMutation } from "@apollo/client";
+import Layout from "@components/layouts";
 import ProfileSkeleton from "@components/pages/profile/ProfileSkeleton";
 import { AUTHENTICATE } from "@graphql/users/mutations";
 import { User } from "@interfaces/users";
@@ -8,7 +9,6 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import Bug from "public/illustrations/Bug.svg";
 import React, { useEffect } from "react";
-import Layout from "src/layouts";
 import { NextPageWithLayout } from "./_app";
 
 type AuthUser = {

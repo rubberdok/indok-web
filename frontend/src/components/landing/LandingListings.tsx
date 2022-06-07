@@ -1,9 +1,10 @@
-import { Box, Button, Container, Stack, Typography, useMediaQuery } from "@mui/material";
+import useResponsive from "@hooks/useResponsive";
+import { Box, Button, Container, Stack, Typography } from "@mui/material";
 import Link from "next/link";
 import React from "react";
 
 const LandingListings: React.FC = () => {
-  const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down("md"));
+  const isMobile = useResponsive({ query: "down", key: "md" });
 
   return (
     <Box pt={{ xs: 3, md: 10 }}>

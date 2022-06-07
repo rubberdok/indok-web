@@ -1,6 +1,6 @@
 import { Toolbar, ToolbarProps } from "@mui/material";
 import { alpha, styled } from "@mui/material/styles";
-import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "../../theme/constants";
+import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "../../../theme/constants";
 
 interface ToolbarStyleProps extends ToolbarProps {
   transparent?: boolean;

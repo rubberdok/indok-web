@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
-import Layout from "@components/Layout";
+import DeprecatedLayout from "@components/DeprecatedLayout";
 import SalesTermsDialog from "@components/pages/ecommerce/SalesTermsDialog";
 import { ATTEMPT_CAPTURE_PAYMENT } from "@graphql/ecommerce/mutations";
 import { GET_USER } from "@graphql/users/queries";
@@ -87,7 +87,7 @@ const FallbackPage: NextPage = () => {
   }, [data]);
 
   return (
-    <Layout>
+    <DeprecatedLayout>
       <Container>
         {redirect && typeof redirect === "string" && (
           <Box mt={2}>
@@ -174,7 +174,7 @@ const FallbackPage: NextPage = () => {
           </Card>
         </Box>
       </Container>
-    </Layout>
+    </DeprecatedLayout>
   );
 };
 

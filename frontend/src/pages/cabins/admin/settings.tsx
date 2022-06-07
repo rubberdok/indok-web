@@ -1,4 +1,4 @@
-import Layout from "@components/Layout";
+import DeprecatedLayout from "@components/DeprecatedLayout";
 import BookingSemesterPicker from "@components/pages/cabins/Admin/BookingSemesterPicker";
 import CabinInfoPicker from "@components/pages/cabins/Admin/CabinInfoPicker";
 import PermissionRequired from "@components/permissions/PermissionRequired";
@@ -11,7 +11,7 @@ const SettingsPage: React.VFC = () => {
   const isMobile = useResponsive({ query: "down", key: "md" });
 
   return (
-    <Layout>
+    <DeprecatedLayout>
       <Container>
         <PermissionRequired permission="cabins.change_bookingsemester">
           <Grid container direction="column" spacing={3}>
@@ -50,7 +50,7 @@ const SettingsPage: React.VFC = () => {
           </Box>
         </PermissionRequired>
       </Container>
-    </Layout>
+    </DeprecatedLayout>
   );
 };
 

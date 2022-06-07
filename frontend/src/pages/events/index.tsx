@@ -1,29 +1,20 @@
 import Breadcrumbs from "@components/Breadcrumbs";
+import Layout, { RootStyle } from "@components/layouts";
 import AllEvents from "@components/pages/events/AllEvents";
-import { Box, Container, styled, Tab, Tabs, Typography } from "@mui/material";
+import { Box, Container, Tab, Tabs, Typography } from "@mui/material";
 import React, { useState } from "react";
-import Layout from "src/layouts";
-import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "src/theme/constants";
 import { NextPageWithLayout } from "../_app";
+
+const links = [{ name: "Hjem", href: "/" }, { name: "Arrangementer" }];
 
 /**
  * Component for showing the list page for event (for showing all events)
  */
-
-const RootStyle = styled("div")(({ theme }) => ({
-  paddingTop: HEADER_MOBILE_HEIGHT,
-  [theme.breakpoints.up("md")]: {
-    paddingTop: HEADER_DESKTOP_HEIGHT,
-  },
-}));
-
-const links = [{ name: "Hjem", href: "/" }, { name: "Arrangementer" }];
-
 const Events: NextPageWithLayout = () => {
   const [showCalendarView, setShowCalenderView] = useState(false);
 
   return (
-    <RootStyle>
+    <>
       <Box width={1} pt={5} position="relative" bgcolor="background.neutral">
         <Container>
           <Breadcrumbs sx={{ mb: { xs: 5, md: 8 } }} links={links} />
@@ -56,12 +47,13 @@ const Events: NextPageWithLayout = () => {
           <AllEvents />
         )}
       </Container>
-    </RootStyle>
+    </>
   );
 };
 
-Events.getLayout = function getLayout(page: React.ReactElement) {
-  return <Layout>{page}</Layout>;
-};
-
+Events.getLayout = (page: React.ReactElement) => (
+  <Layout>
+    <RootStyle>{page}</RootStyle>
+  </Layout>
+);
 export default Events;

@@ -1,7 +1,7 @@
-import { Container, Divider, Hidden, Stack, styled, Typography } from "@mui/material";
+import { RootStyle } from "@components/layouts";
+import { Container, Divider, Hidden, Stack, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import React from "react";
-import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "src/theme/constants";
 import AboutPageArrow from "./AboutPageArrow";
 import AboutSidebar from "./AboutSidebar";
 
@@ -20,13 +20,6 @@ type Props = {
   prevPost?: AboutPostProps;
   nextPost?: AboutPostProps;
 };
-
-const RootStyle = styled("div")(({ theme }) => ({
-  paddingTop: HEADER_MOBILE_HEIGHT,
-  [theme.breakpoints.up("md")]: {
-    paddingTop: HEADER_DESKTOP_HEIGHT,
-  },
-}));
 
 const Template: React.FC<Props> = (props) => {
   const { children, title, description, prevPost, nextPost } = props;

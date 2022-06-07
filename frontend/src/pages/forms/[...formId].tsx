@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
 import AnswerForm from "@components/forms/AnswerForm";
-import Layout from "@components/Layout";
+import DeprecatedLayout from "@components/DeprecatedLayout";
 import { FORM_WITH_QUESTIONS_AND_ANSWERS } from "@graphql/forms/queries";
 import { Form } from "@interfaces/forms";
 import { CircularProgress, Container, Grid, Typography } from "@mui/material";
@@ -23,7 +23,7 @@ const FormPage: NextPage = () => {
       const signInURL = generateFeideLoginUrl(router.asPath);
       router.push(signInURL);
       return (
-        <Layout>
+        <DeprecatedLayout>
           <Container>
             <Grid container direction="row" style={{ marginTop: 16 }} justifyContent="center">
               <Grid item>
@@ -34,20 +34,20 @@ const FormPage: NextPage = () => {
               </Grid>
             </Grid>
           </Container>
-        </Layout>
+        </DeprecatedLayout>
       );
     }
     return <p>Noe gikk galt...</p>;
   }
 
   return (
-    <Layout>
+    <DeprecatedLayout>
       {data && (
         <Container>
           <AnswerForm form={data.form} />
         </Container>
       )}
-    </Layout>
+    </DeprecatedLayout>
   );
 };
 
