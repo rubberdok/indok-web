@@ -1,10 +1,14 @@
 import { useQuery } from "@apollo/client";
+import Layout from "src/layouts";
 import PayWithVipps from "@components/pages/ecommerce/PayWithVipps";
 import SalesTermsDialog from "@components/pages/ecommerce/SalesTermsDialog";
-import Layout from "@components/Layout";
+import { UserInfoDocument } from "@generated/graphql";
 import { GET_PRODUCT } from "@graphql/ecommerce/queries";
 import { Product } from "@interfaces/ecommerce";
+import { addApolloState, initializeApollo } from "@lib/apolloClient";
+import { KeyboardArrowLeft } from "@mui/icons-material";
 import {
+  Alert,
   Box,
   Button,
   Card,
@@ -24,12 +28,12 @@ import {
   Typography,
 } from "@mui/material";
 import makeStyles from "@mui/styles/makeStyles";
-import { KeyboardArrowLeft } from "@mui/icons-material";
-import { Alert } from "@mui/material";
-import { NextPage } from "next";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { useRouter } from "next/router";
-import { useState } from "react";
-import { redirectIfNotLoggedIn } from "src/utils/redirect";
+import React, { useState } from "react";
+import { NextPageWithLayout } from "../_app";
+import { styled } from "@mui/styles";
+import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "src/theme/constants";
 
 const useStyles = makeStyles((theme: Theme) => ({
   list: {
@@ -57,7 +61,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const CheckoutPage: NextPage = () => {
+const RootStyle = styled("div")(({ theme }) => ({
+  marginTop: HEADER_MOBILE_HEIGHT,
+  [theme.breakpoints.up("md")]: {
+    marginTop: HEADER_DESKTOP_HEIGHT,
+  },
+}));
+
+const CheckoutPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSideProps>> = () => {
   const classes = useStyles();
   const router = useRouter();
   const { productId, quantityStr, redirect } = router.query;
@@ -73,12 +84,8 @@ const CheckoutPage: NextPage = () => {
     onCompleted: (data) => setProduct(data.product),
   });
 
-  if (redirectIfNotLoggedIn()) {
-    return null;
-  }
-
   return (
-    <Layout>
+    <RootStyle>
       <Container>
         <Box mt={2}>
           <Button startIcon={<KeyboardArrowLeft />} onClick={() => router.back()}>
@@ -192,8 +199,23 @@ const CheckoutPage: NextPage = () => {
           </Card>
         </Box>
       </Container>
-    </Layout>
+    </RootStyle>
   );
 };
 
 export default CheckoutPage;
+
+CheckoutPage.getLayout = (page: React.ReactElement) => <Layout>{page}</Layout>;
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const client = initializeApollo({}, ctx);
+  const { data, error } = await client.query({
+    query: UserInfoDocument,
+  });
+
+  if (error) return { notFound: true };
+  if (!data.user) {
+    return { notFound: true };
+  }
+  return addApolloState(client, { props: { user: data.user } });
+};

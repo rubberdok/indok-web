@@ -1,10 +1,14 @@
 import { useQuery } from "@apollo/client";
 import Layout from "@components/Layout";
 import OrderCellContent from "@components/pages/ecommerce/OrderCellContent";
+import { UserInfoDocument } from "@generated/graphql";
 import { GET_USER_ORDERS } from "@graphql/ecommerce/queries";
 import { Order } from "@interfaces/ecommerce";
 import { HeaderValuePair } from "@interfaces/utils";
+import { addApolloState, initializeApollo } from "@lib/apolloClient";
+import { KeyboardArrowLeft } from "@mui/icons-material";
 import {
+  Alert,
   Box,
   Button,
   Card,
@@ -21,12 +25,9 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { KeyboardArrowLeft } from "@mui/icons-material";
-import { Alert } from "@mui/material";
-import { NextPage } from "next";
+import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from "next";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { redirectIfNotLoggedIn } from "src/utils/redirect";
 
 const orderFields: HeaderValuePair<Order>[] = [
   { header: "Ordre-ID", field: "id" },
@@ -37,7 +38,7 @@ const orderFields: HeaderValuePair<Order>[] = [
   { header: "Status", field: "paymentStatus" },
 ];
 
-const OrdersPage: NextPage = () => {
+const OrdersPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = () => {
   const router = useRouter();
 
   const [orders, setOrders] = useState<Order[]>();
@@ -45,10 +46,6 @@ const OrdersPage: NextPage = () => {
   const { loading, error } = useQuery<{ userOrders: Order[] }>(GET_USER_ORDERS, {
     onCompleted: (data) => setOrders(data.userOrders),
   });
-
-  if (redirectIfNotLoggedIn()) {
-    return null;
-  }
 
   return (
     <Layout>
@@ -125,3 +122,16 @@ const OrdersPage: NextPage = () => {
 };
 
 export default OrdersPage;
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const client = initializeApollo({}, ctx);
+  const { data, error } = await client.query({
+    query: UserInfoDocument,
+  });
+
+  if (error) return { notFound: true };
+  if (!data.user) {
+    return { notFound: true };
+  }
+  return addApolloState(client, { props: { user: data.user } });
+};
