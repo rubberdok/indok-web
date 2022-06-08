@@ -1,7 +1,7 @@
 import { Box, Divider, Stack } from "@mui/material";
 import { Logo } from "../../..";
 
-const HeaderSimple: React.FC = () => {
+const Simple: React.FC = () => {
   return (
     <Box display="flex" justifyContent="center" py={4}>
       <Stack
@@ -16,4 +16,4 @@ const HeaderSimple: React.FC = () => {
   );
 };
 
-export default HeaderSimple;
+export default Simple;

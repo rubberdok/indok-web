@@ -75,7 +75,7 @@ const ImageSlider: React.VFC<ImageSliderProps> = ({ imageData, displayLabelText 
             width={1}
             height={{ xs: 300, md: 400 }}
           >
-            {Math.abs(activeStep - index) <= 2 ? (
+            {Math.abs(activeStep - index) <= 2 && (
               <Image
                 layout="fill"
                 alt={step.label}
@@ -84,7 +84,7 @@ const ImageSlider: React.VFC<ImageSliderProps> = ({ imageData, displayLabelText 
                 objectFit={isMobile ? "cover" : "contain"}
                 objectPosition="bottom"
               />
-            ) : null}
+            )}
           </Box>
         ))}
       </SwipeableViews>

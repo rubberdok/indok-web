@@ -1,9 +1,9 @@
 import { useMutation } from "@apollo/client";
 import ErrorDialog from "@components/dialogs/ErrorDialog";
 import { UPDATE_BOOKING_SEMESTER } from "@graphql/cabins/mutations";
-
 import useBookingSemester from "@hooks/cabins/useBookingSemester";
 import {
+  Alert,
   Box,
   Button,
   Checkbox,
@@ -15,8 +15,6 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-
-import { Alert } from "@mui/material";
 import dayjs from "dayjs";
 import router from "next/router";
 import { useState } from "react";
