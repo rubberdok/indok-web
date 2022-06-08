@@ -8,6 +8,7 @@ export default class MyDocument extends Document {
       <Html lang="en">
         <Head>
           <meta charSet="utf-8" />
+          <meta name="theme-color" content="#ffffff" />
 
           {/* Fonts */}
           <link rel="preconnect" href="https://fonts.googleapis.com" />
