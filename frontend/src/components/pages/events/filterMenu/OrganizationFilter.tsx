@@ -20,7 +20,6 @@ type Props = {
  */
 const OrganizationFilter: React.FC<Props> = ({ filters, handleChecked }) => {
   const { data, loading, error } = useQuery(EventFilteredOrganizationsDocument);
-  console.log(filters);
 
   if (loading) {
     return (
