@@ -554,6 +554,11 @@ export type ListingType = {
   viewCount: Scalars["Int"];
 };
 
+export type Logout = {
+  __typename?: "Logout";
+  idToken?: Maybe<Scalars["String"]>;
+};
+
 export type MembershipInput = {
   groupId?: InputMaybe<Scalars["ID"]>;
   organizationId?: InputMaybe<Scalars["ID"]>;
@@ -625,6 +630,7 @@ export type Mutations = {
    */
   eventSignUp?: Maybe<EventSignUp>;
   initiateOrder?: Maybe<InitiateOrder>;
+  logout?: Maybe<Logout>;
   /** Sends email to the user or an admin (or both) */
   sendEmail?: Maybe<SendEmail>;
   /** Send an email to all users signed up to an event */
@@ -973,7 +979,7 @@ export type Queries = {
   category?: Maybe<CategoryType>;
   defaultEvents?: Maybe<Array<Maybe<EventType>>>;
   event?: Maybe<EventType>;
-  eventFilteredOrganizations?: Maybe<Array<Maybe<OrganizationType>>>;
+  eventFilteredOrganizations?: Maybe<Array<OrganizationType>>;
   featuredArchive: Array<ArchiveDocumentType>;
   form?: Maybe<FormType>;
   forms?: Maybe<Array<Maybe<FormType>>>;
@@ -1540,6 +1546,26 @@ export type ActiveBookingResponsibleQuery = {
   } | null;
 };
 
+export type EventFilteredOrganizationsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type EventFilteredOrganizationsQuery = {
+  __typename?: "Queries";
+  eventFilteredOrganizations?: Array<{
+    __typename?: "OrganizationType";
+    id: string;
+    name: string;
+    color?: string | null;
+    children: Array<{ __typename?: "OrganizationType"; id: string; name: string }>;
+  }> | null;
+};
+
+export type GetCategoriesQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetCategoriesQuery = {
+  __typename?: "Queries";
+  allCategories?: Array<{ __typename?: "CategoryType"; id: string; name: string } | null> | null;
+};
+
 export type ListingFragment = {
   __typename?: "ListingType";
   id: string;
@@ -1616,6 +1642,13 @@ export type UserFieldsFragment = {
   allergies?: string | null;
   phoneNumber: string;
   firstLogin: boolean;
+};
+
+export type LogoutMutationVariables = Exact<{ [key: string]: never }>;
+
+export type LogoutMutation = {
+  __typename?: "Mutations";
+  logout?: { __typename?: "Logout"; idToken?: string | null } | null;
 };
 
 export type UserInfoQueryVariables = Exact<{ [key: string]: never }>;
@@ -2137,6 +2170,70 @@ export const ActiveBookingResponsibleDocument = {
     },
   ],
 } as unknown as DocumentNode<ActiveBookingResponsibleQuery, ActiveBookingResponsibleQueryVariables>;
+export const EventFilteredOrganizationsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "eventFilteredOrganizations" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "eventFilteredOrganizations" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "name" } },
+                { kind: "Field", name: { kind: "Name", value: "color" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "children" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "name" } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<EventFilteredOrganizationsQuery, EventFilteredOrganizationsQueryVariables>;
+export const GetCategoriesDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "getCategories" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "allCategories" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "name" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<GetCategoriesQuery, GetCategoriesQueryVariables>;
 export const ListingDocument = {
   kind: "Document",
   definitions: [
@@ -2218,6 +2315,29 @@ export const HasPermissionDocument = {
     },
   ],
 } as unknown as DocumentNode<HasPermissionQuery, HasPermissionQueryVariables>;
+export const LogoutDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "logout" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "logout" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "Field", name: { kind: "Name", value: "idToken" } }],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<LogoutMutation, LogoutMutationVariables>;
 export const UserInfoDocument = {
   kind: "Document",
   definitions: [

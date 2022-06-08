@@ -1,13 +1,6 @@
-import { Form, Response } from "@interfaces/forms";
-import { Typography, Grid, Card, CardContent, FormHelperText } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
 import FormAnswer from "@components/forms/formAdmin/FormAnswer";
-
-const useStyles = makeStyles(() => ({
-  bold: {
-    fontWeight: "bold",
-  },
-}));
+import { Form, Response } from "@interfaces/forms";
+import { Card, CardContent, FormHelperText, Grid, Typography } from "@mui/material";
 
 /**
  * Component to see a user's answers to a form.
@@ -20,7 +13,6 @@ const FormResponse: React.FC<{
   form: Form;
   response: Response;
 }> = ({ form, response }) => {
-  const classes = useStyles();
   return (
     <Grid container direction="column" spacing={1}>
       <Grid item>
@@ -36,7 +28,7 @@ const FormResponse: React.FC<{
           <CardContent>
             <Grid container direction="row" spacing={1}>
               <Grid item>
-                <Typography className={classes.bold}>Søker:</Typography>
+                <Typography sx={{ fontWeight: (theme) => theme.typography.fontWeightBold }}>Søker:</Typography>
               </Grid>
               <Grid item>
                 <Typography>

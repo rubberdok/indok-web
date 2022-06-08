@@ -1,5 +1,6 @@
-import DeprecatedLayout from "@components/DeprecatedLayout";
+import Layout, { RootStyle } from "@components/layouts";
 import ContactInfo from "@components/pages/reports/ContactInfo";
+import { ArrowRight } from "@mui/icons-material";
 import {
   Button,
   Card,
@@ -15,18 +16,17 @@ import {
   useTheme,
 } from "@mui/material";
 import { amber, deepOrange, deepPurple, green, indigo, red } from "@mui/material/colors";
-import { ArrowRight } from "@mui/icons-material";
-import { NextPage } from "next";
-import Head from "next/head";
 import Amund from "@public/img/Amund.jpg";
 import Benjamin from "@public/img/Benjamin.jpg";
 import Christine from "@public/img/Christine.jpeg";
 import Jesper from "@public/img/Jesper.jpg";
 import Laila from "@public/img/Laila.jpg";
 import Maria from "@public/img/Maria.jpg";
+import Head from "next/head";
 import { useRef } from "react";
+import { NextPageWithLayout } from "../_app";
 
-const ReportsPage: NextPage = () => {
+const ReportsPage: NextPageWithLayout = () => {
   const formRef = useRef<null | HTMLDivElement>(null);
   const scrollToForm = () => formRef.current?.scrollIntoView({ behavior: "smooth" });
   const theme = useTheme();
@@ -83,7 +83,7 @@ const ReportsPage: NextPage = () => {
   ];
 
   return (
-    <DeprecatedLayout>
+    <>
       <Head>
         <title>Baksida | Forening for studenter ved Industriell Økonomi og Teknologiledelse</title>
         <meta name="og:title" content="Baksida | Indøk NTNU" key="title" />
@@ -360,8 +360,14 @@ const ReportsPage: NextPage = () => {
           </Grid>
         </Grid>
       </Container>
-    </DeprecatedLayout>
+    </>
   );
 };
 
 export default ReportsPage;
+
+ReportsPage.getLayout = (page) => (
+  <Layout>
+    <RootStyle>{page}</RootStyle>
+  </Layout>
+);

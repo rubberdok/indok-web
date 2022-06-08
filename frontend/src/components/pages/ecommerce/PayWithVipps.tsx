@@ -1,16 +1,8 @@
 import { ApolloError, useMutation } from "@apollo/client";
 import { INITIATE_ORDER } from "@graphql/ecommerce/mutations";
 import { Card, CardActionArea, CardMedia } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
 import { useRouter } from "next/router";
 import React from "react";
-
-const useStyles = makeStyles(() => ({
-  root: {
-    maxWidth: 300,
-    background: "inherit",
-  },
-}));
 
 type Props = {
   productId: string;
@@ -27,13 +19,12 @@ const PayWithVipps: React.FC<Props> = ({ productId, quantity, onError, disabled,
     onError: onError,
   });
 
-  const classes = useStyles();
   const router = useRouter();
 
   const disable = disabled || !!error;
 
   return (
-    <Card className={classes.root}>
+    <Card sx={{ maxWidth: 300, background: "inherit" }}>
       <CardActionArea
         onClick={() =>
           initiateOrder({

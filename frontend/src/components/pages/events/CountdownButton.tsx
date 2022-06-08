@@ -1,5 +1,4 @@
-import { Button, CircularProgress } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
+import { Box, Button, CircularProgress } from "@mui/material";
 import dayjs, { Dayjs } from "dayjs";
 import nb from "dayjs/locale/nb";
 import timezone from "dayjs/plugin/timezone";
@@ -25,20 +24,6 @@ const calculateTimeLeft = (countdownTime: string, now: Dayjs): Record<string, nu
 
   return {};
 };
-
-const useStyles = makeStyles(() => ({
-  buttonLoading: {
-    color: "background",
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    marginTop: -12,
-    marginLeft: -12,
-  },
-  positionLeft: {
-    float: "left",
-  },
-}));
 
 interface Props {
   countDownDate: string;
@@ -78,7 +63,6 @@ const CountdownButton: React.FC<Props> = ({
 }) => {
   const [now, setNow] = useState(dayjs(currentTime));
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft(countDownDate, now));
-  const classes = useStyles();
 
   useEffect(() => {
     // Update timeLeft and now (current time) each second
@@ -130,7 +114,7 @@ const CountdownButton: React.FC<Props> = ({
   };
 
   return (
-    <div className={classes.positionLeft}>
+    <Box sx={{ float: "left" }}>
       <Button
         fullWidth
         sx={{ minWidth: (theme) => theme.spacing(30) }}
@@ -150,8 +134,13 @@ const CountdownButton: React.FC<Props> = ({
           ? "Meld på venteliste"
           : "Meld på"}
       </Button>
-      {loading && <CircularProgress size={24} className={classes.buttonLoading} />}
-    </div>
+      {loading && (
+        <CircularProgress
+          size={24}
+          sx={{ color: "background", position: "absolute", top: "50%", left: "50%", marginTop: -12, marginLeft: -12 }}
+        />
+      )}
+    </Box>
   );
 };
 

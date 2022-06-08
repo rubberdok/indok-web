@@ -1,74 +1,65 @@
+import { useQuery } from "@apollo/client";
 import { FilterQuery } from "@components/pages/events/AllEvents";
-import { Organization } from "@interfaces/organizations";
-import { Badge, Collapse, List, ListItem, ListItemText } from "@mui/material";
-import { CaretDown, CaretUp } from "phosphor-react";
-import React, { useState } from "react";
-import SuborganizationFilter from "./SubOrganizationFilter";
+import { EventFilteredOrganizationsDocument } from "@generated/graphql";
+import { Checkbox, Grid, Skeleton, Typography } from "@mui/material";
+import { range } from "@utils/helpers";
+import React from "react";
+import { HandleChecked } from "./types";
 
-interface Props {
+type Props = {
   filters: FilterQuery;
-  onFiltersChange: (query: FilterQuery) => void;
-  organizations: Organization[];
-  classes: {
-    badge: string;
-    nested: string;
-    doubleNested: string;
-    doubleNestedHeader: string;
-    doubleNestedList: string;
-  };
-}
+  handleChecked: HandleChecked;
+};
 
 /**
  * Component for the organization filter in the filter menu
  *
  * Props:
  * - filters: the currently applied filters
- * - onFiltersChange: method called when filters are updated
- * - organizations: list of organizations
- * - classes: styled classes
+ * - handleChecked: method called when filters are updated
  */
+const OrganizationFilter: React.FC<Props> = ({ filters, handleChecked }) => {
+  const { data, loading, error } = useQuery(EventFilteredOrganizationsDocument);
+  console.log(filters);
 
-const OrganizationFilter: React.FC<Props> = ({ filters, onFiltersChange, organizations, classes }) => {
-  const [open, setOpen] = useState(false);
+  if (loading) {
+    return (
+      <Grid container item justifyContent="space-between" spacing={2}>
+        {range(0, 2).map((val) => (
+          <Grid item xs={12} key={val}>
+            <Skeleton variant="rectangular" width="100%">
+              <Typography>Laster...</Typography>
+            </Skeleton>
+          </Grid>
+        ))}
+      </Grid>
+    );
+  }
+
+  if (error) {
+    return (
+      <Grid item sx={{ color: (theme) => theme.palette.error.main }}>
+        <Typography variant="body1">Noe gikk galt</Typography>
+      </Grid>
+    );
+  }
 
   return (
-    <>
-      <ListItem button onClick={() => setOpen(!open)} selected={open}>
-        <ListItemText primary={"Arrangert av"} />
-        <Badge className={classes.badge} badgeContent={1} color="primary" invisible={!filters.organization} />
-        {open ? <CaretUp size={20} /> : <CaretDown size={20} />}
-      </ListItem>
-
-      <Collapse in={open} timeout="auto" unmountOnExit>
-        {organizations.map((org: Organization) => (
-          <List disablePadding key={org.name}>
-            {org.children && org.children.length > 0 ? (
-              <SuborganizationFilter
-                filters={filters}
-                onFiltersChange={onFiltersChange}
-                name={org.name}
-                organizations={org.children}
-                classes={classes}
-              />
-            ) : (
-              <ListItem
-                button
-                className={classes.nested}
-                selected={filters.organization === org.name}
-                onClick={() =>
-                  onFiltersChange({
-                    ...filters,
-                    organization: filters.organization === org.name ? undefined : org.name,
-                  })
-                }
-              >
-                <ListItemText primary={org.name} />
-              </ListItem>
-            )}
-          </List>
-        ))}
-      </Collapse>
-    </>
+    <Grid container item direction="column">
+      {data?.eventFilteredOrganizations?.map((organization) => (
+        <Grid container item direction="row" justifyContent="space-between" alignItems="center" key={organization.id}>
+          <Grid item>
+            <Typography variant="body1">{organization.name}</Typography>
+          </Grid>
+          <Grid item>
+            <Checkbox
+              checked={filters.organization === organization.name}
+              onChange={(e) => handleChecked(e, "organization", organization.name)}
+            />
+          </Grid>
+        </Grid>
+      ))}
+    </Grid>
   );
 };
 

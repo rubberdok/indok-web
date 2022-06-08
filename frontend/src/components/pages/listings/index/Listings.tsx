@@ -1,19 +1,11 @@
+import { useQuery } from "@apollo/client";
 import ListingItem from "@components/pages/listings/index/ListingItem";
 import { LISTINGS } from "@graphql/listings/queries";
 import { Listing } from "@interfaces/listings";
-import { useQuery } from "@apollo/client";
-import { Grid, Typography, CircularProgress, Button } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
-import Link from "next/link";
+import { Button, CircularProgress, Grid, Typography } from "@mui/material";
 import Image from "next/image";
+import Link from "next/link";
 import EmptyStreet from "public/illustrations/EmptyStreet.svg";
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    marginTop: theme.spacing(4),
-    marginBottom: theme.spacing(4),
-  },
-}));
 
 /**
  * Component to show an overview of all open listings.
@@ -27,11 +19,9 @@ const Listings: React.FC<{
   // fetches all open listings
   const { loading, error, data } = useQuery<{ listings: Listing[] }>(LISTINGS);
 
-  const classes = useStyles();
-
   // if the data is fetched, renders a ListingItem for each listing
   return (
-    <Grid container direction="row" spacing={2} className={classes.root} justifyContent="center" alignItems="stretch">
+    <Grid container direction="row" spacing={2} justifyContent="center" alignItems="stretch">
       {loading && (
         <Grid item>
           <CircularProgress color="primary" />
