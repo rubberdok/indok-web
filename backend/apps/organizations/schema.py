@@ -25,6 +25,6 @@ class OrganizationQueries(graphene.ObjectType, OrganizationResolvers, Membership
         id=graphene.ID(required=False),
         slug=graphene.String(required=False),
     )
-    event_filtered_organizations = graphene.List(OrganizationType)
+    event_filtered_organizations = graphene.List(graphene.NonNull(OrganizationType))
 
     memberships = graphene.List(MembershipType, organization_id=graphene.ID())

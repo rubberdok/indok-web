@@ -1,4 +1,5 @@
 import { useQuery } from "@apollo/client";
+import { PermissionRequired } from "@components/authz";
 import { GET_DEFAULT_EVENTS, GET_EVENTS } from "@graphql/events/queries";
 import { GET_USER } from "@graphql/users/queries";
 import useResponsive from "@hooks/useResponsive";
@@ -56,7 +57,7 @@ const AllEvents: React.FC = () => {
 
   return (
     <>
-      {!(loading || userLoading) && (
+      <PermissionRequired permission="events.add_event">
         <Paper
           sx={{
             py: 2,
@@ -93,7 +94,7 @@ const AllEvents: React.FC = () => {
             )}
           </Stack>
         </Paper>
-      )}
+      </PermissionRequired>
       {isMobile && (
         <>
           <Button

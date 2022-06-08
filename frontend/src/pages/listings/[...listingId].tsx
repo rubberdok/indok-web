@@ -11,37 +11,12 @@ import { addApolloState, initializeApollo } from "@lib/apolloClient";
 import ArrowForward from "@mui/icons-material/ArrowForward";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { Button, Container, Grid, Hidden, Paper } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import ReactMarkdown from "react-markdown";
 import { NextPageWithLayout } from "../_app";
-
-const useStyles = makeStyles((theme) => ({
-  container: {
-    paddingBottom: theme.spacing(2),
-    [theme.breakpoints.down("md")]: {
-      marginTop: theme.spacing(4),
-    },
-  },
-  root: {
-    position: "relative",
-    [theme.breakpoints.up("md")]: {
-      marginTop: "-7%",
-    },
-  },
-  bottom: {
-    position: "sticky",
-    bottom: 0,
-    padding: theme.spacing(2),
-    zIndex: theme.zIndex.snackbar,
-  },
-  description: {
-    wordBreak: "break-word",
-  },
-}));
 
 // page to show details about a listing and its organization
 const ListingPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ listing }) => {
@@ -53,8 +28,6 @@ const ListingPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServ
       id: Array.isArray(listingId) ? listingId[0] : listingId,
     },
   });
-
-  const classes = useStyles();
 
   const descriptionWithTitle = (desc: string) => {
     if (!desc.startsWith("#")) {
@@ -89,7 +62,7 @@ const ListingPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServ
           <Hidden smDown>
             <ListingBanner imageUrl={data.listing.heroImageUrl} />
           </Hidden>
-          <Container className={classes.container}>
+          <Container>
             <Grid container justifyContent="center">
               <Grid
                 container
@@ -99,7 +72,12 @@ const ListingPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServ
                 direction="column"
                 alignItems="stretch"
                 spacing={4}
-                className={classes.root}
+                sx={(theme) => ({
+                  position: "relative",
+                  [theme.breakpoints.up("md")]: {
+                    marginTop: "-7%",
+                  },
+                })}
               >
                 <Grid container item direction="row" alignItems="stretch" justifyContent="center" spacing={4}>
                   <Hidden mdDown>
@@ -122,7 +100,14 @@ const ListingPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServ
             </Grid>
           </Container>
           <Hidden mdUp>
-            <Paper className={classes.bottom}>
+            <Paper
+              sx={{
+                position: "sticky",
+                bottom: 0,
+                padding: (theme) => theme.spacing(2),
+                zIndex: (theme) => theme.zIndex.snackbar,
+              }}
+            >
               <Grid container direction="row" justifyContent="space-between" alignItems="center">
                 {data.listing.readMoreUrl && (
                   <Grid item xs>

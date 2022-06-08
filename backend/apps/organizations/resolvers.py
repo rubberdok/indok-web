@@ -1,9 +1,10 @@
 from typing import Optional
 
-from django.db.models import Q
+from decorators import PermissionDenied
+from django.db.models import Count, Q
+from django.utils import timezone
 
 from .models import Membership, Organization
-from decorators import PermissionDenied
 
 
 class OrganizationResolvers:
@@ -24,8 +25,11 @@ class OrganizationResolvers:
 
     def resolve_event_filtered_organizations(self, info):
         try:
-            return Organization.objects.filter(parent=None)
-
+            return (
+                Organization.objects.filter(events__end_time__gte=timezone.now())
+                .annotate(num_events=Count("events"))
+                .filter(num_events__gte=0)
+            )
         except Organization.DoesNotExist:
             return None
 

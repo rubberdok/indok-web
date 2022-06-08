@@ -24,43 +24,14 @@ import {
   List,
   ListItem,
   ListItemText,
-  Theme,
   Typography,
 } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { NextPageWithLayout } from "../_app";
 
-const useStyles = makeStyles((theme: Theme) => ({
-  list: {
-    width: "100%",
-    backgroundColor: theme.palette.background.paper,
-    textAlign: "center",
-  },
-  listitem: {
-    textAlign: "center",
-  },
-  wrapIcon: {
-    alignItems: "center",
-    justifyContent: "center",
-    display: "inline-flex",
-    width: "100%",
-    marginBottom: theme.spacing(1),
-
-    "& > svg": {
-      height: "unset",
-      marginRight: theme.spacing(2),
-    },
-  },
-  errrorContainer: {
-    width: "fit-content",
-  },
-}));
-
 const CheckoutPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSideProps>> = () => {
-  const classes = useStyles();
   const router = useRouter();
   const { productId, quantityStr, redirect } = router.query;
   const quantity = typeof quantityStr == "string" ? parseInt(quantityStr) : 1;
@@ -116,21 +87,21 @@ const CheckoutPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getSer
                   <Grid item xs={12}>
                     <Typography variant="h3">Bekreft ordredetaljer</Typography>
                     {product && quantity ? (
-                      <List className={classes.list}>
-                        <ListItem className={classes.listitem}>
+                      <List>
+                        <ListItem sx={{ textAlign: "center" }}>
                           <ListItemText primary={product.name} secondary={product.description} />
                         </ListItem>
-                        <ListItem className={classes.listitem}>
+                        <ListItem sx={{ textAlign: "center" }}>
                           <ListItemText primary={`${product.price} kr`} secondary="Pris per enhet" />
                         </ListItem>
-                        <ListItem className={classes.listitem}>
+                        <ListItem sx={{ textAlign: "center" }}>
                           <ListItemText
                             primary={`${quantity} stk`}
                             secondary={`Maksimalt antall tillatt: ${product.maxBuyableQuantity}`}
                           />
                         </ListItem>
                         <Divider variant="middle" component="li" />
-                        <ListItem className={classes.listitem}>
+                        <ListItem sx={{ textAlign: "center" }}>
                           <ListItemText primary={`${product.price * quantity} kr`} secondary="Totalbeløp" />
                         </ListItem>
                       </List>

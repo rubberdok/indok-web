@@ -2,7 +2,6 @@ import useResponsive from "@hooks/useResponsive";
 import { Cabin, ContactInfo, DatePick } from "@interfaces/cabins";
 import { Box, Divider, Tooltip, Typography } from "@mui/material";
 import { TypographyProps } from "@mui/material/Typography";
-import makeStyles from "@mui/styles/makeStyles";
 import { calculatePrice, convertDateFormat, toStringChosenCabins } from "@utils/cabins";
 import { NextPage } from "next";
 
@@ -13,14 +12,6 @@ interface Props {
   cabinText?: string;
   mailSent?: boolean;
 }
-
-const useStyles = makeStyles({
-  bold: {
-    fontWeight: 800,
-    display: "inline",
-  },
-});
-
 const InfoText: React.FC<TypographyProps> = (props) => (
   <Typography variant="body2" align="center" component="span" display="block" {...props}>
     {props.children}
@@ -32,7 +23,6 @@ Statusbox with information about the current cabin booking.
 Renders fields based on the props given.
 */
 const CabinBookingStatus: NextPage<Props> = ({ chosenCabins, datePick, contactInfo, cabinText, mailSent }) => {
-  const classes = useStyles();
   const isMobile = useResponsive({ query: "down", key: "md" });
 
   return (
@@ -41,7 +31,9 @@ const CabinBookingStatus: NextPage<Props> = ({ chosenCabins, datePick, contactIn
         <Box m={3}>
           <InfoText>
             {cabinText ?? "Du søker nå om å booke"}{" "}
-            <Box className={classes.bold}>{toStringChosenCabins(chosenCabins)}</Box>
+            <Typography variant="body1" fontWeight={(theme) => theme.typography.fontWeightBold}>
+              {toStringChosenCabins(chosenCabins)}
+            </Typography>
           </InfoText>
         </Box>
       ) : null}
@@ -51,11 +43,15 @@ const CabinBookingStatus: NextPage<Props> = ({ chosenCabins, datePick, contactIn
       {datePick ? (
         <Box m={3}>
           <InfoText>
-            <Box className={classes.bold}>Innsjekk: </Box>
+            <Typography variant="body1" fontWeight={(theme) => theme.typography.fontWeightBold}>
+              Innsjekk:{" "}
+            </Typography>
             {datePick.checkInDate !== undefined && convertDateFormat(datePick.checkInDate)}
           </InfoText>
           <InfoText>
-            <Box className={classes.bold}>Utsjekk: </Box>
+            <Typography variant="body1" fontWeight={(theme) => theme.typography.fontWeightBold}>
+              Utsjekk:{" "}
+            </Typography>
             {datePick.checkOutDate !== undefined && convertDateFormat(datePick.checkOutDate)}
           </InfoText>
         </Box>
@@ -66,13 +62,17 @@ const CabinBookingStatus: NextPage<Props> = ({ chosenCabins, datePick, contactIn
       {contactInfo ? (
         <Box m={3}>
           <InfoText>
-            <Box className={classes.bold}>Gjester: </Box>
+            <Typography variant="body1" fontWeight={(theme) => theme.typography.fontWeightBold}>
+              Gjester:{" "}
+            </Typography>
             {contactInfo.internalParticipants > 0 ? `${contactInfo.internalParticipants} indøkere` : null}
             {contactInfo.internalParticipants > 0 && contactInfo.externalParticipants > 0 ? ", " : null}
             {contactInfo.externalParticipants > 0 ? `${contactInfo.externalParticipants} eksterne` : null}
           </InfoText>
           <InfoText>
-            <Box className={classes.bold}>Pris: </Box>
+            <Typography variant="body1" fontWeight={(theme) => theme.typography.fontWeightBold}>
+              Pris:{" "}
+            </Typography>
             <Tooltip
               title={
                 contactInfo.internalParticipants >= contactInfo.externalParticipants

@@ -1,20 +1,4 @@
 import { Box } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
-
-const useStyles = makeStyles(() => ({
-  hero: {
-    width: "100%",
-    maxHeight: "25vh",
-    height: "25vh",
-  },
-  background: {
-    background: "url(/nth.svg)",
-    backgroundRepeat: "no-repeat",
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    opacity: 0.04,
-  },
-}));
 
 type Props = {
   imageUrl?: string | null;
@@ -27,22 +11,34 @@ type Props = {
  * - the listing from the detail page
  */
 const ListingBanner: React.FC<Props> = ({ imageUrl }) => {
-  const classes = useStyles();
   return (
     <>
       {imageUrl ? (
         <Box
-          className={`${classes.hero}`}
-          style={{
+          sx={{
             background: `url(${imageUrl})`,
             backgroundPosition: "top",
             backgroundSize: "cover",
             backgroundRepeat: "no-repeat",
             opacity: 0.5,
+            width: "100%",
+            maxHeight: "25vh",
+            height: "25vh",
           }}
         />
       ) : (
-        <Box className={`${classes.background} ${classes.hero}`} />
+        <Box
+          sx={{
+            width: "100%",
+            maxHeight: "25vh",
+            height: "25vh",
+            background: "url(/nth.svg)",
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            opacity: 0.04,
+          }}
+        />
       )}
     </>
   );
