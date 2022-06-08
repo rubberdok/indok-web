@@ -1,7 +1,6 @@
 import createEmotionServer from "@emotion/server/create-instance";
 import { createEmotionCache } from "@lib/emotion";
 import Document, { Head, Html, Main, NextScript } from "next/document";
-import React from "react";
 
 export default class MyDocument extends Document {
   render() {
@@ -22,6 +21,8 @@ export default class MyDocument extends Document {
             href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700;900&display=swap"
             rel="stylesheet"
           />
+          {/* Inject MUI styles first to match with the prepend: true configuration. */}
+          {(this.props as any).emotionStyleTags}
         </Head>
 
         <body>
