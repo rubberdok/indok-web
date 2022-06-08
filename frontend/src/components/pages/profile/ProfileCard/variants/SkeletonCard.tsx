@@ -1,5 +1,4 @@
-import { Typography } from "@mui/material";
-import { Skeleton } from "@mui/material";
+import { Skeleton, Typography } from "@mui/material";
 import ProfileCardBase from "./ProfileCardBase";
 
 const SkeletonCard: React.VFC = () => (

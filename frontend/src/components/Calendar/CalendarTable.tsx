@@ -43,7 +43,7 @@ const CalendarTable: React.FC<Props> = ({ month, onChangeMonth, children }) => {
                 sx={{
                   textTransform: "uppercase",
                   fontSize: 12,
-                  color: (theme) => (theme.palette.mode === "dark" ? "grey.200" : "grey.800"),
+                  color: (thm) => (thm.palette.mode === "dark" ? "grey.200" : "grey.800"),
                 }}
               >
                 {dow}

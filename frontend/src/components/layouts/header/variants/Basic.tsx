@@ -20,7 +20,7 @@ const ElevationScroll: React.FC<{ children: React.ReactElement }> = ({ children 
   });
 };
 
-const Header: React.FC<Props> = ({ transparent }) => {
+const Basic: React.FC<Props> = ({ transparent }) => {
   const scrolling = useScrollTrigger({ threshold: HEADER_DESKTOP_HEIGHT });
 
   return (
@@ -46,4 +46,4 @@ const Header: React.FC<Props> = ({ transparent }) => {
   );
 };
 
-export default Header;
+export default Basic;

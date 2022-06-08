@@ -8,7 +8,7 @@ import { LoadingButton } from "@mui/lab";
 
 const Logout: React.FC<ButtonProps> = ({ ...props }) => {
   const router = useRouter();
-  const [logout, { loading, client }] = useMutation(LogoutDocument, {
+  const [logoutAction, { loading, client }] = useMutation(LogoutDocument, {
     onCompleted: ({ logout }) => {
       // reset the apollo store and redirect. See // https://www.apollographql.com/docs/react/networking/authentication/#reset-store-on-logout
       client.resetStore();
@@ -30,7 +30,7 @@ const Logout: React.FC<ButtonProps> = ({ ...props }) => {
   }
 
   return (
-    <Button color="error" variant="contained" {...props} onClick={() => logout()}>
+    <Button color="error" variant="contained" {...props} onClick={() => logoutAction()}>
       Logg ut
     </Button>
   );
