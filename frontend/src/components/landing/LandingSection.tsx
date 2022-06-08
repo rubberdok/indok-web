@@ -25,7 +25,7 @@ const LandingSection: React.FC = () => {
             <Box
               component="img"
               sx={{ height: 1, position: "absolute", top: 0, left: 0, width: 1 / 2, objectFit: "cover" }}
-              alt="recruitment"
+              alt=""
               src="/hovedbygget.jpeg"
             />
           </Grid>
