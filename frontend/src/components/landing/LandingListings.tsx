@@ -31,7 +31,7 @@ const LandingListings: React.FC = () => {
             <Box
               component="img"
               src="/img/gang.jpg"
-              alt="indøkstudenter"
+              alt=""
               sx={{ objectFit: isMobile ? "cover" : "contain", width: 1 }}
             />
           </Box>

@@ -70,7 +70,7 @@ const LandingHero: React.FC = () => {
                   pl: 10,
                   top: 0,
                 }}
-                alt="marketing-market"
+                alt=""
                 src="/hero.jpg"
               />
             </Grid>

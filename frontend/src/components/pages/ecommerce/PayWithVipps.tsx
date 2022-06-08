@@ -40,7 +40,7 @@ const PayWithVipps: React.FC<Props> = ({ productId, quantity, onError, disabled,
       >
         <CardMedia
           component="img"
-          alt="Pay with vipps"
+          alt="Betal med Vipps"
           image="/img/pay_with_vipps_rect_250_NO.svg"
           title="Pay with vipps"
           style={disable ? { opacity: 0.2 } : {}}

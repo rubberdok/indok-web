@@ -32,7 +32,7 @@ const Contract: React.FC<ContractProps> = ({ chosenCabins, contactInfo, datePick
     <Grid container>
       <Box m={2}>
         <Box display="flex" justifyContent="center" alignItems="center">
-          <Image alt="logo" src="/img/hyttestyret_logo.png" width={300} height={165} />
+          <Image alt="" src="/img/hyttestyret_logo.png" width={300} height={165} />
         </Box>
         <Typography variant="h2" align="center">
           Leiekontrakt

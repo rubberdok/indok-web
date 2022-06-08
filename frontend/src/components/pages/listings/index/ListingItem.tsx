@@ -86,7 +86,7 @@ const ListingItem: React.FC<{
             >
               <img
                 src={listing.organization?.logoUrl || "/nth.svg"}
-                alt="Foreningslogo"
+                alt=""
                 onError={(e) => (
                   ((e.target as HTMLImageElement).onerror = null), ((e.target as HTMLImageElement).src = "/nth.svg")
                 )}
