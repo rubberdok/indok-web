@@ -1,20 +1,12 @@
 import { useMutation, useQuery } from "@apollo/client";
-import DeprecatedLayout from "@components/DeprecatedLayout";
 import ListingForm from "@components/pages/listings/organization/ListingForm";
 import { CREATE_LISTING } from "@graphql/listings/mutations";
 import { USER_WITH_ORGANIZATIONS } from "@graphql/listings/queries";
 import { Listing, ListingInput } from "@interfaces/listings";
 import { Organization } from "@interfaces/organizations";
 import { Container, Grid, Typography } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
 import { useRouter } from "next/router";
 import { useState } from "react";
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    marginBottom: theme.spacing(4),
-  },
-}));
 
 const emptyListing: ListingInput = {
   id: "",
@@ -38,8 +30,6 @@ const emptyListing: ListingInput = {
 const NewListing: React.FC<{
   defaultOrganizationId?: string;
 }> = ({ defaultOrganizationId }) => {
-  const classes = useStyles();
-
   const router = useRouter();
 
   // state to manage the listing being created
@@ -67,41 +57,39 @@ const NewListing: React.FC<{
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error...</p>;
   return (
-    <DeprecatedLayout>
-      <Container className={classes.root}>
-        <Typography variant="h1" gutterBottom>
-          Ny vervutlysning
-        </Typography>
-        <Grid container justifyContent="center">
-          <Grid item xs={10}>
-            <ListingForm
-              listing={listing}
-              setListing={setListing}
-              organizations={data?.user.organizations || []}
-              onSubmit={() => {
-                createListing({
-                  variables: {
-                    input: {
-                      title: listing.title,
-                      description: listing.description || undefined,
-                      startDatetime: listing.startDatetime || undefined,
-                      deadline: listing.deadline,
-                      organizationId: listing.organization?.id,
-                      case: listing.case || undefined,
-                      interview: listing.interview || undefined,
-                      application: listing.application || undefined,
-                      applicationUrl: listing.applicationUrl || undefined,
-                      readMoreUrl: listing.readMoreUrl || undefined,
-                    },
+    <Container>
+      <Typography variant="h1" gutterBottom>
+        Ny vervutlysning
+      </Typography>
+      <Grid container justifyContent="center">
+        <Grid item xs={10}>
+          <ListingForm
+            listing={listing}
+            setListing={setListing}
+            organizations={data?.user.organizations || []}
+            onSubmit={() => {
+              createListing({
+                variables: {
+                  input: {
+                    title: listing.title,
+                    description: listing.description || undefined,
+                    startDatetime: listing.startDatetime || undefined,
+                    deadline: listing.deadline,
+                    organizationId: listing.organization?.id,
+                    case: listing.case || undefined,
+                    interview: listing.interview || undefined,
+                    application: listing.application || undefined,
+                    applicationUrl: listing.applicationUrl || undefined,
+                    readMoreUrl: listing.readMoreUrl || undefined,
                   },
-                });
-              }}
-              onCancel={() => router.back()}
-            />
-          </Grid>
+                },
+              });
+            }}
+            onCancel={() => router.back()}
+          />
         </Grid>
-      </Container>
-    </DeprecatedLayout>
+      </Grid>
+    </Container>
   );
 };
 export default NewListing;

@@ -1,7 +1,6 @@
 import { ListingQuery } from "@generated/graphql";
 import ArrowForward from "@mui/icons-material/ArrowForward";
 import { Button, Card, CardContent, Grid, Hidden, Typography } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
 import dayjs from "dayjs";
 import nb from "dayjs/locale/nb";
 import timezone from "dayjs/plugin/timezone";
@@ -12,16 +11,6 @@ dayjs.extend(utc);
 dayjs.tz.setDefault("Europe/Oslo");
 dayjs.locale(nb);
 
-const useStyles = makeStyles((theme) => ({
-  deadline: {
-    "&::before": {
-      content: "'Frist '",
-      fontWeight: "bold",
-      color: theme.palette.primary.main,
-    },
-  },
-}));
-
 /**
  * Component for title and organization info on the listing detail page.
  *
@@ -31,7 +20,6 @@ const useStyles = makeStyles((theme) => ({
 const TitleCard: React.FC<{
   listing: NonNullable<ListingQuery["listing"]>;
 }> = ({ listing }) => {
-  const classes = useStyles();
   let link: string | undefined = undefined;
   if (listing.form) {
     link = `/forms/${listing.form.id}/`;
@@ -51,7 +39,19 @@ const TitleCard: React.FC<{
             </Typography>
           </Grid>
           <Grid item>
-            <Typography variant="caption" component="h3" align="center" className={classes.deadline} gutterBottom>
+            <Typography
+              variant="caption"
+              component="h3"
+              align="center"
+              sx={{
+                "&::before": {
+                  content: "'Frist '",
+                  fontWeight: "bold",
+                  color: (theme) => theme.palette.primary.main,
+                },
+              }}
+              gutterBottom
+            >
               {dayjs(listing.deadline).format("DD. MMMM YYYY [kl.] HH:mm")}
             </Typography>
           </Grid>

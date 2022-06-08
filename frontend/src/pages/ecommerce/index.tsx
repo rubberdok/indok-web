@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import DeprecatedLayout from "@components/DeprecatedLayout";
+import Layout, { RootStyle } from "@components/layouts";
 import OrderCellContent from "@components/pages/ecommerce/OrderCellContent";
 import { UserInfoDocument } from "@generated/graphql";
 import { GET_USER_ORDERS } from "@graphql/ecommerce/queries";
@@ -25,9 +25,10 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from "next";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import { NextPageWithLayout } from "../_app";
 
 const orderFields: HeaderValuePair<Order>[] = [
   { header: "Ordre-ID", field: "id" },
@@ -38,7 +39,7 @@ const orderFields: HeaderValuePair<Order>[] = [
   { header: "Status", field: "paymentStatus" },
 ];
 
-const OrdersPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = () => {
+const OrdersPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSideProps>> = () => {
   const router = useRouter();
 
   const [orders, setOrders] = useState<Order[]>();
@@ -48,80 +49,84 @@ const OrdersPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProps
   });
 
   return (
-    <DeprecatedLayout>
-      <Container>
-        <Box mt={2}>
-          <Button startIcon={<KeyboardArrowLeft />} onClick={() => router.back()}>
-            Tilbake
-          </Button>
-        </Box>
-        <Box mb={2}>
-          <Card>
-            <CardHeader title="Betalinger"></CardHeader>
-            <CardContent>
-              <Grid container alignItems="center" direction="column" spacing={3}>
-                <Grid item xs={12}>
-                  <Alert variant="filled" severity="info">
-                    Betalingsløsningen er under utvikling. Dersom du opplever problemer, kontakt{" "}
-                    <a style={{ color: "blue" }} href="mailto:kontakt@rubberdok.no">
-                      kontakt@rubberdok.no
-                    </a>
+    <Container>
+      <Box mt={2}>
+        <Button startIcon={<KeyboardArrowLeft />} onClick={() => router.back()}>
+          Tilbake
+        </Button>
+      </Box>
+      <Box mb={2}>
+        <Card>
+          <CardHeader title="Betalinger"></CardHeader>
+          <CardContent>
+            <Grid container alignItems="center" direction="column" spacing={3}>
+              <Grid item xs={12}>
+                <Alert variant="filled" severity="info">
+                  Betalingsløsningen er under utvikling. Dersom du opplever problemer, kontakt{" "}
+                  <a style={{ color: "blue" }} href="mailto:kontakt@rubberdok.no">
+                    kontakt@rubberdok.no
+                  </a>
+                </Alert>
+              </Grid>
+              {error ? (
+                <>
+                  <Typography variant="h3">Feil</Typography>
+                  <Alert severity="error" variant="filled">
+                    {error.message}
                   </Alert>
-                </Grid>
-                {error ? (
-                  <>
-                    <Typography variant="h3">Feil</Typography>
-                    <Alert severity="error" variant="filled">
-                      {error.message}
-                    </Alert>
-                  </>
-                ) : loading ? (
-                  <CircularProgress />
-                ) : (
-                  <>
-                    <Grid item xs={12}>
-                      <Typography variant="h3">Mine betalinger</Typography>
-                      {orders && orders.length !== 0 ? (
-                        <TableContainer style={{ maxHeight: 600 }}>
-                          <Table>
-                            <TableHead>
-                              <TableRow>
+                </>
+              ) : loading ? (
+                <CircularProgress />
+              ) : (
+                <>
+                  <Grid item xs={12}>
+                    <Typography variant="h3">Mine betalinger</Typography>
+                    {orders && orders.length !== 0 ? (
+                      <TableContainer style={{ maxHeight: 600 }}>
+                        <Table>
+                          <TableHead>
+                            <TableRow>
+                              {orderFields.map((field) => (
+                                <TableCell key={`user-header-${field.header}`}>{field.header}</TableCell>
+                              ))}
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {orders.map((order: Order) => (
+                              <TableRow key={`user-row-${order.id}`}>
                                 {orderFields.map((field) => (
-                                  <TableCell key={`user-header-${field.header}`}>{field.header}</TableCell>
+                                  <TableCell key={`user-${order.id}-cell--${field.field}`}>
+                                    <OrderCellContent order={order} field={field} />
+                                  </TableCell>
                                 ))}
                               </TableRow>
-                            </TableHead>
-                            <TableBody>
-                              {orders.map((order: Order) => (
-                                <TableRow key={`user-row-${order.id}`}>
-                                  {orderFields.map((field) => (
-                                    <TableCell key={`user-${order.id}-cell--${field.field}`}>
-                                      <OrderCellContent order={order} field={field} />
-                                    </TableCell>
-                                  ))}
-                                </TableRow>
-                              ))}
-                            </TableBody>
-                          </Table>
-                        </TableContainer>
-                      ) : (
-                        <Typography align="center" variant="body1">
-                          Ingen ordrer funnet
-                        </Typography>
-                      )}
-                    </Grid>
-                  </>
-                )}
-              </Grid>
-            </CardContent>
-          </Card>
-        </Box>
-      </Container>
-    </DeprecatedLayout>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                    ) : (
+                      <Typography align="center" variant="body1">
+                        Ingen ordrer funnet
+                      </Typography>
+                    )}
+                  </Grid>
+                </>
+              )}
+            </Grid>
+          </CardContent>
+        </Card>
+      </Box>
+    </Container>
   );
 };
 
 export default OrdersPage;
+
+OrdersPage.getLayout = (page) => (
+  <Layout>
+    <RootStyle>{page}</RootStyle>
+  </Layout>
+);
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const client = initializeApollo({}, ctx);

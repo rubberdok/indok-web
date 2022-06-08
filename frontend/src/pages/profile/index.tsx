@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { PermissionRequired } from "@components/authz";
+import { Logout, PermissionRequired } from "@components/authz";
 import Layout from "@components/layouts";
 import {
   CabinsAdmin,
@@ -11,9 +11,8 @@ import {
   Report,
 } from "@components/pages/profile/ProfileCard";
 import { GET_USER_INFO } from "@graphql/users/queries";
-import { Avatar, Button, Container, Grid, Stack, styled, Typography } from "@mui/material";
+import { Avatar, Container, Grid, Stack, styled, Typography } from "@mui/material";
 import Head from "next/head";
-import NextLink from "next/link";
 import { useMemo } from "react";
 import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "src/theme/constants";
 import { User } from "src/types/users";
@@ -102,11 +101,7 @@ const ProfilePage: NextPageWithLayout = () => {
               </PermissionRequired>
             </Grid>
           </Grid>
-          <NextLink href="/logout" passHref>
-            <Button variant="contained" color="error">
-              Logg ut
-            </Button>
-          </NextLink>
+          <Logout />
         </Stack>
       </Container>
     </RootStyle>
