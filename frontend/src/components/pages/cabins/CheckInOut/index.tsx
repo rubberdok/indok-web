@@ -43,7 +43,7 @@ const CheckInOut: NextPage<Props> = ({ allCabins, chosenCabins, setChosenCabins,
         minWidth={200}
         bgcolor="grey.200"
         p={3}
-        sx={{ bgcolor: (theme) => (theme.palette.mode === "dark" ? "grey.800" : "grey.200") }}
+        sx={{ bgcolor: (thm) => (thm.palette.mode === "dark" ? "grey.800" : "grey.200") }}
         variant={isLight ? undefined : "outlined"}
       >
         <Typography variant="h5">Velg hytte</Typography>
@@ -72,7 +72,7 @@ const CheckInOut: NextPage<Props> = ({ allCabins, chosenCabins, setChosenCabins,
       {isMobile && <Divider sx={{ my: 2 }} />}
       <Paper
         variant={isLight ? undefined : "outlined"}
-        sx={{ p: 3, bgcolor: (theme) => (theme.palette.mode === "dark" ? "grey.800" : "grey.200"), width: 1 }}
+        sx={{ p: 3, bgcolor: (thm) => (thm.palette.mode === "dark" ? "grey.800" : "grey.200"), width: 1 }}
       >
         <Calendar
           title="Velg innsjekk og utsjekk"

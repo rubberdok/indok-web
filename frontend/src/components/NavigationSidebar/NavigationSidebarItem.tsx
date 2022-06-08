@@ -28,23 +28,22 @@ const NavigationSidebarItem: React.FC<Props> = ({ item }) => {
         <ListItemStyle onClick={handleOpen} activeRoot={isActiveRoot}>
           {icon && <ListItemIconStyle>{icon}</ListItemIconStyle>}
           <ListItemText disableTypography primary={title} />
-          {info && info}
+          {info}
           <Box ml={1}>{open ? <CaretDown width={16} height={16} /> : <CaretRight width={16} height={16} />}</Box>
         </ListItemStyle>
 
         <Collapse in={open} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
-            {children.map((item) => {
-              const { title, path } = item;
-              const isActiveSub = pathname === path || asPath === path;
+            {children.map(({ title: cTitle, path: cPath }) => {
+              const isActiveSub = pathname === cPath || asPath === cPath;
 
               return (
-                <NextLink key={title} href={path} passHref>
+                <NextLink key={cTitle} href={cPath} passHref>
                   <ListItemStyle activeSub={isActiveSub}>
                     <ListItemIconStyle>
                       <ListSubItemIconStyle component="span" active={isActiveSub} />
                     </ListItemIconStyle>
-                    <ListItemText disableTypography primary={title} />
+                    <ListItemText disableTypography primary={cTitle} />
                   </ListItemStyle>
                 </NextLink>
               );

@@ -1,5 +1,4 @@
-import { Avatar, Grid, Typography, useTheme } from "@mui/material";
-import { Skeleton } from "@mui/material";
+import { Avatar, Grid, Skeleton, Typography, useTheme } from "@mui/material";
 import SkeletonCard from "./ProfileCard/variants/SkeletonCard";
 
 const ProfileSkeleton: React.VFC = () => {
