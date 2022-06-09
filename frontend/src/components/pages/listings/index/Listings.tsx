@@ -60,20 +60,14 @@ const Listings: React.FC<{
               Det er for øyeblikket ingen verv tilgjengelige.
             </Typography>
           </Grid>
-          <Grid item container direction="column" justifyContent="center" alignItems="center">
-            <Box
-              sx={{
-                borderRadius: "50%",
-                overflow: "hidden",
-                width: (theme) => theme.spacing(50),
-                height: (theme) => theme.spacing(50),
-                maxWidth: "60vw",
-                maxHeight: "60vw",
-                display: "flex",
-              }}
-            >
-              <Image src={EmptyStreet} alt="" layout="fixed" objectFit="cover" objectPosition="left bottom" />
-            </Box>
+          <Grid container item direction="row" justifyContent="center" alignItems="center">
+            <Grid item xs={8} sm={5}>
+              <Box
+                sx={{ overflow: "hidden", borderRadius: "50%", width: "100%", aspectRatio: "1", position: "relative" }}
+              >
+                <Image src={EmptyStreet} alt="" layout="fill" objectFit="contain" objectPosition="center" />
+              </Box>
+            </Grid>
           </Grid>
         </Grid>
       )}
