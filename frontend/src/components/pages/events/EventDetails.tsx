@@ -245,7 +245,7 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
           </Stack>
         </Container>
       </Box>
-      <Container sx={{ pb: 6 }}>
+      <Container sx={{ pb: 6, mt: (theme) => theme.spacing(4) }}>
         {user?.organizations.map((organization) => organization.id).includes(event.organization.id) && (
           <Paper
             sx={{
