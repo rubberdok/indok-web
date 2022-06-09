@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
 import Layout, { RootStyle } from "@layouts/Layout";
-import * as markdownComponents from "@components/Markdown/components";
+import * as markdownComponents from "@components/MarkdownForm/components";
 import InfoCard from "@components/pages/listings/detail/InfoCard";
 import ListingBanner from "@components/pages/listings/detail/ListingBanner";
 import ListingBody from "@components/pages/listings/detail/ListingBody";
