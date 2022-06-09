@@ -19,6 +19,7 @@
     signup_open_date: 2020-03-31 19:14:32+00:00
     available_slots: 50
     organization: 19
+    is_attendable: true
 - model: events.Event
   pk: 2
   fields:
@@ -39,4 +40,5 @@
     allowed_grade_years: "1"
     signup_open_date: 2020-03-31 19:14:32+00:00
     available_slots: 1
+    is_attendable: true
     organization: 19
