@@ -8,12 +8,12 @@ import {
 } from "@components/pages/profile/UserForm/helpers";
 import { UPDATE_USER } from "@graphql/users/mutations";
 import { EDIT_USER_QUERY } from "@graphql/users/queries";
+import { ArrowBack } from "@mui/icons-material";
 import {
   Button,
   Card,
   CardActions,
   CardContent,
-  Divider,
   FormControl,
   FormHelperText,
   Grid,
@@ -23,7 +23,6 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import { ArrowBack } from "@mui/icons-material";
 import { range } from "@utils/helpers";
 import dayjs from "dayjs";
 import { useFormik } from "formik";
