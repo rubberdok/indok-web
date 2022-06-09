@@ -1,7 +1,7 @@
 import { Event } from "@interfaces/events";
 import { Organization } from "@interfaces/organizations";
 import { HeaderValuePair } from "@interfaces/utils";
-import { CardActionArea, Chip, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
+import { Chip, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import dayjs from "dayjs";
 import Link from "next/link";
 
@@ -31,7 +31,7 @@ const OrgEventsTable: React.FC<Props> = ({ organization }) => {
         <TableBody>
           {(organization.events ?? []).map((event: Event) => (
             <Link href={`${organization.id}/events/${event.id}`} passHref key={event.id}>
-              <TableRow hover sx={{ cursor: "pointer" }}>
+              <TableRow hover sx={{ pointer: "cursor" }}>
                 <TableCell>{dayjs(event.startTime).format("HH:mm DD-MM-YYYY")}</TableCell>
                 {eventFields.map((field: HeaderValuePair<Event>) => (
                   <TableCell key={`event-${event.id}-cell-${field.field}`}>{event[field.field]}</TableCell>
