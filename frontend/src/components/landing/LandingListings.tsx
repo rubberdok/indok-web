@@ -14,7 +14,7 @@ const LandingListings: React.FC = () => {
             <Typography variant="overline" sx={{ color: "primary.main", mb: 2, display: "block" }}>
               Sosialt
             </Typography>
-            <Typography variant="h2">Delta i et fantastisk studentmiljø.</Typography>
+            <Typography variant="h2">Delta i et fantastisk studentmiljø</Typography>
             <br />
             <Typography variant="body1">
               Vi har foreninger som tar seg av det meste, og man finner en forening for enhver som har lyst til å

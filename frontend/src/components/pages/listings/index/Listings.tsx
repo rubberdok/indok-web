@@ -2,7 +2,7 @@ import { useQuery } from "@apollo/client";
 import ListingItem from "@components/pages/listings/index/ListingItem";
 import { LISTINGS } from "@graphql/listings/queries";
 import { Listing } from "@interfaces/listings";
-import { Button, CircularProgress, Grid, Typography } from "@mui/material";
+import { Button, CircularProgress, Grid, Typography, Box } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
 import EmptyStreet from "public/illustrations/EmptyStreet.svg";
@@ -54,14 +54,26 @@ const Listings: React.FC<{
           </Grid>
         ))}
       {data?.listings.length == 0 && (
-        <Grid container item direction="column">
+        <Grid container item direction="column" alignItems="center">
           <Grid item>
             <Typography variant="body1" align="center">
               Det er for øyeblikket ingen verv tilgjengelige.
             </Typography>
           </Grid>
-          <Grid item md={6} xs={10}>
-            <Image src={EmptyStreet} alt="" />
+          <Grid item container direction="column" justifyContent="center" alignItems="center">
+            <Box
+              sx={{
+                borderRadius: "50%",
+                overflow: "hidden",
+                width: (theme) => theme.spacing(50),
+                height: (theme) => theme.spacing(50),
+                maxWidth: "60vw",
+                maxHeight: "60vw",
+                display: "flex",
+              }}
+            >
+              <Image src={EmptyStreet} alt="" layout="fixed" objectFit="cover" objectPosition="left bottom" />
+            </Box>
           </Grid>
         </Grid>
       )}
