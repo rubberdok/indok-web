@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
-import Layout from "@components/layouts";
+import Layout from "@layouts/Layout";
 import ContractDialog from "@components/pages/cabins/Popup/ContractDialog";
 import StepComponent from "@components/pages/cabins/StepComponent";
 import { CREATE_BOOKING, SEND_EMAIL } from "@graphql/cabins/mutations";

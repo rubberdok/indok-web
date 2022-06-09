@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import Layout, { RootStyle } from "@components/layouts";
+import Layout, { RootStyle } from "@layouts/Layout";
 import OrderCellContent from "@components/pages/ecommerce/OrderCellContent";
 import { UserInfoDocument } from "@generated/graphql";
 import { GET_USER_ORDERS } from "@graphql/ecommerce/queries";

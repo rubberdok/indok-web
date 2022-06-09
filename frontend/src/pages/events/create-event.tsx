@@ -1,4 +1,4 @@
-import Layout, { RootStyle } from "@components/layouts";
+import Layout, { RootStyle } from "@layouts/Layout";
 import EventCreator from "@components/pages/events/EventCreator";
 import { Button, Container } from "@mui/material";
 import Link from "next/link";

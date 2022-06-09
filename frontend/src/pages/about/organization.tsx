@@ -1,4 +1,4 @@
-import Layout from "@components/layouts";
+import Layout from "@layouts/Layout";
 import TabPanel from "@components/pages/about/TabPanel";
 import Template from "@components/pages/about/Template";
 import { Box, Card, CardActionArea, CardMedia, styled, Tab, Tabs, Typography } from "@mui/material";

@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
-import AnswerForm from "@components/forms/AnswerForm";
-import Layout, { RootStyle } from "@components/layouts";
+import AnswerForm from "@components/pages/forms/AnswerForm";
+import Layout, { RootStyle } from "@layouts/Layout";
 import { FORM_WITH_QUESTIONS_AND_ANSWERS } from "@graphql/forms/queries";
 import { Form } from "@interfaces/forms";
 import { CircularProgress, Container, Grid, Typography } from "@mui/material";

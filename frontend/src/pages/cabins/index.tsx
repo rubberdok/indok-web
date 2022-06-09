@@ -1,4 +1,4 @@
-import Layout from "@components/layouts";
+import Layout from "@layouts/Layout";
 import CabinPrices from "@components/pages/cabins/CabinPrices";
 import CabinsDetailsSection from "@components/pages/cabins/CabinsDetailsSection";
 import CabinsHero from "@components/pages/cabins/CabinsHero";

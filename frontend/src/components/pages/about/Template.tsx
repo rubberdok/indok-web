@@ -1,4 +1,4 @@
-import { RootStyle } from "@components/layouts";
+import { RootStyle } from "@layouts/Layout";
 import { Container, Divider, Hidden, Stack, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import React from "react";

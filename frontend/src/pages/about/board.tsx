@@ -1,4 +1,4 @@
-import Layout from "@components/layouts";
+import Layout from "@layouts/Layout";
 import MemberCard from "@components/pages/about/MemberCard";
 import { BoardMember } from "@components/pages/about/MemberCard/types";
 import Template from "@components/pages/about/Template";

@@ -1,4 +1,4 @@
-import Layout, { RootStyle } from "@components/layouts";
+import Layout, { RootStyle } from "@layouts/Layout";
 import ContactInfo from "@components/pages/reports/ContactInfo";
 import { ArrowRight } from "@mui/icons-material";
 import {

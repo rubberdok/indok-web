@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import Layout from "@components/layouts";
+import Layout from "@layouts/Layout";
 import { GET_USER } from "@graphql/users/queries";
 import { Organization } from "@interfaces/organizations";
 import { User } from "@interfaces/users";

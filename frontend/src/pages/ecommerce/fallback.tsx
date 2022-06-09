@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
-import Layout, { RootStyle } from "@components/layouts";
+import Layout, { RootStyle } from "@layouts/Layout";
 import SalesTermsDialog from "@components/pages/ecommerce/SalesTermsDialog";
 import { ATTEMPT_CAPTURE_PAYMENT } from "@graphql/ecommerce/mutations";
 import { GET_USER } from "@graphql/users/queries";

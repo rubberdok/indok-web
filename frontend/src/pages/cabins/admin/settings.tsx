@@ -1,5 +1,5 @@
-import { PermissionRequired } from "@components/authz";
-import Layout, { RootStyle } from "@components/layouts";
+import { PermissionRequired } from "@components/Auth";
+import Layout, { RootStyle } from "@layouts/Layout";
 import BookingSemesterPicker from "@components/pages/cabins/Admin/BookingSemesterPicker";
 import CabinInfoPicker from "@components/pages/cabins/Admin/CabinInfoPicker";
 import useResponsive from "@hooks/useResponsive";

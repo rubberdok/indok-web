@@ -1,5 +1,5 @@
 import { useMutation } from "@apollo/client";
-import ErrorDialog from "@components/dialogs/ErrorDialog";
+import ErrorDialog from "@components/Dialog/ErrorDialog";
 import { UPDATE_BOOKING_SEMESTER } from "@graphql/cabins/mutations";
 import useBookingSemester from "@hooks/cabins/useBookingSemester";
 import {

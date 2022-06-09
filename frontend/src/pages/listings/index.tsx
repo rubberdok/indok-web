@@ -1,4 +1,4 @@
-import Layout, { RootStyle } from "@components/layouts";
+import Layout, { RootStyle } from "@layouts/Layout";
 import Listings from "@components/pages/listings/index/Listings";
 import Title from "@components/Title";
 import { Container } from "@mui/material";

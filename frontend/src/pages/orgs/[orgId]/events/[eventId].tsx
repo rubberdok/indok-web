@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@apollo/client";
-import Layout from "@components/layouts";
-import OrganizationEventHero from "@components/organization/OrganizationEventHero";
+import Layout from "@layouts/Layout";
+import OrganizationEventHero from "@components/pages/organization/OrganizationEventHero";
 import AttendeeExport from "@components/pages/events/AttendeeExport";
 import EmailForm from "@components/pages/events/email/EmailForm";
 import EditEvent from "@components/pages/events/EventEditor";

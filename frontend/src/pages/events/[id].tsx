@@ -1,4 +1,4 @@
-import Layout, { RootStyle } from "@components/layouts";
+import Layout, { RootStyle } from "@layouts/Layout";
 import { useRouter } from "next/router";
 import React from "react";
 import EventDetailPage from "../../components/pages/events/EventDetails";

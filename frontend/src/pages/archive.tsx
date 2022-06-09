@@ -1,4 +1,4 @@
-import Layout, { RootStyle } from "@components/layouts";
+import Layout, { RootStyle } from "@layouts/Layout";
 import Documents from "@components/pages/archive/Documents";
 import FeaturedDocumentsList from "@components/pages/archive/FeaturedDocumentsList";
 import FilterButtons from "@components/pages/archive/FilterButtons";

@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
-import Layout from "@components/layouts";
+import Layout from "@layouts/Layout";
 import ListingForm from "@components/pages/listings/organization/ListingForm";
 import { UPDATE_LISTING } from "@graphql/listings/mutations";
 import { LISTING } from "@graphql/listings/queries";

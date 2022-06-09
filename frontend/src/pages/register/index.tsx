@@ -1,4 +1,4 @@
-import Layout, { RootStyle } from "@components/layouts";
+import Layout, { RootStyle } from "@layouts/Layout";
 import UserForm from "@components/pages/profile/UserForm";
 import { Container, Grid } from "@mui/material";
 import { useRouter } from "next/router";
