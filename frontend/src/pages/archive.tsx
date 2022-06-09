@@ -32,7 +32,13 @@ const Archive: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSi
 
   return (
     <>
-      <Title>Arkiv</Title>
+      <Title
+        title="Arkiv"
+        breadcrumbs={[
+          { name: "Hjem", href: "/" },
+          { name: "Arkiv", href: "/archive" },
+        ]}
+      />
 
       <Container>
         <Grid container spacing={4}>

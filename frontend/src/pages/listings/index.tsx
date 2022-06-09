@@ -15,7 +15,13 @@ const ListingsPage: NextPageWithLayout = () => {
   // renders a ListingItem for each listing
   return (
     <>
-      <Title>Verv</Title>
+      <Title
+        title="Verv"
+        breadcrumbs={[
+          { name: "Hjem", href: "/" },
+          { name: "Verv", href: "/listings" },
+        ]}
+      />
       <Container>
         <Listings reload={reload} />
       </Container>
