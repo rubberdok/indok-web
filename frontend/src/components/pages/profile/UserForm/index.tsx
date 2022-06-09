@@ -228,23 +228,6 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": 
                 </Button>
               </Grid>
             </Grid>
-            {kind === "update" && (
-              <>
-                <Grid item>
-                  <Divider />
-                </Grid>
-                <Grid item>
-                  <Typography variant="subtitle2">Irreversible operasjoner</Typography>
-                </Grid>
-                <Grid item>
-                  <Grid item md>
-                    <Button disabled variant="contained">
-                      Slett bruker (kommer snart)
-                    </Button>
-                  </Grid>
-                </Grid>
-              </>
-            )}
           </Grid>
         </CardActions>
       </Card>
