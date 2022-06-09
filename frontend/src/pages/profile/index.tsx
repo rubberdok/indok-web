@@ -1,5 +1,6 @@
 import { useQuery } from "@apollo/client";
 import { Logout, PermissionRequired } from "@components/authz";
+import Breadcrumbs from "@components/Breadcrumbs";
 import Layout from "@components/layouts";
 import {
   CabinsAdmin,
@@ -57,6 +58,12 @@ const ProfilePage: NextPageWithLayout = () => {
         <meta name="description" content="Profilside" />
       </Head>
       <Container>
+        <Breadcrumbs
+          links={[
+            { name: "Hjem", href: "/" },
+            { name: "Profil", href: "/profile" },
+          ]}
+        />
         <Stack alignItems="center" sx={{ mb: 4 }} spacing={2}>
           <Avatar
             sx={{

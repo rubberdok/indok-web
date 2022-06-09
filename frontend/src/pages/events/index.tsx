@@ -1,7 +1,7 @@
-import Breadcrumbs from "@components/Breadcrumbs";
 import Layout, { RootStyle } from "@components/layouts";
 import AllEvents from "@components/pages/events/AllEvents";
-import { Box, Container, Tab, Tabs, Typography } from "@mui/material";
+import Title from "@components/Title";
+import { Container, Tab, Tabs } from "@mui/material";
 import React, { useState } from "react";
 import { NextPageWithLayout } from "../_app";
 
@@ -15,23 +15,17 @@ const Events: NextPageWithLayout = () => {
 
   return (
     <>
-      <Box width={1} pt={5} position="relative" bgcolor="background.neutral">
-        <Container>
-          <Breadcrumbs sx={{ mb: { xs: 5, md: 8 } }} links={links} />
-          <Typography variant="h1" mb={4}>
-            Arrangementer
-          </Typography>
-          <Tabs
-            value={showCalendarView ? 1 : 0}
-            onChange={() => setShowCalenderView(!showCalendarView)}
-            indicatorColor="primary"
-            textColor="primary"
-          >
-            <Tab label="Liste" />
-            <Tab label="Kalender" />
-          </Tabs>
-        </Container>
-      </Box>
+      <Title title="Arrangementer" breadcrumbs={links}>
+        <Tabs
+          value={showCalendarView ? 1 : 0}
+          onChange={() => setShowCalenderView(!showCalendarView)}
+          indicatorColor="primary"
+          textColor="primary"
+        >
+          <Tab label="Liste" />
+          <Tab label="Kalender" />
+        </Tabs>
+      </Title>
       <Container sx={{ mb: 10, mt: 6 }}>
         {showCalendarView ? (
           <iframe

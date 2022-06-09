@@ -1,3 +1,4 @@
+import Breadcrumbs from "@components/Breadcrumbs";
 import Layout from "@components/layouts";
 import UserForm from "@components/pages/profile/UserForm";
 import { Alert, Container, Grid, Snackbar, styled } from "@mui/material";
@@ -20,6 +21,13 @@ const EditPage: NextPageWithLayout = () => {
   return (
     <RootStyle>
       <Container>
+        <Breadcrumbs
+          links={[
+            { name: "Hjem", href: "/" },
+            { name: "Profil", href: "/profile" },
+            { name: "Rediger", href: "/profile/edit" },
+          ]}
+        />
         <Snackbar
           autoHideDuration={6000}
           open={open}
