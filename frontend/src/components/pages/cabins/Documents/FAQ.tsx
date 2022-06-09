@@ -113,10 +113,10 @@ const faqs = [
 Renders all frequently asked questions regarding the cabins.
 */
 const FAQ: React.FC = () => {
-  const [expanded, setExpanded] = React.useState<number | false>(false);
+  const [expandedPanel, setExpandedPanel] = React.useState<number>();
 
-  const handleChange = (panel: number) => (_event: React.ChangeEvent<Record<string, unknown>>, isExpanded: boolean) => {
-    setExpanded(isExpanded ? panel : false);
+  const handleChange = (panel: number) => (_: React.SyntheticEvent<Element, Event>, expanded: boolean) => {
+    setExpandedPanel(expanded ? panel : undefined);
   };
 
   return (
@@ -124,7 +124,7 @@ const FAQ: React.FC = () => {
       {faqs.map((faq, index) => (
         <Grid item xs={12} md={6} key={index}>
           <Box>
-            <Accordion expanded={expanded === index} onChange={() => handleChange(index)}>
+            <Accordion expanded={expandedPanel === index} onChange={handleChange(index)}>
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <Typography variant="subtitle1">{faq.question}</Typography>
               </AccordionSummary>
