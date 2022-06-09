@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
-import Layout from "@components/layouts";
-import OrganizationHero from "@components/organization/OrganizationHero";
+import Layout from "@layouts/Layout";
+import OrganizationHero from "@components/pages/organization/OrganizationHero";
 import OrgEvents from "@components/pages/events/org/OrgEvents";
 import OrganizationListings from "@components/pages/listings/organization/OrganizationListings";
 import { GET_ORGANIZATION } from "@graphql/orgs/queries";

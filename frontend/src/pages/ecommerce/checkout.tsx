@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import Layout, { RootStyle } from "@components/layouts";
+import Layout, { RootStyle } from "@layouts/Layout";
 import PayWithVipps from "@components/pages/ecommerce/PayWithVipps";
 import SalesTermsDialog from "@components/pages/ecommerce/SalesTermsDialog";
 import { UserInfoDocument } from "@generated/graphql";

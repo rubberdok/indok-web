@@ -1,4 +1,4 @@
-import Layout from "@components/layouts";
+import Layout from "@layouts/Layout";
 import { Button, Container, Grid, Typography, useTheme } from "@mui/material";
 import Head from "next/head";
 import Image from "next/image";

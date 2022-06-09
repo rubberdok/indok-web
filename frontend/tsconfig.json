@@ -33,7 +33,8 @@
       "@graphql/*": ["src/graphql/*"],
       "@hooks/*": ["src/hooks/*"],
       "@lib/*": ["src/lib/*"],
-      "@generated/*": ["src/generated/*"]
+      "@generated/*": ["src/generated/*"],
+      "@layouts/*": ["src/layouts/*"]
     },
     "incremental": false
   },

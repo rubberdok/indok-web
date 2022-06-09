@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { PermissionRequired } from "@components/authz";
+import { PermissionRequired } from "@components/Auth";
 import { GET_DEFAULT_EVENTS, GET_EVENTS } from "@graphql/events/queries";
 import { GET_USER } from "@graphql/users/queries";
 import useResponsive from "@hooks/useResponsive";

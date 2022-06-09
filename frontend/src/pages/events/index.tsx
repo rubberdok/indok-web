@@ -1,4 +1,4 @@
-import Layout, { RootStyle } from "@components/layouts";
+import Layout, { RootStyle } from "@layouts/Layout";
 import AllEvents from "@components/pages/events/AllEvents";
 import Title from "@components/Title";
 import { Container, Tab, Tabs } from "@mui/material";

@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/client";
-import { Logout, PermissionRequired } from "@components/authz";
+import { Logout, PermissionRequired } from "@components/Auth";
 import Breadcrumbs from "@components/Breadcrumbs";
-import Layout from "@components/layouts";
+import Layout from "@layouts/Layout";
 import {
   CabinsAdmin,
   Event,

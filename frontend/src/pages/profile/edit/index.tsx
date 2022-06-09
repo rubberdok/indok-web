@@ -1,5 +1,5 @@
 import Breadcrumbs from "@components/Breadcrumbs";
-import Layout from "@components/layouts";
+import Layout from "@layouts/Layout";
 import UserForm from "@components/pages/profile/UserForm";
 import { Alert, Container, Grid, Snackbar, styled } from "@mui/material";
 import React, { useState } from "react";

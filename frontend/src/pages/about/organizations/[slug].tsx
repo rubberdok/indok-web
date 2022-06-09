@@ -1,5 +1,5 @@
-import Layout, { RootStyle } from "@components/layouts";
-import * as markdownComponents from "@components/markdown/components";
+import Layout, { RootStyle } from "@layouts/Layout";
+import { components as markdownComponents } from "@components/Markdown";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import PhoneIcon from "@mui/icons-material/Phone";
 import { Box, Card, Chip, Container, Divider, Grid, Paper, Typography } from "@mui/material";

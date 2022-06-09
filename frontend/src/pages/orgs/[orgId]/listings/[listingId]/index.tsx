@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "@apollo/client";
-import EditForm from "@components/forms/formAdmin/EditForm";
-import FormResponse from "@components/forms/formAdmin/FormResponse";
-import Layout from "@components/layouts";
+import EditForm from "@components/pages/forms/formAdmin/EditForm";
+import FormResponse from "@components/pages/forms/formAdmin/FormResponse";
+import Layout from "@layouts/Layout";
 import OrganizationListing from "@components/pages/listings/organization/OrganizationListing";
 import { CREATE_FORM } from "@graphql/forms/mutations";
 import { LISTING_RESPONSES_FRAGMENT } from "@graphql/listings/fragments";
