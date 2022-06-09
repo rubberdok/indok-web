@@ -2,7 +2,7 @@ import { Listing } from "@interfaces/listings";
 import { Typography, Card, CardContent, Grid, CardActions, Button } from "@mui/material";
 import Link from "next/link";
 import { Create } from "@mui/icons-material";
-import { components } from "@components/Markdown";
+import * as components from "@components/Markdown/components";
 import ReactMarkdown from "react-markdown";
 
 /**
