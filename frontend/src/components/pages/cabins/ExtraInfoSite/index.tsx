@@ -25,7 +25,7 @@ const ExtraInfoSite: React.VFC<Props> = ({ setExtraInfo, datePick, chosenCabins 
             På neste side sender du søknad om å booke {toStringChosenCabins(chosenCabins)} fra {fromDate} til {toDate}.
           </Typography>
           <Typography variant="body1">
-            Hyttestyret får en e-post med søknaden din, og hvis de godkjenner bookingen sender de en faktura.
+            Hytteforeningen får en e-post med søknaden din, og hvis de godkjenner bookingen sender de en faktura.
           </Typography>
           <Typography variant="body1">
             Har du noen spørsmål? Da kan du skrive de inn nedenfor, så sendes de sammen med søknaden din.

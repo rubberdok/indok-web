@@ -84,7 +84,7 @@ const BoardPage: NextPageWithLayout = () => {
     >
       <Typography variant="body1" paragraph>
         Hovedstyret består av et valgt lederpar, instituttilittsvalgt ved IØT, samt leder for hver av linjeforeningene
-        Janus, Bindeleddet, ESTIEM, Hyttestyret, Janus IF og Indøk Kultur.
+        Janus, Bindeleddet, ESTIEM, Hytteforeningen, Janus IF og Indøk Kultur.
       </Typography>
       <Typography variant="body1" paragraph>
         Hovedstyrets fremste oppgave er å sørge for god kommunikasjon og samarbeid mellom de ulike studentinitiativene,

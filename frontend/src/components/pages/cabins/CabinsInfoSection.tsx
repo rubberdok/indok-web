@@ -76,12 +76,12 @@ const CabinsInfoSection: React.FC = () => {
               venneturer. Det er en gyllen mulighet til å få en liten pause fra det travle bylivet. Indøks egne
               Hytteturstyre arrangerer flere forskjellige turer i løpet av året. Dette er en flott mulighet til både å
               bli kjent med hyttene, området rundt hyttene, og å bli kjent med andre indøkere på tvers av
-              klassetrinnene. <NextLink href="/about/organizations/hyttestyret"> Hytteforeningen</NextLink>
+              klassetrinnene. <NextLink href="/about/organizations/hyttestyret">Hytteforeningen</NextLink>
               har det daglige ansvaret for drift og vedlikehold av Indøkhyttene og organisering av utleie.
             </Typography>
             <NextLink href="/about/organizations/hyttestyret" passHref>
               <Button variant="contained" size="large">
-                Les om Hyttestyret
+                Les om Hytteforeningen
               </Button>
             </NextLink>
           </Grid>
