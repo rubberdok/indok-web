@@ -1,7 +1,6 @@
 import { AppBar, Box, Container, useScrollTrigger } from "@mui/material";
 import React from "react";
 import { Logo } from "../../../components";
-import { HEADER_DESKTOP_HEIGHT } from "../../../theme/constants";
 import Navigation from "../../navigation";
 import { ToolbarStyle } from "../styles";
 
@@ -12,7 +11,7 @@ type Props = {
 const ElevationScroll: React.FC<{ children: React.ReactElement }> = ({ children }) => {
   const trigger = useScrollTrigger({
     disableHysteresis: true,
-    threshold: 0,
+    threshold: 30,
   });
 
   return React.cloneElement(children, {
@@ -21,7 +20,7 @@ const ElevationScroll: React.FC<{ children: React.ReactElement }> = ({ children 
 };
 
 const Basic: React.FC<Props> = ({ transparent }) => {
-  const scrolling = useScrollTrigger({ threshold: HEADER_DESKTOP_HEIGHT });
+  const scrolling = useScrollTrigger({ disableHysteresis: true, threshold: 30 });
 
   return (
     <ElevationScroll>

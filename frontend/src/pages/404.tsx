@@ -1,5 +1,5 @@
 import Layout from "@layouts/Layout";
-import { Button, Container, Grid, Typography, useTheme } from "@mui/material";
+import { Button, Container, Grid, Typography, useTheme, Box } from "@mui/material";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
@@ -32,8 +32,20 @@ const Custom404: NextPageWithLayout = () => {
               <Button>Tilbake til hjemmesiden</Button>
             </Link>
           </Grid>
-          <Grid item md={6} xs={10}>
-            <Image src={_404} alt="404, fant ikke siden." />
+          <Grid container item direction="row" justifyContent="center" alignItems="center">
+            <Grid item xs={8} sm={5}>
+              <Box
+                sx={{ overflow: "hidden", borderRadius: "50%", width: "100%", aspectRatio: "1", position: "relative" }}
+              >
+                <Image
+                  src={_404}
+                  alt="404, fant ikke siden."
+                  layout="fill"
+                  objectFit="contain"
+                  objectPosition="center"
+                />
+              </Box>
+            </Grid>
           </Grid>
         </Grid>
       </Container>
