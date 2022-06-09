@@ -18,12 +18,12 @@ const ContactCabinBoard: React.FC = () => {
     return (
       <Grid item container spacing={4} direction="column" justifyContent="center" alignContent="center">
         <Grid item>
-          <Typography variant="h3">Kontakt Hyttestyret</Typography>
+          <Typography variant="h3">Kontakt Hytteforeningen</Typography>
         </Grid>
         <Grid item>
           <Typography>
-            Send mail til bookingansvarlig i Hyttestyret, {responsible.firstName} {responsible.lastName}, her:{" "}
-            <Link href={`mailto:${responsible.email}`}>{responsible.email}</Link>. Du kan lese mer om Hyttestyret{" "}
+            Send mail til bookingansvarlig i Hytteforeningen, {responsible.firstName} {responsible.lastName}, her:{" "}
+            <Link href={`mailto:${responsible.email}`}>{responsible.email}</Link>. Du kan lese mer om Hytteforeningen{" "}
             <Link href="/about/organizations/hyttestyret">her.</Link>
           </Typography>
         </Grid>

@@ -40,7 +40,7 @@ const Contract: React.FC<ContractProps> = ({ chosenCabins, contactInfo, datePick
         <Divider component="br" />
         <Typography variant="body2" component="span">
           På vegne av Foreningen for studenter ved Industriell Økonomi og Teknologiledelse er det i dag inngått følgende
-          leiekontrakt mellom Hyttestyret og
+          leiekontrakt mellom Hytteforeningen og
           <Box display="inline" fontWeight="fontWeightBold">
             {` ${contactInfo.firstName} ${contactInfo.lastName}`}.
           </Box>
@@ -131,7 +131,7 @@ const Contract: React.FC<ContractProps> = ({ chosenCabins, contactInfo, datePick
           Partene vedtar eiendommens verneting i alle tvister som måtte oppstå i forbindelse med avtalen.
         </Typography>
         <Typography variant="body2">
-          Hyttestyret forbeholder seg retten til å kunne gjøre om på bookingen hvis det skulle oppstå uforutsette
+          Hytteforeningen forbeholder seg retten til å kunne gjøre om på bookingen hvis det skulle oppstå uforutsette
           hendelser.
         </Typography>
         <Typography variant="body2">
