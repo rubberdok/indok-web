@@ -31,7 +31,7 @@ const OrgEventsTable: React.FC<Props> = ({ organization }) => {
         <TableBody>
           {(organization.events ?? []).map((event: Event) => (
             <Link href={`${organization.id}/events/${event.id}`} passHref key={event.id}>
-              <TableRow hover component={CardActionArea}>
+              <TableRow hover sx={{ cursor: "pointer" }}>
                 <TableCell>{dayjs(event.startTime).format("HH:mm DD-MM-YYYY")}</TableCell>
                 {eventFields.map((field: HeaderValuePair<Event>) => (
                   <TableCell key={`event-${event.id}-cell-${field.field}`}>{event[field.field]}</TableCell>

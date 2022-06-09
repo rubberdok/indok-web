@@ -23,7 +23,7 @@ const DateTimeFilter: React.FC<Props> = ({ filters, onFiltersChange }) => {
           <TextField
             id="date"
             label="Starttid"
-            type="datetime-local"
+            type="date"
             fullWidth
             margin="normal"
             value={filters?.startTime?.split("T")[0] ?? ""}
@@ -35,7 +35,7 @@ const DateTimeFilter: React.FC<Props> = ({ filters, onFiltersChange }) => {
           <TextField
             id="date"
             label="Sluttid"
-            type="datetime-local"
+            type="date"
             fullWidth
             value={filters?.endTime?.split("T")[0] ?? ""}
             InputLabelProps={{ shrink: true }}
