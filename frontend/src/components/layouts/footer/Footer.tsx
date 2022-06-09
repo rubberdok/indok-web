@@ -49,9 +49,9 @@ const Footer: React.FC = () => {
             <Grid item xs={12} md={7}>
               <Stack alignItems="flex-start">
                 <Typography variant="h6">Lenker</Typography>
-                <NextLinkItem href="#">Baksida</NextLinkItem>
-                <NextLinkItem href="#">Om oss</NextLinkItem>
-                <NextLinkItem href="#">Studieside</NextLinkItem>
+                <NextLinkItem href="/report">Baksida</NextLinkItem>
+                <NextLinkItem href="/about">Om oss</NextLinkItem>
+                <NextLinkItem href="https://www.indøk.no">Studieside</NextLinkItem>
               </Stack>
             </Grid>
             {isDesktop && <Watermark />}
