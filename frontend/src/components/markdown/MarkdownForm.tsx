@@ -1,4 +1,4 @@
-import * as markdownComponents from "@components/Markdown/components";
+import * as markdownComponents from "./components";
 import { Tab, Tabs, TextField } from "@mui/material";
 import { ChangeEventHandler, useState } from "react";
 import ReactMarkdown from "react-markdown";
