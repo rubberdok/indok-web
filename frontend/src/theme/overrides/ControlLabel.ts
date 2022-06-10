@@ -1,13 +1,13 @@
-import { experimental_sx as sx } from "@mui/material";
+import React from "react";
 import { ComponentOverride } from "./types";
 
 const ControlLabel: ComponentOverride = (theme) => {
   return {
     MuiFormControlLabel: {
       styleOverrides: {
-        label: sx({
-          typography: theme.typography.body2,
-        }),
+        label: {
+          ...(theme.typography.body2 as React.CSSProperties),
+        },
       },
     },
     MuiFormHelperText: {

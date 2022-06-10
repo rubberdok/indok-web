@@ -1,4 +1,3 @@
-import Layout from "@layouts/Layout";
 import CabinPrices from "@components/pages/cabins/CabinPrices";
 import CabinsDetailsSection from "@components/pages/cabins/CabinsDetailsSection";
 import CabinsHero from "@components/pages/cabins/CabinsHero";
@@ -7,7 +6,9 @@ import ContactCabinBoard from "@components/pages/cabins/ContactCabinBoard";
 import FAQ from "@components/pages/cabins/Documents/FAQ";
 import { outsideImages } from "@components/pages/cabins/ImageSlider/imageData";
 import ImageSlider from "@components/pages/cabins/ImageSlider/ImageSlider";
-import { Box, Container, Divider, Grid, styled, Typography } from "@mui/material";
+import Layout from "@layouts/Layout";
+import { Box, Container, Divider, Grid, Typography } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";

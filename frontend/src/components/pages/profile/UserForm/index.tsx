@@ -8,7 +8,7 @@ import {
 } from "@components/pages/profile/UserForm/helpers";
 import { UPDATE_USER } from "@graphql/users/mutations";
 import { EDIT_USER_QUERY } from "@graphql/users/queries";
-import ArrowBack from "@mui/icons-material/ArrowBack";
+import { ArrowBack } from "@mui/icons-material";
 import {
   Button,
   Card,
@@ -21,7 +21,6 @@ import {
   NativeSelect,
   TextField,
   Typography,
-  useTheme,
 } from "@mui/material";
 import { range } from "@utils/helpers";
 import dayjs from "dayjs";
@@ -44,7 +43,6 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": 
     onCompleted: onCompleted,
     refetchQueries: ["editUserInfo"],
   });
-  const theme = useTheme();
   const router = useRouter();
   const currentYear = dayjs().year();
   const ID_PREFIX = `${dataTestId}`;
@@ -77,8 +75,8 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": 
 
   return (
     <form onSubmit={formik.handleSubmit}>
-      <Card style={{ marginTop: theme.spacing(8), marginBottom: theme.spacing(8) }}>
-        <CardContent style={{ paddingTop: 32 }}>
+      <Card sx={{ mt: (theme) => theme.spacing(8), mb: (theme) => theme.spacing(8) }}>
+        <CardContent sx={{ pt: (theme) => theme.spacing(4) }}>
           <Grid container>
             {kind === "update" && (
               <Grid item>
@@ -179,7 +177,7 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": 
                   ))}
                 </NativeSelect>
                 {formik.touched.graduationYear && Boolean(formik.errors.graduationYear) && (
-                  <FormHelperText style={{ color: theme.palette.error.main }}>
+                  <FormHelperText sx={{ color: (theme) => theme.palette.error.main }}>
                     {formik.touched.graduationYear && formik.errors.graduationYear}
                   </FormHelperText>
                 )}

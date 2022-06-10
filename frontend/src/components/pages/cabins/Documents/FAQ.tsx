@@ -1,4 +1,4 @@
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { ExpandMore } from "@mui/icons-material";
 import { Box, Grid } from "@mui/material";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
@@ -125,7 +125,7 @@ const FAQ: React.FC = () => {
         <Grid item xs={12} md={6} key={index}>
           <Box>
             <Accordion expanded={expandedPanel === index} onChange={handleChange(index)}>
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <AccordionSummary expandIcon={<ExpandMore />}>
                 <Typography variant="subtitle1">{faq.question}</Typography>
               </AccordionSummary>
               <AccordionDetails>{faq.answer}</AccordionDetails>

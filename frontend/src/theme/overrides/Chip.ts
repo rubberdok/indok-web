@@ -1,4 +1,3 @@
-import { experimental_sx as sx } from "@mui/material";
 import { ComponentOverride } from "./types";
 
 const Chip: ComponentOverride = (theme) => {
@@ -24,10 +23,10 @@ const Chip: ComponentOverride = (theme) => {
           },
         },
         //
-        avatar: sx({
+        avatar: {
           fontSize: theme.typography.subtitle2.fontSize,
-          fontWeight: theme.typography.subtitle2.fontWeight,
-        }),
+          fontWeight: theme.typography.fontWeightMedium,
+        },
         avatarColorInfo: {
           color: theme.palette.info.contrastText,
           backgroundColor: theme.palette.info.dark,

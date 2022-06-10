@@ -1,8 +1,9 @@
-import Layout from "@layouts/Layout";
 import TabPanel from "@components/pages/about/TabPanel";
 import Template from "@components/pages/about/Template";
-import { Box, Card, CardActionArea, CardMedia, styled, Tab, Tabs, Typography } from "@mui/material";
+import Layout from "@layouts/Layout";
+import { Box, Card, CardActionArea, CardMedia, Tab, Tabs, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
+import { styled } from "@mui/material/styles";
 import { getSortedPosts } from "@utils/posts";
 import { GetStaticProps } from "next";
 import Image from "next/image";

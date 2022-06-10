@@ -1,4 +1,4 @@
-import { experimental_sx as sx } from "@mui/material";
+import React from "react";
 import { ComponentOverride } from "./types";
 
 const Menu: ComponentOverride = (theme) => {
@@ -6,11 +6,9 @@ const Menu: ComponentOverride = (theme) => {
     MuiMenuItem: {
       styleOverrides: {
         root: {
-          ...sx({
-            typography: theme.typography.body2,
-            padding: theme.spacing(1),
-            borderRadius: theme.shape.borderRadius,
-          }),
+          ...(theme.typography.body2 as React.CSSProperties),
+          padding: theme.spacing(1),
+          borderRadius: theme.shape.borderRadius,
           "&.Mui-selected": {
             backgroundColor: theme.palette.action.selected,
             "&:hover": {

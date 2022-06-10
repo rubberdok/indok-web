@@ -1,6 +1,5 @@
 import useBookingSemester from "@hooks/cabins/useBookingSemester";
-import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
-import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import { NavigateBefore, NavigateNext } from "@mui/icons-material";
 import { Hidden, IconButton, Stack, Typography } from "@mui/material";
 import { dateInBookingSemester } from "@utils/cabins";
 import dayjs from "dayjs";
@@ -182,7 +181,7 @@ const Calendar: React.FC<CalendarProps> = ({
       <Stack direction="row" width={1} justifyContent="space-between" alignItems="center">
         <Hidden lgDown>
           <IconButton onClick={() => onChangeMonth(-1)} size="large">
-            <NavigateBeforeIcon />
+            <NavigateBefore />
           </IconButton>
         </Hidden>
         <Typography variant="h5" align="center">
@@ -190,7 +189,7 @@ const Calendar: React.FC<CalendarProps> = ({
         </Typography>
         <Hidden lgDown>
           <IconButton onClick={() => onChangeMonth(1)} size="large">
-            <NavigateNextIcon />
+            <NavigateNext />
           </IconButton>
         </Hidden>
       </Stack>

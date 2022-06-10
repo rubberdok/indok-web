@@ -1,6 +1,7 @@
 import Breadcrumbs from "@components/Breadcrumbs";
 import { Event } from "@interfaces/events";
-import { Box, Container, styled, Typography } from "@mui/material";
+import { Box, Container, Typography } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "src/theme/constants";
 
 const RootStyle = styled("div")(({ theme }) => ({

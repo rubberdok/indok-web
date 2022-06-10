@@ -3,7 +3,8 @@ import LabeledIcon from "@components/LabeledIcon";
 import useDisabledDates from "@hooks/cabins/useDisabledDates";
 import useResponsive from "@hooks/useResponsive";
 import { Cabin, DatePick } from "@interfaces/cabins";
-import { Checkbox, Divider, Paper, Stack, Typography, useTheme } from "@mui/material";
+import { Checkbox, Divider, Paper, Stack, Typography } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import { NextPage } from "next";
 import React from "react";
 

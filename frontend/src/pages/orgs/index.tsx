@@ -1,9 +1,10 @@
 import { useQuery } from "@apollo/client";
-import Layout from "@layouts/Layout";
 import { GET_USER } from "@graphql/users/queries";
 import { Organization } from "@interfaces/organizations";
 import { User } from "@interfaces/users";
-import { Card, CardActionArea, CircularProgress, Container, Grid, styled, Typography } from "@mui/material";
+import Layout from "@layouts/Layout";
+import { Card, CardActionArea, CircularProgress, Container, Grid, Typography } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import Link from "next/link";
 import React from "react";
 import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "src/theme/constants";

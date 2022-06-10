@@ -1,9 +1,9 @@
 import { useMutation } from "@apollo/client";
-import Layout from "@layouts/Layout";
 import ProfileSkeleton from "@components/pages/profile/ProfileSkeleton";
 import { AUTHENTICATE } from "@graphql/users/mutations";
 import { User } from "@interfaces/users";
-import { Button, Container, Grid, Typography, useTheme } from "@mui/material";
+import Layout from "@layouts/Layout";
+import { Button, Container, Grid, Typography } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -18,7 +18,6 @@ type AuthUser = {
 
 const AuthCallbackPage: NextPageWithLayout = () => {
   const router = useRouter();
-  const theme = useTheme();
 
   const { code, state } = router.query;
   const [authUser, { loading, error }] = useMutation<{ authUser: AuthUser }>(AUTHENTICATE, {
@@ -52,7 +51,7 @@ const AuthCallbackPage: NextPageWithLayout = () => {
           spacing={2}
           justifyContent="center"
           alignItems="center"
-          style={{ marginTop: theme.spacing(4) }}
+          sx={{ mt: (theme) => theme.spacing(4) }}
         >
           <Grid item md={6}>
             <Typography variant="h2" component="h1">

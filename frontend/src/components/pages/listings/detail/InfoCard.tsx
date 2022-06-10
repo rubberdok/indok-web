@@ -1,5 +1,5 @@
 import { ListingFragment } from "@generated/graphql";
-import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import { OpenInNew } from "@mui/icons-material";
 import { Button, Card, CardContent, Grid, Typography } from "@mui/material";
 import Link from "next/link";
 
@@ -45,7 +45,7 @@ const InfoCard: React.FC<{
           <Grid item>
             {listing.readMoreUrl && (
               <Link passHref href={listing.readMoreUrl}>
-                <Button endIcon={<OpenInNewIcon />}>Les mer</Button>
+                <Button endIcon={<OpenInNew />}>Les mer</Button>
               </Link>
             )}
           </Grid>

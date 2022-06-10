@@ -1,11 +1,12 @@
 import { useQuery } from "@apollo/client";
-import Layout from "@layouts/Layout";
-import OrganizationHero from "@components/pages/organization/OrganizationHero";
 import OrgEvents from "@components/pages/events/org/OrgEvents";
 import OrganizationListings from "@components/pages/listings/organization/OrganizationListings";
+import OrganizationHero from "@components/pages/organization/OrganizationHero";
 import { GET_ORGANIZATION } from "@graphql/orgs/queries";
 import { Organization } from "@interfaces/organizations";
-import { CircularProgress, Container, Stack, styled } from "@mui/material";
+import Layout from "@layouts/Layout";
+import { CircularProgress, Container, Stack } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { NextPageWithLayout } from "src/pages/_app";

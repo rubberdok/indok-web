@@ -1,7 +1,6 @@
 import { useQuery } from "@apollo/client";
 import { Logout, PermissionRequired } from "@components/Auth";
 import Breadcrumbs from "@components/Breadcrumbs";
-import Layout from "@layouts/Layout";
 import {
   CabinsAdmin,
   Event,
@@ -12,7 +11,9 @@ import {
   Report,
 } from "@components/pages/profile/ProfileCard";
 import { GET_USER_INFO } from "@graphql/users/queries";
-import { Avatar, Container, Grid, Stack, styled, Typography } from "@mui/material";
+import Layout from "@layouts/Layout";
+import { Avatar, Container, Grid, Stack, Typography } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import Head from "next/head";
 import { useMemo } from "react";
 import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "src/theme/constants";

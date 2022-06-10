@@ -1,7 +1,7 @@
 import { Listing } from "@interfaces/listings";
 import { Typography, Card, CardContent, Grid, CardActions, Button } from "@mui/material";
 import Link from "next/link";
-import Create from "@mui/icons-material/Create";
+import { Create } from "@mui/icons-material";
 import * as components from "@components/MarkdownForm/components";
 import ReactMarkdown from "react-markdown";
 

@@ -1,7 +1,8 @@
-import LoginButton from "@layouts/components/LoginButton";
-import Logo from "@components/Logo";
 import { PermissionRequired } from "@components/Auth";
-import { Box, Divider, Drawer as MuiDrawer, Grid, IconButton, Stack, useTheme } from "@mui/material";
+import Logo from "@components/Logo";
+import LoginButton from "@layouts/components/LoginButton";
+import { Box, Divider, Drawer as MuiDrawer, Grid, IconButton, Stack } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import { useRouter } from "next/router";
 import { List } from "phosphor-react";
 import { useState } from "react";

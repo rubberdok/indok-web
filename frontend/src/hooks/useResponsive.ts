@@ -1,5 +1,5 @@
 import { Breakpoint } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
+import { Theme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
 type UpOrDown = {
@@ -19,16 +19,15 @@ type Between = {
 };
 
 const useResponsive = (options: UpOrDown | Only | Between): boolean => {
-  const theme = useTheme();
-  let queryInput: string;
+  let queryFn: (theme: Theme) => string;
   if (options.query === "between") {
-    queryInput = theme.breakpoints[options.query](options.start, options.end);
+    queryFn = (theme) => theme.breakpoints[options.query](options.start, options.end);
   } else if (options.query === "only") {
-    queryInput = theme.breakpoints[options.query](options.key);
+    queryFn = (theme) => theme.breakpoints[options.query](options.key);
   } else {
-    queryInput = theme.breakpoints[options.query](options.key);
+    queryFn = (theme: Theme) => theme.breakpoints[options.query](options.key);
   }
-  return useMediaQuery(queryInput);
+  return useMediaQuery(queryFn);
 };
 
 export default useResponsive;

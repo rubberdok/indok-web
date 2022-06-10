@@ -10,7 +10,7 @@ import { GET_USER } from "@graphql/users/queries";
 import { GET_SERVER_TIME } from "@graphql/utils/time/queries";
 import { AttendableEvent, Event } from "@interfaces/events";
 import { User } from "@interfaces/users";
-import ErrorOutline from "@mui/icons-material/ErrorOutline";
+import { ErrorOutline } from "@mui/icons-material";
 import {
   Alert as MuiAlert,
   Box,

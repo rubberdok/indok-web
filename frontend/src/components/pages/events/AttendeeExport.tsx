@@ -1,6 +1,6 @@
 import { useLazyQuery } from "@apollo/client";
 import { QUERY_ATTENDEE_REPORT } from "@graphql/events/queries";
-import GetAppIcon from "@mui/icons-material/GetApp";
+import { GetApp } from "@mui/icons-material";
 import { Box, Button, ButtonGroup, CircularProgress, Typography } from "@mui/material";
 import { promptDownloadFromPayload } from "@utils/exports";
 import React from "react";
@@ -13,7 +13,7 @@ const AttendeeExport: React.FC<{ eventId: number }> = ({ eventId }) => {
   const wrapDownloadButtonReport = (eventId: number, filetype: string) => {
     return (
       <Button
-        startIcon={<GetAppIcon fontSize="small" />}
+        startIcon={<GetApp fontSize="small" />}
         onClick={() => getAttendeeReport({ variables: { eventId: eventId, filetype: filetype } })}
       >
         {filetype}

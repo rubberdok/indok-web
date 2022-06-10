@@ -2,8 +2,7 @@ import { ApolloQueryResult, OperationVariables, useMutation } from "@apollo/clie
 import { CONFIRM_BOOKING, SEND_EMAIL } from "@graphql/cabins/mutations";
 import { QUERY_ADMIN_ALL_BOOKINGS } from "@graphql/cabins/queries";
 import { BookingFromQuery } from "@interfaces/cabins";
-import CheckIcon from "@mui/icons-material/Check";
-import ClearIcon from "@mui/icons-material/Clear";
+import { Check, Clear } from "@mui/icons-material";
 import {
   Alert,
   Box,
@@ -98,7 +97,7 @@ const AdminCabinTable = ({ bookings, refetch, currentTab }: Props) => {
                       color="secondary"
                       size="large"
                     >
-                      <CheckIcon />
+                      <Check />
                     </IconButton>
                   </Box>
                 </Tooltip>
@@ -110,7 +109,7 @@ const AdminCabinTable = ({ bookings, refetch, currentTab }: Props) => {
                       color="inherit"
                       size="large"
                     >
-                      <ClearIcon />
+                      <Clear />
                     </IconButton>
                   </Box>
                 </Tooltip>

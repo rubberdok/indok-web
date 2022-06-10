@@ -1,6 +1,6 @@
 import ContactInfo from "@components/pages/reports/ContactInfo";
 import Layout, { RootStyle } from "@layouts/Layout";
-import ArrowRight from "@mui/icons-material/ArrowRight";
+import { ArrowRight } from "@mui/icons-material";
 import {
   Button,
   Card,
@@ -13,7 +13,6 @@ import {
   ListItemIcon,
   ListItemText,
   Typography,
-  useTheme,
 } from "@mui/material";
 import { amber, deepOrange, deepPurple, green, indigo, red } from "@mui/material/colors";
 import Amund from "@public/img/Amund.jpg";
@@ -29,7 +28,6 @@ import { NextPageWithLayout } from "../_app";
 const ReportsPage: NextPageWithLayout = () => {
   const formRef = useRef<null | HTMLDivElement>(null);
   const scrollToForm = () => formRef.current?.scrollIntoView({ behavior: "smooth" });
-  const theme = useTheme();
 
   const responsibles = [
     {
@@ -274,7 +272,7 @@ const ReportsPage: NextPageWithLayout = () => {
                     direction="row"
                     justifyContent="center"
                     spacing={8}
-                    style={{ marginBottom: theme.spacing(8) }}
+                    sx={{ mb: (theme) => theme.spacing(8) }}
                   >
                     {responsibles.map((responsible) => (
                       <Grid item md={6} key={responsible.id}>

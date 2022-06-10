@@ -3,10 +3,10 @@ import ContractDialog from "@components/pages/cabins/Popup/ContractDialog";
 import StepComponent from "@components/pages/cabins/StepComponent";
 import { CREATE_BOOKING, SEND_EMAIL } from "@graphql/cabins/mutations";
 import { QUERY_CABINS } from "@graphql/cabins/queries";
+import useResponsive from "@hooks/useResponsive";
 import { Cabin, ContactInfo, ContactInfoValidations, DatePick, ModalData } from "@interfaces/cabins";
 import Layout from "@layouts/Layout";
-import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
-import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
+import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -17,12 +17,10 @@ import {
   Step,
   StepLabel,
   Stepper,
-  styled,
   Tooltip,
   Typography,
-  useMediaQuery,
-  useTheme,
 } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import {
   allValuesFilled,
   cabinOrderStepReady,
@@ -140,8 +138,7 @@ const CabinBookingPage: NextPageWithLayout = () => {
     }
   };
 
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const isMobile = useResponsive({ query: "down", key: "md" });
 
   const NextButton = () => (
     <Tooltip
@@ -257,7 +254,7 @@ const CabinBookingPage: NextPageWithLayout = () => {
             activeStep={activeStep}
             nextButton={<NextButton />}
             backButton={<BackButton />}
-            sx={{ boxShadow: theme.shadows[24] }}
+            sx={{ boxShadow: (theme) => theme.shadows[24] }}
           />
         ) : (
           <></>

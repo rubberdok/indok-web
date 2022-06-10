@@ -1,4 +1,5 @@
-import { Button, styled } from "@mui/material";
+import { Button } from "@mui/material";
+import { styled } from "@mui/material/styles";
 
 const WarningButton = styled(Button)(({ theme }) => ({
   color: theme.palette.getContrastText(theme.palette.error.main),

@@ -1,4 +1,5 @@
-import { alpha, experimental_sx as sx } from "@mui/material/styles";
+import { alpha } from "@mui/material/styles";
+import React from "react";
 import { ComponentOverride } from "./types";
 
 const Input: ComponentOverride = (theme) => {
@@ -34,9 +35,9 @@ const Input: ComponentOverride = (theme) => {
     },
     MuiInputLabel: {
       styleOverrides: {
-        root: sx({
-          typography: theme.typography.body2,
-        }),
+        root: {
+          ...(theme.typography.body2 as React.CSSProperties),
+        },
       },
     },
     MuiFilledInput: {
@@ -60,9 +61,9 @@ const Input: ComponentOverride = (theme) => {
             backgroundColor: theme.palette.action.disabledBackground,
           },
         },
-        input: sx({
-          typography: theme.typography.body2,
-        }),
+        input: {
+          ...(theme.typography.body2 as React.CSSProperties),
+        },
         underline: {
           "&:before": {
             borderBottomColor: theme.palette.grey[500_56],
