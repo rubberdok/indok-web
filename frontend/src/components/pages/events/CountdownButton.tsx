@@ -1,4 +1,5 @@
-import { Box, Button, CircularProgress } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
+import { Box } from "@mui/material";
 import dayjs, { Dayjs } from "dayjs";
 import nb from "dayjs/locale/nb";
 import timezone from "dayjs/plugin/timezone";
@@ -115,7 +116,7 @@ const CountdownButton: React.FC<Props> = ({
 
   return (
     <Box sx={{ float: "left" }}>
-      <Button
+      <LoadingButton
         fullWidth
         sx={{ minWidth: (theme) => theme.spacing(30) }}
         size="large"
@@ -123,6 +124,7 @@ const CountdownButton: React.FC<Props> = ({
         color={isSignedUp || isOnWaitingList ? "inherit" : "primary"}
         onClick={onClick}
         disabled={currentTimeParts.length !== 0 || disabled}
+        loading={loading}
       >
         {currentTimeParts.length !== 0
           ? getCurrentTimeLeft(currentTimeParts)
@@ -133,13 +135,7 @@ const CountdownButton: React.FC<Props> = ({
           : isFull
           ? "Meld på venteliste"
           : "Meld på"}
-      </Button>
-      {loading && (
-        <CircularProgress
-          size={24}
-          sx={{ color: "background", position: "absolute", top: "50%", left: "50%", marginTop: -12, marginLeft: -12 }}
-        />
-      )}
+      </LoadingButton>
     </Box>
   );
 };
