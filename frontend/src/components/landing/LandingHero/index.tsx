@@ -31,7 +31,7 @@ const LandingHero: React.FC = () => {
 
                 <Stack
                   direction={{ xs: "column", sm: "row" }}
-                  justifyContent={{ xs: "center", md: "unset" }}
+                  justifyContent={{ xs: "center", md: "flex-start" }}
                   spacing={2}
                 >
                   <Link passHref href="/about">

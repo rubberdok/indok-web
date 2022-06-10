@@ -1,4 +1,4 @@
-import { LandingHero, LandingListings } from "@components/landing";
+import { LandingHero, LandingListings, LandingPromo } from "@components/landing";
 import LandingSection from "@components/landing/LandingSection";
 import Layout from "@layouts/Layout";
 import React from "react";
@@ -10,6 +10,7 @@ const IndexPage: NextPageWithLayout = () => {
       <LandingHero />
       <LandingSection />
       <LandingListings />
+      <LandingPromo />
     </>
   );
 };

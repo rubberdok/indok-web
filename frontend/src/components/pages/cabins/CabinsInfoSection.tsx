@@ -42,8 +42,8 @@ const CabinsInfoSection: React.FC = () => {
   return (
     <RootStyle>
       <Container>
-        <Grid container justifyContent="space-between" alignItems="center">
-          <Grid item xs={12} md={6} lg={5}>
+        <Grid container justifyContent="space-between" alignItems="center" spacing={2}>
+          <Grid container item xs={12} md={6} lg={5}>
             <Grid container spacing={4} justifyContent="center">
               {facilitiesData.map((facility) => (
                 <Grid item md={4} sm={6} xs={6} key={facility.text}>
@@ -57,6 +57,7 @@ const CabinsInfoSection: React.FC = () => {
           </Grid>
           <Grid
             item
+            container
             xs={12}
             md={6}
             lg={5}
@@ -76,12 +77,12 @@ const CabinsInfoSection: React.FC = () => {
               venneturer. Det er en gyllen mulighet til å få en liten pause fra det travle bylivet. Indøks egne
               Hytteturstyre arrangerer flere forskjellige turer i løpet av året. Dette er en flott mulighet til både å
               bli kjent med hyttene, området rundt hyttene, og å bli kjent med andre indøkere på tvers av
-              klassetrinnene. <NextLink href="/about/organizations/hyttestyret">Hytteforeningen</NextLink>
-              har det daglige ansvaret for drift og vedlikehold av Indøkhyttene og organisering av utleie.
+              klassetrinnene. <NextLink href="/about/organizations/hyttestyret">Hytteforeningen</NextLink> det daglige
+              ansvaret for drift og vedlikehold av Indøkhyttene og organisering av utleie.
             </Typography>
             <NextLink href="/about/organizations/hyttestyret" passHref>
-              <Button variant="contained" size="large">
-                Les om Hytteforeningen
+              <Button variant="outlined" size="small">
+                Om Hytteforeningen
               </Button>
             </NextLink>
           </Grid>
