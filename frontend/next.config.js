@@ -32,11 +32,21 @@ const moduleExports = {
   },
   compiler: {
     ...getPresets(),
+    /* https://nextjs.org/docs/advanced-features/compiler#emotion */
     emotion: true,
   },
+  /* https://nextjs.org/docs/advanced-features/compiler#minification */
   swcMinify: true,
   experimental: {
+    /* https://nextjs.org/docs/advanced-features/output-file-tracing */
     outputStandalone: true,
+    /**
+     * https://nextjs.org/docs/advanced-features/compiler#modularize-imports
+     * See https://mui.com/material-ui/guides/minimizing-bundle-size/#option-2 for reasoning.
+     * In short, top level imports from "@mui/icons-material" will load the entire
+     * "@mui/icons-material" package, which is a lot of code.
+     * Instead, we do some compiler magic to only load the modules we need.
+     */
     modularizeImports: {
       "@mui/icons-material": {
         transform: "@mui/icons-material/{{member}}",
@@ -75,7 +85,8 @@ const moduleExports = {
     disableServerWebpackPlugin: true,
     disableClientWebpackPlugin: true,
   },
-  productionBrowserSourceMaps: process.env.NEXT_PUBLIC_APP_ENV !== "production",
+  /* Browser source maps should be enabled during production to upload to Sentry  */
+  productionBrowserSourceMaps: process.env.NEXT_PUBLIC_APP_ENV === "production",
 };
 
 // Make sure adding Sentry options is the last code to run before exporting, to
