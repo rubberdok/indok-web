@@ -28,8 +28,8 @@ const OrganizationEventHero: React.FC<Props> = (props) => {
             sx={{ mb: 10 }}
             links={[
               { href: "/", name: "Hjem" },
-              { href: "/orgs", name: "Organisasjoner" },
-              { href: "/orgs/" + event.organization.id, name: event.organization.name },
+              { href: "/orgs", name: "Foreninger" },
+              { href: `/orgs/${event.organization.id}`, name: event.organization.name },
               { name: event.title },
             ]}
           />
