@@ -8,7 +8,7 @@ import {
 } from "@components/pages/profile/UserForm/helpers";
 import { UPDATE_USER } from "@graphql/users/mutations";
 import { EDIT_USER_QUERY } from "@graphql/users/queries";
-import { ArrowBack } from "@mui/icons-material";
+import ArrowBack from "@mui/icons-material/ArrowBack";
 import {
   Button,
   Card,

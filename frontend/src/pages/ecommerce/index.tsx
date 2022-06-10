@@ -1,12 +1,12 @@
 import { useQuery } from "@apollo/client";
-import Layout, { RootStyle } from "@layouts/Layout";
 import OrderCellContent from "@components/pages/ecommerce/OrderCellContent";
 import { UserInfoDocument } from "@generated/graphql";
 import { GET_USER_ORDERS } from "@graphql/ecommerce/queries";
 import { Order } from "@interfaces/ecommerce";
 import { HeaderValuePair } from "@interfaces/utils";
+import Layout, { RootStyle } from "@layouts/Layout";
 import { addApolloState, initializeApollo } from "@lib/apolloClient";
-import { KeyboardArrowLeft } from "@mui/icons-material";
+import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import {
   Alert,
   Box,

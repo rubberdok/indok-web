@@ -8,7 +8,7 @@ import { LISTING_RESPONSES_FRAGMENT } from "@graphql/listings/fragments";
 import { LISTING_RESPONSES } from "@graphql/listings/queries";
 import { Form, Response } from "@interfaces/forms";
 import { ListingWithForm } from "@interfaces/listings";
-import { ArrowBack } from "@mui/icons-material";
+import ArrowBack from "@mui/icons-material/ArrowBack";
 import { Box, Button, Card, CardContent, Container, Grid, styled, Tab, Tabs, Typography } from "@mui/material";
 import Link from "next/link";
 import { useRouter } from "next/router";

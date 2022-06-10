@@ -1,11 +1,11 @@
 import { useMutation, useQuery } from "@apollo/client";
-import Layout, { RootStyle } from "@layouts/Layout";
 import SalesTermsDialog from "@components/pages/ecommerce/SalesTermsDialog";
 import { ATTEMPT_CAPTURE_PAYMENT } from "@graphql/ecommerce/mutations";
 import { GET_USER } from "@graphql/users/queries";
 import { Order, PaymentStatus } from "@interfaces/ecommerce";
 import { User } from "@interfaces/users";
-import { KeyboardArrowLeft } from "@mui/icons-material";
+import Layout, { RootStyle } from "@layouts/Layout";
+import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import {
   Alert,
   Box,

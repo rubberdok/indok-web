@@ -4,7 +4,7 @@ import { SUBMIT_ANSWERS } from "@graphql/forms/mutations";
 import { Form, Question } from "@interfaces/forms";
 import { Button, Card, CardContent, Grid, Typography, FormHelperText } from "@mui/material";
 import { useState } from "react";
-import { Send } from "@mui/icons-material";
+import Send from "@mui/icons-material/Send";
 import { useRouter } from "next/router";
 
 // interface for the state of answers before pushing to the database

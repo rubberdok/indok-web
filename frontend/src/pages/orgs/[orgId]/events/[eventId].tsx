@@ -1,15 +1,17 @@
 import { useMutation, useQuery } from "@apollo/client";
-import Layout from "@layouts/Layout";
-import OrganizationEventHero from "@components/pages/organization/OrganizationEventHero";
 import AttendeeExport from "@components/pages/events/AttendeeExport";
 import EmailForm from "@components/pages/events/email/EmailForm";
 import EditEvent from "@components/pages/events/EventEditor";
+import OrganizationEventHero from "@components/pages/organization/OrganizationEventHero";
 import { ADMIN_EVENT_SIGN_OFF } from "@graphql/events/mutations";
 import { ADMIN_GET_EVENT } from "@graphql/events/queries";
 import { Event, SignUp } from "@interfaces/events";
 import { HeaderValuePair } from "@interfaces/utils";
-import { Check, Close, Edit } from "@mui/icons-material";
+import Layout from "@layouts/Layout";
+import Check from "@mui/icons-material/Check";
+import Close from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
+import Edit from "@mui/icons-material/Edit";
 import {
   Alert,
   Box,

@@ -1,5 +1,5 @@
 import { rubberdokMembers } from "@layouts/footer/HallOfFame/constants";
-import { Close } from "@mui/icons-material";
+import Close from "@mui/icons-material/Close";
 import { Box, Dialog, DialogContent, DialogTitle, Grid, IconButton, styled, Typography } from "@mui/material";
 
 const CloseButton = styled(IconButton)(({ theme }) => ({

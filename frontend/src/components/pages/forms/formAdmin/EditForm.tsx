@@ -6,7 +6,7 @@ import { FORM_RESPONSES_FRAGMENT } from "@graphql/forms/fragments";
 import { Question, QuestionVariables, Form } from "@interfaces/forms";
 import { Button, Grid, Typography, Card, CardContent, FormHelperText } from "@mui/material";
 import { useState } from "react";
-import { Add } from "@mui/icons-material";
+import Add from "@mui/icons-material/Add";
 import ConfirmFormChange from "@components/pages/forms/formAdmin/ConfirmFormChange";
 
 /**

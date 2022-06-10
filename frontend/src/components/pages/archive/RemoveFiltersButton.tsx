@@ -1,4 +1,4 @@
-import { Close } from "@mui/icons-material";
+import Close from "@mui/icons-material/Close";
 import { Box, Button } from "@mui/material";
 import React from "react";
 

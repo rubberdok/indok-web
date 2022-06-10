@@ -1,12 +1,14 @@
-import HallOfFame from "@layouts/footer/HallOfFame";
 import Logo from "@components/Logo";
+import useResponsive from "@hooks/useResponsive";
 import { Container, Divider, Grid, Link, Paper, Stack, styled, SxProps, Typography } from "@mui/material";
 import rubberdokLogo from "@public/img/rubberdok_logo_black.svg";
 import dayjs from "dayjs";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import NextLink, { LinkProps } from "next/link";
 import { ReactNode, useState } from "react";
-import useResponsive from "@hooks/useResponsive";
+
+const HallOfFame = dynamic(() => import("./HallOfFame"));
 
 const Watermark = styled("div")(({ theme }) => ({
   background: "url('/nth.svg')",
@@ -85,7 +87,7 @@ const Footer: React.FC = () => {
           </Stack>
         </Stack>
       </Container>
-      <HallOfFame open={open} setOpen={setOpen} />
+      {open && <HallOfFame open={open} setOpen={setOpen} />}
     </>
   );
 };
