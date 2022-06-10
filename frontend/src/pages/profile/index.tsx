@@ -10,9 +10,10 @@ import {
   Personal,
   Report,
 } from "@components/pages/profile/ProfileCard";
+import { UserInfoDocument } from "@generated/graphql";
 import { GET_USER_INFO } from "@graphql/users/queries";
 import Layout from "@layouts/Layout";
-import { initializeApollo, addApolloState } from "@lib/apolloClient";
+import { addApolloState, initializeApollo } from "@lib/apolloClient";
 import { Avatar, Container, Grid, Stack, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
@@ -21,7 +22,6 @@ import { useMemo } from "react";
 import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "src/theme/constants";
 import { User } from "src/types/users";
 import { NextPageWithLayout } from "../_app";
-import { UserInfoDocument } from "@generated/graphql";
 
 const ID_PREFIX = "profile-";
 
@@ -56,7 +56,7 @@ const ProfilePage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServ
   const initials = useMemo(() => (data?.user ? userInitials(data.user.firstName, data.user.lastName) : ""), [data]);
 
   return (
-    <RootStyle>
+    <>
       <Head>
         <title>Profil | Forening for studentene ved Industriell Økonomi og Teknologiledelse</title>
         <meta name="description" content="Profilside" />
@@ -115,12 +115,16 @@ const ProfilePage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServ
           <Logout />
         </Stack>
       </Container>
-    </RootStyle>
+    </>
   );
 };
 
 ProfilePage.getLayout = function getLayout(page: React.ReactElement) {
-  return <Layout>{page}</Layout>;
+  return (
+    <Layout>
+      <RootStyle>{page}</RootStyle>
+    </Layout>
+  );
 };
 
 export default ProfilePage;
