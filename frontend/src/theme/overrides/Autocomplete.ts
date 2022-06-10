@@ -1,4 +1,4 @@
-import { experimental_sx as sx } from "@mui/material";
+import React from "react";
 import { ComponentOverride } from "./types";
 
 const Autocomplete: ComponentOverride = (theme) => {
@@ -11,10 +11,10 @@ const Autocomplete: ComponentOverride = (theme) => {
           boxShadow: theme.customShadows.z24,
           borderRadius: Number(theme.shape.borderRadius) * 2,
         },
-        option: sx({
+        option: {
           borderRadius: theme.shape.borderRadius,
-          typography: theme.typography.body2,
-        }),
+          ...(theme.typography.body2 as React.CSSProperties),
+        },
       },
     },
   };

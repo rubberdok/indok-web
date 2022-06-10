@@ -1,5 +1,4 @@
 import { useQuery } from "@apollo/client";
-import Layout, { RootStyle } from "@layouts/Layout";
 import * as markdownComponents from "@components/MarkdownForm/components";
 import InfoCard from "@components/pages/listings/detail/InfoCard";
 import ListingBanner from "@components/pages/listings/detail/ListingBanner";
@@ -7,9 +6,9 @@ import ListingBody from "@components/pages/listings/detail/ListingBody";
 import TitleCard from "@components/pages/listings/detail/TitleCard";
 import { ListingDocument, ListingQuery } from "@generated/graphql";
 import { Listing } from "@interfaces/listings";
+import Layout, { RootStyle } from "@layouts/Layout";
 import { addApolloState, initializeApollo } from "@lib/apolloClient";
-import ArrowForward from "@mui/icons-material/ArrowForward";
-import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import { ArrowForward, OpenInNew } from "@mui/icons-material";
 import { Button, Container, Grid, Hidden, Paper } from "@mui/material";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Head from "next/head";
@@ -112,7 +111,7 @@ const ListingPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServ
                 {data.listing.readMoreUrl && (
                   <Grid item xs>
                     <Link passHref href={data.listing.readMoreUrl}>
-                      <Button size="small" endIcon={<OpenInNewIcon />}>
+                      <Button size="small" endIcon={<OpenInNew />}>
                         {data.listing.organization.name.slice(0, 20)}
                       </Button>
                     </Link>

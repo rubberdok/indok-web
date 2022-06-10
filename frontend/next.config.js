@@ -37,6 +37,17 @@ const moduleExports = {
   swcMinify: true,
   experimental: {
     outputStandalone: true,
+    modularizeImports: {
+      "@mui/icons-material": {
+        transform: "@mui/icons-material/{{member}}",
+      },
+      "@mui/material": {
+        transform: "@mui/material/{{member}}",
+      },
+      lodash: {
+        transform: "lodash/{{member}}",
+      },
+    },
   },
   webpack: (config, { isServer }) => {
     // In `pages/_app.js`, Sentry is imported from @sentry/browser. While

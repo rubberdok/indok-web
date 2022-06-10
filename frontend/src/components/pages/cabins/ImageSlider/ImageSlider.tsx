@@ -1,6 +1,5 @@
 import useResponsive from "@hooks/useResponsive";
-import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
-import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
+import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
 import { Box, Grid, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import MobileStepper from "@mui/material/MobileStepper";

@@ -1,6 +1,6 @@
 import QuestionTypePreview from "@components/pages/forms/formAdmin/QuestionTypePreview";
 import { Question } from "@interfaces/forms";
-import Edit from "@mui/icons-material/Edit";
+import { Edit } from "@mui/icons-material";
 import { Button, Grid, Typography } from "@mui/material";
 
 /**

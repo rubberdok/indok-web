@@ -1,5 +1,5 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Link } from "@mui/material";
-import ClearIcon from "@mui/icons-material/Clear";
+import { Clear } from "@mui/icons-material";
 import React, { Dispatch, SetStateAction } from "react";
 import { SendEmailProps } from "./EmailForm";
 
@@ -46,7 +46,7 @@ const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button startIcon={<ClearIcon />} onClick={() => handleConfirmationClose()} color="primary">
+        <Button startIcon={<Clear />} onClick={() => handleConfirmationClose()} color="primary">
           Lukk
         </Button>
       </DialogActions>

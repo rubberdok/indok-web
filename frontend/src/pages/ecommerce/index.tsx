@@ -6,7 +6,7 @@ import { Order } from "@interfaces/ecommerce";
 import { HeaderValuePair } from "@interfaces/utils";
 import Layout, { RootStyle } from "@layouts/Layout";
 import { addApolloState, initializeApollo } from "@lib/apolloClient";
-import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
+import { KeyboardArrowLeft } from "@mui/icons-material";
 import {
   Alert,
   Box,

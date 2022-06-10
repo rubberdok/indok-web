@@ -1,6 +1,6 @@
-import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
-import NavigateNextIcon from "@mui/icons-material/NavigateNext";
-import { Grid, Hidden, IconButton, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
+import useResponsive from "@hooks/useResponsive";
+import { NavigateBefore, NavigateNext } from "@mui/icons-material";
+import { Grid, Hidden, IconButton, Stack, Typography } from "@mui/material";
 import dayjs from "dayjs";
 import React, { ReactElement } from "react";
 import { DAYS_IN_WEEK } from "./constants";
@@ -12,14 +12,13 @@ interface Props {
 }
 
 const CalendarTable: React.FC<Props> = ({ month, onChangeMonth, children }) => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const isMobile = useResponsive({ query: "down", key: "md" });
   return (
     <Stack spacing={2} width={1}>
       <Grid container alignItems="center" justifyContent={isMobile ? "space-between" : "center"}>
         <Hidden mdUp>
           <IconButton onClick={() => onChangeMonth(-1)} size="large">
-            <NavigateBeforeIcon />
+            <NavigateBefore />
           </IconButton>
         </Hidden>
         <Typography variant="h6" textTransform="capitalize" align="center">{`${month.format("MMMM")} ${month.format(
@@ -27,7 +26,7 @@ const CalendarTable: React.FC<Props> = ({ month, onChangeMonth, children }) => {
         )}`}</Typography>
         <Hidden mdUp>
           <IconButton onClick={() => onChangeMonth(1)} size="large">
-            <NavigateNextIcon />
+            <NavigateNext />
           </IconButton>
         </Hidden>
       </Grid>

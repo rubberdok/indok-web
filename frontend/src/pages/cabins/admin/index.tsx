@@ -6,7 +6,7 @@ import AdminCabinTable from "@components/pages/cabins/Admin/AdminCabinTable";
 import { QUERY_ADMIN_ALL_BOOKINGS } from "@graphql/cabins/queries";
 import useResponsive from "@hooks/useResponsive";
 import { BookingFromQuery } from "@interfaces/cabins";
-import Settings from "@mui/icons-material/Settings";
+import { Settings } from "@mui/icons-material";
 import { Box, Button, Container, Grid, Tab, Tabs, Typography } from "@mui/material";
 import dayjs from "dayjs";
 import { useRouter } from "next/router";

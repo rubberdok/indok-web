@@ -1,5 +1,6 @@
 import { FilterQuery } from "@components/pages/events/AllEvents";
-import { Card, CardContent, Divider, Grid, IconButton, Tooltip, Typography, useTheme } from "@mui/material";
+import { Card, CardContent, Divider, Grid, IconButton, Tooltip, Typography } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import { Star, X } from "phosphor-react";
 import React from "react";
 import CategoryFilter from "./CategoryFilter";

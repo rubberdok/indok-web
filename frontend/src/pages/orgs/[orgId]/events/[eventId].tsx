@@ -8,10 +8,7 @@ import { ADMIN_GET_EVENT } from "@graphql/events/queries";
 import { Event, SignUp } from "@interfaces/events";
 import { HeaderValuePair } from "@interfaces/utils";
 import Layout from "@layouts/Layout";
-import Check from "@mui/icons-material/Check";
-import Close from "@mui/icons-material/Close";
-import DeleteIcon from "@mui/icons-material/Delete";
-import Edit from "@mui/icons-material/Edit";
+import { Check, Close, Delete, Edit } from "@mui/icons-material";
 import {
   Alert,
   Box,
@@ -26,7 +23,6 @@ import {
   IconButton,
   Snackbar,
   Stack,
-  styled,
   Table,
   TableBody,
   TableCell,
@@ -36,6 +32,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import dayjs from "dayjs";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
@@ -216,7 +213,7 @@ const EventAdminPage: NextPageWithLayout = () => {
                                             onClick={() => handleDeleteSignUp(signUp.user.id)}
                                             size="large"
                                           >
-                                            <DeleteIcon fontSize="small" />
+                                            <Delete fontSize="small" />
                                           </IconButton>
                                         )}
                                       </Tooltip>

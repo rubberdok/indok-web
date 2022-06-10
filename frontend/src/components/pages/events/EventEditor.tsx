@@ -2,9 +2,7 @@ import { useMutation, useQuery } from "@apollo/client";
 import { UPDATE_EVENT } from "@graphql/events/mutations";
 import { ADMIN_GET_EVENT, GET_CATEGORIES, GET_EVENT } from "@graphql/events/queries";
 import { Category, Event } from "@interfaces/events";
-import Check from "@mui/icons-material/Check";
-import Close from "@mui/icons-material/Close";
-import Warning from "@mui/icons-material/Warning";
+import { Check, Close, Warning } from "@mui/icons-material";
 import {
   Button,
   Checkbox,

@@ -1,4 +1,5 @@
-import { InputAdornment, OutlinedInput, styled, Toolbar } from "@mui/material";
+import { InputAdornment, OutlinedInput, Toolbar } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import { MagnifyingGlass } from "phosphor-react";
 
 interface SearchBarProps {

@@ -1,16 +1,11 @@
 import { Cabin, ContactInfo, DatePick, ModalData } from "@interfaces/cabins";
-import CheckIcon from "@mui/icons-material/Check";
-import ClearIcon from "@mui/icons-material/Clear";
-import { Grid, IconButton } from "@mui/material";
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
+import { Check, Clear } from "@mui/icons-material";
+import { Button, Dialog, DialogActions, DialogContent, Grid, IconButton } from "@mui/material";
 import { NextPage } from "next";
 import { Dispatch, SetStateAction } from "react";
 import Contract from "../Documents/Contract";
 
-interface ContractDialogProps {
+type ContractDialogProps = {
   modalData: ModalData;
   setModalData: Dispatch<SetStateAction<ModalData>>;
   datePick: DatePick;
@@ -18,7 +13,7 @@ interface ContractDialogProps {
   contactInfo: ContactInfo;
   activeStep: number;
   setActiveStep: Dispatch<SetStateAction<number>>;
-}
+};
 
 /*
 Dialog component for the contract component
@@ -48,7 +43,7 @@ const ContractDialog: NextPage<ContractDialogProps> = ({
           <Grid container alignContent="center" spacing={3}>
             <Grid item>
               <IconButton onClick={() => setModalData({ ...modalData, displayPopUp: false })} size="large">
-                <ClearIcon />
+                <Clear />
               </IconButton>
             </Grid>
             <Grid item>
@@ -57,10 +52,10 @@ const ContractDialog: NextPage<ContractDialogProps> = ({
           </Grid>
         </DialogContent>
         <DialogActions sx={{ backgroundColor: (theme) => theme.palette.background.neutral }}>
-          <Button size="large" onClick={handleClose} color="primary" startIcon={<ClearIcon />}>
+          <Button size="large" onClick={handleClose} color="primary" startIcon={<Clear />}>
             Lukk
           </Button>
-          <Button size="large" onClick={handleAccept} color="primary" startIcon={<CheckIcon />}>
+          <Button size="large" onClick={handleAccept} color="primary" startIcon={<Check />}>
             Jeg samtykker til kontrakten
           </Button>
         </DialogActions>

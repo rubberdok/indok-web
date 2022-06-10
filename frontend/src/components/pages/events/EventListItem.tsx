@@ -1,7 +1,8 @@
 import useResponsive from "@hooks/useResponsive";
 import { Event } from "@interfaces/events";
 import { User } from "@interfaces/users";
-import { Card, CardActionArea, Chip, styled, Typography } from "@mui/material";
+import { Card, CardActionArea, Chip, Typography } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import dayjs from "dayjs";
 import nb from "dayjs/locale/nb";
 import Link from "next/link";

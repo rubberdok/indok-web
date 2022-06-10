@@ -1,6 +1,7 @@
 import Logo from "@components/Logo";
 import useResponsive from "@hooks/useResponsive";
-import { Container, Divider, Grid, Link, Paper, Stack, styled, SxProps, Typography } from "@mui/material";
+import { Container, Divider, Grid, Link, Paper, Stack, SxProps, Typography } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import rubberdokLogo from "@public/img/rubberdok_logo_black.svg";
 import dayjs from "dayjs";
 import dynamic from "next/dynamic";

@@ -5,7 +5,7 @@ import { GET_USER } from "@graphql/users/queries";
 import { Order, PaymentStatus } from "@interfaces/ecommerce";
 import { User } from "@interfaces/users";
 import Layout, { RootStyle } from "@layouts/Layout";
-import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
+import { KeyboardArrowLeft } from "@mui/icons-material";
 import {
   Alert,
   Box,

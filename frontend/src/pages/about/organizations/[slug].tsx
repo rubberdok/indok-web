@@ -1,7 +1,6 @@
-import Layout, { RootStyle } from "@layouts/Layout";
 import * as markdownComponents from "@components/MarkdownForm/components";
-import MailOutlineIcon from "@mui/icons-material/MailOutline";
-import PhoneIcon from "@mui/icons-material/Phone";
+import Layout, { RootStyle } from "@layouts/Layout";
+import { MailOutline, Phone } from "@mui/icons-material";
 import { Box, Card, Chip, Container, Divider, Grid, Paper, Typography } from "@mui/material";
 import { getPostBySlug, getPostsSlugs } from "@utils/posts";
 import { GetStaticPaths, GetStaticProps } from "next";
@@ -93,11 +92,11 @@ const Article: NextPageWithLayout<ArticleProps> = ({ post, frontmatter }) => {
                           <br />
                           {member.mail && (
                             <Link href={`mailto:${member.mail}`}>
-                              <Chip size="small" label={member.mail} icon={<MailOutlineIcon />} />
+                              <Chip size="small" label={member.mail} icon={<MailOutline />} />
                             </Link>
                           )}
                           {member.mail && member.phoneNumber && <br />}
-                          {member.phoneNumber && <Chip size="small" label={member.phoneNumber} icon={<PhoneIcon />} />}
+                          {member.phoneNumber && <Chip size="small" label={member.phoneNumber} icon={<Phone />} />}
                         </Box>
                       </Card>
                     </>

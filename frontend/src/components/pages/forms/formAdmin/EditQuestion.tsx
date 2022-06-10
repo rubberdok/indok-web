@@ -1,23 +1,20 @@
 import questionTypeLabels from "@components/pages/forms/formAdmin/questionTypeLabels";
-import { Question, QuestionType, Option } from "@interfaces/forms";
+import { Option, Question, QuestionType } from "@interfaces/forms";
+import { Add, Close, Delete, Save } from "@mui/icons-material";
 import {
+  Box,
   Button,
   Checkbox,
+  FormControl,
+  FormControlLabel,
   Grid,
+  InputLabel,
   MenuItem,
   Radio,
   Select,
-  TextField,
   Switch,
-  FormControlLabel,
-  FormControl,
-  InputLabel,
-  Box,
+  TextField,
 } from "@mui/material";
-import Save from "@mui/icons-material/Save";
-import Delete from "@mui/icons-material/Delete";
-import Add from "@mui/icons-material/Add";
-import Close from "@mui/icons-material/Close";
 
 /**
  * Component to edit a question on a form.

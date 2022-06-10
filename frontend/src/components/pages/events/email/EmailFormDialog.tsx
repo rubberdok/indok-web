@@ -1,6 +1,5 @@
+import { Clear, Send } from "@mui/icons-material";
 import { Box, Button, Dialog, DialogActions, DialogContent, Grid, TextField, Tooltip, Typography } from "@mui/material";
-import ClearIcon from "@mui/icons-material/Clear";
-import SendIcon from "@mui/icons-material/Send";
 import React, { Dispatch, SetStateAction } from "react";
 import { SendEmailProps } from "./EmailForm";
 
@@ -73,14 +72,14 @@ const EmailFormDialog: React.FC<EmailFormDialogProps> = ({
         </Grid>
       </DialogContent>
       <DialogActions>
-        <Button startIcon={<ClearIcon />} onClick={() => setShowEmailForm(false)} color="primary">
+        <Button startIcon={<Clear />} onClick={() => setShowEmailForm(false)} color="primary">
           Lukk
         </Button>
 
         <Tooltip disableHoverListener={Object.values(validations).every(Boolean)} title="Du må fylle inn alle feltene.">
           <Box>
             <Button
-              startIcon={<SendIcon />}
+              startIcon={<Send />}
               disabled={!Object.values(validations).every(Boolean)}
               onClick={() => sendEmail()}
               color="primary"

@@ -1,7 +1,8 @@
 import Breadcrumbs from "@components/Breadcrumbs";
-import Layout from "@layouts/Layout";
 import UserForm from "@components/pages/profile/UserForm";
-import { Alert, Container, Grid, Snackbar, styled } from "@mui/material";
+import Layout from "@layouts/Layout";
+import { Alert, Container, Grid, Snackbar } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import React, { useState } from "react";
 import { NextPageWithLayout } from "src/pages/_app";
 import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "src/theme/constants";

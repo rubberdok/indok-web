@@ -1,6 +1,7 @@
 import Breadcrumbs from "@components/Breadcrumbs";
 import useResponsive from "@hooks/useResponsive";
-import { Button, Card, Container, Stack, styled, Typography } from "@mui/material";
+import { Button, Card, Container, Stack, Typography } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import Link from "next/link";
 import React from "react";
 

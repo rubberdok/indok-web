@@ -1,5 +1,5 @@
 import Layout from "@layouts/Layout";
-import { Button, Container, Grid, Typography, useTheme, Box } from "@mui/material";
+import { Box, Button, Container, Grid, Typography } from "@mui/material";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
@@ -7,7 +7,6 @@ import _404 from "public/illustrations/404.svg";
 import { NextPageWithLayout } from "./_app";
 
 const Custom404: NextPageWithLayout = () => {
-  const theme = useTheme();
   return (
     <>
       <Head>
@@ -18,7 +17,7 @@ const Custom404: NextPageWithLayout = () => {
           container
           direction="column"
           spacing={4}
-          style={{ marginTop: theme.spacing(4), marginBottom: theme.spacing(4) }}
+          sx={{ mt: (theme) => theme.spacing(4), mb: (theme) => theme.spacing(4) }}
           justifyContent="center"
           alignItems="center"
         >

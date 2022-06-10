@@ -1,5 +1,6 @@
 import { Typography } from "@mui/material";
-import { styled, Theme } from "@mui/system";
+import { styled } from "@mui/material/styles";
+import { Theme } from "@mui/system";
 
 type Props = {
   active?: boolean;
