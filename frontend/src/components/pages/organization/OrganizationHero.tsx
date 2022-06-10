@@ -28,11 +28,7 @@ const OrganizationHero: React.FC<Props> = (props) => {
           <Breadcrumbs
             onDark
             sx={{ mb: 10 }}
-            links={[
-              { href: "/", name: "Hjem" },
-              { href: "/orgs", name: "Organisasjoner" },
-              { name: organization.name },
-            ]}
+            links={[{ href: "/", name: "Hjem" }, { href: "/orgs", name: "Foreninger" }, { name: organization.name }]}
           />
           <Typography variant="overline" color="grey.500">
             Administrasjonsside
