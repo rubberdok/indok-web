@@ -5,7 +5,7 @@ import { NextPage } from "next";
 import { AppProps } from "next/app";
 import Head from "next/head";
 import { ReactElement, ReactNode } from "react";
-import { useApollo } from "src/lib/apolloClient";
+import { useApollo } from "@lib/apolloClient";
 import ThemeWrapper from "src/theme";
 
 export type NextPageWithLayout<P = Record<string, unknown>> = NextPage<P> & {
