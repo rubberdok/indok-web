@@ -16,7 +16,7 @@ const LandingSection: React.FC = () => {
           <Grid
             item
             xs={12}
-            md={6}
+            md={5}
             lg={5}
             sx={{
               display: { xs: "none", md: "block" },
@@ -32,7 +32,7 @@ const LandingSection: React.FC = () => {
           <Grid
             item
             xs={12}
-            md={6}
+            md={5}
             lg={5}
             sx={{
               color: "common.white",

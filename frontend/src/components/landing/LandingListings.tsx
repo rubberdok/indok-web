@@ -1,5 +1,6 @@
 import useResponsive from "@hooks/useResponsive";
-import { Box, Button, Container, Stack, Typography } from "@mui/material";
+import { Box, Button, Container, Typography } from "@mui/material";
+import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
@@ -7,37 +8,36 @@ const LandingListings: React.FC = () => {
   const isMobile = useResponsive({ query: "down", key: "md" });
 
   return (
-    <Box pt={{ xs: 3, md: 10 }}>
-      <Container>
-        <Stack py={isMobile ? 6 : 20} display="flex" alignItems="center" direction={{ xs: "column", md: "row" }}>
-          <Box maxWidth={650}>
-            <Typography variant="overline" sx={{ color: "primary.main", mb: 2, display: "block" }}>
-              Sosialt
-            </Typography>
-            <Typography variant="h2">Delta i et fantastisk studentmiljø</Typography>
-            <br />
-            <Typography variant="body1">
-              Vi har foreninger som tar seg av det meste, og man finner en forening for enhver som har lyst til å
-              engasjere seg!
-            </Typography>
-            <br />
-            <Link href="/listings" passHref>
-              <Button color="primary" variant="contained" size="large">
-                Søk verv
-              </Button>
-            </Link>
-          </Box>
-          <Box ml={isMobile ? 0 : 20} mt={isMobile ? 10 : 0} width="100%" height={350} position="relative">
-            <Box
-              component="img"
-              src="/img/gang.jpg"
-              alt=""
-              sx={{ objectFit: isMobile ? "cover" : "contain", width: 1 }}
-            />
-          </Box>
-        </Stack>
-      </Container>
-    </Box>
+    <Container sx={{ my: (theme) => theme.spacing(8) }}>
+      <Box
+        sx={{
+          display: "grid",
+          gap: (theme) => theme.spacing(8),
+          ...(!isMobile ? { gridTemplateColumns: "repeat(2, 1fr)" } : { gridTemplateRows: "repeat(2, 1fr)" }),
+        }}
+      >
+        <Box>
+          <Typography variant="overline" sx={{ color: "primary.main", mb: 2, display: "block" }}>
+            Sosialt
+          </Typography>
+          <Typography variant="h2">Delta i et fantastisk studentmiljø</Typography>
+          <br />
+          <Typography variant="body1">
+            Vi har foreninger som tar seg av det meste, og man finner en forening for enhver som har lyst til å
+            engasjere seg!
+          </Typography>
+          <br />
+          <Link href="/listings" passHref>
+            <Button color="primary" variant="contained" size="medium">
+              Søk verv
+            </Button>
+          </Link>
+        </Box>
+        <Box sx={{ position: "relative" }}>
+          <Image src="/img/gang.jpg" layout="fill" objectFit="cover" objectPosition="center" />
+        </Box>
+      </Box>
+    </Container>
   );
 };
 
