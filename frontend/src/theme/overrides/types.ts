@@ -1,9 +1,5 @@
-import { LoadingButtonClassKey } from "@mui/lab";
+/* https://mui.com/material-ui/about-the-lab/#typescript */
+import type {} from "@mui/lab/themeAugmentation";
 import { Theme } from "@mui/material";
 
-/* Certain components are not of the core theme, so we extend the components here to include them */
-type Overrides = {
-  MuiLoadingButton?: Partial<Record<LoadingButtonClassKey, React.CSSProperties | (() => React.CSSProperties)>>;
-} & Theme["components"];
-
-export type ComponentOverride = (theme: Theme) => Overrides;
+export type ComponentOverride = (theme: Theme) => Theme["components"];
