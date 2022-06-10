@@ -12,13 +12,16 @@ import {
 } from "@components/pages/profile/ProfileCard";
 import { GET_USER_INFO } from "@graphql/users/queries";
 import Layout from "@layouts/Layout";
+import { initializeApollo, addApolloState } from "@lib/apolloClient";
 import { Avatar, Container, Grid, Stack, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Head from "next/head";
 import { useMemo } from "react";
 import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "src/theme/constants";
 import { User } from "src/types/users";
 import { NextPageWithLayout } from "../_app";
+import { UserInfoDocument } from "@generated/graphql";
 
 const ID_PREFIX = "profile-";
 
@@ -48,7 +51,7 @@ const RootStyle = styled("div")(({ theme }) => ({
   },
 }));
 
-const ProfilePage: NextPageWithLayout = () => {
+const ProfilePage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSideProps>> = () => {
   const { data } = useQuery<{ user?: User }>(GET_USER_INFO);
   const initials = useMemo(() => (data?.user ? userInitials(data.user.firstName, data.user.lastName) : ""), [data]);
 
@@ -121,3 +124,16 @@ ProfilePage.getLayout = function getLayout(page: React.ReactElement) {
 };
 
 export default ProfilePage;
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const client = initializeApollo({}, ctx);
+  const { data, error } = await client.query({
+    query: UserInfoDocument,
+  });
+
+  if (error) return { notFound: true };
+  if (!data.user) {
+    return { notFound: true };
+  }
+  return addApolloState(client, { props: { user: data.user } });
+};
