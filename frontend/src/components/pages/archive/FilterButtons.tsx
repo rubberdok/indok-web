@@ -1,4 +1,5 @@
-import { CheckBox as CheckBoxIcon, CheckBoxOutlineBlank as CheckBoxOutlineBlankIcon } from "@mui/icons-material";
+import { default as CheckBoxIcon } from "@mui/icons-material/CheckBox";
+import { default as CheckBoxOutlineBlankIcon } from "@mui/icons-material/CheckBoxOutlineBlank";
 import { Checkbox, FormControlLabel, Typography } from "@mui/material";
 import React from "react";
 

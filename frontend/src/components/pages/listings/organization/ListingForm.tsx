@@ -1,7 +1,9 @@
 import MarkdownForm from "@components/MarkdownForm";
 import { ListingInput } from "@interfaces/listings";
 import { Organization } from "@interfaces/organizations";
-import { Close, HelpOutline, Save } from "@mui/icons-material";
+import Close from "@mui/icons-material/Close";
+import HelpOutline from "@mui/icons-material/HelpOutline";
+import Save from "@mui/icons-material/Save";
 import {
   Button,
   Card,

@@ -14,7 +14,10 @@ import {
   InputLabel,
   Box,
 } from "@mui/material";
-import { Save, Delete, Add, Close } from "@mui/icons-material";
+import Save from "@mui/icons-material/Save";
+import Delete from "@mui/icons-material/Delete";
+import Add from "@mui/icons-material/Add";
+import Close from "@mui/icons-material/Close";
 
 /**
  * Component to edit a question on a form.

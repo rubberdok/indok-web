@@ -1,7 +1,9 @@
 import DeleteListing from "@components/pages/listings/organization/DeleteListing";
 import { Listing } from "@interfaces/listings";
 import { Organization } from "@interfaces/organizations";
-import { Add, Create, Delete } from "@mui/icons-material";
+import Add from "@mui/icons-material/Add";
+import Create from "@mui/icons-material/Create";
+import Delete from "@mui/icons-material/Delete";
 import {
   Button,
   Stack,

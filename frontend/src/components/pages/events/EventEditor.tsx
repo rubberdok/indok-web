@@ -2,6 +2,9 @@ import { useMutation, useQuery } from "@apollo/client";
 import { UPDATE_EVENT } from "@graphql/events/mutations";
 import { ADMIN_GET_EVENT, GET_CATEGORIES, GET_EVENT } from "@graphql/events/queries";
 import { Category, Event } from "@interfaces/events";
+import Check from "@mui/icons-material/Check";
+import Close from "@mui/icons-material/Close";
+import Warning from "@mui/icons-material/Warning";
 import {
   Button,
   Checkbox,
@@ -22,12 +25,11 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { Check, Close, Warning } from "@mui/icons-material";
-import React, { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import nb from "dayjs/locale/nb";
-import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
+import React, { useEffect, useState } from "react";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.locale(nb);

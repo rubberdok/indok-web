@@ -1,11 +1,12 @@
 import { useMutation, useQuery } from "@apollo/client";
-import Layout from "@layouts/Layout";
 import ContractDialog from "@components/pages/cabins/Popup/ContractDialog";
 import StepComponent from "@components/pages/cabins/StepComponent";
 import { CREATE_BOOKING, SEND_EMAIL } from "@graphql/cabins/mutations";
 import { QUERY_CABINS } from "@graphql/cabins/queries";
 import { Cabin, ContactInfo, ContactInfoValidations, DatePick, ModalData } from "@interfaces/cabins";
-import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
+import Layout from "@layouts/Layout";
+import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
+import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import {
   Box,
   Button,

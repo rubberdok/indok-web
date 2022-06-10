@@ -6,7 +6,7 @@ import { UserInfoDocument } from "@generated/graphql";
 import { GET_PRODUCT } from "@graphql/ecommerce/queries";
 import { Product } from "@interfaces/ecommerce";
 import { addApolloState, initializeApollo } from "@lib/apolloClient";
-import { KeyboardArrowLeft } from "@mui/icons-material";
+import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import {
   Alert,
   Box,
