@@ -93,7 +93,7 @@ jobs:
         with:
           context: ${{ matrix.context }}
           file: ${{ matrix.context }}/${{ matrix.dockerfile }}
-          outputs: type=docker,dest=/tmp/${{ env.dockerfile }}.tar
+          load: true
           tags: |
             ${{ matrix.image }}:${{ matrix.stage }}
             ${{ steps.image-tag.outputs.image }}
@@ -111,6 +111,20 @@ jobs:
             -e CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }} \
             -e CLOUDINARY_CLOUD_NAME=rubberdok \
             ${{ matrix.image }}:${{ matrix.stage }}
+
+      - name: Build ${{ matrix.image }} image
+        id: build-image
+        uses: docker/build-push-action@v2
+        with:
+          context: ${{ matrix.context }}
+          file: ${{ matrix.context }}/${{ matrix.dockerfile }}
+          outputs: type=docker,dest=/tmp/${{ env.dockerfile }}.tar
+          tags: |
+            ${{ matrix.image }}:${{ matrix.stage }}
+            ${{ steps.image-tag.outputs.image }}
+          push: false
+          build-args: |
+            APP_ENV=${{ matrix.stage }}
 
       - name: Push ${{ matrix.image }} image
         id: push-image
