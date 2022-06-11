@@ -253,21 +253,23 @@ jobs:
 
     strategy:
       matrix:
-        image: [frontend, backend]
+        image: [frontend, backend, migrate]
         include:
           - image: frontend
             sourcemaps: .next
-            mount: true
             url_prefix: ~/_next/
+            service: frontend
           - image: backend
-            mount: false
+            service: backend
+          - image: migrate
+            service: backend
       fail-fast: false
 
     env:
       ECS_TASK_DEFINITION: .aws/task-definition.${{ matrix.image }}.json
-      ECS_SERVICE: indokweb-${{ matrix.image }}-fg-service
-      ECS_REPOSITORY: indokweb-${{ matrix.image }}
-      SENTRY_PROJECT: indokweb-${{ matrix.image }}
+      ECS_SERVICE: indokweb-${{ matrix.service }}-fg-service
+      ECS_REPOSITORY: indokweb-${{ matrix.service }}
+      SENTRY_PROJECT: indokweb-${{ matrix.service }}
       CONTAINER_NAME: ${{ matrix.image }}
       ECS_CLUSTER: indokweb-cluster # Set this to our ECS cluster name, e.g. indokweb-cluster
       SENTRY_ORG: rbberdk
@@ -292,7 +294,7 @@ jobs:
         id: image-tag
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: indokweb-${{ matrix.image }}
+          ECR_REPOSITORY: indokweb-${{ matrix.service }}
           IMAGE_TAG: ${{ github.sha }}
         run: echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
 
@@ -316,11 +318,11 @@ jobs:
 
       - name: Start container
         id: container
-        if: ${{ matrix.mount }}
+        if: ${{ matrix.sourcemaps }}
         run: echo "::set-output name=container::$(docker run -d ${{ steps.image-tag.outputs.image }} sleep 3600)"
 
       - name: Copy files
-        if: ${{ matrix.mount }}
+        if: ${{ matrix.sourcemaps }}
         run: docker cp ${{ steps.container.outputs.container }}:/usr/src/app/${{ matrix.sourcemaps }} ${{ matrix.sourcemaps }}
 
       - name: Sentry release
