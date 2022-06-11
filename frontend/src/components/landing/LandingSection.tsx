@@ -15,8 +15,9 @@ const LandingSection: React.FC = () => {
       }}
     >
       <Container sx={{ alignSelf: "center", gridColumn: "1 / -1", gridRow: "1" }}>
-        <Grid container direction="row" justifyContent={{ xs: "center", md: "flex-end" }}>
-          <Grid item md={5} sm={8} xs={10}>
+        <Grid container direction="row-reverse" justifyContent={{ xs: "center", md: "flex-start" }}>
+          <Grid item md={1} xs={0} />
+          <Grid item md={4} sm={8} xs={10}>
             <Grid
               container
               my={8}
