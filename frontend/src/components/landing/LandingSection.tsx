@@ -54,7 +54,7 @@ const LandingSection: React.FC = () => {
         }}
       >
         <Box sx={{ position: "relative", width: "100%", height: "100%" }}>
-          <Image src={Hovedbygget} layout="fill" objectFit="cover" objectPosition="center" placeholder="blur" />
+          <Image src={Hovedbygget} layout="fill" objectFit="cover" objectPosition="center" placeholder="blur" alt="" />
         </Box>
       </Box>
     </Box>
