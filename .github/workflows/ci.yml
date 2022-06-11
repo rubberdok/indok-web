@@ -124,7 +124,7 @@ jobs:
 
       - name: Upload image files
         id: one-off
-        if: ${{ matrix.image == frontend && matrix.stage == production }}
+        if: ${{ matrix.image == "frontend" && matrix.stage == "production" }}
         run: |
           docker run \
             --entrypoint /usr/src/app/entrypoints/cloudinary.sh \
@@ -320,7 +320,7 @@ jobs:
 
       - name: Upload image files
         id: one-off
-        if: ${{ matrix.image == frontend }}
+        if: ${{ matrix.image == "frontend" }}
         run: |
           docker run \
             --entrypoint /usr/src/app/entrypoints/cloudinary.sh \
