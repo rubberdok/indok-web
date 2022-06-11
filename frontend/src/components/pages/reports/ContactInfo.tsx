@@ -1,3 +1,4 @@
+import { getBlurUrl } from "@lib/cloudinary";
 import { Grid, Typography } from "@mui/material";
 import Image, { StaticImageData } from "next/image";
 
@@ -29,7 +30,16 @@ const ContactInfo: React.VFC<Props> = ({ name, position, email, image }) => {
           width: "40%",
         }}
       >
-        {image && <Image src={image} placeholder="blur" layout="fill" objectPosition="center" objectFit="cover" />}
+        {image && (
+          <Image
+            src={image}
+            blurDataURL={getBlurUrl(image.src)}
+            placeholder="blur"
+            layout="fill"
+            objectPosition="center"
+            objectFit="cover"
+          />
+        )}
       </Grid>
       <Grid item md>
         <Typography variant="subtitle2">{nameAndPosition}</Typography>

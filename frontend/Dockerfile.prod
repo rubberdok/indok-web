@@ -30,10 +30,14 @@ RUN yarn build
 # Production image, copy all the files and run next
 FROM 777854691961.dkr.ecr.eu-north-1.amazonaws.com/node:16.13.2-alpine AS runner
 WORKDIR /usr/src/app
+RUN apk add --no-cache python3 py3-pip
+RUN pip install cloudinary-cli
 
 RUN addgroup -g 1001 -S nodejs
 RUN adduser -S nextjs -u 1001
 
+COPY --from=builder /usr/src/app/entrypoints ./entrypoints
+RUN chmod +x ./entrypoints/*.sh
 COPY --from=builder /usr/src/app/next.config.js ./
 COPY --from=builder /usr/src/app/public ./public
 COPY --from=builder /usr/src/app/package.json ./package.json

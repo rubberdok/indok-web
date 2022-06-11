@@ -1,3 +1,4 @@
+import { getBlurUrl } from "@lib/cloudinary";
 import { Box, Button, Container, Grid, Stack, Typography } from "@mui/material";
 import Hero from "@public/static/landing/hero.jpg";
 import Image from "next/image";
@@ -67,8 +68,9 @@ const LandingHero: React.FC = () => {
               layout="fill"
               objectFit="cover"
               objectPosition="center"
-              placeholder="blur"
               alt=""
+              placeholder="blur"
+              blurDataURL={getBlurUrl(Hero)}
             />
           </Box>
         </Box>

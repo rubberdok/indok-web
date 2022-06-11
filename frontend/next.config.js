@@ -85,6 +85,11 @@ const moduleExports = {
     disableServerWebpackPlugin: true,
     disableClientWebpackPlugin: true,
   },
+  images: {
+    loader: "cloudinary",
+    path: "https://res.cloudinary.com/rubberdok/image/upload/",
+  },
+
   /* Browser source maps should be enabled during production to upload to Sentry  */
   productionBrowserSourceMaps: process.env.NEXT_PUBLIC_APP_ENV === "production",
 };

@@ -1,3 +1,4 @@
+import { getBlurUrl } from "@lib/cloudinary";
 import { Box, Button, Container, Grid, Typography } from "@mui/material";
 import Hovedbygget from "@public/static/landing/hovedbygget.jpeg";
 import Image from "next/image";
@@ -22,7 +23,15 @@ const LandingSection: React.FC = () => {
         }}
       >
         <Box sx={{ position: "relative", width: "100%", height: "100%" }}>
-          <Image src={Hovedbygget} layout="fill" objectFit="cover" objectPosition="center" placeholder="blur" alt="" />
+          <Image
+            src={Hovedbygget}
+            layout="fill"
+            objectFit="cover"
+            objectPosition="center"
+            placeholder="blur"
+            alt=""
+            blurDataUrl={getBlurUrl(Hovedbygget)}
+          />
         </Box>
       </Box>
       <Container

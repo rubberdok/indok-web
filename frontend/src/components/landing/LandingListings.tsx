@@ -1,7 +1,10 @@
+import useResponsive from "@hooks/useResponsive";
+import { getBlurUrl } from "@lib/cloudinary";
 import { Box, Button, Container, Grid, Typography } from "@mui/material";
 import Social from "@public/img/gang.jpg";
 import Image from "next/image";
 import Link from "next/link";
+import React from "react";
 
 const LandingListings: React.FC = () => {
   return (
@@ -22,7 +25,15 @@ const LandingListings: React.FC = () => {
         }}
       >
         <Box sx={{ position: "relative", width: "100%", height: "100%" }}>
-          <Image src={Social} layout="fill" objectFit="cover" objectPosition="center" placeholder="blur" alt="" />
+          <Image
+            src={Social}
+            layout="fill"
+            objectFit="cover"
+            objectPosition="center"
+            placeholder="blur"
+            blurDataURL={getBlurUrl(Social)}
+            alt=""
+          />
         </Box>
       </Box>
       <Container
