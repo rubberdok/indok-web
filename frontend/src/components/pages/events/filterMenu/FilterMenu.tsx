@@ -1,19 +1,80 @@
+import { useQuery } from "@apollo/client";
 import { FilterQuery } from "@components/pages/events/AllEvents";
-import { Card, CardContent, Divider, Grid, IconButton, Tooltip, Typography } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
-import { Star, X } from "phosphor-react";
+import { QUERY_EVENT_FILTERED_ORGANIZATIONS } from "@graphql/events/queries";
+import { IconButton, List, ListItem, ListItemText, makeStyles, Tooltip, Typography } from "@material-ui/core";
+import { Refresh, StarBorderRounded, StarRounded } from "@material-ui/icons";
 import React from "react";
 import CategoryFilter from "./CategoryFilter";
 import DateTimeFilter from "./DateTimeFilter";
 import OrganizationFilter from "./OrganizationFilter";
-import { HandleChecked } from "./types";
 
-type Props = {
+interface Props {
   filters: FilterQuery;
   onFiltersChange: (query: FilterQuery) => void;
   showDefaultEvents: boolean;
   onShowDefaultChange: (show: boolean) => void;
-};
+}
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    width: "100%",
+    maxWidth: 360,
+    backgroundColor: theme.palette.background.paper,
+    paddingTop: theme.spacing(0),
+  },
+  nested: {
+    padding: 0,
+    margin: 0,
+    paddingLeft: theme.spacing(4),
+    ["&.Mui-selected"]: {
+      backgroundColor: theme.palette.primary.main,
+      color: "#fff",
+      ["&:hover"]: {
+        backgroundColor: theme.palette.primary.main,
+      },
+    },
+  },
+  doubleNestedList: {
+    padding: 0,
+    margin: 0,
+    paddingLeft: theme.spacing(6),
+    ["&.Mui-selected"]: {
+      backgroundColor: theme.palette.primary.main,
+      color: "#fff",
+      ["&:hover"]: {
+        backgroundColor: theme.palette.primary.main,
+      },
+    },
+  },
+  doubleNested: {
+    padding: 0,
+  },
+  doubleNestedHeader: {
+    padding: 0,
+    paddingLeft: theme.spacing(4),
+    ["&.Mui-selected"]: {
+      backgroundColor: theme.palette.primary.main,
+      color: "#fff",
+      ["&:hover"]: {
+        backgroundColor: theme.palette.primary.main,
+      },
+    },
+  },
+  headerContainer: {
+    padding: theme.spacing(2),
+    paddingTop: 0,
+    paddingBottom: 0,
+  },
+  deleteButton: {
+    padding: 0,
+    margin: 0,
+  },
+  badge: { marginRight: theme.spacing(1.5) },
+  tooltip: {
+    margin: 0,
+    padding: 0,
+  },
+}));
 
 /**
  * Component for the filter menu on the event list page
@@ -26,67 +87,51 @@ type Props = {
  */
 
 const FilterMenu: React.FC<Props> = ({ filters, onFiltersChange, showDefaultEvents, onShowDefaultChange }) => {
-  const theme = useTheme();
+  const classes = useStyles();
 
-  const handleChecked: HandleChecked = (e, field, filter) => {
-    if (e.target.checked) {
-      onFiltersChange({ ...filters, [field]: filter });
-    } else {
-      onFiltersChange({ ...filters, [field]: undefined });
-    }
-  };
+  const {
+    loading: organizationLoading,
+    error: organizationError,
+    data: organizationData,
+  } = useQuery(QUERY_EVENT_FILTERED_ORGANIZATIONS);
+  if (organizationLoading) return null;
+  if (organizationError) return null;
+
   return (
-    <Card>
-      <CardContent>
-        <Grid container direction="column" spacing={3}>
-          <Grid container item direction="row" justifyContent="space-between" alignItems="center">
-            <Grid item>
-              <Typography variant="subtitle1">Filter</Typography>
-            </Grid>
-            <Grid item>
-              <Tooltip title="Nullstill filter" arrow>
-                <IconButton onClick={() => onFiltersChange({})} aria-label="delete">
-                  <X />
-                </IconButton>
-              </Tooltip>
-            </Grid>
-          </Grid>
-          <Grid item>
-            <Divider />
-          </Grid>
-          <Grid container item direction="row" justifyContent="space-between" alignItems="center">
-            <Grid item>
-              <Typography variant="body1">Fremhevet</Typography>
-            </Grid>
-            <Grid item>
-              <IconButton onClick={() => onShowDefaultChange(!showDefaultEvents)} aria-label="delete">
-                {showDefaultEvents ? <Star color={theme.palette.secondary.main} weight="fill" /> : <Star />}
-              </IconButton>
-            </Grid>
-          </Grid>
-          <Grid item>
-            <Divider />
-          </Grid>
-          <Grid item>
-            <Typography variant="subtitle2">Arrangør</Typography>
-          </Grid>
-          <OrganizationFilter filters={filters} handleChecked={handleChecked} />
+    <>
+      <List>
+        <ListItem>
+          <ListItemText primary={<Typography variant="h4">Filtre</Typography>} />
+          <Tooltip className={classes.tooltip} title="Nullstill filtre" arrow>
+            <IconButton disableFocusRipple disableRipple onClick={() => onFiltersChange({})} aria-label="delete">
+              <Refresh />
+            </IconButton>
+          </Tooltip>
+        </ListItem>
 
-          <Grid item>
-            <Divider />
-          </Grid>
-          <Grid item>
-            <Typography variant="subtitle2">Kategori</Typography>
-          </Grid>
-          <CategoryFilter filters={filters} handleChecked={handleChecked} />
+        <ListItem
+          button
+          onClick={() => {
+            onShowDefaultChange(!showDefaultEvents);
+            onFiltersChange({});
+          }}
+        >
+          <ListItemText primary={"Fremhevet"} />
+          {showDefaultEvents ? <StarRounded /> : <StarBorderRounded />}
+        </ListItem>
 
-          <Grid item>
-            <Divider />
-          </Grid>
-          <DateTimeFilter filters={filters} onFiltersChange={onFiltersChange} />
-        </Grid>
-      </CardContent>
-    </Card>
+        <OrganizationFilter
+          filters={filters}
+          onFiltersChange={onFiltersChange}
+          organizations={organizationData.eventFilteredOrganizations}
+          classes={classes}
+        />
+
+        <CategoryFilter filters={filters} onFiltersChange={onFiltersChange} classes={classes} />
+
+        <DateTimeFilter filters={filters} onFiltersChange={onFiltersChange} />
+      </List>
+    </>
   );
 };
 

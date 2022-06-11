@@ -1,32 +1,59 @@
-import Layout, { RootStyle } from "@layouts/Layout";
+import Layout from "@components/Layout";
 import AllEvents from "@components/pages/events/AllEvents";
-import Title from "@components/Title";
-import { Container, Tab, Tabs } from "@mui/material";
+import { Box, Container, Hidden, makeStyles, Tab, Tabs, Typography, useTheme } from "@material-ui/core";
+import { NextPage } from "next";
 import React, { useState } from "react";
-import { NextPageWithLayout } from "../_app";
 
-const links = [{ name: "Hjem", href: "/" }, { name: "Arrangementer" }];
+const useStyles = makeStyles((theme) => ({
+  container: {
+    paddingTop: theme.spacing(4),
+    paddingBottom: theme.spacing(8),
+  },
+  anniversary: {
+    transition: "0.7s all ease",
+    background: "url('/static/anniversary/anniversary_logo_black.svg')",
+    backgroundSize: "contain",
+    backgroundPosition: "right",
+    backgroundRepeat: "no-repeat",
+    opacity: 0.05,
+    height: "120%",
+    marginRight: "10%",
+    right: 0,
+    top: 0,
+  },
+}));
 
 /**
  * Component for showing the list page for event (for showing all events)
  */
-const Events: NextPageWithLayout = () => {
+
+const Events: NextPage = () => {
+  const classes = useStyles();
+  const theme = useTheme();
   const [showCalendarView, setShowCalenderView] = useState(false);
 
   return (
-    <>
-      <Title title="Arrangementer" breadcrumbs={links}>
-        <Tabs
-          value={showCalendarView ? 1 : 0}
-          onChange={() => setShowCalenderView(!showCalendarView)}
-          indicatorColor="primary"
-          textColor="primary"
-        >
-          <Tab label="Liste" />
-          <Tab label="Kalender" />
-        </Tabs>
-      </Title>
-      <Container sx={{ mb: 10, mt: 6 }}>
+    <Layout>
+      <Box width="100%" pt={10} position="relative" overflow="hidden" bgcolor={theme.palette.background.paper}>
+        <Container>
+          <Typography variant="h1" gutterBottom>
+            Arrangementer
+          </Typography>
+          <Tabs
+            value={showCalendarView ? 1 : 0}
+            onChange={() => setShowCalenderView(!showCalendarView)}
+            indicatorColor="primary"
+            textColor="primary"
+          >
+            <Tab label="Liste" />
+            <Tab label="Kalender" />
+          </Tabs>
+        </Container>
+        <Hidden xsDown>
+          <Box className={classes.anniversary} position="absolute" width="100vw" height="100vh" />
+        </Hidden>
+      </Box>
+      <Container className={classes.container}>
         {showCalendarView ? (
           <iframe
             src="https://calendar.google.com/calendar/embed?src=sp3rre4hhjfofj8124jp5k093o%40group.calendar.google.com&ctz=Europe%2FOslo"
@@ -41,13 +68,8 @@ const Events: NextPageWithLayout = () => {
           <AllEvents />
         )}
       </Container>
-    </>
+    </Layout>
   );
 };
 
-Events.getLayout = (page: React.ReactElement) => (
-  <Layout>
-    <RootStyle>{page}</RootStyle>
-  </Layout>
-);
 export default Events;

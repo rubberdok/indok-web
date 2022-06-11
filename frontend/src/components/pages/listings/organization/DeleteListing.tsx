@@ -11,7 +11,7 @@ import {
   DialogContentText,
   Button,
   FormHelperText,
-} from "@mui/material";
+} from "@material-ui/core";
 import WarningButton from "@components/ui/WarningButton";
 
 /**

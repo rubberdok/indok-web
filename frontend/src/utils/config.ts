@@ -29,12 +29,4 @@ export const config = {
   ),
   COOKIE_DOMAIN: validateEnvironmentVariable(process.env.NEXT_PUBLIC_COOKIE_DOMAIN, "NEXT_PUBLIC_COOKIE_DOMAIN"),
   CSRF_COOKIE: validateEnvironmentVariable(process.env.NEXT_PUBLIC_CSRF_COOKIE, "NEXT_PUBLIC_CSRF_COOKIE"),
-  FEIDE_LOGOUT_ENDPOINT: validateEnvironmentVariable(
-    process.env.NEXT_PUBLIC_FEIDE_LOGOUT_URI,
-    "NEXT_PUBLIC_FEIDE_LOGOUT_URI"
-  ),
-  FEIDE_AUTHORIZATION_URI: validateEnvironmentVariable(
-    process.env.NEXT_PUBLIC_FEIDE_AUTHORIZATION_URI,
-    "NEXT_PUBLIC_FEIDE_AUTHORIZATION_URI"
-  ),
 };

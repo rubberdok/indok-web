@@ -1,3 +1,0 @@
-query hasPermission($permission: String!) {
-  hasPermission(permission: $permission)
-}

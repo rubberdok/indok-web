@@ -1,9 +1,11 @@
-import { Avatar, Grid, Skeleton, Typography } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
+import useStyles from "@components/pages/profile/styles";
+import { Avatar, Grid, Typography, useTheme } from "@material-ui/core";
+import { Skeleton } from "@material-ui/lab";
 import SkeletonCard from "./ProfileCard/variants/SkeletonCard";
 
 const ProfileSkeleton: React.VFC = () => {
   const theme = useTheme();
+  const classes = useStyles();
 
   return (
     <Grid
@@ -15,7 +17,7 @@ const ProfileSkeleton: React.VFC = () => {
     >
       <>
         <Grid item>
-          <Skeleton variant="circular">
+          <Skeleton variant="circle">
             <Avatar style={{ backgroundColor: "#526fa0", width: theme.spacing(16), height: theme.spacing(16) }} />
           </Skeleton>
         </Grid>
@@ -36,7 +38,16 @@ const ProfileSkeleton: React.VFC = () => {
           </Grid>
         </Grid>
 
-        <Grid container item spacing={4} justifyContent="center" sm={10} xs={12} alignItems="stretch">
+        <Grid
+          container
+          item
+          className={classes.cards}
+          spacing={4}
+          justifyContent="center"
+          sm={10}
+          xs={12}
+          alignItems="stretch"
+        >
           <Grid item md={6}>
             <SkeletonCard />
           </Grid>

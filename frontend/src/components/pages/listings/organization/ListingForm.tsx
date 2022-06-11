@@ -1,7 +1,6 @@
-import MarkdownForm from "@components/MarkdownForm";
+import MarkdownForm from "@components/markdown/MarkdownForm";
 import { ListingInput } from "@interfaces/listings";
 import { Organization } from "@interfaces/organizations";
-import { Close, HelpOutline, Save } from "@mui/icons-material";
 import {
   Button,
   Card,
@@ -13,13 +12,26 @@ import {
   Grid,
   InputAdornment,
   InputLabel,
+  makeStyles,
   MenuItem,
   Select,
   TextField,
   Tooltip,
   Typography,
-} from "@mui/material";
+} from "@material-ui/core";
+import { Close, HelpOutline, Save } from "@material-ui/icons";
 import React, { ChangeEvent } from "react";
+
+const useStyles = makeStyles((theme) => ({
+  inputGroup: {
+    [theme.breakpoints.up("md")]: {
+      flexDirection: "row",
+    },
+    [theme.breakpoints.down("sm")]: {
+      flexDirection: "column",
+    },
+  },
+}));
 
 /**
  * A form to create or edit a listing.
@@ -38,6 +50,8 @@ const ListingForm: React.FC<{
   onCancel: () => void;
   organizations: Organization[];
 }> = ({ listing, setListing, onSubmit, onCancel, organizations }) => {
+  const classes = useStyles();
+
   /**
    * Helper method to handle changes to TextFields.
    */
@@ -109,18 +123,7 @@ const ListingForm: React.FC<{
             />
           </Grid>
           <Grid item>
-            <Grid
-              container
-              spacing={2}
-              sx={(theme) => ({
-                [theme.breakpoints.up("md")]: {
-                  flexDirection: "row",
-                },
-                [theme.breakpoints.down("md")]: {
-                  flexDirection: "column",
-                },
-              })}
-            >
+            <Grid container spacing={2} className={classes.inputGroup}>
               <Grid item xs>
                 <TextField
                   variant="filled"
@@ -145,18 +148,7 @@ const ListingForm: React.FC<{
                 />
               </Grid>
             </Grid>
-            <Grid
-              container
-              spacing={2}
-              sx={(theme) => ({
-                [theme.breakpoints.up("md")]: {
-                  flexDirection: "row",
-                },
-                [theme.breakpoints.down("md")]: {
-                  flexDirection: "column",
-                },
-              })}
-            >
+            <Grid container spacing={2} className={classes.inputGroup}>
               <Grid item xs>
                 <TextField
                   label="Søknadslink"
@@ -219,17 +211,7 @@ const ListingForm: React.FC<{
             <Typography variant="h5" component="h2">
               Opptaksprosessen
             </Typography>
-            <Grid
-              container
-              sx={(theme) => ({
-                [theme.breakpoints.up("md")]: {
-                  flexDirection: "row",
-                },
-                [theme.breakpoints.down("md")]: {
-                  flexDirection: "column",
-                },
-              })}
-            >
+            <Grid container className={classes.inputGroup}>
               <Grid item xs>
                 <FormControlLabel
                   control={

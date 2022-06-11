@@ -1,8 +1,8 @@
 import { Organization } from "@interfaces/organizations";
-import { Button, ButtonGroup, Grid, TextField, Typography, CircularProgress } from "@mui/material";
+import { Button, ButtonGroup, Grid, TextField, Typography, CircularProgress } from "@material-ui/core";
 import { useState } from "react";
 import { useLazyQuery } from "@apollo/client";
-import { GetApp } from "@mui/icons-material";
+import GetAppIcon from "@material-ui/icons/GetApp";
 import { QUERY_ATTENDEE_REPORTS, QUERY_ATTENDEE_REPORT_ORG } from "@graphql/events/queries";
 import { promptDownloadFromPayload } from "@utils/exports";
 
@@ -24,7 +24,7 @@ const EventsExport: React.FC<Props> = ({ organization }) => {
   const wrapDownloadButtonReportOrg = (orgId: string, filetype: string) => {
     return (
       <Button
-        startIcon={<GetApp fontSize="small" />}
+        startIcon={<GetAppIcon fontSize="small" />}
         onClick={() => getAttendeeReportOrg({ variables: { orgId: orgId, filetype: filetype } })}
       >
         {filetype}
@@ -39,7 +39,7 @@ const EventsExport: React.FC<Props> = ({ organization }) => {
   const wrapDownloadButtonReports = (filetype: string) => {
     return (
       <Button
-        startIcon={<GetApp fontSize="small" />}
+        startIcon={<GetAppIcon fontSize="small" />}
         disabled
         onClick={() => {
           return getAttendeeReports({ variables: { eventIds: selectedEvents, filetype: filetype } });

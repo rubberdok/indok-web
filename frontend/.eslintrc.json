@@ -20,13 +20,7 @@
     "prettier/prettier": ["error", {}, { "usePrettierrc": true }],
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/ban-ts-ignore": "off",
-    "@typescript-eslint/no-explicit-any": "off",
-    "no-restricted-imports": [
-      "error",
-      {
-        "patterns": ["@mui/*/*/*", "!@mui/material/test-utils/*"]
-      }
-    ]
+    "@typescript-eslint/no-explicit-any": "off"
   },
   "settings": {
     "react": {

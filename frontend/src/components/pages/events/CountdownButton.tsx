@@ -1,5 +1,4 @@
-import { LoadingButton } from "@mui/lab";
-import { Box } from "@mui/material";
+import { Button, CircularProgress, makeStyles } from "@material-ui/core";
 import dayjs, { Dayjs } from "dayjs";
 import nb from "dayjs/locale/nb";
 import timezone from "dayjs/plugin/timezone";
@@ -25,6 +24,20 @@ const calculateTimeLeft = (countdownTime: string, now: Dayjs): Record<string, nu
 
   return {};
 };
+
+const useStyles = makeStyles(() => ({
+  buttonLoading: {
+    color: "background",
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    marginTop: -12,
+    marginLeft: -12,
+  },
+  positionLeft: {
+    float: "left",
+  },
+}));
 
 interface Props {
   countDownDate: string;
@@ -64,6 +77,7 @@ const CountdownButton: React.FC<Props> = ({
 }) => {
   const [now, setNow] = useState(dayjs(currentTime));
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft(countDownDate, now));
+  const classes = useStyles();
 
   useEffect(() => {
     // Update timeLeft and now (current time) each second
@@ -115,16 +129,13 @@ const CountdownButton: React.FC<Props> = ({
   };
 
   return (
-    <Box sx={{ float: "left" }}>
-      <LoadingButton
-        fullWidth
-        sx={{ minWidth: (theme) => theme.spacing(30) }}
+    <div className={classes.positionLeft}>
+      <Button
         size="large"
-        variant={currentTimeParts.length !== 0 ? "text" : "contained"}
+        variant="contained"
         color={isSignedUp || isOnWaitingList ? "inherit" : "primary"}
         onClick={onClick}
         disabled={currentTimeParts.length !== 0 || disabled}
-        loading={loading}
       >
         {currentTimeParts.length !== 0
           ? getCurrentTimeLeft(currentTimeParts)
@@ -135,8 +146,9 @@ const CountdownButton: React.FC<Props> = ({
           : isFull
           ? "Meld på venteliste"
           : "Meld på"}
-      </LoadingButton>
-    </Box>
+      </Button>
+      {loading && <CircularProgress size={24} className={classes.buttonLoading} />}
+    </div>
   );
 };
 

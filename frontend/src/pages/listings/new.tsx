@@ -1,16 +1,9 @@
-import Layout, { RootStyle } from "@layouts/Layout";
+import { NextPage } from "next";
 import NewListing from "@components/pages/listings/organization/NewListing";
-import { NextPageWithLayout } from "../_app";
 
 /**
  * Page for creating new listings, navigates to the newly created listing upon completion.
  */
-const NewListingPage: NextPageWithLayout = () => <NewListing />;
-
-NewListingPage.getLayout = (page) => (
-  <Layout>
-    <RootStyle>{page}</RootStyle>
-  </Layout>
-);
+const NewListingPage: NextPage = () => <NewListing />;
 
 export default NewListingPage;

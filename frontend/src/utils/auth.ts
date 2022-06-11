@@ -1,5 +1,5 @@
 import { config } from "./config";
-import { toQuery } from "./helpers";
+import { generateQueryString } from "./helpers";
 
 const DATAPORTEN_SCOPES = [
   "openid",
@@ -12,12 +12,12 @@ const DATAPORTEN_SCOPES = [
 ];
 
 export const generateFeideLoginUrl = (redirect?: string) => {
-  const queryString = toQuery({
+  const queryString = generateQueryString({
     client_id: config.DATAPORTEN_ID,
     state: redirect,
     redirect_uri: config.DATAPORTEN_REDIRECT_URI,
     response_type: "code",
     scope: DATAPORTEN_SCOPES.join(" "),
   });
-  return config.FEIDE_AUTHORIZATION_URI + queryString;
+  return "https://auth.dataporten.no/oauth/authorization" + queryString;
 };

@@ -1,4 +1,4 @@
-import { Grid } from "@mui/material";
+import { Grid } from "@material-ui/core";
 import React, { ReactElement } from "react";
 
 interface Props {

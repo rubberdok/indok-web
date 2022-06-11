@@ -1,14 +1,15 @@
-import useBookingSemester from "@hooks/cabins/useBookingSemester";
-import { NavigateBefore, NavigateNext } from "@mui/icons-material";
-import { Hidden, IconButton, Stack, Typography } from "@mui/material";
-import { dateInBookingSemester } from "@utils/cabins";
+import { IconButton, Grid, Typography, Divider, Hidden } from "@material-ui/core";
 import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
-import CalendarDay from "./CalendarDay";
-import CalendarRow from "./CalendarRow";
-import CalendarTable from "./CalendarTable";
 import { DATE_FORMAT } from "./constants";
+import NavigateNextIcon from "@material-ui/icons/NavigateNext";
+import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore";
 import { getDateRange } from "./helpers";
+import CalendarTable from "./CalendarTable";
+import CalendarRow from "./CalendarRow";
+import CalendarDay from "./CalendarDay";
+import { dateInBookingSemester } from "@utils/cabins";
+import useBookingSemester from "@hooks/cabins/useBookingSemester";
 
 interface CalendarProps {
   disabledDates?: string[];
@@ -177,54 +178,36 @@ const Calendar: React.FC<CalendarProps> = ({
   };
 
   return (
-    <Stack spacing={2} width={1} justifyContent="center">
-      <Stack direction="row" width={1} justifyContent="space-between" alignItems="center">
-        <Hidden lgDown>
-          <IconButton onClick={() => onChangeMonth(-1)} size="large">
-            <NavigateBefore />
+    <Grid container direction="column" spacing={5}>
+      <Grid item container alignItems="center" justifyContent="space-between">
+        <Hidden>
+          <IconButton onClick={() => onChangeMonth(-1)}>
+            <NavigateBeforeIcon />
           </IconButton>
         </Hidden>
         <Typography variant="h5" align="center">
           {title}
         </Typography>
-        <Hidden lgDown>
-          <IconButton onClick={() => onChangeMonth(1)} size="large">
-            <NavigateNext />
+        <Hidden>
+          <IconButton onClick={() => onChangeMonth(1)}>
+            <NavigateNextIcon />
           </IconButton>
         </Hidden>
-      </Stack>
-      <Stack spacing={5} direction="row" alignItems="flex-start">
-        <CalendarTable month={selectedMonth} onChangeMonth={onChangeMonth}>
-          {getRows(selectedMonth).map((row, index) => (
-            <CalendarRow key={index} index={index}>
-              {row.map((date) => (
-                <CalendarDay
-                  value={date.date()}
-                  isFromDate={selectedFromDay ? date.isSame(selectedFromDay, "day") : false}
-                  isToDate={selectedToDay ? date.isSame(selectedToDay, "day") : false}
-                  onClick={() => handleDateClicked(date, selectedMonth)}
-                  isDisabled={isDisabled(date)}
-                  isHidden={isHidden(date, selectedMonth)}
-                  isInRange={range.includes(date.format(DATE_FORMAT))}
-                  isInvalidRange={!isRangeValid}
-                  key={date.format(DATE_FORMAT)}
-                />
-              ))}
-            </CalendarRow>
-          ))}
-        </CalendarTable>
-        <Hidden lgDown>
-          <CalendarTable month={selectedMonth.add(1, "month")} onChangeMonth={onChangeMonth}>
-            {getRows(selectedMonth.add(1, "month")).map((row, index) => (
+      </Grid>
+      <Divider variant="middle" />
+      <Grid item container spacing={5}>
+        <Grid item xs>
+          <CalendarTable month={selectedMonth} onChangeMonth={onChangeMonth}>
+            {getRows(selectedMonth).map((row, index) => (
               <CalendarRow key={index} index={index}>
                 {row.map((date) => (
                   <CalendarDay
                     value={date.date()}
                     isFromDate={selectedFromDay ? date.isSame(selectedFromDay, "day") : false}
                     isToDate={selectedToDay ? date.isSame(selectedToDay, "day") : false}
-                    onClick={() => handleDateClicked(date, selectedMonth.add(1, "month"))}
+                    onClick={() => handleDateClicked(date, selectedMonth)}
                     isDisabled={isDisabled(date)}
-                    isHidden={isHidden(date, selectedMonth.add(1, "month"))}
+                    isHidden={isHidden(date, selectedMonth)}
                     isInRange={range.includes(date.format(DATE_FORMAT))}
                     isInvalidRange={!isRangeValid}
                     key={date.format(DATE_FORMAT)}
@@ -233,9 +216,34 @@ const Calendar: React.FC<CalendarProps> = ({
               </CalendarRow>
             ))}
           </CalendarTable>
+        </Grid>
+        <Divider variant="fullWidth" orientation="vertical" />
+        <Hidden mdDown>
+          <Grid item xs>
+            <CalendarTable month={selectedMonth.add(1, "month")} onChangeMonth={onChangeMonth}>
+              {getRows(selectedMonth.add(1, "month")).map((row, index) => (
+                <CalendarRow key={index} index={index}>
+                  {row.map((date) => (
+                    <CalendarDay
+                      value={date.date()}
+                      isFromDate={selectedFromDay ? date.isSame(selectedFromDay, "day") : false}
+                      isToDate={selectedToDay ? date.isSame(selectedToDay, "day") : false}
+                      onClick={() => handleDateClicked(date, selectedMonth.add(1, "month"))}
+                      isDisabled={isDisabled(date)}
+                      isHidden={isHidden(date, selectedMonth.add(1, "month"))}
+                      isInRange={range.includes(date.format(DATE_FORMAT))}
+                      isInvalidRange={!isRangeValid}
+                      key={date.format(DATE_FORMAT)}
+                    />
+                  ))}
+                </CalendarRow>
+              ))}
+            </CalendarTable>
+          </Grid>
         </Hidden>
-      </Stack>
-    </Stack>
+      </Grid>
+      <Divider variant="middle" />
+    </Grid>
   );
 };
 

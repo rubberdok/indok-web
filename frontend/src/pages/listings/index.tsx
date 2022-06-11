@@ -1,12 +1,12 @@
-import Layout, { RootStyle } from "@layouts/Layout";
+import Layout from "@components/Layout";
 import Listings from "@components/pages/listings/index/Listings";
 import Title from "@components/Title";
-import { Container } from "@mui/material";
+import { Container } from "@material-ui/core";
+import { NextPage } from "next";
 import { useRouter } from "next/router";
-import { NextPageWithLayout } from "../_app";
 
 // page to show all listings open to users
-const ListingsPage: NextPageWithLayout = () => {
+const ListingsPage: NextPage = () => {
   const router = useRouter();
 
   const reload = () => {
@@ -14,24 +14,13 @@ const ListingsPage: NextPageWithLayout = () => {
   };
   // renders a ListingItem for each listing
   return (
-    <>
-      <Title
-        title="Verv"
-        breadcrumbs={[
-          { name: "Hjem", href: "/" },
-          { name: "Verv", href: "/listings" },
-        ]}
-      />
+    <Layout>
+      <Title>Verv</Title>
       <Container>
         <Listings reload={reload} />
       </Container>
-    </>
+    </Layout>
   );
 };
 
-ListingsPage.getLayout = (page: React.ReactElement) => (
-  <Layout>
-    <RootStyle>{page}</RootStyle>
-  </Layout>
-);
 export default ListingsPage;

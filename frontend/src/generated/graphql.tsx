@@ -554,11 +554,6 @@ export type ListingType = {
   viewCount: Scalars["Int"];
 };
 
-export type Logout = {
-  __typename?: "Logout";
-  idToken?: Maybe<Scalars["String"]>;
-};
-
 export type MembershipInput = {
   groupId?: InputMaybe<Scalars["ID"]>;
   organizationId?: InputMaybe<Scalars["ID"]>;
@@ -630,7 +625,6 @@ export type Mutations = {
    */
   eventSignUp?: Maybe<EventSignUp>;
   initiateOrder?: Maybe<InitiateOrder>;
-  logout?: Maybe<Logout>;
   /** Sends email to the user or an admin (or both) */
   sendEmail?: Maybe<SendEmail>;
   /** Send an email to all users signed up to an event */
@@ -979,7 +973,7 @@ export type Queries = {
   category?: Maybe<CategoryType>;
   defaultEvents?: Maybe<Array<Maybe<EventType>>>;
   event?: Maybe<EventType>;
-  eventFilteredOrganizations?: Maybe<Array<OrganizationType>>;
+  eventFilteredOrganizations?: Maybe<Array<Maybe<OrganizationType>>>;
   featuredArchive: Array<ArchiveDocumentType>;
   form?: Maybe<FormType>;
   forms?: Maybe<Array<Maybe<FormType>>>;
@@ -1408,7 +1402,7 @@ export type UserType = {
 };
 
 export type ArchiveByTypesQueryVariables = Exact<{
-  documentTypes: Array<InputMaybe<Scalars["String"]>> | InputMaybe<Scalars["String"]>;
+  document_types: Array<InputMaybe<Scalars["String"]>> | InputMaybe<Scalars["String"]>;
   year?: InputMaybe<Scalars["Int"]>;
   names?: InputMaybe<Scalars["String"]>;
 }>;
@@ -1546,26 +1540,6 @@ export type ActiveBookingResponsibleQuery = {
   } | null;
 };
 
-export type EventFilteredOrganizationsQueryVariables = Exact<{ [key: string]: never }>;
-
-export type EventFilteredOrganizationsQuery = {
-  __typename?: "Queries";
-  eventFilteredOrganizations?: Array<{
-    __typename?: "OrganizationType";
-    id: string;
-    name: string;
-    color?: string | null;
-    children: Array<{ __typename?: "OrganizationType"; id: string; name: string }>;
-  }> | null;
-};
-
-export type GetCategoriesQueryVariables = Exact<{ [key: string]: never }>;
-
-export type GetCategoriesQuery = {
-  __typename?: "Queries";
-  allCategories?: Array<{ __typename?: "CategoryType"; id: string; name: string } | null> | null;
-};
-
 export type ListingFragment = {
   __typename?: "ListingType";
   id: string;
@@ -1622,56 +1596,6 @@ export type ListingQuery = {
   } | null;
 };
 
-export type HasPermissionQueryVariables = Exact<{
-  permission: Scalars["String"];
-}>;
-
-export type HasPermissionQuery = { __typename?: "Queries"; hasPermission?: boolean | null };
-
-export type UserFieldsFragment = {
-  __typename?: "UserType";
-  id: string;
-  feideEmail: string;
-  email: string;
-  username: string;
-  firstName: string;
-  lastName: string;
-  dateJoined: any;
-  graduationYear?: number | null;
-  gradeYear?: number | null;
-  allergies?: string | null;
-  phoneNumber: string;
-  firstLogin: boolean;
-};
-
-export type LogoutMutationVariables = Exact<{ [key: string]: never }>;
-
-export type LogoutMutation = {
-  __typename?: "Mutations";
-  logout?: { __typename?: "Logout"; idToken?: string | null } | null;
-};
-
-export type UserInfoQueryVariables = Exact<{ [key: string]: never }>;
-
-export type UserInfoQuery = {
-  __typename?: "Queries";
-  user?: {
-    __typename?: "UserType";
-    id: string;
-    feideEmail: string;
-    email: string;
-    username: string;
-    firstName: string;
-    lastName: string;
-    dateJoined: any;
-    graduationYear?: number | null;
-    gradeYear?: number | null;
-    allergies?: string | null;
-    phoneNumber: string;
-    firstLogin: boolean;
-  } | null;
-};
-
 export const ListingFragmentDoc = {
   kind: "Document",
   definitions: [
@@ -1713,33 +1637,6 @@ export const ListingFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<ListingFragment, unknown>;
-export const UserFieldsFragmentDoc = {
-  kind: "Document",
-  definitions: [
-    {
-      kind: "FragmentDefinition",
-      name: { kind: "Name", value: "UserFields" },
-      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "UserType" } },
-      selectionSet: {
-        kind: "SelectionSet",
-        selections: [
-          { kind: "Field", name: { kind: "Name", value: "id" } },
-          { kind: "Field", name: { kind: "Name", value: "feideEmail" } },
-          { kind: "Field", name: { kind: "Name", value: "email" } },
-          { kind: "Field", name: { kind: "Name", value: "username" } },
-          { kind: "Field", name: { kind: "Name", value: "firstName" } },
-          { kind: "Field", name: { kind: "Name", value: "lastName" } },
-          { kind: "Field", name: { kind: "Name", value: "dateJoined" } },
-          { kind: "Field", name: { kind: "Name", value: "graduationYear" } },
-          { kind: "Field", name: { kind: "Name", value: "gradeYear" } },
-          { kind: "Field", name: { kind: "Name", value: "allergies" } },
-          { kind: "Field", name: { kind: "Name", value: "phoneNumber" } },
-          { kind: "Field", name: { kind: "Name", value: "firstLogin" } },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<UserFieldsFragment, unknown>;
 export const ArchiveByTypesDocument = {
   kind: "Document",
   definitions: [
@@ -1750,7 +1647,7 @@ export const ArchiveByTypesDocument = {
       variableDefinitions: [
         {
           kind: "VariableDefinition",
-          variable: { kind: "Variable", name: { kind: "Name", value: "documentTypes" } },
+          variable: { kind: "Variable", name: { kind: "Name", value: "document_types" } },
           type: {
             kind: "NonNullType",
             type: { kind: "ListType", type: { kind: "NamedType", name: { kind: "Name", value: "String" } } },
@@ -1777,7 +1674,7 @@ export const ArchiveByTypesDocument = {
               {
                 kind: "Argument",
                 name: { kind: "Name", value: "typeDoc" },
-                value: { kind: "Variable", name: { kind: "Name", value: "documentTypes" } },
+                value: { kind: "Variable", name: { kind: "Name", value: "document_types" } },
               },
               {
                 kind: "Argument",
@@ -2170,70 +2067,6 @@ export const ActiveBookingResponsibleDocument = {
     },
   ],
 } as unknown as DocumentNode<ActiveBookingResponsibleQuery, ActiveBookingResponsibleQueryVariables>;
-export const EventFilteredOrganizationsDocument = {
-  kind: "Document",
-  definitions: [
-    {
-      kind: "OperationDefinition",
-      operation: "query",
-      name: { kind: "Name", value: "eventFilteredOrganizations" },
-      selectionSet: {
-        kind: "SelectionSet",
-        selections: [
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "eventFilteredOrganizations" },
-            selectionSet: {
-              kind: "SelectionSet",
-              selections: [
-                { kind: "Field", name: { kind: "Name", value: "id" } },
-                { kind: "Field", name: { kind: "Name", value: "name" } },
-                { kind: "Field", name: { kind: "Name", value: "color" } },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "children" },
-                  selectionSet: {
-                    kind: "SelectionSet",
-                    selections: [
-                      { kind: "Field", name: { kind: "Name", value: "id" } },
-                      { kind: "Field", name: { kind: "Name", value: "name" } },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<EventFilteredOrganizationsQuery, EventFilteredOrganizationsQueryVariables>;
-export const GetCategoriesDocument = {
-  kind: "Document",
-  definitions: [
-    {
-      kind: "OperationDefinition",
-      operation: "query",
-      name: { kind: "Name", value: "getCategories" },
-      selectionSet: {
-        kind: "SelectionSet",
-        selections: [
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "allCategories" },
-            selectionSet: {
-              kind: "SelectionSet",
-              selections: [
-                { kind: "Field", name: { kind: "Name", value: "id" } },
-                { kind: "Field", name: { kind: "Name", value: "name" } },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<GetCategoriesQuery, GetCategoriesQueryVariables>;
 export const ListingDocument = {
   kind: "Document",
   definitions: [
@@ -2282,83 +2115,3 @@ export const ListingDocument = {
     ...ListingFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<ListingQuery, ListingQueryVariables>;
-export const HasPermissionDocument = {
-  kind: "Document",
-  definitions: [
-    {
-      kind: "OperationDefinition",
-      operation: "query",
-      name: { kind: "Name", value: "hasPermission" },
-      variableDefinitions: [
-        {
-          kind: "VariableDefinition",
-          variable: { kind: "Variable", name: { kind: "Name", value: "permission" } },
-          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "String" } } },
-        },
-      ],
-      selectionSet: {
-        kind: "SelectionSet",
-        selections: [
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "hasPermission" },
-            arguments: [
-              {
-                kind: "Argument",
-                name: { kind: "Name", value: "permission" },
-                value: { kind: "Variable", name: { kind: "Name", value: "permission" } },
-              },
-            ],
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<HasPermissionQuery, HasPermissionQueryVariables>;
-export const LogoutDocument = {
-  kind: "Document",
-  definitions: [
-    {
-      kind: "OperationDefinition",
-      operation: "mutation",
-      name: { kind: "Name", value: "logout" },
-      selectionSet: {
-        kind: "SelectionSet",
-        selections: [
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "logout" },
-            selectionSet: {
-              kind: "SelectionSet",
-              selections: [{ kind: "Field", name: { kind: "Name", value: "idToken" } }],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<LogoutMutation, LogoutMutationVariables>;
-export const UserInfoDocument = {
-  kind: "Document",
-  definitions: [
-    {
-      kind: "OperationDefinition",
-      operation: "query",
-      name: { kind: "Name", value: "userInfo" },
-      selectionSet: {
-        kind: "SelectionSet",
-        selections: [
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "user" },
-            selectionSet: {
-              kind: "SelectionSet",
-              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "UserFields" } }],
-            },
-          },
-        ],
-      },
-    },
-    ...UserFieldsFragmentDoc.definitions,
-  ],
-} as unknown as DocumentNode<UserInfoQuery, UserInfoQueryVariables>;

@@ -2,22 +2,22 @@ import { useMutation } from "@apollo/client";
 import ProfileSkeleton from "@components/pages/profile/ProfileSkeleton";
 import { AUTHENTICATE } from "@graphql/users/mutations";
 import { User } from "@interfaces/users";
-import Layout from "@layouts/Layout";
-import { Button, Container, Grid, Typography } from "@mui/material";
+import { Button, Container, Grid, Typography, useTheme } from "@material-ui/core";
+import { NextPage } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import Bug from "public/illustrations/Bug.svg";
 import React, { useEffect } from "react";
-import { NextPageWithLayout } from "./_app";
 
 type AuthUser = {
   user: User;
   idToken: string | null;
 };
 
-const AuthCallbackPage: NextPageWithLayout = () => {
+const AuthCallbackPage: NextPage = () => {
   const router = useRouter();
+  const theme = useTheme();
 
   const { code, state } = router.query;
   const [authUser, { loading, error }] = useMutation<{ authUser: AuthUser }>(AUTHENTICATE, {
@@ -51,7 +51,7 @@ const AuthCallbackPage: NextPageWithLayout = () => {
           spacing={2}
           justifyContent="center"
           alignItems="center"
-          sx={{ mt: (theme) => theme.spacing(4) }}
+          style={{ marginTop: theme.spacing(4) }}
         >
           <Grid item md={6}>
             <Typography variant="h2" component="h1">
@@ -74,11 +74,5 @@ const AuthCallbackPage: NextPageWithLayout = () => {
     </Container>
   );
 };
-
-AuthCallbackPage.getLayout = (page: React.ReactElement) => (
-  <Layout simpleHeader simpleFooter>
-    {page}
-  </Layout>
-);
 
 export default AuthCallbackPage;

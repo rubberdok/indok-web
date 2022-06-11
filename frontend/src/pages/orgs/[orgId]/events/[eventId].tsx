@@ -1,16 +1,13 @@
 import { useMutation, useQuery } from "@apollo/client";
+import Layout from "@components/Layout";
 import AttendeeExport from "@components/pages/events/AttendeeExport";
 import EmailForm from "@components/pages/events/email/EmailForm";
 import EditEvent from "@components/pages/events/EventEditor";
-import OrganizationEventHero from "@components/pages/organization/OrganizationEventHero";
 import { ADMIN_EVENT_SIGN_OFF } from "@graphql/events/mutations";
 import { ADMIN_GET_EVENT } from "@graphql/events/queries";
 import { Event, SignUp } from "@interfaces/events";
 import { HeaderValuePair } from "@interfaces/utils";
-import Layout from "@layouts/Layout";
-import { Check, Close, Delete, Edit } from "@mui/icons-material";
 import {
-  Alert,
   Box,
   Button,
   Card,
@@ -18,11 +15,11 @@ import {
   CardContent,
   CardHeader,
   CircularProgress,
-  Container,
   Grid,
   IconButton,
+  List,
+  ListItem,
   Snackbar,
-  Stack,
   Table,
   TableBody,
   TableCell,
@@ -31,12 +28,14 @@ import {
   TableRow,
   Tooltip,
   Typography,
-} from "@mui/material";
-import { styled } from "@mui/material/styles";
+} from "@material-ui/core";
+import { Check, Close, Edit } from "@material-ui/icons";
+import DeleteIcon from "@material-ui/icons/Delete";
+import { Alert } from "@material-ui/lab";
 import dayjs from "dayjs";
+import { NextPage } from "next";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
-import { NextPageWithLayout } from "src/pages/_app";
 
 const signUpFields: HeaderValuePair<SignUp>[] = [
   { header: "Navn", field: "user" },
@@ -68,11 +67,7 @@ const dateEventFields: HeaderValuePair<Event>[] = [
  * viewing and editing users signed up (or on the waiting list) for an event
  */
 
-const RootStyle = styled("div")(({ theme }) => ({
-  margin: theme.spacing(6, 0),
-}));
-
-const EventAdminPage: NextPageWithLayout = () => {
+const EventAdminPage: NextPage = () => {
   const router = useRouter();
   const { eventId } = router.query;
   const eventNumberID = parseInt(eventId as string);
@@ -98,12 +93,14 @@ const EventAdminPage: NextPageWithLayout = () => {
     }
     const val = typeof value === "boolean" ? (value ? "ja" : "nei") : value;
     return (
-      <Typography key={`${label}-${val}`}>
-        <Box fontWeight="bold" display="inline">
-          {`${label}: `}
-        </Box>
-        {val}
-      </Typography>
+      <ListItem key={`${label}-${val}`}>
+        <Typography>
+          <Box fontWeight={1000} m={1} display="inline">
+            {`${label}: `}
+          </Box>
+          {val}
+        </Typography>
+      </ListItem>
     );
   };
 
@@ -136,141 +133,142 @@ const EventAdminPage: NextPageWithLayout = () => {
   };
 
   return (
-    <>
+    <Layout>
       {data?.event ? (
-        <>
-          <OrganizationEventHero event={data.event} />
-          <RootStyle>
-            <Container>
-              {openEditEvent && (
-                <EditEvent open={openEditEvent} onClose={() => setOpenEditEvent(false)} event={data.event} />
-              )}
-              <Grid container direction="column" spacing={4}>
-                <Grid item container spacing={5}>
-                  <Grid item xs={4}>
-                    <Card>
-                      <CardHeader title="Generell informasjon" />
-                      <CardContent>
-                        <Stack spacing={2}>
-                          {stringEventFields.map((headerPair: HeaderValuePair<Event>) =>
-                            renderInfo(headerPair.header, data.event[headerPair.field] as string)
-                          )}
-                          {dateEventFields.map((headerPair: HeaderValuePair<Event>) =>
-                            renderInfo(
-                              headerPair.header,
-                              data.event[headerPair.field]
-                                ? dayjs(data.event[headerPair.field] as string).format("HH:mm DD-MM-YYYY")
-                                : ""
-                            )
-                          )}
-                          <Button variant="contained" startIcon={<Edit />} onClick={() => setOpenEditEvent(true)}>
-                            Rediger
-                          </Button>
-                        </Stack>
-                      </CardContent>
-                    </Card>
-                  </Grid>
-                  <Grid item xs={8}>
-                    <Card>
-                      <CardHeader title="Påmeldte" />
-                      <CardActions>
-                        {eventId ? <EmailForm eventId={eventId} /> : <CircularProgress color="primary" />}
-                        <AttendeeExport eventId={eventNumberID} />
-                      </CardActions>
-                      <CardContent>
-                        {data.event?.usersAttending?.length !== 0 ? (
-                          <TableContainer style={{ maxHeight: 600 }}>
-                            <Table>
-                              <TableHead>
-                                <TableRow>
-                                  {signUpFields.map((field) => (
-                                    <TableCell key={`user-header-${field.header}`}>{field.header}</TableCell>
-                                  ))}
-                                  {data.event.product && <TableCell>Betalt?</TableCell>}
-                                  <TableCell key={`user-header-delete`} />
-                                </TableRow>
-                              </TableHead>
-                              <TableBody>
-                                {data.event?.usersAttending?.map((signUp: SignUp) => (
-                                  <TableRow key={`user-row-${signUp.user.id}`}>
-                                    {signUpFields.map((field) => (
-                                      <TableCell key={`user-${signUp.user.id}-cell--${field.field}`}>
-                                        <CellContent signUp={signUp} field={field} />
-                                      </TableCell>
-                                    ))}
-                                    {data.event.product && (
-                                      <TableCell>
-                                        {signUp.hasBoughtTicket ? <Check color="primary" /> : <Close color="error" />}
-                                      </TableCell>
-                                    )}
-                                    <TableCell>
-                                      <Tooltip title="Fjern påmelding" arrow>
-                                        {signOffLoading ? (
-                                          <CircularProgress />
-                                        ) : (
-                                          <IconButton
-                                            aria-label="delete"
-                                            onClick={() => handleDeleteSignUp(signUp.user.id)}
-                                            size="large"
-                                          >
-                                            <Delete fontSize="small" />
-                                          </IconButton>
-                                        )}
-                                      </Tooltip>
-                                    </TableCell>
-                                  </TableRow>
-                                ))}
-                              </TableBody>
-                            </Table>
-                          </TableContainer>
-                        ) : (
-                          <Typography align="center" variant="body1">
-                            Ingen påmeldte
-                          </Typography>
-                        )}
-                      </CardContent>
-                    </Card>
-                  </Grid>
-                  <Grid item xs>
-                    <Card>
-                      <CardHeader title="Venteliste" />
-                      <CardContent>
-                        {data.event?.usersOnWaitingList?.length !== 0 ? (
-                          <TableContainer style={{ maxHeight: 600 }}>
-                            <Table>
-                              <TableHead>
-                                <TableRow>
-                                  {signUpFields.map((field) => (
-                                    <TableCell key={`user-header-${field.header}`}>{field.header}</TableCell>
-                                  ))}
-                                </TableRow>
-                              </TableHead>
-                              <TableBody>
-                                {data.event?.usersOnWaitingList?.map((signUp: SignUp) => (
-                                  <TableRow key={`user-row-${signUp.user.id}`}>
-                                    {signUpFields.map((field) => (
-                                      <TableCell key={`user-${signUp.user.id}-cell--${field.field}`}>
-                                        <CellContent signUp={signUp} field={field} />
-                                      </TableCell>
-                                    ))}
-                                  </TableRow>
-                                ))}
-                              </TableBody>
-                            </Table>
-                          </TableContainer>
-                        ) : (
-                          <Typography align="center" variant="body1">
-                            Ingen på venteliste
-                          </Typography>
-                        )}
-                      </CardContent>
-                    </Card>
-                  </Grid>
-                </Grid>
+        <Box m={10}>
+          {openEditEvent && (
+            <EditEvent open={openEditEvent} onClose={() => setOpenEditEvent(false)} event={data.event} />
+          )}
+          <Grid container direction="column" spacing={4}>
+            <Grid item>
+              <Typography variant="h1" align="center">
+                {data.event.title}
+              </Typography>
+            </Grid>
+            <Grid item container spacing={5}>
+              <Grid item xs={4}>
+                <Card variant="outlined">
+                  <CardHeader title="Generell informasjon" />
+                  <CardActions>
+                    <Button startIcon={<Edit />} onClick={() => setOpenEditEvent(true)}>
+                      Rediger
+                    </Button>
+                  </CardActions>
+                  <CardContent>
+                    <List>
+                      {stringEventFields.map((headerPair: HeaderValuePair<Event>) =>
+                        renderInfo(headerPair.header, data.event[headerPair.field] as string)
+                      )}
+                      {dateEventFields.map((headerPair: HeaderValuePair<Event>) =>
+                        renderInfo(
+                          headerPair.header,
+                          data.event[headerPair.field]
+                            ? dayjs(data.event[headerPair.field] as string).format("HH:mm DD-MM-YYYY")
+                            : ""
+                        )
+                      )}
+                    </List>
+                  </CardContent>
+                </Card>
               </Grid>
-            </Container>
-          </RootStyle>
-        </>
+              <Grid item xs={8}>
+                <Card variant="outlined">
+                  <CardHeader title="Påmeldte" />
+                  <CardActions>
+                    {eventId ? <EmailForm eventId={eventId} /> : <CircularProgress color="primary" />}
+                    <AttendeeExport eventId={eventNumberID} />
+                  </CardActions>
+                  <CardContent>
+                    {data.event?.usersAttending?.length !== 0 ? (
+                      <TableContainer style={{ maxHeight: 600 }}>
+                        <Table>
+                          <TableHead>
+                            <TableRow>
+                              {signUpFields.map((field) => (
+                                <TableCell key={`user-header-${field.header}`}>{field.header}</TableCell>
+                              ))}
+                              {data.event.product && <TableCell>Betalt?</TableCell>}
+                              <TableCell key={`user-header-delete`} />
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {data.event?.usersAttending?.map((signUp: SignUp) => (
+                              <TableRow key={`user-row-${signUp.user.id}`}>
+                                {signUpFields.map((field) => (
+                                  <TableCell key={`user-${signUp.user.id}-cell--${field.field}`}>
+                                    <CellContent signUp={signUp} field={field} />
+                                  </TableCell>
+                                ))}
+                                {data.event.product && (
+                                  <TableCell>
+                                    {signUp.hasBoughtTicket ? <Check color="primary" /> : <Close color="error" />}
+                                  </TableCell>
+                                )}
+                                <TableCell>
+                                  <Tooltip title="Fjern påmelding" arrow>
+                                    {signOffLoading ? (
+                                      <CircularProgress />
+                                    ) : (
+                                      <IconButton
+                                        aria-label="delete"
+                                        onClick={() => handleDeleteSignUp(signUp.user.id)}
+                                      >
+                                        <DeleteIcon fontSize="small" />
+                                      </IconButton>
+                                    )}
+                                  </Tooltip>
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                    ) : (
+                      <Typography align="center" variant="body1">
+                        Ingen påmeldte
+                      </Typography>
+                    )}
+                  </CardContent>
+                </Card>
+              </Grid>
+              <Grid item xs>
+                <Card variant="outlined">
+                  <CardHeader title="Venteliste" />
+                  <CardContent>
+                    {data.event?.usersOnWaitingList?.length !== 0 ? (
+                      <TableContainer style={{ maxHeight: 600 }}>
+                        <Table>
+                          <TableHead>
+                            <TableRow>
+                              {signUpFields.map((field) => (
+                                <TableCell key={`user-header-${field.header}`}>{field.header}</TableCell>
+                              ))}
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {data.event?.usersOnWaitingList?.map((signUp: SignUp) => (
+                              <TableRow key={`user-row-${signUp.user.id}`}>
+                                {signUpFields.map((field) => (
+                                  <TableCell key={`user-${signUp.user.id}-cell--${field.field}`}>
+                                    <CellContent signUp={signUp} field={field} />
+                                  </TableCell>
+                                ))}
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                    ) : (
+                      <Typography align="center" variant="body1">
+                        Ingen på venteliste
+                      </Typography>
+                    )}
+                  </CardContent>
+                </Card>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Box>
       ) : null}
       <Snackbar
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
@@ -292,10 +290,8 @@ const EventAdminPage: NextPageWithLayout = () => {
           Avmelding fullført
         </Alert>
       </Snackbar>
-    </>
+    </Layout>
   );
 };
-
-EventAdminPage.getLayout = (page: React.ReactElement) => <Layout>{page}</Layout>;
 
 export default EventAdminPage;

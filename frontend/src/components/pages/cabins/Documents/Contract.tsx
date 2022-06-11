@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/client";
 import { QUERY_BOOKING_RESPONSIBLE } from "@graphql/cabins/queries";
 import { BookingResponsible, Cabin, ContactInfo, DatePick } from "@interfaces/cabins";
-import { Box, Divider, Grid, Typography } from "@mui/material";
+import { Box, Divider, Grid, Typography } from "@material-ui/core";
 import { convertDateFormat, toStringChosenCabins, calculatePrice } from "@utils/cabins";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -32,7 +32,7 @@ const Contract: React.FC<ContractProps> = ({ chosenCabins, contactInfo, datePick
     <Grid container>
       <Box m={2}>
         <Box display="flex" justifyContent="center" alignItems="center">
-          <Image alt="" src="/img/hyttestyret_logo.png" width={300} height={165} />
+          <Image alt="logo" src="/img/hyttestyret_logo.png" width={300} height={165} />
         </Box>
         <Typography variant="h2" align="center">
           Leiekontrakt
@@ -40,7 +40,7 @@ const Contract: React.FC<ContractProps> = ({ chosenCabins, contactInfo, datePick
         <Divider component="br" />
         <Typography variant="body2" component="span">
           På vegne av Foreningen for studenter ved Industriell Økonomi og Teknologiledelse er det i dag inngått følgende
-          leiekontrakt mellom Hytteforeningen og
+          leiekontrakt mellom Hyttestyret og
           <Box display="inline" fontWeight="fontWeightBold">
             {` ${contactInfo.firstName} ${contactInfo.lastName}`}.
           </Box>
@@ -131,7 +131,7 @@ const Contract: React.FC<ContractProps> = ({ chosenCabins, contactInfo, datePick
           Partene vedtar eiendommens verneting i alle tvister som måtte oppstå i forbindelse med avtalen.
         </Typography>
         <Typography variant="body2">
-          Hytteforeningen forbeholder seg retten til å kunne gjøre om på bookingen hvis det skulle oppstå uforutsette
+          Hyttestyret forbeholder seg retten til å kunne gjøre om på bookingen hvis det skulle oppstå uforutsette
           hendelser.
         </Typography>
         <Typography variant="body2">

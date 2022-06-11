@@ -1,46 +1,34 @@
-import { InputAdornment, OutlinedInput, Toolbar } from "@mui/material";
-import { styled } from "@mui/material/styles";
-import { MagnifyingGlass } from "phosphor-react";
+import { makeStyles } from "@material-ui/core";
+import { default as MuiSearchBar } from "material-ui-search-bar";
+import { debounce } from "ts-debounce";
 
 interface SearchBarProps {
   searchFilter: string;
-  handleSearchFilterChanged: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  handleSearchFilterChanged: (name: string) => void;
   handleSearchFilterCanceled: () => void;
 }
 
-const RootStyle = styled(Toolbar)(() => ({
-  height: 56,
-  display: "flex",
-  justifyContent: "space-between",
-  padding: 0,
-}));
-
-const SearchStyle = styled(OutlinedInput)(({ theme }) => ({
-  width: "100%",
-  transition: theme.transitions.create(["box-shadow", "width"], {
-    easing: theme.transitions.easing.easeInOut,
-    duration: theme.transitions.duration.shorter,
-  }),
-  "&.Mui-focused": { boxShadow: theme.customShadows.z8 },
-  "& fieldset": {
-    borderWidth: `1px !important`,
+const useStyles = makeStyles(() => ({
+  input: {
+    fontSize: "14px",
   },
 }));
 
-const SearchBar: React.FC<SearchBarProps> = ({ searchFilter, handleSearchFilterChanged }) => {
+const SearchBar: React.FC<SearchBarProps> = ({
+  searchFilter,
+  handleSearchFilterChanged,
+  handleSearchFilterCanceled,
+}) => {
+  const styles = useStyles();
+
   return (
-    <RootStyle>
-      <SearchStyle
-        value={searchFilter}
-        onChange={handleSearchFilterChanged}
-        placeholder="Søk etter dokumenter..."
-        startAdornment={
-          <InputAdornment position="start">
-            <MagnifyingGlass />
-          </InputAdornment>
-        }
-      />
-    </RootStyle>
+    <MuiSearchBar
+      value={searchFilter}
+      classes={styles}
+      onChange={debounce(handleSearchFilterChanged, 200)}
+      placeholder={"Søk på dokumenter"}
+      onCancelSearch={handleSearchFilterCanceled}
+    />
   );
 };
 

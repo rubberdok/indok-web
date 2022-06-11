@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, Typography } from "@mui/material";
+import { Card, CardContent, CardHeader, Typography } from "@material-ui/core";
 import { BoardMember } from "./types";
 
 type Props = {

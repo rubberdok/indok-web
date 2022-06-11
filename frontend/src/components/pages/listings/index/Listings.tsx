@@ -1,11 +1,18 @@
-import { useQuery } from "@apollo/client";
 import ListingItem from "@components/pages/listings/index/ListingItem";
 import { LISTINGS } from "@graphql/listings/queries";
 import { Listing } from "@interfaces/listings";
-import { Button, CircularProgress, Grid, Typography, Box } from "@mui/material";
-import Image from "next/image";
+import { useQuery } from "@apollo/client";
+import { Grid, Typography, makeStyles, CircularProgress, Button } from "@material-ui/core";
 import Link from "next/link";
+import Image from "next/image";
 import EmptyStreet from "public/illustrations/EmptyStreet.svg";
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    marginTop: theme.spacing(4),
+    marginBottom: theme.spacing(4),
+  },
+}));
 
 /**
  * Component to show an overview of all open listings.
@@ -19,9 +26,11 @@ const Listings: React.FC<{
   // fetches all open listings
   const { loading, error, data } = useQuery<{ listings: Listing[] }>(LISTINGS);
 
+  const classes = useStyles();
+
   // if the data is fetched, renders a ListingItem for each listing
   return (
-    <Grid container direction="row" spacing={2} justifyContent="center" alignItems="stretch">
+    <Grid container direction="row" spacing={2} className={classes.root} justifyContent="center" alignItems="stretch">
       {loading && (
         <Grid item>
           <CircularProgress color="primary" />
@@ -54,22 +63,16 @@ const Listings: React.FC<{
           </Grid>
         ))}
       {data?.listings.length == 0 && (
-        <Grid container item direction="column" alignItems="center">
+        <>
           <Grid item>
             <Typography variant="body1" align="center">
               Det er for øyeblikket ingen verv tilgjengelige.
             </Typography>
           </Grid>
-          <Grid container item direction="row" justifyContent="center" alignItems="center">
-            <Grid item xs={8} sm={5}>
-              <Box
-                sx={{ overflow: "hidden", borderRadius: "50%", width: "100%", aspectRatio: "1", position: "relative" }}
-              >
-                <Image src={EmptyStreet} alt="" layout="fill" objectFit="contain" objectPosition="center" />
-              </Box>
-            </Grid>
+          <Grid item md={6} xs={10}>
+            <Image src={EmptyStreet} alt="" />
           </Grid>
-        </Grid>
+        </>
       )}
     </Grid>
   );
