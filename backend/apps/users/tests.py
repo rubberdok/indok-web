@@ -268,6 +268,19 @@ class UsersMutationsTestCase(UsersBaseTestCase):
         cookies = response.client.cookies
         self.assertIn("sessionid", cookies)
 
+    def test_logout(self):
+        logout = """
+            mutation {
+                logout {
+                    idToken
+                }
+            }
+        """
+        response = self.query(logout, user=self.registered_indok_user)
+        self.assertResponseNoErrors(response)
+        id_token = response.json()["data"]["logout"]["idToken"]
+        self.assertEqual(id_token, self.registered_indok_user.id_token)
+
     def test_update_graduation_year(self):
         today = timezone.now().year
         query = self.mutation(today + 1)
