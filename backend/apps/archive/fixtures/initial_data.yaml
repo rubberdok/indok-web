@@ -1,1 +1,18 @@
-[]
+- model: archive.ArchiveDocument
+  pk: 1
+  fields:
+    title: Protokoll Generalforsamling H21
+    type_doc: Generalforsamling
+    file_location: 1Z6VaWoGozMg560zjj0bGjQNkIYPOOn-u
+    featured: true
+    year: 2021
+    web_link: https://drive.google.com/file/d/1Z6VaWoGozMg560zjj0bGjQNkIYPOOn-u/view?usp=drivesdk
+- model: archive.ArchiveDocument
+  pk: 2
+  fields:
+    title: Budsjett Foreningen V22
+    type_doc: Budsjett og Regnskap
+    file_location: 1Ob5xYDvsv4CKfgPn0saAUAsXFVwGo4OON8kuPgcBNtA
+    featured: false
+    year: 2022
+    web_link: https://docs.google.com/spreadsheets/d/1Ob5xYDvsv4CKfgPn0saAUAsXFVwGo4OON8kuPgcBNtA/edit?usp=drivesdk

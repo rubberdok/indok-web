@@ -1,8 +1,12 @@
 # pull official base image
-FROM --platform=linux/amd64 python:3.9.6
+FROM --platform=linux/amd64 public.ecr.aws/docker/library/python:3.9-slim
 
 # set work directory
 WORKDIR /usr/src/app
+RUN apt-get update && \
+    apt-get install -y \
+    libpango-1.0-0 \
+    libpangoft2-1.0-0
 
 # set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1

@@ -1,19 +1,16 @@
-from __future__ import print_function
+from typing import Optional
 
 from django.conf import settings
 from googleapiclient.discovery import build
-from googleapiclient.errors import HttpError
 
 
-# Connect to the Drive v3 API
-service = build("drive", "v3", developerKey=settings.GOOGLE_DRIVE_API_KEY)
+class GoogleDriveAPI:
+    def __init__(self):
+        self.service = build("drive", "v3", developerKey=settings.GOOGLE_DRIVE_API_KEY)
 
-
-def get_url(file_id):
-    # Call the Drive v3 API
-    try:
+    def get_url(self, file_id: str) -> Optional[str]:
         file = (
-            service.files()
+            self.service.files()
             .get(
                 fileId=file_id,
                 fields="id, name, webViewLink",
@@ -21,16 +18,16 @@ def get_url(file_id):
             )
             .execute()
         )
+        return file["webViewLink"]
 
-    except HttpError as err:
-        print(err)
-        print("No files found.")
-        return None
-
-    return file["webViewLink"]
-
-
-def get_thumbnail(file_id):
-    # No need to call the Drive v3 API
-    thumbnail_link = "https://drive.google.com/thumbnail?id=" + file_id
-    return thumbnail_link
+    def get_thumbnail(self, file_id: str) -> Optional[str]:
+        file = (
+            self.service.files()
+            .get(
+                fileId=file_id,
+                fields="id, name, thumbnailLink",
+                supportsTeamDrives=True,
+            )
+            .execute()
+        )
+        return file["thumbnailLink"]
