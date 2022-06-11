@@ -1,6 +1,4 @@
 import { ChangeEvent } from "react";
-import { SelectChangeEvent } from "@mui/material";
-
 export interface BasicBooking {
   firstName: string;
   lastName: string;
@@ -34,9 +32,7 @@ export interface BookingFromQuery extends Booking {
 
 export type InputFieldsEvent =
   | ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  | React.ChangeEvent<{ name?: string; value: unknown }>
-  | SelectChangeEvent<number>
-  | SelectChangeEvent<string>;
+  | React.ChangeEvent<{ name?: string | undefined; value: unknown }>;
 
 export interface Cabin {
   id: string;

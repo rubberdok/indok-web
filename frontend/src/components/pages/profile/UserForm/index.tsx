@@ -8,12 +8,12 @@ import {
 } from "@components/pages/profile/UserForm/helpers";
 import { UPDATE_USER } from "@graphql/users/mutations";
 import { EDIT_USER_QUERY } from "@graphql/users/queries";
-import { ArrowBack } from "@mui/icons-material";
 import {
   Button,
   Card,
   CardActions,
   CardContent,
+  Divider,
   FormControl,
   FormHelperText,
   Grid,
@@ -21,7 +21,9 @@ import {
   NativeSelect,
   TextField,
   Typography,
-} from "@mui/material";
+  useTheme,
+} from "@material-ui/core";
+import { ArrowBack } from "@material-ui/icons";
 import { range } from "@utils/helpers";
 import dayjs from "dayjs";
 import { useFormik } from "formik";
@@ -43,17 +45,18 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": 
     onCompleted: onCompleted,
     refetchQueries: ["editUserInfo"],
   });
+  const theme = useTheme();
   const router = useRouter();
   const currentYear = dayjs().year();
   const ID_PREFIX = `${dataTestId}`;
 
   const minimumGraduationYear = useMemo<number>(
     () => Math.min(currentYear, data?.user?.graduationYear || currentYear),
-    [data?.user?.graduationYear, currentYear]
+    [data?.user?.graduationYear]
   );
   const graduationYears = useMemo<number[]>(
     () => range(minimumGraduationYear, maxGraduationYear, 1),
-    [minimumGraduationYear, currentYear]
+    [minimumGraduationYear]
   );
 
   const formik = useFormik({
@@ -75,8 +78,8 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": 
 
   return (
     <form onSubmit={formik.handleSubmit}>
-      <Card sx={{ mt: (theme) => theme.spacing(8), mb: (theme) => theme.spacing(8) }}>
-        <CardContent sx={{ pt: (theme) => theme.spacing(4) }}>
+      <Card style={{ marginTop: theme.spacing(8), marginBottom: theme.spacing(8) }}>
+        <CardContent style={{ paddingTop: 32 }}>
           <Grid container>
             {kind === "update" && (
               <Grid item>
@@ -100,12 +103,16 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": 
                 <TextField
                   label="Fornavn"
                   name="firstName"
+                  variant="outlined"
                   required
                   value={formik.values.firstName}
                   onChange={formik.handleChange}
                   onBlur={() => formik.setFieldTouched("firstName")}
                   error={formik.touched.firstName && Boolean(formik.errors.firstName)}
                   helperText={formik.touched.firstName && formik.errors.firstName}
+                  InputLabelProps={{
+                    shrink: formik.values.firstName !== undefined,
+                  }}
                   data-test-id={`${ID_PREFIX}firstNameTextField`}
                 />
               </Grid>
@@ -113,12 +120,16 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": 
                 <TextField
                   label="Etternavn"
                   name="lastName"
+                  variant="outlined"
                   required
                   value={formik.values.lastName}
                   onChange={formik.handleChange}
                   onBlur={() => formik.setFieldTouched("lastName")}
                   error={formik.touched.lastName && Boolean(formik.errors.lastName)}
                   helperText={formik.touched.lastName && formik.errors.lastName}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
                   data-test-id={`${ID_PREFIX}lastNameTextField`}
                 />
               </Grid>
@@ -132,11 +143,15 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": 
                   label="E-post"
                   name="email"
                   id="email"
+                  variant="outlined"
                   onBlur={() => formik.setFieldTouched("email")}
                   value={formik.values.email}
                   onChange={formik.handleChange}
                   error={formik.touched.email && Boolean(formik.errors.email)}
                   helperText={formik.touched.email && formik.errors.email}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
                   data-test-id={`${ID_PREFIX}emailTextField`}
                 />
               </Grid>
@@ -144,11 +159,15 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": 
                 <TextField
                   label="Telefonnummer"
                   name="phoneNumber"
+                  variant="outlined"
                   onBlur={() => formik.setFieldTouched("phoneNumber")}
                   value={formik.values.phoneNumber}
                   onChange={formik.handleChange}
                   error={formik.touched.phoneNumber && Boolean(formik.errors.phoneNumber)}
                   helperText={formik.touched.phoneNumber && formik.errors.phoneNumber}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
                   data-test-id={`${ID_PREFIX}phoneNumberTextField`}
                 />
               </Grid>
@@ -157,12 +176,14 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": 
               <Typography variant="subtitle2">Studieinformasjon</Typography>
             </Grid>
             <Grid item>
-              <FormControl variant="standard">
-                <InputLabel htmlFor="graduationYear">Uteksamineringsår</InputLabel>
+              <FormControl>
+                <InputLabel htmlFor="graduationYear" shrink>
+                  Uteksamineringsår
+                </InputLabel>
                 <NativeSelect
                   name="graduationYear"
+                  variant="outlined"
                   required
-                  variant="filled"
                   value={formik.values.graduationYear}
                   onChange={formik.handleChange}
                   onBlur={() => formik.setFieldTouched("graduationYear")}
@@ -177,7 +198,7 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": 
                   ))}
                 </NativeSelect>
                 {formik.touched.graduationYear && Boolean(formik.errors.graduationYear) && (
-                  <FormHelperText sx={{ color: (theme) => theme.palette.error.main }}>
+                  <FormHelperText style={{ color: theme.palette.error.main }}>
                     {formik.touched.graduationYear && formik.errors.graduationYear}
                   </FormHelperText>
                 )}
@@ -197,11 +218,15 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": 
                 <TextField
                   label="Allergier"
                   name="allergies"
+                  variant="outlined"
                   value={formik.values.allergies}
                   onChange={formik.handleChange}
                   onBlur={() => formik.setFieldTouched("allergies")}
                   error={formik.touched.allergies && Boolean(formik.errors.allergies)}
                   helperText={formik.touched.allergies && formik.errors.allergies}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
                   data-test-id={`${ID_PREFIX}allergiesTextField`}
                 />
               </Grid>
@@ -225,6 +250,23 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": 
                 </Button>
               </Grid>
             </Grid>
+            {kind === "update" && (
+              <>
+                <Grid item>
+                  <Divider />
+                </Grid>
+                <Grid item>
+                  <Typography variant="subtitle2">Irreversible operasjoner</Typography>
+                </Grid>
+                <Grid item>
+                  <Grid item md>
+                    <Button disabled variant="contained">
+                      Slett bruker (kommer snart)
+                    </Button>
+                  </Grid>
+                </Grid>
+              </>
+            )}
           </Grid>
         </CardActions>
       </Card>

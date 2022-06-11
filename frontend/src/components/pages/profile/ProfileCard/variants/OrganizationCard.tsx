@@ -1,4 +1,4 @@
-import { Grid, Typography } from "@mui/material";
+import { Grid, Typography } from "@material-ui/core";
 import Organization from "@public/illustrations/Organization.svg";
 import ProfileCardBase from "./ProfileCardBase";
 

@@ -1,13 +1,26 @@
-import useResponsive from "@hooks/useResponsive";
-import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
-import { Box, Grid, Typography } from "@mui/material";
-import Button from "@mui/material/Button";
-import MobileStepper from "@mui/material/MobileStepper";
-import Paper from "@mui/material/Paper";
-import { useTheme } from "@mui/material/styles";
-import Image from "next/image";
 import React from "react";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
+import MobileStepper from "@material-ui/core/MobileStepper";
+import Paper from "@material-ui/core/Paper";
+import Button from "@material-ui/core/Button";
+import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
+import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import SwipeableViews from "react-swipeable-views";
+import { Box, Grid, Theme, Typography } from "@material-ui/core";
+import Image from "next/image";
+
+const useStyles = makeStyles((theme: Theme) => ({
+  img: {
+    height: "100%",
+    display: "block",
+    maxWidth: "100%",
+    overflow: "hidden",
+    width: "100%",
+  },
+  mobileStepper: {
+    backgroundColor: theme.palette.background.paper,
+  },
+}));
 
 interface ImageData {
   label: string;
@@ -24,9 +37,9 @@ interface ImageSliderProps {
 Carousel compoent for showing images
 */
 const ImageSlider: React.VFC<ImageSliderProps> = ({ imageData, displayLabelText }) => {
+  const classes = useStyles();
   const theme = useTheme();
   const [activeStep, setActiveStep] = React.useState(0);
-  const isMobile = useResponsive({ query: "down", key: "md" });
 
   const maxSteps = imageData.length;
 
@@ -58,50 +71,38 @@ const ImageSlider: React.VFC<ImageSliderProps> = ({ imageData, displayLabelText 
       ) : (
         ""
       )}
-      <SwipeableViews
-        axis={theme.direction === "rtl" ? "x-reverse" : "x"}
-        index={activeStep}
-        onChangeIndex={handleStepChange}
-        enableMouseEvents
-        disableLazyLoading
-      >
-        {imageData.map((step, index) => (
-          <Box
-            key={index}
-            display="flex"
-            justifyContent="center"
-            position="relative"
-            width={1}
-            height={{ xs: 300, md: 400 }}
-          >
-            {Math.abs(activeStep - index) <= 2 && (
-              <Image
-                layout="fill"
-                alt={step.label}
-                src={step.imgPath}
-                height={300}
-                objectFit={isMobile ? "cover" : "contain"}
-                objectPosition="bottom"
-              />
-            )}
-          </Box>
-        ))}
-      </SwipeableViews>
+      <Box>
+        <SwipeableViews
+          axis={theme.direction === "rtl" ? "x-reverse" : "x"}
+          index={activeStep}
+          onChangeIndex={handleStepChange}
+          enableMouseEvents
+          disableLazyLoading
+        >
+          {imageData.map((step, index) => (
+            <Box key={index} display="flex" justifyContent="center">
+              {Math.abs(activeStep - index) <= 2 ? (
+                <Image alt={step.label} src={step.imgPath} width={400} height={300} />
+              ) : null}
+            </Box>
+          ))}
+        </SwipeableViews>
+      </Box>
 
       <MobileStepper
         steps={maxSteps}
         position="static"
         activeStep={activeStep}
+        className={classes.mobileStepper}
         variant="text"
-        sx={{ ...theme.typography.subtitle2, bgcolor: "transparent" }}
         nextButton={
-          <Button color="inherit" size="small" onClick={handleNext} disabled={activeStep === maxSteps - 1}>
+          <Button size="small" onClick={handleNext} disabled={activeStep === maxSteps - 1}>
             Neste
             {theme.direction === "rtl" ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
           </Button>
         }
         backButton={
-          <Button color="inherit" size="small" onClick={handleBack} disabled={activeStep === 0}>
+          <Button size="small" onClick={handleBack} disabled={activeStep === 0}>
             {theme.direction === "rtl" ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
             Forrige
           </Button>

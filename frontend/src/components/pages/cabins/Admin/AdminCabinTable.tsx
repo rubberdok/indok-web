@@ -1,10 +1,5 @@
-import { ApolloQueryResult, OperationVariables, useMutation } from "@apollo/client";
-import { CONFIRM_BOOKING, SEND_EMAIL } from "@graphql/cabins/mutations";
-import { QUERY_ADMIN_ALL_BOOKINGS } from "@graphql/cabins/queries";
 import { BookingFromQuery } from "@interfaces/cabins";
-import { Check, Clear } from "@mui/icons-material";
 import {
-  Alert,
   Box,
   IconButton,
   Paper,
@@ -16,12 +11,19 @@ import {
   TableHead,
   TableRow,
   Tooltip,
-} from "@mui/material";
-import { getDecisionEmailProps, toStringChosenCabins } from "@utils/cabins";
+} from "@material-ui/core";
+import theme from "@styles/theme";
+import { toStringChosenCabins, getDecisionEmailProps } from "@utils/cabins";
+import ClearIcon from "@material-ui/icons/Clear";
+import CheckIcon from "@material-ui/icons/Check";
+import { ApolloQueryResult, OperationVariables, useMutation } from "@apollo/client";
+import { CONFIRM_BOOKING, SEND_EMAIL } from "@graphql/cabins/mutations";
+import { QUERY_ADMIN_ALL_BOOKINGS } from "@graphql/cabins/queries";
 import dayjs from "dayjs";
-import { useState } from "react";
-import DeclineBookingDialog from "./DeclineBookingDialog";
 import InlineTableCell from "./InlineTableCell";
+import React, { useState } from "react";
+import { Alert } from "@material-ui/lab";
+import DeclineBookingDialog from "./DeclineBookingDialog";
 
 type Props = {
   bookings?: BookingFromQuery[];
@@ -95,21 +97,19 @@ const AdminCabinTable = ({ bookings, refetch, currentTab }: Props) => {
                         sendEmail(getDecisionEmailProps(booking, true));
                       }}
                       color="secondary"
-                      size="large"
                     >
-                      <Check />
+                      <CheckIcon />
                     </IconButton>
                   </Box>
                 </Tooltip>
                 <Tooltip title="Avkreft">
-                  <Box color="error.main" display="inline" component="span">
+                  <Box color={theme.palette.error.main} display="inline" component="span">
                     <IconButton
                       disabled={(!booking.isTentative && booking.isDeclined) || isExpired(booking)}
                       onClick={() => setBookingToBeDeclined && setBookingToBeDeclined(booking)}
                       color="inherit"
-                      size="large"
                     >
-                      <Clear />
+                      <ClearIcon />
                     </IconButton>
                   </Box>
                 </Tooltip>

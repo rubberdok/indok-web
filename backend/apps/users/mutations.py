@@ -2,9 +2,9 @@ from typing import TYPE_CHECKING, Optional
 
 import graphene
 from api.auth.dataporten_auth import DataportenAuth
-from decorators import login_required
-from django.contrib.auth import login, logout
+from django.contrib.auth import login
 from graphene import ResolveInfo
+from decorators import login_required
 
 from apps.users.helpers import update_graduation_year
 
@@ -72,13 +72,3 @@ class UpdateUser(graphene.Mutation):
         user.save()
 
         return UpdateUser(user=user)
-
-
-class Logout(graphene.Mutation):
-    id_token = graphene.String()
-
-    @login_required
-    def mutate(self, info: ResolveInfo):
-        user: "models.User" = info.context.user
-        logout(info.context)
-        return Logout(id_token=user.id_token)

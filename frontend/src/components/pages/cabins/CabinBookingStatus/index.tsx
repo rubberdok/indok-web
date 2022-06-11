@@ -1,9 +1,9 @@
-import useResponsive from "@hooks/useResponsive";
-import { Cabin, ContactInfo, DatePick } from "@interfaces/cabins";
-import { Box, Divider, Tooltip, Typography } from "@mui/material";
-import { TypographyProps } from "@mui/material/Typography";
-import { calculatePrice, convertDateFormat, toStringChosenCabins } from "@utils/cabins";
 import { NextPage } from "next";
+import { makeStyles, Typography, Box, Divider, Tooltip, useMediaQuery } from "@material-ui/core";
+import { Cabin, ContactInfo, DatePick } from "@interfaces/cabins";
+import { TypographyProps } from "@material-ui/core/Typography";
+import { calculatePrice, convertDateFormat, toStringChosenCabins } from "@utils/cabins";
+import theme from "@styles/theme";
 
 interface Props {
   chosenCabins: Cabin[];
@@ -12,6 +12,14 @@ interface Props {
   cabinText?: string;
   mailSent?: boolean;
 }
+
+const useStyles = makeStyles({
+  bold: {
+    fontWeight: theme.typography.fontWeightBold,
+    display: "inline",
+  },
+});
+
 const InfoText: React.FC<TypographyProps> = (props) => (
   <Typography variant="body2" align="center" component="span" display="block" {...props}>
     {props.children}
@@ -23,7 +31,8 @@ Statusbox with information about the current cabin booking.
 Renders fields based on the props given.
 */
 const CabinBookingStatus: NextPage<Props> = ({ chosenCabins, datePick, contactInfo, cabinText, mailSent }) => {
-  const isMobile = useResponsive({ query: "down", key: "md" });
+  const classes = useStyles();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
     <Box p={isMobile ? 0 : 3} border={3} borderColor="primary.main">
@@ -31,9 +40,7 @@ const CabinBookingStatus: NextPage<Props> = ({ chosenCabins, datePick, contactIn
         <Box m={3}>
           <InfoText>
             {cabinText ?? "Du søker nå om å booke"}{" "}
-            <Typography variant="body1" fontWeight={(theme) => theme.typography.fontWeightBold}>
-              {toStringChosenCabins(chosenCabins)}
-            </Typography>
+            <Box className={classes.bold}>{toStringChosenCabins(chosenCabins)}</Box>
           </InfoText>
         </Box>
       ) : null}
@@ -43,15 +50,11 @@ const CabinBookingStatus: NextPage<Props> = ({ chosenCabins, datePick, contactIn
       {datePick ? (
         <Box m={3}>
           <InfoText>
-            <Typography variant="body1" fontWeight={(theme) => theme.typography.fontWeightBold}>
-              Innsjekk:{" "}
-            </Typography>
+            <Box className={classes.bold}>Innsjekk: </Box>
             {datePick.checkInDate !== undefined && convertDateFormat(datePick.checkInDate)}
           </InfoText>
           <InfoText>
-            <Typography variant="body1" fontWeight={(theme) => theme.typography.fontWeightBold}>
-              Utsjekk:{" "}
-            </Typography>
+            <Box className={classes.bold}>Utsjekk: </Box>
             {datePick.checkOutDate !== undefined && convertDateFormat(datePick.checkOutDate)}
           </InfoText>
         </Box>
@@ -62,17 +65,13 @@ const CabinBookingStatus: NextPage<Props> = ({ chosenCabins, datePick, contactIn
       {contactInfo ? (
         <Box m={3}>
           <InfoText>
-            <Typography variant="body1" fontWeight={(theme) => theme.typography.fontWeightBold}>
-              Gjester:{" "}
-            </Typography>
+            <Box className={classes.bold}>Gjester: </Box>
             {contactInfo.internalParticipants > 0 ? `${contactInfo.internalParticipants} indøkere` : null}
             {contactInfo.internalParticipants > 0 && contactInfo.externalParticipants > 0 ? ", " : null}
             {contactInfo.externalParticipants > 0 ? `${contactInfo.externalParticipants} eksterne` : null}
           </InfoText>
           <InfoText>
-            <Typography variant="body1" fontWeight={(theme) => theme.typography.fontWeightBold}>
-              Pris:{" "}
-            </Typography>
+            <Box className={classes.bold}>Pris: </Box>
             <Tooltip
               title={
                 contactInfo.internalParticipants >= contactInfo.externalParticipants

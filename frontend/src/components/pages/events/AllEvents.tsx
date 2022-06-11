@@ -1,12 +1,10 @@
 import { useQuery } from "@apollo/client";
-import { PermissionRequired } from "@components/Auth";
 import { GET_DEFAULT_EVENTS, GET_EVENTS } from "@graphql/events/queries";
 import { GET_USER } from "@graphql/users/queries";
-import useResponsive from "@hooks/useResponsive";
 import { Event } from "@interfaces/events";
 import { User } from "@interfaces/users";
-import { Add, List, Tune } from "@mui/icons-material";
-import { Button, CircularProgress, Drawer, Grid, Hidden, Paper, Stack, Typography } from "@mui/material";
+import { Button, CircularProgress, Drawer, Grid, Hidden, makeStyles, Typography } from "@material-ui/core";
+import { Add, List, Tune } from "@material-ui/icons";
 import Link from "next/link";
 import React, { useState } from "react";
 import EventListItem from "./EventListItem";
@@ -19,11 +17,21 @@ export interface FilterQuery {
   endTime?: string;
 }
 
+const useStyles = makeStyles((theme) => ({
+  grid: {
+    padding: theme.spacing(3, 0),
+  },
+  drawer: {
+    width: 500,
+    maxWidth: "80%",
+  },
+}));
+
 const AllEvents: React.FC = () => {
+  const classes = useStyles();
   const [filters, setFilters] = useState({});
   const [showDefaultEvents, setShowDefaultEvents] = useState(false);
   const [openFilterDrawer, setOpenFilterDrawer] = React.useState(false);
-  const isMobile = useResponsive({ query: "down", key: "sm" });
 
   const { loading: userLoading, data: userData } = useQuery<{ user: User }>(GET_USER);
 
@@ -47,6 +55,7 @@ const AllEvents: React.FC = () => {
     userData?.user ? event.allowedGradeYears.includes(userData.user.gradeYear) : true
   );
 
+  if (loading || userLoading) return <Typography variant="body1">Laster..</Typography>;
   if (error) return <Typography variant="body1">Kunne ikke hente arrangementer.</Typography>;
 
   const onChange = (newFilters: FilterQuery) => {
@@ -57,94 +66,63 @@ const AllEvents: React.FC = () => {
 
   return (
     <>
-      <PermissionRequired permission="events.add_event">
-        <Paper
-          sx={{
-            py: 2,
-            px: { xs: 0, md: 3 },
-            bgcolor: { md: "secondary.main" },
-            mb: { md: 5 },
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
+      <Hidden mdUp>
+        <Button onClick={() => setOpenFilterDrawer(true)} variant="contained" startIcon={<Tune />}>
+          Filtre
+        </Button>
+        <Drawer
+          PaperProps={{ className: classes.drawer }}
+          anchor="left"
+          open={openFilterDrawer}
+          onClose={() => setOpenFilterDrawer(false)}
         >
-          <Hidden smDown>
-            <Typography variant="h5" color="secondary.darker">
-              Administrer
-            </Typography>
-          </Hidden>
-          <Stack direction="row" spacing={1}>
-            {userData && !userLoading && userData.user && !!userData.user.organizations.length && (
-              <Link href="/events/create-event" passHref>
-                <Button variant="contained" color="inherit" startIcon={<Add />}>
-                  Opprett
-                </Button>
-              </Link>
-            )}
-            {userData && !userLoading && userData.user && !!userData.user.organizations.length && (
-              <Link
-                href={userData.user.organizations.length > 1 ? "/orgs" : `/orgs/${userData.user.organizations[0].id}`}
-                passHref
-              >
-                <Button variant="contained" color="inherit" startIcon={<List />}>
-                  Mine arrangementer
-                </Button>
-              </Link>
-            )}
-          </Stack>
-        </Paper>
-      </PermissionRequired>
-      {isMobile && (
-        <>
-          <Button
-            fullWidth
-            onClick={() => setOpenFilterDrawer(true)}
-            variant="outlined"
-            color="inherit"
-            startIcon={<Tune />}
-            sx={{ mb: 3 }}
-          >
-            Filtre
-          </Button>
-          <Drawer anchor="left" open={openFilterDrawer} onClose={() => setOpenFilterDrawer(false)}>
+          <FilterMenu
+            filters={filters}
+            onFiltersChange={onChange}
+            showDefaultEvents={showDefaultEvents}
+            onShowDefaultChange={setShowDefaultEvents}
+          />
+        </Drawer>
+      </Hidden>
+      <Grid container className={classes.grid} spacing={3}>
+        <Hidden smDown>
+          <Grid item md={3}>
             <FilterMenu
               filters={filters}
               onFiltersChange={onChange}
               showDefaultEvents={showDefaultEvents}
               onShowDefaultChange={setShowDefaultEvents}
             />
-          </Drawer>
-        </>
-      )}
-      <Grid container spacing={3}>
-        {!isMobile && (
-          <Grid item md={3}>
-            <Paper variant="outlined">
-              <FilterMenu
-                filters={filters}
-                onFiltersChange={onChange}
-                showDefaultEvents={showDefaultEvents}
-                onShowDefaultChange={setShowDefaultEvents}
-              />
-            </Paper>
           </Grid>
-        )}
-        <Grid item xs={12} md={9}>
-          {!(loading || userLoading) && (
-            <>
-              {loading ? (
-                <CircularProgress />
-              ) : data === undefined || data.length === 0 ? (
+        </Hidden>
+        <Grid item xs>
+          {userData && !userLoading && userData.user && !!userData.user.organizations.length && (
+            <Link href="/events/create-event" passHref>
+              <Button color="primary" disableRipple startIcon={<Add />}>
+                Opprett
+              </Button>
+            </Link>
+          )}
+          {userData && !userLoading && userData.user && !!userData.user.organizations.length && (
+            <Link
+              href={userData.user.organizations.length > 1 ? "/orgs" : `/orgs/${userData.user.organizations[0].id}`}
+              passHref
+            >
+              <Button color="primary" disableRipple startIcon={<List />}>
+                Mine arrangementer
+              </Button>
+            </Link>
+          )}
+          {loading ? (
+            <CircularProgress />
+          ) : (
+            <Grid container spacing={2}>
+              {data === undefined || data.length === 0 ? (
                 <Typography variant="body1">Ingen arrangementer passer til valgte filtre.</Typography>
               ) : (
-                <Stack spacing={3}>
-                  {data.map((event) => (
-                    <EventListItem key={event.id} event={event} user={userData?.user} />
-                  ))}
-                </Stack>
+                data.map((event) => <EventListItem key={event.id} event={event} user={userData?.user} />)
               )}
-            </>
+            </Grid>
           )}
         </Grid>
       </Grid>

@@ -1,4 +1,4 @@
-export const toQuery = (values: Record<string, string | null | undefined | number>): string => {
+export const generateQueryString = (values: Record<string, any>): string => {
   const valueList: string[] = [];
 
   Object.keys(values).forEach((name) => {

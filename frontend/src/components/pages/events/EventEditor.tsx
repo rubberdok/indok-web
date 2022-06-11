@@ -2,7 +2,6 @@ import { useMutation, useQuery } from "@apollo/client";
 import { UPDATE_EVENT } from "@graphql/events/mutations";
 import { ADMIN_GET_EVENT, GET_CATEGORIES, GET_EVENT } from "@graphql/events/queries";
 import { Category, Event } from "@interfaces/events";
-import { Check, Close, Warning } from "@mui/icons-material";
 import {
   Button,
   Checkbox,
@@ -22,12 +21,13 @@ import {
   TextField,
   Tooltip,
   Typography,
-} from "@mui/material";
+} from "@material-ui/core";
+import { Check, Close, Warning } from "@material-ui/icons";
+import React, { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import nb from "dayjs/locale/nb";
-import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
-import React, { useEffect, useState } from "react";
+import timezone from "dayjs/plugin/timezone";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.locale(nb);
@@ -178,6 +178,7 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
               rows={3}
               required
               placeholder="Beskrivelse ..."
+              variant="outlined"
               value={eventData.description}
               onChange={(e) => setEventData({ ...eventData, description: e.currentTarget.value })}
               fullWidth

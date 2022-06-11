@@ -1,6 +1,6 @@
 import { Order } from "@interfaces/ecommerce";
 import { HeaderValuePair } from "@interfaces/utils";
-import { Link as MuiLink, Typography } from "@mui/material";
+import { Link as MuiLink, Typography } from "@material-ui/core";
 import dayjs from "dayjs";
 import Link from "next/link";
 import { useRouter } from "next/router";

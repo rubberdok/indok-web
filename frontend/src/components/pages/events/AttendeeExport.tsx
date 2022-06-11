@@ -1,9 +1,9 @@
 import { useLazyQuery } from "@apollo/client";
 import { QUERY_ATTENDEE_REPORT } from "@graphql/events/queries";
-import { GetApp } from "@mui/icons-material";
-import { Box, Button, ButtonGroup, CircularProgress, Typography } from "@mui/material";
+import { Box, Button, ButtonGroup, CircularProgress, Typography } from "@material-ui/core";
 import { promptDownloadFromPayload } from "@utils/exports";
 import React from "react";
+import GetAppIcon from "@material-ui/icons/GetApp";
 
 const AttendeeExport: React.FC<{ eventId: number }> = ({ eventId }) => {
   const [getAttendeeReport, { loading: attendeeReportLoading }] = useLazyQuery(QUERY_ATTENDEE_REPORT, {
@@ -13,7 +13,7 @@ const AttendeeExport: React.FC<{ eventId: number }> = ({ eventId }) => {
   const wrapDownloadButtonReport = (eventId: number, filetype: string) => {
     return (
       <Button
-        startIcon={<GetApp fontSize="small" />}
+        startIcon={<GetAppIcon fontSize="small" />}
         onClick={() => getAttendeeReport({ variables: { eventId: eventId, filetype: filetype } })}
       >
         {filetype}

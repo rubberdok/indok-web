@@ -1,13 +1,12 @@
-import Layout from "@layouts/Layout";
 import MemberCard from "@components/pages/about/MemberCard";
 import { BoardMember } from "@components/pages/about/MemberCard/types";
 import Template from "@components/pages/about/Template";
-import { Typography } from "@mui/material";
-import Grid from "@mui/material/Grid";
+import { Typography } from "@material-ui/core";
+import Grid from "@material-ui/core/Grid";
+import { NextPage } from "next";
 import React from "react";
-import { NextPageWithLayout } from "../_app";
 
-const BoardPage: NextPageWithLayout = () => {
+const BoardPage: NextPage = () => {
   const boardMembers: BoardMember[] = [
     {
       rank: 1,
@@ -84,7 +83,7 @@ const BoardPage: NextPageWithLayout = () => {
     >
       <Typography variant="body1" paragraph>
         Hovedstyret består av et valgt lederpar, instituttilittsvalgt ved IØT, samt leder for hver av linjeforeningene
-        Janus, Bindeleddet, ESTIEM, Hytteforeningen, Janus IF og Indøk Kultur.
+        Janus, Bindeleddet, ESTIEM, Hyttestyret, Janus IF og Indøk Kultur.
       </Typography>
       <Typography variant="body1" paragraph>
         Hovedstyrets fremste oppgave er å sørge for god kommunikasjon og samarbeid mellom de ulike studentinitiativene,
@@ -104,10 +103,6 @@ const BoardPage: NextPageWithLayout = () => {
       </Grid>
     </Template>
   );
-};
-
-BoardPage.getLayout = function getLayout(page: React.ReactElement) {
-  return <Layout>{page}</Layout>;
 };
 
 export default BoardPage;

@@ -1,18 +1,15 @@
 {
   "compilerOptions": {
     "allowJs": true,
-    "noImplicitThis": true,
-    "strictNullChecks": true,
-    "noImplicitAny": true,
     "alwaysStrict": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
     "jsx": "preserve",
+    "lib": ["dom", "es2019"],
     "module": "esnext",
     "moduleResolution": "node",
     "noEmit": true,
-    "jsxImportSource": "@emotion/react",
     "noFallthroughCasesInSwitch": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
@@ -20,8 +17,7 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
-    "target": "es5",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "target": "esnext",
     "baseUrl": "./",
     "paths": {
       "@components/*": ["src/components/*"],
@@ -33,11 +29,10 @@
       "@graphql/*": ["src/graphql/*"],
       "@hooks/*": ["src/hooks/*"],
       "@lib/*": ["src/lib/*"],
-      "@generated/*": ["src/generated/*"],
-      "@layouts/*": ["src/layouts/*"]
+      "@generated/*": ["src/generated/*"]
     },
     "incremental": false
   },
-  "exclude": ["**/node_modules", "**/.next"],
+  "exclude": ["node_modules"],
   "include": ["**/*.ts", "**/*.tsx"]
 }

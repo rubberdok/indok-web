@@ -1,12 +1,12 @@
-import * as markdownComponents from "@components/MarkdownForm/components";
-import Layout, { RootStyle } from "@layouts/Layout";
-import { MailOutline, Phone } from "@mui/icons-material";
-import { Box, Card, Chip, Container, Divider, Grid, Paper, Typography } from "@mui/material";
+import Layout from "@components/Layout";
+import * as markdownComponents from "@components/markdown/components";
+import { Box, Card, Chip, Container, Divider, Grid, makeStyles, Paper, Typography } from "@material-ui/core";
+import MailOutlineIcon from "@material-ui/icons/MailOutline";
+import PhoneIcon from "@material-ui/icons/Phone";
 import { getPostBySlug, getPostsSlugs } from "@utils/posts";
-import { GetStaticPaths, GetStaticProps } from "next";
+import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
-import { NextPageWithLayout } from "src/pages/_app";
 import { Post } from "src/types/posts";
 
 type ArticleProps = {
@@ -36,85 +36,97 @@ type BoardMember = {
   phoneNumber: string;
 };
 
-const Article: NextPageWithLayout<ArticleProps> = ({ post, frontmatter }) => {
+const useStyles = makeStyles(() => ({
+  title: {
+    color: "white",
+    zIndex: -1,
+  },
+  titleImage: {
+    width: "100%",
+    height: "100%",
+    backgroundSize: "cover",
+    backgroundRepeat: "no-repeat",
+    backgroundPosition: "center",
+  },
+  heroCard: {
+    marginTop: -112,
+    textAlign: "center",
+  },
+  logo: {
+    height: 100,
+  },
+  avatar: {
+    height: 100,
+  },
+}));
+
+const Article: NextPage<ArticleProps> = ({ post, frontmatter }) => {
+  const classes = useStyles();
+
   return (
-    <>
-      <Box mt="-60px" position="relative" sx={{ color: "white", zIndex: -1 }} height={350}>
+    <Layout>
+      <Box mt="-60px" position="relative" className={classes.title} height={350}>
         <Box
-          sx={{
-            width: "100%",
-            height: "100%",
-            backgroundSize: "cover",
-            backgroundRepeat: "no-repeat",
-            backgroundPosition: "center",
-            backgroundImage: `linear-gradient(to top, rgb(0 0 0 / 50%), rgb(0 0 0 / 60%)),
-            url(${frontmatter.image})`,
-          }}
           display="flex"
           alignItems="center"
           flexDirection="column"
           justifyContent="center"
+          className={classes.titleImage}
+          style={{
+            backgroundImage: `linear-gradient(to top, rgb(0 0 0 / 50%), rgb(0 0 0 / 60%)),
+            url(${frontmatter.image})`,
+          }}
         ></Box>
       </Box>
 
-      <RootStyle>
-        <Container>
-          <Grid justifyContent="center" container>
-            <Grid item xs={10}>
-              <Paper sx={{ marginTop: -112, textAlign: "center" }}>
-                <Box mb="56px" py="40px" px="56px" display="flex" alignItems="center" justifyContent="space-between">
-                  <Typography variant="h4">{frontmatter.title}</Typography>
-                  <img height={100} alt={frontmatter.alt} src={frontmatter.logo}></img>
-                </Box>
-              </Paper>
-            </Grid>
+      <Container>
+        <Grid justifyContent="center" container>
+          <Grid item xs={10}>
+            <Paper className={classes.heroCard}>
+              <Box mb="56px" py="40px" px="56px" display="flex" alignItems="center" justifyContent="space-between">
+                <Typography variant="h4">{frontmatter.title}</Typography>
+                <img className={classes.logo} alt={frontmatter.alt} src={frontmatter.logo}></img>
+              </Box>
+            </Paper>
           </Grid>
+        </Grid>
 
-          <Grid container spacing={4}>
-            <Grid item xs={8}>
-              <ReactMarkdown components={markdownComponents}>{post.content}</ReactMarkdown>
-            </Grid>
-            <Grid item xs={4}>
-              {frontmatter.board && (
-                <>
-                  <Typography variant="h5" gutterBottom>
-                    Styret
-                  </Typography>
-                  {Object.entries(frontmatter.board).map(([key, member], index) => (
-                    <>
-                      {index != 0 && <Divider />}
-                      <Card key={key}>
-                        <Box p={4}>
-                          <Typography variant="body2">{member.name}</Typography>
-                          <Typography variant="caption" gutterBottom>
-                            {member.title}
-                          </Typography>
-                          <br />
-                          {member.mail && (
-                            <Link href={`mailto:${member.mail}`}>
-                              <Chip size="small" label={member.mail} icon={<MailOutline />} />
-                            </Link>
-                          )}
-                          {member.mail && member.phoneNumber && <br />}
-                          {member.phoneNumber && <Chip size="small" label={member.phoneNumber} icon={<Phone />} />}
-                        </Box>
-                      </Card>
-                    </>
-                  ))}
-                </>
-              )}
-            </Grid>
+        <Grid container spacing={4}>
+          <Grid item xs={8}>
+            <ReactMarkdown components={markdownComponents}>{post.content}</ReactMarkdown>
           </Grid>
-        </Container>
-      </RootStyle>
-    </>
-  );
-};
-
-Article.getLayout = function getLayout(page: React.ReactElement) {
-  return (
-    <Layout>
-      <RootStyle>{page}</RootStyle>
+          <Grid item xs={4}>
+            {frontmatter.board && (
+              <>
+                <Typography variant="h5" gutterBottom>
+                  Styret
+                </Typography>
+                {Object.entries(frontmatter.board).map(([key, member], index) => (
+                  <>
+                    {index != 0 && <Divider />}
+                    <Card key={key}>
+                      <Box p={4}>
+                        <Typography variant="body2">{member.name}</Typography>
+                        <Typography variant="caption" gutterBottom>
+                          {member.title}
+                        </Typography>
+                        <br />
+                        {member.mail && (
+                          <Link href={`mailto:${member.mail}`}>
+                            <Chip size="small" label={member.mail} icon={<MailOutlineIcon />} />
+                          </Link>
+                        )}
+                        {member.mail && member.phoneNumber && <br />}
+                        {member.phoneNumber && <Chip size="small" label={member.phoneNumber} icon={<PhoneIcon />} />}
+                      </Box>
+                    </Card>
+                  </>
+                ))}
+              </>
+            )}
+          </Grid>
+        </Grid>
+      </Container>
     </Layout>
   );
 };

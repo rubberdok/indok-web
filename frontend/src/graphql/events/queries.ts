@@ -142,7 +142,6 @@ export const ADMIN_GET_EVENT = gql`
       location
       description
       organization {
-        id
         name
       }
       category {

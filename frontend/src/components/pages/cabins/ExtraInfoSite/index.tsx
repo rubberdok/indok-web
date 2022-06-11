@@ -1,6 +1,6 @@
 import { Cabin, DatePick } from "@interfaces/cabins";
-import { Box, Divider, Hidden, Stack, TextField, Typography } from "@mui/material";
-import { convertDateFormat, toStringChosenCabins } from "@utils/cabins";
+import { Box, Divider, Grid, Hidden, TextField, Typography } from "@material-ui/core";
+import { toStringChosenCabins, convertDateFormat } from "@utils/cabins";
 
 type Props = {
   setExtraInfo: React.Dispatch<React.SetStateAction<string>>;
@@ -13,33 +13,42 @@ const ExtraInfoSite: React.VFC<Props> = ({ setExtraInfo, datePick, chosenCabins 
   const toDate = datePick.checkOutDate !== undefined && convertDateFormat(datePick.checkOutDate);
 
   return (
-    <Box display="flex" justifyContent="center">
-      <Stack alignItems="center" direction="column" spacing={5} maxWidth={600}>
-        <Hidden lgDown>
+    <Grid container alignItems="center" direction="column" spacing={5}>
+      <Hidden mdDown>
+        <Grid item>
           <Typography variant="h4">Ekstra informasjon</Typography>
           <Divider />
-        </Hidden>
+        </Grid>
+      </Hidden>
 
-        <div>
+      <Grid item container justifyContent="space-evenly" alignItems="stretch">
+        <Grid item>
           <Typography variant="body1">
             På neste side sender du søknad om å booke {toStringChosenCabins(chosenCabins)} fra {fromDate} til {toDate}.
           </Typography>
           <Typography variant="body1">
-            Hytteforeningen får en e-post med søknaden din, og hvis de godkjenner bookingen sender de en faktura.
+            Hyttestyret får en e-post med søknaden din, og hvis de godkjenner bookingen sender de en faktura.
           </Typography>
           <Typography variant="body1">
             Har du noen spørsmål? Da kan du skrive de inn nedenfor, så sendes de sammen med søknaden din.
           </Typography>
-        </div>
-        <TextField
-          placeholder="Fyll inn spørsmål..."
-          multiline
-          rows={6}
-          fullWidth
-          onChange={(e) => setExtraInfo(e.target.value)}
-        />
-      </Stack>
-    </Box>
+        </Grid>
+        <Grid container>
+          <Grid item xs={12}>
+            <Box marginTop={3}>
+              <TextField
+                placeholder="Fyll inn spørsmål..."
+                variant="outlined"
+                multiline
+                rows={6}
+                fullWidth
+                onChange={(e) => setExtraInfo(e.target.value)}
+              />
+            </Box>
+          </Grid>
+        </Grid>
+      </Grid>
+    </Grid>
   );
 };
 

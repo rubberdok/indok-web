@@ -1,24 +1,48 @@
 import { useQuery } from "@apollo/client";
-import * as markdownComponents from "@components/MarkdownForm/components";
+import Layout from "@components/Layout";
+import * as markdownComponents from "@components/markdown/components";
 import InfoCard from "@components/pages/listings/detail/InfoCard";
 import ListingBanner from "@components/pages/listings/detail/ListingBanner";
 import ListingBody from "@components/pages/listings/detail/ListingBody";
 import TitleCard from "@components/pages/listings/detail/TitleCard";
 import { ListingDocument, ListingQuery } from "@generated/graphql";
 import { Listing } from "@interfaces/listings";
-import Layout, { RootStyle } from "@layouts/Layout";
 import { addApolloState, initializeApollo } from "@lib/apolloClient";
-import { ArrowForward, OpenInNew } from "@mui/icons-material";
-import { Button, Container, Grid, Hidden, Paper } from "@mui/material";
-import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import { Button, Container, Grid, Hidden, makeStyles, Paper } from "@material-ui/core";
+import ArrowForward from "@material-ui/icons/ArrowForward";
+import OpenInNewIcon from "@material-ui/icons/OpenInNew";
+import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import ReactMarkdown from "react-markdown";
-import { NextPageWithLayout } from "../_app";
+
+const useStyles = makeStyles((theme) => ({
+  container: {
+    paddingBottom: theme.spacing(2),
+    [theme.breakpoints.down("sm")]: {
+      marginTop: theme.spacing(4),
+    },
+  },
+  root: {
+    position: "relative",
+    [theme.breakpoints.up("md")]: {
+      marginTop: "-7%",
+    },
+  },
+  bottom: {
+    position: "sticky",
+    bottom: 0,
+    padding: theme.spacing(2),
+    zIndex: theme.zIndex.snackbar,
+  },
+  description: {
+    wordBreak: "break-word",
+  },
+}));
 
 // page to show details about a listing and its organization
-const ListingPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ listing }) => {
+const ListingPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ listing }) => {
   const { listingId } = useRouter().query;
 
   // fetches the listing, using the URL parameter as the argument
@@ -27,6 +51,8 @@ const ListingPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServ
       id: Array.isArray(listingId) ? listingId[0] : listingId,
     },
   });
+
+  const classes = useStyles();
 
   const descriptionWithTitle = (desc: string) => {
     if (!desc.startsWith("#")) {
@@ -46,7 +72,7 @@ const ListingPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServ
   };
 
   return (
-    <>
+    <Layout>
       <Head>
         <title>{`${listing.title} | Foreningen for Studenter ved Industriell Økonomi og Teknologiledelse`}</title>
         {listing.heroImageUrl && <meta property="og:image" content={listing.heroImageUrl} key="image" />}
@@ -61,7 +87,7 @@ const ListingPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServ
           <Hidden smDown>
             <ListingBanner imageUrl={data.listing.heroImageUrl} />
           </Hidden>
-          <Container>
+          <Container className={classes.container}>
             <Grid container justifyContent="center">
               <Grid
                 container
@@ -71,15 +97,10 @@ const ListingPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServ
                 direction="column"
                 alignItems="stretch"
                 spacing={4}
-                sx={(theme) => ({
-                  position: "relative",
-                  [theme.breakpoints.up("md")]: {
-                    marginTop: "-7%",
-                  },
-                })}
+                className={classes.root}
               >
                 <Grid container item direction="row" alignItems="stretch" justifyContent="center" spacing={4}>
-                  <Hidden mdDown>
+                  <Hidden smDown>
                     <Grid item xs={4}>
                       <InfoCard listing={data.listing} />
                     </Grid>
@@ -99,19 +120,12 @@ const ListingPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServ
             </Grid>
           </Container>
           <Hidden mdUp>
-            <Paper
-              sx={{
-                position: "sticky",
-                bottom: 0,
-                padding: (theme) => theme.spacing(2),
-                zIndex: (theme) => theme.zIndex.snackbar,
-              }}
-            >
+            <Paper className={classes.bottom}>
               <Grid container direction="row" justifyContent="space-between" alignItems="center">
                 {data.listing.readMoreUrl && (
                   <Grid item xs>
                     <Link passHref href={data.listing.readMoreUrl}>
-                      <Button size="small" endIcon={<OpenInNew />}>
+                      <Button size="small" endIcon={<OpenInNewIcon />}>
                         {data.listing.organization.name.slice(0, 20)}
                       </Button>
                     </Link>
@@ -136,15 +150,9 @@ const ListingPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServ
           </Hidden>
         </>
       )}
-    </>
+    </Layout>
   );
 };
-
-ListingPage.getLayout = (page) => (
-  <Layout>
-    <RootStyle>{page}</RootStyle>
-  </Layout>
-);
 
 export const getServerSideProps: GetServerSideProps<{ listing: Listing }> = async (ctx) => {
   const client = initializeApollo({}, ctx);
@@ -162,10 +170,6 @@ export const getServerSideProps: GetServerSideProps<{ listing: Listing }> = asyn
   if (typeof listing === "undefined") return { notFound: true };
 
   return addApolloState(client, { props: { listing } });
-};
-
-ListingPage.getLayout = function getLayout(page: React.ReactElement) {
-  return <Layout>{page}</Layout>;
 };
 
 export default ListingPage;
