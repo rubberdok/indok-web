@@ -101,6 +101,17 @@ jobs:
           build-args: |
             APP_ENV=${{ matrix.stage }}
 
+      - name: Upload image files
+        id: one-off
+        if: ${{ matrix.image == 'frontend' && matrix.stage == 'production' }}
+        run: |
+          docker run \
+            --entrypoint /usr/src/app/entrypoints/cloudinary.sh \
+            -e CLOUDINARY_API_KEY=${{ secrets.CLOUDINARY_API_KEY }} \
+            -e CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }} \
+            -e CLOUDINARY_CLOUD_NAME=rubberdok \
+            ${{ matrix.image }}:${{ matrix.stage }}
+
       - name: Push ${{ matrix.image }} image
         id: push-image
         # If this is run on the main branch, and is a production image, it should be pushed to ECR
@@ -121,17 +132,6 @@ jobs:
           path: /tmp/${{ env.dockerfile }}.tar
           if-no-files-found: error
           retention-days: 1
-
-      - name: Upload image files
-        id: one-off
-        if: ${{ matrix.image == 'frontend' && matrix.stage == 'production' }}
-        run: |
-          docker run \
-            --entrypoint /usr/src/app/entrypoints/cloudinary.sh \
-            -e CLOUDINARY_API_KEY=${{ secrets.CLOUDINARY_API_KEY }} \
-            -e CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }} \
-            -e CLOUDINARY_CLOUD_NAME=rubberdok \
-            ${{ steps.image-tag.outputs.image }}
 
   api:
     name: API tests
