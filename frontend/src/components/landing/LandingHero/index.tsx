@@ -1,5 +1,5 @@
 import { Box, Button, Container, Grid, Stack, Typography } from "@mui/material";
-import Hero from "@public/hero.jpg";
+import Hero from "@public/static/landing/hero.jpg";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "phosphor-react";

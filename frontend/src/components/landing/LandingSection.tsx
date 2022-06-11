@@ -1,63 +1,62 @@
 import { Box, Button, Container, Grid, Typography } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import Hovedbygget from "@public/static/landing/hovedbygget.jpeg";
+import Image from "next/image";
 import Link from "next/link";
-
-const RootStyle = styled("div")(({ theme }) => ({
-  background: theme.palette.grey[900],
-  position: "relative",
-  display: "flex",
-}));
 
 const LandingSection: React.FC = () => {
   return (
-    <RootStyle>
-      <Container>
-        <Grid container justifyContent="space-between" alignItems="center">
-          <Grid
-            item
-            xs={12}
-            md={5}
-            lg={5}
-            sx={{
-              display: { xs: "none", md: "block" },
-            }}
-          >
-            <Box
-              component="img"
-              sx={{ height: 1, position: "absolute", top: 0, left: 0, width: 1 / 2, objectFit: "cover" }}
-              alt=""
-              src="/hovedbygget.jpeg"
-            />
-          </Grid>
-          <Grid
-            item
-            xs={12}
-            md={5}
-            lg={5}
-            sx={{
-              color: "common.white",
-              textAlign: { xs: "center", md: "left" },
-              my: 10,
-            }}
-          >
-            <Typography variant="overline" sx={{ color: "primary.light", mb: 2, display: "block" }}>
-              Samarbeid og kommunikasjon
-            </Typography>
-            <Typography variant="h2">Hovedstyret i Foreningen</Typography>
-            <Typography sx={{ mt: 3, mb: 5, opacity: 0.72 }}>
-              Hovedstyrets fremste oppgave er å sørge for god kommunikasjon og samarbeid mellom de ulike
-              studentinitiativene, og forvalte og disponere Indøks midler på en forsvarlig måte.
-            </Typography>
+    <Box
+      sx={{
+        background: (theme) => theme.palette.grey[900],
+        display: "grid",
+        gridTemplateColumns: "repeat(12, 1fr)",
+        gap: 4,
+        position: "relative",
+      }}
+    >
+      <Container sx={{ alignSelf: "center", gridColumn: "1 / -1", gridRow: "1" }}>
+        <Grid container direction="row" justifyContent={{ xs: "center", md: "flex-end" }}>
+          <Grid item md={5} sm={8} xs={10}>
+            <Grid
+              container
+              my={8}
+              direction="column"
+              alignItems={{ xs: "center", md: "flex-start" }}
+              sx={{ color: (theme) => theme.palette.common.white }}
+            >
+              <Grid item>
+                <Typography variant="overline" sx={{ color: "primary.light", mb: 3 }}>
+                  Samarbeid og kommunikasjon
+                </Typography>
+                <Typography variant="h2">Hovedstyret i Foreningen</Typography>
+                <Typography sx={{ mt: 3, mb: 5, opacity: 0.72 }}>
+                  Hovedstyrets fremste oppgave er å sørge for god kommunikasjon og samarbeid mellom de ulike
+                  studentinitiativene, og forvalte og disponere Indøks midler på en forsvarlig måte.
+                </Typography>
 
-            <Link href="/about/board" passHref>
-              <Button variant="contained" size="large">
-                Les mer
-              </Button>
-            </Link>
+                <Link href="/about/board" passHref>
+                  <Button variant="contained" size="medium">
+                    Les mer
+                  </Button>
+                </Link>
+              </Grid>
+            </Grid>
           </Grid>
         </Grid>
       </Container>
-    </RootStyle>
+      <Box
+        sx={{
+          position: "relative",
+          gridColumn: "1 / 7",
+          gridRow: "1",
+          display: { xs: "none", md: "block" },
+        }}
+      >
+        <Box sx={{ position: "relative", width: "100%", height: "100%" }}>
+          <Image src={Hovedbygget} layout="fill" objectFit="cover" objectPosition="center" placeholder="blur" />
+        </Box>
+      </Box>
+    </Box>
   );
 };
 
