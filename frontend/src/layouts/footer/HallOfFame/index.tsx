@@ -1,6 +1,6 @@
 import { rubberdokMembers } from "@layouts/footer/HallOfFame/constants";
 import { Close } from "@mui/icons-material";
-import { Box, Dialog, DialogContent, DialogTitle, Grid, IconButton, Typography } from "@mui/material";
+import { Box, Dialog, DialogContent, DialogTitle, Divider, Grid, IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
 const CloseButton = styled(IconButton)(({ theme }) => ({
@@ -22,13 +22,15 @@ const HallOfFame: React.FC<Props> = ({ open, setOpen }) => {
         <Typography gutterBottom variant="h4" id="dialogTitle">
           Hall of Fame
         </Typography>
-        <Typography variant="body1">Progget med blod, svette, tårer og kjærlighet av:</Typography>
+        <Typography variant="body1" sx={{ mb: 2 }}>
+          Progget med tårer og kjærlighet av:
+        </Typography>
         <CloseButton aria-label="close" onClick={() => setOpen(!open)} size="large">
           <Close />
         </CloseButton>
       </DialogTitle>
       <DialogContent>
-        {Object.entries(rubberdokMembers).map(([year, members]) => (
+        {Object.entries(rubberdokMembers).map(([year, members], index) => (
           <Box key={year}>
             <Typography>{year}</Typography>
             <Grid container>
@@ -44,6 +46,7 @@ const HallOfFame: React.FC<Props> = ({ open, setOpen }) => {
                 </Grid>
               ))}
             </Grid>
+            {Object.keys(rubberdokMembers).length > index + 1 && <Divider sx={{ my: 2 }} />}
           </Box>
         ))}
       </DialogContent>

@@ -1,6 +1,6 @@
 import Logo from "@components/Logo";
 import useResponsive from "@hooks/useResponsive";
-import { Container, Divider, Grid, Link, Paper, Stack, SxProps, Typography } from "@mui/material";
+import { Button, Container, Divider, Grid, Link, Paper, Stack, SxProps, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import rubberdokLogo from "@public/img/rubberdok_logo_black.svg";
 import dayjs from "dayjs";
@@ -36,7 +36,7 @@ const Footer: React.FC = () => {
   return (
     <>
       <Divider />
-      <Paper sx={{ bgcolor: "background.neutral" }}>
+      <Paper sx={{ bgcolor: (theme) => theme.palette.background.neutral }}>
         <Container sx={{ position: "relative", py: { xs: 8, md: 10 } }}>
           <Grid container spacing={3} justifyContent={{ md: "space-between" }}>
             <Grid item xs={12} md={3}>
@@ -79,9 +79,13 @@ const Footer: React.FC = () => {
             <Link href="mailto:feedback@rubberdok.no" variant="body3" sx={{ color: "text.secondary" }}>
               Oppdaget feil ved nettsiden?
             </Link>
-            <Link onClick={() => setOpen(!open)} variant="body3" sx={{ color: "text.secondary" }}>
+            <Button
+              variant="text"
+              onClick={() => setOpen(!open)}
+              sx={{ color: "text.secondary", typography: (theme) => theme.typography.body3 }}
+            >
               Hall of Fame
-            </Link>
+            </Button>
             <Link href="https://github.com/rubberdok/indok-web" rel="noreferrer noopener" style={{ height: "100%" }}>
               <Image src={rubberdokLogo} alt="Rubberdøk" width="64px" height="32px" layout="fixed" />
             </Link>

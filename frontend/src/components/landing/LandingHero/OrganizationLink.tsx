@@ -35,7 +35,9 @@ const OrganizationLink: React.FC<Props> = ({ organization }) => {
                 bgcolor: "primary.main",
               }}
             />
-            <Typography variant="h6">{organization.name}</Typography>
+            <Typography variant="h6" component="p">
+              {organization.name}
+            </Typography>
             {organization.externalUrl && <LinkIcon width={20} height={20} />}
           </Stack>
         </CardActionArea>

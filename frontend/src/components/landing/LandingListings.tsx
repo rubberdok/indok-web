@@ -39,7 +39,7 @@ const LandingListings: React.FC = () => {
           </Grid>
         </Box>
         <Box sx={{ position: "relative" }}>
-          <Image src={Social} layout="fill" objectFit="cover" objectPosition="center" placeholder="blur" />
+          <Image src={Social} layout="fill" objectFit="cover" objectPosition="center" placeholder="blur" alt="" />
         </Box>
       </Box>
     </Container>

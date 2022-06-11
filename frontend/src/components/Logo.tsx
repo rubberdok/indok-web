@@ -14,7 +14,9 @@ const Logo: React.FC<{ sx?: SxProps }> = ({ sx }) => {
           ...sx,
         }}
       >
-        <Typography variant="h4">INDØK</Typography>
+        <Typography variant="h4" component="span">
+          INDØK
+        </Typography>
       </Box>
     </NextLink>
   );
