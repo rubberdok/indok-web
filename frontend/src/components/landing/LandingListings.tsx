@@ -18,7 +18,7 @@ const LandingListings: React.FC = () => {
         }}
       >
         <Box>
-          <Grid container justifyContent="center">
+          <Grid container justifyContent={{ xs: "center", md: "flex-start" }}>
             <Grid item sm={8} xs={10}>
               <Typography variant="overline" sx={{ color: "primary.main", mb: 2, display: "block" }}>
                 Sosialt
