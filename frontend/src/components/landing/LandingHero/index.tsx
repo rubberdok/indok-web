@@ -1,82 +1,72 @@
 import { Box, Button, Container, Grid, Stack, Typography } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import Hero from "@public/hero.jpg";
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "phosphor-react";
 import Organizations from "./Organizations";
 
-const RootStyle = styled("div")(({ theme }) => ({
-  padding: theme.spacing(15, 0, 8, 0),
-  overflow: "hidden",
-  [theme.breakpoints.up("md")]: {
-    padding: theme.spacing(15, 0),
-    height: "80vh",
-    display: "flex",
-    alignItems: "center",
-  },
-}));
-
 const LandingHero: React.FC = () => {
   return (
     <>
-      <RootStyle>
-        <Container>
-          <Grid container columnSpacing={14} justifyContent="space-between" alignItems="center">
-            <Grid item xs={12} md={6} lg={6} sx={{ textAlign: { xs: "center", md: "left", zIndex: 10 } }}>
-              <Stack spacing={4} sx={{ mt: { xs: 0, md: 8 } }}>
-                <Typography variant="overline" sx={{ color: "primary.main" }}>
-                  Foreningen for studentene ved
-                </Typography>
+      <Box
+        sx={{
+          display: "grid",
+          gridTemplateColumns: "repeat(12, 1fr)",
+          gap: 4,
+          height: { md: "80vh" },
+          position: "relative",
+        }}
+      >
+        <Container sx={{ alignSelf: "center", gridColumn: "1 / -1", gridRow: "1" }}>
+          <Grid container direction="row">
+            <Grid item md={5} xs={12}>
+              <Stack spacing={4} mt={14} mb={8}>
+                <Grid container gap={4} direction="column" alignItems={{ xs: "center", md: "flex-start" }}>
+                  <Grid item>
+                    <Typography variant="overline" sx={{ color: "primary.main" }}>
+                      Foreningen for studentene ved
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={8}>
+                    <Typography variant="h2" textAlign={{ xs: "center", md: "left" }}>
+                      Industriell Økonomi & Teknologiledelse
+                    </Typography>
+                  </Grid>
+                </Grid>
 
-                <Typography variant="h1">Industriell Økonomi & Teknologiledelse</Typography>
-
-                <Stack
-                  direction={{ xs: "column", sm: "row" }}
-                  justifyContent={{ xs: "center", md: "flex-start" }}
-                  spacing={2}
-                >
-                  <Link passHref href="/about">
-                    <Button variant="contained" size="large">
-                      Les om foreningen
-                    </Button>
-                  </Link>
-                  <Link passHref href="/events">
-                    <Button variant="contained" color="inherit" size="large">
-                      Se arrangementer
-                    </Button>
-                  </Link>
-                </Stack>
+                <Grid container direction={{ xs: "column", md: "row" }} columnGap={1} rowGap={2} alignItems="center">
+                  <Grid item xs={10} md="auto">
+                    <Link passHref href="/about">
+                      <Button variant="contained" size="medium">
+                        Les om foreningen
+                      </Button>
+                    </Link>
+                  </Grid>
+                  <Grid item xs={10} md="auto">
+                    <Link passHref href="/events">
+                      <Button variant="contained" color="inherit" size="medium">
+                        Se arrangementer
+                      </Button>
+                    </Link>
+                  </Grid>
+                </Grid>
               </Stack>
-            </Grid>
-
-            <Grid
-              item
-              xs={12}
-              md={6}
-              lg={6}
-              sx={{
-                display: { xs: "none", md: "block" },
-              }}
-            >
-              <Box
-                component="img"
-                sx={{
-                  objectFit: "cover",
-                  height: "100vh",
-                  float: "right",
-                  right: 0,
-                  width: 1 / 2,
-                  zIndex: -1,
-                  position: "absolute",
-                  pl: 10,
-                  top: 0,
-                }}
-                alt=""
-                src="/hero.jpg"
-              />
             </Grid>
           </Grid>
         </Container>
-      </RootStyle>
+        <Box
+          sx={{
+            position: "relative",
+            gridColumn: "7 / -1",
+            gridRow: "1",
+            display: { xs: "none", md: "block" },
+          }}
+        >
+          <Box sx={{ position: "relative", width: "100%", height: "100%" }}>
+            <Image src={Hero} layout="fill" objectFit="cover" objectPosition="center" placeholder="blur" />
+          </Box>
+        </Box>
+      </Box>
       <Box
         sx={{
           width: "100vw",
