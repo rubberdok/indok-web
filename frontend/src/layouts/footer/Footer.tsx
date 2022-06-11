@@ -9,6 +9,7 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import NextLink, { LinkProps } from "next/link";
 import { ReactNode, useState } from "react";
+import { grey } from "@mui/material/colors";
 
 const HallOfFame = dynamic(() => import("./HallOfFame"));
 
@@ -43,7 +44,7 @@ const Footer: React.FC = () => {
             <Grid item xs={12} md={3}>
               <Stack alignItems="flex-start" spacing={3}>
                 <Logo />
-                <Typography variant="body3" sx={{ color: "text.secondary" }}>
+                <Typography variant="body3" sx={{ color: grey[700] }}>
                   Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse, NTNU Kolbjørn Hejes vei 1E,
                   7034 Trondheim Org.nr. 994 778 463
                 </Typography>
@@ -53,9 +54,15 @@ const Footer: React.FC = () => {
             <Grid item xs={12} md={7}>
               <Stack alignItems="flex-start">
                 <Typography variant="h6">Lenker</Typography>
-                <NextLinkItem href="/report">Baksida</NextLinkItem>
-                <NextLinkItem href="/about">Om oss</NextLinkItem>
-                <NextLinkItem href="https://www.indøk.no">Studieside</NextLinkItem>
+                <NextLinkItem href="/report" sx={{ color: grey[700] }}>
+                  Baksida
+                </NextLinkItem>
+                <NextLinkItem href="/about" sx={{ color: grey[700] }}>
+                  Om oss
+                </NextLinkItem>
+                <NextLinkItem href="https://www.indøk.no" sx={{ color: grey[700] }}>
+                  Studieside
+                </NextLinkItem>
               </Stack>
             </Grid>
             {isDesktop && <Watermark />}
@@ -77,15 +84,17 @@ const Footer: React.FC = () => {
             {`Kopirett © ${dayjs().format("YYYY")} Foreningen for Studentene ved Indøk. Alle rettigheter reservert.`}
           </Typography>
           <Stack direction="row" spacing={3} justifyContent="center" alignItems="center">
-            <Link href="https://github.com/rubberdok/indok-web" variant="body3" sx={{ color: "text.secondary" }}>
-              <GitHub fontSize="inherit" />
-            </Link>
             <Link
               href="https://github.com/rubberdok/indok-web/issues/new/choose"
               variant="body3"
               sx={{ color: "text.secondary" }}
             >
-              Oppdaget feil ved nettsiden?
+              <Grid container justifyContent="center" alignItems="center" gap={1}>
+                <Grid item>
+                  <GitHub fontSize="inherit" />
+                </Grid>
+                <Grid item>Oppdaget feil ved nettsiden?</Grid>
+              </Grid>
             </Link>
             <Button
               variant="text"
