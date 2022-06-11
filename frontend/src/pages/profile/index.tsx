@@ -16,6 +16,7 @@ import Layout from "@layouts/Layout";
 import { addApolloState, initializeApollo } from "@lib/apolloClient";
 import { Avatar, Container, Grid, Stack, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import { generateFeideLoginUrl } from "@utils/auth";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Head from "next/head";
 import { useMemo } from "react";
@@ -137,7 +138,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   if (error) return { notFound: true };
   if (!data.user) {
-    return { notFound: true };
+    return { redirect: { destination: generateFeideLoginUrl("/profile"), permanent: false } };
   }
   return addApolloState(client, { props: { user: data.user } });
 };
