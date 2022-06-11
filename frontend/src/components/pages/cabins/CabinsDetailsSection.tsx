@@ -30,7 +30,6 @@ const CabinsDetailsSection: React.FC = () => {
             <Typography variant="overline" sx={{ color: "primary.main", mb: 2, display: "block" }}>
               Hyttenes standard
             </Typography>
-            <Typography variant="h2">Standard lik et vanlig bolighus</Typography>
             <Typography sx={{ mt: 3, mb: 5, opacity: 0.72 }}>
               Med sine to etasjer, rommer Bjørnen og Oksen 18 personer per hytte. Den generelle standarden er tilnærmet
               lik et vanlig bolighus.
