@@ -327,7 +327,7 @@ jobs:
             -e CLOUDINARY_API_KEY=${{ secrets.CLOUDINARY_API_KEY }} \
             -e CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }} \
             -e CLOUDINARY_CLOUD_NAME=rubberdok \
-            ${{ steps.image-tag.outsputs.image }}
+            ${{ steps.image-tag.outputs.image }}
 
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
