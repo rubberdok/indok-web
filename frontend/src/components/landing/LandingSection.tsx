@@ -30,7 +30,7 @@ const LandingSection: React.FC = () => {
             objectPosition="center"
             placeholder="blur"
             alt=""
-            blurDataUrl={getBlurUrl(Hovedbygget)}
+            blurDataURL={getBlurUrl(Hovedbygget)}
           />
         </Box>
       </Box>
