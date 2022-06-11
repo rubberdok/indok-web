@@ -3,7 +3,7 @@
 ###########
 
 # pull official base image
-FROM 777854691961.dkr.ecr.eu-north-1.amazonaws.com/python:3.9 as builder
+FROM public.ecr.aws/docker/library/python:3.9-slim as builder
 
 # set work directory
 WORKDIR /usr/src/app
@@ -26,8 +26,13 @@ RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/app/wheels -r ./requ
 ##########
 
 # pull official base image
-FROM 777854691961.dkr.ecr.eu-north-1.amazonaws.com/python:3.9 as runner
+FROM public.ecr.aws/docker/library/python:3.9-slim as runner
 WORKDIR /usr/src/app
+
+RUN apt-get update && \
+    apt-get install -y \
+    libpango-1.0-0 \
+    libpangoft2-1.0-0
 
 # create directory for the app user
 RUN addgroup --gid 1001 -system python

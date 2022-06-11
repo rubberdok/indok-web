@@ -1,7 +1,7 @@
 import graphene
 from graphene_django import DjangoObjectType
 
-from .google_drive_api import get_thumbnail
+from .google_drive_api import GoogleDriveAPI
 from .models import ArchiveDocument
 
 
@@ -13,4 +13,5 @@ class ArchiveDocumentType(DjangoObjectType):
 
     @staticmethod
     def resolve_thumbnail(root: ArchiveDocument, info):
-        return get_thumbnail(root.file_location)
+        drive = GoogleDriveAPI()
+        return drive.get_thumbnail(root.file_location)
