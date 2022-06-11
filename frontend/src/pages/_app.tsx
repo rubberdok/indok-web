@@ -1,38 +1,40 @@
 import { ApolloProvider } from "@apollo/client";
-import { CssBaseline, responsiveFontSizes } from "@material-ui/core";
-import { ThemeProvider } from "@material-ui/styles";
-import "@styles/global.css";
-import theme from "@styles/theme";
+import { CacheProvider, EmotionCache } from "@emotion/react";
+import { createEmotionCache } from "@lib/emotion";
+import { NextPage } from "next";
 import { AppProps } from "next/app";
 import Head from "next/head";
-import React, { useEffect } from "react";
-import { useApollo } from "src/lib/apolloClient";
+import { ReactElement, ReactNode } from "react";
+import { useApollo } from "@lib/apolloClient";
+import ThemeWrapper from "src/theme";
 
-type AppPropsWithError = AppProps & { err: Error };
+export type NextPageWithLayout<P = Record<string, unknown>> = NextPage<P> & {
+  getLayout?: (page: ReactElement) => ReactNode;
+};
 
-const App = ({ Component, pageProps, err }: AppPropsWithError): JSX.Element => {
+type CustomAppProps = AppProps & {
+  err: Error;
+  Component: NextPageWithLayout;
+  emotionCache?: EmotionCache;
+};
+
+const clientSideEmotionCache = createEmotionCache();
+
+const App = (props: CustomAppProps): JSX.Element => {
+  const { pageProps, err, Component, emotionCache = clientSideEmotionCache } = props;
   const apolloClient = useApollo(pageProps);
-
-  useEffect(() => {
-    const jssStyles = document.querySelector("#jss-server-side");
-    if (jssStyles) {
-      jssStyles.parentElement?.removeChild(jssStyles);
-    }
-  }, []);
-
-  const responsiveTheme = responsiveFontSizes(theme, { breakpoints: ["sm", "md", "lg", "xl"], factor: 2 });
+  const getLayout = Component.getLayout ?? ((page) => page);
 
   return (
-    <ApolloProvider client={apolloClient}>
-      <Head>
-        <title>Indøk NTNU - Foreningen for Industriell Økonomi og teknologiledelse</title>
-        <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
-      </Head>
-      <ThemeProvider theme={responsiveTheme}>
-        <CssBaseline />
-        <Component {...pageProps} err={err} />
-      </ThemeProvider>
-    </ApolloProvider>
+    <CacheProvider value={emotionCache}>
+      <ApolloProvider client={apolloClient}>
+        <Head>
+          <title>Indøk NTNU - Foreningen for Industriell Økonomi og teknologiledelse</title>
+          <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
+        </Head>
+        <ThemeWrapper>{getLayout(<Component {...pageProps} err={err} />)}</ThemeWrapper>
+      </ApolloProvider>
+    </CacheProvider>
   );
 };
 

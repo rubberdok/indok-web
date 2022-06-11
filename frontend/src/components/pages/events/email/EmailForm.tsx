@@ -2,9 +2,9 @@ import { useMutation, useQuery } from "@apollo/client";
 import { SEND_EVENT_EMAILS } from "@graphql/events/mutations";
 import { QUERY_SIGNED_UP_USERS } from "@graphql/events/queries";
 import { AttendableEvent } from "@interfaces/events";
-import { Box, Button, Tooltip } from "@material-ui/core";
+import { Box, Button, Tooltip } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import SendIcon from "@material-ui/icons/Send";
+import { Send } from "@mui/icons-material";
 import EmailFormDialog from "./EmailFormDialog";
 import ConfirmationDialog from "./ConfirmationsDialog";
 
@@ -89,7 +89,7 @@ const EmailForm: React.FC<EmailFormProps> = ({ eventId }) => {
       >
         <Box>
           <Button disabled={!data?.event.isAttendable} onClick={() => setShowEmailForm(true)} color="primary">
-            <SendIcon style={{ margin: "5px" }} />
+            <Send style={{ margin: "5px" }} />
             Send e-post til alle påmeldte
           </Button>
         </Box>

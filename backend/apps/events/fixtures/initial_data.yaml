@@ -1,1 +1,44 @@
-[]
+- model: events.Event
+  pk: 1
+  fields:
+    title: Immatrikuleringsball
+    description:
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+      quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+      Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
+      eu fugiat nulla pariatur.
+    start_time: 2025-03-31 20:14:32+00:00
+    end_time: 2025-03-31 21:14:32+00:00
+    deadline: 2025-03-31 19:14:32+00:00
+    publisher: 3
+    location: Scandic Nidelven
+    short_description: Lorem Ipsum
+    contact_email: eva_student@feide.no
+    allowed_grade_years: "1,2,3,4,5"
+    signup_open_date: 2020-03-31 19:14:32+00:00
+    available_slots: 50
+    organization: 19
+    is_attendable: true
+- model: events.Event
+  pk: 2
+  fields:
+    title: Immatrikuleringsball 2 (for de kule)
+    description:
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+      quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+      Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
+      eu fugiat nulla pariatur.
+    start_time: 2025-03-31 20:14:32+00:00
+    end_time: 2025-03-31 21:14:32+00:00
+    deadline: 2025-03-31 19:14:32+00:00
+    publisher: 3
+    location: Scandic Nidelven
+    short_description: Lorem Ipsum
+    contact_email: eva_student@feide.no
+    allowed_grade_years: "1"
+    signup_open_date: 2020-03-31 19:14:32+00:00
+    available_slots: 1
+    is_attendable: true
+    organization: 19

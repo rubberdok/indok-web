@@ -1,33 +1,32 @@
 import { useQuery } from "@apollo/client";
-import Layout from "@components/Layout";
 import { GET_USER } from "@graphql/users/queries";
 import { Organization } from "@interfaces/organizations";
 import { User } from "@interfaces/users";
-import { Box, CircularProgress, Container, Grid, makeStyles, Paper, Typography } from "@material-ui/core";
-import { NextPage } from "next";
+import Layout from "@layouts/Layout";
+import { Card, CardActionArea, CircularProgress, Container, Grid, Typography } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import Link from "next/link";
+import React from "react";
+import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "src/theme/constants";
+import { NextPageWithLayout } from "../_app";
 
-const useStyles = makeStyles((theme) => ({
-  container: { padding: theme.spacing(4) },
-  hover: {
-    "&:hover": {
-      backgroundColor: theme.palette.primary.light,
-      cursor: "pointer",
-      color: theme.palette.primary.contrastText,
-    },
+const RootStyle = styled("div")(({ theme }) => ({
+  paddingTop: HEADER_MOBILE_HEIGHT,
+  margin: theme.spacing(4, 0),
+  [theme.breakpoints.up("md")]: {
+    paddingTop: HEADER_DESKTOP_HEIGHT,
   },
 }));
 
-const OrganizationPage: NextPage = () => {
+const OrganizationPage: NextPageWithLayout = () => {
   const { data } = useQuery<{ user: User }>(GET_USER);
-  const classes = useStyles();
 
   return (
-    <Layout>
-      <Container className={classes.container}>
+    <RootStyle>
+      <Container>
         <Grid container direction="column" spacing={10}>
           <Grid item>
-            <Typography variant="h1" align="center">
+            <Typography variant="h3" align="center">
               Dine foreninger
             </Typography>
           </Grid>
@@ -35,15 +34,15 @@ const OrganizationPage: NextPage = () => {
             {data?.user?.organizations ? (
               data.user.organizations.map((org: Organization) => (
                 <Grid item key={org.id}>
-                  <Link passHref href={`orgs/${org.id}`}>
-                    <Paper className={classes.hover}>
-                      <Box p={5}>
+                  <Card>
+                    <Link passHref href={`orgs/${org.id}`}>
+                      <CardActionArea sx={{ p: 4 }}>
                         <Typography variant="h5" align="center">
                           {org.name}
                         </Typography>
-                      </Box>
-                    </Paper>
-                  </Link>
+                      </CardActionArea>
+                    </Link>
+                  </Card>
                 </Grid>
               ))
             ) : (
@@ -52,8 +51,10 @@ const OrganizationPage: NextPage = () => {
           </Grid>
         </Grid>
       </Container>
-    </Layout>
+    </RootStyle>
   );
 };
+
+OrganizationPage.getLayout = (page: React.ReactElement) => <Layout>{page}</Layout>;
 
 export default OrganizationPage;

@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/client";
 import { QUERY_CABINS } from "@graphql/cabins/queries";
 import { Cabin } from "@interfaces/cabins";
-import { Divider, Grid, Typography } from "@material-ui/core";
+import { Divider, Grid, Typography } from "@mui/material";
 
 /*
 Shows an overview of cabin prices. Fetches the prices from the Cabin model.

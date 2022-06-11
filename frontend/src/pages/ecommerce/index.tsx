@@ -1,10 +1,14 @@
 import { useQuery } from "@apollo/client";
-import Layout from "@components/Layout";
 import OrderCellContent from "@components/pages/ecommerce/OrderCellContent";
+import { UserInfoDocument } from "@generated/graphql";
 import { GET_USER_ORDERS } from "@graphql/ecommerce/queries";
 import { Order } from "@interfaces/ecommerce";
 import { HeaderValuePair } from "@interfaces/utils";
+import Layout, { RootStyle } from "@layouts/Layout";
+import { addApolloState, initializeApollo } from "@lib/apolloClient";
+import { KeyboardArrowLeft } from "@mui/icons-material";
 import {
+  Alert,
   Box,
   Button,
   Card,
@@ -20,13 +24,11 @@ import {
   TableHead,
   TableRow,
   Typography,
-} from "@material-ui/core";
-import { KeyboardArrowLeft } from "@material-ui/icons";
-import { Alert } from "@material-ui/lab";
-import { NextPage } from "next";
+} from "@mui/material";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { redirectIfNotLoggedIn } from "src/utils/redirect";
+import { NextPageWithLayout } from "../_app";
 
 const orderFields: HeaderValuePair<Order>[] = [
   { header: "Ordre-ID", field: "id" },
@@ -37,7 +39,7 @@ const orderFields: HeaderValuePair<Order>[] = [
   { header: "Status", field: "paymentStatus" },
 ];
 
-const OrdersPage: NextPage = () => {
+const OrdersPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSideProps>> = () => {
   const router = useRouter();
 
   const [orders, setOrders] = useState<Order[]>();
@@ -46,82 +48,95 @@ const OrdersPage: NextPage = () => {
     onCompleted: (data) => setOrders(data.userOrders),
   });
 
-  if (redirectIfNotLoggedIn()) {
-    return null;
-  }
-
   return (
-    <Layout>
-      <Container>
-        <Box mt={2}>
-          <Button startIcon={<KeyboardArrowLeft />} onClick={() => router.back()}>
-            Tilbake
-          </Button>
-        </Box>
-        <Box mb={2}>
-          <Card>
-            <CardHeader title="Betalinger"></CardHeader>
-            <CardContent>
-              <Grid container alignItems="center" direction="column" spacing={3}>
-                <Grid item xs={12}>
-                  <Alert variant="filled" severity="info">
-                    Betalingsløsningen er under utvikling. Dersom du opplever problemer, kontakt{" "}
-                    <a style={{ color: "blue" }} href="mailto:kontakt@rubberdok.no">
-                      kontakt@rubberdok.no
-                    </a>
+    <Container>
+      <Box mt={2}>
+        <Button startIcon={<KeyboardArrowLeft />} onClick={() => router.back()}>
+          Tilbake
+        </Button>
+      </Box>
+      <Box mb={2}>
+        <Card>
+          <CardHeader title="Betalinger"></CardHeader>
+          <CardContent>
+            <Grid container alignItems="center" direction="column" spacing={3}>
+              <Grid item xs={12}>
+                <Alert variant="filled" severity="info">
+                  Betalingsløsningen er under utvikling. Dersom du opplever problemer, kontakt{" "}
+                  <a style={{ color: "blue" }} href="mailto:kontakt@rubberdok.no">
+                    kontakt@rubberdok.no
+                  </a>
+                </Alert>
+              </Grid>
+              {error ? (
+                <>
+                  <Typography variant="h3">Feil</Typography>
+                  <Alert severity="error" variant="filled">
+                    {error.message}
                   </Alert>
-                </Grid>
-                {error ? (
-                  <>
-                    <Typography variant="h3">Feil</Typography>
-                    <Alert severity="error" variant="filled">
-                      {error.message}
-                    </Alert>
-                  </>
-                ) : loading ? (
-                  <CircularProgress />
-                ) : (
-                  <>
-                    <Grid item xs={12}>
-                      <Typography variant="h3">Mine betalinger</Typography>
-                      {orders && orders.length !== 0 ? (
-                        <TableContainer style={{ maxHeight: 600 }}>
-                          <Table>
-                            <TableHead>
-                              <TableRow>
+                </>
+              ) : loading ? (
+                <CircularProgress />
+              ) : (
+                <>
+                  <Grid item xs={12}>
+                    <Typography variant="h3">Mine betalinger</Typography>
+                    {orders && orders.length !== 0 ? (
+                      <TableContainer style={{ maxHeight: 600 }}>
+                        <Table>
+                          <TableHead>
+                            <TableRow>
+                              {orderFields.map((field) => (
+                                <TableCell key={`user-header-${field.header}`}>{field.header}</TableCell>
+                              ))}
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {orders.map((order: Order) => (
+                              <TableRow key={`user-row-${order.id}`}>
                                 {orderFields.map((field) => (
-                                  <TableCell key={`user-header-${field.header}`}>{field.header}</TableCell>
+                                  <TableCell key={`user-${order.id}-cell--${field.field}`}>
+                                    <OrderCellContent order={order} field={field} />
+                                  </TableCell>
                                 ))}
                               </TableRow>
-                            </TableHead>
-                            <TableBody>
-                              {orders.map((order: Order) => (
-                                <TableRow key={`user-row-${order.id}`}>
-                                  {orderFields.map((field) => (
-                                    <TableCell key={`user-${order.id}-cell--${field.field}`}>
-                                      <OrderCellContent order={order} field={field} />
-                                    </TableCell>
-                                  ))}
-                                </TableRow>
-                              ))}
-                            </TableBody>
-                          </Table>
-                        </TableContainer>
-                      ) : (
-                        <Typography align="center" variant="body1">
-                          Ingen ordrer funnet
-                        </Typography>
-                      )}
-                    </Grid>
-                  </>
-                )}
-              </Grid>
-            </CardContent>
-          </Card>
-        </Box>
-      </Container>
-    </Layout>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                    ) : (
+                      <Typography align="center" variant="body1">
+                        Ingen ordrer funnet
+                      </Typography>
+                    )}
+                  </Grid>
+                </>
+              )}
+            </Grid>
+          </CardContent>
+        </Card>
+      </Box>
+    </Container>
   );
 };
 
 export default OrdersPage;
+
+OrdersPage.getLayout = (page) => (
+  <Layout>
+    <RootStyle>{page}</RootStyle>
+  </Layout>
+);
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const client = initializeApollo({}, ctx);
+  const { data, error } = await client.query({
+    query: UserInfoDocument,
+  });
+
+  if (error) return { notFound: true };
+  if (!data.user) {
+    return { notFound: true };
+  }
+  return addApolloState(client, { props: { user: data.user } });
+};

@@ -1,49 +1,48 @@
-import { Box, Button, Container, makeStyles, Typography, useMediaQuery } from "@material-ui/core";
+import useResponsive from "@hooks/useResponsive";
+import { Box, Button, Container, Grid, Typography } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    paddingTop: 80,
-  },
-  container: {
-    alignItems: "center",
-
-    [theme.breakpoints.down("sm")]: {
-      flexDirection: "column",
-    },
-  },
-}));
+import Social from "@public/img/gang.jpg";
 
 const LandingListings: React.FC = () => {
-  const classes = useStyles();
-  const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down("sm"));
+  const isMobile = useResponsive({ query: "down", key: "md" });
 
   return (
-    <Box className={classes.root}>
-      <Container>
-        <Box py={isMobile ? 10 : 20} display="flex" className={classes.container}>
-          <Box maxWidth={650}>
-            <Typography variant="h2">Delta i et fantastisk studentmiljø.</Typography>
-            <br />
-            <Typography variant="body1">
-              Vi har foreninger som tar seg av det meste, og man finner en forening for enhver som har lyst til å
-              engasjere seg!
-            </Typography>
-            <br />
-            <Link href="/listings" passHref>
-              <Button color="inherit" variant="outlined">
-                Søk verv
-              </Button>
-            </Link>
-          </Box>
-          <Box ml={isMobile ? 0 : 20} mt={isMobile ? 10 : 0} width="100%" height={350} position="relative">
-            <Image layout="fill" src="/img/gang.jpg" alt="indøkstudenter" objectFit={isMobile ? "cover" : "none"} />
-          </Box>
+    <Container sx={{ my: (theme) => theme.spacing(8) }}>
+      <Box
+        sx={{
+          display: "grid",
+          gap: (theme) => theme.spacing(8),
+          ...(!isMobile ? { gridTemplateColumns: "repeat(2, 1fr)" } : { gridTemplateRows: "repeat(2, 1fr)" }),
+        }}
+      >
+        <Box>
+          <Grid container justifyContent={{ xs: "center", md: "flex-start" }}>
+            <Grid item sm={8} xs={10}>
+              <Typography variant="overline" sx={{ color: "primary.main", mb: 2, display: "block" }}>
+                Sosialt
+              </Typography>
+              <Typography variant="h2">Delta i et fantastisk studentmiljø</Typography>
+              <br />
+              <Typography variant="body1">
+                Vi har foreninger som tar seg av det meste, og man finner en forening for enhver som har lyst til å
+                engasjere seg!
+              </Typography>
+              <br />
+              <Link href="/listings" passHref>
+                <Button color="primary" variant="contained" size="medium">
+                  Søk verv
+                </Button>
+              </Link>
+            </Grid>
+          </Grid>
         </Box>
-      </Container>
-    </Box>
+        <Box sx={{ position: "relative" }}>
+          <Image src={Social} layout="fill" objectFit="cover" objectPosition="center" placeholder="blur" alt="" />
+        </Box>
+      </Box>
+    </Container>
   );
 };
 

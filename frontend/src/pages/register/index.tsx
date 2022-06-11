@@ -1,29 +1,33 @@
-import Layout from "@components/Layout";
+import Layout, { RootStyle } from "@layouts/Layout";
 import UserForm from "@components/pages/profile/UserForm";
-import { Container, Grid } from "@material-ui/core";
-import { NextPage } from "next";
+import { Container, Grid } from "@mui/material";
 import { useRouter } from "next/router";
+import { NextPageWithLayout } from "../_app";
 
 const ID_PREFIX = "registerUser-";
 
-const EditProfilePage: NextPage = () => {
+const EditProfilePage: NextPageWithLayout = () => {
   const router = useRouter();
   return (
-    <Layout>
-      <Container>
-        <Grid container direction="row" justifyContent="center">
-          <Grid item md={8}>
-            <UserForm
-              kind="register"
-              title="Registrering"
-              onCompleted={() => router.push("/profile")}
-              data-test-id={ID_PREFIX}
-            />
-          </Grid>
+    <Container>
+      <Grid container direction="row" justifyContent="center">
+        <Grid item md={8}>
+          <UserForm
+            kind="register"
+            title="Registrering"
+            onCompleted={() => router.push("/profile")}
+            data-test-id={ID_PREFIX}
+          />
         </Grid>
-      </Container>
-    </Layout>
+      </Grid>
+    </Container>
   );
 };
+
+EditProfilePage.getLayout = (page) => (
+  <Layout>
+    <RootStyle>{page}</RootStyle>
+  </Layout>
+);
 
 export default EditProfilePage;

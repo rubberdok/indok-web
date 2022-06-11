@@ -1,11 +1,11 @@
-import React from "react";
-import Accordion from "@material-ui/core/Accordion";
-import AccordionDetails from "@material-ui/core/AccordionDetails";
-import AccordionSummary from "@material-ui/core/AccordionSummary";
-import Typography from "@material-ui/core/Typography";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import { Box, Grid } from "@material-ui/core";
+import { ExpandMore } from "@mui/icons-material";
+import { Box, Grid } from "@mui/material";
+import Accordion from "@mui/material/Accordion";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import Typography from "@mui/material/Typography";
 import Link from "next/link";
+import React from "react";
 
 const faqs = [
   {
@@ -113,10 +113,10 @@ const faqs = [
 Renders all frequently asked questions regarding the cabins.
 */
 const FAQ: React.FC = () => {
-  const [expanded, setExpanded] = React.useState<number | false>(false);
+  const [expandedPanel, setExpandedPanel] = React.useState<number>();
 
-  const handleChange = (panel: number) => (_event: React.ChangeEvent<Record<string, unknown>>, isExpanded: boolean) => {
-    setExpanded(isExpanded ? panel : false);
+  const handleChange = (panel: number) => (_: React.SyntheticEvent<Element, Event>, expanded: boolean) => {
+    setExpandedPanel(expanded ? panel : undefined);
   };
 
   return (
@@ -124,8 +124,8 @@ const FAQ: React.FC = () => {
       {faqs.map((faq, index) => (
         <Grid item xs={12} md={6} key={index}>
           <Box>
-            <Accordion expanded={expanded === index} onChange={handleChange(index)}>
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <Accordion expanded={expandedPanel === index} onChange={handleChange(index)}>
+              <AccordionSummary expandIcon={<ExpandMore />}>
                 <Typography variant="subtitle1">{faq.question}</Typography>
               </AccordionSummary>
               <AccordionDetails>{faq.answer}</AccordionDetails>

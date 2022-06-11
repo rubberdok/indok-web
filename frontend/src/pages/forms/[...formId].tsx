@@ -1,14 +1,14 @@
 import { useQuery } from "@apollo/client";
-import AnswerForm from "@components/forms/AnswerForm";
-import Layout from "@components/Layout";
+import AnswerForm from "@components/pages/forms/AnswerForm";
+import Layout, { RootStyle } from "@layouts/Layout";
 import { FORM_WITH_QUESTIONS_AND_ANSWERS } from "@graphql/forms/queries";
 import { Form } from "@interfaces/forms";
-import { CircularProgress, Container, Grid, Typography } from "@material-ui/core";
+import { CircularProgress, Container, Grid, Typography } from "@mui/material";
 import { generateFeideLoginUrl } from "@utils/auth";
-import { NextPage } from "next";
 import { useRouter } from "next/router";
+import { NextPageWithLayout } from "../_app";
 
-const FormPage: NextPage = () => {
+const FormPage: NextPageWithLayout = () => {
   const router = useRouter();
   const { formId } = router.query;
   const { loading, error, data } = useQuery<{ form: Form }>(FORM_WITH_QUESTIONS_AND_ANSWERS, {
@@ -23,32 +23,36 @@ const FormPage: NextPage = () => {
       const signInURL = generateFeideLoginUrl(router.asPath);
       router.push(signInURL);
       return (
-        <Layout>
-          <Container>
-            <Grid container direction="row" style={{ marginTop: 16 }} justifyContent="center">
-              <Grid item>
-                <Typography variant="subtitle1">Du må være logget inn for å se dette, sender deg til login.</Typography>
-              </Grid>
-              <Grid item>
-                <CircularProgress />
-              </Grid>
+        <Container>
+          <Grid container direction="row" style={{ marginTop: 16 }} justifyContent="center">
+            <Grid item>
+              <Typography variant="subtitle1">Du må være logget inn for å se dette, sender deg til login.</Typography>
             </Grid>
-          </Container>
-        </Layout>
+            <Grid item>
+              <CircularProgress />
+            </Grid>
+          </Grid>
+        </Container>
       );
     }
     return <p>Noe gikk galt...</p>;
   }
 
   return (
-    <Layout>
+    <>
       {data && (
         <Container>
           <AnswerForm form={data.form} />
         </Container>
       )}
-    </Layout>
+    </>
   );
 };
+
+FormPage.getLayout = (page) => (
+  <Layout>
+    <RootStyle>{page}</RootStyle>
+  </Layout>
+);
 
 export default FormPage;

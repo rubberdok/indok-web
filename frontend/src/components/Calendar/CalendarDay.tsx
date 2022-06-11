@@ -1,6 +1,6 @@
-import { makeStyles, Theme } from "@material-ui/core/styles";
-import { Grid, Box, Typography } from "@material-ui/core";
-interface Props {
+import { Box, Button, Grid, Typography } from "@mui/material";
+
+type Props = {
   isDisabled?: boolean;
   isFromDate?: boolean;
   isToDate?: boolean;
@@ -9,54 +9,38 @@ interface Props {
   onClick?: () => void;
   isInRange?: boolean;
   isInvalidRange?: boolean;
-}
+};
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    width: "100%",
-    height: 60,
-    color: (props: Props) => {
-      if (props.isDisabled) {
-        return "#cecece";
-      } else if (props.isFromDate || props.isToDate || props.isInRange) {
-        return "white";
-      } else {
-        return "black";
-      }
-    },
-    backgroundColor: (props: Props) => {
-      if (props.isHidden) {
-        return "transparent";
-      }
-      if (props.isFromDate || props.isToDate) {
-        if (props.isInvalidRange) {
-          return theme.palette.error.dark;
-        }
-        return theme.palette.primary.dark;
-      }
-      if (props.isInRange) {
-        if (props.isInvalidRange) {
-          return theme.palette.error.light;
-        }
-        return theme.palette.primary.light;
-      }
-      return theme.palette.background.paper;
-    },
-    cursor: (props: Props) => (props.isDisabled || props.isHidden ? "default" : "pointer"),
-  },
-}));
+const bgcolor = (
+  isFromDate: boolean | undefined,
+  isToDate: boolean | undefined,
+  isInRange: boolean | undefined,
+  isHidden: boolean | undefined
+) => {
+  if (isHidden) {
+    return "transparent";
+  }
+  if (isFromDate || isToDate) {
+    return "primary.darker";
+  }
+  if (isInRange) {
+    return "primary.dark";
+  }
+  return "transparent";
+};
 
-const CalendarDay: React.VFC<Props> = (props) => {
-  const classes = useStyles(props);
-  const { onClick, value, isHidden } = props;
+const CalendarDay: React.VFC<Props> = ({ onClick, value, isHidden, isDisabled, isToDate, isInRange, isFromDate }) => {
   return (
-    <Grid item xs component="td" onClick={onClick}>
-      <Box className={classes.root}>
-        <Grid container justifyContent="center" alignItems="center" style={{ height: "100%" }}>
-          <Grid item>
-            <Typography>{!isHidden ? value : ""}</Typography>
-          </Grid>
-        </Grid>
+    <Grid item xs component="td" position="relative">
+      <Box
+        component={Button}
+        disabled={isDisabled || isHidden}
+        variant={(isFromDate || isToDate || isInRange) && !isHidden ? "contained" : "text"}
+        bgcolor={bgcolor(isFromDate, isToDate, isInRange, isHidden)}
+        onClick={onClick}
+        sx={{ width: 1, p: 0, minWidth: 0, aspectRatio: "1" }}
+      >
+        <Typography variant="subtitle2">{!isHidden ? value : ""}</Typography>
       </Box>
     </Grid>
   );
