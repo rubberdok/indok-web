@@ -1,5 +1,6 @@
 import Logo from "@components/Logo";
 import useResponsive from "@hooks/useResponsive";
+import { GitHub } from "@mui/icons-material";
 import { Button, Container, Divider, Grid, Link, Paper, Stack, SxProps, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import rubberdokLogo from "@public/img/rubberdok_logo_black.svg";
@@ -76,12 +77,20 @@ const Footer: React.FC = () => {
             {`Kopirett © ${dayjs().format("YYYY")} Foreningen for Studentene ved Indøk. Alle rettigheter reservert.`}
           </Typography>
           <Stack direction="row" spacing={3} justifyContent="center" alignItems="center">
-            <Link href="mailto:feedback@rubberdok.no" variant="body3" sx={{ color: "text.secondary" }}>
+            <Link href="https://github.com/rubberdok/indok-web" variant="body3" sx={{ color: "text.secondary" }}>
+              <GitHub fontSize="inherit" />
+            </Link>
+            <Link
+              href="https://github.com/rubberdok/indok-web/issues/new/choose"
+              variant="body3"
+              sx={{ color: "text.secondary" }}
+            >
               Oppdaget feil ved nettsiden?
             </Link>
             <Button
               variant="text"
               onClick={() => setOpen(!open)}
+              disableFocusRipple
               sx={{ color: "text.secondary", typography: (theme) => theme.typography.body3 }}
             >
               Hall of Fame
