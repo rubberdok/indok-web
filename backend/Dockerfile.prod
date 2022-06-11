@@ -50,8 +50,17 @@ RUN chmod +x  ./entrypoints/*.sh
 COPY .env.production ./.env.production
 COPY .env.test ./.env.test
 
+
 # copy project
 COPY . .
+
+# copy static files
+# importantly, we set some dummy envs here to
+# not run into errors with missing environment variables
+# might not be an ideal workaround
+ENV DJANGO_READ_DOT_ENV_FILE true
+ENV DJANGO_ENV_FILES ".env.test"
+RUN python manage.py collectstatic --noinput
 
 # chown all the files to the app user
 RUN chown -R django:python /usr/src/app
