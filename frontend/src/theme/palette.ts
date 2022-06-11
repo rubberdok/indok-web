@@ -131,7 +131,7 @@ const palette = {
     ...COMMON,
     mode: "light",
     divider: GREY[500_24],
-    text: { primary: GREY[800], secondary: GREY[600], disabled: GREY[500] },
+    text: { primary: GREY[800], secondary: GREY[700], disabled: GREY[500] },
     background: { paper: "#fff", default: "#fff", neutral: "#f0f0f0" },
     action: { active: GREY[600], ...COMMON.action },
   },
