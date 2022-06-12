@@ -12,7 +12,7 @@ const Basic: React.FC<Props> = ({ transparent }) => {
   const scrolling = useScrollTrigger({ disableHysteresis: true, threshold: 30 });
 
   return (
-    <AppBar sx={{ bgcolor: "transparent", boxShadow: 0 }}>
+    <AppBar sx={{ bgcolor: transparent ? "transparent" : "background.default", boxShadow: 0 }}>
       <ToolbarStyle disableGutters transparent={transparent} scrolling={scrolling}>
         <Container
           sx={{
