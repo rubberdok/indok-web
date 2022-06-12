@@ -25,24 +25,12 @@ export const ToolbarStyle = styled(Toolbar, {
     backgroundColor: "transparent",
   }),
   ...(scrolling && {
+    boxShadow:
+      theme.palette.mode === "light"
+        ? `-23px 16px 56px -8px ${alpha(theme.palette.grey[600], 0.15)}`
+        : `-23px 16px 56px -8px ${alpha(theme.palette.common.black, 0.25)}`,
     [theme.breakpoints.up("md")]: {
       height: HEADER_DESKTOP_HEIGHT - 20,
     },
   }),
-}));
-
-export const ToolbarShadowStyle = styled("div")(({ theme }) => ({
-  left: 0,
-  right: 0,
-  bottom: 0,
-  height: 24,
-  zIndex: -1,
-  margin: "auto",
-  borderRadius: "50%",
-  position: "absolute",
-  width: `calc(100% - 48px)`,
-  boxShadow: `-23px 16px 56px -8px ${alpha(
-    theme.palette.mode === "light" ? theme.palette.grey[500] : theme.palette.common.black,
-    1
-  )}`,
 }));

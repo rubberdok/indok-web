@@ -24,7 +24,7 @@ const Basic: React.FC<Props> = ({ transparent }) => {
 
   return (
     <ElevationScroll>
-      <AppBar sx={{ bgcolor: "transparent" }}>
+      <AppBar sx={{ bgcolor: "transparent", boxShadow: 0 }}>
         <ToolbarStyle disableGutters transparent={transparent} scrolling={scrolling}>
           <Container
             sx={{
