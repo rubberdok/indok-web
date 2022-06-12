@@ -13,7 +13,7 @@ export const ToolbarStyle = styled(Toolbar, {
   height: HEADER_MOBILE_HEIGHT,
   color: theme.palette.text.primary,
   backgroundColor: theme.palette.background.default,
-  transition: `${theme.transitions.create(["height", "background-color", "filter"], {
+  transition: `${theme.transitions.create(["height", "background-color"], {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.shorter,
   })}, ${theme.transitions.create(["filter"], {
