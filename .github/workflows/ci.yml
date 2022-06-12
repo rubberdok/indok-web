@@ -196,7 +196,6 @@ jobs:
     needs: [prepare, build]
     name: E2E Tests
     runs-on: ubuntu-latest
-    container: cypress/browsers:node16.13.2-chrome100-ff98
     strategy:
       fail-fast: false
       matrix:
