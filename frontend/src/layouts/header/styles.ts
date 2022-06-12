@@ -13,10 +13,14 @@ export const ToolbarStyle = styled(Toolbar, {
   height: HEADER_MOBILE_HEIGHT,
   color: theme.palette.text.primary,
   backgroundColor: theme.palette.background.default,
-  transition: theme.transitions.create(["height", "background-color"], {
+  transition: `${theme.transitions.create(["height", "background-color", "filter"], {
     easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.short,
-  }),
+    duration: theme.transitions.duration.shorter,
+  })}, ${theme.transitions.create(["filter"], {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.standard,
+  })}`,
+  willChange: "filter",
   [theme.breakpoints.up("md")]: {
     height: HEADER_DESKTOP_HEIGHT,
   },
@@ -24,11 +28,21 @@ export const ToolbarStyle = styled(Toolbar, {
     color: theme.palette.common.white,
     backgroundColor: "transparent",
   }),
+  filter:
+    theme.palette.mode === "light"
+      ? `drop-shadow(0 25px 25px ${alpha(theme.palette.common.black, 0)})`
+      : `drop-shadow(0 4px 3px ${alpha(theme.palette.common.black, 0)}) drop-shadow(0 2px 2px ${alpha(
+          theme.palette.common.black,
+          0
+        )})`,
   ...(scrolling && {
-    boxShadow:
+    filter:
       theme.palette.mode === "light"
-        ? `-23px 16px 56px -8px ${alpha(theme.palette.grey[600], 0.15)}`
-        : `-23px 16px 56px -8px ${alpha(theme.palette.common.black, 0.25)}`,
+        ? `drop-shadow(0 25px 25px ${alpha(theme.palette.common.black, 0.06)})`
+        : `drop-shadow(0 4px 3px ${alpha(theme.palette.common.black, 0.07)}) drop-shadow(0 2px 2px ${alpha(
+            theme.palette.common.black,
+            0.06
+          )})`,
     [theme.breakpoints.up("md")]: {
       height: HEADER_DESKTOP_HEIGHT - 20,
     },
