@@ -1,4 +1,4 @@
-import { Box, Button, Container, Divider, Grid, Stack, Typography } from "@mui/material";
+import { Box, Button, Container, Grid, Stack, Typography } from "@mui/material";
 import Hero from "@public/static/landing/hero.jpg";
 import Image from "next/image";
 import Link from "next/link";
