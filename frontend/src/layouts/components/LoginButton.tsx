@@ -10,9 +10,9 @@ const LoginButton: React.FC = () => {
   const { data } = useQuery<{ user: UserInfo | null }>(GET_USER_INFO);
 
   return (
-    <LoginRequired size="small" color="inherit" data-test-id="login">
+    <LoginRequired size="medium" color="inherit" data-test-id="login">
       <NextLink href="/profile" passHref>
-        <Button endIcon={<User />} variant="outlined" color="inherit" size="small">
+        <Button endIcon={<User />} variant="outlined" color="inherit" size="medium">
           {data?.user?.firstName}
         </Button>
       </NextLink>
