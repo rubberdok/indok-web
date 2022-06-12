@@ -28,20 +28,28 @@ class CabinsBaseTestCase(ExtendedGraphQLTestCase):
             check_in=self.now,
             check_out=self.now + datetime.timedelta(days=4),
             cabins=[self.bjornen_cabin],
+            internal_participants=4,
+            external_participants=1,
         )
         self.second_booking = BookingFactory(
             check_in=self.now + datetime.timedelta(days=6),
             check_out=self.now + datetime.timedelta(days=12),
             cabins=[self.oksen_cabin, self.bjornen_cabin],
+            internal_participants=3,
+            external_participants=4,
         )
         self.third_booking = BookingFactory(
             check_in=self.now + datetime.timedelta(days=24),
             check_out=self.now + datetime.timedelta(days=30),
             cabins=[self.oksen_cabin],
+            internal_participants=4,
+            external_participants=3,
         )
         self.no_conflict_booking = BookingFactory.build(
             check_in=self.now + datetime.timedelta(days=50),
             check_out=self.now + datetime.timedelta(days=52),
+            internal_participants=4,
+            external_participants=2,
         )
 
         # Create two (logged in) users
