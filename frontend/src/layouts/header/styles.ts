@@ -15,7 +15,7 @@ export const ToolbarStyle = styled(Toolbar, {
   backgroundColor: theme.palette.background.default,
   transition: `${theme.transitions.create(["height", "background-color"], {
     easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.shorter,
+    duration: theme.transitions.duration.short,
   })}, ${theme.transitions.create(["filter"], {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.standard,
