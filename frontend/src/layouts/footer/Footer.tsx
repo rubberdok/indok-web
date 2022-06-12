@@ -36,6 +36,8 @@ const Footer: React.FC = () => {
   const [open, setOpen] = useState(false);
   const theme = useTheme();
 
+  const footerTextColor = theme.palette.mode === "light" ? "grey.700" : "grey.500";
+
   return (
     <>
       <Divider />
@@ -45,7 +47,7 @@ const Footer: React.FC = () => {
             <Grid item xs={12} md={3}>
               <Stack alignItems="flex-start" spacing={3}>
                 <Logo />
-                <Typography variant="body3" sx={{ color: "text.secondary" }}>
+                <Typography variant="body3" sx={{ color: footerTextColor }}>
                   Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse, NTNU Kolbjørn Hejes vei 1E,
                   7034 Trondheim Org.nr. 994 778 463
                 </Typography>
@@ -57,13 +59,13 @@ const Footer: React.FC = () => {
                 <Typography variant="h6" mb={1}>
                   Lenker
                 </Typography>
-                <NextLinkItem href="/report" sx={{ color: "text.secondary" }}>
+                <NextLinkItem href="/report" sx={{ color: footerTextColor }}>
                   Baksida
                 </NextLinkItem>
-                <NextLinkItem href="/about" sx={{ color: "text.secondary" }}>
+                <NextLinkItem href="/about" sx={{ color: footerTextColor }}>
                   Om oss
                 </NextLinkItem>
-                <NextLinkItem href="https://www.indøk.no" sx={{ color: "text.secondary" }}>
+                <NextLinkItem href="https://www.indøk.no" sx={{ color: footerTextColor }}>
                   Studieside
                 </NextLinkItem>
               </Stack>
