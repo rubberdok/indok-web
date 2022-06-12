@@ -7,6 +7,7 @@ import Head from "next/head";
 import { ReactElement, ReactNode } from "react";
 import { useApollo } from "@lib/apolloClient";
 import ThemeWrapper from "src/theme";
+import "swiper/css";
 
 export type NextPageWithLayout<P = Record<string, unknown>> = NextPage<P> & {
   getLayout?: (page: ReactElement) => ReactNode;
