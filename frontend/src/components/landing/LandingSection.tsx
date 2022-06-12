@@ -7,30 +7,32 @@ const LandingSection: React.FC = () => {
   return (
     <Box
       sx={{
-        background: (theme) => theme.palette.grey[900],
+        bgcolor: "grey.900",
         display: "grid",
         gridTemplateColumns: "repeat(12, 1fr)",
         gap: 4,
         position: "relative",
       }}
     >
-      <Container sx={{ alignSelf: "center", gridColumn: "1 / -1", gridRow: "1" }}>
+      <Container
+        sx={{ alignSelf: "center", gridColumn: "1 / -1", gridRow: "1", textAlign: { xs: "center", md: "left" } }}
+      >
         <Grid container direction="row-reverse" justifyContent={{ xs: "center", md: "flex-start" }}>
-          <Grid item md={1} xs={0} />
-          <Grid item md={4} sm={8} xs={10}>
+          <Grid item md={6} sm={8} xs={12}>
             <Grid
               container
-              my={8}
+              my={{ xs: 6, md: 12 }}
+              ml={{ xs: 0, md: 6 }}
               direction="column"
               alignItems={{ xs: "center", md: "flex-start" }}
-              sx={{ color: (theme) => theme.palette.common.white }}
+              sx={{ color: "common.white" }}
             >
               <Grid item>
                 <Typography variant="overline" sx={{ color: "primary.light", mb: 3 }}>
                   Samarbeid og kommunikasjon
                 </Typography>
                 <Typography variant="h2">Hovedstyret i Foreningen</Typography>
-                <Typography sx={{ mt: 3, mb: 5, opacity: 0.72 }}>
+                <Typography textAlign="left" sx={{ mt: 3, mb: 5, opacity: 0.72 }}>
                   Hovedstyrets fremste oppgave er å sørge for god kommunikasjon og samarbeid mellom de ulike
                   studentinitiativene, og forvalte og disponere Indøks midler på en forsvarlig måte.
                 </Typography>
