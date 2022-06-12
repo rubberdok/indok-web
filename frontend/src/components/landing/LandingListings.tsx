@@ -9,7 +9,7 @@ const LandingListings: React.FC = () => {
   const isMobile = useResponsive({ query: "down", key: "md" });
 
   return (
-    <Container sx={{ my: (theme) => theme.spacing(8) }}>
+    <Container sx={{ my: 12 }}>
       <Box
         sx={{
           display: "grid",
@@ -20,7 +20,14 @@ const LandingListings: React.FC = () => {
         <Box>
           <Grid container justifyContent={{ xs: "center", md: "flex-start" }}>
             <Grid item sm={8} xs={10}>
-              <Typography variant="overline" sx={{ color: "primary.main", mb: 2, display: "block" }}>
+              <Typography
+                variant="overline"
+                sx={{
+                  color: (theme) => (theme.palette.mode === "light" ? "primary.main" : "primary.light"),
+                  mb: 2,
+                  display: "block",
+                }}
+              >
                 Sosialt
               </Typography>
               <Typography variant="h2">Delta i et fantastisk studentmiljø</Typography>
