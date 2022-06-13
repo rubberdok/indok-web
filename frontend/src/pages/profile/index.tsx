@@ -68,6 +68,7 @@ const ProfilePage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServ
             { name: "Hjem", href: "/" },
             { name: "Profil", href: "/profile" },
           ]}
+          sx={{ mb: 4 }}
         />
         <Grid container direction="column" spacing={2} alignItems="center" justifyContent="center" sx={{ mb: 4 }}>
           <Grid item>

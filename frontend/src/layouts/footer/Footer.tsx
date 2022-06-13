@@ -1,7 +1,7 @@
+import DarkModeToggle from "@components/DarkModeToggle";
 import Logo from "@components/Logo";
 import useResponsive from "@hooks/useResponsive";
-import { GitHub } from "@mui/icons-material";
-import { Box, Button, Container, Divider, Grid, Hidden, Link, Paper, Stack, SxProps, Typography } from "@mui/material";
+import { Box, Button, Container, Divider, Grid, Link, Paper, Stack, SxProps, Typography } from "@mui/material";
 import { styled, useTheme } from "@mui/material/styles";
 import rubberdokLogo from "@public/img/rubberdok_logo_black.svg";
 import dayjs from "dayjs";
@@ -9,7 +9,6 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import NextLink, { LinkProps } from "next/link";
 import { ReactNode, useState } from "react";
-import LabeledIcon from "@components/LabeledIcon";
 
 const HallOfFame = dynamic(() => import("./HallOfFame"));
 
@@ -51,6 +50,9 @@ const Footer: React.FC = () => {
                   Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse, NTNU Kolbjørn Hejes vei 1E,
                   7034 Trondheim Org.nr. 994 778 463
                 </Typography>
+                <Typography variant="body3" sx={{ color: "grey.700" }}>
+                  {`© ${dayjs().format("YYYY")} Foreningen for Studentene ved Indøk`}
+                </Typography>
               </Stack>
             </Grid>
 
@@ -68,6 +70,12 @@ const Footer: React.FC = () => {
                 <NextLinkItem href="https://www.indøk.no" sx={{ color: footerTextColor }}>
                   Studieside
                 </NextLinkItem>
+                <NextLinkItem
+                  href="https://github.com/rubberdok/indok-web/issues/new/choose"
+                  sx={{ color: "grey.700" }}
+                >
+                  Oppdaget en feil?
+                </NextLinkItem>
               </Stack>
             </Grid>
             {isDesktop && <Watermark />}
@@ -79,31 +87,14 @@ const Footer: React.FC = () => {
 
       <Container>
         <Stack
-          direction={{ xs: "column", md: "row" }}
+          direction={{ xs: "column", sm: "row" }}
           spacing={2.5}
           justifyContent="space-between"
           alignItems="center"
           sx={{ py: 3, textAlign: { xs: "left", md: "center" } }}
         >
-          <Typography variant="body3" sx={{ color: "text.secondary" }}>
-            {`Kopirett © ${dayjs().format("YYYY")} Foreningen for Studentene ved Indøk. Alle rettigheter reservert.`}
-          </Typography>
+          <DarkModeToggle variant="toggle" />
           <Stack direction="row" spacing={3} justifyContent="center" alignItems="center">
-            <Link
-              href="https://github.com/rubberdok/indok-web/issues/new/choose"
-              variant="body3"
-              sx={{ color: "text.secondary" }}
-            >
-              <LabeledIcon
-                icon={
-                  <Hidden smDown>
-                    <GitHub />
-                  </Hidden>
-                }
-                value={<Typography variant="body3">Oppdaget feil ved nettsiden?</Typography>}
-                spacing={1}
-              />
-            </Link>
             <Button
               variant="text"
               onClick={() => setOpen(!open)}
