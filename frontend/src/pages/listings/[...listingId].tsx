@@ -13,18 +13,14 @@ import { Button, Container, Grid, Hidden, Paper } from "@mui/material";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Head from "next/head";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import ReactMarkdown from "react-markdown";
 import { NextPageWithLayout } from "../_app";
 
 // page to show details about a listing and its organization
 const ListingPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ listing }) => {
-  const { listingId } = useRouter().query;
-
-  // fetches the listing, using the URL parameter as the argument
   const { loading, error, data } = useQuery(ListingDocument, {
     variables: {
-      id: Array.isArray(listingId) ? listingId[0] : listingId,
+      id: listing.id,
     },
   });
 
