@@ -50,8 +50,8 @@ const Footer: React.FC = () => {
                   Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse, NTNU Kolbjørn Hejes vei 1E,
                   7034 Trondheim Org.nr. 994 778 463
                 </Typography>
-                <Typography variant="body3" sx={{ color: "grey.700" }}>
-                  {`© ${dayjs().format("YYYY")} Foreningen for Studentene ved Indøk`}
+                <Typography variant="body3" sx={{ color: footerTextColor }}>
+                  {`Foreningen for Studentene ved Indøk © ${dayjs().format("YYYY")}`}
                 </Typography>
               </Stack>
             </Grid>
@@ -72,7 +72,7 @@ const Footer: React.FC = () => {
                 </NextLinkItem>
                 <NextLinkItem
                   href="https://github.com/rubberdok/indok-web/issues/new/choose"
-                  sx={{ color: "grey.700" }}
+                  sx={{ color: footerTextColor }}
                 >
                   Oppdaget en feil?
                 </NextLinkItem>
