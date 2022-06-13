@@ -149,6 +149,9 @@ ListingPage.getLayout = (page) => (
 export const getServerSideProps: GetServerSideProps<{ listing: Listing }> = async (ctx) => {
   const client = initializeApollo({}, ctx);
   const id = Array.isArray(ctx.params?.listingId) ? ctx.params?.listingId[0] : ctx.params?.listingId;
+
+  if (!id) return { notFound: true };
+
   const { data, error } = await client.query({
     query: ListingDocument,
     variables: {
