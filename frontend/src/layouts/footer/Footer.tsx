@@ -1,7 +1,7 @@
 import DarkModeToggle from "@components/DarkModeToggle";
 import Logo from "@components/Logo";
 import useResponsive from "@hooks/useResponsive";
-import { Box, Button, Container, Divider, Grid, Link, Paper, Stack, SxProps, Typography } from "@mui/material";
+import { Box, Container, Divider, Grid, Link, Paper, Stack, SxProps, Typography } from "@mui/material";
 import { styled, useTheme } from "@mui/material/styles";
 import rubberdokLogo from "@public/img/rubberdok_logo_black.svg";
 import dayjs from "dayjs";
@@ -95,14 +95,9 @@ const Footer: React.FC = () => {
         >
           <DarkModeToggle variant="toggle" />
           <Stack direction="row" spacing={3} justifyContent="center" alignItems="center">
-            <Button
-              variant="text"
-              onClick={() => setOpen(!open)}
-              disableFocusRipple
-              sx={{ color: "text.secondary", typography: (theme) => theme.typography.body3 }}
-            >
+            <NextLinkItem onClick={() => setOpen(!open)} href="javascript:undefined">
               Hall of Fame
-            </Button>
+            </NextLinkItem>
             <Link href="https://github.com/rubberdok/indok-web" rel="noreferrer noopener">
               <Box sx={{ ...(theme.palette.mode === "dark" && { filter: "invert(1)", opacity: 0.8 }) }}>
                 <Image src={rubberdokLogo} alt="Rubberdøk" width="64px" height="32px" layout="fixed" />
@@ -119,13 +114,15 @@ const Footer: React.FC = () => {
 type NextLinkItemProps = LinkProps & {
   children: ReactNode;
   sx?: SxProps;
+  onClick?: () => void;
 };
 
-const NextLinkItem: React.FC<NextLinkItemProps> = ({ children, sx, ...other }) => {
+const NextLinkItem: React.FC<NextLinkItemProps> = ({ children, sx, onClick, ...other }) => {
   return (
     <NextLink passHref {...other}>
       <Link
         variant="body3"
+        onClick={onClick}
         sx={{
           mt: 1,
           color: "text.secondary",
