@@ -86,21 +86,22 @@ const Footer: React.FC = () => {
       <Divider />
 
       <Container>
-        <Stack
-          direction={{ xs: "column", sm: "row" }}
-          spacing={2.5}
-          justifyContent="space-between"
-          alignItems="center"
-          sx={{ py: 3, textAlign: { xs: "left", md: "center" } }}
-        >
-          <DarkModeToggle variant="toggle" />
-          <Stack direction="row" spacing={3} justifyContent="center" alignItems="center">
-            <NextLinkItem onClick={() => setOpen(!open)} href="javascript:undefined">
+        <Stack py={3} direction="row" justifyContent="space-between" alignItems="center" width="100%">
+          <DarkModeToggle variant="toggle" size="small" />
+          <Stack direction="row" spacing={3} alignItems="center" justifyContent="center">
+            <NextLinkItem sx={{ mt: 0 }} onClick={() => setOpen(!open)} href="javascript:undefined">
               Hall of Fame
             </NextLinkItem>
             <Link href="https://github.com/rubberdok/indok-web" rel="noreferrer noopener">
-              <Box sx={{ ...(theme.palette.mode === "dark" && { filter: "invert(1)", opacity: 0.8 }) }}>
-                <Image src={rubberdokLogo} alt="Rubberdøk" width="64px" height="32px" layout="fixed" />
+              <Box
+                sx={{
+                  ...(theme.palette.mode === "dark" && { filter: "invert(1)", opacity: 0.8 }),
+                  "& span": {
+                    display: "block !important",
+                  },
+                }}
+              >
+                <Image src={rubberdokLogo} alt="Rubberdøk" width="48px" height="24px" layout="fixed" />
               </Box>
             </Link>
           </Stack>

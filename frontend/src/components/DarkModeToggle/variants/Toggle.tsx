@@ -1,8 +1,10 @@
-import { ToggleButton, ToggleButtonGroup } from "@mui/material";
+import { ToggleButton, ToggleButtonGroup, ToggleButtonGroupProps } from "@mui/material";
 import { SunDim, Monitor, Moon } from "phosphor-react";
 import { useTernaryDarkMode } from "usehooks-ts";
 
-const Toggle: React.FC = () => {
+export type Props = ToggleButtonGroupProps;
+
+const Toggle: React.FC<Props> = (props) => {
   const { ternaryDarkMode, setTernaryDarkMode } = useTernaryDarkMode();
   return (
     <>
@@ -12,6 +14,7 @@ const Toggle: React.FC = () => {
         exclusive
         size="small"
         color="info"
+        {...props}
       >
         <ToggleButton value="light" aria-label="Light">
           <SunDim />

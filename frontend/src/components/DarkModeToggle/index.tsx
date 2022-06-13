@@ -1,16 +1,16 @@
 import { IconButton } from "@mui/material";
 import { Monitor, Moon, SunDim } from "phosphor-react";
 import { useTernaryDarkMode } from "usehooks-ts";
-import Toggle from "./variants/Toggle";
+import Toggle, { Props as ToggleProps } from "./variants/Toggle";
 
-type Props = {
+interface Props extends ToggleProps {
   variant?: "select" | "toggle";
-};
+}
 
-const DarkModeToggle: React.FC<Props> = ({ variant = "select" }) => {
+const DarkModeToggle: React.FC<Props> = ({ variant = "select", ...props }) => {
   const { ternaryDarkMode, setTernaryDarkMode } = useTernaryDarkMode();
 
-  if (variant === "toggle") return <Toggle />;
+  if (variant === "toggle") return <Toggle {...props} />;
 
   switch (ternaryDarkMode) {
     case "light":
