@@ -1,7 +1,7 @@
 coverage==6.4.1
 cryptography==37.0.2
 django-alive==1.2.1
-django-anymail[postmark]==8.5
+django-anymail[postmark]==8.6
 django-cors-headers==3.13.0
 django-environ==0.8.1
 django-guardian==2.4.0
