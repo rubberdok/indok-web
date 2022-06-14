@@ -71,7 +71,10 @@ const Organizations: React.FC<Props> = ({ offsetX, onActiveIndexChange }) => {
           navigation={{ nextEl: ".arrow.right", prevEl: ".arrow.left" }}
           spaceBetween={16}
           slidesPerView={0.8}
-          freeMode={true}
+          freeMode={{
+            enabled: true,
+            momentum: false,
+          }}
           breakpoints={{
             930: {
               slidesPerView: 3,
