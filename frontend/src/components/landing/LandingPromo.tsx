@@ -1,8 +1,7 @@
 import { Container, Grid } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
-const RootStyle = styled("div")(({ theme }) => ({
-  background: theme.palette.grey[900],
+const RootStyle = styled("div")(() => ({
   position: "relative",
   display: "flex",
 }));
@@ -11,7 +10,7 @@ const LandingPromo: React.FC = () => {
   return (
     <RootStyle>
       <Container>
-        <Grid container direction="row" justifyContent="center" alignItems="center" py={14}>
+        <Grid container direction="row" justifyContent="center" alignItems="center" py={10}>
           <Grid item xs={12} sm={8} md={6}>
             <iframe
               width="100%"
