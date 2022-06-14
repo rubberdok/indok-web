@@ -232,6 +232,7 @@ jobs:
           group: "E2E"
           working-directory: e2e
           headless: true
+          browser: chrome
           ci-build-id: ${{ needs.prepare.outputs.uuid }}
           wait-on: "http://localhost:8000/-/health, http://localhost:3000/api/health"
         env:

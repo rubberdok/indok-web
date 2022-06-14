@@ -8,40 +8,27 @@ type Props = {
   transparent?: boolean;
 };
 
-const ElevationScroll: React.FC<{ children: React.ReactElement }> = ({ children }) => {
-  const trigger = useScrollTrigger({
-    disableHysteresis: true,
-    threshold: 30,
-  });
-
-  return React.cloneElement(children, {
-    elevation: trigger ? 4 : 0,
-  });
-};
-
 const Basic: React.FC<Props> = ({ transparent }) => {
   const scrolling = useScrollTrigger({ disableHysteresis: true, threshold: 30 });
 
   return (
-    <ElevationScroll>
-      <AppBar sx={{ bgcolor: "transparent" }}>
-        <ToolbarStyle disableGutters transparent={transparent} scrolling={scrolling}>
-          <Container
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "flex-start",
-            }}
-          >
-            <Box sx={{ position: "relative", mr: 2 }}>
-              <Logo />
-            </Box>
+    <AppBar sx={{ bgcolor: transparent ? "transparent" : "background.default", boxShadow: 0 }}>
+      <ToolbarStyle disableGutters transparent={transparent} scrolling={scrolling}>
+        <Container
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "flex-start",
+          }}
+        >
+          <Box sx={{ position: "relative", mr: 2 }}>
+            <Logo />
+          </Box>
 
-            <Navigation />
-          </Container>
-        </ToolbarStyle>
-      </AppBar>
-    </ElevationScroll>
+          <Navigation />
+        </Container>
+      </ToolbarStyle>
+    </AppBar>
   );
 };
 

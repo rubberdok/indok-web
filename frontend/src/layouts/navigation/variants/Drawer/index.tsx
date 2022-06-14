@@ -1,8 +1,7 @@
 import { PermissionRequired } from "@components/Auth";
 import Logo from "@components/Logo";
 import LoginButton from "@layouts/components/LoginButton";
-import { Box, Divider, Drawer as MuiDrawer, Grid, IconButton, Stack } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
+import { Box, Divider, Drawer as MuiDrawer, IconButton, Stack } from "@mui/material";
 import { useRouter } from "next/router";
 import { List } from "phosphor-react";
 import { useState } from "react";
@@ -10,14 +9,13 @@ import { NavigationProps } from "../../types";
 import NavigationLink from "./NavigationLink";
 
 const Drawer: React.FC<NavigationProps> = ({ routes }) => {
-  const theme = useTheme();
   const [open, setOpen] = useState(false);
   const { pathname } = useRouter();
 
   return (
     <Stack direction="row" justifyContent="flex-end" sx={{ width: "100%" }}>
-      <IconButton onClick={() => setOpen(true)}>
-        <List color={theme.palette.text.secondary} alt="Meny" />
+      <IconButton onClick={() => setOpen(true)} sx={{ color: "text.secondary" }}>
+        <List alt="Meny" />
       </IconButton>
       <MuiDrawer
         open={open}
@@ -29,12 +27,8 @@ const Drawer: React.FC<NavigationProps> = ({ routes }) => {
           },
         }}
       >
-        <Box
-          sx={{
-            padding: (thm) => thm.spacing(4),
-          }}
-        >
-          <Stack direction="column" gap={2}>
+        <Box px={3} pt={2}>
+          <Stack direction="column" spacing={2}>
             <Logo />
             {routes.map((route) => {
               if (route.permission) {
@@ -47,11 +41,8 @@ const Drawer: React.FC<NavigationProps> = ({ routes }) => {
               return <NavigationLink key={route.title} route={route} active={pathname.includes(route.path)} />;
             })}
             <Divider />
-            <Grid container direction="row" justifyContent="center">
-              <Grid item>
-                <LoginButton />
-              </Grid>
-            </Grid>
+
+            <LoginButton />
           </Stack>
         </Box>
       </MuiDrawer>

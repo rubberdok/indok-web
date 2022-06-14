@@ -1,15 +1,15 @@
 import Logo from "@components/Logo";
 import useResponsive from "@hooks/useResponsive";
 import { GitHub } from "@mui/icons-material";
-import { Button, Container, Divider, Grid, Link, Paper, Stack, SxProps, Typography } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import { Box, Button, Container, Divider, Grid, Hidden, Link, Paper, Stack, SxProps, Typography } from "@mui/material";
+import { styled, useTheme } from "@mui/material/styles";
 import rubberdokLogo from "@public/img/rubberdok_logo_black.svg";
 import dayjs from "dayjs";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import NextLink, { LinkProps } from "next/link";
 import { ReactNode, useState } from "react";
-import { grey } from "@mui/material/colors";
+import LabeledIcon from "@components/LabeledIcon";
 
 const HallOfFame = dynamic(() => import("./HallOfFame"));
 
@@ -18,7 +18,7 @@ const Watermark = styled("div")(({ theme }) => ({
   backgroundSize: 500,
   backgroundPosition: "right center",
   backgroundRepeat: "no-repeat",
-  opacity: 0.1,
+  opacity: theme.palette.mode === "light" ? 0.1 : 0.3,
   position: "absolute",
   width: "600px",
   height: "100%",
@@ -34,17 +34,20 @@ const Watermark = styled("div")(({ theme }) => ({
 const Footer: React.FC = () => {
   const isDesktop = useResponsive({ query: "up", key: "md" });
   const [open, setOpen] = useState(false);
+  const theme = useTheme();
+
+  const footerTextColor = theme.palette.mode === "light" ? "grey.700" : "grey.500";
 
   return (
     <>
       <Divider />
-      <Paper sx={{ bgcolor: (theme) => theme.palette.background.neutral }}>
-        <Container sx={{ position: "relative", py: { xs: 8, md: 10 } }}>
+      <Paper sx={{ bgcolor: "background.neutral" }}>
+        <Container sx={{ position: "relative", py: { xs: 6, md: 10 } }}>
           <Grid container spacing={3} justifyContent={{ md: "space-between" }}>
             <Grid item xs={12} md={3}>
               <Stack alignItems="flex-start" spacing={3}>
                 <Logo />
-                <Typography variant="body3" sx={{ color: grey[700] }}>
+                <Typography variant="body3" sx={{ color: footerTextColor }}>
                   Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse, NTNU Kolbjørn Hejes vei 1E,
                   7034 Trondheim Org.nr. 994 778 463
                 </Typography>
@@ -53,14 +56,16 @@ const Footer: React.FC = () => {
 
             <Grid item xs={12} md={7}>
               <Stack alignItems="flex-start">
-                <Typography variant="h6">Lenker</Typography>
-                <NextLinkItem href="/report" sx={{ color: grey[700] }}>
+                <Typography variant="h6" mb={1}>
+                  Lenker
+                </Typography>
+                <NextLinkItem href="/report" sx={{ color: footerTextColor }}>
                   Baksida
                 </NextLinkItem>
-                <NextLinkItem href="/about" sx={{ color: grey[700] }}>
+                <NextLinkItem href="/about" sx={{ color: footerTextColor }}>
                   Om oss
                 </NextLinkItem>
-                <NextLinkItem href="https://www.indøk.no" sx={{ color: grey[700] }}>
+                <NextLinkItem href="https://www.indøk.no" sx={{ color: footerTextColor }}>
                   Studieside
                 </NextLinkItem>
               </Stack>
@@ -78,7 +83,7 @@ const Footer: React.FC = () => {
           spacing={2.5}
           justifyContent="space-between"
           alignItems="center"
-          sx={{ py: 3, textAlign: "center" }}
+          sx={{ py: 3, textAlign: { xs: "left", md: "center" } }}
         >
           <Typography variant="body3" sx={{ color: "text.secondary" }}>
             {`Kopirett © ${dayjs().format("YYYY")} Foreningen for Studentene ved Indøk. Alle rettigheter reservert.`}
@@ -89,12 +94,15 @@ const Footer: React.FC = () => {
               variant="body3"
               sx={{ color: "text.secondary" }}
             >
-              <Grid container justifyContent="center" alignItems="center" gap={1}>
-                <Grid item>
-                  <GitHub fontSize="inherit" />
-                </Grid>
-                <Grid item>Oppdaget feil ved nettsiden?</Grid>
-              </Grid>
+              <LabeledIcon
+                icon={
+                  <Hidden smDown>
+                    <GitHub />
+                  </Hidden>
+                }
+                value={<Typography variant="body3">Oppdaget feil ved nettsiden?</Typography>}
+                spacing={1}
+              />
             </Link>
             <Button
               variant="text"
@@ -104,8 +112,10 @@ const Footer: React.FC = () => {
             >
               Hall of Fame
             </Button>
-            <Link href="https://github.com/rubberdok/indok-web" rel="noreferrer noopener" style={{ height: "100%" }}>
-              <Image src={rubberdokLogo} alt="Rubberdøk" width="64px" height="32px" layout="fixed" />
+            <Link href="https://github.com/rubberdok/indok-web" rel="noreferrer noopener">
+              <Box sx={{ ...(theme.palette.mode === "dark" && { filter: "invert(1)", opacity: 0.8 }) }}>
+                <Image src={rubberdokLogo} alt="Rubberdøk" width="64px" height="32px" layout="fixed" />
+              </Box>
             </Link>
           </Stack>
         </Stack>
