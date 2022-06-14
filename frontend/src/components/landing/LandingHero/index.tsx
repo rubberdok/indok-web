@@ -61,7 +61,15 @@ const LandingHero: React.FC = () => {
           }}
         >
           <Box sx={{ position: "relative", width: "100%", height: "100%" }}>
-            <Image src={Hero} layout="fill" objectFit="cover" objectPosition="center" placeholder="blur" alt="" />
+            <Image
+              priority
+              src={Hero}
+              layout="fill"
+              objectFit="cover"
+              objectPosition="center"
+              placeholder="blur"
+              alt=""
+            />
           </Box>
         </Box>
       </Box>
