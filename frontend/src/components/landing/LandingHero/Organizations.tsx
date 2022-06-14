@@ -4,6 +4,7 @@ import { Box, Button, IconButton } from "@mui/material";
 import { ArrowLeft, ArrowRight } from "phosphor-react";
 import { styled } from "@mui/system";
 import { FreeMode, Navigation } from "swiper";
+import "swiper/css";
 import Link from "next/link";
 
 const organizations: Readonly<Organization[]> = [
