@@ -8,11 +8,23 @@ const LandingListings: React.FC = () => {
     <Box
       sx={{
         bgcolor: "background.neutral",
-        display: "grid",
+        display: { xs: "block", md: "grid" },
         gridTemplateColumns: "repeat(2, 1fr)",
         position: "relative",
       }}
     >
+      <Box
+        sx={{
+          position: "relative",
+          gridColumn: "2 / 2",
+          gridRow: "1",
+          height: { xs: 250, md: "auto" },
+        }}
+      >
+        <Box sx={{ position: "relative", width: "100%", height: "100%" }}>
+          <Image src={Social} layout="fill" objectFit="cover" objectPosition="center" placeholder="blur" alt="" />
+        </Box>
+      </Box>
       <Container
         sx={{
           alignSelf: "center",
@@ -51,18 +63,6 @@ const LandingListings: React.FC = () => {
           </Grid>
         </Grid>
       </Container>
-      <Box
-        sx={{
-          position: "relative",
-          gridColumn: "2 / 2",
-          gridRow: "1",
-          display: { xs: "none", md: "block" },
-        }}
-      >
-        <Box sx={{ position: "relative", width: "100%", height: "100%" }}>
-          <Image src={Social} layout="fill" objectFit="cover" objectPosition="center" placeholder="blur" alt="" />
-        </Box>
-      </Box>
     </Box>
   );
 };
