@@ -73,7 +73,8 @@ const Organizations: React.FC<Props> = ({ offsetX, onActiveIndexChange }) => {
           slidesPerView={0.8}
           freeMode={{
             enabled: true,
-            momentum: false,
+            momentumRatio: 0.5,
+            momentumVelocityRatio: 0.5,
           }}
           breakpoints={{
             930: {
