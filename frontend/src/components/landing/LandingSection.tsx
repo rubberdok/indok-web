@@ -9,8 +9,7 @@ const LandingSection: React.FC = () => {
       sx={{
         bgcolor: "grey.900",
         display: "grid",
-        gridTemplateColumns: "repeat(12, 1fr)",
-        gap: 4,
+        gridTemplateColumns: "repeat(2, 1fr)",
         position: "relative",
       }}
     >
@@ -22,7 +21,7 @@ const LandingSection: React.FC = () => {
             <Grid
               container
               my={{ xs: 6, md: 12 }}
-              ml={{ xs: 0, md: 6 }}
+              ml={{ xs: 0, md: 8 }}
               direction="column"
               alignItems={{ xs: "center", md: "flex-start" }}
               sx={{ color: "common.white" }}
@@ -32,7 +31,7 @@ const LandingSection: React.FC = () => {
                   Samarbeid og kommunikasjon
                 </Typography>
                 <Typography variant="h2">Hovedstyret i Foreningen</Typography>
-                <Typography textAlign="left" sx={{ mt: 3, mb: 5, opacity: 0.72 }}>
+                <Typography maxWidth={450} textAlign="left" sx={{ mt: 3, mb: 5, opacity: 0.72 }}>
                   Hovedstyrets fremste oppgave er å sørge for god kommunikasjon og samarbeid mellom de ulike
                   studentinitiativene, og forvalte og disponere Indøks midler på en forsvarlig måte.
                 </Typography>
@@ -50,7 +49,7 @@ const LandingSection: React.FC = () => {
       <Box
         sx={{
           position: "relative",
-          gridColumn: "1 / 7",
+          gridColumn: "1 / 2",
           gridRow: "1",
           display: { xs: "none", md: "block" },
         }}
