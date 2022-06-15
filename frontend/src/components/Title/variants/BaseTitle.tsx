@@ -2,8 +2,11 @@ import Breadcrumbs, { Props as BreadcrumbProps } from "@components/Breadcrumbs";
 import { TLink } from "@components/Breadcrumbs/types";
 import { Box, Container, Stack, Typography } from "@mui/material";
 import { SxProps, Theme } from "@mui/material/styles";
-import Image, { ImageProps, StaticImageData } from "next/image";
+import dynamic from "next/dynamic";
+import { ImageProps, StaticImageData } from "next/image";
 import { ImageContainer, ImageOverlay, OverlayProps, RootStyle } from "./styles";
+
+const Image = dynamic(() => import("next/image"));
 
 export type Props = {
   title: string;
@@ -42,9 +45,7 @@ const Title: React.FC<Props> = ({
       )}
       <Container>
         <Stack direction="column" sx={{ pt: 5, pb: children ? 0 : 6 }} justifyContent="space-between">
-          {breadcrumbs && (
-            <Breadcrumbs sx={{ mb: { xs: 5, md: 8 } }} links={breadcrumbs} activeLast {...BreadcrumbProps} />
-          )}
+          <Breadcrumbs sx={{ mb: { xs: 5, md: 8 } }} links={breadcrumbs} activeLast {...BreadcrumbProps} />
           <Box sx={{ position: "relative" }}>
             {overline && (
               <Typography variant="overline" color="grey.500" sx={{ position: "absolute" }}>
