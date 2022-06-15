@@ -4,7 +4,7 @@ import { GET_USER_INFO } from "@graphql/users/queries";
 import { UserInfo } from "@interfaces/users";
 import { Button } from "@mui/material";
 import NextLink from "next/link";
-import { User } from "phosphor-react";
+import { UserIcon } from "@heroicons/react/outline";
 
 const LoginButton: React.FC = () => {
   const { data } = useQuery<{ user: UserInfo | null }>(GET_USER_INFO);
@@ -12,7 +12,7 @@ const LoginButton: React.FC = () => {
   return (
     <LoginRequired size="medium" color="inherit" data-test-id="login">
       <NextLink href="/profile" passHref>
-        <Button endIcon={<User />} variant="outlined" color="inherit" size="medium">
+        <Button endIcon={<UserIcon height={20} width={20} />} variant="outlined" color="inherit" size="medium">
           {data?.user?.firstName}
         </Button>
       </NextLink>

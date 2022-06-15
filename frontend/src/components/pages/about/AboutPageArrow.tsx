@@ -1,6 +1,6 @@
 import { Avatar, Box, CardActionArea, Grid, Stack, Typography } from "@mui/material";
 import NextLink from "next/link";
-import { CaretLeft, CaretRight } from "phosphor-react";
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/outline";
 
 type AboutPostProps = {
   slug: string;
@@ -25,7 +25,9 @@ const AboutPageArrow: React.FC<Props> = ({ prevPost, nextPost }) => {
             href={prevSlug}
             title={prevPost?.title}
             coverImg={prevPost?.cover}
-            icon={<Box component={CaretLeft} sx={{ width: 24, height: 24, color: "text.disabled", flexShrink: 0 }} />}
+            icon={
+              <Box component={ChevronLeftIcon} sx={{ width: 24, height: 24, color: "text.disabled", flexShrink: 0 }} />
+            }
           />
         )}
       </Grid>
@@ -37,7 +39,9 @@ const AboutPageArrow: React.FC<Props> = ({ prevPost, nextPost }) => {
             isNext
             title={nextPost?.title}
             coverImg={nextPost?.cover}
-            icon={<Box component={CaretRight} sx={{ width: 24, height: 24, color: "text.disabled", flexShrink: 0 }} />}
+            icon={
+              <Box component={ChevronRightIcon} sx={{ width: 24, height: 24, color: "text.disabled", flexShrink: 0 }} />
+            }
           />
         )}
       </Grid>

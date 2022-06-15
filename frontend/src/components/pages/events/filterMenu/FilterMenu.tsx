@@ -1,7 +1,8 @@
 import { FilterQuery } from "@components/pages/events/AllEvents";
 import { Card, CardContent, Divider, Grid, IconButton, Tooltip, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { Star, X } from "phosphor-react";
+import { StarIcon, RefreshIcon } from "@heroicons/react/outline";
+import { StarIcon as SolidStarIcon } from "@heroicons/react/solid";
 import React from "react";
 import CategoryFilter from "./CategoryFilter";
 import DateTimeFilter from "./DateTimeFilter";
@@ -46,7 +47,7 @@ const FilterMenu: React.FC<Props> = ({ filters, onFiltersChange, showDefaultEven
             <Grid item>
               <Tooltip title="Nullstill filter" arrow>
                 <IconButton onClick={() => onFiltersChange({})} aria-label="delete">
-                  <X />
+                  <RefreshIcon width={24} height={24} />
                 </IconButton>
               </Tooltip>
             </Grid>
@@ -60,7 +61,11 @@ const FilterMenu: React.FC<Props> = ({ filters, onFiltersChange, showDefaultEven
             </Grid>
             <Grid item>
               <IconButton onClick={() => onShowDefaultChange(!showDefaultEvents)} aria-label="delete">
-                {showDefaultEvents ? <Star color={theme.palette.secondary.main} weight="fill" /> : <Star />}
+                {showDefaultEvents ? (
+                  <SolidStarIcon color={theme.palette.secondary.main} width={24} height={24} />
+                ) : (
+                  <StarIcon width={24} height={24} />
+                )}
               </IconButton>
             </Grid>
           </Grid>

@@ -1,6 +1,6 @@
 import { InputAdornment, OutlinedInput, Toolbar } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { MagnifyingGlass } from "phosphor-react";
+import { SearchIcon } from "@heroicons/react/outline";
 
 interface SearchBarProps {
   searchFilter: string;
@@ -36,7 +36,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ searchFilter, handleSearchFilterC
         placeholder="Søk etter dokumenter..."
         startAdornment={
           <InputAdornment position="start">
-            <MagnifyingGlass />
+            <SearchIcon width={20} height={20} />
           </InputAdornment>
         }
       />

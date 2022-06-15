@@ -5,6 +5,12 @@
 
 // eslint-disable-next-line
 const { withSentryConfig } = require("@sentry/nextjs");
+// eslint-disable-next-line
+const withBundleAnalyzer = require("@next/bundle-analyzer")({
+  enabled: process.env.ANALYZE === "true",
+});
+// eslint-disable-next-line
+const withPlugins = require("next-compose-plugins");
 
 const getPresets = () => {
   if (process.env.NEXT_PUBLIC_APP_ENV === "production") {
@@ -54,6 +60,15 @@ const moduleExports = {
       "@mui/material": {
         transform: "@mui/material/{{member}}",
       },
+      "@mui/lab": {
+        transform: "@mui/lab/{{member}}",
+      },
+      "@heroicons/react/solid": {
+        transform: "@heroicons/react/solid/{{member}}",
+      },
+      "@heroicons/react/outlined": {
+        transform: "@heroicons/react/solid/{{member}}",
+      },
       lodash: {
         transform: "lodash/{{member}}",
       },
@@ -91,4 +106,4 @@ const moduleExports = {
 
 // Make sure adding Sentry options is the last code to run before exporting, to
 // ensure that your source maps include changes from all other Webpack plugins
-module.exports = withSentryConfig(moduleExports);
+module.exports = withPlugins([[withBundleAnalyzer], withSentryConfig], moduleExports);

@@ -1,17 +1,18 @@
 import { BookingSemester } from "@components/pages/cabins/Admin/BookingSemesterPicker";
 import {
   BasicBooking,
+  BookingFromQuery,
   Cabin,
   ContactInfo,
   ContactInfoValidations,
-  BookingFromQuery,
   DatePick,
   EmailAndBookingInput,
 } from "@interfaces/cabins";
 import dayjs from "dayjs";
-import validator from "validator";
-import * as Yup from "yup";
 import isBetween from "dayjs/plugin/isBetween";
+import isEmail from "validator/lib/isEmail";
+import isMobilePhone from "validator/lib/isMobilePhone";
+import * as Yup from "yup";
 dayjs.extend(isBetween);
 
 /*
@@ -20,15 +21,14 @@ File containing helper functions for cabins.
 
 export const validateName: (name: string) => boolean = (name) => name?.length > 0;
 
-export const validateEmail: (email: string) => boolean = (email) => (email ? validator.isEmail(email) : false);
+export const validateEmail: (email: string) => boolean = (email) => (email ? isEmail(email) : false);
 
 export const validateSelect: (internalParticipants: number, externalParticipants: number) => boolean = (
   internalParticipants,
   externalParticipants
 ) => internalParticipants > 0 || externalParticipants > 0;
 
-export const validatePhone: (phone: string) => boolean = (phone) =>
-  phone ? validator.isMobilePhone(phone, "nb-NO") : false;
+export const validatePhone: (phone: string) => boolean = (phone) => (phone ? isMobilePhone(phone, "nb-NO") : false);
 
 export const validateInputForm: (inputValues: ContactInfo) => ContactInfoValidations = (inputValues) => {
   const selectValidity = validateSelect(inputValues.internalParticipants, inputValues.externalParticipants);

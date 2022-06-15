@@ -32,7 +32,16 @@ import { calendarFile } from "@utils/calendars";
 import dayjs from "dayjs";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { CalendarBlank, CreditCard, Envelope, Gear, GraduationCap, MapPin, Pencil, SquaresFour } from "phosphor-react";
+import {
+  CalendarIcon,
+  CreditCardIcon,
+  MailIcon,
+  CogIcon,
+  AcademicCapIcon,
+  LocationMarkerIcon,
+  PencilIcon,
+  ViewGridIcon,
+} from "@heroicons/react/outline";
 import React, { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import CountdownButton from "./CountdownButton";
@@ -267,7 +276,7 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
               <Button
                 variant="contained"
                 color="inherit"
-                startIcon={<Pencil />}
+                startIcon={<PencilIcon />}
                 onClick={() => {
                   setOpenEditEvent(true);
                 }}
@@ -275,7 +284,7 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
                 Rediger
               </Button>
               <Link href={`/orgs/${event.organization.id}/events/${eventId}`} passHref>
-                <Button variant="contained" color="inherit" startIcon={<Gear />}>
+                <Button variant="contained" color="inherit" startIcon={<CogIcon />}>
                   Administrer
                 </Button>
               </Link>
@@ -300,7 +309,7 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
                   <LabeledIcon
                     spacing={2}
                     alignItems="flex-start"
-                    icon={<CreditCard size={24} />}
+                    icon={<CreditCardIcon height={24} width={24} />}
                     value={
                       <Stack>
                         <Typography variant="subtitle2">Pris</Typography>
@@ -315,7 +324,7 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
                   <LabeledIcon
                     spacing={2}
                     alignItems="flex-start"
-                    icon={<MapPin size={24} />}
+                    icon={<LocationMarkerIcon height={24} width={24} />}
                     value={
                       <Stack>
                         <Typography variant="subtitle2">Sted</Typography>
@@ -330,7 +339,7 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
                   <LabeledIcon
                     spacing={2}
                     alignItems="flex-start"
-                    icon={<SquaresFour size={24} />}
+                    icon={<ViewGridIcon height={24} width={24} />}
                     value={
                       <Stack>
                         <Typography variant="subtitle2">Kategori</Typography>
@@ -345,7 +354,7 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
                   <LabeledIcon
                     spacing={2}
                     alignItems="flex-start"
-                    icon={<Envelope size={24} />}
+                    icon={<MailIcon height={24} width={24} />}
                     value={
                       <Stack>
                         <Typography variant="subtitle2">Kontakt</Typography>
@@ -360,7 +369,7 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
                 <LabeledIcon
                   spacing={2}
                   alignItems="flex-start"
-                  icon={<CalendarBlank size={24} />}
+                  icon={<CalendarIcon height={24} width={24} />}
                   value={
                     <Stack>
                       <Typography variant="subtitle2">Starter</Typography>
@@ -375,7 +384,7 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
                   <LabeledIcon
                     spacing={2}
                     alignItems="flex-start"
-                    icon={<CalendarBlank size={24} />}
+                    icon={<CalendarIcon height={24} width={24} />}
                     value={
                       <Stack>
                         <Typography variant="subtitle2">Slutter</Typography>
@@ -390,7 +399,7 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
                   <LabeledIcon
                     spacing={2}
                     alignItems="flex-start"
-                    icon={<GraduationCap size={24} />}
+                    icon={<AcademicCapIcon height={24} width={24} />}
                     value={
                       <Stack spacing={0.5}>
                         <Typography variant="subtitle2">Åpent for trinn</Typography>
