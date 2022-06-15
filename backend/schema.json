@@ -8875,9 +8875,13 @@
               "isDeprecated": false,
               "name": "user",
               "type": {
-                "kind": "OBJECT",
-                "name": "UserType",
-                "ofType": null
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "UserType",
+                  "ofType": null
+                }
               }
             }
           ],
