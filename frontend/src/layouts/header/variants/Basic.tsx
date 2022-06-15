@@ -1,33 +1,32 @@
-import { AppBar, Box, Container, useScrollTrigger } from "@mui/material";
+import { AppBarProps, Box, Container, useScrollTrigger } from "@mui/material";
 import React from "react";
 import { Logo } from "../../../components";
 import Navigation from "../../navigation";
-import { ToolbarStyle } from "../styles";
+import { AppBar } from "../styles";
 
 type Props = {
   transparent?: boolean;
 };
 
-const Basic: React.FC<Props> = ({ transparent }) => {
+const Basic: React.FC<Props & AppBarProps> = ({ transparent, ...props }) => {
   const scrolling = useScrollTrigger({ disableHysteresis: true, threshold: 30 });
 
   return (
-    <AppBar sx={{ bgcolor: transparent ? "transparent" : "background.default", boxShadow: 0 }}>
-      <ToolbarStyle disableGutters transparent={transparent} scrolling={scrolling}>
-        <Container
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "flex-start",
-          }}
-        >
-          <Box sx={{ position: "relative", mr: 2 }}>
-            <Logo />
-          </Box>
+    <AppBar scrolling={scrolling} transparent={transparent} {...props}>
+      <Container
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "flex-start",
+          height: "100%",
+        }}
+      >
+        <Box sx={{ position: "relative", mr: 2 }}>
+          <Logo />
+        </Box>
 
-          <Navigation />
-        </Container>
-      </ToolbarStyle>
+        <Navigation />
+      </Container>
     </AppBar>
   );
 };

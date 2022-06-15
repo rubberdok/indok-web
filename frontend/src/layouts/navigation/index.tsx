@@ -1,8 +1,10 @@
 import useResponsive from "@hooks/useResponsive";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { routes } from "./constants";
-import Basic from "./variants/Basic";
-import Drawer from "./variants/Drawer";
+
+const Drawer = dynamic(() => import("./variants/Drawer"));
+const Basic = dynamic(() => import("./variants/Basic"));
 
 /**
  * Navigation component for the app bar, switches between a navigation drawer and

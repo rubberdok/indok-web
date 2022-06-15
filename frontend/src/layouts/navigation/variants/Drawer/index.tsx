@@ -23,7 +23,7 @@ const Drawer: React.FC<NavigationProps> = ({ routes }) => {
         anchor="right"
         PaperProps={{
           sx: {
-            width: (thm) => thm.spacing(35),
+            width: (theme) => theme.spacing(35),
           },
         }}
       >
