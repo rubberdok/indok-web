@@ -26,8 +26,8 @@ const Layout: React.FC<Props> = ({
   return (
     <>
       {!disabledHeader && simpleHeader ? <HeaderSimple /> : <Header transparent={transparentHeader} />}
-      {children}
-      {!disabledFooter && simpleFooter ? <FooterSimple /> : <Footer />}
+      <div className="content">{children}</div>
+      {!disabledFooter && <footer className="footer">{simpleFooter ? <FooterSimple /> : <Footer />}</footer>}
     </>
   );
 };
