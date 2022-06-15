@@ -18,7 +18,7 @@ class AuthUser(graphene.Mutation):
     class Arguments:
         code = graphene.String(required=True)
 
-    user = graphene.Field(UserType)
+    user = graphene.Field(UserType, required=True)
 
     def mutate(self, info, code: str):
         user = DataportenAuth.authenticate_and_get_user(code=code)
