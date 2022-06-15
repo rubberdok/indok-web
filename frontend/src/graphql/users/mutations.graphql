@@ -3,3 +3,11 @@ mutation logout {
     idToken
   }
 }
+
+mutation AuthUser($code: String!) {
+  authUser(code: $code) {
+    user {
+      ...UserFields
+    }
+  }
+}
