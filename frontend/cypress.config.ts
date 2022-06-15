@@ -13,4 +13,7 @@ export default defineConfig({
       // implement node event listeners here
     },
   },
+  env: {
+    API_URL: "http://localhost:8000",
+  },
 });

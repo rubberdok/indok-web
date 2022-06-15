@@ -2,3 +2,6 @@ node_modules
 .next
 .husky
 cypress
+out
+cypress.config.ts
+
