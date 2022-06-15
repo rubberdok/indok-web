@@ -1,6 +1,6 @@
-import Layout, { RootStyle } from "@layouts/Layout";
 import Listings from "@components/pages/listings/index/Listings";
-import Title from "@components/Title";
+import Title from "@components/Title/";
+import Layout from "@layouts/Layout";
 import { Container } from "@mui/material";
 import { useRouter } from "next/router";
 import { NextPageWithLayout } from "../_app";
@@ -29,9 +29,5 @@ const ListingsPage: NextPageWithLayout = () => {
   );
 };
 
-ListingsPage.getLayout = (page: React.ReactElement) => (
-  <Layout>
-    <RootStyle>{page}</RootStyle>
-  </Layout>
-);
+ListingsPage.getLayout = (page: React.ReactElement) => <Layout>{page}</Layout>;
 export default ListingsPage;
