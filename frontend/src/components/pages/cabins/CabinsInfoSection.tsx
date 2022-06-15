@@ -1,6 +1,5 @@
-import { Box, Button, Container, Grid, Typography } from "@mui/material";
+import { Box, Container, Grid, Typography } from "@mui/material";
 import Image from "next/image";
-import NextLink from "next/link";
 import BookNow from "./BookNow";
 
 const facilitiesData = [
