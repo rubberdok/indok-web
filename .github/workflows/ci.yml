@@ -115,7 +115,7 @@ jobs:
             APP_ENV=${{ matrix.stage }}
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: ${{ env.dockerfile }}
           path: /tmp/${{ env.dockerfile }}.tar
