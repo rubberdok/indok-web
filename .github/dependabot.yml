@@ -15,8 +15,6 @@ updates:
       - "dependencies"
       - "javascript"
 
-    open-pull-requests-limit: 4
-
   - package-ecosystem: "pip"
     directory: "/backend/requirements/"
     schedule:
@@ -30,4 +28,15 @@ updates:
       - "dependencies"
       - "python"
 
-    open-pull-requests-limit: 4
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "daily"
+      time: "02:00"
+
+    commit-message:
+      prefix: "build(ci): "
+
+    labels:
+      - "dependencies"
+      - "CI/CD"
