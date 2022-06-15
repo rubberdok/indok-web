@@ -1,63 +1,52 @@
-import Breadcrumbs from "@components/Breadcrumbs";
-import useResponsive from "@hooks/useResponsive";
-import { Button, Card, Container, Stack, Typography } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import { useQuery } from "@apollo/client";
+import Title from "@components/Title";
+import { AllCabinsDocument } from "@generated/graphql";
+import { Box, Button, Container, Divider, Stack, Typography } from "@mui/material";
+import cabin from "@public/img/hytte.jpg";
 import Link from "next/link";
 import React from "react";
 
-const RootStyle = styled("div")(({ theme }) => ({
-  color: "white",
-  padding: theme.spacing(5, 0),
-
-  backgroundColor: "black",
-  backgroundSize: "cover",
-  backgroundRepeat: "no-repeat",
-  backgroundPosition: "center",
-  backgroundImage: `linear-gradient(to left, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5)), url('img/hytte.jpg')`,
-}));
-
 const CabinsHero: React.VFC = () => {
-  const isMobile = useResponsive({ query: "down", key: "md" });
-
   return (
     <>
-      <RootStyle>
-        <Container>
-          <Breadcrumbs onDark links={[{ name: "Hjem", href: "/" }, { name: "Hyttebooking" }]} />
-          <Stack
-            direction={{ xs: "column", md: "row" }}
-            justifyContent="space-between"
-            alignItems="center"
-            spacing={{ xs: 8, md: 0 }}
-            sx={{ py: 12 }}
-          >
-            <Typography variant="h1">Hyttebooking</Typography>
-            {!isMobile && <CabinsBookCard />}
-          </Stack>
+      <Title
+        title="Hyttebooking"
+        variant="dark"
+        breadcrumbs={[
+          { href: "/", name: "Hjem" },
+          { href: "/cabins", name: "Hyttebooking" },
+        ]}
+        bgImage={cabin}
+        disableGutters
+      />
+      <Box bgcolor="grey.900" py={4}>
+        <Container maxWidth="sm">
+          <CabinsBookCard />
         </Container>
-      </RootStyle>
-
-      {isMobile && <CabinsBookCard />}
+      </Box>
     </>
   );
 };
 
 const CabinsBookCard: React.FC = () => {
+  const { data } = useQuery(AllCabinsDocument);
   return (
-    <Card
-      component={Stack}
-      direction="row"
-      sx={{ alignItems: "center", p: 1, pl: 3, bgcolor: "grey.900", color: "common.white" }}
-      spacing={4}
-      justifyContent="space-between"
-    >
-      <Typography variant="h6">Vi har ledige hytter</Typography>
+    <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ color: "common.white" }}>
+      <Stack direction="column">
+        <Typography variant="h4" gutterBottom>
+          Priser
+        </Typography>
+        <Typography variant="subtitle1">Hel hytte</Typography>
+        <Divider />
+        <Typography variant="subtitle2">Internpris: {data?.cabins?.[0]?.internalPrice} kr</Typography>
+        <Typography variant="subtitle2">Eksternpris: {data?.cabins?.[0]?.externalPrice} kr</Typography>
+      </Stack>
       <Link href="/cabins/book" passHref>
         <Button variant="contained" size="large" color="success">
           Book nå
         </Button>
       </Link>
-    </Card>
+    </Stack>
   );
 };
 

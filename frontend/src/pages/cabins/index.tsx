@@ -8,24 +8,14 @@ import { outsideImages } from "@components/pages/cabins/ImageSlider/imageData";
 import ImageSlider from "@components/pages/cabins/ImageSlider/ImageSlider";
 import Layout from "@layouts/Layout";
 import { Box, Container, Divider, Grid, Typography } from "@mui/material";
-import { styled } from "@mui/material/styles";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "src/theme/constants";
 import { NextPageWithLayout } from "../_app";
 
 /*
 Front page for cabins. Includes info about the cabins and link to the booking page (cabins/book).
 */
-
-const RootStyle = styled("div")(({ theme }) => ({
-  paddingTop: HEADER_MOBILE_HEIGHT,
-  [theme.breakpoints.up("md")]: {
-    paddingTop: HEADER_DESKTOP_HEIGHT,
-  },
-}));
-
 const CabinsPage: NextPageWithLayout = () => {
   const transportData = [
     {
@@ -60,7 +50,7 @@ const CabinsPage: NextPageWithLayout = () => {
   ];
 
   return (
-    <RootStyle>
+    <>
       <CabinsHero />
       <CabinsInfoSection />
       <CabinsDetailsSection />
@@ -126,7 +116,7 @@ const CabinsPage: NextPageWithLayout = () => {
           </Grid>
         </Box>
       </Container>
-    </RootStyle>
+    </>
   );
 };
 
