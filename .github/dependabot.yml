@@ -17,23 +17,6 @@ updates:
 
     open-pull-requests-limit: 4
 
-  # Keep E2E dependencies up to date
-  - package-ecosystem: "npm"
-    directory: "/e2e"
-    # Check the npm registry for updates at 2am UTC
-    schedule:
-      interval: "daily"
-      time: "02:00"
-
-    commit-message:
-      prefix: "build(e2e): "
-
-    labels:
-      - "dependencies"
-      - "ci"
-
-    open-pull-requests-limit: 4
-
   - package-ecosystem: "pip"
     directory: "/backend/requirements/"
     schedule:
