@@ -14,6 +14,7 @@ const LandingHero: React.FC = () => {
           gridTemplateColumns: "repeat(12, 1fr)",
           gap: 4,
           height: { md: "80vh" },
+          maxHeight: "1250px",
           position: "relative",
         }}
       >
