@@ -12,7 +12,11 @@
     "lint": "eslint",
     "lint:fix": "yarn run lint --fix",
     "postinstall": "cd .. && husky install frontend/.husky",
-    "generate": "graphql-codegen --config codegen.yml"
+    "generate": "graphql-codegen --config codegen.yml",
+    "test": "cypress open",
+    "test:headless": "cypress run",
+    "e2e": "wait-on --httpTimeout 60000 http://localhost:3000 && wait-on --httpTimeout 60000 http://localhost:8000 && yarn test",
+    "e2e:headless": "wait-on --httpTimeout 60000 http://localhost:3000 && wait-on --httpTimeout 60000 http://localhost:8000 && yarn test:headless"
   },
   "repository": {
     "type": "git",
@@ -70,6 +74,7 @@
     "@types/validator": "^13.1.4",
     "@typescript-eslint/eslint-plugin": "^4.27.0",
     "@typescript-eslint/parser": "^4.27.0",
+    "cypress": "^10.1.0",
     "eslint": "^7.29.0",
     "eslint-config-next": "^12.1.0",
     "eslint-config-prettier": "^8.3.0",
@@ -80,7 +85,8 @@
     "husky": "^8.0.1",
     "lint-staged": "<14.0.0",
     "prettier": "^2.3.1",
-    "typescript": "^4.3.4"
+    "typescript": "^4.3.4",
+    "wait-on": "^6.0.1"
   },
   "lint-staged": {
     "*.{ts,js,tsx,jsx}": [
