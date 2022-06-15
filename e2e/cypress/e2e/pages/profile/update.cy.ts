@@ -3,11 +3,6 @@ describe("On the profile page", () => {
     cy.login();
   });
 
-  beforeEach(() => {
-    Cypress.Cookies.preserveOnce("sessionid");
-    Cypress.Cookies.preserveOnce("csrf");
-  });
-
   it("should be able to update personal information", () => {
     cy.log("Accessing site");
     cy.visit("/profile");
