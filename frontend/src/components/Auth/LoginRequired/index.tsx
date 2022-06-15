@@ -36,11 +36,10 @@ export const LoginRequired: React.FC<Props & ButtonProps> = ({
   }
   const url = useMemo<string>(() => generateFeideLoginUrl(path), [path]);
   const { data, loading } = useQuery<{ user?: UserInfo | null }>(GET_USER_INFO);
-  const { fullWidth } = buttonProps;
 
   if (loading) {
     return (
-      <Skeleton variant="rectangular" {...(fullWidth && { width: "100%" })}>
+      <Skeleton variant="rectangular">
         <Link href={url} passHref>
           <Button size="medium" variant="contained" color="primary" {...buttonProps}>
             Logg inn
