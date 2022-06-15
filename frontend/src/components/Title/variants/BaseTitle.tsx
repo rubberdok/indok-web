@@ -40,7 +40,7 @@ const Title: React.FC<Props> = ({
       {bgImage && (
         <ImageContainer>
           <ImageOverlay {...OverlayProps} />
-          <Image src={bgImage} placeholder="blur" objectFit="cover" objectPosition="center" {...ImageProps} />
+          <Image src={bgImage} placeholder="blur" objectFit="cover" objectPosition="center" alt="" {...ImageProps} />
         </ImageContainer>
       )}
       <Container>
