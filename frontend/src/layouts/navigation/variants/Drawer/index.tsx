@@ -42,7 +42,7 @@ const Drawer: React.FC<NavigationProps> = ({ routes }) => {
             })}
             <Divider />
 
-            <LoginButton />
+            <LoginButton fullWidth />
           </Stack>
         </Box>
       </MuiDrawer>
