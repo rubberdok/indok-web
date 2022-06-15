@@ -3,7 +3,7 @@ import { CaretRight } from "phosphor-react";
 import Link from "./Link";
 import { TLink } from "./types";
 
-interface Props extends BreadcrumbsProps {
+export interface Props extends BreadcrumbsProps {
   links: TLink[];
   activeLast?: boolean;
   onDark?: boolean;
