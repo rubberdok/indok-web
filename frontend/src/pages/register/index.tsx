@@ -2,7 +2,7 @@ import Layout, { RootStyle } from "@layouts/Layout";
 import UserForm from "@components/pages/profile/UserForm";
 import { Container, Grid } from "@mui/material";
 import { useRouter } from "next/router";
-import { NextPageWithLayout } from "../_app";
+import { NextPageWithLayout } from "@layouts/Layout";
 
 const ID_PREFIX = "registerUser-";
 

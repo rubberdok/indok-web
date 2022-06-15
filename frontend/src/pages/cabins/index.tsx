@@ -13,7 +13,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "src/theme/constants";
-import { NextPageWithLayout } from "../_app";
+import { NextPageWithLayout } from "@layouts/Layout";
 
 /*
 Front page for cabins. Includes info about the cabins and link to the booking page (cabins/book).

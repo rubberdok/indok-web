@@ -4,7 +4,7 @@ import Layout from "@layouts/Layout";
 import { Alert, Container, Grid, Snackbar } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import React, { useState } from "react";
-import { NextPageWithLayout } from "src/pages/_app";
+import { NextPageWithLayout } from "@layouts/Layout";
 import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "src/theme/constants";
 
 const ID_PREFIX = "editUser-";

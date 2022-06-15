@@ -11,7 +11,7 @@ import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
-import { NextPageWithLayout } from "src/pages/_app";
+import { NextPageWithLayout } from "@layouts/Layout";
 import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "src/theme/constants";
 dayjs.extend(utc);
 dayjs.extend(timezone);

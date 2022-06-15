@@ -11,7 +11,7 @@ import { addApolloState, initializeApollo } from "@lib/apolloClient";
 import { Box, Container, FormGroup, Grid } from "@mui/material";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import React, { useState } from "react";
-import { NextPageWithLayout } from "./_app";
+import { NextPageWithLayout } from "@layouts/Layout";
 
 const Archive: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSideProps>> = () => {
   const [yearFilter, setYearFilter] = useState("");

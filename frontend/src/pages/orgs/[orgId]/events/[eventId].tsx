@@ -36,7 +36,7 @@ import { styled } from "@mui/material/styles";
 import dayjs from "dayjs";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
-import { NextPageWithLayout } from "src/pages/_app";
+import { NextPageWithLayout } from "@layouts/Layout";
 
 const signUpFields: HeaderValuePair<SignUp>[] = [
   { header: "Navn", field: "user" },

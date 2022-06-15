@@ -6,7 +6,7 @@ import { getPostBySlug, getPostsSlugs } from "@utils/posts";
 import { GetStaticPaths, GetStaticProps } from "next";
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
-import { NextPageWithLayout } from "src/pages/_app";
+import { NextPageWithLayout } from "@layouts/Layout";
 import { Post } from "src/types/posts";
 
 type ArticleProps = {

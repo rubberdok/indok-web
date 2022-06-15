@@ -14,7 +14,7 @@ import { styled } from "@mui/material/styles";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
-import { NextPageWithLayout } from "src/pages/_app";
+import { NextPageWithLayout } from "@layouts/Layout";
 import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "src/theme/constants";
 
 /**

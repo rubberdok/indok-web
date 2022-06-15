@@ -3,7 +3,7 @@ import AllEvents from "@components/pages/events/AllEvents";
 import Title from "@components/Title";
 import { Container, Tab, Tabs } from "@mui/material";
 import React, { useState } from "react";
-import { NextPageWithLayout } from "../_app";
+import { NextPageWithLayout } from "@layouts/Layout";
 
 const links = [{ name: "Hjem", href: "/" }, { name: "Arrangementer" }];
 

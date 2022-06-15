@@ -33,5 +33,5 @@ const Layout: React.FC<Props> = ({
 };
 
 export default Layout;
-
 export { RootStyle } from "../styles";
+export type { NextPageWithLayout } from "./types";

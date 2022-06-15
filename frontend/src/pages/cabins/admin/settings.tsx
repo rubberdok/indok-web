@@ -6,7 +6,7 @@ import Layout, { RootStyle } from "@layouts/Layout";
 import { ArrowBackIos } from "@mui/icons-material";
 import { Box, Button, Container, Divider, Grid, Paper, Typography } from "@mui/material";
 import router from "next/router";
-import { NextPageWithLayout } from "src/pages/_app";
+import { NextPageWithLayout } from "@layouts/Layout";
 
 const SettingsPage: NextPageWithLayout = () => {
   const isMobile = useResponsive({ query: "down", key: "md" });

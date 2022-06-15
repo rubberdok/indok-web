@@ -9,7 +9,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import Bug from "public/illustrations/Bug.svg";
 import React, { useEffect } from "react";
-import { NextPageWithLayout } from "./_app";
+import { NextPageWithLayout } from "@layouts/Layout";
 
 type AuthUser = {
   user: User;

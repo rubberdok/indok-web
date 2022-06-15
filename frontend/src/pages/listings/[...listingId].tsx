@@ -14,7 +14,7 @@ import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
-import { NextPageWithLayout } from "../_app";
+import { NextPageWithLayout } from "@layouts/Layout";
 
 // page to show details about a listing and its organization
 const ListingPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ listing }) => {

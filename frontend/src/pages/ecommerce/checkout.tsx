@@ -29,7 +29,7 @@ import {
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
-import { NextPageWithLayout } from "../_app";
+import { NextPageWithLayout } from "@layouts/Layout";
 
 const CheckoutPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSideProps>> = () => {
   const router = useRouter();

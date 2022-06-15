@@ -23,7 +23,7 @@ import Laila from "@public/img/Laila.jpg";
 import Maria from "@public/img/Maria.jpg";
 import Head from "next/head";
 import { useRef } from "react";
-import { NextPageWithLayout } from "../_app";
+import { NextPageWithLayout } from "@layouts/Layout";
 
 const ReportsPage: NextPageWithLayout = () => {
   const formRef = useRef<null | HTMLDivElement>(null);

@@ -3,7 +3,7 @@ import Listings from "@components/pages/listings/index/Listings";
 import Title from "@components/Title";
 import { Container } from "@mui/material";
 import { useRouter } from "next/router";
-import { NextPageWithLayout } from "../_app";
+import { NextPageWithLayout } from "@layouts/Layout";
 
 // page to show all listings open to users
 const ListingsPage: NextPageWithLayout = () => {

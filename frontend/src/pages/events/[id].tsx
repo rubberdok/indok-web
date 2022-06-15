@@ -2,7 +2,7 @@ import Layout, { RootStyle } from "@layouts/Layout";
 import { useRouter } from "next/router";
 import React from "react";
 import EventDetailPage from "../../components/pages/events/EventDetails";
-import { NextPageWithLayout } from "../_app";
+import { NextPageWithLayout } from "@layouts/Layout";
 
 /**
  * Component for showing the detail page of an event

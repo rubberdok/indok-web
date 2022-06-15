@@ -22,7 +22,7 @@ import Head from "next/head";
 import { useMemo } from "react";
 import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "src/theme/constants";
 import { User } from "src/types/users";
-import { NextPageWithLayout } from "../_app";
+import { NextPageWithLayout } from "@layouts/Layout";
 
 const ID_PREFIX = "profile-";
 

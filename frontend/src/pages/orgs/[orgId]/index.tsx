@@ -9,7 +9,7 @@ import { CircularProgress, Container, Stack } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { NextPageWithLayout } from "src/pages/_app";
+import { NextPageWithLayout } from "@layouts/Layout";
 
 const RootStyle = styled("div")(({ theme }) => ({
   margin: theme.spacing(4, 0),

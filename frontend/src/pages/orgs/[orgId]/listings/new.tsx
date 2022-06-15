@@ -1,7 +1,7 @@
 import Layout, { RootStyle } from "@layouts/Layout";
 import NewListing from "@components/pages/listings/organization/NewListing";
 import { useRouter } from "next/router";
-import { NextPageWithLayout } from "src/pages/_app";
+import { NextPageWithLayout } from "@layouts/Layout";
 
 /**
  * Page for creating new listings, navigates to the newly created listing upon completion.

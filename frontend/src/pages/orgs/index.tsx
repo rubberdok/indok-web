@@ -8,7 +8,7 @@ import { styled } from "@mui/material/styles";
 import Link from "next/link";
 import React from "react";
 import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "src/theme/constants";
-import { NextPageWithLayout } from "../_app";
+import { NextPageWithLayout } from "@layouts/Layout";
 
 const RootStyle = styled("div")(({ theme }) => ({
   paddingTop: HEADER_MOBILE_HEIGHT,

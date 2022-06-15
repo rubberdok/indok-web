@@ -6,7 +6,7 @@ import { Form } from "@interfaces/forms";
 import { CircularProgress, Container, Grid, Typography } from "@mui/material";
 import { generateFeideLoginUrl } from "@utils/auth";
 import { useRouter } from "next/router";
-import { NextPageWithLayout } from "../_app";
+import { NextPageWithLayout } from "@layouts/Layout";
 
 const FormPage: NextPageWithLayout = () => {
   const router = useRouter();

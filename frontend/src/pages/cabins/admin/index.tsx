@@ -11,7 +11,7 @@ import { Box, Button, Container, Grid, Tab, Tabs, Typography } from "@mui/materi
 import dayjs from "dayjs";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { NextPageWithLayout } from "src/pages/_app";
+import { NextPageWithLayout } from "@layouts/Layout";
 
 /*
 Page for booking admininistration showing all upcoming bookings and buttons for actions on these bookings.

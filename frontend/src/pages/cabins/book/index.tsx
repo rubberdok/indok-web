@@ -29,7 +29,7 @@ import {
   validateInputForm,
 } from "@utils/cabins";
 import React, { useEffect, useState } from "react";
-import { NextPageWithLayout } from "src/pages/_app";
+import { NextPageWithLayout } from "@layouts/Layout";
 
 type StepReady = Record<number, { ready: boolean; errortext: string }>;
 

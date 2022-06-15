@@ -28,7 +28,7 @@ import {
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { NextPageWithLayout } from "../_app";
+import { NextPageWithLayout } from "@layouts/Layout";
 
 const orderFields: HeaderValuePair<Order>[] = [
   { header: "Ordre-ID", field: "id" },
