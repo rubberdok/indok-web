@@ -1,17 +1,22 @@
-import { TLink } from "@components/Breadcrumbs/types";
-import { default as NormalTitle } from "./variants/Title";
-import { default as AdminTitle } from "./variants/Admin";
+import { default as BaseTitle, Props as BaseProps } from "./variants/BaseTitle";
 
 type Props = {
-  variant?: "normal" | "admin";
-  title: string;
-  breadcrumbs?: TLink[];
+  variant?: "normal" | "dark";
   children?: React.ReactNode;
-};
+} & BaseProps;
 
 const Title: React.FC<Props> = ({ variant = "normal", children, ...props }) => {
-  if (variant === "normal") return <NormalTitle {...props}>{children}</NormalTitle>;
-  if (variant === "admin") return <AdminTitle {...props}>{children}</AdminTitle>;
+  if (variant === "normal") return <BaseTitle {...props}>{children}</BaseTitle>;
+  if (variant === "dark")
+    return (
+      <BaseTitle
+        sx={{ backgroundColor: "grey.900", color: "common.white" }}
+        {...props}
+        BreadcrumbProps={{ onDark: true }}
+      >
+        {children}
+      </BaseTitle>
+    );
   return null;
 };
 
