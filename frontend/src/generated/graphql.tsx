@@ -118,7 +118,7 @@ export type AttemptCapturePayment = {
 
 export type AuthUser = {
   __typename?: "AuthUser";
-  user?: Maybe<UserType>;
+  user: UserType;
 };
 
 export type BaseFormInput = {
@@ -1636,6 +1636,32 @@ export type LogoutMutation = {
   logout?: { __typename?: "Logout"; idToken?: string | null } | null;
 };
 
+export type AuthUserMutationVariables = Exact<{
+  code: Scalars["String"];
+}>;
+
+export type AuthUserMutation = {
+  __typename?: "Mutations";
+  authUser?: {
+    __typename?: "AuthUser";
+    user: {
+      __typename?: "UserType";
+      id: string;
+      feideEmail: string;
+      email: string;
+      username: string;
+      firstName: string;
+      lastName: string;
+      dateJoined: any;
+      graduationYear?: number | null;
+      gradeYear?: number | null;
+      allergies?: string | null;
+      phoneNumber: string;
+      firstLogin: boolean;
+    };
+  } | null;
+};
+
 export type UserInfoQueryVariables = Exact<{ [key: string]: never }>;
 
 export type UserInfoQuery = {
@@ -2333,6 +2359,53 @@ export const LogoutDocument = {
     },
   ],
 } as unknown as DocumentNode<LogoutMutation, LogoutMutationVariables>;
+export const AuthUserDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "AuthUser" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "code" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "String" } } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "authUser" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "code" },
+                value: { kind: "Variable", name: { kind: "Name", value: "code" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "user" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "UserFields" } }],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...UserFieldsFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<AuthUserMutation, AuthUserMutationVariables>;
 export const UserInfoDocument = {
   kind: "Document",
   definitions: [
