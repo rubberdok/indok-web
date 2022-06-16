@@ -1,4 +1,3 @@
-import useResponsive from "@hooks/useResponsive";
 import { getBlurUrl } from "@lib/cloudinary";
 import { Box, Button, Container, Grid, Typography } from "@mui/material";
 import Social from "@public/img/gang.jpg";
