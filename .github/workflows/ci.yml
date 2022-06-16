@@ -88,7 +88,6 @@ jobs:
         uses: docker/setup-buildx-action@v2
 
       - name: Build ${{ matrix.image }} image
-        id: build-image
         uses: docker/build-push-action@v3
         with:
           context: ${{ matrix.context }}
