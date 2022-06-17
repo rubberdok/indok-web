@@ -3,7 +3,7 @@ describe("SSO login", () => {
     cy.session("asbjørn_elevg", () => {
       cy.log("Accessing site");
       cy.visit("/");
-      cy.getByTestId("login").click();
+      cy.getByTestId("app-bar-login").click();
       cy.log("Logging in");
       cy.contains("Feide test users").click();
       cy.get("[id=username]").type("asbjorn_elevg");
@@ -18,7 +18,7 @@ describe("SSO login", () => {
     cy.session("cecilie_elevvgs", () => {
       cy.log("Accessing site");
       cy.visit("/");
-      cy.getByTestId("login").click();
+      cy.getByTestId("app-bar-login").click();
       cy.log("Logging in");
       cy.contains("Feide test users").click();
       cy.get("[id=username]").type("cecilie_elevvgs");

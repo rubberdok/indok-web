@@ -12,41 +12,52 @@ const Drawer: React.FC<NavigationProps> = ({ routes }) => {
   const [open, setOpen] = useState(false);
   const { pathname } = useRouter();
 
+  const closeDrawer = () => setOpen(false);
   return (
-    <Stack direction="row" justifyContent="flex-end" sx={{ width: "100%" }}>
-      <IconButton onClick={() => setOpen(true)} sx={{ color: "text.secondary" }}>
-        <List alt="Meny" />
-      </IconButton>
-      <MuiDrawer
-        open={open}
-        onClose={() => setOpen(false)}
-        anchor="right"
-        PaperProps={{
-          sx: {
-            width: (theme) => theme.spacing(35),
-          },
-        }}
-      >
-        <Box px={3} pt={2}>
-          <Stack direction="column" spacing={2}>
-            <Logo />
-            {routes.map((route) => {
-              if (route.permission) {
+    <Box sx={{ display: { xs: "block", md: "none" }, width: "100%" }}>
+      <Stack direction="row" justifyContent="flex-end" sx={{ width: "100%" }}>
+        <IconButton onClick={() => setOpen(true)} sx={{ color: "text.secondary" }}>
+          <List alt="Meny" />
+        </IconButton>
+        <MuiDrawer
+          open={open}
+          onClose={() => setOpen(false)}
+          anchor="right"
+          keepMounted
+          PaperProps={{
+            sx: {
+              width: (theme) => theme.spacing(35),
+            },
+          }}
+        >
+          <Box px={3} pt={2}>
+            <Stack direction="column" spacing={2}>
+              <Logo />
+              {routes.map((route) => {
+                if (route.permission) {
+                  return (
+                    <PermissionRequired permission={route.permission} key={route.title}>
+                      <NavigationLink route={route} active={pathname.includes(route.path)} onClick={closeDrawer} />
+                    </PermissionRequired>
+                  );
+                }
                 return (
-                  <PermissionRequired permission={route.permission} key={route.title}>
-                    <NavigationLink route={route} active={pathname.includes(route.path)} />
-                  </PermissionRequired>
+                  <NavigationLink
+                    key={route.title}
+                    route={route}
+                    active={pathname.includes(route.path)}
+                    onClick={closeDrawer}
+                  />
                 );
-              }
-              return <NavigationLink key={route.title} route={route} active={pathname.includes(route.path)} />;
-            })}
-            <Divider />
+              })}
+              <Divider />
 
-            <LoginButton fullWidth />
-          </Stack>
-        </Box>
-      </MuiDrawer>
-    </Stack>
+              <LoginButton fullWidth data-test-id="drawer-login" />
+            </Stack>
+          </Box>
+        </MuiDrawer>
+      </Stack>
+    </Box>
   );
 };
 
