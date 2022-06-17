@@ -18,18 +18,18 @@ const BookNow: React.FC = () => {
         >
           <Stack direction="column">
             <Typography variant="h4" gutterBottom>
-              Vi har ledige hytter
+              Priser
             </Typography>
             <Typography variant="subtitle1">Hel hytte</Typography>
             <Divider />
-            <Typography variant="subtitle2">Internpris: {data?.cabins?.[0]?.internalPrice} kr</Typography>
+            <Typography variant="subtitle2">Intern: {data?.cabins?.[0]?.internalPrice} kr</Typography>
             <Typography variant="subtitle2" gutterBottom>
-              Eksternpris: {data?.cabins?.[0]?.externalPrice} kr
+              Ekstern: {data?.cabins?.[0]?.externalPrice} kr
             </Typography>
             <Typography variant="subtitle1">Sengeplass</Typography>
             <Divider />
-            <Typography variant="subtitle2">Indøk: 110 kr</Typography>
-            <Typography variant="subtitle2">Ikke-Indøk: 270 kr</Typography>
+            <Typography variant="subtitle2">Intern: 110 kr</Typography>
+            <Typography variant="subtitle2">Ekstern: 270 kr</Typography>
           </Stack>
           <Link href="/cabins/book" passHref>
             <Button variant="contained" size="large" color="success" endIcon={<ArrowRight />}>
