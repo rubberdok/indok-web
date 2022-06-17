@@ -6,7 +6,7 @@ import FAQ from "@components/pages/cabins/Documents/FAQ";
 import { outsideImages } from "@components/pages/cabins/ImageSlider/imageData";
 import ImageSlider from "@components/pages/cabins/ImageSlider/ImageSlider";
 import Layout from "@layouts/Layout";
-import { Box, Container, Divider, Grid, Typography } from "@mui/material";
+import { Box, Container, Divider, Grid, Stack, Typography } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -20,19 +20,23 @@ const CabinsPage: NextPageWithLayout = () => {
     {
       icon: <Image alt="" src="/img/undraw_bus_stop.svg" width={200} height={200} />,
       text: (
-        <Typography component="span">
+        <Typography component="span" variant="caption">
           Kom deg til Oppdal med <Link href="https://www.atb.no/">AtB</Link>.
         </Typography>
       ),
     },
     {
       icon: <Image alt="" src="/img/undraw_off_road.svg" width={200} height={200} />,
-      text: <Typography component="span">Kjøretid med bil er ca. to timer.</Typography>,
+      text: (
+        <Typography component="span" variant="caption">
+          Kjøretid med bil er ca. to timer.
+        </Typography>
+      ),
     },
     {
       icon: <Image alt="" src="/img/undraw_subway.svg" width={200} height={200} />,
       text: (
-        <Typography component="span">
+        <Typography component="span" variant="caption">
           Ta toget med <Link href="https://www.sj.no/">SJ Nord</Link> til Oppdal for en billig penge.
         </Typography>
       ),
@@ -40,7 +44,7 @@ const CabinsPage: NextPageWithLayout = () => {
     {
       icon: <Image alt="" src="/img/undraw_taxi.svg" width={200} height={200} />,
       text: (
-        <Typography component="span">
+        <Typography component="span" variant="caption">
           Taxi fra togstasjonen til hyttene tar 5-10 min.{" "}
           <Link href="https://www.07373.no/Booking/?=Oppdal/">Taxi Oppdal</Link>, tlf: 72 42 12 05.
         </Typography>
@@ -91,10 +95,10 @@ const CabinsPage: NextPageWithLayout = () => {
             <Grid container item direction="row">
               {transportData.map((transport, index) => (
                 <Grid item xs={12} sm={6} md={6} key={index}>
-                  <Box textAlign="center">
+                  <Stack textAlign="center" direction="column" justifyContent="center" alignItems="center" spacing={1}>
                     {transport.icon}
-                    <Typography variant="body2">{transport.text}</Typography>
-                  </Box>
+                    {transport.text}
+                  </Stack>
                 </Grid>
               ))}
             </Grid>

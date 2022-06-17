@@ -1,4 +1,4 @@
-import { Box, Container, Grid, Typography } from "@mui/material";
+import { Box, Container, Grid, Stack, Typography } from "@mui/material";
 import Image from "next/image";
 import BookNow from "./BookNow";
 
@@ -51,10 +51,10 @@ const CabinsInfoSection: React.FC = () => {
           <Grid container spacing={4} justifyContent="space-between">
             {facilitiesData.map((facility) => (
               <Grid item md={4} sm={4} xs={6} key={facility.text}>
-                <Box textAlign="center">
+                <Stack textAlign="center" direction="column" justifyContent="center" alignItems="center" spacing={1}>
                   {facility.icon}
-                  <Typography variant="body2">{facility.text}</Typography>
-                </Box>
+                  <Typography variant="caption">{facility.text}</Typography>
+                </Stack>
               </Grid>
             ))}
           </Grid>
