@@ -21,7 +21,7 @@ const Basic: React.FC<Props & AppBarProps> = ({ transparent, ...props }) => {
           height: "100%",
         }}
       >
-        <Box sx={{ position: "relative", mr: 2 }}>
+        <Box sx={{ position: "relative", mr: 6 }}>
           <Logo />
         </Box>
 
