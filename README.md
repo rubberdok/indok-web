@@ -19,18 +19,15 @@
 ## Introduction
 
 [![MIT License](https://img.shields.io/apm/l/atomic-design-ui.svg?)](https://opensource.org/licenses/MIT)
-[![CI](https://github.com/rubberdok/indok-web/actions/workflows/ci.yml/badge.svg)](https://github.com/rubberdok/indok-web/actions/workflows/ci.yml)
+[![CI](https://github.com/rubberdok/indok-web/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/rubberdok/indok-web/actions/workflows/ci.yml)
 [![Code style](https://img.shields.io/badge/code%20style-black-black?style=flat)](https://github.com/psf/black)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat)](https://github.com/prettier/prettier)
 [![codecov](https://codecov.io/gh/rubberdok/indok-web/branch/main/graph/badge.svg?token=UO2NENP9Z8)](https://codecov.io/gh/rubberdok/indok-web)
 
 Website for the students at Industrial Economics and Technology Management at NTNU Trondheim. Built with Django, Next.js, and a GraphQL API. Maintained by Rubberdøk NTNU.
 
-<p align="center">
-  <a href="https://www.indokntnu.no/">
-    <img alt="Landing Page" title="Indøk NTNU" src="https://github.com/rubberdok/indok-web/blob/docs/assets/Index.png" width="600">
-  </a>
-</p>
+![Landing page](https://github.com/rubberdok/indok-web/blob/docs/assets/index-light.png#gh-light-mode-only)
+![Landing page](https://github.com/rubberdok/indok-web/blob/docs/assets/index-dark.png#gh-dark-mode-only)
 
 ## Features
 
