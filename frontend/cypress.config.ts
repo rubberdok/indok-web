@@ -7,6 +7,7 @@ export default defineConfig({
     viewportWidth: 1920,
     chromeWebSecurity: false,
     projectId: "1fyogc",
+    video: false,
     experimentalSessionAndOrigin: true,
     defaultCommandTimeout: 20000,
     setupNodeEvents(on, config) {
