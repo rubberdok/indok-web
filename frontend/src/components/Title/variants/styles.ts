@@ -12,7 +12,7 @@ export const RootStyle = styled(Box, {
 })<RootProps>(({ theme, disableGutters }) => ({
   paddingTop: HEADER_MOBILE_HEIGHT,
   backgroundColor: theme.palette.background.neutral,
-  color: theme.palette.common.black,
+  color: theme.palette.text.primary,
   [theme.breakpoints.up("md")]: {
     paddingTop: HEADER_DESKTOP_HEIGHT,
   },
