@@ -38,6 +38,6 @@
     },
     "incremental": false
   },
-  "exclude": ["**/node_modules", "**/.next"],
+  "exclude": ["**/node_modules", "**/.next", "cypress", "cypress.config.ts"],
   "include": ["**/*.ts", "**/*.tsx"]
 }
