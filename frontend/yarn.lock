@@ -6287,9 +6287,9 @@ react-markdown@^8.0.0:
     vfile "^5.0.0"
 
 react-parallax@^3.3.0:
-  version "3.5.0"
-  resolved "https://registry.yarnpkg.com/react-parallax/-/react-parallax-3.5.0.tgz#5f1019fe5c2d1799aba9f79eb22745673fbc10df"
-  integrity sha512-6uDZEMk7h+vF6kEi7xHvSlmSkQ7q1DuZixD9X+n3pbj/4BcpUaX4xBIsqGV1ok4Omvmap2GtAScEcPrD09NIqw==
+  version "3.5.1"
+  resolved "https://registry.yarnpkg.com/react-parallax/-/react-parallax-3.5.1.tgz#73071679371b7738e21ffac8daa0bc3cb7e5174d"
+  integrity sha512-p5zPsPsqELlIOGaPS01O0IRx8R2bxcBAtrdF/RHf9nIxxk5hijbM2y89tk4rJQBcNH6ESSLe7J2NV4/ms7FLFw==
 
 react-swipeable-views-core@^0.14.0:
   version "0.14.0"
