@@ -14,6 +14,7 @@ const LandingHero: React.FC = () => {
           gap: 4,
           height: { md: "80vh" },
           maxHeight: "1250px",
+          minHeight: "565px",
           position: "relative",
         }}
       >
