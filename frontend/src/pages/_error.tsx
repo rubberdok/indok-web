@@ -1,6 +1,6 @@
-import * as Sentry from "@sentry/node";
-import NextErrorComponent, { ErrorProps as NextErrorProps } from "next/error";
+import { captureUnderscoreErrorException } from "@sentry/nextjs";
 import { NextPageContext } from "next";
+import NextErrorComponent, { ErrorProps as NextErrorProps } from "next/error";
 
 export type ErrorPageProps = {
   err: Error;
@@ -12,35 +12,14 @@ export type ErrorProps = {
   isReadyToRender: boolean;
 } & NextErrorProps;
 
-const ErrorPage = ({ statusCode, isReadyToRender, err }: ErrorPageProps): JSX.Element => {
-  if (!isReadyToRender && err) {
-    Sentry.captureException(err);
-  }
-  return <NextErrorComponent statusCode={statusCode} />;
+const ErrorPage = (props: ErrorPageProps): JSX.Element => {
+  captureUnderscoreErrorException(props);
+  return <NextErrorComponent statusCode={props.statusCode} />;
 };
 
-ErrorPage.getInitialProps = async ({ res, err, asPath }: NextPageContext): Promise<ErrorProps> => {
-  const errorInitialProps: ErrorProps = (await NextErrorComponent.getInitialProps({
-    res,
-    err,
-  } as NextPageContext)) as ErrorProps;
-
-  errorInitialProps.isReadyToRender = true;
-
-  if (res?.statusCode === 404) {
-    return { statusCode: 404, isReadyToRender: true };
-  }
-
-  if (err) {
-    Sentry.captureException(err);
-    await Sentry.flush(2000);
-    return errorInitialProps;
-  }
-
-  Sentry.captureException(new Error(`_error.js getInitialProps missing data at path: ${asPath}`));
-  await Sentry.flush(2000);
-
-  return errorInitialProps;
+ErrorPage.getInitialProps = async (contextData: NextPageContext & { [key: string]: unknown }) => {
+  await captureUnderscoreErrorException(contextData);
+  return NextErrorComponent.getInitialProps(contextData);
 };
 
 export default ErrorPage;
