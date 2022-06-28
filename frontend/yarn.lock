@@ -1250,15 +1250,15 @@
     rifm "^0.12.1"
 
 "@mui/material@^5.8.3":
-  version "5.8.5"
-  resolved "https://registry.yarnpkg.com/@mui/material/-/material-5.8.5.tgz#a1a79fc57b212a9781eb4a53e9995c4a9df04753"
-  integrity sha512-wngPXlOI9BurLSGlObQM/2L0QFFaIcvJnDK5A+ALxuUyuQnPviVWfC1l/r8rPlxQ4PCbSYpq3gzLlgnLoWcO/g==
+  version "5.8.6"
+  resolved "https://registry.yarnpkg.com/@mui/material/-/material-5.8.6.tgz#4019fbf1b95d8ea9f397efaed835ac92a6d8f22d"
+  integrity sha512-9fo5AiNHs+HY5ArMzsDMFrAmJSRw90y/qu81oDIszgK7Bfrm8GuI7Eb0mO6WADWPEyKOzOov/WZsm4G6jPEM4g==
   dependencies:
     "@babel/runtime" "^7.17.2"
-    "@mui/base" "5.0.0-alpha.86"
-    "@mui/system" "^5.8.5"
+    "@mui/base" "5.0.0-alpha.87"
+    "@mui/system" "^5.8.6"
     "@mui/types" "^7.1.4"
-    "@mui/utils" "^5.8.4"
+    "@mui/utils" "^5.8.6"
     "@types/react-transition-group" "^4.4.4"
     clsx "^1.1.1"
     csstype "^3.1.0"
