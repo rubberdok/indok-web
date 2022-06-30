@@ -14,7 +14,7 @@ import { UserInfoDocument } from "@generated/graphql";
 import { GET_USER_INFO } from "@graphql/users/queries";
 import Layout from "@layouts/Layout";
 import { addApolloState, initializeApollo } from "@lib/apolloClient";
-import { Avatar, Container, Grid, Stack, Typography } from "@mui/material";
+import { Avatar, Container, Grid, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { generateFeideLoginUrl } from "@utils/auth";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
@@ -70,52 +70,60 @@ const ProfilePage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServ
           ]}
           sx={{ mb: 4 }}
         />
-        <Stack alignItems="center" sx={{ mb: 4 }} spacing={2}>
-          <Avatar
-            sx={{
-              bgcolor: "primary.main",
-              width: (theme) => theme.spacing(16),
-              height: (theme) => theme.spacing(16),
-            }}
-          >
-            {data?.user && (
-              <Typography variant="h3" component="p" color="common.white">
-                {initials}
-              </Typography>
-            )}
-          </Avatar>
-          {data?.user && <Typography variant="h4" component="h1">{`Hei, ${data.user.firstName}`}</Typography>}
-          <Typography variant="body1" align="center">
-            Her kan du endre din informasjon, se tidligere arrangementer og foreningene der du er medlem.
-          </Typography>
+        <Grid container direction="column" spacing={2} alignItems="center" justifyContent="center" sx={{ mb: 4 }}>
+          <Grid item>
+            <Avatar
+              sx={{
+                bgcolor: "primary.main",
+                width: (theme) => theme.spacing(16),
+                height: (theme) => theme.spacing(16),
+              }}
+            >
+              {data?.user && (
+                <Typography variant="h3" component="p" color="common.white">
+                  {initials}
+                </Typography>
+              )}
+            </Avatar>
+          </Grid>
+          <Grid item>
+            {data?.user && <Typography variant="h4" component="h1">{`Hei, ${data.user.firstName}`}</Typography>}
+          </Grid>
+          <Grid item xs={10}>
+            <Typography variant="body1" align="center">
+              Her kan du endre din informasjon, se tidligere arrangementer og foreningene der du er medlem.
+            </Typography>
+          </Grid>
 
-          <Grid container columnSpacing={{ xs: 0, md: 4 }} rowSpacing={4} justifyContent="center" alignItems="stretch">
-            <Grid item xs={12} md={5}>
+          <Grid container item justifyContent="center" alignItems="stretch" spacing={4}>
+            <Grid item xs={12} md={6} lg={5}>
               <Personal user={data?.user} data-test-id={`${ID_PREFIX}personal-`} />
             </Grid>
-            <Grid item xs={12} md={5}>
+            <Grid item xs={12} md={6} lg={5}>
               <Event data-test-id={`${ID_PREFIX}event-`} />
             </Grid>
-            <Grid item xs={12} md={5}>
+            <Grid item xs={12} md={6} lg={5}>
               <Organization data-test-id={`${ID_PREFIX}organization-`} />
             </Grid>
-            <Grid item xs={12} md={5}>
+            <Grid item xs={12} md={6} lg={5}>
               <Form data-test-id={`${ID_PREFIX}form-`} />
             </Grid>
-            <Grid item xs={12} md={5}>
+            <Grid item xs={12} md={6} lg={5}>
               <Report data-test-id={`${ID_PREFIX}report-`} />
             </Grid>
-            <Grid item xs={12} md={5}>
+            <Grid item xs={12} md={6} lg={5}>
               <Orders data-test-id={`${ID_PREFIX}orders-`} />
             </Grid>
-            <Grid item xs={12} md={5}>
+            <Grid item xs={12} md={6} lg={5}>
               <PermissionRequired permission="cabins.manage_booking">
                 <CabinsAdmin data-test-id={`${ID_PREFIX}cabins-`} />
               </PermissionRequired>
             </Grid>
           </Grid>
-          <Logout />
-        </Stack>
+          <Grid item>
+            <Logout />
+          </Grid>
+        </Grid>
       </Container>
     </>
   );
