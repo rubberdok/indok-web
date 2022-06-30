@@ -231,7 +231,6 @@ jobs:
           parallel: true
           group: "E2E"
           working-directory: frontend
-          headless: true
           browser: chrome
           ci-build-id: ${{ needs.prepare.outputs.uuid }}
           wait-on: "http://localhost:8000/-/health, http://localhost:3000/api/health"
