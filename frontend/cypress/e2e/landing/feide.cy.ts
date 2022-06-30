@@ -4,7 +4,7 @@ describe("SSO login", () => {
       cy.log("Accessing site");
       cy.visit("/");
       cy.getByTestId("app-bar-login").click();
-      cy.origin("https://dataporten.no", () => {
+      cy.origin("https://feide.no", () => {
         cy.log("Logging in");
         cy.contains("Feide test users").click();
         cy.get("[id=username]").type("asbjorn_elevg");
@@ -21,7 +21,7 @@ describe("SSO login", () => {
       cy.log("Accessing site");
       cy.visit("/");
       cy.getByTestId("app-bar-login").click();
-      cy.origin("https://dataporten.no", () => {
+      cy.origin("https://feide.no", () => {
         cy.log("Logging in");
         cy.contains("Feide test users").click();
         cy.get("[id=username]").type("cecilie_elevvgs");
