@@ -29,6 +29,7 @@ RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/app/wheels -r ./requ
 FROM public.ecr.aws/docker/library/python:3.9-slim as runner
 WORKDIR /usr/src/app
 
+# install weasyprint dependencies
 RUN apt-get update && \
     apt-get install -y \
     libpango-1.0-0 \

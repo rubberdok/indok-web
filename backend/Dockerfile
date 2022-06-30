@@ -3,6 +3,8 @@ FROM --platform=linux/amd64 public.ecr.aws/docker/library/python:3.9-slim
 
 # set work directory
 WORKDIR /usr/src/app
+
+# install weasyprint dependencies
 RUN apt-get update && \
     apt-get install -y \
     libpango-1.0-0 \
