@@ -4,9 +4,11 @@ describe("SSO login", () => {
       cy.log("Accessing site");
       cy.visit("/");
       cy.getByTestId("app-bar-login").click();
-      cy.origin("https://feide.no", () => {
+      cy.origin("https://dataporten.no", () => {
         cy.log("Logging in");
-        cy.contains("Feide test users").click();
+        cy.get("[aria-label='Feide test users']").click();
+      });
+      cy.origin("https://feide.no", () => {
         cy.get("[id=username]").type("asbjorn_elevg");
         cy.get("[id=password]").type("1qaz");
         cy.get("button").get("[type=submit]").click();
@@ -21,9 +23,11 @@ describe("SSO login", () => {
       cy.log("Accessing site");
       cy.visit("/");
       cy.getByTestId("app-bar-login").click();
-      cy.origin("https://feide.no", () => {
+      cy.origin("https://dataporten.no", () => {
         cy.log("Logging in");
-        cy.contains("Feide test users").click();
+        cy.get("[aria-label='Feide test users']").click();
+      });
+      cy.origin("https://feide.no", () => {
         cy.get("[id=username]").type("cecilie_elevvgs");
         cy.get("[id=password]").type("3edc");
         cy.get("button").get("[type=submit]").click();
