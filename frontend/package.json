@@ -11,7 +11,12 @@
     "start": "next start",
     "lint": "eslint",
     "lint:fix": "yarn run lint --fix",
-    "postinstall": "cd .. && husky install frontend/.husky"
+    "postinstall": "cd .. && husky install frontend/.husky",
+    "generate": "graphql-codegen --config codegen.yml",
+    "test": "cypress open",
+    "test:headless": "cypress run",
+    "e2e": "wait-on --httpTimeout 60000 http://localhost:3000 && wait-on --httpTimeout 60000 http://localhost:8000 && yarn test",
+    "e2e:headless": "wait-on --httpTimeout 60000 http://localhost:3000 && wait-on --httpTimeout 60000 http://localhost:8000 && yarn test:headless"
   },
   "repository": {
     "type": "git",
@@ -19,20 +24,25 @@
   },
   "dependencies": {
     "@apollo/client": "^3.3.20",
-    "@material-ui/core": "^4.11.4",
-    "@material-ui/icons": "^4.11.2",
-    "@material-ui/lab": "^4.0.0-alpha.58",
-    "@material-ui/system": "^4.11.2",
-    "@sentry/nextjs": "^6.17.3",
-    "cookie": "^0.4.2",
+    "@emotion/cache": "^11.7.1",
+    "@emotion/react": "^11.9.0",
+    "@emotion/server": "^11.4.0",
+    "@emotion/styled": "^11.8.1",
+    "@mui/icons-material": "^5.6.2",
+    "@mui/lab": "^5.0.0-alpha.79",
+    "@mui/material": "^5.8.3",
+    "@sentry/nextjs": "^7.1.1",
+    "@types/js-cookie": "^3.0.1",
+    "cookie": "^0.5.0",
     "dayjs": "^1.10.5",
     "deepmerge": "^4.2.2",
     "formik": "^2.2.9",
-    "graphql": "^15.5.0",
+    "graphql": "^16.3.0",
     "gray-matter": "^4.0.3",
+    "js-cookie": "^3.0.1",
     "lodash": "^4.17.21",
-    "material-ui-search-bar": "^1.0.0",
     "next": "^12.0.8",
+    "phosphor-react": "^1.4.1",
     "react": "^17.0.2",
     "react-awesome-reveal": "^3.8.1",
     "react-dom": "^17.0.2",
@@ -40,13 +50,21 @@
     "react-parallax": "^3.3.0",
     "react-swipeable-views": "^0.14.0",
     "react-swipeable-views-utils": "^0.14.0",
-    "sharp": "^0.29.0",
+    "sharp": "^0.30.2",
+    "swiper": "^8.2.3",
     "ts-debounce": "^4.0.0",
     "validator": "^13.6.0",
     "yup": "^0.32.9"
   },
   "devDependencies": {
-    "@types/cookie": "^0.4.1",
+    "@graphql-codegen/cli": "2.6.4",
+    "@graphql-codegen/introspection": "2.1.1",
+    "@graphql-codegen/typed-document-node": "^2.2.3",
+    "@graphql-codegen/typescript": "2.5.1",
+    "@graphql-codegen/typescript-operations": "2.4.2",
+    "@graphql-codegen/typescript-react-apollo": "3.2.16",
+    "@graphql-codegen/typescript-resolvers": "2.6.6",
+    "@types/cookie": "^0.5.1",
     "@types/node": "^16.11.22",
     "@types/react": "^17.0.11",
     "@types/react-dom": "^17.0.8",
@@ -56,17 +74,20 @@
     "@types/validator": "^13.1.4",
     "@typescript-eslint/eslint-plugin": "^4.27.0",
     "@typescript-eslint/parser": "^4.27.0",
+    "cypress": "^10.1.0",
     "eslint": "^7.29.0",
     "eslint-config-next": "^12.1.0",
     "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-cypress": "^2.12.1",
     "eslint-plugin-jsx-a11y": "^6.3.1",
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.24.0",
     "eslint-plugin-react-hooks": "^4.0.8",
-    "husky": "^7.0.1",
-    "lint-staged": "^12.3.1",
+    "husky": "^8.0.1",
+    "lint-staged": "<14.0.0",
     "prettier": "^2.3.1",
-    "typescript": "^4.3.4"
+    "typescript": "^4.3.4",
+    "wait-on": "^6.0.1"
   },
   "lint-staged": {
     "*.{ts,js,tsx,jsx}": [
@@ -75,9 +96,12 @@
     "*.{json,md,html,js,jsx,ts,tsx}": [
       "prettier --write"
     ],
-    "../**/*.py": [
+    "../backend/**/*.py": [
       "black",
       "flake8 --config=../backend/tox.ini"
+    ],
+    "../backend/schema.json": [
+      "yarn generate"
     ]
   }
 }

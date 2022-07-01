@@ -1,5 +1,6 @@
-import Layout from "@components/Layout";
 import ContactInfo from "@components/pages/reports/ContactInfo";
+import Layout, { RootStyle } from "@layouts/Layout";
+import { ArrowRight } from "@mui/icons-material";
 import {
   Button,
   Card,
@@ -12,24 +13,21 @@ import {
   ListItemIcon,
   ListItemText,
   Typography,
-  useTheme,
-} from "@material-ui/core";
-import { amber, deepOrange, deepPurple, green, indigo, red } from "@material-ui/core/colors";
-import { ArrowRight } from "@material-ui/icons";
-import { NextPage } from "next";
-import Head from "next/head";
+} from "@mui/material";
+import { amber, deepOrange, deepPurple, green, indigo, red } from "@mui/material/colors";
 import Amund from "@public/img/Amund.jpg";
 import Benjamin from "@public/img/Benjamin.jpg";
 import Christine from "@public/img/Christine.jpeg";
 import Jesper from "@public/img/Jesper.jpg";
 import Laila from "@public/img/Laila.jpg";
 import Maria from "@public/img/Maria.jpg";
+import Head from "next/head";
 import { useRef } from "react";
+import { NextPageWithLayout } from "../_app";
 
-const ReportsPage: NextPage = () => {
+const ReportsPage: NextPageWithLayout = () => {
   const formRef = useRef<null | HTMLDivElement>(null);
   const scrollToForm = () => formRef.current?.scrollIntoView({ behavior: "smooth" });
-  const theme = useTheme();
 
   const responsibles = [
     {
@@ -83,7 +81,7 @@ const ReportsPage: NextPage = () => {
   ];
 
   return (
-    <Layout>
+    <>
       <Head>
         <title>Baksida | Forening for studenter ved Industriell Økonomi og Teknologiledelse</title>
         <meta name="og:title" content="Baksida | Indøk NTNU" key="title" />
@@ -274,7 +272,7 @@ const ReportsPage: NextPage = () => {
                     direction="row"
                     justifyContent="center"
                     spacing={8}
-                    style={{ marginBottom: theme.spacing(8) }}
+                    sx={{ mb: (theme) => theme.spacing(8) }}
                   >
                     {responsibles.map((responsible) => (
                       <Grid item md={6} key={responsible.id}>
@@ -360,8 +358,14 @@ const ReportsPage: NextPage = () => {
           </Grid>
         </Grid>
       </Container>
-    </Layout>
+    </>
   );
 };
 
 export default ReportsPage;
+
+ReportsPage.getLayout = (page) => (
+  <Layout>
+    <RootStyle>{page}</RootStyle>
+  </Layout>
+);

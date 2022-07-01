@@ -1,33 +1,30 @@
+from typing import TYPE_CHECKING, Optional
+
 import graphene
 from api.auth.dataporten_auth import DataportenAuth
-from graphql_jwt.decorators import login_required
-from graphql_jwt.shortcuts import get_token
-from guardian.shortcuts import get_anonymous_user
+from decorators import login_required
+from django.contrib.auth import login, logout
+from graphene import ResolveInfo
 
 from apps.users.helpers import update_graduation_year
 
 from .types import UserType
 
+if TYPE_CHECKING:
+    from apps.users import models
+
 
 class AuthUser(graphene.Mutation):
     class Arguments:
-        code = graphene.String()
+        code = graphene.String(required=True)
 
-    token = graphene.String()
     user = graphene.Field(UserType)
-    is_indok_student = graphene.Boolean()
-    id_token = graphene.String()
 
-    def mutate(self, info, code):
-        user, id_token = DataportenAuth.authenticate_and_get_user(code=code)
-
-        token = get_token(user)
-        info.context.set_jwt_cookie = token
-        info.context.user = user or get_anonymous_user()
+    def mutate(self, info, code: str):
+        user = DataportenAuth.authenticate_and_get_user(code=code)
+        login(info.context, user, backend="django.contrib.auth.backends.ModelBackend")
         return AuthUser(
             user=user,
-            token=token,
-            id_token=id_token,
         )
 
 
@@ -49,13 +46,13 @@ class UpdateUser(graphene.Mutation):
     @login_required
     def mutate(
         self,
-        info,
-        user_data=None,
-    ):
+        info: ResolveInfo,
+        user_data: Optional[dict] = None,
+    ) -> Optional["UpdateUser"]:
         if user_data is None:
             return None
 
-        user = info.context.user
+        user: "models.User" = info.context.user
 
         new_graduation_year = user_data.get("graduation_year")
 
@@ -77,14 +74,11 @@ class UpdateUser(graphene.Mutation):
         return UpdateUser(user=user)
 
 
-class GetIDToken(graphene.Mutation):
-    id_token = graphene.String(required=True)
+class Logout(graphene.Mutation):
+    id_token = graphene.String()
 
     @login_required
-    def mutate(self, info):
-        user = info.context.user
-        id_token = user.id_token
-
-        return GetIDToken(
-            id_token=id_token,
-        )
+    def mutate(self, info: ResolveInfo):
+        user: "models.User" = info.context.user
+        logout(info.context)
+        return Logout(id_token=user.id_token)

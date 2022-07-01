@@ -1,13 +1,15 @@
 import graphene
+from decorators import permission_required
 
-from .helpers import price
-from .types import AllBookingsType, BookingInfoType, EmailInputType, UpdateBookingSemesterType
-from apps.cabins.models import Booking as BookingModel, BookingSemester
+from apps.cabins.models import Booking as BookingModel
+from apps.cabins.models import BookingSemester
 from apps.cabins.models import Cabin as CabinModel
+
 from .constants import APPROVE_BOOKING, DISAPPROVE_BOOKING
+from .helpers import price
 from .mail import send_mail
+from .types import AllBookingsType, BookingInfoType, CabinType, EmailInputType, UpdateBookingSemesterType
 from .validators import create_booking_validation
-from graphql_jwt.decorators import permission_required
 
 
 class BookingInput(graphene.InputObjectType):
@@ -24,17 +26,18 @@ class BookingInput(graphene.InputObjectType):
     internal_participants = graphene.Int()
     external_participants = graphene.Int()
     cabins = graphene.List(graphene.Int)
+    extra_info = graphene.String(required=False)
 
 
 class EmailInput(BookingInput):
     email_type = graphene.String()
-    extra_info = graphene.String(required=False, default_value="")
 
 
 class UpdateBookingInput(BookingInput):
     id = graphene.ID(required=True)
     is_tentative = graphene.Boolean()
     is_declined = graphene.Boolean()
+    decline_reason = graphene.String(required=False)
 
 
 class UpdateBookingSemesterInput(graphene.InputObjectType):
@@ -44,6 +47,14 @@ class UpdateBookingSemesterInput(graphene.InputObjectType):
     spring_end_date = graphene.Date()
     fall_semester_active = graphene.Boolean()
     spring_semester_active = graphene.Boolean()
+
+
+class UpdateCabinInput(graphene.InputObjectType):
+    id = graphene.ID()
+    name = graphene.String()
+    max_guests = graphene.Int()
+    internal_price = graphene.Int()
+    external_price = graphene.Int()
 
 
 class CreateBooking(graphene.Mutation):
@@ -57,7 +68,6 @@ class CreateBooking(graphene.Mutation):
     ok = graphene.Boolean()
     booking = graphene.Field(AllBookingsType)
 
-    @permission_required("cabins.add_booking")
     def mutate(
         self,
         info,
@@ -149,7 +159,6 @@ class SendEmail(graphene.Mutation):
 
     ok = graphene.Boolean()
 
-    @permission_required("cabins.send_email")
     def mutate(self, info, email_input: EmailInputType):
         cabins = CabinModel.objects.filter(id__in=email_input["cabins"])
 
@@ -217,3 +226,34 @@ class UpdateBookingSemester(graphene.Mutation):
 
         semester.save()
         return UpdateBookingSemester(ok=ok, booking_semester=semester)
+
+
+class UpdateCabin(graphene.Mutation):
+    """
+    Change the given cabin
+    """
+
+    class Arguments:
+        cabin_data = UpdateCabinInput()
+
+    ok = graphene.Boolean()
+    cabin = graphene.Field(CabinType)
+
+    @permission_required("cabins.change_cabin")
+    def mutate(self, info, cabin_data):
+        ok = True
+
+        try:
+            # Fetch cabin object by id
+            cabin = CabinModel.objects.get(name=cabin_data.name)
+
+            for input_field, input_value in cabin_data.items():
+                setattr(cabin, input_field, input_value)
+            cabin.save()
+
+            return UpdateCabin(cabin=cabin, ok=ok)
+        except CabinModel.DoesNotExist:
+            return UpdateCabin(
+                cabin=None,
+                ok=False,
+            )

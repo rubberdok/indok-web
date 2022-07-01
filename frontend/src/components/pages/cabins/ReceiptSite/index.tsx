@@ -1,5 +1,5 @@
 import { NextPage } from "next";
-import { Grid, Typography, Divider, Hidden } from "@material-ui/core";
+import { Grid, Typography, Divider, Hidden } from "@mui/material";
 import { Cabin, ContactInfo, DatePick } from "@interfaces/cabins";
 import CabinBookingStatus from "../CabinBookingStatus";
 
@@ -16,7 +16,7 @@ Step in the cabins/book site. Shows a confirmation of the booking made after the
 const ReceiptSite: NextPage<Props> = (props) => {
   return (
     <Grid container alignItems="center" direction="column">
-      <Hidden mdDown>
+      <Hidden lgDown>
         <Grid item>
           <Typography variant="h4">Takk for din bestilling</Typography>
           <Divider />

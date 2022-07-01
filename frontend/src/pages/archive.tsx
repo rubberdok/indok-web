@@ -1,33 +1,26 @@
-import Layout from "@components/Layout";
-import DocumentList from "@components/pages/archive/DocumentList";
+import Layout, { RootStyle } from "@layouts/Layout";
+import Documents from "@components/pages/archive/Documents";
 import FeaturedDocumentsList from "@components/pages/archive/FeaturedDocumentsList";
 import FilterButtons from "@components/pages/archive/FilterButtons";
 import { RemoveFiltersButton } from "@components/pages/archive/RemoveFiltersButton";
 import SearchBar from "@components/pages/archive/SearchBar";
 import YearSelector from "@components/pages/archive/YearSelector";
 import Title from "@components/Title";
-import { Box, Container, FormGroup, Grid, makeStyles } from "@material-ui/core";
-import { NextPage } from "next";
+import { HasPermissionDocument } from "@generated/graphql";
+import { addApolloState, initializeApollo } from "@lib/apolloClient";
+import { Box, Container, FormGroup, Grid } from "@mui/material";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import React, { useState } from "react";
-import { redirectIfNotLoggedIn } from "src/utils/redirect";
+import { NextPageWithLayout } from "./_app";
 
-const useStyles = makeStyles((theme) => ({
-  container: {
-    paddingTop: theme.spacing(4),
-    paddingBottom: theme.spacing(4),
-  },
-}));
-
-const Archive: NextPage = () => {
-  const classes = useStyles();
-
+const Archive: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSideProps>> = () => {
   const [yearFilter, setYearFilter] = useState("");
 
   const [searchFilter, setSearchFilter] = useState("");
 
   const [viewFeatured, setViewFeatured] = useState(true);
 
-  const [typeFilters, setTypeFilters] = useState<{ [key: string]: { active: boolean; title: string } }>({
+  const [typeFilters, setTypeFilters] = useState<Record<string, { active: boolean; title: string }>>({
     Budget: { active: false, title: "Budsjett og Regnskap" },
     Summary: { active: false, title: "Generalforsamling" },
     Yearbook: { active: false, title: "Årbøker" },
@@ -37,28 +30,28 @@ const Archive: NextPage = () => {
     Others: { active: false, title: "Annet" },
   });
 
-  if (redirectIfNotLoggedIn()) {
-    return null;
-  }
-
   return (
-    <Layout>
-      <Title>Arkiv</Title>
+    <>
+      <Title
+        title="Arkiv"
+        breadcrumbs={[
+          { name: "Hjem", href: "/" },
+          { name: "Arkiv", href: "/archive" },
+        ]}
+      />
 
-      <Container className={classes.container}>
+      <Container>
         <Grid container spacing={4}>
           <Grid item xs={12} md={6}>
             <FormGroup row>
               <FilterButtons
                 typeFilters={typeFilters}
                 updateTypeFilters={(key) => {
-                  [
-                    setTypeFilters({
-                      ...typeFilters,
-                      [key]: { active: !typeFilters[key].active, title: typeFilters[key].title },
-                    }),
-                    setViewFeatured(false),
-                  ];
+                  setTypeFilters((prevState) => ({
+                    ...prevState,
+                    [key]: { active: !typeFilters[key].active, title: typeFilters[key].title },
+                  }));
+                  setViewFeatured(false);
                 }}
               />
             </FormGroup>
@@ -66,8 +59,9 @@ const Archive: NextPage = () => {
           <Grid item xs={12} md={6}>
             <SearchBar
               searchFilter={searchFilter}
-              handleSearchFilterChanged={(newValue: string) => {
-                [setSearchFilter(newValue), setViewFeatured(false)];
+              handleSearchFilterChanged={(event: React.ChangeEvent<HTMLInputElement>) => {
+                setSearchFilter(event.target.value);
+                setViewFeatured(false);
               }}
               handleSearchFilterCanceled={() => setSearchFilter("")}
             />
@@ -78,7 +72,8 @@ const Archive: NextPage = () => {
           <YearSelector
             yearFilter={yearFilter}
             handleYearFilterChanged={(year: string) => {
-              [setYearFilter(year), setViewFeatured(false)];
+              setYearFilter(year);
+              setViewFeatured(false);
             }}
           />
         </Box>
@@ -86,35 +81,55 @@ const Archive: NextPage = () => {
         {!viewFeatured && (
           <RemoveFiltersButton
             handleRemoveFilterChanged={() => {
-              [
-                setYearFilter(""),
-                setSearchFilter(""),
-                setTypeFilters({
-                  Budget: { active: false, title: "Budsjett og Regnskap" },
-                  Summary: { active: false, title: "Generalforsamling" },
-                  Yearbook: { active: false, title: "Årbøker" },
-                  Guidelines: { active: false, title: "Støtte fra HS" },
-                  Regulation: { active: false, title: "Foreningens lover" },
-                  Statues: { active: false, title: "Utveksling" },
-                  Others: { active: false, title: "Annet" },
-                }),
-                setViewFeatured(true),
-              ];
+              setYearFilter("");
+              setSearchFilter("");
+              setTypeFilters({
+                Budget: { active: false, title: "Budsjett og Regnskap" },
+                Summary: { active: false, title: "Generalforsamling" },
+                Yearbook: { active: false, title: "Årbøker" },
+                Guidelines: { active: false, title: "Støtte fra HS" },
+                Regulation: { active: false, title: "Foreningens lover" },
+                Statues: { active: false, title: "Utveksling" },
+                Others: { active: false, title: "Annet" },
+              });
+              setViewFeatured(true);
             }}
           />
         )}
 
         {viewFeatured && <FeaturedDocumentsList />}
-        <DocumentList
-          document_types={Object.entries(typeFilters)
+        <Documents
+          documentTypes={Object.entries(typeFilters)
             .filter((key) => key[1].active)
             .map(([, val]) => val.title)}
           year={parseInt(yearFilter)}
           names={searchFilter}
         />
       </Container>
-    </Layout>
+    </>
   );
 };
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const client = initializeApollo({}, ctx);
+  const { data, error } = await client.query({
+    query: HasPermissionDocument,
+    variables: {
+      permission: "archive.view_archivedocument",
+    },
+  });
+
+  if (error) return { notFound: true };
+  if (!data.hasPermission) {
+    return { notFound: true };
+  }
+  return addApolloState(client, { props: { data } });
+};
+
+Archive.getLayout = (page: React.ReactElement) => (
+  <Layout>
+    <RootStyle>{page}</RootStyle>
+  </Layout>
+);
 
 export default Archive;

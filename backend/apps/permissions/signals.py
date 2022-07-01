@@ -39,9 +39,7 @@ def create_default_groups(apps, **kwargs):
             query: Q = Q()
             for permission in permissions:
                 query |= Q(codename=permission[1], content_type__app_label=permission[0])
-            group.permissions.set(Permission.objects.filter(query))
-        else:
-            group.permissions.set([])
+            group.permissions.add(*Permission.objects.filter(query))
 
 
 @receiver(post_migrate)

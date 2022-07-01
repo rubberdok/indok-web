@@ -1,6 +1,8 @@
 from typing import Optional
 
-from django.db.models import Q
+from decorators import PermissionDenied
+from django.db.models import Count, Q
+from django.utils import timezone
 
 from .models import Membership, Organization
 
@@ -23,8 +25,11 @@ class OrganizationResolvers:
 
     def resolve_event_filtered_organizations(self, info):
         try:
-            return Organization.objects.filter(parent=None)
-
+            return (
+                Organization.objects.filter(events__end_time__gte=timezone.now())
+                .annotate(num_events=Count("events"))
+                .filter(num_events__gte=0)
+            )
         except Organization.DoesNotExist:
             return None
 
@@ -43,4 +48,4 @@ class MembershipResolvers:
         organization = Organization.objects.get(pk=organization_id)
         if organization.users.filter(user=info.context.user).exists():
             return Membership.objects.filter(organization=organization)
-        raise PermissionError(f"Du må være medlem av {organization} for å gjøre dette kallet.")
+        raise PermissionDenied(f"Du må være medlem av {organization} for å gjøre dette kallet.")

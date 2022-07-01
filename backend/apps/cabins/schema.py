@@ -13,6 +13,7 @@ from apps.cabins.mutations import (
     DeleteBooking,
     SendEmail,
     UpdateBookingSemester,
+    UpdateCabin,
 )
 from apps.cabins.resolvers import CabinResolvers
 
@@ -23,6 +24,7 @@ class CabinMutations(graphene.ObjectType):
     delete_booking = DeleteBooking.Field()
     send_email = SendEmail.Field()
     update_booking_semester = UpdateBookingSemester.Field()
+    update_cabin = UpdateCabin.Field()
 
 
 class CabinQueries(graphene.ObjectType, CabinResolvers):

@@ -2,7 +2,7 @@
 ARG APP_ENV=production
 
 # Install dependencies only when needed
-FROM 777854691961.dkr.ecr.eu-north-1.amazonaws.com/node:16.13.2-alpine AS deps
+FROM public.ecr.aws/docker/library/node:lts-alpine3.16 AS deps
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
 RUN apk add --no-cache libc6-compat
 WORKDIR /usr/src/app
@@ -10,46 +10,26 @@ COPY package.json yarn.lock ./
 RUN yarn install --frozen-lockfile
 
 # Rebuild the source code only when needed
-FROM 777854691961.dkr.ecr.eu-north-1.amazonaws.com/node:16.13.2-alpine AS builder
+FROM public.ecr.aws/docker/library/node:lts-alpine3.16 AS builder
 WORKDIR /usr/src/app
 COPY --from=deps /usr/src/app/node_modules ./node_modules
 COPY . .
 
-ARG NEXT_PUBLIC_GRAPHQL_BACKEND_URI
-ENV NEXT_PUBLIC_GRAPHQL_BACKEND_URI $NEXT_PUBLIC_GRAPHQL_BACKEND_URI
-
-ARG NEXT_PUBLIC_INTERNAL_GRAPHQL_BACKEND_URI
-ENV NEXT_PUBLIC_INTERNAL_GRAPHQL_BACKEND_URI $NEXT_PUBLIC_INTERNAL_GRAPHQL_BACKEND_URI
-
-ARG NEXT_PUBLIC_DATAPORTEN_ID
-ENV NEXT_PUBLIC_DATAPORTEN_ID $NEXT_PUBLIC_DATAPORTEN_ID
-
-ARG NEXT_PUBLIC_DATAPORTEN_REDIRECT_URI
-ENV NEXT_PUBLIC_DATAPORTEN_REDIRECT_URI $NEXT_PUBLIC_DATAPORTEN_REDIRECT_URI
-
-ARG NEXT_PUBLIC_DATAPORTEN_STATE
-ENV NEXT_PUBLIC_DATAPORTEN_STATE $NEXT_PUBLIC_DATAPORTEN_STATE
-
-ARG NEXT_PUBLIC_FRONTEND_URI
-ENV NEXT_PUBLIC_FRONTEND_URI $NEXT_PUBLIC_FRONTEND_URI
-
-ARG NEXT_PUBLIC_SENTRY_DSN
-ENV NEXT_PUBLIC_SENTRY_DSN $NEXT_PUBLIC_SENTRY_DSN
-
 ARG APP_ENV
 ENV NEXT_PUBLIC_APP_ENV $APP_ENV
-ENV BABEL_ENV $APP_ENV
+
+ENV NODE_ENV=production
+
+# Use the corresponding env file for each environment.
+# See https://nextjs.org/docs/basic-features/environment-variables for
+# more details on loading environment variables.
+COPY .env.${APP_ENV} .env.production
 
 RUN yarn build 
 
 # Production image, copy all the files and run next
-FROM 777854691961.dkr.ecr.eu-north-1.amazonaws.com/node:16.13.2-alpine AS runner
+FROM public.ecr.aws/docker/library/node:lts-alpine3.16 AS runner
 WORKDIR /usr/src/app
-
-ENV NODE_ENV production
-
-ARG APP_ENV
-ENV NEXT_PUBLIC_APP_ENV $APP_ENV
 
 RUN addgroup -g 1001 -S nodejs
 RUN adduser -S nextjs -u 1001

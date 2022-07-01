@@ -1,6 +1,6 @@
 from typing import Optional
 
-from django.core.mail import EmailMultiAlternatives
+from utils.mail.streams import TransactionalEmail
 from django.template.loader import get_template, render_to_string
 from django.utils.html import strip_tags
 
@@ -63,10 +63,10 @@ def send_mail(booking_info: BookingInfoType, email_type: EmailTypes, admin: bool
     html_content = get_template(template).render(content)
     text_content = strip_tags(html_content)
 
-    email = EmailMultiAlternatives(
-        subject,
+    email = TransactionalEmail(
+        stream="cabin-booking-confirmations",
+        subject=subject,
         body=text_content,
-        from_email="noreply@indokntnu.no",
         bcc=[booking_responsible.email if admin else booking_info["receiver_email"]],
     )
     email.attach_alternative(html_content, "text/html")
@@ -75,6 +75,7 @@ def send_mail(booking_info: BookingInfoType, email_type: EmailTypes, admin: bool
     if email_type != "disapprove_booking" and not admin:
         email.attach_file("static/cabins/Sjekkliste.pdf")
         email.attach_file("static/cabins/Reglement.pdf")
+        email.attach_file("static/cabins/Stamp_brukerveiledning.pdf")
         contract_pdf = html_to_pdf("contract_template.html", content)
         email.attach("Kontrakt.pdf", contract_pdf, "application/pdf")
     email.send()

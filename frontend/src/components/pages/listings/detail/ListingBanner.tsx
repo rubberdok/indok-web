@@ -1,20 +1,8 @@
-import { Listing } from "@interfaces/listings";
-import { Box, makeStyles } from "@material-ui/core";
+import { Box } from "@mui/material";
 
-const useStyles = makeStyles(() => ({
-  hero: {
-    width: "100%",
-    maxHeight: "25vh",
-    height: "25vh",
-  },
-  background: {
-    background: "url(/nth.svg)",
-    backgroundRepeat: "no-repeat",
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    opacity: 0.04,
-  },
-}));
+type Props = {
+  imageUrl?: string | null;
+};
 
 /**
  * Component for banner image on listing detail page.
@@ -22,25 +10,35 @@ const useStyles = makeStyles(() => ({
  * Props:
  * - the listing from the detail page
  */
-const ListingBanner: React.FC<{
-  listing: Listing;
-}> = ({ listing }) => {
-  const classes = useStyles();
+const ListingBanner: React.FC<Props> = ({ imageUrl }) => {
   return (
     <>
-      {listing.heroImageUrl ? (
+      {imageUrl ? (
         <Box
-          className={`${classes.hero}`}
-          style={{
-            background: `url(${listing.heroImageUrl})`,
+          sx={{
+            background: `url(${imageUrl})`,
             backgroundPosition: "top",
             backgroundSize: "cover",
             backgroundRepeat: "no-repeat",
             opacity: 0.5,
+            width: "100%",
+            maxHeight: "25vh",
+            height: "25vh",
           }}
         />
       ) : (
-        <Box className={`${classes.background} ${classes.hero}`} />
+        <Box
+          sx={{
+            width: "100%",
+            maxHeight: "25vh",
+            height: "25vh",
+            background: "url(/nth.svg)",
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            opacity: 0.04,
+          }}
+        />
       )}
     </>
   );

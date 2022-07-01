@@ -1,5 +1,5 @@
-import { Checkbox, FormControlLabel, Typography } from "@material-ui/core";
-import { CheckBox as CheckBoxIcon, CheckBoxOutlineBlank as CheckBoxOutlineBlankIcon } from "@material-ui/icons";
+import { CheckBox as CheckBoxIcon, CheckBoxOutlineBlankOutlined } from "@mui/icons-material";
+import { Checkbox, FormControlLabel, Typography } from "@mui/material";
 import React from "react";
 
 interface FilterButtonProps {
@@ -16,7 +16,7 @@ const FilterButtons: React.FC<FilterButtonProps> = ({ typeFilters, updateTypeFil
           control={
             <Checkbox
               color="primary"
-              icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+              icon={<CheckBoxOutlineBlankOutlined fontSize="small" />}
               checkedIcon={<CheckBoxIcon fontSize="small" />}
               checked={val.active}
               onChange={() => updateTypeFilters(key)}

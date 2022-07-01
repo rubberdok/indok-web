@@ -1,55 +1,28 @@
 import { useQuery } from "@apollo/client";
-import Layout from "@components/Layout";
-import * as markdownComponents from "@components/markdown/components";
+import * as markdownComponents from "@components/MarkdownForm/components";
 import InfoCard from "@components/pages/listings/detail/InfoCard";
 import ListingBanner from "@components/pages/listings/detail/ListingBanner";
 import ListingBody from "@components/pages/listings/detail/ListingBody";
 import TitleCard from "@components/pages/listings/detail/TitleCard";
-import { LISTING } from "@graphql/listings/queries";
+import { ListingDocument, ListingQuery } from "@generated/graphql";
 import { Listing } from "@interfaces/listings";
-import { Button, Container, Grid, Hidden, makeStyles, Paper } from "@material-ui/core";
-import ArrowForward from "@material-ui/icons/ArrowForward";
-import OpenInNewIcon from "@material-ui/icons/OpenInNew";
-import { NextPage } from "next";
-import Link from "next/link";
+import Layout, { RootStyle } from "@layouts/Layout";
+import { addApolloState, initializeApollo } from "@lib/apolloClient";
+import { ArrowForward, OpenInNew } from "@mui/icons-material";
+import { Button, Container, Grid, Hidden, Paper } from "@mui/material";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Head from "next/head";
-import { useRouter } from "next/router";
+import Link from "next/link";
 import ReactMarkdown from "react-markdown";
-
-const useStyles = makeStyles((theme) => ({
-  container: {
-    paddingBottom: theme.spacing(2),
-    [theme.breakpoints.down("sm")]: {
-      marginTop: theme.spacing(4),
-    },
-  },
-  root: {
-    position: "relative",
-    [theme.breakpoints.up("md")]: {
-      marginTop: "-7%",
-    },
-  },
-  bottom: {
-    position: "sticky",
-    bottom: 0,
-    padding: theme.spacing(2),
-    zIndex: theme.zIndex.snackbar,
-  },
-  description: {
-    wordBreak: "break-word",
-  },
-}));
+import { NextPageWithLayout } from "../_app";
 
 // page to show details about a listing and its organization
-const ListingPage: NextPage = () => {
-  const { listingId } = useRouter().query;
-
-  // fetches the listing, using the URL parameter as the argument
-  const { loading, error, data } = useQuery<{ listing: Listing }>(LISTING, {
-    variables: { id: parseInt(listingId as string) },
+const ListingPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ listing }) => {
+  const { loading, error, data } = useQuery(ListingDocument, {
+    variables: {
+      id: listing.id,
+    },
   });
-
-  const classes = useStyles();
 
   const descriptionWithTitle = (desc: string) => {
     if (!desc.startsWith("#")) {
@@ -61,30 +34,30 @@ const ListingPage: NextPage = () => {
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error</p>;
 
-  const getLink = (listing: Listing) => {
-    if (listing.form) {
+  const getLink = (listing: ListingQuery["listing"]): string => {
+    if (listing?.form) {
       return `/forms/${listing.form.id}`;
     }
-    return listing.applicationUrl;
+    return listing?.applicationUrl ?? "";
   };
 
   return (
     <>
-      {data && (
-        <Layout>
-          <Head>
-            <title>{`${data.listing.title} | Foreningen for Studenter ved Industriell Økonomi og Teknologiledelse`}</title>
-            {data.listing.heroImageUrl && <meta property="og:image" content={data.listing.heroImageUrl} key="image" />}
-            <meta
-              property="og:title"
-              content={`${data.listing.title} | Foreningen for Studenter ved Industriell Økonomi og Teknologiledelse`}
-              key="title"
-            />
-          </Head>
+      <Head>
+        <title>{`${listing.title} | Foreningen for Studenter ved Industriell Økonomi og Teknologiledelse`}</title>
+        {listing.heroImageUrl && <meta property="og:image" content={listing.heroImageUrl} key="image" />}
+        <meta
+          property="og:title"
+          content={`${listing.title} | Foreningen for Studenter ved Industriell Økonomi og Teknologiledelse`}
+          key="title"
+        />
+      </Head>
+      {data?.listing && (
+        <>
           <Hidden smDown>
-            <ListingBanner listing={data.listing} />
+            <ListingBanner imageUrl={data.listing.heroImageUrl} />
           </Hidden>
-          <Container className={classes.container}>
+          <Container>
             <Grid container justifyContent="center">
               <Grid
                 container
@@ -94,10 +67,15 @@ const ListingPage: NextPage = () => {
                 direction="column"
                 alignItems="stretch"
                 spacing={4}
-                className={classes.root}
+                sx={(theme) => ({
+                  position: "relative",
+                  [theme.breakpoints.up("md")]: {
+                    marginTop: "-7%",
+                  },
+                })}
               >
                 <Grid container item direction="row" alignItems="stretch" justifyContent="center" spacing={4}>
-                  <Hidden smDown>
+                  <Hidden mdDown>
                     <Grid item xs={4}>
                       <InfoCard listing={data.listing} />
                     </Grid>
@@ -117,12 +95,19 @@ const ListingPage: NextPage = () => {
             </Grid>
           </Container>
           <Hidden mdUp>
-            <Paper className={classes.bottom}>
+            <Paper
+              sx={{
+                position: "sticky",
+                bottom: 0,
+                padding: (theme) => theme.spacing(2),
+                zIndex: (theme) => theme.zIndex.snackbar,
+              }}
+            >
               <Grid container direction="row" justifyContent="space-between" alignItems="center">
                 {data.listing.readMoreUrl && (
                   <Grid item xs>
                     <Link passHref href={data.listing.readMoreUrl}>
-                      <Button size="small" endIcon={<OpenInNewIcon />}>
+                      <Button size="small" endIcon={<OpenInNew />}>
                         {data.listing.organization.name.slice(0, 20)}
                       </Button>
                     </Link>
@@ -145,10 +130,41 @@ const ListingPage: NextPage = () => {
               </Grid>
             </Paper>
           </Hidden>
-        </Layout>
+        </>
       )}
     </>
   );
+};
+
+ListingPage.getLayout = (page) => (
+  <Layout>
+    <RootStyle>{page}</RootStyle>
+  </Layout>
+);
+
+export const getServerSideProps: GetServerSideProps<{ listing: Listing }> = async (ctx) => {
+  const client = initializeApollo({}, ctx);
+  const id = Array.isArray(ctx.params?.listingId) ? ctx.params?.listingId[0] : ctx.params?.listingId;
+
+  if (!id) return { notFound: true };
+
+  const { data, error } = await client.query({
+    query: ListingDocument,
+    variables: {
+      id,
+    },
+  });
+
+  if (error) return { notFound: true };
+
+  const { listing } = data;
+  if (typeof listing === "undefined") return { notFound: true };
+
+  return addApolloState(client, { props: { listing } });
+};
+
+ListingPage.getLayout = function getLayout(page: React.ReactElement) {
+  return <Layout>{page}</Layout>;
 };
 
 export default ListingPage;

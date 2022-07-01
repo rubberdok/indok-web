@@ -1,17 +1,34 @@
-import Layout from "@components/Layout";
+import Breadcrumbs from "@components/Breadcrumbs";
 import UserForm from "@components/pages/profile/UserForm";
-import { Container, Grid, Snackbar } from "@material-ui/core";
-import { Alert } from "@material-ui/lab";
-import { NextPage } from "next";
-import { useState } from "react";
+import Layout from "@layouts/Layout";
+import { Alert, Container, Grid, Snackbar } from "@mui/material";
+import { styled } from "@mui/material/styles";
+import React, { useState } from "react";
+import { NextPageWithLayout } from "src/pages/_app";
+import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "src/theme/constants";
 
 const ID_PREFIX = "editUser-";
 
-const EditPage: NextPage = () => {
+const RootStyle = styled("div")(({ theme }) => ({
+  paddingTop: HEADER_MOBILE_HEIGHT,
+  margin: theme.spacing(4, 0),
+  [theme.breakpoints.up("md")]: {
+    paddingTop: HEADER_DESKTOP_HEIGHT,
+  },
+}));
+
+const EditPage: NextPageWithLayout = () => {
   const [open, setOpen] = useState<boolean>(false);
   return (
-    <Layout>
+    <RootStyle>
       <Container>
+        <Breadcrumbs
+          links={[
+            { name: "Hjem", href: "/" },
+            { name: "Profil", href: "/profile" },
+            { name: "Rediger", href: "/profile/edit" },
+          ]}
+        />
         <Snackbar
           autoHideDuration={6000}
           open={open}
@@ -33,8 +50,12 @@ const EditPage: NextPage = () => {
           </Grid>
         </Grid>
       </Container>
-    </Layout>
+    </RootStyle>
   );
+};
+
+EditPage.getLayout = (page: React.ReactElement) => {
+  return <Layout>{page}</Layout>;
 };
 
 export default EditPage;

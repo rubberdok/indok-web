@@ -1,19 +1,5 @@
-import { Grid, makeStyles, Typography } from "@material-ui/core";
-import Image from "next/image";
-
-const useStyles = makeStyles((theme) => ({
-  img: {
-    borderRadius: "50%",
-    // aspectRatio: "1 / 1",
-    overflow: "hidden",
-    marginBottom: theme.spacing(2),
-    backgroundColor: theme.palette.primary.light,
-    /* Replace the below when MacOS 15 arrives */
-    paddingTop: "40%",
-    position: "relative" /* If you want text inside of it */,
-    width: "40%",
-  },
-}));
+import { Grid, Typography } from "@mui/material";
+import Image, { StaticImageData } from "next/image";
 
 type Props = {
   name: string;
@@ -23,11 +9,26 @@ type Props = {
 };
 
 const ContactInfo: React.VFC<Props> = ({ name, position, email, image }) => {
-  const classes = useStyles();
   const nameAndPosition = `${name}${position ? ` - ${position}` : ""}`;
   return (
     <Grid container direction="column" justifyContent="center" alignItems="center">
-      <Grid item container direction="row" justifyContent="center" className={classes.img}>
+      <Grid
+        item
+        container
+        direction="row"
+        justifyContent="center"
+        sx={{
+          borderRadius: "50%",
+          // aspectRatio: "1 / 1",
+          overflow: "hidden",
+          marginBottom: (theme) => theme.spacing(2),
+          backgroundColor: (theme) => theme.palette.primary.light,
+          /* Replace the below when MacOS 15 arrives */
+          paddingTop: "40%",
+          position: "relative" /* If you want text inside of it */,
+          width: "40%",
+        }}
+      >
         {image && <Image src={image} placeholder="blur" layout="fill" objectPosition="center" objectFit="cover" />}
       </Grid>
       <Grid item md>

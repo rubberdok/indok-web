@@ -24,10 +24,10 @@ jobs:
       fail-fast: false
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: "3.9.7"
 
@@ -46,12 +46,9 @@ jobs:
         stage: [test, production]
         include:
           - image: frontend
-            build-env: true
-            env-prefix: next
             context: ./frontend
             dockerfile: Dockerfile.prod
           - image: backend
-            env-prefix: django
             context: ./backend
             dockerfile: Dockerfile.prod
         exclude:
@@ -60,12 +57,11 @@ jobs:
       fail-fast: false
 
     env:
-      ENV_FILE: ${{ matrix.env-prefix }}.${{ matrix.stage }}.env
       dockerfile: ${{ matrix.image }}-${{ matrix.stage }}
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -87,24 +83,13 @@ jobs:
           IMAGE_TAG: ${{ github.sha }}
         run: echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
 
-      - name: Load environment variables from S3
-        if: ${{ matrix.build-env }}
-        id: env-download
-        run: |
-          aws s3 cp s3://indok-web-environments/${{ env.ENV_FILE }} ${{ env.ENV_FILE }}
-          args=$(cat ${{ env.ENV_FILE }})
-          args="${args//'%'/'%25'}"
-          args="${args//$'\n'/'%0A'}"
-          args="${args//$'\r'/'%0D'}"
-          echo "::set-output name=build-args::$args"
-
       - name: Set up Docker Buildx
         id: buildx
-        uses: docker/setup-buildx-action@v1
+        uses: docker/setup-buildx-action@v2
 
       - name: Build ${{ matrix.image }} image
         id: build-image
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
           context: ${{ matrix.context }}
           file: ${{ matrix.context }}/${{ matrix.dockerfile }}
@@ -114,23 +99,23 @@ jobs:
             ${{ steps.image-tag.outputs.image }}
           push: false
           build-args: |
-            ${{ steps.env-download.outputs.build-args }}
+            APP_ENV=${{ matrix.stage }}
 
-      - name: Push ${{ matrix.image }} image
+      - name: Push ${{ matrix.image }} image
         id: push-image
         # If this is run on the main branch, and is a production image, it should be pushed to ECR
         if: ${{ github.ref == 'refs/heads/main' && matrix.stage == 'production' }}
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
           context: ${{ matrix.context }}
           file: ${{ matrix.context }}/${{ matrix.dockerfile }}
           tags: ${{ steps.image-tag.outputs.image }}
           push: true
           build-args: |
-            ${{ steps.env-download.outputs.build-args }}
+            APP_ENV=${{ matrix.stage }}
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: ${{ env.dockerfile }}
           path: /tmp/${{ env.dockerfile }}.tar
@@ -152,14 +137,12 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-    env:
-      ENV_FILE: django.test.env
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Download image from previous job
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: backend-production
           path: /tmp
@@ -175,26 +158,22 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Load environment variables from S3
-        id: env-download
-        run: |
-          aws s3 cp s3://indok-web-environments/${{ env.ENV_FILE }} ${{ env.ENV_FILE }}
-          echo "DATAPORTEN_SECRET=${{ secrets.DATAPORTEN_SECRET }}" >> ${{ env.ENV_FILE }}
-          echo "GOOGLE_DRIVE_API_KEY=${{ secrets.GOOGLE_DRIVE_API_KEY }}" >> ${{ env.ENV_FILE }}
-          echo "VIPPS_SECRET=${{ secrets.VIPPS_SECRET }}" >> ${{ env.ENV_FILE }}
-          echo "VIPPS_SUBSCRIPTION_KEY=${{ secrets.VIPPS_SUBSCRIPTION_KEY }}" >> ${{ env.ENV_FILE }}
-
       - name: Run API tests
         run: |
           docker run \
             -v $GITHUB_WORKSPACE/backend:/usr/src/app \
-            --env-file ${{ env.ENV_FILE }} \
+            --env DJANGO_READ_DOT_ENV_FILE=true \
+            --env DJANGO_DOT_ENV_FILES=.env.test \
+            --env DATAPORTEN_SECRET=${{ secrets.DATAPORTEN_SECRET }} \
+            --env GOOGLE_DRIVE_API_KEY=${{ secrets.GOOGLE_DRIVE_API_KEY }} \
+            --env VIPPS_SECRET=${{ secrets.VIPPS_SECRET }} \
+            --env VIPPS_SUBSCRIPTION_KEY=${{ secrets.VIPPS_SUBSCRIPTION_KEY }} \
             --network ${{ job.container.network }} \
             --entrypoint /usr/src/app/entrypoints/test.sh \
             backend:production
 
       - name: Upload coverage
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
           files: coverage.xml
@@ -222,15 +201,13 @@ jobs:
       matrix:
         # Containers for parallelization, increase if necessary
         containers: [1, 2, 3]
-    env:
-      ENV_FILE: django.test.env
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Download image from previous job
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           path: /tmp
 
@@ -239,34 +216,24 @@ jobs:
           docker load --input /tmp/backend-production/backend-production.tar
           docker load --input /tmp/frontend-test/frontend-test.tar
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
-
-      - name: Load environment variables from S3
-        id: env-download
-        run: |
-          aws s3 cp s3://indok-web-environments/${{ env.ENV_FILE }} ${{ env.ENV_FILE }}
-          echo "DATAPORTEN_SECRET=${{ secrets.DATAPORTEN_SECRET }}" >> ${{ env.ENV_FILE }}
-          echo "GOOGLE_DRIVE_API_KEY=${{ secrets.GOOGLE_DRIVE_API_KEY }}" >> ${{ env.ENV_FILE }}
-          echo "VIPPS_SECRET=${{ secrets.VIPPS_SECRET }}" >> ${{ env.ENV_FILE }}
-          echo "VIPPS_SUBSCRIPTION_KEY=${{ secrets.VIPPS_SUBSCRIPTION_KEY }}" >> ${{ env.ENV_FILE }}
-
       - name: Build and run the Application
+        env:
+          DATAPORTEN_SECRET: ${{ secrets.DATAPORTEN_SECRET }}
+          GOOGLE_DRIVE_API_KEY: ${{ secrets.GOOGLE_DRIVE_API_KEY }}
+          VIPPS_SECRET: ${{ secrets.VIPPS_SECRET }}
+          VIPPS_SUBSCRIPTION_KEY: ${{ secrets.VIPPS_SUBSCRIPTION_KEY }}
         run: docker compose -f docker-compose.integration.yml up -d
 
       - name: Run Cypress
-        uses: cypress-io/github-action@v2
+        uses: cypress-io/github-action@v4.1.1
         with:
           record: true
           parallel: true
           group: "E2E"
-          working-directory: e2e
-          headless: true
+          working-directory: frontend
+          browser: chrome
           ci-build-id: ${{ needs.prepare.outputs.uuid }}
+          wait-on: "http://localhost:8000/-/health, http://localhost:3000/api/health"
         env:
           # pass the Dashboard record key as an environment variable
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
@@ -278,7 +245,7 @@ jobs:
     name: Deploy to ECS
     runs-on: ubuntu-latest
 
-    needs: [api]
+    needs: [api, e2e]
     if: github.ref == 'refs/heads/main'
 
     environment: production
@@ -307,7 +274,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1

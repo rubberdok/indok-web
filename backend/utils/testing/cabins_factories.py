@@ -12,7 +12,7 @@ class BookingFactory(DjangoModelFactory):
 
     first_name = Faker(["no-NO"]).first_name()
     last_name = Faker(["no-NO"]).last_name()
-    phone = "".join([random.choice(["4", "9"]), str(random.randint(1000000, 9999999))])
+    phone = "40000000"
     receiver_email = Faker(["no-NO"]).ascii_company_email()
     timestamp = timezone.now()
     internal_participants = random.randint(1, 5)

@@ -2,7 +2,7 @@ import datetime
 
 import graphene
 from django.utils.text import slugify
-from graphql_jwt.decorators import login_required, permission_required
+from decorators import login_required, permission_required
 
 from .models import Listing
 from .types import ListingType

@@ -1,5 +1,5 @@
 from apps.cabins.models import Booking as BookingModel, Cabin, BookingResponsible, BookingSemester
-from graphql_jwt.decorators import permission_required
+from decorators import permission_required
 
 
 class CabinResolvers:

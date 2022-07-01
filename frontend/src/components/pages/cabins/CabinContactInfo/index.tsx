@@ -1,10 +1,10 @@
 import { useQuery } from "@apollo/client/react";
 import { GET_USER } from "@graphql/users/queries";
-import { ContactInfo, InputFieldsEvent, ContactInfoValidations, Cabin } from "@interfaces/cabins";
+import { Cabin, ContactInfo, ContactInfoValidations, InputFieldsEvent } from "@interfaces/cabins";
 import { User } from "@interfaces/users";
-import { Grid } from "@material-ui/core";
+import { Grid } from "@mui/material";
 import { NextPage } from "next";
-import React, { Dispatch, SetStateAction, useEffect } from "react";
+import { Dispatch, SetStateAction } from "react";
 import { InputFields } from "../InputFields/InputFields";
 
 interface ContractInfoProps {
@@ -25,18 +25,18 @@ const CabinContactInfo: NextPage<ContractInfoProps> = ({
   chosenCabins,
   errorTrigger,
 }) => {
-  const { data } = useQuery<{ user: User }>(GET_USER);
-
-  useEffect(() => {
-    if (data?.user) {
-      setContactInfo({
-        ...contactInfo,
-        firstName: data.user.firstName,
-        lastName: data.user.lastName,
-        receiverEmail: data.user.email,
-      });
-    }
-  }, [data]);
+  useQuery<{ user: User | null }>(GET_USER, {
+    onCompleted: (data) => {
+      if (data.user) {
+        setContactInfo({
+          ...contactInfo,
+          firstName: data.user.firstName,
+          lastName: data.user.lastName,
+          receiverEmail: data.user.feideEmail,
+        });
+      }
+    },
+  });
 
   const handleInputChange = (name: string, event: InputFieldsEvent) => {
     setContactInfo({ ...contactInfo, [name]: event.target.value });

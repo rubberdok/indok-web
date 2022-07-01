@@ -2,7 +2,7 @@ from django.db import models
 from datetime import datetime
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from .google_drive_api import get_url
+from .google_drive_api import GoogleDriveAPI
 from django.core.exceptions import FieldError
 
 
@@ -40,7 +40,8 @@ class ArchiveDocument(models.Model):
 @receiver(post_save, sender=ArchiveDocument)
 def notify_doc(sender, instance, created, **kwargs):
     if created:
-        instance.web_link = get_url(instance.file_location)
+        drive = GoogleDriveAPI()
+        instance.web_link = drive.get_url(instance.file_location)
         if instance.web_link is None:
             instance.delete()
             raise FieldError(

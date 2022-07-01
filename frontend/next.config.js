@@ -7,7 +7,7 @@
 const { withSentryConfig } = require("@sentry/nextjs");
 
 const getPresets = () => {
-  if (process.env.NEXT_PUBLIC_APP_ENV == "production") {
+  if (process.env.NEXT_PUBLIC_APP_ENV === "production") {
     return {
       // The regexes defined here are processed in Rust so the syntax is different from
       // JavaScript `RegExp`s. See https://docs.rs/regex.
@@ -30,12 +30,35 @@ const moduleExports = {
       },
     ];
   },
-  experimental: {
-    outputStandalone: true,
-    styledComponents: true,
+  compiler: {
     ...getPresets(),
+    /* https://nextjs.org/docs/advanced-features/compiler#emotion */
+    emotion: true,
   },
+  /* https://nextjs.org/docs/advanced-features/compiler#minification */
   swcMinify: true,
+  experimental: {
+    /* https://nextjs.org/docs/advanced-features/output-file-tracing */
+    outputStandalone: true,
+    /**
+     * https://nextjs.org/docs/advanced-features/compiler#modularize-imports
+     * See https://mui.com/material-ui/guides/minimizing-bundle-size/#option-2 for reasoning.
+     * In short, top level imports from "@mui/icons-material" will load the entire
+     * "@mui/icons-material" package, which is a lot of code.
+     * Instead, we do some compiler magic to only load the modules we need.
+     */
+    modularizeImports: {
+      "@mui/icons-material": {
+        transform: "@mui/icons-material/{{member}}",
+      },
+      "@mui/material": {
+        transform: "@mui/material/{{member}}",
+      },
+      lodash: {
+        transform: "lodash/{{member}}",
+      },
+    },
+  },
   webpack: (config, { isServer }) => {
     // In `pages/_app.js`, Sentry is imported from @sentry/browser. While
     // @sentry/node will run in a Node.js environment. @sentry/node will use
@@ -62,6 +85,7 @@ const moduleExports = {
     disableServerWebpackPlugin: true,
     disableClientWebpackPlugin: true,
   },
+  /* Browser source maps should be enabled during production to upload to Sentry  */
   productionBrowserSourceMaps: process.env.NEXT_PUBLIC_APP_ENV === "production",
 };
 

@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@material-ui/core";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 
 function SalesTermsDialog({ onClose, open }: { onClose: () => void; open: boolean }) {
   return (

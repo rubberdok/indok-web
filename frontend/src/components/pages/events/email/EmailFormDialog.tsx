@@ -1,16 +1,5 @@
-import {
-  Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  Grid,
-  TextField,
-  Tooltip,
-  Typography,
-} from "@material-ui/core";
-import ClearIcon from "@material-ui/icons/Clear";
-import SendIcon from "@material-ui/icons/Send";
+import { Clear, Send } from "@mui/icons-material";
+import { Box, Button, Dialog, DialogActions, DialogContent, Grid, TextField, Tooltip, Typography } from "@mui/material";
 import React, { Dispatch, SetStateAction } from "react";
 import { SendEmailProps } from "./EmailForm";
 
@@ -53,7 +42,7 @@ const EmailFormDialog: React.FC<EmailFormDialogProps> = ({
           <Grid item>
             <Typography variant="h5">Send en e-post til alle påmeldte</Typography>
             <Typography variant="body2">
-              E-postadressen registrert på brukeren din vil bli lagt til på blindkopi
+              En kopi av e-posten vil bli sendt til kontaktpersonen for arrangementet.
             </Typography>
           </Grid>
           <Grid item>
@@ -72,20 +61,25 @@ const EmailFormDialog: React.FC<EmailFormDialogProps> = ({
               onChange={(e) => setEmailProps({ ...emailProps, content: e.currentTarget.value })}
               label="E-post-innhold"
               rows={4}
-              variant="outlined"
             />
+          </Grid>
+          <Grid item>
+            <Typography variant="caption">
+              Denne tjenesten er kun ment for informasjon om arrangementet. Promotering, nyhetsbrev, og lignende er ikke
+              tillatt. Misbruk vil føre til utestengelse fra denne funksjonen.
+            </Typography>
           </Grid>
         </Grid>
       </DialogContent>
       <DialogActions>
-        <Button startIcon={<ClearIcon />} onClick={() => setShowEmailForm(false)} color="primary">
+        <Button startIcon={<Clear />} onClick={() => setShowEmailForm(false)} color="primary">
           Lukk
         </Button>
 
         <Tooltip disableHoverListener={Object.values(validations).every(Boolean)} title="Du må fylle inn alle feltene.">
           <Box>
             <Button
-              startIcon={<SendIcon />}
+              startIcon={<Send />}
               disabled={!Object.values(validations).every(Boolean)}
               onClick={() => sendEmail()}
               color="primary"

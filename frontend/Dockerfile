@@ -1,11 +1,11 @@
 # Larger base image for development
-FROM --platform=linux/amd64 node:16.13.2
+FROM --platform=linux/amd64 public.ecr.aws/docker/library/node:lts-alpine3.16
 
 WORKDIR /app
 
 # Install dependencies
 COPY package.json yarn.lock ./
-RUN yarn install --frozen-lockfile
+RUN yarn install --frozen-lockfile --network-timeout 300000
 
 COPY . .
 

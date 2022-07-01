@@ -1,11 +1,11 @@
-import React from "react";
-import Accordion from "@material-ui/core/Accordion";
-import AccordionDetails from "@material-ui/core/AccordionDetails";
-import AccordionSummary from "@material-ui/core/AccordionSummary";
-import Typography from "@material-ui/core/Typography";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import { Box, Grid } from "@material-ui/core";
+import { ExpandMore } from "@mui/icons-material";
+import { Box, Grid } from "@mui/material";
+import Accordion from "@mui/material/Accordion";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import Typography from "@mui/material/Typography";
 import Link from "next/link";
+import React from "react";
 
 const faqs = [
   {
@@ -33,35 +33,28 @@ const faqs = [
               Avbestilling innen en uke i forkant av bestilt ankomstdato medfører et gebyr på 30% av leien.
             </Typography>
           </li>
-          <li>
-            <Typography>
-              Avbestilling innen en uke i forkant av bestilt ankomstdato medfører et gebyr på 50% av leien.
-            </Typography>
-          </li>
         </ul>
       </Box>
     ),
   },
   {
     question: "Hvordan booker jeg sengeplasser?",
-    answer: <Typography>Det gjøres ved å sende mail til Hyttestyret.</Typography>,
+    answer: (
+      <Typography>
+        Det gjøres ved å sende mail til{" "}
+        <a href="mailto:booking.indokhyttene@gmail.com">booking.indokhyttene@gmail.com</a>.
+      </Typography>
+    ),
   },
   {
     question: "Hva er forskjellen på de to hyttene?",
-    answer: (
-      <Typography>
-        Hyttene er tilnærmet identiske, men Bjørnen blir gjerne kalt kosehytta og Oksen festhytta, siden Bjørnen er den
-        av de to som først blir oppgradert gjennom pågående oppussingsprosjekter.
-      </Typography>
-    ),
+    answer: <Typography>Hyttene er tilnærmet identiske. Bjørnen har TV med HDMI-kabel.</Typography>,
   },
   {
     question: "Hva er den totale kapasiteten på hyttene?",
     answer: (
       <Typography>
-        Vi har satt total kapasitet til 18 personer, fordelt på 14 sengeplasser og 4 madrasser. Det skal være flere
-        madrasser enn dette tilgjengelig på hyttene, men det anbefales å ikke overstige dette antallet pga
-        plassbegrensninger rundt kjøkkenbordet o.l.
+        Den totale kapasiteten er 18 personer på hver hytte, fordelt på 14 sengeplasser og 4 madrasser.
       </Typography>
     ),
   },
@@ -70,8 +63,7 @@ const faqs = [
     answer: (
       <Typography>
         Mange aktiviteter tilbys av eksterne aktører, se Aktiviteter for videre info. Oppdal ligger på østkanten av
-        Trollheimen, og det er mange flotte dagsturer å velge mellom med dette utgangspunktet. Det skal ligge kart over
-        området tilgjengelig på hyttene.
+        Trollheimen, og det er mange flotte dagsturer å velge mellom med dette utgangspunktet.
       </Typography>
     ),
   },
@@ -79,8 +71,7 @@ const faqs = [
     question: "Hva har hyttene av dyner, puter og sengetøy?",
     answer: (
       <Typography>
-        Begge hyttene er utstyrt med minimum 18 puter og 18 dyner, men laken og sengetøy (evt. laken og sovepose) må
-        medbringes.
+        Begge hyttene er utstyrt med minimum 18 puter og 18 dyner, men laken og sengetøy (evt. sovepose) må medbringes.
       </Typography>
     ),
   },
@@ -89,8 +80,8 @@ const faqs = [
     question: "Kan jeg ha med meg eksterne venner (ikke-indøkere) til hyttene?",
     answer: (
       <Typography>
-        Ja. Såfremt over 50% av deltakerne på turen er indøkere gjelder 50,- for indøkere /100,- for eksterne per natt.
-        Hvis det er under 50 % indøkere må man leie hele hytta.
+        Ja. Det er egne priser for eksterne gjester. Hvis det skal bookes sengeplasser må det være med en indøker på
+        turen. Hvis over 50 % av gjestene er eksterne, og hele hytta skal bookes, må det betales ekstern-pris.
       </Typography>
     ),
   },
@@ -98,15 +89,19 @@ const faqs = [
     question: "Hvor mye må jeg betale om jeg mister nøklene?",
     answer: (
       <Typography>
-        Den som er nøkkelansvarlig er ansvarlig for nøklene. Dersom disse går tapt vil Hyttestyret fakturere den
-        nøkkelansvarlige et gebyr på 1000,-. Hyttestyret tar ikke stilling til hvorvidt de andre gjestene bidrar til å
-        dekke gebyret.
+        Den som er nøkkelansvarlig er ansvarlig for nøklene. Dersom disse går tapt vil Hytteforeningen fakturere den
+        nøkkelansvarlige et gebyr på 1000,-. Hytteforeningen tar ikke stilling til hvorvidt de andre gjestene bidrar til
+        å dekke gebyret.
       </Typography>
     ),
   },
   {
     question: "Hvordan er ordningen for utvask på hyttene?",
-    answer: <Typography>De som har brukt hyttene må alltid vaske ut selv.</Typography>,
+    answer: (
+      <Typography>
+        De som har brukt hyttene må alltid vaske ut selv. Det er veldig viktig at alle vinduer lukkes og dører låses.
+      </Typography>
+    ),
   },
   {
     question: "Kan jeg reservere en hytte for min eksterne vennegjeng eller eksterne linjeforening?",
@@ -118,10 +113,10 @@ const faqs = [
 Renders all frequently asked questions regarding the cabins.
 */
 const FAQ: React.FC = () => {
-  const [expanded, setExpanded] = React.useState<number | false>(false);
+  const [expandedPanel, setExpandedPanel] = React.useState<number>();
 
-  const handleChange = (panel: number) => (_event: React.ChangeEvent<Record<string, unknown>>, isExpanded: boolean) => {
-    setExpanded(isExpanded ? panel : false);
+  const handleChange = (panel: number) => (_: React.SyntheticEvent<Element, Event>, expanded: boolean) => {
+    setExpandedPanel(expanded ? panel : undefined);
   };
 
   return (
@@ -129,8 +124,8 @@ const FAQ: React.FC = () => {
       {faqs.map((faq, index) => (
         <Grid item xs={12} md={6} key={index}>
           <Box>
-            <Accordion expanded={expanded === index} onChange={handleChange(index)}>
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <Accordion expanded={expandedPanel === index} onChange={handleChange(index)}>
+              <AccordionSummary expandIcon={<ExpandMore />}>
                 <Typography variant="subtitle1">{faq.question}</Typography>
               </AccordionSummary>
               <AccordionDetails>{faq.answer}</AccordionDetails>

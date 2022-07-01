@@ -5,9 +5,9 @@ from apps.cabins.helpers import number_of_nights, is_internal_price, price
 
 class Cabin(models.Model):
     name = models.CharField(max_length=100)
-    max_guests = models.IntegerField(default=18)
-    internal_price = models.IntegerField(default=1100)  # price per night
-    external_price = models.IntegerField(default=2700)
+    max_guests = models.PositiveIntegerField(default=18)
+    internal_price = models.PositiveIntegerField(default=1100)  # price per night
+    external_price = models.PositiveIntegerField(default=2700)
 
     def __str__(self):
         return self.name
@@ -29,6 +29,8 @@ class Booking(models.Model):
     external_participants = models.IntegerField()
     is_tentative = models.BooleanField(default=True)
     is_declined = models.BooleanField(default=False)
+    decline_reason = models.TextField(default="", blank=True)
+    extra_info = models.TextField(default="", blank=True)
 
     @property
     def number_of_nights(self) -> int:

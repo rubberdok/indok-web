@@ -11,10 +11,6 @@ export const config = {
     process.env.NEXT_PUBLIC_DATAPORTEN_REDIRECT_URI,
     "NEXT_PUBLIC_DATAPORTEN_REDIRECT_URI"
   ),
-  DATAPORTEN_STATE: validateEnvironmentVariable(
-    process.env.NEXT_PUBLIC_DATAPORTEN_STATE,
-    "NEXT_PUBLIC_DATAPORTEN_STATE"
-  ),
   GRAPHQL_ENDPOINT: validateEnvironmentVariable(
     process.env.NEXT_PUBLIC_GRAPHQL_BACKEND_URI,
     "NEXT_PUBLIC_GRAPHQL_BACKEND_URI"
@@ -26,4 +22,19 @@ export const config = {
   SENTRY_DSN: validateEnvironmentVariable(process.env.NEXT_PUBLIC_SENTRY_DSN, "NEXT_PUBLIC_SENTRY_DSN"),
   FRONTEND_URI: validateEnvironmentVariable(process.env.NEXT_PUBLIC_FRONTEND_URI, "NEXT_PUBLIC_FRONTEND_URI"),
   APP_ENV: validateEnvironmentVariable(process.env.NEXT_PUBLIC_APP_ENV, "NEXT_PUBLIC_APP_ENV"),
+  API_URL: validateEnvironmentVariable(process.env.NEXT_PUBLIC_BASE_API_URL, "NEXT_PUBLIC_BASE_API_URL"),
+  INTERNAL_API_URL: validateEnvironmentVariable(
+    process.env.NEXT_PUBLIC_INTERNAL_API_URL,
+    "NEXT_PUBLIC_INTERNAL_API_URL"
+  ),
+  COOKIE_DOMAIN: validateEnvironmentVariable(process.env.NEXT_PUBLIC_COOKIE_DOMAIN, "NEXT_PUBLIC_COOKIE_DOMAIN"),
+  CSRF_COOKIE: validateEnvironmentVariable(process.env.NEXT_PUBLIC_CSRF_COOKIE, "NEXT_PUBLIC_CSRF_COOKIE"),
+  FEIDE_LOGOUT_ENDPOINT: validateEnvironmentVariable(
+    process.env.NEXT_PUBLIC_FEIDE_LOGOUT_URI,
+    "NEXT_PUBLIC_FEIDE_LOGOUT_URI"
+  ),
+  FEIDE_AUTHORIZATION_URI: validateEnvironmentVariable(
+    process.env.NEXT_PUBLIC_FEIDE_AUTHORIZATION_URI,
+    "NEXT_PUBLIC_FEIDE_AUTHORIZATION_URI"
+  ),
 };

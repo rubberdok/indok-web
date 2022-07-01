@@ -13,12 +13,14 @@ env = environ.Env()
 
 READ_DOT_ENV_FILE = env.bool("DJANGO_READ_DOT_ENV_FILE", default=False)
 if READ_DOT_ENV_FILE:
+    DOT_ENV_FILES = env.list("DJANGO_DOT_ENV_FILES", default=[".env", ".env.development"])
     # OS environment variables take precedence over variables from .env
-    env.read_env(str(ROOT_DIR / ".env"))
+    for file in DOT_ENV_FILES:
+        env.read_env(str(ROOT_DIR / file))
 
 # GENERAL
 ENVIRONMENT: Literal["development", "production", "test"] = env("DJANGO_ENVIRONMENT")
-DEBUG: bool = ENVIRONMENT == "development"
+DEBUG: bool = ENVIRONMENT != "production"
 
 TIME_ZONE = "Europe/Oslo"
 LANGUAGE_CODE = "en-us"
@@ -41,7 +43,7 @@ DATABASES = {
 }
 
 # URLS
-ROOT_URLCONF = "config.urls.base"
+ROOT_URLCONF = env("ROOT_URLCONF", default="config.urls.base")
 WSGI_APPLICATION = "config.wsgi.application"
 
 # APPS
@@ -82,11 +84,18 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 # AUTHENTICATION
 AUTHENTICATION_BACKENDS = [
-    "graphql_jwt.backends.JSONWebTokenBackend",
     "django.contrib.auth.backends.ModelBackend",
     "guardian.backends.ObjectPermissionBackend",
 ]
 AUTH_USER_MODEL = "users.User"
+SESSION_COOKIE_DOMAIN = env("SESSION_COOKIE_DOMAIN", default="localhost")
+
+# CSRF
+CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS", default=["http://localhost:3000", "http://frontend:3000"])
+CSRF_COOKIE_DOMAIN = env("CSRF_COOKIE_DOMAIN", default="localhost")
+CSRF_COOKIE_NAME = env("CSRF_COOKIE_NAME", default="csrf")
+CSRF_FAILURE_VIEW = env("CSRF_FAILURE_VIEW", default="config.views.csrf.csrf_failure")
+
 
 # DATAPORTEN
 DATAPORTEN_ID = env("DATAPORTEN_ID")
@@ -104,7 +113,6 @@ AUTH_PASSWORD_VALIDATORS = [
 # MIDDLEWARE
 MIDDLEWARE = [
     "django_alive.middleware.healthcheck_bypass_host_check",
-    "api.auth.middleware.IndokWebJWTMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -143,13 +151,21 @@ TEMPLATES = [
 
 # CORS
 CORS_ALLOW_CREDENTIALS = env.bool("CORS_ALLOW_CREDENTIALS", True)
-CORS_ORIGIN_WHITELIST = env.list("CORS_ORIGIN_WHITELIST", default="http://localhost:3000")
+CORS_ALLOWED_ORIGINS = env.list("CORS_ALLOWED_ORIGINS", default="http://localhost:3000")
 ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=["localhost"])
+
+# URLS
+FRONTEND_BASE_URL = env("FRONTEND_BASE_URL", default="https://www.indokntnu.no")
 
 
 # EMAIL
 EMAIL_BACKEND = env("DJANGO_EMAIL_BACKEND", default="django.core.mail.backends.console.EmailBackend")
+DEFAULT_FROM_EMAIL = env("DJANGO_DEFAULT_FROM_EMAIL", default="Indøk <no-reply@indokntnu.no>")
+CONTACT_EMAIL = env("CONTACT_EMAIL", default="kontakt@rubberdok.no")
 EMAIL_MAX_RECIPIENTS = env.int("EMAIL_MAX_RECIPIENTS", 50)
+
+# ANYMAIL
+ANYMAIL = {"POSTMARK_SERVER_TOKEN": env("POSTMARK_SERVER_TOKEN", default="")}
 
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-timeout
@@ -186,12 +202,11 @@ GOOGLE_DRIVE_API_KEY = env("GOOGLE_DRIVE_API_KEY")
 # GRAPHENE
 GRAPHENE = {
     "SCHEMA": "config.schema.schema",
+    "SCHEMA_OUTPUT": "schema.json",
     "MIDDLEWARE": [
-        "graphql_jwt.middleware.JSONWebTokenMiddleware",
         "api.auth.middleware.AnonymousUserMiddleware",
     ],
 }
-GRAPHQL_JWT = {"JWT_COOKIE_DOMAIN": env("JWT_COOKIE_DOMAIN", default="localhost")}
 GRAPHQL_URL = "graphql/"
 
 # DJANGO GUARDIAN

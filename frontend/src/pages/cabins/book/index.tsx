@@ -1,22 +1,26 @@
 import { useMutation, useQuery } from "@apollo/client";
 import ContractDialog from "@components/pages/cabins/Popup/ContractDialog";
+import StepComponent from "@components/pages/cabins/StepComponent";
+import { CREATE_BOOKING, SEND_EMAIL } from "@graphql/cabins/mutations";
 import { QUERY_CABINS } from "@graphql/cabins/queries";
+import useResponsive from "@hooks/useResponsive";
 import { Cabin, ContactInfo, ContactInfoValidations, DatePick, ModalData } from "@interfaces/cabins";
+import Layout from "@layouts/Layout";
+import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
 import {
   Box,
-  Grid,
+  Button,
+  Card,
+  Container,
+  MobileStepper,
+  Stack,
   Step,
   StepLabel,
   Stepper,
-  Button,
-  Typography,
-  Paper,
   Tooltip,
-  useTheme,
-  useMediaQuery,
-  MobileStepper,
-  Container,
-} from "@material-ui/core";
+  Typography,
+} from "@mui/material";
+import { styled } from "@mui/material/styles";
 import {
   allValuesFilled,
   cabinOrderStepReady,
@@ -24,16 +28,12 @@ import {
   isFormValid,
   validateInputForm,
 } from "@utils/cabins";
-import { NextPage } from "next";
 import React, { useEffect, useState } from "react";
-import { CREATE_BOOKING, SEND_EMAIL } from "@graphql/cabins/mutations";
-import { KeyboardArrowLeft, KeyboardArrowRight } from "@material-ui/icons";
-import Layout from "@components/Layout";
-import StepComponent from "@components/pages/cabins/StepComponent";
+import { NextPageWithLayout } from "src/pages/_app";
 
 type StepReady = Record<number, { ready: boolean; errortext: string }>;
 
-const steps = ["Bestill", "Kontaktinfo", "Ekstra info", "Send søknad", "Kvittering"];
+const steps = ["Book hytte", "Kontaktinfo", "Ekstra info", "Send søknad", "Kvittering"];
 
 const initalStepReady: StepReady = steps.reduce((initialObject, _step, index) => {
   initialObject[index] = {
@@ -56,11 +56,22 @@ const defaultModalData: ModalData = {
   contractViewed: false,
   displayPopUp: false,
 };
+
+const RootStyle = styled("div")(({ theme }) => ({
+  backgroundColor: theme.palette.background.neutral,
+  padding: theme.spacing(6, 0),
+  [theme.breakpoints.down("md")]: {
+    backgroundColor: theme.palette.background.default,
+    padding: 0,
+    paddingBottom: theme.spacing(4),
+  },
+}));
+
 /*
 Main page for the booking of a cabin. 
 The page renders different components depending on the step variale chosen.
 */
-const CabinBookingPage: NextPage = () => {
+const CabinBookingPage: NextPageWithLayout = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [stepReady, setStepReady] = useState<StepReady>(initalStepReady);
 
@@ -78,8 +89,8 @@ const CabinBookingPage: NextPage = () => {
   const [errorTrigger, setErrorTrigger] = useState(false);
 
   // Booking creation and email mutations
-  const [create_booking] = useMutation(CREATE_BOOKING);
-  const [send_email] = useMutation(SEND_EMAIL);
+  const [createBooking] = useMutation(CREATE_BOOKING);
+  const [sendEmail] = useMutation(SEND_EMAIL);
 
   // Extra info from the user, sent to Hyttestyret
   const [extraInfo, setExtraInfo] = useState("");
@@ -109,18 +120,17 @@ const CabinBookingPage: NextPage = () => {
       setModalData({ ...modalData, displayPopUp: true });
     } else {
       if (activeStep == 3) {
-        send_email({
+        sendEmail({
           variables: {
             emailInput: {
-              ...generateEmailAndBookingInput(contactInfo, datePick, chosenCabins),
+              ...generateEmailAndBookingInput(contactInfo, datePick, chosenCabins, extraInfo),
               emailType: "reserve_booking",
-              extraInfo: extraInfo,
             },
           },
         });
-        create_booking({
+        createBooking({
           variables: {
-            bookingData: generateEmailAndBookingInput(contactInfo, datePick, chosenCabins),
+            bookingData: generateEmailAndBookingInput(contactInfo, datePick, chosenCabins, extraInfo),
           },
         });
       }
@@ -128,9 +138,7 @@ const CabinBookingPage: NextPage = () => {
     }
   };
 
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const getMargin = () => (isMobile ? 2 : 10);
+  const isMobile = useResponsive({ query: "down", key: "md" });
 
   const NextButton = () => (
     <Tooltip
@@ -142,7 +150,8 @@ const CabinBookingPage: NextPage = () => {
         <Button
           onClick={handleNextClick}
           disabled={!stepReady[activeStep].ready}
-          variant={isMobile ? "text" : "contained"}
+          size={isMobile ? "small" : "large"}
+          variant="contained"
         >
           {activeStep == 3 ? "Send søknad" : "Neste"}
           <KeyboardArrowRight />
@@ -152,11 +161,12 @@ const CabinBookingPage: NextPage = () => {
   );
 
   const BackButton = () => (
-    <Box display={activeStep == 4 ? "none" : "block"}>
+    <Box display={activeStep == 4 ? "none" : "block"} sx={{ opacity: activeStep === 0 ? 0 : 1 }}>
       <Button
+        size={isMobile ? "small" : "large"}
         onClick={() => setActiveStep((prev) => prev - 1)}
         disabled={activeStep === 0}
-        variant={isMobile ? "text" : "contained"}
+        variant="contained"
       >
         <KeyboardArrowLeft />
         Tilbake
@@ -165,7 +175,7 @@ const CabinBookingPage: NextPage = () => {
   );
 
   return (
-    <Layout>
+    <RootStyle>
       <Container>
         <ContractDialog
           modalData={modalData}
@@ -176,64 +186,84 @@ const CabinBookingPage: NextPage = () => {
           activeStep={activeStep}
           setActiveStep={setActiveStep}
         />
-        <Box m={getMargin()}>
-          <Grid container direction="column" justifyContent="center" alignItems="stretch" spacing={1}>
-            <Grid item>
-              {isMobile ? (
-                <Typography variant="h4" align="center">
-                  {steps[activeStep]}
-                </Typography>
-              ) : (
-                <Stepper activeStep={activeStep}>
-                  {steps.map((label) => (
-                    <Step key={label}>
-                      <StepLabel>{label}</StepLabel>
-                    </Step>
-                  ))}
-                </Stepper>
-              )}
-            </Grid>
-            <Grid item>
-              <Paper>
-                <Box p={getMargin()}>
-                  <StepComponent
-                    cabinQuery={cabinQuery}
-                    activeStep={activeStep}
-                    chosenCabins={chosenCabins}
-                    contactInfo={contactInfo}
-                    datePick={datePick}
-                    errorTrigger={errorTrigger}
-                    validations={validations}
-                    setContactInfo={setContactInfo}
-                    setChosenCabins={setChosenCabins}
-                    setDatePick={setDatePick}
-                    setExtraInfo={setExtraInfo}
-                  />
-                </Box>
-              </Paper>
-            </Grid>
-            <Grid item>
-              {isMobile && activeStep != 3 ? (
-                <MobileStepper
-                  steps={4}
-                  position="bottom"
-                  variant="progress"
+        <Stack spacing={{ xs: 3, md: 5 }}>
+          <div>
+            {isMobile ? (
+              <Typography variant="h4" align="center">
+                {steps[activeStep]}
+              </Typography>
+            ) : (
+              <Stepper activeStep={activeStep}>
+                {steps.map((label) => (
+                  <Step key={label}>
+                    <StepLabel>{label}</StepLabel>
+                  </Step>
+                ))}
+              </Stepper>
+            )}
+          </div>
+          {isMobile ? (
+            <StepComponent
+              cabinQuery={cabinQuery}
+              activeStep={activeStep}
+              chosenCabins={chosenCabins}
+              contactInfo={contactInfo}
+              datePick={datePick}
+              errorTrigger={errorTrigger}
+              validations={validations}
+              setContactInfo={setContactInfo}
+              setChosenCabins={setChosenCabins}
+              setDatePick={setDatePick}
+              setExtraInfo={setExtraInfo}
+            />
+          ) : (
+            <Card>
+              <Box sx={{ px: 4, py: 4 }}>
+                <StepComponent
+                  cabinQuery={cabinQuery}
                   activeStep={activeStep}
-                  nextButton={<NextButton />}
-                  backButton={<BackButton />}
+                  chosenCabins={chosenCabins}
+                  contactInfo={contactInfo}
+                  datePick={datePick}
+                  errorTrigger={errorTrigger}
+                  validations={validations}
+                  setContactInfo={setContactInfo}
+                  setChosenCabins={setChosenCabins}
+                  setDatePick={setDatePick}
+                  setExtraInfo={setExtraInfo}
                 />
-              ) : (
-                <Grid item container justifyContent="space-between">
-                  <BackButton />
-                  <NextButton />
-                </Grid>
-              )}
-            </Grid>
-          </Grid>
-        </Box>
+              </Box>
+              <Stack
+                width={1}
+                direction="row"
+                justifyContent="space-between"
+                borderTop="1px solid"
+                borderColor="divider"
+              >
+                <BackButton />
+                <NextButton />
+              </Stack>
+            </Card>
+          )}
+        </Stack>
+        {isMobile && activeStep != 3 ? (
+          <MobileStepper
+            steps={4}
+            position="bottom"
+            variant="progress"
+            activeStep={activeStep}
+            nextButton={<NextButton />}
+            backButton={<BackButton />}
+            sx={{ boxShadow: (theme) => theme.shadows[24] }}
+          />
+        ) : (
+          <></>
+        )}
       </Container>
-    </Layout>
+    </RootStyle>
   );
 };
+
+CabinBookingPage.getLayout = (page: React.ReactElement) => <Layout simpleHeader>{page}</Layout>;
 
 export default CabinBookingPage;

@@ -16,31 +16,19 @@ import {
   FormHelperText,
   Grid,
   InputLabel,
-  makeStyles,
   MenuItem,
   Select,
   TextField,
   Tooltip,
   Typography,
-} from "@material-ui/core";
+} from "@mui/material";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
-
-const useStyles = makeStyles((theme) => ({
-  content: {
-    padding: theme.spacing(5),
-    width: "50%",
-    margin: "0 auto",
-  },
-}));
 
 /**
  * Component for the creating a new event
  */
-
 const CreateEvent: React.FC = () => {
-  const classes = useStyles();
-
   const defaultInput: Record<string, any> = {
     title: "",
     description: "",
@@ -137,7 +125,7 @@ const CreateEvent: React.FC = () => {
   };
 
   return (
-    <Card className={classes.content}>
+    <Card sx={{ padding: (theme) => theme.spacing(5), width: "50%", margin: "0 auto" }}>
       <Box marginTop="-10" marginBottom="10" textAlign="center">
         <Typography variant="h2">Opprett nytt arrangement</Typography>
       </Box>
@@ -166,7 +154,6 @@ const CreateEvent: React.FC = () => {
             rows={3}
             required
             placeholder="Beskrivelse ..."
-            variant="outlined"
             value={eventData.description}
             onChange={(e) => setEventData({ ...eventData, description: e.currentTarget.value })}
             fullWidth
