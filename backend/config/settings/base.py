@@ -110,6 +110,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # MIDDLEWARE
 MIDDLEWARE = [
+    "config.middleware.health.HealthcheckMiddleware",
     "django_alive.middleware.healthcheck_bypass_host_check",
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
