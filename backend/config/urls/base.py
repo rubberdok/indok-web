@@ -21,7 +21,6 @@ from django.urls import path
 from django.urls.conf import include
 from django.views.decorators.csrf import csrf_exempt
 
-from config.views.health import health_check
 
 urlpatterns = [
     path(settings.ADMIN_URL, admin.site.urls),
@@ -29,5 +28,4 @@ urlpatterns = [
     path("-/", include("django_alive.urls")),
     path("ecommerce/", include("apps.ecommerce.urls")),
     path("csrf/", csrf_exempt(csrf.csrf)),
-    path("health/", health_check),
 ]
