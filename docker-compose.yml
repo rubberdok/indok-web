@@ -14,6 +14,18 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/:cached
 
+  api:
+    restart: always
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    volumes:
+      - ./api:/usr/src/app
+    ports:
+      - 4000:4000
+    depends_on:
+      - postgres
+
   backend:
     restart: always
     environment:
