@@ -9,8 +9,7 @@ import express from "express";
 import http from "http";
 import { env } from "./config";
 import context, { initializeDB } from "./context";
-import { schema } from "./graphql";
-import { SentryErrorPlugin } from "./graphql/plugins/sentry";
+import { resolvers, typeDefs } from "./graphql";
 
 Sentry.init({
   dsn: env.SENTRY_DSN,
@@ -27,15 +26,15 @@ const startApolloServer = async () => {
   const server = new ApolloServer({
     csrfPrevention: true,
     cache: "bounded",
-    schema: schema,
     context: context(db),
     introspection: true,
+    resolvers,
+    typeDefs,
     plugins: [
       env.NODE_ENV === "production"
         ? ApolloServerPluginLandingPageDisabled()
         : ApolloServerPluginLandingPageLocalDefault(),
       ApolloServerPluginDrainHttpServer({ httpServer }),
-      SentryErrorPlugin,
     ],
   });
   await server.start();

@@ -1,0 +1,18 @@
+schema:
+  - ./**/schema.ts
+generates:
+  src/graphql/resolvers-types.ts:
+    config:
+      mapperTypeSuffix: Model
+      useIndexSignature: true
+      nonOptionalTypename: true
+      showUnusedMappers: true
+      immutableTypes: true
+      contextType: ../context#Context
+      mappers:
+        User: "@prisma/client#User"
+        Permission: "@prisma/client#Permission"
+
+    plugins:
+      - typescript
+      - typescript-resolvers
