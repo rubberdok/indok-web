@@ -1,17 +1,9 @@
-import { makeSchema } from "nexus";
-import * as Scalars from "./scalars";
-import * as Users from "./users";
-import * as Auth from "./auth";
-export { Context } from "../context";
+import { permissions } from "./permissions/schema";
+import { Resolvers } from "./resolvers-types";
+import { mutations, queries } from "./schema";
+import { typeDefs as userTypes, resolvers as userResolvers } from "./users";
+import merge from "lodash/merge";
 
-export const schema = makeSchema({
-  types: [Users, Scalars, Auth],
-  outputs: {
-    schema: __dirname + "/generated/schema.graphql",
-    typegen: __dirname + "/generated/typings.ts",
-  },
-  contextType: {
-    module: __dirname,
-    export: "Context",
-  },
-});
+export const resolvers: Resolvers = merge(userResolvers);
+
+export const typeDefs = [queries, mutations, permissions, userTypes];

@@ -26,21 +26,6 @@ services:
     depends_on:
       - postgres
 
-  backend:
-    restart: always
-    environment:
-      - DJANGO_READ_DOT_ENV_FILE=true
-      - DJANGO_DOT_ENV_FILES=.env,.env.development
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    volumes:
-      - ./backend:/usr/src/app
-    ports:
-      - "8000:8000"
-    depends_on:
-      - postgres
-
   frontend:
     build:
       context: ./frontend

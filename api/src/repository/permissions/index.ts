@@ -10,3 +10,5 @@ export const permissions = (db: PrismaClient) => ({
     });
   },
 });
+
+export type PermissionsRepository = ReturnType<typeof permissions>;
