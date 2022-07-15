@@ -14,13 +14,16 @@ type TokenResponse = {
 /**
  * https://docs.feide.no/service_providers/openid_connect/feide_obtaining_tokens.html
  */
-const getToken = async (code: string, codeVerifier: string): Promise<TokenResponse> => {
+const getToken = async (
+  code: string,
+  codeVerifier: string
+): Promise<TokenResponse> => {
   const data = {
     code,
     grant_type: "authorization_code",
     redirect_uri: env.FEIDE_REDIRECT_URI,
     client_id: env.FEIDE_CLIENT_ID,
-    code_verifier: 
+    code_verifier: codeVerifier,
   } as const;
   const { access_token: accessToken, id_token: idToken } =
     await fetchAccessToken(data);
@@ -66,7 +69,7 @@ export const AuthenticationService = ({
    * https://docs.feide.no/service_providers/openid_connect/feide_obtaining_tokens.html
    */
   authenticate: async (code: string, id: string): Promise<User> => {
-    const { codeVerifier } = await authRepository.retrieveCodeVerifier(id)
+    const { codeVerifier } = await authRepository.retrieveCodeVerifier(id);
     const token = await getToken(code, codeVerifier);
     // pkce
     const userInfo = await getUserInfo(token.accessToken);
