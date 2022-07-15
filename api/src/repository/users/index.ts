@@ -14,7 +14,6 @@ export const users = (db: PrismaClient) => ({
   },
 
   getByFeideId: async (feideId: string): Promise<User> => {
-    console.log("should really not happen");
     return db.user.findFirstOrThrow({
       where: {
         feideId,

@@ -1,11 +1,11 @@
 import { PrismaClient } from "@prisma/client";
 import * as Users from "./users/seed";
 
-const client = new PrismaClient();
+const db = new PrismaClient();
 
 const main = async () => {
   console.log("Seeding...");
-  Users.load(client);
+  Users.load(db);
 };
 
 main()
@@ -15,5 +15,5 @@ main()
   })
   .finally(async () => {
     console.log("Finished");
-    await client.$disconnect();
+    await db.$disconnect();
   });
