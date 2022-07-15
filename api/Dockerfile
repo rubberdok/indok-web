@@ -1,4 +1,4 @@
-FROM node:lts-alpine as deps
+FROM public.ecr.aws/docker/library/node:lts-alpine3.16 as deps
 
 RUN apk add --no-cache libc6-compat
 WORKDIR /usr/src/app
@@ -6,7 +6,7 @@ WORKDIR /usr/src/app
 COPY package.json package-lock.json ./
 RUN npm install
 
-FROM node:lts-alpine as runner
+FROM public.ecr.aws/docker/library/node:lts-alpine3.16 as runner
 WORKDIR /usr/src/app
 
 COPY --from=deps /usr/src/app/node_modules ./node_modules
