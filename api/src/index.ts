@@ -10,6 +10,7 @@ import http from "http";
 import { env } from "./config";
 import context, { initializeDB } from "./context";
 import { resolvers, typeDefs } from "./graphql";
+import { SentryErrorPlugin } from "./graphql/plugins/sentry";
 
 Sentry.init({
   dsn: env.SENTRY_DSN,
@@ -35,6 +36,7 @@ const startApolloServer = async () => {
         ? ApolloServerPluginLandingPageDisabled()
         : ApolloServerPluginLandingPageLocalDefault(),
       ApolloServerPluginDrainHttpServer({ httpServer }),
+      SentryErrorPlugin,
     ],
   });
   await server.start();
