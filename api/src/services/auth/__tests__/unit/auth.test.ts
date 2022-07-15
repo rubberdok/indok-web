@@ -47,8 +47,12 @@ const cases: Table = [
       username: "example",
       feideId: "feide_id",
       id: "id",
+      firstName: "first",
+      lastName: "last",
       email: "example@example.com",
       createdAt: new Date(),
+      updatedAt: new Date(),
+      lastLogin: new Date(),
     }),
   },
 ];
@@ -90,7 +94,7 @@ test.each(cases)("authenticate - $name", async ({ responses, expected }) => {
   mockRepo.getByFeideId.mockReturnValue(Promise.resolve(expected));
   mockRepo.create.mockReturnValue(Promise.resolve(expected));
 
-  const user = service.authenticate("some code");
+  const user = service.authenticate("some code", "");
   expect(user).toMatchObject(expected);
   expect(mockRepo.create.mock.calls.length).toBe(0);
   expect(mockRepo.getByFeideId.mock.calls.length).toBe(1);

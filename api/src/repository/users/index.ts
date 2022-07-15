@@ -26,6 +26,8 @@ export const users = (db: PrismaClient) => ({
     feideId: string;
     username: string;
     email: string;
+    firstName: string;
+    lastName: string;
   }): Promise<User> => {
     return db.user.create({
       data,

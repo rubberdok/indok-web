@@ -9,7 +9,10 @@ beforeAll(() => {
 
 type UsersTable = {
   input: Prisma.UserCreateInput;
-  expected: Pick<User, "username" | "email" | "feideId">;
+  expected: Pick<
+    User,
+    "username" | "email" | "feideId" | "firstName" | "lastName"
+  >;
 }[];
 
 const usersTable: UsersTable = [
@@ -18,11 +21,15 @@ const usersTable: UsersTable = [
       username: "test-1",
       email: "example@example.com",
       feideId: "asdf",
+      firstName: "first",
+      lastName: "last",
     },
     expected: {
       username: "test-1",
       email: "example@example.com",
       feideId: "asdf",
+      firstName: "first",
+      lastName: "last",
     },
   },
 ];

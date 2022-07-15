@@ -9,8 +9,8 @@ import express from "express";
 import http from "http";
 import { env } from "./config";
 import context, { initializeDB } from "./context";
-import { schema } from "./ports/graphql";
-import { SentryErrorPlugin } from "./ports/graphql/plugins/sentry";
+import { schema } from "./graphql";
+import { SentryErrorPlugin } from "./graphql/plugins/sentry";
 
 Sentry.init({
   dsn: env.SENTRY_DSN,
