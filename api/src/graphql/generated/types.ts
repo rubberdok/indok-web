@@ -1,6 +1,6 @@
 import { GraphQLResolveInfo } from 'graphql';
 import { User as UserModel, Permission as PermissionModel } from '@prisma/client';
-import { Context } from '../context';
+import { Context } from '../../context';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };

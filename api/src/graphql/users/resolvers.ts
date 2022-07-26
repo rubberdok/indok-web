@@ -1,20 +1,19 @@
 import { ApolloError } from "apollo-server-core";
-import { Resolvers } from "../resolvers-types";
+import { Resolvers } from "../generated/types";
 
 export const resolvers: Resolvers = {
   Query: {
-    user: (_, { id }, ctx) => {
+    user: (_root, { id }, ctx) => {
       try {
         return ctx.service.users.get(id);
       } catch (err) {
         if (err instanceof Error && err.name === "NotFoundError") {
           return null;
         }
-        console.log("throwing new err");
         throw new ApolloError("Internal server error");
       }
     },
-    users: (_, __, ctx) => ctx.service.users.getAll(),
+    users: (_root, _args, ctx) => ctx.service.users.getAll(),
   },
   User: {
     username: (user) => user.username,

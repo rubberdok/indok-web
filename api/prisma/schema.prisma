@@ -36,13 +36,8 @@ model Role {
 model Permission {
   id     String  @id @default(uuid())
   name   String  @unique
-  Role   Role?   @relation(fields: [roleId], references: [id])
+  role   Role?   @relation(fields: [roleId], references: [id])
   roleId String?
-  User   User?   @relation(fields: [userId], references: [id])
+  user   User?   @relation(fields: [userId], references: [id])
   userId String?
-}
-
-model pkce {
-  codeVerifier String @unique
-  id           String @id @default(uuid())
 }

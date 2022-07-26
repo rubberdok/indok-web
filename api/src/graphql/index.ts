@@ -1,5 +1,5 @@
 import { permissions } from "./permissions/schema";
-import { Resolvers } from "./resolvers-types";
+import { Resolvers } from "./generated/types";
 import { mutations, queries } from "./schema";
 import { typeDefs as userTypes, resolvers as userResolvers } from "./users";
 import merge from "lodash/merge";
