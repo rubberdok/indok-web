@@ -7,7 +7,7 @@ const FooterSimple: React.FC = () => {
     <Container sx={{ textAlign: "center", py: 8 }}>
       <Logo sx={{ mb: 3 }} />
       <Typography variant="body3" sx={{ color: "text.secondary" }}>
-        Kopirett © {dayjs().format("YYYY")} Foreningen for Studentene ved Indøk. Alle rettigheter reservert
+        {`Foreningen for Studentene ved Indøk © ${dayjs().format("YYYY")}`}
       </Typography>
     </Container>
   );

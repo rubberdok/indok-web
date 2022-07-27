@@ -1,7 +1,7 @@
+import DarkModeToggle from "@components/DarkModeToggle";
 import Logo from "@components/Logo";
 import useResponsive from "@hooks/useResponsive";
-import { GitHub } from "@mui/icons-material";
-import { Box, Button, Container, Divider, Grid, Hidden, Link, Paper, Stack, SxProps, Typography } from "@mui/material";
+import { Box, Container, Divider, Grid, Link, Paper, Stack, SxProps, Typography } from "@mui/material";
 import { styled, useTheme } from "@mui/material/styles";
 import rubberdokLogo from "@public/img/rubberdok_logo_black.svg";
 import dayjs from "dayjs";
@@ -9,7 +9,6 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import NextLink, { LinkProps } from "next/link";
 import { ReactNode, useState } from "react";
-import LabeledIcon from "@components/LabeledIcon";
 
 const HallOfFame = dynamic(() => import("./HallOfFame"));
 
@@ -51,6 +50,9 @@ const Footer: React.FC = () => {
                   Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse, NTNU Kolbjørn Hejes vei 1E,
                   7034 Trondheim Org.nr. 994 778 463
                 </Typography>
+                <Typography variant="body3" sx={{ color: footerTextColor }}>
+                  {`Foreningen for Studentene ved Indøk © ${dayjs().format("YYYY")}`}
+                </Typography>
               </Stack>
             </Grid>
 
@@ -68,6 +70,12 @@ const Footer: React.FC = () => {
                 <NextLinkItem href="https://www.indøk.no" sx={{ color: footerTextColor }}>
                   Studieside
                 </NextLinkItem>
+                <NextLinkItem
+                  href="https://github.com/rubberdok/indok-web/issues/new/choose"
+                  sx={{ color: footerTextColor }}
+                >
+                  Oppdaget en feil?
+                </NextLinkItem>
               </Stack>
             </Grid>
             {isDesktop && <Watermark />}
@@ -78,43 +86,22 @@ const Footer: React.FC = () => {
       <Divider />
 
       <Container>
-        <Stack
-          direction={{ xs: "column", md: "row" }}
-          spacing={2.5}
-          justifyContent="space-between"
-          alignItems="center"
-          sx={{ py: 3, textAlign: { xs: "left", md: "center" } }}
-        >
-          <Typography variant="body3" sx={{ color: "text.secondary" }}>
-            {`Kopirett © ${dayjs().format("YYYY")} Foreningen for Studentene ved Indøk. Alle rettigheter reservert.`}
-          </Typography>
-          <Stack direction="row" spacing={3} justifyContent="center" alignItems="center">
-            <Link
-              href="https://github.com/rubberdok/indok-web/issues/new/choose"
-              variant="body3"
-              sx={{ color: "text.secondary" }}
-            >
-              <LabeledIcon
-                icon={
-                  <Hidden smDown>
-                    <GitHub />
-                  </Hidden>
-                }
-                value={<Typography variant="body3">Oppdaget feil ved nettsiden?</Typography>}
-                spacing={1}
-              />
-            </Link>
-            <Button
-              variant="text"
-              onClick={() => setOpen(!open)}
-              disableFocusRipple
-              sx={{ color: "text.secondary", typography: (theme) => theme.typography.body3 }}
-            >
+        <Stack py={3} spacing={3} direction="row" justifyContent="space-between" alignItems="center" width="100%">
+          <DarkModeToggle variant="toggle" size="small" />
+          <Stack direction="row" spacing={3} alignItems="center" justifyContent="center">
+            <NextLinkItem sx={{ mt: 0 }} onClick={() => setOpen(!open)} href="javascript:undefined">
               Hall of Fame
-            </Button>
+            </NextLinkItem>
             <Link href="https://github.com/rubberdok/indok-web" rel="noreferrer noopener">
-              <Box sx={{ ...(theme.palette.mode === "dark" && { filter: "invert(1)", opacity: 0.8 }) }}>
-                <Image src={rubberdokLogo} alt="Rubberdøk" width="64px" height="32px" layout="fixed" />
+              <Box
+                sx={{
+                  ...(theme.palette.mode === "dark" && { filter: "invert(1)", opacity: 0.8 }),
+                  "& span": {
+                    display: "block !important",
+                  },
+                }}
+              >
+                <Image src={rubberdokLogo} alt="Rubberdøk" width="48px" height="24px" layout="fixed" />
               </Box>
             </Link>
           </Stack>
@@ -128,13 +115,15 @@ const Footer: React.FC = () => {
 type NextLinkItemProps = LinkProps & {
   children: ReactNode;
   sx?: SxProps;
+  onClick?: () => void;
 };
 
-const NextLinkItem: React.FC<NextLinkItemProps> = ({ children, sx, ...other }) => {
+const NextLinkItem: React.FC<NextLinkItemProps> = ({ children, sx, onClick, ...other }) => {
   return (
     <NextLink passHref {...other}>
       <Link
         variant="body3"
+        onClick={onClick}
         sx={{
           mt: 1,
           color: "text.secondary",
