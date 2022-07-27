@@ -145,84 +145,19 @@ The app is deployed through AWS ECS.
 ## Acknowledgements
 
 <p float="left">
+  Logo created by   
   <a href="https://github.com/Skraagen">
-    <img alt="Skraagen" src="https://avatars1.githubusercontent.com/u/18050179?s=400&v=4" width="14">
+    Skraagen
   </a>
-  Logo created by Skraagen 🦆
 </p>
 
-[indokntnu.no](https://www.indokntnu.no) is powered by:
-
 <p float="left">
-  <a href="https://graphql.org/">
+  <a href="https://vercel.com/?utm_source=rubberdok&utm_campaign=oss">
     <img
-      alt="GraphQL"
-      title="GraphQL"
-      src="https://upload.wikimedia.org/wikipedia/commons/1/17/GraphQL_Logo.svg"
-      height="50"
-    >
-  </a>
-  &nbsp;
-  <a href="https://reactjs.org">
-    <img
-      alt="ReactJS"
-      title="ReactJS"
-      src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg"
-      height="50"
-    >
-  </a>
-  &nbsp;
-  <a href="https://nextjs.org">
-    <img
-      alt="NextJS"
-      title="NextJS"
-      src="https://github.com/rubberdok/indok-web/blob/docs/assets/nextjs_logo.svg"
-      height="50"
-    >
-  </a>
-  &nbsp;
-  <a href="https://www.typescriptlang.org/">
-    <img
-      alt="TypeScript"
-      title="TypeScript"
-      src="https://upload.wikimedia.org/wikipedia/commons/4/4c/Typescript_logo_2020.svg"
-      height="50"
-    >
-  </a>
-  &nbsp;
-  <a href="https://www.python.org">
-    <img
-      alt="Python"
-      title="Python"
-      src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg"
-      height="50"
-    >
-  </a>
-  &nbsp;
-  <a href="https://www.djangoproject.com">
-    <img
-      alt="Django"
-      title="Django"
-      src="https://github.com/rubberdok/indok-web/blob/docs/assets/django_logo.svg"
-      height="50"
-    >
-  </a>
-  &nbsp;
-  <a href="https://www.docker.com">
-    <img
-      alt="Docker"
-      title="Docker"
-      src="https://github.com/rubberdok/indok-web/blob/docs/assets/docker_logo.svg"
-      height="50"
-    >
-  </a>
-  &nbsp;
-  <a href="https://aws.amazon.com/">
-    <img
-      alt="AWS"
-      title="AWS"
-      src="https://github.com/rubberdok/indok-web/blob/docs/assets/aws_logo.svg"
-      height="50"
+      alt="Powered by Vercel"
+      title="Powered by Vercel"
+      src="https://www.datocms-assets.com/31049/1618983297-powered-by-vercel.svg"
+      height="48px"
     >
   </a>
 </p>
