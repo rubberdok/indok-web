@@ -7,18 +7,15 @@ import { IUserService } from "../interfaces";
 
 @injectable()
 export default class UsersService implements IUserService {
-  private _usersRepository: IUserRepository;
-
-  public async get(id: string): Promise<User> {
-    return this._usersRepository.get(id);
-  }
-  public async getAll(): Promise<User[]> {
-    return this._usersRepository.getAll();
-  }
   public constructor(
     @inject(Types.UserRepository)
-    usersRepository: IUserRepository
-  ) {
-    this._usersRepository = usersRepository;
+    private usersRepository: IUserRepository
+  ) {}
+
+  public async get(id: string): Promise<User> {
+    return this.usersRepository.get(id);
+  }
+  public async getAll(): Promise<User[]> {
+    return this.usersRepository.getAll();
   }
 }

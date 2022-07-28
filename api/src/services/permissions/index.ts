@@ -12,7 +12,8 @@ export default class PermissionService implements IPermissionService {
     @inject(Types.PermissionRepository)
     private permissionRepository: IPermissionRepository
   ) {}
-  getAllByUser(id: string): Promise<Permission[]> {
+
+  public getAllByUser(id: string): Promise<Permission[]> {
     return this.permissionRepository.getByUser(id);
   }
 }
