@@ -1,15 +1,18 @@
+import "reflect-metadata";
+
+import { inject, injectable } from "inversify";
+
+import { IPermissionService } from "../interfaces";
+import { IPermissionRepository, Types } from "../../repositories";
 import { Permission } from "@prisma/client";
-import { PermissionsRepository } from "../../repository/permissions";
 
-type Dependencies = {
-  permissionsRepository: PermissionsRepository;
-};
-
-export const PermissionsService = ({
-  permissionsRepository,
-}: Dependencies) => ({
-  getAllByUser: (userId: string): Promise<Permission[]> =>
-    permissionsRepository.getAllByUser(userId),
-});
-
-export type PermissionsService = ReturnType<typeof PermissionsService>;
+@injectable()
+export default class PermissionService implements IPermissionService {
+  public constructor(
+    @inject(Types.PermissionRepository)
+    private permissionRepository: IPermissionRepository
+  ) {}
+  getAllByUser(id: string): Promise<Permission[]> {
+    return this.permissionRepository.getByUser(id);
+  }
+}

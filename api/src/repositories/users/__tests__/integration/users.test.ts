@@ -1,10 +1,11 @@
-import { Prisma, User } from "@prisma/client";
-import context, { Context, initializeDB } from "../../../../context";
+import { Prisma, PrismaClient, User } from "@prisma/client";
+import UserRepository from "../..";
+import { IUserRepository } from "../../../interfaces";
 
-let ctx: Context;
+let repo: IUserRepository;
 
 beforeAll(() => {
-  ctx = context(initializeDB());
+  repo = new UserRepository(new PrismaClient());
 });
 
 type UsersTable = {
@@ -35,7 +36,7 @@ const usersTable: UsersTable = [
 ];
 
 test.each(usersTable)("createUser($input)", async ({ input, expected }) => {
-  const got = await ctx.repository.users.create(input);
+  const got = await repo.create(input);
   const { username, email, feideId, firstName, lastName } = got;
   expect({ username, email, feideId, firstName, lastName }).toMatchObject(
     expected

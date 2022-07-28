@@ -1,5 +1,6 @@
+overwrite: true
 schema:
-  - ./**/schema.ts
+  - "./src/graphql/**/type-defs.ts"
 generates:
   src/graphql/generated/types.ts:
     config:
@@ -8,7 +9,7 @@ generates:
       nonOptionalTypename: true
       showUnusedMappers: true
       immutableTypes: true
-      contextType: ../../context#Context
+      contextType: ../context#IContext
       mappers:
         User: "@prisma/client#User"
         Permission: "@prisma/client#Permission"

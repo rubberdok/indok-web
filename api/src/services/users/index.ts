@@ -1,12 +1,24 @@
-import { UsersRepository } from "../../repository/users";
+import "reflect-metadata";
 
-type Dependencies = {
-  usersRepository: UsersRepository;
-};
+import { User } from "@prisma/client";
+import { inject, injectable } from "inversify";
+import { Types, IUserRepository } from "../../repositories";
+import { IUserService } from "../interfaces";
 
-export const UsersService = ({ usersRepository }: Dependencies) => ({
-  get: async (id: string) => usersRepository.get(id),
-  getAll: async () => usersRepository.getAll(),
-});
+@injectable()
+export default class UsersService implements IUserService {
+  private _usersRepository: IUserRepository;
 
-export type UsersService = ReturnType<typeof UsersService>;
+  public async get(id: string): Promise<User> {
+    return this._usersRepository.get(id);
+  }
+  public async getAll(): Promise<User[]> {
+    return this._usersRepository.getAll();
+  }
+  public constructor(
+    @inject(Types.UserRepository)
+    usersRepository: IUserRepository
+  ) {
+    this._usersRepository = usersRepository;
+  }
+}

@@ -1,16 +1,18 @@
-import { Repository } from "../repository";
-import { PermissionsService } from "./permissions";
-import { UsersService } from "./users";
+import { Container } from "inversify";
 
-export type Service = ReturnType<typeof service>;
+import { IUserService, IPermissionService } from "./interfaces";
 
-const service = (repository: Repository) => ({
-  users: UsersService({
-    usersRepository: repository.users,
-  }),
-  permissions: PermissionsService({
-    permissionsRepository: repository.permissions,
-  }),
-});
+import { default as UserService } from "./users";
+import { default as PermissionService } from "./permissions";
 
-export default service;
+import { default as Types } from "./types";
+
+export const bind = (container: Container) => {
+  container.bind<IUserService>(Types.UserService).to(UserService);
+  container
+    .bind<IPermissionService>(Types.PermissionService)
+    .to(PermissionService);
+};
+
+export { IUserService, IPermissionService };
+export { Types };

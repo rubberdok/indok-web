@@ -1,16 +1,25 @@
-import * as Sentry from "@sentry/node";
-import {
-  ApolloServerPluginDrainHttpServer,
-  ApolloServerPluginLandingPageDisabled,
-  ApolloServerPluginLandingPageLocalDefault,
-} from "apollo-server-core";
-import { ApolloServer } from "apollo-server-express";
+import "reflect-metadata";
+
+import cors from "cors";
 import express from "express";
 import http from "http";
+
+import { ApolloServer } from "@apollo/server";
+import { expressMiddleware } from "@apollo/server/express4";
+import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
+import { ApolloServerPluginLandingPageLocalDefault } from "@apollo/server/plugin/landingPage/default";
+
+import * as Sentry from "@sentry/node";
+
+import { json } from "body-parser";
 import { env } from "./config";
-import context, { initializeDB } from "./context";
+
+import { container } from "./container";
 import { resolvers, typeDefs } from "./graphql";
-import { SentryErrorPlugin } from "./graphql/plugins/sentry";
+import {
+  IContextProvider,
+  Type as ContextProviderType,
+} from "./graphql/context";
 
 Sentry.init({
   dsn: env.SENTRY_DSN,
@@ -20,35 +29,35 @@ Sentry.init({
 const startApolloServer = async () => {
   const app = express();
   const httpServer = http.createServer(app);
-  const db = initializeDB();
 
   app.use(Sentry.Handlers.requestHandler());
 
-  const server = new ApolloServer({
+  const server = new ApolloServer<IContextProvider>({
     csrfPrevention: true,
-    cache: "bounded",
-    context: context(db),
     introspection: true,
     resolvers,
     typeDefs,
     plugins: [
-      env.NODE_ENV === "production"
-        ? ApolloServerPluginLandingPageDisabled()
-        : ApolloServerPluginLandingPageLocalDefault(),
       ApolloServerPluginDrainHttpServer({ httpServer }),
-      SentryErrorPlugin,
+      ApolloServerPluginLandingPageLocalDefault,
     ],
   });
   await server.start();
-  server.applyMiddleware({
-    app,
-    path: "/",
-  });
+  app.use(
+    "/graphql",
+    cors<cors.CorsRequest>(),
+    json(),
+    expressMiddleware(server, {
+      context: async () => container.get<IContextProvider>(ContextProviderType),
+    })
+  );
 
   await new Promise<void>((resolve) =>
     httpServer.listen({ port: env.PORT }, resolve)
   );
-  console.info(`[INFO] ${new Date()} 🚀 Server ready at ${server.graphqlPath}`);
+  console.info(
+    `[INFO] ${new Date()} 🚀 Server ready at ${app.path()}/graphql}`
+  );
   console.info("[INFO] CTRL+C to exit");
 };
 
