@@ -12,8 +12,12 @@ import * as Services from "./services";
 
 export const container = new Container();
 
+// Bind Prisma
 container.bind<PrismaClient>(CoreTypes.Prisma).toConstantValue(Prisma);
 
+// Bind Context
 Context.bind(container);
+// Bind Repositories
 Repositories.bind(container);
+// Bind Services
 Services.bind(container);

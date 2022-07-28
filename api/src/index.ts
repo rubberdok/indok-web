@@ -42,7 +42,9 @@ const startApolloServer = async () => {
       ApolloServerPluginLandingPageLocalDefault,
     ],
   });
+
   await server.start();
+
   app.use(
     "/graphql",
     cors<cors.CorsRequest>(),
@@ -55,6 +57,7 @@ const startApolloServer = async () => {
   await new Promise<void>((resolve) =>
     httpServer.listen({ port: env.PORT }, resolve)
   );
+
   console.info(
     `[INFO] ${new Date()} 🚀 Server ready at ${app.path()}/graphql}`
   );
