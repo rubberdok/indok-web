@@ -1,5 +1,5 @@
-import { GraphQLResolveInfo } from 'graphql';
-import { User as UserModel, Permission as PermissionModel } from '@prisma/client';
+import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
+import { User as UserModel, Permission as PermissionModel, Cabin as CabinModel, Booking as BookingModel } from '@prisma/client';
 import { IContext } from '../context';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
@@ -14,16 +14,61 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  DateTime: Date;
+};
+
+export type Booking = {
+  readonly __typename: 'Booking';
+  readonly cabin: Cabin;
+  readonly email: Scalars['String'];
+  readonly endDate: Scalars['DateTime'];
+  readonly firstName: Scalars['String'];
+  readonly id: Scalars['ID'];
+  readonly lastName: Scalars['String'];
+  readonly phoneNumber: Scalars['String'];
+  readonly startDate: Scalars['DateTime'];
+  readonly status: Status;
+};
+
+export type Cabin = {
+  readonly __typename: 'Cabin';
+  readonly externalPrice: Scalars['String'];
+  readonly id: Scalars['ID'];
+  readonly internalPrice: Scalars['String'];
+  readonly name: Scalars['String'];
 };
 
 export type Mutation = {
   readonly __typename: 'Mutation';
   readonly createUser?: Maybe<User>;
+  readonly newBooking: Booking;
+  readonly updateBookingStatus: Booking;
 };
 
 
 export type MutationCreateUserArgs = {
   firstName: Scalars['String'];
+};
+
+
+export type MutationNewBookingArgs = {
+  data: NewBookingInput;
+};
+
+
+export type MutationUpdateBookingStatusArgs = {
+  id: Scalars['ID'];
+  status: Status;
+};
+
+export type NewBookingInput = {
+  readonly cabinId: Scalars['ID'];
+  readonly email: Scalars['String'];
+  readonly endDate: Scalars['DateTime'];
+  readonly firstName: Scalars['String'];
+  readonly lastName: Scalars['String'];
+  readonly phoneNumber: Scalars['String'];
+  readonly startDate: Scalars['DateTime'];
 };
 
 export type Permission = {
@@ -42,6 +87,13 @@ export type Query = {
 export type QueryUserArgs = {
   id: Scalars['String'];
 };
+
+export enum Status {
+  Cancelled = 'CANCELLED',
+  Confirmed = 'CONFIRMED',
+  Pending = 'PENDING',
+  Rejected = 'REJECTED'
+}
 
 export type User = {
   readonly __typename: 'User';
@@ -123,28 +175,64 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = ResolversObject<{
+  Booking: ResolverTypeWrapper<BookingModel>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+  Cabin: ResolverTypeWrapper<CabinModel>;
+  DateTime: ResolverTypeWrapper<Scalars['DateTime']>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
   Mutation: ResolverTypeWrapper<{}>;
+  NewBookingInput: NewBookingInput;
   Permission: ResolverTypeWrapper<PermissionModel>;
   Query: ResolverTypeWrapper<{}>;
+  Status: Status;
   String: ResolverTypeWrapper<Scalars['String']>;
   User: ResolverTypeWrapper<UserModel>;
 }>;
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = ResolversObject<{
+  Booking: BookingModel;
   Boolean: Scalars['Boolean'];
+  Cabin: CabinModel;
+  DateTime: Scalars['DateTime'];
   ID: Scalars['ID'];
   Mutation: {};
+  NewBookingInput: NewBookingInput;
   Permission: PermissionModel;
   Query: {};
   String: Scalars['String'];
   User: UserModel;
 }>;
 
+export type BookingResolvers<ContextType = IContext, ParentType extends ResolversParentTypes['Booking'] = ResolversParentTypes['Booking']> = ResolversObject<{
+  cabin?: Resolver<ResolversTypes['Cabin'], ParentType, ContextType>;
+  email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  endDate?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  firstName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  lastName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  phoneNumber?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  startDate?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  status?: Resolver<ResolversTypes['Status'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type CabinResolvers<ContextType = IContext, ParentType extends ResolversParentTypes['Cabin'] = ResolversParentTypes['Cabin']> = ResolversObject<{
+  externalPrice?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  internalPrice?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['DateTime'], any> {
+  name: 'DateTime';
+}
+
 export type MutationResolvers<ContextType = IContext, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
   createUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'firstName'>>;
+  newBooking?: Resolver<ResolversTypes['Booking'], ParentType, ContextType, RequireFields<MutationNewBookingArgs, 'data'>>;
+  updateBookingStatus?: Resolver<ResolversTypes['Booking'], ParentType, ContextType, RequireFields<MutationUpdateBookingStatusArgs, 'id' | 'status'>>;
 }>;
 
 export type PermissionResolvers<ContextType = IContext, ParentType extends ResolversParentTypes['Permission'] = ResolversParentTypes['Permission']> = ResolversObject<{
@@ -169,6 +257,9 @@ export type UserResolvers<ContextType = IContext, ParentType extends ResolversPa
 }>;
 
 export type Resolvers<ContextType = IContext> = ResolversObject<{
+  Booking?: BookingResolvers<ContextType>;
+  Cabin?: CabinResolvers<ContextType>;
+  DateTime?: GraphQLScalarType;
   Mutation?: MutationResolvers<ContextType>;
   Permission?: PermissionResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;

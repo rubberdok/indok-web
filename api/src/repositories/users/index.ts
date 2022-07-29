@@ -1,35 +1,33 @@
-import "reflect-metadata";
-
-import { Prisma, PrismaClient, User } from "@prisma/client";
+import { Prisma, User } from "@prisma/client";
 import { inject, injectable } from "inversify";
+import { CoreTypes } from "../../core";
+import { Database } from "../../core/interfaces";
 import { IUserRepository } from "../interfaces";
-import { Types as CoreTypes } from "../../core";
 
 @injectable()
 export default class UserRepository implements IUserRepository {
-  private _db: PrismaClient;
-  public constructor(@inject(CoreTypes.Prisma) db: PrismaClient) {
-    this._db = db;
-  }
-  public async create(data: Prisma.UserCreateInput): Promise<User> {
-    return this._db.user.create({
+  constructor(@inject(CoreTypes.Prisma) private db: Database) {}
+
+  create(data: Prisma.UserCreateInput): Promise<User> {
+    return this.db.user.create({
       data,
     });
   }
 
-  public async getAll(): Promise<User[]> {
-    return this._db.user.findMany();
+  getAll(): Promise<User[]> {
+    return this.db.user.findMany();
   }
 
-  public async get(id: string): Promise<User> {
-    return this._db.user.findFirstOrThrow({
+  get(id: string): Promise<User> {
+    return this.db.user.findFirstOrThrow({
       where: {
         id,
       },
     });
   }
-  public async getByFeideId(feideId: string): Promise<User> {
-    return this._db.user.findFirstOrThrow({
+
+  getByFeideId(feideId: string): Promise<User> {
+    return this.db.user.findFirstOrThrow({
       where: {
         feideId,
       },

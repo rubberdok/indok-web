@@ -1,19 +1,24 @@
-import "reflect-metadata";
-
 import { Container, inject, injectable } from "inversify";
 
-import { IPermissionService, IUserService, Types } from "../services";
+import {
+  ICabinService,
+  IPermissionService,
+  IUserService,
+  Types,
+} from "../services";
 
 export const Type = Symbol.for("ContextProvider");
 
 export interface IContextProvider {
   userService: IUserService;
   permissionService: IPermissionService;
+  cabinService: ICabinService;
 }
 
 export interface IContext {
   userService: IUserService;
   permissionService: IPermissionService;
+  cabinService: ICabinService;
 }
 
 @injectable()
@@ -21,7 +26,8 @@ class ContextProvider implements IContextProvider {
   public constructor(
     @inject(Types.UserService) public userService: IUserService,
     @inject(Types.PermissionService)
-    public permissionService: IPermissionService
+    public permissionService: IPermissionService,
+    @inject(Types.CabinService) public cabinService: ICabinService
   ) {}
 }
 

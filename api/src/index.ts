@@ -1,5 +1,3 @@
-import "reflect-metadata";
-
 import cors from "cors";
 import express from "express";
 import http from "http";
@@ -26,7 +24,7 @@ Sentry.init({
   tracesSampleRate: env.SENTRY_TRACES_SAMPLE_RATE,
 });
 
-const startApolloServer = async () => {
+const start = async () => {
   const app = express();
   const httpServer = http.createServer(app);
 
@@ -64,4 +62,4 @@ const startApolloServer = async () => {
   console.info("[INFO] CTRL+C to exit");
 };
 
-startApolloServer();
+start();

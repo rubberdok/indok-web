@@ -1,5 +1,3 @@
-import "reflect-metadata";
-
 import { inject, injectable } from "inversify";
 
 import { IPermissionService } from "../interfaces";
@@ -8,12 +6,12 @@ import { Permission } from "@prisma/client";
 
 @injectable()
 export default class PermissionService implements IPermissionService {
-  public constructor(
+  constructor(
     @inject(Types.PermissionRepository)
     private permissionRepository: IPermissionRepository
   ) {}
 
-  public getAllByUser(id: string): Promise<Permission[]> {
+  getAllByUser(id: string): Promise<Permission[]> {
     return this.permissionRepository.getByUser(id);
   }
 }

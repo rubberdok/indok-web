@@ -4,15 +4,22 @@ schema:
 generates:
   src/graphql/generated/types.ts:
     config:
-      mapperTypeSuffix: Model
       useIndexSignature: true
-      nonOptionalTypename: true
       showUnusedMappers: true
       immutableTypes: true
+      nonOptionalTypename: true
+
+      scalars:
+        DateTime: Date
+
       contextType: ../context#IContext
+
+      mapperTypeSuffix: Model
       mappers:
         User: "@prisma/client#User"
         Permission: "@prisma/client#Permission"
+        Cabin: "@prisma/client#Cabin"
+        Booking: "@prisma/client#Booking"
 
     plugins:
       - typescript

@@ -10,11 +10,17 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model GoogleDocument {
+  id        String  @id @default(uuid())
+  identifer String  @unique
+  favorite  Boolean @default(false)
+}
+
 model User {
   id          String       @id @default(uuid())
   feideId     String       @unique
   createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
   lastLogin   DateTime     @default(now())
   firstName   String
   lastName    String
@@ -22,6 +28,27 @@ model User {
   username    String       @unique
   roles       Role[]
   permissions Permission[]
+  Event       Event[]
+}
+
+model Organization {
+  id    String  @id @default(uuid())
+  name  String  @unique
+  Event Event[]
+}
+
+model Event {
+  id             String       @id @default(uuid())
+  name           String
+  description    String?
+  startAt        DateTime
+  endAt          DateTime?
+  openAt         DateTime?
+  location       String?
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  organizationId String
+  publisher      User         @relation(fields: [userId], references: [id])
+  userId         String
 }
 
 model Role {
@@ -40,4 +67,34 @@ model Permission {
   roleId String?
   user   User?   @relation(fields: [userId], references: [id])
   userId String?
+}
+
+// Cabins
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  REJECTED
+}
+
+model Cabin {
+  id            String @id @default(uuid())
+  name          String @unique
+  internalPrice Int
+  externalPrice Int
+  capacity      Int
+}
+
+model Booking {
+  id          String        @id @default(uuid())
+  email       String
+  phoneNumber String
+  firstName   String
+  lastName    String
+  cabinId     String
+  startDate   DateTime
+  endDate     DateTime
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  status      BookingStatus @default(PENDING)
 }

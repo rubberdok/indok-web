@@ -6,6 +6,7 @@ dotenv.config();
 
 const envVarsSchema = z.object({
   NODE_ENV: z.string(),
+  NO_REPLY_EMAIL: z.string().email(),
   DATABASE_URL: z.string(),
   PORT: z
     .string()
@@ -19,6 +20,7 @@ const envVarsSchema = z.object({
   FEIDE_CLIENT_ID: z.string(),
   FEIDE_CLIENT_SECRET: z.string(),
   FEIDE_REDIRECT_URI: z.string(),
+  POSTMARK_API_TOKEN: z.string(),
 });
 
 export const env = envVarsSchema.parse(process.env);

@@ -53,9 +53,11 @@
     "express": "^4.18.1",
     "express-openid-connect": "^2.7.3",
     "graphql": "^16.5.0",
+    "graphql-scalars": "^1.17.0",
     "graphql-tag": "^2.12.6",
     "inversify": "^6.0.1",
     "lodash": "^4.17.21",
+    "postmark": "^3.0.12",
     "reflect-metadata": "^0.1.13",
     "zod": "^3.17.3"
   }
