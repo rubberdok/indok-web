@@ -1,4 +1,4 @@
 -r base.txt
 
 black==22.6.0
-flake8==4.0.1
+flake8==5.0.1
