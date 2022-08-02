@@ -30,13 +30,16 @@ query AdminAllBookings($after: String) {
   }
 }
 
-query AllCabins {
+query CabinsAndResponsibles {
   cabins {
     id
     name
-    maxGuests
     internalPrice
     externalPrice
+  }
+  activeBookingResponsible {
+    id
+    email
   }
 }
 

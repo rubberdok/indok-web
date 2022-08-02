@@ -1,48 +1,23 @@
-import Breadcrumbs from "@components/Breadcrumbs";
+import Title from "@components/Title";
 import { Event } from "@interfaces/events";
-import { Box, Container, Typography } from "@mui/material";
-import { styled } from "@mui/material/styles";
-import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "src/theme/constants";
-
-const RootStyle = styled("div")(({ theme }) => ({
-  paddingTop: HEADER_MOBILE_HEIGHT,
-  backgroundColor: theme.palette.grey[900],
-  color: theme.palette.common.white,
-  [theme.breakpoints.up("md")]: {
-    paddingTop: HEADER_DESKTOP_HEIGHT,
-  },
-}));
 
 type Props = {
   event: Event;
 };
 
-const OrganizationEventHero: React.FC<Props> = (props) => {
-  const { event } = props;
-
+const OrganizationEventHero: React.FC<Props> = ({ event }) => {
   return (
-    <RootStyle>
-      <Container>
-        <Box sx={{ pt: 5, pb: 8 }}>
-          <Breadcrumbs
-            onDark
-            sx={{ mb: 10 }}
-            links={[
-              { href: "/", name: "Hjem" },
-              { href: "/orgs", name: "Foreninger" },
-              { href: `/orgs/${event.organization.id}`, name: event.organization.name },
-              { name: event.title },
-            ]}
-          />
-          <Typography variant="overline" color="grey.500">
-            Administrer arrangement
-          </Typography>
-          <Typography variant="h2" component="h1">
-            {event.title}
-          </Typography>
-        </Box>
-      </Container>
-    </RootStyle>
+    <Title
+      title={event.title}
+      overline="Administrer arrangement"
+      breadcrumbs={[
+        { href: "/", name: "Hjem" },
+        { href: "/orgs", name: "Foreninger" },
+        { href: `/orgs/${event.organization.id}`, name: event.organization.name },
+        { name: event.title },
+      ]}
+      variant="dark"
+    />
   );
 };
 

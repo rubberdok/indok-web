@@ -20,9 +20,9 @@ const CabinPrices: React.VFC = () => {
           interne og eksterne, se pris.
         </Typography>
       </Grid>
-      <Grid item container xs={12} sm={6} spacing={2}>
-        <Grid item container alignContent="center" justifyContent="center" md={6}>
-          <Typography variant="body2" align="center">
+      <Grid item container xs={12} sm={6} spacing={2} justifyContent="flex-start" alignItems="flex-start">
+        <Grid item alignContent="center" justifyContent="center" md={6}>
+          <Typography variant="body2" textAlign="left">
             <b>Enkeltperson</b>
             <br />
             Indøker: 110 kr per sengeplass.
@@ -30,8 +30,8 @@ const CabinPrices: React.VFC = () => {
             Ikke-indøkere: 270 kr per sengeplass.
           </Typography>
         </Grid>
-        <Grid item container alignContent="center" justifyContent="center" md={6}>
-          <Typography variant="body2" align="center">
+        <Grid item alignContent="center" justifyContent="center" md={6}>
+          <Typography variant="body2" textAlign="left">
             <b>Hel hytte</b>
             {cabins?.map((cabin) => (
               <>

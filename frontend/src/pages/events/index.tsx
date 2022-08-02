@@ -1,6 +1,6 @@
-import Layout, { RootStyle } from "@layouts/Layout";
 import AllEvents from "@components/pages/events/AllEvents";
 import Title from "@components/Title";
+import Layout from "@layouts/Layout";
 import { Container, Tab, Tabs } from "@mui/material";
 import React, { useState } from "react";
 import { NextPageWithLayout } from "../_app";
@@ -45,9 +45,5 @@ const Events: NextPageWithLayout = () => {
   );
 };
 
-Events.getLayout = (page: React.ReactElement) => (
-  <Layout>
-    <RootStyle>{page}</RootStyle>
-  </Layout>
-);
+Events.getLayout = (page: React.ReactElement) => <Layout>{page}</Layout>;
 export default Events;

@@ -1518,18 +1518,18 @@ export type AdminAllBookingsQuery = {
   } | null> | null;
 };
 
-export type AllCabinsQueryVariables = Exact<{ [key: string]: never }>;
+export type CabinsAndResponsiblesQueryVariables = Exact<{ [key: string]: never }>;
 
-export type AllCabinsQuery = {
+export type CabinsAndResponsiblesQuery = {
   __typename?: "Queries";
   cabins?: Array<{
     __typename?: "CabinType";
     id: string;
     name: string;
-    maxGuests: number;
     internalPrice: number;
     externalPrice: number;
   } | null> | null;
+  activeBookingResponsible?: { __typename?: "BookingResponsibleType"; id: string; email?: string | null } | null;
 };
 
 export type ActiveBookingResponsibleQueryVariables = Exact<{ [key: string]: never }>;
@@ -2112,13 +2112,13 @@ export const AdminAllBookingsDocument = {
     },
   ],
 } as unknown as DocumentNode<AdminAllBookingsQuery, AdminAllBookingsQueryVariables>;
-export const AllCabinsDocument = {
+export const CabinsAndResponsiblesDocument = {
   kind: "Document",
   definitions: [
     {
       kind: "OperationDefinition",
       operation: "query",
-      name: { kind: "Name", value: "AllCabins" },
+      name: { kind: "Name", value: "CabinsAndResponsibles" },
       selectionSet: {
         kind: "SelectionSet",
         selections: [
@@ -2130,9 +2130,19 @@ export const AllCabinsDocument = {
               selections: [
                 { kind: "Field", name: { kind: "Name", value: "id" } },
                 { kind: "Field", name: { kind: "Name", value: "name" } },
-                { kind: "Field", name: { kind: "Name", value: "maxGuests" } },
                 { kind: "Field", name: { kind: "Name", value: "internalPrice" } },
                 { kind: "Field", name: { kind: "Name", value: "externalPrice" } },
+              ],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "activeBookingResponsible" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "email" } },
               ],
             },
           },
@@ -2140,7 +2150,7 @@ export const AllCabinsDocument = {
       },
     },
   ],
-} as unknown as DocumentNode<AllCabinsQuery, AllCabinsQueryVariables>;
+} as unknown as DocumentNode<CabinsAndResponsiblesQuery, CabinsAndResponsiblesQueryVariables>;
 export const ActiveBookingResponsibleDocument = {
   kind: "Document",
   definitions: [

@@ -94,7 +94,7 @@ const AdminCabinTable = ({ bookings, refetch, currentTab }: Props) => {
                         });
                         sendEmail(getDecisionEmailProps(booking, true));
                       }}
-                      color="secondary"
+                      color="success"
                       size="large"
                     >
                       <Check />
@@ -102,11 +102,11 @@ const AdminCabinTable = ({ bookings, refetch, currentTab }: Props) => {
                   </Box>
                 </Tooltip>
                 <Tooltip title="Avkreft">
-                  <Box color="error.main" display="inline" component="span">
+                  <Box display="inline" component="span">
                     <IconButton
                       disabled={(!booking.isTentative && booking.isDeclined) || isExpired(booking)}
                       onClick={() => setBookingToBeDeclined && setBookingToBeDeclined(booking)}
-                      color="inherit"
+                      color="error"
                       size="large"
                     >
                       <Clear />

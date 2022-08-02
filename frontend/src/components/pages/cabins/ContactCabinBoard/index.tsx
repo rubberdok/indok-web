@@ -1,33 +1,29 @@
 import { useQuery } from "@apollo/client";
+import LabeledIcon from "@components/LabeledIcon";
 import { QUERY_BOOKING_RESPONSIBLE } from "@graphql/cabins/queries";
 import { BookingResponsible } from "@interfaces/cabins";
-import { Grid, Link, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { Link, Stack, Typography } from "@mui/material";
+import { Envelope } from "phosphor-react";
+import React from "react";
 
 const ContactCabinBoard: React.FC = () => {
   const { data } = useQuery<{ activeBookingResponsible: BookingResponsible }>(QUERY_BOOKING_RESPONSIBLE);
-  const [responsible, setResponsible] = useState<BookingResponsible>();
 
-  useEffect(() => {
-    if (data?.activeBookingResponsible) {
-      setResponsible(data.activeBookingResponsible);
-    }
-  }, [data]);
-
-  if (responsible) {
+  if (data?.activeBookingResponsible?.email) {
     return (
-      <Grid item container spacing={4} direction="column" justifyContent="center" alignContent="center">
-        <Grid item>
-          <Typography variant="h3">Kontakt Hytteforeningen</Typography>
-        </Grid>
-        <Grid item>
-          <Typography>
-            Send mail til bookingansvarlig i Hytteforeningen, {responsible.firstName} {responsible.lastName}, her:{" "}
-            <Link href={`mailto:${responsible.email}`}>{responsible.email}</Link>. Du kan lese mer om Hytteforeningen{" "}
-            <Link href="/about/organizations/hyttestyret">her.</Link>
-          </Typography>
-        </Grid>
-      </Grid>
+      <Stack direction="column" spacing={2} mb={4}>
+        <Typography variant="subtitle1">Spørsmål?</Typography>
+        <LabeledIcon
+          icon={<Envelope size="24px" />}
+          value={
+            <Typography variant="body1" sx={{ ml: 1 }}>
+              <Link href={`mailto:${data?.activeBookingResponsible.email}`}>
+                {data?.activeBookingResponsible.email}
+              </Link>
+            </Typography>
+          }
+        />
+      </Stack>
     );
   } else {
     return <></>;
