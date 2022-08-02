@@ -569,7 +569,7 @@ export type Mutations = {
   adminEventSignOff?: Maybe<AdminEventSignOff>;
   assignMembership?: Maybe<AssignMembership>;
   attemptCapturePayment?: Maybe<AttemptCapturePayment>;
-  authUser?: Maybe<AuthUser>;
+  authUser: AuthUser;
   createArchivedocument?: Maybe<CreateArchiveDocument>;
   createBlog?: Maybe<CreateBlog>;
   createBlogPost?: Maybe<CreateBlogPost>;
@@ -1642,7 +1642,7 @@ export type AuthUserMutationVariables = Exact<{
 
 export type AuthUserMutation = {
   __typename?: "Mutations";
-  authUser?: {
+  authUser: {
     __typename?: "AuthUser";
     user: {
       __typename?: "UserType";
@@ -1659,7 +1659,7 @@ export type AuthUserMutation = {
       phoneNumber: string;
       firstLogin: boolean;
     };
-  } | null;
+  };
 };
 
 export type UserInfoQueryVariables = Exact<{ [key: string]: never }>;

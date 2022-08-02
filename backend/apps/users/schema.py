@@ -7,7 +7,7 @@ from .types import UserType
 
 
 class UserMutations(graphene.ObjectType):
-    auth_user = AuthUser.Field()
+    auth_user = AuthUser.Field(required=True)
     update_user = UpdateUser.Field()
     logout = Logout.Field()
 

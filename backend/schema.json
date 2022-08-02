@@ -5886,9 +5886,13 @@
               "isDeprecated": false,
               "name": "authUser",
               "type": {
-                "kind": "OBJECT",
-                "name": "AuthUser",
-                "ofType": null
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "AuthUser",
+                  "ofType": null
+                }
               }
             },
             {
