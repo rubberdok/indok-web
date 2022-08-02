@@ -1,13 +1,16 @@
-import { useMutation } from "@apollo/client";
-import { AuthUserDocument } from "@generated/graphql";
-import Layout from "@layouts/Layout";
-import { Button, CircularProgress, Container, Grid, Stack, Typography } from "@mui/material";
+import React from "react";
+
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
+
+import { useMutation } from "@apollo/client";
+import { AuthUserDocument } from "@generated/graphql";
+
+import Layout from "@layouts/Layout";
+import { Button, CircularProgress, Container, Grid, Stack, Typography } from "@mui/material";
 import Bug from "public/illustrations/Bug.svg";
-import React, { useEffect } from "react";
 import { NextPageWithLayout } from "./_app";
 
 const AuthCallbackPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
@@ -16,27 +19,24 @@ const AuthCallbackPage: NextPageWithLayout<InferGetServerSidePropsType<typeof ge
 }) => {
   const router = useRouter();
 
-  const [authUser, { error }] = useMutation(AuthUserDocument, {
+  const [authUser, { error, called }] = useMutation(AuthUserDocument, {
     errorPolicy: "none",
-    onCompleted: ({ authUser }) => {
-      if (authUser) {
-        const { user } = authUser;
-        if (user.firstLogin) {
-          router.replace("/register");
-        } else if (typeof state === "string") {
-          router.replace(state);
-        } else if (Array.isArray(state) && state.length > 0) {
-          router.replace(state[0]);
-        } else {
-          router.replace("/profile");
-        }
+    onCompleted({ authUser: { user } }) {
+      if (user.firstLogin) {
+        router.push("/register");
+      } else if (typeof state === "string") {
+        router.push(state);
+      } else if (Array.isArray(state) && state.length > 0) {
+        router.push(state[0]);
+      } else {
+        router.push("/profile");
       }
     },
   });
 
-  useEffect(() => {
+  if (!called) {
     authUser({ variables: { code } });
-  }, []);
+  }
 
   if (error) {
     return (
