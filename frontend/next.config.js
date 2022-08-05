@@ -37,9 +37,9 @@ const moduleExports = {
   },
   /* https://nextjs.org/docs/advanced-features/compiler#minification */
   swcMinify: true,
+  /* https://nextjs.org/docs/advanced-features/output-file-tracing */
+  output: "standalone",
   experimental: {
-    /* https://nextjs.org/docs/advanced-features/output-file-tracing */
-    outputStandalone: true,
     /**
      * https://nextjs.org/docs/advanced-features/compiler#modularize-imports
      * See https://mui.com/material-ui/guides/minimizing-bundle-size/#option-2 for reasoning.

@@ -1,5 +1,4 @@
-import { alpha } from "@mui/material/styles";
-import { Shadows } from "@mui/material/styles/shadows";
+import { alpha, Shadows } from "@mui/material/styles";
 import palette from "./palette";
 
 declare module "@mui/material/styles" {
