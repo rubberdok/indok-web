@@ -674,11 +674,11 @@
     csstype "^3.0.2"
 
 "@emotion/server@^11.4.0":
-  version "11.4.0"
-  resolved "https://registry.yarnpkg.com/@emotion/server/-/server-11.4.0.tgz#3ae1d74cb31c7d013c3c76e88c0c4439076e9f66"
-  integrity sha512-IHovdWA3V0DokzxLtUNDx4+hQI82zUXqQFcVz/om2t44O0YSc+NHB+qifnyAOoQwt3SXcBTgaSntobwUI9gnfA==
+  version "11.10.0"
+  resolved "https://registry.yarnpkg.com/@emotion/server/-/server-11.10.0.tgz#3edc075b672c75426f682d56aadc6404fb1f6648"
+  integrity sha512-MTvJ21JPo9aS02GdjFW4nhdwOi2tNNpMmAM/YED0pkxzjDNi5WbiTwXqaCnvLc2Lr8NFtjhT0az1vTJyLIHYcw==
   dependencies:
-    "@emotion/utils" "^1.0.0"
+    "@emotion/utils" "^1.2.0"
     html-tokenize "^2.0.0"
     multipipe "^1.0.2"
     through "^2.3.8"
@@ -704,7 +704,7 @@
   resolved "https://registry.yarnpkg.com/@emotion/unitless/-/unitless-0.8.0.tgz#a4a36e9cbdc6903737cd20d38033241e1b8833db"
   integrity sha512-VINS5vEYAscRl2ZUDiT3uMPlrFQupiKgHz5AA4bCH1miKBg4qtwkim1qPmJj/4WG6TreYMY111rEFsjupcOKHw==
 
-"@emotion/utils@^1.0.0", "@emotion/utils@^1.2.0":
+"@emotion/utils@^1.2.0":
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/@emotion/utils/-/utils-1.2.0.tgz#9716eaccbc6b5ded2ea5a90d65562609aab0f561"
   integrity sha512-sn3WH53Kzpw8oQ5mgMmIzzyAaH2ZqFEbozVVBSYp538E06OSE6ytOp7pRAjNQR+Q/orwqdQYJSe2m3hCOeznkw==
