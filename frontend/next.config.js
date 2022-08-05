@@ -38,7 +38,7 @@ const moduleExports = {
   /* https://nextjs.org/docs/advanced-features/compiler#minification */
   swcMinify: true,
   /* https://nextjs.org/docs/advanced-features/output-file-tracing */
-  outputStandalone: true,
+  output: "standalone",
   experimental: {
     /**
      * https://nextjs.org/docs/advanced-features/compiler#modularize-imports
