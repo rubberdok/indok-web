@@ -25,8 +25,8 @@ const moduleExports = {
   async rewrites() {
     return [
       {
-        source: "/varsle",
-        destination: "/report",
+        source: "/report",
+        destination: "/baksida",
       },
     ];
   },

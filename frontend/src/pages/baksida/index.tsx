@@ -1,4 +1,4 @@
-import ContactInfo from "@components/pages/reports/ContactInfo";
+import ContactInfo from "@components/pages/baksida/ContactInfo";
 import Layout, { RootStyle } from "@layouts/Layout";
 import { ArrowRight } from "@mui/icons-material";
 import {
