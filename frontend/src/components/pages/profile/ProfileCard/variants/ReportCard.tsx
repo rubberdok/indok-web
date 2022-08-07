@@ -4,7 +4,7 @@ import ProfileCardBase from "./ProfileCardBase";
 
 const ReportCard: React.VFC = ({ ...props }) => {
   return (
-    <ProfileCardBase title="Baksida" actionText="Gå til Baksida" actionLink="/report" image={Report} alt="" {...props}>
+    <ProfileCardBase title="Baksida" actionText="Gå til Baksida" actionLink="/baksida" image={Report} alt="" {...props}>
       <Grid container direction="column">
         <Grid item>
           <Typography variant="body2">

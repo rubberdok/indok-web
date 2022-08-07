@@ -61,7 +61,7 @@ const Footer: React.FC = () => {
                 <Typography variant="h6" mb={1}>
                   Lenker
                 </Typography>
-                <NextLinkItem href="/report" sx={{ color: footerTextColor }}>
+                <NextLinkItem href="/baksida" sx={{ color: footerTextColor }}>
                   Baksida
                 </NextLinkItem>
                 <NextLinkItem href="/about" sx={{ color: footerTextColor }}>
