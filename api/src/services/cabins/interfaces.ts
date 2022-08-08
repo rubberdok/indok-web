@@ -1,4 +1,4 @@
-import { Booking, BookingStatus, Cabin, Prisma } from "@prisma/client";
+import { Booking, BookingStatus, Cabin, Prisma, User } from "@prisma/client";
 
 export interface BookingData
   extends Pick<
@@ -14,6 +14,10 @@ export interface BookingData
 
 export interface ICabinService {
   newBooking(data: BookingData): Promise<Booking>;
-  updateBookingStatus(id: string, status: BookingStatus): Promise<Booking>;
+  updateBookingStatus(
+    user: User,
+    id: string,
+    status: BookingStatus
+  ): Promise<Booking>;
   getCabin(id: string): Promise<Cabin>;
 }

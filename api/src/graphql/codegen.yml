@@ -1,4 +1,3 @@
-overwrite: true
 schema:
   - "./src/graphql/**/type-defs.ts"
 generates:

@@ -1,5 +1,6 @@
 import cors from "cors";
 import express from "express";
+import session from "express-session";
 import http from "http";
 
 import { ApolloServer } from "@apollo/server";
@@ -15,9 +16,12 @@ import { env } from "./config";
 import { container } from "./container";
 import { resolvers, typeDefs } from "./graphql";
 import {
+  IContext,
   IContextProvider,
   Type as ContextProviderType,
 } from "./graphql/context";
+import { formatError } from "./lib/apolloServer";
+import { redisClient, RedisStore } from "./lib/redis";
 
 Sentry.init({
   dsn: env.SENTRY_DSN,
@@ -29,12 +33,29 @@ const start = async () => {
   const httpServer = http.createServer(app);
 
   app.use(Sentry.Handlers.requestHandler());
+  app.use(
+    session({
+      name: env.SESSION_COOKIE_NAME,
+      cookie: {
+        domain: env.SESSION_COOKIE_DOMAIN,
+        httpOnly: env.SESSION_COOKIE_HTTP_ONLY,
+        secure: env.SESSION_COOKIE_SECURE,
+      },
+      store: new RedisStore({
+        client: redisClient,
+      }),
+      secret: env.SESSION_SECRET,
+      resave: false,
+      saveUninitialized: false,
+    })
+  );
 
-  const server = new ApolloServer<IContextProvider>({
+  const server = new ApolloServer<IContext>({
     csrfPrevention: true,
     introspection: true,
     resolvers,
     typeDefs,
+    formatError,
     plugins: [
       ApolloServerPluginDrainHttpServer({ httpServer }),
       ApolloServerPluginLandingPageLocalDefault,
@@ -48,7 +69,10 @@ const start = async () => {
     cors<cors.CorsRequest>(),
     json(),
     expressMiddleware(server, {
-      context: async () => container.get<IContextProvider>(ContextProviderType),
+      context: async ({ req, res }) => {
+        const info = container.get<IContextProvider>(ContextProviderType);
+        return Object.assign(info, { req, res });
+      },
     })
   );
 

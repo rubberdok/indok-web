@@ -9,13 +9,23 @@ services:
       - POSTGRES_PASSWORD=postgres
     ports:
       - "5432:5432"
-    expose:
-      - 5432
     volumes:
       - postgres_data:/var/lib/postgresql/data/:cached
 
+  redis:
+    restart: always
+    image: redis:7.0.4-alpine
+    ports:
+      - "6379:6379"
+    environment:
+      - REDIS_PASSWORD=redis
+    command: redis-server --loglevel warning --requirepass redis
+    volumes:
+      - ./data:/data/
+
   api:
     restart: always
+    tty: true
     build:
       context: ./api
       dockerfile: Dockerfile
@@ -25,15 +35,14 @@ services:
       - 4000:4000
     depends_on:
       - postgres
+      - redis
 
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
     volumes:
-      - ./frontend:/app
-      - /app/node_modules
-      - /app/.next
+      - ./frontend:/usr/src/app
     ports:
       - 3000:3000
     expose:

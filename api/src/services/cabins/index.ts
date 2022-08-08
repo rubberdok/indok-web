@@ -1,6 +1,7 @@
-import { Booking, BookingStatus, Cabin } from "@prisma/client";
+import { Booking, BookingStatus, Cabin, User } from "@prisma/client";
 import { inject, injectable } from "inversify";
 import { ICabinRepository, Types as RepositoryTypes } from "../../repositories";
+import { IPermissionService } from "../interfaces";
 import { IMailService, TemplateAliasEnum } from "../mail/interfaces";
 import Types from "../types";
 import { OverlappingBookingError } from "./errors";
@@ -12,7 +13,9 @@ export default class CabinService implements ICabinService {
   constructor(
     @inject(RepositoryTypes.CabinRepsitory)
     private cabinRepository: ICabinRepository,
-    @inject(Types.MailService) private mailService: IMailService
+    @inject(Types.MailService) private mailService: IMailService,
+    @inject(Types.PermissionService)
+    private permissionService: IPermissionService
   ) {}
 
   getCabin(id: string): Promise<Cabin> {
@@ -40,9 +43,12 @@ export default class CabinService implements ICabinService {
   }
 
   async updateBookingStatus(
+    user: User,
     id: string,
     status: BookingStatus
   ): Promise<Booking> {
+    this.permissionService.permissionRequired(user, "write:booking");
+
     if (status === BookingStatus.CONFIRMED) {
       const booking = await this.cabinRepository.getBookingById(id);
       const overlapping = await this.cabinRepository.getOverlappingBookings({

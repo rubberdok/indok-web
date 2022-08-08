@@ -4,7 +4,7 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /usr/src/app
 
 COPY package.json package-lock.json ./
-RUN npm install
+RUN npm ci
 
 FROM public.ecr.aws/docker/library/node:lts-alpine3.16 as runner
 WORKDIR /usr/src/app

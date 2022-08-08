@@ -24,8 +24,9 @@ const resolvers: Resolvers = {
     },
 
     updateBookingStatus: async (_root, { id, status }, ctx) => {
+      if (!ctx.user) throw new Error("User not logged in");
       try {
-        return await ctx.cabinService.updateBookingStatus(id, status);
+        return await ctx.cabinService.updateBookingStatus(ctx.user, id, status);
       } catch (err) {
         if (err instanceof OverlappingBookingError) {
           throw new GraphQLError(err.message, {

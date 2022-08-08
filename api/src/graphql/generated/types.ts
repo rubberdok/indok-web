@@ -40,9 +40,17 @@ export type Cabin = {
 
 export type Mutation = {
   readonly __typename: 'Mutation';
+  readonly authenticate: User;
   readonly createUser?: Maybe<User>;
+  readonly logout: Scalars['Boolean'];
   readonly newBooking: Booking;
+  readonly redirectUrl: Scalars['String'];
   readonly updateBookingStatus: Booking;
+};
+
+
+export type MutationAuthenticateArgs = {
+  code: Scalars['String'];
 };
 
 
@@ -53,6 +61,11 @@ export type MutationCreateUserArgs = {
 
 export type MutationNewBookingArgs = {
   data: NewBookingInput;
+};
+
+
+export type MutationRedirectUrlArgs = {
+  state?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -81,11 +94,6 @@ export type Query = {
   readonly __typename: 'Query';
   readonly user?: Maybe<User>;
   readonly users: ReadonlyArray<User>;
-};
-
-
-export type QueryUserArgs = {
-  id: Scalars['String'];
 };
 
 export enum Status {
@@ -230,8 +238,11 @@ export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversT
 }
 
 export type MutationResolvers<ContextType = IContext, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
+  authenticate?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationAuthenticateArgs, 'code'>>;
   createUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'firstName'>>;
+  logout?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   newBooking?: Resolver<ResolversTypes['Booking'], ParentType, ContextType, RequireFields<MutationNewBookingArgs, 'data'>>;
+  redirectUrl?: Resolver<ResolversTypes['String'], ParentType, ContextType, Partial<MutationRedirectUrlArgs>>;
   updateBookingStatus?: Resolver<ResolversTypes['Booking'], ParentType, ContextType, RequireFields<MutationUpdateBookingStatusArgs, 'id' | 'status'>>;
 }>;
 
@@ -242,7 +253,7 @@ export type PermissionResolvers<ContextType = IContext, ParentType extends Resol
 }>;
 
 export type QueryResolvers<ContextType = IContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
-  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>;
+  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   users?: Resolver<ReadonlyArray<ResolversTypes['User']>, ParentType, ContextType>;
 }>;
 

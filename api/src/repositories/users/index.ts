@@ -8,6 +8,15 @@ import { IUserRepository } from "../interfaces";
 export default class UserRepository implements IUserRepository {
   constructor(@inject(CoreTypes.Prisma) private db: Database) {}
 
+  update(id: string, data: Prisma.UserUpdateInput): Promise<User> {
+    return this.db.user.update({
+      where: {
+        id,
+      },
+      data,
+    });
+  }
+
   create(data: Prisma.UserCreateInput): Promise<User> {
     return this.db.user.create({
       data,

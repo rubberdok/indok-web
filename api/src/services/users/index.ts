@@ -1,18 +1,34 @@
-import { User } from "@prisma/client";
+import { Prisma, User } from "@prisma/client";
 import { inject, injectable } from "inversify";
-import { Types, IUserRepository } from "../../repositories";
+import { IUserRepository, Types } from "../../repositories";
 import { IUserService } from "../interfaces";
-import { userSchema } from "./validation";
+import { createUserSchema } from "./validation";
 
 @injectable()
-export default class UsersService implements IUserService {
+export default class UserService implements IUserService {
   constructor(
     @inject(Types.UserRepository)
     private usersRepository: IUserRepository
   ) {}
+  login(id: string): Promise<User> {
+    return this.usersRepository.update(id, { lastLogin: new Date() });
+  }
 
-  private validateUser(user: User): void {
-    userSchema.parse(user);
+  create(data: Prisma.UserCreateInput): Promise<User> {
+    this.validateUser(data);
+    return this.usersRepository.create(data);
+  }
+
+  async getByFeideID(feideId: string): Promise<User | null> {
+    try {
+      return await this.usersRepository.getByFeideId(feideId);
+    } catch (err) {
+      return null;
+    }
+  }
+
+  private validateUser(user: Prisma.UserCreateInput): void {
+    createUserSchema.parse(user);
   }
 
   get(id: string): Promise<User> {

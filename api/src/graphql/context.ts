@@ -1,6 +1,10 @@
+import { ExpressContextFunctionArgument } from "@apollo/server/dist/esm/express4";
+import { User } from "@prisma/client";
 import { Container, inject, injectable } from "inversify";
+import { ISessionContext } from "../core";
 
 import {
+  IAuthService,
   ICabinService,
   IPermissionService,
   IUserService,
@@ -13,12 +17,14 @@ export interface IContextProvider {
   userService: IUserService;
   permissionService: IPermissionService;
   cabinService: ICabinService;
+  authService: IAuthService;
 }
 
-export interface IContext {
+export interface IContext extends ExpressContextFunctionArgument {
   userService: IUserService;
   permissionService: IPermissionService;
   cabinService: ICabinService;
+  authService: IAuthService;
 }
 
 @injectable()
@@ -27,7 +33,8 @@ class ContextProvider implements IContextProvider {
     @inject(Types.UserService) public userService: IUserService,
     @inject(Types.PermissionService)
     public permissionService: IPermissionService,
-    @inject(Types.CabinService) public cabinService: ICabinService
+    @inject(Types.CabinService) public cabinService: ICabinService,
+    @inject(Types.AuthService) public authService: IAuthService
   ) {}
 }
 
