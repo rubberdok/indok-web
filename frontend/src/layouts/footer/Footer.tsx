@@ -1,5 +1,6 @@
 import DarkModeToggle from "@components/DarkModeToggle";
 import Logo from "@components/Logo";
+import Vercel from "@components/Vercel";
 import useResponsive from "@hooks/useResponsive";
 import { Box, Container, Divider, Grid, Link, Paper, Stack, SxProps, Typography } from "@mui/material";
 import { styled, useTheme } from "@mui/material/styles";
@@ -76,6 +77,9 @@ const Footer: React.FC = () => {
                 >
                   Oppdaget en feil?
                 </NextLinkItem>
+                <Box mt={2}>
+                  <Vercel />
+                </Box>
               </Stack>
             </Grid>
             {isDesktop && <Watermark />}
