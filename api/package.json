@@ -22,7 +22,8 @@
     "docker:up": "docker compose up integration-tests -d",
     "docker:down": "docker compose stop integration-tests && docker compose rm integration-tests -v -f",
     "test:integration": "npm run docker:up && dotenv -e .env.test npm run migrate && dotenv -e .env.test -- jest --config jest.integration.config.ts",
-    "posttest:integration": "npm run docker:down"
+    "posttest:integration": "npm run docker:down",
+    "tsc": "tsc"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^2.8.1",
