@@ -9,9 +9,6 @@
     "dev": "next",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint",
-    "lint:fix": "yarn run lint --fix",
-    "postinstall": "cd .. && husky install frontend/.husky",
     "generate": "graphql-codegen --config codegen.yml",
     "test": "cypress open",
     "test:headless": "cypress run",
@@ -84,25 +81,9 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.24.0",
     "eslint-plugin-react-hooks": "^4.0.8",
-    "husky": "^8.0.1",
     "lint-staged": "<14.0.0",
     "prettier": "^2.3.1",
     "typescript": "^4.3.4",
     "wait-on": "^6.0.1"
-  },
-  "lint-staged": {
-    "*.{ts,js,tsx,jsx}": [
-      "yarn run lint:fix"
-    ],
-    "*.{json,md,html,js,jsx,ts,tsx}": [
-      "prettier --write"
-    ],
-    "../backend/**/*.py": [
-      "black",
-      "flake8 --config=../backend/tox.ini"
-    ],
-    "../backend/schema.json": [
-      "yarn generate"
-    ]
   }
 }

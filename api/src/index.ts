@@ -15,11 +15,7 @@ import { env } from "./config";
 
 import { container } from "./container";
 import { resolvers, typeDefs } from "./graphql";
-import {
-  IContext,
-  IContextProvider,
-  Type as ContextProviderType,
-} from "./graphql/context";
+import { IContext, IContextProvider, Type as ContextProviderType } from "./graphql/context";
 import { formatError } from "./lib/apolloServer";
 import { redisClient, RedisStore } from "./lib/redis";
 
@@ -56,10 +52,7 @@ const start = async () => {
     resolvers,
     typeDefs,
     formatError,
-    plugins: [
-      ApolloServerPluginDrainHttpServer({ httpServer }),
-      ApolloServerPluginLandingPageLocalDefault,
-    ],
+    plugins: [ApolloServerPluginDrainHttpServer({ httpServer }), ApolloServerPluginLandingPageLocalDefault],
   });
 
   await server.start();
@@ -76,13 +69,9 @@ const start = async () => {
     })
   );
 
-  await new Promise<void>((resolve) =>
-    httpServer.listen({ port: env.PORT }, resolve)
-  );
+  await new Promise<void>((resolve) => httpServer.listen({ port: env.PORT }, resolve));
 
-  console.info(
-    `[INFO] ${new Date()} 🚀 Server ready at ${app.path()}/graphql}`
-  );
+  console.info(`[INFO] ${new Date()} 🚀 Server ready at ${app.path()}/graphql}`);
   console.info("[INFO] CTRL+C to exit");
 };
 
