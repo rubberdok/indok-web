@@ -12,7 +12,7 @@
     "start": "ts-node src/index.ts",
     "generate:prisma": "prisma generate",
     "generate:gql": "graphql-codegen --config src/graphql/codegen.yml",
-    "dev": "concurrently --restart-tries 3 -n server,graphql,prisma -k -c cyan.bold,magenta.dim,black.dim \"dotenv -e .env.development -- ts-node-dev --exit-child --no-notify --transpile-only --respawn src\" \"npm run generate:gql -- --watch\" \"npm run generate:prisma -- --watch\"",
+    "dev": "concurrently --restart-tries 3 -n server,graphql,prisma -k -c cyan.bold,magenta.dim,black.dim \"dotenv -e .env.development -- nodemon --watch src src/index.ts\" \"npm run generate:gql -- --watch\" \"npm run generate:prisma -- --watch\"",
     "db:push": "dotenv -e .env.development -- prisma db push",
     "db:migrate": "prisma migrate deploy",
     "db:migrate:dev": "dotenv -e .env.development -- prisma migrate dev",
@@ -25,10 +25,16 @@
     "test:integration": "dotenv -e .env.test -- run-s docker:up db:push && dotenv -e .env.test -- jest --config jest.integration.config.ts",
     "tsc": "tsc"
   },
+  "optionalDependencies": {
+    "@swc/core-linux-x64-musl": "^1.2.224"
+  },
   "devDependencies": {
     "@graphql-codegen/cli": "^2.8.1",
     "@graphql-codegen/typescript": "^2.7.1",
     "@graphql-codegen/typescript-resolvers": "^2.7.1",
+    "@swc/core": "^1.2.224",
+    "@swc/helpers": "^0.4.3",
+    "@swc/jest": "^0.2.22",
     "@types/connect-redis": "^0.0.18",
     "@types/cors": "^2.8.12",
     "@types/crypto-js": "^4.1.1",
@@ -40,10 +46,11 @@
     "dotenv-cli": "^6.0.0",
     "jest": "^28.1.2",
     "jest-mock-extended": "^2.0.6",
+    "nodemon": "^2.0.19",
     "npm-run-all": "^4.1.5",
-    "prisma": "^4.0.0",
+    "prisma": "^4.2.1",
     "ts-jest": "^28.0.5",
-    "ts-node": "^10.8.2",
+    "ts-node": "^10.9.1",
     "ts-node-dev": "^2.0.0",
     "typescript": "^4.7.4",
     "wait-on": "^6.0.1"
@@ -51,7 +58,7 @@
   "dependencies": {
     "@apollo/server": "^4.0.0-alpha.1",
     "@graphql-tools/merge": "^8.3.1",
-    "@prisma/client": "^4.0.0",
+    "@prisma/client": "^4.2.1",
     "@sentry/node": "^7.5.1",
     "body-parser": "^1.20.0",
     "connect-redis": "^6.1.3",

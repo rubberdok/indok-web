@@ -31,6 +31,8 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./api:/usr/src/app
+      - ./api/node_modules/.prisma:/usr/src/app/node_modules/.prisma
+      - /usr/src/app/node_modules/
     ports:
       - 4000:4000
     depends_on:
@@ -43,6 +45,7 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./frontend:/usr/src/app
+      - /usr/src/app/node_modules/
     ports:
       - 3000:3000
     expose:

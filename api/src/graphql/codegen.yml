@@ -1,5 +1,5 @@
 schema:
-  - "./src/graphql/**/type-defs.ts"
+  - "src/graphql/**/type-defs.ts"
 generates:
   src/graphql/generated/types.ts:
     config:

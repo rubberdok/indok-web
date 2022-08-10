@@ -1,7 +1,5 @@
 import { ExpressContextFunctionArgument } from "@apollo/server/dist/esm/express4";
-import { User } from "@prisma/client";
 import { Container, inject, injectable } from "inversify";
-import { ISessionContext } from "../core";
 
 import {
   IAuthService,
