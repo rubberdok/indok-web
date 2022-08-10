@@ -6,18 +6,18 @@ import { DeepMockProxy, mockDeep } from "jest-mock-extended";
 import UserRepository from "../..";
 import { Types } from "../../..";
 import { CoreTypes } from "../../../../core";
-import prisma from "../../../../lib/prisma";
 import { IUserRepository } from "../../../interfaces";
 
-describe("UsersRepository", () => {
-  const container = new Container();
+const container = new Container();
 
+describe("UsersRepository", () => {
   beforeAll(() => {
     container.unbindAll();
+    container.bind<IUserRepository>(Types.UserRepository).to(UserRepository);
+    const mockDb = mockDeep<PrismaClient>();
     container
       .bind<DeepMockProxy<PrismaClient>>(CoreTypes.Prisma)
-      .toConstantValue(mockDeep<PrismaClient>(prisma));
-    container.bind<IUserRepository>(Types.UserRepository).to(UserRepository);
+      .toConstantValue(mockDeep<PrismaClient>(mockDb));
   });
 
   const usersTable: {
@@ -48,9 +48,9 @@ describe("UsersRepository", () => {
 
   test.each(usersTable)("createUser($input)", async ({ input, expected }) => {
     const db = container.get<DeepMockProxy<PrismaClient>>(CoreTypes.Prisma);
-    const repo = container.get<IUserRepository>(Types.UserRepository);
+    db.user.create.mockResolvedValueOnce(expected);
 
-    db.user.create.mockResolvedValue(expected);
+    const repo = container.get<IUserRepository>(Types.UserRepository);
     const got = await repo.create(input);
     expect(got).toMatchObject(expected);
   });

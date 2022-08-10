@@ -63,7 +63,6 @@ export default class FeideService implements IAuthService {
     const { email, sub: feideId, name } = userInfo;
 
     const user = await this.userService.getByFeideID(feideId);
-
     if (!user) {
       const [firstName, lastName] = name.split(" ");
       const userId =

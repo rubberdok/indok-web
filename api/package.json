@@ -22,7 +22,7 @@
     "docker:up": "docker compose up integration-tests -d",
     "docker:down": "docker compose stop integration-tests && docker compose rm integration-tests -v -f",
     "pretest:integration": "run-s docker:down docker:up && wait-on tcp:5433 -t 20000",
-    "test:integration": "dotenv -e .env.test -- run-s docker:up db:push &&dotenv -e .env.test -- jest --config jest.integration.config.ts",
+    "test:integration": "dotenv -e .env.test -- run-s docker:up db:push && dotenv -e .env.test -- jest --config jest.integration.config.ts",
     "tsc": "tsc"
   },
   "devDependencies": {
