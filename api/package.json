@@ -48,6 +48,7 @@
     "concurrently": "^7.2.2",
     "dotenv-cli": "^6.0.0",
     "eslint": "^8.21.0",
+    "eslint-config-prettier": "^8.5.0",
     "jest": "^28.1.2",
     "jest-mock-extended": "^2.0.6",
     "nodemon": "^2.0.19",
