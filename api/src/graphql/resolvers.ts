@@ -7,11 +7,6 @@ import { resolvers as scalarResolvers } from "./scalars";
 import { resolvers as cabinResolvers } from "./cabins";
 import { resolvers as authResolvers } from "./auth";
 
-const resolvers: Resolvers = mergeResolvers([
-  userResolvers,
-  cabinResolvers,
-  scalarResolvers,
-  authResolvers,
-]);
+const resolvers: Resolvers = mergeResolvers([userResolvers, cabinResolvers, scalarResolvers, authResolvers]);
 
 export default resolvers;

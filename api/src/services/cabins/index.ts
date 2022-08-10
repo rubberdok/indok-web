@@ -42,11 +42,7 @@ export default class CabinService implements ICabinService {
     return booking;
   }
 
-  async updateBookingStatus(
-    user: User,
-    id: string,
-    status: BookingStatus
-  ): Promise<Booking> {
+  async updateBookingStatus(user: User, id: string, status: BookingStatus): Promise<Booking> {
     this.permissionService.permissionRequired(user, "write:booking");
 
     if (status === BookingStatus.CONFIRMED) {

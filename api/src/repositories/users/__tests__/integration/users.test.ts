@@ -49,9 +49,7 @@ test.each(usersTable)("createUser($input)", async ({ input, expected }) => {
   const repo = container.get<IUserRepository>(Types.UserRepository);
   const got = await repo.create(input);
   const { username, email, feideId, firstName, lastName } = got;
-  expect({ username, email, feideId, firstName, lastName }).toMatchObject(
-    expected
-  );
+  expect({ username, email, feideId, firstName, lastName }).toMatchObject(expected);
   expect(got.id).toBeTruthy();
   expect(got.createdAt.getTime()).toBeLessThanOrEqual(new Date().getTime());
 });

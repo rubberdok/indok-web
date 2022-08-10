@@ -1,10 +1,6 @@
 import { Container } from "inversify";
 
-import {
-  IPermissionRepository,
-  IUserRepository,
-  ICabinRepository,
-} from "./interfaces";
+import { IPermissionRepository, IUserRepository, ICabinRepository } from "./interfaces";
 
 import { default as UserRepository } from "./users";
 import { default as PermissionRepository } from "./permissions";
@@ -14,9 +10,7 @@ import { default as Types } from "./types";
 
 export const bind = (container: Container) => {
   container.bind<IUserRepository>(Types.UserRepository).to(UserRepository);
-  container
-    .bind<IPermissionRepository>(Types.PermissionRepository)
-    .to(PermissionRepository);
+  container.bind<IPermissionRepository>(Types.PermissionRepository).to(PermissionRepository);
   container.bind<ICabinRepository>(Types.CabinRepsitory).to(CabinRepository);
 };
 

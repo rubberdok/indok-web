@@ -17,14 +17,8 @@ export default class PermissionService implements IPermissionService {
     return this.permissionRepository.getByUser(id);
   }
 
-  async permissionRequired(
-    permissionHolder: User | Role,
-    permission: PermissionString
-  ): Promise<void> {
-    const permissions = await this.permissionRepository.getByUser(
-      permissionHolder.id
-    );
-    if (!permissions.some((perm) => perm.name === permission))
-      throw new PermissionDeniedError();
+  async permissionRequired(permissionHolder: User | Role, permission: PermissionString): Promise<void> {
+    const permissions = await this.permissionRepository.getByUser(permissionHolder.id);
+    if (!permissions.some((perm) => perm.name === permission)) throw new PermissionDeniedError();
   }
 }

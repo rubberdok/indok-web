@@ -15,9 +15,7 @@ describe("UsersRepository", () => {
     container.unbindAll();
     container.bind<IUserRepository>(Types.UserRepository).to(UserRepository);
     const mockDb = mockDeep<PrismaClient>();
-    container
-      .bind<DeepMockProxy<PrismaClient>>(CoreTypes.Prisma)
-      .toConstantValue(mockDeep<PrismaClient>(mockDb));
+    container.bind<DeepMockProxy<PrismaClient>>(CoreTypes.Prisma).toConstantValue(mockDeep<PrismaClient>(mockDb));
   });
 
   const usersTable: {

@@ -1,8 +1,5 @@
 import { ServerClient } from "postmark";
-import {
-  MessageSendingResponse,
-  TemplatedMessage,
-} from "postmark/dist/client/models";
+import { MessageSendingResponse, TemplatedMessage } from "postmark/dist/client/models";
 
 type Modify<M, N> = Omit<M, Extract<keyof M, keyof N>> & N;
 

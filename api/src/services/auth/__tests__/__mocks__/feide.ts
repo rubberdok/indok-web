@@ -16,10 +16,7 @@ export interface FeideResponses {
   };
 }
 
-export const setupMocks = (
-  url: URL | RequestInfo,
-  responses: FeideResponses
-) => {
+export const setupMocks = (url: URL | RequestInfo, responses: FeideResponses) => {
   switch (url) {
     case "https://auth.dataporten.no/oauth/token":
       return {

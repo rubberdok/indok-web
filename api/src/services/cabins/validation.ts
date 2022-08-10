@@ -2,12 +2,8 @@ import { z } from "zod";
 
 export const bookingSchema = z
   .object({
-    startDate: z
-      .date()
-      .min(new Date(), { message: "start date must be in the future" }),
-    endDate: z
-      .date()
-      .min(new Date(), { message: "end date must be in the future" }),
+    startDate: z.date().min(new Date(), { message: "start date must be in the future" }),
+    endDate: z.date().min(new Date(), { message: "end date must be in the future" }),
     email: z.string().email({ message: "invalid email" }),
     phoneNumber: z.string().regex(/^(0047|\+47|47)?\d{8} $/, {
       message: "invalid phone number",

@@ -6,10 +6,7 @@ import fetch, { Response as _Response } from "node-fetch";
 import AuthService from "../../";
 import { CoreTypes } from "../../../../core";
 import prisma from "../../../../lib/prisma";
-import {
-  IUserRepository,
-  Types as RepositoryTypes,
-} from "../../../../repositories";
+import { IUserRepository, Types as RepositoryTypes } from "../../../../repositories";
 import UserRepository from "../../../../repositories/users";
 import { Types as ServiceTypes } from "../../../../services";
 import { IAuthService, IUserService } from "../../../interfaces";
@@ -29,9 +26,7 @@ describe("OAuth", () => {
   beforeAll(() => {
     container.unbindAll();
     container.bind<IUserService>(ServiceTypes.UserService).to(UserService);
-    container
-      .bind<IUserRepository>(RepositoryTypes.UserRepository)
-      .to(UserRepository);
+    container.bind<IUserRepository>(RepositoryTypes.UserRepository).to(UserRepository);
     container.bind<IAuthService>(ServiceTypes.AuthService).to(AuthService);
     container.bind<PrismaClient>(CoreTypes.Prisma).toConstantValue(prisma);
   });
@@ -123,28 +118,22 @@ describe("OAuth", () => {
       },
     },
   ];
-  test.each(cases)(
-    "authentication - $name",
-    async ({ responses, expected }) => {
-      const mockFetch = fetch as jest.MockedFunction<typeof fetch>;
+  test.each(cases)("authentication - $name", async ({ responses, expected }) => {
+    const mockFetch = fetch as jest.MockedFunction<typeof fetch>;
 
-      mockFetch.mockImplementation((url) => {
-        const { json, status } = setupMocks(url, responses);
-        const res = new ActualResponse(undefined, { status });
-        res.json = json;
-        return Promise.resolve(res);
-      });
+    mockFetch.mockImplementation((url) => {
+      const { json, status } = setupMocks(url, responses);
+      const res = new ActualResponse(undefined, { status });
+      res.json = json;
+      return Promise.resolve(res);
+    });
 
-      const auth = container.get<IAuthService>(ServiceTypes.AuthService);
-      const { username, feideId, firstName, lastName, email } =
-        await auth.getUser({
-          code: "code",
-          encryptedCodeVerifier: "verifier",
-        });
+    const auth = container.get<IAuthService>(ServiceTypes.AuthService);
+    const { username, feideId, firstName, lastName, email } = await auth.getUser({
+      code: "code",
+      encryptedCodeVerifier: "verifier",
+    });
 
-      expect({ username, feideId, firstName, lastName, email }).toEqual(
-        expected
-      );
-    }
-  );
+    expect({ username, feideId, firstName, lastName, email }).toEqual(expected);
+  });
 });

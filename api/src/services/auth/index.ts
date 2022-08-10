@@ -21,15 +21,9 @@ const FeideProvider = {
 export default class FeideService implements IAuthService {
   constructor(@inject(Types.UserService) private userService: IUserService) {}
 
-  private scope = [
-    "openid",
-    "userid",
-    "userid-feide",
-    "userinfo-name",
-    "userinfo-photo",
-    "email",
-    "groups-edu",
-  ].join(" ");
+  private scope = ["openid", "userid", "userid-feide", "userinfo-name", "userinfo-photo", "email", "groups-edu"].join(
+    " "
+  );
 
   ssoUrl(state?: string | null): {
     url: string;
@@ -38,10 +32,7 @@ export default class FeideService implements IAuthService {
     codeVerifier: string;
   } {
     const { codeVerifier, codeChallenge } = this.pkce();
-    const encryptedCodeVerifier = cryptojs.AES.encrypt(
-      codeVerifier,
-      env.FEIDE_VERIFIER_SECRET
-    ).toString();
+    const encryptedCodeVerifier = cryptojs.AES.encrypt(codeVerifier, env.FEIDE_VERIFIER_SECRET).toString();
     return {
       url:
         `${FeideProvider.authorization}?client_id=${env.FEIDE_CLIENT_ID}&scope=${this.scope}&response_type=code&code_challenge_method=S256&code_challenge=${codeChallenge}&redirect_uri=${env.FEIDE_REDIRECT_URI}` +
@@ -53,10 +44,9 @@ export default class FeideService implements IAuthService {
   }
 
   async getUser({ code, encryptedCodeVerifier }: GetUserParams): Promise<User> {
-    const codeVerifier = cryptojs.AES.decrypt(
-      encryptedCodeVerifier,
-      env.FEIDE_VERIFIER_SECRET
-    ).toString(cryptojs.enc.Utf8);
+    const codeVerifier = cryptojs.AES.decrypt(encryptedCodeVerifier, env.FEIDE_VERIFIER_SECRET).toString(
+      cryptojs.enc.Utf8
+    );
 
     const accessToken = await this.getAccessToken(code, codeVerifier);
     const userInfo = await this.getUserInfo(accessToken);
@@ -65,14 +55,8 @@ export default class FeideService implements IAuthService {
     const user = await this.userService.getByFeideID(feideId);
     if (!user) {
       const [firstName, lastName] = name.split(" ");
-      const userId =
-        userInfo["dataporten-userid_sec"].find((id) =>
-          id.endsWith("@ntnu.no")
-        ) ?? userInfo.email;
-      const username = userId.slice(
-        userId.indexOf(":") + 1,
-        userId.indexOf("@")
-      );
+      const userId = userInfo["dataporten-userid_sec"].find((id) => id.endsWith("@ntnu.no")) ?? userInfo.email;
+      const username = userId.slice(userId.indexOf(":") + 1, userId.indexOf("@"));
 
       return this.userService.create({
         email,
@@ -106,18 +90,12 @@ export default class FeideService implements IAuthService {
     }
   }
 
-  private async getAccessToken(
-    code: string,
-    codeVerifier: string
-  ): Promise<string> {
+  private async getAccessToken(code: string, codeVerifier: string): Promise<string> {
     const url = FeideProvider.token;
 
     // https://en.wikipedia.org/wiki/Basic_access_authentication
     const authorization =
-      "Basic " +
-      Buffer.from(`${env.FEIDE_CLIENT_ID}:${env.FEIDE_CLIENT_SECRET}`).toString(
-        "base64url"
-      );
+      "Basic " + Buffer.from(`${env.FEIDE_CLIENT_ID}:${env.FEIDE_CLIENT_SECRET}`).toString("base64url");
 
     const data = {
       grant_type: "authorization_code",
@@ -149,10 +127,7 @@ export default class FeideService implements IAuthService {
 
   private pkce(): { codeVerifier: string; codeChallenge: string } {
     const codeVerifier = crypto.randomBytes(32).toString("base64url");
-    const codeChallenge = crypto
-      .createHash("sha256")
-      .update(codeVerifier)
-      .digest("base64url");
+    const codeChallenge = crypto.createHash("sha256").update(codeVerifier).digest("base64url");
 
     return { codeVerifier, codeChallenge };
   }

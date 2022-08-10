@@ -16,12 +16,7 @@ export default class CabinRepository implements ICabinRepository {
     });
   }
 
-  getOverlappingBookings({
-    bookingId,
-    endDate,
-    startDate,
-    status,
-  }: OverlappingBookingsData): Promise<Booking[]> {
+  getOverlappingBookings({ bookingId, endDate, startDate, status }: OverlappingBookingsData): Promise<Booking[]> {
     return this.db.booking.findMany({
       where: {
         AND: [

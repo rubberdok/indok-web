@@ -16,8 +16,7 @@ const resolvers: Resolvers = {
     username: (user) => user.username,
     firstName: (user) => user.firstName,
     lastName: (user) => user.lastName,
-    permissions: (user, _args, ctx) =>
-      ctx.permissionService.getAllByUser(user.id),
+    permissions: (user, _args, ctx) => ctx.permissionService.getAllByUser(user.id),
   },
 };
 

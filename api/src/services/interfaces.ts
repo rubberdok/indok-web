@@ -14,10 +14,7 @@ export interface IUserService {
 
 export interface IPermissionService {
   getAllByUser(id: string): Promise<Permission[]>;
-  permissionRequired(
-    permissionHolder: User | Role,
-    permission: PermissionString
-  ): Promise<void>;
+  permissionRequired(permissionHolder: User | Role, permission: PermissionString): Promise<void>;
 }
 
 export interface GetUserParams {

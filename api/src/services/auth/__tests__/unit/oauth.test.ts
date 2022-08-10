@@ -23,9 +23,7 @@ describe("OAuth", () => {
     const userService = mockDeep<IUserService>();
 
     container.unbindAll();
-    container
-      .bind<DeepMockProxy<IUserService>>(types.UserService)
-      .toConstantValue(userService);
+    container.bind<DeepMockProxy<IUserService>>(types.UserService).toConstantValue(userService);
     container.bind<IAuthService>(types.AuthService).to(AuthService);
   });
 
@@ -39,10 +37,7 @@ describe("OAuth", () => {
   it("should generate a valid code challenge", () => {
     const auth = container.get<IAuthService>(types.AuthService);
     const { codeChallenge, codeVerifier } = auth.ssoUrl();
-    const expected = crypto
-      .createHash("sha256")
-      .update(codeVerifier)
-      .digest("base64url");
+    const expected = crypto.createHash("sha256").update(codeVerifier).digest("base64url");
     expect(expected).toStrictEqual(codeChallenge);
   });
 
@@ -80,40 +75,31 @@ describe("OAuth", () => {
       },
     },
   ];
-  test.each(newUserCases)(
-    "authentication - $name",
-    async ({ responses, expected }) => {
-      const mockFetch = fetch as jest.MockedFunction<typeof fetch>;
+  test.each(newUserCases)("authentication - $name", async ({ responses, expected }) => {
+    const mockFetch = fetch as jest.MockedFunction<typeof fetch>;
 
-      mockFetch.mockImplementation((url) => {
-        const { json, status } = setupMocks(url, responses);
-        const res = new ActualResponse(undefined, { status });
-        res.json = json;
-        return Promise.resolve(res);
-      });
+    mockFetch.mockImplementation((url) => {
+      const { json, status } = setupMocks(url, responses);
+      const res = new ActualResponse(undefined, { status });
+      res.json = json;
+      return Promise.resolve(res);
+    });
 
-      const mockUserService = container.get<DeepMockProxy<IUserService>>(
-        types.UserService
-      );
+    const mockUserService = container.get<DeepMockProxy<IUserService>>(types.UserService);
 
-      mockUserService.getByFeideID.mockReturnValueOnce(
-        Promise.resolve(expected)
-      );
-      mockUserService.login.mockReturnValueOnce(Promise.resolve(expected));
+    mockUserService.getByFeideID.mockReturnValueOnce(Promise.resolve(expected));
+    mockUserService.login.mockReturnValueOnce(Promise.resolve(expected));
 
-      const auth = container.get<IAuthService>(types.AuthService);
-      const user = await auth.getUser({
-        code: "code",
-        encryptedCodeVerifier: "verifier",
-      });
+    const auth = container.get<IAuthService>(types.AuthService);
+    const user = await auth.getUser({
+      code: "code",
+      encryptedCodeVerifier: "verifier",
+    });
 
-      expect(user).toEqual(expected);
-      expect(mockUserService.getByFeideID).toHaveBeenCalledWith(
-        (await expected).feideId
-      );
-      expect(mockUserService.create).not.toHaveBeenCalled();
-    }
-  );
+    expect(user).toEqual(expected);
+    expect(mockUserService.getByFeideID).toHaveBeenCalledWith((await expected).feideId);
+    expect(mockUserService.create).not.toHaveBeenCalled();
+  });
 
   const existingUserCases: OAuthCase[] = [
     {
@@ -149,44 +135,37 @@ describe("OAuth", () => {
       },
     },
   ];
-  test.each(existingUserCases)(
-    "authentication - $name",
-    async ({ responses, expected }) => {
-      const mockFetch = fetch as jest.MockedFunction<typeof fetch>;
+  test.each(existingUserCases)("authentication - $name", async ({ responses, expected }) => {
+    const mockFetch = fetch as jest.MockedFunction<typeof fetch>;
 
-      mockFetch.mockImplementation((url) => {
-        const { json, status } = setupMocks(url, responses);
-        const res = new ActualResponse(undefined, { status });
-        res.json = json;
-        return Promise.resolve(res);
-      });
+    mockFetch.mockImplementation((url) => {
+      const { json, status } = setupMocks(url, responses);
+      const res = new ActualResponse(undefined, { status });
+      res.json = json;
+      return Promise.resolve(res);
+    });
 
-      const mockUserService = container.get<DeepMockProxy<IUserService>>(
-        types.UserService
-      );
+    const mockUserService = container.get<DeepMockProxy<IUserService>>(types.UserService);
 
-      mockUserService.getByFeideID.mockReturnValueOnce(Promise.resolve(null));
-      mockUserService.create.mockReturnValueOnce(Promise.resolve(expected));
+    mockUserService.getByFeideID.mockReturnValueOnce(Promise.resolve(null));
+    mockUserService.create.mockReturnValueOnce(Promise.resolve(expected));
 
-      const auth = container.get<IAuthService>(types.AuthService);
-      const user = await auth.getUser({
-        code: "code",
-        encryptedCodeVerifier: "verifier",
-      });
+    const auth = container.get<IAuthService>(types.AuthService);
+    const user = await auth.getUser({
+      code: "code",
+      encryptedCodeVerifier: "verifier",
+    });
 
-      expect(user).toEqual(expected);
-      expect(mockUserService.getByFeideID).toHaveBeenCalledWith(
-        (await expected).feideId
-      );
+    expect(user).toEqual(expected);
+    expect(mockUserService.getByFeideID).toHaveBeenCalledWith((await expected).feideId);
 
-      const { username, feideId, firstName, lastName, email } = expected;
-      expect(mockUserService.create).toHaveBeenCalledWith({
-        username,
-        feideId,
-        firstName,
-        lastName,
-        email,
-      });
-    }
-  );
+    const { username, feideId, firstName, lastName, email } = expected;
+    expect(mockUserService.create).toHaveBeenCalledWith({
+      username,
+      feideId,
+      firstName,
+      lastName,
+      email,
+    });
+  });
 });

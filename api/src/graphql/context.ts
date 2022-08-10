@@ -1,13 +1,7 @@
 import { ExpressContextFunctionArgument } from "@apollo/server/dist/esm/express4";
 import { Container, inject, injectable } from "inversify";
 
-import {
-  IAuthService,
-  ICabinService,
-  IPermissionService,
-  IUserService,
-  Types,
-} from "../services";
+import { IAuthService, ICabinService, IPermissionService, IUserService, Types } from "../services";
 
 export const Type = Symbol.for("ContextProvider");
 
