@@ -1,22 +1,32 @@
-import { Prisma, PrismaClient, User } from "@prisma/client";
-import UserRepository from "../..";
-import { IUserRepository } from "../../../interfaces";
+import "reflect-metadata";
 
-let repo: IUserRepository;
+import { PrismaClient } from "@prisma/client";
+import { Container } from "inversify";
+import UserRepository from "../..";
+import { Types } from "../../../";
+import { CoreTypes } from "../../../../core";
+import prisma from "../../../../lib/prisma";
+import { IUserRepository } from "../../../interfaces";
+import { CreateUserCase } from "./interfaces";
+
+const container = new Container();
 
 beforeAll(() => {
-  repo = new UserRepository(new PrismaClient());
+  container.unbindAll();
+  container.bind<PrismaClient>(CoreTypes.Prisma).toConstantValue(prisma);
+  container.bind<IUserRepository>(Types.UserRepository).to(UserRepository);
 });
 
-type UsersTable = {
-  input: Prisma.UserCreateInput;
-  expected: Pick<
-    User,
-    "username" | "email" | "feideId" | "firstName" | "lastName"
-  >;
-}[];
+beforeEach(() => {
+  const db = container.get<PrismaClient>(CoreTypes.Prisma);
+  db.user.delete({
+    where: {
+      id: "test-1",
+    },
+  });
+});
 
-const usersTable: UsersTable = [
+const usersTable: CreateUserCase[] = [
   {
     input: {
       username: "test-1",
@@ -36,6 +46,7 @@ const usersTable: UsersTable = [
 ];
 
 test.each(usersTable)("createUser($input)", async ({ input, expected }) => {
+  const repo = container.get<IUserRepository>(Types.UserRepository);
   const got = await repo.create(input);
   const { username, email, feideId, firstName, lastName } = got;
   expect({ username, email, feideId, firstName, lastName }).toMatchObject(

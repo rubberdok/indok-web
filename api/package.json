@@ -21,8 +21,8 @@
     "test:coverage": "jest --collect-coverage",
     "docker:up": "docker compose up integration-tests -d",
     "docker:down": "docker compose stop integration-tests && docker compose rm integration-tests -v -f",
-    "test:integration": "npm run docker:up && dotenv -e .env.test npm run migrate && dotenv -e .env.test -- jest --config jest.integration.config.ts",
-    "posttest:integration": "npm run docker:down",
+    "pretest:integration": "run-s docker:down docker:up && wait-on tcp:5433 -t 20000",
+    "test:integration": "dotenv -e .env.test -- run-s docker:up db:push &&dotenv -e .env.test -- jest --config jest.integration.config.ts",
     "tsc": "tsc"
   },
   "devDependencies": {
@@ -40,11 +40,13 @@
     "dotenv-cli": "^6.0.0",
     "jest": "^28.1.2",
     "jest-mock-extended": "^2.0.6",
+    "npm-run-all": "^4.1.5",
     "prisma": "^4.0.0",
     "ts-jest": "^28.0.5",
     "ts-node": "^10.8.2",
     "ts-node-dev": "^2.0.0",
-    "typescript": "^4.7.4"
+    "typescript": "^4.7.4",
+    "wait-on": "^6.0.1"
   },
   "dependencies": {
     "@apollo/server": "^4.0.0-alpha.1",

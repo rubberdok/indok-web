@@ -1,9 +1,24 @@
 import { RequestInfo } from "node-fetch";
+import { UserInfo } from "../../interfaces";
 import { OAuthCase } from "../unit/interfaces";
+
+export interface FeideResponses {
+  token: {
+    status: number;
+    data: {
+      access_token: string;
+      id_token: string;
+    };
+  };
+  userInfo: {
+    status: number;
+    data: UserInfo;
+  };
+}
 
 export const setupMocks = (
   url: URL | RequestInfo,
-  responses: OAuthCase["responses"]
+  responses: FeideResponses
 ) => {
   switch (url) {
     case "https://auth.dataporten.no/oauth/token":
