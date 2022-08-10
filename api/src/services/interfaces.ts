@@ -31,5 +31,6 @@ export interface IAuthService {
     url: string;
     encryptedCodeVerifier: string;
     codeChallenge: string;
+    codeVerifier: string;
   };
 }

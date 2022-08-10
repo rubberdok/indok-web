@@ -35,6 +35,7 @@ export default class FeideService implements IAuthService {
     url: string;
     encryptedCodeVerifier: string;
     codeChallenge: string;
+    codeVerifier: string;
   } {
     const { codeVerifier, codeChallenge } = this.pkce();
     const encryptedCodeVerifier = cryptojs.AES.encrypt(
@@ -47,6 +48,7 @@ export default class FeideService implements IAuthService {
         (state ? `&state=${state}` : ""),
       encryptedCodeVerifier,
       codeChallenge,
+      codeVerifier,
     };
   }
 
