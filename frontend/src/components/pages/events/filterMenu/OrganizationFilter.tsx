@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
 import { FilterQuery } from "@components/pages/events/AllEvents";
-import { EventFilteredOrganizationsDocument } from "@generated/graphql";
+import { EventFilteredOrganizationsDocument } from "@generated/graphql-deprecated";
 import { Checkbox, Grid, Skeleton, Typography } from "@mui/material";
 import { range } from "@utils/helpers";
 import React from "react";

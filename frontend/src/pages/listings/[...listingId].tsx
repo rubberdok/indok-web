@@ -4,7 +4,7 @@ import InfoCard from "@components/pages/listings/detail/InfoCard";
 import ListingBanner from "@components/pages/listings/detail/ListingBanner";
 import ListingBody from "@components/pages/listings/detail/ListingBody";
 import TitleCard from "@components/pages/listings/detail/TitleCard";
-import { ListingDocument, ListingQuery } from "@generated/graphql";
+import { ListingDocument, ListingQuery } from "@generated/graphql-deprecated";
 import { Listing } from "@interfaces/listings";
 import Layout, { RootStyle } from "@layouts/Layout";
 import { addApolloState, initializeApollo } from "@lib/apolloClient";

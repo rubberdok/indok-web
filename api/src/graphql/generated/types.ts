@@ -106,6 +106,7 @@ export enum Status {
 export type User = {
   readonly __typename: 'User';
   readonly createdAt: Scalars['String'];
+  readonly firstLogin: Scalars['Boolean'];
   readonly firstName: Scalars['String'];
   readonly id: Scalars['ID'];
   readonly lastName: Scalars['String'];
@@ -259,6 +260,7 @@ export type QueryResolvers<ContextType = IContext, ParentType extends ResolversP
 
 export type UserResolvers<ContextType = IContext, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = ResolversObject<{
   createdAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  firstLogin?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   firstName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   lastName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;

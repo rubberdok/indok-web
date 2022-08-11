@@ -1,4 +1,4 @@
-import { ListingFragment } from "@generated/graphql";
+import { ListingFragment } from "@generated/graphql-deprecated";
 import { OpenInNew } from "@mui/icons-material";
 import { Button, Card, CardContent, Grid, Typography } from "@mui/material";
 import Link from "next/link";

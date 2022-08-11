@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { FeaturedArchiveDocument } from "@generated/graphql";
+import { FeaturedArchiveDocument } from "@generated/graphql-deprecated";
 import Typography from "@mui/material/Typography";
 import DocumentList from "./DocumentList";
 

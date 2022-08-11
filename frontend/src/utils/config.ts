@@ -6,11 +6,6 @@ const validateEnvironmentVariable = (environmentVariable: string | undefined, na
 };
 
 export const config = {
-  DATAPORTEN_ID: validateEnvironmentVariable(process.env.NEXT_PUBLIC_DATAPORTEN_ID, "NEXT_PUBLIC_DATAPORTEN_ID"),
-  DATAPORTEN_REDIRECT_URI: validateEnvironmentVariable(
-    process.env.NEXT_PUBLIC_DATAPORTEN_REDIRECT_URI,
-    "NEXT_PUBLIC_DATAPORTEN_REDIRECT_URI"
-  ),
   GRAPHQL_ENDPOINT: validateEnvironmentVariable(
     process.env.NEXT_PUBLIC_GRAPHQL_BACKEND_URI,
     "NEXT_PUBLIC_GRAPHQL_BACKEND_URI"
@@ -27,14 +22,8 @@ export const config = {
     process.env.NEXT_PUBLIC_INTERNAL_API_URL,
     "NEXT_PUBLIC_INTERNAL_API_URL"
   ),
-  COOKIE_DOMAIN: validateEnvironmentVariable(process.env.NEXT_PUBLIC_COOKIE_DOMAIN, "NEXT_PUBLIC_COOKIE_DOMAIN"),
-  CSRF_COOKIE: validateEnvironmentVariable(process.env.NEXT_PUBLIC_CSRF_COOKIE, "NEXT_PUBLIC_CSRF_COOKIE"),
   FEIDE_LOGOUT_ENDPOINT: validateEnvironmentVariable(
     process.env.NEXT_PUBLIC_FEIDE_LOGOUT_URI,
     "NEXT_PUBLIC_FEIDE_LOGOUT_URI"
-  ),
-  FEIDE_AUTHORIZATION_URI: validateEnvironmentVariable(
-    process.env.NEXT_PUBLIC_FEIDE_AUTHORIZATION_URI,
-    "NEXT_PUBLIC_FEIDE_AUTHORIZATION_URI"
   ),
 };

@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/client";
 import OrderCellContent from "@components/pages/ecommerce/OrderCellContent";
-import { UserInfoDocument } from "@generated/graphql";
-import { GET_USER_ORDERS } from "@graphql/ecommerce/queries";
+import { UserInfoDocument } from "@generated/graphql-deprecated";
+import { GET_USER_ORDERS } from "src/graphql-deprecated/ecommerce/queries";
 import { Order } from "@interfaces/ecommerce";
 import { HeaderValuePair } from "@interfaces/utils";
 import Layout, { RootStyle } from "@layouts/Layout";

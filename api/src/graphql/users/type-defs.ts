@@ -17,6 +17,7 @@ const typeDefs = gql`
     username: String!
     createdAt: String!
     permissions: [Permission!]!
+    firstLogin: Boolean!
   }
 `;
 

@@ -31,6 +31,7 @@
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^2.8.1",
+    "@graphql-codegen/schema-ast": "^2.5.1",
     "@graphql-codegen/typescript": "^2.7.1",
     "@graphql-codegen/typescript-resolvers": "^2.7.1",
     "@swc/core": "^1.2.224",

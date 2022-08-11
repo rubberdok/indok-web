@@ -1,5 +1,5 @@
 import { useMutation } from "@apollo/client";
-import { LogoutDocument } from "@generated/graphql";
+import { LogoutDocument } from "@generated/graphql-deprecated";
 import { LoadingButton } from "@mui/lab";
 import { Alert, AlertTitle, ButtonProps, Snackbar } from "@mui/material";
 import { config } from "@utils/config";

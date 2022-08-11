@@ -1,0 +1,66 @@
+type Booking {
+  cabin: Cabin!
+  email: String!
+  endDate: DateTime!
+  firstName: String!
+  id: ID!
+  lastName: String!
+  phoneNumber: String!
+  startDate: DateTime!
+  status: Status!
+}
+
+type Cabin {
+  externalPrice: String!
+  id: ID!
+  internalPrice: String!
+  name: String!
+}
+
+scalar DateTime
+
+type Mutation {
+  authenticate(code: String!): User!
+  createUser(firstName: String!): User
+  logout: Boolean!
+  newBooking(data: NewBookingInput!): Booking!
+  redirectUrl(state: String): String!
+  updateBookingStatus(id: ID!, status: Status!): Booking!
+}
+
+input NewBookingInput {
+  cabinId: ID!
+  email: String!
+  endDate: DateTime!
+  firstName: String!
+  lastName: String!
+  phoneNumber: String!
+  startDate: DateTime!
+}
+
+type Permission {
+  id: ID!
+  name: String!
+}
+
+type Query {
+  user: User
+  users: [User!]!
+}
+
+enum Status {
+  CANCELLED
+  CONFIRMED
+  PENDING
+  REJECTED
+}
+
+type User {
+  createdAt: String!
+  firstLogin: Boolean!
+  firstName: String!
+  id: ID!
+  lastName: String!
+  permissions: [Permission!]!
+  username: String!
+}

@@ -5,6 +5,8 @@ dotenv.config({ path: ".env" });
 dotenv.config();
 
 const envVarsSchema = z.object({
+  CORS_ORIGINS: z.string().transform((v) => v.split(",")),
+  CORS_CREDENTIALS: z.string().transform((v) => v === "true"),
   NODE_ENV: z.string(),
   NO_REPLY_EMAIL: z.string().email(),
   DATABASE_URL: z.string(),

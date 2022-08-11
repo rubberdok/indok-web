@@ -1,8 +1,16 @@
-overwrite: true
-schema: "../backend/**/schema.json"
-documents: "src/graphql/**/*.graphql"
+schema:
+  - "../api/src/graphql/generated/schema.graphql"
 generates:
-  src/generated/graphql.tsx:
+  src/generated/graphql.ts:
+    documents: "src/graphql/**/*.graphql"
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+      - "typed-document-node"
+
+  src/generated/graphql-deprecated.ts:
+    documents: "src/graphql-deprecated/**/*.graphql"
+    schema: "../backend/**/schema.json"
     plugins:
       - "typescript"
       - "typescript-operations"
@@ -11,4 +19,3 @@ hooks:
   afterAllFileWrite:
     - eslint --fix
     - prettier --write
-    - git add src/generated/graphql.tsx

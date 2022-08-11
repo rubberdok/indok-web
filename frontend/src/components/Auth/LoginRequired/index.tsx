@@ -1,11 +1,10 @@
-import { useQuery } from "@apollo/client";
-import { GET_USER_INFO } from "@graphql/users/queries";
+import { useMutation, useQuery } from "@apollo/client";
+import { RedirectUrlDocument } from "@generated/graphql";
+import { GET_USER_INFO } from "src/graphql-deprecated/users/queries";
 import { UserInfo } from "@interfaces/users";
 import { Button, ButtonProps, Skeleton } from "@mui/material";
-import { generateFeideLoginUrl } from "@utils/auth";
-import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useMemo } from "react";
+import React from "react";
 
 type Props = {
   redirect?: boolean;
@@ -34,18 +33,25 @@ export const LoginRequired: React.FC<Props & ButtonProps> = ({
   if (redirect) {
     path ||= router.asPath;
   }
-  const url = useMemo<string>(() => generateFeideLoginUrl(path), [path]);
+
+  const [mutation] = useMutation(RedirectUrlDocument, {
+    variables: {
+      state: redirectPath,
+    },
+    onCompleted(data) {
+      const { redirectUrl } = data;
+      router.push(redirectUrl);
+    },
+  });
   const { data, loading } = useQuery<{ user?: UserInfo | null }>(GET_USER_INFO);
   const { fullWidth } = buttonProps;
 
   if (loading) {
     return (
       <Skeleton variant="rectangular" {...(fullWidth && { width: "100%" })}>
-        <Link href={url} passHref>
-          <Button size="medium" variant="contained" color="primary" {...buttonProps}>
-            Logg inn
-          </Button>
-        </Link>
+        <Button size="medium" variant="contained" color="primary" {...buttonProps}>
+          Logg inn
+        </Button>
       </Skeleton>
     );
   }
@@ -59,11 +65,16 @@ export const LoginRequired: React.FC<Props & ButtonProps> = ({
   }
 
   return (
-    <Link href={url} passHref>
-      <Button size="medium" variant="contained" color="primary" data-test-id={dataTestId} {...buttonProps}>
-        Logg inn
-      </Button>
-    </Link>
+    <Button
+      size="medium"
+      variant="contained"
+      color="primary"
+      data-test-id={dataTestId}
+      {...buttonProps}
+      onClick={() => mutation()}
+    >
+      Logg inn
+    </Button>
   );
 };
 

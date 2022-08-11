@@ -1,4 +1,4 @@
-import { ArchiveByTypesQuery } from "@generated/graphql";
+import { ArchiveByTypesQuery } from "@generated/graphql-deprecated";
 import { Card, CardActionArea, CardContent, CardMedia, Grid } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import React from "react";

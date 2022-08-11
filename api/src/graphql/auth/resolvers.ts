@@ -14,6 +14,7 @@ const resolvers: Resolvers = {
       return true;
     },
     authenticate: async (_root, { code }, ctx) => {
+      console.log(ctx.req.session);
       if (!ctx.req.session.codeVerifier) {
         throw new GraphQLError("authorization failed", {
           extensions: { code: ApolloServerErrorCode.INTERNAL_SERVER_ERROR },

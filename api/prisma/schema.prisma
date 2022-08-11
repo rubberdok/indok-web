@@ -22,6 +22,7 @@ model User {
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
   lastLogin   DateTime     @default(now())
+  firstLogin  Boolean      @default(true)
   firstName   String
   lastName    String
   email       String       @unique

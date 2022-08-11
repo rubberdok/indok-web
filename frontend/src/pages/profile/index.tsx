@@ -10,8 +10,8 @@ import {
   Personal,
   Report,
 } from "@components/pages/profile/ProfileCard";
-import { UserInfoDocument } from "@generated/graphql";
-import { GET_USER_INFO } from "@graphql/users/queries";
+import { UserInfoDocument } from "@generated/graphql-deprecated";
+import { GET_USER_INFO } from "src/graphql-deprecated/users/queries";
 import Layout from "@layouts/Layout";
 import { addApolloState, initializeApollo } from "@lib/apolloClient";
 import { Avatar, Container, Grid, Typography } from "@mui/material";

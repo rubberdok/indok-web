@@ -2,11 +2,11 @@ import { Prisma, PrismaClient } from "@prisma/client";
 
 export const userData: Prisma.UserCreateInput[] = [
   {
-    username: "eva_student",
-    feideId: "evastudent",
+    username: "indok",
+    feideId: "indok",
     email: "example@example.org",
-    firstName: "Eva",
-    lastName: "Student Aasen",
+    firstName: "Indok",
+    lastName: "Student",
   },
   {
     username: "rubberdok",

@@ -2,7 +2,7 @@ import { useQuery } from "@apollo/client";
 import Layout, { RootStyle } from "@layouts/Layout";
 import PayWithVipps from "@components/pages/ecommerce/PayWithVipps";
 import SalesTermsDialog from "@components/pages/ecommerce/SalesTermsDialog";
-import { UserInfoDocument } from "@generated/graphql";
+import { UserInfoDocument } from "@generated/graphql-deprecated";
 import { GET_PRODUCT } from "@graphql/ecommerce/queries";
 import { Product } from "@interfaces/ecommerce";
 import { addApolloState, initializeApollo } from "@lib/apolloClient";

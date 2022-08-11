@@ -1,16 +1,12 @@
 import { ApolloClient, HttpLink, InMemoryCache, NormalizedCacheObject } from "@apollo/client";
-import { setContext } from "@apollo/client/link/context";
 import { config } from "@utils/config";
-import cookie from "cookie";
 import merge from "deepmerge";
-import Cookies from "js-cookie";
 import isEqual from "lodash/isEqual";
 import { GetServerSidePropsContext } from "next";
 import { AppProps } from "next/app";
 import { useMemo } from "react";
 
 export const APOLLO_STATE_PROP_NAME = "__APOLLO_STATE__";
-const CSRF_COOKIE = config.CSRF_COOKIE;
 
 type PageProps = {
   props: AppProps["pageProps"];
@@ -19,57 +15,17 @@ type PageProps = {
 
 let apolloClient: ApolloClient<NormalizedCacheObject> | undefined;
 
-const getCsrfToken = async (req?: GetServerSidePropsContext["req"]) => {
-  if (req?.cookies[CSRF_COOKIE]) return req.cookies[CSRF_COOKIE];
-  if (Cookies.get(CSRF_COOKIE)) return Cookies.get(CSRF_COOKIE);
-
-  const ssr = typeof window === "undefined";
-
-  const csrfToken: string = await fetch(`${ssr ? config.INTERNAL_API_URL : config.API_URL}/csrf/`)
-    .then((response) => response.json())
-    .then((data) => data.csrfToken);
-
-  Cookies.set(CSRF_COOKIE, csrfToken, {
-    domain: config.COOKIE_DOMAIN,
-  });
-
-  return csrfToken;
-};
-
-function createApolloClient(ctx?: GetServerSidePropsContext): ApolloClient<NormalizedCacheObject> {
+function createApolloClient(): ApolloClient<NormalizedCacheObject> {
   const uri = typeof window === "undefined" ? config.INTERNAL_GRAPHQL_ENDPOINT : config.GRAPHQL_ENDPOINT;
   const httpLink = new HttpLink({
     uri: uri, // Server URL (must be absolute)
     credentials: "include",
   });
 
-  const authLink = setContext(async (_, { headers }) => {
-    // Get the authentication token from cookies
-    const csrfToken = await getCsrfToken(ctx?.req);
-    if (!csrfToken) throw Error("Missing CSRF token");
-
-    let cookies: string | undefined;
-    if (ctx?.req.cookies[CSRF_COOKIE]) {
-      cookies = ctx.req.headers.cookie;
-    } else if (ctx?.req.headers.cookie) {
-      cookies = ctx.req.headers.cookie + `; ${cookie.serialize(CSRF_COOKIE, csrfToken)}`;
-    } else {
-      cookies = cookie.serialize(CSRF_COOKIE, csrfToken);
-    }
-
-    return {
-      headers: {
-        Cookie: cookies,
-        ...headers,
-        "X-CSRFToken": Cookies.get(CSRF_COOKIE) ?? csrfToken,
-      },
-    };
-  });
-
   return new ApolloClient({
     credentials: "include",
     ssrMode: typeof window === "undefined",
-    link: authLink.concat(httpLink),
+    link: httpLink,
     cache: new InMemoryCache(),
   });
 }
@@ -78,7 +34,7 @@ export function initializeApollo(
   initialState: NormalizedCacheObject = {},
   ctx?: GetServerSidePropsContext
 ): ApolloClient<NormalizedCacheObject> {
-  const _apolloClient = apolloClient ?? createApolloClient(ctx);
+  const _apolloClient = apolloClient ?? createApolloClient();
 
   // If your page has Next.js data fetching methods that use Apollo Client, the initial state
   // gets hydrated here

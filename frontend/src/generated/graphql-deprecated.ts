@@ -182,6 +182,19 @@ export type BlogType = {
   organization?: Maybe<OrganizationType>;
 };
 
+export type Booking = {
+  __typename?: "Booking";
+  cabin: Cabin;
+  email: Scalars["String"];
+  endDate: Scalars["DateTime"];
+  firstName: Scalars["String"];
+  id: Scalars["ID"];
+  lastName: Scalars["String"];
+  phoneNumber: Scalars["String"];
+  startDate: Scalars["DateTime"];
+  status: Status;
+};
+
 /** Basic booking object type used as a base for other types and as a standalone */
 export type BookingInput = {
   cabins?: InputMaybe<Array<InputMaybe<Scalars["Int"]>>>;
@@ -204,6 +217,14 @@ export type BookingResponsibleType = {
   id: Scalars["ID"];
   lastName?: Maybe<Scalars["String"]>;
   phone?: Maybe<Scalars["Int"]>;
+};
+
+export type Cabin = {
+  __typename?: "Cabin";
+  externalPrice: Scalars["String"];
+  id: Scalars["ID"];
+  internalPrice: Scalars["String"];
+  name: Scalars["String"];
 };
 
 export type CabinType = {
@@ -573,6 +594,37 @@ export type MembershipType = {
   user: UserType;
 };
 
+export type Mutation = {
+  __typename?: "Mutation";
+  authenticate: User;
+  createUser?: Maybe<User>;
+  logout: Scalars["Boolean"];
+  newBooking: Booking;
+  redirectUrl: Scalars["String"];
+  updateBookingStatus: Booking;
+};
+
+export type MutationAuthenticateArgs = {
+  code: Scalars["String"];
+};
+
+export type MutationCreateUserArgs = {
+  firstName: Scalars["String"];
+};
+
+export type MutationNewBookingArgs = {
+  data: NewBookingInput;
+};
+
+export type MutationRedirectUrlArgs = {
+  state?: InputMaybe<Scalars["String"]>;
+};
+
+export type MutationUpdateBookingStatusArgs = {
+  id: Scalars["ID"];
+  status: Status;
+};
+
 export type Mutations = {
   __typename?: "Mutations";
   /**
@@ -875,6 +927,16 @@ export type MutationsUpdateUserArgs = {
   userData?: InputMaybe<UserInput>;
 };
 
+export type NewBookingInput = {
+  cabinId: Scalars["ID"];
+  email: Scalars["String"];
+  endDate: Scalars["DateTime"];
+  firstName: Scalars["String"];
+  lastName: Scalars["String"];
+  phoneNumber: Scalars["String"];
+  startDate: Scalars["DateTime"];
+};
+
 export type OptionInput = {
   answer: Scalars["String"];
   id?: InputMaybe<Scalars["ID"]>;
@@ -945,6 +1007,12 @@ export type OrganizationType = {
   primaryGroup?: Maybe<ResponsibleGroupType>;
   slug: Scalars["String"];
   users: Array<UserType>;
+};
+
+export type Permission = {
+  __typename?: "Permission";
+  id: Scalars["ID"];
+  name: Scalars["String"];
 };
 
 export type ProductType = {
@@ -1108,6 +1176,12 @@ export type QueriesSignUpsArgs = {
   eventId: Scalars["ID"];
 };
 
+export type Query = {
+  __typename?: "Query";
+  user?: Maybe<User>;
+  users: Array<User>;
+};
+
 /** A question on a form. */
 export type QuestionType = {
   __typename?: "QuestionType";
@@ -1196,6 +1270,13 @@ export type SignUpType = {
   userGradeYear: Scalars["Int"];
   userPhoneNumber: Scalars["String"];
 };
+
+export enum Status {
+  Cancelled = "CANCELLED",
+  Confirmed = "CONFIRMED",
+  Pending = "PENDING",
+  Rejected = "REJECTED",
+}
 
 export type SubmitOrUpdateAnswers = {
   __typename?: "SubmitOrUpdateAnswers";
@@ -1363,6 +1444,17 @@ export type UpdateQuestion = {
 export type UpdateUser = {
   __typename?: "UpdateUser";
   user?: Maybe<UserType>;
+};
+
+export type User = {
+  __typename?: "User";
+  createdAt: Scalars["String"];
+  firstLogin: Scalars["Boolean"];
+  firstName: Scalars["String"];
+  id: Scalars["ID"];
+  lastName: Scalars["String"];
+  permissions: Array<Permission>;
+  username: Scalars["String"];
 };
 
 export type UserAttendingType = {
@@ -1631,16 +1723,10 @@ export type HasPermissionQuery = { __typename?: "Queries"; hasPermission?: boole
 export type UserFieldsFragment = {
   __typename?: "UserType";
   id: string;
-  feideEmail: string;
   email: string;
   username: string;
   firstName: string;
   lastName: string;
-  dateJoined: any;
-  graduationYear?: number | null;
-  gradeYear?: number | null;
-  allergies?: string | null;
-  phoneNumber: string;
   firstLogin: boolean;
 };
 
@@ -1658,16 +1744,10 @@ export type UserInfoQuery = {
   user?: {
     __typename?: "UserType";
     id: string;
-    feideEmail: string;
     email: string;
     username: string;
     firstName: string;
     lastName: string;
-    dateJoined: any;
-    graduationYear?: number | null;
-    gradeYear?: number | null;
-    allergies?: string | null;
-    phoneNumber: string;
     firstLogin: boolean;
   } | null;
 };
@@ -1724,16 +1804,10 @@ export const UserFieldsFragmentDoc = {
         kind: "SelectionSet",
         selections: [
           { kind: "Field", name: { kind: "Name", value: "id" } },
-          { kind: "Field", name: { kind: "Name", value: "feideEmail" } },
           { kind: "Field", name: { kind: "Name", value: "email" } },
           { kind: "Field", name: { kind: "Name", value: "username" } },
           { kind: "Field", name: { kind: "Name", value: "firstName" } },
           { kind: "Field", name: { kind: "Name", value: "lastName" } },
-          { kind: "Field", name: { kind: "Name", value: "dateJoined" } },
-          { kind: "Field", name: { kind: "Name", value: "graduationYear" } },
-          { kind: "Field", name: { kind: "Name", value: "gradeYear" } },
-          { kind: "Field", name: { kind: "Name", value: "allergies" } },
-          { kind: "Field", name: { kind: "Name", value: "phoneNumber" } },
           { kind: "Field", name: { kind: "Name", value: "firstLogin" } },
         ],
       },

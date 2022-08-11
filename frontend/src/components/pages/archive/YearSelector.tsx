@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { AvailableYearsDocument } from "@generated/graphql";
+import { AvailableYearsDocument } from "@generated/graphql-deprecated";
 import { CircularProgress } from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import MenuItem from "@mui/material/MenuItem";

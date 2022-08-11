@@ -1,0 +1,9 @@
+mutation RedirectUrl($state: String) {
+  redirectUrl(state: $state)
+}
+
+mutation Authenticate($code: String!) {
+  authenticate(code: $code) {
+    ...UserFields
+  }
+}

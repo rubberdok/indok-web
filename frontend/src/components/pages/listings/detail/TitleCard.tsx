@@ -1,4 +1,4 @@
-import { ListingQuery } from "@generated/graphql";
+import { ListingQuery } from "@generated/graphql-deprecated";
 import { ArrowForward } from "@mui/icons-material";
 import { Button, Card, CardContent, Grid, Hidden, Typography } from "@mui/material";
 import dayjs from "dayjs";
