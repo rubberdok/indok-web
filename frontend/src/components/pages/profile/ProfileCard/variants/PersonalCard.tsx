@@ -1,10 +1,13 @@
 import { Grid, Skeleton, Typography } from "@mui/material";
 import Profile from "@public/illustrations/Profile.svg";
-import { User } from "src/types/users";
 import ProfileCardBase from "./ProfileCardBase";
 
 type Props = {
-  user?: User;
+  user?: {
+    firstName: string;
+    lastName: string;
+    graduationYear?: number | null;
+  } | null;
   "data-test-id"?: string;
 };
 
@@ -33,8 +36,8 @@ const PersonalCard: React.VFC<Props> = ({ user, "data-test-id": dataTestId, ...p
           )}
         </Grid>
         <Grid item>
-          {user && user.gradeYear ? (
-            <Typography variant="body2">{`${user.gradeYear}. klasse`}</Typography>
+          {user && user.graduationYear ? (
+            <Typography variant="body2">{`${user.graduationYear}. klasse`}</Typography>
           ) : (
             <Skeleton variant="rectangular">
               <Typography variant="body2">0. klasse</Typography>

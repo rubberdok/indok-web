@@ -1,11 +1,5 @@
-query User {
-  user {
-    ...UserFields
-  }
-}
-
-query EditUser {
-  user {
+mutation UpdateUser($id: ID!, $data: UpdateUserInput!) {
+  updateUser(id: $id, data: $data) {
     ...UserFields
     canUpdateYear
     graduationYear

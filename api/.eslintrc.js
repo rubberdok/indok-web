@@ -10,6 +10,7 @@ module.exports = {
     sourceType: "module",
   },
   plugins: ["@typescript-eslint"],
+  ignorePatterns: ["**/generated/**"],
   rules: {
     "@typescript-eslint/no-empty-interface": [
       "error",

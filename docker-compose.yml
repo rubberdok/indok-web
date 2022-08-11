@@ -32,7 +32,7 @@ services:
     volumes:
       - ./api:/usr/src/app
       - ./api/node_modules/.prisma:/usr/src/app/node_modules/.prisma
-      - /usr/src/app/node_modules/
+      - api_node_modules:/usr/src/app/node_modules/
     ports:
       - 4000:4000
     depends_on:
@@ -40,12 +40,13 @@ services:
       - redis
 
   frontend:
+    tty: true
     build:
       context: ./frontend
       dockerfile: Dockerfile
     volumes:
       - ./frontend:/usr/src/app
-      - /usr/src/app/node_modules/
+      - next_node_modules:/usr/src/app/node_modules/
     ports:
       - 3000:3000
     expose:
@@ -53,4 +54,8 @@ services:
 
 volumes:
   postgres_data:
+    driver: local
+  next_node_modules:
+    driver: local
+  api_node_modules:
     driver: local

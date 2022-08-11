@@ -23,7 +23,6 @@
     "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],
     "baseUrl": "./",
-    "types": ["src/generated/graphql"],
     "paths": {
       "@components/*": ["src/components/*"],
       "@styles/*": ["src/styles/*"],

@@ -26,6 +26,7 @@ type Mutation {
   newBooking(data: NewBookingInput!): Booking!
   redirectUrl(state: String): String!
   updateBookingStatus(id: ID!, status: Status!): Booking!
+  updateUser(data: UpdateUserInput!, id: ID!): User!
 }
 
 input NewBookingInput {
@@ -55,12 +56,25 @@ enum Status {
   REJECTED
 }
 
+input UpdateUserInput {
+  allergies: String
+  firstName: String!
+  graduationYear: Int
+  lastName: String!
+  phoneNumber: String
+}
+
 type User {
+  allergies: String
+  canUpdateYear: Boolean!
   createdAt: String!
   firstLogin: Boolean!
   firstName: String!
+  graduationYear: Int
+  graduationYearUpdatedAt: DateTime
   id: ID!
   lastName: String!
   permissions: [Permission!]!
+  phoneNumber: String
   username: String!
 }

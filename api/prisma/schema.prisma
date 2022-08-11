@@ -17,19 +17,23 @@ model GoogleDocument {
 }
 
 model User {
-  id          String       @id @default(uuid())
-  feideId     String       @unique
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-  lastLogin   DateTime     @default(now())
-  firstLogin  Boolean      @default(true)
-  firstName   String
-  lastName    String
-  email       String       @unique
-  username    String       @unique
-  roles       Role[]
-  permissions Permission[]
-  Event       Event[]
+  id                      String       @id @default(uuid())
+  feideId                 String       @unique
+  createdAt               DateTime     @default(now())
+  updatedAt               DateTime     @updatedAt
+  lastLogin               DateTime     @default(now())
+  firstLogin              Boolean      @default(true)
+  firstName               String
+  lastName                String
+  email                   String       @unique
+  username                String       @unique
+  roles                   Role[]
+  permissions             Permission[]
+  Event                   Event[]
+  graduationYear          Int?
+  graduationYearUpdatedAt DateTime?
+  allergies               String?
+  phoneNumber             String?
 }
 
 model Organization {

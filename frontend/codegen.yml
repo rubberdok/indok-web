@@ -2,7 +2,16 @@ schema:
   - "../api/src/graphql/generated/schema.graphql"
 generates:
   src/generated/graphql.ts:
+    schema:
+      - "../api/src/graphql/generated/schema.graphql"
     documents: "src/graphql/**/*.graphql"
+
+    config:
+      strictScalars: true
+
+      scalars:
+        DateTime: string
+
     plugins:
       - "typescript"
       - "typescript-operations"

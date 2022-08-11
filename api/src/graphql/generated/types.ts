@@ -46,6 +46,7 @@ export type Mutation = {
   readonly newBooking: Booking;
   readonly redirectUrl: Scalars['String'];
   readonly updateBookingStatus: Booking;
+  readonly updateUser: User;
 };
 
 
@@ -72,6 +73,12 @@ export type MutationRedirectUrlArgs = {
 export type MutationUpdateBookingStatusArgs = {
   id: Scalars['ID'];
   status: Status;
+};
+
+
+export type MutationUpdateUserArgs = {
+  data: UpdateUserInput;
+  id: Scalars['ID'];
 };
 
 export type NewBookingInput = {
@@ -103,14 +110,27 @@ export enum Status {
   Rejected = 'REJECTED'
 }
 
+export type UpdateUserInput = {
+  readonly allergies?: InputMaybe<Scalars['String']>;
+  readonly firstName: Scalars['String'];
+  readonly graduationYear?: InputMaybe<Scalars['Int']>;
+  readonly lastName: Scalars['String'];
+  readonly phoneNumber?: InputMaybe<Scalars['String']>;
+};
+
 export type User = {
   readonly __typename: 'User';
+  readonly allergies?: Maybe<Scalars['String']>;
+  readonly canUpdateYear: Scalars['Boolean'];
   readonly createdAt: Scalars['String'];
   readonly firstLogin: Scalars['Boolean'];
   readonly firstName: Scalars['String'];
+  readonly graduationYear?: Maybe<Scalars['Int']>;
+  readonly graduationYearUpdatedAt?: Maybe<Scalars['DateTime']>;
   readonly id: Scalars['ID'];
   readonly lastName: Scalars['String'];
   readonly permissions: ReadonlyArray<Permission>;
+  readonly phoneNumber?: Maybe<Scalars['String']>;
   readonly username: Scalars['String'];
 };
 
@@ -189,12 +209,14 @@ export type ResolversTypes = ResolversObject<{
   Cabin: ResolverTypeWrapper<CabinModel>;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
+  Int: ResolverTypeWrapper<Scalars['Int']>;
   Mutation: ResolverTypeWrapper<{}>;
   NewBookingInput: NewBookingInput;
   Permission: ResolverTypeWrapper<PermissionModel>;
   Query: ResolverTypeWrapper<{}>;
   Status: Status;
   String: ResolverTypeWrapper<Scalars['String']>;
+  UpdateUserInput: UpdateUserInput;
   User: ResolverTypeWrapper<UserModel>;
 }>;
 
@@ -205,11 +227,13 @@ export type ResolversParentTypes = ResolversObject<{
   Cabin: CabinModel;
   DateTime: Scalars['DateTime'];
   ID: Scalars['ID'];
+  Int: Scalars['Int'];
   Mutation: {};
   NewBookingInput: NewBookingInput;
   Permission: PermissionModel;
   Query: {};
   String: Scalars['String'];
+  UpdateUserInput: UpdateUserInput;
   User: UserModel;
 }>;
 
@@ -245,6 +269,7 @@ export type MutationResolvers<ContextType = IContext, ParentType extends Resolve
   newBooking?: Resolver<ResolversTypes['Booking'], ParentType, ContextType, RequireFields<MutationNewBookingArgs, 'data'>>;
   redirectUrl?: Resolver<ResolversTypes['String'], ParentType, ContextType, Partial<MutationRedirectUrlArgs>>;
   updateBookingStatus?: Resolver<ResolversTypes['Booking'], ParentType, ContextType, RequireFields<MutationUpdateBookingStatusArgs, 'id' | 'status'>>;
+  updateUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationUpdateUserArgs, 'data' | 'id'>>;
 }>;
 
 export type PermissionResolvers<ContextType = IContext, ParentType extends ResolversParentTypes['Permission'] = ResolversParentTypes['Permission']> = ResolversObject<{
@@ -259,12 +284,17 @@ export type QueryResolvers<ContextType = IContext, ParentType extends ResolversP
 }>;
 
 export type UserResolvers<ContextType = IContext, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = ResolversObject<{
+  allergies?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  canUpdateYear?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   firstLogin?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   firstName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  graduationYear?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  graduationYearUpdatedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   lastName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   permissions?: Resolver<ReadonlyArray<ResolversTypes['Permission']>, ParentType, ContextType>;
+  phoneNumber?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   username?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;

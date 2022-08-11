@@ -11,7 +11,7 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  DateTime: any;
+  DateTime: string;
 };
 
 export type Booking = {
@@ -43,6 +43,7 @@ export type Mutation = {
   newBooking: Booking;
   redirectUrl: Scalars["String"];
   updateBookingStatus: Booking;
+  updateUser: User;
 };
 
 export type MutationAuthenticateArgs = {
@@ -64,6 +65,11 @@ export type MutationRedirectUrlArgs = {
 export type MutationUpdateBookingStatusArgs = {
   id: Scalars["ID"];
   status: Status;
+};
+
+export type MutationUpdateUserArgs = {
+  data: UpdateUserInput;
+  id: Scalars["ID"];
 };
 
 export type NewBookingInput = {
@@ -95,14 +101,27 @@ export enum Status {
   Rejected = "REJECTED",
 }
 
+export type UpdateUserInput = {
+  allergies?: InputMaybe<Scalars["String"]>;
+  firstName: Scalars["String"];
+  graduationYear?: InputMaybe<Scalars["Int"]>;
+  lastName: Scalars["String"];
+  phoneNumber?: InputMaybe<Scalars["String"]>;
+};
+
 export type User = {
   __typename?: "User";
+  allergies?: Maybe<Scalars["String"]>;
+  canUpdateYear: Scalars["Boolean"];
   createdAt: Scalars["String"];
   firstLogin: Scalars["Boolean"];
   firstName: Scalars["String"];
+  graduationYear?: Maybe<Scalars["Int"]>;
+  graduationYearUpdatedAt?: Maybe<Scalars["DateTime"]>;
   id: Scalars["ID"];
   lastName: Scalars["String"];
   permissions: Array<Permission>;
+  phoneNumber?: Maybe<Scalars["String"]>;
   username: Scalars["String"];
 };
 
@@ -135,6 +154,61 @@ export type UserFieldsFragment = {
   firstName: string;
   lastName: string;
   firstLogin: boolean;
+};
+
+export type UpdateUserMutationVariables = Exact<{
+  id: Scalars["ID"];
+  data: UpdateUserInput;
+}>;
+
+export type UpdateUserMutation = {
+  __typename?: "Mutation";
+  updateUser: {
+    __typename?: "User";
+    canUpdateYear: boolean;
+    graduationYear?: number | null;
+    graduationYearUpdatedAt?: string | null;
+    allergies?: string | null;
+    phoneNumber?: string | null;
+    id: string;
+    username: string;
+    firstName: string;
+    lastName: string;
+    firstLogin: boolean;
+  };
+};
+
+export type UserQueryVariables = Exact<{ [key: string]: never }>;
+
+export type UserQuery = {
+  __typename?: "Query";
+  user?: {
+    __typename?: "User";
+    id: string;
+    username: string;
+    firstName: string;
+    lastName: string;
+    firstLogin: boolean;
+  } | null;
+};
+
+export type EditUserQueryVariables = Exact<{ [key: string]: never }>;
+
+export type EditUserQuery = {
+  __typename?: "Query";
+  user?: {
+    __typename?: "User";
+    canUpdateYear: boolean;
+    graduationYear?: number | null;
+    graduationYearUpdatedAt?: string | null;
+    allergies?: string | null;
+    phoneNumber?: string | null;
+    id: string;
+    username: string;
+    firstName: string;
+    lastName: string;
+    firstLogin: boolean;
+  } | null;
 };
 
 export const UserFieldsFragmentDoc = {
@@ -228,3 +302,113 @@ export const AuthenticateDocument = {
     ...UserFieldsFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<AuthenticateMutation, AuthenticateMutationVariables>;
+export const UpdateUserDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "UpdateUser" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "id" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "data" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "UpdateUserInput" } } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "updateUser" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "id" },
+                value: { kind: "Variable", name: { kind: "Name", value: "id" } },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "data" },
+                value: { kind: "Variable", name: { kind: "Name", value: "data" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "FragmentSpread", name: { kind: "Name", value: "UserFields" } },
+                { kind: "Field", name: { kind: "Name", value: "canUpdateYear" } },
+                { kind: "Field", name: { kind: "Name", value: "graduationYear" } },
+                { kind: "Field", name: { kind: "Name", value: "graduationYearUpdatedAt" } },
+                { kind: "Field", name: { kind: "Name", value: "allergies" } },
+                { kind: "Field", name: { kind: "Name", value: "phoneNumber" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...UserFieldsFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<UpdateUserMutation, UpdateUserMutationVariables>;
+export const UserDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "User" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "user" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "UserFields" } }],
+            },
+          },
+        ],
+      },
+    },
+    ...UserFieldsFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<UserQuery, UserQueryVariables>;
+export const EditUserDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "EditUser" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "user" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "FragmentSpread", name: { kind: "Name", value: "UserFields" } },
+                { kind: "Field", name: { kind: "Name", value: "canUpdateYear" } },
+                { kind: "Field", name: { kind: "Name", value: "graduationYear" } },
+                { kind: "Field", name: { kind: "Name", value: "graduationYearUpdatedAt" } },
+                { kind: "Field", name: { kind: "Name", value: "allergies" } },
+                { kind: "Field", name: { kind: "Name", value: "phoneNumber" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...UserFieldsFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<EditUserQuery, EditUserQueryVariables>;

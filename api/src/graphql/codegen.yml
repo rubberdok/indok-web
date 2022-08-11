@@ -7,6 +7,7 @@ generates:
       showUnusedMappers: true
       immutableTypes: true
       nonOptionalTypename: true
+      strictScalars: true
 
       scalars:
         DateTime: Date

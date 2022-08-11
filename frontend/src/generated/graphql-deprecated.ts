@@ -602,6 +602,7 @@ export type Mutation = {
   newBooking: Booking;
   redirectUrl: Scalars["String"];
   updateBookingStatus: Booking;
+  updateUser: User;
 };
 
 export type MutationAuthenticateArgs = {
@@ -623,6 +624,11 @@ export type MutationRedirectUrlArgs = {
 export type MutationUpdateBookingStatusArgs = {
   id: Scalars["ID"];
   status: Status;
+};
+
+export type MutationUpdateUserArgs = {
+  data: UpdateUserInput;
+  id: Scalars["ID"];
 };
 
 export type Mutations = {
@@ -1446,14 +1452,27 @@ export type UpdateUser = {
   user?: Maybe<UserType>;
 };
 
+export type UpdateUserInput = {
+  allergies?: InputMaybe<Scalars["String"]>;
+  firstName: Scalars["String"];
+  graduationYear?: InputMaybe<Scalars["Int"]>;
+  lastName: Scalars["String"];
+  phoneNumber?: InputMaybe<Scalars["String"]>;
+};
+
 export type User = {
   __typename?: "User";
+  allergies?: Maybe<Scalars["String"]>;
+  canUpdateYear: Scalars["Boolean"];
   createdAt: Scalars["String"];
   firstLogin: Scalars["Boolean"];
   firstName: Scalars["String"];
+  graduationYear?: Maybe<Scalars["Int"]>;
+  graduationYearUpdatedAt?: Maybe<Scalars["DateTime"]>;
   id: Scalars["ID"];
   lastName: Scalars["String"];
   permissions: Array<Permission>;
+  phoneNumber?: Maybe<Scalars["String"]>;
   username: Scalars["String"];
 };
 

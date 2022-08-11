@@ -1,7 +1,6 @@
 import { useQuery } from "@apollo/client";
 import LoginRequired from "@components/Auth/LoginRequired";
-import { UserInfoDocument } from "@generated/graphql-deprecated";
-import { UserInfo } from "@interfaces/users";
+import { UserDocument } from "@graphql";
 import { Button } from "@mui/material";
 import NextLink from "next/link";
 import { User } from "phosphor-react";
@@ -12,7 +11,7 @@ type Props = {
 };
 
 const LoginButton: React.FC<Props> = ({ fullWidth, "data-test-id": dataTestId }) => {
-  const { data } = useQuery<{ user: UserInfo | null }>(UserInfoDocument);
+  const { data } = useQuery(UserDocument);
 
   return (
     <LoginRequired size="medium" color="inherit" data-test-id={dataTestId} fullWidth={fullWidth}>

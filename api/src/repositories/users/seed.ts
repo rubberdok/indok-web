@@ -1,4 +1,5 @@
 import { Prisma, PrismaClient } from "@prisma/client";
+import dayjs from "dayjs";
 
 export const userData: Prisma.UserCreateInput[] = [
   {
@@ -7,6 +8,7 @@ export const userData: Prisma.UserCreateInput[] = [
     email: "example@example.org",
     firstName: "Indok",
     lastName: "Student",
+    graduationYear: dayjs().add(5, "year").year(),
   },
   {
     username: "rubberdok",
@@ -14,6 +16,7 @@ export const userData: Prisma.UserCreateInput[] = [
     email: "rubberdok@example.org",
     firstName: "Rubb",
     lastName: "Er Dok",
+    graduationYear: dayjs().add(5, "year").year(),
   },
 ];
 
