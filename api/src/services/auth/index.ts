@@ -1,5 +1,4 @@
 import crypto from "crypto";
-import { default as cryptojs } from "crypto-js";
 import fetch from "node-fetch";
 
 import { User } from "@prisma/client";
@@ -27,27 +26,20 @@ export default class FeideService implements IAuthService {
 
   ssoUrl(state?: string | null): {
     url: string;
-    encryptedCodeVerifier: string;
     codeChallenge: string;
     codeVerifier: string;
   } {
     const { codeVerifier, codeChallenge } = this.pkce();
-    const encryptedCodeVerifier = cryptojs.AES.encrypt(codeVerifier, env.FEIDE_VERIFIER_SECRET).toString();
     return {
       url:
         `${FeideProvider.authorization}?client_id=${env.FEIDE_CLIENT_ID}&scope=${this.scope}&response_type=code&code_challenge_method=S256&code_challenge=${codeChallenge}&redirect_uri=${env.FEIDE_REDIRECT_URI}` +
         (state ? `&state=${state}` : ""),
-      encryptedCodeVerifier,
-      codeChallenge,
       codeVerifier,
+      codeChallenge,
     };
   }
 
-  async getUser({ code, encryptedCodeVerifier }: GetUserParams): Promise<User> {
-    const codeVerifier = cryptojs.AES.decrypt(encryptedCodeVerifier, env.FEIDE_VERIFIER_SECRET).toString(
-      cryptojs.enc.Utf8
-    );
-
+  async getUser({ code, codeVerifier }: GetUserParams): Promise<User> {
     const accessToken = await this.getAccessToken(code, codeVerifier);
     const userInfo = await this.getUserInfo(accessToken);
     const { email, sub: feideId, name } = userInfo;

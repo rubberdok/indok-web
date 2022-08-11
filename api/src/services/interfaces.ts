@@ -21,14 +21,13 @@ export interface IPermissionService {
 
 export interface GetUserParams {
   code: string;
-  encryptedCodeVerifier: string;
+  codeVerifier: string;
 }
 
 export interface IAuthService {
   getUser(data: GetUserParams): Promise<User>;
   ssoUrl(state?: string | null): {
     url: string;
-    encryptedCodeVerifier: string;
     codeChallenge: string;
     codeVerifier: string;
   };

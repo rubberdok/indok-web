@@ -5,8 +5,8 @@ import { Resolvers } from "../generated/types";
 const resolvers: Resolvers = {
   Mutation: {
     redirectUrl: async (_root, { state }, ctx) => {
-      const { url, encryptedCodeVerifier } = ctx.authService.ssoUrl(state);
-      ctx.req.session.codeVerifier = encryptedCodeVerifier;
+      const { url, codeVerifier } = ctx.authService.ssoUrl(state);
+      ctx.req.session.codeVerifier = codeVerifier;
       return url;
     },
     logout: async (_root, _args, ctx) => {
@@ -23,7 +23,7 @@ const resolvers: Resolvers = {
       try {
         const user = await ctx.authService.getUser({
           code,
-          encryptedCodeVerifier: ctx.req.session.codeVerifier,
+          codeVerifier: ctx.req.session.codeVerifier,
         });
 
         ctx.req.session.user = user;

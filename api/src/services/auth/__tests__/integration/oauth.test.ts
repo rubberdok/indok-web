@@ -131,7 +131,7 @@ describe("OAuth", () => {
     const auth = container.get<IAuthService>(ServiceTypes.AuthService);
     const { username, feideId, firstName, lastName, email } = await auth.getUser({
       code: "code",
-      encryptedCodeVerifier: "verifier",
+      codeVerifier: "verifier",
     });
 
     expect({ username, feideId, firstName, lastName, email }).toEqual(expected);

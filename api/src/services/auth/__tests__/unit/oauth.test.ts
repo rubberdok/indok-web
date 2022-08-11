@@ -93,7 +93,7 @@ describe("OAuth", () => {
     const auth = container.get<IAuthService>(types.AuthService);
     const user = await auth.getUser({
       code: "code",
-      encryptedCodeVerifier: "verifier",
+      codeVerifier: "verifier",
     });
 
     expect(user).toEqual(expected);
@@ -132,6 +132,11 @@ describe("OAuth", () => {
         createdAt: new Date(),
         updatedAt: new Date(),
         lastLogin: new Date(),
+        graduationYear: null,
+        firstLogin: false,
+        graduationYearUpdatedAt: null,
+        allergies: null,
+        phoneNumber: "40000000",
       },
     },
   ];
@@ -153,7 +158,7 @@ describe("OAuth", () => {
     const auth = container.get<IAuthService>(types.AuthService);
     const user = await auth.getUser({
       code: "code",
-      encryptedCodeVerifier: "verifier",
+      codeVerifier: "verifier",
     });
 
     expect(user).toEqual(expected);
