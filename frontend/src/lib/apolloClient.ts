@@ -1,4 +1,5 @@
 import { ApolloClient, HttpLink, InMemoryCache, NormalizedCacheObject } from "@apollo/client";
+import { setContext } from "@apollo/client/link/context";
 import { config } from "@utils/config";
 import merge from "deepmerge";
 import isEqual from "lodash/isEqual";
@@ -15,17 +16,29 @@ type PageProps = {
 
 let apolloClient: ApolloClient<NormalizedCacheObject> | undefined;
 
-function createApolloClient(): ApolloClient<NormalizedCacheObject> {
+function createApolloClient(ctx?: GetServerSidePropsContext): ApolloClient<NormalizedCacheObject> {
   const uri = typeof window === "undefined" ? config.INTERNAL_GRAPHQL_ENDPOINT : config.GRAPHQL_ENDPOINT;
   const httpLink = new HttpLink({
     uri: uri, // Server URL (must be absolute)
     credentials: "include",
   });
 
+  const authLink = setContext((_, prev) => {
+    if (typeof window !== "undefined") return prev;
+    const cookie = ctx?.req?.headers?.cookie;
+    return {
+      ...prev,
+      headers: {
+        ...prev.headers,
+        cookie,
+      },
+    };
+  });
+
   return new ApolloClient({
     credentials: "include",
     ssrMode: typeof window === "undefined",
-    link: httpLink,
+    link: authLink.concat(httpLink),
     cache: new InMemoryCache(),
   });
 }
@@ -34,7 +47,7 @@ export function initializeApollo(
   initialState: NormalizedCacheObject = {},
   ctx?: GetServerSidePropsContext
 ): ApolloClient<NormalizedCacheObject> {
-  const _apolloClient = apolloClient ?? createApolloClient();
+  const _apolloClient = apolloClient ?? createApolloClient(ctx);
 
   // If your page has Next.js data fetching methods that use Apollo Client, the initial state
   // gets hydrated here
