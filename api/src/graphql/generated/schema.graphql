@@ -45,6 +45,7 @@ type Permission {
 }
 
 type Query {
+  hasPermission(permission: String!): Boolean!
   user: User
   users: [User!]!
 }

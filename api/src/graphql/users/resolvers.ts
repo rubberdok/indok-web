@@ -3,7 +3,6 @@ import { Resolvers } from "../generated/types";
 const resolvers: Resolvers = {
   Query: {
     user: (_root, _args, ctx) => {
-      console.log(ctx.req.session);
       if (ctx.req.session.user) {
         return ctx.userService.get(ctx.req.session.user.id);
       }

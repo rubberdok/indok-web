@@ -1,5 +1,7 @@
-import { Permission } from "@prisma/client";
+import { Permission, User } from "@prisma/client";
+import { PermissionString } from "../../services/permissions/types";
 
 export interface IPermissionRepository {
-  getByUser(id: string): Promise<Permission[]>;
+  getManyByUser(id: string): Promise<Permission[]>;
+  hasPermission(user: User, permission: PermissionString | string): Promise<boolean>;
 }

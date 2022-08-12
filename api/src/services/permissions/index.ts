@@ -12,13 +12,16 @@ export default class PermissionService implements IPermissionService {
     @inject(Types.PermissionRepository)
     private permissionRepository: IPermissionRepository
   ) {}
+  hasPermission(user: User, permission: PermissionString | string): Promise<boolean> {
+    return this.permissionRepository.hasPermission(user, permission);
+  }
 
   getAllByUser(id: string): Promise<Permission[]> {
-    return this.permissionRepository.getByUser(id);
+    return this.permissionRepository.getManyByUser(id);
   }
 
   async permissionRequired(permissionHolder: User | Role, permission: PermissionString): Promise<void> {
-    const permissions = await this.permissionRepository.getByUser(permissionHolder.id);
+    const permissions = await this.permissionRepository.getManyByUser(permissionHolder.id);
     if (!permissions.some((perm) => perm.name === permission)) throw new PermissionDeniedError();
   }
 }

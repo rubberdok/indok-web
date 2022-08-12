@@ -18,6 +18,7 @@ import { resolvers, typeDefs } from "./graphql";
 import { IContext, IContextProvider, Type as ContextProviderType } from "./graphql/context";
 import { formatError } from "./lib/apolloServer";
 import { redisClient, RedisStore } from "./lib/redis";
+import { randomUUID } from "crypto";
 
 Sentry.init({
   dsn: env.SENTRY_DSN,
@@ -32,6 +33,7 @@ const start = async () => {
   app.use(
     session({
       name: env.SESSION_COOKIE_NAME,
+      genid: () => randomUUID(),
       cookie: {
         domain: env.SESSION_COOKIE_DOMAIN,
         httpOnly: env.SESSION_COOKIE_HTTP_ONLY,
