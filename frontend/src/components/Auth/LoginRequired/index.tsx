@@ -1,7 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { RedirectUrlDocument } from "@generated/graphql";
-import { GET_USER_INFO } from "src/graphql-deprecated/users/queries";
-import { UserInfo } from "@interfaces/users";
+import { RedirectUrlDocument, UserDocument } from "@generated/graphql";
 import { Button, ButtonProps, Skeleton } from "@mui/material";
 import { useRouter } from "next/router";
 import React from "react";
@@ -36,14 +34,14 @@ export const LoginRequired: React.FC<Props & ButtonProps> = ({
 
   const [mutation] = useMutation(RedirectUrlDocument, {
     variables: {
-      state: redirectPath,
+      state: path,
     },
     onCompleted(data) {
       const { redirectUrl } = data;
       router.push(redirectUrl);
     },
   });
-  const { data, loading } = useQuery<{ user?: UserInfo | null }>(GET_USER_INFO);
+  const { data, loading } = useQuery(UserDocument);
   const { fullWidth } = buttonProps;
 
   if (loading) {

@@ -4,6 +4,10 @@ mutation RedirectUrl($state: String) {
 
 mutation Authenticate($code: String!) {
   authenticate(code: $code) {
-    ...UserFields
+    ...BaseUserFields
   }
+}
+
+mutation Logout {
+  logout
 }

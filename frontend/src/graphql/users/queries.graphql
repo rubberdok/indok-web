@@ -1,12 +1,12 @@
 query User {
   user {
-    ...UserFields
+    ...BaseUserFields
   }
 }
 
 query EditUser {
   user {
-    ...UserFields
+    ...BaseUserFields
     canUpdateYear
     graduationYear
     graduationYearUpdatedAt

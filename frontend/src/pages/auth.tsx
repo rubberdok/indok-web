@@ -18,7 +18,6 @@ const AuthPage: NextPageWithLayout = () => {
       console.error(error);
     },
     onCompleted: ({ authenticate: user }) => {
-      console.log({ user });
       if (user.firstLogin) {
         router.push("/register");
       } else if (typeof state === "string") {
@@ -30,7 +29,6 @@ const AuthPage: NextPageWithLayout = () => {
       }
     },
   });
-  console.log({ error, loading, data });
 
   useEffect(() => {
     if (code) authenticate({ variables: { code: Array.isArray(code) ? code[0] : code } });

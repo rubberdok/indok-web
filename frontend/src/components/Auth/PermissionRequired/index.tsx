@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { HasPermissionDocument } from "@generated/graphql-deprecated";
+import { HasPermissionDocument } from "@graphql";
 
 type Props = {
   permission: string;
@@ -7,7 +7,7 @@ type Props = {
 };
 
 const PermissionRequired: React.FC<Props> = ({ permission, fallback, children }) => {
-  const { data } = useQuery<{ hasPermission: boolean }>(HasPermissionDocument, {
+  const { data } = useQuery(HasPermissionDocument, {
     variables: {
       permission,
     },

@@ -71,7 +71,6 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": 
   });
 
   const onSubmit: SubmitHandler<UserForm> = (values) => {
-    console.log(values);
     if (data?.user) {
       updateUser({
         variables: {
@@ -110,7 +109,6 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": 
                   name="firstName"
                   control={control}
                   render={({ field, fieldState: { error, isTouched } }) => {
-                    console.log({ error, isTouched, value: field.value });
                     return (
                       <TextField
                         label="Fornavn"

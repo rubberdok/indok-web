@@ -90,8 +90,13 @@ export type Permission = {
 
 export type Query = {
   __typename?: "Query";
+  hasPermission: Scalars["Boolean"];
   user?: Maybe<User>;
   users: Array<User>;
+};
+
+export type QueryHasPermissionArgs = {
+  permission: Scalars["String"];
 };
 
 export enum Status {
@@ -147,7 +152,17 @@ export type AuthenticateMutation = {
   };
 };
 
-export type UserFieldsFragment = {
+export type LogoutMutationVariables = Exact<{ [key: string]: never }>;
+
+export type LogoutMutation = { __typename?: "Mutation"; logout: boolean };
+
+export type HasPermissionQueryVariables = Exact<{
+  permission: Scalars["String"];
+}>;
+
+export type HasPermissionQuery = { __typename?: "Query"; hasPermission: boolean };
+
+export type BaseUserFieldsFragment = {
   __typename?: "User";
   id: string;
   username: string;
@@ -211,12 +226,12 @@ export type EditUserQuery = {
   } | null;
 };
 
-export const UserFieldsFragmentDoc = {
+export const BaseUserFieldsFragmentDoc = {
   kind: "Document",
   definitions: [
     {
       kind: "FragmentDefinition",
-      name: { kind: "Name", value: "UserFields" },
+      name: { kind: "Name", value: "BaseUserFields" },
       typeCondition: { kind: "NamedType", name: { kind: "Name", value: "User" } },
       selectionSet: {
         kind: "SelectionSet",
@@ -230,7 +245,7 @@ export const UserFieldsFragmentDoc = {
       },
     },
   ],
-} as unknown as DocumentNode<UserFieldsFragment, unknown>;
+} as unknown as DocumentNode<BaseUserFieldsFragment, unknown>;
 export const RedirectUrlDocument = {
   kind: "Document",
   definitions: [
@@ -293,15 +308,59 @@ export const AuthenticateDocument = {
             ],
             selectionSet: {
               kind: "SelectionSet",
-              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "UserFields" } }],
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "BaseUserFields" } }],
             },
           },
         ],
       },
     },
-    ...UserFieldsFragmentDoc.definitions,
+    ...BaseUserFieldsFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<AuthenticateMutation, AuthenticateMutationVariables>;
+export const LogoutDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "Logout" },
+      selectionSet: { kind: "SelectionSet", selections: [{ kind: "Field", name: { kind: "Name", value: "logout" } }] },
+    },
+  ],
+} as unknown as DocumentNode<LogoutMutation, LogoutMutationVariables>;
+export const HasPermissionDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "HasPermission" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "permission" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "String" } } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "hasPermission" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "permission" },
+                value: { kind: "Variable", name: { kind: "Name", value: "permission" } },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<HasPermissionQuery, HasPermissionQueryVariables>;
 export const UpdateUserDocument = {
   kind: "Document",
   definitions: [
@@ -342,7 +401,7 @@ export const UpdateUserDocument = {
             selectionSet: {
               kind: "SelectionSet",
               selections: [
-                { kind: "FragmentSpread", name: { kind: "Name", value: "UserFields" } },
+                { kind: "FragmentSpread", name: { kind: "Name", value: "BaseUserFields" } },
                 { kind: "Field", name: { kind: "Name", value: "canUpdateYear" } },
                 { kind: "Field", name: { kind: "Name", value: "graduationYear" } },
                 { kind: "Field", name: { kind: "Name", value: "graduationYearUpdatedAt" } },
@@ -354,7 +413,7 @@ export const UpdateUserDocument = {
         ],
       },
     },
-    ...UserFieldsFragmentDoc.definitions,
+    ...BaseUserFieldsFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<UpdateUserMutation, UpdateUserMutationVariables>;
 export const UserDocument = {
@@ -372,13 +431,13 @@ export const UserDocument = {
             name: { kind: "Name", value: "user" },
             selectionSet: {
               kind: "SelectionSet",
-              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "UserFields" } }],
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "BaseUserFields" } }],
             },
           },
         ],
       },
     },
-    ...UserFieldsFragmentDoc.definitions,
+    ...BaseUserFieldsFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<UserQuery, UserQueryVariables>;
 export const EditUserDocument = {
@@ -397,7 +456,7 @@ export const EditUserDocument = {
             selectionSet: {
               kind: "SelectionSet",
               selections: [
-                { kind: "FragmentSpread", name: { kind: "Name", value: "UserFields" } },
+                { kind: "FragmentSpread", name: { kind: "Name", value: "BaseUserFields" } },
                 { kind: "Field", name: { kind: "Name", value: "canUpdateYear" } },
                 { kind: "Field", name: { kind: "Name", value: "graduationYear" } },
                 { kind: "Field", name: { kind: "Name", value: "graduationYearUpdatedAt" } },
@@ -409,6 +468,6 @@ export const EditUserDocument = {
         ],
       },
     },
-    ...UserFieldsFragmentDoc.definitions,
+    ...BaseUserFieldsFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<EditUserQuery, EditUserQueryVariables>;

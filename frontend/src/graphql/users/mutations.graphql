@@ -1,6 +1,6 @@
 mutation UpdateUser($id: ID!, $data: UpdateUserInput!) {
   updateUser(id: $id, data: $data) {
-    ...UserFields
+    ...BaseUserFields
     canUpdateYear
     graduationYear
     graduationYearUpdatedAt

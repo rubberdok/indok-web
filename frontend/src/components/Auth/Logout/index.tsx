@@ -1,5 +1,5 @@
 import { useMutation } from "@apollo/client";
-import { LogoutDocument } from "@generated/graphql-deprecated";
+import { LogoutDocument } from "@graphql";
 import { LoadingButton } from "@mui/lab";
 import { Alert, AlertTitle, ButtonProps, Snackbar } from "@mui/material";
 import { config } from "@utils/config";
@@ -10,14 +10,13 @@ const Logout: React.FC<Omit<ButtonProps, "sx">> = ({ ...props }) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [logoutAction, { loading, client }] = useMutation(LogoutDocument, {
-    onCompleted: async ({ logout }) => {
+    onCompleted: async () => {
       // reset the apollo store and redirect. See // https://www.apollographql.com/docs/react/networking/authentication/#reset-store-on-logout
       await client.resetStore();
       router.push({
         pathname: config.FEIDE_LOGOUT_ENDPOINT,
         query: {
           post_logout_redirect_uri: config.FRONTEND_URI,
-          id_token_hint: logout?.idToken,
         },
       });
     },

@@ -10,7 +10,6 @@ import {
   Personal,
   Report,
 } from "@components/pages/profile/ProfileCard";
-import { UserInfoDocument } from "@generated/graphql-deprecated";
 import { RedirectUrlDocument, UserDocument } from "@graphql";
 import Layout from "@layouts/Layout";
 import { addApolloState, initializeApollo } from "@lib/apolloClient";
@@ -138,12 +137,10 @@ ProfilePage.getLayout = function getLayout(page: React.ReactElement) {
 export default ProfilePage;
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  console.log("hello");
   const client = initializeApollo({}, ctx);
   const { data, error } = await client.query({
-    query: UserInfoDocument,
+    query: UserDocument,
   });
-  console.log(data);
 
   if (error) return { notFound: true };
   if (!data.user) {

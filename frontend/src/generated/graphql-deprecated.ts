@@ -11,24 +11,9 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  /**
-   * The `Date` scalar type represents a Date
-   * value as specified by
-   * [iso8601](https://en.wikipedia.org/wiki/ISO_8601).
-   */
   Date: any;
-  /**
-   * The `DateTime` scalar type represents a DateTime
-   * value as specified by
-   * [iso8601](https://en.wikipedia.org/wiki/ISO_8601).
-   */
   DateTime: any;
-  /** The `Decimal` scalar type represents a python Decimal. */
   Decimal: any;
-  /**
-   * Leverages the internal Python implmeentation of UUID (uuid.UUID) to provide native UUID objects
-   * in fields, resolvers and input.
-   */
   UUID: any;
 };
 
@@ -182,19 +167,6 @@ export type BlogType = {
   organization?: Maybe<OrganizationType>;
 };
 
-export type Booking = {
-  __typename?: "Booking";
-  cabin: Cabin;
-  email: Scalars["String"];
-  endDate: Scalars["DateTime"];
-  firstName: Scalars["String"];
-  id: Scalars["ID"];
-  lastName: Scalars["String"];
-  phoneNumber: Scalars["String"];
-  startDate: Scalars["DateTime"];
-  status: Status;
-};
-
 /** Basic booking object type used as a base for other types and as a standalone */
 export type BookingInput = {
   cabins?: InputMaybe<Array<InputMaybe<Scalars["Int"]>>>;
@@ -217,14 +189,6 @@ export type BookingResponsibleType = {
   id: Scalars["ID"];
   lastName?: Maybe<Scalars["String"]>;
   phone?: Maybe<Scalars["Int"]>;
-};
-
-export type Cabin = {
-  __typename?: "Cabin";
-  externalPrice: Scalars["String"];
-  id: Scalars["ID"];
-  internalPrice: Scalars["String"];
-  name: Scalars["String"];
 };
 
 export type CabinType = {
@@ -594,43 +558,6 @@ export type MembershipType = {
   user: UserType;
 };
 
-export type Mutation = {
-  __typename?: "Mutation";
-  authenticate: User;
-  createUser?: Maybe<User>;
-  logout: Scalars["Boolean"];
-  newBooking: Booking;
-  redirectUrl: Scalars["String"];
-  updateBookingStatus: Booking;
-  updateUser: User;
-};
-
-export type MutationAuthenticateArgs = {
-  code: Scalars["String"];
-};
-
-export type MutationCreateUserArgs = {
-  firstName: Scalars["String"];
-};
-
-export type MutationNewBookingArgs = {
-  data: NewBookingInput;
-};
-
-export type MutationRedirectUrlArgs = {
-  state?: InputMaybe<Scalars["String"]>;
-};
-
-export type MutationUpdateBookingStatusArgs = {
-  id: Scalars["ID"];
-  status: Status;
-};
-
-export type MutationUpdateUserArgs = {
-  data: UpdateUserInput;
-  id: Scalars["ID"];
-};
-
 export type Mutations = {
   __typename?: "Mutations";
   /**
@@ -933,16 +860,6 @@ export type MutationsUpdateUserArgs = {
   userData?: InputMaybe<UserInput>;
 };
 
-export type NewBookingInput = {
-  cabinId: Scalars["ID"];
-  email: Scalars["String"];
-  endDate: Scalars["DateTime"];
-  firstName: Scalars["String"];
-  lastName: Scalars["String"];
-  phoneNumber: Scalars["String"];
-  startDate: Scalars["DateTime"];
-};
-
 export type OptionInput = {
   answer: Scalars["String"];
   id?: InputMaybe<Scalars["ID"]>;
@@ -1013,12 +930,6 @@ export type OrganizationType = {
   primaryGroup?: Maybe<ResponsibleGroupType>;
   slug: Scalars["String"];
   users: Array<UserType>;
-};
-
-export type Permission = {
-  __typename?: "Permission";
-  id: Scalars["ID"];
-  name: Scalars["String"];
 };
 
 export type ProductType = {
@@ -1182,12 +1093,6 @@ export type QueriesSignUpsArgs = {
   eventId: Scalars["ID"];
 };
 
-export type Query = {
-  __typename?: "Query";
-  user?: Maybe<User>;
-  users: Array<User>;
-};
-
 /** A question on a form. */
 export type QuestionType = {
   __typename?: "QuestionType";
@@ -1276,13 +1181,6 @@ export type SignUpType = {
   userGradeYear: Scalars["Int"];
   userPhoneNumber: Scalars["String"];
 };
-
-export enum Status {
-  Cancelled = "CANCELLED",
-  Confirmed = "CONFIRMED",
-  Pending = "PENDING",
-  Rejected = "REJECTED",
-}
 
 export type SubmitOrUpdateAnswers = {
   __typename?: "SubmitOrUpdateAnswers";
@@ -1450,30 +1348,6 @@ export type UpdateQuestion = {
 export type UpdateUser = {
   __typename?: "UpdateUser";
   user?: Maybe<UserType>;
-};
-
-export type UpdateUserInput = {
-  allergies?: InputMaybe<Scalars["String"]>;
-  firstName: Scalars["String"];
-  graduationYear?: InputMaybe<Scalars["Int"]>;
-  lastName: Scalars["String"];
-  phoneNumber?: InputMaybe<Scalars["String"]>;
-};
-
-export type User = {
-  __typename?: "User";
-  allergies?: Maybe<Scalars["String"]>;
-  canUpdateYear: Scalars["Boolean"];
-  createdAt: Scalars["String"];
-  firstLogin: Scalars["Boolean"];
-  firstName: Scalars["String"];
-  graduationYear?: Maybe<Scalars["Int"]>;
-  graduationYearUpdatedAt?: Maybe<Scalars["DateTime"]>;
-  id: Scalars["ID"];
-  lastName: Scalars["String"];
-  permissions: Array<Permission>;
-  phoneNumber?: Maybe<Scalars["String"]>;
-  username: Scalars["String"];
 };
 
 export type UserAttendingType = {
@@ -1733,11 +1607,11 @@ export type ListingQuery = {
   } | null;
 };
 
-export type HasPermissionQueryVariables = Exact<{
+export type DeprecatedHasPermissionQueryVariables = Exact<{
   permission: Scalars["String"];
 }>;
 
-export type HasPermissionQuery = { __typename?: "Queries"; hasPermission?: boolean | null };
+export type DeprecatedHasPermissionQuery = { __typename?: "Queries"; hasPermission?: boolean | null };
 
 export type UserFieldsFragment = {
   __typename?: "UserType";
@@ -2385,13 +2259,13 @@ export const ListingDocument = {
     ...ListingFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<ListingQuery, ListingQueryVariables>;
-export const HasPermissionDocument = {
+export const DeprecatedHasPermissionDocument = {
   kind: "Document",
   definitions: [
     {
       kind: "OperationDefinition",
       operation: "query",
-      name: { kind: "Name", value: "hasPermission" },
+      name: { kind: "Name", value: "deprecatedHasPermission" },
       variableDefinitions: [
         {
           kind: "VariableDefinition",
@@ -2417,7 +2291,7 @@ export const HasPermissionDocument = {
       },
     },
   ],
-} as unknown as DocumentNode<HasPermissionQuery, HasPermissionQueryVariables>;
+} as unknown as DocumentNode<DeprecatedHasPermissionQuery, DeprecatedHasPermissionQueryVariables>;
 export const LogoutDocument = {
   kind: "Document",
   definitions: [

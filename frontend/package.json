@@ -6,10 +6,10 @@
   "author": "rubberdok",
   "license": "MIT",
   "scripts": {
-    "dev": "concurrently --restart-tries 3 -n next,graphql[next] -k -c blue.bold,green.dim \"next\" \"npm run generate -- --watch\"",
+    "dev": "concurrently --restart-tries 3 -n next,graphql -c blue.bold,green.dim \"next\" \"npm:generate -- --watch src\"",
+    "generate": "graphql-codegen --config codegen.yml",
     "build": "next build",
     "start": "next start",
-    "generate": "graphql-codegen --config codegen.yml",
     "test": "cypress open",
     "test:headless": "cypress run",
     "e2e": "wait-on --httpTimeout 60000 http://localhost:3000 && wait-on --httpTimeout 60000 http://localhost:8000 && yarn test",
