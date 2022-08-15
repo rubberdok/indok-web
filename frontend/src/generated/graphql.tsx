@@ -11,24 +11,9 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  /**
-   * The `Date` scalar type represents a Date
-   * value as specified by
-   * [iso8601](https://en.wikipedia.org/wiki/ISO_8601).
-   */
   Date: any;
-  /**
-   * The `DateTime` scalar type represents a DateTime
-   * value as specified by
-   * [iso8601](https://en.wikipedia.org/wiki/ISO_8601).
-   */
   DateTime: any;
-  /** The `Decimal` scalar type represents a python Decimal. */
   Decimal: any;
-  /**
-   * Leverages the internal Python implmeentation of UUID (uuid.UUID) to provide native UUID objects
-   * in fields, resolvers and input.
-   */
   UUID: any;
 };
 

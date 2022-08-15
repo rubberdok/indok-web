@@ -5,25 +5,8 @@ logo: /img/hylogo.jpg
 image: /img/hy1.jpg
 board:
   leder:
-    name: Sjur Filip Vik Haakestad
-    phoneNumber: 919 97 470
-    title: Leder
-  øko_nestleder:
-    name: Ellie Berglund
-    phoneNumber: 942 58 380
-    title: Nestleder og økonomiansvarlig
-  book:
-    name: Ingvild Vartdal Sund
-    phoneNumber: 960 46 506
-    title: Bookingansvarlig
-  log:
     name: Einar Midthun
-    phoneNumber: 909 72 957
-    title: Logistikkansvarlig
-  drift:
-    name: Iver Kvaale Skibsrud
-    phoneNumber: 479 23 118
-    title: Driftsansvarlig
+    title: Leder
 
 tag: annet
 ---
@@ -36,4 +19,4 @@ Hvordan er det å være den del av Hytteforeningen? Vi er en gjeng på fem perso
 
 Kontakt oss på Facebook, Mail, eller direkte til hvilket som helst medlem.
 
-![Hyttestyret](/img/hy2.jpg)
+![Hytteforeningen](/img/hy2.jpg)

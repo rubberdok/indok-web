@@ -41,7 +41,7 @@ const CabinsDetailsSection: React.FC = () => {
               organisering av utleie.
             </Typography>
             <Grid item>
-              <Link href="/about/organizations/hyttestyret" passHref>
+              <Link href="/about/organizations/hytteforeningen" passHref>
                 <Button variant="outlined" size="small" fullWidth={false}>
                   Om Hytteforeningen
                 </Button>

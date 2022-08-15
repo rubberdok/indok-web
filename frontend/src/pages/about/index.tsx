@@ -97,6 +97,7 @@ const AboutPage: NextPageWithLayout = () => {
             <li>2019-2020: Peder Gjerstad og Mette Liset</li>
             <li>2020-2021: Andreas Johannesen og Lars Lien Ankile</li>
             <li>2021-2022: Christian August Brask Rustad og Olaf Alexander Styrmoe</li>
+            <li>2022-2023: Morten Vinje og Erlend Heir</li>
           </ul>
         </Typography>
       </Template>

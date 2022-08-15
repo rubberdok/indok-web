@@ -5,10 +5,7 @@ logo: /img/tindoklogo.png
 image: /img/tindok3.jpg
 board:
   ceo:
-    name: Fredrik Sollerud
-    title: Turleder
-  cto:
-    name: Trym Wian
+    name: Solveig Kildahl
     title: Turleder
 tag: idrett
 ---

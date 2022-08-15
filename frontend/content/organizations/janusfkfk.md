@@ -5,11 +5,8 @@ logo: /img/fkfklogo.png
 image: /img/fkfkbilde.png
 board:
   ceo:
-    name: Sunniva Økland
+    name: Julie Brubakk Karlsen
     title: Chief Executive Officer
-  cto:
-    name: Elin Ulsaker
-    title: Chief Financial Officer
 tag: idrett
 ---
 

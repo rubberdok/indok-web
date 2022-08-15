@@ -5,13 +5,8 @@ logo: /img/bandoklogo.png
 image: /img/bandoklogo.png
 board:
   ceo:
-    name: Johannes Log Indbjo
-    mail:
+    name: Vegard Holm Gundersen
     title: Administrerende ansvarlig
-  cto:
-    name: Sigurd Elias Halse
-    mail:
-    title: Økonomiansvarlig/utstyrsansvarlig
 tag: kultur
 ---
 
