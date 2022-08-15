@@ -4,6 +4,9 @@ description: Norges beste studentrevy?
 logo: /img/indokrevylogo.jpg
 image: /img/indokrevyenbilde.jpg
 board:
+  leder:
+    name: Marte Fosen
+    title: Leder
 tag: kultur
 ---
 

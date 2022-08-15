@@ -5,10 +5,7 @@ logo: /img/janusstrikk.jpg
 image: /img/janusstrikk.jpg
 board:
   ceo:
-    name: Maren Barth
-    title: Leder
-  cto:
-    name: Amanda Krutnes
+    name: Ane Holm Grøneng
     title: Leder
 tag: annet
 ---

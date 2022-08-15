@@ -5,12 +5,7 @@ image: /img/ivibilde.jpg
 logo: /img/ivilogo.png
 board:
   ceo:
-    name: Torjus Hagen
-    mail: andreomd@stud.ntnu.no
-    title: Leder
-  cto:
-    name: Andrea Omdahl
-    mail: andreomd@stud.ntnu.no
+    name: Emma Kjerstine Martinsen Walle
     title: Leder
 
 tag: kultur

@@ -92,7 +92,7 @@ const CabinBookingPage: NextPageWithLayout = () => {
   const [createBooking] = useMutation(CREATE_BOOKING);
   const [sendEmail] = useMutation(SEND_EMAIL);
 
-  // Extra info from the user, sent to Hyttestyret
+  // Extra info from the user, sent to Hytteforeningen
   const [extraInfo, setExtraInfo] = useState("");
 
   useEffect(() => {

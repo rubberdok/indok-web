@@ -5,21 +5,8 @@ logo: /img/indollogo.png
 image: /img/indolbilde.jpg
 board:
   ceo:
-    name: Hans Magnus Utne
-    phoneNumber: 975 18 033
+    name: Magnus Trandokken
     title: Leder
-  cto:
-    name: Phillip Kolkmeier
-    phoneNumber: 906 71 650
-    title: Nestleder
-  brygg:
-    name: Olav Førland
-    phoneNumber: 902 25 335
-    title: Bryggeansvarlig
-  pr:
-    name: Marte Vingsnes
-    phoneNumber: 482 60 767
-    title: PR-ansvarlig
 tag: kultur
 ---
 

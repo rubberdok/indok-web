@@ -5,16 +5,7 @@ logo: /img/eivlogo.jpg
 image: /img/eivbilde.jpg
 board:
   ceo:
-    name: Phillip Kolkmeier
-    title: Sommelier
-  cto:
-    name: Erlend Heir
-    title: Sommelier
-  cfo:
-    name: Haakon Døssland
-    title: Sommelier
-  cmo:
-    name: Ane Sandvik Rognskaug
+    name: Johan Martin Emberland Johnsen
     title: Sommelier
 
 tag: kultur

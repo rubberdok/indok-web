@@ -5,10 +5,7 @@ logo: /img/typisk.jpg
 image: /img/hero.jpg
 board:
   ceo:
-    name: Jakob Fougner Engebretsen
-    title: Podcasthost
-  cto:
-    name: Håkon Melgård Sveen
+    name: Marie Eskeland Børtveit
     title: Podcasthost
 tag: kultur
 ---

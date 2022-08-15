@@ -5,7 +5,7 @@ logo: /img/mkmlogo.png
 image: /img/mkm.jpg
 board:
   ceo:
-    name: Kristoffer Winther
+    name: Amund Bekkelund Bakken
     mail: ceo@klingendemynt.no
     title: CEO
 

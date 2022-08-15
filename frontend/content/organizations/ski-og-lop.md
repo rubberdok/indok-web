@@ -5,15 +5,8 @@ logo: /img/jslklogo.png
 image: /img/jslk.jpg
 board:
   ceo:
-    name: Kristoffer Jonsson
+    name: Synne Råheim Borge
     title: Leder
-  cto:
-    name: Jostein Hjortland Tysse
-    title: Nestleder
-  cfo:
-    name: Asbjørn Nisi
-    title: Økonomiansvarlig
-
 tag: idrett
 ---
 
