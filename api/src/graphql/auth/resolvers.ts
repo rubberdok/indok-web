@@ -10,7 +10,10 @@ const resolvers: Resolvers = {
       return url;
     },
     logout: async (_root, _args, ctx) => {
-      ctx.req.session.destroy(() => null);
+      ctx.req.session.user = null;
+      ctx.req.session.save(() => {
+        ctx.req.session.regenerate(() => true);
+      });
       return true;
     },
     authenticate: async (_root, { code }, ctx) => {
@@ -24,8 +27,9 @@ const resolvers: Resolvers = {
           code,
           codeVerifier: ctx.req.session.codeVerifier,
         });
-
         ctx.req.session.user = user;
+        ctx.req.session.save();
+        ctx.req.session.regenerate(() => null);
         return user;
       } catch (err) {
         ctx.req.session.user = null;
