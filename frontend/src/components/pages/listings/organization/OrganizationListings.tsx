@@ -60,12 +60,7 @@ const OrganizationListings: React.FC<{
                       <Stack spacing={1} direction="row" justifyContent="flex-end">
                         <Link href={`${organization.id}/listings/${listing.id}`} passHref>
                           <Button variant="contained" color="secondary" startIcon={<Create />}>
-                            Rediger søknad
-                          </Button>
-                        </Link>
-                        <Link passHref href={`${organization.id}/listings/${listing.id}/edit/`}>
-                          <Button variant="contained" color="secondary" startIcon={<Create />}>
-                            Rediger
+                            Administrer
                           </Button>
                         </Link>
                         <Button

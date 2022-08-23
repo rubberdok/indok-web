@@ -198,24 +198,27 @@ const EditForm: React.FC<{ form: Form }> = ({ form }) => {
             </CardContent>
           </Card>
         </Grid>
-        {form.questions.map((question) => (
-          <Grid item key={question.id}>
-            <Card>
-              <CardContent>
-                {question.id === activeQuestion?.id ? (
-                  <EditQuestion
-                    question={activeQuestion}
-                    setQuestion={(question) => setActiveQuestion(question)}
-                    saveQuestion={() => switchActiveQuestion(undefined)}
-                    deleteQuestion={deleteActiveQuestion}
-                  />
-                ) : (
-                  <QuestionPreview question={question} setActive={() => switchActiveQuestion(question)} />
-                )}
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
+        {form.questions
+          // sorts questions by ID (hacky solution to maintain question order until we implement order field)
+          .sort((q1, q2) => (parseInt(q1.id) || 0) - (parseInt(q2.id) || 0))
+          .map((question) => (
+            <Grid item key={question.id}>
+              <Card>
+                <CardContent>
+                  {question.id === activeQuestion?.id ? (
+                    <EditQuestion
+                      question={activeQuestion}
+                      setQuestion={(question) => setActiveQuestion(question)}
+                      saveQuestion={() => switchActiveQuestion(undefined)}
+                      deleteQuestion={deleteActiveQuestion}
+                    />
+                  ) : (
+                    <QuestionPreview question={question} setActive={() => switchActiveQuestion(question)} />
+                  )}
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
         <Grid item>
           <Button
             fullWidth
