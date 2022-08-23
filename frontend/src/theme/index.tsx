@@ -1,7 +1,8 @@
+import { useThemeModeContext } from "@hooks/useDarkMode";
 import CssBaseline from "@mui/material/CssBaseline";
 import { createTheme, ThemeOptions, ThemeProvider as MUIThemeProvider } from "@mui/material/styles";
-import { ReactNode, useMemo } from "react";
-import { useTernaryDarkMode } from "usehooks-ts";
+import Head from "next/head";
+import { ReactNode, useEffect, useMemo, useState } from "react";
 import componentsOverride from "./overrides";
 import palette from "./palette";
 import shadows, { customShadows } from "./shadows";
@@ -12,24 +13,38 @@ type Props = {
 };
 
 const ThemeWrapper: React.FC<Props> = ({ children }) => {
-  const { isDarkMode } = useTernaryDarkMode();
+  const { darkMode } = useThemeModeContext();
 
   const themeOptions: ThemeOptions = useMemo(
     () => ({
-      palette: isDarkMode ? palette.dark : palette.light,
+      palette: darkMode ? palette.dark : palette.light,
       shape: { borderRadius: 2 },
-      shadows: isDarkMode ? shadows.dark : shadows.light,
-      customShadows: isDarkMode ? customShadows.dark : customShadows.light,
+      shadows: darkMode ? shadows.dark : shadows.light,
+      customShadows: darkMode ? customShadows.dark : customShadows.light,
       typography,
     }),
-    [isDarkMode]
+    [darkMode]
   );
 
   const theme = createTheme(themeOptions);
   theme.components = componentsOverride(theme);
 
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Force application of darkMode -- a little hacky solution
+  if (!mounted) {
+    return <MUIThemeProvider theme={theme}>{children}</MUIThemeProvider>;
+  }
+
   return (
     <MUIThemeProvider theme={theme}>
+      <Head>
+        <meta name="theme-color" content={darkMode ? "#0f1217" : "#fff"} />
+      </Head>
       <CssBaseline />
       {children}
     </MUIThemeProvider>

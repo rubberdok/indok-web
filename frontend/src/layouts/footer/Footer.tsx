@@ -91,7 +91,7 @@ const Footer: React.FC = () => {
 
       <Container>
         <Stack py={3} spacing={3} direction="row" justifyContent="space-between" alignItems="center" width="100%">
-          <DarkModeToggle variant="toggle" size="small" />
+          <DarkModeToggle />
           <Stack direction="row" spacing={3} alignItems="center" justifyContent="center">
             <NextLinkItem sx={{ mt: 0 }} onClick={() => setOpen(!open)} href="javascript:undefined">
               Hall of Fame
