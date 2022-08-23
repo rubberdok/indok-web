@@ -44,7 +44,7 @@
     "next": "^12.0.8",
     "phosphor-react": "^1.4.1",
     "react": "^17.0.2",
-    "react-awesome-reveal": "^3.8.1",
+    "react-awesome-reveal": "^4.0.0",
     "react-dom": "^17.0.2",
     "react-markdown": "^8.0.0",
     "react-parallax": "^3.3.0",
