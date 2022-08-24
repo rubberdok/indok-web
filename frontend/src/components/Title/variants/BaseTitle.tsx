@@ -16,7 +16,7 @@ export type Props = {
   BreadcrumbProps?: Partial<BreadcrumbProps>;
   bgImage?: StaticImageData | string;
   disableGutters?: boolean;
-  ImageProps?: ImageProps;
+  ImageProps?: Partial<ImageProps>;
   OverlayProps?: OverlayProps & { sx?: SxProps<Theme> };
 };
 

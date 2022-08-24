@@ -1,10 +1,12 @@
-import { ListingQuery } from "@generated/graphql";
+import { ListingDocument, ListingQuery } from "@generated/graphql";
+import { ResultOf } from "@graphql-typed-document-node/core";
 import { ArrowForward } from "@mui/icons-material";
-import { Button, Card, CardContent, Grid, Hidden, Typography } from "@mui/material";
+import { Box, Button, Card, CardContent, Stack, Typography } from "@mui/material";
 import dayjs from "dayjs";
 import nb from "dayjs/locale/nb";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
+import Image from "next/future/image";
 import Link from "next/link";
 dayjs.extend(timezone);
 dayjs.extend(utc);
@@ -18,7 +20,7 @@ dayjs.locale(nb);
  * - the listing to render
  */
 const TitleCard: React.FC<{
-  listing: NonNullable<ListingQuery["listing"]>;
+  listing: NonNullable<ResultOf<typeof ListingDocument>["listing"]>;
 }> = ({ listing }) => {
   let link: string | undefined = undefined;
   if (listing.form) {
@@ -30,43 +32,37 @@ const TitleCard: React.FC<{
   }
 
   return (
-    <Card style={{ height: "100%" }}>
+    <Card>
       <CardContent>
-        <Grid container direction="column" justifyContent="space-between" alignItems="center">
-          <Grid item>
-            <Typography variant="h3" component="h1" align="center">
-              {listing.title}
+        <Stack direction={{ xs: "row", sm: "column" }} spacing={4} justifyContent="center" alignItems="center">
+          {listing.organization.logoUrl && (
+            <Box position="relative" width="100%" height={{ xs: "100px", sm: "150px" }}>
+              <Image
+                src={listing.organization.logoUrl}
+                unoptimized
+                fill
+                style={{ objectFit: "contain", objectPosition: "center", aspectRatio: "1" }}
+              />
+            </Box>
+          )}
+          <Stack direction="column" justifyContent="center" alignItems="center">
+            <Typography variant="h4" component="h4" align="center" gutterBottom>
+              {listing.organization.name}
             </Typography>
-          </Grid>
-          <Grid item>
-            <Typography
-              variant="caption"
-              component="h3"
-              align="center"
-              sx={{
-                "&::before": {
-                  content: "'Frist '",
-                  fontWeight: "bold",
-                  color: (theme) => theme.palette.primary.main,
-                },
-              }}
-              gutterBottom
-            >
-              {dayjs(listing.deadline).format("DD. MMMM YYYY [kl.] HH:mm")}
+            <Typography variant="caption" component="h3" align="center" gutterBottom>
+              {`Frist ${dayjs(listing.deadline).format("DD. MMMM YYYY [kl.] HH:mm")}`}
             </Typography>
-          </Grid>
-          <Hidden smDown>
-            <Grid item>
-              {link && (
+            {link && (
+              <Box>
                 <Link href={link} passHref>
                   <Button variant="contained" color="primary" endIcon={<ArrowForward />}>
                     Søk her
                   </Button>
                 </Link>
-              )}
-            </Grid>
-          </Hidden>
-        </Grid>
+              </Box>
+            )}
+          </Stack>
+        </Stack>
       </CardContent>
     </Card>
   );

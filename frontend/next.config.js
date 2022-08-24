@@ -58,6 +58,13 @@ const moduleExports = {
         transform: "lodash/{{member}}",
       },
     },
+
+    images: {
+      allowFutureImage: true,
+    },
+  },
+  images: {
+    domains: ["indokweb-assets.s3.eu-north-1.amazonaws.com"],
   },
   webpack: (config, { isServer }) => {
     // In `pages/_app.js`, Sentry is imported from @sentry/browser. While
