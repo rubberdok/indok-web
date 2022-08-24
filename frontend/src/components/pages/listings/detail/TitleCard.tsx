@@ -1,4 +1,4 @@
-import { ListingDocument, ListingQuery } from "@generated/graphql";
+import { ListingDocument } from "@generated/graphql";
 import { ResultOf } from "@graphql-typed-document-node/core";
 import { ArrowForward } from "@mui/icons-material";
 import { Box, Button, Card, CardContent, Stack, Typography } from "@mui/material";
