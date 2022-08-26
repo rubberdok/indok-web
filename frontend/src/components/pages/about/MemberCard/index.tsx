@@ -18,7 +18,7 @@ const MemberCard: React.VFC<Props> = ({ member }) => {
         </Typography>
         {member.phone && (
           <Typography variant="body1" component="p">
-            Tlf: {member.phone}
+            Tlf: <a href={`tel:${member.phone}`}>{member.phone}</a>
           </Typography>
         )}
       </CardContent>

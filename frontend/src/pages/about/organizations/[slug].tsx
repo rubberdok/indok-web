@@ -96,7 +96,13 @@ const Article: NextPageWithLayout<ArticleProps> = ({ post, frontmatter }) => {
                             </Link>
                           )}
                           {member.mail && member.phoneNumber && <br />}
-                          {member.phoneNumber && <Chip size="small" label={member.phoneNumber} icon={<Phone />} />}
+                          {member.phoneNumber && (
+                            <Chip
+                              size="small"
+                              label={<a href={`tel:${member.phoneNumber}`}>{member.phoneNumber}</a>}
+                              icon={<Phone />}
+                            />
+                          )}
                         </Box>
                       </Card>
                     </>

@@ -34,6 +34,7 @@ const App = (props: CustomAppProps): JSX.Element => {
           <title>Indøk NTNU - Foreningen for Industriell Økonomi og teknologiledelse</title>
           <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
           <meta name="theme-color" content={isDarkMode ? "#0f1217" : "#fff"} />
+          <meta name="format-detection" content="telephone=no" />
         </Head>
         <ThemeWrapper>{getLayout(<Component {...pageProps} err={err} />)}</ThemeWrapper>
       </ApolloProvider>
