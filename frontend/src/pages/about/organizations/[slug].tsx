@@ -54,7 +54,7 @@ const Article: NextPageWithLayout<ArticleProps> = ({ post, frontmatter }) => {
         }}
         breadcrumbs={[
           { href: "/", name: "Hjem" },
-          { href: "/about/organizations", name: "Om oss" },
+          { href: "/about/organization", name: "Om oss" },
           { href: `/about/organizations/${slug}`, name: frontmatter.title },
         ]}
       />
