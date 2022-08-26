@@ -1,5 +1,4 @@
-import { Color } from "@mui/material";
-import { ColorFormat, ThemeOptions } from "@mui/material/styles";
+import { ThemeOptions } from "@mui/material/styles";
 
 const palette = (mode: "light" | "dark"): ThemeOptions["palette"] => ({
   mode,
