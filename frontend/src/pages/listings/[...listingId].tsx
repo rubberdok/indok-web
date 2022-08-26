@@ -14,21 +14,19 @@ import { NextPageWithLayout } from "../_app";
 
 // page to show details about a listing and its organization
 const ListingPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ listing }) => {
-  const { loading, error, data } = useQuery(ListingDocument, {
+  const { data } = useQuery(ListingDocument, {
     variables: {
       id: listing.id,
     },
   });
 
-  const descriptionWithTitle = (desc: string) => {
+  const descriptionWithTitle = (desc: string | undefined) => {
+    if (desc === undefined) return "";
     if (!desc.startsWith("#")) {
       return "### Om vervet\n" + desc;
     }
     return desc;
   };
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error</p>;
 
   return (
     <>
@@ -45,45 +43,41 @@ const ListingPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServ
           key="title"
         />
       </Head>
-      {data?.listing && (
-        <>
-          <Title
-            title={data.listing.title}
-            variant={data.listing.heroImageUrl ? "dark" : "normal"}
-            overline={data.listing.organization.name}
-            breadcrumbs={[
-              { href: "/", name: "Hjem" },
-              { href: "/listings", name: "Verv" },
-              { href: `/listings/${data.listing.id}`, name: data.listing.title },
-            ]}
-            bgImage={data.listing.heroImageUrl ?? undefined}
-            ImageProps={{
-              placeholder: "empty",
-              unoptimized: true,
-              layout: "fill",
-              objectPosition: "top",
-            }}
-          />
-          <Container sx={{ mb: 4 }}>
-            <Grid
-              container
-              direction="row-reverse"
-              justifyContent={{ xs: "center", sm: "space-between" }}
-              alignItems="flex-start"
-              spacing={4}
-            >
-              <Grid item xs={12} sm={6} md={5} direction="column">
-                <TitleCard listing={data.listing} />
-              </Grid>
-              <Grid item xs={12} sm={6} md={7}>
-                <ReactMarkdown components={markdownComponents}>
-                  {descriptionWithTitle(data.listing.description)}
-                </ReactMarkdown>
-              </Grid>
-            </Grid>
-          </Container>
-        </>
-      )}
+      <Title
+        title={data?.listing?.title}
+        variant={data?.listing?.heroImageUrl ? "dark" : "normal"}
+        overline={data?.listing?.organization.name}
+        breadcrumbs={[
+          { href: "/", name: "Hjem" },
+          { href: "/listings", name: "Verv" },
+          { href: `/listings/${data?.listing?.id}`, name: data?.listing?.title },
+        ]}
+        bgImage={data?.listing?.heroImageUrl ?? undefined}
+        ImageProps={{
+          placeholder: "empty",
+          unoptimized: true,
+          layout: "fill",
+          objectPosition: "top",
+        }}
+      />
+      <Container sx={{ mb: 4 }}>
+        <Grid
+          container
+          direction="row-reverse"
+          justifyContent={{ xs: "center", sm: "space-between" }}
+          alignItems="flex-start"
+          spacing={4}
+        >
+          <Grid item xs={12} sm={6} md={5} direction="column">
+            <TitleCard listing={data?.listing} />
+          </Grid>
+          <Grid item xs={12} sm={6} md={7}>
+            <ReactMarkdown components={markdownComponents}>
+              {descriptionWithTitle(data?.listing?.description)}
+            </ReactMarkdown>
+          </Grid>
+        </Grid>
+      </Container>
     </>
   );
 };

@@ -9,9 +9,9 @@ import { ImageContainer, ImageOverlay, OverlayProps, RootStyle } from "./styles"
 const Image = dynamic(() => import("next/image"));
 
 export type Props = {
-  title: string;
+  title?: string;
   overline?: string;
-  breadcrumbs: TLink[];
+  breadcrumbs?: TLink[];
   sx?: SxProps<Theme>;
   BreadcrumbProps?: Partial<BreadcrumbProps>;
   bgImage?: StaticImageData | string;
@@ -23,7 +23,7 @@ export type Props = {
 const Title: React.FC<Props> = ({
   title,
   children,
-  breadcrumbs,
+  breadcrumbs = [],
   overline,
   sx,
   bgImage,
