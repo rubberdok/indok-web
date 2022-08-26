@@ -1,10 +1,12 @@
 import * as markdownComponents from "@components/MarkdownForm/components";
+import Title from "@components/Title";
 import Layout, { RootStyle } from "@layouts/Layout";
 import { MailOutline, Phone } from "@mui/icons-material";
 import { Box, Card, Chip, Container, Divider, Grid, Paper, Typography } from "@mui/material";
 import { getPostBySlug, getPostsSlugs } from "@utils/posts";
 import { GetStaticPaths, GetStaticProps } from "next";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import ReactMarkdown from "react-markdown";
 import { NextPageWithLayout } from "src/pages/_app";
 import { Post } from "src/types/posts";
@@ -37,86 +39,69 @@ type BoardMember = {
 };
 
 const Article: NextPageWithLayout<ArticleProps> = ({ post, frontmatter }) => {
+  const router = useRouter();
+  const { slug } = router.query;
+
   return (
     <>
-      <Box mt="-60px" position="relative" sx={{ color: "white", zIndex: -1 }} height={350}>
-        <Box
-          sx={{
-            width: "100%",
-            height: "100%",
-            backgroundSize: "cover",
-            backgroundRepeat: "no-repeat",
-            backgroundPosition: "center",
-            backgroundImage: `linear-gradient(to top, rgb(0 0 0 / 50%), rgb(0 0 0 / 60%)),
-            url(${frontmatter.image})`,
-          }}
-          display="flex"
-          alignItems="center"
-          flexDirection="column"
-          justifyContent="center"
-        ></Box>
-      </Box>
+      <Title
+        title={frontmatter.title}
+        bgImage={frontmatter.image}
+        variant="dark"
+        ImageProps={{
+          placeholder: "empty",
+          layout: "fill",
+        }}
+        breadcrumbs={[
+          { href: "/", name: "Hjem" },
+          { href: "/about/organizations", name: "Om oss" },
+          { href: `/about/organizations/${slug}`, name: frontmatter.title },
+        ]}
+      />
 
-      <RootStyle>
-        <Container>
-          <Grid justifyContent="center" container>
-            <Grid item xs={10}>
-              <Paper sx={{ marginTop: -112, textAlign: "center" }}>
-                <Box mb="56px" py="40px" px="56px" display="flex" alignItems="center" justifyContent="space-between">
-                  <Typography variant="h4">{frontmatter.title}</Typography>
-                  <img height={100} alt={frontmatter.alt} src={frontmatter.logo}></img>
-                </Box>
-              </Paper>
-            </Grid>
+      <Container sx={{ mb: 4 }}>
+        <Grid container spacing={4}>
+          <Grid item xs={12} md={8}>
+            <ReactMarkdown components={markdownComponents}>{post.content}</ReactMarkdown>
           </Grid>
-
-          <Grid container spacing={4}>
-            <Grid item xs={8}>
-              <ReactMarkdown components={markdownComponents}>{post.content}</ReactMarkdown>
-            </Grid>
-            <Grid item xs={4}>
-              {frontmatter.board && (
-                <>
-                  <Typography variant="h5" gutterBottom>
-                    Styret
-                  </Typography>
-                  {Object.entries(frontmatter.board).map(([key, member], index) => (
-                    <>
-                      {index != 0 && <Divider />}
-                      <Card key={key}>
-                        <Box p={4}>
-                          <Typography variant="body2">{member.name}</Typography>
-                          <Typography variant="caption" gutterBottom>
-                            {member.title}
-                          </Typography>
-                          <br />
-                          {member.mail && (
-                            <Link href={`mailto:${member.mail}`}>
-                              <Chip size="small" label={member.mail} icon={<MailOutline />} />
-                            </Link>
-                          )}
-                          {member.mail && member.phoneNumber && <br />}
-                          {member.phoneNumber && <Chip size="small" label={member.phoneNumber} icon={<Phone />} />}
-                        </Box>
-                      </Card>
-                    </>
-                  ))}
-                </>
-              )}
-            </Grid>
+          <Grid item xs={12} md={4}>
+            {frontmatter.board && (
+              <>
+                <Typography variant="h5" gutterBottom>
+                  Styret
+                </Typography>
+                {Object.entries(frontmatter.board).map(([key, member], index) => (
+                  <>
+                    {index != 0 && <Divider />}
+                    <Card key={key}>
+                      <Box p={4}>
+                        <Typography variant="body2">{member.name}</Typography>
+                        <Typography variant="caption" gutterBottom>
+                          {member.title}
+                        </Typography>
+                        <br />
+                        {member.mail && (
+                          <Link href={`mailto:${member.mail}`}>
+                            <Chip size="small" label={member.mail} icon={<MailOutline />} />
+                          </Link>
+                        )}
+                        {member.mail && member.phoneNumber && <br />}
+                        {member.phoneNumber && <Chip size="small" label={member.phoneNumber} icon={<Phone />} />}
+                      </Box>
+                    </Card>
+                  </>
+                ))}
+              </>
+            )}
           </Grid>
-        </Container>
-      </RootStyle>
+        </Grid>
+      </Container>
     </>
   );
 };
 
 Article.getLayout = function getLayout(page: React.ReactElement) {
-  return (
-    <Layout>
-      <RootStyle>{page}</RootStyle>
-    </Layout>
-  );
+  return <Layout>{page}</Layout>;
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
