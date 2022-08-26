@@ -1,4 +1,5 @@
 import { ThemeOptions } from "@mui/material";
+
 import Accordion from "./Accordion";
 import Alert from "./Alert";
 import Autocomplete from "./Autocomplete";
@@ -30,6 +31,7 @@ import Switch from "./Switch";
 import Table from "./Table";
 import Tabs from "./Tabs";
 import ToggleButton from "./ToggleButton";
+import ToggleButtonGroup from "./ToggleButtonGroup";
 import Tooltip from "./Tooltip";
 import Typography from "./Typography";
 
@@ -65,6 +67,7 @@ const components: ThemeOptions["components"] = {
   ...Table,
   ...Tabs,
   ...ToggleButton,
+  ...ToggleButtonGroup,
   ...Tooltip,
   ...Typography,
 };

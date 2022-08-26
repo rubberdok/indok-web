@@ -1,6 +1,6 @@
 import { ThemeOptions } from "@mui/material";
 
-const PRIMARY = "Poppins, sans-serif";
+const PRIMARY = "-apple-system, Poppins, sans-serif";
 const SECONDARY = "Merriweather, sans-serif";
 
 const typography: ThemeOptions["typography"] = {
