@@ -1,5 +1,5 @@
 import { Box, Breadcrumbs as MUIBreadcrumbs, BreadcrumbsProps, SxProps, Typography } from "@mui/material";
-import { CaretRight } from "phosphor-react";
+import { ChevronRight } from "@mui/icons-material";
 import Link from "./Link";
 import { TLink } from "./types";
 
@@ -49,7 +49,7 @@ const Breadcrumbs: React.FC<Props> = ({ links, sx, activeLast = false, onDark = 
             lineHeight: 0,
           }}
         >
-          <CaretRight width={8} height={8} />
+          <ChevronRight sx={{ fontSize: 12 }} />
         </Box>
       }
       {...other}

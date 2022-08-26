@@ -1,4 +1,5 @@
 import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
 import { routes } from "./constants";
 
 const Drawer = dynamic(() => import("./variants/Drawer"));
@@ -9,9 +10,10 @@ const Basic = dynamic(() => import("./variants/Basic"));
  * app bar navigation depending on screen size.
  */
 const Navigation: React.FC = () => {
+  const { route } = useRouter();
   return (
     <>
-      <Drawer routes={routes} />
+      <Drawer key={route} routes={routes} />
       <Basic routes={routes} />
     </>
   );

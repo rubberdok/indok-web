@@ -1,9 +1,9 @@
 import { PermissionRequired } from "@components/Auth";
 import Logo from "@components/Logo";
 import LoginButton from "@layouts/components/LoginButton";
+import { Menu } from "@mui/icons-material";
 import { Box, Divider, Drawer as MuiDrawer, IconButton, Stack } from "@mui/material";
 import { useRouter } from "next/router";
-import { List } from "phosphor-react";
 import { useState } from "react";
 import { NavigationProps } from "../../types";
 import NavigationLink from "./NavigationLink";
@@ -17,7 +17,7 @@ const Drawer: React.FC<NavigationProps> = ({ routes }) => {
     <Box sx={{ display: { xs: "block", md: "none" }, width: "100%" }}>
       <Stack direction="row" justifyContent="flex-end" sx={{ width: "100%" }}>
         <IconButton onClick={() => setOpen(true)} sx={{ color: "text.secondary" }}>
-          <List alt="Meny" />
+          <Menu aria-label="menu" />
         </IconButton>
         <MuiDrawer
           open={open}
