@@ -13,7 +13,7 @@ const Card: ThemeOptions["components"] = {
   },
   MuiCardHeader: {
     defaultProps: {
-      titleTypographyProps: { variant: "h6" },
+      titleTypographyProps: { variant: "subtitle1" },
       subheaderTypographyProps: { variant: "body2" },
     },
     styleOverrides: {
