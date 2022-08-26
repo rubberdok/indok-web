@@ -1,50 +1,41 @@
 import { useQuery } from "@apollo/client";
 import * as markdownComponents from "@components/MarkdownForm/components";
-import InfoCard from "@components/pages/listings/detail/InfoCard";
-import ListingBanner from "@components/pages/listings/detail/ListingBanner";
-import ListingBody from "@components/pages/listings/detail/ListingBody";
 import TitleCard from "@components/pages/listings/detail/TitleCard";
-import { ListingDocument, ListingQuery } from "@generated/graphql";
+import Title from "@components/Title";
+import { ListingDocument } from "@generated/graphql";
 import { Listing } from "@interfaces/listings";
-import Layout, { RootStyle } from "@layouts/Layout";
+import Layout from "@layouts/Layout";
 import { addApolloState, initializeApollo } from "@lib/apolloClient";
-import { ArrowForward, OpenInNew } from "@mui/icons-material";
-import { Button, Container, Grid, Hidden, Paper } from "@mui/material";
+import { Container, Grid } from "@mui/material";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Head from "next/head";
-import Link from "next/link";
 import ReactMarkdown from "react-markdown";
 import { NextPageWithLayout } from "../_app";
 
 // page to show details about a listing and its organization
 const ListingPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ listing }) => {
-  const { loading, error, data } = useQuery(ListingDocument, {
+  const { data } = useQuery(ListingDocument, {
     variables: {
       id: listing.id,
     },
   });
 
-  const descriptionWithTitle = (desc: string) => {
+  const descriptionWithTitle = (desc: string | undefined) => {
+    if (desc === undefined) return "";
     if (!desc.startsWith("#")) {
       return "### Om vervet\n" + desc;
     }
     return desc;
   };
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error</p>;
-
-  const getLink = (listing: ListingQuery["listing"]): string => {
-    if (listing?.form) {
-      return `/forms/${listing.form.id}`;
-    }
-    return listing?.applicationUrl ?? "";
-  };
-
   return (
     <>
       <Head>
         <title>{`${listing.title} | Foreningen for Studenter ved Industriell Økonomi og Teknologiledelse`}</title>
+        <meta property="og:image" content="img/gang.jpg" key="image" />
+        {listing.organization.logoUrl && (
+          <meta property="og:image" content={listing.organization.logoUrl} key="image" />
+        )}
         {listing.heroImageUrl && <meta property="og:image" content={listing.heroImageUrl} key="image" />}
         <meta
           property="og:title"
@@ -52,95 +43,46 @@ const ListingPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServ
           key="title"
         />
       </Head>
-      {data?.listing && (
-        <>
-          <Hidden smDown>
-            <ListingBanner imageUrl={data.listing.heroImageUrl} />
-          </Hidden>
-          <Container>
-            <Grid container justifyContent="center">
-              <Grid
-                container
-                item
-                xs={12}
-                sm={10}
-                direction="column"
-                alignItems="stretch"
-                spacing={4}
-                sx={(theme) => ({
-                  position: "relative",
-                  [theme.breakpoints.up("md")]: {
-                    marginTop: "-7%",
-                  },
-                })}
-              >
-                <Grid container item direction="row" alignItems="stretch" justifyContent="center" spacing={4}>
-                  <Hidden mdDown>
-                    <Grid item xs={4}>
-                      <InfoCard listing={data.listing} />
-                    </Grid>
-                  </Hidden>
-                  <Grid item xs>
-                    <TitleCard listing={data.listing} />
-                  </Grid>
-                </Grid>
-                <Grid item>
-                  <ListingBody>
-                    <ReactMarkdown components={markdownComponents}>
-                      {descriptionWithTitle(data.listing.description)}
-                    </ReactMarkdown>
-                  </ListingBody>
-                </Grid>
-              </Grid>
-            </Grid>
-          </Container>
-          <Hidden mdUp>
-            <Paper
-              sx={{
-                position: "sticky",
-                bottom: 0,
-                padding: (theme) => theme.spacing(2),
-                zIndex: (theme) => theme.zIndex.snackbar,
-              }}
-            >
-              <Grid container direction="row" justifyContent="space-between" alignItems="center">
-                {data.listing.readMoreUrl && (
-                  <Grid item xs>
-                    <Link passHref href={data.listing.readMoreUrl}>
-                      <Button size="small" endIcon={<OpenInNew />}>
-                        {data.listing.organization.name.slice(0, 20)}
-                      </Button>
-                    </Link>
-                  </Grid>
-                )}
-                <Hidden smUp>
-                  {(data.listing.form || data.listing.applicationUrl) && (
-                    <Grid item>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        href={getLink(data.listing)}
-                        endIcon={<ArrowForward />}
-                      >
-                        Søk her
-                      </Button>
-                    </Grid>
-                  )}
-                </Hidden>
-              </Grid>
-            </Paper>
-          </Hidden>
-        </>
-      )}
+      <Title
+        title={data?.listing?.title}
+        variant={data?.listing?.heroImageUrl ? "dark" : "normal"}
+        overline={data?.listing?.organization.name}
+        breadcrumbs={[
+          { href: "/", name: "Hjem" },
+          { href: "/listings", name: "Verv" },
+          { href: `/listings/${data?.listing?.id}`, name: data?.listing?.title },
+        ]}
+        bgImage={data?.listing?.heroImageUrl ?? undefined}
+        ImageProps={{
+          placeholder: "empty",
+          unoptimized: true,
+          layout: "fill",
+          objectPosition: "top",
+        }}
+      />
+      <Container sx={{ mb: 4 }}>
+        <Grid
+          container
+          direction="row-reverse"
+          justifyContent={{ xs: "center", sm: "space-between" }}
+          alignItems="flex-start"
+          spacing={4}
+        >
+          <Grid item xs={12} sm={6} md={5} direction="column">
+            <TitleCard listing={data?.listing} />
+          </Grid>
+          <Grid item xs={12} sm={6} md={7}>
+            <ReactMarkdown components={markdownComponents}>
+              {descriptionWithTitle(data?.listing?.description)}
+            </ReactMarkdown>
+          </Grid>
+        </Grid>
+      </Container>
     </>
   );
 };
 
-ListingPage.getLayout = (page) => (
-  <Layout>
-    <RootStyle>{page}</RootStyle>
-  </Layout>
-);
+ListingPage.getLayout = (page) => <Layout>{page}</Layout>;
 
 export const getServerSideProps: GetServerSideProps<{ listing: Listing }> = async (ctx) => {
   const client = initializeApollo({}, ctx);
