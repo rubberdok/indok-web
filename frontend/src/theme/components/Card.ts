@@ -2,9 +2,11 @@ import { ThemeOptions } from "@mui/material";
 
 const Card: ThemeOptions["components"] = {
   MuiCard: {
+    defaultProps: {
+      elevation: 6,
+    },
     styleOverrides: {
       root: ({ theme }) => ({
-        boxShadow: theme.shadows[24],
         borderRadius: Number(theme.shape.borderRadius) * 2,
       }),
     },

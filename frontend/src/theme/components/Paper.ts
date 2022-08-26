@@ -1,19 +1,11 @@
-import { ComponentOverride } from "./types";
+import { ThemeOptions } from "@mui/material";
 
-const Paper: ComponentOverride = () => {
-  return {
-    MuiPaper: {
-      defaultProps: {
-        elevation: 0,
-      },
-
-      styleOverrides: {
-        root: {
-          backgroundImage: "none",
-        },
-      },
+const Paper: ThemeOptions["components"] = {
+  MuiPaper: {
+    defaultProps: {
+      elevation: 0,
     },
-  };
+  },
 };
 
 export default Paper;

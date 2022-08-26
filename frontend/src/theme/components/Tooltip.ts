@@ -1,20 +1,16 @@
-import { ComponentOverride } from "./types";
+import { ThemeOptions } from "@mui/material";
 
-const Tooltip: ComponentOverride = (theme) => {
-  const lightMode = theme.palette.mode === "light";
-
-  return {
-    MuiTooltip: {
-      styleOverrides: {
-        tooltip: {
-          backgroundColor: theme.palette.grey[lightMode ? 800 : 700],
-        },
-        arrow: {
-          color: theme.palette.grey[lightMode ? 800 : 700],
-        },
-      },
+const Tooltip: ThemeOptions["components"] = {
+  MuiTooltip: {
+    styleOverrides: {
+      tooltip: ({ theme }) => ({
+        backgroundColor: theme.palette.grey[800],
+      }),
+      arrow: ({ theme }) => ({
+        color: theme.palette.grey[800],
+      }),
     },
-  };
+  },
 };
 
 export default Tooltip;

@@ -1,61 +1,36 @@
-import { alpha } from "@mui/material/styles";
-import { ColorSchema } from "../../theme/palette";
-import { ComponentOverride } from "./types";
+import { alpha, ThemeOptions } from "@mui/material/styles";
 
-const ToggleButton: ComponentOverride = (theme) => {
-  const styleSelected = (color: ColorSchema) => ({
-    props: { color },
-    style: {
-      "&.Mui-selected": {
-        borderColor: alpha(theme.palette[color].main, 0.48),
-      },
+const ToggleButton: ThemeOptions["components"] = {
+  MuiToggleButton: {
+    defaultProps: {},
+
+    styleOverrides: {
+      root: ({ theme }) => ({
+        color: theme.palette.text.primary,
+      }),
     },
-  });
+  },
 
-  return {
-    MuiToggleButton: {
-      defaultProps: {
-        color: "primary",
-      },
-
-      variants: [
-        styleSelected("primary"),
-        styleSelected("secondary"),
-        styleSelected("info"),
-        styleSelected("success"),
-        styleSelected("warning"),
-        styleSelected("error"),
-      ],
-
-      styleOverrides: {
-        root: {
-          color: theme.palette.text.primary,
-          "& svg": { width: 24, height: 24 },
-        },
-      },
+  MuiToggleButtonGroup: {
+    defaultProps: {
+      color: "primary",
     },
 
-    MuiToggleButtonGroup: {
-      defaultProps: {
-        color: "primary",
-      },
-
-      styleOverrides: {
-        root: {
-          boxShadow: theme.customShadows.z8,
-          border: `solid 1px ${theme.palette.grey[500_12]}`,
-          "& .MuiToggleButton-root": {
+    styleOverrides: {
+      root: ({ theme }) => ({
+        boxShadow: theme.shadows[7],
+        border: `solid 1px ${alpha(theme.palette.grey[500], 0.12)}`,
+        "& .MuiToggleButton-root": {
+          border: "none",
+          margin: 4,
+          borderRadius: `${theme.shape.borderRadius}px !important`,
+          "&.Mui-disabled": {
             border: "none",
-            margin: 4,
-            borderRadius: `${theme.shape.borderRadius}px !important`,
-            "&.Mui-disabled": {
-              border: "none",
-            },
           },
         },
-      },
+      }),
     },
-  };
+  },
 };
 
 export default ToggleButton;
