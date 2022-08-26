@@ -1,21 +1,13 @@
-import { ComponentOverride } from "./types";
+import { ThemeOptions } from "@mui/material";
 
-const Radio: ComponentOverride = (theme) => {
-  return {
-    MuiRadio: {
-      styleOverrides: {
-        root: {
-          padding: theme.spacing(1),
-          svg: {
-            fontSize: 24,
-            "&[font-size=small]": {
-              fontSize: 20,
-            },
-          },
-        },
-      },
+const Radio: ThemeOptions["components"] = {
+  MuiRadio: {
+    styleOverrides: {
+      root: ({ theme }) => ({
+        padding: theme.spacing(1),
+      }),
     },
-  };
+  },
 };
 
 export default Radio;

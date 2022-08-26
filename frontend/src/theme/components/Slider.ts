@@ -1,31 +1,22 @@
-import { ComponentOverride } from "./types";
+import { ThemeOptions } from "@mui/material";
 
-const Slider: ComponentOverride = (theme) => {
-  const lightMode = theme.palette.mode === "light";
-
-  return {
-    MuiSlider: {
-      defaultProps: {
-        size: "small",
-      },
-
-      styleOverrides: {
-        root: {
-          "&.Mui-disabled": {
-            color: theme.palette.action.disabled,
-          },
-        },
-        markLabel: {
-          fontSize: 13,
-          color: theme.palette.text.disabled,
-        },
-        valueLabel: {
-          borderRadius: 8,
-          backgroundColor: theme.palette.grey[lightMode ? 800 : 700],
-        },
-      },
+const Slider: ThemeOptions["components"] = {
+  MuiSlider: {
+    defaultProps: {
+      size: "small",
     },
-  };
+
+    styleOverrides: {
+      markLabel: ({ theme }) => ({
+        fontSize: 13,
+        color: theme.palette.text.disabled,
+      }),
+      valueLabel: ({ theme }) => ({
+        borderRadius: 8,
+        backgroundColor: theme.palette.grey[800],
+      }),
+    },
+  },
 };
 
 export default Slider;

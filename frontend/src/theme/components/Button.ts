@@ -8,6 +8,14 @@ const Button: ThemeOptions["components"] = {
     styleOverrides: {
       root: {
         textTransform: "none",
+        "& .MuiLoadingButton-text": {
+          "& .MuiLoadingButton-startIcon": {
+            marginLeft: 0,
+          },
+          "& .MuiLoadingButton-endIcon": {
+            marginRight: 0,
+          },
+        },
       },
     },
   },

@@ -1,15 +1,13 @@
-import { ComponentOverride } from "./types";
+import { ThemeOptions } from "@mui/material";
 
-const Stepper: ComponentOverride = (theme) => {
-  return {
-    MuiStepConnector: {
-      styleOverrides: {
-        line: {
-          borderColor: theme.palette.divider,
-        },
-      },
+const Stepper: ThemeOptions["components"] = {
+  MuiStepConnector: {
+    styleOverrides: {
+      line: ({ theme }) => ({
+        borderColor: theme.palette.divider,
+      }),
     },
-  };
+  },
 };
 
 export default Stepper;

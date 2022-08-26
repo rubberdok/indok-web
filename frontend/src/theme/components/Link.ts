@@ -1,18 +1,16 @@
-import { ComponentOverride } from "./types";
+import { ThemeOptions } from "@mui/material";
 
-const Link: ComponentOverride = () => {
-  return {
-    MuiLink: {
-      defaultProps: {
-        underline: "hover",
-      },
-      styleOverrides: {
-        root: {
-          cursor: "pointer",
-        },
+const Link: ThemeOptions["components"] = {
+  MuiLink: {
+    defaultProps: {
+      underline: "hover",
+    },
+    styleOverrides: {
+      root: {
+        cursor: "pointer",
       },
     },
-  };
+  },
 };
 
 export default Link;
