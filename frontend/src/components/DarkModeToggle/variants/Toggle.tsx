@@ -1,5 +1,5 @@
 import { ToggleButton, ToggleButtonGroup, ToggleButtonGroupProps } from "@mui/material";
-import { LightMode, SettingsBrightness, DarkMode } from "@mui/icons-material";
+import { LightModeOutlined, SettingsBrightness, DarkModeOutlined } from "@mui/icons-material";
 
 import { useTernaryDarkMode } from "usehooks-ts";
 
@@ -18,13 +18,13 @@ const Toggle: React.FC<Props> = (props) => {
         {...props}
       >
         <ToggleButton value="light" aria-label="Light">
-          <LightMode fontSize="small" />
+          <LightModeOutlined fontSize="small" />
         </ToggleButton>
         <ToggleButton value="system" aria-label="System">
           <SettingsBrightness fontSize="small" />
         </ToggleButton>
         <ToggleButton value="dark" aria-label="Dark">
-          <DarkMode fontSize="small" />
+          <DarkModeOutlined fontSize="small" />
         </ToggleButton>
       </ToggleButtonGroup>
     </>
