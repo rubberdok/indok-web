@@ -22,7 +22,7 @@ type Props = {
 
 const OrganizationLink: React.FC<Props> = ({ organization }) => {
   return (
-    <Card sx={{ boxShadow: (theme) => theme.customShadows.z24 }}>
+    <Card sx={{ boxShadow: (theme) => theme.shadows[24] }}>
       <Link passHref href={organization.externalUrl ?? organization.internalUrl}>
         <CardActionArea sx={{ px: 4, py: 3 }}>
           <Stack direction="row" spacing={2} alignItems="center">
