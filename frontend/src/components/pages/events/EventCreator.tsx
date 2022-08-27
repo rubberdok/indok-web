@@ -78,7 +78,17 @@ const CreateEvent: React.FC = () => {
   });
 
   const { loading: categoryLoading, error: categoryError, data: categoryData } = useQuery(GET_CATEGORIES);
-  const { loading: userLoading, error: userError, data: userData } = useQuery<{ user: User }>(GET_USER);
+  const {
+    loading: userLoading,
+    error: userError,
+    data: userData,
+  } = useQuery<{ user: User }>(GET_USER, {
+    onCompleted: ({ user }) => {
+      if (!eventData.organizationId) {
+        setEventData((prevData) => ({ ...prevData, organizationId: user?.organizations[0]?.id ?? "" }));
+      }
+    },
+  });
 
   if (categoryLoading || userLoading) return <CircularProgress />;
   if (categoryError || userError) return <Typography>Det oppstod en feil.</Typography>;
@@ -86,9 +96,6 @@ const CreateEvent: React.FC = () => {
   if (!userData || !userData.user || !userData.user.organizations.length) {
     router.push("/events");
     return null;
-  }
-  if (!eventData.organizationId) {
-    setEventData({ ...eventData, organizationId: userData.user.organizations[0].id });
   }
 
   const onIsAttendableChange = (attendable: boolean) => {

@@ -110,7 +110,7 @@ const CheckoutPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getSer
                     )}
                   </Grid>
 
-                  {product && quantity && typeof productId == "string" && (
+                  {product && Boolean(quantity) && typeof productId == "string" && (
                     <Grid item xs={12}>
                       <Box alignItems={"center"} display={"inline-flex"}>
                         <FormControlLabel
