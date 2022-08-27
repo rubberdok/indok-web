@@ -22,9 +22,9 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { range } from "@utils/helpers";
 import dayjs from "dayjs";
 import { useFormik } from "formik";
+import range from "lodash/range";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
@@ -48,11 +48,11 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": 
   const ID_PREFIX = `${dataTestId}`;
 
   const minimumGraduationYear = useMemo<number>(
-    () => Math.min(currentYear, data?.user?.graduationYear || currentYear),
+    () => Math.min(currentYear, data?.user?.graduationYear ?? currentYear),
     [data?.user?.graduationYear, currentYear]
   );
   const graduationYears = useMemo<number[]>(
-    () => range(minimumGraduationYear, maxGraduationYear, 1),
+    () => range(minimumGraduationYear, maxGraduationYear + 1, 1),
     [minimumGraduationYear, currentYear]
   );
 
