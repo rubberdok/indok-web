@@ -2,7 +2,7 @@ import * as markdownComponents from "@components/MarkdownForm/components";
 import Title from "@components/Title";
 import Layout from "@layouts/Layout";
 import { MailOutline, Phone } from "@mui/icons-material";
-import { Box, Card, Chip, Container, Divider, Grid, Typography } from "@mui/material";
+import { Card, CardContent, CardHeader, Chip, Container, Divider, Grid, Typography } from "@mui/material";
 import { Article, getPostBySlug, getPostsSlugs } from "@utils/posts";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import Link from "next/link";
@@ -38,16 +38,13 @@ const ArticlePage: NextPageWithLayout<InferGetStaticPropsType<typeof getStaticPr
           </Grid>
           <Grid item xs={12} md={4}>
             {frontmatter.board && (
-              <>
-                <Typography variant="h5" gutterBottom>
-                  Styret
-                </Typography>
-                {Object.entries(frontmatter.board).map(([key, member], index) => (
-                  <>
-                    {index != 0 && <Divider />}
-                    <Card key={key}>
-                      <Box p={4}>
-                        <Typography variant="body2">{member.name}</Typography>
+              <Card>
+                <CardHeader title="Styret" />
+                <CardContent>
+                  <Grid container direction="column" spacing={2}>
+                    {Object.entries(frontmatter.board).map(([key, member], index, array) => (
+                      <Grid item key={key}>
+                        <Typography variant="body1">{member.name}</Typography>
                         <Typography variant="caption" gutterBottom>
                           {member.title}
                         </Typography>
@@ -59,11 +56,12 @@ const ArticlePage: NextPageWithLayout<InferGetStaticPropsType<typeof getStaticPr
                         )}
                         {member.mail && member.phoneNumber && <br />}
                         {member.phoneNumber && <Chip size="small" label={member.phoneNumber} icon={<Phone />} />}
-                      </Box>
-                    </Card>
-                  </>
-                ))}
-              </>
+                        {index < array.length - 1 && <Divider sx={{ mt: 2 }} />}
+                      </Grid>
+                    ))}
+                  </Grid>
+                </CardContent>
+              </Card>
             )}
           </Grid>
         </Grid>
