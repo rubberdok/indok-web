@@ -10,7 +10,7 @@ import { useRouter } from "next/router";
 import ReactMarkdown from "react-markdown";
 import { NextPageWithLayout } from "src/pages/_app";
 
-const Article: NextPageWithLayout<InferGetStaticPropsType<typeof getStaticProps>> = ({ post, frontmatter }) => {
+const ArticlePage: NextPageWithLayout<InferGetStaticPropsType<typeof getStaticProps>> = ({ post, frontmatter }) => {
   const router = useRouter();
   const { slug } = router.query;
 
@@ -105,4 +105,4 @@ export const getStaticProps: GetStaticProps<Article> = async ({ params }) => {
   return { notFound: true };
 };
 
-export default Article;
+export default ArticlePage;
