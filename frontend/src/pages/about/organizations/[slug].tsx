@@ -72,7 +72,7 @@ const ArticlePage: NextPageWithLayout<InferGetStaticPropsType<typeof getStaticPr
   );
 };
 
-Article.getLayout = function getLayout(page: React.ReactElement) {
+ArticlePage.getLayout = function getLayout(page: React.ReactElement) {
   return <Layout>{page}</Layout>;
 };
 
