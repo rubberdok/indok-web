@@ -2,8 +2,8 @@ import { useQuery } from "@apollo/client";
 import LabeledIcon from "@components/LabeledIcon";
 import { QUERY_BOOKING_RESPONSIBLE } from "@graphql/cabins/queries";
 import { BookingResponsible } from "@interfaces/cabins";
+import { MailOutline } from "@mui/icons-material";
 import { Link, Stack, Typography } from "@mui/material";
-import { Envelope } from "phosphor-react";
 import React from "react";
 
 const ContactCabinBoard: React.FC = () => {
@@ -14,7 +14,7 @@ const ContactCabinBoard: React.FC = () => {
       <Stack direction="column" spacing={2} mb={4}>
         <Typography variant="subtitle1">Spørsmål?</Typography>
         <LabeledIcon
-          icon={<Envelope size="24px" />}
+          icon={<MailOutline />}
           value={
             <Typography variant="body1" sx={{ ml: 1 }}>
               <Link href={`mailto:${data?.activeBookingResponsible.email}`}>

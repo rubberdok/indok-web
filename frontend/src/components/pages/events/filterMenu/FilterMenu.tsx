@@ -1,7 +1,6 @@
 import { FilterQuery } from "@components/pages/events/AllEvents";
+import { Refresh, StarOutlineRounded, StarRounded } from "@mui/icons-material";
 import { Card, CardContent, Divider, Grid, IconButton, Tooltip, Typography } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
-import { Star, X } from "phosphor-react";
 import React from "react";
 import CategoryFilter from "./CategoryFilter";
 import DateTimeFilter from "./DateTimeFilter";
@@ -26,8 +25,6 @@ type Props = {
  */
 
 const FilterMenu: React.FC<Props> = ({ filters, onFiltersChange, showDefaultEvents, onShowDefaultChange }) => {
-  const theme = useTheme();
-
   const handleChecked: HandleChecked = (e, field, filter) => {
     if (e.target.checked) {
       onFiltersChange({ ...filters, [field]: filter });
@@ -46,7 +43,7 @@ const FilterMenu: React.FC<Props> = ({ filters, onFiltersChange, showDefaultEven
             <Grid item>
               <Tooltip title="Nullstill filter" arrow>
                 <IconButton onClick={() => onFiltersChange({})} aria-label="delete">
-                  <X />
+                  <Refresh />
                 </IconButton>
               </Tooltip>
             </Grid>
@@ -60,7 +57,7 @@ const FilterMenu: React.FC<Props> = ({ filters, onFiltersChange, showDefaultEven
             </Grid>
             <Grid item>
               <IconButton onClick={() => onShowDefaultChange(!showDefaultEvents)} aria-label="delete">
-                {showDefaultEvents ? <Star color={theme.palette.secondary.main} weight="fill" /> : <Star />}
+                {showDefaultEvents ? <StarRounded color="secondary" /> : <StarOutlineRounded />}
               </IconButton>
             </Grid>
           </Grid>

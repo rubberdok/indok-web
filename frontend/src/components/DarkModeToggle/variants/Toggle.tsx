@@ -1,5 +1,6 @@
 import { ToggleButton, ToggleButtonGroup, ToggleButtonGroupProps } from "@mui/material";
-import { SunDim, Monitor, Moon } from "phosphor-react";
+import { LightModeOutlined, SettingsBrightness, DarkModeOutlined } from "@mui/icons-material";
+
 import { useTernaryDarkMode } from "usehooks-ts";
 
 export type Props = ToggleButtonGroupProps;
@@ -17,13 +18,13 @@ const Toggle: React.FC<Props> = (props) => {
         {...props}
       >
         <ToggleButton value="light" aria-label="Light">
-          <SunDim />
+          <LightModeOutlined fontSize="small" />
         </ToggleButton>
         <ToggleButton value="system" aria-label="System">
-          <Monitor />{" "}
+          <SettingsBrightness fontSize="small" />
         </ToggleButton>
         <ToggleButton value="dark" aria-label="Dark">
-          <Moon />
+          <DarkModeOutlined fontSize="small" />
         </ToggleButton>
       </ToggleButtonGroup>
     </>

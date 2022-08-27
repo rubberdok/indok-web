@@ -1,6 +1,6 @@
 import { Box, Card, CardActionArea, Stack, Typography } from "@mui/material";
 import Link from "next/link";
-import { Link as LinkIcon } from "phosphor-react";
+import { OpenInNew } from "@mui/icons-material";
 
 type External = {
   externalUrl: string;
@@ -38,7 +38,7 @@ const OrganizationLink: React.FC<Props> = ({ organization }) => {
             <Typography variant="h6" component="p">
               {organization.name}
             </Typography>
-            {organization.externalUrl && <LinkIcon width={20} height={20} />}
+            {organization.externalUrl && <OpenInNew fontSize="small" />}
           </Stack>
         </CardActionArea>
       </Link>
