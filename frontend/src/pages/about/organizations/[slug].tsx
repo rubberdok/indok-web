@@ -1,44 +1,16 @@
 import * as markdownComponents from "@components/MarkdownForm/components";
 import Title from "@components/Title";
-import Layout, { RootStyle } from "@layouts/Layout";
+import Layout from "@layouts/Layout";
 import { MailOutline, Phone } from "@mui/icons-material";
-import { Box, Card, Chip, Container, Divider, Grid, Paper, Typography } from "@mui/material";
-import { getPostBySlug, getPostsSlugs } from "@utils/posts";
-import { GetStaticPaths, GetStaticProps } from "next";
+import { Box, Card, Chip, Container, Divider, Grid, Typography } from "@mui/material";
+import { Article, getPostBySlug, getPostsSlugs } from "@utils/posts";
+import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import ReactMarkdown from "react-markdown";
 import { NextPageWithLayout } from "src/pages/_app";
-import { Post } from "src/types/posts";
 
-type ArticleProps = {
-  params: {
-    slug: string;
-  };
-  post: {
-    content: string;
-    excerpt: string;
-  };
-  frontmatter: {
-    description: string;
-    title: string;
-    logo?: string;
-    alt?: string;
-    image?: string;
-    board: Record<string, BoardMember>;
-  };
-  nextPost: Post | null;
-  previousPost: Post | null;
-};
-
-type BoardMember = {
-  name: string;
-  mail: string;
-  title: string;
-  phoneNumber: string;
-};
-
-const Article: NextPageWithLayout<ArticleProps> = ({ post, frontmatter }) => {
+const Article: NextPageWithLayout<InferGetStaticPropsType<typeof getStaticProps>> = ({ post, frontmatter }) => {
   const router = useRouter();
   const { slug } = router.query;
 
@@ -113,19 +85,23 @@ export const getStaticPaths: GetStaticPaths = async () => {
   };
 };
 
-export const getStaticProps: GetStaticProps = async ({ params }) => {
+export const getStaticProps: GetStaticProps<Article> = async ({ params }) => {
   if (params) {
     const { slug } = params;
-    let postData = undefined;
+
+    let article: Article | undefined;
     if (typeof slug === "string") {
-      postData = getPostBySlug(slug, "organizations");
+      article = getPostBySlug(slug, "organizations");
     } else if (Array.isArray(slug)) {
-      postData = getPostBySlug(slug[0], "organizations");
+      article = getPostBySlug(slug[0], "organizations");
     } else {
       return { notFound: true };
     }
-    return { props: postData };
+
+    if (!article) return { notFound: true };
+    return { props: article };
   }
+
   return { notFound: true };
 };
 
