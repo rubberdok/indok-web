@@ -2,8 +2,8 @@ import dayjs from "dayjs";
 import * as Yup from "yup";
 
 const today = dayjs();
-export const maxGraduationYear = today.month() > 7 ? today.year() + 5 : today.year() + 4;
-const minGraduationYear = today.month() > 7 ? today.year() + 1 : today.year();
+export const maxGraduationYear = today.month() > 6 ? today.year() + 5 : today.year() + 4;
+const minGraduationYear = today.month() > 6 ? today.year() + 1 : today.year();
 
 export const suggestNames = (name: string | undefined): { firstName: string; lastName: string } => {
   if (!name) {
