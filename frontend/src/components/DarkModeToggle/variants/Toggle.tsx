@@ -11,7 +11,7 @@ const Toggle: React.FC<Props> = (props) => {
     <>
       <ToggleButtonGroup
         value={ternaryDarkMode}
-        onChange={(_e, value: "light" | "system" | "dark") => setTernaryDarkMode(value)}
+        onChange={(_e, value: "light" | "system" | "dark" | null) => value && setTernaryDarkMode(value)}
         exclusive
         size="small"
         color="info"
