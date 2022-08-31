@@ -39,18 +39,6 @@ services:
       - postgres
       - redis
 
-  frontend:
-    tty: true
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    volumes:
-      - ./frontend:/usr/src/app
-      - next_node_modules:/usr/src/app/node_modules/
-    ports:
-      - 3000:3000
-    expose:
-      - 3000
 
 volumes:
   postgres_data:
