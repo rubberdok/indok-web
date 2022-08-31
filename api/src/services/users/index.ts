@@ -3,7 +3,7 @@ import dayjs from "dayjs";
 import { inject, injectable } from "inversify";
 import { IUserRepository, Types } from "../../repositories";
 import { IUserService } from "../interfaces";
-import { createUserSchema } from "./validation";
+import { createUserSchema, updateUserSchema } from "./validation";
 
 @injectable()
 export default class UserService implements IUserService {
@@ -11,7 +11,20 @@ export default class UserService implements IUserService {
     @inject(Types.UserRepository)
     private usersRepository: IUserRepository
   ) {}
-  update(id: string, data: Prisma.UserUpdateInput): Promise<User> {
+  
+  async update(id: string, data: Prisma.UserUpdateInput): Promise<User> {
+    updateUserSchema.parse(data)
+    
+    const user = await this.usersRepository.get(id);
+
+    if (user.firstLogin) {
+      data = { ...data, firstLogin: false }
+    } else if (!this.canUpdateYear(user)) {
+      data = {...data, graduationYear: undefined};
+    } else if (data.graduationYear && data.graduationYear !== user.graduationYear) {
+      data = {...data, graduationYearUpdatedAt: new Date()}
+    }
+
     return this.usersRepository.update(id, data);
   }
 
