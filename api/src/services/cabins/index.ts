@@ -1,10 +1,10 @@
 import { Booking, BookingStatus, Cabin, User } from "@prisma/client";
 import { inject, injectable } from "inversify";
+import { ValidationError } from "../../core/errors";
 import { ICabinRepository, Types as RepositoryTypes } from "../../repositories";
 import { IPermissionService } from "../interfaces";
 import { IMailService, TemplateAliasEnum } from "../mail/interfaces";
 import Types from "../types";
-import { OverlappingBookingError } from "./errors";
 import { BookingData, ICabinService } from "./interfaces";
 import { bookingSchema } from "./validation";
 
@@ -54,11 +54,9 @@ export default class CabinService implements ICabinService {
         status,
       });
       if (overlapping.length > 0) {
-        throw new OverlappingBookingError();
+        throw new ValidationError("bookings cannot overlap");
       }
     }
     return this.cabinRepository.updateBooking(id, { status });
   }
 }
-
-export { OverlappingBookingError };

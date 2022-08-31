@@ -1,12 +1,13 @@
-const codes = {
-  PERMISSION_DENIED: "PERMISSION_DENIED",
-} as const;
+import { codes } from "../../core/errors";
 
 class PermissionDeniedError implements Error {
+  constructor(public message: string) {}
+  
   name: string = "PermissionError";
-  message: string = codes.PERMISSION_DENIED;
+  extensions: { code: string } = { code: codes.PERMISSION_DENIED };
+  
   stack?: string;
   cause?: Error;
 }
 
-export { codes, PermissionDeniedError };
+export { PermissionDeniedError };
