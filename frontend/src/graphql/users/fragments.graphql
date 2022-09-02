@@ -4,4 +4,5 @@ fragment BaseUserFields on User {
   firstName
   lastName
   firstLogin
+  graduationYear
 }

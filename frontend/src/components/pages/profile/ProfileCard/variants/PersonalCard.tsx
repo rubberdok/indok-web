@@ -1,5 +1,6 @@
 import { Grid, Skeleton, Typography } from "@mui/material";
 import Profile from "@public/illustrations/Profile.svg";
+import { currentGradeYear } from "../../UserForm/helpers";
 import ProfileCardBase from "./ProfileCardBase";
 
 type Props = {
@@ -37,7 +38,7 @@ const PersonalCard: React.VFC<Props> = ({ user, "data-test-id": dataTestId, ...p
         </Grid>
         <Grid item>
           {user && user.graduationYear ? (
-            <Typography variant="body2">{`${user.graduationYear}. klasse`}</Typography>
+            <Typography variant="body2">{`${currentGradeYear(user.graduationYear)}. klasse`}</Typography>
           ) : (
             <Skeleton variant="rectangular">
               <Typography variant="body2">0. klasse</Typography>

@@ -149,6 +149,7 @@ export type AuthenticateMutation = {
     firstName: string;
     lastName: string;
     firstLogin: boolean;
+    graduationYear?: number | null;
   };
 };
 
@@ -169,6 +170,7 @@ export type BaseUserFieldsFragment = {
   firstName: string;
   lastName: string;
   firstLogin: boolean;
+  graduationYear?: number | null;
 };
 
 export type UpdateUserMutationVariables = Exact<{
@@ -204,6 +206,7 @@ export type UserQuery = {
     firstName: string;
     lastName: string;
     firstLogin: boolean;
+    graduationYear?: number | null;
   } | null;
 };
 
@@ -241,6 +244,7 @@ export const BaseUserFieldsFragmentDoc = {
           { kind: "Field", name: { kind: "Name", value: "firstName" } },
           { kind: "Field", name: { kind: "Name", value: "lastName" } },
           { kind: "Field", name: { kind: "Name", value: "firstLogin" } },
+          { kind: "Field", name: { kind: "Name", value: "graduationYear" } },
         ],
       },
     },
