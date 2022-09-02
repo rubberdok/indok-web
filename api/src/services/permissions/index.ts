@@ -13,6 +13,7 @@ export default class PermissionService implements IPermissionService {
     private permissionRepository: IPermissionRepository
   ) {}
   hasPermission(user: User, permission: PermissionString | string): Promise<boolean> {
+    if (user.isSuperUser) return Promise.resolve(true);
     return this.permissionRepository.hasPermission(user, permission);
   }
 
