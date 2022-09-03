@@ -1,0 +1,91 @@
+name: API
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    
+defaults:
+  run:
+    working-directory: api
+
+jobs:
+  unit-test:
+    name: Unit Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: npm
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Run Unit Tests
+        run: npm run test:unit -- --collect-coverage
+      
+      - name: Upload Coverage
+        uses: codecov/codecov-action@v3
+        with:
+          directory: api/coverage/unit
+          flags: unittests
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: npm
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: api
+          path: api/dist
+
+  integration-test:
+    name: Integration Test
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: npm
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Run Integration Tests
+        run: npm run test:integration:headless -- --collect-coverage
+
+      - name: Upload Coverage
+        uses: codecov/codecov-action@v3
+        with:
+          directory: api/coverage/integration
+          flags: integrationtests # optional
