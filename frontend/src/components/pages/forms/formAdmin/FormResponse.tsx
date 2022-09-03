@@ -41,18 +41,21 @@ const FormResponse: React.FC<{
       </Grid>
       <Grid item>
         <Grid container direction="column" spacing={1}>
-          {form.questions.map((question) => (
-            <Grid item key={question.id}>
-              <Card>
-                <CardContent>
-                  <FormAnswer
-                    question={question}
-                    answer={response.answers.find((answer) => answer.question?.id === question.id)}
-                  />
-                </CardContent>
-              </Card>
-            </Grid>
-          ))}
+          {form.questions
+            // sorts questions by ID (hacky solution to maintain question order until we implement order field)
+            .sort((q1, q2) => (parseInt(q1.id) || 0) - (parseInt(q2.id) || 0))
+            .map((question) => (
+              <Grid item key={question.id}>
+                <Card>
+                  <CardContent>
+                    <FormAnswer
+                      question={question}
+                      answer={response.answers.find((answer) => answer.question?.id === question.id)}
+                    />
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
         </Grid>
       </Grid>
     </Grid>

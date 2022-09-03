@@ -1,7 +1,7 @@
 import OrganizationLink, { Organization } from "./OrganizationLink";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Box, Button, IconButton } from "@mui/material";
-import { ArrowLeft, ArrowRight } from "phosphor-react";
+import { ArrowBack, ArrowForward } from "@mui/icons-material";
 import { styled } from "@mui/system";
 import { FreeMode, Navigation } from "swiper";
 import "swiper/css";
@@ -13,7 +13,7 @@ const organizations: Readonly<Organization[]> = [
   { name: "ESTIEM", externalUrl: "https://sites.google.com/view/estiem-ntnu" },
   { name: "Indøk Kultur", internalUrl: "/about/organization?category=kultur" },
   { name: "Rubberdøk", internalUrl: "/about/organizations/rubberdok" },
-  { name: "Hytteforeningen", internalUrl: "/about/organizations/hyttestyret" },
+  { name: "Hytteforeningen", internalUrl: "/about/organizations/hytteforeningen" },
   { name: "Janus IF", internalUrl: "/about/organization?category=idrett" },
 ] as const;
 
@@ -58,7 +58,7 @@ const Organizations: React.FC<Props> = ({ offsetX, onActiveIndexChange }) => {
   return (
     <>
       <ArrowStyle className="arrow left">
-        <ArrowLeft />
+        <ArrowBack />
       </ArrowStyle>
       <Box
         sx={{ "& .swiper-slide": { my: "auto" }, "& .swiper": { overflow: "visible" } }}
@@ -97,7 +97,7 @@ const Organizations: React.FC<Props> = ({ offsetX, onActiveIndexChange }) => {
           ))}
           <SwiperSlide>
             <Link passHref href="/about/organization">
-              <Button color="inherit" variant="contained" size="large" endIcon={<ArrowRight />}>
+              <Button color="inherit" variant="contained" size="large" endIcon={<ArrowForward />}>
                 Alle organisasjoner
               </Button>
             </Link>
@@ -105,7 +105,7 @@ const Organizations: React.FC<Props> = ({ offsetX, onActiveIndexChange }) => {
         </Swiper>
       </Box>
       <ArrowStyle className="arrow right">
-        <ArrowRight />
+        <ArrowForward />
       </ArrowStyle>
     </>
   );

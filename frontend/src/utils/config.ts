@@ -6,6 +6,11 @@ const validateEnvironmentVariable = (environmentVariable: string | undefined, na
 };
 
 export const config = {
+  DATAPORTEN_ID: validateEnvironmentVariable(process.env.NEXT_PUBLIC_DATAPORTEN_ID, "NEXT_PUBLIC_DATAPORTEN_ID"),
+  DATAPORTEN_REDIRECT_URI: validateEnvironmentVariable(
+    process.env.NEXT_PUBLIC_DATAPORTEN_REDIRECT_URI,
+    "NEXT_PUBLIC_DATAPORTEN_REDIRECT_URI"
+  ),
   GRAPHQL_ENDPOINT: validateEnvironmentVariable(
     process.env.NEXT_PUBLIC_GRAPHQL_BACKEND_URI,
     "NEXT_PUBLIC_GRAPHQL_BACKEND_URI"
@@ -15,10 +20,6 @@ export const config = {
     "NEXT_PUBLIC_INTERNAL_GRAPHQL_BACKEND_URI"
   ),
   SENTRY_DSN: validateEnvironmentVariable(process.env.NEXT_PUBLIC_SENTRY_DSN, "NEXT_PUBLIC_SENTRY_DSN"),
-  SESSION_COOKIE_NAME: validateEnvironmentVariable(
-    process.env.NEXT_PUBLIC_SESSION_COOKIE_NAME,
-    "NEXT_PUBLIC_SESSION_COOKIE_NAME"
-  ),
   FRONTEND_URI: validateEnvironmentVariable(process.env.NEXT_PUBLIC_FRONTEND_URI, "NEXT_PUBLIC_FRONTEND_URI"),
   APP_ENV: validateEnvironmentVariable(process.env.NEXT_PUBLIC_APP_ENV, "NEXT_PUBLIC_APP_ENV"),
   API_URL: validateEnvironmentVariable(process.env.NEXT_PUBLIC_BASE_API_URL, "NEXT_PUBLIC_BASE_API_URL"),
@@ -26,8 +27,14 @@ export const config = {
     process.env.NEXT_PUBLIC_INTERNAL_API_URL,
     "NEXT_PUBLIC_INTERNAL_API_URL"
   ),
+  COOKIE_DOMAIN: validateEnvironmentVariable(process.env.NEXT_PUBLIC_COOKIE_DOMAIN, "NEXT_PUBLIC_COOKIE_DOMAIN"),
+  CSRF_COOKIE: validateEnvironmentVariable(process.env.NEXT_PUBLIC_CSRF_COOKIE, "NEXT_PUBLIC_CSRF_COOKIE"),
   FEIDE_LOGOUT_ENDPOINT: validateEnvironmentVariable(
     process.env.NEXT_PUBLIC_FEIDE_LOGOUT_URI,
     "NEXT_PUBLIC_FEIDE_LOGOUT_URI"
+  ),
+  FEIDE_AUTHORIZATION_URI: validateEnvironmentVariable(
+    process.env.NEXT_PUBLIC_FEIDE_AUTHORIZATION_URI,
+    "NEXT_PUBLIC_FEIDE_AUTHORIZATION_URI"
   ),
 };

@@ -6,12 +6,12 @@ image: /img/rubberdoklogo1.png
 alt: Logoen til rubberdøk
 board:
   ceo:
-    navn: Lars Waage
-    tittel: Prosjektleder
+    name: Lars Waage
+    title: Prosjektleder
     mail: lars.waage@rubberdok.no
   cto:
-    navn: Hermann Mørkrid
-    tittel: Prosjektleder
+    name: Hermann Mørkrid
+    title: Prosjektleder
     mail: hermann.morkrid@rubberdok.no
 tag: annet
 ---

@@ -4,6 +4,9 @@ export default defineConfig({
   e2e: {
     baseUrl: "http://localhost:3000",
     viewportHeight: 1200,
+    retries: {
+      runMode: 3,
+    },
     viewportWidth: 1920,
     chromeWebSecurity: false,
     projectId: "1fyogc",

@@ -6,10 +6,13 @@
   "author": "rubberdok",
   "license": "MIT",
   "scripts": {
-    "dev": "concurrently --restart-tries 3 -n next,graphql -c blue.bold,green.dim \"next\" \"npm:generate -- --watch src\"",
-    "generate": "graphql-codegen --config codegen.yml",
+    "dev": "next",
     "build": "next build",
     "start": "next start",
+    "lint": "eslint",
+    "lint:fix": "yarn run lint --fix",
+    "postinstall": "cd .. && husky install frontend/.husky",
+    "generate": "graphql-codegen --config codegen.yml",
     "test": "cypress open",
     "test:headless": "cypress run",
     "e2e": "wait-on --httpTimeout 60000 http://localhost:3000 && wait-on --httpTimeout 60000 http://localhost:8000 && yarn test",
@@ -25,7 +28,6 @@
     "@emotion/react": "^11.9.0",
     "@emotion/server": "^11.4.0",
     "@emotion/styled": "^11.8.1",
-    "@hookform/resolvers": "^2.9.7",
     "@mui/icons-material": "^5.6.2",
     "@mui/lab": "^5.0.0-alpha.79",
     "@mui/material": "^5.8.3",
@@ -40,11 +42,9 @@
     "js-cookie": "^3.0.1",
     "lodash": "^4.17.21",
     "next": "^12.0.8",
-    "phosphor-react": "^1.4.1",
     "react": "^17.0.2",
-    "react-awesome-reveal": "^3.8.1",
+    "react-awesome-reveal": "^4.0.0",
     "react-dom": "^17.0.2",
-    "react-hook-form": "^7.34.0",
     "react-markdown": "^8.0.0",
     "react-parallax": "^3.3.0",
     "react-swipeable-views": "^0.14.0",
@@ -57,10 +57,13 @@
     "yup": "^0.32.9"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "2.11.3",
+    "@graphql-codegen/cli": "2.11.6",
+    "@graphql-codegen/introspection": "2.2.1",
     "@graphql-codegen/typed-document-node": "^2.2.3",
     "@graphql-codegen/typescript": "2.7.2",
     "@graphql-codegen/typescript-operations": "2.5.2",
+    "@graphql-codegen/typescript-react-apollo": "3.3.2",
+    "@graphql-codegen/typescript-resolvers": "2.7.2",
     "@graphql-typed-document-node/core": "^3.1.1",
     "@types/cookie": "^0.5.1",
     "@types/node": "^16.11.22",
@@ -72,7 +75,6 @@
     "@types/validator": "^13.1.4",
     "@typescript-eslint/eslint-plugin": "^4.27.0",
     "@typescript-eslint/parser": "^4.27.0",
-    "concurrently": "^7.3.0",
     "cypress": "^10.1.0",
     "eslint": "^7.29.0",
     "eslint-config-next": "^12.1.0",
@@ -82,9 +84,25 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.24.0",
     "eslint-plugin-react-hooks": "^4.0.8",
-    "npm-run-all": "^4.1.5",
+    "husky": "^8.0.1",
+    "lint-staged": "<14.0.0",
     "prettier": "^2.3.1",
     "typescript": "^4.3.4",
     "wait-on": "^6.0.1"
+  },
+  "lint-staged": {
+    "*.{ts,js,tsx,jsx}": [
+      "yarn run lint:fix"
+    ],
+    "*.{json,md,html,js,jsx,ts,tsx}": [
+      "prettier --write"
+    ],
+    "../backend/**/*.py": [
+      "black",
+      "flake8 --config=../backend/tox.ini"
+    ],
+    "../backend/schema.json": [
+      "yarn generate"
+    ]
   }
 }

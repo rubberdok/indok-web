@@ -1,10 +1,9 @@
 import dayjs from "dayjs";
-import range from "lodash/range";
 import * as Yup from "yup";
 
 const today = dayjs();
-export const maxGraduationYear = today.month() > 7 ? today.year() + 5 : today.year() + 4;
-const minGraduationYear = today.month() > 7 ? today.year() + 1 : today.year();
+export const maxGraduationYear = today.month() > 6 ? today.year() + 5 : today.year() + 4;
+const minGraduationYear = today.month() > 6 ? today.year() + 1 : today.year();
 
 export const suggestNames = (name: string | undefined): { firstName: string; lastName: string } => {
   if (!name) {
@@ -18,27 +17,25 @@ export const suggestNames = (name: string | undefined): { firstName: string; las
   };
 };
 
-export const isVegetarian = (allergies?: string): boolean => {
+export const isVegetarian = (allergies: string): boolean => {
   const options = ["veggis", "vegetar", "plantebasert", "vegan"];
-  return options.some((option) => allergies?.toLowerCase().includes(option));
+  return options.some((option) => allergies.toLowerCase().includes(option));
 };
 
-export const validationSchema = Yup.object()
-  .shape({
-    firstName: Yup.string().required("Fornavn kan ikke være tomt.").min(2, "Kan ikke være kortere enn 2 tegn."),
-    lastName: Yup.string().required("Etternavn kan ikke være tomt.").min(2, "Kan ikke være kortere enn to tegn."),
-    email: Yup.string().email("Oppgi en gyldig e-postadresse.").notRequired(),
-    allergies: Yup.string().notRequired(),
-    graduationYear: Yup.number()
-      .required()
-      .min(minGraduationYear, `Kan ikke være før ${minGraduationYear}`)
-      .max(maxGraduationYear, `Kan ikke være etter ${maxGraduationYear}`),
-    phoneNumber: Yup.string()
-      .min(8, "Telefonnummeret må være 8 tegn eller lenger.")
-      .max(12, "Telefonnummeret kan ikke være mer enn 12 tegn.")
-      .matches(/^(0047|\+47|47)?[49]\d{7}$/, "Må være et gyldig telefonnummer."),
-  })
-  .required();
+export const validationSchema = Yup.object().shape({
+  firstName: Yup.string().required("Fornavn kan ikke være tomt.").min(2, "Kan ikke være kortere enn 2 tegn."),
+  lastName: Yup.string().required("Etternavn kan ikke være tomt.").min(2, "Kan ikke være kortere enn to tegn."),
+  email: Yup.string().email("Oppgi en gyldig e-postadresse.").notRequired(),
+  allergies: Yup.string().notRequired(),
+  graduationYear: Yup.number()
+    .required()
+    .min(minGraduationYear, `Kan ikke være før ${minGraduationYear}`)
+    .max(maxGraduationYear, `Kan ikke være etter ${maxGraduationYear}`),
+  phoneNumber: Yup.string()
+    .min(8, "Telefonnummeret må være 8 tegn eller lenger.")
+    .max(12, "Telefonnummeret kan ikke være mer enn 12 tegn.")
+    .matches(/^(0047|\+47|47)?[49]\d{7}$/, "Må være et gyldig telefonnummer."),
+});
 
 export const suggestGraduationYear = () => {
   const currentMonth = today.month();
@@ -55,9 +52,3 @@ export const currentGradeYear = (graduationYear: number) => {
   }
   return 6 - (graduationYear - today.year());
 };
-
-export const minimumGraduationYear = (graduationYear?: number | null) =>
-  Math.min(today.year(), graduationYear || today.year());
-
-export const graduationYears = (graduationYear?: number | null) =>
-  range(minimumGraduationYear(graduationYear) ?? suggestGraduationYear(), maxGraduationYear, 1);

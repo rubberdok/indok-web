@@ -5,9 +5,7 @@ logo: /img/schacklogo.jpg
 image: /img/hero.jpg
 board:
   ceo:
-    name:
-    mail:
-    title:
+    name: Audun Midtun Systad
 tag: idrett
 ---
 

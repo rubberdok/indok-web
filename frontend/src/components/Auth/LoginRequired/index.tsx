@@ -1,8 +1,11 @@
-import { useMutation, useQuery } from "@apollo/client";
-import { RedirectUrlDocument, UserDocument } from "@generated/graphql";
+import { useQuery } from "@apollo/client";
+import { GET_USER_INFO } from "@graphql/users/queries";
+import { UserInfo } from "@interfaces/users";
 import { Button, ButtonProps, Skeleton } from "@mui/material";
+import { generateFeideLoginUrl } from "@utils/auth";
+import Link from "next/link";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useMemo } from "react";
 
 type Props = {
   redirect?: boolean;
@@ -31,25 +34,18 @@ export const LoginRequired: React.FC<Props & ButtonProps> = ({
   if (redirect) {
     path ||= router.asPath;
   }
-
-  const [mutation] = useMutation(RedirectUrlDocument, {
-    variables: {
-      state: path,
-    },
-    onCompleted(data) {
-      const { redirectUrl } = data;
-      router.push(redirectUrl);
-    },
-  });
-  const { data, loading } = useQuery(UserDocument);
+  const url = useMemo<string>(() => generateFeideLoginUrl(path), [path]);
+  const { data, loading } = useQuery<{ user?: UserInfo | null }>(GET_USER_INFO);
   const { fullWidth } = buttonProps;
 
   if (loading) {
     return (
       <Skeleton variant="rectangular" {...(fullWidth && { width: "100%" })}>
-        <Button size="medium" variant="contained" color="primary" {...buttonProps}>
-          Logg inn
-        </Button>
+        <Link href={url} passHref>
+          <Button size="medium" variant="contained" color="primary" {...buttonProps}>
+            Logg inn
+          </Button>
+        </Link>
       </Skeleton>
     );
   }
@@ -63,16 +59,11 @@ export const LoginRequired: React.FC<Props & ButtonProps> = ({
   }
 
   return (
-    <Button
-      size="medium"
-      variant="contained"
-      color="primary"
-      data-test-id={dataTestId}
-      {...buttonProps}
-      onClick={() => mutation()}
-    >
-      Logg inn
-    </Button>
+    <Link href={url} passHref>
+      <Button size="medium" variant="contained" color="primary" data-test-id={dataTestId} {...buttonProps}>
+        Logg inn
+      </Button>
+    </Link>
   );
 };
 

@@ -1,11 +1,14 @@
-import { ListingQuery } from "@generated/graphql-deprecated";
+import { ListingDocument } from "@generated/graphql";
+import { ResultOf } from "@graphql-typed-document-node/core";
 import { ArrowForward } from "@mui/icons-material";
-import { Button, Card, CardContent, Grid, Hidden, Typography } from "@mui/material";
+import { Box, Button, Card, CardContent, Divider, Grid, Typography, Link as MuiLink } from "@mui/material";
 import dayjs from "dayjs";
 import nb from "dayjs/locale/nb";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
+import Image from "next/future/image";
 import Link from "next/link";
+import React from "react";
 dayjs.extend(timezone);
 dayjs.extend(utc);
 dayjs.tz.setDefault("Europe/Oslo");
@@ -18,10 +21,10 @@ dayjs.locale(nb);
  * - the listing to render
  */
 const TitleCard: React.FC<{
-  listing: NonNullable<ListingQuery["listing"]>;
+  listing: ResultOf<typeof ListingDocument>["listing"];
 }> = ({ listing }) => {
   let link: string | undefined = undefined;
-  if (listing.form) {
+  if (listing?.form) {
     link = `/forms/${listing.form.id}/`;
   } else if (listing?.applicationUrl) {
     link = listing.applicationUrl;
@@ -30,42 +33,49 @@ const TitleCard: React.FC<{
   }
 
   return (
-    <Card style={{ height: "100%" }}>
+    <Card>
       <CardContent>
-        <Grid container direction="column" justifyContent="space-between" alignItems="center">
-          <Grid item>
-            <Typography variant="h3" component="h1" align="center">
-              {listing.title}
+        <Grid container direction={{ xs: "row", sm: "column" }} spacing={4} justifyContent="center" alignItems="center">
+          {listing?.organization.logoUrl && (
+            <Grid container item xs={4} sm={12}>
+              <Box position="relative" height="150px" width="100%">
+                <Image
+                  src={listing?.organization.logoUrl}
+                  unoptimized
+                  fill
+                  style={{ objectFit: "contain", objectPosition: "center", aspectRatio: "1" }}
+                />
+              </Box>
+            </Grid>
+          )}
+          <Grid container xs sm={12} item direction="column">
+            {listing?.readMoreUrl ? (
+              <Link href={listing.readMoreUrl} passHref>
+                <MuiLink target="_blank" color="text.primary">
+                  <Typography variant="h4" component="h4" align="center" gutterBottom>
+                    {listing?.organization.name}
+                  </Typography>
+                </MuiLink>
+              </Link>
+            ) : (
+              <Typography variant="h4" component="h4" align="center" gutterBottom>
+                {listing?.organization.name}
+              </Typography>
+            )}
+            <Divider sx={{ my: 2, display: { xs: "none", sm: "block" } }} />
+            <Typography variant="caption" component="h3" align="center" gutterBottom>
+              {`Frist ${dayjs(listing?.deadline).format("DD. MMMM YYYY [kl.] HH:mm")}`}
             </Typography>
-          </Grid>
-          <Grid item>
-            <Typography
-              variant="caption"
-              component="h3"
-              align="center"
-              sx={{
-                "&::before": {
-                  content: "'Frist '",
-                  fontWeight: "bold",
-                  color: (theme) => theme.palette.primary.main,
-                },
-              }}
-              gutterBottom
-            >
-              {dayjs(listing.deadline).format("DD. MMMM YYYY [kl.] HH:mm")}
-            </Typography>
-          </Grid>
-          <Hidden smDown>
-            <Grid item>
-              {link && (
+            {link && (
+              <Grid container item justifyContent="center">
                 <Link href={link} passHref>
                   <Button variant="contained" color="primary" endIcon={<ArrowForward />}>
                     Søk her
                   </Button>
                 </Link>
-              )}
-            </Grid>
-          </Hidden>
+              </Grid>
+            )}
+          </Grid>
         </Grid>
       </CardContent>
     </Card>

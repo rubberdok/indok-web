@@ -2,7 +2,7 @@ import { useQuery } from "@apollo/client";
 import Layout, { RootStyle } from "@layouts/Layout";
 import PayWithVipps from "@components/pages/ecommerce/PayWithVipps";
 import SalesTermsDialog from "@components/pages/ecommerce/SalesTermsDialog";
-import { UserInfoDocument } from "@generated/graphql-deprecated";
+import { UserInfoDocument } from "@generated/graphql";
 import { GET_PRODUCT } from "@graphql/ecommerce/queries";
 import { Product } from "@interfaces/ecommerce";
 import { addApolloState, initializeApollo } from "@lib/apolloClient";
@@ -110,7 +110,7 @@ const CheckoutPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getSer
                     )}
                   </Grid>
 
-                  {product && quantity && typeof productId == "string" && (
+                  {product && Boolean(quantity) && typeof productId == "string" && (
                     <Grid item xs={12}>
                       <Box alignItems={"center"} display={"inline-flex"}>
                         <FormControlLabel

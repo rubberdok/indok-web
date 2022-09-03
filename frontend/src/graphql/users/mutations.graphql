@@ -1,10 +1,5 @@
-mutation UpdateUser($id: ID!, $data: UpdateUserInput!) {
-  updateUser(id: $id, data: $data) {
-    ...BaseUserFields
-    canUpdateYear
-    graduationYear
-    graduationYearUpdatedAt
-    allergies
-    phoneNumber
+mutation logout {
+  logout {
+    idToken
   }
 }

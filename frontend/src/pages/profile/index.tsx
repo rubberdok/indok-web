@@ -10,15 +10,18 @@ import {
   Personal,
   Report,
 } from "@components/pages/profile/ProfileCard";
-import { RedirectUrlDocument, UserDocument } from "@graphql";
+import { UserInfoDocument } from "@generated/graphql";
+import { GET_USER_INFO } from "@graphql/users/queries";
 import Layout from "@layouts/Layout";
 import { addApolloState, initializeApollo } from "@lib/apolloClient";
 import { Avatar, Container, Grid, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import { generateFeideLoginUrl } from "@utils/auth";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Head from "next/head";
 import { useMemo } from "react";
 import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "src/theme/constants";
+import { User } from "src/types/users";
 import { NextPageWithLayout } from "../_app";
 
 const ID_PREFIX = "profile-";
@@ -50,7 +53,7 @@ const RootStyle = styled("div")(({ theme }) => ({
 }));
 
 const ProfilePage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSideProps>> = () => {
-  const { data } = useQuery(UserDocument);
+  const { data } = useQuery<{ user?: User }>(GET_USER_INFO);
   const initials = useMemo(() => (data?.user ? userInitials(data.user.firstName, data.user.lastName) : ""), [data]);
 
   return (
@@ -139,18 +142,12 @@ export default ProfilePage;
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const client = initializeApollo({}, ctx);
   const { data, error } = await client.query({
-    query: UserDocument,
+    query: UserInfoDocument,
   });
 
   if (error) return { notFound: true };
   if (!data.user) {
-    const { data: redirectData } = await client.mutate({
-      mutation: RedirectUrlDocument,
-      variables: {
-        state: "/profile",
-      },
-    });
-    if (redirectData) return { redirect: { destination: redirectData.redirectUrl, permanent: false } };
+    return { redirect: { destination: generateFeideLoginUrl("/profile"), permanent: false } };
   }
   return addApolloState(client, { props: { user: data.user } });
 };

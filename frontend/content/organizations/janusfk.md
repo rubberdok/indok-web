@@ -5,13 +5,8 @@ logo: /img/FK_logo.jpg
 image: /img/fkbilde.jpg
 board:
   ceo:
-    name: Henrik Planke Berg
-    phoneNumber: 975 18 033
+    name: Gard Drag Erlandsen
     title: Leder
-  cto:
-    name: Christian Bakke Vennerød
-    phoneNumber: 906 71 650
-    title: Trener
 tag: idrett
 ---
 

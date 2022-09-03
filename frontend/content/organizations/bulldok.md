@@ -5,8 +5,7 @@ logo: /img/bulldok.jpeg
 image: /img/bulldok.jpeg
 board:
   ceo:
-    name: Bendik Edvardsen
-    mail:
+    name: Morten Smedal Unstad
     title: Leder
 tag: idrett
 ---

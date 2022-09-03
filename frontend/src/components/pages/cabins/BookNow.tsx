@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
 import { CabinsAndResponsiblesDocument } from "@generated/graphql";
-import { ArrowRight } from "phosphor-react";
+import { ArrowForward } from "@mui/icons-material";
 import { Button, Card, CardContent, Divider, Stack, Typography } from "@mui/material";
 import Link from "next/link";
 import React from "react";
@@ -32,7 +32,7 @@ const BookNow: React.FC = () => {
             <Typography variant="subtitle2">Ekstern: 270 kr</Typography>
           </Stack>
           <Link href="/cabins/book" passHref>
-            <Button variant="contained" size="large" color="success" endIcon={<ArrowRight />}>
+            <Button variant="contained" size="large" color="success" endIcon={<ArrowForward />}>
               Book nå
             </Button>
           </Link>

@@ -16,9 +16,11 @@ const MemberCard: React.VFC<Props> = ({ member }) => {
         <Typography variant="body1" component="p">
           E-post: <a href={`mailto:${member.email}`}>{member.email}</a>
         </Typography>
-        <Typography variant="body1" component="p">
-          Tlf: {member.phone}
-        </Typography>
+        {member.phone && (
+          <Typography variant="body1" component="p">
+            Tlf: {member.phone}
+          </Typography>
+        )}
       </CardContent>
     </Card>
   );

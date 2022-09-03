@@ -1,16 +1,5 @@
-query User {
+query userInfo {
   user {
-    ...BaseUserFields
-  }
-}
-
-query EditUser {
-  user {
-    ...BaseUserFields
-    canUpdateYear
-    graduationYear
-    graduationYearUpdatedAt
-    allergies
-    phoneNumber
+    ...UserFields
   }
 }

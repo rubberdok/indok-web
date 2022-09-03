@@ -4,22 +4,10 @@ description: Indøks helt egne case-klubb
 logo: /img/IBClogo.png
 image: /img/IBCmote.jpeg
 board:
-  ceo:
-    name: Håkon Andreas Hyttedalen
-    phoneNumber: 974 09 177
-    title: Leder
-  cto:
-    name: Anders Rønning
-    phoneNumber: 913 51 892
-    title: Nestleder
   board:
     name: Tobias Spinnangr Sindre
     phoneNumber: 954 57 507
-    title: Styremedlem
-  markedsføring:
-    name: Camilla Elise Espelund
-    phoneNumber: 942 97 714
-    title: Styremedlem/Markedsføring
+    title: Leder
 tag: annet
 ---
 

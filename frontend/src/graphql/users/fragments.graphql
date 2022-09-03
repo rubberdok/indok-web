@@ -1,8 +1,14 @@
-fragment BaseUserFields on User {
+fragment UserFields on UserType {
   id
+  feideEmail
+  email
   username
   firstName
   lastName
-  firstLogin
+  dateJoined
   graduationYear
+  gradeYear
+  allergies
+  phoneNumber
+  firstLogin
 }

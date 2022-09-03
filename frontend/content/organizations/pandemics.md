@@ -5,8 +5,7 @@ logo: /img/pandemicslogo.jpg
 image: /img/pandemics.jpg
 board:
   ceo:
-    name: Simen Vadseth
-    phoneNumber: 41634151
+    name: Benjamin Krogh
     title: Leder
 tag: idrett
 ---

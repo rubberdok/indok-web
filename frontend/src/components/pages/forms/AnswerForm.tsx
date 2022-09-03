@@ -61,31 +61,34 @@ const AnswerForm: React.FC<{
           </CardContent>
         </Card>
       </Grid>
-      {Object.entries(questions).map(([id, { question, answer }]) => (
-        <Grid item key={id}>
-          <Card>
-            <CardContent>
-              <Grid container direction="column">
-                <Grid item>
-                  <Typography>
-                    {question.question}
-                    {question.mandatory && " *"}
-                  </Typography>
+      {Object.entries(questions)
+        // sorts questions by ID (hacky solution to maintain question order until we implement order field)
+        .sort(([id1], [id2]) => (parseInt(id1) || 0) - (parseInt(id2) || 0))
+        .map(([id, { question, answer }]) => (
+          <Grid item key={id}>
+            <Card>
+              <CardContent>
+                <Grid container direction="column">
+                  <Grid item>
+                    <Typography>
+                      {question.question}
+                      {question.mandatory && " *"}
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <AnswerQuestion
+                      question={question}
+                      answer={answer}
+                      onValueChanged={(value) =>
+                        setQuestions((prevState) => ({ ...prevState, [id]: { ...prevState[id], answer: value } }))
+                      }
+                    />
+                  </Grid>
                 </Grid>
-                <Grid item>
-                  <AnswerQuestion
-                    question={question}
-                    answer={answer}
-                    onValueChanged={(value) =>
-                      setQuestions((prevState) => ({ ...prevState, [id]: { ...prevState[id], answer: value } }))
-                    }
-                  />
-                </Grid>
-              </Grid>
-            </CardContent>
-          </Card>
-        </Grid>
-      ))}
+              </CardContent>
+            </Card>
+          </Grid>
+        ))}
       {errorMessage && (
         <Grid item>
           <Card>

@@ -5,13 +5,8 @@ logo: /img/FK_logo.jpg
 image: /img/janushklogo.jpg
 board:
   ceo:
-    name: Maren Larsen
-    phoneNumber: 916 49 220
+    name: Markus Myklebust
     title: Leder
-  cto:
-    name: Emilie Bakke-Jakobsen
-    phoneNumber: 414 99 925
-    title: Økonomiansvarlig
 tag: idrett
 ---
 

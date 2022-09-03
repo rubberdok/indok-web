@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1
 ARG APP_ENV=production
 
 # Install dependencies only when needed

@@ -2,6 +2,6 @@ export type BoardMember = {
   rank: number;
   name: string;
   email: string;
-  phone: string;
+  phone?: string;
   position: string;
 };
