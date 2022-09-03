@@ -15,7 +15,7 @@ COPY . .
 
 RUN npm run generate
 RUN npm run build
-RUN npm ci --omit=dev
+RUN npm install --omit=dev
 
 FROM public.ecr.aws/docker/library/node:lts-alpine3.16 as runner
 
