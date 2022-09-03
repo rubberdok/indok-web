@@ -67,6 +67,15 @@ jobs:
     services:
       postgres:
         image: postgres
+        env:
+          POSTGRES_USERNAME: postgres
+          POSTGRES_PASSWORD: postgres
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
         ports:
           - 5432:5432
 
@@ -84,7 +93,7 @@ jobs:
         run: npm ci
 
       - name: Run Integration Tests
-        run: DATABASE_URL=postgresql://integration:integration@postgres:5432/tests npm run test:integration:headless -- --collect-coverage
+        run: DATABASE_URL=postgresql://postgres:postgres@postgres:5432/tests npm run test:integration:headless -- --collect-coverage
 
       - name: Upload Coverage
         uses: codecov/codecov-action@v3
