@@ -1,0 +1,42 @@
+name: API
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - api/**
+  pull_request:
+    paths-ignore:
+      - api/**
+
+jobs:
+  unit-test:
+    name: Unit Test
+    runs-on: ubuntu-latest
+    steps:
+      - run: 'echo "Not Required"'
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - run: 'echo "Not Required"'
+  
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - run: 'echo "Not Required"'
+  
+  integration-test:
+    name: Integration Test
+    runs-on: ubuntu-latest
+    steps:
+      - run: 'echo "Not Required"'
+
+  build-image:
+    name: Build Image
+    runs-on: ubuntu-latest
+    steps:
+      - run: 'echo "Not Required"'
