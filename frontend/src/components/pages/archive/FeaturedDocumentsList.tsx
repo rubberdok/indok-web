@@ -4,7 +4,9 @@ import Typography from "@mui/material/Typography";
 import DocumentList from "./DocumentList";
 
 const FeaturedDocumentsList: React.FC = () => {
-  const { loading, data, error } = useQuery(FeaturedArchiveDocument);
+  const { loading, data, error } = useQuery(FeaturedArchiveDocument, {
+    ssr: false,
+  });
 
   if (loading) return <p style={{ textAlign: "center" }}></p>;
 
