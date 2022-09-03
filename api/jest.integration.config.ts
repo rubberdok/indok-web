@@ -7,4 +7,5 @@ import base from "./jest.config";
 export default {
   ...base,
   testMatch: ["**/__tests__/integration/**/*.test.ts", "**/?(*.)+integration.test.ts"],
+  coverageDirectory: "coverage/integration",
 };
