@@ -27,11 +27,11 @@ export default class CabinService implements ICabinService {
     bookingSchema.parse(data);
   }
 
-  private sendBookingValidation(booking: Booking) {
+  private sendBookingConfirmation(booking: Booking) {
     return this.mailService.send({
       TemplateAlias: TemplateAliasEnum.CABIN_BOOKING_RECEIPT,
       TemplateModel: {
-        title: "Booking Receipt",
+        title: `Booking confirmation for ${booking.firstName}`,
       },
     });
   }
@@ -39,7 +39,7 @@ export default class CabinService implements ICabinService {
   async newBooking(data: BookingData): Promise<Booking> {
     this.validateBooking(data);
     const booking = await this.cabinRepository.createBooking(data);
-    this.sendBookingValidation(booking);
+    this.sendBookingConfirmation(booking);
     return booking;
   }
 

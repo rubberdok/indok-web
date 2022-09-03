@@ -12,6 +12,7 @@
     "build": "npm run tsc && swc src -d dist",
     "generate:prisma": "prisma generate",
     "generate:gql": "graphql-codegen --config src/graphql/codegen.yml",
+    "lint": "eslint .",
     "dev": "concurrently --restart-tries 3 -n server,graphql,prisma -k -c cyan.bold,magenta.dim,black.dim \"dotenv -e .env.development -- nodemon --watch src src/index.ts\" \"npm:generate:gql -- --watch\" \"npm:generate:prisma -- --watch\"",
     "db:push": "dotenv -e .env.development -- prisma db push",
     "db:migrate": "prisma migrate deploy",
