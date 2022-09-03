@@ -7,9 +7,9 @@
   "author": "Rubberdøk NTNU",
   "license": "MIT",
   "private": true,
-  "type": "commonjs",
   "scripts": {
     "start": "ts-node src/index.ts",
+    "build": "swc src -d dist",
     "generate:prisma": "prisma generate",
     "generate:gql": "graphql-codegen --config src/graphql/codegen.yml",
     "dev": "concurrently --restart-tries 3 -n server,graphql,prisma -k -c cyan.bold,magenta.dim,black.dim \"dotenv -e .env.development -- nodemon --watch src src/index.ts\" \"npm:generate:gql -- --watch\" \"npm:generate:prisma -- --watch\"",
@@ -34,6 +34,7 @@
     "@graphql-codegen/schema-ast": "^2.5.1",
     "@graphql-codegen/typescript": "^2.7.1",
     "@graphql-codegen/typescript-resolvers": "^2.7.1",
+    "@swc/cli": "^0.1.57",
     "@swc/core": "^1.2.224",
     "@swc/helpers": "^0.4.3",
     "@swc/jest": "^0.2.22",

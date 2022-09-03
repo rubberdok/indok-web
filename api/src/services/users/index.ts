@@ -1,8 +1,8 @@
 import { Prisma, User } from "@prisma/client";
 import dayjs from "dayjs";
 import { inject, injectable } from "inversify";
-import { IUserRepository, Types } from "../../repositories";
-import { IUserService } from "../interfaces";
+import { IUserRepository, Types } from "@/repositories";
+import { IUserService } from "@/services/interfaces";
 import { createUserSchema, updateUserSchema } from "./validation";
 
 @injectable()

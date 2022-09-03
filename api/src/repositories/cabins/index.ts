@@ -1,7 +1,7 @@
-import { Prisma, Booking, Cabin } from "@prisma/client";
+import { Booking, Cabin, Prisma } from "@prisma/client";
 import { inject, injectable } from "inversify";
 
-import { CoreTypes, Database } from "../../core";
+import { CoreTypes, Database } from "@/core";
 import { ICabinRepository, OverlappingBookingsData } from "./interfaces";
 
 @injectable()

@@ -2,8 +2,8 @@ import cors from "cors";
 import express from "express";
 import session from "express-session";
 import http from "http";
-
 import { ApolloServer } from "@apollo/server";
+
 import { expressMiddleware } from "@apollo/server/express4";
 import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
 import { ApolloServerPluginLandingPageLocalDefault } from "@apollo/server/plugin/landingPage/default";
@@ -11,13 +11,13 @@ import { ApolloServerPluginLandingPageLocalDefault } from "@apollo/server/plugin
 import * as Sentry from "@sentry/node";
 
 import { json } from "body-parser";
-import { env } from "./config";
+import { env } from "@/config";
 
-import { container } from "./container";
-import { resolvers, typeDefs } from "./graphql";
-import { IContext, IContextProvider, Type as ContextProviderType } from "./graphql/context";
-import { formatError } from "./lib/apolloServer";
-import { redisClient, RedisStore } from "./lib/redis";
+import { container } from "@/container";
+import { resolvers, typeDefs } from "@/graphql";
+import { IContext, IContextProvider, Type as ContextProviderType } from "@/graphql/context";
+import { formatError } from "@/lib/apolloServer";
+import { redisClient, RedisStore } from "@/lib/redis";
 import { randomUUID } from "crypto";
 
 Sentry.init({

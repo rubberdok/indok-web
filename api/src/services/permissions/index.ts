@@ -1,8 +1,9 @@
 import { inject, injectable } from "inversify";
 
 import { Permission, Role, User } from "@prisma/client";
-import { IPermissionRepository, Types } from "../../repositories";
-import { IPermissionService } from "../interfaces";
+import { IPermissionRepository, Types } from "@/repositories";
+import { IPermissionService } from "@/services/interfaces";
+
 import { PermissionString } from "./types";
 import { PermissionDeniedError } from "./errors";
 

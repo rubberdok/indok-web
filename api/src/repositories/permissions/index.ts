@@ -1,9 +1,10 @@
 import { Permission, User } from "@prisma/client";
 import { inject, injectable } from "inversify";
-import { CoreTypes } from "../../core";
-import { Database } from "../../core/interfaces";
-import { PermissionString } from "../../services/permissions/types";
-import { IPermissionRepository } from "../interfaces";
+
+import { CoreTypes } from "@/core";
+import { Database } from "@/core/interfaces";
+import { PermissionString } from "@/services/permissions/types";
+import { IPermissionRepository } from "@/repositories/interfaces";
 
 @injectable()
 export default class PermissionRepository implements IPermissionRepository {

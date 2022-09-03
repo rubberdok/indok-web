@@ -1,7 +1,8 @@
 import { createClient } from "redis";
 import session from "express-session";
 import { default as _RedisStore } from "connect-redis";
-import { env } from "../config";
+
+import { env } from "@/config";
 
 export const RedisStore = _RedisStore(session);
 export const redisClient = createClient({

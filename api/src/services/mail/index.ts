@@ -1,7 +1,7 @@
 import { inject, injectable } from "inversify";
-import { env } from "../../config";
+import { env } from "@/config";
 
-import { CoreTypes } from "../../core";
+import { CoreTypes } from "@/core";
 import { EmailContent, IMailClient, IMailService } from "./interfaces";
 
 @injectable()

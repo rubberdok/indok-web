@@ -4,11 +4,11 @@ import { Container } from "inversify";
 
 import { PrismaClient } from "@prisma/client";
 
-import { Context } from "./graphql";
-import { IMailClient, Prisma, Postmark, CoreTypes } from "./core";
+import { Context } from "@/graphql";
+import { IMailClient, Prisma, Postmark, CoreTypes } from "@/core";
 
-import * as Repositories from "./repositories";
-import * as Services from "./services";
+import * as Repositories from "@/repositories";
+import * as Services from "@/services";
 
 export const container = new Container();
 

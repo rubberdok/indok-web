@@ -4,17 +4,21 @@ import crypto from "crypto";
 import { Container } from "inversify";
 import { DeepMockProxy, mockDeep } from "jest-mock-extended";
 import fetch, { Response as _Response } from "node-fetch";
-import AuthService from "../../";
-import { IAuthService, IUserService } from "../../../interfaces";
-import types from "../../../types";
-import { setupMocks } from "../__mocks__/feide";
+
+import AuthService from "@/services/auth";
+import { IAuthService, IUserService } from "@/services/interfaces";
+import types from "@/services/types";
+import { setupMocks } from "@/services/auth/__tests__/__mocks__/feide";
 import { OAuthCase } from "./interfaces";
+import { User } from "@prisma/client";
 
 const { Response: ActualResponse } = jest.requireActual<{
   Response: typeof _Response;
 }>("node-fetch");
 
 jest.mock("node-fetch");
+
+const dummyUser = mockDeep<User>();
 
 const container = new Container();
 
@@ -63,6 +67,7 @@ describe("OAuth", () => {
         },
       },
       expected: {
+        ...dummyUser,
         username: "example",
         feideId: "feide_id",
         id: "id",
@@ -123,6 +128,7 @@ describe("OAuth", () => {
         },
       },
       expected: {
+        ...dummyUser,
         username: "existing",
         feideId: "feide_id",
         id: "id",

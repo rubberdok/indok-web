@@ -3,12 +3,15 @@ import "reflect-metadata";
 import { Prisma, PrismaClient, User } from "@prisma/client";
 import { Container } from "inversify";
 import { DeepMockProxy, mockDeep } from "jest-mock-extended";
-import UserRepository from "../..";
-import { Types } from "../../..";
-import { CoreTypes } from "../../../../core";
-import { IUserRepository } from "../../../interfaces";
+
+import { CoreTypes } from "@/core";
+import { Types } from "@/repositories";
+import { IUserRepository } from "@/repositories/interfaces";
+import UserRepository from "@/repositories/users";
 
 const container = new Container();
+
+const dummyUser = mockDeep<User>();
 
 describe("UsersRepository", () => {
   beforeAll(() => {
@@ -31,6 +34,7 @@ describe("UsersRepository", () => {
         lastName: "last",
       },
       expected: {
+        ...dummyUser,
         id: "some-cuid",
         createdAt: new Date(),
         updatedAt: new Date(),

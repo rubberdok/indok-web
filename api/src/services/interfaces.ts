@@ -1,8 +1,8 @@
 import { Permission, Prisma, Role, User } from "@prisma/client";
-import { PermissionString } from "./permissions/types";
+import { PermissionString } from "@/services/permissions/types";
 
-export { ICabinService } from "./cabins/interfaces";
-export { IMailService } from "./mail/interfaces";
+export { ICabinService } from "@/services/cabins/interfaces";
+export { IMailService } from "@/services/mail/interfaces";
 
 export interface IUserService {
   update(id: string, data: Prisma.UserUpdateInput): Promise<User>;

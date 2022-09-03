@@ -1,8 +1,9 @@
 import { Prisma, User } from "@prisma/client";
 import { inject, injectable } from "inversify";
-import { CoreTypes } from "../../core";
-import { Database } from "../../core/interfaces";
-import { IUserRepository } from "../interfaces";
+
+import { CoreTypes } from "@/core";
+import { Database } from "@/core/interfaces";
+import { IUserRepository } from "@/repositories/users/interfaces";
 
 @injectable()
 export default class UserRepository implements IUserRepository {

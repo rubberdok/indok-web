@@ -1,10 +1,11 @@
 import { Booking, BookingStatus, Cabin, User } from "@prisma/client";
 import { inject, injectable } from "inversify";
-import { ValidationError } from "../../core/errors";
-import { ICabinRepository, Types as RepositoryTypes } from "../../repositories";
-import { IPermissionService } from "../interfaces";
-import { IMailService, TemplateAliasEnum } from "../mail/interfaces";
-import Types from "../types";
+
+import { ValidationError } from "@/core/errors";
+import { ICabinRepository, Types as RepositoryTypes } from "@/repositories";
+import { IPermissionService } from "@/services/interfaces";
+import { IMailService, TemplateAliasEnum } from "@/services/mail/interfaces";
+import Types from "@/services/types";
 import { BookingData, ICabinService } from "./interfaces";
 import { bookingSchema } from "./validation";
 

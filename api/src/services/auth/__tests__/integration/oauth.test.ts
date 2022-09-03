@@ -3,15 +3,16 @@ import "reflect-metadata";
 import { PrismaClient } from "@prisma/client";
 import { Container } from "inversify";
 import fetch, { Response as _Response } from "node-fetch";
-import AuthService from "../../";
-import { CoreTypes } from "../../../../core";
-import prisma from "../../../../lib/prisma";
-import { IUserRepository, Types as RepositoryTypes } from "../../../../repositories";
-import UserRepository from "../../../../repositories/users";
-import { Types as ServiceTypes } from "../../../../services";
-import { IAuthService, IUserService } from "../../../interfaces";
-import UserService from "../../../users";
-import { setupMocks } from "../__mocks__/feide";
+
+import { CoreTypes } from "@/core";
+import prisma from "@/lib/prisma";
+import { IUserRepository, Types as RepositoryTypes } from "@/repositories";
+import UserRepository from "@/repositories/users";
+import { Types as ServiceTypes } from "@/services";
+import AuthService from "@/services/auth";
+import { setupMocks } from "@/services/auth/__tests__/__mocks__/feide";
+import { IAuthService, IUserService } from "@/services/interfaces";
+import UserService from "@/services/users";
 import { OAuthCase } from "./interfaces";
 
 const { Response: ActualResponse } = jest.requireActual<{

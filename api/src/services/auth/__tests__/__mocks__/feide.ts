@@ -1,6 +1,5 @@
 import { RequestInfo } from "node-fetch";
-import { UserInfo } from "../../interfaces";
-import { OAuthCase } from "../unit/interfaces";
+import { UserInfo } from "@/services/auth/interfaces";
 
 export interface FeideResponses {
   token: {

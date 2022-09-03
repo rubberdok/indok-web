@@ -1,5 +1,5 @@
-import { ICabinRepository } from "./cabins/interfaces";
-import { IPermissionRepository } from "./permissions/interfaces";
-import { IUserRepository } from "./users/interfaces";
+import { ICabinRepository } from "@/repositories/cabins/interfaces";
+import { IPermissionRepository } from "@/repositories/permissions/interfaces";
+import { IUserRepository } from "@/repositories/users/interfaces";
 
 export { ICabinRepository, IUserRepository, IPermissionRepository };

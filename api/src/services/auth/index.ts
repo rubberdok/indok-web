@@ -3,9 +3,9 @@ import fetch from "node-fetch";
 
 import { User } from "@prisma/client";
 import { inject, injectable } from "inversify";
-import { env } from "../../config";
-import { GetUserParams, IAuthService, IUserService } from "../interfaces";
-import { default as Types } from "../types";
+import { env } from "@/config";
+import { GetUserParams, IAuthService, IUserService } from "@/services/interfaces";
+import { default as Types } from "@/services/types";
 import { UserInfo } from "./interfaces";
 
 const FeideProvider = {

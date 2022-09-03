@@ -11,7 +11,7 @@ generates:
       scalars:
         DateTime: Date
 
-      contextType: ../context#IContext
+      contextType: "@/graphql/context#IContext"
 
       mapperTypeSuffix: Model
       mappers:

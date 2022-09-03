@@ -1,7 +1,8 @@
 import { GraphQLFormattedError } from "graphql";
 import { ZodError } from "zod";
-import { codes, ValidationError } from "../core/errors";
-import { PermissionDeniedError } from "../services/permissions/errors";
+
+import { codes, ValidationError } from "@/core/errors";
+import { PermissionDeniedError } from "@/services/permissions/errors";
 
 export const formatError = (formattedError: GraphQLFormattedError, error: unknown): GraphQLFormattedError => {
   if (error instanceof PermissionDeniedError) {
