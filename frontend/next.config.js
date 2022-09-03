@@ -92,8 +92,6 @@ const moduleExports = {
     disableServerWebpackPlugin: true,
     disableClientWebpackPlugin: true,
   },
-  /* Browser source maps should be enabled during production to upload to Sentry  */
-  productionBrowserSourceMaps: process.env.NEXT_PUBLIC_APP_ENV === "production",
 };
 
 // Make sure adding Sentry options is the last code to run before exporting, to

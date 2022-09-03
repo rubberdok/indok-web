@@ -11,6 +11,7 @@ const PermissionRequired: React.FC<Props> = ({ permission, fallback, children })
     variables: {
       permission,
     },
+    ssr: false,
   });
 
   if (data?.hasPermission) return <>{children}</>;

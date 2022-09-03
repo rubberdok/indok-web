@@ -11,7 +11,7 @@ type Props = {
 const ContactInfo: React.VFC<Props> = ({ name, position, email, image }) => {
   const nameAndPosition = `${name}${position ? ` - ${position}` : ""}`;
   return (
-    <Grid container direction="column" justifyContent="center" alignItems="center">
+    <Grid item container direction="column" justifyContent="space-between" alignItems="center">
       <Grid
         item
         container
@@ -19,14 +19,11 @@ const ContactInfo: React.VFC<Props> = ({ name, position, email, image }) => {
         justifyContent="center"
         sx={{
           borderRadius: "50%",
-          // aspectRatio: "1 / 1",
+          aspectRatio: "1 / 1",
           overflow: "hidden",
           marginBottom: (theme) => theme.spacing(2),
           backgroundColor: (theme) => theme.palette.primary.light,
-          /* Replace the below when MacOS 15 arrives */
-          paddingTop: "40%",
           position: "relative" /* If you want text inside of it */,
-          width: "40%",
         }}
       >
         {image && <Image src={image} placeholder="blur" layout="fill" objectPosition="center" objectFit="cover" />}

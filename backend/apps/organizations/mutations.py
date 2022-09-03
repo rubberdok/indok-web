@@ -1,14 +1,13 @@
 import graphene
-from django.contrib.auth.models import User
 from django.utils.text import slugify
 from decorators import permission_required
 
 from apps.users.types import UserType
 from apps.permissions.models import ResponsibleGroup
 
-from . import permissions as perms
-from .models import Membership, Organization
-from .types import MembershipType, OrganizationType
+from apps.organizations import permissions as perms
+from apps.organizations.models import Membership, Organization
+from apps.organizations.types import MembershipType, OrganizationType
 
 
 def get_organization_from_data(*_, membership_data, **kwargs) -> Organization:
@@ -121,7 +120,3 @@ class RemoveMembership(graphene.Mutation):
 
     def mutate(self, info, member_id):
         raise NotImplementedError("Denne funksjonaliteten er ikke implementert.")
-        membership = Membership.objects.get(pk=member_id)
-        user: User = membership.user
-        membership.delete()
-        return RemoveMembership(removed_member=user, ok=True)

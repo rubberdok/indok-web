@@ -14,13 +14,10 @@ import {
   ListItemText,
   Typography,
 } from "@mui/material";
-import { amber, deepOrange, deepPurple, green, indigo, red } from "@mui/material/colors";
+import { amber, green, red } from "@mui/material/colors";
+import adrian from "@public/img/adrian.jpg";
 import Amund from "@public/img/Amund.jpg";
-import Benjamin from "@public/img/Benjamin.jpg";
-import Christine from "@public/img/Christine.jpeg";
-import Jesper from "@public/img/Jesper.jpg";
 import Laila from "@public/img/Laila.jpg";
-import Maria from "@public/img/Maria.jpg";
 import Head from "next/head";
 import { useRef } from "react";
 import { NextPageWithLayout } from "../_app";
@@ -41,14 +38,6 @@ const ReportsPage: NextPageWithLayout = () => {
     },
     {
       id: 2,
-      name: "Christine Lindberg",
-      initials: "CL",
-      color: deepOrange[500],
-      email: "chrislli@stud.ntnu.no",
-      image: Christine,
-    },
-    {
-      id: 3,
       name: "Laila Voll",
       initials: "LV",
       color: amber[500],
@@ -56,27 +45,12 @@ const ReportsPage: NextPageWithLayout = () => {
       email: "lailaov@stud.ntnu.no",
     },
     {
-      id: 4,
-      name: "Benjamin Pettersen",
-      initials: "BP",
+      id: 3,
+      name: "Adrian Fagerland",
+      initials: "AF",
       color: green[500],
-      image: Benjamin,
-      email: "benjamin-pettersen@hotmail.com",
-    },
-    {
-      id: 5,
-      name: "Jesper Engvik Skovdahl",
-      initials: "JS",
-      color: indigo[500],
-      image: Jesper,
-      email: "jesperes@stud.ntnu.no",
-    },
-    {
-      id: 6,
-      name: "Maria Ruiz Ulltveit-Moe (permisjon)",
-      initials: "MM",
-      color: deepPurple[500],
-      image: Maria,
+      image: adrian,
+      email: "adriafag@stud.ntnu.no",
     },
   ];
 
@@ -271,11 +245,12 @@ const ReportsPage: NextPageWithLayout = () => {
                     container
                     direction="row"
                     justifyContent="center"
+                    alignItems="stretch"
                     spacing={8}
                     sx={{ mb: (theme) => theme.spacing(8) }}
                   >
                     {responsibles.map((responsible) => (
-                      <Grid item md={6} key={responsible.id}>
+                      <Grid container item sm={3} xs={8} key={responsible.id}>
                         <ContactInfo
                           name={responsible.name}
                           email={responsible.email}
@@ -347,7 +322,7 @@ const ReportsPage: NextPageWithLayout = () => {
             <Grid style={{ width: "100%" }} item ref={formRef}>
               <iframe
                 title="Reports"
-                src="https://docs.google.com/forms/d/e/1FAIpQLScP9hqHr2lzlbh1Ie7xXaLAjRkQx9MdRf5Hl1EDLb1kpulmjg/viewform?embedded=true"
+                src="https://docs.google.com/forms/d/e/1FAIpQLSdXFXYU7O1_qcDbX3PONucYLDv3K6KrUIEQ6rtfcRiiR3DEzg/viewform?embedded=true"
                 width="100%"
                 height="2003px"
                 frameBorder="0"

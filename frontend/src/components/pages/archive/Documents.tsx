@@ -13,6 +13,7 @@ type Props = {
 const Documents: React.FC<Props> = ({ documentTypes, year, names }) => {
   const { refetch, loading, data, error } = useQuery(ArchiveByTypesDocument, {
     variables: { documentTypes, year, names },
+    ssr: false,
   });
 
   useEffect(() => {

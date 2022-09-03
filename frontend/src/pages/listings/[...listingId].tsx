@@ -18,6 +18,7 @@ const ListingPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServ
     variables: {
       id: listing.id,
     },
+    ssr: false,
   });
 
   const descriptionWithTitle = (desc: string | undefined) => {

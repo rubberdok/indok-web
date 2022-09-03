@@ -124,7 +124,7 @@ The project has error logging through [Sentry](https://sentry.io), and can be ac
 
 ## Contributing
 
-See [CONTRIBUTING](CONTRIBUDING.md).
+This project is completely open source and is intended to serve as a platform for students who are interested in web development to have a project where they can find inspiration and contribute, and as such, we gladly welcome outside contributors to the project. If you're interested in how to get started, no matter what level of experience you have, please see [CONTRIBUTING](CONTRIBUDING.md).
 
 ## Deployment
 
