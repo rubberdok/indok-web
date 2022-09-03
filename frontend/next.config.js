@@ -89,8 +89,8 @@ const moduleExports = {
   sentry: {
     // Disable the Sentry CLI and manually manage releases and source maps
     // To make Sentry work more nicely with CI/CD, as build != release for us.
-    disableServerWebpackPlugin: process.env.NEXT_PUBLIC_APP_ENV !== "production",
-    disableClientWebpackPlugin: process.env.NEXT_PUBLIC_APP_ENV !== "production",
+    disableServerWebpackPlugin: true,
+    disableClientWebpackPlugin: true,
   },
 };
 
