@@ -135,7 +135,7 @@ describe("UserService", () => {
     },
   ]
 
-  test.each(testCases)("should %s", async ({ name, existing, expected, input, updateInput }) => {
+  test.each(testCases)("should $name", async ({ existing, expected, input, updateInput }) => {
     const repo = container.get<DeepMockProxy<IUserRepository>>(RepositoryTypes.UserRepository)
     const service = container.get<IUserService>(ServiceTypes.UserService)
     repo.get.mockReturnValueOnce(Promise.resolve(existing))
