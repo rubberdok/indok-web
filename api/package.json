@@ -8,8 +8,8 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "start": "ts-node src/index.ts",
-    "build": "swc src -d dist",
+    "start": "node dist/index.js",
+    "build": "npm run tsc && swc src -d dist",
     "generate:prisma": "prisma generate",
     "generate:gql": "graphql-codegen --config src/graphql/codegen.yml",
     "dev": "concurrently --restart-tries 3 -n server,graphql,prisma -k -c cyan.bold,magenta.dim,black.dim \"dotenv -e .env.development -- nodemon --watch src src/index.ts\" \"npm:generate:gql -- --watch\" \"npm:generate:prisma -- --watch\"",
@@ -21,9 +21,11 @@
     "test:coverage": "jest --collect-coverage",
     "docker:up": "docker compose up integration-tests -d",
     "docker:down": "docker compose stop integration-tests && docker compose rm integration-tests -v -f",
+    "integration-test": "dotenv -e .env.test -- npm run db:push && dotenv -e .env.test -- jest --config jest.integration.config.ts",
     "pretest:integration": "run-s docker:down docker:up && wait-on tcp:5433 -t 20000",
-    "test:integration": "dotenv -e .env.test -- run-s docker:up db:push && dotenv -e .env.test -- jest --config jest.integration.config.ts",
-    "posttest:integration": "run-s docker:down",
+    "test:integration": "npm run integration-test --",
+    "posttest:integration": "npm run docker:down",
+    "test:integration:headless": "npm run integration-test --",
     "tsc": "tsc"
   },
   "optionalDependencies": {
@@ -55,7 +57,7 @@
     "jest-mock-extended": "^2.0.6",
     "nodemon": "^2.0.19",
     "npm-run-all": "^4.1.5",
-    "prisma": "^4.2.1",
+    "prisma": "^4.3.1",
     "ts-jest": "^28.0.5",
     "ts-node": "^10.9.1",
     "tsconfig-paths": "^4.1.0",
@@ -65,7 +67,7 @@
   "dependencies": {
     "@apollo/server": "^4.0.0-alpha.1",
     "@graphql-tools/merge": "^8.3.1",
-    "@prisma/client": "^4.2.1",
+    "@prisma/client": "^4.3.1",
     "@sentry/node": "^7.5.1",
     "body-parser": "^1.20.0",
     "connect-redis": "^6.1.3",

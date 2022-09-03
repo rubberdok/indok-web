@@ -19,13 +19,20 @@ beforeAll(() => {
   container.bind<IUserRepository>(Types.UserRepository).to(UserRepository);
 });
 
-beforeEach(() => {
+beforeEach(async () => {
   const db = container.get<PrismaClient>(CoreTypes.Prisma);
-  db.user.delete({
+  const user = await db.user.findFirst({
     where: {
-      id: "test-1",
-    },
-  });
+      feideId: "test-1"
+    }
+  })
+  if (user !== null) {
+    await db.user.delete({
+      where: {
+        id: user.id,
+      },
+    });
+  }
 });
 
 const usersTable: CreateUserCase[] = [
@@ -33,14 +40,14 @@ const usersTable: CreateUserCase[] = [
     input: {
       username: "test-1",
       email: "example@example.com",
-      feideId: "asdf",
+      feideId: "test-1",
       firstName: "first",
       lastName: "last",
     },
     expected: {
       username: "test-1",
       email: "example@example.com",
-      feideId: "asdf",
+      feideId: "test-1",
       firstName: "first",
       lastName: "last",
     },
