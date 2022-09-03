@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+    paths:
+      - api/**
   pull_request:
     paths:
       - api/**
@@ -144,7 +146,7 @@ jobs:
         with:
           context: api
           file: api/Dockerfile.prod
-          tags: api:${{ github.sha }}
+          tags: ghcr.io/rubberdok/api:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
           push: true
