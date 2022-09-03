@@ -141,10 +141,19 @@ describe("UserService", () => {
     repo.get.mockReturnValueOnce(Promise.resolve(existing))
     repo.update.mockReturnValueOnce(Promise.resolve(expected))
 
-    const actual = await service.update(existing.id, input)
+    await service.update(existing.id, input)
     
     expect(repo.get).toBeCalledWith(existing.id)
     expect(repo.update).toBeCalledWith(existing.id, updateInput)
-    expect(actual).toMatchObject(expected)
+  })
+
+  it("logging in should set lastLogin", async () => {
+    const repo = container.get<DeepMockProxy<IUserRepository>>(RepositoryTypes.UserRepository)
+    const service = container.get<IUserService>(ServiceTypes.UserService)
+    repo.update.mockReturnValueOnce(Promise.resolve(dummyUser))
+
+    await service.login(dummyUser.id)
+
+    expect(repo.update).toBeCalledWith(dummyUser.id, { lastLogin: time })
   })
 })
