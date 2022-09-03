@@ -67,6 +67,8 @@ jobs:
     services:
       postgres:
         image: postgres
+        ports:
+          - 5432:5432
 
     steps:
       - name: Checkout
