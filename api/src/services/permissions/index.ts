@@ -1,11 +1,12 @@
 import { inject, injectable } from "inversify";
 
-import { Permission, Role, User } from "@prisma/client";
 import { IPermissionRepository, Types } from "@/repositories";
 import { IPermissionService } from "@/services/interfaces";
+import { Permission, User } from "@prisma/client";
 
-import { PermissionString } from "./types";
 import { PermissionDeniedError } from "./errors";
+import { PermissionString } from "./types";
+import { isPermissionString } from "./utils";
 
 @injectable()
 export default class PermissionService implements IPermissionService {
@@ -22,8 +23,10 @@ export default class PermissionService implements IPermissionService {
     return this.permissionRepository.getManyByUser(id);
   }
 
-  async permissionRequired(permissionHolder: User | Role, permission: PermissionString): Promise<void> {
-    const permissions = await this.permissionRepository.getManyByUser(permissionHolder.id);
-    if (!permissions.some((perm) => perm.name === permission)) throw new PermissionDeniedError();
+  async permissionRequired(user: User, permission: PermissionString): Promise<void> {
+    if (isPermissionString(permission)) {
+      if (await this.hasPermission(user, permission)) return;
+      throw new PermissionDeniedError(permission);
+    }
   }
 }
