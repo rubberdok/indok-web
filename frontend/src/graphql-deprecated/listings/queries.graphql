@@ -1,8 +1,0 @@
-query listing($id: ID!) {
-  listing(id: $id) {
-    ...Listing
-    form {
-      id
-    }
-  }
-}

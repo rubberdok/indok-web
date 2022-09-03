@@ -1,8 +1,0 @@
-fragment UserFields on UserType {
-  id
-  email
-  username
-  firstName
-  lastName
-  firstLogin
-}
