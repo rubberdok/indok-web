@@ -34,7 +34,7 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           directory: api/coverage/unit
-          flags: unittests
+          flags: unittests,node
 
   build:
     name: Build
@@ -90,4 +90,4 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           directory: api/coverage/integration
-          flags: integrationtests # optional
+          flags: integrationtests,node
