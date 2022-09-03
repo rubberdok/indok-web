@@ -28,7 +28,7 @@ jobs:
         run: npm ci
 
       - name: Run Unit Tests
-        run: npm run test:unit -- --collect-coverage
+        run: npm run test -- --collect-coverage
       
       - name: Upload Coverage
         uses: codecov/codecov-action@v3
