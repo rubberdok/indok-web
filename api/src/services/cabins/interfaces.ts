@@ -8,6 +8,6 @@ export interface BookingData
 
 export interface ICabinService {
   newBooking(data: BookingData): Promise<Booking>;
-  updateBookingStatus(user: User, id: string, status: BookingStatus): Promise<Booking>;
+  updateBookingStatus(id: string, status: BookingStatus): Promise<Booking>;
   getCabin(id: string): Promise<Cabin>;
 }

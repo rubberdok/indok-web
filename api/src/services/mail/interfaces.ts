@@ -10,13 +10,16 @@ export enum TemplateAliasEnum {
   CABIN_BOOKING_RECEIPT = "cabin-booking-receipt",
 }
 
+export type CabinBookingReceipt = {
+  firstName: string;
+  lastName: string;
+}
+
 type Model = {
   [TemplateAliasEnum.EVENT_WAIT_LIST]: {
     subject: string;
   };
-  [TemplateAliasEnum.CABIN_BOOKING_RECEIPT]: {
-    title: string;
-  };
+  [TemplateAliasEnum.CABIN_BOOKING_RECEIPT]: CabinBookingReceipt
 };
 
 export enum MessageStream {

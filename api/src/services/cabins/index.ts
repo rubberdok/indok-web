@@ -1,9 +1,8 @@
-import { Booking, BookingStatus, Cabin, User } from "@prisma/client";
+import { Booking, BookingStatus, Cabin } from "@prisma/client";
 import { inject, injectable } from "inversify";
 
 import { ValidationError } from "@/core/errors";
 import { ICabinRepository, Types as RepositoryTypes } from "@/repositories";
-import { IPermissionService } from "@/services/interfaces";
 import { IMailService, TemplateAliasEnum } from "@/services/mail/interfaces";
 import Types from "@/services/types";
 import { BookingData, ICabinService } from "./interfaces";
@@ -15,8 +14,6 @@ export default class CabinService implements ICabinService {
     @inject(RepositoryTypes.CabinRepsitory)
     private cabinRepository: ICabinRepository,
     @inject(Types.MailService) private mailService: IMailService,
-    @inject(Types.PermissionService)
-    private permissionService: IPermissionService
   ) {}
 
   getCabin(id: string): Promise<Cabin> {
@@ -31,7 +28,8 @@ export default class CabinService implements ICabinService {
     return this.mailService.send({
       TemplateAlias: TemplateAliasEnum.CABIN_BOOKING_RECEIPT,
       TemplateModel: {
-        title: `Booking confirmation for ${booking.firstName}`,
+        firstName: booking.firstName,
+        lastName: booking.lastName,
       },
     });
   }
@@ -43,9 +41,7 @@ export default class CabinService implements ICabinService {
     return booking;
   }
 
-  async updateBookingStatus(user: User, id: string, status: BookingStatus): Promise<Booking> {
-    this.permissionService.permissionRequired(user, "write:booking");
-
+  async updateBookingStatus(id: string, status: BookingStatus): Promise<Booking> {
     if (status === BookingStatus.CONFIRMED) {
       const booking = await this.cabinRepository.getBookingById(id);
       const overlapping = await this.cabinRepository.getOverlappingBookings({
