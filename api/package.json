@@ -34,6 +34,7 @@
     "@swc/core-linux-x64-musl": "^1.2.224"
   },
   "devDependencies": {
+    "@faker-js/faker": "^7.5.0",
     "@graphql-codegen/cli": "^2.8.1",
     "@graphql-codegen/schema-ast": "^2.5.1",
     "@graphql-codegen/typescript": "^2.7.1",
