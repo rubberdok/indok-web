@@ -15,7 +15,7 @@ import { randomUUID } from "crypto"
 const container = new Container()
 const systemTime = dayjs().add(50, "years").toDate()
 
-let cabins: Record<string, Cabin> = {}
+const cabins: Record<string, Cabin> = {}
 const id = randomUUID()
 
 beforeAll(() => {
