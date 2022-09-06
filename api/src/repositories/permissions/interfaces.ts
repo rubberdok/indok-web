@@ -1,4 +1,5 @@
 import { Permission, User } from "@prisma/client";
+
 import { PermissionString } from "@/services/permissions/types";
 
 export interface IPermissionRepository {

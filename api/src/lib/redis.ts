@@ -1,6 +1,6 @@
-import { createClient } from "redis";
-import session from "express-session";
 import { default as _RedisStore } from "connect-redis";
+import session from "express-session";
+import { createClient } from "redis";
 
 import { env } from "@/config";
 

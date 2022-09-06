@@ -5,6 +5,7 @@ import { ValidationError } from "@/core/errors";
 import { ICabinRepository, Types as RepositoryTypes } from "@/repositories";
 import { IMailService, TemplateAliasEnum } from "@/services/mail/interfaces";
 import Types from "@/services/types";
+
 import { BookingData, ICabinService } from "./interfaces";
 import { bookingSchema } from "./validation";
 
@@ -13,7 +14,7 @@ export default class CabinService implements ICabinService {
   constructor(
     @inject(RepositoryTypes.CabinRepsitory)
     private cabinRepository: ICabinRepository,
-    @inject(Types.MailService) private mailService: IMailService,
+    @inject(Types.MailService) private mailService: IMailService
   ) {}
 
   getCabin(id: string): Promise<Cabin> {

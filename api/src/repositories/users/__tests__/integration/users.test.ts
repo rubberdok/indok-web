@@ -3,11 +3,11 @@ import "reflect-metadata";
 import { PrismaClient } from "@prisma/client";
 import { Container } from "inversify";
 
-import UserRepository from "@/repositories/users";
-import { Types } from "@/repositories";
 import { CoreTypes } from "@//core";
 import prisma from "@/lib/prisma";
+import { Types } from "@/repositories";
 import { IUserRepository } from "@/repositories/interfaces";
+import UserRepository from "@/repositories/users";
 
 import { CreateUserCase } from "./interfaces";
 
@@ -23,9 +23,9 @@ beforeEach(async () => {
   const db = container.get<PrismaClient>(CoreTypes.Prisma);
   const user = await db.user.findFirst({
     where: {
-      feideId: "test-1"
-    }
-  })
+      feideId: "test-1",
+    },
+  });
   if (user !== null) {
     await db.user.delete({
       where: {

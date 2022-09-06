@@ -15,5 +15,8 @@ export const updateUserSchema = z.object({
   email: z.string().email({ message: "invalid email" }).optional(),
   graduationYear: z.number().min(dayjs().year()).optional(),
   allergies: z.string().optional(),
-  phoneNumber: z.string().regex(/^(0047|\+47|47)?[49]\d{7}$/).optional()
-})
+  phoneNumber: z
+    .string()
+    .regex(/^(0047|\+47|47)?[49]\d{7}$/)
+    .optional(),
+});

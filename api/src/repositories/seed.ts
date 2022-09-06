@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+
 import * as Users from "./users/seed";
 
 const db = new PrismaClient();

@@ -1,4 +1,5 @@
 import { RequestInfo } from "node-fetch";
+
 import { UserInfo } from "@/services/auth/interfaces";
 
 export interface FeideResponses {

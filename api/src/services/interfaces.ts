@@ -1,4 +1,5 @@
 import { Permission, Prisma, Role, User } from "@prisma/client";
+
 import { PermissionString } from "@/services/permissions/types";
 
 export { ICabinService } from "@/services/cabins/interfaces";

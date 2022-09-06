@@ -13,6 +13,7 @@ import AuthService from "@/services/auth";
 import { setupMocks } from "@/services/auth/__tests__/__mocks__/feide";
 import { IAuthService, IUserService } from "@/services/interfaces";
 import UserService from "@/services/users";
+
 import { OAuthCase } from "./interfaces";
 
 const { Response: ActualResponse } = jest.requireActual<{

@@ -1,5 +1,6 @@
 import { ApolloServerErrorCode } from "@apollo/server/errors";
 import { GraphQLError } from "graphql";
+
 import { Resolvers } from "@/graphql/generated/types";
 
 const resolvers: Resolvers = {

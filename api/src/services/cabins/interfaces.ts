@@ -1,4 +1,4 @@
-import { Booking, BookingStatus, Cabin, Prisma, User } from "@prisma/client";
+import { Booking, BookingStatus, Cabin, Prisma } from "@prisma/client";
 
 export interface BookingData
   extends Pick<

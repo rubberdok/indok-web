@@ -3,8 +3,8 @@ import { inject, injectable } from "inversify";
 
 import { CoreTypes } from "@/core";
 import { Database } from "@/core/interfaces";
-import { PermissionString } from "@/services/permissions/types";
 import { IPermissionRepository } from "@/repositories/interfaces";
+import { PermissionString } from "@/services/permissions/types";
 
 @injectable()
 export default class PermissionRepository implements IPermissionRepository {

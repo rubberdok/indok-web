@@ -1,11 +1,13 @@
 import crypto from "crypto";
-import fetch from "node-fetch";
 
 import { User } from "@prisma/client";
 import { inject, injectable } from "inversify";
+import fetch from "node-fetch";
+
 import { env } from "@/config";
 import { GetUserParams, IAuthService, IUserService } from "@/services/interfaces";
 import { default as Types } from "@/services/types";
+
 import { UserInfo } from "./interfaces";
 
 const FeideProvider = {
