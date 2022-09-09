@@ -27,7 +27,7 @@
     "**/*.{ts,js,tsx,jsx}": [
       "npm run lint:fix"
     ],
-    "**/*.{json,md,html,js,jsx,ts,tsx,yml,yaml}": [
+    "**/*.{json,md,html,js,jsx,ts,tsx,yml,yaml,graphql}": [
       "prettier --write"
     ]
   }
