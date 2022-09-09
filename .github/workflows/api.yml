@@ -9,7 +9,7 @@ on:
   pull_request:
     paths:
       - api/**
-    
+
 defaults:
   run:
     working-directory: api
@@ -27,13 +27,14 @@ jobs:
         with:
           node-version: 16
           cache: npm
+          cache-dependency-path: api/package-lock.json
 
       - name: Install Dependencies
         run: npm ci
 
       - name: Run Unit Tests
         run: npm run test -- --collect-coverage
-      
+
       - name: Upload Coverage
         uses: codecov/codecov-action@v3
         with:
@@ -52,6 +53,7 @@ jobs:
         with:
           node-version: 16
           cache: npm
+          cache-dependency-path: api/package-lock.json
 
       - name: Install Dependencies
         run: npm ci
@@ -71,6 +73,7 @@ jobs:
         with:
           node-version: 16
           cache: npm
+          cache-dependency-path: api/package-lock.json
 
       - name: Install Dependencies
         run: npm ci
@@ -111,6 +114,7 @@ jobs:
         with:
           node-version: 16
           cache: npm
+          cache-dependency-path: api/package-lock.json
 
       - name: Install Dependencies
         run: npm ci
