@@ -31,11 +31,29 @@ module.exports = {
 
   ignorePatterns: ["**/generated/**", "dist"],
 
+  overrides: [
+    {
+      files: ["src/graphql/**/type-defs.ts"],
+      processor: "@graphql-eslint/graphql",
+    },
+    {
+      files: ["*.graphql"],
+      parser: "@graphql-eslint/eslint-plugin",
+      plugins: ["@graphql-eslint"],
+      rules: {
+        "@graphql-eslint/known-type-names": "error",
+      },
+      parserOptions: {
+        schema: "src/graphql/generated/schema.graphql",
+      },
+    },
+  ],
+
   rules: {
     "import/no-extraneous-dependencies": [
       "error",
       {
-        devDependencies: ["jest.*config.ts", "**/__tests__/**"],
+        devDependencies: ["*.config.ts", "**/__tests__/**"],
       },
     ],
 
