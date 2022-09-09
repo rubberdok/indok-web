@@ -16,6 +16,18 @@ board:
     name: Iver Kvaale Skibsrud
     phoneNumber: 479 23 118
     title: Driftsansvarlig
+  book:
+    name: Thale Simonsen
+    phoneNumber: 907 94 116
+    title: Bookingansvarlig
+  log:
+    name: Bendik Westerhelm-Hjelmås
+    phoneNumber: 457 75 516
+    title: Logistikkansvarlig
+  pr:
+    name: Ingrid Bergan
+    phoneNumber: 919 14 214
+    title: PR- og sosialansvarlig
 
 tag: annet
 ---
