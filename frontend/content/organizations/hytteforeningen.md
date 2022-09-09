@@ -21,7 +21,7 @@ board:
     phoneNumber: 907 94 116
     title: Bookingansvarlig
   log:
-    name: Bendik Westerhelm-Hjelmås
+    name: Bendik Westerheim-Hjemås
     phoneNumber: 457 75 516
     title: Logistikkansvarlig
   pr:
