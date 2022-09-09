@@ -1,17 +1,6 @@
 version: "3"
 
 services:
-  integration-tests:
-    image: postgres
-    restart: always
-    container_name: integration-tests
-    environment:
-      - POSTGRES_DB=tests
-      - POSTGRES_USER=integration
-      - POSTGRES_PASSWORD=integration
-    ports:
-      - "5433:5432"
-
   postgres:
     image: postgres
     environment:
@@ -38,11 +27,11 @@ services:
     restart: always
     tty: true
     build:
-      context: ./api
+      context: .
       dockerfile: Dockerfile
     volumes:
-      - ./api:/usr/src/app
-      - ./api/node_modules/.prisma:/usr/src/app/node_modules/.prisma
+      - ./:/usr/src/app
+      - ./node_modules/.prisma:/usr/src/app/node_modules/.prisma
       - api_node_modules:/usr/src/app/node_modules/
     ports:
       - 4000:4000

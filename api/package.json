@@ -22,7 +22,7 @@
     "db:seed": "dotenv -e .env.development -- ts-node --transpile-only src/repositories/seed.ts",
     "test": "dotenv -e .env.test -- jest",
     "test:coverage": "jest --collect-coverage",
-    "docker:up": "docker compose up integration-tests -d",
+    "docker:up": "docker compose -f docker-compose.integration.yml up integration-tests -d",
     "docker:down": "docker compose stop integration-tests && docker compose rm integration-tests -v -f",
     "integration-test": "dotenv -e .env.test -- npm run db:push && dotenv -e .env.test -- jest --config jest.integration.config.ts",
     "pretest:integration": "run-s docker:down docker:up && wait-on tcp:5433 -t 20000",
