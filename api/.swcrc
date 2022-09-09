@@ -10,7 +10,7 @@
       "syntax": "typescript",
       "decorators": true
     },
-    
+
     "transform": {
       "decoratorMetadata": true
     },

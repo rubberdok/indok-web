@@ -3,13 +3,13 @@ import "reflect-metadata";
 import { PrismaClient } from "@prisma/client";
 import { Container } from "inversify";
 
+import { CreateUserCase } from "./interfaces";
+
 import { CoreTypes } from "@//core";
 import prisma from "@/lib/prisma";
 import { Types } from "@/repositories";
 import { IUserRepository } from "@/repositories/interfaces";
 import UserRepository from "@/repositories/users";
-
-import { CreateUserCase } from "./interfaces";
 
 const container = new Container();
 

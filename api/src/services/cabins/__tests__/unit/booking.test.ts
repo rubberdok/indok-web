@@ -7,13 +7,13 @@ import dayjs from "dayjs";
 import { Container } from "inversify";
 import { DeepMockProxy, mockDeep } from "jest-mock-extended";
 
+import { NegativeValidationTestCase, PositiveValidationTestCase } from "./interfaces";
+
 import { ICabinRepository, Types as RepositoryTypes } from "@/repositories";
 import { ICabinService, IMailService, Types as ServiceTypes } from "@/services";
 import CabinService from "@/services/cabins";
 import { BookingData } from "@/services/cabins/interfaces";
 import { TemplateAliasEnum } from "@/services/mail/interfaces";
-
-import { NegativeValidationTestCase, PositiveValidationTestCase } from "./interfaces";
 
 const container = new Container();
 
