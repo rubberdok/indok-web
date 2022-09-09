@@ -7,12 +7,12 @@ import { Container } from "inversify";
 import { DeepMockProxy, mockDeep } from "jest-mock-extended";
 import fetch, { Response as _Response } from "node-fetch";
 
-import { OAuthCase } from "./interfaces";
-
 import AuthService from "@/services/auth";
 import { setupMocks } from "@/services/auth/__tests__/__mocks__/feide";
 import { IAuthService, IUserService } from "@/services/interfaces";
 import types from "@/services/types";
+
+import { OAuthCase } from "./interfaces";
 
 const { Response: ActualResponse } = jest.requireActual<{
   Response: typeof _Response;

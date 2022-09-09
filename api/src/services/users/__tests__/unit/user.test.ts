@@ -5,12 +5,12 @@ import dayjs from "dayjs";
 import { Container } from "inversify";
 import { DeepMockProxy, mockDeep } from "jest-mock-extended";
 
-import { TestCase } from "./interfaces";
-
 import { IUserRepository, Types as RepositoryTypes } from "@/repositories";
 import { Types as ServiceTypes } from "@/services";
 import { IUserService } from "@/services/interfaces";
 import UserService from "@/services/users";
+
+import { TestCase } from "./interfaces";
 
 const dummyUser = mockDeep<User>();
 

@@ -1,13 +1,13 @@
 import { Booking, BookingStatus, Cabin } from "@prisma/client";
 import { inject, injectable } from "inversify";
 
-import { BookingData, ICabinService } from "./interfaces";
-import { bookingSchema } from "./validation";
-
 import { ValidationError } from "@/core/errors";
 import { ICabinRepository, Types as RepositoryTypes } from "@/repositories";
 import { IMailService, TemplateAliasEnum } from "@/services/mail/interfaces";
 import Types from "@/services/types";
+
+import { BookingData, ICabinService } from "./interfaces";
+import { bookingSchema } from "./validation";
 
 @injectable()
 export default class CabinService implements ICabinService {

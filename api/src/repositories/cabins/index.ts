@@ -1,9 +1,9 @@
 import { Booking, Cabin, Prisma } from "@prisma/client";
 import { inject, injectable } from "inversify";
 
-import { ICabinRepository, OverlappingBookingsData } from "./interfaces";
-
 import { CoreTypes, Database } from "@/core";
+
+import { ICabinRepository, OverlappingBookingsData } from "./interfaces";
 
 @injectable()
 export default class CabinRepository implements ICabinRepository {

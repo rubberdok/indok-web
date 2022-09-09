@@ -4,8 +4,6 @@ import { PrismaClient } from "@prisma/client";
 import { Container } from "inversify";
 import fetch, { Response as _Response } from "node-fetch";
 
-import { OAuthCase } from "./interfaces";
-
 import { CoreTypes } from "@/core";
 import prisma from "@/lib/prisma";
 import { IUserRepository, Types as RepositoryTypes } from "@/repositories";
@@ -15,6 +13,8 @@ import AuthService from "@/services/auth";
 import { setupMocks } from "@/services/auth/__tests__/__mocks__/feide";
 import { IAuthService, IUserService } from "@/services/interfaces";
 import UserService from "@/services/users";
+
+import { OAuthCase } from "./interfaces";
 
 const { Response: ActualResponse } = jest.requireActual<{
   Response: typeof _Response;

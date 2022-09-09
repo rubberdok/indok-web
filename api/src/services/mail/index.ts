@@ -1,9 +1,9 @@
 import { inject, injectable } from "inversify";
 
-import { EmailContent, IMailClient, IMailService } from "./interfaces";
-
 import { env } from "@/config";
 import { CoreTypes } from "@/core";
+
+import { EmailContent, IMailClient, IMailService } from "./interfaces";
 
 @injectable()
 export default class MailService implements IMailService {
