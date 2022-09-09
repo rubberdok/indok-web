@@ -9,41 +9,39 @@ services:
       - POSTGRES_PASSWORD=postgres
     ports:
       - "5432:5432"
+    expose:
+      - 5432
     volumes:
       - postgres_data:/var/lib/postgresql/data/:cached
 
-  redis:
+  backend:
     restart: always
-    image: redis:7.0.4-alpine
-    ports:
-      - "6379:6379"
     environment:
-      - REDIS_PASSWORD=redis
-    command: redis-server --loglevel warning --requirepass redis
-    volumes:
-      - ./data:/data/
-
-  api:
-    restart: always
-    tty: true
+      - DJANGO_READ_DOT_ENV_FILE=true
+      - DJANGO_DOT_ENV_FILES=.env,.env.development
     build:
-      context: ./api
+      context: ./backend
       dockerfile: Dockerfile
     volumes:
-      - ./api:/usr/src/app
-      - ./api/node_modules/.prisma:/usr/src/app/node_modules/.prisma
-      - api_node_modules:/usr/src/app/node_modules/
+      - ./backend:/usr/src/app
     ports:
-      - 4000:4000
+      - "8000:8000"
     depends_on:
       - postgres
-      - redis
 
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
+    ports:
+      - 3000:3000
+    expose:
+      - 3000
 
 volumes:
   postgres_data:
-    driver: local
-  next_node_modules:
-    driver: local
-  api_node_modules:
     driver: local
