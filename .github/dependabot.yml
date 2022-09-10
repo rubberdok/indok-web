@@ -9,7 +9,7 @@ updates:
       time: "02:00"
 
     commit-message:
-      prefix: "build(node): "
+      prefix: "build(next): "
 
     labels:
       - "dependencies"
@@ -40,3 +40,23 @@ updates:
     labels:
       - "dependencies"
       - "CI/CD"
+
+  - package-ecosystem: npm
+    directory: "/api"
+
+    schedule:
+      interval: daily
+
+    commit-message:
+      prefix: "chore(deps): "
+      prefix-development: "chore(dev): "
+      include: scope
+
+    versioning-strategy: increase
+    ignore:
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
+
+    labels:
+      - dependencies
+      - javascript
