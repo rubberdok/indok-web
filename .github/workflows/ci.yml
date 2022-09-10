@@ -4,7 +4,11 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+      - api/**
   pull_request:
+    paths-ignore:
+      - api/**
 
 env:
   AWS_REGION: eu-north-1 # Set this to our AWS region
