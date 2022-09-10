@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - api/**
+  pull_request:
+    paths:
+      - api/**
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        linter: [black, flake8]
+    steps:
+      - run: echo "Skipping"
+
+  build:
+    name: Build backend
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Skipping"
+
+  api:
+    name: API tests
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Skipping"
+
+  e2e:
+    name: E2E Tests
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Skipping"
