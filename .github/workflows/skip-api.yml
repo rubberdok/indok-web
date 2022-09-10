@@ -20,6 +20,9 @@ jobs:
   lint:
     name: Lint
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        linter: [black, flake8]
     steps:
       - run: echo "Skipping job"
 
