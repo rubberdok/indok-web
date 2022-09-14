@@ -55,7 +55,7 @@ const Contract: React.FC<ContractProps> = ({ chosenCabins, contactInfo, datePick
           Leieperiode: <b>{datePick.checkInDate && convertDateFormat(datePick.checkInDate)}</b> -{" "}
           <b>{datePick.checkOutDate && convertDateFormat(datePick.checkOutDate)}</b>
           <Divider component="br" />
-          Leiesum: <b>{price}</b> NOK innbetalt til konto <b>9235.28.31311</b> i forkant av leieperioden.
+          Leiesum: <b>{price}</b> NOK faktureres i forkant av leieperioden.
         </Typography>
         <Divider component="br" />
         <Typography variant="body2">
