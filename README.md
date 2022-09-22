@@ -11,6 +11,11 @@
 - [Features](#features)
 - [Feedback](#feedback)
 - [Setup](#setup)
+  - [With Docker](#with-docker)
+  - [Without Docker](#without-docker)
+    - [Frontend](#frontend)
+    - [Database](#database)
+    - [Backend](#backend)
 - [Error Logging](#error-logging)
 - [Deployment](#deployment)
 - [Other Services](#other-services)
@@ -44,7 +49,7 @@ Found a bug, got a suggestion, or something we should know about? Take a look at
 
 ## Setup
 
-### Installation
+### With Docker
 
 1. [Set up Git](https://docs.github.com/en/get-started/quickstart/set-up-git)
 
@@ -100,8 +105,8 @@ The last command creates some initial data, two test users, and one admin user:
    1. Install [Python 3.9](https://www.python.org/downloads/release/python-397/)
    2. (Optional, but recommended) Create a virtual environment in the root folder `indok-web`
    ```zsh
-   python -m venv .venv
-   source .venv/bin/activate
+   python -m venv venv
+   source venv/bin/activate
    ```
    3. Install Python dependencies locally
    ```zsh
@@ -110,13 +115,85 @@ The last command creates some initial data, two test users, and one admin user:
 
 The frontend runs on [http://localhost:3000](http://localhost:3000), and the backend on [http://localhost:8000](http://localhost:8000). The GraphQL API endpoint is [http://localhost:8000/graphql](http://localhost:8000/graphql). The admin panel is available at [http://localhost:8000/admin](http://localhost:8000/admin).
 
+### Without Docker
+
+Some users, particularly those using Windows, may have issues running the app through Docker. Some functionality such as
+hot reloading (which drastically improves developer experience) only work when you have the whole project in WSL
+(Windows Subsystem for Linux, which is what Docker on Windows uses). Therefore, you may prefer to run the project
+without Docker — in that case, follow the below steps to set up the frontend, backend and database locally.
+
+Before following the steps below, make sure to clone the project with Git:
+
+1. In the terminal, move to where you want to store the project (easiest is just where you are when you open the
+   terminal)
+2. Type `git clone https://github.com/rubberdok/indok-web.git`
+   - This creates a new folder named `indok-web`, which contains the project
+3. Type `cd indok-web` to move into the new folder
+4. If using VSCode, you can type `code .` to open the current folder in VSCode
+
+#### Frontend
+
+1. Download and install `nvm` (Node Version Manager): https://github.com/nvm-sh/nvm#installing-and-updating
+   - If on Windows, install `nvm-windows` instead: https://github.com/coreybutler/nvm-windows/releases
+     - Scroll down on that page to find `nvm-setup.exe`
+   - Type `nvm --version` in a new terminal to check that it was installed correctly
+2. Type `nvm install 16` in the terminal to install Node.js version 16
+3. Type `nvm use 16` to use that version of Node
+4. Move to the `indok-web` folder in the terminal (`cd indok-web`), then into the `frontend` folder (`cd frontend`)
+5. Type `npm install -g yarn`
+   - This installs Yarn, which we use to manage dependencies in the frontend
+6. Type `yarn` to build the frontend
+7. Type `yarn start` to run the frontend
+
+Now the frontend should be running at `localhost:3000`! You can check it out in the web browser.
+
+#### Database
+
+1. Download and install PostgreSQL: https://www.postgresql.org/download/
+2. Type `psql --version` in a new terminal to check that it was installed correctly
+3. Open the `indok-web` folder in VSCode
+4. Make a new file called `.env` inside `backend`
+5. Paste the following line in that file, and save:
+
+```
+DB_HOST=localhost
+```
+
+#### Backend
+
+1. Download and install `pyenv` (Python version manager): https://github.com/pyenv/pyenv#installation
+   - If on Windows, install `pyenv-win` instead: https://github.com/pyenv-win/pyenv-win#installation
+   - Type `pyenv --version` in a new terminal to check that it was installed correctly
+2. Type `pyenv install --list | grep "^  3.9"` to get the list of available Python 3.9 versions
+   - If on Windows, type `pyenv install --list | findstr -r "^  3.9"` instead
+3. Type `pyenv install 3.9.X`, where `X` is the latest version found from the previous step
+4. Type `pyenv global 3.9.X`, where `X` is the same as the previous step
+   - If you do not want to use Python 3.9 globally, type `pyenv local 3.9.X` instead (make sure you are in the
+     `indok-web` folder when you do this)
+   - Type `python --version` to verify that it has been set to `3.9.X`
+5. Type `python -m venv venv` (make sure you are in the `indok-web` folder in the terminal when you do this!)
+   - This sets up a Python virtual environment, to isolate this project from others
+6. Type `source venv/bin/activate` to activate the virtual environment
+   - If on Windows, type `.\venv\scripts\activate` instead
+7. Type `python -m pip install -r backend/requirements/local.txt` to install dependencies
+8. Type `cd backend` to move into the backend folder
+9. Type `python manage.py runserver` to run the backend server
+   - This requires the database to be running, so make sure to follow the steps for that above if you haven't!
+10. Type `python manage.py migrate` to update the database with our backend models
+11. Type `python manage.py loaddata initial_data` to load example data into the database
+    - This also creates an admin user with username `admin` and password `admin123`
+
+Now the backend should be running at `localhost:8000`! You can check out the GraphQL API at `localhost:8000/graphql`, or
+use the Django admin panel at `localhost:8000/admin`.
+
 ### Secrets
 
 Environment variables are automatically loaded, but secrets are not stored in the repository.
 
-1. Create `.env` and `.env.local` in `backend/` and `frontend/`, respectively.
-2. Contact maintainers in order to get the necessary secrets, alternatively, if you're a member of Rubberdøk, check the #dev channel on Slack.
-3. Make sure to restart either container after making changes to `.env*`
+1. Create a file called `.env` in the `backend` folder, and a file called `.env.local` in `frontend`.
+2. Contact maintainers in order to get the necessary secrets.
+   - If you're a member of Rubberdøk, check the `#dev` channel on Slack.
+3. When you make changes to `.env` files, make sure to restart the frontend and backend if you have them running
 
 ## Error logging
 
