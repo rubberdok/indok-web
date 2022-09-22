@@ -151,6 +151,13 @@ Now the frontend should be running at `localhost:3000`! You can check it out in 
 
 1. Download and install PostgreSQL: https://www.postgresql.org/download/
 2. Type `psql --version` in a new terminal to check that it was installed correctly
+3. Open the `indok-web` folder in VSCode
+4. Make a new file called `.env` inside `backend`
+5. Paste the following line in that file, and save:
+
+```
+DB_HOST=localhost
+```
 
 #### Backend
 
