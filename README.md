@@ -164,8 +164,8 @@ DB_HOST=localhost
 1. Download and install `pyenv` (Python version manager): https://github.com/pyenv/pyenv#installation
    - If on Windows, install `pyenv-win` instead: https://github.com/pyenv-win/pyenv-win#installation
    - Type `pyenv --version` in a new terminal to check that it was installed correctly
-2. Type `pyenv install --list | grep "^ 3.9"` to get the list of available Python 3.9 versions
-   - If on Windows, type `pyenv install --list | findstr -r "^ 3.9"` instead
+2. Type `pyenv install --list | grep "^  3.9"` to get the list of available Python 3.9 versions
+   - If on Windows, type `pyenv install --list | findstr -r "^  3.9"` instead
 3. Type `pyenv install 3.9.X`, where `X` is the latest version found from the previous step
 4. Type `pyenv global 3.9.X`, where `X` is the same as the previous step
    - If you do not want to use Python 3.9 globally, type `pyenv local 3.9.X` instead (make sure you are in the
