@@ -10,7 +10,7 @@ django-phonenumber-field==7.0.0
 Django==3.2.14
 djangorestframework==3.13.1
 factory-boy==3.2.1
-google-api-python-client==2.61.0
+google-api-python-client==2.62.0
 graphene-django==2.15.0
 graphene==2.1.8
 gunicorn==20.1.0
@@ -20,7 +20,7 @@ phonenumbers==8.12.54
 pillow>=8.1.1
 promise==2.3
 psycopg2-binary==2.9.3
-PyJWT==2.4.0
+PyJWT==2.5.0
 PyYAML==6.0
 typing-extensions==4.3.0
 WeasyPrint==56.1
