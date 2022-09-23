@@ -1,19 +1,13 @@
-import useResponsive from "@hooks/useResponsive";
 import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
 import { Box, Grid, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import MobileStepper from "@mui/material/MobileStepper";
 import Paper from "@mui/material/Paper";
 import { useTheme } from "@mui/material/styles";
-import Image from "next/image";
+import Image from "next/future/image";
 import React from "react";
 import SwipeableViews from "react-swipeable-views";
-
-interface ImageData {
-  label: string;
-  description: string;
-  imgPath: string;
-}
+import { ImageData } from "./imageData";
 
 interface ImageSliderProps {
   imageData: ImageData[];
@@ -26,7 +20,6 @@ Carousel compoent for showing images
 const ImageSlider: React.VFC<ImageSliderProps> = ({ imageData, displayLabelText }) => {
   const theme = useTheme();
   const [activeStep, setActiveStep] = React.useState(0);
-  const isMobile = useResponsive({ query: "down", key: "md" });
 
   const maxSteps = imageData.length;
 
@@ -44,44 +37,34 @@ const ImageSlider: React.VFC<ImageSliderProps> = ({ imageData, displayLabelText 
 
   return (
     <Box>
-      {displayLabelText ? (
+      {displayLabelText && (
         <Paper square elevation={0}>
           <Grid container direction="column" alignItems="center" justifyContent="center">
             <Grid item>
               <Typography variant="h4">{imageData[activeStep].label}</Typography>
             </Grid>
-            <Grid item>
-              <Typography variant="overline">{imageData[activeStep].description}</Typography>
-            </Grid>
           </Grid>
         </Paper>
-      ) : (
-        ""
       )}
       <SwipeableViews
         axis={theme.direction === "rtl" ? "x-reverse" : "x"}
         index={activeStep}
         onChangeIndex={handleStepChange}
         enableMouseEvents
-        disableLazyLoading
       >
         {imageData.map((step, index) => (
-          <Box
-            key={index}
-            display="flex"
-            justifyContent="center"
-            position="relative"
-            width={1}
-            height={{ xs: 300, md: 400 }}
-          >
+          <Box key={index} display="flex" justifyContent="center" position="relative" height={{ xs: 300, md: 400 }}>
             {Math.abs(activeStep - index) <= 2 && (
               <Image
-                layout="fill"
                 alt={step.label}
-                src={step.imgPath}
-                height={300}
-                objectFit={isMobile ? "cover" : "contain"}
-                objectPosition="bottom"
+                src={step.img}
+                placeholder="blur"
+                style={{
+                  maxWidth: "100%",
+                  height: "auto",
+                  objectFit: "cover",
+                  objectPosition: "center",
+                }}
               />
             )}
           </Box>
