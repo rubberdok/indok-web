@@ -2,8 +2,9 @@ import { useQuery } from "@apollo/client";
 import { QUERY_BOOKING_RESPONSIBLE } from "@graphql/cabins/queries";
 import { BookingResponsible, Cabin, ContactInfo, DatePick } from "@interfaces/cabins";
 import { Box, Divider, Grid, Typography } from "@mui/material";
-import { convertDateFormat, toStringChosenCabins, calculatePrice } from "@utils/cabins";
-import Image from "next/image";
+import hytteforeningen from "@public/static/cabins/logo.svg";
+import { calculatePrice, convertDateFormat, toStringChosenCabins } from "@utils/cabins";
+import Image from "next/future/image";
 import { useEffect, useState } from "react";
 
 interface ContractProps {
@@ -32,7 +33,7 @@ const Contract: React.FC<ContractProps> = ({ chosenCabins, contactInfo, datePick
     <Grid container>
       <Box m={2}>
         <Box display="flex" justifyContent="center" alignItems="center">
-          <Image alt="" src="/img/hyttestyret_logo.png" width={300} height={165} />
+          <Image alt="Hytteforeningen" src={hytteforeningen} width={300} height={165} />
         </Box>
         <Typography variant="h2" align="center">
           Leiekontrakt
