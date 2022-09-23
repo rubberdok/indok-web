@@ -5835,9 +5835,9 @@ queue-microtask@^1.2.2:
   integrity sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==
 
 react-awesome-reveal@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/react-awesome-reveal/-/react-awesome-reveal-4.0.0.tgz#dd01ac807fc3a90a8b449cb0d585c071eb344946"
-  integrity sha512-GaSO3+Gr5+6QIpL/R0yrKRvQ0zibN0t3PPQtD/EwfrOLgdWAmdQN5zXMYQTWpQeALDwK3VtzFaWGRc2CDCvxvA==
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/react-awesome-reveal/-/react-awesome-reveal-4.0.1.tgz#7b1f6932bb7255965afcbae735fb4585ebf826ab"
+  integrity sha512-6DQg14rAhEXbMsWbKHxFJBThUi6dZhpc4YsaCcSdh4dhiDRwYuCnAeSZYnhdkbCURP5dBJukWhVzlJrCuq81Cg==
   dependencies:
     react-intersection-observer "^9.4.0"
     react-is "^18.2.0"
