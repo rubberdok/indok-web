@@ -54,7 +54,7 @@
     "@types/node": "^18.0.0",
     "@typescript-eslint/eslint-plugin": "^5.33.0",
     "@typescript-eslint/parser": "^5.33.0",
-    "concurrently": "^7.2.2",
+    "concurrently": "^7.4.0",
     "dotenv-cli": "^6.0.0",
     "eslint": "^8.23.1",
     "eslint-config-prettier": "^8.5.0",
