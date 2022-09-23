@@ -51,12 +51,12 @@ const Contract: React.FC<ContractProps> = ({ chosenCabins, contactInfo, datePick
 
       <Box m={2}>
         <Typography variant="body2">
-          Gjeldende Leieobjekt(er): <b>{toStringChosenCabins(chosenCabins)}</b>, Landsbygrenda, 7340 Oppdal
+          Gjeldende Leieobjekt(er): <b>{toStringChosenCabins(chosenCabins)}</b>, Gardåvegen 88/90, 7340 Oppdal
           <Divider component="br" />
           Leieperiode: <b>{datePick.checkInDate && convertDateFormat(datePick.checkInDate)}</b> -{" "}
           <b>{datePick.checkOutDate && convertDateFormat(datePick.checkOutDate)}</b>
           <Divider component="br" />
-          Leiesum: <b>{price}</b> NOK innbetalt til konto <b>9235.28.31311</b> i forkant av leieperioden.
+          Leiesum: <b>{price}</b> NOK faktureres i forkant av leieperioden.
         </Typography>
         <Divider component="br" />
         <Typography variant="body2">
@@ -98,8 +98,7 @@ const Contract: React.FC<ContractProps> = ({ chosenCabins, contactInfo, datePick
             <Typography variant="body2">
               straks melde fra om skader eller mangler som må utbedres uten opphold, til utleier ved bookingansvarlig{" "}
               {responsible?.firstName} {responsible?.lastName} på telefon {responsible?.phone} eller e-post{" "}
-              {responsible?.email}. Annen skade eller mangler meldes fra til utleier i sammenheng med tilbakelevering av
-              nøkler ved endt leieperiode.
+              {responsible?.email}. Annen skade eller mangler meldes fra til utleier..
             </Typography>
           </li>
           <li>
