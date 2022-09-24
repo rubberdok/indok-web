@@ -27,6 +27,8 @@ declare module "@mui/material/styles" {
   interface CustomPalette {
     contrast?: PaletteOptions["primary"];
   }
+  interface Palette extends CustomPalette {}
+  interface PaletteOptions extends CustomPalette {}
 }
 
 declare module "@mui/material/Typography" {
