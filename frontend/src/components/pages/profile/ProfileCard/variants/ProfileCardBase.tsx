@@ -29,7 +29,7 @@ const ProfileCardBase: React.FC<Props> = ({
           {actionText && actionLink && (
             <CardActions sx={{ ml: 2, mb: 2 }}>
               <Link passHref href={actionLink}>
-                <Button color="inherit" variant="outlined" data-test-id={`${dataTestId}link`}>
+                <Button color="contrast" variant="outlined" data-test-id={`${dataTestId}link`}>
                   {actionText}
                 </Button>
               </Link>

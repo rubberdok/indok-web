@@ -7,7 +7,7 @@ const LandingListings: React.FC = () => {
   return (
     <Box
       sx={{
-        bgcolor: "background.neutral",
+        bgcolor: (theme) => theme.palette.background.elevated,
         display: { xs: "block", md: "grid" },
         gridTemplateColumns: "repeat(2, 1fr)",
         position: "relative",

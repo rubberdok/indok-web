@@ -75,7 +75,7 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": 
 
   return (
     <form onSubmit={formik.handleSubmit}>
-      <Card sx={{ mt: (theme) => theme.spacing(8), mb: (theme) => theme.spacing(8) }}>
+      <Card sx={{ mt: (theme) => theme.spacing(8), mb: (theme) => theme.spacing(8) }} elevation={6}>
         <CardContent sx={{ pt: (theme) => theme.spacing(4) }}>
           <Grid container>
             {kind === "update" && (

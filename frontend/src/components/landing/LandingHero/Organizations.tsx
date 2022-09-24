@@ -97,7 +97,7 @@ const Organizations: React.FC<Props> = ({ offsetX, onActiveIndexChange }) => {
           ))}
           <SwiperSlide>
             <Link passHref href="/about/organization">
-              <Button color="inherit" variant="contained" size="large" endIcon={<ArrowForward />}>
+              <Button color="contrast" variant="contained" size="large" endIcon={<ArrowForward />}>
                 Alle organisasjoner
               </Button>
             </Link>

@@ -84,7 +84,7 @@ const OrganizationListings: React.FC<{
         )}
         <div>
           <Link passHref href={`${organization.id}/listings/new`}>
-            <Button variant="outlined" color="inherit" startIcon={<Add />}>
+            <Button variant="outlined" color="contrast" startIcon={<Add />}>
               Opprett nytt verv
             </Button>
           </Link>

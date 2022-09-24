@@ -38,7 +38,7 @@ const CalendarDay: React.VFC<Props> = ({ onClick, value, isHidden, isDisabled, i
         variant={(isFromDate || isToDate || isInRange) && !isHidden ? "contained" : "text"}
         bgcolor={bgcolor(isFromDate, isToDate, isInRange, isHidden)}
         onClick={onClick}
-        sx={{ width: 1, p: 0, minWidth: 0, aspectRatio: "1" }}
+        sx={{ width: 1, p: 0, minWidth: 0, aspectRatio: "1", borderRadius: 0 }}
       >
         <Typography variant="subtitle2">{!isHidden ? value : ""}</Typography>
       </Box>

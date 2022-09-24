@@ -51,7 +51,7 @@ const ContractDialog: NextPage<ContractDialogProps> = ({
             </Grid>
           </Grid>
         </DialogContent>
-        <DialogActions sx={{ backgroundColor: (theme) => theme.palette.background.neutral }}>
+        <DialogActions sx={{ backgroundColor: (theme) => theme.palette.background.elevated }}>
           <Button size="large" onClick={handleClose} color="primary" startIcon={<Clear />}>
             Lukk
           </Button>

@@ -45,7 +45,7 @@ const LandingHero: React.FC = () => {
                     </Button>
                   </Link>
                   <Link passHref href="/events">
-                    <Button variant="contained" color="inherit" size="large">
+                    <Button variant="contained" color="contrast" size="large">
                       Se arrangementer
                     </Button>
                   </Link>

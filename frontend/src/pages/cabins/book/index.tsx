@@ -58,13 +58,8 @@ const defaultModalData: ModalData = {
 };
 
 const RootStyle = styled("div")(({ theme }) => ({
-  backgroundColor: theme.palette.background.neutral,
-  padding: theme.spacing(6, 0),
-  [theme.breakpoints.down("md")]: {
-    backgroundColor: theme.palette.background.default,
-    padding: 0,
-    paddingBottom: theme.spacing(4),
-  },
+  marginTop: theme.spacing(4),
+  marginBottom: theme.spacing(4),
 }));
 
 /*
