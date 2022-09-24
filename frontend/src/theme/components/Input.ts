@@ -1,5 +1,4 @@
 import { alpha, ThemeOptions } from "@mui/material/styles";
-import React from "react";
 
 const Input: ThemeOptions["components"] = {
   MuiTextField: {
@@ -36,7 +35,7 @@ const Input: ThemeOptions["components"] = {
         },
       }),
       input: ({ theme }) => ({
-        ...(theme.typography.body2 as React.CSSProperties),
+        ...theme.typography.body2,
       }),
       underline: ({ theme }) => ({
         "&:before": {

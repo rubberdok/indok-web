@@ -7,15 +7,9 @@ const Button: ThemeOptions["components"] = {
     },
 
     styleOverrides: {
-      root: ({ theme, ownerState }) => ({
+      root: ({ theme }) => ({
         "&.MuiButton-outlinedInherit": {
-          borderColor: alpha(ownerState.style?.color ?? theme.palette.text.primary, 0.32),
-        },
-        "&.MuiButton-outlinedPrimary": {
-          borderColor: alpha(theme.palette.primary.main, 0.32),
-        },
-        "&.MuiButton-outlinedSecondary": {
-          borderColor: alpha(theme.palette.secondary.main, 0.32),
+          borderColor: alpha(theme.palette.text.primary, 0.25),
         },
         textTransform: "none",
         "& .MuiLoadingButton-text": {

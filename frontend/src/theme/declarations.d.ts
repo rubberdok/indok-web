@@ -1,4 +1,11 @@
+import { TypeBackground } from "@mui/material/styles";
+import { TypographyPropsVariantOverrides } from "@mui/material/Typography";
+
 declare module "@mui/material/styles" {
+  interface TypeBackground {
+    elevated: string;
+  }
+
   interface TypographyVariants {
     subtitle3: React.CSSProperties;
     body3: React.CSSProperties;
@@ -16,5 +23,3 @@ declare module "@mui/material/Typography" {
     body3: true;
   }
 }
-
-export {};
