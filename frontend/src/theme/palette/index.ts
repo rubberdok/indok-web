@@ -78,7 +78,7 @@ const dark: ThemeOptions["palette"] = {
     contrastText: "#fff",
   },
   primary: {
-    main: "#578283",
+    main: "#3E878A",
   },
   secondary: {
     main: "#F37F31",
