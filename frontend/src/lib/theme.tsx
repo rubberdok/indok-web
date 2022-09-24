@@ -10,7 +10,11 @@ import React, { useMemo } from "react";
 import { getDesignTokens } from "src/theme";
 import { useTernaryDarkMode } from "usehooks-ts";
 
-const ThemeWrapper: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
+interface Props {
+  children: React.ReactNode;
+}
+
+const ThemeProvider: React.FC<Props> = ({ children }) => {
   const { isDarkMode } = useTernaryDarkMode();
 
   const themeOptions: ThemeOptions = useMemo(() => getDesignTokens(isDarkMode ? "dark" : "light"), [isDarkMode]);
@@ -29,4 +33,4 @@ const ThemeWrapper: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
   );
 };
 
-export default ThemeWrapper;
+export default ThemeProvider;

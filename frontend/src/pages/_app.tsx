@@ -2,7 +2,7 @@ import { ApolloProvider } from "@apollo/client";
 import { CacheProvider, EmotionCache } from "@emotion/react";
 import { useApollo } from "@lib/apolloClient";
 import { createEmotionCache } from "@lib/emotion";
-import ThemeWrapper from "@lib/theme";
+import ThemeProvider from "@lib/theme";
 import { NextPage } from "next";
 import { AppProps } from "next/app";
 import Head from "next/head";
@@ -32,7 +32,7 @@ const App = (props: CustomAppProps): JSX.Element => {
           <title>Indøk NTNU - Foreningen for Industriell Økonomi og teknologiledelse</title>
           <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
         </Head>
-        <ThemeWrapper>{getLayout(<Component {...pageProps} err={err} />)}</ThemeWrapper>
+        <ThemeProvider>{getLayout(<Component {...pageProps} err={err} />)}</ThemeProvider>
       </ApolloProvider>
     </CacheProvider>
   );
