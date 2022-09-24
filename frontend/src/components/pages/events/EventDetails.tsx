@@ -156,7 +156,7 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
   return (
     <>
       {openEditEvent && <EditEvent open={openEditEvent} onClose={() => setOpenEditEvent(false)} event={event} />}
-      <Box width="100%" py={5} bgcolor="background.neutral" pb={{ xs: 5, md: 10 }}>
+      <Box width="100%" py={5} bgcolor="background.elevated" pb={{ xs: 5, md: 10 }}>
         <Container>
           <Breadcrumbs
             sx={{ mb: { xs: 5, md: 8 } }}
@@ -275,7 +275,7 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
             <Stack direction="row" spacing={1}>
               <Button
                 variant="contained"
-                color="inherit"
+                color="contrast"
                 startIcon={<CreateRounded />}
                 onClick={() => {
                   setOpenEditEvent(true);
@@ -284,7 +284,7 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
                 Rediger
               </Button>
               <Link href={`/orgs/${event.organization.id}/events/${eventId}`} passHref>
-                <Button variant="contained" color="inherit" startIcon={<SettingsRounded />}>
+                <Button variant="contained" color="contrast" startIcon={<SettingsRounded />}>
                   Administrer
                 </Button>
               </Link>
@@ -414,7 +414,7 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
                 )}
                 <Button
                   variant="outlined"
-                  color="inherit"
+                  color="contrast"
                   href={calendarFile(event.title, event.startTime, event.endTime, event.location, event.description)}
                   download="event.ics"
                 >

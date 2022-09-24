@@ -4,7 +4,6 @@ import useDisabledDates from "@hooks/cabins/useDisabledDates";
 import useResponsive from "@hooks/useResponsive";
 import { Cabin, DatePick } from "@interfaces/cabins";
 import { Checkbox, Divider, Paper, Stack, Typography } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
 import { NextPage } from "next";
 import React from "react";
 
@@ -20,8 +19,6 @@ One of the steps in the cabins/book page. In this step the user chooses a cabin 
 const CheckInOut: NextPage<Props> = ({ allCabins, chosenCabins, setChosenCabins, setDatePick }) => {
   const { disabledDates } = useDisabledDates(chosenCabins);
   const isMobile = useResponsive({ query: "down", key: "md" });
-  const theme = useTheme();
-  const isLight = theme.palette.mode === "light";
 
   const handleRangeChange = (fromDate: string | undefined, toDate: string | undefined, validRange: boolean) => {
     setDatePick({
@@ -42,10 +39,9 @@ const CheckInOut: NextPage<Props> = ({ allCabins, chosenCabins, setChosenCabins,
         alignItems={{ xs: "center", md: "flex-start" }}
         spacing={1}
         minWidth={200}
-        bgcolor="grey.200"
+        bgcolor="background.elevated"
         p={3}
-        sx={{ bgcolor: (thm) => (thm.palette.mode === "dark" ? "grey.800" : "grey.200") }}
-        variant={isLight ? undefined : "outlined"}
+        elevation={0}
       >
         <Typography variant="h5">Velg hytte</Typography>
 
@@ -71,10 +67,7 @@ const CheckInOut: NextPage<Props> = ({ allCabins, chosenCabins, setChosenCabins,
         ))}
       </Stack>
       {isMobile && <Divider sx={{ my: 2 }} />}
-      <Paper
-        variant={isLight ? undefined : "outlined"}
-        sx={{ p: 3, bgcolor: (thm) => (thm.palette.mode === "dark" ? "grey.800" : "grey.200"), width: 1 }}
-      >
+      <Paper sx={{ p: 3, bgcolor: "background.elevated", width: 1 }} elevation={0}>
         <Calendar
           title="Velg innsjekk og utsjekk"
           disabledDates={disabledDates}

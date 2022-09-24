@@ -8,7 +8,7 @@ import React from "react";
 const BookNow: React.FC = () => {
   const { data } = useQuery(CabinsAndResponsiblesDocument);
   return (
-    <Card sx={{ bgcolor: "grey.900", height: "100%" }}>
+    <Card sx={{ bgcolor: (theme) => theme.palette.grey[900], height: "100%" }} elevation={0}>
       <CardContent sx={{ height: "100%" }}>
         <Stack
           direction="row"

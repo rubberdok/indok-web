@@ -77,7 +77,7 @@ const AllEvents: React.FC = () => {
           <Stack direction="row" spacing={1}>
             {userData && !userLoading && userData.user && !!userData.user.organizations.length && (
               <Link href="/events/create-event" passHref>
-                <Button variant="contained" color="inherit" startIcon={<Add />}>
+                <Button variant="contained" color="contrast" startIcon={<Add />}>
                   Opprett
                 </Button>
               </Link>
@@ -87,7 +87,7 @@ const AllEvents: React.FC = () => {
                 href={userData.user.organizations.length > 1 ? "/orgs" : `/orgs/${userData.user.organizations[0].id}`}
                 passHref
               >
-                <Button variant="contained" color="inherit" startIcon={<List />}>
+                <Button variant="contained" color="contrast" startIcon={<List />}>
                   Mine arrangementer
                 </Button>
               </Link>
@@ -101,7 +101,7 @@ const AllEvents: React.FC = () => {
             fullWidth
             onClick={() => setOpenFilterDrawer(true)}
             variant="outlined"
-            color="inherit"
+            color="contrast"
             startIcon={<Tune />}
             sx={{ mb: 3 }}
           >
@@ -120,14 +120,12 @@ const AllEvents: React.FC = () => {
       <Grid container spacing={3}>
         {!isMobile && (
           <Grid item md={3}>
-            <Paper variant="outlined">
-              <FilterMenu
-                filters={filters}
-                onFiltersChange={onChange}
-                showDefaultEvents={showDefaultEvents}
-                onShowDefaultChange={setShowDefaultEvents}
-              />
-            </Paper>
+            <FilterMenu
+              filters={filters}
+              onFiltersChange={onChange}
+              showDefaultEvents={showDefaultEvents}
+              onShowDefaultChange={setShowDefaultEvents}
+            />
           </Grid>
         )}
         <Grid item xs={12} md={9}>

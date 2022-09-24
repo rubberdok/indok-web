@@ -15,9 +15,9 @@ const LoginButton: React.FC<Props> = ({ fullWidth, "data-test-id": dataTestId })
   const { data } = useQuery<{ user: UserInfo | null }>(GET_USER_INFO);
 
   return (
-    <LoginRequired size="medium" color="inherit" data-test-id={dataTestId} fullWidth={fullWidth}>
+    <LoginRequired size="medium" color="contrast" data-test-id={dataTestId} fullWidth={fullWidth}>
       <NextLink href="/profile" passHref>
-        <Button endIcon={<PersonOutlineRounded fontSize="small" />} variant="outlined" color="inherit" size="medium">
+        <Button endIcon={<PersonOutlineRounded fontSize="small" />} variant="text" color="contrast" size="medium">
           {data?.user?.firstName}
         </Button>
       </NextLink>

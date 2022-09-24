@@ -32,7 +32,7 @@ const OrganizationsSlider: React.FC = () => {
         width: "100vw",
         py: { xs: 4, md: 6 },
         px: 1,
-        bgcolor: "background.neutral",
+        bgcolor: (theme) => theme.palette.background.elevated,
         borderTop: "1px solid",
         borderBottom: "1px solid",
         borderColor: "divider",
