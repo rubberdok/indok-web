@@ -39,7 +39,7 @@ const LandingSection: React.FC = () => {
               sx={{ color: "common.white" }}
             >
               <Grid item>
-                <Typography variant="overline" sx={{ color: "primary.light", mb: 3 }}>
+                <Typography variant="overline" sx={{ mb: 3, color: "grey.300" }}>
                   Samarbeid og kommunikasjon
                 </Typography>
                 <Typography variant="h2">Hovedstyret i Foreningen</Typography>
