@@ -57,7 +57,7 @@ type Props = {
 const Organizations: React.FC<Props> = ({ offsetX, onActiveIndexChange }) => {
   return (
     <>
-      <ArrowStyle className="arrow left">
+      <ArrowStyle className="arrow left" aria-label="Forrige">
         <ArrowBack />
       </ArrowStyle>
       <Box
@@ -104,7 +104,7 @@ const Organizations: React.FC<Props> = ({ offsetX, onActiveIndexChange }) => {
           </SwiperSlide>
         </Swiper>
       </Box>
-      <ArrowStyle className="arrow right">
+      <ArrowStyle className="arrow right" aria-label="Neste">
         <ArrowForward />
       </ArrowStyle>
     </>
