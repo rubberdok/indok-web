@@ -1,7 +1,7 @@
-import { ComponentOverride } from "./types";
+import { ThemeOptions } from "@mui/material";
 
-const Container: ComponentOverride = () => {
-  return {} as const;
+const Container: ThemeOptions["components"] = {
+  MuiContainer: {},
 };
 
 export default Container;

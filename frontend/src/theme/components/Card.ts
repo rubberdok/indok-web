@@ -3,7 +3,7 @@ import { ThemeOptions } from "@mui/material";
 const Card: ThemeOptions["components"] = {
   MuiCard: {
     defaultProps: {
-      elevation: 12,
+      elevation: 8,
     },
     styleOverrides: {
       root: ({ theme }) => ({
