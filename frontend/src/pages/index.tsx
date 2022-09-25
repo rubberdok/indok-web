@@ -10,7 +10,7 @@ const IndexPage: NextPageWithLayout = () => {
     <>
       <LandingHero />
       <LandingSection />
-      <NoSsr defer>
+      <NoSsr>
         <LandingListings />
         <LandingPromo />
       </NoSsr>
