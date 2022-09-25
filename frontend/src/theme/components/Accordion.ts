@@ -3,7 +3,7 @@ import { ThemeOptions } from "@mui/material";
 const Accordion: ThemeOptions["components"] = {
   MuiAccordion: {
     defaultProps: {
-      elevation: 4,
+      elevation: 0,
     },
   },
 
