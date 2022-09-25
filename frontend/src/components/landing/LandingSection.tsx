@@ -1,5 +1,5 @@
 import { Box, Button, Container, Grid, Typography } from "@mui/material";
-import Hovedbygget from "@public/static/landing/hovedbygget.jpeg";
+import Hovedbygget from "@public/static/landing/hovedbygget.webp";
 import Image from "next/image";
 import Link from "next/link";
 
