@@ -51,7 +51,6 @@
     "react-swipeable-views-utils": "^0.14.0",
     "swiper": "^8.2.3",
     "ts-debounce": "^4.0.0",
-    "usehooks-ts": "^2.5.4",
     "validator": "^13.6.0",
     "yup": "^0.32.9"
   },

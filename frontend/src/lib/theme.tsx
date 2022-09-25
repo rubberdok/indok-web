@@ -1,3 +1,4 @@
+import { useMediaQuery } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import {
   createTheme,
@@ -8,14 +9,13 @@ import {
 import Head from "next/head";
 import React, { useMemo } from "react";
 import { getDesignTokens } from "src/theme";
-import { useTernaryDarkMode } from "usehooks-ts";
 
 interface Props {
   children: React.ReactNode;
 }
 
 const ThemeProvider: React.FC<Props> = ({ children }) => {
-  const { isDarkMode } = useTernaryDarkMode();
+  const isDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
 
   const themeOptions: ThemeOptions = useMemo(() => getDesignTokens(isDarkMode ? "dark" : "light"), [isDarkMode]);
 
@@ -25,7 +25,7 @@ const ThemeProvider: React.FC<Props> = ({ children }) => {
   return (
     <MUIThemeProvider theme={responsiveTheme}>
       <Head>
-        <meta name="theme-color" content={isDarkMode ? "#0f1217" : "#fff"} />
+        <meta name="theme-color" content={isDarkMode ? "#121212" : "#fff"} />
       </Head>
       <CssBaseline />
       {children}
