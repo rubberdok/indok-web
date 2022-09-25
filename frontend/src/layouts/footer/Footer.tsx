@@ -1,4 +1,3 @@
-import DarkModeToggle from "@components/DarkModeToggle";
 import Logo from "@components/Logo";
 import Vercel from "@components/Vercel";
 import useResponsive from "@hooks/useResponsive";
@@ -76,11 +75,15 @@ const Footer: React.FC = () => {
         </Container>
       </Paper>
 
-      <Divider />
-
       <Container>
-        <Stack py={3} spacing={3} direction="row" justifyContent="space-between" alignItems="center" width="100%">
-          <DarkModeToggle variant="toggle" size="small" />
+        <Stack
+          py={3}
+          spacing={3}
+          direction="row-reverse"
+          justifyContent="space-between"
+          alignItems="center"
+          width="100%"
+        >
           <Stack direction="row" spacing={3} alignItems="center" justifyContent="center">
             <NextLinkItem sx={{ mt: 0 }} onClick={() => setOpen(!open)} href="javascript:undefined">
               Hall of Fame
