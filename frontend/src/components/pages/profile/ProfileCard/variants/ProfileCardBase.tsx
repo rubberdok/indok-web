@@ -27,9 +27,9 @@ const ProfileCardBase: React.FC<Props> = ({
           <CardHeader title={title} />
           <CardContent>{children}</CardContent>
           {actionText && actionLink && (
-            <CardActions sx={{ ml: 2, mb: 2 }}>
+            <CardActions sx={{ ml: 1 }}>
               <Link passHref href={actionLink}>
-                <Button color="contrast" variant="outlined" data-test-id={`${dataTestId}link`}>
+                <Button color="contrast" variant="text" data-test-id={`${dataTestId}link`}>
                   {actionText}
                 </Button>
               </Link>
