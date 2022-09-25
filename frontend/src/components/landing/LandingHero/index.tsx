@@ -22,7 +22,7 @@ const LandingHero: React.FC = () => {
           <Grid container direction="row">
             <Grid item md={5} xs={12}>
               <Stack spacing={4} mt={14} mb={8}>
-                <Grid container gap={4} direction="column" alignItems={{ xs: "center", md: "flex-start" }}>
+                <Grid container gap={2} direction="column" alignItems={{ xs: "center", md: "flex-start" }}>
                   <Grid item>
                     <Typography
                       variant="overline"

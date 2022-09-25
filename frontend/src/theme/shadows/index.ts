@@ -5,7 +5,7 @@ import { createShadow } from "./helpers";
 const shadows: (mode: PaletteMode) => ThemeOptions["shadows"] = (mode) => {
   switch (mode) {
     case "light":
-      return createShadow(grey[500]);
+      return createShadow(grey[400]);
     case "dark":
       return createShadow("#000");
   }

@@ -42,7 +42,7 @@ const LandingSection: React.FC = () => {
                 <Typography variant="overline" sx={{ mb: 3, color: "grey.300" }}>
                   Samarbeid og kommunikasjon
                 </Typography>
-                <Typography variant="h2">Hovedstyret i Foreningen</Typography>
+                <Typography variant="h2">Hovedstyret i foreningen</Typography>
                 <Typography maxWidth={450} textAlign="left" sx={{ mt: 3, mb: 5, opacity: 0.72 }}>
                   Hovedstyrets fremste oppgave er å sørge for god kommunikasjon og samarbeid mellom de ulike
                   studentinitiativene, og forvalte og disponere Indøks midler på en forsvarlig måte.
