@@ -16,8 +16,8 @@ const Drawer: React.FC<NavigationProps> = ({ routes }) => {
   return (
     <Box sx={{ display: { xs: "block", md: "none" }, width: "100%" }}>
       <Stack direction="row" justifyContent="flex-end" sx={{ width: "100%" }}>
-        <IconButton onClick={() => setOpen(true)} sx={{ color: "text.secondary" }}>
-          <Menu aria-label="menu" />
+        <IconButton onClick={() => setOpen(true)} sx={{ color: "text.secondary" }} aria-label="meny">
+          <Menu />
         </IconButton>
         <MuiDrawer
           open={open}
