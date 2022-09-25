@@ -1,6 +1,6 @@
 import { ThemeOptions } from "@mui/material";
 
-const PRIMARY = "-apple-system, Poppins, sans-serif";
+const PRIMARY = "Poppins, sans-serif";
 const SECONDARY = "Merriweather, sans-serif";
 
 const typography: ThemeOptions["typography"] = {
@@ -9,37 +9,37 @@ const typography: ThemeOptions["typography"] = {
     fontFamily: SECONDARY,
     fontWeight: 800,
     lineHeight: 80 / 64,
-    fontSize: "2.5rem",
+    fontSize: "4rem",
   },
   h2: {
     fontFamily: SECONDARY,
     fontWeight: 800,
     lineHeight: 64 / 48,
-    fontSize: "2rem",
+    fontSize: "3rem",
   },
   h3: {
     fontFamily: SECONDARY,
     fontWeight: 800,
     lineHeight: 1.5,
-    fontSize: "1.5rem",
+    fontSize: "2rem",
   },
   h4: {
     fontFamily: SECONDARY,
     fontWeight: 800,
     lineHeight: 1.5,
-    fontSize: "1.25rem",
+    fontSize: "1.5rem",
   },
   h5: {
     fontFamily: SECONDARY,
     fontWeight: 600,
     lineHeight: 1.5,
-    fontSize: "1rem",
+    fontSize: "1.25rem",
   },
   h6: {
     fontFamily: SECONDARY,
     fontWeight: 600,
     lineHeight: 28 / 18,
-    fontSize: "1rem",
+    fontSize: "1.125rem",
   },
   subtitle1: {
     fontWeight: 600,
@@ -82,6 +82,7 @@ const typography: ThemeOptions["typography"] = {
     fontWeight: 600,
     lineHeight: 24 / 14,
     fontSize: "0.875rem",
+    textTransform: "none",
   },
 };
 

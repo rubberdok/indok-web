@@ -7,16 +7,16 @@ const palette = (mode: "light" | "dark"): ThemeOptions["palette"] => ({
 });
 
 const grey: Partial<Color> = {
-  50: "#F2F2F7",
-  100: "#E5E5EA",
-  200: "#D1D1D6",
-  300: "#C7C7CC",
-  400: "#8E8E93",
-  500: "#636366",
-  600: "#48484A",
-  700: "#3A3A3C",
-  800: "#2C2C2E",
-  900: "#1C1C1E",
+  50: "#FFFFFF",
+  100: "#F9FAFB",
+  200: "#F4F6F8",
+  300: "#DFE3E8",
+  400: "#C4CDD5",
+  500: "#919EAB",
+  600: "#637381",
+  700: "#454F5B",
+  800: "#212B36",
+  900: "#161C24",
 };
 
 const light: ThemeOptions["palette"] = {
@@ -60,9 +60,9 @@ const light: ThemeOptions["palette"] = {
 
 const dark: ThemeOptions["palette"] = {
   background: {
-    elevated: "#1C1C1E",
-    default: "#121212",
-    paper: "#121212",
+    elevated: grey[900],
+    default: "#0f1217",
+    paper: grey[800],
   },
   error: {
     main: "#FF4530",

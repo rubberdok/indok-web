@@ -3,7 +3,9 @@ import { ThemeOptions } from "@mui/material";
 const Paper: ThemeOptions["components"] = {
   MuiPaper: {
     styleOverrides: {
-      root: {},
+      root: {
+        backgroundImage: "none",
+      },
     },
   },
 };
