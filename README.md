@@ -139,15 +139,16 @@ recommend running Postgres through Docker, since you don't need hot reloading th
 To set up PostgreSQL in Docker, follow these steps:
 
 1. Download, install and start Docker Desktop: https://www.docker.com/products/docker-desktop
-2. Navigate to `indok-web` in the terminal (`cd indok-web`)
-3. Type `docker compose up postgres`
-4. Open the `indok-web` folder in VSCode
-5. Make a new file called `.env` inside `backend`
-6. Paste the following line in that file, and save:
+2. Open the `indok-web` folder in VSCode
+3. Make a new file called `.env` inside `backend`
+4. Paste the following line in that file, and save:
 
 ```
 DB_HOST=localhost
 ```
+
+5. Navigate to `indok-web` in the terminal (`cd indok-web`)
+6. Type `docker compose up postgres`
 
 Now Postgres should be up and running! Leave the terminal window open to keep the database running in the background.
 
@@ -156,7 +157,7 @@ inside the `indok-web` folder in another terminal. To start Postgres again, type
 the `indok-web` folder (and make sure Docker Desktop is running!). If you want to clear the database, go to the
 `Volumes` tab in Docker Desktop, and delete `indok-web_postgres_data`
 
-If you still want to run Postgres without Docker, download and install it from here instead: https://www.postgresql.org/download/. Then follow steps 4-6 as above.
+If you still want to run Postgres without Docker, download and install it from here instead: https://www.postgresql.org/download/. Then follow steps 2-4 as above.
 
 #### Backend
 
