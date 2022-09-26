@@ -51,69 +51,26 @@ Found a bug, got a suggestion, or something we should know about? Take a look at
 
 ### With Docker
 
-1. [Set up Git](https://docs.github.com/en/get-started/quickstart/set-up-git)
+1. Download, install and start Docker Desktop: https://www.docker.com/products/docker-desktop
+2. In the terminal, move to where you want to store the project (easiest is just where you are when you open the
+   terminal)
+3. Type `git clone https://github.com/rubberdok/indok-web.git`
+   - This creates a new folder named `indok-web`, which contains the project
+4. Type `cd indok-web` to move into the new folder
+5. Type `docker compose build` to build the project
+6. Type `docker compose up` to run the frontend, backend and database
+7. Open a new terminal, and navigate back to `indok-web`
+8. Type `docker compose exec backend python manage.py migrate` to update the database
+9. Type `docker compose exec backend python manage.py loaddata initial_data` to load example data into the database
+10. Set up the backend locally, to get linting, auto-complete and environment variables
+    - Follow steps 1-9 under [Without Docker: Backend](#backend) below
+11. Set up the frontend locally, to get pre-commit hooks, linting, auto-complete and environment variables
+    - Follow steps 1-8 under [Without Docker: Frontend](#frontend) below
 
-2. Install and start [Docker Desktop](https://www.docker.com/products/docker-desktop)
-
-3. Clone the project and build the Docker images
-
-```zsh
-git clone https://github.com/rubberdok/indok-web.git
-cd indok-web
-docker compose build
-```
-
-4. Run the project in Docker and set up the database
-
-```zsh
-docker compose up
-docker compose exec backend python manage.py loaddata initial_data
-```
-
-The last command creates some initial data, two test users, and one admin user:
-
-| Username      | Password | Indøk |
-| ------------- | :------: | ----: |
-| eva_student   |   5tgb   |  true |
-| asbjorn_elevg |   1qaz   | false |
-| admin         | admin123 | super |
-
-- Accessing the test users
-
-  - Log in with Feide > Feide Test Users (under "Other login alternatives")
-
-  - Enter the respective username and password.
-
-5. Install pre-commit hooks and Node dependencies locally for linting
-   - If you already have `yarn` installed, skip to step 4.
-   1. Install `nvm` by following the [instructions](https://github.com/nvm-sh/nvm#installing-and-updating)
-   2. Install Node 16
-   ```zsh
-   nvm install 16
-   nvm use 16
-   ```
-   3. Install `yarn`
-   ```zsh
-   npm i -g yarn
-   ```
-   4. Install pre-commit hooks and dependencies locally
-   ```zsh
-   cd frontend
-   yarn
-   ```
-6. Install Python dependencies locally for linting
-   1. Install [Python 3.9](https://www.python.org/downloads/release/python-397/)
-   2. (Optional, but recommended) Create a virtual environment in the root folder `indok-web`
-   ```zsh
-   python -m venv venv
-   source venv/bin/activate
-   ```
-   3. Install Python dependencies locally
-   ```zsh
-   pip install -r backend/requirements/local.txt
-   ```
-
-The frontend runs on [http://localhost:3000](http://localhost:3000), and the backend on [http://localhost:8000](http://localhost:8000). The GraphQL API endpoint is [http://localhost:8000/graphql](http://localhost:8000/graphql). The admin panel is available at [http://localhost:8000/admin](http://localhost:8000/admin).
+The frontend runs on [http://localhost:3000](http://localhost:3000), and the backend on
+[http://localhost:8000](http://localhost:8000). The GraphQL API endpoint is
+[http://localhost:8000/graphql](http://localhost:8000/graphql), and the Django panel is at
+[http://localhost:8000/admin](http://localhost:8000/admin).
 
 ### Without Docker
 
@@ -180,23 +137,23 @@ If you still want to run Postgres without Docker, download and install it from h
    - If on Windows, also install the GTK3 runtime from the `.exe` here:
      https://github.com/tschoonj/GTK-for-Windows-Runtime-Environment-Installer/releases (one of the Python libraries we
      use depends on this)
-9. Set the environment variable `DJANGO_READ_DOT_ENV_FILE` to `true`
-   - On Mac/Linux:
-     - Type `code ~/.zshrc` to open the `zsh` config
-     - Paste this line somewhere in that file: `export DJANGO_READ_DOT_ENV_FILE=true`
-     - Save the file, and re-open the terminal
-   - On Windows:
-     - Use the Windows search bar to search for "environment variables" (Norwegian: "miljøvariabler")
-     - Click the "Edit the system environment variables" result
-     - Click "Environment variables..." (may not be necessary, if you were brought directly to the environment variable overview)
-     - Click "New" under "User variables"
-     - Set variable name as `DJANGO_READ_DOT_ENV_FILE` and variable value as `true`
-     - Click OK through all the windows
-10. Ask the project maintainers for dev environment variables (not strictly required, but step 14 will not work without this)
-    - If you're a member of Rubberdøk:
-      - Go to the `#dev` channel in Slack
-      - Find the pinned post with dev environment variables
-      - Copy the variables for `backend/.env` into your own `.env` file in `indok-web/backend` (make sure not to overwrite the `DB_HOST` variable from the database setup)
+9. Ask the project maintainers for dev environment variables (not strictly required, but step 14 will not work without this)
+   - If you're a member of Rubberdøk:
+     - Go to the `#dev` channel in Slack
+     - Find the pinned post with dev environment variables
+     - Copy the variables for `backend/.env` into your own `.env` file in `indok-web/backend` (make sure not to overwrite the `DB_HOST` variable from the database setup)
+10. Set the environment variable `DJANGO_READ_DOT_ENV_FILE` to `true`
+    - On Mac/Linux:
+      - Type `code ~/.zshrc` to open the `zsh` config
+      - Paste this line somewhere in that file: `export DJANGO_READ_DOT_ENV_FILE=true`
+      - Save the file, and re-open the terminal
+    - On Windows:
+      - Use the Windows search bar to search for "environment variables" (Norwegian: "miljøvariabler")
+      - Click the "Edit the system environment variables" result
+      - Click "Environment variables..." (may not be necessary, if you were brought directly to the environment variable overview)
+      - Click "New" under "User variables"
+      - Set variable name as `DJANGO_READ_DOT_ENV_FILE` and variable value as `true`
+      - Click OK through all the windows
 11. Type `python manage.py runserver` to run the backend server
     - If it fails, make sure that you:
       - are in the `indok-web/backend` folder
@@ -253,14 +210,18 @@ Now the frontend should be running at `localhost:3000`! You can check it out in 
 If you want to close the frontend, press `Ctrl + C` in the terminal where it runs. To start it again, type `yarn dev`
 inside `indok-web/frontend` (if dependencies have changed, you may have to run `yarn` first).
 
-### Secrets
+### Using test users
 
-Environment variables are automatically loaded, but secrets are not stored in the repository.
+The `python manage.py loaddata initial_data` command used in the setup above sets up one admin user and two test users:
 
-1. Create a file called `.env` in the `backend` folder, and a file called `.env.local` in `frontend`.
-2. Contact maintainers in order to get the necessary secrets.
-   - If you're a member of Rubberdøk, check the `#dev` channel on Slack.
-3. When you make changes to `.env` files, make sure to restart the frontend and backend if you have them running
+| Username      | Password | Indøk |
+| ------------- | :------: | ----: |
+| eva_student   |   5tgb   |  true |
+| asbjorn_elevg |   1qaz   | false |
+| admin         | admin123 | super |
+
+To log in as one of these test users when testing out the frontend locally, click "Other login alternatives" on the
+Feide login screen, then "Feide Test Users".
 
 ## Error logging
 
