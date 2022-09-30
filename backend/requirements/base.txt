@@ -1,4 +1,4 @@
-coverage==6.4.4
+coverage==6.5.0
 cryptography==38.0.1
 django-alive==1.2.1
 django-anymail[postmark]==8.6
