@@ -23,13 +23,13 @@ const AuthCallbackPage: NextPageWithLayout<InferGetServerSidePropsType<typeof ge
     errorPolicy: "none",
     onCompleted({ authUser: { user } }) {
       if (user.firstLogin) {
-        router.push("/register");
+        router.replace("/register");
       } else if (typeof state === "string") {
-        router.push(state);
+        router.replace(state);
       } else if (Array.isArray(state) && state.length > 0) {
-        router.push(state[0]);
+        router.replace(state[0]);
       } else {
-        router.push("/profile");
+        router.replace("/profile");
       }
     },
   });
