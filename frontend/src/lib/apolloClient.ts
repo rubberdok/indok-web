@@ -9,10 +9,12 @@ import { useMemo } from "react";
 
 export const APOLLO_STATE_PROP_NAME = "__APOLLO_STATE__";
 
-type PageProps = {
-  props: AppProps["pageProps"];
+export type ApolloStateProps = {
   [APOLLO_STATE_PROP_NAME]?: NormalizedCacheObject;
 };
+export type PageProps = {
+  props: AppProps<ApolloStateProps>["pageProps"];
+} & ApolloStateProps;
 
 let apolloClient: ApolloClient<NormalizedCacheObject> | undefined;
 
