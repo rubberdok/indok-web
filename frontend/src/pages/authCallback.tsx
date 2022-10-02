@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Image from "next/image";
@@ -34,10 +34,15 @@ const AuthCallbackPage: NextPageWithLayout<InferGetServerSidePropsType<typeof ge
     },
   });
 
-  // Do not run on the server, i.e. when window is undefined
-  if (!called && typeof window !== "undefined") {
-    authUser({ variables: { code } });
-  }
+  /**
+   * We specifically do not want to run this on the server, because we want to
+   * redirect the user and set the cookies from the server. Otherwise, this will run twice:
+   * once on the server, and once on the client, causing the request to fail as the authorization token
+   * has already been used.
+   */
+  useEffect(() => {
+    if (!called) authUser({ variables: { code } });
+  }, [authUser, called, code]);
 
   if (error) {
     return (
