@@ -43,6 +43,7 @@ const TitleCard: React.FC<{
                   src={listing?.organization.logoUrl}
                   unoptimized
                   fill
+                  alt=""
                   style={{ objectFit: "contain", objectPosition: "center", aspectRatio: "1" }}
                 />
               </Box>

@@ -74,7 +74,10 @@ export function initializeApollo(
   return _apolloClient;
 }
 
-export function addApolloState(client: ApolloClient<NormalizedCacheObject>, pageProps: PageProps): PageProps {
+export function addApolloState<T extends { props: Record<string, unknown> }>(
+  client: ApolloClient<NormalizedCacheObject>,
+  pageProps: T
+): T {
   if (pageProps?.props) {
     pageProps.props[APOLLO_STATE_PROP_NAME] = client.cache.extract();
   }
