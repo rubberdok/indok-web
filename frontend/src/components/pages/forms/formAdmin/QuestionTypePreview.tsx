@@ -1,6 +1,7 @@
-import { Question } from "@interfaces/forms";
 import { Checkbox, FormControlLabel, FormGroup, Radio, RadioGroup, TextField, Box } from "@mui/material";
+
 import questionTypeLabels from "@components/pages/forms/formAdmin/questionTypeLabels";
+import { Question } from "@interfaces/forms";
 
 /**
  * Component to show a preview of how a form question's input will look like to the end user.

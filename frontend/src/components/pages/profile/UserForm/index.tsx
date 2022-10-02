@@ -1,13 +1,4 @@
 import { useMutation, useQuery } from "@apollo/client";
-import {
-  currentGradeYear,
-  isVegetarian,
-  maxGraduationYear,
-  suggestGraduationYear,
-  validationSchema,
-} from "@components/pages/profile/UserForm/helpers";
-import { UPDATE_USER } from "@graphql/users/mutations";
-import { EDIT_USER_QUERY } from "@graphql/users/queries";
 import { ArrowBack } from "@mui/icons-material";
 import {
   Button,
@@ -28,6 +19,16 @@ import range from "lodash/range";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
+
+import {
+  currentGradeYear,
+  isVegetarian,
+  maxGraduationYear,
+  suggestGraduationYear,
+  validationSchema,
+} from "@components/pages/profile/UserForm/helpers";
+import { UPDATE_USER } from "@graphql/users/mutations";
+import { EDIT_USER_QUERY } from "@graphql/users/queries";
 import { EditUser } from "src/types/users";
 
 type Props = {

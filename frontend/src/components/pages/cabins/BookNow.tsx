@@ -1,9 +1,10 @@
 import { useQuery } from "@apollo/client";
-import { CabinsAndResponsiblesDocument } from "@generated/graphql";
 import { ArrowForward } from "@mui/icons-material";
 import { Button, Card, CardContent, Divider, Stack, Typography } from "@mui/material";
 import Link from "next/link";
 import React from "react";
+
+import { CabinsAndResponsiblesDocument } from "@generated/graphql";
 
 const BookNow: React.FC = () => {
   const { data } = useQuery(CabinsAndResponsiblesDocument);

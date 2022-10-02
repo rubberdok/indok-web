@@ -1,12 +1,13 @@
-import useResponsive from "@hooks/useResponsive";
-import { Event } from "@interfaces/events";
-import { User } from "@interfaces/users";
 import { Card, CardActionArea, Chip, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import dayjs from "dayjs";
 import nb from "dayjs/locale/nb";
 import Link from "next/link";
 import React from "react";
+
+import useResponsive from "@hooks/useResponsive";
+import { Event } from "@interfaces/events";
+import { User } from "@interfaces/users";
 
 const formatDate = (dateAndTime: string) => {
   return dayjs(dateAndTime).locale(nb).format(`D. MMM`);

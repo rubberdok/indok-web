@@ -1,10 +1,11 @@
 import { useMutation } from "@apollo/client";
-import { LogoutDocument } from "@generated/graphql";
 import { LoadingButton } from "@mui/lab";
 import { Alert, AlertTitle, ButtonProps, Snackbar } from "@mui/material";
-import { config } from "@utils/config";
 import { useRouter } from "next/router";
 import { useState } from "react";
+
+import { LogoutDocument } from "@generated/graphql";
+import { config } from "@utils/config";
 
 const Logout: React.FC<Omit<ButtonProps, "sx">> = ({ ...props }) => {
   const router = useRouter();

@@ -1,8 +1,10 @@
+import { NoSsr } from "@mui/material";
+import React from "react";
+
 import { LandingHero, LandingListings, LandingPromo } from "@components/landing";
 import LandingSection from "@components/landing/LandingSection";
 import Layout from "@layouts/Layout";
-import { NoSsr } from "@mui/material";
-import React from "react";
+
 import { NextPageWithLayout } from "./_app";
 
 const IndexPage: NextPageWithLayout = () => {

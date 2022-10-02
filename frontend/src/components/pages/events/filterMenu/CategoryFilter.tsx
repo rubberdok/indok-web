@@ -1,8 +1,10 @@
 import { useQuery } from "@apollo/client";
-import { FilterQuery } from "@components/pages/events/AllEvents";
-import { GetCategoriesDocument } from "@generated/graphql";
 import { Checkbox, Grid } from "@mui/material";
 import React from "react";
+
+import { FilterQuery } from "@components/pages/events/AllEvents";
+import { GetCategoriesDocument } from "@generated/graphql";
+
 import { HandleChecked } from "./types";
 
 type Props = {

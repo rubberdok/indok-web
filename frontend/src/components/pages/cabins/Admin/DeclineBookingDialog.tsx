@@ -1,10 +1,11 @@
 import { ApolloQueryResult, OperationVariables, useMutation } from "@apollo/client";
+import { Dialog, DialogTitle, DialogContent, DialogContentText, TextField, DialogActions, Button } from "@mui/material";
+import { useState } from "react";
+
 import { DECLINE_BOOKING, SEND_EMAIL } from "@graphql/cabins/mutations";
 import { QUERY_ADMIN_ALL_BOOKINGS } from "@graphql/cabins/queries";
 import { BookingFromQuery } from "@interfaces/cabins";
-import { Dialog, DialogTitle, DialogContent, DialogContentText, TextField, DialogActions, Button } from "@mui/material";
 import { convertDateFormat, getDecisionEmailProps, toStringChosenCabins } from "@utils/cabins";
-import { useState } from "react";
 
 type DialogProps = {
   bookingToBeDeclined?: BookingFromQuery;

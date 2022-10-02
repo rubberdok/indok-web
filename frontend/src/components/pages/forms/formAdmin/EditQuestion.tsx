@@ -1,5 +1,3 @@
-import questionTypeLabels from "@components/pages/forms/formAdmin/questionTypeLabels";
-import { Option, Question, QuestionType } from "@interfaces/forms";
 import { Add, Close, Delete, Save } from "@mui/icons-material";
 import {
   Box,
@@ -15,6 +13,9 @@ import {
   Switch,
   TextField,
 } from "@mui/material";
+
+import questionTypeLabels from "@components/pages/forms/formAdmin/questionTypeLabels";
+import { Option, Question, QuestionType } from "@interfaces/forms";
 
 /**
  * Component to edit a question on a form.

@@ -1,4 +1,5 @@
 import { Card, CardContent, CardHeader, Typography } from "@mui/material";
+
 import { BoardMember } from "./types";
 
 type Props = {

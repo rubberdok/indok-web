@@ -1,7 +1,8 @@
-import { ArchiveByTypesQuery } from "@generated/graphql";
 import { Card, CardActionArea, CardContent, CardMedia, Grid } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import React from "react";
+
+import { ArchiveByTypesQuery } from "@generated/graphql";
 
 type Props = {
   documents?: ArchiveByTypesQuery["archiveByTypes"];

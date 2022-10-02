@@ -1,3 +1,4 @@
+import type { ButtonPropsColorOverrides } from "@mui/material/Button";
 import type {
   TypeBackground,
   ThemeOptions,
@@ -7,7 +8,6 @@ import type {
   PaletteColorOptions,
 } from "@mui/material/styles";
 import type { TypographyPropsVariantOverrides } from "@mui/material/Typography";
-import type { ButtonPropsColorOverrides } from "@mui/material/Button";
 
 declare module "@mui/material/styles" {
   interface TypeBackground {

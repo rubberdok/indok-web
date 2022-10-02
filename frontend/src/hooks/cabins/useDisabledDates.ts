@@ -1,8 +1,9 @@
 import { useQuery } from "@apollo/client";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
+
 import { getDateRange } from "@components/Calendar/helpers";
 import { QUERY_ALL_BOOKINGS } from "@graphql/cabins/queries";
 import { Cabin, PublicBooking } from "@interfaces/cabins";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 interface Output {
   disabledDates: string[];

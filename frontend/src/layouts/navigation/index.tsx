@@ -1,5 +1,6 @@
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
+
 import { routes } from "./constants";
 
 const Drawer = dynamic(() => import("./variants/Drawer"));

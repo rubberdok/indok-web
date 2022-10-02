@@ -1,5 +1,7 @@
 import { Box } from "@mui/material";
+
 import { HEADER_DESKTOP_HEIGHT } from "src/theme/constants";
+
 import { NavigationSidebar } from "../../";
 
 const NAV_ITEMS = [

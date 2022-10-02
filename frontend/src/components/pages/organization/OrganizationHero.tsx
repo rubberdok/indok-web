@@ -1,6 +1,7 @@
+import { Tab, Tabs, Typography } from "@mui/material";
+
 import Title from "@components/Title";
 import { Organization } from "@interfaces/organizations";
-import { Tab, Tabs, Typography } from "@mui/material";
 
 type Props = {
   organization: Organization;

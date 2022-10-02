@@ -1,5 +1,7 @@
 import { Grid, Typography } from "@mui/material";
+
 import Event from "@public/illustrations/Event.svg";
+
 import ProfileCardBase from "./ProfileCardBase";
 
 const EventCard: React.VFC = ({ ...props }) => {

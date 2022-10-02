@@ -1,5 +1,6 @@
-import { Box, Breadcrumbs as MUIBreadcrumbs, BreadcrumbsProps, SxProps, Typography } from "@mui/material";
 import { ChevronRight } from "@mui/icons-material";
+import { Box, Breadcrumbs as MUIBreadcrumbs, BreadcrumbsProps, SxProps, Typography } from "@mui/material";
+
 import Link from "./Link";
 import { TLink } from "./types";
 

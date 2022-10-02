@@ -1,5 +1,5 @@
-import { ChangeEvent } from "react";
 import { SelectChangeEvent } from "@mui/material";
+import { ChangeEvent } from "react";
 
 export interface BasicBooking {
   firstName: string;

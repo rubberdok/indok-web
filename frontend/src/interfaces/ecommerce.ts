@@ -1,5 +1,5 @@
-import { User } from "./users";
 import { Organization } from "./organizations";
+import { User } from "./users";
 
 export type Product = {
   id: string;

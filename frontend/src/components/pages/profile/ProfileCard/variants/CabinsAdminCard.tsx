@@ -1,5 +1,7 @@
 import { Grid, Typography } from "@mui/material";
+
 import Cabin from "@public/illustrations/Cabin.svg";
+
 import ProfileCardBase from "./ProfileCardBase";
 
 const CabinsAdminCard: React.VFC = ({ ...props }) => {

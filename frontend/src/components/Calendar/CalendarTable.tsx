@@ -1,8 +1,10 @@
-import useResponsive from "@hooks/useResponsive";
 import { NavigateBefore, NavigateNext } from "@mui/icons-material";
 import { Grid, Hidden, IconButton, Stack, Typography } from "@mui/material";
 import dayjs from "dayjs";
 import React, { ReactElement } from "react";
+
+import useResponsive from "@hooks/useResponsive";
+
 import { DAYS_IN_WEEK } from "./constants";
 
 interface Props {

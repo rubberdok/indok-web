@@ -1,4 +1,5 @@
 import { Box, BoxProps, List } from "@mui/material";
+
 import NavigationSidebarItem from "./NavigationSidebarItem";
 import { ListSubheaderStyle } from "./styles";
 

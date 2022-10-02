@@ -1,5 +1,6 @@
 import { AppBar as MuiAppBar, AppBarProps as MuiAppBarProps } from "@mui/material";
 import { alpha, styled } from "@mui/material/styles";
+
 import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "../../theme/constants";
 
 interface AppBarProps extends MuiAppBarProps {
