@@ -1,6 +1,6 @@
 import { ApolloProvider } from "@apollo/client";
 import { CacheProvider, EmotionCache } from "@emotion/react";
-import { useApollo } from "@lib/apolloClient";
+import { PageProps, useApollo } from "@lib/apolloClient";
 import { createEmotionCache } from "@lib/emotion";
 import ThemeProvider from "@lib/theme";
 import { NextPage } from "next";
@@ -12,7 +12,7 @@ export type NextPageWithLayout<P = Record<string, unknown>> = NextPage<P> & {
   getLayout?: (page: ReactElement) => ReactNode;
 };
 
-type CustomAppProps = AppProps & {
+type CustomAppProps = AppProps<PageProps> & {
   err: Error;
   Component: NextPageWithLayout;
   emotionCache?: EmotionCache;
