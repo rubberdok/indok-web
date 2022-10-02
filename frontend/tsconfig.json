@@ -34,7 +34,8 @@
       "@hooks/*": ["src/hooks/*"],
       "@lib/*": ["src/lib/*"],
       "@generated/*": ["src/generated/*"],
-      "@layouts/*": ["src/layouts/*"]
+      "@layouts/*": ["src/layouts/*"],
+      "@/*": ["src/*"]
     },
     "incremental": false
   },
