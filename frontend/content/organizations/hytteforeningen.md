@@ -1,7 +1,7 @@
 ---
 title: Hytteforeningen
 description: Gjengen som passer på hyttene våre
-logo: /img/hylogo.jpg
+logo: /static/cabins/logo.svg
 image: /img/hy1.jpg
 board:
   leder:
