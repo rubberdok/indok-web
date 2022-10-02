@@ -58,10 +58,6 @@ const moduleExports = {
         transform: "lodash/{{member}}",
       },
     },
-
-    images: {
-      allowFutureImage: true,
-    },
   },
   images: {
     domains: ["indokweb-assets.s3.eu-north-1.amazonaws.com"],

@@ -3,7 +3,7 @@ import * as markdownComponents from "@components/MarkdownForm/components";
 import TitleCard from "@components/pages/listings/detail/TitleCard";
 import Title from "@components/Title";
 import { ListingDocument } from "@generated/graphql";
-import { Listing } from "@interfaces/listings";
+import { ResultOf } from "@graphql-typed-document-node/core";
 import Layout from "@layouts/Layout";
 import { addApolloState, initializeApollo } from "@lib/apolloClient";
 import { Container, Grid } from "@mui/material";
@@ -85,7 +85,9 @@ const ListingPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServ
 
 ListingPage.getLayout = (page) => <Layout>{page}</Layout>;
 
-export const getServerSideProps: GetServerSideProps<{ listing: Listing }> = async (ctx) => {
+export const getServerSideProps: GetServerSideProps<{
+  listing: NonNullable<ResultOf<typeof ListingDocument>["listing"]>;
+}> = async (ctx) => {
   const client = initializeApollo({}, ctx);
   const id = Array.isArray(ctx.params?.listingId) ? ctx.params?.listingId[0] : ctx.params?.listingId;
 
@@ -101,7 +103,7 @@ export const getServerSideProps: GetServerSideProps<{ listing: Listing }> = asyn
   if (error) return { notFound: true };
 
   const { listing } = data;
-  if (typeof listing === "undefined") return { notFound: true };
+  if (!listing) return { notFound: true };
 
   return addApolloState(client, { props: { listing } });
 };
