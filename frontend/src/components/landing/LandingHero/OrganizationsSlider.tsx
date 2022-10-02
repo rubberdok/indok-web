@@ -1,4 +1,4 @@
-import { Box, Container, Typography, Stack } from "@mui/material";
+import { Box, Container, Typography, Stack, NoSsr } from "@mui/material";
 import { useRef, useState, useEffect } from "react";
 import Organizations from "./Organizations";
 
@@ -54,7 +54,9 @@ const OrganizationsSlider: React.FC = () => {
               Foreninger
             </Typography>
           </Box>
-          <Organizations onActiveIndexChange={onActiveIndexChange} offsetX={sliderOffsetX + 48} />
+          <NoSsr>
+            <Organizations onActiveIndexChange={onActiveIndexChange} offsetX={sliderOffsetX + 48} />
+          </NoSsr>
         </Stack>
       </Container>
     </Box>
