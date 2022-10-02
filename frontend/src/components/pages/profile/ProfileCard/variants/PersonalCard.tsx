@@ -1,6 +1,8 @@
 import { Grid, Skeleton, Typography } from "@mui/material";
+
 import Profile from "@public/illustrations/Profile.svg";
 import { User } from "src/types/users";
+
 import ProfileCardBase from "./ProfileCardBase";
 
 type Props = {

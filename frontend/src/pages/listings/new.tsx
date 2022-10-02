@@ -1,5 +1,6 @@
-import Layout, { RootStyle } from "@layouts/Layout";
 import NewListing from "@components/pages/listings/organization/NewListing";
+import Layout, { RootStyle } from "@layouts/Layout";
+
 import { NextPageWithLayout } from "../_app";
 
 /**

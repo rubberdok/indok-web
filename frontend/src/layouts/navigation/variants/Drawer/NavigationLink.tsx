@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { MouseEventHandler } from "react";
+
 import { Route } from "../../types";
+
 import { RouteLink } from "./styles";
 
 type Props = {

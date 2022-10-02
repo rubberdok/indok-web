@@ -1,5 +1,6 @@
 import { Container, Grid, Stack, Typography } from "@mui/material";
 import Image from "next/image";
+
 import BookNow from "./BookNow";
 
 const facilitiesData = [

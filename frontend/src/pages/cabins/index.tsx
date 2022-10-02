@@ -1,3 +1,8 @@
+import { Box, Container, Divider, Grid, Stack, Typography } from "@mui/material";
+import Image from "next/image";
+import Link from "next/link";
+import React from "react";
+
 import CabinsDetailsSection from "@components/pages/cabins/CabinsDetailsSection";
 import CabinsHero from "@components/pages/cabins/CabinsHero";
 import CabinsInfoSection from "@components/pages/cabins/CabinsInfoSection";
@@ -6,10 +11,7 @@ import FAQ from "@components/pages/cabins/Documents/FAQ";
 import { outsideImages } from "@components/pages/cabins/ImageSlider/imageData";
 import ImageSlider from "@components/pages/cabins/ImageSlider/ImageSlider";
 import Layout from "@layouts/Layout";
-import { Box, Container, Divider, Grid, Stack, Typography } from "@mui/material";
-import Image from "next/image";
-import Link from "next/link";
-import React from "react";
+
 import { NextPageWithLayout } from "../_app";
 
 /*

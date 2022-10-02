@@ -1,8 +1,10 @@
-import { Cabin, ContactInfo, DatePick, ModalData } from "@interfaces/cabins";
 import { Check, Clear } from "@mui/icons-material";
 import { Button, Dialog, DialogActions, DialogContent, Grid, IconButton } from "@mui/material";
 import { NextPage } from "next";
 import { Dispatch, SetStateAction } from "react";
+
+import { Cabin, ContactInfo, DatePick, ModalData } from "@interfaces/cabins";
+
 import Contract from "../Documents/Contract";
 
 type ContractDialogProps = {

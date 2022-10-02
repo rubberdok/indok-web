@@ -1,6 +1,7 @@
 import { Button, Container, Grid, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import Link from "next/link";
+
 import { cabinImages } from "./ImageSlider/imageData";
 import ImageSlider from "./ImageSlider/ImageSlider";
 

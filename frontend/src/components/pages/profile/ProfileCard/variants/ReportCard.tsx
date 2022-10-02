@@ -1,5 +1,7 @@
 import { Grid, Typography } from "@mui/material";
+
 import Report from "@public/illustrations/Report.svg";
+
 import ProfileCardBase from "./ProfileCardBase";
 
 const ReportCard: React.VFC = ({ ...props }) => {

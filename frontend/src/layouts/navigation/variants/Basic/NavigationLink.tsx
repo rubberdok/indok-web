@@ -1,5 +1,7 @@
 import Link from "next/link";
+
 import { Route } from "../../types";
+
 import { RouteLink } from "./styles";
 
 type Props = {

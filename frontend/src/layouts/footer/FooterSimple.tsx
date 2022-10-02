@@ -1,6 +1,8 @@
-import Vercel from "@components/Vercel";
 import { Container, Stack, Typography } from "@mui/material";
 import dayjs from "dayjs";
+
+import Vercel from "@components/Vercel";
+
 import { Logo } from "../../components";
 
 const FooterSimple: React.FC = () => {

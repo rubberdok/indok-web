@@ -1,4 +1,3 @@
-import { ListingDocument } from "@generated/graphql";
 import { ResultOf } from "@graphql-typed-document-node/core";
 import { ArrowForward } from "@mui/icons-material";
 import { Box, Button, Card, CardContent, Divider, Grid, Typography, Link as MuiLink } from "@mui/material";
@@ -9,6 +8,8 @@ import utc from "dayjs/plugin/utc";
 import Image from "next/future/image";
 import Link from "next/link";
 import React from "react";
+
+import { ListingDocument } from "@generated/graphql";
 dayjs.extend(timezone);
 dayjs.extend(utc);
 dayjs.tz.setDefault("Europe/Oslo");

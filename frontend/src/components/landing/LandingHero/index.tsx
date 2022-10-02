@@ -1,7 +1,9 @@
 import { Box, Button, Container, Grid, Stack, Typography } from "@mui/material";
-import Hero from "@public/static/landing/hero.webp";
 import Image from "next/image";
 import Link from "next/link";
+
+import Hero from "@public/static/landing/hero.webp";
+
 import OrganizationsSlider from "./OrganizationsSlider";
 
 const LandingHero: React.FC = () => {

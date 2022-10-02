@@ -1,6 +1,6 @@
+import { OpenInNew } from "@mui/icons-material";
 import { Box, Card, CardActionArea, Stack, Typography } from "@mui/material";
 import Link from "next/link";
-import { OpenInNew } from "@mui/icons-material";
 
 type External = {
   externalUrl: string;

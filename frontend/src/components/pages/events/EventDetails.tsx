@@ -1,16 +1,15 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { PermissionRequired } from "@components/Auth";
-import LoginRequired from "@components/Auth/LoginRequired";
-import Breadcrumbs from "@components/Breadcrumbs";
-import LabeledIcon from "@components/LabeledIcon";
-import * as components from "@components/MarkdownForm/components";
-import { EVENT_SIGN_OFF, EVENT_SIGN_UP } from "@graphql/events/mutations";
-import { GET_EVENT } from "@graphql/events/queries";
-import { GET_USER } from "@graphql/users/queries";
-import { GET_SERVER_TIME } from "@graphql/utils/time/queries";
-import { AttendableEvent, Event } from "@interfaces/events";
-import { User } from "@interfaces/users";
 import { ErrorOutline } from "@mui/icons-material";
+import {
+  PlaceOutlined,
+  CreditCardRounded,
+  MailOutline,
+  SettingsRounded,
+  SchoolRounded,
+  CreateRounded,
+  WidgetsOutlined,
+  CalendarTodayOutlined,
+} from "@mui/icons-material";
 import {
   Alert as MuiAlert,
   Box,
@@ -28,22 +27,25 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { calendarFile } from "@utils/calendars";
 import dayjs from "dayjs";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import {
-  PlaceOutlined,
-  CreditCardRounded,
-  MailOutline,
-  SettingsRounded,
-  SchoolRounded,
-  CreateRounded,
-  WidgetsOutlined,
-  CalendarTodayOutlined,
-} from "@mui/icons-material";
 import React, { useState } from "react";
 import ReactMarkdown from "react-markdown";
+
+import { PermissionRequired } from "@components/Auth";
+import LoginRequired from "@components/Auth/LoginRequired";
+import Breadcrumbs from "@components/Breadcrumbs";
+import LabeledIcon from "@components/LabeledIcon";
+import * as components from "@components/MarkdownForm/components";
+import { EVENT_SIGN_OFF, EVENT_SIGN_UP } from "@graphql/events/mutations";
+import { GET_EVENT } from "@graphql/events/queries";
+import { GET_USER } from "@graphql/users/queries";
+import { GET_SERVER_TIME } from "@graphql/utils/time/queries";
+import { AttendableEvent, Event } from "@interfaces/events";
+import { User } from "@interfaces/users";
+import { calendarFile } from "@utils/calendars";
+
 import CountdownButton from "./CountdownButton";
 import EditEvent from "./EventEditor";
 

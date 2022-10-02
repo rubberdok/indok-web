@@ -1,6 +1,7 @@
 import { AppBarProps, Box, Container, useScrollTrigger } from "@mui/material";
 import { PropsFor } from "@mui/system";
 import React from "react";
+
 import { Logo } from "../../../components";
 import Navigation from "../../navigation";
 import { AppBar } from "../styles";

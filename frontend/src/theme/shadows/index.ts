@@ -1,5 +1,6 @@
 import { PaletteMode, ThemeOptions } from "@mui/material";
 import { grey } from "@mui/material/colors";
+
 import { createShadow } from "./helpers";
 
 const shadows: (mode: PaletteMode) => ThemeOptions["shadows"] = (mode) => {

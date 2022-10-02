@@ -1,12 +1,14 @@
 import { useMutation, useQuery } from "@apollo/client";
+import { Send } from "@mui/icons-material";
+import { Box, Button, Tooltip } from "@mui/material";
+import React, { useEffect, useState } from "react";
+
 import { SEND_EVENT_EMAILS } from "@graphql/events/mutations";
 import { QUERY_SIGNED_UP_USERS } from "@graphql/events/queries";
 import { AttendableEvent } from "@interfaces/events";
-import { Box, Button, Tooltip } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import { Send } from "@mui/icons-material";
-import EmailFormDialog from "./EmailFormDialog";
+
 import ConfirmationDialog from "./ConfirmationsDialog";
+import EmailFormDialog from "./EmailFormDialog";
 
 export interface EmailFormProps {
   eventId: string | string[] | undefined;

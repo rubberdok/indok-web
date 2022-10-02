@@ -1,14 +1,15 @@
-import Logo from "@components/Logo";
-import Vercel from "@components/Vercel";
-import useResponsive from "@hooks/useResponsive";
 import { Box, Container, Divider, Grid, Link, Paper, Stack, SxProps, Typography } from "@mui/material";
 import { styled, useTheme } from "@mui/material/styles";
-import rubberdokLogo from "@public/img/rubberdok_logo_black.svg";
 import dayjs from "dayjs";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import NextLink, { LinkProps } from "next/link";
 import { ReactNode, useState } from "react";
+
+import Logo from "@components/Logo";
+import Vercel from "@components/Vercel";
+import useResponsive from "@hooks/useResponsive";
+import rubberdokLogo from "@public/img/rubberdok_logo_black.svg";
 
 const HallOfFame = dynamic(() => import("./HallOfFame"));
 

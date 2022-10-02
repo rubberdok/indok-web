@@ -1,11 +1,4 @@
 import { useQuery } from "@apollo/client";
-import Layout, { RootStyle } from "@layouts/Layout";
-import PayWithVipps from "@components/pages/ecommerce/PayWithVipps";
-import SalesTermsDialog from "@components/pages/ecommerce/SalesTermsDialog";
-import { UserInfoDocument } from "@generated/graphql";
-import { GET_PRODUCT } from "@graphql/ecommerce/queries";
-import { Product } from "@interfaces/ecommerce";
-import { addApolloState, initializeApollo } from "@lib/apolloClient";
 import { KeyboardArrowLeft } from "@mui/icons-material";
 import {
   Alert,
@@ -29,6 +22,15 @@ import {
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
+
+import PayWithVipps from "@components/pages/ecommerce/PayWithVipps";
+import SalesTermsDialog from "@components/pages/ecommerce/SalesTermsDialog";
+import { UserInfoDocument } from "@generated/graphql";
+import { GET_PRODUCT } from "@graphql/ecommerce/queries";
+import { Product } from "@interfaces/ecommerce";
+import Layout, { RootStyle } from "@layouts/Layout";
+import { addApolloState, initializeApollo } from "@lib/apolloClient";
+
 import { NextPageWithLayout } from "../_app";
 
 const CheckoutPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSideProps>> = () => {

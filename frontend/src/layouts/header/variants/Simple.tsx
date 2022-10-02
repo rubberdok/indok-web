@@ -1,4 +1,5 @@
 import { Box, Divider, Stack } from "@mui/material";
+
 import { Logo } from "../../../components";
 
 const Simple: React.FC = () => {

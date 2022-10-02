@@ -1,6 +1,7 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Link } from "@mui/material";
 import { Clear } from "@mui/icons-material";
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Link } from "@mui/material";
 import React, { Dispatch, SetStateAction } from "react";
+
 import { SendEmailProps } from "./EmailForm";
 
 interface ConfirmationDialogProps {

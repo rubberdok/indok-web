@@ -1,5 +1,7 @@
-import { Answer, Question } from "@interfaces/forms";
 import { Grid, Typography } from "@mui/material";
+
+import { Answer, Question } from "@interfaces/forms";
+
 import QuestionTypePreview from "./QuestionTypePreview";
 
 /**

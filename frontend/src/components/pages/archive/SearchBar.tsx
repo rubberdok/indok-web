@@ -1,6 +1,6 @@
+import { Search } from "@mui/icons-material";
 import { InputAdornment, OutlinedInput, Toolbar } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { Search } from "@mui/icons-material";
 
 interface SearchBarProps {
   searchFilter: string;

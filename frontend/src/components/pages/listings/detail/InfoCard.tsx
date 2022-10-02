@@ -1,7 +1,8 @@
-import { ListingFragment } from "@generated/graphql";
 import { OpenInNew } from "@mui/icons-material";
 import { Button, Card, CardContent, Grid, Typography } from "@mui/material";
 import Link from "next/link";
+
+import { ListingFragment } from "@generated/graphql";
 
 /**
  * Component for title and organization info on the listing detail page.

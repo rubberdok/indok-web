@@ -1,8 +1,9 @@
 import { ApolloError, useMutation } from "@apollo/client";
-import { INITIATE_ORDER } from "@graphql/ecommerce/mutations";
 import { Card, CardActionArea, CardMedia } from "@mui/material";
 import { useRouter } from "next/router";
 import React from "react";
+
+import { INITIATE_ORDER } from "@graphql/ecommerce/mutations";
 
 type Props = {
   productId: string;

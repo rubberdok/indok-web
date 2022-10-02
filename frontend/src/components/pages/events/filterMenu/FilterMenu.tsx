@@ -1,7 +1,9 @@
-import { FilterQuery } from "@components/pages/events/AllEvents";
 import { Refresh, StarOutlineRounded, StarRounded } from "@mui/icons-material";
 import { Card, CardContent, Divider, Grid, IconButton, Tooltip, Typography } from "@mui/material";
 import React from "react";
+
+import { FilterQuery } from "@components/pages/events/AllEvents";
+
 import CategoryFilter from "./CategoryFilter";
 import DateTimeFilter from "./DateTimeFilter";
 import OrganizationFilter from "./OrganizationFilter";

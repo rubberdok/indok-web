@@ -1,9 +1,11 @@
-import Layout from "@layouts/Layout";
 import { Box, Button, Container, Grid, Typography } from "@mui/material";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
+
+import Layout from "@layouts/Layout";
 import _404 from "public/illustrations/404.svg";
+
 import { NextPageWithLayout } from "./_app";
 
 const Custom404: NextPageWithLayout = () => {

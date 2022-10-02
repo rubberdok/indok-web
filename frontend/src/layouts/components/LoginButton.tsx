@@ -1,10 +1,11 @@
 import { useQuery } from "@apollo/client";
+import { PersonOutlineRounded } from "@mui/icons-material";
+import { Button } from "@mui/material";
+import NextLink from "next/link";
+
 import LoginRequired from "@components/Auth/LoginRequired";
 import { GET_USER_INFO } from "@graphql/users/queries";
 import { UserInfo } from "@interfaces/users";
-import { Button } from "@mui/material";
-import NextLink from "next/link";
-import { PersonOutlineRounded } from "@mui/icons-material";
 
 type Props = {
   fullWidth?: boolean;

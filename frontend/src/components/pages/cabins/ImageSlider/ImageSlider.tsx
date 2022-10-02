@@ -7,6 +7,7 @@ import { useTheme } from "@mui/material/styles";
 import Image from "next/future/image";
 import React from "react";
 import SwipeableViews from "react-swipeable-views";
+
 import { ImageData } from "./imageData";
 
 interface ImageSliderProps {

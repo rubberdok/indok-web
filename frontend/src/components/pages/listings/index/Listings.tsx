@@ -1,10 +1,11 @@
 import { useQuery } from "@apollo/client";
-import ListingItem from "@components/pages/listings/index/ListingItem";
-import { LISTINGS } from "@graphql/listings/queries";
-import { Listing } from "@interfaces/listings";
 import { Button, CircularProgress, Grid, Typography, Box } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
+
+import ListingItem from "@components/pages/listings/index/ListingItem";
+import { LISTINGS } from "@graphql/listings/queries";
+import { Listing } from "@interfaces/listings";
 import EmptyStreet from "public/illustrations/EmptyStreet.svg";
 
 /**

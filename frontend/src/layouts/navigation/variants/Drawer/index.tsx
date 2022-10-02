@@ -1,11 +1,14 @@
-import { PermissionRequired } from "@components/Auth";
-import Logo from "@components/Logo";
-import LoginButton from "@layouts/components/LoginButton";
 import { Menu } from "@mui/icons-material";
 import { Box, Divider, Drawer as MuiDrawer, IconButton, Stack } from "@mui/material";
 import { useRouter } from "next/router";
 import { useState } from "react";
+
+import { PermissionRequired } from "@components/Auth";
+import Logo from "@components/Logo";
+import LoginButton from "@layouts/components/LoginButton";
+
 import { NavigationProps } from "../../types";
+
 import NavigationLink from "./NavigationLink";
 
 const Drawer: React.FC<NavigationProps> = ({ routes }) => {

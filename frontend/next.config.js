@@ -20,6 +20,9 @@ const getPresets = () => {
   return {};
 };
 
+/**
+ * @type {import('next').NextConfig}
+ */
 const moduleExports = {
   /** @todo internationalized routing */
   async rewrites() {

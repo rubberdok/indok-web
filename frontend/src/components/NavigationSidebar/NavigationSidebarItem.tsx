@@ -1,10 +1,12 @@
+import { KeyboardArrowDown, ChevronRight } from "@mui/icons-material";
 import { Box, Collapse, List, ListItemText } from "@mui/material";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
-import { KeyboardArrowDown, ChevronRight } from "@mui/icons-material";
 import { useState } from "react";
-import { NavigationItem } from ".";
+
 import { ListItemIconStyle, ListItemStyle, ListSubItemIconStyle } from "./styles";
+
+import { NavigationItem } from ".";
 
 type Props = {
   item: NavigationItem;

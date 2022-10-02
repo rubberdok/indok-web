@@ -1,6 +1,8 @@
-import { NextPage } from "next";
 import { Grid, Typography, Divider, Hidden } from "@mui/material";
+import { NextPage } from "next";
+
 import { Cabin, ContactInfo, DatePick } from "@interfaces/cabins";
+
 import CabinBookingStatus from "../CabinBookingStatus";
 
 interface Props {

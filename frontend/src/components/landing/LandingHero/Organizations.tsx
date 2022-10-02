@@ -1,11 +1,12 @@
-import OrganizationLink, { Organization } from "./OrganizationLink";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Box, Button, IconButton } from "@mui/material";
 import { ArrowBack, ArrowForward } from "@mui/icons-material";
+import { Box, Button, IconButton } from "@mui/material";
 import { styled } from "@mui/system";
-import { FreeMode, Navigation } from "swiper";
-import "swiper/css";
 import Link from "next/link";
+import { FreeMode, Navigation } from "swiper";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+
+import OrganizationLink, { Organization } from "./OrganizationLink";
 
 const organizations: Readonly<Organization[]> = [
   { name: "Janus", externalUrl: "https://www.januslinjeforening.no" },

@@ -1,11 +1,13 @@
 import { useQuery } from "@apollo/client";
+import { CircularProgress, Container, Grid, Typography } from "@mui/material";
+import { useRouter } from "next/router";
+
 import AnswerForm from "@components/pages/forms/AnswerForm";
-import Layout, { RootStyle } from "@layouts/Layout";
 import { FORM_WITH_QUESTIONS_AND_ANSWERS } from "@graphql/forms/queries";
 import { Form } from "@interfaces/forms";
-import { CircularProgress, Container, Grid, Typography } from "@mui/material";
+import Layout, { RootStyle } from "@layouts/Layout";
 import { generateFeideLoginUrl } from "@utils/auth";
-import { useRouter } from "next/router";
+
 import { NextPageWithLayout } from "../_app";
 
 const FormPage: NextPageWithLayout = () => {

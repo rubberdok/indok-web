@@ -1,5 +1,6 @@
 import { Box, Container, Typography, Stack, NoSsr } from "@mui/material";
 import { useRef, useState, useEffect } from "react";
+
 import Organizations from "./Organizations";
 
 const OrganizationsSlider: React.FC = () => {

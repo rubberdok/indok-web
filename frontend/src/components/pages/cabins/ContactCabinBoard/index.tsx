@@ -1,10 +1,11 @@
 import { useQuery } from "@apollo/client";
-import LabeledIcon from "@components/LabeledIcon";
-import { QUERY_BOOKING_RESPONSIBLE } from "@graphql/cabins/queries";
-import { BookingResponsible } from "@interfaces/cabins";
 import { MailOutline } from "@mui/icons-material";
 import { Link, Stack, Typography } from "@mui/material";
 import React from "react";
+
+import LabeledIcon from "@components/LabeledIcon";
+import { QUERY_BOOKING_RESPONSIBLE } from "@graphql/cabins/queries";
+import { BookingResponsible } from "@interfaces/cabins";
 
 const ContactCabinBoard: React.FC = () => {
   const { data } = useQuery<{ activeBookingResponsible: BookingResponsible }>(QUERY_BOOKING_RESPONSIBLE);

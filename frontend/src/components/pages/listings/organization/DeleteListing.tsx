@@ -1,8 +1,4 @@
 import { useMutation } from "@apollo/client";
-import { DELETE_LISTING } from "@graphql/listings/mutations";
-import { GET_ORGANIZATION } from "@graphql/orgs/queries";
-import { Organization } from "@interfaces/organizations";
-import { Listing } from "@interfaces/listings";
 import {
   Dialog,
   DialogContent,
@@ -12,7 +8,12 @@ import {
   Button,
   FormHelperText,
 } from "@mui/material";
+
 import WarningButton from "@components/ui/WarningButton";
+import { DELETE_LISTING } from "@graphql/listings/mutations";
+import { GET_ORGANIZATION } from "@graphql/orgs/queries";
+import { Listing } from "@interfaces/listings";
+import { Organization } from "@interfaces/organizations";
 
 /**
  * Component for confirmation dialog when an organization admin tries to delete a listing.

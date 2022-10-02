@@ -1,5 +1,7 @@
 import { Grid, Typography } from "@mui/material";
+
 import Form from "@public/illustrations/Form.svg";
+
 import ProfileCardBase from "./ProfileCardBase";
 
 const FormCard: React.VFC = ({ ...props }) => {

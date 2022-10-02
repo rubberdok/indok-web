@@ -1,5 +1,6 @@
-import { Cabin, DatePick } from "@interfaces/cabins";
 import { Box, Divider, Hidden, Stack, TextField, Typography } from "@mui/material";
+
+import { Cabin, DatePick } from "@interfaces/cabins";
 import { convertDateFormat, toStringChosenCabins } from "@utils/cabins";
 
 type Props = {
