@@ -34,7 +34,8 @@ const AuthCallbackPage: NextPageWithLayout<InferGetServerSidePropsType<typeof ge
     },
   });
 
-  if (!called) {
+  // Do not run on the server, i.e. when window is undefined
+  if (!called && typeof window !== "undefined") {
     authUser({ variables: { code } });
   }
 

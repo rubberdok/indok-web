@@ -56,9 +56,6 @@ class DataportenAuth:
             "client_id": CLIENT_ID,
         }
 
-        print(params)
-        print(settings.DATAPORTEN_SECRET)
-
         try:
             response = requests.post(
                 "https://auth.dataporten.no/oauth/token",
@@ -70,8 +67,8 @@ class DataportenAuth:
             )
             # Raises exceptions upon HTTP errors
             response.raise_for_status()
-        except requests.exceptions.RequestException as err:
-            raise err
+        except requests.exceptions.RequestException:
+            raise RuntimeError("En feil oppstod under fullføring av Dataporten-autentisering.")
 
         return response.json()
 
@@ -167,7 +164,6 @@ class DataportenAuth:
 
     @classmethod
     def authenticate_and_get_user(cls, code: str) -> "models.User":
-        print(code)
         # Complete authentication of user
         response = cls.complete_dataporten_auth(code)
         cls.validate_response(response)
