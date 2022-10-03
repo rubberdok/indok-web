@@ -30,8 +30,7 @@ import { GET_USER } from "@/graphql/users/queries";
 import { Order, PaymentStatus } from "@/interfaces/ecommerce";
 import { User } from "@/interfaces/users";
 import Layout, { RootStyle } from "@/layouts/Layout";
-
-import savings from "@/public/illustrations/Savings.svg";
+import savings from "~/public/illustrations/Savings.svg";
 
 import { NextPageWithLayout } from "../_app";
 

@@ -6,8 +6,7 @@ import { useEffect, useState } from "react";
 import { QUERY_BOOKING_RESPONSIBLE } from "@/graphql/cabins/queries";
 import { BookingResponsible, Cabin, ContactInfo, DatePick } from "@/interfaces/cabins";
 import { calculatePrice, convertDateFormat, toStringChosenCabins } from "@/utils/cabins";
-
-import hytteforeningen from "@/public/static/cabins/logo.svg";
+import hytteforeningen from "~/public/static/cabins/logo.svg";
 
 interface ContractProps {
   chosenCabins: Cabin[];

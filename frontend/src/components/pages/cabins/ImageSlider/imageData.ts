@@ -1,20 +1,20 @@
 import { StaticImageData } from "next/future/image";
 
-import _00 from "@/public/static/cabins/00.jpg";
-import _01 from "@/public/static/cabins/01.jpg";
-import _02 from "@/public/static/cabins/02.jpg";
-import _03 from "@/public/static/cabins/03.jpg";
-import _04 from "@/public/static/cabins/04.jpg";
-import _05 from "@/public/static/cabins/05.jpg";
-import _06 from "@/public/static/cabins/06.jpg";
-import _07 from "@/public/static/cabins/07.jpg";
-import _08 from "@/public/static/cabins/08.jpg";
-import _09 from "@/public/static/cabins/09.jpg";
-import _10 from "@/public/static/cabins/10.jpg";
-import _11 from "@/public/static/cabins/11.jpg";
-import _20 from "@/public/static/cabins/20.jpg";
-import _21 from "@/public/static/cabins/21.jpg";
-import _22 from "@/public/static/cabins/22.jpg";
+import _00 from "~/public/static/cabins/00.jpg";
+import _01 from "~/public/static/cabins/01.jpg";
+import _02 from "~/public/static/cabins/02.jpg";
+import _03 from "~/public/static/cabins/03.jpg";
+import _04 from "~/public/static/cabins/04.jpg";
+import _05 from "~/public/static/cabins/05.jpg";
+import _06 from "~/public/static/cabins/06.jpg";
+import _07 from "~/public/static/cabins/07.jpg";
+import _08 from "~/public/static/cabins/08.jpg";
+import _09 from "~/public/static/cabins/09.jpg";
+import _10 from "~/public/static/cabins/10.jpg";
+import _11 from "~/public/static/cabins/11.jpg";
+import _20 from "~/public/static/cabins/20.jpg";
+import _21 from "~/public/static/cabins/21.jpg";
+import _22 from "~/public/static/cabins/22.jpg";
 
 export interface ImageData {
   label: string;
