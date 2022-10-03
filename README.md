@@ -17,6 +17,7 @@
     - [Backend](#backend)
     - [Frontend](#frontend)
   - [Using test users](#using-test-users)
+- [Development Workflow](#development-workflow)
 - [Contributing](#contributing)
 - [Feedback](#feedback)
 - [Error Logging](#error-logging)
@@ -340,13 +341,161 @@ The `python manage.py loaddata initial_data` command used in the setup above set
 To log in as one of these test users when testing out the frontend locally, click "Other login alternatives" on the
 Feide login screen, then "Feide Test Users".
 
+## Development Workflow
+
+An outline of how a developer may work with this project:
+
+- Move to `indok-web` in the terminal (`cd indok-web`)
+- If you are on the `main` branch, pull the latest updates
+  - In the terminal:
+    - Type `git status` to see which branch you are on
+    - If you're not on the `main` branch but want to move back to it, type `git checkout main`
+    - Type `git pull` to get the latest updates
+  - In VSCode:
+    - Check which branch you are on in the bottom left corner of the window
+      - To change branch, click it and select e.g. `main`
+    - Go to the Source Control tab on the left
+    - Click `...` -> `Pull`
+- Run the frontend, backend and database
+  - With Docker:
+    - Have Docker Desktop open, and type `docker compose up` inside `indok-web`
+      - You may sometimes have to do `docker compose build` first
+    - If the backend complains about unapplied migrations:
+      - Open a new terminal in `indok-web`
+      - Type `docker compose exec backend python manage.py migrate`
+  - Without Docker (one terminal for each, in the `indok-web` folder):
+    - Database (still with Docker):
+      - Type `docker compose up postgres`
+    - Backend:
+      - Type `cd backend` to move into the backend folder
+      - Activate your Python virtual environment
+        - Mac: type `source venv/bin/activate`
+        - Windows: type `.\venv\scripts\activate`
+        - If you've followed the steps in the `#dev` channel in the Rubberdøk Slack: simply type `venv`
+      - Type `python manage.py runserver`
+      - If it says you have unapplied migrations:
+        - Open a new terminal, move back to `indok-web/backend`, and activate your virtual environment again
+        - Type `python manage.py migrate`
+      - If it complains about missing dependencies:
+        - Close the server (`Ctrl + C`)
+        - Type `pip install -r requirements/local.txt` to install dependencies
+        - Type `python manage.py runserver` again
+    - Frontend:
+      - Type `cd frontend` to move into the frontend folder
+      - Type `yarn dev` to start the app
+      - If it complains about missing dependencies:
+        - Close the app (`Ctrl + C`)
+        - Type `yarn` to install dependencies
+        - Type `yarn dev` again
+- Open another terminal, and move back to `indok-web`
+- Open the project in VSCode, or your favorite code editor
+  - Type `code .` to open the current terminal folder in VSCode
+- Create a new Git branch for your changes
+  - In the terminal:
+    - Type `git checkout -b add-example-feature` to create a new Git branch called `add-example-feature`
+      - Replace this name with a short, descriptive name for your branch!
+  - In VSCode:
+    - Click the branch name in the bottom left of the window, then `Create new branch...`
+- Make your changes to the code!
+  - If you want to update a page on the website:
+    - Navigate to the file in `frontend/src/pages` that matches the URL of the page you want to update
+      - For example, `pages/events/index.tsx` is the page component for
+        [indokntnu.no/events](https://indokntnu.no/events)
+    - Update the page component as you wish
+      - If what you want to change is not shown in the page component, it's probably in a sub-component
+        - Sub-components for a specific page are in `frontend/src/components/pages/...`
+          - For example, components for event pages are in `components/pages/events`
+        - In VSCode, you can move to a sub-component on a page by right-clicking it in the HTML of the page component,
+          and clicking `Go to Definition`
+  - If you want to add/update a GraphQL query/mutation to fetch/change data from the backend:
+    - Find the `queries.graphql` / `mutations.graphql` file in the appropriate feature folder under
+      `frontend/src/graphql`
+    - Add/change your query/mutation
+    - Generate TypeScript code for your query/mutation
+      - `cd` into `frontend`, and type `yarn generate`
+  - If you want to add/change a field on a backend database model:
+    - Change the model class in the `models.py` file, in the appropriate feature folder under `backend/apps`
+    - Generate a Django migration to update the database
+      - `cd` into `backend`, and type `python manage.py makemigrations` (with your virtual environment activated!)
+      - Update your local database with `python manage.py migrate`
+        - If running the backend through Docker: type `docker compose exec backend python manage.py migrate` instead
+  - If you want to add/change a field on a type in the GraphQL API:
+    - Change the type class in the `types.py` file, in the appropriate feature folder under `backend/apps`
+    - If it's a new field from the type's Django model:
+      - Simply add the field name in the `fields` list on the type's `Meta` class
+    - If it's a field that only exists on the API type, but not on the database model:
+      - Add `field_name = graphene.FieldType()` under the class name, replacing `field_name` and `FieldType` with the
+        appropriate name and type for your field
+      - Add a method `resolve_field_name` with the `@staticmethod` decorator on the class, with the logic for how to
+        get data for the field
+    - Re-generate the backend's `schema.json`
+      - `cd` into `backend`, and type `python manage.py graphql_schema` (with your virtual environment activated!)
+  - If you want to add/change a query (to fetch data) or mutation (to change data) in the GraphQL API:
+    - Find the query resolver method in `resolvers.py`, or the mutation class in `mutations.py`, in the appropriate
+      feature folder under `backend/apps`
+      - Examples:
+        - The resolver for the `allOrganizations` query is the `resolve_all_organizations` method on the
+          `OrganizationResolvers` class in `backend/apps/organizations/resolvers.py`
+        - The `createOrganization` mutation corresponds to the `CreateOrganization` class in
+          `backend/apps/organizations/mutations.py`, with an `OrganizationInput` class for its arguments, and a `mutate`
+          method for the actual mutation logic
+    - Add/change your query resolver method or mutation class
+    - If you added a new query/mutation, update the `schema.py` file in the same folder to expose it through the API:
+      - For a query: add a new field for the query in the `...Queries` class, with the appropriate `graphene` type for
+        what the query returns
+      - For a mutation: import `YourMutation` class from `.mutations`, and add `your_mutation = YourMutation.Field()` to
+        the `...Mutations` class (obviously replacing `your_mutation` / `YourMutation` with the name of your mutation)
+    - Re-generate the backend's `schema.json`
+      - `cd` into `backend`, and type `python manage.py graphql_schema` (with your virtual environment activated!)
+- Commit your changes to Git
+  - If your changes are large, consider splitting it up into different commits for different files
+  - In the terminal:
+    - Type `git status` to see which files you have changed
+    - If you want to add them all, type `git add .` from `indok-web`
+      - Otherwise, you can do `git add` followed by the path of the specific file you want to add
+    - Type `git commit -m "add example component for example feature"`
+      - Replace the message here with your own short, descriptive message describing the changes!
+      - Git commit messages should be written in imperative, e.g. `add` rather than `adds` / `added`
+  - In VSCode:
+    - Go to the Source Control tab on the left
+    - Click `+` on the files you want to add to the commit
+    - Write a commit message in the text box, then click `Commit`
+  - If it complains about missing `black` / `flake8`:
+    - This is because we have configured "pre-commit hooks" to format and lint your code on commit
+    - Since `black` and `flake8` are part of your Python virtual environment, you have to activate your virtual
+      environment for these to work
+      - In the terminal, type `source backend/venv/bin/activate` (Mac) / `.\backend\venv\scripts\activate` (Windows) /
+        `venv backend` (from Rubberdøk Slack)
+      - If committing through the terminal, just run `git commit` again after this
+      - If committing through VSCode, you may have to restart VSCode from the terminal to use your virtual environment
+        (`code .`)
+  - If you get errors from pre-commit hooks, look through the error message to see what you have to fix
+- Push your branch to GitHub
+  - In the terminal:
+    - Type `git push -u origin add-example-feature`, replacing `add-example-feature` with your branch name
+  - In VSCode:
+    - Go to the Source Control tab on the left
+    - Click `...` -> `Push`
+- Make a Pull Request on GitHub
+  - Go to [github.com/rubberdok/indok-web/branches](https://github.com/rubberdok/indok-web/branches)
+  - Click `New Pull Request` on your branch
+  - Write a concise, but descriptive summary of your changes
+  - Request a review from another developer
+  - Respond to any questions or concerns they may have with your Pull Request
+  - If an automatic test fails, click `Details` on it to see what went wrong in the logs
+  - Once your Pull Request is approved, and the tests pass, you can merge it - now your changes are live!
+
 ## Contributing
 
-This project is completely open source and is intended to serve as a platform for students who are interested in web development to have a project where they can find inspiration and contribute, and as such, we gladly welcome outside contributors to the project. If you're interested in how to get started, no matter what level of experience you have, please see [CONTRIBUTING](CONTRIBUDING.md).
+This project is completely open source and is intended to serve as a platform for students who are interested in web
+development to have a project where they can find inspiration and contribute, and as such, we gladly welcome outside
+contributors to the project. If you're interested in how to get started, no matter what level of experience you have,
+please see [CONTRIBUTING](CONTRIBUDING.md).
 
 ## Feedback
 
-Found a bug, got a suggestion, or something we should know about? Take a look at the [roadmap](https://github.com/orgs/rubberdok/projects/2) and
+Found a bug, got a suggestion, or something we should know about? Take a look at the
+[roadmap](https://github.com/orgs/rubberdok/projects/2) and
 [file an issue](https://github.com/rubberdok/indok-web/issues/new) if it's not on the roadmap!
 
 ## Error logging
