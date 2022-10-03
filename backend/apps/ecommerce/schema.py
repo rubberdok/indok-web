@@ -1,4 +1,5 @@
 import graphene
+from graphene import NonNull
 
 from .mutations import AttemptCapturePayment, CreateProduct, InitiateOrder
 from .resolvers import EcommerceResolvers
@@ -13,9 +14,9 @@ class EcommerceMutations(graphene.ObjectType):
 
 class EcommerceQueries(graphene.ObjectType, EcommerceResolvers):
     product = graphene.Field(ProductType, product_id=graphene.ID(required=True))
-    products = graphene.List(ProductType)
+    products = graphene.List(NonNull(ProductType))
     order = graphene.Field(OrderType, order_id=graphene.ID(required=True))
-    user_orders = graphene.List(OrderType)
+    user_orders = graphene.List(NonNull(OrderType))
 
     orders_by_status = graphene.Field(
         OrdersByStatusType, product_id=graphene.ID(required=True), status=graphene.String(required=True)

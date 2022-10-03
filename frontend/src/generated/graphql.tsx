@@ -169,7 +169,7 @@ export type BlogType = {
 
 /** Basic booking object type used as a base for other types and as a standalone */
 export type BookingInput = {
-  cabins?: InputMaybe<Array<InputMaybe<Scalars["Int"]>>>;
+  cabins?: InputMaybe<Array<Scalars["Int"]>>;
   checkIn?: InputMaybe<Scalars["Date"]>;
   checkOut?: InputMaybe<Scalars["Date"]>;
   externalParticipants?: InputMaybe<Scalars["Int"]>;
@@ -250,7 +250,7 @@ export type CreateEvent = {
 };
 
 export type CreateEventInput = {
-  allowedGradeYears?: InputMaybe<Array<InputMaybe<Scalars["Int"]>>>;
+  allowedGradeYears?: InputMaybe<Array<Scalars["Int"]>>;
   availableSlots?: InputMaybe<Scalars["Int"]>;
   bindingSignup?: InputMaybe<Scalars["Boolean"]>;
   categoryId?: InputMaybe<Scalars["ID"]>;
@@ -341,7 +341,7 @@ export type CreateQuestionInput = {
 export type CreateUpdateAndDeleteOptions = {
   __typename?: "CreateUpdateAndDeleteOptions";
   ok?: Maybe<Scalars["Boolean"]>;
-  options?: Maybe<Array<Maybe<OptionType>>>;
+  options?: Maybe<Array<OptionType>>;
 };
 
 export type DeleteAnswer = {
@@ -418,7 +418,7 @@ export type DeleteQuestion = {
 };
 
 export type EmailInput = {
-  cabins?: InputMaybe<Array<InputMaybe<Scalars["Int"]>>>;
+  cabins?: InputMaybe<Array<Scalars["Int"]>>;
   checkIn?: InputMaybe<Scalars["Date"]>;
   checkOut?: InputMaybe<Scalars["Date"]>;
   emailType?: InputMaybe<Scalars["String"]>;
@@ -459,7 +459,7 @@ export type EventSignUpInput = {
 
 export type EventType = {
   __typename?: "EventType";
-  allowedGradeYears?: Maybe<Array<Maybe<Scalars["Int"]>>>;
+  allowedGradeYears?: Maybe<Array<Scalars["Int"]>>;
   availableSlots?: Maybe<Scalars["Int"]>;
   bindingSignup: Scalars["Boolean"];
   category?: Maybe<CategoryType>;
@@ -482,8 +482,8 @@ export type EventType = {
   startTime: Scalars["DateTime"];
   title: Scalars["String"];
   userAttendance?: Maybe<UserAttendingType>;
-  usersAttending?: Maybe<Array<Maybe<SignUpType>>>;
-  usersOnWaitingList?: Maybe<Array<Maybe<SignUpType>>>;
+  usersAttending?: Maybe<Array<SignUpType>>;
+  usersOnWaitingList?: Maybe<Array<SignUpType>>;
 };
 
 /** A form containing questions, optionally linked to a listing. */
@@ -495,9 +495,9 @@ export type FormType = {
   organization?: Maybe<OrganizationType>;
   questions: Array<QuestionType>;
   responder?: Maybe<UserType>;
-  responders?: Maybe<Array<Maybe<UserType>>>;
+  responders?: Maybe<Array<UserType>>;
   response?: Maybe<ResponseType>;
-  responses?: Maybe<Array<Maybe<ResponseType>>>;
+  responses?: Maybe<Array<ResponseType>>;
 };
 
 /** A form containing questions, optionally linked to a listing. */
@@ -524,7 +524,7 @@ export type InitiateOrder = {
 export type ListingType = {
   __typename?: "ListingType";
   applicationUrl?: Maybe<Scalars["String"]>;
-  chips: Array<Maybe<Scalars["String"]>>;
+  chips: Array<Scalars["String"]>;
   deadline: Scalars["DateTime"];
   description: Scalars["String"];
   endDatetime: Scalars["DateTime"];
@@ -714,7 +714,7 @@ export type MutationsCreateQuestionArgs = {
 };
 
 export type MutationsCreateUpdateAndDeleteOptionsArgs = {
-  optionData?: InputMaybe<Array<InputMaybe<OptionInput>>>;
+  optionData?: InputMaybe<Array<OptionInput>>;
   questionId: Scalars["ID"];
 };
 
@@ -788,12 +788,12 @@ export type MutationsSendEmailArgs = {
 export type MutationsSendEventMailsArgs = {
   content?: InputMaybe<Scalars["String"]>;
   eventId: Scalars["ID"];
-  receiverEmails?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  receiverEmails?: InputMaybe<Array<Scalars["String"]>>;
   subject: Scalars["String"];
 };
 
 export type MutationsSubmitAnswersArgs = {
-  answersData?: InputMaybe<Array<InputMaybe<AnswerInput>>>;
+  answersData?: InputMaybe<Array<AnswerInput>>;
   formId: Scalars["ID"];
 };
 
@@ -905,7 +905,7 @@ export type OrderType = {
 export type OrdersByStatusType = {
   __typename?: "OrdersByStatusType";
   length?: Maybe<Scalars["Int"]>;
-  orders?: Maybe<Array<Maybe<OrderType>>>;
+  orders?: Maybe<Array<OrderType>>;
 };
 
 export type OrganizationInput = {
@@ -923,7 +923,7 @@ export type OrganizationType = {
   events: Array<EventType>;
   hrGroup?: Maybe<ResponsibleGroupType>;
   id: Scalars["ID"];
-  listings?: Maybe<Array<Maybe<ListingType>>>;
+  listings?: Maybe<Array<ListingType>>;
   logoUrl?: Maybe<Scalars["String"]>;
   name: Scalars["String"];
   parent?: Maybe<OrganizationType>;
@@ -944,14 +944,14 @@ export type ProductType = {
 export type Queries = {
   __typename?: "Queries";
   activeBookingResponsible?: Maybe<BookingResponsibleType>;
-  adminAllBookings?: Maybe<Array<Maybe<AdminBookingType>>>;
-  allBlogPosts?: Maybe<Array<Maybe<BlogPostType>>>;
-  allBlogs?: Maybe<Array<Maybe<BlogType>>>;
-  allBookings?: Maybe<Array<Maybe<AllBookingsType>>>;
-  allCategories?: Maybe<Array<Maybe<CategoryType>>>;
-  allEvents?: Maybe<Array<Maybe<EventType>>>;
-  allOrganizations?: Maybe<Array<Maybe<OrganizationType>>>;
-  allUsers?: Maybe<Array<Maybe<UserType>>>;
+  adminAllBookings?: Maybe<Array<AdminBookingType>>;
+  allBlogPosts?: Maybe<Array<BlogPostType>>;
+  allBlogs?: Maybe<Array<BlogType>>;
+  allBookings?: Maybe<Array<AllBookingsType>>;
+  allCategories?: Maybe<Array<CategoryType>>;
+  allEvents?: Maybe<Array<EventType>>;
+  allOrganizations?: Maybe<Array<OrganizationType>>;
+  allUsers?: Maybe<Array<UserType>>;
   archiveByTypes: Array<ArchiveDocumentType>;
   attendeeReport?: Maybe<Scalars["String"]>;
   attendeeReportOrg?: Maybe<Scalars["String"]>;
@@ -960,30 +960,30 @@ export type Queries = {
   blog?: Maybe<BlogType>;
   blogPost?: Maybe<BlogPostType>;
   bookingSemester?: Maybe<UpdateBookingSemesterType>;
-  cabins?: Maybe<Array<Maybe<CabinType>>>;
+  cabins?: Maybe<Array<CabinType>>;
   category?: Maybe<CategoryType>;
-  defaultEvents?: Maybe<Array<Maybe<EventType>>>;
+  defaultEvents?: Maybe<Array<EventType>>;
   event?: Maybe<EventType>;
   eventFilteredOrganizations?: Maybe<Array<OrganizationType>>;
   featuredArchive: Array<ArchiveDocumentType>;
   form?: Maybe<FormType>;
-  forms?: Maybe<Array<Maybe<FormType>>>;
+  forms?: Maybe<Array<FormType>>;
   hasPermission?: Maybe<Scalars["Boolean"]>;
   listing?: Maybe<ListingType>;
-  listings?: Maybe<Array<Maybe<ListingType>>>;
+  listings?: Maybe<Array<ListingType>>;
   logout: Scalars["String"];
-  memberships?: Maybe<Array<Maybe<MembershipType>>>;
+  memberships?: Maybe<Array<MembershipType>>;
   order?: Maybe<OrderType>;
   ordersByStatus?: Maybe<OrdersByStatusType>;
   organization?: Maybe<OrganizationType>;
   product?: Maybe<ProductType>;
-  products?: Maybe<Array<Maybe<ProductType>>>;
+  products?: Maybe<Array<ProductType>>;
   response?: Maybe<ResponseType>;
-  responses?: Maybe<Array<Maybe<ResponseType>>>;
+  responses?: Maybe<Array<ResponseType>>;
   serverTime?: Maybe<Scalars["DateTime"]>;
   signUps?: Maybe<SignUpType>;
   user?: Maybe<UserType>;
-  userOrders?: Maybe<Array<Maybe<OrderType>>>;
+  userOrders?: Maybe<Array<OrderType>>;
 };
 
 export type QueriesAdminAllBookingsArgs = {
@@ -1010,19 +1010,19 @@ export type QueriesArchiveByTypesArgs = {
 
 export type QueriesAttendeeReportArgs = {
   eventId: Scalars["ID"];
-  fields?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  fields?: InputMaybe<Array<Scalars["String"]>>;
   filetype?: InputMaybe<Scalars["String"]>;
 };
 
 export type QueriesAttendeeReportOrgArgs = {
-  fields?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  fields?: InputMaybe<Array<Scalars["String"]>>;
   filetype?: InputMaybe<Scalars["String"]>;
   orgId: Scalars["ID"];
 };
 
 export type QueriesAttendeeReportsArgs = {
-  eventIds: Array<InputMaybe<Scalars["ID"]>>;
-  fields?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  eventIds: Array<Scalars["ID"]>;
+  fields?: InputMaybe<Array<Scalars["String"]>>;
   filetype?: InputMaybe<Scalars["String"]>;
 };
 
@@ -1097,11 +1097,11 @@ export type QueriesSignUpsArgs = {
 export type QuestionType = {
   __typename?: "QuestionType";
   answer?: Maybe<AnswerType>;
-  answers?: Maybe<Array<Maybe<AnswerType>>>;
+  answers?: Maybe<Array<AnswerType>>;
   description: Scalars["String"];
   id: Scalars["ID"];
   mandatory: Scalars["Boolean"];
-  options?: Maybe<Array<Maybe<OptionType>>>;
+  options?: Maybe<Array<OptionType>>;
   question: Scalars["String"];
   questionType?: Maybe<QuestionTypeEnum>;
 };
@@ -1139,7 +1139,7 @@ export type ResponseType = {
   answers: Array<AnswerType>;
   form: FormType;
   id?: Maybe<Scalars["UUID"]>;
-  questions?: Maybe<Array<Maybe<QuestionType>>>;
+  questions?: Maybe<Array<QuestionType>>;
   respondent: UserType;
   status?: Maybe<ResponseStatus>;
   uuid: Scalars["UUID"];
@@ -1228,7 +1228,7 @@ export type UpdateBooking = {
 };
 
 export type UpdateBookingInput = {
-  cabins?: InputMaybe<Array<InputMaybe<Scalars["Int"]>>>;
+  cabins?: InputMaybe<Array<Scalars["Int"]>>;
   checkIn?: InputMaybe<Scalars["Date"]>;
   checkOut?: InputMaybe<Scalars["Date"]>;
   declineReason?: InputMaybe<Scalars["String"]>;
@@ -1301,7 +1301,7 @@ export type UpdateEvent = {
 };
 
 export type UpdateEventInput = {
-  allowedGradeYears?: InputMaybe<Array<InputMaybe<Scalars["Int"]>>>;
+  allowedGradeYears?: InputMaybe<Array<Scalars["Int"]>>;
   availableSlots?: InputMaybe<Scalars["Int"]>;
   bindingSignup?: InputMaybe<Scalars["Boolean"]>;
   categoryId?: InputMaybe<Scalars["ID"]>;
@@ -1372,7 +1372,7 @@ export type UserType = {
   canUpdateYear?: Maybe<Scalars["Boolean"]>;
   dateJoined: Scalars["DateTime"];
   email: Scalars["String"];
-  events?: Maybe<Array<Maybe<EventType>>>;
+  events?: Maybe<Array<EventType>>;
   feideEmail: Scalars["String"];
   feideUserid: Scalars["String"];
   firstLogin: Scalars["Boolean"];
@@ -1477,7 +1477,7 @@ export type AllBookingsQuery = {
     checkIn: any;
     checkOut: any;
     cabins: Array<{ __typename?: "CabinType"; id: string; name: string }>;
-  } | null> | null;
+  }> | null;
 };
 
 export type AdminAllBookingsQueryVariables = Exact<{
@@ -1500,7 +1500,7 @@ export type AdminAllBookingsQuery = {
     price?: number | null;
     isTentative: boolean;
     cabins: Array<{ __typename?: "CabinType"; id: string; name: string }>;
-  } | null> | null;
+  }> | null;
 };
 
 export type CabinsAndResponsiblesQueryVariables = Exact<{ [key: string]: never }>;
@@ -1513,7 +1513,7 @@ export type CabinsAndResponsiblesQuery = {
     name: string;
     internalPrice: number;
     externalPrice: number;
-  } | null> | null;
+  }> | null;
   activeBookingResponsible?: { __typename?: "BookingResponsibleType"; id: string; email?: string | null } | null;
 };
 
@@ -1528,6 +1528,41 @@ export type ActiveBookingResponsibleQuery = {
     firstName?: string | null;
     lastName?: string | null;
     email?: string | null;
+  } | null;
+};
+
+export type EventFragmentFragment = {
+  __typename?: "EventType";
+  id: string;
+  title: string;
+  startTime: any;
+  endTime?: any | null;
+  location?: string | null;
+  description: string;
+  image?: string | null;
+  isAttendable: boolean;
+  deadline?: any | null;
+  price?: number | null;
+  shortDescription?: string | null;
+  signupOpenDate?: any | null;
+  isFull?: boolean | null;
+  hasExtraInformation: boolean;
+  allowedGradeYears?: Array<number> | null;
+  organization: { __typename?: "OrganizationType"; name: string; color?: string | null };
+  category?: { __typename?: "CategoryType"; name: string } | null;
+  publisher?: {
+    __typename?: "UserType";
+    id: string;
+    username: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    dateJoined: any;
+  } | null;
+  userAttendance?: {
+    __typename?: "UserAttendingType";
+    isSignedUp?: boolean | null;
+    isOnWaitingList?: boolean | null;
   } | null;
 };
 
@@ -1548,7 +1583,92 @@ export type GetCategoriesQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetCategoriesQuery = {
   __typename?: "Queries";
-  allCategories?: Array<{ __typename?: "CategoryType"; id: string; name: string } | null> | null;
+  allCategories?: Array<{ __typename?: "CategoryType"; id: string; name: string }> | null;
+};
+
+export type AllEventsQueryVariables = Exact<{
+  organization?: InputMaybe<Scalars["String"]>;
+  category?: InputMaybe<Scalars["String"]>;
+  startTime?: InputMaybe<Scalars["DateTime"]>;
+  endTime?: InputMaybe<Scalars["DateTime"]>;
+}>;
+
+export type AllEventsQuery = {
+  __typename?: "Queries";
+  allEvents?: Array<{
+    __typename?: "EventType";
+    id: string;
+    title: string;
+    startTime: any;
+    endTime?: any | null;
+    location?: string | null;
+    description: string;
+    image?: string | null;
+    isAttendable: boolean;
+    deadline?: any | null;
+    price?: number | null;
+    shortDescription?: string | null;
+    signupOpenDate?: any | null;
+    isFull?: boolean | null;
+    hasExtraInformation: boolean;
+    allowedGradeYears?: Array<number> | null;
+    organization: { __typename?: "OrganizationType"; name: string; color?: string | null };
+    category?: { __typename?: "CategoryType"; name: string } | null;
+    publisher?: {
+      __typename?: "UserType";
+      id: string;
+      username: string;
+      email: string;
+      firstName: string;
+      lastName: string;
+      dateJoined: any;
+    } | null;
+    userAttendance?: {
+      __typename?: "UserAttendingType";
+      isSignedUp?: boolean | null;
+      isOnWaitingList?: boolean | null;
+    } | null;
+  }> | null;
+};
+
+export type DefaultEventsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type DefaultEventsQuery = {
+  __typename?: "Queries";
+  defaultEvents?: Array<{
+    __typename?: "EventType";
+    id: string;
+    title: string;
+    startTime: any;
+    endTime?: any | null;
+    location?: string | null;
+    description: string;
+    image?: string | null;
+    isAttendable: boolean;
+    deadline?: any | null;
+    price?: number | null;
+    shortDescription?: string | null;
+    signupOpenDate?: any | null;
+    isFull?: boolean | null;
+    hasExtraInformation: boolean;
+    allowedGradeYears?: Array<number> | null;
+    organization: { __typename?: "OrganizationType"; name: string; color?: string | null };
+    category?: { __typename?: "CategoryType"; name: string } | null;
+    publisher?: {
+      __typename?: "UserType";
+      id: string;
+      username: string;
+      email: string;
+      firstName: string;
+      lastName: string;
+      dateJoined: any;
+    } | null;
+    userAttendance?: {
+      __typename?: "UserAttendingType";
+      isSignedUp?: boolean | null;
+      isOnWaitingList?: boolean | null;
+    } | null;
+  }> | null;
 };
 
 export type ListingFragment = {
@@ -1561,7 +1681,7 @@ export type ListingFragment = {
   deadline: any;
   endDatetime: any;
   applicationUrl?: string | null;
-  chips: Array<string | null>;
+  chips: Array<string>;
   readMoreUrl?: string | null;
   heroImageUrl?: string | null;
   organization: {
@@ -1591,7 +1711,7 @@ export type ListingQuery = {
     deadline: any;
     endDatetime: any;
     applicationUrl?: string | null;
-    chips: Array<string | null>;
+    chips: Array<string>;
     readMoreUrl?: string | null;
     heroImageUrl?: string | null;
     form?: { __typename?: "FormType"; id: string } | null;
@@ -1683,6 +1803,81 @@ export type UserInfoQuery = {
   } | null;
 };
 
+export const EventFragmentFragmentDoc = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "EventFragment" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "EventType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "title" } },
+          { kind: "Field", name: { kind: "Name", value: "startTime" } },
+          { kind: "Field", name: { kind: "Name", value: "endTime" } },
+          { kind: "Field", name: { kind: "Name", value: "location" } },
+          { kind: "Field", name: { kind: "Name", value: "description" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "organization" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "name" } },
+                { kind: "Field", name: { kind: "Name", value: "color" } },
+              ],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "category" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "Field", name: { kind: "Name", value: "name" } }],
+            },
+          },
+          { kind: "Field", name: { kind: "Name", value: "image" } },
+          { kind: "Field", name: { kind: "Name", value: "isAttendable" } },
+          { kind: "Field", name: { kind: "Name", value: "deadline" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "publisher" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "username" } },
+                { kind: "Field", name: { kind: "Name", value: "email" } },
+                { kind: "Field", name: { kind: "Name", value: "firstName" } },
+                { kind: "Field", name: { kind: "Name", value: "lastName" } },
+                { kind: "Field", name: { kind: "Name", value: "dateJoined" } },
+              ],
+            },
+          },
+          { kind: "Field", name: { kind: "Name", value: "price" } },
+          { kind: "Field", name: { kind: "Name", value: "shortDescription" } },
+          { kind: "Field", name: { kind: "Name", value: "signupOpenDate" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "userAttendance" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "isSignedUp" } },
+                { kind: "Field", name: { kind: "Name", value: "isOnWaitingList" } },
+              ],
+            },
+          },
+          { kind: "Field", name: { kind: "Name", value: "isFull" } },
+          { kind: "Field", name: { kind: "Name", value: "hasExtraInformation" } },
+          { kind: "Field", name: { kind: "Name", value: "allowedGradeYears" } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<EventFragmentFragment, unknown>;
 export const ListingFragmentDoc = {
   kind: "Document",
   definitions: [
@@ -2255,6 +2450,98 @@ export const GetCategoriesDocument = {
     },
   ],
 } as unknown as DocumentNode<GetCategoriesQuery, GetCategoriesQueryVariables>;
+export const AllEventsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "allEvents" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "organization" } },
+          type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "category" } },
+          type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "startTime" } },
+          type: { kind: "NamedType", name: { kind: "Name", value: "DateTime" } },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "endTime" } },
+          type: { kind: "NamedType", name: { kind: "Name", value: "DateTime" } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "allEvents" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "organization" },
+                value: { kind: "Variable", name: { kind: "Name", value: "organization" } },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "category" },
+                value: { kind: "Variable", name: { kind: "Name", value: "category" } },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "startTime" },
+                value: { kind: "Variable", name: { kind: "Name", value: "startTime" } },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "endTime" },
+                value: { kind: "Variable", name: { kind: "Name", value: "endTime" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "EventFragment" } }],
+            },
+          },
+        ],
+      },
+    },
+    ...EventFragmentFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<AllEventsQuery, AllEventsQueryVariables>;
+export const DefaultEventsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "defaultEvents" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "defaultEvents" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "EventFragment" } }],
+            },
+          },
+        ],
+      },
+    },
+    ...EventFragmentFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<DefaultEventsQuery, DefaultEventsQueryVariables>;
 export const ListingDocument = {
   kind: "Document",
   definitions: [

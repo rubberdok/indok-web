@@ -1,11 +1,12 @@
 from graphene_django import DjangoObjectType
 import graphene
+from graphene import NonNull
 
 from .models import Listing
 
 
 class ListingType(DjangoObjectType):
-    chips = graphene.List(graphene.String, required=True)
+    chips = graphene.List(NonNull(graphene.String), required=True)
 
     class Meta:
         model = Listing

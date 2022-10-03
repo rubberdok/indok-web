@@ -1,5 +1,6 @@
 from typing import Optional
 import graphene
+from graphene import NonNull
 
 from apps.permissions.types import ResponsibleGroupType
 from .models import Organization, Membership
@@ -12,7 +13,7 @@ from .dataloader import ListingsByOrganizationIdLoader
 
 class OrganizationType(DjangoObjectType):
     absolute_slug = graphene.String()
-    listings = graphene.List(ListingType)
+    listings = graphene.List(NonNull(ListingType))
     primary_group = graphene.Field(source="primary_group", type=ResponsibleGroupType)
     hr_group = graphene.Field(source="hr_group", type=ResponsibleGroupType)
 

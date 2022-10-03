@@ -1,4 +1,5 @@
 import graphene
+from graphene import NonNull
 
 from .mutations import (
     AssignMembership,
@@ -19,12 +20,12 @@ class OrganizationMutations(graphene.ObjectType):
 
 
 class OrganizationQueries(graphene.ObjectType, OrganizationResolvers, MembershipResolvers):
-    all_organizations = graphene.List(OrganizationType, search=graphene.String())
+    all_organizations = graphene.List(NonNull(OrganizationType), search=graphene.String())
     organization = graphene.Field(
         OrganizationType,
         id=graphene.ID(required=False),
         slug=graphene.String(required=False),
     )
-    event_filtered_organizations = graphene.List(graphene.NonNull(OrganizationType))
+    event_filtered_organizations = graphene.List(NonNull(OrganizationType))
 
-    memberships = graphene.List(MembershipType, organization_id=graphene.ID())
+    memberships = graphene.List(NonNull(MembershipType), organization_id=graphene.ID())
