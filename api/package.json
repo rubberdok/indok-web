@@ -43,7 +43,7 @@
     "@graphql-eslint/eslint-plugin": "^3.10.7",
     "@swc/cli": "^0.1.57",
     "@swc/core": "^1.2.224",
-    "@swc/helpers": "^0.4.3",
+    "@swc/helpers": "^0.4.11",
     "@swc/jest": "^0.2.22",
     "@types/connect-redis": "^0.0.18",
     "@types/cors": "^2.8.12",
