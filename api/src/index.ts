@@ -11,13 +11,14 @@ import { json } from "body-parser";
 import cors from "cors";
 import express from "express";
 import session from "express-session";
-import { container } from "tsyringe";
+import { initializeContainer } from "@/container";
 
 import { env } from "@/config";
 import { resolvers, typeDefs } from "@/graphql";
 import { IContext, IContextProvider, Type as ContextProviderType } from "@/graphql/context";
 import { formatError } from "@/lib/apolloServer";
 import { redisClient, RedisStore } from "@/lib/redis";
+import { container } from "tsyringe";
 
 Sentry.init({
   dsn: env.SENTRY_DSN,
@@ -27,6 +28,7 @@ Sentry.init({
 const start = async () => {
   const app = express();
   const httpServer = http.createServer(app);
+  initializeContainer();
 
   app.use(Sentry.Handlers.requestHandler());
   app.use(
