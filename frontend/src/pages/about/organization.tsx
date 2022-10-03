@@ -7,10 +7,10 @@ import Link from "next/link";
 import Router, { useRouter } from "next/router";
 import React from "react";
 
-import TabPanel from "@components/pages/about/TabPanel";
-import Template from "@components/pages/about/Template";
-import Layout from "@layouts/Layout";
-import { getSortedPosts } from "@utils/posts";
+import TabPanel from "@/components/pages/about/TabPanel";
+import Template from "@/components/pages/about/Template";
+import Layout from "@/layouts/Layout";
+import { getSortedPosts } from "@/utils/posts";
 
 import { NextPageWithLayout } from "../_app";
 

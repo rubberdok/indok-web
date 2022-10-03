@@ -2,11 +2,11 @@ import { Checkbox, Divider, Paper, Stack, Typography } from "@mui/material";
 import { NextPage } from "next";
 import React from "react";
 
-import Calendar from "@components/Calendar";
-import LabeledIcon from "@components/LabeledIcon";
-import useDisabledDates from "@hooks/cabins/useDisabledDates";
-import useResponsive from "@hooks/useResponsive";
-import { Cabin, DatePick } from "@interfaces/cabins";
+import Calendar from "@/components/Calendar";
+import LabeledIcon from "@/components/LabeledIcon";
+import useDisabledDates from "@/hooks/cabins/useDisabledDates";
+import useResponsive from "@/hooks/useResponsive";
+import { Cabin, DatePick } from "@/interfaces/cabins";
 
 interface Props {
   allCabins: Cabin[];

@@ -1,6 +1,6 @@
 import { Grid, Typography } from "@mui/material";
 
-import Cabin from "@public/illustrations/Cabin.svg";
+import Cabin from "@/public/illustrations/Cabin.svg";
 
 import ProfileCardBase from "./ProfileCardBase";
 

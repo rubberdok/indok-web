@@ -1,5 +1,5 @@
-import { Event } from "@interfaces/events";
-import { Listing } from "@interfaces/listings";
+import { Event } from "@/interfaces/events";
+import { Listing } from "@/interfaces/listings";
 
 export interface Organization {
   id: string;

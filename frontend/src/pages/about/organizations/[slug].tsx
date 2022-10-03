@@ -5,10 +5,10 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import ReactMarkdown from "react-markdown";
 
-import * as markdownComponents from "@components/MarkdownForm/components";
-import Title from "@components/Title";
-import Layout from "@layouts/Layout";
-import { Article, getPostBySlug, getPostsSlugs } from "@utils/posts";
+import * as markdownComponents from "@/components/MarkdownForm/components";
+import Title from "@/components/Title";
+import Layout from "@/layouts/Layout";
+import { Article, getPostBySlug, getPostsSlugs } from "@/utils/posts";
 import { NextPageWithLayout } from "src/pages/_app";
 
 const ArticlePage: NextPageWithLayout<InferGetStaticPropsType<typeof getStaticProps>> = ({ post, frontmatter }) => {

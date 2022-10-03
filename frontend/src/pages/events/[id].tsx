@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import React from "react";
 
-import Layout, { RootStyle } from "@layouts/Layout";
+import Layout, { RootStyle } from "@/layouts/Layout";
 
 import EventDetailPage from "../../components/pages/events/EventDetails";
 import { NextPageWithLayout } from "../_app";

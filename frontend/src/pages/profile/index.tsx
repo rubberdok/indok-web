@@ -5,8 +5,8 @@ import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Head from "next/head";
 import { useMemo } from "react";
 
-import { Logout, PermissionRequired } from "@components/Auth";
-import Breadcrumbs from "@components/Breadcrumbs";
+import { Logout, PermissionRequired } from "@/components/Auth";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import {
   CabinsAdmin,
   Event,
@@ -15,12 +15,12 @@ import {
   Organization,
   Personal,
   Report,
-} from "@components/pages/profile/ProfileCard";
-import { UserInfoDocument } from "@generated/graphql";
-import { GET_USER_INFO } from "@graphql/users/queries";
-import Layout from "@layouts/Layout";
-import { addApolloState, initializeApollo } from "@lib/apolloClient";
-import { generateFeideLoginUrl } from "@utils/auth";
+} from "@/components/pages/profile/ProfileCard";
+import { UserInfoDocument } from "@/generated/graphql";
+import { GET_USER_INFO } from "@/graphql/users/queries";
+import Layout from "@/layouts/Layout";
+import { addApolloState, initializeApollo } from "@/lib/apolloClient";
+import { generateFeideLoginUrl } from "@/utils/auth";
 import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "src/theme/constants";
 import { User } from "src/types/users";
 

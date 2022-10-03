@@ -26,9 +26,9 @@ import {
   maxGraduationYear,
   suggestGraduationYear,
   validationSchema,
-} from "@components/pages/profile/UserForm/helpers";
-import { UPDATE_USER } from "@graphql/users/mutations";
-import { EDIT_USER_QUERY } from "@graphql/users/queries";
+} from "@/components/pages/profile/UserForm/helpers";
+import { UPDATE_USER } from "@/graphql/users/mutations";
+import { EDIT_USER_QUERY } from "@/graphql/users/queries";
 import { EditUser } from "src/types/users";
 
 type Props = {

@@ -4,10 +4,10 @@ import { styled } from "@mui/material/styles";
 import Link from "next/link";
 import React from "react";
 
-import { GET_USER } from "@graphql/users/queries";
-import { Organization } from "@interfaces/organizations";
-import { User } from "@interfaces/users";
-import Layout from "@layouts/Layout";
+import { GET_USER } from "@/graphql/users/queries";
+import { Organization } from "@/interfaces/organizations";
+import { User } from "@/interfaces/users";
+import Layout from "@/layouts/Layout";
 import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "src/theme/constants";
 
 import { NextPageWithLayout } from "../_app";

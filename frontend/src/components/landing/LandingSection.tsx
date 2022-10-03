@@ -2,7 +2,7 @@ import { Box, Button, Container, Grid, Typography } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
 
-import Hovedbygget from "@public/static/landing/hovedbygget.webp";
+import Hovedbygget from "@/public/static/landing/hovedbygget.webp";
 
 const LandingSection: React.FC = () => {
   return (

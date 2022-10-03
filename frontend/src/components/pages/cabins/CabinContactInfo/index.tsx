@@ -3,9 +3,9 @@ import { Grid } from "@mui/material";
 import { NextPage } from "next";
 import { Dispatch, SetStateAction } from "react";
 
-import { GET_USER } from "@graphql/users/queries";
-import { Cabin, ContactInfo, ContactInfoValidations, InputFieldsEvent } from "@interfaces/cabins";
-import { User } from "@interfaces/users";
+import { GET_USER } from "@/graphql/users/queries";
+import { Cabin, ContactInfo, ContactInfoValidations, InputFieldsEvent } from "@/interfaces/cabins";
+import { User } from "@/interfaces/users";
 
 import { InputFields } from "../InputFields/InputFields";
 

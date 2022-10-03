@@ -17,10 +17,10 @@ import {
 import dayjs from "dayjs";
 import { useState } from "react";
 
-import { CONFIRM_BOOKING, SEND_EMAIL } from "@graphql/cabins/mutations";
-import { QUERY_ADMIN_ALL_BOOKINGS } from "@graphql/cabins/queries";
-import { BookingFromQuery } from "@interfaces/cabins";
-import { getDecisionEmailProps, toStringChosenCabins } from "@utils/cabins";
+import { CONFIRM_BOOKING, SEND_EMAIL } from "@/graphql/cabins/mutations";
+import { QUERY_ADMIN_ALL_BOOKINGS } from "@/graphql/cabins/queries";
+import { BookingFromQuery } from "@/interfaces/cabins";
+import { getDecisionEmailProps, toStringChosenCabins } from "@/utils/cabins";
 
 import DeclineBookingDialog from "./DeclineBookingDialog";
 import InlineTableCell from "./InlineTableCell";

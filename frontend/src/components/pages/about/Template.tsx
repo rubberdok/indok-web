@@ -2,7 +2,7 @@ import { Container, Divider, Hidden, Stack, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import React from "react";
 
-import { RootStyle } from "@layouts/Layout";
+import { RootStyle } from "@/layouts/Layout";
 
 import AboutPageArrow from "./AboutPageArrow";
 import AboutSidebar from "./AboutSidebar";

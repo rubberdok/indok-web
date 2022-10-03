@@ -2,8 +2,8 @@ import { Button, Container } from "@mui/material";
 import Link from "next/link";
 import React from "react";
 
-import EventCreator from "@components/pages/events/EventCreator";
-import Layout, { RootStyle } from "@layouts/Layout";
+import EventCreator from "@/components/pages/events/EventCreator";
+import Layout, { RootStyle } from "@/layouts/Layout";
 
 import { NextPageWithLayout } from "../_app";
 

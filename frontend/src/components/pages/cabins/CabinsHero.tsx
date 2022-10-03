@@ -1,7 +1,8 @@
 import React from "react";
 
-import Title from "@components/Title";
-import cabin from "@public/img/hytte.jpg";
+import Title from "@/components/Title";
+
+import cabin from "@/public/img/hytte.jpg";
 
 const CabinsHero: React.VFC = () => {
   return (

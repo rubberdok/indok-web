@@ -2,9 +2,9 @@ import { Chip, Table, TableBody, TableCell, TableContainer, TableHead, TableRow 
 import dayjs from "dayjs";
 import Link from "next/link";
 
-import { Event } from "@interfaces/events";
-import { Organization } from "@interfaces/organizations";
-import { HeaderValuePair } from "@interfaces/utils";
+import { Event } from "@/interfaces/events";
+import { Organization } from "@/interfaces/organizations";
+import { HeaderValuePair } from "@/interfaces/utils";
 
 const eventFields: HeaderValuePair<Event>[] = [
   { header: "Navn", field: "title" },

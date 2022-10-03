@@ -3,9 +3,9 @@ import { GetApp } from "@mui/icons-material";
 import { Button, ButtonGroup, Grid, TextField, Typography, CircularProgress } from "@mui/material";
 import { useState } from "react";
 
-import { QUERY_ATTENDEE_REPORTS, QUERY_ATTENDEE_REPORT_ORG } from "@graphql/events/queries";
-import { Organization } from "@interfaces/organizations";
-import { promptDownloadFromPayload } from "@utils/exports";
+import { QUERY_ATTENDEE_REPORTS, QUERY_ATTENDEE_REPORT_ORG } from "@/graphql/events/queries";
+import { Organization } from "@/interfaces/organizations";
+import { promptDownloadFromPayload } from "@/utils/exports";
 
 type Props = {
   organization: Organization;

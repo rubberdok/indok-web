@@ -5,13 +5,13 @@ import dayjs from "dayjs";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
-import { PermissionRequired } from "@components/Auth";
-import TabPanel from "@components/pages/about/TabPanel";
-import AdminCabinTable from "@components/pages/cabins/Admin/AdminCabinTable";
-import { QUERY_ADMIN_ALL_BOOKINGS } from "@graphql/cabins/queries";
-import useResponsive from "@hooks/useResponsive";
-import { BookingFromQuery } from "@interfaces/cabins";
-import Layout, { RootStyle } from "@layouts/Layout";
+import { PermissionRequired } from "@/components/Auth";
+import TabPanel from "@/components/pages/about/TabPanel";
+import AdminCabinTable from "@/components/pages/cabins/Admin/AdminCabinTable";
+import { QUERY_ADMIN_ALL_BOOKINGS } from "@/graphql/cabins/queries";
+import useResponsive from "@/hooks/useResponsive";
+import { BookingFromQuery } from "@/interfaces/cabins";
+import Layout, { RootStyle } from "@/layouts/Layout";
 import { NextPageWithLayout } from "src/pages/_app";
 
 /*

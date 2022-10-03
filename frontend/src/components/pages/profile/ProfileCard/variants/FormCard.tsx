@@ -1,6 +1,6 @@
 import { Grid, Typography } from "@mui/material";
 
-import Form from "@public/illustrations/Form.svg";
+import Form from "@/public/illustrations/Form.svg";
 
 import ProfileCardBase from "./ProfileCardBase";
 

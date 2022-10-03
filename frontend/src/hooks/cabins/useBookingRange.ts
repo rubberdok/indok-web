@@ -2,9 +2,9 @@ import { QueryResult, useQuery } from "@apollo/client";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 
-import { getDateRange } from "@components/Calendar/helpers";
-import { QUERY_ALL_BOOKINGS } from "@graphql/cabins/queries";
-import { PublicBooking } from "@interfaces/cabins";
+import { getDateRange } from "@/components/Calendar/helpers";
+import { QUERY_ALL_BOOKINGS } from "@/graphql/cabins/queries";
+import { PublicBooking } from "@/interfaces/cabins";
 
 interface AllBookingsQuery {
   allBookings: PublicBooking[];

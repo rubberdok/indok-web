@@ -22,13 +22,13 @@ import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
-import OrderCellContent from "@components/pages/ecommerce/OrderCellContent";
-import { UserInfoDocument } from "@generated/graphql";
-import { GET_USER_ORDERS } from "@graphql/ecommerce/queries";
-import { Order } from "@interfaces/ecommerce";
-import { HeaderValuePair } from "@interfaces/utils";
-import Layout, { RootStyle } from "@layouts/Layout";
-import { addApolloState, initializeApollo } from "@lib/apolloClient";
+import OrderCellContent from "@/components/pages/ecommerce/OrderCellContent";
+import { UserInfoDocument } from "@/generated/graphql";
+import { GET_USER_ORDERS } from "@/graphql/ecommerce/queries";
+import { Order } from "@/interfaces/ecommerce";
+import { HeaderValuePair } from "@/interfaces/utils";
+import Layout, { RootStyle } from "@/layouts/Layout";
+import { addApolloState, initializeApollo } from "@/lib/apolloClient";
 
 import { NextPageWithLayout } from "../_app";
 

@@ -6,7 +6,7 @@ import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import Link from "next/link";
 
-import { Listing } from "@interfaces/listings";
+import { Listing } from "@/interfaces/listings";
 
 dayjs.extend(timezone);
 dayjs.extend(utc);

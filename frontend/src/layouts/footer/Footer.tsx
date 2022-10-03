@@ -6,10 +6,11 @@ import Image from "next/image";
 import NextLink, { LinkProps } from "next/link";
 import { ReactNode, useState } from "react";
 
-import Logo from "@components/Logo";
-import Vercel from "@components/Vercel";
-import useResponsive from "@hooks/useResponsive";
-import rubberdokLogo from "@public/img/rubberdok_logo_black.svg";
+import Logo from "@/components/Logo";
+import Vercel from "@/components/Vercel";
+import useResponsive from "@/hooks/useResponsive";
+
+import rubberdokLogo from "@/public/img/rubberdok_logo_black.svg";
 
 const HallOfFame = dynamic(() => import("./HallOfFame"));
 

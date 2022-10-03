@@ -3,10 +3,10 @@ import { Alert, Button, Grid, Snackbar, TextField, Typography } from "@mui/mater
 import { useFormik } from "formik";
 import { useEffect, useState } from "react";
 
-import { UPDATE_CABIN } from "@graphql/cabins/mutations";
-import { QUERY_CABINS } from "@graphql/cabins/queries";
-import { Cabin } from "@interfaces/cabins";
-import { cabinInfoValidationSchema } from "@utils/cabins";
+import { UPDATE_CABIN } from "@/graphql/cabins/mutations";
+import { QUERY_CABINS } from "@/graphql/cabins/queries";
+import { Cabin } from "@/interfaces/cabins";
+import { cabinInfoValidationSchema } from "@/utils/cabins";
 
 type FormikCabinValues = {
   oksenInternalPrice?: number;

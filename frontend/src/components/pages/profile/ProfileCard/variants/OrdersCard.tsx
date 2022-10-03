@@ -1,6 +1,6 @@
 import { Grid, Typography } from "@mui/material";
 
-import CreditCard from "@public/illustrations/CreditCard.svg";
+import CreditCard from "@/public/illustrations/CreditCard.svg";
 
 import ProfileCardBase from "./ProfileCardBase";
 

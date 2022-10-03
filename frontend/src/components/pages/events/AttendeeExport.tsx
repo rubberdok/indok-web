@@ -3,8 +3,8 @@ import { GetApp } from "@mui/icons-material";
 import { Box, Button, ButtonGroup, CircularProgress, Typography } from "@mui/material";
 import React from "react";
 
-import { QUERY_ATTENDEE_REPORT } from "@graphql/events/queries";
-import { promptDownloadFromPayload } from "@utils/exports";
+import { QUERY_ATTENDEE_REPORT } from "@/graphql/events/queries";
+import { promptDownloadFromPayload } from "@/utils/exports";
 
 const AttendeeExport: React.FC<{ eventId: number }> = ({ eventId }) => {
   const [getAttendeeReport, { loading: attendeeReportLoading }] = useLazyQuery(QUERY_ATTENDEE_REPORT, {

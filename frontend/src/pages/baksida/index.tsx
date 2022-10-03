@@ -16,11 +16,12 @@ import { amber, green, red } from "@mui/material/colors";
 import Head from "next/head";
 import { useRef } from "react";
 
-import ContactInfo from "@components/pages/baksida/ContactInfo";
-import Layout, { RootStyle } from "@layouts/Layout";
-import adrian from "@public/img/adrian.jpg";
-import Amund from "@public/img/Amund.jpg";
-import Laila from "@public/img/Laila.jpg";
+import ContactInfo from "@/components/pages/baksida/ContactInfo";
+import Layout, { RootStyle } from "@/layouts/Layout";
+
+import adrian from "@/public/img/adrian.jpg";
+import Amund from "@/public/img/Amund.jpg";
+import Laila from "@/public/img/Laila.jpg";
 
 import { NextPageWithLayout } from "../_app";
 
