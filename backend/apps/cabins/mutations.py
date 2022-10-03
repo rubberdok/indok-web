@@ -1,4 +1,5 @@
 import graphene
+from graphene import NonNull
 from decorators import permission_required
 
 from apps.cabins.models import Booking as BookingModel
@@ -25,7 +26,7 @@ class BookingInput(graphene.InputObjectType):
     check_out = graphene.Date()
     internal_participants = graphene.Int()
     external_participants = graphene.Int()
-    cabins = graphene.List(graphene.Int)
+    cabins = graphene.List(NonNull(graphene.Int))
     extra_info = graphene.String(required=False)
 
 

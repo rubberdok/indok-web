@@ -1,6 +1,7 @@
 from typing import List, TypedDict, Union
 
 import graphene
+from graphene import NonNull
 from graphene_django import DjangoObjectType
 from decorators import login_required, PermissionDenied
 
@@ -65,9 +66,9 @@ class SignUpType(DjangoObjectType):
 class EventType(DjangoObjectType):
     user_attendance = graphene.Field(UserAttendingType)
     is_full = graphene.Boolean(source="is_full")
-    users_on_waiting_list = graphene.List(SignUpType)
-    users_attending = graphene.List(SignUpType)
-    allowed_grade_years = graphene.List(graphene.Int)
+    users_on_waiting_list = graphene.List(NonNull(SignUpType))
+    users_attending = graphene.List(NonNull(SignUpType))
+    allowed_grade_years = graphene.List(NonNull(graphene.Int))
     available_slots = graphene.Int()
     product = graphene.Field(ProductType)
 

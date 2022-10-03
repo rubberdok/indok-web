@@ -1,4 +1,5 @@
 import graphene
+from graphene import NonNull
 
 from .mutations import CreateBlog, DeleteBlog, UpdateBlog, CreateBlogPost, DeleteBlogPost, UpdateBlogPost
 from .types import BlogType, BlogPostType
@@ -15,7 +16,7 @@ class BlogMutations(graphene.ObjectType):
 
 
 class BlogQueries(graphene.ObjectType, BlogResolvers):
-    all_blogs = graphene.List(BlogType)
+    all_blogs = graphene.List(NonNull(BlogType))
     blog = graphene.Field(BlogType, blog_id=graphene.ID(required=True))
-    all_blog_posts = graphene.List(BlogPostType)
+    all_blog_posts = graphene.List(NonNull(BlogPostType))
     blog_post = graphene.Field(BlogPostType, blog_post_id=graphene.ID(required=True))

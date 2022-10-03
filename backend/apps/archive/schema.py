@@ -1,4 +1,5 @@
 import graphene
+from graphene import NonNull
 
 from .mutations import (
     CreateArchiveDocument,
@@ -16,12 +17,12 @@ class ArchiveMutations(graphene.ObjectType):
 
 
 class ArchiveQueries(graphene.ObjectType, ArchiveDocumentResolvers):
-    featured_archive = graphene.List(graphene.NonNull(ArchiveDocumentType), required=True)
+    featured_archive = graphene.List(NonNull(ArchiveDocumentType), required=True)
     archive_by_types = graphene.List(
-        graphene.NonNull(ArchiveDocumentType),
+        NonNull(ArchiveDocumentType),
         type_doc=graphene.List(graphene.String, required=True),
         year=graphene.Int(required=False),
         names=graphene.String(required=False),
         required=True,
     )
-    available_years = graphene.List(graphene.NonNull(graphene.String), required=True)
+    available_years = graphene.List(NonNull(graphene.String), required=True)

@@ -1,4 +1,5 @@
 import graphene
+from graphene import NonNull
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied, ValidationError
@@ -31,7 +32,7 @@ class BaseEventInput:
     has_extra_information = graphene.Boolean(required=False)
     contact_email = graphene.String(required=False)
     binding_signup = graphene.Boolean(required=False)
-    allowed_grade_years = graphene.List(graphene.Int)
+    allowed_grade_years = graphene.List(NonNull(graphene.Int))
 
 
 class CreateEventInput(BaseEventInput, graphene.InputObjectType):
@@ -336,7 +337,7 @@ class SendEventEmails(graphene.Mutation):
 
     class Arguments:
         event_id = graphene.ID(required=True)
-        receiver_emails = graphene.List(graphene.String)
+        receiver_emails = graphene.List(NonNull(graphene.String))
         content = graphene.String()
         subject = graphene.String(required=True)
 

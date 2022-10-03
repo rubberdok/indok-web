@@ -1,4 +1,5 @@
 import graphene
+from graphene import NonNull
 
 from .mutations.forms import CreateForm, DeleteForm, UpdateForm
 from .mutations.questions import (
@@ -20,10 +21,10 @@ class FormQueries(
     ResponseResolvers,
 ):
     form = graphene.Field(FormType, form_id=graphene.ID())
-    forms = graphene.List(FormType)
+    forms = graphene.List(NonNull(FormType))
 
     response = graphene.Field(ResponseType, form_id=graphene.ID(required=True), response_id=graphene.ID())
-    responses = graphene.List(ResponseType, form_id=graphene.ID(required=True))
+    responses = graphene.List(NonNull(ResponseType), form_id=graphene.ID(required=True))
 
 
 class FormMutations(graphene.ObjectType):
