@@ -476,6 +476,7 @@ An outline of how a developer may work with this project:
   - In VSCode:
     - Go to the Source Control tab on the left
     - Click `...` -> `Push`
+      - If it asks if you want to publish your branch, click `OK`
 - Make a Pull Request on GitHub
   - Go to [github.com/rubberdok/indok-web/branches](https://github.com/rubberdok/indok-web/branches)
   - Click `New Pull Request` on your branch
