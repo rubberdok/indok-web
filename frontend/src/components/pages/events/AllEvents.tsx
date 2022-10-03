@@ -34,7 +34,7 @@ const AllEvents: React.FC = () => {
     error: eventsError,
     data: eventsData,
     refetch,
-  } = useQuery<{ allEvents: Event[] }>(GET_EVENTS, {
+  } = useQuery(AllEventsDocument, {
     variables: filters,
   });
 
@@ -42,12 +42,17 @@ const AllEvents: React.FC = () => {
     loading: defaultEventsLoading,
     error: defaultEventsError,
     data: defaultEventsData,
-  } = useQuery<{ defaultEvents: Event[] }>(GET_DEFAULT_EVENTS);
+  } = useQuery(DefaultEventsDocument);
+
   const error = showDefaultEvents ? defaultEventsError : eventsError;
   const loading = showDefaultEvents ? defaultEventsLoading : eventsLoading;
-  const data = (showDefaultEvents ? defaultEventsData?.defaultEvents : eventsData?.allEvents)?.filter((event) =>
-    userData?.user ? event.allowedGradeYears.includes(userData.user.gradeYear) : true
-  );
+  const data = (showDefaultEvents ? defaultEventsData?.defaultEvents : eventsData?.allEvents)?.filter((event) => {
+    if (userData?.user && event?.allowedGradeYears) {
+      return event.allowedGradeYears.includes(userData.user.gradeYear);
+    } else {
+      return true;
+    }
+  });
 
   if (error) return <Typography variant="body1">Kunne ikke hente arrangementer.</Typography>;
 
