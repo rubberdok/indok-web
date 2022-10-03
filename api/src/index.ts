@@ -1,6 +1,6 @@
-import "reflect-metadata";
 import { randomUUID } from "crypto";
 import http from "http";
+import "reflect-metadata";
 
 import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@apollo/server/express4";
@@ -14,7 +14,7 @@ import session from "express-session";
 import { container } from "tsyringe";
 
 import { env } from "@/config";
-import { initializeContainer } from "@/container";
+import "@/container";
 import { resolvers, typeDefs } from "@/graphql";
 import { IContext, IContextProvider, Type as ContextProviderType } from "@/graphql/context";
 import { formatError } from "@/lib/apolloServer";
@@ -24,8 +24,6 @@ Sentry.init({
   dsn: env.SENTRY_DSN,
   tracesSampleRate: env.SENTRY_TRACES_SAMPLE_RATE,
 });
-
-initializeContainer();
 
 const start = async () => {
   const app = express();

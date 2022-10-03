@@ -8,17 +8,15 @@ import { Context } from "@/graphql";
 import * as Repositories from "@/repositories";
 import * as Services from "@/services";
 
-export function initializeContainer() {
-  // register Prisma
-  container.register<PrismaClient>(CoreTypes.Prisma, { useValue: Prisma });
+// register Prisma
+container.register<PrismaClient>(CoreTypes.Prisma, { useValue: Prisma });
 
-  // register Postmark
-  container.register<IMailClient>(CoreTypes.MailClient, { useValue: Postmark });
+// register Postmark
+container.register<IMailClient>(CoreTypes.MailClient, { useValue: Postmark });
 
-  // register Context
-  Context.register(container);
-  // register Repositories
-  Repositories.register(container);
-  // register Services
-  Services.register(container);
-}
+// register Context
+Context.register(container);
+// register Repositories
+Repositories.register(container);
+// register Services
+Services.register(container);
