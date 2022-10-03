@@ -4,8 +4,7 @@ import React from "react";
 
 import EventCreator from "@/components/pages/events/EventCreator";
 import Layout, { RootStyle } from "@/layouts/Layout";
-
-import { NextPageWithLayout } from "../_app";
+import { NextPageWithLayout } from "@/pages/_app";
 
 /**
  * Component for showing the create event page

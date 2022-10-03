@@ -3,7 +3,7 @@ import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 
 import { GET_USER_INFO } from "@/graphql/users/queries";
 import { addApolloState, initializeApollo } from "@/lib/apolloClient";
-import { User } from "src/types/users";
+import { User } from "@/types/users";
 
 const HealthPage = ({ user }: InferGetServerSidePropsType<typeof getServerSideProps>): JSX.Element => {
   const { data } = useQuery<{ user: User }>(GET_USER_INFO, {

@@ -1,6 +1,6 @@
 import { Grid, Skeleton, Typography } from "@mui/material";
 
-import { User } from "src/types/users";
+import { User } from "@/types/users";
 import Profile from "~/public/illustrations/Profile.svg";
 
 import ProfileCardBase from "./ProfileCardBase";

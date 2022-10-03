@@ -37,7 +37,7 @@ import { ADMIN_GET_EVENT } from "@/graphql/events/queries";
 import { Event, SignUp } from "@/interfaces/events";
 import { HeaderValuePair } from "@/interfaces/utils";
 import Layout from "@/layouts/Layout";
-import { NextPageWithLayout } from "src/pages/_app";
+import { NextPageWithLayout } from "@/pages/_app";
 
 const signUpFields: HeaderValuePair<SignUp>[] = [
   { header: "Navn", field: "user" },

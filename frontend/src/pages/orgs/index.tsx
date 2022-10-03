@@ -8,9 +8,8 @@ import { GET_USER } from "@/graphql/users/queries";
 import { Organization } from "@/interfaces/organizations";
 import { User } from "@/interfaces/users";
 import Layout from "@/layouts/Layout";
-import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "src/theme/constants";
-
-import { NextPageWithLayout } from "../_app";
+import { NextPageWithLayout } from "@/pages/_app";
+import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "@/theme/constants";
 
 const RootStyle = styled("div")(({ theme }) => ({
   paddingTop: HEADER_MOBILE_HEIGHT,

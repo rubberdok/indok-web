@@ -6,9 +6,8 @@ import AnswerForm from "@/components/pages/forms/AnswerForm";
 import { FORM_WITH_QUESTIONS_AND_ANSWERS } from "@/graphql/forms/queries";
 import { Form } from "@/interfaces/forms";
 import Layout, { RootStyle } from "@/layouts/Layout";
+import { NextPageWithLayout } from "@/pages/_app";
 import { generateFeideLoginUrl } from "@/utils/auth";
-
-import { NextPageWithLayout } from "../_app";
 
 const FormPage: NextPageWithLayout = () => {
   const router = useRouter();

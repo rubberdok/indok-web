@@ -15,8 +15,8 @@ import { LISTING_RESPONSES } from "@/graphql/listings/queries";
 import { Form, Response } from "@/interfaces/forms";
 import { ListingWithForm } from "@/interfaces/listings";
 import Layout from "@/layouts/Layout";
-import { NextPageWithLayout } from "src/pages/_app";
-import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "src/theme/constants";
+import { NextPageWithLayout } from "@/pages/_app";
+import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "@/theme/constants";
 
 /**
  * Page for organization admins to administer a listing, edit its application form, and review applicants.

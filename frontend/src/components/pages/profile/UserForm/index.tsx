@@ -29,7 +29,7 @@ import {
 } from "@/components/pages/profile/UserForm/helpers";
 import { UPDATE_USER } from "@/graphql/users/mutations";
 import { EDIT_USER_QUERY } from "@/graphql/users/queries";
-import { EditUser } from "src/types/users";
+import { EditUser } from "@/types/users";
 
 type Props = {
   kind: "register" | "update";

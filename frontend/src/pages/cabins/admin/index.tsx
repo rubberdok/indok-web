@@ -12,7 +12,7 @@ import { QUERY_ADMIN_ALL_BOOKINGS } from "@/graphql/cabins/queries";
 import useResponsive from "@/hooks/useResponsive";
 import { BookingFromQuery } from "@/interfaces/cabins";
 import Layout, { RootStyle } from "@/layouts/Layout";
-import { NextPageWithLayout } from "src/pages/_app";
+import { NextPageWithLayout } from "@/pages/_app";
 
 /*
 Page for booking admininistration showing all upcoming bookings and buttons for actions on these bookings.

@@ -10,7 +10,7 @@ import OrganizationHero from "@/components/pages/organization/OrganizationHero";
 import { GET_ORGANIZATION } from "@/graphql/orgs/queries";
 import { Organization } from "@/interfaces/organizations";
 import Layout from "@/layouts/Layout";
-import { NextPageWithLayout } from "src/pages/_app";
+import { NextPageWithLayout } from "@/pages/_app";
 
 const RootStyle = styled("div")(({ theme }) => ({
   margin: theme.spacing(4, 0),

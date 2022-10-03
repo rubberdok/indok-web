@@ -11,8 +11,7 @@ import Title from "@/components/Title";
 import { ListingDocument } from "@/generated/graphql";
 import Layout from "@/layouts/Layout";
 import { addApolloState, initializeApollo } from "@/lib/apolloClient";
-
-import { NextPageWithLayout } from "../_app";
+import { NextPageWithLayout } from "@/pages/_app";
 
 // page to show details about a listing and its organization
 const ListingPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ listing }) => {

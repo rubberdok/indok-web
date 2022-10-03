@@ -29,8 +29,7 @@ import { Order } from "@/interfaces/ecommerce";
 import { HeaderValuePair } from "@/interfaces/utils";
 import Layout, { RootStyle } from "@/layouts/Layout";
 import { addApolloState, initializeApollo } from "@/lib/apolloClient";
-
-import { NextPageWithLayout } from "../_app";
+import { NextPageWithLayout } from "@/pages/_app";
 
 const orderFields: HeaderValuePair<Order>[] = [
   { header: "Ordre-ID", field: "id" },

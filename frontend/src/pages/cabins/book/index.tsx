@@ -23,6 +23,7 @@ import { QUERY_CABINS } from "@/graphql/cabins/queries";
 import useResponsive from "@/hooks/useResponsive";
 import { Cabin, ContactInfo, ContactInfoValidations, DatePick, ModalData } from "@/interfaces/cabins";
 import Layout from "@/layouts/Layout";
+import { NextPageWithLayout } from "@/pages/_app";
 import {
   allValuesFilled,
   cabinOrderStepReady,
@@ -30,7 +31,6 @@ import {
   isFormValid,
   validateInputForm,
 } from "@/utils/cabins";
-import { NextPageWithLayout } from "src/pages/_app";
 
 type StepReady = Record<number, { ready: boolean; errortext: string }>;
 

@@ -7,7 +7,7 @@ import BookingSemesterPicker from "@/components/pages/cabins/Admin/BookingSemest
 import CabinInfoPicker from "@/components/pages/cabins/Admin/CabinInfoPicker";
 import useResponsive from "@/hooks/useResponsive";
 import Layout, { RootStyle } from "@/layouts/Layout";
-import { NextPageWithLayout } from "src/pages/_app";
+import { NextPageWithLayout } from "@/pages/_app";
 
 const SettingsPage: NextPageWithLayout = () => {
   const isMobile = useResponsive({ query: "down", key: "md" });

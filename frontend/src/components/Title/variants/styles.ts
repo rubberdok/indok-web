@@ -2,7 +2,7 @@ import { CSSProperties } from "@emotion/serialize";
 import { Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
-import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "src/theme/constants";
+import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "@/theme/constants";
 
 type RootProps = {
   disableGutters?: boolean;

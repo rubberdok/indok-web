@@ -20,11 +20,10 @@ import { UserInfoDocument } from "@/generated/graphql";
 import { GET_USER_INFO } from "@/graphql/users/queries";
 import Layout from "@/layouts/Layout";
 import { addApolloState, initializeApollo } from "@/lib/apolloClient";
+import { NextPageWithLayout } from "@/pages/_app";
+import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "@/theme/constants";
+import { User } from "@/types/users";
 import { generateFeideLoginUrl } from "@/utils/auth";
-import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "src/theme/constants";
-import { User } from "src/types/users";
-
-import { NextPageWithLayout } from "../_app";
 
 const ID_PREFIX = "profile-";
 

@@ -9,7 +9,7 @@ import {
 import Head from "next/head";
 import React, { useMemo } from "react";
 
-import { getDesignTokens } from "src/theme";
+import { getDesignTokens } from "@/theme";
 
 interface Props {
   children: React.ReactNode;
