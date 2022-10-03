@@ -1,5 +1,5 @@
 import { Booking, BookingStatus, Cabin } from "@prisma/client";
-import { inject, injectable } from "inversify";
+import { inject, injectable } from "tsyringe";
 
 import { ValidationError } from "@/core/errors";
 import { ICabinRepository, Types as RepositoryTypes } from "@/repositories";

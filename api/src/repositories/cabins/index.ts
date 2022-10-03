@@ -1,5 +1,5 @@
 import { Booking, Cabin, Prisma } from "@prisma/client";
-import { inject, injectable } from "inversify";
+import { inject, injectable } from "tsyringe";
 
 import { CoreTypes, Database } from "@/core";
 

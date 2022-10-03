@@ -2,8 +2,8 @@ import "reflect-metadata";
 
 import { User } from "@prisma/client";
 import dayjs from "dayjs";
-import { Container } from "inversify";
 import { DeepMockProxy, mockDeep } from "jest-mock-extended";
+import { container as _container } from "tsyringe";
 
 import { IUserRepository, Types as RepositoryTypes } from "@/repositories";
 import { Types as ServiceTypes } from "@/services";
@@ -15,15 +15,12 @@ import { TestCase } from "./interfaces";
 const dummyUser = mockDeep<User>();
 
 const time = new Date(`${dayjs().year() + 1}-01-01`);
-let container: Container;
+const container = _container.createChildContainer();
 
 beforeAll(() => {
-  container = new Container();
-  container.unbindAll();
-
   const mockUserService = mockDeep<IUserRepository>();
-  container.bind<DeepMockProxy<IUserRepository>>(RepositoryTypes.UserRepository).toConstantValue(mockUserService);
-  container.bind<IUserService>(ServiceTypes.UserService).to(UserService);
+  container.register<DeepMockProxy<IUserRepository>>(RepositoryTypes.UserRepository, { useValue: mockUserService });
+  container.register<IUserService>(ServiceTypes.UserService, { useClass: UserService });
   jest.useFakeTimers().setSystemTime(time);
 });
 
@@ -137,8 +134,8 @@ describe("UserService", () => {
   ];
 
   test.each(testCases)("should $name", async ({ existing, expected, input, updateInput }) => {
-    const repo = container.get<DeepMockProxy<IUserRepository>>(RepositoryTypes.UserRepository);
-    const service = container.get<IUserService>(ServiceTypes.UserService);
+    const repo = container.resolve<DeepMockProxy<IUserRepository>>(RepositoryTypes.UserRepository);
+    const service = container.resolve<IUserService>(ServiceTypes.UserService);
     repo.get.mockReturnValueOnce(Promise.resolve(existing));
     repo.update.mockReturnValueOnce(Promise.resolve(expected));
 
@@ -149,8 +146,8 @@ describe("UserService", () => {
   });
 
   it("logging in should set lastLogin", async () => {
-    const repo = container.get<DeepMockProxy<IUserRepository>>(RepositoryTypes.UserRepository);
-    const service = container.get<IUserService>(ServiceTypes.UserService);
+    const repo = container.resolve<DeepMockProxy<IUserRepository>>(RepositoryTypes.UserRepository);
+    const service = container.resolve<IUserService>(ServiceTypes.UserService);
     repo.update.mockReturnValueOnce(Promise.resolve(dummyUser));
 
     await service.login(dummyUser.id);
