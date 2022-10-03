@@ -54,8 +54,8 @@ export class FeideService implements IAuthService {
 
       return this.userService.create({
         email,
-        firstName,
-        lastName,
+        firstName: firstName ?? "",
+        lastName: lastName ?? "",
         feideId,
         username,
       });
