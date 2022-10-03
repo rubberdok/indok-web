@@ -9,7 +9,8 @@ import Image from "next/future/image";
 import Link from "next/link";
 import React from "react";
 
-import { ListingDocument } from "@generated/graphql";
+import { ListingDocument } from "@/generated/graphql";
+
 dayjs.extend(timezone);
 dayjs.extend(utc);
 dayjs.tz.setDefault("Europe/Oslo");

@@ -4,13 +4,13 @@ import { styled } from "@mui/material/styles";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
-import OrgEvents from "@components/pages/events/org/OrgEvents";
-import OrganizationListings from "@components/pages/listings/organization/OrganizationListings";
-import OrganizationHero from "@components/pages/organization/OrganizationHero";
-import { GET_ORGANIZATION } from "@graphql/orgs/queries";
-import { Organization } from "@interfaces/organizations";
-import Layout from "@layouts/Layout";
-import { NextPageWithLayout } from "src/pages/_app";
+import OrgEvents from "@/components/pages/events/org/OrgEvents";
+import OrganizationListings from "@/components/pages/listings/organization/OrganizationListings";
+import OrganizationHero from "@/components/pages/organization/OrganizationHero";
+import { GET_ORGANIZATION } from "@/graphql/orgs/queries";
+import { Organization } from "@/interfaces/organizations";
+import Layout from "@/layouts/Layout";
+import { NextPageWithLayout } from "@/pages/_app";
 
 const RootStyle = styled("div")(({ theme }) => ({
   margin: theme.spacing(4, 0),

@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
-import { FORM_FRAGMENT } from "@graphql/forms/fragments";
-import { LISTING_FRAGMENT, LISTING_RESPONSES_FRAGMENT } from "@graphql/listings/fragments";
+import { FORM_FRAGMENT } from "@/graphql/forms/fragments";
+import { LISTING_FRAGMENT, LISTING_RESPONSES_FRAGMENT } from "@/graphql/listings/fragments";
 
 export const LISTINGS = gql`
   ${LISTING_FRAGMENT}

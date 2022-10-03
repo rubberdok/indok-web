@@ -1,5 +1,5 @@
-import { Form } from "@interfaces/forms";
-import { Organization } from "@interfaces/organizations";
+import { Form } from "@/interfaces/forms";
+import { Organization } from "@/interfaces/organizations";
 
 export interface Listing {
   id: string;

@@ -4,9 +4,9 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useMemo } from "react";
 
-import { GET_USER_INFO } from "@graphql/users/queries";
-import { UserInfo } from "@interfaces/users";
-import { generateFeideLoginUrl } from "@utils/auth";
+import { GET_USER_INFO } from "@/graphql/users/queries";
+import { UserInfo } from "@/interfaces/users";
+import { generateFeideLoginUrl } from "@/utils/auth";
 
 type Props = {
   redirect?: boolean;

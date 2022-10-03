@@ -1,7 +1,7 @@
 import { Checkbox, FormControlLabel, FormGroup } from "@mui/material";
 import { useEffect, useState } from "react";
 
-import { Option, Question } from "@interfaces/forms";
+import { Option, Question } from "@/interfaces/forms";
 
 /**
  * Component to answer questions of the Checkboxes type.

@@ -16,21 +16,21 @@ import {
 import { styled } from "@mui/material/styles";
 import React, { useEffect, useState } from "react";
 
-import ContractDialog from "@components/pages/cabins/Popup/ContractDialog";
-import StepComponent from "@components/pages/cabins/StepComponent";
-import { CREATE_BOOKING, SEND_EMAIL } from "@graphql/cabins/mutations";
-import { QUERY_CABINS } from "@graphql/cabins/queries";
-import useResponsive from "@hooks/useResponsive";
-import { Cabin, ContactInfo, ContactInfoValidations, DatePick, ModalData } from "@interfaces/cabins";
-import Layout from "@layouts/Layout";
+import ContractDialog from "@/components/pages/cabins/Popup/ContractDialog";
+import StepComponent from "@/components/pages/cabins/StepComponent";
+import { CREATE_BOOKING, SEND_EMAIL } from "@/graphql/cabins/mutations";
+import { QUERY_CABINS } from "@/graphql/cabins/queries";
+import useResponsive from "@/hooks/useResponsive";
+import { Cabin, ContactInfo, ContactInfoValidations, DatePick, ModalData } from "@/interfaces/cabins";
+import Layout from "@/layouts/Layout";
+import { NextPageWithLayout } from "@/pages/_app";
 import {
   allValuesFilled,
   cabinOrderStepReady,
   generateEmailAndBookingInput,
   isFormValid,
   validateInputForm,
-} from "@utils/cabins";
-import { NextPageWithLayout } from "src/pages/_app";
+} from "@/utils/cabins";
 
 type StepReady = Record<number, { ready: boolean; errortext: string }>;
 

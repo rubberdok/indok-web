@@ -6,7 +6,7 @@ import { GetServerSidePropsContext } from "next";
 import { AppProps } from "next/app";
 import { useMemo } from "react";
 
-import { config } from "@utils/config";
+import { config } from "@/utils/config";
 
 export const APOLLO_STATE_PROP_NAME = "__APOLLO_STATE__";
 

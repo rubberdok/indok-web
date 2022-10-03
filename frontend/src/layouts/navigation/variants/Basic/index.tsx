@@ -1,8 +1,8 @@
 import { Box, Stack } from "@mui/material";
 import { useRouter } from "next/router";
 
-import { PermissionRequired } from "@components/Auth";
-import LoginButton from "@layouts/components/LoginButton";
+import { PermissionRequired } from "@/components/Auth";
+import LoginButton from "@/layouts/components/LoginButton";
 
 import { NavigationProps } from "../../types";
 

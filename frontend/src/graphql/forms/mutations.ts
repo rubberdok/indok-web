@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 
-import { FORM_RESPONSES_FRAGMENT, QUESTION_ANSWERS_FRAGMENT } from "@graphql/forms/fragments";
+import { FORM_RESPONSES_FRAGMENT, QUESTION_ANSWERS_FRAGMENT } from "@/graphql/forms/fragments";
 
 export const CREATE_FORM = gql`
   ${FORM_RESPONSES_FRAGMENT}

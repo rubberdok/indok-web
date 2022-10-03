@@ -2,7 +2,7 @@ import { Box, Button, Container, Grid, Typography } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
 
-import Social from "@public/img/gang.jpg";
+import Social from "~/public/img/gang.jpg";
 
 const LandingListings: React.FC = () => {
   return (

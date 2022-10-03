@@ -1,7 +1,7 @@
 import { Card, CardContent, FormHelperText, Grid, Typography } from "@mui/material";
 
-import FormAnswer from "@components/pages/forms/formAdmin/FormAnswer";
-import { Form, Response } from "@interfaces/forms";
+import FormAnswer from "@/components/pages/forms/formAdmin/FormAnswer";
+import { Form, Response } from "@/interfaces/forms";
 
 /**
  * Component to see a user's answers to a form.

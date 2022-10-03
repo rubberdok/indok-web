@@ -3,9 +3,9 @@ import { PersonOutlineRounded } from "@mui/icons-material";
 import { Button } from "@mui/material";
 import NextLink from "next/link";
 
-import LoginRequired from "@components/Auth/LoginRequired";
-import { GET_USER_INFO } from "@graphql/users/queries";
-import { UserInfo } from "@interfaces/users";
+import LoginRequired from "@/components/Auth/LoginRequired";
+import { GET_USER_INFO } from "@/graphql/users/queries";
+import { UserInfo } from "@/interfaces/users";
 
 type Props = {
   fullWidth?: boolean;

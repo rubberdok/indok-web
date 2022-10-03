@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 
-import { FORM_RESPONSES_FRAGMENT } from "@graphql/forms/fragments";
+import { FORM_RESPONSES_FRAGMENT } from "@/graphql/forms/fragments";
 
 export const LISTING_FRAGMENT = gql`
   fragment ListingFragment on ListingType {

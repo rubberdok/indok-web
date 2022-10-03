@@ -5,7 +5,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import React from "react";
 
-import { AvailableYearsDocument } from "@generated/graphql";
+import { AvailableYearsDocument } from "@/generated/graphql";
 
 interface YearSelectorProps {
   yearFilter: string;

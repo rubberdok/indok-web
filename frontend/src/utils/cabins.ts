@@ -3,7 +3,7 @@ import isBetween from "dayjs/plugin/isBetween";
 import validator from "validator";
 import * as Yup from "yup";
 
-import { BookingSemester } from "@components/pages/cabins/Admin/BookingSemesterPicker";
+import { BookingSemester } from "@/components/pages/cabins/Admin/BookingSemesterPicker";
 import {
   BasicBooking,
   Cabin,
@@ -12,7 +12,7 @@ import {
   BookingFromQuery,
   DatePick,
   EmailAndBookingInput,
-} from "@interfaces/cabins";
+} from "@/interfaces/cabins";
 dayjs.extend(isBetween);
 
 /*

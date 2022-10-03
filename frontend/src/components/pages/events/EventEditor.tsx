@@ -26,9 +26,9 @@ import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import React, { useEffect, useState } from "react";
 
-import { UPDATE_EVENT } from "@graphql/events/mutations";
-import { ADMIN_GET_EVENT, GET_CATEGORIES, GET_EVENT } from "@graphql/events/queries";
-import { Category, Event } from "@interfaces/events";
+import { UPDATE_EVENT } from "@/graphql/events/mutations";
+import { ADMIN_GET_EVENT, GET_CATEGORIES, GET_EVENT } from "@/graphql/events/queries";
+import { Category, Event } from "@/interfaces/events";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.locale(nb);

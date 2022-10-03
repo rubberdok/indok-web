@@ -5,9 +5,9 @@ import nb from "dayjs/locale/nb";
 import Link from "next/link";
 import React from "react";
 
-import useResponsive from "@hooks/useResponsive";
-import { Event } from "@interfaces/events";
-import { User } from "@interfaces/users";
+import useResponsive from "@/hooks/useResponsive";
+import { Event } from "@/interfaces/events";
+import { User } from "@/interfaces/users";
 
 const formatDate = (dateAndTime: string) => {
   return dayjs(dateAndTime).locale(nb).format(`D. MMM`);

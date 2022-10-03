@@ -2,12 +2,12 @@ import { ArrowBackIos } from "@mui/icons-material";
 import { Box, Button, Container, Divider, Grid, Paper, Typography } from "@mui/material";
 import router from "next/router";
 
-import { PermissionRequired } from "@components/Auth";
-import BookingSemesterPicker from "@components/pages/cabins/Admin/BookingSemesterPicker";
-import CabinInfoPicker from "@components/pages/cabins/Admin/CabinInfoPicker";
-import useResponsive from "@hooks/useResponsive";
-import Layout, { RootStyle } from "@layouts/Layout";
-import { NextPageWithLayout } from "src/pages/_app";
+import { PermissionRequired } from "@/components/Auth";
+import BookingSemesterPicker from "@/components/pages/cabins/Admin/BookingSemesterPicker";
+import CabinInfoPicker from "@/components/pages/cabins/Admin/CabinInfoPicker";
+import useResponsive from "@/hooks/useResponsive";
+import Layout, { RootStyle } from "@/layouts/Layout";
+import { NextPageWithLayout } from "@/pages/_app";
 
 const SettingsPage: NextPageWithLayout = () => {
   const isMobile = useResponsive({ query: "down", key: "md" });

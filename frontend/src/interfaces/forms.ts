@@ -1,4 +1,4 @@
-import { User } from "@interfaces/users";
+import { User } from "@/interfaces/users";
 
 export interface Form {
   id: string;

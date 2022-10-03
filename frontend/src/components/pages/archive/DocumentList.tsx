@@ -2,7 +2,7 @@ import { Card, CardActionArea, CardContent, CardMedia, Grid } from "@mui/materia
 import Typography from "@mui/material/Typography";
 import React from "react";
 
-import { ArchiveByTypesQuery } from "@generated/graphql";
+import { ArchiveByTypesQuery } from "@/generated/graphql";
 
 type Props = {
   documents?: ArchiveByTypesQuery["archiveByTypes"];

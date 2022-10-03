@@ -73,7 +73,7 @@ Website for the students at Industrial Economics and Technology Management at NT
             `generated/graphql.ts`).
           - At the top of the React component file where you want to use it:
             - `import { useQuery } from "@apollo/client";`
-            - `import { [QUERY_NAME]Document } from "@generated/graphql";`
+            - `import { [QUERY_NAME]Document } from "@/generated/graphql";`
           - Inside the component:
             - `const { data, loading, error } = useQuery([QUERY_NAME]Document)`
           - Now, after checking that there is no `error` or `loading`, we can use the `data`.

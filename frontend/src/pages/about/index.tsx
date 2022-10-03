@@ -1,10 +1,9 @@
 import { Box, Paper, Typography } from "@mui/material";
 import React from "react";
 
-import Template from "@components/pages/about/Template";
-import Layout from "@layouts/Layout";
-
-import { NextPageWithLayout } from "../_app";
+import Template from "@/components/pages/about/Template";
+import Layout from "@/layouts/Layout";
+import { NextPageWithLayout } from "@/pages/_app";
 
 const AboutPage: NextPageWithLayout = () => {
   return (

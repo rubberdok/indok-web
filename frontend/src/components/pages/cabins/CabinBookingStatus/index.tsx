@@ -2,9 +2,9 @@ import { Box, Divider, Tooltip, Typography } from "@mui/material";
 import { TypographyProps } from "@mui/material/Typography";
 import { NextPage } from "next";
 
-import useResponsive from "@hooks/useResponsive";
-import { Cabin, ContactInfo, DatePick } from "@interfaces/cabins";
-import { calculatePrice, convertDateFormat, toStringChosenCabins } from "@utils/cabins";
+import useResponsive from "@/hooks/useResponsive";
+import { Cabin, ContactInfo, DatePick } from "@/interfaces/cabins";
+import { calculatePrice, convertDateFormat, toStringChosenCabins } from "@/utils/cabins";
 
 interface Props {
   chosenCabins: Cabin[];

@@ -22,7 +22,9 @@
       "@typescript-eslint/parser": [".ts", ".tsx"]
     },
     "import/resolver": {
-      "typescript": {}
+      "typescript": {
+        "project": "frontend/tsconfig.json"
+      }
     },
     "react": {
       "version": "detect"

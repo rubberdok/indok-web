@@ -28,16 +28,16 @@ import dayjs from "dayjs";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 
-import AttendeeExport from "@components/pages/events/AttendeeExport";
-import EmailForm from "@components/pages/events/email/EmailForm";
-import EditEvent from "@components/pages/events/EventEditor";
-import OrganizationEventHero from "@components/pages/organization/OrganizationEventHero";
-import { ADMIN_EVENT_SIGN_OFF } from "@graphql/events/mutations";
-import { ADMIN_GET_EVENT } from "@graphql/events/queries";
-import { Event, SignUp } from "@interfaces/events";
-import { HeaderValuePair } from "@interfaces/utils";
-import Layout from "@layouts/Layout";
-import { NextPageWithLayout } from "src/pages/_app";
+import AttendeeExport from "@/components/pages/events/AttendeeExport";
+import EmailForm from "@/components/pages/events/email/EmailForm";
+import EditEvent from "@/components/pages/events/EventEditor";
+import OrganizationEventHero from "@/components/pages/organization/OrganizationEventHero";
+import { ADMIN_EVENT_SIGN_OFF } from "@/graphql/events/mutations";
+import { ADMIN_GET_EVENT } from "@/graphql/events/queries";
+import { Event, SignUp } from "@/interfaces/events";
+import { HeaderValuePair } from "@/interfaces/utils";
+import Layout from "@/layouts/Layout";
+import { NextPageWithLayout } from "@/pages/_app";
 
 const signUpFields: HeaderValuePair<SignUp>[] = [
   { header: "Navn", field: "user" },
