@@ -71,8 +71,9 @@ const BoardPage: NextPageWithLayout = () => {
       img="/img/hero.jpg"
       title="Hovedstyret"
       page="Hovedstyret"
-      description="Hovedstyret (HS) er styret i Foreningen for studentene ved Industriell økonomi og teknologiledelse, NTNU. 
-      "
+      description="Hovedstyret (HS) er styret i Foreningen for studentene ved Industriell økonomi og teknologiledelse, NTNU."
+      prevPost={{ title: "Våre foreninger", slug: "/about/organizations", cover: "/img/hero.jpg" }}
+      nextPost={{ title: "Institutt-tillitsvalgte", slug: "/about/itv", cover: "/img/hero.jpg" }}
     >
       <Typography variant="body1" paragraph>
         Hovedstyret består av et valgt lederpar, instituttilittsvalgt ved IØT, samt leder for hver av linjeforeningene

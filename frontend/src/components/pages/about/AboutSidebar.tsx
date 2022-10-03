@@ -17,6 +17,10 @@ const NAV_ITEMS = [
         title: "Hovedstyret",
         path: "/about/board",
       },
+      {
+        title: "Institutt-tillitsvalgte",
+        path: "/about/itv",
+      },
     ],
   },
 ];
