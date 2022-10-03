@@ -1,8 +1,8 @@
 import crypto from "crypto";
 
 import { User } from "@prisma/client";
-import { inject, injectable } from "inversify";
 import fetch from "node-fetch";
+import { inject, injectable } from "tsyringe";
 
 import { env } from "@/config";
 import { GetUserParams, IAuthService, IUserService } from "@/services/interfaces";

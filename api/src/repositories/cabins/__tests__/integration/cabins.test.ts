@@ -5,7 +5,7 @@ import { randomUUID } from "crypto";
 import { faker } from "@faker-js/faker";
 import { BookingStatus, Cabin } from "@prisma/client";
 import dayjs from "dayjs";
-import { Container } from "inversify";
+import { container as _container } from "tsyringe";
 
 import { CoreTypes, Database } from "@/core";
 import prisma from "@/lib/prisma";
@@ -13,22 +13,21 @@ import { Types } from "@/repositories";
 import CabinRepository from "@/repositories/cabins";
 import { ICabinRepository } from "@/repositories/cabins/interfaces";
 
-const container = new Container();
 const systemTime = dayjs().add(50, "years").toDate();
 
 const cabins: Record<string, Cabin> = {};
 const id = randomUUID();
+const container = _container.createChildContainer();
 
 beforeAll(() => {
-  container.unbindAll();
-  container.bind<Database>(CoreTypes.Prisma).toConstantValue(prisma);
-  container.bind<ICabinRepository>(Types.CabinRepsitory).to(CabinRepository);
+  container.register<Database>(CoreTypes.Prisma, { useValue: prisma });
+  container.register<ICabinRepository>(Types.CabinRepsitory, { useClass: CabinRepository });
   jest.useFakeTimers().setSystemTime(systemTime);
 });
 
 describe("Overlapping bookings", () => {
   beforeEach(async () => {
-    const db = container.get<Database>(CoreTypes.Prisma);
+    const db = container.resolve<Database>(CoreTypes.Prisma);
     await db.booking.deleteMany({
       where: {
         OR: [
@@ -101,7 +100,7 @@ describe("Overlapping bookings", () => {
   });
 
   it("should find overlapping bookings", async () => {
-    const cabinRepo = container.get<ICabinRepository>(Types.CabinRepsitory);
+    const cabinRepo = container.resolve<ICabinRepository>(Types.CabinRepsitory);
     const bookings = await cabinRepo.getOverlappingBookings({
       bookingId: id,
       startDate: dayjs().add(1, "day").toDate(),

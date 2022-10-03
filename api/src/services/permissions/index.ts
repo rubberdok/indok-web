@@ -1,5 +1,5 @@
 import { Permission, User } from "@prisma/client";
-import { inject, injectable } from "inversify";
+import { inject, injectable } from "tsyringe";
 
 import { IPermissionRepository, Types } from "@/repositories";
 import { IPermissionService } from "@/services/interfaces";

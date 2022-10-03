@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import { randomUUID } from "crypto";
 import http from "http";
 
@@ -10,9 +11,9 @@ import { json } from "body-parser";
 import cors from "cors";
 import express from "express";
 import session from "express-session";
+import { container } from "tsyringe";
 
 import { env } from "@/config";
-import { container } from "@/container";
 import { resolvers, typeDefs } from "@/graphql";
 import { IContext, IContextProvider, Type as ContextProviderType } from "@/graphql/context";
 import { formatError } from "@/lib/apolloServer";
@@ -63,7 +64,7 @@ const start = async () => {
     json(),
     expressMiddleware(server, {
       context: async ({ req, res }) => {
-        const info = container.get<IContextProvider>(ContextProviderType);
+        const info = container.resolve<IContextProvider>(ContextProviderType);
         return Object.assign(info, { req, res });
       },
     })

@@ -4,8 +4,8 @@ import { randomUUID } from "crypto";
 
 import { BookingStatus } from "@prisma/client";
 import dayjs from "dayjs";
-import { Container } from "inversify";
 import { DeepMockProxy, mockDeep } from "jest-mock-extended";
+import { container as _container } from "tsyringe";
 
 import { ICabinRepository, Types as RepositoryTypes } from "@/repositories";
 import { ICabinService, IMailService, Types as ServiceTypes } from "@/services";
@@ -15,7 +15,7 @@ import { TemplateAliasEnum } from "@/services/mail/interfaces";
 
 import { NegativeValidationTestCase, PositiveValidationTestCase } from "./interfaces";
 
-const container = new Container();
+const container = _container.createChildContainer();
 
 const validBooking: BookingData = {
   cabinId: randomUUID(),
@@ -31,10 +31,9 @@ beforeAll(() => {
   const mockCabinRepo = mockDeep<ICabinRepository>();
   const mockMailService = mockDeep<IMailService>();
 
-  container.unbindAll();
-  container.bind<DeepMockProxy<ICabinRepository>>(RepositoryTypes.CabinRepsitory).toConstantValue(mockCabinRepo);
-  container.bind<DeepMockProxy<IMailService>>(ServiceTypes.MailService).toConstantValue(mockMailService);
-  container.bind<ICabinService>(ServiceTypes.CabinService).to(CabinService);
+  container.register<DeepMockProxy<ICabinRepository>>(RepositoryTypes.CabinRepsitory, { useValue: mockCabinRepo });
+  container.register<DeepMockProxy<IMailService>>(ServiceTypes.MailService, { useValue: mockMailService });
+  container.register<ICabinService>(ServiceTypes.CabinService, { useClass: CabinService });
 });
 
 describe("New booking", () => {
@@ -91,7 +90,7 @@ describe("New booking", () => {
   ];
 
   test.each(negativeValidationTestCases)("$name", async ({ input, expectedError }) => {
-    const cabinService = container.get<ICabinService>(ServiceTypes.CabinService);
+    const cabinService = container.resolve<ICabinService>(ServiceTypes.CabinService);
     expect(cabinService.newBooking(input)).rejects.toThrow(expectedError);
   });
 
@@ -107,9 +106,9 @@ describe("New booking", () => {
   ];
 
   test.each(positiveValidationTestCases)("$name", async ({ input, expectedConfirmationEmail }) => {
-    const cabinService = container.get<ICabinService>(ServiceTypes.CabinService);
-    const cabinRepo = container.get<DeepMockProxy<ICabinRepository>>(RepositoryTypes.CabinRepsitory);
-    const mailService = container.get<DeepMockProxy<IMailService>>(ServiceTypes.MailService);
+    const cabinService = container.resolve<ICabinService>(ServiceTypes.CabinService);
+    const cabinRepo = container.resolve<DeepMockProxy<ICabinRepository>>(RepositoryTypes.CabinRepsitory);
+    const mailService = container.resolve<DeepMockProxy<IMailService>>(ServiceTypes.MailService);
     cabinRepo.createBooking.mockReturnValueOnce(
       Promise.resolve({
         ...input,

@@ -1,8 +1,8 @@
 import "reflect-metadata";
 
 import { PrismaClient } from "@prisma/client";
-import { Container } from "inversify";
 import fetch, { Response as _Response } from "node-fetch";
+import { container as _container } from "tsyringe";
 
 import { CoreTypes } from "@/core";
 import prisma from "@/lib/prisma";
@@ -10,9 +10,10 @@ import { IUserRepository, Types as RepositoryTypes } from "@/repositories";
 import UserRepository from "@/repositories/users";
 import { Types as ServiceTypes } from "@/services";
 import AuthService from "@/services/auth";
-import { setupMocks } from "@/services/auth/__tests__/__mocks__/feide";
 import { IAuthService, IUserService } from "@/services/interfaces";
 import UserService from "@/services/users";
+
+import { setupMocks } from "../__mocks__/feide";
 
 import { OAuthCase } from "./interfaces";
 
@@ -22,19 +23,18 @@ const { Response: ActualResponse } = jest.requireActual<{
 
 jest.mock("node-fetch");
 
-const container = new Container();
+const container = _container.createChildContainer();
 
 describe("OAuth", () => {
   beforeAll(() => {
-    container.unbindAll();
-    container.bind<IUserService>(ServiceTypes.UserService).to(UserService);
-    container.bind<IUserRepository>(RepositoryTypes.UserRepository).to(UserRepository);
-    container.bind<IAuthService>(ServiceTypes.AuthService).to(AuthService);
-    container.bind<PrismaClient>(CoreTypes.Prisma).toConstantValue(prisma);
+    container.register<IUserService>(ServiceTypes.UserService, { useClass: UserService });
+    container.register<IUserRepository>(RepositoryTypes.UserRepository, { useClass: UserRepository });
+    container.register<IAuthService>(ServiceTypes.AuthService, { useClass: AuthService });
+    container.register<PrismaClient>(CoreTypes.Prisma, { useValue: prisma });
   });
 
   beforeEach(() => {
-    const db = container.get<PrismaClient>(CoreTypes.Prisma);
+    const db = container.resolve<PrismaClient>(CoreTypes.Prisma);
     db.user.delete({
       where: {
         id: "new_id",
@@ -130,7 +130,7 @@ describe("OAuth", () => {
       return Promise.resolve(res);
     });
 
-    const auth = container.get<IAuthService>(ServiceTypes.AuthService);
+    const auth = container.resolve<IAuthService>(ServiceTypes.AuthService);
     const { username, feideId, firstName, lastName, email } = await auth.getUser({
       code: "code",
       codeVerifier: "verifier",

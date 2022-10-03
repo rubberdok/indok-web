@@ -1,6 +1,6 @@
 import { Prisma, User } from "@prisma/client";
 import dayjs from "dayjs";
-import { inject, injectable } from "inversify";
+import { inject, injectable } from "tsyringe";
 
 import { IUserRepository, Types } from "@/repositories";
 import { IUserService } from "@/services/interfaces";
