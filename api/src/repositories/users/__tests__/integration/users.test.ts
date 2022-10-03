@@ -7,7 +7,7 @@ import { CoreTypes } from "@//core";
 import prisma from "@/lib/prisma";
 import { Types } from "@/repositories";
 import { IUserRepository } from "@/repositories/interfaces";
-import UserRepository from "@/repositories/users";
+import { UserRepository } from "@/repositories/users";
 
 import { CreateUserCase } from "./interfaces";
 

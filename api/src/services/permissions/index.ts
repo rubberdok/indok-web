@@ -9,7 +9,7 @@ import { PermissionString } from "./types";
 import { isPermissionString } from "./utils";
 
 @injectable()
-export default class PermissionService implements IPermissionService {
+export class PermissionService implements IPermissionService {
   constructor(
     @inject(Types.PermissionRepository)
     private permissionRepository: IPermissionRepository

@@ -10,7 +10,7 @@ import { container as _container } from "tsyringe";
 import { CoreTypes, Database } from "@/core";
 import prisma from "@/lib/prisma";
 import { Types } from "@/repositories";
-import CabinRepository from "@/repositories/cabins";
+import { CabinRepository } from "@/repositories/cabins";
 import { ICabinRepository } from "@/repositories/cabins/interfaces";
 
 const systemTime = dayjs().add(50, "years").toDate();

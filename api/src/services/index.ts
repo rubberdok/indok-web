@@ -1,12 +1,12 @@
 import { DependencyContainer } from "tsyringe";
 
-import { default as FeideService } from "@/services/auth";
-import { default as CabinService } from "@/services/cabins";
-import { ICabinService, IMailService, IPermissionService, IUserService, IAuthService } from "@/services/interfaces";
-import { default as MailService } from "@/services/mail";
-import { default as PermissionService } from "@/services/permissions";
-import { default as Types } from "@/services/types";
-import { default as UserService } from "@/services/users";
+import { FeideService } from "./auth";
+import { CabinService } from "./cabins";
+import { ICabinService, IMailService, IPermissionService, IUserService, IAuthService } from "./interfaces";
+import { MailService } from "./mail";
+import { PermissionService } from "./permissions";
+import { Types } from "./types";
+import { UserService } from "./users";
 
 export const register = (container: DependencyContainer) => {
   container.register<IUserService>(Types.UserService, { useClass: UserService });

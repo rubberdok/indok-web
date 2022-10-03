@@ -6,7 +6,7 @@ import { Database } from "@/core/interfaces";
 import { IUserRepository } from "@/repositories/users/interfaces";
 
 @injectable()
-export default class UserRepository implements IUserRepository {
+export class UserRepository implements IUserRepository {
   constructor(@inject(CoreTypes.Prisma) private db: Database) {}
 
   update(id: string, data: Prisma.UserUpdateInput): Promise<User> {
