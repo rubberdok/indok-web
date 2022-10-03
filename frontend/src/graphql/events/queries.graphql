@@ -16,3 +16,15 @@ query getCategories {
     name
   }
 }
+
+query allEvents($organization: String, $category: String, $startTime: DateTime, $endTime: DateTime) {
+  allEvents(organization: $organization, category: $category, startTime: $startTime, endTime: $endTime) {
+    ...EventFragment
+  }
+}
+
+query defaultEvents {
+  defaultEvents {
+    ...EventFragment
+  }
+}
