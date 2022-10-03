@@ -8,7 +8,7 @@ import React, { useEffect } from "react";
 
 import { AuthUserDocument } from "@/generated/graphql";
 import Layout from "@/layouts/Layout";
-import Bug from "public/illustrations/Bug.svg";
+import Bug from "~/public/illustrations/Bug.svg";
 
 import { NextPageWithLayout } from "./_app";
 
