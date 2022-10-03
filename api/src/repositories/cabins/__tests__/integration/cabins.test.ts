@@ -109,7 +109,7 @@ describe("Overlapping bookings", () => {
     });
 
     expect(bookings).toHaveLength(2);
-    expect(bookings[0].id).not.toBe(id);
-    expect(bookings[1].id).not.toBe(id);
+    expect(bookings[0]?.id).not.toBe(id);
+    expect(bookings[1]?.id).not.toBe(id);
   });
 });
