@@ -8,7 +8,7 @@ import { container as _container } from "tsyringe";
 import { IUserRepository, Types as RepositoryTypes } from "@/repositories";
 import { Types as ServiceTypes } from "@/services";
 import { IUserService } from "@/services/interfaces";
-import UserService from "@/services/users";
+import { UserService } from "@/services/users";
 
 import { TestCase } from "./interfaces";
 

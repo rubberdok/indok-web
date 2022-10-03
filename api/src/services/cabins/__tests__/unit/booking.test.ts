@@ -9,7 +9,7 @@ import { container as _container } from "tsyringe";
 
 import { ICabinRepository, Types as RepositoryTypes } from "@/repositories";
 import { ICabinService, IMailService, Types as ServiceTypes } from "@/services";
-import CabinService from "@/services/cabins";
+import { CabinService } from "@/services/cabins";
 import { BookingData } from "@/services/cabins/interfaces";
 import { TemplateAliasEnum } from "@/services/mail/interfaces";
 

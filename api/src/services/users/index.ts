@@ -8,7 +8,7 @@ import { IUserService } from "@/services/interfaces";
 import { createUserSchema, updateUserSchema } from "./validation";
 
 @injectable()
-export default class UserService implements IUserService {
+export class UserService implements IUserService {
   constructor(
     @inject(Types.UserRepository)
     private usersRepository: IUserRepository

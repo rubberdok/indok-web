@@ -7,7 +7,7 @@ import { container as _container } from "tsyringe";
 import { CoreTypes } from "@/core";
 import { Types } from "@/repositories";
 import { IUserRepository } from "@/repositories/interfaces";
-import UserRepository from "@/repositories/users";
+import { UserRepository } from "@/repositories/users";
 
 const container = _container.createChildContainer();
 

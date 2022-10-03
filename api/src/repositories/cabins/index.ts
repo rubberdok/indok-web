@@ -6,7 +6,7 @@ import { CoreTypes, Database } from "@/core";
 import { ICabinRepository, OverlappingBookingsData } from "./interfaces";
 
 @injectable()
-export default class CabinRepository implements ICabinRepository {
+export class CabinRepository implements ICabinRepository {
   constructor(@inject(CoreTypes.Prisma) private db: Database) {}
 
   getBookingById(id: string): Promise<Booking> {
