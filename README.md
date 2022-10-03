@@ -18,11 +18,12 @@
     - [Frontend](#frontend)
   - [Using test users](#using-test-users)
 - [Development Workflow](#development-workflow)
-- [Contributing](#contributing)
-- [Feedback](#feedback)
+- [Tech Stack](#tech-stack)
 - [Error Logging](#error-logging)
 - [Deployment](#deployment)
 - [Other Services](#other-services)
+- [Contributing](#contributing)
+- [Feedback](#feedback)
 - [Acknowledgements](#acknowledgements)
 
 ## Introduction
@@ -486,22 +487,29 @@ An outline of how a developer may work with this project:
   - If an automatic test fails, click `Details` on it to see what went wrong in the logs
   - Once your Pull Request is approved, and the tests pass, you can merge it - now your changes are live!
 
-## Contributing
+## Tech Stack
 
-This project is completely open source and is intended to serve as a platform for students who are interested in web
-development to have a project where they can find inspiration and contribute, and as such, we gladly welcome outside
-contributors to the project. If you're interested in how to get started, no matter what level of experience you have,
-please see [CONTRIBUTING](CONTRIBUDING.md).
-
-## Feedback
-
-Found a bug, got a suggestion, or something we should know about? Take a look at the
-[roadmap](https://github.com/orgs/rubberdok/projects/2) and
-[file an issue](https://github.com/rubberdok/indok-web/issues/new) if it's not on the roadmap!
+- Frontend
+  - TypeScript (programming language, "JavaScript with types")
+    - Docs: https://www.typescriptlang.org/docs/
+  - React (library for building UI with components)
+    - Docs: https://beta.reactjs.org/learn
+  - Next.js (framework for structuring and server-side rendering React apps)
+    - Docs: https://nextjs.org/docs
+  - Apollo Client (library for handling GraphQL requests in the frontend)
+    - Docs: https://www.apollographql.com/docs/react/
+- Backend
+  - Python (programming language)
+    - Docs: https://docs.python.org/3.9/tutorial/index.html
+  - Django (web framework)
+    - Docs: https://docs.djangoproject.com/en/3.2/
+  - Graphene (library for building GraphQL APIs)
+    - Docs: https://docs.graphene-python.org/en/latest/
+    - Graphene-Django docs (the integration we use for Django): https://docs.graphene-python.org/projects/django/en/latest/
 
 ## Error logging
 
-The project has error logging through [Sentry](https://sentry.io), and can be accessed by authenticating with Github SSO.
+The project has error logging through [Sentry](https://sentry.io), and can be accessed by logging in with GitHub.
 
 ## Deployment
 
@@ -518,6 +526,19 @@ The app is deployed through AWS ECS.
 - [AWS](https://rubberdok.signin.aws.amazon.com/console/) for various services, contact an administrator for access.
 - [Google Workspace](https://admin.google.com) for account management, contact an administrator for access.
 - [Slack](https://slack.com) for communication, available with a [rubberdok.no](rubberdok.no) domain.
+
+## Contributing
+
+This project is completely open source and is intended to serve as a platform for students who are interested in web
+development to have a project where they can find inspiration and contribute, and as such, we gladly welcome outside
+contributors to the project. If you're interested in how to get started, no matter what level of experience you have,
+please see [CONTRIBUTING](CONTRIBUDING.md).
+
+## Feedback
+
+Found a bug, got a suggestion, or something we should know about? Take a look at the
+[roadmap](https://github.com/orgs/rubberdok/projects/2) and
+[file an issue](https://github.com/rubberdok/indok-web/issues/new) if it's not on the roadmap!
 
 ## Acknowledgements
 
