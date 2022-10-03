@@ -54,7 +54,7 @@ const start = async () => {
     resolvers,
     typeDefs,
     formatError,
-    plugins: [ApolloServerPluginDrainHttpServer({ httpServer }), ApolloServerPluginLandingPageLocalDefault],
+    plugins: [ApolloServerPluginDrainHttpServer({ httpServer }), ApolloServerPluginLandingPageLocalDefault()],
   });
 
   await server.start();
