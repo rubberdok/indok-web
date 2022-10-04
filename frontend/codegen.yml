@@ -7,6 +7,12 @@ generates:
       - "typescript"
       - "typescript-operations"
       - "typed-document-node"
+config:
+  scalars:
+    Date: string
+    DateTime: string
+    Decimal: number
+    UUID: string
 hooks:
   afterAllFileWrite:
     - eslint --fix
