@@ -1531,7 +1531,7 @@ export type ActiveBookingResponsibleQuery = {
   } | null;
 };
 
-export type EventFragmentFragment = {
+export type EventFragment = {
   __typename?: "EventType";
   id: string;
   title: string;
@@ -1803,12 +1803,12 @@ export type UserInfoQuery = {
   } | null;
 };
 
-export const EventFragmentFragmentDoc = {
+export const EventFragmentDoc = {
   kind: "Document",
   definitions: [
     {
       kind: "FragmentDefinition",
-      name: { kind: "Name", value: "EventFragment" },
+      name: { kind: "Name", value: "Event" },
       typeCondition: { kind: "NamedType", name: { kind: "Name", value: "EventType" } },
       selectionSet: {
         kind: "SelectionSet",
@@ -1877,7 +1877,7 @@ export const EventFragmentFragmentDoc = {
       },
     },
   ],
-} as unknown as DocumentNode<EventFragmentFragment, unknown>;
+} as unknown as DocumentNode<EventFragment, unknown>;
 export const ListingFragmentDoc = {
   kind: "Document",
   definitions: [
@@ -2509,13 +2509,13 @@ export const AllEventsDocument = {
             ],
             selectionSet: {
               kind: "SelectionSet",
-              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "EventFragment" } }],
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Event" } }],
             },
           },
         ],
       },
     },
-    ...EventFragmentFragmentDoc.definitions,
+    ...EventFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<AllEventsQuery, AllEventsQueryVariables>;
 export const DefaultEventsDocument = {
@@ -2533,13 +2533,13 @@ export const DefaultEventsDocument = {
             name: { kind: "Name", value: "defaultEvents" },
             selectionSet: {
               kind: "SelectionSet",
-              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "EventFragment" } }],
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Event" } }],
             },
           },
         ],
       },
     },
-    ...EventFragmentFragmentDoc.definitions,
+    ...EventFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<DefaultEventsQuery, DefaultEventsQueryVariables>;
 export const ListingDocument = {

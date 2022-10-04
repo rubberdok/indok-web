@@ -5,10 +5,9 @@ import Link from "next/link";
 import React, { useState } from "react";
 
 import { PermissionRequired } from "@/components/Auth";
-import { GET_DEFAULT_EVENTS, GET_EVENTS } from "@/graphql/events/queries";
+import { AllEventsDocument, DefaultEventsDocument } from "@/generated/graphql";
 import { GET_USER } from "@/graphql/users/queries";
 import useResponsive from "@/hooks/useResponsive";
-import { Event } from "@/interfaces/events";
 import { User } from "@/interfaces/users";
 
 import EventListItem from "./EventListItem";
@@ -24,7 +23,7 @@ export interface FilterQuery {
 const AllEvents: React.FC = () => {
   const [filters, setFilters] = useState({});
   const [showDefaultEvents, setShowDefaultEvents] = useState(false);
-  const [openFilterDrawer, setOpenFilterDrawer] = React.useState(false);
+  const [openFilterDrawer, setOpenFilterDrawer] = useState(false);
   const isMobile = useResponsive({ query: "down", key: "sm" });
 
   const { loading: userLoading, data: userData } = useQuery<{ user: User }>(GET_USER);

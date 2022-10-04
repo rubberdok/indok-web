@@ -1,4 +1,4 @@
-fragment EventFragment on EventType {
+fragment Event on EventType {
   id
   title
   startTime
