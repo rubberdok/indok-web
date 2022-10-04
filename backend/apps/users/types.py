@@ -1,4 +1,5 @@
 import graphene
+from graphene import NonNull
 from django.contrib.auth import get_user_model
 from graphene_django import DjangoObjectType
 from decorators import login_required, get_resolver_parent, permission_required_or_none
@@ -6,7 +7,7 @@ from decorators import login_required, get_resolver_parent, permission_required_
 
 class UserType(DjangoObjectType):
     grade_year = graphene.Int(source="grade_year")
-    events = graphene.List("apps.events.types.EventType", source="events")
+    events = graphene.List(NonNull("apps.events.types.EventType"), source="events")
     allergies = graphene.String(required=False)
     can_update_year = graphene.Boolean()
 

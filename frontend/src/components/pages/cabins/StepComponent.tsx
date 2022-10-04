@@ -2,7 +2,7 @@ import { OperationVariables, QueryResult } from "@apollo/client";
 import { Typography } from "@mui/material";
 import React from "react";
 
-import { Cabin, ContactInfo, ContactInfoValidations, DatePick } from "@interfaces/cabins";
+import { Cabin, ContactInfo, ContactInfoValidations, DatePick } from "@/interfaces/cabins";
 
 import CabinContactInfo from "./CabinContactInfo";
 import CheckInOut from "./CheckInOut";

@@ -1,8 +1,8 @@
 import { Edit } from "@mui/icons-material";
 import { Button, Grid, Typography } from "@mui/material";
 
-import QuestionTypePreview from "@components/pages/forms/formAdmin/QuestionTypePreview";
-import { Question } from "@interfaces/forms";
+import QuestionTypePreview from "@/components/pages/forms/formAdmin/QuestionTypePreview";
+import { Question } from "@/interfaces/forms";
 
 /**
  * Component to preview a question in a form when not in editing mode.

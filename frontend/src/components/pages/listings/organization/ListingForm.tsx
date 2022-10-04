@@ -18,9 +18,9 @@ import {
 } from "@mui/material";
 import React, { ChangeEvent } from "react";
 
-import MarkdownForm from "@components/MarkdownForm";
-import { ListingInput } from "@interfaces/listings";
-import { Organization } from "@interfaces/organizations";
+import MarkdownForm from "@/components/MarkdownForm";
+import { ListingInput } from "@/interfaces/listings";
+import { Organization } from "@/interfaces/organizations";
 
 /**
  * A form to create or edit a listing.

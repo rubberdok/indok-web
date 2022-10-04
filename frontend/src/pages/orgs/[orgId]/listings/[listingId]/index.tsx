@@ -6,17 +6,17 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 
-import EditForm from "@components/pages/forms/formAdmin/EditForm";
-import FormResponse from "@components/pages/forms/formAdmin/FormResponse";
-import OrganizationListing from "@components/pages/listings/organization/OrganizationListing";
-import { CREATE_FORM } from "@graphql/forms/mutations";
-import { LISTING_RESPONSES_FRAGMENT } from "@graphql/listings/fragments";
-import { LISTING_RESPONSES } from "@graphql/listings/queries";
-import { Form, Response } from "@interfaces/forms";
-import { ListingWithForm } from "@interfaces/listings";
-import Layout from "@layouts/Layout";
-import { NextPageWithLayout } from "src/pages/_app";
-import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "src/theme/constants";
+import EditForm from "@/components/pages/forms/formAdmin/EditForm";
+import FormResponse from "@/components/pages/forms/formAdmin/FormResponse";
+import OrganizationListing from "@/components/pages/listings/organization/OrganizationListing";
+import { CREATE_FORM } from "@/graphql/forms/mutations";
+import { LISTING_RESPONSES_FRAGMENT } from "@/graphql/listings/fragments";
+import { LISTING_RESPONSES } from "@/graphql/listings/queries";
+import { Form, Response } from "@/interfaces/forms";
+import { ListingWithForm } from "@/interfaces/listings";
+import Layout from "@/layouts/Layout";
+import { NextPageWithLayout } from "@/pages/_app";
+import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "@/theme/constants";
 
 /**
  * Page for organization admins to administer a listing, edit its application form, and review applicants.

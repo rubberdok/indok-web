@@ -1,11 +1,10 @@
 import { Container, Tab, Tabs } from "@mui/material";
 import React, { useState } from "react";
 
-import AllEvents from "@components/pages/events/AllEvents";
-import Title from "@components/Title";
-import Layout from "@layouts/Layout";
-
-import { NextPageWithLayout } from "../_app";
+import AllEvents from "@/components/pages/events/AllEvents";
+import Title from "@/components/Title";
+import Layout from "@/layouts/Layout";
+import { NextPageWithLayout } from "@/pages/_app";
 
 const links = [{ name: "Hjem", href: "/" }, { name: "Arrangementer" }];
 

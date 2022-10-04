@@ -2,6 +2,7 @@ from typing import Optional
 from django.contrib.auth import get_user_model
 
 import graphene
+from graphene import NonNull
 from graphene_django import DjangoObjectType
 from decorators import login_required
 
@@ -36,8 +37,8 @@ class AnswerType(DjangoObjectType):
 
 
 class QuestionType(DjangoObjectType):
-    options = graphene.List(OptionType)
-    answers = graphene.List(AnswerType, user_id=graphene.ID(), required=False)
+    options = graphene.List(NonNull(OptionType))
+    answers = graphene.List(NonNull(AnswerType), user_id=graphene.ID(), required=False)
     question_type = graphene.Field(QuestionTypeEnum)
     answer = graphene.Field(AnswerType)
 
@@ -74,7 +75,7 @@ class QuestionType(DjangoObjectType):
 
 class ResponseType(DjangoObjectType):
     id = graphene.UUID(source="uuid")
-    questions = graphene.List(QuestionType)
+    questions = graphene.List(NonNull(QuestionType))
 
     class Meta:
         model = Response
@@ -87,9 +88,9 @@ class ResponseType(DjangoObjectType):
 
 
 class FormType(DjangoObjectType):
-    responders = graphene.List(UserType, user_id=graphene.ID())
+    responders = graphene.List(NonNull(UserType), user_id=graphene.ID())
     responder = graphene.Field(UserType, user_id=graphene.ID(required=True))
-    responses = graphene.List(ResponseType)
+    responses = graphene.List(NonNull(ResponseType))
     response = graphene.Field(ResponseType, response_pk=graphene.UUID(required=False))
 
     class Meta:

@@ -1,24 +1,22 @@
 import "reflect-metadata";
 
 import { PrismaClient } from "@prisma/client";
-import { Container } from "inversify";
+import { container } from "tsyringe";
 
-import { IMailClient, Prisma, Postmark, CoreTypes } from "@/core";
+import { CoreTypes, IMailClient, Postmark, Prisma } from "@/core";
 import { Context } from "@/graphql";
 import * as Repositories from "@/repositories";
 import * as Services from "@/services";
 
-export const container = new Container();
+// register Prisma
+container.register<PrismaClient>(CoreTypes.Prisma, { useValue: Prisma });
 
-// Bind Prisma
-container.bind<PrismaClient>(CoreTypes.Prisma).toConstantValue(Prisma);
+// register Postmark
+container.register<IMailClient>(CoreTypes.MailClient, { useValue: Postmark });
 
-// Bind Postmark
-container.bind<IMailClient>(CoreTypes.MailClient).toConstantValue(Postmark);
-
-// Bind Context
-Context.bind(container);
-// Bind Repositories
-Repositories.bind(container);
-// Bind Services
-Services.bind(container);
+// register Context
+Context.register(container);
+// register Repositories
+Repositories.register(container);
+// register Services
+Services.register(container);

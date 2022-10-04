@@ -2,16 +2,16 @@ import { Box, Container, FormGroup, Grid } from "@mui/material";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import React, { useState } from "react";
 
-import Documents from "@components/pages/archive/Documents";
-import FeaturedDocumentsList from "@components/pages/archive/FeaturedDocumentsList";
-import FilterButtons from "@components/pages/archive/FilterButtons";
-import { RemoveFiltersButton } from "@components/pages/archive/RemoveFiltersButton";
-import SearchBar from "@components/pages/archive/SearchBar";
-import YearSelector from "@components/pages/archive/YearSelector";
-import Title from "@components/Title";
-import { HasPermissionDocument } from "@generated/graphql";
-import Layout from "@layouts/Layout";
-import { addApolloState, initializeApollo } from "@lib/apolloClient";
+import Documents from "@/components/pages/archive/Documents";
+import FeaturedDocumentsList from "@/components/pages/archive/FeaturedDocumentsList";
+import FilterButtons from "@/components/pages/archive/FilterButtons";
+import { RemoveFiltersButton } from "@/components/pages/archive/RemoveFiltersButton";
+import SearchBar from "@/components/pages/archive/SearchBar";
+import YearSelector from "@/components/pages/archive/YearSelector";
+import Title from "@/components/Title";
+import { HasPermissionDocument } from "@/generated/graphql";
+import Layout from "@/layouts/Layout";
+import { addApolloState, initializeApollo } from "@/lib/apolloClient";
 
 import { NextPageWithLayout } from "./_app";
 

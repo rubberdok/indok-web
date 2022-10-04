@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
 
-import { HAS_PERMISSION } from "@graphql/permissions/queries";
+import { HAS_PERMISSION } from "@/graphql/permissions/queries";
 
 type Props = {
   permission: string;

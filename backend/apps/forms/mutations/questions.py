@@ -1,4 +1,5 @@
 import graphene
+from graphene import NonNull
 from decorators import login_required, permission_required
 from django.db.models import Q
 from django.db import IntegrityError
@@ -115,7 +116,7 @@ class SubmitOrUpdateAnswers(graphene.Mutation):
 
     class Arguments:
         form_id = graphene.ID(required=True)
-        answers_data = graphene.List(AnswerInput)
+        answers_data = graphene.List(NonNull(AnswerInput))
 
     @permission_required(["forms.add_answer", "forms.change_answer"])
     def mutate(self, info, form_id, answers_data):
@@ -217,11 +218,11 @@ class OptionInput(graphene.InputObjectType):
 
 class CreateUpdateAndDeleteOptions(graphene.Mutation):
     ok = graphene.Boolean()
-    options = graphene.List(OptionType)
+    options = graphene.List(NonNull(OptionType))
 
     class Arguments:
         question_id = graphene.ID(required=True)
-        option_data = graphene.List(OptionInput)
+        option_data = graphene.List(NonNull(OptionInput))
 
     @permission_required("forms.change_form", (Form, ("questions__pk", "question_id")))
     def mutate(self, info, question_id, option_data):

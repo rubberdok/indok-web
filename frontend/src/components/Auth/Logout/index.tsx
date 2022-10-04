@@ -4,8 +4,8 @@ import { Alert, AlertTitle, ButtonProps, Snackbar } from "@mui/material";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
-import { LogoutDocument } from "@generated/graphql";
-import { config } from "@utils/config";
+import { LogoutDocument } from "@/generated/graphql";
+import { config } from "@/utils/config";
 
 const Logout: React.FC<Omit<ButtonProps, "sx">> = ({ ...props }) => {
   const router = useRouter();

@@ -1,4 +1,4 @@
-export default {
+export const Types = {
   UserService: Symbol.for("UserService"),
   PermissionService: Symbol.for("PermissionService"),
   MailService: Symbol.for("MailService"),

@@ -3,8 +3,8 @@ import { SxProps, Theme } from "@mui/material/styles";
 import dynamic from "next/dynamic";
 import { ImageProps, StaticImageData } from "next/image";
 
-import Breadcrumbs, { Props as BreadcrumbProps } from "@components/Breadcrumbs";
-import { TLink } from "@components/Breadcrumbs/types";
+import Breadcrumbs, { Props as BreadcrumbProps } from "@/components/Breadcrumbs";
+import { TLink } from "@/components/Breadcrumbs/types";
 
 import { ImageContainer, ImageOverlay, OverlayProps, RootStyle } from "./styles";
 

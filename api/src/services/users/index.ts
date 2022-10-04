@@ -1,6 +1,6 @@
 import { Prisma, User } from "@prisma/client";
 import dayjs from "dayjs";
-import { inject, injectable } from "inversify";
+import { inject, injectable } from "tsyringe";
 
 import { IUserRepository, Types } from "@/repositories";
 import { IUserService } from "@/services/interfaces";
@@ -8,7 +8,7 @@ import { IUserService } from "@/services/interfaces";
 import { createUserSchema, updateUserSchema } from "./validation";
 
 @injectable()
-export default class UserService implements IUserService {
+export class UserService implements IUserService {
   constructor(
     @inject(Types.UserRepository)
     private usersRepository: IUserRepository

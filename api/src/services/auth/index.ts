@@ -1,12 +1,12 @@
 import crypto from "crypto";
 
 import { User } from "@prisma/client";
-import { inject, injectable } from "inversify";
 import fetch from "node-fetch";
+import { inject, injectable } from "tsyringe";
 
 import { env } from "@/config";
 import { GetUserParams, IAuthService, IUserService } from "@/services/interfaces";
-import { default as Types } from "@/services/types";
+import { Types } from "@/services/types";
 
 import { UserInfo } from "./interfaces";
 
@@ -19,7 +19,7 @@ const FeideProvider = {
 };
 
 @injectable()
-export default class FeideService implements IAuthService {
+export class FeideService implements IAuthService {
   constructor(@inject(Types.UserService) private userService: IUserService) {}
 
   private scope = ["openid", "userid", "userid-feide", "userinfo-name", "userinfo-photo", "email", "groups-edu"].join(
@@ -54,8 +54,8 @@ export default class FeideService implements IAuthService {
 
       return this.userService.create({
         email,
-        firstName,
-        lastName,
+        firstName: firstName ?? "",
+        lastName: lastName ?? "",
         feideId,
         username,
       });

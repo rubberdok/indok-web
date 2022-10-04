@@ -2,7 +2,7 @@ import { Box, Link } from "@mui/material";
 import Image from "next/image";
 import NextLink from "next/link";
 
-import poweredByVercel from "@public/powered-vercel.svg";
+import poweredByVercel from "~/public/powered-vercel.svg";
 
 const Vercel: React.FC = () => {
   return (

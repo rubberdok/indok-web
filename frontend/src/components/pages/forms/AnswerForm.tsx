@@ -4,8 +4,8 @@ import { Button, Card, CardContent, FormHelperText, Grid, Typography } from "@mu
 import { useRouter } from "next/router";
 import { useState } from "react";
 
-import { SUBMIT_ANSWERS } from "@graphql/forms/mutations";
-import { Form, Question } from "@interfaces/forms";
+import { SUBMIT_ANSWERS } from "@/graphql/forms/mutations";
+import { Form, Question } from "@/interfaces/forms";
 
 import AnswerQuestion from "./AnswerQuestion";
 

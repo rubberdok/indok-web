@@ -7,13 +7,14 @@ import utc from "dayjs/plugin/utc";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 
-import ListingForm from "@components/pages/listings/organization/ListingForm";
-import { UPDATE_LISTING } from "@graphql/listings/mutations";
-import { LISTING } from "@graphql/listings/queries";
-import { Listing, ListingInput } from "@interfaces/listings";
-import Layout from "@layouts/Layout";
-import { NextPageWithLayout } from "src/pages/_app";
-import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "src/theme/constants";
+import ListingForm from "@/components/pages/listings/organization/ListingForm";
+import { UPDATE_LISTING } from "@/graphql/listings/mutations";
+import { LISTING } from "@/graphql/listings/queries";
+import { Listing, ListingInput } from "@/interfaces/listings";
+import Layout from "@/layouts/Layout";
+import { NextPageWithLayout } from "@/pages/_app";
+import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "@/theme/constants";
+
 dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.tz.setDefault("Europe/Oslo");

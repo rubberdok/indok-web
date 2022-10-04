@@ -2,7 +2,7 @@ import { useQuery } from "@apollo/client";
 import Typography from "@mui/material/Typography";
 import React, { useEffect } from "react";
 
-import { ArchiveByTypesDocument } from "@generated/graphql";
+import { ArchiveByTypesDocument } from "@/generated/graphql";
 
 import DocumentList from "./DocumentList";
 

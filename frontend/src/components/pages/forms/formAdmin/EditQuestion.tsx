@@ -14,8 +14,8 @@ import {
   TextField,
 } from "@mui/material";
 
-import questionTypeLabels from "@components/pages/forms/formAdmin/questionTypeLabels";
-import { Option, Question, QuestionType } from "@interfaces/forms";
+import questionTypeLabels from "@/components/pages/forms/formAdmin/questionTypeLabels";
+import { Option, Question, QuestionType } from "@/interfaces/forms";
 
 /**
  * Component to edit a question on a form.

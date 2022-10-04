@@ -16,6 +16,7 @@
     - [Database](#database)
     - [Backend](#backend)
     - [Frontend](#frontend)
+  - [VSCode](#vscode)
   - [Using test users](#using-test-users)
 - [Development Workflow](#development-workflow)
 - [Tech Stack](#tech-stack)
@@ -72,7 +73,7 @@ Website for the students at Industrial Economics and Technology Management at NT
             `generated/graphql.ts`).
           - At the top of the React component file where you want to use it:
             - `import { useQuery } from "@apollo/client";`
-            - `import { [QUERY_NAME]Document } from "@generated/graphql";`
+            - `import { [QUERY_NAME]Document } from "@/generated/graphql";`
           - Inside the component:
             - `const { data, loading, error } = useQuery([QUERY_NAME]Document)`
           - Now, after checking that there is no `error` or `loading`, we can use the `data`.
@@ -162,6 +163,11 @@ Website for the students at Industrial Economics and Technology Management at NT
 
 ## Project Setup
 
+[With Docker](#with-docker) below describes how to set up the project fully in Docker. This may not work perfectly for
+everyone, particularly those using Windows - they may instead wish to follow the steps under
+[Without Docker](#without-docker). Finally, [VSCode](#vscode) describes how to configure your development environment in
+the VSCode editor.
+
 ### With Docker
 
 1. Download, install and start Docker Desktop: https://www.docker.com/products/docker-desktop
@@ -248,21 +254,23 @@ If you still want to run Postgres without Docker, download and install it from h
    - If you do not want to use Python 3.9 globally, type `pyenv local 3.9.X` instead (make sure you are in the
      `indok-web` folder when you do this)
    - Type `python --version` to verify that it has been set to `3.9.X`
-5. Type `cd indok-web/backend` to move into the backend folder (or just `cd backend` if you were already in `indok-web`)
+5. Type `cd indok-web` to move into the project folder (if you weren't already there)
 6. Type `python -m venv venv`
    - This sets up a Python virtual environment, to isolate this project from others
 7. Type `source venv/bin/activate` to activate the virtual environment
    - If on Windows, type `.\venv\scripts\activate` instead
-8. Type `python -m pip install -r requirements/local.txt` to install dependencies
+8. Type `cd backend` to move into the `backend` folder
+9. Type `python -m pip install -r requirements/local.txt` to install dependencies
    - If on Windows, also install the GTK3 runtime from the `.exe` here:
      https://github.com/tschoonj/GTK-for-Windows-Runtime-Environment-Installer/releases (one of the Python libraries we
      use depends on this)
-9. Ask the project maintainers for dev environment variables (not strictly required, but step 14 will not work without this)
-   - If you're a member of Rubberdøk:
-     - Go to the `#dev` channel in Slack
-     - Find the pinned post with dev environment variables
-     - Copy the variables for `backend/.env` into your own `.env` file in `indok-web/backend` (make sure not to overwrite the `DB_HOST` variable from the database setup)
-10. Set the environment variable `DJANGO_READ_DOT_ENV_FILE` to `true`
+10. Ask the project maintainers for dev environment variables (not strictly required, but step 14 will not work without this)
+    - If you're a member of Rubberdøk:
+      - Go to the `#dev` channel in Slack
+      - Find the pinned post with dev environment variables
+      - Copy the variables for `backend/.env` into your own `.env` file in `indok-web/backend` (make sure not to
+        overwrite the `DB_HOST` variable from the database setup)
+11. Set the environment variable `DJANGO_READ_DOT_ENV_FILE` to `true`
     - On Mac/Linux:
       - Type `code ~/.zshrc` to open the `zsh` config in VSCode
         - If `code` doesn't work, try `open ~/.zshrc` to open it in another text editor
@@ -273,16 +281,18 @@ If you still want to run Postgres without Docker, download and install it from h
         - If `code` doesn't work, type `echo $profile` and open that file in some other text editor
       - Paste this line somewhere in that file: `$env:DJANGO_READ_DOT_ENV_FILE = "true"`
       - Save the file, and re-open PowerShell
-11. Type `python manage.py runserver` to run the backend server
+12. Type `python manage.py runserver` to run the backend server
     - If it fails, make sure that you:
       - are in the `indok-web/backend` folder
       - have your virtual environment active
       - have the database running
-12. Open a new terminal (leave the previous terminal open to keep the server running!)
-    - Type `cd indok-web/backend` to get back to the backend folder
-    - Type `source venv/bin/activate` (Mac) or `.\venv\scripts\activate` (Windows) to re-activate the virtual environment in this new terminal
-13. Type `python manage.py migrate` to update the database with our backend models
-14. Type `python manage.py loaddata initial_data` to load example data into the database
+13. Open a new terminal (leave the previous terminal open to keep the server running!)
+    - Type `cd indok-web` to move into `indok-web` (or `cd ..` if you were put in `indok-web/backend`)
+    - Type `source venv/bin/activate` (Mac) or `.\venv\scripts\activate` (Windows) to re-activate the virtual
+      environment in this new terminal
+    - Type `cd backend` to get back to the backend folder
+14. Type `python manage.py migrate` to update the database with our backend models
+15. Type `python manage.py loaddata initial_data` to load example data into the database
     - This also creates an admin user with username `admin` and password `admin123`
 
 Now the backend should be running at `localhost:8000`! You can check out the GraphQL API at `localhost:8000/graphql`, or
@@ -290,13 +300,14 @@ use the Django admin panel at `localhost:8000/admin` (log in with the admin user
 
 If you want to close the backend, press `Ctrl + C` in the terminal where it runs. To start it again:
 
-1. Move into the backend folder (`cd indok-web/backend`)
+1. Move into the `indok-web` folder (`cd indok-web`)
 2. Activate your virtual environment
    - On Mac: `source venv/bin/activate`
    - On Windows: `.\venv\scripts\activate`
-3. Type `python manage.py runserver`
-4. If you need to run migrations:
-   - Open a new terminal, and repeat steps 1 and 2
+3. Move into the backend folder (`cd backend`)
+4. Type `python manage.py runserver`
+5. If you need to run migrations:
+   - Open a new terminal, and repeat steps 1-3
    - If you've made changes to Django models and want to generate new migrations: `python manage.py makemigrations`
    - Run migrations with `python manage.py migrate`
 
@@ -328,6 +339,43 @@ Now the frontend should be running at `localhost:3000`! You can check it out in 
 
 If you want to close the frontend, press `Ctrl + C` in the terminal where it runs. To start it again, type `yarn dev`
 inside `indok-web/frontend` (if dependencies have changed, you may have to run `yarn` first).
+
+### VSCode
+
+First of all, we recommend installing the following extensions:
+
+- [Python](https://marketplace.visualstudio.com/items?itemName=ms-python.python)
+- [Prettier - Code formatter](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
+- [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
+
+Next, open the `indok-web` folder in VSCode, create a folder called `.vscode` at the top level, and a `settings.json`
+file inside that. Paste the following in it:
+
+```
+{
+  // Sets VSCode to auto-format files when saving
+  "editor.formatOnSave": true,
+
+  // Configures Prettier, our formatter for TypeScript
+  "[html][css][json][jsonc][yaml][javascript][javascriptreact][typescript][typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  // Configures Black, our formatter for Python
+  "python.formatting.provider": "black",
+  "python.formatting.blackArgs": ["--config=backend/pyproject.toml"],
+
+  // Configures flake8, our linter for Python
+  "python.linting.flake8Enabled": true,
+  "python.linting.flake8Args": ["--config=backend/tox.ini"],
+
+  // Allows the Python VSCode extension to suggest correct auto-import paths when having the project open in indok-web
+  "python.analysis.extraPaths": ["backend"]
+}
+```
+
+Finally, if you're on Mac, we recommend pressing `Cmd + Shift + P`, searching for "shell command", and clicking
+`Shell Command: Install 'code' command in PATH`. This lets you open your current folder in the terminal, using `code .`.
 
 ### Using test users
 
@@ -368,14 +416,14 @@ An outline of how a developer may work with this project:
     - Database (still with Docker):
       - Type `docker compose up postgres`
     - Backend:
-      - Type `cd backend` to move into the backend folder
       - Activate your Python virtual environment
         - Mac: type `source venv/bin/activate`
         - Windows: type `.\venv\scripts\activate`
         - If you've followed the steps in the `#dev` channel in the Rubberdøk Slack: simply type `venv`
+      - Type `cd backend` to move into the backend folder
       - Type `python manage.py runserver`
       - If it says you have unapplied migrations:
-        - Open a new terminal, move back to `indok-web/backend`, and activate your virtual environment again
+        - Open a new terminal in `indok-web`, activate your virtual environment again, then `cd backend`
         - Type `python manage.py migrate`
       - If it complains about missing dependencies:
         - Close the server (`Ctrl + C`)
@@ -465,8 +513,8 @@ An outline of how a developer may work with this project:
     - This is because we have configured "pre-commit hooks" to format and lint your code on commit
     - Since `black` and `flake8` are part of your Python virtual environment, you have to activate your virtual
       environment for these to work
-      - In the terminal, type `source backend/venv/bin/activate` (Mac) / `.\backend\venv\scripts\activate` (Windows) /
-        `venv backend` (from Rubberdøk Slack)
+      - In the terminal, type `source venv/bin/activate` (Mac) / `.\venv\scripts\activate` (Windows) / `venv` (from
+        Rubberdøk Slack)
       - If committing through the terminal, just run `git commit` again after this
       - If committing through VSCode, you may have to restart VSCode from the terminal to use your virtual environment
         (`code .`)
@@ -544,8 +592,8 @@ Found a bug, got a suggestion, or something we should know about? Take a look at
 
 <p float="left">
   Logo created by   
-  <a href="https://github.com/Skraagen">
-    Skraagen
+  <a href="https://github.com/mathiasraa">
+    mathiasraa
   </a>
 </p>
 

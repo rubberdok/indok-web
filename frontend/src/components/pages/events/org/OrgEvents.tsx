@@ -1,8 +1,8 @@
 import { Stack, Typography } from "@mui/material";
 
-import EventsExport from "@components/pages/events/org/EventsExport";
-import OrgEventsTable from "@components/pages/events/org/OrgEventsTable";
-import { Organization } from "@interfaces/organizations";
+import EventsExport from "@/components/pages/events/org/EventsExport";
+import OrgEventsTable from "@/components/pages/events/org/OrgEventsTable";
+import { Organization } from "@/interfaces/organizations";
 
 type Props = {
   organization: Organization;

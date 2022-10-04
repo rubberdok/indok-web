@@ -4,12 +4,12 @@ import { Button, CircularProgress, Drawer, Grid, Hidden, Paper, Stack, Typograph
 import Link from "next/link";
 import React, { useState } from "react";
 
-import { PermissionRequired } from "@components/Auth";
-import { GET_DEFAULT_EVENTS, GET_EVENTS } from "@graphql/events/queries";
-import { GET_USER } from "@graphql/users/queries";
-import useResponsive from "@hooks/useResponsive";
-import { Event } from "@interfaces/events";
-import { User } from "@interfaces/users";
+import { PermissionRequired } from "@/components/Auth";
+import { GET_DEFAULT_EVENTS, GET_EVENTS } from "@/graphql/events/queries";
+import { GET_USER } from "@/graphql/users/queries";
+import useResponsive from "@/hooks/useResponsive";
+import { Event } from "@/interfaces/events";
+import { User } from "@/interfaces/users";
 
 import EventListItem from "./EventListItem";
 import FilterMenu from "./filterMenu/FilterMenu";

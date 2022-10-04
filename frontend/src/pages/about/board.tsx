@@ -2,12 +2,11 @@ import { Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import React from "react";
 
-import MemberCard from "@components/pages/about/MemberCard";
-import { BoardMember } from "@components/pages/about/MemberCard/types";
-import Template from "@components/pages/about/Template";
-import Layout from "@layouts/Layout";
-
-import { NextPageWithLayout } from "../_app";
+import MemberCard from "@/components/pages/about/MemberCard";
+import { BoardMember } from "@/components/pages/about/MemberCard/types";
+import Template from "@/components/pages/about/Template";
+import Layout from "@/layouts/Layout";
+import { NextPageWithLayout } from "@/pages/_app";
 
 const BoardPage: NextPageWithLayout = () => {
   const boardMembers: BoardMember[] = [

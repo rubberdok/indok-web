@@ -1,8 +1,8 @@
 import { FormControl, Grid, Hidden, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
 import React from "react";
 
-import { Cabin, ContactInfo, ContactInfoValidations, InputFieldsEvent } from "@interfaces/cabins";
-import { range } from "@utils/helpers";
+import { Cabin, ContactInfo, ContactInfoValidations, InputFieldsEvent } from "@/interfaces/cabins";
+import { range } from "@/utils/helpers";
 
 interface Props {
   contactInfo: ContactInfo;

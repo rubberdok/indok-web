@@ -4,7 +4,7 @@ import { Button, Card, CardContent, Divider, Stack, Typography } from "@mui/mate
 import Link from "next/link";
 import React from "react";
 
-import { CabinsAndResponsiblesDocument } from "@generated/graphql";
+import { CabinsAndResponsiblesDocument } from "@/generated/graphql";
 
 const BookNow: React.FC = () => {
   const { data } = useQuery(CabinsAndResponsiblesDocument);

@@ -1,4 +1,4 @@
-import { inject, injectable } from "inversify";
+import { inject, injectable } from "tsyringe";
 
 import { env } from "@/config";
 import { CoreTypes } from "@/core";
@@ -6,7 +6,7 @@ import { CoreTypes } from "@/core";
 import { EmailContent, IMailClient, IMailService } from "./interfaces";
 
 @injectable()
-export default class MailService implements IMailService {
+export class MailService implements IMailService {
   constructor(@inject(CoreTypes.MailClient) private client: IMailClient) {}
 
   send(template: EmailContent) {

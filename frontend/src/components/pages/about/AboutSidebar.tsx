@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 
-import { HEADER_DESKTOP_HEIGHT } from "src/theme/constants";
+import { HEADER_DESKTOP_HEIGHT } from "@/theme/constants";
 
 import { NavigationSidebar } from "../../";
 

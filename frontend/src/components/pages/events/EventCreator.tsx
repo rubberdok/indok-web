@@ -20,11 +20,11 @@ import {
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 
-import { CREATE_EVENT } from "@graphql/events/mutations";
-import { GET_CATEGORIES } from "@graphql/events/queries";
-import { GET_USER } from "@graphql/users/queries";
-import { Category, Event } from "@interfaces/events";
-import { User } from "@interfaces/users";
+import { CREATE_EVENT } from "@/graphql/events/mutations";
+import { GET_CATEGORIES } from "@/graphql/events/queries";
+import { GET_USER } from "@/graphql/users/queries";
+import { Category, Event } from "@/interfaces/events";
+import { User } from "@/interfaces/users";
 
 /**
  * Component for the creating a new event

@@ -3,8 +3,8 @@ import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 
-import Layout from "@layouts/Layout";
-import _404 from "public/illustrations/404.svg";
+import Layout from "@/layouts/Layout";
+import _404 from "~/public/illustrations/404.svg";
 
 import { NextPageWithLayout } from "./_app";
 

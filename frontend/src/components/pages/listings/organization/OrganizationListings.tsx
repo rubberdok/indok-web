@@ -14,9 +14,9 @@ import dayjs from "dayjs";
 import Link from "next/link";
 import { useState } from "react";
 
-import DeleteListing from "@components/pages/listings/organization/DeleteListing";
-import { Listing } from "@interfaces/listings";
-import { Organization } from "@interfaces/organizations";
+import DeleteListing from "@/components/pages/listings/organization/DeleteListing";
+import { Listing } from "@/interfaces/listings";
+import { Organization } from "@/interfaces/organizations";
 
 /**
  * Component to show a list of listings connected to an organization for its administrators.

@@ -1,5 +1,5 @@
-import Title from "@components/Title";
-import { Event } from "@interfaces/events";
+import Title from "@/components/Title";
+import { Event } from "@/interfaces/events";
 
 type Props = {
   event: Event;
