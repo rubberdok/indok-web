@@ -353,12 +353,18 @@ file inside that. Paste the following in it:
 
 ```
 {
-  // Sets VSCode to auto-format files when saving
+  // Auto-formats code on save
   "editor.formatOnSave": true,
 
   // Configures Prettier, our formatter for TypeScript
   "[html][css][json][jsonc][yaml][javascript][javascriptreact][typescript][typescriptreact]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  // Configures ESLint, our linter for TypeScript
+  "eslint.workingDirectories": ["frontend"],
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
   },
 
   // Configures Black, our formatter for Python
