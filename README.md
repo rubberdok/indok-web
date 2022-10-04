@@ -592,8 +592,8 @@ Found a bug, got a suggestion, or something we should know about? Take a look at
 
 <p float="left">
   Logo created by   
-  <a href="https://github.com/Skraagen">
-    Skraagen
+  <a href="https://github.com/mathiasraa">
+    mathiasraa
   </a>
 </p>
 
