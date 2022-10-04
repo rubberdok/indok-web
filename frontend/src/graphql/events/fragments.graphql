@@ -34,3 +34,70 @@ fragment Event on EventType {
   hasExtraInformation
   allowedGradeYears
 }
+
+fragment AdminEvent on EventType {
+  id
+  title
+  startTime
+  endTime
+  location
+  description
+  organization {
+    id
+    name
+  }
+  category {
+    id
+    name
+  }
+  image
+  isAttendable
+  deadline
+  publisher {
+    id
+    username
+    email
+    firstName
+    lastName
+    dateJoined
+  }
+  availableSlots
+  price
+  shortDescription
+  signupOpenDate
+  usersAttending {
+    user {
+      id
+      firstName
+      lastName
+    }
+    userEmail
+    userGradeYear
+    userAllergies
+    userPhoneNumber
+    hasBoughtTicket
+  }
+  usersOnWaitingList {
+    user {
+      id
+      firstName
+      lastName
+    }
+    userEmail
+    userGradeYear
+    userAllergies
+    userPhoneNumber
+  }
+  userAttendance {
+    isSignedUp
+    isOnWaitingList
+  }
+  isFull
+  hasExtraInformation
+  bindingSignup
+  contactEmail
+  allowedGradeYears
+  product {
+    id
+  }
+}

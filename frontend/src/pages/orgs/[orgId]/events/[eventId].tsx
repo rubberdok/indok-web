@@ -32,12 +32,12 @@ import AttendeeExport from "@/components/pages/events/AttendeeExport";
 import EmailForm from "@/components/pages/events/email/EmailForm";
 import EditEvent from "@/components/pages/events/EventEditor";
 import OrganizationEventHero from "@/components/pages/organization/OrganizationEventHero";
-import { ADMIN_EVENT_SIGN_OFF } from "@/graphql/events/mutations";
-import { ADMIN_GET_EVENT } from "@/graphql/events/queries";
-import { Event, SignUp } from "@/interfaces/events";
+import { AdminEventDocument, AdminEventFragment, AdminEventSignOffDocument } from "@/generated/graphql";
 import { HeaderValuePair } from "@/interfaces/utils";
 import Layout from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/pages/_app";
+
+type SignUp = NonNullable<AdminEventFragment["usersAttending"]>[0];
 
 const signUpFields: HeaderValuePair<SignUp>[] = [
   { header: "Navn", field: "user" },
@@ -47,7 +47,7 @@ const signUpFields: HeaderValuePair<SignUp>[] = [
   { header: "E-post", field: "userEmail" },
 ];
 
-const stringEventFields: HeaderValuePair<Event>[] = [
+const stringEventFields: HeaderValuePair<AdminEventFragment>[] = [
   { header: "Tittel", field: "title" },
   { header: "Kort beskrivelse", field: "shortDescription" },
   // { header: "Beskrivelse", field: "description" },
@@ -57,7 +57,7 @@ const stringEventFields: HeaderValuePair<Event>[] = [
   { header: "Bindende påmelding", field: "bindingSignup" },
 ];
 
-const dateEventFields: HeaderValuePair<Event>[] = [
+const dateEventFields: HeaderValuePair<AdminEventFragment>[] = [
   { header: "Starttid", field: "startTime" },
   { header: "Slutttid", field: "endTime" },
   { header: "Påmeldingsfrist", field: "deadline" },
@@ -76,14 +76,14 @@ const RootStyle = styled("div")(({ theme }) => ({
 const EventAdminPage: NextPageWithLayout = () => {
   const router = useRouter();
   const { eventId } = router.query;
-  const eventNumberID = parseInt(eventId as string);
+  const eventIdString = eventId as string;
 
-  const { loading, data, refetch } = useQuery<{ event: Event }, { id: number }>(ADMIN_GET_EVENT, {
-    variables: { id: eventNumberID },
-    skip: Number.isNaN(eventNumberID),
+  const { loading, data, refetch } = useQuery(AdminEventDocument, {
+    variables: { id: eventIdString },
+    skip: Number.isNaN(parseInt(eventIdString)),
   });
 
-  const [adminEventSignOff, { loading: signOffLoading, error: signOffError }] = useMutation(ADMIN_EVENT_SIGN_OFF);
+  const [adminEventSignOff, { loading: signOffLoading, error: signOffError }] = useMutation(AdminEventSignOffDocument);
 
   const [openEditEvent, setOpenEditEvent] = useState(false);
   const [openSignOffErrorSnackbar, setOpenSignOffErrorSnackbar] = useState(false);
@@ -109,9 +109,9 @@ const EventAdminPage: NextPageWithLayout = () => {
   };
 
   const handleDeleteSignUp = (userId: string) => {
-    adminEventSignOff({ variables: { eventId: eventNumberID, userId: userId } })
+    adminEventSignOff({ variables: { eventId: eventIdString, userId: userId } })
       .then(() => {
-        refetch({ id: eventNumberID });
+        refetch({ id: eventIdString });
         setOpenSignOffSuccessSnackbar(true);
       })
       .catch(() => {
@@ -153,16 +153,19 @@ const EventAdminPage: NextPageWithLayout = () => {
                       <CardHeader title="Generell informasjon" />
                       <CardContent>
                         <Stack spacing={2}>
-                          {stringEventFields.map((headerPair: HeaderValuePair<Event>) =>
-                            renderInfo(headerPair.header, data.event[headerPair.field] as string)
+                          {stringEventFields.map(
+                            (headerPair) =>
+                              data.event && renderInfo(headerPair.header, data.event[headerPair.field] as string)
                           )}
-                          {dateEventFields.map((headerPair: HeaderValuePair<Event>) =>
-                            renderInfo(
-                              headerPair.header,
-                              data.event[headerPair.field]
-                                ? dayjs(data.event[headerPair.field] as string).format("HH:mm DD-MM-YYYY")
-                                : ""
-                            )
+                          {dateEventFields.map(
+                            (headerPair) =>
+                              data.event &&
+                              renderInfo(
+                                headerPair.header,
+                                data.event[headerPair.field]
+                                  ? dayjs(data.event[headerPair.field] as string).format("HH:mm DD-MM-YYYY")
+                                  : ""
+                              )
                           )}
                           <Button variant="contained" startIcon={<Edit />} onClick={() => setOpenEditEvent(true)}>
                             Rediger
@@ -175,8 +178,8 @@ const EventAdminPage: NextPageWithLayout = () => {
                     <Card>
                       <CardHeader title="Påmeldte" />
                       <CardActions>
-                        {eventId ? <EmailForm eventId={eventId} /> : <CircularProgress color="primary" />}
-                        <AttendeeExport eventId={eventNumberID} />
+                        {eventId ? <EmailForm eventId={eventIdString} /> : <CircularProgress color="primary" />}
+                        <AttendeeExport eventId={eventIdString} />
                       </CardActions>
                       <CardContent>
                         {data.event?.usersAttending?.length !== 0 ? (
@@ -192,14 +195,14 @@ const EventAdminPage: NextPageWithLayout = () => {
                                 </TableRow>
                               </TableHead>
                               <TableBody>
-                                {data.event?.usersAttending?.map((signUp: SignUp) => (
+                                {data.event?.usersAttending?.map((signUp) => (
                                   <TableRow key={`user-row-${signUp.user.id}`}>
                                     {signUpFields.map((field) => (
                                       <TableCell key={`user-${signUp.user.id}-cell--${field.field}`}>
                                         <CellContent signUp={signUp} field={field} />
                                       </TableCell>
                                     ))}
-                                    {data.event.product && (
+                                    {data.event?.product && (
                                       <TableCell>
                                         {signUp.hasBoughtTicket ? <Check color="primary" /> : <Close color="error" />}
                                       </TableCell>
