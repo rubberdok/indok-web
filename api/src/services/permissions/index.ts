@@ -1,5 +1,5 @@
 import { Permission, User } from "@prisma/client";
-import { inject, injectable } from "inversify";
+import { inject, injectable } from "tsyringe";
 
 import { IPermissionRepository, Types } from "@/repositories";
 import { IPermissionService } from "@/services/interfaces";
@@ -9,7 +9,7 @@ import { PermissionString } from "./types";
 import { isPermissionString } from "./utils";
 
 @injectable()
-export default class PermissionService implements IPermissionService {
+export class PermissionService implements IPermissionService {
   constructor(
     @inject(Types.PermissionRepository)
     private permissionRepository: IPermissionRepository

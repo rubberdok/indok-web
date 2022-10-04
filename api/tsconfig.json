@@ -12,6 +12,7 @@
     "moduleResolution": "node",
     "sourceMap": true,
     "esModuleInterop": true,
+    "noUncheckedIndexedAccess": true,
     "lib": ["ES2022"],
     "strict": true,
     "rootDir": ".",
@@ -25,5 +26,8 @@
     "baseUrl": "."
   },
   "include": ["src/**/*.ts"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules"],
+  "files": [
+    "src/index.ts"
+  ]
 }

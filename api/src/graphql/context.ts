@@ -1,5 +1,5 @@
 import { ExpressContextFunctionArgument } from "@apollo/server/dist/esm/express4";
-import { Container, inject, injectable } from "inversify";
+import { DependencyContainer, inject, injectable } from "tsyringe";
 
 import { IAuthService, ICabinService, IPermissionService, IUserService, Types } from "@/services";
 
@@ -31,7 +31,7 @@ class ContextProvider implements IContextProvider {
 }
 
 export default {
-  bind: (container: Container) => {
-    container.bind<IContextProvider>(Type).to(ContextProvider);
+  register: (container: DependencyContainer) => {
+    container.register<IContextProvider>(Type, { useClass: ContextProvider });
   },
 };
