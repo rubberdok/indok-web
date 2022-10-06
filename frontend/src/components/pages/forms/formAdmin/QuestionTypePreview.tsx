@@ -2,7 +2,6 @@ import { Checkbox, FormControlLabel, FormGroup, Radio, RadioGroup, TextField, Bo
 
 import questionTypeLabels from "@/components/pages/forms/formAdmin/questionTypeLabels";
 import { QuestionTypeEnum, QuestionWithAnswerIdsFragment } from "@/generated/graphql";
-import { Question } from "@/interfaces/forms";
 
 type Props = {
   question: QuestionWithAnswerIdsFragment;
