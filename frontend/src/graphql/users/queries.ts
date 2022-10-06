@@ -42,6 +42,19 @@ export const GET_USER = gql`
         id
         name
       }
+      memberships {
+        id
+        organization {
+          id
+          name
+          hrGroup {
+            uuid
+          }
+        }
+        group {
+          uuid
+        }
+      }
     }
   }
 `;

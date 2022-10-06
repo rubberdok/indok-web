@@ -11,4 +11,7 @@ export interface Organization {
   listings?: Listing[];
   slug: string;
   logoUrl?: string;
+  hrGroup: {
+    uuid: string;
+  };
 }

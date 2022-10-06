@@ -1,3 +1,4 @@
+import { Membership } from "./membership";
 import { Organization } from "./organizations";
 
 export type UserInfo = {
@@ -17,5 +18,6 @@ export type UserInfo = {
 
 export type User = {
   organizations: Organization[];
+  memberships: Membership[];
   events: Partial<Event>[];
 } & UserInfo;
