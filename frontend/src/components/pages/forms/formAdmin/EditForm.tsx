@@ -7,13 +7,14 @@ import ConfirmFormChange from "@/components/pages/forms/formAdmin/ConfirmFormCha
 import EditQuestion from "@/components/pages/forms/formAdmin/EditQuestion";
 import QuestionPreview from "@/components/pages/forms/formAdmin/QuestionPreview";
 import {
+  CreateQuestionDocument,
+  DeleteQuestionDocument,
   FormWithAllResponsesFragment,
   FormWithAllResponsesFragmentDoc,
+  QuestionTypeEnum,
   QuestionWithAnswerIdsFragment,
+  UpdateQuestionDocument,
 } from "@/generated/graphql";
-import { FORM_RESPONSES_FRAGMENT } from "@/graphql/forms/fragments";
-import { CREATE_QUESTION, DELETE_QUESTION, UPDATE_QUESTION } from "@/graphql/forms/mutations";
-import { Form, QuestionVariables } from "@/interfaces/forms";
 
 type Props = { form: FormWithAllResponsesFragment };
 
@@ -33,59 +34,54 @@ const EditForm: React.FC<Props> = ({ form }) => {
   >(undefined);
 
   // mutation to create a new question
-  const [createQuestion] = useMutation<{ createQuestion: { question: QuestionWithAnswerIdsFragment } }>(
-    CREATE_QUESTION,
-    {
-      // updates the cache upon creating the question, keeping the client consistent with the database
-      update: (cache, { data }) => {
-        // gets the new question from the mutation's return
-        const newQuestion = data?.createQuestion.question;
-        // reads the cached form on which to update the question
-        const cachedForm = cache.readFragment({
+  const [createQuestion] = useMutation(CreateQuestionDocument, {
+    // updates the cache upon creating the question, keeping the client consistent with the database
+    update: (cache, { data }) => {
+      // gets the new question from the mutation's return
+      const newQuestion = data?.createQuestion?.question;
+      // reads the cached form on which to update the question
+      const cachedForm = cache.readFragment({
+        id: `FormType:${form.id}`,
+        fragment: FormWithAllResponsesFragmentDoc,
+        fragmentName: "FormWithAllResponses",
+      });
+      if (cachedForm && newQuestion) {
+        // adds the new question to the questions field of the cached form
+        cache.writeFragment({
           id: `FormType:${form.id}`,
           fragment: FormWithAllResponsesFragmentDoc,
           fragmentName: "FormWithAllResponses",
+          data: {
+            ...cachedForm,
+            questions: [...cachedForm.questions, newQuestion],
+          },
         });
-        if (cachedForm && newQuestion) {
-          // adds the new question to the questions field of the cached form
-          cache.writeFragment({
-            id: `FormType:${form.id}`,
-            fragment: FormWithAllResponsesFragmentDoc,
-            fragmentName: "FormWithAllResponses",
-            data: {
-              ...cachedForm,
-              questions: [...cachedForm.questions, newQuestion],
-            },
-          });
-        }
-      },
-      onCompleted: ({ createQuestion }) => {
-        if (createQuestion) {
-          switchActiveQuestion(createQuestion.question);
-        }
-      },
-    }
-  );
+      }
+    },
+    onCompleted: ({ createQuestion }) => {
+      if (createQuestion?.question) {
+        switchActiveQuestion(createQuestion.question);
+      }
+    },
+  });
 
   // mutation to update a question (and its options)
-  const [updateQuestion] = useMutation<
-    { updateQuestion: { question: QuestionWithAnswerIdsFragment } },
-    QuestionVariables
-  >(UPDATE_QUESTION, {
+  const [updateQuestion] = useMutation(UpdateQuestionDocument, {
     // updates the cache upon updating the question
     update: (cache, { data }) => {
-      const newQuestion = data?.updateQuestion.question;
-      const cachedForm = cache.readFragment<Form>({
+      const newQuestion = data?.updateQuestion?.question;
+      const cachedForm = cache.readFragment({
         id: `FormType:${form.id}`,
-        fragment: FORM_RESPONSES_FRAGMENT,
-        fragmentName: "FormResponsesFragment",
+        fragment: FormWithAllResponsesFragmentDoc,
+        fragmentName: "FormWithAllResponses",
       });
       if (cachedForm && newQuestion) {
         cache.writeFragment({
           id: `FormType:${form.id}`,
-          fragment: FORM_RESPONSES_FRAGMENT,
-          fragmentName: "FormResponsesFragment",
+          fragment: FormWithAllResponsesFragmentDoc,
+          fragmentName: "FormWithAllResponses",
           data: {
+            ...cachedForm,
             questions: cachedForm.questions.map((question) =>
               question.id === newQuestion.id ? newQuestion : question
             ),
@@ -96,21 +92,22 @@ const EditForm: React.FC<Props> = ({ form }) => {
   });
 
   // mutation to delete the question
-  const [deleteQuestion] = useMutation<{ deleteQuestion: { deletedId: string } }>(DELETE_QUESTION, {
+  const [deleteQuestion] = useMutation(DeleteQuestionDocument, {
     // updates the cache upon deleting the question
     update: (cache, { data }) => {
-      const cachedForm = cache.readFragment<Form>({
+      const cachedForm = cache.readFragment({
         id: `FormType:${form.id}`,
-        fragment: FORM_RESPONSES_FRAGMENT,
-        fragmentName: "FormResponsesFragment",
+        fragment: FormWithAllResponsesFragmentDoc,
+        fragmentName: "FormWithAllResponses",
       });
-      const deletedId = data?.deleteQuestion.deletedId;
+      const deletedId = data?.deleteQuestion?.deletedId;
       if (cachedForm && deletedId) {
         cache.writeFragment({
           id: `FormType:${form.id}`,
-          fragment: FORM_RESPONSES_FRAGMENT,
-          fragmentName: "FormResponsesFragment",
+          fragment: FormWithAllResponsesFragmentDoc,
+          fragmentName: "FormWithAllResponses",
           data: {
+            ...cachedForm,
             questions: cachedForm.questions.filter((question) => question.id !== deletedId),
           },
         });
@@ -128,17 +125,20 @@ const EditForm: React.FC<Props> = ({ form }) => {
         updateQuestion({
           variables: {
             id: activeQuestion.id,
-            question: activeQuestion.question,
-            description: activeQuestion.description,
-            questionType: activeQuestion.questionType,
-            mandatory: activeQuestion.mandatory,
-            options:
+            questionData: {
+              question: activeQuestion.question,
+              description: activeQuestion.description,
+              questionType: activeQuestion.questionType,
+              mandatory: activeQuestion.mandatory,
+            },
+            optionData:
               activeQuestion.options &&
-              (activeQuestion.questionType === "CHECKBOXES" ||
-                activeQuestion.questionType === "MULTIPLE_CHOICE" ||
-                activeQuestion.questionType === "DROPDOWN")
+              (activeQuestion.questionType === QuestionTypeEnum.Checkboxes ||
+                activeQuestion.questionType === QuestionTypeEnum.MultipleChoice ||
+                activeQuestion.questionType === QuestionTypeEnum.Dropdown)
                 ? activeQuestion.options.map((option) => ({
-                    // replaces "|||" with empty string in options, as ||| is used to separate checkbox answers (see AnswerCheckboxes)
+                    // replaces "|||" with empty string in options, as ||| is used to separate checkbox answers
+                    // see AnswerCheckboxes for explanation
                     answer: option.answer.replace(/\|\|\|/g, ""),
                     ...(option.id ? { id: option.id } : {}),
                   }))
@@ -157,9 +157,8 @@ const EditForm: React.FC<Props> = ({ form }) => {
     } else {
       createQuestion({
         variables: {
-          question: "",
-          description: "",
           formId: form.id,
+          questionData: { question: "", description: "" },
         },
       });
     }

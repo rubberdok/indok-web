@@ -4,8 +4,7 @@ import { Button, Card, CardContent, FormHelperText, Grid, Typography } from "@mu
 import { useRouter } from "next/router";
 import { useState } from "react";
 
-import { FormWithAnswersFragment, QuestionWithAnswerFragment } from "@/generated/graphql";
-import { SUBMIT_ANSWERS } from "@/graphql/forms/mutations";
+import { FormWithAnswersFragment, QuestionWithAnswerFragment, SubmitAnswersDocument } from "@/generated/graphql";
 
 import AnswerQuestion from "./AnswerQuestion";
 
@@ -31,17 +30,13 @@ const AnswerForm: React.FC<Props> = ({ form }) => {
   const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
 
   // mutation to submit answers
-  const [submitAnswers] = useMutation<
-    // object returned from the mutation
-    { submitAnswers: { ok: boolean; message: string } },
-    // variables of the mutation
-    { formId: string; answersData: { questionId: string; answer: string }[] }
-  >(SUBMIT_ANSWERS, {
+  const [submitAnswers] = useMutation(SubmitAnswersDocument, {
     onCompleted: ({ submitAnswers }) => {
+      if (!submitAnswers) return;
       if (submitAnswers.ok) {
         router.push("/");
       } else {
-        setErrorMessage(submitAnswers.message);
+        setErrorMessage(submitAnswers.message ?? undefined);
       }
     },
   });
