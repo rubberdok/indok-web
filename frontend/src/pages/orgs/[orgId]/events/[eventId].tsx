@@ -32,13 +32,12 @@ import AttendeeExport from "@/components/pages/events/AttendeeExport";
 import EmailForm from "@/components/pages/events/email/EmailForm";
 import EditEvent from "@/components/pages/events/EventEditor";
 import OrganizationEventHero from "@/components/pages/organization/OrganizationEventHero";
-import { AdminEventDocument, AdminEventSignOffDocument } from "@/generated/graphql";
+import { AdminEventDocument, AdminEventFragment, AdminEventSignOffDocument, SignUpFragment } from "@/generated/graphql";
 import { HeaderValuePair } from "@/interfaces/utils";
 import Layout from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/pages/_app";
-import { AdminEvent, SignUp } from "@/types/events";
 
-const signUpFields: HeaderValuePair<SignUp>[] = [
+const signUpFields: HeaderValuePair<SignUpFragment>[] = [
   { header: "Navn", field: "user" },
   { header: "Mobilnummer", field: "userPhoneNumber" },
   { header: "Klassetrinn", field: "userGradeYear" },
@@ -46,7 +45,7 @@ const signUpFields: HeaderValuePair<SignUp>[] = [
   { header: "E-post", field: "userEmail" },
 ];
 
-const stringEventFields: HeaderValuePair<AdminEvent>[] = [
+const stringEventFields: HeaderValuePair<AdminEventFragment>[] = [
   { header: "Tittel", field: "title" },
   { header: "Kort beskrivelse", field: "shortDescription" },
   // { header: "Beskrivelse", field: "description" },
@@ -56,7 +55,7 @@ const stringEventFields: HeaderValuePair<AdminEvent>[] = [
   { header: "Bindende påmelding", field: "bindingSignup" },
 ];
 
-const dateEventFields: HeaderValuePair<AdminEvent>[] = [
+const dateEventFields: HeaderValuePair<AdminEventFragment>[] = [
   { header: "Starttid", field: "startTime" },
   { header: "Slutttid", field: "endTime" },
   { header: "Påmeldingsfrist", field: "deadline" },
@@ -118,7 +117,7 @@ const EventAdminPage: NextPageWithLayout = () => {
       });
   };
 
-  const CellContent = ({ signUp, field }: { signUp: SignUp; field: HeaderValuePair<SignUp> }) => {
+  const CellContent = ({ signUp, field }: { signUp: SignUpFragment; field: HeaderValuePair<SignUpFragment> }) => {
     if (field.header === "Navn") {
       return (
         <Typography variant="body2">
@@ -249,7 +248,7 @@ const EventAdminPage: NextPageWithLayout = () => {
                                 </TableRow>
                               </TableHead>
                               <TableBody>
-                                {data.event?.usersOnWaitingList?.map((signUp: SignUp) => (
+                                {data.event?.usersOnWaitingList?.map((signUp) => (
                                   <TableRow key={`user-row-${signUp.user.id}`}>
                                     {signUpFields.map((field) => (
                                       <TableCell key={`user-${signUp.user.id}-cell--${field.field}`}>

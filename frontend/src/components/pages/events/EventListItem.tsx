@@ -5,16 +5,16 @@ import nb from "dayjs/locale/nb";
 import Link from "next/link";
 import React from "react";
 
+import { EventInListFragment } from "@/generated/graphql";
 import useResponsive from "@/hooks/useResponsive";
 import { User } from "@/interfaces/users";
-import { EventInList } from "@/types/events";
 
 const formatDate = (dateAndTime: string) => {
   return dayjs(dateAndTime).locale(nb).format(`D. MMM`);
 };
 
 interface Props {
-  event: EventInList;
+  event: EventInListFragment;
   user?: User;
 }
 

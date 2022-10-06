@@ -2,11 +2,11 @@ import { Chip, Table, TableBody, TableCell, TableContainer, TableHead, TableRow 
 import dayjs from "dayjs";
 import Link from "next/link";
 
+import { EventFragment } from "@/generated/graphql";
 import { Organization } from "@/interfaces/organizations";
 import { HeaderValuePair } from "@/interfaces/utils";
-import { Event } from "@/types/events";
 
-const eventFields: HeaderValuePair<Event>[] = [
+const eventFields: HeaderValuePair<EventFragment>[] = [
   { header: "Navn", field: "title" },
   { header: "Antall Plasser", field: "availableSlots" },
 ];
@@ -34,7 +34,7 @@ const OrgEventsTable: React.FC<Props> = ({ organization }) => {
             <Link href={`${organization.id}/events/${event.id}`} passHref key={event.id}>
               <TableRow hover sx={{ pointer: "cursor" }}>
                 <TableCell>{dayjs(event.startTime).format("HH:mm DD-MM-YYYY")}</TableCell>
-                {eventFields.map((field: HeaderValuePair<Event>) => (
+                {eventFields.map((field) => (
                   <TableCell key={`event-${event.id}-cell-${field.field}`}>{event[field.field]}</TableCell>
                 ))}
                 <TableCell>{event.usersAttending?.length}</TableCell>
