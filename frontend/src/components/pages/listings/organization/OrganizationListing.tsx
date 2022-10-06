@@ -4,9 +4,9 @@ import Link from "next/link";
 import ReactMarkdown from "react-markdown";
 
 import * as components from "@/components/MarkdownForm/components";
-import { Listing } from "@/types/listings";
+import { ListingFragment } from "@/generated/graphql";
 
-type Props = { listing: Listing };
+type Props = { listing: ListingFragment };
 
 /** Component for authorized organization members to administer their listing. */
 const OrganizationListing: React.FC<Props> = ({ listing }) => (

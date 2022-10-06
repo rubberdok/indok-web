@@ -19,7 +19,8 @@ import {
 import React, { ChangeEvent } from "react";
 
 import MarkdownForm from "@/components/MarkdownForm";
-import { ListingInput, ListingOrganization } from "@/types/listings";
+import { ListingOrganizationFragment } from "@/generated/graphql";
+import { ListingInput } from "@/types/listings";
 
 /**
  * A form to create or edit a listing.
@@ -36,7 +37,7 @@ const ListingForm: React.FC<{
   setListing: (listing: ListingInput) => void;
   onSubmit: (e: React.MouseEvent<HTMLButtonElement>) => void;
   onCancel: () => void;
-  organizations: ListingOrganization[];
+  organizations: ListingOrganizationFragment[];
 }> = ({ listing, setListing, onSubmit, onCancel, organizations }) => {
   /**
    * Helper method to handle changes to TextFields.

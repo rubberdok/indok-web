@@ -6,88 +6,94 @@ import { useState } from "react";
 import ConfirmFormChange from "@/components/pages/forms/formAdmin/ConfirmFormChange";
 import EditQuestion from "@/components/pages/forms/formAdmin/EditQuestion";
 import QuestionPreview from "@/components/pages/forms/formAdmin/QuestionPreview";
-import { FormWithAllResponsesFragmentDoc } from "@/generated/graphql";
+import {
+  FormWithAllResponsesFragment,
+  FormWithAllResponsesFragmentDoc,
+  QuestionWithAnswerIdsFragment,
+} from "@/generated/graphql";
 import { FORM_RESPONSES_FRAGMENT } from "@/graphql/forms/fragments";
 import { CREATE_QUESTION, DELETE_QUESTION, UPDATE_QUESTION } from "@/graphql/forms/mutations";
 import { Form, QuestionVariables } from "@/interfaces/forms";
-import { FormWithAllResponses, QuestionWithAnswerIds } from "@/types/forms";
 
-type Props = { form: FormWithAllResponses };
+type Props = { form: FormWithAllResponsesFragment };
 
 /** Component for editing forms (for example: the applications to listings). */
 const EditForm: React.FC<Props> = ({ form }) => {
   // state to manage the question on the form currently being edited
   // undefined if no question is currently being edited
-  const [activeQuestion, setActiveQuestion] = useState<QuestionWithAnswerIds | undefined>();
+  const [activeQuestion, setActiveQuestion] = useState<QuestionWithAnswerIdsFragment | undefined>();
 
   // state for whether to show a confirmation dialog after changing the form
   // "update" type also includes toSwitch for question to switch to after confirming
   const [confirmationDialog, setConfirmationDialog] = useState<
     | { type: "create" }
-    | { type: "update"; toSwitch: QuestionWithAnswerIds | undefined }
+    | { type: "update"; toSwitch: QuestionWithAnswerIdsFragment | undefined }
     | { type: "delete" }
     | undefined
   >(undefined);
 
   // mutation to create a new question
-  const [createQuestion] = useMutation<{ createQuestion: { question: QuestionWithAnswerIds } }>(CREATE_QUESTION, {
-    // updates the cache upon creating the question, keeping the client consistent with the database
-    update: (cache, { data }) => {
-      // gets the new question from the mutation's return
-      const newQuestion = data?.createQuestion.question;
-      // reads the cached form on which to update the question
-      const cachedForm = cache.readFragment({
-        id: `FormType:${form.id}`,
-        fragment: FormWithAllResponsesFragmentDoc,
-        fragmentName: "FormWithAllResponses",
-      });
-      if (cachedForm && newQuestion) {
-        // adds the new question to the questions field of the cached form
-        cache.writeFragment({
+  const [createQuestion] = useMutation<{ createQuestion: { question: QuestionWithAnswerIdsFragment } }>(
+    CREATE_QUESTION,
+    {
+      // updates the cache upon creating the question, keeping the client consistent with the database
+      update: (cache, { data }) => {
+        // gets the new question from the mutation's return
+        const newQuestion = data?.createQuestion.question;
+        // reads the cached form on which to update the question
+        const cachedForm = cache.readFragment({
           id: `FormType:${form.id}`,
           fragment: FormWithAllResponsesFragmentDoc,
           fragmentName: "FormWithAllResponses",
-          data: {
-            ...cachedForm,
-            questions: [...cachedForm.questions, newQuestion],
-          },
-        });
-      }
-    },
-    onCompleted: ({ createQuestion }) => {
-      if (createQuestion) {
-        switchActiveQuestion(createQuestion.question);
-      }
-    },
-  });
-
-  // mutation to update a question (and its options)
-  const [updateQuestion] = useMutation<{ updateQuestion: { question: QuestionWithAnswers } }, QuestionVariables>(
-    UPDATE_QUESTION,
-    {
-      // updates the cache upon updating the question
-      update: (cache, { data }) => {
-        const newQuestion = data?.updateQuestion.question;
-        const cachedForm = cache.readFragment<Form>({
-          id: `FormType:${form.id}`,
-          fragment: FORM_RESPONSES_FRAGMENT,
-          fragmentName: "FormResponsesFragment",
         });
         if (cachedForm && newQuestion) {
+          // adds the new question to the questions field of the cached form
           cache.writeFragment({
             id: `FormType:${form.id}`,
-            fragment: FORM_RESPONSES_FRAGMENT,
-            fragmentName: "FormResponsesFragment",
+            fragment: FormWithAllResponsesFragmentDoc,
+            fragmentName: "FormWithAllResponses",
             data: {
-              questions: cachedForm.questions.map((question) =>
-                question.id === newQuestion.id ? newQuestion : question
-              ),
+              ...cachedForm,
+              questions: [...cachedForm.questions, newQuestion],
             },
           });
         }
       },
+      onCompleted: ({ createQuestion }) => {
+        if (createQuestion) {
+          switchActiveQuestion(createQuestion.question);
+        }
+      },
     }
   );
+
+  // mutation to update a question (and its options)
+  const [updateQuestion] = useMutation<
+    { updateQuestion: { question: QuestionWithAnswerIdsFragment } },
+    QuestionVariables
+  >(UPDATE_QUESTION, {
+    // updates the cache upon updating the question
+    update: (cache, { data }) => {
+      const newQuestion = data?.updateQuestion.question;
+      const cachedForm = cache.readFragment<Form>({
+        id: `FormType:${form.id}`,
+        fragment: FORM_RESPONSES_FRAGMENT,
+        fragmentName: "FormResponsesFragment",
+      });
+      if (cachedForm && newQuestion) {
+        cache.writeFragment({
+          id: `FormType:${form.id}`,
+          fragment: FORM_RESPONSES_FRAGMENT,
+          fragmentName: "FormResponsesFragment",
+          data: {
+            questions: cachedForm.questions.map((question) =>
+              question.id === newQuestion.id ? newQuestion : question
+            ),
+          },
+        });
+      }
+    },
+  });
 
   // mutation to delete the question
   const [deleteQuestion] = useMutation<{ deleteQuestion: { deletedId: string } }>(DELETE_QUESTION, {
@@ -113,7 +119,7 @@ const EditForm: React.FC<Props> = ({ form }) => {
   });
 
   // function to update the current active question to the database and then set a new one
-  const switchActiveQuestion = (question: QuestionWithAnswers | undefined) => {
+  const switchActiveQuestion = (question: QuestionWithAnswerIdsFragment | undefined) => {
     if (activeQuestion) {
       if (activeQuestion.answers && activeQuestion.answers.length > 0 && confirmationDialog?.type !== "update") {
         setConfirmationDialog({ type: "update", toSwitch: question });

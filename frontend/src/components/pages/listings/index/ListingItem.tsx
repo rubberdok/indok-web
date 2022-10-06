@@ -6,7 +6,7 @@ import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import Link from "next/link";
 
-import { Listing } from "@/types/listings";
+import { ListingFragment } from "@/generated/graphql";
 
 dayjs.extend(timezone);
 dayjs.extend(utc);
@@ -36,7 +36,7 @@ const translateChip = (chip: string) => {
   }
 };
 
-type Props = { listing: Listing };
+type Props = { listing: ListingFragment };
 
 /** Component for listing item in overview of listings. */
 const ListingItem: React.FC<Props> = ({ listing }) => {

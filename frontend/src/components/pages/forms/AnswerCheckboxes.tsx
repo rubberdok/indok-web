@@ -1,10 +1,10 @@
 import { Checkbox, FormControlLabel, FormGroup } from "@mui/material";
 import { useEffect, useState } from "react";
 
-import { Option, Question } from "@/types/forms";
+import { OptionFragment, QuestionFragment } from "@/generated/graphql";
 
 type Props = {
-  question: Question;
+  question: QuestionFragment;
   /** Answer state passed down from AnswerForm */
   answer: string;
   onAnswerChange: (value: string) => void;
@@ -16,7 +16,7 @@ type Props = {
  */
 const AnswerCheckboxes: React.FC<Props> = ({ answer, question, onAnswerChange }) => {
   // state to manage which options are selected
-  const [selectedOptions, selectOptions] = useState<Option[]>(
+  const [selectedOptions, selectOptions] = useState<OptionFragment[]>(
     question.options ? question.options?.filter((option) => answer.split("|||").includes(option.answer)) : []
   );
 

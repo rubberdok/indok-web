@@ -1,11 +1,10 @@
 import { FormControlLabel, MenuItem, Radio, RadioGroup, Select, TextField } from "@mui/material";
 
 import AnswerCheckboxes from "@/components/pages/forms/AnswerCheckboxes";
-import { QuestionTypeEnum } from "@/generated/graphql";
-import { Question } from "@/types/forms";
+import { QuestionFragment, QuestionTypeEnum } from "@/generated/graphql";
 
 type Props = {
-  question: Question;
+  question: QuestionFragment;
   /** Answer state passed down from AnswerForm */
   answer: string;
   onAnswerChange: (value: string) => void;

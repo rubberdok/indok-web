@@ -4,17 +4,17 @@ import { Button, Card, CardContent, FormHelperText, Grid, Typography } from "@mu
 import { useRouter } from "next/router";
 import { useState } from "react";
 
+import { FormWithAnswersFragment, QuestionWithAnswerFragment } from "@/generated/graphql";
 import { SUBMIT_ANSWERS } from "@/graphql/forms/mutations";
-import { FormWithAnswers, QuestionWithAnswer } from "@/types/forms";
 
 import AnswerQuestion from "./AnswerQuestion";
 
 // interface for the state of answers before pushing to the database
 type Questions = {
-  [key: string]: { question: QuestionWithAnswer; answer: string };
+  [key: string]: { question: QuestionWithAnswerFragment; answer: string };
 };
 
-type Props = { form: FormWithAnswers };
+type Props = { form: FormWithAnswersFragment };
 
 /** Component for a user to answer a form. */
 const AnswerForm: React.FC<Props> = ({ form }) => {
