@@ -1,4 +1,4 @@
-import { Event } from "@/interfaces/events";
+import { AdminEventFragment } from "@/generated/graphql";
 import { Listing } from "@/interfaces/listings";
 
 export interface Organization {
@@ -7,7 +7,7 @@ export interface Organization {
   description: string;
   color: string | null;
   children?: Organization[];
-  events?: Event[];
+  events?: AdminEventFragment[];
   listings?: Listing[];
   slug: string;
   logoUrl?: string;
