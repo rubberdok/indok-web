@@ -25,12 +25,11 @@ import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 
 import SalesTermsDialog from "@/components/pages/ecommerce/SalesTermsDialog";
-import { AttemptCapturePaymentDocument, PaymentStatus } from "@/generated/graphql";
+import { AttemptCapturePaymentDocument, OrderFragment, PaymentStatus } from "@/generated/graphql";
 import { GET_USER } from "@/graphql/users/queries";
 import { User } from "@/interfaces/users";
 import Layout, { RootStyle } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/pages/_app";
-import { Order } from "@/types/ecommerce";
 import savings from "~/public/illustrations/Savings.svg";
 
 const FallbackPage: NextPageWithLayout = () => {
@@ -43,7 +42,7 @@ const FallbackPage: NextPageWithLayout = () => {
   const { data: userData } = useQuery<{ user?: User }>(GET_USER);
 
   const [paymentStatus, setPaymentStatus] = useState(PaymentStatus.Reserved);
-  const [order, setOrder] = useState<Order>();
+  const [order, setOrder] = useState<OrderFragment>();
   const [openSalesTerms, setOpenSalesTerms] = useState(false);
   const intervalRef: { current: NodeJS.Timer | null } = useRef(null);
 
