@@ -25,32 +25,32 @@ import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 
 import SalesTermsDialog from "@/components/pages/ecommerce/SalesTermsDialog";
-import { ATTEMPT_CAPTURE_PAYMENT } from "@/graphql/ecommerce/mutations";
+import { AttemptCapturePaymentDocument, PaymentStatus } from "@/generated/graphql";
 import { GET_USER } from "@/graphql/users/queries";
-import { Order, PaymentStatus } from "@/interfaces/ecommerce";
 import { User } from "@/interfaces/users";
 import Layout, { RootStyle } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/pages/_app";
+import { Order } from "@/types/ecommerce";
 import savings from "~/public/illustrations/Savings.svg";
 
 const FallbackPage: NextPageWithLayout = () => {
   const router = useRouter();
   const { orderId, redirect } = router.query;
 
-  const [attemptCapturePayment, { data, loading, error }] = useMutation(ATTEMPT_CAPTURE_PAYMENT, {
+  const [attemptCapturePayment, { data, loading, error }] = useMutation(AttemptCapturePaymentDocument, {
     onError: () => intervalRef.current && clearInterval(intervalRef.current),
   });
   const { data: userData } = useQuery<{ user?: User }>(GET_USER);
 
-  const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>("RESERVED");
+  const [paymentStatus, setPaymentStatus] = useState(PaymentStatus.Reserved);
   const [order, setOrder] = useState<Order>();
   const [openSalesTerms, setOpenSalesTerms] = useState(false);
   const intervalRef: { current: NodeJS.Timer | null } = useRef(null);
 
   useEffect(() => {
-    if (orderId && paymentStatus == "RESERVED") {
+    if (orderId && paymentStatus == PaymentStatus.Reserved) {
       intervalRef.current = setInterval(() => {
-        attemptCapturePayment({ variables: { orderId } });
+        attemptCapturePayment({ variables: { orderId: orderId as string } });
       }, 2000);
     }
     return () => {
@@ -59,12 +59,17 @@ const FallbackPage: NextPageWithLayout = () => {
   }, [orderId]);
 
   useEffect(() => {
-    if (data) {
-      setPaymentStatus(data.attemptCapturePayment.status);
-      setOrder(data.attemptCapturePayment.order);
-      if (["CAPTURED", "CANCELLED"].includes(data.attemptCapturePayment.status) && intervalRef.current) {
-        // We either sucessfully captured payment or the payment was somehow cancelled
-        clearInterval(intervalRef.current);
+    if (data?.attemptCapturePayment) {
+      const { status, order } = data.attemptCapturePayment;
+      if (status) {
+        setPaymentStatus(status);
+        if (["CAPTURED", "CANCELLED"].includes(status) && intervalRef.current) {
+          // We either sucessfully captured payment or the payment was somehow cancelled
+          clearInterval(intervalRef.current);
+        }
+      }
+      if (order) {
+        setOrder(order);
       }
     }
     return () => {
