@@ -1,0 +1,43 @@
+mutation createEvent($eventData: CreateEventInput!) {
+  createEvent(eventData: $eventData) {
+    event {
+      ...EventInList
+    }
+    ok
+  }
+}
+
+mutation updateEvent($id: ID!, $eventData: UpdateEventInput!) {
+  updateEvent(id: $id, eventData: $eventData) {
+    event {
+      ...Event
+    }
+    ok
+  }
+}
+
+mutation eventSignUp($eventId: ID!, $extraInformation: String) {
+  eventSignUp(eventId: $eventId, data: { extraInformation: $extraInformation }) {
+    isFull
+  }
+}
+
+mutation eventSignOff($eventId: ID!) {
+  eventSignOff(eventId: $eventId) {
+    isFull
+  }
+}
+
+mutation adminEventSignOff($eventId: ID!, $userId: ID!) {
+  adminEventSignOff(eventId: $eventId, userId: $userId) {
+    event {
+      id
+    }
+  }
+}
+
+mutation sendEventMails($eventId: ID!, $receiverEmails: [String!], $content: String, $subject: String!) {
+  sendEventMails(eventId: $eventId, receiverEmails: $receiverEmails, content: $content, subject: $subject) {
+    ok
+  }
+}

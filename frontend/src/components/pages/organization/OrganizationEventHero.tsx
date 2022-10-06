@@ -1,9 +1,7 @@
 import Title from "@/components/Title";
-import { Event } from "@/interfaces/events";
+import { AdminEventFragment } from "@/generated/graphql";
 
-type Props = {
-  event: Event;
-};
+type Props = { event: AdminEventFragment };
 
 const OrganizationEventHero: React.FC<Props> = ({ event }) => {
   return (
