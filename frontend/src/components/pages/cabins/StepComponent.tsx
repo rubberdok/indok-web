@@ -2,7 +2,7 @@ import { Typography } from "@mui/material";
 import React from "react";
 
 import { CabinFragment } from "@/generated/graphql";
-import { ContactInfo, ContactInfoValidations, DatePick } from "@/interfaces/cabins";
+import { ContactInfo, ContactInfoValidations, DatePick } from "@/types/cabins";
 
 import CabinContactInfo from "./CabinContactInfo";
 import CheckInOut from "./CheckInOut";

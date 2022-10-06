@@ -20,15 +20,6 @@ import ErrorDialog from "@/components/Dialog/ErrorDialog";
 import { UpdateBookingSemesterDocument } from "@/generated/graphql";
 import useBookingSemester from "@/hooks/cabins/useBookingSemester";
 
-export type BookingSemester = {
-  fallStartDate: string;
-  fallEndDate: string;
-  springStartDate: string;
-  springEndDate: string;
-  fallSemesterActive: boolean;
-  springSemesterActive: boolean;
-};
-
 const BookingSemesterPicker: React.VFC = () => {
   const [updateBookingSemester] = useMutation(UpdateBookingSemesterDocument);
   const handleErrorDialogClose = () => router.push("/");

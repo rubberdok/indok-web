@@ -7,7 +7,7 @@ import LabeledIcon from "@/components/LabeledIcon";
 import { CabinFragment } from "@/generated/graphql";
 import useDisabledDates from "@/hooks/cabins/useDisabledDates";
 import useResponsive from "@/hooks/useResponsive";
-import { DatePick } from "@/interfaces/cabins";
+import { DatePick } from "@/types/cabins";
 
 interface Props {
   allCabins: CabinFragment[];

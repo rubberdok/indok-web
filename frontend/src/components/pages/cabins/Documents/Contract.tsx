@@ -4,7 +4,7 @@ import Image from "next/future/image";
 import { useEffect, useState } from "react";
 
 import { ActiveBookingResponsibleDocument, BookingResponsibleFragment, CabinFragment } from "@/generated/graphql";
-import { ContactInfo, DatePick } from "@/interfaces/cabins";
+import { ContactInfo, DatePick } from "@/types/cabins";
 import { calculatePrice, convertDateFormat, toStringChosenCabins } from "@/utils/cabins";
 import hytteforeningen from "~/public/static/cabins/logo.svg";
 

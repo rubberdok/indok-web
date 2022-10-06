@@ -20,9 +20,9 @@ import ContractDialog from "@/components/pages/cabins/Popup/ContractDialog";
 import StepComponent from "@/components/pages/cabins/StepComponent";
 import { CabinFragment, CabinsDocument, CreateBookingDocument, SendEmailDocument } from "@/generated/graphql";
 import useResponsive from "@/hooks/useResponsive";
-import { ContactInfo, ContactInfoValidations, DatePick, ModalData } from "@/interfaces/cabins";
 import Layout from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/pages/_app";
+import { ContactInfo, ContactInfoValidations, DatePick, ModalData } from "@/types/cabins";
 import {
   allValuesFilled,
   cabinOrderStepReady,
