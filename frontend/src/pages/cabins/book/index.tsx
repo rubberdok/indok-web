@@ -18,12 +18,11 @@ import React, { useEffect, useState } from "react";
 
 import ContractDialog from "@/components/pages/cabins/Popup/ContractDialog";
 import StepComponent from "@/components/pages/cabins/StepComponent";
-import { CabinsDocument, CreateBookingDocument, SendEmailDocument } from "@/generated/graphql";
+import { CabinFragment, CabinsDocument, CreateBookingDocument, SendEmailDocument } from "@/generated/graphql";
 import useResponsive from "@/hooks/useResponsive";
 import { ContactInfo, ContactInfoValidations, DatePick, ModalData } from "@/interfaces/cabins";
 import Layout from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/pages/_app";
-import { Cabin } from "@/types/cabins";
 import {
   allValuesFilled,
   cabinOrderStepReady,
@@ -72,7 +71,7 @@ const CabinBookingPage: NextPageWithLayout = () => {
   const [stepReady, setStepReady] = useState<StepReady>(initalStepReady);
 
   // Choose cabin
-  const [chosenCabins, setChosenCabins] = useState<Cabin[]>([]);
+  const [chosenCabins, setChosenCabins] = useState<CabinFragment[]>([]);
   const { data } = useQuery(CabinsDocument);
   const [modalData, setModalData] = useState<ModalData>(defaultModalData);
 

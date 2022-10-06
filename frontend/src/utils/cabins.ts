@@ -4,9 +4,8 @@ import validator from "validator";
 import * as Yup from "yup";
 
 import { BookingSemester } from "@/components/pages/cabins/Admin/BookingSemesterPicker";
-import { SendEmailMutationVariables } from "@/generated/graphql";
+import { AdminBookingFragment, CabinFragment, SendEmailMutationVariables } from "@/generated/graphql";
 import { BasicBooking, ContactInfo, ContactInfoValidations, DatePick, EmailAndBookingInput } from "@/interfaces/cabins";
-import { AdminBooking, Cabin } from "@/types/cabins";
 
 dayjs.extend(isBetween);
 
@@ -52,7 +51,7 @@ export const allValuesFilled: (contactInfo: ContactInfo) => boolean = (contactIn
 };
 
 export const cabinOrderStepReady: (
-  chosenCabins: Cabin[],
+  chosenCabins: CabinFragment[],
   datePick: DatePick
 ) => { ready: boolean; errortext: string } = (chosenCabins, datePick) => {
   // At least one cabin has to be selected
@@ -74,11 +73,11 @@ export const cabinOrderStepReady: (
   return { ready: true, errortext: "" };
 };
 
-export const toStringChosenCabins = (chosenCabins: Pick<Cabin, "name">[]): string[] =>
+export const toStringChosenCabins = (chosenCabins: Pick<CabinFragment, "name">[]): string[] =>
   chosenCabins.map((cabin, i) => (i > 0 ? " og " + cabin.name : cabin.name));
 
 export const calculatePrice: (
-  chosenCabins: Cabin[],
+  chosenCabins: CabinFragment[],
   contactInfo: ContactInfo,
   datePick: DatePick
 ) => number | undefined = (chosenCabins, contactInfo, datePick) => {
@@ -97,7 +96,7 @@ export const calculatePrice: (
 export const convertDateFormat: (date?: string) => string = (date) => dayjs(date).format("DD-MM-YYYY");
 
 export const getDecisionEmailInput = (
-  booking: AdminBooking,
+  booking: AdminBookingFragment,
   approved: boolean,
   declineMessage?: string
 ): SendEmailMutationVariables => {
@@ -127,7 +126,7 @@ export const getDecisionEmailInput = (
 export const generateEmailAndBookingInput: (
   contactInfo: ContactInfo,
   datePick: DatePick,
-  chosenCabins: Cabin[],
+  chosenCabins: CabinFragment[],
   extraInfo: string
 ) => EmailAndBookingInput = (contactInfo, datePick, chosenCabins, extraInfo) => {
   return {

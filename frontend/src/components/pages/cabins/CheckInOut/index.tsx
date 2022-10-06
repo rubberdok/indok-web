@@ -4,15 +4,15 @@ import React from "react";
 
 import Calendar from "@/components/Calendar";
 import LabeledIcon from "@/components/LabeledIcon";
+import { CabinFragment } from "@/generated/graphql";
 import useDisabledDates from "@/hooks/cabins/useDisabledDates";
 import useResponsive from "@/hooks/useResponsive";
 import { DatePick } from "@/interfaces/cabins";
-import { Cabin } from "@/types/cabins";
 
 interface Props {
-  allCabins: Cabin[];
-  chosenCabins: Cabin[];
-  setChosenCabins: React.Dispatch<React.SetStateAction<Cabin[]>>;
+  allCabins: CabinFragment[];
+  chosenCabins: CabinFragment[];
+  setChosenCabins: React.Dispatch<React.SetStateAction<CabinFragment[]>>;
   setDatePick: React.Dispatch<React.SetStateAction<DatePick>>;
 }
 /*

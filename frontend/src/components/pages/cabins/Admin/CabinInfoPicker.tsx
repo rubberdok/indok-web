@@ -3,8 +3,7 @@ import { Alert, Button, Grid, Snackbar, TextField, Typography } from "@mui/mater
 import { useFormik } from "formik";
 import { useEffect, useState } from "react";
 
-import { CabinsDocument, UpdateCabinDocument } from "@/generated/graphql";
-import { Cabin } from "@/types/cabins";
+import { CabinsDocument, CabinFragment, UpdateCabinDocument } from "@/generated/graphql";
 import { cabinInfoValidationSchema } from "@/utils/cabins";
 
 type FormikCabinValues = {
@@ -16,7 +15,7 @@ type FormikCabinValues = {
   bjornenMaxGuests?: number;
 };
 
-const getCabinData = (cabin?: Partial<Cabin>) => {
+const getCabinData = (cabin?: Partial<CabinFragment>) => {
   return {
     name: cabin?.name,
     maxGuests: cabin?.maxGuests,
@@ -28,7 +27,7 @@ const getCabinData = (cabin?: Partial<Cabin>) => {
 /** Component for editing cabin information. Only used on the admin page. */
 const CabinInfoPicker: React.VFC = () => {
   const cabinQuery = useQuery(CabinsDocument);
-  const [updateCabin] = useMutation<{ cabinData: Cabin }>(UpdateCabinDocument, {
+  const [updateCabin] = useMutation<{ cabinData: CabinFragment }>(UpdateCabinDocument, {
     onError: () => {
       setAlertSeverity("error");
       setSnackbarMessage("En feilmelding oppstod.");
@@ -43,8 +42,8 @@ const CabinInfoPicker: React.VFC = () => {
   });
 
   const cabins = cabinQuery?.data?.cabins;
-  const [bjornen, setBjornen] = useState<Cabin>();
-  const [oksen, setOksen] = useState<Cabin>();
+  const [bjornen, setBjornen] = useState<CabinFragment>();
+  const [oksen, setOksen] = useState<CabinFragment>();
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [alertSeverity, setAlertSeverity] = useState<"success" | "error">("success");
@@ -57,13 +56,13 @@ const CabinInfoPicker: React.VFC = () => {
   }, [cabins]);
 
   const handleUpdate = (values: FormikCabinValues) => {
-    const oksenData: Partial<Cabin> = {
+    const oksenData: Partial<CabinFragment> = {
       name: "Oksen",
       internalPrice: values.oksenInternalPrice,
       externalPrice: values.oksenExternalPrice,
       maxGuests: values.oksenMaxGuests,
     };
-    const bjornenData: Partial<Cabin> = {
+    const bjornenData: Partial<CabinFragment> = {
       name: "Bjørnen",
       internalPrice: values.bjornenInternalPrice,
       externalPrice: values.bjornenExternalPrice,

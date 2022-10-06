@@ -17,15 +17,19 @@ import {
 import dayjs from "dayjs";
 import { useState } from "react";
 
-import { AdminAllBookingsDocument, ConfirmBookingDocument, SendEmailDocument } from "@/generated/graphql";
-import { AdminBooking } from "@/types/cabins";
+import {
+  AdminAllBookingsDocument,
+  AdminBookingFragment,
+  ConfirmBookingDocument,
+  SendEmailDocument,
+} from "@/generated/graphql";
 import { getDecisionEmailInput, toStringChosenCabins } from "@/utils/cabins";
 
 import DeclineBookingDialog from "./DeclineBookingDialog";
 import InlineTableCell from "./InlineTableCell";
 
 type Props = {
-  bookings?: AdminBooking[];
+  bookings?: AdminBookingFragment[];
   refetchBookings: () => void;
   currentTab: string;
 };
@@ -33,13 +37,13 @@ type Props = {
 const AdminCabinTable: React.FC<Props> = ({ bookings, refetchBookings, currentTab }) => {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [bookingToBeDeclined, setBookingToBeDeclined] = useState<AdminBooking | undefined>();
+  const [bookingToBeDeclined, setBookingToBeDeclined] = useState<AdminBookingFragment | undefined>();
   const [confirmBooking] = useMutation(ConfirmBookingDocument, {
     refetchQueries: [{ query: AdminAllBookingsDocument }],
   });
   const [sendEmail] = useMutation(SendEmailDocument);
 
-  const isExpired = (booking: AdminBooking) => dayjs().isAfter(booking.checkIn);
+  const isExpired = (booking: AdminBookingFragment) => dayjs().isAfter(booking.checkIn);
   const isDeclinedTab = currentTab === "declined";
 
   return (

@@ -11,10 +11,10 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  Date: string;
-  DateTime: string;
-  Decimal: number;
-  UUID: string;
+  Date: any;
+  DateTime: any;
+  Decimal: any;
+  UUID: any;
 };
 
 /** Booking type for admin users */
@@ -1443,16 +1443,16 @@ export type CabinFragment = {
 export type BookingFragment = {
   __typename?: "AllBookingsType";
   id: string;
-  checkIn: string;
-  checkOut: string;
+  checkIn: any;
+  checkOut: any;
   cabins: Array<{ __typename?: "CabinType"; id: string; name: string }>;
 };
 
 export type AdminBookingFragment = {
   __typename?: "AdminBookingType";
   id: string;
-  checkIn: string;
-  checkOut: string;
+  checkIn: any;
+  checkOut: any;
   firstName: string;
   lastName: string;
   phone: string;
@@ -1462,7 +1462,7 @@ export type AdminBookingFragment = {
   price?: number | null;
   isTentative: boolean;
   isDeclined: boolean;
-  timestamp: string;
+  timestamp: any;
   extraInfo: string;
   declineReason: string;
   cabins: Array<{ __typename?: "CabinType"; id: string; name: string }>;
@@ -1475,14 +1475,15 @@ export type BookingResponsibleFragment = {
   firstName?: string | null;
   lastName?: string | null;
   email?: string | null;
+  phone?: number | null;
 };
 
 export type BookingSemesterFragment = {
   __typename?: "UpdateBookingSemesterType";
-  fallStartDate: string;
-  fallEndDate: string;
-  springStartDate: string;
-  springEndDate: string;
+  fallStartDate: any;
+  fallEndDate: any;
+  springStartDate: any;
+  springEndDate: any;
   fallSemesterActive: boolean;
   springSemesterActive: boolean;
 };
@@ -1566,8 +1567,8 @@ export type AllBookingsQuery = {
   allBookings?: Array<{
     __typename?: "AllBookingsType";
     id: string;
-    checkIn: string;
-    checkOut: string;
+    checkIn: any;
+    checkOut: any;
     cabins: Array<{ __typename?: "CabinType"; id: string; name: string }>;
   }> | null;
 };
@@ -1581,8 +1582,8 @@ export type AdminAllBookingsQuery = {
   adminAllBookings?: Array<{
     __typename?: "AdminBookingType";
     id: string;
-    checkIn: string;
-    checkOut: string;
+    checkIn: any;
+    checkOut: any;
     firstName: string;
     lastName: string;
     phone: string;
@@ -1592,7 +1593,7 @@ export type AdminAllBookingsQuery = {
     price?: number | null;
     isTentative: boolean;
     isDeclined: boolean;
-    timestamp: string;
+    timestamp: any;
     extraInfo: string;
     declineReason: string;
     cabins: Array<{ __typename?: "CabinType"; id: string; name: string }>;
@@ -1610,6 +1611,7 @@ export type ActiveBookingResponsibleQuery = {
     firstName?: string | null;
     lastName?: string | null;
     email?: string | null;
+    phone?: number | null;
   } | null;
 };
 
@@ -1634,10 +1636,10 @@ export type BookingSemesterQuery = {
   __typename?: "Queries";
   bookingSemester?: {
     __typename?: "UpdateBookingSemesterType";
-    fallStartDate: string;
-    fallEndDate: string;
-    springStartDate: string;
-    springEndDate: string;
+    fallStartDate: any;
+    fallEndDate: any;
+    springStartDate: any;
+    springEndDate: any;
     fallSemesterActive: boolean;
     springSemesterActive: boolean;
   } | null;
@@ -1669,9 +1671,9 @@ export type ListingFragment = {
   title: string;
   slug: string;
   description: string;
-  startDatetime: string;
-  deadline: string;
-  endDatetime: string;
+  startDatetime: any;
+  deadline: any;
+  endDatetime: any;
   applicationUrl?: string | null;
   chips: Array<string>;
   readMoreUrl?: string | null;
@@ -1699,9 +1701,9 @@ export type ListingQuery = {
     title: string;
     slug: string;
     description: string;
-    startDatetime: string;
-    deadline: string;
-    endDatetime: string;
+    startDatetime: any;
+    deadline: any;
+    endDatetime: any;
     applicationUrl?: string | null;
     chips: Array<string>;
     readMoreUrl?: string | null;
@@ -1733,7 +1735,7 @@ export type UserFieldsFragment = {
   username: string;
   firstName: string;
   lastName: string;
-  dateJoined: string;
+  dateJoined: any;
   graduationYear?: number | null;
   gradeYear?: number | null;
   allergies?: string | null;
@@ -1764,7 +1766,7 @@ export type AuthUserMutation = {
       username: string;
       firstName: string;
       lastName: string;
-      dateJoined: string;
+      dateJoined: any;
       graduationYear?: number | null;
       gradeYear?: number | null;
       allergies?: string | null;
@@ -1786,7 +1788,7 @@ export type UserInfoQuery = {
     username: string;
     firstName: string;
     lastName: string;
-    dateJoined: string;
+    dateJoined: any;
     graduationYear?: number | null;
     gradeYear?: number | null;
     allergies?: string | null;
@@ -1900,6 +1902,7 @@ export const BookingResponsibleFragmentDoc = {
           { kind: "Field", name: { kind: "Name", value: "firstName" } },
           { kind: "Field", name: { kind: "Name", value: "lastName" } },
           { kind: "Field", name: { kind: "Name", value: "email" } },
+          { kind: "Field", name: { kind: "Name", value: "phone" } },
         ],
       },
     },

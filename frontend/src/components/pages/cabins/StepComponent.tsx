@@ -1,8 +1,8 @@
 import { Typography } from "@mui/material";
 import React from "react";
 
+import { CabinFragment } from "@/generated/graphql";
 import { ContactInfo, ContactInfoValidations, DatePick } from "@/interfaces/cabins";
-import { Cabin } from "@/types/cabins";
 
 import CabinContactInfo from "./CabinContactInfo";
 import CheckInOut from "./CheckInOut";
@@ -12,14 +12,14 @@ import ReceiptSite from "./ReceiptSite";
 
 type Props = {
   activeStep: number;
-  allCabins: Cabin[];
-  chosenCabins: Cabin[];
+  allCabins: CabinFragment[];
+  chosenCabins: CabinFragment[];
   contactInfo: ContactInfo;
   datePick: DatePick;
   validations?: ContactInfoValidations;
   errorTrigger: boolean;
   setContactInfo: React.Dispatch<React.SetStateAction<ContactInfo>>;
-  setChosenCabins: React.Dispatch<React.SetStateAction<Cabin[]>>;
+  setChosenCabins: React.Dispatch<React.SetStateAction<CabinFragment[]>>;
   setDatePick: React.Dispatch<React.SetStateAction<DatePick>>;
   setExtraInfo: React.Dispatch<React.SetStateAction<string>>;
 };

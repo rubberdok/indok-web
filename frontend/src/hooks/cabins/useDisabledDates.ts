@@ -2,15 +2,14 @@ import { useQuery } from "@apollo/client";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 import { getDateRange } from "@/components/Calendar/helpers";
-import { AllBookingsDocument } from "@/generated/graphql";
-import { Cabin } from "@/types/cabins";
+import { AllBookingsDocument, CabinFragment } from "@/generated/graphql";
 
 interface Output {
   disabledDates: string[];
   setDisabledDates: Dispatch<SetStateAction<string[]>>;
 }
 
-const useDisabledDates = (chosenCabins: Cabin[]): Output => {
+const useDisabledDates = (chosenCabins: CabinFragment[]): Output => {
   const allBookingsQuery = useQuery(AllBookingsDocument);
   const [disabledDates, setDisabledDates] = useState<string[]>([]);
 

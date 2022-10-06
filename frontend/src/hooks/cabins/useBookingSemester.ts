@@ -3,10 +3,9 @@ import dayjs from "dayjs";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 import { DATE_FORMAT } from "@/components/Calendar/constants";
-import { BookingSemesterDocument } from "@/generated/graphql";
-import { BookingSemester } from "@/types/cabins";
+import { BookingSemesterDocument, BookingSemesterFragment } from "@/generated/graphql";
 
-const defaultBookingSemester: BookingSemester = {
+const defaultBookingSemester: BookingSemesterFragment = {
   fallStartDate: dayjs().format(DATE_FORMAT),
   fallEndDate: dayjs().format(DATE_FORMAT),
   springStartDate: dayjs().format(DATE_FORMAT),
@@ -16,8 +15,8 @@ const defaultBookingSemester: BookingSemester = {
 };
 
 type UseBookingSemester = {
-  bookingSemester: BookingSemester;
-  setBookingSemester: Dispatch<SetStateAction<BookingSemester>>;
+  bookingSemester: BookingSemesterFragment;
+  setBookingSemester: Dispatch<SetStateAction<BookingSemesterFragment>>;
   loading: boolean;
   error?: ApolloError;
 };
