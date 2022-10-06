@@ -2,9 +2,9 @@ import { Chip, Table, TableBody, TableCell, TableContainer, TableHead, TableRow 
 import dayjs from "dayjs";
 import Link from "next/link";
 
-import { Event } from "@/interfaces/events";
 import { Organization } from "@/interfaces/organizations";
 import { HeaderValuePair } from "@/interfaces/utils";
+import { Event } from "@/types/events";
 
 const eventFields: HeaderValuePair<Event>[] = [
   { header: "Navn", field: "title" },
@@ -22,7 +22,7 @@ const OrgEventsTable: React.FC<Props> = ({ organization }) => {
         <TableHead>
           <TableRow>
             <TableCell>Dato</TableCell>
-            {eventFields.map((field: HeaderValuePair<Event>) => (
+            {eventFields.map((field) => (
               <TableCell key={`header-${field.header}`}>{field.header}</TableCell>
             ))}
             <TableCell>Antall påmeldte</TableCell>
@@ -30,7 +30,7 @@ const OrgEventsTable: React.FC<Props> = ({ organization }) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {(organization.events ?? []).map((event: Event) => (
+          {(organization.events ?? []).map((event) => (
             <Link href={`${organization.id}/events/${event.id}`} passHref key={event.id}>
               <TableRow hover sx={{ pointer: "cursor" }}>
                 <TableCell>{dayjs(event.startTime).format("HH:mm DD-MM-YYYY")}</TableCell>

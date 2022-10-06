@@ -6,6 +6,51 @@ fragment Event on EventType {
   location
   description
   organization {
+    id
+    name
+  }
+  category {
+    id
+    name
+  }
+  image
+  isAttendable
+  deadline
+  publisher {
+    id
+    username
+    email
+    firstName
+    lastName
+    dateJoined
+  }
+  availableSlots
+  price
+  shortDescription
+  signupOpenDate
+  userAttendance {
+    isSignedUp
+    isOnWaitingList
+    hasBoughtTicket
+  }
+  isFull
+  hasExtraInformation
+  bindingSignup
+  contactEmail
+  allowedGradeYears
+  product {
+    id
+  }
+}
+
+fragment EventInList on EventType {
+  id
+  title
+  startTime
+  endTime
+  location
+  description
+  organization {
     name
     color
   }
@@ -66,27 +111,10 @@ fragment AdminEvent on EventType {
   shortDescription
   signupOpenDate
   usersAttending {
-    user {
-      id
-      firstName
-      lastName
-    }
-    userEmail
-    userGradeYear
-    userAllergies
-    userPhoneNumber
-    hasBoughtTicket
+    ...SignUpWithTicket
   }
   usersOnWaitingList {
-    user {
-      id
-      firstName
-      lastName
-    }
-    userEmail
-    userGradeYear
-    userAllergies
-    userPhoneNumber
+    ...SignUp
   }
   userAttendance {
     isSignedUp
@@ -100,4 +128,29 @@ fragment AdminEvent on EventType {
   product {
     id
   }
+}
+
+fragment SignUp on SignUpType {
+  user {
+    id
+    firstName
+    lastName
+  }
+  userEmail
+  userGradeYear
+  userAllergies
+  userPhoneNumber
+}
+
+fragment SignUpWithTicket on SignUpType {
+  user {
+    id
+    firstName
+    lastName
+  }
+  userEmail
+  userGradeYear
+  userAllergies
+  userPhoneNumber
+  hasBoughtTicket
 }

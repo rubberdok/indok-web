@@ -1,12 +1,18 @@
-query eventFilteredOrganizations {
-  eventFilteredOrganizations {
-    id
-    name
-    color
-    children {
-      id
-      name
-    }
+query event($id: ID!) {
+  event(id: $id) {
+    ...Event
+  }
+}
+
+query allEvents($organization: String, $category: String, $startTime: DateTime, $endTime: DateTime) {
+  allEvents(organization: $organization, category: $category, startTime: $startTime, endTime: $endTime) {
+    ...EventInList
+  }
+}
+
+query defaultEvents {
+  defaultEvents {
+    ...EventInList
   }
 }
 
@@ -17,61 +23,14 @@ query allCategories {
   }
 }
 
-query allEvents($organization: String, $category: String, $startTime: DateTime, $endTime: DateTime) {
-  allEvents(organization: $organization, category: $category, startTime: $startTime, endTime: $endTime) {
-    ...Event
-  }
-}
-
-query defaultEvents {
-  defaultEvents {
-    ...Event
-  }
-}
-
-query event($id: ID!) {
-  event(id: $id) {
+query eventFilteredOrganizations {
+  eventFilteredOrganizations {
     id
-    title
-    startTime
-    endTime
-    location
-    description
-    organization {
+    name
+    color
+    children {
       id
       name
-    }
-    category {
-      id
-      name
-    }
-    image
-    isAttendable
-    deadline
-    publisher {
-      id
-      username
-      email
-      firstName
-      lastName
-      dateJoined
-    }
-    availableSlots
-    price
-    shortDescription
-    signupOpenDate
-    userAttendance {
-      isSignedUp
-      isOnWaitingList
-      hasBoughtTicket
-    }
-    isFull
-    hasExtraInformation
-    bindingSignup
-    contactEmail
-    allowedGradeYears
-    product {
-      id
     }
   }
 }

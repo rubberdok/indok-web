@@ -32,12 +32,11 @@ import AttendeeExport from "@/components/pages/events/AttendeeExport";
 import EmailForm from "@/components/pages/events/email/EmailForm";
 import EditEvent from "@/components/pages/events/EventEditor";
 import OrganizationEventHero from "@/components/pages/organization/OrganizationEventHero";
-import { AdminEventDocument, AdminEventFragment, AdminEventSignOffDocument } from "@/generated/graphql";
+import { AdminEventDocument, AdminEventSignOffDocument } from "@/generated/graphql";
 import { HeaderValuePair } from "@/interfaces/utils";
 import Layout from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/pages/_app";
-
-type SignUp = NonNullable<AdminEventFragment["usersAttending"]>[0];
+import { AdminEvent, SignUp } from "@/types/events";
 
 const signUpFields: HeaderValuePair<SignUp>[] = [
   { header: "Navn", field: "user" },
@@ -47,7 +46,7 @@ const signUpFields: HeaderValuePair<SignUp>[] = [
   { header: "E-post", field: "userEmail" },
 ];
 
-const stringEventFields: HeaderValuePair<AdminEventFragment>[] = [
+const stringEventFields: HeaderValuePair<AdminEvent>[] = [
   { header: "Tittel", field: "title" },
   { header: "Kort beskrivelse", field: "shortDescription" },
   // { header: "Beskrivelse", field: "description" },
@@ -57,7 +56,7 @@ const stringEventFields: HeaderValuePair<AdminEventFragment>[] = [
   { header: "Bindende påmelding", field: "bindingSignup" },
 ];
 
-const dateEventFields: HeaderValuePair<AdminEventFragment>[] = [
+const dateEventFields: HeaderValuePair<AdminEvent>[] = [
   { header: "Starttid", field: "startTime" },
   { header: "Slutttid", field: "endTime" },
   { header: "Påmeldingsfrist", field: "deadline" },

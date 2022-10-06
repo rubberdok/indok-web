@@ -26,14 +26,8 @@ import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import React, { useEffect, useState } from "react";
 
-import {
-  AdminEventDocument,
-  AdminEventFragment,
-  AllCategoriesDocument,
-  EventDocument,
-  UpdateEventDocument,
-} from "@/generated/graphql";
-import { Category } from "@/interfaces/events";
+import { AdminEventDocument, AllCategoriesDocument, EventDocument, UpdateEventDocument } from "@/generated/graphql";
+import { AdminEvent } from "@/types/events";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -44,7 +38,7 @@ const DATE_FORMAT = "YYYY-MM-DDTHH:mm:ss";
 interface EditEventProps {
   open: boolean;
   onClose: () => void;
-  event: AdminEventFragment;
+  event: AdminEvent;
 }
 
 /**
@@ -287,7 +281,7 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
                 displayEmpty
               >
                 <MenuItem value="">{"Ingen Kategori"}</MenuItem>
-                {categoryData?.allCategories?.map((category: Category) => (
+                {categoryData?.allCategories?.map((category) => (
                   <MenuItem key={category.id} value={category.id}>
                     {category.name}
                   </MenuItem>

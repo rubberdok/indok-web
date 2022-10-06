@@ -20,9 +20,8 @@ import {
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 
-import { AllCategoriesDocument, CreateEventDocument, CreateEventInput, EventFragment } from "@/generated/graphql";
+import { AllCategoriesDocument, CreateEventDocument, CreateEventInput, EventInListFragment } from "@/generated/graphql";
 import { GET_USER } from "@/graphql/users/queries";
-import { Category } from "@/interfaces/events";
 import { User } from "@/interfaces/users";
 
 /**
@@ -62,7 +61,7 @@ const CreateEvent: React.FC = () => {
             allEvents: (existingEvents) => {
               if (!data?.createEvent?.event) return existingEvents;
 
-              const newEventRef = cache.writeFragment<EventFragment>({
+              const newEventRef = cache.writeFragment<EventInListFragment>({
                 data: data.createEvent.event,
                 fragment: gql`
                   fragment NewEvent on Event {
@@ -278,7 +277,7 @@ const CreateEvent: React.FC = () => {
               displayEmpty
             >
               <MenuItem value="">{"Ingen Kategori"}</MenuItem>
-              {categoryData?.allCategories?.map((category: Category) => (
+              {categoryData?.allCategories?.map((category) => (
                 <MenuItem key={category.id} value={category.id}>
                   {category.name}
                 </MenuItem>
