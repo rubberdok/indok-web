@@ -2220,6 +2220,32 @@ export type AuthUserMutation = {
   };
 };
 
+export type UpdateUserMutationVariables = Exact<{
+  userData?: InputMaybe<UserInput>;
+}>;
+
+export type UpdateUserMutation = {
+  __typename?: "Mutations";
+  updateUser?: {
+    __typename?: "UpdateUser";
+    user?: {
+      __typename?: "UserType";
+      id: string;
+      feideEmail: string;
+      email: string;
+      username: string;
+      firstName: string;
+      lastName: string;
+      dateJoined: string;
+      graduationYear?: number | null;
+      gradeYear?: number | null;
+      allergies?: string | null;
+      phoneNumber: string;
+      firstLogin: boolean;
+    } | null;
+  } | null;
+};
+
 export type UserQueryVariables = Exact<{ [key: string]: never }>;
 
 export type UserQuery = {
@@ -4079,7 +4105,7 @@ export const AuthUserDocument = {
     {
       kind: "OperationDefinition",
       operation: "mutation",
-      name: { kind: "Name", value: "AuthUser" },
+      name: { kind: "Name", value: "authUser" },
       variableDefinitions: [
         {
           kind: "VariableDefinition",
@@ -4120,6 +4146,53 @@ export const AuthUserDocument = {
     ...UserFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<AuthUserMutation, AuthUserMutationVariables>;
+export const UpdateUserDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "updateUser" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "userData" } },
+          type: { kind: "NamedType", name: { kind: "Name", value: "UserInput" } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "updateUser" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "userData" },
+                value: { kind: "Variable", name: { kind: "Name", value: "userData" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "user" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "User" } }],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...UserFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<UpdateUserMutation, UpdateUserMutationVariables>;
 export const UserDocument = {
   kind: "Document",
   definitions: [
