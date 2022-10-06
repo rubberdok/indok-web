@@ -5,14 +5,13 @@ import {
   SignUpFragment,
   SignUpWithTicketFragment,
 } from "@/generated/graphql";
-import { GraphqlType } from "@/utils/graphql";
 
-export type Event = GraphqlType<EventFragment>;
+export type Event = EventFragment;
 
-export type EventInList = GraphqlType<EventInListFragment>;
+export type EventInList = EventInListFragment;
 
-export type AdminEvent = GraphqlType<AdminEventFragment>;
+export type AdminEvent = AdminEventFragment;
 
-export type SignUp = GraphqlType<SignUpFragment>;
+export type SignUp = SignUpFragment;
 
-export type SignUpWithTicket = GraphqlType<SignUpWithTicketFragment>;
+export type SignUpWithTicket = SignUpWithTicketFragment;
