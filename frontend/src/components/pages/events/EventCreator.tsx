@@ -237,7 +237,7 @@ const CreateEvent: React.FC = () => {
                 value={eventData.allowedGradeYears}
                 multiple
                 onChange={(e) => {
-                  const allowedGradeYears = (e.target.value as number[] | null | "") || undefined;
+                  const allowedGradeYears = typeof e.target.value === "string" ? undefined : e.target.value;
                   setEventData({ ...eventData, allowedGradeYears });
                 }}
                 displayEmpty
