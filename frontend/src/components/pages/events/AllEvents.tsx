@@ -5,10 +5,9 @@ import Link from "next/link";
 import React, { useState } from "react";
 
 import { PermissionRequired } from "@/components/Auth";
-import { GET_DEFAULT_EVENTS, GET_EVENTS } from "@/graphql/events/queries";
+import { AllEventsDocument, DefaultEventsDocument } from "@/generated/graphql";
 import { GET_USER } from "@/graphql/users/queries";
 import useResponsive from "@/hooks/useResponsive";
-import { Event } from "@/interfaces/events";
 import { User } from "@/interfaces/users";
 
 import EventListItem from "./EventListItem";
@@ -24,7 +23,7 @@ export interface FilterQuery {
 const AllEvents: React.FC = () => {
   const [filters, setFilters] = useState({});
   const [showDefaultEvents, setShowDefaultEvents] = useState(false);
-  const [openFilterDrawer, setOpenFilterDrawer] = React.useState(false);
+  const [openFilterDrawer, setOpenFilterDrawer] = useState(false);
   const isMobile = useResponsive({ query: "down", key: "sm" });
 
   const { loading: userLoading, data: userData } = useQuery<{ user: User }>(GET_USER);
@@ -34,7 +33,7 @@ const AllEvents: React.FC = () => {
     error: eventsError,
     data: eventsData,
     refetch,
-  } = useQuery<{ allEvents: Event[] }>(GET_EVENTS, {
+  } = useQuery(AllEventsDocument, {
     variables: filters,
   });
 
@@ -42,12 +41,17 @@ const AllEvents: React.FC = () => {
     loading: defaultEventsLoading,
     error: defaultEventsError,
     data: defaultEventsData,
-  } = useQuery<{ defaultEvents: Event[] }>(GET_DEFAULT_EVENTS);
+  } = useQuery(DefaultEventsDocument);
+
   const error = showDefaultEvents ? defaultEventsError : eventsError;
   const loading = showDefaultEvents ? defaultEventsLoading : eventsLoading;
-  const data = (showDefaultEvents ? defaultEventsData?.defaultEvents : eventsData?.allEvents)?.filter((event) =>
-    userData?.user ? event.allowedGradeYears.includes(userData.user.gradeYear) : true
-  );
+  const data = (showDefaultEvents ? defaultEventsData?.defaultEvents : eventsData?.allEvents)?.filter((event) => {
+    if (userData?.user && event?.allowedGradeYears) {
+      return event.allowedGradeYears.includes(userData.user.gradeYear);
+    } else {
+      return true;
+    }
+  });
 
   if (error) return <Typography variant="body1">Kunne ikke hente arrangementer.</Typography>;
 

@@ -38,11 +38,9 @@ import LoginRequired from "@/components/Auth/LoginRequired";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import LabeledIcon from "@/components/LabeledIcon";
 import * as components from "@/components/MarkdownForm/components";
-import { EVENT_SIGN_OFF, EVENT_SIGN_UP } from "@/graphql/events/mutations";
-import { GET_EVENT } from "@/graphql/events/queries";
+import { EventDocument, EventSignOffDocument, EventSignUpDocument } from "@/generated/graphql";
 import { GET_USER } from "@/graphql/users/queries";
 import { GET_SERVER_TIME } from "@/graphql/utils/time/queries";
-import { AttendableEvent, Event } from "@/interfaces/events";
 import { User } from "@/interfaces/users";
 import { calendarFile } from "@/utils/calendars";
 
@@ -85,13 +83,9 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
   const [extraInformation, setExtraInformation] = useState<string>();
   const router = useRouter();
 
-  const [eventSignUp, { loading: signUpLoading, error: signUpError }] = useMutation<{
-    eventSignUp: { isFull: boolean };
-  }>(EVENT_SIGN_UP);
+  const [eventSignUp, { loading: signUpLoading, error: signUpError }] = useMutation(EventSignUpDocument);
 
-  const [eventSignOff, { loading: signOffLoading }] = useMutation<{
-    eventSignOff: { isFull: boolean };
-  }>(EVENT_SIGN_OFF);
+  const [eventSignOff, { loading: signOffLoading }] = useMutation(EventSignOffDocument);
 
   const { data: userData } = useQuery<{ user: User }>(GET_USER);
 
@@ -104,9 +98,7 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
     error: eventError,
     loading: eventLoading,
     refetch: refetchEventData,
-  } = useQuery<{
-    event: Event;
-  }>(GET_EVENT, { variables: { id: eventId } });
+  } = useQuery(EventDocument, { variables: { id: eventId } });
 
   const [openEditEvent, setOpenEditEvent] = useState(false);
 
@@ -123,9 +115,9 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
   const handleClick = () => {
     if (!user) return;
     if (event.userAttendance?.isSignedUp) {
-      eventSignOff({ variables: { eventId: eventId.toString() } })
+      eventSignOff({ variables: { eventId } })
         .then(() => {
-          refetchEventData({ eventId: eventId.toString() });
+          refetchEventData({ id: eventId });
           setOpenSignOffSnackbar(true);
         })
         .catch(() => {
@@ -134,9 +126,9 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
       return;
     }
     if (event.userAttendance?.isOnWaitingList) {
-      eventSignOff({ variables: { eventId: eventId.toString() } })
+      eventSignOff({ variables: { eventId } })
         .then(() => {
-          refetchEventData({ eventId: eventId.toString() });
+          refetchEventData({ id: eventId });
           setOpenOffWaitingListSnackbar(true);
         })
         .catch(() => {
@@ -144,10 +136,10 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
         });
       return;
     }
-    eventSignUp({ variables: { eventId: eventId.toString(), data: extraInformation } })
+    eventSignUp({ variables: { eventId, extraInformation } })
       .then(() => {
-        refetchEventData({ eventId: eventId.toString() }).then((res) => {
-          res.data.event.userAttendance?.isSignedUp ? setOpenSignUpSnackbar(true) : setOpenOnWaitingListSnackbar(true);
+        refetchEventData({ id: eventId }).then((res) => {
+          res.data.event?.userAttendance?.isSignedUp ? setOpenSignUpSnackbar(true) : setOpenOnWaitingListSnackbar(true);
         });
       })
       .catch(() => {
@@ -179,7 +171,7 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
 
             {!event.isAttendable ? null : !user ? (
               <LoginRequired redirect />
-            ) : !event.allowedGradeYears.includes(user.gradeYear) ? (
+            ) : !event.allowedGradeYears?.includes(user.gradeYear) ? (
               <Typography variant="h5">Ikke aktuell</Typography>
             ) : (
               <>
@@ -205,10 +197,10 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
                   {timeData && event.deadline && dayjs(event.deadline).isAfter(dayjs()) && (
                     <Stack spacing={2}>
                       <CountdownButton
-                        countDownDate={(event as AttendableEvent).signupOpenDate}
-                        isSignedUp={(event as AttendableEvent).userAttendance.isSignedUp}
-                        isOnWaitingList={(event as AttendableEvent).userAttendance.isOnWaitingList}
-                        isFull={(event as AttendableEvent).isFull}
+                        countDownDate={event.signupOpenDate ?? ""}
+                        isSignedUp={event.userAttendance?.isSignedUp ?? false}
+                        isOnWaitingList={event.userAttendance?.isOnWaitingList ?? false}
+                        isFull={event.isFull ?? false}
                         loading={signOffLoading || signUpLoading || eventLoading}
                         disabled={
                           (!user.phoneNumber &&
@@ -397,7 +389,7 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
                     }
                   />
                 )}
-                {event.allowedGradeYears.length < 5 && (
+                {event.allowedGradeYears && event.allowedGradeYears.length < 5 && (
                   <LabeledIcon
                     spacing={2}
                     alignItems="flex-start"
