@@ -5,10 +5,8 @@ import Link from "next/link";
 import React, { useState } from "react";
 
 import { PermissionRequired } from "@/components/Auth";
-import { AllEventsDocument, DefaultEventsDocument } from "@/generated/graphql";
-import { GET_USER } from "@/graphql/users/queries";
+import { AllEventsDocument, DefaultEventsDocument, UserWithEventsAndOrgsDocument } from "@/generated/graphql";
 import useResponsive from "@/hooks/useResponsive";
-import { User } from "@/interfaces/users";
 
 import EventListItem from "./EventListItem";
 import FilterMenu from "./filterMenu/FilterMenu";
@@ -26,7 +24,7 @@ const AllEvents: React.FC = () => {
   const [openFilterDrawer, setOpenFilterDrawer] = useState(false);
   const isMobile = useResponsive({ query: "down", key: "sm" });
 
-  const { loading: userLoading, data: userData } = useQuery<{ user: User }>(GET_USER);
+  const { loading: userLoading, data: userData } = useQuery(UserWithEventsAndOrgsDocument);
 
   const {
     loading: eventsLoading,
@@ -46,7 +44,7 @@ const AllEvents: React.FC = () => {
   const error = showDefaultEvents ? defaultEventsError : eventsError;
   const loading = showDefaultEvents ? defaultEventsLoading : eventsLoading;
   const data = (showDefaultEvents ? defaultEventsData?.defaultEvents : eventsData?.allEvents)?.filter((event) => {
-    if (userData?.user && event?.allowedGradeYears) {
+    if (userData?.user?.gradeYear && event?.allowedGradeYears) {
       return event.allowedGradeYears.includes(userData.user.gradeYear);
     } else {
       return true;
@@ -144,7 +142,7 @@ const AllEvents: React.FC = () => {
               ) : (
                 <Stack spacing={3}>
                   {data.map((event) => (
-                    <EventListItem key={event.id} event={event} user={userData?.user} />
+                    <EventListItem key={event.id} event={event} user={userData?.user ?? undefined} />
                   ))}
                 </Stack>
               )}

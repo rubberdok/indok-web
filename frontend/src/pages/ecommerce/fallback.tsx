@@ -25,10 +25,9 @@ import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 
 import SalesTermsDialog from "@/components/pages/ecommerce/SalesTermsDialog";
+import { UserDocument } from "@/generated/graphql";
 import { ATTEMPT_CAPTURE_PAYMENT } from "@/graphql/ecommerce/mutations";
-import { GET_USER } from "@/graphql/users/queries";
 import { Order, PaymentStatus } from "@/interfaces/ecommerce";
-import { User } from "@/interfaces/users";
 import Layout, { RootStyle } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/pages/_app";
 import savings from "~/public/illustrations/Savings.svg";
@@ -40,7 +39,7 @@ const FallbackPage: NextPageWithLayout = () => {
   const [attemptCapturePayment, { data, loading, error }] = useMutation(ATTEMPT_CAPTURE_PAYMENT, {
     onError: () => intervalRef.current && clearInterval(intervalRef.current),
   });
-  const { data: userData } = useQuery<{ user?: User }>(GET_USER);
+  const { data: userData } = useQuery(UserDocument);
 
   const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>("RESERVED");
   const [order, setOrder] = useState<Order>();

@@ -27,8 +27,8 @@ import {
   suggestGraduationYear,
   validationSchema,
 } from "@/components/pages/profile/UserForm/helpers";
+import { UserToEditDocument } from "@/generated/graphql";
 import { UPDATE_USER } from "@/graphql/users/mutations";
-import { EDIT_USER_QUERY } from "@/graphql/users/queries";
 import { EditUser } from "@/types/users";
 
 type Props = {
@@ -39,7 +39,7 @@ type Props = {
 };
 
 const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": dataTestId }) => {
-  const { data } = useQuery<{ user?: EditUser }>(EDIT_USER_QUERY);
+  const { data } = useQuery(UserToEditDocument);
   const [updateUser] = useMutation<{ updateUser: { user: EditUser } }>(UPDATE_USER, {
     onCompleted: onCompleted,
     refetchQueries: ["editUserInfo"],

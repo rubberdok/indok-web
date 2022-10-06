@@ -3,9 +3,8 @@ import { Grid } from "@mui/material";
 import { NextPage } from "next";
 import { Dispatch, SetStateAction } from "react";
 
-import { GET_USER } from "@/graphql/users/queries";
+import { UserDocument } from "@/generated/graphql";
 import { Cabin, ContactInfo, ContactInfoValidations, InputFieldsEvent } from "@/interfaces/cabins";
-import { User } from "@/interfaces/users";
 
 import { InputFields } from "../InputFields/InputFields";
 
@@ -16,10 +15,10 @@ interface ContractInfoProps {
   errorTrigger: boolean;
   chosenCabins: Cabin[];
 }
-/*
-One of the steps in the cabins/book page.
-Fetches the current user and tries to input its values to the InputFields.
-*/
+/**
+ * One of the steps in the cabins/book page.
+ * Fetches the current user and tries to input its values to the InputFields.
+ */
 const CabinContactInfo: NextPage<ContractInfoProps> = ({
   contactInfo,
   setContactInfo,
@@ -27,7 +26,7 @@ const CabinContactInfo: NextPage<ContractInfoProps> = ({
   chosenCabins,
   errorTrigger,
 }) => {
-  useQuery<{ user: User | null }>(GET_USER, {
+  useQuery(UserDocument, {
     onCompleted: (data) => {
       if (data.user) {
         setContactInfo({

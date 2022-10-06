@@ -25,7 +25,7 @@ import React, { useState } from "react";
 
 import PayWithVipps from "@/components/pages/ecommerce/PayWithVipps";
 import SalesTermsDialog from "@/components/pages/ecommerce/SalesTermsDialog";
-import { UserInfoDocument } from "@/generated/graphql";
+import { UserDocument } from "@/generated/graphql";
 import { GET_PRODUCT } from "@/graphql/ecommerce/queries";
 import { Product } from "@/interfaces/ecommerce";
 import Layout, { RootStyle } from "@/layouts/Layout";
@@ -174,9 +174,7 @@ CheckoutPage.getLayout = (page: React.ReactElement) => (
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const client = initializeApollo({}, ctx);
-  const { data, error } = await client.query({
-    query: UserInfoDocument,
-  });
+  const { data, error } = await client.query({ query: UserDocument });
 
   if (error) return { notFound: true };
   if (!data.user) {

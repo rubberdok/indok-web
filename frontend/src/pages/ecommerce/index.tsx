@@ -23,7 +23,7 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 
 import OrderCellContent from "@/components/pages/ecommerce/OrderCellContent";
-import { UserInfoDocument } from "@/generated/graphql";
+import { UserDocument } from "@/generated/graphql";
 import { GET_USER_ORDERS } from "@/graphql/ecommerce/queries";
 import { Order } from "@/interfaces/ecommerce";
 import { HeaderValuePair } from "@/interfaces/utils";
@@ -131,9 +131,7 @@ OrdersPage.getLayout = (page) => (
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const client = initializeApollo({}, ctx);
-  const { data, error } = await client.query({
-    query: UserInfoDocument,
-  });
+  const { data, error } = await client.query({ query: UserDocument });
 
   if (error) return { notFound: true };
   if (!data.user) {

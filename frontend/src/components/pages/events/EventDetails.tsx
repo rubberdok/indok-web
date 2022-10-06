@@ -38,10 +38,13 @@ import LoginRequired from "@/components/Auth/LoginRequired";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import LabeledIcon from "@/components/LabeledIcon";
 import * as components from "@/components/MarkdownForm/components";
-import { EventDocument, EventSignOffDocument, EventSignUpDocument } from "@/generated/graphql";
-import { GET_USER } from "@/graphql/users/queries";
+import {
+  EventDocument,
+  EventSignOffDocument,
+  EventSignUpDocument,
+  UserWithEventsAndOrgsDocument,
+} from "@/generated/graphql";
 import { GET_SERVER_TIME } from "@/graphql/utils/time/queries";
-import { User } from "@/interfaces/users";
 import { calendarFile } from "@/utils/calendars";
 
 import CountdownButton from "./CountdownButton";
@@ -87,7 +90,7 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
 
   const [eventSignOff, { loading: signOffLoading }] = useMutation(EventSignOffDocument);
 
-  const { data: userData } = useQuery<{ user: User }>(GET_USER);
+  const { data: userData } = useQuery(UserWithEventsAndOrgsDocument);
 
   const { data: timeData } = useQuery<{ serverTime: string }>(GET_SERVER_TIME, {
     fetchPolicy: "network-only",
@@ -171,7 +174,7 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
 
             {!event.isAttendable ? null : !user ? (
               <LoginRequired redirect />
-            ) : !event.allowedGradeYears?.includes(user.gradeYear) ? (
+            ) : user.gradeYear && !event.allowedGradeYears?.includes(user.gradeYear) ? (
               <Typography variant="h5">Ikke aktuell</Typography>
             ) : (
               <>

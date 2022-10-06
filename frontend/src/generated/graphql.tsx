@@ -2137,7 +2137,7 @@ export type HasPermissionQueryVariables = Exact<{
 
 export type HasPermissionQuery = { __typename?: "Queries"; hasPermission?: boolean | null };
 
-export type UserFieldsFragment = {
+export type UserFragment = {
   __typename?: "UserType";
   id: string;
   feideEmail: string;
@@ -2151,6 +2151,40 @@ export type UserFieldsFragment = {
   allergies?: string | null;
   phoneNumber: string;
   firstLogin: boolean;
+};
+
+export type UserWithEventsAndOrgsFragment = {
+  __typename?: "UserType";
+  id: string;
+  feideEmail: string;
+  email: string;
+  username: string;
+  firstName: string;
+  lastName: string;
+  dateJoined: string;
+  graduationYear?: number | null;
+  gradeYear?: number | null;
+  allergies?: string | null;
+  phoneNumber: string;
+  firstLogin: boolean;
+  events?: Array<{ __typename?: "EventType"; id: string }> | null;
+  organizations: Array<{ __typename?: "OrganizationType"; id: string; name: string }>;
+};
+
+export type UserToEditFragment = {
+  __typename?: "UserType";
+  id: string;
+  username: string;
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  allergies?: string | null;
+  email: string;
+  graduationYear?: number | null;
+  firstLogin: boolean;
+  feideEmail: string;
+  canUpdateYear?: boolean | null;
+  yearUpdatedAt?: string | null;
 };
 
 export type LogoutMutationVariables = Exact<{ [key: string]: never }>;
@@ -2186,9 +2220,9 @@ export type AuthUserMutation = {
   };
 };
 
-export type UserInfoQueryVariables = Exact<{ [key: string]: never }>;
+export type UserQueryVariables = Exact<{ [key: string]: never }>;
 
-export type UserInfoQuery = {
+export type UserQuery = {
   __typename?: "Queries";
   user?: {
     __typename?: "UserType";
@@ -2204,6 +2238,50 @@ export type UserInfoQuery = {
     allergies?: string | null;
     phoneNumber: string;
     firstLogin: boolean;
+  } | null;
+};
+
+export type UserWithEventsAndOrgsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type UserWithEventsAndOrgsQuery = {
+  __typename?: "Queries";
+  user?: {
+    __typename?: "UserType";
+    id: string;
+    feideEmail: string;
+    email: string;
+    username: string;
+    firstName: string;
+    lastName: string;
+    dateJoined: string;
+    graduationYear?: number | null;
+    gradeYear?: number | null;
+    allergies?: string | null;
+    phoneNumber: string;
+    firstLogin: boolean;
+    events?: Array<{ __typename?: "EventType"; id: string }> | null;
+    organizations: Array<{ __typename?: "OrganizationType"; id: string; name: string }>;
+  } | null;
+};
+
+export type UserToEditQueryVariables = Exact<{ [key: string]: never }>;
+
+export type UserToEditQuery = {
+  __typename?: "Queries";
+  user?: {
+    __typename?: "UserType";
+    id: string;
+    username: string;
+    firstName: string;
+    lastName: string;
+    phoneNumber: string;
+    allergies?: string | null;
+    email: string;
+    graduationYear?: number | null;
+    firstLogin: boolean;
+    feideEmail: string;
+    canUpdateYear?: boolean | null;
+    yearUpdatedAt?: string | null;
   } | null;
 };
 
@@ -2583,12 +2661,12 @@ export const ListingFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<ListingFragment, unknown>;
-export const UserFieldsFragmentDoc = {
+export const UserFragmentDoc = {
   kind: "Document",
   definitions: [
     {
       kind: "FragmentDefinition",
-      name: { kind: "Name", value: "UserFields" },
+      name: { kind: "Name", value: "User" },
       typeCondition: { kind: "NamedType", name: { kind: "Name", value: "UserType" } },
       selectionSet: {
         kind: "SelectionSet",
@@ -2609,7 +2687,70 @@ export const UserFieldsFragmentDoc = {
       },
     },
   ],
-} as unknown as DocumentNode<UserFieldsFragment, unknown>;
+} as unknown as DocumentNode<UserFragment, unknown>;
+export const UserWithEventsAndOrgsFragmentDoc = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "UserWithEventsAndOrgs" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "UserType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "FragmentSpread", name: { kind: "Name", value: "User" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "events" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "Field", name: { kind: "Name", value: "id" } }],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "organizations" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "name" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...UserFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<UserWithEventsAndOrgsFragment, unknown>;
+export const UserToEditFragmentDoc = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "UserToEdit" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "UserType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "username" } },
+          { kind: "Field", name: { kind: "Name", value: "firstName" } },
+          { kind: "Field", name: { kind: "Name", value: "lastName" } },
+          { kind: "Field", name: { kind: "Name", value: "phoneNumber" } },
+          { kind: "Field", name: { kind: "Name", value: "allergies" } },
+          { kind: "Field", name: { kind: "Name", value: "email" } },
+          { kind: "Field", name: { kind: "Name", value: "graduationYear" } },
+          { kind: "Field", name: { kind: "Name", value: "firstLogin" } },
+          { kind: "Field", name: { kind: "Name", value: "feideEmail" } },
+          { kind: "Field", name: { kind: "Name", value: "canUpdateYear" } },
+          { kind: "Field", name: { kind: "Name", value: "yearUpdatedAt" } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<UserToEditFragment, unknown>;
 export const ArchiveByTypesDocument = {
   kind: "Document",
   definitions: [
@@ -3967,7 +4108,7 @@ export const AuthUserDocument = {
                   name: { kind: "Name", value: "user" },
                   selectionSet: {
                     kind: "SelectionSet",
-                    selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "UserFields" } }],
+                    selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "User" } }],
                   },
                 },
               ],
@@ -3976,16 +4117,16 @@ export const AuthUserDocument = {
         ],
       },
     },
-    ...UserFieldsFragmentDoc.definitions,
+    ...UserFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<AuthUserMutation, AuthUserMutationVariables>;
-export const UserInfoDocument = {
+export const UserDocument = {
   kind: "Document",
   definitions: [
     {
       kind: "OperationDefinition",
       operation: "query",
-      name: { kind: "Name", value: "userInfo" },
+      name: { kind: "Name", value: "user" },
       selectionSet: {
         kind: "SelectionSet",
         selections: [
@@ -3994,12 +4135,60 @@ export const UserInfoDocument = {
             name: { kind: "Name", value: "user" },
             selectionSet: {
               kind: "SelectionSet",
-              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "UserFields" } }],
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "User" } }],
             },
           },
         ],
       },
     },
-    ...UserFieldsFragmentDoc.definitions,
+    ...UserFragmentDoc.definitions,
   ],
-} as unknown as DocumentNode<UserInfoQuery, UserInfoQueryVariables>;
+} as unknown as DocumentNode<UserQuery, UserQueryVariables>;
+export const UserWithEventsAndOrgsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "userWithEventsAndOrgs" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "user" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "UserWithEventsAndOrgs" } }],
+            },
+          },
+        ],
+      },
+    },
+    ...UserWithEventsAndOrgsFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<UserWithEventsAndOrgsQuery, UserWithEventsAndOrgsQueryVariables>;
+export const UserToEditDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "userToEdit" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "user" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "UserToEdit" } }],
+            },
+          },
+        ],
+      },
+    },
+    ...UserToEditFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<UserToEditQuery, UserToEditQueryVariables>;

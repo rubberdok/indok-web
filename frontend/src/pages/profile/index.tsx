@@ -16,13 +16,11 @@ import {
   Personal,
   Report,
 } from "@/components/pages/profile/ProfileCard";
-import { UserInfoDocument } from "@/generated/graphql";
-import { GET_USER_INFO } from "@/graphql/users/queries";
+import { UserDocument } from "@/generated/graphql";
 import Layout from "@/layouts/Layout";
 import { addApolloState, initializeApollo } from "@/lib/apolloClient";
 import { NextPageWithLayout } from "@/pages/_app";
 import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "@/theme/constants";
-import { User } from "@/types/users";
 import { generateFeideLoginUrl } from "@/utils/auth";
 
 const ID_PREFIX = "profile-";
@@ -54,7 +52,7 @@ const RootStyle = styled("div")(({ theme }) => ({
 }));
 
 const ProfilePage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSideProps>> = () => {
-  const { data } = useQuery<{ user?: User }>(GET_USER_INFO, { ssr: false });
+  const { data } = useQuery(UserDocument, { ssr: false });
   const initials = useMemo(() => (data?.user ? userInitials(data.user.firstName, data.user.lastName) : ""), [data]);
 
   return (
@@ -98,7 +96,7 @@ const ProfilePage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServ
 
           <Grid container item justifyContent="center" alignItems="stretch" spacing={4}>
             <Grid item xs={12} md={6} lg={5}>
-              <Personal user={data?.user} data-test-id={`${ID_PREFIX}personal-`} />
+              <Personal user={data?.user ?? undefined} data-test-id={`${ID_PREFIX}personal-`} />
             </Grid>
             <Grid item xs={12} md={6} lg={5}>
               <Event data-test-id={`${ID_PREFIX}event-`} />
@@ -142,9 +140,7 @@ export default ProfilePage;
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const client = initializeApollo({}, ctx);
-  const { data, error } = await client.query({
-    query: UserInfoDocument,
-  });
+  const { data, error } = await client.query({ query: UserDocument });
 
   if (error) return { notFound: true };
   if (!data.user) {
