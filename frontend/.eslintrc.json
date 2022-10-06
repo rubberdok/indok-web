@@ -23,7 +23,7 @@
     },
     "import/resolver": {
       "typescript": {
-        "project": "frontend/tsconfig.json"
+        "project": "./tsconfig.json"
       }
     },
     "react": {

@@ -1,5 +1,5 @@
 import { Permission, User } from "@prisma/client";
-import { inject, injectable } from "inversify";
+import { inject, injectable } from "tsyringe";
 
 import { CoreTypes } from "@/core";
 import { Database } from "@/core/interfaces";
@@ -7,7 +7,7 @@ import { IPermissionRepository } from "@/repositories/interfaces";
 import { PermissionString } from "@/services/permissions/types";
 
 @injectable()
-export default class PermissionRepository implements IPermissionRepository {
+export class PermissionRepository implements IPermissionRepository {
   constructor(@inject(CoreTypes.Prisma) public db: Database) {}
 
   async hasPermission(user: User, permission: PermissionString | string): Promise<boolean> {
