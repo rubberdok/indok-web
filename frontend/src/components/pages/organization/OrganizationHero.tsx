@@ -34,6 +34,14 @@ const OrganizationHero: React.FC<Props> = ({ organization, handleTabChange, acti
             </Typography>
           }
         />
+        <Tab
+          sx={{ color: "grey.500", "&.Mui-selected": { color: "secondary.main" } }}
+          label={
+            <Typography variant="subtitle2" mb={2}>
+              Medlemmer
+            </Typography>
+          }
+        />
       </Tabs>
     </Title>
   );
