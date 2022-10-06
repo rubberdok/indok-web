@@ -11,10 +11,10 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  Date: any;
-  DateTime: any;
-  Decimal: any;
-  UUID: any;
+  Date: string;
+  DateTime: string;
+  Decimal: number;
+  UUID: string;
 };
 
 /** Booking type for admin users */
@@ -1431,6 +1431,62 @@ export type AvailableYearsQueryVariables = Exact<{ [key: string]: never }>;
 
 export type AvailableYearsQuery = { __typename?: "Queries"; availableYears: Array<string> };
 
+export type CabinFragment = {
+  __typename?: "CabinType";
+  id: string;
+  name: string;
+  maxGuests: number;
+  internalPrice: number;
+  externalPrice: number;
+};
+
+export type BookingFragment = {
+  __typename?: "AllBookingsType";
+  id: string;
+  checkIn: string;
+  checkOut: string;
+  cabins: Array<{ __typename?: "CabinType"; id: string; name: string }>;
+};
+
+export type AdminBookingFragment = {
+  __typename?: "AdminBookingType";
+  id: string;
+  checkIn: string;
+  checkOut: string;
+  firstName: string;
+  lastName: string;
+  phone: string;
+  receiverEmail: string;
+  externalParticipants: number;
+  internalParticipants: number;
+  price?: number | null;
+  isTentative: boolean;
+  isDeclined: boolean;
+  timestamp: string;
+  extraInfo: string;
+  declineReason: string;
+  cabins: Array<{ __typename?: "CabinType"; id: string; name: string }>;
+};
+
+export type BookingResponsibleFragment = {
+  __typename?: "BookingResponsibleType";
+  id: string;
+  active?: boolean | null;
+  firstName?: string | null;
+  lastName?: string | null;
+  email?: string | null;
+};
+
+export type BookingSemesterFragment = {
+  __typename?: "UpdateBookingSemesterType";
+  fallStartDate: string;
+  fallEndDate: string;
+  springStartDate: string;
+  springEndDate: string;
+  fallSemesterActive: boolean;
+  springSemesterActive: boolean;
+};
+
 export type CreateBookingMutationVariables = Exact<{
   bookingData?: InputMaybe<BookingInput>;
 }>;
@@ -1467,6 +1523,20 @@ export type DeleteBookingMutation = {
   deleteBooking?: { __typename?: "DeleteBooking"; ok?: boolean | null } | null;
 };
 
+export type CabinsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type CabinsQuery = {
+  __typename?: "Queries";
+  cabins?: Array<{
+    __typename?: "CabinType";
+    id: string;
+    name: string;
+    maxGuests: number;
+    internalPrice: number;
+    externalPrice: number;
+  }> | null;
+};
+
 export type AllBookingsQueryVariables = Exact<{ [key: string]: never }>;
 
 export type AllBookingsQuery = {
@@ -1474,8 +1544,8 @@ export type AllBookingsQuery = {
   allBookings?: Array<{
     __typename?: "AllBookingsType";
     id: string;
-    checkIn: any;
-    checkOut: any;
+    checkIn: string;
+    checkOut: string;
     cabins: Array<{ __typename?: "CabinType"; id: string; name: string }>;
   }> | null;
 };
@@ -1489,32 +1559,22 @@ export type AdminAllBookingsQuery = {
   adminAllBookings?: Array<{
     __typename?: "AdminBookingType";
     id: string;
+    checkIn: string;
+    checkOut: string;
     firstName: string;
     lastName: string;
     phone: string;
     receiverEmail: string;
-    checkIn: any;
-    checkOut: any;
     externalParticipants: number;
     internalParticipants: number;
     price?: number | null;
     isTentative: boolean;
+    isDeclined: boolean;
+    timestamp: string;
+    extraInfo: string;
+    declineReason: string;
     cabins: Array<{ __typename?: "CabinType"; id: string; name: string }>;
   }> | null;
-};
-
-export type CabinsAndResponsiblesQueryVariables = Exact<{ [key: string]: never }>;
-
-export type CabinsAndResponsiblesQuery = {
-  __typename?: "Queries";
-  cabins?: Array<{
-    __typename?: "CabinType";
-    id: string;
-    name: string;
-    internalPrice: number;
-    externalPrice: number;
-  }> | null;
-  activeBookingResponsible?: { __typename?: "BookingResponsibleType"; id: string; email?: string | null } | null;
 };
 
 export type ActiveBookingResponsibleQueryVariables = Exact<{ [key: string]: never }>;
@@ -1531,38 +1591,33 @@ export type ActiveBookingResponsibleQuery = {
   } | null;
 };
 
-export type EventFragmentFragment = {
-  __typename?: "EventType";
-  id: string;
-  title: string;
-  startTime: any;
-  endTime?: any | null;
-  location?: string | null;
-  description: string;
-  image?: string | null;
-  isAttendable: boolean;
-  deadline?: any | null;
-  price?: number | null;
-  shortDescription?: string | null;
-  signupOpenDate?: any | null;
-  isFull?: boolean | null;
-  hasExtraInformation: boolean;
-  allowedGradeYears?: Array<number> | null;
-  organization: { __typename?: "OrganizationType"; name: string; color?: string | null };
-  category?: { __typename?: "CategoryType"; name: string } | null;
-  publisher?: {
-    __typename?: "UserType";
+export type CabinsAndResponsiblesQueryVariables = Exact<{ [key: string]: never }>;
+
+export type CabinsAndResponsiblesQuery = {
+  __typename?: "Queries";
+  cabins?: Array<{
+    __typename?: "CabinType";
     id: string;
-    username: string;
-    email: string;
-    firstName: string;
-    lastName: string;
-    dateJoined: any;
-  } | null;
-  userAttendance?: {
-    __typename?: "UserAttendingType";
-    isSignedUp?: boolean | null;
-    isOnWaitingList?: boolean | null;
+    name: string;
+    maxGuests: number;
+    internalPrice: number;
+    externalPrice: number;
+  }> | null;
+  activeBookingResponsible?: { __typename?: "BookingResponsibleType"; id: string; email?: string | null } | null;
+};
+
+export type BookingSemesterQueryVariables = Exact<{ [key: string]: never }>;
+
+export type BookingSemesterQuery = {
+  __typename?: "Queries";
+  bookingSemester?: {
+    __typename?: "UpdateBookingSemesterType";
+    fallStartDate: string;
+    fallEndDate: string;
+    springStartDate: string;
+    springEndDate: string;
+    fallSemesterActive: boolean;
+    springSemesterActive: boolean;
   } | null;
 };
 
@@ -1586,100 +1641,15 @@ export type GetCategoriesQuery = {
   allCategories?: Array<{ __typename?: "CategoryType"; id: string; name: string }> | null;
 };
 
-export type AllEventsQueryVariables = Exact<{
-  organization?: InputMaybe<Scalars["String"]>;
-  category?: InputMaybe<Scalars["String"]>;
-  startTime?: InputMaybe<Scalars["DateTime"]>;
-  endTime?: InputMaybe<Scalars["DateTime"]>;
-}>;
-
-export type AllEventsQuery = {
-  __typename?: "Queries";
-  allEvents?: Array<{
-    __typename?: "EventType";
-    id: string;
-    title: string;
-    startTime: any;
-    endTime?: any | null;
-    location?: string | null;
-    description: string;
-    image?: string | null;
-    isAttendable: boolean;
-    deadline?: any | null;
-    price?: number | null;
-    shortDescription?: string | null;
-    signupOpenDate?: any | null;
-    isFull?: boolean | null;
-    hasExtraInformation: boolean;
-    allowedGradeYears?: Array<number> | null;
-    organization: { __typename?: "OrganizationType"; name: string; color?: string | null };
-    category?: { __typename?: "CategoryType"; name: string } | null;
-    publisher?: {
-      __typename?: "UserType";
-      id: string;
-      username: string;
-      email: string;
-      firstName: string;
-      lastName: string;
-      dateJoined: any;
-    } | null;
-    userAttendance?: {
-      __typename?: "UserAttendingType";
-      isSignedUp?: boolean | null;
-      isOnWaitingList?: boolean | null;
-    } | null;
-  }> | null;
-};
-
-export type DefaultEventsQueryVariables = Exact<{ [key: string]: never }>;
-
-export type DefaultEventsQuery = {
-  __typename?: "Queries";
-  defaultEvents?: Array<{
-    __typename?: "EventType";
-    id: string;
-    title: string;
-    startTime: any;
-    endTime?: any | null;
-    location?: string | null;
-    description: string;
-    image?: string | null;
-    isAttendable: boolean;
-    deadline?: any | null;
-    price?: number | null;
-    shortDescription?: string | null;
-    signupOpenDate?: any | null;
-    isFull?: boolean | null;
-    hasExtraInformation: boolean;
-    allowedGradeYears?: Array<number> | null;
-    organization: { __typename?: "OrganizationType"; name: string; color?: string | null };
-    category?: { __typename?: "CategoryType"; name: string } | null;
-    publisher?: {
-      __typename?: "UserType";
-      id: string;
-      username: string;
-      email: string;
-      firstName: string;
-      lastName: string;
-      dateJoined: any;
-    } | null;
-    userAttendance?: {
-      __typename?: "UserAttendingType";
-      isSignedUp?: boolean | null;
-      isOnWaitingList?: boolean | null;
-    } | null;
-  }> | null;
-};
-
 export type ListingFragment = {
   __typename?: "ListingType";
   id: string;
   title: string;
   slug: string;
   description: string;
-  startDatetime: any;
-  deadline: any;
-  endDatetime: any;
+  startDatetime: string;
+  deadline: string;
+  endDatetime: string;
   applicationUrl?: string | null;
   chips: Array<string>;
   readMoreUrl?: string | null;
@@ -1707,9 +1677,9 @@ export type ListingQuery = {
     title: string;
     slug: string;
     description: string;
-    startDatetime: any;
-    deadline: any;
-    endDatetime: any;
+    startDatetime: string;
+    deadline: string;
+    endDatetime: string;
     applicationUrl?: string | null;
     chips: Array<string>;
     readMoreUrl?: string | null;
@@ -1741,7 +1711,7 @@ export type UserFieldsFragment = {
   username: string;
   firstName: string;
   lastName: string;
-  dateJoined: any;
+  dateJoined: string;
   graduationYear?: number | null;
   gradeYear?: number | null;
   allergies?: string | null;
@@ -1772,7 +1742,7 @@ export type AuthUserMutation = {
       username: string;
       firstName: string;
       lastName: string;
-      dateJoined: any;
+      dateJoined: string;
       graduationYear?: number | null;
       gradeYear?: number | null;
       allergies?: string | null;
@@ -1794,7 +1764,7 @@ export type UserInfoQuery = {
     username: string;
     firstName: string;
     lastName: string;
-    dateJoined: any;
+    dateJoined: string;
     graduationYear?: number | null;
     gradeYear?: number | null;
     allergies?: string | null;
@@ -1803,81 +1773,137 @@ export type UserInfoQuery = {
   } | null;
 };
 
-export const EventFragmentFragmentDoc = {
+export const CabinFragmentDoc = {
   kind: "Document",
   definitions: [
     {
       kind: "FragmentDefinition",
-      name: { kind: "Name", value: "EventFragment" },
-      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "EventType" } },
+      name: { kind: "Name", value: "Cabin" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "CabinType" } },
       selectionSet: {
         kind: "SelectionSet",
         selections: [
           { kind: "Field", name: { kind: "Name", value: "id" } },
-          { kind: "Field", name: { kind: "Name", value: "title" } },
-          { kind: "Field", name: { kind: "Name", value: "startTime" } },
-          { kind: "Field", name: { kind: "Name", value: "endTime" } },
-          { kind: "Field", name: { kind: "Name", value: "location" } },
-          { kind: "Field", name: { kind: "Name", value: "description" } },
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "organization" },
-            selectionSet: {
-              kind: "SelectionSet",
-              selections: [
-                { kind: "Field", name: { kind: "Name", value: "name" } },
-                { kind: "Field", name: { kind: "Name", value: "color" } },
-              ],
-            },
-          },
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "category" },
-            selectionSet: {
-              kind: "SelectionSet",
-              selections: [{ kind: "Field", name: { kind: "Name", value: "name" } }],
-            },
-          },
-          { kind: "Field", name: { kind: "Name", value: "image" } },
-          { kind: "Field", name: { kind: "Name", value: "isAttendable" } },
-          { kind: "Field", name: { kind: "Name", value: "deadline" } },
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "publisher" },
-            selectionSet: {
-              kind: "SelectionSet",
-              selections: [
-                { kind: "Field", name: { kind: "Name", value: "id" } },
-                { kind: "Field", name: { kind: "Name", value: "username" } },
-                { kind: "Field", name: { kind: "Name", value: "email" } },
-                { kind: "Field", name: { kind: "Name", value: "firstName" } },
-                { kind: "Field", name: { kind: "Name", value: "lastName" } },
-                { kind: "Field", name: { kind: "Name", value: "dateJoined" } },
-              ],
-            },
-          },
-          { kind: "Field", name: { kind: "Name", value: "price" } },
-          { kind: "Field", name: { kind: "Name", value: "shortDescription" } },
-          { kind: "Field", name: { kind: "Name", value: "signupOpenDate" } },
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "userAttendance" },
-            selectionSet: {
-              kind: "SelectionSet",
-              selections: [
-                { kind: "Field", name: { kind: "Name", value: "isSignedUp" } },
-                { kind: "Field", name: { kind: "Name", value: "isOnWaitingList" } },
-              ],
-            },
-          },
-          { kind: "Field", name: { kind: "Name", value: "isFull" } },
-          { kind: "Field", name: { kind: "Name", value: "hasExtraInformation" } },
-          { kind: "Field", name: { kind: "Name", value: "allowedGradeYears" } },
+          { kind: "Field", name: { kind: "Name", value: "name" } },
+          { kind: "Field", name: { kind: "Name", value: "maxGuests" } },
+          { kind: "Field", name: { kind: "Name", value: "internalPrice" } },
+          { kind: "Field", name: { kind: "Name", value: "externalPrice" } },
         ],
       },
     },
   ],
-} as unknown as DocumentNode<EventFragmentFragment, unknown>;
+} as unknown as DocumentNode<CabinFragment, unknown>;
+export const BookingFragmentDoc = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Booking" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "AllBookingsType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "checkIn" } },
+          { kind: "Field", name: { kind: "Name", value: "checkOut" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "cabins" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "name" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<BookingFragment, unknown>;
+export const AdminBookingFragmentDoc = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "AdminBooking" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "AdminBookingType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "checkIn" } },
+          { kind: "Field", name: { kind: "Name", value: "checkOut" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "cabins" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "name" } },
+              ],
+            },
+          },
+          { kind: "Field", name: { kind: "Name", value: "firstName" } },
+          { kind: "Field", name: { kind: "Name", value: "lastName" } },
+          { kind: "Field", name: { kind: "Name", value: "phone" } },
+          { kind: "Field", name: { kind: "Name", value: "receiverEmail" } },
+          { kind: "Field", name: { kind: "Name", value: "externalParticipants" } },
+          { kind: "Field", name: { kind: "Name", value: "internalParticipants" } },
+          { kind: "Field", name: { kind: "Name", value: "price" } },
+          { kind: "Field", name: { kind: "Name", value: "isTentative" } },
+          { kind: "Field", name: { kind: "Name", value: "isDeclined" } },
+          { kind: "Field", name: { kind: "Name", value: "timestamp" } },
+          { kind: "Field", name: { kind: "Name", value: "extraInfo" } },
+          { kind: "Field", name: { kind: "Name", value: "declineReason" } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<AdminBookingFragment, unknown>;
+export const BookingResponsibleFragmentDoc = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "BookingResponsible" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "BookingResponsibleType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "active" } },
+          { kind: "Field", name: { kind: "Name", value: "firstName" } },
+          { kind: "Field", name: { kind: "Name", value: "lastName" } },
+          { kind: "Field", name: { kind: "Name", value: "email" } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<BookingResponsibleFragment, unknown>;
+export const BookingSemesterFragmentDoc = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "BookingSemester" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "UpdateBookingSemesterType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "fallStartDate" } },
+          { kind: "Field", name: { kind: "Name", value: "fallEndDate" } },
+          { kind: "Field", name: { kind: "Name", value: "springStartDate" } },
+          { kind: "Field", name: { kind: "Name", value: "springEndDate" } },
+          { kind: "Field", name: { kind: "Name", value: "fallSemesterActive" } },
+          { kind: "Field", name: { kind: "Name", value: "springSemesterActive" } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<BookingSemesterFragment, unknown>;
 export const ListingFragmentDoc = {
   kind: "Document",
   definitions: [
@@ -2220,13 +2246,37 @@ export const DeleteBookingDocument = {
     },
   ],
 } as unknown as DocumentNode<DeleteBookingMutation, DeleteBookingMutationVariables>;
+export const CabinsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "cabins" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "cabins" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Cabin" } }],
+            },
+          },
+        ],
+      },
+    },
+    ...CabinFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<CabinsQuery, CabinsQueryVariables>;
 export const AllBookingsDocument = {
   kind: "Document",
   definitions: [
     {
       kind: "OperationDefinition",
       operation: "query",
-      name: { kind: "Name", value: "AllBookings" },
+      name: { kind: "Name", value: "allBookings" },
       selectionSet: {
         kind: "SelectionSet",
         selections: [
@@ -2235,27 +2285,13 @@ export const AllBookingsDocument = {
             name: { kind: "Name", value: "allBookings" },
             selectionSet: {
               kind: "SelectionSet",
-              selections: [
-                { kind: "Field", name: { kind: "Name", value: "id" } },
-                { kind: "Field", name: { kind: "Name", value: "checkIn" } },
-                { kind: "Field", name: { kind: "Name", value: "checkOut" } },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "cabins" },
-                  selectionSet: {
-                    kind: "SelectionSet",
-                    selections: [
-                      { kind: "Field", name: { kind: "Name", value: "id" } },
-                      { kind: "Field", name: { kind: "Name", value: "name" } },
-                    ],
-                  },
-                },
-              ],
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Booking" } }],
             },
           },
         ],
       },
     },
+    ...BookingFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<AllBookingsQuery, AllBookingsQueryVariables>;
 export const AdminAllBookingsDocument = {
@@ -2264,7 +2300,7 @@ export const AdminAllBookingsDocument = {
     {
       kind: "OperationDefinition",
       operation: "query",
-      name: { kind: "Name", value: "AdminAllBookings" },
+      name: { kind: "Name", value: "adminAllBookings" },
       variableDefinitions: [
         {
           kind: "VariableDefinition",
@@ -2287,44 +2323,46 @@ export const AdminAllBookingsDocument = {
             ],
             selectionSet: {
               kind: "SelectionSet",
-              selections: [
-                { kind: "Field", name: { kind: "Name", value: "id" } },
-                { kind: "Field", name: { kind: "Name", value: "firstName" } },
-                { kind: "Field", name: { kind: "Name", value: "lastName" } },
-                { kind: "Field", name: { kind: "Name", value: "phone" } },
-                { kind: "Field", name: { kind: "Name", value: "receiverEmail" } },
-                { kind: "Field", name: { kind: "Name", value: "checkIn" } },
-                { kind: "Field", name: { kind: "Name", value: "checkOut" } },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "cabins" },
-                  selectionSet: {
-                    kind: "SelectionSet",
-                    selections: [
-                      { kind: "Field", name: { kind: "Name", value: "id" } },
-                      { kind: "Field", name: { kind: "Name", value: "name" } },
-                    ],
-                  },
-                },
-                { kind: "Field", name: { kind: "Name", value: "externalParticipants" } },
-                { kind: "Field", name: { kind: "Name", value: "internalParticipants" } },
-                { kind: "Field", name: { kind: "Name", value: "price" } },
-                { kind: "Field", name: { kind: "Name", value: "isTentative" } },
-              ],
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "AdminBooking" } }],
             },
           },
         ],
       },
     },
+    ...AdminBookingFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<AdminAllBookingsQuery, AdminAllBookingsQueryVariables>;
+export const ActiveBookingResponsibleDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "activeBookingResponsible" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "activeBookingResponsible" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "BookingResponsible" } }],
+            },
+          },
+        ],
+      },
+    },
+    ...BookingResponsibleFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<ActiveBookingResponsibleQuery, ActiveBookingResponsibleQueryVariables>;
 export const CabinsAndResponsiblesDocument = {
   kind: "Document",
   definitions: [
     {
       kind: "OperationDefinition",
       operation: "query",
-      name: { kind: "Name", value: "CabinsAndResponsibles" },
+      name: { kind: "Name", value: "cabinsAndResponsibles" },
       selectionSet: {
         kind: "SelectionSet",
         selections: [
@@ -2333,12 +2371,7 @@ export const CabinsAndResponsiblesDocument = {
             name: { kind: "Name", value: "cabins" },
             selectionSet: {
               kind: "SelectionSet",
-              selections: [
-                { kind: "Field", name: { kind: "Name", value: "id" } },
-                { kind: "Field", name: { kind: "Name", value: "name" } },
-                { kind: "Field", name: { kind: "Name", value: "internalPrice" } },
-                { kind: "Field", name: { kind: "Name", value: "externalPrice" } },
-              ],
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Cabin" } }],
             },
           },
           {
@@ -2355,37 +2388,33 @@ export const CabinsAndResponsiblesDocument = {
         ],
       },
     },
+    ...CabinFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<CabinsAndResponsiblesQuery, CabinsAndResponsiblesQueryVariables>;
-export const ActiveBookingResponsibleDocument = {
+export const BookingSemesterDocument = {
   kind: "Document",
   definitions: [
     {
       kind: "OperationDefinition",
       operation: "query",
-      name: { kind: "Name", value: "ActiveBookingResponsible" },
+      name: { kind: "Name", value: "bookingSemester" },
       selectionSet: {
         kind: "SelectionSet",
         selections: [
           {
             kind: "Field",
-            name: { kind: "Name", value: "activeBookingResponsible" },
+            name: { kind: "Name", value: "bookingSemester" },
             selectionSet: {
               kind: "SelectionSet",
-              selections: [
-                { kind: "Field", name: { kind: "Name", value: "id" } },
-                { kind: "Field", name: { kind: "Name", value: "active" } },
-                { kind: "Field", name: { kind: "Name", value: "firstName" } },
-                { kind: "Field", name: { kind: "Name", value: "lastName" } },
-                { kind: "Field", name: { kind: "Name", value: "email" } },
-              ],
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "BookingSemester" } }],
             },
           },
         ],
       },
     },
+    ...BookingSemesterFragmentDoc.definitions,
   ],
-} as unknown as DocumentNode<ActiveBookingResponsibleQuery, ActiveBookingResponsibleQueryVariables>;
+} as unknown as DocumentNode<BookingSemesterQuery, BookingSemesterQueryVariables>;
 export const EventFilteredOrganizationsDocument = {
   kind: "Document",
   definitions: [
@@ -2450,98 +2479,6 @@ export const GetCategoriesDocument = {
     },
   ],
 } as unknown as DocumentNode<GetCategoriesQuery, GetCategoriesQueryVariables>;
-export const AllEventsDocument = {
-  kind: "Document",
-  definitions: [
-    {
-      kind: "OperationDefinition",
-      operation: "query",
-      name: { kind: "Name", value: "allEvents" },
-      variableDefinitions: [
-        {
-          kind: "VariableDefinition",
-          variable: { kind: "Variable", name: { kind: "Name", value: "organization" } },
-          type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
-        },
-        {
-          kind: "VariableDefinition",
-          variable: { kind: "Variable", name: { kind: "Name", value: "category" } },
-          type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
-        },
-        {
-          kind: "VariableDefinition",
-          variable: { kind: "Variable", name: { kind: "Name", value: "startTime" } },
-          type: { kind: "NamedType", name: { kind: "Name", value: "DateTime" } },
-        },
-        {
-          kind: "VariableDefinition",
-          variable: { kind: "Variable", name: { kind: "Name", value: "endTime" } },
-          type: { kind: "NamedType", name: { kind: "Name", value: "DateTime" } },
-        },
-      ],
-      selectionSet: {
-        kind: "SelectionSet",
-        selections: [
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "allEvents" },
-            arguments: [
-              {
-                kind: "Argument",
-                name: { kind: "Name", value: "organization" },
-                value: { kind: "Variable", name: { kind: "Name", value: "organization" } },
-              },
-              {
-                kind: "Argument",
-                name: { kind: "Name", value: "category" },
-                value: { kind: "Variable", name: { kind: "Name", value: "category" } },
-              },
-              {
-                kind: "Argument",
-                name: { kind: "Name", value: "startTime" },
-                value: { kind: "Variable", name: { kind: "Name", value: "startTime" } },
-              },
-              {
-                kind: "Argument",
-                name: { kind: "Name", value: "endTime" },
-                value: { kind: "Variable", name: { kind: "Name", value: "endTime" } },
-              },
-            ],
-            selectionSet: {
-              kind: "SelectionSet",
-              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "EventFragment" } }],
-            },
-          },
-        ],
-      },
-    },
-    ...EventFragmentFragmentDoc.definitions,
-  ],
-} as unknown as DocumentNode<AllEventsQuery, AllEventsQueryVariables>;
-export const DefaultEventsDocument = {
-  kind: "Document",
-  definitions: [
-    {
-      kind: "OperationDefinition",
-      operation: "query",
-      name: { kind: "Name", value: "defaultEvents" },
-      selectionSet: {
-        kind: "SelectionSet",
-        selections: [
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "defaultEvents" },
-            selectionSet: {
-              kind: "SelectionSet",
-              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "EventFragment" } }],
-            },
-          },
-        ],
-      },
-    },
-    ...EventFragmentFragmentDoc.definitions,
-  ],
-} as unknown as DocumentNode<DefaultEventsQuery, DefaultEventsQueryVariables>;
 export const ListingDocument = {
   kind: "Document",
   definitions: [

@@ -18,12 +18,13 @@ import React, { useEffect, useState } from "react";
 
 import ContractDialog from "@/components/pages/cabins/Popup/ContractDialog";
 import StepComponent from "@/components/pages/cabins/StepComponent";
+import { CabinsDocument } from "@/generated/graphql";
 import { CREATE_BOOKING, SEND_EMAIL } from "@/graphql/cabins/mutations";
-import { QUERY_CABINS } from "@/graphql/cabins/queries";
 import useResponsive from "@/hooks/useResponsive";
-import { Cabin, ContactInfo, ContactInfoValidations, DatePick, ModalData } from "@/interfaces/cabins";
+import { ContactInfo, ContactInfoValidations, DatePick, ModalData } from "@/interfaces/cabins";
 import Layout from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/pages/_app";
+import { Cabin } from "@/types/cabins";
 import {
   allValuesFilled,
   cabinOrderStepReady,
@@ -63,17 +64,17 @@ const RootStyle = styled("div")(({ theme }) => ({
   marginBottom: theme.spacing(4),
 }));
 
-/*
-Main page for the booking of a cabin. 
-The page renders different components depending on the step variale chosen.
-*/
+/**
+ * Main page for the booking of a cabin.
+ * The page renders different components depending on the step variable chosen.
+ */
 const CabinBookingPage: NextPageWithLayout = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [stepReady, setStepReady] = useState<StepReady>(initalStepReady);
 
   // Choose cabin
   const [chosenCabins, setChosenCabins] = useState<Cabin[]>([]);
-  const cabinQuery = useQuery<{ cabins: Cabin[] }>(QUERY_CABINS);
+  const { data } = useQuery(CabinsDocument);
   const [modalData, setModalData] = useState<ModalData>(defaultModalData);
 
   // Check in/Check out
@@ -198,49 +199,50 @@ const CabinBookingPage: NextPageWithLayout = () => {
               </Stepper>
             )}
           </div>
-          {isMobile ? (
-            <StepComponent
-              cabinQuery={cabinQuery}
-              activeStep={activeStep}
-              chosenCabins={chosenCabins}
-              contactInfo={contactInfo}
-              datePick={datePick}
-              errorTrigger={errorTrigger}
-              validations={validations}
-              setContactInfo={setContactInfo}
-              setChosenCabins={setChosenCabins}
-              setDatePick={setDatePick}
-              setExtraInfo={setExtraInfo}
-            />
-          ) : (
-            <Card>
-              <Box sx={{ px: 4, py: 4 }}>
-                <StepComponent
-                  cabinQuery={cabinQuery}
-                  activeStep={activeStep}
-                  chosenCabins={chosenCabins}
-                  contactInfo={contactInfo}
-                  datePick={datePick}
-                  errorTrigger={errorTrigger}
-                  validations={validations}
-                  setContactInfo={setContactInfo}
-                  setChosenCabins={setChosenCabins}
-                  setDatePick={setDatePick}
-                  setExtraInfo={setExtraInfo}
-                />
-              </Box>
-              <Stack
-                width={1}
-                direction="row"
-                justifyContent="space-between"
-                borderTop="1px solid"
-                borderColor="divider"
-              >
-                <BackButton />
-                <NextButton />
-              </Stack>
-            </Card>
-          )}
+          {data?.cabins &&
+            (isMobile ? (
+              <StepComponent
+                allCabins={data.cabins}
+                activeStep={activeStep}
+                chosenCabins={chosenCabins}
+                contactInfo={contactInfo}
+                datePick={datePick}
+                errorTrigger={errorTrigger}
+                validations={validations}
+                setContactInfo={setContactInfo}
+                setChosenCabins={setChosenCabins}
+                setDatePick={setDatePick}
+                setExtraInfo={setExtraInfo}
+              />
+            ) : (
+              <Card>
+                <Box sx={{ px: 4, py: 4 }}>
+                  <StepComponent
+                    allCabins={data.cabins}
+                    activeStep={activeStep}
+                    chosenCabins={chosenCabins}
+                    contactInfo={contactInfo}
+                    datePick={datePick}
+                    errorTrigger={errorTrigger}
+                    validations={validations}
+                    setContactInfo={setContactInfo}
+                    setChosenCabins={setChosenCabins}
+                    setDatePick={setDatePick}
+                    setExtraInfo={setExtraInfo}
+                  />
+                </Box>
+                <Stack
+                  width={1}
+                  direction="row"
+                  justifyContent="space-between"
+                  borderTop="1px solid"
+                  borderColor="divider"
+                >
+                  <BackButton />
+                  <NextButton />
+                </Stack>
+              </Card>
+            ))}
         </Stack>
         {isMobile && activeStep != 3 ? (
           <MobileStepper

@@ -1,0 +1,56 @@
+fragment Cabin on CabinType {
+  id
+  name
+  maxGuests
+  internalPrice
+  externalPrice
+}
+
+fragment Booking on AllBookingsType {
+  id
+  checkIn
+  checkOut
+  cabins {
+    id
+    name
+  }
+}
+
+fragment AdminBooking on AdminBookingType {
+  id
+  checkIn
+  checkOut
+  cabins {
+    id
+    name
+  }
+  firstName
+  lastName
+  phone
+  receiverEmail
+  externalParticipants
+  internalParticipants
+  price
+  isTentative
+  isDeclined
+  timestamp
+  extraInfo
+  declineReason
+}
+
+fragment BookingResponsible on BookingResponsibleType {
+  id
+  active
+  firstName
+  lastName
+  email
+}
+
+fragment BookingSemester on UpdateBookingSemesterType {
+  fallStartDate
+  fallEndDate
+  springStartDate
+  springEndDate
+  fallSemesterActive
+  springSemesterActive
+}

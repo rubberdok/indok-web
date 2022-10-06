@@ -1,4 +1,4 @@
-import { ApolloQueryResult, OperationVariables, useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import { Check, Clear } from "@mui/icons-material";
 import {
   Alert,
@@ -17,30 +17,28 @@ import {
 import dayjs from "dayjs";
 import { useState } from "react";
 
+import { AdminAllBookingsDocument } from "@/generated/graphql";
 import { CONFIRM_BOOKING, SEND_EMAIL } from "@/graphql/cabins/mutations";
-import { QUERY_ADMIN_ALL_BOOKINGS } from "@/graphql/cabins/queries";
-import { BookingFromQuery } from "@/interfaces/cabins";
+import { AdminBooking } from "@/types/cabins";
 import { getDecisionEmailProps, toStringChosenCabins } from "@/utils/cabins";
 
 import DeclineBookingDialog from "./DeclineBookingDialog";
 import InlineTableCell from "./InlineTableCell";
 
 type Props = {
-  bookings?: BookingFromQuery[];
-  refetch: (
-    variables?: Partial<OperationVariables> | undefined
-  ) => Promise<ApolloQueryResult<{ adminAllBookings: BookingFromQuery[] }>>;
+  bookings?: AdminBooking[];
+  refetchBookings: () => void;
   currentTab: string;
 };
 
-const AdminCabinTable = ({ bookings, refetch, currentTab }: Props) => {
+const AdminCabinTable: React.FC<Props> = ({ bookings, refetchBookings, currentTab }) => {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [bookingToBeDeclined, setBookingToBeDeclined] = useState<BookingFromQuery | undefined>();
-  const [confirmBooking] = useMutation(CONFIRM_BOOKING, { refetchQueries: [{ query: QUERY_ADMIN_ALL_BOOKINGS }] });
+  const [bookingToBeDeclined, setBookingToBeDeclined] = useState<AdminBooking | undefined>();
+  const [confirmBooking] = useMutation(CONFIRM_BOOKING, { refetchQueries: [{ query: AdminAllBookingsDocument }] });
   const [sendEmail] = useMutation(SEND_EMAIL);
 
-  const isExpired = (booking: BookingFromQuery) => dayjs().isAfter(booking.checkIn);
+  const isExpired = (booking: AdminBooking) => dayjs().isAfter(booking.checkIn);
   const isDeclinedTab = currentTab === "declined";
 
   return (
@@ -53,7 +51,7 @@ const AdminCabinTable = ({ bookings, refetch, currentTab }: Props) => {
         setBookingToBeDeclined={setBookingToBeDeclined}
         setSnackbarMessage={setSnackbarMessage}
         setOpenSnackbar={setOpenSnackbar}
-        refetch={refetch}
+        refetchBookings={refetchBookings}
       />
       <Table size="small" style={{ display: "table" }}>
         <TableHead>
@@ -73,7 +71,7 @@ const AdminCabinTable = ({ bookings, refetch, currentTab }: Props) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {bookings?.map((booking: BookingFromQuery) => (
+          {bookings?.map((booking) => (
             <TableRow key={booking.id}>
               <InlineTableCell>{`${booking.firstName} ${booking.lastName}`}</InlineTableCell>
               <InlineTableCell>{booking.receiverEmail}</InlineTableCell>
@@ -92,7 +90,7 @@ const AdminCabinTable = ({ bookings, refetch, currentTab }: Props) => {
                             `Booking bekreftet. Bekreftelsesmail er sendt til ${booking.receiverEmail}.`
                           );
                           setOpenSnackbar(true);
-                          refetch();
+                          refetchBookings();
                         });
                         sendEmail(getDecisionEmailProps(booking, true));
                       }}

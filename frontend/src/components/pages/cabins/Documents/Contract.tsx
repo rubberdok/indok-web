@@ -3,8 +3,9 @@ import { Box, Divider, Grid, Typography } from "@mui/material";
 import Image from "next/future/image";
 import { useEffect, useState } from "react";
 
-import { QUERY_BOOKING_RESPONSIBLE } from "@/graphql/cabins/queries";
-import { BookingResponsible, Cabin, ContactInfo, DatePick } from "@/interfaces/cabins";
+import { ActiveBookingResponsibleDocument, BookingResponsibleType } from "@/generated/graphql";
+import { ContactInfo, DatePick } from "@/interfaces/cabins";
+import { Cabin } from "@/types/cabins";
 import { calculatePrice, convertDateFormat, toStringChosenCabins } from "@/utils/cabins";
 import hytteforeningen from "~/public/static/cabins/logo.svg";
 
@@ -20,8 +21,8 @@ const Contract: React.FC<ContractProps> = ({ chosenCabins, contactInfo, datePick
   const currentTime = new Date().toLocaleString();
   const price = calculatePrice(chosenCabins, contactInfo, datePick);
 
-  const { data } = useQuery<{ activeBookingResponsible: BookingResponsible }>(QUERY_BOOKING_RESPONSIBLE);
-  const [responsible, setResponsible] = useState<BookingResponsible>();
+  const { data } = useQuery(ActiveBookingResponsibleDocument);
+  const [responsible, setResponsible] = useState<BookingResponsibleType>();
 
   useEffect(() => {
     if (data?.activeBookingResponsible) {

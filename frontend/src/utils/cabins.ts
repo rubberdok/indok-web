@@ -4,15 +4,9 @@ import validator from "validator";
 import * as Yup from "yup";
 
 import { BookingSemester } from "@/components/pages/cabins/Admin/BookingSemesterPicker";
-import {
-  BasicBooking,
-  Cabin,
-  ContactInfo,
-  ContactInfoValidations,
-  BookingFromQuery,
-  DatePick,
-  EmailAndBookingInput,
-} from "@/interfaces/cabins";
+import { BasicBooking, ContactInfo, ContactInfoValidations, DatePick, EmailAndBookingInput } from "@/interfaces/cabins";
+import { AdminBooking, Cabin } from "@/types/cabins";
+
 dayjs.extend(isBetween);
 
 /*
@@ -79,7 +73,7 @@ export const cabinOrderStepReady: (
   return { ready: true, errortext: "" };
 };
 
-export const toStringChosenCabins: (chosenCabins: Cabin[]) => string[] = (chosenCabins) =>
+export const toStringChosenCabins = (chosenCabins: Pick<Cabin, "name">[]): string[] =>
   chosenCabins.map((cabin, i) => (i > 0 ? " og " + cabin.name : cabin.name));
 
 export const calculatePrice: (
@@ -101,7 +95,7 @@ export const calculatePrice: (
 
 export const convertDateFormat: (date?: string) => string = (date) => dayjs(date).format("DD-MM-YYYY");
 
-export const getDecisionEmailProps = (booking: BookingFromQuery, approved: boolean, declineMessage?: string) => {
+export const getDecisionEmailProps = (booking: AdminBooking, approved: boolean, declineMessage?: string) => {
   // omit unwanted fields
   const { checkIn, checkOut, externalParticipants, firstName, internalParticipants, lastName, phone, receiverEmail } =
     booking;

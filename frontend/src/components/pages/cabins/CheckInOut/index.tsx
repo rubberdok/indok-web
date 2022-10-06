@@ -6,7 +6,8 @@ import Calendar from "@/components/Calendar";
 import LabeledIcon from "@/components/LabeledIcon";
 import useDisabledDates from "@/hooks/cabins/useDisabledDates";
 import useResponsive from "@/hooks/useResponsive";
-import { Cabin, DatePick } from "@/interfaces/cabins";
+import { DatePick } from "@/interfaces/cabins";
+import { Cabin } from "@/types/cabins";
 
 interface Props {
   allCabins: Cabin[];
