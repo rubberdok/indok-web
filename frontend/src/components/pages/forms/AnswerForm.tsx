@@ -5,28 +5,23 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 
 import { SUBMIT_ANSWERS } from "@/graphql/forms/mutations";
-import { Form, Question } from "@/interfaces/forms";
+import { FormWithAnswers, QuestionWithAnswer } from "@/types/forms";
 
 import AnswerQuestion from "./AnswerQuestion";
 
 // interface for the state of answers before pushing to the database
 type Questions = {
-  [key: string]: { question: Question; answer: string };
+  [key: string]: { question: QuestionWithAnswer; answer: string };
 };
 
-/**
- * Component for a user to answer a form.
- *
- * Props:
- * - the form to answer
- */
-const AnswerForm: React.FC<{
-  form: Form;
-}> = ({ form }) => {
+type Props = { form: FormWithAnswers };
+
+/** Component for a user to answer a form. */
+const AnswerForm: React.FC<Props> = ({ form }) => {
   // state to manage the user's answers before submitting
   const [questions, setQuestions] = useState<Questions>(
     Object.fromEntries(
-      form.questions.map((question) => [question.id, { question: question, answer: question.answer?.answer || "" }])
+      form.questions.map((question) => [question.id, { question: question, answer: question?.answer?.answer || "" }])
     )
   );
 
@@ -81,7 +76,7 @@ const AnswerForm: React.FC<{
                     <AnswerQuestion
                       question={question}
                       answer={answer}
-                      onValueChanged={(value) =>
+                      onAnswerChange={(value) =>
                         setQuestions((prevState) => ({ ...prevState, [id]: { ...prevState[id], answer: value } }))
                       }
                     />

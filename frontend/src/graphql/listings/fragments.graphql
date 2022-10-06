@@ -41,6 +41,6 @@ fragment ListingWithForm on ListingType {
 fragment ListingWithResponses on ListingType {
   ...Listing
   form {
-    ...FormWithResponses
+    ...FormWithAllResponses
   }
 }

@@ -1,21 +1,33 @@
 import {
   AnswerFragment,
+  AnswerWithQuestionIdFragment,
   FormFragment,
-  FormWithResponsesFragment,
+  FormWithAllResponsesFragment,
+  FormWithAnswersFragment,
+  OptionFragment,
   QuestionFragment,
-  QuestionWithAnswersFragment,
+  QuestionWithAnswerFragment,
+  QuestionWithAnswerIdsFragment,
   ResponseFragment,
 } from "@/generated/graphql";
 import { GraphqlType } from "@/utils/graphql";
 
 export type Form = GraphqlType<FormFragment>;
 
-export type Question = GraphqlType<QuestionFragment>;
+export type FormWithAnswers = GraphqlType<FormWithAnswersFragment>;
 
-export type Answer = GraphqlType<AnswerFragment>;
-
-export type QuestionWithAnswers = GraphqlType<QuestionWithAnswersFragment>;
+export type FormWithAllResponses = GraphqlType<FormWithAllResponsesFragment>;
 
 export type Response = GraphqlType<ResponseFragment>;
 
-export type FormWithResponses = GraphqlType<FormWithResponsesFragment>;
+export type Question = GraphqlType<QuestionFragment>;
+
+export type QuestionWithAnswer = GraphqlType<QuestionWithAnswerFragment>;
+
+export type QuestionWithAnswerIds = GraphqlType<QuestionWithAnswerIdsFragment>;
+
+export type Option = GraphqlType<OptionFragment>;
+
+export type Answer = GraphqlType<AnswerFragment>;
+
+export type AnswerWithQuestionId = GraphqlType<AnswerWithQuestionIdFragment>;

@@ -1,21 +1,20 @@
 import { Checkbox, FormControlLabel, FormGroup } from "@mui/material";
 import { useEffect, useState } from "react";
 
-import { Option, Question } from "@/interfaces/forms";
+import { Option, Question } from "@/types/forms";
+
+type Props = {
+  question: Question;
+  /** Answer state passed down from AnswerForm */
+  answer: string;
+  onAnswerChange: (value: string) => void;
+};
 
 /**
  * Component to answer questions of the Checkboxes type.
  * Separated into its own component, since multiple possible answers requires its own logic.
- *
- * Props:
- * - the answer state, passed down from answerForm
- * - onValueChanged function to change answer state
  */
-const AnswerCheckboxes: React.FC<{
-  answer: string;
-  question: Question;
-  onValueChanged: (value: string) => void;
-}> = ({ answer, question, onValueChanged }) => {
+const AnswerCheckboxes: React.FC<Props> = ({ answer, question, onAnswerChange }) => {
   // state to manage which options are selected
   const [selectedOptions, selectOptions] = useState<Option[]>(
     question.options ? question.options?.filter((option) => answer.split("|||").includes(option.answer)) : []
@@ -23,7 +22,7 @@ const AnswerCheckboxes: React.FC<{
 
   // every time options changes, set answer to the concatenation of selected options
   useEffect(() => {
-    onValueChanged(selectedOptions.map((option) => option.answer).join("|||"));
+    onAnswerChange(selectedOptions.map((option) => option.answer).join("|||"));
   }, [selectedOptions]);
   /*
     Why concatenate?

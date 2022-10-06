@@ -6,30 +6,23 @@ fragment Form on FormType {
   }
 }
 
-fragment Question on QuestionType {
+fragment FormWithAnswers on FormType {
   id
-  question
+  name
   description
-  questionType
-  mandatory
-  options {
-    id
-    answer
+  questions {
+    ...QuestionWithAnswer
   }
 }
 
-fragment Answer on AnswerType {
+fragment FormWithAllResponses on FormType {
   id
-  answer
-  question {
-    id
+  name
+  questions {
+    ...QuestionWithAnswerIds
   }
-}
-
-fragment QuestionWithAnswers on QuestionType {
-  ...Question
-  answers {
-    id
+  responses {
+    ...Response
   }
 }
 
@@ -41,17 +34,48 @@ fragment Response on ResponseType {
     lastName
   }
   answers {
+    ...AnswerWithQuestionId
+  }
+}
+
+fragment Question on QuestionType {
+  id
+  question
+  description
+  questionType
+  mandatory
+  options {
+    ...Option
+  }
+}
+
+fragment QuestionWithAnswer on QuestionType {
+  ...Question
+  answer {
     ...Answer
   }
 }
 
-fragment FormWithResponses on FormType {
-  id
-  name
-  questions {
-    ...QuestionWithAnswers
+fragment QuestionWithAnswerIds on QuestionType {
+  ...Question
+  answers {
+    id
   }
-  responses {
-    ...Response
+}
+
+fragment Option on OptionType {
+  id
+  answer
+}
+
+fragment Answer on AnswerType {
+  id
+  answer
+}
+
+fragment AnswerWithQuestionId on AnswerType {
+  ...Answer
+  question {
+    id
   }
 }
