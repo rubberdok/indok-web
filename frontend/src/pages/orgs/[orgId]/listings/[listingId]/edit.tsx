@@ -8,12 +8,11 @@ import { useRouter } from "next/router";
 import React, { useState } from "react";
 
 import ListingForm from "@/components/pages/listings/organization/ListingForm";
-import { ListingDocument } from "@/generated/graphql";
-import { UPDATE_LISTING } from "@/graphql/listings/mutations";
+import { ListingDocument, UpdateListingDocument } from "@/generated/graphql";
 import Layout from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/pages/_app";
 import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "@/theme/constants";
-import { Listing, ListingInput } from "@/types/listings";
+import { ListingInput } from "@/types/listings";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -55,9 +54,7 @@ const EditListingPage: NextPageWithLayout = () => {
   });
 
   // Return to the previous page after updating.
-  const [updateListing] = useMutation<{ updateListing: { ok: boolean; listing: Listing } }>(UPDATE_LISTING, {
-    onCompleted: () => router.back(),
-  });
+  const [updateListing] = useMutation(UpdateListingDocument, { onCompleted: () => router.back() });
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error</p>;
