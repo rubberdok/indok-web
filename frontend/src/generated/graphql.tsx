@@ -2131,6 +2131,60 @@ export type ListingQuery = {
   } | null;
 };
 
+export type AdminOrganizationFragment = {
+  __typename?: "OrganizationType";
+  id: string;
+  name: string;
+  events: Array<{
+    __typename?: "EventType";
+    id: string;
+    title: string;
+    startTime: string;
+    shortDescription?: string | null;
+    availableSlots?: number | null;
+    isFull?: boolean | null;
+    usersAttending?: Array<{ __typename?: "SignUpType"; id: string }> | null;
+  }>;
+  listings?: Array<{ __typename?: "ListingType"; id: string; title: string; deadline: string }> | null;
+};
+
+export type OrgAdminEventFragment = {
+  __typename?: "EventType";
+  id: string;
+  title: string;
+  startTime: string;
+  shortDescription?: string | null;
+  availableSlots?: number | null;
+  isFull?: boolean | null;
+  usersAttending?: Array<{ __typename?: "SignUpType"; id: string }> | null;
+};
+
+export type OrgAdminListingFragment = { __typename?: "ListingType"; id: string; title: string; deadline: string };
+
+export type AdminOrganizationQueryVariables = Exact<{
+  orgId: Scalars["ID"];
+}>;
+
+export type AdminOrganizationQuery = {
+  __typename?: "Queries";
+  organization?: {
+    __typename?: "OrganizationType";
+    id: string;
+    name: string;
+    events: Array<{
+      __typename?: "EventType";
+      id: string;
+      title: string;
+      startTime: string;
+      shortDescription?: string | null;
+      availableSlots?: number | null;
+      isFull?: boolean | null;
+      usersAttending?: Array<{ __typename?: "SignUpType"; id: string }> | null;
+    }>;
+    listings?: Array<{ __typename?: "ListingType"; id: string; title: string; deadline: string }> | null;
+  } | null;
+};
+
 export type HasPermissionQueryVariables = Exact<{
   permission: Scalars["String"];
 }>;
@@ -2583,6 +2637,88 @@ export const ListingFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<ListingFragment, unknown>;
+export const OrgAdminEventFragmentDoc = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "OrgAdminEvent" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "EventType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "title" } },
+          { kind: "Field", name: { kind: "Name", value: "startTime" } },
+          { kind: "Field", name: { kind: "Name", value: "shortDescription" } },
+          { kind: "Field", name: { kind: "Name", value: "availableSlots" } },
+          { kind: "Field", name: { kind: "Name", value: "isFull" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "usersAttending" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "Field", name: { kind: "Name", value: "id" } }],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<OrgAdminEventFragment, unknown>;
+export const OrgAdminListingFragmentDoc = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "OrgAdminListing" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "ListingType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "title" } },
+          { kind: "Field", name: { kind: "Name", value: "deadline" } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<OrgAdminListingFragment, unknown>;
+export const AdminOrganizationFragmentDoc = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "AdminOrganization" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "OrganizationType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "name" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "events" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "OrgAdminEvent" } }],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "listings" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "OrgAdminListing" } }],
+            },
+          },
+        ],
+      },
+    },
+    ...OrgAdminEventFragmentDoc.definitions,
+    ...OrgAdminListingFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<AdminOrganizationFragment, unknown>;
 export const UserFieldsFragmentDoc = {
   kind: "Document",
   definitions: [
@@ -3876,6 +4012,44 @@ export const ListingDocument = {
     ...ListingFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<ListingQuery, ListingQueryVariables>;
+export const AdminOrganizationDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "adminOrganization" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "orgId" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "organization" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "id" },
+                value: { kind: "Variable", name: { kind: "Name", value: "orgId" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "AdminOrganization" } }],
+            },
+          },
+        ],
+      },
+    },
+    ...AdminOrganizationFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<AdminOrganizationQuery, AdminOrganizationQueryVariables>;
 export const HasPermissionDocument = {
   kind: "Document",
   definitions: [
