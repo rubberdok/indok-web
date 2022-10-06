@@ -18,8 +18,7 @@ import React, { useEffect, useState } from "react";
 
 import ContractDialog from "@/components/pages/cabins/Popup/ContractDialog";
 import StepComponent from "@/components/pages/cabins/StepComponent";
-import { CabinsDocument } from "@/generated/graphql";
-import { CREATE_BOOKING, SEND_EMAIL } from "@/graphql/cabins/mutations";
+import { CabinsDocument, CreateBookingDocument, SendEmailDocument } from "@/generated/graphql";
 import useResponsive from "@/hooks/useResponsive";
 import { ContactInfo, ContactInfoValidations, DatePick, ModalData } from "@/interfaces/cabins";
 import Layout from "@/layouts/Layout";
@@ -86,8 +85,8 @@ const CabinBookingPage: NextPageWithLayout = () => {
   const [errorTrigger, setErrorTrigger] = useState(false);
 
   // Booking creation and email mutations
-  const [createBooking] = useMutation(CREATE_BOOKING);
-  const [sendEmail] = useMutation(SEND_EMAIL);
+  const [createBooking] = useMutation(CreateBookingDocument);
+  const [sendEmail] = useMutation(SendEmailDocument);
 
   // Extra info from the user, sent to Hytteforeningen
   const [extraInfo, setExtraInfo] = useState("");

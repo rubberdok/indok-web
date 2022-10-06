@@ -1488,21 +1488,12 @@ export type BookingSemesterFragment = {
 };
 
 export type CreateBookingMutationVariables = Exact<{
-  bookingData?: InputMaybe<BookingInput>;
+  bookingData: BookingInput;
 }>;
 
 export type CreateBookingMutation = {
   __typename?: "Mutations";
   createBooking?: { __typename?: "CreateBooking"; ok?: boolean | null } | null;
-};
-
-export type SendEmailMutationVariables = Exact<{
-  emailInput?: InputMaybe<EmailInput>;
-}>;
-
-export type SendEmailMutation = {
-  __typename?: "Mutations";
-  sendEmail?: { __typename?: "SendEmail"; ok?: boolean | null } | null;
 };
 
 export type ConfirmBookingMutationVariables = Exact<{
@@ -1514,13 +1505,44 @@ export type ConfirmBookingMutation = {
   updateBooking?: { __typename?: "UpdateBooking"; ok?: boolean | null } | null;
 };
 
-export type DeleteBookingMutationVariables = Exact<{
+export type DeclineBookingMutationVariables = Exact<{
   id: Scalars["ID"];
+  declineReason?: InputMaybe<Scalars["String"]>;
 }>;
 
-export type DeleteBookingMutation = {
+export type DeclineBookingMutation = {
   __typename?: "Mutations";
-  deleteBooking?: { __typename?: "DeleteBooking"; ok?: boolean | null } | null;
+  updateBooking?: { __typename?: "UpdateBooking"; ok?: boolean | null } | null;
+};
+
+export type SendEmailMutationVariables = Exact<{
+  emailInput: EmailInput;
+}>;
+
+export type SendEmailMutation = {
+  __typename?: "Mutations";
+  sendEmail?: { __typename?: "SendEmail"; ok?: boolean | null } | null;
+};
+
+export type UpdateCabinMutationVariables = Exact<{
+  cabinData: UpdateCabinInput;
+}>;
+
+export type UpdateCabinMutation = {
+  __typename?: "Mutations";
+  updateCabin?: { __typename?: "UpdateCabin"; cabin?: { __typename?: "CabinType"; id: string } | null } | null;
+};
+
+export type UpdateBookingSemesterMutationVariables = Exact<{
+  semesterData: UpdateBookingSemesterInput;
+}>;
+
+export type UpdateBookingSemesterMutation = {
+  __typename?: "Mutations";
+  updateBookingSemester?: {
+    __typename?: "UpdateBookingSemester";
+    bookingSemester?: { __typename?: "UpdateBookingSemesterType"; id: string } | null;
+  } | null;
 };
 
 export type CabinsQueryVariables = Exact<{ [key: string]: never }>;
@@ -2090,12 +2112,12 @@ export const CreateBookingDocument = {
     {
       kind: "OperationDefinition",
       operation: "mutation",
-      name: { kind: "Name", value: "CreateBooking" },
+      name: { kind: "Name", value: "createBooking" },
       variableDefinitions: [
         {
           kind: "VariableDefinition",
           variable: { kind: "Variable", name: { kind: "Name", value: "bookingData" } },
-          type: { kind: "NamedType", name: { kind: "Name", value: "BookingInput" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "BookingInput" } } },
         },
       ],
       selectionSet: {
@@ -2121,50 +2143,13 @@ export const CreateBookingDocument = {
     },
   ],
 } as unknown as DocumentNode<CreateBookingMutation, CreateBookingMutationVariables>;
-export const SendEmailDocument = {
-  kind: "Document",
-  definitions: [
-    {
-      kind: "OperationDefinition",
-      operation: "mutation",
-      name: { kind: "Name", value: "SendEmail" },
-      variableDefinitions: [
-        {
-          kind: "VariableDefinition",
-          variable: { kind: "Variable", name: { kind: "Name", value: "emailInput" } },
-          type: { kind: "NamedType", name: { kind: "Name", value: "EmailInput" } },
-        },
-      ],
-      selectionSet: {
-        kind: "SelectionSet",
-        selections: [
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "sendEmail" },
-            arguments: [
-              {
-                kind: "Argument",
-                name: { kind: "Name", value: "emailInput" },
-                value: { kind: "Variable", name: { kind: "Name", value: "emailInput" } },
-              },
-            ],
-            selectionSet: {
-              kind: "SelectionSet",
-              selections: [{ kind: "Field", name: { kind: "Name", value: "ok" } }],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<SendEmailMutation, SendEmailMutationVariables>;
 export const ConfirmBookingDocument = {
   kind: "Document",
   definitions: [
     {
       kind: "OperationDefinition",
       operation: "mutation",
-      name: { kind: "Name", value: "ConfirmBooking" },
+      name: { kind: "Name", value: "confirmBooking" },
       variableDefinitions: [
         {
           kind: "VariableDefinition",
@@ -2209,18 +2194,23 @@ export const ConfirmBookingDocument = {
     },
   ],
 } as unknown as DocumentNode<ConfirmBookingMutation, ConfirmBookingMutationVariables>;
-export const DeleteBookingDocument = {
+export const DeclineBookingDocument = {
   kind: "Document",
   definitions: [
     {
       kind: "OperationDefinition",
       operation: "mutation",
-      name: { kind: "Name", value: "DeleteBooking" },
+      name: { kind: "Name", value: "declineBooking" },
       variableDefinitions: [
         {
           kind: "VariableDefinition",
           variable: { kind: "Variable", name: { kind: "Name", value: "id" } },
           type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "declineReason" } },
+          type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
         },
       ],
       selectionSet: {
@@ -2228,12 +2218,36 @@ export const DeleteBookingDocument = {
         selections: [
           {
             kind: "Field",
-            name: { kind: "Name", value: "deleteBooking" },
+            name: { kind: "Name", value: "updateBooking" },
             arguments: [
               {
                 kind: "Argument",
-                name: { kind: "Name", value: "id" },
-                value: { kind: "Variable", name: { kind: "Name", value: "id" } },
+                name: { kind: "Name", value: "bookingData" },
+                value: {
+                  kind: "ObjectValue",
+                  fields: [
+                    {
+                      kind: "ObjectField",
+                      name: { kind: "Name", value: "id" },
+                      value: { kind: "Variable", name: { kind: "Name", value: "id" } },
+                    },
+                    {
+                      kind: "ObjectField",
+                      name: { kind: "Name", value: "isTentative" },
+                      value: { kind: "BooleanValue", value: false },
+                    },
+                    {
+                      kind: "ObjectField",
+                      name: { kind: "Name", value: "isDeclined" },
+                      value: { kind: "BooleanValue", value: true },
+                    },
+                    {
+                      kind: "ObjectField",
+                      name: { kind: "Name", value: "declineReason" },
+                      value: { kind: "Variable", name: { kind: "Name", value: "declineReason" } },
+                    },
+                  ],
+                },
               },
             ],
             selectionSet: {
@@ -2245,7 +2259,139 @@ export const DeleteBookingDocument = {
       },
     },
   ],
-} as unknown as DocumentNode<DeleteBookingMutation, DeleteBookingMutationVariables>;
+} as unknown as DocumentNode<DeclineBookingMutation, DeclineBookingMutationVariables>;
+export const SendEmailDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "sendEmail" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "emailInput" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "EmailInput" } } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "sendEmail" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "emailInput" },
+                value: { kind: "Variable", name: { kind: "Name", value: "emailInput" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "Field", name: { kind: "Name", value: "ok" } }],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<SendEmailMutation, SendEmailMutationVariables>;
+export const UpdateCabinDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "updateCabin" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "cabinData" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "UpdateCabinInput" } } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "updateCabin" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "cabinData" },
+                value: { kind: "Variable", name: { kind: "Name", value: "cabinData" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "cabin" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [{ kind: "Field", name: { kind: "Name", value: "id" } }],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<UpdateCabinMutation, UpdateCabinMutationVariables>;
+export const UpdateBookingSemesterDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "updateBookingSemester" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "semesterData" } },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "UpdateBookingSemesterInput" } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "updateBookingSemester" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "semesterData" },
+                value: { kind: "Variable", name: { kind: "Name", value: "semesterData" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "bookingSemester" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [{ kind: "Field", name: { kind: "Name", value: "id" } }],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<UpdateBookingSemesterMutation, UpdateBookingSemesterMutationVariables>;
 export const CabinsDocument = {
   kind: "Document",
   definitions: [

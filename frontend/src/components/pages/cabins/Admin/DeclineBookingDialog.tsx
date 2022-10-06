@@ -2,10 +2,9 @@ import { useMutation } from "@apollo/client";
 import { Dialog, DialogTitle, DialogContent, DialogContentText, TextField, DialogActions, Button } from "@mui/material";
 import { useState } from "react";
 
-import { AdminAllBookingsDocument } from "@/generated/graphql";
-import { DECLINE_BOOKING, SEND_EMAIL } from "@/graphql/cabins/mutations";
+import { AdminAllBookingsDocument, DeclineBookingDocument, SendEmailDocument } from "@/generated/graphql";
 import { AdminBooking } from "@/types/cabins";
-import { convertDateFormat, getDecisionEmailProps, toStringChosenCabins } from "@/utils/cabins";
+import { convertDateFormat, getDecisionEmailInput, toStringChosenCabins } from "@/utils/cabins";
 
 type DialogProps = {
   bookingToBeDeclined?: AdminBooking;
@@ -23,9 +22,11 @@ const DeclineBookingDialog: React.VFC<DialogProps> = ({
   refetchBookings,
 }) => {
   const [declineMessage, setDeclineMessage] = useState("");
-  const [declineBooking] = useMutation(DECLINE_BOOKING, { refetchQueries: [{ query: AdminAllBookingsDocument }] });
+  const [declineBooking] = useMutation(DeclineBookingDocument, {
+    refetchQueries: [{ query: AdminAllBookingsDocument }],
+  });
   const handleDeclineBookingOnClose = () => setBookingToBeDeclined(undefined);
-  const [sendEmail] = useMutation(SEND_EMAIL);
+  const [sendEmail] = useMutation(SendEmailDocument);
 
   return (
     <Dialog open={bookingToBeDeclined != undefined} onClose={handleDeclineBookingOnClose}>
@@ -55,7 +56,7 @@ const DeclineBookingDialog: React.VFC<DialogProps> = ({
         <Button
           onClick={() => {
             if (bookingToBeDeclined) {
-              sendEmail(getDecisionEmailProps(bookingToBeDeclined, false, declineMessage));
+              sendEmail({ variables: getDecisionEmailInput(bookingToBeDeclined, false, declineMessage) });
               declineBooking({ variables: { id: bookingToBeDeclined.id, declineReason: declineMessage } }).then(() => {
                 setSnackbarMessage(`Bookingen er underkjent. Mail er sendt til ${bookingToBeDeclined.receiverEmail}.`);
                 setOpenSnackbar(true);

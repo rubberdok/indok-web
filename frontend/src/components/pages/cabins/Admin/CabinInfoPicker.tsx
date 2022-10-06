@@ -3,8 +3,7 @@ import { Alert, Button, Grid, Snackbar, TextField, Typography } from "@mui/mater
 import { useFormik } from "formik";
 import { useEffect, useState } from "react";
 
-import { CabinsDocument } from "@/generated/graphql";
-import { UPDATE_CABIN } from "@/graphql/cabins/mutations";
+import { CabinsDocument, UpdateCabinDocument } from "@/generated/graphql";
 import { Cabin } from "@/types/cabins";
 import { cabinInfoValidationSchema } from "@/utils/cabins";
 
@@ -29,7 +28,7 @@ const getCabinData = (cabin?: Partial<Cabin>) => {
 /** Component for editing cabin information. Only used on the admin page. */
 const CabinInfoPicker: React.VFC = () => {
   const cabinQuery = useQuery(CabinsDocument);
-  const [updateCabin] = useMutation<{ cabinData: Cabin }>(UPDATE_CABIN, {
+  const [updateCabin] = useMutation<{ cabinData: Cabin }>(UpdateCabinDocument, {
     onError: () => {
       setAlertSeverity("error");
       setSnackbarMessage("En feilmelding oppstod.");

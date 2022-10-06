@@ -17,10 +17,9 @@ import {
 import dayjs from "dayjs";
 import { useState } from "react";
 
-import { AdminAllBookingsDocument } from "@/generated/graphql";
-import { CONFIRM_BOOKING, SEND_EMAIL } from "@/graphql/cabins/mutations";
+import { AdminAllBookingsDocument, ConfirmBookingDocument, SendEmailDocument } from "@/generated/graphql";
 import { AdminBooking } from "@/types/cabins";
-import { getDecisionEmailProps, toStringChosenCabins } from "@/utils/cabins";
+import { getDecisionEmailInput, toStringChosenCabins } from "@/utils/cabins";
 
 import DeclineBookingDialog from "./DeclineBookingDialog";
 import InlineTableCell from "./InlineTableCell";
@@ -35,8 +34,10 @@ const AdminCabinTable: React.FC<Props> = ({ bookings, refetchBookings, currentTa
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [bookingToBeDeclined, setBookingToBeDeclined] = useState<AdminBooking | undefined>();
-  const [confirmBooking] = useMutation(CONFIRM_BOOKING, { refetchQueries: [{ query: AdminAllBookingsDocument }] });
-  const [sendEmail] = useMutation(SEND_EMAIL);
+  const [confirmBooking] = useMutation(ConfirmBookingDocument, {
+    refetchQueries: [{ query: AdminAllBookingsDocument }],
+  });
+  const [sendEmail] = useMutation(SendEmailDocument);
 
   const isExpired = (booking: AdminBooking) => dayjs().isAfter(booking.checkIn);
   const isDeclinedTab = currentTab === "declined";
@@ -92,7 +93,7 @@ const AdminCabinTable: React.FC<Props> = ({ bookings, refetchBookings, currentTa
                           setOpenSnackbar(true);
                           refetchBookings();
                         });
-                        sendEmail(getDecisionEmailProps(booking, true));
+                        sendEmail({ variables: getDecisionEmailInput(booking, true) });
                       }}
                       color="success"
                       size="large"

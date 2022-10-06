@@ -4,6 +4,7 @@ import validator from "validator";
 import * as Yup from "yup";
 
 import { BookingSemester } from "@/components/pages/cabins/Admin/BookingSemesterPicker";
+import { SendEmailMutationVariables } from "@/generated/graphql";
 import { BasicBooking, ContactInfo, ContactInfoValidations, DatePick, EmailAndBookingInput } from "@/interfaces/cabins";
 import { AdminBooking, Cabin } from "@/types/cabins";
 
@@ -95,7 +96,11 @@ export const calculatePrice: (
 
 export const convertDateFormat: (date?: string) => string = (date) => dayjs(date).format("DD-MM-YYYY");
 
-export const getDecisionEmailProps = (booking: AdminBooking, approved: boolean, declineMessage?: string) => {
+export const getDecisionEmailInput = (
+  booking: AdminBooking,
+  approved: boolean,
+  declineMessage?: string
+): SendEmailMutationVariables => {
   // omit unwanted fields
   const { checkIn, checkOut, externalParticipants, firstName, internalParticipants, lastName, phone, receiverEmail } =
     booking;
@@ -116,7 +121,7 @@ export const getDecisionEmailProps = (booking: AdminBooking, approved: boolean, 
     extraInfo: declineMessage,
   };
 
-  return { variables: { emailInput: emailInput } };
+  return { emailInput };
 };
 
 export const generateEmailAndBookingInput: (
