@@ -170,9 +170,3 @@
     user:
       - eva_student
     organization: 19
-- model: organizations.membership
-  pk: 22
-  fields:
-    user:
-      - eva_student
-    organization: 20

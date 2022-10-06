@@ -2,6 +2,8 @@ import { Organization } from "./organizations";
 
 export type Membership = {
   id: number;
-  group: string;
+  group: {
+    uuid: string;
+  };
   organization: Organization;
 };

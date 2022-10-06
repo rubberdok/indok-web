@@ -46,7 +46,6 @@ export const GET_USER = gql`
         id
         organization {
           id
-          name
           hrGroup {
             uuid
           }

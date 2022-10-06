@@ -35,3 +35,34 @@ export const GET_ORGANIZATION = gql`
     }
   }
 `;
+
+export const GET_ORGANIZATION_USERS = gql`
+  query getOrgUsers($orgId: ID!) {
+    organization(id: $orgId) {
+      id
+      name
+      users {
+        id
+        username
+        firstName
+        lastName
+        memberships {
+          id
+          group {
+            uuid
+          }
+          organization {
+            id
+            name
+            hrGroup {
+              uuid
+            }
+            primaryGroup {
+              uuid
+            }
+          }
+        }
+      }
+    }
+  }
+`;

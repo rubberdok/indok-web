@@ -27,6 +27,8 @@ const OrganizationDetailPage: NextPageWithLayout = () => {
     skip: Number.isNaN(orgNumberId),
   });
 
+  console.log(data);
+
   const [activeTab, setActiveTab] = useState<number>(0);
 
   const handleTabChange = (_: React.SyntheticEvent, newValue: number) => {
