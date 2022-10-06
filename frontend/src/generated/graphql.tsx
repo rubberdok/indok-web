@@ -113,7 +113,7 @@ export type AssignMembership = {
 export type AttemptCapturePayment = {
   __typename?: "AttemptCapturePayment";
   order?: Maybe<OrderType>;
-  status?: Maybe<Scalars["String"]>;
+  status?: Maybe<PaymentStatus>;
 };
 
 export type AuthUser = {
@@ -873,28 +873,10 @@ export type OptionType = {
   question: QuestionType;
 };
 
-/** An enumeration. */
-export enum OrderPaymentStatus {
-  /** cancelled */
-  Cancelled = "CANCELLED",
-  /** captured */
-  Captured = "CAPTURED",
-  /** failed */
-  Failed = "FAILED",
-  /** initiated */
-  Initiated = "INITIATED",
-  /** refunded */
-  Refunded = "REFUNDED",
-  /** rejected */
-  Rejected = "REJECTED",
-  /** reserved */
-  Reserved = "RESERVED",
-}
-
 export type OrderType = {
   __typename?: "OrderType";
   id: Scalars["UUID"];
-  paymentStatus: OrderPaymentStatus;
+  paymentStatus?: Maybe<PaymentStatus>;
   product: ProductType;
   quantity: Scalars["Int"];
   timestamp: Scalars["DateTime"];
@@ -931,6 +913,17 @@ export type OrganizationType = {
   slug: Scalars["String"];
   users: Array<UserType>;
 };
+
+/** An enumeration. */
+export enum PaymentStatus {
+  Cancelled = "CANCELLED",
+  Captured = "CAPTURED",
+  Failed = "FAILED",
+  Initiated = "INITIATED",
+  Refunded = "REFUNDED",
+  Rejected = "REJECTED",
+  Reserved = "RESERVED",
+}
 
 export type ProductType = {
   __typename?: "ProductType";
@@ -1545,7 +1538,7 @@ export type OrderFragment = {
   id: string;
   quantity: number;
   totalPrice: number;
-  paymentStatus: OrderPaymentStatus;
+  paymentStatus?: PaymentStatus | null;
   timestamp: string;
   product: {
     __typename?: "ProductType";
@@ -1576,13 +1569,13 @@ export type AttemptCapturePaymentMutation = {
   __typename?: "Mutations";
   attemptCapturePayment?: {
     __typename?: "AttemptCapturePayment";
-    status?: string | null;
+    status?: PaymentStatus | null;
     order?: {
       __typename?: "OrderType";
       id: string;
       quantity: number;
       totalPrice: number;
-      paymentStatus: OrderPaymentStatus;
+      paymentStatus?: PaymentStatus | null;
       timestamp: string;
       product: {
         __typename?: "ProductType";
@@ -1621,7 +1614,7 @@ export type UserOrdersQuery = {
     id: string;
     quantity: number;
     totalPrice: number;
-    paymentStatus: OrderPaymentStatus;
+    paymentStatus?: PaymentStatus | null;
     timestamp: string;
     product: {
       __typename?: "ProductType";
