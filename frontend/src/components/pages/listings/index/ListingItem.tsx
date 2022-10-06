@@ -6,7 +6,7 @@ import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import Link from "next/link";
 
-import { Listing } from "@/interfaces/listings";
+import { Listing } from "@/types/listings";
 
 dayjs.extend(timezone);
 dayjs.extend(utc);
@@ -36,15 +36,10 @@ const translateChip = (chip: string) => {
   }
 };
 
-/**
- * Component for listing item in overview of listings.
- *
- * Props:
- * - the listing to render
- */
-const ListingItem: React.FC<{
-  listing: Listing;
-}> = ({ listing }) => {
+type Props = { listing: Listing };
+
+/** Component for listing item in overview of listings. */
+const ListingItem: React.FC<Props> = ({ listing }) => {
   return (
     <Card sx={{ width: "100%", height: "100%" }}>
       <Link href={`listings/${listing.id}/${listing.slug}/`} passHref>

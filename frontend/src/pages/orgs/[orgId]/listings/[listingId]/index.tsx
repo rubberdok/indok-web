@@ -9,9 +9,9 @@ import React, { useState } from "react";
 import EditForm from "@/components/pages/forms/formAdmin/EditForm";
 import FormResponse from "@/components/pages/forms/formAdmin/FormResponse";
 import OrganizationListing from "@/components/pages/listings/organization/OrganizationListing";
+import { ListingWithResponsesDocument } from "@/generated/graphql";
 import { CREATE_FORM } from "@/graphql/forms/mutations";
 import { LISTING_RESPONSES_FRAGMENT } from "@/graphql/listings/fragments";
-import { LISTING_RESPONSES } from "@/graphql/listings/queries";
 import { Form, Response } from "@/interfaces/forms";
 import { ListingWithForm } from "@/interfaces/listings";
 import Layout from "@/layouts/Layout";
@@ -37,11 +37,7 @@ const ListingAdminPage: NextPageWithLayout = () => {
   const [selectedView, selectView] = useState<Response | "listing">("listing");
 
   // fetches the listing along with all users who have applied to it, using URL parameter as argument
-  const { loading, error, data } = useQuery<{ listing: ListingWithForm }>(LISTING_RESPONSES, {
-    variables: {
-      id: listingId as string,
-    },
-  });
+  const { loading, error, data } = useQuery(ListingWithResponsesDocument, { variables: { id: listingId as string } });
 
   // mutation to create a new form
   const [createForm] = useMutation<
@@ -91,7 +87,7 @@ const ListingAdminPage: NextPageWithLayout = () => {
                   </Button>
                 </Link>
               </Grid>
-              {data?.listing.form?.responses && (
+              {data?.listing?.form?.responses && (
                 <Grid item>
                   <Card>
                     {data.listing.form.responses.length > 0 ? (
@@ -139,7 +135,7 @@ const ListingAdminPage: NextPageWithLayout = () => {
               )}
             </Grid>
           </Grid>
-          {data && (
+          {data?.listing && (
             <Grid item xs={8}>
               {selectedView === "listing" ? (
                 <Grid container direction="column" spacing={1}>

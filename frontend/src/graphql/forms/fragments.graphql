@@ -1,0 +1,57 @@
+fragment Form on FormType {
+  id
+  name
+  questions {
+    ...Question
+  }
+}
+
+fragment Question on QuestionType {
+  id
+  question
+  description
+  questionType
+  mandatory
+  options {
+    id
+    answer
+  }
+}
+
+fragment Answer on AnswerType {
+  id
+  answer
+  question {
+    id
+  }
+}
+
+fragment QuestionWithAnswers on QuestionType {
+  ...Question
+  answers {
+    id
+  }
+}
+
+fragment Response on ResponseType {
+  id
+  respondent {
+    id
+    firstName
+    lastName
+  }
+  answers {
+    ...Answer
+  }
+}
+
+fragment FormWithResponses on FormType {
+  id
+  name
+  questions {
+    ...QuestionWithAnswers
+  }
+  responses {
+    ...Response
+  }
+}

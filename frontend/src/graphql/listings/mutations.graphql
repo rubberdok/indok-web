@@ -1,0 +1,26 @@
+mutation createListing($input: CreateListingInput!) {
+  createListing(listingData: $input) {
+    listing {
+      id
+      slug
+    }
+    ok
+  }
+}
+
+mutation updateListing($id: ID!, $input: BaseListingInput) {
+  updateListing(id: $id, listingData: $input) {
+    listing {
+      id
+      slug
+    }
+    ok
+  }
+}
+
+mutation deleteListing($id: ID!) {
+  deleteListing(id: $id) {
+    listingId
+    ok
+  }
+}

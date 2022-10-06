@@ -8,12 +8,12 @@ import { useRouter } from "next/router";
 import React, { useState } from "react";
 
 import ListingForm from "@/components/pages/listings/organization/ListingForm";
+import { ListingDocument } from "@/generated/graphql";
 import { UPDATE_LISTING } from "@/graphql/listings/mutations";
-import { LISTING } from "@/graphql/listings/queries";
-import { Listing, ListingInput } from "@/interfaces/listings";
 import Layout from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/pages/_app";
 import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "@/theme/constants";
+import { Listing, ListingInput } from "@/types/listings";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -38,17 +38,20 @@ const EditListingPage: NextPageWithLayout = () => {
   const [listing, setListing] = useState<ListingInput | undefined>(undefined);
 
   // Load the listing and set the state on completion
-  const { loading, error } = useQuery<{ listing: Listing }>(LISTING, {
+  const { loading, error } = useQuery(ListingDocument, {
     variables: { id: listingId as string },
-    onCompleted: (data) =>
-      setListing({
-        ...(data.listing as ListingInput),
-        startDatetime: dayjs(data.listing.startDatetime).utc().local().format("YYYY-MM-DDTHH:mm"),
-        deadline: dayjs(data.listing.deadline).utc().local().format("YYYY-MM-DDTHH:mm"),
-        application: data.listing.chips.includes("application"),
-        interview: data.listing.chips.includes("interview"),
-        case: data.listing.chips.includes("case"),
-      }),
+    onCompleted: (data) => {
+      if (data.listing) {
+        setListing({
+          ...(data.listing as ListingInput),
+          startDatetime: dayjs(data.listing.startDatetime).utc().local().format("YYYY-MM-DDTHH:mm"),
+          deadline: dayjs(data.listing.deadline).utc().local().format("YYYY-MM-DDTHH:mm"),
+          application: data.listing.chips.includes("application"),
+          interview: data.listing.chips.includes("interview"),
+          case: data.listing.chips.includes("case"),
+        });
+      }
+    },
   });
 
   // Return to the previous page after updating.

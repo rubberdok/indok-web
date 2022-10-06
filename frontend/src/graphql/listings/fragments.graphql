@@ -11,11 +11,36 @@ fragment Listing on ListingType {
   readMoreUrl
   heroImageUrl
   organization {
+    ...ListingOrganization
+  }
+}
+
+fragment ListingOrganization on OrganizationType {
+  id
+  name
+  slug
+  logoUrl
+  color
+  description
+}
+
+fragment ListingWithFormId on ListingType {
+  ...Listing
+  form {
     id
-    name
-    slug
-    logoUrl
-    color
-    description
+  }
+}
+
+fragment ListingWithForm on ListingType {
+  ...Listing
+  form {
+    ...Form
+  }
+}
+
+fragment ListingWithResponses on ListingType {
+  ...Listing
+  form {
+    ...FormWithResponses
   }
 }
