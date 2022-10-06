@@ -3,7 +3,7 @@ import { Checkbox, Grid } from "@mui/material";
 import React from "react";
 
 import { FilterQuery } from "@/components/pages/events/AllEvents";
-import { GetCategoriesDocument } from "@/generated/graphql";
+import { AllCategoriesDocument } from "@/generated/graphql";
 
 import { HandleChecked } from "./types";
 
@@ -22,7 +22,7 @@ type Props = {
  */
 
 const CategoryFilter: React.FC<Props> = ({ filters, handleChecked }) => {
-  const { data } = useQuery(GetCategoriesDocument);
+  const { data } = useQuery(AllCategoriesDocument);
 
   return (
     <Grid container item direction="column">

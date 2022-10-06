@@ -6,13 +6,13 @@ dayjs.locale(nb);
 export const calendarFile = (
   title: string,
   start: string,
-  end: string | undefined,
-  location: string | undefined,
-  description: string | undefined,
+  end: string | null | undefined,
+  location: string | null | undefined,
+  description: string | null | undefined,
   durationHours = 2,
   durationMinutes = 0
-) => {
-  const place = location || "";
+): string => {
+  const place = location ?? "";
   const startTime = dayjs(start).format("YYYYMMDDTHHmmss");
   const endTime = end
     ? dayjs(end).format("YYYYMMDDTHHmmss")

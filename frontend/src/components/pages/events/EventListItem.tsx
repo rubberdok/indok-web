@@ -5,8 +5,8 @@ import nb from "dayjs/locale/nb";
 import Link from "next/link";
 import React from "react";
 
+import { EventInListFragment } from "@/generated/graphql";
 import useResponsive from "@/hooks/useResponsive";
-import { Event } from "@/interfaces/events";
 import { User } from "@/interfaces/users";
 
 const formatDate = (dateAndTime: string) => {
@@ -14,7 +14,7 @@ const formatDate = (dateAndTime: string) => {
 };
 
 interface Props {
-  event: Event;
+  event: EventInListFragment;
   user?: User;
 }
 
@@ -49,7 +49,7 @@ const EventListItem: React.FC<Props> = ({ event, user }) => {
               {event.shortDescription ?? "Trykk for å lese mer"}
             </Typography>
           </div>
-          {user && event.isAttendable && event.allowedGradeYears.includes(user.gradeYear) ? (
+          {user && event.isAttendable && (event.allowedGradeYears?.includes(user.gradeYear) ?? true) ? (
             event.isFull && event.userAttendance?.isOnWaitingList ? (
               <Chip label="På venteliste" />
             ) : event.isFull && !event.userAttendance?.isSignedUp ? (
