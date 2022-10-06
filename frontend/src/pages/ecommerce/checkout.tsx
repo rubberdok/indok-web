@@ -25,12 +25,11 @@ import React, { useState } from "react";
 
 import PayWithVipps from "@/components/pages/ecommerce/PayWithVipps";
 import SalesTermsDialog from "@/components/pages/ecommerce/SalesTermsDialog";
-import { UserInfoDocument } from "@/generated/graphql";
-import { GET_PRODUCT } from "@/graphql/ecommerce/queries";
-import { Product } from "@/interfaces/ecommerce";
+import { ProductDocument, UserInfoDocument } from "@/generated/graphql";
 import Layout, { RootStyle } from "@/layouts/Layout";
 import { addApolloState, initializeApollo } from "@/lib/apolloClient";
 import { NextPageWithLayout } from "@/pages/_app";
+import { Product } from "@/types/ecommerce";
 
 const CheckoutPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSideProps>> = () => {
   const router = useRouter();
@@ -42,9 +41,13 @@ const CheckoutPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getSer
   const [isConsentingTerms, setIsConsentingTerms] = useState(false);
   const [openSalesTerms, setOpenSalesTerms] = useState(false);
 
-  const { loading, error } = useQuery<{ product: Product }>(GET_PRODUCT, {
-    variables: { productId: productId },
-    onCompleted: (data) => setProduct(data.product),
+  const { loading, error } = useQuery(ProductDocument, {
+    variables: { productId: productId as string },
+    onCompleted: (data) => {
+      if (data.product) {
+        setProduct(data.product);
+      }
+    },
   });
 
   return (

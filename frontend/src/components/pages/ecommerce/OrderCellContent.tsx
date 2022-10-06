@@ -3,10 +3,12 @@ import dayjs from "dayjs";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
-import { Order } from "@/interfaces/ecommerce";
 import { HeaderValuePair } from "@/interfaces/utils";
+import { Order } from "@/types/ecommerce";
 
-const OrderCellContent = ({ order, field }: { order: Order; field: HeaderValuePair<Order> }) => {
+type Props = { order: Order; field: HeaderValuePair<Order> };
+
+const OrderCellContent: React.FC<Props> = ({ order, field }) => {
   const router = useRouter();
 
   let content: string;

@@ -11,10 +11,10 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  Date: any;
-  DateTime: any;
-  Decimal: any;
-  UUID: any;
+  Date: string;
+  DateTime: string;
+  Decimal: number;
+  UUID: string;
 };
 
 /** Booking type for admin users */
@@ -1474,8 +1474,8 @@ export type AllBookingsQuery = {
   allBookings?: Array<{
     __typename?: "AllBookingsType";
     id: string;
-    checkIn: any;
-    checkOut: any;
+    checkIn: string;
+    checkOut: string;
     cabins: Array<{ __typename?: "CabinType"; id: string; name: string }>;
   }> | null;
 };
@@ -1493,8 +1493,8 @@ export type AdminAllBookingsQuery = {
     lastName: string;
     phone: string;
     receiverEmail: string;
-    checkIn: any;
-    checkOut: any;
+    checkIn: string;
+    checkOut: string;
     externalParticipants: number;
     internalParticipants: number;
     price?: number | null;
@@ -1531,39 +1531,107 @@ export type ActiveBookingResponsibleQuery = {
   } | null;
 };
 
-export type EventFragmentFragment = {
-  __typename?: "EventType";
+export type ProductFragment = {
+  __typename?: "ProductType";
   id: string;
-  title: string;
-  startTime: any;
-  endTime?: any | null;
-  location?: string | null;
+  name: string;
   description: string;
-  image?: string | null;
-  isAttendable: boolean;
-  deadline?: any | null;
-  price?: number | null;
-  shortDescription?: string | null;
-  signupOpenDate?: any | null;
-  isFull?: boolean | null;
-  hasExtraInformation: boolean;
-  allowedGradeYears?: Array<number> | null;
-  organization: { __typename?: "OrganizationType"; name: string; color?: string | null };
-  category?: { __typename?: "CategoryType"; name: string } | null;
-  publisher?: {
-    __typename?: "UserType";
+  price: number;
+  maxBuyableQuantity: number;
+};
+
+export type OrderFragment = {
+  __typename?: "OrderType";
+  id: string;
+  quantity: number;
+  totalPrice: number;
+  paymentStatus: OrderPaymentStatus;
+  timestamp: string;
+  product: {
+    __typename?: "ProductType";
     id: string;
-    username: string;
-    email: string;
-    firstName: string;
-    lastName: string;
-    dateJoined: any;
+    name: string;
+    description: string;
+    price: number;
+    maxBuyableQuantity: number;
+  };
+};
+
+export type InitiateOrderMutationVariables = Exact<{
+  productId: Scalars["ID"];
+  quantity?: InputMaybe<Scalars["Int"]>;
+  fallbackRedirect?: InputMaybe<Scalars["String"]>;
+}>;
+
+export type InitiateOrderMutation = {
+  __typename?: "Mutations";
+  initiateOrder?: { __typename?: "InitiateOrder"; redirect?: string | null; orderId?: string | null } | null;
+};
+
+export type AttemptCapturePaymentMutationVariables = Exact<{
+  orderId: Scalars["ID"];
+}>;
+
+export type AttemptCapturePaymentMutation = {
+  __typename?: "Mutations";
+  attemptCapturePayment?: {
+    __typename?: "AttemptCapturePayment";
+    status?: string | null;
+    order?: {
+      __typename?: "OrderType";
+      id: string;
+      quantity: number;
+      totalPrice: number;
+      paymentStatus: OrderPaymentStatus;
+      timestamp: string;
+      product: {
+        __typename?: "ProductType";
+        id: string;
+        name: string;
+        description: string;
+        price: number;
+        maxBuyableQuantity: number;
+      };
+    } | null;
   } | null;
-  userAttendance?: {
-    __typename?: "UserAttendingType";
-    isSignedUp?: boolean | null;
-    isOnWaitingList?: boolean | null;
+};
+
+export type ProductQueryVariables = Exact<{
+  productId: Scalars["ID"];
+}>;
+
+export type ProductQuery = {
+  __typename?: "Queries";
+  product?: {
+    __typename?: "ProductType";
+    id: string;
+    name: string;
+    description: string;
+    price: number;
+    maxBuyableQuantity: number;
   } | null;
+};
+
+export type UserOrdersQueryVariables = Exact<{ [key: string]: never }>;
+
+export type UserOrdersQuery = {
+  __typename?: "Queries";
+  userOrders?: Array<{
+    __typename?: "OrderType";
+    id: string;
+    quantity: number;
+    totalPrice: number;
+    paymentStatus: OrderPaymentStatus;
+    timestamp: string;
+    product: {
+      __typename?: "ProductType";
+      id: string;
+      name: string;
+      description: string;
+      price: number;
+      maxBuyableQuantity: number;
+    };
+  }> | null;
 };
 
 export type EventFilteredOrganizationsQueryVariables = Exact<{ [key: string]: never }>;
@@ -1586,100 +1654,15 @@ export type GetCategoriesQuery = {
   allCategories?: Array<{ __typename?: "CategoryType"; id: string; name: string }> | null;
 };
 
-export type AllEventsQueryVariables = Exact<{
-  organization?: InputMaybe<Scalars["String"]>;
-  category?: InputMaybe<Scalars["String"]>;
-  startTime?: InputMaybe<Scalars["DateTime"]>;
-  endTime?: InputMaybe<Scalars["DateTime"]>;
-}>;
-
-export type AllEventsQuery = {
-  __typename?: "Queries";
-  allEvents?: Array<{
-    __typename?: "EventType";
-    id: string;
-    title: string;
-    startTime: any;
-    endTime?: any | null;
-    location?: string | null;
-    description: string;
-    image?: string | null;
-    isAttendable: boolean;
-    deadline?: any | null;
-    price?: number | null;
-    shortDescription?: string | null;
-    signupOpenDate?: any | null;
-    isFull?: boolean | null;
-    hasExtraInformation: boolean;
-    allowedGradeYears?: Array<number> | null;
-    organization: { __typename?: "OrganizationType"; name: string; color?: string | null };
-    category?: { __typename?: "CategoryType"; name: string } | null;
-    publisher?: {
-      __typename?: "UserType";
-      id: string;
-      username: string;
-      email: string;
-      firstName: string;
-      lastName: string;
-      dateJoined: any;
-    } | null;
-    userAttendance?: {
-      __typename?: "UserAttendingType";
-      isSignedUp?: boolean | null;
-      isOnWaitingList?: boolean | null;
-    } | null;
-  }> | null;
-};
-
-export type DefaultEventsQueryVariables = Exact<{ [key: string]: never }>;
-
-export type DefaultEventsQuery = {
-  __typename?: "Queries";
-  defaultEvents?: Array<{
-    __typename?: "EventType";
-    id: string;
-    title: string;
-    startTime: any;
-    endTime?: any | null;
-    location?: string | null;
-    description: string;
-    image?: string | null;
-    isAttendable: boolean;
-    deadline?: any | null;
-    price?: number | null;
-    shortDescription?: string | null;
-    signupOpenDate?: any | null;
-    isFull?: boolean | null;
-    hasExtraInformation: boolean;
-    allowedGradeYears?: Array<number> | null;
-    organization: { __typename?: "OrganizationType"; name: string; color?: string | null };
-    category?: { __typename?: "CategoryType"; name: string } | null;
-    publisher?: {
-      __typename?: "UserType";
-      id: string;
-      username: string;
-      email: string;
-      firstName: string;
-      lastName: string;
-      dateJoined: any;
-    } | null;
-    userAttendance?: {
-      __typename?: "UserAttendingType";
-      isSignedUp?: boolean | null;
-      isOnWaitingList?: boolean | null;
-    } | null;
-  }> | null;
-};
-
 export type ListingFragment = {
   __typename?: "ListingType";
   id: string;
   title: string;
   slug: string;
   description: string;
-  startDatetime: any;
-  deadline: any;
-  endDatetime: any;
+  startDatetime: string;
+  deadline: string;
+  endDatetime: string;
   applicationUrl?: string | null;
   chips: Array<string>;
   readMoreUrl?: string | null;
@@ -1707,9 +1690,9 @@ export type ListingQuery = {
     title: string;
     slug: string;
     description: string;
-    startDatetime: any;
-    deadline: any;
-    endDatetime: any;
+    startDatetime: string;
+    deadline: string;
+    endDatetime: string;
     applicationUrl?: string | null;
     chips: Array<string>;
     readMoreUrl?: string | null;
@@ -1741,7 +1724,7 @@ export type UserFieldsFragment = {
   username: string;
   firstName: string;
   lastName: string;
-  dateJoined: any;
+  dateJoined: string;
   graduationYear?: number | null;
   gradeYear?: number | null;
   allergies?: string | null;
@@ -1772,7 +1755,7 @@ export type AuthUserMutation = {
       username: string;
       firstName: string;
       lastName: string;
-      dateJoined: any;
+      dateJoined: string;
       graduationYear?: number | null;
       gradeYear?: number | null;
       allergies?: string | null;
@@ -1794,7 +1777,7 @@ export type UserInfoQuery = {
     username: string;
     firstName: string;
     lastName: string;
-    dateJoined: any;
+    dateJoined: string;
     graduationYear?: number | null;
     gradeYear?: number | null;
     allergies?: string | null;
@@ -1803,81 +1786,55 @@ export type UserInfoQuery = {
   } | null;
 };
 
-export const EventFragmentFragmentDoc = {
+export const ProductFragmentDoc = {
   kind: "Document",
   definitions: [
     {
       kind: "FragmentDefinition",
-      name: { kind: "Name", value: "EventFragment" },
-      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "EventType" } },
+      name: { kind: "Name", value: "Product" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "ProductType" } },
       selectionSet: {
         kind: "SelectionSet",
         selections: [
           { kind: "Field", name: { kind: "Name", value: "id" } },
-          { kind: "Field", name: { kind: "Name", value: "title" } },
-          { kind: "Field", name: { kind: "Name", value: "startTime" } },
-          { kind: "Field", name: { kind: "Name", value: "endTime" } },
-          { kind: "Field", name: { kind: "Name", value: "location" } },
+          { kind: "Field", name: { kind: "Name", value: "name" } },
           { kind: "Field", name: { kind: "Name", value: "description" } },
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "organization" },
-            selectionSet: {
-              kind: "SelectionSet",
-              selections: [
-                { kind: "Field", name: { kind: "Name", value: "name" } },
-                { kind: "Field", name: { kind: "Name", value: "color" } },
-              ],
-            },
-          },
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "category" },
-            selectionSet: {
-              kind: "SelectionSet",
-              selections: [{ kind: "Field", name: { kind: "Name", value: "name" } }],
-            },
-          },
-          { kind: "Field", name: { kind: "Name", value: "image" } },
-          { kind: "Field", name: { kind: "Name", value: "isAttendable" } },
-          { kind: "Field", name: { kind: "Name", value: "deadline" } },
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "publisher" },
-            selectionSet: {
-              kind: "SelectionSet",
-              selections: [
-                { kind: "Field", name: { kind: "Name", value: "id" } },
-                { kind: "Field", name: { kind: "Name", value: "username" } },
-                { kind: "Field", name: { kind: "Name", value: "email" } },
-                { kind: "Field", name: { kind: "Name", value: "firstName" } },
-                { kind: "Field", name: { kind: "Name", value: "lastName" } },
-                { kind: "Field", name: { kind: "Name", value: "dateJoined" } },
-              ],
-            },
-          },
           { kind: "Field", name: { kind: "Name", value: "price" } },
-          { kind: "Field", name: { kind: "Name", value: "shortDescription" } },
-          { kind: "Field", name: { kind: "Name", value: "signupOpenDate" } },
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "userAttendance" },
-            selectionSet: {
-              kind: "SelectionSet",
-              selections: [
-                { kind: "Field", name: { kind: "Name", value: "isSignedUp" } },
-                { kind: "Field", name: { kind: "Name", value: "isOnWaitingList" } },
-              ],
-            },
-          },
-          { kind: "Field", name: { kind: "Name", value: "isFull" } },
-          { kind: "Field", name: { kind: "Name", value: "hasExtraInformation" } },
-          { kind: "Field", name: { kind: "Name", value: "allowedGradeYears" } },
+          { kind: "Field", name: { kind: "Name", value: "maxBuyableQuantity" } },
         ],
       },
     },
   ],
-} as unknown as DocumentNode<EventFragmentFragment, unknown>;
+} as unknown as DocumentNode<ProductFragment, unknown>;
+export const OrderFragmentDoc = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Order" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "OrderType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "quantity" } },
+          { kind: "Field", name: { kind: "Name", value: "totalPrice" } },
+          { kind: "Field", name: { kind: "Name", value: "paymentStatus" } },
+          { kind: "Field", name: { kind: "Name", value: "timestamp" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "product" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Product" } }],
+            },
+          },
+        ],
+      },
+    },
+    ...ProductFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<OrderFragment, unknown>;
 export const ListingFragmentDoc = {
   kind: "Document",
   definitions: [
@@ -2386,6 +2343,176 @@ export const ActiveBookingResponsibleDocument = {
     },
   ],
 } as unknown as DocumentNode<ActiveBookingResponsibleQuery, ActiveBookingResponsibleQueryVariables>;
+export const InitiateOrderDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "initiateOrder" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "productId" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "quantity" } },
+          type: { kind: "NamedType", name: { kind: "Name", value: "Int" } },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "fallbackRedirect" } },
+          type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "initiateOrder" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "productId" },
+                value: { kind: "Variable", name: { kind: "Name", value: "productId" } },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "quantity" },
+                value: { kind: "Variable", name: { kind: "Name", value: "quantity" } },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "fallbackRedirect" },
+                value: { kind: "Variable", name: { kind: "Name", value: "fallbackRedirect" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "redirect" } },
+                { kind: "Field", name: { kind: "Name", value: "orderId" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<InitiateOrderMutation, InitiateOrderMutationVariables>;
+export const AttemptCapturePaymentDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "attemptCapturePayment" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "orderId" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "attemptCapturePayment" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "orderId" },
+                value: { kind: "Variable", name: { kind: "Name", value: "orderId" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "status" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "order" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Order" } }],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...OrderFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<AttemptCapturePaymentMutation, AttemptCapturePaymentMutationVariables>;
+export const ProductDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "product" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "productId" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "product" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "productId" },
+                value: { kind: "Variable", name: { kind: "Name", value: "productId" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Product" } }],
+            },
+          },
+        ],
+      },
+    },
+    ...ProductFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<ProductQuery, ProductQueryVariables>;
+export const UserOrdersDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "userOrders" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "userOrders" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Order" } }],
+            },
+          },
+        ],
+      },
+    },
+    ...OrderFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<UserOrdersQuery, UserOrdersQueryVariables>;
 export const EventFilteredOrganizationsDocument = {
   kind: "Document",
   definitions: [
@@ -2450,98 +2577,6 @@ export const GetCategoriesDocument = {
     },
   ],
 } as unknown as DocumentNode<GetCategoriesQuery, GetCategoriesQueryVariables>;
-export const AllEventsDocument = {
-  kind: "Document",
-  definitions: [
-    {
-      kind: "OperationDefinition",
-      operation: "query",
-      name: { kind: "Name", value: "allEvents" },
-      variableDefinitions: [
-        {
-          kind: "VariableDefinition",
-          variable: { kind: "Variable", name: { kind: "Name", value: "organization" } },
-          type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
-        },
-        {
-          kind: "VariableDefinition",
-          variable: { kind: "Variable", name: { kind: "Name", value: "category" } },
-          type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
-        },
-        {
-          kind: "VariableDefinition",
-          variable: { kind: "Variable", name: { kind: "Name", value: "startTime" } },
-          type: { kind: "NamedType", name: { kind: "Name", value: "DateTime" } },
-        },
-        {
-          kind: "VariableDefinition",
-          variable: { kind: "Variable", name: { kind: "Name", value: "endTime" } },
-          type: { kind: "NamedType", name: { kind: "Name", value: "DateTime" } },
-        },
-      ],
-      selectionSet: {
-        kind: "SelectionSet",
-        selections: [
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "allEvents" },
-            arguments: [
-              {
-                kind: "Argument",
-                name: { kind: "Name", value: "organization" },
-                value: { kind: "Variable", name: { kind: "Name", value: "organization" } },
-              },
-              {
-                kind: "Argument",
-                name: { kind: "Name", value: "category" },
-                value: { kind: "Variable", name: { kind: "Name", value: "category" } },
-              },
-              {
-                kind: "Argument",
-                name: { kind: "Name", value: "startTime" },
-                value: { kind: "Variable", name: { kind: "Name", value: "startTime" } },
-              },
-              {
-                kind: "Argument",
-                name: { kind: "Name", value: "endTime" },
-                value: { kind: "Variable", name: { kind: "Name", value: "endTime" } },
-              },
-            ],
-            selectionSet: {
-              kind: "SelectionSet",
-              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "EventFragment" } }],
-            },
-          },
-        ],
-      },
-    },
-    ...EventFragmentFragmentDoc.definitions,
-  ],
-} as unknown as DocumentNode<AllEventsQuery, AllEventsQueryVariables>;
-export const DefaultEventsDocument = {
-  kind: "Document",
-  definitions: [
-    {
-      kind: "OperationDefinition",
-      operation: "query",
-      name: { kind: "Name", value: "defaultEvents" },
-      selectionSet: {
-        kind: "SelectionSet",
-        selections: [
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "defaultEvents" },
-            selectionSet: {
-              kind: "SelectionSet",
-              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "EventFragment" } }],
-            },
-          },
-        ],
-      },
-    },
-    ...EventFragmentFragmentDoc.definitions,
-  ],
-} as unknown as DocumentNode<DefaultEventsQuery, DefaultEventsQueryVariables>;
 export const ListingDocument = {
   kind: "Document",
   definitions: [

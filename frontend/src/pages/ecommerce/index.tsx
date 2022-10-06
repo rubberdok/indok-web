@@ -23,13 +23,12 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 
 import OrderCellContent from "@/components/pages/ecommerce/OrderCellContent";
-import { UserInfoDocument } from "@/generated/graphql";
-import { GET_USER_ORDERS } from "@/graphql/ecommerce/queries";
-import { Order } from "@/interfaces/ecommerce";
+import { UserInfoDocument, UserOrdersDocument } from "@/generated/graphql";
 import { HeaderValuePair } from "@/interfaces/utils";
 import Layout, { RootStyle } from "@/layouts/Layout";
 import { addApolloState, initializeApollo } from "@/lib/apolloClient";
 import { NextPageWithLayout } from "@/pages/_app";
+import { Order } from "@/types/ecommerce";
 
 const orderFields: HeaderValuePair<Order>[] = [
   { header: "Ordre-ID", field: "id" },
@@ -45,8 +44,12 @@ const OrdersPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServe
 
   const [orders, setOrders] = useState<Order[]>();
 
-  const { loading, error } = useQuery<{ userOrders: Order[] }>(GET_USER_ORDERS, {
-    onCompleted: (data) => setOrders(data.userOrders),
+  const { loading, error } = useQuery(UserOrdersDocument, {
+    onCompleted: (data) => {
+      if (data.userOrders) {
+        setOrders(data.userOrders);
+      }
+    },
   });
 
   return (
