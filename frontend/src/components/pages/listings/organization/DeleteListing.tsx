@@ -10,24 +10,20 @@ import {
 } from "@mui/material";
 
 import WarningButton from "@/components/ui/WarningButton";
+import { AdminOrganizationDocument, OrgAdminListingFragment } from "@/generated/graphql";
 import { DELETE_LISTING } from "@/graphql/listings/mutations";
-import { GET_ORGANIZATION } from "@/graphql/orgs/queries";
-import { Listing } from "@/interfaces/listings";
-import { Organization } from "@/interfaces/organizations";
 
-/**
- * Component for confirmation dialog when an organization admin tries to delete a listing.
- *
- * Props:
- * - the listing to delete (if undefined: hides the dialog)
- * - the id of the organization that owns the listing (for use in the cache update function)
- * - onClose function to execute when the dialog is closed
- */
-const DeleteListing: React.FC<{
-  listing: Listing | undefined;
-  organizationId: number;
+type Props = {
+  /** Listing to delete (if undefined: hides the dialog) */
+  listing: OrgAdminListingFragment | undefined;
+  /** ID of the organization that owns the listing (to update cache) */
+  organizationId: string;
+  /** Called when the dialog is closed */
   onClose: () => void;
-}> = ({ listing, organizationId, onClose }) => {
+};
+
+/** Component for confirmation dialog when an organization admin tries to delete a listing. */
+const DeleteListing: React.FC<Props> = ({ listing, organizationId, onClose }) => {
   // mutation to delete the listing
   const [deleteListing] = useMutation<{ deleteListing: { ok: boolean; listingId: string } }, { id: string }>(
     DELETE_LISTING,
@@ -36,17 +32,18 @@ const DeleteListing: React.FC<{
       update: (cache, { data }) => {
         const deletedListingId = data?.deleteListing.listingId;
         // reads the cached organization from which to delete the listing
-        const cachedOrg = cache.readQuery<{ organization: Organization }>({
-          query: GET_ORGANIZATION,
+        const cachedOrg = cache.readQuery({
+          query: AdminOrganizationDocument,
           variables: { orgId: organizationId },
         });
-        if (data?.deleteListing?.ok && deletedListingId && cachedOrg) {
+        if (data?.deleteListing?.ok && deletedListingId && cachedOrg?.organization) {
           // removes the deleted listing from the cached organization's listings
           cache.writeQuery({
-            query: GET_ORGANIZATION,
+            query: AdminOrganizationDocument,
             variables: { orgId: organizationId },
             data: {
               organization: {
+                ...cachedOrg.organization,
                 listings: (cachedOrg.organization.listings ?? []).filter((listing) => listing.id !== deletedListingId),
               },
             },
