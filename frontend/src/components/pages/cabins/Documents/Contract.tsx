@@ -1,9 +1,8 @@
 import { useQuery } from "@apollo/client";
 import { Box, Divider, Grid, Typography } from "@mui/material";
 import Image from "next/future/image";
-import { useEffect, useState } from "react";
 
-import { ActiveBookingResponsibleDocument, BookingResponsibleFragment, CabinFragment } from "@/generated/graphql";
+import { ActiveBookingResponsibleDocument, CabinFragment } from "@/generated/graphql";
 import { ContactInfo, DatePick } from "@/types/cabins";
 import { calculatePrice, convertDateFormat, toStringChosenCabins } from "@/utils/cabins";
 import hytteforeningen from "~/public/static/cabins/logo.svg";
@@ -21,13 +20,7 @@ const Contract: React.FC<ContractProps> = ({ chosenCabins, contactInfo, datePick
   const price = calculatePrice(chosenCabins, contactInfo, datePick);
 
   const { data } = useQuery(ActiveBookingResponsibleDocument);
-  const [responsible, setResponsible] = useState<BookingResponsibleFragment>();
-
-  useEffect(() => {
-    if (data?.activeBookingResponsible) {
-      setResponsible(data.activeBookingResponsible);
-    }
-  }, [data]);
+  const responsible = data?.activeBookingResponsible;
 
   //NB! there also exist a HTML template version of the contract backend, in case of changes both must be updated
   return (
