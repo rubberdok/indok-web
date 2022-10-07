@@ -7,8 +7,7 @@ import { useState } from "react";
 import OrgEvents from "@/components/pages/events/org/OrgEvents";
 import OrganizationListings from "@/components/pages/listings/organization/OrganizationListings";
 import OrganizationHero from "@/components/pages/organization/OrganizationHero";
-import { GET_ORGANIZATION } from "@/graphql/orgs/queries";
-import { Organization } from "@/interfaces/organizations";
+import { AdminOrganizationDocument } from "@/generated/graphql";
 import Layout from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/pages/_app";
 
@@ -19,11 +18,10 @@ const RootStyle = styled("div")(({ theme }) => ({
 const OrganizationDetailPage: NextPageWithLayout = () => {
   const router = useRouter();
   const { orgId } = router.query;
-  const orgNumberId = parseInt(orgId as string);
 
-  const { data, loading, error } = useQuery<{ organization: Organization }, { orgId: number }>(GET_ORGANIZATION, {
-    variables: { orgId: orgNumberId },
-    skip: Number.isNaN(orgNumberId),
+  const { data, loading, error } = useQuery(AdminOrganizationDocument, {
+    variables: { orgId: orgId as string },
+    skip: Number.isNaN(parseInt(orgId as string)),
   });
 
   const [activeTab, setActiveTab] = useState<number>(0);
@@ -33,7 +31,7 @@ const OrganizationDetailPage: NextPageWithLayout = () => {
   };
 
   if (error) return <p>Error</p>;
-  if (!data || loading) return <CircularProgress />;
+  if (!data?.organization || loading) return <CircularProgress />;
 
   return (
     <>

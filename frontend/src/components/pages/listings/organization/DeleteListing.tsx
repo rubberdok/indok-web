@@ -10,12 +10,11 @@ import {
 } from "@mui/material";
 
 import WarningButton from "@/components/ui/WarningButton";
-import { DeleteListingDocument } from "@/generated/graphql";
-import { Listing } from "@/interfaces/listings";
+import { DeleteListingDocument, OrgAdminListingFragment } from "@/generated/graphql";
 
 type Props = {
   /** Listing to delete (if undefined: hides the dialog) */
-  listing: Listing | undefined;
+  listing: OrgAdminListingFragment | undefined;
   /** Function to call when the dialog is closed */
   onClose: () => void;
 };
