@@ -2,12 +2,13 @@ import { Box, Divider, Tooltip, Typography } from "@mui/material";
 import { TypographyProps } from "@mui/material/Typography";
 import { NextPage } from "next";
 
+import { CabinFragment } from "@/generated/graphql";
 import useResponsive from "@/hooks/useResponsive";
-import { Cabin, ContactInfo, DatePick } from "@/interfaces/cabins";
+import { ContactInfo, DatePick } from "@/types/cabins";
 import { calculatePrice, convertDateFormat, toStringChosenCabins } from "@/utils/cabins";
 
 interface Props {
-  chosenCabins: Cabin[];
+  chosenCabins: CabinFragment[];
   datePick: DatePick;
   contactInfo: ContactInfo;
   cabinText?: string;

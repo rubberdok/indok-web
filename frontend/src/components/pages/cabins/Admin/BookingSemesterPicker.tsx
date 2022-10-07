@@ -17,20 +17,11 @@ import router from "next/router";
 import { useState } from "react";
 
 import ErrorDialog from "@/components/Dialog/ErrorDialog";
-import { UPDATE_BOOKING_SEMESTER } from "@/graphql/cabins/mutations";
+import { UpdateBookingSemesterDocument } from "@/generated/graphql";
 import useBookingSemester from "@/hooks/cabins/useBookingSemester";
 
-export type BookingSemester = {
-  fallStartDate: string;
-  fallEndDate: string;
-  springStartDate: string;
-  springEndDate: string;
-  fallSemesterActive: boolean;
-  springSemesterActive: boolean;
-};
-
 const BookingSemesterPicker: React.VFC = () => {
-  const [updateBookingSemester] = useMutation<{ semesterData: BookingSemester }>(UPDATE_BOOKING_SEMESTER);
+  const [updateBookingSemester] = useMutation(UpdateBookingSemesterDocument);
   const handleErrorDialogClose = () => router.push("/");
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
