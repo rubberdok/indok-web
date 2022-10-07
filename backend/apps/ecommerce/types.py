@@ -17,7 +17,13 @@ class ProductType(DjangoObjectType):
         ]
 
 
+# Graphene enum type extracted from Order model to allow reuse and consistent types for codegen
+PaymentStatus = graphene.Enum.from_enum(Order.PaymentStatus)
+
+
 class OrderType(DjangoObjectType):
+    payment_status = NonNull(PaymentStatus)
+
     class Meta:
         model = Order
         fields = [

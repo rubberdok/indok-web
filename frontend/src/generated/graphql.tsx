@@ -113,7 +113,7 @@ export type AssignMembership = {
 export type AttemptCapturePayment = {
   __typename?: "AttemptCapturePayment";
   order?: Maybe<OrderType>;
-  status?: Maybe<Scalars["String"]>;
+  status?: Maybe<PaymentStatus>;
 };
 
 export type AuthUser = {
@@ -873,28 +873,10 @@ export type OptionType = {
   question: QuestionType;
 };
 
-/** An enumeration. */
-export enum OrderPaymentStatus {
-  /** cancelled */
-  Cancelled = "CANCELLED",
-  /** captured */
-  Captured = "CAPTURED",
-  /** failed */
-  Failed = "FAILED",
-  /** initiated */
-  Initiated = "INITIATED",
-  /** refunded */
-  Refunded = "REFUNDED",
-  /** rejected */
-  Rejected = "REJECTED",
-  /** reserved */
-  Reserved = "RESERVED",
-}
-
 export type OrderType = {
   __typename?: "OrderType";
   id: Scalars["UUID"];
-  paymentStatus: OrderPaymentStatus;
+  paymentStatus: PaymentStatus;
   product: ProductType;
   quantity: Scalars["Int"];
   timestamp: Scalars["DateTime"];
@@ -931,6 +913,17 @@ export type OrganizationType = {
   slug: Scalars["String"];
   users: Array<UserType>;
 };
+
+/** An enumeration. */
+export enum PaymentStatus {
+  Cancelled = "CANCELLED",
+  Captured = "CAPTURED",
+  Failed = "FAILED",
+  Initiated = "INITIATED",
+  Refunded = "REFUNDED",
+  Rejected = "REJECTED",
+  Reserved = "RESERVED",
+}
 
 export type ProductType = {
   __typename?: "ProductType";
@@ -1643,6 +1636,109 @@ export type BookingSemesterQuery = {
     fallSemesterActive: boolean;
     springSemesterActive: boolean;
   } | null;
+};
+
+export type ProductFragment = {
+  __typename?: "ProductType";
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  maxBuyableQuantity: number;
+};
+
+export type OrderFragment = {
+  __typename?: "OrderType";
+  id: string;
+  quantity: number;
+  totalPrice: number;
+  paymentStatus: PaymentStatus;
+  timestamp: string;
+  product: {
+    __typename?: "ProductType";
+    id: string;
+    name: string;
+    description: string;
+    price: number;
+    maxBuyableQuantity: number;
+  };
+};
+
+export type InitiateOrderMutationVariables = Exact<{
+  productId: Scalars["ID"];
+  quantity?: InputMaybe<Scalars["Int"]>;
+  fallbackRedirect?: InputMaybe<Scalars["String"]>;
+}>;
+
+export type InitiateOrderMutation = {
+  __typename?: "Mutations";
+  initiateOrder?: { __typename?: "InitiateOrder"; redirect?: string | null; orderId?: string | null } | null;
+};
+
+export type AttemptCapturePaymentMutationVariables = Exact<{
+  orderId: Scalars["ID"];
+}>;
+
+export type AttemptCapturePaymentMutation = {
+  __typename?: "Mutations";
+  attemptCapturePayment?: {
+    __typename?: "AttemptCapturePayment";
+    status?: PaymentStatus | null;
+    order?: {
+      __typename?: "OrderType";
+      id: string;
+      quantity: number;
+      totalPrice: number;
+      paymentStatus: PaymentStatus;
+      timestamp: string;
+      product: {
+        __typename?: "ProductType";
+        id: string;
+        name: string;
+        description: string;
+        price: number;
+        maxBuyableQuantity: number;
+      };
+    } | null;
+  } | null;
+};
+
+export type ProductQueryVariables = Exact<{
+  productId: Scalars["ID"];
+}>;
+
+export type ProductQuery = {
+  __typename?: "Queries";
+  product?: {
+    __typename?: "ProductType";
+    id: string;
+    name: string;
+    description: string;
+    price: number;
+    maxBuyableQuantity: number;
+  } | null;
+};
+
+export type UserOrdersQueryVariables = Exact<{ [key: string]: never }>;
+
+export type UserOrdersQuery = {
+  __typename?: "Queries";
+  userOrders?: Array<{
+    __typename?: "OrderType";
+    id: string;
+    quantity: number;
+    totalPrice: number;
+    paymentStatus: PaymentStatus;
+    timestamp: string;
+    product: {
+      __typename?: "ProductType";
+      id: string;
+      name: string;
+      description: string;
+      price: number;
+      maxBuyableQuantity: number;
+    };
+  }> | null;
 };
 
 export type EventFragment = {
@@ -2453,6 +2549,55 @@ export const BookingSemesterFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<BookingSemesterFragment, unknown>;
+export const ProductFragmentDoc = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Product" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "ProductType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "name" } },
+          { kind: "Field", name: { kind: "Name", value: "description" } },
+          { kind: "Field", name: { kind: "Name", value: "price" } },
+          { kind: "Field", name: { kind: "Name", value: "maxBuyableQuantity" } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<ProductFragment, unknown>;
+export const OrderFragmentDoc = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Order" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "OrderType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "quantity" } },
+          { kind: "Field", name: { kind: "Name", value: "totalPrice" } },
+          { kind: "Field", name: { kind: "Name", value: "paymentStatus" } },
+          { kind: "Field", name: { kind: "Name", value: "timestamp" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "product" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Product" } }],
+            },
+          },
+        ],
+      },
+    },
+    ...ProductFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<OrderFragment, unknown>;
 export const EventFragmentDoc = {
   kind: "Document",
   definitions: [
@@ -3423,6 +3568,176 @@ export const BookingSemesterDocument = {
     ...BookingSemesterFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<BookingSemesterQuery, BookingSemesterQueryVariables>;
+export const InitiateOrderDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "initiateOrder" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "productId" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "quantity" } },
+          type: { kind: "NamedType", name: { kind: "Name", value: "Int" } },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "fallbackRedirect" } },
+          type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "initiateOrder" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "productId" },
+                value: { kind: "Variable", name: { kind: "Name", value: "productId" } },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "quantity" },
+                value: { kind: "Variable", name: { kind: "Name", value: "quantity" } },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "fallbackRedirect" },
+                value: { kind: "Variable", name: { kind: "Name", value: "fallbackRedirect" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "redirect" } },
+                { kind: "Field", name: { kind: "Name", value: "orderId" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<InitiateOrderMutation, InitiateOrderMutationVariables>;
+export const AttemptCapturePaymentDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "attemptCapturePayment" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "orderId" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "attemptCapturePayment" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "orderId" },
+                value: { kind: "Variable", name: { kind: "Name", value: "orderId" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "status" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "order" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Order" } }],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...OrderFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<AttemptCapturePaymentMutation, AttemptCapturePaymentMutationVariables>;
+export const ProductDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "product" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "productId" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "product" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "productId" },
+                value: { kind: "Variable", name: { kind: "Name", value: "productId" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Product" } }],
+            },
+          },
+        ],
+      },
+    },
+    ...ProductFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<ProductQuery, ProductQueryVariables>;
+export const UserOrdersDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "userOrders" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "userOrders" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "FragmentSpread", name: { kind: "Name", value: "Order" } }],
+            },
+          },
+        ],
+      },
+    },
+    ...OrderFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<UserOrdersQuery, UserOrdersQueryVariables>;
 export const CreateEventDocument = {
   kind: "Document",
   definitions: [
