@@ -33,9 +33,9 @@ import EmailForm from "@/components/pages/events/email/EmailForm";
 import EditEvent from "@/components/pages/events/EventEditor";
 import OrganizationEventHero from "@/components/pages/organization/OrganizationEventHero";
 import { AdminEventDocument, AdminEventFragment, AdminEventSignOffDocument, SignUpFragment } from "@/generated/graphql";
-import { HeaderValuePair } from "@/interfaces/utils";
 import Layout from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/pages/_app";
+import { HeaderValuePair } from "@/types/utils";
 
 const signUpFields: HeaderValuePair<SignUpFragment>[] = [
   { header: "Navn", field: "user" },
