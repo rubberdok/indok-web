@@ -71,7 +71,7 @@ const ListingPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServ
           spacing={4}
         >
           <Grid item xs={12} sm={6} md={5} direction="column">
-            <TitleCard listing={data?.listing} />
+            <TitleCard listing={data?.listing ?? undefined} />
           </Grid>
           <Grid item xs={12} sm={6} md={7}>
             <ReactMarkdown components={markdownComponents}>

@@ -3,9 +3,10 @@ import { Grid } from "@mui/material";
 import { NextPage } from "next";
 import { Dispatch, SetStateAction } from "react";
 
+import { CabinFragment } from "@/generated/graphql";
 import { GET_USER } from "@/graphql/users/queries";
-import { Cabin, ContactInfo, ContactInfoValidations, InputFieldsEvent } from "@/interfaces/cabins";
 import { User } from "@/interfaces/users";
+import { ContactInfo, ContactInfoValidations, InputFieldsEvent } from "@/types/cabins";
 
 import { InputFields } from "../InputFields/InputFields";
 
@@ -14,7 +15,7 @@ interface ContractInfoProps {
   setContactInfo: Dispatch<SetStateAction<ContactInfo>>;
   validations: ContactInfoValidations | undefined;
   errorTrigger: boolean;
-  chosenCabins: Cabin[];
+  chosenCabins: CabinFragment[];
 }
 /*
 One of the steps in the cabins/book page.

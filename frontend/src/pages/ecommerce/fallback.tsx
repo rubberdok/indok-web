@@ -25,9 +25,8 @@ import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 
 import SalesTermsDialog from "@/components/pages/ecommerce/SalesTermsDialog";
-import { ATTEMPT_CAPTURE_PAYMENT } from "@/graphql/ecommerce/mutations";
+import { AttemptCapturePaymentDocument, PaymentStatus } from "@/generated/graphql";
 import { GET_USER } from "@/graphql/users/queries";
-import { Order, PaymentStatus } from "@/interfaces/ecommerce";
 import { User } from "@/interfaces/users";
 import Layout, { RootStyle } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/pages/_app";
@@ -37,32 +36,31 @@ const FallbackPage: NextPageWithLayout = () => {
   const router = useRouter();
   const { orderId, redirect } = router.query;
 
-  const [attemptCapturePayment, { data, loading, error }] = useMutation(ATTEMPT_CAPTURE_PAYMENT, {
+  const [attemptCapturePayment, { data, loading, error }] = useMutation(AttemptCapturePaymentDocument, {
     onError: () => intervalRef.current && clearInterval(intervalRef.current),
   });
   const { data: userData } = useQuery<{ user?: User }>(GET_USER);
 
-  const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>("RESERVED");
-  const [order, setOrder] = useState<Order>();
+  const paymentStatus = data?.attemptCapturePayment?.status ?? PaymentStatus.Reserved;
+  const order = data?.attemptCapturePayment?.order;
+
   const [openSalesTerms, setOpenSalesTerms] = useState(false);
   const intervalRef: { current: NodeJS.Timer | null } = useRef(null);
 
   useEffect(() => {
-    if (orderId && paymentStatus == "RESERVED") {
+    if (orderId && paymentStatus === PaymentStatus.Reserved) {
       intervalRef.current = setInterval(() => {
-        attemptCapturePayment({ variables: { orderId } });
+        attemptCapturePayment({ variables: { orderId: orderId as string } });
       }, 2000);
     }
     return () => {
       intervalRef.current && clearInterval(intervalRef.current);
     };
-  }, [orderId]);
+  }, [orderId, paymentStatus, attemptCapturePayment]);
 
   useEffect(() => {
-    if (data) {
-      setPaymentStatus(data.attemptCapturePayment.status);
-      setOrder(data.attemptCapturePayment.order);
-      if (["CAPTURED", "CANCELLED"].includes(data.attemptCapturePayment.status) && intervalRef.current) {
+    if (paymentStatus) {
+      if ([PaymentStatus.Captured, PaymentStatus.Cancelled].includes(paymentStatus) && intervalRef.current) {
         // We either sucessfully captured payment or the payment was somehow cancelled
         clearInterval(intervalRef.current);
       }
@@ -70,7 +68,7 @@ const FallbackPage: NextPageWithLayout = () => {
     return () => {
       intervalRef.current && clearInterval(intervalRef.current);
     };
-  }, [data]);
+  }, [paymentStatus]);
 
   return (
     <Container>

@@ -27,13 +27,7 @@ const OrganizationListings: React.FC<Props> = ({ organization }) => {
 
   return (
     <>
-      <DeleteListing
-        listing={listingToDelete}
-        organizationId={organization.id}
-        onClose={() => {
-          setListingToDelete(undefined);
-        }}
-      />
+      <DeleteListing listing={listingToDelete} onClose={() => setListingToDelete(undefined)} />
       <Stack spacing={5}>
         <Typography variant="h3">Søknader</Typography>
         {organization.listings && organization.listings.length !== 0 && (

@@ -1,0 +1,11 @@
+query product($productId: ID!) {
+  product(productId: $productId) {
+    ...Product
+  }
+}
+
+query userOrders {
+  userOrders {
+    ...Order
+  }
+}

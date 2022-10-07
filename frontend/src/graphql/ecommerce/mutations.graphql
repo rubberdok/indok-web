@@ -1,0 +1,15 @@
+mutation initiateOrder($productId: ID!, $quantity: Int, $fallbackRedirect: String) {
+  initiateOrder(productId: $productId, quantity: $quantity, fallbackRedirect: $fallbackRedirect) {
+    redirect
+    orderId
+  }
+}
+
+mutation attemptCapturePayment($orderId: ID!) {
+  attemptCapturePayment(orderId: $orderId) {
+    status
+    order {
+      ...Order
+    }
+  }
+}

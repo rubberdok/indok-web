@@ -20,18 +20,15 @@ import {
 } from "@mui/material";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { useRouter } from "next/router";
-import { useState } from "react";
 
 import OrderCellContent from "@/components/pages/ecommerce/OrderCellContent";
-import { UserInfoDocument } from "@/generated/graphql";
-import { GET_USER_ORDERS } from "@/graphql/ecommerce/queries";
-import { Order } from "@/interfaces/ecommerce";
+import { OrderFragment, UserInfoDocument, UserOrdersDocument } from "@/generated/graphql";
 import { HeaderValuePair } from "@/interfaces/utils";
 import Layout, { RootStyle } from "@/layouts/Layout";
 import { addApolloState, initializeApollo } from "@/lib/apolloClient";
 import { NextPageWithLayout } from "@/pages/_app";
 
-const orderFields: HeaderValuePair<Order>[] = [
+const orderFields: HeaderValuePair<OrderFragment>[] = [
   { header: "Ordre-ID", field: "id" },
   { header: "Produkt", field: "product" },
   { header: "Totalpris", field: "totalPrice" },
@@ -43,11 +40,8 @@ const orderFields: HeaderValuePair<Order>[] = [
 const OrdersPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSideProps>> = () => {
   const router = useRouter();
 
-  const [orders, setOrders] = useState<Order[]>();
-
-  const { loading, error } = useQuery<{ userOrders: Order[] }>(GET_USER_ORDERS, {
-    onCompleted: (data) => setOrders(data.userOrders),
-  });
+  const { loading, error, data } = useQuery(UserOrdersDocument);
+  const orders = data?.userOrders;
 
   return (
     <Container>
@@ -93,7 +87,7 @@ const OrdersPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServe
                             </TableRow>
                           </TableHead>
                           <TableBody>
-                            {orders.map((order: Order) => (
+                            {orders.map((order: OrderFragment) => (
                               <TableRow key={`user-row-${order.id}`}>
                                 {orderFields.map((field) => (
                                   <TableCell key={`user-${order.id}-cell--${field.field}`}>

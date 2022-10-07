@@ -1,0 +1,52 @@
+mutation createForm($formData: CreateFormInput!, $listingId: ID) {
+  createForm(formData: $formData, listingId: $listingId) {
+    form {
+      ...FormWithAllResponses
+    }
+    ok
+  }
+}
+
+mutation updateForm($id: ID!, $formData: BaseFormInput!) {
+  updateForm(id: $id, formData: $formData) {
+    form {
+      ...FormWithAllResponses
+    }
+    ok
+  }
+}
+
+mutation createQuestion($formId: ID!, $questionData: CreateQuestionInput!) {
+  createQuestion(formId: $formId, questionData: $questionData) {
+    question {
+      ...QuestionWithAnswerIds
+    }
+    ok
+  }
+}
+
+mutation updateQuestion($id: ID!, $questionData: BaseQuestionInput!, $optionData: [OptionInput!]) {
+  createUpdateAndDeleteOptions(questionId: $id, optionData: $optionData) {
+    ok
+  }
+  updateQuestion(id: $id, questionData: $questionData) {
+    question {
+      ...QuestionWithAnswerIds
+    }
+    ok
+  }
+}
+
+mutation deleteQuestion($id: ID!) {
+  deleteQuestion(id: $id) {
+    deletedId
+    ok
+  }
+}
+
+mutation submitAnswers($formId: ID!, $answersData: [AnswerInput!]) {
+  submitAnswers(formId: $formId, answersData: $answersData) {
+    ok
+    message
+  }
+}

@@ -4,29 +4,21 @@ import { Button, Card, CardContent, FormHelperText, Grid, Typography } from "@mu
 import { useRouter } from "next/router";
 import { useState } from "react";
 
-import { SUBMIT_ANSWERS } from "@/graphql/forms/mutations";
-import { Form, Question } from "@/interfaces/forms";
+import { FormWithAnswersFragment, QuestionWithAnswerFragment, SubmitAnswersDocument } from "@/generated/graphql";
 
 import AnswerQuestion from "./AnswerQuestion";
 
 // interface for the state of answers before pushing to the database
-type Questions = {
-  [key: string]: { question: Question; answer: string };
-};
+type Questions = Record<string, { question: QuestionWithAnswerFragment; answer: string }>;
 
-/**
- * Component for a user to answer a form.
- *
- * Props:
- * - the form to answer
- */
-const AnswerForm: React.FC<{
-  form: Form;
-}> = ({ form }) => {
+type Props = { form: FormWithAnswersFragment };
+
+/** Component for a user to answer a form. */
+const AnswerForm: React.FC<Props> = ({ form }) => {
   // state to manage the user's answers before submitting
   const [questions, setQuestions] = useState<Questions>(
     Object.fromEntries(
-      form.questions.map((question) => [question.id, { question: question, answer: question.answer?.answer || "" }])
+      form.questions.map((question) => [question.id, { question: question, answer: question?.answer?.answer || "" }])
     )
   );
 
@@ -36,17 +28,13 @@ const AnswerForm: React.FC<{
   const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
 
   // mutation to submit answers
-  const [submitAnswers] = useMutation<
-    // object returned from the mutation
-    { submitAnswers: { ok: boolean; message: string } },
-    // variables of the mutation
-    { formId: string; answersData: { questionId: string; answer: string }[] }
-  >(SUBMIT_ANSWERS, {
+  const [submitAnswers] = useMutation(SubmitAnswersDocument, {
     onCompleted: ({ submitAnswers }) => {
+      if (!submitAnswers) return;
       if (submitAnswers.ok) {
         router.push("/");
       } else {
-        setErrorMessage(submitAnswers.message);
+        setErrorMessage(submitAnswers.message ?? undefined);
       }
     },
   });
@@ -81,7 +69,7 @@ const AnswerForm: React.FC<{
                     <AnswerQuestion
                       question={question}
                       answer={answer}
-                      onValueChanged={(value) =>
+                      onAnswerChange={(value) =>
                         setQuestions((prevState) => ({ ...prevState, [id]: { ...prevState[id], answer: value } }))
                       }
                     />
