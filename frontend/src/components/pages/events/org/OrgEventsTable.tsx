@@ -2,18 +2,15 @@ import { Chip, Table, TableBody, TableCell, TableContainer, TableHead, TableRow 
 import dayjs from "dayjs";
 import Link from "next/link";
 
-import { EventFragment } from "@/generated/graphql";
-import { Organization } from "@/interfaces/organizations";
+import { OrgAdminEventFragment, AdminOrganizationFragment } from "@/generated/graphql";
 import { HeaderValuePair } from "@/interfaces/utils";
 
-const eventFields: HeaderValuePair<EventFragment>[] = [
+const eventFields: HeaderValuePair<OrgAdminEventFragment>[] = [
   { header: "Navn", field: "title" },
   { header: "Antall Plasser", field: "availableSlots" },
 ];
 
-type Props = {
-  organization: Organization;
-};
+type Props = { organization: AdminOrganizationFragment };
 
 const OrgEventsTable: React.FC<Props> = ({ organization }) => {
   return (

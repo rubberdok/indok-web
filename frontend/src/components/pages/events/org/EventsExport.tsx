@@ -3,13 +3,10 @@ import { GetApp } from "@mui/icons-material";
 import { Button, ButtonGroup, Grid, TextField, Typography, CircularProgress } from "@mui/material";
 import { useState } from "react";
 
-import { AttendeeReportOrgDocument, AttendeeReportsDocument } from "@/generated/graphql";
-import { Organization } from "@/interfaces/organizations";
+import { AttendeeReportOrgDocument, AttendeeReportsDocument, AdminOrganizationFragment } from "@/generated/graphql";
 import { promptDownloadFromPayload } from "@/utils/exports";
 
-type Props = {
-  organization: Organization;
-};
+type Props = { organization: AdminOrganizationFragment };
 
 const EventsExport: React.FC<Props> = ({ organization }) => {
   const [selectedEvents, setSelectedEvents] = useState(["1", "2", "3"]);
