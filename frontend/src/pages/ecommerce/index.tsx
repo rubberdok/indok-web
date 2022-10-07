@@ -20,7 +20,6 @@ import {
 } from "@mui/material";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { useRouter } from "next/router";
-import { useState } from "react";
 
 import OrderCellContent from "@/components/pages/ecommerce/OrderCellContent";
 import { OrderFragment, UserInfoDocument, UserOrdersDocument } from "@/generated/graphql";
@@ -41,15 +40,8 @@ const orderFields: HeaderValuePair<OrderFragment>[] = [
 const OrdersPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSideProps>> = () => {
   const router = useRouter();
 
-  const [orders, setOrders] = useState<OrderFragment[]>();
-
-  const { loading, error } = useQuery(UserOrdersDocument, {
-    onCompleted: (data) => {
-      if (data.userOrders) {
-        setOrders(data.userOrders);
-      }
-    },
-  });
+  const { loading, error, data } = useQuery(UserOrdersDocument);
+  const orders = data?.userOrders;
 
   return (
     <Container>

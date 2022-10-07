@@ -25,7 +25,7 @@ import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 
 import SalesTermsDialog from "@/components/pages/ecommerce/SalesTermsDialog";
-import { AttemptCapturePaymentDocument, OrderFragment, PaymentStatus } from "@/generated/graphql";
+import { AttemptCapturePaymentDocument, PaymentStatus } from "@/generated/graphql";
 import { GET_USER } from "@/graphql/users/queries";
 import { User } from "@/interfaces/users";
 import Layout, { RootStyle } from "@/layouts/Layout";
@@ -41,13 +41,14 @@ const FallbackPage: NextPageWithLayout = () => {
   });
   const { data: userData } = useQuery<{ user?: User }>(GET_USER);
 
-  const [paymentStatus, setPaymentStatus] = useState(PaymentStatus.Reserved);
-  const [order, setOrder] = useState<OrderFragment>();
+  const paymentStatus = data?.attemptCapturePayment?.status ?? PaymentStatus.Reserved;
+  const order = data?.attemptCapturePayment?.order;
+
   const [openSalesTerms, setOpenSalesTerms] = useState(false);
   const intervalRef: { current: NodeJS.Timer | null } = useRef(null);
 
   useEffect(() => {
-    if (orderId && paymentStatus == PaymentStatus.Reserved) {
+    if (orderId && paymentStatus === PaymentStatus.Reserved) {
       intervalRef.current = setInterval(() => {
         attemptCapturePayment({ variables: { orderId: orderId as string } });
       }, 2000);
@@ -58,23 +59,16 @@ const FallbackPage: NextPageWithLayout = () => {
   }, [orderId]);
 
   useEffect(() => {
-    if (data?.attemptCapturePayment) {
-      const { status, order } = data.attemptCapturePayment;
-      if (status) {
-        setPaymentStatus(status);
-        if (["CAPTURED", "CANCELLED"].includes(status) && intervalRef.current) {
-          // We either sucessfully captured payment or the payment was somehow cancelled
-          clearInterval(intervalRef.current);
-        }
-      }
-      if (order) {
-        setOrder(order);
+    if (paymentStatus) {
+      if ([PaymentStatus.Captured, PaymentStatus.Cancelled].includes(paymentStatus) && intervalRef.current) {
+        // We either sucessfully captured payment or the payment was somehow cancelled
+        clearInterval(intervalRef.current);
       }
     }
     return () => {
       intervalRef.current && clearInterval(intervalRef.current);
     };
-  }, [data]);
+  }, [paymentStatus]);
 
   return (
     <Container>

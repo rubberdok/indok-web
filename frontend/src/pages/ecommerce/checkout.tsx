@@ -25,7 +25,7 @@ import React, { useState } from "react";
 
 import PayWithVipps from "@/components/pages/ecommerce/PayWithVipps";
 import SalesTermsDialog from "@/components/pages/ecommerce/SalesTermsDialog";
-import { ProductDocument, ProductFragment, UserInfoDocument } from "@/generated/graphql";
+import { ProductDocument, UserInfoDocument } from "@/generated/graphql";
 import Layout, { RootStyle } from "@/layouts/Layout";
 import { addApolloState, initializeApollo } from "@/lib/apolloClient";
 import { NextPageWithLayout } from "@/pages/_app";
@@ -35,19 +35,14 @@ const CheckoutPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getSer
   const { productId, quantityStr, redirect } = router.query;
   const quantity = typeof quantityStr == "string" ? parseInt(quantityStr) : 1;
 
-  const [product, setProduct] = useState<ProductFragment>();
   const [orderError, setOrderError] = useState<string>("");
   const [isConsentingTerms, setIsConsentingTerms] = useState(false);
   const [openSalesTerms, setOpenSalesTerms] = useState(false);
 
-  const { loading, error } = useQuery(ProductDocument, {
+  const { loading, error, data } = useQuery(ProductDocument, {
     variables: { productId: productId as string },
-    onCompleted: (data) => {
-      if (data.product) {
-        setProduct(data.product);
-      }
-    },
   });
+  const product = data?.product;
 
   return (
     <Container>
