@@ -876,7 +876,7 @@ export type OptionType = {
 export type OrderType = {
   __typename?: "OrderType";
   id: Scalars["UUID"];
-  paymentStatus?: Maybe<PaymentStatus>;
+  paymentStatus: PaymentStatus;
   product: ProductType;
   quantity: Scalars["Int"];
   timestamp: Scalars["DateTime"];
@@ -1538,7 +1538,7 @@ export type OrderFragment = {
   id: string;
   quantity: number;
   totalPrice: number;
-  paymentStatus?: PaymentStatus | null;
+  paymentStatus: PaymentStatus;
   timestamp: string;
   product: {
     __typename?: "ProductType";
@@ -1575,7 +1575,7 @@ export type AttemptCapturePaymentMutation = {
       id: string;
       quantity: number;
       totalPrice: number;
-      paymentStatus?: PaymentStatus | null;
+      paymentStatus: PaymentStatus;
       timestamp: string;
       product: {
         __typename?: "ProductType";
@@ -1614,7 +1614,7 @@ export type UserOrdersQuery = {
     id: string;
     quantity: number;
     totalPrice: number;
-    paymentStatus?: PaymentStatus | null;
+    paymentStatus: PaymentStatus;
     timestamp: string;
     product: {
       __typename?: "ProductType";

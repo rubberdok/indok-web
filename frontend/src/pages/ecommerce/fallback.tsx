@@ -56,7 +56,7 @@ const FallbackPage: NextPageWithLayout = () => {
     return () => {
       intervalRef.current && clearInterval(intervalRef.current);
     };
-  }, [orderId]);
+  }, [orderId, paymentStatus, attemptCapturePayment]);
 
   useEffect(() => {
     if (paymentStatus) {

@@ -46,8 +46,9 @@ const OrderCellContent: React.FC<Props> = ({ order, field }) => {
         case PaymentStatus.Rejected:
           content = "Avbrutt";
           break;
-        default:
-          content = order.paymentStatus ?? "";
+        case PaymentStatus.Refunded:
+          content = "Refundert";
+          break;
       }
       break;
     default:

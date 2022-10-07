@@ -22,7 +22,7 @@ PaymentStatus = graphene.Enum.from_enum(Order.PaymentStatus)
 
 
 class OrderType(DjangoObjectType):
-    payment_status = PaymentStatus()
+    payment_status = NonNull(PaymentStatus)
 
     class Meta:
         model = Order

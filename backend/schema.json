@@ -4021,9 +4021,13 @@
               "isDeprecated": false,
               "name": "paymentStatus",
               "type": {
-                "kind": "ENUM",
-                "name": "PaymentStatus",
-                "ofType": null
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "ENUM",
+                  "name": "PaymentStatus",
+                  "ofType": null
+                }
               }
             },
             {
