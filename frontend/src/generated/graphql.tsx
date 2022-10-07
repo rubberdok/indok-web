@@ -2417,6 +2417,10 @@ export type UserInfoQuery = {
   } | null;
 };
 
+export type ServerTimeQueryVariables = Exact<{ [key: string]: never }>;
+
+export type ServerTimeQuery = { __typename?: "Queries"; serverTime?: string | null };
+
 export const CabinFragmentDoc = {
   kind: "Document",
   definitions: [
@@ -4691,3 +4695,17 @@ export const UserInfoDocument = {
     ...UserFieldsFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<UserInfoQuery, UserInfoQueryVariables>;
+export const ServerTimeDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "serverTime" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [{ kind: "Field", name: { kind: "Name", value: "serverTime" } }],
+      },
+    },
+  ],
+} as unknown as DocumentNode<ServerTimeQuery, ServerTimeQueryVariables>;
