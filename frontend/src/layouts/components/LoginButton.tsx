@@ -4,8 +4,7 @@ import { Button } from "@mui/material";
 import NextLink from "next/link";
 
 import LoginRequired from "@/components/Auth/LoginRequired";
-import { GET_USER_INFO } from "@/graphql/users/queries";
-import { UserInfo } from "@/interfaces/users";
+import { UserDocument } from "@/generated/graphql";
 
 type Props = {
   fullWidth?: boolean;
@@ -13,7 +12,7 @@ type Props = {
 };
 
 const LoginButton: React.FC<Props> = ({ fullWidth, "data-test-id": dataTestId }) => {
-  const { data } = useQuery<{ user: UserInfo | null }>(GET_USER_INFO);
+  const { data } = useQuery(UserDocument);
 
   return (
     <LoginRequired size="medium" color="contrast" data-test-id={dataTestId} fullWidth={fullWidth}>

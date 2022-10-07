@@ -4,9 +4,7 @@ import { styled } from "@mui/material/styles";
 import Link from "next/link";
 import React from "react";
 
-import { GET_USER } from "@/graphql/users/queries";
-import { Organization } from "@/interfaces/organizations";
-import { User } from "@/interfaces/users";
+import { UserWithEventsAndOrgsDocument } from "@/generated/graphql";
 import Layout from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/pages/_app";
 import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "@/theme/constants";
@@ -20,7 +18,7 @@ const RootStyle = styled("div")(({ theme }) => ({
 }));
 
 const OrganizationPage: NextPageWithLayout = () => {
-  const { data } = useQuery<{ user: User }>(GET_USER);
+  const { data } = useQuery(UserWithEventsAndOrgsDocument);
 
   return (
     <RootStyle>
@@ -33,7 +31,7 @@ const OrganizationPage: NextPageWithLayout = () => {
           </Grid>
           <Grid item container spacing={10} justifyContent="center">
             {data?.user?.organizations ? (
-              data.user.organizations.map((org: Organization) => (
+              data.user.organizations.map((org) => (
                 <Grid item key={org.id}>
                   <Card>
                     <Link passHref href={`orgs/${org.id}`}>

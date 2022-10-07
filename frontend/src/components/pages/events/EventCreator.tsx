@@ -20,9 +20,13 @@ import {
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 
-import { AllCategoriesDocument, CreateEventDocument, CreateEventInput, EventInListFragment } from "@/generated/graphql";
-import { GET_USER } from "@/graphql/users/queries";
-import { User } from "@/interfaces/users";
+import {
+  AllCategoriesDocument,
+  CreateEventDocument,
+  CreateEventInput,
+  EventInListFragment,
+  UserWithEventsAndOrgsDocument,
+} from "@/generated/graphql";
 
 /**
  * Component for the creating a new event
@@ -81,7 +85,7 @@ const CreateEvent: React.FC = () => {
     loading: userLoading,
     error: userError,
     data: userData,
-  } = useQuery<{ user: User }>(GET_USER, {
+  } = useQuery(UserWithEventsAndOrgsDocument, {
     onCompleted: ({ user }) => {
       if (!eventData.organizationId) {
         setEventData((prevData) => ({ ...prevData, organizationId: user?.organizations[0]?.id ?? "" }));
