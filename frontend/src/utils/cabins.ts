@@ -3,35 +3,33 @@ import isBetween from "dayjs/plugin/isBetween";
 import validator from "validator";
 import * as Yup from "yup";
 
-import { BookingSemester } from "@/components/pages/cabins/Admin/BookingSemesterPicker";
 import {
-  BasicBooking,
-  Cabin,
-  ContactInfo,
-  ContactInfoValidations,
-  BookingFromQuery,
-  DatePick,
-  EmailAndBookingInput,
-} from "@/interfaces/cabins";
+  AdminBookingFragment,
+  BookingInput,
+  BookingSemesterFragment,
+  CabinFragment,
+  EmailInput,
+  SendEmailMutationVariables,
+} from "@/generated/graphql";
+import { BasicBooking, ContactInfo, ContactInfoValidations, DatePick } from "@/types/cabins";
+
 dayjs.extend(isBetween);
 
 /*
 File containing helper functions for cabins.
 */
 
-export const validateName: (name: string) => boolean = (name) => name?.length > 0;
+export const validateName = (name: string): boolean => name?.length > 0;
 
-export const validateEmail: (email: string) => boolean = (email) => (email ? validator.isEmail(email) : false);
+export const validateEmail = (email: string): boolean => (email ? validator.isEmail(email) : false);
 
-export const validateSelect: (internalParticipants: number, externalParticipants: number) => boolean = (
-  internalParticipants,
-  externalParticipants
-) => internalParticipants > 0 || externalParticipants > 0;
+export const validateSelect = (internalParticipants: number, externalParticipants: number): boolean =>
+  internalParticipants > 0 || externalParticipants > 0;
 
 export const validatePhone: (phone: string) => boolean = (phone) =>
   phone ? validator.isMobilePhone(phone, "nb-NO") : false;
 
-export const validateInputForm: (inputValues: ContactInfo) => ContactInfoValidations = (inputValues) => {
+export const validateInputForm = (inputValues: ContactInfo): ContactInfoValidations => {
   const selectValidity = validateSelect(inputValues.internalParticipants, inputValues.externalParticipants);
   return {
     firstName: validateName(inputValues.firstName),
@@ -43,12 +41,12 @@ export const validateInputForm: (inputValues: ContactInfo) => ContactInfoValidat
   };
 };
 
-export const isFormValid: (inputValues: ContactInfo) => boolean = (inputValues) => {
+export const isFormValid = (inputValues: ContactInfo): boolean => {
   const validations = validateInputForm(inputValues);
   return Object.values(validations).every((val) => val);
 };
 
-export const allValuesFilled: (contactInfo: ContactInfo) => boolean = (contactInfo) => {
+export const allValuesFilled = (contactInfo: ContactInfo): boolean => {
   const selectValidity = validateSelect(contactInfo.internalParticipants, contactInfo.externalParticipants);
   const nonSelectContactInfo: BasicBooking = contactInfo;
   const filled = Object.values(nonSelectContactInfo).filter((info) => info != "");
@@ -56,10 +54,10 @@ export const allValuesFilled: (contactInfo: ContactInfo) => boolean = (contactIn
   return selectValidity && filled.length == Object.keys(nonSelectContactInfo).length;
 };
 
-export const cabinOrderStepReady: (
-  chosenCabins: Cabin[],
+export const cabinOrderStepReady = (
+  chosenCabins: CabinFragment[],
   datePick: DatePick
-) => { ready: boolean; errortext: string } = (chosenCabins, datePick) => {
+): { ready: boolean; errortext: string } => {
   // At least one cabin has to be selected
   if (chosenCabins.length == 0) {
     return { ready: false, errortext: "Du må velge minst en hytte å booke" };
@@ -79,14 +77,14 @@ export const cabinOrderStepReady: (
   return { ready: true, errortext: "" };
 };
 
-export const toStringChosenCabins: (chosenCabins: Cabin[]) => string[] = (chosenCabins) =>
+export const toStringChosenCabins = (chosenCabins: Pick<CabinFragment, "name">[]): string[] =>
   chosenCabins.map((cabin, i) => (i > 0 ? " og " + cabin.name : cabin.name));
 
-export const calculatePrice: (
-  chosenCabins: Cabin[],
+export const calculatePrice = (
+  chosenCabins: CabinFragment[],
   contactInfo: ContactInfo,
   datePick: DatePick
-) => number | undefined = (chosenCabins, contactInfo, datePick) => {
+): number | undefined => {
   const internalPrice = contactInfo.internalParticipants >= contactInfo.externalParticipants;
   const pricePerNight = chosenCabins
     .map((cabin) => (internalPrice ? cabin.internalPrice : cabin.externalPrice))
@@ -99,9 +97,13 @@ export const calculatePrice: (
   }
 };
 
-export const convertDateFormat: (date?: string) => string = (date) => dayjs(date).format("DD-MM-YYYY");
+export const convertDateFormat = (date?: string): string => dayjs(date).format("DD-MM-YYYY");
 
-export const getDecisionEmailProps = (booking: BookingFromQuery, approved: boolean, declineMessage?: string) => {
+export const getDecisionEmailInput = (
+  booking: AdminBookingFragment,
+  approved: boolean,
+  declineMessage?: string
+): SendEmailMutationVariables => {
   // omit unwanted fields
   const { checkIn, checkOut, externalParticipants, firstName, internalParticipants, lastName, phone, receiverEmail } =
     booking;
@@ -122,15 +124,15 @@ export const getDecisionEmailProps = (booking: BookingFromQuery, approved: boole
     extraInfo: declineMessage,
   };
 
-  return { variables: { emailInput: emailInput } };
+  return { emailInput };
 };
 
-export const generateEmailAndBookingInput: (
+export const generateEmailAndBookingInput = (
   contactInfo: ContactInfo,
   datePick: DatePick,
-  chosenCabins: Cabin[],
+  chosenCabins: CabinFragment[],
   extraInfo: string
-) => EmailAndBookingInput = (contactInfo, datePick, chosenCabins, extraInfo) => {
+): EmailInput & BookingInput => {
   return {
     ...contactInfo,
     cabins: chosenCabins.map((cabin) => parseInt(cabin.id)),
@@ -143,7 +145,7 @@ export const generateEmailAndBookingInput: (
 /* 
   Checks if a date is within the fall or spring booking semester.
 */
-export const dateInBookingSemester = (date: dayjs.Dayjs, bookingSemester: BookingSemester): boolean => {
+export const dateInBookingSemester = (date: dayjs.Dayjs, bookingSemester: BookingSemesterFragment): boolean => {
   const inFallSemester = date.isBetween(bookingSemester.fallStartDate, bookingSemester.fallEndDate, null, "[]");
   const inSpringSemester = date.isBetween(bookingSemester.springStartDate, bookingSemester.springEndDate, null, "[]");
 

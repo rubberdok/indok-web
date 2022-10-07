@@ -3,10 +3,12 @@ import dayjs from "dayjs";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
-import { Order } from "@/interfaces/ecommerce";
+import { OrderFragment, PaymentStatus } from "@/generated/graphql";
 import { HeaderValuePair } from "@/interfaces/utils";
 
-const OrderCellContent = ({ order, field }: { order: Order; field: HeaderValuePair<Order> }) => {
+type Props = { order: OrderFragment; field: HeaderValuePair<OrderFragment> };
+
+const OrderCellContent: React.FC<Props> = ({ order, field }) => {
   const router = useRouter();
 
   let content: string;
@@ -29,16 +31,25 @@ const OrderCellContent = ({ order, field }: { order: Order; field: HeaderValuePa
       content = dayjs(order.timestamp).format("DD/MM/YYYY, HH:mm");
       break;
     case "Status":
-      content =
-        order.paymentStatus == "CAPTURED"
-          ? "Fullført"
-          : order.paymentStatus == "RESERVED"
-          ? "Betalt"
-          : order.paymentStatus == "INITIATED"
-          ? "Påbegynt"
-          : ["FAILED", "CANCELLED", "REJECTED"].includes(order.paymentStatus)
-          ? "Avbrutt"
-          : order.paymentStatus;
+      switch (order.paymentStatus) {
+        case PaymentStatus.Captured:
+          content = "Fullført";
+          break;
+        case PaymentStatus.Reserved:
+          content = "Betalt";
+          break;
+        case PaymentStatus.Initiated:
+          content = "Påbegynt";
+          break;
+        case PaymentStatus.Failed:
+        case PaymentStatus.Cancelled:
+        case PaymentStatus.Rejected:
+          content = "Avbrutt";
+          break;
+        case PaymentStatus.Refunded:
+          content = "Refundert";
+          break;
+      }
       break;
     default:
       content = `${order[field.field]}`;
