@@ -16,7 +16,7 @@ type Props = {
  */
 const AnswerCheckboxes: React.FC<Props> = ({ answer, question, onAnswerChange }) => {
   // state to manage which options are selected
-  const [selectedOptions, selectOptions] = useState<OptionFragment[]>(
+  const [selectedOptions, setSelectedOptions] = useState<OptionFragment[]>(
     question.options ? question.options?.filter((option) => answer.split("|||").includes(option.answer)) : []
   );
 
@@ -44,11 +44,11 @@ const AnswerCheckboxes: React.FC<Props> = ({ answer, question, onAnswerChange })
               onChange={(e) => {
                 if (e.target.checked) {
                   if (!selectedOptions.includes(option)) {
-                    selectOptions([...selectedOptions, option]);
+                    setSelectedOptions([...selectedOptions, option]);
                   }
                 } else {
                   if (selectedOptions.includes(option)) {
-                    selectOptions(selectedOptions.filter((selectedOption) => selectedOption !== option));
+                    setSelectedOptions(selectedOptions.filter((selectedOption) => selectedOption !== option));
                   }
                 }
               }}

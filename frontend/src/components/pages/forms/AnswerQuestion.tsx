@@ -49,7 +49,7 @@ const AnswerQuestion: React.FC<Props> = ({ answer, question, onAnswerChange }) =
       return <p>To be implemented</p>;
   }
 
-  return <></>;
+  return null;
 };
 
 export default AnswerQuestion;

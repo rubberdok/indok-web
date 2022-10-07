@@ -11,8 +11,8 @@ import FormResponse from "@/components/pages/forms/formAdmin/FormResponse";
 import OrganizationListing from "@/components/pages/listings/organization/OrganizationListing";
 import {
   CreateFormDocument,
+  FormWithAllResponsesFragmentDoc,
   ListingWithResponsesDocument,
-  ListingWithResponsesFragmentDoc,
   ResponseFragment,
 } from "@/generated/graphql";
 import Layout from "@/layouts/Layout";
@@ -36,28 +36,24 @@ const ListingAdminPage: NextPageWithLayout = () => {
 
   // fetches the listing along with all users who have applied to it, using URL parameter as argument
   const { loading, error, data } = useQuery(ListingWithResponsesDocument, { variables: { id: listingId as string } });
+  console.log({ loading, data, error, listingId });
 
   // mutation to create a new form
   const [createForm] = useMutation(CreateFormDocument, {
     // updates the cache so the new form can show instantly
     update: (cache, { data }) => {
-      // gets the new form from the mutation's return
       const newForm = data?.createForm?.form;
-      // reads the cached listing to which to add the form
-      const cachedListing = cache.readFragment({
-        id: `ListingType:${listingId as string}`,
-        fragment: ListingWithResponsesFragmentDoc,
-        fragmentName: "ListingWithResponses",
-      });
-      if (newForm && cachedListing) {
-        // writes the form to the cached listing
-        cache.writeFragment({
-          id: `ListingType:${listingId as string}`,
-          fragment: ListingWithResponsesFragmentDoc,
-          fragmentName: "ListingWithResponses",
-          data: {
-            ...cachedListing,
-            form: newForm,
+      if (newForm) {
+        cache.modify({
+          id: `ListingType:${listingId}`,
+          fields: {
+            form() {
+              return cache.writeFragment({
+                data: newForm,
+                fragment: FormWithAllResponsesFragmentDoc,
+                fragmentName: "FormWithAllResponses",
+              });
+            },
           },
         });
       }

@@ -1,6 +1,7 @@
-import { useMutation } from "@apollo/client";
+import { Reference, useMutation } from "@apollo/client";
 import { Add } from "@mui/icons-material";
 import { Button, Card, CardContent, FormHelperText, Grid, Typography } from "@mui/material";
+import { orderBy } from "lodash";
 import { useState } from "react";
 
 import ConfirmFormChange from "@/components/pages/forms/formAdmin/ConfirmFormChange";
@@ -10,9 +11,9 @@ import {
   CreateQuestionDocument,
   DeleteQuestionDocument,
   FormWithAllResponsesFragment,
-  FormWithAllResponsesFragmentDoc,
   QuestionTypeEnum,
   QuestionWithAnswerIdsFragment,
+  QuestionWithAnswerIdsFragmentDoc,
   UpdateQuestionDocument,
 } from "@/generated/graphql";
 
@@ -37,23 +38,19 @@ const EditForm: React.FC<Props> = ({ form }) => {
   const [createQuestion] = useMutation(CreateQuestionDocument, {
     // updates the cache upon creating the question, keeping the client consistent with the database
     update: (cache, { data }) => {
-      // gets the new question from the mutation's return
-      const newQuestion = data?.createQuestion?.question;
-      // reads the cached form on which to update the question
-      const cachedForm = cache.readFragment({
-        id: `FormType:${form.id}`,
-        fragment: FormWithAllResponsesFragmentDoc,
-        fragmentName: "FormWithAllResponses",
-      });
-      if (cachedForm && newQuestion) {
-        // adds the new question to the questions field of the cached form
-        cache.writeFragment({
-          id: `FormType:${form.id}`,
-          fragment: FormWithAllResponsesFragmentDoc,
-          fragmentName: "FormWithAllResponses",
-          data: {
-            ...cachedForm,
-            questions: [...cachedForm.questions, newQuestion],
+      const question = data?.createQuestion?.question;
+      if (question) {
+        cache.modify({
+          id: cache.identify(form),
+          fields: {
+            questions(existingQuestions: Reference[] = []) {
+              const newQuestionRef = cache.writeFragment({
+                data: question,
+                fragment: QuestionWithAnswerIdsFragmentDoc,
+                fragmentName: "QuestionWithAnswerIds",
+              });
+              return [...existingQuestions, newQuestionRef];
+            },
           },
         });
       }
@@ -66,51 +63,16 @@ const EditForm: React.FC<Props> = ({ form }) => {
   });
 
   // mutation to update a question (and its options)
-  const [updateQuestion] = useMutation(UpdateQuestionDocument, {
-    // updates the cache upon updating the question
-    update: (cache, { data }) => {
-      const newQuestion = data?.updateQuestion?.question;
-      const cachedForm = cache.readFragment({
-        id: `FormType:${form.id}`,
-        fragment: FormWithAllResponsesFragmentDoc,
-        fragmentName: "FormWithAllResponses",
-      });
-      if (cachedForm && newQuestion) {
-        cache.writeFragment({
-          id: `FormType:${form.id}`,
-          fragment: FormWithAllResponsesFragmentDoc,
-          fragmentName: "FormWithAllResponses",
-          data: {
-            ...cachedForm,
-            questions: cachedForm.questions.map((question) =>
-              question.id === newQuestion.id ? newQuestion : question
-            ),
-          },
-        });
-      }
-    },
-  });
+  const [updateQuestion] = useMutation(UpdateQuestionDocument);
 
   // mutation to delete the question
   const [deleteQuestion] = useMutation(DeleteQuestionDocument, {
     // updates the cache upon deleting the question
     update: (cache, { data }) => {
-      const cachedForm = cache.readFragment({
-        id: `FormType:${form.id}`,
-        fragment: FormWithAllResponsesFragmentDoc,
-        fragmentName: "FormWithAllResponses",
-      });
       const deletedId = data?.deleteQuestion?.deletedId;
-      if (cachedForm && deletedId) {
-        cache.writeFragment({
-          id: `FormType:${form.id}`,
-          fragment: FormWithAllResponsesFragmentDoc,
-          fragmentName: "FormWithAllResponses",
-          data: {
-            ...cachedForm,
-            questions: cachedForm.questions.filter((question) => question.id !== deletedId),
-          },
-        });
+      if (deletedId) {
+        cache.evict({ id: `QuestionType:${deletedId}` });
+        cache.gc();
       }
     },
   });
@@ -210,27 +172,25 @@ const EditForm: React.FC<Props> = ({ form }) => {
             </CardContent>
           </Card>
         </Grid>
-        {form.questions
+        {orderBy(form.questions, ["id"], ["asc"]).map((question) => (
           // sorts questions by ID (hacky solution to maintain question order until we implement order field)
-          .sort((q1, q2) => (parseInt(q1.id) || 0) - (parseInt(q2.id) || 0))
-          .map((question) => (
-            <Grid item key={question.id}>
-              <Card>
-                <CardContent>
-                  {question.id === activeQuestion?.id ? (
-                    <EditQuestion
-                      question={activeQuestion}
-                      setQuestion={(question) => setActiveQuestion(question)}
-                      saveQuestion={() => switchActiveQuestion(undefined)}
-                      deleteQuestion={deleteActiveQuestion}
-                    />
-                  ) : (
-                    <QuestionPreview question={question} setActive={() => switchActiveQuestion(question)} />
-                  )}
-                </CardContent>
-              </Card>
-            </Grid>
-          ))}
+          <Grid item key={question.id}>
+            <Card>
+              <CardContent>
+                {question.id === activeQuestion?.id ? (
+                  <EditQuestion
+                    question={activeQuestion}
+                    setQuestion={(question) => setActiveQuestion(question)}
+                    saveQuestion={() => switchActiveQuestion(undefined)}
+                    deleteQuestion={deleteActiveQuestion}
+                  />
+                ) : (
+                  <QuestionPreview question={question} setActive={() => switchActiveQuestion(question)} />
+                )}
+              </CardContent>
+            </Card>
+          </Grid>
+        ))}
         <Grid item>
           <Button
             fullWidth

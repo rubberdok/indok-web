@@ -9,9 +9,7 @@ import { FormWithAnswersFragment, QuestionWithAnswerFragment, SubmitAnswersDocum
 import AnswerQuestion from "./AnswerQuestion";
 
 // interface for the state of answers before pushing to the database
-type Questions = {
-  [key: string]: { question: QuestionWithAnswerFragment; answer: string };
-};
+type Questions = Record<string, { question: QuestionWithAnswerFragment; answer: string }>;
 
 type Props = { form: FormWithAnswersFragment };
 
