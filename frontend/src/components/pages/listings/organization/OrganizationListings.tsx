@@ -35,7 +35,6 @@ const OrganizationListings: React.FC<{
     <>
       <DeleteListing
         listing={listingToDelete}
-        organizationId={parseInt(organization.id)}
         onClose={() => {
           setListingToDelete(undefined);
         }}

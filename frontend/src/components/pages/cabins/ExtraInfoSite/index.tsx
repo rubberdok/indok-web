@@ -1,11 +1,12 @@
 import { Box, Divider, Hidden, Stack, TextField, Typography } from "@mui/material";
 
-import { Cabin, DatePick } from "@/interfaces/cabins";
+import { CabinFragment } from "@/generated/graphql";
+import { DatePick } from "@/types/cabins";
 import { convertDateFormat, toStringChosenCabins } from "@/utils/cabins";
 
 type Props = {
   setExtraInfo: React.Dispatch<React.SetStateAction<string>>;
-  chosenCabins: Cabin[];
+  chosenCabins: CabinFragment[];
   datePick: DatePick;
 };
 

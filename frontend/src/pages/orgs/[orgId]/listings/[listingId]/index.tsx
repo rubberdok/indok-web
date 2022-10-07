@@ -9,18 +9,15 @@ import React, { useState } from "react";
 import EditForm from "@/components/pages/forms/formAdmin/EditForm";
 import FormResponse from "@/components/pages/forms/formAdmin/FormResponse";
 import OrganizationListing from "@/components/pages/listings/organization/OrganizationListing";
-import { CREATE_FORM } from "@/graphql/forms/mutations";
-import { LISTING_RESPONSES_FRAGMENT } from "@/graphql/listings/fragments";
-import { LISTING_RESPONSES } from "@/graphql/listings/queries";
-import { Form, Response } from "@/interfaces/forms";
-import { ListingWithForm } from "@/interfaces/listings";
+import {
+  CreateFormDocument,
+  FormWithAllResponsesFragmentDoc,
+  ListingWithResponsesDocument,
+  ResponseFragment,
+} from "@/generated/graphql";
 import Layout from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/pages/_app";
 import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "@/theme/constants";
-
-/**
- * Page for organization admins to administer a listing, edit its application form, and review applicants.
- */
 
 const RootStyle = styled("div")(({ theme }) => ({
   paddingTop: HEADER_MOBILE_HEIGHT,
@@ -30,54 +27,56 @@ const RootStyle = styled("div")(({ theme }) => ({
   },
 }));
 
+/** Page for organization admins to administer a listing, edit its application form, and review applicants. */
 const ListingAdminPage: NextPageWithLayout = () => {
   const { orgId, listingId } = useRouter().query;
 
   // state to determine whether to show the response or the listing/form view
-  const [selectedView, selectView] = useState<Response | "listing">("listing");
+  const [selectedView, selectView] = useState<ResponseFragment | "listing">("listing");
 
   // fetches the listing along with all users who have applied to it, using URL parameter as argument
-  const { loading, error, data } = useQuery<{ listing: ListingWithForm }>(LISTING_RESPONSES, {
-    variables: {
-      id: listingId as string,
-    },
-  });
+  const { loading, error, data } = useQuery(ListingWithResponsesDocument, { variables: { id: listingId as string } });
+  console.log({ loading, data, error, listingId });
 
   // mutation to create a new form
-  const [createForm] = useMutation<
-    // interface of formData returned from mutation
-    { createForm: { ok: boolean; form: Form } },
-    // interface for variables passed to createForm
-    { name: string; description: string; listingId: string; organizationId: string }
-  >(CREATE_FORM, {
+  const [createForm] = useMutation(CreateFormDocument, {
     // updates the cache so the new form can show instantly
     update: (cache, { data }) => {
-      // gets the new form from the mutation's return
-      const newForm = data?.createForm.form;
-      // reads the cached listing to which to add the form
-      const cachedListing = cache.readFragment<ListingWithForm>({
-        id: `ListingType:${listingId as string}`,
-        fragment: LISTING_RESPONSES_FRAGMENT,
-        fragmentName: "ListingResponsesFragment",
-      });
-      if (newForm && cachedListing) {
-        // writes the form to the cached listing
-        cache.writeFragment({
-          id: `ListingType:${listingId as string}`,
-          fragment: LISTING_RESPONSES_FRAGMENT,
-          fragmentName: "ListingResponsesFragment",
-          data: {
-            form: newForm,
+      const newForm = data?.createForm?.form;
+      if (newForm) {
+        cache.modify({
+          id: `ListingType:${listingId}`,
+          fields: {
+            form() {
+              return cache.writeFragment({
+                data: newForm,
+                fragment: FormWithAllResponsesFragmentDoc,
+                fragmentName: "FormWithAllResponses",
+              });
+            },
           },
         });
       }
     },
   });
 
+  const onCreateFormClick = () => {
+    const listing = data?.listing;
+    if (listing) {
+      createForm({
+        variables: {
+          formData: { name: `Søknad: ${listing.title}`, description: "", organizationId: orgId as string },
+          listingId: listing.id,
+        },
+      });
+    }
+  };
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error</p>;
 
-  // renders an overview of applicants, and either an applicant's application or the listing itself (along with its form, or a button to create one)
+  // renders an overview of applicants, and either an applicant's application or the listing itself
+  // (along with its form, or a button to create one)
   return (
     <RootStyle>
       <Container>
@@ -91,7 +90,7 @@ const ListingAdminPage: NextPageWithLayout = () => {
                   </Button>
                 </Link>
               </Grid>
-              {data?.listing.form?.responses && (
+              {data?.listing?.form?.responses && (
                 <Grid item>
                   <Card>
                     {data.listing.form.responses.length > 0 ? (
@@ -139,7 +138,7 @@ const ListingAdminPage: NextPageWithLayout = () => {
               )}
             </Grid>
           </Grid>
-          {data && (
+          {data?.listing && (
             <Grid item xs={8}>
               {selectedView === "listing" ? (
                 <Grid container direction="column" spacing={1}>
@@ -150,21 +149,7 @@ const ListingAdminPage: NextPageWithLayout = () => {
                     {data.listing.form ? (
                       <EditForm form={data.listing.form} />
                     ) : (
-                      <Button
-                        fullWidth
-                        variant="contained"
-                        color="primary"
-                        onClick={() => {
-                          createForm({
-                            variables: {
-                              name: `Søknad: ${data.listing.title}`,
-                              description: "",
-                              listingId: data.listing.id,
-                              organizationId: orgId as string,
-                            },
-                          });
-                        }}
-                      >
+                      <Button fullWidth variant="contained" color="primary" onClick={onCreateFormClick}>
                         Lag søknad
                       </Button>
                     )}

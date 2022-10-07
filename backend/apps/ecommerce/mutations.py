@@ -10,7 +10,7 @@ from apps.organizations.models import Organization
 from apps.organizations.permissions import check_user_membership
 
 from .models import Order, Product
-from .types import OrderType, ProductType
+from .types import OrderType, PaymentStatus, ProductType
 from .vipps_utils import VippsApi
 
 
@@ -97,7 +97,7 @@ class AttemptCapturePayment(graphene.Mutation):
     # Polling request to capture payment in case callback does not succeed
     # Also returns payment status
 
-    status = graphene.String()
+    status = PaymentStatus()
     order = graphene.Field(OrderType)
     vipps_api = VippsApi()
 

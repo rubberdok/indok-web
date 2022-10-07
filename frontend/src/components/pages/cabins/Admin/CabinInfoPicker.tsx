@@ -1,11 +1,9 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { Alert, Button, Grid, Snackbar, TextField, Typography } from "@mui/material";
 import { useFormik } from "formik";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-import { UPDATE_CABIN } from "@/graphql/cabins/mutations";
-import { QUERY_CABINS } from "@/graphql/cabins/queries";
-import { Cabin } from "@/interfaces/cabins";
+import { CabinsDocument, UpdateCabinDocument, UpdateCabinInput } from "@/generated/graphql";
 import { cabinInfoValidationSchema } from "@/utils/cabins";
 
 type FormikCabinValues = {
@@ -17,19 +15,10 @@ type FormikCabinValues = {
   bjornenMaxGuests?: number;
 };
 
-const getCabinData = (cabin?: Partial<Cabin>) => {
-  return {
-    name: cabin?.name,
-    maxGuests: cabin?.maxGuests,
-    internalPrice: cabin?.internalPrice,
-    externalPrice: cabin?.externalPrice,
-  };
-};
-
 /** Component for editing cabin information. Only used on the admin page. */
 const CabinInfoPicker: React.VFC = () => {
-  const cabinQuery = useQuery<{ cabins: Cabin[] }>(QUERY_CABINS);
-  const [updateCabin] = useMutation<{ cabinData: Cabin }>(UPDATE_CABIN, {
+  const cabinQuery = useQuery(CabinsDocument);
+  const [updateCabin] = useMutation(UpdateCabinDocument, {
     onError: () => {
       setAlertSeverity("error");
       setSnackbarMessage("En feilmelding oppstod.");
@@ -44,35 +33,29 @@ const CabinInfoPicker: React.VFC = () => {
   });
 
   const cabins = cabinQuery?.data?.cabins;
-  const [bjornen, setBjornen] = useState<Cabin>();
-  const [oksen, setOksen] = useState<Cabin>();
+  const bjornen = cabins?.find((cabin) => cabin.name === "Bjørnen");
+  const oksen = cabins?.find((cabin) => cabin.name === "Oksen");
+
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [alertSeverity, setAlertSeverity] = useState<"success" | "error">("success");
 
-  useEffect(() => {
-    if (cabins) {
-      setBjornen(cabins?.find((cabin) => cabin.name == "Bjørnen"));
-      setOksen(cabins?.find((cabin) => cabin.name == "Oksen"));
-    }
-  }, [cabins]);
-
   const handleUpdate = (values: FormikCabinValues) => {
-    const oksenData: Partial<Cabin> = {
+    const oksenData: UpdateCabinInput = {
       name: "Oksen",
       internalPrice: values.oksenInternalPrice,
       externalPrice: values.oksenExternalPrice,
       maxGuests: values.oksenMaxGuests,
     };
-    const bjornenData: Partial<Cabin> = {
+    const bjornenData: UpdateCabinInput = {
       name: "Bjørnen",
       internalPrice: values.bjornenInternalPrice,
       externalPrice: values.bjornenExternalPrice,
       maxGuests: values.bjornenMaxGuests,
     };
 
-    updateCabin({ variables: { cabinData: getCabinData(oksenData) } });
-    updateCabin({ variables: { cabinData: getCabinData(bjornenData) } });
+    updateCabin({ variables: { cabinData: oksenData } });
+    updateCabin({ variables: { cabinData: bjornenData } });
   };
 
   const formik = useFormik({

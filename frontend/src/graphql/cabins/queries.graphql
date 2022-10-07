@@ -1,41 +1,30 @@
-query AllBookings {
-  allBookings {
-    id
-    checkIn
-    checkOut
-    cabins {
-      id
-      name
-    }
-  }
-}
-
-query AdminAllBookings($after: String) {
-  adminAllBookings(after: $after) {
-    id
-    firstName
-    lastName
-    phone
-    receiverEmail
-    checkIn
-    checkOut
-    cabins {
-      id
-      name
-    }
-    externalParticipants
-    internalParticipants
-    price
-    isTentative
-  }
-}
-
-query CabinsAndResponsibles {
+query cabins {
   cabins {
-    id
-    name
-    internalPrice
-    externalPrice
+    ...Cabin
+  }
+}
+
+query allBookings {
+  allBookings {
+    ...Booking
+  }
+}
+
+query adminAllBookings($after: String) {
+  adminAllBookings(after: $after) {
+    ...AdminBooking
+  }
+}
+
+query activeBookingResponsible {
+  activeBookingResponsible {
+    ...BookingResponsible
+  }
+}
+
+query cabinsAndResponsibles {
+  cabins {
+    ...Cabin
   }
   activeBookingResponsible {
     id
@@ -43,12 +32,8 @@ query CabinsAndResponsibles {
   }
 }
 
-query ActiveBookingResponsible {
-  activeBookingResponsible {
-    id
-    active
-    firstName
-    lastName
-    email
+query bookingSemester {
+  bookingSemester {
+    ...BookingSemester
   }
 }

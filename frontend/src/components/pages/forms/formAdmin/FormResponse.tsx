@@ -1,19 +1,12 @@
 import { Card, CardContent, FormHelperText, Grid, Typography } from "@mui/material";
 
 import FormAnswer from "@/components/pages/forms/formAdmin/FormAnswer";
-import { Form, Response } from "@/interfaces/forms";
+import { FormWithAllResponsesFragment, ResponseFragment } from "@/generated/graphql";
 
-/**
- * Component to see a user's answers to a form.
- *
- * Props:
- * - the answered form
- * - the response from an applicant
- */
-const FormResponse: React.FC<{
-  form: Form;
-  response: Response;
-}> = ({ form, response }) => {
+type Props = { form: FormWithAllResponsesFragment; response: ResponseFragment };
+
+/** Component to see a user's answers to a form. */
+const FormResponse: React.FC<Props> = ({ form, response }) => {
   return (
     <Grid container direction="column" spacing={1}>
       <Grid item>

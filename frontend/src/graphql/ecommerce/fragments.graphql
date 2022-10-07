@@ -1,0 +1,18 @@
+fragment Product on ProductType {
+  id
+  name
+  description
+  price
+  maxBuyableQuantity
+}
+
+fragment Order on OrderType {
+  id
+  quantity
+  totalPrice
+  paymentStatus
+  timestamp
+  product {
+    ...Product
+  }
+}

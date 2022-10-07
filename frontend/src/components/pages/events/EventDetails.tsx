@@ -42,9 +42,9 @@ import {
   EventDocument,
   EventSignOffDocument,
   EventSignUpDocument,
+  ServerTimeDocument,
   UserWithEventsAndOrgsDocument,
 } from "@/generated/graphql";
-import { GET_SERVER_TIME } from "@/graphql/utils/time/queries";
 import { calendarFile } from "@/utils/calendars";
 
 import CountdownButton from "./CountdownButton";
@@ -92,9 +92,7 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
 
   const { data: userData } = useQuery(UserWithEventsAndOrgsDocument);
 
-  const { data: timeData } = useQuery<{ serverTime: string }>(GET_SERVER_TIME, {
-    fetchPolicy: "network-only",
-  });
+  const { data: timeData } = useQuery(ServerTimeDocument, { fetchPolicy: "network-only" });
 
   const {
     data: eventData,
@@ -197,7 +195,7 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
                         onChange={(e) => setExtraInformation(e.target.value)}
                       />
                     )}
-                  {timeData && event.deadline && dayjs(event.deadline).isAfter(dayjs()) && (
+                  {timeData?.serverTime && event.deadline && dayjs(event.deadline).isAfter(dayjs()) && (
                     <Stack spacing={2}>
                       <CountdownButton
                         countDownDate={event.signupOpenDate ?? ""}
