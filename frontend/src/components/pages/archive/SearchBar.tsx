@@ -2,12 +2,6 @@ import { Search } from "@mui/icons-material";
 import { InputAdornment, OutlinedInput, Toolbar } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
-interface SearchBarProps {
-  searchFilter: string;
-  handleSearchFilterChanged: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  handleSearchFilterCanceled: () => void;
-}
-
 const RootStyle = styled(Toolbar)(() => ({
   height: 56,
   display: "flex",
@@ -27,7 +21,13 @@ const SearchStyle = styled(OutlinedInput)(({ theme }) => ({
   },
 }));
 
-const SearchBar: React.FC<SearchBarProps> = ({ searchFilter, handleSearchFilterChanged }) => {
+type Props = {
+  searchFilter: string;
+  handleSearchFilterChanged: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  handleSearchFilterCanceled: () => void;
+};
+
+const SearchBar: React.FC<Props> = ({ searchFilter, handleSearchFilterChanged }) => {
   return (
     <RootStyle>
       <SearchStyle

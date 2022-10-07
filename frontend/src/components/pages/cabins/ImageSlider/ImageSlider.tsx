@@ -10,15 +10,13 @@ import SwipeableViews from "react-swipeable-views";
 
 import { ImageData } from "./imageData";
 
-interface ImageSliderProps {
+type Props = {
   imageData: ImageData[];
   displayLabelText: boolean;
-}
+};
 
-/*
-Carousel compoent for showing images
-*/
-const ImageSlider: React.VFC<ImageSliderProps> = ({ imageData, displayLabelText }) => {
+/** Carousel compoent for showing images. */
+const ImageSlider: React.VFC<Props> = ({ imageData, displayLabelText }) => {
   const theme = useTheme();
   const [activeStep, setActiveStep] = React.useState(0);
 

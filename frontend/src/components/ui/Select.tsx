@@ -1,19 +1,19 @@
 import { FocusEventHandler } from "react";
 
-interface SelectProps {
+type SelectItem = {
+  name: string;
+  value: string | number | undefined;
+  selected?: boolean;
+};
+
+type Props = {
   name: string;
   items: SelectItem[];
   placeholder?: string;
   onChange: FocusEventHandler<HTMLSelectElement>;
-}
+};
 
-interface SelectItem {
-  name: string;
-  value: string | number | undefined;
-  selected?: boolean;
-}
-
-const Select: React.FC<SelectProps> = ({ name, items, placeholder, onChange }) => {
+const Select: React.FC<Props> = ({ name, items, placeholder, onChange }) => {
   return (
     <div>
       <h6 style={{ marginBottom: 0, marginTop: 0 }}>{`${name}:`}</h6>

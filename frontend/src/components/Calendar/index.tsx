@@ -12,16 +12,16 @@ import CalendarTable from "./CalendarTable";
 import { DATE_FORMAT } from "./constants";
 import { getDateRange } from "./helpers";
 
-interface CalendarProps {
+type Props = {
   disabledDates?: string[];
   disableAll?: boolean;
   disableBefore?: string;
   disableAfter?: string;
   title?: string;
   onRangeChange?: (fromDate: string | undefined, toDate: string | undefined, validRange: boolean) => void;
-}
+};
 
-const Calendar: React.FC<CalendarProps> = ({
+const Calendar: React.FC<Props> = ({
   disabledDates,
   disableAll,
   disableBefore,

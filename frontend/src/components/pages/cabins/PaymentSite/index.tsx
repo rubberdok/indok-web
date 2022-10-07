@@ -6,15 +6,16 @@ import { ContactInfo, DatePick } from "@/types/cabins";
 
 import CabinBookingStatus from "../CabinBookingStatus";
 
-interface Props {
+type Props = {
   chosenCabins: CabinFragment[];
   datePick: DatePick;
   contactInfo: ContactInfo;
-}
-/*
-One of the steps in the cabins/book page. 
-The page shows the a description of the current booking and a button to confirm the booking.
-*/
+};
+
+/**
+ * One of the steps in the cabins/book page.
+ * The page shows the a description of the current booking and a button to confirm the booking.
+ */
 const PaymentSite: NextPage<Props> = (props) => {
   return (
     <Grid container alignItems="center" direction="column" spacing={5}>

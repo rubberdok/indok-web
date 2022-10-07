@@ -11,9 +11,9 @@ import React, { useMemo } from "react";
 
 import { getDesignTokens } from "@/theme";
 
-interface Props {
+type Props = {
   children: React.ReactNode;
-}
+};
 
 const ThemeProvider: React.FC<Props> = ({ children }) => {
   const isDarkMode = useMediaQuery("(prefers-color-scheme: dark)");

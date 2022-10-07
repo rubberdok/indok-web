@@ -8,18 +8,19 @@ import { ContactInfo, ContactInfoValidations, InputFieldsEvent } from "@/types/c
 
 import { InputFields } from "../InputFields/InputFields";
 
-interface ContractInfoProps {
+type Props = {
   contactInfo: ContactInfo;
   setContactInfo: Dispatch<SetStateAction<ContactInfo>>;
   validations: ContactInfoValidations | undefined;
   errorTrigger: boolean;
   chosenCabins: CabinFragment[];
-}
+};
+
 /**
  * One of the steps in the cabins/book page.
  * Fetches the current user and tries to input its values to the InputFields.
  */
-const CabinContactInfo: NextPage<ContractInfoProps> = ({
+const CabinContactInfo: NextPage<Props> = ({
   contactInfo,
   setContactInfo,
   validations,

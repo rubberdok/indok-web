@@ -8,15 +8,15 @@ import { EventSignUpsDocument, SendEventMailsDocument } from "@/generated/graphq
 import ConfirmationDialog from "./ConfirmationsDialog";
 import EmailFormDialog from "./EmailFormDialog";
 
-export interface EmailFormProps {
+export type EmailFormProps = {
   eventId: string;
-}
+};
 
-export interface SendEmailProps {
+export type SendEmailProps = {
   receiverEmails: string[];
   content: string;
   subject: string;
-}
+};
 
 const defaultMailProps: SendEmailProps = {
   receiverEmails: [],

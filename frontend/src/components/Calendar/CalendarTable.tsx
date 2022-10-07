@@ -7,11 +7,11 @@ import useResponsive from "@/hooks/useResponsive";
 
 import { DAYS_IN_WEEK } from "./constants";
 
-interface Props {
+type Props = {
   month: dayjs.Dayjs;
   onChangeMonth: (months: number) => void;
   children?: ReactElement | ReactElement[];
-}
+};
 
 const CalendarTable: React.FC<Props> = ({ month, onChangeMonth, children }) => {
   const isMobile = useResponsive({ query: "down", key: "md" });

@@ -50,16 +50,12 @@ import { calendarFile } from "@/utils/calendars";
 import CountdownButton from "./CountdownButton";
 import EditEvent from "./EventEditor";
 
-interface Props {
-  eventId: string;
-}
-
-interface AlertProps {
+type AlertProps = {
   open: boolean;
   onClose: () => void | undefined;
   severity: "success" | "info" | "warning" | "error";
   children: string | undefined;
-}
+};
 
 const Alert: React.FC<AlertProps> = ({ open, onClose, children, severity }) => {
   return (
@@ -74,6 +70,10 @@ const Alert: React.FC<AlertProps> = ({ open, onClose, children, severity }) => {
       </MuiAlert>
     </MuiSnackbar>
   );
+};
+
+type Props = {
+  eventId: string;
 };
 
 const EventDetails: React.FC<Props> = ({ eventId }) => {

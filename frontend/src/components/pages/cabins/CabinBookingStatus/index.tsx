@@ -7,23 +7,24 @@ import useResponsive from "@/hooks/useResponsive";
 import { ContactInfo, DatePick } from "@/types/cabins";
 import { calculatePrice, convertDateFormat, toStringChosenCabins } from "@/utils/cabins";
 
-interface Props {
-  chosenCabins: CabinFragment[];
-  datePick: DatePick;
-  contactInfo: ContactInfo;
-  cabinText?: string;
-  mailSent?: boolean;
-}
 const InfoText: React.FC<TypographyProps> = (props) => (
   <Typography variant="body2" align="center" component="span" display="block" {...props}>
     {props.children}
   </Typography>
 );
 
-/*
-Statusbox with information about the current cabin booking.
-Renders fields based on the props given.
-*/
+type Props = {
+  chosenCabins: CabinFragment[];
+  datePick: DatePick;
+  contactInfo: ContactInfo;
+  cabinText?: string;
+  mailSent?: boolean;
+};
+
+/**
+ * Statusbox with information about the current cabin booking.
+ * Renders fields based on the props given.
+ */
 const CabinBookingStatus: NextPage<Props> = ({ chosenCabins, datePick, contactInfo, cabinText, mailSent }) => {
   const isMobile = useResponsive({ query: "down", key: "md" });
 

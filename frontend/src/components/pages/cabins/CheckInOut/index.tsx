@@ -9,15 +9,16 @@ import useDisabledDates from "@/hooks/cabins/useDisabledDates";
 import useResponsive from "@/hooks/useResponsive";
 import { DatePick } from "@/types/cabins";
 
-interface Props {
+type Props = {
   allCabins: CabinFragment[];
   chosenCabins: CabinFragment[];
   setChosenCabins: React.Dispatch<React.SetStateAction<CabinFragment[]>>;
   setDatePick: React.Dispatch<React.SetStateAction<DatePick>>;
-}
-/*
-One of the steps in the cabins/book page. In this step the user chooses a cabin and the check-in and check-out dates.
-*/
+};
+
+/**
+ * One of the steps in the cabins/book page. In this step the user chooses a cabin and the check-in and check-out dates.
+ */
 const CheckInOut: NextPage<Props> = ({ allCabins, chosenCabins, setChosenCabins, setDatePick }) => {
   const { disabledDates } = useDisabledDates(chosenCabins);
   const isMobile = useResponsive({ query: "down", key: "md" });

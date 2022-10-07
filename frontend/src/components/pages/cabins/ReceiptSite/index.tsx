@@ -6,12 +6,12 @@ import { ContactInfo, DatePick } from "@/types/cabins";
 
 import CabinBookingStatus from "../CabinBookingStatus";
 
-interface Props {
+type Props = {
   chosenCabins: CabinFragment[];
   datePick: DatePick;
   contactInfo: ContactInfo;
   mailSent?: boolean;
-}
+};
 
 /** Step in the cabins/book site. Shows a confirmation of the booking made after the payment site. */
 const ReceiptSite: NextPage<Props> = (props) => {

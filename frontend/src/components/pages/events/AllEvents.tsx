@@ -11,12 +11,12 @@ import useResponsive from "@/hooks/useResponsive";
 import EventListItem from "./EventListItem";
 import FilterMenu from "./filterMenu/FilterMenu";
 
-export interface FilterQuery {
+export type FilterQuery = {
   organization?: string;
   category?: string;
   startTime?: string;
   endTime?: string;
-}
+};
 
 const AllEvents: React.FC = () => {
   const [filters, setFilters] = useState({});

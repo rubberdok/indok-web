@@ -40,11 +40,11 @@ dayjs.locale(nb);
 dayjs.tz.setDefault("Europe/Oslo");
 const DATE_FORMAT = "YYYY-MM-DDTHH:mm:ss";
 
-interface EditEventProps {
+type Props = {
   open: boolean;
   onClose: () => void;
   event: AdminEventFragment;
-}
+};
 
 /**
  * Component (Dialog) for editing an event
@@ -54,8 +54,7 @@ interface EditEventProps {
  * - onClose: called when the doalog should be closed
  * - event: The event to be edited
  */
-
-const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
+const EditEvent: React.FC<Props> = ({ open, onClose, event }) => {
   const defaultInput: Record<string, any> = {
     title: "",
     description: "",

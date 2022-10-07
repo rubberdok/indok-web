@@ -2,12 +2,12 @@ import { CheckBox as CheckBoxIcon, CheckBoxOutlineBlankOutlined } from "@mui/ico
 import { Checkbox, FormControlLabel, Typography } from "@mui/material";
 import React from "react";
 
-interface FilterButtonProps {
+type Props = {
   typeFilters: { [key: string]: { active: boolean; title: string } };
   updateTypeFilters: (key: string) => void;
-}
+};
 
-const FilterButtons: React.FC<FilterButtonProps> = ({ typeFilters, updateTypeFilters }) => {
+const FilterButtons: React.FC<Props> = ({ typeFilters, updateTypeFilters }) => {
   return (
     <>
       {Object.entries(typeFilters).map(([key, val]) => (

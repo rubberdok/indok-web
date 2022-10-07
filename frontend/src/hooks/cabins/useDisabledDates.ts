@@ -4,10 +4,10 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { getDateRange } from "@/components/Calendar/helpers";
 import { AllBookingsDocument, CabinFragment } from "@/generated/graphql";
 
-interface Output {
+type Output = {
   disabledDates: string[];
   setDisabledDates: Dispatch<SetStateAction<string[]>>;
-}
+};
 
 const useDisabledDates = (chosenCabins: CabinFragment[]): Output => {
   const allBookingsQuery = useQuery(AllBookingsDocument);

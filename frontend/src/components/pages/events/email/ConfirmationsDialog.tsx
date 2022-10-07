@@ -4,14 +4,14 @@ import React, { Dispatch, SetStateAction } from "react";
 
 import { SendEmailProps } from "./EmailForm";
 
-interface ConfirmationDialogProps {
+type Props = {
   showConfirmation: boolean;
   setShowConfirmation: Dispatch<SetStateAction<boolean>>;
   emailProps: SendEmailProps;
   handleConfirmationClose: () => void;
-}
+};
 
-const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
+const ConfirmationDialog: React.FC<Props> = ({
   showConfirmation,
   setShowConfirmation,
   emailProps,

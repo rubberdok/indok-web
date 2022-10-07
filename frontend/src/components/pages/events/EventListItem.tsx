@@ -12,10 +12,10 @@ const formatDate = (dateAndTime: string) => {
   return dayjs(dateAndTime).locale(nb).format(`D. MMM`);
 };
 
-interface Props {
+type Props = {
   event: EventInListFragment;
   user?: UserWithEventsAndOrgsFragment;
-}
+};
 
 const EventActionCardStyle = styled((props) => <CardActionArea {...props} />)(({ theme }) => ({
   display: "flex",

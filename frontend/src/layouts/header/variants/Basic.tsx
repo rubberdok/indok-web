@@ -10,9 +10,9 @@ type Props = {
   transparent?: boolean;
 };
 
-interface ScrollProps {
+type ScrollProps = {
   children: React.ReactElement;
-}
+};
 
 const ElevationScroll: React.FC<ScrollProps> = ({ children }) => {
   const trigger = useScrollTrigger({
