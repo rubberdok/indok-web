@@ -3,7 +3,7 @@ import { Alert, Button, Grid, Snackbar, TextField, Typography } from "@mui/mater
 import { useFormik } from "formik";
 import { useState } from "react";
 
-import { CabinFragment, CabinsDocument, UpdateCabinDocument, UpdateCabinInput } from "@/generated/graphql";
+import { CabinsDocument, UpdateCabinDocument, UpdateCabinInput } from "@/generated/graphql";
 import { cabinInfoValidationSchema } from "@/utils/cabins";
 
 type FormikCabinValues = {
