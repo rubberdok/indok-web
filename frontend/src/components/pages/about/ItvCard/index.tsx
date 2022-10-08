@@ -6,7 +6,7 @@ type Props = {
   member: ItvMember;
 };
 
-const ItvCard: React.VFC<Props> = ({ member }) => {
+export const ItvCard: React.VFC<Props> = ({ member }) => {
   return (
     <Card style={{ height: "100%" }}>
       <CardHeader title={member.name} />
@@ -18,5 +18,3 @@ const ItvCard: React.VFC<Props> = ({ member }) => {
     </Card>
   );
 };
-
-export default ItvCard;

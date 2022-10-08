@@ -2,14 +2,14 @@ import { Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import React from "react";
 
-import ItvCard from "@/components/pages/about/ItvCard";
+import { ItvCard } from "@/components/pages/about/ItvCard";
 import { ItvMember } from "@/components/pages/about/ItvCard/types";
 import Template from "@/components/pages/about/Template";
 import Layout from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/pages/_app";
 
 const ItvPage: NextPageWithLayout = () => {
-  const ItvMembers: ItvMember[] = [
+  const itvMembers: ItvMember[] = [
     {
       rank: 1,
       name: "Marthe Kirkeby",
@@ -52,7 +52,7 @@ const ItvPage: NextPageWithLayout = () => {
         Medlemmer
       </Typography>
       <Grid container spacing={2} alignItems="stretch" justifyContent="center">
-        {ItvMembers.map((member) => (
+        {itvMembers.map((member) => (
           <Grid key={member.rank} item xs={12} md={6}>
             <ItvCard member={member} />
           </Grid>

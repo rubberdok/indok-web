@@ -18,7 +18,7 @@ const NAV_ITEMS = [
         path: "/about/board",
       },
       {
-        title: "Institutt-tillitsvalgte",
+        title: "Instituttillitsvalgte",
         path: "/about/itv",
       },
     ],
