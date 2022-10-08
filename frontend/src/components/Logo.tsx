@@ -2,7 +2,9 @@ import { Box, SxProps, Typography } from "@mui/material";
 import NextLink from "next/link";
 import { memo } from "react";
 
-const Logo: React.FC<{ sx?: SxProps }> = ({ sx }) => {
+type Props = { sx?: SxProps };
+
+const Logo: React.FC<Props> = ({ sx }) => {
   return (
     <NextLink href="/" passHref>
       <Box

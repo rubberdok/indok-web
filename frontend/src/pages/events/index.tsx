@@ -8,9 +8,7 @@ import { NextPageWithLayout } from "@/pages/_app";
 
 const links = [{ name: "Hjem", href: "/" }, { name: "Arrangementer" }];
 
-/**
- * Component for showing the list page for event (for showing all events)
- */
+/** Component for showing the list page for event (for showing all events). */
 const Events: NextPageWithLayout = () => {
   const [showCalendarView, setShowCalenderView] = useState(false);
 

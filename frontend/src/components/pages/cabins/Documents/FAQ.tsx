@@ -109,9 +109,7 @@ const faqs = [
   },
 ];
 
-/*
-Renders all frequently asked questions regarding the cabins.
-*/
+/** Renders all frequently asked questions regarding the cabins. */
 const FAQ: React.FC = () => {
   const [expandedPanel, setExpandedPanel] = React.useState<number>();
 

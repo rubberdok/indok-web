@@ -18,9 +18,7 @@ type ContractDialogProps = {
   setActiveStep: Dispatch<SetStateAction<number>>;
 };
 
-/*
-Dialog component for the contract component
-*/
+/** Dialog component for the contract component. */
 const ContractDialog: NextPage<ContractDialogProps> = ({
   modalData,
   setModalData,

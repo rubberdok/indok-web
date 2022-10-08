@@ -72,9 +72,7 @@ const Calendar: React.FC<Props> = ({
     }
   };
 
-  /*
-  Handles what happens to the calendar date range when the user selects (or deselects) from dates and to dates.
-  */
+  // Handles what happens to the calendar date range when the user selects (or deselects) from dates and to dates.
   useEffect(() => {
     const dateToString = (date: dayjs.Dayjs | undefined): string | undefined =>
       date ? date.format(DATE_FORMAT) : undefined;

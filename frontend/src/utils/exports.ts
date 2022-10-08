@@ -1,14 +1,12 @@
 const XLSX_CONTENT_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
-/**
- * Converts the given string to an ArrayBuffer.
- */
-function s2ab(s: string) {
+/** Converts the given string to an ArrayBuffer. */
+const s2ab = (s: string) => {
   const buf = new ArrayBuffer(s.length);
   const view = new Uint8Array(buf);
   for (let i = 0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xff;
   return buf;
-}
+};
 
 export const promptDownloadFromPayload = (payload: { filename: string; data: string; contentType: string }): void => {
   let blob;

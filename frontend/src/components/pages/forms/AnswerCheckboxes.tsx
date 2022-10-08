@@ -20,16 +20,19 @@ const AnswerCheckboxes: React.FC<Props> = ({ answer, question, onAnswerChange })
     question.options ? question.options?.filter((option) => answer.split("|||").includes(option.answer)) : []
   );
 
-  // every time options changes, set answer to the concatenation of selected options
+  /*
+    Every time options changes, sets answer to the concatenation of selected options.
+    
+    Why concatenate?
+    Checkboxes is the only question type that allows multiple answers.
+    Rather than change the backend model to allow multiple answers to a question,
+    we concatenate the answers to preservethe single-answer model.
+    This should not cause problems when choosing a rarely-typed concatenation separator,
+    and not allowing that separator as part of an Option.
+  */
   useEffect(() => {
     onAnswerChange(selectedOptions.map((option) => option.answer).join("|||"));
   }, [selectedOptions]);
-  /*
-    Why concatenate?
-    Checkboxes is the only question type that allows multiple answers.
-    Rather than change the backend model to allow multiple answers to a question, we concatenate the answers to preserve the single-answer model.
-    This should not cause problems when choosing a rarely-typed concatenation separator, and not allowing that separator as part of an Option.
-  */
 
   return (
     <FormGroup>

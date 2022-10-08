@@ -10,22 +10,17 @@ import OrganizationFilter from "./OrganizationFilter";
 import { HandleChecked } from "./types";
 
 type Props = {
+  /** The currently applied filters */
   filters: FilterQuery;
+  /** Function called when filters are updated */
   onFiltersChange: (query: FilterQuery) => void;
+  /** Whether to show the default event or all (possibly filtered) events */
   showDefaultEvents: boolean;
+  /** Called when whether to show default events or not changes */
   onShowDefaultChange: (show: boolean) => void;
 };
 
-/**
- * Component for the filter menu on the event list page
- *
- * Props:
- * - filters: the currently applied filters
- * - onFiltersChange: method called when filters are updated
- * - showDefaultEvents: whether to show the default event or all (possibly filtered) events
- * - onShowDefaultChange: method called when whether to show default events or not changes
- */
-
+/** Component for the filter menu on the event list page. */
 const FilterMenu: React.FC<Props> = ({ filters, onFiltersChange, showDefaultEvents, onShowDefaultChange }) => {
   const handleChecked: HandleChecked = (e, field, filter) => {
     if (e.target.checked) {

@@ -13,9 +13,7 @@ import ImageSlider from "@/components/pages/cabins/ImageSlider/ImageSlider";
 import Layout from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/pages/_app";
 
-/*
-Front page for cabins. Includes info about the cabins and link to the booking page (cabins/book).
-*/
+/** Front page for cabins. Includes info about the cabins and link to the booking page (cabins/book). */
 const CabinsPage: NextPageWithLayout = () => {
   const transportData = [
     {

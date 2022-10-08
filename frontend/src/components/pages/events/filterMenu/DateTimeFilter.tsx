@@ -4,17 +4,13 @@ import React from "react";
 import { FilterQuery } from "@/components/pages/events/AllEvents";
 
 type Props = {
+  /** The currently applied filters */
   filters: FilterQuery;
+  /** Function called when filters are updated */
   onFiltersChange: (query: FilterQuery) => void;
 };
 
-/**
- * Component for the date filter in the filter menu
- *
- * Props:
- * - filters: the currently applied filters
- * - onFiltersChange: method called when filters are updated
- */
+/** Component for the date filter in the filter menu. */
 const DateTimeFilter: React.FC<Props> = ({ filters, onFiltersChange }) => {
   return (
     <>

@@ -1,15 +1,11 @@
 import { Box } from "@mui/material";
 
 type Props = {
+  /** URL on the listing for the image to display in the banner. */
   imageUrl?: string | null;
 };
 
-/**
- * Component for banner image on listing detail page.
- *
- * Props:
- * - the listing from the detail page
- */
+/** Component for banner image on listing detail page. */
 const ListingBanner: React.FC<Props> = ({ imageUrl }) => {
   return (
     <>

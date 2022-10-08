@@ -28,9 +28,7 @@ import {
   UserWithEventsAndOrgsDocument,
 } from "@/generated/graphql";
 
-/**
- * Component for the creating a new event
- */
+/** Component for the creating a new event. */
 const CreateEvent: React.FC = () => {
   const defaultInput: CreateEventInput = {
     title: "",

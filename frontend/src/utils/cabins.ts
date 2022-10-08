@@ -15,9 +15,7 @@ import { BasicBooking, ContactInfo, ContactInfoValidations, DatePick } from "@/t
 
 dayjs.extend(isBetween);
 
-/*
-File containing helper functions for cabins.
-*/
+/* File containing helper functions for cabins. */
 
 export const validateName = (name: string): boolean => name?.length > 0;
 

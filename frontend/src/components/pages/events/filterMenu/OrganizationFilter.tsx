@@ -9,17 +9,13 @@ import { range } from "@/utils/helpers";
 import { HandleChecked } from "./types";
 
 type Props = {
+  /** The currently applied filters */
   filters: FilterQuery;
+  /** Function called when filters are updated */
   handleChecked: HandleChecked;
 };
 
-/**
- * Component for the organization filter in the filter menu
- *
- * Props:
- * - filters: the currently applied filters
- * - handleChecked: method called when filters are updated
- */
+/** Component for the organization filter in the filter menu. */
 const OrganizationFilter: React.FC<Props> = ({ filters, handleChecked }) => {
   const { data, loading, error } = useQuery(EventFilteredOrganizationsDocument);
 

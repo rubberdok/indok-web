@@ -27,30 +27,25 @@ const calculateTimeLeft = (countdownTime: string, now: Dayjs): Record<string, nu
 };
 
 type Props = {
+  /** The date that is counted down to */
   countDownDate: string;
+  /** The time right now */
   currentTime: string;
+  /** Whether the user viewing the page is signed up to the event */
   isSignedUp: boolean;
+  /** Whether the user viewing the page is on the waiting list for the event */
   isOnWaitingList: boolean;
+  /** Whether the event is full (all available slots are taken) */
   isFull: boolean;
+  /** Whether the button should show a loading symbol */
   loading: boolean;
+  /** Whether the button should be disabled */
   disabled?: boolean;
+  /** Method called when the count down button is clicked */
   onClick: () => void;
 };
 
-/**
- * Component for the count down button on the detail page of an attendable event
- *
- * Props:
- * - countDownDate: the date that is counted down to
- * - currentTime: the time right now
- * - isSignedUp: whether the user viewing the page is signed up to the event
- * - isOnWaitingList: whether the user viewing the page is on the waiting list for the event
- * - isFull: whether the event is full (all available slots are taken)
- * - loading: whether the button should show a loading symbol
- * - disabled: whether the button should be disabled
- * - onClick: metod called when the count down button is clicked
- * - styleClassName: styled class
- */
+/** Component for the count down button on the detail page of an attendable event. */
 const CountdownButton: React.FC<Props> = ({
   countDownDate,
   currentTime,
@@ -84,19 +79,18 @@ const CountdownButton: React.FC<Props> = ({
     if (timeWord === "seconds") return time > 1 ? "sekunder" : "sekund";
   };
 
+  /**
+   * `timeparts` is a list containing the elements of time that are not 0,
+   * e.g. 3 days, 14 minutes and 3 seconds yields: ["days", "minutes", "seconds"].
+   * The actual time left is stored in the Record<string, number> called timeLeft.
+   *
+   * Shows remaining time until the event opens on the following formats depending on how much time is left:
+   * - XX days and YY hours
+   * - XX hours and YY minutes
+   * - XX minutes  (minutes left >= 10)
+   * - XX minutes and YY seconds (minutes left < 10)
+   */
   const getCurrentTimeLeft = (timeparts: string[]) => {
-    /**
-     * timeparts is a list containing the elements of time that are not 0
-     * ex. 3 days, 14 minutes and 3 seconds yields: ["days", "minutes", "seconds"]
-     * The actual time left is stored in the Record<string, number> called timeLeft
-     *
-     * Shows remaining time until the event opens on the following formats depending on how much time is left:
-     * XX days and YY hours
-     * XX hours and YY minutes
-     * XX minutes  (minutes left >= 10)
-     * XX minutes and YY seconds (minutes left < 10)
-     * */
-
     if (timeparts.length === 1) {
       return `Åpner om ${timeLeft[timeparts[0]]} ${translate(timeparts[0], timeLeft[timeparts[0]])}`;
     }

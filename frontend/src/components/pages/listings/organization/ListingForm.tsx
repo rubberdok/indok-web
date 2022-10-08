@@ -27,15 +27,13 @@ type Props = {
   setListing: (listing: ListingInput) => void;
   onSubmit: (e: React.MouseEvent<HTMLButtonElement>) => void;
   onCancel: () => void;
-  /** Organizations of which the listing editor is an authorized member */
+  /** Organizations of which the user editing the listing is an authorized member */
   organizations: ListingOrganizationFragment[];
 };
 
 /** A form to create or edit a listing. */
 const ListingForm: React.FC<Props> = ({ listing, setListing, onSubmit, onCancel, organizations }) => {
-  /**
-   * Helper method to handle changes to TextFields.
-   */
+  /** Helper function to handle changes to TextFields. */
   const handlePropertyChange = (
     event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
     property: keyof ListingInput
@@ -43,9 +41,7 @@ const ListingForm: React.FC<Props> = ({ listing, setListing, onSubmit, onCancel,
     setListing({ ...listing, [property]: event.target.value });
   };
 
-  /**
-   * Helper method to handle changes to boolean fields using checkboxes.
-   */
+  /** Helper function to handle changes to boolean fields using checkboxes. */
   const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>, property: keyof ListingInput) => {
     setListing({ ...listing, [property]: event.target.checked });
   };

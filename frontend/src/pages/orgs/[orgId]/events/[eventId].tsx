@@ -62,15 +62,14 @@ const dateEventFields: HeaderValuePair<AdminEventFragment>[] = [
   { header: "Påmeldingsdato", field: "signupOpenDate" },
 ];
 
-/**
- * Component for an admin panel for an event, used for viewing and editing an event as well as
- * viewing and editing users signed up (or on the waiting list) for an event
- */
-
 const RootStyle = styled("div")(({ theme }) => ({
   margin: theme.spacing(6, 0),
 }));
 
+/**
+ * Component for an admin panel for an event, used for viewing and editing an event as well as
+ * viewing and editing users signed up (or on the waiting list) for an event
+ */
 const EventAdminPage: NextPageWithLayout = () => {
   const router = useRouter();
   const { eventId } = router.query;

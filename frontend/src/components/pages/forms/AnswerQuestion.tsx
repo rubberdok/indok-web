@@ -9,6 +9,7 @@ type Props = {
   answer: string;
   onAnswerChange: (value: string) => void;
 };
+
 /** Component to answer a question on a form. */
 const AnswerQuestion: React.FC<Props> = ({ answer, question, onAnswerChange }) => {
   // returns a form input based on the type of the answer's question

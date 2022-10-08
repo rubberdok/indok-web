@@ -6,10 +6,7 @@ import EventCreator from "@/components/pages/events/EventCreator";
 import Layout, { RootStyle } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/pages/_app";
 
-/**
- * Component for showing the create event page
- */
-
+/** Component for showing the create event page. */
 const CreateEventsPage: NextPageWithLayout = () => {
   return (
     <Container>

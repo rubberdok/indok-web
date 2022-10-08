@@ -7,9 +7,7 @@ type Props = {
   error?: ApolloError;
 };
 
-/*
-Displays the error message in a dialog.
- */
+/** Displays the error message in a dialog. */
 const ErrorDialog: React.VFC<Props> = ({ handleErrorDialogClose, error }) => (
   <Dialog open={error != undefined} onClose={handleErrorDialogClose}>
     <DialogTitle>{`Det har oppstått en feilmelding: ${error?.name}`}</DialogTitle>

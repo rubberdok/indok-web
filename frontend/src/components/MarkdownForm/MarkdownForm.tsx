@@ -4,18 +4,18 @@ import ReactMarkdown from "react-markdown";
 
 import * as markdownComponents from "./components";
 
+type Props = {
+  /** The markdown text to edit/render */
+  markdown: string;
+  /** Function to call when text changes */
+  onTextChange: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
+};
+
 /**
  * Component for a simple markdown form with a live preview.
  * @todo Add a more user-friendly way of interacting with markdown, i.e. allowing users to set heading level through a UI.
- *
- * Props:
- * - the markdown text to edit/render
- * - onTextChange callback
  */
-const MarkdownForm: React.FC<{
-  markdown: string;
-  onTextChange: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
-}> = ({ markdown, onTextChange }) => {
+const MarkdownForm: React.FC<Props> = ({ markdown, onTextChange }) => {
   const [view, setView] = useState<"edit" | "preview">("edit");
 
   return (

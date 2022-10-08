@@ -13,9 +13,7 @@ import useResponsive from "@/hooks/useResponsive";
 import Layout, { RootStyle } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/pages/_app";
 
-/*
-Page for booking admininistration showing all upcoming bookings and buttons for actions on these bookings.
-*/
+/** Page for booking admininistration showing all upcoming bookings and buttons for actions on these bookings. */
 const AdminPage: NextPageWithLayout = () => {
   const { data, refetch } = useQuery(AdminAllBookingsDocument, {
     variables: { after: dayjs().subtract(1, "day").format("YYYY-MM-DD") },

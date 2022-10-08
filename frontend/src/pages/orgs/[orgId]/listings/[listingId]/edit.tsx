@@ -18,10 +18,7 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.tz.setDefault("Europe/Oslo");
 
-/**
- * Page for editing an existing listing.
- */
-
+/** Page for editing an existing listing. */
 const RootStyle = styled("div")(({ theme }) => ({
   paddingTop: HEADER_MOBILE_HEIGHT,
   margin: theme.spacing(4, 0),

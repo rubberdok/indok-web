@@ -8,7 +8,7 @@ import {
   FormHelperText,
 } from "@mui/material";
 
-// utility function to return text for the dialog based on its type
+/** Utility function to return text for the dialog based on its type */
 const dialogText = (type: "create" | "update" | "delete") => {
   switch (type) {
     case "create":
