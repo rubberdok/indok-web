@@ -19,26 +19,20 @@ import {
 import React, { ChangeEvent } from "react";
 
 import MarkdownForm from "@/components/MarkdownForm";
-import { ListingInput } from "@/interfaces/listings";
-import { Organization } from "@/interfaces/organizations";
+import { ListingOrganizationFragment } from "@/generated/graphql";
+import { ListingInput } from "@/types/listings";
 
-/**
- * A form to create or edit a listing.
- *
- * Props:
- * - the state of the listing to create/edit
- * - setListing function to set the state
- * - onSubmit callback for updating the database
- * - onCancel callback for discarding changes
- * - organizations of which the listing editor is an authorized member
- */
-const ListingForm: React.FC<{
+type Props = {
   listing: ListingInput;
   setListing: (listing: ListingInput) => void;
   onSubmit: (e: React.MouseEvent<HTMLButtonElement>) => void;
   onCancel: () => void;
-  organizations: Organization[];
-}> = ({ listing, setListing, onSubmit, onCancel, organizations }) => {
+  /** Organizations of which the listing editor is an authorized member */
+  organizations: ListingOrganizationFragment[];
+};
+
+/** A form to create or edit a listing. */
+const ListingForm: React.FC<Props> = ({ listing, setListing, onSubmit, onCancel, organizations }) => {
   /**
    * Helper method to handle changes to TextFields.
    */

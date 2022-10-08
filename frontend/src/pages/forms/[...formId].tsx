@@ -3,8 +3,7 @@ import { CircularProgress, Container, Grid, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 
 import AnswerForm from "@/components/pages/forms/AnswerForm";
-import { FORM_WITH_QUESTIONS_AND_ANSWERS } from "@/graphql/forms/queries";
-import { Form } from "@/interfaces/forms";
+import { FormWithAnswersDocument } from "@/generated/graphql";
 import Layout, { RootStyle } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/pages/_app";
 import { generateFeideLoginUrl } from "@/utils/auth";
@@ -12,11 +11,7 @@ import { generateFeideLoginUrl } from "@/utils/auth";
 const FormPage: NextPageWithLayout = () => {
   const router = useRouter();
   const { formId } = router.query;
-  const { loading, error, data } = useQuery<{ form: Form }>(FORM_WITH_QUESTIONS_AND_ANSWERS, {
-    variables: {
-      formId: formId && (formId[0] as string),
-    },
-  });
+  const { loading, error, data } = useQuery(FormWithAnswersDocument, { variables: { formId: formId as string } });
 
   if (loading) return <p>Laster...</p>;
   if (error) {
@@ -41,7 +36,7 @@ const FormPage: NextPageWithLayout = () => {
 
   return (
     <>
-      {data && (
+      {data?.form && (
         <Container>
           <AnswerForm form={data.form} />
         </Container>

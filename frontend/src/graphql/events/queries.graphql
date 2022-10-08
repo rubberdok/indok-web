@@ -1,3 +1,28 @@
+query event($id: ID!) {
+  event(id: $id) {
+    ...Event
+  }
+}
+
+query allEvents($organization: String, $category: String, $startTime: DateTime, $endTime: DateTime) {
+  allEvents(organization: $organization, category: $category, startTime: $startTime, endTime: $endTime) {
+    ...EventInList
+  }
+}
+
+query defaultEvents {
+  defaultEvents {
+    ...EventInList
+  }
+}
+
+query allCategories {
+  allCategories {
+    id
+    name
+  }
+}
+
 query eventFilteredOrganizations {
   eventFilteredOrganizations {
     id
@@ -10,9 +35,29 @@ query eventFilteredOrganizations {
   }
 }
 
-query getCategories {
-  allCategories {
-    id
-    name
+query adminEvent($id: ID!) {
+  event(id: $id) {
+    ...AdminEvent
   }
+}
+
+query eventSignUps($id: ID!) {
+  event(id: $id) {
+    isAttendable
+    usersAttending {
+      userEmail
+    }
+  }
+}
+
+query attendeeReport($eventId: ID!, $fields: [String!], $filetype: String) {
+  attendeeReport(eventId: $eventId, fields: $fields, filetype: $filetype)
+}
+
+query attendeeReportOrg($orgId: ID!, $fields: [String!], $filetype: String) {
+  attendeeReportOrg(orgId: $orgId, fields: $fields, filetype: $filetype)
+}
+
+query attendeeReports($eventIds: [ID!]!, $fields: [String!], $filetype: String) {
+  attendeeReports(eventIds: $eventIds, fields: $fields, filetype: $filetype)
 }

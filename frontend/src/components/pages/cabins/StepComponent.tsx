@@ -1,8 +1,8 @@
-import { OperationVariables, QueryResult } from "@apollo/client";
 import { Typography } from "@mui/material";
 import React from "react";
 
-import { Cabin, ContactInfo, ContactInfoValidations, DatePick } from "@/interfaces/cabins";
+import { CabinFragment } from "@/generated/graphql";
+import { ContactInfo, ContactInfoValidations, DatePick } from "@/types/cabins";
 
 import CabinContactInfo from "./CabinContactInfo";
 import CheckInOut from "./CheckInOut";
@@ -12,19 +12,14 @@ import ReceiptSite from "./ReceiptSite";
 
 type Props = {
   activeStep: number;
-  cabinQuery: QueryResult<
-    {
-      cabins: Cabin[];
-    },
-    OperationVariables
-  >;
-  chosenCabins: Cabin[];
+  allCabins: CabinFragment[];
+  chosenCabins: CabinFragment[];
   contactInfo: ContactInfo;
   datePick: DatePick;
   validations?: ContactInfoValidations;
   errorTrigger: boolean;
   setContactInfo: React.Dispatch<React.SetStateAction<ContactInfo>>;
-  setChosenCabins: React.Dispatch<React.SetStateAction<Cabin[]>>;
+  setChosenCabins: React.Dispatch<React.SetStateAction<CabinFragment[]>>;
   setDatePick: React.Dispatch<React.SetStateAction<DatePick>>;
   setExtraInfo: React.Dispatch<React.SetStateAction<string>>;
 };
@@ -33,14 +28,14 @@ const StepComponent: React.FC<Props> = (props) => {
   switch (props.activeStep) {
     case 0:
       // Choose cabin
-      return props.cabinQuery.data ? (
+      return (
         <CheckInOut
-          allCabins={props.cabinQuery.data.cabins}
+          allCabins={props.allCabins}
           chosenCabins={props.chosenCabins}
           setChosenCabins={props.setChosenCabins}
           setDatePick={props.setDatePick}
         />
-      ) : null;
+      );
     case 1:
       // Choose contact info
       return (

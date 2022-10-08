@@ -5,17 +5,16 @@ import nb from "dayjs/locale/nb";
 import Link from "next/link";
 import React from "react";
 
+import { EventInListFragment, UserWithEventsAndOrgsFragment } from "@/generated/graphql";
 import useResponsive from "@/hooks/useResponsive";
-import { Event } from "@/interfaces/events";
-import { User } from "@/interfaces/users";
 
 const formatDate = (dateAndTime: string) => {
   return dayjs(dateAndTime).locale(nb).format(`D. MMM`);
 };
 
 interface Props {
-  event: Event;
-  user?: User;
+  event: EventInListFragment;
+  user?: UserWithEventsAndOrgsFragment;
 }
 
 const EventActionCardStyle = styled((props) => <CardActionArea {...props} />)(({ theme }) => ({
@@ -49,7 +48,9 @@ const EventListItem: React.FC<Props> = ({ event, user }) => {
               {event.shortDescription ?? "Trykk for å lese mer"}
             </Typography>
           </div>
-          {user && event.isAttendable && event.allowedGradeYears.includes(user.gradeYear) ? (
+          {user &&
+          event.isAttendable &&
+          ((user.gradeYear && event.allowedGradeYears?.includes(user.gradeYear)) ?? true) ? (
             event.isFull && event.userAttendance?.isOnWaitingList ? (
               <Chip label="På venteliste" />
             ) : event.isFull && !event.userAttendance?.isSignedUp ? (

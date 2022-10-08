@@ -1,10 +1,10 @@
 import { Tab, Tabs, Typography } from "@mui/material";
 
 import Title from "@/components/Title";
-import { Organization } from "@/interfaces/organizations";
+import { AdminOrganizationFragment } from "@/generated/graphql";
 
 type Props = {
-  organization: Organization;
+  organization: AdminOrganizationFragment;
   activeTab: number;
   handleTabChange: (event: React.SyntheticEvent, newValue: number) => void;
 };

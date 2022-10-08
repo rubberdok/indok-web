@@ -32,21 +32,15 @@ const dialogText = (type: "create" | "update" | "delete") => {
   }
 };
 
-/**
- * Component for confirmation dialog when changing a form when it already has responses.
- *
- * Props:
- * - type of the dialog, decided by parent's state
- * - boolean to determine whether the dialog should be shown
- * - onConfirm function, making a change defined by the parent component
- * - onClose function to execute when the dialog is closed
- */
-const ConfirmFormChange: React.FC<{
+type Props = {
   type: "create" | "update" | "delete";
   open: boolean;
   onConfirm: () => void;
   onClose: () => void;
-}> = ({ type, open, onConfirm, onClose }) => {
+};
+
+/** Component for confirmation dialog when changing a form when it already has responses. */
+const ConfirmFormChange: React.FC<Props> = ({ type, open, onConfirm, onClose }) => {
   const { title, body, warning } = dialogText(type);
   return (
     <Dialog open={open} onClose={onClose} fullWidth>

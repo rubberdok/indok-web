@@ -3,7 +3,7 @@ import { Card, CardActionArea, CardMedia } from "@mui/material";
 import { useRouter } from "next/router";
 import React from "react";
 
-import { INITIATE_ORDER } from "@/graphql/ecommerce/mutations";
+import { InitiateOrderDocument } from "@/generated/graphql";
 
 type Props = {
   productId: string;
@@ -14,9 +14,12 @@ type Props = {
 };
 
 const PayWithVipps: React.FC<Props> = ({ productId, quantity, onError, disabled, fallbackRedirect }) => {
-  const [initiateOrder, { error }] = useMutation(INITIATE_ORDER, {
-    onCompleted: (data) =>
-      router.push(data.initiateOrder.redirect || `/ecommerce/fallback?orderId=${data.initiateOrder.orderId}`),
+  const [initiateOrder, { error }] = useMutation(InitiateOrderDocument, {
+    onCompleted: (data) => {
+      if (data.initiateOrder) {
+        router.push(data.initiateOrder?.redirect || `/ecommerce/fallback?orderId=${data.initiateOrder.orderId}`);
+      }
+    },
     onError: onError,
   });
 

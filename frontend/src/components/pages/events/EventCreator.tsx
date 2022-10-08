@@ -20,33 +20,35 @@ import {
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 
-import { CREATE_EVENT } from "@/graphql/events/mutations";
-import { GET_CATEGORIES } from "@/graphql/events/queries";
-import { GET_USER } from "@/graphql/users/queries";
-import { Category, Event } from "@/interfaces/events";
-import { User } from "@/interfaces/users";
+import {
+  AllCategoriesDocument,
+  CreateEventDocument,
+  CreateEventInput,
+  EventInListFragment,
+  UserWithEventsAndOrgsDocument,
+} from "@/generated/graphql";
 
 /**
  * Component for the creating a new event
  */
 const CreateEvent: React.FC = () => {
-  const defaultInput: Record<string, any> = {
+  const defaultInput: CreateEventInput = {
     title: "",
     description: "",
     startTime: "",
-    endTime: "",
-    location: "",
+    endTime: undefined,
+    location: undefined,
     organizationId: "",
-    categoryId: "",
-    image: "",
+    categoryId: undefined,
+    image: undefined,
     isAttendable: false,
-    deadline: "",
-    signupOpenDate: "",
-    availableSlots: "",
+    deadline: undefined,
+    signupOpenDate: undefined,
+    availableSlots: undefined,
     // price: undefined,
-    shortDescription: "",
+    shortDescription: undefined,
     hasExtraInformation: false,
-    contactEmail: "",
+    contactEmail: undefined,
     bindingSignup: false,
     allowedGradeYears: [1, 2, 3, 4, 5],
   };
@@ -55,15 +57,15 @@ const CreateEvent: React.FC = () => {
 
   const router = useRouter();
 
-  const [createEvent, { loading: createEventLoading, error: createEventError }] = useMutation<{
-    createEvent: { event: Event };
-  }>(CREATE_EVENT, {
+  const [createEvent, { loading: createEventLoading, error: createEventError }] = useMutation(CreateEventDocument, {
     update: (cache, { data }) => {
-      data &&
+      data?.createEvent?.event &&
         cache.modify({
           fields: {
             allEvents: (existingEvents) => {
-              const newEventRef = cache.writeFragment<Event>({
+              if (!data?.createEvent?.event) return existingEvents;
+
+              const newEventRef = cache.writeFragment<EventInListFragment>({
                 data: data.createEvent.event,
                 fragment: gql`
                   fragment NewEvent on Event {
@@ -78,12 +80,12 @@ const CreateEvent: React.FC = () => {
     },
   });
 
-  const { loading: categoryLoading, error: categoryError, data: categoryData } = useQuery(GET_CATEGORIES);
+  const { loading: categoryLoading, error: categoryError, data: categoryData } = useQuery(AllCategoriesDocument);
   const {
     loading: userLoading,
     error: userError,
     data: userData,
-  } = useQuery<{ user: User }>(GET_USER, {
+  } = useQuery(UserWithEventsAndOrgsDocument, {
     onCompleted: ({ user }) => {
       if (!eventData.organizationId) {
         setEventData((prevData) => ({ ...prevData, organizationId: user?.organizations[0]?.id ?? "" }));
@@ -107,7 +109,7 @@ const CreateEvent: React.FC = () => {
       setEventData({
         ...eventData,
         isAttendable: false,
-        availableSlots: "",
+        availableSlots: undefined,
         bindingSignup: false,
         hasExtraInformation: false,
         signupOpenDate: "",
@@ -118,13 +120,7 @@ const CreateEvent: React.FC = () => {
   };
 
   const onSubmit = () => {
-    const input = { ...eventData };
-    Object.keys(eventData).forEach((key) => {
-      if (eventData[key] === "") {
-        input[key] = undefined;
-      }
-    });
-    createEvent({ variables: { eventData: input } }).then((res) => {
+    createEvent({ variables: { eventData: eventData } }).then((res) => {
       if (res.data?.createEvent) {
         setEventData(defaultInput);
         router.push("/events");
@@ -223,7 +219,7 @@ const CreateEvent: React.FC = () => {
             <TextField
               type="number"
               value={eventData.availableSlots}
-              onChange={(e) => setEventData({ ...eventData, availableSlots: e.currentTarget.value })}
+              onChange={(e) => setEventData({ ...eventData, availableSlots: parseInt(e.currentTarget.value) })}
               disabled={!eventData.isAttendable}
             />
           </Tooltip>
@@ -245,7 +241,8 @@ const CreateEvent: React.FC = () => {
                 value={eventData.allowedGradeYears}
                 multiple
                 onChange={(e) => {
-                  setEventData({ ...eventData, allowedGradeYears: e.target.value });
+                  const allowedGradeYears = typeof e.target.value === "string" ? undefined : e.target.value;
+                  setEventData({ ...eventData, allowedGradeYears });
                 }}
                 displayEmpty
                 disabled={!eventData.isAttendable}
@@ -284,7 +281,7 @@ const CreateEvent: React.FC = () => {
               displayEmpty
             >
               <MenuItem value="">{"Ingen Kategori"}</MenuItem>
-              {categoryData.allCategories.map((category: Category) => (
+              {categoryData?.allCategories?.map((category) => (
                 <MenuItem key={category.id} value={category.id}>
                   {category.name}
                 </MenuItem>
@@ -321,7 +318,7 @@ const CreateEvent: React.FC = () => {
             <FormControlLabel
               control={
                 <Checkbox
-                  checked={eventData.bindingSignup}
+                  checked={eventData.bindingSignup ?? false}
                   onChange={(e) => setEventData({ ...eventData, bindingSignup: e.currentTarget.checked })}
                   name="bindingSignup"
                   color="primary"
@@ -343,7 +340,7 @@ const CreateEvent: React.FC = () => {
             <FormControlLabel
               control={
                 <Checkbox
-                  checked={eventData.hasExtraInformation}
+                  checked={eventData.hasExtraInformation ?? false}
                   onChange={(e) => setEventData({ ...eventData, hasExtraInformation: e.currentTarget.checked })}
                   name="hasExtraInformation"
                   color="primary"

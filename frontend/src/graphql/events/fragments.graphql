@@ -1,0 +1,156 @@
+fragment Event on EventType {
+  id
+  title
+  startTime
+  endTime
+  location
+  description
+  organization {
+    id
+    name
+  }
+  category {
+    id
+    name
+  }
+  image
+  isAttendable
+  deadline
+  publisher {
+    id
+    username
+    email
+    firstName
+    lastName
+    dateJoined
+  }
+  availableSlots
+  price
+  shortDescription
+  signupOpenDate
+  userAttendance {
+    isSignedUp
+    isOnWaitingList
+    hasBoughtTicket
+  }
+  isFull
+  hasExtraInformation
+  bindingSignup
+  contactEmail
+  allowedGradeYears
+  product {
+    id
+  }
+}
+
+fragment EventInList on EventType {
+  id
+  title
+  startTime
+  endTime
+  location
+  description
+  organization {
+    name
+    color
+  }
+  category {
+    name
+  }
+  image
+  isAttendable
+  deadline
+  publisher {
+    id
+    username
+    email
+    firstName
+    lastName
+    dateJoined
+  }
+  price
+  shortDescription
+  signupOpenDate
+  userAttendance {
+    isSignedUp
+    isOnWaitingList
+  }
+  isFull
+  hasExtraInformation
+  allowedGradeYears
+}
+
+fragment AdminEvent on EventType {
+  id
+  title
+  startTime
+  endTime
+  location
+  description
+  organization {
+    id
+    name
+  }
+  category {
+    id
+    name
+  }
+  image
+  isAttendable
+  deadline
+  publisher {
+    id
+    username
+    email
+    firstName
+    lastName
+    dateJoined
+  }
+  availableSlots
+  price
+  shortDescription
+  signupOpenDate
+  usersAttending {
+    ...SignUpWithTicket
+  }
+  usersOnWaitingList {
+    ...SignUp
+  }
+  userAttendance {
+    isSignedUp
+    isOnWaitingList
+  }
+  isFull
+  hasExtraInformation
+  bindingSignup
+  contactEmail
+  allowedGradeYears
+  product {
+    id
+  }
+}
+
+fragment SignUp on SignUpType {
+  user {
+    id
+    firstName
+    lastName
+  }
+  userEmail
+  userGradeYear
+  userAllergies
+  userPhoneNumber
+}
+
+fragment SignUpWithTicket on SignUpType {
+  user {
+    id
+    firstName
+    lastName
+  }
+  userEmail
+  userGradeYear
+  userAllergies
+  userPhoneNumber
+  hasBoughtTicket
+}

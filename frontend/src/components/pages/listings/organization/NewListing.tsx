@@ -4,10 +4,8 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 
 import ListingForm from "@/components/pages/listings/organization/ListingForm";
-import { CREATE_LISTING } from "@/graphql/listings/mutations";
-import { USER_WITH_ORGANIZATIONS } from "@/graphql/listings/queries";
-import { Listing, ListingInput } from "@/interfaces/listings";
-import { Organization } from "@/interfaces/organizations";
+import { CreateListingDocument, UserOrganizationsDocument } from "@/generated/graphql";
+import { ListingInput } from "@/types/listings";
 
 const emptyListing: ListingInput = {
   id: "",
@@ -25,12 +23,10 @@ const emptyListing: ListingInput = {
   },
 };
 
-/**
- * Page for creating new listings, navigates to the newly created listing upon completion.
- */
-const NewListing: React.FC<{
-  defaultOrganizationId?: string;
-}> = ({ defaultOrganizationId }) => {
+type Props = { defaultOrganizationId?: string };
+
+/** Page for creating new listings, navigates to the newly created listing upon completion. */
+const NewListing: React.FC<Props> = ({ defaultOrganizationId }) => {
   const router = useRouter();
 
   // state to manage the listing being created
@@ -40,19 +36,26 @@ const NewListing: React.FC<{
    * Load the organizations to which the user belongs.
    * @todo Currently assumes the user belongs to an organization, which must be the case, yet this should allow for dynamically setting the default organization.
    */
-  const { loading, error, data } = useQuery<{ user: { organizations: Organization[] } }>(USER_WITH_ORGANIZATIONS, {
-    onCompleted: (data) =>
-      setListing({
-        ...listing,
-        organization:
-          data.user.organizations.find((organization) => organization.id === defaultOrganizationId) ||
-          data.user.organizations[0],
-      }),
+  const { loading, error, data } = useQuery(UserOrganizationsDocument, {
+    onCompleted: (data) => {
+      const user = data.user;
+      if (user) {
+        setListing({
+          ...listing,
+          organization:
+            user.organizations.find((organization) => organization.id === defaultOrganizationId) ||
+            user.organizations[0],
+        });
+      }
+    },
   });
 
   // Create the listing, navigate to the newly created listing upon completion.
-  const [createListing] = useMutation<{ createListing: { ok: boolean; listing: Listing } }>(CREATE_LISTING, {
-    onCompleted: (data) => router.push(`/orgs/${listing.organization.id}/listings/${data.createListing.listing.id}`),
+  const [createListing] = useMutation(CreateListingDocument, {
+    onCompleted: (data) => {
+      const listingId = data.createListing?.listing?.id;
+      if (listingId) router.push(`/orgs/${listing.organization.id}/listings/${listingId}`);
+    },
   });
 
   if (loading) return <p>Loading...</p>;
@@ -67,7 +70,7 @@ const NewListing: React.FC<{
           <ListingForm
             listing={listing}
             setListing={setListing}
-            organizations={data?.user.organizations || []}
+            organizations={data?.user?.organizations || []}
             onSubmit={() => {
               createListing({
                 variables: {

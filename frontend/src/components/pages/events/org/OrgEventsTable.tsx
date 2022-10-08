@@ -2,18 +2,15 @@ import { Chip, Table, TableBody, TableCell, TableContainer, TableHead, TableRow 
 import dayjs from "dayjs";
 import Link from "next/link";
 
-import { Event } from "@/interfaces/events";
-import { Organization } from "@/interfaces/organizations";
+import { OrgAdminEventFragment, AdminOrganizationFragment } from "@/generated/graphql";
 import { HeaderValuePair } from "@/interfaces/utils";
 
-const eventFields: HeaderValuePair<Event>[] = [
+const eventFields: HeaderValuePair<OrgAdminEventFragment>[] = [
   { header: "Navn", field: "title" },
   { header: "Antall Plasser", field: "availableSlots" },
 ];
 
-type Props = {
-  organization: Organization;
-};
+type Props = { organization: AdminOrganizationFragment };
 
 const OrgEventsTable: React.FC<Props> = ({ organization }) => {
   return (
@@ -22,7 +19,7 @@ const OrgEventsTable: React.FC<Props> = ({ organization }) => {
         <TableHead>
           <TableRow>
             <TableCell>Dato</TableCell>
-            {eventFields.map((field: HeaderValuePair<Event>) => (
+            {eventFields.map((field) => (
               <TableCell key={`header-${field.header}`}>{field.header}</TableCell>
             ))}
             <TableCell>Antall påmeldte</TableCell>
@@ -30,11 +27,11 @@ const OrgEventsTable: React.FC<Props> = ({ organization }) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {(organization.events ?? []).map((event: Event) => (
+          {(organization.events ?? []).map((event) => (
             <Link href={`${organization.id}/events/${event.id}`} passHref key={event.id}>
               <TableRow hover sx={{ pointer: "cursor" }}>
                 <TableCell>{dayjs(event.startTime).format("HH:mm DD-MM-YYYY")}</TableCell>
-                {eventFields.map((field: HeaderValuePair<Event>) => (
+                {eventFields.map((field) => (
                   <TableCell key={`event-${event.id}-cell-${field.field}`}>{event[field.field]}</TableCell>
                 ))}
                 <TableCell>{event.usersAttending?.length}</TableCell>

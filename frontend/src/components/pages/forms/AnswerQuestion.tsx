@@ -1,31 +1,26 @@
 import { FormControlLabel, MenuItem, Radio, RadioGroup, Select, TextField } from "@mui/material";
 
 import AnswerCheckboxes from "@/components/pages/forms/AnswerCheckboxes";
-import { Question } from "@/interfaces/forms";
+import { QuestionFragment, QuestionTypeEnum } from "@/generated/graphql";
 
 type Props = {
-  question: Question;
+  question: QuestionFragment;
+  /** Answer state passed down from AnswerForm */
   answer: string;
-  onValueChanged: (value: string) => void;
+  onAnswerChange: (value: string) => void;
 };
-/**
- * Component to answer a question on a form.
- *
- * Props:
- * - the answer state, passed down from answerForm
- * - onValueChanged function to change answer state
- */
-const AnswerQuestion: React.FC<Props> = ({ answer, question, onValueChanged }) => {
+/** Component to answer a question on a form. */
+const AnswerQuestion: React.FC<Props> = ({ answer, question, onAnswerChange }) => {
   // returns a form input based on the type of the answer's question
   // each input calls on onValueChanged to change the state of AnswerForm
   switch (question.questionType) {
-    case "PARAGRAPH":
-      return <TextField fullWidth multiline rows={4} value={answer} onChange={(e) => onValueChanged(e.target.value)} />;
-    case "SHORT_ANSWER":
-      return <TextField fullWidth value={answer} onChange={(e) => onValueChanged(e.target.value)} />;
-    case "MULTIPLE_CHOICE":
+    case QuestionTypeEnum.Paragraph:
+      return <TextField fullWidth multiline rows={4} value={answer} onChange={(e) => onAnswerChange(e.target.value)} />;
+    case QuestionTypeEnum.ShortAnswer:
+      return <TextField fullWidth value={answer} onChange={(e) => onAnswerChange(e.target.value)} />;
+    case QuestionTypeEnum.MultipleChoice:
       return (
-        <RadioGroup value={answer} onChange={(e) => onValueChanged(e.target.value)}>
+        <RadioGroup value={answer} onChange={(e) => onAnswerChange(e.target.value)}>
           {(question.options ?? []).map((option, index) => (
             <FormControlLabel
               key={index}
@@ -36,11 +31,11 @@ const AnswerQuestion: React.FC<Props> = ({ answer, question, onValueChanged }) =
           ))}
         </RadioGroup>
       );
-    case "CHECKBOXES":
-      return <AnswerCheckboxes answer={answer} question={question} onValueChanged={onValueChanged} />;
-    case "DROPDOWN":
+    case QuestionTypeEnum.Checkboxes:
+      return <AnswerCheckboxes answer={answer} question={question} onAnswerChange={onAnswerChange} />;
+    case QuestionTypeEnum.Dropdown:
       return (
-        <Select fullWidth value={answer} onChange={(e) => onValueChanged(e.target.value as string)}>
+        <Select fullWidth value={answer} onChange={(e) => onAnswerChange(e.target.value as string)}>
           {(question.options ?? []).map((option, index) => (
             <MenuItem key={index} value={option.answer}>
               {option.answer}
@@ -48,11 +43,13 @@ const AnswerQuestion: React.FC<Props> = ({ answer, question, onValueChanged }) =
           ))}
         </Select>
       );
-    case "SLIDER":
+    case QuestionTypeEnum.Slider:
       return <p>To be implemented</p>;
-    case "FILE_UPLOAD":
+    case QuestionTypeEnum.FileUpload:
       return <p>To be implemented</p>;
   }
+
+  return null;
 };
 
 export default AnswerQuestion;

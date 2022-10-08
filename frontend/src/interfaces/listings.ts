@@ -19,10 +19,6 @@ export interface Listing {
   readMoreUrl?: string;
 }
 
-export interface ListingWithForm extends Listing {
-  form?: Form;
-}
-
 export interface ListingInput extends Omit<Listing, "startDatetime" | "endDatetime" | "chips" | "slug"> {
   startDatetime?: string;
   endDatetime?: string;
