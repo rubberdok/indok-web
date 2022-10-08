@@ -1,6 +1,6 @@
 import { alpha, ThemeOptions } from "@mui/material/styles";
 
-const Drawer: ThemeOptions["components"] = {
+export const Drawer: ThemeOptions["components"] = {
   MuiDrawer: {
     styleOverrides: {
       modal: ({ theme }) => ({
@@ -22,5 +22,3 @@ const Drawer: ThemeOptions["components"] = {
     },
   },
 };
-
-export default Drawer;

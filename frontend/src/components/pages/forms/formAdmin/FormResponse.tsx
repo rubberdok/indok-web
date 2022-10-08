@@ -1,12 +1,12 @@
 import { Card, CardContent, FormHelperText, Grid, Typography } from "@mui/material";
 
-import FormAnswer from "@/components/pages/forms/formAdmin/FormAnswer";
+import { FormAnswer } from "@/components/pages/forms/formAdmin/FormAnswer";
 import { FormWithAllResponsesFragment, ResponseFragment } from "@/generated/graphql";
 
 type Props = { form: FormWithAllResponsesFragment; response: ResponseFragment };
 
 /** Component to see a user's answers to a form. */
-const FormResponse: React.FC<Props> = ({ form, response }) => {
+export const FormResponse: React.FC<Props> = ({ form, response }) => {
   return (
     <Grid container direction="column" spacing={1}>
       <Grid item>
@@ -55,5 +55,3 @@ const FormResponse: React.FC<Props> = ({ form, response }) => {
     </Grid>
   );
 };
-
-export default FormResponse;

@@ -9,7 +9,7 @@ type Output = {
   setDisabledDates: Dispatch<SetStateAction<string[]>>;
 };
 
-const useDisabledDates = (chosenCabins: CabinFragment[]): Output => {
+export const useDisabledDates = (chosenCabins: CabinFragment[]): Output => {
   const allBookingsQuery = useQuery(AllBookingsDocument);
   const [disabledDates, setDisabledDates] = useState<string[]>([]);
 
@@ -32,5 +32,3 @@ const useDisabledDates = (chosenCabins: CabinFragment[]): Output => {
 
   return { disabledDates, setDisabledDates };
 };
-
-export default useDisabledDates;

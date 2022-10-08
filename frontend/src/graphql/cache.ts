@@ -1,7 +1,7 @@
 import { InMemoryCache } from "@apollo/client";
 
 /* https://www.apollographql.com/docs/react/api/cache/InMemoryCache/ */
-const cache = new InMemoryCache({
+export const cache = new InMemoryCache({
   typePolicies: {
     Query: {
       fields: {
@@ -18,5 +18,3 @@ const cache = new InMemoryCache({
     },
   },
 });
-
-export default cache;

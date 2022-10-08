@@ -3,14 +3,14 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-import CabinsDetailsSection from "@/components/pages/cabins/CabinsDetailsSection";
-import CabinsHero from "@/components/pages/cabins/CabinsHero";
-import CabinsInfoSection from "@/components/pages/cabins/CabinsInfoSection";
-import ContactCabinBoard from "@/components/pages/cabins/ContactCabinBoard";
-import FAQ from "@/components/pages/cabins/Documents/FAQ";
+import { CabinsDetailsSection } from "@/components/pages/cabins/CabinsDetailsSection";
+import { CabinsHero } from "@/components/pages/cabins/CabinsHero";
+import { CabinsInfoSection } from "@/components/pages/cabins/CabinsInfoSection";
+import { ContactCabinBoard } from "@/components/pages/cabins/ContactCabinBoard";
+import { FAQ } from "@/components/pages/cabins/Documents/FAQ";
 import { outsideImages } from "@/components/pages/cabins/ImageSlider/imageData";
-import ImageSlider from "@/components/pages/cabins/ImageSlider/ImageSlider";
-import Layout from "@/layouts/Layout";
+import { ImageSlider } from "@/components/pages/cabins/ImageSlider/ImageSlider";
+import { Layout } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/pages/_app";
 
 /** Front page for cabins. Includes info about the cabins and link to the booking page (cabins/book). */

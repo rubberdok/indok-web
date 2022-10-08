@@ -50,7 +50,7 @@ type Props = {
 };
 
 /** Component (Dialog) for editing an event. */
-const EditEvent: React.FC<Props> = ({ open, onClose, event }) => {
+export const EditEvent: React.FC<Props> = ({ open, onClose, event }) => {
   const defaultInput: Record<string, any> = {
     title: "",
     description: "",
@@ -419,5 +419,3 @@ const EditEvent: React.FC<Props> = ({ open, onClose, event }) => {
     </Dialog>
   );
 };
-
-export default EditEvent;

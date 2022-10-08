@@ -7,7 +7,7 @@ import { useState } from "react";
 import { LogoutDocument } from "@/generated/graphql";
 import { config } from "@/utils/config";
 
-const Logout: React.FC<Omit<ButtonProps, "sx">> = ({ ...props }) => {
+export const Logout: React.FC<Omit<ButtonProps, "sx">> = ({ ...props }) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [logoutAction, { loading, client }] = useMutation(LogoutDocument, {
@@ -41,5 +41,3 @@ const Logout: React.FC<Omit<ButtonProps, "sx">> = ({ ...props }) => {
     </>
   );
 };
-
-export default Logout;

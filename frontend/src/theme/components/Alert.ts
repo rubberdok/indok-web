@@ -1,6 +1,6 @@
 import { ThemeOptions } from "@mui/material";
 
-const Alert: ThemeOptions["components"] = {
+export const Alert: ThemeOptions["components"] = {
   MuiAlert: {
     styleOverrides: {
       root: {
@@ -9,5 +9,3 @@ const Alert: ThemeOptions["components"] = {
     },
   },
 };
-
-export default Alert;

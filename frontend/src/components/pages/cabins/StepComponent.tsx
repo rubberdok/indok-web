@@ -4,11 +4,11 @@ import React from "react";
 import { CabinFragment } from "@/generated/graphql";
 import { ContactInfo, ContactInfoValidations, DatePick } from "@/types/cabins";
 
-import CabinContactInfo from "./CabinContactInfo";
-import CheckInOut from "./CheckInOut";
-import ExtraInfoSite from "./ExtraInfoSite";
-import PaymentSite from "./PaymentSite";
-import ReceiptSite from "./ReceiptSite";
+import { CabinContactInfo } from "./CabinContactInfo";
+import { CheckInOut } from "./CheckInOut";
+import { ExtraInfoSite } from "./ExtraInfoSite";
+import { PaymentSite } from "./PaymentSite";
+import { ReceiptSite } from "./ReceiptSite";
 
 type Props = {
   activeStep: number;
@@ -24,7 +24,7 @@ type Props = {
   setExtraInfo: React.Dispatch<React.SetStateAction<string>>;
 };
 
-const StepComponent: React.FC<Props> = (props) => {
+export const StepComponent: React.FC<Props> = (props) => {
   switch (props.activeStep) {
     case 0:
       // Choose cabin
@@ -72,5 +72,3 @@ const StepComponent: React.FC<Props> = (props) => {
       return <Typography>Step not found</Typography>;
   }
 };
-
-export default StepComponent;

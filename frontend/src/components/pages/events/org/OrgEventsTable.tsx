@@ -12,7 +12,7 @@ const eventFields: HeaderValuePair<OrgAdminEventFragment>[] = [
 
 type Props = { organization: AdminOrganizationFragment };
 
-const OrgEventsTable: React.FC<Props> = ({ organization }) => {
+export const OrgEventsTable: React.FC<Props> = ({ organization }) => {
   return (
     <TableContainer>
       <Table>
@@ -49,5 +49,3 @@ const OrgEventsTable: React.FC<Props> = ({ organization }) => {
     </TableContainer>
   );
 };
-
-export default OrgEventsTable;

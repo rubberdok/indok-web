@@ -9,7 +9,7 @@ import {
   FormHelperText,
 } from "@mui/material";
 
-import WarningButton from "@/components/ui/WarningButton";
+import { WarningButton } from "@/components/ui/WarningButton";
 import { DeleteListingDocument, OrgAdminListingFragment } from "@/generated/graphql";
 
 type Props = {
@@ -20,7 +20,7 @@ type Props = {
 };
 
 /** Component for confirmation dialog when an organization admin tries to delete a listing. */
-const DeleteListing: React.FC<Props> = ({ listing, onClose }) => {
+export const DeleteListing: React.FC<Props> = ({ listing, onClose }) => {
   const [deleteListing] = useMutation(DeleteListingDocument, {
     // updates the cache upon deleting the listing, so changes are reflected instantly
     update: (cache, { data }) => {
@@ -64,5 +64,3 @@ const DeleteListing: React.FC<Props> = ({ listing, onClose }) => {
     </Dialog>
   );
 };
-
-export default DeleteListing;

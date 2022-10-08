@@ -6,7 +6,7 @@ type Props = {
 };
 
 /** Component for banner image on listing detail page. */
-const ListingBanner: React.FC<Props> = ({ imageUrl }) => {
+export const ListingBanner: React.FC<Props> = ({ imageUrl }) => {
   return (
     <>
       {imageUrl ? (
@@ -39,5 +39,3 @@ const ListingBanner: React.FC<Props> = ({ imageUrl }) => {
     </>
   );
 };
-
-export default ListingBanner;

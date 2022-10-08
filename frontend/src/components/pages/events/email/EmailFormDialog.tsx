@@ -13,7 +13,7 @@ type Props = {
   sendEmail: () => void;
 };
 
-const EmailFormDialog: React.FC<Props> = ({
+export const EmailFormDialog: React.FC<Props> = ({
   showEmailForm,
   setShowEmailForm,
   emailProps,
@@ -93,5 +93,3 @@ const EmailFormDialog: React.FC<Props> = ({
     </Dialog>
   );
 };
-
-export default EmailFormDialog;

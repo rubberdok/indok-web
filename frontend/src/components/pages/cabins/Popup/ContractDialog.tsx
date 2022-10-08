@@ -3,12 +3,11 @@ import { Button, Dialog, DialogActions, DialogContent, Grid, IconButton } from "
 import { NextPage } from "next";
 import { Dispatch, SetStateAction } from "react";
 
+import { Contract } from "@/components/pages/cabins/Documents/Contract";
 import { CabinFragment } from "@/generated/graphql";
 import { ContactInfo, DatePick, ModalData } from "@/types/cabins";
 
-import Contract from "../Documents/Contract";
-
-type ContractDialogProps = {
+type Props = {
   modalData: ModalData;
   setModalData: Dispatch<SetStateAction<ModalData>>;
   datePick: DatePick;
@@ -19,7 +18,7 @@ type ContractDialogProps = {
 };
 
 /** Dialog component for the contract component. */
-const ContractDialog: NextPage<ContractDialogProps> = ({
+export const ContractDialog: NextPage<Props> = ({
   modalData,
   setModalData,
   datePick,
@@ -64,5 +63,3 @@ const ContractDialog: NextPage<ContractDialogProps> = ({
     </>
   );
 };
-
-export default ContractDialog;

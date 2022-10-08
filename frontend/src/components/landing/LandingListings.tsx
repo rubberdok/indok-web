@@ -4,7 +4,7 @@ import Link from "next/link";
 
 import Social from "~/public/img/gang.jpg";
 
-const LandingListings: React.FC = () => {
+export const LandingListings: React.FC = () => {
   return (
     <Box
       sx={{
@@ -67,5 +67,3 @@ const LandingListings: React.FC = () => {
     </Box>
   );
 };
-
-export default LandingListings;

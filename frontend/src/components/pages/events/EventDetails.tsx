@@ -34,9 +34,9 @@ import React, { useState } from "react";
 import ReactMarkdown from "react-markdown";
 
 import { PermissionRequired } from "@/components/Auth";
-import LoginRequired from "@/components/Auth/LoginRequired";
-import Breadcrumbs from "@/components/Breadcrumbs";
-import LabeledIcon from "@/components/LabeledIcon";
+import { LoginRequired } from "@/components/Auth/LoginRequired";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { LabeledIcon } from "@/components/LabeledIcon";
 import * as components from "@/components/MarkdownForm/components";
 import {
   EventDocument,
@@ -47,8 +47,8 @@ import {
 } from "@/generated/graphql";
 import { calendarFile } from "@/utils/calendars";
 
-import CountdownButton from "./CountdownButton";
-import EditEvent from "./EventEditor";
+import { CountdownButton } from "./CountdownButton";
+import { EditEvent } from "./EditEvent";
 
 type AlertProps = {
   open: boolean;
@@ -76,7 +76,7 @@ type Props = {
   eventId: string;
 };
 
-const EventDetails: React.FC<Props> = ({ eventId }) => {
+export const EventDetails: React.FC<Props> = ({ eventId }) => {
   const [openSignUpSnackbar, setOpenSignUpSnackbar] = useState(false);
   const [openSignOffSnackbar, setOpenSignOffSnackbar] = useState(false);
   const [openOnWaitingListSnackbar, setOpenOnWaitingListSnackbar] = useState(false);
@@ -447,5 +447,3 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
     </>
   );
 };
-
-export default EventDetails;

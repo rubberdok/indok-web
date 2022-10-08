@@ -6,12 +6,13 @@ import Image from "next/image";
 import NextLink, { LinkProps } from "next/link";
 import { ReactNode, useState } from "react";
 
-import Logo from "@/components/Logo";
-import Vercel from "@/components/Vercel";
-import useResponsive from "@/hooks/useResponsive";
+import { Logo } from "@/components/Logo";
+import { Vercel } from "@/components/Vercel";
+import { useResponsive } from "@/hooks/useResponsive";
 import rubberdokLogo from "~/public/img/rubberdok_logo_black.svg";
 
-const HallOfFame = dynamic(() => import("./HallOfFame"));
+// https://nextjs.org/docs/advanced-features/dynamic-import
+const HallOfFame = dynamic(() => import("./HallOfFame").then((mod) => mod.HallOfFame));
 
 const Watermark = styled("div")(({ theme }) => ({
   background: "url('/nth.svg')",
@@ -31,7 +32,7 @@ const Watermark = styled("div")(({ theme }) => ({
   },
 }));
 
-const Footer: React.FC = () => {
+export const Footer: React.FC = () => {
   const isDesktop = useResponsive({ query: "up", key: "md" });
   const [open, setOpen] = useState(false);
   const theme = useTheme();
@@ -135,5 +136,3 @@ const NextLinkItem: React.FC<NextLinkItemProps> = ({ children, sx, onClick, ...o
     </NextLink>
   );
 };
-
-export default Footer;

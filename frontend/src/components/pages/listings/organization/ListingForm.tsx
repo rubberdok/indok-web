@@ -18,7 +18,7 @@ import {
 } from "@mui/material";
 import React, { ChangeEvent } from "react";
 
-import MarkdownForm from "@/components/MarkdownForm";
+import { MarkdownForm } from "@/components/MarkdownForm";
 import { ListingOrganizationFragment } from "@/generated/graphql";
 import { ListingInput } from "@/types/listings";
 
@@ -32,7 +32,7 @@ type Props = {
 };
 
 /** A form to create or edit a listing. */
-const ListingForm: React.FC<Props> = ({ listing, setListing, onSubmit, onCancel, organizations }) => {
+export const ListingForm: React.FC<Props> = ({ listing, setListing, onSubmit, onCancel, organizations }) => {
   /** Helper function to handle changes to TextFields. */
   const handlePropertyChange = (
     event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
@@ -308,5 +308,3 @@ const ListingForm: React.FC<Props> = ({ listing, setListing, onSubmit, onCancel,
     </Card>
   );
 };
-
-export default ListingForm;

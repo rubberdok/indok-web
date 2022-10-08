@@ -14,7 +14,7 @@ import {
   TextField,
 } from "@mui/material";
 
-import questionTypeLabels from "@/components/pages/forms/formAdmin/questionTypeLabels";
+import { questionTypeLabels } from "@/components/pages/forms/formAdmin/questionTypeLabels";
 import { OptionFragment, QuestionTypeEnum, QuestionWithAnswerIdsFragment } from "@/generated/graphql";
 
 type Props = {
@@ -29,7 +29,7 @@ type Props = {
  * Renders input fields to change the question's details.
  * If the question's type allows options, allows the creation of such.
  */
-const EditQuestion: React.FC<Props> = ({ question, setQuestion, saveQuestion, deleteQuestion }) => (
+export const EditQuestion: React.FC<Props> = ({ question, setQuestion, saveQuestion, deleteQuestion }) => (
   <Grid container direction="column" spacing={1}>
     <Grid item>
       <TextField
@@ -189,5 +189,3 @@ const EditQuestion: React.FC<Props> = ({ question, setQuestion, saveQuestion, de
     </Grid>
   </Grid>
 );
-
-export default EditQuestion;

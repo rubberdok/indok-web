@@ -8,7 +8,7 @@ type Props = {
   onDark?: boolean;
 };
 
-const LinkItem: React.FC<Props> = ({ link, onDark }) => {
+export const LinkItem: React.FC<Props> = ({ link, onDark }) => {
   const { href = "", name, icon } = link;
   return (
     <NextLink key={name} href={href} passHref>
@@ -39,5 +39,3 @@ const LinkItem: React.FC<Props> = ({ link, onDark }) => {
     </NextLink>
   );
 };
-
-export default LinkItem;

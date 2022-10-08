@@ -2,13 +2,13 @@ import { Box, Stack } from "@mui/material";
 import { useRouter } from "next/router";
 
 import { PermissionRequired } from "@/components/Auth";
-import LoginButton from "@/layouts/components/LoginButton";
+import { LoginButton } from "@/layouts/components/LoginButton";
 
 import { NavigationProps } from "../../types";
 
-import NavigationLink from "./NavigationLink";
+import { NavigationLink } from "./NavigationLink";
 
-const Basic: React.FC<NavigationProps> = ({ routes }) => {
+export const Basic: React.FC<NavigationProps> = ({ routes }) => {
   const { pathname } = useRouter();
   return (
     <Box sx={{ display: { xs: "none", md: "block" }, width: "100%" }}>
@@ -29,5 +29,3 @@ const Basic: React.FC<NavigationProps> = ({ routes }) => {
     </Box>
   );
 };
-
-export default Basic;

@@ -10,7 +10,7 @@ type Props = {
   datePick: DatePick;
 };
 
-const ExtraInfoSite: React.VFC<Props> = ({ setExtraInfo, datePick, chosenCabins }) => {
+export const ExtraInfoSite: React.VFC<Props> = ({ setExtraInfo, datePick, chosenCabins }) => {
   const fromDate = datePick.checkInDate !== undefined && convertDateFormat(datePick.checkInDate);
   const toDate = datePick.checkOutDate !== undefined && convertDateFormat(datePick.checkOutDate);
 
@@ -44,5 +44,3 @@ const ExtraInfoSite: React.VFC<Props> = ({ setExtraInfo, datePick, chosenCabins 
     </Box>
   );
 };
-
-export default ExtraInfoSite;

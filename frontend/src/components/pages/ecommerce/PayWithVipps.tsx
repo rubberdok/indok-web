@@ -13,7 +13,7 @@ type Props = {
   fallbackRedirect: string | undefined;
 };
 
-const PayWithVipps: React.FC<Props> = ({ productId, quantity, onError, disabled, fallbackRedirect }) => {
+export const PayWithVipps: React.FC<Props> = ({ productId, quantity, onError, disabled, fallbackRedirect }) => {
   const [initiateOrder, { error }] = useMutation(InitiateOrderDocument, {
     onCompleted: (data) => {
       if (data.initiateOrder) {
@@ -53,5 +53,3 @@ const PayWithVipps: React.FC<Props> = ({ productId, quantity, onError, disabled,
     </Card>
   );
 };
-
-export default PayWithVipps;

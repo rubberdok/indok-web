@@ -4,9 +4,9 @@ import React from "react";
 
 import { FilterQuery } from "@/components/pages/events/AllEvents";
 
-import CategoryFilter from "./CategoryFilter";
-import DateTimeFilter from "./DateTimeFilter";
-import OrganizationFilter from "./OrganizationFilter";
+import { CategoryFilter } from "./CategoryFilter";
+import { DateTimeFilter } from "./DateTimeFilter";
+import { OrganizationFilter } from "./OrganizationFilter";
 import { HandleChecked } from "./types";
 
 type Props = {
@@ -21,7 +21,7 @@ type Props = {
 };
 
 /** Component for the filter menu on the event list page. */
-const FilterMenu: React.FC<Props> = ({ filters, onFiltersChange, showDefaultEvents, onShowDefaultChange }) => {
+export const FilterMenu: React.FC<Props> = ({ filters, onFiltersChange, showDefaultEvents, onShowDefaultChange }) => {
   const handleChecked: HandleChecked = (e, field, filter) => {
     if (e.target.checked) {
       onFiltersChange({ ...filters, [field]: filter });
@@ -83,5 +83,3 @@ const FilterMenu: React.FC<Props> = ({ filters, onFiltersChange, showDefaultEven
     </Card>
   );
 };
-
-export default FilterMenu;

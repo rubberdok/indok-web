@@ -3,7 +3,7 @@ import { grey } from "@mui/material/colors";
 
 import { createShadow } from "./helpers";
 
-const shadows: (mode: PaletteMode) => ThemeOptions["shadows"] = (mode) => {
+export const shadows: (mode: PaletteMode) => ThemeOptions["shadows"] = (mode) => {
   switch (mode) {
     case "light":
       return createShadow(grey[400]);
@@ -11,5 +11,3 @@ const shadows: (mode: PaletteMode) => ThemeOptions["shadows"] = (mode) => {
       return createShadow("#000");
   }
 };
-
-export default shadows;

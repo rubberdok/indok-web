@@ -2,7 +2,7 @@ import { useQuery } from "@apollo/client";
 import { CircularProgress } from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
+import { Select } from "@mui/material/Select";
 import React from "react";
 
 import { AvailableYearsDocument } from "@/generated/graphql";
@@ -12,7 +12,7 @@ type Props = {
   handleYearFilterChanged: (year: string) => void;
 };
 
-const YearSelector: React.FC<Props> = ({ yearFilter, handleYearFilterChanged }) => {
+export const YearSelector: React.FC<Props> = ({ yearFilter, handleYearFilterChanged }) => {
   const { loading, data, error } = useQuery(AvailableYearsDocument);
 
   if (loading) return <CircularProgress />;
@@ -45,4 +45,3 @@ const YearSelector: React.FC<Props> = ({ yearFilter, handleYearFilterChanged }) 
     </>
   );
 };
-export default YearSelector;

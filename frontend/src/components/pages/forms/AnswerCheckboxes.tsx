@@ -14,7 +14,7 @@ type Props = {
  * Component to answer questions of the Checkboxes type.
  * Separated into its own component, since multiple possible answers requires its own logic.
  */
-const AnswerCheckboxes: React.FC<Props> = ({ answer, question, onAnswerChange }) => {
+export const AnswerCheckboxes: React.FC<Props> = ({ answer, question, onAnswerChange }) => {
   // state to manage which options are selected
   const [selectedOptions, setSelectedOptions] = useState<OptionFragment[]>(
     question.options ? question.options?.filter((option) => answer.split("|||").includes(option.answer)) : []
@@ -62,5 +62,3 @@ const AnswerCheckboxes: React.FC<Props> = ({ answer, question, onAnswerChange })
     </FormGroup>
   );
 };
-
-export default AnswerCheckboxes;

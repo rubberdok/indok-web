@@ -15,7 +15,7 @@ type Props = {
   children: React.ReactNode;
 };
 
-const ThemeProvider: React.FC<Props> = ({ children }) => {
+export const ThemeProvider: React.FC<Props> = ({ children }) => {
   const isDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
 
   const themeOptions: ThemeOptions = useMemo(() => getDesignTokens(isDarkMode ? "dark" : "light"), [isDarkMode]);
@@ -33,5 +33,3 @@ const ThemeProvider: React.FC<Props> = ({ children }) => {
     </MUIThemeProvider>
   );
 };
-
-export default ThemeProvider;

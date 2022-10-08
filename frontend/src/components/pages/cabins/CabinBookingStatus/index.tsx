@@ -3,7 +3,7 @@ import { TypographyProps } from "@mui/material/Typography";
 import { NextPage } from "next";
 
 import { CabinFragment } from "@/generated/graphql";
-import useResponsive from "@/hooks/useResponsive";
+import { useResponsive } from "@/hooks/useResponsive";
 import { ContactInfo, DatePick } from "@/types/cabins";
 import { calculatePrice, convertDateFormat, toStringChosenCabins } from "@/utils/cabins";
 
@@ -25,7 +25,7 @@ type Props = {
  * Statusbox with information about the current cabin booking.
  * Renders fields based on the props given.
  */
-const CabinBookingStatus: NextPage<Props> = ({ chosenCabins, datePick, contactInfo, cabinText, mailSent }) => {
+export const CabinBookingStatus: NextPage<Props> = ({ chosenCabins, datePick, contactInfo, cabinText, mailSent }) => {
   const isMobile = useResponsive({ query: "down", key: "md" });
 
   return (
@@ -104,5 +104,3 @@ const CabinBookingStatus: NextPage<Props> = ({ chosenCabins, datePick, contactIn
     </Box>
   );
 };
-
-export default CabinBookingStatus;

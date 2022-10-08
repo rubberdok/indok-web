@@ -9,7 +9,7 @@ import { ListingFragment } from "@/generated/graphql";
 type Props = { listing: ListingFragment };
 
 /** Component for authorized organization members to administer their listing. */
-const OrganizationListing: React.FC<Props> = ({ listing }) => (
+export const OrganizationListing: React.FC<Props> = ({ listing }) => (
   <Grid container direction="column" spacing={1}>
     <Grid item>
       <Card>
@@ -32,5 +32,3 @@ const OrganizationListing: React.FC<Props> = ({ listing }) => (
     </Grid>
   </Grid>
 );
-
-export default OrganizationListing;

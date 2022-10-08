@@ -6,15 +6,10 @@ import Link from "next/link";
 import React from "react";
 
 import { EventInListFragment, UserWithEventsAndOrgsFragment } from "@/generated/graphql";
-import useResponsive from "@/hooks/useResponsive";
+import { useResponsive } from "@/hooks/useResponsive";
 
 const formatDate = (dateAndTime: string) => {
   return dayjs(dateAndTime).locale(nb).format(`D. MMM`);
-};
-
-type Props = {
-  event: EventInListFragment;
-  user?: UserWithEventsAndOrgsFragment;
 };
 
 const EventActionCardStyle = styled((props) => <CardActionArea {...props} />)(({ theme }) => ({
@@ -30,7 +25,12 @@ const EventActionCardStyle = styled((props) => <CardActionArea {...props} />)(({
   },
 }));
 
-const EventListItem: React.FC<Props> = ({ event, user }) => {
+type Props = {
+  event: EventInListFragment;
+  user?: UserWithEventsAndOrgsFragment;
+};
+
+export const EventListItem: React.FC<Props> = ({ event, user }) => {
   const isMobile = useResponsive({ query: "down", key: "md" });
 
   return (
@@ -66,5 +66,3 @@ const EventListItem: React.FC<Props> = ({ event, user }) => {
     </Card>
   );
 };
-
-export default EventListItem;

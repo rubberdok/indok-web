@@ -16,7 +16,7 @@ type Props = {
 };
 
 /** Component for the organization filter in the filter menu. */
-const OrganizationFilter: React.FC<Props> = ({ filters, handleChecked }) => {
+export const OrganizationFilter: React.FC<Props> = ({ filters, handleChecked }) => {
   const { data, loading, error } = useQuery(EventFilteredOrganizationsDocument);
 
   if (loading) {
@@ -59,5 +59,3 @@ const OrganizationFilter: React.FC<Props> = ({ filters, handleChecked }) => {
     </Grid>
   );
 };
-
-export default OrganizationFilter;

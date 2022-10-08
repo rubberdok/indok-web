@@ -1,6 +1,6 @@
 import { FormControlLabel, MenuItem, Radio, RadioGroup, Select, TextField } from "@mui/material";
 
-import AnswerCheckboxes from "@/components/pages/forms/AnswerCheckboxes";
+import { AnswerCheckboxes } from "@/components/pages/forms/AnswerCheckboxes";
 import { QuestionFragment, QuestionTypeEnum } from "@/generated/graphql";
 
 type Props = {
@@ -11,7 +11,7 @@ type Props = {
 };
 
 /** Component to answer a question on a form. */
-const AnswerQuestion: React.FC<Props> = ({ answer, question, onAnswerChange }) => {
+export const AnswerQuestion: React.FC<Props> = ({ answer, question, onAnswerChange }) => {
   // returns a form input based on the type of the answer's question
   // each input calls on onValueChanged to change the state of AnswerForm
   switch (question.questionType) {
@@ -52,5 +52,3 @@ const AnswerQuestion: React.FC<Props> = ({ answer, question, onAnswerChange }) =
 
   return null;
 };
-
-export default AnswerQuestion;

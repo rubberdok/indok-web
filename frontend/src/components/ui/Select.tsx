@@ -13,7 +13,7 @@ type Props = {
   onChange: FocusEventHandler<HTMLSelectElement>;
 };
 
-const Select: React.FC<Props> = ({ name, items, placeholder, onChange }) => {
+export const Select: React.FC<Props> = ({ name, items, placeholder, onChange }) => {
   return (
     <div>
       <h6 style={{ marginBottom: 0, marginTop: 0 }}>{`${name}:`}</h6>
@@ -32,5 +32,3 @@ const Select: React.FC<Props> = ({ name, items, placeholder, onChange }) => {
     </div>
   );
 };
-
-export default Select;

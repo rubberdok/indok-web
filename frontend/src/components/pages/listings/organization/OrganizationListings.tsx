@@ -14,13 +14,13 @@ import dayjs from "dayjs";
 import Link from "next/link";
 import { useState } from "react";
 
-import DeleteListing from "@/components/pages/listings/organization/DeleteListing";
+import { DeleteListing } from "@/components/pages/listings/organization/DeleteListing";
 import { AdminOrganizationFragment, OrgAdminListingFragment } from "@/generated/graphql";
 
 type Props = { organization: AdminOrganizationFragment };
 
 /** Component to show a list of listings connected to an organization for its administrators. */
-const OrganizationListings: React.FC<Props> = ({ organization }) => {
+export const OrganizationListings: React.FC<Props> = ({ organization }) => {
   // state for whether to show the DeleteListing confirmation dialog
   // if not undefined, contains the listing to be deleted for use by the dialog
   const [listingToDelete, setListingToDelete] = useState<OrgAdminListingFragment | undefined>();
@@ -82,5 +82,3 @@ const OrganizationListings: React.FC<Props> = ({ organization }) => {
     </>
   );
 };
-
-export default OrganizationListings;

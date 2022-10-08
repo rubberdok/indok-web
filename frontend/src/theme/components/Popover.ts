@@ -1,6 +1,6 @@
 import { alpha, ThemeOptions } from "@mui/material/styles";
 
-const Popover: ThemeOptions["components"] = {
+export const Popover: ThemeOptions["components"] = {
   MuiPopover: {
     defaultProps: {
       elevation: 24,
@@ -13,5 +13,3 @@ const Popover: ThemeOptions["components"] = {
     },
   },
 };
-
-export default Popover;

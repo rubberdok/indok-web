@@ -36,7 +36,7 @@ type Props = {
   "data-test-id"?: string;
 };
 
-const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": dataTestId }) => {
+export const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": dataTestId }) => {
   const { data } = useQuery(UserToEditDocument);
   const [updateUser] = useMutation(UpdateUserDocument, { onCompleted, refetchQueries: [UserToEditDocument] });
   const router = useRouter();
@@ -227,5 +227,3 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": 
     </form>
   );
 };
-
-export default UserForm;

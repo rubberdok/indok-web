@@ -16,7 +16,7 @@ type FormikCabinValues = {
 };
 
 /** Component for editing cabin information. Only used on the admin page. */
-const CabinInfoPicker: React.VFC = () => {
+export const CabinInfoPicker: React.VFC = () => {
   const cabinQuery = useQuery(CabinsDocument);
   const [updateCabin] = useMutation(UpdateCabinDocument, {
     onError: () => {
@@ -183,5 +183,3 @@ const CabinInfoPicker: React.VFC = () => {
     </>
   );
 };
-
-export default CabinInfoPicker;

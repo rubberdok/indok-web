@@ -28,12 +28,12 @@ import dayjs from "dayjs";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 
-import AttendeeExport from "@/components/pages/events/AttendeeExport";
-import EmailForm from "@/components/pages/events/email/EmailForm";
-import EditEvent from "@/components/pages/events/EventEditor";
-import OrganizationEventHero from "@/components/pages/organization/OrganizationEventHero";
+import { AttendeeExport } from "@/components/pages/events/AttendeeExport";
+import { EditEvent } from "@/components/pages/events/EditEvent";
+import { EmailForm } from "@/components/pages/events/email/EmailForm";
+import { OrganizationEventHero } from "@/components/pages/organization/OrganizationEventHero";
 import { AdminEventDocument, AdminEventFragment, AdminEventSignOffDocument, SignUpFragment } from "@/generated/graphql";
-import Layout from "@/layouts/Layout";
+import { Layout } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/pages/_app";
 import { HeaderValuePair } from "@/types/utils";
 

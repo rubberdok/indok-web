@@ -4,7 +4,7 @@ import { NextPage } from "next";
 import { CabinFragment } from "@/generated/graphql";
 import { ContactInfo, DatePick } from "@/types/cabins";
 
-import CabinBookingStatus from "../CabinBookingStatus";
+import { CabinBookingStatus } from "../CabinBookingStatus";
 
 type Props = {
   chosenCabins: CabinFragment[];
@@ -14,7 +14,7 @@ type Props = {
 };
 
 /** Step in the cabins/book site. Shows a confirmation of the booking made after the payment site. */
-const ReceiptSite: NextPage<Props> = (props) => {
+export const ReceiptSite: NextPage<Props> = (props) => {
   return (
     <Grid container alignItems="center" direction="column">
       <Hidden lgDown>
@@ -32,5 +32,3 @@ const ReceiptSite: NextPage<Props> = (props) => {
     </Grid>
   );
 };
-
-export default ReceiptSite;

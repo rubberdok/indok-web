@@ -4,14 +4,14 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 
 import { PermissionRequired } from "@/components/Auth";
-import Logo from "@/components/Logo";
-import LoginButton from "@/layouts/components/LoginButton";
+import { Logo } from "@/components/Logo";
+import { LoginButton } from "@/layouts/components/LoginButton";
 
 import { NavigationProps } from "../../types";
 
-import NavigationLink from "./NavigationLink";
+import { NavigationLink } from "./NavigationLink";
 
-const Drawer: React.FC<NavigationProps> = ({ routes }) => {
+export const Drawer: React.FC<NavigationProps> = ({ routes }) => {
   const [open, setOpen] = useState(false);
   const { pathname } = useRouter();
 
@@ -63,5 +63,3 @@ const Drawer: React.FC<NavigationProps> = ({ routes }) => {
     </Box>
   );
 };
-
-export default Drawer;

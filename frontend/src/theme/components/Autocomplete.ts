@@ -1,6 +1,6 @@
 import { ThemeOptions } from "@mui/material";
 
-const Autocomplete: ThemeOptions["components"] = {
+export const Autocomplete: ThemeOptions["components"] = {
   MuiAutocomplete: {
     styleOverrides: {
       paper: ({ theme }) => ({
@@ -16,5 +16,3 @@ const Autocomplete: ThemeOptions["components"] = {
     },
   },
 };
-
-export default Autocomplete;

@@ -4,7 +4,8 @@ import { memo } from "react";
 
 type Props = { sx?: SxProps };
 
-const Logo: React.FC<Props> = ({ sx }) => {
+// eslint-disable-next-line react/display-name
+export const Logo: React.NamedExoticComponent<Props> = memo(({ sx }) => {
   return (
     <NextLink href="/" passHref>
       <Box
@@ -22,6 +23,4 @@ const Logo: React.FC<Props> = ({ sx }) => {
       </Box>
     </NextLink>
   );
-};
-
-export default memo(Logo);
+});

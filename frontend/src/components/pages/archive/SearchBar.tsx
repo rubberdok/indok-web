@@ -27,7 +27,7 @@ type Props = {
   handleSearchFilterCanceled: () => void;
 };
 
-const SearchBar: React.FC<Props> = ({ searchFilter, handleSearchFilterChanged }) => {
+export const SearchBar: React.FC<Props> = ({ searchFilter, handleSearchFilterChanged }) => {
   return (
     <RootStyle>
       <SearchStyle
@@ -43,5 +43,3 @@ const SearchBar: React.FC<Props> = ({ searchFilter, handleSearchFilterChanged })
     </RootStyle>
   );
 };
-
-export default SearchBar;

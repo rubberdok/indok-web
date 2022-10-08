@@ -16,7 +16,7 @@ type Props = {
 };
 
 /** Carousel compoent for showing images. */
-const ImageSlider: React.VFC<Props> = ({ imageData, displayLabelText }) => {
+export const ImageSlider: React.VFC<Props> = ({ imageData, displayLabelText }) => {
   const theme = useTheme();
   const [activeStep, setActiveStep] = React.useState(0);
 
@@ -92,5 +92,3 @@ const ImageSlider: React.VFC<Props> = ({ imageData, displayLabelText }) => {
     </Box>
   );
 };
-
-export default ImageSlider;

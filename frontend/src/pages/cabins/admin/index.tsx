@@ -6,11 +6,11 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 
 import { PermissionRequired } from "@/components/Auth";
-import TabPanel from "@/components/pages/about/TabPanel";
-import AdminCabinTable from "@/components/pages/cabins/Admin/AdminCabinTable";
+import { TabPanel } from "@/components/pages/about/TabPanel";
+import { AdminCabinTable } from "@/components/pages/cabins/Admin/AdminCabinTable";
 import { AdminAllBookingsDocument } from "@/generated/graphql";
-import useResponsive from "@/hooks/useResponsive";
-import Layout, { RootStyle } from "@/layouts/Layout";
+import { useResponsive } from "@/hooks/useResponsive";
+import { Layout, RootStyle } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/pages/_app";
 
 /** Page for booking admininistration showing all upcoming bookings and buttons for actions on these bookings. */

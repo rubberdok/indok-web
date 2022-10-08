@@ -2,7 +2,7 @@ import { Grid, Typography } from "@mui/material";
 
 import { AnswerWithQuestionIdFragment, QuestionTypeEnum, QuestionWithAnswerIdsFragment } from "@/generated/graphql";
 
-import QuestionTypePreview from "./QuestionTypePreview";
+import { QuestionTypePreview } from "./QuestionTypePreview";
 
 type Props = {
   question: QuestionWithAnswerIdsFragment;
@@ -11,7 +11,7 @@ type Props = {
 };
 
 /** Component to show an answer to a question on a form. */
-const FormAnswer: React.FC<Props> = ({ question, answer }) => {
+export const FormAnswer: React.FC<Props> = ({ question, answer }) => {
   return (
     <>
       <Grid container direction="row" spacing={1}>
@@ -39,5 +39,3 @@ const FormAnswer: React.FC<Props> = ({ question, answer }) => {
     </>
   );
 };
-
-export default FormAnswer;

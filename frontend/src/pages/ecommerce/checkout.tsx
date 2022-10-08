@@ -23,10 +23,10 @@ import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 
-import PayWithVipps from "@/components/pages/ecommerce/PayWithVipps";
-import SalesTermsDialog from "@/components/pages/ecommerce/SalesTermsDialog";
+import { PayWithVipps } from "@/components/pages/ecommerce/PayWithVipps";
+import { SalesTermsDialog } from "@/components/pages/ecommerce/SalesTermsDialog";
 import { ProductDocument, UserDocument } from "@/generated/graphql";
-import Layout, { RootStyle } from "@/layouts/Layout";
+import { Layout, RootStyle } from "@/layouts/Layout";
 import { addApolloState, initializeApollo } from "@/lib/apolloClient";
 import { NextPageWithLayout } from "@/pages/_app";
 

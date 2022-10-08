@@ -1,6 +1,6 @@
 import { Checkbox, FormControlLabel, FormGroup, Radio, RadioGroup, TextField, Box } from "@mui/material";
 
-import questionTypeLabels from "@/components/pages/forms/formAdmin/questionTypeLabels";
+import { questionTypeLabels } from "@/components/pages/forms/formAdmin/questionTypeLabels";
 import { QuestionTypeEnum, QuestionWithAnswerIdsFragment } from "@/generated/graphql";
 
 type Props = {
@@ -12,7 +12,7 @@ type Props = {
 };
 
 /** Component to show a preview of how a form question's input will look like to the end user. */
-const QuestionTypePreview: React.FC<Props> = ({ question, answer, answers }) => {
+export const QuestionTypePreview: React.FC<Props> = ({ question, answer, answers }) => {
   switch (question.questionType) {
     case QuestionTypeEnum.Paragraph:
       return <TextField fullWidth disabled label={questionTypeLabels[question.questionType]} multiline rows={4} />;
@@ -62,5 +62,3 @@ const QuestionTypePreview: React.FC<Props> = ({ question, answer, answers }) => 
       return <></>;
   }
 };
-
-export default QuestionTypePreview;

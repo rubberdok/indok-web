@@ -1,6 +1,6 @@
 import { ThemeOptions } from "@mui/material";
 
-const Paper: ThemeOptions["components"] = {
+export const Paper: ThemeOptions["components"] = {
   MuiPaper: {
     styleOverrides: {
       root: {
@@ -9,5 +9,3 @@ const Paper: ThemeOptions["components"] = {
     },
   },
 };
-
-export default Paper;

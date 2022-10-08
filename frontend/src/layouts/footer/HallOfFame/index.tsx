@@ -16,7 +16,7 @@ type Props = {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const HallOfFame: React.FC<Props> = ({ open, setOpen }) => {
+export const HallOfFame: React.FC<Props> = ({ open, setOpen }) => {
   return (
     <Dialog maxWidth="xl" fullWidth={false} onClose={() => setOpen(!open)} aria-labelledby="dialogTitle" open={open}>
       <DialogTitle>
@@ -54,5 +54,3 @@ const HallOfFame: React.FC<Props> = ({ open, setOpen }) => {
     </Dialog>
   );
 };
-
-export default HallOfFame;

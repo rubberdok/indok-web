@@ -8,7 +8,7 @@ type Props = {
 };
 
 /** Displays the error message in a dialog. */
-const ErrorDialog: React.VFC<Props> = ({ handleErrorDialogClose, error }) => (
+export const ErrorDialog: React.VFC<Props> = ({ handleErrorDialogClose, error }) => (
   <Dialog open={error != undefined} onClose={handleErrorDialogClose}>
     <DialogTitle>{`Det har oppstått en feilmelding: ${error?.name}`}</DialogTitle>
     <DialogContent>
@@ -21,5 +21,3 @@ const ErrorDialog: React.VFC<Props> = ({ handleErrorDialogClose, error }) => (
     </DialogActions>
   </Dialog>
 );
-
-export default ErrorDialog;

@@ -6,10 +6,10 @@ import React, { useState } from "react";
 
 import { PermissionRequired } from "@/components/Auth";
 import { AllEventsDocument, DefaultEventsDocument, UserWithEventsAndOrgsDocument } from "@/generated/graphql";
-import useResponsive from "@/hooks/useResponsive";
+import { useResponsive } from "@/hooks/useResponsive";
 
-import EventListItem from "./EventListItem";
-import FilterMenu from "./filterMenu/FilterMenu";
+import { EventListItem } from "./EventListItem";
+import { FilterMenu } from "./filterMenu/FilterMenu";
 
 export type FilterQuery = {
   organization?: string;
@@ -18,7 +18,7 @@ export type FilterQuery = {
   endTime?: string;
 };
 
-const AllEvents: React.FC = () => {
+export const AllEvents: React.FC = () => {
   const [filters, setFilters] = useState({});
   const [showDefaultEvents, setShowDefaultEvents] = useState(false);
   const [openFilterDrawer, setOpenFilterDrawer] = useState(false);
@@ -153,5 +153,3 @@ const AllEvents: React.FC = () => {
     </>
   );
 };
-
-export default AllEvents;

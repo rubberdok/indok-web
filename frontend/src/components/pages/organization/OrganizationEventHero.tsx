@@ -1,9 +1,9 @@
-import Title from "@/components/Title";
+import { Title } from "@/components/Title";
 import { AdminEventFragment } from "@/generated/graphql";
 
 type Props = { event: AdminEventFragment };
 
-const OrganizationEventHero: React.FC<Props> = ({ event }) => {
+export const OrganizationEventHero: React.FC<Props> = ({ event }) => {
   return (
     <Title
       title={event.title}
@@ -18,5 +18,3 @@ const OrganizationEventHero: React.FC<Props> = ({ event }) => {
     />
   );
 };
-
-export default OrganizationEventHero;

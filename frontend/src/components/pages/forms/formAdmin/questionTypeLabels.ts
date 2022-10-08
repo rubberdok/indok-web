@@ -1,7 +1,7 @@
 import { QuestionTypeEnum } from "@/generated/graphql";
 
 // maps question types to Norwegian labels
-const questionTypeLabels: { [key in QuestionTypeEnum]: string } = {
+export const questionTypeLabels: { [key in QuestionTypeEnum]: string } = {
   [QuestionTypeEnum.Paragraph]: "Langsvar",
   [QuestionTypeEnum.ShortAnswer]: "Kortsvar",
   [QuestionTypeEnum.MultipleChoice]: "Flervalg",
@@ -10,5 +10,3 @@ const questionTypeLabels: { [key in QuestionTypeEnum]: string } = {
   [QuestionTypeEnum.Slider]: "Skala",
   [QuestionTypeEnum.FileUpload]: "Filopplasting",
 };
-
-export default questionTypeLabels;

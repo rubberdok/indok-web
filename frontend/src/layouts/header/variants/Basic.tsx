@@ -3,7 +3,7 @@ import { PropsFor } from "@mui/system";
 import React from "react";
 
 import { Logo } from "../../../components";
-import Navigation from "../../navigation";
+import { Navigation } from "../../navigation";
 import { AppBar } from "../styles";
 
 type Props = {
@@ -26,7 +26,7 @@ const ElevationScroll: React.FC<ScrollProps> = ({ children }) => {
   });
 };
 
-const Basic: React.FC<Props & AppBarProps> = ({ transparent, ...props }) => {
+export const Basic: React.FC<Props & AppBarProps> = ({ transparent, ...props }) => {
   return (
     <ElevationScroll>
       <AppBar transparent={transparent} {...props}>
@@ -48,5 +48,3 @@ const Basic: React.FC<Props & AppBarProps> = ({ transparent, ...props }) => {
     </ElevationScroll>
   );
 };
-
-export default Basic;

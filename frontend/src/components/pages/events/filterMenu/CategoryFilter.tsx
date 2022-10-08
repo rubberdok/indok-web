@@ -15,7 +15,7 @@ type Props = {
 };
 
 /** Component for the category filter in the filter menu. */
-const CategoryFilter: React.FC<Props> = ({ filters, handleChecked }) => {
+export const CategoryFilter: React.FC<Props> = ({ filters, handleChecked }) => {
   const { data } = useQuery(AllCategoriesDocument);
 
   return (
@@ -37,5 +37,3 @@ const CategoryFilter: React.FC<Props> = ({ filters, handleChecked }) => {
     </Grid>
   );
 };
-
-export default CategoryFilter;

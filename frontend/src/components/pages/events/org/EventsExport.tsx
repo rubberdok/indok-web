@@ -8,7 +8,7 @@ import { promptDownloadFromPayload } from "@/utils/exports";
 
 type Props = { organization: AdminOrganizationFragment };
 
-const EventsExport: React.FC<Props> = ({ organization }) => {
+export const EventsExport: React.FC<Props> = ({ organization }) => {
   const [selectedEvents, setSelectedEvents] = useState(["1", "2", "3"]);
 
   const [getAttendeeReportOrg, { loading: loadingReport }] = useLazyQuery(AttendeeReportOrgDocument, {
@@ -91,5 +91,3 @@ const EventsExport: React.FC<Props> = ({ organization }) => {
     </Grid>
   );
 };
-
-export default EventsExport;

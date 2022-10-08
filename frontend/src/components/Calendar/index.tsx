@@ -3,12 +3,12 @@ import { Hidden, IconButton, Stack, Typography } from "@mui/material";
 import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
 
-import useBookingSemester from "@/hooks/cabins/useBookingSemester";
+import { useBookingSemester } from "@/hooks/cabins/useBookingSemester";
 import { dateInBookingSemester } from "@/utils/cabins";
 
-import CalendarDay from "./CalendarDay";
-import CalendarRow from "./CalendarRow";
-import CalendarTable from "./CalendarTable";
+import { CalendarDay } from "./CalendarDay";
+import { CalendarRow } from "./CalendarRow";
+import { CalendarTable } from "./CalendarTable";
 import { DATE_FORMAT } from "./constants";
 import { getDateRange } from "./helpers";
 
@@ -21,7 +21,7 @@ type Props = {
   onRangeChange?: (fromDate: string | undefined, toDate: string | undefined, validRange: boolean) => void;
 };
 
-const Calendar: React.FC<Props> = ({
+export const Calendar: React.FC<Props> = ({
   disabledDates,
   disableAll,
   disableBefore,
@@ -238,5 +238,3 @@ const Calendar: React.FC<Props> = ({
     </Stack>
   );
 };
-
-export default Calendar;

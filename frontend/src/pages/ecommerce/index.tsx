@@ -21,9 +21,9 @@ import {
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { useRouter } from "next/router";
 
-import OrderCellContent from "@/components/pages/ecommerce/OrderCellContent";
+import { OrderCellContent } from "@/components/pages/ecommerce/OrderCellContent";
 import { OrderFragment, UserDocument, UserOrdersDocument } from "@/generated/graphql";
-import Layout, { RootStyle } from "@/layouts/Layout";
+import { Layout, RootStyle } from "@/layouts/Layout";
 import { addApolloState, initializeApollo } from "@/lib/apolloClient";
 import { NextPageWithLayout } from "@/pages/_app";
 import { HeaderValuePair } from "@/types/utils";

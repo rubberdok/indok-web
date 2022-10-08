@@ -6,7 +6,7 @@ import Head from "next/head";
 import { useMemo } from "react";
 
 import { Logout, PermissionRequired } from "@/components/Auth";
-import Breadcrumbs from "@/components/Breadcrumbs";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 import {
   CabinsAdmin,
   Event,
@@ -17,7 +17,7 @@ import {
   Report,
 } from "@/components/pages/profile/ProfileCard";
 import { UserDocument } from "@/generated/graphql";
-import Layout from "@/layouts/Layout";
+import { Layout } from "@/layouts/Layout";
 import { addApolloState, initializeApollo } from "@/lib/apolloClient";
 import { NextPageWithLayout } from "@/pages/_app";
 import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "@/theme/constants";

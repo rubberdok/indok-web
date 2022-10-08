@@ -11,7 +11,7 @@ type Props = {
   handleConfirmationClose: () => void;
 };
 
-const ConfirmationDialog: React.FC<Props> = ({
+export const ConfirmationDialog: React.FC<Props> = ({
   showConfirmation,
   setShowConfirmation,
   emailProps,
@@ -54,5 +54,3 @@ const ConfirmationDialog: React.FC<Props> = ({
     </Dialog>
   );
 };
-
-export default ConfirmationDialog;

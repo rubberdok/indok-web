@@ -1,6 +1,6 @@
 import { ThemeOptions } from "@mui/material";
 
-const Lists: ThemeOptions["components"] = {
+export const Lists: ThemeOptions["components"] = {
   MuiListItemIcon: {
     defaultProps: {
       color: "inherit",
@@ -33,5 +33,3 @@ const Lists: ThemeOptions["components"] = {
     },
   },
 };
-
-export default Lists;

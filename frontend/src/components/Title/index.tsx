@@ -1,11 +1,11 @@
-import { default as BaseTitle, Props as BaseProps } from "./variants/BaseTitle";
+import { BaseTitle, Props as BaseProps } from "./variants/BaseTitle";
 
 type Props = {
   variant?: "normal" | "dark";
   children?: React.ReactNode;
 } & BaseProps;
 
-const Title: React.FC<Props> = ({ variant = "normal", children, ...props }) => {
+export const Title: React.FC<Props> = ({ variant = "normal", children, ...props }) => {
   if (variant === "normal") return <BaseTitle {...props}>{children}</BaseTitle>;
   if (variant === "dark")
     return (
@@ -19,5 +19,3 @@ const Title: React.FC<Props> = ({ variant = "normal", children, ...props }) => {
     );
   return null;
 };
-
-export default Title;

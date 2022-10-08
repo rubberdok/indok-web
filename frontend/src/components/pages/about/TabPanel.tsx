@@ -1,10 +1,10 @@
-type TabPanelProps = {
+type Props = {
   children?: React.ReactNode;
   index: string | number;
   value: string | number;
 };
 
-const TabPanel: React.FC<TabPanelProps> = (props) => {
+export const TabPanel: React.FC<Props> = (props) => {
   const { children, value, index, ...other } = props;
 
   return (
@@ -19,5 +19,3 @@ const TabPanel: React.FC<TabPanelProps> = (props) => {
     </div>
   );
 };
-
-export default TabPanel;

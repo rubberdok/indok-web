@@ -13,7 +13,7 @@ type Props = {
   nextPost?: AboutPostProps;
 };
 
-const AboutPageArrow: React.FC<Props> = ({ prevPost, nextPost }) => {
+export const AboutPageArrow: React.FC<Props> = ({ prevPost, nextPost }) => {
   const nextSlug = nextPost?.slug || "";
   const prevSlug = prevPost?.slug || "";
 
@@ -91,5 +91,3 @@ function PostItem({ coverImg, title, icon, href, isNext }: PostItemProps) {
     </CardActionArea>
   );
 }
-
-export default AboutPageArrow;
