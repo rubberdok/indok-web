@@ -2,7 +2,7 @@ import { useQuery } from "@apollo/client";
 import { CircularProgress } from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import MenuItem from "@mui/material/MenuItem";
-import { Select } from "@mui/material/Select";
+import Select from "@mui/material/Select";
 import React from "react";
 
 import { AvailableYearsDocument } from "@/generated/graphql";
