@@ -4,8 +4,8 @@ import React from "react";
 
 import { ItvCard } from "@/components/pages/about/ItvCard";
 import { ItvMember } from "@/components/pages/about/ItvCard/types";
-import Template from "@/components/pages/about/Template";
-import Layout from "@/layouts/Layout";
+import { Template } from "@/components/pages/about/Template";
+import { Layout } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/pages/_app";
 
 const ItvPage: NextPageWithLayout = () => {
