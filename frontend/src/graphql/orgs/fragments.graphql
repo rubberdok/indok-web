@@ -1,6 +1,12 @@
 fragment AdminOrganization on OrganizationType {
   id
   name
+  hrGroup {
+    uuid
+  }
+  primaryGroup {
+    uuid
+  }
   events {
     ...OrgAdminEvent
   }
@@ -25,4 +31,15 @@ fragment OrgAdminListing on ListingType {
   id
   title
   deadline
+}
+
+fragment Membership on MembershipType {
+  id
+  user {
+    firstName
+    lastName
+  }
+  group {
+    uuid
+  }
 }

@@ -22,18 +22,6 @@ fragment UserWithEventsAndOrgs on UserType {
     id
     name
   }
-  memberships {
-    id
-    organization {
-      id
-      hrGroup {
-        uuid
-      }
-    }
-    group {
-      uuid
-    }
-  }
 }
 
 fragment UserToEdit on UserType {
