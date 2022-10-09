@@ -11,45 +11,38 @@ import {
   Typography,
 } from "@mui/material";
 
-import { GET_ORGANIZATION_USERS } from "@/graphql/orgs/queries";
-import { GET_USER } from "@/graphql/users/queries";
-import { Organization } from "@/interfaces/organizations";
-import { User } from "@/interfaces/users";
+import { AdminOrganizationFragment, OrgUsersDocument, UserWithEventsAndOrgsDocument } from "@/generated/graphql";
 
 type Props = {
-  organization: Organization;
+  organization: AdminOrganizationFragment;
 };
 
-const OrgMembers: React.FC<Props> = ({ organization }) => {
-  const { data, loading, error } = useQuery<{ user: User }>(GET_USER);
-
-  const orgNumberId = parseInt(organization.id as string);
+export const OrgMembers: React.FC<Props> = ({ organization }) => {
+  const { data, loading, error } = useQuery(UserWithEventsAndOrgsDocument);
 
   const {
     data: usersData,
     loading: usersLoading,
     error: usersError,
-  } = useQuery<{ organization: Organization }, { orgId: number }>(GET_ORGANIZATION_USERS, {
-    variables: { orgId: orgNumberId },
-    skip: Number.isNaN(orgNumberId),
+  } = useQuery(OrgUsersDocument, {
+    variables: { orgId: organization.id },
+    skip: Number.isNaN(parseInt(organization.id)),
   });
-  if (usersError) return <p>Error</p>;
-  if (!usersData || usersLoading) return <CircularProgress />;
+
+  if (error || usersError) return <p>Error</p>;
+  if (!data || loading || !usersData || usersLoading) return <CircularProgress />;
 
   let isHRGroup = false;
 
-  data?.user.memberships?.forEach((membership) => {
+  data?.user?.memberships?.forEach((membership) => {
     if (!membership.group?.uuid) return;
-    if (membership.group.uuid == membership.organization.hrGroup.uuid) {
+    if (membership.group.uuid === membership?.organization?.hrGroup?.uuid) {
       isHRGroup = true;
     }
   });
 
-  if (error) return <p>Error</p>;
-  if (!data || loading) return <CircularProgress />;
-
   if (!isHRGroup) return <Typography variant="h3">Du har ikke tilgang til denne siden.</Typography>;
-  console.log(usersData);
+
   return (
     <Stack spacing={4}>
       <Typography variant="h3">Oversikt over medlemmer</Typography>
@@ -61,7 +54,7 @@ const OrgMembers: React.FC<Props> = ({ organization }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {usersData.organization.users.map((user: User) => (
+            {usersData?.organization?.users.map((user) => (
               <TableRow key={user.id}>
                 <TableCell>
                   {user.firstName} {user.lastName}
@@ -75,5 +68,3 @@ const OrgMembers: React.FC<Props> = ({ organization }) => {
     </Stack>
   );
 };
-
-export default OrgMembers;

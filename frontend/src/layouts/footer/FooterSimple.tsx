@@ -1,11 +1,11 @@
 import { Container, Stack, Typography } from "@mui/material";
 import dayjs from "dayjs";
 
-import Vercel from "@/components/Vercel";
+import { Vercel } from "@/components/Vercel";
 
 import { Logo } from "../../components";
 
-const FooterSimple: React.FC = () => {
+export const FooterSimple: React.FC = () => {
   return (
     <Container sx={{ textAlign: "center", py: 8 }}>
       <Logo sx={{ mb: 3 }} />
@@ -18,5 +18,3 @@ const FooterSimple: React.FC = () => {
     </Container>
   );
 };
-
-export default FooterSimple;

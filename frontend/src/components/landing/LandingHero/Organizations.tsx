@@ -6,7 +6,7 @@ import { FreeMode, Navigation } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 
-import OrganizationLink, { Organization } from "./OrganizationLink";
+import { OrganizationLink, Organization } from "./OrganizationLink";
 
 const organizations: Readonly<Organization[]> = [
   { name: "Janus", externalUrl: "https://www.januslinjeforening.no" },
@@ -55,7 +55,7 @@ type Props = {
   onActiveIndexChange: (index: number) => void;
 };
 
-const Organizations: React.FC<Props> = ({ offsetX, onActiveIndexChange }) => {
+export const Organizations: React.FC<Props> = ({ offsetX, onActiveIndexChange }) => {
   return (
     <>
       <ArrowStyle className="arrow left" aria-label="Forrige">
@@ -111,5 +111,3 @@ const Organizations: React.FC<Props> = ({ offsetX, onActiveIndexChange }) => {
     </>
   );
 };
-
-export default Organizations;

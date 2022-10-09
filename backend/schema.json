@@ -4017,7 +4017,7 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": "",
+              "description": null,
               "isDeprecated": false,
               "name": "paymentStatus",
               "type": {
@@ -4025,7 +4025,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "ENUM",
-                  "name": "OrderPaymentStatus",
+                  "name": "PaymentStatus",
                   "ofType": null
                 }
               }
@@ -4058,43 +4058,43 @@
           "enumValues": [
             {
               "deprecationReason": null,
-              "description": "initiated",
+              "description": null,
               "isDeprecated": false,
               "name": "INITIATED"
             },
             {
               "deprecationReason": null,
-              "description": "reserved",
+              "description": null,
               "isDeprecated": false,
               "name": "RESERVED"
             },
             {
               "deprecationReason": null,
-              "description": "captured",
+              "description": null,
               "isDeprecated": false,
               "name": "CAPTURED"
             },
             {
               "deprecationReason": null,
-              "description": "cancelled",
+              "description": null,
               "isDeprecated": false,
               "name": "CANCELLED"
             },
             {
               "deprecationReason": null,
-              "description": "refunded",
+              "description": null,
               "isDeprecated": false,
               "name": "REFUNDED"
             },
             {
               "deprecationReason": null,
-              "description": "failed",
+              "description": null,
               "isDeprecated": false,
               "name": "FAILED"
             },
             {
               "deprecationReason": null,
-              "description": "rejected",
+              "description": null,
               "isDeprecated": false,
               "name": "REJECTED"
             }
@@ -4103,7 +4103,7 @@
           "inputFields": null,
           "interfaces": null,
           "kind": "ENUM",
-          "name": "OrderPaymentStatus",
+          "name": "PaymentStatus",
           "possibleTypes": null
         },
         {
@@ -6922,8 +6922,8 @@
               "isDeprecated": false,
               "name": "status",
               "type": {
-                "kind": "SCALAR",
-                "name": "String",
+                "kind": "ENUM",
+                "name": "PaymentStatus",
                 "ofType": null
               }
             },

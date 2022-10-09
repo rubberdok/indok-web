@@ -4,8 +4,8 @@ import React from "react";
 
 import { RootStyle } from "@/layouts/Layout";
 
-import AboutPageArrow from "./AboutPageArrow";
-import AboutSidebar from "./AboutSidebar";
+import { AboutPageArrow } from "./AboutPageArrow";
+import { AboutSidebar } from "./AboutSidebar";
 
 type AboutPostProps = {
   slug: string;
@@ -23,7 +23,7 @@ type Props = {
   nextPost?: AboutPostProps;
 };
 
-const Template: React.FC<Props> = (props) => {
+export const Template: React.FC<Props> = (props) => {
   const { children, title, description, prevPost, nextPost } = props;
 
   return (
@@ -65,5 +65,3 @@ const Template: React.FC<Props> = (props) => {
     </RootStyle>
   );
 };
-
-export default Template;

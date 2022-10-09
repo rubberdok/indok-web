@@ -1,4 +1,4 @@
-export { default as Breadcrumbs } from "./Breadcrumbs";
-export { default as LabeledIcon } from "./LabeledIcon";
-export { default as Logo } from "./Logo";
-export { default as NavigationSidebar } from "./NavigationSidebar";
+export { Breadcrumbs } from "./Breadcrumbs";
+export { LabeledIcon } from "./LabeledIcon";
+export { Logo } from "./Logo";
+export { NavigationSidebar } from "./NavigationSidebar";

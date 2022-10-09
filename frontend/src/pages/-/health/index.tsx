@@ -1,15 +1,12 @@
 import { useLazyQuery, useQuery } from "@apollo/client";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 
-import { GET_USER_INFO } from "@/graphql/users/queries";
+import { UserDocument, UserFragment } from "@/generated/graphql";
 import { addApolloState, initializeApollo } from "@/lib/apolloClient";
-import { User } from "@/types/users";
 
 const HealthPage = ({ user }: InferGetServerSidePropsType<typeof getServerSideProps>): JSX.Element => {
-  const { data } = useQuery<{ user: User }>(GET_USER_INFO, {
-    fetchPolicy: "cache-only",
-  });
-  const [loadUser] = useLazyQuery<{ user: User | null }>(GET_USER_INFO, { fetchPolicy: "network-only" });
+  const { data } = useQuery(UserDocument, { fetchPolicy: "cache-only" });
+  const [loadUser] = useLazyQuery(UserDocument, { fetchPolicy: "network-only" });
   return (
     <>
       <h1>Hi, I am healthy</h1>
@@ -20,24 +17,18 @@ const HealthPage = ({ user }: InferGetServerSidePropsType<typeof getServerSidePr
   );
 };
 
-export const getServerSideProps: GetServerSideProps<{ user: User | null }> = async (ctx) => {
+export const getServerSideProps: GetServerSideProps<{ user?: UserFragment | null }> = async (ctx) => {
   const client = initializeApollo({}, ctx);
   const {
     data: { user },
     error,
-  } = await client.query<{ user: User | null }>({
-    query: GET_USER_INFO,
-  });
+  } = await client.query({ query: UserDocument });
 
   if (error) {
-    return {
-      notFound: true,
-    };
+    return { notFound: true };
   }
 
-  return addApolloState(client, {
-    props: { user },
-  });
+  return addApolloState(client, { props: { user } });
 };
 
 export default HealthPage;

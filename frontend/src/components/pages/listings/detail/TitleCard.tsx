@@ -1,4 +1,3 @@
-import { ResultOf } from "@graphql-typed-document-node/core";
 import { ArrowForward } from "@mui/icons-material";
 import { Box, Button, Card, CardContent, Divider, Grid, Typography, Link as MuiLink } from "@mui/material";
 import dayjs from "dayjs";
@@ -9,22 +8,17 @@ import Image from "next/future/image";
 import Link from "next/link";
 import React from "react";
 
-import { ListingDocument } from "@/generated/graphql";
+import { ListingWithFormIdFragment } from "@/generated/graphql";
 
 dayjs.extend(timezone);
 dayjs.extend(utc);
 dayjs.tz.setDefault("Europe/Oslo");
 dayjs.locale(nb);
 
-/**
- * Component for title and organization info on the listing detail page.
- *
- * Props:
- * - the listing to render
- */
-const TitleCard: React.FC<{
-  listing: ResultOf<typeof ListingDocument>["listing"];
-}> = ({ listing }) => {
+type Props = { listing?: ListingWithFormIdFragment };
+
+/** Component for title and organization info on the listing detail page. */
+export const TitleCard: React.FC<Props> = ({ listing }) => {
   let link: string | undefined = undefined;
   if (listing?.form) {
     link = `/forms/${listing.form.id}/`;
@@ -84,5 +78,3 @@ const TitleCard: React.FC<{
     </Card>
   );
 };
-
-export default TitleCard;

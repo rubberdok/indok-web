@@ -1,6 +1,6 @@
 import { alpha, ThemeOptions } from "@mui/material/styles";
 
-const ToggleButtonGroup: ThemeOptions["components"] = {
+export const ToggleButtonGroup: ThemeOptions["components"] = {
   MuiToggleButtonGroup: {
     defaultProps: {
       color: "primary",
@@ -21,5 +21,3 @@ const ToggleButtonGroup: ThemeOptions["components"] = {
     },
   },
 };
-
-export default ToggleButtonGroup;

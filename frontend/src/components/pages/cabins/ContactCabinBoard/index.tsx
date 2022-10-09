@@ -3,12 +3,11 @@ import { MailOutline } from "@mui/icons-material";
 import { Link, Stack, Typography } from "@mui/material";
 import React from "react";
 
-import LabeledIcon from "@/components/LabeledIcon";
-import { QUERY_BOOKING_RESPONSIBLE } from "@/graphql/cabins/queries";
-import { BookingResponsible } from "@/interfaces/cabins";
+import { LabeledIcon } from "@/components/LabeledIcon";
+import { ActiveBookingResponsibleDocument } from "@/generated/graphql";
 
-const ContactCabinBoard: React.FC = () => {
-  const { data } = useQuery<{ activeBookingResponsible: BookingResponsible }>(QUERY_BOOKING_RESPONSIBLE);
+export const ContactCabinBoard: React.FC = () => {
+  const { data } = useQuery(ActiveBookingResponsibleDocument);
 
   if (data?.activeBookingResponsible?.email) {
     return (
@@ -30,5 +29,3 @@ const ContactCabinBoard: React.FC = () => {
     return <></>;
   }
 };
-
-export default ContactCabinBoard;

@@ -1,6 +1,6 @@
 import { ThemeOptions } from "@mui/material";
 
-const Table: ThemeOptions["components"] = {
+export const Table: ThemeOptions["components"] = {
   MuiTableRow: {
     styleOverrides: {
       root: ({ theme }) => ({
@@ -67,5 +67,3 @@ const Table: ThemeOptions["components"] = {
     },
   },
 };
-
-export default Table;

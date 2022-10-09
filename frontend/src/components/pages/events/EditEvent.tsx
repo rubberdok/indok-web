@@ -26,31 +26,31 @@ import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import React, { useEffect, useState } from "react";
 
-import { UPDATE_EVENT } from "@/graphql/events/mutations";
-import { ADMIN_GET_EVENT, GET_CATEGORIES, GET_EVENT } from "@/graphql/events/queries";
-import { Category, Event } from "@/interfaces/events";
+import {
+  AdminEventDocument,
+  AdminEventFragment,
+  AllCategoriesDocument,
+  EventDocument,
+  UpdateEventDocument,
+} from "@/generated/graphql";
+
 dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.locale(nb);
 dayjs.tz.setDefault("Europe/Oslo");
 const DATE_FORMAT = "YYYY-MM-DDTHH:mm:ss";
 
-interface EditEventProps {
+type Props = {
+  /** Whether the dialog should be open */
   open: boolean;
+  /** Called when the dialog should be closed */
   onClose: () => void;
-  event: Event;
-}
+  /** The event to be edited */
+  event: AdminEventFragment;
+};
 
-/**
- * Component (Dialog) for editing an event
- *
- * Props:
- * - open: whether the dialog should be open
- * - onClose: called when the doalog should be closed
- * - event: The event to be edited
- */
-
-const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
+/** Component (Dialog) for editing an event. */
+export const EditEvent: React.FC<Props> = ({ open, onClose, event }) => {
   const defaultInput: Record<string, any> = {
     title: "",
     description: "",
@@ -73,17 +73,16 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
 
   const [eventData, setEventData] = useState(defaultInput);
 
-  const [updateEvent, { loading: updateEventLoading, error: updateEventError }] = useMutation<{
-    updateEvent: { event: Event };
-  }>(UPDATE_EVENT, {
+  const [updateEvent, { loading: updateEventLoading, error: updateEventError }] = useMutation(UpdateEventDocument, {
     update: (cache, { data }) => {
-      data &&
-        cache.writeQuery<Event>({ query: GET_EVENT, data: data.updateEvent.event }) &&
-        cache.writeQuery<Event>({ query: ADMIN_GET_EVENT, data: { ...event, ...data.updateEvent.event } });
+      if (data?.updateEvent?.event) {
+        cache.writeQuery({ query: EventDocument, data: { event: data.updateEvent.event } });
+        cache.writeQuery({ query: AdminEventDocument, data: { event: { ...event, ...data.updateEvent.event } } });
+      }
     },
   });
 
-  const { loading: categoryLoading, error: categoryError, data: categoryData } = useQuery(GET_CATEGORIES);
+  const { loading: categoryLoading, error: categoryError, data: categoryData } = useQuery(AllCategoriesDocument);
 
   useEffect(() => {
     // Used to get an initial event data object, keeping all fields except for the date related ones
@@ -282,7 +281,7 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
                 displayEmpty
               >
                 <MenuItem value="">{"Ingen Kategori"}</MenuItem>
-                {categoryData.allCategories.map((category: Category) => (
+                {categoryData?.allCategories?.map((category) => (
                   <MenuItem key={category.id} value={category.id}>
                     {category.name}
                   </MenuItem>
@@ -420,5 +419,3 @@ const EditEvent: React.FC<EditEventProps> = ({ open, onClose, event }) => {
     </Dialog>
   );
 };
-
-export default EditEvent;

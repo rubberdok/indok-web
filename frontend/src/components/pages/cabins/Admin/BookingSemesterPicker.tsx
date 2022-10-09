@@ -16,21 +16,12 @@ import dayjs from "dayjs";
 import router from "next/router";
 import { useState } from "react";
 
-import ErrorDialog from "@/components/Dialog/ErrorDialog";
-import { UPDATE_BOOKING_SEMESTER } from "@/graphql/cabins/mutations";
-import useBookingSemester from "@/hooks/cabins/useBookingSemester";
+import { ErrorDialog } from "@/components/Dialog/ErrorDialog";
+import { UpdateBookingSemesterDocument } from "@/generated/graphql";
+import { useBookingSemester } from "@/hooks/cabins/useBookingSemester";
 
-export type BookingSemester = {
-  fallStartDate: string;
-  fallEndDate: string;
-  springStartDate: string;
-  springEndDate: string;
-  fallSemesterActive: boolean;
-  springSemesterActive: boolean;
-};
-
-const BookingSemesterPicker: React.VFC = () => {
-  const [updateBookingSemester] = useMutation<{ semesterData: BookingSemester }>(UPDATE_BOOKING_SEMESTER);
+export const BookingSemesterPicker: React.VFC = () => {
+  const [updateBookingSemester] = useMutation(UpdateBookingSemesterDocument);
   const handleErrorDialogClose = () => router.push("/");
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
@@ -172,5 +163,3 @@ const BookingSemesterPicker: React.VFC = () => {
     </Box>
   );
 };
-
-export default BookingSemesterPicker;

@@ -1,14 +1,11 @@
 import { useQuery } from "@apollo/client";
 import { Divider, Grid, Typography } from "@mui/material";
 
-import { QUERY_CABINS } from "@/graphql/cabins/queries";
-import { Cabin } from "@/interfaces/cabins";
+import { CabinsDocument } from "@/generated/graphql";
 
-/*
-Shows an overview of cabin prices. Fetches the prices from the Cabin model.
-*/
-const CabinPrices: React.VFC = () => {
-  const cabinQuery = useQuery<{ cabins: Cabin[] }>(QUERY_CABINS);
+/** Shows an overview of cabin prices. Fetches the prices from the Cabin model. */
+export const CabinPrices: React.VFC = () => {
+  const cabinQuery = useQuery(CabinsDocument);
   const cabins = cabinQuery?.data?.cabins;
 
   return (
@@ -49,5 +46,3 @@ const CabinPrices: React.VFC = () => {
     </Grid>
   );
 };
-
-export default CabinPrices;

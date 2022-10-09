@@ -1,33 +1,25 @@
 import { useQuery } from "@apollo/client";
 import { Box, Divider, Grid, Typography } from "@mui/material";
 import Image from "next/future/image";
-import { useEffect, useState } from "react";
 
-import { QUERY_BOOKING_RESPONSIBLE } from "@/graphql/cabins/queries";
-import { BookingResponsible, Cabin, ContactInfo, DatePick } from "@/interfaces/cabins";
+import { ActiveBookingResponsibleDocument, CabinFragment } from "@/generated/graphql";
+import { ContactInfo, DatePick } from "@/types/cabins";
 import { calculatePrice, convertDateFormat, toStringChosenCabins } from "@/utils/cabins";
 import hytteforeningen from "~/public/static/cabins/logo.svg";
 
-interface ContractProps {
-  chosenCabins: Cabin[];
+type Props = {
+  chosenCabins: CabinFragment[];
   contactInfo: ContactInfo;
   datePick: DatePick;
-}
-/*
-Renders the contract of a booking.
-*/
-const Contract: React.FC<ContractProps> = ({ chosenCabins, contactInfo, datePick }) => {
+};
+
+/** Renders the contract of a booking. */
+export const Contract: React.FC<Props> = ({ chosenCabins, contactInfo, datePick }) => {
   const currentTime = new Date().toLocaleString();
   const price = calculatePrice(chosenCabins, contactInfo, datePick);
 
-  const { data } = useQuery<{ activeBookingResponsible: BookingResponsible }>(QUERY_BOOKING_RESPONSIBLE);
-  const [responsible, setResponsible] = useState<BookingResponsible>();
-
-  useEffect(() => {
-    if (data?.activeBookingResponsible) {
-      setResponsible(data.activeBookingResponsible);
-    }
-  }, [data]);
+  const { data } = useQuery(ActiveBookingResponsibleDocument);
+  const responsible = data?.activeBookingResponsible;
 
   //NB! there also exist a HTML template version of the contract backend, in case of changes both must be updated
   return (
@@ -149,5 +141,3 @@ const Contract: React.FC<ContractProps> = ({ chosenCabins, contactInfo, datePick
     </Grid>
   );
 };
-
-export default Contract;

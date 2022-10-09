@@ -1,4 +1,4 @@
-fragment UserFields on UserType {
+fragment User on UserType {
   id
   feideEmail
   email
@@ -11,4 +11,42 @@ fragment UserFields on UserType {
   allergies
   phoneNumber
   firstLogin
+}
+
+fragment UserWithEventsAndOrgs on UserType {
+  ...User
+  events {
+    id
+  }
+  organizations {
+    id
+    name
+  }
+  memberships {
+    id
+    organization {
+      id
+      hrGroup {
+        uuid
+      }
+    }
+    group {
+      uuid
+    }
+  }
+}
+
+fragment UserToEdit on UserType {
+  id
+  username
+  firstName
+  lastName
+  phoneNumber
+  allergies
+  email
+  graduationYear
+  firstLogin
+  feideEmail
+  canUpdateYear
+  yearUpdatedAt
 }

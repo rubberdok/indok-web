@@ -1,6 +1,6 @@
 import { ThemeOptions } from "@mui/material";
 
-const Menu: ThemeOptions["components"] = {
+export const Menu: ThemeOptions["components"] = {
   MuiMenuItem: {
     styleOverrides: {
       root: ({ theme }) => ({
@@ -20,5 +20,3 @@ const Menu: ThemeOptions["components"] = {
     },
   },
 };
-
-export default Menu;

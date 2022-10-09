@@ -5,18 +5,12 @@ import nb from "dayjs/locale/nb";
 import Link from "next/link";
 import React from "react";
 
-import useResponsive from "@/hooks/useResponsive";
-import { Event } from "@/interfaces/events";
-import { User } from "@/interfaces/users";
+import { EventInListFragment, UserWithEventsAndOrgsFragment } from "@/generated/graphql";
+import { useResponsive } from "@/hooks/useResponsive";
 
 const formatDate = (dateAndTime: string) => {
   return dayjs(dateAndTime).locale(nb).format(`D. MMM`);
 };
-
-interface Props {
-  event: Event;
-  user?: User;
-}
 
 const EventActionCardStyle = styled((props) => <CardActionArea {...props} />)(({ theme }) => ({
   display: "flex",
@@ -31,7 +25,12 @@ const EventActionCardStyle = styled((props) => <CardActionArea {...props} />)(({
   },
 }));
 
-const EventListItem: React.FC<Props> = ({ event, user }) => {
+type Props = {
+  event: EventInListFragment;
+  user?: UserWithEventsAndOrgsFragment;
+};
+
+export const EventListItem: React.FC<Props> = ({ event, user }) => {
   const isMobile = useResponsive({ query: "down", key: "md" });
 
   return (
@@ -49,7 +48,9 @@ const EventListItem: React.FC<Props> = ({ event, user }) => {
               {event.shortDescription ?? "Trykk for å lese mer"}
             </Typography>
           </div>
-          {user && event.isAttendable && event.allowedGradeYears.includes(user.gradeYear) ? (
+          {user &&
+          event.isAttendable &&
+          ((user.gradeYear && event.allowedGradeYears?.includes(user.gradeYear)) ?? true) ? (
             event.isFull && event.userAttendance?.isOnWaitingList ? (
               <Chip label="På venteliste" />
             ) : event.isFull && !event.userAttendance?.isSignedUp ? (
@@ -65,5 +66,3 @@ const EventListItem: React.FC<Props> = ({ event, user }) => {
     </Card>
   );
 };
-
-export default EventListItem;

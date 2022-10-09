@@ -1,6 +1,6 @@
 import { alpha, ThemeOptions } from "@mui/material/styles";
 
-const Input: ThemeOptions["components"] = {
+export const Input: ThemeOptions["components"] = {
   MuiTextField: {
     defaultProps: {
       variant: "filled",
@@ -59,5 +59,3 @@ const Input: ThemeOptions["components"] = {
     },
   },
 };
-
-export default Input;

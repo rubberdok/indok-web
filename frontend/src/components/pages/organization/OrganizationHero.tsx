@@ -1,15 +1,15 @@
 import { Tab, Tabs, Typography } from "@mui/material";
 
-import Title from "@/components/Title";
-import { Organization } from "@/interfaces/organizations";
+import { Title } from "@/components/Title";
+import { AdminOrganizationFragment } from "@/generated/graphql";
 
 type Props = {
-  organization: Organization;
+  organization: AdminOrganizationFragment;
   activeTab: number;
   handleTabChange: (event: React.SyntheticEvent, newValue: number) => void;
 };
 
-const OrganizationHero: React.FC<Props> = ({ organization, handleTabChange, activeTab }) => {
+export const OrganizationHero: React.FC<Props> = ({ organization, handleTabChange, activeTab }) => {
   return (
     <Title
       title={organization.name}
@@ -46,5 +46,3 @@ const OrganizationHero: React.FC<Props> = ({ organization, handleTabChange, acti
     </Title>
   );
 };
-
-export default OrganizationHero;

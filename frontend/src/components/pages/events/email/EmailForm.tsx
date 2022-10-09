@@ -3,22 +3,16 @@ import { Send } from "@mui/icons-material";
 import { Box, Button, Tooltip } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
-import { SEND_EVENT_EMAILS } from "@/graphql/events/mutations";
-import { QUERY_SIGNED_UP_USERS } from "@/graphql/events/queries";
-import { AttendableEvent } from "@/interfaces/events";
+import { EventSignUpsDocument, SendEventMailsDocument } from "@/generated/graphql";
 
-import ConfirmationDialog from "./ConfirmationsDialog";
-import EmailFormDialog from "./EmailFormDialog";
+import { ConfirmationDialog } from "./ConfirmationsDialog";
+import { EmailFormDialog } from "./EmailFormDialog";
 
-export interface EmailFormProps {
-  eventId: string | string[] | undefined;
-}
-
-export interface SendEmailProps {
+export type SendEmailProps = {
   receiverEmails: string[];
   content: string;
   subject: string;
-}
+};
 
 const defaultMailProps: SendEmailProps = {
   receiverEmails: [],
@@ -31,22 +25,24 @@ const defaultValidations: { subject: boolean; content: boolean } = {
   content: false,
 };
 
-const EmailForm: React.FC<EmailFormProps> = ({ eventId }) => {
+type Props = {
+  eventId: string;
+};
+
+export const EmailForm: React.FC<Props> = ({ eventId }) => {
   const [showEmailForm, setShowEmailForm] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [emailProps, setEmailProps] = useState<SendEmailProps>(defaultMailProps);
   const [validations, setValidations] = useState(defaultValidations);
 
-  const { data } = useQuery<{ event: AttendableEvent }>(QUERY_SIGNED_UP_USERS, {
-    variables: { id: eventId },
-  });
+  const { data } = useQuery(EventSignUpsDocument, { variables: { id: eventId } });
 
-  const [sendEventMail] = useMutation(SEND_EVENT_EMAILS);
+  const [sendEventMail] = useMutation(SendEventMailsDocument);
 
   useEffect(() => {
-    const signUps = data?.event.usersAttending;
+    const signUps = data?.event?.usersAttending;
 
-    if (data?.event && signUps) {
+    if (signUps) {
       setEmailProps({ ...emailProps, receiverEmails: signUps.map((signUp) => signUp.userEmail) });
     }
   }, [data]);
@@ -85,12 +81,12 @@ const EmailForm: React.FC<EmailFormProps> = ({ eventId }) => {
       />
 
       <Tooltip
-        disableHoverListener={data?.event.isAttendable}
+        disableHoverListener={data?.event?.isAttendable}
         title="Du kan kun sende mail hvis det er mulig å melde seg på eventet."
         placement="bottom-start"
       >
         <Box>
-          <Button disabled={!data?.event.isAttendable} onClick={() => setShowEmailForm(true)} color="primary">
+          <Button disabled={!data?.event?.isAttendable} onClick={() => setShowEmailForm(true)} color="primary">
             <Send style={{ margin: "5px" }} />
             Send e-post til alle påmeldte
           </Button>
@@ -99,5 +95,3 @@ const EmailForm: React.FC<EmailFormProps> = ({ eventId }) => {
     </>
   );
 };
-
-export default EmailForm;

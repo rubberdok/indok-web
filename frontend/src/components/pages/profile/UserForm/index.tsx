@@ -27,9 +27,7 @@ import {
   suggestGraduationYear,
   validationSchema,
 } from "@/components/pages/profile/UserForm/helpers";
-import { UPDATE_USER } from "@/graphql/users/mutations";
-import { EDIT_USER_QUERY } from "@/graphql/users/queries";
-import { EditUser } from "@/types/users";
+import { UpdateUserDocument, UserToEditDocument } from "@/generated/graphql";
 
 type Props = {
   kind: "register" | "update";
@@ -38,12 +36,9 @@ type Props = {
   "data-test-id"?: string;
 };
 
-const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": dataTestId }) => {
-  const { data } = useQuery<{ user?: EditUser }>(EDIT_USER_QUERY);
-  const [updateUser] = useMutation<{ updateUser: { user: EditUser } }>(UPDATE_USER, {
-    onCompleted: onCompleted,
-    refetchQueries: ["editUserInfo"],
-  });
+export const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": dataTestId }) => {
+  const { data } = useQuery(UserToEditDocument);
+  const [updateUser] = useMutation(UpdateUserDocument, { onCompleted, refetchQueries: [UserToEditDocument] });
   const router = useRouter();
   const currentYear = dayjs().year();
   const ID_PREFIX = `${dataTestId}`;
@@ -68,7 +63,7 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": 
     },
     onSubmit: (values) =>
       updateUser({
-        variables: { id: data?.user?.id, userData: values },
+        variables: { userData: values },
       }),
     validationSchema,
     enableReinitialize: true,
@@ -232,5 +227,3 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": 
     </form>
   );
 };
-
-export default UserForm;

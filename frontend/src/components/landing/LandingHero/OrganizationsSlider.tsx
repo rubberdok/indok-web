@@ -1,9 +1,9 @@
 import { Box, Container, Typography, Stack, NoSsr } from "@mui/material";
 import { useRef, useState, useEffect } from "react";
 
-import Organizations from "./Organizations";
+import { Organizations } from "./Organizations";
 
-const OrganizationsSlider: React.FC = () => {
+export const OrganizationsSlider: React.FC = () => {
   const orgsTitleEl = useRef<HTMLElement>();
 
   const [sliderActiveIndex, setSliderActiveIndex] = useState(0);
@@ -63,5 +63,3 @@ const OrganizationsSlider: React.FC = () => {
     </Box>
   );
 };
-
-export default OrganizationsSlider;

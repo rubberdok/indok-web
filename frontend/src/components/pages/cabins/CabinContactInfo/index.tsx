@@ -1,33 +1,32 @@
 import { useQuery } from "@apollo/client/react";
 import { Grid } from "@mui/material";
-import { NextPage } from "next";
 import { Dispatch, SetStateAction } from "react";
 
-import { GET_USER } from "@/graphql/users/queries";
-import { Cabin, ContactInfo, ContactInfoValidations, InputFieldsEvent } from "@/interfaces/cabins";
-import { User } from "@/interfaces/users";
+import { CabinFragment, UserDocument } from "@/generated/graphql";
+import { ContactInfo, ContactInfoValidations, InputFieldsEvent } from "@/types/cabins";
 
 import { InputFields } from "../InputFields/InputFields";
 
-interface ContractInfoProps {
+type Props = {
   contactInfo: ContactInfo;
   setContactInfo: Dispatch<SetStateAction<ContactInfo>>;
   validations: ContactInfoValidations | undefined;
   errorTrigger: boolean;
-  chosenCabins: Cabin[];
-}
-/*
-One of the steps in the cabins/book page.
-Fetches the current user and tries to input its values to the InputFields.
-*/
-const CabinContactInfo: NextPage<ContractInfoProps> = ({
+  chosenCabins: CabinFragment[];
+};
+
+/**
+ * One of the steps in the cabins/book page.
+ * Fetches the current user and tries to input its values to the InputFields.
+ */
+export const CabinContactInfo: React.FC<Props> = ({
   contactInfo,
   setContactInfo,
   validations,
   chosenCabins,
   errorTrigger,
 }) => {
-  useQuery<{ user: User | null }>(GET_USER, {
+  useQuery(UserDocument, {
     onCompleted: (data) => {
       if (data.user) {
         setContactInfo({
@@ -56,5 +55,3 @@ const CabinContactInfo: NextPage<ContractInfoProps> = ({
     </Grid>
   );
 };
-
-export default CabinContactInfo;

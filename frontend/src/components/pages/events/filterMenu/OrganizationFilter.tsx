@@ -9,18 +9,14 @@ import { range } from "@/utils/helpers";
 import { HandleChecked } from "./types";
 
 type Props = {
+  /** The currently applied filters */
   filters: FilterQuery;
+  /** Function called when filters are updated */
   handleChecked: HandleChecked;
 };
 
-/**
- * Component for the organization filter in the filter menu
- *
- * Props:
- * - filters: the currently applied filters
- * - handleChecked: method called when filters are updated
- */
-const OrganizationFilter: React.FC<Props> = ({ filters, handleChecked }) => {
+/** Component for the organization filter in the filter menu. */
+export const OrganizationFilter: React.FC<Props> = ({ filters, handleChecked }) => {
   const { data, loading, error } = useQuery(EventFilteredOrganizationsDocument);
 
   if (loading) {
@@ -63,5 +59,3 @@ const OrganizationFilter: React.FC<Props> = ({ filters, handleChecked }) => {
     </Grid>
   );
 };
-
-export default OrganizationFilter;

@@ -4,15 +4,12 @@ import Link from "next/link";
 import ReactMarkdown from "react-markdown";
 
 import * as components from "@/components/MarkdownForm/components";
-import { Listing } from "@/interfaces/listings";
+import { ListingFragment } from "@/generated/graphql";
 
-/**
- * Component for authorized organization members to administer their listing.
- *
- * Props:
- * - the listing to administrate
- */
-const OrganizationListing: React.FC<{ listing: Listing }> = ({ listing }) => (
+type Props = { listing: ListingFragment };
+
+/** Component for authorized organization members to administer their listing. */
+export const OrganizationListing: React.FC<Props> = ({ listing }) => (
   <Grid container direction="column" spacing={1}>
     <Grid item>
       <Card>
@@ -35,5 +32,3 @@ const OrganizationListing: React.FC<{ listing: Listing }> = ({ listing }) => (
     </Grid>
   </Grid>
 );
-
-export default OrganizationListing;

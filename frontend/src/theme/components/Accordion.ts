@@ -1,6 +1,6 @@
 import { ThemeOptions } from "@mui/material";
 
-const Accordion: ThemeOptions["components"] = {
+export const Accordion: ThemeOptions["components"] = {
   MuiAccordion: {
     defaultProps: {
       elevation: 0,
@@ -11,5 +11,3 @@ const Accordion: ThemeOptions["components"] = {
 
   MuiAccordionSummary: {},
 };
-
-export default Accordion;

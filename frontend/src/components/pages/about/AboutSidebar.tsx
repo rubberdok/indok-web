@@ -17,11 +17,15 @@ const NAV_ITEMS = [
         title: "Hovedstyret",
         path: "/about/board",
       },
+      {
+        title: "Instituttillitsvalgte",
+        path: "/about/itv",
+      },
     ],
   },
 ];
 
-const AboutSidebar: React.FC = () => {
+export const AboutSidebar: React.FC = () => {
   return (
     <Box position="relative" mt={13} height={1 / 2} sx={{ borderRight: "1px solid", borderColor: "divider" }}>
       <NavigationSidebar
@@ -37,5 +41,3 @@ const AboutSidebar: React.FC = () => {
     </Box>
   );
 };
-
-export default AboutSidebar;

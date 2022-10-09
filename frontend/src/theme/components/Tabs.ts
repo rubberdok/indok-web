@@ -1,6 +1,6 @@
 import { ThemeOptions } from "@mui/material";
 
-const Tabs: ThemeOptions["components"] = {
+export const Tabs: ThemeOptions["components"] = {
   MuiTab: {
     defaultProps: {
       disableRipple: true,
@@ -14,5 +14,3 @@ const Tabs: ThemeOptions["components"] = {
     },
   },
 };
-
-export default Tabs;

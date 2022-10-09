@@ -1,6 +1,6 @@
 import { ThemeOptions } from "@mui/material";
 
-const Chip: ThemeOptions["components"] = {
+export const Chip: ThemeOptions["components"] = {
   MuiChip: {
     styleOverrides: {
       outlined: ({ theme }) => ({
@@ -20,5 +20,3 @@ const Chip: ThemeOptions["components"] = {
     },
   },
 };
-
-export default Chip;

@@ -1,6 +1,6 @@
 import { alpha, ThemeOptions } from "@mui/material/styles";
 
-const Button: ThemeOptions["components"] = {
+export const Button: ThemeOptions["components"] = {
   MuiButton: {
     defaultProps: {
       disableElevation: true,
@@ -24,5 +24,3 @@ const Button: ThemeOptions["components"] = {
     },
   },
 };
-
-export default Button;

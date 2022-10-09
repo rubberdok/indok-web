@@ -6,7 +6,7 @@ const RootStyle = styled("div")(() => ({
   display: "flex",
 }));
 
-const LandingPromo: React.FC = () => {
+export const LandingPromo: React.FC = () => {
   return (
     <RootStyle>
       <Container>
@@ -29,5 +29,3 @@ const LandingPromo: React.FC = () => {
     </RootStyle>
   );
 };
-
-export default LandingPromo;

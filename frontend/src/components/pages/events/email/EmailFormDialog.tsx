@@ -4,16 +4,16 @@ import React, { Dispatch, SetStateAction } from "react";
 
 import { SendEmailProps } from "./EmailForm";
 
-interface EmailFormDialogProps {
+type Props = {
   showEmailForm: boolean;
   setShowEmailForm: Dispatch<SetStateAction<boolean>>;
   emailProps: SendEmailProps;
   setEmailProps: Dispatch<SetStateAction<SendEmailProps>>;
   validations: { subject: boolean; content: boolean };
   sendEmail: () => void;
-}
+};
 
-const EmailFormDialog: React.FC<EmailFormDialogProps> = ({
+export const EmailFormDialog: React.FC<Props> = ({
   showEmailForm,
   setShowEmailForm,
   emailProps,
@@ -93,5 +93,3 @@ const EmailFormDialog: React.FC<EmailFormDialogProps> = ({
     </Dialog>
   );
 };
-
-export default EmailFormDialog;

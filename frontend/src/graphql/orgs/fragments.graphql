@@ -1,0 +1,28 @@
+fragment AdminOrganization on OrganizationType {
+  id
+  name
+  events {
+    ...OrgAdminEvent
+  }
+  listings {
+    ...OrgAdminListing
+  }
+}
+
+fragment OrgAdminEvent on EventType {
+  id
+  title
+  startTime
+  shortDescription
+  availableSlots
+  isFull
+  usersAttending {
+    id
+  }
+}
+
+fragment OrgAdminListing on ListingType {
+  id
+  title
+  deadline
+}

@@ -4,10 +4,18 @@ mutation logout {
   }
 }
 
-mutation AuthUser($code: String!) {
+mutation authUser($code: String!) {
   authUser(code: $code) {
     user {
-      ...UserFields
+      ...User
+    }
+  }
+}
+
+mutation updateUser($userData: UserInput) {
+  updateUser(userData: $userData) {
+    user {
+      ...User
     }
   }
 }

@@ -3,22 +3,19 @@ import { Button, CircularProgress, Grid, Typography, Box } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
 
-import ListingItem from "@/components/pages/listings/index/ListingItem";
-import { LISTINGS } from "@/graphql/listings/queries";
-import { Listing } from "@/interfaces/listings";
+import { ListingItem } from "@/components/pages/listings/index/ListingItem";
+import { ListingsDocument } from "@/generated/graphql";
 import EmptyStreet from "public/illustrations/EmptyStreet.svg";
 
-/**
- * Component to show an overview of all open listings.
- *
- * Props:
- * - reload function to reload the page on an error
- */
-const Listings: React.FC<{
+type Props = {
+  /** Reload function to reload the page on error. */
   reload: () => void;
-}> = ({ reload }) => {
+};
+
+/** Component to show an overview of all open listings. */
+export const Listings: React.FC<Props> = ({ reload }) => {
   // fetches all open listings
-  const { loading, error, data } = useQuery<{ listings: Listing[] }>(LISTINGS);
+  const { loading, error, data } = useQuery(ListingsDocument);
 
   // if the data is fetched, renders a ListingItem for each listing
   return (
@@ -47,14 +44,14 @@ const Listings: React.FC<{
           </Grid>
         </Grid>
       )}
-      {data &&
+      {data?.listings &&
         data.listings.length > 0 &&
         data.listings.map((listing) => (
           <Grid container item key={listing.id} md={5} sm={7} xs={10}>
             <ListingItem listing={listing} />
           </Grid>
         ))}
-      {data?.listings.length == 0 && (
+      {data?.listings?.length == 0 && (
         <Grid container item direction="column" alignItems="center">
           <Grid item>
             <Typography variant="body1" align="center">
@@ -75,5 +72,3 @@ const Listings: React.FC<{
     </Grid>
   );
 };
-
-export default Listings;

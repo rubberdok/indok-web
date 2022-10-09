@@ -2,9 +2,9 @@ import { Grid, Typography } from "@mui/material";
 
 import Organization from "~/public/illustrations/Organization.svg";
 
-import ProfileCardBase from "./ProfileCardBase";
+import { ProfileCardBase } from "./ProfileCardBase";
 
-const OrganizationCard: React.VFC = ({ ...props }) => {
+export const OrganizationCard: React.VFC = ({ ...props }) => {
   return (
     <ProfileCardBase
       title="Foreninger"
@@ -22,5 +22,3 @@ const OrganizationCard: React.VFC = ({ ...props }) => {
     </ProfileCardBase>
   );
 };
-
-export default OrganizationCard;

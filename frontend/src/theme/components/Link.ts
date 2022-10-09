@@ -1,6 +1,6 @@
 import { ThemeOptions } from "@mui/material";
 
-const Link: ThemeOptions["components"] = {
+export const Link: ThemeOptions["components"] = {
   MuiLink: {
     defaultProps: {
       underline: "hover",
@@ -12,5 +12,3 @@ const Link: ThemeOptions["components"] = {
     },
   },
 };
-
-export default Link;

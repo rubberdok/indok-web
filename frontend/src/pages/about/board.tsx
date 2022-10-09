@@ -2,10 +2,10 @@ import { Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import React from "react";
 
-import MemberCard from "@/components/pages/about/MemberCard";
+import { MemberCard } from "@/components/pages/about/MemberCard";
 import { BoardMember } from "@/components/pages/about/MemberCard/types";
-import Template from "@/components/pages/about/Template";
-import Layout from "@/layouts/Layout";
+import { Template } from "@/components/pages/about/Template";
+import { Layout } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/pages/_app";
 
 const BoardPage: NextPageWithLayout = () => {
@@ -71,8 +71,9 @@ const BoardPage: NextPageWithLayout = () => {
       img="/img/hero.jpg"
       title="Hovedstyret"
       page="Hovedstyret"
-      description="Hovedstyret (HS) er styret i Foreningen for studentene ved Industriell økonomi og teknologiledelse, NTNU. 
-      "
+      description="Hovedstyret (HS) er styret i Foreningen for studentene ved Industriell økonomi og teknologiledelse, NTNU."
+      prevPost={{ title: "Våre foreninger", slug: "/about/organizations", cover: "/img/hero.jpg" }}
+      nextPost={{ title: "Institutt-tillitsvalgte", slug: "/about/itv", cover: "/img/hero.jpg" }}
     >
       <Typography variant="body1" paragraph>
         Hovedstyret består av et valgt lederpar, instituttilittsvalgt ved IØT, samt leder for hver av linjeforeningene

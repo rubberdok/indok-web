@@ -14,32 +14,20 @@ import dayjs from "dayjs";
 import Link from "next/link";
 import { useState } from "react";
 
-import DeleteListing from "@/components/pages/listings/organization/DeleteListing";
-import { Listing } from "@/interfaces/listings";
-import { Organization } from "@/interfaces/organizations";
+import { DeleteListing } from "@/components/pages/listings/organization/DeleteListing";
+import { AdminOrganizationFragment, OrgAdminListingFragment } from "@/generated/graphql";
 
-/**
- * Component to show a list of listings connected to an organization for its administrators.
- *
- * Props:
- * - the organization for which to show listings
- */
-const OrganizationListings: React.FC<{
-  organization: Organization;
-}> = ({ organization }) => {
+type Props = { organization: AdminOrganizationFragment };
+
+/** Component to show a list of listings connected to an organization for its administrators. */
+export const OrganizationListings: React.FC<Props> = ({ organization }) => {
   // state for whether to show the DeleteListing confirmation dialog
   // if not undefined, contains the listing to be deleted for use by the dialog
-  const [listingToDelete, setListingToDelete] = useState<Listing | undefined>();
+  const [listingToDelete, setListingToDelete] = useState<OrgAdminListingFragment | undefined>();
 
   return (
     <>
-      <DeleteListing
-        listing={listingToDelete}
-        organizationId={parseInt(organization.id)}
-        onClose={() => {
-          setListingToDelete(undefined);
-        }}
-      />
+      <DeleteListing listing={listingToDelete} onClose={() => setListingToDelete(undefined)} />
       <Stack spacing={5}>
         <Typography variant="h3">Søknader</Typography>
         {organization.listings && organization.listings.length !== 0 && (
@@ -53,7 +41,7 @@ const OrganizationListings: React.FC<{
                 </TableRow>
               </TableHead>
               <TableBody>
-                {organization.listings.map((listing: Listing) => (
+                {organization.listings.map((listing) => (
                   <TableRow key={listing.id}>
                     <TableCell>{listing.title}</TableCell>
                     <TableCell>{dayjs(listing.deadline).format("HH:mm DD-MM-YYYY")}</TableCell>
@@ -94,5 +82,3 @@ const OrganizationListings: React.FC<{
     </>
   );
 };
-
-export default OrganizationListings;

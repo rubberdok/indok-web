@@ -4,15 +4,10 @@ import Link from "next/link";
 
 import { ListingFragment } from "@/generated/graphql";
 
-/**
- * Component for title and organization info on the listing detail page.
- *
- * Props:
- * - the listing to render
- */
-const InfoCard: React.FC<{
-  listing: ListingFragment;
-}> = ({ listing }) => {
+type Props = { listing: ListingFragment };
+
+/** Component for title and organization info on the listing detail page. */
+export const InfoCard: React.FC<Props> = ({ listing }) => {
   return (
     <Card style={{ height: "100%" }}>
       <CardContent style={{ height: "100%" }}>
@@ -55,5 +50,3 @@ const InfoCard: React.FC<{
     </Card>
   );
 };
-
-export default InfoCard;

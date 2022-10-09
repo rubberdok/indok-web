@@ -4,9 +4,9 @@ import Link from "next/link";
 
 import Hero from "~/public/static/landing/hero.webp";
 
-import OrganizationsSlider from "./OrganizationsSlider";
+import { OrganizationsSlider } from "./OrganizationsSlider";
 
-const LandingHero: React.FC = () => {
+export const LandingHero: React.FC = () => {
   return (
     <>
       <Box
@@ -73,5 +73,3 @@ const LandingHero: React.FC = () => {
     </>
   );
 };
-
-export default LandingHero;

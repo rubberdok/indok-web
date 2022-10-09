@@ -4,8 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useMemo } from "react";
 
-import { GET_USER_INFO } from "@/graphql/users/queries";
-import { UserInfo } from "@/interfaces/users";
+import { UserDocument } from "@/generated/graphql";
 import { generateFeideLoginUrl } from "@/utils/auth";
 
 type Props = {
@@ -36,7 +35,7 @@ export const LoginRequired: React.FC<Props & ButtonProps> = ({
     path ||= router.asPath;
   }
   const url = useMemo<string>(() => generateFeideLoginUrl(path), [path]);
-  const { data, loading } = useQuery<{ user?: UserInfo | null }>(GET_USER_INFO);
+  const { data, loading } = useQuery(UserDocument);
   const { fullWidth } = buttonProps;
 
   if (loading) {
@@ -67,5 +66,3 @@ export const LoginRequired: React.FC<Props & ButtonProps> = ({
     </Link>
   );
 };
-
-export default LoginRequired;

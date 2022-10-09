@@ -6,21 +6,18 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 
 import { PermissionRequired } from "@/components/Auth";
-import TabPanel from "@/components/pages/about/TabPanel";
-import AdminCabinTable from "@/components/pages/cabins/Admin/AdminCabinTable";
-import { QUERY_ADMIN_ALL_BOOKINGS } from "@/graphql/cabins/queries";
-import useResponsive from "@/hooks/useResponsive";
-import { BookingFromQuery } from "@/interfaces/cabins";
-import Layout, { RootStyle } from "@/layouts/Layout";
+import { TabPanel } from "@/components/pages/about/TabPanel";
+import { AdminCabinTable } from "@/components/pages/cabins/Admin/AdminCabinTable";
+import { AdminAllBookingsDocument } from "@/generated/graphql";
+import { useResponsive } from "@/hooks/useResponsive";
+import { Layout, RootStyle } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/pages/_app";
 
-/*
-Page for booking admininistration showing all upcoming bookings and buttons for actions on these bookings.
-*/
+/** Page for booking admininistration showing all upcoming bookings and buttons for actions on these bookings. */
 const AdminPage: NextPageWithLayout = () => {
-  const { data, refetch } = useQuery<{
-    adminAllBookings: BookingFromQuery[];
-  }>(QUERY_ADMIN_ALL_BOOKINGS, { variables: { after: dayjs().subtract(1, "day").format("YYYY-MM-DD") } });
+  const { data, refetch } = useQuery(AdminAllBookingsDocument, {
+    variables: { after: dayjs().subtract(1, "day").format("YYYY-MM-DD") },
+  });
 
   const [tabValue, setTabValue] = useState<number>(0);
   const router = useRouter();
@@ -28,9 +25,9 @@ const AdminPage: NextPageWithLayout = () => {
   const handleTabChange = (newTabValue: number) => setTabValue(newTabValue);
 
   const isMobile = useResponsive({ query: "down", key: "md" });
-  const accepted = data?.adminAllBookings.filter((booking) => !booking.isTentative && !booking.isDeclined);
-  const declined = data?.adminAllBookings.filter((booking) => !booking.isTentative && booking.isDeclined);
-  const tentative = data?.adminAllBookings.filter((booking) => booking.isTentative);
+  const accepted = data?.adminAllBookings?.filter((booking) => !booking.isTentative && !booking.isDeclined);
+  const declined = data?.adminAllBookings?.filter((booking) => !booking.isTentative && booking.isDeclined);
+  const tentative = data?.adminAllBookings?.filter((booking) => booking.isTentative);
 
   return (
     <Container>
@@ -63,13 +60,13 @@ const AdminPage: NextPageWithLayout = () => {
               </Tabs>
             </Box>
             <TabPanel value={tabValue} index={0}>
-              <AdminCabinTable bookings={tentative} refetch={refetch} currentTab="tentative" />
+              <AdminCabinTable bookings={tentative} refetchBookings={refetch} currentTab="tentative" />
             </TabPanel>
             <TabPanel value={tabValue} index={1}>
-              <AdminCabinTable bookings={accepted} refetch={refetch} currentTab="accepted" />
+              <AdminCabinTable bookings={accepted} refetchBookings={refetch} currentTab="accepted" />
             </TabPanel>
             <TabPanel value={tabValue} index={2}>
-              <AdminCabinTable bookings={declined} refetch={refetch} currentTab="declined" />
+              <AdminCabinTable bookings={declined} refetchBookings={refetch} currentTab="declined" />
             </TabPanel>
           </Box>
         </Box>

@@ -1,0 +1,34 @@
+query adminOrganization($orgId: ID!) {
+  organization(id: $orgId) {
+    ...AdminOrganization
+  }
+}
+
+query orgUsers($orgId: ID!) {
+  organization(id: $orgId) {
+    id
+    name
+    users {
+      id
+      username
+      firstName
+      lastName
+      memberships {
+        id
+        group {
+          uuid
+        }
+        organization {
+          id
+          name
+          hrGroup {
+            uuid
+          }
+          primaryGroup {
+            uuid
+          }
+        }
+      }
+    }
+  }
+}

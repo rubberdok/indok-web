@@ -1,6 +1,6 @@
 import { ThemeOptions } from "@mui/material";
 
-const Tooltip: ThemeOptions["components"] = {
+export const Tooltip: ThemeOptions["components"] = {
   MuiTooltip: {
     styleOverrides: {
       tooltip: ({ theme }) => ({
@@ -12,5 +12,3 @@ const Tooltip: ThemeOptions["components"] = {
     },
   },
 };
-
-export default Tooltip;

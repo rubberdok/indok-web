@@ -1,16 +1,16 @@
 import { Grid, Skeleton, Typography } from "@mui/material";
 
-import { User } from "@/types/users";
+import { UserFragment } from "@/generated/graphql";
 import Profile from "~/public/illustrations/Profile.svg";
 
-import ProfileCardBase from "./ProfileCardBase";
+import { ProfileCardBase } from "./ProfileCardBase";
 
 type Props = {
-  user?: User;
+  user?: UserFragment;
   "data-test-id"?: string;
 };
 
-const PersonalCard: React.VFC<Props> = ({ user, "data-test-id": dataTestId, ...props }) => {
+export const PersonalCard: React.VFC<Props> = ({ user, "data-test-id": dataTestId, ...props }) => {
   return (
     <ProfileCardBase
       title="Personlig informasjon"
@@ -47,5 +47,3 @@ const PersonalCard: React.VFC<Props> = ({ user, "data-test-id": dataTestId, ...p
     </ProfileCardBase>
   );
 };
-
-export default PersonalCard;

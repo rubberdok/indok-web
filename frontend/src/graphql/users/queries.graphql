@@ -1,5 +1,17 @@
-query userInfo {
+query user {
   user {
-    ...UserFields
+    ...User
+  }
+}
+
+query userWithEventsAndOrgs {
+  user {
+    ...UserWithEventsAndOrgs
+  }
+}
+
+query userToEdit {
+  user {
+    ...UserToEdit
   }
 }

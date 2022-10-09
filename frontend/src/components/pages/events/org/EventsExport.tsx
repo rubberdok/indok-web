@@ -3,23 +3,24 @@ import { GetApp } from "@mui/icons-material";
 import { Button, ButtonGroup, Grid, TextField, Typography, CircularProgress } from "@mui/material";
 import { useState } from "react";
 
-import { QUERY_ATTENDEE_REPORTS, QUERY_ATTENDEE_REPORT_ORG } from "@/graphql/events/queries";
-import { Organization } from "@/interfaces/organizations";
+import { AttendeeReportOrgDocument, AttendeeReportsDocument, AdminOrganizationFragment } from "@/generated/graphql";
 import { promptDownloadFromPayload } from "@/utils/exports";
 
-type Props = {
-  organization: Organization;
-};
+type Props = { organization: AdminOrganizationFragment };
 
-const EventsExport: React.FC<Props> = ({ organization }) => {
+export const EventsExport: React.FC<Props> = ({ organization }) => {
   const [selectedEvents, setSelectedEvents] = useState(["1", "2", "3"]);
 
-  const [getAttendeeReportOrg, { loading: loadingReport }] = useLazyQuery(QUERY_ATTENDEE_REPORT_ORG, {
-    onCompleted: (data) => promptDownloadFromPayload(JSON.parse(data.attendeeReportOrg)),
+  const [getAttendeeReportOrg, { loading: loadingReport }] = useLazyQuery(AttendeeReportOrgDocument, {
+    onCompleted: (data) => {
+      if (data.attendeeReportOrg) promptDownloadFromPayload(JSON.parse(data.attendeeReportOrg));
+    },
   });
 
-  const [getAttendeeReports, { loading: loadingReports }] = useLazyQuery(QUERY_ATTENDEE_REPORTS, {
-    onCompleted: (data) => promptDownloadFromPayload(JSON.parse(data.attendeeReports)),
+  const [getAttendeeReports, { loading: loadingReports }] = useLazyQuery(AttendeeReportsDocument, {
+    onCompleted: (data) => {
+      if (data.attendeeReports) promptDownloadFromPayload(JSON.parse(data.attendeeReports));
+    },
   });
 
   const wrapDownloadButtonReportOrg = (orgId: string, filetype: string) => {
@@ -90,5 +91,3 @@ const EventsExport: React.FC<Props> = ({ organization }) => {
     </Grid>
   );
 };
-
-export default EventsExport;
