@@ -1,6 +1,5 @@
 import { Check, Clear } from "@mui/icons-material";
 import { Button, Dialog, DialogActions, DialogContent, Grid, IconButton } from "@mui/material";
-import { NextPage } from "next";
 import { Dispatch, SetStateAction } from "react";
 
 import { Contract } from "@/components/pages/cabins/Documents/Contract";
@@ -18,7 +17,7 @@ type Props = {
 };
 
 /** Dialog component for the contract component. */
-export const ContractDialog: NextPage<Props> = ({
+export const ContractDialog: React.FC<Props> = ({
   modalData,
   setModalData,
   datePick,

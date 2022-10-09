@@ -1,6 +1,5 @@
 import { Box, Divider, Tooltip, Typography } from "@mui/material";
 import { TypographyProps } from "@mui/material/Typography";
-import { NextPage } from "next";
 
 import { CabinFragment } from "@/generated/graphql";
 import { useResponsive } from "@/hooks/useResponsive";
@@ -25,7 +24,7 @@ type Props = {
  * Statusbox with information about the current cabin booking.
  * Renders fields based on the props given.
  */
-export const CabinBookingStatus: NextPage<Props> = ({ chosenCabins, datePick, contactInfo, cabinText, mailSent }) => {
+export const CabinBookingStatus: React.FC<Props> = ({ chosenCabins, datePick, contactInfo, cabinText, mailSent }) => {
   const isMobile = useResponsive({ query: "down", key: "md" });
 
   return (

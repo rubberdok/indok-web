@@ -1,5 +1,4 @@
-import { Grid, Typography, Divider, Hidden } from "@mui/material";
-import { NextPage } from "next";
+import { Divider, Grid, Hidden, Typography } from "@mui/material";
 
 import { CabinFragment } from "@/generated/graphql";
 import { ContactInfo, DatePick } from "@/types/cabins";
@@ -14,7 +13,7 @@ type Props = {
 };
 
 /** Step in the cabins/book site. Shows a confirmation of the booking made after the payment site. */
-export const ReceiptSite: NextPage<Props> = (props) => {
+export const ReceiptSite: React.FC<Props> = (props) => {
   return (
     <Grid container alignItems="center" direction="column">
       <Hidden lgDown>

@@ -1,5 +1,4 @@
 import { Checkbox, Divider, Paper, Stack, Typography } from "@mui/material";
-import { NextPage } from "next";
 import React from "react";
 
 import { Calendar } from "@/components/Calendar";
@@ -19,7 +18,7 @@ type Props = {
 /**
  * One of the steps in the cabins/book page. In this step the user chooses a cabin and the check-in and check-out dates.
  */
-export const CheckInOut: NextPage<Props> = ({ allCabins, chosenCabins, setChosenCabins, setDatePick }) => {
+export const CheckInOut: React.FC<Props> = ({ allCabins, chosenCabins, setChosenCabins, setDatePick }) => {
   const { disabledDates } = useDisabledDates(chosenCabins);
   const isMobile = useResponsive({ query: "down", key: "md" });
 

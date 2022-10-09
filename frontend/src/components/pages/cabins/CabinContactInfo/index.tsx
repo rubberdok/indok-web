@@ -1,6 +1,5 @@
 import { useQuery } from "@apollo/client/react";
 import { Grid } from "@mui/material";
-import { NextPage } from "next";
 import { Dispatch, SetStateAction } from "react";
 
 import { CabinFragment, UserDocument } from "@/generated/graphql";
@@ -20,7 +19,7 @@ type Props = {
  * One of the steps in the cabins/book page.
  * Fetches the current user and tries to input its values to the InputFields.
  */
-export const CabinContactInfo: NextPage<Props> = ({
+export const CabinContactInfo: React.FC<Props> = ({
   contactInfo,
   setContactInfo,
   validations,
