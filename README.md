@@ -77,10 +77,10 @@ Website for the students at Industrial Economics and Technology Management at NT
       - `graphql.ts` is the output from `graphql-codegen`, the tool we run with `yarn generate`. It reads our GraphQL
         schema (`backend/schema.json`), and our queries, mutations and fragments (from the `graphql` folder), to
         generate TypeScript types and data for making requests to our backend API.
-    - `theme` contains customizations for Material UI, the styled component library we use for React.
-      - `overrides` contains customizations for specific Material UI components.
-    - `lib` contains functions defined by us to make it easier to work with some of our libraries.
     - `types` contains shared types used across the app.
+    - `theme` contains customizations for Material UI, the styled component library we use for React.
+      - `components` contains customizations for specific Material UI components.
+    - `lib` contains functions defined by us to make it easier to work with some of our libraries.
     - `utils` contains utility functions.
   - `.husky` configures Husky, the tool we use for pre-commit hooks (checks that run on each Git commit).
   - `content` contains files for static content used by our React components.
