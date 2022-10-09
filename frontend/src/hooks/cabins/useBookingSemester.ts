@@ -22,7 +22,7 @@ type UseBookingSemester = {
 };
 
 /** Fetches the booking semesters from backend. */
-const useBookingSemester = (): UseBookingSemester => {
+export const useBookingSemester = (): UseBookingSemester => {
   const [bookingSemester, setBookingSemester] = useState(defaultBookingSemester);
   const { data, loading, error } = useQuery(BookingSemesterDocument);
 
@@ -34,5 +34,3 @@ const useBookingSemester = (): UseBookingSemester => {
 
   return { bookingSemester, setBookingSemester, loading, error };
 };
-
-export default useBookingSemester;

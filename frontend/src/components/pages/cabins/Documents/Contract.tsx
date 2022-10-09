@@ -7,15 +7,14 @@ import { ContactInfo, DatePick } from "@/types/cabins";
 import { calculatePrice, convertDateFormat, toStringChosenCabins } from "@/utils/cabins";
 import hytteforeningen from "~/public/static/cabins/logo.svg";
 
-interface ContractProps {
+type Props = {
   chosenCabins: CabinFragment[];
   contactInfo: ContactInfo;
   datePick: DatePick;
-}
-/*
-Renders the contract of a booking.
-*/
-const Contract: React.FC<ContractProps> = ({ chosenCabins, contactInfo, datePick }) => {
+};
+
+/** Renders the contract of a booking. */
+export const Contract: React.FC<Props> = ({ chosenCabins, contactInfo, datePick }) => {
   const currentTime = new Date().toLocaleString();
   const price = calculatePrice(chosenCabins, contactInfo, datePick);
 
@@ -142,5 +141,3 @@ const Contract: React.FC<ContractProps> = ({ chosenCabins, contactInfo, datePick
     </Grid>
   );
 };
-
-export default Contract;

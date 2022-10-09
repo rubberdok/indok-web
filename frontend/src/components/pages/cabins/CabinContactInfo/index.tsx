@@ -1,6 +1,5 @@
 import { useQuery } from "@apollo/client/react";
 import { Grid } from "@mui/material";
-import { NextPage } from "next";
 import { Dispatch, SetStateAction } from "react";
 
 import { CabinFragment, UserDocument } from "@/generated/graphql";
@@ -8,18 +7,19 @@ import { ContactInfo, ContactInfoValidations, InputFieldsEvent } from "@/types/c
 
 import { InputFields } from "../InputFields/InputFields";
 
-interface ContractInfoProps {
+type Props = {
   contactInfo: ContactInfo;
   setContactInfo: Dispatch<SetStateAction<ContactInfo>>;
   validations: ContactInfoValidations | undefined;
   errorTrigger: boolean;
   chosenCabins: CabinFragment[];
-}
+};
+
 /**
  * One of the steps in the cabins/book page.
  * Fetches the current user and tries to input its values to the InputFields.
  */
-const CabinContactInfo: NextPage<ContractInfoProps> = ({
+export const CabinContactInfo: React.FC<Props> = ({
   contactInfo,
   setContactInfo,
   validations,
@@ -55,5 +55,3 @@ const CabinContactInfo: NextPage<ContractInfoProps> = ({
     </Grid>
   );
 };
-
-export default CabinContactInfo;

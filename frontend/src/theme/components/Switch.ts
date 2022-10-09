@@ -1,6 +1,6 @@
 import { alpha, ThemeOptions } from "@mui/material/styles";
 
-const Switch: ThemeOptions["components"] = {
+export const Switch: ThemeOptions["components"] = {
   MuiSwitch: {
     styleOverrides: {
       root: {
@@ -42,5 +42,3 @@ const Switch: ThemeOptions["components"] = {
     },
   },
 };
-
-export default Switch;

@@ -8,7 +8,7 @@ type Props = {
   documents?: ArchiveByTypesQuery["archiveByTypes"];
 };
 
-const DocumentList: React.FC<Props> = ({ documents }) => {
+export const DocumentList: React.FC<Props> = ({ documents }) => {
   if (!documents?.length) return <Typography> Fant ingen dokumenter som samsvarer med søket ditt </Typography>;
 
   return (
@@ -50,5 +50,3 @@ const DocumentList: React.FC<Props> = ({ documents }) => {
     </Grid>
   );
 };
-
-export default DocumentList;

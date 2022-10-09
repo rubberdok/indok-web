@@ -3,7 +3,7 @@ import { Container, Grid, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
-import ListingForm from "@/components/pages/listings/organization/ListingForm";
+import { ListingForm } from "@/components/pages/listings/organization/ListingForm";
 import { CreateListingDocument, UserOrganizationsDocument } from "@/generated/graphql";
 import { ListingInput } from "@/types/listings";
 
@@ -26,7 +26,7 @@ const emptyListing: ListingInput = {
 type Props = { defaultOrganizationId?: string };
 
 /** Page for creating new listings, navigates to the newly created listing upon completion. */
-const NewListing: React.FC<Props> = ({ defaultOrganizationId }) => {
+export const NewListing: React.FC<Props> = ({ defaultOrganizationId }) => {
   const router = useRouter();
 
   // state to manage the listing being created
@@ -96,4 +96,3 @@ const NewListing: React.FC<Props> = ({ defaultOrganizationId }) => {
     </Container>
   );
 };
-export default NewListing;

@@ -28,10 +28,8 @@ import {
   UserWithEventsAndOrgsDocument,
 } from "@/generated/graphql";
 
-/**
- * Component for the creating a new event
- */
-const CreateEvent: React.FC = () => {
+/** Component for the creating a new event. */
+export const CreateEvent: React.FC = () => {
   const defaultInput: CreateEventInput = {
     title: "",
     description: "",
@@ -417,5 +415,3 @@ const CreateEvent: React.FC = () => {
     </Card>
   );
 };
-
-export default CreateEvent;

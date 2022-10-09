@@ -4,9 +4,9 @@ import { Button, Card, CardContent, FormHelperText, Grid, Typography } from "@mu
 import { orderBy } from "lodash";
 import { useState } from "react";
 
-import ConfirmFormChange from "@/components/pages/forms/formAdmin/ConfirmFormChange";
-import EditQuestion from "@/components/pages/forms/formAdmin/EditQuestion";
-import QuestionPreview from "@/components/pages/forms/formAdmin/QuestionPreview";
+import { ConfirmFormChange } from "@/components/pages/forms/formAdmin/ConfirmFormChange";
+import { EditQuestion } from "@/components/pages/forms/formAdmin/EditQuestion";
+import { QuestionPreview } from "@/components/pages/forms/formAdmin/QuestionPreview";
 import {
   CreateQuestionDocument,
   DeleteQuestionDocument,
@@ -20,7 +20,7 @@ import {
 type Props = { form: FormWithAllResponsesFragment };
 
 /** Component for editing forms (for example: the applications to listings). */
-const EditForm: React.FC<Props> = ({ form }) => {
+export const EditForm: React.FC<Props> = ({ form }) => {
   // state to manage the question on the form currently being edited
   // undefined if no question is currently being edited
   const [activeQuestion, setActiveQuestion] = useState<QuestionWithAnswerIdsFragment | undefined>();
@@ -208,5 +208,3 @@ const EditForm: React.FC<Props> = ({ form }) => {
     </>
   );
 };
-
-export default EditForm;

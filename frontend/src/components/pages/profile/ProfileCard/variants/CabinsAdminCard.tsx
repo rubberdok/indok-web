@@ -2,9 +2,9 @@ import { Grid, Typography } from "@mui/material";
 
 import Cabin from "~/public/illustrations/Cabin.svg";
 
-import ProfileCardBase from "./ProfileCardBase";
+import { ProfileCardBase } from "./ProfileCardBase";
 
-const CabinsAdminCard: React.VFC = ({ ...props }) => {
+export const CabinsAdminCard: React.VFC = ({ ...props }) => {
   return (
     <ProfileCardBase
       title="Hytte-admin"
@@ -24,5 +24,3 @@ const CabinsAdminCard: React.VFC = ({ ...props }) => {
     </ProfileCardBase>
   );
 };
-
-export default CabinsAdminCard;

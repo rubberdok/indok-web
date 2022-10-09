@@ -28,14 +28,14 @@ import dayjs from "dayjs";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 
-import AttendeeExport from "@/components/pages/events/AttendeeExport";
-import EmailForm from "@/components/pages/events/email/EmailForm";
-import EditEvent from "@/components/pages/events/EventEditor";
-import OrganizationEventHero from "@/components/pages/organization/OrganizationEventHero";
+import { AttendeeExport } from "@/components/pages/events/AttendeeExport";
+import { EditEvent } from "@/components/pages/events/EditEvent";
+import { EmailForm } from "@/components/pages/events/email/EmailForm";
+import { OrganizationEventHero } from "@/components/pages/organization/OrganizationEventHero";
 import { AdminEventDocument, AdminEventFragment, AdminEventSignOffDocument, SignUpFragment } from "@/generated/graphql";
-import { HeaderValuePair } from "@/interfaces/utils";
-import Layout from "@/layouts/Layout";
+import { Layout } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/pages/_app";
+import { HeaderValuePair } from "@/types/utils";
 
 const signUpFields: HeaderValuePair<SignUpFragment>[] = [
   { header: "Navn", field: "user" },
@@ -62,15 +62,14 @@ const dateEventFields: HeaderValuePair<AdminEventFragment>[] = [
   { header: "Påmeldingsdato", field: "signupOpenDate" },
 ];
 
-/**
- * Component for an admin panel for an event, used for viewing and editing an event as well as
- * viewing and editing users signed up (or on the waiting list) for an event
- */
-
 const RootStyle = styled("div")(({ theme }) => ({
   margin: theme.spacing(6, 0),
 }));
 
+/**
+ * Component for an admin panel for an event, used for viewing and editing an event as well as
+ * viewing and editing users signed up (or on the waiting list) for an event
+ */
 const EventAdminPage: NextPageWithLayout = () => {
   const router = useRouter();
   const { eventId } = router.query;

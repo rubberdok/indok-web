@@ -3,11 +3,12 @@ import { SxProps, Theme } from "@mui/material/styles";
 import dynamic from "next/dynamic";
 import { ImageProps, StaticImageData } from "next/image";
 
-import Breadcrumbs, { Props as BreadcrumbProps } from "@/components/Breadcrumbs";
+import { Breadcrumbs, Props as BreadcrumbProps } from "@/components/Breadcrumbs";
 import { TLink } from "@/components/Breadcrumbs/types";
 
 import { ImageContainer, ImageOverlay, OverlayProps, RootStyle } from "./styles";
 
+// https://nextjs.org/docs/advanced-features/dynamic-import
 const Image = dynamic(() => import("next/image"));
 
 export type Props = {
@@ -22,7 +23,7 @@ export type Props = {
   OverlayProps?: OverlayProps & { sx?: SxProps<Theme> };
 };
 
-const Title: React.FC<Props> = ({
+export const BaseTitle: React.FC<Props> = ({
   title,
   children,
   breadcrumbs = [],
@@ -64,5 +65,3 @@ const Title: React.FC<Props> = ({
     </RootStyle>
   );
 };
-
-export default Title;

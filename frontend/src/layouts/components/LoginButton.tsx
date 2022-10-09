@@ -3,7 +3,7 @@ import { PersonOutlineRounded } from "@mui/icons-material";
 import { Button } from "@mui/material";
 import NextLink from "next/link";
 
-import LoginRequired from "@/components/Auth/LoginRequired";
+import { LoginRequired } from "@/components/Auth/LoginRequired";
 import { UserDocument } from "@/generated/graphql";
 
 type Props = {
@@ -11,7 +11,7 @@ type Props = {
   "data-test-id"?: string;
 };
 
-const LoginButton: React.FC<Props> = ({ fullWidth, "data-test-id": dataTestId }) => {
+export const LoginButton: React.FC<Props> = ({ fullWidth, "data-test-id": dataTestId }) => {
   const { data } = useQuery(UserDocument);
 
   return (
@@ -24,5 +24,3 @@ const LoginButton: React.FC<Props> = ({ fullWidth, "data-test-id": dataTestId })
     </LoginRequired>
   );
 };
-
-export default LoginButton;

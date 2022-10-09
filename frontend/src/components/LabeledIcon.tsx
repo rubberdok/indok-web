@@ -8,7 +8,7 @@ interface Props extends StackProps {
   sx?: SxProps;
 }
 
-const LabeledIcon: React.FC<Props> = ({ icon, value, endIcon = false, sx, ...other }) => (
+export const LabeledIcon: React.FC<Props> = ({ icon, value, endIcon = false, sx, ...other }) => (
   <Stack
     direction="row"
     alignItems="center"
@@ -23,5 +23,3 @@ const LabeledIcon: React.FC<Props> = ({ icon, value, endIcon = false, sx, ...oth
     {endIcon && icon}
   </Stack>
 );
-
-export default LabeledIcon;

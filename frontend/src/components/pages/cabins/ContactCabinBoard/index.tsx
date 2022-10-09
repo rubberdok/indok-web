@@ -3,10 +3,10 @@ import { MailOutline } from "@mui/icons-material";
 import { Link, Stack, Typography } from "@mui/material";
 import React from "react";
 
-import LabeledIcon from "@/components/LabeledIcon";
+import { LabeledIcon } from "@/components/LabeledIcon";
 import { ActiveBookingResponsibleDocument } from "@/generated/graphql";
 
-const ContactCabinBoard: React.FC = () => {
+export const ContactCabinBoard: React.FC = () => {
   const { data } = useQuery(ActiveBookingResponsibleDocument);
 
   if (data?.activeBookingResponsible?.email) {
@@ -29,5 +29,3 @@ const ContactCabinBoard: React.FC = () => {
     return <></>;
   }
 };
-
-export default ContactCabinBoard;

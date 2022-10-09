@@ -1,6 +1,6 @@
 import { Box, BoxProps, List } from "@mui/material";
 
-import NavigationSidebarItem from "./NavigationSidebarItem";
+import { NavigationSidebarItem } from "./NavigationSidebarItem";
 import { ListSubheaderStyle } from "./styles";
 
 export type NavigationItem = {
@@ -14,14 +14,14 @@ export type NavigationItem = {
   }[];
 };
 
-type NavigationSidebarProps = BoxProps & {
+type Props = BoxProps & {
   navConfig: {
     subheader: string;
     items: NavigationItem[];
   }[];
 };
 
-const NavigationSidebar: React.FC<NavigationSidebarProps> = ({ navConfig, ...other }) => {
+export const NavigationSidebar: React.FC<Props> = ({ navConfig, ...other }) => {
   return (
     <Box {...other}>
       {navConfig.map((list) => (
@@ -35,5 +35,3 @@ const NavigationSidebar: React.FC<NavigationSidebarProps> = ({ navConfig, ...oth
     </Box>
   );
 };
-
-export default NavigationSidebar;

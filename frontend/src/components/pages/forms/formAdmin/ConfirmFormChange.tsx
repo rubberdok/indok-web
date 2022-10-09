@@ -8,7 +8,7 @@ import {
   FormHelperText,
 } from "@mui/material";
 
-// utility function to return text for the dialog based on its type
+/** Utility function to return text for the dialog based on its type */
 const dialogText = (type: "create" | "update" | "delete") => {
   switch (type) {
     case "create":
@@ -40,7 +40,7 @@ type Props = {
 };
 
 /** Component for confirmation dialog when changing a form when it already has responses. */
-const ConfirmFormChange: React.FC<Props> = ({ type, open, onConfirm, onClose }) => {
+export const ConfirmFormChange: React.FC<Props> = ({ type, open, onConfirm, onClose }) => {
   const { title, body, warning } = dialogText(type);
   return (
     <Dialog open={open} onClose={onClose} fullWidth>
@@ -69,5 +69,3 @@ const ConfirmFormChange: React.FC<Props> = ({ type, open, onConfirm, onClose }) 
     </Dialog>
   );
 };
-
-export default ConfirmFormChange;

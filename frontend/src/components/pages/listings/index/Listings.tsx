@@ -3,7 +3,7 @@ import { Button, CircularProgress, Grid, Typography, Box } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
 
-import ListingItem from "@/components/pages/listings/index/ListingItem";
+import { ListingItem } from "@/components/pages/listings/index/ListingItem";
 import { ListingsDocument } from "@/generated/graphql";
 import EmptyStreet from "public/illustrations/EmptyStreet.svg";
 
@@ -13,7 +13,7 @@ type Props = {
 };
 
 /** Component to show an overview of all open listings. */
-const Listings: React.FC<Props> = ({ reload }) => {
+export const Listings: React.FC<Props> = ({ reload }) => {
   // fetches all open listings
   const { loading, error, data } = useQuery(ListingsDocument);
 
@@ -72,5 +72,3 @@ const Listings: React.FC<Props> = ({ reload }) => {
     </Grid>
   );
 };
-
-export default Listings;

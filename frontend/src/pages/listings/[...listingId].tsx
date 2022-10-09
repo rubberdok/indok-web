@@ -6,10 +6,10 @@ import Head from "next/head";
 import ReactMarkdown from "react-markdown";
 
 import * as markdownComponents from "@/components/MarkdownForm/components";
-import TitleCard from "@/components/pages/listings/detail/TitleCard";
-import Title from "@/components/Title";
+import { TitleCard } from "@/components/pages/listings/detail/TitleCard";
+import { Title } from "@/components/Title";
 import { ListingDocument } from "@/generated/graphql";
-import Layout from "@/layouts/Layout";
+import { Layout } from "@/layouts/Layout";
 import { addApolloState, initializeApollo } from "@/lib/apolloClient";
 import { NextPageWithLayout } from "@/pages/_app";
 

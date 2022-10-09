@@ -18,7 +18,7 @@ type DialogProps = {
   refetchBookings: () => void;
 };
 
-const DeclineBookingDialog: React.VFC<DialogProps> = ({
+export const DeclineBookingDialog: React.VFC<DialogProps> = ({
   bookingToBeDeclined: bookingToBeDeclined,
   setBookingToBeDeclined,
   setOpenSnackbar,
@@ -78,5 +78,3 @@ const DeclineBookingDialog: React.VFC<DialogProps> = ({
     </Dialog>
   );
 };
-
-export default DeclineBookingDialog;

@@ -6,15 +6,15 @@ import { useState } from "react";
 
 import { FormWithAnswersFragment, QuestionWithAnswerFragment, SubmitAnswersDocument } from "@/generated/graphql";
 
-import AnswerQuestion from "./AnswerQuestion";
+import { AnswerQuestion } from "./AnswerQuestion";
 
-// interface for the state of answers before pushing to the database
+// Type for the state of answers before pushing to the database
 type Questions = Record<string, { question: QuestionWithAnswerFragment; answer: string }>;
 
 type Props = { form: FormWithAnswersFragment };
 
 /** Component for a user to answer a form. */
-const AnswerForm: React.FC<Props> = ({ form }) => {
+export const AnswerForm: React.FC<Props> = ({ form }) => {
   // state to manage the user's answers before submitting
   const [questions, setQuestions] = useState<Questions>(
     Object.fromEntries(
@@ -124,5 +124,3 @@ const AnswerForm: React.FC<Props> = ({ form }) => {
     </Grid>
   );
 };
-
-export default AnswerForm;

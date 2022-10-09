@@ -2,7 +2,15 @@ import { Box, SxProps, Typography } from "@mui/material";
 import NextLink from "next/link";
 import { memo } from "react";
 
-const Logo: React.FC<{ sx?: SxProps }> = ({ sx }) => {
+type Props = { sx?: SxProps };
+
+/**
+ * The Indøk logo
+ *
+ * The display name cannot be resolved if we wrap an arrow function in memo() directly,
+ * hence this is wrapping a named function.
+ */
+export const Logo: React.FC<Props> = memo(function Logo({ sx }) {
   return (
     <NextLink href="/" passHref>
       <Box
@@ -20,6 +28,4 @@ const Logo: React.FC<{ sx?: SxProps }> = ({ sx }) => {
       </Box>
     </NextLink>
   );
-};
-
-export default memo(Logo);
+});

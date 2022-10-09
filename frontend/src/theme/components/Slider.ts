@@ -1,6 +1,6 @@
 import { ThemeOptions } from "@mui/material";
 
-const Slider: ThemeOptions["components"] = {
+export const Slider: ThemeOptions["components"] = {
   MuiSlider: {
     defaultProps: {
       size: "small",
@@ -18,5 +18,3 @@ const Slider: ThemeOptions["components"] = {
     },
   },
 };
-
-export default Slider;

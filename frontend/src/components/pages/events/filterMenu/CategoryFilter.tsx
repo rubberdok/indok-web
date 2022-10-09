@@ -8,20 +8,14 @@ import { AllCategoriesDocument } from "@/generated/graphql";
 import { HandleChecked } from "./types";
 
 type Props = {
+  /** The currently applied filters */
   filters: FilterQuery;
+  /** Method called when filters are updated */
   handleChecked: HandleChecked;
 };
 
-/**
- * Component for the category filter in the filter menu
- *
- * Props:
- * - filters: the currently applied filters
- * - handleChecked: method called when filters are updated
- * - classes: styled classes
- */
-
-const CategoryFilter: React.FC<Props> = ({ filters, handleChecked }) => {
+/** Component for the category filter in the filter menu. */
+export const CategoryFilter: React.FC<Props> = ({ filters, handleChecked }) => {
   const { data } = useQuery(AllCategoriesDocument);
 
   return (
@@ -43,5 +37,3 @@ const CategoryFilter: React.FC<Props> = ({ filters, handleChecked }) => {
     </Grid>
   );
 };
-
-export default CategoryFilter;

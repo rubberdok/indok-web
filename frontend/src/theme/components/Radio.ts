@@ -1,6 +1,6 @@
 import { ThemeOptions } from "@mui/material";
 
-const Radio: ThemeOptions["components"] = {
+export const Radio: ThemeOptions["components"] = {
   MuiRadio: {
     styleOverrides: {
       root: ({ theme }) => ({
@@ -9,5 +9,3 @@ const Radio: ThemeOptions["components"] = {
     },
   },
 };
-
-export default Radio;

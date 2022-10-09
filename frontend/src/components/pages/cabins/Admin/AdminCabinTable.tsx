@@ -25,8 +25,8 @@ import {
 } from "@/generated/graphql";
 import { getDecisionEmailInput, toStringChosenCabins } from "@/utils/cabins";
 
-import DeclineBookingDialog from "./DeclineBookingDialog";
-import InlineTableCell from "./InlineTableCell";
+import { DeclineBookingDialog } from "./DeclineBookingDialog";
+import { InlineTableCell } from "./InlineTableCell";
 
 type Props = {
   bookings?: AdminBookingFragment[];
@@ -34,7 +34,7 @@ type Props = {
   currentTab: string;
 };
 
-const AdminCabinTable: React.FC<Props> = ({ bookings, refetchBookings, currentTab }) => {
+export const AdminCabinTable: React.FC<Props> = ({ bookings, refetchBookings, currentTab }) => {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [bookingToBeDeclined, setBookingToBeDeclined] = useState<AdminBookingFragment | undefined>();
@@ -131,5 +131,3 @@ const AdminCabinTable: React.FC<Props> = ({ bookings, refetchBookings, currentTa
     </TableContainer>
   );
 };
-
-export default AdminCabinTable;

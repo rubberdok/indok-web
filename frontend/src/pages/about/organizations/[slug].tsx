@@ -6,8 +6,8 @@ import { useRouter } from "next/router";
 import ReactMarkdown from "react-markdown";
 
 import * as markdownComponents from "@/components/MarkdownForm/components";
-import Title from "@/components/Title";
-import Layout from "@/layouts/Layout";
+import { Title } from "@/components/Title";
+import { Layout } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/pages/_app";
 import { Article, getPostBySlug, getPostsSlugs } from "@/utils/posts";
 

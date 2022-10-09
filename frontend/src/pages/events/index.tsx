@@ -1,16 +1,14 @@
 import { Container, Tab, Tabs } from "@mui/material";
 import React, { useState } from "react";
 
-import AllEvents from "@/components/pages/events/AllEvents";
-import Title from "@/components/Title";
-import Layout from "@/layouts/Layout";
+import { AllEvents } from "@/components/pages/events/AllEvents";
+import { Title } from "@/components/Title";
+import { Layout } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/pages/_app";
 
 const links = [{ name: "Hjem", href: "/" }, { name: "Arrangementer" }];
 
-/**
- * Component for showing the list page for event (for showing all events)
- */
+/** Component for showing the list page for event (for showing all events). */
 const Events: NextPageWithLayout = () => {
   const [showCalendarView, setShowCalenderView] = useState(false);
 

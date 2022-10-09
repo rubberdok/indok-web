@@ -4,7 +4,7 @@ import { Divider, Grid, Typography } from "@mui/material";
 import { CabinsDocument } from "@/generated/graphql";
 
 /** Shows an overview of cabin prices. Fetches the prices from the Cabin model. */
-const CabinPrices: React.VFC = () => {
+export const CabinPrices: React.VFC = () => {
   const cabinQuery = useQuery(CabinsDocument);
   const cabins = cabinQuery?.data?.cabins;
 
@@ -46,5 +46,3 @@ const CabinPrices: React.VFC = () => {
     </Grid>
   );
 };
-
-export default CabinPrices;

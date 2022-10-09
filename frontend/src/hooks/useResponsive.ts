@@ -18,7 +18,7 @@ type Between = {
   end: Breakpoint | number;
 };
 
-const useResponsive = (options: UpOrDown | Only | Between): boolean => {
+export const useResponsive = (options: UpOrDown | Only | Between): boolean => {
   let queryFn: (theme: Theme) => string;
   if (options.query === "between") {
     queryFn = (theme) => theme.breakpoints[options.query](options.start, options.end);
@@ -29,5 +29,3 @@ const useResponsive = (options: UpOrDown | Only | Between): boolean => {
   }
   return useMediaQuery(queryFn);
 };
-
-export default useResponsive;

@@ -16,11 +16,11 @@ import {
 import { styled } from "@mui/material/styles";
 import React, { useEffect, useState } from "react";
 
-import ContractDialog from "@/components/pages/cabins/Popup/ContractDialog";
-import StepComponent from "@/components/pages/cabins/StepComponent";
+import { ContractDialog } from "@/components/pages/cabins/Popup/ContractDialog";
+import { StepComponent } from "@/components/pages/cabins/StepComponent";
 import { CabinFragment, CabinsDocument, CreateBookingDocument, SendEmailDocument } from "@/generated/graphql";
-import useResponsive from "@/hooks/useResponsive";
-import Layout from "@/layouts/Layout";
+import { useResponsive } from "@/hooks/useResponsive";
+import { Layout } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/pages/_app";
 import { ContactInfo, ContactInfoValidations, DatePick, ModalData } from "@/types/cabins";
 import {

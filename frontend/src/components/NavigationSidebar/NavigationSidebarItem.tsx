@@ -12,7 +12,7 @@ type Props = {
   item: NavigationItem;
 };
 
-const NavigationSidebarItem: React.FC<Props> = ({ item }) => {
+export const NavigationSidebarItem: React.FC<Props> = ({ item }) => {
   const { pathname, asPath } = useRouter();
 
   const { title, path, icon, info, children } = item;
@@ -66,5 +66,3 @@ const NavigationSidebarItem: React.FC<Props> = ({ item }) => {
     </NextLink>
   );
 };
-
-export default NavigationSidebarItem;

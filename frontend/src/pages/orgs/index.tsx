@@ -5,7 +5,7 @@ import Link from "next/link";
 import React from "react";
 
 import { UserWithEventsAndOrgsDocument } from "@/generated/graphql";
-import Layout from "@/layouts/Layout";
+import { Layout } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/pages/_app";
 import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "@/theme/constants";
 

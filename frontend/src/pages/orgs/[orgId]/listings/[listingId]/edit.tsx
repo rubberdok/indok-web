@@ -7,9 +7,9 @@ import utc from "dayjs/plugin/utc";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 
-import ListingForm from "@/components/pages/listings/organization/ListingForm";
+import { ListingForm } from "@/components/pages/listings/organization/ListingForm";
 import { ListingDocument, UpdateListingDocument } from "@/generated/graphql";
-import Layout from "@/layouts/Layout";
+import { Layout } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/pages/_app";
 import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "@/theme/constants";
 import { ListingInput } from "@/types/listings";
@@ -18,10 +18,7 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.tz.setDefault("Europe/Oslo");
 
-/**
- * Page for editing an existing listing.
- */
-
+/** Page for editing an existing listing. */
 const RootStyle = styled("div")(({ theme }) => ({
   paddingTop: HEADER_MOBILE_HEIGHT,
   margin: theme.spacing(4, 0),

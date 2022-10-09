@@ -16,11 +16,11 @@ import dayjs from "dayjs";
 import router from "next/router";
 import { useState } from "react";
 
-import ErrorDialog from "@/components/Dialog/ErrorDialog";
+import { ErrorDialog } from "@/components/Dialog/ErrorDialog";
 import { UpdateBookingSemesterDocument } from "@/generated/graphql";
-import useBookingSemester from "@/hooks/cabins/useBookingSemester";
+import { useBookingSemester } from "@/hooks/cabins/useBookingSemester";
 
-const BookingSemesterPicker: React.VFC = () => {
+export const BookingSemesterPicker: React.VFC = () => {
   const [updateBookingSemester] = useMutation(UpdateBookingSemesterDocument);
   const handleErrorDialogClose = () => router.push("/");
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -163,5 +163,3 @@ const BookingSemesterPicker: React.VFC = () => {
     </Box>
   );
 };
-
-export default BookingSemesterPicker;

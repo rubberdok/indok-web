@@ -1,7 +1,7 @@
 import { Container, Grid, Stack, Typography } from "@mui/material";
 import Image from "next/image";
 
-import BookNow from "./BookNow";
+import { BookNow } from "./BookNow";
 
 const facilitiesData = [
   {
@@ -30,7 +30,7 @@ const facilitiesData = [
   },
 ];
 
-const CabinsInfoSection: React.FC = () => {
+export const CabinsInfoSection: React.FC = () => {
   return (
     <Container>
       <Grid container direction="row-reverse" justifyContent="space-between" alignItems="stretch" spacing={8} mb={4}>
@@ -64,5 +64,3 @@ const CabinsInfoSection: React.FC = () => {
     </Container>
   );
 };
-
-export default CabinsInfoSection;

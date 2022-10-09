@@ -2,9 +2,9 @@ import { Grid, Typography } from "@mui/material";
 
 import CreditCard from "~/public/illustrations/CreditCard.svg";
 
-import ProfileCardBase from "./ProfileCardBase";
+import { ProfileCardBase } from "./ProfileCardBase";
 
-const OrdersCard: React.VFC = ({ ...props }) => {
+export const OrdersCard: React.VFC = ({ ...props }) => {
   return (
     <ProfileCardBase
       title="Ordrehistorikk"
@@ -24,5 +24,3 @@ const OrdersCard: React.VFC = ({ ...props }) => {
     </ProfileCardBase>
   );
 };
-
-export default OrdersCard;

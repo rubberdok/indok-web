@@ -24,9 +24,9 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 
-import SalesTermsDialog from "@/components/pages/ecommerce/SalesTermsDialog";
+import { SalesTermsDialog } from "@/components/pages/ecommerce/SalesTermsDialog";
 import { AttemptCapturePaymentDocument, PaymentStatus, UserDocument } from "@/generated/graphql";
-import Layout, { RootStyle } from "@/layouts/Layout";
+import { Layout, RootStyle } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/pages/_app";
 import savings from "~/public/illustrations/Savings.svg";
 

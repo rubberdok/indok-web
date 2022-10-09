@@ -20,7 +20,7 @@ type Props = {
   organization: Organization;
 };
 
-const OrganizationLink: React.FC<Props> = ({ organization }) => {
+export const OrganizationLink: React.FC<Props> = ({ organization }) => {
   return (
     <Card sx={{ boxShadow: (theme) => theme.shadows[24] }}>
       <Link passHref href={organization.externalUrl ?? organization.internalUrl}>
@@ -45,5 +45,3 @@ const OrganizationLink: React.FC<Props> = ({ organization }) => {
     </Card>
   );
 };
-
-export default OrganizationLink;

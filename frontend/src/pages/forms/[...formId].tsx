@@ -2,9 +2,9 @@ import { useQuery } from "@apollo/client";
 import { CircularProgress, Container, Grid, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 
-import AnswerForm from "@/components/pages/forms/AnswerForm";
+import { AnswerForm } from "@/components/pages/forms/AnswerForm";
 import { FormWithAnswersDocument } from "@/generated/graphql";
-import Layout, { RootStyle } from "@/layouts/Layout";
+import { Layout, RootStyle } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/pages/_app";
 import { generateFeideLoginUrl } from "@/utils/auth";
 

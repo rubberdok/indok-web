@@ -66,5 +66,3 @@ export const LoginRequired: React.FC<Props & ButtonProps> = ({
     </Link>
   );
 };
-
-export default LoginRequired;

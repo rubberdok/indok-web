@@ -1,7 +1,7 @@
 import { ChevronRight } from "@mui/icons-material";
 import { Box, Breadcrumbs as MUIBreadcrumbs, BreadcrumbsProps, SxProps, Typography } from "@mui/material";
 
-import Link from "./Link";
+import { LinkItem } from "./LinkItem";
 import { TLink } from "./types";
 
 export interface Props extends BreadcrumbsProps {
@@ -11,11 +11,11 @@ export interface Props extends BreadcrumbsProps {
   sx?: SxProps;
 }
 
-const Breadcrumbs: React.FC<Props> = ({ links, sx, activeLast = false, onDark = false, ...other }) => {
+export const Breadcrumbs: React.FC<Props> = ({ links, sx, activeLast = false, onDark = false, ...other }) => {
   const currentLink = links[links.length - 1];
 
   const currentPath = activeLast ? (
-    <Link key={currentLink.name} link={currentLink} onDark={onDark} />
+    <LinkItem key={currentLink.name} link={currentLink} onDark={onDark} />
   ) : (
     <Typography
       noWrap
@@ -31,7 +31,7 @@ const Breadcrumbs: React.FC<Props> = ({ links, sx, activeLast = false, onDark = 
       {currentLink.name || ""}
     </Typography>
   );
-  const path = links.slice(0, -1).map((link) => <Link key={link.name} link={link} onDark={onDark} />);
+  const path = links.slice(0, -1).map((link) => <LinkItem key={link.name} link={link} onDark={onDark} />);
 
   return (
     <MUIBreadcrumbs
@@ -60,5 +60,3 @@ const Breadcrumbs: React.FC<Props> = ({ links, sx, activeLast = false, onDark = 
     </MUIBreadcrumbs>
   );
 };
-
-export default Breadcrumbs;

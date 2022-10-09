@@ -11,7 +11,7 @@ type Props = {
   "data-test-id"?: string;
 };
 
-const ProfileCardBase: React.FC<Props> = ({
+export const ProfileCardBase: React.FC<Props> = ({
   title,
   children,
   actionText,
@@ -45,5 +45,3 @@ const ProfileCardBase: React.FC<Props> = ({
     </Card>
   );
 };
-
-export default ProfileCardBase;

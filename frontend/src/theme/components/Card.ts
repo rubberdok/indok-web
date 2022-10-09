@@ -1,6 +1,6 @@
 import { ThemeOptions } from "@mui/material";
 
-const Card: ThemeOptions["components"] = {
+export const Card: ThemeOptions["components"] = {
   MuiCard: {
     defaultProps: {
       elevation: 8,
@@ -30,5 +30,3 @@ const Card: ThemeOptions["components"] = {
     },
   },
 };
-
-export default Card;

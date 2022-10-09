@@ -4,7 +4,7 @@ import Link from "next/link";
 
 import Hovedbygget from "~/public/static/landing/hovedbygget.webp";
 
-const LandingSection: React.FC = () => {
+export const LandingSection: React.FC = () => {
   return (
     <Box
       sx={{
@@ -62,5 +62,3 @@ const LandingSection: React.FC = () => {
     </Box>
   );
 };
-
-export default LandingSection;

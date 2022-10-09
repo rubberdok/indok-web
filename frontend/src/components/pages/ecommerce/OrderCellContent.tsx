@@ -4,11 +4,11 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 
 import { OrderFragment, PaymentStatus } from "@/generated/graphql";
-import { HeaderValuePair } from "@/interfaces/utils";
+import { HeaderValuePair } from "@/types/utils";
 
 type Props = { order: OrderFragment; field: HeaderValuePair<OrderFragment> };
 
-const OrderCellContent: React.FC<Props> = ({ order, field }) => {
+export const OrderCellContent: React.FC<Props> = ({ order, field }) => {
   const router = useRouter();
 
   let content: string;
@@ -56,5 +56,3 @@ const OrderCellContent: React.FC<Props> = ({ order, field }) => {
   }
   return <Typography variant="body2">{content}</Typography>;
 };
-
-export default OrderCellContent;

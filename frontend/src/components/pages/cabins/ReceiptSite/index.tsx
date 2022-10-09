@@ -1,20 +1,19 @@
-import { Grid, Typography, Divider, Hidden } from "@mui/material";
-import { NextPage } from "next";
+import { Divider, Grid, Hidden, Typography } from "@mui/material";
 
 import { CabinFragment } from "@/generated/graphql";
 import { ContactInfo, DatePick } from "@/types/cabins";
 
-import CabinBookingStatus from "../CabinBookingStatus";
+import { CabinBookingStatus } from "../CabinBookingStatus";
 
-interface Props {
+type Props = {
   chosenCabins: CabinFragment[];
   datePick: DatePick;
   contactInfo: ContactInfo;
   mailSent?: boolean;
-}
+};
 
 /** Step in the cabins/book site. Shows a confirmation of the booking made after the payment site. */
-const ReceiptSite: NextPage<Props> = (props) => {
+export const ReceiptSite: React.FC<Props> = (props) => {
   return (
     <Grid container alignItems="center" direction="column">
       <Hidden lgDown>
@@ -32,5 +31,3 @@ const ReceiptSite: NextPage<Props> = (props) => {
     </Grid>
   );
 };
-
-export default ReceiptSite;

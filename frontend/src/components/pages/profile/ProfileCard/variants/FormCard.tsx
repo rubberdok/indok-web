@@ -2,9 +2,9 @@ import { Grid, Typography } from "@mui/material";
 
 import Form from "~/public/illustrations/Form.svg";
 
-import ProfileCardBase from "./ProfileCardBase";
+import { ProfileCardBase } from "./ProfileCardBase";
 
-const FormCard: React.VFC = ({ ...props }) => {
+export const FormCard: React.VFC = ({ ...props }) => {
   return (
     <ProfileCardBase title="Verv" actionText="Se verv" actionLink="/listings" image={Form} alt="" {...props}>
       <Grid container direction="column">
@@ -15,5 +15,3 @@ const FormCard: React.VFC = ({ ...props }) => {
     </ProfileCardBase>
   );
 };
-
-export default FormCard;

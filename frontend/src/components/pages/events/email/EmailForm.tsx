@@ -5,18 +5,14 @@ import React, { useEffect, useState } from "react";
 
 import { EventSignUpsDocument, SendEventMailsDocument } from "@/generated/graphql";
 
-import ConfirmationDialog from "./ConfirmationsDialog";
-import EmailFormDialog from "./EmailFormDialog";
+import { ConfirmationDialog } from "./ConfirmationsDialog";
+import { EmailFormDialog } from "./EmailFormDialog";
 
-export interface EmailFormProps {
-  eventId: string;
-}
-
-export interface SendEmailProps {
+export type SendEmailProps = {
   receiverEmails: string[];
   content: string;
   subject: string;
-}
+};
 
 const defaultMailProps: SendEmailProps = {
   receiverEmails: [],
@@ -29,7 +25,11 @@ const defaultValidations: { subject: boolean; content: boolean } = {
   content: false,
 };
 
-const EmailForm: React.FC<EmailFormProps> = ({ eventId }) => {
+type Props = {
+  eventId: string;
+};
+
+export const EmailForm: React.FC<Props> = ({ eventId }) => {
   const [showEmailForm, setShowEmailForm] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [emailProps, setEmailProps] = useState<SendEmailProps>(defaultMailProps);
@@ -95,5 +95,3 @@ const EmailForm: React.FC<EmailFormProps> = ({ eventId }) => {
     </>
   );
 };
-
-export default EmailForm;

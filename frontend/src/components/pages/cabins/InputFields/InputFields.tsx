@@ -5,18 +5,16 @@ import { CabinFragment } from "@/generated/graphql";
 import { ContactInfo, ContactInfoValidations, InputFieldsEvent } from "@/types/cabins";
 import { range } from "@/utils/helpers";
 
-interface Props {
+type Props = {
   contactInfo: ContactInfo;
   validations: ContactInfoValidations | undefined;
   onChange: (name: string, event: InputFieldsEvent) => void;
   errorTrigger: boolean;
   chosenCabins: CabinFragment[];
   header?: string;
-}
+};
 
-/*
-Component for rendering all input fields for the contact info of a booking
-*/
+/** Component for rendering all input fields for the contact info of a booking. */
 export const InputFields: React.FC<Props> = ({ contactInfo, validations, onChange, errorTrigger, chosenCabins }) => {
   const totalGuestsAllowed = chosenCabins.reduce((sum, currentCabin) => sum + (currentCabin.maxGuests || 0), 0);
 
