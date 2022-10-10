@@ -147,7 +147,7 @@ class EventResolvers:
 
         return SignUp.objects.filter(event=event)
 
-    def resolve_get_postion_on_waitlist(self, event_id: int, user: User):
+    def resolve_position_on_waiting_list(self, event_id: int, user: User):
         # Get all signups
         event: Event = Event.objects.get(pk=event_id)
         wait_list = event.users_on_waiting_list(event)  # Sorted by timestamp
