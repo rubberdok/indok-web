@@ -8,6 +8,7 @@ query memberships($organizationId: ID!) {
   memberships(organizationId: $organizationId) {
     id
     user {
+      id
       firstName
       lastName
     }

@@ -1,5 +1,7 @@
 import { useQuery } from "@apollo/client";
+import { Create } from "@mui/icons-material";
 import {
+  Button,
   CircularProgress,
   Stack,
   Table,
@@ -11,17 +13,33 @@ import {
   Typography,
 } from "@mui/material";
 
-import { AdminOrganizationFragment, MembershipsDocument } from "@/generated/graphql";
+import { AdminOrganizationFragment, MembershipsDocument, UserDocument } from "@/generated/graphql";
 
 type Props = {
   organization: AdminOrganizationFragment;
 };
 
 export const OrgMembers: React.FC<Props> = ({ organization }) => {
-  const { data, loading, error } = useQuery(MembershipsDocument, { variables: { organizationId: organization.id } });
+  const {
+    data: membershipsData,
+    loading: membershipsLoading,
+    error: membershipsError,
+  } = useQuery(MembershipsDocument, { variables: { organizationId: organization.id } });
+  const { data: userData, loading: userLoading, error: userError } = useQuery(UserDocument);
 
-  if (error) return <p>Error</p>;
-  if (!data?.memberships || loading) return <CircularProgress />;
+  if (membershipsError || userError) return <p>Error</p>;
+  if (!membershipsData?.memberships || membershipsLoading || !userData || userLoading) return <CircularProgress />;
+
+  console.log(membershipsData.memberships);
+  console.log(userData);
+
+  let isAdmin = false;
+  if (
+    membershipsData.memberships?.filter((membership) => membership.user?.id == userData.user?.id)[0].group?.uuid ==
+    organization?.hrGroup?.uuid
+  ) {
+    isAdmin = true;
+  }
 
   return (
     <Stack spacing={4}>
@@ -31,15 +49,24 @@ export const OrgMembers: React.FC<Props> = ({ organization }) => {
           <TableHead>
             <TableRow>
               <TableCell>Navn</TableCell>
+              <TableCell>Gruppe</TableCell>
+              {isAdmin && <TableCell>Rediger</TableCell>}
             </TableRow>
           </TableHead>
           <TableBody>
-            {data.memberships.map((membership) => (
+            {membershipsData.memberships.map((membership) => (
               <TableRow key={membership.id}>
                 <TableCell>
                   {membership.user.firstName} {membership.user.lastName}
                 </TableCell>
-                <TableCell size="small" align="right"></TableCell>
+                <TableCell>
+                  {membership?.group?.uuid == organization.hrGroup?.uuid ? "Administrator" : "Medlem"}
+                </TableCell>
+                {isAdmin && (
+                  <TableCell>
+                    <Button startIcon={<Create />}>Rediger</Button>
+                  </TableCell>
+                )}
               </TableRow>
             ))}
           </TableBody>
