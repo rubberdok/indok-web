@@ -90,9 +90,7 @@ const OrganizationPage: NextPageWithLayout<Props> = ({ posts }) => {
 
   return (
     <Template
-      img="/img/hero.jpg"
       title="Foreningene under Hovedstyret"
-      page="Våre foreninger"
       description="Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse er den øverste instansen
       (moderforeningen) for all studentfrivillighet på masterstudiet Indøk ved NTNU."
       prevPost={{ title: "Om oss", slug: "/about", cover: "/img/hero.jpg" }}
@@ -193,7 +191,7 @@ const OrganizationPage: NextPageWithLayout<Props> = ({ posts }) => {
   );
 };
 
-OrganizationPage.getLayout = (page: React.ReactElement) => <Layout>{page}</Layout>;
+OrganizationPage.getLayout = (page) => <Layout>{page}</Layout>;
 
 export const getStaticProps: GetStaticProps = async () => {
   const posts = getSortedPosts("organizations");

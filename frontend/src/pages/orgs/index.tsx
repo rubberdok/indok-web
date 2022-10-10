@@ -2,7 +2,6 @@ import { useQuery } from "@apollo/client";
 import { Card, CardActionArea, CircularProgress, Container, Grid, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import Link from "next/link";
-import React from "react";
 
 import { UserWithEventsAndOrgsDocument } from "@/generated/graphql";
 import { Layout } from "@/layouts/Layout";
@@ -54,6 +53,6 @@ const OrganizationPage: NextPageWithLayout = () => {
   );
 };
 
-OrganizationPage.getLayout = (page: React.ReactElement) => <Layout>{page}</Layout>;
+OrganizationPage.getLayout = (page) => <Layout>{page}</Layout>;
 
 export default OrganizationPage;

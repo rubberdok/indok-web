@@ -14,7 +14,7 @@ import {
   Typography,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { ContractDialog } from "@/components/pages/cabins/Popup/ContractDialog";
 import { StepComponent } from "@/components/pages/cabins/StepComponent";
@@ -260,6 +260,6 @@ const CabinBookingPage: NextPageWithLayout = () => {
   );
 };
 
-CabinBookingPage.getLayout = (page: React.ReactElement) => <Layout simpleHeader>{page}</Layout>;
+CabinBookingPage.getLayout = (page) => <Layout simpleHeader>{page}</Layout>;
 
 export default CabinBookingPage;

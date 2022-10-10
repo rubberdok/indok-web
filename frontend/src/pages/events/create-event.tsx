@@ -1,6 +1,5 @@
 import { Button, Container } from "@mui/material";
 import Link from "next/link";
-import React from "react";
 
 import { CreateEvent } from "@/components/pages/events/CreateEvent";
 import { Layout, RootStyle } from "@/layouts/Layout";
@@ -18,7 +17,7 @@ const CreateEventsPage: NextPageWithLayout = () => {
   );
 };
 
-CreateEventsPage.getLayout = (page: React.ReactElement) => (
+CreateEventsPage.getLayout = (page) => (
   <Layout>
     <RootStyle>{page}</RootStyle>
   </Layout>

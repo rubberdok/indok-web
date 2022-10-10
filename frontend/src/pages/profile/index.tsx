@@ -128,13 +128,11 @@ const ProfilePage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServ
   );
 };
 
-ProfilePage.getLayout = function getLayout(page: React.ReactElement) {
-  return (
-    <Layout>
-      <RootStyle>{page}</RootStyle>
-    </Layout>
-  );
-};
+ProfilePage.getLayout = (page) => (
+  <Layout>
+    <RootStyle>{page}</RootStyle>
+  </Layout>
+);
 
 export default ProfilePage;
 

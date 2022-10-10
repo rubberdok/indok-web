@@ -1,6 +1,5 @@
 import { Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
-import React from "react";
 
 import { ItvCard } from "@/components/pages/about/ItvCard";
 import { ItvMember } from "@/components/pages/about/ItvCard/types";
@@ -24,9 +23,7 @@ const ItvPage: NextPageWithLayout = () => {
 
   return (
     <Template
-      img="/img/hero.jpg"
       title="Instituttillitsvalgte"
-      page="Instituttillitsvalgte"
       description="De instituttillitsvalgte (ITVene) er kontaktpunktet mellom studentene og instituttet vårt."
       prevPost={{ title: "Hovedstyret", slug: "/about/board", cover: "/img/hero.jpg" }}
     >
@@ -62,8 +59,6 @@ const ItvPage: NextPageWithLayout = () => {
   );
 };
 
-ItvPage.getLayout = function getLayout(page: React.ReactElement) {
-  return <Layout>{page}</Layout>;
-};
+ItvPage.getLayout = (page) => <Layout>{page}</Layout>;
 
 export default ItvPage;

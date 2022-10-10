@@ -1,6 +1,5 @@
 import { Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
-import React from "react";
 
 import { MemberCard } from "@/components/pages/about/MemberCard";
 import { BoardMember } from "@/components/pages/about/MemberCard/types";
@@ -68,9 +67,7 @@ const BoardPage: NextPageWithLayout = () => {
 
   return (
     <Template
-      img="/img/hero.jpg"
       title="Hovedstyret"
-      page="Hovedstyret"
       description="Hovedstyret (HS) er styret i Foreningen for studentene ved Industriell økonomi og teknologiledelse, NTNU."
       prevPost={{ title: "Våre foreninger", slug: "/about/organizations", cover: "/img/hero.jpg" }}
       nextPost={{ title: "Instituttillitsvalgte", slug: "/about/itv", cover: "/img/hero.jpg" }}
@@ -99,8 +96,6 @@ const BoardPage: NextPageWithLayout = () => {
   );
 };
 
-BoardPage.getLayout = function getLayout(page: React.ReactElement) {
-  return <Layout>{page}</Layout>;
-};
+BoardPage.getLayout = (page) => <Layout>{page}</Layout>;
 
 export default BoardPage;

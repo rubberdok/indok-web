@@ -1,7 +1,6 @@
 import { Box, Container, Divider, Grid, Stack, Typography } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
 
 import { CabinsDetailsSection } from "@/components/pages/cabins/CabinsDetailsSection";
 import { CabinsHero } from "@/components/pages/cabins/CabinsHero";
@@ -149,6 +148,6 @@ const CabinsPage: NextPageWithLayout = () => {
   );
 };
 
-CabinsPage.getLayout = (page: React.ReactElement) => <Layout>{page}</Layout>;
+CabinsPage.getLayout = (page) => <Layout>{page}</Layout>;
 
 export default CabinsPage;

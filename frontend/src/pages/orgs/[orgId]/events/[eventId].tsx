@@ -26,7 +26,7 @@ import {
 import { styled } from "@mui/material/styles";
 import dayjs from "dayjs";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import { useState } from "react";
 
 import { AttendeeExport } from "@/components/pages/events/AttendeeExport";
 import { EditEvent } from "@/components/pages/events/EditEvent";
@@ -297,6 +297,6 @@ const EventAdminPage: NextPageWithLayout = () => {
   );
 };
 
-EventAdminPage.getLayout = (page: React.ReactElement) => <Layout>{page}</Layout>;
+EventAdminPage.getLayout = (page) => <Layout>{page}</Layout>;
 
 export default EventAdminPage;

@@ -1,5 +1,4 @@
 import { useRouter } from "next/router";
-import React from "react";
 
 import { EventDetails } from "@/components/pages/events/EventDetails";
 import { Layout, RootStyle } from "@/layouts/Layout";
@@ -13,7 +12,7 @@ const EventInfo: NextPageWithLayout = () => {
   return <>{id && typeof id === "string" ? <EventDetails eventId={id} /> : <></>}</>;
 };
 
-EventInfo.getLayout = (page: React.ReactElement) => (
+EventInfo.getLayout = (page) => (
   <Layout>
     <RootStyle>{page}</RootStyle>
   </Layout>
