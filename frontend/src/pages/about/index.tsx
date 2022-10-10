@@ -8,9 +8,7 @@ const AboutPage: NextPageWithLayout = () => {
   return (
     <>
       <Template
-        img="img/hero.jpg"
         title="Om oss"
-        page=""
         description="Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse er den øverste instansen
       (moderforeningen) for all studentfrivillighet på masterstudiet Indøk ved NTNU."
         nextPost={{ title: "Våre foreninger", slug: "/about/organization" }}

@@ -3,7 +3,7 @@ import { Box, Grid } from "@mui/material";
 
 import { PostItem } from "./PostItem";
 
-type AboutPostProps = {
+export type AboutPostProps = {
   slug: string;
   title: string;
   cover?: string;

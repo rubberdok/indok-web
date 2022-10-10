@@ -67,9 +67,7 @@ const BoardPage: NextPageWithLayout = () => {
 
   return (
     <Template
-      img="/img/hero.jpg"
       title="Hovedstyret"
-      page="Hovedstyret"
       description="Hovedstyret (HS) er styret i Foreningen for studentene ved Industriell økonomi og teknologiledelse, NTNU."
       prevPost={{ title: "Våre foreninger", slug: "/about/organizations", cover: "/img/hero.jpg" }}
       nextPost={{ title: "Institutt-tillitsvalgte", slug: "/about/itv", cover: "/img/hero.jpg" }}
