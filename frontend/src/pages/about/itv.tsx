@@ -26,7 +26,7 @@ const ItvPage: NextPageWithLayout = () => {
     <Template
       img="/img/hero.jpg"
       title="Instituttillitsvalgte"
-      page="Institutt-tillitsvalgte"
+      page="Instituttillitsvalgte"
       description="De instituttillitsvalgte (ITVene) er kontaktpunktet mellom studentene og instituttet vårt."
       prevPost={{ title: "Hovedstyret", slug: "/about/board", cover: "/img/hero.jpg" }}
     >
