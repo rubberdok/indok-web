@@ -1,5 +1,5 @@
 import { Container, Tab, Tabs } from "@mui/material";
-import React, { useState } from "react";
+import { useState } from "react";
 
 import { AllEvents } from "@/components/pages/events/AllEvents";
 import { Title } from "@/components/Title";
@@ -44,5 +44,6 @@ const Events: NextPageWithLayout = () => {
   );
 };
 
-Events.getLayout = (page: React.ReactElement) => <Layout>{page}</Layout>;
+Events.getLayout = (page) => <Layout>{page}</Layout>;
+
 export default Events;

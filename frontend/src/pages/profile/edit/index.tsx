@@ -1,6 +1,6 @@
 import { Alert, Container, Grid, Snackbar } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import React, { useState } from "react";
+import { useState } from "react";
 
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { UserForm } from "@/components/pages/profile/UserForm";
@@ -55,8 +55,6 @@ const EditPage: NextPageWithLayout = () => {
   );
 };
 
-EditPage.getLayout = (page: React.ReactElement) => {
-  return <Layout>{page}</Layout>;
-};
+EditPage.getLayout = (page) => <Layout>{page}</Layout>;
 
 export default EditPage;

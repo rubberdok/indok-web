@@ -1,6 +1,5 @@
 import { Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
-import React from "react";
 
 import { MemberCard } from "@/components/pages/about/MemberCard";
 import { BoardMember } from "@/components/pages/about/MemberCard/types";
@@ -99,8 +98,6 @@ const BoardPage: NextPageWithLayout = () => {
   );
 };
 
-BoardPage.getLayout = function getLayout(page: React.ReactElement) {
-  return <Layout>{page}</Layout>;
-};
+BoardPage.getLayout = (page) => <Layout>{page}</Layout>;
 
 export default BoardPage;

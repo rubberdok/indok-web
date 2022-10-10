@@ -1,6 +1,5 @@
 import { Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
-import React from "react";
 
 import { ItvCard } from "@/components/pages/about/ItvCard";
 import { ItvMember } from "@/components/pages/about/ItvCard/types";
@@ -62,8 +61,6 @@ const ItvPage: NextPageWithLayout = () => {
   );
 };
 
-ItvPage.getLayout = function getLayout(page: React.ReactElement) {
-  return <Layout>{page}</Layout>;
-};
+ItvPage.getLayout = (page) => <Layout>{page}</Layout>;
 
 export default ItvPage;

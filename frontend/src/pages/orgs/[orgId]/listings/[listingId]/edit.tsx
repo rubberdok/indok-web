@@ -5,7 +5,7 @@ import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import { useState } from "react";
 
 import { ListingForm } from "@/components/pages/listings/organization/ListingForm";
 import { ListingDocument, UpdateListingDocument } from "@/generated/graphql";
@@ -96,6 +96,6 @@ const EditListingPage: NextPageWithLayout = () => {
   );
 };
 
-EditListingPage.getLayout = (page: React.ReactElement) => <Layout>{page}</Layout>;
+EditListingPage.getLayout = (page) => <Layout>{page}</Layout>;
 
 export default EditListingPage;

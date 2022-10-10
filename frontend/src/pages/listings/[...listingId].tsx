@@ -109,8 +109,4 @@ export const getServerSideProps: GetServerSideProps<{
   return addApolloState(client, { props: { listing } });
 };
 
-ListingPage.getLayout = function getLayout(page: React.ReactElement) {
-  return <Layout>{page}</Layout>;
-};
-
 export default ListingPage;

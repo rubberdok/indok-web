@@ -71,9 +71,7 @@ const ArticlePage: NextPageWithLayout<InferGetStaticPropsType<typeof getStaticPr
   );
 };
 
-ArticlePage.getLayout = function getLayout(page: React.ReactElement) {
-  return <Layout>{page}</Layout>;
-};
+ArticlePage.getLayout = (page) => <Layout>{page}</Layout>;
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const paths = getPostsSlugs("organizations");

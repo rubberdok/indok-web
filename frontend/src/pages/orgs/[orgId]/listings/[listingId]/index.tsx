@@ -4,7 +4,7 @@ import { Box, Button, Card, CardContent, Container, Grid, Tab, Tabs, Typography 
 import { styled } from "@mui/material/styles";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import { useState } from "react";
 
 import { EditForm } from "@/components/pages/forms/formAdmin/EditForm";
 import { FormResponse } from "@/components/pages/forms/formAdmin/FormResponse";
@@ -166,6 +166,6 @@ const ListingAdminPage: NextPageWithLayout = () => {
   );
 };
 
-ListingAdminPage.getLayout = (page: React.ReactElement) => <Layout>{page}</Layout>;
+ListingAdminPage.getLayout = (page) => <Layout>{page}</Layout>;
 
 export default ListingAdminPage;

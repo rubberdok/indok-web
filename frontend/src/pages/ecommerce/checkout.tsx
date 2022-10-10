@@ -21,7 +21,7 @@ import {
 } from "@mui/material";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import { useState } from "react";
 
 import { PayWithVipps } from "@/components/pages/ecommerce/PayWithVipps";
 import { SalesTermsDialog } from "@/components/pages/ecommerce/SalesTermsDialog";
@@ -163,7 +163,7 @@ const CheckoutPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getSer
 
 export default CheckoutPage;
 
-CheckoutPage.getLayout = (page: React.ReactElement) => (
+CheckoutPage.getLayout = (page) => (
   <Layout>
     <RootStyle>{page}</RootStyle>
   </Layout>

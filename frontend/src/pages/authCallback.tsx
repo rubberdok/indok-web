@@ -4,7 +4,7 @@ import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 
 import { AuthUserDocument } from "@/generated/graphql";
 import { Layout } from "@/layouts/Layout";
@@ -84,7 +84,7 @@ const AuthCallbackPage: NextPageWithLayout<InferGetServerSidePropsType<typeof ge
   );
 };
 
-AuthCallbackPage.getLayout = (page: React.ReactElement) => (
+AuthCallbackPage.getLayout = (page) => (
   <Layout simpleHeader simpleFooter>
     {page}
   </Layout>

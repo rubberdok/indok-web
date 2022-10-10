@@ -53,6 +53,6 @@ const OrganizationDetailPage: NextPageWithLayout = () => {
   );
 };
 
-OrganizationDetailPage.getLayout = (page: React.ReactElement) => <Layout>{page}</Layout>;
+OrganizationDetailPage.getLayout = (page) => <Layout>{page}</Layout>;
 
 export default OrganizationDetailPage;
