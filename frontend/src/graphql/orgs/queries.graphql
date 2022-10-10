@@ -3,3 +3,16 @@ query adminOrganization($orgId: ID!) {
     ...AdminOrganization
   }
 }
+
+query memberships($organizationId: ID!) {
+  memberships(organizationId: $organizationId) {
+    id
+    user {
+      firstName
+      lastName
+    }
+    group {
+      uuid
+    }
+  }
+}

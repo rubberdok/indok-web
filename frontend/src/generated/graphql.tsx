@@ -2970,6 +2970,8 @@ export type AdminOrganizationFragment = {
   __typename?: "OrganizationType";
   id: string;
   name: string;
+  hrGroup?: { __typename?: "ResponsibleGroupType"; uuid: string } | null;
+  primaryGroup?: { __typename?: "ResponsibleGroupType"; uuid: string } | null;
   events: Array<{
     __typename?: "EventType";
     id: string;
@@ -2996,6 +2998,13 @@ export type OrgAdminEventFragment = {
 
 export type OrgAdminListingFragment = { __typename?: "ListingType"; id: string; title: string; deadline: string };
 
+export type MembershipFragment = {
+  __typename?: "MembershipType";
+  id: string;
+  user: { __typename?: "UserType"; firstName: string; lastName: string };
+  group?: { __typename?: "ResponsibleGroupType"; uuid: string } | null;
+};
+
 export type AdminOrganizationQueryVariables = Exact<{
   orgId: Scalars["ID"];
 }>;
@@ -3006,6 +3015,8 @@ export type AdminOrganizationQuery = {
     __typename?: "OrganizationType";
     id: string;
     name: string;
+    hrGroup?: { __typename?: "ResponsibleGroupType"; uuid: string } | null;
+    primaryGroup?: { __typename?: "ResponsibleGroupType"; uuid: string } | null;
     events: Array<{
       __typename?: "EventType";
       id: string;
@@ -3018,6 +3029,20 @@ export type AdminOrganizationQuery = {
     }>;
     listings?: Array<{ __typename?: "ListingType"; id: string; title: string; deadline: string }> | null;
   } | null;
+};
+
+export type MembershipsQueryVariables = Exact<{
+  organizationId: Scalars["ID"];
+}>;
+
+export type MembershipsQuery = {
+  __typename?: "Queries";
+  memberships?: Array<{
+    __typename?: "MembershipType";
+    id: string;
+    user: { __typename?: "UserType"; firstName: string; lastName: string };
+    group?: { __typename?: "ResponsibleGroupType"; uuid: string } | null;
+  }> | null;
 };
 
 export type HasPermissionQueryVariables = Exact<{
@@ -4178,6 +4203,22 @@ export const AdminOrganizationFragmentDoc = {
           { kind: "Field", name: { kind: "Name", value: "name" } },
           {
             kind: "Field",
+            name: { kind: "Name", value: "hrGroup" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "Field", name: { kind: "Name", value: "uuid" } }],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "primaryGroup" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "Field", name: { kind: "Name", value: "uuid" } }],
+            },
+          },
+          {
+            kind: "Field",
             name: { kind: "Name", value: "events" },
             selectionSet: {
               kind: "SelectionSet",
@@ -4199,6 +4240,41 @@ export const AdminOrganizationFragmentDoc = {
     ...OrgAdminListingFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<AdminOrganizationFragment, unknown>;
+export const MembershipFragmentDoc = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "Membership" },
+      typeCondition: { kind: "NamedType", name: { kind: "Name", value: "MembershipType" } },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "user" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "firstName" } },
+                { kind: "Field", name: { kind: "Name", value: "lastName" } },
+              ],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "group" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "Field", name: { kind: "Name", value: "uuid" } }],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<MembershipFragment, unknown>;
 export const UserFragmentDoc = {
   kind: "Document",
   definitions: [
@@ -6601,6 +6677,64 @@ export const AdminOrganizationDocument = {
     ...AdminOrganizationFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<AdminOrganizationQuery, AdminOrganizationQueryVariables>;
+export const MembershipsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "memberships" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "organizationId" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "memberships" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "organizationId" },
+                value: { kind: "Variable", name: { kind: "Name", value: "organizationId" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "user" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "firstName" } },
+                      { kind: "Field", name: { kind: "Name", value: "lastName" } },
+                    ],
+                  },
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "group" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [{ kind: "Field", name: { kind: "Name", value: "uuid" } }],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<MembershipsQuery, MembershipsQueryVariables>;
 export const HasPermissionDocument = {
   kind: "Document",
   definitions: [

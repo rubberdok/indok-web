@@ -38,7 +38,10 @@ type Props = {
 
 export const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": dataTestId }) => {
   const { data } = useQuery(UserToEditDocument);
-  const [updateUser] = useMutation(UpdateUserDocument, { onCompleted, refetchQueries: [UserToEditDocument] });
+  const [updateUser] = useMutation(UpdateUserDocument, {
+    onCompleted: onCompleted,
+    refetchQueries: [{ query: UserToEditDocument }],
+  });
   const router = useRouter();
   const currentYear = dayjs().year();
   const ID_PREFIX = `${dataTestId}`;

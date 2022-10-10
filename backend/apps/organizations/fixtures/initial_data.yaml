@@ -113,8 +113,7 @@
   fields:
     name: Janus Linjeforening
     slug: janus-linjeforening
-    description:
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+    description: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
       tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
       quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
       Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
@@ -128,8 +127,7 @@
   fields:
     name: Bindeleddet
     slug: bindeleddet
-    description:
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+    description: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
       tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
       quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
       Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
@@ -143,8 +141,7 @@
   fields:
     name: Indøk Kultur
     slug: indok-kultur
-    description:
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+    description: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
       tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
       quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
       Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
@@ -158,8 +155,7 @@
   fields:
     name: Indøl
     slug: indol
-    description:
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+    description: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
       tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
       quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
       Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore

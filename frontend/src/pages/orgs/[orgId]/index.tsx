@@ -7,6 +7,7 @@ import { useState } from "react";
 import { OrgEvents } from "@/components/pages/events/org/OrgEvents";
 import { OrganizationListings } from "@/components/pages/listings/organization/OrganizationListings";
 import { OrganizationHero } from "@/components/pages/organization/OrganizationHero";
+import { OrgMembers } from "@/components/pages/organization/OrgMembers";
 import { AdminOrganizationDocument } from "@/generated/graphql";
 import { Layout } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/pages/_app";
@@ -45,6 +46,7 @@ const OrganizationDetailPage: NextPageWithLayout = () => {
               {activeTab == 1 && data.organization.listings && (
                 <OrganizationListings organization={data.organization} />
               )}
+              {activeTab == 2 && data.organization && <OrgMembers organization={data.organization} />}
             </Stack>
           )}
         </Container>
