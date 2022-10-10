@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 
 import { PermissionRequired } from "@/components/Auth";
-import { AdminOrganizationFragment, MembershipsDocument, UserDocument } from "@/generated/graphql";
+import { AdminOrganizationFragment, MembershipsDocument } from "@/generated/graphql";
 
 type Props = {
   organization: AdminOrganizationFragment;
