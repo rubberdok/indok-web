@@ -3040,7 +3040,7 @@ export type MembershipsQuery = {
   memberships?: Array<{
     __typename?: "MembershipType";
     id: string;
-    user: { __typename?: "UserType"; id: string; firstName: string; lastName: string };
+    user: { __typename?: "UserType"; firstName: string; lastName: string };
     group?: { __typename?: "ResponsibleGroupType"; uuid: string } | null;
   }> | null;
 };
@@ -6714,7 +6714,6 @@ export const MembershipsDocument = {
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
-                      { kind: "Field", name: { kind: "Name", value: "id" } },
                       { kind: "Field", name: { kind: "Name", value: "firstName" } },
                       { kind: "Field", name: { kind: "Name", value: "lastName" } },
                     ],
