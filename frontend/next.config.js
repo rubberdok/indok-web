@@ -24,6 +24,11 @@ const getPresets = () => {
  * @type {import('next').NextConfig}
  */
 const moduleExports = {
+  // We want to colocate files with their usage, so
+  // we define pages to have .page.{tsx|ts} extensions rather than
+  // requiring all files in src/pages to be pages.
+  pageExtensions: ["page.tsx", "page.ts"],
+
   /** @todo internationalized routing */
   async rewrites() {
     return [
