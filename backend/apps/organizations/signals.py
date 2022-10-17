@@ -7,11 +7,11 @@ from guardian.shortcuts import assign_perm
 
 from apps.organizations.models import Membership, Organization
 from apps.permissions.constants import (
-    HR_GROUP_NAME,
-    HR_TYPE,
+    ORG_ADMIN_GROUP_NAME,
+    ORG_ADMIN_TYPE,
     ORGANIZATION,
-    PRIMARY_GROUP_NAME,
-    PRIMARY_TYPE,
+    ORG_MEMBER_GROUP_NAME,
+    ORG_MEMBER_TYPE,
 )
 from apps.permissions.models import ResponsibleGroup
 
@@ -44,19 +44,20 @@ def handle_removed_member(instance: Membership, **kwargs):
 @receiver(post_save, sender=Organization)
 def create_default_groups(instance: Organization, created, **kwargs):
     """
-    Creates and assigns a primary group and HR group to members of the organization.
+    Creates and assigns a member group and admin group to members of the organization.
     """
     if created:
         ResponsibleGroup.objects.create(
-            name=PRIMARY_GROUP_NAME,
+            name=ORG_MEMBER_GROUP_NAME,
             description=f"Medlemmer av {instance.name}.",
             organization=instance,
-            group_type=PRIMARY_TYPE,
+            group_type=ORG_MEMBER_TYPE,
         )
-        hr_group = ResponsibleGroup.objects.create(
-            name=HR_GROUP_NAME,
-            description=f"HR-gruppen til {instance.name}. Tillatelser for å se og behandle søknader.",
+        admin_group = ResponsibleGroup.objects.create(
+            name=ORG_ADMIN_GROUP_NAME,
+            description=f"Admin-gruppen til {instance.name}. Tillatelser for å se og behandle søknader.",
             organization=instance,
-            group_type=HR_TYPE,
+            group_type=ORG_ADMIN_TYPE,
         )
-        assign_perm("forms.add_form", hr_group.group)
+        assign_perm("forms.add_form", admin_group.group)
+        assign_perm("organizations.manage_organization", admin_group.group)

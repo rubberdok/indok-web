@@ -4,7 +4,7 @@ from django.conf import settings
 from django.db import models
 from django.db.models import UniqueConstraint
 
-from apps.permissions.constants import HR_TYPE, PRIMARY_TYPE
+from apps.permissions.constants import ORG_ADMIN_TYPE, ORG_MEMBER_TYPE
 from apps.permissions.models import ResponsibleGroup
 
 
@@ -28,7 +28,8 @@ class Organization(models.Model):
     # Permission groups
     # All members are added to the primary group
     # Members can be added to groups programatically
-    # The HR-group has the "forms.manage_form" permission, allowing them to view and manage responses to e.g. listings.
+    # The ADMIN-group has the "forms.manage_form" permission, allowing them to view and manage responses to e.g
+    # listings.
     # The primary group is intended to act as a group for organizations who need any kind of
     # special permission, e.g. hyttestyret
     # Or if we wish to limit the creation of events or listings to certain organizations.
@@ -42,16 +43,16 @@ class Organization(models.Model):
     )
 
     @property
-    def hr_group(self) -> Optional["ResponsibleGroup"]:
+    def admin_group(self) -> Optional["ResponsibleGroup"]:
         try:
-            return self.permission_groups.get(group_type=HR_TYPE)
+            return self.permission_groups.get(group_type=ORG_ADMIN_TYPE)
         except ResponsibleGroup.DoesNotExist:
             return None
 
     @property
-    def primary_group(self) -> Optional["ResponsibleGroup"]:
+    def member_group(self) -> Optional["ResponsibleGroup"]:
         try:
-            return self.permission_groups.get(group_type=PRIMARY_TYPE)
+            return self.permission_groups.get(group_type=ORG_MEMBER_TYPE)
         except ResponsibleGroup.DoesNotExist:
             return None
 
