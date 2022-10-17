@@ -3,7 +3,7 @@
 from typing import TYPE_CHECKING, Type
 from django.db import migrations
 
-from apps.permissions.constants import HR_TYPE, PRIMARY_TYPE
+from apps.permissions.constants import ORG_ADMIN_TYPE, ORG_MEMBER_TYPE
 
 if TYPE_CHECKING:
     from apps.organizations import models as org_models
@@ -15,22 +15,22 @@ def move_permission_groups_to_fk(apps, _):
     Organization: Type["org_models.Organization"] = apps.get_model("organizations", "Organization")
 
     for organization in Organization.objects.all():
-        primary_group = organization.primary_group
-        hr_group = organization.hr_group
+        member_group = organization.member_group
+        admin_group = organization.admin_group
 
-        if primary_group and hr_group:
-            primary_group.group_type = PRIMARY_TYPE
-            hr_group.group_type = HR_TYPE
+        if member_group and admin_group:
+            member_group.group_type = ORG_MEMBER_TYPE
+            admin_group.group_type = ORG_ADMIN_TYPE
 
             # Name as of this migration
-            primary_group.temp_organization = organization
-            hr_group.temp_organization = organization
+            member_group.temp_organization = organization
+            admin_group.temp_organization = organization
 
-            primary_group.save()
-            hr_group.save()
+            member_group.save()
+            admin_group.save()
 
-            organization.primary_group = None
-            organization.hr_group = None
+            organization.member_group = None
+            organization.admin_group = None
             organization.save()
 
     # Delete orphan responsible groups
@@ -43,10 +43,12 @@ def move_permission_groups_to_one_to_one_field(apps, _):
 
     organization: "org_models.Organization"
     for organization in Organization.objects.all():
-        organization.primary_group = ResponsibleGroup.objects.get(
-            temp_organization=organization, group_type=PRIMARY_TYPE
+        organization.member_group = ResponsibleGroup.objects.get(
+            temp_organization=organization, group_type=ORG_MEMBER_TYPE
         )
-        organization.hr_group = ResponsibleGroup.objects.get(temp_organization=organization, group_type=HR_TYPE)
+        organization.admin_group = ResponsibleGroup.objects.get(
+            temp_organization=organization, group_type=ORG_ADMIN_TYPE
+        )
         organization.save()
 
 
