@@ -47,7 +47,7 @@ class UpdateOrganization(graphene.Mutation):
         id = graphene.ID(required=True)
         organization_data = OrganizationInput(required=False)
 
-    @permission_required("organizations.change_organization")
+    @permission_required("organizations.manage_organization")
     def mutate(self, info, id, organization_data=None):
         organization = Organization.objects.get(pk=id)
         user = info.context.user
@@ -91,7 +91,7 @@ class AssignMembership(graphene.Mutation):
     class Arguments:
         membership_data = MembershipInput(required=True)
 
-    @permission_required("organizations.change_organization", fn=get_organization_from_data)
+    @permission_required("organizations.manage_organization", fn=get_organization_from_data)
     def mutate(self, _, membership_data):
         organization = Organization.objects.prefetch_related("permission_groups").get(
             pk=membership_data["organization_id"]
