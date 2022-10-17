@@ -8,16 +8,18 @@ def migrate_org_groups(apps, schema_editor):
 
     Organization = apps.get_model("organizations", "Organization")
 
-    for organization in Organization.objects.all():
-        organization.hr_group.group_type = ORG_ADMIN_TYPE
-        organization.primary_group.group_type = ORG_MEMBER_TYPE
+    for org in Organization.objects.all():
+        if org.hr_group is not None:
+            org.hr_group.group_type = ORG_ADMIN_TYPE
+        if org.primary_group is not None:
+            org.primary_group.group_type = ORG_MEMBER_TYPE
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
         ("permissions", "0011_merge_0004_auto_20210824_2126_0010_auto_20210824_1546"),
-        ("organizations", "0035_auto_20211004_1923"),
+        ("organizations", "0033_merge_0031_auto_20210909_1813_0032_auto_20210824_1457"),
     ]
 
     operations = [migrations.RunPython(migrate_org_groups)]
