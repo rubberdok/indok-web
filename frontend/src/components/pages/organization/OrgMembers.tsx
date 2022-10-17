@@ -57,9 +57,8 @@ export const OrgMembers: React.FC<Props> = ({ organization }) => {
               variant="standard"
               placeholder="Skriv inn brukernavn"
               onChange={(e) => setUserInput(e.target.value)}
-            >
-              {userInput}
-            </TextField>
+              value={userInput}
+            />
           </Grid>
           <Grid item xs={6} md={4} lg={2}>
             <Button startIcon={<GroupAdd />} onClick={() => addUser()}>
