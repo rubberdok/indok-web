@@ -390,8 +390,8 @@ The `python manage.py loaddata initial_data` command used in the setup above set
 
 | Username      | Password | Indøk |
 | ------------- | :------: | ----: |
-| eva_student   |   5tgb   |  true |
-| asbjorn_elevg |   1qaz   | false |
+| eva_student   |  098asd  |  true |
+| asbjorn_elevg |  098asd  | false |
 | admin         | admin123 | super |
 
 To log in as one of these test users when testing out the frontend locally, click "Other login alternatives" on the
