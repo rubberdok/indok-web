@@ -119,7 +119,7 @@ export const GET_EVENT = gql`
         isSignedUp
         isOnWaitingList
         hasBoughtTicket
-        positionOnWaitingList
+        positionOnWaitinglist
       }
       isFull
       hasExtraInformation

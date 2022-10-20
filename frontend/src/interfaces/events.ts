@@ -33,7 +33,12 @@ export interface AttendableEvent extends Event {
   deadline: string;
   availableSlots: string;
   signupOpenDate: string;
-  userAttendance: { isSignedUp: boolean; isOnWaitingList: boolean; hasBoughtTicket: boolean };
+  userAttendance: {
+    isSignedUp: boolean;
+    isOnWaitingList: boolean;
+    hasBoughtTicket: boolean;
+    positionOnWaitingList: number;
+  };
   usersAttending: SignUp[];
   isFull: boolean;
 }
