@@ -12,7 +12,8 @@ from apps.ecommerce.models import Order
 
 from ..organizations.models import Organization
 from ..organizations.permissions import check_user_membership
-from .models import Category, Event, SignUp, User
+from .models import Category, Event, SignUp
+
 
 DEFAULT_REPORT_FIELDS = {
     "signup_timestamp",
@@ -146,22 +147,6 @@ class EventResolvers:
         check_user_membership(info.context.user, event.organization)
 
         return SignUp.objects.filter(event=event)
-
-    def resolve_position_on_waiting_list(self, event_id: int, user: User):
-        # Get all signups
-        event: Event = Event.objects.get(pk=event_id)
-        wait_list = event.users_on_waiting_list(event)  # Sorted by timestamp
-
-        if event.is_attendable:
-            for i in range(len(wait_list)):
-                positon: int = 1
-                if wait_list[i].is_attending and wait_list[i] == user:
-                    return positon
-                elif wait_list[i].is_attending:
-                    positon += 1
-        else:
-            # this might be a case we need to handle, but for now we don't care
-            pass
 
 
 def export_single_event(event_id: int, fields: Union[list[str], set[str]]) -> pd.DataFrame:
