@@ -10,7 +10,7 @@ describe("SSO login", () => {
       });
       cy.origin("https://feide.no", () => {
         cy.get("[id=username]").type("asbjorn_elevg");
-        cy.get("[id=password]").type("1qaz");
+        cy.get("[id=password]").type("098asd");
         cy.get("button").get("[type=submit]").click();
       });
       cy.contains("[data-test-id=profile-personal-name]", "Asbjørn ElevG Hansen");
@@ -29,7 +29,7 @@ describe("SSO login", () => {
       });
       cy.origin("https://feide.no", () => {
         cy.get("[id=username]").type("cecilie_elevvgs");
-        cy.get("[id=password]").type("3edc");
+        cy.get("[id=password]").type("098asd");
         cy.get("button").get("[type=submit]").click();
       });
       cy.getByTestId("registerUser-title").should("contain.text", "Registrering");
