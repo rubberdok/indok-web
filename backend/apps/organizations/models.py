@@ -30,7 +30,7 @@ class Organization(models.Model):
     # Members can be added to groups programatically
     # The ADMIN-group has the "forms.manage_form" permission, allowing them to view and manage responses to e.g
     # listings.
-    # The primary group is intended to act as a group for organizations who need any kind of
+    # The member group is intended to act as a group for organizations who need any kind of
     # special permission, e.g. hyttestyret
     # Or if we wish to limit the creation of events or listings to certain organizations.
 

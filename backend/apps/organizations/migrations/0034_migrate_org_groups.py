@@ -9,10 +9,12 @@ def migrate_org_groups(apps, schema_editor):
     Organization = apps.get_model("organizations", "Organization")
 
     for org in Organization.objects.all():
-        if org.hr_group is not None:
-            org.hr_group.group_type = ORG_ADMIN_TYPE
-        if org.primary_group is not None:
-            org.primary_group.group_type = ORG_MEMBER_TYPE
+        if org.admin_group is not None:
+            org.admi_group.group_type = ORG_ADMIN_TYPE
+            org.admin_group.save()
+        if org.member_group is not None:
+            org.member_group.group_type = ORG_MEMBER_TYPE
+            org.member_group.save()
 
 
 class Migration(migrations.Migration):
