@@ -31,20 +31,7 @@ export const OrgMembers: React.FC<Props> = ({ organization }) => {
   if (error) return <p>Error</p>;
   if (!data?.memberships || loading) return <CircularProgress />;
 
-<<<<<<< HEAD
-  console.log(data.memberships);
-  data?.memberships?.sort((a, b) => a.user.firstName.localeCompare(b.user.firstName));
-=======
   //Sorterer medlemmer alfabetisk
-  [...data?.memberships].sort((a, b) => a.user.firstName.localeCompare(b.user.firstName));
-
-  const addUser = () => {
-    //Legg til funksjonalitet for å legge til bruker ved brukernavn
-    console.log(userInput);
-    setUserInput(""); //Funker men oppdaterer ikke siden?
-  };
->>>>>>> 80e11b75 (add username input to add members and create buttons for changing member-status)
-
   [...data?.memberships].sort((a, b) => a.user.firstName.localeCompare(b.user.firstName));
 
   return (
