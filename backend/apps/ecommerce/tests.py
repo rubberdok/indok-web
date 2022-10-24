@@ -112,7 +112,7 @@ class EcommerceBaseTestCase(ExtendedGraphQLTestCase):
         MembershipFactory(
             user=self.staff_user,
             organization=self.organization,
-            group=self.organization.primary_group,
+            group=self.organization.member_group,
         )
         self.total_quantity = 5
         self.max_buyable_quantity = 2

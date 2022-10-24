@@ -23,7 +23,7 @@ export const OrgMembers: React.FC<Props> = ({ organization }) => {
   if (error) return <p>Error</p>;
   if (!data?.memberships || loading) return <CircularProgress />;
 
-  data?.memberships?.sort((a, b) => a.user.firstName.localeCompare(b.user.firstName));
+  [...data?.memberships].sort((a, b) => a.user.firstName.localeCompare(b.user.firstName));
 
   return (
     <Stack spacing={4}>

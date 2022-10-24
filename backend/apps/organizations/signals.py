@@ -19,7 +19,7 @@ from apps.permissions.models import ResponsibleGroup
 @receiver(post_save, sender=Membership)
 def handle_new_member(instance: Membership, **kwargs):
     optional_group: Optional[ResponsibleGroup] = instance.group
-    group: Group = instance.organization.primary_group.group
+    group: Group = instance.organization.member_group
     org_group: Group = Group.objects.get(name=ORGANIZATION)
     user = instance.user
     user.groups.add(org_group)
@@ -31,7 +31,7 @@ def handle_new_member(instance: Membership, **kwargs):
 
 @receiver(pre_delete, sender=Membership)
 def handle_removed_member(instance: Membership, **kwargs):
-    group: Group = instance.organization.primary_group.group
+    group: Group = instance.organization.member_group
     org_group: Group = Group.objects.get(name=ORGANIZATION)
     user = instance.user
     if group:
@@ -53,10 +53,11 @@ def create_default_groups(instance: Organization, created, **kwargs):
             organization=instance,
             group_type=ORG_MEMBER_TYPE,
         )
-        hr_group = ResponsibleGroup.objects.create(
+        admin_group = ResponsibleGroup.objects.create(
             name=ORG_ADMIN_GROUP_NAME,
-            description=f"HR-gruppen til {instance.name}. Tillatelser for å se og behandle søknader.",
+            description=f"Admin-gruppen til {instance.name}. Tillatelser for å se og behandle søknader og medlemmer.",
             organization=instance,
             group_type=ORG_ADMIN_TYPE,
         )
-        assign_perm("forms.add_form", hr_group.group)
+        assign_perm("forms.add_form", admin_group.group)
+        assign_perm("organizations.manage_organization", admin_group.group)

@@ -4,18 +4,18 @@ from apps.permissions.constants import ORG_ADMIN_GROUP_NAME, ORG_ADMIN_TYPE, ORG
 
 
 def migrate_org_groups(apps, schema_editor):
-    """Rename hr_group to admin_group and primary_group to member_group"""
+    """Rename admin_group to admin_group and member_group to member_group"""
 
     Organization = apps.get_model("organizations", "Organization")
 
     for org in Organization.objects.all():
         if org.admin_group is not None:
             org.admin_group.group_type = ORG_ADMIN_TYPE
-            org.admin_group.name = ORG_ADMIN_GROUP_NAME
+            org.group.name = ORG_ADMIN_GROUP_NAME
             org.admin_group.save()
         if org.member_group is not None:
             org.member_group.group_type = ORG_MEMBER_TYPE
-            org.member_group.name = ORG_ADMIN_GROUP_NAME
+            org.group.name = ORG_ADMIN_GROUP_NAME
             org.member_group.save()
 
 
