@@ -61,9 +61,7 @@ export const OrgMembers: React.FC<Props> = ({ organization }) => {
             />
           </Grid>
           <Grid item xs={6} md={4} lg={2}>
-            <Button startIcon={<GroupAdd />} onClick={() => addUser()}>
-              Legg til
-            </Button>
+            <Button startIcon={<GroupAdd />}>Legg til</Button>
           </Grid>
         </Grid>
       </PermissionRequired>
@@ -85,12 +83,12 @@ export const OrgMembers: React.FC<Props> = ({ organization }) => {
                   {membership.user.firstName} {membership.user.lastName}
                 </TableCell>
                 <TableCell>
-                  {membership?.group?.uuid == organization.hrGroup?.uuid ? "Administrator" : "Medlem"}
+                  {membership?.group?.uuid == organization.adminGroup?.uuid ? "Administrator" : "Medlem"}
                 </TableCell>
                 <PermissionRequired permission="organizations.change_organization">
                   <TableCell>
                     <Button variant="contained" color="warning" startIcon={<AdminPanelSettings />} sx={{ mr: 1 }}>
-                      {membership?.group?.uuid == organization.hrGroup?.uuid ? "Demoter" : "Promoter"}
+                      {membership?.group?.uuid == organization.adminGroup?.uuid ? "Demoter" : "Promoter"}
                     </Button>
                     <Button variant="contained" color="error" startIcon={<Delete />}>
                       Fjern
