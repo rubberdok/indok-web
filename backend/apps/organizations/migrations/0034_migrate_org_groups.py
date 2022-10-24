@@ -11,11 +11,11 @@ def migrate_org_groups(apps, schema_editor):
     for org in Organization.objects.all():
         if org.admin_group is not None:
             org.admin_group.group_type = ORG_ADMIN_TYPE
-            org.group.name = ORG_ADMIN_GROUP_NAME
+            org.admin_group.name = ORG_ADMIN_GROUP_NAME
             org.admin_group.save()
         if org.member_group is not None:
             org.member_group.group_type = ORG_MEMBER_TYPE
-            org.group.name = ORG_ADMIN_GROUP_NAME
+            org.member_group.name = ORG_ADMIN_GROUP_NAME
             org.member_group.save()
 
 
