@@ -13,6 +13,7 @@ import {
   Typography,
 } from "@mui/material";
 
+import { PermissionRequired } from "@/components/Auth";
 import { AdminOrganizationFragment, MembershipsDocument, UserDocument } from "@/generated/graphql";
 
 type Props = {
@@ -20,26 +21,13 @@ type Props = {
 };
 
 export const OrgMembers: React.FC<Props> = ({ organization }) => {
-  const {
-    data: membershipsData,
-    loading: membershipsLoading,
-    error: membershipsError,
-  } = useQuery(MembershipsDocument, { variables: { organizationId: organization.id } });
-  const { data: userData, loading: userLoading, error: userError } = useQuery(UserDocument);
+  const { data, loading, error } = useQuery(MembershipsDocument, { variables: { organizationId: organization.id } });
 
-  if (membershipsError || userError) return <p>Error</p>;
-  if (!membershipsData?.memberships || membershipsLoading || !userData || userLoading) return <CircularProgress />;
+  if (error) return <p>Error</p>;
+  if (!data?.memberships || loading) return <CircularProgress />;
 
-  console.log(membershipsData.memberships);
-  console.log(userData);
-
-  let isAdmin = false;
-  if (
-    membershipsData.memberships?.filter((membership) => membership.user?.id == userData.user?.id)[0].group?.uuid ==
-    organization?.hrGroup?.uuid
-  ) {
-    isAdmin = true;
-  }
+  console.log(data.memberships);
+  data?.memberships?.sort((a, b) => a.user.firstName.localeCompare(b.user.firstName));
 
   [...data?.memberships].sort((a, b) => a.user.firstName.localeCompare(b.user.firstName));
 
@@ -52,11 +40,13 @@ export const OrgMembers: React.FC<Props> = ({ organization }) => {
             <TableRow>
               <TableCell>Navn</TableCell>
               <TableCell>Gruppe</TableCell>
-              {isAdmin && <TableCell>Rediger</TableCell>}
+              <PermissionRequired permission="organizations.change_organization">
+                <TableCell>Rediger</TableCell>
+              </PermissionRequired>
             </TableRow>
           </TableHead>
           <TableBody>
-            {membershipsData.memberships.map((membership) => (
+            {data.memberships.map((membership) => (
               <TableRow key={membership.id}>
                 <TableCell>
                   {membership.user.firstName} {membership.user.lastName}
@@ -64,11 +54,11 @@ export const OrgMembers: React.FC<Props> = ({ organization }) => {
                 <TableCell>
                   {membership?.group?.uuid == organization.hrGroup?.uuid ? "Administrator" : "Medlem"}
                 </TableCell>
-                {isAdmin && (
+                <PermissionRequired permission="organizations.change_organization">
                   <TableCell>
                     <Button startIcon={<Create />}>Rediger</Button>
                   </TableCell>
-                )}
+                </PermissionRequired>
               </TableRow>
             ))}
           </TableBody>
