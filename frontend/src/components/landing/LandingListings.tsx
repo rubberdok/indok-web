@@ -4,7 +4,7 @@ import Link from "next/link";
 
 import Social from "~/public/img/gang.jpg";
 
-export const LandingListings: React.FC = () => {
+export const LandingListings: React.FC<React.PropsWithChildren<unknown>> = () => {
   return (
     <Box
       sx={{

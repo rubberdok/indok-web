@@ -21,7 +21,12 @@ type Props = {
 };
 
 /** Component for the filter menu on the event list page. */
-export const FilterMenu: React.FC<Props> = ({ filters, onFiltersChange, showDefaultEvents, onShowDefaultChange }) => {
+export const FilterMenu: React.FC<React.PropsWithChildren<Props>> = ({
+  filters,
+  onFiltersChange,
+  showDefaultEvents,
+  onShowDefaultChange,
+}) => {
   const handleChecked: HandleChecked = (e, field, filter) => {
     if (e.target.checked) {
       onFiltersChange({ ...filters, [field]: filter });

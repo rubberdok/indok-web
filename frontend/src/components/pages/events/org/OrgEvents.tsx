@@ -6,7 +6,7 @@ import { AdminOrganizationFragment } from "@/generated/graphql";
 
 type Props = { organization: AdminOrganizationFragment };
 
-export const OrgEvents: React.FC<Props> = ({ organization }) => {
+export const OrgEvents: React.FC<React.PropsWithChildren<Props>> = ({ organization }) => {
   return (
     <Stack spacing={4}>
       <Typography variant="h3">Oversikt</Typography>

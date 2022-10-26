@@ -14,7 +14,7 @@ type ScrollProps = {
   children: React.ReactElement;
 };
 
-const ElevationScroll: React.FC<ScrollProps> = ({ children }) => {
+const ElevationScroll: React.FC<React.PropsWithChildren<ScrollProps>> = ({ children }) => {
   const trigger = useScrollTrigger({
     disableHysteresis: true,
     threshold: 30,
@@ -26,7 +26,7 @@ const ElevationScroll: React.FC<ScrollProps> = ({ children }) => {
   });
 };
 
-export const Basic: React.FC<Props & AppBarProps> = ({ transparent, ...props }) => {
+export const Basic: React.FC<React.PropsWithChildren<Props & AppBarProps>> = ({ transparent, ...props }) => {
   return (
     <ElevationScroll>
       <AppBar transparent={transparent} {...props}>

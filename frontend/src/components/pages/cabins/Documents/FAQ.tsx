@@ -110,7 +110,7 @@ const faqs = [
 ];
 
 /** Renders all frequently asked questions regarding the cabins. */
-export const FAQ: React.FC = () => {
+export const FAQ: React.FC<React.PropsWithChildren<unknown>> = () => {
   const [expandedPanel, setExpandedPanel] = React.useState<number>();
 
   const handleChange = (panel: number) => (_: React.SyntheticEvent<Element, Event>, expanded: boolean) => {

@@ -11,7 +11,7 @@ type Props = {
   onClick?: MouseEventHandler<HTMLSpanElement>;
 };
 
-export const NavigationLink: React.FC<Props> = ({ active, route, onClick }) => {
+export const NavigationLink: React.FC<React.PropsWithChildren<Props>> = ({ active, route, onClick }) => {
   return (
     <Link href={route.path} passHref>
       <RouteLink

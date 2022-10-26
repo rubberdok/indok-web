@@ -5,7 +5,7 @@ type Props = {
   children?: React.ReactNode;
 } & BaseProps;
 
-export const Title: React.FC<Props> = ({ variant = "normal", children, ...props }) => {
+export const Title: React.FC<React.PropsWithChildren<Props>> = ({ variant = "normal", children, ...props }) => {
   if (variant === "normal") return <BaseTitle {...props}>{children}</BaseTitle>;
   if (variant === "dark")
     return (

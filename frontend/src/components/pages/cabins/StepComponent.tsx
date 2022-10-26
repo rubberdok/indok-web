@@ -24,7 +24,7 @@ type Props = {
   setExtraInfo: React.Dispatch<React.SetStateAction<string>>;
 };
 
-export const StepComponent: React.FC<Props> = (props) => {
+export const StepComponent: React.FC<React.PropsWithChildren<Props>> = (props) => {
   switch (props.activeStep) {
     case 0:
       // Choose cabin

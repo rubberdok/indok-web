@@ -11,7 +11,7 @@ type Props = {
 };
 
 /** Component to answer a question on a form. */
-export const AnswerQuestion: React.FC<Props> = ({ answer, question, onAnswerChange }) => {
+export const AnswerQuestion: React.FC<React.PropsWithChildren<Props>> = ({ answer, question, onAnswerChange }) => {
   // returns a form input based on the type of the answer's question
   // each input calls on onValueChanged to change the state of AnswerForm
   switch (question.questionType) {

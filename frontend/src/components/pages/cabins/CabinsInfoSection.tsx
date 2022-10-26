@@ -30,7 +30,7 @@ const facilitiesData = [
   },
 ];
 
-export const CabinsInfoSection: React.FC = () => {
+export const CabinsInfoSection: React.FC<React.PropsWithChildren<unknown>> = () => {
   return (
     <Container>
       <Grid container direction="row-reverse" justifyContent="space-between" alignItems="stretch" spacing={8} mb={4}>

@@ -55,7 +55,7 @@ type Props = {
   onActiveIndexChange: (index: number) => void;
 };
 
-export const Organizations: React.FC<Props> = ({ offsetX, onActiveIndexChange }) => {
+export const Organizations: React.FC<React.PropsWithChildren<Props>> = ({ offsetX, onActiveIndexChange }) => {
   return (
     <>
       <ArrowStyle className="arrow left" aria-label="Forrige">

@@ -4,7 +4,7 @@ import Link from "next/link";
 
 import Hovedbygget from "~/public/static/landing/hovedbygget.webp";
 
-export const LandingSection: React.FC = () => {
+export const LandingSection: React.FC<React.PropsWithChildren<unknown>> = () => {
   return (
     <Box
       sx={{

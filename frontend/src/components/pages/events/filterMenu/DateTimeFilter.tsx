@@ -11,7 +11,7 @@ type Props = {
 };
 
 /** Component for the date filter in the filter menu. */
-export const DateTimeFilter: React.FC<Props> = ({ filters, onFiltersChange }) => {
+export const DateTimeFilter: React.FC<React.PropsWithChildren<Props>> = ({ filters, onFiltersChange }) => {
   return (
     <>
       <Grid container item direction="column">

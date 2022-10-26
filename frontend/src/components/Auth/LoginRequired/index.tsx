@@ -21,7 +21,7 @@ type Props = {
  * If a user is logged in, it renders the children.
  * While loading, will render as a rectangular skeleton.
  */
-export const LoginRequired: React.FC<Props & ButtonProps> = ({
+export const LoginRequired: React.FC<React.PropsWithChildren<Props & ButtonProps>> = ({
   redirect,
   redirectPath,
   children,

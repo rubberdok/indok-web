@@ -20,7 +20,7 @@ import {
 type Props = { form: FormWithAllResponsesFragment };
 
 /** Component for editing forms (for example: the applications to listings). */
-export const EditForm: React.FC<Props> = ({ form }) => {
+export const EditForm: React.FC<React.PropsWithChildren<Props>> = ({ form }) => {
   // state to manage the question on the form currently being edited
   // undefined if no question is currently being edited
   const [activeQuestion, setActiveQuestion] = useState<QuestionWithAnswerIdsFragment | undefined>();

@@ -7,7 +7,7 @@ import { ListingFragment } from "@/generated/graphql";
 type Props = { listing: ListingFragment };
 
 /** Component for title and organization info on the listing detail page. */
-export const InfoCard: React.FC<Props> = ({ listing }) => {
+export const InfoCard: React.FC<React.PropsWithChildren<Props>> = ({ listing }) => {
   return (
     <Card style={{ height: "100%" }}>
       <CardContent style={{ height: "100%" }}>

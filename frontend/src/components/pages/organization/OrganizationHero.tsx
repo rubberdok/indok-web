@@ -9,7 +9,11 @@ type Props = {
   handleTabChange: (event: React.SyntheticEvent, newValue: number) => void;
 };
 
-export const OrganizationHero: React.FC<Props> = ({ organization, handleTabChange, activeTab }) => {
+export const OrganizationHero: React.FC<React.PropsWithChildren<Props>> = ({
+  organization,
+  handleTabChange,
+  activeTab,
+}) => {
   return (
     <Title
       title={organization.name}

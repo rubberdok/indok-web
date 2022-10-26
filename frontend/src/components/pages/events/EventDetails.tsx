@@ -57,7 +57,7 @@ type AlertProps = {
   children: string | undefined;
 };
 
-const Alert: React.FC<AlertProps> = ({ open, onClose, children, severity }) => {
+const Alert: React.FC<React.PropsWithChildren<AlertProps>> = ({ open, onClose, children, severity }) => {
   return (
     <MuiSnackbar
       autoHideDuration={3000}
@@ -76,7 +76,7 @@ type Props = {
   eventId: string;
 };
 
-export const EventDetails: React.FC<Props> = ({ eventId }) => {
+export const EventDetails: React.FC<React.PropsWithChildren<Props>> = ({ eventId }) => {
   const [openSignUpSnackbar, setOpenSignUpSnackbar] = useState(false);
   const [openSignOffSnackbar, setOpenSignOffSnackbar] = useState(false);
   const [openOnWaitingListSnackbar, setOpenOnWaitingListSnackbar] = useState(false);

@@ -13,7 +13,7 @@ type Props = {
 };
 
 /** Step in the cabins/book site. Shows a confirmation of the booking made after the payment site. */
-export const ReceiptSite: React.FC<Props> = (props) => {
+export const ReceiptSite: React.FC<React.PropsWithChildren<Props>> = (props) => {
   return (
     <Grid container alignItems="center" direction="column">
       <Hidden lgDown>

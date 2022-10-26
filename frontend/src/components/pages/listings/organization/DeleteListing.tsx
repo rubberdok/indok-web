@@ -20,7 +20,7 @@ type Props = {
 };
 
 /** Component for confirmation dialog when an organization admin tries to delete a listing. */
-export const DeleteListing: React.FC<Props> = ({ listing, onClose }) => {
+export const DeleteListing: React.FC<React.PropsWithChildren<Props>> = ({ listing, onClose }) => {
   const [deleteListing] = useMutation(DeleteListingDocument, {
     // updates the cache upon deleting the listing, so changes are reflected instantly
     update: (cache, { data }) => {

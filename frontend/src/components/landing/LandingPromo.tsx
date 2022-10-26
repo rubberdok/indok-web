@@ -6,7 +6,7 @@ const RootStyle = styled("div")(() => ({
   display: "flex",
 }));
 
-export const LandingPromo: React.FC = () => {
+export const LandingPromo: React.FC<React.PropsWithChildren<unknown>> = () => {
   return (
     <RootStyle>
       <Container>

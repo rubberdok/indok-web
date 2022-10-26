@@ -23,7 +23,7 @@ export type Props = {
   OverlayProps?: OverlayProps & { sx?: SxProps<Theme> };
 };
 
-export const BaseTitle: React.FC<Props> = ({
+export const BaseTitle: React.FC<React.PropsWithChildren<Props>> = ({
   title,
   children,
   breadcrumbs = [],

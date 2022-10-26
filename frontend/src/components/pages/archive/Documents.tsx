@@ -12,7 +12,7 @@ type Props = {
   names: string;
 };
 
-export const Documents: React.FC<Props> = ({ documentTypes, year, names }) => {
+export const Documents: React.FC<React.PropsWithChildren<Props>> = ({ documentTypes, year, names }) => {
   const { refetch, loading, data, error } = useQuery(ArchiveByTypesDocument, {
     variables: { documentTypes, year, names },
     ssr: false,

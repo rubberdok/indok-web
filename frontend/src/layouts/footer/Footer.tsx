@@ -120,7 +120,7 @@ type NextLinkItemProps = LinkProps & {
   onClick?: () => void;
 };
 
-const NextLinkItem: React.FC<NextLinkItemProps> = ({ children, sx, onClick, ...other }) => {
+const NextLinkItem: React.FC<React.PropsWithChildren<NextLinkItemProps>> = ({ children, sx, onClick, ...other }) => {
   return (
     <NextLink passHref {...other}>
       <Link

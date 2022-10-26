@@ -23,7 +23,7 @@ type Props = {
   organization: AdminOrganizationFragment;
 };
 
-export const OrgMembers: React.FC<Props> = ({ organization }) => {
+export const OrgMembers: React.FC<React.PropsWithChildren<Props>> = ({ organization }) => {
   const { data, loading, error } = useQuery(MembershipsDocument, { variables: { organizationId: organization.id } });
 
   const [userInput, setUserInput] = useState<string>("");

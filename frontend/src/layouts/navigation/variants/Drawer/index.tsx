@@ -11,7 +11,7 @@ import { NavigationProps } from "../../types";
 
 import { NavigationLink } from "./NavigationLink";
 
-export const Drawer: React.FC<NavigationProps> = ({ routes }) => {
+export const Drawer: React.FC<React.PropsWithChildren<NavigationProps>> = ({ routes }) => {
   const [open, setOpen] = useState(false);
   const { pathname } = useRouter();
 

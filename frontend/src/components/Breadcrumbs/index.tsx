@@ -11,7 +11,13 @@ export interface Props extends BreadcrumbsProps {
   sx?: SxProps;
 }
 
-export const Breadcrumbs: React.FC<Props> = ({ links, sx, activeLast = false, onDark = false, ...other }) => {
+export const Breadcrumbs: React.FC<React.PropsWithChildren<Props>> = ({
+  links,
+  sx,
+  activeLast = false,
+  onDark = false,
+  ...other
+}) => {
   const currentLink = links[links.length - 1];
 
   const currentPath = activeLast ? (

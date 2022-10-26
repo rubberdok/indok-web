@@ -13,7 +13,13 @@ type Props = {
   fallbackRedirect: string | undefined;
 };
 
-export const PayWithVipps: React.FC<Props> = ({ productId, quantity, onError, disabled, fallbackRedirect }) => {
+export const PayWithVipps: React.FC<React.PropsWithChildren<Props>> = ({
+  productId,
+  quantity,
+  onError,
+  disabled,
+  fallbackRedirect,
+}) => {
   const [initiateOrder, { error }] = useMutation(InitiateOrderDocument, {
     onCompleted: (data) => {
       if (data.initiateOrder) {

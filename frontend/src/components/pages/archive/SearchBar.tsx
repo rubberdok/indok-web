@@ -27,7 +27,7 @@ type Props = {
   handleSearchFilterCanceled: () => void;
 };
 
-export const SearchBar: React.FC<Props> = ({ searchFilter, handleSearchFilterChanged }) => {
+export const SearchBar: React.FC<React.PropsWithChildren<Props>> = ({ searchFilter, handleSearchFilterChanged }) => {
   return (
     <RootStyle>
       <SearchStyle

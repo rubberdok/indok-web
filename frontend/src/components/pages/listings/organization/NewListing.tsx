@@ -26,7 +26,7 @@ const emptyListing: ListingInput = {
 type Props = { defaultOrganizationId?: string };
 
 /** Page for creating new listings, navigates to the newly created listing upon completion. */
-export const NewListing: React.FC<Props> = ({ defaultOrganizationId }) => {
+export const NewListing: React.FC<React.PropsWithChildren<Props>> = ({ defaultOrganizationId }) => {
   const router = useRouter();
 
   // state to manage the listing being created

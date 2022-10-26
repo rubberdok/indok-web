@@ -13,7 +13,7 @@ type Props = {
 };
 
 /** Component to show an overview of all open listings. */
-export const Listings: React.FC<Props> = ({ reload }) => {
+export const Listings: React.FC<React.PropsWithChildren<Props>> = ({ reload }) => {
   // fetches all open listings
   const { loading, error, data } = useQuery(ListingsDocument);
 

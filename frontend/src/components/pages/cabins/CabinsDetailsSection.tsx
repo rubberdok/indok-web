@@ -14,7 +14,7 @@ const RootStyle = styled("div")(({ theme }) => ({
   },
 }));
 
-export const CabinsDetailsSection: React.FC = () => {
+export const CabinsDetailsSection: React.FC<React.PropsWithChildren<unknown>> = () => {
   return (
     <RootStyle>
       <Container>

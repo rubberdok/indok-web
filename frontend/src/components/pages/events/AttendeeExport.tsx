@@ -8,7 +8,7 @@ import { promptDownloadFromPayload } from "@/utils/exports";
 
 type Props = { eventId: string };
 
-export const AttendeeExport: React.FC<Props> = ({ eventId }) => {
+export const AttendeeExport: React.FC<React.PropsWithChildren<Props>> = ({ eventId }) => {
   const [getAttendeeReport, { loading: attendeeReportLoading }] = useLazyQuery(AttendeeReportDocument, {
     onCompleted: (data) => {
       if (data.attendeeReport) promptDownloadFromPayload(JSON.parse(data.attendeeReport));

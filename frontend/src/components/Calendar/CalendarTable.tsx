@@ -13,7 +13,7 @@ type Props = {
   children?: ReactElement | ReactElement[];
 };
 
-export const CalendarTable: React.FC<Props> = ({ month, onChangeMonth, children }) => {
+export const CalendarTable: React.FC<React.PropsWithChildren<Props>> = ({ month, onChangeMonth, children }) => {
   const isMobile = useResponsive({ query: "down", key: "md" });
   return (
     <Stack spacing={2} width={1}>

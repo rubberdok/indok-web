@@ -25,7 +25,7 @@ const NAV_ITEMS = [
   },
 ];
 
-export const AboutSidebar: React.FC = () => {
+export const AboutSidebar: React.FC<React.PropsWithChildren<unknown>> = () => {
   return (
     <Box position="relative" mt={13} height={1 / 2} sx={{ borderRight: "1px solid", borderColor: "divider" }}>
       <NavigationSidebar

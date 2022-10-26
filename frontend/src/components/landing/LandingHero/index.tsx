@@ -6,7 +6,7 @@ import Hero from "~/public/static/landing/hero.webp";
 
 import { OrganizationsSlider } from "./OrganizationsSlider";
 
-export const LandingHero: React.FC = () => {
+export const LandingHero: React.FC<React.PropsWithChildren<unknown>> = () => {
   return (
     <>
       <Box

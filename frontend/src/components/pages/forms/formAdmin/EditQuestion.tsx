@@ -29,7 +29,12 @@ type Props = {
  * Renders input fields to change the question's details.
  * If the question's type allows options, allows the creation of such.
  */
-export const EditQuestion: React.FC<Props> = ({ question, setQuestion, saveQuestion, deleteQuestion }) => (
+export const EditQuestion: React.FC<React.PropsWithChildren<Props>> = ({
+  question,
+  setQuestion,
+  saveQuestion,
+  deleteQuestion,
+}) => (
   <Grid container direction="column" spacing={1}>
     <Grid item>
       <TextField

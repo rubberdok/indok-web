@@ -6,7 +6,7 @@ import { AdminOrganizationFragment } from "@/generated/graphql";
 
 type Props = { organization: AdminOrganizationFragment };
 
-export const OrgEventsTable: React.FC<Props> = ({ organization }) => {
+export const OrgEventsTable: React.FC<React.PropsWithChildren<Props>> = ({ organization }) => {
   return (
     <TableContainer>
       <Table>

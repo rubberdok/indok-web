@@ -21,7 +21,7 @@ type Props = {
   onRangeChange?: (fromDate: string | undefined, toDate: string | undefined, validRange: boolean) => void;
 };
 
-export const Calendar: React.FC<Props> = ({
+export const Calendar: React.FC<React.PropsWithChildren<Props>> = ({
   disabledDates,
   disableAll,
   disableBefore,

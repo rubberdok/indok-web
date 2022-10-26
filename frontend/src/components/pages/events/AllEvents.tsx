@@ -18,7 +18,7 @@ export type FilterQuery = {
   endTime?: string;
 };
 
-export const AllEvents: React.FC = () => {
+export const AllEvents: React.FC<React.PropsWithChildren<unknown>> = () => {
   const [filters, setFilters] = useState({});
   const [showDefaultEvents, setShowDefaultEvents] = useState(false);
   const [openFilterDrawer, setOpenFilterDrawer] = useState(false);

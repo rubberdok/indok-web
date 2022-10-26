@@ -29,7 +29,7 @@ import {
 } from "@/generated/graphql";
 
 /** Component for the creating a new event. */
-export const CreateEvent: React.FC = () => {
+export const CreateEvent: React.FC<React.PropsWithChildren<unknown>> = () => {
   const defaultInput: CreateEventInput = {
     title: "",
     description: "",
