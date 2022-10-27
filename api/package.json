@@ -75,7 +75,7 @@
   "dependencies": {
     "@apollo/server": "^4.0.3",
     "@graphql-tools/merge": "^8.3.6",
-    "@prisma/client": "^4.4.0",
+    "@prisma/client": "^4.5.0",
     "@sentry/node": "^7.15.0",
     "body-parser": "^1.20.1",
     "connect-redis": "^6.1.3",
