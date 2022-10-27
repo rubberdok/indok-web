@@ -36,7 +36,6 @@ const ListingAdminPage: NextPageWithLayout = () => {
 
   // fetches the listing along with all users who have applied to it, using URL parameter as argument
   const { loading, error, data } = useQuery(ListingWithResponsesDocument, { variables: { id: listingId as string } });
-  console.log({ loading, data, error, listingId });
 
   // mutation to create a new form
   const [createForm] = useMutation(CreateFormDocument, {

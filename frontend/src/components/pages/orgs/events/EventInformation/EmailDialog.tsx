@@ -63,7 +63,7 @@ export const EmailDialog: React.FC<React.PropsWithChildren<Props>> = ({ eventId,
     <>
       <FormProvider {...methods}>
         <Dialog open={open} fullWidth>
-          <form onSubmit={handleSubmit(() => setConfirmation(true), console.log)}>
+          <form onSubmit={handleSubmit(() => setConfirmation(true))}>
             <DialogTitle>
               <Stack direction="row" justifyContent="space-between" alignItems="center">
                 <Typography variant="subtitle1">Send e-post til alle påmeldte</Typography>
