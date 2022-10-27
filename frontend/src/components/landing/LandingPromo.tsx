@@ -19,7 +19,6 @@ export const LandingPromo: React.FC = () => {
               title="Industriell Økonomi og Teknologiledelse"
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              sandbox="allow-scripts allow-same-origin allow-presentation"
               loading="lazy"
               allowFullScreen
             />

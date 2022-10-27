@@ -1,10 +1,12 @@
 import { Box, Button, Container, Grid, Typography } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import Image from "next/future/image";
 import Link from "next/link";
 
 import Hovedbygget from "~/public/static/landing/hovedbygget.webp";
 
 export const LandingSection: React.FC = () => {
+  const theme = useTheme();
   return (
     <Box
       sx={{
@@ -28,6 +30,10 @@ export const LandingSection: React.FC = () => {
           style={{ objectFit: "cover", objectPosition: "center" }}
           placeholder="blur"
           alt=""
+          sizes={`
+            (max-width: ${theme.breakpoints.values.xs}px) 100vw,
+            50vw,
+          `}
         />
       </Box>
       <Container
