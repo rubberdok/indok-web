@@ -57,11 +57,6 @@ const defaultModalData: ModalData = {
   displayPopUp: false,
 };
 
-const RootStyle = styled("div")(({ theme }) => ({
-  marginTop: theme.spacing(4),
-  marginBottom: theme.spacing(4),
-}));
-
 /**
  * Main page for the booking of a cabin.
  * The page renders different components depending on the step variable chosen.
@@ -170,93 +165,91 @@ const CabinBookingPage: NextPageWithLayout = () => {
   );
 
   return (
-    <RootStyle>
-      <Container>
-        <ContractDialog
-          modalData={modalData}
-          setModalData={setModalData}
-          chosenCabins={chosenCabins}
-          datePick={datePick}
-          contactInfo={contactInfo}
+    <Container>
+      <ContractDialog
+        modalData={modalData}
+        setModalData={setModalData}
+        chosenCabins={chosenCabins}
+        datePick={datePick}
+        contactInfo={contactInfo}
+        activeStep={activeStep}
+        setActiveStep={setActiveStep}
+      />
+      <Stack spacing={{ xs: 3, md: 5 }}>
+        <div>
+          {isMobile ? (
+            <Typography variant="h4" align="center">
+              {steps[activeStep]}
+            </Typography>
+          ) : (
+            <Stepper activeStep={activeStep}>
+              {steps.map((label) => (
+                <Step key={label}>
+                  <StepLabel>{label}</StepLabel>
+                </Step>
+              ))}
+            </Stepper>
+          )}
+        </div>
+        {data?.cabins &&
+          (isMobile ? (
+            <StepComponent
+              allCabins={data.cabins}
+              activeStep={activeStep}
+              chosenCabins={chosenCabins}
+              contactInfo={contactInfo}
+              datePick={datePick}
+              errorTrigger={errorTrigger}
+              validations={validations}
+              setContactInfo={setContactInfo}
+              setChosenCabins={setChosenCabins}
+              setDatePick={setDatePick}
+              setExtraInfo={setExtraInfo}
+            />
+          ) : (
+            <Card>
+              <Box sx={{ px: 4, py: 4 }}>
+                <StepComponent
+                  allCabins={data.cabins}
+                  activeStep={activeStep}
+                  chosenCabins={chosenCabins}
+                  contactInfo={contactInfo}
+                  datePick={datePick}
+                  errorTrigger={errorTrigger}
+                  validations={validations}
+                  setContactInfo={setContactInfo}
+                  setChosenCabins={setChosenCabins}
+                  setDatePick={setDatePick}
+                  setExtraInfo={setExtraInfo}
+                />
+              </Box>
+              <Stack
+                width={1}
+                direction="row"
+                justifyContent="space-between"
+                borderTop="1px solid"
+                borderColor="divider"
+              >
+                <BackButton />
+                <NextButton />
+              </Stack>
+            </Card>
+          ))}
+      </Stack>
+      {isMobile && activeStep != 3 ? (
+        <MobileStepper
+          steps={4}
+          position="bottom"
+          variant="progress"
           activeStep={activeStep}
-          setActiveStep={setActiveStep}
+          nextButton={<NextButton />}
+          backButton={<BackButton />}
+          sx={{ boxShadow: (theme) => theme.shadows[24] }}
         />
-        <Stack spacing={{ xs: 3, md: 5 }}>
-          <div>
-            {isMobile ? (
-              <Typography variant="h4" align="center">
-                {steps[activeStep]}
-              </Typography>
-            ) : (
-              <Stepper activeStep={activeStep}>
-                {steps.map((label) => (
-                  <Step key={label}>
-                    <StepLabel>{label}</StepLabel>
-                  </Step>
-                ))}
-              </Stepper>
-            )}
-          </div>
-          {data?.cabins &&
-            (isMobile ? (
-              <StepComponent
-                allCabins={data.cabins}
-                activeStep={activeStep}
-                chosenCabins={chosenCabins}
-                contactInfo={contactInfo}
-                datePick={datePick}
-                errorTrigger={errorTrigger}
-                validations={validations}
-                setContactInfo={setContactInfo}
-                setChosenCabins={setChosenCabins}
-                setDatePick={setDatePick}
-                setExtraInfo={setExtraInfo}
-              />
-            ) : (
-              <Card>
-                <Box sx={{ px: 4, py: 4 }}>
-                  <StepComponent
-                    allCabins={data.cabins}
-                    activeStep={activeStep}
-                    chosenCabins={chosenCabins}
-                    contactInfo={contactInfo}
-                    datePick={datePick}
-                    errorTrigger={errorTrigger}
-                    validations={validations}
-                    setContactInfo={setContactInfo}
-                    setChosenCabins={setChosenCabins}
-                    setDatePick={setDatePick}
-                    setExtraInfo={setExtraInfo}
-                  />
-                </Box>
-                <Stack
-                  width={1}
-                  direction="row"
-                  justifyContent="space-between"
-                  borderTop="1px solid"
-                  borderColor="divider"
-                >
-                  <BackButton />
-                  <NextButton />
-                </Stack>
-              </Card>
-            ))}
-        </Stack>
-        {isMobile && activeStep != 3 ? (
-          <MobileStepper
-            steps={4}
-            position="bottom"
-            variant="progress"
-            activeStep={activeStep}
-            nextButton={<NextButton />}
-            backButton={<BackButton />}
-            sx={{ boxShadow: (theme) => theme.shadows[24] }}
-          />
-        ) : (
-          <></>
-        )}
-      </Container>
-    </RootStyle>
+      ) : (
+        <></>
+      )}
+    </Container>
   );
 };
 
