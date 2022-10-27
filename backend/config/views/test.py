@@ -6,7 +6,7 @@ def test_session(request: HttpRequest):
     try:
         login(
             request,
-            get_user_model().objects.get(username="eva_student"),
+            get_user_model().objects.get(feide_userid="557669b3-af64-4a55-b97e-57c0836efef6"),
             backend="django.contrib.auth.backends.ModelBackend",
         )
         return JsonResponse({"username": request.user.username})

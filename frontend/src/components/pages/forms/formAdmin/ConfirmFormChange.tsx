@@ -40,7 +40,7 @@ type Props = {
 };
 
 /** Component for confirmation dialog when changing a form when it already has responses. */
-export const ConfirmFormChange: React.FC<Props> = ({ type, open, onConfirm, onClose }) => {
+export const ConfirmFormChange: React.FC<React.PropsWithChildren<Props>> = ({ type, open, onConfirm, onClose }) => {
   const { title, body, warning } = dialogText(type);
   return (
     <Dialog open={open} onClose={onClose} fullWidth>

@@ -15,7 +15,7 @@ type Props = {
   children: React.ReactNode;
 };
 
-export const ThemeProvider: React.FC<Props> = ({ children }) => {
+export const ThemeProvider: React.FC<React.PropsWithChildren<Props>> = ({ children }) => {
   const isDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
 
   const themeOptions: ThemeOptions = useMemo(() => getDesignTokens(isDarkMode ? "dark" : "light"), [isDarkMode]);

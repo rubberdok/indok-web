@@ -19,7 +19,7 @@ type Props = {
   simpleFooter?: boolean;
 };
 
-export const Layout: React.FC<Props> = ({
+export const Layout: React.FC<React.PropsWithChildren<Props>> = ({
   children,
   transparentHeader,
   disabledHeader,

@@ -11,7 +11,7 @@ const Basic = dynamic(() => import("./variants/Basic").then((mod) => mod.Basic))
  * Navigation component for the app bar, switches between a navigation drawer and
  * app bar navigation depending on screen size.
  */
-export const Navigation: React.FC = () => {
+export const Navigation: React.FC<React.PropsWithChildren<unknown>> = () => {
   const { route } = useRouter();
   return (
     <>

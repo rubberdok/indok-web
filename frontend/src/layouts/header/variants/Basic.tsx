@@ -14,7 +14,7 @@ type ScrollProps = {
   children: React.ReactElement;
 };
 
-const ElevationScroll: React.FC<ScrollProps> = ({ children }) => {
+const ElevationScroll: React.FC<React.PropsWithChildren<ScrollProps>> = ({ children }) => {
   const trigger = useScrollTrigger({
     disableHysteresis: true,
     threshold: 30,

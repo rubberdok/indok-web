@@ -43,7 +43,7 @@ type Props = {
   onComplete: (state: "success" | "error") => void;
 };
 
-export const EmailDialog: React.FC<React.PropsWithChildren<Props>> = ({ eventId, onClose, open, onComplete }) => {
+export const EmailDialog: React.FC<Props> = ({ eventId, onClose, open, onComplete }) => {
   const [confirmation, setConfirmation] = useState(false);
 
   const { data, loading } = useQuery(EventSignUpsDocument, { variables: { id: eventId } });

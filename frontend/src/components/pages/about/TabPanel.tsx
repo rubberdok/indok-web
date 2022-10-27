@@ -4,7 +4,7 @@ type Props = {
   value: string | number;
 };
 
-export const TabPanel: React.FC<Props> = (props) => {
+export const TabPanel: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { children, value, index, ...other } = props;
 
   return (

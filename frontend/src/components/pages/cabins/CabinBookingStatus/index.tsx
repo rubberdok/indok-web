@@ -6,7 +6,7 @@ import { useResponsive } from "@/hooks/useResponsive";
 import { ContactInfo, DatePick } from "@/types/cabins";
 import { calculatePrice, convertDateFormat, toStringChosenCabins } from "@/utils/cabins";
 
-const InfoText: React.FC<TypographyProps> = (props) => (
+const InfoText: React.FC<React.PropsWithChildren<TypographyProps>> = (props) => (
   <Typography variant="body2" align="center" component="span" display="block" {...props}>
     {props.children}
   </Typography>

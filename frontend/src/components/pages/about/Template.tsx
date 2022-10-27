@@ -15,7 +15,13 @@ type Props = {
   nextPost?: AboutPostProps;
 };
 
-export const Template: React.FC<Props> = ({ children, title, description, prevPost, nextPost }) => {
+export const Template: React.FC<React.PropsWithChildren<Props>> = ({
+  children,
+  title,
+  description,
+  prevPost,
+  nextPost,
+}) => {
   return (
     <RootStyle>
       <Container>

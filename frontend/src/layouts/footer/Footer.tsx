@@ -91,7 +91,7 @@ export const Footer: React.FC<Props> = ({ disableGutter }) => {
           width="100%"
         >
           <Stack direction="row" spacing={3} alignItems="center" justifyContent="center">
-            <NextLinkItem sx={{ mt: 0 }} onClick={() => setOpen(!open)} href="javascript:undefined">
+            <NextLinkItem sx={{ mt: 0 }} onClick={() => setOpen(!open)} href="#">
               Hall of Fame
             </NextLinkItem>
             <Link href="https://github.com/rubberdok/indok-web" rel="noreferrer noopener">
@@ -120,7 +120,7 @@ type NextLinkItemProps = LinkProps & {
   onClick?: () => void;
 };
 
-const NextLinkItem: React.FC<NextLinkItemProps> = ({ children, sx, onClick, ...other }) => {
+const NextLinkItem: React.FC<React.PropsWithChildren<NextLinkItemProps>> = ({ children, sx, onClick, ...other }) => {
   return (
     <NextLink passHref {...other}>
       <Link

@@ -54,10 +54,9 @@ type AlertProps = {
   open: boolean;
   onClose: () => void | undefined;
   severity: "success" | "info" | "warning" | "error";
-  children: string | undefined;
 };
 
-const Alert: React.FC<AlertProps> = ({ open, onClose, children, severity }) => {
+const Alert: React.FC<React.PropsWithChildren<AlertProps>> = ({ open, onClose, children, severity }) => {
   return (
     <MuiSnackbar
       autoHideDuration={3000}

@@ -6,7 +6,7 @@ type Props = {
   children?: ReactElement | ReactElement[];
 };
 
-export const CalendarRow: React.FC<Props> = ({ index, children }) => {
+export const CalendarRow: React.FC<React.PropsWithChildren<Props>> = ({ index, children }) => {
   return (
     <Grid item container xs component="tr" key={`row-${index}`} wrap="nowrap">
       {children}
