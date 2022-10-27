@@ -19,7 +19,7 @@ pandas==1.5.1
 phonenumbers==8.12.57
 pillow>=8.1.1
 promise==2.3
-psycopg2-binary==2.9.4
+psycopg2-binary==2.9.5
 PyJWT==2.5.0
 PyYAML==6.0
 typing-extensions==4.4.0
