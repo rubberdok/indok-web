@@ -28,6 +28,7 @@
     "@emotion/react": "^11.9.0",
     "@emotion/server": "^11.4.0",
     "@emotion/styled": "^11.8.1",
+    "@hookform/resolvers": "^2.9.10",
     "@mui/icons-material": "^5.6.2",
     "@mui/lab": "^5.0.0-alpha.79",
     "@mui/material": "^5.8.3",
@@ -45,6 +46,7 @@
     "react": "^17.0.2",
     "react-awesome-reveal": "^4.0.0",
     "react-dom": "^17.0.2",
+    "react-hook-form": "^7.38.0",
     "react-markdown": "^8.0.0",
     "react-parallax": "^3.3.0",
     "react-swipeable-views": "^0.14.0",
@@ -52,7 +54,7 @@
     "swiper": "^8.2.3",
     "ts-debounce": "^4.0.0",
     "validator": "^13.6.0",
-    "yup": "^0.32.9"
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "2.13.7",
