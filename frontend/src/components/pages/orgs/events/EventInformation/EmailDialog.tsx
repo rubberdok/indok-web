@@ -1,26 +1,25 @@
-import { useMutation, useQuery } from "@apollo/client";
-import { Close, Send } from "@mui/icons-material";
+import { useQuery } from "@apollo/client";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { Close } from "@mui/icons-material";
 import {
-  Box,
   Button,
-  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   IconButton,
-  Modal,
+  Skeleton,
   Stack,
   TextField,
-  Tooltip,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import { FormProvider, useForm } from "react-hook-form";
+import * as yup from "yup";
 
-import { EventSignUpsDocument, SendEventMailsDocument } from "@/generated/graphql";
+import { EventSignUpsDocument } from "@/generated/graphql";
 
-import { ConfirmationDialog } from "./ConfirmationsDialog";
-import { EmailFormDialog } from "./EmailFormDialog";
+import { ConfirmationDialog } from "./ConfirmationDialog";
 
 export type SendEmailProps = {
   receiverEmails: string[];
@@ -28,108 +27,104 @@ export type SendEmailProps = {
   subject: string;
 };
 
-const defaultMailProps: SendEmailProps = {
-  receiverEmails: [],
-  content: "",
-  subject: "",
-};
+const schema = yup
+  .object({
+    subject: yup.string().required("Feltet må fylles ut").min(2),
+    content: yup.string().required("Feltet må fylles ut").max(10000, "Maks 10 000 tegn"),
+  })
+  .required();
 
-const defaultValidations: { subject: boolean; content: boolean } = {
-  subject: false,
-  content: false,
-};
+export type EmailForm = yup.InferType<typeof schema>;
 
 type Props = {
   eventId: string;
   onClose: () => void;
   open: boolean;
+  onComplete: (state: "success" | "error") => void;
 };
 
-export const EmailDialog: React.FC<React.PropsWithChildren<Props>> = ({ eventId, onClose, open }) => {
-  const [showEmailForm, setShowEmailForm] = useState(false);
-  const [showConfirmation, setShowConfirmation] = useState(false);
-  const [emailProps, setEmailProps] = useState<SendEmailProps>(defaultMailProps);
-  const [validations, setValidations] = useState(defaultValidations);
+export const EmailDialog: React.FC<React.PropsWithChildren<Props>> = ({ eventId, onClose, open, onComplete }) => {
+  const [confirmation, setConfirmation] = useState(false);
 
-  const { data, loading, error } = useQuery(EventSignUpsDocument, { variables: { id: eventId } });
+  const { data, loading } = useQuery(EventSignUpsDocument, { variables: { id: eventId } });
   const receivers = data?.event?.usersAttending?.map((signUp) => signUp.userEmail) ?? [];
 
-  const [sendEmail] = useMutation(SendEventMailsDocument);
+  const methods = useForm<EmailForm>({
+    resolver: yupResolver(schema),
+  });
 
-  useEffect(() => {
-    const signUps = data?.event?.usersAttending;
-
-    if (signUps) {
-      setEmailProps({ ...emailProps, receiverEmails: signUps.map((signUp) => signUp.userEmail) });
-    }
-  }, [data]);
-
-  const handleConfirmationClose = () => {
-    setEmailProps({ ...emailProps, content: "", subject: "" });
-    setShowConfirmation(false);
-  };
-
-  useEffect(() => {
-    setValidations({ content: emailProps.content.length > 0, subject: emailProps.subject.length > 0 });
-  }, [emailProps]);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = methods;
 
   return (
     <>
-      <Dialog open={open} fullWidth>
-        <DialogTitle>
-          <Stack direction="row" justifyContent="space-between" alignItems="center">
-            <Typography variant="subtitle1">Send e-mail til alle påmeldte</Typography>
-            <IconButton onClick={() => onClose()}>
-              <Close />
-            </IconButton>
-          </Stack>
-        </DialogTitle>
-        <DialogContent>
-          <Stack direction="column" spacing={2}>
-            <TextField label="Emne" required />
-            <TextField label="Innhold" required multiline rows={3} />
-            <Typography variant="caption">
-              Denne tjenesten er kun ment for informasjon om arrangementet. Promotering, nyhetsbrev, og lignende er ikke
-              tillatt. Misbruk vil føre til utestengelse fra denne funksjonen.
-            </Typography>
-          </Stack>
-        </DialogContent>
-        <DialogActions>
-          <Button variant="text" onClick={() => onClose()}>
-            Avbryt
-          </Button>
-          <Button variant="contained">Send</Button>
-        </DialogActions>
-      </Dialog>
+      <FormProvider {...methods}>
+        <Dialog open={open} fullWidth>
+          <form onSubmit={handleSubmit(() => setConfirmation(true), console.log)}>
+            <DialogTitle>
+              <Stack direction="row" justifyContent="space-between" alignItems="center">
+                <Typography variant="subtitle1">Send e-post til alle påmeldte</Typography>
+                <IconButton onClick={() => onClose()}>
+                  <Close />
+                </IconButton>
+              </Stack>
+            </DialogTitle>
+            <DialogContent>
+              <Stack direction="column" spacing={2}>
+                <TextField
+                  {...register("subject")}
+                  label="Emne"
+                  required
+                  error={Boolean(errors.subject)}
+                  helperText={errors.subject?.message}
+                />
+                <TextField
+                  {...register("content")}
+                  label="Innhold"
+                  required
+                  multiline
+                  rows={3}
+                  error={Boolean(errors.content)}
+                  helperText={errors.content?.message}
+                />
+                <Typography variant="caption">
+                  Denne tjenesten er kun ment for informasjon om arrangementet. Promotering, nyhetsbrev, og lignende er
+                  ikke tillatt. Misbruk vil føre til utestengelse fra denne funksjonen.
+                </Typography>
+              </Stack>
+            </DialogContent>
 
-      <ConfirmationDialog
-        emailProps={emailProps}
-        showConfirmation={showConfirmation}
-        setShowConfirmation={setShowEmailForm}
-        handleConfirmationClose={handleConfirmationClose}
-      />
+            <DialogActions>
+              <Button variant="text" onClick={() => onClose()}>
+                Avbryt
+              </Button>
+              {loading && (
+                <Skeleton>
+                  <Button variant="contained">Send</Button>
+                </Skeleton>
+              )}
+              {!loading && (
+                <Button variant="contained" type="submit">
+                  Send
+                </Button>
+              )}
+            </DialogActions>
+          </form>
 
-      <EmailFormDialog
-        emailProps={emailProps}
-        setEmailProps={setEmailProps}
-        showEmailForm={showEmailForm}
-        setShowEmailForm={setShowEmailForm}
-        sendEmail={sendEmail}
-        validations={validations}
-      />
-
-      <Tooltip
-        disableHoverListener={data?.event?.isAttendable}
-        title="Du kan kun sende mail hvis det er mulig å melde seg på eventet."
-        placement="bottom-start"
-      >
-        <Box>
-          <Button disabled={!data?.event?.isAttendable} onClick={() => setShowEmailForm(true)} color="primary">
-            <Send style={{ margin: "5px" }} />
-            Send e-post til alle påmeldte
-          </Button>
-        </Box>
-      </Tooltip>
+          {confirmation && (
+            <ConfirmationDialog
+              eventId={eventId}
+              open={confirmation}
+              onClose={() => setConfirmation(false)}
+              onComplete={onComplete}
+              receiverEmails={receivers}
+            />
+          )}
+        </Dialog>
+      </FormProvider>
     </>
   );
 };

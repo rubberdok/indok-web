@@ -1,9 +1,10 @@
 import { ResultOf } from "@graphql-typed-document-node/core";
 import { Edit, MailRounded } from "@mui/icons-material";
-import { Button, Card, CardContent, CardHeader, Stack, Typography } from "@mui/material";
+import { Alert, Button, Card, CardContent, CardHeader, Snackbar, Stack, Typography } from "@mui/material";
 import dayjs from "dayjs";
 import { useState } from "react";
 
+import { AttendeeExport } from "@/components/pages/events/AttendeeExport";
 import { EditEvent } from "@/components/pages/events/EditEvent";
 import { AdminEventDocument } from "@/generated/graphql";
 
@@ -31,6 +32,7 @@ const Description: React.FC<DescriptionProps> = ({ name, value }) => {
 
 export const EventInformation: React.FC<Props> = ({ event }) => {
   const [openModal, setOpenModal] = useState<"edit" | "email" | false>(false);
+  const [alert, setAlert] = useState<"success" | "error" | false>(false);
 
   return (
     <>
@@ -38,7 +40,27 @@ export const EventInformation: React.FC<Props> = ({ event }) => {
         <EditEvent event={event} onClose={() => setOpenModal(false)} open={openModal === "edit"} />
       )}
       {openModal === "email" && (
-        <EmailDialog eventId={event.id} open={openModal === "email"} onClose={() => setOpenModal(false)} />
+        <EmailDialog
+          eventId={event.id}
+          open={openModal === "email"}
+          onClose={() => setOpenModal(false)}
+          onComplete={(state) => {
+            setAlert(state);
+            setOpenModal(false);
+          }}
+        />
+      )}
+      {alert && (
+        <Snackbar
+          anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+          open={Boolean(alert)}
+          autoHideDuration={6000}
+          onClose={() => setAlert(false)}
+        >
+          <Alert elevation={6} variant="filled" severity={alert}>
+            {alert === "success" ? "E-posten ble sendt" : "Noe gikk galt"}
+          </Alert>
+        </Snackbar>
       )}
       <Card sx={{ width: "100%" }}>
         <CardHeader
@@ -63,9 +85,14 @@ export const EventInformation: React.FC<Props> = ({ event }) => {
             <Description name="Slutttid" value={dayjs(event.endTime).format("L LT")} />
             <Description name="Påmeldingsdato" value={dayjs(event.signupOpenDate).format("L LT")} />
             <Description name="Påmeldingsfrist" value={dayjs(event.deadline).format("L LT")} />
-            <Button variant="contained" endIcon={<MailRounded />} onClick={() => setOpenModal("email")}>
-              Send mail til påmeldte
-            </Button>
+            {event.isAttendable && (
+              <>
+                <Button variant="contained" endIcon={<MailRounded />} onClick={() => setOpenModal("email")}>
+                  Send e-post til alle påmeldte
+                </Button>
+                <AttendeeExport eventId={event.id} />
+              </>
+            )}
           </Stack>
         </CardContent>
       </Card>

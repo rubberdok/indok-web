@@ -50,12 +50,20 @@ const AdminEventPage: NextPageWithLayout = () => {
               <EventInformation event={event} />
             </Grid>
             {event.isAttendable && (
-              <Grid container item sm={12} md={7} lg={8}>
-                <Attendees attendees={event.usersAttending ?? []} tickets={Boolean(event.product)} eventId={event.id} />
+              <Grid container item sm={12} md={7} lg={8} direction="column" spacing={2}>
+                <Grid container item>
+                  <Attendees
+                    attendees={event.usersAttending ?? []}
+                    tickets={Boolean(event.product)}
+                    eventId={event.id}
+                  />
+                </Grid>
+                <Grid container item>
+                  <Waitlist attendees={event.usersOnWaitingList ?? []} eventId={event.id} />
+                </Grid>
               </Grid>
             )}
           </Grid>
-          <Waitlist />
         </Container>
       </>
     );
