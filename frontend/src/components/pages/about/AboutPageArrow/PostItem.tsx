@@ -9,7 +9,7 @@ type Props = {
   isNext?: boolean;
 };
 
-export const PostItem: React.FC<React.PropsWithChildren<Props>> = ({ coverImg, title, icon, href, isNext }) => {
+export const PostItem: React.FC<Props> = ({ coverImg, title, icon, href, isNext }) => {
   return (
     <CardActionArea sx={{ borderRadius: 2 }}>
       <NextLink href={href || ""} passHref>

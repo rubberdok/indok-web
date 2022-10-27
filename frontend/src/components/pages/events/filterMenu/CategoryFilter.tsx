@@ -15,7 +15,7 @@ type Props = {
 };
 
 /** Component for the category filter in the filter menu. */
-export const CategoryFilter: React.FC<React.PropsWithChildren<Props>> = ({ filters, handleChecked }) => {
+export const CategoryFilter: React.FC<Props> = ({ filters, handleChecked }) => {
   const { data } = useQuery(AllCategoriesDocument);
 
   return (

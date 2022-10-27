@@ -4,7 +4,7 @@ import NextLink from "next/link";
 
 import poweredByVercel from "~/public/powered-vercel.svg";
 
-export const Vercel: React.FC<React.PropsWithChildren<unknown>> = () => {
+export const Vercel: React.FC = () => {
   return (
     <NextLink href="https://vercel.com/?utm_source=rubberdok&utm_campaign=oss" rel="noreferrer noopener" passHref>
       <Link>

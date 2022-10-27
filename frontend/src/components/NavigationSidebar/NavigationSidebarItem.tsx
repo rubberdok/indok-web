@@ -12,7 +12,7 @@ type Props = {
   item: NavigationItem;
 };
 
-export const NavigationSidebarItem: React.FC<React.PropsWithChildren<Props>> = ({ item }) => {
+export const NavigationSidebarItem: React.FC<Props> = ({ item }) => {
   const { pathname, asPath } = useRouter();
 
   const { title, path, icon, info, children } = item;

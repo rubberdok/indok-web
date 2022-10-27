@@ -20,7 +20,7 @@ import { AdminOrganizationFragment, OrgAdminListingFragment } from "@/generated/
 type Props = { organization: AdminOrganizationFragment };
 
 /** Component to show a list of listings connected to an organization for its administrators. */
-export const OrganizationListings: React.FC<React.PropsWithChildren<Props>> = ({ organization }) => {
+export const OrganizationListings: React.FC<Props> = ({ organization }) => {
   // state for whether to show the DeleteListing confirmation dialog
   // if not undefined, contains the listing to be deleted for use by the dialog
   const [listingToDelete, setListingToDelete] = useState<OrgAdminListingFragment | undefined>();

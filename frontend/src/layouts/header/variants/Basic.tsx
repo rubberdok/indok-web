@@ -26,7 +26,7 @@ const ElevationScroll: React.FC<React.PropsWithChildren<ScrollProps>> = ({ child
   });
 };
 
-export const Basic: React.FC<React.PropsWithChildren<Props & AppBarProps>> = ({ transparent, ...props }) => {
+export const Basic: React.FC<Props & AppBarProps> = ({ transparent, ...props }) => {
   return (
     <ElevationScroll>
       <AppBar transparent={transparent} {...props}>

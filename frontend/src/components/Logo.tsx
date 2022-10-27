@@ -10,7 +10,7 @@ type Props = { sx?: SxProps };
  * The display name cannot be resolved if we wrap an arrow function in memo() directly,
  * hence this is wrapping a named function.
  */
-export const Logo: React.FC<React.PropsWithChildren<Props>> = memo(function Logo({ sx }) {
+export const Logo: React.FC<Props> = memo(function Logo({ sx }) {
   return (
     <NextLink href="/" passHref>
       <Box

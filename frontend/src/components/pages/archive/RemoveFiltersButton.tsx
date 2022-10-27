@@ -6,7 +6,7 @@ type Props = {
   handleRemoveFilterChanged: () => void;
 };
 
-export const RemoveFiltersButton: React.FC<React.PropsWithChildren<Props>> = ({ handleRemoveFilterChanged }) => {
+export const RemoveFiltersButton: React.FC<Props> = ({ handleRemoveFilterChanged }) => {
   return (
     <Box pb={3}>
       <Button variant="contained" startIcon={<Close />} onClick={handleRemoveFilterChanged}>

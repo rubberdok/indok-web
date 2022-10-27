@@ -15,7 +15,7 @@ type Props = {
  * Component for a simple markdown form with a live preview.
  * @todo Add a more user-friendly way of interacting with markdown, i.e. allowing users to set heading level through a UI.
  */
-export const MarkdownForm: React.FC<React.PropsWithChildren<Props>> = ({ markdown, onTextChange }) => {
+export const MarkdownForm: React.FC<Props> = ({ markdown, onTextChange }) => {
   const [view, setView] = useState<"edit" | "preview">("edit");
 
   return (

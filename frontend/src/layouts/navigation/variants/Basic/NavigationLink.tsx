@@ -9,7 +9,7 @@ type Props = {
   active?: boolean;
 };
 
-export const NavigationLink: React.FC<React.PropsWithChildren<Props>> = ({ route, active }) => {
+export const NavigationLink: React.FC<Props> = ({ route, active }) => {
   return (
     <Link href={route.path} passHref>
       <RouteLink

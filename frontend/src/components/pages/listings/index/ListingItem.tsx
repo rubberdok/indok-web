@@ -39,7 +39,7 @@ const translateChip = (chip: string) => {
 type Props = { listing: ListingFragment };
 
 /** Component for listing item in overview of listings. */
-export const ListingItem: React.FC<React.PropsWithChildren<Props>> = ({ listing }) => {
+export const ListingItem: React.FC<Props> = ({ listing }) => {
   return (
     <Card sx={{ width: "100%", height: "100%" }}>
       <Link href={`listings/${listing.id}/${listing.slug}/`} passHref>

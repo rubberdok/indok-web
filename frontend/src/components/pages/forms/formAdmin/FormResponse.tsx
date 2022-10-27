@@ -6,7 +6,7 @@ import { FormWithAllResponsesFragment, ResponseFragment } from "@/generated/grap
 type Props = { form: FormWithAllResponsesFragment; response: ResponseFragment };
 
 /** Component to see a user's answers to a form. */
-export const FormResponse: React.FC<React.PropsWithChildren<Props>> = ({ form, response }) => {
+export const FormResponse: React.FC<Props> = ({ form, response }) => {
   return (
     <Grid container direction="column" spacing={1}>
       <Grid item>

@@ -8,7 +8,7 @@ import { promptDownloadFromPayload } from "@/utils/exports";
 
 type Props = { organization: AdminOrganizationFragment };
 
-export const EventsExport: React.FC<React.PropsWithChildren<Props>> = ({ organization }) => {
+export const EventsExport: React.FC<Props> = ({ organization }) => {
   const [selectedEvents, setSelectedEvents] = useState(["1", "2", "3"]);
 
   const [getAttendeeReportOrg, { loading: loadingReport }] = useLazyQuery(AttendeeReportOrgDocument, {

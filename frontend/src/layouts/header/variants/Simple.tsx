@@ -2,7 +2,7 @@ import { Box, Divider, Stack } from "@mui/material";
 
 import { Logo } from "../../../components";
 
-export const Simple: React.FC<React.PropsWithChildren<unknown>> = () => {
+export const Simple: React.FC = () => {
   return (
     <Box display="flex" justifyContent="center" py={4}>
       <Stack

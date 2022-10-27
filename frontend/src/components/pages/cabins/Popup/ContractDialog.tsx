@@ -17,7 +17,7 @@ type Props = {
 };
 
 /** Dialog component for the contract component. */
-export const ContractDialog: React.FC<React.PropsWithChildren<Props>> = ({
+export const ContractDialog: React.FC<Props> = ({
   modalData,
   setModalData,
   datePick,

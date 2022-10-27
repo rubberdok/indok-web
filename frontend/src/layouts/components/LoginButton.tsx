@@ -11,7 +11,7 @@ type Props = {
   "data-test-id"?: string;
 };
 
-export const LoginButton: React.FC<React.PropsWithChildren<Props>> = ({ fullWidth, "data-test-id": dataTestId }) => {
+export const LoginButton: React.FC<Props> = ({ fullWidth, "data-test-id": dataTestId }) => {
   const { data } = useQuery(UserDocument);
 
   return (

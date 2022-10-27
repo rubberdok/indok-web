@@ -5,7 +5,7 @@ type Props = {
   open: boolean;
 };
 
-export const SalesTermsDialog: React.FC<React.PropsWithChildren<Props>> = ({ onClose, open }) => {
+export const SalesTermsDialog: React.FC<Props> = ({ onClose, open }) => {
   return (
     <Dialog onClose={onClose} aria-labelledby="sales-terms-dialog-title" open={open} scroll="paper">
       <DialogTitle id="sales-terms-dialog-title">Salgsbetingelser for kjøp</DialogTitle>

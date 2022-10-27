@@ -14,7 +14,7 @@ type Props = {
 };
 
 /** Renders the contract of a booking. */
-export const Contract: React.FC<React.PropsWithChildren<Props>> = ({ chosenCabins, contactInfo, datePick }) => {
+export const Contract: React.FC<Props> = ({ chosenCabins, contactInfo, datePick }) => {
   const currentTime = new Date().toLocaleString();
   const price = calculatePrice(chosenCabins, contactInfo, datePick);
 

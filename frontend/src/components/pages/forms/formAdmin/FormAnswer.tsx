@@ -11,7 +11,7 @@ type Props = {
 };
 
 /** Component to show an answer to a question on a form. */
-export const FormAnswer: React.FC<React.PropsWithChildren<Props>> = ({ question, answer }) => {
+export const FormAnswer: React.FC<Props> = ({ question, answer }) => {
   return (
     <>
       <Grid container direction="row" spacing={1}>

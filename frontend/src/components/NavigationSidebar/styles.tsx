@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { alpha, styled } from "@mui/material/styles";
 
-export const ListSubheaderStyle: React.FC<React.PropsWithChildren<ListSubheaderProps>> = styled((props) => (
+export const ListSubheaderStyle: React.FC<ListSubheaderProps> = styled((props) => (
   <ListSubheader disableSticky disableGutters {...props} />
 ))(({ theme }) => ({
   ...theme.typography.overline,

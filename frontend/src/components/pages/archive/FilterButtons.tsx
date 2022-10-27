@@ -7,7 +7,7 @@ type Props = {
   updateTypeFilters: (key: string) => void;
 };
 
-export const FilterButtons: React.FC<React.PropsWithChildren<Props>> = ({ typeFilters, updateTypeFilters }) => {
+export const FilterButtons: React.FC<Props> = ({ typeFilters, updateTypeFilters }) => {
   return (
     <>
       {Object.entries(typeFilters).map(([key, val]) => (

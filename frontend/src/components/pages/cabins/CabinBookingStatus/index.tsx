@@ -24,13 +24,7 @@ type Props = {
  * Statusbox with information about the current cabin booking.
  * Renders fields based on the props given.
  */
-export const CabinBookingStatus: React.FC<React.PropsWithChildren<Props>> = ({
-  chosenCabins,
-  datePick,
-  contactInfo,
-  cabinText,
-  mailSent,
-}) => {
+export const CabinBookingStatus: React.FC<Props> = ({ chosenCabins, datePick, contactInfo, cabinText, mailSent }) => {
   const isMobile = useResponsive({ query: "down", key: "md" });
 
   return (

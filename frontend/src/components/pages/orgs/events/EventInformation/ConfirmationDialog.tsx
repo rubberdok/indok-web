@@ -28,13 +28,7 @@ type Props = {
   receiverEmails: string[];
 };
 
-export const ConfirmationDialog: React.FC<React.PropsWithChildren<Props>> = ({
-  eventId,
-  onClose,
-  onComplete,
-  open,
-  receiverEmails,
-}) => {
+export const ConfirmationDialog: React.FC<Props> = ({ eventId, onClose, onComplete, open, receiverEmails }) => {
   const [sendEmail] = useMutation(SendEventMailsDocument, {
     onCompleted() {
       onComplete("success");

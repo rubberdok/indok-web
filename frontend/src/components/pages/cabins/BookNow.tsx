@@ -6,7 +6,7 @@ import React from "react";
 
 import { CabinsAndResponsiblesDocument } from "@/generated/graphql";
 
-export const BookNow: React.FC<React.PropsWithChildren<unknown>> = () => {
+export const BookNow: React.FC = () => {
   const { data } = useQuery(CabinsAndResponsiblesDocument);
   return (
     <Card sx={{ bgcolor: (theme) => theme.palette.grey[900], height: "100%" }} elevation={0}>

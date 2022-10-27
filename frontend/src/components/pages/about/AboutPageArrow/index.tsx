@@ -14,7 +14,7 @@ type Props = {
   nextPost?: AboutPostProps;
 };
 
-export const AboutPageArrow: React.FC<React.PropsWithChildren<Props>> = ({ prevPost, nextPost }) => {
+export const AboutPageArrow: React.FC<Props> = ({ prevPost, nextPost }) => {
   const nextSlug = nextPost?.slug || "";
   const prevSlug = prevPost?.slug || "";
 

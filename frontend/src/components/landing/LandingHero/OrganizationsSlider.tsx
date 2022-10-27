@@ -3,7 +3,7 @@ import { useRef, useState, useEffect } from "react";
 
 import { Organizations } from "./Organizations";
 
-export const OrganizationsSlider: React.FC<React.PropsWithChildren<unknown>> = () => {
+export const OrganizationsSlider: React.FC = () => {
   const orgsTitleEl = useRef<HTMLElement>();
 
   const [sliderActiveIndex, setSliderActiveIndex] = useState(0);

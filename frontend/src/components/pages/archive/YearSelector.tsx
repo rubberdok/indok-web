@@ -12,7 +12,7 @@ type Props = {
   handleYearFilterChanged: (year: string) => void;
 };
 
-export const YearSelector: React.FC<React.PropsWithChildren<Props>> = ({ yearFilter, handleYearFilterChanged }) => {
+export const YearSelector: React.FC<Props> = ({ yearFilter, handleYearFilterChanged }) => {
   const { loading, data, error } = useQuery(AvailableYearsDocument);
 
   if (loading) return <CircularProgress />;

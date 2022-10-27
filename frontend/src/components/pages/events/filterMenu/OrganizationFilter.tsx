@@ -16,7 +16,7 @@ type Props = {
 };
 
 /** Component for the organization filter in the filter menu. */
-export const OrganizationFilter: React.FC<React.PropsWithChildren<Props>> = ({ filters, handleChecked }) => {
+export const OrganizationFilter: React.FC<Props> = ({ filters, handleChecked }) => {
   const { data, loading, error } = useQuery(EventFilteredOrganizationsDocument);
 
   if (loading) {

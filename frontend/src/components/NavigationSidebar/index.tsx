@@ -21,7 +21,7 @@ type Props = BoxProps & {
   }[];
 };
 
-export const NavigationSidebar: React.FC<React.PropsWithChildren<Props>> = ({ navConfig, ...other }) => {
+export const NavigationSidebar: React.FC<Props> = ({ navConfig, ...other }) => {
   return (
     <Box {...other}>
       {navConfig.map((list) => (

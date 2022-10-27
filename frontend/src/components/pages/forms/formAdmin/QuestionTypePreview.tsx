@@ -12,7 +12,7 @@ type Props = {
 };
 
 /** Component to show a preview of how a form question's input will look like to the end user. */
-export const QuestionTypePreview: React.FC<React.PropsWithChildren<Props>> = ({ question, answer, answers }) => {
+export const QuestionTypePreview: React.FC<Props> = ({ question, answer, answers }) => {
   switch (question.questionType) {
     case QuestionTypeEnum.Paragraph:
       return <TextField fullWidth disabled label={questionTypeLabels[question.questionType]} multiline rows={4} />;

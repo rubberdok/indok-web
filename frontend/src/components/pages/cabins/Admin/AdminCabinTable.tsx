@@ -34,11 +34,7 @@ type Props = {
   currentTab: string;
 };
 
-export const AdminCabinTable: React.FC<React.PropsWithChildren<Props>> = ({
-  bookings,
-  refetchBookings,
-  currentTab,
-}) => {
+export const AdminCabinTable: React.FC<Props> = ({ bookings, refetchBookings, currentTab }) => {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [bookingToBeDeclined, setBookingToBeDeclined] = useState<AdminBookingFragment | undefined>();

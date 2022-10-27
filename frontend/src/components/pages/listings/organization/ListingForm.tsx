@@ -32,13 +32,7 @@ type Props = {
 };
 
 /** A form to create or edit a listing. */
-export const ListingForm: React.FC<React.PropsWithChildren<Props>> = ({
-  listing,
-  setListing,
-  onSubmit,
-  onCancel,
-  organizations,
-}) => {
+export const ListingForm: React.FC<Props> = ({ listing, setListing, onSubmit, onCancel, organizations }) => {
   /** Helper function to handle changes to TextFields. */
   const handlePropertyChange = (
     event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,

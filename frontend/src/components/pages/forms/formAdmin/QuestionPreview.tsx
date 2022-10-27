@@ -11,7 +11,7 @@ type Props = {
 };
 
 /** Component to preview a question in a form when not in editing mode. */
-export const QuestionPreview: React.FC<React.PropsWithChildren<Props>> = ({ question, setActive }) => (
+export const QuestionPreview: React.FC<Props> = ({ question, setActive }) => (
   <Grid container direction="column" spacing={1}>
     <Grid item container direction="row" justifyContent="space-between" alignItems="center">
       <Grid item>

@@ -8,7 +8,7 @@ import { HeaderValuePair } from "@/types/utils";
 
 type Props = { order: OrderFragment; field: HeaderValuePair<OrderFragment> };
 
-export const OrderCellContent: React.FC<React.PropsWithChildren<Props>> = ({ order, field }) => {
+export const OrderCellContent: React.FC<Props> = ({ order, field }) => {
   const router = useRouter();
 
   let content: string;

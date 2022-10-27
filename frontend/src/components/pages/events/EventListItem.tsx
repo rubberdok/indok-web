@@ -16,7 +16,7 @@ type Props = {
   user?: UserWithEventsAndOrgsFragment;
 };
 
-export const EventListItem: React.FC<React.PropsWithChildren<Props>> = ({ event, user }) => {
+export const EventListItem: React.FC<Props> = ({ event, user }) => {
   const isMobile = useResponsive({ query: "down", key: "md" });
 
   return (

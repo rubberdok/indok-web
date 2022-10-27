@@ -6,7 +6,7 @@ import React from "react";
 import { LabeledIcon } from "@/components/LabeledIcon";
 import { ActiveBookingResponsibleDocument } from "@/generated/graphql";
 
-export const ContactCabinBoard: React.FC<React.PropsWithChildren<unknown>> = () => {
+export const ContactCabinBoard: React.FC = () => {
   const { data } = useQuery(ActiveBookingResponsibleDocument);
 
   if (data?.activeBookingResponsible?.email) {

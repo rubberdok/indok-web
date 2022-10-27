@@ -8,7 +8,7 @@ import { NavigationProps } from "../../types";
 
 import { NavigationLink } from "./NavigationLink";
 
-export const Basic: React.FC<React.PropsWithChildren<NavigationProps>> = ({ routes }) => {
+export const Basic: React.FC<NavigationProps> = ({ routes }) => {
   const { pathname } = useRouter();
   return (
     <Box sx={{ display: { xs: "none", md: "block" }, width: "100%" }}>

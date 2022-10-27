@@ -16,7 +16,7 @@ type Props = {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export const HallOfFame: React.FC<React.PropsWithChildren<Props>> = ({ open, setOpen }) => {
+export const HallOfFame: React.FC<Props> = ({ open, setOpen }) => {
   return (
     <Dialog maxWidth="xl" fullWidth={false} onClose={() => setOpen(!open)} aria-labelledby="dialogTitle" open={open}>
       <DialogTitle>

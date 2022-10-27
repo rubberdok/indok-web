@@ -54,7 +54,6 @@ type AlertProps = {
   open: boolean;
   onClose: () => void | undefined;
   severity: "success" | "info" | "warning" | "error";
-  children: string | undefined;
 };
 
 const Alert: React.FC<React.PropsWithChildren<AlertProps>> = ({ open, onClose, children, severity }) => {
@@ -76,7 +75,7 @@ type Props = {
   eventId: string;
 };
 
-export const EventDetails: React.FC<React.PropsWithChildren<Props>> = ({ eventId }) => {
+export const EventDetails: React.FC<Props> = ({ eventId }) => {
   const [openSignUpSnackbar, setOpenSignUpSnackbar] = useState(false);
   const [openSignOffSnackbar, setOpenSignOffSnackbar] = useState(false);
   const [openOnWaitingListSnackbar, setOpenOnWaitingListSnackbar] = useState(false);

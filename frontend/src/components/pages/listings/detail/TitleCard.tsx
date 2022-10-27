@@ -18,7 +18,7 @@ dayjs.locale(nb);
 type Props = { listing?: ListingWithFormIdFragment };
 
 /** Component for title and organization info on the listing detail page. */
-export const TitleCard: React.FC<React.PropsWithChildren<Props>> = ({ listing }) => {
+export const TitleCard: React.FC<Props> = ({ listing }) => {
   let link: string | undefined = undefined;
   if (listing?.form) {
     link = `/forms/${listing.form.id}/`;

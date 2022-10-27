@@ -14,7 +14,7 @@ type Questions = Record<string, { question: QuestionWithAnswerFragment; answer: 
 type Props = { form: FormWithAnswersFragment };
 
 /** Component for a user to answer a form. */
-export const AnswerForm: React.FC<React.PropsWithChildren<Props>> = ({ form }) => {
+export const AnswerForm: React.FC<Props> = ({ form }) => {
   // state to manage the user's answers before submitting
   const [questions, setQuestions] = useState<Questions>(
     Object.fromEntries(

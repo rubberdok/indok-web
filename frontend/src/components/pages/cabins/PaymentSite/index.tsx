@@ -15,7 +15,7 @@ type Props = {
  * One of the steps in the cabins/book page.
  * The page shows the a description of the current booking and a button to confirm the booking.
  */
-export const PaymentSite: React.FC<React.PropsWithChildren<Props>> = (props) => {
+export const PaymentSite: React.FC<Props> = (props) => {
   return (
     <Grid container alignItems="center" direction="column" spacing={5}>
       <Hidden lgDown>

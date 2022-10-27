@@ -46,7 +46,7 @@ type Props = {
 };
 
 /** Component for the count down button on the detail page of an attendable event. */
-export const CountdownButton: React.FC<React.PropsWithChildren<Props>> = ({
+export const CountdownButton: React.FC<Props> = ({
   countDownDate,
   currentTime,
   isSignedUp,
