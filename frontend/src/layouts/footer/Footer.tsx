@@ -32,14 +32,18 @@ const Watermark = styled("div")(({ theme }) => ({
   },
 }));
 
-export const Footer: React.FC = () => {
+type Props = {
+  disableGutter?: boolean;
+};
+
+export const Footer: React.FC<Props> = ({ disableGutter }) => {
   const isDesktop = useResponsive({ query: "up", key: "md" });
   const [open, setOpen] = useState(false);
   const theme = useTheme();
 
   return (
     <>
-      <Divider />
+      <Divider sx={{ mt: disableGutter ? 0 : 4 }} />
       <Paper sx={{ bgcolor: "background.elevated" }}>
         <Container sx={{ position: "relative", py: { xs: 6, md: 10 } }}>
           <Grid container spacing={3} justifyContent={{ md: "space-between" }}>
