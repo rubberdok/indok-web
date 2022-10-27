@@ -1,5 +1,5 @@
 import { Grid, Typography } from "@mui/material";
-import Image, { StaticImageData } from "next/image";
+import Image, { StaticImageData } from "next/future/image";
 
 type Props = {
   name: string;
@@ -26,7 +26,9 @@ export const ContactInfo: React.VFC<Props> = ({ name, position, email, image }) 
           position: "relative" /* If you want text inside of it */,
         }}
       >
-        {image && <Image src={image} placeholder="blur" layout="fill" objectPosition="center" objectFit="cover" />}
+        {image && (
+          <Image src={image} alt="" placeholder="blur" fill style={{ objectPosition: "center", objectFit: "cover" }} />
+        )}
       </Grid>
       <Grid item md>
         <Typography variant="subtitle2">{nameAndPosition}</Typography>

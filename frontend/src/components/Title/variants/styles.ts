@@ -26,7 +26,6 @@ export const ImageContainer = styled(Box)(({ theme }) => ({
   overflow: "hidden",
   height: "100%",
   width: "100%",
-  "& span": { height: "100% !important" },
   marginTop: `-${HEADER_MOBILE_HEIGHT}px`,
   [theme.breakpoints.up("md")]: {
     marginTop: `-${HEADER_DESKTOP_HEIGHT}px`,

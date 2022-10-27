@@ -19,7 +19,7 @@ import {
   Typography,
 } from "@mui/material";
 import dayjs from "dayjs";
-import Image from "next/image";
+import Image from "next/future/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
@@ -99,7 +99,7 @@ const FallbackPage: NextPageWithLayout = () => {
                       <CircularProgress />
                     </Grid>
                     <Grid item xs={6}>
-                      <Image src={savings} />
+                      <Image src={savings} alt="" />
                     </Grid>
                   </Grid>
                 </>

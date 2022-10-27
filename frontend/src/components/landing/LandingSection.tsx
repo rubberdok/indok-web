@@ -1,5 +1,5 @@
 import { Box, Button, Container, Grid, Typography } from "@mui/material";
-import Image from "next/image";
+import Image from "next/future/image";
 import Link from "next/link";
 
 import Hovedbygget from "~/public/static/landing/hovedbygget.webp";
@@ -22,9 +22,13 @@ export const LandingSection: React.FC = () => {
           height: { xs: 250, md: "auto" },
         }}
       >
-        <Box sx={{ position: "relative", width: "100%", height: "100%" }}>
-          <Image src={Hovedbygget} layout="fill" objectFit="cover" objectPosition="center" placeholder="blur" alt="" />
-        </Box>
+        <Image
+          src={Hovedbygget}
+          fill
+          style={{ objectFit: "cover", objectPosition: "center" }}
+          placeholder="blur"
+          alt=""
+        />
       </Box>
       <Container
         sx={{ alignSelf: "center", gridColumn: "1 / -1", gridRow: "1", textAlign: { xs: "center", md: "left" } }}

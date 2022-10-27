@@ -2,7 +2,7 @@ import { Box, Container, Divider, Grid, Link, Paper, Stack, SxProps, Typography 
 import { styled, useTheme } from "@mui/material/styles";
 import dayjs from "dayjs";
 import dynamic from "next/dynamic";
-import Image from "next/image";
+import Image from "next/future/image";
 import NextLink, { LinkProps } from "next/link";
 import { ReactNode, useState } from "react";
 
@@ -95,16 +95,15 @@ export const Footer: React.FC<Props> = ({ disableGutter }) => {
               Hall of Fame
             </NextLinkItem>
             <Link href="https://github.com/rubberdok/indok-web" rel="noreferrer noopener">
-              <Box
-                sx={{
+              <Image
+                src={rubberdokLogo}
+                alt="Rubberdøk"
+                style={{
+                  width: "48px",
+                  height: "24px",
                   ...(theme.palette.mode === "dark" && { filter: "invert(1)", opacity: 0.8 }),
-                  "& span": {
-                    display: "block !important",
-                  },
                 }}
-              >
-                <Image src={rubberdokLogo} alt="Rubberdøk" width="48px" height="24px" layout="fixed" />
-              </Box>
+              />
             </Link>
           </Stack>
         </Stack>

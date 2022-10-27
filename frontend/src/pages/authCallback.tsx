@@ -1,7 +1,7 @@
 import { useMutation } from "@apollo/client";
 import { Button, CircularProgress, Container, Grid, Stack, Typography } from "@mui/material";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import Image from "next/image";
+import Image from "next/future/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
