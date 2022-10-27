@@ -1,10 +1,12 @@
 import { Box, Button, Container, Grid, Typography } from "@mui/material";
-import Image from "next/image";
+import { useTheme } from "@mui/material/styles";
+import Image from "next/future/image";
 import Link from "next/link";
 
 import Social from "~/public/img/gang.jpg";
 
 export const LandingListings: React.FC = () => {
+  const theme = useTheme();
   return (
     <Box
       sx={{
@@ -22,9 +24,17 @@ export const LandingListings: React.FC = () => {
           height: { xs: 250, md: "auto" },
         }}
       >
-        <Box sx={{ position: "relative", width: "100%", height: "100%" }}>
-          <Image src={Social} layout="fill" objectFit="cover" objectPosition="center" placeholder="blur" alt="" />
-        </Box>
+        <Image
+          src={Social}
+          fill
+          style={{ objectFit: "cover", objectPosition: "center" }}
+          placeholder="blur"
+          alt=""
+          sizes={`
+            (max-width: ${theme.breakpoints.values.xs}px) 100vw,
+            50vw,
+          `}
+        />
       </Box>
       <Container
         sx={{

@@ -1,5 +1,5 @@
 import { Box, Container, Divider, Grid, Stack, Typography } from "@mui/material";
-import Image from "next/image";
+import Image from "next/future/image";
 import Link from "next/link";
 
 import { CabinsDetailsSection } from "@/components/pages/cabins/CabinsDetailsSection";

@@ -1,8 +1,8 @@
-import { Box, Card, CardActionArea, CardMedia, Tab, Tabs, Typography } from "@mui/material";
+import { Card, CardActionArea, CardMedia, Stack, Tab, Tabs, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { styled } from "@mui/material/styles";
 import { GetStaticProps } from "next";
-import Image from "next/image";
+import Image from "next/future/image";
 import Link from "next/link";
 import Router, { useRouter } from "next/router";
 import React from "react";
@@ -96,9 +96,9 @@ const OrganizationPage: NextPageWithLayout<Props> = ({ posts }) => {
       prevPost={{ title: "Om oss", slug: "/about", cover: "/img/hero.jpg" }}
       nextPost={{ title: "Les om Hovedstyret", slug: "/about/board", cover: "/img/hero.jpg" }}
     >
-      <Box width={1} position="relative" height={{ xs: 400, md: 460 }}>
-        <Image src="/img/orgmap.svg" alt="Foreningskart" layout="fill" />
-      </Box>
+      <Stack direction="column" height={460} position="relative">
+        <Image src="/img/orgmap.svg" alt="Foreningskart" fill />
+      </Stack>
       <Typography id="orgList" variant="h3" gutterBottom>
         Se foreningene våre under
       </Typography>

@@ -1,5 +1,5 @@
 import { Button, Card, CardActions, CardContent, CardHeader, Grid } from "@mui/material";
-import Image, { StaticImageData } from "next/image";
+import Image, { StaticImageData } from "next/future/image";
 import Link from "next/link";
 
 type Props = {
@@ -38,7 +38,7 @@ export const ProfileCardBase: React.FC<React.PropsWithChildren<Props>> = ({
         </Grid>
         {image && (
           <Grid item xs={3} sx={{ mr: 4 }}>
-            <Image src={image} layout="responsive" objectFit="contain" alt={alt} />
+            <Image src={image} style={{ objectFit: "contain", width: "100%", height: "100%" }} alt={alt ?? ""} />
           </Grid>
         )}
       </Grid>

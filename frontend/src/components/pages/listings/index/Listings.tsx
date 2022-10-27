@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
 import { Button, CircularProgress, Grid, Typography, Box } from "@mui/material";
-import Image from "next/image";
+import Image from "next/future/image";
 import Link from "next/link";
 
 import { ListingItem } from "@/components/pages/listings/index/ListingItem";
@@ -51,7 +51,7 @@ export const Listings: React.FC<Props> = ({ reload }) => {
             <ListingItem listing={listing} />
           </Grid>
         ))}
-      {data?.listings?.length == 0 && (
+      {data?.listings?.length === 0 && (
         <Grid container item direction="column" alignItems="center">
           <Grid item>
             <Typography variant="body1" align="center">
@@ -63,7 +63,7 @@ export const Listings: React.FC<Props> = ({ reload }) => {
               <Box
                 sx={{ overflow: "hidden", borderRadius: "50%", width: "100%", aspectRatio: "1", position: "relative" }}
               >
-                <Image src={EmptyStreet} alt="" layout="fill" objectFit="contain" objectPosition="center" />
+                <Image src={EmptyStreet} alt="" fill style={{ objectFit: "contain", objectPosition: "center" }} />
               </Box>
             </Grid>
           </Grid>

@@ -1,5 +1,6 @@
 import { Box, Button, Container, Grid, Stack, Typography } from "@mui/material";
-import Image from "next/image";
+import { useTheme } from "@mui/material/styles";
+import Image from "next/future/image";
 import Link from "next/link";
 
 import Hero from "~/public/static/landing/hero.webp";
@@ -7,6 +8,7 @@ import Hero from "~/public/static/landing/hero.webp";
 import { OrganizationsSlider } from "./OrganizationsSlider";
 
 export const LandingHero: React.FC = () => {
+  const theme = useTheme();
   return (
     <>
       <Box
@@ -64,9 +66,17 @@ export const LandingHero: React.FC = () => {
             display: { xs: "none", md: "block" },
           }}
         >
-          <Box sx={{ position: "relative", width: "100%", height: "100%" }}>
-            <Image src={Hero} layout="fill" objectFit="cover" objectPosition="center" placeholder="blur" alt="" />
-          </Box>
+          <Image
+            src={Hero}
+            fill
+            style={{ objectFit: "cover", objectPosition: "center" }}
+            placeholder="blur"
+            alt=""
+            sizes={`
+              (max-width: ${theme.breakpoints.values.sm}px) 0vw,
+              40vw,
+            `}
+          />
         </Box>
       </Box>
       <OrganizationsSlider />

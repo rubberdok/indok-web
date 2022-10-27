@@ -23,7 +23,6 @@ const ArticlePage: NextPageWithLayout<InferGetStaticPropsType<typeof getStaticPr
         variant="dark"
         ImageProps={{
           placeholder: "empty",
-          layout: "fill",
         }}
         breadcrumbs={[
           { href: "/", name: "Hjem" },

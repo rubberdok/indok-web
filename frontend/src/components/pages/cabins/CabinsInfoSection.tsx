@@ -1,5 +1,5 @@
 import { Container, Grid, Stack, Typography } from "@mui/material";
-import Image from "next/image";
+import Image from "next/future/image";
 
 import { BookNow } from "./BookNow";
 
