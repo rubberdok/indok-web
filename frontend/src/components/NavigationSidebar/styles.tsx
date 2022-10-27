@@ -1,9 +1,17 @@
-import { Box, BoxProps, ListItemButton, ListItemButtonProps, ListItemIcon, ListSubheader } from "@mui/material";
+import {
+  Box,
+  BoxProps,
+  ListItemButton,
+  ListItemButtonProps,
+  ListItemIcon,
+  ListSubheader,
+  ListSubheaderProps,
+} from "@mui/material";
 import { alpha, styled } from "@mui/material/styles";
 
-export const ListSubheaderStyle = styled((props) => <ListSubheader disableSticky disableGutters {...props} />)<{
-  theme?: any;
-}>(({ theme }) => ({
+export const ListSubheaderStyle: React.FC<React.PropsWithChildren<ListSubheaderProps>> = styled((props) => (
+  <ListSubheader disableSticky disableGutters {...props} />
+))(({ theme }) => ({
   ...theme.typography.overline,
   marginTop: theme.spacing(3),
   marginBottom: theme.spacing(2),
