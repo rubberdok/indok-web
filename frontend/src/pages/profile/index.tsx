@@ -1,6 +1,5 @@
 import { useQuery } from "@apollo/client";
 import { Avatar, Container, Grid, Typography } from "@mui/material";
-import { styled } from "@mui/material/styles";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Head from "next/head";
 import { useMemo } from "react";
@@ -20,7 +19,6 @@ import { UserDocument } from "@/generated/graphql";
 import { Layout, RootStyle } from "@/layouts/Layout";
 import { addApolloState, initializeApollo } from "@/lib/apolloClient";
 import { NextPageWithLayout } from "@/pages/_app";
-import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "@/theme/constants";
 import { generateFeideLoginUrl } from "@/utils/auth";
 
 const ID_PREFIX = "profile-";

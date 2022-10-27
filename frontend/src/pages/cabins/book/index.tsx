@@ -13,7 +13,6 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { styled } from "@mui/material/styles";
 import { useEffect, useState } from "react";
 
 import { ContractDialog } from "@/components/pages/cabins/Popup/ContractDialog";

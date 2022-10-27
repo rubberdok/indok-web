@@ -1,12 +1,10 @@
 import { useQuery } from "@apollo/client";
 import { Card, CardActionArea, CircularProgress, Container, Grid, Typography } from "@mui/material";
-import { styled } from "@mui/material/styles";
 import Link from "next/link";
 
 import { UserWithEventsAndOrgsDocument } from "@/generated/graphql";
 import { Layout, RootStyle } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/pages/_app";
-import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "@/theme/constants";
 
 const OrganizationPage: NextPageWithLayout = () => {
   const { data } = useQuery(UserWithEventsAndOrgsDocument);
