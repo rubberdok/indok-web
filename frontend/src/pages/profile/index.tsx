@@ -52,7 +52,7 @@ const RootStyle = styled("div")(({ theme }) => ({
 }));
 
 const ProfilePage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSideProps>> = () => {
-  const { data } = useQuery(UserDocument, { ssr: false });
+  const { data } = useQuery(UserDocument);
   const initials = useMemo(() => (data?.user ? userInitials(data.user.firstName, data.user.lastName) : ""), [data]);
 
   return (
