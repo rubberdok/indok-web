@@ -1,4 +1,4 @@
-import { Box, Card, CardActionArea, CardMedia, Stack, Tab, Tabs, Typography } from "@mui/material";
+import { Card, CardActionArea, CardMedia, Stack, Tab, Tabs, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { styled } from "@mui/material/styles";
 import { GetStaticProps } from "next";

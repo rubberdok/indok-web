@@ -1,4 +1,4 @@
-import { Box, Button, Container, Grid, Typography } from "@mui/material";
+import { Button, Container, Grid, Typography } from "@mui/material";
 import Image from "next/future/image";
 import Head from "next/head";
 import Link from "next/link";

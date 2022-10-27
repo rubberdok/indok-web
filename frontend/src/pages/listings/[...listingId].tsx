@@ -58,8 +58,6 @@ const ListingPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServ
         ImageProps={{
           placeholder: "empty",
           unoptimized: true,
-          layout: "fill",
-          objectPosition: "top",
         }}
       />
       <Container sx={{ mb: 4 }}>
