@@ -36,7 +36,6 @@ export const OrgMembers: React.FC<Props> = ({ organization }) => {
 
   const addUser = () => {
     //Legg til funksjonalitet for å legge til bruker ved brukernavn
-    console.log(userInput);
     setUserInput(""); //Funker men oppdaterer ikke siden?
   };
 
