@@ -1,6 +1,5 @@
 import { useQuery } from "@apollo/client";
 import { CircularProgress, Container, Stack } from "@mui/material";
-import { styled } from "@mui/material/styles";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
@@ -9,12 +8,8 @@ import { OrganizationListings } from "@/components/pages/listings/organization/O
 import { OrganizationHero } from "@/components/pages/organization/OrganizationHero";
 import { OrgMembers } from "@/components/pages/organization/OrgMembers";
 import { AdminOrganizationDocument } from "@/generated/graphql";
-import { Layout } from "@/layouts/Layout";
+import { Layout, RootStyle } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/pages/_app";
-
-const RootStyle = styled("div")(({ theme }) => ({
-  margin: theme.spacing(4, 0),
-}));
 
 const OrganizationDetailPage: NextPageWithLayout = () => {
   const router = useRouter();
@@ -38,23 +33,23 @@ const OrganizationDetailPage: NextPageWithLayout = () => {
     <>
       <OrganizationHero handleTabChange={handleTabChange} activeTab={activeTab} organization={data.organization} />
 
-      <RootStyle>
-        <Container>
-          {data?.organization && (
-            <Stack spacing={4}>
-              {activeTab == 0 && data.organization.events && <OrgEvents organization={data.organization} />}
-              {activeTab == 1 && data.organization.listings && (
-                <OrganizationListings organization={data.organization} />
-              )}
-              {activeTab == 2 && data.organization && <OrgMembers organization={data.organization} />}
-            </Stack>
-          )}
-        </Container>
-      </RootStyle>
+      <Container>
+        {data?.organization && (
+          <Stack spacing={4}>
+            {activeTab == 0 && data.organization.events && <OrgEvents organization={data.organization} />}
+            {activeTab == 1 && data.organization.listings && <OrganizationListings organization={data.organization} />}
+            {activeTab == 2 && data.organization && <OrgMembers organization={data.organization} />}
+          </Stack>
+        )}
+      </Container>
     </>
   );
 };
 
-OrganizationDetailPage.getLayout = (page) => <Layout>{page}</Layout>;
+OrganizationDetailPage.getLayout = (page) => (
+  <Layout>
+    <RootStyle>{page}</RootStyle>
+  </Layout>
+);
 
 export default OrganizationDetailPage;

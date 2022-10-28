@@ -1,7 +1,6 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { ArrowBack } from "@mui/icons-material";
 import { Box, Button, Card, CardContent, Container, Grid, Tab, Tabs, Typography } from "@mui/material";
-import { styled } from "@mui/material/styles";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
@@ -15,17 +14,8 @@ import {
   ListingWithResponsesDocument,
   ResponseFragment,
 } from "@/generated/graphql";
-import { Layout } from "@/layouts/Layout";
+import { Layout, RootStyle } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/pages/_app";
-import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "@/theme/constants";
-
-const RootStyle = styled("div")(({ theme }) => ({
-  paddingTop: HEADER_MOBILE_HEIGHT,
-  margin: theme.spacing(4, 0),
-  [theme.breakpoints.up("md")]: {
-    paddingTop: HEADER_DESKTOP_HEIGHT,
-  },
-}));
 
 /** Page for organization admins to administer a listing, edit its application form, and review applicants. */
 const ListingAdminPage: NextPageWithLayout = () => {
@@ -77,94 +67,96 @@ const ListingAdminPage: NextPageWithLayout = () => {
   // renders an overview of applicants, and either an applicant's application or the listing itself
   // (along with its form, or a button to create one)
   return (
-    <RootStyle>
-      <Container>
-        <Grid container direction="row" justifyContent="center" spacing={1}>
-          <Grid item>
-            <Grid container direction="column" spacing={1}>
+    <Container>
+      <Grid container direction="row" justifyContent="center" spacing={1}>
+        <Grid item>
+          <Grid container direction="column" spacing={1}>
+            <Grid item>
+              <Link href={`/orgs/${orgId}`} passHref>
+                <Button fullWidth variant="contained" startIcon={<ArrowBack />}>
+                  Tilbake
+                </Button>
+              </Link>
+            </Grid>
+            {data?.listing?.form?.responses && (
               <Grid item>
-                <Link href={`/orgs/${orgId}`} passHref>
-                  <Button fullWidth variant="contained" startIcon={<ArrowBack />}>
-                    Tilbake
-                  </Button>
-                </Link>
+                <Card>
+                  {data.listing.form.responses.length > 0 ? (
+                    <Tabs
+                      color="primary"
+                      orientation="vertical"
+                      variant="scrollable"
+                      value={selectedView}
+                      onChange={(_, view) => {
+                        selectView(view);
+                      }}
+                    >
+                      <Tab value={"listing"} label="Verv & søknad" />
+                      <Box textAlign="center">
+                        <Typography variant="h5">Søkere</Typography>
+                      </Box>
+                      {data.listing.form.responses.map((response, index) => (
+                        <Tab
+                          key={index}
+                          value={response}
+                          label={`${response.respondent.firstName} ${response.respondent.lastName}`}
+                        />
+                      ))}
+                    </Tabs>
+                  ) : (
+                    <Tabs
+                      orientation="vertical"
+                      variant="scrollable"
+                      value={selectedView}
+                      onChange={(_, view) => {
+                        selectView(view);
+                      }}
+                    >
+                      <Tab value={"listing"} label="Verv & søknad" />
+                      <Box textAlign="center">
+                        <Typography variant="h5">Søkere</Typography>
+                      </Box>
+                      <CardContent>
+                        <Typography>Ingen søkere enda.</Typography>
+                      </CardContent>
+                    </Tabs>
+                  )}
+                </Card>
               </Grid>
-              {data?.listing?.form?.responses && (
-                <Grid item>
-                  <Card>
-                    {data.listing.form.responses.length > 0 ? (
-                      <Tabs
-                        color="primary"
-                        orientation="vertical"
-                        variant="scrollable"
-                        value={selectedView}
-                        onChange={(_, view) => {
-                          selectView(view);
-                        }}
-                      >
-                        <Tab value={"listing"} label="Verv & søknad" />
-                        <Box textAlign="center">
-                          <Typography variant="h5">Søkere</Typography>
-                        </Box>
-                        {data.listing.form.responses.map((response, index) => (
-                          <Tab
-                            key={index}
-                            value={response}
-                            label={`${response.respondent.firstName} ${response.respondent.lastName}`}
-                          />
-                        ))}
-                      </Tabs>
-                    ) : (
-                      <Tabs
-                        orientation="vertical"
-                        variant="scrollable"
-                        value={selectedView}
-                        onChange={(_, view) => {
-                          selectView(view);
-                        }}
-                      >
-                        <Tab value={"listing"} label="Verv & søknad" />
-                        <Box textAlign="center">
-                          <Typography variant="h5">Søkere</Typography>
-                        </Box>
-                        <CardContent>
-                          <Typography>Ingen søkere enda.</Typography>
-                        </CardContent>
-                      </Tabs>
-                    )}
-                  </Card>
-                </Grid>
-              )}
-            </Grid>
+            )}
           </Grid>
-          {data?.listing && (
-            <Grid item xs={8}>
-              {selectedView === "listing" ? (
-                <Grid container direction="column" spacing={1}>
-                  <Grid item>
-                    <OrganizationListing listing={data.listing} />
-                  </Grid>
-                  <Grid item>
-                    {data.listing.form ? (
-                      <EditForm form={data.listing.form} />
-                    ) : (
-                      <Button fullWidth variant="contained" color="primary" onClick={onCreateFormClick}>
-                        Lag søknad
-                      </Button>
-                    )}
-                  </Grid>
-                </Grid>
-              ) : (
-                <>{data.listing.form && <FormResponse response={selectedView} form={data.listing.form} />}</>
-              )}
-            </Grid>
-          )}
         </Grid>
-      </Container>
-    </RootStyle>
+        {data?.listing && (
+          <Grid item xs={8}>
+            {selectedView === "listing" ? (
+              <Grid container direction="column" spacing={1}>
+                <Grid item>
+                  <OrganizationListing listing={data.listing} />
+                </Grid>
+                <Grid item>
+                  {data.listing.form ? (
+                    <EditForm form={data.listing.form} />
+                  ) : (
+                    <Button fullWidth variant="contained" color="primary" onClick={onCreateFormClick}>
+                      Lag søknad
+                    </Button>
+                  )}
+                </Grid>
+              </Grid>
+            ) : (
+              <>{data.listing.form && <FormResponse response={selectedView} form={data.listing.form} />}</>
+            )}
+          </Grid>
+        )}
+      </Grid>
+    </Container>
   );
 };
 
-ListingAdminPage.getLayout = (page) => <Layout>{page}</Layout>;
+ListingAdminPage.getLayout = (page) => (
+  <Layout>
+    <RootStyle> {page}</RootStyle>
+  </Layout>
+);
 
 export default ListingAdminPage;

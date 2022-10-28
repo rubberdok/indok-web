@@ -1,6 +1,5 @@
 import { useQuery } from "@apollo/client";
 import { Avatar, Container, Grid, Typography } from "@mui/material";
-import { styled } from "@mui/material/styles";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Head from "next/head";
 import { useMemo } from "react";
@@ -17,10 +16,9 @@ import {
   Report,
 } from "@/components/pages/profile/ProfileCard";
 import { UserDocument } from "@/generated/graphql";
-import { Layout } from "@/layouts/Layout";
+import { Layout, RootStyle } from "@/layouts/Layout";
 import { addApolloState, initializeApollo } from "@/lib/apolloClient";
 import { NextPageWithLayout } from "@/pages/_app";
-import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "@/theme/constants";
 import { generateFeideLoginUrl } from "@/utils/auth";
 
 const ID_PREFIX = "profile-";
@@ -42,14 +40,6 @@ const userInitials = (firstName: string, lastName: string): string => {
 
   return initials;
 };
-
-const RootStyle = styled("div")(({ theme }) => ({
-  paddingTop: HEADER_MOBILE_HEIGHT,
-  margin: theme.spacing(4, 0),
-  [theme.breakpoints.up("md")]: {
-    paddingTop: HEADER_DESKTOP_HEIGHT,
-  },
-}));
 
 const ProfilePage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSideProps>> = () => {
   const { data } = useQuery(UserDocument);

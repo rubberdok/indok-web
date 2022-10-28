@@ -72,6 +72,7 @@ export const LandingHero: React.FC = () => {
             style={{ objectFit: "cover", objectPosition: "center" }}
             placeholder="blur"
             alt=""
+            priority
             sizes={`
               (max-width: ${theme.breakpoints.values.sm}px) 0vw,
               40vw,
