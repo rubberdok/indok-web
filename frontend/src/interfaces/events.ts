@@ -18,7 +18,12 @@ export interface Event {
   shortDescription?: string;
   signupOpenDate?: string;
   usersOnWaitingList?: SignUp[];
-  userAttendance?: { isSignedUp: boolean; isOnWaitingList: boolean; hasBoughtTicket: boolean };
+  userAttendance?: {
+    isSignedUp: boolean;
+    isOnWaitingList: boolean;
+    hasBoughtTicket: boolean;
+    positionOnWaitinglist: number;
+  };
   isFull?: boolean;
   price?: string;
   usersAttending?: SignUp[];
@@ -37,7 +42,7 @@ export interface AttendableEvent extends Event {
     isSignedUp: boolean;
     isOnWaitingList: boolean;
     hasBoughtTicket: boolean;
-    positionOnWaitingList: number;
+    positionOnWaitinglist: number;
   };
   usersAttending: SignUp[];
   isFull: boolean;
