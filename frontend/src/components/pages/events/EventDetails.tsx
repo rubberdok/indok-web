@@ -208,6 +208,7 @@ const EventDetails: React.FC<Props> = ({ eventId }) => {
                         countDownDate={(event as AttendableEvent).signupOpenDate}
                         isSignedUp={(event as AttendableEvent).userAttendance.isSignedUp}
                         isOnWaitingList={(event as AttendableEvent).userAttendance.isOnWaitingList}
+                        positionOnWaitinglist={(event as AttendableEvent).userAttendance.positionOnWaitinglist}
                         isFull={(event as AttendableEvent).isFull}
                         loading={signOffLoading || signUpLoading || eventLoading}
                         disabled={
