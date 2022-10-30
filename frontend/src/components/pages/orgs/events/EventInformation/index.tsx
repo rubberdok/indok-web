@@ -81,10 +81,10 @@ export const EventInformation: React.FC<Props> = ({ event }) => {
             <Description name="Tilgjengelige Plasser" value={event.availableSlots} />
             <Description name="Krever ekstrainformasjon" value={event.hasExtraInformation ? "Ja" : "Nei"} />
             <Description name="Bindende påmelding" value={event.bindingSignup ? "Ja" : "Nei"} />
-            <Description name="Starttid" value={dayjs(event.startTime).format("L LT")} />
-            <Description name="Slutttid" value={dayjs(event.endTime).format("L LT")} />
-            <Description name="Påmeldingsdato" value={dayjs(event.signupOpenDate).format("L LT")} />
-            <Description name="Påmeldingsfrist" value={dayjs(event.deadline).format("L LT")} />
+            <Description name="Starttid" value={dayjs(event.startTime).format("LLL")} />
+            <Description name="Slutttid" value={dayjs(event.endTime).format("LLL")} />
+            <Description name="Påmeldingsdato" value={dayjs(event.signupOpenDate).format("LLL")} />
+            <Description name="Påmeldingsfrist" value={dayjs(event.deadline).format("LLL")} />
             {event.isAttendable && (
               <>
                 <Button variant="contained" endIcon={<MailRounded />} onClick={() => setOpenModal("email")}>

@@ -368,7 +368,7 @@ export const EventDetails: React.FC<Props> = ({ eventId }) => {
                     <Stack>
                       <Typography variant="subtitle2">Starter</Typography>
                       <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                        {dayjs(event.startTime).format("DD.MMM YYYY, kl. HH:mm")}
+                        {dayjs(event.startTime).format("LLLL")}
                       </Typography>
                     </Stack>
                   }
@@ -383,7 +383,7 @@ export const EventDetails: React.FC<Props> = ({ eventId }) => {
                       <Stack>
                         <Typography variant="subtitle2">Slutter</Typography>
                         <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                          {dayjs(event.endTime).format("DD.MMM YYYY, kl. HH:mm")}
+                          {dayjs(event.endTime).format("LLLL")}
                         </Typography>
                       </Stack>
                     }

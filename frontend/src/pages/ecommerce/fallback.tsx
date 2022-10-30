@@ -125,10 +125,7 @@ const FallbackPage: NextPageWithLayout = () => {
                       <ListItemText primary={`${order.quantity} stk`} secondary={"Antall"} />
                     </ListItem>
                     <ListItem sx={{ textAlign: "center" }}>
-                      <ListItemText
-                        primary={dayjs(order.timestamp).format("DD. MMM YYYY, kl. HH:mm")}
-                        secondary={"Dato"}
-                      />
+                      <ListItemText primary={dayjs(order.timestamp).format("L LT")} secondary={"Dato"} />
                     </ListItem>
                     <Divider variant="middle" component="li" />
                     <ListItem sx={{ textAlign: "center" }}>
