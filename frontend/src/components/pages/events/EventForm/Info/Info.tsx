@@ -2,7 +2,7 @@ import { MailOutlineRounded } from "@mui/icons-material";
 import { InputAdornment, Stack, TextField, Typography } from "@mui/material";
 import { useFormContext } from "react-hook-form";
 
-import { EventForm } from "../schema";
+import { IEventForm } from "../schema";
 import { Organization } from "../types";
 
 import { Category } from "./Category";
@@ -17,7 +17,7 @@ export const Info: React.FC<Props> = ({ organizations }) => {
   const {
     register,
     formState: { errors },
-  } = useFormContext<EventForm>();
+  } = useFormContext<IEventForm>();
 
   return (
     <Stack direction="column" spacing={2}>
