@@ -25,11 +25,15 @@ import {
   CreateEventDocument,
   CreateEventInput,
   EventInListFragment,
+  UserOrganizationsDocument,
   UserWithEventsAndOrgsDocument,
 } from "@/generated/graphql";
 
 /** Component for the creating a new event. */
 export const CreateEvent: React.FC = () => {
+  const { data } = useQuery(UserOrganizationsDocument);
+  const organizations = data?.user?.organizations ?? [];
+
   const defaultInput: CreateEventInput = {
     title: "",
     description: "",
