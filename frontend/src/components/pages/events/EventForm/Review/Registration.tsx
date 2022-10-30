@@ -36,7 +36,7 @@ export const Registration: React.FC = () => {
             label="Påmelding åpner"
             value={
               dayjs(watch("registration.details.signUpOpen")).isValid()
-                ? dayjs(watch("registration.details.signUpOpen")).format("L LT")
+                ? dayjs(watch("registration.details.signUpOpen")).format("LLL")
                 : ""
             }
           />
@@ -44,7 +44,7 @@ export const Registration: React.FC = () => {
             label="Påmelding slutter"
             value={
               dayjs(watch("registration.details.deadline")).isValid()
-                ? dayjs(watch("registration.details.deadline")).format("L LT")
+                ? dayjs(watch("registration.details.deadline")).format("LLL")
                 : ""
             }
           />

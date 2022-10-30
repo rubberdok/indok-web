@@ -24,15 +24,11 @@ export const TimeAndPlace: React.FC = () => {
           <Typography variant="subtitle1">Tid</Typography>
           <ReviewItem
             label="Starttid"
-            value={
-              dayjs(watch("timeAndPlace.start")).isValid() ? dayjs(watch("timeAndPlace.start")).format("L LT") : ""
-            }
+            value={dayjs(watch("timeAndPlace.start")).isValid() ? dayjs(watch("timeAndPlace.start")).format("LLL") : ""}
           />
           <ReviewItem
             label="Sluttid"
-            value={
-              dayjs(watch("timeAndPlace.start")).isValid() ? dayjs(watch("timeAndPlace.start")).format("L LT") : ""
-            }
+            value={dayjs(watch("timeAndPlace.start")).isValid() ? dayjs(watch("timeAndPlace.start")).format("LLL") : ""}
           />
 
           <Typography variant="subtitle1">Sted</Typography>
