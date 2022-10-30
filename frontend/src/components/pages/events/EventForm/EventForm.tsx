@@ -136,7 +136,7 @@ export const EventForm: React.FC<Props> = ({ organizations, defaultValues = {}, 
     <form onSubmit={handleSubmit(onSubmit)}>
       <FormProvider {...methods}>
         <Card>
-          <CardHeader title="Nytt Arrangement" />
+          <CardHeader title="Nytt arrangement" />
           <CardContent>
             <Stepper activeStep={activeStep} alternativeLabel sx={{ mb: 3 }}>
               {Object.values(steps).map(({ label, slug }, index) => (
