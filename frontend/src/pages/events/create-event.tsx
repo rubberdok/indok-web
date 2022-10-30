@@ -2,11 +2,10 @@ import { useQuery } from "@apollo/client";
 import { Button, Container } from "@mui/material";
 import Link from "next/link";
 
+import { CreateEvent } from "@/components/pages/events/Create";
 import { UserOrganizationsDocument } from "@/generated/graphql";
 import { Layout, RootStyle } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/pages/_app";
-
-import CreateEvent from "../create";
 
 /** Component for showing the create event page. */
 const CreateEventsPage: NextPageWithLayout = () => {
