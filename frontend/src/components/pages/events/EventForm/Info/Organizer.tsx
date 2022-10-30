@@ -1,7 +1,7 @@
 import { FormControl, FormHelperText, InputLabel, MenuItem, Select } from "@mui/material";
 import { Controller, useFormContext } from "react-hook-form";
 
-import { EventForm } from "../schema";
+import { IEventForm } from "../schema";
 import { Organization } from "../types";
 
 type Props = {
@@ -13,7 +13,7 @@ export const Organizer: React.FC<Props> = ({ organizations, disabled }) => {
   const {
     control,
     formState: { errors },
-  } = useFormContext<EventForm>();
+  } = useFormContext<IEventForm>();
 
   return (
     <Controller

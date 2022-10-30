@@ -4,7 +4,7 @@ import { Controller, useFormContext } from "react-hook-form";
 
 import { AllCategoriesDocument } from "@/generated/graphql";
 
-import { EventForm } from "../schema";
+import { IEventForm } from "../schema";
 
 type Props = {
   disabled?: boolean;
@@ -16,7 +16,7 @@ export const Category: React.FC<Props> = ({ disabled }) => {
   const {
     control,
     formState: { errors },
-  } = useFormContext<EventForm>();
+  } = useFormContext<IEventForm>();
 
   return (
     <Controller
