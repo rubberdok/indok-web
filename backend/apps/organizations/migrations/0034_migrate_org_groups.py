@@ -1,6 +1,6 @@
 from django.db import migrations
 
-from apps.permissions.constants import ORG_ADMIN_GROUP_NAME, ORG_ADMIN_TYPE, ORG_MEMBER_TYPE
+from apps.permissions.constants import ORG_ADMIN_GROUP_NAME, ORG_ADMIN_TYPE, ORG_MEMBER_TYPE, ORG_MEMBER_GROUP_NAME
 
 
 def migrate_org_groups(apps, schema_editor):
@@ -15,7 +15,7 @@ def migrate_org_groups(apps, schema_editor):
             org.admin_group.save()
         if org.member_group is not None:
             org.member_group.group_type = ORG_MEMBER_TYPE
-            org.member_group.name = ORG_ADMIN_GROUP_NAME
+            org.member_group.name = ORG_MEMBER_GROUP_NAME
             org.member_group.save()
 
 
