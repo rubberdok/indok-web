@@ -61,7 +61,7 @@ export const TitleCard: React.FC<Props> = ({ listing }) => {
             )}
             <Divider sx={{ my: 2, display: { xs: "none", sm: "block" } }} />
             <Typography variant="caption" component="h3" align="center" gutterBottom>
-              {`Frist ${dayjs(listing?.deadline).format("DD. MMMM YYYY [kl.] HH:mm")}`}
+              {`Frist ${dayjs(listing?.deadline).format("LLL")}`}
             </Typography>
             {link && (
               <Grid container item justifyContent="center">

@@ -44,7 +44,7 @@ export const OrganizationListings: React.FC<Props> = ({ organization }) => {
                 {organization.listings.map((listing) => (
                   <TableRow key={listing.id}>
                     <TableCell>{listing.title}</TableCell>
-                    <TableCell>{dayjs(listing.deadline).format("HH:mm DD-MM-YYYY")}</TableCell>
+                    <TableCell>{dayjs(listing.deadline).format("LLL")}</TableCell>
                     <TableCell size="small" align="right">
                       <Stack spacing={1} direction="row" justifyContent="flex-end">
                         <Link href={`${organization.id}/listings/${listing.id}`} passHref>
