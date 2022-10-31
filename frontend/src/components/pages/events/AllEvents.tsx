@@ -5,36 +5,33 @@ import Link from "next/link";
 import React, { useState } from "react";
 
 import { PermissionRequired } from "@/components/Auth";
-import { GET_DEFAULT_EVENTS, GET_EVENTS } from "@/graphql/events/queries";
-import { GET_USER } from "@/graphql/users/queries";
-import useResponsive from "@/hooks/useResponsive";
-import { Event } from "@/interfaces/events";
-import { User } from "@/interfaces/users";
+import { AllEventsDocument, DefaultEventsDocument, UserWithEventsAndOrgsDocument } from "@/generated/graphql";
+import { useResponsive } from "@/hooks/useResponsive";
 
-import EventListItem from "./EventListItem";
-import FilterMenu from "./filterMenu/FilterMenu";
+import { EventListItem } from "./EventListItem";
+import { FilterMenu } from "./filterMenu/FilterMenu";
 
-export interface FilterQuery {
+export type FilterQuery = {
   organization?: string;
   category?: string;
   startTime?: string;
   endTime?: string;
-}
+};
 
-const AllEvents: React.FC = () => {
+export const AllEvents: React.FC = () => {
   const [filters, setFilters] = useState({});
   const [showDefaultEvents, setShowDefaultEvents] = useState(false);
-  const [openFilterDrawer, setOpenFilterDrawer] = React.useState(false);
+  const [openFilterDrawer, setOpenFilterDrawer] = useState(false);
   const isMobile = useResponsive({ query: "down", key: "sm" });
 
-  const { loading: userLoading, data: userData } = useQuery<{ user: User }>(GET_USER);
+  const { loading: userLoading, data: userData } = useQuery(UserWithEventsAndOrgsDocument);
 
   const {
     loading: eventsLoading,
     error: eventsError,
     data: eventsData,
     refetch,
-  } = useQuery<{ allEvents: Event[] }>(GET_EVENTS, {
+  } = useQuery(AllEventsDocument, {
     variables: filters,
   });
 
@@ -42,12 +39,17 @@ const AllEvents: React.FC = () => {
     loading: defaultEventsLoading,
     error: defaultEventsError,
     data: defaultEventsData,
-  } = useQuery<{ defaultEvents: Event[] }>(GET_DEFAULT_EVENTS);
+  } = useQuery(DefaultEventsDocument);
+
   const error = showDefaultEvents ? defaultEventsError : eventsError;
   const loading = showDefaultEvents ? defaultEventsLoading : eventsLoading;
-  const data = (showDefaultEvents ? defaultEventsData?.defaultEvents : eventsData?.allEvents)?.filter((event) =>
-    userData?.user ? event.allowedGradeYears.includes(userData.user.gradeYear) : true
-  );
+  const data = (showDefaultEvents ? defaultEventsData?.defaultEvents : eventsData?.allEvents)?.filter((event) => {
+    if (userData?.user?.gradeYear && event?.allowedGradeYears) {
+      return event.allowedGradeYears.includes(userData.user.gradeYear);
+    } else {
+      return true;
+    }
+  });
 
   if (error) return <Typography variant="body1">Kunne ikke hente arrangementer.</Typography>;
 
@@ -140,7 +142,7 @@ const AllEvents: React.FC = () => {
               ) : (
                 <Stack spacing={3}>
                   {data.map((event) => (
-                    <EventListItem key={event.id} event={event} user={userData?.user} />
+                    <EventListItem key={event.id} event={event} user={userData?.user ?? undefined} />
                   ))}
                 </Stack>
               )}
@@ -151,5 +153,3 @@ const AllEvents: React.FC = () => {
     </>
   );
 };
-
-export default AllEvents;

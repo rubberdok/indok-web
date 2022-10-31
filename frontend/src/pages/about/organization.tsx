@@ -1,15 +1,15 @@
-import { Box, Card, CardActionArea, CardMedia, Tab, Tabs, Typography } from "@mui/material";
+import { Card, CardActionArea, CardMedia, Stack, Tab, Tabs, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { styled } from "@mui/material/styles";
 import { GetStaticProps } from "next";
-import Image from "next/image";
+import Image from "next/future/image";
 import Link from "next/link";
 import Router, { useRouter } from "next/router";
 import React from "react";
 
-import TabPanel from "@/components/pages/about/TabPanel";
-import Template from "@/components/pages/about/Template";
-import Layout from "@/layouts/Layout";
+import { TabPanel } from "@/components/pages/about/TabPanel";
+import { Template } from "@/components/pages/about/Template";
+import { Layout } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/pages/_app";
 import { getSortedPosts } from "@/utils/posts";
 
@@ -90,17 +90,15 @@ const OrganizationPage: NextPageWithLayout<Props> = ({ posts }) => {
 
   return (
     <Template
-      img="/img/hero.jpg"
       title="Foreningene under Hovedstyret"
-      page="Våre foreninger"
       description="Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse er den øverste instansen
       (moderforeningen) for all studentfrivillighet på masterstudiet Indøk ved NTNU."
       prevPost={{ title: "Om oss", slug: "/about", cover: "/img/hero.jpg" }}
       nextPost={{ title: "Les om Hovedstyret", slug: "/about/board", cover: "/img/hero.jpg" }}
     >
-      <Box width={1} position="relative" height={{ xs: 400, md: 460 }}>
-        <Image src="/img/orgmap.svg" alt="Foreningskart" layout="fill" />
-      </Box>
+      <Stack direction="column" height={460} position="relative">
+        <Image src="/img/orgmap.svg" alt="Foreningskart" fill />
+      </Stack>
       <Typography id="orgList" variant="h3" gutterBottom>
         Se foreningene våre under
       </Typography>
@@ -193,7 +191,7 @@ const OrganizationPage: NextPageWithLayout<Props> = ({ posts }) => {
   );
 };
 
-OrganizationPage.getLayout = (page: React.ReactElement) => <Layout>{page}</Layout>;
+OrganizationPage.getLayout = (page) => <Layout>{page}</Layout>;
 
 export const getStaticProps: GetStaticProps = async () => {
   const posts = getSortedPosts("organizations");

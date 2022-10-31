@@ -7,12 +7,12 @@ import React from "react";
 
 import { AvailableYearsDocument } from "@/generated/graphql";
 
-interface YearSelectorProps {
+type Props = {
   yearFilter: string;
   handleYearFilterChanged: (year: string) => void;
-}
+};
 
-const YearSelector: React.FC<YearSelectorProps> = ({ yearFilter, handleYearFilterChanged }) => {
+export const YearSelector: React.FC<Props> = ({ yearFilter, handleYearFilterChanged }) => {
   const { loading, data, error } = useQuery(AvailableYearsDocument);
 
   if (loading) return <CircularProgress />;
@@ -45,4 +45,3 @@ const YearSelector: React.FC<YearSelectorProps> = ({ yearFilter, handleYearFilte
     </>
   );
 };
-export default YearSelector;

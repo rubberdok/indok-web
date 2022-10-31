@@ -3,12 +3,10 @@ import Typography from "@mui/material/Typography";
 
 import { FeaturedArchiveDocument } from "@/generated/graphql";
 
-import DocumentList from "./DocumentList";
+import { DocumentList } from "./DocumentList";
 
-const FeaturedDocumentsList: React.FC = () => {
-  const { loading, data, error } = useQuery(FeaturedArchiveDocument, {
-    ssr: false,
-  });
+export const FeaturedDocumentsList: React.FC = () => {
+  const { loading, data, error } = useQuery(FeaturedArchiveDocument, { ssr: false });
 
   if (loading) return <p style={{ textAlign: "center" }}></p>;
 
@@ -23,5 +21,3 @@ const FeaturedDocumentsList: React.FC = () => {
     </>
   );
 };
-
-export default FeaturedDocumentsList;

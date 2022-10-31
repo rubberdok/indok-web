@@ -1,6 +1,11 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 
-function SalesTermsDialog({ onClose, open }: { onClose: () => void; open: boolean }) {
+type Props = {
+  onClose: () => void;
+  open: boolean;
+};
+
+export const SalesTermsDialog: React.FC<Props> = ({ onClose, open }) => {
   return (
     <Dialog onClose={onClose} aria-labelledby="sales-terms-dialog-title" open={open} scroll="paper">
       <DialogTitle id="sales-terms-dialog-title">Salgsbetingelser for kjøp</DialogTitle>
@@ -372,6 +377,4 @@ function SalesTermsDialog({ onClose, open }: { onClose: () => void; open: boolea
       </DialogActions>
     </Dialog>
   );
-}
-
-export default SalesTermsDialog;
+};

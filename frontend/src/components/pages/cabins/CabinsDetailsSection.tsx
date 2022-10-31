@@ -3,7 +3,7 @@ import { styled } from "@mui/material/styles";
 import Link from "next/link";
 
 import { cabinImages } from "./ImageSlider/imageData";
-import ImageSlider from "./ImageSlider/ImageSlider";
+import { ImageSlider } from "./ImageSlider/ImageSlider";
 
 const RootStyle = styled("div")(({ theme }) => ({
   background: theme.palette.background.elevated,
@@ -14,7 +14,7 @@ const RootStyle = styled("div")(({ theme }) => ({
   },
 }));
 
-const CabinsDetailsSection: React.FC = () => {
+export const CabinsDetailsSection: React.FC = () => {
   return (
     <RootStyle>
       <Container>
@@ -57,5 +57,3 @@ const CabinsDetailsSection: React.FC = () => {
     </RootStyle>
   );
 };
-
-export default CabinsDetailsSection;

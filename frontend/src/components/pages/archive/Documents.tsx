@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 
 import { ArchiveByTypesDocument } from "@/generated/graphql";
 
-import DocumentList from "./DocumentList";
+import { DocumentList } from "./DocumentList";
 
 type Props = {
   documentTypes: string[];
@@ -12,7 +12,7 @@ type Props = {
   names: string;
 };
 
-const Documents: React.FC<Props> = ({ documentTypes, year, names }) => {
+export const Documents: React.FC<Props> = ({ documentTypes, year, names }) => {
   const { refetch, loading, data, error } = useQuery(ArchiveByTypesDocument, {
     variables: { documentTypes, year, names },
     ssr: false,
@@ -35,5 +35,3 @@ const Documents: React.FC<Props> = ({ documentTypes, year, names }) => {
     </>
   );
 };
-
-export default Documents;

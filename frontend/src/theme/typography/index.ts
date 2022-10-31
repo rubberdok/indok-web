@@ -3,7 +3,7 @@ import { ThemeOptions } from "@mui/material";
 const PRIMARY = "Poppins, sans-serif";
 const SECONDARY = "Merriweather, sans-serif";
 
-const typography: ThemeOptions["typography"] = {
+export const typography: ThemeOptions["typography"] = {
   fontFamily: PRIMARY,
   h1: {
     fontFamily: SECONDARY,
@@ -85,5 +85,3 @@ const typography: ThemeOptions["typography"] = {
     textTransform: "none",
   },
 };
-
-export default typography;

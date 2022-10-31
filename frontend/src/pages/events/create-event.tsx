@@ -1,27 +1,23 @@
 import { Button, Container } from "@mui/material";
 import Link from "next/link";
-import React from "react";
 
-import EventCreator from "@/components/pages/events/EventCreator";
-import Layout, { RootStyle } from "@/layouts/Layout";
+import { CreateEvent } from "@/components/pages/events/CreateEvent";
+import { Layout, RootStyle } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/pages/_app";
 
-/**
- * Component for showing the create event page
- */
-
+/** Component for showing the create event page. */
 const CreateEventsPage: NextPageWithLayout = () => {
   return (
     <Container>
       <Link href="/events" passHref>
         <Button color="primary">Tilbake til arrangementer</Button>
       </Link>
-      <EventCreator />
+      <CreateEvent />
     </Container>
   );
 };
 
-CreateEventsPage.getLayout = (page: React.ReactElement) => (
+CreateEventsPage.getLayout = (page) => (
   <Layout>
     <RootStyle>{page}</RootStyle>
   </Layout>

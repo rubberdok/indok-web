@@ -1,29 +1,30 @@
 import { Box, Divider, Tooltip, Typography } from "@mui/material";
 import { TypographyProps } from "@mui/material/Typography";
-import { NextPage } from "next";
 
-import useResponsive from "@/hooks/useResponsive";
-import { Cabin, ContactInfo, DatePick } from "@/interfaces/cabins";
+import { CabinFragment } from "@/generated/graphql";
+import { useResponsive } from "@/hooks/useResponsive";
+import { ContactInfo, DatePick } from "@/types/cabins";
 import { calculatePrice, convertDateFormat, toStringChosenCabins } from "@/utils/cabins";
 
-interface Props {
-  chosenCabins: Cabin[];
-  datePick: DatePick;
-  contactInfo: ContactInfo;
-  cabinText?: string;
-  mailSent?: boolean;
-}
-const InfoText: React.FC<TypographyProps> = (props) => (
+const InfoText: React.FC<React.PropsWithChildren<TypographyProps>> = (props) => (
   <Typography variant="body2" align="center" component="span" display="block" {...props}>
     {props.children}
   </Typography>
 );
 
-/*
-Statusbox with information about the current cabin booking.
-Renders fields based on the props given.
-*/
-const CabinBookingStatus: NextPage<Props> = ({ chosenCabins, datePick, contactInfo, cabinText, mailSent }) => {
+type Props = {
+  chosenCabins: CabinFragment[];
+  datePick: DatePick;
+  contactInfo: ContactInfo;
+  cabinText?: string;
+  mailSent?: boolean;
+};
+
+/**
+ * Statusbox with information about the current cabin booking.
+ * Renders fields based on the props given.
+ */
+export const CabinBookingStatus: React.FC<Props> = ({ chosenCabins, datePick, contactInfo, cabinText, mailSent }) => {
   const isMobile = useResponsive({ query: "down", key: "md" });
 
   return (
@@ -102,5 +103,3 @@ const CabinBookingStatus: NextPage<Props> = ({ chosenCabins, datePick, contactIn
     </Box>
   );
 };
-
-export default CabinBookingStatus;

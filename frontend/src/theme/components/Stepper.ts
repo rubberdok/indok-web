@@ -1,6 +1,6 @@
 import { ThemeOptions } from "@mui/material";
 
-const Stepper: ThemeOptions["components"] = {
+export const Stepper: ThemeOptions["components"] = {
   MuiStepConnector: {
     styleOverrides: {
       line: ({ theme }) => ({
@@ -9,5 +9,3 @@ const Stepper: ThemeOptions["components"] = {
     },
   },
 };
-
-export default Stepper;

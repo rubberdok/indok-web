@@ -3,14 +3,15 @@ import { useRouter } from "next/router";
 
 import { routes } from "./constants";
 
-const Drawer = dynamic(() => import("./variants/Drawer"));
-const Basic = dynamic(() => import("./variants/Basic"));
+// https://nextjs.org/docs/advanced-features/dynamic-import
+const Drawer = dynamic(() => import("./variants/Drawer").then((mod) => mod.Drawer));
+const Basic = dynamic(() => import("./variants/Basic").then((mod) => mod.Basic));
 
 /**
  * Navigation component for the app bar, switches between a navigation drawer and
  * app bar navigation depending on screen size.
  */
-const Navigation: React.FC = () => {
+export const Navigation: React.FC<React.PropsWithChildren<unknown>> = () => {
   const { route } = useRouter();
   return (
     <>
@@ -19,5 +20,3 @@ const Navigation: React.FC = () => {
     </>
   );
 };
-
-export default Navigation;

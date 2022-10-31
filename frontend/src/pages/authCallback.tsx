@@ -1,13 +1,13 @@
 import { useMutation } from "@apollo/client";
 import { Button, CircularProgress, Container, Grid, Stack, Typography } from "@mui/material";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import Image from "next/image";
+import Image from "next/future/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 
 import { AuthUserDocument } from "@/generated/graphql";
-import Layout from "@/layouts/Layout";
+import { Layout } from "@/layouts/Layout";
 import Bug from "~/public/illustrations/Bug.svg";
 
 import { NextPageWithLayout } from "./_app";
@@ -84,7 +84,7 @@ const AuthCallbackPage: NextPageWithLayout<InferGetServerSidePropsType<typeof ge
   );
 };
 
-AuthCallbackPage.getLayout = (page: React.ReactElement) => (
+AuthCallbackPage.getLayout = (page) => (
   <Layout simpleHeader simpleFooter>
     {page}
   </Layout>

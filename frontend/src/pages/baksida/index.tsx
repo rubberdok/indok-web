@@ -16,8 +16,8 @@ import { amber, green, red } from "@mui/material/colors";
 import Head from "next/head";
 import { useRef } from "react";
 
-import ContactInfo from "@/components/pages/baksida/ContactInfo";
-import Layout, { RootStyle } from "@/layouts/Layout";
+import { ContactInfo } from "@/components/pages/baksida/ContactInfo";
+import { Layout, RootStyle } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/pages/_app";
 import adrian from "~/public/img/adrian.jpg";
 import Amund from "~/public/img/Amund.jpg";

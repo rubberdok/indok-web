@@ -1,6 +1,6 @@
 import { ThemeOptions } from "@mui/material";
 
-const CssBaseline: ThemeOptions["components"] = {
+export const CssBaseline: ThemeOptions["components"] = {
   MuiCssBaseline: {
     styleOverrides: (theme) => ({
       "*": {
@@ -38,5 +38,3 @@ const CssBaseline: ThemeOptions["components"] = {
     }),
   },
 };
-
-export default CssBaseline;

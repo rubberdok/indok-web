@@ -1,14 +1,15 @@
 import { Box, Container, Stack, Typography } from "@mui/material";
 import { SxProps, Theme } from "@mui/material/styles";
 import dynamic from "next/dynamic";
-import { ImageProps, StaticImageData } from "next/image";
+import { ImageProps, StaticImageData } from "next/future/image";
 
-import Breadcrumbs, { Props as BreadcrumbProps } from "@/components/Breadcrumbs";
+import { Breadcrumbs, Props as BreadcrumbProps } from "@/components/Breadcrumbs";
 import { TLink } from "@/components/Breadcrumbs/types";
 
 import { ImageContainer, ImageOverlay, OverlayProps, RootStyle } from "./styles";
 
-const Image = dynamic(() => import("next/image"));
+// https://nextjs.org/docs/advanced-features/dynamic-import
+const Image = dynamic(() => import("next/future/image"));
 
 export type Props = {
   title?: string;
@@ -22,7 +23,7 @@ export type Props = {
   OverlayProps?: OverlayProps & { sx?: SxProps<Theme> };
 };
 
-const Title: React.FC<Props> = ({
+export const BaseTitle: React.FC<React.PropsWithChildren<Props>> = ({
   title,
   children,
   breadcrumbs = [],
@@ -42,7 +43,14 @@ const Title: React.FC<Props> = ({
       {bgImage && (
         <ImageContainer>
           <ImageOverlay {...OverlayProps} />
-          <Image src={bgImage} placeholder="blur" objectFit="cover" objectPosition="center" alt="" {...ImageProps} />
+          <Image
+            src={bgImage}
+            placeholder="blur"
+            fill
+            style={{ objectFit: "cover", objectPosition: "center" }}
+            alt=""
+            {...ImageProps}
+          />
         </ImageContainer>
       )}
       <Container>
@@ -64,5 +72,3 @@ const Title: React.FC<Props> = ({
     </RootStyle>
   );
 };
-
-export default Title;

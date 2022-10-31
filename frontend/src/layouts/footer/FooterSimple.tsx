@@ -1,13 +1,17 @@
 import { Container, Stack, Typography } from "@mui/material";
 import dayjs from "dayjs";
 
-import Vercel from "@/components/Vercel";
+import { Vercel } from "@/components/Vercel";
 
 import { Logo } from "../../components";
 
-const FooterSimple: React.FC = () => {
+type Props = {
+  disableGutter?: boolean;
+};
+
+export const FooterSimple: React.FC<Props> = ({ disableGutter }) => {
   return (
-    <Container sx={{ textAlign: "center", py: 8 }}>
+    <Container sx={{ textAlign: "center", py: 8, mt: disableGutter ? 0 : 4 }}>
       <Logo sx={{ mb: 3 }} />
       <Stack direction="column" gap={2} alignContent="center" justifyContent="center">
         <Typography variant="body3" sx={{ color: "text.secondary" }}>
@@ -18,5 +22,3 @@ const FooterSimple: React.FC = () => {
     </Container>
   );
 };
-
-export default FooterSimple;

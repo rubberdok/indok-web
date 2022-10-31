@@ -1,6 +1,6 @@
 import { ThemeOptions } from "@mui/material";
 
-const Badge: ThemeOptions["components"] = {
+export const Badge: ThemeOptions["components"] = {
   MuiBadge: {
     styleOverrides: {
       dot: {
@@ -11,5 +11,3 @@ const Badge: ThemeOptions["components"] = {
     },
   },
 };
-
-export default Badge;

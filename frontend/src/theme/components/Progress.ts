@@ -1,6 +1,6 @@
 import { ThemeOptions } from "@mui/material";
 
-const Progress: ThemeOptions["components"] = {
+export const Progress: ThemeOptions["components"] = {
   MuiLinearProgress: {
     styleOverrides: {
       root: {
@@ -16,5 +16,3 @@ const Progress: ThemeOptions["components"] = {
     },
   },
 };
-
-export default Progress;

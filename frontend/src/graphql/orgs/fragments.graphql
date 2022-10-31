@@ -1,0 +1,45 @@
+fragment AdminOrganization on OrganizationType {
+  id
+  name
+  hrGroup {
+    uuid
+  }
+  primaryGroup {
+    uuid
+  }
+  events {
+    ...OrgAdminEvent
+  }
+  listings {
+    ...OrgAdminListing
+  }
+}
+
+fragment OrgAdminEvent on EventType {
+  id
+  title
+  startTime
+  shortDescription
+  availableSlots
+  isFull
+  usersAttending {
+    id
+  }
+}
+
+fragment OrgAdminListing on ListingType {
+  id
+  title
+  deadline
+}
+
+fragment Membership on MembershipType {
+  id
+  user {
+    firstName
+    lastName
+  }
+  group {
+    uuid
+  }
+}

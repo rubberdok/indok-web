@@ -2,9 +2,9 @@ import { Grid, Typography } from "@mui/material";
 
 import Report from "~/public/illustrations/Report.svg";
 
-import ProfileCardBase from "./ProfileCardBase";
+import { ProfileCardBase } from "./ProfileCardBase";
 
-const ReportCard: React.VFC = ({ ...props }) => {
+export const ReportCard: React.VFC = ({ ...props }) => {
   return (
     <ProfileCardBase title="Baksida" actionText="Gå til Baksida" actionLink="/baksida" image={Report} alt="" {...props}>
       <Grid container direction="column">
@@ -17,5 +17,3 @@ const ReportCard: React.VFC = ({ ...props }) => {
     </ProfileCardBase>
   );
 };
-
-export default ReportCard;

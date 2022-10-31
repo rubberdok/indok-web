@@ -6,7 +6,7 @@ const RootStyle = styled("div")(() => ({
   display: "flex",
 }));
 
-const LandingPromo: React.FC = () => {
+export const LandingPromo: React.FC = () => {
   return (
     <RootStyle>
       <Container>
@@ -19,7 +19,6 @@ const LandingPromo: React.FC = () => {
               title="Industriell Økonomi og Teknologiledelse"
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              sandbox="allow-scripts allow-same-origin allow-presentation"
               loading="lazy"
               allowFullScreen
             />
@@ -29,5 +28,3 @@ const LandingPromo: React.FC = () => {
     </RootStyle>
   );
 };
-
-export default LandingPromo;

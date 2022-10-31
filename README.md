@@ -63,22 +63,23 @@ Website for the students at Industrial Economics and Technology Management at NT
       - Other folders here are for components used across pages.
     - `layouts` contains React components that are part of the base website layout on every page, e.g. the navigation
       bar and footer.
-    - `graphql` contains GraphQL queries and mutations that the frontend uses to talk to the backend API.
+    - `graphql` contains GraphQL requests that the frontend uses to talk to the backend API.
       - The folders here are grouped by backend app, so `graphql/events` contains queries/mutations for the backend app
         in `backend/apps/events`.
-      - Each folder has a `queries.graphql` file for requests that only fetch data, and a `mutations.graphql` file for
-        requests that change data.
-        - To use a query from a `queries.graphql` file:
-          - Run `yarn generate` in `indok-web/frontend` to generate data and types for the request (ending up in
-            `generated/graphql.ts`).
-          - At the top of the React component file where you want to use it:
-            - `import { useQuery } from "@apollo/client";`
-            - `import { [QUERY_NAME]Document } from "@/generated/graphql";`
-          - Inside the component:
-            - `const { data, loading, error } = useQuery([QUERY_NAME]Document)`
-          - Now, after checking that there is no `error` or `loading`, we can use the `data`.
+      - Each folder has:
+        - `queries.graphql` for requests that only fetch data.
+        - `mutations.graphql` for requests that change data.
+        - `fragments.graphql` for [GraphQL fragments](https://www.apollographql.com/docs/react/data/fragments/): a
+          selection of fields on one of our API types, that can be reused across different queries/mutations to ensure
+          consistent types. Whenever you see a `...Fragment` type from `generated/graphql`, that type has been generated
+          from a `fragments.graphql` file.
+    - `generated` contains output from code generation.
+      - `graphql.ts` is the output from `graphql-codegen`, the tool we run with `yarn generate`. It reads our GraphQL
+        schema (`backend/schema.json`), and our queries, mutations and fragments (from the `graphql` folder), to
+        generate TypeScript types and data for making requests to our backend API.
+    - `types` contains shared types used across the app.
     - `theme` contains customizations for Material UI, the styled component library we use for React.
-      - `overrides` contains customizations for specific Material UI components.
+      - `components` contains customizations for specific Material UI components.
     - `lib` contains functions defined by us to make it easier to work with some of our libraries.
     - `utils` contains utility functions.
   - `.husky` configures Husky, the tool we use for pre-commit hooks (checks that run on each Git commit).
@@ -389,8 +390,8 @@ The `python manage.py loaddata initial_data` command used in the setup above set
 
 | Username      | Password | Indøk |
 | ------------- | :------: | ----: |
-| eva_student   |   5tgb   |  true |
-| asbjorn_elevg |   1qaz   | false |
+| eva_student   |  098asd  |  true |
+| asbjorn_elevg |  098asd  | false |
 | admin         | admin123 | super |
 
 To log in as one of these test users when testing out the frontend locally, click "Other login alternatives" on the
@@ -466,8 +467,22 @@ An outline of how a developer may work with this project:
     - Find the `queries.graphql` / `mutations.graphql` file in the appropriate feature folder under
       `frontend/src/graphql`
     - Add/change your query/mutation
+      - Use a fragment from `fragments.graphql` with the `...MyFragment` syntax if you want to use the same fields as
+        other queries/mutations
     - Generate TypeScript code for your query/mutation
       - `cd` into `frontend`, and type `yarn generate`
+    - At the top of the React component file where you want to use your query/mutation:
+      - For query: `import { useQuery } from "@apollo/client";`
+      - For mutation: `import { useMutation } from "@apollo/client";`
+      - `import { [MyQuery/MyMutation]Document } from "@/generated/graphql";`
+    - Inside the component:
+      - For query:
+        - `const { data, loading, error } = useQuery([MyQuery]Document);`
+          - If the query has variables, add them like this: `useQuery([MyQuery]Document, { variables: { ... } })`
+        - Now, after checking that there is no `error` or `loading`, we can use the `data`
+      - For mutation:
+        - `const [myMutation] = useMutation([MyMutation]Document);`
+        - Now the `myMutation` function can be called like this: `myMutation({ variables: { ... } })`
   - If you want to add/change a field on a backend database model:
     - Change the model class in the `models.py` file, in the appropriate feature folder under `backend/apps`
     - Generate a Django migration to update the database

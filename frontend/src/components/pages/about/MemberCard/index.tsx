@@ -6,7 +6,7 @@ type Props = {
   member: BoardMember;
 };
 
-const MemberCard: React.VFC<Props> = ({ member }) => {
+export const MemberCard: React.VFC<Props> = ({ member }) => {
   return (
     <Card style={{ height: "100%" }}>
       <CardHeader title={member.name} />
@@ -26,5 +26,3 @@ const MemberCard: React.VFC<Props> = ({ member }) => {
     </Card>
   );
 };
-
-export default MemberCard;

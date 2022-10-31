@@ -1,6 +1,6 @@
 import { ThemeOptions } from "@mui/material";
 
-const ControlLabel: ThemeOptions["components"] = {
+export const ControlLabel: ThemeOptions["components"] = {
   MuiFormControlLabel: {
     styleOverrides: {
       label: ({ theme }) => ({
@@ -11,5 +11,3 @@ const ControlLabel: ThemeOptions["components"] = {
   MuiFormHelperText: {},
   MuiFormLabel: {},
 };
-
-export default ControlLabel;

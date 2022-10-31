@@ -1,6 +1,6 @@
 import { ThemeOptions } from "@mui/material";
 
-const Typography: ThemeOptions["components"] = {
+export const Typography: ThemeOptions["components"] = {
   MuiTypography: {
     defaultProps: {
       variantMapping: {
@@ -9,5 +9,3 @@ const Typography: ThemeOptions["components"] = {
     },
   },
 };
-
-export default Typography;

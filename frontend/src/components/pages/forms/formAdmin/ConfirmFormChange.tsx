@@ -8,7 +8,7 @@ import {
   FormHelperText,
 } from "@mui/material";
 
-// utility function to return text for the dialog based on its type
+/** Utility function to return text for the dialog based on its type */
 const dialogText = (type: "create" | "update" | "delete") => {
   switch (type) {
     case "create":
@@ -32,21 +32,15 @@ const dialogText = (type: "create" | "update" | "delete") => {
   }
 };
 
-/**
- * Component for confirmation dialog when changing a form when it already has responses.
- *
- * Props:
- * - type of the dialog, decided by parent's state
- * - boolean to determine whether the dialog should be shown
- * - onConfirm function, making a change defined by the parent component
- * - onClose function to execute when the dialog is closed
- */
-const ConfirmFormChange: React.FC<{
+type Props = {
   type: "create" | "update" | "delete";
   open: boolean;
   onConfirm: () => void;
   onClose: () => void;
-}> = ({ type, open, onConfirm, onClose }) => {
+};
+
+/** Component for confirmation dialog when changing a form when it already has responses. */
+export const ConfirmFormChange: React.FC<React.PropsWithChildren<Props>> = ({ type, open, onConfirm, onClose }) => {
   const { title, body, warning } = dialogText(type);
   return (
     <Dialog open={open} onClose={onClose} fullWidth>
@@ -75,5 +69,3 @@ const ConfirmFormChange: React.FC<{
     </Dialog>
   );
 };
-
-export default ConfirmFormChange;

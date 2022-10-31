@@ -16,14 +16,12 @@ import _20 from "~/public/static/cabins/20.jpg";
 import _21 from "~/public/static/cabins/21.jpg";
 import _22 from "~/public/static/cabins/22.jpg";
 
-export interface ImageData {
+export type ImageData = {
   label: string;
   img: StaticImageData;
-}
+};
 
-/*
-Data with all paths, labels and descriptions for images used in the image slider
-*/
+/** Data with all paths, labels and descriptions for images used in the image slider. */
 export const outsideImages: ImageData[] = [
   {
     label: "Fjell",

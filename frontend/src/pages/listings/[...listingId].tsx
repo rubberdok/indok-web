@@ -6,10 +6,10 @@ import Head from "next/head";
 import ReactMarkdown from "react-markdown";
 
 import * as markdownComponents from "@/components/MarkdownForm/components";
-import TitleCard from "@/components/pages/listings/detail/TitleCard";
-import Title from "@/components/Title";
+import { TitleCard } from "@/components/pages/listings/detail/TitleCard";
+import { Title } from "@/components/Title";
 import { ListingDocument } from "@/generated/graphql";
-import Layout from "@/layouts/Layout";
+import { Layout } from "@/layouts/Layout";
 import { addApolloState, initializeApollo } from "@/lib/apolloClient";
 import { NextPageWithLayout } from "@/pages/_app";
 
@@ -58,8 +58,6 @@ const ListingPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServ
         ImageProps={{
           placeholder: "empty",
           unoptimized: true,
-          layout: "fill",
-          objectPosition: "top",
         }}
       />
       <Container sx={{ mb: 4 }}>
@@ -71,7 +69,7 @@ const ListingPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServ
           spacing={4}
         >
           <Grid item xs={12} sm={6} md={5} direction="column">
-            <TitleCard listing={data?.listing} />
+            <TitleCard listing={data?.listing ?? undefined} />
           </Grid>
           <Grid item xs={12} sm={6} md={7}>
             <ReactMarkdown components={markdownComponents}>
@@ -107,10 +105,6 @@ export const getServerSideProps: GetServerSideProps<{
   if (!listing) return { notFound: true };
 
   return addApolloState(client, { props: { listing } });
-};
-
-ListingPage.getLayout = function getLayout(page: React.ReactElement) {
-  return <Layout>{page}</Layout>;
 };
 
 export default ListingPage;

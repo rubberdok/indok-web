@@ -1,11 +1,9 @@
 import { TableCell } from "@mui/material";
 
-const InlineTableCell: React.FC = ({ children }) => {
+export const InlineTableCell: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => {
   return (
     <TableCell style={{ whiteSpace: "nowrap" }} align="right">
       {children}
     </TableCell>
   );
 };
-
-export default InlineTableCell;

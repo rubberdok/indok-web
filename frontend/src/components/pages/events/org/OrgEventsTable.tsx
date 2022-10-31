@@ -2,41 +2,30 @@ import { Chip, Table, TableBody, TableCell, TableContainer, TableHead, TableRow 
 import dayjs from "dayjs";
 import Link from "next/link";
 
-import { Event } from "@/interfaces/events";
-import { Organization } from "@/interfaces/organizations";
-import { HeaderValuePair } from "@/interfaces/utils";
+import { AdminOrganizationFragment } from "@/generated/graphql";
 
-const eventFields: HeaderValuePair<Event>[] = [
-  { header: "Navn", field: "title" },
-  { header: "Antall Plasser", field: "availableSlots" },
-];
+type Props = { organization: AdminOrganizationFragment };
 
-type Props = {
-  organization: Organization;
-};
-
-const OrgEventsTable: React.FC<Props> = ({ organization }) => {
+export const OrgEventsTable: React.FC<Props> = ({ organization }) => {
   return (
     <TableContainer>
       <Table>
         <TableHead>
           <TableRow>
             <TableCell>Dato</TableCell>
-            {eventFields.map((field: HeaderValuePair<Event>) => (
-              <TableCell key={`header-${field.header}`}>{field.header}</TableCell>
-            ))}
+            <TableCell>Navn</TableCell>
+            <TableCell>Antall Plasser</TableCell>
             <TableCell>Antall påmeldte</TableCell>
             <TableCell>Status</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {(organization.events ?? []).map((event: Event) => (
+          {(organization.events ?? []).map((event) => (
             <Link href={`${organization.id}/events/${event.id}`} passHref key={event.id}>
               <TableRow hover sx={{ pointer: "cursor" }}>
                 <TableCell>{dayjs(event.startTime).format("HH:mm DD-MM-YYYY")}</TableCell>
-                {eventFields.map((field: HeaderValuePair<Event>) => (
-                  <TableCell key={`event-${event.id}-cell-${field.field}`}>{event[field.field]}</TableCell>
-                ))}
+                <TableCell>{event.title}</TableCell>
+                <TableCell>{event.availableSlots}</TableCell>
                 <TableCell>{event.usersAttending?.length}</TableCell>
                 <TableCell>
                   <Chip
@@ -52,5 +41,3 @@ const OrgEventsTable: React.FC<Props> = ({ organization }) => {
     </TableContainer>
   );
 };
-
-export default OrgEventsTable;

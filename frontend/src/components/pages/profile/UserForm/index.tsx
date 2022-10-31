@@ -27,9 +27,7 @@ import {
   suggestGraduationYear,
   validationSchema,
 } from "@/components/pages/profile/UserForm/helpers";
-import { UPDATE_USER } from "@/graphql/users/mutations";
-import { EDIT_USER_QUERY } from "@/graphql/users/queries";
-import { EditUser } from "@/types/users";
+import { UpdateUserDocument, UserToEditDocument } from "@/generated/graphql";
 
 type Props = {
   kind: "register" | "update";
@@ -38,11 +36,11 @@ type Props = {
   "data-test-id"?: string;
 };
 
-const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": dataTestId }) => {
-  const { data } = useQuery<{ user?: EditUser }>(EDIT_USER_QUERY);
-  const [updateUser] = useMutation<{ updateUser: { user: EditUser } }>(UPDATE_USER, {
+export const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": dataTestId }) => {
+  const { data } = useQuery(UserToEditDocument);
+  const [updateUser] = useMutation(UpdateUserDocument, {
     onCompleted: onCompleted,
-    refetchQueries: ["editUserInfo"],
+    refetchQueries: [{ query: UserToEditDocument }],
   });
   const router = useRouter();
   const currentYear = dayjs().year();
@@ -68,7 +66,7 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": 
     },
     onSubmit: (values) =>
       updateUser({
-        variables: { id: data?.user?.id, userData: values },
+        variables: { userData: values },
       }),
     validationSchema,
     enableReinitialize: true,
@@ -185,7 +183,7 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": 
                 {data?.user?.canUpdateYear && <FormHelperText>Kan bare endres én gang i året.</FormHelperText>}
                 {!data?.user?.canUpdateYear && (
                   <FormHelperText>
-                    Kan ikke endres før: {dayjs(data?.user?.yearUpdatedAt).add(1, "year").format("DD.MM.YYYY")}
+                    Kan ikke endres før: {dayjs(data?.user?.yearUpdatedAt).add(1, "year").format("L")}
                   </FormHelperText>
                 )}
               </FormControl>
@@ -232,5 +230,3 @@ const UserForm: React.VFC<Props> = ({ kind, title, onCompleted, "data-test-id": 
     </form>
   );
 };
-
-export default UserForm;

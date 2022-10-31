@@ -1,12 +1,11 @@
 import { useQuery } from "@apollo/client";
 import { Avatar, Container, Grid, Typography } from "@mui/material";
-import { styled } from "@mui/material/styles";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Head from "next/head";
 import { useMemo } from "react";
 
 import { Logout, PermissionRequired } from "@/components/Auth";
-import Breadcrumbs from "@/components/Breadcrumbs";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 import {
   CabinsAdmin,
   Event,
@@ -16,13 +15,10 @@ import {
   Personal,
   Report,
 } from "@/components/pages/profile/ProfileCard";
-import { UserInfoDocument } from "@/generated/graphql";
-import { GET_USER_INFO } from "@/graphql/users/queries";
-import Layout from "@/layouts/Layout";
+import { UserDocument } from "@/generated/graphql";
+import { Layout, RootStyle } from "@/layouts/Layout";
 import { addApolloState, initializeApollo } from "@/lib/apolloClient";
 import { NextPageWithLayout } from "@/pages/_app";
-import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from "@/theme/constants";
-import { User } from "@/types/users";
 import { generateFeideLoginUrl } from "@/utils/auth";
 
 const ID_PREFIX = "profile-";
@@ -45,16 +41,8 @@ const userInitials = (firstName: string, lastName: string): string => {
   return initials;
 };
 
-const RootStyle = styled("div")(({ theme }) => ({
-  paddingTop: HEADER_MOBILE_HEIGHT,
-  margin: theme.spacing(4, 0),
-  [theme.breakpoints.up("md")]: {
-    paddingTop: HEADER_DESKTOP_HEIGHT,
-  },
-}));
-
 const ProfilePage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSideProps>> = () => {
-  const { data } = useQuery<{ user?: User }>(GET_USER_INFO, { ssr: false });
+  const { data } = useQuery(UserDocument);
   const initials = useMemo(() => (data?.user ? userInitials(data.user.firstName, data.user.lastName) : ""), [data]);
 
   return (
@@ -98,7 +86,7 @@ const ProfilePage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServ
 
           <Grid container item justifyContent="center" alignItems="stretch" spacing={4}>
             <Grid item xs={12} md={6} lg={5}>
-              <Personal user={data?.user} data-test-id={`${ID_PREFIX}personal-`} />
+              <Personal user={data?.user ?? undefined} data-test-id={`${ID_PREFIX}personal-`} />
             </Grid>
             <Grid item xs={12} md={6} lg={5}>
               <Event data-test-id={`${ID_PREFIX}event-`} />
@@ -130,21 +118,17 @@ const ProfilePage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServ
   );
 };
 
-ProfilePage.getLayout = function getLayout(page: React.ReactElement) {
-  return (
-    <Layout>
-      <RootStyle>{page}</RootStyle>
-    </Layout>
-  );
-};
+ProfilePage.getLayout = (page) => (
+  <Layout>
+    <RootStyle>{page}</RootStyle>
+  </Layout>
+);
 
 export default ProfilePage;
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const client = initializeApollo({}, ctx);
-  const { data, error } = await client.query({
-    query: UserInfoDocument,
-  });
+  const { data, error } = await client.query({ query: UserDocument });
 
   if (error) return { notFound: true };
   if (!data.user) {

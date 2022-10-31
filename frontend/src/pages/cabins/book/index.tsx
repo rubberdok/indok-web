@@ -13,17 +13,15 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { styled } from "@mui/material/styles";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
-import ContractDialog from "@/components/pages/cabins/Popup/ContractDialog";
-import StepComponent from "@/components/pages/cabins/StepComponent";
-import { CREATE_BOOKING, SEND_EMAIL } from "@/graphql/cabins/mutations";
-import { QUERY_CABINS } from "@/graphql/cabins/queries";
-import useResponsive from "@/hooks/useResponsive";
-import { Cabin, ContactInfo, ContactInfoValidations, DatePick, ModalData } from "@/interfaces/cabins";
-import Layout from "@/layouts/Layout";
+import { ContractDialog } from "@/components/pages/cabins/Popup/ContractDialog";
+import { StepComponent } from "@/components/pages/cabins/StepComponent";
+import { CabinFragment, CabinsDocument, CreateBookingDocument, SendEmailDocument } from "@/generated/graphql";
+import { useResponsive } from "@/hooks/useResponsive";
+import { Layout } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/pages/_app";
+import { ContactInfo, ContactInfoValidations, DatePick, ModalData } from "@/types/cabins";
 import {
   allValuesFilled,
   cabinOrderStepReady,
@@ -58,22 +56,17 @@ const defaultModalData: ModalData = {
   displayPopUp: false,
 };
 
-const RootStyle = styled("div")(({ theme }) => ({
-  marginTop: theme.spacing(4),
-  marginBottom: theme.spacing(4),
-}));
-
-/*
-Main page for the booking of a cabin. 
-The page renders different components depending on the step variale chosen.
-*/
+/**
+ * Main page for the booking of a cabin.
+ * The page renders different components depending on the step variable chosen.
+ */
 const CabinBookingPage: NextPageWithLayout = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [stepReady, setStepReady] = useState<StepReady>(initalStepReady);
 
   // Choose cabin
-  const [chosenCabins, setChosenCabins] = useState<Cabin[]>([]);
-  const cabinQuery = useQuery<{ cabins: Cabin[] }>(QUERY_CABINS);
+  const [chosenCabins, setChosenCabins] = useState<CabinFragment[]>([]);
+  const { data } = useQuery(CabinsDocument);
   const [modalData, setModalData] = useState<ModalData>(defaultModalData);
 
   // Check in/Check out
@@ -85,8 +78,8 @@ const CabinBookingPage: NextPageWithLayout = () => {
   const [errorTrigger, setErrorTrigger] = useState(false);
 
   // Booking creation and email mutations
-  const [createBooking] = useMutation(CREATE_BOOKING);
-  const [sendEmail] = useMutation(SEND_EMAIL);
+  const [createBooking] = useMutation(CreateBookingDocument);
+  const [sendEmail] = useMutation(SendEmailDocument);
 
   // Extra info from the user, sent to Hytteforeningen
   const [extraInfo, setExtraInfo] = useState("");
@@ -171,36 +164,36 @@ const CabinBookingPage: NextPageWithLayout = () => {
   );
 
   return (
-    <RootStyle>
-      <Container>
-        <ContractDialog
-          modalData={modalData}
-          setModalData={setModalData}
-          chosenCabins={chosenCabins}
-          datePick={datePick}
-          contactInfo={contactInfo}
-          activeStep={activeStep}
-          setActiveStep={setActiveStep}
-        />
-        <Stack spacing={{ xs: 3, md: 5 }}>
-          <div>
-            {isMobile ? (
-              <Typography variant="h4" align="center">
-                {steps[activeStep]}
-              </Typography>
-            ) : (
-              <Stepper activeStep={activeStep}>
-                {steps.map((label) => (
-                  <Step key={label}>
-                    <StepLabel>{label}</StepLabel>
-                  </Step>
-                ))}
-              </Stepper>
-            )}
-          </div>
+    <Container>
+      <ContractDialog
+        modalData={modalData}
+        setModalData={setModalData}
+        chosenCabins={chosenCabins}
+        datePick={datePick}
+        contactInfo={contactInfo}
+        activeStep={activeStep}
+        setActiveStep={setActiveStep}
+      />
+      <Stack spacing={{ xs: 3, md: 5 }}>
+        <div>
           {isMobile ? (
+            <Typography variant="h4" align="center">
+              {steps[activeStep]}
+            </Typography>
+          ) : (
+            <Stepper activeStep={activeStep}>
+              {steps.map((label) => (
+                <Step key={label}>
+                  <StepLabel>{label}</StepLabel>
+                </Step>
+              ))}
+            </Stepper>
+          )}
+        </div>
+        {data?.cabins &&
+          (isMobile ? (
             <StepComponent
-              cabinQuery={cabinQuery}
+              allCabins={data.cabins}
               activeStep={activeStep}
               chosenCabins={chosenCabins}
               contactInfo={contactInfo}
@@ -216,7 +209,7 @@ const CabinBookingPage: NextPageWithLayout = () => {
             <Card>
               <Box sx={{ px: 4, py: 4 }}>
                 <StepComponent
-                  cabinQuery={cabinQuery}
+                  allCabins={data.cabins}
                   activeStep={activeStep}
                   chosenCabins={chosenCabins}
                   contactInfo={contactInfo}
@@ -240,26 +233,25 @@ const CabinBookingPage: NextPageWithLayout = () => {
                 <NextButton />
               </Stack>
             </Card>
-          )}
-        </Stack>
-        {isMobile && activeStep != 3 ? (
-          <MobileStepper
-            steps={4}
-            position="bottom"
-            variant="progress"
-            activeStep={activeStep}
-            nextButton={<NextButton />}
-            backButton={<BackButton />}
-            sx={{ boxShadow: (theme) => theme.shadows[24] }}
-          />
-        ) : (
-          <></>
-        )}
-      </Container>
-    </RootStyle>
+          ))}
+      </Stack>
+      {isMobile && activeStep != 3 ? (
+        <MobileStepper
+          steps={4}
+          position="bottom"
+          variant="progress"
+          activeStep={activeStep}
+          nextButton={<NextButton />}
+          backButton={<BackButton />}
+          sx={{ boxShadow: (theme) => theme.shadows[24] }}
+        />
+      ) : (
+        <></>
+      )}
+    </Container>
   );
 };
 
-CabinBookingPage.getLayout = (page: React.ReactElement) => <Layout simpleHeader>{page}</Layout>;
+CabinBookingPage.getLayout = (page) => <Layout simpleHeader>{page}</Layout>;
 
 export default CabinBookingPage;

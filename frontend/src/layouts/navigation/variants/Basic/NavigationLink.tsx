@@ -9,7 +9,7 @@ type Props = {
   active?: boolean;
 };
 
-const NavigationLink: React.FC<Props> = ({ route, active }) => {
+export const NavigationLink: React.FC<Props> = ({ route, active }) => {
   return (
     <Link href={route.path} passHref>
       <RouteLink
@@ -23,5 +23,3 @@ const NavigationLink: React.FC<Props> = ({ route, active }) => {
     </Link>
   );
 };
-
-export default NavigationLink;

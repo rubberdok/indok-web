@@ -26,18 +26,26 @@ const calculateTimeLeft = (countdownTime: string, now: Dayjs): Record<string, nu
   return {};
 };
 
-interface Props {
+type Props = {
+  /** The date that is counted down to */
   countDownDate: string;
+  /** The time right now */
   currentTime: string;
+  /** Whether the user viewing the page is signed up to the event */
   isSignedUp: boolean;
+  /** Whether the user viewing the page is on the waiting list for the event */
   isOnWaitingList: boolean;
   positionOnWaitinglist: number;
+  /** Whether the event is full (all available slots are taken) */
   isFull: boolean;
+  /** Whether the button should show a loading symbol */
   loading: boolean;
+  /** Whether the button should be disabled */
   disabled?: boolean;
   currentTimeParts: string[];
+  /** Method called when the count down button is clicked */
   onClick: () => void;
-}
+};
 
 const ButtonText: React.FC<Props> = ({
   currentTimeParts,
@@ -143,7 +151,7 @@ const ButtonText: React.FC<Props> = ({
  * - styleClassName: styled class
  */
 
-const CountdownButton: React.FC<Props> = ({
+export const CountdownButton: React.FC<Props> = ({
   countDownDate,
   currentTime,
   isSignedUp,
@@ -197,5 +205,3 @@ const CountdownButton: React.FC<Props> = ({
     </Box>
   );
 };
-
-export default CountdownButton;

@@ -1,26 +1,23 @@
 import { Check, Clear } from "@mui/icons-material";
 import { Button, Dialog, DialogActions, DialogContent, Grid, IconButton } from "@mui/material";
-import { NextPage } from "next";
 import { Dispatch, SetStateAction } from "react";
 
-import { Cabin, ContactInfo, DatePick, ModalData } from "@/interfaces/cabins";
+import { Contract } from "@/components/pages/cabins/Documents/Contract";
+import { CabinFragment } from "@/generated/graphql";
+import { ContactInfo, DatePick, ModalData } from "@/types/cabins";
 
-import Contract from "../Documents/Contract";
-
-type ContractDialogProps = {
+type Props = {
   modalData: ModalData;
   setModalData: Dispatch<SetStateAction<ModalData>>;
   datePick: DatePick;
-  chosenCabins: Cabin[];
+  chosenCabins: CabinFragment[];
   contactInfo: ContactInfo;
   activeStep: number;
   setActiveStep: Dispatch<SetStateAction<number>>;
 };
 
-/*
-Dialog component for the contract component
-*/
-const ContractDialog: NextPage<ContractDialogProps> = ({
+/** Dialog component for the contract component. */
+export const ContractDialog: React.FC<Props> = ({
   modalData,
   setModalData,
   datePick,
@@ -65,5 +62,3 @@ const ContractDialog: NextPage<ContractDialogProps> = ({
     </>
   );
 };
-
-export default ContractDialog;

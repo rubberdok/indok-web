@@ -1,14 +1,12 @@
 import { Stack, Typography } from "@mui/material";
 
-import EventsExport from "@/components/pages/events/org/EventsExport";
-import OrgEventsTable from "@/components/pages/events/org/OrgEventsTable";
-import { Organization } from "@/interfaces/organizations";
+import { EventsExport } from "@/components/pages/events/org/EventsExport";
+import { OrgEventsTable } from "@/components/pages/events/org/OrgEventsTable";
+import { AdminOrganizationFragment } from "@/generated/graphql";
 
-type Props = {
-  organization: Organization;
-};
+type Props = { organization: AdminOrganizationFragment };
 
-const OrgEvents: React.FC<Props> = ({ organization }) => {
+export const OrgEvents: React.FC<Props> = ({ organization }) => {
   return (
     <Stack spacing={4}>
       <Typography variant="h3">Oversikt</Typography>
@@ -18,5 +16,3 @@ const OrgEvents: React.FC<Props> = ({ organization }) => {
     </Stack>
   );
 };
-
-export default OrgEvents;

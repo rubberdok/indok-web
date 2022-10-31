@@ -1,0 +1,11 @@
+query formWithAllResponses($formId: ID!) {
+  form(formId: $formId) {
+    ...FormWithAllResponses
+  }
+}
+
+query formWithAnswers($formId: ID!) {
+  form(formId: $formId) {
+    ...FormWithAnswers
+  }
+}

@@ -1,6 +1,6 @@
 import { ThemeOptions } from "@mui/material";
 
-const Dialog: ThemeOptions["components"] = {
+export const Dialog: ThemeOptions["components"] = {
   MuiDialog: {
     styleOverrides: {
       paper: ({ theme }) => ({
@@ -54,5 +54,3 @@ const Dialog: ThemeOptions["components"] = {
     },
   },
 };
-
-export default Dialog;

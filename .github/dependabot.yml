@@ -16,6 +16,7 @@ updates:
       - javascript
       - next
 
+    versioning-strategy: increase
     # Should only be bumped when a new LTS is released, see schedule on nodejs.org
     # should also correspond to the node version in dockerfiles/vercel
     ignore:

@@ -1,7 +1,7 @@
 import { Color } from "@mui/material";
 import { ThemeOptions } from "@mui/material/styles";
 
-const palette = (mode: "light" | "dark"): ThemeOptions["palette"] => ({
+export const palette = (mode: "light" | "dark"): ThemeOptions["palette"] => ({
   mode,
   ...(mode === "light" ? light : dark),
 });
@@ -90,5 +90,3 @@ const dark: ThemeOptions["palette"] = {
     contrastText: "#000",
   },
 };
-
-export default palette;

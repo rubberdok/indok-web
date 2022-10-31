@@ -1,19 +1,18 @@
 import { NavigateBefore, NavigateNext } from "@mui/icons-material";
 import { Grid, Hidden, IconButton, Stack, Typography } from "@mui/material";
 import dayjs from "dayjs";
-import React, { ReactElement } from "react";
+import React from "react";
 
-import useResponsive from "@/hooks/useResponsive";
+import { useResponsive } from "@/hooks/useResponsive";
 
 import { DAYS_IN_WEEK } from "./constants";
 
-interface Props {
+type Props = {
   month: dayjs.Dayjs;
   onChangeMonth: (months: number) => void;
-  children?: ReactElement | ReactElement[];
-}
+};
 
-const CalendarTable: React.FC<Props> = ({ month, onChangeMonth, children }) => {
+export const CalendarTable: React.FC<React.PropsWithChildren<Props>> = ({ month, onChangeMonth, children }) => {
   const isMobile = useResponsive({ query: "down", key: "md" });
   return (
     <Stack spacing={2} width={1}>
@@ -58,4 +57,3 @@ const CalendarTable: React.FC<Props> = ({ month, onChangeMonth, children }) => {
     </Stack>
   );
 };
-export default CalendarTable;

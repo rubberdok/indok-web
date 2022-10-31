@@ -1,20 +1,17 @@
 import { Edit } from "@mui/icons-material";
 import { Button, Grid, Typography } from "@mui/material";
 
-import QuestionTypePreview from "@/components/pages/forms/formAdmin/QuestionTypePreview";
-import { Question } from "@/interfaces/forms";
+import { QuestionTypePreview } from "@/components/pages/forms/formAdmin/QuestionTypePreview";
+import { QuestionWithAnswerIdsFragment } from "@/generated/graphql";
 
-/**
- * Component to preview a question in a form when not in editing mode.
- *
- * Props:
- * - the question to preview
- * - setActive function to activate editing mode on this question
- */
-const QuestionPreview: React.FC<{
-  question: Question;
+type Props = {
+  question: QuestionWithAnswerIdsFragment;
+  /** Function to activate editing mode on this question */
   setActive: () => void;
-}> = ({ question, setActive }) => (
+};
+
+/** Component to preview a question in a form when not in editing mode. */
+export const QuestionPreview: React.FC<Props> = ({ question, setActive }) => (
   <Grid container direction="column" spacing={1}>
     <Grid item container direction="row" justifyContent="space-between" alignItems="center">
       <Grid item>
@@ -41,5 +38,3 @@ const QuestionPreview: React.FC<{
     </Grid>
   </Grid>
 );
-
-export default QuestionPreview;

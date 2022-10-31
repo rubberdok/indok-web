@@ -2,16 +2,17 @@ import { Box, Container, Divider, Grid, Link, Paper, Stack, SxProps, Typography 
 import { styled, useTheme } from "@mui/material/styles";
 import dayjs from "dayjs";
 import dynamic from "next/dynamic";
-import Image from "next/image";
+import Image from "next/future/image";
 import NextLink, { LinkProps } from "next/link";
 import { ReactNode, useState } from "react";
 
-import Logo from "@/components/Logo";
-import Vercel from "@/components/Vercel";
-import useResponsive from "@/hooks/useResponsive";
+import { Logo } from "@/components/Logo";
+import { Vercel } from "@/components/Vercel";
+import { useResponsive } from "@/hooks/useResponsive";
 import rubberdokLogo from "~/public/img/rubberdok_logo_black.svg";
 
-const HallOfFame = dynamic(() => import("./HallOfFame"));
+// https://nextjs.org/docs/advanced-features/dynamic-import
+const HallOfFame = dynamic(() => import("./HallOfFame").then((mod) => mod.HallOfFame));
 
 const Watermark = styled("div")(({ theme }) => ({
   background: "url('/nth.svg')",
@@ -31,14 +32,18 @@ const Watermark = styled("div")(({ theme }) => ({
   },
 }));
 
-const Footer: React.FC = () => {
+type Props = {
+  disableGutter?: boolean;
+};
+
+export const Footer: React.FC<Props> = ({ disableGutter }) => {
   const isDesktop = useResponsive({ query: "up", key: "md" });
   const [open, setOpen] = useState(false);
   const theme = useTheme();
 
   return (
     <>
-      <Divider />
+      <Divider sx={{ mt: disableGutter ? 0 : 4 }} />
       <Paper sx={{ bgcolor: "background.elevated" }}>
         <Container sx={{ position: "relative", py: { xs: 6, md: 10 } }}>
           <Grid container spacing={3} justifyContent={{ md: "space-between" }}>
@@ -86,20 +91,19 @@ const Footer: React.FC = () => {
           width="100%"
         >
           <Stack direction="row" spacing={3} alignItems="center" justifyContent="center">
-            <NextLinkItem sx={{ mt: 0 }} onClick={() => setOpen(!open)} href="javascript:undefined">
+            <NextLinkItem sx={{ mt: 0 }} onClick={() => setOpen(!open)} href="#">
               Hall of Fame
             </NextLinkItem>
             <Link href="https://github.com/rubberdok/indok-web" rel="noreferrer noopener">
-              <Box
-                sx={{
+              <Image
+                src={rubberdokLogo}
+                alt="Rubberdøk"
+                style={{
+                  width: "48px",
+                  height: "24px",
                   ...(theme.palette.mode === "dark" && { filter: "invert(1)", opacity: 0.8 }),
-                  "& span": {
-                    display: "block !important",
-                  },
                 }}
-              >
-                <Image src={rubberdokLogo} alt="Rubberdøk" width="48px" height="24px" layout="fixed" />
-              </Box>
+              />
             </Link>
           </Stack>
         </Stack>
@@ -115,7 +119,7 @@ type NextLinkItemProps = LinkProps & {
   onClick?: () => void;
 };
 
-const NextLinkItem: React.FC<NextLinkItemProps> = ({ children, sx, onClick, ...other }) => {
+const NextLinkItem: React.FC<React.PropsWithChildren<NextLinkItemProps>> = ({ children, sx, onClick, ...other }) => {
   return (
     <NextLink passHref {...other}>
       <Link
@@ -135,5 +139,3 @@ const NextLinkItem: React.FC<NextLinkItemProps> = ({ children, sx, onClick, ...o
     </NextLink>
   );
 };
-
-export default Footer;

@@ -6,8 +6,8 @@ import { useRouter } from "next/router";
 import ReactMarkdown from "react-markdown";
 
 import * as markdownComponents from "@/components/MarkdownForm/components";
-import Title from "@/components/Title";
-import Layout from "@/layouts/Layout";
+import { Title } from "@/components/Title";
+import { Layout } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/pages/_app";
 import { Article, getPostBySlug, getPostsSlugs } from "@/utils/posts";
 
@@ -23,7 +23,6 @@ const ArticlePage: NextPageWithLayout<InferGetStaticPropsType<typeof getStaticPr
         variant="dark"
         ImageProps={{
           placeholder: "empty",
-          layout: "fill",
         }}
         breadcrumbs={[
           { href: "/", name: "Hjem" },
@@ -71,9 +70,7 @@ const ArticlePage: NextPageWithLayout<InferGetStaticPropsType<typeof getStaticPr
   );
 };
 
-ArticlePage.getLayout = function getLayout(page: React.ReactElement) {
-  return <Layout>{page}</Layout>;
-};
+ArticlePage.getLayout = (page) => <Layout>{page}</Layout>;
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const paths = getPostsSlugs("organizations");

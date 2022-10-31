@@ -1,2 +1,2 @@
-export { default as Footer } from "./Footer";
-export { default as FooterSimple } from "./FooterSimple";
+export { Footer } from "./Footer";
+export { FooterSimple } from "./FooterSimple";

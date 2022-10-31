@@ -14,26 +14,22 @@ import {
   TextField,
 } from "@mui/material";
 
-import questionTypeLabels from "@/components/pages/forms/formAdmin/questionTypeLabels";
-import { Option, Question, QuestionType } from "@/interfaces/forms";
+import { questionTypeLabels } from "@/components/pages/forms/formAdmin/questionTypeLabels";
+import { OptionFragment, QuestionTypeEnum, QuestionWithAnswerIdsFragment } from "@/generated/graphql";
+
+type Props = {
+  question: QuestionWithAnswerIdsFragment;
+  setQuestion: (question: QuestionWithAnswerIdsFragment | undefined) => void;
+  saveQuestion: () => void;
+  deleteQuestion: () => void;
+};
 
 /**
  * Component to edit a question on a form.
  * Renders input fields to change the question's details.
  * If the question's type allows options, allows the creation of such.
- *
- * Props:
- * - state of the question to edit
- * - setQuestion function to set question state
- * - saveQuestion function to save this question to the database and then set it as inactive
- * - deleteQuestion function to delete this question from the database
  */
-const EditQuestion: React.FC<{
-  question: Question;
-  setQuestion: (question: Question | undefined) => void;
-  saveQuestion: () => void;
-  deleteQuestion: () => void;
-}> = ({ question, setQuestion, saveQuestion, deleteQuestion }) => (
+export const EditQuestion: React.FC<Props> = ({ question, setQuestion, saveQuestion, deleteQuestion }) => (
   <Grid container direction="column" spacing={1}>
     <Grid item>
       <TextField
@@ -57,12 +53,14 @@ const EditQuestion: React.FC<{
             fullWidth
             value={question.questionType}
             onChange={(e) => {
-              const questionType = e.target.value as QuestionType;
-              let firstOption: Option | undefined = undefined;
+              const questionType = e.target.value as QuestionTypeEnum;
+              let firstOption: OptionFragment | undefined = undefined;
               if (
                 question.options &&
                 question.options.length === 0 &&
-                (questionType === "CHECKBOXES" || questionType === "MULTIPLE_CHOICE" || questionType === "DROPDOWN")
+                (questionType === QuestionTypeEnum.Checkboxes ||
+                  questionType === QuestionTypeEnum.MultipleChoice ||
+                  questionType === QuestionTypeEnum.Dropdown)
               ) {
                 firstOption = { id: "", answer: "" };
               }
@@ -76,7 +74,10 @@ const EditQuestion: React.FC<{
           >
             {Object.entries(questionTypeLabels)
               // TODO: remove below line once Slider and File Upload question types are implemented
-              .filter(([questionType]) => !(questionType === "SLIDER" || questionType === "FILE_UPLOAD"))
+              .filter(
+                ([questionType]) =>
+                  !(questionType === QuestionTypeEnum.Slider || questionType === QuestionTypeEnum.FileUpload)
+              )
               .map(([questionType, label]) => (
                 <MenuItem key={questionType} value={questionType}>
                   {label}
@@ -98,17 +99,17 @@ const EditQuestion: React.FC<{
         />
       </Grid>
     </Grid>
-    {(question.questionType === "CHECKBOXES" ||
-      question.questionType === "MULTIPLE_CHOICE" ||
-      question.questionType === "DROPDOWN") && (
+    {(question.questionType === QuestionTypeEnum.Checkboxes ||
+      question.questionType === QuestionTypeEnum.MultipleChoice ||
+      question.questionType === QuestionTypeEnum.Dropdown) && (
       <Grid item container direction="column" spacing={1}>
         {question.options &&
           question.options.map((option, index) => (
             <Grid key={index} item container direction="row" alignItems="center">
               <Grid item>
-                {question.questionType === "CHECKBOXES" ? (
+                {question.questionType === QuestionTypeEnum.Checkboxes ? (
                   <Checkbox disabled />
-                ) : question.questionType === "MULTIPLE_CHOICE" ? (
+                ) : question.questionType === QuestionTypeEnum.MultipleChoice ? (
                   <Radio disabled />
                 ) : (
                   <Box pl={1} pr={1}>
@@ -188,5 +189,3 @@ const EditQuestion: React.FC<{
     </Grid>
   </Grid>
 );
-
-export default EditQuestion;

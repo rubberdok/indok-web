@@ -21,14 +21,12 @@ import {
 } from "@mui/material";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import { useState } from "react";
 
-import PayWithVipps from "@/components/pages/ecommerce/PayWithVipps";
-import SalesTermsDialog from "@/components/pages/ecommerce/SalesTermsDialog";
-import { UserInfoDocument } from "@/generated/graphql";
-import { GET_PRODUCT } from "@/graphql/ecommerce/queries";
-import { Product } from "@/interfaces/ecommerce";
-import Layout, { RootStyle } from "@/layouts/Layout";
+import { PayWithVipps } from "@/components/pages/ecommerce/PayWithVipps";
+import { SalesTermsDialog } from "@/components/pages/ecommerce/SalesTermsDialog";
+import { ProductDocument, UserDocument } from "@/generated/graphql";
+import { Layout, RootStyle } from "@/layouts/Layout";
 import { addApolloState, initializeApollo } from "@/lib/apolloClient";
 import { NextPageWithLayout } from "@/pages/_app";
 
@@ -37,15 +35,14 @@ const CheckoutPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getSer
   const { productId, quantityStr, redirect } = router.query;
   const quantity = typeof quantityStr == "string" ? parseInt(quantityStr) : 1;
 
-  const [product, setProduct] = useState<Product>();
   const [orderError, setOrderError] = useState<string>("");
   const [isConsentingTerms, setIsConsentingTerms] = useState(false);
   const [openSalesTerms, setOpenSalesTerms] = useState(false);
 
-  const { loading, error } = useQuery<{ product: Product }>(GET_PRODUCT, {
-    variables: { productId: productId },
-    onCompleted: (data) => setProduct(data.product),
+  const { loading, error, data } = useQuery(ProductDocument, {
+    variables: { productId: productId as string },
   });
+  const product = data?.product;
 
   return (
     <Container>
@@ -166,7 +163,7 @@ const CheckoutPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getSer
 
 export default CheckoutPage;
 
-CheckoutPage.getLayout = (page: React.ReactElement) => (
+CheckoutPage.getLayout = (page) => (
   <Layout>
     <RootStyle>{page}</RootStyle>
   </Layout>
@@ -174,9 +171,7 @@ CheckoutPage.getLayout = (page: React.ReactElement) => (
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const client = initializeApollo({}, ctx);
-  const { data, error } = await client.query({
-    query: UserInfoDocument,
-  });
+  const { data, error } = await client.query({ query: UserDocument });
 
   if (error) return { notFound: true };
   if (!data.user) {
