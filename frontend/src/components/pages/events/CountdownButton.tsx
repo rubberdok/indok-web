@@ -58,11 +58,22 @@ const ButtonText: React.FC<Props> = ({
   const [now, setNow] = useState(dayjs(currentTime));
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft(countDownDate, now));
 
+  useEffect(() => {
+    // Update timeLeft and now (current time) each second
+    const id = setTimeout(() => {
+      setTimeLeft(calculateTimeLeft(countDownDate, now));
+      setNow(now.add(1, "second"));
+    }, 1000);
+    return () => {
+      clearTimeout(id);
+    };
+  });
+
   const getCurrentTimeLeft = (timeparts: string[]) => {
     /**
      * timeparts is a list containing the elements of time that are not 0
      * ex. 3 days, 14 minutes and 3 seconds yields: ["days", "minutes", "seconds"]
-     * The actual time left is stored in the Record<string, number> called timeLeft
+     * The actual time left is stored in the sRecord<string, number> called timeLeft
      *
      * Shows remaining time until the event opens on the following formats depending on how much time is left:
      * XX days and YY hours
