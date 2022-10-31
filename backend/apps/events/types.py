@@ -38,18 +38,18 @@ def has_bought_ticket(event: Event, user: User) -> bool:
 
 
 def resolve_position_on_waiting_list(event: Event, user: User) -> int:
-    # some wierd shit can happen if the caller is not on the list
-    # Get all signups
+    # some wierd shit can happen if the caller is not on the list,
+    # but we dont think it matters as it will only ever be called when people are on it
     if event.is_attendable:
-        wait_list = event.users_on_waiting_list  # Sorted by timestamp
+        wait_list = event.users_on_waiting_list
         for i in range(len(wait_list)):
             position: int = 1
             if wait_list[i] == user:
                 return position
-            else:  # wait_list[i].is_attending:
+            else:
                 position += 1
     else:
-        # this might be a case we need to handle, but for now we don't care
+        # this might be a case we need to handle, but probably not
         return None
     return None
 
