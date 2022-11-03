@@ -2,7 +2,7 @@ import { FormControl, FormHelperText, InputLabel, MenuItem, Select } from "@mui/
 import { sortBy } from "lodash";
 import { Controller, useFormContext } from "react-hook-form";
 
-import { IEventForm } from "../schema";
+import { IEventForm } from "../../schema";
 
 type Props = {
   disabled?: boolean;
