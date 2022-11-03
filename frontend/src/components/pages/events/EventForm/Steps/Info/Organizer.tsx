@@ -1,8 +1,8 @@
 import { FormControl, FormHelperText, InputLabel, MenuItem, Select } from "@mui/material";
 import { Controller, useFormContext } from "react-hook-form";
 
-import { IEventForm } from "../schema";
-import { Organization } from "../types";
+import { IEventForm } from "../../schema";
+import { Organization } from "../../types";
 
 type Props = {
   organizations: Organization[];
