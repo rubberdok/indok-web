@@ -44,6 +44,10 @@ yup.setLocale({
   },
 });
 
+/**
+ * Schema for basic information about the event, responsible for validating things like
+ * title, description, grade years etc.
+ */
 const infoSchema = yup
   .object({
     title: yup.string().max(100).label("Tittel").required(),
@@ -61,6 +65,10 @@ const infoSchema = yup
   })
   .required();
 
+/**
+ * Schema for the event's time and location
+ *
+ */
 const timeAndPlaceSchema = yup
   .object({
     location: yup.string().max(100, "Maks 100 tegn").label("Sted"),
@@ -76,6 +84,10 @@ const timeAndPlaceSchema = yup
   })
   .required();
 
+/**
+ * Schema for validation everything related to sign ups and registrations. If `isAttendable` is set, then the contents
+ * of `details` will be validated. Otherwise, they're simply ignored.
+ */
 const registrationSchema = yup.object({
   isAttendable: yup.boolean().required().default(false),
   details: yup
@@ -92,6 +104,9 @@ const registrationSchema = yup.object({
     }),
 });
 
+/**
+ * Combined validation schema of the above schemas
+ */
 export const schema = yup
   .object({
     info: infoSchema,
