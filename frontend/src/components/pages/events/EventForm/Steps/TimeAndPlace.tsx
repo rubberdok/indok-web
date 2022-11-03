@@ -2,7 +2,7 @@ import { CalendarMonthRounded, PlaceOutlined } from "@mui/icons-material";
 import { InputAdornment, Stack, TextField, Typography } from "@mui/material";
 import { useFormContext } from "react-hook-form";
 
-import { IEventForm } from "./schema";
+import { IEventForm } from "../schema";
 
 export const TimeAndPlace: React.FC = () => {
   const {

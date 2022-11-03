@@ -5,11 +5,8 @@ import { isEmpty } from "lodash";
 import { useRouter } from "next/router";
 import { FormProvider, useForm } from "react-hook-form";
 
-import { Info } from "./Info";
-import { Registration } from "./Registration";
-import { Review } from "./Review";
 import { IEventForm, schema } from "./schema";
-import { TimeAndPlace } from "./TimeAndPlace";
+import { Review, TimeAndPlace, Info, Registration } from "./Steps";
 import { Organization } from "./types";
 
 const steps = {
@@ -113,11 +110,9 @@ export const EventForm: React.FC<Props> = ({ organizations, defaultValues = {}, 
   const {
     formState: { errors },
     handleSubmit,
-    trigger,
   } = methods;
 
   function navigateToStep(step: StepIndex) {
-    trigger(steps[activeStep].slug);
     router.push(
       {
         query: {

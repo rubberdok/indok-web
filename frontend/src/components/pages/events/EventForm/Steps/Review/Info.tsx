@@ -5,7 +5,7 @@ import { useFormContext } from "react-hook-form";
 
 import { AllCategoriesDocument, UserOrganizationsDocument } from "@/generated/graphql";
 
-import { IEventForm } from "../schema";
+import { IEventForm } from "../../schema";
 
 import { Errors } from "./Errors";
 import { ReviewItem } from "./ReviewItem";
