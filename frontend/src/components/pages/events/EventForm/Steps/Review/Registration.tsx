@@ -3,7 +3,7 @@ import { Accordion, AccordionDetails, AccordionSummary, Stack, Typography } from
 import dayjs from "dayjs";
 import { useFormContext } from "react-hook-form";
 
-import { IEventForm } from "../schema";
+import { IEventForm } from "../../schema";
 
 import { Errors } from "./Errors";
 import { ReviewItem } from "./ReviewItem";

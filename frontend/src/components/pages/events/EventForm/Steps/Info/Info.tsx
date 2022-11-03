@@ -2,8 +2,8 @@ import { MailOutlineRounded } from "@mui/icons-material";
 import { InputAdornment, Stack, TextField, Typography } from "@mui/material";
 import { useFormContext } from "react-hook-form";
 
-import { IEventForm } from "../schema";
-import { Organization } from "../types";
+import { IEventForm } from "../../schema";
+import { Organization } from "../../types";
 
 import { Category } from "./Category";
 import { GradeYears } from "./GradeYears";

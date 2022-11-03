@@ -1,7 +1,7 @@
 import { Typography } from "@mui/material";
 import { FieldErrors, useFormContext } from "react-hook-form";
 
-import { IEventForm } from "../schema";
+import { IEventForm } from "../../schema";
 
 type Props = {
   step: keyof FieldErrors<IEventForm>;

@@ -4,7 +4,7 @@ import { Controller, useFormContext } from "react-hook-form";
 
 import { AllCategoriesDocument } from "@/generated/graphql";
 
-import { IEventForm } from "../schema";
+import { IEventForm } from "../../schema";
 
 type Props = {
   disabled?: boolean;

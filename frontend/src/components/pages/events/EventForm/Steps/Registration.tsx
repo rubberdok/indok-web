@@ -2,7 +2,7 @@ import { CalendarMonthRounded, PeopleOutlineRounded } from "@mui/icons-material"
 import { Divider, FormControlLabel, InputAdornment, Stack, Switch, TextField, Typography } from "@mui/material";
 import { Controller, useFormContext } from "react-hook-form";
 
-import { IEventForm } from "./schema";
+import { IEventForm } from "../schema";
 
 export const Registration: React.FC = () => {
   const {
