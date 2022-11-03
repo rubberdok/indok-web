@@ -69,6 +69,13 @@ type Props = {
   onSubmit: (data: IEventForm) => void;
 };
 
+/**
+ * Form for creating and editing events.
+ * Built with `react-hook-form` and `yup`. Split into several steps, where each step
+ * has limited responsibility in order to limit the cognitive complexity of the form.
+ * Validation is performed on submission, and the validation must pass for `onSubmit` to be called.
+ * Otherwise, the user is informed about the errors in the form.
+ */
 export const EventForm: React.FC<Props> = ({ organizations, defaultValues = {}, onSubmit }) => {
   const router = useRouter();
   const { step } = router.query;
