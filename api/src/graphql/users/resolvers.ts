@@ -1,4 +1,4 @@
-import { Resolvers } from "@/graphql/generated/types";
+import { Resolvers } from "../generated/types";
 
 const resolvers: Resolvers = {
   Query: {
@@ -18,7 +18,6 @@ const resolvers: Resolvers = {
     },
   },
   User: {
-    permissions: (user, _args, ctx) => ctx.permissionService.getAllByUser(user.id),
     canUpdateYear: (user, _args, ctx) => ctx.userService.canUpdateYear(user),
   },
 };

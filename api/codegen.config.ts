@@ -21,7 +21,6 @@ const config: CodegenConfig = {
 
         mappers: {
           User: "@prisma/client#User",
-          Permission: "@prisma/client#Permission",
           Cabin: "@prisma/client#Cabin",
           Booking: "@prisma/client#Booking",
         },

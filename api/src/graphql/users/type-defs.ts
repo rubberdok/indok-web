@@ -25,7 +25,6 @@ const typeDefs = gql`
     firstName: String!
     username: String!
     createdAt: String!
-    permissions: [Permission!]!
     firstLogin: Boolean!
     canUpdateYear: Boolean!
     graduationYear: Int
