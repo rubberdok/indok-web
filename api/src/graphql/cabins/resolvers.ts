@@ -1,4 +1,4 @@
-import { Resolvers } from "@/graphql/generated/types";
+import { Resolvers } from "../generated/types";
 
 const resolvers: Resolvers = {
   Mutation: {

@@ -14,7 +14,7 @@ import session from "express-session";
 import { container } from "tsyringe";
 
 import { env } from "@/config";
-import "@/container";
+import { initializeContainer } from "@/container";
 import { resolvers, typeDefs } from "@/graphql";
 import { IContext, IContextProvider, Type as ContextProviderType } from "@/graphql/context";
 import { formatError } from "@/lib/apolloServer";
@@ -28,6 +28,8 @@ Sentry.init({
 const start = async () => {
   const app = express();
   const httpServer = http.createServer(app);
+
+  initializeContainer();
 
   app.use(Sentry.Handlers.requestHandler());
   app.use(

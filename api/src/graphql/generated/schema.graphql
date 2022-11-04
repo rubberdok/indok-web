@@ -39,13 +39,7 @@ input NewBookingInput {
   startDate: DateTime!
 }
 
-type Permission {
-  id: ID!
-  name: String!
-}
-
 type Query {
-  hasPermission(permission: String!): Boolean!
   user: User
   users: [User!]!
 }
@@ -75,7 +69,6 @@ type User {
   graduationYearUpdatedAt: DateTime
   id: ID!
   lastName: String!
-  permissions: [Permission!]!
   phoneNumber: String
   username: String!
 }
