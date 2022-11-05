@@ -7,7 +7,7 @@ const resolvers: Resolvers = {
     },
 
     updateBookingStatus: async (_root, { id, status }, ctx) => {
-      if (!ctx.req.session.user) throw new Error("User not logged in");
+      if (!ctx.req.session.userId) throw new Error("User not logged in");
       return await ctx.cabinService.updateBookingStatus(id, status);
     },
   },
