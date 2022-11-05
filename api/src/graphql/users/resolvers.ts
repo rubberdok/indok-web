@@ -3,8 +3,9 @@ import { Resolvers } from "../generated/types";
 const resolvers: Resolvers = {
   Query: {
     user: (_root, _args, ctx) => {
-      if (ctx.req.session.user) {
-        return ctx.userService.get(ctx.req.session.user.id);
+      const { userId } = ctx.req.session;
+      if (userId) {
+        return ctx.userService.get(userId);
       }
       return null;
     },
