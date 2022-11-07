@@ -9,6 +9,6 @@ from apps.forms.models import Form
 def handle_new_form(sender, instance: Form, created: bool, **kwargs) -> None:
     if created:
         perms = ["forms.manage_form", "forms.change_form", "forms.delete_form"]
-        group = instance.organization.hr_group.group
+        group = instance.organization.admin_group.group
         for perm in perms:
             assign_perm(perm, group, instance)

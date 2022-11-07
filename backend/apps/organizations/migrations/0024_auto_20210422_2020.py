@@ -23,7 +23,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name="organization",
-            name="primary_group",
+            name="member_group",
             field=models.OneToOneField(
                 on_delete=django.db.models.deletion.CASCADE, to="permissions.responsiblegroup", null=True
             ),

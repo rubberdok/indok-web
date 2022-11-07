@@ -4,23 +4,23 @@ from django.db import migrations, models
 import django.db.models.deletion
 
 
-def set_primary_groups(apps, schema_editor):
+def set_member_groups(apps, schema_editor):
     Organization = apps.get_model("organizations", "Organization")
     ResponsibleGroup = apps.get_model("permissions", "ResponsibleGroup")
 
     for organization in Organization.objects.all():
         created = False
-        if organization.primary_group is None:
-            primary_group = ResponsibleGroup.objects.create(
+        if organization.member_group is None:
+            member_group = ResponsibleGroup.objects.create(
                 name=organization.name, description=f"Medlemmer av {organization.name}"
             )
-            organization.primary_group = primary_group
+            organization.member_group = member_group
             created = True
-        if organization.hr_group is None:
-            hr_group = ResponsibleGroup.objects.create(
+        if organization.admin_group is None:
+            admin_group = ResponsibleGroup.objects.create(
                 name="HR", description=f"HR-gruppen til {organization.name}. Tillatelser for å se og behandle søknader."
             )
-            organization.hr_group = hr_group
+            organization.admin_group = admin_group
             created = True
 
         if created:
@@ -41,7 +41,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name="organization",
-            name="hr_group",
+            name="admin_group",
             field=models.OneToOneField(
                 null=True,
                 on_delete=django.db.models.deletion.CASCADE,
@@ -51,12 +51,12 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterField(
             model_name="organization",
-            name="primary_group",
+            name="member_group",
             field=models.OneToOneField(
                 on_delete=django.db.models.deletion.CASCADE,
                 related_name="organization",
                 to="permissions.responsiblegroup",
             ),
         ),
-        migrations.RunPython(set_primary_groups, lambda apps, schema_editor: None),
+        migrations.RunPython(set_member_groups, lambda apps, schema_editor: None),
     ]

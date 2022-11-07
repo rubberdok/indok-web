@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AlterField(
             model_name="organization",
-            name="hr_group",
+            name="admin_group",
             field=models.OneToOneField(
                 null=True,
                 on_delete=django.db.models.deletion.DO_NOTHING,
@@ -24,7 +24,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterField(
             model_name="organization",
-            name="primary_group",
+            name="member_group",
             field=models.OneToOneField(
                 on_delete=django.db.models.deletion.DO_NOTHING,
                 related_name="organization",
