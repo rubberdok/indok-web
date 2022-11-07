@@ -109,7 +109,7 @@ const ButtonText: React.FC<Props> = ({
   if (currentTimeParts.length !== 0) return <>{getCurrentTimeLeft(currentTimeParts)}</>;
   if (isSignedUp) return <>Meld av</>;
   if (isOnWaitingList) {
-    if (positionOnWaitinglist - 1 == 1) {
+    if (positionOnWaitinglist - 1 === 1) {
       return (
         <>
           Det er {positionOnWaitinglist - 1} person foran deg i ventelisten
