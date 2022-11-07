@@ -2075,6 +2075,7 @@ export type EventQuery = {
       isSignedUp?: boolean | null;
       isOnWaitingList?: boolean | null;
       hasBoughtTicket?: boolean | null;
+      positionOnWaitinglist?: number | null;
     } | null;
     product?: { __typename?: "ProductType"; id: string } | null;
   } | null;
