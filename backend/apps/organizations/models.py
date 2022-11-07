@@ -4,7 +4,7 @@ from django.conf import settings
 from django.db import models
 from django.db.models import UniqueConstraint
 
-from apps.permissions.constants import HR_TYPE, PRIMARY_TYPE
+from apps.permissions.constants import ADMIN_GROUP_TYPE, MEMBER_GROUP_TYPE
 from apps.permissions.models import ResponsibleGroup
 
 
@@ -42,22 +42,22 @@ class Organization(models.Model):
     )
 
     @property
-    def hr_group(self) -> Optional["ResponsibleGroup"]:
+    def admin_group(self) -> Optional["ResponsibleGroup"]:
         try:
-            return self.permission_groups.get(group_type=HR_TYPE)
+            return self.permission_groups.get(group_type=ADMIN_GROUP_TYPE)
         except ResponsibleGroup.DoesNotExist:
             return None
 
     @property
-    def primary_group(self) -> Optional["ResponsibleGroup"]:
+    def member_group(self) -> Optional["ResponsibleGroup"]:
         try:
-            return self.permission_groups.get(group_type=PRIMARY_TYPE)
+            return self.permission_groups.get(group_type=MEMBER_GROUP_TYPE)
         except ResponsibleGroup.DoesNotExist:
             return None
 
     class Meta:
         constraints = [UniqueConstraint(fields=["parent", "name"], name="unique_child_organization_name")]
-        permissions = [("manage_organization", "Can manage organizations, used for admins")]
+        # permissions = [("manage_organization", "Can manage organizations, used for admins")]
 
     def __str__(self):
         return f"{self.name}"
