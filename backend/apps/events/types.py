@@ -37,7 +37,7 @@ def has_bought_ticket(event: Event, user: User) -> bool:
     )
 
 
-def resolve_position_on_waiting_list(event: Event, user: User) -> int:
+def resolve_position_on_waiting_list(event: Event, user: User) -> Optional[int]:
     # some wierd shit can happen if the caller is not on the list,
     # but we dont think it matters as it will only ever be called when people are on it
     if event.is_attendable:
