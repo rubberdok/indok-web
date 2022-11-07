@@ -1,4 +1,4 @@
-from typing import List, TypedDict, Union
+from typing import List, Optional, TypedDict, Union
 
 import graphene
 from graphene import NonNull
