@@ -197,11 +197,11 @@ export const EventDetails: React.FC<Props> = ({ eventId }) => {
                   {timeData?.serverTime && event.deadline && dayjs(event.deadline).isAfter(dayjs()) && (
                     <Stack spacing={2}>
                       <CountdownButton
-                        countDownDate={(event as AttendableEvent).signupOpenDate}
-                        isSignedUp={(event as AttendableEvent).userAttendance.isSignedUp}
-                        isOnWaitingList={(event as AttendableEvent).userAttendance.isOnWaitingList}
-                        positionOnWaitinglist={(event as AttendableEvent).userAttendance.positionOnWaitinglist}
-                        isFull={(event as AttendableEvent).isFull}
+                        countDownDate={event.signupOpenDate ?? ""}
+                        isSignedUp={event.userAttendance?.isSignedUp ?? false}
+                        isOnWaitingList={event.userAttendance?.isOnWaitingList ?? false}
+                        positionOnWaitinglist={event.userAttendance?.positionOnWaitingList ?? 0}
+                        isFull={event.isFull ?? false}
                         loading={signOffLoading || signUpLoading || eventLoading}
                         disabled={
                           (!user.phoneNumber &&
