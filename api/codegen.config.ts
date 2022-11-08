@@ -1,14 +1,14 @@
 import { CodegenConfig } from "@graphql-codegen/cli";
 
 const config: CodegenConfig = {
-  schema: "src/graphql/**/type-defs.ts",
+  overwrite: true,
+  schema: "src/graphql/type-defs.ts",
   generates: {
     "src/graphql/generated/types.ts": {
       config: {
         useIndexSignature: true,
         showUnusedMappers: true,
         immutableTypes: true,
-        nonOptionalTypename: true,
         strictScalars: true,
 
         scalars: {

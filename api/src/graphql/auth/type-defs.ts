@@ -1,11 +1,22 @@
 import gql from "graphql-tag";
 
-const typeDefs = gql`
+export const typeDefs = gql`
+  type RedirectUrlResponse {
+    url: String!
+  }
+
+  enum LogoutStatus {
+    SUCCESS
+    ERROR
+  }
+
+  type LogoutResponse {
+    status: LogoutStatus!
+  }
+
   type Mutation {
-    redirectUrl(state: String): String!
-    authenticate(code: String!): User!
-    logout: Boolean!
+    redirectUrl(state: String): RedirectUrlResponse!
+    authenticate(code: String!): UserResponse!
+    logout: LogoutResponse!
   }
 `;
-
-export default typeDefs;
