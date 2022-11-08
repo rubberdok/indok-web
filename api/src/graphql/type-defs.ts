@@ -6,5 +6,3 @@ import { typeDefs as scalarTypes } from "./scalars";
 import { typeDefs as userTypes } from "./users";
 
 export const typeDefs = mergeTypeDefs([userTypes, cabinTypes, scalarTypes, authTypes]);
-
-export default typeDefs;

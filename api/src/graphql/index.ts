@@ -1,3 +1,2 @@
-export { default as Context } from "./context";
-export { default as resolvers } from "./resolvers";
-export { default as typeDefs } from "./type-defs";
+export { resolvers } from "./resolvers";
+export { typeDefs } from "./type-defs";

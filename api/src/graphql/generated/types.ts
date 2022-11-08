@@ -6,6 +6,7 @@ export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -18,7 +19,7 @@ export type Scalars = {
 };
 
 export type Booking = {
-  readonly __typename: "Booking";
+  readonly __typename?: "Booking";
   readonly cabin: Cabin;
   readonly email: Scalars["String"];
   readonly endDate: Scalars["DateTime"];
@@ -31,20 +32,30 @@ export type Booking = {
 };
 
 export type Cabin = {
-  readonly __typename: "Cabin";
+  readonly __typename?: "Cabin";
   readonly externalPrice: Scalars["String"];
   readonly id: Scalars["ID"];
   readonly internalPrice: Scalars["String"];
   readonly name: Scalars["String"];
 };
 
+export type LogoutResponse = {
+  readonly __typename?: "LogoutResponse";
+  readonly status: LogoutStatus;
+};
+
+export enum LogoutStatus {
+  Error = "ERROR",
+  Success = "SUCCESS",
+}
+
 export type Mutation = {
-  readonly __typename: "Mutation";
-  readonly authenticate: User;
+  readonly __typename?: "Mutation";
+  readonly authenticate: UserResponse;
   readonly createUser?: Maybe<User>;
-  readonly logout: Scalars["Boolean"];
+  readonly logout: LogoutResponse;
   readonly newBooking: Booking;
-  readonly redirectUrl: Scalars["String"];
+  readonly redirectUrl: RedirectUrlResponse;
   readonly updateBookingStatus: Booking;
   readonly updateUser: User;
 };
@@ -86,9 +97,14 @@ export type NewBookingInput = {
 };
 
 export type Query = {
-  readonly __typename: "Query";
-  readonly user?: Maybe<User>;
-  readonly users: ReadonlyArray<User>;
+  readonly __typename?: "Query";
+  readonly user: UserResponse;
+  readonly users: UsersResponse;
+};
+
+export type RedirectUrlResponse = {
+  readonly __typename?: "RedirectUrlResponse";
+  readonly url: Scalars["String"];
 };
 
 export enum Status {
@@ -107,7 +123,7 @@ export type UpdateUserInput = {
 };
 
 export type User = {
-  readonly __typename: "User";
+  readonly __typename?: "User";
   readonly allergies?: Maybe<Scalars["String"]>;
   readonly canUpdateYear: Scalars["Boolean"];
   readonly createdAt: Scalars["String"];
@@ -119,6 +135,17 @@ export type User = {
   readonly lastName: Scalars["String"];
   readonly phoneNumber?: Maybe<Scalars["String"]>;
   readonly username: Scalars["String"];
+};
+
+export type UserResponse = {
+  readonly __typename?: "UserResponse";
+  readonly user?: Maybe<User>;
+};
+
+export type UsersResponse = {
+  readonly __typename?: "UsersResponse";
+  readonly total: Scalars["Int"];
+  readonly users: ReadonlyArray<User>;
 };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
@@ -202,13 +229,18 @@ export type ResolversTypes = ResolversObject<{
   DateTime: ResolverTypeWrapper<Scalars["DateTime"]>;
   ID: ResolverTypeWrapper<Scalars["ID"]>;
   Int: ResolverTypeWrapper<Scalars["Int"]>;
+  LogoutResponse: ResolverTypeWrapper<LogoutResponse>;
+  LogoutStatus: LogoutStatus;
   Mutation: ResolverTypeWrapper<{}>;
   NewBookingInput: NewBookingInput;
   Query: ResolverTypeWrapper<{}>;
+  RedirectUrlResponse: ResolverTypeWrapper<RedirectUrlResponse>;
   Status: Status;
   String: ResolverTypeWrapper<Scalars["String"]>;
   UpdateUserInput: UpdateUserInput;
   User: ResolverTypeWrapper<UserModel>;
+  UserResponse: ResolverTypeWrapper<Omit<UserResponse, "user"> & { user?: Maybe<ResolversTypes["User"]> }>;
+  UsersResponse: ResolverTypeWrapper<Omit<UsersResponse, "users"> & { users: ReadonlyArray<ResolversTypes["User"]> }>;
 }>;
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -219,12 +251,16 @@ export type ResolversParentTypes = ResolversObject<{
   DateTime: Scalars["DateTime"];
   ID: Scalars["ID"];
   Int: Scalars["Int"];
+  LogoutResponse: LogoutResponse;
   Mutation: {};
   NewBookingInput: NewBookingInput;
   Query: {};
+  RedirectUrlResponse: RedirectUrlResponse;
   String: Scalars["String"];
   UpdateUserInput: UpdateUserInput;
   User: UserModel;
+  UserResponse: Omit<UserResponse, "user"> & { user?: Maybe<ResolversParentTypes["User"]> };
+  UsersResponse: Omit<UsersResponse, "users"> & { users: ReadonlyArray<ResolversParentTypes["User"]> };
 }>;
 
 export type BookingResolvers<
@@ -258,12 +294,20 @@ export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversT
   name: "DateTime";
 }
 
+export type LogoutResponseResolvers<
+  ContextType = IContext,
+  ParentType extends ResolversParentTypes["LogoutResponse"] = ResolversParentTypes["LogoutResponse"]
+> = ResolversObject<{
+  status?: Resolver<ResolversTypes["LogoutStatus"], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type MutationResolvers<
   ContextType = IContext,
   ParentType extends ResolversParentTypes["Mutation"] = ResolversParentTypes["Mutation"]
 > = ResolversObject<{
   authenticate?: Resolver<
-    ResolversTypes["User"],
+    ResolversTypes["UserResponse"],
     ParentType,
     ContextType,
     RequireFields<MutationAuthenticateArgs, "code">
@@ -274,14 +318,19 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationCreateUserArgs, "firstName">
   >;
-  logout?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
+  logout?: Resolver<ResolversTypes["LogoutResponse"], ParentType, ContextType>;
   newBooking?: Resolver<
     ResolversTypes["Booking"],
     ParentType,
     ContextType,
     RequireFields<MutationNewBookingArgs, "data">
   >;
-  redirectUrl?: Resolver<ResolversTypes["String"], ParentType, ContextType, Partial<MutationRedirectUrlArgs>>;
+  redirectUrl?: Resolver<
+    ResolversTypes["RedirectUrlResponse"],
+    ParentType,
+    ContextType,
+    Partial<MutationRedirectUrlArgs>
+  >;
   updateBookingStatus?: Resolver<
     ResolversTypes["Booking"],
     ParentType,
@@ -300,8 +349,16 @@ export type QueryResolvers<
   ContextType = IContext,
   ParentType extends ResolversParentTypes["Query"] = ResolversParentTypes["Query"]
 > = ResolversObject<{
-  user?: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
-  users?: Resolver<ReadonlyArray<ResolversTypes["User"]>, ParentType, ContextType>;
+  user?: Resolver<ResolversTypes["UserResponse"], ParentType, ContextType>;
+  users?: Resolver<ResolversTypes["UsersResponse"], ParentType, ContextType>;
+}>;
+
+export type RedirectUrlResponseResolvers<
+  ContextType = IContext,
+  ParentType extends ResolversParentTypes["RedirectUrlResponse"] = ResolversParentTypes["RedirectUrlResponse"]
+> = ResolversObject<{
+  url?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type UserResolvers<
@@ -322,11 +379,32 @@ export type UserResolvers<
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type UserResponseResolvers<
+  ContextType = IContext,
+  ParentType extends ResolversParentTypes["UserResponse"] = ResolversParentTypes["UserResponse"]
+> = ResolversObject<{
+  user?: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type UsersResponseResolvers<
+  ContextType = IContext,
+  ParentType extends ResolversParentTypes["UsersResponse"] = ResolversParentTypes["UsersResponse"]
+> = ResolversObject<{
+  total?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+  users?: Resolver<ReadonlyArray<ResolversTypes["User"]>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type Resolvers<ContextType = IContext> = ResolversObject<{
   Booking?: BookingResolvers<ContextType>;
   Cabin?: CabinResolvers<ContextType>;
   DateTime?: GraphQLScalarType;
+  LogoutResponse?: LogoutResponseResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  RedirectUrlResponse?: RedirectUrlResponseResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
+  UserResponse?: UserResponseResolvers<ContextType>;
+  UsersResponse?: UsersResponseResolvers<ContextType>;
 }>;

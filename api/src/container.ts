@@ -4,7 +4,7 @@ import { PrismaClient } from "@prisma/client";
 import { container } from "tsyringe";
 
 import { CoreTypes, IMailClient, Postmark, Prisma } from "@/core";
-import { Context } from "@/graphql";
+import { Context } from "@/graphql/context";
 import * as Repositories from "@/repositories";
 import * as Services from "@/services";
 

@@ -26,7 +26,7 @@ class ContextProvider implements IContextProvider {
   ) {}
 }
 
-export default {
+export const Context = {
   register: (container: DependencyContainer) => {
     container.register<IContextProvider>(Type, { useClass: ContextProvider });
   },

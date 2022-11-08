@@ -6,6 +6,4 @@ import { Resolvers } from "./generated/types";
 import { resolvers as scalarResolvers } from "./scalars";
 import { resolvers as userResolvers } from "./users";
 
-const resolvers: Resolvers = mergeResolvers([userResolvers, cabinResolvers, scalarResolvers, authResolvers]);
-
-export default resolvers;
+export const resolvers: Resolvers = mergeResolvers([userResolvers, cabinResolvers, scalarResolvers, authResolvers]);
