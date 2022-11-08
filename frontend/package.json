@@ -63,7 +63,7 @@
     "@types/react-swipeable-views": "^0.13.0",
     "@types/react-swipeable-views-utils": "^0.13.2",
     "@types/styled-components": "^5.1.10",
-    "@types/validator": "^13.1.4",
+    "@types/validator": "^13.7.10",
     "@typescript-eslint/eslint-plugin": "^4.27.0",
     "@typescript-eslint/parser": "^4.27.0",
     "cypress": "^10.1.0",
