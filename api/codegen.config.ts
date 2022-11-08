@@ -31,9 +31,6 @@ const config: CodegenConfig = {
       plugins: ["schema-ast"],
     },
   },
-  hooks: {
-    afterAllFileWrite: ["prettier --write"],
-  },
 };
 
 export default config;
