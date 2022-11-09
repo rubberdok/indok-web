@@ -30,7 +30,7 @@ const faqs = [
           </li>
           <li>
             <Typography>
-              Avbestilling innen en uke i forkant av bestilt ankomstdato medfører et gebyr på 30% av leien.
+              Avbestilling etter dette medfører et gebyr på 30% av leien.
             </Typography>
           </li>
         </ul>
