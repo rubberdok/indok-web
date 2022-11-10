@@ -42,13 +42,12 @@ type Props = {
   loading: boolean;
   /** Whether the button should be disabled */
   disabled?: boolean;
-  currentTimeParts: string[];
+  /**currentTimeParts: string[];*/
   /** Method called when the count down button is clicked */
   onClick: () => void;
 };
 
 const ButtonText: React.FC<Props> = ({
-  currentTimeParts,
   isSignedUp,
   isOnWaitingList,
   countDownDate,
@@ -76,6 +75,8 @@ const ButtonText: React.FC<Props> = ({
       clearTimeout(id);
     };
   });
+
+  const currentTimeParts = Object.keys(timeLeft).filter((interval) => timeLeft[interval] !== 0);
 
   const getCurrentTimeLeft = (timeparts: string[]) => {
     /**
@@ -109,14 +110,14 @@ const ButtonText: React.FC<Props> = ({
   if (currentTimeParts.length !== 0) return <>{getCurrentTimeLeft(currentTimeParts)}</>;
   if (isSignedUp) return <>Meld av</>;
   if (isOnWaitingList) {
-    if (positionOnWaitinglist - 1 === 1) {
+    if (positionOnWaitinglist === 1) {
       return (
         <>
-          Det er {positionOnWaitinglist - 1} person foran deg i ventelisten
+          Det er en person foran deg i ventelisten
           <br /> Trykk her for å melde av
         </>
       );
-    } else if (positionOnWaitinglist - 1 == 0) {
+    } else if (positionOnWaitinglist === 0) {
       return (
         <>
           Du er på første plass i ventelisten <br />
@@ -191,7 +192,6 @@ export const CountdownButton: React.FC<Props> = ({
         loading={loading}
       >
         <ButtonText
-          currentTimeParts={currentTimeParts}
           countDownDate={countDownDate}
           currentTime={currentTime}
           isSignedUp={isSignedUp}
