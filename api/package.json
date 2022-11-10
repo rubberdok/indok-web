@@ -73,7 +73,7 @@
   },
   "dependencies": {
     "@apollo/server": "^4.1.0",
-    "@graphql-tools/merge": "^8.3.10",
+    "@graphql-tools/merge": "^8.3.11",
     "@prisma/client": "^4.5.0",
     "@sentry/node": "^7.17.3",
     "body-parser": "^1.20.1",
