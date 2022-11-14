@@ -79,18 +79,6 @@ const ButtonText: React.FC<Props> = ({
   const currentTimeParts = Object.keys(timeLeft).filter((interval) => timeLeft[interval] !== 0);
 
   const getCurrentTimeLeft = (timeparts: string[]) => {
-    /**
-     * timeparts is a list containing the elements of time that are not 0
-     * ex. 3 days, 14 minutes and 3 seconds yields: ["days", "minutes", "seconds"]
-     * The actual time left is stored in the sRecord<string, number> called timeLeft
-     *
-     * Shows remaining time until the event opens on the following formats depending on how much time is left:
-     * XX days and YY hours
-     * XX hours and YY minutes
-     * XX minutes  (minutes left >= 10)
-     * XX minutes and YY seconds (minutes left < 10)
-     * */
-
     if (timeparts.length === 1) {
       return `Åpner om ${timeLeft[timeparts[0]]} ${translate(timeparts[0], timeLeft[timeparts[0]])}`;
     }
@@ -110,14 +98,14 @@ const ButtonText: React.FC<Props> = ({
   if (currentTimeParts.length !== 0) return <>{getCurrentTimeLeft(currentTimeParts)}</>;
   if (isSignedUp) return <>Meld av</>;
   if (isOnWaitingList) {
-    if (positionOnWaitinglist === 1) {
+    if (positionOnWaitinglist === 2) {
       return (
         <>
           Det er en person foran deg i ventelisten
           <br /> Trykk her for å melde av
         </>
       );
-    } else if (positionOnWaitinglist === 0) {
+    } else if (positionOnWaitinglist === 1) {
       return (
         <>
           Du er på første plass i ventelisten <br />
