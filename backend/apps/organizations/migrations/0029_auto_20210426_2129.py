@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
             field=models.OneToOneField(
                 null=True,
                 on_delete=django.db.models.deletion.DO_NOTHING,
-                related_name="hr_organization",
+                related_name="admin_organization",
                 to="permissions.responsiblegroup",
             ),
         ),

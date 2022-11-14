@@ -18,7 +18,8 @@ def set_member_groups(apps, schema_editor):
             created = True
         if organization.admin_group is None:
             admin_group = ResponsibleGroup.objects.create(
-                name="HR", description=f"HR-gruppen til {organization.name}. Tillatelser for å se og behandle søknader."
+                name="ADMIN",
+                description=f"ADMIN-gruppen til {organization.name}. Tillatelser for å se og behandle søknader.",
             )
             organization.admin_group = admin_group
             created = True
@@ -45,7 +46,7 @@ class Migration(migrations.Migration):
             field=models.OneToOneField(
                 null=True,
                 on_delete=django.db.models.deletion.CASCADE,
-                related_name="hr_organization",
+                related_name="admin_organization",
                 to="permissions.responsiblegroup",
             ),
         ),

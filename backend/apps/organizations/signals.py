@@ -55,7 +55,7 @@ def create_default_groups(instance: Organization, created, **kwargs):
         )
         admin_group = ResponsibleGroup.objects.create(
             name=ADMIN_GROUP_NAME,
-            description=f"ADMIN-gruppen til {instance.name}. Tillatelser for å se og behandle søknader.",
+            description=f"ADMIN-gruppen til {instance.name}. Tillatelser for å se og behandle søknader og medlemmer.",
             organization=instance,
             group_type=ADMIN_GROUP_TYPE,
         )

@@ -28,7 +28,8 @@ class Organization(models.Model):
     # Permission groups
     # All members are added to the primary group
     # Members can be added to groups programatically
-    # The HR-group has the "forms.manage_form" permission, allowing them to view and manage responses to e.g. listings.
+    # The ADMIN-group has the "forms.manage_form" permission, allowing them to view and manage responses to e.g.
+    # listings.
     # The primary group is intended to act as a group for organizations who need any kind of
     # special permission, e.g. hyttestyret
     # Or if we wish to limit the creation of events or listings to certain organizations.
