@@ -31,7 +31,7 @@
     "swc": "swc src -d dist"
   },
   "optionalDependencies": {
-    "@swc/core-linux-x64-musl": "^1.3.14"
+    "@swc/core-linux-x64-musl": "^1.3.17"
   },
   "devDependencies": {
     "@faker-js/faker": "^7.6.0",
