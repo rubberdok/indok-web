@@ -14,18 +14,18 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AlterField(
             model_name="organization",
-            name="admin_group",
+            name="hr_group",
             field=models.OneToOneField(
                 blank=True,
                 null=True,
                 on_delete=django.db.models.deletion.DO_NOTHING,
-                related_name="admin_organization",
+                related_name="hr_organization",
                 to="permissions.responsiblegroup",
             ),
         ),
         migrations.AlterField(
             model_name="organization",
-            name="member_group",
+            name="primary_group",
             field=models.OneToOneField(
                 blank=True,
                 null=True,

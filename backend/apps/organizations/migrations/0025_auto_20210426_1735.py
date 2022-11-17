@@ -8,11 +8,11 @@ def set_member_groups(apps, schema_editor):
     ResponsibleGroup = apps.get_model("permissions", "ResponsibleGroup")
 
     for organization in Organization.objects.all():
-        if organization.member_group is None:
+        if organization.primary_group is None:
             rg = ResponsibleGroup.objects.create(
                 name=organization.name, description=f"Medlemmer av {organization.name}"
             )
-            organization.member_group = rg
+            organization.primary_group = rg
             organization.save()
 
 

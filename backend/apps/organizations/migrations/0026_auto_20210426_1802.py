@@ -4,24 +4,24 @@ from django.db import migrations, models
 import django.db.models.deletion
 
 
-def set_member_groups(apps, schema_editor):
+def set_primary_groups(apps, schema_editor):
     Organization = apps.get_model("organizations", "Organization")
     ResponsibleGroup = apps.get_model("permissions", "ResponsibleGroup")
 
     for organization in Organization.objects.all():
         created = False
-        if organization.member_group is None:
-            member_group = ResponsibleGroup.objects.create(
+        if organization.primary_group is None:
+            primary_group = ResponsibleGroup.objects.create(
                 name=organization.name, description=f"Medlemmer av {organization.name}"
             )
-            organization.member_group = member_group
+            organization.primary_group = primary_group
             created = True
-        if organization.admin_group is None:
-            admin_group = ResponsibleGroup.objects.create(
-                name="ADMIN",
-                description=f"ADMIN-gruppen til {organization.name}. Tillatelser for å se og behandle søknader.",
+        if organization.hr_group is None:
+            hr_group = ResponsibleGroup.objects.create(
+                name="HR",
+                description=f"HR-gruppen til {organization.name}. Tillatelser for å se og behandle søknader.",
             )
-            organization.admin_group = admin_group
+            organization.hr_group = hr_group
             created = True
 
         if created:
@@ -42,22 +42,22 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name="organization",
-            name="admin_group",
+            name="hr_group",
             field=models.OneToOneField(
                 null=True,
                 on_delete=django.db.models.deletion.CASCADE,
-                related_name="admin_organization",
+                related_name="hr_organization",
                 to="permissions.responsiblegroup",
             ),
         ),
         migrations.AlterField(
             model_name="organization",
-            name="member_group",
+            name="primary_group",
             field=models.OneToOneField(
                 on_delete=django.db.models.deletion.CASCADE,
                 related_name="organization",
                 to="permissions.responsiblegroup",
             ),
         ),
-        migrations.RunPython(set_member_groups, lambda apps, schema_editor: None),
+        migrations.RunPython(set_primary_groups, lambda apps, schema_editor: None),
     ]
