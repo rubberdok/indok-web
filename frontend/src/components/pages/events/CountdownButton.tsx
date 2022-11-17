@@ -42,7 +42,6 @@ type Props = {
   loading: boolean;
   /** Whether the button should be disabled */
   disabled?: boolean;
-  /**currentTimeParts: string[];*/
   /** Method called when the count down button is clicked */
   onClick: () => void;
 };
