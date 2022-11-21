@@ -8,11 +8,11 @@ def migrate_org_groups(apps, schema_editor):
     ResponsibleGroup = apps.get_model("permissions", "ResponsibleGroup")
     for group in ResponsibleGroup.objects.all():
         if group.name == "HR":
-            group.name == ADMIN_GROUP_NAME
+            group.name == f"{ADMIN_GROUP_NAME}:{group.organization.name}"
             group.group_type == ADMIN_GROUP_TYPE
             group.save()
         if group.name == "Medlem":
-            group.name = MEMBER_GROUP_NAME
+            group.name = f"{MEMBER_GROUP_NAME}:{group.organization.name}"
             group.group_type = MEMBER_GROUP_TYPE
             group.save()
 
