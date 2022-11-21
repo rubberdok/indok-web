@@ -58,7 +58,7 @@ class Organization(models.Model):
 
     class Meta:
         constraints = [UniqueConstraint(fields=["parent", "name"], name="unique_child_organization_name")]
-        # permissions = [("manage_organization", "Can manage organizations, used for admins")]
+        permissions = [("manage_organization", "Can manage organizations, used for admins")]
 
     def __str__(self):
         return f"{self.name}"
