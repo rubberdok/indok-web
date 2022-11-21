@@ -48,13 +48,13 @@ def create_default_groups(instance: Organization, created, **kwargs):
     """
     if created:
         ResponsibleGroup.objects.create(
-            name=MEMBER_GROUP_NAME,
+            name=f"{instance.name}:{MEMBER_GROUP_NAME}",
             description=f"Medlemmer av {instance.name}.",
             organization=instance,
             group_type=MEMBER_GROUP_TYPE,
         )
         admin_group = ResponsibleGroup.objects.create(
-            name=ADMIN_GROUP_NAME,
+            name=f"{instance.name}:{ADMIN_GROUP_NAME}",
             description=f"ADMIN-gruppen til {instance.name}. Tillatelser for å se og behandle søknader og medlemmer.",
             organization=instance,
             group_type=ADMIN_GROUP_TYPE,
