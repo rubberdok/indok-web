@@ -15,7 +15,7 @@ def migrate_org_groups(apps, schema_editor):
             # Change ResponsibleGroup.group_type from "HR" or "PRIMARY" to "ADMIN" or "MEMBER"
             responsible_group.name = f"{responsible_group.organization.name}:{ADMIN_GROUP_TYPE}"
             responsible_group.group.name = (
-                f"{responsible_group.organization.name}:{ADMIN_GROUP_TYPE}:{responsible_group.group.uuid}"
+                f"{responsible_group.organization.name}:{ADMIN_GROUP_TYPE}:git{responsible_group.group.uuid}"
             )
             responsible_group.group_type = ADMIN_GROUP_TYPE
             responsible_group.save()
