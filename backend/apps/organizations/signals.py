@@ -59,4 +59,6 @@ def create_default_groups(instance: Organization, created, **kwargs):
             organization=instance,
             group_type=ADMIN_GROUP_TYPE,
         )
+        print(admin_group.group, instance)
         assign_perm("forms.add_form", admin_group.group)
+        # assign_perm("organizations.manage_organization", admin_group.group, instance)
