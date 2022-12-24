@@ -153,17 +153,6 @@ export const CountdownButton: React.FC<Props> = ({
   const [now, setNow] = useState(dayjs(currentTime));
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft(countDownDate, now));
 
-  useEffect(() => {
-    // Update timeLeft and now (current time) each second
-    const id = setTimeout(() => {
-      setTimeLeft(calculateTimeLeft(countDownDate, now));
-      setNow(now.add(1, "second"));
-    }, 1000);
-    return () => {
-      clearTimeout(id);
-    };
-  });
-
   const currentTimeParts = Object.keys(timeLeft).filter((interval) => timeLeft[interval] !== 0);
 
   return (
