@@ -43,7 +43,7 @@ jobs:
 
   build:
     name: Build backend
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     env:
       dockerfile: backend-production
