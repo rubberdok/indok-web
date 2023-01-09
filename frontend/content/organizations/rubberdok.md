@@ -6,7 +6,7 @@ image: /img/rubberdoklogo1.png
 alt: Logoen til rubberdøk
 board:
   ceo:
-    name: Simen Sandhaud
+    name: Simen Sandhaug
     title: Prosjektleder
     mail: simen.sandhaug@rubberdok.no
   cto:
