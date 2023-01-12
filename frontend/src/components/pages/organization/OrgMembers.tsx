@@ -17,7 +17,7 @@ import {
 import { useState } from "react";
 
 import { PermissionRequired } from "@/components/Auth";
-import { AdminOrganizationFragment, MembershipsDocument } from "@/generated/graphql";
+import { AdminOrganizationFragment, MembershipsDocument, MembershipType } from "@/generated/graphql";
 
 type Props = {
   organization: AdminOrganizationFragment;
@@ -34,9 +34,23 @@ export const OrgMembers: React.FC<Props> = ({ organization }) => {
   //Sorterer medlemmer alfabetisk
   [...data?.memberships].sort((a, b) => a.user.firstName.localeCompare(b.user.firstName));
 
-  const addUser = () => {
+  const handleAddMembership = () => {
     //Legg til funksjonalitet for å legge til bruker ved brukernavn
     setUserInput(""); //Funker men oppdaterer ikke siden?
+  };
+
+  const handleGroupChange = (membership: MembershipType | any) => {
+    if (!membership) return;
+    const role = membership?.group?.uuid == organization.hrGroup?.uuid ? "ADMIN" : "MEMBER";
+    if (role == "ADMIN") console.log("Demoterer" + membership.user.firstName + " " + membership.user.lastName);
+    if (role == "MEMBER") console.log("Promoterer" + membership.user.firstName + " " + membership.user.lastName);
+    //Legg til funksjonalitet for å endre gruppe
+  };
+
+  const handleRemoveMembership = (membership: MembershipType | any) => {
+    if (!membership) return;
+    console.log("Fjerner " + membership.user.firstName + " " + membership.user.lastName);
+    //Legg til funksjonalitet for å fjerne medlem
   };
 
   return (
@@ -53,7 +67,7 @@ export const OrgMembers: React.FC<Props> = ({ organization }) => {
             />
           </Grid>
           <Grid item xs={6} md={4} lg={2}>
-            <Button startIcon={<GroupAdd />} onClick={() => addUser()}>
+            <Button startIcon={<GroupAdd />} onClick={() => handleAddMembership()}>
               Legg til
             </Button>
           </Grid>
@@ -81,10 +95,21 @@ export const OrgMembers: React.FC<Props> = ({ organization }) => {
                 </TableCell>
                 <PermissionRequired permission="organizations.change_organization">
                   <TableCell>
-                    <Button variant="contained" color="warning" startIcon={<AdminPanelSettings />} sx={{ mr: 1 }}>
+                    <Button
+                      onClick={handleGroupChange(membership)}
+                      variant="contained"
+                      color="warning"
+                      startIcon={<AdminPanelSettings />}
+                      sx={{ mr: 1 }}
+                    >
                       {membership?.group?.uuid == organization.hrGroup?.uuid ? "Demoter" : "Promoter"}
                     </Button>
-                    <Button variant="contained" color="error" startIcon={<Delete />}>
+                    <Button
+                      onClick={handleRemoveMembership(membership)}
+                      variant="contained"
+                      color="error"
+                      startIcon={<Delete />}
+                    >
                       Fjern
                     </Button>
                   </TableCell>
