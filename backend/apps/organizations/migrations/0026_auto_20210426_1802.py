@@ -18,7 +18,8 @@ def set_primary_groups(apps, schema_editor):
             created = True
         if organization.hr_group is None:
             hr_group = ResponsibleGroup.objects.create(
-                name="HR", description=f"HR-gruppen til {organization.name}. Tillatelser for å se og behandle søknader."
+                name="HR",
+                description=f"HR-gruppen til {organization.name}. Tillatelser for å se og behandle søknader.",
             )
             organization.hr_group = hr_group
             created = True

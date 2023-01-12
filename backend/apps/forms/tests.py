@@ -31,7 +31,7 @@ class FormBaseTestCase(ExtendedGraphQLTestCase):
         MembershipFactory(
             user=self.authorized_user,
             organization=self.organization,
-            group=self.organization.hr_group,
+            group=self.organization.admin_group,
         )
 
         # Create the form

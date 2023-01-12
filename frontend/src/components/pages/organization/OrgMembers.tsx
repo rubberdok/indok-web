@@ -41,7 +41,7 @@ export const OrgMembers: React.FC<Props> = ({ organization }) => {
 
   const handleGroupChange = (membership: MembershipType | any) => {
     if (!membership) return;
-    const role = membership?.group?.uuid == organization.hrGroup?.uuid ? "ADMIN" : "MEMBER";
+    const role = membership?.group?.uuid == organization.adminGroup?.uuid ? "ADMIN" : "MEMBER";
     if (role == "ADMIN") console.log("Demoterer" + membership.user.firstName + " " + membership.user.lastName);
     if (role == "MEMBER") console.log("Promoterer" + membership.user.firstName + " " + membership.user.lastName);
     //Legg til funksjonalitet for å endre gruppe
@@ -91,21 +91,21 @@ export const OrgMembers: React.FC<Props> = ({ organization }) => {
                   {membership.user.firstName} {membership.user.lastName}
                 </TableCell>
                 <TableCell>
-                  {membership?.group?.uuid == organization.hrGroup?.uuid ? "Administrator" : "Medlem"}
+                  {membership?.group?.uuid == organization.adminGroup?.uuid ? "Administrator" : "Medlem"}
                 </TableCell>
                 <PermissionRequired permission="organizations.change_organization">
                   <TableCell>
                     <Button
-                      onClick={handleGroupChange(membership)}
+                      onClick={() => handleGroupChange(membership)}
                       variant="contained"
                       color="warning"
                       startIcon={<AdminPanelSettings />}
                       sx={{ mr: 1 }}
                     >
-                      {membership?.group?.uuid == organization.hrGroup?.uuid ? "Demoter" : "Promoter"}
+                      {membership?.group?.uuid == organization.adminGroup?.uuid ? "Demoter" : "Promoter"}
                     </Button>
                     <Button
-                      onClick={handleRemoveMembership(membership)}
+                      onClick={() => handleRemoveMembership(membership)}
                       variant="contained"
                       color="error"
                       startIcon={<Delete />}
