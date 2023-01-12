@@ -135,7 +135,7 @@ const CabinBookingPage: NextPageWithLayout = () => {
       placement="left"
       disableHoverListener={stepReady[activeStep].ready}
     >
-      <Box display={"block"}>
+      <Box display={activeStep == 4 ? "none" : "block"}>
         <Button
           onClick={handleNextClick}
           disabled={!stepReady[activeStep].ready}
@@ -150,7 +150,7 @@ const CabinBookingPage: NextPageWithLayout = () => {
   );
 
   const BackButton = () => (
-    <Box display={"block"} sx={{ opacity: activeStep === 0 ? 0 : 1 }}>
+    <Box display={activeStep == 4 ? "none" : "block"} sx={{ opacity: activeStep === 0 ? 0 : 1 }}>
       <Button
         size={isMobile ? "small" : "large"}
         onClick={() => setActiveStep((prev) => prev - 1)}
