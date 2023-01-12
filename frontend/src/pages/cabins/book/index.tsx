@@ -135,14 +135,14 @@ const CabinBookingPage: NextPageWithLayout = () => {
       placement="left"
       disableHoverListener={stepReady[activeStep].ready}
     >
-      <Box display={activeStep == 4 ? "none" : "block"}>
+      <Box display={"block"}>
         <Button
           onClick={handleNextClick}
           disabled={!stepReady[activeStep].ready}
           size={isMobile ? "small" : "large"}
           variant="contained"
         >
-          {activeStep == 3 ? "Send søknad" : "Neste"}
+          {activeStep == 3 ? "Send" : "Neste"}
           <KeyboardArrowRight />
         </Button>
       </Box>
@@ -150,7 +150,7 @@ const CabinBookingPage: NextPageWithLayout = () => {
   );
 
   const BackButton = () => (
-    <Box display={activeStep == 4 ? "none" : "block"} sx={{ opacity: activeStep === 0 ? 0 : 1 }}>
+    <Box display={"block"} sx={{ opacity: activeStep === 0 ? 0 : 1 }}>
       <Button
         size={isMobile ? "small" : "large"}
         onClick={() => setActiveStep((prev) => prev - 1)}
@@ -235,7 +235,7 @@ const CabinBookingPage: NextPageWithLayout = () => {
             </Card>
           ))}
       </Stack>
-      {isMobile && activeStep != 3 ? (
+      {isMobile ? (
         <MobileStepper
           steps={4}
           position="bottom"
