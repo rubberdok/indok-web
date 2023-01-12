@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { Delete, GroupAdd, AdminPanelSettings } from "@mui/icons-material";
 import {
   Button,
@@ -17,7 +17,12 @@ import {
 import { useState } from "react";
 
 import { PermissionRequired } from "@/components/Auth";
-import { AdminOrganizationFragment, MembershipsDocument, MembershipType } from "@/generated/graphql";
+import {
+  AdminOrganizationFragment,
+  MembershipsDocument,
+  MembershipType,
+  AssignMembershipDocument,
+} from "@/generated/graphql";
 
 type Props = {
   organization: AdminOrganizationFragment;
@@ -25,6 +30,10 @@ type Props = {
 
 export const OrgMembers: React.FC<Props> = ({ organization }) => {
   const { data, loading, error } = useQuery(MembershipsDocument, { variables: { organizationId: organization.id } });
+  const [
+    AssignMembership,
+    { data: AssignMembershipData, loading: AssignMembershipLoading, error: AssignMembershipError },
+  ] = useMutation(AssignMembershipDocument);
 
   const [userInput, setUserInput] = useState<string>("");
 
@@ -36,14 +45,41 @@ export const OrgMembers: React.FC<Props> = ({ organization }) => {
 
   const handleAddMembership = () => {
     //Legg til funksjonalitet for å legge til bruker ved brukernavn
-    setUserInput(""); //Funker men oppdaterer ikke siden?
+    console.log("Legger til " + userInput);
+    setUserInput("");
   };
 
   const handleGroupChange = (membership: MembershipType | any) => {
     if (!membership) return;
     const role = membership?.group?.uuid == organization.adminGroup?.uuid ? "ADMIN" : "MEMBER";
-    if (role == "ADMIN") console.log("Demoterer" + membership.user.firstName + " " + membership.user.lastName);
-    if (role == "MEMBER") console.log("Promoterer" + membership.user.firstName + " " + membership.user.lastName);
+    if (role == "ADMIN") console.log("Demoterer " + membership.user.firstName + " " + membership.user.lastName);
+    if (role == "MEMBER") console.log("Promoterer " + membership.user.firstName + " " + membership.user.lastName);
+
+    if (role == "ADMIN") {
+      //Legg til funksjonalitet for å demote bruker
+      AssignMembership({
+        variables: {
+          membershipData: {
+            organizationId: organization.id,
+            userId: membership.user.id,
+            groupId: organization?.memberGroup?.uuid,
+          },
+        },
+      });
+    }
+
+    if (role == "MEMBER") {
+      //Legg til funksjonalitet for å promote bruker
+      AssignMembership({
+        variables: {
+          membershipData: {
+            organizationId: organization.id,
+            userId: membership.user.id,
+            groupId: organization?.adminGroup?.uuid,
+          },
+        },
+      });
+    }
     //Legg til funksjonalitet for å endre gruppe
   };
 

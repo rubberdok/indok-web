@@ -3005,6 +3005,24 @@ export type MembershipFragment = {
   group?: { __typename?: "ResponsibleGroupType"; uuid: string } | null;
 };
 
+export type AssignMembershipMutationVariables = Exact<{
+  membershipData: MembershipInput;
+}>;
+
+export type AssignMembershipMutation = {
+  __typename?: "Mutations";
+  assignMembership?: {
+    __typename?: "AssignMembership";
+    ok?: boolean | null;
+    membership?: {
+      __typename?: "MembershipType";
+      id: string;
+      organization: { __typename?: "OrganizationType"; id: string };
+      group?: { __typename?: "ResponsibleGroupType"; uuid: string } | null;
+    } | null;
+  } | null;
+};
+
 export type AdminOrganizationQueryVariables = Exact<{
   orgId: Scalars["ID"];
 }>;
@@ -6639,6 +6657,71 @@ export const UserOrganizationsDocument = {
     ...ListingOrganizationFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<UserOrganizationsQuery, UserOrganizationsQueryVariables>;
+export const AssignMembershipDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "assignMembership" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "membershipData" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "MembershipInput" } } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "assignMembership" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "membershipData" },
+                value: { kind: "Variable", name: { kind: "Name", value: "membershipData" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "membership" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "organization" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [{ kind: "Field", name: { kind: "Name", value: "id" } }],
+                        },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "group" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [{ kind: "Field", name: { kind: "Name", value: "uuid" } }],
+                        },
+                      },
+                    ],
+                  },
+                },
+                { kind: "Field", name: { kind: "Name", value: "ok" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<AssignMembershipMutation, AssignMembershipMutationVariables>;
 export const AdminOrganizationDocument = {
   kind: "Document",
   definitions: [

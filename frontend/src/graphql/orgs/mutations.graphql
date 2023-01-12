@@ -1,0 +1,14 @@
+mutation assignMembership($membershipData: MembershipInput!) {
+  assignMembership(membershipData: $membershipData) {
+    membership {
+      id
+      organization {
+        id
+      }
+      group {
+        uuid
+      }
+    }
+    ok
+  }
+}
