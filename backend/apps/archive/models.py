@@ -12,7 +12,8 @@ class FileType(models.TextChoices):
     YBO = ("Årbøker",)
     REG = ("Foreningens lover",)
     SUP = ("Støtte fra HS",)
-    EXC = ("Utveksling",)
+    EXC = (("Utveksling",),)
+    JSC = (("JanuScript"),)
     OTH = ("Annet",)
 
 
