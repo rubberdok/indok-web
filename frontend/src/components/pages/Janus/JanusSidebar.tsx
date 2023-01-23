@@ -8,18 +8,9 @@ const NAV_ITEMS = [
   {
     subheader: "Innhold",
     items: [
-      { title: "Om oss", path: "/about" },
       {
         title: "JanusStyre",
-        path: "/about/organization",
-      },
-      {
-        title: "Hovedstyret",
-        path: "/about/board",
-      },
-      {
-        title: "Instituttillitsvalgte",
-        path: "/about/itv",
+        path: "/janus/info",
       },
     ],
   },
