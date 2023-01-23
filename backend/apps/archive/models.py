@@ -14,6 +14,7 @@ class FileType(models.TextChoices):
     SUP = ("Støtte fra HS",)
     EXC = ("Utveksling",)
     OTH = ("Annet",)
+    JSS = "Januscript"
 
 
 class ArchiveDocument(models.Model):
