@@ -3,7 +3,7 @@ import Grid from "@mui/material/Grid";
 
 import { MemberCard } from "@/components/pages/about/MemberCard";
 import { BoardMember } from "@/components/pages/about/MemberCard/types";
-import { Template } from "@/components/pages/about/Template";
+import { Template } from "@/components/pages/Janus/Template";
 import { Layout } from "@/layouts/Layout";
 import { NextPageWithLayout } from "@/pages/_app";
 
@@ -24,12 +24,7 @@ const JanusPage: NextPageWithLayout = () => {
   ];
 
   return (
-    <Template
-      title="Janus"
-      description="Janus er indøkslinjeforening..."
-      prevPost={{ title: "Våre foreninger", slug: "/about/organizations", cover: "/img/hero.jpg" }}
-      nextPost={{ title: "Instituttillitsvalgte", slug: "/about/itv", cover: "/img/hero.jpg" }}
-    >
+    <Template title="Janus" description="Janus er indøkslinjeforening...">
       <Typography variant="body1" paragraph>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
         magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
