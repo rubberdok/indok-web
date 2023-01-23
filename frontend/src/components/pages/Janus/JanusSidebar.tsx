@@ -12,6 +12,14 @@ const NAV_ITEMS = [
         title: "JanusStyre",
         path: "/janus/info",
       },
+      {
+        title: "Indøk kalender",
+        path: "https://calendar.google.com/calendar/u/0/r?cid=c3AzcnJlNGhoamZvZmo4MTI0anA1azA5M29AZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ",
+      },
+      {
+        title: "Kontakt oss",
+        path: "",
+      },
     ],
   },
 ];
