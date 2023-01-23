@@ -32,9 +32,7 @@ export const Template: React.FC<React.PropsWithChildren<Props>> = ({ children, t
                 pt: { xs: 3, md: 5 },
               }}
             >
-              <Typography variant="body2" sx={{ color: "text.disabled" }}>
-                Om foreningen
-              </Typography>
+              <Typography variant="body2" sx={{ color: "text.disabled" }}></Typography>
               <Typography variant="h2" component="h1">
                 {title}
               </Typography>
