@@ -72,7 +72,7 @@
     "wait-on": "^6.0.1"
   },
   "dependencies": {
-    "@apollo/server": "^4.1.0",
+    "@apollo/server": "^4.3.2",
     "@graphql-tools/merge": "^8.3.11",
     "@prisma/client": "^4.5.0",
     "@sentry/node": "^7.17.3",
