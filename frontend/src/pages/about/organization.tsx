@@ -97,7 +97,7 @@ const OrganizationPage: NextPageWithLayout<Props> = ({ posts }) => {
       nextPost={{ title: "Les om Hovedstyret", slug: "/about/board", cover: "/img/hero.jpg" }}
     >
       <Stack direction="column" height={460} position="relative">
-        <Image src="/img/orgmap.svg" alt="Foreningskart" fill />
+        <Image src="/img/organisasjonskart2023.jpg" alt="Foreningskart" fill />
       </Stack>
       <Typography id="orgList" variant="h3" gutterBottom>
         Se foreningene våre under
