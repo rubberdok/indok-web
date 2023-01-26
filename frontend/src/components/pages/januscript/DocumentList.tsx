@@ -26,7 +26,7 @@ export const DocumentList: React.FC<Props> = ({ documents }) => {
             <CardActionArea href={doc.webLink ?? ""} sx={{ height: "100%" }}>
               <CardMedia
                 component="img"
-                image={doc.thumbnail ?? ""}
+                image={"https://www.januslinjeforening.no/wp-content/uploads/2016/12/JanuScript_logo.png"}
                 height="150"
                 sx={{
                   objectPosition: "top",

@@ -11,9 +11,7 @@ import { addApolloState, initializeApollo } from "@/lib/apolloClient";
 import { NextPageWithLayout } from "./_app";
 
 const Archive: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSideProps>> = () => {
-  const typeFilters = {
-    Januscript: { active: true, title: "Januscript" },
-  };
+  const typeFilters = { Januscript: { active: true, title: "Januscript" } };
   return (
     <>
       <Title
