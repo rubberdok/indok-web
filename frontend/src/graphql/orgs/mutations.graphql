@@ -12,3 +12,9 @@ mutation assignMembership($membershipData: MembershipInput!) {
     ok
   }
 }
+
+mutation deleteMembership($membershipId: ID!) {
+  deleteMembership(membershipId: $membershipId) {
+    ok
+  }
+}

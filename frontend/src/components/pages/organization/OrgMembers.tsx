@@ -22,6 +22,7 @@ import {
   MembershipsDocument,
   MembershipType,
   AssignMembershipDocument,
+  DeleteMembershipDocument,
 } from "@/generated/graphql";
 
 type Props = {
@@ -30,10 +31,8 @@ type Props = {
 
 export const OrgMembers: React.FC<Props> = ({ organization }) => {
   const { data, loading, error } = useQuery(MembershipsDocument, { variables: { organizationId: organization.id } });
-  const [
-    AssignMembership,
-    { data: assignMembershipData, loading: assignMembershipLoading, error: assignMembershipError },
-  ] = useMutation(AssignMembershipDocument);
+  const [AssignMembership] = useMutation(AssignMembershipDocument);
+  const [DeleteMembership] = useMutation(DeleteMembershipDocument);
 
   const [userInput, setUserInput] = useState<string>("");
 
@@ -65,9 +64,6 @@ export const OrgMembers: React.FC<Props> = ({ organization }) => {
             groupId: organization?.memberGroup?.uuid,
           },
         },
-      }).then(() => {
-        console.log("Demoterer " + membership.user.firstName + " " + membership.user.lastName);
-        console.log(assignMembershipData);
       });
     }
 
@@ -81,21 +77,20 @@ export const OrgMembers: React.FC<Props> = ({ organization }) => {
             groupId: organization?.adminGroup?.uuid,
           },
         },
-      }).then(() => {
-        console.log("Promoterer " + membership.user.firstName + " " + membership.user.lastName);
-        console.log(assignMembershipData);
       });
     }
-
-    if (assignMembershipError) return <p>Error</p>;
-    if (assignMembershipLoading) return <CircularProgress />;
-    //Legg til funksjonalitet for å endre gruppe
   };
 
   const handleRemoveMembership = (membership: MembershipType | any) => {
     if (!membership) return;
+
+    DeleteMembership({
+      variables: {
+        membershipId: membership.id,
+      },
+    });
+
     console.log("Fjerner " + membership.user.firstName + " " + membership.user.lastName);
-    //Legg til funksjonalitet for å fjerne medlem
   };
 
   return (

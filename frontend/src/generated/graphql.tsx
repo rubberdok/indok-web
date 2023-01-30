@@ -98,6 +98,8 @@ export enum ArchiveDocumentTypeDoc {
   ForeningensLover = "FORENINGENS_LOVER",
   /** Generalforsamling */
   Generalforsamling = "GENERALFORSAMLING",
+  /** Januscript */
+  Januscript = "JANUSCRIPT",
   /** Støtte fra HS */
   StotteFraHs = "STOTTE_FRA_HS",
   /** Utveksling */
@@ -405,6 +407,12 @@ export type DeleteListing = {
   ok?: Maybe<Scalars["Boolean"]>;
 };
 
+export type DeleteMembership = {
+  __typename?: "DeleteMembership";
+  membership?: Maybe<MembershipType>;
+  ok?: Maybe<Scalars["Boolean"]>;
+};
+
 export type DeleteOrganization = {
   __typename?: "DeleteOrganization";
   ok?: Maybe<Scalars["Boolean"]>;
@@ -600,6 +608,7 @@ export type Mutations = {
   deleteForm?: Maybe<DeleteForm>;
   /** Deletes the listing with the given ID */
   deleteListing?: Maybe<DeleteListing>;
+  deleteMembership?: Maybe<DeleteMembership>;
   deleteOrganization?: Maybe<DeleteOrganization>;
   deleteQuestion?: Maybe<DeleteQuestion>;
   /**
@@ -756,6 +765,10 @@ export type MutationsDeleteFormArgs = {
 
 export type MutationsDeleteListingArgs = {
   id?: InputMaybe<Scalars["ID"]>;
+};
+
+export type MutationsDeleteMembershipArgs = {
+  membershipId?: InputMaybe<Scalars["ID"]>;
 };
 
 export type MutationsDeleteOrganizationArgs = {
@@ -3021,6 +3034,15 @@ export type AssignMembershipMutation = {
       group?: { __typename?: "ResponsibleGroupType"; uuid: string } | null;
     } | null;
   } | null;
+};
+
+export type DeleteMembershipMutationVariables = Exact<{
+  membershipId: Scalars["ID"];
+}>;
+
+export type DeleteMembershipMutation = {
+  __typename?: "Mutations";
+  deleteMembership?: { __typename?: "DeleteMembership"; ok?: boolean | null } | null;
 };
 
 export type AdminOrganizationQueryVariables = Exact<{
@@ -6722,6 +6744,43 @@ export const AssignMembershipDocument = {
     },
   ],
 } as unknown as DocumentNode<AssignMembershipMutation, AssignMembershipMutationVariables>;
+export const DeleteMembershipDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "deleteMembership" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "membershipId" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "deleteMembership" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "membershipId" },
+                value: { kind: "Variable", name: { kind: "Name", value: "membershipId" } },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [{ kind: "Field", name: { kind: "Name", value: "ok" } }],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<DeleteMembershipMutation, DeleteMembershipMutationVariables>;
 export const AdminOrganizationDocument = {
   kind: "Document",
   definitions: [
