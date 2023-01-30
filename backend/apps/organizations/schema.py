@@ -3,10 +3,11 @@ from graphene import NonNull
 
 from .mutations import (
     AssignMembership,
-    RemoveMembership,
+    DeleteMembership,
     CreateOrganization,
     DeleteOrganization,
     UpdateOrganization,
+    ChangeMembership,
 )
 from .resolvers import MembershipResolvers, OrganizationResolvers
 from .types import MembershipType, OrganizationType
@@ -18,7 +19,8 @@ class OrganizationMutations(graphene.ObjectType):
     delete_organization = DeleteOrganization.Field()
 
     assign_membership = AssignMembership.Field()
-    remove_membership = RemoveMembership.Field()
+    delete_membership = DeleteMembership.Field()
+    change_membership = ChangeMembership.Field()
 
 
 class OrganizationQueries(graphene.ObjectType, OrganizationResolvers, MembershipResolvers):

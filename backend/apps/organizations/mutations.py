@@ -90,7 +90,7 @@ class AssignMembership(graphene.Mutation):
     class Arguments:
         membership_data = MembershipInput(required=True)
 
-    @permission_required("organizations.change_organization", fn=get_organization_from_data)
+    @permission_required("organizations.manage_organization", fn=get_organization_from_data)
     def mutate(self, _, membership_data):
         organization = Organization.objects.prefetch_related("permission_groups").get(
             pk=membership_data["organization_id"]
@@ -110,17 +110,39 @@ class AssignMembership(graphene.Mutation):
         return AssignMembership(membership=membership, ok=True)
 
 
-class RemoveMembership(graphene.Mutation):
+class DeleteMembership(graphene.Mutation):
     membership = graphene.Field(MembershipType)
     ok = graphene.Boolean()
 
     class Arguments:
-        id = graphene.ID()
+        membership_id = graphene.ID()
 
     @permission_required("organizations.manage_organization")
-    def mutate(self, info, id):
-        membership = Membership.objects.get(pk=id)
+    def mutate(self, info, membership_id):
+        membership = Membership.objects.get(pk=membership_id)
         membership.delete()
 
         ok = True
-        return RemoveMembership(ok=ok)
+        return DeleteMembership(ok=ok)
+
+
+class ChangeMembershipInput(graphene.InputObjectType):
+    membership_id = graphene.ID()
+    group_id = graphene.ID()
+
+
+class ChangeMembership(graphene.Mutation):
+    membership = graphene.Field(MembershipType)
+    ok = graphene.Boolean()
+
+    class Arguments:
+        membership_data = ChangeMembershipInput(required=True)
+
+    @permission_required("organizations.manage_organization")
+    def mutate(self, info, membership_data):
+        membership = Membership.objects.get(pk=membership_data["membership_id"])
+        membership.group_id = membership_data["group_id"]
+        membership.save()
+
+        ok = True
+        return ChangeMembership(membership=membership, ok=ok)
