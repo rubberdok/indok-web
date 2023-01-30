@@ -2,7 +2,6 @@ import graphene
 from django.utils.text import slugify
 from decorators import permission_required
 
-from apps.users.types import UserType
 from apps.permissions.models import ResponsibleGroup
 
 from apps.organizations import permissions as perms
@@ -112,11 +111,16 @@ class AssignMembership(graphene.Mutation):
 
 
 class RemoveMembership(graphene.Mutation):
-    removed_member = graphene.Field(UserType)
+    membership = graphene.Field(MembershipType)
     ok = graphene.Boolean()
 
     class Arguments:
-        member_id = graphene.ID()
+        id = graphene.ID()
 
-    def mutate(self, info, member_id):
-        raise NotImplementedError("Denne funksjonaliteten er ikke implementert.")
+    @permission_required("organizations.manage_organization")
+    def mutate(self, info, id):
+        membership = Membership.objects.get(pk=id)
+        membership.delete()
+
+        ok = True
+        return RemoveMembership(ok=ok)
