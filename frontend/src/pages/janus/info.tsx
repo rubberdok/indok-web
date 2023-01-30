@@ -24,12 +24,15 @@ const JanusPage: NextPageWithLayout = () => {
   ];
 
   return (
-    <Template title="Janus" description="Janus er indøkslinjeforening...">
+    <Template title="Om Janus linjeforening" description="Janus er indøkslinjeforening">
       <Typography variant="body1" paragraph>
         Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse er den øverste instansen
         («moderforeningen») for all studentfrivillighet på masterstudiet Indøk ved NTNU. Foreningen drives av over 200
         ivrige sjeler og over 20 ulike underforeninger, hvor alt fra veldedighet og ølbrygging til fadderuker og
         case-trening står på agendaen.
+      </Typography>
+      <Typography variant="h3" gutterBottom>
+        Janus
       </Typography>
       <Typography variant="body1" paragraph>
         Janus er i romersk mytologi guden for portene, dørene, døråpningene, alle begynnelser og enhver slutt. Han er
@@ -39,7 +42,7 @@ const JanusPage: NextPageWithLayout = () => {
         mennesker som vokser opp og endres fra barn til ungdom og fra ungdom til voksen, og fra et univers til et annet
         univers.
       </Typography>
-      <Typography variant="body1" paragraph>
+      <Typography variant="h3" gutterBottom>
         Vår oppgave er å sørge for at indøkstudentene får en fantastisk studietid!
       </Typography>
       <Typography variant="body1" paragraph>
@@ -54,7 +57,6 @@ const JanusPage: NextPageWithLayout = () => {
         linjeforeningers arrangementer som ball, jubileer og revyer, og på den måten knytte bånd på tvers av
         studieretninger, universiteter og høyskoler.
       </Typography>
-
       <Typography variant="h3" gutterBottom>
         Janusvalget
       </Typography>
@@ -70,7 +72,6 @@ const JanusPage: NextPageWithLayout = () => {
         vervet. Det er også lagt opp til at kandidaten legger inn et element der man på sin egen måte viser hvem man er.
         Deretter vil det åpnes for spørsmål fra salen. Nøl ikke med å ta kontakt dersom det er noe du lurer på:)
       </Typography>
-
       <Typography variant="h3" gutterBottom>
         Medlemmer
       </Typography>
