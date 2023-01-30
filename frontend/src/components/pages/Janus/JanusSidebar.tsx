@@ -9,11 +9,15 @@ const NAV_ITEMS = [
     subheader: "Innhold",
     items: [
       {
-        title: "JanusStyre",
+        title: "Janusstyret",
         path: "/janus/info",
       },
       {
-        title: "Indøk kalender",
+        title: "Kjellerbooking",
+        path: "/janus/kjellerbooking",
+      },
+      {
+        title: "Indøk-kalender",
         path: "https://calendar.google.com/calendar/u/0/r?cid=c3AzcnJlNGhoamZvZmo4MTI0anA1azA5M29AZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ",
       },
       {
