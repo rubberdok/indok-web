@@ -32,7 +32,7 @@ export const OrgMembers: React.FC<Props> = ({ organization }) => {
   const { data, loading, error } = useQuery(MembershipsDocument, { variables: { organizationId: organization.id } });
   const [
     AssignMembership,
-    { data: AssignMembershipData, loading: AssignMembershipLoading, error: AssignMembershipError },
+    { data: assignMembershipData, loading: assignMembershipLoading, error: assignMembershipError },
   ] = useMutation(AssignMembershipDocument);
 
   const [userInput, setUserInput] = useState<string>("");
@@ -65,6 +65,9 @@ export const OrgMembers: React.FC<Props> = ({ organization }) => {
             groupId: organization?.memberGroup?.uuid,
           },
         },
+      }).then(() => {
+        console.log("Demoterer " + membership.user.firstName + " " + membership.user.lastName);
+        console.log(assignMembershipData);
       });
     }
 
@@ -78,8 +81,14 @@ export const OrgMembers: React.FC<Props> = ({ organization }) => {
             groupId: organization?.adminGroup?.uuid,
           },
         },
+      }).then(() => {
+        console.log("Promoterer " + membership.user.firstName + " " + membership.user.lastName);
+        console.log(assignMembershipData);
       });
     }
+
+    if (assignMembershipError) return <p>Error</p>;
+    if (assignMembershipLoading) return <CircularProgress />;
     //Legg til funksjonalitet for å endre gruppe
   };
 
