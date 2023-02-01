@@ -262,7 +262,7 @@ jobs:
         run: docker compose -f docker-compose.integration.yml up -d
 
       - name: Run Cypress
-        uses: cypress-io/github-action@v4.2.0
+        uses: cypress-io/github-action@v5.0.7
         with:
           record: true
           parallel: true
