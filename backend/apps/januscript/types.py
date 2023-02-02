@@ -2,16 +2,16 @@ import graphene
 from graphene_django import DjangoObjectType
 
 from .google_drive_api import GoogleDriveAPI
-from .models import ArchiveDocument
+from .models import JanuscriptDocument
 
 
-class ArchiveDocumentType(DjangoObjectType):
+class JanuscriptDocumentType(DjangoObjectType):
     thumbnail = graphene.String()
 
     class Meta:
-        model = ArchiveDocument
+        model = JanuscriptDocument
 
     @staticmethod
-    def resolve_thumbnail(root: ArchiveDocument, info):
+    def resolve_thumbnail(root: JanuscriptDocument, info):
         drive = GoogleDriveAPI()
         return drive.get_thumbnail(root.file_location)

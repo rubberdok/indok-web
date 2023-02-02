@@ -3,13 +3,13 @@ from decorators import permission_required
 from .models import JanuscriptDocument
 
 
-class ArchiveDocumentResolvers:
-    @permission_required("archive.view_archivedocument")
-    def resolve_featured_archive(self, info):
+class ArchiDocumentResolvers:
+    @permission_required("januscript.view_januscriptdocument")
+    def resolve_featured_januscript(self, info):
         return JanuscriptDocument.objects.filter(featured=True)
 
-    @permission_required("archive.view_archivedocument")
-    def resolve_archive_by_types(self, info, type_doc, year=None, names=None):
+    @permission_required("januscript.view_januscriptdocument")
+    def resolve_januscript_by_types(self, info, type_doc, year=None, names=None):
         documents = JanuscriptDocument.objects.all()
         if type_doc:
             documents = documents.filter(type_doc__in=type_doc)
@@ -22,7 +22,7 @@ class ArchiveDocumentResolvers:
 
         return documents.reverse()
 
-    @permission_required("archive.view_archivedocument")
+    @permission_required("januscript.view_januscriptdocument")
     def resolve_available_years(self, info):
         return (
             JanuscriptDocument.objects.distinct("year")

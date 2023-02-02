@@ -4,11 +4,11 @@ import graphene
 from django.shortcuts import get_object_or_404
 from decorators import login_required
 
-from .models import ArchiveDocument as ArchiveDocumentModel
-from .types import ArchiveDocumentType
+from .models import JanuscriptDocument as JanuscriptDocumentModel
+from .types import JanuscriptDocumentType
 
 
-class CreateArchiveDocument(graphene.Mutation):
+class CreateJanuscriptDocument(graphene.Mutation):
     class Arguments:
         title = graphene.String()
         date = graphene.DateTime()
@@ -17,11 +17,11 @@ class CreateArchiveDocument(graphene.Mutation):
         web_link = graphene.String()
 
     ok = graphene.Boolean()
-    arhiveDocument = graphene.Field(ArchiveDocumentType)
+    januscriptDocument = graphene.Field(JanuscriptDocumentType)
 
     @login_required
     def mutate(self, info, title, date, type_doc, file_location):
-        archiveDocument = ArchiveDocumentModel.objects.create(
+        januscriptDocument = JanuscriptDocumentModel.objects.create(
             title=title,
             date=date,
             uploaded_date=datetime.now(),
@@ -29,10 +29,10 @@ class CreateArchiveDocument(graphene.Mutation):
             file_location=file_location,
         )
         ok = True
-        return CreateArchiveDocument(archiveDocument=archiveDocument, ok=ok)
+        return CreateJanuscriptDocument(januscriptDocument=januscriptDocument, ok=ok)
 
 
-class UpdateArchiveDocument(graphene.Mutation):
+class UpdateJanuscriptDocument(graphene.Mutation):
     class Arguments:
         title = graphene.String()
         id = graphene.ID()
@@ -42,27 +42,27 @@ class UpdateArchiveDocument(graphene.Mutation):
         web_link = graphene.String()
 
     ok = graphene.Boolean()
-    event = graphene.Field(ArchiveDocumentType)
+    event = graphene.Field(JanuscriptDocumentType)
 
     @login_required
     def mutate(self, info, id, title=None):
-        archiveDocument = ArchiveDocumentModel.objects.get(pk=id)
-        archiveDocument.title = title if title is not None else archiveDocument.title
+        januscriptDocument = JanuscriptDocumentModel.objects.get(pk=id)
+        januscriptDocument.title = ":)"
 
         ok = True
-        return UpdateArchiveDocument(archiveDocument=archiveDocument, ok=ok)
+        return UpdateJanuscriptDocument(januscriptDocument=januscriptDocument, ok=ok)
 
 
-class DeleteArchiveDocument(graphene.Mutation):
+class DeleteJanuscriptDocument(graphene.Mutation):
     class Arguments:
         id = graphene.ID()
 
     ok = graphene.Boolean()
-    archiveDocument = graphene.Field(ArchiveDocumentType)
+    januscriptDocument = graphene.Field(JanuscriptDocumentType)
 
     @login_required
     def mutate(self, info, id):
-        archiveDocument = get_object_or_404(ArchiveDocumentModel, pk=id)
-        archiveDocument.delete()
+        januscriptDocument = get_object_or_404(JanuscriptDocumentModel, pk=id)
+        januscriptDocument.delete()
         ok = True
-        return DeleteArchiveDocument(archiveDocument=archiveDocument, ok=ok)
+        return DeleteJanuscriptDocument(januscriptDocument=januscriptDocument, ok=ok)

@@ -2,24 +2,24 @@ import graphene
 from graphene import NonNull
 
 from .mutations import (
-    CreateArchiveDocument,
-    DeleteArchiveDocument,
-    UpdateArchiveDocument,
+    CreateJanuscriptDocument,
+    DeleteJanuscriptDocument,
+    UpdateJanuscriptDocument,
 )
-from .resolvers import ArchiveDocumentResolvers
-from .types import ArchiveDocumentType
+from .resolvers import JanuscriptDocumentResolvers
+from .types import JanuscriptDocumentType
 
 
-class ArchiveMutations(graphene.ObjectType):
-    create_archiveDocument = CreateArchiveDocument.Field()
-    update_archiveDocument = UpdateArchiveDocument.Field()
-    delete_archiveDocument = DeleteArchiveDocument.Field()
+class JanuscriptMutations(graphene.ObjectType):
+    create_januscriptDocument = CreateJanuscriptDocument.Field()
+    update_januscriptDocument = UpdateJanuscriptDocument.Field()
+    delete_januscriptDocument = DeleteJanuscriptDocument.Field()
 
 
-class ArchiveQueries(graphene.ObjectType, ArchiveDocumentResolvers):
-    featured_archive = graphene.List(NonNull(ArchiveDocumentType), required=True)
-    archive_by_types = graphene.List(
-        NonNull(ArchiveDocumentType),
+class JanuscriptQueries(graphene.ObjectType, JanuscriptDocumentResolvers):
+    featured_januscript = graphene.List(NonNull(JanuscriptDocumentType), required=True)
+    januscript_by_types = graphene.List(
+        NonNull(JanuscriptDocumentType),
         type_doc=graphene.List(graphene.String, required=True),
         year=graphene.Int(required=False),
         names=graphene.String(required=False),
