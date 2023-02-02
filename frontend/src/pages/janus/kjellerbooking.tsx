@@ -8,9 +8,9 @@ const JanusPage: NextPageWithLayout = () => {
   return (
     <Template title="Kjellern" description="">
       <Typography variant="body1" paragraph>
-        Kjellern på Moholt er Indøk, Fysmat og Kjemi sitt offisielle utested. Det er drevet at studenter ved linjene.
+        Kjellern på Moholt er Indøk, Fysmat og Kjemi sitt offisielle utested, og er drevet at studenter ved linjene.
         Indøks Kjellerstyre er ansvarlig for all Janus sin aktivitet på Kjellern. Kjellern fungerer utmerket som et
-        vors-sted, eller som et tidlig-fest-sted, siden baren må stenge 22:30 i hverdager, og 23:30 i helger. Det er
+        vors-sted, eller som et tidlig-fest-sted, siden baren må stenge 22:30 i hverdager og 23:30 i helger. Det er
         plass til 60 mennesker der, og alle som skal inn må ha legitimasjon (pga. at det er et offentlig utested). Det
         er ikke lov å ha med medbrakt inn, men Kjellern skal ikke tjene noe penger, så drikken er billig.
       </Typography>
