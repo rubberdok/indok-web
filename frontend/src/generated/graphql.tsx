@@ -98,6 +98,8 @@ export enum ArchiveDocumentTypeDoc {
   ForeningensLover = "FORENINGENS_LOVER",
   /** Generalforsamling */
   Generalforsamling = "GENERALFORSAMLING",
+  /** Januscript */
+  Januscript = "JANUSCRIPT",
   /** Støtte fra HS */
   StotteFraHs = "STOTTE_FRA_HS",
   /** Utveksling */
