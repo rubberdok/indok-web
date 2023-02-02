@@ -7,6 +7,9 @@ import { NextPageWithLayout } from "@/pages/_app";
 const JanusPage: NextPageWithLayout = () => {
   return (
     <Template title="Kjellern" description="">
+      <Typography variant="h6" gutterBottom>
+        Hva er Kjellern?
+      </Typography>
       <Typography variant="body1" paragraph>
         Kjellern på Moholt er Indøk, Fysmat og Kjemi sitt offisielle utested, og er drevet at studenter ved linjene.
         Indøks Kjellerstyre er ansvarlig for all Janus sin aktivitet på Kjellern. Kjellern fungerer utmerket som et
@@ -15,7 +18,7 @@ const JanusPage: NextPageWithLayout = () => {
         er ikke lov å ha med medbrakt inn, men Kjellern skal ikke tjene noe penger, så drikken er billig.
       </Typography>
       <Typography variant="h6" gutterBottom>
-        Hvordan booke kjellern:
+        Hvordan booke Kjellern:
       </Typography>
       <Typography variant="body1" paragraph>
         Om man ønsker å ha et arrangement på Kjellern er det lavterskel å sende mail til Kjellersjef, så kan man avtale
@@ -28,7 +31,7 @@ const JanusPage: NextPageWithLayout = () => {
         Tobias S. Jortveit: tobiasjortveit@gmail.com
       </Typography>
       <Typography variant="h6" gutterBottom>
-        Adresse til kjellern:
+        Adresse til Kjellern:
       </Typography>
       <Typography variant="body1" paragraph>
         Herman Krags veg 18, 7050 Trondheim
