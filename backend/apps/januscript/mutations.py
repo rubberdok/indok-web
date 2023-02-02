@@ -47,7 +47,7 @@ class UpdateJanuscriptDocument(graphene.Mutation):
     @login_required
     def mutate(self, info, id, title=None):
         januscriptDocument = JanuscriptDocumentModel.objects.get(pk=id)
-        januscriptDocument.title = ":)"
+        januscriptDocument.title = title if title is not None else januscriptDocument.title
 
         ok = True
         return UpdateJanuscriptDocument(januscriptDocument=januscriptDocument, ok=ok)
