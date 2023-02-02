@@ -47,8 +47,6 @@ export const OrgMembers: React.FC<Props> = ({ organization }) => {
   const handleAddMembership = () => {
     //Legg til funksjonalitet for å legge til bruker ved brukernavn
 
-    //Get userId from username
-
     AssignMembershipWithUsername({
       variables: {
         membershipData: {
@@ -57,11 +55,8 @@ export const OrgMembers: React.FC<Props> = ({ organization }) => {
           groupId: organization?.memberGroup?.uuid,
         },
       },
-    }).then((res) => {
-      console.log("Membership added");
-      console.log(res);
-      //Problem: Clientside cache doesnt get updated
     });
+    //Problem: Clientside cache doesnt get updated
     setUserInput("");
   };
 
