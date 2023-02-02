@@ -284,6 +284,12 @@ export type CreateFormInput = {
   organizationId: Scalars["ID"];
 };
 
+export type CreateJanuscriptDocument = {
+  __typename?: "CreateJanuscriptDocument";
+  januscriptDocument?: Maybe<JanuscriptDocumentType>;
+  ok?: Maybe<Scalars["Boolean"]>;
+};
+
 /** Creates a new listing */
 export type CreateListing = {
   __typename?: "CreateListing";
@@ -397,6 +403,12 @@ export type DeleteEvent = {
 export type DeleteForm = {
   __typename?: "DeleteForm";
   deletedId?: Maybe<Scalars["ID"]>;
+  ok?: Maybe<Scalars["Boolean"]>;
+};
+
+export type DeleteJanuscriptDocument = {
+  __typename?: "DeleteJanuscriptDocument";
+  januscriptDocument?: Maybe<JanuscriptDocumentType>;
   ok?: Maybe<Scalars["Boolean"]>;
 };
 
@@ -523,6 +535,16 @@ export type InitiateOrder = {
   redirect?: Maybe<Scalars["String"]>;
 };
 
+export type JanuscriptDocumentType = {
+  __typename?: "JanuscriptDocumentType";
+  fileLocation: Scalars["String"];
+  id: Scalars["ID"];
+  thumbnail?: Maybe<Scalars["String"]>;
+  title: Scalars["String"];
+  webLink?: Maybe<Scalars["String"]>;
+  year?: Maybe<Scalars["Int"]>;
+};
+
 export type ListingType = {
   __typename?: "ListingType";
   applicationUrl?: Maybe<Scalars["String"]>;
@@ -582,6 +604,7 @@ export type Mutations = {
   /** Create a new event */
   createEvent?: Maybe<CreateEvent>;
   createForm?: Maybe<CreateForm>;
+  createJanuscriptdocument?: Maybe<CreateJanuscriptDocument>;
   /** Creates a new listing */
   createListing?: Maybe<CreateListing>;
   createOrganization?: Maybe<CreateOrganization>;
@@ -600,6 +623,7 @@ export type Mutations = {
   /** Deletes the event with the given ID */
   deleteEvent?: Maybe<DeleteEvent>;
   deleteForm?: Maybe<DeleteForm>;
+  deleteJanuscriptdocument?: Maybe<DeleteJanuscriptDocument>;
   /** Deletes the listing with the given ID */
   deleteListing?: Maybe<DeleteListing>;
   deleteOrganization?: Maybe<DeleteOrganization>;
@@ -637,6 +661,7 @@ export type Mutations = {
   /** Updates the event with a given ID with the data in event_data */
   updateEvent?: Maybe<UpdateEvent>;
   updateForm?: Maybe<UpdateForm>;
+  updateJanuscriptdocument?: Maybe<UpdateJanuscriptDocument>;
   updateListing?: Maybe<UpdateListing>;
   updateOrganization?: Maybe<UpdateOrganization>;
   updateQuestion?: Maybe<UpdateQuestion>;
@@ -698,6 +723,14 @@ export type MutationsCreateFormArgs = {
   listingId?: InputMaybe<Scalars["ID"]>;
 };
 
+export type MutationsCreateJanuscriptdocumentArgs = {
+  date?: InputMaybe<Scalars["DateTime"]>;
+  fileLocation?: InputMaybe<Scalars["String"]>;
+  thumbnail?: InputMaybe<Scalars["String"]>;
+  title?: InputMaybe<Scalars["String"]>;
+  webLink?: InputMaybe<Scalars["String"]>;
+};
+
 export type MutationsCreateListingArgs = {
   listingData: CreateListingInput;
 };
@@ -754,6 +787,10 @@ export type MutationsDeleteEventArgs = {
 
 export type MutationsDeleteFormArgs = {
   id: Scalars["ID"];
+};
+
+export type MutationsDeleteJanuscriptdocumentArgs = {
+  id?: InputMaybe<Scalars["ID"]>;
 };
 
 export type MutationsDeleteListingArgs = {
@@ -841,6 +878,15 @@ export type MutationsUpdateEventArgs = {
 export type MutationsUpdateFormArgs = {
   formData: BaseFormInput;
   id?: InputMaybe<Scalars["ID"]>;
+};
+
+export type MutationsUpdateJanuscriptdocumentArgs = {
+  date?: InputMaybe<Scalars["DateTime"]>;
+  fileLocation?: InputMaybe<Scalars["String"]>;
+  id?: InputMaybe<Scalars["ID"]>;
+  thumbnail?: InputMaybe<Scalars["String"]>;
+  title?: InputMaybe<Scalars["String"]>;
+  webLink?: InputMaybe<Scalars["String"]>;
 };
 
 export type MutationsUpdateListingArgs = {
@@ -945,6 +991,7 @@ export type Queries = {
   allBookings?: Maybe<Array<AllBookingsType>>;
   allCategories?: Maybe<Array<CategoryType>>;
   allEvents?: Maybe<Array<EventType>>;
+  allJanuscript?: Maybe<Array<JanuscriptDocumentType>>;
   allOrganizations?: Maybe<Array<OrganizationType>>;
   allUsers?: Maybe<Array<UserType>>;
   archiveByTypes: Array<ArchiveDocumentType>;
@@ -1319,6 +1366,12 @@ export type UpdateEventInput = {
 export type UpdateForm = {
   __typename?: "UpdateForm";
   form?: Maybe<FormType>;
+  ok?: Maybe<Scalars["Boolean"]>;
+};
+
+export type UpdateJanuscriptDocument = {
+  __typename?: "UpdateJanuscriptDocument";
+  event?: Maybe<JanuscriptDocumentType>;
   ok?: Maybe<Scalars["Boolean"]>;
 };
 
