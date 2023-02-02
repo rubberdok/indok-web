@@ -21,8 +21,9 @@ import {
   AdminOrganizationFragment,
   MembershipsDocument,
   MembershipType,
-  AssignMembershipDocument,
+  AssignMembershipWithUsernameDocument,
   DeleteMembershipDocument,
+  ChangeMembershipDocument,
 } from "@/generated/graphql";
 
 type Props = {
@@ -31,8 +32,9 @@ type Props = {
 
 export const OrgMembers: React.FC<Props> = ({ organization }) => {
   const { data, loading, error } = useQuery(MembershipsDocument, { variables: { organizationId: organization.id } });
-  const [AssignMembership] = useMutation(AssignMembershipDocument);
+  const [AssignMembershipWithUsername] = useMutation(AssignMembershipWithUsernameDocument);
   const [DeleteMembership] = useMutation(DeleteMembershipDocument);
+  const [ChangeMembership] = useMutation(ChangeMembershipDocument);
 
   const [userInput, setUserInput] = useState<string>("");
 
@@ -44,36 +46,49 @@ export const OrgMembers: React.FC<Props> = ({ organization }) => {
 
   const handleAddMembership = () => {
     //Legg til funksjonalitet for å legge til bruker ved brukernavn
-    console.log("Legger til " + userInput);
+
+    //Get userId from username
+
+    AssignMembershipWithUsername({
+      variables: {
+        membershipData: {
+          organizationId: organization.id,
+          username: userInput.toLowerCase(), //Just to make sure
+          groupId: organization?.memberGroup?.uuid,
+        },
+      },
+    }).then((res) => {
+      console.log("Membership added");
+      console.log(res);
+      //Problem: Clientside cache doesnt get updated
+    });
     setUserInput("");
   };
 
   const handleGroupChange = (membership: MembershipType | any) => {
     if (!membership) return;
-    const role = membership?.group?.uuid == organization.adminGroup?.uuid ? "ADMIN" : "MEMBER";
-    if (role == "ADMIN") console.log("Demoterer " + membership.user.firstName + " " + membership.user.lastName);
-    if (role == "MEMBER") console.log("Promoterer " + membership.user.firstName + " " + membership.user.lastName);
 
-    if (role == "ADMIN") {
-      //Legg til funksjonalitet for å demote bruker
-      AssignMembership({
+    const currentRole = membership?.group?.uuid == organization.adminGroup?.uuid ? "ADMIN" : "MEMBER";
+    if (currentRole == "ADMIN") {
+      //Legg til funksjonalitet for å demotere bruker
+
+      ChangeMembership({
         variables: {
           membershipData: {
-            organizationId: organization.id,
-            userId: membership.user.id,
+            membershipId: membership?.id,
             groupId: organization?.memberGroup?.uuid,
           },
         },
       });
     }
 
-    if (role == "MEMBER") {
+    if (currentRole == "MEMBER") {
       //Legg til funksjonalitet for å promote bruker
-      AssignMembership({
+
+      ChangeMembership({
         variables: {
           membershipData: {
-            organizationId: organization.id,
-            userId: membership.user.id,
+            membershipId: membership?.id,
             groupId: organization?.adminGroup?.uuid,
           },
         },
@@ -90,7 +105,7 @@ export const OrgMembers: React.FC<Props> = ({ organization }) => {
       },
     });
 
-    console.log("Fjerner " + membership.user.firstName + " " + membership.user.lastName);
+    //Problem: Clientside cache doesnt get updated
   };
 
   return (

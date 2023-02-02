@@ -6,13 +6,6 @@ query adminOrganization($orgId: ID!) {
 
 query memberships($organizationId: ID!) {
   memberships(organizationId: $organizationId) {
-    id
-    user {
-      firstName
-      lastName
-    }
-    group {
-      uuid
-    }
+    ...Membership
   }
 }

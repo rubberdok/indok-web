@@ -13,8 +13,35 @@ mutation assignMembership($membershipData: MembershipInput!) {
   }
 }
 
+mutation assignMembershipWithUsername($membershipData: MembershipInputWithUsername!) {
+  assignMembershipWithUsername(membershipData: $membershipData) {
+    membership {
+      id
+      organization {
+        id
+      }
+      group {
+        uuid
+      }
+    }
+    ok
+  }
+}
+
 mutation deleteMembership($membershipId: ID!) {
   deleteMembership(membershipId: $membershipId) {
+    ok
+  }
+}
+
+mutation changeMembership($membershipData: ChangeMembershipInput!) {
+  changeMembership(membershipData: $membershipData) {
+    membership {
+      id
+      group {
+        uuid
+      }
+    }
     ok
   }
 }

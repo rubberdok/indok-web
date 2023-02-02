@@ -36,6 +36,7 @@ fragment OrgAdminListing on ListingType {
 fragment Membership on MembershipType {
   id
   user {
+    id
     firstName
     lastName
   }
