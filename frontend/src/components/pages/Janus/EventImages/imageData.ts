@@ -12,35 +12,35 @@ export type ImageData = {
 //Change this when adding new images
 export const immballImages: ImageData[] = [
   {
-    label: "Immatrikulering",
+    label: "placeholder",
     img: _00,
   },
 ];
 
 export const winterGamesImages: ImageData[] = [
   {
-    label: "Winter Games",
+    label: "placeholder",
     img: _00,
   },
 ];
 
 export const janusvalgetImages: ImageData[] = [
   {
-    label: "Janusvalget",
+    label: "placeholder",
     img: _00,
   },
 ];
 
 export const aareturImages: ImageData[] = [
   {
-    label: "Åretur",
+    label: "placeholder",
     img: _00,
   },
 ];
 
 export const borsfestImages: ImageData[] = [
   {
-    label: "Børsfest",
+    label: "placeholder",
     img: _00,
   },
 ];

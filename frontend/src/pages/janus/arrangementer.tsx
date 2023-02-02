@@ -19,7 +19,7 @@ const ArrangementPage: NextPageWithLayout = () => {
         Immatrikuleringsball
       </Typography>
       <Box width="100%" marginBottom={2}>
-        <ImageSlider imageData={immballImages} displayLabelText={false}></ImageSlider>
+        <ImageSlider imageData={immballImages} displayLabelText={true}></ImageSlider>
       </Box>
       <Typography variant="body1" paragraph>
         Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dolorum ipsa consectetur, illum pariatur id sed,
@@ -30,7 +30,7 @@ const ArrangementPage: NextPageWithLayout = () => {
         Winter Games
       </Typography>
       <Box width="100%" marginBottom={2}>
-        <ImageSlider imageData={winterGamesImages} displayLabelText={false}></ImageSlider>
+        <ImageSlider imageData={winterGamesImages} displayLabelText={true}></ImageSlider>
       </Box>
       <Typography variant="body1" paragraph>
         Lorem ipsum dolor sit, amet consectetur adipisicing elit. Neque, iusto. Mollitia assumenda in ipsa inventore
@@ -44,7 +44,7 @@ const ArrangementPage: NextPageWithLayout = () => {
         Janusvalget
       </Typography>
       <Box width="100%" marginBottom={2}>
-        <ImageSlider imageData={janusvalgetImages} displayLabelText={false}></ImageSlider>
+        <ImageSlider imageData={janusvalgetImages} displayLabelText={true}></ImageSlider>
       </Box>
       <Typography variant="body1" paragraph>
         Valg av nye styremedlemmer foregår på Janusvalget, der alle indøkere kan møte opp og har stemmerett. Om man
@@ -57,7 +57,7 @@ const ArrangementPage: NextPageWithLayout = () => {
         Åretur
       </Typography>
       <Box width="100%" marginBottom={2}>
-        <ImageSlider imageData={aareturImages} displayLabelText={false}></ImageSlider>
+        <ImageSlider imageData={aareturImages} displayLabelText={true}></ImageSlider>
       </Box>
       <Typography variant="body1" paragraph>
         Lorem ipsum dolor sit amet consectetur, adipisicing elit. Officia delectus ea perspiciatis accusantium
@@ -68,7 +68,7 @@ const ArrangementPage: NextPageWithLayout = () => {
         Børsfest
       </Typography>
       <Box width="100%" marginBottom={2}>
-        <ImageSlider imageData={borsfestImages} displayLabelText={false}></ImageSlider>
+        <ImageSlider imageData={borsfestImages} displayLabelText={true}></ImageSlider>
       </Box>
       <Typography variant="body1" paragraph>
         Lorem ipsum dolor sit amet consectetur, adipisicing elit. Officia delectus ea perspiciatis accusantium
