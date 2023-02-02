@@ -22,7 +22,7 @@ const NAV_ITEMS = [
       },
       {
         title: "Kontakt oss",
-        path: "http://indokntnu.no/janus/info#:~:text=Oskar%20G%C3%A5s%C3%B8-,President,-tlf%3A%20979%2062",
+        path: "https://indokntnu.no/janus/info#:~:text=Oskar%20G%C3%A5s%C3%B8-,President,-tlf%3A%20979%2062",
       },
     ],
   },
