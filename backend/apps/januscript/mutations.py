@@ -11,8 +11,8 @@ from .types import JanuscriptDocumentType
 class CreateJanuscriptDocument(graphene.Mutation):
     class Arguments:
         title = graphene.String()
+        thumbnail = graphene.String()
         date = graphene.DateTime()
-        type_doc = graphene.String()
         file_location = graphene.String()
         web_link = graphene.String()
 
@@ -20,12 +20,11 @@ class CreateJanuscriptDocument(graphene.Mutation):
     januscriptDocument = graphene.Field(JanuscriptDocumentType)
 
     @login_required
-    def mutate(self, info, title, date, type_doc, file_location):
+    def mutate(self, info, title, date, file_location):
         januscriptDocument = JanuscriptDocumentModel.objects.create(
             title=title,
             date=date,
             uploaded_date=datetime.now(),
-            type_doc=type_doc,
             file_location=file_location,
         )
         ok = True
@@ -35,9 +34,9 @@ class CreateJanuscriptDocument(graphene.Mutation):
 class UpdateJanuscriptDocument(graphene.Mutation):
     class Arguments:
         title = graphene.String()
+        thumbnail = graphene.String()
         id = graphene.ID()
         date = graphene.DateTime()
-        type_doc = graphene.String()
         file_location = graphene.String()
         web_link = graphene.String()
 

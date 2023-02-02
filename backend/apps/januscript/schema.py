@@ -17,12 +17,4 @@ class JanuscriptMutations(graphene.ObjectType):
 
 
 class JanuscriptQueries(graphene.ObjectType, JanuscriptDocumentResolvers):
-    featured_januscript = graphene.List(NonNull(JanuscriptDocumentType), required=True)
-    januscript_by_types = graphene.List(
-        NonNull(JanuscriptDocumentType),
-        type_doc=graphene.List(graphene.String, required=True),
-        year=graphene.Int(required=False),
-        names=graphene.String(required=False),
-        required=True,
-    )
-    available_years = graphene.List(NonNull(graphene.String), required=True)
+    all_januscript = graphene.List(NonNull(JanuscriptDocumentType))

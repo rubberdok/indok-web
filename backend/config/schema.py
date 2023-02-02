@@ -1,6 +1,7 @@
 import graphene
 
 from apps.archive.schema import ArchiveMutations, ArchiveQueries
+from apps.januscript.schema import JanuscriptMutations, JanuscriptQueries
 from apps.blogs.schema import BlogMutations, BlogQueries
 from apps.cabins.schema import CabinMutations, CabinQueries
 from apps.events.schema import EventMutations, EventQueries
@@ -16,6 +17,7 @@ from apps.ecommerce.schema import EcommerceMutations, EcommerceQueries
 class Queries(
     EventQueries,
     ArchiveQueries,
+    JanuscriptQueries,
     UserQueries,
     CabinQueries,
     OrganizationQueries,
@@ -30,6 +32,7 @@ class Queries(
 
 
 class Mutations(
+    JanuscriptMutations,
     EventMutations,
     ArchiveMutations,
     UserMutations,

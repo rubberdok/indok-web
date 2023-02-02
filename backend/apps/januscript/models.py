@@ -6,23 +6,11 @@ from .google_drive_api import GoogleDriveAPI
 from django.core.exceptions import FieldError
 
 
-class FileType(models.TextChoices):
-    BUD = ("Budsjett og Regnskap",)
-    SUM = ("Generalforsamling",)
-    YBO = ("Årbøker",)
-    REG = ("Foreningens lover",)
-    SUP = ("Støtte fra HS",)
-    EXC = ("Utveksling",)
-    OTH = ("Annet",)
-    JSS = ("Januscript",)
-
-
 class JanuscriptDocument(models.Model):
     title = models.CharField(max_length=128)
-    type_doc = models.CharField(max_length=20, choices=[(tag, tag.value) for tag in FileType])
+    thumbnail = models.CharField(max_length=2000, default=None, null=True)
     file_location = models.CharField(max_length=2000, default=None, null=False)
     uploaded_date = datetime.now()
-    featured = models.BooleanField(default=False)
     year = models.PositiveSmallIntegerField(
         blank=True,
         null=True,
