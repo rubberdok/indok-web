@@ -1,5 +1,6 @@
 import { Box } from "@mui/material";
 
+//Fix import order
 import { HEADER_DESKTOP_HEIGHT } from "@/theme/constants";
 
 import { NavigationSidebar } from "../../";
