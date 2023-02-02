@@ -13,6 +13,10 @@ const NAV_ITEMS = [
         path: "/janus/info",
       },
       {
+        title: "Årlige Arrangementer",
+        path: "/janus/arrangementer",
+      },
+      {
         title: "Indøk kalender",
         path: "https://calendar.google.com/calendar/u/0/r?cid=c3AzcnJlNGhoamZvZmo4MTI0anA1azA5M29AZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ",
       },
