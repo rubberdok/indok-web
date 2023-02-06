@@ -1,5 +1,5 @@
 import { MailOutlineRounded } from "@mui/icons-material";
-import { InputAdornment, Stack, TextField, Typography } from "@mui/material";
+import { InputAdornment, Stack, TextField, Typography, Link } from "@mui/material";
 import { useFormContext } from "react-hook-form";
 
 import { IEventForm } from "../../schema";
@@ -44,7 +44,16 @@ export const Info: React.FC<Props> = ({ organizations }) => {
       <TextField
         {...register("info.description")}
         error={Boolean(errors.info?.description)}
-        helperText={errors.info?.description?.message ?? "Beskrivelsen støtter markdown"}
+        helperText={
+          errors.info?.description?.message ?? (
+            <>
+              Beskrivelsen støtter{" "}
+              <Link href="https://www.markdownguide.org/cheat-sheet/" target="_blank" rel="noopener noreferrer">
+                markdown
+              </Link>
+            </>
+          )
+        }
         label="Beskrivelse"
         placeholder="Linjeforeningen vår arrangerer..."
         required
