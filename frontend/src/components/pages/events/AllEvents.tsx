@@ -80,7 +80,7 @@ export const AllEvents: React.FC = () => {
           </Hidden>
           <Stack direction="row" spacing={1}>
             {userData && !userLoading && userData.user && !!userData.user.organizations.length && (
-              <Link href="/events/create-event" passHref>
+              <Link href="/events/new" passHref>
                 <Button variant="contained" color="contrast" startIcon={<Add />}>
                   Opprett
                 </Button>

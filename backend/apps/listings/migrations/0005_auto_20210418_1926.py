@@ -15,7 +15,6 @@ def assign_default_organization(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("organizations", "0021_auto_20210415_1706"),
         ("listings", "0004_auto_20210416_1534"),

@@ -45,7 +45,7 @@ class Event(models.Model, Sellable):
     has_extra_information = models.BooleanField(default=False)
     contact_email = models.EmailField(blank=True, default="")
     GRADE_CHOICES = ((1, "1"), (2, "2"), (3, "3"), (4, "4"), (5, "5"))
-    allowed_grade_years = MultiSelectField(choices=GRADE_CHOICES, default="1,2,3,4,5")
+    allowed_grade_years = MultiSelectField(choices=GRADE_CHOICES, default=[1, 2, 3, 4, 5])
 
     # --------------- Required fields given is_attendable == True ---------------
     signup_open_date = models.DateTimeField(blank=True, null=True)  # When the signup should become available

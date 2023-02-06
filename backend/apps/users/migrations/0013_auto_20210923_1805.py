@@ -45,7 +45,6 @@ def assign_standard_permissions(apps, _):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("users", "0012_user_is_indok"),
     ]

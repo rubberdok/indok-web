@@ -80,7 +80,6 @@ class CabinsBaseTestCase(ExtendedGraphQLTestCase):
         self.user.user_permissions.add(Permission.objects.get(codename=codename, content_type=content_type))
 
     def create_booking(self, booking, cabins_field, user=None):
-
         query = f"""
                 mutation CreateBooking {{
                     createBooking(
