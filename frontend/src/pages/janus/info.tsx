@@ -112,7 +112,7 @@ const JanusPage: NextPageWithLayout = () => {
   ];
 
   return (
-    <Template title="Om Janus linjeforening" description="Janus er indøkslinjeforening">
+    <Template title="Om Janus linjeforening" description="Janus er indøks linjeforening">
       <Typography variant="body1" paragraph>
         Foreningen for Studentene ved Industriell Økonomi og Teknologiledelse er den øverste instansen
         («moderforeningen») for all studentfrivillighet på masterstudiet Indøk ved NTNU. Foreningen drives av over 200
