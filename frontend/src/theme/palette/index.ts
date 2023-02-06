@@ -153,10 +153,6 @@ export const janus: ThemeOptions["palette"] = {
     main: "#2C2C2E",
     contrastText: "#fff",
   },
-  common: {
-    black: "#000",
-    white: "#FAF9F6",
-  },
   background: {
     elevated: "#FAF9F6",
     default: "#FAF9F6",
