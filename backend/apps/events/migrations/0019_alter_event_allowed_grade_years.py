@@ -5,7 +5,6 @@ import multiselectfield.db.fields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("events", "0018_auto_20210909_1813"),
     ]
